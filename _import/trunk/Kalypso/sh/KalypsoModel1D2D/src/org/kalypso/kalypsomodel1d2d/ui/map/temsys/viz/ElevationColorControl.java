@@ -49,6 +49,7 @@ import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.ui.map.temsys.ColorModelChangeComponent;
 import org.kalypso.kalypsomodel1d2d.ui.map.temsys.IColorModelPreferenceConstants;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ColorModelIntervalSingleton;
+import org.kalypsodeegree_impl.graphics.displayelements.IElevationColorModel;
 
 /**
  * @author madanago
@@ -103,8 +104,7 @@ public class ElevationColorControl implements IColorModelPreferenceConstants
     if( !preferenceStore.contains( LINE_TRANSPARENCY ) )
     {
       transparencyIndex = DEFAULT_TRANSPARENCY_INDEX;
-      preferenceStore.setValue( 
-                LINE_TRANSPARENCY, DEFAULT_TRANSPARENCY_INDEX );
+      preferenceStore.setValue( LINE_TRANSPARENCY, DEFAULT_TRANSPARENCY_INDEX );
     }
     else
     {
@@ -128,19 +128,17 @@ public class ElevationColorControl implements IColorModelPreferenceConstants
     }
     else
     {
-      m_maxColor = 
-        ColorModelChangeComponent.getThisColor( LINE_MAX_COLOR );
+      m_maxColor = ColorModelChangeComponent.getThisColor( LINE_MAX_COLOR );
     }
 
     if( !preferenceStore.contains( LINE_MIN_COLOR ) )
     {
       setPreferenceColor( LINE_MIN_COLOR, DEFAULT_MIN_COLOR );
-      m_minColor = DEFAULT_MIN_COLOR;      
+      m_minColor = DEFAULT_MIN_COLOR;
     }
     else
     {
-      m_minColor = 
-        ColorModelChangeComponent.getThisColor( LINE_MIN_COLOR );
+      m_minColor = ColorModelChangeComponent.getThisColor( LINE_MIN_COLOR );
     }
 
     if( !preferenceStore.contains( LINE_NO_COLOR ) )
@@ -150,48 +148,42 @@ public class ElevationColorControl implements IColorModelPreferenceConstants
     }
     else
     {
-      noElevationColor = 
-        ColorModelChangeComponent.getThisColor( LINE_NO_COLOR );
+      noElevationColor = ColorModelChangeComponent.getThisColor( LINE_NO_COLOR );
     }
 
   }
 
-  public static final IElevationColorModel getColorModel( double minElevation, double maxElevation )
+  public static final IElevationColorModel getColorModel( final double minElevation, final double maxElevation )
   {
-//  if ( values[0] == 0 &&  values[1] ==0)
-//  colorModel.setElevationMinMax( elevationProvider.getMinElevation(), elevationProvider.getMaxElevation() );
+    // if ( values[0] == 0 && values[1] ==0)
+    // colorModel.setElevationMinMax( elevationProvider.getMinElevation(), elevationProvider.getMaxElevation() );
     double minIfNot0 = m_minElevation;
     double maxIfNot0 = m_maxElevation;
-    
-    if(minIfNot0==0 && maxIfNot0==0)
+
+    if( minIfNot0 == 0 && maxIfNot0 == 0 )
     {
       minIfNot0 = minElevation;
       maxIfNot0 = maxElevation;
     }
-    return new SimpleElevationColorModel( 
-                      minIfNot0, 
-                      maxIfNot0, 
-                      getMinColor(), 
-                      getMaxColor(), 
-                      getNoElevationColor(), getTransparencyIndex(), getColorIndex(), getMinMaxStatus() );
+    return new SimpleElevationColorModel( minIfNot0, maxIfNot0, getMinColor(), getMaxColor(), getNoElevationColor(), getTransparencyIndex(), getColorIndex(), getMinMaxStatus() );
   }
 
   public static final IElevationColorModel getColorModel( )
   {
     return new SimpleElevationColorModel( m_minElevation, m_maxElevation, getMinColor(), getMaxColor(), getNoElevationColor(), getTransparencyIndex(), getColorIndex(), getMinMaxStatus() );
   }
-  
-  public static void setBaseColor( Color baseColor1 )
+
+  public static void setBaseColor( final Color baseColor1 )
   {
     ElevationColorControl.m_baseColor = baseColor1;
   }
 
-  public static void setMinColor( Color minColor )
+  public static void setMinColor( final Color minColor )
   {
     m_minColor = minColor;
   }
 
-  public static void setMaxColor( Color maxColor )
+  public static void setMaxColor( final Color maxColor )
   {
     m_maxColor = maxColor;
   }
@@ -216,7 +208,7 @@ public class ElevationColorControl implements IColorModelPreferenceConstants
     return noElevationColor;
   }
 
-  public static void setNoElevationColor( Color noElevationColor1 )
+  public static void setNoElevationColor( final Color noElevationColor1 )
   {
     ElevationColorControl.noElevationColor = noElevationColor1;
   }
@@ -226,18 +218,18 @@ public class ElevationColorControl implements IColorModelPreferenceConstants
     return colorIndex;
   }
 
-  public static void setColorIndex( int colorIndex1 )
+  public static void setColorIndex( final int colorIndex1 )
   {
     ElevationColorControl.colorIndex = colorIndex1;
     ColorModelIntervalSingleton.getInstance().setInterval( ElevationColorControl.colorIndex );
-}
+  }
 
   public static boolean getMinMaxStatus( )
   {
     return minMaxStatus;
   }
 
-  public static void setMinMaxStatus( boolean minMaxStatus1 )
+  public static void setMinMaxStatus( final boolean minMaxStatus1 )
   {
     ElevationColorControl.minMaxStatus = minMaxStatus1;
   }
@@ -248,43 +240,39 @@ public class ElevationColorControl implements IColorModelPreferenceConstants
     return transparencyIndex;
   }
 
-  public static void setTransparencyIndex( int transparencyIndex1 )
+  public static void setTransparencyIndex( final int transparencyIndex1 )
   {
     ElevationColorControl.transparencyIndex = transparencyIndex1;
   }
-  
-  
-  public static void setMaxElevation( double max )
+
+  public static void setMaxElevation( final double max )
   {
     m_maxElevation = max;
   }
-  
-  public static void setMinElevation( double min )
+
+  public static void setMinElevation( final double min )
   {
     m_minElevation = min;
   }
-  
-  public static double getMaxElevation(  )
+
+  public static double getMaxElevation( )
   {
     return m_maxElevation;
   }
-  
+
   public static double getMinElevation( )
   {
     return m_minElevation;
-  }  
-  
-  private static final void setPreferenceColor(String key, Color color)
-  {
-    RGB rgb = new RGB( color.getRed(), color.getGreen(), color.getBlue() );
-    PreferenceConverter.setValue( 
-        preferenceStore, 
-        LINE_NO_COLOR,
-        rgb );
   }
-  
+
+  private static final void setPreferenceColor( final String key, final Color color )
+  {
+    final RGB rgb = new RGB( color.getRed(), color.getGreen(), color.getBlue() );
+    PreferenceConverter.setValue( preferenceStore, LINE_NO_COLOR, rgb );
+  }
+
   public double getDiscretisationInterval( )
-  {    
-    return Math.abs((m_maxElevation - m_minElevation))/getColorIndex();
+  {
+    return Math.abs( (m_maxElevation - m_minElevation) ) / getColorIndex();
   }
 }

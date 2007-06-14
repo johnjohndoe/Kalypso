@@ -54,7 +54,7 @@ import org.kalypsodeegree.model.feature.Feature;
 public class NodeDisplayDeco implements DisplayElementDecorator
 {
   private DisplayElement decorated;
-  
+
   /**
    * @see org.kalypsodeegree.graphics.displayelements.DisplayElementDecorator#getDecorated()
    */
@@ -66,7 +66,7 @@ public class NodeDisplayDeco implements DisplayElementDecorator
   /**
    * @see org.kalypsodeegree.graphics.displayelements.DisplayElementDecorator#setDecorated(org.kalypsodeegree.graphics.displayelements.DisplayElement)
    */
-  public void setDecorated( DisplayElement decorated )
+  public void setDecorated( final DisplayElement decorated )
   {
     this.decorated = decorated;
   }
@@ -74,9 +74,9 @@ public class NodeDisplayDeco implements DisplayElementDecorator
   /**
    * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#doesScaleConstraintApply(double)
    */
-  public boolean doesScaleConstraintApply( double scale )
+  public boolean doesScaleConstraintApply( final double scale )
   {
-    if(decorated != null)
+    if( decorated != null )
     {
       return decorated.doesScaleConstraintApply( scale );
     }
@@ -87,26 +87,11 @@ public class NodeDisplayDeco implements DisplayElementDecorator
   }
 
   /**
-   * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#getAssociateFeatureId()
-   */
-  public String getAssociateFeatureId( )
-  {
-    if(decorated!=null)
-    {
-      return decorated.getAssociateFeatureId();
-    }
-    else
-    {
-      return null;
-    }
-  }
-
-  /**
    * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#getFeature()
    */
   public Feature getFeature( )
   {
-    if(decorated!=null)
+    if( decorated != null )
     {
       return decorated.getFeature();
     }
@@ -121,7 +106,7 @@ public class NodeDisplayDeco implements DisplayElementDecorator
    */
   public boolean isHighlighted( )
   {
-    if(decorated!=null)
+    if( decorated != null )
     {
       return decorated.isHighlighted();
     }
@@ -136,7 +121,7 @@ public class NodeDisplayDeco implements DisplayElementDecorator
    */
   public boolean isSelected( )
   {
-    if(decorated!=null)
+    if( decorated != null )
     {
       return decorated.isSelected();
     }
@@ -147,21 +132,22 @@ public class NodeDisplayDeco implements DisplayElementDecorator
   }
 
   /**
-   * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#paint(java.awt.Graphics, org.kalypsodeegree.graphics.transformation.GeoTransform)
+   * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#paint(java.awt.Graphics,
+   *      org.kalypsodeegree.graphics.transformation.GeoTransform)
    */
-  public void paint( Graphics g, GeoTransform projection )
+  public void paint( final Graphics g, final GeoTransform projection )
   {
-    if(decorated!=null)
+    if( decorated != null )
     {
       decorated.paint( g, projection );
     }
-    
+
   }
 
   /**
    * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#setHighlighted(boolean)
    */
-  public void setHighlighted( boolean highlighted )
+  public void setHighlighted( final boolean highlighted )
   {
     decorated.setHighlighted( highlighted );
   }
@@ -169,9 +155,9 @@ public class NodeDisplayDeco implements DisplayElementDecorator
   /**
    * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#setSelected(boolean)
    */
-  public void setSelected( boolean selected )
+  public void setSelected( final boolean selected )
   {
-    
+
   }
 
 }

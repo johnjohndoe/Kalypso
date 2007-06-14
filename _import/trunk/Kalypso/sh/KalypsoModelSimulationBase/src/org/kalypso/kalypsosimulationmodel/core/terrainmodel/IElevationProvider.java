@@ -42,57 +42,54 @@ package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
- * Interface for classes that provide elevation information.
- * The elevation can be get using {@link #getElevation(GM_Point)}. 
+ * Interface for classes that provide elevation information. The elevation can be get using
+ * {@link #getElevation(GM_Point)}.
  * 
  * @author Patrice Congo
- *
+ * 
  */
 public interface IElevationProvider
 {
-  public static final String CS_KEY_GAUSS_KRUEGER="EPSG:31467";
-  public static final CS_CoordinateSystem CRS_GAUSS_KRUEGER= 
-        ConvenienceCSFactory.getInstance().getOGCCSByName( 
-                            CS_KEY_GAUSS_KRUEGER );
-
   /**
-   * Get the elevation provides by this model
-   * for the specified location [(x,y) position]. 
-   * @param location the location for which an elevation is
-   *        to be computed
-   * @return the elevation if the model covered this position or
-   *    NaN if not
+   * Get the elevation provides by this model for the specified location [(x,y) position].
+   * 
+   * @param location
+   *            the location for which an elevation is to be computed
+   * @return the elevation if the model covered this position or NaN if not
    */
   public double getElevation( GM_Point location );
 
   /**
    * To get the bounding box of this elevation provider
+   * 
    * @return the bounding box as {@link GM_Envelope}
    */
   public GM_Envelope getBoundingBox( );
-  
+
   /**
    * To get the coordinate system of this elevation provider
+   * 
    * @return return the coordinate system as {@link CS_CoordinateSystem}
    */
-  public CS_CoordinateSystem getCoordinateSystem();
-  
+  public CS_CoordinateSystem getCoordinateSystem( );
+
   /**
    * To get the minimal elavation in this elevation provider
-   * @return the minimal elevation of this provider as double 
+   * 
+   * @return the minimal elevation of this provider as double
    */
-  public double getMinElevation();
-  
+  public double getMinElevation( );
+
   /**
    * To get the maximal elavation in this elevation provider
-   * @return the maximal elevation of this provider as double 
+   * 
+   * @return the maximal elevation of this provider as double
    */
-  public double getMaxElevation();
-  
-  public void setCoordinateSystem(String coordinateSystem);  
+  public double getMaxElevation( );
+
+  public void setCoordinateSystem( String coordinateSystem );
 
 }

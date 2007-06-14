@@ -44,6 +44,8 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.kalypsodeegree_impl.graphics.displayelements.IElevationColorModel;
+
 /**
  * @author Patrice Congo
  */
@@ -58,42 +60,40 @@ public class SimpleElevationColorModel implements IElevationColorModel
 
   private double m_maxElevation;
 
-  private double m_minHue;
+  private final double m_minHue;
 
-  private double m_maxHue;
+  private final double m_maxHue;
 
-  private double m_minSat;
+  private final double m_minSat;
 
-  private double m_maxSat;
+  private final double m_maxSat;
 
   private float[] noElevationColorHSB;
 
-  private int m_transparency;
+  private final int m_transparency;
 
   private boolean m_goDarkerFromMinToMax;
 
-  private Color m_minColor;
+  private final Color m_minColor;
 
-  private Color m_maxColor;
+  private final Color m_maxColor;
 
-  private float[] m_minhsb;
+  private final float[] m_minhsb;
 
-  private float[] m_maxhsb;
+  private final float[] m_maxhsb;
 
-  private double m_minBri;
+  private final double m_minBri;
 
-  private double m_maxBri;
+  private final double m_maxBri;
 
-  private List<Color> m_colorList = new ArrayList<Color>();
+  private final List<Color> m_colorList = new ArrayList<Color>();
 
-  private int m_numOfClasses;
+  private final int m_numOfClasses;
 
-  private Color m_noElevationColor;
-  
-  public SimpleElevationColorModel( double minElevation, double maxElevation, Color minColor, Color maxColor, Color noElevationColor, double transparency, int numOfClasses, boolean goDarkerFromMinToMax )
+  private final Color m_noElevationColor;
+
+  public SimpleElevationColorModel( final double minElevation, final double maxElevation, final Color minColor, final Color maxColor, final Color noElevationColor, final double transparency, final int numOfClasses, final boolean goDarkerFromMinToMax )
   {
-    
-    
 
     m_minElevation = minElevation;
     m_maxElevation = maxElevation;
@@ -151,7 +151,7 @@ public class SimpleElevationColorModel implements IElevationColorModel
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.ElevationColorModel#getColor(double)
    */
-  public Color getColor( double elevation )
+  public Color getColor( final double elevation )
   {
     return interpolateColor( elevation );
   }
@@ -160,14 +160,14 @@ public class SimpleElevationColorModel implements IElevationColorModel
    * gets the corresponding color class for the given elevation
    * 
    * @param elevation
-   *          given elevation
+   *            given elevation
    */
-  private final Color interpolateColor( double elevation )
+  private final Color interpolateColor( final double elevation )
   {
-    
-//    if (elevation == Double.MAX_VALUE||elevation == Double.MIN_VALUE)
-//      System.out.println("SaveMe");
-//    System.out.println("elevation :"+elevation);
+
+    // if (elevation == Double.MAX_VALUE||elevation == Double.MIN_VALUE)
+    // System.out.println("SaveMe");
+    // System.out.println("elevation :"+elevation);
     final int colorClass = (int) ((elevation - m_minElevation) / (m_maxElevation - m_minElevation) * m_numOfClasses);
     int red = 0;
     int green = 0;
@@ -191,7 +191,7 @@ public class SimpleElevationColorModel implements IElevationColorModel
         green = m_colorList.get( (m_numOfClasses - 1) - colorClass ).getGreen();
         blue = m_colorList.get( (m_numOfClasses - 1) - colorClass ).getBlue();
       }
-      
+
     }
     else
     {
@@ -213,10 +213,7 @@ public class SimpleElevationColorModel implements IElevationColorModel
           green = m_colorList.get( 0 ).getGreen();
           blue = m_colorList.get( 0 ).getBlue();
         }
-        final Color rgbColor = 
-          new Color( 
-              red,green, blue, 
-              elevation == m_maxElevation?m_transparency:0 );
+        final Color rgbColor = new Color( red, green, blue, elevation == m_maxElevation ? m_transparency : 0 );
         return rgbColor;
       }
 
@@ -235,14 +232,11 @@ public class SimpleElevationColorModel implements IElevationColorModel
           green = m_colorList.get( (m_numOfClasses - 1) ).getGreen();
           blue = m_colorList.get( (m_numOfClasses - 1) ).getBlue();
         }
-        final Color rgbColor = 
-            new Color( 
-                red, green, blue, 
-                elevation == m_minElevation?m_transparency:0);
+        final Color rgbColor = new Color( red, green, blue, elevation == m_minElevation ? m_transparency : 0 );
 
         return rgbColor;
       }
-      
+
     }
     final Color rgbColor = new Color( red, green, blue, m_transparency );
 
@@ -253,7 +247,7 @@ public class SimpleElevationColorModel implements IElevationColorModel
    * 
    * @see org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.IElevationColorModel#setElevationMinMax(double, double)
    */
-  public void setElevationMinMax( double minElevation, double maxElevation )
+  public void setElevationMinMax( final double minElevation, final double maxElevation )
   {
     m_minElevation = minElevation;
     m_maxElevation = maxElevation;
@@ -263,7 +257,7 @@ public class SimpleElevationColorModel implements IElevationColorModel
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.IElevationColorModel#getHSB(double)
    */
-  public float[] getHSB( double elevation )
+  public float[] getHSB( final double elevation )
   {
     if( Double.isNaN( elevation ) )
     {
@@ -271,9 +265,9 @@ public class SimpleElevationColorModel implements IElevationColorModel
     }
     else if( elevation >= m_minElevation && elevation <= m_maxElevation )
     {
-      double hue = m_minHue + elevation * (m_maxHue - m_minHue) / (m_maxElevation - m_minElevation);
-      double sat = m_minSat + elevation * (m_maxSat - m_minSat) / (m_maxElevation - m_minElevation);
-      double bri = m_minBri + elevation * (m_maxBri - m_minBri) / (m_maxElevation - m_minElevation);
+      final double hue = m_minHue + elevation * (m_maxHue - m_minHue) / (m_maxElevation - m_minElevation);
+      final double sat = m_minSat + elevation * (m_maxSat - m_minSat) / (m_maxElevation - m_minElevation);
+      final double bri = m_minBri + elevation * (m_maxBri - m_minBri) / (m_maxElevation - m_minElevation);
       return new float[] { (float) hue, (float) sat, (float) bri };
     }
     else
@@ -283,9 +277,9 @@ public class SimpleElevationColorModel implements IElevationColorModel
     }
   }
 
-  public float[] getRealRGB( double elevation )
+  public float[] getRealRGB( final double elevation )
   {
-    float[] val = getHSB( elevation );
+    final float[] val = getHSB( elevation );
     return new float[] { Color.getHSBColor( val[0], val[1], val[2] ).getRed(), Color.getHSBColor( val[0], val[1], val[2] ).getGreen(), Color.getHSBColor( val[0], val[1], val[2] ).getBlue() };
   }
 
@@ -294,12 +288,11 @@ public class SimpleElevationColorModel implements IElevationColorModel
    */
   public double[] getElevationMinMax( )
   {
-    double[] values = new double[2];
+    final double[] values = new double[2];
     values[0] = m_minElevation;
     values[1] = m_maxElevation;
     return values;
   }
-
 
   public int getColorIndex( )
   {
@@ -310,10 +303,8 @@ public class SimpleElevationColorModel implements IElevationColorModel
    * @see org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.IElevationColorModel#getDiscretisationInterval()
    */
   public double getDiscretisationInterval( )
-  {    
-    return Math.abs((m_maxElevation - m_minElevation))/m_numOfClasses;
+  {
+    return Math.abs( (m_maxElevation - m_minElevation) ) / m_numOfClasses;
   }
-  
- 
 
 }

@@ -43,6 +43,9 @@ package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.ISurfacePatchVisitable;
+import org.kalypsodeegree.model.geometry.ISurfacePatchVisitor;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.LinearRing;
@@ -54,7 +57,7 @@ import com.vividsolutions.jts.geom.Polygon;
  * @author Madanagopal
  */
 
-class TriangleData implements SurfacePatchVisitable
+class TriangleData implements ISurfacePatchVisitable<GM_SurfacePatch>
 {
   private final LinearRing ring;
 
@@ -108,11 +111,6 @@ class TriangleData implements SurfacePatchVisitable
         return ring.contains( point );
       }
     }
-  }
-
-  public org.kalypsodeegree.model.geometry.GM_Surface getSurface( )
-  {
-    return null;
   }
 
   public double getCenterElevation( )
@@ -174,7 +172,7 @@ class TriangleData implements SurfacePatchVisitable
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitable#aceptSurfacePatches(org.kalypsodeegree.model.geometry.GM_Envelope,
    *      org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitor)
    */
-  public void acceptSurfacePatches( final GM_Envelope envToVisit, final SurfacePatchVisitor surfacePatchVisitor ) throws GM_Exception
+  public void acceptSurfacePatches( final GM_Envelope envToVisit, final ISurfacePatchVisitor<GM_SurfacePatch> surfacePatchVisitor ) throws GM_Exception
   {
     _divider.acceptSurfacePatches( envToVisit, surfacePatchVisitor );
   }

@@ -50,55 +50,44 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  * 
  * @author Madanagopal
  * @author Patrice Congo
- *
+ * 
  */
 public class TestASCTerrainElevationProvider extends TestCase
 {
 
- 
-  
-  public void testLoadSmallAscFile()
+  public void testLoadSmallAscFile( )
   {
     try
     {
-      
-     ASCTerrainElevationModel ascModel = 
-               new ASCTerrainElevationModel(TestWorkspaces.URL_SMALL_ASC, null);
-      
-      for(int i=0;i<10;i++)
+      final ASCTerrainElevationModel ascModel = new ASCTerrainElevationModel( TestWorkspaces.URL_SMALL_ASC );
+
+      for( int i = 0; i < 10; i++ )
       {
-        for(int j=0;j<10;j++)
+        for( int j = 0; j < 10; j++ )
         {
-          double jFlip=9-j;
-          double x=5*i+1+13;
-          double y=5*jFlip+1+154;
-          if(i==j)
+          final double jFlip = 9 - j;
+          final double x = 5 * i + 1 + 13;
+          final double y = 5 * jFlip + 1 + 154;
+          if( i == j )
           {
-            GM_Point curPoint = 
-              GeometryFactory.createGM_Point( 
-                x, y, TestWorkspaces.getGaussKrueger() );
-            double ele=ascModel.getElevation( curPoint  );
-            assertEquals(
-                "i="+i+" j="+j+"jFlip"+jFlip+" ele="+ele,i*j*1.000,ele);
-            
+            final GM_Point curPoint = GeometryFactory.createGM_Point( x, y, TestWorkspaces.getGaussKrueger() );
+            final double ele = ascModel.getElevation( curPoint );
+            assertEquals( "i=" + i + " j=" + j + "jFlip" + jFlip + " ele=" + ele, i * j * 1.000, ele );
+
           }
           else
           {
-            GM_Point curPoint = 
-              GeometryFactory.createGM_Point( 
-                x,y, TestWorkspaces.getGaussKrueger() );
-            double ele=ascModel.getElevation( curPoint  );
-            assertEquals(
-                "i="+i+" j="+j+"jFlip"+(9-j)+" ele="+ele,
-                Double.NaN,ele);
+            final GM_Point curPoint = GeometryFactory.createGM_Point( x, y, TestWorkspaces.getGaussKrueger() );
+            final double ele = ascModel.getElevation( curPoint );
+            assertEquals( "i=" + i + " j=" + j + "jFlip" + (9 - j) + " ele=" + ele, Double.NaN, ele );
           }
         }
       }
-      
+
     }
-    catch (Throwable th) 
+    catch( final Throwable th )
     {
-     fail( TestUtils.getStackTraceAsString( th ) );
+      fail( TestUtils.getStackTraceAsString( th ) );
     }
   }
 }

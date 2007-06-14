@@ -52,7 +52,6 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IStaticModel1D2D;
-import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.SurfacePatchVisitableDisplayElement;
 import org.kalypso.kalypsomodel1d2d.update.ModelMergeService;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
@@ -69,22 +68,26 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree_impl.graphics.displayelements.SurfacePatchVisitableDisplayElement;
 import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * @author congo
- *
+ * 
  */
 public class FERoughnessDisplayElement implements DisplayElementDecorator
 {
   private IStaticModel1D2D staticModel;
+
   private DisplayElement decorated;
+
   private boolean highlighted;
+
   private boolean selected;
+
   private final ModelMergeService mergeService = ModelMergeService.getInstance();
-  
-  public FERoughnessDisplayElement( 
-                      IStaticModel1D2D staticModel )
+
+  public FERoughnessDisplayElement( final IStaticModel1D2D staticModel )
   {
     this.staticModel = staticModel;
     this.selected = false;
@@ -102,17 +105,17 @@ public class FERoughnessDisplayElement implements DisplayElementDecorator
   /**
    * @see org.kalypsodeegree.graphics.displayelements.DisplayElementDecorator#setDecorated(org.kalypsodeegree.graphics.displayelements.DisplayElement)
    */
-  public void setDecorated( DisplayElement decorated )
+  public void setDecorated( final DisplayElement decorated )
   {
-   this.decorated = decorated; 
+    this.decorated = decorated;
   }
 
   /**
    * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#doesScaleConstraintApply(double)
    */
-  public boolean doesScaleConstraintApply( double scale )
+  public boolean doesScaleConstraintApply( final double scale )
   {
-    if( decorated!= null )
+    if( decorated != null )
     {
       return decorated.doesScaleConstraintApply( scale );
     }
@@ -120,22 +123,6 @@ public class FERoughnessDisplayElement implements DisplayElementDecorator
     {
       return true;
     }
-  }
-
-  /**
-   * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#getAssociateFeatureId()
-   */
-  public String getAssociateFeatureId( )
-  {
-    if( decorated!= null )
-    {
-      return decorated.getAssociateFeatureId();
-    }
-    else
-    {
-      return staticModel.getGmlID();
-    }
-    
   }
 
   /**
@@ -151,7 +138,7 @@ public class FERoughnessDisplayElement implements DisplayElementDecorator
    */
   public boolean isHighlighted( )
   {
-    if ( decorated != null )
+    if( decorated != null )
     {
       return decorated.isHighlighted();
     }
@@ -166,7 +153,7 @@ public class FERoughnessDisplayElement implements DisplayElementDecorator
    */
   public boolean isSelected( )
   {
-    if ( decorated != null )
+    if( decorated != null )
     {
       return decorated.isSelected();
     }
@@ -177,89 +164,83 @@ public class FERoughnessDisplayElement implements DisplayElementDecorator
   }
 
   /**
-   * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#paint(java.awt.Graphics, org.kalypsodeegree.graphics.transformation.GeoTransform)
+   * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#paint(java.awt.Graphics,
+   *      org.kalypsodeegree.graphics.transformation.GeoTransform)
    */
-  public void paint( Graphics g, GeoTransform projection )
+  public void paint( final Graphics g, final GeoTransform projection )
   {
     staticModel = Util.getModel( IStaticModel1D2D.class );
-    IFEDiscretisationModel1d2d model1d2d = 
-              Util.getModel( IFEDiscretisationModel1d2d.class );//staticModel.getDiscretisationModel();
+    final IFEDiscretisationModel1d2d model1d2d = Util.getModel( IFEDiscretisationModel1d2d.class );// staticModel.getDiscretisationModel();
     if( model1d2d == null )
     {
       return;
     }
-    ITerrainModel terrainModel = Util.getModel( ITerrainModel.class );//staticModel.getTerrainModel();
+    final ITerrainModel terrainModel = Util.getModel( ITerrainModel.class );// staticModel.getTerrainModel();
     if( terrainModel == null )
     {
       return;
     }
-    IRoughnessPolygonCollection rpc = terrainModel.getRoughnessPolygonCollection();
+    final IRoughnessPolygonCollection rpc = terrainModel.getRoughnessPolygonCollection();
     if( rpc == null )
     {
       return;
     }
-    IFeatureWrapperCollection<IFE1D2DElement> elements = model1d2d.getElements();
-    GM_Envelope sourceRect = projection.getSourceRect();
-    List<IFE1D2DElement> visibleElements = elements.query( sourceRect );
-    for(IFE1D2DElement element: visibleElements )
+    final IFeatureWrapperCollection<IFE1D2DElement> elements = model1d2d.getElements();
+    final GM_Envelope sourceRect = projection.getSourceRect();
+    final List<IFE1D2DElement> visibleElements = elements.query( sourceRect );
+    for( final IFE1D2DElement element : visibleElements )
     {
       if( element instanceof IPolyElement )
       {
         try
         {
-          GM_Surface surface = 
-              (GM_Surface) element.recalculateElementGeometry();
-          Area area = calcTargetCoordinates( projection, surface );
-//          IRoughnessCls roughness = //getRoughness( (IPolyElement)element );
-//            getElementRoughnessCls( (IPolyElement)element, rpc );
-          Color color = mergeService.getColor( (IPolyElement)element, Color.BLACK );
-          
+          final GM_Surface surface = (GM_Surface) element.recalculateElementGeometry();
+          final Area area = calcTargetCoordinates( projection, surface );
+          // IRoughnessCls roughness = //getRoughness( (IPolyElement)element );
+          // getElementRoughnessCls( (IPolyElement)element, rpc );
+          final Color color = mergeService.getColor( (IPolyElement) element, Color.BLACK );
+
           g.setColor( color );
-          ((Graphics2D) g ).fill( area );
-          
-          //shape drawing
+          ((Graphics2D) g).fill( area );
+
+          // shape drawing
           g.setColor( Color.BLACK );
-          java.awt.Stroke bs2 = new BasicStroke( 1 );
-          
+          final java.awt.Stroke bs2 = new BasicStroke( 1 );
+
           ((Graphics2D) g).setStroke( bs2 );
           ((Graphics2D) g).draw( area );
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
           e.printStackTrace();
         }
       }
     }
   }
-  
+
   /**
    * calculates the Area (image or screen coordinates) where to draw the surface.
    */
-  private Area calcTargetCoordinates( 
-                      GeoTransform projection, 
-                      GM_Surface surface ) 
-                      throws Exception
+  private Area calcTargetCoordinates( final GeoTransform projection, final GM_Surface<GM_SurfacePatch> surface ) throws Exception
   {
-//    final PolygonSymbolizer sym = getSymbolizer();
-//    final Stroke stroke = sym.getStroke();
-    float width = 1;
-//    if( stroke != null )
-//    {
-//      width = (float) stroke.getWidth( getFeature() );
-//    }
+    // final PolygonSymbolizer sym = getSymbolizer();
+    // final Stroke stroke = sym.getStroke();
+    final float width = 1;
+    // if( stroke != null )
+    // {
+    // width = (float) stroke.getWidth( getFeature() );
+    // }
 
     try
     {
-      final GM_SurfacePatch patch = surface.getSurfacePatchAt( 0 );
+      final GM_SurfacePatch patch = surface.get( 0 );
       final GM_Position[] ex = patch.getExteriorRing();
-      
-      final Area areaouter = 
-        SurfacePatchVisitableDisplayElement.areaFromRing( projection, width, ex );
-     
+
+      final Area areaouter = SurfacePatchVisitableDisplayElement.areaFromRing( projection, width, ex );
 
       return areaouter;
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       Debug.debugException( e, "" );
     }
@@ -270,7 +251,7 @@ public class FERoughnessDisplayElement implements DisplayElementDecorator
   /**
    * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#setHighlighted(boolean)
    */
-  public void setHighlighted( boolean highlighted )
+  public void setHighlighted( final boolean highlighted )
   {
     this.highlighted = highlighted;
   }
@@ -278,58 +259,56 @@ public class FERoughnessDisplayElement implements DisplayElementDecorator
   /**
    * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#setSelected(boolean)
    */
-  public void setSelected( boolean selected )
+  public void setSelected( final boolean selected )
   {
     this.selected = selected;
   }
 
-  public static final FERoughnessDisplayElement createDisplayElement( Feature feature )
+  public static final FERoughnessDisplayElement createDisplayElement( final Feature feature )
   {
     Assert.throwIAEOnNullParam( feature, "feature" );
-    IStaticModel1D2D staticModel = 
-      ( IStaticModel1D2D ) feature.getAdapter( IStaticModel1D2D.class );
+    final IStaticModel1D2D staticModel = (IStaticModel1D2D) feature.getAdapter( IStaticModel1D2D.class );
     if( staticModel == null )
     {
-      System.out.println("Could not adapt to static model 1d2d");
+      System.out.println( "Could not adapt to static model 1d2d" );
       return null;
     }
     else
     {
-      return new FERoughnessDisplayElement(staticModel); 
+      return new FERoughnessDisplayElement( staticModel );
     }
-    
+
   }
-  
-//  public static final IRoughnessCls getRoughness(IPolyElement polyElement)
-//  {
-//    Assert.throwIAEOnNullParam( polyElement, "polyElement" );
-//    Feature wrappedFeature = polyElement.getWrappedFeature();
-//    Object property = wrappedFeature.getProperty( 
-//        KalypsoModelSimulationBaseConsts.SIM_BASE_P_KalypsoModelRoughnessConsts.WBR_PROP_COLOR_STYLE);//ROUGHNESS_CLS_MEMBER );
-//    System.out.println("element roughness property="+ property);
-//    if( property instanceof Feature )
-//    {
-//      IRoughnessCls roughnessCls = 
-//        (IRoughnessCls) ((Feature)property).getAdapter( IRoughnessCls.class );
-//      
-//      if( roughnessCls != null )
-//      {
-//        return roughnessCls;
-//      }
-//      else
-//      {
-//        throw new RuntimeException("Could not adapt ro roughness");
-//      }
-//    }
-//    else
-//    {
-//      return null;
-//    }
-//  }
-  
-  private IRoughnessCls getElementRoughnessCls( 
-                            IPolyElement polyElement,
-                            IRoughnessPolygonCollection roughnessPolygonCollection )
+
+  // public static final IRoughnessCls getRoughness(IPolyElement polyElement)
+  // {
+  // Assert.throwIAEOnNullParam( polyElement, "polyElement" );
+  // Feature wrappedFeature = polyElement.getWrappedFeature();
+  // Object property = wrappedFeature.getProperty(
+  // KalypsoModelSimulationBaseConsts.SIM_BASE_P_KalypsoModelRoughnessConsts.WBR_PROP_COLOR_STYLE);//ROUGHNESS_CLS_MEMBER
+  // );
+  // System.out.println("element roughness property="+ property);
+  // if( property instanceof Feature )
+  // {
+  // IRoughnessCls roughnessCls =
+  // (IRoughnessCls) ((Feature)property).getAdapter( IRoughnessCls.class );
+  //      
+  // if( roughnessCls != null )
+  // {
+  // return roughnessCls;
+  // }
+  // else
+  // {
+  // throw new RuntimeException("Could not adapt ro roughness");
+  // }
+  // }
+  // else
+  // {
+  // return null;
+  // }
+  // }
+
+  private IRoughnessCls getElementRoughnessCls( final IPolyElement polyElement, final IRoughnessPolygonCollection roughnessPolygonCollection )
   {
     try
     {
@@ -339,11 +318,11 @@ public class FERoughnessDisplayElement implements DisplayElementDecorator
         return null;
       }
       final String polyElementID = polyElement.getGmlID();
-      IRoughnessCls clsName = null;//roughnessMap.get( polyElementID ); 
-      if ( clsName != null )
+      IRoughnessCls clsName = null;// roughnessMap.get( polyElementID );
+      if( clsName != null )
       {
-        //already computed
-//        System.out.println("From Cache "+ polyElementID + clsName);
+        // already computed
+        // System.out.println("From Cache "+ polyElementID + clsName);
         return clsName;
       }
       else
@@ -351,28 +330,25 @@ public class FERoughnessDisplayElement implements DisplayElementDecorator
         clsName = null;
         if( !roughnessPolygonCollection.isEmpty() )
         {
-          IRoughnessEstimateSpec roughnessEstimateSpec = 
-                    roughnessPolygonCollection.getRoughnessEstimateSpec( 
-                                            polyElement.recalculateElementGeometry() );
-          IRoughnessCls[] classes = roughnessEstimateSpec.mostSpreadRoughness();
-          if( classes.length >0 )
+          final IRoughnessEstimateSpec roughnessEstimateSpec = roughnessPolygonCollection.getRoughnessEstimateSpec( polyElement.recalculateElementGeometry() );
+          final IRoughnessCls[] classes = roughnessEstimateSpec.mostSpreadRoughness();
+          if( classes.length > 0 )
           {
             clsName = classes[0];
-                        
+
           }
-          
+
         }
-        System.out.println( "StyleName=" + 
-              (clsName==null ? null:clsName.getGmlID()) );
-//        roughnessMap.put( polyElementID, clsName );
-        return clsName;  
+        System.out.println( "StyleName=" + (clsName == null ? null : clsName.getGmlID()) );
+        // roughnessMap.put( polyElementID, clsName );
+        return clsName;
       }
     }
-    catch( GM_Exception e )
+    catch( final GM_Exception e )
     {
       e.printStackTrace();
       return null;
     }
-    
+
   }
 }

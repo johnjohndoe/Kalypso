@@ -46,11 +46,15 @@ import java.io.Reader;
 import java.net.URL;
 import java.util.List;
 
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.ISurfacePatchVisitable;
+import org.kalypsodeegree.model.geometry.ISurfacePatchVisitor;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.opengis.cs.CS_CoordinateSystem;
 
@@ -69,7 +73,7 @@ import com.vividsolutions.jts.io.ParseException;
  * @author Patrice Congo
  * @author Madanagopal
  */
-public class HMOTerrainElevationModel implements IElevationProvider, SurfacePatchVisitable
+public class HMOTerrainElevationModel implements IElevationProvider, ISurfacePatchVisitable<GM_SurfacePatch>
 {
 
   public static final double[][] NO_INTERIOR = {};
@@ -84,13 +88,10 @@ public class HMOTerrainElevationModel implements IElevationProvider, SurfacePatc
 
   private Quadtree triangles;
 
-  private final Object regionOfInterest;
+  private final CS_CoordinateSystem crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
 
-  private final CS_CoordinateSystem crs = CRS_GAUSS_KRUEGER;
-
-  public HMOTerrainElevationModel( final URL hmoFileURL, final GM_Envelope regionOfInterest ) throws IOException, ParseException
+  public HMOTerrainElevationModel( final URL hmoFileURL ) throws IOException, ParseException
   {
-    this.regionOfInterest = regionOfInterest;
     parseFile( hmoFileURL );
   }
 
@@ -178,7 +179,7 @@ public class HMOTerrainElevationModel implements IElevationProvider, SurfacePatc
       final List<TriangleData> list = triangles.query( searchEnv );
       if( list.isEmpty() )
       {
-        System.out.println( "List is empty" );
+        // System.out.println( "List is empty" );
         return Double.NaN;
       }
       else
@@ -205,9 +206,8 @@ public class HMOTerrainElevationModel implements IElevationProvider, SurfacePatc
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitable#aceptSurfacePatches(org.kalypsodeegree.model.geometry.GM_Envelope,
    *      org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitor)
    */
-  public void acceptSurfacePatches( final GM_Envelope envToVisit, final SurfacePatchVisitor surfacePatchVisitor ) throws GM_Exception
+  public void acceptSurfacePatches( final GM_Envelope envToVisit, final ISurfacePatchVisitor<GM_SurfacePatch> surfacePatchVisitor ) throws GM_Exception
   {
-
     Assert.throwIAEOnNullParam( envToVisit, "envToVisit" );
     Assert.throwIAEOnNullParam( surfacePatchVisitor, "surfacePatchVisitor" );
     // TODO; export the whole env at once

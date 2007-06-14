@@ -81,76 +81,61 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  * 
  * @author Patrice Congo
  * @author Madanagopal
- *
+ * 
  */
-public class ApplyElevationWidget 
-                    extends FENetConceptSelectionWidget//AbstractWidget 
-                    implements IWidgetWithOptions/*, IEvaluationContextConsumer*/
+public class ApplyElevationWidget extends FENetConceptSelectionWidget// AbstractWidget
+    implements IWidgetWithOptions/* , IEvaluationContextConsumer */
 {
-  
-  
+
   private Composite rootComposite;
+
   private WizardComposite wizardComposite;
 
-  
-  ApplyElevationWidgetDataModel dataModel= new ApplyElevationWidgetDataModel();
-  private ApplyElevationWidgetFace widgetFace = 
-    new ApplyElevationWidgetFace(dataModel);
+  ApplyElevationWidgetDataModel dataModel = new ApplyElevationWidgetDataModel();
+
+  private final ApplyElevationWidgetFace widgetFace = new ApplyElevationWidgetFace( dataModel );
 
   private Point point;
-  
-  public ApplyElevationWidget()
+
+  public ApplyElevationWidget( )
   {
-    this("Höhen zuweisen","Höhenzuweisung starten");
+    this( "Höhen zuweisen", "Höhenzuweisung starten" );
   }
-  
-  public ApplyElevationWidget( String name, String toolTip )
+
+  public ApplyElevationWidget( final String name, final String toolTip )
   {
-//    super( name, toolTip );
-    super( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE, name, toolTip );    
+    // super( name, toolTip );
+    super( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE, name, toolTip );
   }
 
   /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#activate(org.kalypso.commons.command.ICommandTarget, org.kalypso.ogc.gml.map.MapPanel)
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#activate(org.kalypso.commons.command.ICommandTarget,
+   *      org.kalypso.ogc.gml.map.MapPanel)
    */
   @Override
-  public void activate( ICommandTarget commandPoster, MapPanel mapPanel )
+  public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel )
   {
-    super.activate(commandPoster, mapPanel);
-    
-    IMapModell mapModell = mapPanel.getMapModell();
-    IFEDiscretisationModel1d2d model1d2d = 
-      UtilMap.findFEModelTheme( 
-          mapModell );
+    super.activate( commandPoster, mapPanel );
+
+    final IMapModell mapModell = mapPanel.getMapModell();
+    final IFEDiscretisationModel1d2d model1d2d = UtilMap.findFEModelTheme( mapModell );
     dataModel.setDiscretisationModel( model1d2d );
     dataModel.setMapModell( mapModell );
     dataModel.setMapPanel( mapPanel );
-    
-    //find and set Elevation model system
-    IKalypsoFeatureTheme terrainElevationTheme = UtilMap.findEditableTheme( 
-          mapModell, 
-          KalypsoModelSimulationBaseConsts.SIM_BASE_F_BASE_TERRAIN_ELE_MODEL
-          );
-    Feature eleSystemFeature = 
-      terrainElevationTheme.getFeatureList().getParentFeature();
-    ITerrainElevationModelSystem system = 
-      (ITerrainElevationModelSystem) eleSystemFeature.getAdapter( 
-                                      ITerrainElevationModelSystem.class );
-    
-    IKalypsoFeatureTheme nodeTheme = UtilMap.findEditableTheme( 
-        mapModell, 
-        KalypsoModelSimulationBaseConsts.SIM_BASE_F_BASE_TERRAIN_ELE_MODEL
-        );
+
+    // find and set Elevation model system
+    final IKalypsoFeatureTheme terrainElevationTheme = UtilMap.findEditableTheme( mapModell, KalypsoModelSimulationBaseConsts.SIM_BASE_F_BASE_TERRAIN_ELE_MODEL );
+    final Feature eleSystemFeature = terrainElevationTheme.getFeatureList().getParentFeature();
+    final ITerrainElevationModelSystem system = (ITerrainElevationModelSystem) eleSystemFeature.getAdapter( ITerrainElevationModelSystem.class );
+
+    final IKalypsoFeatureTheme nodeTheme = UtilMap.findEditableTheme( mapModell, KalypsoModelSimulationBaseConsts.SIM_BASE_F_BASE_TERRAIN_ELE_MODEL );
     dataModel.setElevationModelSystem( system );
-    dataModel.setData( 
-          ApplyElevationWidgetDataModel.NODE_THEME, 
-          nodeTheme );
-    
-    dataModel.setElevationTheme( terrainElevationTheme ); 
+    dataModel.setData( ApplyElevationWidgetDataModel.NODE_THEME, nodeTheme );
+
+    dataModel.setElevationTheme( terrainElevationTheme );
     dataModel.setMapPanel( mapPanel );
   }
-  
-  
+
   /**
    * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#createControl(org.eclipse.swt.widgets.Composite)
    */
@@ -160,7 +145,7 @@ public class ApplyElevationWidget
     {
       return widgetFace.createControl( parent );
     }
-    catch (Throwable th) 
+    catch( final Throwable th )
     {
       th.printStackTrace();
       return null;
@@ -172,7 +157,7 @@ public class ApplyElevationWidget
    */
   public void disposeControl( )
   {
-    if(widgetFace!=null)
+    if( widgetFace != null )
     {
       widgetFace.disposeControl();
     }
@@ -182,200 +167,192 @@ public class ApplyElevationWidget
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.ITerrainModelConsumer#setTerrainModel(org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel)
    */
-  public void setTerrainModel( ITerrainElevationModel terrainModel )
+  public void setTerrainModel( final ITerrainElevationModel terrainModel )
   {
     dataModel.setElevationModel( terrainModel );
-    
+
   }
-//   /**
-//   * @see org.kalypso.ogc.gml.map.widgets.IEvaluationContextConsumer#setEvaluationContext(org.eclipse.core.expressions.IEvaluationContext)
-//   */
-//  public void setEvaluationContext( IEvaluationContext evaluationContext )
-//  {
-////    Assert.throwIAEOnNullParam( evaluationContext, "evaluationContext" );
-//////    final ISzenarioDataProvider szenarioDataProvider = 
-//////      (ISzenarioDataProvider) context.getVariable( 
-//////            SzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
-//////    final ITerrainModel terrainModel = (ITerrainModel) szenarioDataProvider.getModel( ITerrainModel.class );    
-////    try
-////    {
-////      ITerrainModel terrainModel= refelectTerrainModel( evaluationContext );
-////      dataModel.setTerrainModel( terrainModel );
-////    }
-////    catch( Throwable e )
-////    {
-////      e.printStackTrace();
-////    }
-//   
-//  }
-  
-//  private final ITerrainModel refelectTerrainModel(IEvaluationContext evaluationContext) throws SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException
-//  {
-//    Object dataProvider=evaluationContext.getVariable( "activeSzenarioDataProvider" );
-//    
-//    if(dataProvider==null)
-//    {
-//      throw new IllegalArgumentException(
-//          "evaluation context does not contain an active szenarion data provider");
-//    }
-//    Method getModelMethod=
-//      dataProvider.getClass().getMethod( "getModel", new Class[]{Class.class});
-//    if(getModelMethod==null)
-//    {
-//      throw new IllegalArgumentException(
-//          "Data provider in "+evaluationContext+" does not have getModel method"); 
-//    }
-//    try
-//    {
-//      ITerrainModel terrainModel=
-//        (ITerrainModel) getModelMethod.invoke( 
-//            dataProvider, new Object[]{ITerrainModel.class});
-//      return terrainModel;
-//    }
-//    catch (Exception e) 
-//    {
-//      e.printStackTrace();
-//      return null;
-//    }
-//  }
-  
+
+  // /**
+  // * @see
+  // org.kalypso.ogc.gml.map.widgets.IEvaluationContextConsumer#setEvaluationContext(org.eclipse.core.expressions.IEvaluationContext)
+  // */
+  // public void setEvaluationContext( IEvaluationContext evaluationContext )
+  // {
+  // // Assert.throwIAEOnNullParam( evaluationContext, "evaluationContext" );
+  // //// final ISzenarioDataProvider szenarioDataProvider =
+  // //// (ISzenarioDataProvider) context.getVariable(
+  // //// SzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
+  // //// final ITerrainModel terrainModel = (ITerrainModel) szenarioDataProvider.getModel( ITerrainModel.class );
+  // // try
+  // // {
+  // // ITerrainModel terrainModel= refelectTerrainModel( evaluationContext );
+  // // dataModel.setTerrainModel( terrainModel );
+  // // }
+  // // catch( Throwable e )
+  // // {
+  // // e.printStackTrace();
+  // // }
+  //   
+  // }
+
+  // private final ITerrainModel refelectTerrainModel(IEvaluationContext evaluationContext) throws SecurityException,
+  // NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException
+  // {
+  // Object dataProvider=evaluationContext.getVariable( "activeSzenarioDataProvider" );
+  //    
+  // if(dataProvider==null)
+  // {
+  // throw new IllegalArgumentException(
+  // "evaluation context does not contain an active szenarion data provider");
+  // }
+  // Method getModelMethod=
+  // dataProvider.getClass().getMethod( "getModel", new Class[]{Class.class});
+  // if(getModelMethod==null)
+  // {
+  // throw new IllegalArgumentException(
+  // "Data provider in "+evaluationContext+" does not have getModel method");
+  // }
+  // try
+  // {
+  // ITerrainModel terrainModel=
+  // (ITerrainModel) getModelMethod.invoke(
+  // dataProvider, new Object[]{ITerrainModel.class});
+  // return terrainModel;
+  // }
+  // catch (Exception e)
+  // {
+  // e.printStackTrace();
+  // return null;
+  // }
+  // }
+
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget#moved(java.awt.Point)
    */
   @Override
-  public void moved( Point p )
+  public void moved( final Point p )
   {
     dataModel.setIgnoreMapSelection( false );
-    super.moved(p);
-    this.point=p;
-    //TODO: check if this repaint is necessary for the widget
-    MapPanel mapPanel = dataModel.getMapPanel();
-    if ( mapPanel != null)
+    super.moved( p );
+    this.point = p;
+    // TODO: check if this repaint is necessary for the widget
+    final MapPanel mapPanel = dataModel.getMapPanel();
+    if( mapPanel != null )
       mapPanel.repaint();
   }
-  
-  private void drawToolTip( String tooltip, Point p, Graphics g )
+
+  private void drawToolTip( final String tooltip, final Point p, final Graphics g )
   {
-    Rectangle2D rectangle = g.getFontMetrics().getStringBounds( tooltip, g );
+    final Rectangle2D rectangle = g.getFontMetrics().getStringBounds( tooltip, g );
 
     g.setColor( new Color( 255, 255, 225 ) );
     g.fillRect( (int) p.getX(), (int) p.getY() + 20, (int) rectangle.getWidth() + 10, (int) rectangle.getHeight() + 5 );
 
-    g.setColor( Color.BLUE);
+    g.setColor( Color.BLUE );
     g.drawRect( (int) p.getX(), (int) p.getY() + 20, (int) rectangle.getWidth() + 10, (int) rectangle.getHeight() + 5 );
 
     /* Tooltip zeichnen. */
     g.drawString( tooltip, (int) p.getX() + 5, (int) p.getY() + 35 );
 
-    
   }
 
-  private String getElevationMessage( GM_Point nodePoint )
+  private String getElevationMessage( final GM_Point nodePoint )
   {
-    StringBuffer nodeElevationText= new StringBuffer(64);
-    if(nodePoint.getCoordinateDimension()<=2)
+    final StringBuffer nodeElevationText = new StringBuffer( 64 );
+    if( nodePoint.getCoordinateDimension() <= 2 )
     {
       nodeElevationText.append( "keine Netzhöhe" );
     }
     else
     {
       nodeElevationText.append( "Netzhöhe = " );
-      nodeElevationText.append( String.format( "%.3f",nodePoint.getZ()) );
-      nodeElevationText.append( " m");
+      nodeElevationText.append( String.format( "%.3f", nodePoint.getZ() ) );
+      nodeElevationText.append( " m" );
     }
-    
+
     final String elevationMessage = nodeElevationText.toString();
     return elevationMessage;
-}
-  
-  
-  private final void drawElevationData(Graphics g, Point p)
+  }
+
+  private final void drawElevationData( final Graphics g, final Point p )
   {
     final Color color = g.getColor();
     g.setColor( Color.BLACK );
     try
     {
-      if(p==null)
+      if( p == null )
       {
         return;
       }
-      MapPanel mapPanel = dataModel.getMapPanel();
-      if(mapPanel==null)
+      final MapPanel mapPanel = dataModel.getMapPanel();
+      if( mapPanel == null )
       {
-        System.out.println("map panel is null");
+        // System.out.println("map panel is null");
         return;
       }
-      
-      //finde node
-      GM_Point point = 
-            MapUtilities.transform( 
-                  mapPanel, p );
-      final double DELTA = 
-        MapUtilities.calculateWorldDistance( 
-                                      mapPanel, 
-                                      point, 
-                                      10 );
-      IFE1D2DNode node = dataModel.getDiscretisationModel().findNode( 
-                                point, 
-                                DELTA );
-      double height=0;
-      GM_Point nodePoint=null;
-      
-      if(node!=null)
+
+      // finde node
+      final GM_Point point = MapUtilities.transform( mapPanel, p );
+      final double DELTA = MapUtilities.calculateWorldDistance( mapPanel, point, 10 );
+      final IFE1D2DNode node = dataModel.getDiscretisationModel().findNode( point, DELTA );
+      double height = 0;
+      GM_Point nodePoint = null;
+
+      if( node != null )
       {
         nodePoint = node.getPoint();
-        
-        
-        StringBuffer nodeElevationText= new StringBuffer(64);
-        if(nodePoint.getCoordinateDimension()<=2)
+
+        final StringBuffer nodeElevationText = new StringBuffer( 64 );
+        if( nodePoint.getCoordinateDimension() <= 2 )
         {
           nodeElevationText.append( "Keine Höhendaten an FE-Knoten" );
         }
         else
         {
           nodeElevationText.append( "Knotenhöhe = " );
-          nodeElevationText.append( String.format( "%.3f",nodePoint.getZ() ));
+          nodeElevationText.append( String.format( "%.3f", nodePoint.getZ() ) );
           nodeElevationText.append( " m" );
         }
-        
-        //show info
-        //g.drawString( nodeElevationText.toString(), (int)p.getX(), (int)p.getY() );
-        drawToolTip( nodeElevationText.toString() , p, g);
-        FontMetrics fontMetrics = g.getFontMetrics();
-        LineMetrics lineMetrics = fontMetrics.getLineMetrics( nodeElevationText.toString(), g );
-        height= lineMetrics.getHeight()*1.35;
+
+        // show info
+        // g.drawString( nodeElevationText.toString(), (int)p.getX(), (int)p.getY() );
+        drawToolTip( nodeElevationText.toString(), p, g );
+        final FontMetrics fontMetrics = g.getFontMetrics();
+        final LineMetrics lineMetrics = fontMetrics.getLineMetrics( nodeElevationText.toString(), g );
+        height = lineMetrics.getHeight() * 1.35;
       }
-      
-      if(nodePoint==null)
+
+      if( nodePoint == null )
       {
-        nodePoint = MapUtilities.transform( mapPanel, p );  
+        nodePoint = MapUtilities.transform( mapPanel, p );
       }
-      StringBuffer modelEleText = new StringBuffer(64);
-      IElevationProvider elevationProvider=getElevationProvider();
-      if(elevationProvider!=null)
+      final StringBuffer modelEleText = new StringBuffer( 64 );
+      final IElevationProvider elevationProvider = getElevationProvider();
+      if( elevationProvider != null )
       {
-        double elevation = elevationProvider.getElevation( nodePoint );
+        final double elevation = elevationProvider.getElevation( nodePoint );
         if( !Double.isNaN( elevation ) )
         {
           modelEleText.append( "DGM-Höhe = " );
-          modelEleText.append(String.format( "%.3f",elevation));
-          modelEleText.append(" m");          
+          modelEleText.append( String.format( "%.3f", elevation ) );
+          modelEleText.append( " m" );
         }
         else
-          modelEleText.append("Keine Geländehöhen vorhanden");
+          modelEleText.append( "Keine Geländehöhen vorhanden" );
       }
       else
       {
-        modelEleText.append("Geländemodell nicht gefunden");
+        modelEleText.append( "Geländemodell nicht gefunden" );
       }
-        
-      //g.drawString( modelEleText.toString(), (int)p.getX(), (int)(p.getY()+height) );
-      Point p2 = new Point();
-      p2.setLocation((int)p.getX(), (int)(p.getY()+height) );
-      drawToolTip( modelEleText.toString() , p2, g);
+
+      // g.drawString( modelEleText.toString(), (int)p.getX(), (int)(p.getY()+height) );
+      final Point p2 = new Point();
+      p2.setLocation( (int) p.getX(), (int) (p.getY() + height) );
+      drawToolTip( modelEleText.toString(), p2, g );
       return;
     }
-    catch( RuntimeException e )
+    catch( final RuntimeException e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -385,38 +362,37 @@ public class ApplyElevationWidget
       g.setColor( color );
     }
   }
-  
+
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget#doubleClickedLeft(java.awt.Point)
    */
   @Override
-  public void doubleClickedLeft( Point p )
+  public void doubleClickedLeft( final Point p )
   {
     dataModel.setIgnoreMapSelection( false );
-    super.doubleClickedLeft(p);
-    if(!isPolygonSelectModus())
+    super.doubleClickedLeft( p );
+    if( !isPolygonSelectModus() )
     {
-      assignElevationToSelectedNodes(p);
+      assignElevationToSelectedNodes( p );
     }
-    //used to propagate the selection again to the listener
-    //necessary to get the map the  node info refreshed
+    // used to propagate the selection again to the listener
+    // necessary to get the map the node info refreshed
     reselectSelected();
   }
-  
+
   private void reselectSelected( )
   {
-    MapPanel mapPanel = dataModel.getMapPanel();
-    if(mapPanel==null)
+    final MapPanel mapPanel = dataModel.getMapPanel();
+    if( mapPanel == null )
     {
-      System.out.println("Cannot reselect Map panel is null");
+      // System.out.println("Cannot reselect Map panel is null");
       return;
     }
-    IFeatureSelectionManager selectionManager = 
-                        mapPanel.getSelectionManager();
-    EasyFeatureWrapper[] allFeatures = selectionManager.getAllFeatures();
-    if(allFeatures!=null)
+    final IFeatureSelectionManager selectionManager = mapPanel.getSelectionManager();
+    final EasyFeatureWrapper[] allFeatures = selectionManager.getAllFeatures();
+    if( allFeatures != null )
     {
-      if(allFeatures.length!=0)
+      if( allFeatures.length != 0 )
       {
         selectionManager.setSelection( allFeatures );
       }
@@ -427,289 +403,277 @@ public class ApplyElevationWidget
    * @see org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget#doubleClickedRight(java.awt.Point)
    */
   @Override
-  public void doubleClickedRight( Point p )
+  public void doubleClickedRight( final Point p )
   {
     dataModel.setIgnoreMapSelection( false );
-    super.doubleClickedRight(p);
+    super.doubleClickedRight( p );
     assignElevationToSelectedNodes( p );
   }
-  
+
   @Override
-  public void keyPressed( KeyEvent e )
+  public void keyPressed( final KeyEvent e )
   {
     super.keyPressed( e );
-    int code = e.getKeyCode();
-    MapPanel mapPanel = dataModel.getMapPanel();
+    final int code = e.getKeyCode();
+    final MapPanel mapPanel = dataModel.getMapPanel();
 
     // TODO:
     // zoom in "-"
 
     if( e.isActionKey() )
     {
-      System.out.println( "e:" + e );
+      // System.out.println( "e:" + e );
     }
-    
+
     MapKeyNavigator.navigateOnKeyEvent( mapPanel, e, true );
-//    /* zoom in */
-//    if( code == KeyEvent.VK_PLUS )
-//    {
-////      if( e.isShiftDown() )
-////      {
-//        final GM_Envelope currentBBox = mapPanel.getBoundingBox();
-//
-//        GM_Envelope wishBBox = null;
-//
-//        final GM_Position currentMax = currentBBox.getMax();
-//        final GM_Position currentMin = currentBBox.getMin();
-//
-//        final double newMaxX = currentMax.getX() - (currentMax.getX() - currentMin.getX()) / 10;
-//        final double newMaxY = currentMax.getY() - (currentMax.getY() - currentMin.getY()) / 10;
-//        final double newMinX = currentMin.getX() + (currentMax.getX() - currentMin.getX()) / 10;
-//        final double newMinY = currentMin.getY() + (currentMax.getY() - currentMin.getY()) / 10;
-//
-//        final GM_Position newMin = GeometryFactory.createGM_Position( newMinX, newMinY );
-//        final GM_Position newMax = GeometryFactory.createGM_Position( newMaxX, newMaxY );
-//
-//        wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
-//
-//        mapPanel.setBoundingBox( wishBBox );
-////      }
-////      else
-////      {
-////        mapPanel.getMapModell().getActiveTheme().fireModellEvent( null );
-////      }
-//
-//    }
-//    /* zoom out */
-//    else if( code == KeyEvent.VK_MINUS )
-//    {
-//      final GM_Envelope currentBBox = mapPanel.getBoundingBox();
-//
-//      GM_Envelope wishBBox = null;
-//
-//      final GM_Position currentMax = currentBBox.getMax();
-//      final GM_Position currentMin = currentBBox.getMin();
-//
-//      final double newMaxX = currentMax.getX() + (currentMax.getX() - currentMin.getX()) / 10;
-//      final double newMaxY = currentMax.getY() + (currentMax.getY() - currentMin.getY()) / 10;
-//      final double newMinX = currentMin.getX() - (currentMax.getX() - currentMin.getX()) / 10;
-//      final double newMinY = currentMin.getY() - (currentMax.getY() - currentMin.getY()) / 10;
-//
-//      final GM_Position newMin = GeometryFactory.createGM_Position( newMinX, newMinY );
-//      final GM_Position newMax = GeometryFactory.createGM_Position( newMaxX, newMaxY );
-//
-//      wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
-//
-//      mapPanel.setBoundingBox( wishBBox );
-//    }
-//
-//    // pan "arrows
-//    else if( code == KeyEvent.VK_RIGHT )
-//    {
-//      final GM_Envelope currentBBox = mapPanel.getBoundingBox();
-//
-//      GM_Envelope wishBBox = null;
-//
-//      final GM_Position currentMax = currentBBox.getMax();
-//      final GM_Position currentMin = currentBBox.getMin();
-//
-//      final double newMaxX = currentMax.getX() + (currentMax.getX() - currentMin.getX()) / 20;
-//      final double newMinX = currentMin.getX() + (currentMax.getX() - currentMin.getX()) / 20;
-//      
-//
-//      final GM_Position newMin = GeometryFactory.createGM_Position( newMinX, currentMin.getY() );
-//      final GM_Position newMax = GeometryFactory.createGM_Position( newMaxX, currentMax.getY() );
-//
-//      wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
-//
-//      mapPanel.setBoundingBox( wishBBox );
-//    }
-//    else if( code == KeyEvent.VK_LEFT )
-//    {
-//      final GM_Envelope currentBBox = mapPanel.getBoundingBox();
-//
-//      GM_Envelope wishBBox = null;
-//
-//      final GM_Position currentMax = currentBBox.getMax();
-//      final GM_Position currentMin = currentBBox.getMin();
-//
-//      final double newMaxX = currentMax.getX() - (currentMax.getX() - currentMin.getX()) / 20;
-//      final double newMinX = currentMin.getX() - (currentMax.getX() - currentMin.getX()) / 20;
-//      
-//
-//      final GM_Position newMin = GeometryFactory.createGM_Position( newMinX, currentMin.getY() );
-//      final GM_Position newMax = GeometryFactory.createGM_Position( newMaxX, currentMax.getY() );
-//
-//      wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
-//
-//      mapPanel.setBoundingBox( wishBBox );
-//    }
-//    else if( code == KeyEvent.VK_UP )
-//    {
-//      final GM_Envelope currentBBox = mapPanel.getBoundingBox();
-//
-//      GM_Envelope wishBBox = null;
-//
-//      final GM_Position currentMax = currentBBox.getMax();
-//      final GM_Position currentMin = currentBBox.getMin();
-//
-//      final double newMaxY = currentMax.getY() + (currentMax.getY() - currentMin.getY()) / 20;
-//      final double newMinY = currentMin.getY() + (currentMax.getY() - currentMin.getY()) / 20;
-//      
-//
-//      final GM_Position newMin = GeometryFactory.createGM_Position( currentMin.getX(), newMinY );
-//      final GM_Position newMax = GeometryFactory.createGM_Position( currentMax.getX(), newMaxY );
-//
-//      wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
-//
-//      mapPanel.setBoundingBox( wishBBox );
-//    }
-//    else if( code == KeyEvent.VK_DOWN )
-//    {
-//      final GM_Envelope currentBBox = mapPanel.getBoundingBox();
-//
-//      GM_Envelope wishBBox = null;
-//
-//      final GM_Position currentMax = currentBBox.getMax();
-//      final GM_Position currentMin = currentBBox.getMin();
-//
-//      final double newMaxY = currentMax.getY() - (currentMax.getY() - currentMin.getY()) / 20;
-//      final double newMinY = currentMin.getY() - (currentMax.getY() - currentMin.getY()) / 20;
-//      
-//
-//      final GM_Position newMin = GeometryFactory.createGM_Position( currentMin.getX(), newMinY );
-//      final GM_Position newMax = GeometryFactory.createGM_Position( currentMax.getX(), newMaxY );
-//
-//      wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
-//
-//      mapPanel.setBoundingBox( wishBBox );
-//    }
+    // /* zoom in */
+    // if( code == KeyEvent.VK_PLUS )
+    // {
+    // // if( e.isShiftDown() )
+    // // {
+    // final GM_Envelope currentBBox = mapPanel.getBoundingBox();
+    //
+    // GM_Envelope wishBBox = null;
+    //
+    // final GM_Position currentMax = currentBBox.getMax();
+    // final GM_Position currentMin = currentBBox.getMin();
+    //
+    // final double newMaxX = currentMax.getX() - (currentMax.getX() - currentMin.getX()) / 10;
+    // final double newMaxY = currentMax.getY() - (currentMax.getY() - currentMin.getY()) / 10;
+    // final double newMinX = currentMin.getX() + (currentMax.getX() - currentMin.getX()) / 10;
+    // final double newMinY = currentMin.getY() + (currentMax.getY() - currentMin.getY()) / 10;
+    //
+    // final GM_Position newMin = GeometryFactory.createGM_Position( newMinX, newMinY );
+    // final GM_Position newMax = GeometryFactory.createGM_Position( newMaxX, newMaxY );
+    //
+    // wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
+    //
+    // mapPanel.setBoundingBox( wishBBox );
+    // // }
+    // // else
+    // // {
+    // // mapPanel.getMapModell().getActiveTheme().fireModellEvent( null );
+    // // }
+    //
+    // }
+    // /* zoom out */
+    // else if( code == KeyEvent.VK_MINUS )
+    // {
+    // final GM_Envelope currentBBox = mapPanel.getBoundingBox();
+    //
+    // GM_Envelope wishBBox = null;
+    //
+    // final GM_Position currentMax = currentBBox.getMax();
+    // final GM_Position currentMin = currentBBox.getMin();
+    //
+    // final double newMaxX = currentMax.getX() + (currentMax.getX() - currentMin.getX()) / 10;
+    // final double newMaxY = currentMax.getY() + (currentMax.getY() - currentMin.getY()) / 10;
+    // final double newMinX = currentMin.getX() - (currentMax.getX() - currentMin.getX()) / 10;
+    // final double newMinY = currentMin.getY() - (currentMax.getY() - currentMin.getY()) / 10;
+    //
+    // final GM_Position newMin = GeometryFactory.createGM_Position( newMinX, newMinY );
+    // final GM_Position newMax = GeometryFactory.createGM_Position( newMaxX, newMaxY );
+    //
+    // wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
+    //
+    // mapPanel.setBoundingBox( wishBBox );
+    // }
+    //
+    // // pan "arrows
+    // else if( code == KeyEvent.VK_RIGHT )
+    // {
+    // final GM_Envelope currentBBox = mapPanel.getBoundingBox();
+    //
+    // GM_Envelope wishBBox = null;
+    //
+    // final GM_Position currentMax = currentBBox.getMax();
+    // final GM_Position currentMin = currentBBox.getMin();
+    //
+    // final double newMaxX = currentMax.getX() + (currentMax.getX() - currentMin.getX()) / 20;
+    // final double newMinX = currentMin.getX() + (currentMax.getX() - currentMin.getX()) / 20;
+    //      
+    //
+    // final GM_Position newMin = GeometryFactory.createGM_Position( newMinX, currentMin.getY() );
+    // final GM_Position newMax = GeometryFactory.createGM_Position( newMaxX, currentMax.getY() );
+    //
+    // wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
+    //
+    // mapPanel.setBoundingBox( wishBBox );
+    // }
+    // else if( code == KeyEvent.VK_LEFT )
+    // {
+    // final GM_Envelope currentBBox = mapPanel.getBoundingBox();
+    //
+    // GM_Envelope wishBBox = null;
+    //
+    // final GM_Position currentMax = currentBBox.getMax();
+    // final GM_Position currentMin = currentBBox.getMin();
+    //
+    // final double newMaxX = currentMax.getX() - (currentMax.getX() - currentMin.getX()) / 20;
+    // final double newMinX = currentMin.getX() - (currentMax.getX() - currentMin.getX()) / 20;
+    //      
+    //
+    // final GM_Position newMin = GeometryFactory.createGM_Position( newMinX, currentMin.getY() );
+    // final GM_Position newMax = GeometryFactory.createGM_Position( newMaxX, currentMax.getY() );
+    //
+    // wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
+    //
+    // mapPanel.setBoundingBox( wishBBox );
+    // }
+    // else if( code == KeyEvent.VK_UP )
+    // {
+    // final GM_Envelope currentBBox = mapPanel.getBoundingBox();
+    //
+    // GM_Envelope wishBBox = null;
+    //
+    // final GM_Position currentMax = currentBBox.getMax();
+    // final GM_Position currentMin = currentBBox.getMin();
+    //
+    // final double newMaxY = currentMax.getY() + (currentMax.getY() - currentMin.getY()) / 20;
+    // final double newMinY = currentMin.getY() + (currentMax.getY() - currentMin.getY()) / 20;
+    //      
+    //
+    // final GM_Position newMin = GeometryFactory.createGM_Position( currentMin.getX(), newMinY );
+    // final GM_Position newMax = GeometryFactory.createGM_Position( currentMax.getX(), newMaxY );
+    //
+    // wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
+    //
+    // mapPanel.setBoundingBox( wishBBox );
+    // }
+    // else if( code == KeyEvent.VK_DOWN )
+    // {
+    // final GM_Envelope currentBBox = mapPanel.getBoundingBox();
+    //
+    // GM_Envelope wishBBox = null;
+    //
+    // final GM_Position currentMax = currentBBox.getMax();
+    // final GM_Position currentMin = currentBBox.getMin();
+    //
+    // final double newMaxY = currentMax.getY() - (currentMax.getY() - currentMin.getY()) / 20;
+    // final double newMinY = currentMin.getY() - (currentMax.getY() - currentMin.getY()) / 20;
+    //      
+    //
+    // final GM_Position newMin = GeometryFactory.createGM_Position( currentMin.getX(), newMinY );
+    // final GM_Position newMax = GeometryFactory.createGM_Position( currentMax.getX(), newMaxY );
+    //
+    // wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
+    //
+    // mapPanel.setBoundingBox( wishBBox );
+    // }
 
   }
 
-  
-  
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget#leftClicked(java.awt.Point)
    */
   @Override
-  public void leftClicked( Point p )
+  public void leftClicked( final Point p )
   {
     dataModel.setIgnoreMapSelection( false );
-    super.leftClicked(p);
+    super.leftClicked( p );
   }
-  
-  private void assignElevationToSelectedNodes( Point p )
+
+  private void assignElevationToSelectedNodes( final Point p )
   {
-    MapPanel mapPanel = dataModel.getMapPanel();
-    if(mapPanel==null)
+    final MapPanel mapPanel = dataModel.getMapPanel();
+    if( mapPanel == null )
     {
-      System.out.println("map panel is null");
+      // System.out.println("map panel is null");
       return;
     }
-    
-    IFeatureSelectionManager selectionManager = mapPanel.getSelectionManager();
-    IKalypsoFeatureTheme theme = getTheme( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
-    IFEDiscretisationModel1d2d model1d2d = dataModel.getDiscretisationModel();
-    if(theme==null)
+
+    final IFeatureSelectionManager selectionManager = mapPanel.getSelectionManager();
+    final IKalypsoFeatureTheme theme = getTheme( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
+    final IFEDiscretisationModel1d2d model1d2d = dataModel.getDiscretisationModel();
+    if( theme == null )
     {
-      System.out.println("Could not get node theme");
+      // System.out.println("Could not get node theme");
       return;
     }
-    CommandableWorkspace workspace = theme.getWorkspace();
-    ChangeDiscretiationModelCommand modelCommand = 
-      new ChangeDiscretiationModelCommand(workspace,model1d2d);
+    final CommandableWorkspace workspace = theme.getWorkspace();
+    final ChangeDiscretiationModelCommand modelCommand = new ChangeDiscretiationModelCommand( workspace, model1d2d );
     ChangeNodePositionCommand changeNodePosCmd = null;
 
-    IElevationProvider elevationProvider=getElevationProvider();
-    if(elevationProvider==null)
+    final IElevationProvider elevationProvider = getElevationProvider();
+    if( elevationProvider == null )
     {
-      System.out.println("could not find elevation provider 1");
+      // System.out.println("could not find elevation provider 1");
       return;
     }
-    
-    if(!selectionManager.isEmpty())
+
+    if( !selectionManager.isEmpty() )
     {
       double elevation;
-      for(EasyFeatureWrapper easyFeatureWrapper:selectionManager.getAllFeatures())
+      for( final EasyFeatureWrapper easyFeatureWrapper : selectionManager.getAllFeatures() )
       {
-        if(easyFeatureWrapper!=null)
+        if( easyFeatureWrapper != null )
         {
-          Feature feature = easyFeatureWrapper.getFeature();
-          if(feature!=null)
+          final Feature feature = easyFeatureWrapper.getFeature();
+          if( feature != null )
           {
-            IFE1D2DNode node = (IFE1D2DNode)feature.getAdapter( IFE1D2DNode.class );
-            if(node!=null)
+            final IFE1D2DNode node = (IFE1D2DNode) feature.getAdapter( IFE1D2DNode.class );
+            if( node != null )
             {
               elevation = elevationProvider.getElevation( node.getPoint() );
-              changeNodePosCmd = new ChangeNodePositionCommand(model1d2d,node,elevation);
+              changeNodePosCmd = new ChangeNodePositionCommand( model1d2d, node, elevation );
               modelCommand.addCommand( changeNodePosCmd );
             }
           }
         }
       }
-      
+
       try
       {
         workspace.postCommand( modelCommand );
       }
-      catch( Throwable th )
+      catch( final Throwable th )
       {
         th.printStackTrace();
       }
-      
+
     }
     else
     {
-    
-      if(p==null)
+
+      if( p == null )
       {
         return;
       }
-      
-      
-      //finde node
-      GM_Point point = 
-            MapUtilities.transform( 
-                  mapPanel, p );
-      final double DELTA = 
-        MapUtilities.calculateWorldDistance( 
-                                      mapPanel, 
-                                      point, 
-                                      10 );
-      IFE1D2DNode node = dataModel.getDiscretisationModel().findNode( 
-                                point, 
-                                DELTA );
-      if(node!=null)
+
+      // finde node
+      final GM_Point point = MapUtilities.transform( mapPanel, p );
+      final double DELTA = MapUtilities.calculateWorldDistance( mapPanel, point, 10 );
+      final IFE1D2DNode node = dataModel.getDiscretisationModel().findNode( point, DELTA );
+      if( node != null )
       {
         //
-        double elevation = elevationProvider.getElevation( node.getPoint() );
-        changeNodePosCmd = new ChangeNodePositionCommand(model1d2d,node,elevation);
+        final double elevation = elevationProvider.getElevation( node.getPoint() );
+        changeNodePosCmd = new ChangeNodePositionCommand( model1d2d, node, elevation );
         modelCommand.addCommand( changeNodePosCmd );
         try
         {
           workspace.postCommand( modelCommand );
         }
-        catch( Throwable th )
+        catch( final Throwable th )
         {
           th.printStackTrace();
         }
-        
+
       }
       return;
     }
   }
-  
-  private final IElevationProvider getElevationProvider()
+
+  private final IElevationProvider getElevationProvider( )
   {
     IElevationProvider elevationProvider = dataModel.getElevationModel();
-    if(elevationProvider==null)
+    if( elevationProvider == null )
     {
-      System.out.println("Could not found selected elevation model; trying to use elevation model system");
+      // System.out.println("Could not found selected elevation model; trying to use elevation model system");
       elevationProvider = dataModel.getElevationModelSystem();
-      if(elevationProvider==null)
+      if( elevationProvider == null )
       {
-        System.out.println("Could not find elevation model system");
+        // System.out.println("Could not find elevation model system");
       }
     }
     return elevationProvider;
@@ -719,37 +683,31 @@ public class ApplyElevationWidget
    * @see org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget#paint(java.awt.Graphics)
    */
   @Override
-  public void paint( Graphics g )
+  public void paint( final Graphics g )
   {
-    super.paint(g);
+    super.paint( g );
     drawElevationData( g, point );
     drawHandle( g, point, Color.BLUE, 6 );
   }
-  
-  public static final void drawHandle(
-                          Graphics g, 
-                          Point currentPoint, 
-                          Color handleColor, 
-                          int squareWidth)
+
+  public static final void drawHandle( final Graphics g, final Point currentPoint, final Color handleColor, final int squareWidth )
   {
-    if(currentPoint==null)
+    if( currentPoint == null )
     {
       return;
     }
-    
-    int pointRectSizeHalf=squareWidth/2;
-    g.drawRect( 
-        (int) currentPoint.getX() - pointRectSizeHalf, 
-        (int) currentPoint.getY() - pointRectSizeHalf, 
-        squareWidth, 
-        squareWidth );
+
+    final int pointRectSizeHalf = squareWidth / 2;
+    g.drawRect( (int) currentPoint.getX() - pointRectSizeHalf, (int) currentPoint.getY() - pointRectSizeHalf, squareWidth, squareWidth );
   }
+
   /**
-   * @see org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget#canBeActivated(org.eclipse.jface.viewers.ISelection, org.kalypso.ogc.gml.map.MapPanel)
+   * @see org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget#canBeActivated(org.eclipse.jface.viewers.ISelection,
+   *      org.kalypso.ogc.gml.map.MapPanel)
    */
   @Override
-  public boolean canBeActivated( ISelection selection, MapPanel mapPanel )
+  public boolean canBeActivated( final ISelection selection, final MapPanel mapPanel )
   {
-    return true;//super.canBeActivated(selection, mapPanel);
+    return true;// super.canBeActivated(selection, mapPanel);
   }
 }

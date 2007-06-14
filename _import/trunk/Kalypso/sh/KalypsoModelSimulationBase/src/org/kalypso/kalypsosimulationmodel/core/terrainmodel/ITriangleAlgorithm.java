@@ -40,27 +40,28 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.ISurfacePatchVisitor;
 
 /**
  * @author madanago
- *
+ * 
  */
 public interface ITriangleAlgorithm
 {
+  public boolean furtherDivisionNeeded( GM_Position[] coOrds );
 
-  public abstract boolean furtherDivisionNeeded( GM_Position[] coOrds );
-
-  public abstract HashMap<GM_Surface, Double> visitThisDivisionSurface( GM_Surface pos );
+  public Map<GM_SurfacePatch, Double> visitThisDivisionSurface( GM_SurfacePatch patch );
 
   /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitable#aceptSurfacePatches(org.kalypsodeegree.model.geometry.GM_Envelope, org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitor)
+   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitable#aceptSurfacePatches(org.kalypsodeegree.model.geometry.GM_Envelope,
+   *      org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitor)
    */
-  public abstract void acceptSurfacePatches( GM_Envelope envToVisit, SurfacePatchVisitor surfacePatchVisitor ) throws GM_Exception;
+  public void acceptSurfacePatches( GM_Envelope envToVisit, ISurfacePatchVisitor surfacePatchVisitor ) throws GM_Exception;
 
 }

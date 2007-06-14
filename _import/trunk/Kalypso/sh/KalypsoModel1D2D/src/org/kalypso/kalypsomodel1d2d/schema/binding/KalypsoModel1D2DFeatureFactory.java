@@ -65,7 +65,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.model.IStaticModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.SimulationModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.StaticModel1D2D;
 import org.kalypso.kalypsomodel1d2d.ui.map.merge.FERoughnessDisplayElement;
-import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.SurfacePatchVisitableDisplayElement;
+import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.ElevationModelDisplayElementFactory;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.modeling.ISimulationModel;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
@@ -87,18 +87,18 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
   {
     // TODO: Please dont pollute the console with stuff which happens verrrry often.
     // Comment this in if (and only if) a tracig option is introduced to switch it on/off.
-//
-// final String id = (featureToAdapt==null)?null:featureToAdapt.getId();
-// String msg =
-// String.format(
-// "Unable to provide log for:"+
-// "\n\tfeatureType=%S"+
-// "\n\tfeatureID=%s"+
-// "\n\ttargetClass=%s",
-// featureQName,
-// id,
-// targetClass );
-// logger.warning( msg );
+    //
+    // final String id = (featureToAdapt==null)?null:featureToAdapt.getId();
+    // String msg =
+    // String.format(
+    // "Unable to provide log for:"+
+    // "\n\tfeatureType=%S"+
+    // "\n\tfeatureID=%s"+
+    // "\n\ttargetClass=%s",
+    // featureQName,
+    // id,
+    // targetClass );
+    // logger.warning( msg );
   }
 
   interface AdapterConstructor
@@ -210,7 +210,6 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
     // registered for IFE1D2DElement.class but generates the most specific type
     cTor = new AdapterConstructor()
     {
-
       public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
       {
         final QName featureQName = feature.getFeatureType().getQName();
@@ -254,24 +253,24 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
     cMap.put( IElement2D.class, cTor );
     cMap.put( IPolyElement.class, cTor );
     // PolyElement
-//    cTor = new AdapterConstructor()
-//    {
-//      public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
-//      {
-//        final QName featureQName = feature.getFeatureType().getQName();
-//
-//        if( featureQName.equals( Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT ) )
-//        {
-//          return new PolyElement( feature );
-//        }
-//        else
-//        {
-//          warnUnableToAdapt( feature, featureQName, IPolyElement.class );
-//          return null;
-//        }
-//      }
-//    };
-//    cMap.put( IPolyElement.class, cTor );
+    // cTor = new AdapterConstructor()
+    // {
+    // public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
+    // {
+    // final QName featureQName = feature.getFeatureType().getQName();
+    //
+    // if( featureQName.equals( Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT ) )
+    // {
+    // return new PolyElement( feature );
+    // }
+    // else
+    // {
+    // warnUnableToAdapt( feature, featureQName, IPolyElement.class );
+    // return null;
+    // }
+    // }
+    // };
+    // cMap.put( IPolyElement.class, cTor );
 
     // 1d2d 1d-element
     cTor = new AdapterConstructor()
@@ -385,6 +384,11 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
           return new FE1D2DComplexElement<IFE1D2DElement>( feature, Kalypso1D2DSchemaConstants.WB1D2D_F_COMPLEX_ELE_2D, Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELE_2D,// elements
           IFE1D2DElement.class );
         }
+        else if( featureQName.equals( Kalypso1D2DSchemaConstants.WB1D2D_F_RIVER_CHANNEL1D ) )
+        {
+          return new FE1D2DComplexElement<Element1D>( feature, Kalypso1D2DSchemaConstants.WB1D2D_F_RIVER_CHANNEL1D, Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT1D,// elements
+          Element1D.class );
+        }
         else if( featureQName.equals( Kalypso1D2DSchemaConstants.WB1D2D_F_JUNTCION_CONTEXT_1D_2D ) )
         {
           return new JunctionContext1DTo2D( feature );
@@ -429,33 +433,33 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
     };
     cMap.put( IRiverChannel1D.class, cTor );
 
-// // JunctionContext
-// cTor = new AdapterConstructor()
-// {
-// public Object constructAdapter(
-// Feature feature,
-// Class cls)
-// throws IllegalArgumentException
-// {
-// QName featureQName = feature.getFeatureType().getQName();
-// if(featureQName.equals(
-// Kalypso1D2DSchemaConstants.WB1D2D_F_JUNTCION_CONTEXT_1D_2D) )
-// {
-// return new JunctionContext1DTo2D(feature);
-// }
-// else if(featureQName.equals(
-// Kalypso1D2DSchemaConstants.WB1D2D_F_JUNTCION_CONTEXT_1D_CLINE) )
-// {
-// return new JunctionContext1DToCLine(feature);
-// }
-// else
-// {
-// return null;
-// }
-// }
-// };
-// cMap.put(IJunctionContext1DTo2D.class, cTor);
-// cMap.put( IJunctionContext1DToCLine.class, cTor );
+    // // JunctionContext
+    // cTor = new AdapterConstructor()
+    // {
+    // public Object constructAdapter(
+    // Feature feature,
+    // Class cls)
+    // throws IllegalArgumentException
+    // {
+    // QName featureQName = feature.getFeatureType().getQName();
+    // if(featureQName.equals(
+    // Kalypso1D2DSchemaConstants.WB1D2D_F_JUNTCION_CONTEXT_1D_2D) )
+    // {
+    // return new JunctionContext1DTo2D(feature);
+    // }
+    // else if(featureQName.equals(
+    // Kalypso1D2DSchemaConstants.WB1D2D_F_JUNTCION_CONTEXT_1D_CLINE) )
+    // {
+    // return new JunctionContext1DToCLine(feature);
+    // }
+    // else
+    // {
+    // return null;
+    // }
+    // }
+    // };
+    // cMap.put(IJunctionContext1DTo2D.class, cTor);
+    // cMap.put( IJunctionContext1DToCLine.class, cTor );
 
     // DiscretisationModel
     cTor = new AdapterConstructor()
@@ -477,7 +481,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
     };
     cMap.put( IFEDiscretisationModel1d2d.class, cTor );
 
-// StaticModel1D2D
+    // StaticModel1D2D
     cTor = new AdapterConstructor()
     {
       public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
@@ -497,7 +501,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
     };
     cMap.put( IStaticModel1D2D.class, cTor );
 
-// ControlModel
+    // ControlModel
     cTor = new AdapterConstructor()
     {
       public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
@@ -516,7 +520,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
       }
     };
     cMap.put( IControlModel1D2D.class, cTor );
-// SimulationModel
+    // SimulationModel
     cTor = new AdapterConstructor()
     {
       public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
@@ -536,7 +540,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
     };
     cMap.put( ISimulationModel.class, cTor );
 
-// IDisplayElement
+    // IDisplayElement
     cTor = new AdapterConstructor()
     {
       public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
@@ -544,7 +548,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
         final QName name = feature.getFeatureType().getQName();
         if( KalypsoModelSimulationBaseConsts.SIM_BASE_F_NATIVE_TERRAIN_ELE_WRAPPER.equals( name ) )
         {
-          return SurfacePatchVisitableDisplayElement.createDisplayElement( feature );
+          return ElevationModelDisplayElementFactory.createDisplayElement( feature );
         }
         else if( Kalypso1D2DSchemaConstants.WB1D2D_F_STATIC_MODEL.equals( name ) )
         {

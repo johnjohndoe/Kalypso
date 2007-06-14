@@ -67,167 +67,161 @@ import org.kalypso.kalypsosimulationmodel.core.Util;
 
 /**
  * @author Madanagopal
- *
+ * 
  */
-@SuppressWarnings({"unchecked","hiding","synthetic-access"})
-class CreateCalculationUnitDialog extends Dialog{
-  
+@SuppressWarnings( { "unchecked", "hiding", "synthetic-access" })
+class CreateCalculationUnitDialog extends Dialog
+{
+
   private static final String QNAME_KEY_1D2D = "1D/2D";
 
   private static final String QNAME_KEY_2D = "2D";
 
   private static final String QNAME_KEY_1D = "1D";
-  
+
   private static final int RESET_ID = IDialogConstants.NO_TO_ALL_ID + 1;
+
   public static final int OK_APPLIED = IDialogConstants.OK_ID;
-  
+
   private Text nameField;
+
   private Text typeField;
-  private String defaultDescriptionText = "Geben Sie eine Deskription fur das Complex Element";
+
+  private final String defaultDescriptionText = "Geben Sie eine Deskription fur das Complex Element";
+
   private Combo typeCombo;
+
   private Text descriptionText;
 
   private final KeyBasedDataModel dataModel;
 
   private ICalculationUnit createdCalculationUnit;
 
-  protected CreateCalculationUnitDialog( 
-                            Shell parentShell,
-                            KeyBasedDataModel dataModel )
+  protected CreateCalculationUnitDialog( final Shell parentShell, final KeyBasedDataModel dataModel )
   {
     super( parentShell );
     parentShell.setText( "Berechnungseinheit Hinzufügen" );
-    this.dataModel =  dataModel;
+    this.dataModel = dataModel;
   }
-  
+
   @Override
-  protected Control createDialogArea(Composite parent)
+  protected Control createDialogArea( final Composite parent )
   {
-    Composite comp = (Composite)super.createDialogArea(parent);
-    
-    GridLayout layout = (GridLayout)comp.getLayout();
+    final Composite comp = (Composite) super.createDialogArea( parent );
+
+    final GridLayout layout = (GridLayout) comp.getLayout();
     layout.numColumns = 2;
-    
-    Label nameLabel = new Label(comp, SWT.RIGHT);
-    nameLabel.setText("Name: ");
-    
-    nameField = new Text(comp, SWT.SINGLE|SWT.BORDER);
-    GridData data = new GridData(GridData.FILL_HORIZONTAL);
-    nameField.setLayoutData(data);
-    
-    Label typeLabel = new Label(comp, SWT.RIGHT);
-    typeLabel.setText("Type: ");
-    
-    //@TODO A Combo Field
-    
-    typeCombo = new Combo(comp, SWT.RIGHT|SWT.READ_ONLY|SWT.BORDER);
+
+    final Label nameLabel = new Label( comp, SWT.RIGHT );
+    nameLabel.setText( "Name: " );
+
+    nameField = new Text( comp, SWT.SINGLE | SWT.BORDER );
+    GridData data = new GridData( GridData.FILL_HORIZONTAL );
+    nameField.setLayoutData( data );
+
+    final Label typeLabel = new Label( comp, SWT.RIGHT );
+    typeLabel.setText( "Type: " );
+
+    // @TODO A Combo Field
+
+    typeCombo = new Combo( comp, SWT.RIGHT | SWT.READ_ONLY | SWT.BORDER );
     typeCombo.add( QNAME_KEY_1D );
     typeCombo.add( QNAME_KEY_2D );
     typeCombo.add( QNAME_KEY_1D2D );
-    data = new GridData(GridData.FILL_HORIZONTAL);
-    typeCombo.setLayoutData( data );      
-    
-    Label DescriptionLabel = new Label(comp, SWT.RIGHT);
-    DescriptionLabel.setText("Description: ");
-    
-    descriptionText = new Text(comp, SWT.BORDER | SWT.MULTI );
+    data = new GridData( GridData.FILL_HORIZONTAL );
+    typeCombo.setLayoutData( data );
+
+    final Label DescriptionLabel = new Label( comp, SWT.RIGHT );
+    DescriptionLabel.setText( "Description: " );
+
+    descriptionText = new Text( comp, SWT.BORDER | SWT.MULTI );
     descriptionText.setText( defaultDescriptionText );
-    data = new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING ); 
+    data = new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING );
     data.heightHint = 100;
     descriptionText.setLayoutData( data );
     return comp;
   }
-  
+
   @Override
-  protected void createButtonsForButtonBar(Composite parent)
+  protected void createButtonsForButtonBar( final Composite parent )
   {
-    super.createButtonsForButtonBar(parent);
-    createButton(parent, RESET_ID, "Reset All", false);
+    super.createButtonsForButtonBar( parent );
+    createButton( parent, RESET_ID, "Reset All", false );
   }
-  
+
   @Override
-  protected void buttonPressed(int buttonId)
+  protected void buttonPressed( final int buttonId )
   {
-    if(buttonId == RESET_ID)
+    if( buttonId == RESET_ID )
     {
-      nameField.setText("");
-      typeCombo.select( 0 );        
-      descriptionText.setText(defaultDescriptionText);
+      nameField.setText( "" );
+      typeCombo.select( 0 );
+      descriptionText.setText( defaultDescriptionText );
     }
-    if (buttonId == OK_APPLIED)
+    if( buttonId == OK_APPLIED )
     {
-      System.out.println(nameField.getText()+","+typeCombo.getText()+","+descriptionText.getText());
+      System.out.println( nameField.getText() + "," + typeCombo.getText() + "," + descriptionText.getText() );
       final String name = nameField.getText();
       final String qNameKey = typeCombo.getText();
       final String desc = descriptionText.getText();
-      
-      //model is taken from the current context
-      CreateCalculationUnitCmd cmd = 
-          new CreateCalculationUnitCmd(
-                  getCUnitQName( qNameKey ),
-          Util.getModel( IFEDiscretisationModel1d2d.class ),
-          name,
-          desc )
+
+      // model is taken from the current context
+      final CreateCalculationUnitCmd cmd = new CreateCalculationUnitCmd( getCUnitQName( qNameKey ), Util.getModel( IFEDiscretisationModel1d2d.class ), name, desc )
       {
         /**
          * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.CreateCalculationUnitCmd#process()
          */
-        @SuppressWarnings({"unchecked","synthetic-access"})
+        @SuppressWarnings( { "unchecked", "synthetic-access" })
         @Override
         public void process( ) throws Exception
         {
           super.process();
-          //reset list of calculation units
-          IFEDiscretisationModel1d2d model1d2d =
-            (IFEDiscretisationModel1d2d) 
-            dataModel.getData( ICommonKeys.KEY_DISCRETISATION_MODEL );
-          List<ICalculationUnit> calUnits = 
-            CalUnitOps.getModelCalculationUnits( model1d2d );
+          // reset list of calculation units
+          IFEDiscretisationModel1d2d model1d2d = (IFEDiscretisationModel1d2d) dataModel.getData( ICommonKeys.KEY_DISCRETISATION_MODEL );
+          List<ICalculationUnit> calUnits = CalUnitOps.getModelCalculationUnits( model1d2d );
           dataModel.setData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST, calUnits );
-          
-          //set the create unit as selected
-          dataModel.setData( 
-                ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, 
-                getCreatedCalculationUnit() );
-          
+
+          // set the create unit as selected
+          dataModel.setData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, getCreatedCalculationUnit() );
+
         }
       };
-//      ICommandTarget cmdTarget =
-//        (ICommandTarget) dataModel.getData( ICommonKeys.KEY_COMMAND_TARGET );
-//      if( cmdTarget == null )
-//      {
-//        throw new RuntimeException(
-//            "Could not found command target; not set in the data model" );
-//      }
-      //cmdTarget.postCommand( cmd, null );
+      // ICommandTarget cmdTarget =
+      // (ICommandTarget) dataModel.getData( ICommonKeys.KEY_COMMAND_TARGET );
+      // if( cmdTarget == null )
+      // {
+      // throw new RuntimeException(
+      // "Could not found command target; not set in the data model" );
+      // }
+      // cmdTarget.postCommand( cmd, null );
       KeyBasedDataModelUtil.postCommand( dataModel, cmd );
-      
-      super.okPressed();   
+
+      super.okPressed();
       this.createdCalculationUnit = cmd.getCreatedCalculationUnit();
     }
     else
     {
-      super.buttonPressed(buttonId);
+      super.buttonPressed( buttonId );
     }
-  }   
-  
+  }
+
   /**
    * Return the QNane associated with the given key
-   * @param qNameKey the q-name key
+   * 
+   * @param qNameKey
+   *            the q-name key
    * @return return the QName for the given key
-   * @throws RuntimeException if qNameKey is an unknown key
+   * @throws RuntimeException
+   *             if qNameKey is an unknown key
    */
-  private static final QName getCUnitQName( 
-                              String qNameKey )
-                              throws RuntimeException
+  private static final QName getCUnitQName( final String qNameKey ) throws RuntimeException
   {
-    if( QNAME_KEY_1D.equals( qNameKey ))
+    if( QNAME_KEY_1D.equals( qNameKey ) )
     {
       return Kalypso1D2DSchemaConstants.WB1D2D_F_CALC_UNIT_1D;
     }
     else if( QNAME_KEY_2D.equals( qNameKey ) )
     {
-      
       return Kalypso1D2DSchemaConstants.WB1D2D_F_CALC_UNIT_2D;
     }
     else if( QNAME_KEY_1D2D.equals( qNameKey ) )
@@ -236,12 +230,12 @@ class CreateCalculationUnitDialog extends Dialog{
     }
     else
     {
-      throw new RuntimeException("Unknown qNameKey:"+qNameKey);
+      throw new RuntimeException( "Unknown qNameKey:" + qNameKey );
     }
   }
-  
-//  public ICalculationUnit getCreatedCalculationUnit()
-//  {
-//    return createdCalculationUnit;
-//  }
-}  
+
+  // public ICalculationUnit getCreatedCalculationUnit()
+  // {
+  // return createdCalculationUnit;
+  // }
+}
