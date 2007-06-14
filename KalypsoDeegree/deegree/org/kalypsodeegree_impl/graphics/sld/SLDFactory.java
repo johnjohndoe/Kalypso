@@ -171,7 +171,7 @@ public class SLDFactory
   {
     final StringReader sr = new StringReader( s );
 
-    return createSLD( urlResolver, sr );
+    return SLDFactory.createSLD( urlResolver, sr );
   }
 
   /**
@@ -191,7 +191,7 @@ public class SLDFactory
     try
     {
       final Document doc = XMLTools.parse( reader );
-      sld = createStyledLayerDescriptor( urlResolver, doc.getDocumentElement() );
+      sld = SLDFactory.createStyledLayerDescriptor( urlResolver, doc.getDocumentElement() );
     }
     catch( final IOException e )
     {
@@ -238,45 +238,35 @@ public class SLDFactory
     final Element geometryElement = XMLTools.getChildByName( "Geometry", CommonNamespaces.SLDNS, element );
 
     if( geometryElement != null )
-    {
-      geometry = createGeometry( geometryElement );
-    }
+      geometry = SLDFactory.createGeometry( geometryElement );
 
     // optional: <Label>
     ParameterValueType label = null;
     final Element labelElement = XMLTools.getChildByName( "Label", CommonNamespaces.SLDNS, element );
 
     if( labelElement != null )
-    {
-      label = createParameterValueType( labelElement );
-    }
+      label = SLDFactory.createParameterValueType( labelElement );
 
     // optional: <Font>
     Font font = null;
     final Element fontElement = XMLTools.getChildByName( "Font", CommonNamespaces.SLDNS, element );
 
     if( fontElement != null )
-    {
-      font = createFont( fontElement );
-    }
+      font = SLDFactory.createFont( fontElement );
 
     // optional: <LabelPlacement>
     LabelPlacement labelPlacement = null;
     final Element lpElement = XMLTools.getChildByName( "LabelPlacement", CommonNamespaces.SLDNS, element );
 
     if( lpElement != null )
-    {
-      labelPlacement = createLabelPlacement( lpElement );
-    }
+      labelPlacement = SLDFactory.createLabelPlacement( lpElement );
 
     // optional: <Halo>
     Halo halo = null;
     final Element haloElement = XMLTools.getChildByName( "Halo", CommonNamespaces.SLDNS, element );
 
     if( haloElement != null )
-    {
-      halo = createHalo( urlResolver, haloElement );
-    }
+      halo = SLDFactory.createHalo( urlResolver, haloElement );
 
     // optional: <Fill>
     final Fill fill = null;
@@ -302,27 +292,21 @@ public class SLDFactory
     final Element radiusElement = XMLTools.getChildByName( "Radius", CommonNamespaces.SLDNS, element );
 
     if( radiusElement != null )
-    {
-      radius = createParameterValueType( radiusElement );
-    }
+      radius = SLDFactory.createParameterValueType( radiusElement );
 
     // optional: <Fill>
     Fill fill = null;
     final Element fillElement = XMLTools.getChildByName( "Fill", CommonNamespaces.SLDNS, element );
 
     if( fillElement != null )
-    {
-      fill = createFill( urlResolver, fillElement );
-    }
+      fill = SLDFactory.createFill( urlResolver, fillElement );
 
     // optional: <Stroke>
     Stroke stroke = null;
     final Element strokeElement = XMLTools.getChildByName( "Stroke", CommonNamespaces.SLDNS, element );
 
     if( strokeElement != null )
-    {
-      stroke = createStroke( urlResolver, strokeElement );
-    }
+      stroke = SLDFactory.createStroke( urlResolver, strokeElement );
 
     return new Halo_Impl( radius, fill, stroke );
   }
@@ -348,42 +332,28 @@ public class SLDFactory
     LinePlacement lPlacement = null;
 
     for( int i = 0; i < nodelist.getLength(); i++ )
-    {
       if( nodelist.item( i ) instanceof Element )
       {
         final Element child = (Element) nodelist.item( i );
         final String namespace = child.getNamespaceURI();
 
         if( !CommonNamespaces.SLDNS.equals( namespace ) )
-        {
           continue;
-        }
 
         final String childName = child.getLocalName();
 
         if( childName.equals( "PointPlacement" ) )
-        {
-          pPlacement = createPointPlacement( child );
-        }
+          pPlacement = SLDFactory.createPointPlacement( child );
         else if( childName.equals( "LinePlacement" ) )
-        {
-          lPlacement = createLinePlacement( child );
-        }
+          lPlacement = SLDFactory.createLinePlacement( child );
       }
-    }
 
     if( (pPlacement != null) && (lPlacement == null) )
-    {
       labelPlacement = new LabelPlacement_Impl( pPlacement );
-    }
     else if( (pPlacement == null) && (lPlacement != null) )
-    {
       labelPlacement = new LabelPlacement_Impl( lPlacement );
-    }
     else
-    {
       throw new XMLParsingException( "Element 'LabelPlacement' must contain exactly one " + "'PointPlacement'- or one 'LinePlacement'-element!" );
-    }
 
     return labelPlacement;
   }
@@ -406,10 +376,8 @@ public class SLDFactory
     boolean auto = false;
     final String autoStr = XMLTools.getAttrValue( element, "auto" );
 
-    if( autoStr != null && autoStr.equals( "true" ) )
-    {
+    if( (autoStr != null) && autoStr.equals( "true" ) )
       auto = true;
-    }
 
     // optional: <AnchorPoint>
     ParameterValueType[] anchorPoint = null;
@@ -423,12 +391,10 @@ public class SLDFactory
       final Element apYElement = XMLTools.getChildByName( "AnchorPointY", CommonNamespaces.SLDNS, apElement );
 
       if( (apXElement == null) || (apYElement == null) )
-      {
         throw new XMLParsingException( "Element 'AnchorPoint' must contain exactly one " + "'AnchorPointX'- and one 'AnchorPointY'-element!" );
-      }
 
-      anchorPoint[0] = createParameterValueType( apXElement );
-      anchorPoint[1] = createParameterValueType( apYElement );
+      anchorPoint[0] = SLDFactory.createParameterValueType( apXElement );
+      anchorPoint[1] = SLDFactory.createParameterValueType( apYElement );
     }
 
     // optional: <Displacement>
@@ -443,12 +409,10 @@ public class SLDFactory
       final Element dYElement = XMLTools.getChildByName( "DisplacementY", CommonNamespaces.SLDNS, dElement );
 
       if( (dXElement == null) || (dYElement == null) )
-      {
         throw new XMLParsingException( "Element 'Displacement' must contain exactly one " + "'DisplacementX'- and one 'DisplacementY'-element!" );
-      }
 
-      displacement[0] = createParameterValueType( dXElement );
-      displacement[1] = createParameterValueType( dYElement );
+      displacement[0] = SLDFactory.createParameterValueType( dXElement );
+      displacement[1] = SLDFactory.createParameterValueType( dYElement );
     }
 
     // optional: <Rotation>
@@ -456,9 +420,7 @@ public class SLDFactory
     final Element rElement = XMLTools.getChildByName( "Rotation", CommonNamespaces.SLDNS, element );
 
     if( rElement != null )
-    {
-      rotation = createParameterValueType( rElement );
-    }
+      rotation = SLDFactory.createParameterValueType( rElement );
 
     return new PointPlacement_Impl( anchorPoint, displacement, rotation, auto );
   }
@@ -482,27 +444,21 @@ public class SLDFactory
     final Element pOffsetElement = XMLTools.getChildByName( "PerpendicularOffset", CommonNamespaces.SLDNS, element );
 
     if( pOffsetElement != null )
-    {
-      pOffset = createParameterValueType( pOffsetElement );
-    }
+      pOffset = SLDFactory.createParameterValueType( pOffsetElement );
 
     // optional: <Gap> (this is deegree-specific)
     ParameterValueType gap = null;
     final Element gapElement = XMLTools.getChildByName( "Gap", CommonNamespaces.SLDNS, element );
 
     if( gapElement != null )
-    {
-      gap = createParameterValueType( gapElement );
-    }
+      gap = SLDFactory.createParameterValueType( gapElement );
 
     // optional: <LineWidth> (this is deegree-specific)
     ParameterValueType lineWidth = null;
     final Element lineWidthElement = XMLTools.getChildByName( "LineWidth", CommonNamespaces.SLDNS, element );
 
     if( lineWidthElement != null )
-    {
-      lineWidth = createParameterValueType( lineWidthElement );
-    }
+      lineWidth = SLDFactory.createParameterValueType( lineWidthElement );
 
     return new LinePlacement_Impl( pOffset, lineWidth, gap );
   }
@@ -527,7 +483,7 @@ public class SLDFactory
 
     for( int i = 0; i < nl.getLength(); i++ )
     {
-      final CssParameter cssParam = createCssParameter( nl.item( i ) );
+      final CssParameter cssParam = SLDFactory.createCssParameter( nl.item( i ) );
       cssParams.put( cssParam.getName(), cssParam );
     }
 
@@ -605,29 +561,21 @@ public class SLDFactory
     final ArrayList layerList = new ArrayList( 100 );
 
     for( int i = 0; i < nodelist.getLength(); i++ )
-    {
       if( nodelist.item( i ) instanceof Element )
       {
         final Element child = (Element) nodelist.item( i );
         final String namespace = child.getNamespaceURI();
 
         if( !CommonNamespaces.SLDNS.equals( namespace ) )
-        {
           continue;
-        }
 
         final String childName = child.getLocalName();
 
         if( childName.equals( "NamedLayer" ) )
-        {
-          layerList.add( createNamedLayer( urlResolver, child ) );
-        }
+          layerList.add( SLDFactory.createNamedLayer( urlResolver, child ) );
         else if( childName.equals( "UserLayer" ) )
-        {
-          layerList.add( createUserLayer( urlResolver, child ) );
-        }
+          layerList.add( SLDFactory.createUserLayer( urlResolver, child ) );
       }
-    }
 
     final Layer[] layers = (Layer[]) layerList.toArray( new Layer[layerList.size()] );
 
@@ -678,9 +626,7 @@ public class SLDFactory
     final String service = XMLTools.getRequiredStringValue( "Service", CommonNamespaces.SLDNS, element );
 
     if( !(service.equals( "WFS" ) || service.equals( "WCS" )) )
-    {
       throw new XMLParsingException( "Value ('" + service + "') of element 'service' is invalid. " + "Allowed values are: 'WFS' and 'WCS'." );
-    }
 
     // required: <OnlineResource>
     final Element onlineResourceElement = XMLTools.getRequiredChildByName( "OnlineResource", CommonNamespaces.SLDNS, element );
@@ -720,38 +666,28 @@ public class SLDFactory
     final Element lfcElement = XMLTools.getChildByName( "LayerFeatureConstraints", CommonNamespaces.SLDNS, element );
 
     if( lfcElement != null )
-    {
-      lfc = createLayerFeatureConstraints( lfcElement );
-    }
+      lfc = SLDFactory.createLayerFeatureConstraints( lfcElement );
 
     // optional: <NamedStyle>(s) / <UserStyle>(s)
     final NodeList nodelist = element.getChildNodes();
     final ArrayList styleList = new ArrayList();
 
     for( int i = 0; i < nodelist.getLength(); i++ )
-    {
       if( nodelist.item( i ) instanceof Element )
       {
         final Element child = (Element) nodelist.item( i );
         final String namespace = child.getNamespaceURI();
 
         if( !CommonNamespaces.SLDNS.equals( namespace ) )
-        {
           continue;
-        }
 
         final String childName = child.getLocalName();
 
         if( childName.equals( "NamedStyle" ) )
-        {
-          styleList.add( createNamedStyle( child ) );
-        }
+          styleList.add( SLDFactory.createNamedStyle( child ) );
         else if( childName.equals( "UserStyle" ) )
-        {
-          styleList.add( createUserStyle( urlResolver, child ) );
-        }
+          styleList.add( SLDFactory.createUserStyle( urlResolver, child ) );
       }
-    }
 
     final Style[] styles = (Style[]) styleList.toArray( new Style[styleList.size()] );
 
@@ -787,23 +723,19 @@ public class SLDFactory
     final Element remoteOWSElement = XMLTools.getChildByName( "RemoteOWS", CommonNamespaces.SLDNS, element );
 
     if( remoteOWSElement != null )
-    {
-      remoteOWS = createRemoteOWS( remoteOWSElement );
-    }
+      remoteOWS = SLDFactory.createRemoteOWS( remoteOWSElement );
 
     // required: <LayerFeatureConstraints>
     LayerFeatureConstraints lfc = null;
     final Element lfcElement = XMLTools.getRequiredChildByName( "LayerFeatureConstraints", CommonNamespaces.SLDNS, element );
-    lfc = createLayerFeatureConstraints( lfcElement );
+    lfc = SLDFactory.createLayerFeatureConstraints( lfcElement );
 
     // optional: <UserStyle>(s)
     final ElementList nodelist = XMLTools.getChildElementsByName( "UserStyle", CommonNamespaces.SLDNS, element );
     final UserStyle[] styles = new UserStyle[nodelist.getLength()];
 
     for( int i = 0; i < nodelist.getLength(); i++ )
-    {
-      styles[i] = createUserStyle( urlResolver, nodelist.item( i ) );
-    }
+      styles[i] = SLDFactory.createUserStyle( urlResolver, nodelist.item( i ) );
 
     return new UserLayer_Impl( name, lfc, styles, remoteOWS );
   }
@@ -826,21 +758,17 @@ public class SLDFactory
 
     // optional: <Filter>
     Filter filter = null;
-    final Element filterElement = XMLTools.getChildByName( "Filter", ogcNS, element );
+    final Element filterElement = XMLTools.getChildByName( "Filter", SLDFactory.ogcNS, element );
 
     if( filterElement != null )
-    {
       filter = AbstractFilter.buildFromDOM( filterElement );
-    }
 
     // optional: <Extent>(s)
     final ElementList nodelist = XMLTools.getChildElementsByName( "Extent", CommonNamespaces.SLDNS, element );
     final Extent[] extents = new Extent[nodelist.getLength()];
 
     for( int i = 0; i < nodelist.getLength(); i++ )
-    {
-      extents[i] = createExtent( nodelist.item( i ) );
-    }
+      extents[i] = SLDFactory.createExtent( nodelist.item( i ) );
 
     return new FeatureTypeConstraint_Impl( name, filter, extents );
   }
@@ -884,9 +812,7 @@ public class SLDFactory
     final FeatureTypeConstraint[] ftcs = new FeatureTypeConstraint[nodelist.getLength()];
 
     for( int i = 0; i < nodelist.getLength(); i++ )
-    {
-      ftcs[i] = createFeatureTypeConstraint( nodelist.item( i ) );
-    }
+      ftcs[i] = SLDFactory.createFeatureTypeConstraint( nodelist.item( i ) );
 
     return new LayerFeatureConstraints_Impl( ftcs );
   }
@@ -916,26 +842,18 @@ public class SLDFactory
     boolean isDefault = false;
 
     if( defaultString != null )
-    {
       if( defaultString.equals( "1" ) )
-      {
         isDefault = true;
-      }
-    }
 
     // required: <FeatureTypeStyle> (s)
     final ElementList nl = XMLTools.getChildElementsByName( "FeatureTypeStyle", CommonNamespaces.SLDNS, element );
     final FeatureTypeStyle[] styles = new FeatureTypeStyle[nl.getLength()];
 
     if( styles.length == 0 )
-    {
       throw new XMLParsingException( "Required child-element 'FeatureTypeStyle' of element " + "'UserStyle' is missing!" );
-    }
 
     for( int i = 0; i < nl.getLength(); i++ )
-    {
-      styles[i] = createFeatureTypeStyle( urlResolver, nl.item( i ) );
-    }
+      styles[i] = SLDFactory.createFeatureTypeStyle( urlResolver, nl.item( i ) );
 
     return new UserStyle_Impl( name, title, abstract_, isDefault, styles );
   }
@@ -983,47 +901,35 @@ public class SLDFactory
     final ArrayList elseRules = new ArrayList();
 
     for( int i = 0; i < nodelist.getLength(); i++ )
-    {
       if( nodelist.item( i ) instanceof Element )
       {
         final Element child = (Element) nodelist.item( i );
         final String namespace = child.getNamespaceURI();
 
         if( !CommonNamespaces.SLDNS.equals( namespace ) )
-        {
           continue;
-        }
 
         final String childName = child.getLocalName();
 
         if( childName.equals( "Rule" ) )
         {
-          final Rule rule = createRule( urlResolver, child );
+          final Rule rule = SLDFactory.createRule( urlResolver, child );
           if( rule.hasElseFilter() )
-          {
             elseRules.add( rule );
-          }
-          else if( rule.getFilter() == null || rule.getFilter() instanceof ComplexFilter )
-          {
+          else if( (rule.getFilter() == null) || (rule.getFilter() instanceof ComplexFilter) )
             filters.add( rule.getFilter() );
-          }
           ruleList.add( rule );
         }
         else if( childName.equals( "SemanticTypeIdentifier" ) )
-        {
           typeIdentifierList.add( XMLTools.getStringValue( child ) );
-        }
       }
-    }
 
     // compute and set the ElseFilter for all ElseFilter-Rules
     Filter elseFilter = null;
     // a Rule exists with no Filter at all -> elseFilter = false
     if( filters.contains( null ) )
-    {
       elseFilter = new FalseFilter();
-      // one Rule with a Filter exists -> elseFilter = NOT Filter
-    }
+    // one Rule with a Filter exists -> elseFilter = NOT Filter
     else if( filters.size() == 1 )
     {
       elseFilter = new ComplexFilter( OperationDefines.NOT );
@@ -1047,9 +953,7 @@ public class SLDFactory
     }
     final Iterator it = elseRules.iterator();
     while( it.hasNext() )
-    {
       ((Rule) it.next()).setFilter( elseFilter );
-    }
 
     final Rule[] rules = (Rule[]) ruleList.toArray( new Rule[ruleList.size()] );
     final String[] typeIdentifiers = (String[]) typeIdentifierList.toArray( new String[typeIdentifierList.size()] );
@@ -1082,30 +986,22 @@ public class SLDFactory
     final Element legendGraphicElement = XMLTools.getChildByName( "LegendGraphic", CommonNamespaces.SLDNS, element );
 
     if( legendGraphicElement != null )
-    {
-      legendGraphic = createLegendGraphic( urlResolver, legendGraphicElement );
-    }
+      legendGraphic = SLDFactory.createLegendGraphic( urlResolver, legendGraphicElement );
 
     // optional: <Filter>
     boolean isAnElseFilter = false;
     Filter filter = null;
-    final Element filterElement = XMLTools.getChildByName( "Filter", ogcNS, element );
+    final Element filterElement = XMLTools.getChildByName( "Filter", SLDFactory.ogcNS, element );
     if( filterElement != null )
-    {
       filter = AbstractFilter.buildFromDOM( filterElement );
-    }
 
     // optional: <ElseFilter>
     final Element elseFilterElement = XMLTools.getChildByName( "ElseFilter", CommonNamespaces.SLDNS, element );
     if( elseFilterElement != null )
-    {
       isAnElseFilter = true;
-    }
 
     if( (filterElement != null) && (elseFilterElement != null) )
-    {
       throw new XMLParsingException( "Element 'Rule' may contain a 'Filter'- or " + "an 'ElseFilter'-element, but not both!" );
-    }
 
     // optional: <MinScaleDenominator>
     final double min = XMLTools.getDoubleValue( "MinScaleDenominator", CommonNamespaces.SLDNS, element, 0.0 );
@@ -1117,16 +1013,13 @@ public class SLDFactory
     final ArrayList symbolizerList = new ArrayList();
 
     for( int i = 0; i < symbolizerNL.getLength(); i++ )
-    {
       if( symbolizerNL.item( i ) instanceof Element )
       {
         final Element symbolizerElement = (Element) symbolizerNL.item( i );
         final String namespace = symbolizerElement.getNamespaceURI();
 
         if( !CommonNamespaces.SLDNS.equals( namespace ) )
-        {
           continue;
-        }
 
         /*
          * In reference to Symbology Encoding specification (1.1.0), we read an extra 'uom' attribute from the
@@ -1141,27 +1034,16 @@ public class SLDFactory
         final String symbolizerName = symbolizerElement.getLocalName();
 
         if( symbolizerName.equals( "LineSymbolizer" ) )
-        {
-          symbolizerList.add( createLineSymbolizer( urlResolver, symbolizerElement, min, max, uom ) );
-        }
+          symbolizerList.add( SLDFactory.createLineSymbolizer( urlResolver, symbolizerElement, min, max, uom ) );
         else if( symbolizerName.equals( "PointSymbolizer" ) )
-        {
-          symbolizerList.add( createPointSymbolizer( urlResolver, symbolizerElement, min, max, uom ) );
-        }
+          symbolizerList.add( SLDFactory.createPointSymbolizer( urlResolver, symbolizerElement, min, max, uom ) );
         else if( symbolizerName.equals( "PolygonSymbolizer" ) )
-        {
-          symbolizerList.add( createPolygonSymbolizer( urlResolver, symbolizerElement, min, max, uom ) );
-        }
+          symbolizerList.add( SLDFactory.createPolygonSymbolizer( urlResolver, symbolizerElement, min, max, uom ) );
         else if( symbolizerName.equals( "TextSymbolizer" ) )
-        {
-          symbolizerList.add( createTextSymbolizer( urlResolver, symbolizerElement, min, max, uom ) );
-        }
+          symbolizerList.add( SLDFactory.createTextSymbolizer( urlResolver, symbolizerElement, min, max, uom ) );
         else if( symbolizerName.equals( "RasterSymbolizer" ) )
-        {
-          symbolizerList.add( createRasterSymbolizer( symbolizerElement, uom ) );
-        }
+          symbolizerList.add( SLDFactory.createRasterSymbolizer( symbolizerElement, uom ) );
       }
-    }
 
     final Symbolizer[] symbolizers = (Symbolizer[]) symbolizerList.toArray( new Symbolizer[symbolizerList.size()] );
 
@@ -1190,18 +1072,14 @@ public class SLDFactory
     final Element geometryElement = XMLTools.getChildByName( "Geometry", CommonNamespaces.SLDNS, element );
 
     if( geometryElement != null )
-    {
-      geometry = createGeometry( geometryElement );
-    }
+      geometry = SLDFactory.createGeometry( geometryElement );
 
     // optional: <Graphic>
     Graphic graphic = null;
     final Element graphicElement = XMLTools.getChildByName( "Graphic", CommonNamespaces.SLDNS, element );
 
     if( graphicElement != null )
-    {
-      graphic = createGraphic( urlResolver, graphicElement );
-    }
+      graphic = SLDFactory.createGraphic( urlResolver, graphicElement );
 
     return new PointSymbolizer_Impl( graphic, geometry, min, max, uom );
   }
@@ -1229,18 +1107,14 @@ public class SLDFactory
     final Element geometryElement = XMLTools.getChildByName( "Geometry", CommonNamespaces.SLDNS, element );
 
     if( geometryElement != null )
-    {
-      geometry = createGeometry( geometryElement );
-    }
+      geometry = SLDFactory.createGeometry( geometryElement );
 
     // optional: <Stroke>
     Stroke stroke = null;
     final Element strokeElement = XMLTools.getChildByName( "Stroke", CommonNamespaces.SLDNS, element );
 
     if( strokeElement != null )
-    {
-      stroke = createStroke( urlResolver, strokeElement );
-    }
+      stroke = SLDFactory.createStroke( urlResolver, strokeElement );
 
     return new LineSymbolizer_Impl( stroke, geometry, min, max, uom );
   }
@@ -1267,27 +1141,21 @@ public class SLDFactory
     final Element geometryElement = XMLTools.getChildByName( "Geometry", CommonNamespaces.SLDNS, element );
 
     if( geometryElement != null )
-    {
-      geometry = createGeometry( geometryElement );
-    }
+      geometry = SLDFactory.createGeometry( geometryElement );
 
     // optional: <Fill>
     Fill fill = null;
     final Element fillElement = XMLTools.getChildByName( "Fill", CommonNamespaces.SLDNS, element );
 
     if( fillElement != null )
-    {
-      fill = createFill( urlResolver, fillElement );
-    }
+      fill = SLDFactory.createFill( urlResolver, fillElement );
 
     // optional: <Stroke>
     Stroke stroke = null;
     final Element strokeElement = XMLTools.getChildByName( "Stroke", CommonNamespaces.SLDNS, element );
 
     if( strokeElement != null )
-    {
-      stroke = createStroke( urlResolver, strokeElement );
-    }
+      stroke = SLDFactory.createStroke( urlResolver, strokeElement );
 
     return new PolygonSymbolizer_Impl( fill, stroke, geometry, min, max, uom );
   }
@@ -1307,7 +1175,7 @@ public class SLDFactory
    */
   private static Geometry createGeometry( final Element element ) throws XMLParsingException
   {
-    final Element propertyNameElement = XMLTools.getRequiredChildByName( "PropertyName", ogcNS, element );
+    final Element propertyNameElement = XMLTools.getRequiredChildByName( "PropertyName", SLDFactory.ogcNS, element );
     final PropertyName propertyName = (PropertyName) PropertyName.buildFromDOM( propertyNameElement );
     return new Geometry_Impl( propertyName );
   }
@@ -1330,9 +1198,7 @@ public class SLDFactory
     final Element graphicFillElement = XMLTools.getChildByName( "GraphicFill", CommonNamespaces.SLDNS, element );
 
     if( graphicFillElement != null )
-    {
-      graphicFill = createGraphicFill( urlResolver, graphicFillElement );
-    }
+      graphicFill = SLDFactory.createGraphicFill( urlResolver, graphicFillElement );
 
     // optional: <CssParameter>s
     final ElementList nl = XMLTools.getChildElementsByName( "CssParameter", CommonNamespaces.SLDNS, element );
@@ -1340,7 +1206,7 @@ public class SLDFactory
 
     for( int i = 0; i < nl.getLength(); i++ )
     {
-      final CssParameter cssParam = createCssParameter( nl.item( i ) );
+      final CssParameter cssParam = SLDFactory.createCssParameter( nl.item( i ) );
       cssParams.put( cssParam.getName(), cssParam );
     }
 
@@ -1362,7 +1228,7 @@ public class SLDFactory
   {
     // required: <Graphic>
     final Element graphicElement = XMLTools.getRequiredChildByName( "Graphic", CommonNamespaces.SLDNS, element );
-    final Graphic graphic = createGraphic( urlResolver, graphicElement );
+    final Graphic graphic = SLDFactory.createGraphic( urlResolver, graphicElement );
 
     return new LegendGraphic_Impl( graphic );
   }
@@ -1384,7 +1250,7 @@ public class SLDFactory
     final Element onlineResourceElement = XMLTools.getRequiredChildByName( "OnlineResource", CommonNamespaces.SLDNS, element );
 
     // required: href-Attribute (in <OnlineResource>)
-    final String href = XMLTools.getRequiredAttrValue( "href", xlnNS, onlineResourceElement );
+    final String href = XMLTools.getRequiredAttrValue( "href", SLDFactory.xlnNS, onlineResourceElement );
     // URL url = null;
     //
     // try
@@ -1426,17 +1292,13 @@ public class SLDFactory
     final Element strokeElement = XMLTools.getChildByName( "Stroke", CommonNamespaces.SLDNS, element );
 
     if( strokeElement != null )
-    {
-      stroke = createStroke( urlResolver, strokeElement );
-    }
+      stroke = SLDFactory.createStroke( urlResolver, strokeElement );
 
     // optional: <Fill>
     final Element fillElement = XMLTools.getChildByName( "Fill", CommonNamespaces.SLDNS, element );
 
     if( fillElement != null )
-    {
-      fill = createFill( urlResolver, fillElement );
-    }
+      fill = SLDFactory.createFill( urlResolver, fillElement );
 
     return new Mark_Impl( wkn, stroke, fill );
   }
@@ -1461,17 +1323,13 @@ public class SLDFactory
     final Element gfElement = XMLTools.getChildByName( "GraphicFill", CommonNamespaces.SLDNS, element );
 
     if( gfElement != null )
-    {
-      gf = createGraphicFill( urlResolver, gfElement );
-    }
+      gf = SLDFactory.createGraphicFill( urlResolver, gfElement );
 
     // optional: <GraphicStroke>
     final Element gsElement = XMLTools.getChildByName( "GraphicStroke", CommonNamespaces.SLDNS, element );
 
     if( gsElement != null )
-    {
-      gs = createGraphicStroke( urlResolver, gsElement );
-    }
+      gs = SLDFactory.createGraphicStroke( urlResolver, gsElement );
 
     // optional: <CssParameter>s
     final ElementList nl = XMLTools.getChildElementsByName( "CssParameter", CommonNamespaces.SLDNS, element );
@@ -1479,7 +1337,7 @@ public class SLDFactory
 
     for( int i = 0; i < nl.getLength(); i++ )
     {
-      final CssParameter cssParam = createCssParameter( nl.item( i ) );
+      final CssParameter cssParam = SLDFactory.createCssParameter( nl.item( i ) );
       cssParams.put( cssParam.getName(), cssParam );
     }
 
@@ -1501,7 +1359,7 @@ public class SLDFactory
   {
     // required: <Graphic>
     final Element graphicElement = XMLTools.getRequiredChildByName( "Graphic", CommonNamespaces.SLDNS, element );
-    final Graphic graphic = createGraphic( urlResolver, graphicElement );
+    final Graphic graphic = SLDFactory.createGraphic( urlResolver, graphicElement );
 
     return new GraphicFill_Impl( graphic );
   }
@@ -1521,7 +1379,7 @@ public class SLDFactory
   {
     // required: <Graphic>
     final Element graphicElement = XMLTools.getRequiredChildByName( "Graphic", CommonNamespaces.SLDNS, element );
-    final Graphic graphic = createGraphic( urlResolver, graphicElement );
+    final Graphic graphic = SLDFactory.createGraphic( urlResolver, graphicElement );
 
     return new GraphicStroke_Impl( graphic );
   }
@@ -1552,41 +1410,27 @@ public class SLDFactory
     final ArrayList marksAndExtGraphicsList = new ArrayList();
 
     for( int i = 0; i < nodelist.getLength(); i++ )
-    {
       if( nodelist.item( i ) instanceof Element )
       {
         final Element child = (Element) nodelist.item( i );
         final String namespace = child.getNamespaceURI();
 
         if( !CommonNamespaces.SLDNS.equals( namespace ) )
-        {
           continue;
-        }
 
         final String childName = child.getLocalName();
 
         if( childName.equals( "ExternalGraphic" ) )
-        {
-          marksAndExtGraphicsList.add( createExternalGraphic( urlResolver, child ) );
-        }
+          marksAndExtGraphicsList.add( SLDFactory.createExternalGraphic( urlResolver, child ) );
         else if( childName.equals( "Mark" ) )
-        {
-          marksAndExtGraphicsList.add( createMark( urlResolver, child ) );
-        }
+          marksAndExtGraphicsList.add( SLDFactory.createMark( urlResolver, child ) );
         else if( childName.equals( "Opacity" ) )
-        {
-          opacity = createParameterValueType( child );
-        }
+          opacity = SLDFactory.createParameterValueType( child );
         else if( childName.equals( "Size" ) )
-        {
-          size = createParameterValueType( child );
-        }
+          size = SLDFactory.createParameterValueType( child );
         else if( childName.equals( "Rotation" ) )
-        {
-          rotation = createParameterValueType( child );
-        }
+          rotation = SLDFactory.createParameterValueType( child );
       }
-    }
 
     final Object[] marksAndExtGraphics = marksAndExtGraphicsList.toArray( new Object[marksAndExtGraphicsList.size()] );
 
@@ -1608,7 +1452,7 @@ public class SLDFactory
   {
     // required: name-Attribute
     final String name = XMLTools.getRequiredAttrValue( "name", element );
-    final ParameterValueType pvt = createParameterValueType( element );
+    final ParameterValueType pvt = SLDFactory.createParameterValueType( element );
 
     return (new CssParameter_Impl( name, pvt ));
   }
@@ -1617,12 +1461,14 @@ public class SLDFactory
   {
     try
     {
-      final JAXBContext jc = JaxbUtilities.createQuiet( ObjectFactory.class );
+      // IMPORTANT: BOTH object factories need to be included, else jaxb does not find all defined classes and the
+      // JaxContext does not get created.
+      // REMARK: that seems to be a Jax-Bug?
+      final JAXBContext jc = JaxbUtilities.createQuiet( ObjectFactory.class, ogc2.www.opengis.net.gml.ObjectFactory.class, ogc2.www.opengis.net.ogc.ObjectFactory.class );
       final Unmarshaller unmarshaller = jc.createUnmarshaller();
       final Object e = unmarshaller.unmarshal( element );
       final ogc2.www.opengis.net.sld.RasterSymbolizer rasterSymbolizerElement = ((JAXBElement<ogc2.www.opengis.net.sld.RasterSymbolizer>) e).getValue();
-      // Geometry geometry = createGeometry(rasterSymbolizerElement.getGeometry());
-      final TreeMap colorMap = createColorMap( rasterSymbolizerElement.getColorMap() );
+      final TreeMap colorMap = SLDFactory.createColorMap( rasterSymbolizerElement.getColorMap() );
       return new RasterSymbolizer_Impl( colorMap );
     }
     catch( final Exception e )
@@ -1655,17 +1501,13 @@ public class SLDFactory
       final ogc2.www.opengis.net.sld.ColorMapEntry colorMapEntry = (ogc2.www.opengis.net.sld.ColorMapEntry) colorMapEntries.get( i );
       Color color = null;
       if( colorMapEntry.getColor() != null )
-      {
         color = Color.decode( colorMapEntry.getColor() );
-      }
       // double opacity = colorMapEntry.getOpacity();
       final double opacity = 1.0;
       final double quantity = colorMapEntry.getQuantity();
       String label = " ";
       if( colorMapEntry.getLabel() != null )
-      {
         label = colorMapEntry.getLabel();
-      }
       final ColorMapEntry colorMapEntryObject = new ColorMapEntry_Impl( color, opacity, quantity, label );
       colorMap.put( new Double( quantity ), colorMapEntryObject );
     }

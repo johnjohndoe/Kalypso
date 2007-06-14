@@ -99,6 +99,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     m_selectionManager = selectionManager;
 
     final Object featureFromPath = m_workspace.getFeatureFromPath( m_featurePath );
+
     if( featureFromPath instanceof FeatureList )
     {
       m_featureList = (FeatureList) featureFromPath;
@@ -118,12 +119,12 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
       m_featureType = null;
     }
 
-    if( m_featureList != null && m_featureList.getParentFeature() == null )
-    {
+// if( m_featureList != null && m_featureList.getParentFeature() == null )
+// {
 // final String message = String.format( "BAD: layer with no feature list or feature listList.getParent is empty: " +
 // "\n\tfeaturePath = %s\n\tfeatureFromPath = %s", featurePath, featureFromPath );
 // System.out.println( message );
-    }
+// }
 
     m_workspace.addModellListener( this );
   }
@@ -244,7 +245,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     {
       // my workspace ?
       final GMLWorkspace changedWorkspace = ((IGMLWorkspaceModellEvent) modellEvent).getGMLWorkspace();
-      if( m_workspace == null || (changedWorkspace != m_workspace && changedWorkspace != m_workspace.getWorkspace()) )
+      if( (m_workspace == null) || ((changedWorkspace != m_workspace) && (changedWorkspace != m_workspace.getWorkspace())) )
         return; // not my workspace
 
       if( modellEvent instanceof FeaturesChangedModellEvent )
@@ -261,15 +262,11 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
         if( features.length > m_featureList.size() / 5 )
           setDirty();
         else
-        {
           for( final Feature feature : features )
-          {
             // my feature ?
             // TODO: SLOW!!
             if( m_featureList.contains( feature ) )
               restyleFeature( feature );
-          }
-        }
 
       }
       else if( modellEvent instanceof FeatureStructureChangeModellEvent )
@@ -277,9 +274,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
         final FeatureStructureChangeModellEvent fscme = (FeatureStructureChangeModellEvent) modellEvent;
         final Feature[] parents = fscme.getParentFeatures();
         for( final Feature parent : parents )
-        {
           if( m_featureList.getParentFeature() == parent )
-          {
             switch( fscme.getChangeType() )
             {
               case FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD:
@@ -290,16 +285,12 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
               default:
                 setDirty();
             }
-          }
-        }
       }
     }
     else
-    {
       // unknown event, set dirty
       // TODO : if the eventhierarchy is implemented correctly the else-part can be removed
       setDirty();
-    }
   }
 
   private void restyleFeature( final Feature feature )
@@ -416,7 +407,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
       {
         final Feature feature = (Feature) f;
         final GM_Envelope envelope = feature.getEnvelope();
-        if( envelope != null && envelope.intersects( bbox ) )
+        if( (envelope != null) && envelope.intersects( bbox ) )
         {
           final DisplayElement[] elements = m_displayElements.get( feature );
           if( elements != null )
@@ -441,24 +432,18 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
         layerList[i] = new ArrayList<DisplayElement>();
 
       for( final DisplayElement[] element : selectedDE )
-      {
         for( int i = 0; i < element.length; i++ )
-        {
           if( element[i].doesScaleConstraintApply( scale ) )
             layerList[i].add( element[i] );
-        }
-      }
 
       for( final List<DisplayElement> element : layerList )
-      {
         for( final DisplayElement de : element )
           de.paint( g, p );
-      }
     }
 
     public void restyle( final GM_Envelope env )
     {
-      if( m_featureList != null && env != null && (m_vaildEnvelope == null || !m_vaildEnvelope.contains( env )) )
+      if( (m_featureList != null) && (env != null) && ((m_vaildEnvelope == null) || !m_vaildEnvelope.contains( env )) )
       { // restyle
         if( m_vaildEnvelope == null )
           m_vaildEnvelope = env;
@@ -516,7 +501,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
 
     final CommandableWorkspace workspace = getWorkspace();
     // TODO: change this later to a label decorator?
-    if( workspace != null && workspace.isDirty() )
+    if( (workspace != null) && workspace.isDirty() )
       return label + "*";
 
     return label;
@@ -529,7 +514,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   public ImageDescriptor getImageDescriptor( final Object object )
   {
     final Object[] children = getChildren( this );
-    if( children.length > 0 && children[0] instanceof IWorkbenchAdapter )
+    if( (children.length > 0) && (children[0] instanceof IWorkbenchAdapter) )
       return ((IWorkbenchAdapter) children[0]).getImageDescriptor( children[0] );
 
     return super.getImageDescriptor( object );
