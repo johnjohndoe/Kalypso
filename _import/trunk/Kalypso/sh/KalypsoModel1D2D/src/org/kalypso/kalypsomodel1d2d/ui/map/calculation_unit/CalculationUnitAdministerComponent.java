@@ -127,8 +127,7 @@ public class CalculationUnitAdministerComponent
     
     goButton = new Button(rootComposite,SWT.PUSH);
     goButton.setToolTipText( "Funktion aktivieren" );
-//    goButton.setText( "GO");
-    
+   
     goImage = new Image( rootComposite.getDisplay(), 
         KalypsoModel1D2DPlugin.imageDescriptorFromPlugin(
             PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
@@ -186,21 +185,6 @@ public class CalculationUnitAdministerComponent
         }
       }      
     }
-//    else if (ACTION_KEY_REMOVE.equals( selectedAction ))
-//    {
-//      if( ELEMENTS_KEY_BOUNDARY_UP.equals( selectedType )){
-//        
-//      }
-//      else if (ELEMENTS_KEY_ELEMENTS.equals( selectedType ))
-//      {
-//        strategy = new RemoveElementFromCalUnitWidget(dataModel);
-//      }
-//      else if( ELEMENTS_KEY_SUBUNITS.equals( selectedType ))
-//      {
-//        
-//      }
-//
-//    }
     else if( ACTION_KEY_DRAW.equals( selectedAction) )
     {
       if( ELEMENTS_KEY_BOUNDARY_UP.equals( selectedType )  )

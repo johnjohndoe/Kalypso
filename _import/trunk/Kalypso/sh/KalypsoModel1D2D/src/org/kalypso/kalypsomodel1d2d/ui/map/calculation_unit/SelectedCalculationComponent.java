@@ -91,12 +91,7 @@ public class SelectedCalculationComponent
 
   /* ======================================================================== */
   TableViewer tableViewer;
-//  private Image imageBoundaryUp;
-//  private final String mainGroupTitle = "Berechnungseinheiten";
-//  private final String bTextMaximizeSelected = "Berechnungeinheit anzeigen und maximieren";
-//  private final String deleteSelected = "Berechnungseinheit löschen";
   private final String defaultTestDecription = "Wählen Sie ein Modell aus.";
-//  private final String saveToolTip = "Beschreibung Sichern";
   private final String titleDescriptionGroup = "Beschreibung";
   private Group descriptionGroupText;
   private Text descriptionText;
@@ -104,12 +99,9 @@ public class SelectedCalculationComponent
   private Text element1D;
   private Text bLineText;
   private GridData data;
-//  private Image imageBoundaryDown;
   private FormToolkit toolkit;
   private Composite parent;
   private KeyBasedDataModel dataModel;
-//  private int num1DElement;
-//  private int num2DElement;
 
   KeyBasedDataModelChangeListener newKeyListener = new KeyBasedDataModelChangeListener(){
     public void dataChanged( final String key, final Object newValue )
@@ -303,9 +295,6 @@ public class SelectedCalculationComponent
     
     bLineText = toolkit.createText( optionsComposite, "", SWT.SINGLE|SWT.BORDER );
 
-//    Label boundaryDownLabel = new Label(optionsComposite, SWT.RIGHT);
-//    boundaryDownLabel.setText("Boundary Down: ");
-    
     subCalculationComposite = new Composite(rootComposite,SWT.FLAT);
     subCalculationComposite.setLayout( new FormLayout() );
     
@@ -325,7 +314,6 @@ public class SelectedCalculationComponent
         
         if (tableViewer.getSelection() != null)
         {
-          
           try
           {
             if(tableViewer.getSelection() instanceof IStructuredSelection){
@@ -336,8 +324,7 @@ public class SelectedCalculationComponent
           }
           catch( RuntimeException e1 )
           {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
+              e1.printStackTrace();
           }          
         }
         else

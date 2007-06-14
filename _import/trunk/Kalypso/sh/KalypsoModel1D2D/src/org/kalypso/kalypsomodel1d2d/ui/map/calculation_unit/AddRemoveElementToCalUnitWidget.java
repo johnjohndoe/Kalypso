@@ -62,7 +62,6 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.ui.map.DrawElements;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.AddElementToCalculationUnitCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.RemoveElementFromCalculationUnitCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
@@ -283,10 +282,6 @@ public class AddRemoveElementToCalUnitWidget extends FENetConceptSelectionWidget
             }
             if( command != null )
             {
-//              ICommandTarget cmdTarget =
-//                (ICommandTarget)dataModel.getData( ICommonKeys.KEY_COMMAND_TARGET );
-              
-              //cmdTarget.postCommand( command, null  );
               KeyBasedDataModelUtil.postCommand( dataModel, command );
             }            
           }       
@@ -342,9 +337,6 @@ public class AddRemoveElementToCalUnitWidget extends FENetConceptSelectionWidget
           }           
           if( command != null )
           {
-//            ICommandTarget cmdTarget =
-//              (ICommandTarget)dataModel.getData( ICommonKeys.KEY_COMMAND_TARGET );
-//            cmdTarget.postCommand( command, null  );
             KeyBasedDataModelUtil.postCommand( dataModel, command );
           }
         }
@@ -361,16 +353,5 @@ public class AddRemoveElementToCalUnitWidget extends FENetConceptSelectionWidget
   public void paint( Graphics g )
   {
     super.paint( g );
-//    DrawElements drawElements = new DrawElements();    
-//    MapPanel mapPanel = getMapPanel();
-//    Object selectedWraper = 
-//      dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
-//    if( selectedWraper instanceof ICalculationUnit2D )
-//    {
-//      drawElements.paint( 
-//          g, 
-//          mapPanel.getProjection(), 
-//          (ICalculationUnit2D)selectedWraper );
-//    }
   }  
 }
