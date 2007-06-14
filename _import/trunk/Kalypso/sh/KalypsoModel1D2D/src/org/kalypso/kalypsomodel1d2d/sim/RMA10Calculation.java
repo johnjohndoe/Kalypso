@@ -44,21 +44,19 @@ package org.kalypso.kalypsomodel1d2d.sim;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.datatype.XMLGregorianCalendar;
+import javax.xml.namespace.QName;
 
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.kalypsomodel1d2d.conv.BoundaryConditionInfo;
 import org.kalypso.kalypsomodel1d2d.conv.BoundaryLineInfo;
 import org.kalypso.kalypsomodel1d2d.conv.ITimeStepinfo;
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtils;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D;
@@ -69,6 +67,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
@@ -105,11 +104,9 @@ public class RMA10Calculation
 
   private final GMLWorkspace m_flowResistanceWorkspace = null;
 
-  private Feature m_controlRootWorkspace = null;
+  private Feature m_controlModelRoot = null;
 
   private Feature m_roughnessRootWorkspace = null;
-
-  private boolean m_restart;
 
   private String m_kalypso1D2DKernelPath;
 
@@ -165,7 +162,7 @@ public class RMA10Calculation
     // RMA10SimModelConstants.FLOWRESISTANCEMODEL_ID ),
     // factory );
 
-    m_controlRootWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( RMA10SimModelConstants.CONTROL_ID ), factory ).getRootFeature();
+    m_controlModelRoot = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( RMA10SimModelConstants.CONTROL_ID ), factory ).getRootFeature();
     m_roughnessRootWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( RMA10SimModelConstants.ROUGHNESS_ID ), factory ).getRootFeature();
 
     m_timeStepInfos = calculationBoundaryConditionInfos();
@@ -174,7 +171,7 @@ public class RMA10Calculation
   public RMA10Calculation( final GMLWorkspace disModelWorkspace, final Feature controlRoot, final Feature roughnessRoot )
   {
     m_disModelWorkspace = disModelWorkspace;
-    m_controlRootWorkspace = controlRoot;
+    m_controlModelRoot = controlRoot;
     m_roughnessRootWorkspace = roughnessRoot;
   }
 
@@ -203,9 +200,11 @@ public class RMA10Calculation
     return m_flowResistanceWorkspace;
   }
 
-  public void setKalypso1D2DKernelPath( )
+  public String getKalypso1D2DKernelPath( )
   {
-    final String kalypso1D2DVersion = (String) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_VERSION );
+    final IControlModel1D2D controlModel = getControlModel();
+    final String kalypso1D2DVersion = controlModel.getVersion();
+
     if( kalypso1D2DVersion.equals( "test" ) )
       m_kalypso1D2DKernelPath = RMA10SimModelConstants.SIM_EXE_FILE_TEST;
     else if( kalypso1D2DVersion.equals( "NEW" ) )
@@ -214,58 +213,13 @@ public class RMA10Calculation
       m_kalypso1D2DKernelPath = RMA10SimModelConstants.SIM_EXE_FILE_3_5;
     else
       m_kalypso1D2DKernelPath = RMA10SimModelConstants.SIM_EXE_FILE_3_5;
-  }
 
-  public String getKalypso1D2DKernelPath( )
-  {
     return m_kalypso1D2DKernelPath;
-  }
-
-  public Integer getIaccyc( )
-  {
-    final Integer iaccyc = (Integer) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_IACCYC );
-    if( iaccyc > 1 )
-    {
-      m_restart = true;
-    }
-    m_restart = false;
-    return iaccyc;
-  }
-
-  public Integer getIDNOPT( )
-  {
-    return (Integer) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_IDNOPT );
-  }
-
-  public int getStartYear( )
-  {
-    return getStartCalendar().getYear();
-  }
-
-  public XMLGregorianCalendar getStartCalendar( )
-  {
-    return (XMLGregorianCalendar) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_startsim );
-  }
-
-  public Integer getStartJulianDay( )
-  {
-    final GregorianCalendar calendar = getStartCalendar().toGregorianCalendar();
-    return calendar.get( Calendar.DAY_OF_YEAR );
-  }
-
-  public Double getStartHour( )
-  {
-    return new Double( getStartCalendar().getHour() );
-  }
-
-  public Integer getIEDSW( )
-  {
-    return (Integer) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_IEDSW );
   }
 
   public Double getViskosity( final Feature roughnessFE )
   {
-    final int iedsw = ((Integer) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_IEDSW )).intValue();
+    final int iedsw = getControlModel().getIEDSW();
     if( iedsw == 0 )
     {
       return getEddy( roughnessFE );
@@ -281,116 +235,6 @@ public class RMA10Calculation
   public Double getcharactV( final Feature roughnessFE )
   {
     return (Double) roughnessFE.getProperty( KalypsoModelRoughnessConsts.WBR_PROP_CHARACTV );
-  }
-
-  public Double getTBFACT( )
-  {
-    return (Double) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_TBFACT );
-  }
-
-  public Double getTBMIN( )
-  {
-    return (Double) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_TBMIN );
-  }
-
-  public Double getOMEGA( )
-  {
-    return (Double) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_OMEGA );
-  }
-
-  public Double getELEV( )
-  {
-    return (Double) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_ELEV );
-  }
-
-  public Double getUDIR( )
-  {
-    return (Double) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_UDIR );
-  }
-
-  public Double getUNOM( )
-  {
-    return (Double) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_UNOM );
-  }
-
-  public Double getHMIN( )
-  {
-    return (Double) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_HMIN );
-  }
-
-  public Double getDSET( )
-  {
-    return (Double) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_DSET );
-  }
-
-  public Double getDSETD( )
-  {
-    return (Double) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_DSETD );
-  }
-
-  public Integer getNITI( )
-  {
-    return (Integer) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_NITI );
-  }
-
-  public Integer getNITN( )
-  {
-    return (Integer) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_NITN );
-  }
-
-  public Integer getNCYC( )
-  {
-    return (Integer) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_NCYC );
-  }
-
-  public Double getCONV_1( )
-  {
-    return (Double) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_CONV_1 );
-  }
-
-  public Double getCONV_2( )
-  {
-    return (Double) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_CONV_2 );
-  }
-
-  public Double getCONV_3( )
-  {
-    return (Double) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_CONV_3 );
-  }
-
-  public Integer getIDRPT( )
-  {
-    return (Integer) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_IDRPT );
-  }
-
-  public Double getDRFACT( )
-  {
-    return (Double) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_DRFACT );
-  }
-
-  public boolean getRestart( )
-  {
-    return m_restart;
-  }
-
-  public boolean getVegeta( )
-  {
-    return (Boolean) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_VEGETA );
-  }
-
-  public Double getAC1( )
-  {
-    return (Double) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_AC1 );
-  }
-
-  public Double getAC2( )
-  {
-    return (Double) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_AC2 );
-  }
-
-  public Double getAC3( )
-  {
-    return (Double) m_controlRootWorkspace.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_AC3 );
   }
 
   public String getName( final Feature feature )
@@ -435,11 +279,6 @@ public class RMA10Calculation
         list.add( (IBoundaryLine) element );
     }
     return list;
-  }
-
-  public Feature getControlModelFeature( )
-  {
-    return m_controlRootWorkspace;
   }
 
   public BoundaryLineInfo[] getContinuityLineInfo( )
@@ -546,5 +385,15 @@ public class RMA10Calculation
     }
 
     return result;
+  }
+
+  public IControlModel1D2D getControlModel( )
+  {
+    final Feature controlModelCollection = (Feature) m_controlModelRoot.getProperty( new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "controlModelCollection" ) );
+    final List modells = (List) controlModelCollection.getProperty( new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "controlModelMember" ) );
+
+    final Feature controlFeature = (Feature) modells.get( 0 );
+
+    return (IControlModel1D2D) controlFeature.getAdapter( IControlModel1D2D.class );
   }
 }

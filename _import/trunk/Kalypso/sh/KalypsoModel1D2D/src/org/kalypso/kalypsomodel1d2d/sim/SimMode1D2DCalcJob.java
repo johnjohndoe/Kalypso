@@ -137,7 +137,7 @@ public class SimMode1D2DCalcJob implements ISimulation
     {
       // this is just for testing the result visualization and can be removed, when the calc job will create real
       // results (TJ)
-//      if( pseudoResultUrl == null )
+      // if( pseudoResultUrl == null )
       {
         monitor.setMessage( "Generiere Ascii Files zur 2D Simulation..." );
         if( monitor.isCanceled() )
@@ -183,7 +183,6 @@ public class SimMode1D2DCalcJob implements ISimulation
 
         monitor.setProgress( 20 );
 
-        m_calculation.setKalypso1D2DKernelPath();
         copyExecutable( tmpDir, m_calculation.getKalypso1D2DKernelPath() );
         /*
          * Creates the result folder for the .exe file, must be same as in Control-Converter (maybe give as an
@@ -192,7 +191,7 @@ public class SimMode1D2DCalcJob implements ISimulation
         new File( tmpDir, "result" ).mkdirs();
         startCalculation( tmpDir, monitor );
       }
-//      else
+      // else
       {
         InputStream resultStream = null;
         try
@@ -234,7 +233,7 @@ public class SimMode1D2DCalcJob implements ISimulation
     }
   }
 
-  private void loadResults( final File tmpDir, ISimulationMonitor monitor, final Logger logger, final ISimulationDataProvider dataProvider, final ISimulationResultEater resultEater ) throws SimulationException
+  private void loadResults( final File tmpDir, final ISimulationMonitor monitor, final Logger logger, final ISimulationDataProvider dataProvider, final ISimulationResultEater resultEater ) throws SimulationException
   {
     // TODO: check this here and add more handling, if result model is ready (Jessica)
     monitor.setMessage( "Lese Ergebnisse..." );
@@ -247,7 +246,7 @@ public class SimMode1D2DCalcJob implements ISimulation
     // TODO: @the moment,only the pseudo 'result.2d' is read.
     final FileFilter suffixFileFilter = FileFilterUtils.suffixFileFilter( "result.2d" );
     final File[] files = tmpDir.listFiles( suffixFileFilter );
-    if( files == null || files.length == 0)
+    if( files == null || files.length == 0 )
       return;
 
     monitor.setProgress( 80 );
@@ -323,7 +322,7 @@ public class SimMode1D2DCalcJob implements ISimulation
   /**
    * copy the executable to from the resources
    */
-  private void copyExecutable( File tmpdir, String simulationExeName )
+  private void copyExecutable( final File tmpdir, final String simulationExeName )
   {
     final String exeResource = RMA10SimModelConstants.RESOURCEBASE + simulationExeName;
     final File destFile = new File( tmpdir, simulationExeName );
@@ -337,7 +336,7 @@ public class SimMode1D2DCalcJob implements ISimulation
         inputStream.close();
         System.out.println( " ...copied" );
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         e.printStackTrace();
         System.out.println( "ERR: " + exeResource + " may not exist" );
@@ -360,7 +359,7 @@ public class SimMode1D2DCalcJob implements ISimulation
   /**
    * starts 2D simulation
    */
-  private void startCalculation( final File basedir, ISimulationMonitor monitor ) throws SimulationException
+  private void startCalculation( final File basedir, final ISimulationMonitor monitor ) throws SimulationException
   {
     final File exeFile = new File( basedir, m_calculation.getKalypso1D2DKernelPath() );
     final File exeDir = exeFile.getParentFile();

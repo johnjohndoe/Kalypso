@@ -258,7 +258,7 @@ public class ActiveWorkContext<T extends Case>
   public Properties createProperties( )
   {
     final Properties properties = new Properties();
-    // TODO: possible NPE here!
+    // TODO: possible NPE here!vus
     final IProject activeProject = getCurrentProject().getProject();
     if( activeProject != null )
     {

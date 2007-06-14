@@ -40,20 +40,80 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.model;
 
+import javax.xml.datatype.XMLGregorianCalendar;
+
 import org.kalypso.kalypsosimulationmodel.core.modeling.IControlModel;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
 
 /**
- * Interface for model implementing a 
+ * Interface for model implementing a
+ * 
  * @author Madanagopal
  * @author Patrice Congo
- *
+ * 
  */
 public interface IControlModel1D2D extends IControlModel
 {
-  //TODO Patrice move RMA10Calculation control stuf into the control binding class
-  
-  public IObservation<TupleResult> getTimeSteps();
-  
+  public IObservation<TupleResult> getTimeSteps( );
+
+  public Integer getIDNOPT( );
+
+  public String getVersion( );
+
+  public int getStartYear( );
+
+  public Integer getIaccyc( );
+
+  public boolean getRestart( );
+
+  public XMLGregorianCalendar getStartCalendar( );
+
+  public Integer getStartJulianDay( );
+
+  public Double getStartHour( );
+
+  public Integer getIEDSW( );
+
+  public Double getTBFACT( );
+
+  public Double getTBMIN( );
+
+  public Double getOMEGA( );
+
+  public Double getELEV( );
+
+  public Double getUDIR( );
+
+  public Double getUNOM( );
+
+  public Double getHMIN( );
+
+  public Double getDSET( );
+
+  public Double getDSETD( );
+
+  public Integer getNITI( );
+
+  public Integer getNITN( );
+
+  public Integer getNCYC( );
+
+  public Double getCONV_1( );
+
+  public Double getCONV_2( );
+
+  public Double getCONV_3( );
+
+  public Integer getIDRPT( );
+
+  public Double getDRFACT( );
+
+  public boolean getVegeta( );
+
+  public Double getAC1( );
+
+  public Double getAC2( );
+
+  public Double getAC3( );
 }

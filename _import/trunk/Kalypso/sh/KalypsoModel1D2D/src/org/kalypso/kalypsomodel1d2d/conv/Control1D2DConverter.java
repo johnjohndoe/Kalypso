@@ -104,15 +104,17 @@ public class Control1D2DConverter
    */
   private void writeR10ControlDataBlock( final RMA10Calculation calculation, final Formatter formatter )
   {
-    Date firstDate = getFirstTimeStep( calculation );
-    Calendar calendarForFirstTimeStep = Calendar.getInstance();
+    final IControlModel1D2D controlModel = calculation.getControlModel();
+
+    final Date firstDate = getFirstTimeStep( calculation );
+    final Calendar calendarForFirstTimeStep = Calendar.getInstance();
     calendarForFirstTimeStep.setTime( firstDate );
     /* FILES DATA BLOCK */
     formatter.format( "OUTFIL  result\\Output%n" );
     formatter.format( "INKALYPSmodel.2d%n" );
-    final int restartStep = calculation.getRestart() ? calculation.getIaccyc() : 0;
+    final int restartStep = controlModel.getRestart() ? controlModel.getIaccyc() : 0;
     formatter.format( "CONTROL A %4d 2d 0%n", restartStep );
-    if( calculation.getRestart() )
+    if( controlModel.getRestart() )
       formatter.format( "RESTART%n" );
 
     formatter.format( "ENDFIL%n" );
@@ -122,11 +124,8 @@ public class Control1D2DConverter
     formatter.format( "TI Projekt Name%n" ); // write Project name
 
     // // C0
-    // Object[] c0Props = new Object[] { 0, calculation.getIDNOPT(), calculation.getStartYear(),
-    // calculation.getStartJulianDay(), calculation.getStartHour(), calculation.getIEDSW(),
-    // calculation.getTBFACT(), calculation.getTBMIN(), 0 };
-    Object[] c0Props = new Object[] { 0, calculation.getIDNOPT(), calendarForFirstTimeStep.get( Calendar.YEAR ), calendarForFirstTimeStep.get( Calendar.DAY_OF_YEAR ),
-        getTimeInPercentage( firstDate ), calculation.getIEDSW(), calculation.getTBFACT(), calculation.getTBMIN(), 0 };
+    final Object[] c0Props = new Object[] { 0, controlModel.getIDNOPT(), calendarForFirstTimeStep.get( Calendar.YEAR ), calendarForFirstTimeStep.get( Calendar.DAY_OF_YEAR ),
+        getTimeInPercentage( firstDate ), controlModel.getIEDSW(), controlModel.getTBFACT(), controlModel.getTBMIN(), 0 };
     // TODO: also write the (at the moment) constant values with the corrct format strings (%xxx.yyf),so later we
     // can easily exchange the given values without thinking about format any more (applies to all Cx)
     formatter.format( "C0%14d%8d%8d%8d%8.2f%8d%8.3f%8.2f%8d%n", c0Props );
@@ -135,24 +134,24 @@ public class Control1D2DConverter
     formatter.format( "C1%14d%8d%8d%8d%8d%8d%8d%8d%8d%8d%n", 0, 1, 1, 0, 0, 0, 0, 0, 0, 2 );
 
     // C2
-    formatter.format( "C2%14.2f%8.3f%8.1f%8.1f%8.1f%8d%n", calculation.getOMEGA(), calculation.getELEV(), 1.0, 1.0, 1.0, 1 );
+    formatter.format( "C2%14.2f%8.3f%8.1f%8.1f%8.1f%8d%n", controlModel.getOMEGA(), controlModel.getELEV(), 1.0, 1.0, 1.0, 1 );
 
     // C3
-    formatter.format( "C3%14.3f%8.3f%8.3f%8.1f%8.3f%8.3f%8.3f%n", 1.0, 1.0, calculation.getUNOM(), calculation.getUDIR(), calculation.getHMIN(), calculation.getDSET(), calculation.getDSETD() );
+    formatter.format( "C3%14.3f%8.3f%8.3f%8.1f%8.3f%8.3f%8.3f%n", 1.0, 1.0, controlModel.getUNOM(), controlModel.getUDIR(), controlModel.getHMIN(), controlModel.getDSET(), controlModel.getDSETD() );
 
     // C4
     formatter.format( "C4%14.1f%8.1f%8.1f%n", 0.0, 20.0, 0.0 );
 
     // C5
-    formatter.format( "C5%14d%8d%16d%8d%8d%8d%8d%8d%8d%n", calculation.getNITI(), calculation.getNITN(), calculation.getNCYC(), 0, 1, 1, 0, 1, 1 );
+    formatter.format( "C5%14d%8d%16d%8d%8d%8d%8d%8d%8d%n", controlModel.getNITI(), controlModel.getNITN(), controlModel.getNCYC(), 0, 1, 1, 0, 1, 1 );
 
     // CV
-    formatter.format( "CV%14.2f%8.2f%8.2f%8.2f%8.2f%16d%8.2f%n", calculation.getCONV_1(), calculation.getCONV_2(), calculation.getCONV_3(), 0.05, 0.05, calculation.getIDRPT(), calculation.getDRFACT() );
+    formatter.format( "CV%14.2f%8.2f%8.2f%8.2f%8.2f%16d%8.2f%n", controlModel.getCONV_1(), controlModel.getCONV_2(), controlModel.getCONV_3(), 0.05, 0.05, controlModel.getIDRPT(), controlModel.getDRFACT() );
 
     formatter.format( "IOP%n" );
 
     // VEGETA
-    if( calculation.getVegeta() )
+    if( controlModel.getVegeta() )
       formatter.format( "VEGETA%n" );
 
     formatter.format( "KAL_BC%n" );
@@ -169,7 +168,7 @@ public class Control1D2DConverter
       final int roughnessAsciiID = getRoughnessID( roughnessCL.getId() );
 
       // Double eddy = calculation.getViskosity( roughnessCL );
-      double val = 2900.0;
+      final double val = 2900.0;
       formatter.format( "ED1%13d%8.1f%8.1f%8.1f%8.1f%8.1f%8.3f%8.3f%n", roughnessAsciiID, val, val, val, val, -1.0, 1.0, 1.0 );
       // ED2
       formatter.format( "ED2%13.1f%8.1f%8.3f%16.1f%n", 0.5, 0.5, 0.001, 20.0 );
@@ -222,9 +221,10 @@ public class Control1D2DConverter
 
     formatter.format( "ECL%n" );
 
-    if( calculation.getIDNOPT() != 0 && calculation.getIDNOPT() != -1 ) // Write MP Line only under this conditions
+    final IControlModel1D2D controlModel = calculation.getControlModel();
+    if( controlModel.getIDNOPT() != 0 && controlModel.getIDNOPT() != -1 ) // Write MP Line only under this conditions
     {
-      formatter.format( "MP%21.2f%8.2f%8.2f%n", calculation.getAC1(), calculation.getAC2(), calculation.getAC3() );
+      formatter.format( "MP%21.2f%8.2f%8.2f%n", controlModel.getAC1(), controlModel.getAC2(), controlModel.getAC3() );
     }
     formatter.format( "ENDGEO%n" );
   }
@@ -234,13 +234,15 @@ public class Control1D2DConverter
    */
   private void writeR10TimeStepDataBlock( final RMA10Calculation calculation, final Formatter formatter ) throws SimulationException
   {
+    final IControlModel1D2D controlModel = calculation.getControlModel();
+
     formatter.format( "com -----------------------%n" );
     formatter.format( "com steady state input data%n" );
     formatter.format( "com -----------------------%n" );
     formatter.format( "DT%14f%n", 0.0000 );
 
     /* For the moment, steady is like nsteady */
-    final int niti = calculation.getNITI();
+    final int niti = controlModel.getNITI();
     if( niti == 0 )
       formatter.format( "BC%n" );
     else
@@ -250,9 +252,6 @@ public class Control1D2DConverter
     // formatter.format( "HC%14d%8d%8f%8f%8f%8f%n", 3, 0, 5.69, 00.00, 20.0, 0.0 );
     formatter.format( "ENDSTEP  steady%n" );
 
-    final Feature controlFeature = calculation.getControlModelFeature();
-
-    final IControlModel1D2D controlModel = (IControlModel1D2D) controlFeature.getAdapter( IControlModel1D2D.class );
     final IObservation<TupleResult> observation = controlModel.getTimeSteps();
     final TupleResult result = observation.getResult();
 
@@ -294,9 +293,9 @@ public class Control1D2DConverter
       final int year = stepDateCal.get( Calendar.YEAR );
       formatter.format( "DT%14.2f%8d%8d%8.2f", timeStepHours, year, dayOfYear, getTimeInPercentage( date ) );
 
-      float uRVal_ = uRVal.floatValue();
+      final float uRVal_ = uRVal.floatValue();
       // BC lines
-      final int nitn = calculation.getNITN();
+      final int nitn = controlModel.getNITN();
       formatBC( formatter, uRVal_, nitn );
 
       for( final ITimeStepinfo item : timeStepInfos )
@@ -329,7 +328,7 @@ public class Control1D2DConverter
     }
   }
 
-  private void formatBC( final Formatter formatter, float uRVal_, final int nitn )
+  private void formatBC( final Formatter formatter, final float uRVal_, final int nitn )
   {
     final int buffVal;
     if( uRVal_ == (float) 1.0 )
@@ -349,28 +348,26 @@ public class Control1D2DConverter
       formatter.format( "%n" );
   }
 
-  private double getTimeInPercentage( Date _date )
+  private double getTimeInPercentage( final Date _date )
   {
-    Calendar instance_ = Calendar.getInstance();
+    final Calendar instance_ = Calendar.getInstance();
     instance_.setTime( _date );
-    int i = instance_.get( Calendar.HOUR_OF_DAY );
-    int j2 = instance_.get( Calendar.MINUTE );
-    float j = (float) (j2 / 60.0);
+    final int i = instance_.get( Calendar.HOUR_OF_DAY );
+    final int j2 = instance_.get( Calendar.MINUTE );
+    final float j = (float) (j2 / 60.0);
     // return instance_.get(Calendar.HOUR_OF_DAY)+"."+(instance_.get(Calendar.MINUTE)*100)/60;
     return (double) i + j;
   }
 
   private Date getFirstTimeStep( final RMA10Calculation calculation )
   {
-    Feature controlFeature = calculation.getControlModelFeature();
-    IControlModel1D2D controlModel_ = (IControlModel1D2D) controlFeature.getAdapter( IControlModel1D2D.class );
-    IObservation<TupleResult> tupleSet = controlModel_.getTimeSteps();
-    TupleResult result = tupleSet.getResult();
-    IRecord record = result.get( 0 );
+    final IControlModel1D2D controlModel = calculation.getControlModel();
+    final IObservation<TupleResult> tupleSet = controlModel.getTimeSteps();
+    final TupleResult result = tupleSet.getResult();
+    final IRecord record = result.get( 0 );
 
-    IComponent res_C_0 = result.getComponents()[0];
+    final IComponent res_C_0 = result.getComponents()[0];
     return DateUtilities.toDate( (XMLGregorianCalendar) record.getValue( res_C_0 ) );
-
   }
 
 }
