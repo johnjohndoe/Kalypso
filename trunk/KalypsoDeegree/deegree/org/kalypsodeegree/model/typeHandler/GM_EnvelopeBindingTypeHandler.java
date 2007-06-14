@@ -54,10 +54,9 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree_impl.model.geometry.AdapterBindingToValue;
 import org.kalypsodeegree_impl.model.geometry.AdapterGmlIO;
 import org.kalypsodeegree_impl.model.geometry.AdapterValueToGMLBinding;
-import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
-import org.xml.sax.ext.LexicalHandler;
 
 /**
  * a generic typehandler for GM_Object geometries based on a bindingtypehandler<br>
@@ -110,7 +109,7 @@ public class GM_EnvelopeBindingTypeHandler extends AbstractGM_EnvelopeBindingTyp
    * @see org.kalypso.gmlschema.types.GenericBindingTypeHandler#marshal(java.lang.Object, org.xml.sax.ContentHandler,
    *      org.xml.sax.ext.LexicalHandler, java.net.URL)
    */
-  public void marshal( final QName propQName, final Object geometry, final ContentHandler contentHandler, final LexicalHandler lexicalHandler, final URL context, final String gmlVersion ) throws TypeRegistryException
+  public void marshal( final QName propQName, final Object geometry, final XMLReader reader, final URL context, final String gmlVersion ) throws SAXException
   {
     try
     {
@@ -119,12 +118,11 @@ public class GM_EnvelopeBindingTypeHandler extends AbstractGM_EnvelopeBindingTyp
       // final AbstractGeometryType wrappedValue = GMLBindingGM_ObjectAdapter_GML31.createBindingGeometryType(
       // gmlVersion, geometry );
       final QName xmlTagName = getXMLTagNameForGMLVersion( gmlVersion );
-      super.marshal( xmlTagName, propQName, bindingObject, contentHandler, gmlVersion );
+      super.marshal( xmlTagName, propQName, bindingObject, reader, gmlVersion );
     }
-    catch( final Exception e )
+    catch( final GM_Exception e )
     {
-      e.printStackTrace();
-      throw new TypeRegistryException( e );
+      throw new SAXException( e );
     }
   }
 

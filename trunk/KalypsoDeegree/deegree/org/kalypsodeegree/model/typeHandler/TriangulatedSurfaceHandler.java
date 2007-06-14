@@ -42,19 +42,18 @@ package org.kalypsodeegree.model.typeHandler;
 
 import java.net.URL;
 
-import javax.naming.OperationNotSupportedException;
 import javax.xml.namespace.QName;
 
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler2;
-import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.kalypso.gmlschema.types.UnmarshallResultEater;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree_impl.io.sax.TriangulatedSurfaceContentHandler;
+import org.kalypsodeegree_impl.io.sax.TriangulatedSurfaceMarshaller;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
-import org.xml.sax.ext.LexicalHandler;
 
 /**
  * @author Gernot Belger
@@ -81,11 +80,25 @@ public class TriangulatedSurfaceHandler implements IMarshallingTypeHandler2
 
   /**
    * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#marshal(javax.xml.namespace.QName, java.lang.Object,
-   *      org.xml.sax.ContentHandler, org.xml.sax.ext.LexicalHandler, java.net.URL, java.lang.String)
+   *      org.xml.sax.XMLReader, java.net.URL, java.lang.String)
    */
-  public void marshal( final QName propQName, final Object value, final ContentHandler contentHandler, final LexicalHandler lexicalHandler, final URL context, final String gmlVersion ) throws TypeRegistryException
+  public void marshal( final QName propQName, final Object value, final XMLReader reader, final URL context, final String gmlVersion ) throws SAXException
   {
-    throw new TypeRegistryException( new OperationNotSupportedException() );
+    final ContentHandler contentHandler = reader.getContentHandler();
+
+    final String propNamespace = propQName.getNamespaceURI();
+
+    final String propLocalPart = propQName.getLocalPart();
+    final String propPrefix = propQName.getPrefix();
+    final String propQname = propPrefix + ":" + propLocalPart;
+
+    contentHandler.startElement( propNamespace, propLocalPart, propQname, null );
+
+    final GM_TriangulatedSurface surface = (GM_TriangulatedSurface) value;
+
+    new TriangulatedSurfaceMarshaller( reader, surface ).marshal();
+
+    contentHandler.endElement( propNamespace, propLocalPart, propQname );
   }
 
   /**

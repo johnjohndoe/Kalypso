@@ -166,7 +166,8 @@ public class GmlParsingTester extends TestCase
     final GM_Position[] triangle = gmTriangle.getExteriorRing();
     assertNotNull( triangle );
     assertEquals( 4, triangle.length );
-    assertEquals( triangle[0], triangle[1] );
+    assertEquals( triangle[0], triangle[3] );
+
   }
 
 }

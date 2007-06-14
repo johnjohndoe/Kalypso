@@ -77,6 +77,8 @@ public class TriangulatedSurfaceContentHandler extends DefaultHandler
 {
   private final static ListSimpleTypeHandler DOUBLE_LIST_PARSER = new ListSimpleTypeHandler( new XsdBaseTypeHandlerDouble() );
 
+  private final List<GM_Position> m_poses = new ArrayList<GM_Position>();
+
   private List<GM_Triangle> m_triangles = null;
 
   private CS_CoordinateSystem m_crs;
@@ -84,8 +86,6 @@ public class TriangulatedSurfaceContentHandler extends DefaultHandler
   private Locator m_locator;
 
   private StringBuffer m_coordBuffer = null;
-
-  private GM_Position[] m_poses;
 
   private GM_Position[] m_triangle;
 
@@ -153,22 +153,11 @@ public class TriangulatedSurfaceContentHandler extends DefaultHandler
       m_coordBuffer = null;
     else if( "LinearRing".equals( localName ) )
       m_coordBuffer = null;
-    else if( "posList".equals( localName ) )
+    else if( "pos".equals( localName ) )
     {
       m_coordBuffer = new StringBuffer();
-
       m_currentCrs = parseCrsFromAttributes( attributes, m_crs );
-
-      final String countString = AttributesUtilities.getAttributeValue( attributes, "", "count", null );
-      if( countString != null )
-      {
-        final int count = Integer.parseInt( countString );
-        m_poses = new GM_Position[count];
-      }
-      else
-        m_poses = new GM_Position[0];
     }
-
   }
 
   /**
@@ -227,22 +216,22 @@ public class TriangulatedSurfaceContentHandler extends DefaultHandler
       if( m_poses == null )
         throw new SAXParseException( "Exterior contains no valid linear ring.", m_locator );
 
-      if( m_poses.length != 4 )
-        throw new SAXParseException( "LinearRing must contain exactly 4 coodirnates: " + m_poses.length, m_locator );
+      if( m_poses.size() != 4 )
+        throw new SAXParseException( "LinearRing must contain exactly 4 coordinates: " + m_poses.size(), m_locator );
 
-      m_triangle = new GM_Position[] { m_poses[0], m_poses[1], m_poses[2] };
-      m_poses = null;
+      m_triangle = new GM_Position[] { m_poses.get( 0 ), m_poses.get( 1 ), m_poses.get( 2 ) };
+      m_poses.clear();
     }
-    else if( "posList".equals( localName ) )
+    else if( "pos".equals( localName ) )
     {
-      endPosList();
+      endPos();
     }
 
     super.endElement( uri, localName, name );
   }
 
   @SuppressWarnings("unchecked")
-  private void endPosList( ) throws SAXParseException
+  private void endPos( ) throws SAXParseException
   {
     if( m_coordBuffer == null )
       throw new SAXParseException( "Unexpected 'posList'", m_locator );
@@ -252,37 +241,22 @@ public class TriangulatedSurfaceContentHandler extends DefaultHandler
     {
       final List<Double> doubles = (List<Double>) DOUBLE_LIST_PARSER.parseType( coordsString );
 
-      final int dimension = m_currentCrs.getDimension();
+// final int dimension = m_currentCrs.getDimension();
+// TODO: check against crs
+      final int coordCount = doubles.size();
 
-      final int count;
-      final int dimensionToUse; // the dimension to use for parsing the doubles
-      if( m_poses.length == 0 )
-      {
-        // If the count attribute was omiited, we calculate the number of cooridnates from the dimension
-        count = doubles.size() / dimension;
-        dimensionToUse = dimension;
-        m_poses = new GM_Position[count];
-      }
+      // HACK: as long as we have no variable sized coordinates, we have only the choice between dimension 2 or 3.
+      if( coordCount >= 3 )
+        m_poses.add( GeometryFactory.createGM_Position( doubles.get( 0 ), doubles.get( 1 ), doubles.get( 2 ) ) );
+      else if( coordCount == 2 )
+        m_poses.add( GeometryFactory.createGM_Position( doubles.get( 0 ), doubles.get( 1 ) ) );
       else
-      {
-        count = m_poses.length;
-        dimensionToUse = (doubles.size() / count);
-      }
-
-      for( int i = 0; i < count; i++ )
-      {
-        // HACK: as long as we have no variable sized coordinates, we have only the choice between dimension 2 or 3.
-        final int j = i * dimensionToUse;
-        if( dimensionToUse < 3 )
-          m_poses[i] = GeometryFactory.createGM_Position( doubles.get( j ), doubles.get( j + 1 ) );
-        else
-          m_poses[i] = GeometryFactory.createGM_Position( doubles.get( j ), doubles.get( j + 1 ), doubles.get( j + 2 ) );
-      }
+        throw new SAXParseException( "Not enough coords in pos element: " + coordsString, m_locator );
 
     }
     catch( final ParseException e )
     {
-      throw new SAXParseException( "Unable to parse posList-content: " + coordsString, m_locator, e );
+      throw new SAXParseException( "Unable to parse pos-content: " + coordsString, m_locator, e );
     }
     finally
     {
