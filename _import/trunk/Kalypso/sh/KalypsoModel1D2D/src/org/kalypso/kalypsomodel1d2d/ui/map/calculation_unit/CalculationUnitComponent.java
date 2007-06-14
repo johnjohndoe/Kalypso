@@ -44,12 +44,15 @@ import java.util.List;
 
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizard;
+import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards.CreateCalculationUnitWizard;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.DeleteCalculationUnitCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.editor.FeatureWrapperListEditor;
 import org.kalypso.kalypsomodel1d2d.ui.map.editor.IButtonConstants;
@@ -87,23 +90,14 @@ public class CalculationUnitComponent
   public void createFeatureWrapper()
   {
     final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-    final CreateCalculationUnitDialog calculationDialog = 
-      new CreateCalculationUnitDialog( shell, getDataModel() );      
-      
-      int answer = calculationDialog.open();
-//      if( answer == Window.OK )
-//      {
-//        KeyBasedDataModel dataModel = getDataModel();
-//        dataModel.setData( 
-//            ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, 
-//            calculationDialog.getCreatedCalculationUnit() );
-//        IFEDiscretisationModel1d2d model1d2d =
-//          (IFEDiscretisationModel1d2d) 
-//              dataModel.getData( ICommonKeys.KEY_DISCRETISATION_MODEL );
-//        List<ICalculationUnit> calUnits = 
-//                          CalUnitOps.getModelCalculationUnits( model1d2d );
-//        dataModel.setData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST, calUnits );
-//      }
+    
+    final CreateCalculationUnitWizard calculationWizard = 
+        new CreateCalculationUnitWizard(getDataModel());
+    final WizardDialog wizardDialog = new WizardDialog( shell, calculationWizard );
+    wizardDialog.open();
+//    final CreateCalculationUnitDialog calculationDialog = 
+//      new CreateCalculationUnitDialog( shell, getDataModel() );      
+//    int answer = calculationDialog.open();
   } 
   
   @Override
@@ -147,10 +141,6 @@ public class CalculationUnitComponent
           dataModel.getData( 
               IFEDiscretisationModel1d2d.class, 
               ICommonKeys.KEY_DISCRETISATION_MODEL );
-//      final ICommandTarget commandTarget =
-//          dataModel.getData( 
-//              ICommandTarget.class, 
-//              ICommonKeys.KEY_COMMAND_TARGET );
       DeleteCalculationUnitCmd delCmd = 
           new DeleteCalculationUnitCmd( model1d2d, calUnitToDel)
       {

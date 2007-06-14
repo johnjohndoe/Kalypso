@@ -41,6 +41,7 @@
 package org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit;
 
 import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -61,6 +62,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit2D;
 import org.kalypso.kalypsomodel1d2d.ui.map.CreateFE2DElementWidget;
 import org.kalypso.kalypsomodel1d2d.ui.map.IWidgetWithStrategy;
+import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards.CreateSubCalculationUnitCopyWizard;
 import org.kalypso.kalypsomodel1d2d.ui.map.cline.RouteLineElementWidget;
 import org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateFEElement1DWidget;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
@@ -176,13 +178,17 @@ public class CalculationUnitAdministerComponent
       else if( ELEMENTS_KEY_SUBUNITS.equals( selectedType )  )
       {
         final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-        CreateSubCalculationUnitCopyDialog calculationDialog = 
-                      new CreateSubCalculationUnitCopyDialog( shell, dataModel );
-        int answer = calculationDialog.open();
-        if( answer == Window.OK )
-        {
-          // Do Nothing
-        }
+        final CreateSubCalculationUnitCopyWizard calculationSubWizard = 
+                                            new CreateSubCalculationUnitCopyWizard(dataModel);
+        final WizardDialog wizardDialog = new WizardDialog( shell, calculationSubWizard );
+        wizardDialog.open();
+//        CreateSubCalculationUnitCopyDialog calculationDialog = 
+//                      new CreateSubCalculationUnitCopyDialog( shell, dataModel );
+//        int answer = calculationDialog.open();
+//        if( answer == Window.OK )
+//        {
+//          // Do Nothing
+//        }
       }      
     }
     else if( ACTION_KEY_DRAW.equals( selectedAction) )
