@@ -60,15 +60,20 @@ public class ChangeFeaturesCommand implements ICommand
 
   public ChangeFeaturesCommand( final GMLWorkspace workspace, final FeatureChange[] changes )
   {
+    // just to avoid the exception...
+    if(changes == null)
+      m_newChanges = new FeatureChange[0];
+    else
+      m_newChanges = changes;
     m_workspace = workspace;
-    m_newChanges = changes;
-    m_oldChanges = new FeatureChange[changes.length];
-    for( int i = 0; i < changes.length; i++ )
+    m_oldChanges = new FeatureChange[m_newChanges.length];
+    for( int i = 0; i < m_newChanges.length; i++ )
     {
-      final FeatureChange change = changes[i];
+      final FeatureChange change = m_newChanges[i];
 
       final Object oldValue = change.getFeature().getProperty( change.getProperty() );
       m_oldChanges[i] = new FeatureChange( change.getFeature(), change.getProperty(), oldValue );
+      System.out.println("FC prop: " + change.getProperty());
     }
   }
 

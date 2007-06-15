@@ -645,8 +645,8 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     else if( controlType instanceof SubcompositeType )
     {
       final SubcompositeType compoType = (SubcompositeType) controlType;
-
-      final IFeatureControl fc = new SubFeatureControl( ftp, m_selectionManager, m_formToolkit, m_showOk, m_featureviewFactory );
+      
+      final IFeatureControl fc = new SubFeatureControl( ftp, m_selectionManager, m_formToolkit, m_showOk, m_featureviewFactory, compoType.getSelector() );
 
       fc.setFeature( feature );
 
