@@ -66,7 +66,7 @@ public class GM_Triangle_Impl extends GM_Polygon_Impl implements GM_Triangle
     }
   }
 
-  GM_Triangle_Impl( final GM_Position pos1, final GM_Position pos2, final GM_Position pos3, final CS_CoordinateSystem crs ) throws GM_Exception
+  public GM_Triangle_Impl( final GM_Position pos1, final GM_Position pos2, final GM_Position pos3, final CS_CoordinateSystem crs ) throws GM_Exception
   {
     super( PLANAR_INTERPOLATION, new GM_Position[] { pos1, pos2, pos3, pos1 }, null, crs );
   }

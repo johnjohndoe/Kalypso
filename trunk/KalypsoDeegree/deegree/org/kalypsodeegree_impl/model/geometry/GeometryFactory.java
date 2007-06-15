@@ -79,6 +79,7 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfaceInterpolation;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -1089,6 +1090,11 @@ final public class GeometryFactory
   public static GM_Triangle_Impl createGM_Triangle( final GM_Position pos1, final GM_Position pos2, final GM_Position pos3, final CS_CoordinateSystem crs ) throws GM_Exception
   {
     return new GM_Triangle_Impl( pos1, pos2, pos3, crs );
+  }
+  
+  public static GM_TriangulatedSurface createGM_TriangulatedSurface( final CS_CoordinateSystem crs ) throws GM_Exception
+  {
+    return new GM_TriangulatedSurface_Impl( crs );
   }
 
 }
