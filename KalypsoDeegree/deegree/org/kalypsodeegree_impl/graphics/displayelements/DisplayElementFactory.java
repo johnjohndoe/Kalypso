@@ -61,6 +61,7 @@
 package org.kalypsodeegree_impl.graphics.displayelements;
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.util.ArrayList;
 
 import javax.xml.namespace.QName;
@@ -87,6 +88,7 @@ import org.kalypsodeegree.graphics.sld.Rule;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.graphics.sld.TextSymbolizer;
 import org.kalypsodeegree.graphics.sld.UserStyle;
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
@@ -97,7 +99,9 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
+import org.kalypsodeegree.model.geometry.ISurfacePatchVisitor;
 import org.kalypsodeegree_impl.filterencoding.PropertyName;
+import org.kalypsodeegree_impl.graphics.displayelements.SurfacePatchVisitableDisplayElement.IVisitorFactory;
 import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.PointSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.PolygonSymbolizer_Impl;
@@ -303,7 +307,15 @@ public class DisplayElementFactory
       };
 
       final GM_TriangulatedSurface tin = (GM_TriangulatedSurface) feature.getDefaultGeometryProperty();
-      return new SurfacePatchVisitableDisplayElement<GM_Triangle>( feature, tin, colorModel );
+      final IVisitorFactory<GM_Triangle> visitorFactory = new SurfacePatchVisitableDisplayElement.IVisitorFactory<GM_Triangle>()
+      {
+        public ISurfacePatchVisitor<GM_Triangle> createVisitor( final Graphics g, final GeoTransform projection, final IElevationColorModel model )
+        {
+          return new SurfacePaintIsolinesVisitor<GM_Triangle>( g, projection, colorModel );
+        }
+      };
+
+      return new SurfacePatchVisitableDisplayElement<GM_Triangle>( feature, tin, colorModel, visitorFactory );
     }
     else
     {

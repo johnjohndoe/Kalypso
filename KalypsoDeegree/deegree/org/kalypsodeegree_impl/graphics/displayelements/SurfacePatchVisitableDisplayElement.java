@@ -64,6 +64,11 @@ import org.kalypsodeegree.model.geometry.ISurfacePatchVisitor;
  */
 public class SurfacePatchVisitableDisplayElement<P extends GM_SurfacePatch> implements DisplayElementDecorator
 {
+  public interface IVisitorFactory<P2 extends GM_SurfacePatch>
+  {
+    public ISurfacePatchVisitor<P2> createVisitor( final Graphics g, final GeoTransform projection, final IElevationColorModel model);
+  }
+  
   private final IElevationColorModel m_colorModel;
 
   private final ISurfacePatchVisitable<P> m_surfacePatchVisitable;
@@ -76,8 +81,11 @@ public class SurfacePatchVisitableDisplayElement<P extends GM_SurfacePatch> impl
 
   private DisplayElement m_decorated;
 
-  public SurfacePatchVisitableDisplayElement( final Feature feature, final ISurfacePatchVisitable<P> surfacePatchVisitable, final IElevationColorModel colorModel )
+  private final IVisitorFactory<P> m_visitorFactory;
+
+  public SurfacePatchVisitableDisplayElement( final Feature feature, final ISurfacePatchVisitable<P> surfacePatchVisitable, final IElevationColorModel colorModel, final IVisitorFactory<P> visitorFactory )
   {
+    m_visitorFactory = visitorFactory;
     Assert.isNotNull( surfacePatchVisitable, "surfacePatchVisitable" );
 
     m_feature = feature;
@@ -172,8 +180,7 @@ public class SurfacePatchVisitableDisplayElement<P extends GM_SurfacePatch> impl
 
     try
     {
-      // TODO: introduce visitor-factory to allow switch between several visitor
-      final ISurfacePatchVisitor<P> visitor = new SurfacePaintPlainTriangleVisitor<P>( g, projection, m_colorModel );
+      final ISurfacePatchVisitor<P> visitor = m_visitorFactory.createVisitor( g, projection, m_colorModel );
       m_surfacePatchVisitable.acceptSurfacePatches( projection.getSourceRect(), visitor );
     }
     catch( final GM_Exception e )
