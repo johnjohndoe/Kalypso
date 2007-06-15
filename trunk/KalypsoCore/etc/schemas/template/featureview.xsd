@@ -336,7 +336,10 @@
 		substitutionGroup="fv:control" />
 	<xs:complexType name="SubcompositeType">
 		<xs:complexContent>
-			<xs:extension base="fv:PropertyControlType" />
+			<xs:extension base="fv:PropertyControlType">
+					<xs:attribute name="selector" type="xs:string"
+						use="optional"/>
+			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 
@@ -377,9 +380,13 @@
 							<xs:annotation>
 								<xs:documentation>
 									<p>
-										The 'exclude' member of the GridData.
+										The 'exclude' member of the
+										GridData.
 									</p>
-									<p>See also 'visibleOperation' of the type 'ControlType'.</p>
+									<p>
+										See also 'visibleOperation' of
+										the type 'ControlType'.
+									</p>
 								</xs:documentation>
 							</xs:annotation>
 						</xs:element>
