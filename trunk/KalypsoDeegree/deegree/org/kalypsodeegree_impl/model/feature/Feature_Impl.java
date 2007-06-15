@@ -156,7 +156,7 @@ public class Feature_Impl extends AbstractFeature implements Feature
       {
         continue;
       }
-      else if( virGeoProp instanceof List )
+      else if( pt.isList() )
       {
         result.addAll( (List) virGeoProp );
       }
@@ -177,7 +177,7 @@ public class Feature_Impl extends AbstractFeature implements Feature
         {
           continue;
         }
-        if( o instanceof List )
+        if( element.isList() )
         {
           result.addAll( (List) o );
         }
