@@ -75,16 +75,16 @@ public class LineGeometryBuilder implements IGeometryBuilder
    * The constructor.
    * 
    * @param cnt_points
-   *          If >0 the the geometry will be finished, if the count of points is reached. If 0 no rule regarding the
-   *          count of the points will apply.
+   *            If > 1 the the geometry will be finished, if the count of points is reached. If <= 1 no rule regarding
+   *            the count of the points will apply, except that a line must consist of at least 2 points.
    * @param targetCrs
-   *          The target coordinate system.
+   *            The target coordinate system.
    */
   public LineGeometryBuilder( final int cnt_points, final CS_CoordinateSystem targetCrs )
   {
     m_cnt_points = 0;
 
-    if( cnt_points >= 0 )
+    if( cnt_points > 1 )
       m_cnt_points = cnt_points;
 
     m_crs = targetCrs;
@@ -108,7 +108,7 @@ public class LineGeometryBuilder implements IGeometryBuilder
    */
   public GM_Object finish( ) throws Exception
   {
-    if( (m_points.size() == m_cnt_points) || (m_cnt_points == 0) )
+    if( (m_points.size() == m_cnt_points) || ((m_cnt_points == 0) && (m_points.size() > 1)) )
     {
       final GeoTransformer transformer = new GeoTransformer( m_crs );
 
@@ -195,7 +195,7 @@ public class LineGeometryBuilder implements IGeometryBuilder
   {
     if( m_points.isEmpty() )
       return;
-    
-    m_points.remove( m_points.size() -1  );
+
+    m_points.remove( m_points.size() - 1 );
   }
 }
