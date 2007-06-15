@@ -143,6 +143,16 @@ public class CalculationUnitAdministerComponent
       actionsCombo.add( ACTION_KEY_ADMINISTER );
       actionsCombo.add( ACTION_KEY_DRAW );
     }
+    else
+    {
+      actionsCombo.removeAll();
+      elementsCombo.removeAll();
+      actionsCombo.add( ACTION_KEY_ADMINISTER );
+      actionsCombo.add( ACTION_KEY_DRAW );
+      elementsCombo.add( ELEMENTS_KEY_ELEMENTS );
+      elementsCombo.add(ELEMENTS_KEY_SUBUNITS);
+      elementsCombo.add( ELEMENTS_KEY_BOUNDARY_UP ); 
+    }
     
   }
 
