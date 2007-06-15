@@ -38,51 +38,41 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.schema.binding.results;
+package org.kalypso.kalypsomodel1d2d.conv.results;
 
+import java.util.List;
+
+import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
 
 /**
  * @author Thomas Jung
- *
+ * 
  */
-public class ArcResult
+public class MultiTriangleEater implements ITriangleEater
 {
-  public int arcID;
-  public int node1ID;
-  public int node2ID;
-  public int elementLeftID; 
-  public int elementRightID; 
-  public int middleNodeID;
-  public GMLNodeResult m_nodeUp;
-  public GMLNodeResult m_nodeDown;
-  
-  public GMLNodeResult getNodeUp( )
+  private final ITriangleEater[] m_eaters;
+
+  public MultiTriangleEater( final ITriangleEater[] eaters )
   {
-    return m_nodeUp;
+    m_eaters = eaters;
   }
 
-  public void setNodeUp( GMLNodeResult nodeUp )
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.conv.results.ITriangleEater#add(java.util.List)
+   */
+  public void add( List<INodeResult> nodes )
   {
-    m_nodeUp = nodeUp;
+    // TODO Auto-generated method stub
+
   }
 
-  public GMLNodeResult getNodeDown( )
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.conv.results.ITriangleEater#finished()
+   */
+  public void finished( )
   {
-    return m_nodeDown;
+    // TODO Auto-generated method stub
+    
   }
 
-  public void setNodeDown( GMLNodeResult nodeDown )
-  {
-    m_nodeDown = nodeDown;
-  }
-
-  public ArcResult( int id, int node1, int node2, int elementLeft, int elementRight, int middleNode )
-  {
-    arcID = id;
-    node1ID = node1;
-    node2ID = node2;
-    elementLeftID = elementLeft; 
-    elementRightID = elementRight; 
-    middleNodeID = middleNode;
-  } 
 }

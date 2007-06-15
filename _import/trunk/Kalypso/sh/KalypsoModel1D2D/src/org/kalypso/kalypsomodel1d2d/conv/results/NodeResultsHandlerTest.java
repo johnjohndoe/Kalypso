@@ -38,51 +38,31 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.schema.binding.results;
+package org.kalypso.kalypsomodel1d2d.conv.results;
 
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+
+import junit.framework.TestCase;
+
+import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.kalypsomodel1d2d.sim.SimMode1D2DCalcJob;
+import org.kalypso.ogc.gml.serialize.GmlSerializeException;
+import org.kalypso.simulation.core.SimulationException;
+import org.kalypsodeegree.model.geometry.GM_Exception;
 
 /**
  * @author Thomas Jung
  *
  */
-public class ArcResult
+public class NodeResultsHandlerTest extends TestCase
 {
-  public int arcID;
-  public int node1ID;
-  public int node2ID;
-  public int elementLeftID; 
-  public int elementRightID; 
-  public int middleNodeID;
-  public GMLNodeResult m_nodeUp;
-  public GMLNodeResult m_nodeDown;
-  
-  public GMLNodeResult getNodeUp( )
+  public void testLoadResults() throws IOException, InvocationTargetException, GmlSerializeException, SimulationException, GM_Exception
   {
-    return m_nodeUp;
+      final File result2dFile = new File( "D:/Projekte/kalypso_dev/post-processing/b3.2d" );
+      final File outputDir = FileUtilities.createNewTempDir( "bloed" ); 
+      SimMode1D2DCalcJob.read2DIntoNodeResult( result2dFile, outputDir, null );
   }
 
-  public void setNodeUp( GMLNodeResult nodeUp )
-  {
-    m_nodeUp = nodeUp;
-  }
-
-  public GMLNodeResult getNodeDown( )
-  {
-    return m_nodeDown;
-  }
-
-  public void setNodeDown( GMLNodeResult nodeDown )
-  {
-    m_nodeDown = nodeDown;
-  }
-
-  public ArcResult( int id, int node1, int node2, int elementLeft, int elementRight, int middleNode )
-  {
-    arcID = id;
-    node1ID = node1;
-    node2ID = node2;
-    elementLeftID = elementLeft; 
-    elementRightID = elementRight; 
-    middleNodeID = middleNode;
-  } 
 }

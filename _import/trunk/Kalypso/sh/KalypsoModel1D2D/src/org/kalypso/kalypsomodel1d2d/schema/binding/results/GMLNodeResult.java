@@ -41,6 +41,7 @@
 package org.kalypso.kalypsomodel1d2d.schema.binding.results;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -56,16 +57,41 @@ import org.opengis.cs.CS_CoordinateSystem;
 /**
  * @author Thomas Jung
  */
-public class NodeResult extends AbstractFeatureBinder implements INodeResult
+public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
 {
   private static final QName QNAME_PROP_CALCID = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "calcId" );
+
   private static final QName QNAME_PROP_LOCATION = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "location" );
-  private static final QName QNAME_PROP_DEPTH = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "depth" );
+
+  /*
+   * the virtual depth is calculated by the calculation core RMA10 and can differ from the true depth defined by water
+   * level minus node elevation! (Marsh-Algorithm).
+   * 
+   * for that reason the true depth is computed separately.
+   */
+  private static final QName QNAME_PROP_VIRTUALDEPTH = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "virtualdepth" );
+
   private static final QName QNAME_PROP_WATERLEVEL = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "waterlevel" );
+
   private static final QName QNAME_PROP_VELOCITY = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "velocity" );
+
   private static final QName QNAME_PROP_MIDSIDE = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "midside" );
-  
-  public NodeResult( final Feature featureToBind )
+
+  public final List<ArcResult> m_arcs = new LinkedList<ArcResult>();
+
+  private boolean m_nodeAssigned;
+
+  public List<ArcResult> getArcs( )
+  {
+    return m_arcs;
+  }
+
+  public void setArc( ArcResult arc )
+  {
+    m_arcs.add( arc );
+  }
+
+  public GMLNodeResult( final Feature featureToBind )
   {
     super( featureToBind, QNAME );
   }
@@ -73,6 +99,16 @@ public class NodeResult extends AbstractFeatureBinder implements INodeResult
   public void setCalcId( final int id )
   {
     getFeature().setProperty( QNAME_PROP_CALCID, new Integer( id ) );
+  }
+
+  public void setDepth( final double virtualDdepth )
+  {
+    getFeature().setProperty( QNAME_PROP_VIRTUALDEPTH, new Double( virtualDdepth ) );
+  }
+
+  public void setWaterlevel( final double waterlevel )
+  {
+    getFeature().setProperty( QNAME_PROP_WATERLEVEL, new Double( waterlevel ) );
   }
 
   public void setLocation( final double x, final double y, final double z, final CS_CoordinateSystem crs )
@@ -85,26 +121,101 @@ public class NodeResult extends AbstractFeatureBinder implements INodeResult
 
   public void setResultValues( final double vx, final double vy, final double depth, final double waterlevel )
   {
-    getFeature().setProperty( QNAME_PROP_DEPTH, depth );
+    getFeature().setProperty( QNAME_PROP_VIRTUALDEPTH, depth );
     getFeature().setProperty( QNAME_PROP_WATERLEVEL, waterlevel );
-    
+
     final List<Double> veloList = new ArrayList<Double>();
     veloList.clear();
     veloList.add( vx );
     veloList.add( vy );
     getFeature().setProperty( QNAME_PROP_VELOCITY, veloList );
   }
-  
-  public void setMidSide (final boolean isMidSide)
+
+  public void setMidSide( final boolean isMidSide )
   {
     getFeature().setProperty( QNAME_PROP_MIDSIDE, isMidSide );
   }
 
   public GM_Point getPoint( )
   {
-    return (GM_Point) getFeature().getProperty( NodeResult.QNAME_PROP_LOCATION );
+    return (GM_Point) getFeature().getProperty( GMLNodeResult.QNAME_PROP_LOCATION );
   }
 
+  @SuppressWarnings("unchecked")
+  public List<Double> getVelocity( )
+  {
+    return (List<Double>) getFeature().getProperty( GMLNodeResult.QNAME_PROP_VELOCITY );
+  }
 
+  public double getVirtualDepth( )
+  {
+    return (Double) getFeature().getProperty( GMLNodeResult.QNAME_PROP_VIRTUALDEPTH );
+  }
+
+  public double getDepth( )
+  {
+    final double waterlevel = (Double) getFeature().getProperty( GMLNodeResult.QNAME_PROP_WATERLEVEL );
+    final GM_Point point = (GM_Point) getFeature().getProperty( GMLNodeResult.QNAME_PROP_LOCATION );
+    final double z = point.getZ();
+
+    final double depth = waterlevel - z;
+    if( depth <= 0 )
+      return 0;
+    else
+      return depth;
+  }
+
+  public double getWaterlevel( )
+  {
+    return (Double) getFeature().getProperty( GMLNodeResult.QNAME_PROP_WATERLEVEL );
+  }
+
+  public int getNodeID( )
+  {
+    return (Integer) getFeature().getProperty( GMLNodeResult.QNAME_PROP_CALCID );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setVelocity(java.util.List)
+   */
+  public void setVelocity( List<Double> velocity )
+  {
+    // TODO Auto-generated method stub
+
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#isWet()
+   */
+  public boolean isWet( )
+  {
+    if( getDepth() <= 0 )
+      return false;
+    else
+      return true;
+  }
+
+  public boolean isAssigned( )
+  {
+    if( m_nodeAssigned == true )
+      return true;
+    else
+      return false;
+  }
+
+  public void setAssigned( final boolean assign )
+  {
+    m_nodeAssigned = assign;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getAbsoluteVelocity()
+   */
+  public double getAbsoluteVelocity( )
+  {
+    List<Double> velocity = getVelocity();
+    
+    return Math.sqrt( velocity.get( 0 )*velocity.get( 0 ) + velocity.get( 1 ) * velocity.get( 1 ));
+  }
 
 }

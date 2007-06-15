@@ -40,15 +40,22 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz;
 
+import java.awt.Graphics;
+
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ColorModelIntervalSingleton;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.NativeTerrainElevationModelWrapper;
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitable;
+import org.kalypsodeegree.model.geometry.ISurfacePatchVisitor;
 import org.kalypsodeegree_impl.graphics.displayelements.IElevationColorModel;
+import org.kalypsodeegree_impl.graphics.displayelements.SurfacePaintPlainTriangleVisitor;
 import org.kalypsodeegree_impl.graphics.displayelements.SurfacePatchVisitableDisplayElement;
+import org.kalypsodeegree_impl.graphics.displayelements.SurfacePatchVisitableDisplayElement.IVisitorFactory;
 
 /**
  * @author Gernot Belger
@@ -71,7 +78,15 @@ public class ElevationModelDisplayElementFactory
         final IElevationColorModel colorModel = ElevationColorControl.getColorModel( elevationProvider.getMinElevation(), elevationProvider.getMaxElevation() );
         ColorModelIntervalSingleton.getInstance().setInterval( colorModel.getDiscretisationInterval() );
 
-        return new SurfacePatchVisitableDisplayElement( feature, (ISurfacePatchVisitable<GM_SurfacePatch>) elevationProvider, colorModel );
+        final IVisitorFactory<GM_Triangle> visitorFactory = new SurfacePatchVisitableDisplayElement.IVisitorFactory<GM_Triangle>()
+        {
+          public ISurfacePatchVisitor<GM_Triangle> createVisitor( final Graphics g, final GeoTransform projection, final IElevationColorModel model )
+          {
+            return new SurfacePaintPlainTriangleVisitor<GM_Triangle>( g, projection, colorModel );
+          }
+        };
+
+        return new SurfacePatchVisitableDisplayElement( feature, (ISurfacePatchVisitable<GM_SurfacePatch>) elevationProvider, colorModel, visitorFactory );
       }
       else
       {

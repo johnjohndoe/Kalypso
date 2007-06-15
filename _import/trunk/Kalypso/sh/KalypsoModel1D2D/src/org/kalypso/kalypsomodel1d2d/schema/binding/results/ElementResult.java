@@ -44,8 +44,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author Thomas Jung
@@ -53,6 +53,8 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  */
 public class ElementResult
 {
+  public boolean isWet = false;
+
   final private int m_elemID;
 
   private int m_currentRougthnessClassID;
@@ -63,11 +65,11 @@ public class ElementResult
 
   private final HashMap<Integer, ArcResult> m_arcResult = new HashMap<Integer, ArcResult>();
 
-  private final List<NodeResult> m_cornerNodes = new LinkedList<NodeResult>();
+  private final List<GMLNodeResult> m_cornerNodes = new LinkedList<GMLNodeResult>();
 
-  private final List<NodeResult> m_midsideNodes = new LinkedList<NodeResult>();
-  
-  private INodeResult m_centerNode = null;
+  private final List<GMLNodeResult> m_midsideNodes = new LinkedList<GMLNodeResult>();
+
+  private SimpleNodeResult m_centerNode = null;
 
   public ElementResult( int id, int currentRougthnessClass, int previousRoughnessClass, int eleminationNum )
   {
@@ -77,7 +79,7 @@ public class ElementResult
     m_eleminationNumber = eleminationNum;
   }
 
-  public void setNewArc( ArcResult arcresult )
+  public void setArc( ArcResult arcresult )
   {
     m_arcResult.put( m_arcResult.size(), arcresult );
   }
@@ -132,7 +134,7 @@ public class ElementResult
     return m_cornerNodes.get( index );
   }
 
-  public void setCornerNodes( NodeResult nodeResult )
+  public void setCornerNodes( GMLNodeResult nodeResult )
   {
 
     m_cornerNodes.add( nodeResult );
@@ -143,7 +145,7 @@ public class ElementResult
     return m_midsideNodes.get( index );
   }
 
-  public void setMidsideNodes( NodeResult nodeResult )
+  public void setMidsideNodes( GMLNodeResult nodeResult )
   {
     m_midsideNodes.add( nodeResult );
   }
@@ -158,26 +160,201 @@ public class ElementResult
     return m_midsideNodes.size();
   }
 
-  public INodeResult createCenterNode( )
+  public void createCenterNode( )
   {
+    m_centerNode = new SimpleNodeResult();
     interpolateCenterNode();
-    
-    return m_centerNode;
   }
+
   /**
-   * creates a center node for the element by using the corner and midside nodes. 
+   * creates a center node for the element by using the corner and midside nodes.
    */
   private void interpolateCenterNode( )
   {
     /* get the center point location by using the corner nodes */
+    double sumXCoord = 0;
+    double sumYCoord = 0;
+    double sumZCoord = 0;
+    double sumDepth = 0;
+    double sumWaterlevel = 0;
+    double sumVxCorner = 0;
+    double sumVyCorner = 0;
+    double sumVxMid = 0;
+    double sumVyMid = 0;
+
     for( int i = 0; i < m_cornerNodes.size(); i++ )
     {
-      GM_Point p = m_cornerNodes.get( i ).getPoint();
+      /** location */
+      final GMLNodeResult node = m_cornerNodes.get( i );
+      final GM_Point p = node.getPoint();
+
+      sumXCoord = sumXCoord + p.getX();
+      sumYCoord = sumYCoord + p.getY();
+      sumZCoord = sumZCoord + p.getZ();
+
+      sumWaterlevel = sumWaterlevel + node.getWaterlevel();
+      sumDepth = sumDepth + node.getDepth();
+      sumVxCorner = sumVxCorner + node.getVelocity().get( 0 );
+      sumVyCorner = sumVyCorner + node.getVelocity().get( 1 );
     }
-    
+
+    final CS_CoordinateSystem crs = m_cornerNodes.get( 0 ).getPoint().getCoordinateSystem();
+    final double x = sumXCoord / m_cornerNodes.size();
+    final double y = sumYCoord / m_cornerNodes.size();
+    final double z = sumZCoord / m_cornerNodes.size();
+
+    m_centerNode.setLocation( x, y, z, crs );
 
     /* interpolate the data */
-    
+    // waterlevel
+    final double waterlevel = sumWaterlevel / m_cornerNodes.size();
+    m_centerNode.setWaterlevel( waterlevel );
+
+    // depth
+    double depth = waterlevel - z;
+    List<Double> velocity = new LinkedList<Double>();
+
+    if( depth > 0 )
+    {
+      // velocity -> use all nodes by iso-parametric interpolation
+      for( int i = 0; i < m_midsideNodes.size(); i++ )
+      {
+        final GMLNodeResult node = m_midsideNodes.get( i );
+
+        sumVxMid = sumVxMid + node.getVelocity().get( 0 );
+        sumVyMid = sumVyMid + node.getVelocity().get( 1 );
+      }
+
+      /* iso-parametric interpolation of the velocity at the center of the element (isoparam.coord.=(0, 0)) */
+
+      // TODO: check this!!
+      final double vx = sumVxMid / (m_midsideNodes.size() / 2) - sumVxCorner / m_cornerNodes.size();
+      final double vy = sumVyMid / (m_midsideNodes.size() / 2) - sumVyCorner / m_cornerNodes.size();
+
+      velocity.add( vx );
+      velocity.add( vy );
+    }
+    else
+    {
+      depth = 0;
+      velocity.add( 0.0 );
+      velocity.add( 0.0 );
+    }
+    m_centerNode.setDepth( depth );
+    m_centerNode.setVelocity( velocity );
+  }
+
+  /**
+   * assigns the waterlevel to a dry node from the nearest wetted node connected to the current node by an arc.
+   */
+  private void assignWaterlevel( GMLNodeResult node, GMLNodeResult minDistNode )
+  {
+    final double waterlevel = minDistNode.getWaterlevel();
+    final double depth = waterlevel - node.getPoint().getZ();
+    if( depth > 0 )
+      node.setResultValues( 0, 0, depth, waterlevel );
+    else
+      node.setResultValues( 0, 0, 0, waterlevel );
+  }
+
+  /**
+   * checks for the dry nodes of an element if there is a wet node as neighbor. if this is the case the waterlevel of
+   * the found wet node gets assigned to the dry node. This is important in order to get the proper inundation line.
+   */
+  public void checkWaterlevels( )
+  {
+    for( int i = 0; i < m_cornerNodes.size(); i++ )
+    {
+      final GMLNodeResult node = m_cornerNodes.get( i );
+
+      if( node.getDepth() <= 0 && node.isAssigned() == false )
+      {
+        /* node is dry */
+        // search for wet neighboring nodes and add them to a list
+        List<GMLNodeResult> neighborNodeList = new LinkedList<GMLNodeResult>();
+
+        // get the arcs of the dry node
+        final List<ArcResult> arcs = node.getArcs();
+
+        // get the wet nodes of that arcs
+        neighborNodeList = getNeighbors( node, arcs );
+
+        if( neighborNodeList.size() != 0 ) // the complete element is dry (nothing to do)
+        {
+          // get the nearest wet node
+          double minDistance = Double.MAX_VALUE;
+          double distance;
+          GMLNodeResult minDistNode = null;
+
+          for( GMLNodeResult currentNode : neighborNodeList )
+          {
+            if( isPartOfElement( currentNode ) == true )
+            {
+
+              distance = currentNode.getPoint().distance( node.getPoint() );
+              if( distance < minDistance )
+              {
+                minDistance = distance;
+                minDistNode = currentNode;
+              }
+            }
+          }
+          if( minDistNode != null )
+          {
+            assignWaterlevel( node, minDistNode );
+            node.setAssigned( true );
+            // if a node gets an assigned water level and becomes wet, maybe that has influence to other dry nodes of
+            // the element which where processed before the current node -> therefore another water level check.
+            if( node.isWet() == true )
+              checkWaterlevels();
+          }
+        }
+      }
+      else
+        isWet = true;
+    }
+  }
+
+  /**
+   * checks if a given node is part of the corner nodes of the element.
+   * 
+   * @param currentNode
+   *            the node to be checked
+   * 
+   */
+  private boolean isPartOfElement( GMLNodeResult currentNode )
+  {
+    for( INodeResult node : m_cornerNodes )
+    {
+      if( node.equals( currentNode ) )
+        return true;
+    }
+    return false;
+  }
+
+  private List<GMLNodeResult> getNeighbors( final GMLNodeResult node, final List<ArcResult> arcs )
+  {
+    final List<GMLNodeResult> neighborList = new LinkedList<GMLNodeResult>();
+
+    for( ArcResult currentArc : arcs )
+    {
+      GMLNodeResult neighboringNode;
+
+      if( currentArc.node1ID == node.getNodeID() )
+        neighboringNode = currentArc.getNodeUp();
+      else
+        neighboringNode = currentArc.getNodeDown();
+
+      if( neighboringNode.getDepth() > 0 ) // wet
+        neighborList.add( neighboringNode );
+
+    }
+    return neighborList;
+  }
+
+  public SimpleNodeResult getCenterNode( )
+  {
+    return m_centerNode;
   }
 
 }

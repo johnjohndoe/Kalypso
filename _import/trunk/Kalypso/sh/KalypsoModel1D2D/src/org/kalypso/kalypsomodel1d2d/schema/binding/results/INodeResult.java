@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.results;
 
+import java.util.List;
+
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
@@ -48,7 +50,7 @@ import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author jung
- *
+ * 
  */
 public interface INodeResult
 {
@@ -59,10 +61,24 @@ public interface INodeResult
 
   public abstract void setLocation( final double x, final double y, final double z, final CS_CoordinateSystem crs );
 
-  public abstract void setResultValues( final double vx, final double vy, final double depth, final double waterlevel );
+  public abstract void setResultValues( final double vx, final double vy, final double virtualDepth, final double waterlevel );
 
   public abstract void setMidSide( final boolean isMidSide );
 
   public abstract GM_Point getPoint( );
 
+  public abstract void setWaterlevel( final double waterlevel );
+
+  public abstract void setDepth( final double depth );
+
+  public double getDepth( );
+
+  public double getWaterlevel( );
+
+  public boolean isWet( );
+  
+  public abstract void setVelocity( List<Double> velocity );
+
+  public abstract double getAbsoluteVelocity( );
+  
 }

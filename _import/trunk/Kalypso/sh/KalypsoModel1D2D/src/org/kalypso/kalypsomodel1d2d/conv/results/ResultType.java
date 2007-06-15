@@ -38,51 +38,19 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.schema.binding.results;
+package org.kalypso.kalypsomodel1d2d.conv.results;
 
 
 /**
  * @author Thomas Jung
  *
+ * defines the possible result types
+ * 
  */
-public class ArcResult
+public class ResultType
 {
-  public int arcID;
-  public int node1ID;
-  public int node2ID;
-  public int elementLeftID; 
-  public int elementRightID; 
-  public int middleNodeID;
-  public GMLNodeResult m_nodeUp;
-  public GMLNodeResult m_nodeDown;
-  
-  public GMLNodeResult getNodeUp( )
+  public enum TYPE
   {
-    return m_nodeUp;
+    DEPTH, WATERLEVEL, VELOCITY;
   }
-
-  public void setNodeUp( GMLNodeResult nodeUp )
-  {
-    m_nodeUp = nodeUp;
-  }
-
-  public GMLNodeResult getNodeDown( )
-  {
-    return m_nodeDown;
-  }
-
-  public void setNodeDown( GMLNodeResult nodeDown )
-  {
-    m_nodeDown = nodeDown;
-  }
-
-  public ArcResult( int id, int node1, int node2, int elementLeft, int elementRight, int middleNode )
-  {
-    arcID = id;
-    node1ID = node1;
-    node2ID = node2;
-    elementLeftID = elementLeft; 
-    elementRightID = elementRight; 
-    middleNodeID = middleNode;
-  } 
 }
