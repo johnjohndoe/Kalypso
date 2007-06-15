@@ -68,6 +68,8 @@ import org.kalypso.kalypsosimulationmodel.core.modeling.ISimulationModel;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypsodeegree.graphics.displayelements.DisplayElementDecorator;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
+import org.kalypsodeegree_impl.model.sort.SplitSort;
 
 /**
  * Adapter Factory for feature in the simBase namespace
@@ -469,9 +471,11 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
       {
         final QName featureQName = feature.getFeatureType().getQName();
 
-        if( featureQName.equals( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_F_MODEL ) )
+        if( featureQName.equals( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_F_MODEL_GROUP ) )
         {
-          return new ControlModel1D2D( feature );
+          final Feature collection = (Feature)feature.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_FP_MODEL_COLLECTION );
+          final Feature f = ((XLinkedFeature_Impl)collection.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_XP_ACTIVE_MODEL )).getFeature();
+          return new ControlModel1D2D( f );
         }
         else
         {

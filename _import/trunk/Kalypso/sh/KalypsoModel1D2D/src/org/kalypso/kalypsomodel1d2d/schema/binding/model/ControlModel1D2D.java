@@ -119,7 +119,7 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
 
   public XMLGregorianCalendar getStartCalendar( )
   {
-    return (XMLGregorianCalendar) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_startsim );
+    return (XMLGregorianCalendar) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_STARTSIM );
   }
 
   public Integer getStartJulianDay( )

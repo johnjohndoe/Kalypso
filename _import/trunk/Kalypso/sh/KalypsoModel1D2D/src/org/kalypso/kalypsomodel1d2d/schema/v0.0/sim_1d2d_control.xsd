@@ -16,15 +16,16 @@
 	<import namespace="http://www.opengis.net/gml"
 		schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd" />
 	<import namespace="http://www.opengis.net/om"
-		schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/om/1.0.30/om.xsd"/>
-	<import namespace="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase"
+		schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/om/1.0.30/om.xsd" />
+	<import
+		namespace="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase"
 		schemaLocation="platform:/resource/KalypsoModelSimulationBase/src/org/kalypso/kalypsosimulationmodel/schema/v0.0.0/simulation_model.xsd" />
 
 	<!-- =================================================================
 		ControlModelGroup
 		================================================================== -->
-	<element name="ControlModelGroup"
-		type="c1d2d:ControlModelGroupType" substitutionGroup="simBase:_Model">
+	<element name="ControlModelGroup" type="c1d2d:ControlModelGroupType"
+		substitutionGroup="simBase:_Model">
 	</element>
 
 	<complexType name="ControlModelGroupType">
@@ -60,13 +61,14 @@
 	<element name="ControlModelCollection"
 		type="c1d2d:ControlModelCollectionType"
 		substitutionGroup="gml:_Feature">
-
 	</element>
+
 	<complexType name="ControlModelCollectionType">
 		<complexContent>
-			<restriction
-				base="gml:AbstractFeatureCollectionType">
+			<restriction base="gml:AbstractFeatureCollectionType">
 				<sequence>
+					<element name="activeModelID"
+						type="c1d2d:ActiveModelIDType" />
 					<element ref="c1d2d:controlModelMember"
 						minOccurs="0" maxOccurs="unbounded" />
 				</sequence>
@@ -75,7 +77,23 @@
 	</complexType>
 
 	<!-- =================================================================
-		Rougthness layer polynom member or property 
+		ActiveModelIDType
+		================================================================== -->
+	<complexType name="ActiveModelIDType">
+		<annotation>
+			<appinfo xmlns:kapp="org.kalypso.appinfo">
+				<kapp:documentReference>control.gml</kapp:documentReference>
+			</appinfo>
+		</annotation>
+		<sequence>
+			<element ref="c1d2d:ControlModel" minOccurs="0"
+				maxOccurs="0" />
+		</sequence>
+		<attributeGroup ref="gml:AssociationAttributeGroup" />
+	</complexType>
+
+	<!-- =================================================================
+		ControlModelMemberPropertyType member or property 
 		===================================================================-->
 	<element name="controlModelMember"
 		type="c1d2d:ControlModelMemberPropertyType" />
@@ -92,7 +110,21 @@
 		
 		================================================================== -->
 	<element name="ControlModel" type="c1d2d:ControlModelType"
-		substitutionGroup="gml:_Feature" />
+		substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>
+					<![CDATA[${listProperty:http://www.opengis.net/gml#name;0;-no name-}]]>
+				</label>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>
+					<![CDATA[${listProperty:http://www.opengis.net/gml#name;0;-no name-}]]>
+				</label>
+			</documentation>
+		</annotation>
+
+	</element>
 
 	<complexType name="ControlModelType">
 		<complexContent>
@@ -116,12 +148,10 @@
 							<restriction base="string">
 								<enumeration value="NEW">
 									<annotation>
-										<documentation
-											xml:lang="de">
+										<documentation xml:lang="de">
 											<label>Neueste</label>
 										</documentation>
-										<documentation
-											xml:lang="en">
+										<documentation xml:lang="en">
 											<label>latest</label>
 										</documentation>
 									</annotation>
@@ -136,9 +166,7 @@
 						default="true">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>
-									Berücksichtigung Bewuchs
-								</label>
+								<label>Berücksichtigung Bewuchs</label>
 								<tooltip>
 									Berücksichtigung der
 									Bewuchsparameter bei der Berechnung
@@ -202,18 +230,14 @@
 							<restriction base="int">
 								<enumeration value="0">
 									<annotation>
-										<documentation
-											xml:lang="de">
-											<label>
-												ohne Marsh
-											</label>
+										<documentation xml:lang="de">
+											<label>ohne Marsh</label>
 										</documentation>
 									</annotation>
 								</enumeration>
 								<enumeration value="-1">
 									<annotation>
-										<documentation
-											xml:lang="de">
+										<documentation xml:lang="de">
 											<label>
 												Default Werte nutzen
 											</label>
@@ -228,8 +252,7 @@
 								</enumeration>
 								<enumeration value="-2">
 									<annotation>
-										<documentation
-											xml:lang="de">
+										<documentation xml:lang="de">
 											<label>
 												Eingabewerte nutzen
 											</label>
@@ -258,9 +281,7 @@
 					<element name="IEDSW" default="0">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>
-									Wirbelviskositätsansatz
-								</label>
+								<label>Wirbelviskositätsansatz</label>
 								<tooltip>
 									Wirbelviskositätsansatz
 								</tooltip>
@@ -270,8 +291,7 @@
 							<restriction base="int">
 								<enumeration value="0">
 									<annotation>
-										<documentation
-											xml:lang="de">
+										<documentation xml:lang="de">
 											<label>
 												konstante Eingabedaten
 												ohne Skalierung
@@ -310,8 +330,7 @@
 									</enumeration>-->
 								<enumeration value="5">
 									<annotation>
-										<documentation
-											xml:lang="de">
+										<documentation xml:lang="de">
 											<label>
 												Konstante
 												Wirbelviskosität
@@ -321,8 +340,7 @@
 								</enumeration>
 								<enumeration value="6">
 									<annotation>
-										<documentation
-											xml:lang="de">
+										<documentation xml:lang="de">
 											<label>
 												free shear-layer
 											</label>
@@ -331,8 +349,7 @@
 								</enumeration>
 								<enumeration value="2">
 									<annotation>
-										<documentation
-											xml:lang="de">
+										<documentation xml:lang="de">
 											<label>
 												Smagorinsky-Ansatz
 											</label>
@@ -361,8 +378,7 @@
 							</restriction>
 						</simpleType>
 					</element>
-					<element name="TBMIN" type="double"
-						default="2">
+					<element name="TBMIN" type="double" default="2">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>
@@ -425,9 +441,7 @@
 					<element name="ELEV" type="double">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>
-									Anfangswasserspiegel [m]
-								</label>
+								<label>Anfangswasserspiegel [m]</label>
 								<tooltip>
 									Anfangswert des Wasserstandes über
 									jeden Knoten [m]
@@ -436,8 +450,7 @@
 						</annotation>
 					</element>
 					<!--C3-->
-					<element name="UNOM" type="double"
-						default="0.5">
+					<element name="UNOM" type="double" default="0.5">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>
@@ -482,9 +495,7 @@
 					<element name="DSET" type="double">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>
-									Trockenfalltiefe [m]
-								</label>
+								<label>Trockenfalltiefe [m]</label>
 								<tooltip>
 									Wassertiefe ab welcher Knoten
 									trocken fällt [m].
@@ -495,9 +506,7 @@
 					<element name="DSETD" type="double">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>
-									Wiederbenetzungstiefe [m]
-								</label>
+								<label>Wiederbenetzungstiefe [m]</label>
 								<tooltip>
 									Wassertiefe bei welcher trockener
 									Knoten wiederbenetzt wird [m].
@@ -562,9 +571,7 @@
 						default="0.01">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>
-									Konvergenzschranke vx [-]
-								</label>
+								<label>Konvergenzschranke vx [-]</label>
 								<tooltip>
 									Maximale Änderung der
 									Geschwindigkeit in x-Richtung [-]
@@ -576,9 +583,7 @@
 						default="0.01">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>
-									Konvergenzschranke vy [-]
-								</label>
+								<label>Konvergenzschranke vy [-]</label>
 								<tooltip>
 									Maximale Änderung der
 									Geschwindigkeit in y-Richtung [-]
@@ -591,9 +596,7 @@
 						default="0.001">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>
-									Konvergenzschranke h [-]
-								</label>
+								<label>Konvergenzschranke h [-]</label>
 								<tooltip>
 									Maximale Änderung der Wassertiefe
 									[-]
@@ -605,9 +608,7 @@
 					<element name="IDRPT" default="1">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>
-									Gleichungsdeaktivierung
-								</label>
+								<label>Gleichungsdeaktivierung</label>
 								<tooltip>
 									Deaktivierung von nicht benötigten
 									Gleichungen (konvergente
@@ -619,8 +620,7 @@
 							<restriction base="int">
 								<enumeration value="0">
 									<annotation>
-										<documentation
-											xml:lang="de">
+										<documentation xml:lang="de">
 											<label>
 												Keine Deaktivierung
 											</label>
@@ -632,8 +632,7 @@
 								</enumeration>
 								<enumeration value="1">
 									<annotation>
-										<documentation
-											xml:lang="de">
+										<documentation xml:lang="de">
 											<label>
 												Mögliche deaktivieren
 											</label>
@@ -665,13 +664,10 @@
 						</annotation>
 					</element>
 					<!--MP-->
-					<element name="AC1" type="double"
-						default="1.5">
+					<element name="AC1" type="double" default="1.5">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>
-									Deaktivierungstiefe [m]
-								</label>
+								<label>Deaktivierungstiefe [m]</label>
 								<label>
 									Tiefe unter der Oberfläche zur
 									deaktivierung von Knoten [m]
@@ -679,8 +675,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="AC2" type="double"
-						default="0.67">
+					<element name="AC2" type="double" default="0.67">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Übergangstiefe [m]</label>
@@ -691,8 +686,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="AC3" type="double"
-						default="0.04">
+					<element name="AC3" type="double" default="0.04">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Porosität [-]</label>
@@ -721,9 +715,7 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Zeitschritte</label>
-								<tooltip>
-									Time Steps Entries
-								</tooltip>
+								<tooltip>Time Steps Entries</tooltip>
 							</documentation>
 						</annotation>
 					</element>
@@ -735,15 +727,20 @@
 		<sequence>
 			<element ref="c1d2d:TimestepsObservation" minOccurs="0" />
 		</sequence>
+		<!-- 
 		<attributeGroup ref="gml:AssociationAttributeGroup" />
+		-->
 	</complexType>
 
 	<!--quasi Stationär Zeitschrittvorgabe -->
-	<element name="TimestepsObservation" type="om:ObservationType" substitutionGroup="om:Observation">
+	<element name="TimestepsObservation" type="om:ObservationType"
+		substitutionGroup="om:Observation">
 		<annotation>
 			<documentation xml:lang="de">
 				<label>Zeitschrittvorgabe</label>
-				<tooltip>Zeitschrittvorgabe der quasi stationären Berechnung</tooltip>
+				<tooltip>
+					Zeitschrittvorgabe der quasi stationären Berechnung
+				</tooltip>
 			</documentation>
 		</annotation>
 	</element>

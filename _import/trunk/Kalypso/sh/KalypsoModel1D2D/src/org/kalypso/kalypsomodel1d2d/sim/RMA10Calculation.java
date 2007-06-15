@@ -396,4 +396,9 @@ public class RMA10Calculation
 
     return (IControlModel1D2D) controlFeature.getAdapter( IControlModel1D2D.class );
   }
+
+  public Feature getControlModelFeature( )
+  {
+    return m_controlModelRoot;
+  }
 }

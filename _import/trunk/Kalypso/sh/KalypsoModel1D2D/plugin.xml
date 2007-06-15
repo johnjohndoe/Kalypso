@@ -196,13 +196,9 @@
      <extension
            point="org.eclipse.ui.newWizards">
         <wizard
-              class="org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimestepChooseWizard"
-              id="org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimestepChooseWizard"
-              name="TimeStepWizard"/>
-        <wizard
               class="org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizard"
               id="org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeWizard"
-              name="Test"/>
+              name="TimeStepFillerWizard"/>
      </extension>
      <extension
            point="org.kalypso.core.catalogContribution">
@@ -218,6 +214,16 @@
         <extensionControl
               class="org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimestepFillerControlFactory"
               id="org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimestepFillerControlFactory"/>
+     </extension>
+     <extension
+           point="org.kalypso.ui.featureViewExtensionControl">
+        <extensionControl
+              class="org.kalypso.kalypsomodel1d2d.ui.featurecontrols.ControlModelDeleteControlFactory"
+              id="org.kalypso.kalypsomodel1d2d.ui.featurecontrols.ControlModelDeleteControlFactory"/>
+        <extensionControl
+              class="org.kalypso.kalypsomodel1d2d.ui.featurecontrols.ControlModelNewControlFactory"
+              id="org.kalypso.kalypsomodel1d2d.ui.featurecontrols.ControlModelNewControlFactory">
+        </extensionControl>
      </extension>
      <extension
            point="org.kalypso.chart.LayerProvider">

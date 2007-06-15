@@ -147,13 +147,19 @@ public class Kalypso1D2DSchemaConstants
   public static final QName WB1D2D_PROP_ELEMENT_GEOM = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "geometry" );
 
   // Control model
+  public final static QName WB1D2DCONTROL_F_MODEL_GROUP = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "ControlModelGroup" );
+
   public final static QName WB1D2DCONTROL_F_MODEL = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "ControlModel" );
+
+  public final static QName WB1D2DCONTROL_FP_MODEL_COLLECTION = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "controlModelCollection" );
+
+  public final static QName WB1D2DCONTROL_XP_ACTIVE_MODEL = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "activeModelID" );
 
   public final static QName WB1D2DCONTROL_PROP_VERSION = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "Version" );
 
   public final static QName WB1D2DCONTROL_PROP_IDNOPT = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "IDNOPT" );
 
-  public final static QName WB1D2DCONTROL_PROP_startsim = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "startsim" );
+  public final static QName WB1D2DCONTROL_PROP_STARTSIM = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "startsim" );
 
   public final static QName WB1D2DCONTROL_PROP_IEDSW = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "IEDSW" );
 

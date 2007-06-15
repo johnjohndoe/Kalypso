@@ -361,13 +361,22 @@ public class Control1D2DConverter
 
   private Date getFirstTimeStep( final RMA10Calculation calculation )
   {
-    final IControlModel1D2D controlModel = calculation.getControlModel();
-    final IObservation<TupleResult> tupleSet = controlModel.getTimeSteps();
+    final Feature controlFeature = calculation.getControlModelFeature();
+    final IControlModel1D2D controlModel_ = (IControlModel1D2D) controlFeature.getAdapter( IControlModel1D2D.class );
+    final IObservation<TupleResult> tupleSet = controlModel_.getTimeSteps();
     final TupleResult result = tupleSet.getResult();
+    // todo check if result is not empty
     final IRecord record = result.get( 0 );
-
     final IComponent res_C_0 = result.getComponents()[0];
     return DateUtilities.toDate( (XMLGregorianCalendar) record.getValue( res_C_0 ) );
+    
+//    final IControlModel1D2D controlModel = calculation.getControlModel();
+//    final IObservation<TupleResult> tupleSet = controlModel.getTimeSteps();
+//    final TupleResult result = tupleSet.getResult();
+//    final IRecord record = result.get( 0 );
+//
+//    final IComponent res_C_0 = result.getComponents()[0];
+//    return DateUtilities.toDate( (XMLGregorianCalendar) record.getValue( res_C_0 ) );
   }
 
 }

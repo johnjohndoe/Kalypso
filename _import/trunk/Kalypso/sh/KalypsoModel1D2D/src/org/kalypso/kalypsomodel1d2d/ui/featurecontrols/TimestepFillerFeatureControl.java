@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.featurecontrols;
 
-import java.util.Properties;
-
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -54,26 +52,52 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.command.FeatureChange;
+import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
+import org.kalypso.ogc.gml.featureview.control.ButtonFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
+import org.kalypso.ogc.gml.selection.IFeatureSelectionListener;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
- * @author antanas
+ * @author Dejan Antanaskovic
  */
 public class TimestepFillerFeatureControl extends AbstractFeatureControl implements IFeatureControl
 {
-  private final Properties m_arguments;
+  private IFeatureControl m_featureControl;
 
-  private Button m_button;
-
-  private Feature m_feature;
-
-  public TimestepFillerFeatureControl( Feature feature, IPropertyType ftp, Properties arguments )
+  private final IFeatureSelectionListener m_fsl = new IFeatureSelectionListener()
+  {
+    public void selectionChanged(org.kalypso.ogc.gml.selection.IFeatureSelection selection) {
+      System.out.println("SELECTION CHANGEEEEEEEEEEEED!!!!!");
+    }
+  };
+  
+  private final IFeatureChangeListener m_fcl = new IFeatureChangeListener()
+  {
+    public void featureChanged( final FeatureChange[] changes )
+    {
+      System.out.println("featureChanged:" + changes.toString());
+//      final GMLWorkspace workspace = m_featureComposite.getFeature().getWorkspace();
+//      final ChangeFeaturesCommand command = new ChangeFeaturesCommand( workspace, changes );
+//
+//      m_target.setCommandManager( m_commandManager );
+//      m_target.postCommand( command, null );
+    }
+    
+    public void openFeatureRequested( final Feature feature, final IPropertyType ftp )
+    {
+      // just show this feature in the view, don't change the selection this doesn't work
+      // don't change the command manager, changing the feature only work inside the same workspace
+//      activateFeature( feature, false, null );
+    }
+  };
+  
+  public TimestepFillerFeatureControl( Feature feature, IPropertyType ftp )
   {
     super( feature, ftp );
-    m_arguments = arguments;
-    m_feature = feature;
+//    super.addChangeListener( m_fcl );
   }
 
   /**
@@ -81,6 +105,7 @@ public class TimestepFillerFeatureControl extends AbstractFeatureControl impleme
    */
   public void addModifyListener( ModifyListener l )
   {
+    System.out.println("");
   }
 
   /**
@@ -89,29 +114,30 @@ public class TimestepFillerFeatureControl extends AbstractFeatureControl impleme
   public Control createControl( final Composite parent, final int style )
   {
     final Display display = PlatformUI.getWorkbench().getDisplay();
-    m_button = new Button( parent, style );
+    final Feature feature = getFeature();
+    m_featureControl = new ButtonFeatureControl( feature, getFeatureTypeProperty() );
+    m_featureControl.addChangeListener( m_fcl );
+    final Button control = (Button)m_featureControl.createControl( parent, style );
+    control.setText( "Zeitschritte definieren" );
 
-    m_button.setText( "Zeitschritte definieren" );
-
-    m_button.addSelectionListener( new SelectionAdapter()
+    control.addSelectionListener( new SelectionAdapter()
     {
       /**
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
+      @SuppressWarnings("synthetic-access")
       @Override
       public void widgetSelected( SelectionEvent e )
       {
         final Shell shell = display.getActiveShell();
-        TimeStepFillerWizard wizard = new TimeStepFillerWizard( m_feature );
+        final TimeStepFillerWizard wizard = new TimeStepFillerWizard( getFeature() );
         final WizardDialog wizardDialog = new WizardDialog( shell, wizard );
         wizardDialog.open();
-        // MessageDialog.openInformation( parent.getShell(), "Fill Timesteps", "Do it, babe" );
-
         final FeatureChange[] changes = wizard.getFeatureChange();
         fireFeatureChange( changes );
       }
     } );
-    return m_button;
+    return control;
   }
 
   /**
@@ -134,6 +160,23 @@ public class TimestepFillerFeatureControl extends AbstractFeatureControl impleme
    */
   public void updateControl( )
   {
+    final Feature feature = getFeature();
+    IPropertyType featureTypeProperty = getFeatureTypeProperty();
+    Feature f1 = ((XLinkedFeature_Impl)feature.getParent().getParent().getProperties()[0]).getFeature();
+    System.out.println(feature.getId());
+    System.out.println(f1.getId());
+    
+//    final Feature feature = getFeature().getParent().getParent();
+//    final IPropertyType featureTypeProperty = getFeatureTypeProperty();
+//    final Object property = feature.getProperty( getFeatureTypeProperty() );
+////    if( m_selector != null && property instanceof SplitSort )
+//    {
+//      final Feature f = ((XLinkedFeature_Impl) feature.getProperty( m_selector )).getFeature();
+//      m_featureControl.setFeature( f );
+//    }
+////    m_featureControl.setFeature( feature );
+//    m_featureControl.updateControl();
+
   }
 
 }
