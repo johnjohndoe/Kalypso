@@ -75,8 +75,8 @@ public class PolygonGeometryBuilder implements IGeometryBuilder
    * The constructor.
    * 
    * @param cnt_points
-   *          If >0 the the geometry will be finished, if the count of points is reached. If 0 no rule regarding the
-   *          count of the points will apply.
+   *          If > 2 the the geometry will be finished, if the count of points is reached. If <= 2 no rule regarding the
+   *          count of the points will apply, except, that a polygon needs at least 3 points for beeing created.
    * @param targetCrs
    *          The target coordinate system.
    */
@@ -84,7 +84,7 @@ public class PolygonGeometryBuilder implements IGeometryBuilder
   {
     m_cnt_points = 0;
 
-    if( cnt_points >= 0 )
+    if( cnt_points > 2 )
       m_cnt_points = cnt_points;
 
     m_crs = targetCrs;
@@ -108,7 +108,7 @@ public class PolygonGeometryBuilder implements IGeometryBuilder
    */
   public GM_Object finish( ) throws Exception
   {
-    if( (m_points.size() == m_cnt_points) || (m_cnt_points == 0) )
+    if( (m_points.size() == m_cnt_points) || ((m_cnt_points == 0)&&(m_points.size()> 2)) )
     {
       final GeoTransformer transformer = new GeoTransformer( m_crs );
 
