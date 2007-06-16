@@ -52,7 +52,9 @@ import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Formatter;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -69,11 +71,14 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.lang.ProcessHelper;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.commons.performance.TimeLogger;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter;
 import org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv;
 import org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler;
 import org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv;
 import org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler;
+import org.kalypso.kalypsomodel1d2d.conv.results.ResultType;
+import org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceTriangleEater;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -83,7 +88,10 @@ import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * Implements the {@link ISimulation} interface to provide the simulation job for the 1d2d model
@@ -271,18 +279,22 @@ public class SimMode1D2DCalcJob implements ISimulation
     }
   }
 
-  private File read2DIntoNodeResult( final File result2dFile, final File outputDir, final ISimulationDataProvider dataProvider ) throws IOException, InvocationTargetException, GmlSerializeException, SimulationException
+  public static File read2DIntoNodeResult( final File result2dFile, final File outputDir, final ISimulationDataProvider dataProvider ) throws IOException, InvocationTargetException, GmlSerializeException, SimulationException, GM_Exception
   {
     final TimeLogger logger = new TimeLogger( "Start: lese .2d Ergebnisse" );
 
+    if( dataProvider != null )
+    {
     /* Write template sld into result folder */
     final URL resultStyleURL = (URL) dataProvider.getInputForID( "ResultStyle" );
     FileUtils.copyURLToFile( resultStyleURL, new File( outputDir, "result.sld" ) );
 
     final URL resultURL = (URL) dataProvider.getInputForID( "ResultMap" );
     FileUtils.copyURLToFile( resultURL, new File( outputDir, "result.gmt" ) );
+    }
 
     final File gmlResultFile = new File( outputDir, "results.gml" );
+    final File tinResultFile = new File( outputDir, "tin.gml" );
 
     InputStream is = null;
     try
@@ -290,14 +302,35 @@ public class SimMode1D2DCalcJob implements ISimulation
       is = new FileInputStream( result2dFile );
 
       /* GMLWorkspace für Ergebnisse anlegen */
-
       final GMLWorkspace resultWorkspace = FeatureFactory.createGMLWorkspace( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "NodeResultCollection" ), gmlResultFile.toURL(), null );
 
       /* .2d Datei lesen und GML füllen */
       final RMA10S2GmlConv conv = new RMA10S2GmlConv();
-      final IRMA10SModelElementHandler handler = new NodeResultsHandler( resultWorkspace );
+      
+      // TODO: use multi-eater to write multiple triangles at once
+      // move workspace creation into multi-eater
+      final GMLWorkspace wspTriangleWorkspace = FeatureFactory.createGMLWorkspace( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "TinResult" ), gmlResultFile.toURL(), null );
+      final CS_CoordinateSystem crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+      final GM_TriangulatedSurface surface= org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_TriangulatedSurface( crs );
+      wspTriangleWorkspace.getRootFeature().setProperty( new QName(UrlCatalog1D2D.MODEL_1D2DResults_NS, "triangulatedSurfaceMember"), surface );
+      
+      
+      /* just for test purposes */
+      final List<ResultType.TYPE> parameters = new ArrayList<ResultType.TYPE>();
+      
+      parameters.add( ResultType.TYPE.DEPTH );
+      parameters.add( ResultType.TYPE.WATERLEVEL );
+      parameters.add( ResultType.TYPE.VELOCITY );
+      
+//      final File resultHMOFile = new File( "D:/Projekte/kalypso_dev/post-processing/output.hmo" );
+//      final HMOTriangleEater triangleEater = new HMOTriangleEater( resultHMOFile, parameters );
+      final TriangulatedSurfaceTriangleEater triangleEater = new TriangulatedSurfaceTriangleEater( surface );
+      final IRMA10SModelElementHandler handler = new NodeResultsHandler( resultWorkspace, triangleEater );
       conv.setRMA10SModelElementHandler( handler );
 
+      logger.takeInterimTime();
+      logger.printCurrentInterim( "Beginn Parsen in : " );
+      
       conv.parse( is );
 
       is.close();
@@ -305,8 +338,11 @@ public class SimMode1D2DCalcJob implements ISimulation
       logger.takeInterimTime();
       logger.printCurrentInterim( "Fertig mit Lesen in : " );
 
-      /* GML in Datei schreiben */
-      GmlSerializer.serializeWorkspace( gmlResultFile, resultWorkspace, "UTF-8" );
+      triangleEater.finished();
+      
+      /* GMLs in Datei schreiben */
+      //GmlSerializer.serializeWorkspace( gmlResultFile, resultWorkspace, "UTF-8" );
+      GmlSerializer.serializeWorkspace( tinResultFile, wspTriangleWorkspace, "UTF-8" );
 
       return gmlResultFile;
     }
