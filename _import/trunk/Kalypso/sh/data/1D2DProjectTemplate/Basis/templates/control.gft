@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <gft:featuretemplate xmlns:gft="featureview.template.kalypso.org" xmlns:ns1="gistableview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml">
-    <gft:layer id="layer_1" featurePath="#fid#root" linktype="gml" xlink:href="platform:/resource//bbb/Basis/models/control.gml"/>
+    <gft:layer id="layer_1" featurePath="#fid#root" linktype="gml" xlink:href="../models/control.gml"/>
 
     <gft:view typename="c1d2d:TimestepsObservation" style="SWT.NONE" xmlns:c1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl">
         <gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="false"/>
