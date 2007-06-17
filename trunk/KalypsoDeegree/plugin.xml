@@ -73,7 +73,7 @@
       <function
             class="org.kalypsodeegree_impl.filterencoding.FeatureTypeFunctionExpression"
             label="FeatureType-Name"
-            name="org.kalypso.deeegree.featureTypeName">
+            name="org.kalypso.deeegree.functionExpression.featureTypeName">
       </function>
    </extension>
 
