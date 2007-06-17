@@ -51,7 +51,7 @@ import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * @author belger
+ * @author Gernot Belger
  */
 public abstract class AbstractFeatureControl implements IFeatureControl
 {
@@ -59,7 +59,7 @@ public abstract class AbstractFeatureControl implements IFeatureControl
 
   private final IPropertyType m_ftp;
 
-  private Collection<IFeatureChangeListener> m_changelisteners = new ArrayList<IFeatureChangeListener>();
+  private final Collection<IFeatureChangeListener> m_changelisteners = new ArrayList<IFeatureChangeListener>();
 
   public AbstractFeatureControl( final IPropertyType ftp )
   {
@@ -117,9 +117,8 @@ public abstract class AbstractFeatureControl implements IFeatureControl
   protected final void fireFeatureChange( final FeatureChange[] changes )
   {
     final IFeatureChangeListener[] listeners = m_changelisteners.toArray( new IFeatureChangeListener[m_changelisteners.size()] );
-    for( int i = 0; i < listeners.length; i++ )
+    for( final IFeatureChangeListener listener : listeners )
     {
-      final IFeatureChangeListener listener = listeners[i];
       SafeRunner.run( new SafeRunnable()
       {
         public void run( ) throws Exception
@@ -133,9 +132,8 @@ public abstract class AbstractFeatureControl implements IFeatureControl
   protected final void fireOpenFeatureRequested( final Feature feature, final IPropertyType ftp )
   {
     final IFeatureChangeListener[] listeners = m_changelisteners.toArray( new IFeatureChangeListener[m_changelisteners.size()] );
-    for( int i = 0; i < listeners.length; i++ )
+    for( final IFeatureChangeListener listener : listeners )
     {
-      final IFeatureChangeListener listener = listeners[i];
       SafeRunner.run( new SafeRunnable()
       {
         public void run( ) throws Exception

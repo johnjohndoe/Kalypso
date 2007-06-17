@@ -120,12 +120,12 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
     if( m_result != null )
     {
       // Only remove columns if input non null, because input==null may happen while disposing
-      refrehsColumns( m_result );
+      refreshColumns( m_result );
       m_result.addChangeListener( this );
     }
   }
 
-  private void refrehsColumns( final TupleResult result )
+  private void refreshColumns( final TupleResult result )
   {
     m_tableViewer.removeAllColumns();
 
@@ -142,16 +142,12 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
       final int ro = (style & SWT.READ_ONLY);
 
       final CellEditor editor;
-      if( ro == SWT.READ_ONLY )
-      {
-        m_tableViewer.addColumn( id, component.getName(), 100, false, style );
-        editor = TupleResultProviderFactory.getCellEditor( component, m_tableViewer, SWT.NONE, false );
-      }
-      else
-      {
-        m_tableViewer.addColumn( id, component.getName(), 100, true, style );
-        editor = TupleResultProviderFactory.getCellEditor( component, m_tableViewer, SWT.NONE, true );
-      }
+      final String label = component.getName();
+      final String tooltip = component.getDescription();
+      final boolean editable = ro != SWT.READ_ONLY;
+
+      m_tableViewer.addColumn( id, label, tooltip, 100, editable, style );
+      editor = TupleResultProviderFactory.getCellEditor( component, m_tableViewer, SWT.NONE, editable );
 
       m_componentMap.put( id, component );
 
@@ -314,7 +310,7 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
    */
   public void componentsChanged( final IComponent[] components, final TYPE type )
   {
-    refrehsColumns( getResult() );
+    refreshColumns( getResult() );
     m_tableViewer.refresh();
   }
 

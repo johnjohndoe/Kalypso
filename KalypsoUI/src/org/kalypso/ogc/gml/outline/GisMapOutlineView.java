@@ -192,19 +192,6 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView
         }
       }
     };
-
-    // TODO: this is no good!
-    // do not set this to the selection provider of another part!
-    // Instead: set this to the slection provider of my site, the StyleEditor should listen to any selection
-    // and react accordingly
-    // // bei jedem Focus, überprüfe ob outline beim StyleEditor registriert ist.
-    // final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-    // final StyleEditorViewPart part = (StyleEditorViewPart) window.getActivePage().findView(
-    // "org.kalypso.ui.editor.mapeditor.views.styleeditor" );
-    //
-    // if( part != null )
-    // part.setSelectionChangedProvider( m_viewer );
-
   }
 
   protected void setMapPart( final AbstractMapPart mapPart )
@@ -284,6 +271,8 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView
       m_panel.addMapPanelListener( m_mapPanelListener );
       m_viewer.setMapModel( m_panel.getMapModell() );
     }
+    else
+      m_viewer.setMapModel( null );
 
     fireMapModellViewChanged( oldPanel, panel );
   }

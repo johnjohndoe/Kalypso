@@ -59,32 +59,29 @@ public class IdTableViewer extends DefaultTableViewer implements ICellModifier
 
   private static final String COL_OBS = "COL_OBS";
 
-  public IdTableViewer( Composite parent, int style )
+  public IdTableViewer( final Composite parent, final int style )
   {
     super( parent, style );
 
     setContentProvider( new IdTableContentProvider() );
     setLabelProvider( new IdTableLabelProvider() );
-    setCellEditors( new CellEditor[]
-    {
-        null,
-        new ObservationCellEditor( parent ) } );
+    setCellEditors( new CellEditor[] { null, new ObservationCellEditor( parent ) } );
     setCellModifier( this );
 
     final Table table = getTable();
     table.setHeaderVisible( true );
     table.setLinesVisible( true );
 
-    addColumn( COL_OBS, "Zeitreihe", 250, true, SWT.CENTER );
-    addColumn( COL_HREF, "Kennzeichen", 400, true, SWT.CENTER );
+    addColumn( COL_OBS, "Zeitreihe", null, 250, true, SWT.CENTER );
+    addColumn( COL_HREF, "Kennzeichen", null, 400, true, SWT.CENTER );
 
-    //refreshColumnProperties();
+    // refreshColumnProperties();
   }
 
   /**
    * @see org.eclipse.jface.viewers.ICellModifier#canModify(java.lang.Object, java.lang.String)
    */
-  public boolean canModify( Object element, String property )
+  public boolean canModify( final Object element, final String property )
   {
     return property.equals( COL_HREF );
   }
@@ -92,10 +89,10 @@ public class IdTableViewer extends DefaultTableViewer implements ICellModifier
   /**
    * @see org.eclipse.jface.viewers.ICellModifier#getValue(java.lang.Object, java.lang.String)
    */
-  public Object getValue( Object element, String property )
+  public Object getValue( final Object element, final String property )
   {
     if( property.equals( COL_HREF ) )
-      return ( (IdStruct)element ).getId();
+      return ((IdStruct) element).getId();
 
     return null;
   }
@@ -103,13 +100,13 @@ public class IdTableViewer extends DefaultTableViewer implements ICellModifier
   /**
    * @see org.eclipse.jface.viewers.ICellModifier#modify(java.lang.Object, java.lang.String, java.lang.Object)
    */
-  public void modify( Object element, String property, Object value )
+  public void modify( final Object element, final String property, final Object value )
   {
     if( property.equals( COL_HREF ) )
     {
-      final Object data = ( (Item)element ).getData();
-      final IdStruct ids = (IdStruct)data;
-      ids.setId( (String)value );
+      final Object data = ((Item) element).getData();
+      final IdStruct ids = (IdStruct) data;
+      ids.setId( (String) value );
     }
   }
 }

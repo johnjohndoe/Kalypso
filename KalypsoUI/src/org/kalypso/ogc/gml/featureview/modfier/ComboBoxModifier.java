@@ -60,7 +60,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
- * @author belger
+ * @author Gernot Belger
  */
 public class ComboBoxModifier implements IFeatureModifier
 {
@@ -72,9 +72,9 @@ public class ComboBoxModifier implements IFeatureModifier
 
   private Feature m_feature;
 
-  private Map<String, Object> m_entries = new HashMap<String, Object>();
+  private final Map<String, Object> m_entries = new HashMap<String, Object>();
 
-  private ComboBoxCellEditor m_comboBoxCellEditor = new ComboBoxCellEditor();
+  private final ComboBoxCellEditor m_comboBoxCellEditor = new ComboBoxCellEditor();
 
   public ComboBoxModifier( final IRelationType ftp )
   {
@@ -92,7 +92,7 @@ public class ComboBoxModifier implements IFeatureModifier
     {
       /* Null entry to delete link if this is allowed */
       if( m_rt.isNillable() )
-        m_entries.put( NO_LINK_STRING, NULL_LINK ); //$NON-NLS-1$
+        m_entries.put( NO_LINK_STRING, NULL_LINK );
 
       /* Find all substituting features. */
       final Feature feature = getFeature();
@@ -177,7 +177,7 @@ public class ComboBoxModifier implements IFeatureModifier
     // TODO: GUITypeHandler konsequent einsetzen
     // besser: abhängig von der IPropertyType etwas machen
     final IPropertyType ftp = getFeatureTypeProperty();
-    Object fprop = f.getProperty( ftp );
+    final Object fprop = f.getProperty( ftp );
     if( fprop != null )
     {
       return fprop.toString();
