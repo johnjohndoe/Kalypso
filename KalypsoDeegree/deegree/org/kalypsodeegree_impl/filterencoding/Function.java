@@ -118,14 +118,10 @@ public class Function extends Expression_Impl
 
     // determine the arguments of the Function
     final ElementList children = XMLTools.getChildElements( element );
-    if( children.getLength() < 1 )
-      throw new FilterConstructionException( "'" + name + "' requires at least 1 element!" );
 
-    final ArrayList<Expression> args = new ArrayList<Expression>( children.getLength() );
+    final List<Expression> args = new ArrayList<Expression>( children.getLength() );
     for( int i = 0; i < children.getLength(); i++ )
-    {
       args.add( Expression_Impl.buildFromDOM( children.item( i ) ) );
-    }
 
     return new Function( name, args );
   }
@@ -160,11 +156,10 @@ public class Function extends Expression_Impl
   {
     final StringBuffer sb = new StringBuffer( 1000 );
     sb.append( "<ogc:Function name=\"" ).append( m_name ).append( "\">" );
-    for( int i = 0; i < m_args.size(); i++ )
-    {
-      final Expression expr = m_args.get( i );
+
+    for( final Expression expr : m_args )
       sb.append( expr.toXML() );
-    }
+
     sb.append( "</ogc:Function>" );
     return sb;
   }
