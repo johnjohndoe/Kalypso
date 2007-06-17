@@ -80,7 +80,7 @@ import org.kalypsodeegree_impl.model.feature.visitors.FeatureSubstitutionVisitor
  * Today only properties with String type are supported.
  * </p>
  * 
- * @author belger
+ * @author Gernot Belger
  */
 public class ComboFeatureControl extends AbstractFeatureControl
 {
@@ -123,8 +123,13 @@ public class ComboFeatureControl extends AbstractFeatureControl
 
     if( ftp instanceof IValuePropertyType )
     {
-      final Map<Object, String> createComboEntries = PropertyUtils.createComboEntries( (IValuePropertyType) ftp );
+      final IValuePropertyType vpt = (IValuePropertyType) ftp;
+      final Map<Object, String> createComboEntries = PropertyUtils.createComboEntries( vpt );
       m_entries.putAll( createComboEntries );
+
+      if( vpt.isFixed() )
+        m_comboViewer.getControl().setEnabled( false );
+
       return;
     }
 
@@ -276,7 +281,7 @@ public class ComboFeatureControl extends AbstractFeatureControl
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#removeModifyListener(org.eclipse.swt.events.ModifyListener)
    */
-  public void removeModifyListener( ModifyListener l )
+  public void removeModifyListener( final ModifyListener l )
   {
     m_listeners.remove( l );
   }
