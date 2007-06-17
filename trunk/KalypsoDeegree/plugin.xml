@@ -4,6 +4,7 @@
    <extension-point id="functionProperty" name="functionProperty" schema="schema/functionProperty.exsd"/>
    <extension-point id="gmlWorkspaceListener" name="gmlWorkspaceListener" schema="schema/gmlWorkspaceListener.exsd"/>
    <extension-point id="featureRule" name="featureRule" schema="schema/featureRule.exsd"/>
+   <extension-point id="functionExpression" name="functionExpression" schema="schema/functionExpression.exsd"/>
 
      <extension
          id="org.kalypso.deegree.catalog"
@@ -66,6 +67,14 @@
          <adapter type="org.kalypsodeegree_impl.gml.binding.math.IPolynomial2D"/>
       </factory>
       
+   </extension>
+   <extension
+         point="org.kalypso.deegree.functionExpression">
+      <function
+            class="org.kalypsodeegree_impl.filterencoding.FeatureTypeFunctionExpression"
+            label="FeatureType-Name"
+            name="org.kalypso.deeegree.featureTypeName">
+      </function>
    </extension>
 
 </plugin>

@@ -73,7 +73,7 @@ public class ChangeFeaturesCommand implements ICommand
 
       final Object oldValue = change.getFeature().getProperty( change.getProperty() );
       m_oldChanges[i] = new FeatureChange( change.getFeature(), change.getProperty(), oldValue );
-      System.out.println("FC prop: " + change.getProperty());
+//      System.out.println("FC prop: " + change.getProperty());
     }
   }
 

@@ -110,12 +110,12 @@ public interface GMLWorkspace extends ModellEventProvider
   /**
    * Creates a feature an puts it into this workspace. Also create subfeatures where apropriate.
    * <p>
-   * Generates a unique id througout this workspace.
+   * Generates a unique id throughout this workspace.
    * </p>
    * 
    * @param depth
-   *          Number of levels of subfeatures which shall be created. -1 means infinite, 0 means none (only normal
-   *          properties are filled with default values).
+   *            Number of levels of subfeatures which shall be created. -1 means infinite, 0 means none (only normal
+   *            properties are filled with default values).
    */
   public Feature createFeature( final Feature parent, final IRelationType parentRelation, final IFeatureType type, final int depth );
 
@@ -126,8 +126,8 @@ public interface GMLWorkspace extends ModellEventProvider
    * sfirst created, that this method is called).; Second: a featuree hsould never live without workspace
    * 
    * @param pos
-   *          Position at which the new element is inserted into the list. If -1, the new element is added to the end of
-   *          the list.
+   *            Position at which the new element is inserted into the list. If -1, the new element is added to the end
+   *            of the list.
    */
   public void addFeatureAsComposition( Feature parent, final IRelationType linkProperty, int pos, Feature newFeature ) throws Exception;
 
@@ -181,7 +181,7 @@ public interface GMLWorkspace extends ModellEventProvider
    * @param feature
    * @param depth
    * @param featureProperties
-   *          properties to follow
+   *            properties to follow
    */
   public void accept( final FeatureVisitor visitor, Feature feature, int depth, final IPropertyType[] featureProperties );
 

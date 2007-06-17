@@ -74,10 +74,15 @@ public class FilterEvaluationException extends Exception
    * Constructs a new <tt>FilterEvaluationException</tt> with the given detail message.
    * 
    * @param msg
-   *          the detail message
+   *            the detail message
    */
-  public FilterEvaluationException( String msg )
+  public FilterEvaluationException( final String msg )
   {
     super( msg );
+  }
+
+  public FilterEvaluationException( final String msg, final Throwable cause )
+  {
+    super( msg, cause );
   }
 }

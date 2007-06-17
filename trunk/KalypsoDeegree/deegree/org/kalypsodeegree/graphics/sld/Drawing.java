@@ -60,7 +60,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree.graphics.sld;
 
-import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This is the top level interface of <tt>Fill</tt> and <tt>Stroke</tt> defining the methods
@@ -79,14 +79,14 @@ public interface Drawing
    * 
    * @return the GraphicFill-Element
    */
-  GraphicFill getGraphicFill();
+  GraphicFill getGraphicFill( );
 
   /**
    * The GraphicFill element both indicates that a stipple-fill repeated graphic will be used and specifies the fill
    * graphic.
    * 
    * @param graphicFill
-   *          the GraphicFill-Element
+   *            the GraphicFill-Element
    */
   void setGraphicFill( GraphicFill graphicFill );
 
@@ -98,7 +98,7 @@ public interface Drawing
    * 
    * @return the CssParameters
    */
-  HashMap getCssParameters();
+  Map getCssParameters( );
 
   /**
    * A simple SVG/CSS2 styling parameters are given with the CssParameter element.
@@ -107,9 +107,9 @@ public interface Drawing
    * This method sets CssParameters.
    * 
    * @param cssParameters
-   *          the CssParameters
+   *            the CssParameters
    */
-  void setCssParameters( HashMap cssParameters );
+  void setCssParameters( Map cssParameters );
 
   /**
    * A simple SVG/CSS2 styling parameters are given with the CssParameter element.
@@ -119,9 +119,9 @@ public interface Drawing
    * <p>
    * 
    * @param key
-   *          the key of the object to insert
+   *            the key of the object to insert
    * @param value
-   *          the value of the object to insert
+   *            the value of the object to insert
    */
   void addCssParameter( Object key, Object value );
 
@@ -132,7 +132,7 @@ public interface Drawing
    * This method removes a CssParameter from a given set of CssParameters.
    * 
    * @param value
-   *          the key of the object to remove
+   *            the key of the object to remove
    */
   void removeCssParameter( Object value );
 }

@@ -63,9 +63,13 @@ package org.kalypsodeegree_impl.filterencoding;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.CoreException;
+import org.kalypsodeegree.KalypsoDeegreeExtensions;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.filterencoding.Expression;
 import org.kalypsodeegree.filterencoding.FilterConstructionException;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
+import org.kalypsodeegree.filterencoding.IFunctionExpression;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.xml.ElementList;
 import org.kalypsodeegree.xml.XMLTools;
@@ -83,7 +87,7 @@ public class Function extends Expression_Impl
   private String m_name;
 
   /** The Function's arguments. */
-  private final ArrayList<Expression> m_args = new ArrayList<Expression>();
+  private final List<Expression> m_args = new ArrayList<Expression>();
 
   /** Constructs a new Function. */
   public Function( final String name, final List<Expression> args )
@@ -174,6 +178,19 @@ public class Function extends Expression_Impl
    */
   public Object evaluate( final Feature feature ) throws FilterEvaluationException
   {
-    throw new FilterEvaluationException( "Function evaluation is not implemented yet!" );
+    try
+    {
+      final IFunctionExpression function = KalypsoDeegreeExtensions.createFunctionExpression( m_name );
+      if( function == null )
+        throw new FilterEvaluationException( "Unknown function: " + m_name );
+
+      return function.evaluate( feature, m_args );
+    }
+    catch( final CoreException e )
+    {
+      KalypsoDeegreePlugin.getDefault().getLog().log( e.getStatus() );
+
+      throw new FilterEvaluationException( "Failed to creeate function: " + m_name, e );
+    }
   }
 }
