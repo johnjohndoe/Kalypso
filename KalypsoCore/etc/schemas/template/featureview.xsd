@@ -337,6 +337,8 @@
 	<xs:complexType name="SubcompositeType">
 		<xs:complexContent>
 			<xs:extension base="fv:PropertyControlType">
+				<!-- TODO: at LEAST change to qname; never just use the property-tag-name, its not unique!
+				BETTER: use gml-xpath to select property. See ControlType-enableOperation for an example. -->
 					<xs:attribute name="selector" type="xs:string"
 						use="optional"/>
 			</xs:extension>

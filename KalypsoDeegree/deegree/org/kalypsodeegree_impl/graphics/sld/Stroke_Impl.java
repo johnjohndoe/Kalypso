@@ -63,6 +63,7 @@ package org.kalypsodeegree_impl.graphics.sld;
 import java.awt.Color;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 import org.kalypsodeegree.filterencoding.Expression;
@@ -128,7 +129,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
    * @param cssParams keys are <tt>Strings<tt> (see above), values are
    *                  <tt>CssParameters</tt>
    */
-  public Stroke_Impl( final HashMap cssParams, final GraphicStroke graphicStroke, final GraphicFill graphicFill )
+  public Stroke_Impl( final Map cssParams, final GraphicStroke graphicStroke, final GraphicFill graphicFill )
   {
     super( cssParams, graphicFill );
     this.graphicStroke = graphicStroke;

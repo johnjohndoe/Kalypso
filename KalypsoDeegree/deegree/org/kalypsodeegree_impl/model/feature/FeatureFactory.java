@@ -105,11 +105,11 @@ public class FeatureFactory
    * IFeatureType.
    * 
    * @param id
-   *          unique id of the <CODE>Feature</CODE>
+   *            unique id of the <CODE>Feature</CODE>
    * @param featureType
-   *          <CODE>IFeatureType</CODE> of the <CODE>Feature</CODE>
+   *            <CODE>IFeatureType</CODE> of the <CODE>Feature</CODE>
    * @param properties
-   *          properties (content) of the <CODE>Feature</CODE>
+   *            properties (content) of the <CODE>Feature</CODE>
    * @return instance of a <CODE>Feature</CODE>
    */
   public static Feature createFeature( final Feature parent, final IRelationType parentRelation, final String id, final IFeatureType featureType, final Object[] properties )
@@ -129,8 +129,8 @@ public class FeatureFactory
    * Erzeugt ein Feature mit gesetzter ID und füllt das Feature mit Standardwerten.
    * 
    * @param initializeWithDefaults
-   *          set <code>true</code> to generate default properties (e.g. when generating from UserInterface) <br>
-   *          set <code>false</code> to not generate default properties (e.g. when reading from GML or so.)
+   *            set <code>true</code> to generate default properties (e.g. when generating from UserInterface) <br>
+   *            set <code>false</code> to not generate default properties (e.g. when reading from GML or so.)
    */
   public static Feature createFeature( final Feature parent, final IRelationType parentRelation, final String id, final IFeatureType featureType, final boolean initializeWithDefaults, final int depth )
   {
@@ -192,13 +192,19 @@ public class FeatureFactory
       final IValuePropertyType vpt = (IValuePropertyType) ftp;
 
       // get default value from schema if possible
-      final String defaultValue = vpt.getDefault();
+      final String defaultValue;
+      if( vpt.hasDefault() )
+        defaultValue = vpt.getDefault();
+      else if( vpt.isFixed() )
+        defaultValue = vpt.getFixed();
+      else
+        defaultValue = null;
 
       // Only fill non optional values with default value set
       if( isOptional || defaultValue == null )
         return null;
 
-      final IMarshallingTypeHandler typeHandler = (IMarshallingTypeHandler) vpt.getTypeHandler();
+      final IMarshallingTypeHandler typeHandler = vpt.getTypeHandler();
       if( typeHandler != null && defaultValue != null )
       {
         try
@@ -257,23 +263,22 @@ public class FeatureFactory
     return new SplitSort( parentFeature, parentFTP, env );
   }
 
-  public static IPropertyType[] createVirtualFeatureTypeProperties( IFeatureType realFeatureType )
+  public static IPropertyType[] createVirtualFeatureTypeProperties( final IFeatureType realFeatureType )
   {
     final List<IPropertyType> result = new ArrayList<IPropertyType>();
     final VirtualFeatureTypeRegistry registry = VirtualFeatureTypeRegistry.getInstance();
     final IPropertyType[] properties = realFeatureType.getProperties();
 
-    for( int i = 0; i < properties.length; i++ )
+    for( final IPropertyType ftp : properties )
     {
-      final IPropertyType ftp = properties[i];
       final IPropertyType[] newFtp = registry.getVirtualFeatureTypePropertiesFor( ftp );
-      for( int j = 0; j < newFtp.length; j++ )
-        result.add( newFtp[j] );
+      for( final IPropertyType element : newFtp )
+        result.add( element );
     }
 
     final IPropertyType[] vftp = registry.getVirtualFeatureTypePropertiesFor( realFeatureType );
-    for( int i = 0; i < vftp.length; i++ )
-      result.add( vftp[i] );
+    for( final IPropertyType element : vftp )
+      result.add( element );
 
     return result.toArray( new IPropertyType[result.size()] );
   }

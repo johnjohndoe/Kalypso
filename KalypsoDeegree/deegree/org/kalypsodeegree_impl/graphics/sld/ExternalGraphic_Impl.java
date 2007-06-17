@@ -184,10 +184,11 @@ public class ExternalGraphic_Impl implements ExternalGraphic, Marshallable
   {
     if( m_image == null )
     {
+      RenderedOp rop = null;
       try
       {
         final URL url = m_resolver.resolveURL( m_onlineResource );
-        final RenderedOp rop = JAI.create( "url", url );
+        rop = JAI.create( "url", url );
         m_image = rop.getAsBufferedImage();
       }
       catch( final IOException e )
@@ -196,6 +197,8 @@ public class ExternalGraphic_Impl implements ExternalGraphic, Marshallable
       }
       finally
       {
+        if( rop != null )
+          rop.dispose();
       }
 
     }

@@ -62,9 +62,7 @@
 package org.kalypsodeegree.model.geometry;
 
 /**
- * 
  * The interface defines the access to curve geometries. Curves are made of one or more curve segments.
- * 
  * <p>
  * -----------------------------------------------------
  * </p>
@@ -76,15 +74,9 @@ package org.kalypsodeegree.model.geometry;
 public interface GM_Curve extends GM_OrientableCurve, GM_GenericCurve
 {
   /**
-   * @link aggregationByValue
-   * @clientCardinality 1..*
-   */
-  /* #GM_CurveSegment lnkGM_CurveSegment; */
-
-  /**
    * returns the number of segments building the curve
    */
-  int getNumberOfCurveSegments();
+  int getNumberOfCurveSegments( );
 
   /**
    * returns the curve segment at the submitted index

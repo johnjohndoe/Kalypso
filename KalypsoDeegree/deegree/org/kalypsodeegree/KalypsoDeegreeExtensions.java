@@ -56,9 +56,11 @@ import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
+import org.kalypso.contribs.eclipse.core.runtime.ExtensionUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypsodeegree.filterencoding.IFunctionExpression;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GmlWorkspaceListenerProxy;
 import org.kalypsodeegree.model.feature.IGmlWorkspaceListener;
@@ -79,6 +81,8 @@ public class KalypsoDeegreeExtensions
   private final static String RULES_EXTENSION_POINT = "org.kalypso.deegree.featureRule";
 
   private static final IGmlWorkspaceListener[] EMPTY_LISTENERS = new IGmlWorkspaceListener[] {};
+
+  private static Map<String, IConfigurationElement> FUNCTION_EXPRESSION = null;
 
   private static Map<QName, List<IFeatureRule>> THE_RULES = null;
 
@@ -244,6 +248,24 @@ public class KalypsoDeegreeExtensions
 
     final List<IFeatureRule> nameList = THE_RULES.get( name );
     nameList.add( rule );
+  }
+
+  public static IFunctionExpression createFunctionExpression( final String name ) throws CoreException
+  {
+    final Map<String, IConfigurationElement> functions = getFunctionExpressionElements();
+    final IConfigurationElement configurationElement = functions.get( name );
+    return (IFunctionExpression) configurationElement.createExecutableExtension( "class" );
+  }
+
+  /**
+   * Returns the registered extension of the functionExpression extenion-point, indexed by its name attribute.
+   */
+  private static synchronized Map<String, IConfigurationElement> getFunctionExpressionElements( )
+  {
+    if( FUNCTION_EXPRESSION == null )
+      FUNCTION_EXPRESSION = ExtensionUtilities.getConfigurationElements( "org.kalypso.deegree.functionExpression", "name" );
+
+    return FUNCTION_EXPRESSION;
   }
 
 }

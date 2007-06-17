@@ -60,7 +60,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.graphics.sld;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import org.kalypsodeegree.graphics.sld.Drawing;
 import org.kalypsodeegree.graphics.sld.GraphicFill;
@@ -78,12 +78,12 @@ public class Drawing_Impl implements Drawing
 {
   protected GraphicFill graphicFill = null;
 
-  protected HashMap cssParams = null;
+  protected Map cssParams = null;
 
   /**
    * Constructs a new instance of <tt>Drawing_Impl</tt>.
    */
-  Drawing_Impl( HashMap cssParams, GraphicFill graphicFill )
+  Drawing_Impl( final Map cssParams, final GraphicFill graphicFill )
   {
     this.cssParams = cssParams;
     this.graphicFill = graphicFill;
@@ -95,7 +95,7 @@ public class Drawing_Impl implements Drawing
    * 
    * @return the GraphicFill-Element
    */
-  public GraphicFill getGraphicFill()
+  public GraphicFill getGraphicFill( )
   {
     return graphicFill;
   }
@@ -105,9 +105,9 @@ public class Drawing_Impl implements Drawing
    * graphic.
    * 
    * @param graphicFill
-   *          the GraphicFill-Element
+   *            the GraphicFill-Element
    */
-  public void setGraphicFill( GraphicFill graphicFill )
+  public void setGraphicFill( final GraphicFill graphicFill )
   {
     this.graphicFill = graphicFill;
   }
@@ -120,7 +120,7 @@ public class Drawing_Impl implements Drawing
    * 
    * @return the CssParameters
    */
-  public HashMap getCssParameters()
+  public Map getCssParameters( )
   {
     return cssParams;
   }
@@ -132,9 +132,9 @@ public class Drawing_Impl implements Drawing
    * This method sets CssParameters.
    * 
    * @param cssParameters
-   *          the CssParameters
+   *            the CssParameters
    */
-  public void setCssParameters( HashMap cssParameters )
+  public void setCssParameters( final Map cssParameters )
   {
     this.cssParams = cssParameters;
   }
@@ -145,11 +145,11 @@ public class Drawing_Impl implements Drawing
    * <p>
    * 
    * @param key
-   *          the key of the object to insert
+   *            the key of the object to insert
    * @param value
-   *          the value of the object to insert
+   *            the value of the object to insert
    */
-  public void addCssParameter( Object key, Object value )
+  public void addCssParameter( final Object key, final Object value )
   {
     cssParams.put( key, value );
   }
@@ -160,9 +160,9 @@ public class Drawing_Impl implements Drawing
    * This method adds a CssParameter to a given set of CssParameters.
    * 
    * @param key
-   *          the key of the object to remove
+   *            the key of the object to remove
    */
-  public void removeCssParameter( Object key )
+  public void removeCssParameter( final Object key )
   {
     cssParams.remove( key );
   }
