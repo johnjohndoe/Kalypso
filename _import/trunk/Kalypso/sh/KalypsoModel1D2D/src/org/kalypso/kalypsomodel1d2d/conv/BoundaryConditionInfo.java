@@ -89,7 +89,12 @@ public class BoundaryConditionInfo implements ITimeStepinfo
    */
   public double getValue( final Date date )
   {
-    final Number result = (Number) m_index.getValue( m_valueComponent, date );
+    final Number result;
+    if( date == null )
+      result = (Number) m_index.getIterator().next().getValue( m_valueComponent );
+    else
+      result = (Number) m_index.getValue( m_valueComponent, date );
+
     return result == null ? 0.0 : result.doubleValue();
   }
 
@@ -105,7 +110,7 @@ public class BoundaryConditionInfo implements ITimeStepinfo
   public void setObservation( final IObservation<TupleResult> obs, final IComponent domainComponent, final IComponent valueComponent )
   {
     m_valueComponent = valueComponent;
-    
+
     m_index = new TupleResultIndex( obs.getResult(), domainComponent );
   }
 

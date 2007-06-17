@@ -160,7 +160,7 @@
 									</annotation>
 								</enumeration>
 								<enumeration value="Version3.5" />
-								<enumeration value="test" />
+								<enumeration value="Test" />
 							</restriction>
 						</simpleType>
 					</element>
@@ -241,15 +241,8 @@
 								<enumeration value="-1">
 									<annotation>
 										<documentation xml:lang="de">
-											<label>
-												Default Werte nutzen
-											</label>
-											<tooltip>
-												Default Werte sind:
-												(Deaktivierungstiefe=1.5m;
-												Übergangstiefe=0.67m;
-												Porosität=0.04)
-											</tooltip>
+											<label><![CDATA[Default Werte nutzen]]></label>
+											<tooltip><![CDATA[Default Werte sind: Deaktivierungstiefe=1.5m; Übergangstiefe=0.67m; Porosität=0.04)]]></tooltip>
 										</documentation>
 									</annotation>
 								</enumeration>
@@ -284,10 +277,8 @@
 					<element name="IEDSW" default="0">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Wirbelviskositätsansatz</label>
-								<tooltip>
-									Wirbelviskositätsansatz
-								</tooltip>
+								<label><![CDATA[Wirbelviskositätsansatz]]></label>
+								<tooltip>cd<![CDATA[Wirbelviskositätsansatz]]></tooltip>
 							</documentation>
 						</annotation>
 						<simpleType>
@@ -295,10 +286,7 @@
 								<enumeration value="0">
 									<annotation>
 										<documentation xml:lang="de">
-											<label>
-												konstante Eingabedaten
-												ohne Skalierung
-											</label>
+											<label><![CDATA[konstante Eingabedaten ohne Skalierung]]></label>
 										</documentation>
 									</annotation>
 								</enumeration>
@@ -334,28 +322,21 @@
 								<enumeration value="5">
 									<annotation>
 										<documentation xml:lang="de">
-											<label>
-												Konstante
-												Wirbelviskosität
-											</label>
+											<label><![CDATA[Konstante Wirbelviskosität]]></label>
 										</documentation>
 									</annotation>
 								</enumeration>
 								<enumeration value="6">
 									<annotation>
 										<documentation xml:lang="de">
-											<label>
-												free shear-layer
-											</label>
+											<label><![CDATA[free shear-layer]]></label>
 										</documentation>
 									</annotation>
 								</enumeration>
 								<enumeration value="2">
 									<annotation>
 										<documentation xml:lang="de">
-											<label>
-												Smagorinsky-Ansatz
-											</label>
+											<label><![CDATA[Smagorinsky-Ansatz]]></label>
 										</documentation>
 									</annotation>
 								</enumeration>

@@ -57,6 +57,7 @@ import org.kalypso.kalypsomodel1d2d.conv.ITimeStepinfo;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtils;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
@@ -163,7 +164,7 @@ public class RMA10Calculation
     m_controlModelRoot = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( RMA10SimModelConstants.CONTROL_ID ), factory ).getRootFeature();
     m_roughnessRootWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( RMA10SimModelConstants.ROUGHNESS_ID ), factory ).getRootFeature();
 
-    m_timeStepInfos = calculationBoundaryConditionInfos();
+    m_timeStepInfos = calculateBoundaryConditionInfos();
   }
 
   public RMA10Calculation( final GMLWorkspace disModelWorkspace, final Feature controlRoot, final Feature roughnessRoot )
@@ -296,11 +297,11 @@ public class RMA10Calculation
     return m_timeStepInfos.toArray( new ITimeStepinfo[m_timeStepInfos.size()] );
   }
 
-  private List<ITimeStepinfo> calculationBoundaryConditionInfos( ) throws SimulationException
+  private List<ITimeStepinfo> calculateBoundaryConditionInfos( ) throws SimulationException
   {
     final List<ITimeStepinfo> result = new ArrayList<ITimeStepinfo>();
 
-    /* Take all conti lines whihc are defined in the discretisation model. */
+    /* Take all conti lines which are defined in the discretisation model. */
     final Map<IBoundaryLine, BoundaryLineInfo> contiMap = new HashMap<IBoundaryLine, BoundaryLineInfo>();
     final List<IBoundaryLine> continuityLineList = getContinuityLineList();
     int contiCount = 1;
@@ -341,6 +342,8 @@ public class RMA10Calculation
             info.setObservation( obs, timeComponent, hComponent, ITimeStepinfo.TYPE.CONTI_BC_H );
           else
             throw new SimulationException( "Falsche Parameter an Kontinuitätslinien-Randbedingung: " + bc.getName(), null );
+
+          result.add( info );
         }
         else if( wrapper2 instanceof IFE1D2DNode && DiscretisationModelUtils.is1DNode( (IFE1D2DNode<IFE1D2DEdge>) wrapper2 ) )
         {
@@ -357,8 +360,10 @@ public class RMA10Calculation
             info.setObservation( obs, timeComponent, hComponent, ITimeStepinfo.TYPE.CONTI_BC_H );
           else
             throw new SimulationException( "Falsche Parameter an Kontinuitätslinien-Randbedingung: " + bc.getName(), null );
+
+          result.add( info );
         }
-        else if( wrapper2 instanceof IElement2D )
+        else if( wrapper2 instanceof IElement2D || wrapper2 instanceof IElement1D )
         {
           final IElement2D<IFE1D2DComplexElement, IFE1D2DEdge> ele2d = (IElement2D<IFE1D2DComplexElement, IFE1D2DEdge>) wrapper2;
 
@@ -373,10 +378,11 @@ public class RMA10Calculation
           final IComponent valueComponent = qComponent == null ? hComponent : qComponent;
 
           info.setObservation( obs, timeComponent, valueComponent );
+
+          result.add( info );
         }
         else
           throw new SimulationException( "Nicht zugeorndete Randbedingung: " + bc.getName(), null );
-        // TODO: consider 1delements
       }
     }
 

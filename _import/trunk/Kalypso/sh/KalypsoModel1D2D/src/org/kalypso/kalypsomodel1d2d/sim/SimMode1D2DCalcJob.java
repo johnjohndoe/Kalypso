@@ -67,6 +67,7 @@ import javax.xml.namespace.QName;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
+import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.lang.ProcessHelper;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
@@ -128,99 +129,64 @@ public class SimMode1D2DCalcJob implements ISimulation
       logger.fine( e1.getLocalizedMessage() );
     }
 
-    URL pseudoResultUrl = null;
-    try
-    {
-      pseudoResultUrl = (URL) inputProvider.getInputForID( "PseudoResults" );
-    }
-    catch( final Throwable t )
-    {
-      // just ignore
-    }
-
     final String nowString = DateFormat.getDateTimeInstance().format( new Date() );
     logger.log( Level.INFO, "Starte Berechnung: " + nowString + " (Serverzeit)\n" );
 
     try
     {
-      // this is just for testing the result visualization and can be removed, when the calc job will create real
-      // results (TJ)
-      // if( pseudoResultUrl == null )
+      monitor.setMessage( "Generiere Ascii Files zur 2D Simulation..." );
+      if( monitor.isCanceled() )
+        return;
+
+      m_calculation = new RMA10Calculation( inputProvider );
+
+      /** convert discretisation model stuff... */
+      // write merged *.2d file for calc core / Dejan
+      final File modelFile = new File( tmpDir, "model.2d" );
+      final Gml2RMA10SConv converter2D = new Gml2RMA10SConv( modelFile, m_calculation );
+
+      if( monitor.isCanceled() )
+        return;
+
+      monitor.setMessage( "Generiere 2D Netz..." );
+      converter2D.toRMA10sModel();
+
+      /** convert control/resistance stuff... */
+      // first this because we need roughness classes IDs for creating 2D net later
+      monitor.setMessage( "Generiere Randbedingungen und Berechnungssteuerung..." );
+      if( monitor.isCanceled() )
+        return;
+
+      PrintWriter r10pw = null;
+      try
       {
-        monitor.setMessage( "Generiere Ascii Files zur 2D Simulation..." );
-        if( monitor.isCanceled() )
-          return;
-
-        m_calculation = new RMA10Calculation( inputProvider );
-
-        /** convert discretisation model stuff... */
-        // write merged *.2d file for calc core / Dejan
-        final File modelFile = new File( tmpDir, "model.2d" );
-        final Gml2RMA10SConv converter2D = new Gml2RMA10SConv( modelFile, m_calculation );
-
-        if( monitor.isCanceled() )
-          return;
-
-        monitor.setMessage( "Generiere 2D Netz..." );
-        converter2D.toRMA10sModel();
-
-        /** convert control/resistance stuff... */
-        // first this because we need roughness classes IDs for creating 2D net later
-        monitor.setMessage( "Generiere Randbedingungen und Berechnungssteuerung..." );
-        if( monitor.isCanceled() )
-          return;
-
-        PrintWriter r10pw = null;
-        try
-        {
-          r10pw = new PrintWriter( new File( tmpDir, RMA10SimModelConstants.R10_File ) );
-          final Control1D2DConverter controlConverter = new Control1D2DConverter( converter2D.getNodesIDProvider(), converter2D.getRoughnessIDProvider() );
-          controlConverter.writeR10File( m_calculation, r10pw );
-          r10pw.close();
-        }
-        finally
-        {
-          /* Alwaysw close stream in a finally block */
-          IOUtils.closeQuietly( r10pw );
-        }
-
-        /** start calculation... */
-        monitor.setMessage( "Starte Rechenkern..." );
-        if( monitor.isCanceled() )
-          return;
-
-        monitor.setProgress( 20 );
-
-        copyExecutable( tmpDir, m_calculation.getKalypso1D2DKernelPath() );
-        /*
-         * Creates the result folder for the .exe file, must be same as in Control-Converter (maybe give as an
-         * argument?)
-         */
-        new File( tmpDir, "result" ).mkdirs();
-        startCalculation( tmpDir, monitor );
+        r10pw = new PrintWriter( new File( tmpDir, RMA10SimModelConstants.R10_File ) );
+        final Control1D2DConverter controlConverter = new Control1D2DConverter( converter2D.getNodesIDProvider(), converter2D.getRoughnessIDProvider() );
+        controlConverter.writeR10File( m_calculation, r10pw );
+        r10pw.close();
       }
-      // else
+      finally
       {
-        InputStream resultStream = null;
-        try
-        {
-          resultStream = pseudoResultUrl.openStream();
-          ZipUtilities.unzip( resultStream, tmpDir );
-          resultStream.close();
-        }
-        finally
-        {
-          IOUtils.closeQuietly( resultStream );
-        }
+        /* Alwaysw close stream in a finally block */
+        IOUtils.closeQuietly( r10pw );
       }
+
+      /** start calculation... */
+      monitor.setMessage( "Starte Rechenkern..." );
+      if( monitor.isCanceled() )
+        return;
+
+      monitor.setProgress( 20 );
+
+      copyExecutable( tmpDir, m_calculation.getKalypso1D2DKernelPath() );
+      /*
+       * Creates the result folder for the .exe file, must be same as in Control-Converter (maybe give as an argument?)
+       */
+      new File( tmpDir, "result" ).mkdirs();
+      startCalculation( tmpDir, monitor );
+
       /** check succeeded and load results */
-      if( isSucceeded( tmpDir ) )
-      {
-        monitor.setMessage( "Simulation erfolgreich beendet - lade Ergebnisse..." );
-        logger.log( Level.FINEST, "Simulation erfolgreich beendet - lade Ergebnisse" );
-        loadResults( tmpDir, monitor, logger, inputProvider, resultEater );
-      }
-
+      handleResults( tmpDir, monitor, logger, inputProvider, resultEater );
     }
     catch( final SimulationException se )
     {
@@ -241,19 +207,54 @@ public class SimMode1D2DCalcJob implements ISimulation
     }
   }
 
-  private void loadResults( final File tmpDir, final ISimulationMonitor monitor, final Logger logger, final ISimulationDataProvider dataProvider, final ISimulationResultEater resultEater ) throws SimulationException
+  private void handleResults( final File tmpDir, final ISimulationMonitor monitor, final Logger logger, final ISimulationDataProvider dataProvider, final ISimulationResultEater resultEater ) throws SimulationException, IOException
   {
-    // TODO: check this here and add more handling, if result model is ready (Jessica)
-    monitor.setMessage( "Lese Ergebnisse..." );
-    logger.log( Level.INFO, "Ergebnisse werden gelesen" );
-
+    /* We always have a result directory */
     final File outputDir = new File( tmpDir, RMA10SimModelConstants.OUTPUT_DIR_NAME );
     outputDir.mkdirs();
     resultEater.addResult( RMA10SimModelConstants.RESULT_DIR_NAME_ID, outputDir );
 
+    final File errorDatFile = new File( tmpDir, "ERROR.DAT" );
+    final File errorOutFile = new File( tmpDir, "ERROR.OUT" );
+    final File errorFile;
+    if( errorDatFile.exists() )
+      errorFile = errorDatFile;
+    else if( errorOutFile.exists() )
+      errorFile = errorOutFile;
+    else
+      errorFile = null;
+
+    if( errorFile.exists() )
+    {
+      final String message = "Fehler bei der Berechnung - übertrage Zwischenergebnisse und Logdateien...";
+      monitor.setMessage( message );
+      logger.log( Level.FINEST, message );
+
+      handleErrorOut( errorFile, outputDir, monitor );
+    }
+    else
+    {
+      monitor.setMessage( "Lese Ergebnisse..." );
+      logger.log( Level.INFO, "Ergebnisse werden gelesen" );
+
+      loadResults( tmpDir, outputDir, dataProvider, monitor );
+    }
+  }
+
+  private void handleErrorOut( final File errorFile, final File outputDir, final ISimulationMonitor monitor ) throws IOException
+  {
+    final String errorMessage = FileUtils.readFileToString( errorFile, null );
+    // TODO: translate error message to Kalypso
+    monitor.setFinishInfo( IStatus.ERROR, errorMessage );
+
+    FileUtils.copyFile( errorFile, new File( outputDir, "ERROR.DAT" ) );
+  }
+
+  private void loadResults( final File resultDir, final File outputDir, final ISimulationDataProvider dataProvider, final ISimulationMonitor monitor ) throws SimulationException
+  {
     // TODO: @the moment,only the pseudo 'result.2d' is read.
     final FileFilter suffixFileFilter = FileFilterUtils.suffixFileFilter( "result.2d" );
-    final File[] files = tmpDir.listFiles( suffixFileFilter );
+    final File[] files = resultDir.listFiles( suffixFileFilter );
     if( files == null || files.length == 0 )
       return;
 
@@ -285,12 +286,12 @@ public class SimMode1D2DCalcJob implements ISimulation
 
     if( dataProvider != null )
     {
-    /* Write template sld into result folder */
-    final URL resultStyleURL = (URL) dataProvider.getInputForID( "ResultStyle" );
-    FileUtils.copyURLToFile( resultStyleURL, new File( outputDir, "result.sld" ) );
+      /* Write template sld into result folder */
+      final URL resultStyleURL = (URL) dataProvider.getInputForID( "ResultStyle" );
+      FileUtils.copyURLToFile( resultStyleURL, new File( outputDir, "result.sld" ) );
 
-    final URL resultURL = (URL) dataProvider.getInputForID( "ResultMap" );
-    FileUtils.copyURLToFile( resultURL, new File( outputDir, "result.gmt" ) );
+      final URL resultURL = (URL) dataProvider.getInputForID( "ResultMap" );
+      FileUtils.copyURLToFile( resultURL, new File( outputDir, "result.gmt" ) );
     }
 
     final File gmlResultFile = new File( outputDir, "results.gml" );
@@ -306,31 +307,30 @@ public class SimMode1D2DCalcJob implements ISimulation
 
       /* .2d Datei lesen und GML füllen */
       final RMA10S2GmlConv conv = new RMA10S2GmlConv();
-      
+
       // TODO: use multi-eater to write multiple triangles at once
       // move workspace creation into multi-eater
       final GMLWorkspace wspTriangleWorkspace = FeatureFactory.createGMLWorkspace( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "TinResult" ), gmlResultFile.toURL(), null );
       final CS_CoordinateSystem crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
-      final GM_TriangulatedSurface surface= org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_TriangulatedSurface( crs );
-      wspTriangleWorkspace.getRootFeature().setProperty( new QName(UrlCatalog1D2D.MODEL_1D2DResults_NS, "triangulatedSurfaceMember"), surface );
-      
-      
+      final GM_TriangulatedSurface surface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_TriangulatedSurface( crs );
+      wspTriangleWorkspace.getRootFeature().setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "triangulatedSurfaceMember" ), surface );
+
       /* just for test purposes */
       final List<ResultType.TYPE> parameters = new ArrayList<ResultType.TYPE>();
-      
+
       parameters.add( ResultType.TYPE.DEPTH );
       parameters.add( ResultType.TYPE.WATERLEVEL );
       parameters.add( ResultType.TYPE.VELOCITY );
-      
-//      final File resultHMOFile = new File( "D:/Projekte/kalypso_dev/post-processing/output.hmo" );
-//      final HMOTriangleEater triangleEater = new HMOTriangleEater( resultHMOFile, parameters );
+
+      // final File resultHMOFile = new File( "D:/Projekte/kalypso_dev/post-processing/output.hmo" );
+      // final HMOTriangleEater triangleEater = new HMOTriangleEater( resultHMOFile, parameters );
       final TriangulatedSurfaceTriangleEater triangleEater = new TriangulatedSurfaceTriangleEater( surface );
       final IRMA10SModelElementHandler handler = new NodeResultsHandler( resultWorkspace, triangleEater );
       conv.setRMA10SModelElementHandler( handler );
 
       logger.takeInterimTime();
       logger.printCurrentInterim( "Beginn Parsen in : " );
-      
+
       conv.parse( is );
 
       is.close();
@@ -339,9 +339,9 @@ public class SimMode1D2DCalcJob implements ISimulation
       logger.printCurrentInterim( "Fertig mit Lesen in : " );
 
       triangleEater.finished();
-      
+
       /* GMLs in Datei schreiben */
-      //GmlSerializer.serializeWorkspace( gmlResultFile, resultWorkspace, "UTF-8" );
+      // GmlSerializer.serializeWorkspace( gmlResultFile, resultWorkspace, "UTF-8" );
       GmlSerializer.serializeWorkspace( tinResultFile, wspTriangleWorkspace, "UTF-8" );
 
       return gmlResultFile;
@@ -418,17 +418,5 @@ public class SimMode1D2DCalcJob implements ISimulation
       IOUtils.closeQuietly( logOS );
       IOUtils.closeQuietly( errorOS );
     }
-  }
-
-  /**
-   * checks if calculation of simulations is succeeded
-   */
-  public boolean isSucceeded( @SuppressWarnings("unused")
-  final File baseDir )
-  {
-    // TODO: this should be adapted.
-    // final File finalResultFile = new File( baseDir, "steady.2d" );
-    // return finalResultFile.exists();
-    return true;
   }
 }

@@ -48,7 +48,7 @@ import org.kalypso.observation.result.TupleResult;
 /**
  * @author antanas
  */
-public class BoundaryLineInfo extends BoundaryConditionInfo implements ITimeStepinfo
+public class BoundaryLineInfo extends BoundaryConditionInfo
 {
   private final IFE1D2DNode[] m_nodeArray;
 
@@ -67,7 +67,7 @@ public class BoundaryLineInfo extends BoundaryConditionInfo implements ITimeStep
    * @see org.kalypso.kalypsomodel1d2d.conv.BoundaryConditionInfo#setObservation(org.kalypso.observation.IObservation,
    *      org.kalypso.observation.result.IComponent, org.kalypso.observation.result.IComponent)
    */
-  public void setObservation( IObservation<TupleResult> obs, IComponent timeComponent, IComponent valueComponent, final TYPE type )
+  public void setObservation( final IObservation<TupleResult> obs, final IComponent timeComponent, final IComponent valueComponent, final TYPE type )
   {
     super.setObservation( obs, timeComponent, valueComponent );
     setType( type );

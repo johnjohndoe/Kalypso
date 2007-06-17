@@ -160,7 +160,7 @@ public class TimestepFillerFeatureControl extends AbstractFeatureControl impleme
    */
   public void updateControl( )
   {
-    // final Feature feature = getFeature();
+    final Feature feature = getFeature();
     // final IPropertyType featureTypeProperty = getFeatureTypeProperty();
     // final Feature f1 = ((XLinkedFeature_Impl) feature.getParent().getParent().getProperties()[0]).getFeature();
 
@@ -175,6 +175,16 @@ public class TimestepFillerFeatureControl extends AbstractFeatureControl impleme
     // // m_featureControl.setFeature( feature );
     // m_featureControl.updateControl();
 
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl#setFeature(org.kalypsodeegree.model.feature.Feature)
+   */
+  @Override
+  public void setFeature( final Feature feature )
+  {
+    // TODO Auto-generated method stub
+    super.setFeature( feature );
   }
 
 }

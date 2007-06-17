@@ -47,22 +47,31 @@ import java.util.Date;
  */
 public interface ITimeStepinfo
 {
-  enum TYPE { 
-      CONTI, 
-      /** Continuityline of in line Junction Contect*/
-      CONTI_LINE_JC, 
-      /** Continuity line in a element junction context*/
-      CONTI_ELE_JC,
-      CONTI_BC_Q, 
-      CONTI_BC_H, 
-      ELE_BC_1D, 
-      ELE_BCE_2D, WQ };
-  
+  enum TYPE
+  {
+    CONTI,
+    /** Continuityline of in line Junction Contect */
+    CONTI_LINE_JC,
+    /** Continuity line in a element junction context */
+    CONTI_ELE_JC,
+    CONTI_BC_Q,
+    CONTI_BC_H,
+    ELE_BC_1D,
+    ELE_BCE_2D,
+    WQ
+  }
+
   public int getID( );
 
   public TYPE getType( );
 
+  /**
+   * Return the value for the given date.
+   * <p>
+   * If the date is <code>null</code>, return the valeu for the steady state case.
+   * </p>
+   */
   public double getValue( final Date date );
-  
-  public double getTheta();
+
+  public double getTheta( );
 }

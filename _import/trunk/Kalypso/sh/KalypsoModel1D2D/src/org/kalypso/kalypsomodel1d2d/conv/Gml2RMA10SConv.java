@@ -57,7 +57,6 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtil
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IEdgeInv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DContinuityLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
@@ -103,7 +102,7 @@ public class Gml2RMA10SConv
 
   private final LinkedHashMap<String, String> m_edgesIDProvider = new LinkedHashMap<String, String>( 100000 );
 
-  private File m_outputFile;
+  private final File m_outputFile;
 
   private final IFEDiscretisationModel1d2d m_discretisationModel1d2d;
 
@@ -126,7 +125,7 @@ public class Gml2RMA10SConv
     }
   }
 
-  public Gml2RMA10SConv( final File rma10sOutputFile, IFEDiscretisationModel1d2d discretisationModel1d2d, ITerrainModel terrainModel, IFlowRelationshipModel flowrelationModel, List roughnessClassList )
+  public Gml2RMA10SConv( final File rma10sOutputFile, final IFEDiscretisationModel1d2d discretisationModel1d2d, final ITerrainModel terrainModel, final IFlowRelationshipModel flowrelationModel, final List roughnessClassList )
   {
     m_outputFile = rma10sOutputFile;
     m_discretisationModel1d2d = discretisationModel1d2d;
@@ -134,11 +133,11 @@ public class Gml2RMA10SConv
     m_flowrelationModel = flowrelationModel;
 
     // initialize Roughness IDs
-// for( final Object o : roughnessClassList )
-// {
-// final Feature roughnessCL = (Feature) o;
-// getID( m_roughnessIDProvider, roughnessCL.getId() );
-// }
+    // for( final Object o : roughnessClassList )
+    // {
+    // final Feature roughnessCL = (Feature) o;
+    // getID( m_roughnessIDProvider, roughnessCL.getId() );
+    // }
   }
 
   private int getID( final IFeatureWrapper2 i1d2dObject )
@@ -212,8 +211,6 @@ public class Gml2RMA10SConv
     writeEdges( formatter, edges );
   }
 
-
-
   private void writeEdges( final Formatter formatter, final IFeatureWrapperCollection<IFE1D2DEdge> edges ) throws GM_Exception
   {
     int cnt = 1;
@@ -221,8 +218,8 @@ public class Gml2RMA10SConv
     {
       if( edge instanceof IEdgeInv )
         continue;
-      int node0ID = getID( edge.getNode( 0 ) );
-      int node1ID = getID( edge.getNode( 1 ) );
+      final int node0ID = getID( edge.getNode( 0 ) );
+      final int node1ID = getID( edge.getNode( 1 ) );
 
       /*
        * If we have no middle node (which is always the case), create it on the fly (just takes middle of edge). This is
@@ -256,7 +253,7 @@ public class Gml2RMA10SConv
         int leftRightID = 0;
         if( edge.getContainers().size() > 0 )
         {
-          Object object = edge.getContainers().get( 0 );
+          final Object object = edge.getContainers().get( 0 );
 
           if( object instanceof IElement1D )
             leftRightID = getID( ((IElement1D) object) );
@@ -265,8 +262,8 @@ public class Gml2RMA10SConv
       }
       else if( TypeInfo.is2DEdge( edge ) )
       {
-        int leftParent = getID( EdgeOps.getLeftElement( edge ) );
-        int rightParent = getID( EdgeOps.getRightElement( edge ) );
+        final int leftParent = getID( EdgeOps.getLeftElement( edge ) );
+        final int rightParent = getID( EdgeOps.getRightElement( edge ) );
         formatter.format( "AR%10d%10d%10d%10d%10d%10d%n", cnt++, node0ID, node1ID, leftParent, rightParent, middleNodeID );
       }
       else
@@ -352,19 +349,18 @@ public class Gml2RMA10SConv
 
   private void formatNode( final Formatter formatter, final int nodeID, final GM_Point point, final BigDecimal station )
   {
-    
     /* Now really write the nodes */
-    double x = point.getX();
-    double y = point.getY();
+    final double x = point.getX();
+    final double y = point.getY();
     double z = Double.NaN;
-    
-    //TODO: Here we should decide what we do with non-elevation-assigned nodes. For now the elevation of these nodes will be set to '-9999'
-    if (point.getCoordinateDimension() == 3)
+
+    // TODO: Here we should decide what we do with non-elevation-assigned nodes. For now the elevation of these nodes
+    // will be set to '-9999'
+    if( point.getCoordinateDimension() == 3 )
       z = point.getZ();
-    else 
+    else
       z = -9999;
-    
-    
+
     if( station == null )
       formatter.format( "FP%10d%20.7f%20.7f%20.7f%n", nodeID, x, y, z );
     else
@@ -406,7 +402,7 @@ public class Gml2RMA10SConv
     }
   }
 
-  private void writeElements( Formatter formatter, IFeatureWrapperCollection<IFE1D2DElement> elements )
+  private void writeElements( final Formatter formatter, final IFeatureWrapperCollection<IFE1D2DElement> elements )
   {
     for( final IFE1D2DElement element : elements )
     {
@@ -416,9 +412,9 @@ public class Gml2RMA10SConv
       }
       formatter.format( "FE%10d%10d%10d%10d%n", getID( element ), 0, 1, 0 );
     }
-    
+
   }
-  
+
   private int calculateRoughnessID( final LinkedHashMap<String, String> roughnessIDProvider, final IRoughnessPolygonCollection roughnessPolygonCollection, final IFE1D2DElement element ) throws GM_Exception, SimulationException
   {
     /*
@@ -427,8 +423,12 @@ public class Gml2RMA10SConv
      */
     if( element instanceof IElement1D && DiscretisationModelUtils.isTeschkeElement1D( (IElement1D) element, m_flowrelationModel ) )
     {
-      return 889;
+      // return 889;
+      // TODO: recent example of Nico has 89 instead of 889, what is correct now?
+      return 89;
     }
+
+    // TODO: handle weirs
 
     final IRoughnessEstimateSpec roughnessEstimateSpec = roughnessPolygonCollection.getRoughnessEstimateSpec( element.recalculateElementGeometry() );
     if( roughnessEstimateSpec != null )
