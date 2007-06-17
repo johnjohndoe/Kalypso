@@ -23,70 +23,63 @@ import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
  * @author Patrice Congo
  */
 @SuppressWarnings("unchecked")
-public class NodeElevationAvailabilityInfoFunction extends FeaturePropertyFunction {
+public class NodeElevationAvailabilityInfoFunction extends FeaturePropertyFunction
+{
 
-	/**
-	 * @see org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction#init(java.util.Map)
-	 */
-	@Override
-	public void init(final Map<String, String> properties) 
+  /**
+   * @see org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction#init(java.util.Map)
+   */
+  @Override
+  public void init( final Map<String, String> properties )
+  {
+    // yes empty
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#getValue(org.kalypsodeegree.model.feature.Feature,
+   *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
+   */
+  public Object getValue( final Feature feature, final IPropertyType pt, final Object currentValue )
+  {
+    final QName featureQName = feature.getFeatureType().getQName();
+
+    if( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE.equals( featureQName ) )
     {
-		//yes empty
-	}
-
-	/**
-	 * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#getValue(org.kalypsodeegree.model.feature.Feature,
-	 *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
-	 */
-	public Object getValue(
-                      final Feature feature, 
-                      final IPropertyType pt,
-                      final Object currentValue) 
+      // TODO: Sometimes here is a NPE when first displaying the map
+      // Rac e condition?
+      final IFE1D2DNode node = (IFE1D2DNode) feature.getAdapter( IFE1D2DNode.class );
+      try
+      {
+        final GM_Point point = node.getPoint();
+        if( point == null )
+        {
+          return false;
+        }
+        return point.getCoordinateDimension() == 3;
+      }
+      catch( final Throwable th )
+      {
+        th.printStackTrace();
+        final IStatus status = StatusUtilities.statusFromThrowable( th );
+        KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
+        return null;
+      }
+    }
+    else
     {
-       QName featureQName = feature.getFeatureType().getQName(); 
-       
-       if(Kalypso1D2DSchemaConstants.WB1D2D_F_NODE.equals( featureQName ))
-       {
-    		final IFE1D2DNode  node = (IFE1D2DNode)feature.getAdapter( IFE1D2DNode.class );
-    		try 
-          {
-            GM_Point point = node.getPoint();
-            if(point == null)
-            {
-              return false;
-            }
-            return point.getCoordinateDimension()==3;
-    		} 
-          catch (Throwable th) 
-          {
-              th.printStackTrace();
-    			final IStatus status = 
-                    StatusUtilities.statusFromThrowable(th);
-    			KalypsoModel1D2DPlugin.getDefault().getLog().log(status);
-    			return null;
-    		}
-       }
-       else
-       {
-         System.out.println(
-             "Cannot get value for:"+
-             "\n\tfeature="+feature+
-             "\n\tvalue="+pt.getQName()+
-             "\n\tcurrentValue="+currentValue);
-         return null;
-       }
-	}
+      System.out.println( "Cannot get value for:" + "\n\tfeature=" + feature + "\n\tvalue=" + pt.getQName() + "\n\tcurrentValue=" + currentValue );
+      return null;
+    }
+  }
 
-	/**
-	 * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#setValue(org.kalypsodeegree.model.feature.Feature,
-	 *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
-	 */
-	
-  public Object setValue(
-                  Feature feature, IPropertyType pt, Object valueToSet) 
+  /**
+   * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#setValue(org.kalypsodeegree.model.feature.Feature,
+   *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
+   */
+
+  public Object setValue( final Feature feature, final IPropertyType pt, final Object valueToSet )
   {
     return null;
   }
 
-  
 }
