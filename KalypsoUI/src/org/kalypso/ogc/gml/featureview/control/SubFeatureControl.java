@@ -52,6 +52,12 @@ public class SubFeatureControl extends AbstractFeatureControl
       // You can even define the selector attribute to be of type QNAME! You dont have to parse anything yourself!
       // BEST HERE: use gml-xpath like the enabledOperation attribute of the ControlType.
       // Search for 'evaluateOperation' in the FeatureComposite class for an example on how to use it.
+
+      // TODO: check if the selector is needed at all
+      // See the findFeatureToSet method: probably just setting the link-property to the property-attribute in the gft
+      // should be
+      // enough!
+
       m_selector = new QName( ftp.getQName().getNamespaceURI(), selector );
     else
       m_selector = null;
@@ -111,6 +117,7 @@ public class SubFeatureControl extends AbstractFeatureControl
 
     // find feature to set to the sub-FeatureControl
     final Feature featureToSet;
+
     if( m_selector == null )
     {
       Assert.isTrue( !rt.isList() );
@@ -165,7 +172,7 @@ public class SubFeatureControl extends AbstractFeatureControl
   {
     // TODO: this is not always enough
     // Better: cdestroy m_fc and recreate it from scratch
-    // In order to to this, m_fc must be put into an extra Composite (when createComposite is called)
+    // In order to do this, m_fc must be put into an extra Composite (when createComposite is called)
 
     final Feature findFeatureToSet = findFeatuereToSet();
     m_fc.setFeature( findFeatureToSet );
