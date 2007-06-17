@@ -41,6 +41,7 @@
 	<gft:validatorlabel property="wb1d2d:station" visible="true" style="SWT.NONE">
 		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
 	</gft:validatorlabel>
+	<!-- 
 	<gft:label text="Profil-Referenz" visible="true" tooltip="Referenz auf Profil"
 		style="SWT.NONE">
 		<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING"
@@ -60,6 +61,7 @@
 	<gft:validatorlabel property="wb1d2d:profileMember" visible="true" style="SWT.NONE">
 		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
 	</gft:validatorlabel>
+	 -->
 	<gft:label text="Gefälle" visible="true" tooltip="Angabe des Gefälles." style="SWT.NONE">
 		<gft:gridData verticalAlignment="GridData.BEGINNING"
 			horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />

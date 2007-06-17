@@ -217,6 +217,8 @@ public class WQStepDescriptor implements IBoundaryConditionDescriptor
   {
     m_page.setTitle( "W/Q-Beziehung definieren" );
     m_page.setDescription( MSG_PAGE );
+
+    updatePageState( Status.OK_STATUS );
   }
 
   /**

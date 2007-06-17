@@ -65,7 +65,7 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
    */
   private Feature getTimeserieFeature( )
   {
-    return (Feature) getWrappedFeature().getProperty( QNAME_P_TIMESERIE );
+    return (Feature) getWrappedFeature().getProperty( QNAME_P_OBSERVATION );
   }
 
   /**
@@ -82,9 +82,9 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
     {
       final Feature parentFeature = currentObsFeature.getParent();
       final GMLWorkspace workspace = parentFeature.getWorkspace();
-      final IFeatureType directedFT = workspace.getGMLSchema().getFeatureType( QNAME_DIRECTED_TIMESERIE );
+      final IFeatureType directedFT = workspace.getGMLSchema().getFeatureType( QNAME_DIRECTED_OBSERVATION );
       final Feature newObsFeature = workspace.createFeature( parentFeature, currentObsFeature.getParentRelation(), directedFT );
-      parentFeature.setProperty( QNAME_P_TIMESERIE, newObsFeature );
+      parentFeature.setProperty( QNAME_P_OBSERVATION, newObsFeature );
       newObsFeature.setProperty( QNAME_P_DIRECTION, 180 );
       obsFeature = newObsFeature;
     }

@@ -59,6 +59,8 @@ public class UrlCatalog1D2D extends AbstractUrlCatalog
 
   final static public String MODEL_1D2DOperational_NS = "http://www.tu-harburg.de/wb/kalypso/schemata/operationalmodel";
 
+  final static public String MODEL_1D2DObservation_NS = "http://www.tu-harburg.de/wb/kalypso/schemata/observation";
+
   final static public String MODEL_1D2DResults_NS = "http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults";
 
   final static public String MODEL_1D2D_NS_PREFIX = "wb1d2d";
@@ -73,11 +75,12 @@ public class UrlCatalog1D2D extends AbstractUrlCatalog
    * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)
    */
   @Override
-  protected void fillCatalog( final Class<?> myClass, final Map<String, URL> catalog, Map<String, String> prefixes )
+  protected void fillCatalog( final Class< ? > myClass, final Map<String, URL> catalog, final Map<String, String> prefixes )
   {
     catalog.put( MODEL_1D2D_NS, myClass.getResource( "v0.0/sim_1d2d_model.xsd" ) );
     catalog.put( MODEL_1D2DControl_NS, myClass.getResource( "v0.0/sim_1d2d_control.xsd" ) );
     catalog.put( MODEL_1D2DOperational_NS, myClass.getResource( "v0.0/sim_1d2d_operational.xsd" ) );
+    catalog.put( MODEL_1D2DObservation_NS, myClass.getResource( "v0.0/sim_1d2d_observation.xsd" ) );
     catalog.put( MODEL_1D2DResults_NS, myClass.getResource( "v0.0/sim_1d2d_results.xsd" ) );
     prefixes.put( MODEL_1D2D_NS, MODEL_1D2D_NS_PREFIX );
     prefixes.put( MODEL_1D2DControl_NS, MODEL_1D2DControl_NS_PREFIX );

@@ -20,7 +20,7 @@
 	attributeFormDefault="unqualified">
 	<xs:annotation>
 		<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
-			<kapp:gmlVersion>3.1</kapp:gmlVersion>
+			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
 		</xs:appinfo>
 	</xs:annotation>
 	
@@ -1196,62 +1196,6 @@
 			</xs:extension>
 		</xs:complexContent>	
 	</xs:complexType>
-	
-	<!-- ================================================================= 
-		Bridge element 
-	===================================================================-->
-	<!--xs:element 
-		name="FE1D2DBridge"
-		type="wb1d2d:FE1D2DBridgeType"
-		substitutionGroup="simBase:_FEElement"/>
-	<xs:complexType name="FE1D2DBridgeType">
-		<xs:annotation>
-			<xs:documentation>
-			</xs:documentation>
-		</xs:annotation>
-		<xs:complexContent>
-			<xs:extension 
-				base="simBase:FEAbstractElementType">
-					<xs:sequence>
-						<xs:element 
-							ref="wb1d2d:fe1d2dDirectedEdge"
-							minOccurs="1" maxOccurs="unbounded"/>
-						<xs:element
-							name="shape"
-							type="gml:GeometryPropertyType"/>
-					</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>	
-	</xs:complexType-->
-	
-	<!--  TODO: not used, remove -->
-	<xs:element 
-		name="Bridge"
-		type="wb1d2d:BridgeType"
-		substitutionGroup="simBase:_FEComplexElement"/>
-	<xs:complexType name="BridgeType">
-		<xs:annotation>
-			<xs:documentation>
-			</xs:documentation>
-		</xs:annotation>
-		<xs:complexContent>
-			<xs:extension 
-				base="simBase:FEAbstractComplexElementType">
-					<xs:sequence>
-						<!--xs:element 
-							ref="wb1d2d:fe1d2dDirectedEdge"
-							minOccurs="1" maxOccurs="unbounded"/ -->
-						<xs:element
-							ref="wb1d2d:element1D"
-							minOccurs="1" maxOccurs="1"/>
-						<xs:element
-							name="shape"
-							type="gml:GeometryPropertyType"/>
-					</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>	
-	</xs:complexType>
-	
 	
 	<!-- =================================================================
 				FE1D2D_1DRiverChannel

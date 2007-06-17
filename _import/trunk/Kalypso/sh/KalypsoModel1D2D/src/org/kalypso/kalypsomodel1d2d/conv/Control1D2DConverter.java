@@ -192,9 +192,12 @@ public class Control1D2DConverter
    * writes the Continuity Lines Data Block of the RMA10 controlFile (*.R10) into the PrintWriter
    */
 
-  private void writeR10ContinuityLineDataBlock( final RMA10Calculation calculation, final Formatter formatter )
+  private void writeR10ContinuityLineDataBlock( final RMA10Calculation calculation, final Formatter formatter ) throws SimulationException
   {
     final BoundaryLineInfo[] infos = calculation.getContinuityLineInfo();
+
+    if( infos.length == 0 )
+      throw new SimulationException( "Keine Randbedingungen definiert, Rechnung wird abgebrochen.", null );
 
     formatter.format( "SCL%9d%n", infos.length );
 
@@ -361,22 +364,13 @@ public class Control1D2DConverter
 
   private Date getFirstTimeStep( final RMA10Calculation calculation )
   {
-    final Feature controlFeature = calculation.getControlModelFeature();
-    final IControlModel1D2D controlModel_ = (IControlModel1D2D) controlFeature.getAdapter( IControlModel1D2D.class );
-    final IObservation<TupleResult> tupleSet = controlModel_.getTimeSteps();
+    final IControlModel1D2D controlModel = calculation.getControlModel();
+    final IObservation<TupleResult> tupleSet = controlModel.getTimeSteps();
     final TupleResult result = tupleSet.getResult();
     // todo check if result is not empty
     final IRecord record = result.get( 0 );
     final IComponent res_C_0 = result.getComponents()[0];
     return DateUtilities.toDate( (XMLGregorianCalendar) record.getValue( res_C_0 ) );
-    
-//    final IControlModel1D2D controlModel = calculation.getControlModel();
-//    final IObservation<TupleResult> tupleSet = controlModel.getTimeSteps();
-//    final TupleResult result = tupleSet.getResult();
-//    final IRecord record = result.get( 0 );
-//
-//    final IComponent res_C_0 = result.getComponents()[0];
-//    return DateUtilities.toDate( (XMLGregorianCalendar) record.getValue( res_C_0 ) );
   }
 
 }

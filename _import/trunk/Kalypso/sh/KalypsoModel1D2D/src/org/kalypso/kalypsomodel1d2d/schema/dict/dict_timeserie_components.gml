@@ -50,7 +50,7 @@
 
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="Waterlevel">
-			<gml:description>h [NN+m]</gml:description>
+			<gml:description>Wasserstand [NN+m]</gml:description>
 			<gml:name>h [NN+m]</gml:name>
 			<swe:property xlink:href="#phenomenonWaterlevel" />
 			<swe:representation>
@@ -65,8 +65,40 @@
 	</gml:dictionaryEntry>
 
 	<gml:dictionaryEntry>
+		<swe:ItemDefinition gml:id="WaterlevelUpstream">
+			<gml:description>Oberwasser [NN+m]</gml:description>
+			<gml:name>h-O [NN+m]</gml:name>
+			<swe:property xlink:href="#phenomenonWaterlevel" />
+			<swe:representation>
+				<swe:SimpleType>
+					<st:restriction base="decimal">
+						<st:fractionDigits value="4" />
+					</st:restriction>
+					<gml:unitOfMeasure uom="dict_uom.xml#mNN" />
+				</swe:SimpleType>
+			</swe:representation>
+		</swe:ItemDefinition>
+	</gml:dictionaryEntry>
+
+	<gml:dictionaryEntry>
+		<swe:ItemDefinition gml:id="WaterlevelDownstream">
+			<gml:description>Unterwasser [NN+m]</gml:description>
+			<gml:name>h-U [NN+m]</gml:name>
+			<swe:property xlink:href="#phenomenonWaterlevel" />
+			<swe:representation>
+				<swe:SimpleType>
+					<st:restriction base="decimal">
+						<st:fractionDigits value="4" />
+					</st:restriction>
+					<gml:unitOfMeasure uom="dict_uom.xml#mNN" />
+				</swe:SimpleType>
+			</swe:representation>
+		</swe:ItemDefinition>
+	</gml:dictionaryEntry>
+
+	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="Discharge">
-			<gml:description>Q [m³/s]</gml:description>
+			<gml:description>Abfluss [m³/s]</gml:description>
 			<gml:name>Q [m³/s]</gml:name>
 			<swe:property xlink:href="#phenomenonDischarge" />
 			<swe:representation>
@@ -82,7 +114,7 @@
 
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="SpecificDischarge1D">
-			<gml:description>q [m³/s/m²]</gml:description>
+			<gml:description>spezifischer Abfluss [m³/s/m²]</gml:description>
 			<gml:name>q [m³/s/m²]</gml:name>
 			<swe:property xlink:href="#phenomenonSpecificDischarge1D" />
 			<swe:representation>
@@ -96,9 +128,11 @@
 		</swe:ItemDefinition>
 	</gml:dictionaryEntry>
 
+
+
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="SpecificDischarge2D">
-			<gml:description>q [m³/s/m]</gml:description>
+			<gml:description>spezifischer Abfluss [m³/s/m]</gml:description>
 			<gml:name>q [m³/s/m]</gml:name>
 			<swe:property xlink:href="#phenomenonSpecificDischarge2D" />
 			<swe:representation>

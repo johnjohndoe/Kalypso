@@ -49,19 +49,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.namespace.QName;
-
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.kalypsomodel1d2d.conv.BoundaryConditionInfo;
 import org.kalypso.kalypsomodel1d2d.conv.BoundaryLineInfo;
 import org.kalypso.kalypsomodel1d2d.conv.ITimeStepinfo;
-import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
+import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtils;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
-//import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DContinuityLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
@@ -86,12 +83,13 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureProvider;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
 
 /**
  * @author huebsch <a href="mailto:j.huebsch@tuhh.de">Jessica Huebsch</a>
  */
-@SuppressWarnings({"unchecked", "hiding"})
+@SuppressWarnings( { "unchecked", "hiding" })
 public class RMA10Calculation
 {
   private GMLWorkspace m_disModelWorkspace = null;
@@ -267,8 +265,7 @@ public class RMA10Calculation
   {
     // implemented like this, or search for BoundaryConditions (operational model) which fits to ContinuityLines
     // (discretisation model)
-    final IFEDiscretisationModel1d2d adapter = 
-          (IFEDiscretisationModel1d2d) m_disModelWorkspace.getRootFeature().getAdapter( IFEDiscretisationModel1d2d.class );
+    final IFEDiscretisationModel1d2d adapter = (IFEDiscretisationModel1d2d) m_disModelWorkspace.getRootFeature().getAdapter( IFEDiscretisationModel1d2d.class );
     final IFeatureWrapperCollection<IFE1D2DElement> elements = adapter.getElements();
     final List<IBoundaryLine> list = new ArrayList<IBoundaryLine>();
     final Iterator<IFE1D2DElement> iterator = elements.iterator();
@@ -304,8 +301,7 @@ public class RMA10Calculation
     final List<ITimeStepinfo> result = new ArrayList<ITimeStepinfo>();
 
     /* Take all conti lines whihc are defined in the discretisation model. */
-    final Map<IBoundaryLine, BoundaryLineInfo> contiMap = 
-                  new HashMap<IBoundaryLine, BoundaryLineInfo>();
+    final Map<IBoundaryLine, BoundaryLineInfo> contiMap = new HashMap<IBoundaryLine, BoundaryLineInfo>();
     final List<IBoundaryLine> continuityLineList = getContinuityLineList();
     int contiCount = 1;
     for( final IBoundaryLine<IFE1D2DComplexElement, IFE1D2DEdge> line : continuityLineList )
@@ -389,16 +385,11 @@ public class RMA10Calculation
 
   public IControlModel1D2D getControlModel( )
   {
-    final Feature controlModelCollection = (Feature) m_controlModelRoot.getProperty( new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "controlModelCollection" ) );
-    final List modells = (List) controlModelCollection.getProperty( new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "controlModelMember" ) );
+    final Feature controlModelCollection = (Feature) m_controlModelRoot.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_FP_MODEL_COLLECTION );
 
-    final Feature controlFeature = (Feature) modells.get( 0 );
+    final Object link = controlModelCollection.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_XP_ACTIVE_MODEL );
+    final Feature controlModelFeature = FeatureHelper.getFeature( m_controlModelRoot.getWorkspace(), link );
 
-    return (IControlModel1D2D) controlFeature.getAdapter( IControlModel1D2D.class );
-  }
-
-  public Feature getControlModelFeature( )
-  {
-    return m_controlModelRoot;
+    return (IControlModel1D2D) controlModelFeature.getAdapter( IControlModel1D2D.class );
   }
 }

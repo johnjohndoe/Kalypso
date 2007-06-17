@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<gft:featureview typename="op1d2d:Timeserie" style="SWT.NONE" xmlns:op1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/operationalmodel" xmlns:swe="http://www.opengis.net/swe"
+<gft:featureview typename="obs1d2d:ObservationWithSource" style="SWT.NONE" xmlns:obs1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/observation" xmlns:swe="http://www.opengis.net/swe"
 	xmlns:om="http://www.opengis.net/om" xmlns:gft="featureview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink">
 	<gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" />
 	<gft:gridLayout numColumns="4" />
@@ -18,7 +18,7 @@
 	<gft:label text="Richtung" visible="true" tooltip="Richtung [°]" style="SWT.NONE">
 		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
 	</gft:label>
-	<gft:spinner property="op1d2d:direction" tooltip="Richtung [°]" style="SWT.BORDER | SWT.HORIZONTAL">
+	<gft:spinner property="obs1d2d:direction" tooltip="Richtung [°]" style="SWT.BORDER | SWT.HORIZONTAL">
 		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalSpan="3" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
 	</gft:spinner>
 	<gft:label text="Zeitreihe" visible="true" tooltip="Zeitreihe" style="SWT.NONE">

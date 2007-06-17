@@ -10,11 +10,12 @@
 	xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om"
 	xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase"
 	xmlns:op1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/operationalmodel"
+	xmlns:obs1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/observation"
 	elementFormDefault="qualified" attributeFormDefault="unqualified">
 
 	<xs:annotation>
 		<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
-			<kapp:gmlVersion>3.1</kapp:gmlVersion>
+			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
 		</xs:appinfo>
 	</xs:annotation>
 
@@ -23,7 +24,7 @@
 	<xs:import namespace="http://www.opengis.net/om"
 		schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/om/1.0.30/om.xsd" />
 	<xs:import namespace="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase"  />
-
+	<xs:import namespace="http://www.tu-harburg.de/wb/kalypso/schemata/observation"  />
 
 	<!-- ======================================================== 
 		Flow Resistance Model
@@ -83,43 +84,6 @@
 		</xs:sequence>
 		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
 	</xs:complexType>
-	
-	<!-- =================================================================
-	
-	================================================================== -->
-	<!--xs:element 
-			name="ComplexElementOperationalModel"
-			type="op1d2d:ComplexElementOperationalModelType"
-			substitutionGroup="simBase:OperationalModel">
-	</xs:element>
-	
-	<xs:complexType 
-		name="ComplexElementOperationalModelType">
-		<xs:complexContent>
-			<xs:extension 
-				base="simBase:AbstractOperationalModelType">
-				<xs:sequence>
-					<xs:element
-						name="boundaryZone1"
-						type="gml:PointPropertyType"
-						minOccurs="1" maxOccurs="1"/>
-					
-					<xs:element
-						name="boundaryZone2"
-						type="gml:PointPropertyType"
-						minOccurs="1" maxOccurs="1"/>
-						
-					<xs:element
-						ref="op1d2d:boundaryCondition"
-						minOccurs="0" maxOccurs="unbounded"/>
-					<xs:element
-						ref="op1d2d:initialCondition"
-						minOccurs="0" maxOccurs="unbounded"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>		
-	</xs:complexType -->
-	
 	
 	<!-- =======================================================
 		Initial condition
@@ -194,15 +158,15 @@
 		<xs:complexContent>
 			<xs:extension base="simBase:AbstractFlowRelationshipType">
 				<xs:sequence>
-					<xs:element name="timeserie" type="op1d2d:TimeseriePropertyType">
+					<xs:element name="observation" type="obs1d2d:ObservationWithSourcePropertyType">
 						<xs:annotation>
 							<xs:documentation xml:lang="de">
-								<xs:label>Zeitreihe</xs:label>
-								<xs:tooltip>Zeitreihe</xs:tooltip>
+								<xs:label>Randbedingung</xs:label>
+								<xs:tooltip>Randbedingung</xs:tooltip>
 							</xs:documentation>
 							<xs:documentation>
-								<xs:label>Timeserie</xs:label>
-								<xs:tooltip>Timeserie</xs:tooltip>
+								<xs:label>Observation</xs:label>
+								<xs:tooltip>Observation</xs:tooltip>
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
@@ -210,66 +174,5 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-
-	<xs:complexType name="TimeseriePropertyType">
-		<xs:sequence>
-			<xs:element ref="op1d2d:Timeserie" minOccurs="1" maxOccurs="1" />
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:element name="Timeserie" type="op1d2d:TimeserieType" substitutionGroup="om:Observation" />
-
-	<xs:complexType name="TimeserieType">
-		<xs:complexContent>
-			<xs:extension base="om:ObservationType">
-				<xs:sequence>
-					<xs:element name="dataSourceURI" type="xs:anyURI">
-						<xs:annotation>
-							<xs:documentation xml:lang="de">
-								<xs:label>Quelle</xs:label>
-								<xs:tooltip>Herkunft der Zeitreihe</xs:tooltip>
-								<xs:description>
-									Beschreibt woher die Zeitreihe ursprünglich kam.
-								</xs:description>
-							</xs:documentation>
-							<xs:documentation>
-								The source where the timeserie came from. TODO: maybe put it into
-								the timeserie definition?
-								<xs:label>Source</xs:label>
-								<xs:tooltip>Origin of the Timeserie</xs:tooltip>
-								<xs:description>
-									Describes where this timeserie came from.
-								</xs:description>
-							</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	
-	<xs:element name="DirectedTimeserie" type="op1d2d:DirectedTimeserieType" substitutionGroup="op1d2d:Timeserie"/>
-	
-	<xs:complexType name="DirectedTimeserieType">
-		<xs:complexContent>
-			<xs:extension base="op1d2d:TimeserieType">
-				<xs:sequence>
-					<xs:element name="direction" type="gml:DegreeValueType" nillable="false">
-						<xs:annotation>
-							<xs:documentation xml:lang="de">
-								<xs:label>Richtung</xs:label>
-								<xs:tooltip>Richtung der Zeitreihe</xs:tooltip>
-							</xs:documentation>
-							<xs:documentation>
-								<xs:label>Direction</xs:label>
-								<xs:tooltip>Direction of the Timeserie</xs:tooltip>
-							</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	
 
 </xs:schema>

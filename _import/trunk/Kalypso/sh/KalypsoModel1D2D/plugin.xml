@@ -81,6 +81,7 @@
          <adapter type="org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IKingFlowRelation"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation"/>
+         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IWeirFlowRelation"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D"/>
@@ -110,6 +111,22 @@
         <viewContribution
               id="org.kalypso.ui.views.mapView.widgets1d2d"
               targetID="org.kalypso.ui.views.mapView">         	
+          <action
+                icon="icons/elcl16/flowRelation_addWeir.gif"
+                id="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateWeirFlowrelationWidgetAction"
+                label="Wehr hinzufügen"
+                style="radio"
+                toolbarPath="tools"
+                tooltip="Wehr einem FE-Element zuordnen">
+	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
+	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
+	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateWeirFlowrelationWidget"/>
+                     	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin" 
+	                     	value="org.kalypso.model1d2d"/>
+	                    <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context" 
+	                     	value="Parameters1D"/>
+	       			</class>
+			</action>    
           <action
                 icon="icons/elcl16/flowRelation_add_teschke.gif"
                 id="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateTeschkeFlowrelationWidgetAction"

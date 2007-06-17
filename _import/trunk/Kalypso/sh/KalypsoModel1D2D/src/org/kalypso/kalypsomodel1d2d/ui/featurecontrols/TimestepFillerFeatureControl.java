@@ -58,7 +58,6 @@ import org.kalypso.ogc.gml.featureview.control.ButtonFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionListener;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * @author Dejan Antanaskovic
@@ -69,43 +68,44 @@ public class TimestepFillerFeatureControl extends AbstractFeatureControl impleme
 
   private final IFeatureSelectionListener m_fsl = new IFeatureSelectionListener()
   {
-    public void selectionChanged(org.kalypso.ogc.gml.selection.IFeatureSelection selection) {
-      System.out.println("SELECTION CHANGEEEEEEEEEEEED!!!!!");
+    public void selectionChanged( org.kalypso.ogc.gml.selection.IFeatureSelection selection )
+    {
+      System.out.println( "SELECTION CHANGEEEEEEEEEEEED!!!!!" );
     }
   };
-  
+
   private final IFeatureChangeListener m_fcl = new IFeatureChangeListener()
   {
     public void featureChanged( final FeatureChange[] changes )
     {
-      System.out.println("featureChanged:" + changes.toString());
-//      final GMLWorkspace workspace = m_featureComposite.getFeature().getWorkspace();
-//      final ChangeFeaturesCommand command = new ChangeFeaturesCommand( workspace, changes );
-//
-//      m_target.setCommandManager( m_commandManager );
-//      m_target.postCommand( command, null );
+      System.out.println( "featureChanged:" + changes.toString() );
+      // final GMLWorkspace workspace = m_featureComposite.getFeature().getWorkspace();
+      // final ChangeFeaturesCommand command = new ChangeFeaturesCommand( workspace, changes );
+      //
+      // m_target.setCommandManager( m_commandManager );
+      // m_target.postCommand( command, null );
     }
-    
+
     public void openFeatureRequested( final Feature feature, final IPropertyType ftp )
     {
       // just show this feature in the view, don't change the selection this doesn't work
       // don't change the command manager, changing the feature only work inside the same workspace
-//      activateFeature( feature, false, null );
+      // activateFeature( feature, false, null );
     }
   };
-  
-  public TimestepFillerFeatureControl( Feature feature, IPropertyType ftp )
+
+  public TimestepFillerFeatureControl( final Feature feature, final IPropertyType ftp )
   {
     super( feature, ftp );
-//    super.addChangeListener( m_fcl );
+    // super.addChangeListener( m_fcl );
   }
 
   /**
    * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#addModifyListener(org.eclipse.swt.events.ModifyListener)
    */
-  public void addModifyListener( ModifyListener l )
+  public void addModifyListener( final ModifyListener l )
   {
-    System.out.println("");
+    System.out.println( "" );
   }
 
   /**
@@ -117,7 +117,7 @@ public class TimestepFillerFeatureControl extends AbstractFeatureControl impleme
     final Feature feature = getFeature();
     m_featureControl = new ButtonFeatureControl( feature, getFeatureTypeProperty() );
     m_featureControl.addChangeListener( m_fcl );
-    final Button control = (Button)m_featureControl.createControl( parent, style );
+    final Button control = (Button) m_featureControl.createControl( parent, style );
     control.setText( "Zeitschritte definieren" );
 
     control.addSelectionListener( new SelectionAdapter()
@@ -127,7 +127,7 @@ public class TimestepFillerFeatureControl extends AbstractFeatureControl impleme
        */
       @SuppressWarnings("synthetic-access")
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         final Shell shell = display.getActiveShell();
         final TimeStepFillerWizard wizard = new TimeStepFillerWizard( getFeature() );
@@ -151,7 +151,7 @@ public class TimestepFillerFeatureControl extends AbstractFeatureControl impleme
   /**
    * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#removeModifyListener(org.eclipse.swt.events.ModifyListener)
    */
-  public void removeModifyListener( ModifyListener l )
+  public void removeModifyListener( final ModifyListener l )
   {
   }
 
@@ -160,22 +160,20 @@ public class TimestepFillerFeatureControl extends AbstractFeatureControl impleme
    */
   public void updateControl( )
   {
-    final Feature feature = getFeature();
-    IPropertyType featureTypeProperty = getFeatureTypeProperty();
-    Feature f1 = ((XLinkedFeature_Impl)feature.getParent().getParent().getProperties()[0]).getFeature();
-    System.out.println(feature.getId());
-    System.out.println(f1.getId());
-    
-//    final Feature feature = getFeature().getParent().getParent();
-//    final IPropertyType featureTypeProperty = getFeatureTypeProperty();
-//    final Object property = feature.getProperty( getFeatureTypeProperty() );
-////    if( m_selector != null && property instanceof SplitSort )
-//    {
-//      final Feature f = ((XLinkedFeature_Impl) feature.getProperty( m_selector )).getFeature();
-//      m_featureControl.setFeature( f );
-//    }
-////    m_featureControl.setFeature( feature );
-//    m_featureControl.updateControl();
+    // final Feature feature = getFeature();
+    // final IPropertyType featureTypeProperty = getFeatureTypeProperty();
+    // final Feature f1 = ((XLinkedFeature_Impl) feature.getParent().getParent().getProperties()[0]).getFeature();
+
+    // final Feature feature = getFeature().getParent().getParent();
+    // final IPropertyType featureTypeProperty = getFeatureTypeProperty();
+    // final Object property = feature.getProperty( getFeatureTypeProperty() );
+    // // if( m_selector != null && property instanceof SplitSort )
+    // {
+    // final Feature f = ((XLinkedFeature_Impl) feature.getProperty( m_selector )).getFeature();
+    // m_featureControl.setFeature( f );
+    // }
+    // // m_featureControl.setFeature( feature );
+    // m_featureControl.updateControl();
 
   }
 

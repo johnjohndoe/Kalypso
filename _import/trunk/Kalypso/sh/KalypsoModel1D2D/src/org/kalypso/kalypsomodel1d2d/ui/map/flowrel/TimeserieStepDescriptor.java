@@ -281,6 +281,8 @@ public class TimeserieStepDescriptor implements IBoundaryConditionDescriptor
   {
     m_page.setTitle( "Zeitreihendefinition" );
     m_page.setDescription( MSG_PAGE );
+
+    updatePageState( Status.OK_STATUS );
   }
 
   /**

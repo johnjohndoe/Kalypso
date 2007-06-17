@@ -6,15 +6,15 @@
 
 <xs:schema targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d"
 	xmlns:wb1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d"
-	xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase"
-	xmlns:math="org.kalypso.gml.common.math" xmlns:wspmprof="org.kalypso.model.wspmprofile"
-	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink"
-	xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om"
-	elementFormDefault="qualified" attributeFormDefault="unqualified">
+	xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" xmlns:math="org.kalypso.gml.common.math"
+	xmlns:wspmprof="org.kalypso.model.wspmprofile" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om"
+	xmlns:obs1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/observation" elementFormDefault="qualified"
+	attributeFormDefault="unqualified">
 
 	<xs:annotation>
 		<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
-			<kapp:gmlVersion>3.1</kapp:gmlVersion>
+			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
 		</xs:appinfo>
 	</xs:annotation>
 
@@ -23,25 +23,25 @@
 	<xs:import namespace="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" />
 	<xs:import namespace="org.kalypso.model.wspmprofile" />
 	<xs:import namespace="org.kalypso.gml.common.math" />
-
+	<xs:import namespace="http://www.tu-harburg.de/wb/kalypso/schemata/observation" />
 
 	<!-- ================================================
 		King Flow Relation		
 		================================================== -->
 
 	<xs:element name="KingFlowRelation" type="wb1d2d:KingFlowRelationType"
-		substitutionGroup="simBase:_FlowRelationship" >
+		substitutionGroup="simBase:_FlowRelationship">
 		<xs:annotation>
-							<xs:documentation xml:lang="de">
-								<xs:label>Netzparameter (King)</xs:label>
-								<xs:tooltip>Netzparameter (King)</xs:tooltip>
-							</xs:documentation>
-							<xs:documentation xml:lang="en">
-								<xs:label>Flowrelations (King)</xs:label>
-								<xs:tooltip>Flowrelations (King)</xs:tooltip>
-							</xs:documentation>
-						</xs:annotation>
-					</xs:element>
+			<xs:documentation xml:lang="de">
+				<xs:label>Netzparameter (King)</xs:label>
+				<xs:tooltip>Netzparameter (King)</xs:tooltip>
+			</xs:documentation>
+			<xs:documentation xml:lang="en">
+				<xs:label>Flowrelations (King)</xs:label>
+				<xs:tooltip>Flowrelations (King)</xs:tooltip>
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
 
 	<xs:complexType name="KingFlowRelationType">
 		<xs:complexContent>
@@ -89,7 +89,9 @@
 						<xs:annotation>
 							<xs:documentation xml:lang="de">
 								<xs:label>Speicherbreite</xs:label>
-								<xs:tooltip>Breite des Speichers bei Übertreten des Ufers (Summe beider Vorländer)</xs:tooltip>
+								<xs:tooltip>
+									Breite des Speichers bei Übertreten des Ufers (Summe beider Vorländer)
+								</xs:tooltip>
 							</xs:documentation>
 							<xs:documentation xml:lang="en">
 								<xs:label>TODO</xs:label>
@@ -101,7 +103,10 @@
 						<xs:annotation>
 							<xs:documentation xml:lang="de">
 								<xs:label>Übertretungshöhe</xs:label>
-								<xs:tooltip>Übertretungshöhe des Ufers - entspricht geringster Höhe des Wasserstands im Hochwasserspeicher</xs:tooltip>
+								<xs:tooltip>
+									Übertretungshöhe des Ufers - entspricht geringster Höhe des Wasserstands im
+									Hochwasserspeicher
+								</xs:tooltip>
 							</xs:documentation>
 							<xs:documentation xml:lang="en">
 								<xs:label>TODO</xs:label>
@@ -136,18 +141,18 @@
 		Polynomial Flow Relation (Teschke)		
 		================================================== -->
 	<xs:element name="TeschkeFlowRelation" type="wb1d2d:TeschkeFlowRelationType"
-		substitutionGroup="simBase:_FlowRelationship" >
+		substitutionGroup="simBase:_FlowRelationship">
 		<xs:annotation>
-							<xs:documentation xml:lang="de">
-								<xs:label>Netzparameter (Teschke)</xs:label>
-								<xs:tooltip>Netzparameter (Teschke)</xs:tooltip>
-							</xs:documentation>
-							<xs:documentation xml:lang="en">
-								<xs:label>Flowrelations (Teschke)</xs:label>
-								<xs:tooltip>Flowrelations (Teschke)</xs:tooltip>
-							</xs:documentation>
-						</xs:annotation>
-					</xs:element>
+			<xs:documentation xml:lang="de">
+				<xs:label>Netzparameter (Teschke)</xs:label>
+				<xs:tooltip>Netzparameter (Teschke)</xs:tooltip>
+			</xs:documentation>
+			<xs:documentation xml:lang="en">
+				<xs:label>Flowrelations (Teschke)</xs:label>
+				<xs:tooltip>Flowrelations (Teschke)</xs:tooltip>
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
 
 	<xs:complexType name="TeschkeFlowRelationType">
 		<xs:complexContent>
@@ -163,8 +168,7 @@
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="polynomialMember" type="math:Polynomial1DPropertyType"
-						maxOccurs="unbounded">
+					<xs:element name="polynomialMember" type="math:Polynomial1DPropertyType" maxOccurs="unbounded">
 						<xs:annotation>
 							<xs:documentation xml:lang="de">
 								<xs:label>Polygon</xs:label>
@@ -179,23 +183,20 @@
 							<xs:documentation xml:lang="de">
 								<xs:label>Station [km]</xs:label>
 								<xs:tooltip>
-									Optionale Angabe der Station. Falls gesetzt, wird die Länge des
-									FE-Elements als Differenz der anliegenden Stationierung
-									ermittelt.
+									Optionale Angabe der Station. Falls gesetzt, wird die Länge des FE-Elements als
+									Differenz der anliegenden Stationierung ermittelt.
 								</xs:tooltip>
 							</xs:documentation>
 							<xs:documentation xml:lang="en">
 								<xs:label>Station [km]</xs:label>
 								<xs:tooltip>
-									TODO: I18N: Optional Angabe der Station. Falls gesetzt wird die
-									Länge des FE-Elements als Differenz der anliegenden
-									Stationierung ermittelt.
+									TODO: I18N: Optional Angabe der Station. Falls gesetzt wird die Länge des
+									FE-Elements als Differenz der anliegenden Stationierung ermittelt.
 								</xs:tooltip>
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="profileMember" type="wb1d2d:LinkedProfilePropertyType"
-						minOccurs="0">
+					<xs:element name="profileMember" type="wb1d2d:LinkedProfilePropertyType" minOccurs="0">
 						<xs:annotation>
 							<xs:documentation xml:lang="de">
 								Link to any profile. Just for documentation reason.
@@ -244,7 +245,83 @@
 		</xs:sequence>
 	</xs:complexType>
 
-	<xs:element name="HPointsObservation" type="om:ObservationType"
-		substitutionGroup="om:Observation" />
+	<xs:element name="HPointsObservation" type="om:ObservationType" substitutionGroup="om:Observation" />
+
+
+	<!-- ================================================
+		WeirRelation		
+		================================================== -->
+
+	<xs:element name="WeirFlowRelation" type="wb1d2d:WeirFlowRelationType" substitutionGroup="simBase:_FlowRelationship">
+		<xs:annotation>
+			<xs:documentation xml:lang="de">
+				<xs:label>Wehr (1D)</xs:label>
+				<xs:tooltip>Wehr (1D)</xs:tooltip>
+			</xs:documentation>
+			<xs:documentation xml:lang="en">
+				<xs:label>Weir (1D)</xs:label>
+				<xs:tooltip>Weir (1D)</xs:tooltip>
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+
+	<xs:complexType name="WeirFlowRelationType">
+		<xs:complexContent>
+			<xs:extension base="simBase:AbstractFlowRelationshipType">
+				<xs:sequence>
+					<xs:element name="kind" type="wb1d2d:weirKind" fixed="10">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Fließformel</xs:label>
+								<xs:tooltip>Fließformel</xs:tooltip>
+							</xs:documentation>
+							<xs:documentation xml:lang="en">
+								<xs:label>Kind</xs:label>
+								<xs:tooltip>Kind</xs:tooltip>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+
+					<xs:element name="observation" type="obs1d2d:ObservationWithSourcePropertyType">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Parameter</xs:label>
+								<xs:tooltip>Parameter</xs:tooltip>
+							</xs:documentation>
+							<xs:documentation>
+								<xs:label>Parameters</xs:label>
+								<xs:tooltip>Parameters</xs:tooltip>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:simpleType name="weirKind" >
+		<xs:restriction base="xs:int">
+			<xs:enumeration value="1"></xs:enumeration>
+			<xs:enumeration value="2"></xs:enumeration>
+			<xs:enumeration value="3"></xs:enumeration>
+			<xs:enumeration value="4"></xs:enumeration>
+			<xs:enumeration value="5"></xs:enumeration>
+			<xs:enumeration value="6"></xs:enumeration>
+			<xs:enumeration value="7"></xs:enumeration>
+			<xs:enumeration value="8"></xs:enumeration>
+			<xs:enumeration value="9"></xs:enumeration>
+			<xs:enumeration value="10">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">
+						<xs:label>Tabellarisch</xs:label>
+					</xs:documentation>
+					<xs:documentation xml:lang="en">
+						<xs:label>Tabular</xs:label>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>	
+	</xs:simpleType>
 
 </xs:schema>

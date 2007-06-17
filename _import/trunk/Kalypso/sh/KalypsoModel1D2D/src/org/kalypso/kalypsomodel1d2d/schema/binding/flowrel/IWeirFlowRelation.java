@@ -38,31 +38,33 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.ui.map.flowrel;
+package org.kalypso.kalypsomodel1d2d.schema.binding.flowrel;
 
-import org.eclipse.jface.wizard.IWizardPage;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
+import javax.xml.namespace.QName;
+
+import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
+import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 
 /**
- * Abstract implementation of {@link IBoundaryConditionDescriptor} which faktors out common code.
- * 
  * @author Gernot Belger
  */
-public abstract class BoundaryConditionDescriptor implements IBoundaryConditionDescriptor
+public interface IWeirFlowRelation extends IFlowRelationship
 {
-  private IWizardPage m_page;
+  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "WeirFlowRelation" );
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.ui.map.flowrel.ITimeserieTypeDescriptor#createControl(org.eclipse.swt.widgets.Composite,
-   *      org.eclipse.jface.wizard.IWizardPage)
-   */
-  public Control createControl( final Composite composite, final IWizardPage page )
+  public static final QName QNAME_PROP_KIND = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "kind" );
+
+  public static final QName QNAME_P_OBSERVATION = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "observation" );
+
+  public enum KIND
   {
-    m_page = page;
-
-    return doCreateControl( composite );
+    TABULAR
   }
 
-  protected abstract Control doCreateControl( final Composite composite );
+  public KIND getKind( );
+
+  /**
+   * Call this method to initalize a newly create weir.
+   */
+  public void init( );
 }

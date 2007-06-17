@@ -65,5 +65,4 @@ public interface IBoundaryConditionDescriptor
   public String getDomainComponentUrn( );
 
   public String getValueComponentUrn( );
-
 }

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gft:featureview typename="wb1d2d:WeirFlowRelation" style="SWT.NONE"
+	xmlns:wb1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d" xmlns:gft="featureview.template.kalypso.org"
+	xmlns:ns0="gistableview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="true"
+		grabExcessHorizontalSpace="true" />
+	<gft:gridLayout numColumns="2" />
+	<gft:label text="Name" visible="true" tooltip="Name" style="SWT.NONE">
+		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING"
+			grabExcessHorizontalSpace="false" />
+	</gft:label>
+	<gft:text editable="true" property="gml:name" tooltip="Name" style="SWT.BORDER"
+		xmlns:gml="http://www.opengis.net/gml">
+		<gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
+	</gft:text>
+	<gft:label text="Beschreibung" visible="true" tooltip="Beschreibung" style="SWT.NONE">
+		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.BEGINNING"
+			grabExcessHorizontalSpace="false" />
+	</gft:label>
+	<gft:text editable="true" property="gml:description" tooltip="Beschreibung" style="SWT.MULTI | SWT.BORDER"
+		xmlns:gml="http://www.opengis.net/gml">
+		<gft:gridData verticalAlignment="GridData.BEGINNING" horizontalSpan="1" horizontalAlignment="GridData.FILL"
+			heightHint="30" grabExcessHorizontalSpace="true" />
+	</gft:text>
+	<gft:label text="Fließformel" visible="true" tooltip="Fließformel" style="SWT.NONE">
+		<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING"
+			grabExcessHorizontalSpace="false" />
+	</gft:label>
+	<gft:combo property="wb1d2d:kind" tooltip="Fließformel"  enabled="false" style="SWT.DROP_DOWN | SWT.READ_ONLY">
+		<gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
+	</gft:combo>
+	<gft:group text="Parameter" tooltip="Parameter" style="SWT.NONE">
+		<gft:gridData verticalAlignment="GridData.FILL" horizontalSpan="4" horizontalAlignment="GridData.FILL"
+			grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" />
+		<gft:gridLayout numColumns="2" />
+		<gft:subcomposite property="wb1d2d:observation" style="SWT.NONE">
+			<gft:gridData verticalAlignment="GridData.FILL" horizontalSpan="2" horizontalAlignment="GridData.FILL"
+				grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" />
+		</gft:subcomposite>
+	</gft:group>
+</gft:featureview>
+

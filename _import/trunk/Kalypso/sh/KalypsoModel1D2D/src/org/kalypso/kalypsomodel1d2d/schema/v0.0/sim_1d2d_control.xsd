@@ -80,11 +80,14 @@
 		ActiveModelIDType
 		================================================================== -->
 	<complexType name="ActiveModelIDType">
+	<!-- Not needed if links is inside the same workspace
+	TODO: delete after reading
 		<annotation>
 			<appinfo xmlns:kapp="org.kalypso.appinfo">
 				<kapp:documentReference>control.gml</kapp:documentReference>
 			</appinfo>
 		</annotation>
+-->		
 		<sequence>
 			<element ref="c1d2d:ControlModel" minOccurs="0"
 				maxOccurs="0" />

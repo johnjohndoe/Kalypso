@@ -58,9 +58,9 @@ import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.jts.JTSUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DContinuityLine;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ILineElement;
@@ -88,18 +88,17 @@ import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
 import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.PolygonSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.Stroke_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.opengis.cs.CS_CoordinateSystem;
-
-import com.vividsolutions.jts.geom.LineString;
 
 /**
  * @author Gernot Belger
@@ -189,16 +188,9 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
     final double grabDistance = MapUtilities.calculateWorldDistance( mapPanel, currentPos, m_grabRadius );
     m_modelElement = findModelElementFromCurrentPosition( m_discModel, currentPos, grabDistance );
 
-    /* Node has already a flow relation? */
+    /* Item has already a flow relation? */
     m_existingFlowRelation = null;
-    if( m_flowRelCollection == null || m_modelElement == null )
-    {
-      mapPanel.repaint();
-
-      return;
-    }
-
-    if( isConsidered( m_modelElement ) )
+    if( m_flowRelCollection != null && m_modelElement != null )
     {
       final GM_Position flowPosition = getFlowPositionFromElement( m_modelElement );
       if( flowPosition != null )
@@ -213,30 +205,21 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
     try
     {
       /* Node: return its position */
+      final GM_Object geom;
+
       if( modelElement instanceof IFE1D2DNode )
-      {
-        final GM_Point point = ((IFE1D2DNode) modelElement).getPoint();
-        if( point != null )
-          return point.getPosition();
-      }
+        geom = ((IFE1D2DNode) modelElement).getPoint();
       /* ContinuityLine: return middle of line */
-      else if( modelElement instanceof ILineElement )
+      else if( modelElement instanceof IFE1D2DElement )
       {
-        final ILineElement contiLine = (ILineElement) modelElement;
-        final GM_Curve line = (GM_Curve) contiLine.recalculateElementGeometry();
-        if( line != null )
-        {
-          final LineString jtsLine = (LineString) JTSAdapter.export( line );
-          final com.vividsolutions.jts.geom.Point point = JTSUtilities.pointOnLinePercent( jtsLine, 50 );
-          return JTSAdapter.wrap( point.getCoordinate() );
-        }
+        final IFE1D2DElement element = (IFE1D2DElement) modelElement;
+        geom = element.recalculateElementGeometry();
       }
-      else if( modelElement instanceof IPolyElement )
-      {
-        final IPolyElement polyElement = (IPolyElement) modelElement;
-        final GM_Surface surface = (GM_Surface) polyElement.recalculateElementGeometry();
-        return surface.getCentroid().getPosition();
-      }
+      else
+        geom = null;
+
+      if( geom != null )
+        return geom.getCentroid().getPosition();
     }
     catch( final GM_Exception e )
     {
@@ -256,7 +239,7 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
   @Override
   public void paint( final Graphics g )
   {
-    if( !isConsidered( m_modelElement ) )
+    if( m_modelElement == null )
       return;
 
     try
@@ -272,13 +255,13 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
           g.fillRect( (int) nodePoint.getX() - smallRect, (int) nodePoint.getY() - smallRect, smallRect * 2, smallRect * 2 );
       }
       /* ContinuityLine: return middle of line */
-      else if( m_modelElement instanceof ILineElement )
+      else if( m_modelElement instanceof ILineElement || m_modelElement instanceof IElement1D )
       {
-        final ILineElement contiLine = (ILineElement) m_modelElement;
-        final GM_Curve line = (GM_Curve) contiLine.recalculateElementGeometry();
+        final IFE1D2DElement element = (IFE1D2DElement) m_modelElement;
+        final GM_Curve line = (GM_Curve) element.recalculateElementGeometry();
 
         final LineSymbolizer symb = new LineSymbolizer_Impl();
-        final Stroke stroke = new Stroke_Impl( new HashMap(), null, null );
+        final Stroke stroke = new Stroke_Impl( new HashMap<Object, Object>(), null, null );
         stroke.setWidth( 3 );
         stroke.setStroke( new Color( 255, 0, 0 ) );
         symb.setStroke( stroke );
@@ -289,10 +272,10 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
       else if( m_modelElement instanceof IPolyElement )
       {
         final IPolyElement polyElement = (IPolyElement) m_modelElement;
-        final GM_Surface surface = (GM_Surface) polyElement.recalculateElementGeometry();
+        final GM_Surface<GM_SurfacePatch> surface = (GM_Surface<GM_SurfacePatch>) polyElement.recalculateElementGeometry();
 
         final PolygonSymbolizer symb = new PolygonSymbolizer_Impl();
-        final Stroke stroke = new Stroke_Impl( new HashMap(), null, null );
+        final Stroke stroke = new Stroke_Impl( new HashMap<Object, Object>(), null, null );
         stroke.setWidth( 3 );
         stroke.setStroke( new Color( 255, 0, 0 ) );
         symb.setStroke( stroke );
@@ -438,12 +421,6 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
         }
       } );
     }
-  }
-
-  /** Overwrite to let this widget consider other 1d2d-element than nodes. */
-  protected boolean isConsidered( final IFeatureWrapper2 modelElement )
-  {
-    return modelElement instanceof IFE1D2DNode;
   }
 
   /**

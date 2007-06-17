@@ -5,7 +5,8 @@
 	xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase"
-	xmlns:op1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/operationalmodel">
+	xmlns:op1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/operationalmodel"
+	xmlns:obs1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/observation">
 	<Name>_FlowRelationship</Name>
 	<Title>Randbediungung</Title>
 	<FeatureTypeName>
@@ -18,7 +19,7 @@
 		<ogc:Filter>
 			<ogc:PropertyIsNull>
 				<ogc:PropertyName>
-					op1d2d:timeserie/op1d2d:DirectedTimeserie/op1d2d:direction
+					op1d2d:observation/obs1d2d:DirectedObservationWithSource/obs1d2d:direction
 				</ogc:PropertyName>
 			</ogc:PropertyIsNull>
 		</ogc:Filter>
@@ -71,7 +72,7 @@
 			<ogc:Not>
 				<ogc:PropertyIsNull>
 					<ogc:PropertyName>
-						op1d2d:timeserie/op1d2d:DirectedTimeserie/op1d2d:direction
+						op1d2d:observation/obs1d2d:DirectedObservationWithSource/obs1d2d:direction
 					</ogc:PropertyName>
 				</ogc:PropertyIsNull>
 			</ogc:Not>
@@ -149,7 +150,7 @@
 				<Size>50.0</Size>
 				<Rotation>
 					<ogc:PropertyName>
-						op1d2d:timeserie/op1d2d:DirectedTimeserie/op1d2d:direction
+						op1d2d:observation/obs1d2d:DirectedObservationWithSource/obs1d2d:direction
 					</ogc:PropertyName>
 				</Rotation>
 			</Graphic>

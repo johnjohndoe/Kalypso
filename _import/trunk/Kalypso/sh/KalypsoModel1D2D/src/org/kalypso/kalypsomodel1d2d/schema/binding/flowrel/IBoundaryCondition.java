@@ -54,11 +54,11 @@ public interface IBoundaryCondition extends IFlowRelationship
 {
   public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "BoundaryCondition" );
 
-  public static final QName QNAME_DIRECTED_TIMESERIE = new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "DirectedTimeserie" );
+  public static final QName QNAME_DIRECTED_OBSERVATION = new QName( UrlCatalog1D2D.MODEL_1D2DObservation_NS, "DirectedObservationWithSource" );
 
-  public static final QName QNAME_P_TIMESERIE = new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "timeserie" );
+  public static final QName QNAME_P_OBSERVATION = new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "observation" );
 
-  public static final QName QNAME_P_DIRECTION = new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "direction" );
+  public static final QName QNAME_P_DIRECTION = new QName( UrlCatalog1D2D.MODEL_1D2DObservation_NS, "direction" );
 
   public IObservation<TupleResult> initializeObservation( final String domainComponentUrn, final String valueComponentUrn );
 

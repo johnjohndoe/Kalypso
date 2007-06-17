@@ -232,10 +232,10 @@ public class FE1D2DDiscretisationModel extends AbstractFeatureBinder implements 
   {
     final FeatureList modelList = m_elements.getWrappedList();
     final GM_Envelope reqEnvelope = grabEnvelopeFromDistance( position, grabDistance );
-    final List<Feature> foundNodes = modelList.query( reqEnvelope, null );
+    final List<Feature> foundElements = modelList.query( reqEnvelope, null );
     double min = Double.MAX_VALUE;
     IFeatureWrapper2 nearest = null;
-    for( final Feature feature : foundNodes )
+    for( final Feature feature : foundElements )
     {
       final IFeatureWrapper2 current = (IFeatureWrapper2) feature.getAdapter( elementClass );
       if( current != null )
@@ -269,13 +269,15 @@ public class FE1D2DDiscretisationModel extends AbstractFeatureBinder implements 
       // has no surface...
       // FIX: make an own wrapper-class for Polygon-Elements, only those
       // have a surface
+      if( netItem instanceof IElement1D )
+        return ((IElement1D) netItem).recalculateElementGeometry();
+
       if( netItem instanceof ILineElement )
         return ((ILineElement) netItem).recalculateElementGeometry();
 
       if( netItem instanceof IPolyElement )
-      {
         return ((IPolyElement) netItem).recalculateElementGeometry();// getGeometry();
-      }
+
       return null;
     }
     catch( final GM_Exception e )

@@ -50,7 +50,6 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtils;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DContinuityLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ILineElement;
@@ -108,14 +107,14 @@ public class CreateNodalBCFlowrelationWidget extends AbstractCreateFlowrelationW
     final TimeserieStepDescriptor qTimeDescriptor = new TimeserieStepDescriptor( "Abfluss - Zeitreihe", Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
     final TimeserieStepDescriptor specQ1TimeDescriptor = new TimeserieStepDescriptor( "Spezifische Abfluss - Zeitreihe", Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE_1D );
     final TimeserieStepDescriptor specQ2TimeDescriptor = new TimeserieStepDescriptor( "Spezifische Abfluss - Zeitreihe", Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE_2D );
-    final WQStepDescriptor wqDescriptor = new WQStepDescriptor( "W/Q - Beziehung" );
+    // final WQStepDescriptor wqDescriptor = new WQStepDescriptor( "W/Q - Beziehung" );
 
     final IFolder importFolder = scenarioFolder.getProject().getFolder( "imports" ).getFolder( "timeseries" );
     final ZmlChooserStepDescriptor zmlChooser = new ZmlChooserStepDescriptor( "Importierte Zeitreihe", importFolder );
 
     // TODO: ask ingenieurs what is right here:
     if( modelElement instanceof IElement1D )
-      return new IBoundaryConditionDescriptor[] { specQ1TimeDescriptor, wqDescriptor, zmlChooser };
+      return new IBoundaryConditionDescriptor[] { specQ1TimeDescriptor, zmlChooser };
 
     if( modelElement instanceof IPolyElement )
       return new IBoundaryConditionDescriptor[] { specQ2TimeDescriptor, zmlChooser };
@@ -128,17 +127,8 @@ public class CreateNodalBCFlowrelationWidget extends AbstractCreateFlowrelationW
 
     return new IBoundaryConditionDescriptor[] {};
   }
-
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.ui.map.flowrel.AbstractCreateFlowrelationWidget#isConsidered(org.kalypsodeegree.model.feature.binding.IFeatureWrapper2)
-   */
-  @Override
-  protected boolean isConsidered( final IFeatureWrapper2 modelElement )
-  {
-    return modelElement instanceof IFE1D2DNode || modelElement instanceof ILineElement || modelElement instanceof IPolyElement || modelElement instanceof IElement1D;
-  }
-
-  /**
+  
+   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.flowrel.AbstractCreateFlowrelationWidget#findModelElementFromCurrentPosition(org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d,
    *      org.kalypsodeegree.model.geometry.GM_Point, double)
    */
