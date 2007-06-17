@@ -82,6 +82,7 @@ import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -103,7 +104,7 @@ public class BreakLinesHelper implements IWspmConstants
     // don't instantiate
   }
 
-  public static void createBreaklines( final TuhhReachProfileSegment[] reachProfileSegments, final TupleResult result, final String strStationierung, final String strWsp, Double epsThinning, final File breaklineFile ) throws GM_Exception, InvocationTargetException, GMLSchemaException, GmlSerializeException, IOException
+  public static void createBreaklines( final TuhhReachProfileSegment[] reachProfileSegments, final TupleResult result, final String strStationierung, final String strWsp, final Double epsThinning, final File breaklineFile ) throws GM_Exception, InvocationTargetException, GMLSchemaException, GmlSerializeException, IOException
   {
     final Map<Double, Double> wspMap = createWspMap( result, strStationierung, strWsp );
 
@@ -159,10 +160,10 @@ public class BreakLinesHelper implements IWspmConstants
   {
     final GM_Position[] positions = newProfile.getPositions();
     final CS_CoordinateSystem crs = newProfile.getCoordinateSystem();
-    GM_Position[] newPositions = new GM_Position[positions.length];
+    final GM_Position[] newPositions = new GM_Position[positions.length];
     for( int i = 0; i < positions.length; i++ )
     {
-      GM_Position position = positions[i];
+      final GM_Position position = positions[i];
       newPositions[i] = GeometryFactory.createGM_Position( position.getX(), position.getY(), value );
     }
     return GeometryFactory.createGM_Curve( newPositions, crs );
@@ -261,7 +262,7 @@ public class BreakLinesHelper implements IWspmConstants
 
       final List<GM_Position> posList = new ArrayList<GM_Position>();
 
-      for( GM_Point pos : leftPoints )
+      for( final GM_Point pos : leftPoints )
         posList.add( pos.getPosition() );
       for( final ListIterator<GM_Point> iter = rightPoints.listIterator( rightPoints.size() ); iter.hasPrevious(); )
         posList.add( iter.previous().getPosition() );
@@ -274,7 +275,7 @@ public class BreakLinesHelper implements IWspmConstants
         // add first point to close the ring
         posList.add( firstLeftPoint.getPosition() );
 
-        final GM_Surface surface = GeometryFactory.createGM_Surface( posList.toArray( new GM_Position[posList.size()] ), null, null, crs );
+        final GM_Surface<GM_SurfacePatch> surface = GeometryFactory.createGM_Surface( posList.toArray( new GM_Position[posList.size()] ), null, null, crs );
         rootFeature.setProperty( new QName( NS_WSPM_BOUNDARY, "geometry" ), surface );
       }
 
@@ -290,9 +291,9 @@ public class BreakLinesHelper implements IWspmConstants
     // final POINT_PROPERTY ppHW = pointProperties.contains( IWspmTuhhConstants.POINT_PROPERTY_HOCHWERT ) ?
     // IWspmTuhhConstants.POINT_PROPERTY_HOCHWERT : null;
     if( !profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_HOCHWERT ) || !profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_RECHTSWERT ) ) // ignore
-                                                                                                                                                              // profile
-                                                                                                                                                              // without
-                                                                                                                                                              // geo-coordinates
+      // profile
+      // without
+      // geo-coordinates
       return new GM_Point[] {};
 
     final LinkedList<IProfilPoint> points = profil.getPoints();
