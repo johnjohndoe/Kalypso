@@ -2,6 +2,7 @@ package org.kalypso.ogc.gml.featureview.control;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyListener;
@@ -175,7 +176,10 @@ public class SubFeatureControl extends AbstractFeatureControl
     // In order to do this, m_fc must be put into an extra Composite (when createComposite is called)
 
     final Feature findFeatureToSet = findFeatuereToSet();
-    m_fc.setFeature( findFeatureToSet );
+    final Feature currentFeature = m_fc.getFeature();
+    if( !ObjectUtils.equals( findFeatureToSet, currentFeature ) )
+      m_fc.setFeature( findFeatureToSet );
+    // Is updateControl always necessary?
     m_fc.updateControl();
   }
 
