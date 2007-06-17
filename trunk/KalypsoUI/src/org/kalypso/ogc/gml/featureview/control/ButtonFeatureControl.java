@@ -107,6 +107,10 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
 
   public static IFeatureDialog chooseDialog( final Feature feature, final IPropertyType pt, final IFeatureChangeListener listener )
   {
+    // TODO: should never happen remove if fixed
+    if( feature == null )
+      return new NotImplementedFeatureDialog();
+
     if( pt instanceof IValuePropertyType )
     {
       final ITypeRegistry<IGuiTypeHandler> typeRegistry = GuiTypeRegistrySingleton.getTypeRegistry();
