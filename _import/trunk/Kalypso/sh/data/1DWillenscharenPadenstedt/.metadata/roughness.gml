@@ -3,7 +3,8 @@
  <gml:name>Rauheit</gml:name>
  <wbr:roughnessClsMember>
   <wbr:RoughnessCls gml:id="RoughnessCls117813102775819">
-   <gml:name>deaktive Elemente</gml:name>
+   <gml:name>deaktivierte Elemente</gml:name>
+   <wbr:roughness_GroundLink xlink:href="project:/.metadata/roughness.gml#Roughness_GroundCls117681581556216"/>
    <wbr:colorStyle>#ff0000</wbr:colorStyle>
   </wbr:RoughnessCls>
  </wbr:roughnessClsMember>

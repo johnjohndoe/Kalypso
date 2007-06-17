@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="WINDOWS-1252"?>
-<simBase:FlowRelationshipModel xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" xmlns:wb1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d" xmlns:op1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/operationalmodel" xmlns:tuhh="org.kalypso.model.wspm.tuhh" xmlns:swe="http://www.opengis.net/swe" xmlns:math="org.kalypso.gml.common.math" xmlns:om="http://www.opengis.net/om" gml:id="root">
+<simBase:FlowRelationshipModel xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" xmlns:wb1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d" xmlns:op1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/operationalmodel" xmlns:tuhh="org.kalypso.model.wspm.tuhh" xmlns:swe="http://www.opengis.net/swe" xmlns:ns0="http://www.tu-harburg.de/wb/kalypso/schemata/observation" xmlns:math="org.kalypso.gml.common.math" xmlns:om="http://www.opengis.net/om" xmlns:sweExt="org.kalypso.swe.ext" gml:id="root">
  <simBase:flowRelationshipMember>
   <wb1d2d:TeschkeFlowRelation gml:id="TeschkeFlowRelation117839559517121">
    <gml:name>Gelesen aus: PROF0058.8530.txt</gml:name>
    <simBase:position>
-    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
      <gml:coordinates ts="," decimal="." cs=" ">3552876.7786 5987232.8608 2.75</gml:coordinates>
     </gml:Point>
    </simBase:position>
@@ -24,7 +24,7 @@
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaAlpha"/>
       </swe:RecordDefinition>
      </om:resultDefinition>
-     <om:result>3.089 0.3391210 1.472186 1.000000 0.9999998 0.007841056 0.06848547 1.800000E-7
+     <om:result><![CDATA[3.089 0.3391210 1.472186 1.000000 0.9999998 0.007841056 0.06848547 1.800000E-7
 3.216 0.4662640 2.349944 2.000000 0.9999998 -0.02075648 -0.09413956 1.800000E-7
 3.311 0.5614450 3.109214 3.000000 0.9999999 -0.003512365 -0.09473790 1.200000E-7
 3.390 0.6400030 3.801787 4.000000 0.9999999 0.01284661 -0.03414655 1.200000E-7
@@ -54,7 +54,7 @@
 4.284 1.534473 13.47290 28.00000 0.9999998 0.0001540330 -0.0006146386 1.800000E-7
 4.310 1.560000 13.77361 29.00000 0.9999998 0.004064879 -0.1168346 1.800000E-7
 4.310 1.560000 13.77361 30.00000 1.000000 -13.77361 -30.00000 -1.000000
-</om:result>
+]]></om:result>
     </tuhh:WPointsObservation>
    </wb1d2d:pointsMember>
    <wb1d2d:polynomialMember>
@@ -120,7 +120,7 @@
   <wb1d2d:TeschkeFlowRelation gml:id="TeschkeFlowRelation117839559518755">
    <gml:name>Gelesen aus: PROF0058.9000.txt</gml:name>
    <simBase:position>
-    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
      <gml:coordinates ts="," decimal="." cs=" ">3552880.6369 5987277.4016 2.72</gml:coordinates>
     </gml:Point>
    </simBase:position>
@@ -140,7 +140,7 @@
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaAlpha"/>
       </swe:RecordDefinition>
      </om:resultDefinition>
-     <om:result>3.032 0.3119700 1.681917 1.000000 0.9999999 0.004019089 0.02542919 1.200000E-7
+     <om:result><![CDATA[3.032 0.3119700 1.681917 1.000000 0.9999999 0.004019089 0.02542919 1.200000E-7
 3.131 0.4108930 2.559325 2.000000 0.9999997 -0.008221632 -0.02639381 3.000000E-7
 3.209 0.4888610 3.296899 3.000000 0.9999999 -0.003601982 -0.03484757 1.200000E-7
 3.276 0.5555090 3.959576 4.000000 0.9999998 0.003039407 -0.02081812 2.400000E-7
@@ -170,7 +170,7 @@
 4.114 1.394399 13.81549 28.00000 0.9999999 0.001504755 -0.02021924 1.200000E-7
 4.110 1.390002 13.75913 29.00000 1.000000 -13.75913 -29.00000 -1.000000
 4.140 1.420003 14.14464 30.00000 1.000000 -14.14464 -30.00000 -1.000000
-</om:result>
+]]></om:result>
     </tuhh:WPointsObservation>
    </wb1d2d:pointsMember>
    <wb1d2d:polynomialMember>
@@ -236,7 +236,7 @@
   <wb1d2d:TeschkeFlowRelation gml:id="TeschkeFlowRelation117839559520332">
    <gml:name>Gelesen aus: PROF0058.9510.txt</gml:name>
    <simBase:position>
-    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
      <gml:coordinates ts="," decimal="." cs=" ">3552869.1786 5987324.5788 2.55</gml:coordinates>
     </gml:Point>
    </simBase:position>
@@ -256,7 +256,7 @@
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaAlpha"/>
       </swe:RecordDefinition>
      </om:resultDefinition>
-     <om:result>2.918 0.3680420 1.545824 1.000000 1.000000 -0.002611287 0.02300237 0E-7
+     <om:result><![CDATA[2.918 0.3680420 1.545824 1.000000 1.000000 -0.002611287 0.02300237 0E-7
 3.032 0.4815330 2.391146 2.000000 1.000000 0.0002228899 -0.03984104 0E-7
 3.120 0.5698060 3.111219 3.000000 0.9999999 0.005721249 -0.02856694 6.000000E-8
 3.195 0.6445000 3.763310 4.000000 1.000000 0.006180146 0.008321588 -2.400000E-7
@@ -286,7 +286,7 @@
 4.108 1.557635 13.58263 28.00000 1.000000 0.0001895853 0.1926341 -1.200000E-7
 4.110 1.560002 13.61177 29.00000 1.000000 0.0003055112 -0.7182881 0E-7
 4.160 1.610000 14.23202 30.00000 0.9999999 0.003712310 0.1970802 1.200000E-7
-</om:result>
+]]></om:result>
     </tuhh:WPointsObservation>
    </wb1d2d:pointsMember>
    <wb1d2d:polynomialMember>
@@ -352,7 +352,7 @@
   <wb1d2d:TeschkeFlowRelation gml:id="TeschkeFlowRelation117839559521829">
    <gml:name>Gelesen aus: PROF0059.0000.txt</gml:name>
    <simBase:position>
-    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
      <gml:coordinates ts="," decimal="." cs=" ">3552853.1587 5987371.3982 2.85</gml:coordinates>
     </gml:Point>
    </simBase:position>
@@ -372,7 +372,7 @@
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaAlpha"/>
       </swe:RecordDefinition>
      </om:resultDefinition>
-     <om:result>3.150 0.3004030 1.709789 1.000000 1.000000 -0.007321120 0.06793597 -1.200000E-7
+     <om:result><![CDATA[3.150 0.3004030 1.709789 1.000000 1.000000 -0.007321120 0.06793597 -1.200000E-7
 3.255 0.4048810 2.744553 2.000000 1.000000 0.01563780 -0.06381250 0E-7
 3.326 0.4761370 3.543785 3.000000 1.000000 0.002104900 -0.06692124 0E-7
 3.384 0.5338680 4.215714 4.000000 0.9999999 -0.004142271 -0.06203032 6.000000E-8
@@ -402,7 +402,7 @@
 4.157 1.306881 13.98255 28.00000 0.9999999 0.001605826 0.4711570 6.000000E-8
 4.160 1.310000 14.02343 29.00000 0.9999998 0.001993009 -0.3819633 1.800000E-7
 4.180 1.330000 14.28618 30.00000 1.000000 0.004723799 -0.4252492 -2.400000E-7
-</om:result>
+]]></om:result>
     </tuhh:WPointsObservation>
    </wb1d2d:pointsMember>
    <wb1d2d:polynomialMember>
@@ -468,7 +468,7 @@
   <wb1d2d:TeschkeFlowRelation gml:id="TeschkeFlowRelation117839559523427">
    <gml:name>Gelesen aus: PROF0059.0510.txt</gml:name>
    <simBase:position>
-    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
      <gml:coordinates ts="," decimal="." cs=" ">3552846.8788 5987422.5508 2.68</gml:coordinates>
     </gml:Point>
    </simBase:position>
@@ -488,7 +488,7 @@
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaAlpha"/>
       </swe:RecordDefinition>
      </om:resultDefinition>
-     <om:result>3.125 0.4447140 1.510830 1.000000 1.000000 0.01137220 0.01071210 0E-7
+     <om:result><![CDATA[3.125 0.4447140 1.510830 1.000000 1.000000 0.01137220 0.01071210 0E-7
 3.250 0.5697210 2.434335 2.000000 0.9999999 -0.01656246 0.02215041 1.200000E-7
 3.338 0.6580170 3.178864 3.000000 1.000000 -0.01590663 -0.03070379 -1.200000E-7
 3.413 0.7325610 3.854874 4.000000 0.9999997 -0.003645161 -0.05320733 3.000000E-7
@@ -518,7 +518,7 @@
 4.285 1.605448 13.87246 28.00000 1.000000 -0.007793103 -0.08314867 0E-7
 4.280 1.600003 13.80324 29.00000 1.000000 -13.80324 -29.00000 -1.000000
 4.340 1.660000 14.57062 30.00000 0.9999999 -14.57062 -30.00000 -0.9999999
-</om:result>
+]]></om:result>
     </tuhh:WPointsObservation>
    </wb1d2d:pointsMember>
    <wb1d2d:polynomialMember>
@@ -584,7 +584,7 @@
   <wb1d2d:TeschkeFlowRelation gml:id="TeschkeFlowRelation117839559525041">
    <gml:name>Gelesen aus: PROF0059.1000.txt</gml:name>
    <simBase:position>
-    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
      <gml:coordinates ts="," decimal="." cs=" ">3552839.4772 5987474.3447 2.46</gml:coordinates>
     </gml:Point>
    </simBase:position>
@@ -604,7 +604,7 @@
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaAlpha"/>
       </swe:RecordDefinition>
      </om:resultDefinition>
-     <om:result>2.870 0.4095090 1.378917 1.000000 0.9999999 0.004052544 0.02052049 1.200000E-7
+     <om:result><![CDATA[2.870 0.4095090 1.378917 1.000000 0.9999999 0.004052544 0.02052049 1.200000E-7
 3.005 0.5451400 2.174739 2.000000 0.9999999 -0.008085528 -0.02029912 6.000000E-8
 3.108 0.6475070 2.839823 3.000000 1.000000 -0.004052270 -0.03236770 0E-7
 3.194 0.7340130 3.443559 4.000000 0.9999998 0.002457383 -0.02043214 1.800000E-7
@@ -634,7 +634,7 @@
 4.233 1.772585 12.82902 28.00000 0.9999999 0.0004419210 -0.02157923 6.000000E-8
 4.230 1.770002 12.80192 29.00000 0.9999999 -12.80192 -29.00000 -0.9999999
 4.260 1.800003 13.11809 30.00000 1.000000 -13.11809 -30.00000 -1.000000
-</om:result>
+]]></om:result>
     </tuhh:WPointsObservation>
    </wb1d2d:pointsMember>
    <wb1d2d:polynomialMember>
@@ -700,7 +700,7 @@
   <wb1d2d:TeschkeFlowRelation gml:id="TeschkeFlowRelation117839559525016">
    <gml:name>Gelesen aus: PROF0059.1500.txt</gml:name>
    <simBase:position>
-    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
      <gml:coordinates ts="," decimal="." cs=" ">3552849.6867 5987524.1193 2.78</gml:coordinates>
     </gml:Point>
    </simBase:position>
@@ -720,7 +720,7 @@
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaAlpha"/>
       </swe:RecordDefinition>
      </om:resultDefinition>
-     <om:result>3.226 0.4458160 1.628580 1.000000 1.000000 -0.01816181 0.04762988 -1.200000E-7
+     <om:result><![CDATA[3.226 0.4458160 1.628580 1.000000 1.000000 -0.01816181 0.04762988 -1.200000E-7
 3.353 0.5726090 2.661610 2.000000 1.000000 0.03611255 -0.08000475 -1.200000E-7
 3.440 0.6595700 3.509903 3.000000 1.000000 0.01349703 -0.003367223 0E-7
 3.503 0.7229710 4.159938 4.000000 1.000000 -0.005357405 -0.01909295 -1.200000E-7
@@ -750,7 +750,7 @@
 4.398 1.617805 13.92559 28.00000 0.9999999 0.0008639309 0.3144805 1.200000E-7
 4.400 1.620003 13.95158 29.00000 1.000000 0.001365423 -0.6022405 0E-7
 4.440 1.660000 14.42708 30.00000 1.000000 0.01389347 -0.05489159 -2.400000E-7
-</om:result>
+]]></om:result>
     </tuhh:WPointsObservation>
    </wb1d2d:pointsMember>
    <wb1d2d:polynomialMember>
@@ -816,7 +816,7 @@
   <wb1d2d:TeschkeFlowRelation gml:id="TeschkeFlowRelation117839559526559">
    <gml:name>Gelesen aus: PROF0059.2000.txt</gml:name>
    <simBase:position>
-    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
      <gml:coordinates ts="," decimal="." cs=" ">3552889.8488 5987558.463 2.52</gml:coordinates>
     </gml:Point>
    </simBase:position>
@@ -836,7 +836,7 @@
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaAlpha"/>
       </swe:RecordDefinition>
      </om:resultDefinition>
-     <om:result>2.965 0.4453890 1.348351 1.000000 1.000000 -0.001385284 0.1290971 -1.200000E-7
+     <om:result><![CDATA[2.965 0.4453890 1.348351 1.000000 1.000000 -0.001385284 0.1290971 -1.200000E-7
 3.113 0.5931080 2.193690 2.000000 0.9999998 0.004265316 -0.1480003 1.800000E-7
 3.221 0.7010680 2.927788 3.000000 1.000000 0.003453905 -0.09374161 -2.400000E-7
 3.301 0.7814830 3.527501 4.000000 1.000000 -0.005993202 -0.07271362 -2.400000E-7
@@ -866,7 +866,7 @@
 4.425 1.904548 13.59066 28.00000 1.000000 -0.001177650 0.4928306 -2.400000E-7
 4.430 1.909999 13.65276 29.00000 1.000000 -0.0004774944 -0.3569748 -1.200000E-7
 4.450 1.930000 13.88239 30.00000 1.000000 0.002975567 -0.8024342 -2.400000E-7
-</om:result>
+]]></om:result>
     </tuhh:WPointsObservation>
    </wb1d2d:pointsMember>
    <wb1d2d:polynomialMember>
@@ -932,7 +932,7 @@
   <wb1d2d:TeschkeFlowRelation gml:id="TeschkeFlowRelation117839559528144">
    <gml:name>Gelesen aus: PROF0059.2560.txt</gml:name>
    <simBase:position>
-    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
      <gml:coordinates ts="," decimal="." cs=" ">3552936.5794 5987592.6081 2.31</gml:coordinates>
     </gml:Point>
    </simBase:position>
@@ -952,7 +952,7 @@
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaAlpha"/>
       </swe:RecordDefinition>
      </om:resultDefinition>
-     <om:result>2.713 0.4031450 1.306218 1.000000 1.000000 0.009137113 0.001845573 0E-7
+     <om:result><![CDATA[2.713 0.4031450 1.306218 1.000000 1.000000 0.009137113 0.001845573 0E-7
 2.868 0.5583650 2.056219 2.000000 1.000000 -0.01322816 0.01544846 0E-7
 2.989 0.6789110 2.702616 3.000000 1.000000 -0.01162295 -0.01929248 0E-7
 3.094 0.7837260 3.312962 4.000000 0.9999999 -0.0001794155 -0.02344784 1.200000E-7
@@ -982,7 +982,7 @@
 4.259 1.948770 13.48227 28.00000 0.9999999 -0.007885489 -0.01147739 1.200000E-7
 4.250 1.940002 13.38619 29.00000 1.000000 -13.38619 -29.00000 -1.000000
 4.290 1.980003 13.82797 30.00000 1.000000 -13.82797 -30.00000 -1.000000
-</om:result>
+]]></om:result>
     </tuhh:WPointsObservation>
    </wb1d2d:pointsMember>
    <wb1d2d:polynomialMember>
@@ -1048,7 +1048,7 @@
   <wb1d2d:TeschkeFlowRelation gml:id="TeschkeFlowRelation117839559529698">
    <gml:name>Gelesen aus: PROF0059.3000.txt</gml:name>
    <simBase:position>
-    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
      <gml:coordinates ts="," decimal="." cs=" ">3552969.4562 5987619.3316 3.01</gml:coordinates>
     </gml:Point>
    </simBase:position>
@@ -1068,7 +1068,7 @@
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaAlpha"/>
       </swe:RecordDefinition>
      </om:resultDefinition>
-     <om:result>3.341 0.3312470 1.571363 1.000000 1.000000 0.005659993 0.01679390 -1.200000E-7
+     <om:result><![CDATA[3.341 0.3312470 1.571363 1.000000 1.000000 0.005659993 0.01679390 -1.200000E-7
 3.452 0.4418510 2.424984 2.000000 0.9999999 -0.01064813 -0.01701611 1.200000E-7
 3.538 0.5280060 3.150902 3.000000 0.9999999 -0.004869750 -0.02575523 1.200000E-7
 3.611 0.6009910 3.807628 4.000000 0.9999999 0.002896016 -0.01508641 6.000000E-8
@@ -1098,7 +1098,7 @@
 4.507 1.496551 13.73091 28.00000 1.000000 -0.001226699 -0.009230875 0E-7
 4.500 1.490003 13.64885 29.00000 1.000000 -13.64885 -29.00000 -1.000000
 4.530 1.520004 14.02639 30.00000 1.000000 -14.02639 -30.00000 -1.000000
-</om:result>
+]]></om:result>
     </tuhh:WPointsObservation>
    </wb1d2d:pointsMember>
    <wb1d2d:polynomialMember>
@@ -1164,7 +1164,7 @@
   <wb1d2d:TeschkeFlowRelation gml:id="TeschkeFlowRelation117839559531267">
    <gml:name>Gelesen aus: PROF0059.3650.txt</gml:name>
    <simBase:position>
-    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
      <gml:coordinates ts="," decimal="." cs=" ">3552986.6852 5987678.0098 2.77</gml:coordinates>
     </gml:Point>
    </simBase:position>
@@ -1184,7 +1184,7 @@
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaAlpha"/>
       </swe:RecordDefinition>
      </om:resultDefinition>
-     <om:result>3.148 0.3775160 1.499908 1.000000 0.9999999 -0.008669149 0.06723859 6.000000E-8
+     <om:result><![CDATA[3.148 0.3775160 1.499908 1.000000 0.9999999 -0.008669149 0.06723859 6.000000E-8
 3.271 0.5010380 2.388544 2.000000 1.000000 0.01465131 -0.09576344 0E-7
 3.364 0.5937600 3.156631 3.000000 1.000000 0.01083825 -0.03195155 -1.200000E-7
 3.434 0.6640930 3.786980 4.000000 0.9999998 -0.003394217 -0.01968533 1.800000E-7
@@ -1214,7 +1214,7 @@
 4.368 1.598386 13.58388 28.00000 0.9999999 0.001141949 0.4617645 6.000000E-8
 4.380 1.610000 13.72391 29.00000 1.000000 0.002120777 -0.08905226 -1.200000E-7
 4.390 1.620000 13.84497 30.00000 0.9999998 0.003120465 -0.6978112 2.400000E-7
-</om:result>
+]]></om:result>
     </tuhh:WPointsObservation>
    </wb1d2d:pointsMember>
    <wb1d2d:polynomialMember>
@@ -1280,7 +1280,7 @@
   <wb1d2d:TeschkeFlowRelation gml:id="TeschkeFlowRelation117839559531239">
    <gml:name>Gelesen aus: PROF0059.4000.txt</gml:name>
    <simBase:position>
-    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
      <gml:coordinates ts="," decimal="." cs=" ">3552983.6592 5987726.6338 2.68</gml:coordinates>
     </gml:Point>
    </simBase:position>
@@ -1300,7 +1300,7 @@
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaAlpha"/>
       </swe:RecordDefinition>
      </om:resultDefinition>
-     <om:result>3.170 0.4899550 1.301107 1.000000 1.000000 0.006134988 0.06706351 0E-7
+     <om:result><![CDATA[3.170 0.4899550 1.301107 1.000000 1.000000 0.006134988 0.06706351 0E-7
 3.332 0.6518590 2.121403 2.000000 1.000000 -0.01649254 -0.1004877 -1.200000E-7
 3.450 0.7704100 2.834297 3.000000 0.9999999 -0.001262432 -0.08306310 6.000000E-8
 3.547 0.8670580 3.485693 4.000000 0.9999998 0.01017865 -0.01446432 2.400000E-7
@@ -1330,7 +1330,7 @@
 4.661 1.981321 13.75213 28.00000 1.000000 0.004390100 -0.1236725 -1.200000E-7
 4.660 1.980000 13.73667 29.00000 0.9999999 -13.73667 -29.00000 -0.9999999
 4.690 2.010001 14.09003 30.00000 0.9999998 -14.09003 -30.00000 -0.9999998
-</om:result>
+]]></om:result>
     </tuhh:WPointsObservation>
    </wb1d2d:pointsMember>
    <wb1d2d:polynomialMember>
@@ -1396,7 +1396,7 @@
   <wb1d2d:TeschkeFlowRelation gml:id="TeschkeFlowRelation117839559532867">
    <gml:name>Gelesen aus: PROF0059.4480.txt</gml:name>
    <simBase:position>
-    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
      <gml:coordinates ts="," decimal="." cs=" ">3552986.9676 5987774.2405 2.8</gml:coordinates>
     </gml:Point>
    </simBase:position>
@@ -1416,7 +1416,7 @@
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaAlpha"/>
       </swe:RecordDefinition>
      </om:resultDefinition>
-     <om:result>3.158 0.3581840 1.415171 1.000000 1.000000 -0.006999764 -0.006916108 -1.200000E-7
+     <om:result><![CDATA[3.158 0.3581840 1.415171 1.000000 1.000000 -0.006999764 -0.006916108 -1.200000E-7
 3.293 0.4931990 2.262980 2.000000 1.000000 0.01348153 -0.0009150515 0E-7
 3.391 0.5911000 2.971010 3.000000 1.000000 0.004328364 0.02378147 0E-7
 3.469 0.6687690 3.567978 4.000000 1.000000 -0.002056113 0.003993586 -2.400000E-7
@@ -1446,7 +1446,7 @@
 4.463 1.662926 12.96584 28.00000 0.9999998 0.004388225 0.02143166 2.400000E-7
 4.460 1.660001 12.93456 29.00000 1.000000 -12.93456 -29.00000 -1.000000
 4.490 1.690002 13.25623 30.00000 1.000000 -13.25623 -30.00000 -1.000000
-</om:result>
+]]></om:result>
     </tuhh:WPointsObservation>
    </wb1d2d:pointsMember>
    <wb1d2d:polynomialMember>
@@ -1512,7 +1512,7 @@
   <wb1d2d:TeschkeFlowRelation gml:id="TeschkeFlowRelation117839559534385">
    <gml:name>Gelesen aus: PROF0059.5000.txt</gml:name>
    <simBase:position>
-    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
      <gml:coordinates ts="," decimal="." cs=" ">3553012.0314 5987820.7902 2.85</gml:coordinates>
     </gml:Point>
    </simBase:position>
@@ -1532,7 +1532,7 @@
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaAlpha"/>
       </swe:RecordDefinition>
      </om:resultDefinition>
-     <om:result>3.119 0.2688850 1.595086 1.000000 1.000000 -0.001862259 0.06277137 -1.200000E-7
+     <om:result><![CDATA[3.119 0.2688850 1.595086 1.000000 1.000000 -0.001862259 0.06277137 -1.200000E-7
 3.224 0.3744190 2.405058 2.000000 0.9999999 0.001915817 -0.05287280 6.000000E-8
 3.309 0.4586250 3.078787 3.000000 0.9999997 0.001968230 -0.06387894 3.000000E-7
 3.381 0.5313240 3.680056 4.000000 1.000000 0.0009951476 -0.04146938 -2.400000E-7
@@ -1562,7 +1562,7 @@
 4.329 1.478929 13.14115 28.00000 0.9999999 0.0007476075 0.4300537 1.200000E-7
 4.330 1.480000 13.15331 29.00000 0.9999999 0.0007591526 -0.5257344 6.000000E-8
 4.360 1.510000 13.49493 30.00000 1.000000 0.001064272 -0.2612615 -1.200000E-7
-</om:result>
+]]></om:result>
     </tuhh:WPointsObservation>
    </wb1d2d:pointsMember>
    <wb1d2d:polynomialMember>
@@ -1628,7 +1628,7 @@
   <wb1d2d:TeschkeFlowRelation gml:id="TeschkeFlowRelation1178395595359160">
    <gml:name>Gelesen aus: PROF0059.5510.txt</gml:name>
    <simBase:position>
-    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
      <gml:coordinates ts="," decimal="." cs=" ">3553038.0353 5987864.9639 2.67</gml:coordinates>
     </gml:Point>
    </simBase:position>
@@ -1648,7 +1648,7 @@
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaAlpha"/>
       </swe:RecordDefinition>
      </om:resultDefinition>
-     <om:result>3.107 0.4367970 1.464802 1.000000 1.000000 -0.01270698 -0.002183679 -2.400000E-7
+     <om:result><![CDATA[3.107 0.4367970 1.464802 1.000000 1.000000 -0.01270698 -0.002183679 -2.400000E-7
 3.238 0.5682030 2.379438 2.000000 0.9999998 0.02463870 -0.01976622 1.800000E-7
 3.332 0.6623750 3.156594 3.000000 1.000000 0.01100009 0.04402708 0E-7
 3.403 0.7325530 3.777115 4.000000 1.000000 -0.004861255 0.01108122 -2.400000E-7
@@ -1678,7 +1678,7 @@
 4.346 1.675917 13.60753 28.00000 1.000000 0.009381382 0.01324374 -1.200000E-7
 4.340 1.670000 13.53730 29.00000 0.9999999 -13.53730 -29.00000 -0.9999999
 4.370 1.700001 13.89446 30.00000 1.000000 -13.89446 -30.00000 -1.000000
-</om:result>
+]]></om:result>
     </tuhh:WPointsObservation>
    </wb1d2d:pointsMember>
    <wb1d2d:polynomialMember>
@@ -1744,7 +1744,7 @@
   <wb1d2d:TeschkeFlowRelation gml:id="TeschkeFlowRelation1178395595375163">
    <gml:name>Gelesen aus: PROF0059.6000.txt</gml:name>
    <simBase:position>
-    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
      <gml:coordinates ts="," decimal="." cs=" ">3553060.4544 5987908.2036 2.77</gml:coordinates>
     </gml:Point>
    </simBase:position>
@@ -1764,7 +1764,7 @@
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaAlpha"/>
       </swe:RecordDefinition>
      </om:resultDefinition>
-     <om:result>3.298 0.5279610 1.347575 1.000000 1.000000 0.009094106 0.1390876 -1.200000E-7
+     <om:result><![CDATA[3.298 0.5279610 1.347575 1.000000 1.000000 0.009094106 0.1390876 -1.200000E-7
 3.448 0.6775370 2.219295 2.000000 1.000000 -0.01593686 -0.1671786 0E-7
 3.555 0.7845820 2.975950 3.000000 1.000000 -0.007944561 -0.1352360 -1.200000E-7
 3.636 0.8655890 3.615430 4.000000 1.000000 -0.004396222 -0.09422178 -2.400000E-7
@@ -1794,7 +1794,7 @@
 4.642 1.871825 13.99603 28.00000 0.9999999 0.008094506 -0.4737513 6.000000E-8
 4.640 1.870002 13.97245 29.00000 1.000000 -13.97245 -29.00000 -1.000000
 4.670 1.900002 14.36224 30.00000 1.000000 -14.36224 -30.00000 -1.000000
-</om:result>
+]]></om:result>
     </tuhh:WPointsObservation>
    </wb1d2d:pointsMember>
    <wb1d2d:polynomialMember>
@@ -1860,7 +1860,7 @@
   <wb1d2d:TeschkeFlowRelation gml:id="TeschkeFlowRelation1178395595390137">
    <gml:name>Gelesen aus: PROF0059.6520.txt</gml:name>
    <simBase:position>
-    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
      <gml:coordinates ts="," decimal="." cs=" ">3553086.5974 5987951.9282 2.94</gml:coordinates>
     </gml:Point>
    </simBase:position>
@@ -1880,7 +1880,7 @@
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaAlpha"/>
       </swe:RecordDefinition>
      </om:resultDefinition>
-     <om:result>3.420 0.4798920 1.450253 1.000000 1.000000 -0.01764521 0.1931338 -1.200000E-7
+     <om:result><![CDATA[3.420 0.4798920 1.450253 1.000000 1.000000 -0.01764521 0.1931338 -1.200000E-7
 3.555 0.6153650 2.384642 2.000000 1.000000 0.02722211 -0.2629998 0E-7
 3.652 0.7117820 3.184514 3.000000 0.9999999 0.01892209 -0.1561180 1.200000E-7
 3.721 0.7808250 3.804660 4.000000 1.000000 -0.0009387759 -0.1010072 0E-7
@@ -1910,7 +1910,7 @@
 4.734 1.794165 14.43464 28.00000 1.000000 0.03689559 -0.1350850 0E-7
 4.730 1.790001 14.37967 29.00000 0.9999998 -14.37967 -29.00000 -0.9999998
 4.760 1.820002 14.77788 30.00000 1.000000 -14.77788 -30.00000 -1.000000
-</om:result>
+]]></om:result>
     </tuhh:WPointsObservation>
    </wb1d2d:pointsMember>
    <wb1d2d:polynomialMember>
@@ -1976,7 +1976,7 @@
   <wb1d2d:TeschkeFlowRelation gml:id="TeschkeFlowRelation1178395595406173">
    <gml:name>Gelesen aus: PROF0059.7000.txt</gml:name>
    <simBase:position>
-    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
      <gml:coordinates ts="," decimal="." cs=" ">3553111.1638 5987993.6385 3.04</gml:coordinates>
     </gml:Point>
    </simBase:position>
@@ -1996,7 +1996,7 @@
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaAlpha"/>
       </swe:RecordDefinition>
      </om:resultDefinition>
-     <om:result>3.391 0.3512230 1.512824 1.000000 0.9999999 0.001036917 -0.1082878 6.000000E-8
+     <om:result><![CDATA[3.391 0.3512230 1.512824 1.000000 0.9999999 0.001036917 -0.1082878 6.000000E-8
 3.514 0.4742830 2.427194 2.000000 1.000000 0.001384888 0.1226186 -1.200000E-7
 3.601 0.5612240 3.171738 3.000000 0.9999999 -0.002336639 0.1164143 1.200000E-7
 3.672 0.6324650 3.819244 4.000000 1.000000 -0.0009181703 0.06495993 0E-7
@@ -2026,7 +2026,7 @@
 4.636 1.596465 14.09441 28.00000 1.000000 -0.009420235 -0.3142785 0E-7
 4.630 1.590000 14.00994 29.00000 1.000000 -14.00994 -29.00000 -1.000000
 4.660 1.620001 14.40332 30.00000 1.000000 -14.40332 -30.00000 -1.000000
-</om:result>
+]]></om:result>
     </tuhh:WPointsObservation>
    </wb1d2d:pointsMember>
    <wb1d2d:polynomialMember>
@@ -2092,7 +2092,7 @@
   <wb1d2d:TeschkeFlowRelation gml:id="TeschkeFlowRelation1178395595406102">
    <gml:name>Gelesen aus: PROF0059.8000.txt</gml:name>
    <simBase:position>
-    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
      <gml:coordinates ts="," decimal="." cs=" ">3553158.1544 5988081.3086 2.72</gml:coordinates>
     </gml:Point>
    </simBase:position>
@@ -2112,7 +2112,7 @@
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaAlpha"/>
       </swe:RecordDefinition>
      </om:resultDefinition>
-     <om:result>3.051 0.3307610 1.356254 1.000000 0.9999999 0.007228364 -0.03270948 6.000000E-8
+     <om:result><![CDATA[3.051 0.3307610 1.356254 1.000000 0.9999999 0.007228364 -0.03270948 6.000000E-8
 3.192 0.4722710 2.149572 2.000000 0.9999999 -0.009370388 0.05710882 6.000000E-8
 3.300 0.5797250 2.834574 3.000000 1.000000 -0.008772722 0.03310869 -2.400000E-7
 3.389 0.6691680 3.459147 4.000000 0.9999999 -0.003426075 -0.004272000 1.200000E-7
@@ -2142,7 +2142,7 @@
 4.405 1.684663 13.39496 28.00000 1.000000 -0.01256583 -0.001148627 -1.200000E-7
 4.400 1.680002 13.34052 29.00000 0.9999998 -13.34052 -29.00000 -0.9999998
 4.430 1.710002 13.69248 30.00000 1.000000 -13.69248 -30.00000 -1.000000
-</om:result>
+]]></om:result>
     </tuhh:WPointsObservation>
    </wb1d2d:pointsMember>
    <wb1d2d:polynomialMember>
@@ -2208,7 +2208,7 @@
   <wb1d2d:TeschkeFlowRelation gml:id="TeschkeFlowRelation1178395595421121">
    <gml:name>Gelesen aus: PROF0059.9000.txt</gml:name>
    <simBase:position>
-    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
      <gml:coordinates ts="," decimal="." cs=" ">3553209.8569 5988169.6769 2.96</gml:coordinates>
     </gml:Point>
    </simBase:position>
@@ -2228,7 +2228,7 @@
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaAlpha"/>
       </swe:RecordDefinition>
      </om:resultDefinition>
-     <om:result>3.271 0.3114300 1.549494 1.000000 1.000000 0.003636108 -0.006581986 0E-7
+     <om:result><![CDATA[3.271 0.3114300 1.549494 1.000000 1.000000 0.003636108 -0.006581986 0E-7
 3.382 0.4217430 2.355921 2.000000 0.9999998 -0.003799398 0.01238467 1.800000E-7
 3.469 0.5091520 3.032686 3.000000 0.9999999 -0.004240996 0.006252722 6.000000E-8
 3.544 0.5841740 3.640170 4.000000 1.000000 -0.002284960 -0.002681575 -1.200000E-7
@@ -2258,7 +2258,7 @@
 4.501 1.540979 13.27154 28.00000 0.9999999 -0.003949428 0.02313340 6.000000E-8
 4.500 1.540000 13.26023 29.00000 1.000000 -13.26023 -29.00000 -1.000000
 4.530 1.570000 13.60862 30.00000 0.9999999 -13.60862 -30.00000 -0.9999999
-</om:result>
+]]></om:result>
     </tuhh:WPointsObservation>
    </wb1d2d:pointsMember>
    <wb1d2d:polynomialMember>
@@ -2324,7 +2324,7 @@
   <wb1d2d:TeschkeFlowRelation gml:id="TeschkeFlowRelation117839559543789">
    <gml:name>Gelesen aus: PROF0060.0000.txt</gml:name>
    <simBase:position>
-    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
      <gml:coordinates ts="," decimal="." cs=" ">3553279.0441 5988241.8846 2.47</gml:coordinates>
     </gml:Point>
    </simBase:position>
@@ -2344,7 +2344,7 @@
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaAlpha"/>
       </swe:RecordDefinition>
      </om:resultDefinition>
-     <om:result>2.987 0.5168140 1.295128 1.000000 0.9999999 -0.0009260572 -0.007166097 1.200000E-7
+     <om:result><![CDATA[2.987 0.5168140 1.295128 1.000000 0.9999999 -0.0009260572 -0.007166097 1.200000E-7
 3.134 0.6642540 2.029252 2.000000 0.9999997 0.001908383 0.01374925 3.000000E-7
 3.246 0.7761940 2.631310 3.000000 1.000000 0.0002258542 0.003017232 0E-7
 3.342 0.8723440 3.175463 4.000000 1.000000 -0.0004388083 -0.002476563 0E-7
@@ -2374,7 +2374,7 @@
 4.556 2.085503 12.18628 28.00000 1.000000 0.0004422581 0.004297496 -2.400000E-7
 4.550 2.080002 12.13645 29.00000 1.000000 -12.13645 -29.00000 -1.000000
 4.580 2.110002 12.40919 30.00000 0.9999999 -12.40919 -30.00000 -0.9999999
-</om:result>
+]]></om:result>
     </tuhh:WPointsObservation>
    </wb1d2d:pointsMember>
    <wb1d2d:polynomialMember>
@@ -2440,7 +2440,7 @@
   <wb1d2d:TeschkeFlowRelation gml:id="TeschkeFlowRelation1178395595453128">
    <gml:name>Gelesen aus: PROF0060.0560.txt</gml:name>
    <simBase:position>
-    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
      <gml:coordinates ts="," decimal="." cs=" ">3553277.0202 5988299.2696 3.1</gml:coordinates>
     </gml:Point>
    </simBase:position>
@@ -2460,7 +2460,7 @@
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaAlpha"/>
       </swe:RecordDefinition>
      </om:resultDefinition>
-     <om:result>3.417 0.3171400 1.614031 1.000000 0.9999999 -0.002232151 0.05795292 6.000000E-8
+     <om:result><![CDATA[3.417 0.3171400 1.614031 1.000000 0.9999999 -0.002232151 0.05795292 6.000000E-8
 3.522 0.4218240 2.454337 2.000000 1.000000 0.004180713 -0.04332887 -1.200000E-7
 3.603 0.5027430 3.139739 3.000000 1.000000 0.0008457990 -0.05869964 -1.200000E-7
 3.672 0.5722130 3.745404 4.000000 1.000000 -0.0007320539 -0.04416268 -1.200000E-7
@@ -2490,7 +2490,7 @@
 4.594 1.494478 13.26916 28.00000 1.000000 0.0004533822 0.3624436 -1.200000E-7
 4.610 1.510000 13.45334 29.00000 1.000000 0.0005164024 0.0009081884 -1.200000E-7
 4.620 1.520003 13.57264 30.00000 1.000000 0.0003904874 -0.5810395 0E-7
-</om:result>
+]]></om:result>
     </tuhh:WPointsObservation>
    </wb1d2d:pointsMember>
    <wb1d2d:polynomialMember>
@@ -2556,7 +2556,7 @@
   <wb1d2d:TeschkeFlowRelation gml:id="TeschkeFlowRelation117839559546841">
    <gml:name>Gelesen aus: PROF0060.1000.txt</gml:name>
    <simBase:position>
-    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
      <gml:coordinates ts="," decimal="." cs=" ">3553254.2697 5988333.2626 3.14</gml:coordinates>
     </gml:Point>
    </simBase:position>
@@ -2576,7 +2576,7 @@
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaAlpha"/>
       </swe:RecordDefinition>
      </om:resultDefinition>
-     <om:result>3.511 0.3705020 1.531282 1.000000 1.000000 -0.007911141 0.02143163 -1.200000E-7
+     <om:result><![CDATA[3.511 0.3705020 1.531282 1.000000 1.000000 -0.007911141 0.02143163 -1.200000E-7
 3.630 0.4897370 2.420026 2.000000 1.000000 0.009528532 -0.05619923 0E-7
 3.720 0.5800340 3.186041 3.000000 0.9999998 0.01457740 -0.006867077 1.800000E-7
 3.793 0.6533980 3.866834 4.000000 1.000000 0.001894068 0.05252908 0E-7
@@ -2606,7 +2606,7 @@
 4.686 1.545708 13.45560 28.00000 1.000000 0.008947209 0.006721750 0E-7
 4.680 1.540003 13.38680 29.00000 0.9999999 -13.38680 -29.00000 -0.9999999
 4.750 1.610000 14.25198 30.00000 1.000000 -14.25198 -30.00000 -1.000000
-</om:result>
+]]></om:result>
     </tuhh:WPointsObservation>
    </wb1d2d:pointsMember>
    <wb1d2d:polynomialMember>
@@ -2672,7 +2672,7 @@
   <wb1d2d:TeschkeFlowRelation gml:id="TeschkeFlowRelation117839559548486">
    <gml:name>Gelesen aus: PROF0060.1520.txt</gml:name>
    <simBase:position>
-    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
      <gml:coordinates ts="," decimal="." cs=" ">3553219.0821 5988371.4247 3.09</gml:coordinates>
     </gml:Point>
    </simBase:position>
@@ -2692,7 +2692,7 @@
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaAlpha"/>
       </swe:RecordDefinition>
      </om:resultDefinition>
-     <om:result>3.387 0.2973010 1.598196 1.000000 1.000000 -0.0009081314 -0.008965914 -1.200000E-7
+     <om:result><![CDATA[3.387 0.2973010 1.598196 1.000000 1.000000 -0.0009081314 -0.008965914 -1.200000E-7
 3.498 0.4082660 2.522341 2.000000 1.000000 0.001946173 0.02064442 0E-7
 3.577 0.4873190 3.238286 3.000000 1.000000 -0.0001212641 -0.002457516 -1.200000E-7
 3.645 0.5552000 3.879403 4.000000 1.000000 0.0003679412 -0.002442462 -2.400000E-7
@@ -2722,7 +2722,7 @@
 4.524 1.433915 13.36742 28.00000 0.9999999 0.0008182698 -0.01789723 6.000000E-8
 4.520 1.430002 13.32134 29.00000 1.000000 -13.32134 -29.00000 -1.000000
 4.550 1.460003 13.67571 30.00000 1.000000 -13.67571 -30.00000 -1.000000
-</om:result>
+]]></om:result>
     </tuhh:WPointsObservation>
    </wb1d2d:pointsMember>
    <wb1d2d:polynomialMember>
@@ -2788,7 +2788,7 @@
   <wb1d2d:TeschkeFlowRelation gml:id="TeschkeFlowRelation117839559548428">
    <gml:name>Gelesen aus: PROF0060.2000.txt</gml:name>
    <simBase:position>
-    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
      <gml:coordinates ts="," decimal="." cs=" ">3553186.7416 5988407.8925 3.13</gml:coordinates>
     </gml:Point>
    </simBase:position>
@@ -2808,7 +2808,7 @@
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaAlpha"/>
       </swe:RecordDefinition>
      </om:resultDefinition>
-     <om:result>3.417 0.2866400 1.665987 1.000000 1.000000 -0.00007356361 -0.01359549 -1.200000E-7
+     <om:result><![CDATA[3.417 0.2866400 1.665987 1.000000 1.000000 -0.00007356361 -0.01359549 -1.200000E-7
 3.515 0.3849330 2.502155 2.000000 0.9999999 0.0005819004 0.01448158 1.200000E-7
 3.593 0.4634290 3.194850 3.000000 1.000000 0.00008384311 0.01431177 0E-7
 3.661 0.5312620 3.811297 4.000000 1.000000 -0.0004500429 0.007076069 0E-7
@@ -2838,7 +2838,7 @@
 4.554 1.424016 13.37599 28.00000 0.9999996 -0.002181707 0.01051481 3.600000E-7
 4.550 1.420002 13.32799 29.00000 0.9999999 -13.32799 -29.00000 -0.9999999
 4.580 1.450003 13.68772 30.00000 1.000000 -13.68772 -30.00000 -1.000000
-</om:result>
+]]></om:result>
     </tuhh:WPointsObservation>
    </wb1d2d:pointsMember>
    <wb1d2d:polynomialMember>
@@ -2904,7 +2904,7 @@
   <wb1d2d:TeschkeFlowRelation gml:id="TeschkeFlowRelation11783955955150">
    <gml:name>Gelesen aus: PROF0060.3000.txt</gml:name>
    <simBase:position>
-    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
      <gml:coordinates ts="," decimal="." cs=" ">3553115.4608 5988474.0839 3.12</gml:coordinates>
     </gml:Point>
    </simBase:position>
@@ -2924,7 +2924,7 @@
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaAlpha"/>
       </swe:RecordDefinition>
      </om:resultDefinition>
-     <om:result>3.629 0.5090980 1.382754 1.000000 0.9999999 0.008547461 -0.03861407 6.000000E-8
+     <om:result><![CDATA[3.629 0.5090980 1.382754 1.000000 0.9999999 0.008547461 -0.03861407 6.000000E-8
 3.770 0.6499460 2.240281 2.000000 0.9999999 -0.01106313 0.07834199 6.000000E-8
 3.873 0.7530910 2.979349 3.000000 1.000000 -0.01142502 0.03870398 -2.400000E-7
 3.958 0.8375360 3.654164 4.000000 0.9999998 -0.005343470 -0.01414864 2.400000E-7
@@ -2954,7 +2954,7 @@
 4.854 1.734305 13.88786 28.00000 1.000000 -0.006625541 -0.005076050 0E-7
 4.880 1.759999 14.22497 29.00000 1.000000 -0.01729701 0.001444023 -1.200000E-7
 4.880 1.759999 14.22497 30.00000 0.9999999 -14.22497 -30.00000 -0.9999999
-</om:result>
+]]></om:result>
     </tuhh:WPointsObservation>
    </wb1d2d:pointsMember>
    <wb1d2d:polynomialMember>
@@ -3020,7 +3020,7 @@
   <wb1d2d:TeschkeFlowRelation gml:id="TeschkeFlowRelation1178395595515149">
    <gml:name>Gelesen aus: PROF0060.4000.txt</gml:name>
    <simBase:position>
-    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
      <gml:coordinates ts="," decimal="." cs=" ">3553054.338 5988559.8399 3.22</gml:coordinates>
     </gml:Point>
    </simBase:position>
@@ -3040,7 +3040,7 @@
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaAlpha"/>
       </swe:RecordDefinition>
      </om:resultDefinition>
-     <om:result>3.733 0.5133370 1.374598 1.000000 0.9999999 0.0001882425 0.08418157 6.000000E-8
+     <om:result><![CDATA[3.733 0.5133370 1.374598 1.000000 0.9999999 0.0001882425 0.08418157 6.000000E-8
 3.879 0.6586530 2.262998 2.000000 1.000000 -0.003420641 -0.1340436 0E-7
 3.983 0.7626430 3.033985 3.000000 0.9999999 0.003505463 -0.08364847 1.200000E-7
 4.064 0.8437970 3.712005 4.000000 1.000000 0.001799699 -0.01814073 0E-7
@@ -3070,7 +3070,7 @@
 4.967 1.747142 13.46740 28.00000 1.000000 0.001051479 0.3818176 0E-7
 4.980 1.759999 13.62271 29.00000 0.9999999 0.002039868 -0.06908809 6.000000E-8
 4.990 1.769999 13.74373 30.00000 0.9999999 0.002891227 -0.6364596 1.200000E-7
-</om:result>
+]]></om:result>
     </tuhh:WPointsObservation>
    </wb1d2d:pointsMember>
    <wb1d2d:polynomialMember>
@@ -3136,7 +3136,7 @@
   <wb1d2d:TeschkeFlowRelation gml:id="TeschkeFlowRelation117839559553127">
    <gml:name>Gelesen aus: PROF0060.4510.txt</gml:name>
    <simBase:position>
-    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
      <gml:coordinates ts="," decimal="." cs=" ">3553054.7998 5988614.9783 3.54</gml:coordinates>
     </gml:Point>
    </simBase:position>
@@ -3156,7 +3156,7 @@
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaAlpha"/>
       </swe:RecordDefinition>
      </om:resultDefinition>
-     <om:result>3.846 0.3057480 1.769416 1.000000 1.000000 -0.007960614 -0.01560910 -2.400000E-7
+     <om:result><![CDATA[3.846 0.3057480 1.769416 1.000000 1.000000 -0.007960614 -0.01560910 -2.400000E-7
 3.951 0.4105880 2.752561 2.000000 0.9999998 0.01566720 0.02647347 1.800000E-7
 4.025 0.4846750 3.508902 3.000000 0.9999998 0.003783951 0.01319565 1.800000E-7
 4.087 0.5474260 4.164567 4.000000 1.000000 -0.002943179 -0.002547947 -1.200000E-7
@@ -3186,7 +3186,7 @@
 4.941 1.400929 14.13152 28.00000 0.9999999 0.004226743 0.01064897 1.200000E-7
 4.940 1.400001 14.11963 29.00000 0.9999999 -14.11963 -29.00000 -0.9999999
 4.960 1.420001 14.37653 30.00000 1.000000 -14.37653 -30.00000 -1.000000
-</om:result>
+]]></om:result>
     </tuhh:WPointsObservation>
    </wb1d2d:pointsMember>
    <wb1d2d:polynomialMember>
@@ -3252,7 +3252,7 @@
   <wb1d2d:TeschkeFlowRelation gml:id="TeschkeFlowRelation1178395595546167">
    <gml:name>Gelesen aus: PROF0060.5210.txt</gml:name>
    <simBase:position>
-    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
      <gml:coordinates ts="," decimal="." cs=" ">3553087.1005 5988681.3983 3.35</gml:coordinates>
     </gml:Point>
    </simBase:position>
@@ -3272,7 +3272,7 @@
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaAlpha"/>
       </swe:RecordDefinition>
      </om:resultDefinition>
-     <om:result>3.795 0.4452230 1.527937 1.000000 0.9999999 -0.00005458068 0.003708641 6.000000E-8
+     <om:result><![CDATA[3.795 0.4452230 1.527937 1.000000 0.9999999 -0.00005458068 0.003708641 6.000000E-8
 3.915 0.5648010 2.447322 2.000000 0.9999999 -0.002319595 -0.008955021 6.000000E-8
 4.000 0.6504080 3.184746 3.000000 1.000000 0.001549934 -0.01836015 -1.200000E-7
 4.073 0.7228240 3.852617 4.000000 1.000000 0.004681022 0.005904406 0E-7
@@ -3302,7 +3302,7 @@
 4.951 1.600721 13.54636 28.00000 1.000000 0.001538168 0.06488946 -1.200000E-7
 4.950 1.600002 13.53750 29.00000 0.9999999 -13.53750 -29.00000 -0.9999999
 5.010 1.659999 14.28679 30.00000 1.000000 -14.28679 -30.00000 -1.000000
-</om:result>
+]]></om:result>
     </tuhh:WPointsObservation>
    </wb1d2d:pointsMember>
    <wb1d2d:polynomialMember>
@@ -3368,7 +3368,7 @@
   <wb1d2d:TeschkeFlowRelation gml:id="TeschkeFlowRelation1178395595562235">
    <gml:name>Gelesen aus: PROF0060.5280.txt</gml:name>
    <simBase:position>
-    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
      <gml:coordinates ts="," decimal="." cs=" ">3553089.4394 5988686.5515 3.43</gml:coordinates>
     </gml:Point>
    </simBase:position>
@@ -3388,7 +3388,7 @@
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaAlpha"/>
       </swe:RecordDefinition>
      </om:resultDefinition>
-     <om:result>3.658 0.2280310 1.725246 1.000000 1.000000 0.001861246 -0.004346858 0E-7
+     <om:result><![CDATA[3.658 0.2280310 1.725246 1.000000 1.000000 0.001861246 -0.004346858 0E-7
 3.752 0.3216150 2.580056 2.000000 1.000000 -0.001681969 0.007923080 -1.200000E-7
 3.827 0.3965100 3.284811 3.000000 1.000000 -0.002100223 0.004393612 -1.200000E-7
 3.891 0.4613560 3.909846 4.000000 0.9999998 -0.001344912 -0.001113906 1.800000E-7
@@ -3418,7 +3418,7 @@
 4.760 1.330218 13.47520 28.00000 1.000000 -0.002062319 -0.003992866 0E-7
 4.760 1.330002 13.47260 29.00000 0.9999999 -13.47260 -29.00000 -0.9999999
 4.780 1.350002 13.71446 30.00000 0.9999999 -13.71446 -30.00000 -0.9999999
-</om:result>
+]]></om:result>
     </tuhh:WPointsObservation>
    </wb1d2d:pointsMember>
    <wb1d2d:polynomialMember>
@@ -3484,7 +3484,7 @@
   <wb1d2d:TeschkeFlowRelation gml:id="TeschkeFlowRelation1178395595578283">
    <gml:name>Gelesen aus: PROF0060.6000.txt</gml:name>
    <simBase:position>
-    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
      <gml:coordinates ts="," decimal="." cs=" ">3553113.4613 5988757.3721 3.12</gml:coordinates>
     </gml:Point>
    </simBase:position>
@@ -3504,7 +3504,7 @@
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaAlpha"/>
       </swe:RecordDefinition>
      </om:resultDefinition>
-     <om:result>3.610 0.4903540 1.471983 1.000000 0.9999999 -0.003242985 0.004921532 1.200000E-7
+     <om:result><![CDATA[3.610 0.4903540 1.471983 1.000000 0.9999999 -0.003242985 0.004921532 1.200000E-7
 3.749 0.6285150 2.418320 2.000000 1.000000 0.007950435 -0.02153901 0E-7
 3.847 0.7273500 3.238689 3.000000 0.9999999 0.003943309 0.03316769 6.000000E-8
 3.920 0.8002080 3.908357 4.000000 0.9999998 -0.006323761 0.003541545 1.800000E-7
@@ -3534,7 +3534,7 @@
 4.805 1.684634 14.05948 28.00000 1.000000 0.0004315470 0.001155373 0E-7
 4.830 1.709999 14.39031 29.00000 1.000000 0.001805937 -0.02615486 -1.200000E-7
 4.830 1.709999 14.39031 30.00000 1.000000 -14.39031 -30.00000 -1.000000
-</om:result>
+]]></om:result>
     </tuhh:WPointsObservation>
    </wb1d2d:pointsMember>
    <wb1d2d:polynomialMember>
@@ -3600,7 +3600,7 @@
   <wb1d2d:TeschkeFlowRelation gml:id="TeschkeFlowRelation11783955955932">
    <gml:name>Gelesen aus: PROF0060.6310.txt</gml:name>
    <simBase:position>
-    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
      <gml:coordinates ts="," decimal="." cs=" ">3553128.8758 5988780.332 3.22</gml:coordinates>
     </gml:Point>
    </simBase:position>
@@ -3620,7 +3620,7 @@
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaAlpha"/>
       </swe:RecordDefinition>
      </om:resultDefinition>
-     <om:result>3.563 0.3430980 1.569915 1.000000 1.000000 0.0004852617 0.1020627 -1.200000E-7
+     <om:result><![CDATA[3.563 0.3430980 1.569915 1.000000 1.000000 0.0004852617 0.1020627 -1.200000E-7
 3.674 0.4539320 2.421649 2.000000 1.000000 -0.004090780 -0.1079278 -1.200000E-7
 3.760 0.5401120 3.140848 3.000000 1.000000 0.0007646035 -0.1188133 -1.200000E-7
 3.833 0.6133930 3.790759 4.000000 0.9999999 0.005235578 -0.06265033 1.200000E-7
@@ -3650,7 +3650,7 @@
 4.718 1.498003 13.31647 28.00000 1.000000 0.001129582 0.4983652 -1.200000E-7
 4.720 1.500003 13.33997 29.00000 1.000000 0.001274882 -0.4143366 -1.200000E-7
 4.740 1.520003 13.57530 30.00000 0.9999999 0.002789558 -0.5286726 6.000000E-8
-</om:result>
+]]></om:result>
     </tuhh:WPointsObservation>
    </wb1d2d:pointsMember>
    <wb1d2d:polynomialMember>
@@ -3716,7 +3716,7 @@
   <wb1d2d:TeschkeFlowRelation gml:id="TeschkeFlowRelation1178395595609292">
    <gml:name>Gelesen aus: PROF0060.7000.txt</gml:name>
    <simBase:position>
-    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
      <gml:coordinates ts="," decimal="." cs=" ">3553194.98 5988821.9728 3.36</gml:coordinates>
     </gml:Point>
    </simBase:position>
@@ -3736,7 +3736,7 @@
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaAlpha"/>
       </swe:RecordDefinition>
      </om:resultDefinition>
-     <om:result>3.639 0.2790220 1.800489 1.000000 1.000000 0.001383143 -0.01226916 0E-7
+     <om:result><![CDATA[3.639 0.2790220 1.800489 1.000000 1.000000 0.001383143 -0.01226916 0E-7
 3.727 0.3668100 2.682997 2.000000 0.9999999 -0.0007035891 0.01569283 6.000000E-8
 3.797 0.4371360 3.407744 3.000000 1.000000 -0.001492566 0.01332347 -1.200000E-7
 3.858 0.4980910 4.048724 4.000000 0.9999999 -0.001469571 0.004196096 6.000000E-8
@@ -3766,7 +3766,7 @@
 4.681 1.320804 13.71983 28.00000 0.9999999 -0.003536711 -0.003246460 6.000000E-8
 4.680 1.320001 13.70973 29.00000 1.000000 -13.70973 -29.00000 -1.000000
 4.700 1.340001 13.96144 30.00000 1.000000 -13.96144 -30.00000 -1.000000
-</om:result>
+]]></om:result>
     </tuhh:WPointsObservation>
    </wb1d2d:pointsMember>
    <wb1d2d:polynomialMember>
@@ -3832,7 +3832,7 @@
   <wb1d2d:TeschkeFlowRelation gml:id="TeschkeFlowRelation1178395595609247">
    <gml:name>Gelesen aus: PROF0060.8000.txt</gml:name>
    <simBase:position>
-    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
      <gml:coordinates ts="," decimal="." cs=" ">3553297.0266 5988827.8428 3.33</gml:coordinates>
     </gml:Point>
    </simBase:position>
@@ -3852,7 +3852,7 @@
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaAlpha"/>
       </swe:RecordDefinition>
      </om:resultDefinition>
-     <om:result>3.794 0.4642970 1.479820 1.000000 1.000000 -0.006146173 0.06851968 -1.200000E-7
+     <om:result><![CDATA[3.794 0.4642970 1.479820 1.000000 1.000000 -0.006146173 0.06851968 -1.200000E-7
 3.919 0.5888460 2.361854 2.000000 1.000000 0.01277422 -0.07364584 -1.200000E-7
 4.010 0.6795700 3.084947 3.000000 1.000000 0.004059501 -0.05177824 0E-7
 4.082 0.7515980 3.690485 4.000000 1.000000 -0.004127992 -0.04741065 -1.200000E-7
@@ -3882,7 +3882,7 @@
 5.037 1.706583 13.23276 28.00000 0.9999999 0.0007643013 0.4974249 1.200000E-7
 5.040 1.709999 13.27117 29.00000 0.9999999 0.0009208875 -0.3652656 6.000000E-8
 5.060 1.729999 13.49666 30.00000 1.000000 0.001903184 -0.5491691 0E-7
-</om:result>
+]]></om:result>
     </tuhh:WPointsObservation>
    </wb1d2d:pointsMember>
    <wb1d2d:polynomialMember>
@@ -3948,7 +3948,7 @@
   <wb1d2d:TeschkeFlowRelation gml:id="TeschkeFlowRelation1178395595625257">
    <gml:name>Gelesen aus: PROF0060.9000.txt</gml:name>
    <simBase:position>
-    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
      <gml:coordinates ts="," decimal="." cs=" ">3553379.3268 5988867.2554 3.14</gml:coordinates>
     </gml:Point>
    </simBase:position>
@@ -3968,7 +3968,7 @@
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaAlpha"/>
       </swe:RecordDefinition>
      </om:resultDefinition>
-     <om:result>3.613 0.4731040 1.521465 1.000000 1.000000 0.002583651 0.09261385 -1.200000E-7
+     <om:result><![CDATA[3.613 0.4731040 1.521465 1.000000 1.000000 0.002583651 0.09261385 -1.200000E-7
 3.740 0.5998660 2.399552 2.000000 0.9999998 -0.007635712 -0.1154405 2.400000E-7
 3.837 0.6965110 3.156251 3.000000 0.9999999 0.00005278150 -0.1092628 6.000000E-8
 3.917 0.7771670 3.845542 4.000000 0.9999999 0.006231851 -0.03986995 1.200000E-7
@@ -3998,7 +3998,7 @@
 4.838 1.697602 13.87594 28.00000 1.000000 0.00009053121 0.4011082 -1.200000E-7
 4.850 1.709999 14.02676 29.00000 0.9999998 0.0003189988 -0.08271275 1.800000E-7
 4.860 1.719999 14.14866 30.00000 0.9999999 0.0005381467 -0.6610669 6.000000E-8
-</om:result>
+]]></om:result>
     </tuhh:WPointsObservation>
    </wb1d2d:pointsMember>
    <wb1d2d:polynomialMember>
@@ -4064,7 +4064,7 @@
   <wb1d2d:TeschkeFlowRelation gml:id="TeschkeFlowRelation117839559564013">
    <gml:name>Gelesen aus: PROF0061.0000.txt</gml:name>
    <simBase:position>
-    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
      <gml:coordinates ts="," decimal="." cs=" ">3553406.3291 5988962.2023 3.58</gml:coordinates>
     </gml:Point>
    </simBase:position>
@@ -4084,7 +4084,7 @@
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaAlpha"/>
       </swe:RecordDefinition>
      </om:resultDefinition>
-     <om:result>3.788 0.2082200 1.781730 1.000000 0.9999999 -0.03097222 0.1629523 6.000000E-8
+     <om:result><![CDATA[3.788 0.2082200 1.781730 1.000000 0.9999999 -0.03097222 0.1629523 6.000000E-8
 3.882 0.3017500 2.713550 2.000000 1.000000 0.03215613 -0.1918867 0E-7
 3.956 0.3755270 3.498325 3.000000 0.9999999 0.03670412 -0.1588034 1.200000E-7
 4.016 0.4361230 4.173116 4.000000 0.9999999 0.01554944 -0.06314280 6.000000E-8
@@ -4114,7 +4114,7 @@
 4.859 1.279068 14.36899 28.00000 1.000000 0.007346682 0.5343141 0E-7
 4.860 1.280001 14.38143 29.00000 0.9999998 0.007579203 -0.4194058 1.800000E-7
 4.880 1.300002 14.64864 30.00000 0.9999998 0.01271712 -0.4015635 1.800000E-7
-</om:result>
+]]></om:result>
     </tuhh:WPointsObservation>
    </wb1d2d:pointsMember>
    <wb1d2d:polynomialMember>
@@ -4180,7 +4180,7 @@
   <wb1d2d:TeschkeFlowRelation gml:id="TeschkeFlowRelation1178395595640120">
    <gml:name>Gelesen aus: PROF0061.1000.txt</gml:name>
    <simBase:position>
-    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
      <gml:coordinates ts="," decimal="." cs=" ">3553451.2559 5989056.3129 3.45</gml:coordinates>
     </gml:Point>
    </simBase:position>
@@ -4200,7 +4200,7 @@
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaAlpha"/>
       </swe:RecordDefinition>
      </om:resultDefinition>
-     <om:result>3.685 0.2346350 1.793473 1.000000 1.000000 -0.001568547 -0.008222103 0E-7
+     <om:result><![CDATA[3.685 0.2346350 1.793473 1.000000 1.000000 -0.001568547 -0.008222103 0E-7
 3.775 0.3247550 2.703345 2.000000 0.9999999 0.004258906 0.01386886 6.000000E-8
 3.844 0.3943330 3.432983 3.000000 0.9999999 -0.0004369534 0.007287281 1.200000E-7
 3.904 0.4542890 4.070524 4.000000 1.000000 -0.001986221 -0.002092433 -2.400000E-7
@@ -4230,7 +4230,7 @@
 4.412 0.9616430 9.763935 28.00000 1.000000 -9.763935 -28.00000 -1.000000
 4.750 1.300001 13.79633 29.00000 1.000000 -13.79633 -29.00000 -1.000000
 4.780 1.330001 14.17053 30.00000 1.000000 -14.17053 -30.00000 -1.000000
-</om:result>
+]]></om:result>
     </tuhh:WPointsObservation>
    </wb1d2d:pointsMember>
    <wb1d2d:polynomialMember>
@@ -4296,7 +4296,7 @@
   <wb1d2d:TeschkeFlowRelation gml:id="TeschkeFlowRelation1178395595656132">
    <gml:name>Gelesen aus: PROF0061.1270.txt</gml:name>
    <simBase:position>
-    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
      <gml:coordinates ts="," decimal="." cs=" ">3553489.8333 5989054.3354 2.74</gml:coordinates>
     </gml:Point>
    </simBase:position>
@@ -4316,7 +4316,7 @@
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaAlpha"/>
       </swe:RecordDefinition>
      </om:resultDefinition>
-     <om:result>3.250 0.5099950 1.478640 1.000000 0.9999998 0.0003130984 -0.06545977 1.800000E-7
+     <om:result><![CDATA[3.250 0.5099950 1.478640 1.000000 0.9999998 0.0003130984 -0.06545977 1.800000E-7
 3.386 0.6461310 2.360895 2.000000 1.000000 0.002903493 0.1085907 0E-7
 3.484 0.7439840 3.069808 3.000000 0.9999999 -0.003947794 0.05398792 1.200000E-7
 3.570 0.8296740 3.738037 4.000000 1.000000 -0.002234000 0.003807996 -1.200000E-7
@@ -4346,7 +4346,7 @@
 4.501 1.760622 14.40386 28.00000 0.9999999 -0.01151510 0.07166881 6.000000E-8
 4.500 1.760000 14.39537 29.00000 0.9999999 -14.39537 -29.00000 -0.9999999
 4.520 1.780000 14.66866 30.00000 1.000000 -14.66866 -30.00000 -1.000000
-</om:result>
+]]></om:result>
     </tuhh:WPointsObservation>
    </wb1d2d:pointsMember>
    <wb1d2d:polynomialMember>
@@ -4412,7 +4412,7 @@
   <wb1d2d:TeschkeFlowRelation gml:id="TeschkeFlowRelation11783955956716">
    <gml:name>Gelesen aus: PROF0061.1390.txt</gml:name>
    <simBase:position>
-    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
      <gml:coordinates ts="," decimal="." cs=" ">3553501.9134 5989046.718 3.62</gml:coordinates>
     </gml:Point>
    </simBase:position>
@@ -4432,7 +4432,7 @@
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaAlpha"/>
       </swe:RecordDefinition>
      </om:resultDefinition>
-     <om:result>4.063 0.4434510 1.649153 1.000000 0.9999999 -0.001750762 0.06404751 6.000000E-8
+     <om:result><![CDATA[4.063 0.4434510 1.649153 1.000000 0.9999999 -0.001750762 0.06404751 6.000000E-8
 4.186 0.5663700 2.689917 2.000000 0.9999999 0.007420086 -0.03949210 6.000000E-8
 4.265 0.6449000 3.448031 3.000000 1.000000 -0.004760906 -0.09036048 -1.200000E-7
 4.332 0.7123980 4.125875 4.000000 1.000000 -0.004340475 -0.07650684 -1.200000E-7
@@ -4462,7 +4462,7 @@
 5.198 1.577766 14.27831 28.00000 1.000000 -0.00008991266 0.5024591 0E-7
 5.200 1.580002 14.30728 29.00000 0.9999998 -0.00001209121 -0.4034285 1.800000E-7
 5.220 1.600002 14.56726 30.00000 1.000000 0.0008577899 -0.5513338 -1.200000E-7
-</om:result>
+]]></om:result>
     </tuhh:WPointsObservation>
    </wb1d2d:pointsMember>
    <wb1d2d:polynomialMember>
@@ -4528,7 +4528,7 @@
   <wb1d2d:TeschkeFlowRelation gml:id="TeschkeFlowRelation1178395595671191">
    <gml:name>Gelesen aus: PROF0061.2000.txt</gml:name>
    <simBase:position>
-    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gss" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
+    <gml:Point xmlns:ns2="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns3="http://www.isotc211.org/2005/gmd" xmlns:ns4="http://www.isotc211.org/2005/gco" xmlns:ns5="http://www.isotc211.org/2005/gss" xmlns:ns6="http://www.isotc211.org/2005/gts" xmlns:ns7="http://www.isotc211.org/2005/gsr" xmlns:ns8="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
      <gml:coordinates ts="," decimal="." cs=" ">3553560.5597 5989023.3662 4.21</gml:coordinates>
     </gml:Point>
    </simBase:position>
@@ -4548,7 +4548,7 @@
        <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaAlpha"/>
       </swe:RecordDefinition>
      </om:resultDefinition>
-     <om:result>4.534 0.3235660 1.860547 1.000000 0.9999998 0.001291310 -0.0007675631 2.400000E-7
+     <om:result><![CDATA[4.534 0.3235660 1.860547 1.000000 0.9999998 0.001291310 -0.0007675631 2.400000E-7
 4.626 0.4155210 2.778060 2.000000 1.000000 -0.001361086 0.002654613 -1.200000E-7
 4.699 0.4887390 3.535979 3.000000 1.000000 -0.001481766 0.0001882531 -1.200000E-7
 4.762 0.5518940 4.209218 4.000000 1.000000 -0.0007605089 -0.001800334 0E-7
@@ -4578,7 +4578,7 @@
 5.594 1.383992 14.66552 28.00000 1.000000 -0.001056493 -0.001702532 -1.200000E-7
 5.590 1.380002 14.60889 29.00000 1.000000 -14.60889 -29.00000 -1.000000
 5.620 1.410003 15.03625 30.00000 1.000000 -15.03625 -30.00000 -1.000000
-</om:result>
+]]></om:result>
     </tuhh:WPointsObservation>
    </wb1d2d:pointsMember>
    <wb1d2d:polynomialMember>
