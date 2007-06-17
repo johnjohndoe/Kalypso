@@ -1,9 +1,8 @@
 package org.kalypso.ogc.gml.featureview.control;
 
-import java.util.List;
-
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
@@ -63,56 +62,29 @@ public class SubFeatureControl extends AbstractFeatureControl
    */
   public Control createControl( final Composite parent, final int style )
   {
-    final Feature feature = getFeature();
-    final IPropertyType ftp = getFeatureTypeProperty();
-    final Object property = feature.getProperty( ftp );
-    if( property instanceof Feature )
+    try
     {
-      final FeatureComposite fc = new FeatureComposite( (Feature) property, m_selectionManager, m_featureviewFactory );
+      final Feature featureToSet = findFeatuereToSet();
 
-      /* Set the toolkit to the FeatureComposite. The check for null is perfomrmed in FeatureComposite. */
-      fc.setFormToolkit( m_formToolkit );
-      fc.setShowOk( m_showOk );
-
-      m_fc = fc;
-    }
-    else
-    {
-      if( m_selector != null && ftp instanceof IRelationType && ftp.isList() )
+      /* crerate the control */
+      if( featureToSet == null )
       {
-        // TODO: This is not so good!
-        // The SubFeatureControl gets tweaked and shows a subfeature instead of the specified one...
-        // Better would be to implement an extra feature control that shows a combo-box and a specified feature out of a
-        // list.
+        // TODO: If selector is present, just create an empty control
 
-        Feature f = null;
-        try
-        {
-          final Object link = feature.getProperty( m_selector );
-          // TODO: also handle external links
-          // Use a HELPER method for that, dont just put it here! (see FeatureHelper.getFeature)
-          f = FeatureHelper.getFeature( feature.getWorkspace(), link );
-        }
-        catch( final Exception e )
-        {
-          f = ((Feature) ((List) property).get( 0 ));
-// final String xpath = feature.getWorkspace().getContext() + "#" + f.getId();
-// final XLinkedFeature_Impl linkedFeature = new XLinkedFeature_Impl( feature, f.getParentRelation(),
-// f.getFeatureType(), xpath, "", "", "", "", "" );
-// System.out.println( "WARNING: control.gml, xlink to active model broken, first model used as default; temp xlink set
-// to " + xpath );
-          // TODO: also handle external links
-          // Use a HELPER method for that, dont just put it here! (see FeatureHelper.getFeature)
-          feature.setProperty( m_selector, f.getId() );
-        }
-        final FeatureComposite fc = new FeatureComposite( f, m_selectionManager, m_featureviewFactory );
+        m_fc = new ButtonFeatureControl( getFeature(), getFeatureTypeProperty() );
+      }
+      else
+      {
+        final FeatureComposite fc = new FeatureComposite( featureToSet, m_selectionManager, m_featureviewFactory );
         fc.setFormToolkit( m_formToolkit );
         fc.setShowOk( m_showOk );
 
         m_fc = fc;
       }
-      else
-        m_fc = new ButtonFeatureControl( feature, ftp );
+    }
+    catch( final Throwable t )
+    {
+      // TODO: Create text feature control with error message!
     }
 
     m_fc.addChangeListener( new IFeatureChangeListener()
@@ -128,9 +100,53 @@ public class SubFeatureControl extends AbstractFeatureControl
       }
     } );
 
-    final Control control = m_fc.createControl( parent, SWT.NONE );
+    return m_fc.createControl( parent, SWT.NONE );
+  }
 
-    return control;
+  private Feature findFeatuereToSet( )
+  {
+    final Feature feature = getFeature();
+    final IPropertyType ftp = getFeatureTypeProperty();
+    final IRelationType rt = (IRelationType) ftp;
+
+    // find feature to set to the sub-FeatureControl
+    final Feature featureToSet;
+    if( m_selector == null )
+    {
+      Assert.isTrue( !rt.isList() );
+
+      final Object property = feature.getProperty( rt );
+      featureToSet = FeatureHelper.getFeature( feature.getWorkspace(), property );
+    }
+    else
+    {
+// try
+// {
+      final Object link = feature.getProperty( m_selector );
+      // TODO: also handle external links
+      // Use a HELPER method for that, dont just put it here! (see FeatureHelper.getFeature)
+      featureToSet = FeatureHelper.getFeature( feature.getWorkspace(), link );
+// }
+// catch( final Exception e )
+// {
+// // Do not do this!
+// // This could be a property of the Combo-Feature-Control to select the first element, if nothing is selected
+// beforehand
+//          
+// f = ((Feature) ((List) property).get( 0 ));
+// // final String xpath = feature.getWorkspace().getContext() + "#" + f.getId();
+// // final XLinkedFeature_Impl linkedFeature = new XLinkedFeature_Impl( feature, f.getParentRelation(),
+// // f.getFeatureType(), xpath, "", "", "", "", "" );
+// // System.out.println( "WARNING: control.gml, xlink to active model broken, first model used as default;
+// // temp xlink
+// // set
+// // to " + xpath );
+// // TODO: also handle external links
+// // Use a HELPER method for that, dont just put it here! (see FeatureHelper.getFeature)
+// feature.setProperty( m_selector, f.getId() );
+// }
+    }
+    return featureToSet;
   }
 
   /**
@@ -147,23 +163,13 @@ public class SubFeatureControl extends AbstractFeatureControl
    */
   public void updateControl( )
   {
-    // TODO: that does not work!
-    // SubFeature does not get updated... see the timeserie for example
-    // Better: make an own SubFeatureCoontrol implementation with an own
-    // combo box instead which contains a featureComposite wich
-    // gets recreated completely if something changes
-    final Feature feature = getFeature();
-    final IPropertyType ftp = getFeatureTypeProperty();
-    if( m_selector != null && ftp instanceof IRelationType && ftp.isList() )
-    {
-      final Object link = feature.getProperty( m_selector );
-      // TODO: also handle external links
-      // Use a HELPER method for that, dont just put it here! (see FeatureHelper.getFeature)
-      final Feature f = FeatureHelper.getFeature( feature.getWorkspace(), link );
-      m_fc.setFeature( f );
-    }
-    m_fc.updateControl();
+    // TODO: this is not always enough
+    // Better: cdestroy m_fc and recreate it from scratch
+    // In order to to this, m_fc must be put into an extra Composite (when createComposite is called)
 
+    final Feature findFeatureToSet = findFeatuereToSet();
+    m_fc.setFeature( findFeatureToSet );
+    m_fc.updateControl();
   }
 
   /**
