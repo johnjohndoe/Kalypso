@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit;
 
+import org.apache.tools.ant.taskdefs.Sleep;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -88,12 +89,12 @@ public class CalculationUnitAdministerComponent
   private Button goButton;
   private Image goImage;
   private static final String ACTION_KEY_ADMINISTER = "Verwalten";
-  private static final String ACTION_KEY_REMOVE = "REMOVE";
   private static final String ACTION_KEY_DRAW = "New Zeichnen";
   
   private static final String ELEMENTS_KEY_ELEMENTS = "Elemente";
   private static final String ELEMENTS_KEY_SUBUNITS = "Sub-Einheiten";
-  private static final String ELEMENTS_KEY_BOUNDARY_UP = "RandLinien";
+  private static final String ELEMENTS_KEY_BOUNDARY_UP = "Rand-Linien";
+  private static final String ELEMENTS_KEY_BOUNDARY_CONDITIONS = "Rand-Bedingung";
   private KeyBasedDataModelChangeListener settingsKeyListener = new KeyBasedDataModelChangeListener(){
 
     public void dataChanged( final String key, final Object newValue )
@@ -122,36 +123,40 @@ public class CalculationUnitAdministerComponent
     {
       actionsCombo.removeAll();
       elementsCombo.removeAll();
-      actionsCombo.add( ACTION_KEY_ADMINISTER );
       actionsCombo.add( ACTION_KEY_DRAW );
+      actionsCombo.add( ACTION_KEY_ADMINISTER );
       elementsCombo.add( ELEMENTS_KEY_ELEMENTS );
-      elementsCombo.add( ELEMENTS_KEY_BOUNDARY_UP );      
+      elementsCombo.add( ELEMENTS_KEY_BOUNDARY_UP );
+      elementsCombo.add(ELEMENTS_KEY_BOUNDARY_CONDITIONS);
     }
     else if (newValue instanceof ICalculationUnit1D)
     {
       actionsCombo.removeAll();
       elementsCombo.removeAll();
-      actionsCombo.add( ACTION_KEY_ADMINISTER );
       actionsCombo.add( ACTION_KEY_DRAW );
+      actionsCombo.add( ACTION_KEY_ADMINISTER );
       elementsCombo.add( ELEMENTS_KEY_ELEMENTS );
       elementsCombo.add( ELEMENTS_KEY_BOUNDARY_UP );     
+      elementsCombo.add(ELEMENTS_KEY_BOUNDARY_CONDITIONS);
     }
     else if (newValue instanceof ICalculationUnit1D2D)
     {
       actionsCombo.removeAll();
       elementsCombo.removeAll();
-      actionsCombo.add( ACTION_KEY_ADMINISTER );
       actionsCombo.add( ACTION_KEY_DRAW );
+      actionsCombo.add( ACTION_KEY_ADMINISTER );
+      //elementsCombo.add(ELEMENTS_KEY_BOUNDARY_CONDITIONS);
     }
     else
     {
       actionsCombo.removeAll();
       elementsCombo.removeAll();
-      actionsCombo.add( ACTION_KEY_ADMINISTER );
       actionsCombo.add( ACTION_KEY_DRAW );
+      actionsCombo.add( ACTION_KEY_ADMINISTER );
       elementsCombo.add( ELEMENTS_KEY_ELEMENTS );
       elementsCombo.add(ELEMENTS_KEY_SUBUNITS);
-      elementsCombo.add( ELEMENTS_KEY_BOUNDARY_UP ); 
+      elementsCombo.add( ELEMENTS_KEY_BOUNDARY_UP );
+      elementsCombo.add(ELEMENTS_KEY_BOUNDARY_CONDITIONS);
     }
     
   }
@@ -257,7 +262,11 @@ public class CalculationUnitAdministerComponent
                                             new CreateSubCalculationUnitCopyWizard(dataModel);
         final WizardDialog wizardDialog = new WizardDialog( shell, calculationSubWizard );
         wizardDialog.open();
-      }      
+      }
+      else if (ELEMENTS_KEY_BOUNDARY_CONDITIONS.equals( selectedType ))
+      {
+        strategy = new AddRemoveBoundaryConditionToCalUnitWidget(dataModel);
+      }
     }
     else if( ACTION_KEY_DRAW.equals( selectedAction) )
     {
