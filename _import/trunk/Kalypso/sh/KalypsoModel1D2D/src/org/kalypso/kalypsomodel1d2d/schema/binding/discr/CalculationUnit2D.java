@@ -52,7 +52,7 @@ import org.kalypsodeegree.model.feature.Feature;
  *
  */
 @SuppressWarnings("unchecked")
-public class CalculationUnit2D<ET extends IElement2D>
+public class CalculationUnit2D<ET extends IFE1D2DElement>
                         extends CalculationUnit<ET>
                         implements ICalculationUnit2D<ET>
 {
@@ -64,7 +64,7 @@ public class CalculationUnit2D<ET extends IElement2D>
         featureToBind,
         Kalypso1D2DSchemaConstants.WB1D2D_F_CALC_UNIT_2D,
         Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS,//Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELE_2D,
-        (Class<ET>)IElement2D.class );
+        (Class<ET>)IFE1D2DElement.class );
     
   }
   
