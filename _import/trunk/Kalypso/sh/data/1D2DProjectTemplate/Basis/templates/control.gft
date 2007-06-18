@@ -408,12 +408,14 @@
         <gft:combo property="c1d2d:activeModelID" style="SWT.DROP_DOWN | SWT.READ_ONLY">
             <gft:gridData horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"/>
         </gft:combo>
+        <!-- 
         <gft:extensioncontrol property="c1d2d:activeModelID" extension-id="org.kalypso.kalypsomodel1d2d.ui.featurecontrols.ControlModelNewControlFactory" style="SWT.NONE">
             <gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="false" verticalAlignment="GridData.BEGINNING" grabExcessVerticalSpace="true" />
         </gft:extensioncontrol>
         <gft:extensioncontrol property="c1d2d:activeModelID" extension-id="org.kalypso.kalypsomodel1d2d.ui.featurecontrols.ControlModelDeleteControlFactory" style="SWT.NONE">
             <gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="false" verticalAlignment="GridData.BEGINNING" grabExcessVerticalSpace="true" />
         </gft:extensioncontrol>
+         -->
         <gft:subcomposite property="c1d2d:controlModelMember" selector="activeModelID" style="SWT.NONE">
             <gft:gridData verticalAlignment="GridData.FILL" horizontalSpan="4" horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true"/>
         </gft:subcomposite>
