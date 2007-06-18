@@ -94,10 +94,10 @@ public class WMSHelper
    *            the layers that have to be matched to the local srs
    * @return result an array of possible coordiante systems
    */
-  public static CS_CoordinateSystem[] negotiateCRS( final CS_CoordinateSystem localCRS, final WMSCapabilities capabilities, final String[] layerNames ) throws RemoteException 
+  public static CS_CoordinateSystem[] negotiateCRS( final CS_CoordinateSystem localCRS, final WMSCapabilities capabilities, final String[] layerNames ) throws RemoteException
   {
     final Layer topLayer = capabilities.getCapability().getLayer();
-    final CS_CoordinateSystem crs = matchCrs( topLayer, layerNames, localCRS );
+    final CS_CoordinateSystem crs = WMSHelper.matchCrs( topLayer, layerNames, localCRS );
     if( crs != null )
       return new CS_CoordinateSystem[] { localCRS };
     // get crs from top layer
@@ -127,15 +127,15 @@ public class WMSHelper
    *         otherwise it returns the local crs
    */
 
-  private static CS_CoordinateSystem matchCrs( final Layer topLayer, final String[] layerSelection, final CS_CoordinateSystem localCRS ) throws RemoteException 
+  private static CS_CoordinateSystem matchCrs( final Layer topLayer, final String[] layerSelection, final CS_CoordinateSystem localCRS ) throws RemoteException
   {
     final HashSet<Layer> collector = new HashSet<Layer>();
 
-    collect( collector, topLayer, layerSelection );
+    WMSHelper.collect( collector, topLayer, layerSelection );
     for( final Layer layer : collector )
     {
       final String[] layerSRS = layer.getSrs();
-      if( contains( layerSRS, localCRS.getName() ) )
+      if( WMSHelper.contains( layerSRS, localCRS.getName() ) )
         continue;
       return null;
 
@@ -156,7 +156,7 @@ public class WMSHelper
     try
     {
       final Layer topLayer = capabilites.getCapability().getLayer();
-      collect( set, topLayer, null );
+      WMSHelper.collect( set, topLayer, null );
     }
     catch( final Exception e )
     {
@@ -183,18 +183,14 @@ public class WMSHelper
     {
       final Layer newLayer = layerTree[i];
       if( newLayer.getLayer().length > 0 ) // it is a layer container
-        collect( collector, newLayer, layerSelection );
-      else
-      // it is a layer
+        WMSHelper.collect( collector, newLayer, layerSelection );
+      else if( layerSelection != null )
       {
-        if( layerSelection != null )
-        {
-          if( contains( layerSelection, layerTree[i].getName() ) )
-            collector.add( layerTree[i] );
-        }
-        else
+        if( WMSHelper.contains( layerSelection, layerTree[i].getName() ) )
           collector.add( layerTree[i] );
       }
+      else
+        collector.add( layerTree[i] );
     }
   }
 
@@ -226,7 +222,7 @@ public class WMSHelper
   {
     final Layer topLayer = capabilites.getCapability().getLayer();
     final HashSet<Layer> layerCollector = new HashSet<Layer>();
-    collect( layerCollector, topLayer, layers );
+    WMSHelper.collect( layerCollector, topLayer, layers );
 
     GM_Envelope resultEnvelope = null;
     for( final Layer layer : layerCollector )
@@ -287,7 +283,7 @@ public class WMSHelper
     final GM_Surface destScreenSurface;
     if( !targetCS.equals( gridDomain.getOrigin( null ).getCoordinateSystem() ) )
     {
-      GeoTransformer geoTrans1 = new GeoTransformer( gridDomain.getOrigin( null ).getCoordinateSystem() );
+      final GeoTransformer geoTrans1 = new GeoTransformer( gridDomain.getOrigin( null ).getCoordinateSystem() );
       destScreenSurface = (GM_Surface) geoTrans1.transform( sourceScreenSurface );
     }
     else
@@ -415,7 +411,7 @@ public class WMSHelper
     final GM_Point origin = GeometryFactory.createGM_Point( env.getMin().getX(), env.getMin().getY(), remoteCSR );
     final RectifiedGridDomain gridDomain = new RectifiedGridDomain( origin, offsetX, offsetY, range );
 
-    internalTransformation( (Graphics2D) g, worldToScreenTransformation, remoteImage, gridDomain, localCSR );
+    WMSHelper.internalTransformation( (Graphics2D) g, worldToScreenTransformation, remoteImage, gridDomain, localCSR );
 
   }
 

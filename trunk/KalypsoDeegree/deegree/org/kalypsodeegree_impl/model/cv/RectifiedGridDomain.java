@@ -90,7 +90,7 @@ public class RectifiedGridDomain
 
   public GM_Surface getGM_Surface( final CS_CoordinateSystem crs ) throws Exception
   {
-    return calculateSurface( m_origin, m_offsetX, m_offsetY, 0, 0, getNumColumns(), getNumRows(), crs );
+    return RectifiedGridDomain.calculateSurface( m_origin, m_offsetX, m_offsetY, 0, 0, getNumColumns(), getNumRows(), crs );
   }
 
   private static GM_Surface calculateSurface( final GM_Point origin, final OffsetVector offsetX, final OffsetVector offsetY, final int minX, final int minY, final int maxX, final int maxY, final CS_CoordinateSystem cs ) throws Exception
@@ -118,7 +118,7 @@ public class RectifiedGridDomain
 
   public GM_Point getOrigin( final CS_CoordinateSystem cs ) throws Exception
   {
-    if( cs == null || m_origin.getCoordinateSystem().equals( cs ) )
+    if( (cs == null) || m_origin.getCoordinateSystem().equals( cs ) )
       return m_origin;
 
     final GeoTransformer geoTrans = new GeoTransformer( cs );
@@ -138,9 +138,9 @@ public class RectifiedGridDomain
    */
   public int getNumColumns( )
   {
-    double[] low = m_gridRange.getLow();
-    double[] high = m_gridRange.getHigh();
-    double numColumns = high[0] - low[0];
+    final double[] low = m_gridRange.getLow();
+    final double[] high = m_gridRange.getHigh();
+    final double numColumns = high[0] - low[0];
     return (new Double( numColumns )).intValue();
   }
 
@@ -149,9 +149,9 @@ public class RectifiedGridDomain
    */
   public int getNumRows( )
   {
-    double[] low = m_gridRange.getLow();
-    double[] high = m_gridRange.getHigh();
-    double numRows = high[1] - low[1];
+    final double[] low = m_gridRange.getLow();
+    final double[] high = m_gridRange.getHigh();
+    final double numRows = high[1] - low[1];
     return (new Double( numRows )).intValue();
   }
 
@@ -161,7 +161,7 @@ public class RectifiedGridDomain
    */
   private double getOffsetX( final CS_CoordinateSystem cs ) throws Exception
   {
-    if( cs == null || m_origin.getCoordinateSystem().equals( cs ) )
+    if( (cs == null) || m_origin.getCoordinateSystem().equals( cs ) )
       return m_offsetX.getGeoX();
 
     // ???
@@ -174,7 +174,7 @@ public class RectifiedGridDomain
    */
   private double getOffsetY( final CS_CoordinateSystem cs ) throws Exception
   {
-    if( cs == null || m_origin.getCoordinateSystem().equals( cs ) )
+    if( (cs == null) || m_origin.getCoordinateSystem().equals( cs ) )
       return m_offsetY.getGeoY();
 
     // ???
@@ -195,9 +195,9 @@ public class RectifiedGridDomain
     return geoTrans.transform( m_rasterBoundaryAsSurface ).getEnvelope();
   }
 
-  public GM_Surface getGM_Surface( final int lowX, final int lowY, final int highX, final int highY, CS_CoordinateSystem cs ) throws Exception
+  public GM_Surface getGM_Surface( final int lowX, final int lowY, final int highX, final int highY, final CS_CoordinateSystem cs ) throws Exception
   {
-    return calculateSurface( m_origin, m_offsetX, m_offsetY, lowX, lowY, highX, highY, cs );
+    return RectifiedGridDomain.calculateSurface( m_origin, m_offsetX, m_offsetY, lowX, lowY, highX, highY, cs );
   }
 
   /**
@@ -219,28 +219,20 @@ public class RectifiedGridDomain
     final GM_Position origin = envelope.getMin();
 
     if( (env.getMin().getX() - origin.getX()) > 0 )
-    {
       lowX = (int) ((env.getMin().getX() - origin.getX()) / getOffsetX( cs ));
-    }
 
     if( (env.getMin().getY() - origin.getY()) > 0 )
-    {
       lowY = (int) ((env.getMin().getY() - origin.getY()) / getOffsetY( cs ));
-    }
 
     int highX = (int) ((env.getMax().getX() - origin.getX()) / getOffsetX( cs ));
     if( highX > (int) getGridRange().getHigh()[0] )
-    {
       highX = (int) getGridRange().getHigh()[0];
-    }
 
     int highY = Math.abs( (int) ((env.getMax().getY() - origin.getY()) / getOffsetY( cs )) );
     if( highY > (int) getGridRange().getHigh()[1] )
-    {
       highY = (int) getGridRange().getHigh()[1];
-    }
 
-    int[] gridExtent = new int[] { lowX, lowY, highX, highY };
+    final int[] gridExtent = new int[] { lowX, lowY, highX, highY };
 
     return gridExtent;
   }
