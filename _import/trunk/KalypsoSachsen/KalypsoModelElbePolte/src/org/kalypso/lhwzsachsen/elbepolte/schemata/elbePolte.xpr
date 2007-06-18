@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+    <meta>
+        <filters directoryPatterns="" filePatterns=""
+            positiveFilePatterns="" showHiddenFiles="false"/>
+        <options/>
+    </meta>
+    <projectTree name="elbePolte.xpr">
+        <file name="commons.xsd"/>
+        <file name="modell.xsd"/>
+        <file name="pegel.xsd"/>
+        <file name="strecke.xsd"/>
+    </projectTree>
+</project>

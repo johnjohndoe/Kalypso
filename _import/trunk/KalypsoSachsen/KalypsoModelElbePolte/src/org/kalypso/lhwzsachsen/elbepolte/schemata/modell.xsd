@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:commons="org.kalypso.elbepolte.commons" xmlns:modell="org.kalypso.elbepolte.modell"
+    xmlns:strecke="org.kalypso.elbepolte.strecke" xmlns:pegel="org.kalypso.elbepolte.pegel" targetNamespace="org.kalypso.elbepolte.modell" elementFormDefault="qualified" version="0.1">
+    <annotation>
+        <appinfo xmlns:kapp="org.kalypso.appinfo">
+            <kapp:gmlVersion>2.1.2</kapp:gmlVersion>
+        </appinfo>
+    </annotation>
+    <!--    <import namespace="http://www.opengis.net/gml" schemaLocation="basis/feature.xsd"/>-->
+    <import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/2.1.2/feature.xsd"/>
+    <import namespace="org.kalypso.elbepolte.commons" schemaLocation="commons.xsd"/>
+    <import namespace="org.kalypso.elbepolte.strecke" schemaLocation="strecke.xsd"/>
+    <import namespace="org.kalypso.elbepolte.pegel" schemaLocation="pegel.xsd"/>
+    <!-- 
+        _________________________________________________________________________________________
+        ELEMENTS
+        _________________________________________________________________________________________
+    -->
+    <element name="ElbePolteModell" type="modell:ElbePolteModellType" substitutionGroup="gml:_Feature">
+        <annotation>
+            <documentation xml:lang="de">
+                <name>Elbe-Modell (IB Polte)</name>
+                <label>Elbe-Modell (IB Polte)</label>
+                <tooltip>Elbe-Modell (IB Polte)</tooltip>
+                <description>Elbe-Modell (IB Polte)</description>
+            </documentation>
+        </annotation>
+    </element>
+    <!-- 
+        _________________________________________________________________________________________
+        TYPES
+        _________________________________________________________________________________________	
+    -->
+    <complexType name="ElbePolteModellType">
+        <complexContent>
+            <extension base="commons:EmptyFeatureBaseType">
+                <sequence>
+                    <element name="name" type="string">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <name>Name</name>
+                                <label>Name</label>
+                                <tooltip>Name</tooltip>
+                                <description>Name</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="description" type="string">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <name>Beschreibung</name>
+                                <label>Beschreibung</label>
+                                <tooltip>Beschreibung</tooltip>
+                                <description>Beschreibung</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="hw_type" type="commons:hwTypType" default="1">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <name>HW-Typ</name>
+                                <label>HW-Typ</label>
+                                <tooltip>HW-Typ</tooltip>
+                                <description>HW-Typ</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="rido" type="boolean" default="true">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <name>Nachführung RIDO</name>
+                                <label>Nachführung RIDO</label>
+                                <tooltip>Nachführung RIDO</tooltip>
+                                <description>Nachführung RIDO</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element ref="strecke:streckeMember" minOccurs="0" maxOccurs="unbounded">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <name>Strecken</name>
+                                <label>Strecken</label>
+                                <tooltip>Strecken</tooltip>
+                                <description>Strecken</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element ref="pegel:pegelMember" minOccurs="0" maxOccurs="unbounded">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <name>Pegel</name>
+                                <label>Pegel</label>
+                                <tooltip>Pegel</tooltip>
+                                <description>Pegel</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <!--
+                    <element ref="pegel:startPegelMember" minOccurs="0" maxOccurs="unbounded">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <name>Start Pegel</name>
+                                <label>Start Pegel</label>
+                                <tooltip>Start Pegel</tooltip>
+                                <description>Start Pegel</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element ref="pegel:elbePegelMember" minOccurs="0" maxOccurs="unbounded">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <name>Elbe Pegel</name>
+                                <label>Elbe Pegel</label>
+                                <tooltip>Elbe Pegel</tooltip>
+                                <description>Elbe Pegel</description>
+                            </documentation>
+                        </annotation>
+                    </element>-->
+                    <element ref="pegel:zwgZuflussMember" minOccurs="0" maxOccurs="unbounded">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <name>Zwischengebietszuflüsse</name>
+                                <label>Zwischengebietszuflüsse</label>
+                                <tooltip>Zwischengebietszuflüsse</tooltip>
+                                <description>Zwischengebietszuflüsse</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element ref="pegel:internerHPegelMember" minOccurs="0" maxOccurs="unbounded">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <name>interne Hilfspegel</name>
+                                <label>interne Hilfspegel</label>
+                                <tooltip>interne Hilfspegel</tooltip>
+                                <description>interne Hilfspegel</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+</schema>
