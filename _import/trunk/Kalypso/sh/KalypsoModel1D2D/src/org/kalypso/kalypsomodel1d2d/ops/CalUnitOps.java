@@ -475,4 +475,20 @@ public class CalUnitOps
     
   }
   
+  /**
+   * Answer whether an element is part of the calculation unit.
+   * 
+   * @param unit the calculation unit
+   * @param element 
+   */
+  public static final boolean isFiniteElementOf(
+                                  ICalculationUnit unit, 
+                                  IFE1D2DElement element )
+  {
+    Assert.throwIAEOnNullParam( unit, "unit" );
+    Assert.throwIAEOnNullParam( element, "element" );
+    final IFeatureWrapperCollection containers = element.getContainers();
+    return containers.contains( unit );
+  }
+  
 }

@@ -209,4 +209,11 @@ public class Kalypso1D2DSchemaConstants
 
   public final static QName WB1D2DCONTROL_PROP_TIMESTEPS_MEMBER = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "timestepsMember" );
 
+  
+  public static final QName OP1D2D_F_OPERATIONAL_MODEL = 
+    new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "OperationalModel" );
+  
+  public static final QName OP1D2D_PROP_BOUNDARY_CONDITION = 
+    new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "boundaryCondition" );
+
 }

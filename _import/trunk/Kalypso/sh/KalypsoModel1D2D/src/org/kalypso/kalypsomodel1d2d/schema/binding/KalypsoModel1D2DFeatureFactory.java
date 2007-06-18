@@ -59,7 +59,9 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.TeschkeFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.WeirFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.ControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.IOperationalModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IStaticModel1D2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.OperationalModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.SimulationModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.StaticModel1D2D;
 import org.kalypso.kalypsomodel1d2d.ui.map.merge.FERoughnessDisplayElement;
@@ -465,6 +467,26 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
     };
     cMap.put( IStaticModel1D2D.class, cTor );
 
+ // Operational model
+    cTor = new AdapterConstructor()
+    {
+      public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
+      {
+        final QName featureQName = feature.getFeatureType().getQName();
+
+        if( featureQName.equals( Kalypso1D2DSchemaConstants.OP1D2D_F_OPERATIONAL_MODEL ) )
+        {
+          return new OperationalModel1D2D( feature );
+        }
+        else
+        {
+          warnUnableToAdapt( feature, featureQName, IStaticModel1D2D.class );
+          return null;
+        }
+      }
+    };
+    cMap.put( IOperationalModel1D2D.class, cTor );
+    
     // ControlModel
     cTor = new AdapterConstructor()
     {

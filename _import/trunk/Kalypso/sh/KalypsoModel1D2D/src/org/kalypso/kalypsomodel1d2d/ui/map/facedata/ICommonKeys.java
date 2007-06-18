@@ -46,6 +46,12 @@ package org.kalypso.kalypsomodel1d2d.ui.map.facedata;
  */
 public interface ICommonKeys
 {
+  
+  /**
+   * Key for data entry holding the map panel
+   */
+  public static final String KEY_BOUNDARY_CONDITION_THEME ="_bc_condition_theme_";
+  
   /**
    * Key for data entry holding the map panel
    */

@@ -70,6 +70,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ILineElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IOperationalModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteBoundaryLineCmd;
@@ -91,6 +92,7 @@ import org.kalypso.kalypsosimulationmodel.core.KalypsoSimBaseFeatureFactory;
 import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IOperationalModel;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
@@ -143,7 +145,9 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
 
   public AlterCalUnitBorderWidget( KeyBasedDataModel dataModel )
   {
-    this( new QName[] { Kalypso1D2DSchemaConstants.WB1D2D_F_BOUNDARY_LINE }, "Select Elements and add to the current calculation unit", "Select Elements and add to the current calculation unit", dataModel );
+    this( new QName[] { 
+            Kalypso1D2DSchemaConstants.WB1D2D_F_BOUNDARY_LINE }, 
+            "Select Elements and add to the current calculation unit", "Select Elements and add to the current calculation unit", dataModel );
   }
 
   protected AlterCalUnitBorderWidget( QName themeElementsQName, String name, String toolTip, KeyBasedDataModel dataModel )
@@ -327,7 +331,7 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
       final Display display = (Display) dataModel.getData(ICommonKeys.KEY_SELECTED_DISPLAY);
       final Runnable runnable = new Runnable()
       {
-        private CommandableWorkspace workspace;
+//        private CommandableWorkspace workspace;
 
         public void run( )
         {   
@@ -335,16 +339,17 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
           {
              final IBoundaryConditionDescriptor[] descriptors = 
                CreateNodalBCFlowrelationWidget.createTimeserieDescriptors( getSelectedBoundaryLine(),Util.getScenarioFolder() );
-           //@ TODO Add two more parameters.
-             if (dataModel.getData( ICommonKeys.KEY_COMMAND_MANAGER) instanceof CommandableWorkspace)
-             {
-               workspace = (CommandableWorkspace) dataModel.getData( ICommonKeys.KEY_COMMAND_MANAGER);
-             }
+             
+             final IKalypsoFeatureTheme bcTheme =
+                         dataModel.getData( 
+                             IKalypsoFeatureTheme.class, 
+                             ICommonKeys.KEY_BOUNDARY_CONDITION_THEME );
+             CommandableWorkspace workspace = bcTheme.getWorkspace();
              
              ///model is to be  get from the calculation unit
-             final IFlowRelationshipModel opModel=
-                        Util.getModel( IFlowRelationshipModel.class );
-             final Feature opModelFeature = opModel.getWrappedFeature();
+             final Feature opModelFeature = workspace.getRootFeature();
+             IFlowRelationshipModel opModel = 
+               (IFlowRelationshipModel) opModelFeature.getAdapter( IFlowRelationshipModel.class );
              final IRelationType parentRelation = 
                        opModel.getWrappedList().getParentFeatureTypeProperty();
              
@@ -352,12 +357,15 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
              
             NodalBCSelectionWizard wizard = new NodalBCSelectionWizard(
                                               descriptors,
-                                              opWorkspace,
+                                              workspace,
                                               opModelFeature,
-                                              parentRelation );
+                                              parentRelation ); 
             System.out.println("OpWorkspace:"+opWorkspace.getContext());
             GM_Point boundaryPosition = getBoundaryPosition();
             wizard.setBoundaryPosition( boundaryPosition );
+            final MapPanel mapPanel = 
+                    dataModel.getData( MapPanel.class, ICommonKeys.KEY_MAP_PANEL );
+            wizard.setSelectionManager( mapPanel.getSelectionManager() );
             final WizardDialog wizardDialog = new WizardDialog( display.getActiveShell(), wizard );
             wizardDialog.open();
           }
@@ -386,9 +394,10 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
     
     private GM_Point getBoundaryPosition( )
     {
+      //TODO Patrice get the right point since user may have drag a box
       IBoundaryLine selectedBoundaryLine = getSelectedBoundaryLine();
       
-      return null;
+      return getCurrentPoint();
     }
     
 //    private IBoundaryConditionDescriptor[] createTimeserieDescriptors( final IFeatureWrapper2 modelElement, final IFolder scenarioFolder )

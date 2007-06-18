@@ -64,6 +64,7 @@ import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.ui.map.IWidgetWithStrategy;
 import org.kalypso.kalypsomodel1d2d.ui.map.cline.RouteLineElementWidget;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
@@ -187,6 +188,19 @@ public class CalculationUnitWidget
       new Model1d2dCalUnitTheme("Aktuelle CalUnit",mapModell);
     mapModell.addTheme( calUnitTheme );
     dataModel.addKeyBasedDataChangeListener( calThemeUpdater );
+    
+    IKalypsoFeatureTheme bcTheme = UtilMap.findEditableTheme( 
+        mapModell, 
+        IBoundaryCondition.QNAME );
+    if( bcTheme == null )
+    {
+      throw new RuntimeException("Could not find boundary condition theme");
+    }
+    
+    dataModel.setData( 
+        ICommonKeys.KEY_BOUNDARY_CONDITION_THEME, 
+        bcTheme );
+    
     registerPopupBlocker( popupBlocker );
   }
   

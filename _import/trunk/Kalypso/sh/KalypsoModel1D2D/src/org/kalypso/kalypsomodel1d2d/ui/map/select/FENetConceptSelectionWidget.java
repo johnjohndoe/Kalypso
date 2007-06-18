@@ -70,6 +70,7 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -91,7 +92,8 @@ public class FENetConceptSelectionWidget implements IWidget
 
     private IKalypsoFeatureTheme m_featureTheme;
 
-    private IFEDiscretisationModel1d2d m_model1d2d;
+//    private IFEDiscretisationModel1d2d m_model1d2d;
+    
 
     private CommandableWorkspace m_cmdWorkspace;
 
@@ -102,8 +104,8 @@ public class FENetConceptSelectionWidget implements IWidget
 
     public void init( final IMapModell mapModell ) throws IllegalArgumentException
     {
-      m_model1d2d = UtilMap.findFEModelTheme( mapModell );
-      Assert.throwIAEOnNull( this.m_model1d2d, "Could not found model" );
+//      m_model1d2d = UtilMap.findFEModelTheme( mapModell );
+//      Assert.throwIAEOnNull( this.m_model1d2d, "Could not found model" );
       m_featureTheme = UtilMap.findEditableTheme( mapModell, m_themeElementsQName );
       m_cmdWorkspace = this.m_featureTheme.getWorkspace();
     }
@@ -136,7 +138,7 @@ public class FENetConceptSelectionWidget implements IWidget
 
       final int SIZE = selected.size();
       final List<EasyFeatureWrapper> featuresToAdd = new ArrayList<EasyFeatureWrapper>( SIZE );
-      final Feature parentFeature = m_model1d2d.getWrappedFeature();
+      final Feature parentFeature = m_featureTheme.getFeatureList().getParentFeature();//m_model1d2d.getWrappedFeature();
       final IFeatureType featureType = parentFeature.getFeatureType();
       final IRelationType parentFeatureProperty = (IRelationType) featureType.getProperty( m_themeElementsQName );
 
@@ -713,7 +715,10 @@ public class FENetConceptSelectionWidget implements IWidget
     {
       if( themeQName.equals( selectionContext.m_themeElementsQName ) )
       {
-        return selectionContext.m_model1d2d;
+//        return selectionContext.m_model1d2d;
+        final FeatureList featureList = selectionContext.m_featureTheme.getFeatureList();
+        final Feature parentFeature = featureList.getParentFeature();
+        return (IFEDiscretisationModel1d2d) parentFeature.getAdapter( IFEDiscretisationModel1d2d.class );
       }
     }
     return null;
