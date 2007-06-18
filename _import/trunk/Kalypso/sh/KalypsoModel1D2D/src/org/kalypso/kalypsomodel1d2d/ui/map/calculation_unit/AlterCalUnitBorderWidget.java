@@ -89,10 +89,12 @@ import org.kalypso.kalypsomodel1d2d.ui.map.flowrel.ZmlChooserStepDescriptor;
 import org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget;
 import org.kalypso.kalypsosimulationmodel.core.KalypsoSimBaseFeatureFactory;
 import org.kalypso.kalypsosimulationmodel.core.Util;
+import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IOperationalModel;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
@@ -328,33 +330,41 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
         private CommandableWorkspace workspace;
 
         public void run( )
-        {          
-           final IBoundaryConditionDescriptor[] descriptors = 
-             CreateNodalBCFlowrelationWidget.createTimeserieDescriptors( getSelectedBoundaryLine(),Util.getScenarioFolder() );
-         //@ TODO Add two more parameters.
-           if (dataModel.getData( ICommonKeys.KEY_COMMAND_MANAGER) instanceof CommandableWorkspace)
-           {
-             workspace = (CommandableWorkspace) dataModel.getData( ICommonKeys.KEY_COMMAND_MANAGER);
-           }
-           
-           ///model is to be  get from the calculation unit
-           final IOperationalModel1D2D opModel=
-                      Util.getModel( IOperationalModel1D2D.class );
-           final Feature opModelFeature = opModel.getWrappedFeature();
-           final IRelationType parentRelation = 
-                     opModel.getBoundaryConditions().getWrappedList().getParentFeatureTypeProperty();
-           workspace = (CommandableWorkspace) opModel.getWrappedFeature().getWorkspace();
-           
-          NodalBCSelectionWizard wizard = new NodalBCSelectionWizard(
-                                            descriptors,
-                                            workspace,
-                                            opModelFeature,
-                                            parentRelation );
-          
-          GM_Point boundaryPosition = getBoundaryPosition();
-          wizard.setBoundaryPosition( boundaryPosition );
-          final WizardDialog wizardDialog = new WizardDialog( display.getActiveShell(), wizard );
-          wizardDialog.open();
+        {   
+          try
+          {
+             final IBoundaryConditionDescriptor[] descriptors = 
+               CreateNodalBCFlowrelationWidget.createTimeserieDescriptors( getSelectedBoundaryLine(),Util.getScenarioFolder() );
+           //@ TODO Add two more parameters.
+             if (dataModel.getData( ICommonKeys.KEY_COMMAND_MANAGER) instanceof CommandableWorkspace)
+             {
+               workspace = (CommandableWorkspace) dataModel.getData( ICommonKeys.KEY_COMMAND_MANAGER);
+             }
+             
+             ///model is to be  get from the calculation unit
+             final IFlowRelationshipModel opModel=
+                        Util.getModel( IFlowRelationshipModel.class );
+             final Feature opModelFeature = opModel.getWrappedFeature();
+             final IRelationType parentRelation = 
+                       opModel.getWrappedList().getParentFeatureTypeProperty();
+             
+             GMLWorkspace opWorkspace = opModel.getWrappedFeature().getWorkspace();
+             
+            NodalBCSelectionWizard wizard = new NodalBCSelectionWizard(
+                                              descriptors,
+                                              opWorkspace,
+                                              opModelFeature,
+                                              parentRelation );
+            System.out.println("OpWorkspace:"+opWorkspace.getContext());
+            GM_Point boundaryPosition = getBoundaryPosition();
+            wizard.setBoundaryPosition( boundaryPosition );
+            final WizardDialog wizardDialog = new WizardDialog( display.getActiveShell(), wizard );
+            wizardDialog.open();
+          }
+          catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+          }
         }
 
         

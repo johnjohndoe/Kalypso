@@ -106,18 +106,16 @@ public class CreateSubCalculationUnitCopyDialog extends Dialog
   private ArrayList<ICalculationUnit> buffInputListWithNo1D2D = new ArrayList<ICalculationUnit>();
   private ArrayList<ICalculationUnit> buffInputListCalSubUnits = new ArrayList<ICalculationUnit>();
   
-  class calculationUnitsSelectionFilter extends ViewerFilter{
-
+  class calculationUnitsSelectionFilter extends ViewerFilter
+  {
     private ArrayList<ICalculationUnit> inputList;
     public calculationUnitsSelectionFilter( ArrayList<ICalculationUnit> inputList)
     {
       this.inputList = inputList;
     }
+    
     public boolean select( Viewer viewer, Object parentElement, Object element )
     {      
-//      if (inputList == null)
-//        return false;
-//      else
         return (!inputList.contains((ICalculationUnit)element));
     }    
   }
@@ -128,13 +126,11 @@ public class CreateSubCalculationUnitCopyDialog extends Dialog
     parentShell.setText( "Sub - Berechnungseinheiten Verwalten" );
     this.parent = parentShell.getParent();
     this.dataModel = dataModel;
-    //this.dataModel.addKeyBasedDataChangeListener( newKeyListener  );
   }
 
   
   protected Control createDialogArea(Composite parent)
   {
-    //TODO Patrice change since selection must not be on 1d2d cal uni
     parentCalcUnit1D2D = (ICalculationUnit1D2D) dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER);
     Composite comp = (Composite)super.createDialogArea(parent);
     
@@ -187,8 +183,7 @@ public class CreateSubCalculationUnitCopyDialog extends Dialog
               (cUnit instanceof ICalculationUnit2D))
         {
           inputListWithNo1D2D.add(cUnit);
-        }
-        
+        }        
       }
     }
     
@@ -264,8 +259,7 @@ public class CreateSubCalculationUnitCopyDialog extends Dialog
     {
       inputListCalSubUnits = new ArrayList<ICalculationUnit>(parentCalcUnit1D2D.getSubUnits());//(IFeatureWrapperCollection) parentCalcUnit1D2D.getSubUnits();
       subCalculationUnits.setInput( inputListCalSubUnits );
-    }
-    
+    }    
     
     subCalcUnitsTable = subCalculationUnits.getTable();
     subCalcUnitsTable.setLinesVisible( true );
@@ -305,14 +299,10 @@ public class CreateSubCalculationUnitCopyDialog extends Dialog
       inputListCalSubUnits.clear();
       inputListCalSubUnits.addAll( buffInputListCalSubUnits );
       calculationUnits.refresh();
-      subCalculationUnits.refresh();
-      
+      subCalculationUnits.refresh();      
       
       System.out.println(buffInputListWithNo1D2D.size());
       System.out.println(buffInputListCalSubUnits.size());      
-//      nameField.setText("");
-//      typeCombo.select( 0 );        
-//      descriptionText.setText(defaultDescriptionText);
     }
     if (buttonId == OK_APPLIED)
     {
@@ -329,7 +319,6 @@ public class CreateSubCalculationUnitCopyDialog extends Dialog
             }
             catch( Exception e )
             {
-              // TODO Auto-generated catch block
               e.printStackTrace();
             }
            dataModel.setData(
@@ -338,18 +327,7 @@ public class CreateSubCalculationUnitCopyDialog extends Dialog
           }
           
         }; 
-        
-//        ICommandTarget cmdRemTarget =
-//          (ICommandTarget) dataModel.getData( ICommonKeys.KEY_COMMAND_TARGET );
-//        if( cmdRemTarget == null )
-//        {
-//          throw new RuntimeException(
-//              "Could not found command target; not set in the data model" );
-//        }
-//        cmdRemTarget.postCommand( cmdToRemove, null );
         KeyBasedDataModelUtil.postCommand( dataModel, cmdToRemove );
-        
-      
       AddSubCalcUnitsToCalcUnit1D2DCmd cmdToAdd 
           = new AddSubCalcUnitsToCalcUnit1D2DCmd(
                   inputListCalSubUnits,
@@ -364,7 +342,6 @@ public class CreateSubCalculationUnitCopyDialog extends Dialog
           }
           catch( Exception e )
           {
-            // TODO Auto-generated catch block
             e.printStackTrace();
           }
           dataModel.setData(
@@ -372,17 +349,7 @@ public class CreateSubCalculationUnitCopyDialog extends Dialog
               dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER));
         }
       };
-
-//      ICommandTarget cmdTarget =
-//        (ICommandTarget) dataModel.getData( ICommonKeys.KEY_COMMAND_TARGET );
-//      if( cmdTarget == null )
-//      {
-//        throw new RuntimeException(
-//            "Could not found command target; not set in the data model" );
-//      }
       KeyBasedDataModelUtil.postCommand( dataModel, cmdToAdd );
-//      cmdTarget.postCommand( cmdToAdd, null );
-      
       super.okPressed();   
     }
     else
@@ -390,6 +357,4 @@ public class CreateSubCalculationUnitCopyDialog extends Dialog
       super.buttonPressed(buttonId);
     }
   }   
-  
-
 }

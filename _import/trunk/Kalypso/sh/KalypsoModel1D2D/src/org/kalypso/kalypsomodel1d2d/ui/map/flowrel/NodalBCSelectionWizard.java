@@ -62,6 +62,7 @@ import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
@@ -75,7 +76,7 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
 
   private final IBoundaryConditionDescriptor[] m_descriptors;
 
-  private final CommandableWorkspace m_workspace;
+  private final GMLWorkspace/*CommandableWorkspace*/ m_workspace;
 
   private final IRelationType m_parentRelation;
 
@@ -92,7 +93,7 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
    */
   public NodalBCSelectionWizard( 
             final IBoundaryConditionDescriptor[] descriptors, 
-            final CommandableWorkspace workspace, 
+            final GMLWorkspace/*CommandableWorkspace*/ workspace, 
             final Feature parentFeature, 
             final IRelationType parentRelation )
   {
