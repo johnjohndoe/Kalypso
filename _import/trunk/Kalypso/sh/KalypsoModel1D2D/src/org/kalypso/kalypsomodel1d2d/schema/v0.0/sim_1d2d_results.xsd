@@ -113,13 +113,13 @@
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="depth" type="xs:double">
+					<xs:element name="virtualdepth" type="xs:double">
 						<xs:annotation>
 							<xs:documentation xml:lang="de">
 								<xs:label>Fliesstiefe</xs:label>
 							</xs:documentation>
 							<xs:documentation xml:lang="en">
-								<xs:label>depth</xs:label>
+								<xs:label>virtualdepth</xs:label>
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
@@ -196,6 +196,23 @@
 		</xs:complexContent>
 	</xs:complexType>
 
+	<!-- TIN Result -->
+	<xs:element name="TinResult" type="res1d2d:TinResultType" substitutionGroup="gml:_Feature" />
 
+	<xs:complexType name="TinResultType">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element name="triangulatedSurfaceMember" type="res1d2d:TriangulatedSurfacePropertyType" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="TriangulatedSurfacePropertyType">
+		<xs:sequence>
+			<xs:element ref="gml:TriangulatedSurface" />
+		</xs:sequence>
+	</xs:complexType> 
 
 </xs:schema>
