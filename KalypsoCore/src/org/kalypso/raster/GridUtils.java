@@ -172,8 +172,8 @@ public abstract class GridUtils
     final int nCols = new Integer( reader.getCols() ).intValue();
     final int nRows = new Integer( reader.getRows() ).intValue();
 
-    final OffsetVector offsetX = new OffsetVector( 0, reader.getCellSize() );
-    final OffsetVector offsetY = new OffsetVector( reader.getCellSize(), 0 );
+    final OffsetVector offsetX = new OffsetVector( reader.getCellSize(), 0 );
+    final OffsetVector offsetY = new OffsetVector( 0, reader.getCellSize() );
 
     final GM_Point origin = GeometryFactory.createGM_Point( reader.getOriginCornerX(), reader.getOriginCornerY(), cs );
 
