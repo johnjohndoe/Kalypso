@@ -124,11 +124,24 @@ public class AddRemoveBoundaryConditionToCalUnitWidget extends FENetConceptSelec
                                   "icons/elcl16/remove.gif" )));
     removeBoundaryCondition.addActionListener( makeRemoveBoundaryConditionListener() );
     
+    JMenuItem deleteBoundaryCondition = new JMenuItem();
+    deleteBoundaryCondition.setText( "Delete Boundary Condition" );
+    deleteBoundaryCondition.setIcon( new ImageIcon(PluginUtilities.findResource(
+                                  KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(),
+                                  "icons/elcl16/remove.gif" )));
+    deleteBoundaryCondition.addActionListener( makeDeleteBoundaryConditionFromModelListener() );
+    
     popupMenu.add( addBoundaryCondition);
     popupMenu.add( editBoundaryCondition);
     popupMenu.add( removeBoundaryCondition);
+    popupMenu.add( deleteBoundaryCondition);
     popupMenu.show( mapPanel, p.x, p.y );  
     
+  }
+
+  private ActionListener makeDeleteBoundaryConditionFromModelListener( )
+  {
+    return null;
   }
 
   private ActionListener makeEditBoundaryConditionListener( )
