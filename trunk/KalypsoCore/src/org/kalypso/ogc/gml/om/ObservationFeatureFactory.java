@@ -225,6 +225,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
       }
       catch( final NumberFormatException e )
       {
+        e.printStackTrace();
         // TODO: set null here: Problem: the other components can't handle null now, they should
         record.setValue( component, null );
       }

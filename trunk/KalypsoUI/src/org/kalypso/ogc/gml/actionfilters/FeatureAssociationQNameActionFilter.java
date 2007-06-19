@@ -57,6 +57,7 @@ import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
 public class FeatureAssociationQNameActionFilter implements IActionFilterEx
 {
   public final static String ATTR_QNAME = "featureAssociationQname"; //$NON-NLS-1$
+
   public final static String ATTR_LIST = "featureAssociationList"; //$NON-NLS-1$
 
   /**
@@ -72,12 +73,12 @@ public class FeatureAssociationQNameActionFilter implements IActionFilterEx
    */
   public boolean testAttribute( final Object target, final String name, final String value )
   {
-    final String msg = String.format( "target: %s\tname: %s\tvalue: %s", target, name, value );
-    System.out.println( msg );
-    
+// final String msg = String.format( "target: %s\tname: %s\tvalue: %s", target, name, value );
+// System.out.println( msg );
+
     if( !(target instanceof FeatureAssociationTypeElement) )
       return false;
-    
+
     final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) target;
     final IRelationType fateRT = fate.getAssociationTypeProperty();
     final IFeatureType featureType = fateRT.getTargetFeatureType();
@@ -93,10 +94,10 @@ public class FeatureAssociationQNameActionFilter implements IActionFilterEx
           return true;
       }
     }
-    else if( ATTR_LIST.equals( name ))
+    else if( ATTR_LIST.equals( name ) )
     {
       final boolean isTrue = Boolean.parseBoolean( value );
-      return fateRT.isList() == isTrue; 
+      return fateRT.isList() == isTrue;
     }
 
     return false;

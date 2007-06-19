@@ -42,6 +42,7 @@ package org.kalypso.util.command;
 
 import java.util.logging.Logger;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -72,13 +73,15 @@ public final class CommandJob extends Job
 
   private final TYPE m_type;
 
-  public CommandJob( final ICommand command, final ICommandManager commandManager, final ISchedulingRule rule,
-      final Runnable runnable, final TYPE type )
+  public CommandJob( final ICommand command, final ICommandManager commandManager, final ISchedulingRule rule, final Runnable runnable, final TYPE type )
   {
     super( "Kalypso: " + getCommandDescription( commandManager, command, type ) );
 
+    Assert.isNotNull( commandManager );
+    Assert.isNotNull( command );
+
     // Nein: dann bleiben die Jobs als 'Waiting' in der ProgressAnzeige
-    //setUser( true );
+    // setUser( true );
 
     setPriority( Job.SHORT );
     setRule( rule );
@@ -116,8 +119,7 @@ public final class CommandJob extends Job
 
       LOGGER.warning( "Failed " + m_type + ": " + description );
 
-      return new Status( IStatus.ERROR, KalypsoGisPlugin.getDefault().getBundle().getSymbolicName(), 0, "Fehler: "
-          + m_type + ": " + description, e );
+      return new Status( IStatus.ERROR, KalypsoGisPlugin.getDefault().getBundle().getSymbolicName(), 0, "Fehler: " + m_type + ": " + description, e );
     }
 
     if( description == null )
