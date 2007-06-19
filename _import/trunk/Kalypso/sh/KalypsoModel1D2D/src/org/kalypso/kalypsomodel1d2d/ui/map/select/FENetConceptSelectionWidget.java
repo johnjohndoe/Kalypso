@@ -56,6 +56,7 @@ import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.ui.map.IGrabDistanceProvider;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -84,7 +85,7 @@ import org.opengis.cs.CS_CoordinateSystem;
  * @author Patrice Congo
  */
 @SuppressWarnings({"unchecked", "hiding"})
-public class FENetConceptSelectionWidget implements IWidget
+public class FENetConceptSelectionWidget implements IWidget, IGrabDistanceProvider
 {
   private class QNameBasedSelectionContext
   {
@@ -774,5 +775,11 @@ public class FENetConceptSelectionWidget implements IWidget
         MapUtilities.transform( mapPanel, currentPoint );
       return point;
     }
+  }
+  
+  public double getGrabDistance()
+  {
+    final double delta = MapUtilities.calculateWorldDistance( mapPanel, getCurrentPoint(), 6 );
+    return delta;
   }
 }

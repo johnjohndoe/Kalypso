@@ -94,4 +94,6 @@ public interface ICommonKeys
 
   public static final String WIDGET_WITH_STRATEGY = "_widget_with_strategy_";
   
+  public static final String KEY_GRAB_DISTANCE_PROVIDER = "_grab_distance_provider_";
+  
 }

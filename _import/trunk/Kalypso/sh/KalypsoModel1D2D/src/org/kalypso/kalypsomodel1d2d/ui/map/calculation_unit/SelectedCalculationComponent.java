@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -71,13 +74,21 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
+import org.kalypso.kalypsomodel1d2d.ui.map.IGrabDistanceProvider;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListener;
 import org.kalypso.kalypsomodel1d2d.ops.*;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
+import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
+import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
+import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree_impl.gml.schema.virtual.GetGeomDestinationFeatureVisitor;
 
 /**
  * @author Madanagopsl
@@ -90,13 +101,24 @@ public class SelectedCalculationComponent
   private static final String SUB_CALCULATION_UNIT_Title = "Sub Calculation Unit";
 
   /* ======================================================================== */
-  TableViewer tableViewer;
+  private TableViewer tableViewer;
   private final String defaultTestDecription = "Wählen Sie ein Modell aus.";
   private final String titleDescriptionGroup = "Beschreibung";
   private Group descriptionGroupText;
   private Text descriptionText;
   private Text element2D;
   private Text element1D;
+  /** 
+   * text field that holds the number of boundary condition 
+   * assigned to the currently shown calculation unit
+   */
+  
+  private Text textCountBC;
+  /**
+   * Label for the boundary condition text field
+   */
+  private Label boundaryConditionsLabel;
+  
   private Text bLineText;
   private GridData data;
   private FormToolkit toolkit;
@@ -234,6 +256,16 @@ public class SelectedCalculationComponent
           descriptionGroupText.setEnabled( false );
           descriptionText.setEnabled( false );          
         }
+        //get and set the number of boundary conditions
+        IGrabDistanceProvider grabDistanceProvider = dataModel.getData( IGrabDistanceProvider.class, ICommonKeys.KEY_GRAB_DISTANCE_PROVIDER );
+        
+        final double grabDistance = grabDistanceProvider.getGrabDistance();
+        
+        int bcCount = CalUnitOps.countAssignedBoundaryConditions( 
+            getBoundaryConditions(), 
+            (ICalculationUnit)newValue, 
+             6);
+        textCountBC.setText(String.valueOf( bcCount ));
     }
     else
     {
@@ -242,9 +274,27 @@ public class SelectedCalculationComponent
       element1DLabel.setEnabled( false );
       element2D.setEnabled( false );
       element2DLabel.setEnabled( false );
+      bLineText.setEnabled( false );
+      textCountBC.setEnabled( false );
     }
   }
 
+  public List<IBoundaryCondition> getBoundaryConditions()
+  {
+    final IKalypsoFeatureTheme bcTheme = dataModel.getData( 
+        IKalypsoFeatureTheme.class, 
+        ICommonKeys.KEY_BOUNDARY_CONDITION_THEME );
+    final Feature bcHolderFeature = bcTheme.getFeatureList().getParentFeature();
+    //TODO Patrice replace with operational model
+    IFlowRelationshipModel flowRelationship =
+      (IFlowRelationshipModel) bcHolderFeature.getAdapter( IFlowRelationshipModel.class );
+    
+    
+    List<IBoundaryCondition> conditions =
+        new ArrayList<IBoundaryCondition>((List)flowRelationship);
+    return conditions;
+  }
+  
   private void guiSelectFromList( Composite parent )
   {
     rootComposite = new Composite (parent,SWT.FLAT);
@@ -291,9 +341,13 @@ public class SelectedCalculationComponent
         "icons/elcl16/alert.gif" ).getImageData() );      
     
     Label boundaryUpLabel = new Label(optionsComposite, SWT.RIGHT);
-    boundaryUpLabel.setText("Randlinien: ");
-    
+    boundaryUpLabel.setText("Randlinien: ");    
     bLineText = toolkit.createText( optionsComposite, "", SWT.SINGLE|SWT.BORDER );
+    
+    boundaryConditionsLabel = new Label(optionsComposite, SWT.RIGHT);
+    boundaryConditionsLabel.setText("Randbedingungen: ");    
+    textCountBC = toolkit.createText( optionsComposite, "", SWT.SINGLE|SWT.BORDER );
+    
 
     subCalculationComposite = new Composite(rootComposite,SWT.FLAT);
     subCalculationComposite.setLayout( new FormLayout() );

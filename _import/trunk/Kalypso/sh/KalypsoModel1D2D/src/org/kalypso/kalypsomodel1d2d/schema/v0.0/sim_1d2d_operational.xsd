@@ -171,6 +171,21 @@
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
+					<xs:element
+						name="scopeMark"
+						type="gml:PointPropertyType"
+						minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>scopeMark</xs:label>
+								<xs:tooltip>scopeMark</xs:tooltip>
+							</xs:documentation>
+							<xs:documentation xml:lang="en">
+								This points make it possible to assign the boundary condition to the
+								a calculation unit by scoping the boundary lines of the calculation unit.
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>

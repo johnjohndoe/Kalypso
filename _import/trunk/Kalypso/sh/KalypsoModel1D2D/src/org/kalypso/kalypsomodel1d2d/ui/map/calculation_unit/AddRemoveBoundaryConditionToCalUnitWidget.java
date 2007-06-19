@@ -57,8 +57,6 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit2D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
@@ -215,57 +213,68 @@ public class AddRemoveBoundaryConditionToCalUnitWidget extends FENetConceptSelec
       public void actionPerformed( ActionEvent e )
       {
         final Feature[] selectedFeatures = getSelectedFeature();
-        final Object selectedWrapper = dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
+        final ICalculationUnit calUnit = 
+          (ICalculationUnit) dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
         IFEDiscretisationModel1d2d model1d2d = 
           (IFEDiscretisationModel1d2d) dataModel.getData( ICommonKeys.KEY_DISCRETISATION_MODEL );
-        if( selectedWrapper instanceof IBoundaryCondition )
+        
+        if( selectedFeatures.length == 0 )
         {
-          IBoundaryCondition calUnit = (IBoundaryCondition) selectedWrapper;
-          
-          for(Feature feature:selectedFeatures)
-          {
-            AddBoundaryConditionToCalculationUnitCmd command = null;
-            IFE1D2DElement ele = (IFE1D2DElement) feature.getAdapter( IFE1D2DElement.class );
-            if( calUnit instanceof ICalculationUnit1D &&
-                ele instanceof IBoundaryCondition )
-            {
-              command = new AddBoundaryConditionToCalculationUnitCmd(
-                  (ICalculationUnit1D)calUnit, 
-                  (IBoundaryCondition)ele,
-                  model1d2d,
-                  IBoundaryCondition.QNAME);
-              
-            }
-            else if( calUnit instanceof ICalculationUnit2D &&
-                ele instanceof IBoundaryCondition )
-            {
-              command = new AddBoundaryConditionToCalculationUnitCmd(
-                  (ICalculationUnit2D)calUnit, 
-                  (IBoundaryCondition)ele,
-                  model1d2d,
-                  IBoundaryCondition.QNAME);
-              
-            }
-            else if( calUnit instanceof ICalculationUnit1D2D &&
-                ele instanceof IBoundaryCondition )
-            {
-              command = new AddBoundaryConditionToCalculationUnitCmd(
-                  (ICalculationUnit1D2D)calUnit, 
-                  (IBoundaryCondition)ele,
-                  model1d2d,
-                  IBoundaryCondition.QNAME);              
-            }
-            else
-            {
-              System.out.println("Bad constellation:"+feature+ " "+calUnit);
-            }
-            if( command != null )
-            {
-              KeyBasedDataModelUtil.postCommand( dataModel, command );
-            }            
-          }       
+          System.out.println("Please select at least one boundary condition");
+          return;
         }
+        
+        
+        
+        for(Feature feature:selectedFeatures)
+        {
+          final IBoundaryCondition bc = 
+            (IBoundaryCondition)selectedFeatures[0].getAdapter( IBoundaryCondition.class );
+          if( bc == null )
+          {
+            System.out.println("could not adapt to boundary ");
+            return ;
+          }
+          
+          AddBoundaryConditionToCalculationUnitCmd command = null;
+//          IFE1D2DElement ele = (IFE1D2DElement) feature.getAdapter( IFE1D2DElement.class );
+          if( calUnit instanceof ICalculationUnit1D )
+          {
+            command = new AddBoundaryConditionToCalculationUnitCmd(
+                calUnit, 
+                bc,
+                model1d2d,
+                getGrabDistance());
+            
+          }
+          else if( calUnit instanceof ICalculationUnit2D )
+          {
+            command = new AddBoundaryConditionToCalculationUnitCmd(
+                calUnit, 
+                bc,
+                model1d2d,
+                getGrabDistance());
+            
+          }
+          else if( calUnit instanceof ICalculationUnit1D2D )
+          {
+            command = new AddBoundaryConditionToCalculationUnitCmd(
+                calUnit, 
+                bc,
+                model1d2d,
+                getGrabDistance());              
+          }
+          else
+          {
+            System.out.println("Bad constellation:"+feature+ " "+calUnit);
+          }
+          if( command != null )
+          {
+            KeyBasedDataModelUtil.postCommand( dataModel, command );
+          }            
+        }       
       }
+      
     };
     return al;
 

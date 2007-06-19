@@ -3,6 +3,7 @@ package org.kalypso.kalypsomodel1d2d.schema;
 import javax.xml.namespace.QName;
 
 import org.kalypso.commons.xml.NS;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 
 /**
  * @author Patrice Congo
@@ -213,7 +214,15 @@ public class Kalypso1D2DSchemaConstants
   public static final QName OP1D2D_F_OPERATIONAL_MODEL = 
     new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "OperationalModel" );
   
+  public static final QName OP1D2D_F_BOUNDARY_CONDITION = 
+    new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "BoundaryCondition" );
+  
   public static final QName OP1D2D_PROP_BOUNDARY_CONDITION = 
     new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "boundaryCondition" );
+  
+  public static final QName OP1D2D_PROP_SCOPE_MARK = 
+    new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "scopeMark" );
+  
+  
 
 }

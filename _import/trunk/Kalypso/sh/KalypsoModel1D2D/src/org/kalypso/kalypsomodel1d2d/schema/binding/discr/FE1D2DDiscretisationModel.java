@@ -228,13 +228,14 @@ public class FE1D2DDiscretisationModel extends AbstractFeatureBinder implements 
     return (IPolyElement) findElement( position, grabDistance, IPolyElement.class );
   }
 
-  private IFeatureWrapper2 findElement( final GM_Point position, final double grabDistance, final Class elementClass )
+  public <T extends IFE1D2DElement> T findElement( 
+              final GM_Point position, final double grabDistance, final Class<T> elementClass )
   {
     final FeatureList modelList = m_elements.getWrappedList();
     final GM_Envelope reqEnvelope = grabEnvelopeFromDistance( position, grabDistance );
     final List<Feature> foundElements = modelList.query( reqEnvelope, null );
     double min = Double.MAX_VALUE;
-    IFeatureWrapper2 nearest = null;
+    T nearest = null;
     for( final Feature feature : foundElements )
     {
       final IFeatureWrapper2 current = (IFeatureWrapper2) feature.getAdapter( elementClass );
@@ -246,7 +247,7 @@ public class FE1D2DDiscretisationModel extends AbstractFeatureBinder implements 
           final double curDist = position.distance( geometryFromNetItem );
           if( min > curDist && curDist < grabDistance )
           {
-            nearest = current;
+            nearest = (T)current;
             min = curDist;
           }
         }
@@ -288,7 +289,7 @@ public class FE1D2DDiscretisationModel extends AbstractFeatureBinder implements 
 
   }
 
-  private GM_Envelope grabEnvelopeFromDistance( final GM_Point position, final double grabDistance )
+  public static final  GM_Envelope grabEnvelopeFromDistance( final GM_Point position, final double grabDistance )
   {
     final double posX = position.getX();
     final double posY = position.getY();

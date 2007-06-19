@@ -57,6 +57,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ILineElement;
+import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -72,6 +73,7 @@ import com.vividsolutions.jts.geom.Point;
  * @author Gernot Belger
  * @author Thomas Jung
  */
+@SuppressWarnings("unchecked")
 public class ContinuityLineOps
 {
   private ContinuityLineOps( )
@@ -175,4 +177,24 @@ public class ContinuityLineOps
       throw new CoreException( status );
     }
   }
+  
+  /**
+   * To get the middle node of this line.
+   * the middle node is the node with the index:
+   * <code>
+   * Math.ceil( nodes.size()/2.0 )
+   * </code>
+   * @param lineElement the line which middle node is to be computed
+   * @return an {@link IFE1D2DNode} representing the middle node of the 
+   *        given line element
+   *    
+   */
+  public static final IFE1D2DNode getMiddleNode( ILineElement lineElement )
+  {
+    Assert.throwIAEOnNullParam( lineElement, "lineElement" );
+    List nodes = lineElement.getNodes();
+    int middle = (int)Math.ceil( nodes.size()/2.0 );
+    return (IFE1D2DNode) nodes.get( middle );
+  }
+  
 }

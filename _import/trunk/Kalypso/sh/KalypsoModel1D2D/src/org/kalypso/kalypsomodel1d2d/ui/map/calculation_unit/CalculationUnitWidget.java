@@ -65,6 +65,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
+import org.kalypso.kalypsomodel1d2d.ui.map.IGrabDistanceProvider;
 import org.kalypso.kalypsomodel1d2d.ui.map.IWidgetWithStrategy;
 import org.kalypso.kalypsomodel1d2d.ui.map.cline.RouteLineElementWidget;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
@@ -87,8 +88,10 @@ import org.kalypso.ui.views.map.MapView;
  *
  */
 public class CalculationUnitWidget 
-//                    extends FENetConceptSelectionWidget//AbstractWidget 
-                    implements IWidgetWithOptions, IWidget, IWidgetWithStrategy/*, IEvaluationContextConsumer*/
+                    implements IWidgetWithOptions, 
+                                IWidget, 
+                                IWidgetWithStrategy,
+                                IGrabDistanceProvider
 {
   
   
@@ -200,6 +203,10 @@ public class CalculationUnitWidget
     dataModel.setData( 
         ICommonKeys.KEY_BOUNDARY_CONDITION_THEME, 
         bcTheme );
+    
+    dataModel.setData( 
+        ICommonKeys.KEY_GRAB_DISTANCE_PROVIDER, 
+        this );
     
     registerPopupBlocker( popupBlocker );
   }
@@ -657,6 +664,18 @@ public class CalculationUnitWidget
      this.strategy.activate( commandPoster, mapPanel ); 
     }
   }
- 
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.ui.map.IGrabDistanceProvider#getGrabDistance()
+   */
+  public double getGrabDistance( )
+  {
+    if( strategy instanceof IGrabDistanceProvider )
+    {
+      return ((IGrabDistanceProvider)strategy).getGrabDistance();
+    }
+    
+    System.out.println("getting fix grab distance");
+    return 6;
   }
+}
   

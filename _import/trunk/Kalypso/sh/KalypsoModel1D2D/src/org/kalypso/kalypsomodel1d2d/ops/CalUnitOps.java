@@ -45,23 +45,28 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DDiscretisationModel;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ILineElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Point;
 
 
 /**
@@ -73,6 +78,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 @SuppressWarnings({"unchecked", "hiding"})
 public class CalUnitOps
 {
+
   private CalUnitOps( )
   {
     //i hate being instantiated
@@ -491,4 +497,216 @@ public class CalUnitOps
     return containers.contains( unit );
   }
   
+  /**
+   * Mark the boundary condition as condition of the given calculation unit.
+   * Marking means that the boundary condition will get scope mark
+   * pointing to the boundary line other than the one targeted by
+   * the boundary condition.
+   * 
+   * @param unit the target calculation unit
+   * @param bCondition the boundary condition to mark
+   */
+  public static final void markAsBoundaryCondition(
+                                ICalculationUnit<IFE1D2DElement> unit,
+                                IBoundaryCondition bCondition,
+                                double grabDistance )
+  {
+    Assert.throwIAEOnNullParam( unit, "unit" );
+    Assert.throwIAEOnNullParam( bCondition, "bCondition" );
+    Assert.throwIAEOnLessThan0( grabDistance, "grab distance must be greater or equals to 0" );
+    
+    //get the targeted boundary line
+    final GM_Point bcPosition = bCondition.getPosition();
+    final IBoundaryLine targetLine = getLineElement( unit, bcPosition, grabDistance, IBoundaryLine.class ); 
+    if( targetLine == null )
+    {
+      throw new IllegalArgumentException(
+          "Boundary condition does not have a target line" );
+    }
+    // compute the other lines and set their middle nodes as
+    //boundary line    
+    for(IFE1D2DElement ele : unit.getElements())
+    {
+      if( ele instanceof IBoundaryLine )
+      {
+        if( !ele.equals( targetLine ) )
+        {
+          final IFE1D2DNode middleNode = ContinuityLineOps.getMiddleNode( ( IBoundaryLine )ele );
+          bCondition.addScopeMark( middleNode.getPoint() );
+        }
+      }
+    }
+    
+  }
+  
+  
+  /**
+   * Answer whether a boundary condition is assign to the given calculation unit
+   * @param unit the possible target calculation unit
+   * @param bCondition the boundary condition to test for assignment 
+   * @return true if the boundary condition is assign to the calculation unit
+   *            otherwise false.
+   * @throws IllegalArgumentException if unit or bCondition is null 
+   *                or unit does not have a model 1d 2d as parent feature
+   * 
+   */
+  public static final boolean isBoundaryConditionOf(
+                                final ICalculationUnit unit,
+                                final IBoundaryCondition bCondition,
+                                final double grabDistance)
+  {
+    Assert.throwIAEOnNullParam( unit, "unit" );
+    Assert.throwIAEOnNullParam( bCondition, "bCondition" );
+    Assert.throwIAEOnLessThan0( grabDistance, "grab distance must be greater or equals to 0" );
+    
+    final GM_Point bPosition = bCondition.getPosition();
+    Feature unitParent = unit.getWrappedFeature().getParent();
+    IFEDiscretisationModel1d2d model1d2d = 
+      (IFEDiscretisationModel1d2d) unitParent.getAdapter( IFEDiscretisationModel1d2d.class );
+    if( model1d2d == null )
+    {
+      throw new IllegalArgumentException("Unit must have a model 1d2d as parent");
+    }
+    if( bPosition == null )
+    {
+      return false;
+    }
+    final IBoundaryLine<IFE1D2DComplexElement, IFE1D2DEdge> bcLine = 
+                          getLineElement( unit, bPosition,grabDistance, IBoundaryLine.class );
+    if( bcLine == null )
+    {
+      return false;
+    }
+    final List<IFE1D2DComplexElement> containers = 
+      new ArrayList<IFE1D2DComplexElement>( bcLine.getContainers() );
+    final List<GM_Point> scopeMarks = bCondition.getScopeMark();
+    if( scopeMarks.size()<1 )
+    {
+      return false;
+    }
+    for( GM_Point currentPoint : scopeMarks )
+    {
+      IBoundaryLine line = 
+        model1d2d.findElement( 
+                currentPoint, grabDistance, IBoundaryLine.class );
+      containers.retainAll( line.getContainers() );
+      if( containers.isEmpty() )
+      {
+        return false;
+      }
+    }
+    return true;
+  }
+  
+  /**
+   * To select the calculation unit line element given the provided position.
+   * The nearest line in the proximity of the selection position is selected. 
+   * 
+   * @param unit the unit which  line element is to be selected
+   * @param bcPosition the selection location
+   * @param lineType the type of line to be selected
+   * @return a {@link ILineElement} representing the nearest line element in the
+   *            proximity of the given position. 
+   */
+  public static final < T extends ILineElement>  T getLineElement(
+                        ICalculationUnit<IFE1D2DElement> unit,
+                        GM_Point bcPosition,
+                        double grabDistance,
+                        Class<T> lineType )
+  {
+    Assert.throwIAEOnNullParam( unit, "unit" );
+    Assert.throwIAEOnNullParam( bcPosition, "bcPosition" );
+    Assert.throwIAEOnNullParam( lineType, "lineType" );
+    Assert.throwIAEOnLessThan0( grabDistance, "grab distance must be greater or equals to 0" );
+    GM_Envelope env = 
+      FE1D2DDiscretisationModel.grabEnvelopeFromDistance( bcPosition, grabDistance );
+      
+    final List<IFE1D2DElement> targetLines = unit.getElements().query(env);
+    double minDistance = Double.MAX_VALUE;
+    T targetLine = null;
+    for( int i = targetLines.size()-1 ; i>=0 ; i-- )
+    {
+      IFE1D2DElement ele = targetLines.get( i );
+      if( lineType.isInstance( ele ) )
+      {
+        try
+        {
+          GM_Object line = ele.recalculateElementGeometry();
+          double currentDist = bcPosition.distance( line );
+          if( currentDist<minDistance)
+          {
+            minDistance = currentDist;
+            targetLine = (T) ele;
+          }
+        }
+        catch( GM_Exception e )
+        {
+          e.printStackTrace();
+          throw new RuntimeException(e);
+        }
+      
+      }
+    }
+    return targetLine; 
+  }
+  
+  /**
+   * Returns all boundary condition assign to the specified unit
+   * found in the passed list of boundary conditions
+   * @param conditions the list of boundary condition 
+   * @param unit the calculation unit which boundary conditions
+   *            are being collected
+   * @return a list of boundary condition assigned to the calculation unit
+   * @throws IllegalArgumentException if condition or unit is null or grabDistance is less than 0
+   */
+  public static final List<IBoundaryCondition> getBoundaryConditions(
+                          final IFeatureWrapperCollection<IBoundaryCondition> conditions,
+                          final ICalculationUnit<IFE1D2DElement> unit, 
+                          final double grabDistance )
+  {
+    Assert.throwIAEOnNullParam( conditions, "conditions" );
+    Assert.throwIAEOnNullParam( unit, "unit" );
+    Assert.throwIAEOnLessThan0( grabDistance, "grab distance must be greater or equals to 0" );
+    
+    List<IBoundaryCondition> assignedConditions = new ArrayList<IBoundaryCondition>(); 
+    for(IBoundaryCondition condition : conditions )
+    {
+      if( isBoundaryConditionOf( unit, condition, grabDistance ))
+      {
+        assignedConditions.add( condition );
+      }
+    }
+    
+    return conditions;
+  }
+  
+  /**
+   * Counts the number of boundary conditions assigned to the calculation unit.
+   * @param conditions the collection condition to test
+   * @param unit the target calculation unit
+   * @param grabDistance the grab distance for geometry searching
+   * @return a integer representing the number of boundary contions in the 
+   *            collection which has been assigned to the calculation unit
+   * @throws IllegalArgumentException if condition or unit is null or grabDistance is less than 0
+   * 
+   */
+  public static final int countAssignedBoundaryConditions(
+      final Collection<IBoundaryCondition> conditions,
+      final ICalculationUnit<IFE1D2DElement> unit, 
+      final double grabDistance )
+  {
+    Assert.throwIAEOnNullParam( conditions, "conditions" );
+    Assert.throwIAEOnNullParam( unit, "unit" );
+    Assert.throwIAEOnLessThan0( grabDistance, "grab distance must be greater or equals to 0" );
+    int count = 0; 
+    for(IBoundaryCondition condition : conditions )
+    {
+      if( isBoundaryConditionOf( unit, condition, grabDistance ))
+      {
+        count = count+1;
+      }
+    }
+    
+    return count;
+  }
 }

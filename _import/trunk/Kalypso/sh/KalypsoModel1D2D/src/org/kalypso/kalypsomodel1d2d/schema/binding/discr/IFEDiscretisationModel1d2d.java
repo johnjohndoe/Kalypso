@@ -126,4 +126,15 @@ public interface IFEDiscretisationModel1d2d extends IModel
   public IPolyElement find2DElement( final GM_Point position, final double grabDistance );
 
   public IElement1D find1DElement( final GM_Point position, final double grabDistance );
+  
+  /**
+   * Finds the nearest element to the given position
+   * @param position the search position
+   * @param grabDistance the maximal grab distance
+   * @param elementType the element type
+   */
+  public <T extends IFE1D2DElement> T findElement( 
+                        final GM_Point position, 
+                        final double grabDistance,
+                        Class<T> elementType );
 }
