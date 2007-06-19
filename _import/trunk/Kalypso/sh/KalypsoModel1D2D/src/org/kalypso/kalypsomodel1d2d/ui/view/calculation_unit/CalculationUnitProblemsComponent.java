@@ -54,6 +54,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListener;
 
@@ -65,11 +66,11 @@ public class CalculationUnitProblemsComponent
 {
   private FormToolkit toolkit;
   private Composite parent;
-  private KeyBasedDataModel dataModel;
+  private CalculationUnitDataModel dataModel;
   private KeyBasedDataModelChangeListener settingsKeyListener;
   private Composite rootComposite;
 
-  public void createControl( KeyBasedDataModel dataModel, FormToolkit toolkit, Composite parent )
+  public void createControl( CalculationUnitDataModel dataModel, FormToolkit toolkit, Composite parent )
   {
 	    this.toolkit = toolkit;
 	    this.parent = parent;
