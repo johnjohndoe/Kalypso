@@ -194,6 +194,7 @@ class CalculationUnitWidgetFace
     elementStatusSection.setClient( sectionThirdComposite );
     FormLayout formLayout = new FormLayout();
     sectionThirdComposite.setLayout( formLayout );
+    
     FormData formData = new FormData();
     formData.left = new FormAttachment( 0, 5 );
     formData.top = new FormAttachment( sectionThirdComposite, 5 );

@@ -38,18 +38,27 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.ui.map.editor;
+package org.kalypso.kalypsomodel1d2d.ui.view.calculation_unit;
+
+import org.kalypso.kalypsomodel1d2d.ui.map.editor.FeatureWrapperListEditor;
+import org.kalypso.kalypsomodel1d2d.ui.map.editor.IButtonConstants;
 
 /**
  * @author Madanagopal
  *
  */
-public interface IButtonConstants
+public class CalculationUnitPerformComponent extends FeatureWrapperListEditor implements IButtonConstants
 {
-  public String BTN_MOVE_UP = "MOVE_UP";
-  public String BTN_MOVE_DOWN = "MOVE_DOWN";
-  public String BTN_CLICK_TO_RUN = "CLICK_TO_RUN";
-  public String BTN_REMOVE = "REMOVE";
-  public String BTN_ADD = "ADD";
-  public String BTN_CLICK_TO_CALCULATE = "CLICK_TO_CALCULATE";
+
+  public CalculationUnitPerformComponent()
+  {	  
+	    super(null,null,null);
+	    setRequiredButtons( BTN_CLICK_TO_RUN,
+	                        BTN_REMOVE,
+	                        BTN_ADD,
+	                        BTN_CLICK_TO_CALCULATE);
+  }
+  
+  
+
 }

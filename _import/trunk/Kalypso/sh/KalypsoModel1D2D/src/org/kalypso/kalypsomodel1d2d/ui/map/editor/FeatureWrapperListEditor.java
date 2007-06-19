@@ -215,6 +215,8 @@ public class FeatureWrapperListEditor implements IButtonConstants
   final String bTextMaximizeSelected = "Geländemodell anzeigen und maximieren";
 
   final String deleteSelected = "Geländemodell löschen";
+  
+  final String calculateSelected = "Run Calculation";
 
   final String defaultTestDecription = "Wählen Sie ein Modell aus.";
   
@@ -462,6 +464,31 @@ public class FeatureWrapperListEditor implements IButtonConstants
           try
           {
           createFeatureWrapper();
+          }
+          catch( Throwable th )
+          {
+            th.printStackTrace();
+          }
+        }
+      } );           
+    }
+    
+    if (searchForThisString( IButtonConstants.BTN_CLICK_TO_CALCULATE ))
+    {
+      Button calculateButton = new Button( btnComposite, SWT.PUSH );
+      calculateButton.setToolTipText( calculateSelected );
+      image = new Image( btnComposite.getDisplay(),
+          KalypsoModel1D2DPlugin.imageDescriptorFromPlugin(
+              PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
+              "icons/elcl16/add.gif" ).getImageData() );
+      calculateButton.setImage( image );
+      calculateButton.addSelectionListener( new SelectionAdapter()
+      {
+        public void widgetSelected( SelectionEvent event )
+        {
+          try
+          {
+          System.out.println("Calculate Selected");
           }
           catch( Throwable th )
           {

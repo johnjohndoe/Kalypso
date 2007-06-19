@@ -313,7 +313,6 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
       final Display display = (Display) dataModel.getData(ICommonKeys.KEY_SELECTED_DISPLAY);
       final Runnable runnable = new Runnable()
       {
-//        private CommandableWorkspace workspace;
 
         public void run( )
         {   
