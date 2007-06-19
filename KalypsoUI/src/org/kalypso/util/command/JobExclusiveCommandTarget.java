@@ -112,7 +112,13 @@ public class JobExclusiveCommandTarget implements ICommandTarget, ICommandManage
   public void postCommand( final ICommand command, final Runnable runnable )
   {
     // runnable is unused!
-    new CommandJob( command, m_commandManager, m_mutexRule, m_dirtyRunnable, CommandJob.POST );
+    if( m_commandManager == null )
+    {
+      // TODO: error handling
+      System.out.println( "Posting command without command manager." );
+    }
+    else
+      new CommandJob( command, m_commandManager, m_mutexRule, m_dirtyRunnable, CommandJob.POST );
   }
 
   /**

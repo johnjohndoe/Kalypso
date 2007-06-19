@@ -176,7 +176,7 @@ public class KalypsoModelApplication implements IApplication
     }
 
     /* No instance location is set, show error dialog. */
-    MessageDialog.openError( shell, dialogTitle, "Could not launch the product because the there is no workspace specified." );
+    MessageDialog.openError( shell, dialogTitle, "Could not launch the product because there is no workspace specified." );
 
     return false;
   }
