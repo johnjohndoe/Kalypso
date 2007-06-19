@@ -13,5 +13,5 @@ import de.renew.workflow.cases.Case;
 public interface IActiveContextChangeListener<T extends Case>
 {
   /* TODO: why do inform about the OLD worflow db and so on? Why not also the new one? */
-  public void activeContextChanged( final CaseHandlingProjectNature<T> newProject, final T scenario );
+  public void activeContextChanged( final CaseHandlingProjectNature newProject, final T scenario );
 }

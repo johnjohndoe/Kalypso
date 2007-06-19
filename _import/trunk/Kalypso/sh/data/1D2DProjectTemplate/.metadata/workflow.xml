@@ -169,9 +169,9 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 			<Task context="2dElementTheme"
 					URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#CalculationUnit">
 				<Help>
-					<![CDATA[Berechnungseinheiten Modellieren]]>
+					<![CDATA[Berechnungseinheiten modellieren]]>
 				</Help>
-				<Name>Berechnungseinheiten Modellieren</Name>
+				<Name>Berechnungseinheiten modellieren</Name>
 			</Task>	
 			</TaskGroup>
 			<!--
@@ -370,11 +370,11 @@ hier ausgewertet und visualisiert werden.]]>
 			-->
 		</TaskGroup>
 	</TaskGroup>
-	<con:MultiContext id="root">
+	<Perspectives>
 		<con:PerspectiveContext id="1d2dModelling"
 			perspectiveId="org.kalypso.kalypso1d2d.pjt.perspective.Perspective">
 			<con:ViewContext id="FeatureView"
-				viewId="org.kalypso.ui.views.featuretemplateview"
+				partId="org.kalypso.ui.views.featuretemplateview"
 				parent="1d2dModelling">
 				<con:ExtensionContext id="RoughnessDatabase"
 					parent="FeatureView"
@@ -393,11 +393,11 @@ hier ausgewertet und visualisiert werden.]]>
 						value="templates/control.gft" />
 				</con:ExtensionContext>
 			</con:ViewContext>
-			<con:MultiContext id="MapContext" parent="1d2dModelling">
+			<con:WorkbenchSiteContext id="MapContext" parent="1d2dModelling">
 				<con:ViewContext id="MapOutlineView"
-					viewId="org.kalypso.ui.views.outline" parent="MapContext" />
+					partId="org.kalypso.ui.views.outline" parent="MapContext" />
 				<con:ViewContext id="MapView"
-					viewId="org.kalypso.ui.views.mapView" parent="MapContext">
+					partId="org.kalypso.ui.views.mapView" parent="MapContext">
 					<con:ExtensionContext id="BaseMap"
 						parent="MapContext"
 						handlerFactoryId="kalypsoContextHandlerFactory">
@@ -462,19 +462,19 @@ hier ausgewertet und visualisiert werden.]]>
 								wizardId="org.kalypso.wizards.import1d2d.ImportWizard"
 								wizardType="NEW_WIZARD" parent="2dElementTheme" />
 						</con:ExtensionContext>
-						
-						<con:ExtensionContext id="JunctionContextTheme"
-							parent="FenetMap"
-							handlerFactoryId="kalypsoContextHandlerFactory">
-							<con:Parameter name="type"
-								value="themeContext" />
-							<con:Parameter name="input"
-								value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}JunctionContext1DToCLine" />
-							<!--con:WizardContext id="Import2dNet"
-								wizardId="org.kalypso.wizards.import1d2d.ImportWizard"
-								wizardType="NEW_WIZARD" parent="2dElementTheme" / -->
-						</con:ExtensionContext>
-						
+							
+							<con:ExtensionContext id="JunctionContextTheme"
+								parent="FenetMap"
+								handlerFactoryId="kalypsoContextHandlerFactory">
+								<con:Parameter name="type"
+									value="themeContext" />
+								<con:Parameter name="input"
+									value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}JunctionContext1DToCLine" />
+								<!--con:WizardContext id="Import2dNet"
+									wizardId="org.kalypso.wizards.import1d2d.ImportWizard"
+									wizardType="NEW_WIZARD" parent="2dElementTheme" / -->
+							</con:ExtensionContext>
+							
 						<con:ExtensionContext id="ContLineTheme"
 							parent="FenetMap"
 							handlerFactoryId="kalypsoContextHandlerFactory">
@@ -509,10 +509,10 @@ hier ausgewertet und visualisiert werden.]]>
 							value="results/result.gmt" />
 					</con:ExtensionContext>
 				</con:ViewContext>
-			</con:MultiContext>
+			</con:WorkbenchSiteContext>
 			<con:ViewContext id="FeatureSelectionView"
-				viewId="org.kalypso.featureview.views.FeatureView"
+				partId="org.kalypso.featureview.views.FeatureView"
 				parent="1d2dModelling" />
 		</con:PerspectiveContext>
-	</con:MultiContext>
+	</Perspectives>	
 </Workflow>

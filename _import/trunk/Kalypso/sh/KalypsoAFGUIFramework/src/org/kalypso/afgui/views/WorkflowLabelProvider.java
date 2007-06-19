@@ -135,20 +135,20 @@ public class WorkflowLabelProvider extends LabelProvider implements ITableLabelP
       {
         return getImage( element );
       }
-      else if( columnIndex == 1 )
-      {
-        switch( task.getState() )
-        {
-          case RUNNING:
-            return IMAGE_RUNNNING;
-          case FINISHED:
-            return IMAGE_FINISHED;
-          case UNAVAILABLE:
-            return IMAGE_UNAVAILABLE;
-          default:
-            return null;
-        }
-      }
+// else if( columnIndex == 1 )
+// {
+// switch( task.getState() )
+// {
+// case RUNNING:
+// return IMAGE_RUNNNING;
+// case FINISHED:
+// return IMAGE_FINISHED;
+// case UNAVAILABLE:
+// return IMAGE_UNAVAILABLE;
+// default:
+// return null;
+// }
+// }
       else
       {
         return null;

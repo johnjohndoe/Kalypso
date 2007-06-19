@@ -27,7 +27,7 @@ import org.kalypso.afgui.scenarios.ScenarioList;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 
-import de.renew.workflow.connector.context.ICaseManager;
+import de.renew.workflow.connector.cases.ICaseManager;
 
 /**
  * @author pat_dev, Stefan Kurzbach

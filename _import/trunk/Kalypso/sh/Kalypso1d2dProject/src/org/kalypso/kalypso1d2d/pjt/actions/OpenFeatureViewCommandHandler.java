@@ -19,10 +19,11 @@ import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.kalypso1d2d.pjt.SzenarioSourceProvider;
 import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
+import org.kalypso.kalypso1d2d.pjt.views.SzenarioDataProvider;
 import org.kalypso.ui.editor.featureeditor.FeatureTemplateView;
 
+import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 
 /**
  * Opens the feature view on a given template
@@ -52,9 +53,9 @@ public class OpenFeatureViewCommandHandler extends AbstractHandler implements IE
       }
 
       final IWorkbenchWindow activeWorkbenchWindow = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
-      final IFolder szenarioFolder = (IFolder) context.getVariable( SzenarioSourceProvider.ACTIVE_SZENARIO_FOLDER_NAME );
+      final IFolder szenarioFolder = (IFolder) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
 
-      final IFolder folder = SzenarioSourceProvider.findModelContext( szenarioFolder, m_resource );
+      final IFolder folder = SzenarioDataProvider.findModelContext( szenarioFolder, m_resource );
       IFile file = null;
       if( folder != null )
         file = folder.getFile( m_resource );

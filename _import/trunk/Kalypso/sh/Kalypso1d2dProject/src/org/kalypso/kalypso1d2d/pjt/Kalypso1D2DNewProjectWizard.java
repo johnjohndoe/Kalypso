@@ -86,10 +86,12 @@ public class Kalypso1D2DNewProjectWizard extends BasicNewProjectResourceWizard i
       IProject project = getNewProject();
       try
       {
-        Kalypso1D2DProjectNature.addNature( project );        
+        Kalypso1D2DProjectNature.addNature( project );
 
         /* Also activate new project */
-        Kalypso1d2dProjectPlugin.getDefault().getActiveWorkContext().setActiveProject( (CaseHandlingProjectNature<Scenario>) project.getNature( Kalypso1D2DProjectNature.ID ) );        
+        final CaseHandlingProjectNature nature = (CaseHandlingProjectNature) project.getNature( Kalypso1D2DProjectNature.ID );
+        final Scenario caze = (Scenario) nature.getCaseManager().getCases().get( 0 );
+        Kalypso1d2dProjectPlugin.getDefault().getActiveWorkContext().setCurrentCase( caze );
       }
       catch( CoreException e )
       {

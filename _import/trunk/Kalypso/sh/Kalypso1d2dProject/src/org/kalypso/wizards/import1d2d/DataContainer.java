@@ -6,12 +6,11 @@ import java.net.URL;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.kalypso1d2d.pjt.views.SzenarioDataProvider;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.opengis.cs.CS_CoordinateSystem;
-
-import de.renew.workflow.cases.ICaseDataProvider;
 
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
@@ -24,7 +23,7 @@ public class DataContainer
 
   private static final CS_CoordinateSystem m_defaultCoordinateSystem = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
 
-  private ICaseDataProvider<IFeatureWrapper2> m_szenarioDataProvider;
+  private SzenarioDataProvider m_szenarioDataProvider;
 
   public final void setInputFile( String inputFile )
   {
@@ -67,12 +66,12 @@ public class DataContainer
     return m_szenarioDataProvider.getModel( IFEDiscretisationModel1d2d.class );
   }
 
-  public void setSzenarioDataProvider( final ICaseDataProvider<IFeatureWrapper2> szenarioDataProvider )
+  public void setSzenarioDataProvider( final SzenarioDataProvider szenarioDataProvider )
   {
     m_szenarioDataProvider = szenarioDataProvider;
   }
 
-  public void postCommand( final Class<? extends IFeatureWrapper2> clazz, final ICommand command ) throws Exception
+  public void postCommand( final Class< ? extends IFeatureWrapper2> clazz, final ICommand command ) throws Exception
   {
     m_szenarioDataProvider.postCommand( clazz, command );
   }

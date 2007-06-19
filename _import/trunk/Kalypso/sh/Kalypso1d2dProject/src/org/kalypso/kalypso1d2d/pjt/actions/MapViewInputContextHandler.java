@@ -20,10 +20,12 @@ import org.eclipse.ui.ISources;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.kalypso.kalypso1d2d.pjt.SzenarioSourceProvider;
+import org.kalypso.kalypso1d2d.pjt.views.SzenarioDataProvider;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ui.views.map.MapView;
+
+import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 
 /**
  * Loads a template file in the current map view. Requires that the current context contains the map view. Use a
@@ -54,8 +56,8 @@ public class MapViewInputContextHandler extends AbstractHandler implements IExec
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
 
-    final IFolder szenarioFolder = (IFolder) context.getVariable( SzenarioSourceProvider.ACTIVE_SZENARIO_FOLDER_NAME );
-    final IFolder folder = SzenarioSourceProvider.findModelContext( szenarioFolder, m_mapViewInput );
+    final IFolder szenarioFolder = (IFolder) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
+    final IFolder folder = SzenarioDataProvider.findModelContext( szenarioFolder, m_mapViewInput );
     IFile file = null;
     if( folder != null && m_mapViewInput != null )
       file = folder.getFile( m_mapViewInput );

@@ -78,7 +78,7 @@ import org.kalypso.ui.wizard.wms.IKalypsoImportWMSWizard;
 import org.kalypso.ui.wizard.wms.ImportWmsWizardPage;
 import org.kalypso.ui.wizards.imports.Messages;
 
-import de.renew.workflow.base.ISzenarioSourceProvider;
+import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 enum SelectedPage
 {
@@ -130,7 +130,7 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
   {
     final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
     final IEvaluationContext context = handlerService.getCurrentState();
-    m_scenarioFolder = (IFolder) context.getVariable( ISzenarioSourceProvider.ACTIVE_SZENARIO_FOLDER_NAME );
+    m_scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
 
     initialSelection = selection;
     setNeedsProgressMonitor( true );

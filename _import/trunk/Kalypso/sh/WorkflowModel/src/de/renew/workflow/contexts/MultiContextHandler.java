@@ -49,22 +49,19 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 
-import de.renew.workflow.contexts.ContextType;
-import de.renew.workflow.contexts.MultiContext;
-
 /**
  * @author Stefan Kurzbach
  */
 public class MultiContextHandler extends AbstractHandler
 {
 
-  private final MultiContext m_multiContext;
+  private final WorkbenchSiteContext m_compoundContext;
 
   private final IContextHandlerFactory m_contextHandlerFactory;
 
-  public MultiContextHandler( final MultiContext multiContext, final IContextHandlerFactory contextHandlerFactory )
+  public MultiContextHandler( final WorkbenchSiteContext compoundContext, final IContextHandlerFactory contextHandlerFactory )
   {
-    m_multiContext = multiContext;
+    m_compoundContext = compoundContext;
     m_contextHandlerFactory = contextHandlerFactory;
   }
 
@@ -74,8 +71,8 @@ public class MultiContextHandler extends AbstractHandler
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-    final List<JAXBElement< ? extends ContextType>> subContexts = m_multiContext.getSubContexts();
-    for( JAXBElement< ? extends ContextType> context : subContexts )
+    final List<JAXBElement<? extends WorkbenchPartContextType>> subContexts = m_compoundContext.getPartContexts();
+    for( JAXBElement< ? extends WorkbenchPartContextType> context : subContexts )
     {
       final IHandler handler = m_contextHandlerFactory.getHandler( context.getValue() );
       handler.execute( event );

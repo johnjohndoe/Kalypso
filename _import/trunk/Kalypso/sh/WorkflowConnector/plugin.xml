@@ -9,41 +9,20 @@
 -->
 
 <plugin>
-   <extension
-         point="org.eclipse.ui.views">
-      <view
-            allowMultiple="false"
-            class="de.renew.workflow.connector.debug.DebugView"
-            id="WorkflowConnector.debugView"
-            name="Debug View"/>
-	  <view
-             allowMultiple="false"
-             class="org.eclipse.ui.navigator.CommonNavigator"
-             icon="icons/tree.gif"
-             id="de.renew.workflow.connector.CaseView"
-             name="Szenarien"/>
-   <view
-         allowMultiple="false"
-         class="de.renew.workflow.connector.WorklistView"
-         icon="icons/connect.png"
-         id="de.renew.workflow.WorklistView"
-         name="Tätigkeiten">
-   </view>            
+	<extension
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="de.renew.workflow.cases.Case"
+            class="de.renew.workflow.connector.cases.CaseAdapterFactory">
+         <adapter
+               type="org.eclipse.ui.model.IWorkbenchAdapter2">
+         </adapter>
+         <adapter
+               type="org.eclipse.ui.model.IWorkbenchAdapter">
+         </adapter>
+      </factory>
    </extension>
-   <extension
-         point="org.eclipse.ui.popupMenus">
-      <objectContribution
-            adaptable="false"
-            id="WorkflowConnector.WorkItemContribution"
-            objectClass="de.renew.workflow.WorkItem">
-         <action
-               class="de.renew.workflow.connector.debug.RequestWorkItemActionDelegate"
-               id="WorkflowConnector.RequestWorkItemAction"
-               label="Request Workitem">
-         </action>
-      </objectContribution>
-   </extension>
-   <extension
+	<extension
          point="org.eclipse.ui.commands">
       <category
             description="Category for workflow tasks"
@@ -55,172 +34,13 @@
             name="de.renew.workflow.taskgroups.category"/>            
       <command
             categoryId="de.renew.workflow.tasks.category"
-            defaultHandler="de.renew.workflow.connector.context.handlers.NewProjectHandler"
+            defaultHandler="de.renew.workflow.connector.context.NewProjectHandler"
             id="de.renew.workflow.connector.NewProject"
             name="Projekt mit Workflowserver verbinden"/>
 	  <command
             categoryId="de.renew.workflow.tasks.category"
             id="de.renew.workflow.connector.DeleteProject"
             name="Projekt von Workflowserver trennen"/>                     
-   </extension>
-	<extension
-         point="org.eclipse.ui.navigator.viewer">
-      <viewer
-            viewerId="de.renew.workflow.connector.CaseView">
-      </viewer>
-      <viewerContentBinding viewerId="de.renew.workflow.connector.CaseView">
-         <includes>
-            <contentExtension pattern="de.renew.workflow.connector.filters.*"/>
-            <contentExtension
-                  isRoot="true"
-                  pattern="de.renew.workflow.connector.scenarioContent">
-            </contentExtension>            
-         </includes>
-      </viewerContentBinding>
-   </extension>
-   <extension
-         point="org.eclipse.ui.navigator.navigatorContent">
-      <commonFilter
-            activeByDefault="true"
-            description="Nur Workflow-Projekte anzeigen"
-            id="de.renew.workflow.connector.filters.CaseHandlingProjects"
-            name="Nur Workflow-Projekte anzeigen">
-         <filterExpression>
-    	    <and>
-				<instanceof value="org.eclipse.core.resources.IProject"/>        
-				<not>
-					<test
-                        property="org.eclipse.core.resources.projectNature"
-                        value="de.renew.workflow.connector.simpleCaseHandlingProjectNature"/>
-                </not>
-	        </and>
-         </filterExpression>
-      </commonFilter>      
-      <navigatorContent
-            activeByDefault="true"
-            contentProvider="de.renew.workflow.connector.CaseHandlingProjectContentProvider"
-            id="de.renew.workflow.connector.scenarioContent"
-            labelProvider="org.eclipse.ui.model.WorkbenchLabelProvider"
-            name="Fälle"
-            priority="higher"
-            providesSaveables="false">
-         <triggerPoints>
-            <or>
-               <and>
-                  <instanceof
-                        value="org.eclipse.core.resources.IProject">
-                  </instanceof>
-                  <test
-                        property="org.eclipse.core.resources.projectNature"
-                        value="de.renew.workflow.connector.simpleCaseHandlingProjectNature">
-                  </test>
-               </and>
-               <instanceof
-                     value="org.eclipse.core.resources.IFolder">
-               </instanceof>
-               <instanceof
-                     value="org.eclipse.core.resources.IFile">
-               </instanceof>
-               <instanceof
-                     value="org.eclipse.core.resources.IWorkspaceRoot">
-               </instanceof>
-            </or>
-         </triggerPoints>
-         <possibleChildren>
-            <or>
-               <instanceof
-                     value="org.eclipse.core.resources.IProject">
-               </instanceof>
-               <instanceof
-                     value="org.eclipse.core.resources.IFolder">
-               </instanceof>
-               <instanceof
-                     value="org.eclipse.core.resources.IFile">
-               </instanceof>
-               <instanceof
-                     value="de.renew.workflow.cases.Case">
-               </instanceof>
-            </or>
-         </possibleChildren>
-      </navigatorContent>
-   </extension>
-   <extension
-         id="simpleCaseHandlingProjectNature"
-         point="org.eclipse.core.resources.natures">
-      <runtime>
-         <run
-               class="de.renew.workflow.connector.context.SimpleCaseHandlingProjectNature">
-         </run>
-      </runtime>
-   </extension>
-   <extension
-         point="org.eclipse.ui.perspectives">
-      <perspective
-            class="de.renew.workflow.connector.CaseHandlingPerspectiveFactory"
-            fixed="false"
-            icon="icons/connect.png"
-            id="de.renew.workflow.connector.caseHandlingPerspective"
-            name="Case Handling">
-      </perspective>
-   </extension>
-   <extension
-         point="org.eclipse.ui.newWizards">
-      <wizard
-            canFinishEarly="false"
-            category="de.renew.workflow.connector.newWizards"
-            class="de.renew.workflow.connector.context.NewSimpleProjectWizard"
-            finalPerspective="de.renew.workflow.connector.caseHandlingPerspective"
-            hasPages="true"
-            icon="icons/connect.png"
-            id="de.renew.workflow.connector.newSimpleProjectWizard"
-            name="Neues Beispielprojekt"
-            project="true">
-      </wizard>
-      <category
-            id="de.renew.workflow.connector.newWizards"
-            name="Case Handling">
-      </category>
-   </extension>
-   <extension
-         point="org.eclipse.core.runtime.adapters">
-      <factory
-            adaptableType="de.renew.workflow.cases.Case"
-            class="de.renew.workflow.connector.CaseAdapterFactory">
-         <adapter
-               type="org.eclipse.ui.model.IWorkbenchAdapter2">
-         </adapter>
-         <adapter
-               type="org.eclipse.ui.model.IWorkbenchAdapter">
-         </adapter>
-      </factory>
-   </extension>
-   <extension
-         point="org.eclipse.ui.menus">
-      <menuContribution
-            locationURI="popup:org.eclipse.ui.popup.any">
-         <command
-               commandId="de.renew.workflow.connector.NewProject"
-               icon="icons/connect.png"
-               label="Verbinden"
-               style="push"
-               tooltip="Mit dem Workflowserver verbinden">
-            <visibleWhen
-                  checkEnabled="false">
-               <iterate
-                     operator="and">
-                  <adapt
-                        type="org.eclipse.core.resources.IProject">
-                     <test
-                           property="org.eclipse.core.resources.projectNature"
-                           value="de.renew.workflow.connector.simpleCaseHandlingProjectNature">
-                     </test>
-                  </adapt>
-               </iterate>
-            </visibleWhen>
-         </command>
-      </menuContribution>
-   </extension>
-
-
+   </extension>   	
 </plugin>
 

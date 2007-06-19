@@ -77,7 +77,7 @@ import org.kalypso.ui.wizards.imports.Messages;
 import org.kalypso.zml.ObjectFactory;
 import org.kalypso.zml.Observation;
 
-import de.renew.workflow.base.ISzenarioSourceProvider;
+import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 public class ImportObservationWizard extends Wizard implements INewWizard
 {
@@ -109,7 +109,7 @@ public class ImportObservationWizard extends Wizard implements INewWizard
     // dont let it be a INewWizard!
     final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
     final IEvaluationContext context = handlerService.getCurrentState();
-    m_project = ((IFolder) context.getVariable( ISzenarioSourceProvider.ACTIVE_SZENARIO_FOLDER_NAME )).getProject();
+    m_project = ((IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME )).getProject();
     m_selection = currentSelection;
     final List selectedResources = IDE.computeSelectedResources( currentSelection );
     if( !selectedResources.isEmpty() )

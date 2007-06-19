@@ -16,9 +16,10 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.kalypso.kalypso1d2d.pjt.SzenarioSourceProvider;
+import org.kalypso.kalypso1d2d.pjt.views.SzenarioDataProvider;
 import org.kalypso.ui.editor.featureeditor.FeatureTemplateView;
 
+import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 
 /**
  * Loads a template file in the current feature view. Requires that the current context contains the feature view. Use a
@@ -49,8 +50,8 @@ public class FeatureViewInputContextHandler extends AbstractHandler implements I
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
 
-    final IFolder szenarioFolder = (IFolder) context.getVariable( SzenarioSourceProvider.ACTIVE_SZENARIO_FOLDER_NAME );
-    final IFolder folder = SzenarioSourceProvider.findModelContext( szenarioFolder, m_featureViewInput );
+    final IFolder szenarioFolder = (IFolder) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
+    final IFolder folder = SzenarioDataProvider.findModelContext( szenarioFolder, m_featureViewInput );
     IFile file = null;
     if( folder != null && m_featureViewInput != null )
       file = folder.getFile( m_featureViewInput );

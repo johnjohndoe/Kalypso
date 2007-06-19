@@ -77,6 +77,7 @@ import org.kalypso.simulation.core.simspec.Modeldata;
 import org.kalypso.simulation.ui.calccase.CalcJobHandler;
 import org.kalypso.simulation.ui.calccase.ModelNature;
 
+import de.renew.workflow.cases.Case;
 import de.renew.workflow.connector.context.CaseHandlingProjectNature;
 
 /**
@@ -84,10 +85,10 @@ import de.renew.workflow.connector.context.CaseHandlingProjectNature;
  * 
  * @author Patrice Congo, Stefan Kurzbach
  */
-public class Kalypso1D2DProjectNature extends CaseHandlingProjectNature<Scenario>
+public class Kalypso1D2DProjectNature extends CaseHandlingProjectNature
 {
   public static final String ID = "org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature";
-  
+
   private final static Logger logger = Logger.getLogger( Kalypso1D2DProjectNature.class.getName() );
 
   private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.kalypso1d2d.pjt/debug" ) );
@@ -196,8 +197,9 @@ public class Kalypso1D2DProjectNature extends CaseHandlingProjectNature<Scenario
    * Constructs a path for the scenario relative to the project location.
    */
   @Override
-  public IPath getProjectPath( final Scenario scenario )
+  public IPath getProjectPath( final Case caze )
   {
+    final Scenario scenario = (Scenario) caze;
     if( scenario.getParentScenario() != null )
       return getProjectPath( scenario.getParentScenario() ).append( scenario.getName() );
     else
@@ -208,10 +210,10 @@ public class Kalypso1D2DProjectNature extends CaseHandlingProjectNature<Scenario
    * @see org.kalypso.kalypso1d2d.pjt.CaseHandlingProjectNature#scenarioAdded(de.renew.workflow.cases.Case)
    */
   @Override
-  public void caseAdded( final Scenario scenario )
+  public void caseAdded( final Case caze )
   {
-    super.caseAdded( scenario );
-    final IFolder newFolder = getProject().getFolder( getProjectPath( scenario ) );
+    super.caseAdded( caze );
+    final IFolder newFolder = getProject().getFolder( getProjectPath( caze ) );
     final URL resource = getClass().getResource( EMPTY_PROJECT_ZIP_PATH );
     final IPath newLocation = newFolder.getLocation();
     try

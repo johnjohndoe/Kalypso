@@ -10,11 +10,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang.ObjectUtils;
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -23,7 +24,6 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.kalypso1d2d.pjt.SzenarioSourceProvider;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IOperationalModel1D2D;
@@ -41,7 +41,7 @@ import org.kalypso.util.pool.PoolableObjectType;
 import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
-import de.renew.workflow.cases.ICaseDataProvider;
+import de.renew.workflow.connector.cases.ICaseDataProvider;
 
 /**
  * Objects of this class are responsible for loading the gml-workspaces for the current selected simulation model and
@@ -140,7 +140,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
    */
   private Map<Class< ? extends IFeatureWrapper2>, KeyPoolListener> m_keyMap = new HashMap<Class< ? extends IFeatureWrapper2>, KeyPoolListener>();
 
-  public synchronized void setCurrent( final IFolder szenarioFolder )
+  public synchronized void setCurrent( final IContainer szenarioFolder )
   {
     try
     {
@@ -157,8 +157,25 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
       final Class< ? extends IFeatureWrapper2> wrapperClass = entry.getKey();
       final String gmlLocation = entry.getValue();
 
-      resetKeyForProject( szenarioFolder, wrapperClass, gmlLocation );
+      resetKeyForProject( (IFolder) szenarioFolder, wrapperClass, gmlLocation );
     }
+  }
+
+  public static IFolder findModelContext( final IFolder szenarioFolder, final String modelFile )
+  {
+    if( szenarioFolder == null )
+      return null;
+
+    if( szenarioFolder.getFile( new Path( modelFile ) ).exists() )
+    {
+      return szenarioFolder;
+    }
+    final IContainer parent = szenarioFolder.getParent();
+    if( parent.getType() != IResource.PROJECT )
+      return findModelContext( (IFolder) parent, modelFile );
+    else
+      return null;
+
   }
 
   public void reloadModel( )
@@ -197,7 +214,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
       URL context;
       try
       {
-        final IFolder folder = SzenarioSourceProvider.findModelContext( szenarioFolder, gmlLocation );
+        final IFolder folder = findModelContext( szenarioFolder, gmlLocation );
         if( folder != null )
         {
           context = ResourceUtilities.createURL( folder );
@@ -208,8 +225,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
 
           try
           {
-            IPath path = new Path( gmlLocation );
-            IFile file = szenarioFolder.getProject().getFile( path );
+            IFile file = szenarioFolder.getProject().getFile( gmlLocation );
             URL url = FileLocator.resolve( file.getLocationURI().toURL() );
             File gmlFile = new File( url.toURI() );
             context = gmlFile.getParentFile().toURL();

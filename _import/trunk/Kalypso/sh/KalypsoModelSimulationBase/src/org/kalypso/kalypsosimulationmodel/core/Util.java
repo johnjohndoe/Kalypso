@@ -65,8 +65,8 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
-import de.renew.workflow.base.ISzenarioSourceProvider;
-import de.renew.workflow.cases.ICaseDataProvider;
+import de.renew.workflow.connector.cases.ICaseDataProvider;
+import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
  * Holds utility methods
@@ -89,7 +89,7 @@ public class Util
       IEvaluationContext currentState = service.getCurrentState();
       
       IFolder scenarioFolder = 
-        (IFolder) currentState.getVariable( ISzenarioSourceProvider.ACTIVE_SZENARIO_FOLDER_NAME );
+        (IFolder) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME);
       
       /// scenario
       return scenarioFolder;
@@ -100,7 +100,7 @@ public class Util
       throw new RuntimeException(th);
     }
   }
-  
+
   /**
    * Gets the szenario model
    */
@@ -111,7 +111,7 @@ public class Util
       IWorkbench workbench = PlatformUI.getWorkbench();
       IHandlerService service = (IHandlerService) workbench.getService( IHandlerService.class );
       IEvaluationContext currentState = service.getCurrentState();
-      ICaseDataProvider<IFeatureWrapper2> caseDataProvider = (ICaseDataProvider<IFeatureWrapper2>) currentState.getVariable( ISzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
+      ICaseDataProvider<IFeatureWrapper2> caseDataProvider = (ICaseDataProvider<IFeatureWrapper2>) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
       T model = caseDataProvider.getModel( modelClass );
 
       return model;
@@ -401,7 +401,8 @@ public class Util
       return null;
     }
   }
-  /**
+  
+/**
    * Get an {@link IFeatureWrapperCollection} from a feature list
    * property.
    * The feature type, the property type and the type of the collection 

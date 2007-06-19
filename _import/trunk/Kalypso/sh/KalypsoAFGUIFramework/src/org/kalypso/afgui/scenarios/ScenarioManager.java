@@ -15,8 +15,8 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.jwsdp.JaxbUtilities;
 
 import de.renew.workflow.cases.Case;
-import de.renew.workflow.connector.context.ICaseManager;
-import de.renew.workflow.connector.context.AbstractCaseManager;
+import de.renew.workflow.connector.cases.AbstractCaseManager;
+import de.renew.workflow.connector.cases.ICaseManager;
 
 /**
  * This implementation of {@link ICaseManager} persists the scenario model data in the project workspace.

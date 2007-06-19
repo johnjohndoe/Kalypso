@@ -22,8 +22,8 @@ import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.ui.wizards.imports.Messages;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
-import de.renew.workflow.base.ISzenarioSourceProvider;
-import de.renew.workflow.cases.ICaseDataProvider;
+import de.renew.workflow.connector.cases.ICaseDataProvider;
+import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
@@ -66,7 +66,7 @@ public class ImportWizard extends Wizard implements INewWizard
     selection = iSelection;
     final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
     final IEvaluationContext context = handlerService.getCurrentState();
-    final ICaseDataProvider<IFeatureWrapper2> szenarioDataProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( ISzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
+    final ICaseDataProvider<IFeatureWrapper2> szenarioDataProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
     ITerrainModel model;
     try
     {
@@ -83,7 +83,7 @@ public class ImportWizard extends Wizard implements INewWizard
     // if( feature.getRoughnessPolygons().size() > 0 )
     // throw new ExceptionInInitializerError("Roughness data allready loaded!");
     // else
-    m_szenarioFolder = (IFolder) context.getVariable( ISzenarioSourceProvider.ACTIVE_SZENARIO_FOLDER_NAME );
+    m_szenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
     m_project = m_szenarioFolder.getProject();
     // m_project = (IProject) context.get( "Project" );
     // m_szenarioFolder = (IFolder) context.get( "SzenarioPath" );

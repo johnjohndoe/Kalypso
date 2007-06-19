@@ -54,6 +54,8 @@ import org.eclipse.ui.PlatformUI;
 
 import de.renew.workflow.cases.Case;
 import de.renew.workflow.connector.WorkflowConnectorPlugin;
+import de.renew.workflow.connector.cases.ICaseManager;
+import de.renew.workflow.connector.cases.ICaseManagerListener;
 
 /**
  * This project nature adds the possibility to handle cases inside the project and keep information about the current
@@ -61,21 +63,22 @@ import de.renew.workflow.connector.WorkflowConnectorPlugin;
  * 
  * TODO: this is a nature which gets instantiated via extension point stuff. Is it really sensefull to have template
  * parameters for that class?. The type of T is never decided on compile time....
- *
+ * 
  * @author Stefan Kurzbach
  */
-public abstract class CaseHandlingProjectNature<T extends Case> implements IProjectNature, ICaseManagerListener<T>
+@SuppressWarnings("unchecked")
+public abstract class CaseHandlingProjectNature implements IProjectNature, ICaseManagerListener
 {
-  private ICaseManager<T> m_caseManager;
+  private ICaseManager m_caseManager;
 
   private IProject m_project;
 
   /**
    * Creates a specific case manager for this project
    */
-  protected abstract ICaseManager<T> createCaseManager( final IProject project ) throws CoreException;
+  protected abstract ICaseManager createCaseManager( final IProject project ) throws CoreException;
 
-  public ICaseManager<T> getCaseManager( ) throws CoreException
+  public ICaseManager getCaseManager( ) throws CoreException
   {
     if( m_caseManager == null )
     {
@@ -113,7 +116,7 @@ public abstract class CaseHandlingProjectNature<T extends Case> implements IProj
   /**
    * @see org.eclipse.core.resources.IProjectNature#setProject(org.eclipse.core.resources.IProject)
    */
-  synchronized public void setProject( final IProject project )
+  public void setProject( final IProject project )
   {
     this.m_project = project;
   }
@@ -121,15 +124,15 @@ public abstract class CaseHandlingProjectNature<T extends Case> implements IProj
   /**
    * Constructs a path for the case relative to the project location.
    */
-  public IPath getProjectPath( final T caze )
+  public IPath getProjectPath( final Case caze )
   {
-    return new Path( caze.getName() );
+    return Path.EMPTY;// caze.getName() );
   }
 
   /**
    * @see de.renew.workflow.connector.context.ICaseManagerListener#caseAdded(de.renew.workflow.cases.Case)
    */
-  public void caseAdded( final T caze )
+  public void caseAdded( final Case caze )
   {
     final IFolder newFolder = m_project.getFolder( getProjectPath( caze ) );
 
@@ -142,14 +145,14 @@ public abstract class CaseHandlingProjectNature<T extends Case> implements IProj
       catch( final CoreException e )
       {
         final Shell activeShell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
-        final Status status = new Status( IStatus.ERROR,WorkflowConnectorPlugin.PLUGIN_ID,0, "", e);
+        final Status status = new Status( IStatus.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, 0, "", e );
         ErrorDialog.openError( activeShell, "Problem", "Konnte neue Falldaten nicht erzeugen.", status );
         WorkflowConnectorPlugin.getDefault().getLog().log( status );
       }
     }
   }
 
-  public void caseRemoved( final T caze )
+  public void caseRemoved( final Case caze )
   {
     final IFolder folder = m_project.getFolder( getProjectPath( caze ) );
     try
@@ -159,7 +162,7 @@ public abstract class CaseHandlingProjectNature<T extends Case> implements IProj
     catch( final CoreException e )
     {
       final Shell activeShell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
-      final Status status = new Status( IStatus.ERROR,WorkflowConnectorPlugin.PLUGIN_ID,0, "", e);
+      final Status status = new Status( IStatus.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, 0, "", e );
       ErrorDialog.openError( activeShell, "Problem", "Konnte Falldaten nicht löschen.", status );
       WorkflowConnectorPlugin.getDefault().getLog().log( status );
     }

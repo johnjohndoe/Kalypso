@@ -6,7 +6,7 @@ package org.kalypso.afgui.scenarios;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
-import de.renew.workflow.connector.context.ICaseManager;
+import de.renew.workflow.connector.cases.ICaseManager;
 
 /**
  * An {@link IScenarioManager} manages all the scenarios in a project. It provides metadata about the scenarios and

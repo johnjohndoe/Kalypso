@@ -59,10 +59,11 @@ import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.wizards.IWizardDescriptor;
-import org.kalypso.kalypso1d2d.pjt.SzenarioSourceProvider;
 import org.kalypso.kalypso1d2d.pjt.views.SzenarioDataProvider;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler;
+
+import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 
 /**
  * @author madanago
@@ -78,11 +79,11 @@ public class ImportElevationHandler extends AbstractHandler
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final SzenarioDataProvider szenarioDataProvider = (SzenarioDataProvider) context.getVariable( SzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
+    final SzenarioDataProvider szenarioDataProvider = (SzenarioDataProvider) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
     try
     {
       final ITerrainModel terrainModel = szenarioDataProvider.getModel( ITerrainModel.class );
-      final IFolder modelFolder = (IFolder) context.getVariable( SzenarioSourceProvider.ACTIVE_SZENARIO_FOLDER_NAME );
+      final IFolder modelFolder = (IFolder) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
 
       final IFolder temFolder = modelFolder.getFolder( "models/native_tem" );
 

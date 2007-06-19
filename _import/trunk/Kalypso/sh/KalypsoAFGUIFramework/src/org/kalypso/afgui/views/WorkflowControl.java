@@ -38,14 +38,13 @@ import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.i18n.Messages;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 
-import de.renew.workflow.base.Activity;
 import de.renew.workflow.base.Task;
 import de.renew.workflow.base.TaskGroup;
 import de.renew.workflow.base.Workflow;
-import de.renew.workflow.base.Activity.Help;
-import de.renew.workflow.cases.TaskExecutionException;
-import de.renew.workflow.connector.ITaskExecutor;
-import de.renew.workflow.connector.event.IWorklistChangeListener;
+import de.renew.workflow.base.Task.Help;
+import de.renew.workflow.connector.IWorklistChangeListener;
+import de.renew.workflow.connector.cases.TaskExecutionException;
+import de.renew.workflow.connector.worklist.ITaskExecutor;
 
 /**
  * @author Stefan Kurzbach
@@ -94,9 +93,9 @@ public class WorkflowControl implements IWorklistChangeListener
       protected void doUpdateItem( final Item item, final Object element )
       {
         super.doUpdateItem( item, element );
-        if( item != null && element instanceof Activity )
+        if( item != null && element instanceof Task )
         {
-          item.setData( "_HELP", ((Activity) element).getHelp() ); //$NON-NLS-1$
+          item.setData( "_HELP", ((Task) element).getHelp() ); //$NON-NLS-1$
         }
       }
     };
@@ -312,7 +311,7 @@ public class WorkflowControl implements IWorklistChangeListener
     if( m_lastTreePath != null )
     {
       final Object lastSegment = m_lastTreePath.getLastSegment();
-      memento.putString( MEMENTO_LAST_SELECTION, ((Activity) lastSegment).getURI() );
+      memento.putString( MEMENTO_LAST_SELECTION, ((Task) lastSegment).getURI() );
     }
   }
 

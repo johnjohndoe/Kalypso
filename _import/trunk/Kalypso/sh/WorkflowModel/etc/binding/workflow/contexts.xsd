@@ -4,7 +4,9 @@
 		elements and types
 		============================================================== -->
 
-	<element name="_Context" type="kwf:ContextType" abstract="true" />
+	<element name="_Context" type="kwf:ContextType" abstract="true" />	
+	<element name="_WorkbenchPartContext" type="kwf:WorkbenchPartContextType" abstract="true"/>
+	<element name="PerspectiveContext" type="kwf:PerspectiveContextType" />		
 
 	<simpleType name="EWizardType">
 		<annotation>
@@ -24,11 +26,11 @@
 			<element ref="kwf:_Context" minOccurs="0" maxOccurs="unbounded">
 				<annotation>
 					<appinfo>
-						<jaxb:property name="SubContexts" />
+						<jaxb:property name="ExtensionContexts" />
 					</appinfo>
 				</annotation>
 			</element>
-		</sequence>
+		</sequence>			
 		<attribute name="id" type="ID" use="required" />
 		<attribute name="parent" type="IDREF">
 			<annotation>
@@ -40,33 +42,55 @@
 			</annotation>
 		</attribute>
 	</complexType>
+	
+	<complexType name="PerspectiveContextType">
+		<complexContent>
+			<extension base="kwf:ContextType">
+				<sequence>
+					<element ref="kwf:_WorkbenchPartContext" minOccurs="0" maxOccurs="unbounded">
+						<annotation>
+							<appinfo>
+								<jaxb:property name="SubContexts" />
+							</appinfo>
+						</annotation>
+					</element>
+				</sequence>
+				<attribute name="perspectiveId" type="string" />
+			</extension>
+		</complexContent>
+	</complexType>
+	
+	<complexType name="WorkbenchPartContextType">
+		<complexContent>
+			<extension base="kwf:ContextType">
+				<sequence>
+					<element ref="kwf:ExtensionContext" minOccurs="0" maxOccurs="unbounded">
+						<annotation>
+							<appinfo>
+								<jaxb:property name="SubContexts" />
+							</appinfo>
+						</annotation>
+					</element>
+				</sequence>					
+				<attribute name="partId" type="string" />
+			</extension>
+		</complexContent>
+	</complexType>
 
-	<element name="PerspectiveContext" substitutionGroup="kwf:_Context">
+	<element name="EditorContext" substitutionGroup="kwf:_WorkbenchPartContext">
 		<complexType>
 			<complexContent>
-				<extension base="kwf:ContextType">
-					<attribute name="perspectiveId" type="string" />
+				<extension base="kwf:WorkbenchPartContextType">								
+					<attribute name="input" type="string" />
 				</extension>
 			</complexContent>
 		</complexType>
 	</element>
 
-	<element name="EditorContext" substitutionGroup="kwf:_Context">
+	<element name="ViewContext" substitutionGroup="kwf:_WorkbenchPartContext">
 		<complexType>
 			<complexContent>
-				<extension base="kwf:ContextType">
-					<attribute name="editorId" type="string" />
-				</extension>
-			</complexContent>
-		</complexType>
-	</element>
-
-	<element name="ViewContext" substitutionGroup="kwf:_Context">
-		<complexType>
-			<complexContent>
-				<extension base="kwf:ContextType">
-					<attribute name="viewId" type="string" />
-				</extension>
+				<extension base="kwf:WorkbenchPartContextType"/>									
 			</complexContent>
 		</complexType>
 	</element>
@@ -82,15 +106,7 @@
 		</complexType>
 	</element>
 
-	<complexType name="EditorInputContext">
-		<complexContent>
-			<extension base="kwf:ContextType">
-				<attribute name="input" type="string" />
-			</extension>
-		</complexContent>
-	</complexType>
-
-	<element name="ExtensionContext" substitutionGroup="kwf:_Context">
+	<element name="ExtensionContext">
 		<complexType>
 			<complexContent>
 				<extension base="kwf:ContextType">
@@ -108,10 +124,19 @@
 		</complexType>
 	</element>
 
-	<element name="MultiContext" substitutionGroup="kwf:_Context">
+	<element name="WorkbenchSiteContext" substitutionGroup="kwf:_WorkbenchPartContext">
 		<complexType>
 			<complexContent>
-				<extension base="kwf:ContextType" />
+				<extension base="kwf:WorkbenchPartContextType">
+					<sequence>
+						<annotation>
+							<appinfo>
+								<jaxb:property name="PartContexts"/>									
+							</appinfo>
+						</annotation>
+						<element ref="kwf:_WorkbenchPartContext" minOccurs="0" maxOccurs="unbounded"/>													
+					</sequence>
+				</extension>
 			</complexContent>
 		</complexType>
 	</element>

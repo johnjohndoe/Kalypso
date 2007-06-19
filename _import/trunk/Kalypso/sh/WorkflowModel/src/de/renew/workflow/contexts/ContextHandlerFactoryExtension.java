@@ -52,7 +52,6 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 
 import de.renew.workflow.base.WorkflowModelPlugin;
-import de.renew.workflow.contexts.ExtensionContext;
 
 /**
  * Helper class to read and cache context handler factories from extension point.
@@ -66,13 +65,13 @@ public class ContextHandlerFactoryExtension
 
   private final static String CONTEXT_HANDLER_FACTORY_EXTENSION_POINT = "de.renew.workflow.model.contextHandlerFactories";
 
-  public static IContextHandlerFactory getFactory( final ExtensionContext multiContext )
+  public static IContextHandlerFactory getFactory( final ExtensionContext extContext )
   {
     final Map<String, IContextHandlerFactory> map = getFactoryMap();
     if( map == null )
       return null;
 
-    return map.get( multiContext.getHandlerFactoryId() );
+    return map.get( extContext.getHandlerFactoryId() );
   }
 
   private static Map<String, IContextHandlerFactory> getFactoryMap( )

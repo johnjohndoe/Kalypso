@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Properties;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
@@ -18,12 +19,15 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.afgui.scenarios.Scenario;
-import org.kalypso.kalypso1d2d.pjt.actions.PerspectiveWatcher;
+import org.kalypso.kalypso1d2d.pjt.perspective.PerspectiveWatcher;
+import org.kalypso.kalypso1d2d.pjt.views.SzenarioDataProvider;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.osgi.framework.BundleContext;
 
-import de.renew.workflow.base.ISzenarioSourceProvider;
-import de.renew.workflow.cases.ICaseDataProvider;
+import de.renew.workflow.cases.Case;
+import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 import de.renew.workflow.connector.context.ActiveWorkContext;
+import de.renew.workflow.connector.context.CaseHandlingProjectNature;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -45,9 +49,11 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
 
   private final PerspectiveWatcher<Scenario> m_perspectiveWatcher = new PerspectiveWatcher<Scenario>();
 
-  private SzenarioSourceProvider m_szenarioSourceProvider;
-
   private ActiveWorkContext<Scenario> m_activeWorkContext;
+
+  private CaseHandlingSourceProvider<Scenario, IFeatureWrapper2> m_szenarioSourceProvider;
+
+  private SzenarioDataProvider m_szenarioDataProvider;
 
   /**
    * The constructor
@@ -85,6 +91,7 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
       /**
        * @see org.eclipse.ui.IWorkbenchListener#preShutdown(org.eclipse.ui.IWorkbench, boolean)
        */
+      @SuppressWarnings("synthetic-access")
       public boolean preShutdown( final IWorkbench workbench, final boolean forced )
       {
         stopSzenarioSourceProvider();
@@ -134,9 +141,9 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
     return getDefault().getImageRegistry().get( key );
   }
 
-  public ICaseDataProvider<Scenario> getDataProvider( )
+  public SzenarioDataProvider getDataProvider( )
   {
-    return (ICaseDataProvider<Scenario>) m_szenarioSourceProvider.getCurrentState().get( ISzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
+    return m_szenarioDataProvider;
   }
 
   private void startSzenarioSourceProvider( )
@@ -161,7 +168,8 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
       m_activeWorkContext = new ActiveWorkContext<Scenario>( properties, Kalypso1D2DProjectNature.ID );
       final IWorkbench workbench = PlatformUI.getWorkbench();
       final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
-      m_szenarioSourceProvider = new SzenarioSourceProvider( m_activeWorkContext );
+      m_szenarioDataProvider = new SzenarioDataProvider();
+      m_szenarioSourceProvider = new CaseHandlingSourceProvider<Scenario, IFeatureWrapper2>( m_activeWorkContext, m_szenarioDataProvider );
       handlerService.addSourceProvider( m_szenarioSourceProvider );
       m_activeWorkContext.addActiveContextChangeListener( m_perspectiveWatcher );
     }
@@ -169,7 +177,7 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
 
   private void stopSzenarioSourceProvider( )
   {
-    final Properties properties = m_activeWorkContext.createProperties();
+    final Properties properties = createProperties();
     final String fileName = getStateLocation().append( ACTIVE_WORKCONTEXT_MEMENTO ).toOSString();
     final File file = new File( fileName );
     if( file.exists() )
@@ -188,25 +196,49 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
     {
       e1.printStackTrace();
     }
-    
+
     if( PlatformUI.isWorkbenchRunning() )
-    {               
+    {
       final IWorkbench workbench = PlatformUI.getWorkbench();
       try
       {
-        m_activeWorkContext.setActiveProject( null );        
+        m_activeWorkContext.setCurrentCase( null );
       }
       catch( final CoreException e )
       {
         e.printStackTrace();
-      }      
+      }
       final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
       if( handlerService != null )
       {
         handlerService.removeSourceProvider( m_szenarioSourceProvider );
       }
-      m_activeWorkContext.removeActiveContextChangeListener( m_perspectiveWatcher );      
+      m_activeWorkContext.removeActiveContextChangeListener( m_perspectiveWatcher );
     }
   }
 
+  /**
+   * Creates properties that contain current project and case information for restoring state later
+   */
+  private Properties createProperties( )
+  {
+    final Properties properties = new Properties();
+    final CaseHandlingProjectNature currentProject = m_activeWorkContext.getCurrentProject();
+    if( currentProject != null )
+    {
+      final IProject project = currentProject.getProject();
+      if( project != null )
+      {
+        final String projectPath = project.getName();
+        properties.put( ActiveWorkContext.MEMENTO_PROJECT, projectPath );
+      }
+      final Case currentCase = m_activeWorkContext.getCurrentCase();
+      if( currentCase != null )
+      {
+        final String caseString = currentCase.getURI();
+        properties.put( ActiveWorkContext.MEMENTO_CASE, caseString );
+      }
+    }
+    return properties;
+  }
 }

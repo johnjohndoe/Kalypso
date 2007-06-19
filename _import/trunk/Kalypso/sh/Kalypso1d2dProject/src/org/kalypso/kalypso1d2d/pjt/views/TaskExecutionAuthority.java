@@ -55,9 +55,9 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 
 import de.renew.workflow.base.Task;
-import de.renew.workflow.cases.ICaseDataProvider;
-import de.renew.workflow.connector.ITaskExecutionAuthority;
 import de.renew.workflow.connector.WorkflowConnectorPlugin;
+import de.renew.workflow.connector.cases.ICaseDataProvider;
+import de.renew.workflow.connector.worklist.ITaskExecutionAuthority;
 
 /**
  * @author Stefan Kurzbach

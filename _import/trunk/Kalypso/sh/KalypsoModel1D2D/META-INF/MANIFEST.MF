@@ -21,6 +21,7 @@ Require-Bundle:
  org.kalypso.model.wspm.ui,
  org.kalypso.model.wspm.tuhh.ui,
  de.renew.workflow.model,
+ de.renew.workflow.connector,
  org.kalypso.chart
 Eclipse-LazyStart: true 
 Export-Package: org.kalypso.kalypsomodel1d2d,

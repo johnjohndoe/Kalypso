@@ -20,8 +20,9 @@ Bundle-ClassPath: .,
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Export-Package: de.renew.workflow.connector,
+ de.renew.workflow.connector.cases,
  de.renew.workflow.connector.context,
- de.renew.workflow.connector.event
+ de.renew.workflow.connector.worklist
 Require-Bundle: de.renew.workflow.model,
  org.eclipse.core.runtime,
  org.eclipse.core.resources,

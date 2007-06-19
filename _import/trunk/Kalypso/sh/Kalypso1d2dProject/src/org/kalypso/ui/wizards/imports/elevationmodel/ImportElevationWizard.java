@@ -65,6 +65,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
+import org.kalypso.kalypso1d2d.pjt.views.SzenarioDataProvider;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
@@ -80,7 +81,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
-import de.renew.workflow.cases.ICaseDataProvider;
+import de.renew.workflow.connector.cases.ICaseDataProvider;
 
 /**
  * @author Madanagopal
@@ -234,7 +235,7 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
                             temFeature, 
                             FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
             // TODO check why saving thow pool does not work
-            ICaseDataProvider caseDataProvider = Util.getCaseDataProvider();
+            SzenarioDataProvider caseDataProvider = Util.getCaseDataProvider();
             caseDataProvider.postCommand( 
                 ITerrainModel.class, 
                 new AddTerrainelevationModelCmd());

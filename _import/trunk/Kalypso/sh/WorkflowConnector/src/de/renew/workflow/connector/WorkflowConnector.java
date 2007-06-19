@@ -31,12 +31,10 @@ import de.renew.workflow.ClientImpl;
 import de.renew.workflow.WorkItem;
 import de.renew.workflow.WorkItemFilterExpression;
 import de.renew.workflow.WorkflowManager;
-import de.renew.workflow.connector.event.IWorklistChangeListener;
+import de.renew.workflow.cases.Case;
 
-public class WorkflowConnector
+public class WorkflowConnector implements IWorkflowConnector
 {
-  private static final String TASK_NAMESPACE_PREFIX = "http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#";
-
   private static final String SERVICE_NAME = "de.renew.workflow.WorkflowManager";
 
   private static Logger logger = Logger.getLogger( WorkflowConnector.class.getName() );
@@ -51,7 +49,7 @@ public class WorkflowConnector
 
   private static final boolean m_isWorkflowMode = true;
 
-  private static WorkflowConnector _connector;
+  private static IWorkflowConnector _connector;
 
   private LoginInfo m_login;
 
@@ -65,10 +63,12 @@ public class WorkflowConnector
 
   private Client m_client;
 
+  private Case m_activeCase;
+
   /**
    * @return the WorkflowConnector if connection is established, null otherwise
    */
-  public static WorkflowConnector getConnector( )
+  public static IWorkflowConnector getConnector( )
   {
     if( _connector == null )
     {
@@ -86,6 +86,16 @@ public class WorkflowConnector
 
   private WorkflowConnector( )
   {
+  }
+
+  public Case getActiveCase( )
+  {
+    return m_activeCase;
+  }
+
+  public void setActiveCase( final Case activeCase )
+  {
+    m_activeCase = activeCase;
   }
 
   public void connect( )
@@ -145,7 +155,7 @@ public class WorkflowConnector
     {
       try
       {
-        return getAgenda().getAvailables( WorkItemFilterExpression.NO_FILTER );
+        return getAgenda().getAvailables( new WorkItemFilterExpression( m_activeCase.getURI() ) );
       }
       catch( final RemoteException e )
       {
@@ -377,7 +387,7 @@ public class WorkflowConnector
     {
       for( final Activity a : getAgenda().getRequesteds() )
       {
-        final String name = TASK_NAMESPACE_PREFIX + a.getWorkItem().getTask().getName();
+        final String name = a.getWorkItem().getTask().getName();
         if( name.equals( id ) )
         {
           return a;
@@ -405,7 +415,7 @@ public class WorkflowConnector
     {
       for( final WorkItem w : getAvailables() )
       {
-        final String name = TASK_NAMESPACE_PREFIX + w.getTask().getName();
+        final String name = w.getTask().getName();
         if( name.equals( id ) )
         {
           return w;

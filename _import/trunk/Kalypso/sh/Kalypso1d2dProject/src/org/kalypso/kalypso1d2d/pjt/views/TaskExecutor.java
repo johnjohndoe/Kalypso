@@ -54,19 +54,22 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
-import org.kalypso.kalypso1d2d.pjt.actions.PerspectiveWatcher;
+import org.kalypso.kalypso1d2d.pjt.perspective.Perspective;
+import org.kalypso.kalypso1d2d.pjt.perspective.PerspectiveWatcher;
+import org.kalypso.ogc.gml.outline.GisMapOutlineView;
 
 import de.renew.workflow.base.Task;
 import de.renew.workflow.base.TaskGroup;
-import de.renew.workflow.cases.TaskExecutionException;
-import de.renew.workflow.connector.ContextActivation;
-import de.renew.workflow.connector.ContextActivationException;
-import de.renew.workflow.connector.ITaskExecutionAuthority;
-import de.renew.workflow.connector.ITaskExecutor;
-import de.renew.workflow.connector.TaskExecutionListener;
+import de.renew.workflow.connector.cases.TaskExecutionException;
+import de.renew.workflow.connector.context.ContextActivation;
+import de.renew.workflow.connector.context.ContextActivationException;
+import de.renew.workflow.connector.worklist.ITaskExecutionAuthority;
+import de.renew.workflow.connector.worklist.ITaskExecutor;
+import de.renew.workflow.connector.worklist.TaskExecutionListener;
+import de.renew.workflow.contexts.WorkbenchSiteContext;
 import de.renew.workflow.contexts.ContextType;
 import de.renew.workflow.contexts.IContextHandlerFactory;
-import de.renew.workflow.contexts.MultiContext;
+import de.renew.workflow.contexts.WorkbenchPartContextType;
 import de.renew.workflow.contexts.ViewContext;
 
 /**
@@ -112,8 +115,11 @@ public class TaskExecutor implements ITaskExecutor
     if( context != null )
     {
       activateContext( context );
-      final Collection<String> viewsToKeep = collectOpenedViews( context );
-      PerspectiveWatcher.cleanPerspective( PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), viewsToKeep );
+      final Collection<String> partsToKeep = collectOpenedViews( context );
+      partsToKeep.add( WorkflowView.ID );
+      partsToKeep.add( Perspective.SCENARIO_VIEW_ID );
+      partsToKeep.add( GisMapOutlineView.ID);
+      PerspectiveWatcher.cleanPerspective( PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), partsToKeep );
     }
     try
     {
@@ -147,15 +153,16 @@ public class TaskExecutor implements ITaskExecutor
       result = new ArrayList<String>();
     }
     if( context instanceof ViewContext )
-      result.add( ((ViewContext) context).getViewId() );
-    else if( context instanceof MultiContext )
+      result.add( ((ViewContext) context).getPartId() );
+    else if( context instanceof WorkbenchSiteContext )
     {
-      final List<JAXBElement< ? extends ContextType>> subContexts = context.getSubContexts();
-      for( JAXBElement< ? extends ContextType> element : subContexts )
+      final WorkbenchSiteContext multiContext = (WorkbenchSiteContext) context;
+      final List<JAXBElement<? extends WorkbenchPartContextType>> subContexts = multiContext.getPartContexts();
+      for( JAXBElement< ? extends WorkbenchPartContextType> element : subContexts )
       {
         final ContextType value = element.getValue();
         if( value instanceof ViewContext )
-          result.add( ((ViewContext) value).getViewId() );
+          result.add( ((ViewContext) value).getPartId() );
       }
     }
     return result;

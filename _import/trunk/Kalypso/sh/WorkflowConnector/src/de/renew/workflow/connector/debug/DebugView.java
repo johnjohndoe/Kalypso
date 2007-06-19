@@ -17,15 +17,16 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.part.ViewPart;
 
+import de.renew.workflow.connector.IWorkflowConnector;
+import de.renew.workflow.connector.IWorklistChangeListener;
 import de.renew.workflow.connector.WorkflowConnector;
-import de.renew.workflow.connector.event.IWorklistChangeListener;
 
 public class DebugView extends ViewPart implements IWorklistChangeListener
 {
 
   public static final String VIEW_NAME = "WorkflowConnector.debugView";
 
-  private WorkflowConnector m_connector;
+  private IWorkflowConnector m_connector;
 
   private TableViewer m_tableViewer;
 

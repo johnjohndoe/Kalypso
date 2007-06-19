@@ -58,7 +58,8 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilitites;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
-import org.kalypso.kalypso1d2d.pjt.SzenarioSourceProvider;
+
+import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 
 
 /**
@@ -74,7 +75,7 @@ public class StartCalculationHandler extends AbstractHandler implements IHandler
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
     final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
-    final IFolder scenarioFolder = (IFolder) context.getVariable( SzenarioSourceProvider.ACTIVE_SZENARIO_FOLDER_NAME );
+    final IFolder scenarioFolder = (IFolder) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
 
     final IProject project = scenarioFolder.getProject();
     try

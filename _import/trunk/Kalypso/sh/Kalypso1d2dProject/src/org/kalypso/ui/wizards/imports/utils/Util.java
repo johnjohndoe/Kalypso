@@ -10,11 +10,12 @@ import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.kalypso.kalypso1d2d.pjt.views.SzenarioDataProvider;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelRoughnessConsts;
 import org.kalypsodeegree.model.feature.Feature;
 
-import de.renew.workflow.base.ISzenarioSourceProvider;
-import de.renew.workflow.cases.ICaseDataProvider;
+import de.renew.workflow.connector.cases.ICaseDataProvider;
+import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
  * Holds utility methods
@@ -58,14 +59,14 @@ public class Util
   /**
    * Gets the szenario data provider
    */
-  public static final ICaseDataProvider getCaseDataProvider( )
+  public static final SzenarioDataProvider getCaseDataProvider( )
   {
     try
     {
       IWorkbench workbench = PlatformUI.getWorkbench();
       IHandlerService service = (IHandlerService) workbench.getService( IHandlerService.class );
       IEvaluationContext currentState = service.getCurrentState();
-      ICaseDataProvider caseDataProvider = (ICaseDataProvider) currentState.getVariable( ISzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
+      SzenarioDataProvider caseDataProvider = (SzenarioDataProvider) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
       return caseDataProvider;
     }
     catch( Throwable th )

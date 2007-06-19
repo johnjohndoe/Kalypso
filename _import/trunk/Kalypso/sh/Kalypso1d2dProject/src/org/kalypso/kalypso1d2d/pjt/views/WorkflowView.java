@@ -15,11 +15,11 @@ import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.afgui.views.WorkflowControl;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 
-import de.renew.workflow.connector.ITaskExecutor;
-import de.renew.workflow.connector.TaskExecutionListener;
 import de.renew.workflow.connector.context.ActiveWorkContext;
 import de.renew.workflow.connector.context.CaseHandlingProjectNature;
 import de.renew.workflow.connector.context.IActiveContextChangeListener;
+import de.renew.workflow.connector.worklist.ITaskExecutor;
+import de.renew.workflow.connector.worklist.TaskExecutionListener;
 import de.renew.workflow.contexts.WorkflowContextHandlerFactory;
 
 /**
@@ -27,7 +27,7 @@ import de.renew.workflow.contexts.WorkflowContextHandlerFactory;
  */
 public class WorkflowView extends ViewPart
 {
-  final static public String ID = "org.kalypso.kalypso1d2d.pjt.views.WorkflowView";
+  final static public String ID = "org.kalypso.kalypso1d2d.pjt.views.WorklistView";
 
   static Logger LOGGER = Logger.getLogger( WorkflowView.class.getName() );
 
@@ -47,7 +47,7 @@ public class WorkflowView extends ViewPart
     /**
      * @see org.kalypso.kalypso1d2d.pjt.IActiveContextChangeListener#activeProjectChanged(org.eclipse.core.resources.IProject)
      */
-    public void activeContextChanged( final CaseHandlingProjectNature<Scenario> newProject, final Scenario scenario )
+    public void activeContextChanged( final CaseHandlingProjectNature newProject, final Scenario scenario )
     {
       handleContextChanged( newProject, scenario );
     }
@@ -63,12 +63,12 @@ public class WorkflowView extends ViewPart
     handleContextChanged( m_activeWorkContext.getCurrentProject(), m_activeWorkContext.getCurrentCase() );
   }
 
-  protected void handleContextChanged( final CaseHandlingProjectNature<Scenario> newProject, final Scenario scenario )
+  protected void handleContextChanged( final CaseHandlingProjectNature newProject, final Scenario scenario )
   {
     if( scenario != null )
     {
       setContentDescription( "Aktives Szenario: " + scenario.getName() + " (" + newProject.getProject().getName() + ")" );
-      m_workflowControl.setWorkflow( m_activeWorkContext.getCaseManager().getCurrentWorkflow() );
+      m_workflowControl.setWorkflow( m_activeWorkContext.getCurrentWorklist() );
     }
     else
     {

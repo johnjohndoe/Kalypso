@@ -42,16 +42,6 @@ package de.renew.workflow.contexts;
 
 import org.eclipse.core.commands.IHandler;
 
-import de.renew.workflow.contexts.ContextType;
-import de.renew.workflow.contexts.EWizardType;
-import de.renew.workflow.contexts.EditorContext;
-import de.renew.workflow.contexts.EditorInputContext;
-import de.renew.workflow.contexts.ExtensionContext;
-import de.renew.workflow.contexts.MultiContext;
-import de.renew.workflow.contexts.PerspectiveContext;
-import de.renew.workflow.contexts.ViewContext;
-import de.renew.workflow.contexts.WizardContext;
-
 /**
  * Creates the context handlers for the basic workflow contexts. These are {@link PerspectiveContext},
  * {@link ViewContext}, {@link EditorContext}, {@link EditorInputContext} and {@link WizardContext}.
@@ -65,9 +55,9 @@ public class WorkflowContextHandlerFactory implements IContextHandlerFactory
    */
   public IHandler getHandler( final ContextType context )
   {
-    if( context instanceof PerspectiveContext )
+    if( context instanceof PerspectiveContextType )
     {
-      final PerspectiveContext perspectiveContext = (PerspectiveContext) context;
+      final PerspectiveContextType perspectiveContext = (PerspectiveContextType) context;
       final String perspectiveId = perspectiveContext.getPerspectiveId();
       final PerspectiveContextHandler perspectiveContextHandler = new PerspectiveContextHandler( perspectiveId );
       return perspectiveContextHandler;
@@ -75,18 +65,17 @@ public class WorkflowContextHandlerFactory implements IContextHandlerFactory
     else if( context instanceof ViewContext )
     {
       final ViewContext viewContext = (ViewContext) context;
-      final String viewId = viewContext.getViewId();
+      final String viewId = viewContext.getPartId();
       final ViewContextHandler viewContextHandler = new ViewContextHandler( viewId );
       return viewContextHandler;
     }
     else if( context instanceof EditorContext )
     {
-      return null; // TODO handler
-    }
-    else if( context instanceof EditorInputContext )
-    {
-      return null; // TODO handler
-    }
+      final EditorContext editorContext = (EditorContext) context;
+      final String editorId = editorContext.getPartId();
+      final String input = editorContext.getInput();
+      return new EditorContextHandler(editorId, input);
+    }    
     else if( context instanceof WizardContext )
     {
       final WizardContext wizardContext = (WizardContext) context;
@@ -94,9 +83,9 @@ public class WorkflowContextHandlerFactory implements IContextHandlerFactory
       final EWizardType wizardType = wizardContext.getWizardType();
       return new WizardContextHandler( wizardId, wizardType );
     }
-    else if( context instanceof MultiContext )
+    else if( context instanceof WorkbenchSiteContext )
     {
-      final MultiContext multiContext = (MultiContext) context;
+      final WorkbenchSiteContext multiContext = (WorkbenchSiteContext) context;
       final MultiContextHandler contextHandler = new MultiContextHandler( multiContext, this );
       return contextHandler;
     }

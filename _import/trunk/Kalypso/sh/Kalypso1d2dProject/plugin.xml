@@ -81,7 +81,7 @@
              allowMultiple="false"
              class="org.kalypso.kalypso1d2d.pjt.views.WorkflowView"
              icon="icons/nuvola_select/loop.png"
-             id="org.kalypso.kalypso1d2d.pjt.views.WorkflowView"
+             id="org.kalypso.kalypso1d2d.pjt.views.WorklistView"
              name="Aktivitäten"/>
        <view
              allowMultiple="false"
@@ -301,107 +301,43 @@
             name="Szenario"
             priority="highest"
             providesSaveables="false">
-         <triggerPoints>
+         <enablement>
             <or>
-	        	<and>
-					<instanceof value="org.eclipse.core.resources.IProject"/>        
-					<test
-                        property="org.eclipse.core.resources.projectNature"
-                        value="org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature"/>
-		        </and>
+				<adapt type="org.eclipse.core.resources.IResource"/>        
 		        <instanceof value="org.kalypso.afgui.scenarios.Scenario"/>
             </or>
-         </triggerPoints>
-         <possibleChildren>
-            <or>
-               <instanceof value="org.kalypso.afgui.scenarios.Scenario"/>
-            </or>
-         </possibleChildren>
+         </enablement>         
       </navigatorContent>
       <commonFilter
-            activeByDefault="true"
+            activeByDefault="false"
             description="Nur Workflow-Projekte anzeigen"
             id="de.renew.workflow.connector.filters.kalypso.projects"
-            name="Nur Workflow-Projekte anzeigen">
+            name="Nur Kalypso-1d/2d-Projekte anzeigen">
          <filterExpression>
     	    <and>
-				<instanceof value="org.eclipse.core.resources.IProject"/>        
-				<not>
+				<instanceof value="org.eclipse.core.resources.IProject"/>
+				<not>				
 					<test
-                        property="org.eclipse.core.resources.projectNature"
-                        value="org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature"/>
-                </not>
+                	    property="org.eclipse.core.resources.projectNature"
+                    	value="org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature"/>
+                </not>                
 	        </and>
          </filterExpression>
       </commonFilter>
       <commonFilter
+            activeByDefault="false"
             id="de.renew.workflow.connector.filters.kalypso.noresources"
             name="Ressourcen ausblenden">
          <filterExpression>
-            <and>
-               <not>
-                  <instanceof
-                        value="org.eclipse.core.resources.IProject">
-                  </instanceof>
-               </not>
-               <not>
-                  <instanceof
-                        value="org.kalypso.afgui.scenarios.Scenario">
-                  </instanceof>
-               </not>
-            </and>
+         	<not>
+            	<or>
+                	<instanceof value="org.eclipse.core.resources.IProject"/>
+               		<instanceof value="org.kalypso.afgui.scenarios.Scenario"/>
+            	</or>
+            </not>
          </filterExpression>
       </commonFilter>
    </extension>
-   <extension
-         point="org.eclipse.ui.popupMenus">
-      <viewerContribution
-            id="org.kalypso.kalypso1d2d.pjt.views.ScenarioView.popupActions"
-            targetID="org.kalypso.kalypso1d2d.pjt.views.ScenarioView">
-         <action
-               enablesFor="?"
-               icon="icons/nuvola_select/edit_add.png"
-               id="org.kalypso.kalypso1d2d.pjt.actions.AddScenario"
-               label="Szenario hinzufügen"
-               menubarPath="group.edit"
-               tooltip="Ein neues Szenario hinzufügen">
-           <class class="org.kalypso.ui.GenericCommandActionDelegate">
-        	<parameter name="commandId" 
-                 value="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#AddScenario"/>
-           </class>
-         </action>
-      </viewerContribution>
-      <objectContribution
-            adaptable="false"
-            id="org.kalypso.kalypso1d2d.pjt.views.ScenarioView.actions"
-            objectClass="org.kalypso.afgui.scenarios.Scenario">
-         <action
-               enablesFor="1"
-               helpContextId="org.eclipse.ui.edit.delete"
-               icon="icons/nuvola_select/edit_remove.png"
-               id="org.kalypso.kalypso1d2d.pjt.actions.RemoveScenario"
-               label="Szenario löschen"
-               menubarPath="group.edit"
-               tooltip="Das gewählte Szenario löschen">
-           <class class="org.kalypso.ui.GenericCommandActionDelegate">
-            	<parameter name="commandId" 
-                     value="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#RemoveScenario"/>
-           </class>
-         </action>
-         <action
-               enablesFor="1"
-               icon="icons/activate.gif"
-               id="org.kalypso.kalypso1d2d.pjt.actions.ActivateScenario"
-               label="Szenario aktivieren"
-               menubarPath="group.edit"
-               tooltip="Das gewählte Szenario aktivieren">
-           <class class="org.kalypso.ui.GenericCommandActionDelegate">
-            	<parameter name="commandId" 
-                     value="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ActivateScenario"/>
-           </class>
-         </action>
-      </objectContribution>      
-   </extension>     
    <extension
          point="org.eclipse.ui.commands">
       <command
@@ -411,7 +347,12 @@
       <command
             categoryId="de.renew.workflow.tasks.category"
             id="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#RemoveScenario"
-            name="Szenario löschen"/>      
+            name="Szenario löschen"/>
+      <command
+            categoryId="de.renew.workflow.tasks.category"
+            id="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ActivateScenario"
+            name="Szenario aktivieren">
+      </command>      
    </extension>   
    <extension
          point="org.kalypso.deegree.functionProperty">
@@ -434,5 +375,67 @@
             class="org.kalypso.ui.wizards.imports.roughness.RoughnessStyleUpdater"
             id="org.kalypso.ui.wizards.imports.roughness.RoughnessStyleUpdater"
             name="RoughnessStyleUpdater"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="popup:org.kalypso.kalypso1d2d.pjt.views.ScenarioView">
+         <command
+               commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ActivateScenario"
+               icon="icons/activate.gif"
+               id="org.kalypso.kalypso1d2d.pjt.actions.ActivateScenario"
+               label="Szenario aktivieren"
+               tooltip="Das gewählte Szenario aktivieren">
+            <visibleWhen>
+            	<and>
+              		<count value="1"/>
+               		<iterate>                  		                     	
+                     	<instanceof value="org.kalypso.afgui.scenarios.Scenario"/>
+               		</iterate>
+               	</and>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#AddScenario"
+               icon="icons/nuvola_select/edit_add.png"
+               id="org.kalypso.kalypso1d2d.pjt.actions.AddScenario"
+               label="Szenario hinzufügen"
+               tooltip="Ein neues Szenario hinzufügen">
+            <visibleWhen>
+            	<and>
+              		<count value="1"/>
+               		<iterate>
+                  		<or>
+                     		<adapt type="org.eclipse.core.resources.IProject">
+                        	<test
+                              	property="org.eclipse.core.resources.projectNature"
+                              	value="org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature">
+                        	</test>
+                     		</adapt>
+                     		<instanceof
+                        	   value="org.kalypso.afgui.scenarios.Scenario">
+                     		</instanceof>
+                	 	</or>
+               		</iterate>
+               	</and>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#RemoveScenario"
+               helpContextId="org.eclipse.ui.edit.delete"
+               icon="icons/nuvola_select/edit_remove.png"
+               id="org.kalypso.kalypso1d2d.pjt.actions.RemoveScenario"
+               label="Szenario löschen"
+               tooltip="Das gewählte Szenario löschen">
+            <visibleWhen>
+            	<and>
+              		<count value="1"/>
+               		<iterate>                  		                     	
+                     	<instanceof value="org.kalypso.afgui.scenarios.Scenario"/>
+               		</iterate>
+               	</and>
+            </visibleWhen>
+         </command>
+      </menuContribution>
    </extension>
 </plugin>

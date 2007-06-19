@@ -61,7 +61,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
-import de.renew.workflow.base.ISzenarioSourceProvider;
+import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
  * TODO: rename this class, its not nodal any more.
@@ -86,7 +86,7 @@ public class CreateNodalBCFlowrelationWidget extends AbstractCreateFlowrelationW
     final Display display = PlatformUI.getWorkbench().getDisplay();
 
     final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService( IHandlerService.class );
-    final IFolder scenarioFolder = (IFolder) handlerService.getCurrentState().getVariable( ISzenarioSourceProvider.ACTIVE_SZENARIO_FOLDER_NAME );
+    final IFolder scenarioFolder = (IFolder) handlerService.getCurrentState().getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
 
     final IBoundaryConditionDescriptor[] descriptors = createTimeserieDescriptors( modelElement, scenarioFolder );
 
@@ -127,8 +127,8 @@ public class CreateNodalBCFlowrelationWidget extends AbstractCreateFlowrelationW
 
     return new IBoundaryConditionDescriptor[] {};
   }
-  
-   /**
+
+  /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.flowrel.AbstractCreateFlowrelationWidget#findModelElementFromCurrentPosition(org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d,
    *      org.kalypsodeegree.model.geometry.GM_Point, double)
    */

@@ -78,7 +78,7 @@ public class Delete1D2DProjectIntroAction implements IIntroAction
     {
       try
       {
-        activeWorkContext.setActiveProject( null );
+        activeWorkContext.setCurrentCase( null );
       }
       catch( final CoreException e )
       {

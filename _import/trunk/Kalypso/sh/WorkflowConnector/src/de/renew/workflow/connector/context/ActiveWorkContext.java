@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -16,8 +15,10 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 
+import de.renew.workflow.base.Workflow;
 import de.renew.workflow.cases.Case;
 import de.renew.workflow.connector.WorkflowConnectorPlugin;
+import de.renew.workflow.connector.cases.ICaseManager;
 
 /**
  * Represents the work context for a user.
@@ -36,13 +37,13 @@ public class ActiveWorkContext<T extends Case>
       logger.setUseParentHandlers( false );
   }
 
-  private static final String MEMENTO_PROJECT = "project";
+  public static final String MEMENTO_PROJECT = "project";
 
-  private static final String MEMENTO_CASE = "case";
+  public static final String MEMENTO_CASE = "case";
 
   private ICaseManager<T> m_caseManager;
 
-  private CaseHandlingProjectNature<T> m_activeProject;
+  private CaseHandlingProjectNature m_currentProject;
 
   private final List<IActiveContextChangeListener<T>> m_activeContextChangeListeners = new ArrayList<IActiveContextChangeListener<T>>();
 
@@ -69,7 +70,7 @@ public class ActiveWorkContext<T extends Case>
         final IProject project = (IProject) resource;
         try
         {
-          setActiveProject( (CaseHandlingProjectNature<T>) project.getNature( m_natureID ) );
+          setCurrentProject( (CaseHandlingProjectNature) project.getNature( m_natureID ) );
         }
         catch( final CoreException e )
         {
@@ -79,8 +80,7 @@ public class ActiveWorkContext<T extends Case>
         final String caseId = properties.getProperty( MEMENTO_CASE );
         if( caseId != null )
         {
-          final ICaseManager<T> caseManager = getCaseManager();
-          final T caze = caseManager.getCase( caseId );
+          final T caze = m_caseManager.getCase( caseId );
           try
           {
             setCurrentCase( caze );
@@ -102,21 +102,22 @@ public class ActiveWorkContext<T extends Case>
   /**
    * Sets the active case handling project
    */
-  public void setActiveProject( final CaseHandlingProjectNature<T> activeProject ) throws CoreException
+  @SuppressWarnings("unchecked")
+  public void setCurrentProject( final CaseHandlingProjectNature currentProject ) throws CoreException
   {
-    if( m_activeProject == activeProject )
+    if( m_currentProject == currentProject )
     {
       return;
     }
 
-    if( activeProject != null )
+    if( currentProject != null )
     {
-      m_activeProject = activeProject;
-      m_caseManager = activeProject.getCaseManager();
+      m_currentProject = currentProject;
+      m_caseManager = currentProject.getCaseManager();
     }
     else
     {
-      m_activeProject = null;
+      m_currentProject = null;
       m_caseManager = null;
     }
 
@@ -125,17 +126,12 @@ public class ActiveWorkContext<T extends Case>
 
     if( m_caseManager != null )
       m_caseManager.setCurrentCase( caseToActivate );
-    fireActiveContextChanged( m_activeProject, caseToActivate );
+    fireActiveContextChanged( m_currentProject, caseToActivate );
   }
 
-  public CaseHandlingProjectNature<T> getCurrentProject( )
+  public CaseHandlingProjectNature getCurrentProject( )
   {
-    return m_activeProject;
-  }
-
-  public ICaseManager<T> getCaseManager( )
-  {
-    return m_caseManager;
+    return m_currentProject;
   }
 
   /**
@@ -148,16 +144,6 @@ public class ActiveWorkContext<T extends Case>
       return null;
     }
     return m_caseManager.getCurrentCase();
-  }
-
-  public IFolder getCurrentCaseFolder( )
-  {
-    if( m_caseManager == null )
-    {
-      return null;
-    }
-    final T currentCase = m_caseManager.getCurrentCase();
-    return (m_activeProject == null || currentCase == null) ? null : m_activeProject.getProject().getFolder( m_activeProject.getProjectPath( currentCase ) );
   }
 
   public void addActiveContextChangeListener( final IActiveContextChangeListener<T> l )
@@ -198,7 +184,7 @@ public class ActiveWorkContext<T extends Case>
     }
   }
 
-  private void fireActiveContextChanged( final CaseHandlingProjectNature<T> newProject, final T caze )
+  private void fireActiveContextChanged( final CaseHandlingProjectNature newProject, final T caze )
   {
     for( final IActiveContextChangeListener<T> l : m_activeContextChangeListeners )
     {
@@ -224,7 +210,7 @@ public class ActiveWorkContext<T extends Case>
       ensureProject( caze );
       if( m_caseManager != null )
         m_caseManager.setCurrentCase( caze );
-      fireActiveContextChanged( m_activeProject, caze );
+      fireActiveContextChanged( m_currentProject, caze );
     }
   }
 
@@ -236,14 +222,14 @@ public class ActiveWorkContext<T extends Case>
     try
     {
       if( caze == null )
-        setActiveProject( null );
+        setCurrentProject( null );
       else
       {
         final URI uri = new URI( caze.getURI() );
         final String projectName = uri.getHost();
         final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject( projectName );
         if( project.exists() && project.isOpen() )
-          setActiveProject( (CaseHandlingProjectNature<T>) project.getNature( m_natureID ) );
+          setCurrentProject( (CaseHandlingProjectNature) project.getNature( m_natureID ) );
       }
     }
     catch( final URISyntaxException e )
@@ -252,25 +238,8 @@ public class ActiveWorkContext<T extends Case>
     }
   }
 
-  /**
-   * Creates properties that contain current project and case information for restoring state later
-   */
-  public Properties createProperties( )
+  public Workflow getCurrentWorklist( )
   {
-    final Properties properties = new Properties();
-    // TODO: possible NPE here!vus
-    final IProject activeProject = getCurrentProject().getProject();
-    if( activeProject != null )
-    {
-      final String projectPath = activeProject.getName();
-      properties.put( MEMENTO_PROJECT, projectPath );
-    }
-    final T currentCase = getCurrentCase();
-    if( currentCase != null )
-    {
-      final String caseString = currentCase.getURI();
-      properties.put( MEMENTO_CASE, caseString );
-    }
-    return properties;
+    return m_caseManager.getCurrentWorklist();
   }
 }

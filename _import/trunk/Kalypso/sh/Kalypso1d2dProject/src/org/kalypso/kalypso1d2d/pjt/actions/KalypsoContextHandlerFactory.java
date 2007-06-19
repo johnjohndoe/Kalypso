@@ -67,7 +67,7 @@ public class KalypsoContextHandlerFactory implements IContextHandlerFactory
    */
   public IHandler getHandler( final ContextType context )
   {
-    if( context instanceof ExtensionContext )
+    if( context instanceof ExtensionContext)
     {
       final ExtensionContext extensionContext = (ExtensionContext) context;
       final List<Parameter> parameters = extensionContext.getParameter();

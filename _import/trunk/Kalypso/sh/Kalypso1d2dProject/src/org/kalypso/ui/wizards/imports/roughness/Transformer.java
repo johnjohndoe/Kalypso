@@ -11,6 +11,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.kalypso1d2d.pjt.views.SzenarioDataProvider;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
@@ -27,7 +28,7 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
-import de.renew.workflow.cases.ICaseDataProvider;
+import de.renew.workflow.connector.cases.ICaseDataProvider;
 
 /**
  * Implements the transformation algorithm from a shape file into a IRoughnessPolygonCollection
@@ -147,7 +148,7 @@ public class Transformer implements ICoreRunnableWithProgress
       }
     }
     //use (dummy) command to make workspace dirty
-    ICaseDataProvider caseDataProvider = 
+    SzenarioDataProvider caseDataProvider = 
                         Util.getCaseDataProvider();
     if( caseDataProvider != null )
     {

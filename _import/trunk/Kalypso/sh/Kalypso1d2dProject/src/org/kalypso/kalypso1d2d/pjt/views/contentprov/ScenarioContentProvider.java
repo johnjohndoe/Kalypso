@@ -6,8 +6,6 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.StructuredViewer;
@@ -18,8 +16,8 @@ import org.kalypso.afgui.scenarios.ScenarioList;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature;
 import org.kalypso.kalypso1d2d.pjt.actions.ScenarioHelper;
 
-import de.renew.workflow.connector.context.ICaseManager;
-import de.renew.workflow.connector.context.ICaseManagerListener;
+import de.renew.workflow.connector.cases.ICaseManager;
+import de.renew.workflow.connector.cases.ICaseManagerListener;
 
 /**
  * @author Stefan Kurzbach

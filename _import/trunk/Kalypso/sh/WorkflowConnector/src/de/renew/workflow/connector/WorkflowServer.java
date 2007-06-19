@@ -27,6 +27,7 @@ public class WorkflowServer
     try
     {
       setNetPath();
+      setRMI();
       final String[] args = gui ? getGuiArgs() : getShadowSystemArgs();
       startRenew( args );
     }
@@ -37,10 +38,28 @@ public class WorkflowServer
     }
   }
 
+  private void setRMI( )
+  {
+    String codeBaseString = "";
+    for( final File jar : getFiles( new File( "../lib" ), ".jar" ) )
+    {
+      codeBaseString += jar.toURI().toString() + " ";
+    }
+    System.setProperty( "java.rmi.server.codebase", codeBaseString);    
+  }
+
   private String[] getShadowSystemArgs( )
   {
+    final Vector<String> renewArgs = new Vector<String>();
+    renewArgs.add( "startsimulation" );    
+//    for( final File net : getFiles( new File( System.getProperty( DE_RENEW_NET_PATH_PROPERTY ) ), ".sns" ) )
+//    {
+//      renewArgs.add( net.toURI().toString() );
+//    }
+//    renewArgs.add( "ProjectManagement" );
+//    return renewArgs.toArray( new String[renewArgs.size()] );
     return new String[] { "startsimulation", System.getProperty( DE_RENEW_NET_PATH_PROPERTY ) + "/ProjectManagement.sns", "ProjectManagement" };
-  }
+  }  
 
   private String[] getGuiArgs( )
   {

@@ -15,12 +15,11 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.kalypso1d2d.pjt.views.SzenarioDataProvider;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.ui.wizards.imports.Messages;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
-import de.renew.workflow.base.ISzenarioSourceProvider;
-import de.renew.workflow.cases.ICaseDataProvider;
+import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
@@ -55,7 +54,7 @@ public class ImportWizard extends Wizard implements INewWizard
   {
     final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
     final IEvaluationContext context = handlerService.getCurrentState();
-    final ICaseDataProvider<IFeatureWrapper2> szenarioDataProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( ISzenarioSourceProvider.ACTIVE_SZENARIO_DATA_PROVIDER_NAME );
+    final SzenarioDataProvider szenarioDataProvider = (SzenarioDataProvider) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
     m_data.setSzenarioDataProvider( szenarioDataProvider );
     setWindowTitle( Messages.getString( "org.kalypso.wizards.import1d2d.ImportWizard.Title" ) ); //$NON-NLS-1$
     selection = iSelection;
