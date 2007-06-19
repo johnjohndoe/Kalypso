@@ -100,7 +100,7 @@ public class CalculationUnitPerformView extends ViewPart
   @Override
   public void createPartControl( Composite parent )
   {
-    initialiseModel();
+    //initialiseModel();
     toolkit = new FormToolkit(parent.getDisplay());
     form = toolkit.createScrolledForm(parent);
     form.setText("Calculation Unit Perform"); 

@@ -101,7 +101,7 @@ public class CalculationUnitProblemsComponent
 	    Image refreshImage = new Image( rootComposite.getDisplay(),
 	            KalypsoModel1D2DPlugin.imageDescriptorFromPlugin(
 	                    PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
-	                    "icons/elcl16/list_down.gif" ).getImageData() );;
+	                    "icons/elcl16/refresh.gif" ).getImageData() );;
         refreshButton.setImage( refreshImage );
         
         formData = new FormData();
@@ -111,8 +111,9 @@ public class CalculationUnitProblemsComponent
         
         TableViewer problemTableViewer = new TableViewer( rootComposite, SWT.FILL | SWT.BORDER );
         Table problemsTable = problemTableViewer.getTable();
-        problemTableViewer.setLabelProvider( null );
+        
         problemTableViewer.setContentProvider( new ArrayContentProvider() );
+        problemTableViewer.setLabelProvider( new CalculationUnitProblemsLabelProvider());
         problemsTable.setLinesVisible( true );
         problemsTable.setLayoutData( formData );    
   }
