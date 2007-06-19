@@ -74,6 +74,8 @@ public class TuhhCalculation implements IWspmConstants, IWspmTuhhConstants
 
   public static final QName QNAME_TUHH_CALC_REIB_CONST = new QName( NS_WSPM_TUHH, "CalculationReibConstWspmTuhhSteadyState" );
 
+  private static final QName QNAME_PROP_POLYNOME_MEMBER = new QName( NS_WSPM_TUHH, "calcPolynomesMember" );
+
   public static enum MODE
   {
     WATERLEVEL,
@@ -285,7 +287,7 @@ public class TuhhCalculation implements IWspmConstants, IWspmTuhhConstants
     }
   }
 
-  public void setWaterlevelParameters( final WSP_ITERATION_TYPE iterationType, final VERZOEGERUNSVERLUST_TYPE verzType, final REIBUNGSVERLUST_TYPE reibType, final boolean doCalcBridges, boolean doCalcBarrages )
+  public void setWaterlevelParameters( final WSP_ITERATION_TYPE iterationType, final VERZOEGERUNSVERLUST_TYPE verzType, final REIBUNGSVERLUST_TYPE reibType, final boolean doCalcBridges, final boolean doCalcBarrages )
   {
     final QName qname = new QName( NS_WSPM_TUHH, "waterlevelParameterMember" );
     final Feature parameterFeature = FeatureHelper.getSubFeature( m_calcFeature, qname );
@@ -422,7 +424,7 @@ public class TuhhCalculation implements IWspmConstants, IWspmTuhhConstants
   /** Only valid for REIB_KONST mode. */
   public int getPolynomialDeegree( )
   {
-    final Feature polyFeature = (Feature) getFeature().getProperty( new QName( NS_WSPM_TUHH, "calcPolynomesMember" ) );
+    final Feature polyFeature = (Feature) getFeature().getProperty( QNAME_PROP_POLYNOME_MEMBER );
     final Integer value = (Integer) polyFeature.getProperty( new QName( NS_WSPM_TUHH, "degree" ) );
     if( value == null )
       return 4;
@@ -433,8 +435,18 @@ public class TuhhCalculation implements IWspmConstants, IWspmTuhhConstants
   /** Only valid for REIB_KONST mode. */
   public boolean isPolynomialTriple( )
   {
-    final Feature polyFeature = (Feature) getFeature().getProperty( new QName( NS_WSPM_TUHH, "calcPolynomesMember" ) );
+    final Feature polyFeature = (Feature) getFeature().getProperty( QNAME_PROP_POLYNOME_MEMBER );
     final Boolean value = (Boolean) polyFeature.getProperty( new QName( NS_WSPM_TUHH, "trippleIt" ) );
+    if( value == null )
+      return false;
+
+    return value;
+  }
+
+  public boolean getPolynomialIgnoreOutlier( )
+  {
+    final Feature polyFeature = (Feature) getFeature().getProperty( QNAME_PROP_POLYNOME_MEMBER );
+    final Boolean value = (Boolean) polyFeature.getProperty( new QName( NS_WSPM_TUHH, "ignoreOutlier" ) );
     if( value == null )
       return false;
 

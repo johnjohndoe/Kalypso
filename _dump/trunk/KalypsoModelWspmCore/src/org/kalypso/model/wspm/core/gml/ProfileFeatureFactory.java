@@ -383,7 +383,11 @@ public class ProfileFeatureFactory implements IWspmConstants
 
         if( profil.getPropertyProviderFor( compId ) != null )
         {
-          point.setValueFor( compId, (Double) value );
+          final Double doubleValue = value == null ? null : (Double) value;
+          // should never be null, what to do in that case?
+          if( doubleValue == null )
+            throw new IllegalArgumentException( "Null value in profile km " + station );
+          point.setValueFor( compId, doubleValue );
           continue;
         }
 
