@@ -196,10 +196,12 @@ public class CalculationUnitWidget
       throw new RuntimeException("Could not find boundary condition theme");
     }
     
+//    dataModel.setData( 
+//        ICommonKeys.KEY_BOUNDARY_CONDITION_THEME, 
+//        bcTheme );
     dataModel.setData( 
-        ICommonKeys.KEY_BOUNDARY_CONDITION_THEME, 
-        bcTheme );
-    
+        ICommonKeys.KEY_BOUNDARY_CONDITION_CMD_WORKSPACE, 
+        bcTheme.getWorkspace() );
     dataModel.setData( 
         ICommonKeys.KEY_GRAB_DISTANCE_PROVIDER, 
         this );

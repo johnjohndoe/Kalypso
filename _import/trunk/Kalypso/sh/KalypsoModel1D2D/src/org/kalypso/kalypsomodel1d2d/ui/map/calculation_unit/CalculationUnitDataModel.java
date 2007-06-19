@@ -77,7 +77,7 @@ public class CalculationUnitDataModel extends KeyBasedDataModel
               ICommonKeys.WIDGET_WITH_STRATEGY,
               ICommonKeys.KEY_COMMAND_MANAGER,
               ICommonKeys.KEY_SELECTED_DISPLAY,
-              ICommonKeys.KEY_BOUNDARY_CONDITION_THEME,
+              ICommonKeys.KEY_BOUNDARY_CONDITION_CMD_WORKSPACE,
               ICommonKeys.KEY_GRAB_DISTANCE_PROVIDER,
               }, 
         null 

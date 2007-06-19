@@ -70,7 +70,7 @@ public class AddBoundaryConditionToCalculationUnitCmd implements IDiscrModel1d2d
   private final IFEDiscretisationModel1d2d model1d2d;
   
   private boolean done = false;
-  private double grabDistance = 5;
+  private double grabDistance;
   
 //  private final QName relationToCalUnit;
   

@@ -43,6 +43,8 @@ package org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
@@ -50,14 +52,11 @@ import javax.swing.JPopupMenu;
 import javax.xml.namespace.QName;
 
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypso.kalypsomodel1d2d.ops.LinksOps;
+import org.kalypso.kalypsomodel1d2d.ops.TypeInfo;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit2D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.AddBoundaryConditionToCalculationUnitCmd;
@@ -66,7 +65,11 @@ import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
 import org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget;
+import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
+import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
 import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -116,30 +119,77 @@ public class AddRemoveBoundaryConditionToCalUnitWidget extends FENetConceptSelec
     editBoundaryCondition.addActionListener( makeEditBoundaryConditionListener() );
     
     JMenuItem removeBoundaryCondition = new JMenuItem();
-    removeBoundaryCondition.setText( "Remove Boundary Condition" );
+    removeBoundaryCondition.setText( "Remove Boundary Condition from calculation unit" );
     removeBoundaryCondition.setIcon( new ImageIcon(PluginUtilities.findResource(
                                   KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(),
                                   "icons/elcl16/remove.gif" )));
     removeBoundaryCondition.addActionListener( makeRemoveBoundaryConditionListener() );
     
     JMenuItem deleteBoundaryCondition = new JMenuItem();
-    deleteBoundaryCondition.setText( "Delete Boundary Condition" );
+    deleteBoundaryCondition.setText( "Delete Boundary Condition from model" );
     deleteBoundaryCondition.setIcon( new ImageIcon(PluginUtilities.findResource(
                                   KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(),
                                   "icons/elcl16/remove.gif" )));
     deleteBoundaryCondition.addActionListener( makeDeleteBoundaryConditionFromModelListener() );
     
-    popupMenu.add( addBoundaryCondition);
-    popupMenu.add( editBoundaryCondition);
-    popupMenu.add( removeBoundaryCondition);
-    popupMenu.add( deleteBoundaryCondition);
+    popupMenu.add( addBoundaryCondition );
+    popupMenu.add( editBoundaryCondition );
+    popupMenu.add( removeBoundaryCondition );
+    popupMenu.add( deleteBoundaryCondition );
     popupMenu.show( mapPanel, p.x, p.y );  
     
   }
 
   private ActionListener makeDeleteBoundaryConditionFromModelListener( )
   {
-    return null;
+    ActionListener al = new ActionListener()
+    {  
+      @SuppressWarnings("unchecked")
+      public void actionPerformed( ActionEvent e )
+      {
+        
+        
+        final CommandableWorkspace cmdWorkspace = 
+          dataModel.getData( 
+              CommandableWorkspace.class, 
+              ICommonKeys.KEY_BOUNDARY_CONDITION_CMD_WORKSPACE );
+        final Feature parentFeature =
+           cmdWorkspace.getRootFeature();
+        final IFlowRelationshipModel bcHolder = 
+          (IFlowRelationshipModel) parentFeature.getAdapter( IFlowRelationshipModel.class );
+        final IRelationType relationType = 
+            bcHolder.getWrappedList().getParentFeatureTypeProperty();
+        
+        final Feature[] selectedFeatures = getSelectedFeature();
+        
+        for( Feature feature: selectedFeatures )
+        {
+          if ( TypeInfo.isBoundaryCondition( feature ) )
+          {
+            DeleteFeatureCommand delCmd =
+              new DeleteFeatureCommand(
+                  cmdWorkspace, parentFeature, relationType, feature )
+            {
+              /**
+               * @see org.kalypso.ogc.gml.command.DeleteFeatureCommand#process()
+               */
+              @Override
+              public void process( ) throws Exception
+              {
+                super.process();
+                KeyBasedDataModelUtil.resetCurrentEntry( 
+                    dataModel, 
+                    ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
+                KeyBasedDataModelUtil.repaintMapPanel( 
+                    dataModel, ICommonKeys.KEY_MAP_PANEL );
+              }
+            };
+            KeyBasedDataModelUtil.postCommand( dataModel, delCmd );
+          }
+        }
+      }
+    };
+    return al;
   }
 
   private ActionListener makeEditBoundaryConditionListener( )
@@ -156,47 +206,53 @@ public class AddRemoveBoundaryConditionToCalUnitWidget extends FENetConceptSelec
       public void actionPerformed( ActionEvent e )
       {
         final Feature[] selectedFeatures = getSelectedFeature();
-        Object selectedWrapper = dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
+        final ICalculationUnit calUnit = 
+          (ICalculationUnit) dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
         IFEDiscretisationModel1d2d model1d2d = 
           (IFEDiscretisationModel1d2d) dataModel.getData( ICommonKeys.KEY_DISCRETISATION_MODEL );
-        if( selectedWrapper instanceof ICalculationUnit )
+        
+        if( selectedFeatures.length == 0 )
         {
-          ICalculationUnit calUnit = (ICalculationUnit)selectedWrapper;
-          RemoveBoundaryConditionFromCalculationUnitCmd command = null;
-          for(Feature feature:selectedFeatures)
-          {           
-            IFE1D2DElement ele = (IFE1D2DElement) feature.getAdapter( IFE1D2DElement.class );
-            LinksOps.delRelationshipElementAndComplexElement( ele, calUnit );
-            
-            if( calUnit instanceof ICalculationUnit1D &&
-                ele instanceof IBoundaryCondition )
+          System.out.println("Please select at least one boundary condition");
+          return;
+        }
+        
+        
+        
+        for(Feature feature:selectedFeatures)
+        {
+          final IBoundaryCondition bc = 
+            (IBoundaryCondition)feature.getAdapter( IBoundaryCondition.class );
+          if( bc == null )
+          {
+            System.out.println("could not adapt to boundary ");
+            return ;
+          }
+          
+          final RemoveBoundaryConditionFromCalculationUnitCmd command = 
+                new RemoveBoundaryConditionFromCalculationUnitCmd( 
+                    bc,
+                    calUnit, 
+                    model1d2d,
+                    getGrabDistance())
+          {
+            /**
+             * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.AddBoundaryConditionToCalculationUnitCmd#process()
+             */
+            @Override
+            public void process( ) throws Exception
             {
-              command = new RemoveBoundaryConditionFromCalculationUnitCmd(
-                        (IBoundaryCondition)ele,
-                        (ICalculationUnit1D)calUnit,                   
-                        model1d2d);
+              super.process();
+              KeyBasedDataModelUtil.resetCurrentEntry( 
+                  dataModel, 
+                  ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
             }
-            else if( calUnit instanceof ICalculationUnit2D &&
-                ele instanceof IBoundaryCondition )
-            {
-              command = new RemoveBoundaryConditionFromCalculationUnitCmd(
-                        (IBoundaryCondition)ele,
-                        (ICalculationUnit2D)calUnit,                   
-                        model1d2d);
-            }
-            else if( calUnit instanceof ICalculationUnit1D2D &&
-                ele instanceof IBoundaryCondition)
-            {
-              command = new RemoveBoundaryConditionFromCalculationUnitCmd(
-                        (IBoundaryCondition)ele,
-                        (ICalculationUnit1D2D)calUnit,                   
-                        model1d2d);
-            }            
-          }           
+          };
+          
           if( command != null )
           {
             KeyBasedDataModelUtil.postCommand( dataModel, command );
-          }
+          }  
         }
       }      
     };
@@ -229,45 +285,33 @@ public class AddRemoveBoundaryConditionToCalUnitWidget extends FENetConceptSelec
         for(Feature feature:selectedFeatures)
         {
           final IBoundaryCondition bc = 
-            (IBoundaryCondition)selectedFeatures[0].getAdapter( IBoundaryCondition.class );
+            (IBoundaryCondition)feature.getAdapter( IBoundaryCondition.class );
           if( bc == null )
           {
             System.out.println("could not adapt to boundary ");
             return ;
           }
           
-          AddBoundaryConditionToCalculationUnitCmd command = null;
-//          IFE1D2DElement ele = (IFE1D2DElement) feature.getAdapter( IFE1D2DElement.class );
-          if( calUnit instanceof ICalculationUnit1D )
+          final AddBoundaryConditionToCalculationUnitCmd command = 
+                new AddBoundaryConditionToCalculationUnitCmd(
+                    calUnit, 
+                    bc,
+                    model1d2d,
+                    getGrabDistance())
           {
-            command = new AddBoundaryConditionToCalculationUnitCmd(
-                calUnit, 
-                bc,
-                model1d2d,
-                getGrabDistance());
-            
-          }
-          else if( calUnit instanceof ICalculationUnit2D )
-          {
-            command = new AddBoundaryConditionToCalculationUnitCmd(
-                calUnit, 
-                bc,
-                model1d2d,
-                getGrabDistance());
-            
-          }
-          else if( calUnit instanceof ICalculationUnit1D2D )
-          {
-            command = new AddBoundaryConditionToCalculationUnitCmd(
-                calUnit, 
-                bc,
-                model1d2d,
-                getGrabDistance());              
-          }
-          else
-          {
-            System.out.println("Bad constellation:"+feature+ " "+calUnit);
-          }
+            /**
+             * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.AddBoundaryConditionToCalculationUnitCmd#process()
+             */
+            @Override
+            public void process( ) throws Exception
+            {
+              super.process();
+              KeyBasedDataModelUtil.resetCurrentEntry( 
+                  dataModel, 
+                  ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
+            }
+          };
+          
           if( command != null )
           {
             KeyBasedDataModelUtil.postCommand( dataModel, command );

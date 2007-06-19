@@ -517,11 +517,13 @@ public class CalUnitOps
     
     //get the targeted boundary line
     final GM_Point bcPosition = bCondition.getPosition();
-    final IBoundaryLine targetLine = getLineElement( unit, bcPosition, grabDistance, IBoundaryLine.class ); 
+    final IBoundaryLine targetLine = 
+      getLineElement( unit, bcPosition, grabDistance, IBoundaryLine.class ); 
     if( targetLine == null )
     {
       throw new IllegalArgumentException(
-          "Boundary condition does not have a target line" );
+          "Boundary condition does not have a target line:"+
+          "\n\tgrabDistance="+grabDistance);
     }
     // compute the other lines and set their middle nodes as
     //boundary line    
@@ -660,7 +662,7 @@ public class CalUnitOps
    * @throws IllegalArgumentException if condition or unit is null or grabDistance is less than 0
    */
   public static final List<IBoundaryCondition> getBoundaryConditions(
-                          final IFeatureWrapperCollection<IBoundaryCondition> conditions,
+                          final Collection<IBoundaryCondition> conditions,
                           final ICalculationUnit<IFE1D2DElement> unit, 
                           final double grabDistance )
   {
@@ -677,7 +679,7 @@ public class CalUnitOps
       }
     }
     
-    return conditions;
+    return assignedConditions;
   }
   
   /**

@@ -254,6 +254,32 @@ public class TypeInfo
     }
   }
 
+  
+  /**
+   * Answer whether the given element is a line element; i.e. is 
+   * substitutable to wb1d2d:LineElement
+   * 
+   * @param feature  the feature to test
+   * @param return true if the feature passed is a line element 
+   *            otherwise false including the case where its feature 
+   *            is null
+   */
+  public static final boolean isBoundaryCondition( final Feature feature )
+  {
+    if(feature==null)
+    {
+      return false;
+    }
+    else
+    {
+      IFeatureType featureType = feature.getFeatureType();
+      
+      return GMLSchemaUtilities.substitutes( 
+              featureType, 
+              Kalypso1D2DSchemaConstants.OP1D2D_F_BOUNDARY_CONDITION );
+    }
+  }
+  
   public static boolean isNode( Feature selecFeature )
   {
     if(selecFeature==null)

@@ -107,8 +107,16 @@ public class FENetConceptSelectionWidget implements IWidget, IGrabDistanceProvid
     {
 //      m_model1d2d = UtilMap.findFEModelTheme( mapModell );
 //      Assert.throwIAEOnNull( this.m_model1d2d, "Could not found model" );
-      m_featureTheme = UtilMap.findEditableTheme( mapModell, m_themeElementsQName );
-      m_cmdWorkspace = this.m_featureTheme.getWorkspace();
+      try
+      {
+        m_featureTheme = UtilMap.findEditableTheme( mapModell, m_themeElementsQName );
+        m_cmdWorkspace = this.m_featureTheme.getWorkspace();
+      }
+      catch ( Exception e ) 
+      {
+        e.printStackTrace();
+        throw new RuntimeException(e);
+      }
     }
 
     public List getSelectedByPolygon( final GM_Object polygon, final ISelectionFilter selectionFilter )

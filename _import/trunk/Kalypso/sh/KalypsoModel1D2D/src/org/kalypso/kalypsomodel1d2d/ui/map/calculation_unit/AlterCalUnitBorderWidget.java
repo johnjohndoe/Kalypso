@@ -60,6 +60,7 @@ import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteBoundaryLineCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand;
@@ -72,6 +73,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateNodalBCFlowrelationWidg
 import org.kalypso.kalypsomodel1d2d.ui.map.flowrel.IBoundaryConditionDescriptor;
 import org.kalypso.kalypsomodel1d2d.ui.map.flowrel.NodalBCSelectionWizard;
 import org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget;
+import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -80,6 +82,7 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
@@ -313,6 +316,7 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
       final Display display = (Display) dataModel.getData(ICommonKeys.KEY_SELECTED_DISPLAY);
       final Runnable runnable = new Runnable()
       {
+//        private CommandableWorkspace workspace;
 
         public void run( )
         {   
@@ -321,12 +325,14 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
              final IBoundaryConditionDescriptor[] descriptors = 
                CreateNodalBCFlowrelationWidget.createTimeserieDescriptors( getSelectedBoundaryLine(),Util.getScenarioFolder() );
              
-             final IKalypsoFeatureTheme bcTheme =
-                         dataModel.getData( 
-                             IKalypsoFeatureTheme.class, 
-                             ICommonKeys.KEY_BOUNDARY_CONDITION_THEME );
-             CommandableWorkspace workspace = bcTheme.getWorkspace();
-             
+//             final IKalypsoFeatureTheme bcTheme =
+//                         dataModel.getData( 
+//                             IKalypsoFeatureTheme.class, 
+//                             ICommonKeys.KEY_BOUNDARY_CONDITION_THEME );
+             CommandableWorkspace workspace = //bcTheme.getWorkspace();
+               dataModel.getData( 
+                   CommandableWorkspace.class, 
+                   ICommonKeys.KEY_BOUNDARY_CONDITION_CMD_WORKSPACE );
              ///model is to be  get from the calculation unit
              final Feature opModelFeature = workspace.getRootFeature();
              IFlowRelationshipModel opModel = 
@@ -372,13 +378,30 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
       System.out.println( "Not supported menu action:" + text );
     }
   }
-    
+   /**
+    * To get the boundary position. This is defined as the middle
+    * of the nearest edge to the klicked point in the selected boundary line
+    * @return a {@link GM_Point} representing the boundary condition position
+    */ 
     private GM_Point getBoundaryPosition( )
     {
-      //TODO Patrice get the right point since user may have drag a box
       IBoundaryLine selectedBoundaryLine = getSelectedBoundaryLine();
+      final GM_Point klickedPoint = getCurrentPoint();
       
-      return getCurrentPoint();
+      //find the nearest edge
+      IFeatureWrapperCollection<IFE1D2DEdge> edges = selectedBoundaryLine.getEdges();
+      double minDist = Double.MAX_VALUE;
+      GM_Point selectedEdgeCentroid = null; 
+      for( IFE1D2DEdge edge: edges )
+      {
+        final GM_Curve curve = edge.getCurve();
+        final double curDist = klickedPoint.distance( curve );
+        if( curDist<minDist)
+        {
+          selectedEdgeCentroid = curve.getCentroid();
+        }
+      }
+      return selectedEdgeCentroid;
     }
     
 //    private IBoundaryConditionDescriptor[] createTimeserieDescriptors( final IFeatureWrapper2 modelElement, final IFolder scenarioFolder )
@@ -547,7 +570,7 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
 
   private final IBoundaryLine getSelectedBoundaryLine( )
   {
-    IBoundaryLine[] bLines = (IBoundaryLine[]) getWrappedSelectedFeature( IBoundaryLine.class );
+    IBoundaryLine[] bLines = getWrappedSelectedFeature( IBoundaryLine.class );
     if( bLines == null )
     {
       return null;

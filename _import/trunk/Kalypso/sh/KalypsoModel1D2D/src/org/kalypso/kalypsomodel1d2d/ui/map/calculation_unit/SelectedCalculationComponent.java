@@ -86,6 +86,7 @@ import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree_impl.gml.schema.virtual.GetGeomDestinationFeatureVisitor;
@@ -264,8 +265,14 @@ public class SelectedCalculationComponent
         int bcCount = CalUnitOps.countAssignedBoundaryConditions( 
             getBoundaryConditions(), 
             (ICalculationUnit)newValue, 
-             6);
-        textCountBC.setText(String.valueOf( bcCount ));
+             grabDistance );
+        int bcCont1 =
+          CalUnitOps.getBoundaryConditions( 
+                          getBoundaryConditions(), 
+                          (ICalculationUnit)newValue, 
+                          grabDistance ).size();
+        textCountBC.setText(
+            String.valueOf( bcCount ) + " "+bcCont1);
     }
     else
     {
@@ -281,10 +288,13 @@ public class SelectedCalculationComponent
 
   public List<IBoundaryCondition> getBoundaryConditions()
   {
-    final IKalypsoFeatureTheme bcTheme = dataModel.getData( 
-        IKalypsoFeatureTheme.class, 
-        ICommonKeys.KEY_BOUNDARY_CONDITION_THEME );
-    final Feature bcHolderFeature = bcTheme.getFeatureList().getParentFeature();
+    final CommandableWorkspace workspace = dataModel.getData(
+        CommandableWorkspace.class, 
+        ICommonKeys.KEY_BOUNDARY_CONDITION_CMD_WORKSPACE );
+//    final IKalypsoFeatureTheme bcTheme = dataModel.getData( 
+//        IKalypsoFeatureTheme.class, 
+//        ICommonKeys.KEY_BOUNDARY_CONDITION_THEME );
+    final Feature bcHolderFeature = workspace.getRootFeature();//bcTheme.getFeatureList().getParentFeature();
     //TODO Patrice replace with operational model
     IFlowRelationshipModel flowRelationship =
       (IFlowRelationshipModel) bcHolderFeature.getAdapter( IFlowRelationshipModel.class );
