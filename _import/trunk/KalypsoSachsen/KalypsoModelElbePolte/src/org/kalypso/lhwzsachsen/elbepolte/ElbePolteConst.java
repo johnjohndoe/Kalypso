@@ -40,6 +40,8 @@
 *  ---------------------------------------------------------------------------*/
 package org.kalypso.lhwzsachsen.elbepolte;
 
+import java.text.SimpleDateFormat;
+
 /**
  *
  * TODO: insert type comment here
@@ -50,4 +52,10 @@ public class ElbePolteConst
 {
   public static final String ELBEPOLTE_CODEPAGE = "Cp1252";
 
+  // Metadaten-Properties for ZML files
+  public static final String PROP_COMMENT = "comment";
+  
+  public static SimpleDateFormat HWVS_DATE_FORMAT = new SimpleDateFormat("yyyy MM dd HH" );
+
+  
 }

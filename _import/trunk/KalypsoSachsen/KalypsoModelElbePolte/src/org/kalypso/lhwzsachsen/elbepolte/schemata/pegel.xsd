@@ -79,7 +79,7 @@
             </documentation>
         </annotation>
     </element>
-    <element name="ZwgZufluss" type="pegel:ZwgZuflussType" substitutionGroup="gml:_Feature">
+    <element name="ZwgZufluss" type="pegel:ZwgZuflussType" substitutionGroup="pegel:AbstractPegel">
         <annotation>
             <documentation xml:lang="de">
                 <name>Zwischengebietszufluss</name>
@@ -99,7 +99,7 @@
             </documentation>
         </annotation>
     </element>
-    <element name="InternerHPegel" type="pegel:InternerHPegelType" substitutionGroup="gml:_Feature">
+    <element name="InternerHPegel" type="pegel:InternerHPegelType" substitutionGroup="pegel:AbstractPegel">
         <annotation>
             <documentation xml:lang="de">
                 <name>interner Hilfs-Pegel</name>

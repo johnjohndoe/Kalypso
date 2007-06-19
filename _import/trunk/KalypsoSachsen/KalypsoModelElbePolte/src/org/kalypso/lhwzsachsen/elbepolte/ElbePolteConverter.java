@@ -44,11 +44,12 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
-import java.io.Reader;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -62,9 +63,14 @@ import org.apache.commons.io.IOUtils;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
+import org.kalypso.ogc.sensor.impl.SimpleObservation;
+import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
+import org.kalypso.ogc.sensor.zml.ZmlFactory;
+import org.kalypso.zml.ObservationType;
 
 /**
  * 
@@ -75,9 +81,38 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 public class ElbePolteConverter
 {
   public final static String hwvsTypeQ = TimeserieConstants.TYPE_RUNOFF;
-  public final static int step = 3;
+  public final static int cntValuesPast = 120;
 
-  public static IObservation hwvs2zml( final File fleHwvs, final String name )
+  public static void hwvs2zml( final File fleHwvs, final File fleZml )
+  {
+    OutputStream writer = null;
+    try
+    {
+      final InputStreamReader isr = new InputStreamReader( new FileInputStream( fleHwvs ) );
+      final BufferedReader reader = new BufferedReader( isr );
+      final IObservation obsZml = hwvs2zml( reader );
+
+      // convert it
+      writer = new FileOutputStream( fleZml );
+      ObservationType observationType = ZmlFactory.createXML( obsZml, null );
+      ZmlFactory.getMarshaller().marshal( observationType, writer );
+
+    }
+    catch( IOException e )
+    {
+      e.printStackTrace();
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
+    finally
+    {
+      IOUtils.closeQuietly( writer );
+    }
+  }
+
+  public static IObservation hwvs2zml( final File fleHwvs )
   {
     InputStreamReader isRdrHwvs = null;
     IObservation obsZML = null;
@@ -85,13 +120,13 @@ public class ElbePolteConverter
     try
     {
       isRdrHwvs = new InputStreamReader( new FileInputStream( fleHwvs ), ElbePolteConst.ELBEPOLTE_CODEPAGE );
-      obsZML = hwvs2zml( isRdrHwvs, name );
+      obsZML = hwvs2zml( new BufferedReader( isRdrHwvs ) );
     }
-    catch( UnsupportedEncodingException e )
+    catch( FileNotFoundException e )
     {
       e.printStackTrace();
     }
-    catch( FileNotFoundException e )
+    catch( UnsupportedEncodingException e )
     {
       e.printStackTrace();
     }
@@ -103,70 +138,87 @@ public class ElbePolteConverter
   }
 
   /**
-   * @param isRdrHwvs
-   * @param name
+   * @param bufRdrHwvs
    * @return
    */
-  private static IObservation hwvs2zml( final InputStreamReader isRdrHwvs, final String name )
+  private static IObservation hwvs2zml( final BufferedReader bufRdrHwvs )
   {
     final LineNumberReader lneNumRdr;
-    final Date dtDatum;
+
     final List lstEingWerte;
     final List lstEingDatum;
     final Calendar calendar = new GregorianCalendar();
 
     IObservation obsOut = null;
-    //    MetadataList metaDataList;
+    MetadataList metaDataList;
     IAxis[] axis;
     ITuppleModel tplWerte;
     StringTokenizer strTok;
     String sEingabeZeile;
     String sComment;
-
-    //    int ii;
+    Date dtDatum = null;
+    Date vorhersageDte = null;
 
     lstEingWerte = new ArrayList();
     lstEingDatum = new ArrayList();
     Object[][] tuppleData;
-    //    metaDataList = new MetadataList();
+    metaDataList = new MetadataList();
 
     // Codepage wird dem reader schon vorher mitgegeben
-    lneNumRdr = new LineNumberReader( isRdrHwvs );
+    lneNumRdr = new LineNumberReader( bufRdrHwvs );
     try
     {
-      // Kommentar, Datum und Schrittweite lesen
+      // Kommentar (= erste Zeile) lesen
       sComment = lneNumRdr.readLine();
-      //      dtDatum = TubigConst.TUBIG_DATE_FORMAT.parse( lneNumRdr.readLine() );
-      //      calendar.setTime( dtDatum );
-      // ein bisschen umständlich, da manchmal noch Text nach der Schrittweite
-      // kommt...
+      metaDataList.setProperty( ElbePolteConst.PROP_COMMENT, sComment );
+      axis = createAxis( hwvsTypeQ );
+
       sEingabeZeile = lneNumRdr.readLine();
       strTok = new StringTokenizer( sEingabeZeile );
+      int lfdNum = 0;
       if( strTok.hasMoreTokens() )
       {
-        axis = createAxis( hwvsTypeQ );
-        // Werte lesen und Datum generieren
-        sEingabeZeile = lneNumRdr.readLine();
+        // Datum und Werte lesen und Listeneinträge generieren
         while( sEingabeZeile != null )
         {
-          strTok = new StringTokenizer( sEingabeZeile );
+          // Format: lfd_Nummer, Jahr, Monat, Tag, Stunde, Wert
+          String strDate = sEingabeZeile.substring( 10, 32 );
+          dtDatum = ElbePolteConst.HWVS_DATE_FORMAT.parse( strDate );
+          calendar.setTime( dtDatum );
 
+          strTok = new StringTokenizer( sEingabeZeile );
           if( strTok.hasMoreTokens() )
+          {
+            // die ersten Einträge werden übersprungen
+            lfdNum = Integer.valueOf( strTok.nextToken() ).intValue();
+            if( lfdNum == cntValuesPast )
+              vorhersageDte = dtDatum;
+            else
+            {
+              strTok.nextToken();
+              strTok.nextToken();
+              strTok.nextToken();
+              strTok.nextToken();
+            }
+
+            lstEingDatum.add( calendar.getTime() );
             lstEingWerte.add( new Double( strTok.nextToken() ) );
-          lstEingDatum.add( calendar.getTime() );
-          calendar.add( Calendar.HOUR_OF_DAY, step );
+          }
 
           sEingabeZeile = lneNumRdr.readLine();
         }
-        //        tuppleData = new Object[lstEingDatum.size()][2];
-        //        for( ii = 0; ii < lstEingDatum.size(); ii++ )
-        //        {
-        //          tuppleData[ii][0] = lstEingDatum.get( ii );
-        //          tuppleData[ii][1] = lstEingWerte.get( ii );
-        //        }
-        //
-        //        tplWerte = new SimpleTuppleModel( axis, tuppleData );
-        //        obsOut = new SimpleObservation( "href", "ID", name, false, null, metaDataList, axis, tplWerte );
+
+        tuppleData = new Object[lstEingDatum.size()][2];
+        for( int ii = 0; ii < lstEingDatum.size(); ii++ )
+        {
+          tuppleData[ii][0] = lstEingDatum.get( ii );
+          tuppleData[ii][1] = lstEingWerte.get( ii );
+        }
+        tplWerte = new SimpleTuppleModel( axis, tuppleData );
+        obsOut = new SimpleObservation( "href", "ID", hwvsTypeQ, false, null, metaDataList, axis, tplWerte );
+
+        // Vorhersagezeitraum in MetaData setzen
+        TimeserieUtils.setForecast( obsOut, vorhersageDte, dtDatum );
       }
     }
     catch( final IOException e )
@@ -174,12 +226,12 @@ public class ElbePolteConverter
       e.printStackTrace();
       //      throw new TubigException( "Fehler beim Lesen einer TUBIG-Datei (Schreiben von Zeitreihen - ZML", e );
     }
-//    catch( final ParseException e1 )
-//    {
-//      // lneNumRdr.getLineNumber() gibt die problematische Zeilennummer an
-//      e1.printStackTrace();
-//      //      throw new TubigException( "Fehler beim Parsen eines Datums (Schreiben von Zeitreihen - ZML", e1 );
-//    }
+    catch( final ParseException e1 )
+    {
+      // lneNumRdr.getLineNumber() gibt die problematische Zeilennummer an
+      e1.printStackTrace();
+      // throw new TubigException( "Fehler beim Parsen eines Datums (Schreiben von Zeitreihen - ZML", e1 );
+    }
     finally
     {
       IOUtils.closeQuietly( lneNumRdr );
@@ -202,7 +254,9 @@ public class ElbePolteConverter
 
   public static void main( String[] args )
   {
-    final InputStream is = ElbePolteConverter.class.getResourceAsStream( "resources/test/Daten/Daten.001" );
-    final Reader reader = new BufferedReader( new InputStreamReader( is ) );
+    final File fleHwvs =  new File(ElbePolteConverter.class.getResource( "resources/test/Daten/Daten.001" ).getFile()) ;
+    final File fleOut = new File( System.getProperty( "java.io.tmpdir" ), "Daten.001.zml" );
+    
+    hwvs2zml(fleHwvs, fleOut);
   }
 }
