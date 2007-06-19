@@ -23,13 +23,7 @@
 
 	<complexType name="ContextType">
 		<sequence>
-			<element ref="kwf:_Context" minOccurs="0" maxOccurs="unbounded">
-				<annotation>
-					<appinfo>
-						<jaxb:property name="ExtensionContexts" />
-					</appinfo>
-				</annotation>
-			</element>
+			<element ref="kwf:_Context" minOccurs="0" maxOccurs="unbounded"/>
 		</sequence>			
 		<attribute name="id" type="ID" use="required" />
 		<attribute name="parent" type="IDREF">
@@ -62,16 +56,7 @@
 	
 	<complexType name="WorkbenchPartContextType">
 		<complexContent>
-			<extension base="kwf:ContextType">
-				<sequence>
-					<element ref="kwf:ExtensionContext" minOccurs="0" maxOccurs="unbounded">
-						<annotation>
-							<appinfo>
-								<jaxb:property name="SubContexts" />
-							</appinfo>
-						</annotation>
-					</element>
-				</sequence>					
+			<extension base="kwf:ContextType">				
 				<attribute name="partId" type="string" />
 			</extension>
 		</complexContent>
@@ -106,7 +91,7 @@
 		</complexType>
 	</element>
 
-	<element name="ExtensionContext">
+	<element name="ExtensionContext" substitutionGroup="kwf:_Context">
 		<complexType>
 			<complexContent>
 				<extension base="kwf:ContextType">
