@@ -113,9 +113,9 @@ public class PolynomeHelper
    * Prepares the input files for the polynome process
    * 
    * @param tmpDir
-   *          any tmp dir, must be empty before start, may be deleted after end
+   *            any tmp dir, must be empty before start, may be deleted after end
    * @param dathDir
-   *          Directory containing the laengsschnitt.txt and the beiwerte.aus files.
+   *            Directory containing the laengsschnitt.txt and the beiwerte.aus files.
    * @return true, if preparation was succesful
    */
   private static boolean preparePolynomes( final File tmpDir, final File dathDir, final LogHelper log )
@@ -258,26 +258,29 @@ public class PolynomeHelper
     {
       final double startStation = calculation.getStartStation().doubleValue();
       final double endStation = calculation.getStartStation().doubleValue();
+      final boolean ignoreOutlier = calculation.getPolynomialIgnoreOutlier();
+      final boolean isTriple = calculation.isPolynomialTriple();
 
       // TODO: fetch other parameters from calculation
+
       pw = new PrintWriter( new BufferedWriter( new OutputStreamWriter( new FileOutputStream( steuerFile ) ) ) );
+
       pw.println( "Steuerdatei fuer die Polynomfunktionen je Profil" );
       pw.println( "-------------------------------------------------" );
       pw.println( "01 Beiwerte(Pfad) 01Eingang\\Beiwerte.AUS " );
       pw.println( "02 Längsschnitt(Pfad) 01Eingang\\laengsschnitt.txt" );
       pw.println( "03 PolyGrad(2,3,4) " + calculation.getPolynomialDeegree() );
-      final String tripleIt = calculation.isPolynomialTriple() ? "J" : "N";
-      pw.println( "04 DreiTeil(J/N) " + tripleIt );
+      pw.printf( "04 DreiTeil(J/N) %n", isTriple ? "J" : "N" );
       pw.println( "05 PolyReduce(J/N) J" );
       pw.println( "06 ProfIntervall(J/N) N" );
-      pw.printf( Locale.PRC, "07 StartProf(0000.0000) %.4f", startStation );
-      pw.println();
-      pw.printf( Locale.PRC, "08 EndProf(0000.0000) %.4f", endStation );
-      pw.println();
+      pw.printf( Locale.PRC, "07 StartProf(0000.0000) %.4f%n", startStation );
+      pw.printf( Locale.PRC, "08 EndProf(0000.0000) %.4f%n", endStation );
       pw.println( "09 AusgabeJeFunktion(J/N) J" );
       pw.println( "10 AusgabeWspWerte(J/N) J" );
       pw.println( "11 AusgabeKontrolle(J/N) J" );
       pw.println( "12 AusgabeFile(Pfad) 02Ausgang\\" );
+      // TODO: an/aushaken
+      pw.printf( "13 Ausreisser(J/N) %1s%n", ignoreOutlier ? "J" : "N" );
     }
     catch( final FileNotFoundException e )
     {

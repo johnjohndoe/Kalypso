@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <schema targetNamespace="org.kalypso.model.wspm.tuhh" xmlns:tuhh="org.kalypso.model.wspm.tuhh"
 	xmlns:wspm="org.kalypso.model.wspm" xmlns:wspmcommon="org.kalypso.model.wspmcommon"
+	xmlns:wspmProf="org.kalypso.model.wspmprofile"
 	xmlns:runoff="org.kalypso.model.wspmrunoff" xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om"
 	xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" version="0.1">
 	<annotation>
@@ -915,6 +916,18 @@
 							</documentation>
 						</annotation>
 					</element>
+					<element name="ignoreOutlier" type="boolean" default="false">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Ausreisser ignorieren</label>
+								<tooltip>Ausreisser (=Rücksprünge) bei der Polynomerstellung ignorieren.</tooltip>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Ignore Outlier</label>
+								<tooltip>Ignore outlier when createing the polynomes.</tooltip>
+							</documentation>
+						</annotation>
+					</element>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -1214,9 +1227,7 @@
 					<kapp:parameter>
 						<!-- TODO -->
 						<kapp:name>xpath</kapp:name>
-						<kapp:value>
-							{org.kalypso.model.wspm.tuhh}profileMember/{org.kalypso.model.wspmprofile}Profile/{org.kalypso.model.wspmprofile}station
-						</kapp:value>
+						<kapp:value>tuhh:profileMember/wspmProf:Profile/wspmProf:station</kapp:value>
 					</kapp:parameter>
 					<kapp:parameter>
 						<kapp:name>copySet</kapp:name>
@@ -1228,9 +1239,7 @@
 					<kapp:parameter>
 						<!-- TODO -->
 						<kapp:name>xpath</kapp:name>
-						<kapp:value>
-							{org.kalypso.model.wspm.tuhh}profileMember/{org.kalypso.model.wspmprofile}Profile/{org.kalypso.model.wspmprofile}profileLocation
-						</kapp:value>
+						<kapp:value>tuhh:profileMember/wspmProf:Profile/wspmProf:profileLocation</kapp:value>
 					</kapp:parameter>
 					<kapp:parameter>
 						<kapp:name>copySet</kapp:name>

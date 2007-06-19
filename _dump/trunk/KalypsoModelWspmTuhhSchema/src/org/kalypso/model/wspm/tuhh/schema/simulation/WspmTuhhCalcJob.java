@@ -152,6 +152,7 @@ public class WspmTuhhCalcJob implements ISimulation
       if( !(calcObject instanceof Feature) )
       {
         monitor.setFinishInfo( IStatus.ERROR, "GMLXPath points to no feature: " + calcObject );
+        log.log( false, "GMLXPath (%s) points to no feature: %s", calcXPath, calcObject );
         return;
       }
 
@@ -194,10 +195,10 @@ public class WspmTuhhCalcJob implements ISimulation
 
       // generate start.bat
       final File fleBat = new File( tmpDir, "start.bat" );
-      PrintWriter pwBat = new PrintWriter( new BufferedWriter( new FileWriter( fleBat ) ) );
+      final PrintWriter pwBat = new PrintWriter( new BufferedWriter( new FileWriter( fleBat ) ) );
       pwBat.println( "\"" + tmpDir.getAbsolutePath() + File.separator + "Kalypso-1D.exe" + "\" < " + "\"" + fleInParams.getAbsolutePath() + "\"" );
       pwBat.close();
-      String sCmd = "\"" + fleBat.getAbsolutePath() + "\"";
+      final String sCmd = "\"" + fleBat.getAbsolutePath() + "\"";
 
       monitor.setProgress( 20 );
 
@@ -258,7 +259,7 @@ public class WspmTuhhCalcJob implements ISimulation
 
         // process lenghtsection to result observation (laengsschnitt.gml): concatenate new header + laengsschnitt
         // (without header) + new footer
-        File lengthSectionGmlFile = new File( tmpDir, "lengthSectionGml.gml" );
+        final File lengthSectionGmlFile = new File( tmpDir, "lengthSectionGml.gml" );
 
         headerInputStream = getClass().getResourceAsStream( "resources/headerLenghSection.txt" );
         footerInputStream = getClass().getResourceAsStream( "resources/footerLenghSection.txt" );

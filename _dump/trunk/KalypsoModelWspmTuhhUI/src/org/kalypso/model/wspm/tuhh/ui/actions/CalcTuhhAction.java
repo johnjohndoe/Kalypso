@@ -48,7 +48,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -132,15 +131,15 @@ public class CalcTuhhAction implements IActionDelegate
 
             return nature.launchAnt( "Berechnung", "calc", properties, gmlFile.getParent(), monitor );
           }
-          catch( final CoreException e )
+          catch( final Throwable t )
           {
-            return e.getStatus();
+            return StatusUtilities.statusFromThrowable( t );
           }
         }
       };
       calcJob.setUser( true );
       calcJob.schedule();
-      
+
       // Only one calculation may run at the same time
       // Still a problem if the user start several task
       // Setting a mutext does not help, because we already have a rule
