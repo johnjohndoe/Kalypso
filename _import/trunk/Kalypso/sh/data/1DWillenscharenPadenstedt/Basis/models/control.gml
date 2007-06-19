@@ -43,7 +43,7 @@
          <sweExt:sortedComponent xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time"/>
         </sweExt:SortedRecordDefinition>
        </om:resultDefinition>
-       <om:result xmlns:om="http://www.opengis.net/om"><![CDATA[2001-01-01T10:00:00.000%2B01:00 1
+       <om:result xmlns:om="http://www.opengis.net/om"><![CDATA[2001-01-01T10%3A00%3A00.000%2B01%3A00 0.1
 ]]></om:result>
       </c1d2d:TimestepsObservation>
      </c1d2d:timestepsMember>
