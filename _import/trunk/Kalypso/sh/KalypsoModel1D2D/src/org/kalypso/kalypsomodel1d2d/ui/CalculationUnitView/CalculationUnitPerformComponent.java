@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.ui.view.calculation_unit;
+package org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView;
 
 import org.kalypso.kalypsomodel1d2d.ui.map.editor.FeatureWrapperListEditor;
 import org.kalypso.kalypsomodel1d2d.ui.map.editor.IButtonConstants;

@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.ui.view.calculation_unit;
+package org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
@@ -56,13 +56,9 @@ import org.eclipse.ui.part.ViewPart;
 import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
-import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
-import org.kalypso.kalypsomodel1d2d.ui.map.merge.Model1d2dCalUnitTheme;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
-import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -74,6 +70,8 @@ import org.kalypso.ui.views.map.MapView;
  */
 public class CalculationUnitPerformView extends ViewPart
 {
+  public static final String ID = "org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView.CalculationUnitPerformView";
+  
   private FormToolkit toolkit;
   private ScrolledForm form;
   private Composite rootPanel;
@@ -86,10 +84,13 @@ public class CalculationUnitPerformView extends ViewPart
   private Composite sectionSecondComposite;
   private CalculationUnitProblemsComponent calcProblemsGUI;
   private MapPanel mapPanel;
+
+  private IFEDiscretisationModel1d2d m_model;
+
+  private Composite m_parent;
   /**
    * The constructor.
    */
-  
   
   public CalculationUnitPerformView() {
   }
@@ -100,7 +101,7 @@ public class CalculationUnitPerformView extends ViewPart
   @Override
   public void createPartControl( Composite parent )
   {
-    //initialiseModel();
+    m_parent = parent;
     toolkit = new FormToolkit(parent.getDisplay());
     form = toolkit.createScrolledForm(parent);
     form.setText("Calculation Unit Perform"); 
@@ -125,42 +126,41 @@ public class CalculationUnitPerformView extends ViewPart
     tableWrapData.grabVertical = true;
     problemsSection.setLayoutData( tableWrapData );
     problemsSection.setExpanded( true );
- 
-   
+    /*
     createCalculationUnitSection( selectCalcUnitSection );
     createProblemsInCalculationSection(problemsSection);
-    
+    m_parent.update();
+    m_parent.pack();
+    m_parent.redraw();
+    */
   }
 
 
-  private void initialiseModel( )
+  public void initialiseModel( IFEDiscretisationModel1d2d model )
   {
-    final MapView mapView = (MapView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView( MapView.ID );
-    if( mapView != null )
-    {
-     mapPanel = mapView.getMapPanel();
-    }
-    
-    dataModel.setData( ICommonKeys.KEY_MAP_PANEL, mapPanel );
-    IMapModell mapModell = mapPanel.getMapModell();
-    IFEDiscretisationModel1d2d model1d2d = UtilMap.findFEModelTheme( mapModell );
+    m_model = model;
+//    dataModel.setData( ICommonKeys.KEY_MAP_PANEL, mapPanel );
     //TODO check model1d2d for null and do something
     dataModel.setData( 
-        ICommonKeys.KEY_DISCRETISATION_MODEL, model1d2d );
+        ICommonKeys.KEY_DISCRETISATION_MODEL, m_model );
     dataModel.setData(
         ICommonKeys.KEY_FEATURE_WRAPPER_LIST, 
-        CalUnitOps.getModelCalculationUnits( model1d2d ) );
+        CalUnitOps.getModelCalculationUnits( m_model ) );
     dataModel.setData( ICommonKeys.WIDGET_WITH_STRATEGY, this );
     
     //command manager since it is use in the dirty pool object framework
     //the commandable workspace of the target theme is taken
-    IKalypsoFeatureTheme targetTheme = UtilMap.findEditableTheme( mapModell, Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT );
-    dataModel.setData( ICommonKeys.KEY_COMMAND_MANAGER, targetTheme.getWorkspace());
+    dataModel.setData( ICommonKeys.KEY_COMMAND_MANAGER, m_model.getWrappedFeature().getWorkspace());
     
     dataModel.setData( 
         ICommonKeys.KEY_GRAB_DISTANCE_PROVIDER, 
         this );
     
+    createCalculationUnitSection( selectCalcUnitSection );
+    createProblemsInCalculationSection(problemsSection);
+    m_parent.update();
+    m_parent.pack();
+    m_parent.redraw();
   }
 
   private void createCalculationUnitSection( Section selectCalcUnitSection )

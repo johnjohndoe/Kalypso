@@ -108,6 +108,11 @@ public class KalypsoContextHandlerFactory implements IContextHandlerFactory
           return contextHandler;
         }
       }
+      else if( "calculationUnitContext".equals( type ) )
+      {
+          final CalculationUnitPerformViewHandler handler = new CalculationUnitPerformViewHandler( );
+          return handler;
+      }
     }
     return null;
   }

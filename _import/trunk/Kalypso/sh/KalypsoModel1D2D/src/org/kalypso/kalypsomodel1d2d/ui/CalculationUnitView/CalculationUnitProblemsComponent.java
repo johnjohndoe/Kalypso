@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.ui.view.calculation_unit;
+package org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView;
 
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
@@ -101,7 +101,7 @@ public class CalculationUnitProblemsComponent
 	    Image refreshImage = new Image( rootComposite.getDisplay(),
 	            KalypsoModel1D2DPlugin.imageDescriptorFromPlugin(
 	                    PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
-	                    "icons/elcl16/refresh.gif" ).getImageData() );;
+	                    "icons/elcl16/list_down.gif" ).getImageData() );;
         refreshButton.setImage( refreshImage );
         
         formData = new FormData();
@@ -111,9 +111,8 @@ public class CalculationUnitProblemsComponent
         
         TableViewer problemTableViewer = new TableViewer( rootComposite, SWT.FILL | SWT.BORDER );
         Table problemsTable = problemTableViewer.getTable();
-        
+        problemTableViewer.setLabelProvider( null );
         problemTableViewer.setContentProvider( new ArrayContentProvider() );
-        problemTableViewer.setLabelProvider( new CalculationUnitProblemsLabelProvider());
         problemsTable.setLinesVisible( true );
         problemsTable.setLayoutData( formData );    
   }

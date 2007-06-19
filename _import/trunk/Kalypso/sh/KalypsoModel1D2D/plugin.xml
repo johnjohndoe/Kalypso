@@ -536,9 +536,9 @@
   <extension
         point="org.eclipse.ui.views">
      <view
-           class="org.kalypso.kalypsomodel1d2d.ui.view.calculation_unit.CalculationUnitPerformView"
-           id="org.kalypso.kalypsomodel1d2d.ui.view.calculation_unit.CalculationUnitPerformView"
-           name="CalculationUnitPerformView">
+           class="org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView.CalculationUnitPerformView"
+           id="org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView.CalculationUnitPerformView"
+           name="CalculationUnitView">
      </view>
   </extension>     
 </plugin>

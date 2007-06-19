@@ -56,7 +56,6 @@ import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.ButtonFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
-import org.kalypso.ogc.gml.selection.IFeatureSelectionListener;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -66,24 +65,10 @@ public class TimestepFillerFeatureControl extends AbstractFeatureControl impleme
 {
   private IFeatureControl m_featureControl;
 
-  private final IFeatureSelectionListener m_fsl = new IFeatureSelectionListener()
-  {
-    public void selectionChanged( org.kalypso.ogc.gml.selection.IFeatureSelection selection )
-    {
-      System.out.println( "SELECTION CHANGEEEEEEEEEEEED!!!!!" );
-    }
-  };
-
   private final IFeatureChangeListener m_fcl = new IFeatureChangeListener()
   {
     public void featureChanged( final FeatureChange[] changes )
     {
-      System.out.println( "featureChanged:" + changes.toString() );
-      // final GMLWorkspace workspace = m_featureComposite.getFeature().getWorkspace();
-      // final ChangeFeaturesCommand command = new ChangeFeaturesCommand( workspace, changes );
-      //
-      // m_target.setCommandManager( m_commandManager );
-      // m_target.postCommand( command, null );
     }
 
     public void openFeatureRequested( final Feature feature, final IPropertyType ftp )
@@ -97,7 +82,6 @@ public class TimestepFillerFeatureControl extends AbstractFeatureControl impleme
   public TimestepFillerFeatureControl( final Feature feature, final IPropertyType ftp )
   {
     super( feature, ftp );
-    // super.addChangeListener( m_fcl );
   }
 
   /**
@@ -105,7 +89,6 @@ public class TimestepFillerFeatureControl extends AbstractFeatureControl impleme
    */
   public void addModifyListener( final ModifyListener l )
   {
-    System.out.println( "" );
   }
 
   /**
@@ -116,6 +99,7 @@ public class TimestepFillerFeatureControl extends AbstractFeatureControl impleme
     final Display display = PlatformUI.getWorkbench().getDisplay();
     final Feature feature = getFeature();
     m_featureControl = new ButtonFeatureControl( feature, getFeatureTypeProperty() );
+//    m_featureControl = new ButtonFeatureControl( feature, feature.getFeatureType().getProperty( new QName("result") ) );
     m_featureControl.addChangeListener( m_fcl );
     final Button control = (Button) m_featureControl.createControl( parent, style );
     control.setText( "Zeitschritte definieren" );
@@ -160,21 +144,6 @@ public class TimestepFillerFeatureControl extends AbstractFeatureControl impleme
    */
   public void updateControl( )
   {
-    final Feature feature = getFeature();
-    // final IPropertyType featureTypeProperty = getFeatureTypeProperty();
-    // final Feature f1 = ((XLinkedFeature_Impl) feature.getParent().getParent().getProperties()[0]).getFeature();
-
-    // final Feature feature = getFeature().getParent().getParent();
-    // final IPropertyType featureTypeProperty = getFeatureTypeProperty();
-    // final Object property = feature.getProperty( getFeatureTypeProperty() );
-    // // if( m_selector != null && property instanceof SplitSort )
-    // {
-    // final Feature f = ((XLinkedFeature_Impl) feature.getProperty( m_selector )).getFeature();
-    // m_featureControl.setFeature( f );
-    // }
-    // // m_featureControl.setFeature( feature );
-    // m_featureControl.updateControl();
-
   }
 
   /**
