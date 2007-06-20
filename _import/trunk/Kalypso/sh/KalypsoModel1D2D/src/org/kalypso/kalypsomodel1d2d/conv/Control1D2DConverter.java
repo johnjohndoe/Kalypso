@@ -61,7 +61,6 @@ import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
-import org.kalypso.observation.result.TupleResultUtilities;
 import org.kalypso.observation.util.TupleResultIndex;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.Feature;
@@ -133,7 +132,7 @@ public class Control1D2DConverter
     formatter.format( "C0%14d%8d%8d%8d%8.2f%8d%8.3f%8.2f%8d%n", c0Props );
 
     // C1
-    formatter.format( "C1%14d%8d%8d%8d%8d%8d%8d%8d%8d%8d%n", 0, 1, 1, 0, 0, 0, 0, 0, 0, 2 );
+    formatter.format( "C1%14d%8d%8d%8d%8d%8d%8d%8d%8d%n", 0, 1, 1, 0, 0, 0, 0, 0, 0 );
 
     // C2
     formatter.format( "C2%14.2f%8.3f%8.1f%8.1f%8.1f%8d%n", controlModel.getOMEGA(), controlModel.getELEV(), 1.0, 1.0, 1.0, 1 );
@@ -142,7 +141,8 @@ public class Control1D2DConverter
     formatter.format( "C3%14.3f%8.3f%8.3f%8.1f%8.3f%8.3f%8.3f%n", 1.0, 1.0, controlModel.getUNOM(), controlModel.getUDIR(), controlModel.getHMIN(), controlModel.getDSET(), controlModel.getDSETD() );
 
     // C4
-    formatter.format( "C4%14.1f%8.1f%8.1f%n", 0.0, 20.0, 0.0 );
+    final int artImpulsstromBeiwert = 0;
+    formatter.format( "C4%14.1f%8.1f%8.1f%56d%n", 0.0, 20.0, 0.0, artImpulsstromBeiwert );
 
     // C5
     formatter.format( "C5%14d%8d%16d%8d%8d%8d%8d%8d%8d%n", controlModel.getNITI(), controlModel.getNITN(), controlModel.getNCYC(), 0, 1, 1, 0, 1, 1 );
@@ -242,34 +242,36 @@ public class Control1D2DConverter
     final IControlModel1D2D controlModel = calculation.getControlModel();
     final ITimeStepinfo[] timeStepInfos = calculation.getTimeStepInfos();
 
-    /* Steady state, just one block for the Starting Date. */
-    final int niti = controlModel.getNITI();
-    final String msg = "Steady State Input Data";
-    writeTimeStep( formatter, msg, null, null, 1, niti, timeStepInfos );
-
-    /* Unsteady state: a block for each time step */
     final IObservation<TupleResult> observation = controlModel.getTimeSteps();
     final TupleResult result = observation.getResult();
+    // TODO: search components by type!
+    final IComponent compTime = result.getComponents()[0];
+    final IComponent compUnderRelax = result.getComponents()[1];
 
-    final TupleResultIndex index = new TupleResultIndex( result, TupleResultUtilities.findComponentById( result, result.getSortComponents()[0].getId() ) );
-
-    final IComponent res_C_0 = result.getComponents()[0];
-    final IComponent res_C_1 = result.getComponents()[1];
-
+    /* Sort records by time */
+    final TupleResultIndex index = new TupleResultIndex( result, compTime );
     final Iterator<IRecord> iterator = index.getIterator();
     if( !iterator.hasNext() )
       throw new SimulationException( "Zeitschritte leer, keine Rechnung möglich.", null );
     final IRecord firstRecord = iterator.next();
 
-    Calendar lastStepCal = ((XMLGregorianCalendar) firstRecord.getValue( res_C_0 )).toGregorianCalendar();
+    /* Steady state, just one block for the Starting Date. */
+    final int niti = controlModel.getNITI();
+
+    final String msg = "Steady State Input Data";
+    final float uRValSteady = ((BigDecimal) firstRecord.getValue( compUnderRelax )).floatValue();
+    writeTimeStep( formatter, msg, null, null, uRValSteady, niti, timeStepInfos );
+
+    /* Unsteady state: a block for each time step */
+    Calendar lastStepCal = ((XMLGregorianCalendar) firstRecord.getValue( compTime )).toGregorianCalendar();
 
     for( int stepCount = 1; iterator.hasNext(); stepCount++ )
     {
       final IRecord record = iterator.next();
-      final float uRVal = ((BigDecimal) record.getValue( res_C_1 )).floatValue();
+      final float uRVal = ((BigDecimal) record.getValue( compUnderRelax )).floatValue();
       final int nitn = controlModel.getNITN();
 
-      final Calendar stepCal = ((XMLGregorianCalendar) record.getValue( res_C_0 )).toGregorianCalendar();
+      final Calendar stepCal = ((XMLGregorianCalendar) record.getValue( compTime )).toGregorianCalendar();
 
       final String unsteadyMsg = String.format( "Unsteady State Input Data; Step: %4d", stepCount );
       writeTimeStep( formatter, unsteadyMsg, stepCal, lastStepCal, uRVal, nitn, timeStepInfos );
@@ -278,7 +280,7 @@ public class Control1D2DConverter
     }
   }
 
-  private void writeTimeStep( final Formatter formatter, final String message, final Calendar stepCal, final Calendar lastStepCal, final float uRVal, final int nit, final ITimeStepinfo[] timeStepInfos )
+  private void writeTimeStep( final Formatter formatter, final String message, final Calendar stepCal, final Calendar lastStepCal, final float uRVal, final int nit, final ITimeStepinfo[] timeStepInfos ) throws SimulationException
   {
     final String dashes = StringUtils.repeat( "-", message.length() );
     formatter.format( "com %s%n", dashes );
@@ -316,15 +318,30 @@ public class Control1D2DConverter
     else
       formatBC( formatter, uRVal, nit );
 
+    formatBoundCondLines( formatter, stepCal, timeStepInfos, TYPE.CONTI_BC_Q );
+    formatBoundCondLines( formatter, stepCal, timeStepInfos, TYPE.CONTI_BC_H );
+    // add other conti lines types as well (weirs)?
+    formatter.format( "ENDSTEP %s%n", message );
+  }
+
+  /** Formats the lines for one type of boundary condition (QC or HC or ... ). */
+  private void formatBoundCondLines( final Formatter formatter, final Calendar stepCal, final ITimeStepinfo[] timeStepInfos, final TYPE contiType )
+  {
     // Boundary Conditions
     for( final ITimeStepinfo item : timeStepInfos )
     {
+      final double itemValue = item.getValue( stepCal == null ? null : stepCal.getTime() );
       final TYPE type = item.getType();
+
+      /* Write only considered lines */
+      if( type != contiType )
+        continue;
+
       switch( type )
       {
         case CONTI_BC_Q:
         {
-          final double q = item.getValue( stepCal == null ? null : stepCal.getTime() );
+          final double q = itemValue;
           final double theta = item.getTheta();
           formatter.format( "QC%14d%8d%8.3f%8.3f%8.3f%8.3f%8.3f%n", item.getID(), 0, q, theta, 0.000, 20.000, 0.000 );
         }
@@ -332,7 +349,7 @@ public class Control1D2DConverter
 
         case CONTI_BC_H:
         {
-          final double h = item.getValue( stepCal == null ? null : stepCal.getTime() );
+          final double h = itemValue;
           formatter.format( "HC%14d%8d%8.3f%8.3f%8.3f%8.3f%n", item.getID(), 0, h, 0.0, 20.0, 0.0 );
         }
           break;
@@ -341,16 +358,18 @@ public class Control1D2DConverter
           break;
       }
     }
-    formatter.format( "ENDSTEP %s%n", message );
   }
 
-  private void formatBC( final Formatter formatter, final float uRVal_, final int nitn )
+  private void formatBC( final Formatter formatter, final float uRVal, final int nitn ) throws SimulationException
   {
+    if( uRVal < 0.0 || uRVal > 1.0 )
+      throw new SimulationException( "Wichtungsfaktor muss zwischen 0.0 und 1.0 liegen.", null );
+
     final int buffVal;
-    if( uRVal_ == (float) 1.0 )
+    if( uRVal == (float) 1.0 )
       buffVal = 0;
     else
-      buffVal = (int) (((uRVal_ * 10)));
+      buffVal = 10 - (int) (((uRVal * 10)));
 
     for( int j = 0; j < nitn; j++ )
     {

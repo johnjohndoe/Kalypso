@@ -51,7 +51,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
@@ -60,7 +62,6 @@ import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
-
 
 /**
  * @author Thomas Jung
@@ -77,17 +78,34 @@ public class StartCalculationHandler extends AbstractHandler implements IHandler
     final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
     final IFolder scenarioFolder = (IFolder) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
 
+    if( !MessageDialog.openConfirm( shell, "Berechnung starten", "Die Berechnung wird jetzt gestartet, dies kann sehr lange dauern." ) )
+      return Status.CANCEL_STATUS;
+
     final IProject project = scenarioFolder.getProject();
     try
     {
+      final IFolder folder = scenarioFolder.getFolder( "results" );
+      if( folder.exists() )
+      {
+        if( !MessageDialog.openConfirm( shell, "Berechnung starten", "Es sind bereits Ergebnisdaten einer vorangegangenen Berechnung vorhanden.\nWenn Sie fortfahren werden diese unwiederruflich gelöscht." ) )
+          return Status.CANCEL_STATUS;
+      }
+
       final Kalypso1D2DProjectNature nature = Kalypso1D2DProjectNature.getNature( project );
 
       final ICoreRunnableWithProgress runnable = new ICoreRunnableWithProgress()
       {
         public IStatus execute( final IProgressMonitor monitor ) throws CoreException
         {
+          monitor.beginTask( "Starte Berechnung", 11 );
+
+          if( folder.exists() )
+            folder.delete( false, new SubProgressMonitor( monitor, 1 ) );
+          else
+            monitor.worked( 1 );
+
           /* Start calculation and wait for end... */
-          return nature.startCalculation( scenarioFolder, monitor );
+          return nature.startCalculation( scenarioFolder, new SubProgressMonitor( monitor, 10 ) );
         }
       };
       final IStatus status = ProgressUtilitites.busyCursorWhile( runnable );

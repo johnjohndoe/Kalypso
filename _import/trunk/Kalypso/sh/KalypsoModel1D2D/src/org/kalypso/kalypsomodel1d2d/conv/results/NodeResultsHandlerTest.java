@@ -47,22 +47,22 @@ import java.lang.reflect.InvocationTargetException;
 import junit.framework.TestCase;
 
 import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.kalypsomodel1d2d.sim.SimMode1D2DCalcJob;
+import org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 
 /**
  * @author Thomas Jung
- *
+ * 
  */
 public class NodeResultsHandlerTest extends TestCase
 {
-  public void testLoadResults() throws IOException, InvocationTargetException, GmlSerializeException, SimulationException, GM_Exception
+  public void testLoadResults( ) throws IOException, InvocationTargetException, GmlSerializeException, SimulationException, GM_Exception
   {
-      final File result2dFile = new File( "D:/Projekte/kalypso_dev/post-processing/b3.2d" );
-      final File outputDir = FileUtilities.createNewTempDir( "bloed" ); 
-      SimMode1D2DCalcJob.read2DIntoNodeResult( result2dFile, outputDir, null );
+    final File result2dFile = new File( "D:/Projekte/kalypso_dev/post-processing/b3.2d" );
+    final File outputDir = FileUtilities.createNewTempDir( "bloed" );
+    ProcessResultsJob.read2DIntoGmlResults( result2dFile, outputDir, null );
   }
 
 }
