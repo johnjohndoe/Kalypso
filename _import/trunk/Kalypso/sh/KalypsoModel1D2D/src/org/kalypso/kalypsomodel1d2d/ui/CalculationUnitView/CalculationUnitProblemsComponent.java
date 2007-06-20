@@ -43,6 +43,8 @@ package org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
@@ -51,7 +53,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
@@ -75,7 +76,7 @@ public class CalculationUnitProblemsComponent
   {
 	    this.toolkit = toolkit;
 	    this.parent = parent;
-	 //   this.dataModel = dataModel;
+	    this.dataModel = dataModel;
 	    guiProblemViewer( parent );
 	   //dataModel.addKeyBasedDataChangeListener( settingsKeyListener );
     
@@ -87,12 +88,13 @@ public class CalculationUnitProblemsComponent
 	    rootComposite.setLayout( new FormLayout());
 	    
 	    FormData formData = new FormData();
-	    formData.top = new FormAttachment(0,5);
-	    formData.left = new FormAttachment(0,5);
+	    formData.top = new FormAttachment(0,0);
+	    formData.left = new FormAttachment(0,0);
 	    rootComposite.setLayoutData( formData );
 	    
 	    Label nameText = new Label(rootComposite, SWT.NONE);
-	    nameText.setText( "Problems" );
+	    nameText.setText( "Problems :" );
+	    
 	    formData = new FormData();
 	    formData.left = new FormAttachment(0,5);
 	    formData.top = new FormAttachment(0,5);
@@ -104,6 +106,15 @@ public class CalculationUnitProblemsComponent
 	                    PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
 	                    "icons/elcl16/refresh.gif" ).getImageData() );;
         refreshButton.setImage( refreshImage );
+        
+        refreshButton.addSelectionListener( new SelectionAdapter(){
+          @Override
+          public void widgetSelected( SelectionEvent e )
+          {
+            
+          }
+          
+        });
         
         formData = new FormData();
         formData.left = new FormAttachment(nameText,10);
@@ -122,33 +133,6 @@ public class CalculationUnitProblemsComponent
         formData.top = new FormAttachment(refreshButton,5);
         formData.right = new FormAttachment(100,-5);
         problemsTable.setLayoutData( formData );
-        
-        Text problemTextViewer = new Text(rootComposite, SWT.MULTI|SWT.WRAP|SWT.BORDER);
-        StringBuffer buf = new StringBuffer();
-        buf.append("<form>"); //$NON-NLS-1$
-        buf.append("<p>"); //$NON-NLS-1$
-        buf.append("1. Problem with the Final"); //$NON-NLS-1$
-        buf.append("</p>"); //$NON-NLS-1$
-        buf.append("<p>"); //$NON-NLS-1$
-        buf.append("1. Problem with the Final"); //$NON-NLS-1$
-        buf.append("</p>"); //$NON-NLS-1$
-        buf.append("<p>"); //$NON-NLS-1$
-        buf.append("1. Problem with the Final"); //$NON-NLS-1$
-        buf.append("</p>"); //$NON-NLS-1$
-        buf.append("<p>"); //$NON-NLS-1$
-        buf.append("1. Problem with the Final"); //$NON-NLS-1$
-        buf.append("</p>"); //$NON-NLS-1$
-        buf.append("</form>"); //$NON-NLS-1$
-     //   problemTextViewer.setText(buf.toString());
-        
-        formData = new FormData();
-        formData.left = new FormAttachment(0,5);
-        formData.top = new FormAttachment(problemsTable,5);
-        formData.right = new FormAttachment(100,-5);
-        problemTextViewer.setLayoutData(formData);
-        
+       
   }
-
-  
-
 }
