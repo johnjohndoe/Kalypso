@@ -72,13 +72,16 @@ import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
 import org.kalypso.kalypsomodel1d2d.ui.map.merge.Model1d2dCalUnitTheme;
 import org.kalypso.kalypsomodel1d2d.ui.map.popup.PopupBlocker;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
+import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypso.ui.views.map.MapView;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * 
@@ -166,7 +169,8 @@ public class CalculationUnitWidget
         targetTheme.getWorkspace());
     calUnitTheme = 
       new Model1d2dCalUnitTheme("Aktuelle CalUnit",mapModell);
-    mapModell.addTheme( calUnitTheme );
+//    mapModell.addTheme( calUnitTheme );
+    mapModell.insertTheme( calUnitTheme, 0 );
     dataModel.addKeyBasedDataChangeListener( calThemeUpdater );
     
     IKalypsoFeatureTheme bcTheme = UtilMap.findEditableTheme( 
@@ -180,14 +184,21 @@ public class CalculationUnitWidget
 //    dataModel.setData( 
 //        ICommonKeys.KEY_BOUNDARY_CONDITION_THEME, 
 //        bcTheme );
+    final CommandableWorkspace bcWorkspace = bcTheme.getWorkspace();
     dataModel.setData( 
         ICommonKeys.KEY_BOUNDARY_CONDITION_CMD_WORKSPACE, 
-        bcTheme.getWorkspace() );
+        bcWorkspace );
     dataModel.setData( 
         ICommonKeys.KEY_GRAB_DISTANCE_PROVIDER, 
         this );
     
-//    registerPopupBlocker( popupBlocker );
+    //set bc list to calunit theme for display
+    final Feature bcHolderModelFeature = bcWorkspace.getRootFeature();
+    IFlowRelationshipModel bcModel =
+      (IFlowRelationshipModel) bcHolderModelFeature.getAdapter( IFlowRelationshipModel.class );
+    calUnitTheme.setModelBoundaryConditions( bcModel );
+    
+    
     popupBlocker.registerPopupBlockerToActiveMapView();
   }
 
