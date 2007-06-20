@@ -20,9 +20,9 @@
      <c1d2d:HMIN>0.0</c1d2d:HMIN>
      <c1d2d:DSET>0.01</c1d2d:DSET>
      <c1d2d:DSETD>0.015</c1d2d:DSETD>
-     <c1d2d:NITI>54</c1d2d:NITI>
-     <c1d2d:NCYC>0</c1d2d:NCYC>
-     <c1d2d:NITN>1</c1d2d:NITN>
+     <c1d2d:NITI>50</c1d2d:NITI>
+     <c1d2d:NCYC>5</c1d2d:NCYC>
+     <c1d2d:NITN>50</c1d2d:NITN>
      <c1d2d:CONV_1>1.0E-9</c1d2d:CONV_1>
      <c1d2d:CONV_2>1.0E-9</c1d2d:CONV_2>
      <c1d2d:CONV_3>1.0E-9</c1d2d:CONV_3>
@@ -44,6 +44,11 @@
         </sweExt:SortedRecordDefinition>
        </om:resultDefinition>
        <om:result xmlns:om="http://www.opengis.net/om"><![CDATA[2001-01-01T10%3A00%3A00.000%2B01%3A00 0.1
+2001-01-01T11%3A00%3A00.000%2B01%3A00 0.1
+2001-01-01T12%3A00%3A00.000%2B01%3A00 0.1
+2001-01-01T13%3A00%3A00.000%2B01%3A00 0.1
+2001-01-01T14%3A00%3A00.000%2B01%3A00 0.1
+2001-01-01T15%3A00%3A00.000%2B01%3A00 0.1
 ]]></om:result>
       </c1d2d:TimestepsObservation>
      </c1d2d:timestepsMember>

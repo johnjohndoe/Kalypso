@@ -21,6 +21,11 @@
       </sweExt:SortedRecordDefinition>
      </om:resultDefinition>
      <om:result><![CDATA[2001-01-01T10%3A00%3A00.000%2B01%3A00 3.5
+2001-01-01T11%3A00%3A00.000%2B01%3A00 3.4
+2001-01-01T12%3A00%3A00.000%2B01%3A00 3.3
+2001-01-01T13%3A00%3A00.000%2B01%3A00 3.2
+2001-01-01T14%3A00%3A00.000%2B01%3A00 3.1
+2001-01-01T15%3A00%3A00.000%2B01%3A00 3.0
 ]]></om:result>
      <ns0:dataSourceURI/>
     </ns0:ObservationWithSource>
@@ -48,9 +53,14 @@
       </sweExt:SortedRecordDefinition>
      </om:resultDefinition>
      <om:result><![CDATA[2001-01-01T10%3A00%3A00.000%2B01%3A00 5
+2001-01-01T11%3A00%3A00.000%2B01%3A00 4.5
+2001-01-01T12%3A00%3A00.000%2B01%3A00 4
+2001-01-01T13%3A00%3A00.000%2B01%3A00 3.5
+2001-01-01T14%3A00%3A00.000%2B01%3A00 3
+2001-01-01T15%3A00%3A00.000%2B01%3A00 2.5
 ]]></om:result>
      <ns0:dataSourceURI/>
-     <ns0:direction>60</ns0:direction>
+     <ns0:direction>70</ns0:direction>
     </ns0:DirectedObservationWithSource>
    </op1d2d:observation>
   </op1d2d:BoundaryCondition>
