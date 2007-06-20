@@ -105,13 +105,13 @@ public class ProcessHelper
    * @param fleExeDir
    * @param cancelable
    * @param lTimeOut
-   *          Time-out in milliseconds
+   *            Time-out in milliseconds
    * @param wLog
    * @param wErr
    * @throws IOException
    * @throws ProcessTimeoutException
-   * 
-   * @deprecated use {@link #startProcess(String, String[], File, ICancelable, long, OutputStream, OutputStream, InputStream)
+   * @deprecated use
+   *             {@link #startProcess(String, String[], File, ICancelable, long, OutputStream, OutputStream, InputStream)
    */
   @Deprecated
   public static int startProcess( final String sCmd, final String[] envp, final File fleExeDir, final ICancelable cancelable, final long lTimeOut, final Writer wLog, final Writer wErr ) throws IOException, ProcessTimeoutException
@@ -190,6 +190,15 @@ public class ProcessHelper
   }
 
   /**
+   * Same as
+   * {@link #startProcess(String, String[], File, ICancelable, long, OutputStream, OutputStream, InputStream, 100, null)}
+   */
+  public static int startProcess( final String sCmd, final String[] envp, final File fleExeDir, final ICancelable cancelable, final long lTimeOut, final OutputStream wLog, final OutputStream wErr, final InputStream rIn ) throws IOException, ProcessTimeoutException
+  {
+    return startProcess( sCmd, envp, fleExeDir, cancelable, lTimeOut, wLog, wErr, rIn, 100, null );
+  }
+
+  /**
    * startet Prozess (sCmd, envp, fleExeDir), schreibt Ausgaben nach wLog, wErr, beendet den Prozess automatisch nach
    * iTOut ms (iTOut = 0 bedeutet, dass der Prozess nicht abgebrochen wird), die Abarbeitung des Prozesses beachtet auch
    * den Cancel-Status von cancelable
@@ -199,19 +208,27 @@ public class ProcessHelper
    * @param fleExeDir
    * @param cancelable
    * @param lTimeOut
-   *          Time-out in milliseconds
+   *            Time-out in milliseconds
    * @param wLog
+   *            Gets connected to the output stream of the process.
    * @param wErr
+   *            Gets connected to the error stream of the process.
+   * @param rIn
+   *            Gets connected to the input stream of the process.
+   * @param sleepTime
+   *            Sleep time for each loop, for checking the running process.
+   * @param idleWorker
+   *            This runnable gets called for every loop, while checking the running process.
    * @throws IOException
    * @throws ProcessTimeoutException
    */
-  public static int startProcess( final String sCmd, final String[] envp, final File fleExeDir, final ICancelable cancelable, final long lTimeOut, final OutputStream wLog, final OutputStream wErr, final InputStream rIn ) throws IOException, ProcessTimeoutException
+  public static int startProcess( final String sCmd, final String[] envp, final File fleExeDir, final ICancelable cancelable, final long lTimeOut, final OutputStream wLog, final OutputStream wErr, final InputStream rIn, final int sleepTime, final Runnable idleWorker ) throws IOException, ProcessTimeoutException
   {
     final Process process;
     int iRetVal = -1;
-    InputStream inStream = null;
-    InputStream errStream = null;
-    OutputStream outStream = null;
+    final InputStream inStream = null;
+    final InputStream errStream = null;
+    final OutputStream outStream = null;
     ProcessControlThread procCtrlThread = null;
 
     try
@@ -250,7 +267,20 @@ public class ProcessHelper
           iRetVal = process.exitValue();
           return iRetVal;
         }
-        Thread.sleep( 100 );
+
+        if( idleWorker != null )
+        {
+          try
+          {
+            idleWorker.run();
+          }
+          catch( final Throwable t )
+          {
+            t.printStackTrace();
+          }
+        }
+
+        Thread.sleep( sleepTime );
       }
       if( procCtrlThread != null )
       {
@@ -309,7 +339,7 @@ public class ProcessHelper
           m_bProcCtrlActive = true;
           wait( m_lTimeout );
         }
-        catch( InterruptedException ex )
+        catch( final InterruptedException ex )
         {
           // sollte nicht passieren
         }

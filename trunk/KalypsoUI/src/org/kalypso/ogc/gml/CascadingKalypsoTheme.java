@@ -48,7 +48,6 @@ import javax.xml.bind.JAXBException;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
@@ -259,7 +258,9 @@ public class CascadingKalypsoTheme extends AbstractKalypsoTheme implements ITemp
 
   protected void startLoadJob( ) throws Exception
   {
-    m_file.refreshLocal( IResource.DEPTH_ZERO, null );
+    // Do not do such a thing, if the resources are not fresh, something else is wrong!
+    // Apart from, that this causes a scheduling rule conflict so no map ican be opened in expert mode
+// m_file.refreshLocal( IResource.DEPTH_ZERO, null );
     final InputSource inputSource = new InputSource( m_file.getContents() );
     Gismapview innerGisView;
     try
