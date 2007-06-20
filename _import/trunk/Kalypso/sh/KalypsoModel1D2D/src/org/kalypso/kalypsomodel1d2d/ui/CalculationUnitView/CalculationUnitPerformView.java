@@ -105,26 +105,24 @@ public class CalculationUnitPerformView extends ViewPart
     toolkit = new FormToolkit(parent.getDisplay());
     form = toolkit.createScrolledForm(parent);
     form.setText("Calculation Unit Perform"); 
-    TableWrapData tableWrapData;
-
     form.getBody().setLayout( new TableWrapLayout() );
 
     // Calculation Unit Section     
     selectCalcUnitSection = toolkit.createSection( form.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
     selectCalcUnitSection.setText( "Berechnungseinheiten" );
-    tableWrapData = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
-    tableWrapData.grabHorizontal = true;
-    tableWrapData.grabVertical = true;
-    selectCalcUnitSection.setLayoutData( tableWrapData );
+    final TableWrapData tableWrapDataCU = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
+    tableWrapDataCU.grabHorizontal = true;
+    tableWrapDataCU.grabVertical = true;
+    selectCalcUnitSection.setLayoutData( tableWrapDataCU );
     selectCalcUnitSection.setExpanded( true );
 
  // Creates Section for "Calculation Settings Unit"
     problemsSection = toolkit.createSection( form.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
     problemsSection.setText( "Berechnungseinheit Verwalten" );
-    tableWrapData = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
-    tableWrapData.grabHorizontal = true;
-    tableWrapData.grabVertical = true;
-    problemsSection.setLayoutData( tableWrapData );
+    final TableWrapData tableWrapDataPU = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
+    tableWrapDataPU.grabHorizontal = true;
+    tableWrapDataPU.grabVertical = true;
+    problemsSection.setLayoutData( tableWrapDataPU );
     problemsSection.setExpanded( true );
     /*
     createCalculationUnitSection( selectCalcUnitSection );
