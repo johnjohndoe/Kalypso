@@ -51,11 +51,12 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
-import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
+import org.kalypso.kalypsomodel1d2d.ui.map.editor.ListLabelProvider;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListener;
 
 /**
@@ -74,7 +75,7 @@ public class CalculationUnitProblemsComponent
   {
 	    this.toolkit = toolkit;
 	    this.parent = parent;
-	    this.dataModel = dataModel;
+	 //   this.dataModel = dataModel;
 	    guiProblemViewer( parent );
 	   //dataModel.addKeyBasedDataChangeListener( settingsKeyListener );
     
@@ -101,20 +102,51 @@ public class CalculationUnitProblemsComponent
 	    Image refreshImage = new Image( rootComposite.getDisplay(),
 	            KalypsoModel1D2DPlugin.imageDescriptorFromPlugin(
 	                    PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
-	                    "icons/elcl16/list_down.gif" ).getImageData() );;
+	                    "icons/elcl16/refresh.gif" ).getImageData() );;
         refreshButton.setImage( refreshImage );
         
         formData = new FormData();
-        formData.left = new FormAttachment(100,-40);
+        formData.left = new FormAttachment(nameText,10);
         formData.top = new FormAttachment(0,5);
         refreshButton.setLayoutData( formData );
         
         TableViewer problemTableViewer = new TableViewer( rootComposite, SWT.FILL | SWT.BORDER );
         Table problemsTable = problemTableViewer.getTable();
-        problemTableViewer.setLabelProvider( null );
+        problemTableViewer.setLabelProvider( new ListLabelProvider());
         problemTableViewer.setContentProvider( new ArrayContentProvider() );
         problemsTable.setLinesVisible( true );
-        problemsTable.setLayoutData( formData );    
+        problemsTable.setLayoutData( formData ); 
+        
+        formData = new FormData();
+        formData.left = new FormAttachment(0,5);
+        formData.top = new FormAttachment(refreshButton,5);
+        formData.right = new FormAttachment(100,-5);
+        problemsTable.setLayoutData( formData );
+        
+        Text problemTextViewer = new Text(rootComposite, SWT.MULTI|SWT.WRAP|SWT.BORDER);
+        StringBuffer buf = new StringBuffer();
+        buf.append("<form>"); //$NON-NLS-1$
+        buf.append("<p>"); //$NON-NLS-1$
+        buf.append("1. Problem with the Final"); //$NON-NLS-1$
+        buf.append("</p>"); //$NON-NLS-1$
+        buf.append("<p>"); //$NON-NLS-1$
+        buf.append("1. Problem with the Final"); //$NON-NLS-1$
+        buf.append("</p>"); //$NON-NLS-1$
+        buf.append("<p>"); //$NON-NLS-1$
+        buf.append("1. Problem with the Final"); //$NON-NLS-1$
+        buf.append("</p>"); //$NON-NLS-1$
+        buf.append("<p>"); //$NON-NLS-1$
+        buf.append("1. Problem with the Final"); //$NON-NLS-1$
+        buf.append("</p>"); //$NON-NLS-1$
+        buf.append("</form>"); //$NON-NLS-1$
+     //   problemTextViewer.setText(buf.toString());
+        
+        formData = new FormData();
+        formData.left = new FormAttachment(0,5);
+        formData.top = new FormAttachment(problemsTable,5);
+        formData.right = new FormAttachment(100,-5);
+        problemTextViewer.setLayoutData(formData);
+        
   }
 
   

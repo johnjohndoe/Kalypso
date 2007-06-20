@@ -46,7 +46,6 @@ import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
@@ -54,15 +53,10 @@ import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
-import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
-import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ui.views.map.MapView;
 
 /**
  * @author Madanagopal
@@ -95,10 +89,7 @@ public class CalculationUnitPerformView extends ViewPart
   public CalculationUnitPerformView() {
   }
 
-  /**
-   * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
-   */
-  @Override
+
   public void createPartControl( Composite parent )
   {
     m_parent = parent;
@@ -124,6 +115,9 @@ public class CalculationUnitPerformView extends ViewPart
     tableWrapDataPU.grabVertical = true;
     problemsSection.setLayoutData( tableWrapDataPU );
     problemsSection.setExpanded( true );
+    
+    createProblemsInCalculationSection(problemsSection);
+    
     /*
     createCalculationUnitSection( selectCalcUnitSection );
     createProblemsInCalculationSection(problemsSection);
@@ -154,11 +148,12 @@ public class CalculationUnitPerformView extends ViewPart
         ICommonKeys.KEY_GRAB_DISTANCE_PROVIDER, 
         this );
     
-    createCalculationUnitSection( selectCalcUnitSection );
+//    createCalculationUnitSection( selectCalcUnitSection );
     createProblemsInCalculationSection(problemsSection);
     m_parent.update();
     m_parent.pack();
     m_parent.redraw();
+    
   }
 
   private void createCalculationUnitSection( Section selectCalcUnitSection )
@@ -173,8 +168,8 @@ public class CalculationUnitPerformView extends ViewPart
     formData.top = new FormAttachment( 0, 5 );
     sectionFirstComposite.setLayoutData( formData );
     
-    calcSelect = new CalculationUnitPerformComponent();    
-    calcSelect.createControl( dataModel, toolkit, sectionFirstComposite );
+//    calcSelect = new CalculationUnitPerformComponent();    
+//    calcSelect.createControl( dataModel, toolkit, sectionFirstComposite );
     
   }
 
