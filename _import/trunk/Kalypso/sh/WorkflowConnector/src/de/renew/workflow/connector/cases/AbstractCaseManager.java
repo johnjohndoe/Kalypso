@@ -111,7 +111,16 @@ public abstract class AbstractCaseManager<T extends Case>
     final IFolder folder = project.getFolder( METADATA_FOLDER );
     if( !folder.exists() )
     {
-      folder.create( false, true, null );
+      try
+      {
+        folder.create( false, true, null );
+      }
+      catch( final CoreException e )
+      {
+      	//seems that the folder was created inbetween the call to #exists() and #create()
+        WorkflowConnectorPlugin.getDefault().getLog().log( e.getStatus() );
+        e.printStackTrace();
+      }
     }
 
     final IFile metadataFile = folder.getFile( METADATA_FILENAME );

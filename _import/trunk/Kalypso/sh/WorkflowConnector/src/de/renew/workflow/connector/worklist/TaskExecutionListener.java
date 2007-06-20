@@ -49,13 +49,12 @@ import org.eclipse.core.commands.IExecutionListener;
 import org.eclipse.core.commands.NotHandledException;
 import org.eclipse.core.commands.State;
 import org.eclipse.core.commands.common.NotDefinedException;
-import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 
 import de.renew.workflow.connector.WorkflowConnector;
-import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
-
 
 /**
  * A {@link TaskExecutionListener} handles requesting and confirming work items for commands. This
@@ -85,10 +84,11 @@ public class TaskExecutionListener implements IExecutionListener
 
   private final ICommandService m_commandService;
 
-  public TaskExecutionListener( final ICommandService commandService )
+  public TaskExecutionListener( )
   {
-    commandService.addExecutionListener( this );
-    // TODO when does this listener evers gets removed?
+    final IWorkbench workbench = PlatformUI.getWorkbench();
+    final ICommandService commandService = (ICommandService) workbench.getService( ICommandService.class );
+    // remember command service, it is needed several times
     m_commandService = commandService;
   }
 

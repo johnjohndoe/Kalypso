@@ -16,11 +16,14 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchListener;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.kalypso1d2d.pjt.perspective.PerspectiveWatcher;
 import org.kalypso.kalypso1d2d.pjt.views.SzenarioDataProvider;
+import org.kalypso.kalypso1d2d.pjt.views.TaskExecutionAuthority;
+import org.kalypso.kalypso1d2d.pjt.views.TaskExecutor;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.osgi.framework.BundleContext;
 
@@ -28,6 +31,8 @@ import de.renew.workflow.cases.Case;
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 import de.renew.workflow.connector.context.ActiveWorkContext;
 import de.renew.workflow.connector.context.CaseHandlingProjectNature;
+import de.renew.workflow.connector.worklist.ITaskExecutor;
+import de.renew.workflow.contexts.WorkflowContextHandlerFactory;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -55,6 +60,10 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
 
   private SzenarioDataProvider m_szenarioDataProvider;
 
+  private TaskExecutionAuthority m_taskExecutionAuthority;
+
+  private TaskExecutor m_taskExecutor;
+
   /**
    * The constructor
    */
@@ -78,6 +87,13 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
 
     startSzenarioSourceProvider();
 
+    final WorkflowContextHandlerFactory workflowContextHandlerFactory = new WorkflowContextHandlerFactory();
+    final IWorkbench workbench = PlatformUI.getWorkbench();
+    final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
+    final ICommandService commandService = (ICommandService) workbench.getService( ICommandService.class );
+    m_taskExecutionAuthority = new TaskExecutionAuthority();
+    m_taskExecutor = new TaskExecutor( workflowContextHandlerFactory, m_taskExecutionAuthority, commandService, handlerService );
+
     PlatformUI.getWorkbench().addWorkbenchListener( new IWorkbenchListener()
     {
 
@@ -94,8 +110,15 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
       @SuppressWarnings("synthetic-access")
       public boolean preShutdown( final IWorkbench workbench, final boolean forced )
       {
-        stopSzenarioSourceProvider();
-        return true;
+        if( !forced && m_taskExecutionAuthority.canStopTask( m_taskExecutor.getActiveTask() ) )
+        {
+          stopSzenarioSourceProvider();
+          return true;
+        }
+        else
+        {
+          return false;
+        }
       }
     } );
   }
@@ -104,10 +127,21 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
    * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
    */
   @Override
-  public void stop( BundleContext context ) throws Exception
+  public void stop( final BundleContext context ) throws Exception
   {
+    final IWorkbench workbench = PlatformUI.getWorkbench();
+    final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
+    if( handlerService != null )
+    {
+      handlerService.removeSourceProvider( m_szenarioSourceProvider );
+    }
     plugin = null;
     super.stop( context );
+  }
+  
+  public TaskExecutor getTaskExecutor( )
+  {
+    return m_taskExecutor;
   }
 
   /**
@@ -198,8 +232,7 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
     }
 
     if( PlatformUI.isWorkbenchRunning() )
-    {
-      final IWorkbench workbench = PlatformUI.getWorkbench();
+    {      
       try
       {
         m_activeWorkContext.setCurrentCase( null );
@@ -207,12 +240,7 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
       catch( final CoreException e )
       {
         e.printStackTrace();
-      }
-      final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
-      if( handlerService != null )
-      {
-        handlerService.removeSourceProvider( m_szenarioSourceProvider );
-      }
+      }      
       m_activeWorkContext.removeActiveContextChangeListener( m_perspectiveWatcher );
     }
   }

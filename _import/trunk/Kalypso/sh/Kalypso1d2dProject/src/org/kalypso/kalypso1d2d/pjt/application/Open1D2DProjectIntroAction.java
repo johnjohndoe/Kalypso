@@ -45,6 +45,9 @@ import java.util.Properties;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.intro.IIntroManager;
@@ -89,7 +92,10 @@ public class Open1D2DProjectIntroAction implements IIntroAction
     }
     catch( final CoreException e )
     {
-      e.printStackTrace();
+      final Shell activeShell = workbench.getDisplay().getActiveShell();
+      final IStatus status = e.getStatus();
+      ErrorDialog.openError( activeShell, "Problem", "Das Projekt konnte nicht geöffnet werden", status );
+      Kalypso1d2dProjectPlugin.getDefault().getLog().log( status );
     }
   }
 

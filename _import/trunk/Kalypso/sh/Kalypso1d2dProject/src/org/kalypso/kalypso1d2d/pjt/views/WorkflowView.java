@@ -96,13 +96,7 @@ public class WorkflowView extends ViewPart
     super.init( site, memento );
     m_activeWorkContext = Kalypso1d2dProjectPlugin.getDefault().getActiveWorkContext();
     m_activeWorkContext.addActiveContextChangeListener( m_contextListener );
-    final WorkflowContextHandlerFactory workflowContextHandlerFactory = new WorkflowContextHandlerFactory();
-    final IWorkbench workbench = site.getWorkbenchWindow().getWorkbench();
-    final ICommandService commandService = (ICommandService) workbench.getService( ICommandService.class );
-    final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
-    new TaskExecutionListener( commandService );
-    final ITaskExecutor taskExecutor = new TaskExecutor( workflowContextHandlerFactory, new TaskExecutionAuthority(), commandService, handlerService );
-    m_workflowControl = new WorkflowControl( taskExecutor );
+    m_workflowControl = new WorkflowControl( Kalypso1d2dProjectPlugin.getDefault().getTaskExecutor());
     m_workflowControl.restoreState( memento );
   }
 

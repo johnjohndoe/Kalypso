@@ -9,23 +9,37 @@ import java.util.logging.Logger;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.IResourceChangeListener;
+import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.ErrorSupportProvider;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.commands.ICommandService;
 
 import de.renew.workflow.base.Workflow;
 import de.renew.workflow.cases.Case;
 import de.renew.workflow.connector.WorkflowConnectorPlugin;
 import de.renew.workflow.connector.cases.ICaseManager;
+import de.renew.workflow.connector.worklist.TaskExecutionListener;
 
 /**
  * Represents the work context for a user.
  * 
  * @author Patrice Congo, Stefan Kurzbach
  */
-public class ActiveWorkContext<T extends Case>
+public class ActiveWorkContext<T extends Case> implements IResourceChangeListener
 {
   private final static Logger logger = Logger.getLogger( ActiveWorkContext.class.getName() );
 
@@ -56,6 +70,9 @@ public class ActiveWorkContext<T extends Case>
   {
     m_natureID = natureID;
     restoreState( properties );
+
+    final IWorkspace workspace = ResourcesPlugin.getWorkspace();
+    workspace.addResourceChangeListener( this, IResourceChangeEvent.PRE_DELETE );
   }
 
   private void restoreState( final Properties properties )
@@ -228,8 +245,16 @@ public class ActiveWorkContext<T extends Case>
         final URI uri = new URI( caze.getURI() );
         final String projectName = uri.getHost();
         final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject( projectName );
-        if( project.exists() && project.isOpen() )
+        if( project.exists() )
+        {
+          // open a closed project, should we do this?
+          project.open( null );
           setCurrentProject( (CaseHandlingProjectNature) project.getNature( m_natureID ) );
+        }
+        else
+        {
+          throw new CoreException( new Status( Status.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, "Das Projekt " + projectName + " für den Case " + caze.getName() + " existiert nicht." ) );
+        }
       }
     }
     catch( final URISyntaxException e )
@@ -241,5 +266,35 @@ public class ActiveWorkContext<T extends Case>
   public Workflow getCurrentWorklist( )
   {
     return m_caseManager.getCurrentWorklist();
+  }
+
+  /**
+   * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
+   */
+  public void resourceChanged( final IResourceChangeEvent event )
+  {
+    if( event.getResource().equals( m_currentProject.getProject() ) )
+    {
+      final Display display = PlatformUI.getWorkbench().getDisplay();
+      display.asyncExec( new Runnable()
+      {
+
+        public void run( )
+        {
+          try
+          {
+            setCurrentCase( null );
+          }
+          catch( final CoreException e )
+          {
+            final Shell activeShell = display.getActiveShell();
+            final IStatus status = e.getStatus();
+            ErrorDialog.openError( activeShell, "Problem beim Löschen des Projektes", "Projekt wurde nicht deaktiviert.", status );
+            WorkflowConnectorPlugin.getDefault().getLog().log( status );
+          }
+        }
+      } );
+    }
+
   }
 }

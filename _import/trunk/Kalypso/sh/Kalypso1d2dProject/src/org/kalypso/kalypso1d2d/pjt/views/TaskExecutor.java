@@ -94,6 +94,11 @@ public class TaskExecutor implements ITaskExecutor
     m_commandService = commandService;
     m_handlerService = handlerService;
   }
+  
+  public Task getActiveTask( )
+  {
+    return m_activeTask;
+  }
 
   /**
    * @see de.renew.workflow.connector.ITaskExecutor#execute(de.renew.workflow.base.Task)

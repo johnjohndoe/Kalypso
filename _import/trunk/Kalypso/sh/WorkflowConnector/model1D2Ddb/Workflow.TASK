@@ -1,5 +1,4 @@
-NewProject,"Neues Projekt",de.renew.workflow.ConfirmedTaskImpl,1,"",model
-RemoveProject,"Projekt löschen",de.renew.workflow.ConfirmedTaskImpl,1,"",model
+de.renew.workflow.connector.NewProject,"Neues Projekt",de.renew.workflow.ConfirmedTaskImpl,1,"",model
+de.renew.workflow.connector.RemoveProject,"Projekt löschen",de.renew.workflow.ConfirmedTaskImpl,1,"",model
 NewScenario,"Neues Szenario",de.renew.workflow.ConfirmedTaskImpl,1,"",model
 DeriveScenario,"Szenario ableiten",de.renew.workflow.ConfirmedTaskImpl,1,"",model
-MapLoad,"Karte importieren",de.renew.workflow.ConfirmedTaskImpl,1,"",model

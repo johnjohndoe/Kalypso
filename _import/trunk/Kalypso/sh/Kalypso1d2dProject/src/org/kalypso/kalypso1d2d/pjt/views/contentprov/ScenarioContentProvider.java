@@ -40,7 +40,7 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
       if( !project.isOpen() )
       {
         // project is closed or does not exist
-        return null;
+        return new Object[0];
       }
       else
         try

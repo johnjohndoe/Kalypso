@@ -319,6 +319,9 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
   public boolean isDirty( final Class< ? extends IFeatureWrapper2> modelClass )
   {
     final KeyPoolListener keyPoolListener = m_keyMap.get( modelClass );
+    if(keyPoolListener == null) {
+      return false;
+    }
     final IPoolableObjectType key = keyPoolListener.getKey();
     if( key == null )
     {
