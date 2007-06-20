@@ -49,6 +49,7 @@ import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -170,5 +171,24 @@ public class MapUtilities
 
     GM_Point destination = transform( mapPanel, point );
     return destination.getX() - reference.getX();
+  }
+  
+  /**
+   * This function transforms a distance in pixel to the world distance.
+   * 
+   * @param mapPanel
+   *          The MapPanel of the map. 
+   * @param distancePx
+   *          The distance in pixel to be calculated.
+   * @return The distance in the world coordinates system.
+   */
+  public static double calculateWorldDistance( MapPanel mapPanel, int distancePx )
+  {
+    final GM_Position minPosition = mapPanel.getBoundingBox().getMin();
+    final GM_Point reference = GeometryFactory.createGM_Point( 
+        minPosition.getX(), 
+        minPosition.getY(), 
+        mapPanel.getMapModell().getCoordinatesSystem() );
+    return calculateWorldDistance( mapPanel, reference, distancePx );
   }
 }
