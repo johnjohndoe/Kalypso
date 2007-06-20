@@ -60,7 +60,7 @@ import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
 @SuppressWarnings("restriction")
 public class KalypsoModelActionBarAdvisor extends ActionBarAdvisor
 {
-  private IWorkbenchWindow m_window;
+  private final IWorkbenchWindow m_window;
 
   public KalypsoModelActionBarAdvisor( final IActionBarConfigurer configurer )
   {
@@ -128,7 +128,7 @@ public class KalypsoModelActionBarAdvisor extends ActionBarAdvisor
     // menu.add( changePerspMenuMgr );
     // }
     {
-      MenuManager showViewMenuMgr = new MenuManager( IDEWorkbenchMessages.Workbench_showView, "showView" ); //$NON-NLS-1$
+      final MenuManager showViewMenuMgr = new MenuManager( IDEWorkbenchMessages.Workbench_showView, "showView" ); //$NON-NLS-1$
       final IContributionItem showViewMenu = ContributionItemFactory.VIEWS_SHORTLIST.create( getWindow() );
       showViewMenuMgr.add( showViewMenu );
       menu.add( showViewMenuMgr );
@@ -187,9 +187,9 @@ public class KalypsoModelActionBarAdvisor extends ActionBarAdvisor
    * set to <code>true</code>.
    * 
    * @param menu
-   *          the menu to add to
+   *            the menu to add to
    * @param groupId
-   *          the group id for the added separator or group marker
+   *            the group id for the added separator or group marker
    */
   private void addSeparatorOrGroupMarker( final MenuManager menu, final String groupId )
   {
