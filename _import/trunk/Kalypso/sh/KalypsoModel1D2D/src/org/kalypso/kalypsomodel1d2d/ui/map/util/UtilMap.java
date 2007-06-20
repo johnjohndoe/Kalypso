@@ -45,6 +45,11 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
@@ -53,6 +58,7 @@ import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ui.views.map.MapView;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -68,6 +74,38 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public class UtilMap
 {
+  
+  /**
+   * To get the map view. The view with the ID {@link MapView#ID}
+   * in the active workbench page is returned.
+   * 
+   * @return a {@link IViewPart} representing the map view in the active 
+   *            workbench
+   */
+  public static final IViewPart getMapView( )
+  {
+    IWorkbench workbench = PlatformUI.getWorkbench();
+    if( workbench == null )
+    {
+      System.out.println("Could not get Workbench");
+      return null;
+    }
+    IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
+    if( activeWorkbenchWindow == null )
+    {
+      System.out.println("no active workbench available");
+      return null;
+    }
+    IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
+    if( activePage == null )
+    {
+      System.out.println("No active page available");
+      return null;
+    }
+    IViewPart findView = activePage.findView( MapView.ID );
+    return findView;
+  }
+  
   /**
    * Get First Theme which is showing elements substituable to the specified QName (i.e. substituting it).
    */

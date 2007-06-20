@@ -44,6 +44,7 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 
+import org.apache.commons.httpclient.methods.GetMethod;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -69,9 +70,11 @@ import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListener;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
 import org.kalypso.kalypsomodel1d2d.ui.map.merge.Model1d2dCalUnitTheme;
+import org.kalypso.kalypsomodel1d2d.ui.map.popup.PopupBlocker;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
@@ -90,15 +93,6 @@ public class CalculationUnitWidget
                                 IGrabDistanceProvider
 {
   
-  
-  private static IWorkbench workbench;
-
-  private static IWorkbenchWindow activeWorkbenchWindow;
-
-  private static IWorkbenchPage activePage;
-
-  private static IViewPart findView;
-
   private IWidget strategy = null; 
     
   private CalculationUnitDataModel dataModel= new CalculationUnitDataModel();
@@ -128,20 +122,11 @@ public class CalculationUnitWidget
     
   };
   
-  
   /**
-   * Prevents pop up menu to show
+   * Used to prevent the swt popup to show
    */
-  final Listener popupBlocker = new Listener()
-  {
-
-    public void handleEvent( Event event )
-    {
-      event.doit = false;
-    }
-    
-  };
- 
+  final PopupBlocker popupBlocker = new PopupBlocker();
+  
   public CalculationUnitWidget()
   {
     this("Berechnungseinheiten Modellieren","Berechnungseinheiten Modellieren");
@@ -150,8 +135,7 @@ public class CalculationUnitWidget
   public CalculationUnitWidget( String name, String toolTip )
   {
     this.name = name;
-    this.tooltip = toolTip;
-//    super( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE, name, toolTip );    
+    this.tooltip = toolTip;    
   }
 
   /**
@@ -160,9 +144,6 @@ public class CalculationUnitWidget
 //  @Override
   public void activate( ICommandTarget commandPoster, MapPanel mapPanel )
   {
-//    super.activate(commandPoster, mapPanel);
-    
-//    dataModel.setData( ICommonKeys.KEY_COMMAND_TARGET, commandPoster );
     dataModel.setData( ICommonKeys.KEY_MAP_PANEL, mapPanel );
     IMapModell mapModell = mapPanel.getMapModell();
     IFEDiscretisationModel1d2d model1d2d =
@@ -206,71 +187,10 @@ public class CalculationUnitWidget
         ICommonKeys.KEY_GRAB_DISTANCE_PROVIDER, 
         this );
     
-    registerPopupBlocker( popupBlocker );
-  }
-  
-  /**
-   * Register a popup blocker to the mapview id
-   */
-  private static final void registerPopupBlocker(Listener popupBlocker) 
-  {
-    IViewPart findView = getMapView();
-    
-    if( findView instanceof MapView )
-    {
-      final IWorkbenchPartSite site = findView.getViewSite();
-            Control control = (Control) findView.getAdapter( Control.class );
-      control.addListener( SWT.MenuDetect, popupBlocker  );
-    }
+//    registerPopupBlocker( popupBlocker );
+    popupBlocker.registerPopupBlockerToActiveMapView();
   }
 
-  private static IViewPart getMapView( )
-  {
-    if (workbench == null){
-    workbench = PlatformUI.getWorkbench();
-    }
-    if (activeWorkbenchWindow == null){
-    activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
-    }
-    
-    if (activePage == null){
-      activePage = activeWorkbenchWindow.getActivePage();
-    }
-    
-    if(findView == null){
-      findView = activePage.findView( MapView.ID );
-    }
-    
-    return findView;
-  }
-  
-  /**
-   * Register a popup blocker to the mapview id
-   */
-  private static final void unRegisterPopupBlocker(Listener popupBlocker) 
-  {
-    try
-    {
-      IViewPart findView = getMapView();
-      
-      if( findView instanceof MapView )
-      {      
-        final IWorkbenchPartSite site = findView.getViewSite();
-              Control control = (Control) findView.getAdapter( Control.class );
-        if( !control.isDisposed() )
-        {
-          control.removeListener( SWT.MenuDetect, popupBlocker  );
-        }
-      }
-    }
-    catch ( Throwable th) 
-    {
-      th.printStackTrace();
-    }
-  }
-  
-  
-  
   /**
    * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#createControl(org.eclipse.swt.widgets.Composite)
    */
@@ -295,20 +215,10 @@ public class CalculationUnitWidget
    */
   public void disposeControl( )
   {
-//    try
-//    {
-//      unRegisterPopupBlocker( popupBlocker );
-//    }
-//    catch (Exception e) 
-//    {
-//      e.printStackTrace();
-//    }
-    
     if(widgetFace!=null)
     {
       widgetFace.disposeControl();
     }
-    //dataModel.removeAllListeners();
   }
 
   /**
@@ -450,7 +360,8 @@ public class CalculationUnitWidget
     {
       e.printStackTrace();
     }
-    unRegisterPopupBlocker( popupBlocker );
+    
+    popupBlocker.unRegisterPopupBlocker();
   }
 
   /**
@@ -673,7 +584,10 @@ public class CalculationUnitWidget
     }
     
     System.out.println("getting fix grab distance");
-    return 6;
+    
+    final MapPanel mapPanel = 
+      dataModel.getData( MapPanel.class, ICommonKeys.KEY_MAP_PANEL );
+    return MapUtilities.calculateWorldDistance( mapPanel , 6 );
   }
 }
   

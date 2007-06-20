@@ -40,11 +40,110 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.popup;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.ui.IViewPart;
+import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
+import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypso.ui.views.map.MapView;
+
 /**
+ * This class provides a SWT-Popup blocker functionality for SWT-Control
+ * if it is register as one of the control menu detect({@link SWT#MenuDetect}) listener
+ *  
  * @author Patrice Congo
  *
  */
-public class PopupBlocker
+public class PopupBlocker implements Listener
 {
-
+  /**
+   * The control which is being blocked 
+   */
+  private Control blockedControl;
+  
+  /**
+   * Sets the {@link Event#doit} to false preventing the swt pop up to show. 
+   * 
+   * @see org.eclipse.swt.widgets.Listener#handleEvent(org.eclipse.swt.widgets.Event)
+   */
+  public void handleEvent( Event event )
+  {
+    event.doit = false;
+  }
+  
+  /**
+   * Register a popup blocker to the active mapview
+   */
+  public void registerPopupBlockerToActiveMapView( ) 
+  {
+    IViewPart findView = UtilMap.getMapView();
+    
+    if( findView instanceof MapView )
+    {
+      Control mapControl= (Control) findView.getAdapter( Control.class );
+      registerPopupBlockerToControl( mapControl );
+    }
+  }
+  /**
+   * Do register this popup blocker to this control.
+   * If this popup blocker is already blocking a control, 
+   * unregister is called to cease that blocking
+   *   
+   * @param controlToBlock the control to block
+   * @throws IllegalArgumentException if controlToBlock is null
+   *    or is disposed.
+   */
+  public void registerPopupBlockerToControl( Control controlToBlock ) 
+  {
+    Assert.throwIAEOnNullParam( controlToBlock, "controlToBlock" );
+    if( controlToBlock.isDisposed() )
+    {
+      throw new IllegalArgumentException(
+      "Control to block is disposed and cannot be blocked ");
+    }
+    
+    if( blockedControl != null )
+    {
+      unRegisterPopupBlocker();
+    }
+    
+    
+    controlToBlock.addListener( SWT.MenuDetect, this  );
+    blockedControl = controlToBlock;  
+  }
+   
+  /**
+   * Stops the blocking by unregistering a the blocker from 
+   * the blocked control.
+   */
+  public void unRegisterPopupBlocker( ) 
+  {
+    
+    try
+    {
+      if( blockedControl != null )
+      {
+        if( !blockedControl.isDisposed() )
+        {
+          blockedControl.removeListener( SWT.MenuDetect, this  );
+        }
+        blockedControl = null;
+      }      
+    }
+    catch ( Throwable th ) 
+    {
+      th.printStackTrace();
+    }
+  }
+  /**
+   * To get the {@link Control} which is being blocked by the popup blocker.
+   * @return the {@link Control} which is being blocked or null if no control 
+   *            is being blocked
+   */
+  public Control getBlockedControl()
+  {
+    return blockedControl;
+  }
 }

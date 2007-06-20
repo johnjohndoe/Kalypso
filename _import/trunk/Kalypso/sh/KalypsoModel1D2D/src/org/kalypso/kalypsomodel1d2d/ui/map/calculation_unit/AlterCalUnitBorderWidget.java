@@ -396,9 +396,11 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
       {
         final GM_Curve curve = edge.getCurve();
         final double curDist = klickedPoint.distance( curve );
+        System.out.println("curDist"+curDist);
         if( curDist<minDist)
         {
           selectedEdgeCentroid = curve.getCentroid();
+          minDist = curDist;
         }
       }
       return selectedEdgeCentroid;

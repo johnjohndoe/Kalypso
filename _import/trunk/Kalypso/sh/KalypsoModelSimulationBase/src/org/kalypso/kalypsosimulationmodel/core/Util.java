@@ -48,7 +48,10 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.gmlschema.GMLSchemaException;
@@ -58,6 +61,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelRoughnessConsts;
+import org.kalypso.ui.views.map.MapView;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -122,6 +126,8 @@ public class Util
       return null;
     }
   }
+  
+  
 
   /**
    * Test whether the given feature is an elmenent of the type specified by the q-name.
