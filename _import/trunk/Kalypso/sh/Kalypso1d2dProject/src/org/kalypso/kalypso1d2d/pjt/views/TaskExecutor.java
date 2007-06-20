@@ -131,7 +131,8 @@ public class TaskExecutor implements ITaskExecutor
       m_handlerService.executeCommand( command.getId(), null );
     }
     catch( final NotHandledException e )
-    {
+    {      
+//      e.printStackTrace();
       // if not handled, last context activation gives result
       // if( activateContext != null )
       // {

@@ -303,8 +303,9 @@ und/oder Szenarienrechnung durchgeführt werden.]]>
 			</Help>
 			<Name>Berechnung durchführen</Name>
 		</TaskGroup>
-		<TaskGroup context="CalculationUnitView"
-			URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#NoCommand">
+		<TaskGroup
+			context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Calc"
+			URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/StartCalUnitCalculation">
 			<!-- 
 			URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#StartCalculation">
 			 -->
@@ -403,6 +404,7 @@ hier ausgewertet und visualisiert werden.]]>
 						value="templates/control.gft" />
 				</con:ExtensionContext>
 			</con:ViewContext>
+			<!-- 
 			<con:ViewContext id="CalculationUnitView"
 				partId="org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView.CalculationUnitPerformView"
 				parent="1d2dModelling">
@@ -413,6 +415,7 @@ hier ausgewertet und visualisiert werden.]]>
 						value="calculationUnitContext" />
 				</con:ExtensionContext>
 			</con:ViewContext>
+			 -->
 			<con:WorkbenchSiteContext id="MapContext" parent="1d2dModelling">
 				<con:ViewContext id="MapOutlineView"
 					partId="org.kalypso.ui.views.outline" parent="MapContext" />

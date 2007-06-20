@@ -5,10 +5,10 @@ package org.kalypso.kalypso1d2d.pjt.actions;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IViewPart;
@@ -23,7 +23,7 @@ import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
  * 
  * @author Dejan Antanaskovic
  */
-public class CalculationUnitPerformViewHandler extends AbstractHandler implements IExecutableExtension
+public class CalculationUnitPerformViewHandler extends AbstractHandler implements IHandler
 {
   /**
    * Creates a new {@link FeatureViewInputContextHandler} that loads the given input file
@@ -45,7 +45,7 @@ public class CalculationUnitPerformViewHandler extends AbstractHandler implement
     {
       final IFEDiscretisationModel1d2d model = szenarioDataProvider.getModel( IFEDiscretisationModel1d2d.class );
       final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
-      final IViewPart view = window.getActivePage().findView( CalculationUnitPerformView.ID );
+      final IViewPart view = window.getActivePage().showView( CalculationUnitPerformView.ID );
       final CalculationUnitPerformView calculationUnitPerformView = (CalculationUnitPerformView) view;
       calculationUnitPerformView.initialiseModel( model );
     }

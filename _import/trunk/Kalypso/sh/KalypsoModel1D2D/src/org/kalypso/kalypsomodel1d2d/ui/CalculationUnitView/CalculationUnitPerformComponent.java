@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView;
 
+import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.swt.widgets.Display;
+import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitViewerLabelProvider;
 import org.kalypso.kalypsomodel1d2d.ui.map.editor.FeatureWrapperListEditor;
 import org.kalypso.kalypsomodel1d2d.ui.map.editor.IButtonConstants;
 
@@ -59,6 +62,10 @@ public class CalculationUnitPerformComponent extends FeatureWrapperListEditor im
 	                        BTN_CLICK_TO_CALCULATE);
   }
   
-  
+  @Override
+  protected ILabelProvider getLabelProvider(Display display)
+  {    
+    return new CalculationUnitViewerLabelProvider(display);    
+  }
 
 }

@@ -56,6 +56,7 @@ import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
+import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.ogc.gml.map.MapPanel;
 
 /**
@@ -93,6 +94,7 @@ public class CalculationUnitPerformView extends ViewPart
   public void createPartControl( Composite parent )
   {
     m_parent = parent;
+//    initialiseModel( null );
     toolkit = new FormToolkit(parent.getDisplay());
     form = toolkit.createScrolledForm(parent);
     form.setText("Calculation Unit Perform"); 
@@ -116,7 +118,7 @@ public class CalculationUnitPerformView extends ViewPart
     problemsSection.setLayoutData( tableWrapDataPU );
     problemsSection.setExpanded( true );
     
-    createProblemsInCalculationSection(problemsSection);
+//    createProblemsInCalculationSection(problemsSection);
     
     /*
     createCalculationUnitSection( selectCalcUnitSection );
@@ -131,6 +133,8 @@ public class CalculationUnitPerformView extends ViewPart
   public void initialiseModel( IFEDiscretisationModel1d2d model )
   {
     m_model = model;
+    
+//    IFEDiscretisationModel1d2d m_model1 = Util.getModel( IFEDiscretisationModel1d2d.class );
 //    dataModel.setData( ICommonKeys.KEY_MAP_PANEL, mapPanel );
     //TODO check model1d2d for null and do something
     dataModel.setData( 
@@ -148,7 +152,7 @@ public class CalculationUnitPerformView extends ViewPart
         ICommonKeys.KEY_GRAB_DISTANCE_PROVIDER, 
         this );
     
-//    createCalculationUnitSection( selectCalcUnitSection );
+    createCalculationUnitSection( selectCalcUnitSection );
     createProblemsInCalculationSection(problemsSection);
     m_parent.update();
     m_parent.pack();
@@ -168,8 +172,8 @@ public class CalculationUnitPerformView extends ViewPart
     formData.top = new FormAttachment( 0, 5 );
     sectionFirstComposite.setLayoutData( formData );
     
-//    calcSelect = new CalculationUnitPerformComponent();    
-//    calcSelect.createControl( dataModel, toolkit, sectionFirstComposite );
+    calcSelect = new CalculationUnitPerformComponent();    
+    calcSelect.createControl( dataModel, toolkit, sectionFirstComposite );
     
   }
 
