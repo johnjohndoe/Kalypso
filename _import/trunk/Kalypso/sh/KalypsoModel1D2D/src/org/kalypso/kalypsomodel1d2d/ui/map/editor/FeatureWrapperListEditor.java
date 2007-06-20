@@ -341,12 +341,6 @@ public class FeatureWrapperListEditor implements IButtonConstants
   private void guiSelectFromList( Composite parent )
   {
     FormData formData;
-//    formData = new FormData();
-//    formData.left = new FormAttachment( 0, 5 );
-//    formData.top = new FormAttachment( 0, 5 );
-//    Label terrainModelLabel = new Label( parent, SWT.NONE );
-//    //terrainModelLabel.setText( mainGroupTitle );
-//    terrainModelLabel.setLayoutData( formData );
 
     formData = new FormData();
     formData.left = new FormAttachment( 0, 10 );
