@@ -42,6 +42,7 @@
 	<!-- 
 		results for BANKFUL NONUNIFORM mode -->
 	<output id="resultListsNonUni" optional="true" description="Ergebnislisten für jeden Abfluss (*.tab)" />
-	<output id="qIntervallResultGml" optional="true" description="Detailergebnisse der Bordvollberechnung; Ergebnisse über W"/>
-	<output id="qIntervallResultGmv" optional="true" description="Detailergebnisse der Bordvollberechnung; Ergebnisse über W"/>
+	<output id="qIntervallResultGml" optional="true" description="Detailergebnisse der Polynomermittlung - Datendatei."/>
+	<output id="qIntervallResultGmv" optional="true" description="Detailergebnisse der Polynomermittlung - Vorlagendatei."/>
+	<output id="polynomeLog" optional="true" description="Logdatei der Polynomermittlung."/>
 </modelspec>

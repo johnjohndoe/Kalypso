@@ -928,6 +928,24 @@
 							</documentation>
 						</annotation>
 					</element>
+					<element name="alphaLimit" default="1.40">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>maximaler Impulsbeiwert</label>
+								<tooltip>Maximaler Impulsbeiwert, limitiert die Berechnung der Alpha-Polynome.</tooltip>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Max. Impulse</label>
+								<tooltip>Max. Impulse, limits the calculation of the alpha-polynomes.</tooltip>
+							</documentation>
+						</annotation>
+						<simpleType>
+							<restriction base="decimal">
+								<fractionDigits value="2"></fractionDigits>
+								<minExclusive value="0.0"></minExclusive>
+							</restriction>
+						</simpleType>
+					</element>
 				</sequence>
 			</extension>
 		</complexContent>

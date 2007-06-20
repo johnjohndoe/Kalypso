@@ -244,8 +244,11 @@ public class PolynomeHelper
     {
       log.log( e, "Fehler beim Lesen der Polynom1D-Ergebnisse: %s", e.getLocalizedMessage() );
       monitor.setFinishInfo( IStatus.ERROR, "Fehler beim Lesen der Polynom1D-Ergebnisse: " + e.getLocalizedMessage() );
-      return;
     }
+
+    final File polynomeLogFile = new File( tmpDir, "Polynome1d.log" );
+    if( polynomeLogFile.exists() )
+      resultEater.addResult( "polynomeLog", polynomeLogFile );
   }
 
   private static void prepareSteuerpoly( final File tmpDir, final TuhhCalculation calculation ) throws SimulationException
@@ -260,6 +263,7 @@ public class PolynomeHelper
       final double endStation = calculation.getStartStation().doubleValue();
       final boolean ignoreOutlier = calculation.getPolynomialIgnoreOutlier();
       final boolean isTriple = calculation.isPolynomialTriple();
+      final double alphaLimit = calculation.getAlphaLimit();
 
       // TODO: fetch other parameters from calculation
 
@@ -270,7 +274,7 @@ public class PolynomeHelper
       pw.println( "01 Beiwerte(Pfad) 01Eingang\\Beiwerte.AUS " );
       pw.println( "02 Längsschnitt(Pfad) 01Eingang\\laengsschnitt.txt" );
       pw.println( "03 PolyGrad(2,3,4) " + calculation.getPolynomialDeegree() );
-      pw.printf( "04 DreiTeil(J/N) %n", isTriple ? "J" : "N" );
+      pw.printf( "04 DreiTeil(J/N) %s%n", isTriple ? "J" : "N" );
       pw.println( "05 PolyReduce(J/N) J" );
       pw.println( "06 ProfIntervall(J/N) N" );
       pw.printf( Locale.PRC, "07 StartProf(0000.0000) %.4f%n", startStation );
@@ -279,8 +283,8 @@ public class PolynomeHelper
       pw.println( "10 AusgabeWspWerte(J/N) J" );
       pw.println( "11 AusgabeKontrolle(J/N) J" );
       pw.println( "12 AusgabeFile(Pfad) 02Ausgang\\" );
-      // TODO: an/aushaken
       pw.printf( "13 Ausreisser(J/N) %1s%n", ignoreOutlier ? "J" : "N" );
+      pw.printf( Locale.PRC, "14 Impulsstrom(00.0000) %.4f%n", alphaLimit );
     }
     catch( final FileNotFoundException e )
     {

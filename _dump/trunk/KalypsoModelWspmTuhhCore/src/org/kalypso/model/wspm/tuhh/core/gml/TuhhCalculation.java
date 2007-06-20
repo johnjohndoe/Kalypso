@@ -452,4 +452,14 @@ public class TuhhCalculation implements IWspmConstants, IWspmTuhhConstants
 
     return value;
   }
+
+  public double getAlphaLimit( )
+  {
+    final Feature polyFeature = (Feature) getFeature().getProperty( QNAME_PROP_POLYNOME_MEMBER );
+    final BigDecimal value = (BigDecimal) polyFeature.getProperty( new QName( NS_WSPM_TUHH, "alphaLimit" ) );
+    if( value == null )
+      return 01.40;
+
+    return value.doubleValue();
+  }
 }
