@@ -167,7 +167,7 @@ public class ElementResult
   }
 
   /**
-   * creates a center node for the element by using the corner and midside nodes.
+   * creates a center node for the element by using the corner and mid-side nodes.
    */
   private void interpolateCenterNode( )
   {
@@ -206,7 +206,7 @@ public class ElementResult
     m_centerNode.setLocation( x, y, z, crs );
 
     /* interpolate the data */
-    // waterlevel
+    // water level
     final double waterlevel = sumWaterlevel / m_cornerNodes.size();
     m_centerNode.setWaterlevel( waterlevel );
 
@@ -225,11 +225,28 @@ public class ElementResult
         sumVyMid = sumVyMid + node.getVelocity().get( 1 );
       }
 
-      /* iso-parametric interpolation of the velocity at the center of the element (isoparam.coord.=(0, 0)) */
+      /*
+       * iso-parametric interpolation of the velocity at the center of the element (isoparam.coord.=(0, 0))
+       * (isoparam.coord.=(1./3., 1./3.) for triangle and (0, 0) for quad)
+       */
 
-      // TODO: check this!!
-      final double vx = sumVxMid / (m_midsideNodes.size() / 2) - sumVxCorner / m_cornerNodes.size();
-      final double vy = sumVyMid / (m_midsideNodes.size() / 2) - sumVyCorner / m_cornerNodes.size();
+      // TODO: check this by literature. That was directly taken from the BCE2D-post-processing!!
+      double w1 = 0;
+      double w2 = 0;
+
+      if( m_cornerNodes.size() == 3 )
+      {
+        w1 = -1.0 / 9.0;
+        w2 = 4.0 / 9.0;
+      }
+      else if( m_cornerNodes.size() == 4 )
+      {
+        w1 = -1.0 / 4.0;
+        w2 = 1.0 / 2.0;
+      }
+
+      double vx = sumVxMid * w2 + sumVxCorner * w1;
+      double vy = sumVyMid * w2 + sumVyCorner * w1;
 
       velocity.add( vx );
       velocity.add( vy );
@@ -245,7 +262,7 @@ public class ElementResult
   }
 
   /**
-   * assigns the waterlevel to a dry node from the nearest wetted node connected to the current node by an arc.
+   * assigns the water level to a dry node from the nearest wetted node connected to the current node by an arc.
    */
   private void assignWaterlevel( GMLNodeResult node, GMLNodeResult minDistNode )
   {

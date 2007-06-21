@@ -152,6 +152,8 @@ public class SimpleNodeResult implements INodeResult
   public void setVelocity( List<Double> velocity )
   {
     m_velocity = velocity;
+    m_vx = velocity.get( 0 );
+    m_vy = velocity.get( 1 );
   }
 
   /**

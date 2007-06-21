@@ -60,9 +60,9 @@ public class NodeResultsHandlerTest extends TestCase
 {
   public void testLoadResults( ) throws IOException, InvocationTargetException, GmlSerializeException, SimulationException, GM_Exception
   {
-    final File result2dFile = new File( "D:/Projekte/kalypso_dev/post-processing/b3.2d" );
-    final File outputDir = FileUtilities.createNewTempDir( "bloed" );
-    ProcessResultsJob.read2DIntoGmlResults( result2dFile, outputDir, null );
+      final File result2dFile = new File( "D:/Projekte/kalypso_dev/post-processing/performance_tests/large_2d_file/a4_ow_hq2.2d" );
+      final File outputDir = FileUtilities.createNewTempDir( "bloed" ); 
+      ProcessResultsJob.read2DIntoGmlResults( result2dFile, outputDir, null );
   }
 
 }

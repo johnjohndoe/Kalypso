@@ -175,7 +175,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
      * 
      * IT IS NECESSARY, THAT THE ELEMENTS ARE STANDING BELOW THE ARCS IN THE 2D-RESULT FILE!!
      */
-    if( id == 168 )
+    if( id == 12764 )
       id = id;
 
     if( m_elemIndex.containsKey( id ) == true )
@@ -280,9 +280,9 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         }
       }
 
-      /* check the element (number of arcs, nodes, midside nodes) */
+      /* check the element (number of arcs, nodes, mid-side nodes) */
 
-      /* check waterlevels for dry nodes */
+      /* check water levels for dry nodes */
       elementResult.checkWaterlevels();
 
       /* split element into triangles if there is a wet node. */
@@ -485,7 +485,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       if( addedNode != null )
       {
         splitArcs.add( 0 );
-        nodes.add( addedNode );        
+        nodes.add( addedNode );
       }
     }
 
@@ -496,7 +496,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       if( addedNode != null )
       {
         splitArcs.add( 1 );
-        nodes.add( addedNode );       
+        nodes.add( addedNode );
       }
     }
     if( checkTriangleArc( nodes.get( 2 ), nodes.get( 0 ) ) == true )
@@ -506,7 +506,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       if( addedNode != null )
       {
         nodes.add( addedNode );
-        splitArcs.add( 2 );       
+        splitArcs.add( 2 );
       }
     }
 
@@ -781,72 +781,98 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     final INodeResult node3 = new SimpleNodeResult();
     // TODO: here is a bug. The nodes are not correctly interpolated!!!
 
-    final double dx12 = node2.getPoint().getX() - node1.getPoint().getX();
-    final double dy12 = node2.getPoint().getY() - node1.getPoint().getY();
-    final double dz12 = node2.getPoint().getZ() - node1.getPoint().getZ();
+    final double wspNode1 = node1.getWaterlevel();
+    final double zNode1 = node1.getPoint().getZ();
+    final double wspNode2 = node2.getWaterlevel();
+    final double zNode2 = node2.getPoint().getZ();
 
-    final double wsp;
-    if( node1.isWet() == true && node2.isWet() == false )
-      wsp = node1.getPoint().getZ() + node1.getDepth();
-    else
-      wsp = node2.getPoint().getZ() + node2.getDepth();
+    final double dist12 = node2.getPoint().distance( node1.getPoint() );
+    final double dz1;
+    final double dz2;
+    final double dz;
+    final double z;
 
-    final double dWSP = wsp - node1.getPoint().getZ();
-    System.out.println( "wsp: " + wsp );
-
-    if( dz12 == 0 )
+    if( (wspNode1 - zNode1) > 0 ) // the same as node1.isWet() == true;
     {
-      // 'darf nicht sein' -> doch, darf sehr wohl sein. Wenn man einen WSP-Gradienten an einer Kante hat hat!
-      System.out.println( "error while interpolation node-data" );
+      if( wspNode1 > zNode2 )
+      {
+        dz1 = wspNode1 - zNode1;
+        dz2 = wspNode2 - zNode2;
+      }
+      else
+      {
+        dz1 = wspNode1 - zNode1;
+        dz2 = wspNode1 - zNode2;
+      }
     }
-    final double distance12 = node2.getPoint().distance( node1.getPoint() );
-
-    double distance13;
-
-    // calculate distance
-    if( dz12 == 0 )
-      distance13 = distance12 * (node1.getPoint().getZ() - node1.getWaterlevel()) / (node2.getWaterlevel() - node1.getWaterlevel());
-    else
-      distance13 = distance12 * dWSP / dz12;
-
-    if( distance13 > distance12 )
+    else if( (wspNode1 - zNode1) < 0 )
     {
-      System.out.println( "error while interpolation node-data" );
-      //return null;
+      if( wspNode2 > zNode1 )
+      {
+        dz1 = zNode1 - wspNode1;
+        dz2 = zNode2 - wspNode2;
+      }
+      else
+      {
+        dz1 = zNode1 - wspNode2;
+        dz2 = zNode2 - wspNode2;
+      }
     }
+    else
+      // dz1 = 0
+      return null;
 
-    final double dx13 = dx12 * distance13 / distance12;
-    final double dy13 = dy12 * distance13 / distance12;
+    // => dz1 always > 0 and dz2 always < 0 !!
 
-    final double x3 = node1.getPoint().getX() + dx13;
-    final double y3 = node1.getPoint().getY() + dy13;
-    double z3;
+    // getting the zero point
+    final double dist13 = getZeroPoint( dist12, dz1, dz2 );
 
-    if( node1.isWet() == true && node2.isWet() == false )
+    // getting the z-value for the zero point
+    final double z3;
+
+    if( node1.isWet() == true )
       z3 = node1.getWaterlevel();
     else
       z3 = node2.getWaterlevel();
 
-    if( dz12 == 0 )
-      z3 = node1.getPoint().getZ();
+    // getting the geo-coordinates of the zero-point
+    final double dx12 = node2.getPoint().getX() - node1.getPoint().getX();
+    final double dy12 = node2.getPoint().getY() - node1.getPoint().getY();
 
-    System.out.println( "dx12: " + dx12 );
-    System.out.println( "dy12: " + dy12 );
-    System.out.println( "distance12: " + distance12 );
-    System.out.println( "distance13: " + distance13 );
-    System.out.println( "factor: " + distance13 / distance12 );
-
-    System.out.println( "x3: " + x3 );
-    System.out.println( "y3: " + y3 );
-    System.out.println( "z3: " + z3 );
+    final double x3 = node1.getPoint().getX() + (dist13 / dist12) * dx12;
+    final double y3 = node1.getPoint().getY() + (dist13 / dist12) * dy12;
 
     final CS_CoordinateSystem crs = node1.getPoint().getCoordinateSystem();
 
     node3.setLocation( x3, y3, z3, crs );
-
     node3.setResultValues( 0, 0, 0, z3 );
 
     return node3;
+
+  }
+
+  /**
+   * gets the x-coordinate of the zero point of a line defined by y1 (>0), y2 (<0) and the difference of the
+   * x-coordinates (x2-x1) = dx12.
+   * 
+   * @param dx12
+   *            distance between x1 and x2.
+   * @param y1
+   *            the y-value of point 1 of the line. It has to be always > 0!
+   * @param y2
+   *            the y-value of point 2 of the line. It has to be always < 0!
+   */
+  private double getZeroPoint( final double dx12, final double y1, final double y2 )
+  {
+    final double x3 = y1 / (Math.abs( y1 ) + Math.abs( y2 )) * dx12;
+
+    // check: y3Temp is the y-value of the zero point and should always be zero !!
+    final double y3Temp = Math.round( (-(Math.abs( y1 ) + Math.abs( y2 )) / dx12 * x3 + y1) * 100 ) / 100;
+
+    if( y3Temp != 0.00 )
+      System.out.println( "error while interpolation node-data, y3Temp != 0 = " + y3Temp );
+
+    return x3;
   }
 
   private boolean checkTriangleArc( final INodeResult node1, final INodeResult node2 )
@@ -859,20 +885,21 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   }
 
   /**
-   * sets the midside node's waterlevel and depth by interpolation between the corner nodes.
+   * sets the mid-side node's water level and depth by interpolation between the corner nodes.
    * 
    * @param nodeDown
    *            first node of the corresponding arc.
    * @param nodeUp
    *            second node of the corresponding arc.
    * @param midsideNode
-   *            the midside node
+   *            the mid-side node
    */
   private void checkMidsideNodeData( final GMLNodeResult nodeDown, final GMLNodeResult nodeUp, final GMLNodeResult midsideNode )
   {
     if( nodeDown.getDepth() <= 0 && nodeUp.getDepth() <= 0 )
     {
-      midsideNode.setResultValues( 0, 0, 0, midsideNode.getPoint().getZ() - 1 );
+      interpolateMidsideNodeData( nodeDown, nodeUp, midsideNode );
+// midsideNode.setResultValues( 0, 0, 0, midsideNode.getPoint().getZ() - 1 );
       return;
     }
 
@@ -970,6 +997,11 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
       /* Fill node result with data */
       result.setName( "" + id );
+//      if(id == 71332)
+//        id = id;
+      
+//      System.out.println( "node id: " + id );
+      
       // TODO: description: beschreibt, welche Rechenvariante und so weiter... oder noch besser an der collection
 // result.setDescription( "" + id );
 
