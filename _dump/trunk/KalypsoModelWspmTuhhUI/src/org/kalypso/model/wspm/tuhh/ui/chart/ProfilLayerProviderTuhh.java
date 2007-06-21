@@ -299,7 +299,8 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
     }
     if( !profile.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT ) )
     {
-      layerToAdd.add( IWspmTuhhConstants.LAYER_RAUHEIT_QUICKVIEW );
+      // TODO: Kim: mal auskommentiert, weil in diesem Fall der Layer ne exception wirft
+//      layerToAdd.add( IWspmTuhhConstants.LAYER_RAUHEIT_QUICKVIEW );
     }
     return layerToAdd.toArray( new String[0] );
   }
