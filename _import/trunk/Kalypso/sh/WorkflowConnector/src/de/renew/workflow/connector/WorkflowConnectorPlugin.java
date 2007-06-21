@@ -49,8 +49,11 @@ public class WorkflowConnectorPlugin extends Plugin
   public void stop( BundleContext context ) throws Exception
   {
     final IWorkbench workbench = PlatformUI.getWorkbench();
-    final ICommandService commandService = (ICommandService) workbench.getService( ICommandService.class );
-    commandService.removeExecutionListener( m_taskExecutionListener );
+    if( !workbench.isClosing() )
+    {
+      final ICommandService commandService = (ICommandService) workbench.getService( ICommandService.class );
+      commandService.removeExecutionListener( m_taskExecutionListener );
+    }
   }
 
   /**
