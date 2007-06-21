@@ -53,70 +53,72 @@ public class SWTUtilities
   static final HashMap<String, Integer> m_gridDataMap = new HashMap<String, Integer>();
   static
   {
-    putGridData( "GridData.BEGINNING", GridData.BEGINNING );
-    putGridData( "GridData.CENTER", GridData.CENTER );
-    putGridData( "GridData.END", GridData.END );
-    putGridData( "GridData.FILL", GridData.FILL );
-    putGridData( "GridData.FILL_BOTH", GridData.FILL_BOTH );
-    putGridData( "GridData.FILL_HORIZONTAL", GridData.FILL_HORIZONTAL );
-    putGridData( "GridData.FILL_VERTICAL", GridData.FILL_VERTICAL );
-    putGridData( "GridData.GRAB_HORIZONTAL", GridData.GRAB_HORIZONTAL );
-    putGridData( "GridData.GRAB_VERTICAL", GridData.GRAB_VERTICAL );
-    putGridData( "GridData.HORIZONTAL_ALIGN_BEGINNING", GridData.HORIZONTAL_ALIGN_BEGINNING );
-    putGridData( "GridData.HORIZONTAL_ALIGN_CENTER", GridData.HORIZONTAL_ALIGN_CENTER );
-    putGridData( "GridData.HORIZONTAL_ALIGN_END", GridData.HORIZONTAL_ALIGN_END );
-    putGridData( "GridData.HORIZONTAL_ALIGN_FILL", GridData.HORIZONTAL_ALIGN_FILL );
-    putGridData( "GridData.VERTICAL_ALIGN_BEGINNING", GridData.VERTICAL_ALIGN_BEGINNING );
-    putGridData( "GridData.VERTICAL_ALIGN_CENTER", GridData.VERTICAL_ALIGN_CENTER );
-    putGridData( "GridData.VERTICAL_ALIGN_END", GridData.VERTICAL_ALIGN_END );
-    putGridData( "GridData.VERTICAL_ALIGN_FILL", GridData.VERTICAL_ALIGN_FILL );
+    SWTUtilities.putGridData( "GridData.BEGINNING", GridData.BEGINNING );
+    SWTUtilities.putGridData( "GridData.CENTER", GridData.CENTER );
+    SWTUtilities.putGridData( "GridData.END", GridData.END );
+    SWTUtilities.putGridData( "GridData.FILL", GridData.FILL );
+    SWTUtilities.putGridData( "GridData.FILL_BOTH", GridData.FILL_BOTH );
+    SWTUtilities.putGridData( "GridData.FILL_HORIZONTAL", GridData.FILL_HORIZONTAL );
+    SWTUtilities.putGridData( "GridData.FILL_VERTICAL", GridData.FILL_VERTICAL );
+    SWTUtilities.putGridData( "GridData.GRAB_HORIZONTAL", GridData.GRAB_HORIZONTAL );
+    SWTUtilities.putGridData( "GridData.GRAB_VERTICAL", GridData.GRAB_VERTICAL );
+    SWTUtilities.putGridData( "GridData.HORIZONTAL_ALIGN_BEGINNING", GridData.HORIZONTAL_ALIGN_BEGINNING );
+    SWTUtilities.putGridData( "GridData.HORIZONTAL_ALIGN_CENTER", GridData.HORIZONTAL_ALIGN_CENTER );
+    SWTUtilities.putGridData( "GridData.HORIZONTAL_ALIGN_END", GridData.HORIZONTAL_ALIGN_END );
+    SWTUtilities.putGridData( "GridData.HORIZONTAL_ALIGN_FILL", GridData.HORIZONTAL_ALIGN_FILL );
+    SWTUtilities.putGridData( "GridData.VERTICAL_ALIGN_BEGINNING", GridData.VERTICAL_ALIGN_BEGINNING );
+    SWTUtilities.putGridData( "GridData.VERTICAL_ALIGN_CENTER", GridData.VERTICAL_ALIGN_CENTER );
+    SWTUtilities.putGridData( "GridData.VERTICAL_ALIGN_END", GridData.VERTICAL_ALIGN_END );
+    SWTUtilities.putGridData( "GridData.VERTICAL_ALIGN_FILL", GridData.VERTICAL_ALIGN_FILL );
   }
 
   static final HashMap<String, Integer> m_swtMap = new HashMap<String, Integer>();
   static
   {
-    putSWT( "SWT.BEGINNING", SWT.BEGINNING );
-    putSWT( "SWT.BOLD", SWT.BOLD );
-    putSWT( "SWT.BORDER", SWT.BORDER );
-    putSWT( "SWT.CENTER", SWT.CENTER );
-    putSWT( "SWT.CHECK", SWT.CHECK );
-    putSWT( "SWT.END", SWT.END );
-    putSWT( "SWT.FILL", SWT.FILL );
-    putSWT( "SWT.HORIZONTAL", SWT.HORIZONTAL );
-    putSWT( "SWT.LEAD", SWT.LEAD );
-    putSWT( "SWT.LEFT", SWT.LEFT );
-    putSWT( "SWT.MULTI", SWT.MULTI );
-    putSWT( "SWT.NONE", SWT.NONE );
-    putSWT( "SWT.PUSH", SWT.PUSH );
-    putSWT( "SWT.RADIO", SWT.RADIO );
-    putSWT( "SWT.RIGHT", SWT.RIGHT );
-    putSWT( "SWT.TRAIL", SWT.TRAIL );
-    putSWT( "SWT.VERTICAL", SWT.VERTICAL );
-    putSWT( "SWT.DROP_DOWN", SWT.DROP_DOWN );
-    putSWT( "SWT.READ_ONLY", SWT.READ_ONLY );
-    putSWT( "SWT.FULL_SELECTION", SWT.FULL_SELECTION );
-    putSWT( "SWT.WRAP", SWT.WRAP );
+    SWTUtilities.putSWT( "SWT.BEGINNING", SWT.BEGINNING );
+    SWTUtilities.putSWT( "SWT.BOLD", SWT.BOLD );
+    SWTUtilities.putSWT( "SWT.BORDER", SWT.BORDER );
+    SWTUtilities.putSWT( "SWT.CENTER", SWT.CENTER );
+    SWTUtilities.putSWT( "SWT.CHECK", SWT.CHECK );
+    SWTUtilities.putSWT( "SWT.END", SWT.END );
+    SWTUtilities.putSWT( "SWT.FILL", SWT.FILL );
+    SWTUtilities.putSWT( "SWT.HORIZONTAL", SWT.HORIZONTAL );
+    SWTUtilities.putSWT( "SWT.LEAD", SWT.LEAD );
+    SWTUtilities.putSWT( "SWT.LEFT", SWT.LEFT );
+    SWTUtilities.putSWT( "SWT.MULTI", SWT.MULTI );
+    SWTUtilities.putSWT( "SWT.NONE", SWT.NONE );
+    SWTUtilities.putSWT( "SWT.PUSH", SWT.PUSH );
+    SWTUtilities.putSWT( "SWT.RADIO", SWT.RADIO );
+    SWTUtilities.putSWT( "SWT.RIGHT", SWT.RIGHT );
+    SWTUtilities.putSWT( "SWT.TRAIL", SWT.TRAIL );
+    SWTUtilities.putSWT( "SWT.VERTICAL", SWT.VERTICAL );
+    SWTUtilities.putSWT( "SWT.DROP_DOWN", SWT.DROP_DOWN );
+    SWTUtilities.putSWT( "SWT.READ_ONLY", SWT.READ_ONLY );
+    SWTUtilities.putSWT( "SWT.FULL_SELECTION", SWT.FULL_SELECTION );
+    SWTUtilities.putSWT( "SWT.WRAP", SWT.WRAP );
+    SWTUtilities.putSWT( "SWT.V_SCROLL", SWT.V_SCROLL );
+    SWTUtilities.putSWT( "SWT.H_SCROLL", SWT.H_SCROLL );
     // TODO really a lot to complete SWT keys
   }
 
   private static void putSWT( final String key, final int value )
   {
-    m_swtMap.put( key, new Integer( value ) );
+    SWTUtilities.m_swtMap.put( key, new Integer( value ) );
   }
 
   private static void putGridData( final String key, final int value )
   {
-    m_gridDataMap.put( key, new Integer( value ) );
+    SWTUtilities.m_gridDataMap.put( key, new Integer( value ) );
   }
 
-  public static int createStyleFromString( String key )
+  public static int createStyleFromString( final String key )
   {
-    return createStyleFromString( m_swtMap, key );
+    return SWTUtilities.createStyleFromString( SWTUtilities.m_swtMap, key );
   }
 
-  public static int getGridData( String key )
+  public static int getGridData( final String key )
   {
-    return createStyleFromString( m_gridDataMap, key );
+    return SWTUtilities.createStyleFromString( SWTUtilities.m_gridDataMap, key );
   }
 
   private static int createStyleFromString( final HashMap map, final String style )
@@ -138,7 +140,7 @@ public class SWTUtilities
       }
       return result;
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       return SWT.NONE;
