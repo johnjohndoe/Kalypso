@@ -44,19 +44,9 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 
-import org.apache.commons.httpclient.methods.GetMethod;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPartSite;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
@@ -80,7 +70,6 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
-import org.kalypso.ui.views.map.MapView;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
