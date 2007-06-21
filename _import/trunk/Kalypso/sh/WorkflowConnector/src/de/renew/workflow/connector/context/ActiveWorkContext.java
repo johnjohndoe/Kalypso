@@ -20,19 +20,14 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.dialogs.ErrorSupportProvider;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.commands.ICommandService;
 
 import de.renew.workflow.base.Workflow;
 import de.renew.workflow.cases.Case;
 import de.renew.workflow.connector.WorkflowConnectorPlugin;
 import de.renew.workflow.connector.cases.ICaseManager;
-import de.renew.workflow.connector.worklist.TaskExecutionListener;
 
 /**
  * Represents the work context for a user.
@@ -243,7 +238,7 @@ public class ActiveWorkContext<T extends Case> implements IResourceChangeListene
       else
       {
         final URI uri = new URI( caze.getURI() );
-        final String projectName = uri.getHost();
+        final String projectName = uri.getAuthority();
         final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject( projectName );
         if( project.exists() )
         {

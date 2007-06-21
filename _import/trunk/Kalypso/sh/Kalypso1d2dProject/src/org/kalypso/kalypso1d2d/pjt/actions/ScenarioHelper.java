@@ -59,7 +59,7 @@ public class ScenarioHelper
     try
     {
       final URI uri = new URI( name );
-      return uri.getHost();
+      return uri.getAuthority();
     }
     catch( final URISyntaxException e )
     {
@@ -73,7 +73,7 @@ public class ScenarioHelper
     try
     {
       final URI uri = new URI( name );
-      return ResourcesPlugin.getWorkspace().getRoot().getProject( uri.getHost() );
+      return ResourcesPlugin.getWorkspace().getRoot().getProject( uri.getAuthority() );
     }
     catch( final URISyntaxException e )
     {
