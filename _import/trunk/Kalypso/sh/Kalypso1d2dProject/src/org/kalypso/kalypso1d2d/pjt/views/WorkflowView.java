@@ -1,5 +1,7 @@
 package org.kalypso.kalypso1d2d.pjt.views;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.logging.Logger;
 
 import org.eclipse.core.runtime.Platform;
@@ -67,7 +69,20 @@ public class WorkflowView extends ViewPart
   {
     if( scenario != null )
     {
-      setContentDescription( "Aktives Szenario: " + scenario.getName() + " (" + newProject.getProject().getName() + ")" );
+      String scenarioPathName;
+      try
+      {
+        final URI uri = new URI( scenario.getURI() );
+        scenarioPathName = uri.getPath();
+      }
+      catch( URISyntaxException e )
+      {
+        scenarioPathName = "<Fehler>";
+        e.printStackTrace();
+      }
+      final String projectName = newProject.getProject().getName();
+      setContentDescription( "Aktives Szenario: " + projectName + scenarioPathName );
+
       m_workflowControl.setWorkflow( m_activeWorkContext.getCurrentWorklist() );
     }
     else
@@ -96,7 +111,7 @@ public class WorkflowView extends ViewPart
     super.init( site, memento );
     m_activeWorkContext = Kalypso1d2dProjectPlugin.getDefault().getActiveWorkContext();
     m_activeWorkContext.addActiveContextChangeListener( m_contextListener );
-    m_workflowControl = new WorkflowControl( Kalypso1d2dProjectPlugin.getDefault().getTaskExecutor());
+    m_workflowControl = new WorkflowControl( Kalypso1d2dProjectPlugin.getDefault().getTaskExecutor() );
     m_workflowControl.restoreState( memento );
   }
 
