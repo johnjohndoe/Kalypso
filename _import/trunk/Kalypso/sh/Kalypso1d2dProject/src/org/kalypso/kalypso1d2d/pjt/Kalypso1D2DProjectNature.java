@@ -213,26 +213,63 @@ public class Kalypso1D2DProjectNature extends CaseHandlingProjectNature
   public void caseAdded( final Case caze )
   {
     super.caseAdded( caze );
-    final IFolder newFolder = getProject().getFolder( getProjectPath( caze ) );
-    final URL resource = getClass().getResource( EMPTY_PROJECT_ZIP_PATH );
-    final IPath newLocation = newFolder.getLocation();
-    try
+    final IPath projectPath = getProjectPath( caze );
+    final IFolder newFolder = getProject().getFolder( projectPath );
+
+    final Scenario scenario = (Scenario) caze;
+    final Scenario parentScenario = scenario.getParentScenario();
+    if( parentScenario == null )
     {
-      ZipUtilities.unzip( resource.openStream(), "Basis/**", newLocation.toFile(), false );
-      newFolder.refreshLocal( IResource.DEPTH_INFINITE, null );
-      final IFolder basisFolder = newFolder.getFolder( "Basis" );
-      for( final IResource res : basisFolder.members() )
+      // this is a new scenario at base level, so use empty project zip
+      final URL resource = getClass().getResource( EMPTY_PROJECT_ZIP_PATH );
+      final IPath newLocation = newFolder.getLocation();
+      try
       {
-        res.move( newFolder.getFullPath().append( res.getName() ), false, null );
+        ZipUtilities.unzip( resource.openStream(), "Basis/**", newLocation.toFile(), false );
+        newFolder.refreshLocal( IResource.DEPTH_INFINITE, null );
+        final IFolder basisFolder = newFolder.getFolder( "Basis" );
+        for( final IResource res : basisFolder.members() )
+        {
+          res.move( newFolder.getFullPath().append( res.getName() ), false, null );
+        }
+        basisFolder.delete( false, null );
       }
-      basisFolder.delete( false, null );
+      catch( final Throwable e )
+      {
+        final Shell activeShell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+        final IStatus status = StatusUtilities.statusFromThrowable( e );
+        ErrorDialog.openError( activeShell, "Problem", "Konnte neue Szenariodaten nicht erzeugen.", status );
+        Kalypso1d2dProjectPlugin.getDefault().getLog().log( status );
+      }
     }
-    catch( final Throwable e )
+    else
     {
-      final Shell activeShell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
-      final IStatus status = StatusUtilities.statusFromThrowable( e );
-      ErrorDialog.openError( activeShell, "Problem", "Konnte neue Szenariodaten nicht erzeugen.", status );
-      Kalypso1d2dProjectPlugin.getDefault().getLog().log( status );
+      // this is a new derived scenario, so copy scenario contents of parent folder
+      final IPath parentPath = getProjectPath( parentScenario );
+      final IFolder parentFolder = getProject().getFolder( parentPath );
+      try
+      {        
+        final IResource[] members = parentFolder.members( false );
+        for( final IResource resource : members )
+        {
+          if( resource.getName().equals( newFolder.getName() ) )
+          {
+            // ignore scenario folder and .* resources
+            continue;
+          }
+          else
+          {
+            resource.copy( newFolder.getFullPath().append( resource.getName() ), false, null );
+          }
+        }
+      }
+      catch( final CoreException e )
+      {
+        final Shell activeShell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+        final IStatus status = e.getStatus();
+        ErrorDialog.openError( activeShell, "Problem", "Konnte Szenariodaten nicht kopieren.", status );
+        Kalypso1d2dProjectPlugin.getDefault().getLog().log( status );
+      }
     }
   }
 
