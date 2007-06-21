@@ -45,18 +45,11 @@ import java.awt.Point;
 import java.awt.event.KeyEvent;
 
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.FormAttachment;
-import org.eclipse.swt.layout.FormData;
-import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
-import org.eclipse.ui.forms.widgets.TableWrapData;
-import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
@@ -64,7 +57,10 @@ import org.kalypso.kalypsomodel1d2d.ui.map.IGrabDistanceProvider;
 import org.kalypso.kalypsomodel1d2d.ui.map.IWidgetWithStrategy;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
+import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.utilities.MapUtilities;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 
@@ -77,28 +73,11 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions,
                                                      IWidgetWithStrategy,
                                                      IGrabDistanceProvider
 {
-  public static final String ID = "org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView.CalculationUnitPerformView";
-  
-  private FormToolkit toolkit;
-  private ScrolledForm form;
-  private Composite rootPanel;
-  private Section selectCalcUnitSection;
-  private Section problemsSection;
-  private Section calculationElementUnitSection;
-  private Composite sectionFirstComposite;
-  private CalculationUnitPerformComponent calcSelect;
   private CalculationUnitDataModel dataModel = new CalculationUnitDataModel();
-  private Composite sectionSecondComposite;
-  private CalculationUnitProblemsComponent calcProblemsGUI;
-  private MapPanel mapPanel;
-
-  private IFEDiscretisationModel1d2d m_model;
-
-  private Composite m_parent;
-
-  private String name;
-
+  private CalculationUnitPerformWidgetFace calcWidgetFace = new CalculationUnitPerformWidgetFace(dataModel);
   private String toolTip;
+  private IWidget strategy;
+  private String name;
   /**
    * The constructor.
    */
@@ -112,41 +91,48 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions,
     this.toolTip = toolTip;
   }
 
-  public void createPartControl( Composite parent )
+  /**
+   * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#createControl(org.eclipse.swt.widgets.Composite, org.eclipse.ui.forms.widgets.FormToolkit)
+   */
+  public Control createControl( Composite parent, FormToolkit toolkit )
   {
-    m_parent = parent;
-    toolkit = new FormToolkit(parent.getDisplay());
-    form = toolkit.createScrolledForm(parent);
-    form.setText("Calculation Unit Perform"); 
-    form.getBody().setLayout(new TableWrapLayout());
-
-    // Calculation Unit Section     
-    selectCalcUnitSection = toolkit.createSection( form.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
-    selectCalcUnitSection.setText( "Berechnungseinheiten" );
-    final TableWrapData tableWrapDataCU = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
-    tableWrapDataCU.grabHorizontal = true;
-    tableWrapDataCU.grabVertical = true;
-    selectCalcUnitSection.setLayoutData( tableWrapDataCU );
-    selectCalcUnitSection.setExpanded(true);
-
-    // Creates Section for "Calculation Settings Unit"
-    problemsSection = toolkit.createSection( form.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
-    problemsSection.setText( "Berechnungseinheit Verwalten" );
-    final TableWrapData tableWrapDataPU = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
-    tableWrapDataPU.grabHorizontal = true;
-    tableWrapDataPU.grabVertical = true;
-    problemsSection.setLayoutData( tableWrapDataPU );
-    problemsSection.setExpanded(true);    
+    try
+    {
+      dataModel.setData( 
+          ICommonKeys.KEY_SELECTED_DISPLAY,
+          parent.getDisplay() );
+      return calcWidgetFace.createControl( parent );
+    }
+    catch (Throwable th) 
+    {
+      th.printStackTrace();
+      return null;
+    }
   }
 
 
-  public void initialiseModel( IFEDiscretisationModel1d2d model )
+  /**
+   * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#disposeControl()
+   */
+  public void disposeControl( )
   {
-    m_model = model;
+    if(calcWidgetFace!=null)
+    {
+      calcWidgetFace.disposeControl();
+    }
     
-//    IFEDiscretisationModel1d2d m_model1 = Util.getModel( IFEDiscretisationModel1d2d.class );
-//    dataModel.setData( ICommonKeys.KEY_MAP_PANEL, mapPanel );
-    //TODO check model1d2d for null and do something
+  }
+
+
+  /**
+   * @see org.kalypso.ogc.gml.widgets.IWidget#activate(org.kalypso.commons.command.ICommandTarget, org.kalypso.ogc.gml.map.MapPanel)
+   */
+  public void activate( ICommandTarget commandPoster, MapPanel mapPanel )
+  {
+    
+    dataModel.setData( ICommonKeys.KEY_MAP_PANEL, mapPanel );
+    IMapModell mapModell = mapPanel.getMapModell();
+    IFEDiscretisationModel1d2d m_model = UtilMap.findFEModelTheme( mapModell );
     dataModel.setData( 
         ICommonKeys.KEY_DISCRETISATION_MODEL, m_model );
     dataModel.setData(
@@ -160,80 +146,7 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions,
     
     dataModel.setData( 
         ICommonKeys.KEY_GRAB_DISTANCE_PROVIDER, 
-        this );
-    
-    createCalculationUnitSection( selectCalcUnitSection );
-    createProblemsInCalculationSection(problemsSection);
-    m_parent.update();
-    m_parent.pack();
-    m_parent.redraw();
-    
-  }
-
-  private void createCalculationUnitSection( Section selectCalcUnitSection )
-  {
-    selectCalcUnitSection.setLayout( new FillLayout() );
-    sectionFirstComposite = toolkit.createComposite( selectCalcUnitSection, SWT.FLAT );
-    selectCalcUnitSection.setClient( sectionFirstComposite );
-    FormLayout formLayout = new FormLayout();
-    sectionFirstComposite.setLayout( formLayout );
-    FormData formData = new FormData();
-    formData.left = new FormAttachment( 0, 5 );
-    formData.top = new FormAttachment( 0, 5 );
-    sectionFirstComposite.setLayoutData( formData );
-    
-    calcSelect = new CalculationUnitPerformComponent();    
-    calcSelect.createControl( dataModel, toolkit, sectionFirstComposite );
-    
-  }
-
-  private void createProblemsInCalculationSection( Section problemsSection )
-  {
-    problemsSection.setLayout( new FillLayout() );
-    sectionSecondComposite = toolkit.createComposite( problemsSection, SWT.FLAT );
-    problemsSection.setClient( sectionSecondComposite );
-    
-    FormLayout formLayout = new FormLayout();
-    sectionSecondComposite.setLayout( formLayout );
-    FormData formData = new FormData();
-    formData.left = new FormAttachment( 0, 5 );
-    formData.top = new FormAttachment( sectionFirstComposite, 5 );
-    //formData.bottom = new FormAttachment( sectionThirdComposite, -5 );
-    sectionSecondComposite.setLayoutData( formData );
-    
-    calcProblemsGUI = new CalculationUnitProblemsComponent();
-    calcProblemsGUI.createControl( dataModel, toolkit, sectionSecondComposite ); 
-    
-    
-  }
-
-  /**
-   * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#createControl(org.eclipse.swt.widgets.Composite, org.eclipse.ui.forms.widgets.FormToolkit)
-   */
-  public Control createControl( Composite parent, FormToolkit toolkit )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-
-  /**
-   * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#disposeControl()
-   */
-  public void disposeControl( )
-  {
-    // TODO Auto-generated method stub
-    
-  }
-
-
-  /**
-   * @see org.kalypso.ogc.gml.widgets.IWidget#activate(org.kalypso.commons.command.ICommandTarget, org.kalypso.ogc.gml.map.MapPanel)
-   */
-  public void activate( ICommandTarget commandPoster, MapPanel mapPanel )
-  {
-    // TODO Auto-generated method stub
-    
+        this );   
   }
 
 
@@ -242,8 +155,7 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions,
    */
   public boolean canBeActivated( ISelection selection, MapPanel mapPanel )
   {
-    // TODO Auto-generated method stub
-    return false;
+    return true;
   }
 
 
@@ -252,8 +164,10 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions,
    */
   public void clickPopup( Point p )
   {
-    // TODO Auto-generated method stub
-    
+    if( strategy != null )
+    {
+      strategy.clickPopup( p );
+    } 
   }
 
 
@@ -262,8 +176,10 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions,
    */
   public void doubleClickedLeft( Point p )
   {
-    // TODO Auto-generated method stub
-    
+    if( strategy != null )
+    {
+      strategy.doubleClickedLeft( p );
+    } 
   }
 
 
@@ -272,8 +188,10 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions,
    */
   public void doubleClickedRight( Point p )
   {
-    // TODO Auto-generated method stub
-    
+    if( strategy != null )
+    {
+      strategy.doubleClickedRight( p );
+    } 
   }
 
 
@@ -282,8 +200,10 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions,
    */
   public void dragged( Point p )
   {
-    // TODO Auto-generated method stub
-    
+    if( strategy != null )
+    {
+      strategy.dragged( p );
+    } 
   }
 
 
@@ -292,8 +212,10 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions,
    */
   public void finish( )
   {
-    // TODO Auto-generated method stub
-    
+    if( strategy != null )
+    {
+      strategy.finish();
+    }    
   }
 
 
@@ -302,8 +224,7 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions,
    */
   public String getName( )
   {
-    // TODO Auto-generated method stub
-    return null;
+    return name;
   }
 
 
@@ -312,8 +233,7 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions,
    */
   public String getToolTip( )
   {
-    // TODO Auto-generated method stub
-    return null;
+    return toolTip;
   }
 
 
@@ -322,8 +242,10 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions,
    */
   public void keyPressed( KeyEvent e )
   {
-    // TODO Auto-generated method stub
-    
+    if( strategy != null )
+    {
+      strategy.keyPressed( e );
+    }    
   }
 
 
@@ -332,8 +254,10 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions,
    */
   public void keyReleased( KeyEvent e )
   {
-    // TODO Auto-generated method stub
-    
+    if( strategy != null )
+    {
+      strategy.keyReleased( e );
+    }    
   }
 
 
@@ -342,8 +266,10 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions,
    */
   public void keyTyped( KeyEvent e )
   {
-    // TODO Auto-generated method stub
-    
+    if( strategy != null )
+    {
+      strategy.keyTyped( e );
+    }    
   }
 
 
@@ -352,8 +278,10 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions,
    */
   public void leftClicked( Point p )
   {
-    // TODO Auto-generated method stub
-    
+    if( strategy != null )
+    {
+      strategy.leftClicked( p );
+    }    
   }
 
 
@@ -362,7 +290,10 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions,
    */
   public void leftPressed( Point p )
   {
-    // TODO Auto-generated method stub
+    if( strategy != null )
+    {
+      strategy.leftPressed( p );
+    }    
     
   }
 
@@ -372,7 +303,10 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions,
    */
   public void leftReleased( Point p )
   {
-    // TODO Auto-generated method stub
+    if( strategy != null )
+    {
+      strategy.leftReleased( p );
+    }    
     
   }
 
@@ -382,7 +316,10 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions,
    */
   public void middleClicked( Point p )
   {
-    // TODO Auto-generated method stub
+    if( strategy != null )
+    {
+      strategy.middleClicked( p );
+    }    
     
   }
 
@@ -392,8 +329,10 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions,
    */
   public void middlePressed( Point p )
   {
-    // TODO Auto-generated method stub
-    
+    if( strategy != null )
+    {
+      strategy.middlePressed( p );
+    }   
   }
 
 
@@ -402,7 +341,10 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions,
    */
   public void middleReleased( Point p )
   {
-    // TODO Auto-generated method stub
+    if( strategy != null )
+    {
+      strategy.middleReleased( p );
+    }    
     
   }
 
@@ -412,8 +354,10 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions,
    */
   public void moved( Point p )
   {
-    // TODO Auto-generated method stub
-    
+    if( strategy != null )
+    {
+      strategy.moved( p );
+    }        
   }
 
 
@@ -422,8 +366,10 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions,
    */
   public void paint( Graphics g )
   {
-    // TODO Auto-generated method stub
-    
+    if( strategy != null )
+    {
+      strategy.paint( g );
+    }
   }
 
 
@@ -432,8 +378,10 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions,
    */
   public void rightClicked( Point p )
   {
-    // TODO Auto-generated method stub
-    
+    if( strategy != null )
+    {
+      strategy.rightClicked( p );
+    }    
   }
 
 
@@ -442,7 +390,10 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions,
    */
   public void rightPressed( Point p )
   {
-    // TODO Auto-generated method stub
+    if( strategy != null )
+    {
+      strategy.rightPressed( p );
+    }    
     
   }
 
@@ -452,7 +403,10 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions,
    */
   public void rightReleased( Point p )
   {
-    // TODO Auto-generated method stub
+    if( strategy != null )
+    {
+      strategy.rightReleased( p );
+    }    
     
   }
 
@@ -462,8 +416,10 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions,
    */
   public void setSelection( ISelection selection )
   {
-    // TODO Auto-generated method stub
-    
+    if( strategy != null )
+    {
+      strategy.setSelection( selection );
+    }   
   }
 
 
@@ -472,8 +428,20 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions,
    */
   public void setStrategy( IWidget strategy )
   {
-    // TODO Auto-generated method stub
+    if( this.strategy != null )
+    {
+      this.strategy.finish();
+    }
     
+    this.strategy = strategy;
+    if( this.strategy != null )
+    {
+     ICommandTarget commandPoster = 
+       (ICommandTarget) dataModel.getData( ICommonKeys.KEY_COMMAND_TARGET );
+     MapPanel mapPanel = 
+         (MapPanel) dataModel.getData( ICommonKeys.KEY_MAP_PANEL );
+     this.strategy.activate( commandPoster, mapPanel ); 
+    }    
   }
 
 
@@ -482,8 +450,16 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions,
    */
   public double getGrabDistance( )
   {
-    // TODO Auto-generated method stub
-    return 0;
+    if( strategy instanceof IGrabDistanceProvider )
+    {
+      return ((IGrabDistanceProvider)strategy).getGrabDistance();
+    }
+    
+    System.out.println("getting fix grab distance");
+    
+    final MapPanel mapPanel = 
+      dataModel.getData( MapPanel.class, ICommonKeys.KEY_MAP_PANEL );
+    return MapUtilities.calculateWorldDistance( mapPanel , 6 );
   }
 
 }

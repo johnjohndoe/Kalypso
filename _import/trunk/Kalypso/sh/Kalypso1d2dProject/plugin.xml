@@ -217,6 +217,19 @@
            </class>
 	     </handler>
 	     
+	     <!-- // Handler for "Start Calculation Widget"--> 
+	     <handler
+	       	  commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#StartCalculationWithProblemsView">	       	  
+               <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+	           <parameter
+	                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+	                 value="org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView.CalculationUnitPerformWidget"/>
+	           <parameter
+	                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin"
+	                 value="org.kalypso.model1d2d"/>
+           </class>
+	     </handler>
+	     
  	 <!--*** 1D/2D transition handlers CreateJunctionContext1dToCLineFromSelectedEdges ***-->	     	     	     	     	     	     	     
 	     <!--handler commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#SetEltLineTrans">
 	           <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
@@ -260,7 +273,7 @@
                   value="org.kalypso.model1d2d"/>
          </class>
       </handler>
-      <handler
+       <handler
             class="org.kalypso.kalypso1d2d.pjt.actions.StartCalculationHandler"
             commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#StartCalculation"/> 
        <handler

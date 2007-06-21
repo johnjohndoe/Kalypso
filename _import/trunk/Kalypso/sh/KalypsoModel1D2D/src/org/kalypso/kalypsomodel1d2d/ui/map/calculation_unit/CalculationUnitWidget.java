@@ -238,59 +238,7 @@ public class CalculationUnitWidget
     if( strategy != null )
     {
       strategy.clickPopup( p );
-    }
-        
-//    MapPanel mapPanel = (MapPanel) dataModel.getData( ICommonKeys.KEY_MAP_PANEL );
-//    JPopupMenu popupMenu = new JPopupMenu();
-//    
-//    JMenuItem addElement = new JMenuItem();
-//    addElement.setText( "Add Element" );
-//    addElement.setIcon( new ImageIcon(PluginUtilities.findResource(
-//                                  KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(),
-//                                  "icons/elcl16/add.gif" )));
-//   
-//    JMenuItem removeElement = new JMenuItem();
-//    removeElement.setText("Remove Element");
-//    removeElement.setIcon( new ImageIcon(PluginUtilities.findResource(
-//                                  KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(),
-//                                  "icons/elcl16/remove.gif" )));
-//    
-//    JMenuItem addBoundaryUP = new JMenuItem();
-//    addBoundaryUP.setText("Add Boundary UP");
-//    addBoundaryUP.setIcon( new ImageIcon(PluginUtilities.findResource(
-//                                  KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(),
-//                                  "icons/elcl16/addBoundary.gif" )));
-//    
-//    JMenuItem removeBoundaryUP = new JMenuItem();
-//    removeBoundaryUP.setText("Remove Boundary UP");
-//    removeBoundaryUP.setIcon( new ImageIcon(PluginUtilities.findResource(
-//                                  KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(),
-//                                  "icons/elcl16/remove.gif" )));
-//        
-//    
-//    JMenuItem addBoundaryDOWN = new JMenuItem();
-//    addBoundaryDOWN.setText("Add Boundary DOWN");
-//    addBoundaryDOWN.setIcon( new ImageIcon(PluginUtilities.findResource(
-//                                 KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(),
-//                                 "icons/elcl16/addBoundary.gif" )));
-//
-//    
-//    JMenuItem removeBoundaryDOWN = new JMenuItem();
-//    removeBoundaryDOWN.setText("remove Boundary DOWN");
-//    removeBoundaryDOWN.setIcon( new ImageIcon(PluginUtilities.findResource(
-//                                KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(),
-//                                "icons/elcl16/remove.gif" )));
-//
-//    popupMenu.add( addElement);
-//    popupMenu.add( removeElement);
-//    popupMenu.addSeparator();
-//    popupMenu.add( addBoundaryUP);
-//    popupMenu.add( removeBoundaryUP);
-//    popupMenu.addSeparator();
-//    popupMenu.add( addBoundaryDOWN);
-//    popupMenu.add( removeBoundaryDOWN);
-//    
-//    popupMenu.show( mapPanel, p.x, p.y );    
+    } 
   }
 
   

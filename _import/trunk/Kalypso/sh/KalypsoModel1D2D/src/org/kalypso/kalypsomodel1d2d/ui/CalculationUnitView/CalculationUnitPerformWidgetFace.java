@@ -40,7 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.FormAttachment;
+import org.eclipse.swt.layout.FormData;
+import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.ui.forms.widgets.TableWrapData;
+import org.eclipse.ui.forms.widgets.TableWrapLayout;
+import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 
 /**
@@ -50,19 +61,105 @@ import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 public class CalculationUnitPerformWidgetFace
 {
 
-  private KeyBasedDataModel dataModel;
+  private Composite m_parent;
+  private FormToolkit toolkit;
+  private ScrolledForm form;
+  private Section selectCalcUnitSection;
+  private Section problemsSection;
+  private Composite sectionFirstComposite;
+  private CalculationUnitPerformComponent calcSelect;
+  private Composite sectionSecondComposite;
+  private CalculationUnitProblemsComponent calcProblemsGUI;
+  private CalculationUnitDataModel dataModel;
 
   public CalculationUnitPerformWidgetFace( )
   {
   }
   
-  public CalculationUnitPerformWidgetFace(KeyBasedDataModel dataModel)
+  public CalculationUnitPerformWidgetFace(CalculationUnitDataModel dataModel)
   {
     this.dataModel = dataModel;
   }
   
-  public void createControl(Composite parent)
+  public Composite createControl(Composite parent)
   {
+    m_parent = parent;
+    toolkit = new FormToolkit(parent.getDisplay());
+    form = toolkit.createScrolledForm(parent);
+    form.setText("Calculation Unit Perform"); 
+    form.getBody().setLayout(new TableWrapLayout());
+
+    // Calculation Unit Section     
+    selectCalcUnitSection = toolkit.createSection( form.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
+    selectCalcUnitSection.setText( "Berechnungseinheiten" );
+    final TableWrapData tableWrapDataCU = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
+    tableWrapDataCU.grabHorizontal = true;
+    tableWrapDataCU.grabVertical = true;
+    selectCalcUnitSection.setLayoutData( tableWrapDataCU );
+    selectCalcUnitSection.setExpanded(true);
+
+    // Creates Section for "Calculation Settings Unit"
+    problemsSection = toolkit.createSection( form.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
+    problemsSection.setText( "Berechnungseinheit Verwalten" );
+    final TableWrapData tableWrapDataPU = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
+    tableWrapDataPU.grabHorizontal = true;
+    tableWrapDataPU.grabVertical = true;
+    problemsSection.setLayoutData( tableWrapDataPU );
+    problemsSection.setExpanded(true);
+    createCalculationUnitSection( selectCalcUnitSection );
+    createProblemsInCalculationSection(problemsSection);
+    return parent;
+  }
+  
+  private void createCalculationUnitSection( Section selectCalcUnitSection )
+  {
+    selectCalcUnitSection.setLayout( new FillLayout() );
+    sectionFirstComposite = toolkit.createComposite( selectCalcUnitSection, SWT.FLAT );
+    selectCalcUnitSection.setClient( sectionFirstComposite );
+    FormLayout formLayout = new FormLayout();
+    sectionFirstComposite.setLayout( formLayout );
+    FormData formData = new FormData();
+    formData.left = new FormAttachment( 0, 5 );
+    formData.top = new FormAttachment( 0, 5 );
+    sectionFirstComposite.setLayoutData( formData );
     
+    calcSelect = new CalculationUnitPerformComponent();    
+    calcSelect.createControl( dataModel, toolkit, sectionFirstComposite );
+    
+  }
+
+  private void createProblemsInCalculationSection( Section problemsSection )
+  {
+    problemsSection.setLayout( new FillLayout() );
+    sectionSecondComposite = toolkit.createComposite( problemsSection, SWT.FLAT );
+    problemsSection.setClient( sectionSecondComposite );
+    
+    FormLayout formLayout = new FormLayout();
+    sectionSecondComposite.setLayout( formLayout );
+    FormData formData = new FormData();
+    formData.left = new FormAttachment( 0, 5 );
+    formData.top = new FormAttachment( sectionFirstComposite, 5 );
+    //formData.bottom = new FormAttachment( sectionThirdComposite, -5 );
+    sectionSecondComposite.setLayoutData( formData );
+    
+    calcProblemsGUI = new CalculationUnitProblemsComponent();
+    calcProblemsGUI.createControl( dataModel, toolkit, sectionSecondComposite ); 
+    
+    
+  }
+
+  public void disposeControl( )
+  {
+  
+    if( m_parent == null )
+    {
+      System.out.println( "Disposing null root panel" );
+      return;
+    }
+    if( !m_parent.isDisposed() )
+    {
+      m_parent.dispose();
+      toolkit.dispose();
+    }  
   }
 }
