@@ -128,9 +128,7 @@ public class SelectionWidget extends AbstractWidget
     // TODO: check if this repaint is really necessary
     final MapPanel panel = getMapPanel();
     if( panel != null )
-    {
       panel.repaint();
-    }
 
   }
 
@@ -179,9 +177,7 @@ public class SelectionWidget extends AbstractWidget
     super.moved( p );
 
     if( (m_tooltipProvider != null) && (getMapPanel() != null) )
-    {
       m_tooltip = m_tooltipProvider.getTooltip( getMapPanel(), new Rectangle( p.x, p.y, 0, 0 ) );
-    }
 
     m_current_point = p;
 
@@ -189,9 +185,7 @@ public class SelectionWidget extends AbstractWidget
     {
       final MapPanel panel = getMapPanel();
       if( panel != null )
-      {
         panel.repaint();
-      }
     }
   }
 
@@ -202,14 +196,10 @@ public class SelectionWidget extends AbstractWidget
   public void paint( final Graphics g )
   {
     if( m_selector != null )
-    {
       m_selector.paint( g );
-    }
 
     if( (m_current_point != null) && (m_tooltipProvider != null) && (!m_tooltip.equals( "" )) )
-    {
       m_tooltipProvider.paintTooltip( g, m_current_point, m_tooltip );
-    }
   }
 
   /**
@@ -233,6 +223,14 @@ public class SelectionWidget extends AbstractWidget
     super.setSelection( selection );
 
     getMapPanel().setMessage( "Klicken und ziehen Sie, um ein Feature auszuwählen." );
+  }
+
+  public void setSelection( final ISelection selection, final String message )
+  {
+    super.setSelection( selection );
+
+    if( message != null )
+      getMapPanel().setMessage( message );
   }
 
   protected IRectangleMapFunction getClickFunction( )
