@@ -949,6 +949,39 @@
 			</xs:extension>			
 		</xs:complexContent>	
 	</xs:complexType>
+	<!-- ===============================================================
+	1d BoundaryLine
+	================================================================== -->
+	<xs:element 
+		name="BoundaryLine1D"
+		type="wb1d2d:BoundaryLine1DType"
+		substitutionGroup="wb1d2d:BoundaryLine" />
+	
+	<xs:complexType name="BoundaryLine1DType">
+		<xs:annotation>
+			<xs:documentation>
+				An boundary line based on a single 1d edge.
+				Only the first edge in the list is considered.
+				It has to be a 1d edge.				
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension 
+				base="wb1d2d:BoundaryLineType">
+				<xs:sequence>
+					<xs:element 
+						name="isAtEdgeEnd" 
+						type="xs:boolean">
+						<xs:annotation>
+							<xs:documentation>
+								Specifies the position of this line within the edge							
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>			
+		</xs:complexContent>	
+	</xs:complexType>
 	
 	<!-- ================================================================ 
 	Continiuty line element

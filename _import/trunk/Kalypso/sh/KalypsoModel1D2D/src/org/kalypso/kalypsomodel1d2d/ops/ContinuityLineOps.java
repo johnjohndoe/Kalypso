@@ -94,12 +94,32 @@ public class ContinuityLineOps
 //  }
   
   
+  public static <T extends ILineElement> T boundaryLine1DFromCurve(
+                    final Class<T> adapterTargetClass,
+                    final GM_Curve curve, 
+                    final IFEDiscretisationModel1d2d model ) throws CoreException
+  {
+    try
+    {
+      throw new UnsupportedOperationException();
+    }
+    catch ( Exception e ) 
+    {
+      throw new RuntimeException("Could not create boundary line from curve");
+    }
+  }
+  
   public static <T extends ILineElement> T lineElementFromCurve( 
                                               final QName lineElementQName,
                                               final Class<T> adapterTargetClass,
                                               final GM_Curve curve, 
                                               final IFEDiscretisationModel1d2d model ) throws CoreException
   {
+    if( Kalypso1D2DSchemaConstants.WB1D2D_F_BOUNDARY_LINE1D.equals( lineElementQName ) )
+    {
+      return boundaryLine1DFromCurve( adapterTargetClass, curve, model ); 
+     
+    }
     final boolean doTrace = Boolean.parseBoolean( Platform.getDebugOption( "KalypsoModel1D2D/debug/ops/continuity/routing" ) );
     // foreach segment of curve:
     try

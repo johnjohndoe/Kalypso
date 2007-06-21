@@ -696,5 +696,20 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
       return selFW;
     }
     
+    /**
+     * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection#countFeatureWrappers(java.lang.Class)
+     */
+    public int countFeatureWrappers( Class wrapperClass )
+    {
+      int num = 0;
+      for(FWCls ele:this)
+      {
+        if( wrapperClass.isInstance( ele ))
+        {
+          num++;
+        }
+      }
+      return num;
+    }
     
 }

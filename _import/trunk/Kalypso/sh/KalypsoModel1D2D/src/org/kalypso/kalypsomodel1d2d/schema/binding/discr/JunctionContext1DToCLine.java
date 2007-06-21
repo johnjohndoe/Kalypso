@@ -470,6 +470,11 @@ public class JunctionContext1DToCLine
       {
         return null;
       }
+
+      public int countFeatureWrappers( Class wrapperClass )
+      {
+        return 0;
+      }
       
     };
     

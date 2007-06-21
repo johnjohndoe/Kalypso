@@ -139,8 +139,17 @@ public interface IFeatureWrapperCollection<FWCls extends IFeatureWrapper2> exten
    * 
    * @param selectionSurface the selection surface
    * @return a list of feature overlaping the given surface
-   * @thorws {@link IllegalArgumentException} if position is null
+   * @throws {@link IllegalArgumentException} if position is null
    */
-  public List<FWCls> query( final GM_Position position ); 
+  public List<FWCls> query( final GM_Position position );
+  
+  
+  /**
+   * To get the number of object of the specified class in this collection.
+   * 
+   * @return an int representing the number of object of the sepecified class 
+   *            in this collection  
+   */
+  public int countFeatureWrappers( Class wrapperClass );
   
 }

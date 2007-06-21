@@ -86,6 +86,20 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
   private boolean highlighted;
 
   private boolean selected;
+  
+  private Color elementColor = 
+      new Color( 
+            Color.lightGray.getRed(), 
+            Color.lightGray.getGreen(),            
+            Color.lightGray.getBlue(),
+            256/2);
+  
+  private Color lineElementColor = 
+    new Color( 
+          Color.MAGENTA.getRed(), 
+          Color.MAGENTA.getGreen(),            
+          Color.MAGENTA.getBlue(),
+          256/2 );
 
   public CalUnitDisplayElement( final ICalculationUnit<IFE1D2DElement> calUnit )
   {
@@ -188,7 +202,7 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
     while( !calUnitTreeToDraw.isEmpty() )
     {
       final ICalculationUnit<IFE1D2DElement> currentUnit = calUnitTreeToDraw.removeFirst();
-      final Color color = Color.lightGray;
+//      final Color color = new Color( Color.lightGray );
       final IFeatureWrapperCollection<IFE1D2DElement> elements = currentUnit.getElements();
       final List<IFE1D2DElement> visibleElements = elements.query( sourceRect );
 
@@ -199,11 +213,24 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
           try
           {
             final GM_Surface surface = (GM_Surface) element.recalculateElementGeometry();
-            paintSurface( surface, color, (Graphics2D) g, projection );
+            paintSurface( surface, elementColor, (Graphics2D) g, projection );
           }
           catch( final Exception e )
           {
             e.printStackTrace();
+          }
+        }
+        else if( element instanceof IElement1D )
+        {
+          try
+          {
+            final GM_Curve curve = (GM_Curve) element.recalculateElementGeometry();
+            paintLineString( curve, elementColor, (Graphics2D) g, projection );
+          }
+          catch( final Exception e )
+          {
+            e.printStackTrace();
+            throw new RuntimeException( e );
           }
         }
         else if( element instanceof ILineElement || element instanceof IElement1D )
@@ -211,7 +238,7 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
           try
           {
             final GM_Curve curve = (GM_Curve) element.recalculateElementGeometry();
-            paintLineString( curve, color, (Graphics2D) g, projection );
+            paintLineString( curve, lineElementColor, (Graphics2D) g, projection );
           }
           catch( final Exception e )
           {

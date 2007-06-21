@@ -52,6 +52,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
@@ -63,6 +64,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -162,16 +164,19 @@ public class CalUnitOps
     }
     else if( calUnit instanceof ICalculationUnit2D )
     {
-      return calUnit.getElements().size();      
+      return calUnit.getElements().countFeatureWrappers( IPolyElement.class );      
     }
     else if( calUnit instanceof ICalculationUnit1D2D )
     {
-      int num=0; 
-      for( Object ele : calUnit.getElements() )
+      final LinkedList<ICalculationUnit> calUnitsToCheck = new LinkedList<ICalculationUnit>();
+      calUnitsToCheck.add( calUnit );      
+      int num = 0; 
+      for( ICalculationUnit<IFE1D2DElement> currentUnit : calUnitsToCheck )
       {
-        if( ele instanceof IPolyElement )
+        num = num + currentUnit.getElements().countFeatureWrappers( IPolyElement.class );
+        if(currentUnit instanceof ICalculationUnit1D2D )
         {
-          num++;
+          calUnitsToCheck.addAll( ((ICalculationUnit1D2D)currentUnit).getSubUnits() );
         }
       }
       return num;
@@ -181,6 +186,23 @@ public class CalUnitOps
       throw new IllegalArgumentException(
           "Cannot handle this calculation unit:"+calUnit );
     }
+  }
+  
+  public static final int countUnitElements(
+                    ICalculationUnit calUnit, Class eleClass ) 
+  {
+    final LinkedList<ICalculationUnit> calUnitsToCheck = new LinkedList<ICalculationUnit>();
+    calUnitsToCheck.add( calUnit );      
+    int num = 0; 
+    for( ICalculationUnit<IFE1D2DElement> currentUnit : calUnitsToCheck )
+    {
+      num = num + currentUnit.getElements().countFeatureWrappers( eleClass );
+      if(currentUnit instanceof ICalculationUnit1D2D )
+      {
+        calUnitsToCheck.addAll( ((ICalculationUnit1D2D)currentUnit).getSubUnits() );
+      }
+    }
+    return num;
   }
   
   /**
@@ -582,20 +604,32 @@ public class CalUnitOps
     final List<IFE1D2DComplexElement> containers = 
       new ArrayList<IFE1D2DComplexElement>( bcLine.getContainers() );
     final List<GM_Point> scopeMarks = bCondition.getScopeMark();
+    containers.remove( bcLine );
     if( scopeMarks.size()<1 )
     {
       return false;
     }
     for( GM_Point currentPoint : scopeMarks )
     {
-      IBoundaryLine line = 
-        model1d2d.findElement( 
-                currentPoint, grabDistance, IBoundaryLine.class );
-      containers.retainAll( line.getContainers() );
-      if( containers.isEmpty() )
+      
+      final IBoundaryLine<IFE1D2DComplexElement, IFE1D2DEdge> otherLine = 
+        getLineElement( unit, currentPoint,grabDistance, IBoundaryLine.class );
+      if( otherLine == null )
       {
         return false;
       }
+      if( bcLine.equals( otherLine ) )
+      {
+        return false;
+      }
+//      IBoundaryLine line = 
+//        model1d2d.findElement( 
+//                currentPoint, grabDistance, IBoundaryLine.class );
+//      containers.retainAll( line.getContainers() );
+//      if( containers.isEmpty() )
+//      {
+//        return false;
+//      }
     }
     return true;
   }

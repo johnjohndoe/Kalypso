@@ -85,7 +85,7 @@ public class AddRemoveBoundaryConditionToCalUnitWidget extends FENetConceptSelec
   {
     this(new QName[]{
         Kalypso1D2DSchemaConstants.WB1D2D_F_BOUNDARY_LINE,
-        IBoundaryCondition.QNAME,
+        IBoundaryCondition.QNAME
     },
     " Removes Boundary Condition ",
     " Removes Boundary Condition", 

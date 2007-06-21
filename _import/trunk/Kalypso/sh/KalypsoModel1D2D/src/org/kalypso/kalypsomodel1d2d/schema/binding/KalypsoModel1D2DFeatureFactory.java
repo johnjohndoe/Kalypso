@@ -13,6 +13,7 @@ import org.eclipse.core.runtime.IAdapterFactory;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.BoundaryLine;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.BoundaryLine1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.CalculationUnit1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.CalculationUnit1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.CalculationUnit2D;
@@ -26,6 +27,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FEJunction1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FEMiddleNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit2D;
@@ -241,6 +243,10 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
         else if( featureQName.equals( Kalypso1D2DSchemaConstants.WB1D2D_F_BOUNDARY_LINE ) && cls.isAssignableFrom( IBoundaryLine.class ) )
         {
           return new BoundaryLine( feature );
+        }
+        else if( featureQName.equals( Kalypso1D2DSchemaConstants.WB1D2D_F_BOUNDARY_LINE ) && cls.isAssignableFrom( IBoundaryLine1D.class ) )
+        {
+          return new BoundaryLine1D( feature );
         }
         else
         {

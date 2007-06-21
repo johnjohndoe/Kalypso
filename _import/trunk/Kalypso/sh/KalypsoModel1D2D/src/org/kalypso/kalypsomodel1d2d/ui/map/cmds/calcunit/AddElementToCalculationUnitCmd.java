@@ -169,7 +169,7 @@ public class AddElementToCalculationUnitCmd implements IDiscrModel1d2dChangeComm
       {
         for( IFE1D2DElement ele : elementsToAdd )
         {
-          ele.getContainers().add( calculationUnit );
+          ele.getContainers().addRef( calculationUnit );
           calculationUnit.addElementAsRef( ele );
         }
         

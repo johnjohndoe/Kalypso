@@ -58,6 +58,10 @@ public class Kalypso1D2DSchemaConstants
   
   public final static QName WB1D2D_F_BOUNDARY_LINE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "BoundaryLine" );
   
+  public final static QName WB1D2D_F_BOUNDARY_LINE1D = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "BoundaryLine1D" );
+  
+  public final static QName WB1D2D_PROP_IS_AT_EDGE_END = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "isAtEdgeEnd" );
+  
   public final static QName WB1D2D_F_LINE_ELEMENT = 
     new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "LineElement" );
 
