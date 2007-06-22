@@ -112,6 +112,8 @@ public class SimMode1D2DCalcJob implements ISimulation
       if( monitor.isCanceled() )
         return;
 
+      // TODO: this is not nice, as the calculation is only used within this method, outside this method the calculation is not valid any more
+      // so this should not be a member variable
       m_calculation = new RMA10Calculation( inputProvider );
 
       /** convert discretisation model stuff... */
@@ -159,7 +161,7 @@ public class SimMode1D2DCalcJob implements ISimulation
 
       copyExecutable( tmpDir, m_calculation.getKalypso1D2DKernelPath() );
 
-      final ResultProcessRunnable resultRunner = new ResultProcessRunnable( tmpDir, outputDir, "A", inputProvider );
+      final ResultProcessRunnable resultRunner = new ResultProcessRunnable( tmpDir, outputDir, "A", inputProvider, m_calculation );
       startCalculation( tmpDir, monitor, resultRunner );
       /* Run a last time so nothing is forgotten... */
       resultRunner.run();

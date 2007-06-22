@@ -47,6 +47,7 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
+import org.deegree.model.geometry.GM_Curve;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.conv.EReadError;
@@ -54,16 +55,21 @@ import org.kalypso.kalypsomodel1d2d.conv.IModelElementIDProvider;
 import org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler;
 import org.kalypso.kalypsomodel1d2d.conv.IRoughnessIDProvider;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.ArcResult;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.ElementResult;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.GMLNodeResult;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.SimpleNodeResult;
+import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
+import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
+import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -85,10 +91,13 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
   private ITriangleEater m_triangleEater;
 
-  public NodeResultsHandler( final GMLWorkspace resultWorkspace, final ITriangleEater triangleEater )
+  private final IFlowRelationshipModel m_flowRelationModel;
+
+  public NodeResultsHandler( final GMLWorkspace resultWorkspace, final ITriangleEater triangleEater, final IFlowRelationshipModel flowRelationModel )
   {
     m_resultWorkspace = resultWorkspace;
     m_triangleEater = triangleEater;
+    m_flowRelationModel = flowRelationModel;
     m_resultList = (FeatureList) m_resultWorkspace.getRootFeature().getProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "nodeResultMember" ) );
 
     m_crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
@@ -183,6 +192,27 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       // get the element
       final ElementResult elementResult = m_elemIndex.get( id );
 
+      
+      // TODO:
+      // - ist ein 1D-Element
+      // - hol für beide knoten die Curves
+      //    - hol dir die flowrelation für den knoten
+      //    - hol dir das profile
+      //    - mach draus ne ausgedünnte bruckkante mit dem WSP
+      final INodeResult nodeResult1 = null;
+      final INodeResult nodeResult2 = null;
+      final GM_Curve nodeCurve1  = getCurveForNode( nodeResult1 );
+      final GM_Curve nodeCurve2  = getCurveForNode( nodeResult2 );
+      if( nodeCurve1 != null && nodeCurve2 != null )
+      {
+      // - trianguliere die curves
+        
+//        nodeCurve2.getAsLineString();
+      }
+      
+      
+      
+      
       // for completion add the additional parameters
       elementResult.setCurrentRougthnessClassID( currentRougthnessClassID );
       elementResult.setPreviousRoughnessClassID( previousRoughnessClassID );
@@ -304,6 +334,28 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       System.out.println( "element does not exist in the arc list, check model!" );
     }
     // m_triangleEater.finished();
+  }
+
+  private GM_Curve getCurveForNode( final INodeResult nodeResult )
+  {
+    final GM_Position nodePos = nodeResult.getPoint().getPosition();
+    
+    final IFlowRelationship flowRelationship = m_flowRelationModel.findFlowrelationship( nodePos, 0.0 );
+    if( flowRelationship instanceof ITeschkeFlowRelation )
+    {
+      final ITeschkeFlowRelation teschkeRelation = (ITeschkeFlowRelation) flowRelationship;
+//      teschkeRelation.getPolynomials();
+      final WspmProfile profile = teschkeRelation.getProfile();
+      profile.getLine();
+      
+      // wsp als höhe dran machen (clone?)
+      // siehe TUhhCalctrallala: getcurve + ausdünnen
+      
+    }
+    // TODO: King
+    
+    
+    return null;
   }
 
   /**

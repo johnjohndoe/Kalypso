@@ -70,6 +70,7 @@ import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelRoughnessConsts;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
@@ -174,24 +175,24 @@ public class RMA10Calculation
     m_roughnessRootWorkspace = roughnessRoot;
   }
 
-  public GMLWorkspace getDisModelWorkspace( )
-  {
-    return m_disModelWorkspace;
-  }
-
-  public GMLWorkspace getTerrainModelWorkspace( )
-  {
-    return m_terrainModelWorkspace;
-  }
-
   public GMLWorkspace getOperationalModelWorkspace( )
   {
     return m_operationalModelWorkspace;
   }
 
-  public GMLWorkspace getFlowRelWorkspace( )
+  public ITerrainModel getTerrainModel( )
   {
-    return m_flowRelWorkspace;
+    return (ITerrainModel) m_terrainModelWorkspace.getRootFeature().getAdapter( ITerrainModel.class );
+  }
+
+  public IFlowRelationshipModel getFlowModel( )
+  {
+    return (IFlowRelationshipModel) m_flowRelWorkspace.getRootFeature().getAdapter( IFlowRelationshipModel.class );
+  }
+
+  public IFEDiscretisationModel1d2d getDiscModel( )
+  {
+    return (IFEDiscretisationModel1d2d) m_disModelWorkspace.getRootFeature().getAdapter( IFEDiscretisationModel1d2d.class );
   }
 
   public GMLWorkspace getFlowResistanceWorkspace( )
@@ -315,7 +316,7 @@ public class RMA10Calculation
     }
 
     /* Add all boundary conditions. */
-    final IFEDiscretisationModel1d2d discModel = (IFEDiscretisationModel1d2d) getDisModelWorkspace().getRootFeature().getAdapter( IFEDiscretisationModel1d2d.class );
+    final IFEDiscretisationModel1d2d discModel = (IFEDiscretisationModel1d2d) m_disModelWorkspace.getRootFeature().getAdapter( IFEDiscretisationModel1d2d.class );
     final IFlowRelationshipModel model = (IFlowRelationshipModel) m_operationalModelWorkspace.getRootFeature().getAdapter( IFlowRelationshipModel.class );
     for( final IFlowRelationship relationship : model )
     {
@@ -398,4 +399,5 @@ public class RMA10Calculation
 
     return (IControlModel1D2D) controlModelFeature.getAdapter( IControlModel1D2D.class );
   }
+
 }

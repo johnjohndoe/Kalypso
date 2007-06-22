@@ -113,9 +113,9 @@ public class Gml2RMA10SConv
   public Gml2RMA10SConv( final File rma10sOutputFile, final RMA10Calculation calculation )
   {
     m_outputFile = rma10sOutputFile;
-    m_discretisationModel1d2d = (IFEDiscretisationModel1d2d) calculation.getDisModelWorkspace().getRootFeature().getAdapter( IFEDiscretisationModel1d2d.class );
-    m_terrainModel = (ITerrainModel) calculation.getTerrainModelWorkspace().getRootFeature().getAdapter( ITerrainModel.class );
-    m_flowrelationModel = (IFlowRelationshipModel) calculation.getFlowRelWorkspace().getRootFeature().getAdapter( IFlowRelationshipModel.class );
+    m_discretisationModel1d2d = calculation.getDiscModel();
+    m_terrainModel = calculation.getTerrainModel();
+    m_flowrelationModel = calculation.getFlowModel();
 
     // initialize Roughness IDs
     for( final Object o : calculation.getRoughnessClassList() )

@@ -84,11 +84,14 @@ public class ResultProcessRunnable implements Runnable
 
   private final ISimulationDataProvider m_dataProvider;
 
-  public ResultProcessRunnable( final File inputDir, final File outputDir, final String resultFilePattern, final ISimulationDataProvider dataProvider )
+  private final RMA10Calculation m_calculation;
+
+  public ResultProcessRunnable( final File inputDir, final File outputDir, final String resultFilePattern, final ISimulationDataProvider dataProvider, final RMA10Calculation calculation )
   {
     m_inputDir = inputDir;
     m_outputDir = outputDir;
     m_dataProvider = dataProvider;
+    m_calculation = calculation;
     m_resultFilePattern = Pattern.compile( resultFilePattern + "(\\d+)" );
 
     final File[] existing2dFiles = m_inputDir.listFiles( FILTER_2D );
@@ -125,7 +128,7 @@ public class ResultProcessRunnable implements Runnable
 
         final File resultOutputDir = new File( m_outputDir, outDirName );
         resultOutputDir.mkdirs();
-        final ProcessResultsJob processResultsJob = new ProcessResultsJob( file, resultOutputDir, m_dataProvider );
+        final ProcessResultsJob processResultsJob = new ProcessResultsJob( file, resultOutputDir, m_dataProvider, m_calculation );
         m_resultJobs.add( processResultsJob );
 
         /* Schedule job: wait some time in order to make sure file was written to disk. */

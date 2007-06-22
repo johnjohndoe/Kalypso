@@ -67,6 +67,7 @@ import org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultType;
 import org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceTriangleEater;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
+import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.simulation.core.ISimulationDataProvider;
@@ -90,13 +91,16 @@ public class ProcessResultsJob extends Job
 
   private final ISimulationDataProvider m_dataProvider;
 
-  public ProcessResultsJob( final File inputFile, final File outputDir, final ISimulationDataProvider dataProvider )
+  private final RMA10Calculation m_calculation;
+
+  public ProcessResultsJob( final File inputFile, final File outputDir, final ISimulationDataProvider dataProvider, final RMA10Calculation calculation )
   {
     super( "1D2D-Ergebnisse auswerten: " + inputFile.getName() );
 
     m_inputFile = inputFile;
     m_outputDir = outputDir;
     m_dataProvider = dataProvider;
+    m_calculation = calculation;
   }
 
   /**
@@ -115,7 +119,7 @@ public class ProcessResultsJob extends Job
       monitor.worked( 1 );
 
       /* Read into NodeResults */
-      read2DIntoGmlResults( m_inputFile, m_outputDir, m_dataProvider );
+      read2DIntoGmlResults( m_inputFile, m_outputDir, m_dataProvider, m_calculation.getFlowModel() );
     }
     catch( final Throwable e )
     {
@@ -126,7 +130,7 @@ public class ProcessResultsJob extends Job
     return Status.OK_STATUS;
   }
 
-  public static File read2DIntoGmlResults( final File result2dFile, final File outputDir, final ISimulationDataProvider dataProvider ) throws IOException, InvocationTargetException, GmlSerializeException, SimulationException, GM_Exception
+  public static File read2DIntoGmlResults( final File result2dFile, final File outputDir, final ISimulationDataProvider dataProvider, final IFlowRelationshipModel flowModel ) throws IOException, InvocationTargetException, GmlSerializeException, SimulationException, GM_Exception
   {
     final TimeLogger logger = new TimeLogger( "Start: lese .2d Ergebnisse" );
 
@@ -171,7 +175,7 @@ public class ProcessResultsJob extends Job
       // final File resultHMOFile = new File( "D:/Projekte/kalypso_dev/post-processing/output.hmo" );
       // final HMOTriangleEater triangleEater = new HMOTriangleEater( resultHMOFile, parameters );
       final TriangulatedSurfaceTriangleEater triangleEater = new TriangulatedSurfaceTriangleEater( surface );
-      final IRMA10SModelElementHandler handler = new NodeResultsHandler( resultWorkspace, triangleEater );
+      final IRMA10SModelElementHandler handler = new NodeResultsHandler( resultWorkspace, triangleEater, flowModel );
       conv.setRMA10SModelElementHandler( handler );
 
       logger.takeInterimTime();
