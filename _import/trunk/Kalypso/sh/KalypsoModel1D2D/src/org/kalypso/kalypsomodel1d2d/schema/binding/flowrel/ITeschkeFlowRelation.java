@@ -46,6 +46,7 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
+import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D;
 
 /**
@@ -72,4 +73,6 @@ public interface ITeschkeFlowRelation extends IFlowRelationship
   public double getSlope( );
 
   public void setSlope( final double slope );
+  
+  public WspmProfile getProfile();
 }

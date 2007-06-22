@@ -45,6 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.kalypso.kalypsosimulationmodel.core.flowrel.FlowRelationship;
+import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -113,6 +114,15 @@ public class TeschkeFlowRelation extends FlowRelationship implements ITeschkeFlo
   {
     final BigDecimal slopeDec = new BigDecimal( slope ).setScale( 5, BigDecimal.ROUND_HALF_UP );
     getFeature().setProperty( QNAME_PROP_SLOPE, slopeDec );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation#getProfile()
+   */
+  public WspmProfile getProfile( )
+  {
+    // TODO Auto-generated method stub
+    return null;
   }
 
 }
