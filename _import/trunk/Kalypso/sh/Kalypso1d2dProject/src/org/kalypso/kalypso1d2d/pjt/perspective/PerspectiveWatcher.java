@@ -40,20 +40,23 @@ public class PerspectiveWatcher<T extends Case> implements IActiveContextChangeL
       if( workbench.isClosing() )
         return;
 
-      final UIJob job = new UIJob( "Perspektive öffnen" )
+      if( workbench.getActiveWorkbenchWindow().getActivePage().getPerspective().getId().equals( Perspective.ID ) )
       {
-        @SuppressWarnings("unchecked")
-        @Override
-        public IStatus runInUIThread( final IProgressMonitor monitor )
+        final UIJob job = new UIJob( "Perspektive öffnen" )
         {
-          final IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
-          final IWorkbenchPage workbenchPage = activeWorkbenchWindow.getActivePage();
-          cleanPerspective( workbenchPage, Collections.EMPTY_LIST );
-          return Status.OK_STATUS;
-        }
+          @SuppressWarnings("unchecked")
+          @Override
+          public IStatus runInUIThread( final IProgressMonitor monitor )
+          {
+            final IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
+            final IWorkbenchPage workbenchPage = activeWorkbenchWindow.getActivePage();
+            cleanPerspective( workbenchPage, Collections.EMPTY_LIST );
+            return Status.OK_STATUS;
+          }
 
-      };
-      job.schedule();
+        };
+        job.schedule();
+      }
       m_currentProject = newProject;
       m_currentScenario = scenario;
     }
