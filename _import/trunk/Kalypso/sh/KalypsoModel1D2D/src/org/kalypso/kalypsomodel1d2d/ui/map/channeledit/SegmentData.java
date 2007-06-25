@@ -641,7 +641,7 @@ public class SegmentData
    * @param wspmprofile
    *            original profile (WSPMProfile) to be intersected
    * @param prof
-   *            addinitonal informations of the corresponding intersection points of that profile (upstream /
+   *            additional informations of the corresponding intersection points of that profile (upstream /
    *            downstream)
    */
   private IProfil createCroppedIProfile( final WspmProfile wspmprofile, final CreateChannelData.PROF prof ) throws Exception
@@ -652,6 +652,8 @@ public class SegmentData
     // convert WSPM-Profil into IProfil an add the additional intersection width points.
     final IProfil orgIProfil = wspmprofile.getProfil();
 
+    final Point firstPoint = getIntersPoint( prof, CreateChannelData.WIDTHORDER.FIRST ); 
+    final Point lastPoint = getIntersPoint( prof, CreateChannelData.WIDTHORDER.LAST ); 
     final double startWidth;
     final double endWidth;
     final Point geoPoint1;
@@ -661,15 +663,18 @@ public class SegmentData
     {
       startWidth = width2;
       endWidth = width1;
-      geoPoint1 = getIntersPoint( prof, CreateChannelData.WIDTHORDER.FIRST );
-      geoPoint2 = getIntersPoint( prof, CreateChannelData.WIDTHORDER.LAST );
+      //TODO: strange: geopoint1 is always firstpoint ??? check this!!
+//      geoPoint1 = firstPoint;
+      geoPoint1 = lastPoint;
+//      geoPoint2 = lastPoint;
+      geoPoint2 = firstPoint;
     }
     else
     {
       startWidth = width1;
       endWidth = width2;
-      geoPoint1 = getIntersPoint( prof, CreateChannelData.WIDTHORDER.FIRST );
-      geoPoint2 = getIntersPoint( prof, CreateChannelData.WIDTHORDER.LAST );
+      geoPoint1 = firstPoint;
+      geoPoint2 = lastPoint;
     }
 
     // calculate elevations
@@ -690,12 +695,13 @@ public class SegmentData
     /* calculate the width of the intersected profile */
     // sort intersection points by width
     point1.setValueFor( IWspmConstants.POINT_PROPERTY_BREITE, startWidth );
-    point2.setValueFor( IWspmConstants.POINT_PROPERTY_BREITE, endWidth );
     point1.setValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, heigth1 );
-    point2.setValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, heigth2 );
     point1.setValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT, geoPoint1.getX() );
-    point2.setValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT, geoPoint2.getX() );
     point1.setValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT, geoPoint1.getY() );
+
+    point2.setValueFor( IWspmConstants.POINT_PROPERTY_BREITE, endWidth );
+    point2.setValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, heigth2 );
+    point2.setValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT, geoPoint2.getX() );
     point2.setValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT, geoPoint2.getY() );
 
     tmpProfil.addPoint( point1 );
@@ -1442,6 +1448,7 @@ public class SegmentData
 
   }
 
+  @SuppressWarnings("unchecked")
   private void paintLineString( final LineString line, final Graphics g, final MapPanel mapPanel, final Color color ) throws GM_Exception
   {
     if( line == null )
