@@ -123,7 +123,7 @@ public class CalculationUnitPerformWidgetFace
     formData.top = new FormAttachment( 0, 5 );
     sectionFirstComposite.setLayoutData( formData );
     
-    calcSelect = new CalculationUnitPerformComponent();    
+    calcSelect = new CalculationUnitPerformComponent(dataModel);    
     calcSelect.createControl( dataModel, toolkit, sectionFirstComposite );
     
   }

@@ -55,16 +55,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 @SuppressWarnings("unchecked")
 public class CalculationUnitDataModel extends KeyBasedDataModel
 {
-//  /**
-//   * Key for the current selected calculation unit
-//   */
-//  public static final String SELECTED_CALCULATION_UNIT= "_sel_cal_unit_";
-  
-//  /**
-//   * Key for data entry representing the list of calculaton unit
-//   */
-//  public static final String CALCULATION_UNITS = "_calculation_units_";
-  
+ 
   public CalculationUnitDataModel( )
   {
     super( 

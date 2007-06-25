@@ -266,9 +266,6 @@ public class FeatureWrapperListEditor implements IButtonConstants
           if( firstElement instanceof IFeatureWrapper2 )
           {
             IFeatureWrapper2 firstElementWrapper = (IFeatureWrapper2) firstElement;
-//            dataModel.setData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, firstElement );
-//            descriptionText.setText( firstElement.getDescription() );
-//            descriptionText.redraw();
             setCurrentSelection(firstElementWrapper);
           }
         }
@@ -349,7 +346,7 @@ public class FeatureWrapperListEditor implements IButtonConstants
 
     tableViewer = new TableViewer( parent, SWT.FILL | SWT.BORDER );
     Table table = tableViewer.getTable();
-    tableViewer.setContentProvider( new ArrayContentProvider() );
+    tableViewer.setContentProvider( setOwnContentProvider() );
     tableViewer.setLabelProvider( getLabelProvider(parent.getDisplay()) );
     table.setLinesVisible( true );
     table.setLayoutData( formData );
@@ -695,6 +692,12 @@ public class FeatureWrapperListEditor implements IButtonConstants
   
   public void refreshOtherSections(){
     
+  }
+  
+  
+  protected ArrayContentProvider setOwnContentProvider()
+  {
+    return new ArrayContentProvider();
   }
   
 }

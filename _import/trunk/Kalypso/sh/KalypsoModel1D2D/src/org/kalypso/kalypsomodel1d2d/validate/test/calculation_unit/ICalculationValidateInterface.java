@@ -38,51 +38,22 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView;
+package org.kalypso.kalypsomodel1d2d.validate.test.calculation_unit;
 
 import java.util.List;
 
-import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.swt.widgets.Display;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
-import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
-import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitViewerLabelProvider;
-import org.kalypso.kalypsomodel1d2d.ui.map.editor.FeatureWrapperListEditor;
-import org.kalypso.kalypsomodel1d2d.ui.map.editor.IButtonConstants;
-import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 
 /**
  * @author Madanagopal
  *
  */
-public class CalculationUnitPerformComponent extends FeatureWrapperListEditor implements IButtonConstants
+public interface ICalculationValidateInterface
 {
 
-  private CalculationUnitDataModel dataModel;
-
-  public CalculationUnitPerformComponent(CalculationUnitDataModel dataModel)
-  {	  
-	    super(null,null,null);
-	    setRequiredButtons( BTN_CLICK_TO_RUN,
-	                        BTN_REMOVE,
-	                        BTN_ADD,
-	                        BTN_CLICK_TO_CALCULATE);
-	    this.dataModel = dataModel;
-  }
+  public List<IBoundaryLine> getBoundaryLines();
+  public List<ICalculationUnit> getCalculationUnit();  
   
-  @Override
-  protected ILabelProvider getLabelProvider(Display display)
-  {    
-    return new CalculationUnitViewerLabelProvider(display);    
-  }
-  
-  @Override
-  protected ArrayContentProvider setOwnContentProvider(){
-    
-    List<ICalculationUnit> calcList = (List<ICalculationUnit>) dataModel.getData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST );
-    
-    return (ArrayContentProvider) calcList;
-  }
-
+  public List< ? > checkAllInvariants();
 }

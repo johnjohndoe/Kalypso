@@ -50,7 +50,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit2D;
 import org.kalypso.kalypsomodel1d2d.ui.map.editor.ListLabelProvider;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 /**
- * @author madanagopal
+ * @author Madanagopal
  *
  */
 public class CalculationUnitViewerLabelProvider extends ListLabelProvider

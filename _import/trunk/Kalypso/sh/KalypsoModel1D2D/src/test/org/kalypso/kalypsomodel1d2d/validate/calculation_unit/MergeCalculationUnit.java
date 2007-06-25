@@ -38,51 +38,52 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView;
+package test.org.kalypso.kalypsomodel1d2d.validate.calculation_unit;
 
-import java.util.List;
+import javax.xml.namespace.QName;
 
-import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.swt.widgets.Display;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.CalculationUnit;
+import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitCheckDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
-import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitViewerLabelProvider;
-import org.kalypso.kalypsomodel1d2d.ui.map.editor.FeatureWrapperListEditor;
-import org.kalypso.kalypsomodel1d2d.ui.map.editor.IButtonConstants;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
+import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
+import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Madanagopal
  *
  */
-public class CalculationUnitPerformComponent extends FeatureWrapperListEditor implements IButtonConstants
+public class MergeCalculationUnit extends CalculationUnit
 {
 
   private CalculationUnitDataModel dataModel;
+  private CalculationUnitCheckDataModel checkDataModel = new CalculationUnitCheckDataModel();
 
-  public CalculationUnitPerformComponent(CalculationUnitDataModel dataModel)
-  {	  
-	    super(null,null,null);
-	    setRequiredButtons( BTN_CLICK_TO_RUN,
-	                        BTN_REMOVE,
-	                        BTN_ADD,
-	                        BTN_CLICK_TO_CALCULATE);
-	    this.dataModel = dataModel;
+  public MergeCalculationUnit( Feature featureToBind, QName qnameToBind, QName elementListPropQName, Class wrapperClass )
+  {
+    super( featureToBind, qnameToBind, elementListPropQName, wrapperClass );
   }
   
-  @Override
-  protected ILabelProvider getLabelProvider(Display display)
-  {    
-    return new CalculationUnitViewerLabelProvider(display);    
+  public MergeCalculationUnit(CalculationUnitDataModel dataModel,
+      Feature featureToBind, 
+      QName qnameToBind, 
+      QName elementListPropQName, 
+      Class wrapperClass )
+  {
+    this(featureToBind, qnameToBind, elementListPropQName, wrapperClass );
+    this.dataModel = dataModel;
   }
   
-  @Override
-  protected ArrayContentProvider setOwnContentProvider(){
-    
-    List<ICalculationUnit> calcList = (List<ICalculationUnit>) dataModel.getData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST );
-    
-    return (ArrayContentProvider) calcList;
-  }
+  CommandableWorkspace workspace = 
+    dataModel.getData( 
+        CommandableWorkspace.class, 
+        ICommonKeys.KEY_BOUNDARY_CONDITION_CMD_WORKSPACE );
+  
+  final Feature opModelFeature = workspace.getRootFeature();
+  IFlowRelationshipModel opModel = 
+    (IFlowRelationshipModel) opModelFeature.getAdapter( IFlowRelationshipModel.class );  
 
+  
 }
