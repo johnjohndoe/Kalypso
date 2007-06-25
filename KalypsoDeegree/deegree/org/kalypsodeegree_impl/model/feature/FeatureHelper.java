@@ -7,7 +7,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -149,9 +148,8 @@ public class FeatureHelper
   {
     final IPropertyType[] properties = feature.getFeatureType().getProperties();
 
-    for( int i = 0; i < properties.length; i++ )
+    for( final IPropertyType type : properties )
     {
-      final IPropertyType type = properties[i];
       if( propName.equals( type.getQName().getLocalPart() ) )
       {
         return type;
@@ -272,9 +270,9 @@ public class FeatureHelper
   {
     final GMLWorkspace workspace = sourceFeature.getWorkspace();
     final String gmlVersion = workspace == null ? null : workspace.getGMLSchema().getGMLVersion();
-    for( final Iterator pIt = propertyMap.entrySet().iterator(); pIt.hasNext(); )
+    for( final Object element : propertyMap.entrySet() )
     {
-      final Map.Entry entry = (Entry) pIt.next();
+      final Map.Entry entry = (Entry) element;
       final String sourceProp = (String) entry.getKey();
       final String targetProp = (String) entry.getValue();
 
@@ -561,9 +559,8 @@ public class FeatureHelper
   {
     final IFeatureType featureType = f.getFeatureType();
     final IPropertyType[] properties = featureType.getProperties();
-    for( int i = 0; i < properties.length; i++ )
+    for( final IPropertyType property : properties )
     {
-      final IPropertyType property = properties[i];
       if( property.isList() )
       {
         return true;
@@ -616,9 +613,8 @@ public class FeatureHelper
       return false;
     }
 
-    for( int i = 0; i < properties.length; i++ )
+    for( final IPropertyType property : properties )
     {
-      final IPropertyType property = properties[i];
       if( property.isList() )
       {
         return true;
@@ -653,9 +649,9 @@ public class FeatureHelper
   {
     final Properties properties = new Properties();
     final String[] strings = tokens.split( ";" );
-    for( int i = 0; i < strings.length; i++ )
+    for( final String element : strings )
     {
-      final String[] splits = strings[i].split( "-" );
+      final String[] splits = element.split( "-" );
 
       String value = (String) f.getProperty( splits[1] );
       if( value == null )
@@ -710,11 +706,11 @@ public class FeatureHelper
   {
     final MultiException multiException = new MultiException();
     final IPropertyType[] srcFTPs = srcFE.getFeatureType().getProperties();
-    for( int i = 0; i < srcFTPs.length; i++ )
+    for( final IPropertyType element : srcFTPs )
     {
       try
       {
-        FeatureHelper.copySimpleProperty( srcFE, targetFE, srcFTPs[i] );
+        FeatureHelper.copySimpleProperty( srcFE, targetFE, element );
       }
       catch( final Exception e )
       {
@@ -757,13 +753,12 @@ public class FeatureHelper
       throw new CloneNotSupportedException( "source FeatureType=" + sourceFT.getQName() + " is not the same as target featureType=" + targetFT.getQName() );
     }
     final IPropertyType[] properties = sourceFT.getProperties();
-    for( int i = 0; i < properties.length; i++ )
+    for( final IPropertyType pt : properties )
     {
-      final IPropertyType pt = properties[i];
       if( pt instanceof IValuePropertyType )
       {
         final IValuePropertyType vpt = (IValuePropertyType) pt;
-        final IMarshallingTypeHandler sourceTH = (IMarshallingTypeHandler) vpt.getTypeHandler();
+        final IMarshallingTypeHandler sourceTH = vpt.getTypeHandler();
         final Object clonedProptery = sourceTH.cloneObject( srcFE.getProperty( vpt ), gmlVersion );
         targetFE.setProperty( pt, clonedProptery );
       }
@@ -913,16 +908,28 @@ public class FeatureHelper
     }
   }
 
+  public static Feature resolveLink( final Feature feature, final QName qname )
+  {
+    return resolveLink( feature, qname, false );
+  }
+
   /**
    * Returns a value of the given feature as feature. If it is a link, it will be resolved.
    * 
    * @param qname
    *            Must denote a property of type IRelationType of maxoccurs 1.
+   * @param followXLinks
+   *            If true and the property is an xlinked Feature, return the Feature where the xlink points to. Else the
+   *            xlink itself is returned as feature.
    */
-  public static Feature resolveLink( final Feature feature, final QName qname )
+  public static Feature resolveLink( final Feature feature, final QName qname, final boolean followXLinks )
   {
     final IRelationType property = (IRelationType) feature.getFeatureType().getProperty( qname );
     final Object value = feature.getProperty( property );
+
+    if( value instanceof XLinkedFeature_Impl && followXLinks == true )
+      return ((XLinkedFeature_Impl) value).getFeature();
+
     if( value instanceof Feature )
     {
       return (Feature) value;
