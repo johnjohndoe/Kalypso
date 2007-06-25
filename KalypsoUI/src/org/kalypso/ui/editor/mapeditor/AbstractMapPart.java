@@ -145,9 +145,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     public void widgetChanged( final IWidget newWidget )
     {
       if( PlatformUI.getWorkbench().isClosing() )
-      {
         return;
-      }
 
       // the widget changed and there is something to show, so bring this
       // view to top
@@ -159,13 +157,9 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
           final IWorkbenchPage page = site.getPage();
           final IViewPart view = page.findView( ActionOptionsView.class.getName() );
           if( newWidget instanceof IWidgetWithOptions )
-          {
             page.showView( ActionOptionsView.class.getName(), null, IWorkbenchPage.VIEW_VISIBLE );
-          }
           else if( view != null )
-          {
             page.hideView( view );
-          }
         }
       }
       catch( final PartInitException e )
@@ -233,7 +227,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
       if( partRef.getPart( false ) == AbstractMapPart.this )
       {
         final IContextService contextService = (IContextService) getSite().getService( IContextService.class );
-        if( contextService != null && m_activateContext != null )
+        if( (contextService != null) && (m_activateContext != null) )
           contextService.deactivateContext( m_activateContext );
       }
     }
@@ -254,7 +248,6 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     initMapPanel( site );
 
     if( input instanceof IStorageEditorInput )
-    {
       try
       {
         startLoadJob( ((IStorageEditorInput) input).getStorage() );
@@ -264,7 +257,6 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
         // TODO Auto-generated catch block
         e.printStackTrace();
       }
-    }
   }
 
   /**
@@ -300,28 +292,18 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
       public void resourceChanged( final IResourceChangeEvent event )
       {
         if( m_saving )
-        {
           return;
-        }
         final IFile file = getFile();
         if( file == null )
-        {
           return;
-        }
         if( event.getType() != IResourceChangeEvent.POST_CHANGE )
-        {
           return;
-        }
         final IResourceDelta rootDelta = event.getDelta();
         final IResourceDelta fileDelta = rootDelta.findMember( file.getFullPath() );
         if( fileDelta == null )
-        {
           return;
-        }
         if( (fileDelta.getFlags() & IResourceDelta.CONTENT) != 0 )
-        {
           startLoadJob( file );
-        }
       }
     };
   }
@@ -344,9 +326,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     final IWorkbench workbench = site.getWorkbenchWindow().getWorkbench();
     final IContextService workbenchContextService = (IContextService) workbench.getService( IContextService.class );
     if( workbenchContextService != null )
-    {
       m_mapModellContextSwitcher.addContextService( workbenchContextService );
-    }
   }
 
   /**
@@ -356,9 +336,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   public void setFocus( )
   {
     if( (m_control != null) && !m_control.isDisposed() )
-    {
       m_control.setFocus();
-    }
   }
 
   /**
@@ -395,9 +373,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   protected void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input ) throws Exception, CoreException
   {
     if( m_mapPanel != null )
-    {
       loadMap( monitor, input.getStorage() );
-    }
   }
 
   /**
@@ -442,9 +418,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   public void loadMap( final IProgressMonitor monitor, final IStorage storage ) throws CoreException
   {
     if( m_saving )
-    {
       return;
-    }
 
     monitor.beginTask( "Kartenvorlage laden", 2 );
 
@@ -525,9 +499,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
 
       final String fileName = getFile() != null ? FileUtilities.nameWithoutExtension( getFile().getName() ) : "<input not a file>";
       if( partName == null )
-      {
         partName = fileName;
-      }
       setCustomName( partName );
     }
   }
@@ -551,9 +523,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   public void saveMap( final IProgressMonitor monitor, final IFile file ) throws CoreException
   {
     if( (m_mapModell == null) || m_saving )
-    {
       return;
-    }
 
     m_saving = true;
     try
@@ -588,17 +558,13 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     // dispose old one
     // TODO: shouldnt this be done by the one who creates it?
     if( m_mapModell != null )
-    {
       m_mapModell.dispose();
-    }
 
     m_mapModell = mapModell;
     m_mapModellContextSwitcher.setMapModell( mapModell );
 
     if( m_mapPanel != null )
-    {
       m_mapPanel.setMapModell( m_mapModell );
-    }
   }
 
   /**
@@ -619,7 +585,6 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     m_partName = name;
     final IWorkbench workbench = getSite().getWorkbenchWindow().getWorkbench();
     if( !workbench.isClosing() )
-    {
       workbench.getDisplay().asyncExec( new Runnable()
       {
         @SuppressWarnings("synthetic-access")
@@ -628,7 +593,6 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
           setPartName( m_partName );
         }
       } );
-    }
   }
 
   /**
@@ -638,33 +602,23 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   public Object getAdapter( final Class adapter )
   {
     if( IExportableObjectFactory.class.equals( adapter ) )
-    {
       return this;
-    }
 
     if( adapter == IFile.class )
     {
       final IEditorInput input = getEditorInput();
       if( input instanceof IFileEditorInput )
-      {
         return ((IFileEditorInput) getEditorInput()).getFile();
-      }
     }
 
     if( adapter == MapPanel.class )
-    {
       return m_mapPanel;
-    }
 
     if( adapter == ModellEventProvider.class )
-    {
       return new MapPanelModellEventProvider( m_mapPanel );
-    }
 
     if( adapter == Control.class )
-    {
       return m_control;
-    }
 
     return super.getAdapter( adapter );
   }
@@ -728,9 +682,12 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     m_mapPanel.dispose();
 
     if( m_file != null )
-    {
       m_file.getWorkspace().removeResourceChangeListener( m_resourceChangeListener );
-    }
     super.dispose();
+  }
+
+  public void setStatusBarMessage( final String message )
+  {
+    m_statusBar.setText( message );
   }
 }

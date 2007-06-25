@@ -134,7 +134,8 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
 
   public final static String WIDGET_TOGGLE_SELECT = "TOGGLE_SELECT";
 
-  // public final static String WIDGET_CREATE_FEATURE = "CREATE_FEATURE";
+  public final static String WIDGET_CREATE_FEATURE = "CREATE_FEATURE";
+
   public final static String WIDGET_CREATE_FEATURE_WITH_GEOMETRY = "CREATE_FEATURE_WITH_GEOMETRY";
 
   public final static String WIDGET_CREATE_FEATURE_WITH_POINT = "CREATE_FEATURE_WITH_POINT";
@@ -306,11 +307,11 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
     // to avoid threading issues, get reference once
     final IMapModell model = m_model;
 
-    if( model == null || model.getThemeSize() == 0 ) // no maps ...
+    if( (model == null) || (model.getThemeSize() == 0) ) // no maps ...
     {
       String welcomeText = "Kartenvorlage wird geladen ...";
 
-      if( model != null && model.getThemeSize() == 0 )
+      if( (model != null) && (model.getThemeSize() == 0) )
         welcomeText = "Keine Themen vorhanden";
 
       g.setColor( Color.white );
@@ -320,16 +321,16 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
       return;
     }
 
-    if( getHeight() == 0 || getWidth() == 0 )
+    if( (getHeight() == 0) || (getWidth() == 0) )
       return;
 
-    if( getHeight() != m_height || getWidth() != m_width )
+    if( (getHeight() != m_height) || (getWidth() != m_width) )
     { // update dimension
       m_height = getHeight();
       m_width = getWidth();
     }
 
-    if( !hasValidMap() || m_mapImage == null )
+    if( !hasValidMap() || (m_mapImage == null) )
     {
       final Rectangle clipBounds = g.getClipBounds();
       if( clipBounds != null )
@@ -356,7 +357,7 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
       }
     }
 
-    if( xOffset != 0 && yOffset != 0 ) // to clear backround ...
+    if( (xOffset != 0) && (yOffset != 0) ) // to clear backround ...
     {
       final int left = Math.max( 0, xOffset );
       final int right = Math.min( getWidth(), xOffset + getWidth() );
@@ -674,7 +675,7 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
     final GeoTransform transform = getProjection();
 
     final IKalypsoTheme activeTheme = m_model.getActiveTheme();
-    if( activeTheme == null || !(activeTheme instanceof IKalypsoFeatureTheme) )
+    if( (activeTheme == null) || !(activeTheme instanceof IKalypsoFeatureTheme) )
       return;
 
     if( startPoint != null )
@@ -708,7 +709,7 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
         final double g2y = transform.getSourceY( endPoint.getY() );
         boolean withinStatus = false;
 
-        if( endPoint.getX() > startPoint.getX() && endPoint.getY() > startPoint.getY() )
+        if( (endPoint.getX() > startPoint.getX()) && (endPoint.getY() > startPoint.getY()) )
           withinStatus = true;
 
         final double minX = g1x < g2x ? g1x : g2x;
@@ -716,7 +717,7 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
         final double minY = g1y < g2y ? g1y : g2y;
         final double maxY = g1y > g2y ? g1y : g2y;
 
-        if( minX != maxX && minY != maxY )
+        if( (minX != maxX) && (minY != maxY) )
         {
           final JMSelector selector = new JMSelector();
           final GM_Envelope envSelect = GeometryFactory.createGM_Envelope( minX, minY, maxX, maxY );
@@ -744,10 +745,8 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
   {
     // nothing was choosen by the user, clear selection
     if( features.isEmpty() )
-    {
       selectionManager2.clear();
-      // TODO: this should do the widget-manager?
-    }
+    // TODO: this should do the widget-manager?
 
     // remove all selected features from this theme
     // TODO: maybe only visible??
@@ -844,7 +843,7 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
       {
         try
         {
-          sleep( duration );
+          Thread.sleep( duration );
         }
         catch( InterruptedException e )
         {
@@ -898,9 +897,7 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
       g2d.drawString( title, x + 2 * r, y + 2 * r );
     }
     for( final PointOfinterest ofinterest : toRemove )
-    {
       m_pointofInterests.remove( ofinterest );
-    }
   }
 
   public IFeatureSelectionManager getSelectionManager( )
