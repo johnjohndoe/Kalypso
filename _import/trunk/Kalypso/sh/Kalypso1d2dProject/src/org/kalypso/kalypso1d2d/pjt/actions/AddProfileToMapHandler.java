@@ -99,22 +99,22 @@ public class AddProfileToMapHandler extends AbstractHandler
      * Show profiles view: TODO: as the workflow works at the moment, this normally should go into the workflow.xml as
      * context, but this is not possible.
      */
-    final IWorkbenchSite site = (IWorkbenchSite) context.getVariable( ISources.ACTIVE_SITE_NAME );
-    final IWorkbenchPage page = site == null ? null : site.getPage();
-    if( page != null )
-    {
-      try
-      {
-        page.showView( ChartView.ID, null, IWorkbenchPage.VIEW_VISIBLE );
-      }
-      catch( final PartInitException e )
-      {
-        // The next line throws another exception, thats why i dont use it now
-        /* final String title = event.getCommand().getDescription(); */
-        final String title = "Profile in Karte anzeigen";
-        ErrorDialog.openError( shell, title, "Profilansicht konnte nicht geöffnet werden.", e.getStatus() );
-      }
-    }
+//    final IWorkbenchSite site = (IWorkbenchSite) context.getVariable( ISources.ACTIVE_SITE_NAME );
+//    final IWorkbenchPage page = site == null ? null : site.getPage();
+//    if( page != null )
+//    {
+//      try
+//      {
+//        page.showView( ChartView.ID, null, IWorkbenchPage.VIEW_VISIBLE );
+//      }
+//      catch( final PartInitException e )
+//      {
+//        // The next line throws another exception, thats why i dont use it now
+//        /* final String title = event.getCommand().getDescription(); */
+//        final String title = "Profile in Karte anzeigen";
+//        ErrorDialog.openError( shell, title, "Profilansicht konnte nicht geöffnet werden.", e.getStatus() );
+//      }
+//    }
 
     /* Get the map */
     final MapView mapView = (MapView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView( MapView.ID );
