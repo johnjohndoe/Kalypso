@@ -40,15 +40,29 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.conv.results;
 
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.text.DefaultEditorKit.CutAction;
 import javax.xml.namespace.QName;
 
+import org.apache.commons.io.IOUtils;
+import org.eclipse.core.runtime.CoreException;
+import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.conv.EReadError;
 import org.kalypso.kalypsomodel1d2d.conv.IModelElementIDProvider;
@@ -67,16 +81,16 @@ import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
-import org.kalypso.model.wspm.schema.WspmUrlCatalog;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 import org.opengis.cs.CS_CoordinateSystem;
 
@@ -100,6 +114,8 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   private ITriangleEater m_triangleEater;
 
   private final IFlowRelationshipModel m_flowRelationModel;
+
+  private static final long PROCESS_TIMEOUT = 50000;
 
   public NodeResultsHandler( final GMLWorkspace resultWorkspace, final ITriangleEater triangleEater, final IFlowRelationshipModel flowRelationModel )
   {
@@ -180,6 +196,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleElement(java.lang.String, int, int, int,
    *      int)
    */
+  @SuppressWarnings("unchecked")
   public void handleElement( String lineString, int id, int currentRougthnessClassID, int previousRoughnessClassID, int eleminationNumber )
   {
     // For each element calculate the geometry (elemID, cornernode1, midsidenode1, cornernode2, midsidenode2,
@@ -216,37 +233,105 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       // is it a 1d- or 2d-element
       if( currentRougthnessClassID == 89 ) // 1d
       {
-        // TODO:
-        // - get the profile Curves of the two nodes defining the current element
-        GM_Curve nodeCurve1 = null;
-        GM_Curve nodeCurve2 = null;
         try
         {
+          // get the profile Curves of the two nodes defining the current element
+          GM_Curve nodeCurve1 = null;
+          GM_Curve nodeCurve2 = null;
+          BufferedReader nodeReader = null;
+          BufferedReader eleReader = null;
+          PrintWriter pwSimuLog = null;
+
           nodeCurve1 = getCurveForNode( nodeDown );
           nodeCurve2 = getCurveForNode( nodeUp );
-        }
-        catch( GM_Exception e )
-        {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
+
+          if( nodeCurve1 != null && nodeCurve2 != null )
+          {
+
+            final List<GM_LineString> breaklines = new ArrayList<GM_LineString>( 2 );
+            pwSimuLog = new PrintWriter( System.out );
+
+            breaklines.add( nodeCurve1.getAsLineString() );
+            breaklines.add( nodeCurve2.getAsLineString() );
+
+            final File tempDir = FileUtilities.createNewTempDir( "Triangle" );
+            final File polyfile = new File( tempDir, "input.poly" );
+
+            BufferedOutputStream strmPolyInput = null;
+
+            try
+            {
+              strmPolyInput = new BufferedOutputStream( new FileOutputStream( polyfile ) );
+              CS_CoordinateSystem crs = ConstraintDelaunayHelper.writePolyFile( strmPolyInput, breaklines, pwSimuLog );
+              strmPolyInput.close();
+
+              // create command
+              final StringBuffer cmd = createTriangleCommand( polyfile );
+
+              // start Triangle
+              execTriangle( pwSimuLog, tempDir, cmd );
+
+              // get the triangulation
+              final File nodeFile = new File( tempDir, "input.1.node" );
+              final File eleFile = new File( tempDir, "input.1.ele" );
+
+              if( !nodeFile.exists() || !eleFile.exists() )
+              {
+                pwSimuLog.append( "Fehler beim Ausführen von triangle.exe" );
+                pwSimuLog.append( "Stellen Sie sicher, dass triangle.exe über die Windows PATH-Variable auffindbar ist." );
+                pwSimuLog.append( "Fehler: triangle.exe konnte nicht ausgeführt werden." );
+                return;
+              }
+
+              nodeReader = new BufferedReader( new InputStreamReader( new FileInputStream( nodeFile ) ) );
+              eleReader = new BufferedReader( new InputStreamReader( new FileInputStream( eleFile ) ) );
+
+              final GM_Position[] points = ConstraintDelaunayHelper.parseTriangleNodeOutput( nodeReader );
+              final List<GM_Surface> elements = ConstraintDelaunayHelper.parseTriangleElementOutput( eleReader, crs, points );
+
+              for( GM_Surface<GM_SurfacePatch> element : elements )
+              {
+                for( GM_SurfacePatch surfacePatch : element )
+                {
+                  final GM_Position[] ring = surfacePatch.getExteriorRing();
+
+                  final List<INodeResult> nodes = new LinkedList<INodeResult>();
+
+                  for( GM_Position position : ring )
+                  {
+                    double x = position.getX();
+                    double y = position.getY();
+                    double z = position.getZ(); // here: water level
+
+                    final INodeResult node = new SimpleNodeResult();
+                    node.setLocation( x, y, z, crs );
+                    node.setWaterlevel( z );
+
+                    nodes.add( node );
+                  }
+
+                  m_triangleEater.add( nodes );
+
+                }
+              }
+            }
+            finally
+            {
+              IOUtils.closeQuietly( pwSimuLog );
+              IOUtils.closeQuietly( strmPolyInput );
+            }
+
+            // alle punkte als rand verbinden => rand polygon => triangle => wsptin (Geschwindigkeit ebenso??)=>
+            // triangle-eater
+
+          }
         }
         catch( Exception e )
         {
           // TODO Auto-generated catch block
           e.printStackTrace();
+          return;
         }
-
-        if( nodeCurve1 != null && nodeCurve2 != null )
-        {
-
-          //
-
-          // - triangulate the curves
-          // alle punkte als rand verbinden => rand polygon => triangle => wsptin (Gescheindigkeit ebenso??)=>
-          // triangle-eater
-
-        }
-
       }
       else
       {
@@ -362,6 +447,68 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     // m_triangleEater.finished();
   }
 
+  private void execTriangle( PrintWriter pwSimuLog, final File tempDir, final StringBuffer cmd ) throws IOException, CoreException, InterruptedException
+  {
+    pwSimuLog.append( "Triangle.exe wird ausgeführt..." );
+
+    final long lTimeout = PROCESS_TIMEOUT;
+
+    Process exec = Runtime.getRuntime().exec( cmd.toString(), null, tempDir );
+
+    InputStream errorStream = exec.getErrorStream();
+    InputStream inputStream = exec.getInputStream();
+
+    StreamGobbler error = new StreamGobbler( errorStream, "ERROR_STREAM", null );
+    StreamGobbler input = new StreamGobbler( inputStream, "INPUT_STREAM", null );
+
+    error.start();
+    input.start();
+
+    int exitValue = 0;
+    int timeRunning = 0;
+
+    /* It is running until the job has finished or the timeout of 5 minutes is reached. */
+    while( true )
+    {
+      try
+      {
+        exitValue = exec.exitValue();
+        break;
+      }
+      catch( RuntimeException e )
+      {
+        /* The process has not finished. */
+      }
+
+      if( timeRunning >= lTimeout )
+      {
+        exec.destroy();
+        throw new CoreException( StatusUtilities.createErrorStatus( "Es wurde das Timeout erreicht." ) );
+      }
+
+      /* Wait a few millisec, before continuing. */
+      Thread.sleep( 100 );
+      timeRunning = timeRunning + 100;
+    }
+  }
+
+  private StringBuffer createTriangleCommand( final File polyfile )
+  {
+    final StringBuffer cmd = new StringBuffer( "cmd /c triangle.exe -c -p" );
+
+    final Double qualityMinAngle = 30.00;
+
+    if( qualityMinAngle != null )
+    {
+      cmd.append( "-q" );
+      cmd.append( qualityMinAngle.doubleValue() );
+    }
+
+    cmd.append( ' ' );
+    cmd.append( polyfile.getName() );
+    return cmd;
+  }
+
   /**
    * returns a simplified profile curve of a 1d-node, already cut at the intersection points with the water level
    * 
@@ -393,7 +540,12 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
           cutProfile = WspmProfileHelper.cutIProfile( profile.getProfil(), points[0], points[points.length - 1] );
         }
       }
-      final CS_CoordinateSystem crs = nodeResult.getPoint().getCoordinateSystem();
+
+      // get the crs from the profile-gml
+      String srsName = profile.getSrsName();
+      final CS_CoordinateSystem crs = srsName == null ? null : org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory.getInstance().getOGCCSByName( srsName );
+
+      // final CS_CoordinateSystem crs = nodeResult.getPoint().getCoordinateSystem();
       final GM_Curve curve = ProfilUtil.getLine( cutProfile, crs );
 
       /* simplify the profile */
