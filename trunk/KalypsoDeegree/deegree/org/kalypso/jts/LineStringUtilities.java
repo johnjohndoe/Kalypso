@@ -47,31 +47,28 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 
 /**
- * utility to flip a lines string (change its node orientation)
- * 
- * input: line string
- * output: flipped line string
- * 
  * @author Thomas Jung
- *
  */
 public class LineStringUtilities
 {
-
-  public static LineString changeOrientation( LineString inputLine )
+  /**
+   * utility to flip a lines string (change its node orientation) input: line string output: flipped line string
+   * 
+   * @param inputLine
+   *            line string to be flipped
+   */
+  public static LineString changeOrientation( final LineString inputLine )
   {
-    // TODO Auto-generated method stub
- 
-    Coordinate[] coordinatesInputLine = inputLine.getCoordinates();
-    LinkedList<Coordinate> newCoordinates = new LinkedList<Coordinate>(); 
+    final Coordinate[] coordinatesInputLine = inputLine.getCoordinates();
+    final LinkedList<Coordinate> newCoordinates = new LinkedList<Coordinate>();
 
-    for (int i = coordinatesInputLine.length -1; i >=0; i--) 
+    for( int i = coordinatesInputLine.length - 1; i >= 0; i-- )
     {
       newCoordinates.add( coordinatesInputLine[i] );
     }
-    
-    GeometryFactory factory = new GeometryFactory(inputLine.getPrecisionModel(), inputLine.getSRID());
-    LineString flippedLine = factory.createLineString( newCoordinates.toArray( new Coordinate[]{} ) );
+
+    GeometryFactory factory = new GeometryFactory( inputLine.getPrecisionModel(), inputLine.getSRID() );
+    LineString flippedLine = factory.createLineString( newCoordinates.toArray( new Coordinate[] {} ) );
 
     return flippedLine;
   }

@@ -49,6 +49,7 @@ import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
 import org.kalypsodeegree.model.geometry.GM_MultiPoint;
 import org.kalypsodeegree.model.geometry.GM_MultiPrimitive;
@@ -59,8 +60,12 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Primitive;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+import org.opengis.cs.CS_CoordinateSystem;
 
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.simplify.DouglasPeuckerLineSimplifier;
 
 /**
  * @author doemming
@@ -169,6 +174,7 @@ public class GeometryUtilities
     return GeometryFactory.createGM_Point( (p1.getX() + p2.getX()) / 2d, (p1.getY() + p2.getY()) / 2d, p1.getCoordinateSystem() );
   }
 
+  @SuppressWarnings("unchecked")
   public static double calcAngleToSurface( final GM_Surface surface, final GM_Point point )
   {
     final double r = surface.distance( point );
@@ -198,6 +204,7 @@ public class GeometryUtilities
    *            numer of maximal interations
    * @return point that is somewhere on the surface (e.g. can act as label point)
    */
+  @SuppressWarnings("unchecked")
   public static GM_Point guessPointOnSurface( final GM_Surface surface, GM_Point pointGuess, int tries )
   {
     if( surface == null )
@@ -243,6 +250,7 @@ public class GeometryUtilities
     return guessPointOnSurface( surface, createGM_PositionAtCenter( p1, p2 ), tries );
   }
 
+  @SuppressWarnings("unchecked")
   private static GM_Point calcFarestPointOnSurfaceInDirection( final GM_Surface surface, final GM_Point pOnSurface, final double angle, final double max, int tries )
   {
     final GM_Point point = createPointFrom( pOnSurface, angle, max );
@@ -326,6 +334,7 @@ public class GeometryUtilities
     return GeometryFactory.createGM_Point( x, y, centroid.getCoordinateSystem() );
   }
 
+  @SuppressWarnings("unchecked")
   public static double calcArea( final GM_Object geom )
   {
     if( geom instanceof GM_Surface )
@@ -349,6 +358,7 @@ public class GeometryUtilities
     return 0d;
   }
 
+  @SuppressWarnings("unchecked")
   public static boolean isInside( final GM_Object a, final GM_Object b )
   {
     if( a instanceof GM_Surface && b instanceof GM_Surface )
@@ -644,6 +654,7 @@ public class GeometryUtilities
    * @exception a
    *                GM_Exception is thrown when a the geomToCheck can not be wrapped in a multi polygon.
    */
+  @SuppressWarnings("unchecked")
   public static GM_MultiSurface ensureIsMultiPolygon( final GM_Object geomToCheck ) throws GM_Exception
   {
     final Class< ? extends GM_Object> class1 = geomToCheck.getClass();
@@ -714,6 +725,46 @@ public class GeometryUtilities
     }
 
     return geometry.getEnvelope();
+  }
+
+  /**
+   * clones a GM_Linestring as GM_Curve and sets its z-value to a given value.
+   * 
+   * @param newLine
+   *            the input linestring
+   * @param value
+   *            the new z-value
+   */
+  public static GM_Curve setValueZ( final GM_LineString newLine, final double value ) throws GM_Exception
+  {
+    final GM_Position[] positions = newLine.getPositions();
+    final CS_CoordinateSystem crs = newLine.getCoordinateSystem();
+    final GM_Position[] newPositions = new GM_Position[positions.length];
+    for( int i = 0; i < positions.length; i++ )
+    {
+      final GM_Position position = positions[i];
+      newPositions[i] = GeometryFactory.createGM_Position( position.getX(), position.getY(), value );
+    }
+    return GeometryFactory.createGM_Curve( newPositions, crs );
+  }
+
+  /**
+   * creates a new curve by simplifying a given curve by using Douglas-Peucker Algorithm.
+   * 
+   * @param curve
+   *            input curve to be simplified
+   * @param epsThinning
+   *            max. distance value for Douglas-Peucker-Algorithm
+   */
+  public static GM_Curve getThinnedCurve( final GM_Curve curve, final Double epsThinning ) throws GM_Exception
+  {
+    final LineString line = (LineString) JTSAdapter.export( curve );
+    final Coordinate[] coordinates = line.getCoordinates();
+
+    final Coordinate[] simplifiedCrds = DouglasPeuckerLineSimplifier.simplify( coordinates, epsThinning );
+    final LineString simplifiedLine = line.getFactory().createLineString( simplifiedCrds );
+    final GM_Curve thinnedCurve = (GM_Curve) JTSAdapter.wrap( simplifiedLine );
+    return thinnedCurve;
   }
 
 }
