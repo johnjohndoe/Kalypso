@@ -173,6 +173,13 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 				</Help>
 				<Name>Berechnungseinheiten modellieren</Name>
 			</Task>	
+		<!--<Task context="2dElementTheme"
+					URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#CalculationProblemsUnit">
+				<Help>
+					<![CDATA[Berechnungseinheiten modellieren]]>
+				</Help>
+				<Name>Berechnungseinheiten modellieren-1</Name>
+			</Task>-->
 			</TaskGroup>
 			<!--
 				<TaskGroup context="FenetMap" URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#CntrStrcGroup">
@@ -236,7 +243,6 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 				</Help>
 				<Name>Rauheitskorrektur modellieren</Name>
 			</Task>
-
 		</TaskGroup>
 		<TaskGroup context="BoundaryConditionTheme"
 			URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#BCDef">
@@ -263,8 +269,7 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 	<TaskGroup
 		URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Processing">
 		<Help>
-			<![CDATA[Nach Aufbau des Strömungsmodells können Berechnungen mit dem Ziel der Kalibrierung
-und/oder Szenarienrechnung durchgeführt werden.]]>
+			<![CDATA[Nach Aufbau des Strömungsmodells können Berechnungen mit dem Ziel der Kalibrierung und/oder Szenarienrechnung durchgeführt werden.]]>
 		</Help>
 		<Name>Processing: Kalibrieren und Rechnen</Name>
 		<TaskGroup context="CalcParams"
@@ -280,8 +285,7 @@ und/oder Szenarienrechnung durchgeführt werden.]]>
 				context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ResDef"
 				URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#CalcLinesSet">
 				<Help>
-					<![CDATA[Definition von Messlinien, an denen während der Berechnung Daten
-über den Abfluss und Wasserstand gesammelt werden sollen.]]>
+					<![CDATA[Definition von Messlinien, an denen während der Berechnung Daten über den Abfluss und Wasserstand gesammelt werden sollen.]]>
 				</Help>
 				<Name>Kontinuitätslinien bestimmen</Name>
 			</Task>
@@ -289,26 +293,26 @@ und/oder Szenarienrechnung durchgeführt werden.]]>
 				context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ResDef"
 				URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#NodeObserveSet">
 				<Help>
-					<![CDATA[Definition von Messpunkten, an denen während der Berechnung Daten
-über den Abfluss und Wasserstand gesammelt werden sollen.]]>
+					<![CDATA[Definition von Messpunkten, an denen während der Berechnung Daten über den Abfluss und Wasserstand gesammelt werden sollen.]]>
 				</Help>
 				<Name>Ausgabeknoten bestimmen</Name>
 			</Task>
 		</TaskGroup>
+
 		<TaskGroup
 			context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Calc"
-			URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#StartCalculation">
+			URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#StartCalculationWithProblemsView">
 			<Help>
 				<![CDATA[Startet die Berechnung unter Verwendung eines Kontrolldisplays]]>
 			</Help>
 			<Name>Berechnung durchführen</Name>
-		</TaskGroup>
+		</TaskGroup>		 
 	</TaskGroup>
+
 	<TaskGroup
 		URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Postprocessing">
 		<Help>
-			<![CDATA[Nach der Druchführung der Strömungsberechungen können die Ergebnisse
-hier ausgewertet und visualisiert werden.]]>
+			<![CDATA[Nach der Druchführung der Strömungsberechungen können die Ergebnisse hier ausgewertet und visualisiert werden.]]>
 		</Help>
 		<Name>Postprocessing: Ergebnisauswertungen</Name>
 		<TaskGroup
@@ -393,6 +397,18 @@ hier ausgewertet und visualisiert werden.]]>
 						value="templates/control.gft" />
 				</con:ExtensionContext>
 			</con:ViewContext>
+			<!-- 
+			<con:ViewContext id="CalculationUnitView"
+				partId="org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView.CalculationUnitPerformView"
+				parent="1d2dModelling">
+				<con:ExtensionContext id="CalculationPerform"
+					parent="CalculationUnitView"
+					handlerFactoryId="kalypsoContextHandlerFactory">
+					<con:Parameter name="type"
+						value="calculationUnitContext" />
+				</con:ExtensionContext>
+			</con:ViewContext>
+			 -->
 			<con:WorkbenchSiteContext id="MapContext" parent="1d2dModelling">
 				<con:ViewContext id="MapOutlineView"
 					partId="org.kalypso.ui.views.outline" parent="MapContext" />

@@ -269,8 +269,7 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 	<TaskGroup
 		URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Processing">
 		<Help>
-			<![CDATA[Nach Aufbau des Strömungsmodells können Berechnungen mit dem Ziel der Kalibrierung
-				und/oder Szenarienrechnung durchgeführt werden.]]>
+			<![CDATA[Nach Aufbau des Strömungsmodells können Berechnungen mit dem Ziel der Kalibrierung und/oder Szenarienrechnung durchgeführt werden.]]>
 		</Help>
 		<Name>Processing: Kalibrieren und Rechnen</Name>
 		<TaskGroup context="CalcParams"
@@ -286,8 +285,7 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 				context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ResDef"
 				URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#CalcLinesSet">
 				<Help>
-					<![CDATA[Definition von Messlinien, an denen während der Berechnung Daten
-über den Abfluss und Wasserstand gesammelt werden sollen.]]>
+					<![CDATA[Definition von Messlinien, an denen während der Berechnung Daten über den Abfluss und Wasserstand gesammelt werden sollen.]]>
 				</Help>
 				<Name>Kontinuitätslinien bestimmen</Name>
 			</Task>
@@ -295,8 +293,7 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 				context="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ResDef"
 				URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#NodeObserveSet">
 				<Help>
-					<![CDATA[Definition von Messpunkten, an denen während der Berechnung Daten
-über den Abfluss und Wasserstand gesammelt werden sollen.]]>
+					<![CDATA[Definition von Messpunkten, an denen während der Berechnung Daten über den Abfluss und Wasserstand gesammelt werden sollen.]]>
 				</Help>
 				<Name>Ausgabeknoten bestimmen</Name>
 			</Task>
@@ -315,8 +312,7 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 	<TaskGroup
 		URI="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Postprocessing">
 		<Help>
-			<![CDATA[Nach der Druchführung der Strömungsberechungen können die Ergebnisse
-               hier ausgewertet und visualisiert werden.]]>
+			<![CDATA[Nach der Druchführung der Strömungsberechungen können die Ergebnisse hier ausgewertet und visualisiert werden.]]>
 		</Help>
 		<Name>Postprocessing: Ergebnisauswertungen</Name>
 		<TaskGroup
