@@ -97,12 +97,6 @@ public class ProfileFeatureFactory implements IWspmConstants
 
   public static final String DICT_COMP_PROFILE_PREFIX = "urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#";
 
-  // private static final String DICT_COMP_PROFILE_DEVIDER_PREFIX =
-  // "urn:ogc:gml:dict:kalypso:model:wspm:profileMarkerComponents#";
-
-  // private static final String DICT_COMP_PROFILE_BUILDING_PREFIX =
-  // "urn:ogc:gml:dict:kalypso:model:wspm:profileBuildingComponents#";
-
   private ProfileFeatureFactory( )
   {
     // private: never instatiate
