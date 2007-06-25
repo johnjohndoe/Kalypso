@@ -8,6 +8,7 @@ import org.eclipse.ui.internal.PageLayout;
 import org.kalypso.featureview.views.FeatureView;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DNewProjectWizard;
 import org.kalypso.kalypso1d2d.pjt.views.WorkflowView;
+import org.kalypso.model.wspm.ui.view.chart.ChartView;
 import org.kalypso.ogc.gml.outline.GisMapOutlineView;
 import org.kalypso.ui.editor.featureeditor.FeatureTemplateView;
 import org.kalypso.ui.editor.mapeditor.views.ActionOptionsView;
@@ -38,13 +39,19 @@ public class Perspective implements IPerspectiveFactory
     final IPlaceholderFolderLayout veryRight = layout.createPlaceholderFolder( "veryRight", IPageLayout.RIGHT, 0.7f, "rightTop" );
 
     leftTop.addView( WorkflowView.ID );
+
     leftBottom.addView( SCENARIO_VIEW_ID );
     leftBottom.addView( GisMapOutlineView.ID );
+
     rightTop.addPlaceholder( MapView.ID );
     rightTop.addPlaceholder( FeatureTemplateView.ID );
+
     rightBottom.addPlaceholder( FeatureView.ID );
+    rightBottom.addPlaceholder( ChartView.ID );
+
     veryRight.addPlaceholder( ActionOptionsView.ID );
 
+    /* Moveability and closeability of the views. */
     layout.getViewLayout( FeatureView.ID ).setMoveable( true );
     layout.getViewLayout( FeatureTemplateView.ID ).setCloseable( false );
     layout.getViewLayout( FeatureTemplateView.ID ).setMoveable( false );

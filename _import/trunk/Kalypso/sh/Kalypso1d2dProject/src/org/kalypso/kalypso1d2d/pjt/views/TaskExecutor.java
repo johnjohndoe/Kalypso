@@ -83,7 +83,7 @@ public class TaskExecutor implements ITaskExecutor
 
   private final ICommandService m_commandService;
 
-  private IHandlerService m_handlerService;
+  private final IHandlerService m_handlerService;
 
   private final IContextHandlerFactory m_contextHandlerFactory;
 
@@ -94,7 +94,7 @@ public class TaskExecutor implements ITaskExecutor
     m_commandService = commandService;
     m_handlerService = handlerService;
   }
-  
+
   public Task getActiveTask( )
   {
     return m_activeTask;
@@ -106,9 +106,10 @@ public class TaskExecutor implements ITaskExecutor
   public void execute( final Task task ) throws TaskExecutionException
   {
     // HACK: in order to make sure the SzenarioSourceProvider is initialized, call this method each time
-    // a task is executed. It would be better if this happened automatically on plug-in-start, but 
+    // a task is executed. It would be better if this happened automatically on plug-in-start, but
+    // TODO: is this still necessary?
     Kalypso1d2dProjectPlugin.getDefault().getDataProvider();
-    
+
     if( m_activeTask != null )
     {
       if( !m_authority.canStopTask( m_activeTask ) )
@@ -123,7 +124,7 @@ public class TaskExecutor implements ITaskExecutor
       final Collection<String> partsToKeep = collectOpenedViews( context );
       partsToKeep.add( WorkflowView.ID );
       partsToKeep.add( Perspective.SCENARIO_VIEW_ID );
-      partsToKeep.add( GisMapOutlineView.ID);
+      partsToKeep.add( GisMapOutlineView.ID );
       PerspectiveWatcher.cleanPerspective( PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), partsToKeep );
     }
     try
@@ -131,8 +132,8 @@ public class TaskExecutor implements ITaskExecutor
       m_handlerService.executeCommand( command.getId(), null );
     }
     catch( final NotHandledException e )
-    {      
-//      e.printStackTrace();
+    {
+      // e.printStackTrace();
       // if not handled, last context activation gives result
       // if( activateContext != null )
       // {
@@ -163,8 +164,8 @@ public class TaskExecutor implements ITaskExecutor
     else if( context instanceof WorkbenchSiteContext )
     {
       final WorkbenchSiteContext multiContext = (WorkbenchSiteContext) context;
-      final List<JAXBElement<? extends WorkbenchPartContextType>> subContexts = multiContext.getPartContexts();
-      for( JAXBElement< ? extends WorkbenchPartContextType> element : subContexts )
+      final List<JAXBElement< ? extends WorkbenchPartContextType>> subContexts = multiContext.getPartContexts();
+      for( final JAXBElement< ? extends WorkbenchPartContextType> element : subContexts )
       {
         final ContextType value = element.getValue();
         if( value instanceof ViewContext )

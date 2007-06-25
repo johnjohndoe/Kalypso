@@ -97,7 +97,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
     /**
      * @see org.kalypso.util.pool.IPoolListener#dirtyChanged(org.kalypso.util.pool.IPoolableObjectType, boolean)
      */
-    public void dirtyChanged( IPoolableObjectType key, boolean isDirty )
+    public void dirtyChanged( final IPoolableObjectType key, final boolean isDirty )
     {
       // TODO Auto-generated method stub
 
@@ -116,7 +116,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
      * @see org.kalypso.util.pool.IPoolListener#objectInvalid(org.kalypso.util.pool.IPoolableObjectType,
      *      java.lang.Object)
      */
-    public void objectInvalid( IPoolableObjectType key, Object oldValue )
+    public void objectInvalid( final IPoolableObjectType key, final Object oldValue )
     {
       // TODO Auto-generated method stub
 
@@ -126,7 +126,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
      * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType,
      *      java.lang.Object, org.eclipse.core.runtime.IStatus)
      */
-    public void objectLoaded( IPoolableObjectType key, Object newValue, IStatus status )
+    public void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status )
     {
       // TODO Auto-generated method stub
 
@@ -138,7 +138,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
    * <p>
    * At the moment this works, because each gml-file corresponds to exactly one (different) wraper class.
    */
-  private Map<Class< ? extends IFeatureWrapper2>, KeyPoolListener> m_keyMap = new HashMap<Class< ? extends IFeatureWrapper2>, KeyPoolListener>();
+  private final Map<Class< ? extends IFeatureWrapper2>, KeyPoolListener> m_keyMap = new HashMap<Class< ? extends IFeatureWrapper2>, KeyPoolListener>();
 
   public synchronized void setCurrent( final IContainer szenarioFolder )
   {
@@ -225,14 +225,14 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
 
           try
           {
-            IFile file = szenarioFolder.getProject().getFile( gmlLocation );
-            URL url = FileLocator.resolve( file.getLocationURI().toURL() );
-            File gmlFile = new File( url.toURI() );
+            final IFile file = szenarioFolder.getProject().getFile( gmlLocation );
+            final URL url = FileLocator.resolve( file.getLocationURI().toURL() );
+            final File gmlFile = new File( url.toURI() );
             context = gmlFile.getParentFile().toURL();
-            String fileName = gmlFile.getName();
+            final String fileName = gmlFile.getName();
             newKey = new PoolableObjectType( "gml", fileName, context );
           }
-          catch( Exception e )
+          catch( final Exception e )
           {
             e.printStackTrace();
           }
@@ -319,7 +319,8 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
   public boolean isDirty( final Class< ? extends IFeatureWrapper2> modelClass )
   {
     final KeyPoolListener keyPoolListener = m_keyMap.get( modelClass );
-    if(keyPoolListener == null) {
+    if( keyPoolListener == null )
+    {
       return false;
     }
     final IPoolableObjectType key = keyPoolListener.getKey();
@@ -391,5 +392,4 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
       monitor.done();
     }
   }
-
 }

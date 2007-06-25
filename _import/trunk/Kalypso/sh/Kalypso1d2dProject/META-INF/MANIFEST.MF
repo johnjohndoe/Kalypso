@@ -23,7 +23,8 @@ Require-Bundle: org.junit4,
  de.renew.workflow.connector,
  org.eclipse.ui.navigator,
  org.eclipse.ui.navigator.resources,
- org.kalypso.simulation.ui
+ org.kalypso.simulation.ui,
+ org.kalypso.model.wspm.ui
 Eclipse-LazyStart: true
 Export-Package: org.kalypso.kalypso1d2d.pjt.perspective,
  org.kalypso.ui.wizards.imports,

@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.2"?>
 <plugin>
-   
-   
-   
    <!-- Project extensions -->
    <extension
       point="org.eclipse.core.resources.natures"
@@ -96,7 +93,7 @@
      <extension point="org.eclipse.ui.handlers">
         <handler
 			class="org.kalypso.kalypso1d2d.pjt.actions.ActivateScenarioHandler"
-			commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ActivateScenario"/>
+			commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ActivateScenario"/>
 			 		 		 		 		  			
         <handler
               class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler"
@@ -132,32 +129,32 @@
  	 <!--*** handlers for scenario management ***-->			   
 	     <handler
             class="org.kalypso.kalypso1d2d.pjt.actions.AddScenarioHandler"
-            commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#AddScenario"/>      	 
+            commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__AddScenario"/>      	 
 	     <handler
 	           class="org.kalypso.kalypso1d2d.pjt.actions.RemoveScenarioHandler"
-	           commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#RemoveScenario"/>	 	 	               
+	           commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__RemoveScenario"/>	 	 	               
 
  	 <!--*** import handlers ***-->
 	     <handler
 	           class="org.kalypso.kalypso1d2d.pjt.actions.ImportElevationHandler"
-	           commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ElevLoad"/>			   	           
+	           commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ElevLoad"/>			   	           
 	     <handler
 	           class="org.kalypso.kalypso1d2d.pjt.actions.ImportProfileHandler"
-	           commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ProfileImport"/>	
+	           commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ProfileImport"/>	
 	           
  	 <!--*** general net editing handler ***-->	     
 	     
  	 <!--*** 1D-editing handlers ***-->	     
 	     <handler
 	           class="org.kalypso.kalypso1d2d.pjt.actions.ImportWSPMHandler"
-	           commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Net1DImportWspm"/>
+	           commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Net1DImportWspm"/>
 	     <handler
                class="org.kalypso.kalypso1d2d.pjt.actions.AddProfileToMapHandler"
-               commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#AddProfileNetworkToMap"/>	           	           
+               commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__AddProfileNetworkToMap"/>	           	           
 	     
  	 <!--*** 2D-editing handlers ***-->	     
 	     <handler
-	           commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#Chan2DGen">
+	           commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Chan2DGen">
            <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
 	           <parameter
 	                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
@@ -168,7 +165,7 @@
            </class>
 	     </handler>
 	     <handler
-	           commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#BandGen">
+	           commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__BandGen">
            <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
 	           <parameter
 	                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
@@ -181,7 +178,7 @@
 	     
 	     <!-- Roughness correction -->
 	     <handler
-	           commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#roughness_correction_modelling">
+	           commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__roughness_correction_modelling">
            <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
 	           <parameter
 	                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
@@ -193,7 +190,7 @@
 	     </handler>
 	     
 	     <handler
-	     	   commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#AssignElevs">
+	     	   commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__AssignElevs">
            <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
 	           <parameter
 	                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
@@ -206,7 +203,7 @@
 	     
 		<!-- // Handler for "Berechnungseinheiten Modellieren"--> 
 	     <handler
-	       	   commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#CalculationUnit">
+	       	   commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__CalculationUnit">
                <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
 	           <parameter
 	                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
@@ -219,7 +216,7 @@
 	     
 	     <!-- // Handler for "Start Calculation Widget"--> 
 	     <handler
-	       	  commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#StartCalculationWithProblemsView">	       	  
+	       	  commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__StartCalculationWithProblemsView">	       	  
                <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
 	           <parameter
 	                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
@@ -231,7 +228,7 @@
 	     </handler>
 	     
  	 <!--*** 1D/2D transition handlers CreateJunctionContext1dToCLineFromSelectedEdges ***-->	     	     	     	     	     	     	     
-	     <!--handler commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#SetEltLineTrans">
+	     <!--handler commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__SetEltLineTrans">
 	           <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
 		           <parameter
 		                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
@@ -242,7 +239,7 @@
 	        </class>
 	     </handler-->	
 	     
-	    <handler commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#SetEltLineTrans">
+	    <handler commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__SetEltLineTrans">
 	           <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
 		           <parameter
 		                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
@@ -253,7 +250,7 @@
 	        </class>
 	     </handler>	
 	          
-	     <handler commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#SetEltEltTrans">
+	     <handler commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__SetEltEltTrans">
 	           <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
 		           <parameter
 		                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
@@ -263,7 +260,7 @@
 		                 value="org.kalypso.model1d2d"/>
 	        </class>
 	     </handler>
-      <handler commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#RoughnessFENETColor">
+      <handler commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__RoughnessFENETColor">
          <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
             <parameter
                   name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
@@ -275,7 +272,7 @@
       </handler>
        <handler
             class="org.kalypso.kalypso1d2d.pjt.actions.StartCalculationHandler"
-            commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#StartCalculation"/> 
+            commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__StartCalculation"/> 
        <handler
             class="org.kalypso.kalypso1d2d.pjt.actions.CalculationUnitPerformViewHandler"
             commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/StartCalUnitCalculation"/>  	     	     	     	     	     	     
@@ -358,15 +355,15 @@
          point="org.eclipse.ui.commands">
       <command
             categoryId="de.renew.workflow.tasks.category"
-            id="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#AddScenario"
+            id="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__AddScenario"
             name="Szenario hinzufügen"/>
       <command
             categoryId="de.renew.workflow.tasks.category"
-            id="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#RemoveScenario"
+            id="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__RemoveScenario"
             name="Szenario löschen"/>
       <command
             categoryId="de.renew.workflow.tasks.category"
-            id="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ActivateScenario"
+            id="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ActivateScenario"
             name="Szenario aktivieren">
       </command>      
    </extension>   
@@ -397,7 +394,7 @@
       <menuContribution
             locationURI="popup:org.kalypso.kalypso1d2d.pjt.views.ScenarioView">
          <command
-               commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#ActivateScenario"
+               commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ActivateScenario"
                icon="icons/activate.gif"
                id="org.kalypso.kalypso1d2d.pjt.actions.ActivateScenario"
                label="Szenario aktivieren"
@@ -412,7 +409,7 @@
             </visibleWhen>
          </command>
          <command
-               commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#AddScenario"
+               commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__AddScenario"
                icon="icons/nuvola_select/edit_add.png"
                id="org.kalypso.kalypso1d2d.pjt.actions.AddScenario"
                label="Szenario hinzufügen"
@@ -437,7 +434,7 @@
             </visibleWhen>
          </command>
          <command
-               commandId="http://www.tu-harburg.de/wb/kalypso/kb/workflow/test#RemoveScenario"
+               commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__RemoveScenario"
                helpContextId="org.eclipse.ui.edit.delete"
                icon="icons/nuvola_select/edit_remove.png"
                id="org.kalypso.kalypso1d2d.pjt.actions.RemoveScenario"

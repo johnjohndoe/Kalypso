@@ -41,7 +41,6 @@
 package de.renew.workflow.connector.cases;
 
 import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
@@ -69,16 +68,15 @@ public interface ICaseDataProvider<T extends Object>
   public void saveModel( final Class< ? extends T> modelClass, final IProgressMonitor monitor ) throws CoreException;
 
   /** Post a command to the right command manager corresponding to the fiven model. */
-//  public void postCommand( final Class< ? extends T> wrapperClass, final ICommand command ) throws Exception;
-
+  // public void postCommand( final Class< ? extends T> wrapperClass, final ICommand command ) throws Exception;
   /**
    * Returns <code>true</code> if the data object corresponding to the given case data key has been modified since it
    * was retrieved.
    */
   public boolean isDirty( final Class< ? extends T> modelClass );
-  
+
   public boolean isDirty( );
-  
+
   public void reloadModel( );
 
   public void setCurrent( final IContainer container );

@@ -8,10 +8,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewSite;
-import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.commands.ICommandService;
-import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.afgui.views.WorkflowControl;
@@ -20,9 +17,6 @@ import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import de.renew.workflow.connector.context.ActiveWorkContext;
 import de.renew.workflow.connector.context.CaseHandlingProjectNature;
 import de.renew.workflow.connector.context.IActiveContextChangeListener;
-import de.renew.workflow.connector.worklist.ITaskExecutor;
-import de.renew.workflow.connector.worklist.TaskExecutionListener;
-import de.renew.workflow.contexts.WorkflowContextHandlerFactory;
 
 /**
  * @author Patrice Congo, Stefan Kurzbach
@@ -75,7 +69,7 @@ public class WorkflowView extends ViewPart
         final URI uri = new URI( scenario.getURI() );
         scenarioPathName = uri.getPath();
       }
-      catch( URISyntaxException e )
+      catch( final URISyntaxException e )
       {
         scenarioPathName = "<Fehler>";
         e.printStackTrace();
