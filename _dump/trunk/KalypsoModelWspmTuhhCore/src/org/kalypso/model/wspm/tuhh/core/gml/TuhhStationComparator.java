@@ -44,26 +44,28 @@ import java.math.BigDecimal;
 import java.util.Comparator;
 
 /**
- * @author thuel2
+ * @author Gernot Belger
  */
-public class TuhhSegmentStationComparator implements Comparator<TuhhReachProfileSegment>
+public class TuhhStationComparator implements Comparator<BigDecimal>
 {
-  private final TuhhStationComparator m_stationComparator;
+  private final boolean m_isDirectionUpstreams;
 
-  public TuhhSegmentStationComparator( final boolean isDirectionUpstreams )
+  public TuhhStationComparator( final boolean isDirectionUpstreams )
   {
-    m_stationComparator = new TuhhStationComparator( isDirectionUpstreams );
+    m_isDirectionUpstreams = isDirectionUpstreams;
   }
 
   /**
    * @see java.util.Comparator#compare(T, T)
    */
-  public int compare( final TuhhReachProfileSegment o1, final TuhhReachProfileSegment o2 )
+  public int compare( final BigDecimal s1, final BigDecimal s2 )
   {
-    final BigDecimal s1 = o1.getStation();
-    final BigDecimal s2 = o2.getStation();
+    if( s1 == null || s2 == null )
+      return 0;
 
-    return m_stationComparator.compare( s1, s2 );
+    if( m_isDirectionUpstreams )
+      return s1.compareTo( s2 );
+    else
+      return s2.compareTo( s1 );
   }
-
 }

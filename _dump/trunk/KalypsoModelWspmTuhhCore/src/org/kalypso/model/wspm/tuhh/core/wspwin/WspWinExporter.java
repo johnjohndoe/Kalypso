@@ -76,6 +76,7 @@ import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhSegmentStationComparator;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhStationRange;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhWspmProject;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation.MODE;
 import org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSink;
@@ -99,7 +100,7 @@ public class WspWinExporter
     // will not be instantiated
   }
 
-  public static IStatus exportWspmProject( final Iterator modelGml, final File wspwinDir, final SubProgressMonitor monitor )
+  public static IStatus exportWspmProject( final Iterator<IResource> modelGml, final File wspwinDir, final SubProgressMonitor monitor )
   {
     monitor.beginTask( "WspWin Projekt exportieren", 1000 );
 
@@ -111,7 +112,7 @@ public class WspWinExporter
 
       try
       {
-        final IResource resource = (IResource) modelGml.next();
+        final IResource resource = modelGml.next();
         if( resource instanceof IFile )
         {
           // TODO: ensure that resource is a GML file?
@@ -119,7 +120,7 @@ public class WspWinExporter
           final URL modelGmlUrl = ResourceUtilities.createURL( resource );
 
           final GMLWorkspace gmlWrkSpce = GmlSerializer.createGMLWorkspace( modelGmlUrl, null );
-          Feature rootFeat = gmlWrkSpce.getRootFeature();
+          final Feature rootFeat = gmlWrkSpce.getRootFeature();
 
           // featType holen
           final IFeatureType featureType = rootFeat.getFeatureType();
@@ -180,7 +181,7 @@ public class WspWinExporter
    * Schreibt eine Berechnung für den 1D Tuhh-Rechenkern in das angegebene Verzeichnis
    * 
    * @param context
-   *          Context to resolve links inside the gml structure.
+   *            Context to resolve links inside the gml structure.
    */
   public static void writeForTuhhKernel( final TuhhCalculation calculation, final File dir ) throws IOException
   {
@@ -195,7 +196,7 @@ public class WspWinExporter
     final boolean isDirectionUpstreams = calculation.getReach().getWaterBody().isDirectionUpstreams();
 
     write1DTuhhSteuerparameter( calculation, batFile, zustFile, qwtFile );
-    write1DTuhhZustand( calculation.getReach(), isDirectionUpstreams, zustFile, psiFile );
+    write1DTuhhZustand( calculation, isDirectionUpstreams, zustFile, psiFile );
     if( calculation.getCalcMode() == MODE.WATERLEVEL )
     {
       final IObservation<TupleResult> runOffEvent = calculation.getRunOffEvent();
@@ -381,11 +382,15 @@ public class WspWinExporter
 
   }
 
-  private static void write1DTuhhZustand( final TuhhReach reach, final boolean isDirectionUpstreams, final File zustFile, final File psiFile ) throws IOException
+  private static void write1DTuhhZustand( final TuhhCalculation calculation, final boolean isDirectionUpstreams, final File zustFile, final File psiFile ) throws IOException
   {
+    final TuhhReach reach = calculation.getReach();
     final TuhhReachProfileSegment[] segments = reach.getReachProfileSegments();
 
-    Arrays.sort( segments, new TuhhSegmentStationComparator( isDirectionUpstreams ) );
+    final TuhhStationRange stationRange = new TuhhStationRange( calculation, isDirectionUpstreams );
+    final TuhhSegmentStationComparator stationComparator = new TuhhSegmentStationComparator( isDirectionUpstreams );
+
+    Arrays.sort( segments, stationComparator );
 
     PrintWriter zustWriter = null;
     PrintWriter psiWriter = null;
@@ -402,16 +407,18 @@ public class WspWinExporter
       for( final TuhhReachProfileSegment segment : segments )
       {
         final BigDecimal station = segment.getStation();
-        final WspmProfile profileMember = segment.getProfileMember();
 
-        // final String href = profileMember.getHref();
+        if( stationRange.isOutside( station ) )
+          continue;
+
+        final WspmProfile profileMember = segment.getProfileMember();
 
         final String prfName = "Profil_" + fileCount++ + ".prf";
 
         zustWriter.print( prfName );
         zustWriter.print( " " );
         // TODO mindestens 4, besser 5 Nachkommastellen?
-        zustWriter.println( station.doubleValue() );
+        zustWriter.println( station );
 
         final IProfil profil = ProfileFeatureFactory.toProfile( profileMember.getFeature() );
         profil.setStation( station.doubleValue() );

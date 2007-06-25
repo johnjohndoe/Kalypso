@@ -41,29 +41,36 @@
 package org.kalypso.model.wspm.tuhh.core.gml;
 
 import java.math.BigDecimal;
-import java.util.Comparator;
+
+import org.eclipse.core.runtime.Assert;
 
 /**
- * @author thuel2
+ * @author Gernot Belger
  */
-public class TuhhSegmentStationComparator implements Comparator<TuhhReachProfileSegment>
+public class TuhhStationRange
 {
+  private final BigDecimal m_from;
+
+  private final BigDecimal m_to;
+
   private final TuhhStationComparator m_stationComparator;
 
-  public TuhhSegmentStationComparator( final boolean isDirectionUpstreams )
+  public TuhhStationRange( final TuhhCalculation calculation, final boolean isDirectionUpstreams )
   {
+    m_from = calculation.getStartStation();
+    m_to = calculation.getEndStation();
+
     m_stationComparator = new TuhhStationComparator( isDirectionUpstreams );
+
+    Assert.isTrue( m_stationComparator.compare( m_from, m_to ) < 0, "Start-Station muss kleiner als die End-Station sein." );
   }
 
   /**
-   * @see java.util.Comparator#compare(T, T)
+   * Returns true if the given station is outside this range; i.e. if station < from or station > to.
    */
-  public int compare( final TuhhReachProfileSegment o1, final TuhhReachProfileSegment o2 )
+  public boolean isOutside( final BigDecimal station )
   {
-    final BigDecimal s1 = o1.getStation();
-    final BigDecimal s2 = o2.getStation();
-
-    return m_stationComparator.compare( s1, s2 );
+    return m_stationComparator.compare( station, m_from ) == -1 || m_stationComparator.compare( m_to, station ) == -1;
   }
 
 }
