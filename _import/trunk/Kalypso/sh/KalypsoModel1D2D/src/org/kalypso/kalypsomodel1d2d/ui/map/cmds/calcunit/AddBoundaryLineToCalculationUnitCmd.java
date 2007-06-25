@@ -85,15 +85,15 @@ public class AddBoundaryLineToCalculationUnitCmd implements IDiscrModel1d2dChang
   
   public AddBoundaryLineToCalculationUnitCmd(
                       ICalculationUnit calculationUnit,
-                      IBoundaryLine elementsToRemove,
+                      IBoundaryLine elementsToAdd,
                       IFEDiscretisationModel1d2d model1d2d,
                       QName relationToCalUnit )
   {
     Assert.throwIAEOnNullParam( calculationUnit, "calculationUnit" );
-    Assert.throwIAEOnNullParam( elementsToRemove, "elementsToRemove" );
+    Assert.throwIAEOnNullParam( elementsToAdd, "elementsToAdd" );
     Assert.throwIAEOnNullParam( model1d2d, "model1d2d" );
     this.calculationUnit = calculationUnit;
-    this.elementsToAdd = elementsToRemove;
+    this.elementsToAdd = elementsToAdd;
     this.model1d2d = model1d2d;
     this.relationToCalUnit = relationToCalUnit;
   }

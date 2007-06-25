@@ -93,6 +93,7 @@
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionContext1DToCLine"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.ILineElement"/>
+         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine1D"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit2D"/>

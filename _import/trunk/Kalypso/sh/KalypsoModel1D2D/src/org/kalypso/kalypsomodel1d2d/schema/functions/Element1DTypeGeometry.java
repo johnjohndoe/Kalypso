@@ -47,7 +47,7 @@ public class Element1DTypeGeometry extends FeaturePropertyFunction
           "Cannot get feature prop:"+
           "\n\tfeature="+feature+
           "\n\tproperty="+pt.getQName()+
-          "currentValue="+currentValue);
+          "\n\tcurrentValue="+currentValue);
     }
 
     return null;

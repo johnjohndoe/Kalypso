@@ -61,6 +61,7 @@ import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit2D;
@@ -272,12 +273,25 @@ public class CalculationUnitAdministerComponent
     {
       if( ELEMENTS_KEY_BOUNDARY_UP.equals( selectedType )  )
       {
-        strategy = 
-          new RouteLineElementWidget<IBoundaryLine>(
-                  "Route boundary line",
-                  "Route boundary line",
-                  IBoundaryLine.class,
-                  Kalypso1D2DSchemaConstants.WB1D2D_F_BOUNDARY_LINE);
+        if (selectedWrapper instanceof ICalculationUnit1D)
+        {
+          strategy = 
+            new RouteLineElementWidget<IBoundaryLine1D>(
+                    "Route boundary line",
+                    "Route boundary line",
+                    IBoundaryLine1D.class,
+                    Kalypso1D2DSchemaConstants.WB1D2D_F_BOUNDARY_LINE1D
+                    );
+        }
+        else
+        {
+          strategy = 
+            new RouteLineElementWidget<IBoundaryLine>(
+                    "Route boundary line",
+                    "Route boundary line",
+                    IBoundaryLine.class,
+                    Kalypso1D2DSchemaConstants.WB1D2D_F_BOUNDARY_LINE );
+        }
       }
       else if (ELEMENTS_KEY_ELEMENTS.equals( selectedType ))
       {

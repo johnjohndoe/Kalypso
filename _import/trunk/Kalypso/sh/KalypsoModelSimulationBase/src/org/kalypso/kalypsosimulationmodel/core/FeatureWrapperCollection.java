@@ -192,7 +192,9 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
             {
 				throw new IllegalArgumentException("Feature not adaptable:"
 						+ "\n\tfeatureType=" + newChildType
-						+ "\n\tadapatble type=" + fwClass);
+						+ "\n\tadapatble type=" + fwClass
+						+ "\n\tfeature="+feature+"\n"
+						);
 			}
             // Feature was already added by Util.create..., so dont add it again
 			// featureList.add(feature);

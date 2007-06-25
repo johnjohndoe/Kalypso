@@ -53,7 +53,7 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 public interface IBoundaryLine1D<    
                   CT extends IFE1D2DComplexElement, 
                   ET extends IFE1D2DEdge>  
-                  extends ILineElement<CT, ET>
+                  extends IBoundaryLine<CT, ET>
 {
    /**
     * Answers whether the line is at the ende of ist first edge 

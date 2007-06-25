@@ -179,8 +179,8 @@ public class BoundaryLine1D<
       IFE1D2DNode node0 = edge1D.getNode( 0 );
       targetNode = node1.getPoint();
       GM_Point startPoint = node0.getPoint();
-      edgeOrthoVectX = targetNode.getX()-startPoint.getX();
-      edgeOrthVectY = -(targetNode.getY()-startPoint.getY());
+      edgeOrthoVectX = -(targetNode.getY()-startPoint.getY());
+      edgeOrthVectY = targetNode.getX()-startPoint.getX();
     }
     else
     {
@@ -188,8 +188,8 @@ public class BoundaryLine1D<
       IFE1D2DNode node0 = edge1D.getNode( 0 );
       targetNode = node0.getPoint();
       GM_Point startPoint = node1.getPoint();
-      edgeOrthoVectX = targetNode.getX()-startPoint.getX();
-      edgeOrthVectY = -(targetNode.getY()-startPoint.getY());
+      edgeOrthoVectX =-(targetNode.getY()-startPoint.getY());
+      edgeOrthVectY =  targetNode.getX()-startPoint.getX();
     }
     
     //get

@@ -244,7 +244,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
         {
           return new BoundaryLine( feature );
         }
-        else if( featureQName.equals( Kalypso1D2DSchemaConstants.WB1D2D_F_BOUNDARY_LINE ) && cls.isAssignableFrom( IBoundaryLine1D.class ) )
+        else if( featureQName.equals( Kalypso1D2DSchemaConstants.WB1D2D_F_BOUNDARY_LINE1D ) && cls.isAssignableFrom( IBoundaryLine1D.class ) )
         {
           return new BoundaryLine1D( feature );
         }
@@ -261,6 +261,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
     // does not fit (this is according to the adapter-contract)
     cMap.put( IFE1D2DElement.class, cTor );
     cMap.put( IBoundaryLine.class, cTor );
+    cMap.put( IBoundaryLine1D.class, cTor );
     cMap.put( ILineElement.class, cTor );
     cMap.put( IElement2D.class, cTor );
     cMap.put( IPolyElement.class, cTor );

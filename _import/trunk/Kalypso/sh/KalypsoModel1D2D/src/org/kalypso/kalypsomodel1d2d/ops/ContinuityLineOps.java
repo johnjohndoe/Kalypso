@@ -51,6 +51,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine1D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DContinuityLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
@@ -95,17 +98,44 @@ public class ContinuityLineOps
   
   
   public static <T extends ILineElement> T boundaryLine1DFromCurve(
+                    final QName lineElementQName,
                     final Class<T> adapterTargetClass,
                     final GM_Curve curve, 
                     final IFEDiscretisationModel1d2d model ) throws CoreException
   {
     try
     {
-      throw new UnsupportedOperationException();
+      final double grabDistance = curve.getLength()/2;
+      final GM_Point endPoint = curve.getEndPoint();
+      final IElement1D find1DElement = model.find1DElement( endPoint, grabDistance );
+      if( find1DElement == null )
+      {
+        throw new RuntimeException(
+            "Could not found an 1d element");
+      }
+      IFE1D2DEdge edge1D = find1DElement.getEdge();
+      //find target position
+      final IFE1D2DNode node0 = edge1D.getNode( 0 );
+      final IFE1D2DNode node1 = edge1D.getNode( 1 );
+      
+      boolean targetAtEdgeEnd = 
+        endPoint.distance( node0.getPoint() )>endPoint.distance( node1.getPoint() );
+      
+      IFeatureWrapperCollection<IFE1D2DElement> elements = model.getElements();
+      IBoundaryLine1D bline1D = elements.addNew( 
+                      lineElementQName, IBoundaryLine1D.class );
+      bline1D.addEdge( edge1D.getGmlID() );
+      bline1D.setAtEdgeEnd( targetAtEdgeEnd );
+      
+      edge1D.addContainer( bline1D.getGmlID() );
+      
+      
+      return (T) bline1D;
     }
     catch ( Exception e ) 
     {
-      throw new RuntimeException("Could not create boundary line from curve");
+      e.printStackTrace();
+      throw new RuntimeException("Could not create boundary line from curve", e);
     }
   }
   
@@ -117,7 +147,7 @@ public class ContinuityLineOps
   {
     if( Kalypso1D2DSchemaConstants.WB1D2D_F_BOUNDARY_LINE1D.equals( lineElementQName ) )
     {
-      return boundaryLine1DFromCurve( adapterTargetClass, curve, model ); 
+      return boundaryLine1DFromCurve( lineElementQName, adapterTargetClass, curve, model ); 
      
     }
     final boolean doTrace = Boolean.parseBoolean( Platform.getDebugOption( "KalypsoModel1D2D/debug/ops/continuity/routing" ) );
