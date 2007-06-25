@@ -51,23 +51,29 @@ import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfilPointProperty;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
+import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author kimwerner
  */
 public class ProfilUtil
 {
-//  public static final IProfilPoint getProfilPoint( final IProfil profil, final IProfilPoint pointBefore, final IProfilPoint pointAfter )
-//  {
-//    if( profil == null )
-//      return null;
-//    final LinkedList<IProfilPoint> points = profil.getPoints();
-//    final IProfilPoint leftP = ((pointBefore == null) && (!points.isEmpty())) ? points.getFirst() : pointBefore;
+// public static final IProfilPoint getProfilPoint( final IProfil profil, final IProfilPoint pointBefore, final
+// IProfilPoint pointAfter )
+// {
+// if( profil == null )
+// return null;
+// final LinkedList<IProfilPoint> points = profil.getPoints();
+// final IProfilPoint leftP = ((pointBefore == null) && (!points.isEmpty())) ? points.getFirst() : pointBefore;
 //
-//    final IProfilPoint rightP = (pointAfter == null) ? getPointAfter( profil, leftP ) : pointAfter;
-//    return splitSegment( profil, leftP, rightP );
+// final IProfilPoint rightP = (pointAfter == null) ? getPointAfter( profil, leftP ) : pointAfter;
+// return splitSegment( profil, leftP, rightP );
 //
-//  }
+// }
 
   /**
    * @return a subList include both MarkerPoints, maybe null
@@ -97,6 +103,7 @@ public class ProfilUtil
     }
     return values;
   }
+
   /**
    * @return a subList include both MarkerPoints, maybe null
    */
@@ -105,7 +112,7 @@ public class ProfilUtil
 
     final LinkedList<IProfilPoint> points = profil.getPoints();
     final int leftPos = (leftMarker != null) ? points.indexOf( leftMarker.getPoint() ) : 0;
-    final int rightPos = (rightMarker != null) ? points.indexOf( rightMarker.getPoint() )+1 : 0;
+    final int rightPos = (rightMarker != null) ? points.indexOf( rightMarker.getPoint() ) + 1 : 0;
     return (leftPos < rightPos) ? points.subList( leftPos, rightPos ) : null;
 
   }
@@ -563,4 +570,52 @@ public class ProfilUtil
     return clonedProfil;
 
   }
+
+  /**
+   * returns the georeferenced points of a profile.
+   * 
+   * @param profile
+   *            input profile
+   */
+  public static LinkedList<IProfilPoint> getGeoreferencedPoints( IProfil profile )
+  {
+    /* List for storing points of the profile, which have a geo reference. */
+    final LinkedList<IProfilPoint> geoReferencedPoints = new LinkedList<IProfilPoint>();
+
+    final LinkedList<IProfilPoint> points = profile.getPoints();
+    for( final IProfilPoint point : points )
+    {
+      final double rechtsWert = point.getValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+      final double hochWert = point.getValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT );
+
+      if( rechtsWert > 0.0 || hochWert > 0.0 )
+      {
+        /* Memorize the point, because it has a geo reference. */
+        geoReferencedPoints.add( point );
+      }
+      // else
+      // System.out.print( "The point " + point.toString() + " has no RECHTSWERT or HOCHWERT or is missing both.\n" );
+    }
+    return geoReferencedPoints;
+  }
+
+  public static GM_Curve getLine( IProfil profile, final CS_CoordinateSystem crs ) throws GM_Exception
+  {
+    final LinkedList<IProfilPoint> georeferencedPoints = getGeoreferencedPoints( profile );
+    final GM_Position[] pos = null;
+
+    for( int i = 0; i < georeferencedPoints.size(); i++ )
+    {
+      double x = georeferencedPoints.get( i ).getValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+      double y = georeferencedPoints.get( i ).getValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT );
+      double z = georeferencedPoints.get( i ).getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE );
+      pos[i] = GeometryFactory.createGM_Position( x, y, z );
+    }
+    
+    GeometryFactory.createGM_Curve( pos, crs );
+
+    return null;
+
+  }
+
 }

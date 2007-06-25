@@ -50,11 +50,9 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.TreeSet;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.commons.math.geom.PolyLine;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
@@ -62,10 +60,7 @@ import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.IProfilPointProperty;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -73,12 +68,10 @@ import org.kalypso.observation.result.TupleResult;
 import org.kalypso.observation.result.TupleResultUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
@@ -86,13 +79,8 @@ import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 import org.opengis.cs.CS_CoordinateSystem;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.simplify.DouglasPeuckerLineSimplifier;
 
 /**
  * @author Monika Thül
@@ -121,13 +109,14 @@ public class BreakLinesHelper implements IWspmConstants
         if( geometry == null ) // ignore profiles without geometry
           continue;
 
-        final GM_Curve thinProfile = thinnedOutClone( geometry, epsThinning, gmlVersion );
         final BigDecimal station = reach.getStation();
         final Double wsp = wspMap.get( station.doubleValue() );
+
+        final GM_Curve thinProfile = thinnedOutClone( geometry, epsThinning, gmlVersion );
         if( wsp != null ) // ignore profiles without result (no value in laengsschnitt). This can occur if the
         // simulation does not concern the whole reach.
         {
-          final GM_Curve newProfile = setValueZ( thinProfile.getAsLineString(), wsp );
+          final GM_Curve newProfile = GeometryUtilities.setValueZ( thinProfile.getAsLineString(), wsp );
 
           final Feature breakLineFeature = FeatureHelper.addFeature( rootFeature, new QName( NS_WSPM_BREAKLINE, "breaklineMember" ), new QName( NS_WSPM_BREAKLINE, "Breakline" ) );
           breakLineFeature.setProperty( new QName( NS_WSPM_BREAKLINE, "geometry" ), newProfile );
@@ -156,31 +145,14 @@ public class BreakLinesHelper implements IWspmConstants
     return wspMap;
   }
 
-  private static GM_Curve setValueZ( final GM_LineString newProfile, final double value ) throws GM_Exception
-  {
-    final GM_Position[] positions = newProfile.getPositions();
-    final CS_CoordinateSystem crs = newProfile.getCoordinateSystem();
-    final GM_Position[] newPositions = new GM_Position[positions.length];
-    for( int i = 0; i < positions.length; i++ )
-    {
-      final GM_Position position = positions[i];
-      newPositions[i] = GeometryFactory.createGM_Position( position.getX(), position.getY(), value );
-    }
-    return GeometryFactory.createGM_Curve( newPositions, crs );
-  }
-
   private static GM_Curve thinnedOutClone( final GM_Curve curve, final Double epsThinning, final String gmlVersion )
   {
     try
     {
       if( epsThinning > 0.0 )
       {
-        final LineString line = (LineString) JTSAdapter.export( curve );
-        final Coordinate[] coordinates = line.getCoordinates();
         // TODO thin out: sollten "Zwangspunkte" wie Marker für Trennflächen / durchströmte Bereiche erhalten bleiben?
-        final Coordinate[] simplifiedCrds = DouglasPeuckerLineSimplifier.simplify( coordinates, epsThinning );
-        final LineString simplifiedLine = line.getFactory().createLineString( simplifiedCrds );
-        return (GM_Curve) JTSAdapter.wrap( simplifiedLine );
+        return GeometryUtilities.getThinnedCurve( curve, epsThinning );
       }
       else
       {
@@ -236,11 +208,11 @@ public class BreakLinesHelper implements IWspmConstants
           if( wsp != null ) // ignore profiles without result (no value in laengsschnitt). This can occur if the
           // simulation does not concern the whole reach.
           {
-            points = calculateWspPoints( profil, wsp.doubleValue() );
+            points = WspmProfileHelper.calculateWspPoints( profil, wsp.doubleValue() );
           }
         }
         else
-          points = calculateWspPoints( profil, Double.MAX_VALUE );
+          points = WspmProfileHelper.calculateWspPoints( profil, Double.MAX_VALUE );
 
         if( points != null )
         {
@@ -281,95 +253,6 @@ public class BreakLinesHelper implements IWspmConstants
 
       GmlSerializer.serializeWorkspace( file, workspace, WspmTuhhCalcJob.WSPMTUHH_CODEPAGE );
     }
-  }
-
-  private static GM_Point[] calculateWspPoints( final IProfil profil, final double wspHoehe )
-  {
-    // final IProfilPointProperty[] pointProperties = profil.getPointProperties( );
-    // final POINT_PROPERTY ppRW = pointProperties.contains( IWspmTuhhConstants.POINT_PROPERTY_RECHTSWERT ) ?
-    // IWspmTuhhConstants.POINT_PROPERTY_RECHTSWERT : null;
-    // final POINT_PROPERTY ppHW = pointProperties.contains( IWspmTuhhConstants.POINT_PROPERTY_HOCHWERT ) ?
-    // IWspmTuhhConstants.POINT_PROPERTY_HOCHWERT : null;
-    if( !profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_HOCHWERT ) || !profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_RECHTSWERT ) ) // ignore
-      // profile
-      // without
-      // geo-coordinates
-      return new GM_Point[] {};
-
-    final LinkedList<IProfilPoint> points = profil.getPoints();
-    final IProfilPoint firstPoint = points.getFirst();
-    final IProfilPoint lastPoint = points.getLast();
-
-    final double firstX = firstPoint.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE );
-    final double firstY = firstPoint.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE );
-    final double lastX = lastPoint.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE );
-    final double lastY = lastPoint.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE );
-
-    final Double[] breiteValues = ProfilUtil.getValuesFor( profil, IWspmTuhhConstants.POINT_PROPERTY_BREITE );
-
-    final PolyLine wspLine = new PolyLine( new double[] { firstX, lastX }, new double[] { wspHoehe, wspHoehe }, 0.0001 );
-    final PolyLine profilLine = new PolyLine( breiteValues, ProfilUtil.getValuesFor( profil, IWspmTuhhConstants.POINT_PROPERTY_HOEHE ), 0.0001 );
-
-    /* Same for RW and HW, but filter 0-values */
-    final PolyLine rwLine = createPolyline( profil, IWspmTuhhConstants.POINT_PROPERTY_BREITE, IWspmTuhhConstants.POINT_PROPERTY_RECHTSWERT );
-    final PolyLine hwLine = createPolyline( profil, IWspmTuhhConstants.POINT_PROPERTY_BREITE, IWspmTuhhConstants.POINT_PROPERTY_HOCHWERT );
-
-    final double[] intersectionXs = profilLine.intersect( wspLine );
-
-    final TreeSet<Double> intersections = new TreeSet<Double>();
-    if( firstY < wspHoehe )
-      intersections.add( new Double( firstX ) );
-    for( final double d : intersectionXs )
-      intersections.add( new Double( d ) );
-    if( lastY < wspHoehe )
-      intersections.add( new Double( lastX ) );
-
-    final GM_Point[] poses = new GM_Point[intersections.size()];
-    int count = 0;
-    for( final Double x : intersections )
-    {
-      final double rw = rwLine.getYFor( x, false );
-      final double hw = hwLine.getYFor( x, false );
-
-      final String crsName = TimeserieUtils.getCoordinateSystemNameForGkr( Double.toString( rw ) );
-      final CS_CoordinateSystem crs = crsName == null ? null : org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory.getInstance().getOGCCSByName( crsName );
-      final GM_Point point = GeometryFactory.createGM_Point( rw, hw, wspHoehe, crs );
-
-      poses[count++] = point;
-    }
-
-    return poses;
-  }
-
-  private static PolyLine createPolyline( final IProfil profil, final String xProperty, final String yProperty )
-  {
-    final LinkedList<IProfilPoint> points = profil.getPoints();
-
-    final double[] xValues = new double[points.size()];
-    final double[] yValues = new double[points.size()];
-    final IProfilPointProperty pp = profil.getPointProperty( yProperty );
-    final double dy = pp == null ? 0.001 : pp.getPrecision();
-    int count = 0;
-    for( final IProfilPoint point : points )
-    {
-      final double x = point.getValueFor( xProperty );
-      final double y = point.getValueFor( yProperty );
-
-      if( Math.abs( y ) > dy )
-      {
-        xValues[count] = x;
-        yValues[count] = y;
-        count++;
-      }
-    }
-
-    final double[] xFiltered = new double[count];
-    final double[] yFiltered = new double[count];
-
-    System.arraycopy( xValues, 0, xFiltered, 0, count );
-    System.arraycopy( yValues, 0, yFiltered, 0, count );
-
-    return new PolyLine( xFiltered, yFiltered, 0.0001 );
   }
 
 }
