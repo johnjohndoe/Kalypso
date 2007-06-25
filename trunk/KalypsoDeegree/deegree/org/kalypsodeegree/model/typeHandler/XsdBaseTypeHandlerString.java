@@ -40,17 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree.model.typeHandler;
 
-
 /**
  * @author kuch
  */
 public class XsdBaseTypeHandlerString extends XsdBaseTypeHandler<String>
 {
-
   public XsdBaseTypeHandlerString( final String xsdTypeName )
   {
     super( xsdTypeName, String.class );
-
   }
 
   /**

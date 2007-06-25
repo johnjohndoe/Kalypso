@@ -204,6 +204,7 @@ public class MapModellHelper
       gr.setClip( 0, 0, width, height );
 
       gr.setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
+      gr.setRenderingHint( RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON );
 
       final int x = bounds.x;
       final int y = bounds.y;

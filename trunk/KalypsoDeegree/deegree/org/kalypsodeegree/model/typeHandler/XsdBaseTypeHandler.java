@@ -67,15 +67,15 @@ public abstract class XsdBaseTypeHandler<T> implements ISimpleMarshallingTypeHan
 
   private final QName m_typeQName;
 
-  private final Class< ? > m_valueClass;
+  private final Class<T> m_valueClass;
 
-  public XsdBaseTypeHandler( final String xsdTypeName, final Class< ? > valueClass )
+  public XsdBaseTypeHandler( final String xsdTypeName, final Class<T> valueClass )
   {
     m_valueClass = valueClass;
     m_typeQName = new QName( NS.XSD_SCHEMA, xsdTypeName );
   }
 
-  public XsdBaseTypeHandler( final QName qname, final Class< ? > valueClass )
+  public XsdBaseTypeHandler( final QName qname, final Class<T> valueClass )
   {
     m_valueClass = valueClass;
     m_typeQName = qname;
@@ -204,7 +204,7 @@ public abstract class XsdBaseTypeHandler<T> implements ISimpleMarshallingTypeHan
   /**
    * @see org.kalypso.gmlschema.types.ITypeHandler#getValueClass()
    */
-  public Class getValueClass( )
+  public Class<T> getValueClass( )
   {
     return m_valueClass;
   }
