@@ -108,6 +108,7 @@ import org.kalypso.template.featureview.Combo.Entry;
 import org.kalypso.template.featureview.Extensioncontrol.Param;
 import org.kalypso.template.gistableview.Gistableview;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.KalypsoUIDebug;
 import org.kalypso.ui.KalypsoUIExtensions;
 import org.kalypso.util.swt.SWTUtilities;
 import org.kalypsodeegree.filterencoding.FilterConstructionException;
@@ -185,27 +186,21 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     {
       updateLayoutData( control );
 
-      final ControlType controlType = (ControlType) control.getData( DATA_CONTROL_TYPE );
-
-      final Object visibleOperation = controlType.getVisibleOperation();
-      final boolean visible;
-      if( visibleOperation != null )
-        visible = evaluateOperation( getFeature(), visibleOperation );
-      else
-        visible = controlType.isVisible();
-      control.setVisible( visible );
-
-      final Object enabledOperation = controlType.getEnabledOperation();
-      final boolean enabled;
-      if( enabledOperation != null )
-        enabled = evaluateOperation( getFeature(), enabledOperation );
-      else
-        enabled = controlType.isEnabled();
-      control.setEnabled( enabled );
+// if( control instanceof Composite )
+// {
+// // TODO: remove, not necessary
+// final Composite composite = (Composite) control;
+//
+// composite.layout();
+// composite.getParent().layout();
+// }
     }
 
-    if( m_control != null )
-      m_control.getParent().layout();
+    if( m_control != null && !m_control.isDisposed() )
+    {
+      if( m_control instanceof Composite )
+        ((Composite) m_control).layout();
+    }
   }
 
   /**
@@ -296,10 +291,10 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
   private void updateLayoutData( final Control control )
   {
-    final LayoutDataType layoutDataType = (LayoutDataType) control.getData( DATA_LAYOUTDATA );
-
     final Feature feature = getFeature();
 
+    /* Update the layout data */
+    final LayoutDataType layoutDataType = (LayoutDataType) control.getData( DATA_LAYOUTDATA );
     if( layoutDataType instanceof GridDataType )
     {
       final GridDataType gridDataType = (GridDataType) layoutDataType;
@@ -318,20 +313,33 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       gridData.verticalSpan = gridDataType.getVerticalSpan();
 
       final Object excludeType = gridDataType.getExcludeOperation();
-      gridData.exclude = evaluateOperation( feature, excludeType );
+      gridData.exclude = evaluateOperation( feature, excludeType, false );
 
       control.setLayoutData( gridData );
     }
     else if( layoutDataType == NULL_LAYOUT_DATA_TYPE )
       control.setLayoutData( new GridData() );
+
+    /* Update visibility, eneblement, ... */
+    final ControlType controlType = (ControlType) control.getData( DATA_CONTROL_TYPE );
+
+    final Object visibleOperation = controlType.getVisibleOperation();
+    final boolean visible = evaluateOperation( getFeature(), visibleOperation, controlType.isVisible() );
+    control.setVisible( visible );
+
+    final Object enabledOperation = controlType.getEnabledOperation();
+    final boolean enabled = evaluateOperation( getFeature(), enabledOperation, controlType.isEnabled() );
+    control.setEnabled( enabled );
   }
 
-  private boolean evaluateOperation( final Feature feature, final Object operationElement )
+  private boolean evaluateOperation( final Feature feature, final Object operationElement, final boolean defaultValue )
   {
     try
     {
       if( operationElement instanceof Element )
       {
+        KalypsoUIDebug.FEATUREVIEW_OPERATIONS.printf( "Found operation: %s%nfor feature: %s%n", operationElement, feature );
+
         final Element element = (Element) operationElement;
         final NodeList childNodes = element.getChildNodes();
         for( int i = 0; i < childNodes.getLength(); i++ )
@@ -340,8 +348,12 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
           if( item instanceof Element )
           {
             final Operation operation = AbstractOperation.buildFromDOM( (Element) item );
-            final Boolean exclude = operation.evaluate( feature );
-            return exclude == null ? false : exclude.booleanValue();
+            final Boolean value = operation.evaluate( feature );
+            final boolean result = value == null ? false : value.booleanValue();
+
+            KalypsoUIDebug.FEATUREVIEW_OPERATIONS.printf( "Operation result: %s%n%n", result );
+
+            return result;
           }
         }
       }
@@ -357,7 +369,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       e.printStackTrace();
     }
 
-    return false;
+    return defaultValue;
   }
 
   private Control createControlFromControlType( final Composite parent, final int style, final ControlType controlType )
@@ -379,7 +391,6 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       if( m_formToolkit != null )
       {
         m_formToolkit.adapt( composite, true, true );
-        // m_formToolkit.paintBordersFor( composite );
       }
 
       for( final JAXBElement< ? extends ControlType> element : compositeType.getControl() )
@@ -645,7 +656,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     else if( controlType instanceof SubcompositeType )
     {
       final SubcompositeType compoType = (SubcompositeType) controlType;
-      
+
       final IFeatureControl fc = new SubFeatureControl( ftp, m_selectionManager, m_formToolkit, m_showOk, m_featureviewFactory, compoType.getSelector() );
 
       fc.setFeature( feature );
@@ -691,14 +702,15 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
   private Composite createCompositeFromCompositeType( final Composite parent, final int style, final CompositeType compositeType )
   {
+    final int compStyle = style | SWTUtilities.createStyleFromString( compositeType.getStyle() );
     if( compositeType instanceof org.kalypso.template.featureview.Group )
     {
-      final Group group = new org.eclipse.swt.widgets.Group( parent, style | SWTUtilities.createStyleFromString( compositeType.getStyle() ) );
+      final Group group = new org.eclipse.swt.widgets.Group( parent, compStyle );
       group.setText( ((org.kalypso.template.featureview.Group) compositeType).getText() );
       return group;
     }
 
-    return new Composite( parent, style | SWTUtilities.createStyleFromString( compositeType.getStyle() ) );
+    return new Composite( parent, compStyle );
   }
 
   private Layout createLayout( final LayoutType layoutType )
