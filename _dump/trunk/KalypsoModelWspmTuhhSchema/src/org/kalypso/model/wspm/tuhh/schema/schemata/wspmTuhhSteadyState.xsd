@@ -742,25 +742,13 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Anfangswasserspiegel</label>
-								<tooltip>
-									Anfangswasserspiegel (mNN) am ersten Profil (Unterlauf), abhängig von der Art der
-									Ranbedingung
-								</tooltip>
-								<description>
-									Anfangswasserspiegel (mNN) am ersten Profil (Unterlauf), abhängig von der Art der
-									Ranbedingung
-								</description>
+								<tooltip><![CDATA[Anfangswasserspiegel (mNN) am ersten Profil (Unterlauf), abhängig von der Art der Randbedingung]]></tooltip>
+								<description>cdata<![CDATA[Anfangswasserspiegel (mNN) am ersten Profil (Unterlauf), abhängig von der Art der Randbedingung]]></description>
 							</documentation>
 							<documentation xml:lang="en">
 								<label>Initial water level</label>
-								<tooltip>
-									Initial water level (mNN) at first profile (lower reaches), depending on type of
-									boundary condition
-								</tooltip>
-								<description>
-									Initial water level (mNN) at first profile (lower reaches), depending on type of
-									boundary condition
-								</description>
+								<tooltip><![CDATA[Initial water level (mNN) at first profile (lower reaches), depending on type of boundary condition]]></tooltip>
+								<description><![CDATA[Initial water level (mNN) at first profile (lower reaches), depending on type of boundary condition]]></description>
 							</documentation>
 						</annotation>
 					</element>
