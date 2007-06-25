@@ -121,8 +121,8 @@ public class TeschkeFlowRelation extends FlowRelationship implements ITeschkeFlo
    */
   public WspmProfile getProfile( )
   {
-    // TODO Auto-generated method stub
-    return null;
+    final Feature profileFeature = FeatureHelper.resolveLink( getFeature(), QNAME_PROP_PROFILE, true );
+    return profileFeature == null ? null : new WspmProfile( profileFeature );
   }
 
 }

@@ -102,6 +102,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.kalypsodeegree_impl.model.feature.binding.NamedFeatureHelper;
 
 /**
@@ -190,29 +191,29 @@ public class ImportWspmWizard extends Wizard implements IWizard
 
           final TuhhReach reach = calculation.getReach();
 
-          /* Import reach into profile collection */
-          monitor.subTask( " - kopiere Profile..." );
           try
           {
-            doImportNetwork( reach, profNetworkColl, terrainModelAdds );
+            /* Import reach into profile collection */
+            monitor.subTask( " - kopiere Profile..." );
+            final SortedMap<BigDecimal, WspmProfile> profilesByStation = doImportNetwork( reach, profNetworkColl, terrainModelAdds );
+            monitor.worked( 1 );
+
+            /* Create 1D-Network */
+            monitor.subTask( "- erzeuge 1D-Finite-Elemente-Netzwerk..." );
+            final SortedMap<BigDecimal, IFE1D2DNode> elementsByStation = doCreate1DNet( reach, discModel, discModelAdds );
+            monitor.worked( 1 );
+
+            /* Create 1D-Network parameters (flow relations) */
+            monitor.subTask( "- lade stationäre Ergebnisse und erzeuge 1D-Parameter..." );
+            final IStatus status = doReadResults( calculation, elementsByStation, flowRelModel, profilesByStation );
+            monitor.worked( 1 );
+
+            return status;
           }
           catch( final Exception e )
           {
             return StatusUtilities.statusFromThrowable( e, "Failed to copy profiles" );
           }
-          monitor.worked( 1 );
-
-          /* Create 1D-Network */
-          monitor.subTask( "- erzeuge 1D-Finite-Elemente-Netzwerk..." );
-          final SortedMap<BigDecimal, IFE1D2DNode> elementsByStation = doCreate1DNet( reach, discModel, discModelAdds );
-          monitor.worked( 1 );
-
-          /* Create 1D-Network parameters (flow relations) */
-          monitor.subTask( "- lade stationäre Ergebnisse und erzeuge 1D-Parameter..." );
-          final IStatus status = doReadResults( calculation, elementsByStation, flowRelModel );
-          monitor.worked( 1 );
-
-          return status;
         }
         catch( final Throwable t )
         {
@@ -237,7 +238,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
     return !status.matches( IStatus.ERROR );
   }
 
-  protected static IStatus doReadResults( final TuhhCalculation calculation, final SortedMap<BigDecimal, IFE1D2DNode> elementsByStation, final IFlowRelationshipModel flowRelModel ) throws MalformedURLException, Exception
+  protected static IStatus doReadResults( final TuhhCalculation calculation, final SortedMap<BigDecimal, IFE1D2DNode> elementsByStation, final IFlowRelationshipModel flowRelModel, final SortedMap<BigDecimal, WspmProfile> profilesByStation ) throws MalformedURLException, Exception
   {
     try
     {
@@ -293,8 +294,16 @@ public class ImportWspmWizard extends Wizard implements IWizard
           /* clone observation */
           FeatureHelper.cloneFeature( flowRelFeature, flowRelObsRelation, pointObsFeature );
 
-          // TODO
           /* relink profile to corresponding profile in profile network */
+          final WspmProfile wspmProfile = profilesByStation.get( station );
+          final IRelationType profileRelation = (IRelationType) flowRelFeature.getFeatureType().getProperty( ITeschkeFlowRelation.QNAME_PROP_PROFILE );
+          final IFeatureType profileFT = profileRelation.getTargetFeatureType();
+          // TODO: We have the fixed path to the terrain.gml here. Better would be to at least get it from the
+          // SzenarioDataProvider, but
+          // for that we need a dependency to the KalypsoProject1d2d
+          final String profileRef = "terrain.gml#" + wspmProfile.getFeature().getId();
+          final Feature profileLinkFeature = new XLinkedFeature_Impl( flowRelFeature, profileRelation, profileFT, profileRef, "", "", "", "", "" );
+          flowRelFeature.setProperty( profileRelation, profileLinkFeature );
 
           /* clone polynomes */
           for( final Object object : polynomeFeatures )
@@ -303,11 +312,11 @@ public class ImportWspmWizard extends Wizard implements IWizard
             if( polynomeFeature != null )
               FeatureHelper.cloneFeature( flowRelFeature, flowRelPolynomeRelation, polynomeFeature );
           }
-          
+
           addedFeatures.add( flowRelFeature );
         }
       }
-      
+
       final Feature[] addedFeatureArray = addedFeatures.toArray( new Feature[addedFeatures.size()] );
       flowRelworkspace.fireModellEvent( new FeatureStructureChangeModellEvent( flowRelworkspace, flowRelParentFeature, addedFeatureArray, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
 
@@ -342,16 +351,13 @@ public class ImportWspmWizard extends Wizard implements IWizard
     // IRiverChannel1D.QNAME );
     final IFeatureWrapperCollection<IFE1D2DComplexElement> discComplexElements = discretisationModel.getComplexElements();
     final FeatureList wrappedComplexList = discComplexElements.getWrappedList();
-    final Feature riverChannelFeature = 
-                    Util.createFeatureForListProp( 
-                        wrappedComplexList, 
-                        wrappedComplexList.getParentFeatureTypeProperty().getQName(), 
-                        Kalypso1D2DSchemaConstants.WB1D2D_F_RIVER_CHANNEL1D/*IRiverChannel1D.QNAME*/ );
+    final Feature riverChannelFeature = Util.createFeatureForListProp( wrappedComplexList, wrappedComplexList.getParentFeatureTypeProperty().getQName(), Kalypso1D2DSchemaConstants.WB1D2D_F_RIVER_CHANNEL1D/* IRiverChannel1D.QNAME */);
     addedFeatures.add( riverChannelFeature );
     final IRiverChannel1D riverChannel = (IRiverChannel1D) riverChannelFeature.getAdapter( IRiverChannel1D.class );
 
     /* add nodes to model */
     final List<IFE1D2DEdge> edgeList = new ArrayList<IFE1D2DEdge>( segments.length - 1 );
+
     /* add elements to model */
     final SortedMap<BigDecimal, IFE1D2DNode> nodesByStation = new TreeMap<BigDecimal, IFE1D2DNode>();
     IFE1D2DNode lastNode = null;
@@ -397,14 +403,9 @@ public class ImportWspmWizard extends Wizard implements IWizard
         // REMARK: The next line does not work because of the substitution problem with the featurelistwrapper
         // final IElement1D<IFE1D2DComplexElement, IFE1D2DEdge> element1d = (IElement1D<IFE1D2DComplexElement,
         // IFE1D2DEdge>) discElements = discretisationModel.getElements().addNew( IElement1D.QNAME );
-        final Feature elementFeature = 
-          Util.createFeatureForListProp( 
-                          discElementsList, 
-                          discElementsMemberQName, 
-                          Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT1D );
+        final Feature elementFeature = Util.createFeatureForListProp( discElementsList, discElementsMemberQName, Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT1D );
         addedFeatures.add( elementFeature );
-        final IElement1D element1d = 
-              (IElement1D) elementFeature.getAdapter( IElement1D.class );
+        final IElement1D element1d = (IElement1D) elementFeature.getAdapter( IElement1D.class );
 
         element1d.setEdge( edge );
         // adding element to 1d containers is not necessary since setting the edge to the element already does
@@ -425,8 +426,10 @@ public class ImportWspmWizard extends Wizard implements IWizard
     return nodesByStation;
   }
 
-  protected static void doImportNetwork( final TuhhReach reach, final IRiverProfileNetworkCollection networkCollection, final List<Feature> addedFeatures ) throws Exception
+  protected static SortedMap<BigDecimal, WspmProfile> doImportNetwork( final TuhhReach reach, final IRiverProfileNetworkCollection networkCollection, final List<Feature> addedFeatures ) throws Exception
   {
+    final SortedMap<BigDecimal, WspmProfile> result = new TreeMap<BigDecimal, WspmProfile>();
+
     final IRiverProfileNetwork network = networkCollection.addNew( IRiverProfileNetwork.QNAME );
     final Feature networkFeature = network.getWrappedFeature();
     addedFeatures.add( networkFeature );
@@ -443,14 +446,19 @@ public class ImportWspmWizard extends Wizard implements IWizard
     for( final TuhhReachProfileSegment segment : reachProfileSegments )
     {
       final WspmProfile profileMember = segment.getProfileMember();
+      final BigDecimal station = segment.getStation();
 
       final IRelationType wspmRelation = (IRelationType) networkFeature.getFeatureType().getProperty( IRiverProfileNetwork.QNAME_PROP_RIVER_PROFILE );
       final Feature clonedProfileFeature = FeatureHelper.cloneFeature( networkFeature, wspmRelation, profileMember.getFeature() );
       addedFeatures.add( clonedProfileFeature );
+
+      result.put( station, new WspmProfile( clonedProfileFeature ) );
     }
 
     final GMLWorkspace workspace = network.getWrappedFeature().getWorkspace();
     workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, network.getWrappedFeature(), networkFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+
+    return result;
   }
 
   public Feature[] getTerrainModelAdds( )
