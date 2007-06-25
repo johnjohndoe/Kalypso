@@ -45,9 +45,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.text.DefaultEditorKit.CutAction;
 import javax.xml.namespace.QName;
 
-import org.deegree.model.geometry.GM_Curve;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.conv.EReadError;
@@ -64,12 +64,20 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.results.SimpleNodeResult;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
+import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.util.WspmProfileHelper;
+import org.kalypso.model.wspm.schema.WspmUrlCatalog;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -175,8 +183,8 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   public void handleElement( String lineString, int id, int currentRougthnessClassID, int previousRoughnessClassID, int eleminationNumber )
   {
     // For each element calculate the geometry (elemID, cornernode1, midsidenode1, cornernode2, midsidenode2,
-    // cornernode3, midsidenode3, (cornernode4, midsidenode4), element type)
 
+    // cornernode3, midsidenode3, (cornernode4, midsidenode4), element type)
     /* =========== calculate the geometry ============= */
 
     /*
@@ -192,27 +200,6 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       // get the element
       final ElementResult elementResult = m_elemIndex.get( id );
 
-      
-      // TODO:
-      // - ist ein 1D-Element
-      // - hol für beide knoten die Curves
-      //    - hol dir die flowrelation für den knoten
-      //    - hol dir das profile
-      //    - mach draus ne ausgedünnte bruckkante mit dem WSP
-      final INodeResult nodeResult1 = null;
-      final INodeResult nodeResult2 = null;
-      final GM_Curve nodeCurve1  = getCurveForNode( nodeResult1 );
-      final GM_Curve nodeCurve2  = getCurveForNode( nodeResult2 );
-      if( nodeCurve1 != null && nodeCurve2 != null )
-      {
-      // - trianguliere die curves
-        
-//        nodeCurve2.getAsLineString();
-      }
-      
-      
-      
-      
       // for completion add the additional parameters
       elementResult.setCurrentRougthnessClassID( currentRougthnessClassID );
       elementResult.setPreviousRoughnessClassID( previousRoughnessClassID );
@@ -225,104 +212,143 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       ArcResult currentArc = elementResult.getArc( 0 );
       GMLNodeResult nodeDown = m_nodeIndex.get( currentArc.node1ID );
       GMLNodeResult nodeUp = m_nodeIndex.get( currentArc.node2ID );
-      if( currentArc.elementLeftID == id )
+
+      // is it a 1d- or 2d-element
+      if( currentRougthnessClassID == 89 ) // 1d
       {
-        elementResult.setCornerNodes( nodeDown );
-        elementResult.setCornerNodes( nodeUp );
-      }
+        // TODO:
+        // - get the profile Curves of the two nodes defining the current element
+        GM_Curve nodeCurve1 = null;
+        GM_Curve nodeCurve2 = null;
+        try
+        {
+          nodeCurve1 = getCurveForNode( nodeDown );
+          nodeCurve2 = getCurveForNode( nodeUp );
+        }
+        catch( GM_Exception e )
+        {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+        catch( Exception e )
+        {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
 
-      /* element on the right side of the arc */
-      else
-      {
-        elementResult.setCornerNodes( nodeUp );
-        elementResult.setCornerNodes( nodeDown );
-      }
-
-      /* midside node of the current arc */
-      GMLNodeResult midsideNode = m_nodeIndex.get( currentArc.middleNodeID );
-      checkMidsideNodeData( nodeDown, nodeUp, midsideNode );
-      elementResult.setMidsideNodes( midsideNode );
-
-      nodeDown.setArc( currentArc );
-      currentArc.setNodeDown( nodeDown );
-
-      nodeUp.setArc( currentArc );
-      currentArc.setNodeUp( nodeUp );
-
-      /**
-       * For the other arcs, just save one corner node.<br>
-       * This corner node has to be the opposite node of the connectionNode (last saved corner node)<br>
-       * and must lie on the same arc (connected by the same arc).<br>
-       * get the current arc of the element (arc)<br>
-       * check the orientation of the arc (element is left or right-sided)<br>
-       * check the connection. <br>
-       */
-
-      for( int pointIndex = 1; pointIndex < numArcs; pointIndex++ )
-      {
-        final GMLNodeResult connectionNode = (GMLNodeResult) elementResult.getCornerNodes( pointIndex );
-        for( int arc = 1; arc < numArcs; arc++ )
+        if( nodeCurve1 != null && nodeCurve2 != null )
         {
 
-          currentArc = elementResult.getArc( arc );
+          //
 
-          final int elementLeftID = currentArc.elementLeftID;
-          final int elementRightID = currentArc.elementRightID;
-          nodeDown = m_nodeIndex.get( currentArc.node1ID );
-          nodeUp = m_nodeIndex.get( currentArc.node2ID );
+          // - triangulate the curves
+          // alle punkte als rand verbinden => rand polygon => triangle => wsptin (Gescheindigkeit ebenso??)=>
+          // triangle-eater
 
-          /* element on the left side of the arc */
-          midsideNode = m_nodeIndex.get( currentArc.middleNodeID );
-          if( elementLeftID == id && nodeDown.equals( connectionNode ) )
+        }
+
+      }
+      else
+      {
+        if( currentArc.elementLeftID == id )
+        {
+          elementResult.setCornerNodes( nodeDown );
+          elementResult.setCornerNodes( nodeUp );
+        }
+
+        /* element on the right side of the arc */
+        else
+        {
+          elementResult.setCornerNodes( nodeUp );
+          elementResult.setCornerNodes( nodeDown );
+        }
+
+        /* midside node of the current arc */
+        GMLNodeResult midsideNode = m_nodeIndex.get( currentArc.middleNodeID );
+        checkMidsideNodeData( nodeDown, nodeUp, midsideNode );
+        elementResult.setMidsideNodes( midsideNode );
+
+        nodeDown.setArc( currentArc );
+        currentArc.setNodeDown( nodeDown );
+
+        nodeUp.setArc( currentArc );
+        currentArc.setNodeUp( nodeUp );
+
+        /**
+         * For the other arcs, just save one corner node.<br>
+         * This corner node has to be the opposite node of the connectionNode (last saved corner node)<br>
+         * and must lie on the same arc (connected by the same arc).<br>
+         * get the current arc of the element (arc)<br>
+         * check the orientation of the arc (element is left or right-sided)<br>
+         * check the connection. <br>
+         */
+
+        for( int pointIndex = 1; pointIndex < numArcs; pointIndex++ )
+        {
+          final GMLNodeResult connectionNode = (GMLNodeResult) elementResult.getCornerNodes( pointIndex );
+          for( int arc = 1; arc < numArcs; arc++ )
           {
-            if( elementResult.getNumCornerNodes() < numArcs )
+
+            currentArc = elementResult.getArc( arc );
+
+            final int elementLeftID = currentArc.elementLeftID;
+            final int elementRightID = currentArc.elementRightID;
+            nodeDown = m_nodeIndex.get( currentArc.node1ID );
+            nodeUp = m_nodeIndex.get( currentArc.node2ID );
+
+            /* element on the left side of the arc */
+            midsideNode = m_nodeIndex.get( currentArc.middleNodeID );
+            if( elementLeftID == id && nodeDown.equals( connectionNode ) )
             {
-              elementResult.setCornerNodes( nodeUp );
+              if( elementResult.getNumCornerNodes() < numArcs )
+              {
+                elementResult.setCornerNodes( nodeUp );
+              }
+
+              nodeUp.setArc( currentArc );
+              currentArc.setNodeUp( nodeUp );
+
+              connectionNode.setArc( currentArc );
+              currentArc.setNodeDown( connectionNode );
+
+              checkMidsideNodeData( nodeDown, nodeUp, midsideNode );
+              elementResult.setMidsideNodes( midsideNode );
+              break;
             }
-
-            nodeUp.setArc( currentArc );
-            currentArc.setNodeUp( nodeUp );
-
-            connectionNode.setArc( currentArc );
-            currentArc.setNodeDown( connectionNode );
-
-            checkMidsideNodeData( nodeDown, nodeUp, midsideNode );
-            elementResult.setMidsideNodes( midsideNode );
-            break;
-          }
-          /* element on the right side of the arc */
-          else if( elementRightID == id && nodeUp.equals( connectionNode ) )
-          {
-            if( elementResult.getNumCornerNodes() < numArcs )
+            /* element on the right side of the arc */
+            else if( elementRightID == id && nodeUp.equals( connectionNode ) )
             {
-              elementResult.setCornerNodes( nodeDown );
+              if( elementResult.getNumCornerNodes() < numArcs )
+              {
+                elementResult.setCornerNodes( nodeDown );
+              }
+              nodeDown.setArc( currentArc );
+              currentArc.setNodeDown( nodeDown );
+
+              connectionNode.setArc( currentArc );
+              currentArc.setNodeUp( connectionNode );
+
+              checkMidsideNodeData( nodeDown, nodeUp, midsideNode );
+              elementResult.setMidsideNodes( midsideNode );
+              break;
             }
-            nodeDown.setArc( currentArc );
-            currentArc.setNodeDown( nodeDown );
-
-            connectionNode.setArc( currentArc );
-            currentArc.setNodeUp( connectionNode );
-
-            checkMidsideNodeData( nodeDown, nodeUp, midsideNode );
-            elementResult.setMidsideNodes( midsideNode );
-            break;
           }
         }
-      }
 
-      /* check the element (number of arcs, nodes, mid-side nodes) */
+        /* check the element (number of arcs, nodes, mid-side nodes) */
 
-      /* check water levels for dry nodes */
-      elementResult.checkWaterlevels();
+        /* check water levels for dry nodes */
+        elementResult.checkWaterlevels();
 
-      /* split element into triangles if there is a wet node. */
-      if( elementResult.isWet == true )
-      {
-        /* create the center node */
-        elementResult.createCenterNode();
+        /* split element into triangles if there is a wet node. */
+        if( elementResult.isWet == true )
+        {
+          /* create the center node */
+          elementResult.createCenterNode();
 
-        /* split the element */
-        splitElement( elementResult );
+          /* split the element */
+          splitElement( elementResult );
+        }
       }
 
 // Triangle t;
@@ -336,25 +362,49 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     // m_triangleEater.finished();
   }
 
-  private GM_Curve getCurveForNode( final INodeResult nodeResult )
+  /**
+   * returns a simplified profile curve of a 1d-node, already cut at the intersection points with the water level
+   * 
+   * @param nodeResult
+   *            1d-node
+   * 
+   */
+  private GM_Curve getCurveForNode( final INodeResult nodeResult ) throws Exception
   {
     final GM_Position nodePos = nodeResult.getPoint().getPosition();
-    
+    final double waterlevel = nodeResult.getWaterlevel();
     final IFlowRelationship flowRelationship = m_flowRelationModel.findFlowrelationship( nodePos, 0.0 );
     if( flowRelationship instanceof ITeschkeFlowRelation )
     {
       final ITeschkeFlowRelation teschkeRelation = (ITeschkeFlowRelation) flowRelationship;
-//      teschkeRelation.getPolynomials();
+// teschkeRelation.getPolynomials();
+
       final WspmProfile profile = teschkeRelation.getProfile();
-      profile.getLine();
-      
-      // wsp als höhe dran machen (clone?)
-      // siehe TUhhCalctrallala: getcurve + ausdünnen
-      
+
+      /* cut the profile at the intersection points with the water level */
+      // get the intersection points
+      final GM_Point[] points = WspmProfileHelper.calculateWspPoints( profile.getProfil(), waterlevel );
+      IProfil cutProfile = null;
+
+      if( points != null )
+      {
+        if( points.length > 1 )
+        {
+          cutProfile = WspmProfileHelper.cutIProfile( profile.getProfil(), points[0], points[points.length - 1] );
+        }
+      }
+      final CS_CoordinateSystem crs = nodeResult.getPoint().getCoordinateSystem();
+      final GM_Curve curve = ProfilUtil.getLine( cutProfile, crs );
+
+      /* simplify the profile */
+      final double epsThinning = 0.05;
+      GM_Curve thinnedCurve = GeometryUtilities.getThinnedCurve( curve, epsThinning );
+
+      /* set the water level as new z-coordinate of the profile line */
+      return GeometryUtilities.setValueZ( thinnedCurve.getAsLineString(), waterlevel );
     }
     // TODO: King
-    
-    
+
     return null;
   }
 
@@ -831,7 +881,6 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   private INodeResult insertNode( INodeResult node1, INodeResult node2 )
   {
     final INodeResult node3 = new SimpleNodeResult();
-    // TODO: here is a bug. The nodes are not correctly interpolated!!!
 
     final double wspNode1 = node1.getWaterlevel();
     final double zNode1 = node1.getPoint().getZ();
@@ -841,8 +890,6 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     final double dist12 = node2.getPoint().distance( node1.getPoint() );
     final double dz1;
     final double dz2;
-    final double dz;
-    final double z;
 
     if( (wspNode1 - zNode1) > 0 ) // the same as node1.isWet() == true;
     {
@@ -1049,11 +1096,11 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
       /* Fill node result with data */
       result.setName( "" + id );
-//      if(id == 71332)
-//        id = id;
-      
-//      System.out.println( "node id: " + id );
-      
+// if(id == 71332)
+// id = id;
+
+// System.out.println( "node id: " + id );
+
       // TODO: description: beschreibt, welche Rechenvariante und so weiter... oder noch besser an der collection
 // result.setDescription( "" + id );
 
