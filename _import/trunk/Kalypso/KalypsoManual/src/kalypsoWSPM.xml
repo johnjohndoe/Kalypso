@@ -6,38 +6,35 @@
     <primary>1D Spiegellinienmodell KalypsoWSPM</primary>
   </indexterm>
 
-  <para>Die Benutzeroberfläche KALYPSO-WSPM ist an ein Spiegellinienprogramm
-  (KALYPSO-1D) gekoppelt, welches die eigentliche Berechnung durchführt. Die
-  Einbindung der Modelldaten (Steuerdaten, Ein- und Ausgabedaten) erfolgt über
-  die Spezifizierung der Daten nach Standards des OpenGis-Konsortiums (siehe
+  <para>Die Benutzeroberfläche KalypsoWSPM dient der Anwendung des
+  Spiegellinienprogramms (Kalypso1D). Die Einbindung der Modelldaten
+  (Steuerdaten, Ein- und Ausgabedaten) erfolgt über die Spezifizierung der
+  Daten nach Standards des OpenGIS-Consortiums (siehe
   www.opengeo-spatial.org). Die Modelleingabedaten können graphisch interaktiv
-  am Bildschirm eingegeben und modifiziert werden. Durch die Konzeption der
+  am Bildschirm bearbeitet und modifiziert werden. Durch die Konzeption der
   Oberfläche fällt es dem Benutzer leicht, sich in das Programm einzuarbeiten
   bzw. es zu bedienen. Damit entfällt das aufwendige Editieren von
-  ASCII-Eingabedateien unter Einhaltung eines bestimmten Formats. KALYPSO-WSPM
+  ASCII-Eingabedateien unter Einhaltung eines bestimmten Formats. KalypsoWSPM
   übernimmt diese Aufgaben für den Benutzer.</para>
 
-  <para>Das Pre-Processing von KALYPSO-WSPM stellt dem Anwender nicht nur eine
+  <para>Das Pre-Processing von KalypsoWSPM stellt dem Anwender nicht nur eine
   vereinfachte Eingabe der Berechnungsgrundlagen bereit, sondern nimmt ihm
   auch die Datenorganisation vollständig ab. Für die vereinfachte Eingabe und
-  Modifikation von Profildaten wurde der graphisch-interaktive „Profileditor“
-  entwickelt. Die einzelnen Profilquerschnitte sowie die hydraulischen
-  Parameter werden in diesem Fenster optisch anschaulich dargestellt. Ein
-  entscheidender Vorteil für den Anwender besteht darin, dass die Graphik auch
-  gleichzeitig editierbar ist. Durch einfaches Ziehen der Linie auf eine
-  gewünschte Position, welche beispielsweise die Geländehöhe repräsentiert,
-  werden die Daten der zugehörigen Profildatei unmittelbar aktualisiert.
-  Umgekehrt wird die Graphik direkt geändert, sobald Werte modifiziert wurden.
-  Gleichermaßen können Bearbeitungen in der Gewässerkarte vorgenommen werden.
-  Hierzu steht dem Nutzer eine Kartenaufsicht auf das Gewässersystem zur
-  Verfügung, dass sowohl die Nutzung des WebMapService als auch das Anzeigen
-  georeferenzierter Bilddaten unterstützt. Die optische Darstellung der Daten,
-  auf denen die Spiegellinienberechnung aufbaut, ermöglicht neben dem Vorteil
-  der Anschaulichkeit schnell das Erkennen von fehlerhaften Werten, aber auch
-  die rasche Überprüfung der Auswirkungen von Veränderungen bei den
-  hydraulischen oder geometrischen Parametern.</para>
+  Modifikation von Profildaten wurde der graphisch-interaktive <emphasis
+  role="bold">„Profileditor“</emphasis> entwickelt. Die einzelnen
+  Profilquerschnitte sowie die hydraulischen Parameter werden in diesem
+  Fenster optisch anschaulich dargestellt. Ein entscheidender Vorteil für den
+  Anwender besteht darin, dass die Graphik interaktiv ist. Gleichermaßen
+  können Bearbeitungen in der Gewässerkarte vorgenommen werden. Hierzu steht
+  dem Nutzer eine Kartenaufsicht auf das Gewässersystem zur Verfügung, dass
+  sowohl die Nutzung des WebMapService als auch das Anzeigen georeferenzierter
+  Bilddaten unterstützt. Die optische Darstellung der Daten, auf denen die
+  Spiegellinienberechnung aufbaut, ermöglicht neben dem Vorteil der
+  Anschaulichkeit schnell das Erkennen von fehlerhaften Werten, aber auch die
+  rasche Überprüfung der Auswirkungen von Veränderungen bei den hydraulischen
+  oder geometrischen Parametern.</para>
 
-  <para>Nicht zuletzt ermöglicht KALYPSO-WSPM zeitsparend eine Abarbeitung von
+  <para>Nicht zuletzt ermöglicht KalypsoWSPM zeitsparend eine Abarbeitung von
   zuvor erstellten Berechnungsvarianten. Die Ergebnisse der
   Spiegellinienberechnung werden in anschaulicher Form in Längsschnitten,
   Überschwemmungskarten und als Tabellen ausgegeben. Hierbei bietet ein
@@ -52,6 +49,14 @@
   <itemizedlist>
     <listitem>
       <para>Triangulation</para>
+
+      <para>Quellcode (nicht die EXE!!) ist ein OpenSourceProduct: Copyright
+      1993, 1995, 1997, 1998, 2002 Jonathan Richard Shewchuk, 2360 Woolsey #H/
+      California 94705-1927, created as part of the Archimedes project (tools
+      for parallel FEM) Supported in part by NSF Grant CMS-9318163 and an
+      NSERC 1967 Scholarship. (...) In Kalypso-WSPM wird die EXE verwendet.
+      Sie darf nicht weiterverbreitet oder kopiert werden. Für eine weiter
+      Kopie ist der freiverfügbare Source Code neu zu kompilieren!</para>
     </listitem>
 
     <listitem>
@@ -59,9 +64,8 @@
     </listitem>
   </itemizedlist>
 
-  <para>Das vorliegende Handbuch beschreibt die Benutzeroberfläche
-  KALYPSO-WSPM, die auf den Rechenkern von Prof. Pasche zugeschnitten
-  ist.</para>
+  <para>Das vorliegende Kapitel beschreibt die Benutzeroberfläche KalypsoWSPM,
+  die auf den Rechenkern Kalypso1D von Prof. Pasche zugeschnitten ist.</para>
 
   <para>Die theoretischen Grundlagen der Spiegellinienberechnung des
   Rechenkerns nach Prof. Pasche sind in einem separaten Handbuch „Theoretische
@@ -79,8 +83,7 @@
     </mediaobject>
   </figure>
 
-  <para><emphasis role="bold">Rechenkernhistorie, Welche Rechenalgorythmen
-  sind implementiert, Wofür Anwenden</emphasis></para>
+  <para><emphasis role="bold">Der Kalypso1D Rechenkern</emphasis></para>
 
   <para>Im heutigen Gewässerausbau kommt den ökologischen, biologischen und
   landschaftsgestalterischen Elementen eine immer größere Bedeutung zu. Das
@@ -89,21 +92,20 @@
   die ursprüngliche Gerinnehydraulik nur unzureichende Ergebnisse. Neue
   Erkenntnisse der hydraulischen Berechnung naturnaher Fließgewässer sind in
   den Merkblättern des BWK und DVWK zusammengefasst worden. Im
-  Spiegellinienprogramm KALYPSO-1D sind diese neuen Verfahren
+  Spiegellinienprogramm Kalypso1D sind diese neuen Verfahren
   implementiert.</para>
 
   <para>Der Rechenkern dieser Spiegellinienberechnung wurde ursprünglich bei
   der Firma Björnsen Beratende Ingenieure (BCE) entwickelt und wird inzwischen
-  von der Technischen Universität Hamburg-Harburg (TUHH) unter dem Namen
-  KALYPSO-1D als Open-Source Software weiterentwickelt. Eine
-  Benutzeroberfläche zu dem Rechenkern ist von der Firma BCE unter dem Namen
-  KALYPSO-WSPM erhältlich. In Zusammenarbeit der Firma BCE mit der TUHH wird
+  von der Technischen Universität Hamburg-Harburg (TUHH) am Institut für
+  Wasserbau unter dem Namen Kalypso1D als OpenSource Software unter der LGPL
+  Lizenz weiterentwickelt. In Zusammenarbeit der Firma BCE mit der TUHH wird
   das Programm laufend weiterentwickelt.</para>
 
-  <para>Der Rechenkern der Benutzeroberfläche KALYPSO-WSPM ist derzeit (Stand:
-  November 2006) identisch mit dem unter der Benutzeroberfläche WSPWIN
-  genutzte Programm. Diese Oberfläche WSPWIN wurde deutschlandweit bei einer
-  Vielzahl von Projekten eingesetzt.</para>
+  <para>Der Rechenkern der Benutzeroberfläche KalypsoWSPM ist weitestgehend
+  identisch mit dem unter der Benutzeroberfläche WSPWIN genutzte Programm. Die
+  Oberfläche WSPWIN wurde deutschlandweit bei einer Vielzahl von Projekten
+  eingesetzt.</para>
 
   <figure>
     <title>Darstellung zum Rechenkern</title>
@@ -124,7 +126,7 @@
     </listitem>
 
     <listitem>
-      <para>detaillierte Rauheitsmodellierung mit äquivalenten Sandrauheiten
+      <para>Detaillierte Rauheitsmodellierung mit äquivalenten Sandrauheiten
       ks (nach COLEBROOK-WHITE).</para>
     </listitem>
 
@@ -209,7 +211,7 @@
     </orderedlist>
 
     <para>Beim Zusammentragen aller Eingangsdaten kann auf Karten, Literatur,
-    Vorortbegehungen und Vermessungen zurückgegriffen werden.</para>
+    Vorortbegehungen und Vermessungen zurückgegriffen werden:</para>
 
     <itemizedlist>
       <listitem>
@@ -221,7 +223,7 @@
       </listitem>
 
       <listitem>
-        <para>Lage und Pegeldaten von Zuflüssen/ Abflüssen</para>
+        <para>Lage und Daten von Zuflüssen/ Abflüssen</para>
       </listitem>
 
       <listitem>
@@ -255,7 +257,7 @@
     gewünschte Strömungsmodell zu übertragen und ggf. Abschätzungen und
     Vereinfachungen zu treffen. Hierzu zählt, die Abbildung der Querprofile
     inkl. der hydraulischen Parameter, die Definition des Gewässerlaufs über
-    die Profile,die Festlegung von Abflussereignissen sowie die Festlegung
+    die Profile, die Festlegung von Abflussereignissen sowie die Festlegung
     aller Berechnungseinstellungen wie z. B. Simulationsvariante,
     Fließ-Widerstands-Gesetz, Parameter, usw.</para>
 
@@ -272,8 +274,8 @@
 
     <para>Für die Berechnungen von Szenarien oder
     Bemessungshochwasserereignissen bildet das kalibrierte 1D-Modell die
-    Grundlage und (meist) als Referenzzustand für Studien. Eine stetige
-    Kontrolle der Ergebnisse und durch überschlägige Handrechnungen oder
+    Grundlage und gilt (meist) als Referenzzustand für Studien. Eine stetige
+    Kontrolle der Ergebnisse z.B. durch überschlägige Handrechnungen oder
     Plausibilitätskontrollen empfiehlt sich für jede Berechnung. Hierfür
     eignet sich insbesondere die Visualisierung der Ergebnisse in der Karte
     und im Längsschnitt. Für detaillierte Informationen zum Berechnungsablauf
@@ -290,12 +292,12 @@
 
       <para><emphasis role="bold">Profile</emphasis></para>
 
-      <para>Ein Profil enthält alle geometrischen und hydraulischen Daten, die
-      ein Querprofil beschreiben. Ihr Inhalt variiert in Abhängigkeit vom
-      Profiltyp (z.B. Normalprofil, Brückenprofil, Wehrprofil). Die
-      Profildatei definiert sich über dem Profilnamen (Stations-km,
-      Profilzustand), über den das Profil referenzierbar ist. Die Profildatei
-      ist sowohl alphanumerisch wie auch grafisch-interaktiv
+      <para>Ein Profilelement enthält alle geometrischen und hydraulischen
+      Daten, die ein Querprofil beschreiben. Die Daten variieren in
+      Abhängigkeit vom Profiltyp (z.B. Normalprofil, Brückenprofil,
+      Wehrprofil). Das Profilelement definiert sich über dem Profilnamen
+      (Stations-km, Profilzustand), über den das Profil referenzierbar ist.
+      Das Profilelement ist sowohl tabellarisch als auch grafisch-interaktiv
       editierbar.</para>
 
       <para><emphasis role="bold">Gewässerstrang</emphasis></para>
@@ -306,20 +308,20 @@
       der Abstand zwischen den Profilen im Flussschlauch und auf den
       Vorländern festgelegt. Die Profilabstände werden aus den vom Benutzer
       eingegebenen Stationswerten besetzt. Bei einer umgekehrten Stationierung
-      ist ein entsprechender Schalter für das Gewässer zu aktivieren, damit
-      die Stationierung absteigend erfolgt. Jedem Gewässerstrang ist auch eine
-      Liste mit sämtlichen zum Zustand gehörenden Profilen hinterlegt mit dem
-      Profilschlüssel und dem zugehörigen Profildateiname. Die Reihenfolge der
-      Profilangabe ist durch die Berechnungsrichtung entgegen der
-      Fließrichtung festgelegt. Dies gilt auch für den schießenden
-      Abflussbereich. Die Stationierungsrichtung ist nicht festgelegt. Es wird
-      jedoch empfohlen, im Sinne des Gewässerverzeichnisses NRW grundsätzlich
-      von der Mündung in Richtung Quelle zu stationieren.</para>
+      ist dies entsprechend anzugeben, damit die Stationierung absteigend
+      erfolgt. Jedem Gewässerstrang ist eine Liste mit sämtlichen zum Zustand
+      gehörenden Profilen hinterlegt. Die Reihenfolge der Profilangabe ist
+      durch die Berechnungsrichtung entgegen der Fließrichtung festgelegt.
+      Dies gilt auch für den schießenden Abflussbereich. Die
+      Stationierungsrichtung ist nicht festgelegt. Es wird jedoch empfohlen,
+      im Sinne des <emphasis role="bold">DVWK?? (Gewässerverzeichnisses
+      NRW)</emphasis> grundsätzlich von der Mündung in Richtung Quelle zu
+      stationieren.</para>
 
       <para><emphasis role="bold">Abflussereignisse</emphasis></para>
 
       <para>Für eine Spiegellinienberechnung ist als Randbedingung der
-      Durchfluss zu definieren. Hierzu dient die Abflussdatei. Eine
+      Durchfluss zu definieren. Hierzu dient der Abflussdatensatz. Eine
       Abflussdatei ist zunächst unabhängig vom Gewässerstrang und wird diesem
       erst in der Berechnungsvariante zugewiesen. In dieser Datei kann der
       Abfluss profilbezogen oder auch zwischen zwei Profilen festgelegt
@@ -331,11 +333,10 @@
 
       <para><emphasis role="bold">Wasserspiegelfixierung</emphasis></para>
 
-      <para>In dieser Datei können profilbezogen oder auch zwischen zwei
+      <para>In diesem Datensatz können profilbezogen oder auch zwischen zwei
       Profilen gemessene Wasserspiegelhöhen eingegeben werden. Die
       Wasserspiegelfixierungen sollen später im Rahmen der Berechnung in die
-      Längsschnitte eingetragen werden <emphasis role="bold">(derzeit noch
-      nicht verfügbar)</emphasis>.</para>
+      Längsschnitte eingetragen werden (derzeit noch nicht verfügbar).</para>
 
       <para><emphasis role="bold">Berechnungsvarianten</emphasis></para>
 
@@ -344,7 +345,7 @@
       einer separaten Berechnungsvariante gespeichert. Damit hat der Benutzer
       die Möglichkeit, mehrere Berechnungsvarianten zunächst zu erstellen, zu
       ändern oder zu löschen und anschließend die Spiegellinienberechnung für
-      diese Berechnungsvarianten im auszuführen.</para>
+      diese Berechnungsvarianten auszuführen.</para>
     </section>
   </section>
 
@@ -355,18 +356,13 @@
       <primary>Startseite von KalypsoWSPM</primary>
     </indexterm>
 
-    <para>Wenn man das Programm Kalypso.exe startet erscheint die
-    Kalypso-Startseite mit allen Plug-in Modulen:</para>
-
-    <itemizedlist>
-      <listitem>
-        <para>Wählen Sie den Button für Kalypso-WSPM</para>
-      </listitem>
-    </itemizedlist>
+    <para>Beim Programmstart erscheint zunächst die Welcome Seite mit einer
+    Auflistung aller verfügbarer Modelle. Hier ist das KalypsoWSPM Modell zu
+    wählen.</para>
 
     <figure>
-      <title>Kalypso-Startseite mit allen Plug-in Modulen (links): Welcome
-      Dialog (rechts)</title>
+      <title>Kalypso Welcome Seite mit allen verfügbaren Modellen (links):
+      KalypsoWSPM Welcome Seite (rechts)</title>
 
       <mediaobject>
         <imageobject>
@@ -376,60 +372,56 @@
       </mediaobject>
     </figure>
 
-    <para>Es erscheint ein Welcome-Dialog mit folgenden Elementen:</para>
+    <para>Die Welcome Seite des KalypsoWSPM Modells erscheint mit folgenden
+    Elementen:</para>
 
     <itemizedlist>
       <listitem>
         <para>Allgemeine Informationen: Hier liegt eine kurze Beschreibung zum
-        Kalypso-WSPM</para>
+        Modell vor.</para>
       </listitem>
 
       <listitem>
-        <para><inlinemediaobject>
+        <para>Neues Projekt erstellen: Über diese Option kann man ein neues
+        KalypsoWSPM Projekt erstellen (siehe Kapitel 2.2). Wählen Sie hierfür
+        den Button <inlinemediaobject>
             <imageobject>
               <imagedata fileref="img/WSPM/Icon_NeuesProjekt.png" />
             </imageobject>
-          </inlinemediaobject> Neues Projekt erstellen: Über diese Option kann
-        man ein neues Kalypso-WSPM Projekt im referenzierten Workspace anlegen
-        und erhält ein leeres Projekt. (siehe Kapitel 3.2)</para>
+          </inlinemediaobject></para>
       </listitem>
 
       <listitem>
-        <para><inlinemediaobject>
+        <para>WspWin Projekt importieren: Über diese Option kann man ein
+        bereits bestehendes WspWin-Projekt importieren (siehe Kapitel 2.3).
+        Wählen Sie hierfür den Button <inlinemediaobject>
             <imageobject>
               <imagedata fileref="img/WSPM/Icon_WspWinProjekt_importieren.png" />
             </imageobject>
-          </inlinemediaobject> WspWin Projekt importieren: Über diese Option
-        kann man ein bereits bestehendes WspWin-Projekt einladen. Hierzu ist
-        beim browsen lediglich der Überordner des WspWin-Projektes anzugeben.
-        In diesem Überordner müssen sich die Unterordner prof (mit den
-        Gewässerprofilen, dem Projekt und Stangdateien) und dath (mit
-        Ergebnissen) befinden. Beim Import werden alle Eingangsdaten
-        importiert. Berechnungsergebnisse müssen jedoch neu erzeugt
-        werden.<xref
+          </inlinemediaobject> <xref
         linkend="kalypso_wspm-wspwin_Projekt_importieren" /></para>
       </listitem>
 
       <listitem>
-        <para><inlinemediaobject>
+        <para>Bereits vorhandene Projekte bearbeiten: Über diese Option
+        gelangt man direkt in die Spiegellinienmodellierung (siehe Kapitel
+        2.4). Wählen Sie hierfür den Button <inlinemediaobject>
             <imageobject>
               <imagedata fileref="img/WSPM/Icon_VorhandenesProjekt.png" />
             </imageobject>
-          </inlinemediaobject>Bereits vorhandene Projekte bearbeiten: Über
-        diese Option gelangt man direkt in das Kalypso-WSPM Modul ohne zuvor
-        eine Aktion auszuführen.</para>
+          </inlinemediaobject></para>
       </listitem>
     </itemizedlist>
 
     <section id="kalypso_wspm-Perspektiven_Views">
-      <title>Perspektiven und Views in Kalypso-WSPM</title>
+      <title>Perspektiven und Views in KalypsoWSPM</title>
 
       <indexterm>
         <primary>Perspektiven und Views in KalypsoWSPM</primary>
       </indexterm>
 
-      <para>Grundsätzlich stehen für die Bearbeitung eines WSPM-Modells zwei
-      vordefinierte Perspektiven dem Nutzer zur Verfügung:</para>
+      <para>Grundsätzlich stehen für die Bearbeitung eines WSPM-Modells dem
+      Nutzer zwei vordefinierte Perspektiven zur Verfügung:</para>
 
       <itemizedlist>
         <listitem>
@@ -447,7 +439,8 @@
       ...</guimenuitem> kann auch die Perspektive
       <guimenu>Profileditor</guimenu> geöffnet werden. Der Wechsel zwischen
       den Perspektiven ist über die Reiter am oberen Rand (unterhalb der
-      Menuleiste) möglich.</para>
+      Menuleiste) möglich. Generell wird zur Profilbearbeitung automatisch der
+      Profileditor geöffnet.</para>
 
       <figure>
         <title>Wechsel zwischen den Perspektiven über Reiter</title>
@@ -522,7 +515,7 @@
           </listitem>
 
           <listitem>
-            <para>FeatureView: für Bearbeitung von Features (Eigenschaften)
+            <para>FeatureView: für Bearbeitung von Features (Elementen)
             (rechts)</para>
           </listitem>
         </itemizedlist>
@@ -622,19 +615,19 @@
         <primary>Neues KalypsoWSPM Projekt erstellen</primary>
       </indexterm>
 
-      <para>Grundsätzlich kann ein WSPM-Projekt beim Programmstart oder in der
-      bereits geöffneten KALYPSOWSPM-Oberfläche über den Navigator neu
-      angelegt werden.</para>
-
-      <para><emphasis role="bold">1. Variante: Neues Projekt erstellen aus der
-      Startseite heraus</emphasis></para>
-
       <para>Für das Anlegen eines neuen WSPM-Projektes ist der Button
-      <guibutton>Neues Projekt erstellen</guibutton> zu wählen. Es erscheint
-      folgendes Pop-up-window:</para>
+      <guibutton>Neues Projekt erstellen</guibutton> zu wählen. Im Assistenten
+      müssen Sie einen Projektnamen eingeben, z.B. Testfluss. Wählen Sie
+      <guibutton>Fertig stellen</guibutton>, um das Projekt zu
+      generieren.</para>
+
+      <para>Wahlweise kann derselbe Assistent auch aus dem Navigator heraus
+      erreicht werden. Klicken Sie hierfür mit der rechten Maustaste in den
+      Navigatorbereich und wählen Sie im Menü <guimenuitem>Neu... &gt; TUHH
+      1d-Spiegellinienberechnung &gt; Projekt</guimenuitem>.</para>
 
       <figure>
-        <title>Neues Kalypso-WSPM Projekt anlegen</title>
+        <title>Assistent zum Anlegen eines neuen KalypsoWSPM Projektes</title>
 
         <mediaobject>
           <imageobject>
@@ -642,131 +635,6 @@
           </imageobject>
         </mediaobject>
       </figure>
-
-      <itemizedlist>
-        <listitem>
-          <para>Projektname eingeben z.B: Testfluss</para>
-        </listitem>
-
-        <listitem>
-          <para>Wählen Sie <guibutton>Fertig stellen</guibutton>, um das
-          Projekt zu generieren</para>
-        </listitem>
-      </itemizedlist>
-
-      <para>Ein neues leeres Projekt wird im referenzierten Workspace
-      erzeugt.</para>
-
-      <para><emphasis>Es erscheint ein weiteres Pop-up-window mit der Frage,
-      ob das neue Datenmodell ein Spiegellinienmodell sei. Hier muss
-      <guibutton>Ja</guibutton> (Fehlermeldung!) gewählt werden</emphasis>
-      <emphasis role="bold">????</emphasis>.</para>
-
-      <para>Kalypso1d hat das Projekt erzeugt und eine „Default“-Struktur
-      angelegt <xref
-      linkend="kalypso_wspm-Perspektive_Spiegellinienberechnung" /></para>
-
-      <para><emphasis role="bold">2. Variante: Neues Projekt erstellen aus der
-      Startseite heraus</emphasis></para>
-
-      <para>Gehen Sie in den Navigatorbereich, um dort ein neues Projekt
-      anzulegen.</para>
-
-      <itemizedlist>
-        <listitem>
-          <para>Klicken Sie mit der rechten Maustaste in den
-          Navigatorbereich.</para>
-        </listitem>
-
-        <listitem>
-          <para><guimenuitem>Neu... &gt; TUHH 1d-Spiegellinienberechnung &gt;
-          Projekt</guimenuitem></para>
-        </listitem>
-
-        <listitem>
-          <para>Projektname vergeben <guibutton>Fertig
-          stellen</guibutton></para>
-        </listitem>
-      </itemizedlist>
-
-      <para><emphasis>Es erscheint ein Pop-up-window mit der Frage, ob das
-      neue Datenmodell ein Spiegellinienmodell sei. Hier muss
-      <guibutton>Ja</guibutton> (Fehlermeldung!) gewählt
-      werden</emphasis>.</para>
-
-      <para>Kalypso1d hat das Projekt erzeugt und eine „Default“-Struktur
-      angelegt <xref
-      linkend="kalypso_wspm-Perspektive_Spiegellinienberechnung" /></para>
-
-      <section id="kalypso_wspm-neues_gewässer">
-        <title>Definition eines neuen Gewässers im Projekt</title>
-
-        <indexterm>
-          <primary>Neues Gewässer im KalypsoWSPM Projekt anlegen</primary>
-        </indexterm>
-
-        <para>Gehen Sie ins Bäumchen:</para>
-
-        <itemizedlist>
-          <listitem>
-            <para>Geben Sie dem Projekt einen Namen und ggf eine Beschreibung
-            im FeatureView ein.</para>
-          </listitem>
-        </itemizedlist>
-
-        <figure>
-          <title>Definition des Projekt-Namens im FeatureView</title>
-
-          <mediaobject>
-            <imageobject>
-              <imagedata fileref="img/WSPM/FeatureView_Projektname.png" />
-            </imageobject>
-          </mediaobject>
-        </figure>
-
-        <itemizedlist>
-          <listitem>
-            <para>Öffnen Sie im Bäumchen das Projekt</para>
-          </listitem>
-
-          <listitem>
-            <para>Gehen Sie mit der rechten Maustaste auf
-            <guimenuitem>Gewässer &gt; Neu &gt; Gewässer</guimenuitem></para>
-          </listitem>
-        </itemizedlist>
-
-        <figure>
-          <title>Einfügen eines neuen Gewässers im Bäumchen</title>
-
-          <mediaobject>
-            <imageobject>
-              <imagedata align="left" fileref="img/WSPM/NeuesGewaesser.png"
-                         scale="100" />
-            </imageobject>
-          </mediaobject>
-        </figure>
-
-        <itemizedlist>
-          <listitem>
-            <para>Nun kann ein neues Gewässer angelegt werden</para>
-          </listitem>
-
-          <listitem>
-            <para>Geben Sie dem Gewässer einen Namen und ggf eine Beschreibung
-            im FeatureView ein</para>
-          </listitem>
-        </itemizedlist>
-
-        <figure>
-          <title>Definition eines neuen Gewässernamens im FeatureView</title>
-
-          <mediaobject>
-            <imageobject>
-              <imagedata fileref="img/WSPM/FeatureView_Gewaessername.png" />
-            </imageobject>
-          </mediaobject>
-        </figure>
-      </section>
     </section>
 
     <section id="kalypso_wspm-wspwin_Projekt_importieren">
@@ -776,15 +644,9 @@
         <primary>WspWin-Projekte in KalypsoWSPM importieren</primary>
       </indexterm>
 
-      <para>Grundsätzlich kann ein WspWin-Projekt beim Programmstart oder in
-      der bereits geöffneten KALYPSO-WSPM Oberfläche über den Navigator
-      importiert werden.</para>
-
-      <para>Wählen Sie auf der Startseite den Button <inlinemediaobject>
-          <imageobject>
-            <imagedata fileref="img/WSPM/Icon_WspWinProjekt_importieren.png" />
-          </imageobject>
-        </inlinemediaobject> um ein WspWin-Projekt zu importieren.</para>
+      <para>Für den Import eines WspWin-Projektes ist der Button
+      <guibutton>WspWin-Projekt importieren</guibutton> zu wählen. Führen Sie
+      im Assistenten folgende Schritte durch:</para>
 
       <itemizedlist>
         <listitem>
@@ -798,34 +660,11 @@
         </listitem>
       </itemizedlist>
 
-      <para><emphasis role="bold">Alternativ:</emphasis></para>
-
-      <para>Wählen Sie auf der Startseite den Button <inlinemediaobject>
-          <imageobject>
-            <imagedata fileref="img/WSPM/Icon_VorhandenesProjekt.png" />
-          </imageobject>
-        </inlinemediaobject><guibutton> Bereits vorhandene Projekte
-      bearbeiten</guibutton> und klicken Sie anschließend im Navigatorbereich
-      mit der rechten Maustaste. Führen Sie folgende Schritte durch, um ein
-      Projekt zu importieren.</para>
-
-      <itemizedlist>
-        <listitem>
-          <para><guimenuitem>Neu... &gt; Projekt &gt; Kalypso &gt;
-          Spiegellinienberechnung &gt; TUHH ... aus WspWinProjekt &gt;
-          Weiter</guimenuitem></para>
-        </listitem>
-
-        <listitem>
-          <para>Pfad browsen mit Projekt-Ordner nur Überordner aktivieren
-          <guimenuitem>OK &gt; Weiter</guimenuitem></para>
-        </listitem>
-
-        <listitem>
-          <para>Projektname vergeben <guibutton>Fertig
-          stellen</guibutton></para>
-        </listitem>
-      </itemizedlist>
+      <para>Wahlweise kann derselbe Assistent auch aus dem Navigator heraus
+      erreicht werden. Klicken Sie hierfür mit der rechten Maustaste in den
+      Navigatorbereich und wählen Sie im Menü <guimenuitem>Neu... &gt; Projekt
+      &gt; Kalypso &gt; Spiegellinienberechnung &gt; TUHH ... aus
+      WspWinProjekt &gt; Weiter</guimenuitem>.</para>
 
       <figure>
         <title>Dialog für „neues Projekt anlegen“ und Browsen des
@@ -840,7 +679,8 @@
         </mediaobject>
       </figure>
 
-      <para><emphasis role="bold">Haben Sie Probleme?</emphasis></para>
+      <para><emphasis role="bold">Eventuell vorhandene
+      Probleme</emphasis></para>
 
       <itemizedlist>
         <para>Wenn Fehlermeldung zu fehlenden Profilen z.B: „ko000259.prf
@@ -907,25 +747,6 @@
           </mediaobject>
         </figure>
 
-        <itemizedlist>
-          <listitem>
-            <para>Öffnen Sie im Explorer diesen Ordner und wählen Sie im
-            Unterordner den letzten Ordner und kopieren den Dath Ordner heraus
-            <emphasis role="bold">?????</emphasis></para>
-          </listitem>
-
-          <listitem>
-            <para>Kopieren Sie Ihr ursprünglich importiertes WspWin-Projekt
-            und fügen Sie nur die neuen Profile (unter Prof) ein <emphasis
-            role="bold">?????</emphasis></para>
-          </listitem>
-        </itemizedlist>
-
-        <note>
-          <para>Sie müssen die gleichen Namen wie zuvor im WspWin-Ordner
-          haben.</para>
-        </note>
-
         <para>Neu angelegte Berechnungsfälle, Zustände oder Ergebnisse können
         nicht in WspWin zurückgeführt werden.</para>
       </section>
@@ -939,12 +760,8 @@
         bearbeiten</primary>
       </indexterm>
 
-      <para>Wählen Sie auf der Startseite den Button <inlinemediaobject>
-          <imageobject>
-            <imagedata fileref="img/WSPM/Icon_VorhandenesProjekt.png" />
-          </imageobject>
-        </inlinemediaobject><guibutton> Bereits vorhandene Projekte
-      bearbeiten</guibutton>.</para>
+      <para>Wählen Sie auf der KalypsoWSPM Welcome Seite den Button
+      <guibutton> Bereits vorhandene Projekte bearbeiten</guibutton>.</para>
 
       <section id="kalypso_wspm-Import_wspmProjekt">
         <title>Import eines bestehenden Kalypso-WSPM-Projektes aus einem
@@ -980,14 +797,14 @@
                       </listitem>
 
                       <listitem>
-                        <para>Neben dem Projects Fenster auf
+                        <para>Neben dem "Projekte" Fenster auf
                         <guibutton>Anzeige aktualisieren</guibutton>
                         gehen</para>
                       </listitem>
 
                       <listitem>
                         <para>Aus der Liste das Projekt auswählen und gehen
-                        Sie anschließend auf <guibutton>Fertig
+                        Sie anschließend <guibutton>Fertig
                         stellen</guibutton></para>
                       </listitem>
                     </itemizedlist></para>
@@ -1002,14 +819,14 @@
                       </listitem>
 
                       <listitem>
-                        <para>Neben dem Projects Fenster auf
+                        <para>Neben dem "Projekte" Fenster auf
                         <guibutton>Anzeige aktualisieren</guibutton>
                         gehen</para>
                       </listitem>
 
                       <listitem>
                         <para>Wählen Sie ein Projekt aus oder mehrere und
-                        gehen anschließen auf <guibutton>Fertig
+                        gehen anschließen <guibutton>Fertig
                         stellen</guibutton></para>
                       </listitem>
                     </itemizedlist></para>
@@ -1028,253 +845,152 @@
           </mediaobject>
         </figure>
       </section>
+    </section>
+  </section>
 
-      <section id="kalypso_wspm-Projekt_Öffnen_Navigator">
-        <title>Öffnen eines Projektes aus dem Navigator</title>
+  <section>
+    <title id="kalypso_wspm-Modellstruktur">Modellstruktur</title>
 
-        <indexterm>
-          <primary>Öffnen eines KalypsoWSPM Projektes aus dem
-          Navigator</primary>
-        </indexterm>
+    <indexterm>
+      <primary>Modellstruktur eines KalypsoWSPM Projektes</primary>
+    </indexterm>
 
-        <para>Gehen Sie im Navigator auf das Projekt, welches geöffnet werden
-        soll und markieren Sie <filename>model.gml</filename>. Nun soll eine
-        Ansicht aus der GIS Vorlagenauswahl gewählt werden. Es gibt zwei
-        Möglichkeiten diese zu öffnen:</para>
+    <para>Gehen Sie im Navigator auf das Projekt, welches geöffnet werden soll
+    und markieren Sie <filename>model.gml</filename>. Nun soll eine Ansicht
+    aus der GIS Vorlagenauswahl gewählt werden. Es gibt zwei Möglichkeiten die
+    Ansicht auf die Daten zu öffnen:</para>
 
-        <orderedlist>
+    <orderedlist>
+      <listitem>
+        <para>Doppelklick auf <filename>modell.gml</filename> oder</para>
+      </listitem>
+
+      <listitem>
+        <para>mit der rechten Maustaste auf <guimenuitem>modell.gml &gt;Öffnen
+        mit... &gt; GIS Vorlagenauswahl</guimenuitem></para>
+      </listitem>
+    </orderedlist>
+
+    <para>Jetzt kann die gewünschte Ansicht ausgewählt werden: Baum-, Feature-
+    oder Karten-Ansicht.</para>
+
+    <figure>
+      <title>Öffnen eines Projektes aus dem Navigator</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/WSPM/Oeffnen_aus_Navigator_01.png" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <section id="kalypso_wspm-Projekt_Öffnen_Navigator">
+      <title id="kalypso_wspm-Funktionen-Baumansicht">Zusätzliche Funktionen
+      in der Baumansicht</title>
+
+      <indexterm>
+        <primary>Arbeiten in der Baumansicht in KalypsoWSPM</primary>
+      </indexterm>
+
+      <para>Markieren Sie <guimenuitem>Baumansicht</guimenuitem> und klicken
+      sie auf <guibutton>OK</guibutton>, sofort wird der Standard-Baum
+      erzeugt. Hier können neue Features hinzugefügt werden: rechte Maustaste
+      benutzen und <guimenuitem>Neu</guimenuitem> auswählen. Ein Bearbeiten
+      ist im Feature View (rechts außen) möglich</para>
+
+      <figure>
+        <title>Baumansicht und Feature View</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/WSPM/Baumansicht.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Über dem Feature View finden Sie (je nach Element) folgende
+      Zusatzfunktionen für KalypsoWSPM:</para>
+
+      <table align="center" id="kalypso_na-mapping_teilgebiete">
+        <title>Symbole im Feature View</title>
+
+        <tgroup align="center" cols="2">
+          <colspec align="left" colwidth="1*" />
+
+          <colspec align="left" />
+
+          <colspec align="left" />
+
+          <thead>
+            <row>
+              <entry>Symbole</entry>
+
+              <entry>Beschreibung</entry>
+            </row>
+          </thead>
+
+          <tbody>
+            <row>
+              <entry><figure>
+                  <mediaobject>
+                    <imageobject>
+                      <imagedata align="center"
+                                 fileref="img/WSPM/FeatureViewSymbole_Observation.png"
+                                 scale="100" />
+                    </imageobject>
+                  </mediaobject>
+                </figure></entry>
+
+              <entry valign="middle">Observation als Tabelle
+              visualisieren</entry>
+            </row>
+
+            <row>
+              <entry><figure>
+                  <mediaobject>
+                    <imageobject>
+                      <imagedata align="center"
+                                 fileref="img/WSPM/FeatureViewSymbole_Editiert_als_Observation.png"
+                                 scale="100" />
+                    </imageobject>
+                  </mediaobject>
+                </figure></entry>
+
+              <entry valign="middle">Editiert das ausgewählte Feature als
+              Observation</entry>
+            </row>
+
+            <row>
+              <entry><figure>
+                  <mediaobject>
+                    <imageobject>
+                      <imagedata align="center"
+                                 fileref="img/WSPM/FeatureViewSymbole_InProfileditorAnsicht.png"
+                                 scale="100" />
+                    </imageobject>
+                  </mediaobject>
+                </figure></entry>
+
+              <entry valign="middle">In die Profileditor-Ansicht
+              wechseln</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+
+      <caution>
+        <itemizedlist>
           <listitem>
-            <para>Doppelklick auf <filename>modell.gml</filename> oder</para>
+            <para>Speichern der reinen Ansicht auf eine Karte unter
+            <guimenuitem>Datei &gt; Speichern unter...</guimenuitem></para>
           </listitem>
 
           <listitem>
-            <para>mit der rechten Maustaste auf <guimenuitem>modell.gml
-            &gt;Öffnen mit... &gt; GIS Vorlagenauswahl</guimenuitem></para>
+            <para>Speichern des Projektes inklusive Daten: Button mittig unter
+            der Menüleiste</para>
           </listitem>
-        </orderedlist>
-
-        <para>Jetzt kann die gewünschte Ansicht ausgewählt werden: Baum-,
-        Feature- oder Karten-Ansicht.</para>
-
-        <figure>
-          <title>Öffnen eines Projektes aus dem Navigator</title>
-
-          <mediaobject>
-            <imageobject>
-              <imagedata fileref="img/WSPM/Oeffnen_aus_Navigator_01.png" />
-            </imageobject>
-          </mediaobject>
-        </figure>
-
-        <section id="kalypso_wspm-Baumansicht">
-          <title>Arbeiten in der Baumansicht</title>
-
-          <indexterm>
-            <primary>Arbeiten in der Baumansicht in KalypsoWSPM</primary>
-          </indexterm>
-
-          <itemizedlist>
-            <listitem>
-              <para>Markieren Sie <guimenuitem>Baumansicht</guimenuitem> und
-              klicken sie auf <guibutton>OK</guibutton>, sofort wird der
-              Standard-Baum erzeugt.</para>
-            </listitem>
-
-            <listitem>
-              <para>Hier können neue Features hinzugefügt werden: rechte
-              Maustaste benutzen und <guimenuitem>Neu</guimenuitem>
-              auswählen</para>
-            </listitem>
-
-            <listitem>
-              <para>Ein Bearbeiten ist im Feature View (rechts außen)
-              möglich</para>
-            </listitem>
-          </itemizedlist>
-
-          <figure>
-            <title>Baumansicht und Feature View</title>
-
-            <mediaobject>
-              <imageobject>
-                <imagedata fileref="img/WSPM/Baumansicht.png" />
-              </imageobject>
-            </mediaobject>
-          </figure>
-
-          <para>Über dem Feature View findest Du (je nach Feature) folgende
-          Symbole:</para>
-
-          <table align="center" id="kalypso_na-mapping_teilgebiete">
-            <title>Symbole im Feature View</title>
-
-            <tgroup align="center" cols="2">
-              <colspec align="left" colwidth="1*" />
-
-              <colspec align="left" />
-
-              <colspec align="left" />
-
-              <thead>
-                <row>
-                  <entry>Symbole</entry>
-
-                  <entry>Beschreibung</entry>
-                </row>
-              </thead>
-
-              <tbody>
-                <row>
-                  <entry><figure>
-                      <mediaobject>
-                        <imageobject>
-                          <imagedata align="center"
-                                     fileref="img/WSPM/FeatureViewSymbole_Observation.png"
-                                     scale="100" />
-                        </imageobject>
-                      </mediaobject>
-                    </figure></entry>
-
-                  <entry valign="middle">Observation als Tabelle
-                  visualisieren</entry>
-                </row>
-
-                <row>
-                  <entry><figure>
-                      <mediaobject>
-                        <imageobject>
-                          <imagedata align="center"
-                                     fileref="img/WSPM/FeatureViewSymbole_Editiert_als_Observation.png"
-                                     scale="100" />
-                        </imageobject>
-                      </mediaobject>
-                    </figure></entry>
-
-                  <entry valign="middle">Editiert das ausgewählte Feature als
-                  Observation</entry>
-                </row>
-
-                <row>
-                  <entry><figure>
-                      <mediaobject>
-                        <imageobject>
-                          <imagedata align="center"
-                                     fileref="img/WSPM/FeatureViewSymbole_NeuesFeature.png"
-                                     scale="100" />
-                        </imageobject>
-                      </mediaobject>
-                    </figure></entry>
-
-                  <entry valign="middle">Erstellt ein neues Feature/ neues
-                  default Feature wird eingefügt</entry>
-                </row>
-
-                <row>
-                  <entry><figure>
-                      <mediaobject>
-                        <imageobject>
-                          <imagedata align="center"
-                                     fileref="img/WSPM/FeatureViewSymbole_Feature_bearbeiten.png"
-                                     scale="100" />
-                        </imageobject>
-                      </mediaobject>
-                    </figure></entry>
-
-                  <entry valign="middle">Feature editieren/ bearbeiten</entry>
-                </row>
-
-                <row>
-                  <entry><figure>
-                      <mediaobject>
-                        <imageobject>
-                          <imagedata align="center"
-                                     fileref="img/WSPM/FeatureViewSymbole_Feature_loeschen.png"
-                                     scale="100" />
-                        </imageobject>
-                      </mediaobject>
-                    </figure></entry>
-
-                  <entry valign="middle">Feature löschen</entry>
-                </row>
-
-                <row>
-                  <entry><figure>
-                      <mediaobject>
-                        <imageobject>
-                          <imagedata align="center"
-                                     fileref="img/WSPM/FeatureViewSymbole_InProfileditorAnsicht.png"
-                                     scale="100" />
-                        </imageobject>
-                      </mediaobject>
-                    </figure></entry>
-
-                  <entry valign="middle">In die Profileditor-Ansicht
-                  wechseln</entry>
-                </row>
-
-                <row>
-                  <entry><figure>
-                      <mediaobject>
-                        <imageobject>
-                          <imagedata align="center"
-                                     fileref="img/WSPM/FeatureViewSymbole_Feature_duplizieren.png"
-                                     role="" scale="100" />
-                        </imageobject>
-                      </mediaobject>
-                    </figure></entry>
-
-                  <entry valign="middle">Feature duplizieren: markiertes
-                  Feature wird kopiert</entry>
-                </row>
-
-                <row>
-                  <entry><figure>
-                      <mediaobject>
-                        <imageobject>
-                          <imagedata align="center"
-                                     fileref="img/WSPM/FeatureViewSymbole_Reihe_nach_oben.png"
-                                     scale="100" />
-                        </imageobject>
-                      </mediaobject>
-                    </figure></entry>
-
-                  <entry valign="middle">Feature in der Reihe nach oben
-                  verschieben</entry>
-                </row>
-
-                <row>
-                  <entry><figure>
-                      <mediaobject>
-                        <imageobject>
-                          <imagedata align="center"
-                                     fileref="img/WSPM/FeatureViewSymbole_Reihe_nach_unten.png"
-                                     scale="100" />
-                        </imageobject>
-                      </mediaobject>
-                    </figure></entry>
-
-                  <entry valign="middle">Feature in der Reihe nach unten
-                  verschieben</entry>
-                </row>
-              </tbody>
-            </tgroup>
-          </table>
-
-          <caution>
-            <itemizedlist>
-              <listitem>
-                <para>Speichern der reinen Ansicht unter <guimenuitem>Datei
-                &gt; Speichern unter...</guimenuitem></para>
-              </listitem>
-
-              <listitem>
-                <para>Speichern des Projektes inklusive Daten: Button mittig
-                unter der Menüleiste</para>
-              </listitem>
-            </itemizedlist>
-          </caution>
-        </section>
-      </section>
+        </itemizedlist>
+      </caution>
     </section>
   </section>
 
@@ -1307,6 +1023,77 @@
       </listitem>
     </orderedlist>
 
+    <section id="kalypso_wspm-neues_gewässer">
+      <title id="kalypso_wspm-Gewässer_Neu">Definition eines neuen Gewässers
+      im Projekt</title>
+
+      <indexterm>
+        <primary>Neues Gewässer im KalypsoWSPM Projekt anlegen</primary>
+      </indexterm>
+
+      <para>Gehen Sie in den Baum:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Geben Sie dem Projekt einen Namen und ggf eine Beschreibung im
+          FeatureView ein.</para>
+        </listitem>
+      </itemizedlist>
+
+      <figure>
+        <title>Definition des Projekt-Namens im FeatureView</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/WSPM/FeatureView_Projektname.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <itemizedlist>
+        <listitem>
+          <para>Öffnen Sie im Baum das Projekt</para>
+        </listitem>
+
+        <listitem>
+          <para>Gehen Sie mit der rechten Maustaste auf <guimenuitem>Gewässer
+          &gt; Neu &gt; Gewässer</guimenuitem></para>
+        </listitem>
+      </itemizedlist>
+
+      <figure>
+        <title>Einfügen eines neuen Gewässers im Bäumchen</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata align="left" fileref="img/WSPM/NeuesGewaesser.png"
+                       scale="100" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <itemizedlist>
+        <listitem>
+          <para>Nun kann ein neues Gewässer angelegt werden</para>
+        </listitem>
+
+        <listitem>
+          <para>Geben Sie dem Gewässer einen Namen und ggf eine Beschreibung
+          im FeatureView ein</para>
+        </listitem>
+      </itemizedlist>
+
+      <figure>
+        <title>Definition eines neuen Gewässernamens im FeatureView</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/WSPM/FeatureView_Gewaessername.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </section>
+
     <section id="kalypso_wspm-Profile_editieren">
       <title>Profile editieren</title>
 
@@ -1314,12 +1101,12 @@
         <primary>Kalypso WSPM Profile editieren</primary>
       </indexterm>
 
-      <para>Eine Profildatei enthält alle geometrischen und hydraulischen
-      Daten, die ein Querprofil beschreiben. Ihr Inhalt variiert in
+      <para>Ein Profilelement enthält alle geometrischen und hydraulischen
+      Daten, die ein Querprofil beschreiben. Die Daten variieren in
       Abhängigkeit vom Profiltyp (z.B. Normalprofil, Brückenprofil,
-      Wehrprofil). Die Profildatei definiert sich über dem Profilnamen
+      Wehrprofil). Das Profilelement definiert sich über dem Profilnamen
       (Stations-km, Profilzustand), über den das Profil referenzierbar ist.
-      Die Profildatei ist sowohl alphanumerisch wie auch grafisch-interaktiv
+      Das Profilelement ist sowohl tabellarisch als auch grafisch-interaktiv
       editierbar.</para>
 
       <para>Um ein neues Profil anzulegen:</para>
@@ -1331,7 +1118,7 @@
         </listitem>
 
         <listitem>
-          <para>Öffnen Sie in dem Datenbaum das gewünschte Gewässer aus</para>
+          <para>Wählen Sie in dem Datenbaum das gewünschte Gewässer aus</para>
         </listitem>
 
         <listitem>
@@ -1341,7 +1128,7 @@
 
         <listitem>
           <para>Markieren Sie das neue Profil und geben Sie im FeatureView
-          eine Stationsnummer und eine Bezeichnung an.</para>
+          eine Stationsnummer und ggf. eine Bezeichnung an.</para>
         </listitem>
       </itemizedlist>
 
@@ -1414,7 +1201,7 @@
       </itemizedlist>
 
       <figure>
-        <title>Ansichten Öffnen im Profileditor</title>
+        <title>Ansichten öffnen im Profileditor</title>
 
         <mediaobject>
           <imageobject>
@@ -1422,42 +1209,6 @@
           </imageobject>
         </mediaobject>
       </figure>
-
-      <section id="kalypso_wspm-Profileditor">
-        <title>Ansicht im Profileditor</title>
-
-        <indexterm>
-          <primary>Profileditor in KalypsoWSPM</primary>
-        </indexterm>
-
-        <para>Anordnung der vier Views in der Perspektive ist, wie in allen
-        Kalypso-Produkten frei wählbar. Nachstehende Anordnung wird für ein
-        rasches Editieren empfohlen:</para>
-
-        <itemizedlist>
-          <listitem>
-            <para>Oben links: Legende, Layeransicht und Tabelle</para>
-          </listitem>
-
-          <listitem>
-            <para>Unten links: Diagramm</para>
-          </listitem>
-
-          <listitem>
-            <para>Rechts: Navigator</para>
-          </listitem>
-        </itemizedlist>
-
-        <figure>
-          <title>Emfpohlene Anordnung der Views im Profileditor</title>
-
-          <mediaobject>
-            <imageobject>
-              <imagedata fileref="img/WSPM/Profileditor_Ansicht.png" />
-            </imageobject>
-          </mediaobject>
-        </figure>
-      </section>
 
       <section id="kalypso_wspm-Profildiagramm">
         <title>Arbeiten und Darstellung im Profil-Diagramm</title>
@@ -1472,7 +1223,7 @@
           </listitem>
 
           <listitem>
-            <para>hellgrün = Brückenunterkante</para>
+            <para>graublau = Brückenunterkante</para>
           </listitem>
 
           <listitem>
@@ -1496,7 +1247,7 @@
           </listitem>
 
           <listitem>
-            <para>hellgrün = Wehr</para>
+            <para>dunkelgrün = Wehr</para>
           </listitem>
 
           <listitem>
@@ -1565,7 +1316,7 @@
                 <entry valign="middle">Verschieben</entry>
 
                 <entry valign="middle">Blatt anfassen und Bildausschnitt
-                verschieben (z.B. von links nach rechts)</entry>
+                verschieben</entry>
               </row>
 
               <row>
@@ -1654,7 +1405,8 @@
                 <entry valign="middle">Aktuellen Ausschnitt als Bild
                 speichern</entry>
 
-                <entry valign="middle">......</entry>
+                <entry valign="middle">Ablegen des Bildes als jpeg, gif, png,
+                tif oder Icon möglich</entry>
               </row>
             </tbody>
           </tgroup>
@@ -1691,6 +1443,17 @@
             KalypsoWSPM</primary>
           </indexterm>
 
+          <para>Wird ein neues Profil angelegt, so ist die Profiltabelle
+          zunächst leer und enthält keinerlei Einträge. Grundsätzlich können
+          in die Tabelle neue Zeilen eingefügt werden, die je einen Datenpunkt
+          bzw. die Zone rechts des Punktes beschreiben. Oder es können
+          Datensätze (z.B. Bewuchs, Geokoordinaten) eingefügt werden, wodurch
+          die Tabelle sich um eine neue Spalte erweitert. Vor einem Einfügen
+          aller erforderlichen Datensätze macht es Sinn zunächst nur die
+          Geometrie des Profils (Breite und Höhe) vollständig zu erstellen und
+          dann alle weiteren Datensätze zu ergänzen. Um einen ersten
+          Profilpunkt einzufügen sind folgende Schritte erforderlich:</para>
+
           <para><itemizedlist>
               <listitem>
                 <para>Im Navigator ein Profil auswählen</para>
@@ -1701,12 +1464,13 @@
               </listitem>
 
               <listitem>
-                <para>Die rechte Maustaste klicken und <guimenu>Punkt
+                <para>Die rechte Maustaste klicken und <guimenu>&gt;Punkt
                 einfügen</guimenu> wählen</para>
               </listitem>
             </itemizedlist>Für einen ersten Punkt wird ein Punkt mit (0, 0)
-          angelegt. Ein Editieren der Werte ist jetzt möglich. Der neue Punkt
-          wird immer unterhalb der markierten Zeile eingefügt.</para>
+          angelegt. Ein Editieren der Werte (Breite/ Höhe) ist jetzt möglich.
+          Ein neuer Punkt wird immer unterhalb der markierten Zeile
+          eingefügt.</para>
 
           <para>Wenn ein Punkt zwischen zwei Punkten eingefügt wird, so werden
           die z- und y- Werte sowie alle anderen geometrischen Werte (Rauheit,
@@ -1722,6 +1486,9 @@
             KalypsoWSPM</primary>
           </indexterm>
 
+          <para>Mit dem Löschen eines Punktes wird eine Datenzeile vollständig
+          gelöscht!</para>
+
           <para><itemizedlist>
               <listitem>
                 <para>Gehen Sie in die Profileditor Tabelle und selektieren
@@ -1729,11 +1496,11 @@
               </listitem>
 
               <listitem>
-                <para>Klicken Sie anschließend auf die rechte Maustaste und
-                wählen <guimenuitem>Punkt löschen</guimenuitem></para>
+                <para>Klicken Sie auf die rechte Maustaste und wählen
+                <guimenuitem>&gt;Punkt löschen</guimenuitem></para>
               </listitem>
-            </itemizedlist>Alle geometrischen Werte und Rauheiten aus dieser
-          Zeile werden gelöscht. Die Zeile wird entfernt.</para>
+            </itemizedlist>Achtung! Eine undo-Funktion ist nicht
+          verfügbar!</para>
         </section>
 
         <section id="kalypso_wspm-Profileditortabelle_WerteKopieren">
@@ -1744,6 +1511,11 @@
             KalypsoWSPM</primary>
           </indexterm>
 
+          <para>Ein Übertragen von Werten erfolgt nur auf Basis eines
+          Zellenwertes und wird übertragen in die markierten Zeilen der
+          gleichen Spalte. Das heißt, es ist nur ein Kopieren in der gleichen
+          Spalte möglich, jedoch nicht spaltenübergreifend.</para>
+
           <para><itemizedlist>
               <listitem>
                 <para>Gehen Sie in die Profileditor Tabelle und selektieren
@@ -1751,14 +1523,13 @@
               </listitem>
 
               <listitem>
-                <para>Drücken und halten Sie die Shift-Taste und selektieren
-                Sie bis zu der Zeile, in die der Wert übertragen werden
-                soll</para>
+                <para>Drücken und halten Sie die Shift-Taste und markieren Sie
+                die Zeilen, in die der Wert übertragen werden soll</para>
               </listitem>
 
               <listitem>
                 <para>Anschließend auf die rechte Maustaste klicken und
-                <guimenuitem>Werte übertragen</guimenuitem> wählen</para>
+                <guimenuitem>&gt;Werte übertragen</guimenuitem> wählen</para>
               </listitem>
             </itemizedlist><note>
               <para>Man muss mit der Maus auf der Spalte sein, deren Wert
@@ -1768,10 +1539,7 @@
                 <para>Wert aus Zelle wird auf die markierten Zellen
                 übertragen</para>
               </listitem>
-            </itemizedlist>Ein Übertragen von Werten erfolgt nur auf Basis
-          eines Zellenwertes und wird übertragen in die markierten Zeilen der
-          gleichen Spalte. Das heißt, es ist nur ein kopieren in der gleichen
-          Spalte möglich, jedoch nicht spaltenübergreifen.</para>
+            </itemizedlist></para>
 
           <para>Für das Kopieren eines Wertes in die angrenzenden Zeilen gibt
           es noch eine weitere Variante. Klicken Sie hierfür mit der rechten
@@ -1790,6 +1558,14 @@
           <primary>Datensätze in der Profileditor Legende bearbeiten in
           KalypsoWSPM</primary>
         </indexterm>
+
+        <para>Ein Datensatz wird, mit Ausnahme der Fließzonen und der
+        Durchlassprofile, über eine neue Spalte in der Tabelle angezeigt. Je
+        nach Typ des neuen Datensatzes werden die "default" Einträge dieser
+        Spalte mit Null oder mit den Werten der Geländeoberkante belegt.
+        Löscht man einen Datensatz, so gehen alle Informationen in dieser
+        Spalte einschließlich aller daran gekoppelten Parameter und Anzeigen
+        unwiederruflich (!) verloren!</para>
 
         <para>Einfügen eines neuen Datensatzes</para>
 
@@ -1851,7 +1627,7 @@
         Für die Anzeige der Daten im Profildiagramm ist das Häkchen zu
         setzen.</para>
 
-        <para>Dabei kann immer nu an einem Datensatz eines Gewässerprofils
+        <para>Dabei kann immer nur an einem Datensatz eines Gewässerprofils
         gearbeitet werden.</para>
 
         <table align="center"
@@ -1915,7 +1691,7 @@
                   </figure></entry>
 
                 <entry valign="middle">Zur Georeferenzierung der Geländepunkte
-                des Profils (wenn nicht vorhanden ist keine Triangulation und
+                des Profils (wenn nicht vorhanden, ist keine Triangulation und
                 keine Ansicht von Überschwemmungsflächen möglich)</entry>
 
                 <entry valign="middle">Editieren nur in der
@@ -1935,7 +1711,7 @@
 
                 <entry valign="middle">Rauheitsbeiwert in Form der
                 äquivalenten Sandrauheit nach COLEBROOK-WHITE für das
-                Fließgesetzt nach DARCY-WEISBACH</entry>
+                Fließgesetz nach DARCY-WEISSBACH</entry>
 
                 <entry valign="middle">Editieren in der Tabelle, vereinfachte
                 Rauheiten über Layeransicht oder Zuweisen über Polygone in der
@@ -1954,7 +1730,7 @@
                   </figure></entry>
 
                 <entry valign="middle">Bewuchsparameter ax, ay und dp für den
-                Ansatz von Raheit durch Bewuchs nach LINDER/ PASCHE</entry>
+                Ansatz von Rauheit durch Bewuchs nach LINDER/ PASCHE</entry>
 
                 <entry valign="middle">Editieren nur in der Tabelle oder
                 Zuweisen über Polygone in der Karte<para>Einheit in
@@ -1975,8 +1751,8 @@
                 <entry valign="middle">Ein- oder mehrfeldiges Wehrbauwerk im
                 Gewässer</entry>
 
-                <entry valign="middle">Eiditieren der Geometrie in der Tabelle
-                und zuweisen der Parameter (Wehrtyp) in der
+                <entry valign="middle">Editieren der Geometrie in der Tabelle
+                und Zuweisen der Parameter (Wehrtyp) in der
                 Layeransicht</entry>
               </row>
 
@@ -1995,7 +1771,7 @@
                 Ober- und Unterkante der Brücke</entry>
 
                 <entry valign="middle">Editieren der Geometrie in der Tabelle
-                und zuweisen der Parameter in der Layeransicht</entry>
+                und Zuweisen der Parameter in der Layeransicht</entry>
               </row>
 
               <row>
@@ -2012,7 +1788,7 @@
                 <entry valign="middle">Trapez-Durchlass statt offenes
                 Gerinne</entry>
 
-                <entry valign="middle">Editieren der Geometrie und zuweisen
+                <entry valign="middle">Editieren der Geometrie und Zuweisen
                 der Parameter in der Layeransicht (keine Spalte in der
                 Tabelle)</entry>
               </row>
@@ -2031,7 +1807,7 @@
                 <entry valign="middle">Maulprofil-Durchlass statt offenes
                 Gerinne</entry>
 
-                <entry valign="middle">Editieren der Geometrie und zuweisen
+                <entry valign="middle">Editieren der Geometrie und Zuweisen
                 der Parameter in der Layeransicht (keine Spalte in der
                 Tabelle)</entry>
               </row>
@@ -2050,7 +1826,7 @@
                 <entry valign="middle">Eiprofil-Durchlass statt offenes
                 Gerinne</entry>
 
-                <entry valign="middle">Editieren der Geometrie und zuweisen
+                <entry valign="middle">Editieren der Geometrie und Zuweisen
                 der Parameter in der Layeransicht (keine Spalte in der
                 Tabelle)</entry>
               </row>
@@ -2069,7 +1845,7 @@
                 <entry valign="middle">Kreis-Durchlass statt offenes
                 Gerinne</entry>
 
-                <entry valign="middle">Editieren der Geometrie und zuweisen
+                <entry valign="middle">Editieren der Geometrie und Zuweisen
                 der Parameter in der Layeransicht (keine Spalte in der
                 Tabelle)</entry>
               </row>
@@ -2085,7 +1861,7 @@
           </indexterm>
 
           <para>Die Geländehöhe des Gewässerprofils wird über eine Liste von
-          Punkten die einen Linienzug definieren festgelegt. Hierzu sind die
+          Punkten, die einen Linienzug definieren, festgelegt. Hierzu sind die
           z- und y- Werte des Profils in der Tabelle anzugeben. Das Profil
           wird für den Benutzer immer als Schnitt in Fließrichtung angezeigt.
           Dabei wird die x-Achse des Gewässers immer senkrecht zur definierten
@@ -2104,11 +1880,11 @@
 
           <para>Die y-Koordinaten sind als relative Koordinaten entlang der
           Profillinie zu interpretieren. Die Gewässerachse muss daher nicht
-          bei y = 0 angeordnet sein und zum Beispiel am linken oder rechten
-          Rand der Profillinie liegen. Die Profillinien können, wenn die
-          Profilpunkte eine Georeferenz aufweisen in einer Karte angezeigt
-          werden. Die Karte zeigt eine Aufsicht auf das Gewässer mit den
-          Profillinien und dem dazugehörigen Profil-km.</para>
+          bei y = 0 angeordnet sein und kann zum Beispiel am linken oder
+          rechten Rand der Profillinie liegen. Die Profillinien können, wenn
+          die Profilpunkte eine Georeferenz aufweisen, in einer Karte
+          angezeigt werden. Die Karte zeigt eine Aufsicht auf das Gewässer mit
+          den Profillinien und dem dazugehörigen Profil-km.</para>
 
           <figure>
             <title>Kartenansicht auf ein Gewässer mit georeferenzierten
@@ -2121,7 +1897,7 @@
             </mediaobject>
           </figure>
 
-          <para>Sind Geländepunkte im Profil definiert so können im
+          <para>Sind Geländepunkte im Profil definiert, so können im
           Profil-Diagramm die Punkte horizontal und/ oder vertikal mit der
           Maus verschoben werden. Hierzu ist in der Layeransicht die
           Voreinstellung zum Editieren per Maus auszuwählen, danach ist der
@@ -2141,7 +1917,7 @@
 
           <note>
             <para>Keine senkrechten Linien eingeben: Alle geometrischen Werte
-            müssen mindestens 0,005 m in y-Richtung voneinander entfert sein.
+            müssen mindestens 0,005 m in y-Richtung voneinander entfernt sein.
             Dies gilt auch für Brücken.</para>
           </note>
         </section>
@@ -2183,9 +1959,10 @@
           angesetzt. Die Lage der Trennflächen ist an den Übergängen zwischen
           extremen Rauheitssprüngen und/ oder Zunahme der Geländehöhe
           anzusetzen. Grundsätzlich sind die zwei Trennflächen am Übergang zu
-          den maßgebendsten Rauheitsverlusten anzuordnen. Dies ist an
-          Brückenbauwerken die Innenkante des Brückenwiderlagers und an
-          Wehrbauwerken die Schnittpunkte GOK mit Wehroberkante.</para>
+          den maßgebendsten Rauheitsverlusten anzuordnen. Dies sind an
+          Brückenbauwerken die Innenkanten des Brückenwiderlagers und an
+          Wehrbauwerken die Schnittpunkte der Geländeoberkante mit
+          Wehroberkante.</para>
 
           <figure>
             <title>Definition der Fließzonen an einer Brücke (links) und am
@@ -2229,17 +2006,14 @@
               linkend="kalypso_wspm-Profileditorlegende_Geländehöhe" />) der
               Trennfläche anzugeben</para>
             </listitem>
-
-            <listitem>
-              <para>Die Trennflächen können auch nachträglich mit dem
-              Editierstift in dem Profileditor-Diagramm verschoben
-              werden</para>
-            </listitem>
           </itemizedlist>
+
+          <para>Die Trennflächen können auch nachträglich mit dem Editierstift
+          in dem Profileditor-Diagramm verschoben werden.</para>
 
           <para>Die Trennflächen werden im Diagramm als vertikale grüne Linien
           angezeigt und in der Tabelle über einen grünen Strich am Anfang der
-          Zeile</para>
+          Zeile.</para>
 
           <note>
             <para><emphasis role="bold">Derzeit wird dem Benutzer auch eine
@@ -2291,36 +2065,20 @@
               linkend="kalypso_wspm-Profileditorlegende_Geländehöhe" />) des
               Randes des durchströmten Bereiches anzugeben</para>
             </listitem>
-
-            <listitem>
-              <para>Der durchströmte Bereich kann auch nachträglich mit dem
-              Editierstift in dem Profileditor-Diagramm verschoben
-              werden.</para>
-            </listitem>
           </itemizedlist>
+
+          <para>Der durchströmte Bereich kann auch nachträglich mit dem
+          Editierstift in dem Profileditor-Diagramm verschoben werden.</para>
 
           <para><emphasis role="bold">Bordvollpunkte:</emphasis></para>
 
           <para>Bordvollpunkte beschreiben die Lage der Schnittpunkte
           Wasserspiegel mit GOK für einen bordvollen Abfluss. In der Regel
-          sind dies die Knickpunkte zwischen Gewässer und Vorland.</para>
-
-          <itemizedlist>
-            <listitem>
-              <para>Können optional über Bordvollpunkte eingefügt und
-              definiert werden</para>
-            </listitem>
-
-            <listitem>
-              <para>Für eine bordvoll Berechnung müssen sie angegeben
-              werden</para>
-            </listitem>
-
-            <listitem>
-              <para>Wenn sie nicht definiert werden, wird für das KM-Verfahren
-              angenommen, dass sie auf den Trennflächen liegen</para>
-            </listitem>
-          </itemizedlist>
+          sind dies die Knickpunkte zwischen Gewässer und Vorland. Sie können
+          optional über Bordvollpunkte eingefügt und definiert werden. Für
+          eine bordvoll Berechnung müssen sie jedoch angegeben werden. Wenn
+          sie nicht definiert werden, wird für das KM-Verfahren angenommen,
+          dass sie auf den Trennflächen liegen.</para>
 
           <para>Eingabe der Bordvollpunkte:</para>
 
@@ -2371,9 +2129,9 @@
           k<subscript>s</subscript> oder der k<subscript>st</subscript>-Wert
           angegeben werden. Generelle gilt jedoch für beide
           Auswahlmöglichkeiten, dass sie nicht nur gleich bleibend für ein
-          Profil, sondern für den gesamten Gewässerstrang vorgeführt werden
-          müssen und unter der späteren Berechnungseinstellung ist das
-          richtige zugehörige Fließgesetz zu selektieren.</para>
+          Profil, sondern für den gesamten Gewässerstrang fortgeführt werden
+          müssen. Gleichermaßen ist unter der späteren Berechnungseinstellung
+          das zugehörige Fließgesetz zu selektieren.</para>
 
           <para>Die <emphasis role="bold">Rauheit k<subscript><emphasis
           role="bold"><emphasis
@@ -2381,22 +2139,22 @@
           MANNING-STRICKLER kann detailliert in der Tabelle, für vereinfachte
           Rauheiten über Layeransicht oder über Polygone und
           Parameter-Zuweisung in der Karte angegeben werden. Bei der Wahl für
-          den k<subscript>st</subscript>-Wert ist zu beachten, dass Bewuchs
-          angegeben werden darf und unter der späteren Berechnungseinstellung
-          das richtige zugehörige Fließgesetz nach GAUCKLER- MANNING-
-          STRICKLER selektiert wird. Für die Wahl des richtigen Parameters
-          liefern diverse Literaturenquellen Anhaltswerte bereit.</para>
+          den k<subscript>st</subscript>-Wert ist zu beachten, dass kein
+          Bewuchs angegeben werden darf und unter der späteren
+          Berechnungseinstellung das richtige zugehörige Fließgesetz nach
+          GAUCKLER- MANNING- STRICKLER selektiert wird. Für die Wahl des
+          richtigen Parameters liefern diverse Literaturenquellen
+          Anhaltswerte.</para>
 
           <para>Die <emphasis role="bold">Rauheit k<subscript><emphasis
           role="bold">s</emphasis></subscript></emphasis> nach COLEBROOK-WHITE
-          des Gewässerprofils kann detailliert in der Tabelle, für
-          vereinfachte Rauheiten über Layeransicht oder über Polygone und
-          Parameter-Zuweisung in der Karte angegeben werden. Der
-          k<subscript>s</subscript>-Wert ist in [m] anzugeben. Unter der
-          späteren Berechnungseinstellung ist das richtige Fließgesetz nach
-          DARCY-WEISSBACH zu selektieren. Für die Wahl der richtigen Parameter
-          stellen das BWK-Merkblatt 1, das DVWK-Merkblatt 220/1991 und weitere
-          Literaturen Tabellen bereit.</para>
+          kann detailliert in der Tabelle, für vereinfachte Rauheiten über
+          Layeransicht oder über Polygone und Parameter-Zuweisung in der Karte
+          angegeben werden. Der k<subscript>s</subscript>-Wert ist in [m]
+          anzugeben. Unter der späteren Berechnungseinstellung ist das
+          Fließgesetz nach DARCY-WEISSBACH zu selektieren. Für die Wahl der
+          Parameter stellen das BWK-Merkblatt 1, das DVWK-Merkblatt 220/1991
+          und weitere Literaturen Tabellen bereit.</para>
 
           <para>Folgende Eingabemöglichkeiten stehen dem Nutzer zur
           Verfügung:</para>
@@ -2411,18 +2169,18 @@
 
             <listitem>
               <para>Vereinfachte Rauheiten können in der
-              Profileditor-Layeransicht definiert werden. Dabei ist das linke
-              Vorland (VL) als der Bereich zwischen linker Trennfläche und
-              linkem Profilende definiert, der Flussschlauch (HF) als Zone
-              zwischen den beiden Trennflächen und das rechte Vorland (VR)
-              zwischen rechter Trennfläche und rechtem Profilrand
+              Profileditor-Layeransicht je Profil definiert werden. Dabei ist
+              das linke Vorland (VL) als der Bereich zwischen linker
+              Trennfläche und linkem Profilende definiert, der Flussschlauch
+              (HF) als Zone zwischen den beiden Trennflächen und das rechte
+              Vorland (VR) zwischen rechter Trennfläche und rechtem Profilrand
               definiert.</para>
             </listitem>
 
             <listitem>
-              <para>Definition der Rauheiten über Polygone und
-              k<subscript>s</subscript>-Wertzuweisung in der Karte (nur für
-              Profile mit Georeferenzierung möglich)</para>
+              <para>Die Definition der Rauheiten über Polygone und
+              k<subscript>s</subscript>-Wertzuweisung in der Karte ist nur für
+              Profile mit Georeferenzierung möglich.</para>
             </listitem>
           </itemizedlist>
 
@@ -2459,7 +2217,7 @@
 
           <para>Die k<subscript>s</subscript>-Werte können auch nachträglich
           mit in der Profileditor-Tabelle verfeinert und nachbearbeitet
-          werden. </para>
+          werden.</para>
 
           <figure>
             <title>Zuweisen von Rauheiten über die Karte</title>
@@ -2492,7 +2250,7 @@
             <listitem>
               <para>Selektieren Sie die Profile, für die Rauheiten zugewiesen
               werden sollen mit einem Häkchen und gehen Sie auf
-              <guibutton>Weiter</guibutton></para>
+              <guibutton>&gt;Weiter</guibutton></para>
             </listitem>
 
             <listitem>
@@ -2513,7 +2271,7 @@
             </listitem>
 
             <listitem>
-              <para>Den Prozess durchführen mit <guibutton>Fertig
+              <para>Den Prozess durchführen mit <guibutton>&gt;Fertig
               stellen</guibutton></para>
             </listitem>
           </itemizedlist>
@@ -2532,7 +2290,8 @@
                 <listitem>
                   <para>Für niedrige Wasserführung ist folgendes zu beachten:
                   Misst die Wassertiefe weniger als das Dreifache des
-                  ks-Wertes, so wird der ks-Wert automatisch auf ⅓ der
+                  k<subscript>s</subscript>-Wertes, so wird der
+                  k<subscript>s</subscript>-Wert automatisch auf ⅓ der
                   Wassertiefe verringert. Meist kann in diesem Fall nur über
                   das nach innen Verschieben der Trennflächen das Gewässer
                   kalibriert werden.</para>
@@ -2579,7 +2338,7 @@
           <para>Die Zuordnungs-Datei bestimmt die Regel mit der ein bestimmtes
           Polygonattribut (z.B. Rauheitsklasse; entspricht später der
           Quell-ID) mit den gewünschten Parametern (k<subscript>s</subscript>,
-          ax, ay, dp usw.) gleichsetzt.</para>
+          ax, ay, dp usw.) gleichgesetzt wird.</para>
 
           <para><emphasis>Zum Beispiel:</emphasis></para>
 
@@ -2675,9 +2434,10 @@
             </listitem>
 
             <listitem>
-              <para>Setzen Sie die Quell-ID = Wert der Spalte die im
-              Polygonthema die Attribute als Referenz (Polygonattribut, z.B.
-              Nummer der Rauheitsklasse) liefert.</para>
+              <para>Setzen Sie die <emphasis role="bold">Quell-ID</emphasis> =
+              Wert der Spalte die im Polygonthema die Attribute als Referenz
+              (Polygonattribut, z.B. Nummer der Rauheitsklasse)
+              liefert.</para>
             </listitem>
 
             <listitem>
@@ -2688,13 +2448,14 @@
 
             <listitem>
               <para>Wählen Sie im FeatureView das gewünschte Profilattribut
-              aus dem Pull-Down-Menu unter ID (z.B. KS).</para>
+              aus dem Pull-Down-Menu unter <emphasis role="bold">ID</emphasis>
+              (z.B. k<subscript>s</subscript>).</para>
             </listitem>
 
             <listitem>
-              <para>Definieren Sie unter Wert den gewünschten
-              k<subscript>s</subscript>-Wert (oder ax, ay, dp, ... usw. je
-              nach Auswahl unter der ID) in [m]</para>
+              <para>Definieren Sie unter <guilabel>Wert</guilabel> den
+              gewünschten k<subscript>s</subscript>-Wert (oder ax, ay, dp, ...
+              usw. je nach Auswahl unter der ID) in [m]</para>
             </listitem>
           </itemizedlist>
 
@@ -2732,12 +2493,12 @@
           Zuordnungsdatei eine Karte mit den oben genannten Themen
           (Gewässerstrang und Polygonthema) angelegt werden. In der
           Kartenansicht kann über die Gliederung der Karte der Gewässerstrang
-          selektiert werden über: rechte Maustaste klicken <guilabel>Rauheiten
-          zuweisen</guilabel></para>
+          selektiert werden über: rechte Maustaste klicken
+          <guilabel>&gt;Rauheiten zuweisen</guilabel></para>
 
           <figure>
             <title>Aktivierung der Rauheitszuweisung in der Gliederung der
-            Karte, Pop-up-Menu für Profilauswahl</title>
+            Karte, Assistent für Profilauswahl</title>
 
             <mediaobject>
               <imageobject>
@@ -2750,12 +2511,12 @@
           selektieren. Wählen Sie einzelne Profile mittels Häkchen aus und
           gehen Sie auf <guibutton>Weiter</guibutton></para>
 
-          <para>Im neuen Pop-up-Window ist das Polygonthema zu
+          <para>Im neuen Assistenten ist das Polygonthema zu
           selektieren:</para>
 
           <itemizedlist>
             <listitem>
-              <para>Thema: Polygonthema (shape) selektieren</para>
+              <para>Thema: Polygonthema (Shape) selektieren</para>
             </listitem>
 
             <listitem>
@@ -2769,8 +2530,8 @@
             </listitem>
 
             <listitem>
-              <para>Optional: nur Vorländer oder Vorland und
-              Flussschlauch</para>
+              <para>Optional: nur Vorländer oder Vorland und Flussschlauch
+              zuordnen</para>
             </listitem>
 
             <listitem>
@@ -2788,19 +2549,21 @@
             </mediaobject>
           </figure>
 
-          <para><emphasis role="bold">Probleme?</emphasis></para>
+          <para><emphasis role="bold">Eventuell auftretende
+          Probleme:</emphasis></para>
 
           <itemizedlist>
             <listitem>
-              <para>Der Wert (Ks) im Polygonthema muss als
-              <literal>Number</literal> definiert sein (NICHT als
+              <para>Der Wert (k<subscript>s</subscript>) im Polygonthema muss
+              als <literal>Number</literal> definiert sein (NICHT als
               <literal>String</literal>!!). Gehen Sie in ArcView in die
-              Tabelle, auf Tabelle editieren, selektieren Sie die Ks-Spalte
-              und prüfen Sie unter dem Taschenrechner-Symbol die Eigenschaft
-              der Spalte. Wenn die Spalte ein <literal>String</literal> ist,
-              dann legen Sie eine neue Spalte an mit der
-              <literal>Number</literal> Eigenschaft und übernehmen Sie die
-              Werte der alten Spalte mit <literal>AsNumber</literal>.</para>
+              Tabelle, auf Tabelle editieren, selektieren Sie die
+              k<subscript>s</subscript>-Spalte und prüfen Sie unter dem
+              Taschenrechner-Symbol die Eigenschaft der Spalte. Wenn die
+              Spalte ein <literal>String</literal> ist, dann legen Sie eine
+              neue Spalte an mit der <literal>Number</literal> Eigenschaft und
+              übernehmen Sie die Werte der alten Spalte mit
+              <literal>AsNumber</literal>.</para>
             </listitem>
 
             <listitem>
@@ -2852,16 +2615,16 @@
           Bewuchsabstand in Fließrichtung; ay = Bewuchsabstand senkrecht zur
           Fließrichtung; dp = äquivalenter Bewuchsdurchmesser (entspricht bei
           Bäumen ca. dem Stammdurchmesser, bei Büschen jedoch deutlich
-          größer). Für Wahl der richtigen Parameter stellen das BWK-Merkblatt
-          1, das DVWK-Merkblatt 220/1991 und weitere Literatur Tabellen
-          bereit.</para>
+          größer). Für die Wahl der richtigen Parameter stellen das
+          BWK-Merkblatt 1, das DVWK-Merkblatt 220/1991 und weitere Literatur
+          Tabellen bereit.</para>
 
           <note>
             <para><itemizedlist>
                 <listitem>
                   <para>Wurde in einer Zeile ax oder ay oder dp definiert, so
-                  müssen auch die anderen Bewuchsparameter mit einem Wert ≠0
-                  belegt werden.</para>
+                  müssen auch die anderen Bewuchsparameter mit einem Wert
+                  &gt;0 belegt werden.</para>
                 </listitem>
 
                 <listitem>
@@ -2872,7 +2635,7 @@
 
                 <listitem>
                   <para>Üblicherweise befindet sich Bewuchs auf dem Vorland
-                  oder den Böschungen, nicht im Flussschlauch.</para>
+                  oder auf den Böschungen, nicht im Flussschlauch.</para>
                 </listitem>
 
                 <listitem>
@@ -2899,9 +2662,9 @@
             <primary>Wehre in KalypsoWSPM</primary>
           </indexterm>
 
-          <para>Es können ein- und mehrfeldrige Wehre mit scharfkantigem,
-          breitkronigem oder rundkronigem Wehr angegeben werden. Neben der
-          Wehrgeometrie sind auch die hydraulischen Parameter am Wehr zu
+          <para>Es können ein- und mehrfeldrige Wehre mit scharfkantiger,
+          breitkroniger oder rundkroniger Wehrkrone angegeben werden. Neben
+          der Wehrgeometrie sind auch die hydraulischen Parameter am Wehr zu
           definieren. Dies sind die:</para>
 
           <itemizedlist>
@@ -3157,7 +2920,7 @@
           berücksichtigt. Je Gewässerprofil kann immer nur ein Durchlass
           definiert werden.</para>
 
-          <para>Für Durchlässe auch können auch kreisförmige Rohrquerschnitte
+          <para>Für Durchlässe können auch kreisförmige Rohrquerschnitte
           angegeben werden. Neben der Durchlassgeometrie, die über eine
           Vorauswahl der vorhandenen Geometrie erfolgt, sind auch die
           hydraulischen Parameter im Durchlass zu definieren. Für alle
@@ -3253,8 +3016,8 @@
 
             <listitem>
               <para>In der Profileditor-Layeransicht sind unter
-              <guilabel>Bezugspunkt_X</guilabel> und
-              <guilabel>Bezugspunkt_Y</guilabel> die Koordinaten des
+              <guilabel>Bezugspunkt_Y</guilabel> und
+              <guilabel>Bezugspunkt_Z</guilabel> die Koordinaten des
               Bezugspunktes anzugeben.</para>
             </listitem>
 
@@ -3312,8 +3075,8 @@
 
             <listitem>
               <para>In der Profileditor-Layeransicht sind unter
-              <guilabel>Bezugspunkt_X</guilabel> und
-              <guilabel>Bezugspunkt_Y</guilabel> die Koordinaten des
+              <guilabel>Bezugspunkt_Y</guilabel> und
+              <guilabel>Bezugspunkt_Z</guilabel> die Koordinaten des
               Bezugspunktes anzugeben.</para>
             </listitem>
 
@@ -3371,8 +3134,8 @@
 
             <listitem>
               <para>In der Profileditor-Layeransicht sind unter
-              <guilabel>Bezugspunkt_X</guilabel> und
-              <guilabel>Bezugspunkt_Y</guilabel> die Koordinaten des
+              <guilabel>Bezugspunkt_Y</guilabel> und
+              <guilabel>Bezugspunkt_Z</guilabel> die Koordinaten des
               Bezugspunktes anzugeben.</para>
             </listitem>
 
@@ -3417,7 +3180,7 @@
           <note>
             <itemizedlist>
               <listitem>
-                <para>Die Trennflächen gehen in an einem Durchlassprofil nicht
+                <para>Die Trennflächen gehen in einem Durchlassprofil nicht
                 ein und können ganz außen liegen.</para>
               </listitem>
 
@@ -3450,21 +3213,20 @@
       der Abstand zwischen den Profilen im Flussschlauch und auf den
       Vorländern festgelegt. Die Profilabstände werden aus den vom Benutzer
       eingegebenen Stationswerten besetzt. Bei einer umgekehrten Stationierung
-      ist ein entsprechender Schalter für das Gewässer zu aktivieren, damit
-      die Stationierung absteigend erfolgt. Jedem Gewässerstrang ist auch eine
-      Liste mit sämtlichen zum Zustand gehörenden Profilen hinterlegt mit dem
-      Profilschlüssel und dem zugehörigen Profildateiname. Die Reihenfolge der
-      Profilangabe ist durch die Berechnungsrichtung entgegen der
-      Fließrichtung festgelegt. Dies gilt auch für den schießenden
-      Abflussbereich. Die Stationierungsrichtung ist nicht festgelegt. Es wird
-      jedoch empfohlen, im Sinne des Gewässerverzeichnisses NRW grundsätzlich
-      von der Mündung in Richtung Quelle zu stationieren.</para>
+      ist dies entsprechend anzugeben, damit die Stationierung absteigend
+      erfolgt. Jedem Gewässerstrang ist eine Liste mit sämtlichen zum Zustand
+      gehörenden Profilen hinterlegt. Die Reihenfolge der Profilangabe ist
+      durch die Berechnungsrichtung entgegen der Fließrichtung festgelegt.
+      Dies gilt auch für den schießenden Abflussbereich. Die
+      Stationierungsrichtung ist nicht festgelegt. Es wird jedoch empfohlen,
+      im Sinne des Gewässerverzeichnisses NRW grundsätzlich von der Mündung in
+      Richtung Quelle zu stationieren.</para>
 
       <para>Die Gewässerstrangdatei definiert den Gewässerlauf oder eine
       Gewässerzustand über die Aufeinanderfolge von Gewässerprofilen. Um eine
-      Strangdatei zu erzeugen sind die zugehörigen Profile in der richtigen
+      Strangdatei zu erzeugen, sind die zugehörigen Profile in der richtigen
       Reihenfolge ausgehend vom Unterwasser (Mündung = 0,00 km) bis zum
-      Oberwasser (Quelle = X,XX km).</para>
+      Oberwasser (Quelle = X,XX km) anzugeben.</para>
 
       <section id="kalypso_wspm-Gewässerstrang_Neu">
         <title>Anlegen eines neuen Gewässerstranges</title>
@@ -3474,7 +3236,7 @@
         </indexterm>
 
         <para>Um einen neuen Gewässerstrang anzulegen, ist eine Bearbeitung in
-        die Perspektive Spiegellinienberechnung im Datenbaum
+        der Perspektive Spiegellinienberechnung im Datenbaum
         erforderlich.</para>
 
         <itemizedlist>
@@ -3499,8 +3261,8 @@
           </listitem>
 
           <listitem>
-            <para>Markieren Sie den neuen Gewässerstrang und gehen Sie in den
-            FeatureView</para>
+            <para>Markieren Sie den neuen Gewässerstrang und öffnen Sie in die
+            FeatureView durch das Menü der rechten Maustaste</para>
           </listitem>
 
           <listitem>
@@ -3531,15 +3293,13 @@
             <para>Um Profile in den Strang aufzunehmen, selektieren Sie das
             Profil in der Profil-Liste</para>
           </listitem>
-
-          <listitem>
-            <para>Die Auswahl-Reihenfolge der Profile für den Strang ist zu
-            beachten: Die Reihenfolge der selektierten Profile entspricht der
-            späteren Profilfolge im Gewässerstrang. Also müssen die Profile
-            immer vom Unterwasser 0,00 km und zum Oberwasser xx.xx km
-            ausgewählt werden.</para>
-          </listitem>
         </itemizedlist>
+
+        <para>Die Auswahl-Reihenfolge der Profile für den Strang ist zu
+        beachten: Die Reihenfolge der selektierten Profile entspricht der
+        späteren Profilfolge im Gewässerstrang. Also müssen die Profile immer
+        vom Unterwasser 0,00 km und zum Oberwasser xx.xx km ausgewählt
+        werden.</para>
 
         <note>
           <itemizedlist>
@@ -3584,8 +3344,12 @@
 
         <itemizedlist>
           <listitem>
-            <para>Gehen Sie in der Gliederung der Karte auf das grüne
-            „+“</para>
+            <para>Gehen Sie in der Gliederung der Karte auf den Button
+            <inlinemediaobject>
+                <imageobject>
+                  <imagedata fileref="img/WSPM/Profileditor_Plus_NeuerDatensatz.png" />
+                </imageobject>
+              </inlinemediaobject></para>
           </listitem>
 
           <listitem>
@@ -3595,9 +3359,9 @@
           </listitem>
 
           <listitem>
-            <para>Im Bäumchen: <guimenuitem>Gewässer &gt; Zustand &gt;
+            <para>Im Baum: <guimenuitem>Gewässer &gt; Zustand &gt;
             Gewässerstrangsegmente</guimenuitem> wählen und anschließend
-            <guibutton>Fertig stellen</guibutton></para>
+            <guibutton>&gt;Fertig stellen</guibutton></para>
 
             <para><guibutton>BILD Abbildung 80 nur auf Englisch
             bisher</guibutton></para>
@@ -3623,7 +3387,11 @@
 
           <listitem>
             <para>Aktivieren Sie in der Menüleiste der Karte den Auswahl-Modus
-            über die „grüne Raute mit Häkchen“</para>
+            mit dem Button <inlinemediaobject>
+                <imageobject>
+                  <imagedata fileref="img/WSPM/Kartensymbolleiste_Feature_selektieren.png" />
+                </imageobject>
+              </inlinemediaobject></para>
           </listitem>
 
           <listitem>
@@ -3645,7 +3413,7 @@
       </indexterm>
 
       <para>Das Abflussereignis definiert für eine Spiegellinienberechnung die
-      Randbedingungen im Gewässerlauf. Hier zu kann je Profil ein neuer
+      Randbedingungen im Gewässerlauf. Hierzu kann je Profil ein neuer
       Abflusswert angegeben werden, so dass ein gestaffeltes Abflussereignis
       berechnet wird. Wenn nur ein Abflusswert vorgegeben wird, so wird von
       diesem konstanten Abfluss im gesamten Gewässer ausgegangen. Das
@@ -3680,8 +3448,7 @@
 
           <listitem>
             <para>Gehen Sie anschließend mit der rechten Maustaste
-            <guimenuitem>Neu &gt; Abflussereignis</guimenuitem> <emphasis
-            role="bold">(Abbildung 46)</emphasis></para>
+            <guimenuitem>Neu &gt; Abflussereignis</guimenuitem></para>
           </listitem>
 
           <listitem>
@@ -3743,13 +3510,10 @@
       <para>Unter einer Berechnungsvariante können zahlreiche
       Berechnungseinstellungen vorgenommen werden. Die Wahl der richtigen
       Berechnungseinstellung ist vom vorliegenden Gewässermodell und von der
-      gewünschten Berechnung abhängig. Beim Aufruf des Rechenkerns des
-      Spiegellinienprogramms erfolgt die Abfrage der notwendigen
-      Steuerparameter für die Programmausführung. Diese werden in einer
-      separaten Berechnungsvariante gespeichert. Der Benutzer hat die
-      Möglichkeit, mehrere Berechnungsvarianten zunächst zu erstellen, zu
-      ändern oder zu löschen und anschließend die Spiegellinienberechnung für
-      diese Berechnungsvarianten auszuführen.</para>
+      gewünschten Berechnung abhängig. Der Benutzer hat die Möglichkeit,
+      mehrere Berechnungsvarianten zunächst zu erstellen, zu ändern oder zu
+      löschen und anschließend die Spiegellinienberechnung für diese
+      Berechnungsvarianten auszuführen.</para>
 
       <section id="kalypso_wspm-Berechnungsvariante_Neu">
         <title>Anlegen einer neuen Berechnungsvariante</title>
@@ -3812,22 +3576,20 @@
           </listitem>
 
           <listitem>
-            <para>Berechnungsabschnitt muss händisch eingegeben werden (von
-            Profil bis Profil)</para>
+            <para>Der Berechnungsabschnitt muss händisch eingegeben werden
+            (von Profil bis Profil)</para>
           </listitem>
 
           <listitem>
-            <para>Wählen Sie ein Fließgesetz: üblicherweise
-            Darcy-Weisbach</para>
+            <para>Fließgesetz</para>
           </listitem>
 
           <listitem>
-            <para>Berechnungsart: üblicherweise
-            Wasserspiegellinien-Berechnung</para>
+            <para>Berechnungsart</para>
           </listitem>
 
           <listitem>
-            <para>Setzen Sie nun die numerischen Parameter</para>
+            <para>Numerische Parameter</para>
           </listitem>
 
           <listitem>
@@ -3835,8 +3597,8 @@
           </listitem>
 
           <listitem>
-            <para>Setzen Sie die Randbedingung am Unterwasser (Gefälle,
-            Grenztiefe oder Wasserstand)</para>
+            <para>Randbedingung am Unterwasser (Gefälle, Grenztiefe oder
+            Wasserstand)</para>
           </listitem>
 
           <listitem>
@@ -3877,19 +3639,20 @@
           MANNING-STRICKLER durchgeführt, so wird jeweils nur eine Rauheit für
           linkes Vorland, Flussbett und rechtes Vorland berücksichtigt. Sind
           mehr als drei Rauheiten im Profil angegeben, so erfolgen Mittelungen
-          für die Werte in den jeweiligen Teilabflussquerschnitten. Wird diese
-          Berechnungsvariante gewählt, werden die profilbezogenen Werte aus
-          der Spalte Rauheit als kst-Werte ausgelesen. Demzufolge sind in
-          dieser Spalte die richtigen hydraulischen Parameter für eine
-          Berechnung nach MANNING-STRICKLER anzusetzen. Die angegebenen
-          Bewuchsparameter bleiben in der Berechnung unberücksichtigt.</para>
+          für die Werte in den jeweiligen Teilabflussquerschnitten. Bei der
+          Wahl dieser Berechnungsvariante werden die profilbezogenen Werte aus
+          der Spalte Rauheit als k<subscript>st</subscript>-Werte ausgelesen.
+          Demzufolge sind in dieser Spalte die richtigen hydraulischen
+          Parameter für eine Berechnung nach MANNING-STRICKLER anzusetzen. Die
+          angegebenen Bewuchsparameter bleiben in der Berechnung
+          unberücksichtigt.</para>
 
           <para><emphasis role="bold">Fließgesetz nach DARCY-WEISBACH (offene
           Gerinne)</emphasis></para>
 
-          <para>Wird die Berechnung der Reibungsverluste nach DARCY-WEISBACH
+          <para>Wird die Berechnung der Reibungsverluste nach DARCY-WEISSBACH
           für offene Gerinne durchgeführt, so wird der Widerstandsbeiwert für
-          das Fließgesetz von DARCY-WEISBACH nach dem Verfahren nach PASCHE
+          das Fließgesetz von DARCY-WEISSBACH nach dem Verfahren nach PASCHE
           (DVWK-Merkblatt Nr. 220) berechnet. Dazu wird das Gewässerprofil in
           die Teilquerschnitte Hauptgerinne, Vorland links, Vorland rechts
           untergliedert. Die einzelnen Bereiche sind durch Trennflächen
@@ -3968,11 +3731,11 @@
                 <row>
                   <entry>FLIESSGESETZ<itemizedlist>
                       <listitem>
-                        <para>DW mit Formbeiwert</para>
+                        <para>DARCY-WEISSBACH mit Formbeiwert</para>
                       </listitem>
 
                       <listitem>
-                        <para>DW ohne Formbeiwert</para>
+                        <para>DARCY-WEISSBACH ohne Formbeiwert</para>
                       </listitem>
 
                       <listitem>
@@ -3996,7 +3759,7 @@
                 </row>
 
                 <row>
-                  <entry>ART_RANDBEDINGUNG<itemizedlist>
+                  <entry>ART DER RANDBEDINGUNG<itemizedlist>
                       <listitem>
                         <para>Grenztiefe</para>
                       </listitem>
@@ -4020,7 +3783,8 @@
                       </listitem>
 
                       <listitem>
-                        <para><emphasis role="bold">Bjoersen</emphasis></para>
+                        <para><emphasis
+                        role="bold">Bjoernsen</emphasis></para>
                       </listitem>
 
                       <listitem>
@@ -4032,7 +3796,7 @@
                       </listitem>
                     </itemizedlist></entry>
 
-                  <entry>nach Bjoersen</entry>
+                  <entry>nach Bjoernsen</entry>
                 </row>
 
                 <row>
@@ -4076,7 +3840,7 @@
                 </row>
 
                 <row>
-                  <entry>ABFLUSSEREIGNISS</entry>
+                  <entry>ABFLUSSEREIGNIS</entry>
 
                   <entry><emphasis role="bold">KEINES</emphasis></entry>
                 </row>
@@ -4130,7 +3894,7 @@
           </figure>
 
           <para>Eine stationär-ungleichförmige Berechnung wird üblicherweise
-          für die Berechnung von w-QBeziehungen oder ähnlichen
+          für die Berechnung von w-Q Beziehungen oder ähnlichen
           Abflussbeziehungen je Profil angesetzt. Anmerkung: Das
           darüberstehende Abflussereignis wird nicht berücksichtigt.</para>
 
@@ -4168,11 +3932,11 @@
                 <row>
                   <entry>FLIESSGESETZ<itemizedlist>
                       <listitem>
-                        <para>DW mit Formbeiwert</para>
+                        <para>DARCY-WEISSBACH mit Formbeiwert</para>
                       </listitem>
 
                       <listitem>
-                        <para>DW ohne Formbeiwert</para>
+                        <para>DARCY-WEISSBACH ohne Formbeiwert</para>
                       </listitem>
 
                       <listitem>
@@ -4196,7 +3960,7 @@
                 </row>
 
                 <row>
-                  <entry>ART_RANDBEDINGUNG<itemizedlist>
+                  <entry>ART DER RANDBEDINGUNG<itemizedlist>
                       <listitem>
                         <para>Grenztiefe</para>
                       </listitem>
@@ -4220,7 +3984,7 @@
                       </listitem>
 
                       <listitem>
-                        <para>Bjoersen</para>
+                        <para>Bjoernsen</para>
                       </listitem>
 
                       <listitem>
@@ -4276,7 +4040,7 @@
                 </row>
 
                 <row>
-                  <entry>ABFLUSSEREIGNISS</entry>
+                  <entry>ABFLUSSEREIGNIS</entry>
 
                   <entry><emphasis role="bold">KEINES</emphasis></entry>
                 </row>
@@ -4360,11 +4124,11 @@
                 <row>
                   <entry>FLIESSGESETZ<itemizedlist>
                       <listitem>
-                        <para>DW mit Formbeiwert</para>
+                        <para>DARCY-WEISSBACH mit Formbeiwert</para>
                       </listitem>
 
                       <listitem>
-                        <para>DW ohne Formbeiwert</para>
+                        <para>DARCY-WEISSBACH ohne Formbeiwert</para>
                       </listitem>
 
                       <listitem>
@@ -4388,7 +4152,7 @@
                 </row>
 
                 <row>
-                  <entry>ART_RANDBEDINGUNG<itemizedlist>
+                  <entry>ART DER RANDBEDINGUNG<itemizedlist>
                       <listitem>
                         <para>Grenztiefe</para>
                       </listitem>
@@ -4412,7 +4176,7 @@
                       </listitem>
 
                       <listitem>
-                        <para>Bjoersen</para>
+                        <para>Bjoernsen</para>
                       </listitem>
 
                       <listitem>
@@ -4468,7 +4232,7 @@
                 </row>
 
                 <row>
-                  <entry>ABFLUSSEREIGNISS</entry>
+                  <entry>ABFLUSSEREIGNIS</entry>
 
                   <entry><emphasis role="bold">erforderlich</emphasis></entry>
                 </row>
@@ -4476,22 +4240,19 @@
                 <row>
                   <entry>MIN_Q</entry>
 
-                  <entry><emphasis role="bold">nicht
-                  erforderlich</emphasis></entry>
+                  <entry><emphasis role="bold">keines</emphasis></entry>
                 </row>
 
                 <row>
                   <entry>MAX_Q</entry>
 
-                  <entry><emphasis role="bold">nicht
-                  erforderlich</emphasis></entry>
+                  <entry><emphasis role="bold">keines</emphasis></entry>
                 </row>
 
                 <row>
                   <entry>DELTA_Q</entry>
 
-                  <entry><emphasis role="bold">nicht
-                  erforderlich</emphasis></entry>
+                  <entry><emphasis role="bold">keines</emphasis></entry>
                 </row>
               </tbody>
             </tgroup>
@@ -4507,7 +4268,7 @@
             in KalypsoWSPM</primary>
           </indexterm>
 
-          <para>Für die Selektion des Gewässerstranges stehen in einem
+          <para>Für die Selektion des Gewässerstrangs stehen in einem
           Pull-Down-Menu die bislang definierte und angelegten Gewässerstränge
           zur Verfügung. Über den Button am rechten Rand gelangt der Anwender
           direkt zurück zum Gewässerstrang und kann dort editieren.</para>
@@ -4525,7 +4286,7 @@
 
           <para>Der Berechnungsabschnitt ist händisch vorzugeben. Hierbei ist
           zu beachten, dass die Anfangsstation der Berechnung kleiner ist als
-          die Endstation, das KALYPSO-WSPM vom Unterwasser zum Oberwasser
+          die Endstation, da KalypsoWSPM vom Unterwasser zum Oberwasser
           rechnet.</para>
         </section>
 
@@ -4614,8 +4375,9 @@
           direkt in das Feld Anfangswasserspiegel eingegeben werden. Dies kann
           beispielsweise auf bewegliche Wehre mit einem fest vorgegebenen
           Stauziel zutreffen. In diesem Fall legen Sie das Anfangsprofil
-          direkt oberhalb des Wehres. Der Anfangswasserstand entspricht dann
-          dem Stauziel.</para>
+          direkt oberhalb des Wehres. Der <emphasis
+          role="bold">Anfangswasserstand</emphasis> entspricht dann dem
+          Stauziel.</para>
 
           <para><emphasis role="bold">Querschnitt oberhalb eines
           Fließwechsels:</emphasis> An einem Fließwechsel tritt zwangsläufig
@@ -4625,10 +4387,10 @@
           <guilabel>Grenztiefe</guilabel>.</para>
 
           <para><emphasis role="bold">Querschnitt mit annähernd gleichförmigem
-          Abfluss:</emphasis> Aktivieren Sie den Punkt stationär
-          gleichförmiges Gefälle, wird die Normalwassertiefe iterativ aus dem
-          angegebenen Energieliniengefälle (absolut) im ersten Profil
-          berechnet.</para>
+          Abfluss:</emphasis> Aktivieren Sie den Punkt <emphasis
+          role="bold">stationär gleichförmiges Gefälle</emphasis>, wird die
+          Normalwassertiefe iterativ aus dem angegebenen Energieliniengefälle
+          (absolut) im ersten Profil berechnet.</para>
         </section>
       </section>
 
@@ -4696,7 +4458,9 @@
       <primary>Postprozessing KalypsoWSPM</primary>
     </indexterm>
 
-    <para>Ist eine Berechnung erfolgreich durchgeführt...</para>
+    <para>Ist eine Berechnung erfolgreich durchgeführt wurden alle
+    Ergebnis-Dateien erzeugt. Die erzeugten Daten variieren mit der gewählten
+    Berechnungsvariante.</para>
 
     <para>Bei nicht erfolgreicher Berechnung stehen verschiedene Log-Dateien
     zur Fehlerlokalisierung zur Verfügung.</para>
@@ -4714,11 +4478,11 @@
       eigener Unterordner, der nach der Berechnungsvariante benannt ist (z.B.
       <filename>kollau-ist - HQ_100_Risiko_Control</filename>), erzeugt. Dort
       findet man unter dem Ordner <filename>_aktuell</filename> den zuletzt
-      berechneten Fall und darunter nach Zeit sortiert die älteren
+      berechneten Fall und darunter nach dem Datum sortiert die älteren
       Ergebnisordner.</para>
 
       <para>In jedem Ordner findet man automatisch erzeugte
-      Ergebnisausgaben:</para>
+      Standard-Ergebnisausgaben:</para>
 
       <itemizedlist>
         <listitem>
@@ -4739,6 +4503,9 @@
           <para>Ergebnis als Liste (als Textdatei)</para>
         </listitem>
       </itemizedlist>
+
+      <para>Die Ausgaben weichen je nach Berechnungsvariante voneinander
+      ab.</para>
 
       <figure>
         <title>Übersicht zu dem automatisch erzeugten Ergebnisordnern</title>
@@ -4779,6 +4546,11 @@
           </listitem>
 
           <listitem>
+            <para><emphasis role="bold">Modellgrenzen</emphasis> = beschreibt
+            den äußersten Rand der Profilenden als Polygon.</para>
+          </listitem>
+
+          <listitem>
             <para><emphasis role="bold">Profile</emphasis> = Linienthema zeigt
             die Profile des berechneten Gewässerstranges an</para>
           </listitem>
@@ -4793,15 +4565,9 @@
           </listitem>
 
           <listitem>
-            <para><emphasis role="bold">Modellgrenzen</emphasis> = beschreibt
-            den äußersten Rand der Profilenden als Polygon.</para>
-          </listitem>
-
-          <listitem>
             <para><emphasis role="bold">Wasserhöhenmodell</emphasis> = Das
-            Wasserhöhenmodell beschriebt die Triangulation der Profilpunkte,
-            um die Überschwemmungslinie zu generieren. Dabei werden alle
-            Profilpunkte über ein Dreiecksnetz vernetzt. <emphasis
+            Wasserhöhenmodell beschreibt die Triangulation der Profilpunkte,
+            um die Überschwemmungslinie zu generieren. <emphasis
             role="bold">(untere Abbildung)</emphasis></para>
           </listitem>
         </itemizedlist>
@@ -4835,11 +4601,9 @@
           <primary>Ergebnisausgabe im Längsschnitt in KalypsoWSPM</primary>
         </indexterm>
 
-        <para>Ein Längsschnitt mit den enthaltenen Ergebnissen wird auch
-        erzeugt, wenn die Profile nicht georeferenziert sind. Der Längsschnitt
-        liegt im Navigator unter dem Ordner <filename>Ergebnisse</filename>
-        &gt; dem Ordner der Berechnungsvariante &gt; dem Ordner
-        <filename>aktuell</filename> &gt;
+        <para>Der Längsschnitt liegt im Navigator unter dem Ordner
+        <filename>Ergebnisse</filename> &gt; dem Ordner der
+        Berechnungsvariante &gt; dem Ordner <filename>aktuell</filename> &gt;
         <filename>Längsschnitt.kod</filename>. Folgende Themen werden im
         Längsschnitt angezeigt:</para>
 
@@ -4866,6 +4630,22 @@
             Rückstau oder einen steilen Abfall des Wasserspiegels zu
             erkennen.</para>
           </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Energielinie</emphasis> = Die [Farbe]
+            Linie zeigt die Entwicklung der Energiehöhe entlang der
+            Fließgewässer.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Böschung links</emphasis> = Die
+            [Farbe] Linie zeigt die Böschungslinie am linken Ufer an.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">Böschung rechts</emphasis> = Die
+            [Farbe] Linie zeigt die Böschungslinie am rechten Ufer an.</para>
+          </listitem>
         </itemizedlist>
 
         <figure>
@@ -4890,12 +4670,11 @@
           <primary>Ergebnisausgabe in der Tabelle in KalypsoWSPM</primary>
         </indexterm>
 
-        <para>Eine Tabelle mit den enthaltenen Ergebnissen wird auch erzeugt,
-        wenn die Profile nicht georeferenziert sind. Die Tabelle liegt im
-        Navigator unter dem Ordner <filename>Ergebnisse</filename> &gt; dem
-        Ordner der Berechnungsvariante &gt; dem Ordner
-        <filename>aktuell</filename> &gt; <filename>Tabelle.gft</filename>.
-        Folgende Themen werden in der Tabelle angezeigt:</para>
+        <para>Die Ergebnis-Tabelle liegt im Navigator unter dem Ordner
+        <filename>Ergebnisse</filename> &gt; dem Ordner der
+        Berechnungsvariante &gt; dem Ordner <filename>aktuell</filename> &gt;
+        <filename>Tabelle.gft</filename>. Folgende Themen werden in der
+        Tabelle angezeigt:</para>
 
         <itemizedlist>
           <listitem>
@@ -4934,7 +4713,7 @@
             <para><emphasis role="bold">Bordvolle Höhe</emphasis> = zeigt die
             Geländehöhe der geringsten bordvollen Höhe in [mNN] an. Wenn keine
             Bordvollpunkte definiert, werden die Trennflächen als
-            Bordvollpunkte gewählt. Das heißt, die Bordvolle Höhe ist
+            Bordvollpunkte gewählt. Das heißt, die bordvolle Höhe ist
             identisch mit der geringsten Geländeoberkante der Böschung.</para>
           </listitem>
 
@@ -4980,8 +4759,8 @@
           <listitem>
             <para><emphasis role="bold">Wehr, Brücke,
             Rohrdurchmesser</emphasis> = die tatsächlichen Parameter sind nur
-            angegeben, wenn ein derartiges Bauwerk vorhanden ist. Wenn nicht
-            kein Bauwerk an der Station, dann werden alle Einträge mit
+            angegeben, wenn ein derartiges Bauwerk vorhanden ist. Wenn kein
+            Bauwerk an der Station vorliegt, dann werden alle Einträge mit
             –999,999 belegt.</para>
           </listitem>
         </itemizedlist>
@@ -5067,14 +4846,14 @@
 
           <listitem>
             <para><emphasis role="bold">Abfluss</emphasis> = zeigt je Station
-            des Gewässers das definierte Abflussereignis in [m³/s] an. Und
-            darunter die Abflussaufteilung auf dem linken Vorland, rechten
-            Vorland und im Flussschlauch.</para>
+            des Gewässers das definierte Abflussereignis in [m³/s] an.
+            Darunter wird die Abflussaufteilung auf dem linken Vorland,
+            rechten Vorland und im Flussschlauch angegeben.</para>
           </listitem>
 
           <listitem>
             <para><emphasis role="bold">hv_m</emphasis> = Verlusthöhe infolge
-            Ungleichförmigkeitsbeiwert β bzw. Verlust hI infolge geometrische
+            Ungleichförmigkeitsbeiwert β bzw. Verlust hI infolge geometrischer
             Aufweitung und Einschnürung in Fließrichtung.</para>
           </listitem>
 
@@ -5118,77 +4897,24 @@
     </section>
 
     <section id="kalypso_wspm-Fließtiefen_Verschneiden">
-      <title>Verschneiden der Fließtiefen</title>
+      <title>Erzeugung der Fließtiefen</title>
 
       <indexterm>
-        <primary>Verschneidung der Fließtiefen in KalypsoWSPM</primary>
+        <primary>Erzeugung der Fließtiefen in KalypsoWSPM</primary>
       </indexterm>
 
-      <para>Für die Verschneidung der Fließtiefen sind folgende Eingangsdaten
-      erforderlich. Es muss ein georeferenzierter Gewässerstrang vorliegen mit
-      den Berechnungsergebnissen aus einem Abflussereignis
-      (Wasserspiegellinienberechnung). Für die Verschneidung werden zwei Daten
-      verschnitten das Wasserhöhenmodell aus der Berechnung mit einem DGM in
-      Form von Rasterdaten. Derzeit wird bei der Verschneidung ein
-      Graustufen-Tif benötigt.</para>
-
-      <section id="kalypso_wspm-Höhenmodell_einladen">
-        <title>Einladen des Höhenmodells als TIF</title>
-
-        <indexterm>
-          <primary>Einladen des Höhenmodells als TIF vor der Verschneidung der
-          Fließtiefen in KalypsoWSPM</primary>
-        </indexterm>
-
-        <para><itemizedlist>
-            <listitem>
-              <para>Legen Sie im Arbeitsbereich einen neuen leeren Ordner an
-              (z.B. <filename>DGM</filename>)</para>
-            </listitem>
-
-            <listitem>
-              <para>Klicken Sie mit der rechten Maustaste auf den Ordner und
-              wählen Sie <guimenuitem>Importieren...</guimenuitem></para>
-            </listitem>
-
-            <listitem>
-              <para>Wählen Sie <guimenuitem>Kalypso &gt; Rasterdaten &gt;
-              Weiter</guimenuitem></para>
-            </listitem>
-
-            <listitem>
-              <para>Durchsuchen Sie den Dateipfad bis zum tif (in dem gleichen
-              Ordner muss sich auch der worldfile zum tif als
-              <literal>*.tfw</literal> liegen <guibutton>&gt;
-              Weiter</guibutton></para>
-            </listitem>
-
-            <listitem>
-              <para>Selektieren Sie den Ablageordner für das Tif und benennen
-              Sie unter Dateiname das GML, das automatisch erzeugt wird. Gehen
-              Sie anschließen auf <guibutton>Fertig
-              stellen</guibutton>.</para>
-            </listitem>
-          </itemizedlist>In dem selektierten Ordner wird das tif und die
-        zugehörige gml-Datei ablegt.</para>
-
-        <figure>
-          <title>Einladen des Höhenmodells als TIF</title>
-
-          <mediaobject>
-            <imageobject>
-              <imagedata fileref="img/WSPM/Einladen_Hoehenmodell.png" />
-            </imageobject>
-          </mediaobject>
-        </figure>
-      </section>
+      <para>Für die Verschneidung der Fließtiefen muss ein georeferenzierter
+      Gewässerstrang mit den Berechnungsergebnissen aus einem Abflussereignis
+      (Wasserspiegellinienberechnung) vorliegen. Für die Verschneidung werden
+      die Daten des Wasserhöhenmodells aus der Berechnung mit einem digitalen
+      Geländemodell (DGM) in Form von Rasterdaten verschnitten. Derzeit wird
+      bei der Verschneidung ein Graustufen-Tif benötigt.</para>
 
       <section id="kalypso_wspm-Fließtiefen_Verschneiden_Durchführung">
-        <title>Die Verschneidung</title>
+        <title>Verschneidung der Fließtiefen</title>
 
         <indexterm>
-          <primary>Durchführung der Verschneidung der Fließtiefen in
-          KalypsoWSPM</primary>
+          <primary>Verschneidung der Fließtiefen in KalypsoWSPM</primary>
         </indexterm>
 
         <para>Öffnen Sie die Karte mit den gewünschten Ergebnissen, die
@@ -5203,9 +4929,10 @@
           </listitem>
 
           <listitem>
-            <para>Klicken Sie in der Karten-Gliederung mit der rechten
-            Maustaste auf <guilabel>Wasserhöhenmodell</guilabel> und wählen
-            Sie <guimenuitem>mit DGM verschneiden</guimenuitem></para>
+            <para>Selektieren Sie in der Karten-Gliederung das
+            <guilabel>Wasserhöhenmodell</guilabel> und wählen Sie im Untermenü
+            der rechten Maustaste <guimenuitem>&gt;mit DGM
+            verschneiden</guimenuitem></para>
           </listitem>
         </itemizedlist>
 
@@ -5221,13 +4948,13 @@
 
         <itemizedlist>
           <listitem>
-            <para>Ein Pop-up-Window öffnet sich: Durchsuchen Sie den Pfad bis
-            zur tif zugehörigen gml-Datei</para>
+            <para>Im geöffneten Assistenten selektieren Sie den Pfad bis zur
+            tif zugehörigen gml-Datei</para>
           </listitem>
 
           <listitem>
             <para>Geben Sie einen Dateinamen für das Ergebnisfile an und gehen
-            anschließen auf <guibutton>Weiter</guibutton></para>
+            anschließen auf <guibutton>&gt;Weiter</guibutton></para>
           </listitem>
 
           <listitem>
@@ -5237,14 +4964,14 @@
           </listitem>
 
           <listitem>
-            <para>Klicken Sie am Ende auf <guibutton>Fertig
+            <para>Selektieren Sie am Ende <guibutton>&gt;Fertig
             stellen</guibutton></para>
           </listitem>
         </itemizedlist>
 
         <figure>
-          <title>Pop-up-Window zum Verschneiden eines Wasserhöhenmodells mit
-          einem DGM</title>
+          <title>Assistent zum Verschneiden eines Wasserhöhenmodells mit einem
+          DGM</title>
 
           <mediaobject>
             <imageobject>
@@ -5254,7 +4981,7 @@
         </figure>
 
         <para>Das Ergebnis der Verschneidung wird als neues Thema in der Karte
-        angezeigt und kann über den Sytle-Editor in der Farbgebung
+        angezeigt und kann über den Style-Editor in der Farbgebung
         nachbearbeitet werden.</para>
 
         <figure>
@@ -5542,7 +5269,7 @@
                 hereinzoomen</entry>
 
                 <entry valign="middle">Ausschnitt wählen (Fenster ziehen von
-                rechts unten und links oben)</entry>
+                rechts unten nach links oben)</entry>
               </row>
 
               <row>
@@ -5698,8 +5425,8 @@
                   </figure></entry>
 
                 <entry valign="middle">Fügt Themen zur Karte hinzu. Auch
-                Themen aus anderen Projekten oder Unterordnern in im Navigator
-                verfügbar sind, können eingeladen werden.</entry>
+                Themen aus anderen Projekten oder Unterordnern die im
+                Navigator verfügbar sind, können eingeladen werden.</entry>
 
                 <entry valign="middle">Einfügen von Shapes, von GML-dateien,
                 von Images, von Rasterdaten, von WebMaps und WebFeatures ist
@@ -5799,8 +5526,7 @@
 
                 <entry valign="middle">Zur Bearbeitung ist das Bäumchen des
                 Themas in der Gliederung zu öffnen bis der Reiter Style
-                erscheint. <emphasis role="bold">(untere
-                Abbildung</emphasis>)</entry>
+                erscheint. </entry>
               </row>
             </tbody>
           </tgroup>
