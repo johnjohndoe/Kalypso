@@ -84,23 +84,22 @@ public class MapView extends AbstractMapPart implements IViewPart
   {
     super.createPartControl( parent );
 
-    // Stefan: Now we can restore the file if the map is configured to do so      
-    final String reloadOnOpen = getConfigurationElement().getAttribute( RELOAD_MAP_ON_OPEN );
-    if( m_memento_file!= null && "true".equals( reloadOnOpen ) )
+    // Stefan: Now we can restore the file if the map is configured to do so
+    final String reloadOnOpen = getConfigurationElement().getAttribute( MapView.RELOAD_MAP_ON_OPEN );
+    if( (m_memento_file != null) && "true".equals( reloadOnOpen ) )
     {
       final IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile( new Path( m_memento_file ) );
       setFile( file );
       if( file != null )
-      {
         startLoadJob( file );
-      }
     }
   }
 
   public void init( final IViewSite site, final IMemento memento )
   {
     init( site );
-    m_memento_file = memento.getString( MEMENTO_FILE );    
+    if( memento != null )
+      m_memento_file = memento.getString( MapView.MEMENTO_FILE );
   }
 
   /**
@@ -112,7 +111,7 @@ public class MapView extends AbstractMapPart implements IViewPart
     if( file != null )
     {
       final String string = file.getFullPath().toString();
-      memento.putString( MEMENTO_FILE, string );
+      memento.putString( MapView.MEMENTO_FILE, string );
     }
   }
 
@@ -122,7 +121,7 @@ public class MapView extends AbstractMapPart implements IViewPart
   @Override
   public void dispose( )
   {
-    final String saveOnCloseString = getConfigurationElement().getAttribute( SAVE_MAP_ON_CLOSE );
+    final String saveOnCloseString = getConfigurationElement().getAttribute( MapView.SAVE_MAP_ON_CLOSE );
     if( "true".equals( saveOnCloseString ) )
     {
       final IFile file = getFile();
@@ -150,10 +149,8 @@ public class MapView extends AbstractMapPart implements IViewPart
   public void startLoadJob( final IStorage storage )
   {
     final IFile file = getFile();
-    if( file != null && !file.equals( storage ) )
-    {
+    if( (file != null) && !file.equals( storage ) )
       saveMap( file );
-    }
     super.startLoadJob( storage );
   }
 }
