@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -51,6 +52,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitViewe
 import org.kalypso.kalypsomodel1d2d.ui.map.editor.FeatureWrapperListEditor;
 import org.kalypso.kalypsomodel1d2d.ui.map.editor.IButtonConstants;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
  * @author Madanagopal
@@ -65,8 +67,8 @@ public class CalculationUnitPerformComponent extends FeatureWrapperListEditor im
   {	  
 	    super(null,null,null);
 	    setRequiredButtons( BTN_CLICK_TO_RUN,
-	                        BTN_REMOVE,
-	                        BTN_ADD,
+	                        //BTN_REMOVE,
+	                        //BTN_ADD,
 	                        BTN_CLICK_TO_CALCULATE);
 	    this.dataModel = dataModel;
   }
@@ -78,11 +80,17 @@ public class CalculationUnitPerformComponent extends FeatureWrapperListEditor im
   }
   
   @Override
-  protected ArrayContentProvider setOwnContentProvider(){
-    
+  protected List<ICalculationUnit> setInputContentProvider(){
+    Object inputData = 
+      dataModel.getData( 
+        ICommonKeys.KEY_FEATURE_WRAPPER_LIST );
+    if (inputData == null)
+    {
+      inputData = new ArrayList<IFeatureWrapper2>();
+      return (List<ICalculationUnit>) inputData;
+    }    
     List<ICalculationUnit> calcList = (List<ICalculationUnit>) dataModel.getData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST );
-    
-    return (ArrayContentProvider) calcList;
+    return calcList;
   }
 
 }

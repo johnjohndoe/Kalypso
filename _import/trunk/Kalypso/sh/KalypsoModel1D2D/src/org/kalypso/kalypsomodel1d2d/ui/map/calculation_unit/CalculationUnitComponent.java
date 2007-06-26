@@ -40,10 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -51,7 +51,6 @@ import org.eclipse.ui.PlatformUI;
 import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizard;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards.CreateCalculationUnitWizard;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.DeleteCalculationUnitCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.editor.FeatureWrapperListEditor;
@@ -60,6 +59,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
 import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
@@ -95,9 +95,6 @@ public class CalculationUnitComponent
         new CreateCalculationUnitWizard(getDataModel());
     final WizardDialog wizardDialog = new WizardDialog( shell, calculationWizard );
     wizardDialog.open();
-//    final CreateCalculationUnitDialog calculationDialog = 
-//      new CreateCalculationUnitDialog( shell, getDataModel() );      
-//    int answer = calculationDialog.open();
   } 
   
   @Override
@@ -158,29 +155,38 @@ public class CalculationUnitComponent
           List<ICalculationUnit> calUnits = 
             CalUnitOps.getModelCalculationUnits( model1d2d );
           dataModel.setData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST, calUnits );
-          
           //set current selection to null
           dataModel.setData(  
               ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER,
               null );
-          
-//          KeyBasedDataModelUtil.resetCurrentEntry( 
-//                  dataModel, 
-//                  ICommonKeys.KEY_FEATURE_WRAPPER_LIST );
-//          KeyBasedDataModelUtil.resetCurrentEntry( 
-//              dataModel,  
-//              ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
         }
       };
       KeyBasedDataModelUtil.postCommand( dataModel, delCmd );
-      //commandTarget.postCommand( delCmd, null );
     }
   }
   
+  @Override
   protected ILabelProvider getLabelProvider(Display display)
   {    
     return new CalculationUnitViewerLabelProvider(display);
     
   }
+  
+
+  @Override
+  protected List<ICalculationUnit> setInputContentProvider(){
+    KeyBasedDataModel dataModel = getDataModel();
+    Object inputData = 
+      dataModel.getData( 
+        ICommonKeys.KEY_FEATURE_WRAPPER_LIST );
+    if (inputData == null)
+    {
+      inputData = new ArrayList<IFeatureWrapper2>();
+      return (List<ICalculationUnit>) inputData;
+    }    
+    List<ICalculationUnit> calcList = (List<ICalculationUnit>) dataModel.getData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST );
+    return calcList;
+  }
+  
   
 }

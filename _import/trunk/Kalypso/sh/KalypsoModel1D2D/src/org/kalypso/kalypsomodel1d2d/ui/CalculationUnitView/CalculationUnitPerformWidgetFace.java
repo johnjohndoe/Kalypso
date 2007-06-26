@@ -52,6 +52,7 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
+import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.SelectedCalculationComponent;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 
 /**
@@ -71,6 +72,9 @@ public class CalculationUnitPerformWidgetFace
   private Composite sectionSecondComposite;
   private CalculationUnitProblemsComponent calcProblemsGUI;
   private CalculationUnitDataModel dataModel;
+  private Section calculationElementUnitSection;
+  private Composite sectionThirdComposite;
+  private SelectedCalculationComponent calcElementGUI;
 
   public CalculationUnitPerformWidgetFace( )
   {
@@ -98,6 +102,15 @@ public class CalculationUnitPerformWidgetFace
     selectCalcUnitSection.setLayoutData( tableWrapDataCU );
     selectCalcUnitSection.setExpanded(true);
 
+    // Creates Section for "Calculation Elements Unit"
+    calculationElementUnitSection = toolkit.createSection( form.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
+    calculationElementUnitSection.setText( "Status der selektierten Berechnungseinheit" );
+    TableWrapData tableWrapDataCE = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
+    tableWrapDataCE.grabHorizontal = true;
+    tableWrapDataCE.grabVertical = true;
+    calculationElementUnitSection.setLayoutData( tableWrapDataCE );
+    calculationElementUnitSection.setExpanded( true );
+    
     // Creates Section for "Calculation Settings Unit"
     problemsSection = toolkit.createSection( form.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
     problemsSection.setText( "Berechnungseinheit Verwalten" );
@@ -106,11 +119,14 @@ public class CalculationUnitPerformWidgetFace
     tableWrapDataPU.grabVertical = true;
     problemsSection.setLayoutData( tableWrapDataPU );
     problemsSection.setExpanded(true);
+    
     createCalculationUnitSection( selectCalcUnitSection );
+    createCalculationElementsSection(calculationElementUnitSection);
     createProblemsInCalculationSection(problemsSection);
     return parent;
   }
   
+
   private void createCalculationUnitSection( Section selectCalcUnitSection )
   {
     selectCalcUnitSection.setLayout( new FillLayout() );
@@ -128,6 +144,25 @@ public class CalculationUnitPerformWidgetFace
     
   }
 
+  private void createCalculationElementsSection( Section calculationElementUnitSection )
+  {
+    calculationElementUnitSection.setLayout( new FillLayout() );
+    sectionThirdComposite = toolkit.createComposite( calculationElementUnitSection, SWT.FLAT );
+    calculationElementUnitSection.setClient( sectionThirdComposite );
+    FormLayout formLayout = new FormLayout();
+    sectionThirdComposite.setLayout( formLayout );
+    
+    FormData formData = new FormData();
+    formData.left = new FormAttachment( 0, 5 );
+    formData.top = new FormAttachment( sectionThirdComposite, 5 );
+    formData.bottom = new FormAttachment( 100, -5 );
+    sectionThirdComposite.setLayoutData( formData );
+    
+    calcElementGUI= new SelectedCalculationComponent();    
+    calcElementGUI.createControl( dataModel, toolkit, sectionThirdComposite );    
+
+  }
+  
   private void createProblemsInCalculationSection( Section problemsSection )
   {
     problemsSection.setLayout( new FillLayout() );
@@ -139,7 +174,6 @@ public class CalculationUnitPerformWidgetFace
     FormData formData = new FormData();
     formData.left = new FormAttachment( 0, 5 );
     formData.top = new FormAttachment( sectionFirstComposite, 5 );
-    //formData.bottom = new FormAttachment( sectionThirdComposite, -5 );
     sectionSecondComposite.setLayoutData( formData );
     
     calcProblemsGUI = new CalculationUnitProblemsComponent();

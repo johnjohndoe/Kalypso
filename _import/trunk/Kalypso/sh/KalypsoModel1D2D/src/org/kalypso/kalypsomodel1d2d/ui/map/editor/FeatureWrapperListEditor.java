@@ -293,22 +293,15 @@ public class FeatureWrapperListEditor implements IButtonConstants
   private KeyBasedDataModelChangeListener dataModelListener = 
       new KeyBasedDataModelChangeListener()
       {
-
         @SuppressWarnings("synthetic-access")
         public void dataChanged( String key, Object newValue )
         {
           if( ICommonKeys.KEY_FEATURE_WRAPPER_LIST.equals( key ) )
           {
-//            tableViewer.setInput( newValue );
             updateOnNewInput( newValue );
           }
           else if( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER.equals( key ) )
           {
-//            IStructuredSelection selection =
-//              new StructuredSelection(
-//                  newValue==null ? new Object[]{}:new Object[]{newValue} );
-//            
-//            tableViewer.setSelection( selection );
             updateOnNewSelection( newValue );
           }
           else
@@ -316,7 +309,6 @@ public class FeatureWrapperListEditor implements IButtonConstants
             //uninteresting key
           }
         }
-    
       };
 
   public FeatureWrapperListEditor( String selectionID, String inputID, String mapPanelID )
@@ -346,7 +338,7 @@ public class FeatureWrapperListEditor implements IButtonConstants
 
     tableViewer = new TableViewer( parent, SWT.FILL | SWT.BORDER );
     Table table = tableViewer.getTable();
-    tableViewer.setContentProvider( setOwnContentProvider() );
+    tableViewer.setContentProvider( new ArrayContentProvider() );
     tableViewer.setLabelProvider( getLabelProvider(parent.getDisplay()) );
     table.setLinesVisible( true );
     table.setLayoutData( formData );
@@ -354,15 +346,7 @@ public class FeatureWrapperListEditor implements IButtonConstants
     final TableColumn lineColumn = new TableColumn( table, SWT.LEFT );
     lineColumn.setWidth( 50 );
    
-    Object inputData = 
-      dataModel.getData( 
-        ICommonKeys.KEY_FEATURE_WRAPPER_LIST );
-
-    if (inputData == null)
-    {
-      inputData = new ArrayList<IFeatureWrapper2>();
-    }
-    tableViewer.setInput((List<ICalculationUnit>)inputData );
+    tableViewer.setInput(setInputContentProvider());
     tableViewer.addSelectionChangedListener( this.elevationModelSelectListener );
 
     formData = new FormData();
@@ -471,7 +455,7 @@ public class FeatureWrapperListEditor implements IButtonConstants
       image = new Image( btnComposite.getDisplay(),
           KalypsoModel1D2DPlugin.imageDescriptorFromPlugin(
               PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
-              "icons/elcl16/add.gif" ).getImageData() );
+              "icons/elcl16/add.gif" ).getImageData());
       calculateButton.setImage( image );
       calculateButton.addSelectionListener( new SelectionAdapter()
       {
@@ -518,7 +502,6 @@ public class FeatureWrapperListEditor implements IButtonConstants
             "icons/elcl16/save.gif" ).getImageData() );
     saveButton.setImage( image );
     formData = new FormData();
-    //formData.left = new FormAttachment(descriptionGroupText,5);
     formData.right = new FormAttachment(100,0);
     formData.bottom = new FormAttachment(100,0);
     saveButton.setLayoutData( formData ); 
@@ -618,23 +601,10 @@ public class FeatureWrapperListEditor implements IButtonConstants
           tableViewer.setInput( input );
         }
         IFeatureWrapper2 currentSelection = getCurrentSelection();
-        //    final IStructuredSelection selection;
-        //    if( currentSelection != null )
-        //    {
-        //      selection = 
-        //        new StructuredSelection( new Object[]{ currentSelection } );
-        //    }
-        //    else
-        //    {
-        //      selection = 
-        //        new StructuredSelection( new Object[]{ } );
-        //    }
-        //    tableViewer.setSelection( selection );
         updateOnNewSelection( currentSelection );
       }
     };
-    Display display = parent.getDisplay();
-    
+    Display display = parent.getDisplay();    
     display.syncExec( changeInputRunnable );
   }
   
@@ -642,7 +612,6 @@ public class FeatureWrapperListEditor implements IButtonConstants
   {
     final Runnable runnable = new Runnable()
     {
-
       public void run( )
       {
         final Object cachedCurrentSelect = currentSelection; 
@@ -662,13 +631,9 @@ public class FeatureWrapperListEditor implements IButtonConstants
         }
         descriptionText.setText( desc );
         descriptionText.redraw();
-      }
-      
-    };
-    
-    
-    Display display = parent.getDisplay();
-    
+      }      
+    };    
+    Display display = parent.getDisplay();    
     display.syncExec( runnable );
   }
   
@@ -676,28 +641,24 @@ public class FeatureWrapperListEditor implements IButtonConstants
   {
     final Runnable runnable = new Runnable()
     {
-
       public void run( )
       {
         tableViewer.refresh();
-      }
-      
-    };
-    
-    
-    Display display = parent.getDisplay();
-    
+      }      
+    };    
+    Display display = parent.getDisplay();    
     display.syncExec( runnable );
   }
   
-  public void refreshOtherSections(){
-    
+  public void refreshOtherSections()
+  {    
   }
   
   
-  protected ArrayContentProvider setOwnContentProvider()
+  protected List<ICalculationUnit> setInputContentProvider()
   {
-    return new ArrayContentProvider();
+   
+    return null;
   }
   
 }
