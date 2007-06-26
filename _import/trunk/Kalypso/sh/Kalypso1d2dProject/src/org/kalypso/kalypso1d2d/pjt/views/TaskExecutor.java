@@ -111,8 +111,8 @@ public class TaskExecutor implements ITaskExecutor
     Kalypso1d2dProjectPlugin.getDefault().getDataProvider();
 
     if( m_activeTask != null )
-    {
-      if( !m_authority.canStopTask( m_activeTask ) )
+    {      
+      if( m_activeTask == task || !m_authority.canStopTask( m_activeTask ) )
         return;
     }
     final String name = task.getURI();
