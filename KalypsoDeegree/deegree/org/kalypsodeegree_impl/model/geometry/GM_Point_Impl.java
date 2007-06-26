@@ -62,13 +62,19 @@ package org.kalypsodeegree_impl.model.geometry;
 
 import java.io.Serializable;
 
+import org.kalypso.jts.JTSUtilities;
 import org.kalypsodeegree.model.geometry.GM_Aggregate;
 import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.opengis.cs.CS_CoordinateSystem;
+
+import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * default implementation of the GM_Point interface.
@@ -348,5 +354,25 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
     }
 
     return ret;
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl#getBuffer(double)
+   */
+  @SuppressWarnings("unchecked")
+  @Override
+  public GM_Surface<GM_Polygon> getBuffer( double distance )
+  {
+    try
+    {
+      Point export = (Point) JTSAdapter.export( this );
+      Polygon poly = (Polygon) export.buffer( distance );
+      return (GM_Surface<GM_Polygon>) JTSAdapter.wrap( poly );
+    }
+    catch( GM_Exception e )
+    {
+      e.printStackTrace();
+      return null;
+    }
   }
 }
