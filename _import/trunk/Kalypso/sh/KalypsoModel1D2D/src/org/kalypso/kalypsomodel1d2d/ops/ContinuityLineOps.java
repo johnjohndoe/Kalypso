@@ -54,6 +54,7 @@ import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DContinuityLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
@@ -241,10 +242,28 @@ public class ContinuityLineOps
    */
   public static final IFE1D2DNode getMiddleNode( ILineElement lineElement )
   {
+    
     Assert.throwIAEOnNullParam( lineElement, "lineElement" );
-    List nodes = lineElement.getNodes();
-    int middle = (int)Math.ceil( nodes.size()/2.0 );
-    return (IFE1D2DNode) nodes.get( middle );
+    if( lineElement instanceof IBoundaryLine1D )
+    {
+     //boundary line is based on a single 1d node so its target 
+      //point is used as middle node
+      IFE1D2DEdge edge1D = ((IBoundaryLine1D<IFE1D2DComplexElement, IFE1D2DEdge>)lineElement).getEdges().get( 0 );
+      if( ((IBoundaryLine1D)lineElement).isAtEdgeEnd() )
+      {
+        return edge1D.getNode( 1 );
+      }
+      else
+      {
+        return edge1D.getNode( 0 );
+      }
+    }
+    else
+    {
+      List nodes = lineElement.getNodes();
+      int middle = (int)Math.ceil( nodes.size()/2.0 );
+      return (IFE1D2DNode) nodes.get( middle );
+    }
   }
   
 }

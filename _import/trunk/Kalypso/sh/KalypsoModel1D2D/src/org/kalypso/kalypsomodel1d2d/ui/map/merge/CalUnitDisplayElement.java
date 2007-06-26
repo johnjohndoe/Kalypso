@@ -199,12 +199,14 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
     final GM_Envelope sourceRect = projection.getSourceRect();
     final LinkedList<ICalculationUnit> calUnitTreeToDraw = new LinkedList<ICalculationUnit>();
     calUnitTreeToDraw.add( calUnit );
+     
     while( !calUnitTreeToDraw.isEmpty() )
     {
       final ICalculationUnit<IFE1D2DElement> currentUnit = calUnitTreeToDraw.removeFirst();
 //      final Color color = new Color( Color.lightGray );
       final IFeatureWrapperCollection<IFE1D2DElement> elements = currentUnit.getElements();
       final List<IFE1D2DElement> visibleElements = elements.query( sourceRect );
+      boolean includeChildLines = currentUnit.equals( calUnit );
 
       for( final IFE1D2DElement element : visibleElements )
       {
@@ -233,17 +235,21 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
             throw new RuntimeException( e );
           }
         }
-        else if( element instanceof ILineElement || element instanceof IElement1D )
+        else if( element instanceof ILineElement || 
+                      element instanceof IElement1D  )
         {
-          try
+          if( includeChildLines )
           {
-            final GM_Curve curve = (GM_Curve) element.recalculateElementGeometry();
-            paintLineString( curve, lineElementColor, (Graphics2D) g, projection );
-          }
-          catch( final Exception e )
-          {
-            e.printStackTrace();
-            throw new RuntimeException( e );
+            try
+            {
+              final GM_Curve curve = (GM_Curve) element.recalculateElementGeometry();
+              paintLineString( curve, lineElementColor, (Graphics2D) g, projection );
+            }
+            catch( final Exception e )
+            {
+              e.printStackTrace();
+              throw new RuntimeException( e );
+            }
           }
         }
         else

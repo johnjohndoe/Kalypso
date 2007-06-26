@@ -44,11 +44,11 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.kalypsodeegree.model.geometry.GM_MultiPoint;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
-import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * @author Gernot Belger
@@ -77,7 +77,7 @@ public interface IBoundaryCondition extends IFlowRelationship
    * unit must contains.
    * @param scopeMark the scope mark of this 
    */
-  public void addScopeMark( GM_Point scopeMark );
+  public void addScopeMark( GM_MultiPoint scopeMark );
   
   /**
    * Removes the scope parks within the specified circle.
@@ -86,7 +86,7 @@ public interface IBoundaryCondition extends IFlowRelationship
    *            equal to the scopeMark         
    * 
    */
-  public void removeScopeMark( GM_Point scopeMark, double searchRadius );
+  public void removeScopeMark( GM_MultiPoint scopeMark, double searchRadius );
   
   /**
    * Removes all scope marks on of this boundary condition
@@ -96,6 +96,6 @@ public interface IBoundaryCondition extends IFlowRelationship
   /**
    * Returns all scope marks of this boundary condition
    */
-  public List<GM_Point> getScopeMark();
+  public List<GM_MultiPoint> getScopeMark();
   
 }

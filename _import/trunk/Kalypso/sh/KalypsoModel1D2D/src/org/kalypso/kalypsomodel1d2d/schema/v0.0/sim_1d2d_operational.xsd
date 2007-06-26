@@ -173,7 +173,7 @@
 					</xs:element>
 					<xs:element
 						name="scopeMark"
-						type="gml:PointPropertyType"
+						type="gml:MultiPointPropertyType"
 						minOccurs="0" maxOccurs="unbounded">
 						<xs:annotation>
 							<xs:documentation xml:lang="de">

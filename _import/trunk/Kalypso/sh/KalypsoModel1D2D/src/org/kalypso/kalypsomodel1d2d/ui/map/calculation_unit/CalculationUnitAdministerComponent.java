@@ -146,7 +146,8 @@ public class CalculationUnitAdministerComponent
       elementsCombo.removeAll();
       actionsCombo.add( ACTION_KEY_DRAW );
       actionsCombo.add( ACTION_KEY_ADMINISTER );
-      //elementsCombo.add(ELEMENTS_KEY_BOUNDARY_CONDITIONS);
+      elementsCombo.add(ELEMENTS_KEY_BOUNDARY_CONDITIONS);
+//      elementsCombo.add(ELEMENTS_KEY_BOUNDARY_CONDITIONS);
     }
     else
     {
@@ -198,6 +199,7 @@ public class CalculationUnitAdministerComponent
               elementsCombo.removeAll();
               elementsCombo.add(ELEMENTS_KEY_SUBUNITS);
               elementsCombo.add(ELEMENTS_KEY_BOUNDARY_UP);
+              elementsCombo.add(ELEMENTS_KEY_BOUNDARY_CONDITIONS);
             }
         }      
     }

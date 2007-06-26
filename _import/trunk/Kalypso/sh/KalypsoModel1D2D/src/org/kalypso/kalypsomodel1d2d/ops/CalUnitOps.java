@@ -65,8 +65,10 @@ import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_MultiPoint;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 
 /**
@@ -547,16 +549,26 @@ public class CalUnitOps
     }
     // compute the other lines and set their middle nodes as
     //boundary line    
+    ArrayList<GM_Point> points = new ArrayList<GM_Point>();
+    
     for(IFE1D2DElement ele : unit.getElements())
     {
       if( ele instanceof IBoundaryLine )
       {
         if( !ele.equals( targetLine ) )
         {
+          
           final IFE1D2DNode middleNode = ContinuityLineOps.getMiddleNode( ( IBoundaryLine )ele );
-          bCondition.addScopeMark( middleNode.getPoint() );
+          points.add( middleNode.getPoint() );
         }
       }
+    }
+    if( points.size() > 0 )
+    {
+      GM_MultiPoint multiPoint = GeometryFactory.createGM_MultiPoint( 
+            points.toArray( new GM_Point[points.size()] ), 
+            points.get( 0 ).getCoordinateSystem() );
+      bCondition.addScopeMark( multiPoint );
     }
     
   }
@@ -599,37 +611,45 @@ public class CalUnitOps
     {
       return false;
     }
-    final List<IFE1D2DComplexElement> containers = 
+    List<IFE1D2DComplexElement> containers = 
       new ArrayList<IFE1D2DComplexElement>( bcLine.getContainers() );
-    final List<GM_Point> scopeMarks = bCondition.getScopeMark();
-    containers.remove( bcLine );
-    if( scopeMarks.size()<1 )
+    final List<GM_MultiPoint> muliPointScopeMarks = bCondition.getScopeMark();
+    
+    multiPointScanning: for(GM_MultiPoint multiPoint: muliPointScopeMarks )
     {
-      return false;
-    }
-    for( GM_Point currentPoint : scopeMarks )
-    {
+//      final List<GM_MultiPoint> scopeMarks;
+//      containers.remove( bcLine );
+      if( multiPoint.getSize()<1 )
+      {
+        containers = 
+          new ArrayList<IFE1D2DComplexElement>( bcLine.getContainers() );
+        return false;
+      }
       
-      final IBoundaryLine<IFE1D2DComplexElement, IFE1D2DEdge> otherLine = 
-        getLineElement( unit, currentPoint,grabDistance, IBoundaryLine.class );
-      if( otherLine == null )
+      for( GM_Point currentPoint : multiPoint.getAllPoints() )
       {
-        return false;
+        
+        final IBoundaryLine<IFE1D2DComplexElement, IFE1D2DEdge> otherLine = 
+          getLineElement( unit, currentPoint,grabDistance, IBoundaryLine.class );
+        
+        if( otherLine == null )
+        {
+          containers = 
+            new ArrayList<IFE1D2DComplexElement>( bcLine.getContainers() );
+          continue multiPointScanning;
+        }
+        
+        if( bcLine.equals( otherLine ) )
+        {
+          containers = 
+            new ArrayList<IFE1D2DComplexElement>( bcLine.getContainers() );
+          continue multiPointScanning;
+        }
       }
-      if( bcLine.equals( otherLine ) )
-      {
-        return false;
-      }
-//      IBoundaryLine line = 
-//        model1d2d.findElement( 
-//                currentPoint, grabDistance, IBoundaryLine.class );
-//      containers.retainAll( line.getContainers() );
-//      if( containers.isEmpty() )
-//      {
-//        return false;
-//      }
+      return true;
     }
-    return true;
+    
+    return false;
   }
   
   /**
@@ -661,7 +681,8 @@ public class CalUnitOps
     for( int i = targetLines.size()-1 ; i>=0 ; i-- )
     {
       IFE1D2DElement ele = targetLines.get( i );
-      if( lineType.isInstance( ele ) )
+      
+      if( lineType.isAssignableFrom( ele.getClass() ) )
       {
         try
         {

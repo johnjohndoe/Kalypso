@@ -59,8 +59,10 @@ import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteBoundaryLineCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand;
@@ -386,24 +388,43 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
     private GM_Point getBoundaryPosition( )
     {
       IBoundaryLine selectedBoundaryLine = getSelectedBoundaryLine();
-      final GM_Point klickedPoint = getCurrentPoint();
       
-      //find the nearest edge
-      IFeatureWrapperCollection<IFE1D2DEdge> edges = selectedBoundaryLine.getEdges();
-      double minDist = Double.MAX_VALUE;
-      GM_Point selectedEdgeCentroid = null; 
-      for( IFE1D2DEdge edge: edges )
+      if( selectedBoundaryLine instanceof IBoundaryLine1D )
       {
-        final GM_Curve curve = edge.getCurve();
-        final double curDist = klickedPoint.distance( curve );
-        System.out.println("curDist"+curDist);
-        if( curDist<minDist)
-        {
-          selectedEdgeCentroid = curve.getCentroid();
-          minDist = curDist;
-        }
+       IBoundaryLine1D boundaryLine1D = ((IBoundaryLine1D)selectedBoundaryLine);
+       IFeatureWrapperCollection edges = boundaryLine1D.getEdges();
+       final IFE1D2DEdge edge1D  = (IFE1D2DEdge)edges.get( 0 );
+       if( boundaryLine1D.isAtEdgeEnd() )
+       {
+         return edge1D.getNode( 1 ).getPoint();
+       }
+       else
+       {
+         return edge1D.getNode( 0 ).getPoint();
+       }
+           
       }
-      return selectedEdgeCentroid;
+      else
+      {
+        final GM_Point klickedPoint = getCurrentPoint();
+        
+        //find the nearest edge
+        IFeatureWrapperCollection<IFE1D2DEdge> edges = selectedBoundaryLine.getEdges();
+        double minDist = Double.MAX_VALUE;
+        GM_Point selectedEdgeCentroid = null; 
+        for( IFE1D2DEdge edge: edges )
+        {
+          final GM_Curve curve = edge.getCurve();
+          final double curDist = klickedPoint.distance( curve );
+          System.out.println("curDist"+curDist);
+          if( curDist<minDist)
+          {
+            selectedEdgeCentroid = curve.getCentroid();
+            minDist = curDist;
+          }
+        }
+        return selectedEdgeCentroid;
+      }
     }
     
 //    private IBoundaryConditionDescriptor[] createTimeserieDescriptors( final IFeatureWrapper2 modelElement, final IFolder scenarioFolder )

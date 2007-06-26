@@ -199,6 +199,7 @@ public class BoundaryLine1D<
     double[] poses =  
           {
         targetX+edgeOrthoVectX, targetY+edgeOrthVectY,
+        targetX, targetY,
         targetX-edgeOrthoVectX, targetY-edgeOrthVectY} ;
     GM_Curve curve = GeometryFactory.createGM_Curve( 
         poses, 2, targetNode.getCoordinateSystem() );
