@@ -1391,7 +1391,7 @@ Hauptschleife: DO i = 1, maxger
 
 
         WRITE (UNIT_OUT_WEHR, '(/,5x,'' Wehrberechnung an Station km'',f8.4)') stat (nprof)
-        WRITE (UNIT_OUT_WEHR, '(,5x,'' Aeusserer Abfluss q_out ='',f8.4)') q_out
+        WRITE (UNIT_OUT_WEHR, '(5x,'' Aeusserer Abfluss q_out ='',f8.4)') q_out
         WRITE (UNIT_OUT_WEHR, '(5x,''-----------------------------'')')
         WRITE (UNIT_OUT_WEHR, '(5x,'' Q_OW '',6x,''h_ow'',5x,''v_ow'',7x,''he_ow'',3x,''mue'',6x,  &
                &''Q-wehr'',2x,''h-ue'',5x,''A-ue'',4x,''Ü-Art'',13x,''he-wehr'',4x,''h_uw'',5x,''v_uw'',7x,''he_uw'')')

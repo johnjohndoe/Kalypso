@@ -143,9 +143,7 @@ qbordv.o: ./qbordv.f90 globale_definitionen.o
 	$(FC) $(FFLAGS) -c	./qbordv.f90
 SRC = ./iterat.f90 ./geomet.f90 ./impuls.f90 ./pasche.f90 ./lindy.f90 ./br_konv.f90 ./grnzh.f90 ./pktfilt.f90 ./yarnell.f90 ./globale_definitionen.f90 ./ju0gfu.f90 ./ju0chr.f90 ./g_wehr.f90 ./alpha_dru.f90 ./stop_programm.f90 ./Winter.f90 ./verluste.f90 ./speicher.f90 ./sohlef.f90 ./proe_pro.f90 ./when.f90 ./probv.f90 ./zeila.f90 ./lapro.f90 ./minmaxm.f90 ./wspanf.f90 ./lcase.f90 ./wspow.f90 ./bovog.f90 ./kouwen.f90 ./kopf.f90 ./t0f.f90 ./maeand.f90 ./wspber.f90 ./Abfluss.f90 ./linreg.f90 ./normber.f90 ./flae_inh.f90 ./R_WSP.f90 ./intdat.f90 ./eb2ks.f90 ./linie.f90 ./ucase.f90 ./SaWSP.f90 ./check_dialog.f90 ./newton.f90 ./station.f90 ./abskst.f90 ./uf.f90 ./pegasus.f90 ./erfroud.f90 ./globale_funktionen.F90 ./prf.f90 ./read_kalypso_config_file.f90 ./w_ber.f90 ./beiwert.f90 ./fuent_s.f90 ./anf.f90 ./AlWSP.f90 ./integrat.f90 ./wsp.f90 ./close_units.f90 ./drucktab.f90 ./eb2kst.f90 ./qks_qkst.f90 ./linir.f90 ./qbordv.f90
 OBJ = iterat.o geomet.o impuls.o pasche.o lindy.o br_konv.o grnzh.o pktfilt.o yarnell.o globale_definitionen.o ju0gfu.o ju0chr.o g_wehr.o alpha_dru.o stop_programm.o Winter.o verluste.o speicher.o sohlef.o proe_pro.o when.o probv.o zeila.o lapro.o minmaxm.o wspanf.o lcase.o wspow.o bovog.o kouwen.o kopf.o t0f.o maeand.o wspber.o Abfluss.o linreg.o normber.o flae_inh.o R_WSP.o intdat.o eb2ks.o linie.o ucase.o SaWSP.o check_dialog.o newton.o station.o abskst.o uf.o pegasus.o erfroud.o globale_funktionen.o prf.o read_kalypso_config_file.o w_ber.o beiwert.o fuent_s.o anf.o AlWSP.o integrat.o wsp.o close_units.o drucktab.o eb2kst.o qks_qkst.o linir.o qbordv.o
-clean: neat
-	-rm -f .cppdefs $(OBJ) KALYPSO-1D.exe *.mod
-neat:
-	-rm -f $(TMPFILES)
+clean: 
+	-del .cppdefs $(OBJ) KALYPSO-1D.exe *.mod
 KALYPSO-1D.exe: $(OBJ)
 	$(LD) $(OBJ) -o KALYPSO-1D.exe $(LDFLAGS)
