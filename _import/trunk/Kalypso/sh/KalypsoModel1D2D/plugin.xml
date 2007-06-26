@@ -93,7 +93,6 @@
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionContext1DToCLine"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.ILineElement"/>
-         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine1D"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit2D"/>
@@ -114,7 +113,7 @@
               id="org.kalypso.ui.views.mapView.widgets1d2d"
               targetID="org.kalypso.ui.views.mapView">         	
           <action
-                icon="icons/elcl16/flowRelation_addWeir.gif"
+                icon="icons/elcl16/add_weir.gif"
                 id="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateWeirFlowrelationWidgetAction"
                 label="Wehr hinzufügen"
                 style="radio"
@@ -130,7 +129,7 @@
 	       			</class>
 			</action>    
           <action
-                icon="icons/elcl16/flowRelation_add_teschke.gif"
+                icon="icons/elcl16/add_parameter_teschke.gif"
                 id="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateTeschkeFlowrelationWidgetAction"
                 label="Teschke Parameter hinzufügen"
                 style="radio"
@@ -146,7 +145,7 @@
 	       			</class>
 			</action>    
           <action
-                icon="icons/elcl16/flowrelation_addKing.gif"
+                icon="icons/elcl16/add_parameter_king.gif"
                 id="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateKingFlowrelationWidgetAction"
                 label="King Parameter hinzufügen"
                 style="radio"
@@ -268,7 +267,7 @@
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
 	                value="org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateFEElement1DWidget"/>
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
-                    value="icons/elcl16/04_add_1D.gif"/>
+                    value="icons/elcl16/add_1D.gif"/>
 			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
                     value="Ein neues 1d-Element erzeugen"/>              
             </class>
@@ -287,7 +286,7 @@
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
 	                value="org.kalypso.kalypsomodel1d2d.ui.map.CreateFE2DElementWidget"/>
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
-                    value="icons/elcl16/07_add_2D.gif"/>
+                    value="icons/elcl16/add_2D.gif"/>
 			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
                     value="2d-Elemente erzeugen"/>              
             </class>
@@ -306,7 +305,7 @@
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
 	                value="org.kalypso.kalypsomodel1d2d.ui.map.cline.CreateFEContlineWidget"/>
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
-                    value="icons/elcl16/10_add_konti.gif"/>
+                    value="icons/elcl16/add_conti.gif"/>
 			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
                     value="Kontinuitätslinie erzeugen"/>              
             </class>
@@ -345,7 +344,7 @@
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
 	                value="org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFEElements2DWidget"/>
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
-                    value="icons/elcl16/08_cut_2D.gif"/>
+                    value="icons/elcl16/cut_2D.gif"/>
 			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
                     value="2d-Elemente markieren und entfernen"/>              
             </class>
@@ -364,7 +363,7 @@
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
 	                value="org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFEElements1DWidget"/>
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
-                    value="icons/elcl16/05_cut_1D.gif"/>
+                    value="icons/elcl16/cut_1D.gif"/>
 			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
                     value="1d-Elemente markieren und entfernen"/>              
             </class>
@@ -383,7 +382,7 @@
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
 	                value="org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFEContlineWidget"/>
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
-                    value="icons/elcl16/11_cut_konti.gif"/>
+                    value="icons/elcl16/cut_conti.gif"/>
 			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
                     value="Kontinuitätslinien markieren und entfernen"/>              
             </class>
@@ -448,7 +447,7 @@
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
 	                value="org.kalypso.kalypsomodel1d2d.ui.map.EditFEConceptGeometryWidget"/>
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
-                    value="icons/elcl16/09_edit_2D.gif"/>
+                    value="icons/elcl16/move_FE_knot.gif"/>
 			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
                     value="Knoten bewegen"/>              
             </class>
