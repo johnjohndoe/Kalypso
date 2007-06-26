@@ -123,12 +123,14 @@ public class RemoveBoundaryConditionFromCalculationUnitCmd implements IDiscrMode
     {
       if( !done  )
       {
-        if( CalUnitOps.isBoundaryConditionOf( calculationUnit, boundaryCondition, grabDistance ) )
-        {
-          boundaryCondition.clearScopeMarks();
-          fireProcessChanges();
-          done = true;
-        }
+//        if( CalUnitOps.isBoundaryConditionOf( calculationUnit, boundaryCondition, grabDistance ) )
+//        {
+//          boundaryCondition.clearScopeMarks();
+//          fireProcessChanges();
+//          done = true;
+//        }
+        done = CalUnitOps.removeBoundaryConditionFromUnit( calculationUnit, boundaryCondition, grabDistance );
+        fireProcessChanges();
       }
     }
     catch( Throwable th )

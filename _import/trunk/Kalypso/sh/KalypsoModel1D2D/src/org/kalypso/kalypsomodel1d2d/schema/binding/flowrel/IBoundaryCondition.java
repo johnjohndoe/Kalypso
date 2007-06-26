@@ -98,4 +98,9 @@ public interface IBoundaryCondition extends IFlowRelationship
    */
   public List<GM_MultiPoint> getScopeMark();
   
+  
+  public double getStationaryCondition();
+  
+  public void setStationaryCondition( double statCond);
+  
 }

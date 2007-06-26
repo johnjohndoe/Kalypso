@@ -227,6 +227,8 @@ public class Kalypso1D2DSchemaConstants
   public static final QName OP1D2D_PROP_SCOPE_MARK = 
     new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "scopeMark" );
   
+  public static final QName OP1D2D_PROP_STATIONARY_COND = 
+    new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "stationaryCondition" );
   
 
 }

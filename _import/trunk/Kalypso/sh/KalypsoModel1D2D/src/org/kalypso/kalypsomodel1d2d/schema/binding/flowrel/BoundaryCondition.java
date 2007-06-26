@@ -43,7 +43,6 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.flowrel;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
@@ -56,7 +55,6 @@ import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_MultiPoint;
-import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * @author Gernot Belger
@@ -170,7 +168,11 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
    */
   public void removeScopeMark( GM_MultiPoint scopeMark, double searchRadius )
   {
-    throw new UnsupportedOperationException();
+    final Feature feature = getWrappedFeature();
+    final List scopeMarks =
+      (List) feature.getProperty( Kalypso1D2DSchemaConstants.OP1D2D_PROP_SCOPE_MARK );
+    scopeMarks.remove( scopeMark );
+//    throw new UnsupportedOperationException();
 //    final Feature feature = getWrappedFeature();
 //    final List scopeMarks =
 //      (List) feature.getProperty( Kalypso1D2DSchemaConstants.OP1D2D_PROP_SCOPE_MARK );
@@ -184,5 +186,42 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
 //    }
   }
   
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition#getStationaryCondition()
+   */
+  public double getStationaryCondition( )
+  {
+    final Feature feature = getWrappedFeature();
+    Object property = feature.getProperty( 
+        Kalypso1D2DSchemaConstants.OP1D2D_PROP_STATIONARY_COND );
+    if( property instanceof Double )
+    {
+      return ((Double)property).doubleValue();
+    }
+    else
+    {
+      return Double.NaN;
+    }
+  }
+  
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition#setStationaryCondition(double)
+   */
+  public void setStationaryCondition( double statCond )
+  {
+    Double dValue;
+    if( Double.isNaN( statCond ))
+    {
+      dValue = null;
+    }
+    else
+    {
+      dValue = Double.valueOf( statCond );
+    }
+    final Feature feature = getWrappedFeature();
+    feature.setProperty( 
+        Kalypso1D2DSchemaConstants.OP1D2D_PROP_STATIONARY_COND,
+        dValue );
+  }
 
 }
