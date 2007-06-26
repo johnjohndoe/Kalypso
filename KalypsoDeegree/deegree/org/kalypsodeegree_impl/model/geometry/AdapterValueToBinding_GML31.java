@@ -62,6 +62,7 @@ import ogc31.www.opengis.net.gml.LinearRingType;
 import ogc31.www.opengis.net.gml.MultiLineStringType;
 import ogc31.www.opengis.net.gml.MultiPointType;
 import ogc31.www.opengis.net.gml.MultiPolygonType;
+import ogc31.www.opengis.net.gml.PointPropertyType;
 import ogc31.www.opengis.net.gml.PointType;
 import ogc31.www.opengis.net.gml.PolygonPropertyType;
 import ogc31.www.opengis.net.gml.PolygonType;
@@ -189,12 +190,24 @@ public class AdapterValueToBinding_GML31 implements AdapterValueToGMLBinding
     final MultiPointType multiPointType = KalypsoOGC31JAXBcontext.GML3_FAC.createMultiPointType();
     final GM_Point[] allPoints = multiPoint.getAllPoints();
 
-    final List<PointType> pointList = multiPointType.getPointMembers().getPoint();
+//    final List<PointType> pointList = multiPointType.getPointMembers().getPoint();
+//    for( int i = 0; i < allPoints.length; i++ )
+//    {
+//      final GM_Point point = allPoints[i];
+//      final PointType pointType = createPointType( point, csName );
+//      pointList.add( pointType );
+//    }
+//    multiPointType.setSrsName( csName );
+//    return multiPointType;
+    
+    final List<PointPropertyType> pointList = multiPointType.getPointMember();//.getPoint();
     for( int i = 0; i < allPoints.length; i++ )
     {
       final GM_Point point = allPoints[i];
+      PointPropertyType pointPropertyType = KalypsoOGC31JAXBcontext.GML3_FAC.createPointPropertyType();
       final PointType pointType = createPointType( point, csName );
-      pointList.add( pointType );
+      pointPropertyType.setPoint( pointType );
+      pointList.add( pointPropertyType );
     }
     multiPointType.setSrsName( csName );
     return multiPointType;
