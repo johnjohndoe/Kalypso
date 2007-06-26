@@ -42,8 +42,10 @@ package org.kalypso.ui.views.map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IStorage;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IMemento;
@@ -68,6 +70,12 @@ public class MapView extends AbstractMapPart implements IViewPart
 
   private static final String SAVE_MAP_ON_CLOSE = "saveMapOnClose";
 
+  private static final String RELOAD_MAP_ON_OPEN = "reloadMapOnOpen";
+
+  private static final String MEMENTO_FILE = "mapFile";
+
+  private String m_memento_file;
+
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
@@ -76,17 +84,23 @@ public class MapView extends AbstractMapPart implements IViewPart
   {
     super.createPartControl( parent );
 
-    // Stefan: We probably do not want the file to be restored?
-    // final IFile file = getFile();
-    // if( file != null )
-    // {
-    // startLoadJob( file );
-    // }
+    // Stefan: Now we can restore the file if the map is configured to do so      
+    final String reloadOnOpen = getConfigurationElement().getAttribute( RELOAD_MAP_ON_OPEN );
+    if( m_memento_file!= null && "true".equals( reloadOnOpen ) )
+    {
+      final IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile( new Path( m_memento_file ) );
+      setFile( file );
+      if( file != null )
+      {
+        startLoadJob( file );
+      }
+    }
   }
 
   public void init( final IViewSite site, final IMemento memento )
   {
     init( site );
+    m_memento_file = memento.getString( MEMENTO_FILE );    
   }
 
   /**
@@ -94,7 +108,12 @@ public class MapView extends AbstractMapPart implements IViewPart
    */
   public void saveState( final IMemento memento )
   {
-    // nothing to do
+    final IFile file = getFile();
+    if( file != null )
+    {
+      final String string = file.getFullPath().toString();
+      memento.putString( MEMENTO_FILE, string );
+    }
   }
 
   /**
