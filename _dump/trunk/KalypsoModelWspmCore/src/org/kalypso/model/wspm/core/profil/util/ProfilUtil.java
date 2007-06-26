@@ -602,7 +602,7 @@ public class ProfilUtil
   public static GM_Curve getLine( IProfil profile, final CS_CoordinateSystem crs ) throws GM_Exception
   {
     final LinkedList<IProfilPoint> georeferencedPoints = getGeoreferencedPoints( profile );
-    final GM_Position[] pos = null;
+    final GM_Position[] pos = new GM_Position[georeferencedPoints.size()];
 
     for( int i = 0; i < georeferencedPoints.size(); i++ )
     {
@@ -612,9 +612,9 @@ public class ProfilUtil
       pos[i] = GeometryFactory.createGM_Position( x, y, z );
     }
     
-    GeometryFactory.createGM_Curve( pos, crs );
+    final GM_Curve curve = GeometryFactory.createGM_Curve( pos, crs );
 
-    return null;
+    return curve;
 
   }
 
