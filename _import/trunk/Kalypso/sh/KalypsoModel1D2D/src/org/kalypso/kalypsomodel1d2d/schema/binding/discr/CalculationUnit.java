@@ -132,8 +132,7 @@ public class CalculationUnit
     if( oldLine != null )
     {
       LinksOps.delRelationshipElementAndComplexElement( oldLine, this );
-    }
-    
+    }    
     //set new boundary
     FeatureHelper.setLocalLink( 
         this, 

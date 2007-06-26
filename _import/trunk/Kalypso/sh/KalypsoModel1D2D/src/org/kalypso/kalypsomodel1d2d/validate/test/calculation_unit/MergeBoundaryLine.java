@@ -5,11 +5,9 @@ package org.kalypso.kalypsomodel1d2d.validate.test.calculation_unit;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.BoundaryLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
@@ -22,10 +20,11 @@ import org.kalypsodeegree.model.feature.Feature;
 
 /** Class ...
  */
+@SuppressWarnings("unchecked")
 public class MergeBoundaryLine extends BoundaryLine implements ICalculationValidateInterface
 {
-  private List<ICalculationUnit> f_calculationUnit = new ArrayList<ICalculationUnit>();
-  private List<IBoundaryCondition> f_boundaryCondition = new ArrayList<IBoundaryCondition>();
+  private List<ICalculationUnit> calculationUnits = new ArrayList<ICalculationUnit>();
+  private List<IBoundaryCondition> boundaryConditions = new ArrayList<IBoundaryCondition>();
   private CalculationUnitDataModel dataModel;
   static private boolean usesAllInstances = false;
   static private List allInstances = new ArrayList();
@@ -44,15 +43,15 @@ public class MergeBoundaryLine extends BoundaryLine implements ICalculationValid
 	 * @param elements 
 	 */
 	public void setCalculationUnit(List<ICalculationUnit> elements) {
-		if ( this.f_calculationUnit != elements ) {
-			Iterator it = this.f_calculationUnit.iterator();
+		if ( this.calculationUnits != elements ) {
+			Iterator it = this.calculationUnits.iterator();
 			while ( it.hasNext() ) {
 				MergeCalculationUnit x = (MergeCalculationUnit) it.next();
 				x.z_internalRemoveFromBoundaryLine( (MergeBoundaryLine)this );
 			}
-			this.f_calculationUnit = elements;
-			if ( f_calculationUnit != null ) {
-				it = f_calculationUnit.iterator();
+			this.calculationUnits = elements;
+			if ( calculationUnits != null ) {
+				it = calculationUnits.iterator();
 				while ( it.hasNext() ) {
 					MergeCalculationUnit x = (MergeCalculationUnit) it.next();
 					x.z_internalAddToBoundaryLine( (MergeBoundaryLine)this );
@@ -69,10 +68,10 @@ public class MergeBoundaryLine extends BoundaryLine implements ICalculationValid
 		if ( element == null ) {
 			return;
 		}
-		if ( this.f_calculationUnit.contains(element) ) {
+		if ( this.calculationUnits.contains(element) ) {
 			return;
 		}
-		this.f_calculationUnit.add(element);
+		this.calculationUnits.add(element);
 		element.z_internalAddToBoundaryLine( (MergeBoundaryLine)this );
 	}
 	
@@ -84,15 +83,15 @@ public class MergeBoundaryLine extends BoundaryLine implements ICalculationValid
 		if ( element == null ) {
 			return;
 		}
-		this.f_calculationUnit.remove(element);
+		this.calculationUnits.remove(element);
 		element.z_internalRemoveFromBoundaryLine( (MergeBoundaryLine)this );
 	}
 	
 	/** Implements the getter for + calculationUnit : Set(CalculationUnit)
 	 */
 	public List<ICalculationUnit> getCalculationUnit() {
-		if ( f_calculationUnit != null ) {
-			return f_calculationUnit;
+		if ( calculationUnits != null ) {
+			return calculationUnits;
 		} else {
 			return null;
 		}
@@ -103,7 +102,7 @@ public class MergeBoundaryLine extends BoundaryLine implements ICalculationValid
 	 * @param element 
 	 */
 	public void z_internalAddToCalculationUnit(MergeCalculationUnit element) {
-		this.f_calculationUnit.add(element);
+		this.calculationUnits.add(element);
 	}
 	
 	/** This operation should NOT be used by clients. It implements the correct removal of an element in an association.
@@ -111,7 +110,7 @@ public class MergeBoundaryLine extends BoundaryLine implements ICalculationValid
 	 * @param element 
 	 */
 	public void z_internalRemoveFromCalculationUnit(MergeCalculationUnit element) {
-		this.f_calculationUnit.remove(element);
+		this.calculationUnits.remove(element);
 	}
 	
 	/** Implements the addition of a number of elements to calculationUnit
@@ -160,15 +159,15 @@ public class MergeBoundaryLine extends BoundaryLine implements ICalculationValid
 	 * @param elements 
 	 */
 	public void setBoundaryCondition(List<IBoundaryCondition> elements) {
-		if ( this.f_boundaryCondition != elements ) {
-			Iterator it = this.f_boundaryCondition.iterator();
+		if ( this.boundaryConditions != elements ) {
+			Iterator it = this.boundaryConditions.iterator();
 			while ( it.hasNext() ) {
 				MergeBoundaryCondition x = (MergeBoundaryCondition) it.next();
 				x.z_internalRemoveFromBoundaryLine( (MergeBoundaryLine)this );
 			}
-			this.f_boundaryCondition = elements;
-			if ( f_boundaryCondition != null ) {
-				it = f_boundaryCondition.iterator();
+			this.boundaryConditions = elements;
+			if ( boundaryConditions != null ) {
+				it = boundaryConditions.iterator();
 				while ( it.hasNext() ) {
 					MergeBoundaryCondition x = (MergeBoundaryCondition) it.next();
 					x.z_internalAddToBoundaryLine( (MergeBoundaryLine)this );
@@ -185,10 +184,10 @@ public class MergeBoundaryLine extends BoundaryLine implements ICalculationValid
 		if ( element == null ) {
 			return;
 		}
-		if ( this.f_boundaryCondition.contains(element) ) {
+		if ( this.boundaryConditions.contains(element) ) {
 			return;
 		}
-		this.f_boundaryCondition.add(element);
+		this.boundaryConditions.add(element);
 		element.z_internalAddToBoundaryLine( (MergeBoundaryLine)this );
 	}
 	
@@ -200,15 +199,15 @@ public class MergeBoundaryLine extends BoundaryLine implements ICalculationValid
 		if ( element == null ) {
 			return;
 		}
-		this.f_boundaryCondition.remove(element);
+		this.boundaryConditions.remove(element);
 		element.z_internalRemoveFromBoundaryLine( (MergeBoundaryLine)this );
 	}
 	
 	/** Implements the getter for + boundaryCondition : Set(BoundaryCondition)
 	 */
 	public List<IBoundaryCondition> getBoundaryCondition() {
-		if ( f_boundaryCondition != null ) {
-			return f_boundaryCondition;
+		if ( boundaryConditions != null ) {
+			return boundaryConditions;
 		} else {
 			return null;
 		}
@@ -219,7 +218,7 @@ public class MergeBoundaryLine extends BoundaryLine implements ICalculationValid
 	 * @param element 
 	 */
 	public void z_internalAddToBoundaryCondition(MergeBoundaryCondition element) {
-		this.f_boundaryCondition.add(element);
+		this.boundaryConditions.add(element);
 	}
 	
 	/** This operation should NOT be used by clients. It implements the correct removal of an element in an association.
@@ -227,7 +226,7 @@ public class MergeBoundaryLine extends BoundaryLine implements ICalculationValid
 	 * @param element 
 	 */
 	public void z_internalRemoveFromBoundaryCondition(MergeBoundaryCondition element) {
-		this.f_boundaryCondition.remove(element);
+		this.boundaryConditions.remove(element);
 	}
 	
 	/** Implements the addition of a number of elements to boundaryCondition

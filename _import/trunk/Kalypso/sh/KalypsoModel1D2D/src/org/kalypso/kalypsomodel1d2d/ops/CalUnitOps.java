@@ -228,6 +228,22 @@ public class CalUnitOps
     return num;
   }
   
+  public static List<IBoundaryLine> getBoundaryLines( ICalculationUnit calUnit )
+  {
+    Assert.throwIAEOnNullParam( calUnit, "calUnit" );
+    int num=0; 
+    final IFeatureWrapperCollection<IFE1D2DElement> elements = calUnit.getElements();
+    final List<IBoundaryLine> boundaryLines = new ArrayList<IBoundaryLine>();
+    for( IFE1D2DElement ele : elements )
+    {
+        if( ele instanceof IBoundaryLine )
+        {
+          boundaryLines.add( (IBoundaryLine) ele );
+        }
+    }
+    return boundaryLines;
+  }
+  
   /**
    * Answer the number of the 1d elements the given
    * calculation unit has

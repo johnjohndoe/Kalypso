@@ -177,9 +177,7 @@ public class CalculationUnitPerformWidgetFace
     sectionSecondComposite.setLayoutData( formData );
     
     calcProblemsGUI = new CalculationUnitProblemsComponent();
-    calcProblemsGUI.createControl( dataModel, toolkit, sectionSecondComposite ); 
-    
-    
+    calcProblemsGUI.createControl( dataModel, toolkit, sectionSecondComposite );    
   }
 
   public void disposeControl( )

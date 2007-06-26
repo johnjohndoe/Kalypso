@@ -25,21 +25,13 @@ public class MergeCalculationUnit implements ICalculationUnit,ICalculationValida
   private List<IBoundaryLine> boundaryLines = new ArrayList<IBoundaryLine>();
   static private boolean usesAllInstances = false;
   static private List allInstances = new ArrayList();
-//
-//  public MergeCalculationUnit( Feature featureToBind, QName qnameToBind, QName elementListPropQName, Class wrapperClass )
-//  {
-//    super( featureToBind, qnameToBind, elementListPropQName, wrapperClass );
-//		if ( usesAllInstances ) {
-//			allInstances.add(this);
-//	}
-//  }
   
-public MergeCalculationUnit()
-{
+  public MergeCalculationUnit()
+  {
     if ( usesAllInstances ) {
-        allInstances.add(this);
-}
-}
+            allInstances.add(this);
+    }
+  }
 
 	/** Implements the setter for feature '+ boundaryLine : Set(BoundaryLine)'
 	 * 
@@ -92,7 +84,7 @@ public MergeCalculationUnit()
 	
 	/** Implements the getter for + boundaryLine : Set(BoundaryLine)
 	 */
-	public List<IBoundaryLine> getBoundaryLine() {
+	public List<IBoundaryLine> getBoundaryLines() {
 		if ( boundaryLines != null ) {
 			return (boundaryLines);
 		} else {
@@ -148,7 +140,7 @@ public MergeCalculationUnit()
 	 */
 	public void removeAllFromBoundaryLine() {
 		/* make a copy of the collection in order to avoid a ConcurrentModificationException*/
-		Iterator it = new HashSet(getBoundaryLine()).iterator();
+		Iterator it = new HashSet(getBoundaryLines()).iterator();
 		while ( (it.hasNext()) ) {
 			Object item = it.next();
 			if ( item instanceof MergeBoundaryLine ) {
@@ -162,7 +154,7 @@ public MergeCalculationUnit()
 	public void invariant_CalculationUnit1() throws MergeInvariantException {
 		boolean result = false;
 		try {
-			result = (this.getBoundaryLine().size() >= 2);
+			result = (this.getBoundaryLines().size() >= 2);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -212,20 +204,10 @@ public MergeCalculationUnit()
 	}
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.validate.test.calculation_unit.ICalculationValidateInterface#getBoundaryLines()
-   */
-  public List<IBoundaryLine> getBoundaryLines( )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  /**
    * @see org.kalypso.kalypsomodel1d2d.validate.test.calculation_unit.ICalculationValidateInterface#getCalculationUnit()
    */
   public List<ICalculationUnit> getCalculationUnit( )
   {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -234,7 +216,6 @@ public MergeCalculationUnit()
    */
   public boolean addElementAsRef( IFE1D2DElement element )
   {
-    // TODO Auto-generated method stub
     return false;
   }
 
@@ -243,7 +224,6 @@ public MergeCalculationUnit()
    */
   public IFeatureWrapperCollection getElements( )
   {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -252,7 +232,6 @@ public MergeCalculationUnit()
    */
   public boolean removeElementAsRef( IFE1D2DElement elment )
   {
-    // TODO Auto-generated method stub
     return false;
   }
 
@@ -261,7 +240,6 @@ public MergeCalculationUnit()
    */
   public String getDescription( )
   {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -270,7 +248,6 @@ public MergeCalculationUnit()
    */
   public String getGmlID( )
   {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -279,7 +256,6 @@ public MergeCalculationUnit()
    */
   public String getName( )
   {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -288,7 +264,6 @@ public MergeCalculationUnit()
    */
   public Feature getWrappedFeature( )
   {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -297,7 +272,6 @@ public MergeCalculationUnit()
    */
   public void setDescription( String desc )
   {
-    // TODO Auto-generated method stub
     
   }
 
@@ -306,7 +280,6 @@ public MergeCalculationUnit()
    */
   public void setName( String name )
   {
-    // TODO Auto-generated method stub
     
   }
 

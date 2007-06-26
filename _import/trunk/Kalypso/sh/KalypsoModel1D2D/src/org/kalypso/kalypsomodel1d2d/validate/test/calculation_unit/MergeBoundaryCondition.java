@@ -5,11 +5,9 @@ package org.kalypso.kalypsomodel1d2d.validate.test.calculation_unit;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
@@ -23,6 +21,7 @@ import org.kalypsodeegree.model.feature.Feature;
 
 /** Class ...
  */
+@SuppressWarnings("unchecked")
 public class MergeBoundaryCondition extends BoundaryCondition implements ICalculationValidateInterface{
   
   private List<IBoundaryLine> boundaryLines = new ArrayList<IBoundaryLine>();

@@ -51,6 +51,7 @@ import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -58,6 +59,7 @@ import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.editor.ListLabelProvider;
+import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListener;
 
 /**
@@ -69,7 +71,26 @@ public class CalculationUnitProblemsComponent
   private FormToolkit toolkit;
   private Composite parent;
   private CalculationUnitDataModel dataModel;
-  private KeyBasedDataModelChangeListener settingsKeyListener;
+  private KeyBasedDataModelChangeListener settingsKeyListener = new KeyBasedDataModelChangeListener(){
+    public void dataChanged( final String key, final Object newValue )
+    {
+      Display display = parent.getDisplay();
+      final Runnable runnable = new Runnable()
+      {
+        public void run( )
+        {
+          if( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER.equals( key ) ){
+            if (newValue != null){
+            updateThisSection( newValue );
+            }            
+          }
+        }
+
+      };
+      display.syncExec( runnable );      
+    }    
+  };
+  
   private Composite rootComposite;
 
   public void createControl( CalculationUnitDataModel dataModel, FormToolkit toolkit, Composite parent )
@@ -78,7 +99,7 @@ public class CalculationUnitProblemsComponent
 	    this.parent = parent;
 	    this.dataModel = dataModel;
 	    guiProblemViewer( parent );
-	   //dataModel.addKeyBasedDataChangeListener( settingsKeyListener );
+	    dataModel.addKeyBasedDataChangeListener( settingsKeyListener );
     
   }
 
@@ -134,5 +155,9 @@ public class CalculationUnitProblemsComponent
         formData.right = new FormAttachment(100,-5);
         problemsTable.setLayoutData( formData );
        
+  }
+  private void updateThisSection( Object newValue )
+  {
+   //@TODO  
   }
 }

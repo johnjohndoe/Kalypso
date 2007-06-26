@@ -49,6 +49,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
  * @author Madanagopal
  *
  */
+@SuppressWarnings("unchecked")
 public interface ICalculationValidateInterface
 {
 
