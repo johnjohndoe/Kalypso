@@ -530,24 +530,14 @@
 					<element name="calcPolynomesMember" type="tuhh:CalcPolynomesPropertyType">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Abflussintervall</label>
-								<tooltip>
-									Definition eines Abflussintervalls (nur bei Bordvollrechnung und Kalinin-Miljukov)
-								</tooltip>
-								<description>
-									Definition eines Abflussintervalls (nur bei Bordvollrechnung und Kalinin-Miljukov)
-								</description>
+								<label>Polynomerzeugung</label>
+								<tooltip><![CDATA[Parameter für die Erzeugung der Polynome]]></tooltip>
+								<description><![CDATA[Parameter für die Erzeugung der Polynome]]></description>
 							</documentation>
 							<documentation xml:lang="en">
-								<label>Discharge interval</label>
-								<tooltip>
-									Definition of discharge interval (only for bank-full and Kalinin-Miljukov
-									calculations)
-								</tooltip>
-								<description>
-									Definition of discharge interval (only for bank-full and Kalinin-Miljukov
-									calculations)
-								</description>
+								<label>Polynomial Processing</label>
+								<tooltip><![CDATA[Polynomial processing parameters]]></tooltip>
+								<description><![CDATA[Parameters to tweak processing of the polynomials.]]></description>
 							</documentation>
 						</annotation>
 					</element>

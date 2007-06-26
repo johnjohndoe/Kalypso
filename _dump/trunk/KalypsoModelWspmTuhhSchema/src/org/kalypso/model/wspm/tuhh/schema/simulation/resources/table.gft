@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <gft:featuretemplate xmlns:gft="featureview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <gft:layer id="layer_1" featurePath="" linktype="gml" xlink:href="Daten/Längsschnitt.gml"/>
+    <gft:layer id="layer_1" featurePath="" linktype="gml" xlink:href="Daten/LÃ¤ngsschnitt.gml"/>
     <gft:view typename="om:Observation" style="SWT.NONE" xmlns:om="http://www.opengis.net/om">
         <gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true"/>
         <gft:gridLayout numColumns="4"/>
