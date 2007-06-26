@@ -110,8 +110,7 @@ public class CalculationUnitWidget
         KeyBasedDataModelUtil.repaintMapPanel( 
                     dataModel, ICommonKeys.KEY_MAP_PANEL );
       }
-    }
-    
+    }    
   };
   
   /**

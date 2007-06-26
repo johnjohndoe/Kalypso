@@ -52,14 +52,22 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
+import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.ui.map.IGrabDistanceProvider;
 import org.kalypso.kalypsomodel1d2d.ui.map.IWidgetWithStrategy;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
+import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListener;
+import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
+import org.kalypso.kalypsomodel1d2d.ui.map.merge.Model1d2dCalUnitTheme;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
@@ -78,6 +86,7 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions,
   private String toolTip;
   private IWidget strategy;
   private String name;
+  private Model1d2dCalUnitTheme calUnitTheme;
   /**
    * The constructor.
    */
@@ -90,6 +99,21 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions,
     this.name = name;
     this.toolTip = toolTip;
   }
+  private KeyBasedDataModelChangeListener calThemeUpdater =
+    new KeyBasedDataModelChangeListener()
+{
+
+  public void dataChanged( String key, Object newValue )
+  {
+    if( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER.equals( key ) )
+    {
+      calUnitTheme.setCalulationUnit( (ICalculationUnit) newValue );
+      KeyBasedDataModelUtil.repaintMapPanel( 
+                  dataModel, ICommonKeys.KEY_MAP_PANEL );
+    }
+  }
+  
+};
 
   /**
    * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#createControl(org.eclipse.swt.widgets.Composite, org.eclipse.ui.forms.widgets.FormToolkit)
@@ -140,14 +164,41 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions,
         CalUnitOps.getModelCalculationUnits( m_model ) );
     dataModel.setData( ICommonKeys.WIDGET_WITH_STRATEGY, this );
     
+    IKalypsoFeatureTheme targetTheme = UtilMap.findEditableTheme( 
+        mapModell, 
+        Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT );
+    dataModel.setData( 
+        ICommonKeys.KEY_COMMAND_MANAGER, 
+        targetTheme.getWorkspace());
+    calUnitTheme = 
+      new Model1d2dCalUnitTheme("Aktuelle CalUnit",mapModell);
+//    mapModell.addTheme( calUnitTheme );
+    mapModell.insertTheme( calUnitTheme, 0 );
+    dataModel.addKeyBasedDataChangeListener( calThemeUpdater );
+    
     //command manager since it is use in the dirty pool object framework
     //the commandable workspace of the target theme is taken
     dataModel.setData( ICommonKeys.KEY_COMMAND_MANAGER, m_model.getWrappedFeature().getWorkspace());
     
+    IKalypsoFeatureTheme bcTheme = UtilMap.findEditableTheme( 
+        mapModell, 
+        IBoundaryCondition.QNAME );
+    if( bcTheme == null )
+    {
+      throw new RuntimeException("Could not find boundary condition theme");
+    }
+
+    final CommandableWorkspace bcWorkspace = bcTheme.getWorkspace();
+    dataModel.setData( 
+        ICommonKeys.KEY_BOUNDARY_CONDITION_CMD_WORKSPACE, 
+        bcWorkspace );
+    
     dataModel.setData( 
         ICommonKeys.KEY_GRAB_DISTANCE_PROVIDER, 
-        this );   
-  }
+        this );
+    dataModel.setData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST, CalUnitOps.getModelCalculationUnits( m_model));
+    
+   }
 
 
   /**

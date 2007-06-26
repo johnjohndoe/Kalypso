@@ -43,21 +43,23 @@ package org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.swt.widgets.Display;
+import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitViewerLabelProvider;
 import org.kalypso.kalypsomodel1d2d.ui.map.editor.FeatureWrapperListEditor;
 import org.kalypso.kalypsomodel1d2d.ui.map.editor.IButtonConstants;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
+import org.kalypso.kalypsomodel1d2d.validate.test.calculation_unit.MergeCalculationUnit;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
  * @author Madanagopal
  *
  */
+@SuppressWarnings("unchecked")
 public class CalculationUnitPerformComponent extends FeatureWrapperListEditor implements IButtonConstants
 {
 
@@ -94,7 +96,16 @@ public class CalculationUnitPerformComponent extends FeatureWrapperListEditor im
   }
   
   
-  
-  
-
+  @Override
+  protected void validateCalculationUnits( )
+  {
+    if (getCurrentSelection() instanceof ICalculationUnit)
+    {
+      ICalculationUnit orgCalc = (ICalculationUnit) getCurrentSelection();
+      MergeCalculationUnit mergeCal = new MergeCalculationUnit();
+      mergeCal.addToBoundaryLine(CalUnitOps.getBoundaryLines(orgCalc));
+      mergeCal.checkAllInvariants();
+      dataModel.setValidatingMessages( orgCalc, mergeCal.getBrokenInvariantsMessage() );      
+    }   
+  }
 }

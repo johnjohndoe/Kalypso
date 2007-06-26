@@ -57,10 +57,12 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.editor.ListLabelProvider;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListener;
+import org.kalypso.kalypsosimulationmodel.core.Assert;
 
 /**
  * @author Madanagopal
@@ -92,6 +94,8 @@ public class CalculationUnitProblemsComponent
   };
   
   private Composite rootComposite;
+  private TableViewer problemTableViewer;
+  private Table problemsTable;
 
   public void createControl( CalculationUnitDataModel dataModel, FormToolkit toolkit, Composite parent )
   {
@@ -140,11 +144,12 @@ public class CalculationUnitProblemsComponent
         formData = new FormData();
         formData.left = new FormAttachment(nameText,10);
         formData.top = new FormAttachment(0,5);
+        
         refreshButton.setLayoutData( formData );
         
-        TableViewer problemTableViewer = new TableViewer( rootComposite, SWT.FILL | SWT.BORDER );
-        Table problemsTable = problemTableViewer.getTable();
-        problemTableViewer.setLabelProvider( new ListLabelProvider());
+        problemTableViewer = new TableViewer( rootComposite, SWT.FILL | SWT.BORDER );
+        problemsTable = problemTableViewer.getTable();
+        problemTableViewer.setLabelProvider( new ProblemsListLabelProvider());
         problemTableViewer.setContentProvider( new ArrayContentProvider() );
         problemsTable.setLinesVisible( true );
         problemsTable.setLayoutData( formData ); 
@@ -152,12 +157,18 @@ public class CalculationUnitProblemsComponent
         formData = new FormData();
         formData.left = new FormAttachment(0,5);
         formData.top = new FormAttachment(refreshButton,5);
-        formData.right = new FormAttachment(100,-5);
+        //formData.right = new FormAttachment(100,-5);
+        formData.width = 300;        
         problemsTable.setLayoutData( formData );
        
   }
   private void updateThisSection( Object newValue )
   {
-   //@TODO  
+    Assert.throwIAEOnNullParam( newValue, "newValue" );    
+    if (newValue instanceof ICalculationUnit) 
+    {
+      ICalculationUnit selCalcUnit = (ICalculationUnit) dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
+      problemTableViewer.setInput( dataModel.getValidatingMessages( selCalcUnit ));
+      }
   }
 }

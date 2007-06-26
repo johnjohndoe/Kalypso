@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.editor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -73,8 +72,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeIFeatureWrapper2NameCmd;
@@ -82,10 +79,6 @@ import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListener;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
-import org.kalypso.kalypsomodel1d2d.validate.test.calculation_unit.MergeCalculationUnit;
-import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree_impl.model.sort.IEnvelopeProvider;
 
@@ -274,7 +267,7 @@ public class FeatureWrapperListEditor implements IButtonConstants
           {
             IFeatureWrapper2 firstElementWrapper = (IFeatureWrapper2) firstElement;
             setCurrentSelection(firstElementWrapper);
-            doPrintErrors();
+            
           }
         }
       }
@@ -326,15 +319,9 @@ public class FeatureWrapperListEditor implements IButtonConstants
     this.idInput = inputID;
   }
 
-  protected void doPrintErrors( )
+  protected void validateCalculationUnits( )
   {
-    if (getCurrentSelection() instanceof ICalculationUnit)
-    {
-      ICalculationUnit orgCalc = (ICalculationUnit) getCurrentSelection();
-      MergeCalculationUnit mergeCal = new MergeCalculationUnit();
-      mergeCal.addToBoundaryLine(CalUnitOps.getBoundaryLines(orgCalc));
-      mergeCal.checkAllInvariants();        
-    }   
+ 
   }
 
   public void createControl( KeyBasedDataModel dataModel, FormToolkit toolkit, Composite parent )
@@ -584,7 +571,7 @@ public class FeatureWrapperListEditor implements IButtonConstants
   }
   
   
-  private IFeatureWrapper2 getCurrentSelection(){    
+  protected IFeatureWrapper2 getCurrentSelection(){    
     return (IFeatureWrapper2) 
         dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
   }
@@ -650,6 +637,7 @@ public class FeatureWrapperListEditor implements IButtonConstants
         }
         descriptionText.setText( desc );
         descriptionText.redraw();
+        validateCalculationUnits();
       }      
     };    
     Display display = parent.getDisplay();    

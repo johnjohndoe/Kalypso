@@ -12,9 +12,11 @@ import java.util.List;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
+import org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView.IProblem;
 import org.kalypso.kalypsomodel1d2d.validate.calculation_unit.utilities.MergeInvariantError;
 import org.kalypso.kalypsomodel1d2d.validate.calculation_unit.utilities.MergeInvariantException;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypsodeegree.model.feature.Feature;
 
 /** Class ...
@@ -25,6 +27,7 @@ public class MergeCalculationUnit implements ICalculationUnit,ICalculationValida
   private List<IBoundaryLine> boundaryLines = new ArrayList<IBoundaryLine>();
   static private boolean usesAllInstances = false;
   static private List allInstances = new ArrayList();
+  private List<IProblem> invResults = new ArrayList<IProblem>();
   
   public MergeCalculationUnit()
   {
@@ -59,7 +62,7 @@ public class MergeCalculationUnit implements ICalculationUnit,ICalculationValida
 	 * 
 	 * @param element 
 	 */
-	public void addToBoundaryLine(MergeBoundaryLine element) {
+	public void addToBoundaryLine(IBoundaryLine element) {
 		if ( element == null ) {
 			return;
 		}
@@ -67,7 +70,8 @@ public class MergeCalculationUnit implements ICalculationUnit,ICalculationValida
 			return;
 		}
 		this.boundaryLines.add(element);
-		element.z_internalAddToCalculationUnit( (MergeCalculationUnit)this );
+		//@TODO Madan Check this Later
+		//element.z_internalAddToCalculationUnit( (IBoundaryLine)this );
 	}
 	
 	/** Implements removal of a single element from feature '+ boundaryLine : Set(BoundaryLine)'
@@ -116,8 +120,8 @@ public class MergeCalculationUnit implements ICalculationUnit,ICalculationValida
 		Iterator it = newElems.iterator();
 		while ( (it.hasNext()) ) {
 			Object item = it.next();
-			if ( item instanceof MergeBoundaryLine ) {
-				this.addToBoundaryLine((MergeBoundaryLine)item);
+			if ( item instanceof IBoundaryLine ) {
+				this.addToBoundaryLine((IBoundaryLine)item);
 			}
 		}
 	}
@@ -163,6 +167,9 @@ public class MergeCalculationUnit implements ICalculationUnit,ICalculationValida
 			message = message + "is broken in object '";
 			message = message + this.getIdString();
 			message = message + "' of type '" + this.getClass().getName() + "'";
+			System.out.println("INVARIANT "+ message);
+			
+			invResults.add( new problemDescriptor(null,message));
 			throw new MergeInvariantException(this, message);
 		}
 	}
@@ -210,6 +217,11 @@ public class MergeCalculationUnit implements ICalculationUnit,ICalculationValida
   {
     return null;
   }
+  
+//  public void setCalculationUnit(ICalculationUnit calc )
+//  {
+//    return null;
+//  }
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement#addElementAsRef(org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement)
@@ -282,5 +294,77 @@ public class MergeCalculationUnit implements ICalculationUnit,ICalculationValida
   {
     
   }
+  
+  public List<IProblem> getBrokenInvariantsMessage()
+  {    
+    return invResults;    
+  }
+  
+  class problemDescriptor implements IProblem{
+    
+    private String messageDescription;
+    private String name;
 
+    public problemDescriptor(String name, String messageDescription )
+    {
+      this.name = name;
+      this.messageDescription =  messageDescription;
+    }
+    /**
+     * @see org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView.IProblem#getMessageDescription()
+     */
+    public String getMessageDescription( )
+    {
+      return messageDescription;
+    }
+
+    /**
+     * @see org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView.IProblem#getName()
+     */
+    public String getName( )
+    {
+      return name;
+    }
+
+    /**
+     * @see org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView.IProblem#navigateToProblem(org.kalypso.ogc.gml.map.MapPanel)
+     */
+    public void navigateToProblem( MapPanel panel )
+    {
+      
+    }
+
+    /**
+     * @see org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView.IProblem#setMessageDescription(java.lang.String)
+     */
+    public void setMessageDescription( String description )
+    {
+      this.messageDescription = description;
+    }
+
+    /**
+     * @see org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView.IProblem#setName(java.lang.String)
+     */
+    public void setName( String name )
+    {
+      this.name = name;
+    }
+    
+    //@TODO Try To implement CalculationUnit -- Must be List of CalculationUnits
+    /**
+     * @see org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView.IProblem#getCalculationUnit()
+     */
+    public ICalculationUnit getCalculationUnit( )
+    {
+      return null;
+    }
+    /**
+     * @see org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView.IProblem#setCalculationUnit(org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit)
+     */
+    public void setCalculationUnit( ICalculationUnit calculationUnit )
+    {
+      
+    }    
+    
+  }
 }

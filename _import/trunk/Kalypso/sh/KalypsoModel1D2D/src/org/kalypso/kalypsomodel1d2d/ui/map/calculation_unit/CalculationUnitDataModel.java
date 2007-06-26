@@ -40,10 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import org.kalypso.commons.command.ICommandManager;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
+import org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView.IProblem;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 
@@ -55,6 +58,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 @SuppressWarnings("unchecked")
 public class CalculationUnitDataModel extends KeyBasedDataModel
 {
+  Map<ICalculationUnit,List<IProblem>> validateMessages = new HashMap<ICalculationUnit,List<IProblem>>();
  
   public CalculationUnitDataModel( )
   {
@@ -97,6 +101,16 @@ public class CalculationUnitDataModel extends KeyBasedDataModel
                                   List<ICalculationUnit> calculationUnits )
   {
     setData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST, calculationUnits );
+  }
+  
+  public void setValidatingMessages(ICalculationUnit key, List<IProblem> strList)
+  {
+      validateMessages.put( key, strList );      
+  }
+  
+  public List<IProblem> getValidatingMessages(ICalculationUnit key)
+  {
+    return validateMessages.get( key );
   }
   
 }

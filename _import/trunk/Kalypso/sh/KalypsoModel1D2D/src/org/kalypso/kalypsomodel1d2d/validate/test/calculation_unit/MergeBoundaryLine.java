@@ -12,16 +12,20 @@ import java.util.List;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.BoundaryLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
 import org.kalypso.kalypsomodel1d2d.validate.calculation_unit.utilities.MergeInvariantError;
 import org.kalypso.kalypsomodel1d2d.validate.calculation_unit.utilities.MergeInvariantException;
+import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Object;
 
 /** Class ...
  */
 @SuppressWarnings("unchecked")
-public class MergeBoundaryLine extends BoundaryLine implements ICalculationValidateInterface
+public class MergeBoundaryLine implements IBoundaryLine,ICalculationValidateInterface
 {
   private List<ICalculationUnit> calculationUnits = new ArrayList<ICalculationUnit>();
   private List<IBoundaryCondition> boundaryConditions = new ArrayList<IBoundaryCondition>();
@@ -29,13 +33,12 @@ public class MergeBoundaryLine extends BoundaryLine implements ICalculationValid
   static private boolean usesAllInstances = false;
   static private List allInstances = new ArrayList();
 
-  public MergeBoundaryLine( CalculationUnitDataModel dataModel,Feature featureToBind )
-  {
-    super( featureToBind );
+  public MergeBoundaryLine()
+  { 
     if ( usesAllInstances ) {
       allInstances.add(this);
     }
-    this.dataModel = dataModel;
+   
   }
 
 	/** Implements the setter for feature '+ calculationUnit : Set(CalculationUnit)'
@@ -101,7 +104,7 @@ public class MergeBoundaryLine extends BoundaryLine implements ICalculationValid
 	 * 
 	 * @param element 
 	 */
-	public void z_internalAddToCalculationUnit(MergeCalculationUnit element) {
+	public void z_internalAddToCalculationUnit(ICalculationUnit element) {
 		this.calculationUnits.add(element);
 	}
 	
@@ -343,8 +346,103 @@ public class MergeBoundaryLine extends BoundaryLine implements ICalculationValid
    */
   public List<IBoundaryLine> getBoundaryLines( )
   {
-    // TODO Auto-generated method stub
     return null;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.ILineElement#addEdge(java.lang.String)
+   */
+  public void addEdge( String edgeID )
+  {
+    
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.ILineElement#getEdges()
+   */
+  public IFeatureWrapperCollection getEdges( )
+  {
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.ILineElement#setEdges(ET[])
+   */
+  public void setEdges( IFE1D2DEdge[] edges )
+  {
+    
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#getContainers()
+   */
+  public IFeatureWrapperCollection getContainers( )
+  {
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#getNodes()
+   */
+  public List getNodes( )
+  {
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#recalculateElementGeometry()
+   */
+  public GM_Object recalculateElementGeometry( ) throws GM_Exception
+  {
+    return null;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getDescription()
+   */
+  public String getDescription( )
+  {
+    return null;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getGmlID()
+   */
+  public String getGmlID( )
+  {
+    return null;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getName()
+   */
+  public String getName( )
+  {
+    return null;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getWrappedFeature()
+   */
+  public Feature getWrappedFeature( )
+  {
+    return null;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setDescription(java.lang.String)
+   */
+  public void setDescription( String desc )
+  {
+    
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setName(java.lang.String)
+   */
+  public void setName( String name )
+  {
+    
   }
 
 }
