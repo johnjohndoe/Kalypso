@@ -41,6 +41,7 @@
 package org.kalypso.ui.editor.mapeditor;
 
 import java.awt.Rectangle;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 
 import org.apache.commons.configuration.Configuration;
@@ -85,7 +86,9 @@ import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter2;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilitites;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.metadoc.IExportableObjectFactory;
@@ -408,7 +411,6 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
 
     final IFile file = storage instanceof IFile ? (IFile) storage : null;
     job.setRule( new BaseMapSchedulingRule( m_mapPanel, file ) );
-    job.setUser( true );
     job.schedule();
   }
 
@@ -425,7 +427,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     final IWorkbenchPartSite site = getSite();
     String partName = null;
     try
-    {
+    {      
       // prepare for exception
       setMapModell( null );
 
@@ -482,6 +484,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
           job.schedule();
         }
       }
+
     }
     catch( final Throwable e )
     {

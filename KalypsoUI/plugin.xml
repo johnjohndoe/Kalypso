@@ -137,7 +137,9 @@
         class="org.kalypso.ui.views.map.MapView"
         icon="icons/kalypso_gmt.gif"
         id="org.kalypso.ui.views.mapView"
-        name="Map" saveMapOnClose="true"/>
+        name="Map"
+        saveMapOnClose="true"
+        reloadMapOnOpen="true"/>
   <view
         allowMultiple="false"
         category="org.kalypso.ui.kalypso"
