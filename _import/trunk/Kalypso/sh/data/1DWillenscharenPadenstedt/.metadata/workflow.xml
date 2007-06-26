@@ -87,7 +87,7 @@ Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodu
 						</Help>
 						<Name>WSPM Modell</Name>
 					</Task>
-					<Task context="FenetMap"
+					<Task context="FenetMapWithProfileView"
 						URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__AddProfileNetworkToMap">
 						<Help>Zeigt Profile als Thema in der Karte an</Help>
 						<Name>Profile in Karte anzeigen</Name>
@@ -216,7 +216,7 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 			<Task context="Context2dElementTheme"
 				URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__roughness_correction_modelling">
 				<Help>
-					<![CDATA[Rauheitskorrektur an Finit-Elemente modelelieren.]]>
+					<![CDATA[Rauheitskorrektur an Finit-Elemente modellieren.]]>
 				</Help>
 				<Name>Rauheitskorrektur modellieren</Name>
 			</Task>
@@ -272,7 +272,7 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 
 		<!-- TODO: there is no context with this ID -->
 		<Task context="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Calc"
-			URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__StartCalculationWithProblemsView">
+			URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__StartCalculation">
 			<Help>
 				<![CDATA[Startet die Berechnung unter Verwendung eines Kontrolldisplays]]>
 			</Help>
@@ -364,6 +364,16 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 				</con:ExtensionContext>
 				</con:ViewContext>
 			-->
+			<con:WorkbenchSiteContext id="MapAndProfileViewContext" parent="Context1d2dModelling">
+				<con:ViewContext id="ProfileViewWithMapView" partId="org.kalypso.model.wspm.ui.view.chart.ChartView" parent="MapAndProfileViewContext" />
+				<con:ViewContext id="MapViewWithProfileView" partId="org.kalypso.ui.views.mapView" parent="MapAndProfileViewContext">
+					<con:ExtensionContext id="FenetMapWithProfileView" parent="MapViewWithProfileView"
+						handlerFactoryId="kalypsoContextHandlerFactory">
+						<con:Parameter name="type" value="mapViewInputContext" />
+						<con:Parameter name="input" value="maps/fenet.gmt" />
+					</con:ExtensionContext>
+				</con:ViewContext>
+			</con:WorkbenchSiteContext>
 			<con:WorkbenchSiteContext id="MapContext" parent="Context1d2dModelling">
 				<con:ViewContext id="MapOutlineView" partId="org.kalypso.ui.views.outline" parent="MapContext" />
 				<con:ViewContext id="MapView" partId="org.kalypso.ui.views.mapView" parent="MapContext">
