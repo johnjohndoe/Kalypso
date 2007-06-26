@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.conv.results;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
@@ -50,11 +51,11 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
  */
 public class MultiTriangleEater implements ITriangleEater
 {
-  private final ITriangleEater[] m_eaters;
+  private final List<ITriangleEater> m_eaters = new LinkedList<ITriangleEater>();
 
-  public MultiTriangleEater( final ITriangleEater[] eaters )
+  public MultiTriangleEater( )
   {
-    m_eaters = eaters;
+
   }
 
   /**
@@ -62,7 +63,10 @@ public class MultiTriangleEater implements ITriangleEater
    */
   public void add( List<INodeResult> nodes )
   {
-    // TODO Auto-generated method stub
+    for( ITriangleEater eater : m_eaters )
+    {
+      eater.add( nodes );
+    }
 
   }
 
@@ -71,8 +75,46 @@ public class MultiTriangleEater implements ITriangleEater
    */
   public void finished( )
   {
-    // TODO Auto-generated method stub
+    for( ITriangleEater eater : m_eaters )
+    {
+      eater.finished();
+    }
+  }
+
+  public void addEater( ITriangleEater triangleEater )
+  {
+    m_eaters.add( triangleEater );
+  }
+
+  public void addEater( TriangulatedSurfaceTriangleEater triangleEater )
+  {
+    m_eaters.add( triangleEater );
+  }
+
+  public void addEater( HMOTriangleEater triangleEater )
+  {
+    m_eaters.add( triangleEater );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.conv.results.ITriangleEater#setTime(double)
+   */
+  public void setTime( double time )
+  {
+    for( ITriangleEater eater : m_eaters )
+    {
+      eater.setTime( time );
+    }
     
   }
 
+  public void setTimestep( int timestep )
+  {
+    for( ITriangleEater eater : m_eaters )
+    {
+      eater.setTimestep( timestep );
+    }
+    
+  }
+  
 }

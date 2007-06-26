@@ -53,6 +53,7 @@ import javax.xml.namespace.QName;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.xmlbeans.impl.inst2xsd.util.Type;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -63,6 +64,8 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler;
 import org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv;
+import org.kalypso.kalypsomodel1d2d.conv.results.HMOTriangleEater;
+import org.kalypso.kalypsomodel1d2d.conv.results.MultiTriangleEater;
 import org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultType;
 import org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceTriangleEater;
@@ -145,7 +148,6 @@ public class ProcessResultsJob extends Job
     }
 
     final File gmlResultFile = new File( outputDir, "results.gml" );
-    final File tinResultFile = new File( outputDir, "tin.gml" );
 
     InputStream is = null;
     try
@@ -158,13 +160,6 @@ public class ProcessResultsJob extends Job
       /* .2d Datei lesen und GML füllen */
       final RMA10S2GmlConv conv = new RMA10S2GmlConv();
 
-      // TODO: use multi-eater to write multiple triangles at once
-      // move workspace creation into multi-eater
-      final GMLWorkspace wspTriangleWorkspace = FeatureFactory.createGMLWorkspace( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "TinResult" ), tinResultFile.toURL(), null );
-      final CS_CoordinateSystem crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
-      final GM_TriangulatedSurface surface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_TriangulatedSurface( crs );
-      wspTriangleWorkspace.getRootFeature().setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "triangulatedSurfaceMember" ), surface );
-
       /* just for test purposes */
       final List<ResultType.TYPE> parameters = new ArrayList<ResultType.TYPE>();
 
@@ -172,10 +167,31 @@ public class ProcessResultsJob extends Job
       parameters.add( ResultType.TYPE.WATERLEVEL );
       parameters.add( ResultType.TYPE.VELOCITY );
 
-      // final File resultHMOFile = new File( "D:/Projekte/kalypso_dev/post-processing/output.hmo" );
-      // final HMOTriangleEater triangleEater = new HMOTriangleEater( resultHMOFile, parameters );
-      final TriangulatedSurfaceTriangleEater triangleEater = new TriangulatedSurfaceTriangleEater( surface );
-      final IRMA10SModelElementHandler handler = new NodeResultsHandler( resultWorkspace, triangleEater, flowModel );
+      // TODO: use multi-eater to write multiple triangles at once
+      // move workspace creation into multi-eater
+
+      final CS_CoordinateSystem crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+      MultiTriangleEater multiEater = new MultiTriangleEater();
+
+      for( ResultType.TYPE parameter : parameters )
+      {
+        /* GML(s) */
+        final File tinResultFile = new File( outputDir, "tin.gml" );
+        final GMLWorkspace triangleWorkspace = FeatureFactory.createGMLWorkspace( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "TinResult" ), tinResultFile.toURL(), null );
+        final GM_TriangulatedSurface surface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_TriangulatedSurface( crs );
+        triangleWorkspace.getRootFeature().setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "triangulatedSurfaceMember" ), surface );
+        final TriangulatedSurfaceTriangleEater gmlTriangleEater = new TriangulatedSurfaceTriangleEater( tinResultFile, triangleWorkspace, surface, parameter );
+
+        multiEater.addEater( gmlTriangleEater );
+
+        /* HMO(s) */
+        final File resultHMOFile = new File( "D:/Projekte/kalypso_dev/post-processing/output.hmo" );
+        final HMOTriangleEater hmoTriangleEater = new HMOTriangleEater( resultHMOFile, parameter );
+
+        multiEater.addEater( hmoTriangleEater );
+      }
+
+      final IRMA10SModelElementHandler handler = new NodeResultsHandler( resultWorkspace, multiEater, flowModel );
       conv.setRMA10SModelElementHandler( handler );
 
       logger.takeInterimTime();
@@ -188,11 +204,11 @@ public class ProcessResultsJob extends Job
       logger.takeInterimTime();
       logger.printCurrentInterim( "Fertig mit Lesen in : " );
 
-      triangleEater.finished();
+      // finish MultiEater and engage serializer
+      multiEater.finished();
 
-      /* GMLs in Datei schreiben */
+      /* Node-GML in Datei schreiben */
       GmlSerializer.serializeWorkspace( gmlResultFile, resultWorkspace, "UTF-8" );
-      GmlSerializer.serializeWorkspace( tinResultFile, wspTriangleWorkspace, "UTF-8" );
 
       return gmlResultFile;
     }
@@ -204,5 +220,4 @@ public class ProcessResultsJob extends Job
       logger.printCurrentInterim( "Fertig mit Schreiben in : " );
     }
   }
-
 }

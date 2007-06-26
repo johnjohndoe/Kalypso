@@ -40,74 +40,148 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.conv.results;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
-import org.kalypso.jts.JTSUtilities;
-import org.kalypso.jts.Triangle;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DDebug;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
+import org.kalypso.ogc.gml.serialize.GmlSerializeException;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree_impl.model.geometry.GM_Triangle_Impl;
-import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.opengis.cs.CS_CoordinateSystem;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
 
 /**
  * @author Thomas Jung
- *
+ * 
  */
 public class TriangulatedSurfaceTriangleEater implements ITriangleEater
 {
   private final GM_TriangulatedSurface m_surface;
-  
-  private static GeometryFactory factory = new GeometryFactory();
-  
-  public TriangulatedSurfaceTriangleEater( final GM_TriangulatedSurface surface )
+
+  private final ResultType.TYPE m_parameter;
+
+  private final GMLWorkspace m_workspace;
+
+  private final File m_tinResultFile;
+
+  private double m_time;
+
+  private int m_timestep;
+
+  public TriangulatedSurfaceTriangleEater( final File tinResultFile, final GMLWorkspace workspace, final GM_TriangulatedSurface surface, final ResultType.TYPE parameter )
   {
     m_surface = surface;
+    m_parameter = parameter;
+    m_workspace = workspace;
+    m_tinResultFile = tinResultFile;
   }
-  
-  
+
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.results.ITriangleEater#add(java.util.List)
    */
-  public void add( final List<INodeResult> nodes ) 
+  public void add( final List<INodeResult> nodes )
   {
-    final GM_Position[] pos = new GM_Position[3];
+    final GM_Position pos[] = new GM_Position[3];
+
     for( int i = 0; i < nodes.size(); i++ )
     {
-      pos[i] = nodes.get( i ).getPoint().getPosition(); 
+      final double x = nodes.get( i ).getPoint().getX();
+      final double y = nodes.get( i ).getPoint().getY();
+      double z;
+
+      switch( m_parameter )
+      {
+        case VELOCITY:
+          z = nodes.get( i ).getAbsoluteVelocity();
+
+          break;
+        case WATERLEVEL:
+          z = nodes.get( i ).getWaterlevel();
+
+          break;
+        case DEPTH:
+          z = nodes.get( i ).getWaterlevel();
+
+          break;
+
+        default:
+          z = nodes.get( i ).getPoint().getZ();
+          break;
+
+      }
+
+      pos[i] = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Position( x, y, z );
     }
-    
+
     final CS_CoordinateSystem crs = nodes.get( 0 ).getPoint().getCoordinateSystem();
-    
+
     GM_Triangle_Impl gmTriangle = null;
-    
+
     try
     {
-      gmTriangle = new GM_Triangle_Impl( pos[0],pos[1],pos[2], crs );
+      gmTriangle = new GM_Triangle_Impl( pos[0], pos[1], pos[2], crs );
     }
-    catch( GM_Exception e )
+    catch( final GM_Exception e )
     {
-      // TODO Auto-generated catch block
+      KalypsoModel1D2DDebug.TRIANGLEEATER.printf( "%s", "TriangulatedSurfaceTriangleEater: error while adding nodes to eater (GM_Exception)." );
       e.printStackTrace();
     }
-    
-    if (gmTriangle!= null )
+
+    if( gmTriangle != null )
       m_surface.add( gmTriangle );
   }
-
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.results.ITriangleEater#finished()
    */
   public void finished( )
   {
+    String name = m_tinResultFile.getPath();
+
+    final int extensionIndex = name.lastIndexOf( "." );
+
+    final String substring = name.substring( 0, extensionIndex );
+    final String extension = name.substring( extensionIndex, name.length() );
+
+    /* create filename */
+    final String param = m_parameter.name();
+    final String paramName = substring + "_" + param + extension;
+    final File paramFile = new File( paramName );
+
+    try
+    {
+      GmlSerializer.serializeWorkspace( paramFile, m_workspace, "UTF-8" );
+    }
+    catch( final IOException e )
+    {
+      KalypsoModel1D2DDebug.TRIANGLEEATER.printf( "%s", "TriangulatedSurfaceTriangleEater: error while finishing eater (IOException)." );
+      e.printStackTrace();
+    }
+    catch( final GmlSerializeException e )
+    {
+      KalypsoModel1D2DDebug.TRIANGLEEATER.printf( "%s", "TriangulatedSurfaceTriangleEater: error while finishing eater (GmlSerializeException)." );
+      e.printStackTrace();
+    }
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.conv.results.ITriangleEater#setTime(double)
+   */
+  public void setTime( double time )
+  {
+    m_time = time;
+
+  }
+
+  public void setTimestep( int timestep )
+  {
+    m_timestep = timestep;
+
   }
 
 }

@@ -433,4 +433,13 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     
   }
 
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleTime(java.lang.String, double, int)
+   */
+  public void handleTime( String line, double time, int timestep )
+  {
+    // TODO Auto-generated method stub
+    
+  }
+
 }

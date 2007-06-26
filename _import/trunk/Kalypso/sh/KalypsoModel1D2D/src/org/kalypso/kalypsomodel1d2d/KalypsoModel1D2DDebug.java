@@ -38,47 +38,18 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.conv.results;
+package org.kalypso.kalypsomodel1d2d;
 
-import java.util.List;
-
-import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
+import org.kalypso.contribs.eclipse.core.runtime.Debug;
 
 /**
  * @author Thomas Jung
+ * 
  */
-public class NullTriangleEater implements ITriangleEater
+public class KalypsoModel1D2DDebug
 {
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.results.ITriangleEater#add(java.util.List)
-   */
-  public void add( List<INodeResult> nodes )
-  {
-  }
+  public static Debug SIMULATIONRESULT = new Debug( KalypsoModel1D2DPlugin.getDefault(), "/debug/simulation1d2d/results" );
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.results.ITriangleEater#finished()
-   */
-  public void finished( )
-  {
-  }
-
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.results.ITriangleEater#setTime(double)
-   */
-  public void setTime( double time )
-  {
-    // TODO Auto-generated method stub
-    
-  }
-
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.results.ITriangleEater#setTimestep(int)
-   */
-  public void setTimestep( int timestep )
-  {
-    // TODO Auto-generated method stub
-    
-  }
+  public static Debug TRIANGLEEATER = new Debug( KalypsoModel1D2DPlugin.getDefault(), "/debug/simulation1d2d/triangleeater" );
 
 }

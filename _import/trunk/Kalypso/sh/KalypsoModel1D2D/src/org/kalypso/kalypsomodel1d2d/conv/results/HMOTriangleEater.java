@@ -53,6 +53,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DDebug;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
 
 /**
@@ -69,12 +70,16 @@ public class HMOTriangleEater implements ITriangleEater
 
   private File m_output;
 
-  private List<ResultType.TYPE> m_parameters;
+  private ResultType.TYPE m_parameter;
 
-  public HMOTriangleEater( final File filename, final List<ResultType.TYPE> parameters )
+  private double m_time;
+
+  private int m_timestep;
+
+  public HMOTriangleEater( final File filename, ResultType.TYPE parameter )
   {
     m_output = filename;
-    m_parameters = parameters;
+    m_parameter = parameter;
   }
 
   public void add( List<INodeResult> nodes )
@@ -98,7 +103,7 @@ public class HMOTriangleEater implements ITriangleEater
     m_triangles.add( triangle );
   }
 
-  private void writeHMOFile( ResultType.TYPE parameter, File paramFile ) throws IOException
+  private void writeHMOFile( File paramFile ) throws IOException
   {
     /* node list */
     BufferedWriter buf = null;
@@ -110,30 +115,32 @@ public class HMOTriangleEater implements ITriangleEater
         final double x = node.getPoint().getX();
         final double y = node.getPoint().getY();
         double z;
-        switch( parameter )
+
+        switch( m_parameter )
         {
           case VELOCITY:
             z = node.getAbsoluteVelocity();
-            
+
             break;
           case WATERLEVEL:
             z = node.getWaterlevel();
-            
+
             break;
           case DEPTH:
             z = node.getWaterlevel();
-            
+
             break;
 
           default:
             z = node.getPoint().getZ();
             break;
         }
-        
+
         final int nodeID = m_nodes.get( node );
 
         buf.write( "P:  " + nodeID + "  " + x + "  " + y + "  " + z + "\n" );
-        //System.out.println( "P:  " + nodeID + "  " + x + "  " + y + "  " + z );
+
+        KalypsoModel1D2DDebug.TRIANGLEEATER.printf( "%s %d %d %d %d", "HMOTriangleEater: P: ", nodeID, x, y, z );
       }
       /* triangle list */
       for( int i = 0; i < m_triangles.size(); i++ )
@@ -147,7 +154,8 @@ public class HMOTriangleEater implements ITriangleEater
         final int n2 = triangle[1];
         final int n3 = triangle[2];
         buf.write( "D:  " + triangleID + "  " + n1 + "  " + n2 + "  " + n3 + "\n" );
-        //System.out.println( "D:  " + triangleID + "  " + n1 + "  " + n2 + "  " + n3 );
+
+        KalypsoModel1D2DDebug.TRIANGLEEATER.printf( "%s %d %d %d %d", "HMOTriangleEater: D: ", triangleID, n1, n2, n3 );
       }
       buf.close();
     }
@@ -159,31 +167,50 @@ public class HMOTriangleEater implements ITriangleEater
 
   public void finished( )
   {
-    for( ResultType.TYPE parameter : m_parameters )
+    String name = m_output.getPath();
+
+    final int extensionIndex = name.lastIndexOf( "." );
+
+    final String substring = name.substring( 0, extensionIndex );
+    final String extension = name.substring( extensionIndex, name.length() );
+
+    /* create filename */
+    final String param = m_parameter.name();
+    final String paramName = substring + "_" + param + "_" + m_timestep + extension;
+    final File paramFile = new File( paramName );
+
+    try
     {
-      String name = m_output.getPath();
+      writeHMOFile( paramFile );
+    }
+    catch( IOException e )
+    {
+      KalypsoModel1D2DDebug.TRIANGLEEATER.printf( "%s", "HMOTriangleEater: error while finishing eater." );
 
-      final int extensionIndex = name.lastIndexOf( "." );
+      e.printStackTrace();
+    }
 
-      final String substring = name.substring( 0, extensionIndex );
-      final String extension = name.substring( extensionIndex, name.length() );
-      
-      final String param = parameter.name();
-      
-      final String paramName = substring + "_" + param + extension;
+  }
 
-      final File paramFile = new File( paramName );
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.conv.results.ITriangleEater#setTime(double)
+   */
+  public void setTime( double time )
+  {
+    m_time = time;
 
-      try
-      {
-        writeHMOFile( parameter, paramFile );
-      }
-      catch( IOException e )
-      {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.conv.results.ITriangleEater#setTimestep(int)
+   */
+  public void setTimestep( int timestep )
+  {
+    {
+      m_timestep = timestep;
 
     }
+
   }
+
 }

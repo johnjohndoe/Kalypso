@@ -108,7 +108,7 @@ public class SimMode1D2DCalcJob implements ISimulation
 
     try
     {
-      monitor.setMessage( "Generiere Ascii Files zur 2D Simulation..." );
+      monitor.setMessage( "Generiere Ascii Files für FE-Simulation..." );
       if( monitor.isCanceled() )
         return;
 

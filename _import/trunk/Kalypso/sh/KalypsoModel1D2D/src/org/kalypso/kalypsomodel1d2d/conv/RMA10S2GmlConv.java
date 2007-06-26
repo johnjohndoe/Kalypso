@@ -118,6 +118,12 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
         // result LINEID, ID, vx, vy, depth, waterlevel
         interpreteResultLine( line, m_handler );
       }
+      else if( char0 == 'T' && char1 == 'I' )
+      {
+        // result TIMESTEP
+//        TI          18.0000000         3
+        interpreteTimeLine( line, m_handler );
+      }
       else
       {
         if( verboseMode )
@@ -128,6 +134,29 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
     // signal parsing stop
     m_handler.end();
 
+  }
+
+  private void interpreteTimeLine( String line, IRMA10SModelElementHandler handler )
+  {
+    final Pattern linePattern = Pattern.compile( "TI\\s+([0-9]+\\.[0-9]*)\\s*([0-9]+)" );
+    final Matcher matcher = linePattern.matcher( line );
+    if( matcher.matches() )
+    {
+      try
+      {
+        double time = Double.parseDouble( matcher.group( 1 ) );
+        int timestep = Integer.parseInt( matcher.group( 2 ) );
+        
+        handler.handleTime( line, time, timestep );
+      }
+      catch( NumberFormatException e )
+      {
+        handler.handlerError( line, EReadError.ILLEGAL_SECTION );
+      }
+    }
+    else
+      handler.handlerError( line, EReadError.ILLEGAL_SECTION );
+    
   }
 
   /**

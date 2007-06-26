@@ -375,6 +375,15 @@ public class RMA10sModelHandler implements IRMA10SModelElementHandler
     //do nothing, because here just the model is beeing read.
     
   }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleTime(java.lang.String, double, int)
+   */
+  public void handleTime( String line, double time, int timestep )
+  {
+    // TODO Auto-generated method stub
+    
+  }
   
 
 }

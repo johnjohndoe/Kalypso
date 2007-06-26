@@ -111,5 +111,7 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
                         throws IllegalArgumentException;
       
       public List<IFeatureWrapper2> getCreatedFeatures();
+
+      public void handleTime( String line, double time, int timestep );
   }
   

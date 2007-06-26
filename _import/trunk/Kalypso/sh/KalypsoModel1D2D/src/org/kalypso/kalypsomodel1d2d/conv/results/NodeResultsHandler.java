@@ -64,6 +64,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DDebug;
 import org.kalypso.kalypsomodel1d2d.conv.EReadError;
 import org.kalypso.kalypsomodel1d2d.conv.IModelElementIDProvider;
 import org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler;
@@ -87,10 +88,12 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_LineString;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 import org.opengis.cs.CS_CoordinateSystem;
 
@@ -111,7 +114,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
   private final CS_CoordinateSystem m_crs;
 
-  private ITriangleEater m_triangleEater;
+  private final ITriangleEater m_triangleEater;
 
   private final IFlowRelationshipModel m_flowRelationModel;
 
@@ -146,7 +149,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleArc(java.lang.String, int, int, int, int,
    *      int, int)
    */
-  public void handleArc( String lineString, int id, int node1ID, int node2ID, int elementLeftID, int elementRightID, int middleNodeID )
+  public void handleArc( final String lineString, final int id, final int node1ID, final int node2ID, final int elementLeftID, final int elementRightID, final int middleNodeID )
   {
     // to get the model-geometry, we save all arcs in a Hash-Map
     final ArcResult arcResult = new ArcResult( id, node1ID, node2ID, elementLeftID, elementRightID, middleNodeID );
@@ -171,7 +174,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       result.setMidSide( false );
   }
 
-  private void writeArcInfoAtElement( int elementID, final ArcResult arcResult )
+  private void writeArcInfoAtElement( final int elementID, final ArcResult arcResult )
   {
     /* does the element already exist? */
     if( m_elemIndex.containsKey( elementID ) == true )
@@ -197,7 +200,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
    *      int)
    */
   @SuppressWarnings("unchecked")
-  public void handleElement( String lineString, int id, int currentRougthnessClassID, int previousRoughnessClassID, int eleminationNumber )
+  public void handleElement( final String lineString, int id, final int currentRougthnessClassID, final int previousRoughnessClassID, final int eleminationNumber )
   {
     // For each element calculate the geometry (elemID, cornernode1, midsidenode1, cornernode2, midsidenode2,
 
@@ -236,23 +239,28 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         try
         {
           // get the profile Curves of the two nodes defining the current element
-          GM_Curve nodeCurve1 = null;
-          GM_Curve nodeCurve2 = null;
+
           BufferedReader nodeReader = null;
           BufferedReader eleReader = null;
           PrintWriter pwSimuLog = null;
 
-          nodeCurve1 = getCurveForNode( nodeDown );
-          nodeCurve2 = getCurveForNode( nodeUp );
+          final GM_Curve nodeCurve1 = getCurveForNode( nodeDown );
+          final GM_Curve nodeCurve2 = getCurveForNode( nodeUp );
+
+          final double curveDistance = nodeCurve1.distance( nodeCurve2 );
 
           if( nodeCurve1 != null && nodeCurve2 != null )
           {
+            final CS_CoordinateSystem crs = nodeCurve1.getCoordinateSystem();
 
-            final List<GM_LineString> breaklines = new ArrayList<GM_LineString>( 2 );
+            final List<GM_Curve> breaklines = new ArrayList<GM_Curve>( 2 );
+            breaklines.add( nodeCurve1 );
+            breaklines.add( nodeCurve2 );
+
+// final List<GM_LineString> breaklines = new ArrayList<GM_LineString>( 2 );
+// breaklines.add( nodeCurve1.getAsLineString() );
+// breaklines.add( nodeCurve2.getAsLineString() );
             pwSimuLog = new PrintWriter( System.out );
-
-            breaklines.add( nodeCurve1.getAsLineString() );
-            breaklines.add( nodeCurve2.getAsLineString() );
 
             final File tempDir = FileUtilities.createNewTempDir( "Triangle" );
             final File polyfile = new File( tempDir, "input.poly" );
@@ -262,16 +270,19 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
             try
             {
               strmPolyInput = new BufferedOutputStream( new FileOutputStream( polyfile ) );
-              CS_CoordinateSystem crs = ConstraintDelaunayHelper.writePolyFile( strmPolyInput, breaklines, pwSimuLog );
+              ConstraintDelaunayHelper.writePolyFile( strmPolyInput, breaklines, pwSimuLog );
               strmPolyInput.close();
 
               // create command
+              KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", "create command" );
               final StringBuffer cmd = createTriangleCommand( polyfile );
 
               // start Triangle
+              KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", "start Triangle" );
               execTriangle( pwSimuLog, tempDir, cmd );
 
               // get the triangulation
+              KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", "get the triangulation" );
               final File nodeFile = new File( tempDir, "input.1.node" );
               final File eleFile = new File( tempDir, "input.1.ele" );
 
@@ -280,55 +291,43 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
                 pwSimuLog.append( "Fehler beim Ausführen von triangle.exe" );
                 pwSimuLog.append( "Stellen Sie sicher, dass triangle.exe über die Windows PATH-Variable auffindbar ist." );
                 pwSimuLog.append( "Fehler: triangle.exe konnte nicht ausgeführt werden." );
+                KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", "error while executing triangle.exe" );
                 return;
               }
 
               nodeReader = new BufferedReader( new InputStreamReader( new FileInputStream( nodeFile ) ) );
               eleReader = new BufferedReader( new InputStreamReader( new FileInputStream( eleFile ) ) );
 
+              KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", "parse triangle nodes" );
               final GM_Position[] points = ConstraintDelaunayHelper.parseTriangleNodeOutput( nodeReader );
+
+              KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", "parse triangle elements" );
               final List<GM_Surface> elements = ConstraintDelaunayHelper.parseTriangleElementOutput( eleReader, crs, points );
 
-              for( GM_Surface<GM_SurfacePatch> element : elements )
+              for( final GM_Surface<GM_SurfacePatch> element : elements )
               {
-                for( GM_SurfacePatch surfacePatch : element )
+                for( final GM_SurfacePatch surfacePatch : element )
                 {
                   final GM_Position[] ring = surfacePatch.getExteriorRing();
 
-                  final List<INodeResult> nodes = new LinkedList<INodeResult>();
-
-                  for( GM_Position position : ring )
-                  {
-                    double x = position.getX();
-                    double y = position.getY();
-                    double z = position.getZ(); // here: water level
-
-                    final INodeResult node = new SimpleNodeResult();
-                    node.setLocation( x, y, z, crs );
-                    node.setWaterlevel( z );
-
-                    nodes.add( node );
-                  }
-
-                  m_triangleEater.add( nodes );
+                  feedTriangleEater( nodeDown, nodeUp, nodeCurve1, nodeCurve2, curveDistance, crs, ring );
 
                 }
               }
             }
             finally
             {
+              IOUtils.closeQuietly( nodeReader );
+              IOUtils.closeQuietly( eleReader );
               IOUtils.closeQuietly( pwSimuLog );
               IOUtils.closeQuietly( strmPolyInput );
+              FileUtilities.deleteRecursive( tempDir );
             }
-
-            // alle punkte als rand verbinden => rand polygon => triangle => wsptin (Geschwindigkeit ebenso??)=>
-            // triangle-eater
-
           }
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
-          // TODO Auto-generated catch block
+          KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", "exception while handling 1d element." );
           e.printStackTrace();
           return;
         }
@@ -442,24 +441,73 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     }
     else
     {
-      System.out.println( "element does not exist in the arc list, check model!" );
+      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", "element does not exist in the arc list, check model!" );
     }
     // m_triangleEater.finished();
   }
 
-  private void execTriangle( PrintWriter pwSimuLog, final File tempDir, final StringBuffer cmd ) throws IOException, CoreException, InterruptedException
+  private void feedTriangleEater( final GMLNodeResult nodeDown, final GMLNodeResult nodeUp, final GM_Curve nodeCurve1, final GM_Curve nodeCurve2, final double curveDistance, final CS_CoordinateSystem crs, final GM_Position[] ring )
+  {
+
+    final List<INodeResult> nodes = new LinkedList<INodeResult>();
+
+    for( int i = 0; i < ring.length - 1; i++ )
+
+    {
+      final GM_Position position = ring[i];
+      final double x = position.getX();
+      final double y = position.getY();
+      final double z = position.getZ(); // here: water level
+
+      double wsp = 0;
+      double vx = 0;
+      double vy = 0;
+
+      // TODO: get the user result attributes, somehow
+      final GM_Point point = GeometryFactory.createGM_Point( position, crs );
+
+      final GM_Object buffer = point.getBuffer( curveDistance / 2 );
+
+      if( buffer.intersects( nodeCurve1 ) == true )
+      {
+        wsp = nodeDown.getWaterlevel();
+        vx = nodeDown.getVelocity().get( 0 );
+        vy = nodeDown.getVelocity().get( 1 );
+      }
+      else if( buffer.intersects( nodeCurve2 ) == true )
+      {
+        wsp = nodeUp.getWaterlevel();
+        vx = nodeUp.getVelocity().get( 0 );
+        vy = nodeUp.getVelocity().get( 1 );
+      }
+      else
+      {
+        KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", "no profile points found." );
+      }
+
+      final INodeResult node = new SimpleNodeResult();
+      node.setLocation( x, y, z, crs );
+      node.setResultValues( vx, vy, 0, wsp );
+
+      nodes.add( node );
+    }
+
+    m_triangleEater.add( nodes );
+  }
+
+  private void execTriangle( final PrintWriter pwSimuLog, final File tempDir, final StringBuffer cmd ) throws IOException, CoreException, InterruptedException
   {
     pwSimuLog.append( "Triangle.exe wird ausgeführt..." );
 
     final long lTimeout = PROCESS_TIMEOUT;
 
-    Process exec = Runtime.getRuntime().exec( cmd.toString(), null, tempDir );
+    final Process exec = Runtime.getRuntime().exec( cmd.toString(), null, tempDir );
 
-    InputStream errorStream = exec.getErrorStream();
-    InputStream inputStream = exec.getInputStream();
+    final InputStream errorStream = exec.getErrorStream();
+    final InputStream inputStream = exec.getInputStream();
 
-    StreamGobbler error = new StreamGobbler( errorStream, "ERROR_STREAM", null );
-    StreamGobbler input = new StreamGobbler( inputStream, "INPUT_STREAM", null );
+    final StreamGobbler error = new StreamGobbler( errorStream, "ERROR_STREAM", KalypsoModel1D2DDebug.SIMULATIONRESULT );
+    final StreamGobbler input = new StreamGobbler( inputStream, "INPUT_STREAM", KalypsoModel1D2DDebug.SIMULATIONRESULT );
 
     error.start();
     input.start();
@@ -475,7 +523,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         exitValue = exec.exitValue();
         break;
       }
-      catch( RuntimeException e )
+      catch( final RuntimeException e )
       {
         /* The process has not finished. */
       }
@@ -496,12 +544,14 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   {
     final StringBuffer cmd = new StringBuffer( "cmd /c triangle.exe -c -p" );
 
-    final Double qualityMinAngle = 30.00;
+    final Double qualityMinAngle = 5.00;
 
     if( qualityMinAngle != null )
     {
-      cmd.append( "-q" );
-      cmd.append( qualityMinAngle.doubleValue() );
+      // at this point no quality meshing because it produces interpolation errors end zero-value points
+
+// cmd.append( "-q" );
+// cmd.append( qualityMinAngle.doubleValue() );
     }
 
     cmd.append( ' ' );
@@ -542,18 +592,22 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       }
 
       // get the crs from the profile-gml
-      String srsName = profile.getSrsName();
-      final CS_CoordinateSystem crs = srsName == null ? null : org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory.getInstance().getOGCCSByName( srsName );
+      final String srsName = profile.getSrsName();
+      final CS_CoordinateSystem crs = srsName == null ? KalypsoCorePlugin.getDefault().getCoordinatesSystem()
+          : org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory.getInstance().getOGCCSByName( srsName );
 
       // final CS_CoordinateSystem crs = nodeResult.getPoint().getCoordinateSystem();
       final GM_Curve curve = ProfilUtil.getLine( cutProfile, crs );
 
       /* simplify the profile */
       final double epsThinning = 0.05;
-      GM_Curve thinnedCurve = GeometryUtilities.getThinnedCurve( curve, epsThinning );
+      final GM_Curve thinnedCurve = GeometryUtilities.getThinnedCurve( curve, epsThinning );
+
+      thinnedCurve.setCoordinateSystem( crs );
 
       /* set the water level as new z-coordinate of the profile line */
       return GeometryUtilities.setValueZ( thinnedCurve.getAsLineString(), waterlevel );
+
     }
     // TODO: King
 
@@ -567,7 +621,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
    * We begin with the first corner node, the first midside node and the center node.<br>
    * The second triangle is the second corner node, the first midside node and the center node.<br>
    */
-  private void splitElement( ElementResult elementResult )
+  private void splitElement( final ElementResult elementResult )
   {
     final int numMidsideNodes = elementResult.getNumMidsideNodes();
 
@@ -663,9 +717,9 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     }
   }
 
-  private boolean checkIfTriangleWet( INodeResult[] nodes )
+  private boolean checkIfTriangleWet( final INodeResult[] nodes )
   {
-    for( INodeResult node : nodes )
+    for( final INodeResult node : nodes )
     {
       if( node.isWet() == true )
         return true;
@@ -674,9 +728,9 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   }
 
   // determine orientation based on the signed area
-  private int checkOrientation( INodeResult[] nodes )
+  private int checkOrientation( final INodeResult[] nodes )
   {
-    double signedArea = getSignedArea( nodes );
+    final double signedArea = getSignedArea( nodes );
     if( signedArea > 0.0 )
       return 1;
     if( signedArea < 0.0 )
@@ -684,12 +738,12 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     return 0;
   }
 
-  private double getSignedArea( INodeResult[] nodes )
+  private double getSignedArea( final INodeResult[] nodes )
   {
     // calculate the signed area
-    GM_Point a = nodes[0].getPoint();
-    GM_Point b = nodes[1].getPoint();
-    GM_Point c = nodes[2].getPoint();
+    final GM_Point a = nodes[0].getPoint();
+    final GM_Point b = nodes[1].getPoint();
+    final GM_Point c = nodes[2].getPoint();
 
     final double signedArea = 0.5 * (a.getX() * (b.getY() - c.getY()) + b.getX() * (c.getY() - a.getY()) + c.getX() * (a.getY() - b.getY()));
 
@@ -902,7 +956,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       }
       else
       {
-        System.out.println( "Fehler in splitIntoThreeTriangles: Dreieck wurde nicht gesplittet" );
+        KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", "Fehler in splitIntoThreeTriangles: Dreieck wurde nicht gesplittet" );
       }
     }
   }
@@ -1026,11 +1080,11 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     }
     else
     {
-      System.out.println( "Fehler in splitIntoTwoTriangles: Dreieck wurd nicht gesplittet" );
+      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", "Fehler in splitIntoTwoTriangles: Dreieck wurd nicht gesplittet" );
     }
   }
 
-  private INodeResult insertNode( INodeResult node1, INodeResult node2 )
+  private INodeResult insertNode( final INodeResult node1, final INodeResult node2 )
   {
     final INodeResult node3 = new SimpleNodeResult();
 
@@ -1121,7 +1175,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     final double y3Temp = Math.round( (-(Math.abs( y1 ) + Math.abs( y2 )) / dx12 * x3 + y1) * 100 ) / 100;
 
     if( y3Temp != 0.00 )
-      System.out.println( "error while interpolation node-data, y3Temp != 0 = " + y3Temp );
+      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s %9.3f", "error while interpolation node-data, y3Temp != 0 = ", y3Temp );
 
     return x3;
   }
@@ -1184,7 +1238,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
    * @param midsideNode
    *            the midside node
    */
-  private void interpolateMidsideNodeData( GMLNodeResult nodeDown, GMLNodeResult nodeUp, GMLNodeResult midsideNode )
+  private void interpolateMidsideNodeData( final GMLNodeResult nodeDown, final GMLNodeResult nodeUp, final GMLNodeResult midsideNode )
   {
     final List<Double> waterlevels = new LinkedList<Double>();
     final List<Double> depths = new LinkedList<Double>();
@@ -1205,7 +1259,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       midsideNode.setDepth( depth );
   }
 
-  private double interpolate( List<Double> values )
+  private double interpolate( final List<Double> values )
   {
     double sum = 0;
     for( int i = 0; i < values.size(); i++ )
@@ -1231,7 +1285,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleNode(java.lang.String, int, double, double,
    *      double)
    */
-  public void handleNode( String lineString, int id, double easting, double northing, double elevation )
+  public void handleNode( final String lineString, final int id, final double easting, final double northing, final double elevation )
   {
     final Feature parentFeature = m_resultList.getParentFeature();
     final IRelationType parentRelation = m_resultList.getParentFeatureTypeProperty();
@@ -1270,7 +1324,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handlerError(java.lang.String,
    *      org.kalypso.kalypsomodel1d2d.conv.EReadError)
    */
-  public void handlerError( String lineString, EReadError errorHints )
+  public void handlerError( final String lineString, final EReadError errorHints )
   {
     // TODO Auto-generated method stub
 
@@ -1279,7 +1333,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handlerUnIdentifyable(java.lang.String)
    */
-  public void handlerUnIdentifyable( String lineString )
+  public void handlerUnIdentifyable( final String lineString )
   {
     // TODO Auto-generated method stub
 
@@ -1288,7 +1342,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#setIRoughnessIDProvider(org.kalypso.kalypsomodel1d2d.conv.IRoughnessIDProvider)
    */
-  public void setIRoughnessIDProvider( IRoughnessIDProvider roughnessIDProvider ) throws IllegalArgumentException
+  public void setIRoughnessIDProvider( final IRoughnessIDProvider roughnessIDProvider ) throws IllegalArgumentException
   {
     // TODO Auto-generated method stub
 
@@ -1297,7 +1351,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#setModelElementIDProvider(org.kalypso.kalypsomodel1d2d.conv.IModelElementIDProvider)
    */
-  public void setModelElementIDProvider( IModelElementIDProvider modelElementIDProvider ) throws IllegalArgumentException
+  public void setModelElementIDProvider( final IModelElementIDProvider modelElementIDProvider ) throws IllegalArgumentException
   {
     // TODO Auto-generated method stub
 
@@ -1314,16 +1368,26 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleResult(java.lang.String, int, double,
    *      double, double, double)
    */
-  public void handleResult( String lineString, int id, double vx, double vy, double virtualDepth, double waterlevel )
+  public void handleResult( final String lineString, final int id, final double vx, final double vy, final double virtualDepth, final double waterlevel )
   {
     final INodeResult result = m_nodeIndex.get( id );
     if( result == null )
     {
-      System.out.println( "Result for non-existing node: " + id );
+      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s %d ", "Result for non-existing node: ", id );
       return;
     }
 
     result.setResultValues( vx, vy, virtualDepth, waterlevel );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleTime(java.lang.String, double, int)
+   */
+  public void handleTime( String line, double time, int timestep )
+  {
+    m_triangleEater.setTime( time );
+    m_triangleEater.setTimestep( timestep );
+
   }
 
 }

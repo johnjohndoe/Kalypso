@@ -55,4 +55,8 @@ public interface ITriangleEater
 
   void finished( );
 
+  void setTime( double time );
+
+  void setTimestep( int timestep );
+
 }
