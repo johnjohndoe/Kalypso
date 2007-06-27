@@ -41,6 +41,11 @@
 package org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit;
 
 import org.apache.tools.ant.taskdefs.Sleep;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.CoolBarManager;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -53,6 +58,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.CoolBar;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
@@ -72,6 +78,8 @@ import org.kalypso.kalypsomodel1d2d.ui.map.cline.RouteLineElementWidget;
 import org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateFEElement1DWidget;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListener;
+import org.kalypso.ogc.gml.map.widgets.PanToWidget;
+import org.kalypso.ogc.gml.map.widgets.ZoomInByRectWidget;
 import org.kalypso.ogc.gml.widgets.IWidget;
 
 /**
@@ -89,6 +97,11 @@ public class CalculationUnitAdministerComponent
   private Combo elementsCombo;
   private Button goButton;
   private Image goImage;
+  
+  /** holds button that activate wiget strategies*/
+  private CoolBar coolbar;
+  private CoolBarManager toolbarManager;
+  
   private static final String ACTION_KEY_ADMINISTER = "Verwalten";
   private static final String ACTION_KEY_DRAW = "New Zeichnen";
   
@@ -178,9 +191,11 @@ public class CalculationUnitAdministerComponent
     rootComposite = new Composite(parentComposite,SWT.FLAT);
     rootComposite.setLayout( new GridLayout(3,false) );
         
+    toolbarManager = new CoolBarManager();
+    coolbar = toolbarManager.createControl( rootComposite );
+    toolbarManager.add( createSetZoomWidgetAction() );
     actionsCombo = new Combo(rootComposite, SWT.RIGHT|SWT.READ_ONLY|SWT.BORDER);
    // actionsCombo.add( ACTION_KEY_ADMINISTER );
-   
    // actionsCombo.add( ACTION_KEY_DRAW );
     GridData data = new GridData(GridData.FILL_HORIZONTAL);
     actionsCombo.setLayoutData( data );
@@ -233,6 +248,25 @@ public class CalculationUnitAdministerComponent
     };
     goButton.addSelectionListener( goButtonListener  );
   }
+
+  private IAction createSetZoomWidgetAction( )
+  {
+    final IAction action =
+      new Action()
+    {
+      /**
+       * @see org.eclipse.jface.action.Action#run()
+       */
+      @Override
+      public void run( )
+      {
+//        PanToWidget 
+//        ZoomInByRectWidget
+      }
+    };
+    return action;
+  }
+
 
   /**
    * 

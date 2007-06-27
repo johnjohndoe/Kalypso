@@ -80,14 +80,6 @@
 		ActiveModelIDType
 		================================================================== -->
 	<complexType name="ActiveModelIDType">
-	<!-- Not needed if links is inside the same workspace
-	TODO: delete after reading
-		<annotation>
-			<appinfo xmlns:kapp="org.kalypso.appinfo">
-				<kapp:documentReference>control.gml</kapp:documentReference>
-			</appinfo>
-		</annotation>
--->		
 		<sequence>
 			<element ref="c1d2d:ControlModel" minOccurs="0"
 				maxOccurs="0" />
@@ -274,69 +266,86 @@
 						</annotation>
 					</element>
 					<!--TODO: Nico will implement the options 5 and 6 later-->
-					<element name="IEDSW" default="0">
+					<element name="IEDSW" default="10">
 						<annotation>
 							<documentation xml:lang="de">
 								<label><![CDATA[Wirbelviskositätsansatz]]></label>
-								<tooltip>cd<![CDATA[Wirbelviskositätsansatz]]></tooltip>
+								<tooltip>
+									cd<![CDATA[Wirbelviskositätsansatz]]></tooltip>
 							</documentation>
 						</annotation>
 						<simpleType>
 							<restriction base="int">
-								<enumeration value="0">
-									<annotation>
-										<documentation xml:lang="de">
-											<label><![CDATA[konstante Eingabedaten ohne Skalierung]]></label>
-										</documentation>
-									</annotation>
-								</enumeration>
-								<!--
-									<enumeration value="1">
-									<annotation>
-									<documentation xml:lang="de">
-									<label>Skalierung über Elementlänge</label>
-									</documentation>
-									</annotation>
-									</enumeration>-->
 								<!--<enumeration value="-1">
 									<annotation>
 									<documentation xml:lang="de">
 									<label>Eingabedaten verwenden Elementtypenabhängig?</label>
 									</documentation>
 									</annotation>
-									</enumeration>
-									<enumeration value="3">
-									<annotation>
-									<documentation xml:lang="de">
-									<label>mit Fliessrichtung?</label>
-									</documentation>
-									</annotation>
-									</enumeration>
-									<enumeration value="4">
-									<annotation>
-									<documentation xml:lang="de">
-									<label>wie 3 mit 2tem?</label>
-									</documentation>
-									</annotation>
 									</enumeration>-->
-								<enumeration value="5">
+								<enumeration value="0">
 									<annotation>
 										<documentation xml:lang="de">
-											<label><![CDATA[Konstante Wirbelviskosität]]></label>
-										</documentation>
-									</annotation>
-								</enumeration>
-								<enumeration value="6">
-									<annotation>
-										<documentation xml:lang="de">
-											<label><![CDATA[free shear-layer]]></label>
+											<label><![CDATA[use ed3 data(?)]]></label>
 										</documentation>
 									</annotation>
 								</enumeration>
 								<enumeration value="2">
 									<annotation>
 										<documentation xml:lang="de">
+											<label><![CDATA[Smagorinsky]]></label>
+										</documentation>
+									</annotation>
+								</enumeration>
+								<enumeration value="10">
+									<annotation>
+										<documentation xml:lang="de">
+											<label><![CDATA[konstante Eingabedaten ohne Skalierung]]></label>
+										</documentation>
+										<documentation xml:lang="en">
+											<label><![CDATA[constant eddy viscosity]]></label>
+										</documentation>
+									</annotation>
+								</enumeration>
+								<enumeration value="11">
+									<annotation>
+										<documentation xml:lang="de">
+											<label><![CDATA[Skalierung über Elementlänge]]></label>
+										</documentation>
+									</annotation>
+								</enumeration>
+								<enumeration value="12">
+									<annotation>
+										<documentation xml:lang="de">
 											<label><![CDATA[Smagorinsky-Ansatz]]></label>
+										</documentation>
+									</annotation>
+								</enumeration>
+								<enumeration value="13">
+									<annotation>
+										<documentation xml:lang="de">
+											<label><![CDATA[Skalierung über Elementlänge, mit Fliessrichtung]]></label>
+										</documentation>
+									</annotation>
+								</enumeration>
+								<enumeration value="14">
+									<annotation>
+										<documentation xml:lang="de">
+											<label><![CDATA[Superposition aus 1 and 3]]></label>
+										</documentation>
+									</annotation>
+								</enumeration>
+								<enumeration value="15">
+									<annotation>
+										<documentation xml:lang="de">
+											<label><![CDATA[Konstante Wirbelviskosität]]></label>
+										</documentation>
+									</annotation>
+								</enumeration>
+								<enumeration value="16">
+									<annotation>
+										<documentation xml:lang="de">
+											<label><![CDATA[free shear-layer]]></label>
 										</documentation>
 									</annotation>
 								</enumeration>
@@ -498,8 +507,24 @@
 							</documentation>
 						</annotation>
 					</element>
+					<element name="_steady" type="boolean"
+						default="true">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Stätionar Berechnung</label>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="_unsteady" type="boolean"
+						default="false">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Instätionar Berechnung</label>
+							</documentation>
+						</annotation>
+					</element>
 					<!--C5-->
-					<element name="NITI">
+					<element name="NITI" type="int" default="1">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>
@@ -508,14 +533,13 @@
 								</label>
 								<tooltip>
 									Maximale Anzahl der Interationen für
-									stationäre Berechnung (0 - ohne
-									stationäre Berechnung).
+									stationäre Berechnung
 								</tooltip>
 							</documentation>
 						</annotation>
 						<simpleType>
 							<restriction base="int">
-								<minInclusive value="0" />
+								<minInclusive value="1" />
 								<maxInclusive value="100" />
 							</restriction>
 						</simpleType>
@@ -682,7 +706,8 @@
 					</element>
 					<!--CV-->
 					<!--TODO: aus vorhandenen Lösungen auswählen...-->
-					<element name="IACCYC" type="int" default="1">
+					<element name="IACCYC" type="boolean"
+						default="false">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Restart</label>
@@ -712,7 +737,7 @@
 			<element ref="c1d2d:TimestepsObservation" minOccurs="0" />
 		</sequence>
 		<!-- 
-		<attributeGroup ref="gml:AssociationAttributeGroup" />
+			<attributeGroup ref="gml:AssociationAttributeGroup" />
 		-->
 	</complexType>
 

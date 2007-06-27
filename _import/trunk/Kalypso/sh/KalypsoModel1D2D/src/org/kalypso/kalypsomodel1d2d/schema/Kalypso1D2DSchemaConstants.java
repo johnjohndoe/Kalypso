@@ -3,7 +3,6 @@ package org.kalypso.kalypsomodel1d2d.schema;
 import javax.xml.namespace.QName;
 
 import org.kalypso.commons.xml.NS;
-import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 
 /**
  * @author Patrice Congo
@@ -213,6 +212,44 @@ public class Kalypso1D2DSchemaConstants
   public final static QName WB1D2DCONTROL_PROP_AC3 = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "AC3" );
 
   public final static QName WB1D2DCONTROL_PROP_TIMESTEPS_MEMBER = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "timestepsMember" );
+
+  public final static QName SIMMETA_PROP_SIMDESCRIPTOR = new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "simulationDescriptor" );
+
+  public final static QName SIMMETA_PROP_MODELDESCRIPTOR = new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "modelDescriptor" );
+
+  public final static QName SIMMETA_F_SIMDESCRIPTOR_COLLECTION = new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "SimulationDescriptionCollection" );
+
+  public final static QName SIMMETA_F_SIMDESCRIPTOR = new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "SimulationDescriptor" );
+
+  public final static QName SIMMETA_F_MODELDESCRIPTOR = new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "ModelDescriptor" );
+
+  public final static QName SIMMETA_F_RESULT = new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "ResultDescriptor" );
+
+  public final static QName SIMMETA_PROP_GMLID = new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "gmlID" );
+
+  public final static QName SIMMETA_PROP_NAME = new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "name" );
+
+  public final static QName SIMMETA_PROP_MODEL_TYPE = new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "modelType" );
+
+  public final static QName SIMMETA_PROP_WORKSPACE_PATH = new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "workspacePath" );
+
+  public final static QName SIMMETA_PROP_TIME = new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "time" );
+
+  public final static QName SIMMETA_PROP_SIMULATION_TYPE = new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "simulationType" );
+
+  public final static QName SIMMETA_PROP_START_TIME = new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "startTime" );
+
+  public final static QName SIMMETA_PROP_END_TIME = new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "endTime" );
+
+  public final static QName SIMMETA_PROP_RESTARTED = new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "restarted" );
+
+  public final static QName SIMMETA_PROP_AUTOCONVERGED = new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "autoconverged" );
+
+  public final static QName SIMMETA_PROP_CALCULATION_UNIT = new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "calculationUnit" );
+
+  public final static QName WB1D2DSIMMETA_PROP_CONTROL_MODEL = new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "controlModel" );
+
+  public final static QName SIMMETA_PROP_RESULT = new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "result" );
 
   
   public static final QName OP1D2D_F_OPERATIONAL_MODEL = 
