@@ -68,9 +68,9 @@ public final class StringUtilities
   /**
    * Not intended to be instanciated
    */
-  private StringUtilities()
+  private StringUtilities( )
   {
-  // empty
+    // empty
   }
 
   /**
@@ -82,9 +82,8 @@ public final class StringUtilities
    * with A optional, being the alpha composite value in the range (0 - 255).
    * 
    * @param s
-   * 
    * @throws IllegalArgumentException
-   *           if s is null
+   *             if s is null
    */
   public static Color stringToColor( final String s ) throws IllegalArgumentException
   {
@@ -97,8 +96,7 @@ public final class StringUtilities
       return new Color( Integer.parseInt( sc[0] ), Integer.parseInt( sc[1] ), Integer.parseInt( sc[2] ) );
 
     if( sc.length == 4 )
-      return new Color( Integer.parseInt( sc[0] ), Integer.parseInt( sc[1] ), Integer.parseInt( sc[2] ), Integer
-          .parseInt( sc[3] ) );
+      return new Color( Integer.parseInt( sc[0] ), Integer.parseInt( sc[1] ), Integer.parseInt( sc[2] ), Integer.parseInt( sc[3] ) );
 
     throw new IllegalArgumentException( "Color String has wrong format: " + s );
   }
@@ -106,14 +104,11 @@ public final class StringUtilities
   /**
    * Converts a Color into a String.
    * <p>
-   * String will have same format as specified in
-   * 
-   * {@link StringUtilities#stringToColor(String)}
+   * String will have same format as specified in {@link StringUtilities#stringToColor(String)}
    * 
    * @param c
-   * 
    * @throws IllegalArgumentException
-   *           if color is null
+   *             if color is null
    */
   public static String colorToString( final Color c )
   {
@@ -149,9 +144,8 @@ public final class StringUtilities
    * </pre>
    * 
    * @param s
-   * 
    * @throws IllegalArgumentException
-   *           if s is null
+   *             if s is null
    */
   public static Font stringToFont( final String s )
   {
@@ -169,14 +163,11 @@ public final class StringUtilities
   }
 
   /**
-   * Converts a font to a string. Format is defined in
-   * 
-   * {@link StringUtilities#stringToFont(String)}
+   * Converts a font to a string. Format is defined in {@link StringUtilities#stringToFont(String)}
    * 
    * @param f
-   * 
    * @throws IllegalArgumentException
-   *           if f is null
+   *             if f is null
    */
   public static String fontToString( final Font f )
   {
@@ -201,9 +192,9 @@ public final class StringUtilities
   {
     String newString = sourceValue;
 
-    for( Iterator replaceIt = replaceProperties.entrySet().iterator(); replaceIt.hasNext(); )
+    for( final Iterator replaceIt = replaceProperties.entrySet().iterator(); replaceIt.hasNext(); )
     {
-      final Map.Entry entry = (Entry)replaceIt.next();
+      final Map.Entry entry = (Entry) replaceIt.next();
       final String key = entry.getKey().toString();
       final String value = entry.getValue().toString();
 
@@ -218,15 +209,14 @@ public final class StringUtilities
    * existing NEWLINE chars.
    * 
    * @param str
-   *          the string to span
+   *            the string to span
    * @param lineLength
-   *          the number of chars one line must have
+   *            the number of chars one line must have
    * @param keepWords
-   *          when true words are not cut at the end of the line but rather postponed on the next line
+   *            when true words are not cut at the end of the line but rather postponed on the next line
    * @return newly spaned string or null if str is null
    */
-  public static String spanOverLines( final String str, final int lineLength, final boolean keepWords,
-      final int alignment )
+  public static String spanOverLines( final String str, final int lineLength, final boolean keepWords, final int alignment )
   {
     if( str == null )
       return null;
@@ -243,9 +233,9 @@ public final class StringUtilities
       if( i + lineLength > str.length() )
       {
         String line = str.substring( i, str.length() );
-        if( alignment == ALIGNMENT_LEFT )
+        if( alignment == StringUtilities.ALIGNMENT_LEFT )
           line = StringUtils.stripStart( line, null );
-        if( alignment == ALIGNMENT_RIGHT )
+        if( alignment == StringUtilities.ALIGNMENT_RIGHT )
         {
           line = StringUtils.stripEnd( line, null );
           line = StringUtils.leftPad( line, lineLength );
@@ -255,12 +245,11 @@ public final class StringUtilities
       }
 
       int curLineLength = lineLength;
-      if( keepWords && !Character.isWhitespace( str.charAt( i + lineLength - 2 ) )
-          && !Character.isWhitespace( str.charAt( i + lineLength - 1 ) )
+      if( keepWords && !Character.isWhitespace( str.charAt( i + lineLength - 2 ) ) && !Character.isWhitespace( str.charAt( i + lineLength - 1 ) )
           && !Character.isWhitespace( str.charAt( i + lineLength ) ) )
       {
         curLineLength = lineLength - 3;
-        while( curLineLength > 0 && !Character.isWhitespace( str.charAt( i + curLineLength ) ) )
+        while( (curLineLength > 0) && !Character.isWhitespace( str.charAt( i + curLineLength ) ) )
           curLineLength--;
 
         if( curLineLength == 0 )
@@ -270,9 +259,9 @@ public final class StringUtilities
       }
 
       String line = str.substring( i, i + curLineLength );
-      if( alignment == ALIGNMENT_LEFT )
+      if( alignment == StringUtilities.ALIGNMENT_LEFT )
         line = StringUtils.stripStart( line, null );
-      if( alignment == ALIGNMENT_RIGHT )
+      if( alignment == StringUtilities.ALIGNMENT_RIGHT )
       {
         line = StringUtils.stripEnd( line, null );
         line = StringUtils.leftPad( line, lineLength );
@@ -284,5 +273,13 @@ public final class StringUtilities
     }
 
     return bf.toString();
+  }
+
+  /**
+   * removes last letter of an string literal (see perl, ruby, etc.)
+   */
+  public static String chomp( final String s )
+  {
+    return s.substring( 0, s.length() - 1 );
   }
 }
