@@ -64,7 +64,6 @@ import org.kalypso.ogc.gml.mapmodel.MapModell;
 import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.gismapview.Gismapview;
-import org.kalypso.template.gismapview.ObjectFactory;
 import org.kalypso.template.gismapview.Gismapview.Layers;
 import org.kalypso.template.types.ExtentType;
 import org.kalypso.template.types.StyledLayerType;
@@ -116,12 +115,8 @@ public class GisTemplateMapModell implements IMapModell
     setName( gisview.getName() );
 
     for( final IKalypsoTheme theme : getAllThemes() )
-    {
       if( !((theme instanceof KalypsoLegendTheme) || (theme instanceof ScrabLayerFeatureTheme)) )
-      {
         removeTheme( theme );
-      }
-    }
     final Layers layerListType = gisview.getLayers();
     final Object activeLayer = layerListType.getActive();
 
@@ -130,9 +125,7 @@ public class GisTemplateMapModell implements IMapModell
     {
       final IKalypsoTheme theme = addTheme( layerType );
       if( layerType == activeLayer )
-      {
         activateTheme( theme );
-      }
     }
   }
 
@@ -180,43 +173,33 @@ public class GisTemplateMapModell implements IMapModell
       return new KalypsoWMSTheme( layerType.getLinktype(), layerName, source, defaultCS, this );
     }
     else if( ArrayUtils.contains( arrImgTypes, layerType.getLinktype().toLowerCase() ) )
-    {
       return KalypsoPictureTheme.getPictureTheme( layerType, context, this, defaultCS );
-    }
     else if( "gmt".equals( layerType.getLinktype() ) )
-    {
       return new CascadingKalypsoTheme( layerType, context, m_selectionManager, this );
-    }
     else
-    {
       // TODO: returns handling of gml files - part of else?!? dont assume it, proof it!
       return new GisTemplateFeatureTheme( layerType, context, m_selectionManager, this );
-    }
   }
 
   // Helper
   public void createGismapTemplate( final GM_Envelope bbox, final String srsName, final String customName, IProgressMonitor monitor, final IFile file ) throws CoreException
   {
     if( monitor == null )
-    {
       monitor = new NullProgressMonitor();
-    }
     ByteArrayInputStream bis = null;
     try
     {
       final IKalypsoTheme[] themes = m_modell.getAllThemes();
       monitor.beginTask( "Kartenvorlage speichern", themes.length * 1000 + 1000 );
 
-      final ObjectFactory maptemplateFactory = new ObjectFactory();
+      final org.kalypso.template.gismapview.ObjectFactory maptemplateFactory = new org.kalypso.template.gismapview.ObjectFactory();
       final org.kalypso.template.types.ObjectFactory templateFactory = new org.kalypso.template.types.ObjectFactory();
-      //
+
       final org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
       final Gismapview gismapview = maptemplateFactory.createGismapview();
       final Layers layersType = maptemplateFactory.createGismapviewLayers();
       if( customName != null )
-      {
         gismapview.setName( customName );
-      }
       if( bbox != null )
       {
         final ExtentType extentType = extentFac.createExtentType();
@@ -240,9 +223,7 @@ public class GisTemplateMapModell implements IMapModell
       {
         final StyledLayerType layer = templateFactory.createStyledLayerType();
         if( layer == null )
-        {
           continue;
-        }
 
         final IKalypsoTheme kalypsoTheme = themes[i];
         if( kalypsoTheme instanceof GisTemplateFeatureTheme )
@@ -276,9 +257,7 @@ public class GisTemplateMapModell implements IMapModell
         }
 
         if( m_modell.isThemeActivated( kalypsoTheme ) && !(kalypsoTheme instanceof KalypsoLegendTheme) && !(kalypsoTheme instanceof ScrabLayerFeatureTheme) )
-        {
           layersType.setActive( layer );
-        }
       }
 
       final ByteArrayOutputStream bos = new ByteArrayOutputStream();

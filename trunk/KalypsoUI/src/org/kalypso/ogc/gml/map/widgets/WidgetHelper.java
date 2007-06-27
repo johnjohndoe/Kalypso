@@ -60,51 +60,50 @@ public class WidgetHelper
 
   public static IWidget getWidget( final String widgetID )
   {
-    if( !m_widget.containsKey( widgetID ) )
+    if( !WidgetHelper.m_widget.containsKey( widgetID ) )
     {
-      final IWidget newWidget = createWidget( widgetID );
+      final IWidget newWidget = WidgetHelper.createWidget( widgetID );
+
       if( newWidget != null )
-        m_widget.put( widgetID, newWidget );
+        WidgetHelper.m_widget.put( widgetID, newWidget );
     }
-    return m_widget.get( widgetID );
+
+    return WidgetHelper.m_widget.get( widgetID );
   }
 
-  public static IWidget createWidget( String widgetID )
+  public static IWidget createWidget( final String widgetID )
   {
     if( MapPanel.WIDGET_ZOOM_IN.equals( widgetID ) )
       return (new ZoomInWidget( "zoom in", "" ));
-    if( MapPanel.WIDGET_ZOOM_IN_RECT.equals( widgetID ) )
+    else if( MapPanel.WIDGET_ZOOM_IN_RECT.equals( widgetID ) )
       return (new ZoomInByRectWidget( "zoom in", "" ));
-    if( MapPanel.WIDGET_PAN.equals( widgetID ) )
+    else if( MapPanel.WIDGET_PAN.equals( widgetID ) )
       return (new PanToWidget( "pan to", "" ));
+    else if( widgetID.startsWith( MapPanel.WIDGET_EDIT_FEATURE_GEOMETRY ) )
+      return (new EditFeatureGeometryWidget( "Replace Geometry", "Replace The First Geometry Of The Selected Feature", null, null, null ));
+    else if( widgetID.startsWith( MapPanel.WIDGET_CREATE_FEATURE_WITH_POINT ) )
+      return (new CreateGeometeryWidget2( "create Geometry", "", GeometryUtilities.getPointClass() ));
+    else if( widgetID.startsWith( MapPanel.WIDGET_CREATE_FEATURE_WITH_LINESTRING ) )
+      return (new CreateGeometeryWidget2( "create Geometry", "", GeometryUtilities.getLineStringClass() ));
+    else if( widgetID.startsWith( MapPanel.WIDGET_CREATE_FEATURE_WITH_POLYGON ) )
+      return (new CreateGeometeryWidget2( "create Geometry", "", GeometryUtilities.getPolygonClass() ));
+    else if( widgetID.startsWith( MapPanel.WIDGET_CREATE_FEATURE_WITH_GEOMETRY ) )
+      return (new CreateGeometeryWidget2( "create Geometry", "", null ));
+    else if( widgetID.equals( MapPanel.WIDGET_EDIT_GEOMETRY ) )
+      return (new EditGeometryWidget( "edit Geometry", "" ));
+    else if( MapPanel.WIDGET_SELECT.equals( widgetID ) )
+      return (new SelectWidget( "select", "" ));
+    else if( MapPanel.WIDGET_UNSELECT.equals( widgetID ) )
+      return (new UnSelectWidget( "unselect", "" ));
+    else if( MapPanel.WIDGET_TOGGLE_SELECT.equals( widgetID ) )
+      return (new ToggleSelectWidget( "toggle selection", "" ));
+    else if( MapPanel.WIDGET_SINGLE_SELECT.equals( widgetID ) )
+      return (new SingleElementSelectWidget( "single select", "" ));
 
     // if( widgetID.startsWith( MapPanel.WIDGET_CREATE_FEATURE ) )
     // return ( new CreateGeometeryWidget2( "create Geometry", "", widgetID.replaceAll( ".+\\.", "" ) ) );
     // the geometry feature creators:
 
-    if( widgetID.startsWith( MapPanel.WIDGET_EDIT_FEATURE_GEOMETRY ) )
-      return (new EditFeatureGeometryWidget( "Replace Geometry", "Replace The First Geometry Of The Selected Feature", null, null, null ));
-
-    if( widgetID.startsWith( MapPanel.WIDGET_CREATE_FEATURE_WITH_POINT ) )
-      return (new CreateGeometeryWidget2( "create Geometry", "", GeometryUtilities.getPointClass() ));
-
-    if( widgetID.startsWith( MapPanel.WIDGET_CREATE_FEATURE_WITH_LINESTRING ) )
-      return (new CreateGeometeryWidget2( "create Geometry", "", GeometryUtilities.getLineStringClass() ));
-    if( widgetID.startsWith( MapPanel.WIDGET_CREATE_FEATURE_WITH_POLYGON ) )
-      return (new CreateGeometeryWidget2( "create Geometry", "", GeometryUtilities.getPolygonClass() ));
-    if( widgetID.startsWith( MapPanel.WIDGET_CREATE_FEATURE_WITH_GEOMETRY ) )
-      return (new CreateGeometeryWidget2( "create Geometry", "", null ));
-    if( widgetID.equals( MapPanel.WIDGET_EDIT_GEOMETRY ) )
-      return (new EditGeometryWidget( "edit Geometry", "" ));
-    //
-    if( MapPanel.WIDGET_SELECT.equals( widgetID ) )
-      return (new SelectWidget( "select", "" ));
-    if( MapPanel.WIDGET_UNSELECT.equals( widgetID ) )
-      return (new UnSelectWidget( "unselect", "" ));
-    if( MapPanel.WIDGET_TOGGLE_SELECT.equals( widgetID ) )
-      return (new ToggleSelectWidget( "toggle selection", "" ));
-    if( MapPanel.WIDGET_SINGLE_SELECT.equals( widgetID ) )
-      return (new SingleElementSelectWidget( "single select", "" ));
     return null;
   }
 }
