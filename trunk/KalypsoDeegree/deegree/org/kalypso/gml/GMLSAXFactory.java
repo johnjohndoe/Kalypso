@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gml;
 
+import java.math.BigInteger;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -225,7 +226,18 @@ public class GMLSAXFactory
     final ContentHandler contentHandler = m_xmlReader.getContentHandler();
 
     if( singleValue != null )
+    {
+     if( singleValue instanceof Integer )
+     {
+       //to solve problem with boundary condition direction class casting from integer to bigint
+      BigInteger bint = new BigInteger(singleValue.toString()); 
+      th.marshal( prefixedQName, bint, m_xmlReader, context, gmlVersion );
+     }
+     else
+     {
       th.marshal( prefixedQName, singleValue, m_xmlReader, context, gmlVersion );
+     }
+    }
     else if( isMandatory )
     {
       contentHandler.startElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart, new AttributesImpl() );
