@@ -2,44 +2,45 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsosimulationmodel.core;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -48,6 +49,9 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
@@ -74,7 +78,7 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
  * Holds utility methods
- * 
+ *
  * @author Patrice Congo
  *
  */
@@ -91,10 +95,10 @@ public class Util
       IWorkbench workbench = PlatformUI.getWorkbench();
       IHandlerService service = (IHandlerService) workbench.getService( IHandlerService.class );
       IEvaluationContext currentState = service.getCurrentState();
-      
-      IFolder scenarioFolder = 
+
+      IFolder scenarioFolder =
         (IFolder) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME);
-      
+
       /// scenario
       return scenarioFolder;
     }
@@ -126,12 +130,52 @@ public class Util
       return null;
     }
   }
-  
-  
+
+  /**
+   * Saves all dirty submodels in the current scenario.
+   * A workbench and an active workbench window is required.
+   *
+   */
+  public static final void saveAllModel()
+  {
+    try
+    {
+
+      IWorkbench workbench = PlatformUI.getWorkbench();
+      IHandlerService service = (IHandlerService) workbench.getService( IHandlerService.class );
+      IEvaluationContext currentState = service.getCurrentState();
+      final ICaseDataProvider<IFeatureWrapper2> caseDataProvider = (ICaseDataProvider<IFeatureWrapper2>) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+      IRunnableWithProgress rwp = new IRunnableWithProgress()
+      {
+
+        public void run( IProgressMonitor monitor ) throws InvocationTargetException, InterruptedException
+        {
+          try
+          {
+            caseDataProvider.saveModel( null );
+          }
+          catch( CoreException e )
+          {
+            e.printStackTrace();
+            throw new InvocationTargetException(e);
+          }
+        }
+
+      };
+      workbench.getActiveWorkbenchWindow().run( true, false, rwp );
+    }
+    catch( Throwable th )
+    {
+      th.printStackTrace();
+      throw new RuntimeException(th);
+    }
+  }
+
+
 
   /**
    * Test whether the given feature is an elmenent of the type specified by the q-name.
-   * 
+   *
    * @param feature
    *          the feature instance, which type is to be access
    * @param typeQname --
@@ -260,7 +304,7 @@ public class Util
 
   /**
    * Create a feature of the given type and link it to the given parentFeature as a property of the specified q-name
-   * 
+   *
    * @param parentFeature
    *          the parent feature
    * @param propQName
@@ -339,7 +383,7 @@ public class Util
 
   /**
    * Create a feature of the given type and link it to the given parentFeature as a property of the specified q-name
-   * 
+   *
    * @param parentFeature
    *          the parent feature
    * @param propQName
@@ -407,23 +451,23 @@ public class Util
       return null;
     }
   }
-  
+
 /**
    * Get an {@link IFeatureWrapperCollection} from a feature list
    * property.
-   * The feature type, the property type and the type of the collection 
+   * The feature type, the property type and the type of the collection
    * elements can be return
    * @param feature the feature whose property is to be wrapped in a
-   *        {@link IFeatureWrapperCollection} 
+   *        {@link IFeatureWrapperCollection}
    * @param listPropQName the Q Name of the property
    * @param bindingInterface the class of the collection elements
-   * @param doCreate a boolean controling the handling of the property 
-   *            creation. if true a listProperty is created if its not 
+   * @param doCreate a boolean controling the handling of the property
+   *            creation. if true a listProperty is created if its not
    *            allready availayble
-   *             
-   * 
+   *
+   *
    */
-  public static final  <T extends IFeatureWrapper2> IFeatureWrapperCollection<T> 
+  public static final  <T extends IFeatureWrapper2> IFeatureWrapperCollection<T>
                               get(
                                     Feature feature,
                                     QName featureQName,
@@ -432,43 +476,43 @@ public class Util
                                     boolean doCreate
                                     )
   {
-    Assert.throwIAEOnNull( 
+    Assert.throwIAEOnNull(
         feature, "Param feature must not be null" );
-    Assert.throwIAEOnNull( 
+    Assert.throwIAEOnNull(
         featureQName, "Param listPropQName must not be null" );
-    Assert.throwIAEOnNull( 
+    Assert.throwIAEOnNull(
         listPropQName, "Param feature must not be null" );
-    Assert.throwIAEOnNull( 
+    Assert.throwIAEOnNull(
         bindingInterface, "Param bindingInterface must not be null" );
-    
+
     Object prop=
         feature.getProperty(listPropQName);
-    
+
     FeatureWrapperCollection<T> col=null;
-    
+
     if(prop==null)
     {
       //create the property tha is still missing
       if(doCreate)
       {
-        col= 
+        col=
           new FeatureWrapperCollection<T>(
                               feature,
                               featureQName,
                               listPropQName,
                               bindingInterface);
-      }     
+      }
     }
     else
-    {      
+    {
       //just wrapped the existing one
-      col= 
+      col=
         new FeatureWrapperCollection<T>(
                             feature,
                             bindingInterface,
                             listPropQName);
     }
-    
+
     return col;
   }
 }
