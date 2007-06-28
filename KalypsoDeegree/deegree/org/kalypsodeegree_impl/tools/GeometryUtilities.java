@@ -767,4 +767,17 @@ public class GeometryUtilities
     return thinnedCurve;
   }
 
+  public static final GM_Envelope grabEnvelopeFromDistance( final GM_Point position, final double grabDistance )
+  {
+    final double posX = position.getX();
+    final double posY = position.getY();
+    final double grabDistanceHalf = grabDistance / 2;
+
+    final GM_Position minPos = GeometryFactory.createGM_Position( posX - grabDistanceHalf, posY - grabDistanceHalf );
+    final GM_Position maxPos = GeometryFactory.createGM_Position( posX + grabDistanceHalf, posY + grabDistanceHalf );
+
+    final GM_Envelope reqEnvelope = GeometryFactory.createGM_Envelope( minPos, maxPos );
+    return reqEnvelope;
+  }
+
 }
