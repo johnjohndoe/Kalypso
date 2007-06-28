@@ -74,6 +74,7 @@ import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSource;
 import org.kalypso.model.wspm.core.profil.serializer.ProfilSerializerUtilitites;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
@@ -319,10 +320,10 @@ public class WspWinImporter
     {
       // TODO: Gernot: at the moment, we read everything as pasche-profiles, because knauf is not
       // yet supported
-      profiletype = "org.kalypso.model.wspm.tuhh.profiletype";
+      profiletype = IWspmTuhhConstants.PROFIL_TYPE_PASCHE;
     }
     else
-      profiletype = "org.kalypso.model.wspm.tuhh.profiletype";
+      profiletype = IWspmTuhhConstants.PROFIL_TYPE_PASCHE;
 
     final IProfilSource prfSource = KalypsoModelWspmCoreExtensions.createProfilSource( "prf" );
     final IProfil profile = ProfilSerializerUtilitites.readProfile( prfSource, prfFile, profiletype );
