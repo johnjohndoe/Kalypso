@@ -68,11 +68,15 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.tools.Debug;
 import org.opengis.cs.CS_CoordinateSystem;
 
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * Default implementation of the GM_Object interface from package deegree.model. The implementation is abstract because
@@ -290,7 +294,17 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
    */
   public GM_Object getBuffer( final double distance )
   {
-    return null;
+    try
+    {
+      Geometry export = JTSAdapter.export( this );
+      Geometry poly = export.buffer( distance );
+      return JTSAdapter.wrap( poly );
+    }
+    catch( GM_Exception e )
+    {
+      e.printStackTrace();
+      return null;
+    }
   }
 
   /**
