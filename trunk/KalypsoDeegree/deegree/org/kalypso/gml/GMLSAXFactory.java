@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gml;
 
-import java.math.BigInteger;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -227,16 +226,20 @@ public class GMLSAXFactory
 
     if( singleValue != null )
     {
-     if( singleValue instanceof Integer )
-     {
-       //to solve problem with boundary condition direction class casting from integer to bigint
-      BigInteger bint = new BigInteger(singleValue.toString()); 
-      th.marshal( prefixedQName, bint, m_xmlReader, context, gmlVersion );
-     }
-     else
-     {
+// if( singleValue instanceof Integer )
+// {
+      // to solve problem with boundary condition direction class casting from integer to bigint
+
+      // NO! This is not a solution, now everythig else does not work any more!
+      // / Please check your schema, its very probably that you have a schema there!
+
+// BigInteger bint = new BigInteger(singleValue.toString());
+// th.marshal( prefixedQName, bint, m_xmlReader, context, gmlVersion );
+// }
+// else
+// {
       th.marshal( prefixedQName, singleValue, m_xmlReader, context, gmlVersion );
-     }
+// }
     }
     else if( isMandatory )
     {
