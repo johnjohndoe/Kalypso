@@ -40,7 +40,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.mapeditor;
 
-import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -53,11 +52,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypsodeegree.graphics.transformation.GeoTransform;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * @author belger
@@ -83,7 +79,7 @@ public class ExportableMap implements IExportableObject
   /**
    * @see org.kalypso.metadoc.IExportableObject#getPreferredDocumentName()
    */
-  public String getPreferredDocumentName()
+  public String getPreferredDocumentName( )
   {
     // TODO besserer Name?
     return "Karte." + m_format;
@@ -93,21 +89,14 @@ public class ExportableMap implements IExportableObject
    * @see org.kalypso.metadoc.IExportableObject#exportObject(java.io.OutputStream,
    *      org.eclipse.core.runtime.IProgressMonitor, org.apache.commons.configuration.Configuration)
    */
-  public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor,
-      final Configuration metadataExtensions )
+  public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor, final Configuration metadataExtensions )
   {
     try
     {
       monitor.beginTask( "Bildexport", 1000 );
 
-      final IMapModell mapModell = m_panel.getMapModell();
+      final BufferedImage image = MapModellHelper.createWellFormedImageFromModel( m_panel, m_width, m_height );
 
-      final GeoTransform transform = m_panel.getProjection();
-      final GM_Envelope boundingBox = m_panel.getBoundingBox();
-
-      final Rectangle bounds = new Rectangle( m_width, m_height );
-      final BufferedImage image = MapModellHelper.createImageFromModell( transform, boundingBox, bounds, bounds.width,
-          bounds.height, mapModell );
       final boolean result = ImageIO.write( image, m_format, output );
       if( !result )
         return new Status( IStatus.WARNING, KalypsoGisPlugin.getId(), 0, "Ungültiges Format: " + m_format, null );
@@ -129,7 +118,7 @@ public class ExportableMap implements IExportableObject
   /**
    * @see org.kalypso.metadoc.IExportableObject#getIdentifier()
    */
-  public String getIdentifier()
+  public String getIdentifier( )
   {
     // TODO bessere Id?
     return getPreferredDocumentName();
@@ -138,7 +127,7 @@ public class ExportableMap implements IExportableObject
   /**
    * @see org.kalypso.metadoc.IExportableObject#getCategory()
    */
-  public String getCategory()
+  public String getCategory( )
   {
     // TODO bessere category
     return "unbekannt";

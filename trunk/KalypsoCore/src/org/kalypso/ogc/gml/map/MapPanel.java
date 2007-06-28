@@ -494,7 +494,7 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
     m_wishBBox = wishBBox;
 
     final GM_Envelope oldExtent = m_boundingBox;
-    m_boundingBox = adjustBoundingBox( m_wishBBox );
+    m_boundingBox = MapModellHelper.adjustBoundingBox( m_model, m_wishBBox, getRatio() );
 
     if( m_boundingBox != null )
     {
@@ -509,7 +509,7 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
 
       m_projection.setSourceRect( m_boundingBox );
 
-      // dont call onModellChange and inform the listeners
+      // don't call onModellChange and inform the listeners
       // this is dangerous (dead lock!) inside a synchronized method
       // onModellChange( null );
 
@@ -520,38 +520,6 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
     }
 
     fireExtentChanged( oldExtent, m_boundingBox );
-  }
-
-  private GM_Envelope adjustBoundingBox( GM_Envelope env )
-  {
-    if( env == null )
-      env = m_model.getFullExtentBoundingBox();
-    if( env == null )
-      return null;
-
-    final double ratio = getRatio();
-    // todo besser loesen
-    if( Double.isNaN( ratio ) )
-      return env;
-
-    final double minX = env.getMin().getX();
-    final double minY = env.getMin().getY();
-
-    final double maxX = env.getMax().getX();
-    final double maxY = env.getMax().getY();
-
-    double dx = (maxX - minX) / 2d;
-    double dy = (maxY - minY) / 2d;
-
-    if( dx * ratio > dy )
-      dy = dx * ratio;
-    else
-      dx = dy / ratio;
-
-    final double mx = (maxX + minX) / 2d;
-    final double my = (maxY + minY) / 2d;
-
-    return GeometryFactory.createGM_Envelope( mx - dx, my - dy, mx + dx, my + dy );
   }
 
   private double getRatio( )
@@ -757,7 +725,7 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
     final Feature parentFeature = featureList.getParentFeature();
     final IRelationType parentProperty = featureList.getParentFeatureTypeProperty();
 
-    // add all selectied features
+    // add all selected features
     final EasyFeatureWrapper[] selectedWrapped = new EasyFeatureWrapper[features.size()];
     for( int i = 0; i < features.size(); i++ )
     {

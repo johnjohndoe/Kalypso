@@ -52,9 +52,11 @@ import java.util.List;
 import org.kalypso.contribs.java.awt.HighlightGraphics;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoThemeFilter;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.graphics.transformation.WorldToScreenTransform;
 import org.kalypsodeegree_impl.model.ct.GeoTransformer;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.Debug;
@@ -100,7 +102,7 @@ public class MapModellHelper
       // create a box on the central map pixel to determine its size in meters
       final GM_Position min = GeometryFactory.createGM_Position( box.getMin().getX() + dx * (mapWidth / 2d - 1), box.getMin().getY() + dy * (mapHeight / 2d - 1) );
       final GM_Position max = GeometryFactory.createGM_Position( box.getMin().getX() + dx * (mapWidth / 2d), box.getMin().getY() + dy * (mapHeight / 2d) );
-      final double distance = calcDistance( min.getY(), min.getX(), max.getY(), max.getX() );
+      final double distance = MapModellHelper.calcDistance( min.getY(), min.getX(), max.getY(), max.getX() );
 
       // default pixel size defined in SLD specs is 28mm
       final double scale = distance / 0.00028;
@@ -138,7 +140,7 @@ public class MapModellHelper
 
       p.setDestRect( x - 2, y - 2, w + x, h + y );
 
-      final double scale = calcScale( model, bbox, bounds.width, bounds.height );
+      final double scale = MapModellHelper.calcScale( model, bbox, bounds.width, bounds.height );
       try
       {
         // TODO How to initialize the themes without painting?
@@ -151,10 +153,8 @@ public class MapModellHelper
         {
           isLoading = false;
           for( final IKalypsoTheme theme : allThemes )
-          {
             if( theme.isLoaded() == false )
               isLoading = true;
-          }
 
           /* If the timeout was reached the last run, stop waiting. */
           if( timeout >= 15000 )
@@ -188,9 +188,29 @@ public class MapModellHelper
   }
 
   /**
-   * Is used to create an image of a map modell. Does not wait until all themes are loaded. Is used from the map panel
-   * as well, where the drawing is done every refresh of the map. So it does not matter, when some themes finish, if
-   * they finish at last.
+   * Create an image of a map model and keep aspection ration of displayed map and its extend
+   */
+  public static BufferedImage createWellFormedImageFromModel( final MapPanel panel, final int width, final int height )
+  {
+    final IMapModell mapModell = panel.getMapModell();
+    final GM_Envelope bbox = panel.getBoundingBox();
+
+    final double ratio = (double) height / (double) width;
+    final GM_Envelope boundingBox = MapModellHelper.adjustBoundingBox( mapModell, bbox, ratio );
+
+    final GeoTransform transform = new WorldToScreenTransform();
+    transform.setSourceRect( boundingBox );
+
+    final Rectangle bounds = new Rectangle( width, height );
+
+    return MapModellHelper.createImageFromModell( transform, boundingBox, bounds, bounds.width, bounds.height, mapModell );
+
+  }
+
+  /**
+   * Is used to create an image of a map model. Does not wait until all themes are loaded. Is used from the map panel as
+   * well, where the drawing is done every refresh of the map. So it does not matter, when some themes finish, if they
+   * finish at last.
    */
   public static BufferedImage createImageFromModell( final GeoTransform p, final GM_Envelope bbox, final Rectangle bounds, final int width, final int height, final IMapModell model )
   {
@@ -213,7 +233,7 @@ public class MapModellHelper
 
       p.setDestRect( x - 2, y - 2, w + x, h + y );
 
-      final double scale = calcScale( model, bbox, bounds.width, bounds.height );
+      final double scale = MapModellHelper.calcScale( model, bbox, bounds.width, bounds.height );
       try
       {
         model.paint( gr, p, bbox, scale, false );
@@ -255,10 +275,8 @@ public class MapModellHelper
     final IKalypsoTheme[] allThemes = modell.getAllThemes();
     final List<IKalypsoTheme> themes = new ArrayList<IKalypsoTheme>( allThemes.length );
     for( final IKalypsoTheme theme : allThemes )
-    {
       if( filter.accept( theme ) )
         themes.add( theme );
-    }
 
     return themes.toArray( new IKalypsoTheme[themes.size()] );
   }
@@ -277,8 +295,7 @@ public class MapModellHelper
 
     GM_Envelope result = null;
     for( final IKalypsoTheme kalypsoTheme : themes )
-    {
-      if( predicate == null || predicate.decide( kalypsoTheme ) )
+      if( (predicate == null) || predicate.decide( kalypsoTheme ) )
       {
         final GM_Envelope boundingBox = kalypsoTheme.getBoundingBox();
         if( result == null )
@@ -286,9 +303,42 @@ public class MapModellHelper
         else
           result = result.getMerged( boundingBox );
       }
-    }
 
     return result;
+  }
+
+  /**
+   * Adjust an given bounding box (env) to an new ratio
+   */
+  public static GM_Envelope adjustBoundingBox( final IMapModell model, GM_Envelope env, final double ratio )
+  {
+    if( env == null )
+      env = model.getFullExtentBoundingBox();
+    if( env == null )
+      return null;
+
+    // TODO search for a better solution
+    if( Double.isNaN( ratio ) )
+      return env;
+
+    final double minX = env.getMin().getX();
+    final double minY = env.getMin().getY();
+
+    final double maxX = env.getMax().getX();
+    final double maxY = env.getMax().getY();
+
+    double dx = (maxX - minX) / 2d;
+    double dy = (maxY - minY) / 2d;
+
+    if( dx * ratio > dy )
+      dy = dx * ratio;
+    else
+      dx = dy / ratio;
+
+    final double mx = (maxX + minX) / 2d;
+    final double my = (maxY + minY) / 2d;
+
+    return GeometryFactory.createGM_Envelope( mx - dx, my - dy, mx + dx, my + dy );
   }
 
 }
