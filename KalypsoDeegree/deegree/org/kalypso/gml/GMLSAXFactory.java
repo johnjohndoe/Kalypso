@@ -232,6 +232,7 @@ public class GMLSAXFactory
 
       // NO! This is not a solution, now everythig else does not work any more!
       // / Please check your schema, its very probably that you have a schema there!
+      // TODO: delete after reading this comment
 
 // BigInteger bint = new BigInteger(singleValue.toString());
 // th.marshal( prefixedQName, bint, m_xmlReader, context, gmlVersion );
