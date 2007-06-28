@@ -73,8 +73,14 @@ import org.kalypsodeegree.model.geometry.GM_GenericCurve;
 import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
+
+import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * default implementation of the GM_Curve interface from package jago.model.
@@ -809,4 +815,5 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
     ret += ("envelope = " + getEnvelope() + "\n");
     return ret;
   }
+  
 }
