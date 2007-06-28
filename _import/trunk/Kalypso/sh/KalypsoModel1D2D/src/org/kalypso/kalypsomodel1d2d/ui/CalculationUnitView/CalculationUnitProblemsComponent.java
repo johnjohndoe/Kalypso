@@ -41,6 +41,9 @@
 package org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView;
 
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -57,17 +60,21 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
-import org.kalypso.kalypsomodel1d2d.ui.map.editor.ListLabelProvider;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListener;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * @author Madanagopal
  *
  */
+@SuppressWarnings("unchecked")
 public class CalculationUnitProblemsComponent
 {
   private FormToolkit toolkit;
@@ -79,6 +86,7 @@ public class CalculationUnitProblemsComponent
       Display display = parent.getDisplay();
       final Runnable runnable = new Runnable()
       {
+        
         public void run( )
         {
           if( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER.equals( key ) ){
@@ -96,6 +104,43 @@ public class CalculationUnitProblemsComponent
   private Composite rootComposite;
   private TableViewer problemTableViewer;
   private Table problemsTable;
+  private ISelectionChangedListener selectionChangedListener = new ISelectionChangedListener(){
+
+    public void selectionChanged( SelectionChangedEvent event )
+    {
+      try
+      {
+        IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+        if( selection == null )
+        {
+          System.out.println( "Selection is null" );
+          return;
+        }
+        Object firstElement = selection.getFirstElement();
+        if( firstElement == null )
+        {
+          return;//throw new NullPointerException( "Null Value while selection.getFirstElement() :" + firstElement );
+        }
+        else
+        {
+          if( firstElement instanceof IProblem )
+          {
+            IProblem problem = (IProblem) firstElement;
+            
+            MapPanel mapPanel = 
+              dataModel.getData( MapPanel.class, ICommonKeys.KEY_MAP_PANEL );
+            problem.navigateToProblem( mapPanel );            
+          }
+        }
+      }
+      catch( Throwable th )
+      {
+        th.printStackTrace();
+      } 
+      
+    }
+    
+  };
 
   public void createControl( CalculationUnitDataModel dataModel, FormToolkit toolkit, Composite parent )
   {
@@ -151,17 +196,17 @@ public class CalculationUnitProblemsComponent
         problemsTable = problemTableViewer.getTable();
         problemTableViewer.setLabelProvider( new ProblemsListLabelProvider());
         problemTableViewer.setContentProvider( new ArrayContentProvider() );
+        problemTableViewer.addSelectionChangedListener( selectionChangedListener  );
         problemsTable.setLinesVisible( true );
         problemsTable.setLayoutData( formData ); 
         
         formData = new FormData();
         formData.left = new FormAttachment(0,5);
         formData.top = new FormAttachment(refreshButton,5);
-        //formData.right = new FormAttachment(100,-5);
         formData.width = 300;        
-        problemsTable.setLayoutData( formData );
-       
+        problemsTable.setLayoutData( formData );       
   }
+  
   private void updateThisSection( Object newValue )
   {
     Assert.throwIAEOnNullParam( newValue, "newValue" );    

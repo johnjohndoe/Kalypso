@@ -55,6 +55,5 @@ public interface ICalculationValidateInterface
 
   public List<IBoundaryLine> getBoundaryLines();
   public List<ICalculationUnit> getCalculationUnit();  
-  
   public List< ? > checkAllInvariants();
 }

@@ -232,7 +232,6 @@ public class CalUnitOps
   public static List<IBoundaryLine> getBoundaryLines( ICalculationUnit calUnit )
   {
     Assert.throwIAEOnNullParam( calUnit, "calUnit" );
-    int num=0; 
     final IFeatureWrapperCollection<IFE1D2DElement> elements = calUnit.getElements();
     final List<IBoundaryLine> boundaryLines = new ArrayList<IBoundaryLine>();
     for( IFE1D2DElement ele : elements )
@@ -672,8 +671,7 @@ public class CalUnitOps
         }
       }
       return true;
-    }
-    
+    }    
     return false;
   }
   
@@ -831,7 +829,7 @@ public class CalUnitOps
   public static final List<IBoundaryCondition> getBoundaryConditions(
                           final Collection<IBoundaryCondition> conditions,
                           final ICalculationUnit<IFE1D2DElement> unit, 
-                          final double grabDistance )
+                          final double grabDistance)
   {
     Assert.throwIAEOnNullParam( conditions, "conditions" );
     Assert.throwIAEOnNullParam( unit, "unit" );

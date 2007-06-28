@@ -104,7 +104,14 @@ public class CalculationUnitDataModel extends KeyBasedDataModel
 
   public void setValidatingMessages(ICalculationUnit key, List<IProblem> strList)
   {
+    if (validateMessages.containsKey( key ))
+    {
+      validateMessages.get( key ).addAll( strList );
+    }
+    else
+    {
       validateMessages.put( key, strList );
+    }
   }
 
   public List<IProblem> getValidatingMessages(ICalculationUnit key)

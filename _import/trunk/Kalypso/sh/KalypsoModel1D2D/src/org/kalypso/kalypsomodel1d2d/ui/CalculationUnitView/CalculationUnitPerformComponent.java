@@ -102,10 +102,16 @@ public class CalculationUnitPerformComponent extends FeatureWrapperListEditor im
     if (getCurrentSelection() instanceof ICalculationUnit)
     {
       ICalculationUnit orgCalc = (ICalculationUnit) getCurrentSelection();
-      MergeCalculationUnit mergeCal = new MergeCalculationUnit();
+      MergeCalculationUnit mergeCal = new MergeCalculationUnit(orgCalc);
       mergeCal.addToBoundaryLine(CalUnitOps.getBoundaryLines(orgCalc));
       mergeCal.checkAllInvariants();
       dataModel.setValidatingMessages( orgCalc, mergeCal.getBrokenInvariantsMessage() );      
+      
+      //FindInvalidElements findEle = new FindInvalidElements(orgCalc);
+      
+      InvariantBConditionWithBLine invBConditionBLine = new InvariantBConditionWithBLine(orgCalc, dataModel);
+      dataModel.setValidatingMessages( orgCalc,invBConditionBLine.getBrokenInvariantsMessage() );
+      
     }   
   }
 }

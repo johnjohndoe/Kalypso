@@ -21,6 +21,7 @@ public class MergeCalculationUnit1D2D extends MergeCalculationUnit {
 	/** Default constructor for CalculationUnit1D2D
 	 */
 	public MergeCalculationUnit1D2D() {
+	  super(null);
 		if ( usesAllInstances ) {
 			allInstances.add(this);
 		}

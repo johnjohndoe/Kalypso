@@ -52,7 +52,7 @@ public interface IElement2D<    CT extends IFE1D2DComplexElement,
                                 ET extends IFE1D2DEdge> 
                   extends IFE1D2DElement<CT, ET>
 {
-  public IFeatureWrapperCollection<ET> getEdges( );
+  public IFeatureWrapperCollection<ET> getEdges();
 
   public void addEdge( final String edgeID );
   

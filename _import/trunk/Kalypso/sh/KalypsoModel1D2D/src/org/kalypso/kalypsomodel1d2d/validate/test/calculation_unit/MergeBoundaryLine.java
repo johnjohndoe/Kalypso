@@ -98,7 +98,9 @@ public class MergeBoundaryLine implements IBoundaryLine,ICalculationValidateInte
 		} else {
 			return null;
 		}
+
 	}
+	
 	
 	/** This operation should NOT be used by clients. It implements the correct addition of an element in an association.
 	 * 

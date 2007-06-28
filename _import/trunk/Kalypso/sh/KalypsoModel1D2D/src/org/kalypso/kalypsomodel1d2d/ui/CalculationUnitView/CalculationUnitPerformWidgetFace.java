@@ -53,7 +53,6 @@ import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.SelectedCalculationComponent;
-import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 
 /**
  * @author Madanagopal

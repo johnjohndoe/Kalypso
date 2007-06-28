@@ -13,6 +13,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView.IProblem;
+import org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView.ProblemDescriptor;
 import org.kalypso.kalypsomodel1d2d.validate.calculation_unit.utilities.MergeInvariantError;
 import org.kalypso.kalypsomodel1d2d.validate.calculation_unit.utilities.MergeInvariantException;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
@@ -28,12 +29,15 @@ public class MergeCalculationUnit implements ICalculationUnit,ICalculationValida
   static private boolean usesAllInstances = false;
   static private List allInstances = new ArrayList();
   private List<IProblem> invResults = new ArrayList<IProblem>();
+  private ICalculationUnit mainCalculationUnit;
   
-  public MergeCalculationUnit()
+  public MergeCalculationUnit(ICalculationUnit mainCalc)
   {
+    
     if ( usesAllInstances ) {
             allInstances.add(this);
     }
+    this.mainCalculationUnit = mainCalc;
   }
 
 	/** Implements the setter for feature '+ boundaryLine : Set(BoundaryLine)'
@@ -167,9 +171,8 @@ public class MergeCalculationUnit implements ICalculationUnit,ICalculationValida
 			message = message + "is broken in object '";
 			message = message + this.getIdString();
 			message = message + "' of type '" + this.getClass().getName() + "'";
-			System.out.println("INVARIANT "+ message);
-			
-			invResults.add( new problemDescriptor(null,message));
+			System.out.println("INVARIANT "+ message);			
+			invResults.add( new ProblemDescriptor(null,message,getMainCalculationUnit(),getMainCalculationUnit() ));
 			throw new MergeInvariantException(this, message);
 		}
 	}
@@ -218,10 +221,15 @@ public class MergeCalculationUnit implements ICalculationUnit,ICalculationValida
     return null;
   }
   
-//  public void setCalculationUnit(ICalculationUnit calc )
-//  {
-//    return null;
-//  }
+  public ICalculationUnit getMainCalculationUnit( )
+  {
+    return mainCalculationUnit;
+  }
+  
+  public void setMainCalculationUnit(ICalculationUnit calc )
+  {
+    mainCalculationUnit = calc;
+  }
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement#addElementAsRef(org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement)
@@ -300,71 +308,4 @@ public class MergeCalculationUnit implements ICalculationUnit,ICalculationValida
     return invResults;    
   }
   
-  class problemDescriptor implements IProblem{
-    
-    private String messageDescription;
-    private String name;
-
-    public problemDescriptor(String name, String messageDescription )
-    {
-      this.name = name;
-      this.messageDescription =  messageDescription;
-    }
-    /**
-     * @see org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView.IProblem#getMessageDescription()
-     */
-    public String getMessageDescription( )
-    {
-      return messageDescription;
-    }
-
-    /**
-     * @see org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView.IProblem#getName()
-     */
-    public String getName( )
-    {
-      return name;
-    }
-
-    /**
-     * @see org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView.IProblem#navigateToProblem(org.kalypso.ogc.gml.map.MapPanel)
-     */
-    public void navigateToProblem( MapPanel panel )
-    {
-      
-    }
-
-    /**
-     * @see org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView.IProblem#setMessageDescription(java.lang.String)
-     */
-    public void setMessageDescription( String description )
-    {
-      this.messageDescription = description;
-    }
-
-    /**
-     * @see org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView.IProblem#setName(java.lang.String)
-     */
-    public void setName( String name )
-    {
-      this.name = name;
-    }
-    
-    //@TODO Try To implement CalculationUnit -- Must be List of CalculationUnits
-    /**
-     * @see org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView.IProblem#getCalculationUnit()
-     */
-    public ICalculationUnit getCalculationUnit( )
-    {
-      return null;
-    }
-    /**
-     * @see org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView.IProblem#setCalculationUnit(org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit)
-     */
-    public void setCalculationUnit( ICalculationUnit calculationUnit )
-    {
-      
-    }    
-    
-  }
 }

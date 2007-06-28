@@ -263,9 +263,31 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions,
    */
   public void finish( )
   {
-    if( strategy != null )
+    try
     {
-      strategy.finish();
+      MapPanel mapPanel =
+        (MapPanel) dataModel.getData( ICommonKeys.KEY_MAP_PANEL );
+      IMapModell mapModell = mapPanel.getMapModell();
+      if( mapModell != null )
+      {
+        mapModell.removeTheme( calUnitTheme );
+      }
+    }
+    catch ( Exception e)
+    {
+      e.printStackTrace();
+    }
+    
+    try
+    {
+      if( strategy != null )
+      {
+        strategy.finish();
+      }
+    }
+    catch (Exception e)
+    {
+      e.printStackTrace();
     }    
   }
 
