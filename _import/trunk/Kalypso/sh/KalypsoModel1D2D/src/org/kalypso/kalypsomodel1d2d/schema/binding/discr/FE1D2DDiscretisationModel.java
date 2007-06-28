@@ -59,6 +59,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * Provide a implementation of {@link IFEDiscretisationModel1d2d} to bind wb1d2d:Discretisation gml elements
@@ -191,7 +192,7 @@ public class FE1D2DDiscretisationModel extends AbstractFeatureBinder implements 
   {
     final FeatureList nodeList = m_nodes.getWrappedList();
 
-    final GM_Envelope reqEnvelope = grabEnvelopeFromDistance( nodeLocation, searchRectWidth );
+    final GM_Envelope reqEnvelope = GeometryUtilities.grabEnvelopeFromDistance( nodeLocation, searchRectWidth );
 
     final List<Feature> foundNodes = nodeList.query( reqEnvelope, null );
     if( foundNodes.isEmpty() )
@@ -232,12 +233,15 @@ public class FE1D2DDiscretisationModel extends AbstractFeatureBinder implements 
               final GM_Point position, final double grabDistance, final Class<T> elementClass )
   {
     final FeatureList modelList = m_elements.getWrappedList();
-    final GM_Envelope reqEnvelope = grabEnvelopeFromDistance( position, grabDistance );
+    final GM_Envelope reqEnvelope = GeometryUtilities.grabEnvelopeFromDistance( position, grabDistance );
     final List<Feature> foundElements = modelList.query( reqEnvelope, null );
     double min = Double.MAX_VALUE;
     T nearest = null;
     for( final Feature feature : foundElements )
     {
+      // TODO: remove next line
+//      final GM_Object geom = feature.getProperty( geoQName );
+      
       final IFeatureWrapper2 current = (IFeatureWrapper2) feature.getAdapter( elementClass );
       if( current != null )
       {
@@ -289,18 +293,6 @@ public class FE1D2DDiscretisationModel extends AbstractFeatureBinder implements 
 
   }
 
-  public static final  GM_Envelope grabEnvelopeFromDistance( final GM_Point position, final double grabDistance )
-  {
-    final double posX = position.getX();
-    final double posY = position.getY();
-    final double grabDistanceHalf = grabDistance / 2;
-
-    final GM_Position minPos = GeometryFactory.createGM_Position( posX - grabDistanceHalf, posY - grabDistanceHalf );
-    final GM_Position maxPos = GeometryFactory.createGM_Position( posX + grabDistanceHalf, posY + grabDistanceHalf );
-
-    final GM_Envelope reqEnvelope = GeometryFactory.createGM_Envelope( minPos, maxPos );
-    return reqEnvelope;
-  }
 
   /**
    * Finds a continuity line near the given position.
