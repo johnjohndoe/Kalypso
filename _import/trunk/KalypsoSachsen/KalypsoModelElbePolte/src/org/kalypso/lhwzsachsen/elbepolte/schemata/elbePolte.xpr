@@ -8,7 +8,5 @@
     <projectTree name="elbePolte.xpr">
         <file name="commons.xsd"/>
         <file name="modell.xsd"/>
-        <file name="pegel.xsd"/>
-        <file name="strecke.xsd"/>
     </projectTree>
 </project>

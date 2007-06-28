@@ -46,11 +46,15 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.io.Writer;
+import java.net.URL;
+import java.net.URLConnection;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -60,17 +64,24 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.apache.commons.io.IOUtils;
+import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.MetadataList;
+import org.kalypso.ogc.sensor.ObservationUtilities;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
+import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
+import org.kalypso.ogc.sensor.timeseries.interpolation.InterpolationFilter;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.zml.ObservationType;
+
+import com.braju.format.Format;
 
 /**
  * 
@@ -139,7 +150,6 @@ public class ElbePolteConverter
 
   /**
    * @param bufRdrHwvs
-   * @return
    */
   private static IObservation hwvs2zml( final BufferedReader bufRdrHwvs )
   {
@@ -182,27 +192,31 @@ public class ElbePolteConverter
         while( sEingabeZeile != null )
         {
           // Format: lfd_Nummer, Jahr, Monat, Tag, Stunde, Wert
-          String strDate = sEingabeZeile.substring( 10, 32 );
-          dtDatum = ElbePolteConst.HWVS_DATE_FORMAT.parse( strDate );
-          calendar.setTime( dtDatum );
-
-          strTok = new StringTokenizer( sEingabeZeile );
-          if( strTok.hasMoreTokens() )
+          if( sEingabeZeile.length() > 25 )
           {
-            // die ersten Einträge werden übersprungen
-            lfdNum = Integer.valueOf( strTok.nextToken() ).intValue();
-            if( lfdNum == cntValuesPast )
-              vorhersageDte = dtDatum;
-            else
-            {
-              strTok.nextToken();
-              strTok.nextToken();
-              strTok.nextToken();
-              strTok.nextToken();
-            }
+            String strDate = sEingabeZeile.substring( 10, 27 );
+            dtDatum = ElbePolteConst.HWVS_DATE_FORMAT.parse( strDate );
+            calendar.setTime( dtDatum );
 
-            lstEingDatum.add( calendar.getTime() );
-            lstEingWerte.add( new Double( strTok.nextToken() ) );
+            strTok = new StringTokenizer( sEingabeZeile );
+            if( strTok.hasMoreTokens() )
+            {
+              // die ersten Einträge werden übersprungen
+              lfdNum = Integer.valueOf( strTok.nextToken() ).intValue();
+              if( lfdNum == cntValuesPast )
+                vorhersageDte = dtDatum;
+              strTok.nextToken();
+              strTok.nextToken();
+              strTok.nextToken();
+              strTok.nextToken();
+
+              lstEingDatum.add( calendar.getTime() );
+              lstEingWerte.add( new Double( strTok.nextToken() ) );
+            }
+          }
+          else
+          {
+            // sEingabeZeile ungültig
           }
 
           sEingabeZeile = lneNumRdr.readLine();
@@ -239,6 +253,95 @@ public class ElbePolteConverter
     return obsOut;
   }
 
+  public static void zml2Hwvs( final File fleZml, final File fleHwvs )
+  {
+
+    try
+    {
+      final URL url = fleZml.toURL();
+      final IObservation obsZml = ZmlFactory.parseXML( url, url.toString() );
+
+      final URLConnection urlConTest = UrlUtilities.connectQuietly( url );
+
+      if( urlConTest != null )
+      {
+        final Writer wrtrHwvs = new OutputStreamWriter( new FileOutputStream( fleHwvs ),
+            ElbePolteConst.ELBEPOLTE_CODEPAGE );
+        zml2Hwvs( obsZml, wrtrHwvs );
+        IOUtils.closeQuietly( wrtrHwvs );
+      }
+    }
+    catch( Exception e )
+    {
+      // TODO: handle exception
+    }
+  }
+
+  public static void zml2Hwvs( final IObservation obsZml, final Writer wrtr )
+  {
+    // TODO Kommentar von außen mitgeben?
+    final String sComment;
+    final PrintWriter pWrtr;
+    final InterpolationFilter intpolFlt;
+    final ITuppleModel tplWerte;
+    final IAxis axDatum;
+    final IAxis axWerte;
+
+    int ii;
+    Number wert;
+    Date dtDatum;
+
+    pWrtr = new PrintWriter( wrtr );
+
+    try
+    {
+      intpolFlt = new InterpolationFilter( Calendar.HOUR_OF_DAY, Math.abs( ElbePolteConst.ELBEPOLTE_TIMESTEP ), false,
+          0.0, KalypsoStati.BIT_CHECK );
+
+      intpolFlt.initFilter( null, obsZml, null );
+
+      // Kommentar aus ZML-Datei lesen und in ElbePolte-Datei schreiben
+      //      TODO create new comment
+      sComment = intpolFlt.getMetadataList().getProperty( ElbePolteConst.PROP_COMMENT, "REM " );
+      pWrtr.println( sComment );
+
+      tplWerte = intpolFlt.getValues( null );
+      axDatum = ObservationUtilities.findAxisByType( tplWerte.getAxisList(), TimeserieConstants.TYPE_DATE );
+      axWerte = ObservationUtilities.findAxisByType( tplWerte.getAxisList(), hwvsTypeQ );
+
+      for( ii = 0; ii < tplWerte.getCount(); ii++ )
+      {
+        // Format: lfd_Nummer, Jahr, Monat, Tag, Stunde, Wert
+
+        dtDatum = (Date)tplWerte.getElement( ii, axDatum );
+        wert = (Number)tplWerte.getElement( ii, axWerte );
+
+        Format.fprintf( pWrtr, ElbePolteConst.HWVS_FORMAT_DATA_ROW, new Object[]
+        {
+            ( new Integer( ii + 1 ) ),
+            ElbePolteConst.HWVS_DATE_FORMAT_YEAR.format( dtDatum ),
+            ElbePolteConst.HWVS_DATE_FORMAT_MONTH.format( dtDatum ),
+            ElbePolteConst.HWVS_DATE_FORMAT_DAY.format( dtDatum ),
+            ElbePolteConst.HWVS_DATE_FORMAT_HOUR.format( dtDatum ),
+            wert } );
+        pWrtr.println();
+      }
+    }
+
+    catch( SensorException e )
+    {
+      e.printStackTrace();
+    }
+    catch( IOException e )
+    {
+      e.printStackTrace();
+    }
+    finally
+    {
+      IOUtils.closeQuietly( pWrtr );
+    }
+  }
+
   public static IAxis[] createAxis( final String sValueType )
   {
     final IAxis dateAxis = new DefaultAxis( "Datum", TimeserieConstants.TYPE_DATE, "", Date.class, true );
@@ -254,9 +357,37 @@ public class ElbePolteConverter
 
   public static void main( String[] args )
   {
-    final File fleHwvs =  new File(ElbePolteConverter.class.getResource( "resources/test/Daten/Daten.001" ).getFile()) ;
-    final File fleOut = new File( System.getProperty( "java.io.tmpdir" ), "Daten.001.zml" );
-    
-    hwvs2zml(fleHwvs, fleOut);
+
+
+      File fleHwvsIn = new File( ElbePolteConverter.class.getResource( "resources/test/Daten/Daten.001" ).getFile() );
+    File fleZml = new File( System.getProperty( "java.io.tmpdir" ), "Daten.001.zml" );
+    File fleHwvsOut = new File( System.getProperty( "java.io.tmpdir" ), "Daten.001" );
+    hwvs2zml( fleHwvsIn, fleZml );
+    zml2Hwvs( fleZml, fleHwvsOut );
+
+    fleHwvsIn = new File( ElbePolteConverter.class.getResource( "resources/test/Modell/Modell.001" ).getFile() );
+    fleZml = new File( System.getProperty( "java.io.tmpdir" ), "Modell.001.zml" );
+    fleHwvsOut = new File( System.getProperty( "java.io.tmpdir" ), "Modell.001" );
+    hwvs2zml( fleHwvsIn, fleZml );
+    zml2Hwvs( fleZml, fleHwvsOut );
+
+    fleHwvsIn = new File( ElbePolteConverter.class.getResource( "resources/test/ZWG/Dresden_Torgau.001" ).getFile() );
+    fleZml = new File( System.getProperty( "java.io.tmpdir" ), "Dresden_Torgau.001.zml" );
+    fleHwvsOut = new File( System.getProperty( "java.io.tmpdir" ), "Dresden_Torgau.001" );
+    hwvs2zml( fleHwvsIn, fleZml );
+    zml2Hwvs( fleZml, fleHwvsOut );
+
+    fleHwvsIn = new File( ElbePolteConverter.class.getResource( "resources/test/ZWG/Loeben.001" ).getFile() );
+    fleZml = new File( System.getProperty( "java.io.tmpdir" ), "Loeben.001.zml" );
+    fleHwvsOut = new File( System.getProperty( "java.io.tmpdir" ), "Loeben.001" );
+    hwvs2zml( fleHwvsIn, fleZml );
+    zml2Hwvs( fleZml, fleHwvsOut );
+
+    fleHwvsIn = new File( ElbePolteConverter.class.getResource( "resources/test/ZWG/Usti_Dresden.001" ).getFile() );
+    fleZml = new File( System.getProperty( "java.io.tmpdir" ), "Usti_Dresden.001.zml" );
+    fleHwvsOut = new File( System.getProperty( "java.io.tmpdir" ), "Usti_Dresden.001" );
+    hwvs2zml( fleHwvsIn, fleZml );
+    zml2Hwvs( fleZml, fleHwvsOut );
+
   }
 }

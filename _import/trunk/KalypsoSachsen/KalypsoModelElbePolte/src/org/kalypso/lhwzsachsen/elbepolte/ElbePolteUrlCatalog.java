@@ -47,8 +47,6 @@ public class ElbePolteUrlCatalog extends AbstractUrlCatalog
   protected void fillCatalog( Class myClass, Map catalog )
   {
     catalog.put( "org.kalypso.elbepolte.modell", myClass.getResource( "schemata/modell.xsd" ) );
-    catalog.put( "org.kalypso.elbepolte.pegel", myClass.getResource( "schemata/pegel.xsd" ) );
-    catalog.put( "org.kalypso.elbepolte.strecke", myClass.getResource( "schemata/strecke.xsd" ) );
     catalog.put( "org.kalypso.elbepolte.commons", myClass.getResource( "schemata/commons.xsd" ) );
   }
 }
