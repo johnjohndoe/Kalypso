@@ -69,6 +69,7 @@ import org.kalypsodeegree.model.geometry.GM_MultiPoint;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 
 /**
@@ -786,7 +787,7 @@ public class CalUnitOps
     Assert.throwIAEOnNullParam( lineType, "lineType" );
     Assert.throwIAEOnLessThan0( grabDistance, "grab distance must be greater or equals to 0" );
     GM_Envelope env = 
-      FE1D2DDiscretisationModel.grabEnvelopeFromDistance( bcPosition, grabDistance );
+      GeometryUtilities.grabEnvelopeFromDistance( bcPosition, grabDistance );
       
     final List<IFE1D2DElement> targetLines = unit.getElements().query(env);
     double minDistance = Double.MAX_VALUE;
