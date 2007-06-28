@@ -16,6 +16,7 @@
     <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:StartCondition:featureview:default" uri="org.kalypso.model.wspm.tuhh.StartCondition.gft"/>
 
     <!-- org.kalypso.model.wspm.tuhh:CalculationReibConstWspmTuhhSteadyState -->
+    <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:CalculationReibConstWspmTuhhSteadyState:featureview:default" uri="org.kalypso.model.wspm.tuhh.CalculationReibConstWspmTuhhSteadyState.gft"/>
     <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:CalculationReibConstWspmTuhhSteadyState:swtimage:default" uri="org.kalypso.model.wspm.tuhh.CalculationReibConstWspmTuhhSteadyState.gif"/>
     <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.tuhh:CalculationReibConstWspmTuhhSteadyState:uiproperties:default" uri="org.kalypso.model.wspm.tuhh.CalculationReibConstWspmTuhhSteadyState.properties"/>
 

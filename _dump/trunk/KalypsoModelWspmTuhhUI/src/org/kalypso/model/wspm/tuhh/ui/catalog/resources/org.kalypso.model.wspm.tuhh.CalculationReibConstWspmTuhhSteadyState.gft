@@ -44,39 +44,6 @@
 				grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" />
 		</gft:subcomposite>
 	</gft:group>
-	<gft:label text="Fließgesetz" visible="true"
-		tooltip="Auswahl des anzuwendenden Fließgesetzes (Darcy-Weißbach o. Manning-Strickler)" style="SWT.NONE">
-		<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING"
-			grabExcessHorizontalSpace="false" />
-	</gft:label>
-	<gft:combo property="tuhh:fliessgesetz"
-		tooltip="Auswahl des anzuwendenden Fließgesetzes (Darcy-Weißbach o. Manning-Strickler)"
-		style="SWT.DROP_DOWN | SWT.READ_ONLY">
-		<gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
-	</gft:combo>
-	<gft:label visible="false" style="SWT.NONE">
-		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
-	</gft:label>
-	<gft:validatorlabel property="tuhh:fliessgesetz" visible="true" style="SWT.NONE">
-		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
-	</gft:validatorlabel>
-	<gft:label text="Berechnungsart" visible="true"
-		tooltip="Auswahl der Berechnungsart (Wasserspiegellagenberechnung o. Bordvollberechnung)" style="SWT.NONE">
-		<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING"
-			grabExcessHorizontalSpace="false" />
-	</gft:label>
-	<gft:combo property="tuhh:mode"
-		tooltip="Auswahl der Berechnungsart (Wasserspiegellagenberechnung o. Bordvollberechnung)"
-		style="SWT.DROP_DOWN | SWT.READ_ONLY">
-		<gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
-	</gft:combo>
-	<gft:label visible="false" style="SWT.NONE">
-		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
-	</gft:label>
-	<gft:validatorlabel property="tuhh:mode" visible="true" style="SWT.NONE">
-		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
-	</gft:validatorlabel>
-
 	<gft:label text="Gewässerstrang" visible="true"
 		tooltip="Auswahl des Gewässerstrangs, für den die Berechnung durchgeführt wird." style="SWT.NONE">
 		<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING"
@@ -95,7 +62,6 @@
 	<gft:validatorlabel property="tuhh:reachWspmTuhhSteadyStateMember" visible="true" style="SWT.NONE">
 		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
 	</gft:validatorlabel>
-
 	<gft:group text="Berechnungsabschnitt" tooltip="Berechnungsabschnitt" style="SWT.NONE">
 		<gft:gridData verticalAlignment="GridData.FILL" horizontalSpan="4" horizontalAlignment="GridData.FILL"
 			grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" />
@@ -105,89 +71,10 @@
 				grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" />
 		</gft:subcomposite>
 	</gft:group>
-
-	<gft:label text="Abflussereignis" visible="true" tooltip="Auswahl des Abflussereignisses" style="SWT.NONE">
-		<gft:visibleOperation>
-			<ogc:PropertyIsEqualTo>
-				<ogc:Literal>WATERLEVEL</ogc:Literal>
-				<ogc:PropertyName>tuhh:mode</ogc:PropertyName>
-			</ogc:PropertyIsEqualTo>
-		</gft:visibleOperation>
-		<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING"
-			grabExcessHorizontalSpace="false">
-			<gft:excludeOperation>
-				<ogc:Not>
-					<ogc:PropertyIsEqualTo>
-						<ogc:Literal>WATERLEVEL</ogc:Literal>
-						<ogc:PropertyName>tuhh:mode</ogc:PropertyName>
-					</ogc:PropertyIsEqualTo>
-				</ogc:Not>
-			</gft:excludeOperation>
-		</gft:gridData>
-	</gft:label>
-	<gft:composite tooltip="Auswahl des Abflussereignisses" style="SWT.NONE">
-		<gft:visibleOperation>
-			<ogc:PropertyIsEqualTo>
-				<ogc:Literal>WATERLEVEL</ogc:Literal>
-				<ogc:PropertyName>tuhh:mode</ogc:PropertyName>
-			</ogc:PropertyIsEqualTo>
-		</gft:visibleOperation>
-		<gft:gridData horizontalSpan="2" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true">
-			<gft:excludeOperation>
-				<ogc:Not>
-					<ogc:PropertyIsEqualTo>
-						<ogc:Literal>WATERLEVEL</ogc:Literal>
-						<ogc:PropertyName>tuhh:mode</ogc:PropertyName>
-					</ogc:PropertyIsEqualTo>
-				</ogc:Not>
-			</gft:excludeOperation>
-		</gft:gridData>
-		<gft:gridLayout numColumns="2" marginWidth="1" makeColumnsEqualWidth="false" />
-		<gft:combo property="tuhh:runOffEventMember" style="SWT.DROP_DOWN | SWT.READ_ONLY">
-			<gft:gridData horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"></gft:gridData>
-		</gft:combo>
-		<gft:button property="tuhh:runOffEventMember" style="SWT.PUSH">
-			<gft:gridData horizontalAlignment="GridData.BEGINNING"></gft:gridData>
-		</gft:button>
-	</gft:composite>
-	<gft:validatorlabel property="tuhh:runOffEventMember" visible="true" style="SWT.NONE">
-		<gft:visibleOperation>
-			<ogc:PropertyIsEqualTo>
-				<ogc:Literal>WATERLEVEL</ogc:Literal>
-				<ogc:PropertyName>tuhh:mode</ogc:PropertyName>
-			</ogc:PropertyIsEqualTo>
-		</gft:visibleOperation>
-		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false">
-			<gft:excludeOperation>
-				<ogc:Not>
-					<ogc:PropertyIsEqualTo>
-						<ogc:Literal>WATERLEVEL</ogc:Literal>
-						<ogc:PropertyName>tuhh:mode</ogc:PropertyName>
-					</ogc:PropertyIsEqualTo>
-				</ogc:Not>
-			</gft:excludeOperation>
-		</gft:gridData>
-	</gft:validatorlabel>
-
 	<gft:group text="Abflussintervall"
 		tooltip="Definition eines Abflussintervalls (nur bei Bordvollrechnung und Kalinin-Miljukov)" style="SWT.NONE">
-		<gft:visibleOperation>
-			<ogc:PropertyIsEqualTo>
-				<ogc:Literal>BF_NON_UNIFORM</ogc:Literal>
-				<ogc:PropertyName>tuhh:mode</ogc:PropertyName>
-			</ogc:PropertyIsEqualTo>
-		</gft:visibleOperation>
 		<gft:gridData verticalAlignment="GridData.FILL" horizontalSpan="4" horizontalAlignment="GridData.FILL"
-			grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true">
-			<gft:excludeOperation>
-				<ogc:Not>
-					<ogc:PropertyIsEqualTo>
-						<ogc:Literal>BF_NON_UNIFORM</ogc:Literal>
-						<ogc:PropertyName>tuhh:mode</ogc:PropertyName>
-					</ogc:PropertyIsEqualTo>
-				</ogc:Not>
-			</gft:excludeOperation>
-		</gft:gridData>
+			grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" />
 		<gft:gridLayout numColumns="2" />
 		<gft:subcomposite property="tuhh:runOffIntervalMember" style="SWT.NONE">
 			<gft:gridData verticalAlignment="GridData.FILL" horizontalSpan="2" horizontalAlignment="GridData.FILL"
@@ -195,30 +82,23 @@
 		</gft:subcomposite>
 	</gft:group>
 
-	<gft:group text="Untere Randbedingung (1. Profil)" tooltip="Untere Randbedingung (am 1. Profil)" style="SWT.NONE">
-		<gft:visibleOperation>
-			<ogc:Not>
-				<ogc:PropertyIsEqualTo>
-					<ogc:Literal>BF_UNIFORM</ogc:Literal>
-					<ogc:PropertyName>tuhh:mode</ogc:PropertyName>
-				</ogc:PropertyIsEqualTo>
-			</ogc:Not>
-		</gft:visibleOperation>
-		<gft:gridData verticalAlignment="GridData.FILL" horizontalSpan="4" horizontalAlignment="GridData.FILL"
-			grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true">
-			<gft:excludeOperation>
-				<ogc:PropertyIsEqualTo>
-					<ogc:Literal>BF_UNIFORM</ogc:Literal>
-					<ogc:PropertyName>tuhh:mode</ogc:PropertyName>
-				</ogc:PropertyIsEqualTo>
-			</gft:excludeOperation>
-		</gft:gridData>
-		<gft:gridLayout numColumns="2" />
-		<gft:subcomposite property="tuhh:startConditionMember" style="SWT.NONE">
-			<gft:gridData verticalAlignment="GridData.FILL" horizontalSpan="2" horizontalAlignment="GridData.FILL"
-				grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" />
-		</gft:subcomposite>
-	</gft:group>
+	<gft:label text="stationär-gleichförmiges Gefälle" visible="true"
+		tooltip="Sohlgefälle (absolut!) am ersten Profil (Unterlauf), abhängig von der Art der Randbedingung"
+		style="SWT.NONE">
+		<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING"
+			grabExcessHorizontalSpace="false" />
+	</gft:label>
+	<gft:text editable="true" property="tuhh:bottomSlope"
+		tooltip="Sohlgefälle (absolut!) am ersten Profil (Unterlauf), abhängig von der Art der Randbedingung"
+		style="SWT.BORDER">
+		<gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
+	</gft:text>
+	<gft:label visible="false" style="SWT.NONE">
+		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+	</gft:label>
+	<gft:validatorlabel property="tuhh:bottomSlope" visible="true" style="SWT.NONE">
+		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
+	</gft:validatorlabel>
 
 	<gft:group text="Numerische Parameter" tooltip="Numerische Parameter" style="SWT.NONE">
 		<gft:gridData verticalAlignment="GridData.FILL" horizontalSpan="4" horizontalAlignment="GridData.FILL"
@@ -229,5 +109,14 @@
 				grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" />
 		</gft:subcomposite>
 	</gft:group>
-
+	
+	<gft:group text="Polynomerzeugung" tooltip="Parameter für die Erzeugung der Polynome" style="SWT.NONE">
+		<gft:gridData verticalAlignment="GridData.FILL" horizontalSpan="4" horizontalAlignment="GridData.FILL"
+			grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" />
+		<gft:gridLayout numColumns="2" />
+		<gft:subcomposite property="tuhh:calcPolynomesMember" style="SWT.NONE">
+			<gft:gridData verticalAlignment="GridData.FILL" horizontalSpan="2" horizontalAlignment="GridData.FILL"
+				grabExcessVerticalSpace="false" grabExcessHorizontalSpace="true" />
+		</gft:subcomposite>
+	</gft:group>
 </gft:featureview>
