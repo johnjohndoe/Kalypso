@@ -384,6 +384,15 @@ public class RMA10sModelHandler implements IRMA10SModelElementHandler
     // TODO Auto-generated method stub
     
   }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleJunction(java.lang.String, int, int, int, int)
+   */
+  public void handleJunction( String line, int junctionID, int element1dID, int boundaryLine2dID, int node1dID )
+  {
+    // TODO Auto-generated method stub
+    
+  }
   
 
 }

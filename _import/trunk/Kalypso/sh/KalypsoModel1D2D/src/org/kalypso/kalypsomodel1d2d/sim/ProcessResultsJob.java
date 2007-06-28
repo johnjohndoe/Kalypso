@@ -94,7 +94,7 @@ public class ProcessResultsJob extends Job
 
   private final ISimulationDataProvider m_dataProvider;
 
-  private final RMA10Calculation m_calculation;
+  private static RMA10Calculation m_calculation;
 
   public ProcessResultsJob( final File inputFile, final File outputDir, final ISimulationDataProvider dataProvider, final RMA10Calculation calculation )
   {
@@ -122,7 +122,7 @@ public class ProcessResultsJob extends Job
       monitor.worked( 1 );
 
       /* Read into NodeResults */
-      read2DIntoGmlResults( m_inputFile, m_outputDir, m_dataProvider, m_calculation.getFlowModel() );
+      read2DIntoGmlResults( m_inputFile, m_outputDir, m_dataProvider );
     }
     catch( final Throwable e )
     {
@@ -133,7 +133,7 @@ public class ProcessResultsJob extends Job
     return Status.OK_STATUS;
   }
 
-  public static File read2DIntoGmlResults( final File result2dFile, final File outputDir, final ISimulationDataProvider dataProvider, final IFlowRelationshipModel flowModel ) throws IOException, InvocationTargetException, GmlSerializeException, SimulationException, GM_Exception
+  public static File read2DIntoGmlResults( final File result2dFile, final File outputDir, final ISimulationDataProvider dataProvider ) throws IOException, InvocationTargetException, GmlSerializeException, SimulationException, GM_Exception
   {
     final TimeLogger logger = new TimeLogger( "Start: lese .2d Ergebnisse" );
 
@@ -191,7 +191,7 @@ public class ProcessResultsJob extends Job
         multiEater.addEater( hmoTriangleEater );
       }
 
-      final IRMA10SModelElementHandler handler = new NodeResultsHandler( resultWorkspace, multiEater, flowModel );
+      final IRMA10SModelElementHandler handler = new NodeResultsHandler( resultWorkspace, multiEater, m_calculation );
       conv.setRMA10SModelElementHandler( handler );
 
       logger.takeInterimTime();

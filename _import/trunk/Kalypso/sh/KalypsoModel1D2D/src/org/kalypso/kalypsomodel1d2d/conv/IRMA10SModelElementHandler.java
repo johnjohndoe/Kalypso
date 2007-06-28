@@ -113,5 +113,7 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
       public List<IFeatureWrapper2> getCreatedFeatures();
 
       public void handleTime( String line, double time, int timestep );
+
+      public void handleJunction( String line, int junctionID, int element1dID, int boundaryLine2dID, int node1dID );
   }
   

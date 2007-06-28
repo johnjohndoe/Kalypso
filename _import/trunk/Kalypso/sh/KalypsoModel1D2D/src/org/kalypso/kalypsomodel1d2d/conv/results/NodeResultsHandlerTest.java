@@ -41,19 +41,17 @@
 package org.kalypso.kalypsomodel1d2d.conv.results;
 
 import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
 
 import junit.framework.TestCase;
 
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
-import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.geometry.GM_Exception;
 
 /**
  * @author Thomas Jung
@@ -63,14 +61,45 @@ public class NodeResultsHandlerTest extends TestCase
 {
   public void testLoadResults( ) throws Exception
   {
-      final File result2dFile = new File( "D:/Projekte/kalypso_dev/post-processing/performance_tests/large_2d_file/a4_ow_hq2.2d" );
-      final File outputDir = FileUtilities.createNewTempDir( "bloed" ); 
-      
-      final File flowModelFile  = new File( "D:/Projekte/kalypso_dev/post-processing/performance_tests/large_2d_file/flowModel.gml" );
-      GMLWorkspace flowModelWorkspace = GmlSerializer.createGMLWorkspace( flowModelFile.toURL(), null );
-      final IFlowRelationshipModel flowModel = (IFlowRelationshipModel) flowModelWorkspace.getRootFeature().getAdapter(IFlowRelationshipModel.class );
-      
-      ProcessResultsJob.read2DIntoGmlResults( result2dFile, outputDir, null, flowModel );
-  }
+    final File result2dFile = new File( "D:/Projekte/kalypso_dev/post-processing/performance_tests/large_2d_file/a4_ow_hq2.2d" );
+    final File outputDir = FileUtilities.createNewTempDir( "bloed" );
 
+    final File flowModelFile = new File( "D:/Projekte/kalypso_dev/post-processing/performance_tests/large_2d_file/flowModel.gml" );
+    final File discModelFile = new File( "D:/Projekte/kalypso_dev/post-processing/performance_tests/large_2d_file/flowModel.gml" );
+
+    final ISimulationDataProvider provider = new ISimulationDataProvider()
+    {
+      public void dispose( )
+      {
+      }
+
+      public Object getInputForID( final String id ) throws SimulationException
+      {
+        try
+        {
+          if( "FlowRelationshipModel".equals( id ))
+            return flowModelFile.toURL();
+          
+          if( "DiscretisationModel".equals( id ))
+            return discModelFile.toURL();
+          
+          // TODO Auto-generated method stub
+          return null;
+        }
+        catch( MalformedURLException e )
+        {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+          return null;
+        }
+      }
+
+      public boolean hasID( String id )
+      {
+        return true;
+      }
+    };
+
+    ProcessResultsJob.read2DIntoGmlResults( result2dFile, outputDir, provider );
+  }
 }

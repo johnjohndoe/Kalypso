@@ -442,4 +442,13 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     
   }
 
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleJunction(java.lang.String, int, int, int, int)
+   */
+  public void handleJunction( String line, int junctionID, int element1dID, int boundaryLine2dID, int node1dID )
+  {
+    // TODO Auto-generated method stub
+    
+  }
+
 }

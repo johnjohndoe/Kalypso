@@ -124,6 +124,11 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
 //        TI          18.0000000         3
         interpreteTimeLine( line, m_handler );
       }
+      else if( char0 == 'T' && char1 == 'L' )
+      {
+        //TL JunctionID, 1d-ElementID, BoundaryLineID, 1d-NodeID
+        interprete1d2dJunctionElement( line, m_handler );
+      }
       else
       {
         if( verboseMode )
@@ -134,6 +139,30 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
     // signal parsing stop
     m_handler.end();
 
+  }
+
+  private void interprete1d2dJunctionElement( String line, IRMA10SModelElementHandler handler )
+  {
+    final Pattern linePattern = Pattern.compile( "TL\\s*([0-9]+)\\s*([0-9]+)\\s*([0-9]+)\\s*([0-9]+)" );
+    final Matcher matcher = linePattern.matcher( line );
+    if( matcher.matches() )
+    {
+      try
+      {
+        int junctionID = Integer.parseInt( matcher.group( 1 ) );
+        int element1dID = Integer.parseInt( matcher.group( 2 ) );
+        int boundaryLine2dID = Integer.parseInt( matcher.group( 3 ) );
+        int mode1dID = Integer.parseInt( matcher.group( 4 ) );
+        
+        handler.handleJunction( line, junctionID, element1dID, boundaryLine2dID, mode1dID);
+      }
+      catch( NumberFormatException e )
+      {
+        handler.handlerError( line, EReadError.ILLEGAL_SECTION );
+      }
+    }
+    else
+      handler.handlerError( line, EReadError.ILLEGAL_SECTION );
   }
 
   private void interpreteTimeLine( String line, IRMA10SModelElementHandler handler )
