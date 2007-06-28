@@ -202,4 +202,6 @@ public interface IWspmTuhhConstants extends IWspmConstants
 
   public static String LAYER_BRUECKE_COLOR_BOTTOM = LAYER_BRUECKE + "COLOR_BOTTOM";
 
+  public static String PROFIL_TYPE_PASCHE = "org.kalypso.model.wspm.tuhh.profiletype";
+
 }
