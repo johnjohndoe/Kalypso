@@ -257,6 +257,7 @@ public class ProcessHelper
           // Prozess noch nicht fertig, weiterlaufen lassen
         }
 
+        // TODO: cancelling the process does not work
         if( cancelable.isCanceled() )
         {
           process.destroy();
