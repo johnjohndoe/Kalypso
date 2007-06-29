@@ -63,11 +63,11 @@ public final class ComponentUtilities
    */
   public static IComponent findComponent( final IComponent[] comps, final QName typeName )
   {
-    for( int i = 0; i < comps.length; i++ )
+    for( final IComponent element : comps )
     {
-      if( comps[i].getValueTypeName().equals( typeName ) )
+      if( element.getValueTypeName().equals( typeName ) )
       {
-        return comps[i];
+        return element;
       }
     }
 
@@ -95,11 +95,11 @@ public final class ComponentUtilities
    */
   public static IComponent sameComponent( final IComponent[] comps, final IComponent comp )
   {
-    for( int i = 0; i < comps.length; i++ )
+    for( final IComponent element : comps )
     {
-      if( comps[i].equals( comp ) )
+      if( element.equals( comp ) )
       {
-        return comps[i];
+        return element;
       }
     }
 
@@ -137,6 +137,22 @@ public final class ComponentUtilities
           return provider;
         }
       }
+    }
+
+    return null;
+  }
+
+  /**
+   * Searches for a component by id.
+   * 
+   * @return <code>null</code>, if no compoentn with the given id is found, else the first found component.
+   */
+  public static IComponent findComponentByID( final IComponent[] components, final String componentID )
+  {
+    for( final IComponent component : components )
+    {
+      if( componentID.equals( component.getId() ) )
+        return component;
     }
 
     return null;
