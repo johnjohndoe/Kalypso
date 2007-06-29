@@ -206,6 +206,8 @@ public class TimeserieUtils
       {
         try
         {
+// TODO: this dateFormat depends on the locale. This results in problems reading ZML files created using a different
+// locale
           final Date from = TimeserieConstants.DEFAULT_DF.parse( splits[0] );
           final Date to = TimeserieConstants.DEFAULT_DF.parse( splits[1] );
 
