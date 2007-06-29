@@ -103,7 +103,7 @@
                                 <description>Zwischengebietszuflüsse</description>
                             </documentation>
                         </annotation>
-                    </element>
+                    </element> 
                     <element ref="modell:internerHPegelMember" minOccurs="0" maxOccurs="unbounded">
                         <annotation>
                             <documentation xml:lang="de">
@@ -113,7 +113,7 @@
                                 <description>interne Hilfspegel</description>
                             </documentation>
                         </annotation>
-                    </element>
+                        </element>
                 </sequence>
             </extension>
         </complexContent>
@@ -162,7 +162,8 @@
         </annotation>
     </element>
     <element name="StartPegel" type="modell:StartPegelType" substitutionGroup="modell:AbstractMainPegel">
-        <annotation>
+<!--        <element name="StartPegel" type="modell:StartPegelType" substitutionGroup="modell:AbstractPegel">-->
+            <annotation>
             <documentation xml:lang="de">
                 <name>Start-Pegel</name>
                 <label>Start-Pegel</label>
@@ -172,7 +173,8 @@
         </annotation>
     </element>
     <element name="ElbePegel" type="modell:ElbePegelType" substitutionGroup="modell:AbstractMainPegel">
-        <annotation>
+<!--        <element name="ElbePegel" type="modell:ElbePegelType" substitutionGroup="modell:AbstractPegel">-->
+            <annotation>
             <documentation xml:lang="de">
                 <name>Elbe-Pegel</name>
                 <label>Elbe-Pegel</label>
@@ -201,7 +203,7 @@
             </documentation>
         </annotation>
     </element>
-    <element name="internerHPegelMember" type="modell:InternerHPegelPropertyType">
+     <element name="internerHPegelMember" type="modell:InternerHPegelPropertyType">
         <annotation>
             <documentation xml:lang="de">
                 <name>interner Hilfs-Pegel</name>
@@ -210,7 +212,7 @@
                 <description>interner Hilfs-Pegel</description>
             </documentation>
         </annotation>
-    </element>
+    </element> 
     <element name="InternerHPegel" type="modell:InternerHPegelType" substitutionGroup="modell:AbstractPegel">
         <annotation>
             <documentation xml:lang="de">
@@ -233,7 +235,7 @@
                 <sequence> </sequence>
             </extension>
         </complexContent>
-    </complexType>
+    </complexType> 
     <!--  Nicht abstrakt weils sonst vom alten Kalypso Gml-Parser ignoriert wird.  -->
     <complexType name="AbstractPegelType">
         <complexContent>
@@ -333,6 +335,7 @@
             <restriction base="gml:FeatureAssociationType">
                 <sequence>
                     <element ref="modell:AbstractMainPegel"/>
+<!--                    <element ref="modell:AbstractPegel"/>-->
                 </sequence>
             </restriction>
         </complexContent>
@@ -340,7 +343,8 @@
     <complexType name="StartPegelType">
         <complexContent>
             <extension base="modell:AbstractMainPegelType">
-                <sequence>
+<!--                <extension base="modell:AbstractPegelType">-->
+                    <sequence>
                     <element name="ganglinie_gesamt" type="obslink:TimeseriesLinkFeatureProperty">
                         <annotation>
                             <documentation xml:lang="de">
@@ -358,7 +362,8 @@
     <complexType name="ElbePegelType">
         <complexContent>
             <extension base="modell:AbstractMainPegelType">
-                <sequence>
+<!--                <extension base="modell:AbstractPegelType">-->
+                    <sequence>
                     <element name="ganglinie_messwerte" type="obslink:TimeseriesLinkFeatureProperty">
                         <annotation>
                             <documentation xml:lang="de">
