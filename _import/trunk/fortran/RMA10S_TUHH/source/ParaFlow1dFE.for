@@ -1,4 +1,4 @@
-C     Last change:  K     8 May 2007    3:23 pm
+C     Last change:  K    18 Jun 2007    1:02 pm
       MODULE PARAFlow1dFE
 
 
@@ -31,5 +31,6 @@ C     Last change:  K     8 May 2007    3:23 pm
       REAL(KIND=8),ALLOCATABLE       :: dvvt(:)                      !derivative of velocity over t of last time step
       !decision switch for way of coefficient calculation
       INTEGER                        :: beient                       !decision switch for flow coefficient (2: beta, 1: alpha, 0. ignore)
+      INTEGER                        :: Moment_off                   !number of iterations in a not restarted model, in which the momentum term is switched off (only Polynom-approach)
 
       END MODULE
