@@ -957,8 +957,8 @@ alle_profile: do i = 1, anz_prof_orig
     CYCLE
   end if
 
-  write (UNIT_OUT_KM, 1001) stat(i)
-  1001 format (1X, F12.4, '  Station [km]', /)
+  write (UNIT_OUT_KM, 1001) stat(i), out_PROF(i,1)%hbv
+  1001 format (1X, F12.4, '  Station [km]', F15.4, '  Bordvolle Hoehe [mNN]'/)
 
 
   write (UNIT_OUT_KM, 1002) 'NR', ' Wasserspiegel- ', '    Abfluss     ', '  Abfluss   ', '    Flaeche    ', '  Flaeche   ', &

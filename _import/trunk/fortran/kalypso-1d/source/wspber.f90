@@ -1050,7 +1050,7 @@ Hauptschleife: DO i = 1, maxger
         IF (nz .gt. 50) then
           nblatt = nblatt + 1
           CALL kopf (nblatt, nz, UNIT_OUT_TAB, UNIT_OUT_PRO, idr1)
-        ENDIF
+        END IF
 
         CALL speicher (nprof, hr, hv, hvst, hrst, q, stat (nprof), indmax, ikenn)
 
@@ -1063,13 +1063,11 @@ Hauptschleife: DO i = 1, maxger
             ay (i1) = 0.0
             dp (i1) = 0.0
           END DO
-        ENDIF
+        END IF
 
         CALL intdat (staso, ifehl)
 
-        IF (ifehl.ne.0) then
-          STOP
-        ENDIF
+        IF (ifehl.ne.0) STOP
 
         nprof = nprof + 1
 
