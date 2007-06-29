@@ -73,6 +73,7 @@ import org.kalypso.ogc.gml.om.table.TupleResultLabelProvider;
 import org.kalypso.template.featureview.ColumnDescriptor;
 import org.kalypso.template.featureview.ColumnTypeDescriptor;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @author Gernot Belger
@@ -211,14 +212,13 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
       return;
     }
 
-    final Feature feature = getFeature();
-
+    final Feature feature = getObservationFeature();
     if( m_tupleResult != null )
     {
       m_tupleResult.removeChangeListener( this );
     }
 
-    final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( feature );
+    final IObservation<TupleResult> obs = feature == null ? null : ObservationFeatureFactory.toObservation( feature );
     m_tupleResult = obs == null ? null : obs.getResult();
 
     if( m_tupleResult != null )
@@ -227,6 +227,27 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
     }
 
     m_viewer.setInput( m_tupleResult );
+  }
+
+  /**
+   * Returns the observation.
+   * <p>
+   * If the given property is a relation type, get the feature from that property, else directly use the given feature
+   * of this control.
+   * </p>
+   */
+  private Feature getObservationFeature( )
+  {
+    final Feature feature = getFeature();
+    final IPropertyType ftp = getFeatureTypeProperty();
+
+    if( ftp instanceof IRelationType )
+    {
+      final Object property = feature.getProperty( ftp );
+      return FeatureHelper.getFeature( feature.getWorkspace(), property );
+    }
+
+    return feature;
   }
 
   /**
