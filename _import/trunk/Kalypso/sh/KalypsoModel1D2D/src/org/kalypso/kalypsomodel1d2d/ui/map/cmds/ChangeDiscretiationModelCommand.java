@@ -48,69 +48,55 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.functions.GeometryCalcControl;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
- * Composite command used to change the discretisation command.
- * This composite takes the responsibility to nodifies the 
- * commandable workspace about the chnage introduced by its
- * sub command 
+ * Composite command used to change the discretisation command. This composite takes the responsibility to nodifies the
+ * commandable workspace about the chnage introduced by its sub command
  * 
  * 
  * @author Patrice Congo
- *
+ * 
  */
 public class ChangeDiscretiationModelCommand implements ICommand
 {
-  public static final String DEFAULT_DESCRIPTION=
-                            "Change Discretisation model";
-  
-  private String description;
-  
-  private IFEDiscretisationModel1d2d model1d2d;
-  
-  private CommandableWorkspace commandableWorkspace;
-  
-  private List<IDiscrModel1d2dChangeCommand> commands = 
-                      new ArrayList<IDiscrModel1d2dChangeCommand>();
-  private List<IDiscrModel1d2dChangeCommand> nodeCommands = 
-                      new ArrayList<IDiscrModel1d2dChangeCommand>();
-  
-  private boolean isUndoable=true;
+  public static final String DEFAULT_DESCRIPTION = "Change Discretisation model";
 
+  private final String m_description;
 
-  
-  public ChangeDiscretiationModelCommand( 
-                          CommandableWorkspace commandableWorkspace,   
-                          IFEDiscretisationModel1d2d model1d2d)
+  private final IFEDiscretisationModel1d2d m_model1d2d;
+
+  private final GMLWorkspace m_commandableWorkspace;
+
+  private final List<IDiscrModel1d2dChangeCommand> m_commands = new ArrayList<IDiscrModel1d2dChangeCommand>();
+
+  private final List<IDiscrModel1d2dChangeCommand> m_nodeCommands = new ArrayList<IDiscrModel1d2dChangeCommand>();
+
+  private boolean m_isUndoable = true;
+
+  public ChangeDiscretiationModelCommand( final GMLWorkspace commandableWorkspace, final IFEDiscretisationModel1d2d model1d2d )
   {
-    this(   
-        commandableWorkspace,
-        model1d2d,  
-        DEFAULT_DESCRIPTION );
+    this( commandableWorkspace, model1d2d, DEFAULT_DESCRIPTION );
   }
-  
-  public ChangeDiscretiationModelCommand(
-                      CommandableWorkspace commandableWorkspace,
-                      IFEDiscretisationModel1d2d model1d2d,
-                      String description)
+
+  public ChangeDiscretiationModelCommand( final GMLWorkspace commandableWorkspace, final IFEDiscretisationModel1d2d model1d2d, final String description )
   {
     Assert.throwIAEOnNullParam( model1d2d, "model1d2d" );
     Assert.throwIAEOnNullParam( description, "description" );
-    this.description=description;
-    this.model1d2d=model1d2d;
-    this.commandableWorkspace=commandableWorkspace;
+    m_description = description;
+    m_model1d2d = model1d2d;
+    m_commandableWorkspace = commandableWorkspace;
   }
-  
+
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
   public String getDescription( )
   {
-    return description;
+    return m_description;
   }
 
   /**
@@ -118,7 +104,7 @@ public class ChangeDiscretiationModelCommand implements ICommand
    */
   public boolean isUndoable( )
   {
-    return isUndoable;
+    return m_isUndoable;
   }
 
   /**
@@ -126,48 +112,47 @@ public class ChangeDiscretiationModelCommand implements ICommand
    */
   public void process( ) throws Exception
   {
-    List<Feature> changedFeatures= new ArrayList<Feature>();
-    
-    //build nodes with geo indexing
-    for(IDiscrModel1d2dChangeCommand command:nodeCommands)
+    final List<Feature> changedFeatures = new ArrayList<Feature>();
+
+    // build nodes with geo indexing
+    for( final IDiscrModel1d2dChangeCommand command : m_nodeCommands )
     {
       try
       {
         command.process();
-        for(IFeatureWrapper2 changedFeature :command.getChangedFeature())
+        for( final IFeatureWrapper2 changedFeature : command.getChangedFeature() )
         {
-          if(changedFeature!=null)
+          if( changedFeature != null )
           {
-            Feature wrappedFeature = 
-                      changedFeature.getWrappedFeature();
-            if(wrappedFeature!=null)
+            final Feature wrappedFeature = changedFeature.getWrappedFeature();
+            if( wrappedFeature != null )
             {
               changedFeatures.add( wrappedFeature );
-//              wrappedFeature.invalidEnvelope();
+              // wrappedFeature.invalidEnvelope();
             }
           }
         }
       }
-      catch (Exception e) 
+      catch( final Exception e )
       {
         e.printStackTrace();
-      }      
+      }
     }
-    
-    //build edges and element without indexing
-    GeometryCalcControl.setDoCalcEdge(false);
-    GeometryCalcControl.setDoCalcElement(false);
-    for(IDiscrModel1d2dChangeCommand command:commands)
+
+    // build edges and element without indexing
+    GeometryCalcControl.setDoCalcEdge( false );
+    GeometryCalcControl.setDoCalcElement( false );
+    for( final IDiscrModel1d2dChangeCommand command : m_commands )
     {
       try
       {
         command.process();
-        for(IFeatureWrapper2 changedFeature :command.getChangedFeature())
+        for( final IFeatureWrapper2 changedFeature : command.getChangedFeature() )
         {
-          if(changedFeature!=null)
+          if( changedFeature != null )
           {
-            Feature wrappedFeature=changedFeature.getWrappedFeature();
-            if(wrappedFeature!=null)
+            final Feature wrappedFeature = changedFeature.getWrappedFeature();
+            if( wrappedFeature != null )
             {
               changedFeatures.add( wrappedFeature );
               wrappedFeature.invalidEnvelope();
@@ -175,47 +160,43 @@ public class ChangeDiscretiationModelCommand implements ICommand
           }
         }
       }
-      catch (Exception e) 
+      catch( final Exception e )
       {
         e.printStackTrace();
-      }      
+      }
     }
-    
-    GeometryCalcControl.setDoCalcEdge(true);  
-    GeometryCalcControl.setDoCalcElement(true);  
-    for(IFE1D2DEdge edge:model1d2d.getEdges())
+
+    GeometryCalcControl.setDoCalcEdge( true );
+    GeometryCalcControl.setDoCalcElement( true );
+    for( final IFE1D2DEdge edge : m_model1d2d.getEdges() )
     {
       edge.getWrappedFeature().invalidEnvelope();
     }
-    model1d2d.getEdges().getWrappedList().invalidate();
-    model1d2d.getElements().getWrappedList().invalidate();
-//    model1d2d.getNodes().getWrappedList().invalidate();
-    fireStructureChange( changedFeatures );    
+    m_model1d2d.getEdges().getWrappedList().invalidate();
+    m_model1d2d.getElements().getWrappedList().invalidate();
+    // model1d2d.getNodes().getWrappedList().invalidate();
+    fireStructureChange( changedFeatures );
   }
 
-  private final void fireStructureChange(List<Feature> changedFeatures)
+  private final void fireStructureChange( final List<Feature> changedFeatures )
   {
-    Feature[] changedFeaturesArray=new Feature[changedFeatures.size()];
+    final Feature[] changedFeaturesArray = new Feature[changedFeatures.size()];
     changedFeatures.toArray( changedFeaturesArray );
-    commandableWorkspace.fireModellEvent( 
-        new FeatureStructureChangeModellEvent( 
-                          commandableWorkspace, 
-                          model1d2d.getWrappedFeature(), 
-                          changedFeaturesArray, 
-                          FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+    m_commandableWorkspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_commandableWorkspace, m_model1d2d.getWrappedFeature(), changedFeaturesArray, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
   }
+
   /**
    * @see org.kalypso.commons.command.ICommand#redo()
    */
   public void redo( ) throws Exception
   {
-    for(IDiscrModel1d2dChangeCommand command:commands)
+    for( final IDiscrModel1d2dChangeCommand command : m_commands )
     {
       try
       {
         command.redo();
       }
-      catch (Throwable th) 
+      catch( final Throwable th )
       {
         th.printStackTrace();
       }
@@ -227,38 +208,38 @@ public class ChangeDiscretiationModelCommand implements ICommand
    */
   public void undo( ) throws Exception
   {
-    
-//  reverse order  is taken because of eventual dependencies
+
+    // reverse order is taken because of eventual dependencies
     IDiscrModel1d2dChangeCommand command;
-    for(int index=commands.size()-1;index>=0;index-- )
+    for( int index = m_commands.size() - 1; index >= 0; index-- )
     {
-      command=commands.get( index );
+      command = m_commands.get( index );
       try
       {
         command.undo();
       }
-      catch (Exception e) 
+      catch( final Exception e )
       {
         e.printStackTrace();
       }
     }
-    
+
   }
-  
-  public void addCommand(IDiscrModel1d2dChangeCommand command)
+
+  public void addCommand( final IDiscrModel1d2dChangeCommand command )
   {
     Assert.throwIAEOnNullParam( command, "command" );
-    if(commands instanceof AddNodeCommand)
+    if( m_commands instanceof AddNodeCommand )
     {
-      nodeCommands.add( command );
+      m_nodeCommands.add( command );
     }
     else
     {
-      commands.add( command );
-      
+      m_commands.add( command );
+
     }
-    
-    isUndoable=isUndoable && command.isUndoable();
-    
+
+    m_isUndoable = m_isUndoable && command.isUndoable();
+
   }
 }

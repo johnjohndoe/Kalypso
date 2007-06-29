@@ -57,6 +57,7 @@ import java.util.TreeMap;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -71,6 +72,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtils;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
@@ -78,9 +80,14 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IRiverChannel1D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.FlowRelationUtilitites;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IWeirFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.Add1DElementFromNodeCmd;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddNodeCommand;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeDiscretiationModelCommand;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteCmdFactory;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
@@ -103,6 +110,7 @@ import org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.observation.result.TupleResultUtilities;
+import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.wizard.gml.GmlFileImportPage;
 import org.kalypsodeegree.model.feature.Feature;
@@ -110,7 +118,9 @@ import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * A wizard to import WSPM-Models into a 1D2D Model.
@@ -284,8 +294,10 @@ public class ImportWspmWizard extends Wizard implements IWizard
         {
           // Create weir relation
           final IWeirFlowRelation weirRelation = flowRelModel.addNew( IWeirFlowRelation.QNAME, IWeirFlowRelation.class );
-          weirRelation.init();
           final IObservation<TupleResult> weirFlowObservation = weirRelation.getWeirObservation();
+
+          final GM_Point weirPos = replaceNodeWithElement( node );
+          weirRelation.setPosition( weirPos );
 
           /* copy weir parameter from one observation to the other */
           final TupleResult weirResult = weirObs.getResult();
@@ -358,6 +370,53 @@ public class ImportWspmWizard extends Wizard implements IWizard
     return Status.OK_STATUS;
   }
 
+  private static GM_Point replaceNodeWithElement( final IFE1D2DNode node ) throws CoreException
+  {
+    final GMLWorkspace workspace = node.getWrappedFeature().getWorkspace();
+    final IFEDiscretisationModel1d2d model1d2d = DiscretisationModelUtils.modelForItem( node );
+
+    // Lauter TODO-S!
+    final IFE1D2DElement[] elements = node.getElements();
+    if( elements.length != 2 )
+      throw new CoreException( StatusUtilities.createErrorStatus( "Ein Wehr am Ende oder am Anfang eines Berechnungabschnittes kann nicht importiert werden\nFügen Sie wenigstens ein Profil im Ober- bzw. Unterwasser ein." ) );
+
+    /* Find upstream and downstream neighbours */
+    final IFE1D2DNode neighbour0 = DiscretisationModelUtils.findOtherNode( node, elements[0] );
+    final IFE1D2DNode neighbour1 = DiscretisationModelUtils.findOtherNode( node, elements[1] );
+
+    try
+    {
+      /* delete elements (and associated edges) */
+      final Feature feature0 = elements[0].getWrappedFeature();
+      final Feature feature1 = elements[1].getWrappedFeature();
+      final EasyFeatureWrapper[] toDelete = new EasyFeatureWrapper[] { new EasyFeatureWrapper( null, feature0, feature0.getParent(), feature0.getParentRelation() ),
+          new EasyFeatureWrapper( null, feature1, feature1.getParent(), feature1.getParentRelation() ) };
+
+      final ChangeDiscretiationModelCommand elementDeleteCmd = new ChangeDiscretiationModelCommand( workspace, model1d2d );
+      DeleteCmdFactory.createDeleteCmd( model1d2d, toDelete, elementDeleteCmd );
+      elementDeleteCmd.process();
+
+      /* create new edge beetween neighbour nodes */
+      final ChangeDiscretiationModelCommand elementAddCmd = new ChangeDiscretiationModelCommand( workspace, model1d2d );
+      final AddNodeCommand addNode0 = new AddNodeCommand( model1d2d, neighbour0.getPoint(), 0.0 );
+      final AddNodeCommand addNode1 = new AddNodeCommand( model1d2d, neighbour1.getPoint(), 0.0 );
+      final Add1DElementFromNodeCmd eleCmd = new Add1DElementFromNodeCmd( model1d2d, new AddNodeCommand[] { addNode0, addNode1 } );
+      elementAddCmd.addCommand( addNode0 );
+      elementAddCmd.addCommand( addNode1 );
+      elementAddCmd.addCommand( eleCmd );
+      elementAddCmd.process();
+
+      /* Return position of weir */
+      final GM_Position position = FlowRelationUtilitites.getFlowPositionFromElement( eleCmd.getAddedElement() );
+      return GeometryFactory.createGM_Point( position, node.getPoint().getCoordinateSystem() );
+    }
+    catch( final Exception e )
+    {
+      throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
+    }
+
+  }
+
   protected static SortedMap<BigDecimal, IFE1D2DNode> doCreate1DNet( final TuhhReach reach, final IFEDiscretisationModel1d2d discretisationModel, final List<Feature> addedFeatures ) throws Exception
   {
     /* sort reach by station and direction */
@@ -404,6 +463,10 @@ public class ImportWspmWizard extends Wizard implements IWizard
       node.setName( "" );
       final String desc = String.format( "Importiert aus WPSM Modell\n\n" + profileMember.getDescription() );
       node.setDescription( desc );
+
+      if( point == null )
+        throw new CoreException( StatusUtilities.createErrorStatus( "Sohltiefpunkt konnte nicht georeferenziert an Profil Station km: " + station ) );
+
       node.setPoint( point );
 
       nodesByStation.put( new BigDecimal( station ), node );

@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.flowrel;
 
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.FlowRelationship;
 import org.kalypso.observation.IObservation;
@@ -47,6 +48,7 @@ import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author Gernot Belger
@@ -95,37 +97,31 @@ public class WeirFlowRelation extends FlowRelationship implements IWeirFlowRelat
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IWeirFlowRelation#init()
-   */
-  public void init( )
-  {
-    // Just add the right components to my observation
-    final Feature obsFeature = getObservationFeature();
-    final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( obsFeature );
-    final TupleResult result = obs.getResult();
-    if( result.getComponents().length > 0 )
-      throw new IllegalStateException();
-
-    final String[] componentUrns = new String[] { Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL_UPSTREAM, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL_DOWNSTREAM,
-        Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE };
-    final IComponent[] components = new IComponent[componentUrns.length];
-
-    for( int i = 0; i < components.length; i++ )
-      components[i] = ObservationFeatureFactory.createDictionaryComponent( obsFeature, componentUrns[i] );
-
-    for( final IComponent component : components )
-      result.addComponent( component );
-
-    ObservationFeatureFactory.toFeature( obs, obsFeature );
-  }
-
-  /**
+   * Returns the weir-observation.
+   * <p>
+   * If it does not exist yet or is not yet initialized, both is done.
+   * </p>
+   * 
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IWeirFlowRelation#getWeirObservation()
    */
   public IObservation<TupleResult> getWeirObservation( )
   {
-    // Just add the right components to my observation
-    final Feature obsFeature = getObservationFeature();
+    final Feature obsFeatureIfPresent = getObservationFeature();
+
+    /* If observation does not exist, create it. */
+    final Feature obsFeature;
+    if( obsFeatureIfPresent == null )
+    {
+      final Feature feature = getFeature();
+      final GMLWorkspace workspace = feature.getWorkspace();
+      final IRelationType parentRelation = (IRelationType) feature.getFeatureType().getProperty( QNAME_P_OBSERVATION );
+      obsFeature = workspace.createFeature( feature, parentRelation, parentRelation.getTargetFeatureType(), -1 );
+      feature.setProperty( QNAME_P_OBSERVATION, obsFeature );
+    }
+    else
+      obsFeature = getObservationFeature();
+
+    /* Create an observation from it. */
     final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( obsFeature );
     final TupleResult result = obs.getResult();
     if( result.getComponents().length > 0 )

@@ -40,32 +40,60 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.flowrel;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
-import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
-import org.kalypso.observation.IObservation;
-import org.kalypso.observation.result.TupleResult;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Position;
 
 /**
+ * Helper class for {@link org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship}s.
+ * 
  * @author Gernot Belger
+ * 
  */
-public interface IWeirFlowRelation extends IFlowRelationship
+public class FlowRelationUtilitites
 {
-  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "WeirFlowRelation" );
-
-  public static final QName QNAME_PROP_KIND = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "kind" );
-
-  public static final QName QNAME_P_OBSERVATION = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "observation" );
-
-  public enum KIND
+  /**
+   * Helper class, don't instantiate.
+   */
+  private FlowRelationUtilitites( )
   {
-    TABULAR
+    throw new UnsupportedOperationException();
   }
 
-  public KIND getKind( );
+  public static GM_Position getFlowPositionFromElement( final IFeatureWrapper2 modelElement )
+  {
+    try
+    {
+      /* Node: return its position */
+      final GM_Object geom;
 
-  public IObservation<TupleResult> getWeirObservation( );
+      if( modelElement instanceof IFE1D2DNode )
+        geom = ((IFE1D2DNode) modelElement).getPoint();
+      /* ContinuityLine: return middle of line */
+      else if( modelElement instanceof IFE1D2DElement )
+      {
+        final IFE1D2DElement element = (IFE1D2DElement) modelElement;
+        geom = element.recalculateElementGeometry();
+      }
+      else
+        geom = null;
 
-  public void setWeirObservation( final IObservation<TupleResult> observation );
+      if( geom != null )
+        return geom.getCentroid().getPosition();
+    }
+    catch( final GM_Exception e )
+    {
+      e.printStackTrace();
+    }
+    catch( final Throwable th )
+    {
+      th.printStackTrace();
+    }
+
+    return null;
+  }
+
 }

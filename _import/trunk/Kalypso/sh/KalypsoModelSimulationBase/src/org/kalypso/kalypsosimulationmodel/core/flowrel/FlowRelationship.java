@@ -71,5 +71,4 @@ public abstract class FlowRelationship extends AbstractFeatureBinder implements 
   {
     getWrappedFeature().setProperty( QNAME_PROP_POSITION, point );
   }
-
 }

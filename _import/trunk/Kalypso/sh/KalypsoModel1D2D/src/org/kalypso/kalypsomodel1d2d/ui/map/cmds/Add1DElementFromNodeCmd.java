@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.cmds;
 
-
 import org.kalypso.kalypsomodel1d2d.ops.ModelOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
@@ -58,45 +57,39 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 public class Add1DElementFromNodeCmd implements IDiscrModel1d2dChangeCommand
 {
   private IElement1D addedElement;
-  
-  private AddNodeCommand elementNodeCmds[];
-  
-  private IFEDiscretisationModel1d2d model;
-  
+
+  private final AddNodeCommand elementNodeCmds[];
+
+  private final IFEDiscretisationModel1d2d model;
+
   /**
    * @param model
-   * @param elementEdgeCmds an array the command used to create the edges of the element to be created
-   *  by this command. the array must contains only {@link AddEdgeCommand} and 
-   *    {@link AddEdgeInvCommand} commands
+   * @param elementEdgeCmds
+   *            an array the command used to create the edges of the element to be created by this command. the array
+   *            must contains only {@link AddEdgeCommand} and {@link AddEdgeInvCommand} commands
    */
-  public Add1DElementFromNodeCmd(
-              IFEDiscretisationModel1d2d model,
-              AddNodeCommand[] elementNodeCmds)
+  public Add1DElementFromNodeCmd( final IFEDiscretisationModel1d2d model, final AddNodeCommand[] elementNodeCmds )
   {
     Assert.throwIAEOnNullParam( model, "model" );
     Assert.throwIAEOnNullParam( elementNodeCmds, "elementEdgeCmds" );
-    for(IDiscrModel1d2dChangeCommand cmd:elementNodeCmds)
+    for( final IDiscrModel1d2dChangeCommand cmd : elementNodeCmds )
     {
-      if(  cmd==null  )
+      if( cmd == null )
       {
-        throw new IllegalArgumentException(
-            "elementNodeCmds must only contains non null node cmds:"+
-            elementNodeCmds); 
+        throw new IllegalArgumentException( "elementNodeCmds must only contains non null node cmds:" + elementNodeCmds );
       }
     }
-    if(elementNodeCmds.length!=2)
+    if( elementNodeCmds.length != 2 )
     {
-      throw new IllegalArgumentException(
-          "This create 1D element command required 2 create node command "+
-          "\n\tbut got="+elementNodeCmds.length+" node Command");
+      throw new IllegalArgumentException( "This create 1D element command required 2 create node command " + "\n\tbut got=" + elementNodeCmds.length + " node Command" );
     }
-    
-    this.model=model;
-    
-    this.elementNodeCmds= elementNodeCmds;
-    
+
+    this.model = model;
+
+    this.elementNodeCmds = elementNodeCmds;
+
   }
-  
+
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
@@ -110,7 +103,7 @@ public class Add1DElementFromNodeCmd implements IDiscrModel1d2dChangeCommand
    */
   public boolean isUndoable( )
   {
-    //TODO implement undo using delete command
+    // TODO implement undo using delete command
     return false;
   }
 
@@ -119,47 +112,43 @@ public class Add1DElementFromNodeCmd implements IDiscrModel1d2dChangeCommand
    */
   public void process( ) throws Exception
   {
-    if(addedElement==null)
+    if( addedElement == null )
     {
       IFE1D2DEdge curEdge;
-     
-      IFE1D2DNode<IFE1D2DEdge> node0=elementNodeCmds[0].getAddedNode();
-      IFE1D2DNode<IFE1D2DEdge> node1=elementNodeCmds[1].getAddedNode();
-      if(node0==null || node1==null)
+
+      final IFE1D2DNode<IFE1D2DEdge> node0 = elementNodeCmds[0].getAddedNode();
+      final IFE1D2DNode<IFE1D2DEdge> node1 = elementNodeCmds[1].getAddedNode();
+      if( node0 == null || node1 == null )
       {
-        throw new IllegalStateException(
-            "One of the base node command returns a null node:"+
-            "\n\tnode0="+node0+
-            "\n\tnode1="+node1);
+        throw new IllegalStateException( "One of the base node command returns a null node:" + "\n\tnode0=" + node0 + "\n\tnode1=" + node1 );
       }
-      if(node0.equals( node1 ))
+      if( node0.equals( node1 ) )
       {
-        throw new UnsupportedOperationException(
-            "Building an edge from one node not supported");
+        throw new UnsupportedOperationException( "Building an edge from one node not supported" );
       }
-      
-      curEdge=model.findEdge( node0, node1  );
-      if(curEdge==null)
+
+      curEdge = model.findEdge( node0, node1 );
+      if( curEdge == null )
       {
-          final int size1 = model.getEdges().size();
-          curEdge=FE1D2DEdge.createFromModel( model, node0, node1 );
-          final int size2 = model.getEdges().size();
-          if(size2-size1!=1)
-          {
-            throw new IllegalStateException("Multi edge created");
-          }
+        final int size1 = model.getEdges().size();
+        curEdge = FE1D2DEdge.createFromModel( model, node0, node1 );
+        final int size2 = model.getEdges().size();
+        if( size2 - size1 != 1 )
+        {
+          throw new IllegalStateException( "Multi edge created" );
+        }
       }
       else
       {
-        //test whether the edge is in an element
-        if(ModelOps.isContainedInAnElement( curEdge ))
+        // test whether the edge is in an element
+        if( ModelOps.isContainedInAnElement( curEdge ) )
         {
-          
+
           return;
         }
       }
-      
-      addedElement=ModelOps.createElement1d( model, curEdge );
+
+      addedElement = ModelOps.createElement1d( model, curEdge );
     }
   }
 
@@ -168,7 +157,7 @@ public class Add1DElementFromNodeCmd implements IDiscrModel1d2dChangeCommand
    */
   public void redo( ) throws Exception
   {
-    if(addedElement==null)
+    if( addedElement == null )
     {
       process();
     }
@@ -179,9 +168,9 @@ public class Add1DElementFromNodeCmd implements IDiscrModel1d2dChangeCommand
    */
   public void undo( ) throws Exception
   {
-    if(addedElement!=null)
+    if( addedElement != null )
     {
-      //TODO remove element and links to it edges
+      // TODO remove element and links to it edges
     }
   }
 
@@ -190,14 +179,24 @@ public class Add1DElementFromNodeCmd implements IDiscrModel1d2dChangeCommand
    */
   public IFeatureWrapper2[] getChangedFeature( )
   {
-    return new IFeatureWrapper2[]{addedElement};
+    return new IFeatureWrapper2[] { addedElement };
   }
-  
+
   /**
    * @see xp.IDiscrMode1d2dlChangeCommand#getDiscretisationModel1d2d()
    */
   public IFEDiscretisationModel1d2d getDiscretisationModel1d2d( )
   {
     return model;
+  }
+
+  /**
+   * Returns the newly created element.
+   * 
+   * @return <code>null</code>, if the command was not yet processed.
+   */
+  public IElement1D getAddedElement( )
+  {
+    return addedElement;
   }
 }

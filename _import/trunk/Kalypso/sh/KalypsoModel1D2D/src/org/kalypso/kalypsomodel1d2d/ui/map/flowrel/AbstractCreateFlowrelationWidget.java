@@ -65,6 +65,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ILineElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.FlowRelationUtilitites;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
@@ -88,7 +89,6 @@ import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
@@ -192,45 +192,12 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
     m_existingFlowRelation = null;
     if( m_flowRelCollection != null && m_modelElement != null )
     {
-      final GM_Position flowPosition = getFlowPositionFromElement( m_modelElement );
+      final GM_Position flowPosition = FlowRelationUtilitites.getFlowPositionFromElement( m_modelElement );
       if( flowPosition != null )
         m_existingFlowRelation = m_flowRelCollection.findFlowrelationship( flowPosition, 0.0 );
     }
 
     mapPanel.repaint();
-  }
-
-  private GM_Position getFlowPositionFromElement( final IFeatureWrapper2 modelElement )
-  {
-    try
-    {
-      /* Node: return its position */
-      final GM_Object geom;
-
-      if( modelElement instanceof IFE1D2DNode )
-        geom = ((IFE1D2DNode) modelElement).getPoint();
-      /* ContinuityLine: return middle of line */
-      else if( modelElement instanceof IFE1D2DElement )
-      {
-        final IFE1D2DElement element = (IFE1D2DElement) modelElement;
-        geom = element.recalculateElementGeometry();
-      }
-      else
-        geom = null;
-
-      if( geom != null )
-        return geom.getCentroid().getPosition();
-    }
-    catch( final GM_Exception e )
-    {
-      e.printStackTrace();
-    }
-    catch( final Throwable th )
-    {
-      th.printStackTrace();
-    }
-
-    return null;
   }
 
   /**
@@ -339,7 +306,7 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
     if( m_existingFlowRelation == null )
     {
       final MapPanel mapPanel = getMapPanel();
-      final GM_Position flowPositionFromElement = getFlowPositionFromElement( modelElement );
+      final GM_Position flowPositionFromElement = FlowRelationUtilitites.getFlowPositionFromElement( modelElement );
       final IFlowRelationshipModel flowRelationshipModel = m_flowRelCollection;
 
       /* Create flow relation at position */

@@ -45,6 +45,7 @@ import java.util.List;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -115,6 +116,30 @@ public class DiscretisationModelUtils
 
     final IPolyElement element2d = discModel.find2DElement( currentPos, grabDistance );
     return element2d;
+  }
+
+  /** Find the opposite node from an element.@return The first node of the element which is not qual tro the given node. */
+  public static IFE1D2DNode findOtherNode( final IFE1D2DNode node, final IFE1D2DElement element )
+  {
+    final List<IFE1D2DNode> nodes = element.getNodes();
+    for( final IFE1D2DNode otherNode : nodes )
+    {
+      if( otherNode != null && !(otherNode.equals( node )) )
+        return otherNode;
+    }
+
+    return null;
+  }
+
+  /**
+   * Finds the discretisation model for an item of a model.
+   * 
+   * @return <code>null</code>, if the parent feature of the given item is not a discretisation model.
+   */
+  public static IFEDiscretisationModel1d2d modelForItem( final IFeatureWrapper2 modelItem )
+  {
+    final Feature parent = modelItem.getWrappedFeature().getParent();
+    return (IFEDiscretisationModel1d2d) parent.getAdapter( IFEDiscretisationModel1d2d.class );
   }
 
 }
