@@ -145,20 +145,22 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 					</Help>
 					<Name>Höhen zuweisen</Name>
 				</Task>
-				<Task context="Context2dElementTheme"
+		<!--  		<Task context="Context2dElementTheme"
 					URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__CalculationUnit">
 					<Help>
 						<![CDATA[Berechnungseinheiten modellieren]]>
 					</Help>
 					<Name>Berechnungseinheiten modellieren</Name>
-				</Task>
-				<!--<Task context="Context2dElementTheme"
+				</Task> -->
+				<!--
+				<Task context="Context2dElementTheme"
 					URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__CalculationProblemsUnit">
 					<Help>
 					<![CDATA[Berechnungseinheiten modellieren]]>
 					</Help>
 					<Name>Berechnungseinheiten modellieren-1</Name>
-					</Task>-->
+				</Task>
+				-->
 			</TaskGroup>
 			<!--
 				<TaskGroup context="FenetMap" URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__CntrStrcGroup">
@@ -169,20 +171,35 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 			<TaskGroup URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__TransGroup">
 				<Help></Help>
 				<Name>1D-2D-Kopplungen</Name>
+			<!-- 			
 				<Task context="JunctionContextTheme"
 					URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__SetEltLineTrans">
 					<Help>
 						<![CDATA[Ermöglicht die Erstellung einer Kopplung von 1D zu 2D zwischen einem 1D-Element und einer 2D-Randlinie.]]>
 					</Help>
 					<Name>1D-2D-Linienkopplung</Name>
-				</Task>
+				</Task> -->
 				<Task context="JunctionContextTheme"
+					URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__CalculationUnit">
+					<Help>
+						<![CDATA[Berechnungseinheiten modellieren]]>
+					</Help>
+					<Name>Berechnungseinheiten modellieren</Name>
+				</Task>
+				<Task context="JunctionContextTheme" 
+					URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__BCDef">
+					<Help>
+						<![CDATA[Festlegung von Knoten- und Linienrandbedingungen für die Berechnung.]]>
+					</Help>
+					<Name>Randbedingungen</Name>
+				</Task>		
+				<!-- <Task context="JunctionContextTheme"
 					URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__SetEltEltTrans">
 					<Help>
 						<![CDATA[Ermöglicht die Erstellung einer Kopplung von 1D zu 2D zwischen zwei Elementen.]]>
 					</Help>
 					<Name>1D-2D-Elementkopplung</Name>
-				</Task>
+				</Task> -->
 			</TaskGroup>
 		</TaskGroup>
 		<TaskGroup URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__RoughMod">
@@ -221,12 +238,14 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 				<Name>Rauheitskorrektur modellieren</Name>
 			</Task>
 		</TaskGroup>
-		<Task context="BoundaryConditionTheme" URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__BCDef">
+	<!-- 	
+		<Task context="BoundaryConditionTheme" 
+			URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__BCDef">
 			<Help>
 				<![CDATA[Festlegung von Knoten- und Linienrandbedingungen für die Berechnung.]]>
 			</Help>
 			<Name>Randbedingungen</Name>
-			<!-- 
+			 
 				<TaskGroup URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__StSolGroup">
 				<Help>Für das erstmalige Anrechnen eines Modells benötigt man eine sog. Anfangslösung, &#xa;die den Modellzustand vor Beginn der Berechnung beschreibt.</Help>
 				<Name>Anfangslösung</Name>
@@ -239,8 +258,9 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 				<Name>Restartlösung spezifizieren</Name>
 				</Task>
 				</TaskGroup>
-			-->
-		</Task>
+			
+		</Task> 
+	-->	
 	</TaskGroup>
 	<TaskGroup URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Processing">
 		<Help>
