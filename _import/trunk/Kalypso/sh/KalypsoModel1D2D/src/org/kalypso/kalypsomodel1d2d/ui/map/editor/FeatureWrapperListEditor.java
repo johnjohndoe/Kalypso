@@ -42,6 +42,8 @@ package org.kalypso.kalypsomodel1d2d.ui.map.editor;
 
 import java.util.List;
 
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
@@ -72,6 +74,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DUIImages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeIFeatureWrapper2NameCmd;
@@ -79,6 +82,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListener;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
+import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree_impl.model.sort.IEnvelopeProvider;
 
@@ -103,6 +107,48 @@ public class FeatureWrapperListEditor implements IButtonConstants
   private FormToolkit toolkit;
 
   private Composite parent;
+  
+  class ActionBaseButton 
+  {
+    private Button button;
+    
+    public ActionBaseButton( final IAction action , Composite parent, int style )
+    {
+      button = new Button( parent, style );
+      button.setToolTipText( action.getToolTipText() );
+      ImageDescriptor imageDescriptor = action.getImageDescriptor();
+      if( imageDescriptor != null )
+      {
+        
+        button.setImage( 
+            new Image( 
+              parent.getDisplay(),
+              imageDescriptor.getImageData() ) );
+      }
+      else
+      {
+        button.setText( action.getText() );        
+      }
+      
+      SelectionListener seL = new SelectionListener()
+      {
+
+        public void widgetDefaultSelected( SelectionEvent e )
+        {
+                    
+        }
+
+        public void widgetSelected( SelectionEvent e )
+        {
+          action.run();
+          
+        }
+        
+      };
+      button.addSelectionListener( seL  );
+    }
+    
+  };
   
   private ICellModifier modifier = new ICellModifier()
   {
@@ -312,13 +358,33 @@ public class FeatureWrapperListEditor implements IButtonConstants
         }
       };
 
-  public FeatureWrapperListEditor( String selectionID, String inputID, String mapPanelID )
+  private IAction nonGenericActions[] ;
+  
+  public FeatureWrapperListEditor( 
+      String selectionID, 
+      String inputID, 
+      String mapPanelID)
+  {
+      this( selectionID, inputID, mapPanelID, new IAction[]{} );
+  }
+  public FeatureWrapperListEditor( 
+              String selectionID, 
+              String inputID, 
+              String mapPanelID,
+              IAction[] nonGenericActions )
   {
     this.idSselection = selectionID;
     this.idMapPanel = mapPanelID;
     this.idInput = inputID;
+    this.nonGenericActions = nonGenericActions;
   }
 
+  public void setNonGenericActions( IAction[] nonGenericActions )
+  {
+    Assert.throwIAEOnNullParam( nonGenericActions, "nonGenericActions" );
+    this.nonGenericActions = nonGenericActions;
+  }
+  
   protected void validateCalculationUnits( )
   {
  
@@ -469,7 +535,7 @@ public class FeatureWrapperListEditor implements IButtonConstants
         {
           try
           {
-          System.out.println("Calculate Selected");
+            
           }
           catch( Throwable th )
           {
@@ -477,6 +543,18 @@ public class FeatureWrapperListEditor implements IButtonConstants
           }
         }
       } );           
+    }
+    
+    for( final IAction action : nonGenericActions )
+    {
+      ActionBaseButton button = new ActionBaseButton(action,btnComposite, SWT.PUSH );
+//      button.addSelectionListener( new SelectionAdapter()
+//      {
+//        public void widgetSelected( SelectionEvent event )
+//        {
+//          action.run();
+//        }
+//      } ); 
     }
     
     descriptionGroupText = new Group( parent, SWT.NONE );

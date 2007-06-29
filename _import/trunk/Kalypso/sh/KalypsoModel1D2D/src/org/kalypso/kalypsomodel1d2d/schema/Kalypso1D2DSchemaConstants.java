@@ -3,6 +3,7 @@ package org.kalypso.kalypsomodel1d2d.schema;
 import javax.xml.namespace.QName;
 
 import org.kalypso.commons.xml.NS;
+import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
 
 /**
  * @author Patrice Congo
@@ -155,12 +156,18 @@ public class Kalypso1D2DSchemaConstants
 
   public final static QName WB1D2DCONTROL_F_MODEL = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "ControlModel" );
 
+  public final static QName WB1D2DCONTROL_F_MODEL_COLLECTION = 
+            new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "ControlModelCollection" );
+
+  
   public final static QName WB1D2DCONTROL_FP_MODEL_COLLECTION = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "controlModelCollection" );
 
   public final static QName WB1D2DCONTROL_XP_ACTIVE_MODEL = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "activeModelID" );
 
   public final static QName WB1D2DCONTROL_PROP_VERSION = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "Version" );
 
+  public final static QName WB1D2DCONTROL_PROP_CONTROL_MODEL_MEMBER = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "controlModelMember" );
+  
   public final static QName WB1D2DCONTROL_PROP_IDNOPT = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "IDNOPT" );
 
   public final static QName WB1D2DCONTROL_PROP_STARTSIM = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "startsim" );
@@ -203,6 +210,8 @@ public class Kalypso1D2DSchemaConstants
 
   public final static QName WB1D2DCONTROL_PROP_IACCYC = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "IACCYC" );
 
+  public final static QName WB1D2DCONTROL_PROP_RESTART = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "_restart" );
+
   public final static QName WB1D2DCONTROL_PROP_VEGETA = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "VEGETA" );
 
   public final static QName WB1D2DCONTROL_PROP_AC1 = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "AC1" );
@@ -212,6 +221,8 @@ public class Kalypso1D2DSchemaConstants
   public final static QName WB1D2DCONTROL_PROP_AC3 = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "AC3" );
 
   public final static QName WB1D2DCONTROL_PROP_TIMESTEPS_MEMBER = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "timestepsMember" );
+
+  public final static QName WB1D2DCONTROL_F_TIMESTEPS_OBSERVATION = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "TimestepsObservation" );
 
   public final static QName SIMMETA_PROP_SIMDESCRIPTOR = new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "simulationDescriptor" );
 
@@ -252,6 +263,9 @@ public class Kalypso1D2DSchemaConstants
   public final static QName SIMMETA_PROP_RESULT = new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "result" );
 
   
+  public static final QName OP1D2D_F_PSEUDO_FLOW_REL_MODEL = 
+        new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "FlowRelationshipModel" );
+
   public static final QName OP1D2D_F_OPERATIONAL_MODEL = 
     new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "OperationalModel" );
   

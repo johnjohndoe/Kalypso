@@ -38,14 +38,18 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.schema.binding;
+package org.kalypso.kalypsomodel1d2d.schema.binding.model;
 
+import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 
 /**
+ * Interface for classes representing a feature of type c1d2d:ControlModelGroup
+ * 
+ * @author Dejan Antanaskovic
  * @author Patrice Congo
  *
  */
-public class Util extends org.kalypso.kalypsosimulationmodel.core.Util
+public interface IControlModelGroup extends IModel
 {
-
+  public IControlModel1D2DCollection getModel1D2DCollection();
 }

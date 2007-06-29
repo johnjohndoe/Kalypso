@@ -38,14 +38,15 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.schema.binding;
+package org.kalypso.kalypsomodel1d2d.schema.binding.model;
 
+import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 
 /**
- * @author Patrice Congo
+ * @author antanas
  *
  */
-public class Util extends org.kalypso.kalypsosimulationmodel.core.Util
+public interface IPseudoOPerationalModel extends IFlowRelationshipModel
 {
 
 }

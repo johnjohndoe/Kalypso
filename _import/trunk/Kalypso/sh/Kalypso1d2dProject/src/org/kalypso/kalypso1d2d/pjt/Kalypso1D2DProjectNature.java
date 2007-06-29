@@ -44,6 +44,7 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.List;
 import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBException;
@@ -71,9 +72,11 @@ import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.afgui.scenarios.ScenarioManager;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.simulation.core.ISimulationService;
 import org.kalypso.simulation.core.KalypsoSimulationCorePlugin;
 import org.kalypso.simulation.core.simspec.Modeldata;
+import org.kalypso.simulation.core.simspec.Modeldata.Input;
 import org.kalypso.simulation.ui.calccase.CalcJobHandler;
 import org.kalypso.simulation.ui.calccase.ModelNature;
 
@@ -278,6 +281,8 @@ public class Kalypso1D2DProjectNature extends CaseHandlingProjectNature
     return (Kalypso1D2DProjectNature) project.getNature( ID );
   }
 
+ 
+  
   public IStatus startCalculation( final IFolder scenarioFolder, final IProgressMonitor monitor ) throws CoreException
   {
     monitor.beginTask( "Modellrechnung wird durchgeführt", 5 );
@@ -287,6 +292,7 @@ public class Kalypso1D2DProjectNature extends CaseHandlingProjectNature
       final Modeldata modelspec = loadModelspec();
       final String typeID = modelspec.getTypeID();
       final ISimulationService calcService = KalypsoSimulationCorePlugin.findCalculationServiceForType( typeID );
+      
       monitor.worked( 1 );
       final CalcJobHandler cjHandler = new CalcJobHandler( modelspec, calcService );
       return cjHandler.runJob( scenarioFolder, new SubProgressMonitor( monitor, 4 ) );
@@ -307,7 +313,10 @@ public class Kalypso1D2DProjectNature extends CaseHandlingProjectNature
         return null;
 
       final Unmarshaller unmarshaller = ModelNature.JC_SPEC.createUnmarshaller();
-      return (Modeldata) unmarshaller.unmarshal( file.getContents() );
+      
+      Modeldata modelData = (Modeldata) unmarshaller.unmarshal( file.getContents() );
+      return modelData;
+     
     }
     catch( final JAXBException e )
     {

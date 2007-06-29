@@ -120,10 +120,6 @@ Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodu
 					<Help>Bearbeitung von 2D-Elementen</Help>
 					<Name>Netz bearbeiten</Name>
 				</Task>
-				<Task context="ContLineTheme" URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ContilineGen">
-					<Help>Bearbeitung von Kontinuitätslinien</Help>
-					<Name>Kontinuitätslinien</Name>
-				</Task>
 				<Task context="Context2dElementTheme" URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Chan2DGen">
 					<Help>
 						<![CDATA[Generiert Flussschlauchelemente aus Profilendaten. 
@@ -170,7 +166,7 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 			-->
 			<TaskGroup URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__TransGroup">
 				<Help></Help>
-				<Name>1D-2D-Kopplungen</Name>
+				<Name>Berechnungseinheiten und Randbedingungen</Name>
 			<!-- 			
 				<Task context="JunctionContextTheme"
 					URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__SetEltLineTrans">
@@ -179,12 +175,9 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 					</Help>
 					<Name>1D-2D-Linienkopplung</Name>
 				</Task> -->
-				<Task context="JunctionContextTheme"
-					URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__CalculationUnit">
-					<Help>
-						<![CDATA[Berechnungseinheiten modellieren]]>
-					</Help>
-					<Name>Berechnungseinheiten modellieren</Name>
+				<Task context="ContLineTheme" URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ContilineGen">
+					<Help>Definieren von Rand- und Übergangslinien von Modellierungseinheiten (keine Ausgabedefinition)</Help>
+					<Name>Ränder und Übergänge definieren</Name>
 				</Task>
 				<Task context="JunctionContextTheme" 
 					URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__BCDef">
@@ -193,6 +186,13 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 					</Help>
 					<Name>Randbedingungen</Name>
 				</Task>		
+				<Task context="JunctionContextTheme"
+					URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__CalculationUnit">
+					<Help>
+						<![CDATA[Berechnungseinheiten modellieren]]>
+					</Help>
+					<Name>Berechnungseinheiten modellieren</Name>
+				</Task>
 				<!-- <Task context="JunctionContextTheme"
 					URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__SetEltEltTrans">
 					<Help>
@@ -271,6 +271,10 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 			<Help>Einstellung genereller Berechnungsparameter</Help>
 			<Name>Berechnungseinstellungen</Name>
 		</Task>
+		
+		<!--
+		We don't need these activities any more, because it will be (re)calculated by fortran code 
+		
 		<TaskGroup URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ResDef">
 			<Help></Help>
 			<Name>spezielle Ausgaben definieren</Name>
@@ -289,7 +293,8 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 				<Name>Ausgabeknoten bestimmen</Name>
 			</Task>
 		</TaskGroup>
-
+		 -->
+		 
 		<!-- TODO: there is no context with this ID -->
 		<Task context="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Calc"
 			URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__StartCalculation">

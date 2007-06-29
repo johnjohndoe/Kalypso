@@ -11,6 +11,7 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.IPseudoOPerationalModel;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.BoundaryLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.BoundaryLine1D;
@@ -60,10 +61,15 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.KingFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.TeschkeFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.WeirFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.ControlModel1D2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.ControlModel1D2DCollection;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.ControlModelGroup;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2DCollection;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IOperationalModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IStaticModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.OperationalModel1D2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.PseudoOPerationalModel;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.SimulationModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.StaticModel1D2D;
 import org.kalypso.kalypsomodel1d2d.ui.map.merge.FERoughnessDisplayElement;
@@ -434,6 +440,47 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
     // cMap.put(IJunctionContext1DTo2D.class, cTor);
     // cMap.put( IJunctionContext1DToCLine.class, cTor );
 
+    
+ // DiscretisationModel
+    
+    cTor = new AdapterConstructor()
+    {
+      public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
+      {
+        final QName featureQName = feature.getFeatureType().getQName();
+
+        if( featureQName.equals( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_F_MODEL_GROUP ) )
+        {
+          return new ControlModelGroup( feature );
+        }
+        else
+        {
+          warnUnableToAdapt( feature, featureQName, IFEDiscretisationModel1d2d.class );
+          return null;
+        }
+      }
+    };
+    cMap.put( IControlModelGroup.class, cTor );
+    
+    cTor = new AdapterConstructor()
+    {
+      public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
+      {
+        final QName featureQName = feature.getFeatureType().getQName();
+
+        if( featureQName.equals( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_F_MODEL_COLLECTION ) )
+        {
+          return new ControlModel1D2DCollection( feature );
+        }
+        else
+        {
+          warnUnableToAdapt( feature, featureQName, IFEDiscretisationModel1d2d.class );
+          return null;
+        }
+      }
+    };
+    cMap.put( IControlModel1D2DCollection.class, cTor );
+    
     // DiscretisationModel
     cTor = new AdapterConstructor()
     {
@@ -493,6 +540,26 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
       }
     };
     cMap.put( IOperationalModel1D2D.class, cTor );
+    
+    //Pseudo
+    cTor = new AdapterConstructor()
+    {
+      public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
+      {
+        final QName featureQName = feature.getFeatureType().getQName();
+
+        if( featureQName.equals( Kalypso1D2DSchemaConstants.OP1D2D_F_PSEUDO_FLOW_REL_MODEL ) )
+        {
+          return new PseudoOPerationalModel( feature );
+        }
+        else
+        {
+          warnUnableToAdapt( feature, featureQName, IStaticModel1D2D.class );
+          return null;
+        }
+      }
+    };
+    cMap.put( IPseudoOPerationalModel.class, cTor );
     
     // ControlModel
     cTor = new AdapterConstructor()

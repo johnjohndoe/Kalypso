@@ -5,6 +5,7 @@
 	xmlns:om="http://www.opengis.net/om" xmlns:kapp="org.kalypso.appinfo"
 	xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase"
 	xmlns:c1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl"
+	xmlns:wb1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d"
 	targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl"
 	elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<annotation>
@@ -20,6 +21,9 @@
 	<import
 		namespace="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase"
 		schemaLocation="platform:/resource/KalypsoModelSimulationBase/src/org/kalypso/kalypsosimulationmodel/schema/v0.0.0/simulation_model.xsd" />
+	<import
+		namespace="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d"
+		schemaLocation="sim_1d2d_discretisation.xsd" />
 
 	<!-- =================================================================
 		ControlModelGroup
@@ -125,11 +129,7 @@
 		<complexContent>
 			<extension base="simBase:AbstractControlModelType">
 				<sequence>
-					<element name="boundaryZone1"
-						type="gml:PointPropertyType" minOccurs="0" maxOccurs="1" />
-					<element name="boundaryZone2"
-						type="gml:PointPropertyType" minOccurs="0" maxOccurs="1" />
-
+					<element ref="wb1d2d:calculationUnit" />
 					<element name="Version" default="NEW">
 						<annotation>
 							<documentation xml:lang="de">
@@ -524,7 +524,7 @@
 						</annotation>
 					</element>
 					<!--C5-->
-					<element name="NITI" type="int" default="1">
+					<element name="NITI" default="1">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>
@@ -554,7 +554,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="NITN">
+					<element name="NITN" default="1">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>
@@ -569,7 +569,7 @@
 						</annotation>
 						<simpleType>
 							<restriction base="int">
-								<minInclusive value="0" />
+								<minInclusive value="1" />
 								<maxInclusive value="50" />
 							</restriction>
 						</simpleType>
@@ -706,7 +706,7 @@
 					</element>
 					<!--CV-->
 					<!--TODO: aus vorhandenen Lösungen auswählen...-->
-					<element name="IACCYC" type="boolean"
+					<element name="_restart" type="boolean"
 						default="false">
 						<annotation>
 							<documentation xml:lang="de">
@@ -716,6 +716,25 @@
 									(bei 0 wird eine neue Berechnung
 									gestartet).
 								</tooltip>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="IACCYC" type="integer" default="1">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Restart step</label>
+								<tooltip>
+									Angabe des Restart Zeitschrittes
+									(bei 0 wird eine neue Berechnung
+									gestartet).
+								</tooltip>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="FNAM3" type="string">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Restart file</label>
 							</documentation>
 						</annotation>
 					</element>

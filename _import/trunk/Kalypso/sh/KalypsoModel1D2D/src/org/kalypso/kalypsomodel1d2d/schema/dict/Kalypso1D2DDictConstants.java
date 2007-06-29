@@ -41,11 +41,13 @@
 package org.kalypso.kalypsomodel1d2d.schema.dict;
 
 /**
- * @author antanas
+ * @author Dejan Antanaskovic
  */
 public interface Kalypso1D2DDictConstants
 {
   public static final String DICT_COMPONENT_TIME = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time";
+
+  public static final String DICT_COMPONENT_UNDER_RELAXATION_FACTOR = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#UnderRelaxationFactor";
 
   public static final String DICT_COMPONENT_WATERLEVEL = "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Waterlevel";
 

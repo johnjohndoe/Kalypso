@@ -38,14 +38,23 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.schema.binding;
+package org.kalypso.kalypsomodel1d2d.schema.binding.model;
 
+import org.kalypso.kalypsosimulationmodel.core.flowrel.FlowRelationshipModel;
+import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Patrice Congo
+ * @author Dejan Antanaskovic
  *
  */
-public class Util extends org.kalypso.kalypsosimulationmodel.core.Util
+public class PseudoOPerationalModel extends FlowRelationshipModel implements IFlowRelationshipModel
 {
+
+  public PseudoOPerationalModel( Feature featureCol )
+  {
+    super( featureCol );
+  }
 
 }

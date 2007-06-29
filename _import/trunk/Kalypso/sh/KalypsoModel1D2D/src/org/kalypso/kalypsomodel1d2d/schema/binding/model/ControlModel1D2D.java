@@ -40,16 +40,30 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.model;
 
+import java.io.File;
+import java.net.URI;
+import java.net.URL;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.runtime.FileLocator;
+import org.kalypso.commons.resources.FileUtilities;
+import org.kalypso.contribs.java.net.UrlResolver;
+import org.kalypso.contribs.java.net.UrlResolverSingleton;
+import org.kalypso.contribs.java.net.UrlUtilities;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
 
 /**
@@ -57,6 +71,7 @@ import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
  * @author Madanagopal
  * 
  */
+@SuppressWarnings("unchecked")
 public class ControlModel1D2D extends AbstractFeatureBinder implements IControlModel1D2D
 {
   public ControlModel1D2D( final Feature featureToBind )
@@ -113,8 +128,7 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
 
   public boolean getRestart( )
   {
-    final Integer iaccyc = getIaccyc();
-    return iaccyc > 1;
+    return ((Boolean) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_RESTART )).booleanValue();
   }
 
   public XMLGregorianCalendar getStartCalendar( )
@@ -185,12 +199,16 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
 
   public Integer getNITI( )
   {
-    return (Integer) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_NITI );
+    Integer property = (Integer) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_NITI );
+    if(property == null) property = 0;
+    return property;
   }
 
   public Integer getNITN( )
   {
-    return (Integer) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_NITN );
+    Integer property = (Integer) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_NITN );
+    if(property == null) property = 0;
+    return property;
   }
 
   public Integer getNCYC( )
@@ -243,4 +261,36 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
     return (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_AC3 );
   }
 
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#setCalculationUnit(org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit)
+   */
+  public void setCalculationUnit( ICalculationUnit calUnit )
+  {
+    try
+    {
+      Feature wrappedFeature = calUnit.getWrappedFeature();
+      Feature parentFeature = getFeature();//control to link to 
+      IPropertyType property = parentFeature.getFeatureType().getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_CALC_UNIT );
+      
+      GMLWorkspace workspace = calUnit.getWrappedFeature().getWorkspace();
+      URL context = workspace.getContext();      
+      File filee = new File(FileLocator.resolve( context ).getFile() );
+      String name = filee.getName();//new java.io.File( uri ).getName();
+      FeatureHelper.createLinkToID( name+"#"+calUnit.getGmlID(),parentFeature, (IRelationType) property, wrappedFeature.getFeatureType() );
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+      throw new RuntimeException( "Exception while setting calunit link to control", e );
+    }
+  }
+  
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#getCalculationUnit()
+   */
+  public ICalculationUnit getCalculationUnit( )
+  {
+    ICalculationUnit resolveLink = FeatureHelper.resolveLink( this, Kalypso1D2DSchemaConstants.WB1D2D_PROP_CALC_UNIT, ICalculationUnit.class );
+    return resolveLink;
+  }
+  
 }

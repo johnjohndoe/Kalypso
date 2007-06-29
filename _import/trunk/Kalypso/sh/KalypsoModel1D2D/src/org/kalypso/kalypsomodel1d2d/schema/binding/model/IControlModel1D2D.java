@@ -42,6 +42,7 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.model;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IControlModel;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
@@ -53,6 +54,7 @@ import org.kalypso.observation.result.TupleResult;
  * @author Patrice Congo
  * 
  */
+@SuppressWarnings("unchecked")
 public interface IControlModel1D2D extends IControlModel
 {
   public IObservation<TupleResult> getTimeSteps( );
@@ -116,4 +118,9 @@ public interface IControlModel1D2D extends IControlModel
   public Double getAC2( );
 
   public Double getAC3( );
+
+  public void setCalculationUnit( ICalculationUnit calUnit );
+  
+  public ICalculationUnit getCalculationUnit();
+  
 }

@@ -41,6 +41,7 @@
 package org.kalypso.kalypsosimulationmodel.core;
 
 import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -50,12 +51,10 @@ import javax.xml.namespace.QName;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.gmlschema.GMLSchemaException;
@@ -65,7 +64,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelRoughnessConsts;
-import org.kalypso.ui.views.map.MapView;
+import org.kalypso.simulation.core.simspec.Modeldata;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -85,6 +84,7 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 public class Util
 {
 
+  
   /**
    * Gets the scenario folder
    */
@@ -131,6 +131,34 @@ public class Util
     }
   }
 
+  public static final void addModelInputSpec(
+      Modeldata modelSpec,
+      String id, 
+      Class<? extends IFeatureWrapper2> modelClass )
+  {
+    List<Modeldata.Input> input = modelSpec.getInput();
+    Modeldata.Input controlModelInput = new Modeldata.Input();
+    controlModelInput.setPath( Util.getWorkspaceSpec( modelClass ) );
+    controlModelInput.setId( id );
+    controlModelInput.setRelativeToCalcCase( false );
+    input.add( controlModelInput );
+  }
+  
+  public static final String getWorkspaceSpec(Class<? extends IFeatureWrapper2> modelClass)
+  {
+    try
+    {
+      IFeatureWrapper2 model = getModel( modelClass );
+      URL context = model.getWrappedFeature().getWorkspace().getContext();
+      URL resolvedUrl = FileLocator.resolve( context );
+      return resolvedUrl.getFile();
+    }
+    catch (Exception e) 
+    {
+      throw new RuntimeException("Could not get workspace path for:"+modelClass, e);
+    }
+  }
+  
   /**
    * Saves all dirty submodels in the current scenario.
    * A workbench and an active workbench window is required.

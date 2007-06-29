@@ -102,7 +102,7 @@ public class Control1D2DConverter
   /**
    * Writes the Control Data Block of the RMA10 controlFile (*.R10) into the PrintWriter
    */
-  private void writeR10ControlDataBlock( final RMA10Calculation calculation, final Formatter formatter )
+  private void writeR10ControlDataBlock( final RMA10Calculation calculation, final Formatter formatter ) throws SimulationException
   {
     final IControlModel1D2D controlModel = calculation.getControlModel();
 
@@ -390,12 +390,14 @@ public class Control1D2DConverter
     return (double) i + j;
   }
 
-  private Date getFirstTimeStep( final RMA10Calculation calculation )
+  private Date getFirstTimeStep( final RMA10Calculation calculation ) throws SimulationException
   {
     final IControlModel1D2D controlModel = calculation.getControlModel();
     final IObservation<TupleResult> tupleSet = controlModel.getTimeSteps();
     final TupleResult result = tupleSet.getResult();
     // todo check if result is not empty
+    if(result == null || result.size() == 0)
+      throw new SimulationException( "Zeitschritte leer, keine Rechnung möglich.", null );
     final IRecord record = result.get( 0 );
     final IComponent res_C_0 = result.getComponents()[0];
     return DateUtilities.toDate( (XMLGregorianCalendar) record.getValue( res_C_0 ) );

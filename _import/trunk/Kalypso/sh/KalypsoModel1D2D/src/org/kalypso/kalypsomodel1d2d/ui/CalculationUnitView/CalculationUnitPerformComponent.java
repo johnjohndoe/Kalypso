@@ -43,11 +43,17 @@ package org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.swt.widgets.Display;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DUIImages;
 import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
+import org.kalypso.kalypsomodel1d2d.sim.CalculationUnitSimMode1D2DCalcJob;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitViewerLabelProvider;
 import org.kalypso.kalypsomodel1d2d.ui.map.editor.FeatureWrapperListEditor;
@@ -57,6 +63,7 @@ import org.kalypso.kalypsomodel1d2d.validate.test.calculation_unit.MergeCalculat
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
+ * @author Patrice Congo
  * @author Madanagopal
  *
  */
@@ -65,7 +72,34 @@ public class CalculationUnitPerformComponent extends FeatureWrapperListEditor im
 {
 
   private CalculationUnitDataModel dataModel;
-
+  
+  private Action performCalButton = 
+    new Action("Perform", KalypsoModel1D2DUIImages.IMG_RUN_SIM )
+  {
+    /**
+     * @see org.eclipse.jface.action.Action#run()
+     */
+    @Override
+    public void run( )
+    {
+      try
+      {
+        ICalculationUnit unit = dataModel.getSelectedCalculationUnit();
+        if( unit != null )
+        {
+          IProgressMonitor monitor = new NullProgressMonitor();
+          CalculationUnitSimMode1D2DCalcJob.startCalculation( 
+              monitor, unit );
+        }
+      }
+      catch (Exception e) 
+      {
+        e.printStackTrace();
+        throw new RuntimeException(e);
+      }
+    }
+  };
+  
   public CalculationUnitPerformComponent(CalculationUnitDataModel dataModel)
   {	  
 	    super(null,null,null);
@@ -73,6 +107,8 @@ public class CalculationUnitPerformComponent extends FeatureWrapperListEditor im
 	                        //BTN_REMOVE,
 	                        //BTN_ADD,
 	                        BTN_CLICK_TO_CALCULATE);
+	    
+	    setNonGenericActions( new IAction[]{performCalButton} );
 	    this.dataModel = dataModel;
   }
   

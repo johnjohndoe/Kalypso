@@ -38,14 +38,20 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.schema.binding;
+package org.kalypso.kalypsomodel1d2d.schema.binding.model;
 
+import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 
 /**
+ * Interface for classes representing the feature collection c1d2d:ControModelCollection
+ * 
  * @author Patrice Congo
+ * @author Dejan Antanaskovic
  *
  */
-public class Util extends org.kalypso.kalypsosimulationmodel.core.Util
+public interface IControlModel1D2DCollection extends IFeatureWrapperCollection<IControlModel1D2D>
 {
+
+  public void setActiveControlModel( IControlModel1D2D newControlModel );
 
 }

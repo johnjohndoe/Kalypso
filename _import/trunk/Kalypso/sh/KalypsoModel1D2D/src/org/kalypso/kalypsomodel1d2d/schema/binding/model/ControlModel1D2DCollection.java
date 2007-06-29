@@ -38,14 +38,41 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.schema.binding;
+package org.kalypso.kalypsomodel1d2d.schema.binding.model;
 
+import javax.xml.namespace.QName;
+
+import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
+ * Default implementation of {@link IControlModel1D2DCollection} based 
+ * on {@link FeatureWrapperCollection}
+ * 
  * @author Patrice Congo
+ * @author Dejan Antanaskovic
  *
  */
-public class Util extends org.kalypso.kalypsosimulationmodel.core.Util
+public class ControlModel1D2DCollection extends FeatureWrapperCollection<IControlModel1D2D> implements IControlModel1D2DCollection
 {
 
+  public ControlModel1D2DCollection( Feature featureCol)
+  {
+   this(featureCol, IControlModel1D2D.class, Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_CONTROL_MODEL_MEMBER); 
+  }
+  
+  public ControlModel1D2DCollection( Feature featureCol, Class<IControlModel1D2D> fwClass, QName featureMemberProp )
+  {
+    super( featureCol, fwClass, featureMemberProp );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2DCollection#setActiveControlModel(org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D)
+   */
+  public void setActiveControlModel( IControlModel1D2D newControlModel )
+  {
+    Feature feature = getFeature();
+    feature.setProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_XP_ACTIVE_MODEL, newControlModel.getGmlID() );
+  }
 }
