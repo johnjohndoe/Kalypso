@@ -1,3 +1,4 @@
+C     Last change:  K    20 Jun 2007    4:08 pm
 cipk  last update SEP 05 2006 FIX AMASSOUT BUG
 cipk  last update MAY 30 2006 add MASS OUTPUT OPTION
 cipk  last update june 28 2005 add time series option
@@ -65,9 +66,6 @@ cipk sep99 add to line above
 CIPK AUG98 ADD COMMAND LINE
       INTEGER*2 N1,STATUS
 
-	write (*,*) FNAM
-
-
 CIPK DEC00      DATA VOID/-1.E20/
       LIN=2
       LOUT=3
@@ -84,6 +82,23 @@ CIPK DEC00      DATA VOID/-1.E20/
         RETURN
       !NiS,mar06,com: First call
       ELSE
+
+      !nis,jun07: Adding some missing unit number initializations
+      !meteorological data
+      mmet = 0
+      !tidalgraph
+      IHUNIT = 0
+      !Q-graph for continuity line
+      IQUNIT = 0
+      !Q-graph for element inflow
+      IQEUNIT = 0
+      !tidal coefficient graph
+      KEY = 0
+      !wind data graph
+      IWINDIN = 0
+      !-
+
+
 CIPK MAY02
 C......IWVIN  = INPUT WAVE DATA FILE
         IWVIN=0

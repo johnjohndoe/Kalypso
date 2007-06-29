@@ -1,4 +1,4 @@
-C     Last change:  K     6 May 2007    0:29 am
+C     Last change:  K    22 Jun 2007    8:54 am
 CIPK  LAST UPDATE SEP 05 2006 ADD DEPRATO AND TO TMD
 CIPK  LAST UPDATE APR 05 2006 ADD IPASST ALLOCATION
 CIPK  LAST UPDATE MAR 22 2006 FIX NCQOBS BUG
@@ -764,8 +764,10 @@ CIPK MAR01
 !           Transmember = 2 means the coupling node of the 1D element is not part of the continuity line defintion
 !                         This leads to a geometry check, so that the coupling node is in range of 5 percent of the
 !                         transition line's chord length (tolerance).
-      ALLOCATE (TransMember(1:MaxLT))
-      do i=1,MaxLT
+!           The zero-placeholder stands for a default value, every time the connection node becomes the number 0, directly
+!           the Transmember(0) = 0
+      ALLOCATE (TransMember(0:MaxLT))
+      do i=0,MaxLT
         TransMember(i) = 0
       end do
 !-
@@ -866,6 +868,21 @@ CIPK MAR01
         dahdh(i)      = 0.0
         qh(i)         = 0.0
       ENDDO init1
+
+      !nis,jun07: Proforma initialization
+      !roughness class
+      irk = 0
+      !-
+      !nis,jun07: iedrop is used as a source/sink for sediment or something. It needs to be initialized; there might be up to 9 scrs/snks
+      do i = 1, 9
+        iedrop (i) = 0
+      end do
+      do i = 1, 50
+        lmt(i) = 0
+      end do
+      !nis,jun07: maxfil is not zero, if there was a scratch file, otherwise it should be zero, ALWAYS
+      MAXFIL = 0
+      !-
 
 !nis,may07
 !Add midside node for polynom approach

@@ -1,4 +1,4 @@
-C     Last change:  K    25 May 2007    4:16 pm
+C     Last change:  K    22 Jun 2007    7:47 am
 CIPK  LAST UPDATE JUNE 27 2005 ALLOW FOR CONTROL STRUCTURES 
 CIPK  LAST UPDATE MAR 25 2005
 CIPK  LAST UPDATE SEP 06 2004 CREATE ERROR FILE
@@ -92,7 +92,10 @@ C
 C
 C...... Find last appeareance of each node moved from LOAD3
 C
-      DO J=1,NSZF
+      !nis,jun07: Initializing it from the beginning of the array
+      !DO J=1,NSZF
+      DO J = 0, NSZF
+      !-
         NLSTEL(J)=0
       ENDDO
       K=NESAV+1

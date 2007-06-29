@@ -1,4 +1,4 @@
-C     Last change:  K     8 Jun 2007   11:00 am
+C     Last change:  K    28 Jun 2007   11:54 am
 cipk  last update feb 09 2001 allow for zero length cc lines
 
       SUBROUTINE QGEN(J,QREQ,THET,QQAL)
@@ -74,12 +74,12 @@ C-
       maxL=LMT(J)
 CIPK FEB01
         !nis,sep06,com: if there is no node for the CCL, stop the program
-	IF(maxL .EQ. 0) THEN
-	  WRITE(75,*) 'ATTEMPT TO SET FLOW FOR NON-EXISTENT LINE',J
-	  WRITE(75,*) 'EXECUTION TERMINATED'
-	  WRITE(*,*) 'ATTEMPT TO SET FLOW FOR NON-EXISTENT LINE',J
-	  WRITE(*,*) 'EXECUTION TERMINATED'
-	ENDIF
+      IF(maxL .EQ. 0) THEN
+        WRITE(75,*) 'ATTEMPT TO SET FLOW FOR NON-EXISTENT LINE',J
+        WRITE(75,*) 'EXECUTION TERMINATED'
+        WRITE(*,*) 'ATTEMPT TO SET FLOW FOR NON-EXISTENT LINE',J
+        WRITE(*,*) 'EXECUTION TERMINATED'
+      ENDIF
       !nis,sep06,com: Use the global direction of the inflow direction
       STQT(J)=THET
 
@@ -273,15 +273,7 @@ cipk oct98 update to f90
             NC = LINE(J,K+2)
             DX=CORD(NC,1)-CORD(NA,1)
             DY=-(CORD(NC,2)-CORD(NA,2))
-            !EFa Nov06, Sonderfall für Teschke-1D-Elemente mit Kilometrierung
-            if (kmx(na).NE.-1.and.kmx(nc).NE.-1) then
-              !nis,feb07: Scaling kilometers for using meters
-              !xl=ABS(kmx(na)-kmx(nc))
-              xl=ABS(kmx(na)-kmx(nc)) * 1000
-              !-
-            else
-              XL=SQRT(DX**2+DY**2)
-            end if
+            XL=SQRT(DX**2+DY**2)
             ALP=ATAN2(DX,DY)
             D1=VEL(3,NA)
             D3=VEL(3,NC)
@@ -1324,7 +1316,7 @@ C-
  9898  format (1x,'Q-Linie',i6.6,' Knoten: ',i6.6,' Geschw.-X= ',f10.5,
      +         ' Geschw.-Y= ', f10.5,'Gesamtgeschw.:',f10.5)
         !-----------------------------------------------------------------------
-                                                                        
+
         !nis,sep06,com: For unsteady calculation ???
         IF (icyc.gt.0) then
 

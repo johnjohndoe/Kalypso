@@ -1,4 +1,4 @@
-C     Last change:  K     2 Mar 2007    6:02 pm
+C     Last change:  K    20 Jun 2007   12:21 pm
 c           RMA-10
 c           COPYRIGHT  
 c           RESOURCE MODELLING ASSOCIATES PTY LTD 
@@ -255,7 +255,8 @@ C-                    REVISION 4.1a
 C-                      JULY 1989
 C-
 
-!NiS,may06: The program needs access to that module, because iaccyc must be accessable
+!NiS,may06: The program needs access to some modules
+      USE Blk10
       USE Blk10mod
 !-
 
@@ -319,6 +320,11 @@ C-
   !           state
       iaccyc = 1
   !-
+
+      !nis,jun07: Moving file.sub to a point before calling initl.sub leads to an error because zvrs.sub, called from file.sub, uses some values that will be set there
+      !setting those necessary values at first directly here
+      NBS = 5000000
+      !-
       CALL FILE(1,FNAM0)
 C-
 

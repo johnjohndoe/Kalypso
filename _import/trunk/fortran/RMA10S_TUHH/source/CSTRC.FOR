@@ -1,4 +1,4 @@
-C     Last change:  EF   18 May 2007    2:59 pm
+C     Last change:  K    15 Jun 2007    4:08 pm
 cipk  last update nov 28 2006 allow for all 1-d control structure options
       SUBROUTINE CSTRC(NN)
       USE BLK10MOD
@@ -586,7 +586,12 @@ CIPK JUN05
 CIPK JAN06
               Q1T=Q1T*QFACT1
 	      ENDIF
-            WRITE(175,*) MAXN,Q1T,WS1,WS2,NCTREF(IMAT(NN))
+
+            !nis,jun07: unit 175 leads to an error
+            !WRITE(175,*) MAXN,Q1T,WS1,WS2,NCTREF(IMAT(NN))
+            WRITE(75,*) 'Wehr', MAXN,Q1T,WS1,WS2,NCTREF(IMAT(NN))
+            !-
+
           ENDIF
           F(NB)=Q-Q1T
 cipk oct03 add widem

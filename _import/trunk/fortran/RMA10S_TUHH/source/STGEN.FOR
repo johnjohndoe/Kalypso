@@ -1,3 +1,4 @@
+C     Last change:  K    27 Jun 2007    5:45 pm
 cipk  last update feb 09 2001 allow for zero length cc lines
 
       SUBROUTINE STGEN(J,A1,A2,A3,A4,A5,QQAL)
@@ -13,12 +14,12 @@ C...... Save pointer to define which nodes are stage flow
 C-
       MAX=LMT(J)
 CIPK FEB01
-	IF(MAX .EQ. 0) THEN
-	  WRITE(75,*) 'ATTEMPT TO SET STAGE-FLOW FOR NON-EXISTENT LINE',J
-	  WRITE(75,*) 'EXECUTION TERMINATED'
-	  WRITE(*,*) 'ATTEMPT TO SET STAGE-FLOW FOR NON-EXISTENT LINE',J
-	  WRITE(*,*) 'EXECUTION TERMINATED'
-	ENDIF
+      IF(MAX .EQ. 0) THEN
+        WRITE(75,*) 'ATTEMPT TO SET STAGE-FLOW FOR NON-EXISTENT LINE',J
+        WRITE(75,*) 'EXECUTION TERMINATED'
+        WRITE(*,*) 'ATTEMPT TO SET STAGE-FLOW FOR NON-EXISTENT LINE',J
+        WRITE(*,*) 'EXECUTION TERMINATED'
+      ENDIF
       DO 300 K=1,MAX
         NA=LINE(J,K)
         ISTLIN(NA)=J

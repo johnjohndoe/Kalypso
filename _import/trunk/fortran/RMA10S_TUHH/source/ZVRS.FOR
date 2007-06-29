@@ -1,3 +1,4 @@
+C     Last change:  K    20 Jun 2007    3:58 pm
 CIPK  LAST UPDATE SEP 6 2004 RENAME character variable FNAM to FNAMT
 cipk  last updated Feb 4 1998
 CIPK  LAST UPDATED SEPT 8 1995
@@ -64,7 +65,11 @@ C
      +'          9 DUMARESQ STREET'/
      +'          SYDNEY, AUSTRALIA'/
      +          ///)
-      WRITE(LOUT,*) 'IOPTZD HAS SET TO',IOPTZD
+!nis,jun07: Because file.sub is moved to a place before input is called and ioptzd is read, the variable has no value, therefore deactivating it here
+!           What to do with it? It just shows the turbulence closure method, but what exactly?
+!      WRITE(LOUT,*) 'IOPTZD HAS SET TO',IOPTZD
+!-
+
 C
 C             SET IVRSID HERE!!
 C

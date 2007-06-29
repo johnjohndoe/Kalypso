@@ -1,4 +1,4 @@
-!     Last change:  K     8 Jun 2007   11:01 am
+!     Last change:  K    22 Jun 2007    8:29 am
 !purpose of the subroutine is to calculate the average water level along a CCL.
 
 subroutine getLineAverageWaterLevel(CCL, waspi)
@@ -24,6 +24,9 @@ REAL (KIND=8)         :: fliesstiefe, d3
 real (KIND=4)         :: d2
 !new variables
 REAL                  :: amec (350)
+
+!nis,jun07: Adding some initializations
+waspi = 0
 
 !Counter of dry nodes
 lump = lmt (CCL)
