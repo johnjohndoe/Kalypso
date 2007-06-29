@@ -81,8 +81,8 @@ import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 
 /**
- * TODO this class is duplicate with de.renew.workflow.connector.context.handlers.GenericCommandActionDelegate
- * Move it into one of the contribution plug-ins
+ * TODO this class is duplicate with de.renew.workflow.connector.context.handlers.GenericCommandActionDelegate Move it
+ * into one of the contribution plug-ins
  * 
  * @author Stefan Kurzbach
  */
@@ -109,7 +109,7 @@ public class GenericCommandActionDelegate implements IWorkbenchWindowActionDeleg
     public IStatus runInUIThread( final IProgressMonitor monitor )
     {
       // TODO holger schreib mal was...
-           
+
       final IContributionManager toolBarManager = m_bars.getToolBarManager();
       final IContributionManager menuManager = m_bars.getMenuManager();
 
@@ -127,8 +127,7 @@ public class GenericCommandActionDelegate implements IWorkbenchWindowActionDeleg
       }
 
       m_bars.updateActionBars();
-      
-      
+
       return Status.OK_STATUS;
     }
   }
@@ -353,8 +352,9 @@ public class GenericCommandActionDelegate implements IWorkbenchWindowActionDeleg
 
     final UIJob job = new UpdateActionbarsJob( "Update Action-Bars", actionBars, actionId, enabledState );
     job.setPriority( UIJob.INTERACTIVE );
-//    job.schedule();
-    job.schedule(200);
-    //TODO: just delay, when the map view gets the focus by pressing an allready existing button.
+// job.schedule();
+    job.schedule( 200 );
+    // TODO: just delay, when the map view gets the focus by pressing an already existing button.
+    // TODO: check if always needed or only if this method is called from a certain point
   }
 }

@@ -1,9 +1,17 @@
 Changelog of Kalypso-WSPM
 =========================
 
+since 26.06.2007
+----------------
+XXXXX
+
 since 07.05.2007
 ----------------
-XXXX
+- Some of the unused stuff in calculation dialogs hidden (depends on choosen calculation mode)
+- New calculation mode: 'konstantes Reibungsgefälle'
+- Supports creation of Polynomials after BF_UNIFORM and REIB_KONST calculations; also supports various parameters for polynomial creation  
+
+
 
 since 23.03.2007
 ----------------

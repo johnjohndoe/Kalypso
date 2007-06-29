@@ -44,14 +44,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.namespace.QName;
 
 import org.kalypso.commons.xml.XmlTypes;
-import org.kalypso.gmlschema.swe.RepresentationType.KIND;
-import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 
 /**
+ * TODO: Merge most of the stuff with {@link ComponentUtilities}.
+ * 
  * @author Gernot Belger
  */
 public class TupleResultUtilities
@@ -270,6 +271,53 @@ public class TupleResultUtilities
         return null;
       }
       return Collections.max( values );
+    }
+  }
+
+  /**
+   * Copies records from one {@link TupleResult} to another.
+   * 
+   * @param componentMap
+   *            Map of component ids.
+   * @throws IllegalArgumentException
+   *             If for an id from the map no component is found.
+   */
+  public static void copyValues( final TupleResult sourceResult, final TupleResult targetResult, final Map<String, String> componentMap )
+  {
+    /* Find Components */
+    final IComponent[] sourceComponents = new IComponent[componentMap.size()];
+    final IComponent[] targetComponents = new IComponent[componentMap.size()];
+
+    int count = 0;
+    for( final Map.Entry<String, String> entry : componentMap.entrySet() )
+    {
+      final String sourceID = entry.getKey();
+      final String targetID = entry.getValue();
+
+      final IComponent sourceComponent = ComponentUtilities.findComponentByID( sourceResult.getComponents(), sourceID );
+      if( sourceComponent == null )
+        throw new IllegalArgumentException( "Source component not found: " + sourceID );
+
+      final IComponent targetComponent = ComponentUtilities.findComponentByID( targetResult.getComponents(), targetID );
+      if( targetComponent == null )
+        throw new IllegalArgumentException( "Source component not found: " + targetID );
+
+      sourceComponents[count++] = sourceComponent;
+      targetComponents[count++] = targetComponent;
+    }
+
+    /* Copy values */
+    for( final IRecord sourceRecord : sourceResult )
+    {
+      final IRecord targetRecord = targetResult.createRecord();
+
+      for( int i = 0; i < sourceComponents.length; i++ )
+      {
+        final Object value = sourceRecord.getValue( sourceComponents[i] );
+        targetRecord.setValue( targetComponents[i], value );
+      }
+
+      targetResult.add( targetRecord );
     }
   }
 }
