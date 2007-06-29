@@ -130,7 +130,12 @@ public class GMLFeature_Impl implements GMLFeature
     }
     else
     {
-      s = "";
+      // REMARK: if fid is not found directly, look for it in the gml-namespace
+      final String attrValue = XMLTools.getAttrValue( element, "http://www.opengis.net/gml", "fid" );
+      if( attrValue == null )
+        s = "";
+      else
+        s = attrValue.replace( ' ', '_' );
     }
     Debug.debugMethodEnd();
     return s;
@@ -573,9 +578,10 @@ public class GMLFeature_Impl implements GMLFeature
  * Changes to this class. What the people haven been up to:
  * 
  * $Log$
- * Revision 1.11  2005/06/20 14:07:46  belger
- * Formatierung
- * Revision 1.10 2005/05/17 16:40:33 belger *** empty log message ***
+ * Revision 1.11.2.1  2007/06/29 15:03:28  thuel
+ * GML parser now also reads gml:fid
+ * Revision 1.11 2005/06/20 14:07:46 belger Formatierung Revision 1.10 2005/05/17
+ * 16:40:33 belger *** empty log message ***
  * 
  * Revision 1.9 2005/03/08 11:01:04 doemming *** empty log message ***
  * 
