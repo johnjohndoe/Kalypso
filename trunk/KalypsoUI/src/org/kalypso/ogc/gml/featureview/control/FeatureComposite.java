@@ -532,8 +532,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     else if( controlType instanceof TupleResult )
     {
       final TupleResult editorType = (TupleResult) controlType;
-      final IValuePropertyType vpt = (IValuePropertyType) ftp;
-      final TupleResultFeatureControl tfc = new TupleResultFeatureControl( feature, vpt );
+      final TupleResultFeatureControl tfc = new TupleResultFeatureControl( feature, ftp );
       final List<ColumnDescriptor> columnDescriptors = editorType.getColumnDescriptor();
       final ColumnDescriptor[] cd = columnDescriptors.toArray( new ColumnDescriptor[columnDescriptors.size()] );
       tfc.setColumnDescriptors( cd );
