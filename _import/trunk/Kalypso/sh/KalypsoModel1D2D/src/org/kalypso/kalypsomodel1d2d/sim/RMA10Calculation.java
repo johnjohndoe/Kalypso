@@ -327,7 +327,8 @@ public class RMA10Calculation
         final TupleResult obsResult = obs.getResult();
 
         // HACK: 0.5 as grab distance?? normally 0.0 should be enough, but then the contilines are not found, why?
-        final IFeatureWrapper2 wrapper2 = DiscretisationModelUtils.findModelElementForBC( discModel, bc.getPosition(), 1.0 );
+        // TODO: at least find everything in this distance, if mroe than one element is found, take nearest...
+        final IFeatureWrapper2 wrapper2 = DiscretisationModelUtils.findModelElementForBC( discModel, bc.getPosition(), 0.001 );
 
         if( wrapper2 instanceof IBoundaryLine )
         {

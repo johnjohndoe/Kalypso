@@ -1405,7 +1405,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     depths.add( nodeDown.getDepth() );
     depths.add( nodeUp.getDepth() );
 
-    final double waterlevel = interpolate( waterlevels );
+    final double waterlevel = getMeanValue( waterlevels );
     midsideNode.setWaterlevel( waterlevel );
     // midsideNode.setDepth( interpolate( depths ) );
     final double depth = waterlevel - midsideNode.getPoint().getZ();
@@ -1415,7 +1415,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       midsideNode.setDepth( depth );
   }
 
-  private double interpolate( final List<Double> values )
+  private double getMeanValue( final List<Double> values )
   {
     double sum = 0;
     for( int i = 0; i < values.size(); i++ )

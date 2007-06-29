@@ -176,7 +176,12 @@ public class ProcessResultsJob extends Job
       for( ResultType.TYPE parameter : parameters )
       {
         /* GML(s) */
-        final File tinResultFile = new File( outputDir, "tin.gml" );
+        
+        /* create TIN-Dir */
+        final File tinPath = new File( outputDir, "Tin" );
+        tinPath.mkdirs();
+        
+        final File tinResultFile = new File( tinPath, "tin.gml" );
         final GMLWorkspace triangleWorkspace = FeatureFactory.createGMLWorkspace( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "TinResult" ), tinResultFile.toURL(), null );
         final GM_TriangulatedSurface surface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_TriangulatedSurface( crs );
         triangleWorkspace.getRootFeature().setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "triangulatedSurfaceMember" ), surface );
