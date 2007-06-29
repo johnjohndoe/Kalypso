@@ -1,4 +1,4 @@
-C     Last change:  K     7 Jun 2007    9:51 am
+C     Last change:  K    29 Jun 2007    1:19 pm
 cipk  last update sep 05 2006 add depostion/erosion rates to wave file
 CNis  LAST UPDATE NOV XX 2006 Changes for usage of TUHH capabilities
 CIPK  LAST UPDATE MAR 22 2006 ADD OUTPUT FILE REWIND and KINVIS initialization
@@ -22,7 +22,7 @@ CIPK  NEW ROUTINE jULY 9 2001
       USE BLKSEDMOD
       USE BLKSANMOD
       USE BLKSSTMOD
-	USE WBMMODS ! djw 02/11/04
+      USE WBMMODS ! djw 02/11/04
 !NiS,apr06: add module for new Kalypso-2D-specific calculations
       USE PARAKalyps
 !-
@@ -81,6 +81,8 @@ C      MAXE = MEL
 c      IR1MAX=MEQ
       MAXN=1
       NDF=6
+
+!nis,jun07: Moving this subroutine to a point before initl is called (so from rma10.mainroutine, nbs has no value, what leads to errors while calling zvrs from file.subroutine)
 C      CALL FILE(1)
 
 
@@ -107,6 +109,7 @@ C......INPUT GEOMETRY ETC
 C-
 
       CALL INPUT(IBIN)
+
 CIPK MAR00  ADD FORMATION AND OUTPUT OF HEADER
 
       IF(IRMAFM .GT. 0) THEN
@@ -137,40 +140,40 @@ CIPK JUN02    ADD OUTPUT OF HEADER FOR SMS FORMAT
       
       IF(ISMSFM .GT. 0) THEN
 
-	  IREC(1) = 435
+        IREC(1) = 435
         MFLG = 120
         WRITE (ISMSFM) MFLG, IREC(1), NP, NEM
-	ENDIF
+      ENDIF
 CIPK AUG02
       IF(ISMSFM1 .GT. 0) THEN
         IREC(1) = 431     
-	  MFLG = 140   
+        MFLG = 140
         WRITE (ISMSFM1) MFLG, IREC(1), NP, NEM
-	ENDIF
+      ENDIF
 
 CIPK JAN03
       IF(ISMSFM2 .GT. 0) THEN
         IREC(1) = 435     
-	  MFLG = 120   
+        MFLG = 120
         WRITE (ISMSFM2) MFLG, IREC(1), NP, NEM
-	ENDIF
+      ENDIF
 
       IF(ISMSFM .GT. 0  .OR.  ISMSFM1 .GT. 0  .OR.  ISMSFM2 .GT. 0) THEN
         IWRT1 = 1200
-	  DO I=11,1200
-	    IPACKB(I)='    '
-	  ENDDO
-  	  IPACKB(1)='RMA '
-	  IPACKB(2)='IMPL'
-	  IPACKB(3)='EMEN'
-	  IPACKB(4)='TATI'
-	  IPACKB(5)='ON O'
-	  IPACKB(6)='F SM'
-	  IPACKB(7)='S OU'
-	  IPACKB(8)='TPUT'
-	  IPACKB(9)=' FOR'
-	  IPACKB(10)='MAT '
-	
+        DO I=11,1200
+          IPACKB(I)='    '
+        ENDDO
+        IPACKB(1)='RMA '
+        IPACKB(2)='IMPL'
+        IPACKB(3)='EMEN'
+        IPACKB(4)='TATI'
+        IPACKB(5)='ON O'
+        IPACKB(6)='F SM'
+        IPACKB(7)='S OU'
+        IPACKB(8)='TPUT'
+        IPACKB(9)=' FOR'
+        IPACKB(10)='MAT '
+
         IF(ISMSFM .GT. 0) THEN
           WRITE (ISMSFM) IWRT1, (IPACKB(I),I= 1,IWRT1)
         ENDIF
@@ -186,22 +189,22 @@ CIPK JAN03
         IF(ISMSFM .GT. 0) THEN
           WRITE (ISMSFM) IWRT2, IWRT3,
      *              (IREC(I),I=1, IWRT2), (FREC(I),I=1,IWRT3)
-	  ENDIF
+        ENDIF
         IF(ISMSFM1 .GT. 0) THEN
           WRITE (ISMSFM1) IWRT2, IWRT3,
      *              (IREC(I),I=1, IWRT2), (FREC(I),I=1,IWRT3)
-	  ENDIF
+        ENDIF
 CIPK JAN03
         IF(ISMSFM2 .GT. 0) THEN
           WRITE (ISMSFM2) IWRT2, IWRT3,
      *              (IREC(I),I=1, IWRT2), (FREC(I),I=1,IWRT3)
-	  ENDIF
-	  DO I=1,77
-	    IPACKT(I)='    '
+      ENDIF
+        DO I=1,77
+          IPACKT(I)='    '
           IF(I .LT. 73) THEN
-	      IPACKT(I)(1:1)=TITLE(I:I)
-	    ENDIF
-	  ENDDO
+            IPACKT(I)(1:1)=TITLE(I:I)
+          ENDIF
+        ENDDO
         IWRT4 = 77
         IF(ISMSFM .GT. 0) THEN
           WRITE (ISMSFM) IWRT4, (IPACKT(I),I= 1,IWRT4)
@@ -263,7 +266,6 @@ C     REWIND IVS
 !nis,jun07: Moving distribution calculation to this place because of dry node handling
       if (MaxLT /= 0) call TransVelDistribution
 !-
-
 
 C-
 C......  Process dry nodes
@@ -362,11 +364,11 @@ C     REWIND IVS
      +  .AND.  ITEQV(MAXN) .LT. 8) CALL VRTVEL
 CIPK AUG04 REVISE TEST
 
-	IF(NPRTI .EQ. 0) THEN
-	  IPRTF=NITA
-	ELSE
-	  IPRTF=NPRTI
-	ENDIF
+      IF(NPRTI .EQ. 0) THEN
+        IPRTF=NITA
+      ELSE
+        IPRTF=NPRTI
+      ENDIF
 CIPK AUG04      IPRTF=IABS(NPRTF)
 
       IF(MOD(MAXN,IPRTF) .EQ. 0  .OR.  MAXN .EQ. NITA
@@ -439,9 +441,9 @@ CIPK MAY96 ADD YEAR TO FILE
      +     ,(hel(j),hdet(j),j=1,np)
      +     ,(DELBED(J),ELEVB(J),TTHICK(J),J=1,NP)
 CIPK SEP02 ADD WRITE STATEMENT FOR ICE THICKNESS ON RESTART FILE
-	  IF(ICESW .GT. 0) THEN
-	    WRITE(NLL) (ICETHK(J),J=1,NPM)
-	  ENDIF
+        IF(ICESW .GT. 0) THEN
+          WRITE(NLL) (ICETHK(J),J=1,NPM)
+        ENDIF
 CIPK SEP02 ADD RESTART DATA FOR BED
 cipk aug98 add line above for consistent restart
       ENDIF
@@ -481,15 +483,15 @@ cipk dec97  MOVE SKIP   350 IF(NCYC .GT. 0) GO TO 400
 !
 !*************************************************************************
       SalLowPerm = 0.0001
-	SalHighPerm = 300
+      SalHighPerm = 300
       Do J = 1,NP
-	  If (Vel(4,J).LT.SalLowPerm) Then
+        If (Vel(4,J).LT.SalLowPerm) Then
           Vel(4,J) = SalLowPerm
         End If
-	  If (Vel(4,J).GT.SalHighPerm) Then
+        If (Vel(4,J).GT.SalHighPerm) Then
           Vel(4,J) = SalHighPerm
-	  End If
-	End Do
+        End If
+      End Do
 !*************************************************************************END DJW 04/08/04
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -543,8 +545,8 @@ CIPK AUG02
       !NiS,apr06,comment: Writing SMS-outputfile after steady state converged solution
       IF(ISMSFM .GT. 0) THEN
         DO JJ=1,NEM
-	    IMATL(JJ)=IMAT(JJ)
-	  ENDDO
+          IMATL(JJ)=IMAT(JJ)
+        ENDDO
         WRITE (ISMSFM) TETT, NPM, ((VSING(J,K),J=1,3), K = 1, NPM), 
      *                         (NDRY(K), K = 1, NPM), 
      *                    NEM,  (IMATL(JJ), JJ = 1, NEM), 
@@ -559,7 +561,7 @@ CIPK AUG02
         WRITE (ISMSFM1) TETT, NQAL,NPM,
      +   ((VSING(J,K),K=1,NPM),J=4,6),
      *   NEM,  (IMATL(JJ), JJ = 1, NEM)
-  	ENDIF
+      ENDIF
 
 
       !NiS,apr06,comment: writing control output file after steady state converged solution
@@ -587,7 +589,7 @@ C 400 NCYC=TMAX*3600./DELT+0.5
   400 CONTINUE
       IDRYC=0
 CIPK JUN02
-	MAXN=0
+      MAXN=0
 
 !nis,sep06: Initialize the iteration counter for steady case
       NPR = maxn
@@ -597,7 +599,7 @@ C-
 C......LOOP ON NUMBER OF TIME STEPS
 C-
         IF(LBED .GT. 0) THEN
-	      CALL KINVIS
+            CALL KINVIS
           CALL SANDX
         ENDIF
 
@@ -668,11 +670,11 @@ C        CALL HEATEX(ORT,NMAT,DELT,LOUT,IYRR,TET)
           CALL GETWAVE
         ENDIF
 
-	  IF(IWVFC .EQ. 102) THEN
-	    CALL GETSST
-	  ELSEIF(IWVFC .EQ. 104) THEN
-	    CALL GETDRSST
-	  ENDIF
+        IF(IWVFC .EQ. 102) THEN
+          CALL GETSST
+        ELSEIF(IWVFC .EQ. 104) THEN
+          CALL GETDRSST
+        ENDIF
 
         CALL SWANDT
 
@@ -692,7 +694,7 @@ C
 C.....   If NIPT not equal to zero read velocities,depth from file
 C
         IF(NIPT .GT. 0) THEN
-	    WRITE(*,*) 'GETTING VELS'
+          WRITE(*,*) 'GETTING VELS'
           DO 455 J=1,NP
             DO 452 K=1,NDF
               VOLD(K,J)=VEL(K,J)
@@ -848,8 +850,8 @@ CIPK APR01  NOW RESET FOR MID-SIDES
 
 CIPK OCT02  SET ICETHKOL
         DO J=1,NPM
-  	    ICETHKOL(J)=ICETHK(J)
-	  ENDDO
+          ICETHKOL(J)=ICETHK(J)
+        ENDDO
 
 CIPK JUN03
 
@@ -863,10 +865,10 @@ cipk mar06
           CALL KINVIS
 ciat mar06 adding new wbm bedshear stress subroutines for cohesive sediment calcs
 !NiS,Nov06: Seems, that the name of the first shear-Subroutine is not correct. Change SHEAR1 to WSHEAR1
-!		CALL SHEAR1
-		CALL WSHEAR1
+!          CALL SHEAR1
+          CALL WSHEAR1
 !-
-		CALL WSHEAR2      
+          CALL WSHEAR2
 c          CALL SHEAR
 CIPK JUN97
 c          CALL WSHEAR1
@@ -874,7 +876,7 @@ ciat mar06 end changes
           CALL DEPSN
           CALL MEROSN
           CALL SEROSN
-	  ENDIF
+        ENDIF
 
 C        DO NNN=1,NPM
 C        WRITE(240,'(I6,6E15.5)') NNN,BSHEAR(NNN),SERAT(NNN),EDOT(NNN)
@@ -882,25 +884,29 @@ C     +   ,THICK(NNN,1),THICK(NNN,2),DEPRAT(NNN)
 C        ENDDO
 C-
 C......ITERATION LOOP     !NiS,apr06:     starting iteration sequence
-C-                        !		initialization:
+C-                        !               initialization:
         NITA=NITN         !               NITA = maximum number of iterations of timestep, local copy
         MAXN=0            !               NITN = maximum number of iterations of timestep, global value
-	  ITPAS=0             !               ITPAS= ???
+        ITPAS=0             !               ITPAS= ???
   465   MAXN=MAXN+1       !               MAXN = actual iteration number; first initialized, then incremented
                           !-
 cipk oct02
         IF(MAXN .EQ. 1) THEN
-	          write(75,*) 'going to heatex-535',n,maxn,TET,itpas
+                write(75,*) 'going to heatex-535',n,maxn,TET,itpas
 CIPK AUG05          CALL HEATEX(ORT,NMAT,DELT,LOUT,IYRR,TET,ITPAS)
           CALL HEATEX(NMAT,DELT,LOUT,IYRR,TET,ITPAS)
-	    ITPAS=1
-	  ELSEIF(ITEQV(MAXN) .EQ. 8) THEN
-	          write(75,*) 'going to heatex-540',n,maxn,TET,itpas
+          ITPAS=1
+        ELSEIF(ITEQV(MAXN) .EQ. 8) THEN
+                write(75,*) 'going to heatex-540',n,maxn,TET,itpas
 CIPK AUG05          CALL HEATEX(ORT,NMAT,DELT,LOUT,IYRR,TET,ITPAS)
           CALL HEATEX(NMAT,DELT,LOUT,IYRR,TET,ITPAS)
-	  ENDIF
+        ENDIF
 C     DO 700 MAXN=1,NITN
 C     REWIND IVS
+
+!nis,jun07: Activating transition for dynamic loop
+      if (MaxLT /= 0) call TransVelDistribution
+!-
 
 C-
 C......  Process dry nodes
@@ -946,12 +952,12 @@ cipk aug00 experimental
 CIPK MAY02 UPDATE SHEARS ETC
 
         IF((LSAND .GT. 0  .OR.  LBED .GT. 0) .and. ick .eq. 6) THEN
-	    CALL KINVIS
+          CALL KINVIS
 c          CALL SHEAR
           CALL SANDX
           CALL BEDXCG
 
-	  ENDIF
+        ENDIF
 
 CIPK OCT02
   470   CONTINUE
@@ -1025,12 +1031,12 @@ CIPK MAR98
 CIPK OCT02  CHECK FOR NEGATIVE TEMPS
 
       IF(ICESW .GT. 0  .AND. ITEQV(MAXN) .EQ. 8  .AND. ITPAS .LT. 4)THEN
-	    ITPAS=ITPAS+1
-	    DO J=1,NPM
-	      IF(VEL(5,J) .LT. TMED) GO TO 570
-	    ENDDO
+          ITPAS=ITPAS+1
+          DO J=1,NPM
+            IF(VEL(5,J) .LT. TMED) GO TO 570
+          ENDDO
         ENDIF
-	  GO TO 580
+        GO TO 580
   570   CONTINUE
         WRITE(75,*) 'GOING TO HEATEX-570',N,MAXN,TET,ITPAS
 CIPK AUG05        CALL HEATEX(ORT,NMAT,DELT,LOUT,IYRR,TET,ITPAS)
@@ -1088,9 +1094,9 @@ C
           CALL NEWBED(2)
         ENDIF
 
-	  IF(LBED .GT. 0) THEN
+        IF(LBED .GT. 0) THEN
         write(75,*) 'rma10-674 going to bedlbed'
-	    CALL BEDLBED
+          CALL BEDLBED
         ENDIF
 
 !NiS,apr06: calculating the cwr-values for trees.
@@ -1125,7 +1131,7 @@ CIPK MAY96 ADD YEAR TO FILE
      +           ,VVEL(J),J=1,NP)
      +     ,(hel(j),hdet(j),j=1,np)
      +   ,(DELBED(J),ELEVB(J),TTHICK(J),J=1,NP)
-	  ELSE
+        ELSE
           WRITE(NLL) TETT,NP,NDFF,IYRR,((VEL(K,J),VDOT(K,J),K=1,7)
      +           ,VVEL(J),J=1,NP)
      +     ,(hel(j),hdet(j),j=1,np)
@@ -1142,7 +1148,7 @@ C     &     ,SMVAL(I,J),J=1,NLAYO(I)),I=1,NP)
         ENDIF	    
         IF(ICESW .GT. 0) THEN
           WRITE(NLL) (ICETHK(J) ,J=1,NPM)
-  	  ENDIF
+          ENDIF
 CIPK SEP02 ADD RESTART DATA FOR BED
 cipk aug98 add line above for consistent restart
   600   CONTINUE
@@ -1173,7 +1179,7 @@ cipk mar95 add a line to save dhdt
 CIPK NOV02 This is now water column potential and bed elevation
  
               VSING(7,J)=VEL(7,J)
-	        VSING(8,J)=AO(J)
+              VSING(8,J)=AO(J)
   770       CONTINUE
 CIPK MAR00
             IF(IRMAFM .GT. 0  .AND. MOD(N,NBSFRQ) .EQ. 0) THEN
@@ -1210,8 +1216,8 @@ c      14   VSING subscript(7)  water column potential by node
 CIPK AUG02
             IF(ISMSFM .GT. 0  .AND. MOD(N,NBSFRQ) .EQ. 0) THEN
               DO JJ=1,NEM
-	          IMATL(JJ)=IMAT(JJ)
-	        ENDDO
+                IMATL(JJ)=IMAT(JJ)
+              ENDDO
             WRITE (ISMSFM) TETT, NPM, ((VSING(J,K),J=1,3), K = 1, NPM), 
      *                         (NDRY(K), K = 1, NPM), 
      *                    NEM,  (IMATL(JJ), JJ = 1, NEM), 
@@ -1220,8 +1226,8 @@ CIPK AUG02
 
             IF(ISMSFM1 .GT. 0  .AND. MOD(N,NBSFRQ) .EQ. 0) THEN
               DO JJ=1,NEM
-	          IMATL(JJ)=IMAT(JJ)
-	        ENDDO
+                IMATL(JJ)=IMAT(JJ)
+              ENDDO
 
 CIPK DEC02 REVISE TO ADD BED ELEVATION AS 7TH COMPONENT
 cipk aug05 correct to get BSHEAR OUTPUT
@@ -1229,7 +1235,7 @@ cipk aug05 correct to get BSHEAR OUTPUT
             NQAL=9 ! djw 16/08/04 To enable addition of wave force x & wave force y
             NQAL=11 ! djw 16/08/04 To enable addition of bed form height and roughness
             !
-	      !  Initiates Bed form info if necessary ! djw 2/11/04
+            !  Initiates Bed form info if necessary ! djw 2/11/04
             !
             WBM = .FALSE.
             IF (WBM) THEN
@@ -1239,9 +1245,9 @@ cipk aug05 correct to get BSHEAR OUTPUT
 !-
                 CALL BedRoughInitiate(NPM,wbm_Initiated,wbm_MannTrans,
      +          wbm_NodeCounter,wbm_IT, wbm_MannTransOld, wbm_BedHeight)
- 	        END IF
+               END IF
             END IF
-	      IF (WBM) THEN
+            IF (WBM) THEN
               WRITE (ISMSFM1) TETT, NQAL,NPM,       
      +          ((VSING(J,K),K=1,NPM),J=4,7),(VSING(8,K),K=1,NPM),
      +         (DELBED(J),J=1,NP),(BSHEAR(J),J=1,NPM), 
@@ -1257,7 +1263,7 @@ cipk aug05 correct to get BSHEAR OUTPUT
      *                    NEM,  (IMATL(JJ), JJ = 1, NEM) 
             ELSE
               NQAL = 9
-	        WRITE (ISMSFM1) TETT, NQAL,NPM,       
+              WRITE (ISMSFM1) TETT, NQAL,NPM,
      +          ((VSING(J,K),K=1,NPM),J=4,7),(VSING(8,K),K=1,NPM),
      +          (DELBED(J),J=1,NP),(BSHEAR(J),J=1,NPM), 
 !
@@ -1268,8 +1274,8 @@ cipk aug05 correct to get BSHEAR OUTPUT
 !  DJW 16/08/04  end djw 16/08/04
 !
      +          NEM,  (IMATL(JJ), JJ = 1, NEM) 
-	      END IF
-	    ENDIF
+            END IF
+          ENDIF
 c     1   TETT                Time in hours (Julian)
 c     2   NQAL                Number of constituents = 7
 c     3   NP                  Number of nodes
@@ -1282,8 +1288,8 @@ c     9   DELBED              Bed change by node		CONST 6
 c    10   BSHEAR              Shear stress by node		CONST 7
             IF(ISMSFM2 .GT. 0  .AND. MOD(N,NBSFRQ) .EQ. 0) THEN
               DO JJ=1,NEM
-	          IMATL(JJ)=IMAT(JJ)
-	        ENDDO
+                IMATL(JJ)=IMAT(JJ)
+              ENDDO
               TETT=(DAYOFY-1)*24.+TET
               IF(LSAND .GT. 0) THEN
                 WRITE (ISMSFM2) TETT, NPM 
@@ -1330,7 +1336,7 @@ c    11   VVEL                w-vel by node
 c    12   DFCT                stratification multiplier by element
 c    13   VSING subscript(7)  water column potential by node
             IF(IBEDOT .GT. 0) THEN
-	        NQL=10
+              NQL=10
 cipk aug05 correct to get BSHEAR OUTPUT
 CIPK MAR06 CORRECT TO GET SAND OUTPUT
               if(LSS .GT. 0) THEN
@@ -1415,8 +1421,8 @@ C  Save restart file every IOURST timesteps
               CLOSE (131)
 CIPK SEP04
 !              WRITE(INUM,'(I4.4)') N
-	        WRITE(INUM,'(I6.6)') N ! Override djw 31/10/05 enables write of more than 9990 TS restart file
-	        FRST=FNAM(1:LNNAM) // 'RST'//INUM//'.RST'
+              WRITE(INUM,'(I6.6)') N ! Override djw 31/10/05 enables write of more than 9990 TS restart file
+              FRST=FNAM(1:LNNAM) // 'RST'//INUM//'.RST'
               OPEN(131,FILE=FRST,FORM='UNFORMATTED',STATUS='UNKNOWN')
               IF(LSAND .EQ. 0   .AND.  LSS .EQ. 0) THEN
                 WRITE(131) TETT,NP,NDFF,IYRR,((VEL(K,J),VDOT(K,J),K=1,7)
@@ -1428,7 +1434,7 @@ CIPK SEP04
      +           ,VVEL(J),J=1,NP)
      +           ,(hel(j),hdet(j),j=1,np)
      +           ,(DELBED(J),ELEVB(J),TTHICK(J),J=1,NP)
-	        ELSE
+              ELSE
                 WRITE(131) TETT,NP,NDFF,IYRR,((VEL(K,J),VDOT(K,J),K=1,7)
      +           ,VVEL(J),J=1,NP)
      +          ,(hel(j),hdet(j),j=1,np)
@@ -1439,7 +1445,7 @@ CIPK SEP04
               ENDIF	    
               IF(ICESW .GT. 0) THEN
                 WRITE(131) (ICETHK(J) ,J=1,NPM)
-  	        ENDIF
+                ENDIF
 CIPK SEP02 ADD RESTART DATA FOR BED
             ENDIF 
 
