@@ -1,3 +1,4 @@
+C     Last change:  K    21 Jun 2007    7:06 pm
 CIPK  LAST UPDATE JUNE 27 2005  ADDCONTROL STRUCTURES
 cipk  last update Aug 14 1998   fix occasional bug when restarting
 CIPK  LAST UPDATE NOV 12 1996
@@ -29,8 +30,11 @@ cipk change lines to add vdot
 c      IF(MOD(NFIX(J),100)/10 .EQ. 1) VEL(4,J)=SPEC(J,4)
 c      IF(MOD(NFIX(J),10)     .EQ. 1) VEL(5,J)=SPEC(J,5)
 c      IF(    NFIX1(J)        .EQ. 1) VEL(6,J)=SPEC(J,6)
-cipk aug98 test for skipped steady state 
-      IF(NITI .NE. 0  .OR. KK .NE. 0) THEN 
+cipk aug98 test for skipped steady state
+      !nis,jun07: In the old way test is not successful, because niti might be unequal 0 outside unsteady state; test with icyc, which is 0 in steady state is better
+      !IF(NITI .NE. 0  .OR. KK .NE. 0) THEN
+      IF(icyc .NE. 0  .and. KK .NE. 0) THEN
+      !-
         IF(MOD(NFIX(J),100)/10 .EQ. 1) THEN
           VEL(4,J)=SPEC(J,4)
           VDOT(4,J)=ALTM*(VEL(4,J)-VOLD(4,J))-(ALPHA-1.)*VDOTO(4,J)

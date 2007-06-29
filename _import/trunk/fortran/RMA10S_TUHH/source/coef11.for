@@ -19,7 +19,7 @@ CIPK  LAST UPDATE APRIL 27 1999 Fix to use mat instead of nr for material type t
 cipk  last update Jan 6 1999 initialize AKE correctly
 cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
-C     Last change:  EF   15 May 2007   11:20 am
+C     Last change:  K    22 Jun 2007    8:44 am
 CIPK  LAST UPDATED NOVEMBER 13 1997
 CIPK  LAST UPDATED MAY 1 1996
 CIPK LAST UPDATED SEP 7 1995
@@ -373,8 +373,12 @@ C-
       !-
 
 CIPK OCT02 GET GAUSS POINT ICE VALUES
-      GSICE=GSICE+THKI(1)*XM(1)+THKI(3)*XM(2)
-      GSQLW=GSQLW+QWLI(1)*XM(1)+QWLI(3)*XM(2)
+      !nis,jun07: The equations add something to an old value what makes it not properly calculated; might be error because of copy and paste
+      !GSICE=GSICE+THKI(1)*XM(1)+THKI(3)*XM(2)
+      !GSQLW=GSQLW+QWLI(1)*XM(1)+QWLI(3)*XM(2)
+      GSICE = THKI(1)*XM(1) + THKI(3)*XM(2)
+      GSQLW = QWLI(1)*XM(1) + QWLI(3)*XM(2)
+      !-
 CIPK FEB07
       EXTL=EXTLDEL(NN)
 	IF(NTX .NE. 0) THEN

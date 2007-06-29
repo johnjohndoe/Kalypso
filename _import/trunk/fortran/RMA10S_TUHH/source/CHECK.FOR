@@ -1,4 +1,4 @@
-C     Last change:  K    27 Mar 2007   11:08 am
+C     Last change:  K    27 Jun 2007   11:40 am
 CIPK  LAST UPDATE sEP 10 2001 FIX BUG FOR MULTIPLE TRIANGLES
 cipk  last update apr 17 2001 fix case for laterally averaged flows
 cipk  last update apr 12 2001 fix averages for zero flow case
@@ -255,8 +255,8 @@ cipk feb01  skip out for zero lines
           IF(NDEP(NA) .LT. 2) THEN
             !nis,feb07: Allow for continuity checks at nodes with polynomial approach
             !get check value
-            testProd = 1
-            testSum  = 0
+            testProd = 1.0
+            testSum  = 0.0
             !Testsum and Testproduct
             AddMultTest: do i = 0, 12
               testSum  = testSum + qpoly(NA,i)
