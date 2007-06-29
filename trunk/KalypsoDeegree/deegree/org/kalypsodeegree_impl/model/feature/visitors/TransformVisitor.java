@@ -1,6 +1,7 @@
 package org.kalypsodeegree_impl.model.feature.visitors;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -48,32 +49,43 @@ public class TransformVisitor implements FeatureVisitor
    */
   public boolean visit( final Feature f )
   {
-    try
+    final IPropertyType[] ftps = f.getFeatureType().getProperties();
+    for( final IPropertyType ftp : ftps )
     {
-      final IPropertyType[] ftps = f.getFeatureType().getProperties();
-      for( int i = 0; i < ftps.length; i++ )
+      if( GeometryUtilities.isGeometry( ftp ) )
       {
-        // TODO: also handle list of geoobjects
-
-        final IPropertyType ftp = ftps[i];
-        if( GeometryUtilities.isGeometry( ftp ) )
+        if( ftp.isList() )
+        {
+          final List<GM_Object> geomList = (List<GM_Object>) f.getProperty( ftp );
+          for( final GM_Object object : geomList )
+            transformProperty( f, ftp, object );
+        }
+        else
         {
           final GM_Object object = (GM_Object) f.getProperty( ftp );
-          if( object != null )
-          {
-            final GM_Object newGeo = m_transformer.transform( object );
-            f.setProperty( ftp, newGeo );
-          }
+          transformProperty( f, ftp, object );
         }
+      }
+    }
+
+    return true;
+  }
+
+  private void transformProperty( final Feature f, final IPropertyType ftp, final GM_Object object )
+  {
+    try
+    {
+      if( object != null )
+      {
+        final GM_Object newGeo = m_transformer.transform( object );
+        f.setProperty( ftp, newGeo );
       }
     }
     catch( final Exception e )
     {
-//      e.printStackTrace();
+      e.printStackTrace();
       m_exceptions.put( f, e );
     }
-
-    return true;
   }
 
 }
