@@ -67,10 +67,12 @@ public class CreateWeirFlowrelationWidget extends AbstractCreateFlowrelationWidg
   @Override
   protected IWeirFlowRelation createNewFeature( final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation, final IFeatureWrapper2 modelElement )
   {
+    // TODO: use newAdd method in FeatureWrapperCollection instead?
     final IFeatureType newFT = workspace.getGMLSchema().getFeatureType( IWeirFlowRelation.QNAME );
     final Feature newFeature = workspace.createFeature( parentFeature, parentRelation, newFT, -1 );
     final IWeirFlowRelation weirRelation = (IWeirFlowRelation) newFeature.getAdapter( IWeirFlowRelation.class );
-    weirRelation.init();
+    /* Call getObservation once to initialize it */
+    weirRelation.getWeirObservation();
     return weirRelation;
   }
 

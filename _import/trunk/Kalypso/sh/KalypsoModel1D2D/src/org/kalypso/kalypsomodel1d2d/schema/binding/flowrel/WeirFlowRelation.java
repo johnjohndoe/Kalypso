@@ -118,4 +118,40 @@ public class WeirFlowRelation extends FlowRelationship implements IWeirFlowRelat
 
     ObservationFeatureFactory.toFeature( obs, obsFeature );
   }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IWeirFlowRelation#getWeirObservation()
+   */
+  public IObservation<TupleResult> getWeirObservation( )
+  {
+    // Just add the right components to my observation
+    final Feature obsFeature = getObservationFeature();
+    final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( obsFeature );
+    final TupleResult result = obs.getResult();
+    if( result.getComponents().length > 0 )
+      return obs;
+
+    /* If not yet initialized, create components and write obs back to feature. */
+    final String[] componentUrns = new String[] { Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL_UPSTREAM, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL_DOWNSTREAM,
+        Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE };
+    final IComponent[] components = new IComponent[componentUrns.length];
+
+    for( int i = 0; i < components.length; i++ )
+      components[i] = ObservationFeatureFactory.createDictionaryComponent( obsFeature, componentUrns[i] );
+
+    for( final IComponent component : components )
+      result.addComponent( component );
+
+    ObservationFeatureFactory.toFeature( obs, obsFeature );
+    return obs;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IWeirFlowRelation#setWeirObservation(org.kalypso.observation.IObservation)
+   */
+  public void setWeirObservation( final IObservation<TupleResult> observation )
+  {
+    final Feature obsFeature = getObservationFeature();
+    ObservationFeatureFactory.toFeature( observation, obsFeature );
+  }
 }

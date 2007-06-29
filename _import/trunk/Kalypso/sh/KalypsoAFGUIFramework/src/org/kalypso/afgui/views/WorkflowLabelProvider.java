@@ -108,47 +108,31 @@ public class WorkflowLabelProvider extends LabelProvider implements ITableLabelP
   }
 
   /**
-   * @see org.eclipse.jface.viewers.IColorProvider#getBackground(java.lang.Object)
-   */
-  public Color getBackground( final Object element )
-  {
-    return null;
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.IColorProvider#getForeground(java.lang.Object)
-   */
-  public Color getForeground( final Object element )
-  {
-    return null;
-  }
-
-  /**
    * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
    */
   public Image getColumnImage( final Object element, final int columnIndex )
   {
     if( element instanceof Task )
     {
-      Task task = (Task) element;
+      // Task task = (Task) element;
       if( columnIndex == 0 )
       {
         return getImage( element );
       }
-// else if( columnIndex == 1 )
-// {
-// switch( task.getState() )
-// {
-// case RUNNING:
-// return IMAGE_RUNNNING;
-// case FINISHED:
-// return IMAGE_FINISHED;
-// case UNAVAILABLE:
-// return IMAGE_UNAVAILABLE;
-// default:
-// return null;
-// }
-// }
+      // else if( columnIndex == 1 )
+      // {
+      // switch( task.getState() )
+      // {
+      // case RUNNING:
+      // return IMAGE_RUNNNING;
+      // case FINISHED:
+      // return IMAGE_FINISHED;
+      // case UNAVAILABLE:
+      // return IMAGE_UNAVAILABLE;
+      // default:
+      // return null;
+      // }
+      // }
       else
       {
         return null;
@@ -178,7 +162,7 @@ public class WorkflowLabelProvider extends LabelProvider implements ITableLabelP
   /**
    * @see org.eclipse.jface.viewers.ITableFontProvider#getFont(java.lang.Object, int)
    */
-  public Font getFont( Object element, int columnIndex )
+  public Font getFont( final Object element, final int columnIndex )
   {
     return getFont( element );
   }
@@ -186,16 +170,16 @@ public class WorkflowLabelProvider extends LabelProvider implements ITableLabelP
   /**
    * @see org.eclipse.jface.viewers.ITableColorProvider#getBackground(java.lang.Object, int)
    */
-  public Color getBackground( Object element, int columnIndex )
+  public Color getBackground( final Object element, final int columnIndex )
   {
-    return getBackground( element );
+    return null;
   }
 
   /**
    * @see org.eclipse.jface.viewers.ITableColorProvider#getForeground(java.lang.Object, int)
    */
-  public Color getForeground( Object element, int columnIndex )
+  public Color getForeground( final Object element, final int columnIndex )
   {
-    return getForeground( element );
+    return null;
   }
 }

@@ -44,6 +44,8 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
+import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.TupleResult;
 
 /**
  * @author Gernot Belger
@@ -64,7 +66,11 @@ public interface IWeirFlowRelation extends IFlowRelationship
   public KIND getKind( );
 
   /**
-   * Call this method to initalize a newly create weir.
+   * Call this method to initalize a newly create weir. TODO: move to getObs??
    */
   public void init( );
+
+  public IObservation<TupleResult> getWeirObservation( );
+
+  public void setWeirObservation( final IObservation<TupleResult> observation );
 }

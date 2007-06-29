@@ -77,4 +77,6 @@ public interface ITeschkeFlowRelation extends IFlowRelationship
   public void setSlope( final double slope );
 
   public WspmProfile getProfile( );
+
+  public void setProfileLink( final String profileRef );
 }

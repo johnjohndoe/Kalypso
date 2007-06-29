@@ -44,6 +44,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.FlowRelationship;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypsodeegree.model.feature.Feature;
@@ -51,6 +53,7 @@ import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * @author Gernot Belger
@@ -123,6 +126,19 @@ public class TeschkeFlowRelation extends FlowRelationship implements ITeschkeFlo
   {
     final Feature profileFeature = FeatureHelper.resolveLink( getFeature(), QNAME_PROP_PROFILE, true );
     return profileFeature == null ? null : new WspmProfile( profileFeature );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation#setProfileLink(java.lang.String)
+   */
+  public void setProfileLink( final String profileRef )
+  {
+    final Feature feature = getFeature();
+
+    final IRelationType profileRelation = (IRelationType) feature.getFeatureType().getProperty( QNAME_PROP_PROFILE );
+    final IFeatureType profileFT = profileRelation.getTargetFeatureType();
+    final Feature profileLinkFeature = new XLinkedFeature_Impl( feature, profileRelation, profileFT, profileRef, "", "", "", "", "" );
+    feature.setProperty( profileRelation, profileLinkFeature );
   }
 
 }

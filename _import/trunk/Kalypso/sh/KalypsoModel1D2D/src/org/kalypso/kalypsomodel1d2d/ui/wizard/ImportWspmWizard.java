@@ -49,7 +49,9 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -77,6 +79,8 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IRiverChannel1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IWeirFlowRelation;
+import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
@@ -92,8 +96,13 @@ import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhSegmentStationComparator;
+import org.kalypso.model.wspm.tuhh.schema.gml.QIntervallResult;
+import org.kalypso.model.wspm.tuhh.schema.gml.QIntervallResultCollection;
 import org.kalypso.model.wspm.tuhh.schema.schemata.IWspmTuhhQIntervallConstants;
 import org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper;
+import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.TupleResult;
+import org.kalypso.observation.result.TupleResultUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.wizard.gml.GmlFileImportPage;
 import org.kalypsodeegree.model.feature.Feature;
@@ -102,8 +111,6 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
-import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
-import org.kalypsodeegree_impl.model.feature.binding.NamedFeatureHelper;
 
 /**
  * A wizard to import WSPM-Models into a 1D2D Model.
@@ -246,43 +253,63 @@ public class ImportWspmWizard extends Wizard implements IWizard
       final URL calcContext = calcWorkspace.getContext();
       final URL qresultsUrl = new URL( calcContext, "Ergebnisse/" + calculation.getName() + "/_aktuell/Daten/qIntervallResults.gml" );
       final GMLWorkspace qresultsWorkspace = GmlSerializer.createGMLWorkspace( qresultsUrl, calcWorkspace.getFeatureProviderFactory() );
-      final Feature qresultCollectionFeature = qresultsWorkspace.getRootFeature();
-      final IRelationType qresultParentRelation = (IRelationType) qresultCollectionFeature.getFeatureType().getProperty( IWspmTuhhQIntervallConstants.QNAME_P_QIntervallResultCollection_resultMember );
-      final List resultList = (List) qresultCollectionFeature.getProperty( qresultParentRelation );
+      final QIntervallResultCollection qResultCollection = new QIntervallResultCollection( qresultsWorkspace.getRootFeature() );
 
-      final IFeatureType flowRelFT = qresultsWorkspace.getGMLSchema().getFeatureType( ITeschkeFlowRelation.QNAME );
+      final Feature flowRelParentFeature = flowRelModel.getWrappedFeature();
+      final GMLWorkspace flowRelworkspace = flowRelParentFeature.getWorkspace();
+
+      final IFeatureType flowRelFT = flowRelworkspace.getGMLSchema().getFeatureType( ITeschkeFlowRelation.QNAME );
       final IRelationType flowRelObsRelation = (IRelationType) flowRelFT.getProperty( ITeschkeFlowRelation.QNAME_PROP_POINTSOBSERVATION );
       final IRelationType flowRelPolynomeRelation = (IRelationType) flowRelFT.getProperty( ITeschkeFlowRelation.QNAME_PROP_POLYNOMES );
-      final Feature flowRelParentFeature = flowRelModel.getWrappedFeature();
-      final IRelationType flowRelParentRelation = flowRelModel.getWrappedList().getParentFeatureTypeProperty();
-      final GMLWorkspace flowRelworkspace = flowRelParentFeature.getWorkspace();
+
+      final List resultList = qResultCollection.getQResultFeatures();
 
       final List<Feature> addedFeatures = new ArrayList<Feature>();
       for( final Object o : resultList )
       {
-        final Feature qresultFeature = FeatureHelper.getFeature( qresultsWorkspace, o );
-        final Feature pointObsFeature = (Feature) qresultFeature.getProperty( IWspmTuhhQIntervallConstants.QNAME_P_QIntervallResult_pointsMember );
-        final List polynomeFeatures = (List) qresultFeature.getProperty( IWspmTuhhQIntervallConstants.QNAME_P_QIntervallResult_polynomialMember );
-        final BigDecimal slope = (BigDecimal) qresultFeature.getProperty( IWspmTuhhQIntervallConstants.QNAME_P_QIntervallResult_slope );
+        final QIntervallResult qresult = new QIntervallResult( FeatureHelper.getFeature( qresultsWorkspace, o ) );
 
-        final String name = NamedFeatureHelper.getName( qresultFeature );
-        final String description = NamedFeatureHelper.getDescription( qresultFeature );
+        final BigDecimal slope = qresult.getSlope();
+        final String name = qresult.getName();
+        final String description = qresult.getDescription();
 
-        final BigDecimal station = (BigDecimal) qresultFeature.getProperty( IWspmTuhhQIntervallConstants.QNAME_P_QIntervallResult_station );
+        final BigDecimal station = qresult.getStation();
 
         // get corresponding 1d-element
         final IFE1D2DNode node = (IFE1D2DNode) PolynomeHelper.forStation( elementsByStation, station );
-        if( node == null )
+
+        /* Do we have a weir? */
+        final IObservation<TupleResult> weirObs = qresult.getWeirObservation( false );
+        if( weirObs != null )
+        {
+          // Create weir relation
+          final IWeirFlowRelation weirRelation = flowRelModel.addNew( IWeirFlowRelation.QNAME, IWeirFlowRelation.class );
+          weirRelation.init();
+          final IObservation<TupleResult> weirFlowObservation = weirRelation.getWeirObservation();
+
+          /* copy weir parameter from one observation to the other */
+          final TupleResult weirResult = weirObs.getResult();
+          final TupleResult result = weirFlowObservation.getResult();
+          final Map<String, String> componentMap = new HashMap<String, String>();
+          componentMap.put( IWspmTuhhQIntervallConstants.DICT_COMPONENT_RUNOFF, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
+          componentMap.put( IWspmTuhhQIntervallConstants.DICT_COMPONENT_WATERLEVEL_DOWNSTREAM, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL_DOWNSTREAM );
+          componentMap.put( IWspmTuhhQIntervallConstants.DICT_COMPONENT_WATERLEVEL_UPSTREAM, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL_UPSTREAM );
+          TupleResultUtilities.copyValues( weirResult, result, componentMap );
+          weirRelation.setWeirObservation( weirFlowObservation );
+        }
+        else if( node == null )
         {
           KalypsoModel1D2DPlugin.getDefault().getLog().log( StatusUtilities.createWarningStatus( "No node for result at station " + station ) );
         }
         else
         {
           /* create new flow relation at node position */
-          final Feature flowRelFeature = flowRelworkspace.createFeature( flowRelParentFeature, flowRelParentRelation, flowRelFT );
-          flowRelworkspace.addFeatureAsComposition( flowRelParentFeature, flowRelParentRelation, -1, flowRelFeature );
+          final ITeschkeFlowRelation flowRel = flowRelModel.addNew( ITeschkeFlowRelation.QNAME, ITeschkeFlowRelation.class );
+          // final Feature flowRelFeature = flowRelworkspace.createFeature( flowRelParentFeature, flowRelParentRelation,
+          // flowRelFT );
+          // flowRelworkspace.addFeatureAsComposition( flowRelParentFeature, flowRelParentRelation, -1, flowRelFeature
+          // );
 
-          final ITeschkeFlowRelation flowRel = (ITeschkeFlowRelation) flowRelFeature.getAdapter( ITeschkeFlowRelation.class );
           flowRel.setName( name );
           flowRel.setName( description );
           flowRel.setPosition( node.getPoint() );
@@ -292,34 +319,33 @@ public class ImportWspmWizard extends Wizard implements IWizard
           /* copy results into new flow relation */
 
           /* clone observation */
-          FeatureHelper.cloneFeature( flowRelFeature, flowRelObsRelation, pointObsFeature );
+          final Feature pointObsFeature = (Feature) qresult.getWrappedFeature().getProperty( QIntervallResult.QNAME_P_QIntervallResult_pointsMember );
+          if( pointObsFeature != null )
+            FeatureHelper.cloneFeature( flowRel.getWrappedFeature(), flowRelObsRelation, pointObsFeature );
 
           /* relink profile to corresponding profile in profile network */
           final WspmProfile wspmProfile = profilesByStation.get( station );
-          final IRelationType profileRelation = (IRelationType) flowRelFeature.getFeatureType().getProperty( ITeschkeFlowRelation.QNAME_PROP_PROFILE );
-          final IFeatureType profileFT = profileRelation.getTargetFeatureType();
-          // TODO: We have the fixed path to the terrain.gml here. Better would be to at least get it from the
-          // SzenarioDataProvider, but
-          // for that we need a dependency to the KalypsoProject1d2d
-          final String profileRef = "terrain.gml#" + wspmProfile.getFeature().getId();
-          final Feature profileLinkFeature = new XLinkedFeature_Impl( flowRelFeature, profileRelation, profileFT, profileRef, "", "", "", "", "" );
-          flowRelFeature.setProperty( profileRelation, profileLinkFeature );
+          if( wspmProfile != null )
+            flowRel.setProfileLink( "terrain.gml#" + wspmProfile.getFeature().getId() );
 
           /* clone polynomes */
-          for( final Object object : polynomeFeatures )
+          final List polynomeFeatures = qresult.getPolynomialFeatures();
+          if( polynomeFeatures != null )
           {
-            final Feature polynomeFeature = FeatureHelper.getFeature( qresultsWorkspace, object );
-            if( polynomeFeature != null )
-              FeatureHelper.cloneFeature( flowRelFeature, flowRelPolynomeRelation, polynomeFeature );
+            for( final Object object : polynomeFeatures )
+            {
+              final Feature polynomeFeature = FeatureHelper.getFeature( qresultsWorkspace, object );
+              if( polynomeFeature != null )
+                FeatureHelper.cloneFeature( flowRel.getWrappedFeature(), flowRelPolynomeRelation, polynomeFeature );
+            }
           }
 
-          addedFeatures.add( flowRelFeature );
+          addedFeatures.add( flowRel.getWrappedFeature() );
         }
       }
 
       final Feature[] addedFeatureArray = addedFeatures.toArray( new Feature[addedFeatures.size()] );
       flowRelworkspace.fireModellEvent( new FeatureStructureChangeModellEvent( flowRelworkspace, flowRelParentFeature, addedFeatureArray, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
-
     }
     catch( final FileNotFoundException fnfe )
     {

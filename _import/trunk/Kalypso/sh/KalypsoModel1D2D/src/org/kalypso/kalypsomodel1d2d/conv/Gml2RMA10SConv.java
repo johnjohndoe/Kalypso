@@ -314,12 +314,12 @@ public class Gml2RMA10SConv
 
           formatter.format( "MM%10d%20.7f%20.7f%n", nodeID, min, max );
 
-          final IPolynomial1D[] polyArea = teschkeConv.getPolynomialsByType( IWspmTuhhQIntervallConstants.DICT_COMPONENT_AREA );
+          final IPolynomial1D[] polyArea = teschkeConv.getPolynomialsByType( IWspmTuhhQIntervallConstants.DICT_PHENOMENON_AREA );
           writePolynome( formatter, "AP1", nodeID, polyArea[0], 0, 5, null );
           writePolynome( formatter, "AP2", nodeID, polyArea[0], 5, 10, null );
           writePolynome( formatter, "AP3", nodeID, polyArea[0], 10, 13, null );
 
-          final IPolynomial1D[] polyRunoff = teschkeConv.getPolynomialsByType( IWspmTuhhQIntervallConstants.DICT_COMPONENT_RUNOFF );
+          final IPolynomial1D[] polyRunoff = teschkeConv.getPolynomialsByType( IWspmTuhhQIntervallConstants.DICT_PHENOMENON_RUNOFF );
           writePolynome( formatter, "QP1", nodeID, polyRunoff[0], 0, 4, slope );
           writePolynome( formatter, "QP2", nodeID, polyRunoff[0], 4, 9, null );
           writePolynome( formatter, "QP3", nodeID, polyRunoff[0], 9, 13, null );
