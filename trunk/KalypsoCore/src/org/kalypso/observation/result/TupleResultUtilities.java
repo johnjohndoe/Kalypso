@@ -302,8 +302,9 @@ public class TupleResultUtilities
       if( targetComponent == null )
         throw new IllegalArgumentException( "Source component not found: " + targetID );
 
-      sourceComponents[count++] = sourceComponent;
-      targetComponents[count++] = targetComponent;
+      sourceComponents[count] = sourceComponent;
+      targetComponents[count] = targetComponent;
+      count++;
     }
 
     /* Copy values */
