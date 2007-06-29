@@ -7,7 +7,7 @@ CIPK  LAST UPDATE DEC 21 2000 ALLOW FOR GATE STRUCTURE
 cipk  last update Nov 12 1999 add dropout of nodes for 3-d to 2-d
 CIPK  LAST UPDATE JAN 12 1999 FIX 2DV JUNCTION LOGIC
 cipk  last update Dec 5 1998 fix error at transitions
-C     Last change:  K    29 May 2007   12:49 pm
+C     Last change:  K    20 Jun 2007   12:02 pm
 cipk  last update Feb 4 1998 correct zero subscript test and for HCN
 CIPK  LAST UPDATE JAN 22 1998
 cipk  last update Dec 16 1997
@@ -1494,22 +1494,26 @@ CIPK MAY02 SWITCH NDF TO 7
   305   CONTINUE
   310 CONTINUE
  3111     continue
-ccycw added for full 3D optimisation 19/06/96 currently testing
-cipk feb07 reduce test to make it entered only once
-      if(ioptim .LT. 1) then
-C         write(76,*) 'load ivrsid1',ivrsid
-         call optim
-         ioptim=1+IOPTIM
-C         write(76,*) 'load ivrsid2',ivrsid
-         WRITE(76,6020) (NFIXH(N),N=1,NE)
- 6020    FORMAT('RT      ',9I8)
-         DO N=1,NE
-            NN=NFIXH(N)
-            if (nn .ne. 0)  then
-               NREORD(NN)=N
-            endif
-         enddo
-      endif
+
+!nis,jun07: Deactivated for the moment, has to be reactivated, when everything else is debugged
+!ccycw added for full 3D optimisation 19/06/96 currently testing
+!cipk feb07 reduce test to make it entered only once
+!      if(ioptim .LT. 1) then
+!C         write(76,*) 'load ivrsid1',ivrsid
+!         call optim
+!         ioptim=1+IOPTIM
+!C         write(76,*) 'load ivrsid2',ivrsid
+!         WRITE(76,6020) (NFIXH(N),N=1,NE)
+! 6020    FORMAT('RT      ',9I8)
+!         DO N=1,NE
+!            NN=NFIXH(N)
+!            if (nn .ne. 0)  then
+!               NREORD(NN)=N
+!            endif
+!         enddo
+!      endif
+!-
+
 cipk oct96  go to calculate DRODXIN
       call presr
       do n=1,ne
