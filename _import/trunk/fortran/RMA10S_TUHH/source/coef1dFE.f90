@@ -1,4 +1,4 @@
-!Last change:  K    31 May 2007    3:32 pm
+!Last change:  K    22 Jun 2007    5:21 pm
 
 !****************************************************************
 !1D subroutine for calculation of elements, whose corner nodes are described with
@@ -101,7 +101,7 @@ REAL(KIND=8) :: dqdtaltzs(1:2)
 REAL(KIND=8) :: dvdtaltzs(1:2)
 
 REAL(KIND=8) :: pdif(1:2,0:3)
-REAL(KIND=8) :: pbei(1:2,1:12)
+REAL(KIND=8) :: pbei(1:2,0:12)
 REAL(KIND=8) :: Intah(1:2)
 REAL(KIND=8) :: d2ahdh(1:2)
 REAL(KIND=8) :: dqhdh(1:2)
@@ -191,15 +191,15 @@ init1: DO j = 1, 4
   dFintdh2(j)    = 0.0
   d2Fintdh1(j)   = 0.0
   d2Fintdh2(j)   = 0.0
-  dFintdx1(i)    = 0.0
-  dFintdx2(i)    = 0.0
-  d2Fintdxdh1(i) = 0.0
-  d2Fintdxdh2(i) = 0.0
+  dFintdx1(j)    = 0.0
+  dFintdx2(j)    = 0.0
+  d2Fintdxdh1(j) = 0.0
+  d2Fintdxdh2(j) = 0.0
 
-  daintdx1(i)    = 0.0
-  daintdx2(i)    = 0.0
-  d2aintdxdh1(i) = 0.0
-  d2aintdxdh2(i) = 0.0
+  daintdx1(j)    = 0.0
+  daintdx2(j)    = 0.0
+  d2aintdxdh1(j) = 0.0
+  d2aintdxdh2(j) = 0.0
 
   yps(j)        = 0.0
   dypsdh(j)     = 0.0
@@ -259,8 +259,10 @@ byparts = 1
 !byparts = 3: new trial for natural boundary condition; it doesn't work yet
 
 testoutput = 0
+!testoutput = 0: output switched off
 !testoutput = 1: output of partly values of equations and output of matrces
 !testoutput = 2: output of variables at the end
+!testoutput = 3: output of beiwert-variable
 
 optin = 1
 !optin-differences only occur in the convective terms
@@ -627,6 +629,25 @@ if (ntx == 1) then
   ENDDO AssignFlowCoef
 
 ENDIF !ntx=1
+
+!nis,jun07: If there was no restart, don't apply flow factor for stabilization reasons. The number of iterations for this is set to default
+!           moment_off = 15, but may be changed by the user in C2-line
+if (maxn < moment_off .and. nb == 0 .and. icyc <=1) then
+  do i = 1, 2
+    bei(i)     = 0.0
+    dbeidh(i)  = 0.0
+    d2beidh(i) = 0.0
+  end do
+end if
+
+if (testoutput == 3) then
+  do i = 1, 2
+    WRITE(*,*) 'Beiwerte - Element: ', nn, ' Knoten: ', i
+    WRITE(*,*) '    bei(i): ', bei(i)
+    WRITE(*,*) ' dbeidh(i): ', dbeidh(i)
+    WRITE(*,*) 'd2beidh(i): ', d2beidh(i)
+  end do
+end if
 
 !********************************************************************************************************************************************
 !GAUSS LOOP   GAUSS LOOP   GAUSS LOOP   GAUSS LOOP   GAUSS LOOP   GAUSS LOOP   GAUSS LOOP   GAUSS LOOP   GAUSS LOOP   GAUSS LOOP   GAUSS LOOP
@@ -1571,6 +1592,7 @@ QBCAssign: DO N=1, NCN, 2
   ENDDO
 
   !install new boundary condition values
+  !ah(m) is cross sectional area; area(nn) is "area" of element that means length
   ESTIFM(IRW,IRW) = ah(m) * area(nn)
   ESTIFM(IRW,IRH) = dahdh(m) * vt * area(nn)
   F(IRW)          = (SPEC(M,1) - VT * ah(m)) * area(nn)
@@ -1638,7 +1660,7 @@ CouplingCorrection: do l = 1, ncn, 2
       !WRITE(*,*) ppl, grav, rho, zsBC, ah(m)
       WRITE(*,*) ' + Korr.: ', f(na)
       WRITE(*,*) 'Korrektur ', - PPL * zsBC * ah(m)
-      pause
+      !pause
     end if
   end do
 end do CouplingCorrection
