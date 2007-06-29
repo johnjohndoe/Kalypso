@@ -1,4 +1,4 @@
-C     Last change:  K    23 May 2007    5:28 pm
+C     Last change:  K    21 Jun 2007    7:32 pm
 CIPK  LAST UPDATE AUGUST 30 2006 ADD CONSV AND AVEL OPTIONS
 CIPK  LAST UPDATE APRIL 05 2006 MODIFY CALL TO GETINIT
 CIPK  LAST UPDATE MARCH 25 2006 ADD TESTMODE
@@ -134,6 +134,19 @@ CIPK APR96 END ADDITIONS
       VMIN=1.
       POWER=1.
       PWERIN=1.
+
+      !nis,jun07: Add some initializations
+      !for sediment (unit no. ???)
+      lss = 0
+      !for sand (unit no. ???)
+      lsand = 0
+      !for equilibrium bedload calculation
+      lbed = 0
+      !initial number of ocean boundary nodes
+      nrbd = 0
+      !default value for collapsing 3D to 2D (default switch off)
+      ITRANSIT = 0
+      !-
 CIPK OCT96      EDD1=1.
 CIPK OCT96      EDD2=0.
 CIPK OCT96      EDD3=0.
@@ -225,7 +238,6 @@ cipk nov98 add surface friction option
 cipk mar03 add diffusion switch ( default of  0 uses old formulations
       
 CIPK MAR05
-      beient=2
       READ(DLIN,5010) NDP,IGRV,IZB,IPASS1,IPASS2,IPASS3,IZERS,IDIFSW
      +  ,INOTR
       write(*,*) 'read c1'
@@ -284,7 +296,14 @@ cipk sep04
  6997   FORMAT('UNABLE TO FIND LINE TYPE -C2- FOUND LINE TYPE ',A2)
         STOP 'LOOKING FOR C2'
       ENDIF 
-      READ(DLIN,'(5F8.0,I8)') OMEGA,ELEV,XSCALE,YSCALE,ZSCALE,IDEBUG
+      READ(DLIN,'(5F8.0,2I8)') OMEGA,ELEV,XSCALE,YSCALE,ZSCALE,IDEBUG,
+     +                         Moment_off
+      !nis,jun07: Set default values
+      if (Moment_off == 0) then
+        Moment_off = 15
+      ELSEIF (Moment_off < 0) then
+        Moment_off = 0
+      endif
       write(*,*) 'read c2'
 CIPK DEC99 SET UP INITIAL ELEV
       ELEV1=ELEV
@@ -334,9 +353,17 @@ cipk sep04
       ENDIF 
 cipk sep96 add to 3 lines below for ocean exchange percentantage and mixing
       !EFa Nov06, beient ließt Option für Beiwert ein
+
       READ(DLIN,5021) SALI,TEMPI,SEDI,UINP,VINP,prcnt,DMIX,beient
       write(*,*) 'read c4'
-      !WRITE(*,*)'beiwert',beient
+      !nis,jun07: Set default values
+      if (beient == 0) then
+        beient = 0
+      end if
+      !testoutput
+      WRITE(*,*) 'Beient: ', beient, 'Moment_off: ', Moment_off
+      !-
+
       WRITE(LOUT,6021) prcnt,DMIX,SALI,TEMPI,SEDI,UINP,VINP
  6021 FORMAT(5X,'PERCENT RETURNED AT OCEAN',T26,F10.1/
      +       5X,'SURFACE MIXING DEPTH',T26,F10.1
@@ -567,20 +594,23 @@ CIPK  FEB04 add IOV option
       ENDIF
 cipk FEB04 end addition
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-cipk feb97 add line to select optimisation
-      IF(ID(1:3) .EQ. 'IOP') THEN
-        READ(DLIN,'(F8.2)') W2FACT
-        IF(W2FACT .EQ. 0.) THEN
-          W2FACT=4.
-        ENDIF
-CIPK NOV97      READ(LIN,7000) ID,DLIN
-        call ginpt(lin,id,dlin)
-        IOPTIM=0
-      ELSE
-        IOPTIM=2
-      ENDIF
-cipk feb97 end changes
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+!nis,jun07: Deactivated for the moment, has to be reactivated, when everything else is debugged
+!cipk feb97 add line to select optimisation
+!      IF(ID(1:3) .EQ. 'IOP') THEN
+!        READ(DLIN,'(F8.2)') W2FACT
+!        IF(W2FACT .EQ. 0.) THEN
+!          W2FACT=4.
+!        ENDIF
+!CIPK NOV97      READ(LIN,7000) ID,DLIN
+!        call ginpt(lin,id,dlin)
+!        IOPTIM=0
+!      ELSE
+!        IOPTIM=2
+!      ENDIF
+!cipk feb97 end changes
+!-
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 CIPK dec02 add input of data for ice on surface
@@ -930,6 +960,14 @@ C-
 !           The block starts with SCL and ends with ECL, so that the code recognizes
 !           a continuity-line block
 
+      !nis,jun07: line array was never initialized, so it is done here now
+      do i = 1, 50
+        do j = 1, 350
+          line (i,j) = 0
+        end do
+      end do
+      !-
+
       IF (IFILE == 60 .AND. IGEO == 2) THEN
         IF (id == 'SCL') THEN
           READ(DLIN,*) NCL
@@ -1050,6 +1088,31 @@ C-
      +       5x,'---------------------------------')
       WRITE(*,*)'Just informational: ', id(1:6)
 !NiS,mar06: End of CONTINUITYLINEBLOCK-
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!       CONTROL VOLUME FEM (CVFEM)-CONTROL                                      !
+!                                                                               !
+!NiS,mar06      At this point the switch for CVFEM-method is introduced for the !
+!               user entry "CVFEM" in the last line before "ENDGEO". If the user!
+!               does not enter anything the switch is set to 0, if he enters    !
+!               CVFEM it is set to 1; there should be a depending reading option!
+!               whether FEM should be set to 1 or 2 like it is done in Kalypso2D!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      IF (ID(1:5) == 'CVFEM') THEN
+        write (*,*)'Control-Volume method, you have chosen, is not',
+     +             'available yet. It will be calculated with Galerkin',
+     +             'method'
+        FEM = 0
+        !FEM = 1
+      ELSE
+        FEM = 0
+      ENDIF
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!	End of CONTROL VOLUME FEM (CVFEM)-CONTROL				!
+!                                                                               !
+!NiS,mar06                                                                      !
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 CIPK SEP96 ADD OCEAN BOUNDARY NODE LIST
 
@@ -1354,30 +1417,6 @@ CIPK NOV97          READ(LIN,7000) ID,DLIN
         ENDIF
         GO TO 192
       ENDIF
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!       CONTROL VOLUME FEM (CVFEM)-CONTROL                                      !
-!                                                                               !
-!NiS,mar06      At this point the switch for CVFEM-method is introduced for the !
-!               user entry "CVFEM" in the last line before "ENDGEO". If the user!
-!               does not enter anything the switch is set to 0, if he enters    !
-!               CVFEM it is set to 1; there should be a depending reading option!
-!               whether FEM should be set to 1 or 2 like it is done in Kalypso2D!
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      IF (ID(1:5) == 'CVFEM') THEN
-        write (*,*)'Control-Volume method, you have chosen, is not',
-     +             'available yet. It will be calculated with Galerkin',
-     +             'method'
-        FEM = 0
-        !FEM = 1
-      ELSE
-        FEM = 0
-      ENDIF
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!	End of CONTROL VOLUME FEM (CVFEM)-CONTROL				!
-!                                                                               !
-!NiS,mar06                                                                      !
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 C
