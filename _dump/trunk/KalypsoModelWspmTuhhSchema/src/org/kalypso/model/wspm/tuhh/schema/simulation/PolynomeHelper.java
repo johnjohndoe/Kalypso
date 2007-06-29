@@ -72,34 +72,29 @@ import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.lang.ProcessHelper;
 import org.kalypso.commons.java.lang.ProcessHelper.ProcessTimeoutException;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
-import org.kalypso.commons.metadata.MetadataObject;
 import org.kalypso.contribs.java.io.filter.PrefixSuffixFilter;
-import org.kalypso.gmlschema.IGMLSchema;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation.MODE;
+import org.kalypso.model.wspm.tuhh.schema.gml.QIntervallResult;
+import org.kalypso.model.wspm.tuhh.schema.gml.QIntervallResultCollection;
 import org.kalypso.model.wspm.tuhh.schema.schemata.IWspmTuhhQIntervallConstants;
 import org.kalypso.observation.IObservation;
-import org.kalypso.observation.Observation;
+import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
-import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.util.LogHelper;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
-import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
-import org.kalypsodeegree_impl.model.feature.binding.NamedFeatureHelper;
 
 /**
  * Helper class to start the processing of the polynomes.
@@ -109,6 +104,8 @@ import org.kalypsodeegree_impl.model.feature.binding.NamedFeatureHelper;
 public class PolynomeHelper
 {
 
+  private static final String WEIR_FILE_NAME = "HOW_QWehr_HUW.txt";
+
   /**
    * Prepares the input files for the polynome process
    * 
@@ -116,24 +113,25 @@ public class PolynomeHelper
    *            any tmp dir, must be empty before start, may be deleted after end
    * @param dathDir
    *            Directory containing the laengsschnitt.txt and the beiwerte.aus files.
-   * @return true, if preparation was succesful
+   * @return The polynom input dir (01Eingang), if preparation was succesful, else <code>null</code>.
    */
-  private static boolean preparePolynomes( final File tmpDir, final File dathDir, final LogHelper log )
+  private static File preparePolynomes( final File tmpDir, final File dathDir, final LogHelper log )
   {
+    /* The files needed from the 1D-calculation */
     final File lsFile = new File( dathDir, "laengsschnitt.txt" );
     final File ausFile = new File( dathDir, "Beiwerte.AUS" );
+    final File weirFile = new File( dathDir, WEIR_FILE_NAME );
+
+    final File[] dathFiles = new File[] { lsFile, ausFile, weirFile };
 
     /* Check input data */
-    if( !lsFile.exists() )
+    for( final File file : dathFiles )
     {
-      log.log( false, "Ergebnisdatei %s für Polynomerzeugung nicht vorhanden. Abbruch.", lsFile );
-      return false;
-    }
-
-    if( !ausFile.exists() )
-    {
-      log.log( false, "Ergebnisdatei %s für Polynomerzeugung nicht vorhanden. Abbruch.", ausFile );
-      return false;
+      if( !file.exists() )
+      {
+        log.log( false, "Ergebnisdatei %s für Polynomerzeugung nicht vorhanden. Abbruch.", file );
+        return null;
+      }
     }
 
     /* Prepare exe dir */
@@ -147,7 +145,7 @@ public class PolynomeHelper
     catch( final IOException e )
     {
       log.log( e, "Fehler beim Entpacken der polynom1d.exe. Abbruch." );
-      return false;
+      return null;
     }
     finally
     {
@@ -158,15 +156,17 @@ public class PolynomeHelper
     try
     {
       final File eingangDir = new File( tmpDir, "01Eingang" );
-      FileUtils.copyFileToDirectory( lsFile, eingangDir );
-      FileUtils.copyFileToDirectory( ausFile, eingangDir );
+
+      for( final File file : dathFiles )
+        FileUtils.copyFileToDirectory( file, eingangDir );
+
+      return eingangDir;
     }
     catch( final IOException e )
     {
       log.log( e, "Eingangsdaten für Polynomberechnung konnten nicht kopiert werden. Abbruch." );
-      return false;
+      return null;
     }
-    return true;
   }
 
   public static void processPolynomes( final File tmpDir, final File dathDir, final LogHelper log, final long timeout, final ISimulationResultEater resultEater, final TuhhCalculation calculation ) throws SimulationException
@@ -176,7 +176,10 @@ public class PolynomeHelper
     log.log( true, "Polynomfuktionen werden ermittelt" );
 
     log.log( true, "- Übertrage Ergebnisse der Q-Intervallberechnung" );
-    if( !preparePolynomes( tmpDir, dathDir, log ) )
+
+    final File eingangDir = preparePolynomes( tmpDir, dathDir, log );
+    final File resultDir = new File( tmpDir, "02Ausgang" );
+    if( eingangDir == null )
       return;
 
     if( monitor.isCanceled() )
@@ -208,6 +211,9 @@ public class PolynomeHelper
 
       logStream.close();
       errStream.close();
+
+      /* The weir file is not processed by the polynome.exe, just copy it to the result-folder */
+      FileUtils.copyFileToDirectory( new File( eingangDir, WEIR_FILE_NAME ), resultDir );
     }
     catch( final IOException e )
     {
@@ -232,7 +238,6 @@ public class PolynomeHelper
 
     /* Read results */
     log.log( true, "- Lese Punktwolken und Polynome" );
-    final File resultDir = new File( tmpDir, "02Ausgang" );
     final File targetGmlFile = new File( tmpDir, "qIntervallResults.gml" );
     try
     {
@@ -261,11 +266,27 @@ public class PolynomeHelper
     {
       final double startStation = calculation.getStartStation().doubleValue();
       final double endStation = calculation.getStartStation().doubleValue();
-      final boolean ignoreOutlier = calculation.getPolynomialIgnoreOutlier();
-      final boolean isTriple = calculation.isPolynomialTriple();
-      final double alphaLimit = calculation.getAlphaLimit();
+
+      /* Polynomial Parameters */
+      final MODE calcMode = calculation.getCalcMode();
+
+      final boolean ignoreOutlier;
+      final boolean isTriple;
+      final double alphaLimit;
 
       // TODO: fetch other parameters from calculation
+      if( calcMode == calculation.getCalcMode() )
+      {
+        ignoreOutlier = calculation.getPolynomialIgnoreOutlier();
+        isTriple = calculation.isPolynomialTriple();
+        alphaLimit = calculation.getAlphaLimit();
+      }
+      else
+      {
+        ignoreOutlier = false;
+        isTriple = true;
+        alphaLimit = 1.4;
+      }
 
       pw = new PrintWriter( new BufferedWriter( new OutputStreamWriter( new FileOutputStream( steuerFile ) ) ) );
 
@@ -299,14 +320,15 @@ public class PolynomeHelper
   private static void readResults( final File resultDir, final File targetGmlFile, final TuhhCalculation calculation, final LogHelper log, final ISimulationResultEater resultEater ) throws InvocationTargetException, IOException, GmlSerializeException, SimulationException
   {
     /* Read results */
-    final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( IWspmTuhhQIntervallConstants.QNAME_F_QIntervallResultCollection, targetGmlFile.toURL(), GmlSerializer.DEFAULT_FACTORY );
-    final Feature resultCollectionFeature = workspace.getRootFeature();
-    final Map<BigDecimal, Feature> pointResults = readProfFiles( resultDir, resultCollectionFeature, calculation, log );
+    final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( QIntervallResultCollection.QNAME_F_QIntervallResultCollection, targetGmlFile.toURL(), GmlSerializer.DEFAULT_FACTORY );
+    final QIntervallResultCollection resultCollection = new QIntervallResultCollection( workspace.getRootFeature() );
+    final Map<BigDecimal, QIntervallResult> pointResults = readProfFiles( resultDir, resultCollection, calculation, log );
 
     if( log.checkCanceled() )
       return;
 
     readPolynomeFile( resultDir, pointResults, log );
+    readWeirFile( resultDir, pointResults, log );
 
     if( log.checkCanceled() )
       return;
@@ -316,20 +338,9 @@ public class PolynomeHelper
     resultEater.addResult( "qIntervallResultGml", targetGmlFile );
   }
 
-  private static Map<BigDecimal, Feature> readProfFiles( final File resultDir, final Feature resultCollectionFeature, final TuhhCalculation calculation, final LogHelper log )
+  private static Map<BigDecimal, QIntervallResult> readProfFiles( final File resultDir, final QIntervallResultCollection resultCollection, final TuhhCalculation calculation, final LogHelper log )
   {
-    final GMLWorkspace workspace = resultCollectionFeature.getWorkspace();
-    final IGMLSchema schema = workspace.getGMLSchema();
-    final IFeatureType ftQIntervallResult = schema.getFeatureType( IWspmTuhhQIntervallConstants.QNAME_F_QIntervallResult );
-    final IFeatureType ftObservation = schema.getFeatureType( IWspmTuhhQIntervallConstants.QNAME_F_WPointsObservation );
-    final IFeatureType ftProfile = schema.getFeatureType( WspmProfile.QNAME_PROFILE );
-
-    final IRelationType resultRelation = (IRelationType) resultCollectionFeature.getFeatureType().getProperty( IWspmTuhhQIntervallConstants.QNAME_P_QIntervallResultCollection_resultMember );
-
-    final IRelationType pointsObsRelation = (IRelationType) ftQIntervallResult.getProperty( IWspmTuhhQIntervallConstants.QNAME_P_QIntervallResult_pointsMember );
-    final IRelationType profileRelation = (IRelationType) ftQIntervallResult.getProperty( IWspmTuhhQIntervallConstants.QNAME_P_QIntervallResult_profileMember );
-
-    final Map<BigDecimal, Feature> results = new HashMap<BigDecimal, Feature>();
+    final Map<BigDecimal, QIntervallResult> results = new HashMap<BigDecimal, QIntervallResult>();
 
     /* Read w-points first: PROFxxx.xxxx.txt files */
     final FilenameFilter filter = new PrefixSuffixFilter( "PROF", ".txt" );
@@ -358,36 +369,27 @@ public class PolynomeHelper
 
       try
       {
-        final Feature resultFeature = workspace.createFeature( resultCollectionFeature, resultRelation, ftQIntervallResult );
-        resultCollectionFeature.getWorkspace().addFeatureAsComposition( resultCollectionFeature, resultRelation, -1, resultFeature );
+        final QIntervallResult qresult = resultCollection.createQResult();
+        qresult.setName( station.toString() );
+        qresult.setDescription( "Gelesen aus: " + name );
+        qresult.setStation( station );
+        qresult.setSlope( slope );
 
-        NamedFeatureHelper.setName( resultFeature, stationString );
-        NamedFeatureHelper.setDescription( resultFeature, "Gelesen aus: " + name );
-
-        resultFeature.setProperty( IWspmTuhhQIntervallConstants.QNAME_P_QIntervallResult_station, station );
-        resultFeature.setProperty( IWspmTuhhQIntervallConstants.QNAME_P_QIntervallResult_slope, slope );
-
-        final Feature obsFeature = workspace.createFeature( resultFeature, pointsObsRelation, ftObservation );
-        resultFeature.setProperty( IWspmTuhhQIntervallConstants.QNAME_P_QIntervallResult_pointsMember, obsFeature );
-
+        /* Link to profile */
         final WspmProfile profile = profileForStation( profileIndex, station );
-
         if( profile != null )
-        {
-          final String href = "project:/modell.gml#" + profile.getGmlID();
-          final Feature profileFeatureRef = new XLinkedFeature_Impl( resultFeature, profileRelation, ftProfile, href, "", "", "", "", "" );
-          resultFeature.setProperty( profileRelation, profileFeatureRef );
-        }
+          qresult.setProfile( profile );
 
-        final IComponent[] pointsComponents = createPointsComponents( obsFeature );
-
-        final TupleResult tupleResult = readProfFile( profFile, pointsComponents, log );
+        /* Create the points observation */
+        final IObservation<TupleResult> observation = qresult.getPointsObservation();
         final String obsName = stationString;
         final String description = "Übernommen aus Datei: " + name;
-        final IObservation<TupleResult> obs = new Observation<TupleResult>( obsName, description, tupleResult, new ArrayList<MetadataObject>() );
-        ObservationFeatureFactory.toFeature( obs, obsFeature );
+        observation.setName( obsName );
+        observation.setDescription( description );
+        readProfFile( profFile, observation.getResult(), log );
+        qresult.setPointsObservation( observation );
 
-        results.put( station, obsFeature );
+        results.put( station, qresult );
       }
       catch( final Exception e )
       {
@@ -429,9 +431,9 @@ public class PolynomeHelper
     return index;
   }
 
-  private static TupleResult readProfFile( final File profFile, final IComponent[] pointsComponents, final LogHelper log ) throws IOException
+  private static TupleResult readProfFile( final File profFile, final TupleResult tupleResult, final LogHelper log ) throws IOException
   {
-    final TupleResult tupleResult = new TupleResult( pointsComponents );
+    final IComponent[] pointsComponents = tupleResult.getComponents();
 
     LineNumberReader reader = null;
     try
@@ -491,23 +493,7 @@ public class PolynomeHelper
     return tupleResult;
   }
 
-  private static IComponent[] createPointsComponents( final Feature obsFeature )
-  {
-    final IComponent[] components = new IComponent[8];
-
-    components[0] = ObservationFeatureFactory.createDictionaryComponent( obsFeature, "urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Waterlevel" );
-    components[1] = ObservationFeatureFactory.createDictionaryComponent( obsFeature, "urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Depth" );
-    components[2] = ObservationFeatureFactory.createDictionaryComponent( obsFeature, "urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Area" );
-    components[3] = ObservationFeatureFactory.createDictionaryComponent( obsFeature, "urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Runoff" );
-    components[4] = ObservationFeatureFactory.createDictionaryComponent( obsFeature, "urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Alpha" );
-    components[5] = ObservationFeatureFactory.createDictionaryComponent( obsFeature, "urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaArea" );
-    components[6] = ObservationFeatureFactory.createDictionaryComponent( obsFeature, "urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaRunoff" );
-    components[7] = ObservationFeatureFactory.createDictionaryComponent( obsFeature, "urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaAlpha" );
-
-    return components;
-  }
-
-  private static void readPolynomeFile( final File resultDir, final Map<BigDecimal, Feature> pointResults, final LogHelper log ) throws IOException
+  private static void readPolynomeFile( final File resultDir, final Map<BigDecimal, QIntervallResult> pointResults, final LogHelper log ) throws IOException
   {
     final File polyFile = new File( resultDir, "Polynome.TXT" );
 
@@ -568,17 +554,17 @@ public class PolynomeHelper
           final double[] coeffDoubles = ArrayUtils.toPrimitive( doubles );
 
           final String domainId;
-          final String rangeId = IWspmTuhhQIntervallConstants.DICT_COMPONENT_WATERLEVEL;
+          final String rangeId = IWspmTuhhQIntervallConstants.DICT_PHENOMENON_WATERLEVEL;
           switch( type )
           {
             case 'Q':
-              domainId = IWspmTuhhQIntervallConstants.DICT_COMPONENT_RUNOFF;
+              domainId = IWspmTuhhQIntervallConstants.DICT_PHENOMENON_RUNOFF;
               break;
             case 'A':
-              domainId = IWspmTuhhQIntervallConstants.DICT_COMPONENT_AREA;
+              domainId = IWspmTuhhQIntervallConstants.DICT_PHENOMENON_AREA;
               break;
             case 'a':
-              domainId = IWspmTuhhQIntervallConstants.DICT_COMPONENT_ALPHA;
+              domainId = IWspmTuhhQIntervallConstants.DICT_PHENOMENON_ALPHA;
               break;
 
             default:
@@ -587,23 +573,14 @@ public class PolynomeHelper
           }
 
           /* find feature for station */
-          final Feature pointsFeature = pointResults.get( station );
-          if( pointsFeature == null )
+          final QIntervallResult qresult = pointResults.get( station );
+          if( qresult == null )
             log.log( false, "Keine passende Station für Polynom bei km %.4f: %s", station, line );
           else
           {
-            final Feature resultFeature = pointsFeature.getParent();
-            final GMLWorkspace workspace = pointsFeature.getWorkspace();
-            final IGMLSchema schema = workspace.getGMLSchema();
-            final IFeatureType resultFT = schema.getFeatureType( IWspmTuhhQIntervallConstants.QNAME_F_QIntervallResult );
-            final IRelationType polynomialRelation = (IRelationType) resultFT.getProperty( IWspmTuhhQIntervallConstants.QNAME_P_QIntervallResult_polynomialMember );
-
-            final IFeatureType polynomialFT = schema.getFeatureType( IPolynomial1D.QNAME );
-
             /* create new polynome */
-            final Feature polynomialFeature = workspace.createFeature( resultFeature, polynomialRelation, polynomialFT );
-            workspace.addFeatureAsComposition( resultFeature, polynomialRelation, -1, polynomialFeature );
-            final IPolynomial1D poly1d = (IPolynomial1D) polynomialFeature.getAdapter( IPolynomial1D.class );
+            final IPolynomial1D poly1d = qresult.createPolynomial();
+
             poly1d.setName( description );
             poly1d.setDescription( description );
             poly1d.setCoefficients( coeffDoubles );
@@ -631,6 +608,113 @@ public class PolynomeHelper
     {
       IOUtils.closeQuietly( reader );
     }
+  }
+
+  /**
+   * Reads the contents of 'HOW_QWehr_HUW.txt' into the qIntervallResults.
+   */
+  private static void readWeirFile( final File resultDir, final Map<BigDecimal, QIntervallResult> pointResults, final LogHelper log ) throws IOException
+  {
+    final File weirFile = new File( resultDir, WEIR_FILE_NAME );
+
+    LineNumberReader reader = null;
+    try
+    {
+      reader = new LineNumberReader( new FileReader( weirFile ) );
+
+      /* Ingore first line */
+      if( reader.ready() )
+        reader.readLine();
+
+      while( reader.ready() )
+      {
+        final String line = reader.readLine();
+        if( line == null )
+          break;
+
+        try
+        {
+          readWeirLine( line.trim(), pointResults, weirFile );
+        }
+        catch( final NumberFormatException nfe )
+        {
+          /* A good line but bad content. Give user a hint that something might be wrong. */
+          log.log( false, "Lesefehler in Datei: %s - Zeile: %d: %s", weirFile.getName(), reader.getLineNumber(), nfe.getLocalizedMessage() );
+        }
+        catch( final Throwable e )
+        {
+          // should never happen
+          log.log( e, "Lesefehler in Datei: %s - Zeile: %d: %s", weirFile.getName(), reader.getLineNumber(), e.getLocalizedMessage() );
+        }
+
+      }
+      reader.close();
+    }
+    finally
+    {
+      IOUtils.closeQuietly( reader );
+    }
+  }
+
+  private static void readWeirLine( final String line, final Map<BigDecimal, QIntervallResult> pointResults, final File weirFile ) throws Exception
+  {
+    final String[] tokens = line.split( " +" );
+    if( tokens.length < 6 )
+      return;
+
+    /* Determine if this is a good line: good lines are lines whos first token is a number */
+    final String firstToken = tokens[0];
+    try
+    {
+      new Double( firstToken );
+    }
+    catch( final NumberFormatException nfe )
+    {
+      /* Just ignore this line */
+      return;
+    }
+
+    final BigDecimal station = new BigDecimal( tokens[0] );
+    final BigDecimal qOW = new BigDecimal( tokens[1] );
+    /* final BigDecimal qWehr = new BigDecimal( tokens[2] ); */
+    final BigDecimal hOW = new BigDecimal( tokens[3] );
+    final BigDecimal hUW = new BigDecimal( tokens[4] );
+    /* final String ueArt = tokens[5]; */
+
+    /* Find or create a result for this station */
+    if( !pointResults.containsKey( station ) )
+    {
+      /* Create a new Point Result if not yet existant */
+      // REMARK: hopefully, there is always at least one result
+      final QIntervallResult firstqResult = pointResults.values().iterator().next();
+      final QIntervallResultCollection qresultCollection = new QIntervallResultCollection( firstqResult.getFeature().getParent() );
+      final QIntervallResult newqresult = qresultCollection.createQResult();
+      newqresult.setStation( station );
+
+      newqresult.setName( station.toString() );
+      newqresult.setDescription( "Gelesen aus: " + weirFile.getName() );
+
+      pointResults.put( station, newqresult );
+    }
+
+    final QIntervallResult qresult = pointResults.get( station );
+
+    /* Add values to the weir observation */
+    final IObservation<TupleResult> weirObs = qresult.getWeirObservation( true );
+    final TupleResult result = weirObs.getResult();
+    final IComponent[] components = result.getComponents();
+    final IComponent compHOW = ComponentUtilities.findComponentByID( components, IWspmTuhhQIntervallConstants.DICT_COMPONENT_WATERLEVEL_UPSTREAM );
+    final IComponent compHUW = ComponentUtilities.findComponentByID( components, IWspmTuhhQIntervallConstants.DICT_COMPONENT_WATERLEVEL_DOWNSTREAM );
+    final IComponent compRunoff = ComponentUtilities.findComponentByID( components, IWspmTuhhQIntervallConstants.DICT_COMPONENT_RUNOFF );
+
+    // put extra result into observation
+    final IRecord newRecord = result.createRecord();
+    newRecord.setValue( compRunoff, qOW );
+    newRecord.setValue( compHOW, hOW );
+    newRecord.setValue( compHUW, hUW );
+    result.add( newRecord );
+
+    qresult.setWeirObservation( weirObs );
   }
 
 }

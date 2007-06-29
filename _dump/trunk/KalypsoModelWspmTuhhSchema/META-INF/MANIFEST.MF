@@ -14,5 +14,6 @@ Require-Bundle: org.kalypso.model.wspm.tuhh.core;visibility:=reexport,
  org.kalypso.gml.processes
 Eclipse-LazyStart: true
 Export-Package: org.kalypso.model.wspm.tuhh.schema,
+ org.kalypso.model.wspm.tuhh.schema.gml,
  org.kalypso.model.wspm.tuhh.schema.schemata,
  org.kalypso.model.wspm.tuhh.schema.simulation

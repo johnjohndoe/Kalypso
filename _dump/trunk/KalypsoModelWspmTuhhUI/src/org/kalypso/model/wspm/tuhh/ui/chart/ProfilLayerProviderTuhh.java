@@ -67,7 +67,7 @@ import de.belger.swtchart.layer.IChartLayer;
  */
 public class ProfilLayerProviderTuhh implements IProfilLayerProvider
 {
-  private List<String> m_layers = new ArrayList<String>();
+  private final List<String> m_layers = new ArrayList<String>();
 
   public ProfilLayerProviderTuhh( )
   {
@@ -114,9 +114,9 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
       addableLayer.add( IWspmTuhhConstants.LAYER_GELAENDE );
     if( !profile.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_HOCHWERT ) && !existingLayers.contains( IWspmTuhhConstants.LAYER_GEOKOORDINATEN ) )
       addableLayer.add( IWspmTuhhConstants.LAYER_GEOKOORDINATEN );
-    if(existingLayers.contains( IWspmTuhhConstants.LAYER_RAUHEIT_QUICKVIEW )||!existingLayers.contains( IWspmTuhhConstants.LAYER_RAUHEIT_KST ) )
+    if( existingLayers.contains( IWspmTuhhConstants.LAYER_RAUHEIT_QUICKVIEW ) || !existingLayers.contains( IWspmTuhhConstants.LAYER_RAUHEIT_KST ) )
       addableLayer.add( IWspmTuhhConstants.LAYER_RAUHEIT_KST );
-    if(existingLayers.contains( IWspmTuhhConstants.LAYER_RAUHEIT_QUICKVIEW )|| !existingLayers.contains( IWspmTuhhConstants.LAYER_RAUHEIT_KS ) )
+    if( existingLayers.contains( IWspmTuhhConstants.LAYER_RAUHEIT_QUICKVIEW ) || !existingLayers.contains( IWspmTuhhConstants.LAYER_RAUHEIT_KS ) )
       addableLayer.add( IWspmTuhhConstants.LAYER_RAUHEIT_KS );
     if( !existingLayers.contains( IWspmTuhhConstants.LAYER_DEVIDER ) )
       addableLayer.add( IWspmTuhhConstants.LAYER_DEVIDER );
@@ -248,7 +248,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider#providesLayer(java.lang.String)
    */
-  public boolean providesLayer( String layerId )
+  public boolean providesLayer( final String layerId )
   {
     return m_layers.contains( layerId );
   }
@@ -256,7 +256,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider#addRequieredLayer(org.kalypso.model.wspm.ui.view.chart.ProfilChartView)
    */
-  public String[] getRequiredLayer( ProfilChartView view )
+  public String[] getRequiredLayer( final ProfilChartView view )
   {
     final ArrayList<String> layerToAdd = new ArrayList<String>();
     final IProfil profile = view.getProfil();
@@ -296,11 +296,16 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
         layerToAdd.add( IWspmTuhhConstants.LAYER_RAUHEIT_KS );
       else if( IWspmTuhhConstants.RAUHEIT_TYP_KST.equals( profile.getProperty( IWspmTuhhConstants.RAUHEIT_TYP ) ) )
         layerToAdd.add( IWspmTuhhConstants.LAYER_RAUHEIT_KST );
+      // TODO Kim mal reingenommen, damits immer nen layer gibt, sonst kann man nämlich noch mal Rauheiten hinzufügen
+      // und das gibt Schrott
+      // HM, ne geht auch nicht...
+      else
+        layerToAdd.add( IWspmTuhhConstants.LAYER_RAUHEIT_KS );
     }
     if( !profile.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT ) )
     {
       // TODO: Kim: mal auskommentiert, weil in diesem Fall der Layer ne exception wirft
-//      layerToAdd.add( IWspmTuhhConstants.LAYER_RAUHEIT_QUICKVIEW );
+// layerToAdd.add( IWspmTuhhConstants.LAYER_RAUHEIT_QUICKVIEW );
     }
     return layerToAdd.toArray( new String[0] );
   }
@@ -308,7 +313,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider#getLayer(java.lang.String)
    */
-  public IProfilChartLayer[] getLayer( String layerId, final ProfilChartView view )
+  public IProfilChartLayer[] getLayer( final String layerId, final ProfilChartView view )
   {
     if( layerId.equals( IWspmTuhhConstants.LAYER_BEWUCHS ) )
     {
@@ -366,7 +371,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
     if( layerId.equals( IWspmTuhhConstants.LAYER_WASSERSPIEGEL ) )
     {
       final List<IStationResult> resultLayers = new ArrayList<IStationResult>();
-      for( IStationResult result : view.getResults() )
+      for( final IStationResult result : view.getResults() )
       {
         resultLayers.add( new WspLayer( view, result ) );
       }

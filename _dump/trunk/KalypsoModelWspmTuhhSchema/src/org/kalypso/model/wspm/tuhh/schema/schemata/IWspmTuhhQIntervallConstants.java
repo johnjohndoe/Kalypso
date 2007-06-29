@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.schema.schemata;
 
-import javax.xml.namespace.QName;
-
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 
 /**
@@ -51,34 +49,34 @@ import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
  */
 public interface IWspmTuhhQIntervallConstants extends IWspmTuhhConstants
 {
-  public static final QName QNAME_F_QIntervallResultCollection = new QName( NS_WSPM_TUHH, "QIntervallResultCollection" );
-
-  public static final QName QNAME_P_QIntervallResultCollection_resultMember = new QName( NS_WSPM_TUHH, "resultMember" );
-
-  public static final QName QNAME_F_QIntervallResult = new QName( NS_WSPM_TUHH, "QIntervallResult" );
-
-  public static final QName QNAME_P_QIntervallResult_station = new QName( NS_WSPM_TUHH, "station" );
-
-  public static final QName QNAME_P_QIntervallResult_slope = new QName( NS_WSPM_TUHH, "slope" );
-
-  public static final QName QNAME_P_QIntervallResult_pointsMember = new QName( NS_WSPM_TUHH, "pointsMember" );
-
-  public static final QName QNAME_P_QIntervallResult_polynomialMember = new QName( NS_WSPM_TUHH, "polynomialMember" );
-
-  public static final QName QNAME_P_QIntervallResult_profileMember = new QName( NS_WSPM_TUHH, "profileMember" );
-
-  public static final QName QNAME_F_WPointsObservation = new QName( NS_WSPM_TUHH, "WPointsObservation" );
-
-
   public static final String DICT_BASE = "urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#";
 
-  public static final String DICT_COMPONENT_WATERLEVEL = DICT_BASE + "phenomenonWaterlevel";
+  public static final String DICT_PHENOMENON_WATERLEVEL = DICT_BASE + "phenomenonWaterlevel";
 
-  public static final String DICT_COMPONENT_RUNOFF = DICT_BASE + "phenomenonRunoff";
+  public static final String DICT_PHENOMENON_RUNOFF = DICT_BASE + "phenomenonRunoff";
 
-  public static final String DICT_COMPONENT_AREA = DICT_BASE + "phenomenonArea";
+  public static final String DICT_PHENOMENON_AREA = DICT_BASE + "phenomenonArea";
 
-  public static final String DICT_COMPONENT_ALPHA = DICT_BASE + "phenomenonAlpha";
+  public static final String DICT_PHENOMENON_ALPHA = DICT_BASE + "phenomenonAlpha";
 
+  public static final String DICT_COMPONENT_WATERLEVEL = DICT_BASE + "Waterlevel";
+
+  public static final String DICT_COMPONENT_WATERLEVEL_UPSTREAM = DICT_BASE + "WaterlevelUpstream";
+
+  public static final String DICT_COMPONENT_WATERLEVEL_DOWNSTREAM = DICT_BASE + "WaterlevelDownstream";
+
+  public static final String DICT_COMPONENT_DEPTH = DICT_BASE + "Depth";
+
+  public static final String DICT_COMPONENT_AREA = DICT_BASE + "Area";
+
+  public static final String DICT_COMPONENT_RUNOFF = DICT_BASE + "Runoff";
+
+  public static final String DICT_COMPONENT_ALPHA = DICT_BASE + "Alpha";
+
+  public static final String DICT_COMPONENT_DELTA_AREA = DICT_BASE + "DeltaArea";
+
+  public static final String DICT_COMPONENT_DELTA_RUNOFF = DICT_BASE + "DeltaRunoff";
+
+  public static final String DICT_COMPONENT_DELTA_ALPHA = DICT_BASE + "DeltaAlpha";
 
 }
