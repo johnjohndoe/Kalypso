@@ -1,3 +1,4 @@
+C     Last change:  K    15 Jun 2007    3:25 pm
 cipk  last update feb 09 2001 allow for zero length cc lines
 CIPK  LAST UPDATE AUG 1 2000 ADD SLOPING ELEVATION SET
 CIPK  LAST UPDATE DEC 16 1997 
@@ -12,7 +13,7 @@ C-
 C...... Generate specified head boundary conditions
 C-
 cipk aug05      INCLUDE 'BLK10.COM'
-      DIMENSION QQAL(3),WTS(65)
+      DIMENSION QQAL(3),WTS(90)
 CIPK AUG00
       DISTS(N1,N2)=SQRT((CORD(N2,1)-CORD(N1,1))**2
      +                 +(CORD(N2,2)-CORD(N1,2))**2)
