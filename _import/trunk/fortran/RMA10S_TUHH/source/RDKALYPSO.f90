@@ -1,4 +1,4 @@
-!     Last change:  K    24 May 2007   12:11 pm
+!     Last change:  K    22 Jun 2007    8:27 am
 !-----------------------------------------------------------------------
 ! This code, data_in.f90, performs reading and validation of model
 ! inputa data in the library 'Kalypso-2D'.
@@ -284,13 +284,21 @@ END SUBROUTINE check_Kalypso
         do i = 1, 50
           if (lmt(i) + 2 > maxsize) maxsize = lmt(i) + 2
         end do
-       !allocate it, the size must be two slots bigger, because the two cornder nodes of the connecting 1D-element must be included
-        ALLOCATE (kntimel (MaxE, MaxSize))
       else
         !if there is no transitioning, the allocation runs in normal way; the number should be decreasable from 8 to 4.
-        ALLOCATE (kntimel (MaxE, 8))
+        maxsize = 8
       endif
-!-
+
+      !allocate it, the size must be two slots bigger, because the two cornder nodes of the connecting 1D-element must be included
+      ALLOCATE (kntimel (MaxE, MaxSize))
+      !nis,jun07: Initializing the kntimel-array
+      do i = 1, MaxE
+        do j = 1, maxsize
+          kntimel (i, j) = 0
+        end do
+      enddo
+      !-
+
 
 !nis,may07: Information output
 WRITE(*,*) 'Start of Reordering sequence with ', Maxlt, ' couplings'
@@ -312,7 +320,16 @@ WRITE(*,*) 'Start of Reordering sequence with ', Maxlt, ' couplings'
 !-
 
       ne = elem 
-      np = knot 
+      np = knot
+
+      !nis,jun07: Initializing the allocated variables
+      do i = 1, maxp
+        list(i) = 0
+      end do
+      do i = 1, 5000
+        ihold(i) = 0
+      end do
+      !-
 
 !nis,feb07,testing
 !WRITE(*,*) 'Reordering started'
@@ -441,123 +458,148 @@ END DO ConnectsOuter
 
 IF (ierr.eq.1) stop 5
 
-      nepem = 0 
-      DO 510 n = 1, np 
-        IF (icon (n, 1) .gt.0) nepem = nepem + 1 
-  510 END DO 
-      mpq = 0 
-      list (1) = 1 
-      mp = 1 
-      DO 700 n = 1, np 
-        IF (icon (n, 1) .eq.0) goto 700 
-        is = 0 
-        DO 530 m = 1, mp 
-          IF (n.eq.list (m) ) is = 1
-          IF (is.eq.1) list (m) = list (m + 1)
-  530   END DO 
-        IF (is.eq.1) mp = mp - 1 
-        DO 600 j = 1, maxc 
-          i = icon (n, j) 
-          IF (i.eq.0) goto 610 
-          IF (i.le.n) goto 600 
-          DO 550 m = 1, mp 
-            IF (i.eq.list (m) ) goto 560 
-  550     END DO 
-!NiS,mar06: unit name changed; changed iout to Lout
-!      if( mp .eq. mnd ) write(Lout,80)
-   80 FORMAT( / 10x, 'over 1000 terms in list' ) 
+nepem = 0
+DO n = 1, np
+  IF (icon (n, 1) > 0) nepem = nepem + 1
+END DO
+mpq = 0
+list (1) = 1
+mp = 1
+allnodes: DO n = 1, np
+  IF (icon (n, 1) == 0) CYCLE allnodes
+  is = 0
+  DO m = 1, mp
+    IF (n == list (m) ) is = 1
+    IF (is == 1) list (m) = list (m + 1)
+  END DO
 
-!NiS,mar06: name of variable changed; changed mnd to MaxP
-          IF (mp.eq.MaxP) mp = mp - 1
-          mp = mp + 1
-          list (mp) = i 
-  560     CONTINUE 
-  600   END DO 
-  610   CONTINUE 
-!NiS,mar06: unit name changed; changed iout to Lout
-!      if(nprt.eq.3) write(Lout,'(25i4)') (list(m),m=1,mp)
-!      mpq=mpq+mp*mp                                                    
-        mpq = mpq + mp 
-  700 END DO 
+  IF (is == 1) mp = mp - 1
+
+  allconnects: DO j = 1, maxc
+    i = icon (n, j)
+    IF (i == 0) EXIT allconnects
+    IF (i <= n) CYCLE allconnects
+
+    DO m = 1, mp
+      IF (i == list (m) ) cycle allconnects
+    ENDDO     
+
+    !only if every node is not in list(m)
+    !NiS,mar06: name of variable changed; changed mnd to MaxP
+    IF (mp == MaxP) mp = mp - 1
+    mp = mp + 1
+    list (mp) = i
+
+    !NiS,mar06: unit name changed; changed iout to Lout
+    !    if( mp .eq. mnd ) write(Lout,80)
+    !80 FORMAT( / 10x, 'over 1000 terms in list' )
+
+  END DO allconnects
+
+  !NiS,mar06: unit name changed; changed iout to Lout
+  !      if(nprt.eq.3) write(Lout,'(25i4)') (list(m),m=1,mp)
+  !      mpq=mpq+mp*mp
+  mpq = mpq + mp
+ENDDO allnodes
+
+
 !NiS,mar06: unit name changed; changed iout to Lout
 !      write(Lout,99) mpq
-   99 FORMAT(1h1//10x,'for initial order, reordering sum =',i10) 
+!   99 FORMAT(1h1//10x,'for initial order, reordering sum =',i10)
       mpp = mpq 
                                                                         
 ! korrektur von mpp                                                     
                                                                         
-  790 CONTINUE 
-      DO 780 i = 1, np 
-        DO 780 j = 1, maxc 
-  780 icon (i, j) = iabs (icon (i, j) ) 
+      orderloop: DO
 
-      CALL order (idxx, kntimel, qlist, icon) 
+        DO i = 1, np
+          DO j = 1, maxc
+            icon (i, j) = iabs (icon (i, j) )
+          ENDDO
+        ENDDO
 
-      DO 785 k = 1, 160 
-        qlist (1, k) = qlist (2, k) 
-  785 END DO 
-!                                                                       
-      IF (idxx.lt.99999) goto 790 
+!        CALL order (idxx, kntimel, qlist, icon)
+        CALL order (idxx, kntimel, maxsize, qlist, icon)
+
+        DO k = 1, 160
+          qlist (1, k) = qlist (2, k)
+        END DO
+
+        IF (idxx >= 99999) EXIT orderloop
+
+      ENDDO orderloop
 
       !nis,feb07,testing
       !WRITE(*,*) mpp, mpq
       !WRITE(*,*) 'vor Fehler'
       !pause
       !-
+
       IF (mpp.le.mpq) stop 6 
-      DO 810 n = 1, nepem 
+
+      DO n = 1, nepem
         iel (n) = msn (n) 
-  810 END DO 
+      END DO
 !-                                                                      
 !......zero arrarys                                                     
 !-                                                                      
-      DO 820 n = 1, ne 
+      DO n = 1, ne
         nfixh (n) = 0 
-  820 list (n) = 0 
-      DO 840 n = 1, np 
-        DO 840 m = 1, maxc 
-  840 icon (n, m) = 0 
+        list (n) = 0
+      enddo
+
+      DO n = 1, np 
+        DO m = 1, maxc
+          icon (n, m) = 0
+        ENDDO
+      ENDDO
 !-                                                                      
 !......form nodes connected to elements array                           
 !-                                                                      
-      DO 900 n = 1, ne 
-        DO 880 m = 1, ncn 
+      Nodes2ConnElts: DO n = 1, ne
+        N2CEltsOuter: DO m = 1, ncn
+
           i = kntimel (n, m) 
-          IF (i.eq.0) goto 900 
-          DO 860 j = 1, maxc 
-            IF (icon (i, j) .ne.0) goto 860 
+
+          IF (i == 0) cycle Nodes2ConnElts
+
+          N2CEltsInner: DO j = 1, maxc
+
+            IF (icon (i, j) .ne.0) cycle N2CEltsInner
             icon (i, j) = n 
-            GOTO 880 
-  860     END DO 
-  880   END DO 
-  900 END DO 
-      DO 910 n = 1, np 
-  910 END DO 
-!-                                                                      
+            cycle N2CEltsOuter
+
+          END DO N2CEltsInner
+
+        END DO N2CEltsOuter
+      END DO Nodes2ConnElts
+
+!-
 !......form list of elements to be formed                               
 !-                                                                      
       k = 0 
-      DO 960 n = 1, nepem 
+      FormList: DO n = 1, nepem
         i = iel (n) 
-        IF (i.eq.0) goto 980 
-        DO 940 j = 1, maxc 
+        IF (i.eq.0) EXIT FormList
+        FormListInner: DO j = 1, maxc
           m = icon (i, j) 
-          IF (m.eq.0) goto 960 
-          IF (list (m) .gt.0) goto 940 
+          IF (m.eq.0) CYCLE FormList
+          IF (list (m) .gt.0) cycle FormListInner
           k = k + 1 
           nfixh (k) = m 
           list (m) = k 
-  940   END DO 
-  960 END DO 
-  980 CONTINUE 
-      DO 1020 n = 1, ne 
-        IF (list (n) .ne.0) goto 1020 
+        END DO FormListInner
+      END DO FormList
+
+      AssignNfixh: DO n = 1, ne
+        IF (list (n) /= 0) cycle AssignNfixh
         k = k + 1 
         nfixh (k) = n 
- 1020 END DO 
+      END DO AssignNfixh
+
 !NiS,mar06: unit name changed; changed iout to Lout
 !      write(Lout,98) (nfixh(k),k=1,ne)
-   98 FORMAT(//10x,'selected element order is listed below'//(5x,10i10))
+!   98 FORMAT(//10x,'selected element order is listed below'//(5x,10i10))
 
 !NiS,mar06: Deallocating the arrays of module blkasteph
       DEALLOCATE (mlist)
@@ -581,7 +623,7 @@ IF (ierr.eq.1) stop 5
                                                                         
 !XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 !XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-      SUBROUTINE order (n, kntimel, qlist, icon)
+      SUBROUTINE order (n, kntimel, maxsize, qlist, icon)
 !-
       !NiS,mar06: change the module-access for global variables to the RMA10S-construction
       !INCLUDE "common.cfg"
@@ -590,10 +632,16 @@ IF (ierr.eq.1) stop 5
       !this subroutine
       USE BLK2
       USE BLKASTEPH
+
+      !nis,jun07: Adding some definitions
+      INTEGER :: counter
+      INTEGER :: ia
+      INTEGER :: maxsize
+      !-
 !-
 !NiS,mar06: name of variable has changed in RMA10S
 !      INTEGER kntimel (mel, 8), qlist (2, 160)
-      INTEGER kntimel (MaxE, 8), qlist (2, 160) 
+      INTEGER kntimel (MaxE, maxsize), qlist (2, 160)
                                                                         
       PARAMETER (maxcn = 60, adjmax = 20, adjdepth = 2000) 
                                                                         
@@ -601,6 +649,7 @@ IF (ierr.eq.1) stop 5
 !      INTEGER icon (mnd, maxcn)
       INTEGER icon (MaxP, maxcn)
 !-
+
 
 !NiS,mar06: 	the common blocks are replaced with modules dealing with allocatable
 !               arrays. These modules are inserted above and allocated in subroutine reorder
@@ -611,20 +660,26 @@ IF (ierr.eq.1) stop 5
 !                      paxis (mel)
 !-
       DIMENSION nlist (160)
+
+      !nis,jun07: initializing coutner
+      counter = 0
+      ia = 0
+      !-
+
       maxc = maxcn 
       mpo = mpq 
       mpq = 0 
       isum = 0
 !-                                                                      
-      DO 210 j = 1, 160 
-        nlist (j) = qlist (1, j) 
-  210 END DO 
+      DO j = 1, 160
+        nlist (j) = qlist (1, j)
+      END DO
                                                                         
-  225 CONTINUE 
       nelt = 2
       n = nlist (1) 
+
 !NiS,mar06: name of variable changed; changed mnd to MaxP
-      IF (n.gt.MaxP) return
+      IF (n > MaxP) return
 
 !NiS,mar06: unit name changed; changed iout to Lout
 !      write(*,*) 'Lout in reord =',Lout
@@ -644,107 +699,145 @@ IF (ierr.eq.1) stop 5
       iel (1) = n 
       mp = 0 
       nod = 1 
-      DO 1095 i = 1, maxc 
+
+      allConnects: DO i = 1, maxc
         jj = icon (n, i) 
-        IF (jj.eq.0) goto 1095 
-        DO 1090 m = 1, maxc 
-          IF (icon (jj, m) .eq.n) goto 1093 
- 1090   END DO 
-        GOTO 1095 
- 1093   icon (jj, m) = - icon (jj, m) 
- 1095 END DO 
-      IF (nel.eq.1) goto 1070 
-!     set values for each new poiunt eliminated                         
+        IF (jj.eq.0) CYCLE allConnects
+        DO m = 1, maxc
+          IF (icon (jj, m) == n) then
+            icon (jj, m) = - icon (jj, m)
+            CYCLE allConnects
+          end if
+        END DO
+      END DO allConnects
+
+!     set values for each new point eliminated
 !                                                                       
-  240 DO 250 i = 1, 41 
-        DO 250 j = 1, 40 
-  250 icol (i, j) = 0 
-      nod = nod+1 
-      mist = 0 
-      nr = 1 
-      nadm (nr) = 100 
-      DO 600 m = 1, mp 
-        ii = list (m) 
-        CALL adjpt (ii, m, kntimel, icon) 
-  600 END DO 
- 1000 m = icol (1, 1) 
-!      print *,'m=',m                                                   
- 1005 n = list (m) 
-      IF (ihold (1) .lt.249) goto 1010 
-      m = 1 
-      n = list (1) 
- 1010 CONTINUE 
-      ia = ihold (m) 
-      nel = nel + 1 
-      IF (nlist (nelt) .eq.0) goto 1035 
-      nelt = nelt + 1 
-      n = nlist (nel) 
-      DO 1030 mm = 1, mp
-        m = mm 
-        IF (list (m) .eq.n) goto 1035 
- 1030 END DO 
-      mp = mp + 1 
-      list (mp) = n 
-      m = mp 
- 1035 CONTINUE 
-      iel (nel) = n 
-      DO 1040 i = 1, m 
- 1040 ihold (i) = ihold (i) + 1 
-      mp = mp - 1 
-      IF (m.gt.mp) goto 1070 
-      DO 1050 i = m, mp 
-        ihold (i) = ihold (i + 1) + 1 
-        list (i) = list (i + 1) 
- 1050 END DO 
- 1070 CONTINUE 
-!     add to column adjacent point of eliminated point                  
+    counter = 0
+    MainLoop: do
+     counter = counter + 1
+     IF (nel /= 1 .or. counter /= 1) then
+       !initialization of icol
+       DO i = 1, 41
+         DO j = 1, 40
+           icol (i, j) = 0
+         enddo
+       enddo
+
+       nod = nod+1
+       mist = 0
+       nr = 1
+       nadm (nr) = 100
+
+       DO m = 1, mp
+         ii = list (m)
+         CALL adjpt (ii, m, kntimel, maxsize, icon)
+       END DO
+
+       m = icol (1, 1)
+       !print *,'m=',m, 'mp: ', mp
+       n = list (m)
+
+       IF (ihold (1) >= 249) THEN
+         m = 1
+         n = list (1)
+       ENDIF
+
+       ia = ihold (m)
+       nel = nel + 1
+
+       IF (nlist (nelt) /= 0) THEN
+         nelt = nelt + 1
+         n = nlist (nel)
+         allMPs: DO mm = 1, mp
+           m = mm
+           IF (list (m) == n) EXIT allMPs
+
+           IF (mm == mp) THEN
+             mp = mp + 1
+             list (mp) = n
+             m = mp
+           ENDIF
+
+         END DO allMPs
+       endif
+
+       iel (nel) = n
+
+       DO i = 1, m
+         ihold (i) = ihold (i) + 1
+       ENDDO
+
+       mp = mp - 1
+
+       IF (m <= mp) THEN
+
+         DO i = m, mp
+           ihold (i) = ihold (i + 1) + 1
+           list (i) = list (i + 1)
+         ENDDO
+       ENDIF
+     ENDIF
+
+!     add to column adjacent point of eliminated point
 !                                                                       
-      DO 270 j = 1, maxc
-        !nis,feb07,testing
-        !WRITE(*,*) j, ii, icon(n,j)
-        !-
-        ii = icon (n, j) 
-        IF (ii.le.0) goto 270 
-        mp = mp + 1 
-        ihold (mp) = 1 
-        list (mp) = ii 
-  270 END DO 
-!      mpq=mp*mp+mpq                                                    
-      mpq = mp + mpq 
-      isum = isum + ia 
+      addColumn: DO j = 1, maxc
+        ii = icon (n, j)
+        IF (ii <= 0) CYCLE addColumn
+        mp = mp + 1
+        ihold (mp) = 1
+        list (mp) = ii
+      END DO addColumn
+
+!     mpq=mp*mp+mpq
+
+      mpq = mp + mpq
+      isum = isum + ia
+
 !NiS,mar06: unit name changed; changed iout to Lout
 !      if(nprt.gt.0) write(Lout,'(3i5)') n,ia,mp
 !      if(nprt.gt.1) write(Lout,'(20x,25i4)')  (list(j),j=1,mp)
-      DO 1200 i = 1, maxc 
+
+      iconAssignouter: DO i = 1, maxc
         jj = icon (n, i)
-        IF (jj.le.0) goto 1200 
-        DO 1150 m = 1, maxc 
-          k = iabs (icon (jj, m) ) 
-          IF (k.eq.0) goto 1150 
-          DO 1100 mm = 1, maxc 
-            IF (icon (k, mm) .eq.jj) goto 1105 
- 1100     END DO 
-          GOTO 1150 
- 1105     icon (k, mm) = - icon (k, mm) 
- 1150   END DO 
- 1200 END DO 
-      IF (nod.lt.nepem) goto 240 
+
+        IF (jj <= 0) CYCLE iconAssignouter
+
+        iconAssignInner: DO m = 1, maxc
+          k = iabs (icon (jj, m) )
+
+          IF (k == 0) CYCLE iconAssignInner
+
+          DO mm = 1, maxc
+            IF (icon (k, mm) == jj) then
+              icon (k, mm) = - icon (k, mm)
+              cycle iconAssignInner
+            ENDIF
+          END DO
+
+        END DO iconAssignInner
+
+      END DO iconAssignouter
+
+      IF (nod >= nepem) EXIT MainLoop
+    ENDDO MainLoop
+
 !NiS,mar06: unit name changed; changed iout to Lout
 !      write(Lout,6050) mpq,isum
 ! 6050 format(//10x,'reordering sum =',i10,'  band sum =',i8// )        
 ! 6050 format(//10x,'reordering Summe =',i10,'  Band Summe =',i8// )    
       IF (mpq.ge.mpo) mpq = mpo 
       IF (mpq.eq.mpo) return 
-      DO 1400 n = 1, nepem 
-        msn (n) = iel (n) 
- 1400 END DO 
-      RETURN 
+      DO n = 1, nepem
+        msn (n) = iel (n)
+      END DO
+      RETURN
       END SUBROUTINE order                          
                                                                         
                                                                         
                                                                         
 !-----------------------------------------------------------------------
-      SUBROUTINE adjpt (ii, m, kntimel, icon)
+      SUBROUTINE adjpt (ii, m, kntimel, maxsize, icon)
 !                                                                       
 !     Hier wird ???  WP                                                 
 !                                                                       
@@ -759,9 +852,13 @@ IF (ierr.eq.1) stop 5
       USE BLKASTEPH
 !-
 
+      !nis,jun07: Adding some defintions
+      INTEGER :: maxsize
+      !-
+
 !NiS,mar06: name of variable has changed in RMA10S
 !      INTEGER kntimel (mel, 8) 
-      INTEGER kntimel (MaxE, 8)
+      INTEGER kntimel (MaxE, maxsize)
       PARAMETER (maxcn = 60, adjmax = 20, adjdepth = 2000)
 !      INTEGER icon (mnd, maxcn)
       INTEGER icon (MaxP, maxcn)
@@ -778,22 +875,23 @@ IF (ierr.eq.1) stop 5
       maxc = maxcn 
       nad = 0 
                                                                         
-      DO 100 i = 1, maxc 
+      countloop: DO i = 1, maxc
         jj = icon (ii, i) 
-        IF (jj.le.0) goto 100 
-        IF (jj.eq.mist) goto 100 
+        IF (jj.le.0) cycle countloop
+        IF (jj.eq.mist) cycle countloop
         nad = nad+1 
-  100 END DO 
+      END DO countloop
                                                                         
-      IF (nad-nadm (nr) ) 200, 300, 400 
-  200 nadm (nr) = nad 
-      icol (nr, 1) = m 
-      nc = 1 
-      GOTO 400 
-  300 nc = nc + 1 
-      icol (nr, nc) = m 
-  400 CONTINUE 
-      RETURN 
+      IF (nad-nadm (nr) < 0) then
+        nadm (nr) = nad
+        icol (nr, 1) = m
+        nc = 1
+      ELSEIF (nad-nadm(nr) == 0) then
+        nc = nc + 1
+        icol (nr, nc) = m
+      endif
+
+      RETURN
       END SUBROUTINE adjpt                          
                                                                         
                                                                         
@@ -963,6 +1061,13 @@ ELSE                      !In the second run, the value of MAXA is known and the
 ENDIF                     !NiS,mar06
 arcs_without_midside = 0
 midsidenode_max = 0
+
+!nis,jun07: Initializing the qlist array
+do i = 1, 160
+  qlist(1, i) = 0
+  qlist(2, i) = 0
+end do
+!-
 
 !Nis,may06,com: initializing the I/O error space
 istat =0
@@ -1557,18 +1662,20 @@ END DO reading
 WRITE(*,*) ' Schaffe die Leseschleife'
 
 
-!nis,dec06: Form Continuity lines length arrays
-CClineforming: do i=1,50
-  if (line(i,1).eq.0) CYCLE CClineforming
-  getfirstzeroentry: do j=2,350
-    if (line(i,j).EQ.0) then
-      lmt(i) = j-1
-      CYCLE CClineforming
-    end if
-    !if 350 nodes are in the line the entry has to be made after loop here.
-    lmt(i) = 350
-  end do getfirstzeroentry
-end do CClineforming
+!nis,dec06: Form Continuity lines length arrays, but just, when KSWIT == 0
+if (KSWIT == 0) then
+  CClineforming: do i=1,50
+    if (line(i,1).eq.0) CYCLE CClineforming
+    getfirstzeroentry: do j=2,350
+      if (line(i,j).EQ.0) then
+        lmt(i) = j-1
+        CYCLE CClineforming
+      end if
+      !if 350 nodes are in the line the entry has to be made after loop here.
+      lmt(i) = 350
+    end do getfirstzeroentry
+  end do CClineforming
+endif
 !-
 
 !NiS,mar06: file is closed in the calling subroutine getgeo; it can't be closed here because it is used twice
@@ -2193,9 +2300,9 @@ ENDDO
 ! ----------------------------------------------------------------------
 !     Kopie des Hoehenfeldes
 !NIS,may06: variable name changed; changed mnd to MaxP
-      DO 3000 i = 1, MaxP
+      DO i = 1, MaxP
         aour (i) = ao (i)
- 3000 END DO
+      END DO
                                                                         
 ! ----------------------------------------------------------------------------------------------------------------
 !     Initialize check / ncl Linien zusammensetzen:
@@ -2360,6 +2467,8 @@ neighbours: do i=1,elcnt
   ! leere Elementnummern uebergehen:
   if (elem(i,1).ne.0) then
 
+    !nis,jun07: Initializing ConnNumber
+    ConnNumber = 0
     !nis,jan07: Get the transition number and the transitioning CCL
     findconnection: do j= 1, MaxLT
       if (TransLines(j,1).eq.i) then
@@ -2371,64 +2480,61 @@ neighbours: do i=1,elcnt
     end do findconnection
     !-
 
-  !nis,dec06: For 1D-2D-transition-lines the connectivity of the nodes differs from the original 2D-connectivity,
-  !           that can be also used for simple 1D-networks and simple 1D-2D-elementToelement-transitions
-  !           For those line-transitions, the following two loops are inserted
-  !
-  if (Transmember(ConnNumber).gt.0 .and. ConnNumber.ne.0) then
-    !the slope is just connected to the CORNER nodes of the transition line, the midside nodes are not effecting!
-    !number of nodes at that 1D-2D-transtion without the midsidenodes of the line
-    ncorn_temp = lmt(ConnLine)+Transmember(ConnNumber)+1
+    !nis,dec06: For 1D-2D-transition-lines the connectivity of the nodes differs from the original 2D-connectivity,
+    !           that can be also used for simple 1D-networks and simple 1D-2D-elementToelement-transitions
+    !           For those line-transitions, the following two loops are inserted
+    !
 
-    !nis,dec06,testing
-    !WRITE(*,*) 'Element: ', i
-    !-
+    if (Transmember(ConnNumber).gt.0 .and. ConnNumber.ne.0) then
+      !the slope is just connected to the CORNER nodes of the transition line, the midside nodes are not effecting!
+      !number of nodes at that 1D-2D-transtion without the midsidenodes of the line
+      ncorn_temp = lmt(ConnLine)+Transmember(ConnNumber)+1
 
-    !this is the temporary nop-array for the '1D-2D-transitionline-element'
-    ALLOCATE (nop_temp(1:ncorn_temp))
+      !this is the temporary nop-array for the '1D-2D-transitionline-element'
+      ALLOCATE (nop_temp(1:ncorn_temp))
 
-    !overgive the three nodes of the 1D-part; they are already sorted:
-    !1: connection to next 1D-element
-    !2: midside node
-    !3: connection to transition line
-    do k = 1, 3
-      nop_temp(k) = nop(i,k)
-    end do
-    !-
-
-    !Adding shows the point, from which on the nodes of the connected line have to be stored in the nop_temp array
-    adding = 3
-    !overgiving the nodes into the temporary array nop_temp
-    nodeassigning: do j=1,lmt(ConnLine)
-      !if the connecting node is also part of the line-defintion, this placeholder has to skipped. For next run through loop because j is increased,
-      !  adding has to be decreased
-      if (line(ConnLine,j) .eq. TransLines(ConnNumber,3)) then
-        adding = 2
-        CYCLE nodeassigning
-      endif
-      !overgive the connected node to the temporary array
-      nop_temp(j+adding)=line(ConnLine,j)
-      !nis,dec06: testing
-      !WRITE(*,*) j+adding, nop_temp(j+adding)
+      !overgive the three nodes of the 1D-part; they are already sorted:
+      !1: connection to next 1D-element
+      !2: midside node
+      !3: connection to transition line
+      do k = 1, 3
+        nop_temp(k) = nop(i,k)
+      end do
       !-
-    end do nodeassigning
 
-    !store neighbourhood relations, it's nearly the same loop as in the original loop, shown below
-    outerLT: do j = 1, ncorn_temp
-      node1 = nop_temp(j)
-      innerLT: do l = 1, ncorn_temp
-        node2 = nop_temp(l)
-        if (node1.ne.node2) then
-          nconnect(node1) = nconnect(node1) + 1
-          neighb(node1,nconnect(node1)) = node2
-        end if
-      end do innerLT
-    end do outerLT
-    !array resetting for next transition, that is probably be from other size
-    DEALLOCATE(nop_temp)
+      !Adding shows the point, from which on the nodes of the connected line have to be stored in the nop_temp array
+      adding = 3
+      !overgiving the nodes into the temporary array nop_temp
+      nodeassigning: do j=1,lmt(ConnLine)
+        !if the connecting node is also part of the line-defintion, this placeholder has to skipped. For next run through loop because j is increased,
+        !  adding has to be decreased
+        if (line(ConnLine,j) .eq. TransLines(ConnNumber,3)) then
+          adding = 2
+          CYCLE nodeassigning
+        endif
+        !overgive the connected node to the temporary array
+        nop_temp(j+adding)=line(ConnLine,j)
+        !nis,dec06: testing
+        !WRITE(*,*) j+adding, nop_temp(j+adding)
+        !-
+      end do nodeassigning
+
+      !store neighbourhood relations, it's nearly the same loop as in the original loop, shown below
+      outerLT: do j = 1, ncorn_temp
+        node1 = nop_temp(j)
+        innerLT: do l = 1, ncorn_temp
+          node2 = nop_temp(l)
+          if (node1.ne.node2) then
+            nconnect(node1) = nconnect(node1) + 1
+            neighb(node1,nconnect(node1)) = node2
+          end if
+        end do innerLT
+      end do outerLT
+      !array resetting for next transition, that is probably be from other size
+      DEALLOCATE(nop_temp)
 
 
-    !nis,feb07: Here is a conflict!!!    
+      !nis,feb07: Here is a conflict!!!
 
 !nis,may07
 !Add midside node for polynom approach; at the moment there neighbourhood relation between the nodes must not be calculated
@@ -2446,46 +2552,31 @@ neighbours: do i=1,elcnt
       nconnect(node2) = nconnect(node2)+1
       neighb(node1,nconnect(node1)) = node2
       neighb(node2,nconnect(node2)) = node1
-    else
-    ! Lesen aller Knotennummern eines Elementes
-    outer: do j=1,ncorn(i)
-
-!      if (i == 2306) then
-!        write (*,*) 'Lebe noch! i=', i, '   j=', j, '   nop(i,j)=', nop(i,j), 'ncorn(i): ', ncorn(i)
-!      end if
+    ELSE
+      ! Lesen aller Knotennummern eines Elementes
+      outer: do j=1,ncorn(i)
 
 !nis,dec06: for increasing speed of program, bring line to outside of loop
         node1 = nop(i,j)
 !-
 
-      inner: do l=1,ncorn(i)
+        inner: do l=1,ncorn(i)
 
 !nis,dec06: for increasing speed of program, bring line to outside of loop
-!        node1 = nop(i,j)
+!          node1 = nop(i,j)
 !-
-        node2 = nop(i,l)
+          node2 = nop(i,l)
 
-!        if (i == 2306) then
-!          write (*,*) 'node1: ', node1, '   node2: ', node2
-!        end if
+          IF (node1 .ne. node2) THEN
+            nconnect(node1) = nconnect(node1) + 1
+            neighb(node1,nconnect(node1)) = node2
+          END if
+        end do inner
+      end do outer
 
-        if (node1 .ne. node2) then
-          nconnect(node1) = nconnect(node1) + 1
-          neighb(node1,nconnect(node1)) = node2
-!          if (i == 2306) then
-!            write (*,*) 'nconnect(node1) = nconnect(',node1,'):', nconnect(node1)
-!            write (*,*) 'neighb(node1,',nconnect(node1),'): ', neighb(node1,nconnect(node1))
-!          end if
-
-        END if
-
-      end do inner
-
-    end do outer
-
-  !nis,dec06: endif for the test of whether line transition or not
-  endif
-  !-
+    !nis,dec06: endif for the test of whether line transition or not
+    ENDIF
+    !-
 
   end if
 
