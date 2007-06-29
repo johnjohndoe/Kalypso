@@ -66,6 +66,7 @@ import java.util.ArrayList;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.swt.graphics.RGB;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypsodeegree.filterencoding.Filter;
@@ -276,19 +277,18 @@ public class DisplayElementFactory
       displayElement = buildRasterDisplayElement( feature, (RasterSymbolizer) symbolizer );
     }
     // TODO: replace with symbolizer read from sld
+    
     else if( symbolizer == null && feature.getDefaultGeometryProperty() instanceof GM_TriangulatedSurface )
     {
       final IElevationColorModel colorModel = new IElevationColorModel()
       {
         public Color getColor( double elevation )
         {
-          if( elevation < 0.5 )
-            return Color.BLUE;
-
-          if( elevation < 1.5 )
-            return Color.RED;
-
-          return Color.GREEN;
+          final int hue = (int)( Math.random() * 255 );
+//          System.out.println( hue );
+          final RGB rgb = new RGB( hue, 128, 128 );
+          
+          return new Color( rgb.red, rgb.green, rgb.blue );
         }
 
         public double getDiscretisationInterval( )
@@ -311,7 +311,8 @@ public class DisplayElementFactory
       {
         public ISurfacePatchVisitor<GM_Triangle> createVisitor( final Graphics g, final GeoTransform projection, final IElevationColorModel model )
         {
-          return new SurfacePaintIsolinesVisitor<GM_Triangle>( g, projection, colorModel );
+//          return new SurfacePaintIsolinesVisitor<GM_Triangle>( g, projection, colorModel );
+          return new SurfacePaintPlainTriangleVisitor<GM_Triangle>( g, projection, colorModel );
         }
       };
 
