@@ -27,7 +27,7 @@ cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
 cipk  last update Jan 21 1998
 cipk  last update Dec 16 1997
-C     Last change:  K    24 May 2007    3:39 pm
+C     Last change:  K    28 Jun 2007   12:05 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 cipk  last update Jan 22 1997
 cipk  last update Oct 1 1996 add new formulations for EXX and EYY
@@ -59,7 +59,13 @@ C
 !NiS,apr06: adding variables for friction calculation with DARCY-WEISBACH
       REAL :: lambda
 !-
-
+!nis,jun07: Changes for matrix output
+      INTEGER :: dca
+      INTEGER :: nbct (1:32,1:2)
+      CHARACTER (LEN =  1) :: sort(1:32)
+      CHARACTER (LEN = 16) :: FMT1
+      CHARACTER (LEN = 34) :: FMT2
+!-
 cycw aug94 add double precision salt
       REAL*8 SALT
 CIPK AUG05      INCLUDE 'BLK10.COM'
@@ -644,6 +650,10 @@ CIPK NOV97 MODERNIZE LOOP AND ADD LOGIC FOR MARSH FRICTION
       AKAPMG=0.0
 cipk sep02 add ice parameters
       GSICE=0.
+      !nis,jun07: Adding initializsations
+      GSQLW = 0.
+      !-
+
       SQLW=0.
 
 CIPK JUN02
@@ -660,9 +670,13 @@ cipk jun02
 	  WSELL=WSELL+WSLL(MR)*XM(M)
 CIPK SEP02
 CIPK DEC05
-        IF(ICK .EQ. 6) THEN
-          EXTL=EXTL+XM(M)*EXTLD(MR)
-        ENDIF
+        !nis,jun07: ICK is not assigned, whenn ntx == 0 (beginning of program), therefore jump
+        if (ntx /= 0) then
+          IF(ICK .EQ. 6) THEN
+            EXTL=EXTL+XM(M)*EXTLD(MR)
+          ENDIF
+        endif
+        !-
 cipk jan00 correct location for azer
 C        AZER=AZER+XM(M)*AO(MR)
         BETA3=BETA3+XM(M)*VDOT(3,MR)
@@ -1840,11 +1854,14 @@ C-
 C...... Test for and then retrieve stage flow constants
 C-
       IF(ISTLIN(M) .NE. 0) THEN
+        !line number to apply h-Q-relationship as BC
         J=ISTLIN(M)
+        !coefficients/ parameters of h-Q-relationship equation
         AC1=STQ(J)
         AC2=STQA(J)
         E0=STQE(J)
         CP=STQC(J)
+        !cross sectional area depending on actual water depth, generated in AGEN.sub
         ASC=ALN(J)
       ELSE
         AC2=0.
@@ -1941,27 +1958,51 @@ C            rkeepeq(ja)=rkeepeq(ja)+f(ia)
 
       !matrix in datei
       if (nn >= 313 .and. nn <= 320) then
-        WRITE(9919,*) 'Element ', nn, 'coef2 t', xht
-        WRITE(9919,'(6x,32(1x,i10))')
-     +       ( ( nbc (nop(nn,i), j), j=1, 4), i = 1,8)
-        do i = 1,32
-          if (MOD(i,4)/=0) then
-!            WRITE(*,*) i, MOD(i,4),
-!     +         1+(i-MOD(i,4))/ 4, nop(nn, 1+(i-MOD(i,4))/ 4)
-            WRITE(9919,'(i6,33(1x,f10.2),1x,i6)')
-     +       nbc( nop(nn, 1+(i-MOD(i,4))/ 4), mod(i,4)),
-     +       (estifm(i,j), j=1, 32),
-     +       f(i),
-     +       nbc( nop(nn, 1+(i-MOD(i,4))/ 4), mod(i,4))
-          ELSE
-!            WRITE(*,*) i, 4,
-!     +       i/4, nop(nn, i/4)
-            WRITE(9919,'(i6,33(1x,f10.2),1x,i6)')
-     +       nbc( nop(nn, i/4 ), 4),
-     +       (estifm(i,j), j=1, 32),f(i),
-     +       nbc( nop(nn, i/4 ), 4)
-          endif
+        !active degreecount
+        dca = 0
+        !active positions
+        do i = 1, 32
+          nbct(i,1) = 0
+          nbct(i,2) = 0
+          sort(i) = 'N'
         end do
+
+        do i = 1, ncn
+          do j = 1, 4
+            if (nbc(nop(nn,i), j) /= 0) then
+              dca = dca + 1
+              if (j <=2) then
+                sort(dca) = 'I'
+              ELSEIF (j == 3) then
+                sort(dca) = 'C'
+              else
+                sort(dca) = 'S'
+              endif
+              nbct (dca,1) = i
+              nbct (dca,2) = j
+            endif
+          end do
+        end do
+
+        WRITE(FMT1, '(a5,i2.2,a9)') '(21x,', dca, '(1x,i10))'
+        write(FMT2, '(a14,i2.2,a18)')
+     +    '(a1,i1,a2,i10,', dca+1, '(1x,f10.2),1x,i10)'
+
+        WRITE(9919,*) 'Element ', nn, 'coef2 t', xht
+        WRITE(9919, FMT1)
+     +    ( nbc (nop(nn, nbct(j,1)), nbct(j,2)), j=1, dca)
+        DO i = 1, dca
+          IF (MOD(i,4)/=0) THEN
+            k = (nbct(i,1) - 1) * 4 + nbct(i,2)
+            WRITE(9919, FMT2)
+     +       sort(i), nbct(i,1), ': ',
+     +       nbc( nop(nn, nbct(i,1)), nbct(i,2)),
+!     +       f(nbc( nop(nn, nbct(i,1)), nbct(i,2))),
+     +       f(k),
+     +       (estifm(k, (nbct(j,1) - 1) * 4 + nbct(j,2)), j=1, dca),
+     +       nbc( nop(nn, nbct(i,1)), nbct(i,2))
+          ENDIF
+        ENDDO
         WRITE(9919,*)
         WRITE(9919,*)
       endif
