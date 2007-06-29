@@ -59,7 +59,10 @@ public class ProblemDescriptor implements IProblem
   private ICalculationUnit calculationUnit;
   private IFeatureWrapper2 featureToFocus;
 
-  public ProblemDescriptor(String name, String messageDescription, ICalculationUnit calculationUnit , IFeatureWrapper2 featureToFocus)
+  public ProblemDescriptor(String name, 
+                    String messageDescription, 
+                    ICalculationUnit calculationUnit,
+                    IFeatureWrapper2 featureToFocus)
   {
     this.name = name;
     this.messageDescription =  messageDescription;
@@ -87,6 +90,8 @@ public class ProblemDescriptor implements IProblem
    */
   public void navigateToProblem( MapPanel panel )
   {
+    //@TODO Madan - Must change the below statement to show 
+    //     the element that should get the Focus.. using showFocusOn() 
     GM_Envelope boundingBox = CalUnitOps.getBoundingBox( getParentCalculationUnit() );
     if( boundingBox == null )
     {

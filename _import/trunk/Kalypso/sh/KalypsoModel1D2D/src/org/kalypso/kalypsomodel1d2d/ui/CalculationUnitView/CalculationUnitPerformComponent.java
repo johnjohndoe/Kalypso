@@ -47,6 +47,7 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitViewerLabelProvider;
 import org.kalypso.kalypsomodel1d2d.ui.map.editor.FeatureWrapperListEditor;
@@ -106,12 +107,18 @@ public class CalculationUnitPerformComponent extends FeatureWrapperListEditor im
       mergeCal.addToBoundaryLine(CalUnitOps.getBoundaryLines(orgCalc));
       mergeCal.checkAllInvariants();
       dataModel.setValidatingMessages( orgCalc, mergeCal.getBrokenInvariantsMessage() );      
-      
       //FindInvalidElements findEle = new FindInvalidElements(orgCalc);
       
       InvariantBConditionWithBLine invBConditionBLine = new InvariantBConditionWithBLine(orgCalc, dataModel);
       dataModel.setValidatingMessages( orgCalc,invBConditionBLine.getBrokenInvariantsMessage() );
       
-    }   
+      if (orgCalc instanceof ICalculationUnit1D2D)
+      {
+        ICalculationUnit1D2D calc1D2D = (ICalculationUnit1D2D) orgCalc;
+        InvariantOverlappingElements overlappingElements = new InvariantOverlappingElements(calc1D2D, dataModel);
+      }
+      
+    }
+    
   }
 }

@@ -106,7 +106,10 @@ public class CalculationUnitDataModel extends KeyBasedDataModel
   {
     if (validateMessages.containsKey( key ))
     {
-      validateMessages.get( key ).addAll( strList );
+       List<IProblem> messages = validateMessages.get( key );
+       messages.addAll( strList );
+       validateMessages.put( key, messages );
+      //validateMessages.get( key ).addAll( strList );
     }
     else
     {

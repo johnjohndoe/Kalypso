@@ -127,6 +127,7 @@ public class CalculationUnitProblemsComponent
           {
             IProblem problem = (IProblem) firstElement;
             
+            
             MapPanel mapPanel = 
               dataModel.getData( MapPanel.class, ICommonKeys.KEY_MAP_PANEL );
             problem.navigateToProblem( mapPanel );            

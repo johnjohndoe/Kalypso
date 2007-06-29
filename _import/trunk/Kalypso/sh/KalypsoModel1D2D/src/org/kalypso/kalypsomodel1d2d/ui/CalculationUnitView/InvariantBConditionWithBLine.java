@@ -42,10 +42,11 @@ package org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.ui.map.IGrabDistanceProvider;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
@@ -84,7 +85,12 @@ public class InvariantBConditionWithBLine
     
     for (IBoundaryLine line:boundaryLines)
     {
-
+      
+      List<IFE1D2DNode> nodeList = line.getNodes();
+      for (IFE1D2DNode node:nodeList)
+      {
+        node.getPoint();
+      }
       // @TODO 
     }
  // @TODO 
@@ -107,8 +113,11 @@ public class InvariantBConditionWithBLine
   }
   
   public List<IProblem> getBrokenInvariantsMessage()
-  {    
-    return invariantErrorMessages;    
+  {
+    if (invariantErrorMessages == null)
+      return new ArrayList<IProblem>();
+    else
+      return invariantErrorMessages;    
   }
 
 }
