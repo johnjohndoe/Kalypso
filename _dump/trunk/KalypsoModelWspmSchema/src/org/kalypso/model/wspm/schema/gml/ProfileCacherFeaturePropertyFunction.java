@@ -127,7 +127,8 @@ public class ProfileCacherFeaturePropertyFunction extends FeaturePropertyFunctio
         if( srsName == null )
           srsName = TimeserieUtils.getCoordinateSystemNameForGkr( Double.toString( rw ) );
 
-        positions.add( GeometryFactory.createGM_Position( rw, hw, h ) );
+        final GM_Position position = GeometryFactory.createGM_Position( rw, hw, h );
+        positions.add( position );
       }
 
       if( positions.size() < 2 )
