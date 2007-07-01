@@ -49,6 +49,7 @@ import java.io.PrintWriter;
 import java.net.URL;
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.logging.Formatter;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -66,9 +67,10 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.commons.java.lang.ProcessHelper;
 import org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter;
 import org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv;
+import org.kalypso.kalypsomodel1d2d.conv.Weir1D2DConverter;
+import org.kalypso.kalypsomodel1d2d.conv.WeirIDProvider;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IPseudoOPerationalModel;
 import org.kalypso.kalypsosimulationmodel.core.Util;
@@ -83,11 +85,10 @@ import org.kalypso.simulation.core.KalypsoSimulationCorePlugin;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.simspec.Modeldata;
 import org.kalypso.simulation.ui.calccase.CalcJobHandler;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
-
-import de.renew.workflow.connector.cases.ICaseDataProvider;
 
 /**
+ * TODO: Do notjust copy.paste everything! No one will ever be able to manage this code ever!
+ * 
  * Implements the {@link ISimulation} interface to provide the simulation job for the 1d2d model
  * 
  * @author huebsch <a href="mailto:j.huebsch@tuhh.de">Jessica Huebsch</a>
@@ -95,10 +96,6 @@ import de.renew.workflow.connector.cases.ICaseDataProvider;
  */
 public class CalculationUnitSimMode1D2DCalcJob implements ISimulation
 {
-  public static final String CS_KEY_GAUSS_KRUEGER = "EPSG:31467";
-
-  private RMA10Calculation m_calculation;
-
   /**
    * @see org.kalypso.services.calculation.job.ICalcJob#run(java.io.File,
    *      org.kalypso.services.calculation.job.ICalcDataProvider, org.kalypso.services.calculation.job.ICalcResultEater,
@@ -131,14 +128,12 @@ public class CalculationUnitSimMode1D2DCalcJob implements ISimulation
       if( monitor.isCanceled() )
         return;
 
-      // TODO: this is not nice, as the calculation is only used within this method, outside this method the calculation is not valid any more
-      // so this should not be a member variable
-      m_calculation = new RMA10Calculation( inputProvider );
+      final RMA10Calculation calculation = new RMA10Calculation( inputProvider );
 
       /** convert discretisation model stuff... */
       // write merged *.2d file for calc core / Dejan
       final File modelFile = new File( tmpDir, "model.2d" );
-      final Gml2RMA10SConv converter2D = new Gml2RMA10SConv( modelFile, m_calculation );
+      final Gml2RMA10SConv converter2D = new Gml2RMA10SConv( modelFile, calculation );
 
       if( monitor.isCanceled() )
         return;
@@ -153,17 +148,29 @@ public class CalculationUnitSimMode1D2DCalcJob implements ISimulation
         return;
 
       PrintWriter r10pw = null;
+      PrintWriter weirPw = null;
       try
       {
+        /* Control model */
         r10pw = new PrintWriter( new File( tmpDir, RMA10SimModelConstants.R10_File ) );
-        final Control1D2DConverter controlConverter = new Control1D2DConverter( converter2D.getNodesIDProvider(), converter2D.getRoughnessIDProvider() );
-        controlConverter.writeR10File( m_calculation, r10pw );
+        final WeirIDProvider weirProvider = converter2D.getWeirProvider();
+        final LinkedHashMap<String, String> roughnessIDProvider = converter2D.getRoughnessIDProvider();
+        final LinkedHashMap<String, String> nodesIDProvider = converter2D.getNodesIDProvider();
+        final Control1D2DConverter controlConverter = new Control1D2DConverter( nodesIDProvider, roughnessIDProvider, weirProvider );
+        controlConverter.writeR10File( calculation, r10pw );
         r10pw.close();
+
+        /* Weir File */
+        weirPw = new PrintWriter( new File( tmpDir, RMA10SimModelConstants.WEIR_File ) );
+        final Weir1D2DConverter weirConverter = new Weir1D2DConverter( weirProvider );
+        weirConverter.writeWeirFile( new java.util.Formatter( weirPw ) );
+        weirPw.close();
       }
       finally
       {
         /* Alwaysw close stream in a finally block */
         IOUtils.closeQuietly( r10pw );
+        IOUtils.closeQuietly( weirPw );
       }
 
       /* Prepare the result directory */
@@ -178,10 +185,10 @@ public class CalculationUnitSimMode1D2DCalcJob implements ISimulation
 
       monitor.setProgress( 20 );
 
-      copyExecutable( tmpDir, m_calculation.getKalypso1D2DKernelPath() );
+      copyExecutable( tmpDir, calculation.getKalypso1D2DKernelPath() );
 
-      final ResultProcessRunnable resultRunner = new ResultProcessRunnable( tmpDir, outputDir, "A", inputProvider, m_calculation );
-      startCalculation( tmpDir, monitor, resultRunner );
+      final ResultProcessRunnable resultRunner = new ResultProcessRunnable( tmpDir, outputDir, "A", inputProvider, calculation );
+      startCalculation( tmpDir, monitor, resultRunner, calculation );
       /* Run a last time so nothing is forgotten... */
       resultRunner.run();
 
@@ -281,14 +288,14 @@ public class CalculationUnitSimMode1D2DCalcJob implements ISimulation
   /**
    * starts 2D simulation
    */
-  private void startCalculation( final File basedir, final ISimulationMonitor monitor, final Runnable resultRunner ) throws SimulationException
+  private void startCalculation( final File basedir, final ISimulationMonitor monitor, final Runnable resultRunner, final RMA10Calculation calculation ) throws SimulationException
   {
     /*
      * Creates the result folder for the .exe file, must be same as in Control-Converter (maybe give as an argument?)
      */
     new File( basedir, "result" ).mkdirs();
 
-    final File exeFile = new File( basedir, m_calculation.getKalypso1D2DKernelPath() );
+    final File exeFile = new File( basedir, calculation.getKalypso1D2DKernelPath() );
     final File exeDir = exeFile.getParentFile();
     final String commandString = exeFile.getAbsolutePath();
     FileOutputStream logOS = null;
@@ -310,43 +317,29 @@ public class CalculationUnitSimMode1D2DCalcJob implements ISimulation
       IOUtils.closeQuietly( errorOS );
     }
   }
-  
-  public static IStatus startCalculation( 
-      final IProgressMonitor monitor,
-      final ICalculationUnit calUnit ) throws CoreException
+
+  public static IStatus startCalculation( final IProgressMonitor monitor, final ICalculationUnit calUnit ) throws CoreException
   {
     monitor.beginTask( "Modellrechnung wird durchgeführt", 5 );
-    
+
     try
     {
       final IFolder scenarioFolder = Util.getScenarioFolder();
-      
-      final Modeldata modelspec = new Modeldata();//loadModelspec();
-      Util.addModelInputSpec( 
-          modelspec, RMA10SimModelConstants.CONTROL_ID, IControlModelGroup.class );
-      
-      Util.addModelInputSpec( 
-          modelspec, RMA10SimModelConstants.TERRAINMODEL_ID, ITerrainModel.class );
-      
-      Util.addModelInputSpec( 
-          modelspec, RMA10SimModelConstants.DISCRETISATIOMODEL_ID, IFEDiscretisationModel1d2d.class );
-      
-      Util.addModelInputSpec( 
-          modelspec, RMA10SimModelConstants.FLOWRELATIONSHIPMODEL_ID, IFlowRelationshipModel.class );
-      
-      Util.addModelInputSpec( 
-          modelspec, RMA10SimModelConstants.DISCRETISATIOMODEL_ID, IFEDiscretisationModel1d2d.class );
-      
-      Util.addModelInputSpec( 
-          modelspec, RMA10SimModelConstants.OPERATIONALMODEL_ID, IPseudoOPerationalModel.class );
-      
-      final CalculationUnitBasedModeldata calUnitModelSpec = 
-            new CalculationUnitBasedModeldata( calUnit.getGmlID(), modelspec );
+
+      final Modeldata modelspec = new Modeldata();// loadModelspec();
+      Util.addModelInputSpec( modelspec, RMA10SimModelConstants.CONTROL_ID, IControlModelGroup.class );
+      Util.addModelInputSpec( modelspec, RMA10SimModelConstants.TERRAINMODEL_ID, ITerrainModel.class );
+      Util.addModelInputSpec( modelspec, RMA10SimModelConstants.DISCRETISATIOMODEL_ID, IFEDiscretisationModel1d2d.class );
+      Util.addModelInputSpec( modelspec, RMA10SimModelConstants.FLOWRELATIONSHIPMODEL_ID, IFlowRelationshipModel.class );
+      Util.addModelInputSpec( modelspec, RMA10SimModelConstants.DISCRETISATIOMODEL_ID, IFEDiscretisationModel1d2d.class );
+      Util.addModelInputSpec( modelspec, RMA10SimModelConstants.OPERATIONALMODEL_ID, IPseudoOPerationalModel.class );
+
+      final CalculationUnitBasedModeldata calUnitModelSpec = new CalculationUnitBasedModeldata( calUnit.getGmlID(), modelspec );
       calUnitModelSpec.setTypeID( "CalculationUnitKalypsoModel1D2D" );
       final String typeID = calUnitModelSpec.getTypeID();
-      
+
       final ISimulationService calcService = KalypsoSimulationCorePlugin.findCalculationServiceForType( typeID );
-      
+
       monitor.worked( 1 );
       final CalcJobHandler cjHandler = new CalcJobHandler( calUnitModelSpec, calcService );
       return cjHandler.runJob( scenarioFolder, new SubProgressMonitor( monitor, 4 ) );
