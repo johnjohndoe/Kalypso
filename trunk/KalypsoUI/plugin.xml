@@ -723,11 +723,11 @@
                value="true"/>
          <action
                class="org.kalypso.ui.editor.actions.SortFeaturesActionDelegate"
-               id="org.kalypso.model.wspm.ui.action.SortProfileActionDelegate"
+               id="org.kalypso.ui.editor.actions.SortFeaturesActionDelegate"
                label="Features sortieren"
                menubarPath="featureListMenu"
                style="push"
-               tooltip="Sortiert die Features der Liste anhand ausgeählter Eigenschaften"/>
+               tooltip="Sortiert die Features der Liste anhand ausgewählter Eigenschaften"/>
       </objectContribution>		
   <objectContribution
         adaptable="false"

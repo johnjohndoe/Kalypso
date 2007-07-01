@@ -53,6 +53,7 @@ import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
@@ -170,7 +171,6 @@ public class SortFeaturesActionDelegate extends ActionDelegate implements IObjec
     // dialog.setDialogBoundsSettings( settings, strategy );
 
     dialog.setContentProvider( new ArrayContentProvider() );
-    dialog.setInput( props );
     dialog.setLabelProvider( new LabelProvider()
     {
       /**
@@ -186,7 +186,10 @@ public class SortFeaturesActionDelegate extends ActionDelegate implements IObjec
         return super.getText( element );
       }
     } );
+    dialog.setInput( props );
     dialog.setInitialSelections( new Object[] { props.get( 0 ) } );
+    dialog.create();
+    dialog.getTableViewer().setSorter( new ViewerSorter() );
 
     if( dialog.open() != Window.OK )
       return null;
@@ -198,24 +201,21 @@ public class SortFeaturesActionDelegate extends ActionDelegate implements IObjec
     return (IPropertyType) result[0];
   }
 
+  @SuppressWarnings("unchecked")
   private void sort( final FeatureList list, final IPropertyType propertyToSort )
   {
-    if( propertyToSort.isList() )
-      throw new IllegalArgumentException( "Cannot sort by a list-property" );
-
     if( !(propertyToSort instanceof IValuePropertyType) )
       throw new IllegalArgumentException( "Can only sort value-properties!" );
 
-    final IValuePropertyType vpt = (IValuePropertyType) propertyToSort;
-    final Class valueClass = vpt.getValueClass();
-
-    if( !(Comparable.class.isAssignableFrom( valueClass )) )
-      throw new IllegalArgumentException( "Can only sort comparable data objects." );
+// final IValuePropertyType vpt = (IValuePropertyType) propertyToSort;
+// final Class valueClass = vpt.getValueClass();
+// if( !(Comparable.class.isAssignableFrom( valueClass )) )
+// throw new IllegalArgumentException( "Can only sort comparable data objects." );
 
     // TODO: undoable!
 
-    final Comparator featureComparator = new FeatureComparator( propertyToSort );
-    Collections.sort( list, featureComparator );
+    final Comparator<Object> featureComparator = new FeatureComparator( list.getParentFeature(), propertyToSort );
+    Collections.sort( (List<Object>) list, featureComparator );
 
     final Feature parentFeature = list.getParentFeature();
     final GMLWorkspace workspace = parentFeature.getWorkspace();
