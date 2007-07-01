@@ -57,53 +57,32 @@ import org.opengis.cs.CS_CoordinateSystem;
 
 @SuppressWarnings("unchecked")
 /**
- * Default implementation for {@link ILineElement} 
+ * Default implementation for {@link ILineElement}
  * 
  * @author Patrice Congo
+ * 
+ * TODO: the LineElement implements ILineElement and EXTENDS Element2D, while ILineElement DOES NOT, this is most
+ * probably a bug as this implies that ILineElement inherits from IElement2D
  */
-public class LineElement<    
-                              CT extends IFE1D2DComplexElement, 
-                              ET extends IFE1D2DEdge> 
-                  extends Element2D<CT,ET> 
-                  implements ILineElement<CT,ET> 
+public class LineElement<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge> extends Element2D<CT, ET> implements ILineElement<CT, ET>
 {
-
-  public LineElement( 
-      final Feature featureToBind, 
-      QName featureQName,
-      Class<CT> complexElementClass,
-      Class<ET> edgeClass)
+  public LineElement( final Feature featureToBind, final QName featureQName, final Class<CT> complexElementClass, final Class<ET> edgeClass )
   {
-    super(featureToBind, featureQName, complexElementClass,edgeClass);
+    super( featureToBind, featureQName, complexElementClass, edgeClass );
   }
 
-
-
   /**
-   * Creates a continuity line with a specified GML ID.
-   * The parent feature respectively its link to the newly 
-   * created continuity line are specified as parameters.
-   * @param parentFeature the parent feature
-   * @param propQName the q-name of the property linking the
-   *    parent feature to the continuity line 
+   * Creates a continuity line with a specified GML ID. The parent feature respectively its link to the newly created
+   * continuity line are specified as parameters.
+   * 
+   * @param parentFeature
+   *            the parent feature
+   * @param propQName
+   *            the q-name of the property linking the parent feature to the continuity line
    */
-  public LineElement( 
-                        Feature parentFeature,
-                        QName propQName,
-                        String gmlID,
-                        QName featureQName,
-                        Class<CT> complexElementClass,
-                        Class<ET> edgeClass )
+  public LineElement( final Feature parentFeature, final QName propQName, final String gmlID, final QName featureQName, final Class<CT> complexElementClass, final Class<ET> edgeClass )
   {
-    this(
-      Util.createFeatureWithId( 
-          featureQName,
-          parentFeature, 
-          propQName, 
-          gmlID ),
-       featureQName,
-       complexElementClass,
-       edgeClass );
+    this( Util.createFeatureWithId( featureQName, parentFeature, propQName, gmlID ), featureQName, complexElementClass, edgeClass );
   }
 
   /**
@@ -114,35 +93,35 @@ public class LineElement<
   @Override
   public List<IFE1D2DNode> getNodes( )
   {
-    IFeatureWrapperCollection<ET> edges = super.getEdges();
-    List<IFE1D2DNode> nodes= new ArrayList<IFE1D2DNode>(edges.size()+1);
-    IFE1D2DNode lastAddedNode=null;
-    
-    for(IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge:edges)
+    final IFeatureWrapperCollection<ET> edges = super.getEdges();
+    final List<IFE1D2DNode> nodes = new ArrayList<IFE1D2DNode>( edges.size() + 1 );
+    IFE1D2DNode lastAddedNode = null;
+
+    for( final IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge : edges )
     {
-      IFE1D2DNode<IFE1D2DEdge> node0=edge.getNode( 0 );
-      IFE1D2DNode<IFE1D2DEdge> node1=edge.getNode( 1 );
-      
-      if(node0.equals( lastAddedNode ))
+      final IFE1D2DNode<IFE1D2DEdge> node0 = edge.getNode( 0 );
+      final IFE1D2DNode<IFE1D2DEdge> node1 = edge.getNode( 1 );
+
+      if( node0.equals( lastAddedNode ) )
       {
-        //skip because expected
+        // skip because expected
       }
       else
       {
-        if(lastAddedNode==null)
+        if( lastAddedNode == null )
         {
-          //first node
+          // first node
           nodes.add( node0 );
-          lastAddedNode=node0;
+          lastAddedNode = node0;
         }
         else
         {
-          //bad list not following each other
-          throw new RuntimeException("Continuity line node is bad:"+edges);
+          // bad list not following each other
+          throw new RuntimeException( "Continuity line node is bad:" + edges );
         }
       }
       nodes.add( node1 );
-      lastAddedNode=node1;
+      lastAddedNode = node1;
     }
     return nodes;
   }
@@ -152,27 +131,26 @@ public class LineElement<
    */
   public GM_Object recalculateElementGeometry( ) throws GM_Exception
   {
-      List<IFE1D2DNode> nodes=getNodes();
-      
-      final int SIZE=nodes.size();
-      
-      final GM_Position[] poses = new GM_Position[SIZE];
+    final List<IFE1D2DNode> nodes = getNodes();
 
-      if( SIZE <= 1 )
-      {
-        return null;
-      }
+    final int SIZE = nodes.size();
 
-      final CS_CoordinateSystem crs = 
-        nodes.get(0).getPoint().getCoordinateSystem();
+    final GM_Position[] poses = new GM_Position[SIZE];
 
-      for( int i = 0; i < poses.length; i++ )
-      {
-        final GM_Point point = nodes.get( i ).getPoint();
-        poses[i] = point.getPosition();
-      }
-      
-      return GeometryFactory.createGM_Curve( poses, crs );
+    if( SIZE <= 1 )
+    {
+      return null;
+    }
+
+    final CS_CoordinateSystem crs = nodes.get( 0 ).getPoint().getCoordinateSystem();
+
+    for( int i = 0; i < poses.length; i++ )
+    {
+      final GM_Point point = nodes.get( i ).getPoint();
+      poses[i] = point.getPosition();
+    }
+
+    return GeometryFactory.createGM_Curve( poses, crs );
   }
-  
+
 }

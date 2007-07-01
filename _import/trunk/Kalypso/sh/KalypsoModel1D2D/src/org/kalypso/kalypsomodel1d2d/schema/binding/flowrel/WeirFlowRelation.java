@@ -41,6 +41,7 @@
 package org.kalypso.kalypsomodel1d2d.schema.binding.flowrel;
 
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.FlowRelationship;
 import org.kalypso.observation.IObservation;
@@ -149,5 +150,37 @@ public class WeirFlowRelation extends FlowRelationship implements IWeirFlowRelat
   {
     final Feature obsFeature = getObservationFeature();
     ObservationFeatureFactory.toFeature( observation, obsFeature );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IWeirFlowRelation#getDirection()
+   */
+  public double getDirection( )
+  {
+    // TODO Auto-generated method stub
+    return 0;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IWeirFlowRelation#getUpstreamNode()
+   */
+  public IFE1D2DNode getUpstreamNode( )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * Returns the weir values (hOW, hUW, discharge) as some kind of table.
+   * <p>
+   * The weir parameters are NOT backed by the underlying featre, so changed to the feature are not refelcted in the
+   * weir partameters.
+   * </p>
+   * 
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IWeirFlowRelation#getWeirParameters()
+   */
+  public WeirParameters getWeirParameters( )
+  {
+    return new WeirParameters( getWeirObservation() );
   }
 }

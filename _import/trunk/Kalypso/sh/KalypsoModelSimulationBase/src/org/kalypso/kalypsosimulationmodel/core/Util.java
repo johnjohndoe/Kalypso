@@ -77,103 +77,97 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
  * Holds utility methods
- *
+ * 
  * @author Patrice Congo
- *
+ * 
  */
 public class Util
 {
 
-  
   /**
    * Gets the scenario folder
    */
-  public static final IFolder getScenarioFolder()
+  public static final IFolder getScenarioFolder( )
   {
     try
     {
-      IWorkbench workbench = PlatformUI.getWorkbench();
-      IHandlerService service = (IHandlerService) workbench.getService( IHandlerService.class );
-      IEvaluationContext currentState = service.getCurrentState();
+      final IWorkbench workbench = PlatformUI.getWorkbench();
+      final IHandlerService service = (IHandlerService) workbench.getService( IHandlerService.class );
+      final IEvaluationContext currentState = service.getCurrentState();
 
-      IFolder scenarioFolder =
-        (IFolder) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME);
+      final IFolder scenarioFolder = (IFolder) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
 
-      /// scenario
+      // / scenario
       return scenarioFolder;
     }
-    catch( Throwable th )
+    catch( final Throwable th )
     {
       th.printStackTrace();
-      throw new RuntimeException(th);
+      throw new RuntimeException( th );
     }
   }
 
   /**
    * Gets the szenario model
    */
-  public static final <T extends IFeatureWrapper2> T getModel( Class<T> modelClass )
+  public static final <T extends IFeatureWrapper2> T getModel( final Class<T> modelClass )
   {
     try
     {
-      IWorkbench workbench = PlatformUI.getWorkbench();
-      IHandlerService service = (IHandlerService) workbench.getService( IHandlerService.class );
-      IEvaluationContext currentState = service.getCurrentState();
-      ICaseDataProvider<IFeatureWrapper2> caseDataProvider = (ICaseDataProvider<IFeatureWrapper2>) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
-      T model = caseDataProvider.getModel( modelClass );
+      final IWorkbench workbench = PlatformUI.getWorkbench();
+      final IHandlerService service = (IHandlerService) workbench.getService( IHandlerService.class );
+      final IEvaluationContext currentState = service.getCurrentState();
+      final ICaseDataProvider<IFeatureWrapper2> caseDataProvider = (ICaseDataProvider<IFeatureWrapper2>) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+      final T model = caseDataProvider.getModel( modelClass );
 
       return model;
     }
-    catch( Throwable th )
+    catch( final Throwable th )
     {
       th.printStackTrace();
       return null;
     }
   }
 
-  public static final void addModelInputSpec(
-      Modeldata modelSpec,
-      String id, 
-      Class<? extends IFeatureWrapper2> modelClass )
+  public static final void addModelInputSpec( final Modeldata modelSpec, final String id, final Class< ? extends IFeatureWrapper2> modelClass )
   {
-    List<Modeldata.Input> input = modelSpec.getInput();
-    Modeldata.Input controlModelInput = new Modeldata.Input();
+    final List<Modeldata.Input> input = modelSpec.getInput();
+    final Modeldata.Input controlModelInput = new Modeldata.Input();
     controlModelInput.setPath( Util.getWorkspaceSpec( modelClass ) );
     controlModelInput.setId( id );
     controlModelInput.setRelativeToCalcCase( false );
     input.add( controlModelInput );
   }
-  
-  public static final String getWorkspaceSpec(Class<? extends IFeatureWrapper2> modelClass)
+
+  public static final String getWorkspaceSpec( final Class< ? extends IFeatureWrapper2> modelClass )
   {
     try
     {
-      IFeatureWrapper2 model = getModel( modelClass );
-      URL context = model.getWrappedFeature().getWorkspace().getContext();
-      URL resolvedUrl = FileLocator.resolve( context );
+      final IFeatureWrapper2 model = getModel( modelClass );
+      final URL context = model.getWrappedFeature().getWorkspace().getContext();
+      final URL resolvedUrl = FileLocator.resolve( context );
       return resolvedUrl.getFile();
     }
-    catch (Exception e) 
+    catch( final Exception e )
     {
-      throw new RuntimeException("Could not get workspace path for:"+modelClass, e);
+      throw new RuntimeException( "Could not get workspace path for:" + modelClass, e );
     }
   }
-  
+
   /**
-   * Saves all dirty submodels in the current scenario.
-   * A workbench and an active workbench window is required.
-   *
+   * Saves all dirty submodels in the current scenario. A workbench and an active workbench window is required.
+   * 
    */
-  public static final void saveAllModel()
+  public static final void saveAllModel( )
   {
     try
     {
 
-      IWorkbench workbench = PlatformUI.getWorkbench();
-      IHandlerService service = (IHandlerService) workbench.getService( IHandlerService.class );
-      IEvaluationContext currentState = service.getCurrentState();
+      final IWorkbench workbench = PlatformUI.getWorkbench();
+      final IHandlerService service = (IHandlerService) workbench.getService( IHandlerService.class );
+      final IEvaluationContext currentState = service.getCurrentState();
       final ICaseDataProvider<IFeatureWrapper2> caseDataProvider = (ICaseDataProvider<IFeatureWrapper2>) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
-      IRunnableWithProgress rwp = new IRunnableWithProgress()
+      final IRunnableWithProgress rwp = new IRunnableWithProgress()
       {
 
         public void run( IProgressMonitor monitor ) throws InvocationTargetException, InterruptedException
@@ -185,32 +179,30 @@ public class Util
           catch( CoreException e )
           {
             e.printStackTrace();
-            throw new InvocationTargetException(e);
+            throw new InvocationTargetException( e );
           }
         }
 
       };
       workbench.getActiveWorkbenchWindow().run( true, false, rwp );
     }
-    catch( Throwable th )
+    catch( final Throwable th )
     {
       th.printStackTrace();
-      throw new RuntimeException(th);
+      throw new RuntimeException( th );
     }
   }
 
-
-
   /**
    * Test whether the given feature is an elmenent of the type specified by the q-name.
-   *
+   * 
    * @param feature
-   *          the feature instance, which type is to be access
+   *            the feature instance, which type is to be access
    * @param typeQname --
-   *          the required qname for the feature type
+   *            the required qname for the feature type
    * @return true if qname of the given feature match the one passed otherwise false
    */
-  public static final boolean directInstanceOf( Feature feature, QName typeQname )
+  public static final boolean directInstanceOf( final Feature feature, final QName typeQname )
   {
     if( feature == null || typeQname == null )
     {
@@ -252,14 +244,14 @@ public class Util
       list.size(),// pos,
       newFeature );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
     return newFeature;
   }
 
-  public static final Feature createFeatureWithId( QName newFeatureQName, Feature parentFeature, QName propQName, String gmlID ) throws IllegalArgumentException
+  public static final Feature createFeatureWithId( final QName newFeatureQName, final Feature parentFeature, final QName propQName, String gmlID ) throws IllegalArgumentException
   {
 
     Assert.throwIAEOnNullParam( parentFeature, "parentFeature" );
@@ -267,10 +259,10 @@ public class Util
     Assert.throwIAEOnNullParam( newFeatureQName, "newFeatureQName" );
     gmlID = Assert.throwIAEOnNullOrEmpty( gmlID );
 
-    GMLWorkspace workspace = parentFeature.getWorkspace();
-    IGMLSchema schema = workspace.getGMLSchema();
-    IFeatureType featureType = schema.getFeatureType( newFeatureQName );
-    IPropertyType parentPT = parentFeature.getFeatureType().getProperty( propQName );
+    final GMLWorkspace workspace = parentFeature.getWorkspace();
+    final IGMLSchema schema = workspace.getGMLSchema();
+    final IFeatureType featureType = schema.getFeatureType( newFeatureQName );
+    final IPropertyType parentPT = parentFeature.getFeatureType().getProperty( propQName );
     if( !(parentPT instanceof IRelationType) )
     {
       throw new IllegalArgumentException( "Property not a IRelationType=" + parentPT + " propQname=" + propQName );
@@ -278,7 +270,7 @@ public class Util
 
     // TOASK does not include the feature into any workspace
 
-    Feature created = FeatureFactory.createFeature( parentFeature, (IRelationType) parentPT, gmlID, featureType, true );
+    final Feature created = FeatureFactory.createFeature( parentFeature, (IRelationType) parentPT, gmlID, featureType, true );
 
     try
     {
@@ -303,7 +295,7 @@ public class Util
         parentFeature.setProperty( parentPT, created );
       }
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       throw new RuntimeException( "Could not add to the workspace", e );
     }
@@ -311,13 +303,13 @@ public class Util
     return created;
   }
 
-  public static final List<Feature> toFeatureList( Collection< ? extends IFeatureWrapper2> c )
+  public static final List<Feature> toFeatureList( final Collection< ? extends IFeatureWrapper2> c )
   {
-    List<Feature> fl = new ArrayList<Feature>();
+    final List<Feature> fl = new ArrayList<Feature>();
     if( c != null )
     {
       Feature f;
-      for( IFeatureWrapper2 fw : c )
+      for( final IFeatureWrapper2 fw : c )
       {
         f = fw.getWrappedFeature();
         if( f == null )
@@ -332,63 +324,63 @@ public class Util
 
   /**
    * Create a feature of the given type and link it to the given parentFeature as a property of the specified q-name
-   *
+   * 
    * @param parentFeature
-   *          the parent feature
+   *            the parent feature
    * @param propQName
-   *          the q-name of the property linking the parent and the newly created child
+   *            the q-name of the property linking the parent and the newly created child
    * @param featureQName
-   *          the q-name denoting the type of the feature
+   *            the q-name denoting the type of the feature
    */
-  public static final Feature createFeatureAsProperty( Feature parentFeature, QName propQName, QName featureQName ) throws IllegalArgumentException
+  public static final Feature createFeatureAsProperty( final Feature parentFeature, final QName propQName, final QName featureQName ) throws IllegalArgumentException
   {
     Assert.throwIAEOnNull( propQName, "Argument propQName must not be null" );
     Assert.throwIAEOnNull( parentFeature, "Argument roughnessCollection must not be null" );
 
     try
     {
-      IPropertyType property = parentFeature.getFeatureType().getProperty( propQName );
+      final IPropertyType property = parentFeature.getFeatureType().getProperty( propQName );
       if( property.isList() )
       {
-        Feature feature = FeatureHelper.addFeature( parentFeature, propQName, featureQName );
+        final Feature feature = FeatureHelper.addFeature( parentFeature, propQName, featureQName );
 
         return feature;
       }
       else
       {
-        GMLWorkspace workspace = parentFeature.getWorkspace();
-        IFeatureType newFeatureType = workspace.getGMLSchema().getFeatureType( featureQName );
-        Feature feature = workspace.createFeature( parentFeature, (IRelationType) property, newFeatureType );
+        final GMLWorkspace workspace = parentFeature.getWorkspace();
+        final IFeatureType newFeatureType = workspace.getGMLSchema().getFeatureType( featureQName );
+        final Feature feature = workspace.createFeature( parentFeature, (IRelationType) property, newFeatureType );
         parentFeature.setProperty( property, feature );
         return feature;
       }
 
     }
-    catch( GMLSchemaException ex )
+    catch( final GMLSchemaException ex )
     {
       throw new IllegalArgumentException( "Property " + propQName + " does not accept element of type" + featureQName, ex );
     }
   }
 
-  public static final Feature createFeatureAsProperty( Feature parentFeature, QName propQName, QName featureQName, Object[] featureProperties, QName[] featurePropQNames ) throws IllegalArgumentException
+  public static final Feature createFeatureAsProperty( final Feature parentFeature, final QName propQName, final QName featureQName, final Object[] featureProperties, final QName[] featurePropQNames ) throws IllegalArgumentException
   {
     Assert.throwIAEOnNull( propQName, "Argument propQName must not be null" );
     Assert.throwIAEOnNull( parentFeature, "Argument roughnessCollection must not be null" );
 
     try
     {
-      IPropertyType property = parentFeature.getFeatureType().getProperty( propQName );
+      final IPropertyType property = parentFeature.getFeatureType().getProperty( propQName );
       if( property.isList() )
       {
-        Feature feature = FeatureHelper.addFeature( parentFeature, propQName, featureQName, featureProperties, featurePropQNames );
+        final Feature feature = FeatureHelper.addFeature( parentFeature, propQName, featureQName, featureProperties, featurePropQNames );
 
         return feature;
       }
       else
       {
-        GMLWorkspace workspace = parentFeature.getWorkspace();
-        IFeatureType newFeatureType = workspace.getGMLSchema().getFeatureType( featureQName );
-        Feature feature = workspace.createFeature( parentFeature, (IRelationType) property, newFeatureType );
+        final GMLWorkspace workspace = parentFeature.getWorkspace();
+        final IFeatureType newFeatureType = workspace.getGMLSchema().getFeatureType( featureQName );
+        final Feature feature = workspace.createFeature( parentFeature, (IRelationType) property, newFeatureType );
         for( int i = featureProperties.length - 1; i >= 0; i-- )
         {
           feature.setProperty( featurePropQNames[i], featureProperties[i] );
@@ -399,7 +391,7 @@ public class Util
       }
 
     }
-    catch( GMLSchemaException ex )
+    catch( final GMLSchemaException ex )
     {
       throw new IllegalArgumentException( "Property " + propQName + " does not accept element of type" + featureQName, ex );
     }
@@ -411,18 +403,18 @@ public class Util
 
   /**
    * Create a feature of the given type and link it to the given parentFeature as a property of the specified q-name
-   *
+   * 
    * @param parentFeature
-   *          the parent feature
+   *            the parent feature
    * @param propQName
-   *          the q-name of the property linking the parent and the newly created child
+   *            the q-name of the property linking the parent and the newly created child
    * @param featureQName
-   *          the q-name denoting the type of the feature
+   *            the q-name denoting the type of the feature
    * @param throws
-   *          {@link IllegalArgumentException} if parentFeature is null or propQName is null, or featureQName is null or
-   *          featureID is null or empty or there is a feature in the workspace with the same id
+   *            {@link IllegalArgumentException} if parentFeature is null or propQName is null, or featureQName is null
+   *            or featureID is null or empty or there is a feature in the workspace with the same id
    */
-  public static final Feature createFeatureAsProperty( Feature parentFeature, QName propQName, QName featureQName, String featureID ) throws IllegalArgumentException
+  public static final Feature createFeatureAsProperty( final Feature parentFeature, final QName propQName, final QName featureQName, String featureID ) throws IllegalArgumentException
   {
     Assert.throwIAEOnNull( propQName, "Argument propQName must not be null" );
     Assert.throwIAEOnNull( parentFeature, "Argument roughnessCollection must not be null" );
@@ -430,9 +422,9 @@ public class Util
 
     // try
     // {
-    IGMLSchema schema = parentFeature.getFeatureType().getGMLSchema();
-    IFeatureType featureType = schema.getFeatureType( featureQName );
-    IPropertyType propertyType = featureType.getProperty( propQName );
+    final IGMLSchema schema = parentFeature.getFeatureType().getGMLSchema();
+    final IFeatureType featureType = schema.getFeatureType( featureQName );
+    final IPropertyType propertyType = featureType.getProperty( propQName );
     if( !(propertyType instanceof IRelationType) )
     {
       throw new RuntimeException( "UPS I DID IT AGAIN" );
@@ -456,9 +448,9 @@ public class Util
     // }
   }
 
-  public static final String getFirstName( Feature feature )
+  public static final String getFirstName( final Feature feature )
   {
-    Object obj = feature.getProperty( KalypsoModelRoughnessConsts.GML_PROP_NAME );
+    final Object obj = feature.getProperty( KalypsoModelRoughnessConsts.GML_PROP_NAME );
     if( obj instanceof String )
     {
       return (String) obj;
@@ -480,65 +472,45 @@ public class Util
     }
   }
 
-/**
-   * Get an {@link IFeatureWrapperCollection} from a feature list
-   * property.
-   * The feature type, the property type and the type of the collection
-   * elements can be return
-   * @param feature the feature whose property is to be wrapped in a
-   *        {@link IFeatureWrapperCollection}
-   * @param listPropQName the Q Name of the property
-   * @param bindingInterface the class of the collection elements
-   * @param doCreate a boolean controling the handling of the property
-   *            creation. if true a listProperty is created if its not
+  /**
+   * Get an {@link IFeatureWrapperCollection} from a feature list property. The feature type, the property type and the
+   * type of the collection elements can be return
+   * 
+   * @param feature
+   *            the feature whose property is to be wrapped in a {@link IFeatureWrapperCollection}
+   * @param listPropQName
+   *            the Q Name of the property
+   * @param bindingInterface
+   *            the class of the collection elements
+   * @param doCreate
+   *            a boolean controling the handling of the property creation. if true a listProperty is created if its not
    *            allready availayble
-   *
-   *
+   * 
+   * 
    */
-  public static final  <T extends IFeatureWrapper2> IFeatureWrapperCollection<T>
-                              get(
-                                    Feature feature,
-                                    QName featureQName,
-                                    QName listPropQName,
-                                    Class<T> bindingInterface,
-                                    boolean doCreate
-                                    )
+  public static final <T extends IFeatureWrapper2> IFeatureWrapperCollection<T> get( final Feature feature, final QName featureQName, final QName listPropQName, final Class<T> bindingInterface, final boolean doCreate )
   {
-    Assert.throwIAEOnNull(
-        feature, "Param feature must not be null" );
-    Assert.throwIAEOnNull(
-        featureQName, "Param listPropQName must not be null" );
-    Assert.throwIAEOnNull(
-        listPropQName, "Param feature must not be null" );
-    Assert.throwIAEOnNull(
-        bindingInterface, "Param bindingInterface must not be null" );
+    Assert.throwIAEOnNull( feature, "Param feature must not be null" );
+    Assert.throwIAEOnNull( featureQName, "Param listPropQName must not be null" );
+    Assert.throwIAEOnNull( listPropQName, "Param feature must not be null" );
+    Assert.throwIAEOnNull( bindingInterface, "Param bindingInterface must not be null" );
 
-    Object prop=
-        feature.getProperty(listPropQName);
+    final Object prop = feature.getProperty( listPropQName );
 
-    FeatureWrapperCollection<T> col=null;
+    FeatureWrapperCollection<T> col = null;
 
-    if(prop==null)
+    if( prop == null )
     {
-      //create the property tha is still missing
-      if(doCreate)
+      // create the property tha is still missing
+      if( doCreate )
       {
-        col=
-          new FeatureWrapperCollection<T>(
-                              feature,
-                              featureQName,
-                              listPropQName,
-                              bindingInterface);
+        col = new FeatureWrapperCollection<T>( feature, featureQName, listPropQName, bindingInterface );
       }
     }
     else
     {
-      //just wrapped the existing one
-      col=
-        new FeatureWrapperCollection<T>(
-                            feature,
-                            bindingInterface,
-                            listPropQName);
+      // just wrapped the existing one
+      col = new FeatureWrapperCollection<T>( feature, bindingInterface, listPropQName );
     }
 
     return col;

@@ -40,8 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.flowrel;
 
+import java.util.List;
+
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
+import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
+import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -61,6 +66,25 @@ public class FlowRelationUtilitites
   private FlowRelationUtilitites( )
   {
     throw new UnsupportedOperationException();
+  }
+
+  /**
+   * An 1D-Element is an Teschke Element, if at least one associated flow-relation is teschke. * TODO move this into the
+   * TypeInfo class
+   */
+  @SuppressWarnings("unchecked")
+  public static boolean isTeschkeElement1D( final IElement1D element1D, final IFlowRelationshipModel model )
+  {
+    final List<IFE1D2DNode> nodes = element1D.getNodes();
+    for( final IFE1D2DNode node : nodes )
+    {
+      final GM_Position nodePos = node.getPoint().getPosition();
+      final IFlowRelationship flowRel = model.findFlowrelationship( nodePos, 0.0 );
+      if( flowRel instanceof ITeschkeFlowRelation )
+        return true;
+    }
+
+    return false;
   }
 
   public static GM_Position getFlowPositionFromElement( final IFeatureWrapper2 modelElement )
@@ -92,6 +116,20 @@ public class FlowRelationUtilitites
     {
       th.printStackTrace();
     }
+
+    return null;
+  }
+
+  /**
+   * Checks if a 1D-Element has an associated Weir-Flow-Relation.
+   */
+  public static IWeirFlowRelation findWeirElement1D( final IElement1D element, final IFlowRelationshipModel model )
+  {
+    final GM_Position flowPosition = getFlowPositionFromElement( element );
+
+    final IFlowRelationship flowRel = model.findFlowrelationship( flowPosition, 0.0 );
+    if( flowRel instanceof IWeirFlowRelation )
+      return (IWeirFlowRelation) flowRel;
 
     return null;
   }
