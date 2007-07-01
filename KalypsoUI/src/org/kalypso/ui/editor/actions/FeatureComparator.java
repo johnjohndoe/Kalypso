@@ -41,21 +41,27 @@
 package org.kalypso.ui.editor.actions;
 
 import java.util.Comparator;
+import java.util.List;
 
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * A comparator on features. The compared property values must implement {@link Comparable}.
  * 
  * @author Gernot Belger
  */
-public class FeatureComparator implements Comparator<Feature>
+public class FeatureComparator implements Comparator<Object>
 {
   private final IPropertyType m_pt;
 
-  public FeatureComparator( final IPropertyType pt )
+  private final GMLWorkspace m_workspace;
+
+  public FeatureComparator( final Feature parentFeature, final IPropertyType pt )
   {
+    m_workspace = parentFeature.getWorkspace();
     m_pt = pt;
   }
 
@@ -63,13 +69,22 @@ public class FeatureComparator implements Comparator<Feature>
    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
    */
   @SuppressWarnings("unchecked")
-  public int compare( final Feature f1, final Feature f2 )
+  public int compare( final Object o1, final Object o2 )
   {
-    // TODO: handle list properties
+    final Feature f1 = FeatureHelper.getFeature( m_workspace, o1 );
+    final Feature f2 = FeatureHelper.getFeature( m_workspace, o2 );
 
-    final Comparable<Object> c1 = (Comparable<Object>) f1.getProperty( m_pt );
-    final Comparable<Object> c2 = (Comparable<Object>) f2.getProperty( m_pt );
+    final Object property1 = f1.getProperty( m_pt );
+    final Object property2 = f2.getProperty( m_pt );
 
+    if( m_pt.isList() )
+      return compareLists( (List<Comparable<Object>>) property1, (List<Comparable<Object>>) property2 );
+
+    return compareComparable( (Comparable<Object>) property1, (Comparable<Object>) property2 );
+  }
+
+  private int compareComparable( final Comparable<Object> c1, final Comparable<Object> c2 )
+  {
     if( c1 == null && c2 == null )
       return 0;
 
@@ -78,8 +93,37 @@ public class FeatureComparator implements Comparator<Feature>
 
     if( c2 == null )
       return +1;
-    
+
     return c1.compareTo( c2 );
+  }
+
+  /**
+   * Compares two lists.
+   * <p>
+   * If the lists have not the same size, the size is compared.
+   * </p>
+   * <p>
+   * If the list do have the same size, they are compared entry-wise.
+   * </p>
+   */
+  private int compareLists( final List<Comparable<Object>> list1, final List<Comparable<Object>> list2 )
+  {
+    final int size1 = list1.size();
+    final int size2 = list2.size();
+
+    if( size1 != size2 )
+      return Double.compare( size1, size2 );
+
+    for( int i = 0; i < size1; i++ )
+    {
+      final Comparable<Object> c1 = list1.get( i );
+      final Comparable<Object> c2 = list2.get( i );
+      final int dif = compareComparable( c1, c2 );
+      if( dif != 0 )
+        return dif;
+    }
+
+    return 0;
   }
 
 }
