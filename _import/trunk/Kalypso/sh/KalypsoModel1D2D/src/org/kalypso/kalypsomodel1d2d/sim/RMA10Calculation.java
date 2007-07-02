@@ -54,9 +54,11 @@ import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.kalypsomodel1d2d.conv.BoundaryConditionInfo;
 import org.kalypso.kalypsomodel1d2d.conv.BoundaryLineInfo;
 import org.kalypso.kalypsomodel1d2d.conv.ITimeStepinfo;
+import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtils;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
@@ -265,19 +267,21 @@ public class RMA10Calculation
 
   public List<IBoundaryLine> getContinuityLineList( )
   {
-    // implemented like this, or search for BoundaryConditions (operational model) which fits to ContinuityLines
-    // (discretisation model)
-    final IFEDiscretisationModel1d2d adapter = (IFEDiscretisationModel1d2d) m_disModelWorkspace.getRootFeature().getAdapter( IFEDiscretisationModel1d2d.class );
-    final IFeatureWrapperCollection<IFE1D2DElement> elements = adapter.getElements();
-    final List<IBoundaryLine> list = new ArrayList<IBoundaryLine>();
-    final Iterator<IFE1D2DElement> iterator = elements.iterator();
-    while( iterator.hasNext() )
-    {
-      final IFE1D2DElement element = iterator.next();
-      if( element instanceof IBoundaryLine )
-        list.add( (IBoundaryLine) element );
-    }
-    return list;
+//    // implemented like this, or search for BoundaryConditions (operational model) which fits to ContinuityLines
+//    // (discretisation model)
+//    final IFEDiscretisationModel1d2d adapter = (IFEDiscretisationModel1d2d) m_disModelWorkspace.getRootFeature().getAdapter( IFEDiscretisationModel1d2d.class );
+//    final IFeatureWrapperCollection<IFE1D2DElement> elements = adapter.getElements();
+//    final List<IBoundaryLine> list = new ArrayList<IBoundaryLine>();
+//    final Iterator<IFE1D2DElement> iterator = elements.iterator();
+//    while( iterator.hasNext() )
+//    {
+//      final IFE1D2DElement element = iterator.next();
+//      if( element instanceof IBoundaryLine )
+//        list.add( (IBoundaryLine) element );
+//    }
+//    return list;
+    ICalculationUnit calcultionUnit = getCalcultionUnit();
+    return CalUnitOps.getBoundaryLines( calcultionUnit );
   }
 
   public BoundaryLineInfo[] getContinuityLineInfo( )
@@ -300,6 +304,7 @@ public class RMA10Calculation
 
   private List<ITimeStepinfo> calculateBoundaryConditionInfos( ) throws SimulationException
   {
+    //TOFILTER 
     final List<ITimeStepinfo> result = new ArrayList<ITimeStepinfo>();
 
     /* Take all conti lines which are defined in the discretisation model. */
@@ -391,6 +396,17 @@ public class RMA10Calculation
     return result;
   }
 
+  
+  public ICalculationUnit getCalcultionUnit( )
+  {
+    IControlModel1D2D controlModel = getControlModel();
+    ICalculationUnit linkedCalculationUnit = controlModel.getCalculationUnit();
+    IFEDiscretisationModel1d2d discModel = getDiscModel();
+    Feature feature = discModel.getWrappedFeature().getWorkspace().getFeature( linkedCalculationUnit.getGmlID() );
+    ICalculationUnit realUnit = (ICalculationUnit) feature.getAdapter( ICalculationUnit.class );
+    return realUnit;
+  }
+  
   public IControlModel1D2D getControlModel( )
   {
     final Feature controlModelCollection = (Feature) m_controlModelRoot.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_FP_MODEL_COLLECTION );

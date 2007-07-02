@@ -49,6 +49,9 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DUIImages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
@@ -90,8 +93,10 @@ public class CalculationUnitPerformComponent extends FeatureWrapperListEditor im
         if( unit != null )
         {
           IProgressMonitor monitor = new NullProgressMonitor();
+          IWorkbench workbench = PlatformUI.getWorkbench();
+          IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
           CalculationUnitSimMode1D2DCalcJob.startCalculation( 
-              monitor, unit );
+              unit, workbench, activeWorkbenchWindow );
         }
       }
       catch (Exception e) 

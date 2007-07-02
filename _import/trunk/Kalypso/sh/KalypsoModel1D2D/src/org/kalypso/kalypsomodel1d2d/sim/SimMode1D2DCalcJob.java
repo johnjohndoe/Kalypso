@@ -70,6 +70,8 @@ import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
+import org.kalypso.simulation.core.internal.queued.ModelspecData;
+import org.kalypso.simulation.core.util.UnzippedJarSimulationDataProvider;
 
 /**
  * Implements the {@link ISimulation} interface to provide the simulation job for the 1d2d model
@@ -88,7 +90,7 @@ public class SimMode1D2DCalcJob implements ISimulation
   {
     final Logger logger = Logger.getAnonymousLogger();
     final Formatter f = new XMLFormatter();
-
+    
     try
     {
       final File loggerFile = new File( tmpDir, "simulation.log" );

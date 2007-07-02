@@ -86,6 +86,32 @@ public class CalUnitOps
     //i hate being instantiated
   }
   
+  public static final boolean isNodeOf(ICalculationUnit unit, IFE1D2DNode<IFE1D2DEdge> node )
+  {
+    final IFeatureWrapperCollection<IFE1D2DEdge> containers = 
+       node.getContainers();
+    for( IFE1D2DEdge edge:containers )
+    {
+      if( isEdgeOf( unit, edge ))
+      {
+        return true;
+      }
+    }
+    return false;
+  }
+  public static final boolean isEdgeOf( ICalculationUnit unit, IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge )
+  {
+    IFeatureWrapperCollection<IFE1D2DElement> containers = edge.getContainers();
+    for(IFE1D2DElement ele : containers )
+    {
+      if( isFiniteElementOf( unit, ele ) )
+      {
+        return true;
+      }
+    }
+    return false;
+  }
+  
   /**
    * To get the parent units of the given unit inside the specified 
    * model

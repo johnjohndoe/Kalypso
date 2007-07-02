@@ -220,7 +220,7 @@
                <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
 	           <parameter
 	                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
-	                 value="org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView.CalculationUnitPerformWidget"/>
+	                 value="org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitPerformWidget"/>
 	           <parameter
 	                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin"
 	                 value="org.kalypso.model1d2d"/>

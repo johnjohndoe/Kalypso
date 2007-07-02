@@ -51,9 +51,11 @@ import java.util.Locale;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.jts.JTSUtilities;
+import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
 import org.kalypso.kalypsomodel1d2d.ops.EdgeOps;
 import org.kalypso.kalypsomodel1d2d.ops.TypeInfo;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtils;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IEdgeInv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D;
@@ -62,10 +64,12 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.FlowRelationUtilitites;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IKingFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IWeirFlowRelation;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
@@ -79,6 +83,7 @@ import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D;
@@ -114,13 +119,19 @@ public class Gml2RMA10SConv
 
   private final IFlowRelationshipModel m_flowrelationModel;
 
+  private ICalculationUnit m_calcultionUnit;
+
+  private GM_Envelope m_calUnitBBox;
+
   public Gml2RMA10SConv( final File rma10sOutputFile, final RMA10Calculation calculation )
   {
     m_outputFile = rma10sOutputFile;
     m_discretisationModel1d2d = calculation.getDiscModel();
     m_terrainModel = calculation.getTerrainModel();
     m_flowrelationModel = calculation.getFlowModel();
-
+    m_calcultionUnit = calculation.getCalcultionUnit();
+    m_calUnitBBox = CalUnitOps.getBoundingBox( m_calcultionUnit );
+    
     // initialize Roughness IDs
     for( final Object o : calculation.getRoughnessClassList() )
     {
@@ -211,11 +222,13 @@ public class Gml2RMA10SConv
 
   private void writeEdges( final Formatter formatter, final IFeatureWrapperCollection<IFE1D2DEdge> edges ) throws GM_Exception
   {
+    final List<IFE1D2DEdge> edgeInBBox = edges.query( m_calUnitBBox );
     int cnt = 1;
-    for( final IFE1D2DEdge edge : edges )
+    for( final IFE1D2DEdge edge : edgeInBBox/*edges*/ )
     {
       if( edge instanceof IEdgeInv )
         continue;
+      
       final int node0ID = getID( edge.getNode( 0 ) );
       final int node1ID = getID( edge.getNode( 1 ) );
 
@@ -274,7 +287,8 @@ public class Gml2RMA10SConv
 
   private void writeNodes( final Formatter formatter, final IFeatureWrapperCollection<IFE1D2DNode> nodes ) throws SimulationException
   {
-    for( final IFE1D2DNode<IFE1D2DEdge> node : nodes )
+    List<IFE1D2DNode> nodesInBBox = nodes.query( m_calUnitBBox );
+    for( final IFE1D2DNode<IFE1D2DEdge> node : nodesInBBox/*nodes*/ )
     {
       /* The node itself */
       final int nodeID = getID( node );
@@ -392,14 +406,22 @@ public class Gml2RMA10SConv
 
   private void writeElements( final Formatter formatter, final LinkedHashMap<String, String> roughnessIDProvider, final IFeatureWrapperCollection<IFE1D2DElement> elements, final IRoughnessPolygonCollection roughnessPolygonCollection ) throws GM_Exception, SimulationException
   {
-    for( final IFE1D2DElement element : elements )
+    final List<IFE1D2DElement> elementsInBBox = elements.query( m_calUnitBBox );
+    
+    for( final IFE1D2DElement element : elementsInBBox/*elements*/ )
     {
+      if( !CalUnitOps.isFiniteElementOf( m_calcultionUnit, element ))
+      {
+        continue;
+      }
+      
       final int id = getID( element );
 
       if( element instanceof IElement1D )
       {
         /* 1D-Elements get special handling. */
         final IElement1D element1D = (IElement1D) element;
+        
 
         final IWeirFlowRelation weir = FlowRelationUtilitites.findWeirElement1D( element1D, m_flowrelationModel );
         if( weir != null )
@@ -416,10 +438,12 @@ public class Gml2RMA10SConv
           formatter.format( "FE%10d%10d%n", id, 89 );
         }
         else
+        {
           // TODO: give hint what 1D-element is was?
-          throw new SimulationException( "1D-Element ohne Bauwerk bzw. ohne Netzparameter.", null );
+          throw new SimulationException( "1D-Element ohne Bauwerk bzw. ohne Netzparameter: "+element1D.getGmlID(), null );
+        }
       }
-      else if( element instanceof IElement2D )
+      else if( element instanceof IPolyElement )
       {
         final int roughnessID = calculateRoughnessID( roughnessIDProvider, roughnessPolygonCollection, element );
         formatter.format( "FE%10d%10d%n", id, roughnessID );

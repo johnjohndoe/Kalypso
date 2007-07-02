@@ -57,6 +57,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.graphics.Path;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.gmlschema.GMLSchemaException;
@@ -170,6 +171,7 @@ public class Util
     {
 
       final IWorkbench workbench = PlatformUI.getWorkbench();
+      final IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
       final IHandlerService service = (IHandlerService) workbench.getService( IHandlerService.class );
       final IEvaluationContext currentState = service.getCurrentState();
       final ICaseDataProvider<IFeatureWrapper2> caseDataProvider = (ICaseDataProvider<IFeatureWrapper2>) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
@@ -190,8 +192,26 @@ public class Util
         }
 
       };
-      workbench.getActiveWorkbenchWindow().run( true, false, rwp );
+      
+      activeWorkbenchWindow.run( true, false, rwp );
     }
+    catch( final Throwable th )
+    {
+      th.printStackTrace();
+      throw new RuntimeException( th );
+    }
+  }
+  
+  public static final void saveAllModel(final IWorkbench workbench, final IWorkbenchWindow activeWorkbenchWindow)
+  {
+    try
+    {
+      
+      final IHandlerService service = (IHandlerService) workbench.getService( IHandlerService.class );
+      final IEvaluationContext currentState = service.getCurrentState();
+      final ICaseDataProvider<IFeatureWrapper2> caseDataProvider = (ICaseDataProvider<IFeatureWrapper2>) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+      caseDataProvider.saveModel( null );
+     }
     catch( final Throwable th )
     {
       th.printStackTrace();

@@ -276,7 +276,9 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
       URL context = workspace.getContext();      
       File filee = new File(FileLocator.resolve( context ).getFile() );
       String name = filee.getName();//new java.io.File( uri ).getName();
-      FeatureHelper.createLinkToID( name+"#"+calUnit.getGmlID(),parentFeature, (IRelationType) property, wrappedFeature.getFeatureType() );
+      XLinkedFeature_Impl linkedFeature =
+        (XLinkedFeature_Impl) FeatureHelper.createLinkToID( name+"#"+calUnit.getGmlID(),parentFeature, (IRelationType) property, wrappedFeature.getFeatureType() );
+      parentFeature.setProperty( property, linkedFeature );
     }
     catch (Exception e) {
       e.printStackTrace();

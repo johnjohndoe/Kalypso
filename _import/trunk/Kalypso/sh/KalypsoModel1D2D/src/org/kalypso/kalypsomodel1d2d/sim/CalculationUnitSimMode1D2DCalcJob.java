@@ -41,11 +41,17 @@
 package org.kalypso.kalypsomodel1d2d.sim;
 
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
+import java.io.StringBufferInputStream;
+import java.io.StringReader;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.util.Date;
@@ -66,13 +72,18 @@ import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.commons.java.lang.ProcessHelper;
@@ -82,6 +93,9 @@ import org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv;
 import org.kalypso.kalypsomodel1d2d.conv.Weir1D2DConverter;
 import org.kalypso.kalypsomodel1d2d.conv.WeirIDProvider;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
+import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
@@ -327,43 +341,75 @@ public class CalculationUnitSimMode1D2DCalcJob implements ISimulation
     }
   }
 
-  public static IStatus startCalculation( final IProgressMonitor monitor, final ICalculationUnit calUnit ) throws CoreException
+  public static void startCalculation( 
+//                  final IProgressMonitor monitor, 
+                  final ICalculationUnit calUnit,
+                  final IWorkbench workbench,
+                  final IWorkbenchWindow activeWorkbenchWindow ) throws CoreException
   {
-    monitor.beginTask( "Modellrechnung wird durchgeführt", 5 );
+    IRunnableWithProgress runnable = new IRunnableWithProgress()
+    {
 
-    final IWorkbench workbench = PlatformUI.getWorkbench();
-    final IHandlerService service = (IHandlerService) workbench.getService( IHandlerService.class );
-    final IEvaluationContext currentState = service.getCurrentState();
-    final Shell shell = (Shell) currentState.getVariable( ISources.ACTIVE_SHELL_NAME );
-    final IFolder scenarioFolder = (IFolder) currentState.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
-
+      public void run( final IProgressMonitor monitor ) throws InvocationTargetException, InterruptedException
+      {
+        monitor.beginTask( "Modellrechnung wird durchgeführt", 5 );
+        IControlModelGroup model = Util.getModel( IControlModelGroup.class );
+        final String calcUnitGmlID = calUnit.getGmlID();
+        boolean activeSet = false;
+        for( IControlModel1D2D cm: model.getModel1D2DCollection())
+        {
+          ICalculationUnit current = cm.getCalculationUnit();
+          if( current != null )
+          {
+            if( calcUnitGmlID.equals( current.getGmlID() ) )
+            {
+              model.getModel1D2DCollection().setActiveControlModel( cm );
+              Util.saveAllModel(workbench, workbench.getActiveWorkbenchWindow());
+              activeSet=true;
+            }
+          }
+        }
+        if( !activeSet )
+        {
+          throw new RuntimeException("Could not found and set active control model for: "+calUnit.getGmlID());
+        }
+        
+        
+    //    final IWorkbench workbench = PlatformUI.getWorkbench();
+        final IHandlerService service = (IHandlerService) workbench.getService( IHandlerService.class );
+        final IEvaluationContext currentState = service.getCurrentState();
+        final Shell shell = (Shell) currentState.getVariable( ISources.ACTIVE_SHELL_NAME );
+        final IFolder scenarioFolder = (IFolder) currentState.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
+    
+        try
+        {
+          final Modeldata modelspec = loadModelspec(scenarioFolder.getProject());
+          
+          final String typeID = modelspec.getTypeID();
+    
+          final ISimulationService calcService = 
+                  KalypsoSimulationCorePlugin.findCalculationServiceForType( typeID );
+    
+          monitor.worked( 1 );
+          final CalcJobHandler cjHandler = new CalcJobHandler( modelspec, calcService );
+          cjHandler.runJob( scenarioFolder, new SubProgressMonitor( monitor, 4 ) );
+        }
+        catch (Exception e) {
+          e.printStackTrace();
+        }
+        finally
+        {
+          monitor.done();
+        }
+      }
+    };
     try
     {
-
-      final Modeldata modelspec = loadModelspec(scenarioFolder.getProject());
-//      final String typeID = modelspec.getTypeID();
-//      Util.addModelInputSpec( modelspec, RMA10SimModelConstants.TERRAINMODEL_ID, ITerrainModel.class );
-//      Util.addModelInputSpec( modelspec, RMA10SimModelConstants.DISCRETISATIOMODEL_ID, IFEDiscretisationModel1d2d.class );
-//      Util.addModelInputSpec( modelspec, RMA10SimModelConstants.FLOWRELATIONSHIPMODEL_ID, IFlowRelationshipModel.class );
-//      Util.addModelInputSpec( modelspec, RMA10SimModelConstants.DISCRETISATIOMODEL_ID, IFEDiscretisationModel1d2d.class );
-//      Util.addModelInputSpec( modelspec, RMA10SimModelConstants.OPERATIONALMODEL_ID, IPseudoOPerationalModel.class );
-//      Util.addModelInputSpec( modelspec, RMA10SimModelConstants.CONTROL_ID, IControlModelGroup.class );
-
-      final CalculationUnitBasedModeldata calUnitModelSpec = new CalculationUnitBasedModeldata( calUnit.getGmlID(), modelspec );
-      calUnitModelSpec.setTypeID( "CalculationUnitKalypsoModel1D2D" );
-      final String typeID = calUnitModelSpec.getTypeID();
-
-      final ISimulationService calcService = KalypsoSimulationCorePlugin.findCalculationServiceForType( typeID );
-
-      monitor.worked( 1 );
-      final CalcJobHandler cjHandler = new CalcJobHandler( calUnitModelSpec, calcService );
-      return cjHandler.runJob( scenarioFolder, new SubProgressMonitor( monitor, 4 ) );
+      workbench.getProgressService().run( true, false, runnable );
     }
-    finally
-    {
-      monitor.done();
+    catch (Exception e) {
+      e.printStackTrace();
     }
-    
   }
   private static Modeldata loadModelspec(IProject project ) throws CoreException
   {
