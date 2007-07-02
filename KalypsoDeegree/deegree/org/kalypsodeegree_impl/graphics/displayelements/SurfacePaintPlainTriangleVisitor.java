@@ -43,6 +43,7 @@ package org.kalypsodeegree_impl.graphics.displayelements;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.Area;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -59,7 +60,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.Debug;
 
 /**
- * @author Gernot Belger
+ * @author Gernot Belger, Thomas Jung
  */
 public class SurfacePaintPlainTriangleVisitor<T extends GM_SurfacePatch> implements ISurfacePatchVisitor<T>
 {
@@ -90,13 +91,10 @@ public class SurfacePaintPlainTriangleVisitor<T extends GM_SurfacePatch> impleme
     {
       final GM_Triangle triangle = (GM_Triangle) patch;
 
-      // TODO: create own paintTriangle method
       // TODO: either paint isoines or isoareas
-      // TODO really split the patch along the isolines of the color-model
       final double delta = 0.1;
       // paintTriangleIsoLines( triangle, m_classes);
       getTriangleSurface( triangle, delta );
-// paintThisSurface( patch, triangle.getExteriorRing()[0].getZ() );
     }
     else
       paintThisSurface( patch, elevationSample );
@@ -120,16 +118,20 @@ public class SurfacePaintPlainTriangleVisitor<T extends GM_SurfacePatch> impleme
         maxValue = position.getZ();
     }
 
-    // get a proper start class for the current triangle
-    final double factor = 1.0 / delta;
-    final double minValueFactor = Math.ceil( factor * minValue );
+// final BigDecimal minDecimal = new BigDecimal( minValue ).setScale( 1, BigDecimal.ROUND_FLOOR );
 
-    /* loop over all classes of the current triangle */
+    // TODO: instead of calculating the border by using a fix delta, get the border values directly from the color
+    // model.
+
+    /* calculate start value */
+    final double factor = 1.0 / delta;
+    final double minValueFactor = Math.floor( factor * minValue );
     double min = minValueFactor / factor;
 
+    /* loop over all classes of the current triangle */
     for( double currentValue = min; currentValue <= maxValue; currentValue += delta )
     {
-      /* code below was taken from BCE-2D - bce_FarbFlaechenInAllenDreiecken */
+      /* code below was taken from BCE-2D - bce_FarbFlaechenInAllenDreiecken and a little bit adapted */
 
       /* aktuelles von und bis setzen */
       final double startValue = currentValue;
@@ -140,7 +142,7 @@ public class SurfacePaintPlainTriangleVisitor<T extends GM_SurfacePatch> impleme
           && positions[2].getZ() <= endValue )
       {
         /* paint whole triangle in one color and exit loop */
-        Area areaFromRing = SurfacePatchVisitableDisplayElement.areaFromRing( m_projection, 0, positions );
+        Area areaFromRing = new Area( SurfacePatchVisitableDisplayElement.areaFromRing( m_projection, 0, positions ) );
 
         /* get the mean elevation of the current ring */
         double meanValue = getMeanValue( positions );
@@ -149,6 +151,7 @@ public class SurfacePaintPlainTriangleVisitor<T extends GM_SurfacePatch> impleme
         else if( meanValue - maxValue < VAL_EPS )
           meanValue = meanValue - VAL_EPS;
 
+        /* get the color from the color model and paint the triangle */
         m_gc.setColor( m_colorModel.getColor( meanValue ) );
         ((Graphics2D) m_gc).fill( areaFromRing );
         break;
@@ -307,7 +310,7 @@ public class SurfacePaintPlainTriangleVisitor<T extends GM_SurfacePatch> impleme
          * Orientierung der triangulierten Ausgangsdreiecke sind erzeugten Farbflächen-Polygone ebenfalls automatisch
          * orientiert.
          */
-        int numDoublePoints = 0; // Anzahl nicht doppelter Punkte in Farbklasse
+        int numDoublePoints = 0; // Anzahl nicht doppelter Punkte in Farbklasse (bäh, unschön gelöst!)
 
         final List<GM_Position> posList2 = new ArrayList<GM_Position>();
         if( posList.size() < 2 )
@@ -343,16 +346,20 @@ public class SurfacePaintPlainTriangleVisitor<T extends GM_SurfacePatch> impleme
           {
             posList2.add( posList2.get( 0 ) );
             GM_Position[] posArray = posList2.toArray( new GM_Position[posList2.size()] );
-            Area areaFromRing = SurfacePatchVisitableDisplayElement.areaFromRing( m_projection, 0, posArray );
+
+            Area areaFromRing = new Area( SurfacePatchVisitableDisplayElement.areaFromRing( m_projection, 0, posArray ) );
+
             /* get the mean elevation of the current ring */
-            double meanValue = getMeanValue( positions );
+            double meanValue = getMeanValue( posArray );
             if( meanValue - minValue < VAL_EPS )
               meanValue = meanValue + VAL_EPS;
             else if( meanValue - maxValue < VAL_EPS )
               meanValue = meanValue - VAL_EPS;
 
+            /* get the color from the color model and paint the polygon */
             m_gc.setColor( m_colorModel.getColor( meanValue ) );
             ((Graphics2D) m_gc).fill( areaFromRing );
+
           }
         }
       }
@@ -395,13 +402,13 @@ public class SurfacePaintPlainTriangleVisitor<T extends GM_SurfacePatch> impleme
       final GM_Position[] ex = patch.getExteriorRing();
       final GM_Position[][] inner = patch.getInteriorRings();
 
-      final Area areaouter = SurfacePatchVisitableDisplayElement.areaFromRing( projection, width, ex );
+      final Area areaouter = new Area( SurfacePatchVisitableDisplayElement.areaFromRing( projection, width, ex ) );
       if( inner != null )
       {
         for( final GM_Position[] innerRing : inner )
         {
           if( innerRing != null )
-            areaouter.subtract( SurfacePatchVisitableDisplayElement.areaFromRing( projection, width, innerRing ) );
+            areaouter.subtract( new Area( SurfacePatchVisitableDisplayElement.areaFromRing( projection, width, innerRing ) ) );
         }
       }
 
@@ -413,6 +420,11 @@ public class SurfacePaintPlainTriangleVisitor<T extends GM_SurfacePatch> impleme
     }
 
     return null;
+  }
+
+  public static final double distance( final double x1, final double y1, final double x2, final double y2 )
+  {
+    return Math.sqrt( (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1) );
   }
 
 }

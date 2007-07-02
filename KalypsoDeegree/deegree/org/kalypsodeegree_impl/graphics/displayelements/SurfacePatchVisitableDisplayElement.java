@@ -189,7 +189,7 @@ public class SurfacePatchVisitableDisplayElement<P extends GM_SurfacePatch> impl
     }
   }
 
-  public static final Area areaFromRing( final GeoTransform projection, final float width, final GM_Position[] ex )
+  public static final Polygon areaFromRing( final GeoTransform projection, final float width, final GM_Position[] ex )
   {
     final int[] x = new int[ex.length];
     final int[] y = new int[ex.length];
@@ -218,8 +218,7 @@ public class SurfacePatchVisitableDisplayElement<P extends GM_SurfacePatch> impl
       }
     }
 
-    final Polygon polygon = new Polygon( x, y, k - 1 );
-    return new Area( polygon );
+    return new Polygon( x, y, k - 1 );
   }
 
   public static final double distance( final double x1, final double y1, final double x2, final double y2 )
