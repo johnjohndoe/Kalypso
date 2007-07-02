@@ -56,6 +56,8 @@ public interface RMA10SimModelConstants
 
   public static final String R10_File = "control.R10";
 
+  public static final String WEIR_File = "wehr.txt";
+
   public static final String SIM_EXE_FILE_3_5 = "RMA10S35Kalypso.exe";
 
   public static final String SIM_EXE_FILE_TEST = "RMA10S35Kalypso.exe";

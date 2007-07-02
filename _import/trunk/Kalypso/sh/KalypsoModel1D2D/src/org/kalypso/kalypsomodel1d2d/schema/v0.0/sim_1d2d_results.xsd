@@ -19,7 +19,7 @@
 	</xs:annotation>
 
 	<xs:import namespace="http://www.opengis.net/gml" />
-
+	<xs:import namespace="http://www.opengis.net/om" />
 
 	<!-- NodeResultCollection -->
 	<xs:element name="NodeResultCollection" type="res1d2d:NodeResultCollectionType" substitutionGroup="gml:_Feature" />
@@ -63,7 +63,7 @@
 				</kapp:functionProperty>
 				<kapp:functionProperty
 					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.NodeResultVelocityFunction"
-					kapp:property="res1d2d:velocityRotation" kapp:isVirtual="true" kapp:valueType="xs:double" >
+					kapp:property="res1d2d:velocityRotation" kapp:isVirtual="true" kapp:valueType="xs:double">
 					<kapp:parameter>
 						<kapp:name>vectorProperty</kapp:name>
 						<kapp:value>{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}velocity</kapp:value>
@@ -142,54 +142,6 @@
 								<xs:label>midside node</xs:label>
 							</xs:documentation>
 						</xs:annotation>
-					</xs:element>					
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-
-	<!-- Velocity -->
-
-	<xs:complexType name="VelocityPropertyType">
-		<xs:sequence>
-			<xs:element ref="res1d2d:Velocity" minOccurs="1" maxOccurs="1" />
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:element name="Velocity" type="res1d2d:VelocityType" substitutionGroup="gml:_Feature">
-		<xs:annotation>
-			<xs:documentation xml:lang="de">
-				<xs:label>Geschwindigkeit</xs:label>
-			</xs:documentation>
-			<xs:documentation xml:lang="en">
-				<xs:label>Velocity</xs:label>
-			</xs:documentation>
-		</xs:annotation>
-	</xs:element>
-
-	<xs:complexType name="VelocityType">
-		<xs:complexContent>
-			<xs:extension base="gml:AbstractFeatureType">
-				<xs:sequence>
-					<xs:element name="vector" type="gml:VectorType">
-						<xs:annotation>
-							<xs:documentation xml:lang="de">
-								<xs:label>Vektor</xs:label>
-							</xs:documentation>
-							<xs:documentation xml:lang="en">
-								<xs:label>Vector</xs:label>
-							</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="norm" type="xs:double">
-						<xs:annotation>
-							<xs:documentation xml:lang="de">
-								<xs:label>Betrag</xs:label>
-							</xs:documentation>
-							<xs:documentation xml:lang="en">
-								<xs:label>Norm</xs:label>
-							</xs:documentation>
-						</xs:annotation>
 					</xs:element>
 				</xs:sequence>
 			</xs:extension>
@@ -213,6 +165,63 @@
 		<xs:sequence>
 			<xs:element ref="gml:TriangulatedSurface" />
 		</xs:sequence>
-	</xs:complexType> 
+	</xs:complexType>
+
+	<!-- Hydrograph Results -->
+	<xs:element name="HydrographCollection" type="res1d2d:HydrographCollectionType" substitutionGroup="gml:_Feature">
+		<xs:annotation>
+			<xs:documentation xml:lang="de">
+				<xs:label>Ganglinien</xs:label>
+			</xs:documentation>
+			<xs:documentation xml:lang="en">
+				<xs:label>List of Hydropgraphs</xs:label>
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+
+	<xs:complexType name="HydrographCollectionType">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element name="hydrographMember" type="res1d2d:HydrographPropertyType" minOccurs="0"
+						maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Ganglinie</xs:label>
+							</xs:documentation>
+							<xs:documentation xml:lang="en">
+								<xs:label>Hydropgraph</xs:label>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="HydrographPropertyType">
+		<xs:sequence>
+			<xs:element ref="res1d2d:Hydrograph" minOccurs="1" maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- NodeResult -->
+
+	<xs:element name="Hydrograph" type="res1d2d:HydrographType" substitutionGroup="om:Observation">
+		<xs:annotation>
+			<xs:documentation xml:lang="de">
+				<xs:label>Ganglinie</xs:label>
+			</xs:documentation>
+			<xs:documentation xml:lang="en">
+				<xs:label>Hydropgraphs</xs:label>
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+
+	<xs:complexType name="HydrographType">
+		<xs:complexContent>
+			<xs:extension base="om:ObservationType"></xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
 
 </xs:schema>

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="Cp1252" standalone="yes"?>
+<Configuration xmlns="http://www.ksp.org/chart/configuration">
+	<Axis name="wsp_Axis">
+		<label>Wassertiefe [m]</label>
+		<provider id="org.kalypso.axisprovider.Number" />
+		<direction>POSITIVE</direction>
+		<position>BOTTOM</position>
+		<minVal>0.0</minVal>
+		<maxVal>100.0</maxVal>
+	</Axis>
+	<Chart name="runoffChart">
+		<title>Ganglinie</title>
+		<description>Berechnungsergebnisse</description>
+		<layers>
+			<LayerRef ref="wspLayer" />
+			<LayerRef ref="dischargeLayer" />
+		</layers>
+	</Chart>
+	<Layer visible="true" name="wspLayer">
+		<title>Wasserstand</title>
+		<description>Wasserstandslinie</description>
+		<provider id="org.kalypso.layerprovider.TupleResultLayerProvider" />
+		<axes>
+			<DomainAxisRef ref="timeAxis" />
+			<ValueAxisRef ref="nnAxis" />
+		</axes>
+		<style>
+			<StyleRef ref="wspLineStyle" />
+			<StyleRef ref="wspPointStyle" />
+		</style>
+		<parameters>
+			<Parameter name="featureKey" value="hydrographFeatureKey" />
+			<Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time" />
+			<Parameter name="valueComponentId"
+				value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Waterlevel" />
+		</parameters>
+	</Layer>
+	<Layer visible="true" name="dischargeLayer">
+		<title>Abfluss</title>
+		<description>Abflussganglinie</description>
+		<provider id="org.kalypso.layerprovider.TupleResultLayerProvider" />
+		<axes>
+			<DomainAxisRef ref="timeAxis" />
+			<ValueAxisRef ref="m3sAxis" />
+		</axes>
+		<style>
+			<StyleRef ref="dischargeLineStyle" />
+			<StyleRef ref="dischargePointStyle" />
+		</style>
+		<parameters>
+			<Parameter name="featureKey" value="hydrographFeatureKey" />
+			<Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time" />
+			<Parameter name="valueComponentId"
+				value="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Discharge" />
+		</parameters>
+	</Layer>
+
+	<!-- TODO: velocity layer -->
+	<!-- TODO: depth layer -->
+	<!-- TODO: sohlschubspannung layer -->
+	<!-- TODO: other layers ? -->
+
+	<Axis name="nnAxis">
+		<label>Wasserspiegel [NN+m]</label>
+		<provider id="org.kalypso.axisprovider.Number" />
+		<direction>POSITIVE</direction>
+		<position>LEFT</position>
+		<minVal>5.0</minVal>
+		<maxVal>10.0</maxVal>
+	</Axis>
+	<Axis name="m3sAxis">
+		<label>Abfluss [NN+m]</label>
+		<provider id="org.kalypso.axisprovider.Number" />
+		<direction>POSITIVE</direction>
+		<position>RIGHT</position>
+		<minVal>5.0</minVal>
+		<maxVal>10.0</maxVal>
+	</Axis>
+	<Axis name="timeAxis">
+		<label>Zeit</label>
+		<provider id="org.kalypso.axisprovider.Calendar" />
+		<direction>POSITIVE</direction>
+		<position>BOTTOM</position>
+		<minVal>5.0</minVal>
+		<maxVal>10.0</maxVal>
+	</Axis>
+
+	<Style name="wspLineStyle">
+		<styleID></styleID>
+		<type>LINE</type>
+		<parameters>
+			<Parameter name="lineWidth" value="2" />
+			<Parameter name="lineStyle" value="SOLID" />
+			<Parameter name="lineColor" value="#ff0000" />
+		</parameters>
+	</Style>
+	<Style name="wspPointStyle">
+		<styleID></styleID>
+		<type>POINT</type>
+		<parameters>
+			<Parameter name="pointWidth" value="8" />
+			<Parameter name="pointHeight" value="8" />
+			<Parameter name="borderWidth" value="1" />
+			<Parameter name="fillColor" value="#ff0000" />
+			<Parameter name="borderColor" value="#000000" />
+			<Parameter name="alpha" value="255" />
+		</parameters>
+	</Style>
+
+	<Style name="dischargeLineStyle">
+		<styleID></styleID>
+		<type>LINE</type>
+		<parameters>
+			<Parameter name="lineWidth" value="2" />
+			<Parameter name="lineStyle" value="SOLID" />
+			<Parameter name="lineColor" value="#00ff00" />
+		</parameters>
+	</Style>
+	<Style name="dischargePointStyle">
+		<styleID></styleID>
+		<type>POINT</type>
+		<parameters>
+			<Parameter name="pointWidth" value="8" />
+			<Parameter name="pointHeight" value="8" />
+			<Parameter name="borderWidth" value="1" />
+			<Parameter name="fillColor" value="#00ff00" />
+			<Parameter name="borderColor" value="#000000" />
+			<Parameter name="alpha" value="255" />
+		</parameters>
+	</Style>
+
+</Configuration>
+

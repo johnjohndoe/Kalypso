@@ -133,11 +133,11 @@ public class CreateChannelData
 
   private IKalypsoFeatureTheme m_bankTheme2; // RIGHT = 2
 
-  private Set<Feature> m_selectedProfiles = new HashSet<Feature>();
+  private final Set<Feature> m_selectedProfiles = new HashSet<Feature>();
 
   private int m_numbProfileIntersections = 6;
 
-  private Map<Feature, SIDE> m_selectedBanks = new HashMap<Feature, SIDE>();
+  private final Map<Feature, SIDE> m_selectedBanks = new HashMap<Feature, SIDE>();
 
   private final CreateMainChannelWidget m_widget;
 
@@ -145,9 +145,9 @@ public class CreateChannelData
 
   private int m_globNumbBankIntersections;
 
-  private List<SegmentData> m_segmentList = new LinkedList<SegmentData>();
+  private final List<SegmentData> m_segmentList = new LinkedList<SegmentData>();
 
-  private List<Coordinate[][]> m_coordList = new LinkedList<Coordinate[][]>();
+  private final List<Coordinate[][]> m_coordList = new LinkedList<Coordinate[][]>();
 
   private Coordinate[][] m_meshCoords;
 
@@ -226,8 +226,8 @@ public class CreateChannelData
   public IKalypsoFeatureTheme[] getBankThemes( )
   {
     /* implement visitor for cascading themes in mapPanel */
-    MapPanel panel = m_widget.getPanel();
-    IMapModell mapModell = panel.getMapModell();
+    final MapPanel panel = m_widget.getPanel();
+    final IMapModell mapModell = panel.getMapModell();
     if( mapModell == null )
       return null;
     final BankThemePredicate predicate = new BankThemePredicate();
@@ -299,7 +299,7 @@ public class CreateChannelData
 
   /**
    * @param side
-   *          false: left, true: right
+   *            false: left, true: right
    */
   public void addSelectedBanks( final Feature[] bankFeatures, final SIDE side )
   {
@@ -424,7 +424,7 @@ public class CreateChannelData
       final ICommand command = tempGrid.getAddToModelCommand( mapPanel, model1d2d, workspace, 0 );
       workspace.postCommand( command );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
@@ -433,24 +433,24 @@ public class CreateChannelData
   /**
    * converts a Coordinate[][] array into a GM_Point[][] array
    */
-  private GM_Point[][] convertToGMPoints( Coordinate[][] meshCoords )
+  private GM_Point[][] convertToGMPoints( final Coordinate[][] meshCoords )
   {
-    GeometryFactory geometryFactory = new GeometryFactory();
+    final GeometryFactory geometryFactory = new GeometryFactory();
 
-    GM_Point points2D[][] = new GM_Point[meshCoords.length][];
+    final GM_Point points2D[][] = new GM_Point[meshCoords.length][];
     for( int i = 0; i < meshCoords.length; i++ )
     {
-      Coordinate[] line = meshCoords[i];
-      GM_Point[] points1D = new GM_Point[line.length];
+      final Coordinate[] line = meshCoords[i];
+      final GM_Point[] points1D = new GM_Point[line.length];
       points2D[i] = points1D;
       for( int j = 0; j < line.length; j++ )
       {
-        Coordinate coord = line[j];
+        final Coordinate coord = line[j];
         try
         {
           points1D[j] = (GM_Point) JTSAdapter.wrap( geometryFactory.createPoint( coord ) );
         }
-        catch( GM_Exception e )
+        catch( final GM_Exception e )
         {
           e.printStackTrace();
         }
@@ -469,7 +469,7 @@ public class CreateChannelData
     for( int i = 0; i < m_segmentList.size(); i++ )
     {
       final boolean complete;
-      SegmentData segment = m_segmentList.get( i );
+      final SegmentData segment = m_segmentList.get( i );
       complete = segment.complete();
       if( complete == true )
       {
@@ -505,7 +505,7 @@ public class CreateChannelData
     }
   }
 
-  public boolean checkMesh( int segmentNumber )
+  public boolean checkMesh( final int segmentNumber )
   {
     boolean check = false;
     if( m_coordList.get( segmentNumber ) != null )
@@ -523,7 +523,7 @@ public class CreateChannelData
     final int overallYCoordNum = calculateOverallYCoordNum();
     final int numX = m_numbProfileIntersections;
     final int numY = overallYCoordNum;
-    Coordinate[][] newCoords = new Coordinate[numX][numY];
+    final Coordinate[][] newCoords = new Coordinate[numX][numY];
 
     int coordYPosPointer = 0;
     int coordSegmentPointer = 0;
@@ -531,7 +531,7 @@ public class CreateChannelData
     // loop over all segments -> coords
     for( int i = 0; i < m_coordList.size(); i++ )
     {
-      Coordinate[][] coordinates = m_coordList.get( i );
+      final Coordinate[][] coordinates = m_coordList.get( i );
       if( numX != coordinates.length )
         return;
       // coordSegmentPointer = coordYPosPointer;
@@ -570,21 +570,21 @@ public class CreateChannelData
     return num;
   }
 
-  private LineString[] checkLineOrientation( LineString[] lines )
+  private LineString[] checkLineOrientation( final LineString[] lines )
   {
     final LineString[] lineArray = new LineString[4];
 
-    GeometryFactory factory1 = new GeometryFactory();
-    Coordinate[] coords1 = new Coordinate[lines[0].getNumPoints()];
+    final GeometryFactory factory1 = new GeometryFactory();
+    final Coordinate[] coords1 = new Coordinate[lines[0].getNumPoints()];
 
-    GeometryFactory factory2 = new GeometryFactory();
-    Coordinate[] coords2 = new Coordinate[lines[1].getNumPoints()];
+    final GeometryFactory factory2 = new GeometryFactory();
+    final Coordinate[] coords2 = new Coordinate[lines[1].getNumPoints()];
 
-    GeometryFactory factory3 = new GeometryFactory();
-    Coordinate[] coords3 = new Coordinate[lines[2].getNumPoints()];
+    final GeometryFactory factory3 = new GeometryFactory();
+    final Coordinate[] coords3 = new Coordinate[lines[2].getNumPoints()];
 
-    GeometryFactory factory4 = new GeometryFactory();
-    Coordinate[] coords4 = new Coordinate[lines[3].getNumPoints()];
+    final GeometryFactory factory4 = new GeometryFactory();
+    final Coordinate[] coords4 = new Coordinate[lines[3].getNumPoints()];
 
     boolean error = false;
 
@@ -602,13 +602,13 @@ public class CreateChannelData
       {
         coords1[i] = lines[0].getCoordinateN( i );
       }
-      LineString line1 = factory1.createLineString( coords1 );
+      final LineString line1 = factory1.createLineString( coords1 );
 
       for( int i = 0; i < coords2.length; i++ )
       {
         coords2[i] = lines[1].getCoordinateN( i );
       }
-      LineString line2 = factory2.createLineString( coords2 );
+      final LineString line2 = factory2.createLineString( coords2 );
 
       lineArray[0] = line1;
       lineArray[1] = line2;
@@ -620,8 +620,8 @@ public class CreateChannelData
       {
         coords1[i] = lines[0].getCoordinateN( i );
       }
-      LineString line1 = factory1.createLineString( coords1 );
-      LineString line2 = LineStringUtilities.changeOrientation( lines[1] );
+      final LineString line1 = factory1.createLineString( coords1 );
+      final LineString line2 = LineStringUtilities.changeOrientation( lines[1] );
 
       lineArray[0] = line1;
       lineArray[1] = line2;
@@ -629,13 +629,13 @@ public class CreateChannelData
     else if( startpoint1.distance( startpoint2 ) < 0.001 )
     {
       // switch line 1
-      LineString line1 = LineStringUtilities.changeOrientation( lines[0] );
+      final LineString line1 = LineStringUtilities.changeOrientation( lines[0] );
 
       for( int i = 0; i < coords2.length; i++ )
       {
         coords2[i] = lines[1].getCoordinateN( i );
       }
-      LineString line2 = factory1.createLineString( coords2 );
+      final LineString line2 = factory1.createLineString( coords2 );
 
       lineArray[0] = line1;
       lineArray[1] = line2;
@@ -643,8 +643,8 @@ public class CreateChannelData
     else if( startpoint1.distance( endpoint2 ) < 0.001 )
     {
       // switch both lines
-      LineString line1 = LineStringUtilities.changeOrientation( lines[0] );
-      LineString line2 = LineStringUtilities.changeOrientation( lines[1] );
+      final LineString line1 = LineStringUtilities.changeOrientation( lines[0] );
+      final LineString line2 = LineStringUtilities.changeOrientation( lines[1] );
 
       lineArray[0] = line1;
       lineArray[1] = line2;
@@ -668,14 +668,14 @@ public class CreateChannelData
       {
         coords3[i] = lines[2].getCoordinateN( i );
       }
-      LineString line3 = factory3.createLineString( coords3 );
+      final LineString line3 = factory3.createLineString( coords3 );
 
       lineArray[2] = line3;
     }
     else if( endpoint2.distance( endpoint3 ) < 0.001 )
     {
       // switch line 3
-      LineString line3 = LineStringUtilities.changeOrientation( lines[2] );
+      final LineString line3 = LineStringUtilities.changeOrientation( lines[2] );
 
       lineArray[2] = line3;
     }
@@ -700,14 +700,14 @@ public class CreateChannelData
       {
         coords4[i] = lines[3].getCoordinateN( i );
       }
-      LineString line4 = factory4.createLineString( coords4 );
+      final LineString line4 = factory4.createLineString( coords4 );
 
       lineArray[3] = line4;
     }
     else if( endpoint3.distance( endpoint4 ) < 0.001 )
     {
       // switch line 4
-      LineString line4 = LineStringUtilities.changeOrientation( lines[3] );
+      final LineString line4 = LineStringUtilities.changeOrientation( lines[3] );
 
       lineArray[3] = line4;
     }
@@ -745,8 +745,9 @@ public class CreateChannelData
 
     monitor.beginTask( "Processing profiles", profileFeatures.length );
 
-    final IPropertyType stationProperty = profileFeatures[0].getFeatureType().getProperty( WspmProfile.QNAME_STATION );
-    Arrays.sort( profileFeatures, new FeatureComparator( stationProperty ) );
+    final Feature firstFeature = profileFeatures[0];
+    final IPropertyType stationProperty = firstFeature.getFeatureType().getProperty( WspmProfile.QNAME_STATION );
+    Arrays.sort( profileFeatures, new FeatureComparator( firstFeature.getParent(), stationProperty ) );
 
     // loop over all profiles
     // take two neighbouring profiles create a segment for them
@@ -791,11 +792,11 @@ public class CreateChannelData
       {
         paintEdges( m_meshCoords, g, mapPanel );
       }
-      catch( GM_Exception e )
+      catch( final GM_Exception e )
       {
         e.printStackTrace();
       }
-      catch( IncompatibleGeometryTypeException e )
+      catch( final IncompatibleGeometryTypeException e )
       {
         e.printStackTrace();
       }
@@ -803,7 +804,7 @@ public class CreateChannelData
     }
   }
 
-  public void setNumProfileIntersections( int numProfileIntersections )
+  public void setNumProfileIntersections( final int numProfileIntersections )
   {
     if( m_numbProfileIntersections != numProfileIntersections )
     {
@@ -819,7 +820,7 @@ public class CreateChannelData
     return numProfileIntersections;
   }
 
-  public void setGlobNumBankIntersections( int globNumBankIntersections )
+  public void setGlobNumBankIntersections( final int globNumBankIntersections )
   {
     if( globNumBankIntersections != m_globNumbBankIntersections )
     {
@@ -839,23 +840,23 @@ public class CreateChannelData
     final LineSymbolizer symb = new LineSymbolizer_Impl();
     final Stroke stroke = new Stroke_Impl( new HashMap(), null, null );
 
-    Color grey = new Color( 100, 100, 100 );
+    final Color grey = new Color( 100, 100, 100 );
 
     stroke.setWidth( 1 );
     stroke.setStroke( grey );
     symb.setStroke( stroke );
     DisplayElement de;
 
-    Coordinate[] lineCoords = new Coordinate[2];
+    final Coordinate[] lineCoords = new Coordinate[2];
 
-    for( int i = 0; i < coords.length; i++ )
+    for( final Coordinate[] element : coords )
     {
-      GeometryFactory factory = new GeometryFactory();
-      for( int j = 0; j < coords[i].length - 1; j++ )
+      final GeometryFactory factory = new GeometryFactory();
+      for( int j = 0; j < element.length - 1; j++ )
       {
-        lineCoords[0] = coords[i][j];
-        lineCoords[1] = coords[i][j + 1];
-        LineString line = factory.createLineString( lineCoords );
+        lineCoords[0] = element[j];
+        lineCoords[1] = element[j + 1];
+        final LineString line = factory.createLineString( lineCoords );
         final GM_Curve curve = (GM_Curve) JTSAdapter.wrap( line );
         de = DisplayElementFactory.buildLineStringDisplayElement( null, curve, symb );
         de.paint( g, mapPanel.getProjection() );
@@ -863,12 +864,12 @@ public class CreateChannelData
     }
     for( int j = 0; j < coords[0].length; j++ )
     {
-      GeometryFactory factory = new GeometryFactory();
+      final GeometryFactory factory = new GeometryFactory();
       for( int i = 0; i < coords.length - 1; i++ )
       {
         lineCoords[0] = coords[i][j];
         lineCoords[1] = coords[i + 1][j];
-        LineString line = factory.createLineString( lineCoords );
+        final LineString line = factory.createLineString( lineCoords );
         final GM_Curve curve = (GM_Curve) JTSAdapter.wrap( line );
         de = DisplayElementFactory.buildLineStringDisplayElement( null, curve, symb );
         de.paint( g, mapPanel.getProjection() );
@@ -886,7 +887,7 @@ public class CreateChannelData
     return m_selectedSegment;
   }
 
-  public void setSelectedSegment( int selectedSegment )
+  public void setSelectedSegment( final int selectedSegment )
   {
     m_selectedSegment = selectedSegment;
   }
@@ -894,7 +895,7 @@ public class CreateChannelData
   /**
    * returns the number of bank intersections for the current segment
    */
-  public int getNumBankIntersections( int segment )
+  public int getNumBankIntersections( final int segment )
   {
     return m_segmentList.get( segment - 1 ).getNumBankIntersections();
   }
@@ -902,7 +903,7 @@ public class CreateChannelData
   /**
    * sets the number of bank intersections for the current segment
    */
-  public void setNumBankIntersections( int segment, int numIntersections )
+  public void setNumBankIntersections( final int segment, final int numIntersections )
   {
     m_segmentList.get( segment - 1 ).setNumBankIntersections( numIntersections );
   }
@@ -911,7 +912,7 @@ public class CreateChannelData
    * this method possibly updates the segment data and pushes the calculation of the mesh. inputs: boolean edit: false->
    * update of the bankline and profile intersections true: -> no data update
    */
-  public void updateSegments( boolean edit )
+  public void updateSegments( final boolean edit )
   {
     // loop over all segments
     final SegmentData[] datas = m_segmentList.toArray( new SegmentData[m_segmentList.size()] );
@@ -934,18 +935,18 @@ public class CreateChannelData
     completationCheck();
   }
 
-  public GM_Envelope getCurrentSegmentExtend( int segment )
+  public GM_Envelope getCurrentSegmentExtend( final int segment )
   {
     return m_segmentList.get( segment - 1 ).getSegmentMapExtend();
   }
 
-  public void drawBankLine( int segment, int side, final Graphics g )
+  public void drawBankLine( final int segment, final int side, final Graphics g )
   {
-    MapPanel panel = m_widget.getPanel();
+    final MapPanel panel = m_widget.getPanel();
     m_segmentList.get( segment - 1 ).paintBankLineLineString( panel, g, side, new Color( 20, 20, 255 ) );
   }
 
-  public SegmentData getCurrentSegment( int segment )
+  public SegmentData getCurrentSegment( final int segment )
   {
     if( m_segmentList.size() >= segment )
       return m_segmentList.get( segment - 1 );
@@ -954,7 +955,7 @@ public class CreateChannelData
 
   }
 
-  public void updateSegment( boolean edit, int segmentNumber )
+  public void updateSegment( final boolean edit, final int segmentNumber )
   {
     final SegmentData segment = m_segmentList.get( segmentNumber - 1 );
     if( segment != null & edit == false )
@@ -978,7 +979,7 @@ public class CreateChannelData
     return m_selectedProfile;
   }
 
-  public void setCurrentProfile( CreateChannelData.PROF profile )
+  public void setCurrentProfile( final CreateChannelData.PROF profile )
   {
     m_selectedProfile = profile;
   }
@@ -991,7 +992,7 @@ public class CreateChannelData
       m_selectedProfile = PROF.UP;
   }
 
-  public List getNeighbourSegments( int currentSegmentNum )
+  public List getNeighbourSegments( final int currentSegmentNum )
   {
     final int numOfSegments = m_segmentList.size();
     final List<SegmentData> neighbours = new LinkedList<SegmentData>();
@@ -1022,8 +1023,8 @@ public class CreateChannelData
 
   public CreateChannelData.PROF getCurrentProfilePlace( final double station )
   {
-    double stationUp = m_segmentList.get( m_selectedSegment - 1 ).getProfilUpOrg().getStation();
-    double stationDown = m_segmentList.get( m_selectedSegment - 1 ).getProfilDownOrg().getStation();
+    final double stationUp = m_segmentList.get( m_selectedSegment - 1 ).getProfilUpOrg().getStation();
+    final double stationDown = m_segmentList.get( m_selectedSegment - 1 ).getProfilDownOrg().getStation();
 
     if( stationUp == station )
       return CreateChannelData.PROF.UP;

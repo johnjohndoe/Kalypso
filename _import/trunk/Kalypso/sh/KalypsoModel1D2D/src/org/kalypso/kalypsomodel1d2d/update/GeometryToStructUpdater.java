@@ -78,8 +78,8 @@ public class GeometryToStructUpdater implements IGmlWorkspaceListener
   public QName[] getQNames( )
   {
     return new QName[] {
-// Kalypso1D2DSchemaConstants.WB1D2D_F_NODE//,
-// Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE,
+    // Kalypso1D2DSchemaConstants.WB1D2D_F_NODE//,
+    // Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE,
     // Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT
     };
   }
@@ -95,14 +95,14 @@ public class GeometryToStructUpdater implements IGmlWorkspaceListener
 
     if( Kalypso1D2DSchemaConstants.WB1D2D_F_DiscretisationModel.equals( rootFeatureQname ) )
     {
-// System.out.println( "Update roughness merge because of ne dicr-model" );
-// ElementRoughnessStyleFunc.clear( );
+      // System.out.println( "Update roughness merge because of ne dicr-model" );
+      // ElementRoughnessStyleFunc.clear( );
       mergeService.doReInit();
     }
     else if( KalypsoModelSimulationBaseConsts.SIM_BASE_F_TERRAIN_ELE_MODEL.equals( rootFeature ) )
     {
-// System.out.println( "Update roughness merge because of new terrain-model" );
-// ElementRoughnessStyleFunc.clear();
+      // System.out.println( "Update roughness merge because of new terrain-model" );
+      // ElementRoughnessStyleFunc.clear();
       mergeService.doReInit();
     }
     else
@@ -131,11 +131,15 @@ public class GeometryToStructUpdater implements IGmlWorkspaceListener
       changedFeatures = new Feature[] {};
     }
 
+    // TODO: handle null case: means alls features have changed
+    if( changedFeatures == null )
+      return;
+
     for( final Feature feature : changedFeatures )
     {
       if( TypeInfo.isPolyElementFeature( feature ) )
       {
-// ElementRoughnessStyleFunc.removeRoughnessClass( feature );
+        // ElementRoughnessStyleFunc.removeRoughnessClass( feature );
         mergeService.removeRoughnessClass( feature );
       }
       else if( feature == null )
@@ -153,7 +157,7 @@ public class GeometryToStructUpdater implements IGmlWorkspaceListener
         else
         {
           // TODO: please do not pollute the console, introduce tracing option instead
-// System.out.println("Changed:"+name);
+          // System.out.println("Changed:"+name);
         }
       }
 

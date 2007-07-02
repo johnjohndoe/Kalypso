@@ -56,14 +56,16 @@ import org.kalypso.kalypsomodel1d2d.ops.TypeInfo;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtils;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IEdgeInv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ILineElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.FlowRelationUtilitites;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IKingFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IWeirFlowRelation;
 import org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
@@ -102,6 +104,8 @@ public class Gml2RMA10SConv
 
   private final LinkedHashMap<String, String> m_edgesIDProvider = new LinkedHashMap<String, String>( 100000 );
 
+  private final WeirIDProvider m_weirIDProvider = new WeirIDProvider();
+
   private final File m_outputFile;
 
   private final IFEDiscretisationModel1d2d m_discretisationModel1d2d;
@@ -131,13 +135,6 @@ public class Gml2RMA10SConv
     m_discretisationModel1d2d = discretisationModel1d2d;
     m_terrainModel = terrainModel;
     m_flowrelationModel = flowrelationModel;
-
-    // initialize Roughness IDs
-    // for( final Object o : roughnessClassList )
-    // {
-    // final Feature roughnessCL = (Feature) o;
-    // getID( m_roughnessIDProvider, roughnessCL.getId() );
-    // }
   }
 
   private int getID( final IFeatureWrapper2 i1d2dObject )
@@ -205,6 +202,7 @@ public class Gml2RMA10SConv
     }
     else
     {
+      // TODO: is this reallly possible? Better: throw an exception?
       writeElements( formatter, elements );
     }
     writeNodes( formatter, nodes );
@@ -324,7 +322,10 @@ public class Gml2RMA10SConv
           writePolynome( formatter, "QP2", nodeID, polyRunoff[0], 4, 9, null );
           writePolynome( formatter, "QP3", nodeID, polyRunoff[0], 9, 13, null );
 
-          final IPolynomial1D[] polyAlpha = teschkeConv.getPolynomialsByType( IWspmTuhhQIntervallConstants.DICT_COMPONENT_ALPHA );
+          final IPolynomial1D[] polyAlpha = teschkeConv.getPolynomialsByType( IWspmTuhhQIntervallConstants.DICT_PHENOMENON_ALPHA );
+
+          if( polyAlpha == null )
+            throw new SimulationException( "Kein Alpha-Polynom für Teschke-Netzparameter an Station km: " + station, null );
 
           if( polyAlpha.length > 1 )
           {
@@ -393,12 +394,36 @@ public class Gml2RMA10SConv
   {
     for( final IFE1D2DElement element : elements )
     {
-      if( element instanceof ILineElement )
+      final int id = getID( element );
+
+      if( element instanceof IElement1D )
       {
-        continue;
+        /* 1D-Elements get special handling. */
+        final IElement1D element1D = (IElement1D) element;
+
+        final IWeirFlowRelation weir = FlowRelationUtilitites.findWeirElement1D( element1D, m_flowrelationModel );
+        if( weir != null )
+        {
+          /* A Weir? Create dynamic weir number and use it as weir ID. */
+          final int weirID = m_weirIDProvider.addWeir( weir );
+          final IFE1D2DNode upstreamNode = weir.getUpstreamNode();
+          final int upstreamNodeID = getID( upstreamNode );
+          formatter.format( "FE%10d%10d%10s%10s%10d%n", id, weirID, "", "", upstreamNodeID );
+        }
+        else if( FlowRelationUtilitites.isTeschkeElement1D( element1D, m_flowrelationModel ) )
+        {
+          /* Element without building: The special roughness-class '89' should be used. */
+          formatter.format( "FE%10d%10d%n", id, 89 );
+        }
+        else
+          // TODO: give hint what 1D-element is was?
+          throw new SimulationException( "1D-Element ohne Bauwerk bzw. ohne Netzparameter.", null );
       }
-      final int roughnessID = calculateRoughnessID( roughnessIDProvider, roughnessPolygonCollection, element );
-      formatter.format( "FE%10d%10d%10d%10d%n", getID( element ), roughnessID, 1, 0 );
+      else if( element instanceof IElement2D )
+      {
+        final int roughnessID = calculateRoughnessID( roughnessIDProvider, roughnessPolygonCollection, element );
+        formatter.format( "FE%10d%10d%n", id, roughnessID );
+      }
     }
   }
 
@@ -406,30 +431,15 @@ public class Gml2RMA10SConv
   {
     for( final IFE1D2DElement element : elements )
     {
-      if( element instanceof ILineElement )
-      {
-        continue;
-      }
-      formatter.format( "FE%10d%10d%10d%10d%n", getID( element ), 0, 1, 0 );
+      // TODO: this FE line only makes sense for 2D elements; handle cases of 1D Elements as well
+      // BUT: only if this code is really used, see todo above
+      if( element instanceof IElement2D )
+        formatter.format( "FE%10d%10d%10d%10d%n", getID( element ), 0, 1, 0 );
     }
-
   }
 
   private int calculateRoughnessID( final LinkedHashMap<String, String> roughnessIDProvider, final IRoughnessPolygonCollection roughnessPolygonCollection, final IFE1D2DElement element ) throws GM_Exception, SimulationException
   {
-    /*
-     * According to Nico Schrage, if we have an Element1D with Polynomial flow-relations, the special roughness-class
-     * '889' should be used.
-     */
-    if( element instanceof IElement1D && DiscretisationModelUtils.isTeschkeElement1D( (IElement1D) element, m_flowrelationModel ) )
-    {
-      // return 889;
-      // TODO: recent example of Nico has 89 instead of 889, what is correct now?
-      return 89;
-    }
-
-    // TODO: handle weirs
-
     final IRoughnessEstimateSpec roughnessEstimateSpec = roughnessPolygonCollection.getRoughnessEstimateSpec( element.recalculateElementGeometry() );
     if( roughnessEstimateSpec != null )
     {
@@ -438,15 +448,7 @@ public class Gml2RMA10SConv
         return getID( roughnessIDProvider, cls[0].getGmlID() );
     }
 
-    // TODO: check if this is ok!?
-    // Probably we should throw an exception instead and stop calculation
-
-    // YES, JUST DO IT:
     throw new SimulationException( "Keine Rauheitszone gefunden: " + element, null );
-    // System.out.println( "Keine Rauheitszone gefunden: " + element );
-    // return 0;
-
-    // return -1;
   }
 
   public final LinkedHashMap<String, String> getRoughnessIDProvider( )
@@ -457,6 +459,11 @@ public class Gml2RMA10SConv
   public final LinkedHashMap<String, String> getNodesIDProvider( )
   {
     return m_nodesIDProvider;
+  }
+
+  public WeirIDProvider getWeirProvider( )
+  {
+    return m_weirIDProvider;
   }
 
 }

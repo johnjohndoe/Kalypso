@@ -48,6 +48,7 @@ import java.util.Formatter;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
@@ -55,8 +56,11 @@ import org.apache.commons.lang.StringUtils;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.kalypsomodel1d2d.conv.ITimeStepinfo.TYPE;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IWeirFlowRelation;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IWeirFlowRelation.KIND;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation;
+import org.kalypso.kalypsomodel1d2d.sim.RMA10SimModelConstants;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -78,10 +82,13 @@ public class Control1D2DConverter
 
   private final LinkedHashMap<String, String> m_roughnessIDProvider;
 
-  public Control1D2DConverter( final LinkedHashMap<String, String> nodesIDProvider, final LinkedHashMap<String, String> roughnessIDProvider )
+  private final WeirIDProvider m_weirProvider;
+
+  public Control1D2DConverter( final LinkedHashMap<String, String> nodesIDProvider, final LinkedHashMap<String, String> roughnessIDProvider, final WeirIDProvider weirProvider )
   {
     m_nodesIDProvider = nodesIDProvider;
     m_roughnessIDProvider = roughnessIDProvider;
+    m_weirProvider = weirProvider;
   }
 
   private int getRoughnessID( final String gmlID )
@@ -118,11 +125,16 @@ public class Control1D2DConverter
     if( controlModel.getRestart() )
       formatter.format( "RESTART%n" );
 
+    /* We always write a weir file, even if it is empty. */
+    formatter.format( "INCSTR  %30s%n", RMA10SimModelConstants.WEIR_File );
+
     formatter.format( "ENDFIL%n" );
 
     /* CONTROL DATA BLOCK */
     // TODO: write given name of szenario/projekt
-    formatter.format( "TI Projekt Name%n" ); // write Project name
+    final String discModelName = calculation.getDiscModel().getName();
+    final String projectName = discModelName == null ? "Unbekanntes Projekt" : discModelName;
+    formatter.format( "TI      %30s%n", projectName );
 
     // // C0
     final Object[] c0Props = new Object[] { 0, controlModel.getIDNOPT(), calendarForFirstTimeStep.get( Calendar.YEAR ), calendarForFirstTimeStep.get( Calendar.DAY_OF_YEAR ),
@@ -170,12 +182,9 @@ public class Control1D2DConverter
       final int roughnessAsciiID = getRoughnessID( roughnessCL.getId() );
 
       // Double eddy = calculation.getViskosity( roughnessCL );
+      // TODO: why it is fixed now?
       final double val = 2900.0;
-      formatter.format( "ED1%13d%8.1f%8.1f%8.1f%8.1f%8.1f%8.3f%8.3f%n", roughnessAsciiID, val, val, val, val, -1.0, 1.0, 1.0 );
-      // ED2
-      formatter.format( "ED2%13.1f%8.1f%8.3f%16.1f%n", 0.5, 0.5, 0.001, 20.0 );
 
-      // ED4
       final Double ks = calculation.getKs( roughnessCL );
       final Double axAy = calculation.getAxAy( roughnessCL );
       final Double dp = calculation.getDp( roughnessCL );
@@ -186,8 +195,19 @@ public class Control1D2DConverter
       final Double axayCorrected = axAy == null ? 0.0 : axAy;
       final Double dpCorrected = dp == null ? 0.0 : dp;
 
-      formatter.format( "ED4%21.2f%8.1f%8.2f%n", ks, axayCorrected, dpCorrected );
+      writeEDBlock( formatter, roughnessAsciiID, val, ks, axayCorrected, dpCorrected );
     }
+
+    final Map<Integer, IWeirFlowRelation> weirMap = m_weirProvider.getWeirData();
+    for( final Integer weirID : weirMap.keySet() )
+      writeEDBlock( formatter, weirID, 0.0, 0.0, 0.0, 0.0 );
+  }
+
+  private void writeEDBlock( final Formatter formatter, final int roughnessAsciiID, final double val, final Double ks, final Double axayCorrected, final Double dpCorrected )
+  {
+    formatter.format( "ED1%13d%8.1f%8.1f%8.1f%8.1f%8.1f%8.3f%8.3f%n", roughnessAsciiID, val, val, val, val, -1.0, 1.0, 1.0 );
+    formatter.format( "ED2%13.1f%8.1f%8.3f%16.1f%n", 0.5, 0.5, 0.001, 20.0 );
+    formatter.format( "ED4%21.2f%8.1f%8.2f%n", ks, axayCorrected, dpCorrected );
   }
 
   /**
@@ -320,6 +340,28 @@ public class Control1D2DConverter
 
     formatBoundCondLines( formatter, stepCal, timeStepInfos, TYPE.CONTI_BC_Q );
     formatBoundCondLines( formatter, stepCal, timeStepInfos, TYPE.CONTI_BC_H );
+
+    for( final Map.Entry<Integer, IWeirFlowRelation> weirData : m_weirProvider.getWeirData().entrySet() )
+    {
+      final Integer weirID = weirData.getKey();
+      final IWeirFlowRelation weir = weirData.getValue();
+      final KIND kind = weir.getKind();
+      final int weirKind;
+      switch( kind )
+      {
+        case TABULAR:
+          weirKind = 10;
+          break;
+
+        default:
+          throw new SimulationException( "Wehrtyp nicht unterstüzt: " + kind, null );
+      }
+
+      final double direction = weir.getDirection();
+
+      formatter.format( "FC%14d%8d%8.3f%8.3f%8.3f%8.3f%8.3f%n", weirID, weirKind, 0.0, 0.0, 0.0, 0.0, direction );
+    }
+
     // add other conti lines types as well (weirs)?
     formatter.format( "ENDSTEP %s%n", message );
   }
@@ -402,5 +444,4 @@ public class Control1D2DConverter
     final IComponent res_C_0 = result.getComponents()[0];
     return DateUtilities.toDate( (XMLGregorianCalendar) record.getValue( res_C_0 ) );
   }
-
 }

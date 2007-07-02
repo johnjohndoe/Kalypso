@@ -40,4 +40,9 @@
     <catalog:system systemId="urn:kalypso:chart:configuration:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:TeschkeFlowRelation:default" uri="http___www.tu-harburg.de_wb_kalypso_schemata_1d2d.TeschkeFlowRelation.kod" />
     <catalog:system systemId="urn:kalypso:chart:configuration:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:KingFlowRelation:default" uri="http___www.tu-harburg.de_wb_kalypso_schemata_1d2d.KingFlowRelation.kod" />
     
+    <!--  Hydrograph - Results -->
+    <catalog:system systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2dResults:Hydrograph:featureview:default" uri="http___www.tu-harburg.de_wb_kalypso_schemata_1d2dResults.Hydrograph.gft" />
+    <catalog:system systemId="urn:kalypso:chart:configuration:http___www.tu-harburg.de_wb_kalypso_schemata_1d2dResults:Hydrograph:default" uri="http___www.tu-harburg.de_wb_kalypso_schemata_1d2dResults.Hydrograph.kod" />
+    
+    
 </catalog:catalog>

@@ -12,4 +12,3 @@
             horizontalAlignment="GridData.FILL" heightHint="30" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true"/>
     </gft:tupleResult>
 </gft:featureview>
-
