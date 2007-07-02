@@ -148,13 +148,6 @@ public class CalculationUnitPerformComponent extends FeatureWrapperListEditor im
       checkBC.checkAllInvariants();
       tempProblemList.addAll( checkBC.getBrokenInvariantMessages() );
       
-//      MergeCalculationUnit mergeCal = new MergeCalculationUnit(orgCalc, dataModel);
-//      mergeCal.addToBoundaryLine(CalUnitOps.getBoundaryLines(orgCalc));
-//      mergeCal.checkAllInvariants();
-//      tempProblemList.addAll( mergeCal.getBrokenInvariantMessages());
-            
-      //FindInvalidElements findEle = new FindInvalidElements(orgCalc);
-      
       InvariantBConditionWithBLine invBConditionBLine = new InvariantBConditionWithBLine(orgCalc, dataModel);
       invBConditionBLine.checkAllInvariants();
       tempProblemList.addAll( invBConditionBLine.getBrokenInvariantMessages() );
@@ -168,7 +161,6 @@ public class CalculationUnitPerformComponent extends FeatureWrapperListEditor im
       overlappingElements.checkAllInvariants();
       tempProblemList.addAll( overlappingElements.getBrokenInvariantMessages() );
       dataModel.addValidatingMessage( calc1D2D, tempProblemList );
-      
     }
     
   }
