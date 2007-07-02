@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gismapview xmlns="gismapview.template.kalypso.org">
+    <extent bottom="5622381.016474151" left="5344781.544082234" right="5444440.086756421" srs="EPSG:31469" top="5724853.44741208"/>
+    <highlightColors>
+        <fillColor alpha="100" blue="0" green="255" red="255"/>
+    </highlightColors>
+    <layers active="ID_5">
+        <layer name="StartPegel" visible="false" featurePath="#fid#root/pegelMember[StartPegel]" id="ID_1" linktype="gml" ns1:actuate="onRequest" ns1:href="project:/modell.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+        <layer name="ElbePegel" visible="false" featurePath="#fid#root/pegelMember[ElbePegel]" id="ID_2" linktype="gml" ns2:actuate="onRequest" ns2:href="project:/modell.gml" ns2:type="simple" xmlns:ns2="http://www.w3.org/1999/xlink"/>
+        <layer name="Start- und Elbepegel" visible="false" featurePath="#fid#root/pegelMember[AbstractMainPegel]" id="ID_3" linktype="gml" ns3:actuate="onRequest" ns3:href="project:/modell.gml" ns3:type="simple" xmlns:ns3="http://www.w3.org/1999/xlink"/>
+        <layer name="Zwischengebietszuflüsse" visible="true" featurePath="#fid#root/zwgZuflussMember[ZwgZufluss]" id="ID_4" linktype="gml" ns4:actuate="onRequest" ns4:href="project:/modell.gml" ns4:type="simple" xmlns:ns4="http://www.w3.org/1999/xlink"/>
+        <layer name="interne Hilfspegel" visible="true" featurePath="#fid#root/internerHPegelMember[InternerHPegel]" id="ID_5" linktype="gml" ns5:actuate="onRequest" ns5:href="project:/modell.gml" ns5:type="simple" xmlns:ns5="http://www.w3.org/1999/xlink"/>
+        <layer name="Gewässerverlauf CZ" visible="true" featurePath="featureMember" id="ID_6" linktype="shape" ns6:actuate="onRequest" ns6:href="project:/Grunddaten/Shapes/gewaesser_cz#EPSG:31468" ns6:type="simple" xmlns:ns6="http://www.w3.org/1999/xlink">
+            <ns7:style linktype="sld" style="sachsenrivers" ns6:actuate="onRequest" ns6:href="project:/Grunddaten/.styles/styles.sld" ns6:type="simple" xmlns:ns7="types.template.kalypso.org"/>
+        </layer>
+        <layer name="Gewässerverlauf DE" visible="true" featurePath="featureMember" id="ID_7" linktype="shape" ns8:actuate="onRequest" ns8:href="project:/Grunddaten/Shapes/gewaesser_de#EPSG:31468" ns8:type="simple" xmlns:ns8="http://www.w3.org/1999/xlink">
+            <ns9:style linktype="sld" style="sachsenrivers" ns8:actuate="onRequest" ns8:href="project:/Grunddaten/.styles/styles.sld" ns8:type="simple" xmlns:ns9="types.template.kalypso.org"/>
+        </layer>
+    </layers>
+</gismapview>
+

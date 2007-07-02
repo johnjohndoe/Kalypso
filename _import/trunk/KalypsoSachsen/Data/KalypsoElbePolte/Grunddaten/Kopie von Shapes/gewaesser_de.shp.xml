@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!--<!DOCTYPE metadata SYSTEM "http://www.esri.com/metadata/esriprof80.dtd">-->
+<metadata xml:lang="de">
+    <Esri>
+        <MetaID>{0393412C-40C2-4BE6-A3EC-918CC59C7188}</MetaID>
+        <CreaDate>20070424</CreaDate>
+        <CreaTime>11164300</CreaTime>
+        <SyncOnce>TRUE</SyncOnce>
+        <DataProperties>
+            <lineage>
+                <Process Name="Merge_1" ToolSource="N:\ProLfUG\ArcGIS\ArcToolbox\Toolboxes\Data Management Tools.tbx\Merge" Date="20070424" Time="111643">Merge FLG_Auswahl_aS;FLG_Auswahl
+                    "G:\Abt3\Ref35\Mitarbeiter\Krause_I\Zuarbeiten\Büttner\Pegel_FLG_für Kalypso\FLG_SN.shp" "FNODE_ FNODE_ true false false 11 Double 0 11
+                    ,First,#,FLG_Auswahl_aS,FNODE_,-1,-1,FLG_Auswahl,FNODE_,-1,-1;TNODE_ TNODE_ true false false 11 Double 0 11 ,First,#,FLG_Auswahl_aS,TNODE_,-1,-1,FLG_Auswahl,TNODE_,-1,-1;LPOLY_
+                    LPOLY_ true false false 11 Double 0 11 ,First,#,FLG_Auswahl_aS,LPOLY_,-1,-1,FLG_Auswahl,LPOLY_,-1,-1;RPOLY_ RPOLY_ true false false 11 Double 0 11
+                    ,First,#,FLG_Auswahl_aS,RPOLY_,-1,-1,FLG_Auswahl,RPOLY_,-1,-1;LENGTH LENGTH true false false 19 Double 6 18 ,First,#,FLG_Auswahl_aS,LENGTH,-1,-1,FLG_Auswahl,LENGTH,-1,-1;BRD_HYDR_
+                    BRD_HYDR_ true false false 11 Double 0 11 ,First,#,FLG_Auswahl_aS,BRD_HYDR_,-1,-1;BRD_HYDR_I BRD_HYDR_I true false false 11 Double 0 11
+                    ,First,#,FLG_Auswahl_aS,BRD_HYDR_I,-1,-1;HYDRO HYDRO true false false 4 Short 0 4 ,First,#,FLG_Auswahl_aS,HYDRO,-1,-1;NAME NAME true false false 20 Text 0 0
+                    ,First,#,FLG_Auswahl_aS,NAME,-1,-1;FLG_030428 FLG_030428 true false false 9 Long 0 9 ,First,#,FLG_Auswahl,FLG_030428,-1,-1;FLG__30429 FLG__30429 true false false 9 Long 0 9
+                    ,First,#,FLG_Auswahl,FLG__30429,-1,-1;ID ID true false false 9 Long 0 9 ,First,#,FLG_Auswahl,ID,-1,-1;GEWNAME_ GEWNAME_ true false false 40 Text 0 0
+                    ,First,#,FLG_Auswahl,GEWNAME_,-1,-1;BESCHRIF_ BESCHRIF_ true false false 30 Text 0 0 ,First,#,FLG_Auswahl,BESCHRIF_,-1,-1;BEMERK BEMERK true false false 16 Text 0 0
+                    ,First,#,FLG_Auswahl,BEMERK,-1,-1;UPDATE UPDATE true true false 8 Date 0 0 ,First,#,FLG_Auswahl,UPDATE,-1,-1;AEO50 AEO50 true false false 16 Text 0 0
+                    ,First,#,FLG_Auswahl,AEO50,-1,-1;AEO100 AEO100 true false false 16 Text 0 0 ,First,#,FLG_Auswahl,AEO100,-1,-1;AEO500 AEO500 true false false 16 Text 0 0
+                    ,First,#,FLG_Auswahl,AEO500,-1,-1;AEO10 AEO10 true false false 16 Text 0 0 ,First,#,FLG_Auswahl,AEO10,-1,-1;GWKZ GWKZ true false false 10 Text 0 0
+                    ,First,#,FLG_Auswahl,GWKZ,-1,-1;GKZ_O GKZ_O true false false 10 Text 0 0 ,First,#,FLG_Auswahl,GKZ_O,-1,-1;GKZ GKZ true false false 16 Text 0 0
+                    ,First,#,FLG_Auswahl,GKZ,-1,-1;LENGTH_MET LENGTH_MET true false false 19 Double 11 18 ,First,#,FLG_Auswahl,LENGTH_MET,-1,-1;NR_GW_O1 NR_GW_O1 true false false 6 Text 0 0
+                    ,First,#,FLG_Auswahl,NR_GW_O1,-1,-1;ORDN ORDN true false false 3 Text 0 0 ,First,#,FLG_Auswahl,ORDN,-1,-1;AEO AEO true false false 10 Text 0 0 ,First,#,FLG_Auswahl,AEO,-1,-1;GHK
+                    GHK true false false 1 Short 0 1 ,First,#,FLG_Auswahl,GHK,-1,-1"</Process>
+            </lineage>
+        </DataProperties>
+    </Esri>
+</metadata>

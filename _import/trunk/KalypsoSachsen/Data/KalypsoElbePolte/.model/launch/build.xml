@@ -1,0 +1,70 @@
+<project default="fake">
+
+	<property name="modell.template.dir" value="${project.dir}/.templates/Modell" />
+	
+    <!-- define the requests -->
+    <property name="requestQ"
+              value="&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;axes&gt;date,Q&lt;/axes&gt;&lt;statusAxes&gt;Q&lt;/statusAxes&gt;&lt;/request&gt;" />
+
+	<!-- Zeitschritt der Berechnung: 3h-->
+	<property name="interval.field" value="HOUR_OF_DAY"/>
+	<property name="interval.amount" value="3"/>
+	
+	<!-- Vordefinierte Filter -->
+    <!-- Q: interpolation-filter -->
+    <property name="filterQ"
+              value="${requestQ}&lt;filter&gt;&lt;interpolationFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; defaultStatus=&quot;2&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" />
+	
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: fake                      nur damit das Projekt nicht schreit
+         - - - - - - - - - - - - - - - - - -->
+	<target name="fake" />
+
+	<!-- 
+		 ================================= 
+          target: create			Rechenvariante erzeugen
+         ================================= 
+    -->
+	<target name="create" description="Erzeugt eine Rechenvariante">
+		<echo message="Rechenvariante anlegen: ${calc.dir}" />
+
+		
+	</target>
+	
+	
+    <!-- - - - - - - - - - - - - - - - - - 
+          target: calculationProperties                      Initializes properties from .calculation
+         - - - - - - - - - - - - - - - - - -->
+    <target name="calculationProperties">
+		
+    </target>
+	
+	<!-- 
+		 ================================= 
+          target: update			Zeitreihen aktualisieren
+         ================================= 
+    -->
+	<target name="update" depends="calculationProperties" description="Aktualisiert eine Rechenvariante">
+		
+		
+	
+	</target>
+
+	<!-- 
+		 ================================= 
+          target: runCalculation			
+         ================================= 
+    -->
+	<target name="runCalculation" description="Führt die eigentliche Simulationsrechnung durch">
+		<echo message="Berechnung wird durchgeführt: ${calc.path}"/>
+		
+			</target>
+	
+    <!-- ================================= 
+          target: exportVorhersagen              
+         ================================= -->
+    <target name="exportVorhersagen" depends="calculationProperties" description="Exportiert die Prognosen nach PSICompact">
+       </target>
+	
+
+</project>

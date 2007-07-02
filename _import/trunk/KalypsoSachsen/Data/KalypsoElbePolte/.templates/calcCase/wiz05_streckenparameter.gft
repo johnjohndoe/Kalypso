@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<featuretemplate xmlns="featureview.template.kalypso.org">
+    <layer featurePath="#fid#Brandys" id="layer_1" linktype="gml" ns1:href="platform:/resource//KalypsoElbePolte/..BCE_intern/steuerParam_Import/.elbePolteModell_leer.gml" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+    <view typename="StartPegel" style="SWT.NONE">
+        <gridData grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL"/>
+        <gridLayout numColumns="3"/>
+        <label text="Lage" style="SWT.NONE" tooltip="Lage" visible="true">
+            <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
+        </label>
+        <button property="lage" style="SWT.PUSH" tooltip="Lage">
+            <gridData horizontalAlignment="GridData.BEGINNING" horizontalSpan="2"/>
+        </button>
+        <label text="Pegelname" style="SWT.NONE" tooltip="Pegelname" visible="true">
+            <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
+        </label>
+        <text editable="true" property="name" style="SWT.NONE" tooltip="Pegelname">
+            <gridData horizontalAlignment="GridData.BEGINNING" horizontalSpan="1" widthHint="200"/>
+        </text>
+        <label style="SWT.NONE" visible="false">
+            <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
+        </label>
+        <label text="Pegelname (deutsch)" style="SWT.NONE" tooltip="Pegelname (deutsch)" visible="true">
+            <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
+        </label>
+        <text editable="true" property="name_de" style="SWT.NONE" tooltip="Pegelname (deutsch)">
+            <gridData horizontalAlignment="GridData.BEGINNING" horizontalSpan="1" widthHint="200"/>
+        </text>
+        <label style="SWT.NONE" visible="false">
+            <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
+        </label>
+        <label text="Pegelname (tschechisch)" style="SWT.NONE" tooltip="Pegelname (tschechisch)" visible="true">
+            <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
+        </label>
+        <text editable="true" property="name_cz" style="SWT.NONE" tooltip="Pegelname (tschechisch)">
+            <gridData horizontalAlignment="GridData.BEGINNING" horizontalSpan="1" widthHint="200"/>
+        </text>
+        <label style="SWT.NONE" visible="false">
+            <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
+        </label>
+        <label text="Beschreibung des Pegels" style="SWT.NONE" tooltip="Beschreibung des Pegels" visible="true">
+            <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
+        </label>
+        <text editable="true" property="description" style="SWT.NONE" tooltip="Beschreibung des Pegels">
+            <gridData horizontalAlignment="GridData.BEGINNING" horizontalSpan="1" widthHint="200"/>
+        </text>
+        <label style="SWT.NONE" visible="false">
+            <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
+        </label>
+        <label text="Pegel-ID" style="SWT.NONE" tooltip="Pegel-ID (Messstellen-ID)" visible="true">
+            <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
+        </label>
+        <text editable="true" property="id" style="SWT.NONE" tooltip="Pegel-ID (Messstellen-ID)">
+            <gridData horizontalAlignment="GridData.BEGINNING" horizontalSpan="1" widthHint="200"/>
+        </text>
+        <label style="SWT.NONE" visible="false">
+            <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
+        </label>
+        <label text="interne Pegel-Nr" style="SWT.NONE" tooltip="interne Pegel-Nr" visible="true">
+            <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
+        </label>
+        <text editable="true" property="nr" style="SWT.NONE" tooltip="interne Pegel-Nr">
+            <gridData horizontalAlignment="GridData.BEGINNING" horizontalSpan="1" widthHint="200"/>
+        </text>
+        <label style="SWT.NONE" visible="false">
+            <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
+        </label>
+        <label text="Gewässer" style="SWT.NONE" tooltip="Gewässer" visible="true">
+            <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
+        </label>
+        <text editable="true" property="river" style="SWT.NONE" tooltip="Gewässer">
+            <gridData horizontalAlignment="GridData.BEGINNING" horizontalSpan="1" widthHint="200"/>
+        </text>
+        <label style="SWT.NONE" visible="false">
+            <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
+        </label>
+        <label text="Mess- und Vorgabewerte" style="SWT.NONE" tooltip="Mess- und Vorgabewerte" visible="true">
+            <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
+        </label>
+        <composite style="SWT.NONE" tooltip="Mess- und Vorgabewerte">
+            <gridData grabExcessHorizontalSpace="true" horizontalAlignment="GridData.FILL" horizontalSpan="2"/>
+            <gridLayout makeColumnsEqualWidth="false" marginWidth="0" numColumns="2"/>
+            <text property="ganglinie_gesamt" style="SWT.NONE">
+                <gridData horizontalAlignment="GridData.BEGINNING" widthHint="200"/>
+            </text>
+            <button property="ganglinie_gesamt" style="SWT.PUSH">
+                <gridData horizontalAlignment="GridData.BEGINNING"/>
+            </button>
+        </composite>
+    </view>
+</featuretemplate>
+
