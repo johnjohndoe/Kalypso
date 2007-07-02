@@ -97,7 +97,6 @@ public class SurfacePaintIsolinesVisitor<T extends GM_SurfacePatch> implements I
       final double delta = 0.1;
       // paintTriangleIsoLines( triangle, m_classes);
       getTriangleIsoLines( triangle, delta );
-// paintThisSurface( patch, triangle.getExteriorRing()[0].getZ() );
     }
     else
       paintThisSurface( patch, elevationSample );
@@ -124,7 +123,7 @@ public class SurfacePaintIsolinesVisitor<T extends GM_SurfacePatch> implements I
     // loop over all intervals
     // TODO: get a proper start interval
     final double factor = 1.0 / delta;
-    final double minValueFactor = Math.ceil( factor * minValue );
+    final double minValueFactor = Math.floor( factor * minValue );
 
     for( double currentValue = minValueFactor / factor; currentValue <= maxValue; currentValue += delta )
     {
