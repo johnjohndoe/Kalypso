@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gismapview xmlns="gismapview.template.kalypso.org">
+    <extent bottom="5502362.19214962" left="4480741.941620287" right="4668995.0" srs="EPSG:31469" top="5895042.796025201"/>
+    <layers active="ID_2">
+        <layer name="gewaesser" visible="true" featurePath="featureMember" id="ID_1" linktype="shape" ns1:actuate="onRequest" ns1:href="project:/Grunddaten/Shapes/gewaesser#EPSG:31469" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink"/>
+        <layer name="gewaesser" visible="true" featurePath="featureMember" id="ID_2" linktype="shape" ns2:actuate="onRequest" ns2:href="project:/Grunddaten/Shapes/gewaesser#EPSG:31469" ns2:type="simple" xmlns:ns2="http://www.w3.org/1999/xlink"/>
+    </layers>
+</gismapview>
+

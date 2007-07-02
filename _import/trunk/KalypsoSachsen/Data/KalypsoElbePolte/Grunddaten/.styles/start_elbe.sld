@@ -3,21 +3,39 @@
 	<NamedLayer>
 		<Name>deegree style definition</Name>
 		<UserStyle>
-			<Name>Flutungen</Name>
-			<Title>Zufluesse</Title>
+			<Name>start_elbe</Name>
+			<Title>Start- und Elbepegel</Title>
 			<IsDefault>1</IsDefault>
 			<FeatureTypeStyle>
-				<Name>Flutungen</Name>
+				<Name>Start- und Elbepegel</Name>
 				<Rule>
-					<Name>Zufluesse</Name>
+					<Name>Start- und Elbepegel</Name>
 					<MinScaleDenominator>0.0</MinScaleDenominator>
 					<MaxScaleDenominator>9.0E99</MaxScaleDenominator>
+					<PointSymbolizer>
+						<Geometry>
+							<ogc:PropertyName>lage</ogc:PropertyName>
+						</Geometry>
+						<Graphic>
+							<Mark>
+								<WellKnownName>triangle</WellKnownName>
+								<Fill>
+									<CssParameter name="fill">#0000ab</CssParameter>
+								</Fill>
+								<Stroke>
+									<CssParameter name="stroke">#111111</CssParameter>
+									<CssParameter name="stroke-width">1.0</CssParameter>
+								</Stroke>
+							</Mark>
+							<Size>15.0</Size>
+						</Graphic>
+					</PointSymbolizer>
 					<TextSymbolizer>
 						<Geometry>
-							<ogc:PropertyName>Ort</ogc:PropertyName>
+							<ogc:PropertyName>lage</ogc:PropertyName>
 						</Geometry>
 						<Label>
-							<ogc:PropertyName>Name</ogc:PropertyName>
+							<ogc:PropertyName>name</ogc:PropertyName>
 						</Label>
 						<Font>
 							<CssParameter name="font-family"/>
@@ -29,30 +47,12 @@
 						<LabelPlacement>
 							<PointPlacement auto="true">
 								<Displacement>
-									<DisplacementX>0.0</DisplacementX>
-									<DisplacementY>-12.0</DisplacementY>
+									<DisplacementX>10.0</DisplacementX>
+									<DisplacementY>10.0</DisplacementY>
 								</Displacement>
 							</PointPlacement>
 						</LabelPlacement>
 					</TextSymbolizer>
-					<PointSymbolizer>
-						<Geometry>
-							<ogc:PropertyName>Ort</ogc:PropertyName>
-						</Geometry>
-						<Graphic>
-							<Mark>
-								<WellKnownName>triangle</WellKnownName>
-								<Fill>
-									<CssParameter name="fill">#00abab</CssParameter>
-								</Fill>
-								<Stroke>
-									<CssParameter name="stroke">#111111</CssParameter>
-									<CssParameter name="stroke-width">1.0</CssParameter>
-								</Stroke>
-							</Mark>
-							<Size>15.0</Size>
-						</Graphic>
-					</PointSymbolizer>
 				</Rule>
 			</FeatureTypeStyle>
 		</UserStyle>

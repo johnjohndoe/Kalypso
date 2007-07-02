@@ -3,18 +3,18 @@
 	<NamedLayer>
 		<Name>deegree style definition</Name>
 		<UserStyle>
-			<Name>Zufluesse</Name>
-			<Title>Zufluesse</Title>
+			<Name>start</Name>
+			<Title>Startpegel</Title>
 			<IsDefault>1</IsDefault>
 			<FeatureTypeStyle>
-				<Name>Zufluesse</Name>
+				<Name>Startpegel</Name>
 				<Rule>
-					<Name>Zufluesse</Name>
+					<Name>Startpegel</Name>
 					<MinScaleDenominator>0.0</MinScaleDenominator>
 					<MaxScaleDenominator>9.0E99</MaxScaleDenominator>
 					<PointSymbolizer>
 						<Geometry>
-							<ogc:PropertyName>Ort</ogc:PropertyName>
+							<ogc:PropertyName>lage</ogc:PropertyName>
 						</Geometry>
 						<Graphic>
 							<Mark>
@@ -32,10 +32,10 @@
 					</PointSymbolizer>
 					<TextSymbolizer>
 						<Geometry>
-							<ogc:PropertyName>Ort</ogc:PropertyName>
+							<ogc:PropertyName>lage</ogc:PropertyName>
 						</Geometry>
 						<Label>
-							<ogc:PropertyName>Name</ogc:PropertyName>
+							<ogc:PropertyName>name</ogc:PropertyName>
 						</Label>
 						<Font>
 							<CssParameter name="font-family"/>
