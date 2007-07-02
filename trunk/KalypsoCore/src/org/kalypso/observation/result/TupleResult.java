@@ -465,6 +465,8 @@ public class TupleResult implements List<IRecord>
 
     record.setValue( comp, value );
 
+    sort();
+
     final ValueChange[] changes = new ValueChange[] { new ValueChange( record, comp, value ) };
     fireValuesChanged( changes );
   }
