@@ -45,8 +45,8 @@ import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
- * @author Madanagopal
- *
+ * Every Validating Condition for Calculation Units implements this Interface
+ * @author Madanagopal 
  */
 @SuppressWarnings("unchecked")
 public interface IProblem
@@ -62,6 +62,8 @@ public interface IProblem
   
   public void navigateToProblem(MapPanel panel);
   
-  // Sets focus on Any Feature added
+  /**
+   * Sets focus on particular Feature
+   */
   public IFeatureWrapper2 showFocusOn();
 }

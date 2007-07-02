@@ -46,6 +46,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.IProblem;
 
 /**
+ * Interface for Validating conditions of Calculation Units
  * @author Madanagopal
  *
  */

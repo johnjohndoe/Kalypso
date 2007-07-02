@@ -51,6 +51,7 @@ import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.ProblemDescriptor;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
 
 /**
+ * Provides Validating conditions to check if Every Calculation Unit has atleast 2 boundary conditions.
  * @author Madanagopal
  *
  */
@@ -86,6 +87,7 @@ public class InvariantCheckBoundaryConditions implements ICalculationValidateInt
   }
 
   /**
+   * Runs invariant checks
    * @see org.kalypso.kalypsomodel1d2d.validate.test.calculation_unit.ICalculationValidateInterface#checkAllInvariants()
    */
   public void checkAllInvariants( )

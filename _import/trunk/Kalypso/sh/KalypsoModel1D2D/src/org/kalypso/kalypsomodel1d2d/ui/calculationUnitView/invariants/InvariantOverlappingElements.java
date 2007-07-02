@@ -49,10 +49,10 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit2D;
 import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.IProblem;
 import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.ProblemDescriptor;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
+ * Provides checking conditions to see if any elements overlap in the 1D2D Calculation Unit
  * @author Madanagopal
  *
  */
@@ -76,6 +76,10 @@ public class InvariantOverlappingElements implements ICalculationValidateInterfa
     this.dataModel = dataModel;
   }
   
+  /**
+   * Provides Validating Conditions for this Class.
+   * @see org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.invariants.ICalculationValidateInterface#checkAllInvariants()
+   */
   public void checkAllInvariants()
   {
     subUnits = mainCalculation1D2D.getSubUnits();
@@ -99,11 +103,6 @@ public class InvariantOverlappingElements implements ICalculationValidateInterfa
               if (toCompareCalcUnit.getElements().contains( element ))                
               {
                 //@TODO Can Change the Focus to particular Calculation Unit                
-//                invariantErrorMessages.add( new ProblemDescriptor(
-//                                                          null, 
-//                                                          "Overlapping Elements in "+ toCompareCalcUnit.getName(),
-//                                                          mainCalculation1D2D,
-//                                                          mainCalculation1D2D) );
                 invariantErrorMessages.add( new ProblemDescriptor(null,"Overlapping Elements in "+ toCompareCalcUnit.getName(),mainCalculation1D2D,mainCalculation1D2D ) );
               }
             }

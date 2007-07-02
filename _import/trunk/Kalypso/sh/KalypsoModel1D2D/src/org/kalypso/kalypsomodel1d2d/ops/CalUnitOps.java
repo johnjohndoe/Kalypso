@@ -783,8 +783,7 @@ public class CalUnitOps
     Assert.throwIAEOnNullParam( bcPosition, "bcPosition" );
     Assert.throwIAEOnNullParam( lineType, "lineType" );
     Assert.throwIAEOnLessThan0( grabDistance, "grab distance must be greater or equals to 0" );
-    GM_Envelope env = 
-      GeometryUtilities.grabEnvelopeFromDistance( bcPosition, grabDistance );
+    GM_Envelope env = GeometryUtilities.grabEnvelopeFromDistance( bcPosition, grabDistance );
       
     final List<IFE1D2DElement> targetLines = unit.getElements().query(env);
     double minDistance = Double.MAX_VALUE;

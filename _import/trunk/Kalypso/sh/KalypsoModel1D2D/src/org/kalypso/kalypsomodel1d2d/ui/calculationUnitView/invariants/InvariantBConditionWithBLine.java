@@ -42,11 +42,10 @@ package org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.invariants;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.IProblem;
 import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.ProblemDescriptor;
@@ -58,6 +57,7 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
+ * Provides Validating Conditions for Checking if every boundary line has atleast one boundary condition
  * @author Madanagopal
  * 
  */
@@ -66,11 +66,11 @@ public class InvariantBConditionWithBLine implements ICalculationValidateInterfa
 
   private ICalculationUnit calculationUnit;
 
-  private List<IBoundaryLine> boundaryLines;
+//  private List<IBoundaryLine> boundaryLines;
 
   private CalculationUnitDataModel dataModel;
 
-  private List<IBoundaryCondition> boundaryConditions;
+//  private List<IBoundaryCondition> boundaryConditions;
   private List<IProblem> invariantErrorMessages = new ArrayList<IProblem>();
 
   public InvariantBConditionWithBLine( ICalculationUnit calc, CalculationUnitDataModel dataModel )
@@ -95,28 +95,37 @@ public class InvariantBConditionWithBLine implements ICalculationValidateInterfa
   }
 
   /**
+   * Runs the validating Checks
    * @see org.kalypso.kalypsomodel1d2d.validate.test.calculation_unit.ICalculationValidateInterface#checkAllInvariants()
    */
   public void checkAllInvariants( )
   {
-    boundaryLines = CalUnitOps.getBoundaryLines( calculationUnit );
-    boundaryConditions = CalUnitOps.getBoundaryConditions( getBoundaryConditions(), calculationUnit, getGrabDistance() );
-    
-    
+    final double grabDistance = getGrabDistance();
+    final List<IBoundaryLine> boundaryLines = CalUnitOps.getBoundaryLines( calculationUnit );
+    final List<IBoundaryCondition> boundaryConditions = CalUnitOps.getBoundaryConditions( getBoundaryConditions(), calculationUnit, getGrabDistance() );
     for (IBoundaryLine line:boundaryLines)
     {
-      
-      List<IFE1D2DNode> nodeList = line.getNodes();
-      for (IFE1D2DNode node:nodeList)
+      boolean hasBc=false;
+      try
       {
-        node.getPoint();
+        for( IBoundaryCondition bc: boundaryConditions )
+        {
+          if( line.recalculateElementGeometry().distance( bc.getPosition() )<grabDistance ) 
+          {
+            hasBc=true;
+          }
+        }
       }
-      // @TODO 
+      catch (Exception e) 
+      {
+        e.printStackTrace();
+        hasBc = true;
+      }
+      if( !hasBc )
+      {
+        invariantErrorMessages.add( new ProblemDescriptor(null, "Boundary Condition with out boundary Line "+calculationUnit, calculationUnit, line) );        
+      }
     }
- // @TODO 
-    
-    //dataModel.addValidatingMessage( calculationUnit, new ProblemDescriptor(null,"Boundary Condition with out boundary Line "+calculationUnit,calculationUnit,calculationUnit ) );
-    invariantErrorMessages.add( new ProblemDescriptor(null, "Boundary Condition with out boundary Line "+calculationUnit, calculationUnit, null) );
   }
 
   /**
