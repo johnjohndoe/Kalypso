@@ -131,6 +131,7 @@ public class TupleResultCellModifier implements ICellModifier
         }
 
         record.setValue( component, valueToSet );
+        m_provider.getResult().sort();
       }
       else
       {
