@@ -179,14 +179,14 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 					<Help>Definieren von Rand- und Übergangslinien von Modellierungseinheiten (keine Ausgabedefinition)</Help>
 					<Name>Ränder und Übergänge definieren</Name>
 				</Task>
-				<Task context="JunctionContextTheme" 
+				<Task context="BoundaryConditionTheme" 
 					URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__BCDef">
 					<Help>
 						<![CDATA[Festlegung von Knoten- und Linienrandbedingungen für die Berechnung.]]>
 					</Help>
 					<Name>Randbedingungen</Name>
 				</Task>		
-				<Task context="JunctionContextTheme"
+				<Task context="Context2dElementTheme"
 					URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__CalculationUnit">
 					<Help>
 						<![CDATA[Berechnungseinheiten modellieren]]>
