@@ -79,7 +79,7 @@ public class PlainProfil implements IProfil
 
   /**
    * Der aktive Punkt des Profils: in der Tabelle derjenige, auf welchem der Table-Cursor sitzt. Im Diagramm der zuletzt
-   * angeklickte. Die sichtbaren Trenner werden auch hier verwaltet
+   * angeklickte.
    */
   private IProfilPoint m_activePoint;
 

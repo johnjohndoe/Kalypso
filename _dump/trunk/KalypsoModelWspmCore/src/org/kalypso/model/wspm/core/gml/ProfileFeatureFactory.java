@@ -209,7 +209,7 @@ public class ProfileFeatureFactory implements IWspmConstants
         }
 
         final IComponent comp = compMap.get( ppName );
-        final double value = point.getValueFor( pp.toString() );
+        final double value = point.getValueFor( pp.getId() );
         result.setValue( record, comp, new Double( value ) );
       }
 
@@ -296,32 +296,6 @@ public class ProfileFeatureFactory implements IWspmConstants
 
     final String profiletype = (String) profileFeature.getProperty( QNAME_TYPE );
     final IProfil profil = ProfilFactory.createProfil( profiletype );
-
-    //
-    // Metadaten
-    //
-    // final ArrayList<Object> metastrings = new ArrayList<Object>( 14 );
-    // metastrings.add( profileFeature.getWorkspace().getContext().toString() );
-    // metastrings.add( "" );
-    // metastrings.add( "" );
-    // metastrings.add( "" );
-    // metastrings.add( "" );
-    // metastrings.add( "" );
-    // metastrings.add( "Gewässer Zustand" );
-    // metastrings.add( "QUERPROFIL 000" );
-    // metastrings.add( "STATION KM 000.0000" );
-    // metastrings.add( "" );
-    // metastrings.add( "01.01.1900" );
-    // metastrings.add( "B-1 0 0 0 0 0 0" );
-    // metastrings.add( "" );
-    // profil.setProperty( IWspmConstants.PROFIL_PROPERTY_METASTRINGS, metastrings );
-    // profil.setProperty( IWspmConstants.PROFIL_PROPERTY_STATUS, "Zustand" );
-    // profil.setProperty( IWspmConstants.PROFIL_PROPERTY_VERZWEIGUNGSKENNUNG, "0" );
-    // profil.setProperty( IWspmConstants.PROFIL_PROPERTY_WASSERSPIEGEL, "Gewaesser" );
-    // profil.setProperty( IWspmConstants.PROFIL_PROPERTY_MEHRFELDBRUECKE, "0" );
-
-    // observation.getMetadataList().add( new Metadataobject(name, type, value) );
-
     profil.setName( observation.getName() );
     profil.setComment( observation.getDescription() );
     final BigDecimal station = getProfileStation( profileFeature );

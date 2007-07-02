@@ -127,9 +127,9 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
    * Creates an instance of this class
    * 
    * @param aWorkbench
-   *          IWorkbench
+   *            IWorkbench
    * @param selection
-   *          IStructuredSelection
+   *            IStructuredSelection
    */
   protected WspWinExportPage( final String pageName, final IStructuredSelection selection )
   {
@@ -235,7 +235,7 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
    * // * Creates the buttons for selecting specific types or selecting all or none of the // * elements. // * // *
    * 
    * @param parent
-   *          the parent control //
+   *            the parent control //
    */
   protected final void createButtonsGroup( final Composite parent )
   {
@@ -295,7 +295,7 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
    * Create the export destination specification widgets
    * 
    * @param parent
-   *          org.eclipse.swt.widgets.Composite
+   *            org.eclipse.swt.widgets.Composite
    */
   protected void createDestinationGroup( final Composite parent )
   {
@@ -336,7 +336,7 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
    * Creates the checkbox tree and list for selecting resources.
    * 
    * @param parent
-   *          the parent control
+   *            the parent control
    */
   protected final void createResourcesGroup( final Composite parent )
   {
@@ -626,11 +626,17 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
     Iterator it = m_selection.iterator();
     while( it.hasNext() )
     {
-      IResource currentResource = (IResource) it.next();
-      if( currentResource.getType() == IResource.FILE )
-        this.resourceGroup.initialCheckListItem( currentResource );
+      final Object res = it.next();
+      if( res instanceof IResource )
+      {
+        final IResource currentResource = (IResource) res;
+        if( currentResource.getType() == IResource.FILE )
+          this.resourceGroup.initialCheckListItem( currentResource );
+        else
+          this.resourceGroup.initialCheckTreeItem( res );
+      }
       else
-        this.resourceGroup.initialCheckTreeItem( currentResource );
+        this.resourceGroup.initialCheckTreeItem( res );
     }
   }
 
@@ -648,7 +654,7 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
    * <code>null</code> otherwise.
    * 
    * @param path
-   *          a String not yet formatted for java.io.File compatability
+   *            a String not yet formatted for java.io.File compatability
    */
   private File getDestinationDirectory( String path )
   {
@@ -691,7 +697,7 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
    * the destination combo and selects it.
    * 
    * @param path
-   *          the path to be added
+   *            the path to be added
    */
   protected void setDestinationName( String path )
   {
@@ -730,13 +736,13 @@ public class WspWinExportPage extends WizardDataTransferPage implements Listener
    * </p>
    * 
    * @param parent
-   *          the parent composite
+   *            the parent composite
    * @param id
-   *          the id of the button (see <code>IDialogConstants.*_ID</code> constants for standard dialog button ids)
+   *            the id of the button (see <code>IDialogConstants.*_ID</code> constants for standard dialog button ids)
    * @param label
-   *          the label from the button
+   *            the label from the button
    * @param defaultButton
-   *          <code>true</code> if the button is to be the default button, and <code>false</code> otherwise
+   *            <code>true</code> if the button is to be the default button, and <code>false</code> otherwise
    */
   protected Button createButton( Composite parent, int id, String label, boolean defaultButton )
   {

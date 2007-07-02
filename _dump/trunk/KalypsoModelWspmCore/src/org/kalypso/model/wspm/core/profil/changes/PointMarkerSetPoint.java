@@ -49,11 +49,14 @@ public class PointMarkerSetPoint implements IProfilChange
   private final IProfilPointMarker m_pointMarker;
 
   private final IProfilPoint m_newPosition;
+  
+  private IProfilPoint m_oldPosition;
 
   public PointMarkerSetPoint( IProfilPointMarker pointMarker, final IProfilPoint newPosition )
   {
     m_pointMarker = pointMarker;
     m_newPosition = newPosition;
+    m_oldPosition = pointMarker.getPoint();
   }
 
   /**
@@ -64,9 +67,9 @@ public class PointMarkerSetPoint implements IProfilChange
   {
     if (hint!=null) hint.setMarkerMoved();
 
-    final IProfilPoint oldPosition = m_pointMarker.setPoint( m_newPosition );
+    m_oldPosition = m_pointMarker.setPoint( m_newPosition );
 
-    return new PointMarkerSetPoint( m_pointMarker, oldPosition );
+    return new PointMarkerSetPoint( m_pointMarker, m_oldPosition );
   }
 
   /**
@@ -74,7 +77,7 @@ public class PointMarkerSetPoint implements IProfilChange
    */
   public Object[] getObjects( )
   {
-        return new Object[]{m_pointMarker};
+        return new Object[]{m_pointMarker,m_oldPosition};
   }
 
   /**

@@ -78,11 +78,9 @@ public class ProfilViewData
 
   protected boolean m_editvert = true;
 
-  protected boolean m_useDeviderValue = false;
+   private List<String> m_invisibleMarker = new ArrayList<String>();
 
-  private List<String> m_invisibleMarker = new ArrayList<String>();
-
-  private List<String> m_visiblePointProperties = new ArrayList<String>();
+  private List<String> m_invisiblePointProperties = new ArrayList<String>();
 
   private IChartLayer m_activeLayer;
 
@@ -114,36 +112,26 @@ public class ProfilViewData
 
   public boolean isVisible( final String pointProperty )
   {
-    return m_visiblePointProperties.contains( pointProperty );
+    return !m_invisiblePointProperties.contains( pointProperty );
   }
 
   public void changeVisibility( final String pointProperty, final boolean visibility )
   {
-    if( visibility )
+    if( !visibility )
     {
-      if( !m_visiblePointProperties.contains( pointProperty ) )
-        m_visiblePointProperties.add( pointProperty );
+      if( !m_invisiblePointProperties.contains( pointProperty ) )
+        m_invisiblePointProperties.add( pointProperty );
     }
     else
     {
-      if( m_visiblePointProperties.contains( pointProperty ) )
-        m_visiblePointProperties.remove( pointProperty );
+      if( m_invisiblePointProperties.contains( pointProperty ) )
+        m_invisiblePointProperties.remove( pointProperty );
     }
   }
 
   public IMemento getLegendMemento( )
   {
     return m_legendMemento;
-  }
-
-  public void useDeviderValue( final boolean use )
-  {
-    m_useDeviderValue = use;
-  }
-
-  public boolean useDeviderValue( )
-  {
-    return m_useDeviderValue;
   }
 
   public IMemento getChartMemento( )

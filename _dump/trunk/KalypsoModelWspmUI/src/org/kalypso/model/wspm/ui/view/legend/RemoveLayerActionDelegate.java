@@ -44,7 +44,6 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 
-
 public class RemoveLayerActionDelegate extends AbstractLegendViewActionDelegate
 {
   public void run( final IAction action )
@@ -56,7 +55,7 @@ public class RemoveLayerActionDelegate extends AbstractLegendViewActionDelegate
       return;
     }
 
-    final IProfilChartLayer layer = (IProfilChartLayer)selection.getFirstElement();
+    final IProfilChartLayer layer = (IProfilChartLayer) selection.getFirstElement();
 
     try
     {
@@ -65,12 +64,7 @@ public class RemoveLayerActionDelegate extends AbstractLegendViewActionDelegate
     catch( final UnsupportedOperationException e )
     {
       handleError( "Dieser Datensatz kann nicht gelöscht werden." );
-      return ;
+      return;
     }
-//    catch( IllegalProfileOperationException e )
-//    {
-//      handleError("Feler beim löschen der Datensätze.");
-//      return;
-//    }
   }
 }

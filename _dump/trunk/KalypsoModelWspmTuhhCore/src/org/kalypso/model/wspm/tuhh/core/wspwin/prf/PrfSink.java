@@ -46,9 +46,11 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.commons.KalypsoCommonsPlugin;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
@@ -65,8 +67,6 @@ import org.kalypso.wspwin.core.prf.datablock.TextDataBlock;
  */
 public class PrfSink implements IProfilSink
 {
-
-  private final static Logger m_logger = Logger.getLogger( PrfSink.class.getName() );
 
   private String toDataBlockKey( final Object profilKey )
   {
@@ -85,16 +85,14 @@ public class PrfSink implements IProfilSink
 
   private void extractDataBlocks( final PrfWriter pw, final IProfil p )
   {
-    final IProfilPoint anyPoint = p.getPoints().getFirst();
     writePoints( pw, p );
     writeDevider( pw, p );
-    if( anyPoint.hasProperty( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT) )
-      writeRauheit( pw, p );
+    writeRauheit( pw, p );
     if( p.getProfileObject() != null )
       writeBuilding( pw, p );
-    if( anyPoint.hasProperty( IWspmTuhhConstants.POINT_PROPERTY_HOCHWERT ) )
+    if( p.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_HOCHWERT ) )
       writeHochRechts( pw, p );
-    if( anyPoint.hasProperty( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX ) )
+    if( p.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX ) )
       writeBewuchs( pw, p );
   }
 
@@ -108,28 +106,32 @@ public class PrfSink implements IProfilSink
 
   private void writeRauheit( final PrfWriter pw, final IProfil profil )
   {
-    final DataBlockHeader dbhr = PrfWriter.createHeader( "RAU" );
-    final CoordDataBlock dbr = new CoordDataBlock( dbhr );
-    if( IWspmTuhhConstants.RAUHEIT_TYP_KST.equals( profil.getProperty( IWspmTuhhConstants.RAUHEIT_TYP )) )
+    CoordDataBlock dbr = null;
+    if( profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS ) )
     {
-      dbr.setSecondLine( "kst   m" );
+      final DataBlockHeader dbhr = PrfWriter.createHeader( "KS" );
+      dbr = new CoordDataBlock( dbhr );
+      writeCoords( profil, IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS, dbr );
+    }
+    else if( profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ) )
+    {
+      final DataBlockHeader dbhr = PrfWriter.createHeader( "KST" );
+      dbr = new CoordDataBlock( dbhr );
+      writeCoords( profil, IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST, dbr );
     }
     else
-    {
-      dbr.setSecondLine( "k-s   m" );
-    }
-    writeCoords( profil, IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT, dbr );
+      return;
     final IProfileObject building = profil.getProfileObject();
     final String buildingTyp = building == null ? "" : building.getId();
-    if( buildingTyp.equals( IWspmTuhhConstants.BUILDING_TYP_BRUECKE ) || buildingTyp.equals( IWspmTuhhConstants.BUILDING_TYP_WEHR ))
+    if( IWspmTuhhConstants.BUILDING_TYP_BRUECKE.equals( buildingTyp ) )
     {
       try
       {
-        dbr.getY()[0] = (Double) building.getValueFor(IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT );
+        dbr.getY()[0] = (Double) building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT );
       }
       catch( Exception e )
       {
-        m_logger.log( Level.SEVERE, "Der Rauheitswert für das Bauwerk konnte nicht geschrieben werden." );
+        KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.WARNING, "", 0, "Fehler beim schreiben der Rauheitswerte für " + building.getName() + ".", e ) );
       }
     }
     pw.addDataBlock( dbr );
@@ -148,11 +150,11 @@ public class PrfSink implements IProfilSink
         Xs[index] = point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE );
         Ys[index] = profil.hasPointProperty( prop ) ? point.getValueFor( prop ) : 0.0;
       }
-      catch(Exception e )
+      catch( Exception e )
       {
         Xs[index] = 0;
         Ys[index] = 0;
-        m_logger.log( Level.SEVERE, prop.toString() + " an Position " + Integer.toString( index ) + " konnte nicht geschrieben werden." );
+        KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, "", 0, prop + " an Position " + Integer.toString( index ) + " konnte nicht geschrieben werden.", e ) );
       }
       index++;
     }
@@ -193,11 +195,11 @@ public class PrfSink implements IProfilSink
         }
         catch( Exception e )
         {
-          m_logger.log( Level.SEVERE, "Die Positionen der Trennflächen konnten nicht geschrieben werden." );
-
+          KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, "", 0, "Die Positionen der Trennflächen konnten nicht geschrieben werden.", e ) );
         }
 
-        boolean isBoeschung = devider.getValueFor(IWspmTuhhConstants.POINTMARKER_PROPERTY_BOESCHUNG ) == null ? false : (Boolean) devider.getValueFor( IWspmTuhhConstants.POINTMARKER_PROPERTY_BOESCHUNG );
+        boolean isBoeschung = devider.getValueFor( IWspmTuhhConstants.POINTMARKER_PROPERTY_BOESCHUNG ) == null ? false
+            : (Boolean) devider.getValueFor( IWspmTuhhConstants.POINTMARKER_PROPERTY_BOESCHUNG );
         switch( index )
         {
           case 0:
@@ -234,13 +236,12 @@ public class PrfSink implements IProfilSink
         final IProfilPoint point = devider.getPoint();
         try
         {
-          xs[index] = point.getValueFor(IWspmTuhhConstants.POINT_PROPERTY_BREITE );
-          ys[index] = point.getValueFor(IWspmTuhhConstants.POINT_PROPERTY_HOEHE );
+          xs[index] = point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE );
+          ys[index] = point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE );
         }
-        catch(Exception e )
+        catch( Exception e )
         {
-          m_logger.log( Level.SEVERE, "Die Positionen der " + devider.getMarkerId().toString() + " konnten nicht geschrieben werden." );
-
+          KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, "", 0, "Die Positionen der " + devider.getMarkerId().toString() + " konnten nicht geschrieben werden.", e ) );
         }
         index++;
       }
@@ -265,13 +266,14 @@ public class PrfSink implements IProfilSink
       try
       {
         final String secLine = String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_UNTERWASSER ) )
-            + String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) ) + String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT ) )
+            + String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) )
+            + String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT ) )
             + String.format( Locale.US, " %12.4f", building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ) );
         dbu.setSecondLine( secLine );
       }
       catch( final Exception e )
       {
-        m_logger.log( Level.SEVERE, "Fehler beim schreiben der Brückenparameter" );
+        KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, "", 0, "Fehler beim schreiben der Brückenparameter", e ) );
       }
       pw.addDataBlock( dbu );
     }
@@ -280,7 +282,7 @@ public class PrfSink implements IProfilSink
     {
       final DataBlockHeader dbhw = PrfWriter.createHeader( "OK-W" );
       final CoordDataBlock dbw = new CoordDataBlock( dbhw );
-      writeCoords( profil,IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, dbw );
+      writeCoords( profil, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, dbw );
       try
       {
         final Object wehrart = building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART );
@@ -289,13 +291,13 @@ public class PrfSink implements IProfilSink
         final IProfilPointMarker[] deviders = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_WEHR );
         for( IProfilPointMarker devider : deviders )
         {
-          secLine.append( String.format( Locale.US, " %12.4f", devider.getValueFor(IWspmTuhhConstants.POINTMARKER_PROPERTY_BEIWERT ) ) );
+          secLine.append( String.format( Locale.US, " %12.4f", devider.getValueFor( IWspmTuhhConstants.POINTMARKER_PROPERTY_BEIWERT ) ) );
         }
         dbw.setSecondLine( secLine.toString() );
       }
       catch( final Exception e )
       {
-        m_logger.log( Level.SEVERE, "Fehler beim schreiben der Wehrparameter" );
+        KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, "", 0, "Fehler beim schreiben der Wehrparameter", e ) );
       }
       pw.addDataBlock( dbw );
     }
@@ -312,7 +314,7 @@ public class PrfSink implements IProfilSink
       }
       catch( final Exception e )
       {
-        m_logger.log( Level.SEVERE, "Fehler beim schreiben der Bauwerksparameter" );
+        KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, "", 0, "Fehler beim schreiben der Bauwerksparameter", e ) );
       }
       pw.addDataBlock( dbe );
     }
@@ -323,13 +325,13 @@ public class PrfSink implements IProfilSink
       dbm.setThirdLine( "0  0  0  0  0  0  0  0  9" );
       try
       {
-        dbm.addLine( getDoubleStr( building.getValueFor(IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) ) + getDoubleStr( building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE ) )
-            + getDoubleStr( building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE ) ) + getDoubleStr( building.getValueFor(IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X ) )
+        dbm.addLine( getDoubleStr( building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) ) + getDoubleStr( building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE ) )
+            + getDoubleStr( building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE ) ) + getDoubleStr( building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X ) )
             + getDoubleStr( building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) ) );
       }
       catch( final Exception e )
       {
-        m_logger.log( Level.SEVERE, "Fehler beim schreiben der Bauwerksparameter" );
+        KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, "", 0, "Fehler beim schreiben der Bauwerksparameter", e ) );
       }
       pw.addDataBlock( dbm );
     }
@@ -345,7 +347,7 @@ public class PrfSink implements IProfilSink
       }
       catch( final Exception e )
       {
-        m_logger.log( Level.SEVERE, "Fehler beim schreiben der Bauwerksparameter" );
+        KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, "", 0, "Fehler beim schreiben der Bauwerksparameter", e ) );
       }
       pw.addDataBlock( dbk );
     }
@@ -359,11 +361,11 @@ public class PrfSink implements IProfilSink
       {
         dbt.addLine( getDoubleStr( building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) ) + getDoubleStr( building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE ) )
             + getDoubleStr( building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_STEIGUNG ) ) + getDoubleStr( building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE ) )
-            + getDoubleStr( building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X ) ) + getDoubleStr( building.getValueFor(IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) ) );
+            + getDoubleStr( building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X ) ) + getDoubleStr( building.getValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) ) );
       }
       catch( final Exception e )
       {
-        m_logger.log( Level.SEVERE, "Fehler beim schreiben der Bauwerksparameter" );
+        KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, "", 0, "Fehler beim schreiben der Bauwerksparameter", e ) );
       }
       pw.addDataBlock( dbt );
     }

@@ -40,33 +40,36 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.panel;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.swt.events.DoubleModifyListener;
 import org.kalypso.contribs.java.lang.NumberUtils;
-import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
-import org.kalypso.model.wspm.core.profil.IProfilPointProperty;
-import org.kalypso.model.wspm.core.profil.IProfileObject;
-import org.kalypso.model.wspm.core.profil.changes.PointMarkerEdit;
+import org.kalypso.model.wspm.core.profil.changes.PointPropertyAdd;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
+import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
@@ -78,19 +81,28 @@ import org.kalypso.model.wspm.ui.view.ProfilViewData;
  */
 public class RauheitenPanel extends AbstractProfilView
 {
-  Text m_VL;
+  protected Text m_VL;
 
-  Text m_HF;
+  protected Text m_HF;
 
-  Text m_VR;
+  protected Text m_VR;
 
-  Button m_blockRauheit;
+  protected Combo m_Rauheit;
 
-  boolean m_enablePanel;
+  protected final HashMap<String, String> m_RauheitTypes = new HashMap<String, String>();
+
+  protected String m_rauheitTyp;
+
+  protected HashMap<String, Double> m_RauheitMap = new HashMap<String, Double>();
+
+  protected Button m_updateOnDeviderMove;
 
   public RauheitenPanel( final IProfilEventManager pem, final ProfilViewData viewdata )
   {
     super( pem, viewdata );
+    m_RauheitMap.put( "manuelle Eingabe", null );
+    m_RauheitTypes.put( "KS", IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS );
+    m_RauheitTypes.put( "KST", IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST );
   }
 
   /**
@@ -99,51 +111,277 @@ public class RauheitenPanel extends AbstractProfilView
   @Override
   protected Control doCreateControl( final Composite parent, final int style )
   {
+
+    // das panel
     final Composite panel = new Composite( parent, SWT.NONE );
-    final GridLayout gridLayout = new GridLayout( 3, true );
+    final GridLayout gridLayout = new GridLayout( 2, false );
     panel.setLayout( gridLayout );
     panel.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-    final IProfileObject building = getProfil().getProfileObject();
-    final String[] pointProperties = (building == null) ? null : building.getPointProperties();
-    m_enablePanel = !((building != null) && (pointProperties == null));
-    m_blockRauheit = new Button( panel, SWT.CHECK );
-    m_blockRauheit.setSelection( getViewData().useDeviderValue() );
-    final IProfilPointMarker[] devs1 = (getProfil().getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE));
-    final IProfilPointMarker[] devs2 = (getProfil().getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE  ));
-    m_blockRauheit.setEnabled( m_enablePanel && (devs1.length == 2) && (devs2.length == 2));
-    m_blockRauheit.setText( "einfache Rauheiten verwenden" );
-    final GridData blockData = new GridData();
-    blockData.horizontalSpan = 3;
 
-    m_blockRauheit.setLayoutData( blockData );
-    m_blockRauheit.addSelectionListener( new SelectionAdapter()
+    // RauheitsTyp Combo
+
+    m_Rauheit = new Combo( panel, SWT.DROP_DOWN | SWT.READ_ONLY );
+    m_Rauheit.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+    m_Rauheit.setItems( m_RauheitTypes.keySet().toArray( new String[0] ) );
+    m_Rauheit.addSelectionListener( new SelectionAdapter()
+    {
+      @Override
+      public void widgetSelected( SelectionEvent e )
+      {
+        if( !m_rauheitTyp.equals( m_RauheitTypes.get( m_Rauheit.getText() ) ) )
+        {
+          final ProfilOperation operation = new ProfilOperation( "Rauheitstyp ändern", getProfilEventManager(), true );
+          operation.addChange( new PointPropertyAdd( getProfil(), m_RauheitTypes.get( m_Rauheit.getText() ), ProfilUtil.getValuesFor( getProfil(), m_rauheitTyp ) ) );
+          operation.addChange( new PointPropertyRemove( getProfil(), m_rauheitTyp ) );
+          new ProfilOperationJob( operation ).schedule();
+        }
+      }
+    } );
+    addLabel( panel, "Rauheitstyp", "Rauheitstyp" );
+
+    // automatisches übernehmen wenn Marker geschoben werden
+    final GridData checkData = new GridData( SWT.FILL, SWT.FILL, true, false );
+    checkData.horizontalSpan = 2;
+    m_updateOnDeviderMove = new Button( panel, SWT.CHECK );
+    m_updateOnDeviderMove.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+    ((GridData) m_updateOnDeviderMove.getLayoutData()).horizontalSpan = 2;
+    m_updateOnDeviderMove.setText( "aktualisieren bei Trenneränderung" );
+    m_updateOnDeviderMove.addSelectionListener( new SelectionAdapter()
+    {
+      @Override
+      public void widgetSelected( SelectionEvent e )
+      {
+        if(m_updateOnDeviderMove.getSelection()&&!checkValues())
+        {
+          //setBlockValues();
+        }
+      }
+    } );
+
+    // Rauheitswerte Vorland links
+    final Group vlGroup = new Group( panel, SWT.None );
+    vlGroup.setText( "Vorland links" );
+    vlGroup.setLayout( new GridLayout( 2, false ) );
+    vlGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+    ((GridData) vlGroup.getLayoutData()).horizontalSpan = 2;
+    addLabel( vlGroup, "Rauheit", "Rauheitswerte aus Datenbank übernehmen" );
+    m_VL = addText( vlGroup );
+    final Combo vl_Rauheit = new Combo( vlGroup, SWT.DROP_DOWN | SWT.READ_ONLY );
+    vl_Rauheit.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+    ((GridData) vl_Rauheit.getLayoutData()).horizontalSpan = 2;
+    vl_Rauheit.setItems( m_RauheitMap.keySet().toArray( new String[0] ) );
+    vl_Rauheit.addSelectionListener( new SelectionAdapter()
+    {
+      @Override
+      public void widgetSelected( SelectionEvent e )
+      {
+        final Double value = m_RauheitMap.get( vl_Rauheit.getText() );
+        if( value == null )
+        {
+          m_VL.setEditable( true );
+        }
+        else
+        {
+          m_VL.setText( value.toString() );
+          m_VL.setEditable( false );
+        }
+      }
+    } );
+    vl_Rauheit.setText( vl_Rauheit.getItem( 0 ) );
+    final Button vl_executeBtn = new Button( vlGroup, SWT.None );
+    vl_executeBtn.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+    ((GridData) vl_executeBtn.getLayoutData()).horizontalSpan = 2;
+    vl_executeBtn.setText( "Rauheitswerte übernehmen" );
+    vl_executeBtn.addSelectionListener( new SelectionAdapter()
     {
       @Override
       public void widgetSelected( org.eclipse.swt.events.SelectionEvent e )
       {
-
-        if( getViewData().useDeviderValue() != m_blockRauheit.getSelection() )
+        final IProfilPointMarker[] marker = getProfil().getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+        final ProfilOperation operation = new ProfilOperation( "Rauheiten bearbeiten", getProfilEventManager(), true );
+        final Double value = NumberUtils.parseQuietDouble( m_VL.getText() );
+        if( !value.isNaN() )
         {
-          getViewData().useDeviderValue( m_blockRauheit.getSelection() );
-          if( m_blockRauheit.getSelection() )
-            updateProperty( getProfil() );
+          try
+          {
+
+            for( final IProfilPoint point : getProfil().getPoints() )
+            {
+              if( point == marker[0].getPoint() )
+                break;
+              operation.addChange( new PointPropertyEdit( point, m_rauheitTyp, value ) );
+            }
+          }
+          catch( Exception exception )
+          {
+            throw new IllegalStateException();
+          }
+          new ProfilOperationJob( operation ).schedule();
         }
-        updateControls();
-        // final IProfilChange change = new PointPropertyHide( POINT_PROPERTY.RAUHEIT, !m_blockRauheit.getSelection() );
-        // final ProfilOperation operation = new ProfilOperation( "Rauheiten Blockweise setzen",
-        // getProfilEventManager(), change, true );
-        // new ProfilOperationJob( operation ).schedule();
       }
     } );
-    addLabel( panel, "VL", "Vorland links" );
-    addLabel( panel, "HF", "Hauptöffnung" );
-    addLabel( panel, "VR", "Vorland rechts" );
 
-    m_VL = addText( panel );
-    m_HF = addText( panel );
-    m_VR = addText( panel );
+    // Rauheitswerte Hauptöffnung
+    final Group hfGroup = new Group( panel, SWT.None );
+    hfGroup.setText( "Flußschlauch" );
+    hfGroup.setLayout( new GridLayout( 2, false ) );
+    hfGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+    ((GridData) hfGroup.getLayoutData()).horizontalSpan = 2;
+    addLabel( hfGroup, "Rauheit", "Rauheitswerte aus Datenbank übernehmen" );
+    m_HF = addText( hfGroup );
+    final Combo hf_Rauheit = new Combo( hfGroup, SWT.DROP_DOWN | SWT.READ_ONLY );
+    hf_Rauheit.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+    ((GridData) hf_Rauheit.getLayoutData()).horizontalSpan = 2;
+    hf_Rauheit.setItems( m_RauheitMap.keySet().toArray( new String[0] ) );
+    hf_Rauheit.addSelectionListener( new SelectionAdapter()
+    {
+      @Override
+      public void widgetSelected( SelectionEvent e )
+      {
+        final Double value = m_RauheitMap.get( vl_Rauheit.getText() );
+        if( value == null )
+        {
+          m_HF.setEditable( true );
+        }
+        else
+        {
+          m_HF.setText( value.toString() );
+          m_HF.setEditable( false );
+        }
+      }
+    } );
+    hf_Rauheit.setText( hf_Rauheit.getItem( 0 ) );
+    final Button hf_executeBtn = new Button( hfGroup, SWT.None );
+    hf_executeBtn.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+    ((GridData) hf_executeBtn.getLayoutData()).horizontalSpan = 2;
+    hf_executeBtn.setText( "Rauheitswerte übernehmen" );
+    hf_executeBtn.addSelectionListener( new SelectionAdapter()
+    {
+      @Override
+      public void widgetSelected( org.eclipse.swt.events.SelectionEvent e )
+      {
+        final IProfilPointMarker[] marker = getProfil().getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+        final List<IProfilPoint> points = ProfilUtil.getInnerPoints( getProfil(), IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+        final ProfilOperation operation = new ProfilOperation( "Rauheiten bearbeiten", getProfilEventManager(), true );
+        final Double value = NumberUtils.parseQuietDouble( m_HF.getText() );
+        if( !value.isNaN() )
+        {
+          try
+          {
+            for( final IProfilPoint point : points )
+            {
+              if( point == marker[marker.length - 1].getPoint() )
+                break;
+              operation.addChange( new PointPropertyEdit( point, m_rauheitTyp, value ) );
+            }
+          }
+          catch( Exception exception )
+          {
+            throw new IllegalStateException();
+          }
+          new ProfilOperationJob( operation ).schedule();
+        }
+      }
+    } );
+
+    // Rauheitswerte Vorland rechts
+    final Group vrGroup = new Group( panel, SWT.None );
+    vrGroup.setText( "Vorland links" );
+    vrGroup.setLayout( new GridLayout( 2, false ) );
+    vrGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+    ((GridData) vrGroup.getLayoutData()).horizontalSpan = 2;
+    addLabel( vrGroup, "Rauheit", "Rauheitswerte aus Datenbank übernehmen" );
+    m_VR = addText( vrGroup );
+    final Combo vr_Rauheit = new Combo( vrGroup, SWT.DROP_DOWN | SWT.READ_ONLY );
+    vr_Rauheit.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+    ((GridData) vr_Rauheit.getLayoutData()).horizontalSpan = 2;
+    vr_Rauheit.setItems( m_RauheitMap.keySet().toArray( new String[0] ) );
+    vr_Rauheit.addSelectionListener( new SelectionAdapter()
+    {
+      @Override
+      public void widgetSelected( SelectionEvent e )
+      {
+        final Double value = m_RauheitMap.get( vr_Rauheit.getText() );
+        if( value == null )
+        {
+          m_VR.setEditable( true );
+        }
+        else
+        {
+          m_VR.setText( value.toString() );
+          m_VR.setEditable( false );
+        }
+      }
+    } );
+    vr_Rauheit.setText( vr_Rauheit.getItem( 0 ) );
+    final Button vr_executeBtn = new Button( vrGroup, SWT.None );
+    vr_executeBtn.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+    ((GridData) vr_executeBtn.getLayoutData()).horizontalSpan = 2;
+    vr_executeBtn.setText( "Rauheitswerte übernehmen" );
+    vr_executeBtn.addSelectionListener( new SelectionAdapter()
+    {
+      @Override
+      public void widgetSelected( org.eclipse.swt.events.SelectionEvent e )
+      {
+        final IProfilPointMarker[] marker = getProfil().getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+        final ProfilOperation operation = new ProfilOperation( "Rauheiten bearbeiten", getProfilEventManager(), true );
+        try
+        {
+          Double value = null;
+          for( final IProfilPoint point : getProfil().getPoints() )
+          {
+            if( point == marker[marker.length - 1].getPoint() )
+            {
+              value = NumberUtils.parseQuietDouble( m_VR.getText() );
+              if( value.isNaN() )
+                break;
+            }
+            if( value != null )
+              operation.addChange( new PointPropertyEdit( point, m_rauheitTyp, value ) );
+          }
+        }
+        catch( Exception exception )
+        {
+          throw new IllegalStateException();
+        }
+        new ProfilOperationJob( operation ).schedule();
+      }
+    } );
+
     updateControls();
     return panel;
+  }
+
+  protected void setBlockValues( )
+  {
+    if( m_HF.isDisposed() || m_VL.isDisposed() || m_VR.isDisposed() )
+      return;
+    final Double value1 = NumberUtils.parseQuietDouble( m_VL.getText() );
+    final Double value2 = NumberUtils.parseQuietDouble( m_HF.getText() );
+    final Double value3 = NumberUtils.parseQuietDouble( m_VR.getText() );
+    final IProfilPointMarker[] trennflaechen = getProfil().getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+    // final IProfilPointMarker[] durchstroemte = getProfil().getPointMarkerFor(
+    // IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
+    final ProfilOperation operation = new ProfilOperation( "Rauheiten bearbeiten", getProfilEventManager(), true );
+    try
+    {
+      Double value = value1;// (Double) durchstroemte[0].getValueFor( IWspmTuhhConstants.POINTMARKER_PROPERTY_RAUHEIT );
+      for( final IProfilPoint point : getProfil().getPoints() )
+      {
+        if( point == trennflaechen[0].getPoint() )
+          value = value2;// (Double) trennflaechen[0].getValueFor( IWspmTuhhConstants.POINTMARKER_PROPERTY_RAUHEIT );
+        else if( point == trennflaechen[trennflaechen.length - 1].getPoint() )
+          value = value3;// (Double) trennflaechen[trennflaechen.length - 1].getValueFor(
+        // IWspmTuhhConstants.POINTMARKER_PROPERTY_RAUHEIT );
+        operation.addChange( new PointPropertyEdit( point, m_rauheitTyp, value ) );
+      }
+    }
+    catch( Exception e )
+    {
+      throw new IllegalStateException();
+    }
+
+    new ProfilOperationJob( operation ).schedule();
   }
 
   private Text addText( Composite panel )
@@ -152,16 +390,11 @@ public class RauheitenPanel extends AbstractProfilView
     final Color goodColor = display.getSystemColor( SWT.COLOR_BLACK );
     final Color badColor = display.getSystemColor( SWT.COLOR_RED );
     final DoubleModifyListener doubleModifyListener = new DoubleModifyListener( goodColor, badColor );
-
-    final IProfil profil = getProfil();
-    final Text t = new Text( panel, SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
-
     final GridData data = new GridData();
     data.grabExcessHorizontalSpace = true;
     data.horizontalAlignment = GridData.FILL;
+    final Text t = new Text( panel, SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
     t.setLayoutData( data );
-
-    t.setEnabled( getViewData().useDeviderValue() );
     t.addModifyListener( doubleModifyListener );
     t.addFocusListener( new FocusAdapter()
     {
@@ -177,71 +410,43 @@ public class RauheitenPanel extends AbstractProfilView
       @Override
       public void focusLost( final FocusEvent e )
       {
-        updateProperty( profil );
+        final Double value = NumberUtils.parseQuietDouble( ((Text) e.widget).getText() );
+        final String valueStr = String.format( "%.2f", value );
+        if( !valueStr.equals( ((Text) e.widget).getText() ) )
+          ((Text) e.widget).setText( valueStr );
       }
-
     } );
-
     return t;
   }
 
-  protected void updateProperty( final IProfil p )
-  {
-    final IProfilPointMarker[] pmD = p.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE);
-    final IProfilPointMarker[] pmT = p.getPointMarkerFor(  IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
-    if( m_VL.isDisposed() || m_HF.isDisposed() || m_VR.isDisposed() || pmD.length != 2 || pmT.length != 2)
-      return;
-    final Double value1 = NumberUtils.parseQuietDouble( m_VL.getText() );
-    final Double value2 = NumberUtils.parseQuietDouble( m_HF.getText() );
-    final Double value3 = NumberUtils.parseQuietDouble( m_VR.getText() );
-    final Double d1 = (Double) pmD[0].getValueFor( IWspmTuhhConstants.POINTMARKER_PROPERTY_RAUHEIT );
-    final Double d2 = (Double) pmT[0].getValueFor( IWspmTuhhConstants.POINTMARKER_PROPERTY_RAUHEIT);
-    final Double d3 = (Double) pmT[1].getValueFor( IWspmTuhhConstants.POINTMARKER_PROPERTY_RAUHEIT);
-    final Double oldvalue1 = d1 == null ? 0.0 : d1;
-    final Double oldvalue2 = d2 == null ? 0.0 : d2;
-    final Double oldvalue3 = d3 == null ? 0.0 : d3;
-    final ArrayList<IProfilChange> changes = new ArrayList<IProfilChange>();
-    final IProfilPointProperty pp = p.getPointProperty( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT );
-    final Double prec = pp.getPrecision();
-
-    if( !value1.isNaN() && Math.abs( oldvalue1 - value1 ) > prec )
-    {
-      changes.add( new PointMarkerEdit( pmD[0], IWspmTuhhConstants.POINTMARKER_PROPERTY_RAUHEIT, value1 ) );
-    }
-    if( !value2.isNaN() && Math.abs( oldvalue2 - value2 ) > prec )
-    {
-      changes.add( new PointMarkerEdit( pmT[0],  IWspmTuhhConstants.POINTMARKER_PROPERTY_RAUHEIT, value2 ) );
-    }
-    if( !value3.isNaN() && Math.abs( oldvalue3 - value3 ) > prec )
-    {
-      changes.add( new PointMarkerEdit( pmT[1],  IWspmTuhhConstants.POINTMARKER_PROPERTY_RAUHEIT, value3 ) );
-    }
-    Double currentValue = value1;
-    for( IProfilPoint point : p.getPoints() )
-    {
-      if( pmT[0].getPoint() == point )
-        currentValue = value2;
-      else if( pmT[1].getPoint() == point )
-        currentValue = value3;
-      Double oldvalue;
-      try
-      {
-        oldvalue = point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT );
-      }
-      catch( Exception e )
-      {
-        oldvalue = 0.0;
-      }
-      if( !currentValue.isNaN() && Math.abs( oldvalue - currentValue ) > prec )
-      {
-        changes.add( new PointPropertyEdit( point, IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT, currentValue ) );
-      }
-
-    }
-
-    final ProfilOperation operation = new ProfilOperation( "Rauheiten Blockweise setzen", getProfilEventManager(), changes.toArray( new IProfilChange[0] ), true );
-    new ProfilOperationJob( operation ).schedule();
-  }
+//  protected void updateProperty( )
+//  {
+//    final IProfilPointMarker[] pmD = getProfil().getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
+//    final IProfilPointMarker[] pmT = getProfil().getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+//    if( m_VL.isDisposed() || m_HF.isDisposed() || m_VR.isDisposed() || pmD.length != 2 || pmT.length != 2 )
+//      return;
+//    final Double value1 = NumberUtils.parseQuietDouble( m_VL.getText() );
+//    final Double value2 = NumberUtils.parseQuietDouble( m_HF.getText() );
+//    final Double value3 = NumberUtils.parseQuietDouble( m_VR.getText() );
+//    final ArrayList<IProfilChange> changes = new ArrayList<IProfilChange>();
+//    if( !value1.isNaN() && Math.abs( (Double) pmD[0].getValueFor( IWspmTuhhConstants.POINTMARKER_PROPERTY_RAUHEIT ) - value1 ) > 0 )
+//    {
+//      changes.add( new PointMarkerEdit( pmD[0], IWspmTuhhConstants.POINTMARKER_PROPERTY_RAUHEIT, value1 ) );
+//    }
+//    if( !value2.isNaN() && Math.abs( (Double) pmT[0].getValueFor( IWspmTuhhConstants.POINTMARKER_PROPERTY_RAUHEIT ) - value2 ) > 0 )
+//    {
+//      changes.add( new PointMarkerEdit( pmT[0], IWspmTuhhConstants.POINTMARKER_PROPERTY_RAUHEIT, value2 ) );
+//    }
+//    if( !value3.isNaN() && Math.abs( (Double) pmT[pmT.length - 1].getValueFor( IWspmTuhhConstants.POINTMARKER_PROPERTY_RAUHEIT ) - value3 ) > 0 )
+//    {
+//      changes.add( new PointMarkerEdit( pmT[pmT.length - 1], IWspmTuhhConstants.POINTMARKER_PROPERTY_RAUHEIT, value3 ) );
+//    }
+//    if( changes.size() > 0 )
+//    {
+//      final ProfilOperation operation = new ProfilOperation( "Rauheiten Blockweise setzen", getProfilEventManager(), changes.toArray( new IProfilChange[0] ), true );
+//      new ProfilOperationJob( operation ).schedule();
+//    }
+//  }
 
   private void addLabel( final Composite parent, final String text, final String toolTip )
   {
@@ -258,78 +463,89 @@ public class RauheitenPanel extends AbstractProfilView
   void updateControls( )
   {
 
-    final IProfilPointMarker[] pmD = getProfil().getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE);
-    final IProfilPointMarker[] pmT = getProfil().getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE  );
-    Boolean isBlockSetting = getViewData().useDeviderValue();
-    if( !m_blockRauheit.isDisposed() )
+    final IProfilPointMarker[] pmD = getProfil().getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
+    final IProfilPointMarker[] pmT = getProfil().getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+
+    /**
+     * zurzeit werden nur 2 Rauheitstypen unterstützt
+     */
+    if( getProfil().hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST ) )
     {
-      m_blockRauheit.setSelection( isBlockSetting );
+      m_rauheitTyp = IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST;
+      if( !m_Rauheit.isDisposed() )
+        m_Rauheit.setText( "KST" );
     }
+    else
+    {
+      m_rauheitTyp = IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS;
+      if( !m_Rauheit.isDisposed() )
+        m_Rauheit.setText( "KS" );
+    }
+    m_updateOnDeviderMove.setSelection( checkValues() );
     if( !m_VL.isDisposed() )
     {
-      m_VL.setEnabled( isBlockSetting && m_enablePanel );
       if( pmD.length > 0 )
-        setBlockValue( m_VL, pmD[0] );
+        setEditText( m_VL, pmD[0] );
     }
     if( !m_HF.isDisposed() )
     {
-      m_HF.setEnabled( isBlockSetting && m_enablePanel );
       if( pmT.length > 0 )
-        setBlockValue( m_HF, pmT[0] );
+        setEditText( m_HF, pmT[0] );
     }
-
     if( !m_VR.isDisposed() )
     {
-      m_VR.setEnabled( isBlockSetting && m_enablePanel );
       if( pmT.length > 1 )
-        setBlockValue( m_VR, pmT[1] );
+        setEditText( m_VR, pmT[pmT.length - 1] );
     }
+
   }
 
-  private void setBlockValue( final Text text, final IProfilPointMarker devider )
+  protected boolean checkValues( )
   {
-    final Double value = (Double) devider.getValueFor(  IWspmTuhhConstants.POINTMARKER_PROPERTY_RAUHEIT );
     try
     {
-      text.setText( String.format( "%.2f", (value == null) ? devider.getPoint().getValueFor( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT ) : value ) );
+      final IProfilPointMarker[] durchstroemte = getProfil().getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
+      final IProfilPointMarker[] trennflaechen = getProfil().getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+      Double value = durchstroemte[0].getPoint().getValueFor( m_rauheitTyp );
+      for( final IProfilPoint point : getProfil().getPoints() )
+      {
+        if( point.equals( trennflaechen[0] ) )
+          value = trennflaechen[0].getPoint().getValueFor( m_rauheitTyp );
+        else if( point.equals( trennflaechen[0] ) )
+          value = trennflaechen[trennflaechen.length - 1].getPoint().getValueFor( m_rauheitTyp );
+        else if( value != point.getValueFor( m_rauheitTyp ) )
+          return false;
+      }
     }
     catch( Exception e )
     {
-      text.setText( "" );
+      return false;
     }
+    return true;
+  }
+
+  private void setEditText( final Text text, final IProfilPointMarker devider )
+  {
+    text.setText( String.format( "%.2f", devider.getPoint().getValueFor( m_rauheitTyp ) ) );
     if( text.isFocusControl() )
       text.selectAll();
   }
 
-  public void onProfilChanged( ProfilChangeHint hint, IProfilChange[] changes )
+  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
-    final Control control = getControl();
-
-    if( hint.isMarkerMoved() && getViewData().useDeviderValue() )
+    if( !getControl().isDisposed() )
     {
-      if( control != null && !control.isDisposed() )
+      getControl().getDisplay().asyncExec( new Runnable()
       {
-        control.getDisplay().asyncExec( new Runnable()
+        public void run( )
         {
-          public void run( )
-          {
-            updateProperty( getProfil() );
-          }
-        } );
-      }
-    }
-    if( hint.isPointPropertiesChanged() )
-    {
-      if( control != null && !control.isDisposed() )
-      {
-        control.getDisplay().asyncExec( new Runnable()
-        {
-          public void run( )
-          {
+          if(hint.isMarkerMoved()&&m_updateOnDeviderMove.getSelection())
+            setBlockValues();
+          if( hint.isPointPropertiesChanged()|| hint.isPointValuesChanged() )
             updateControls();
-          }
-        } );
-      }
+          
+        }
+      } );
     }
   }
 }

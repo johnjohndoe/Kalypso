@@ -49,7 +49,7 @@ import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.IProfileObjectProvider;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyAdd;
-import org.kalypso.model.wspm.core.profil.changes.ProfilPropertyEdit;
+import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectSet;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.result.IStationResult;
@@ -165,9 +165,13 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
     if( layerId.equals( IWspmTuhhConstants.LAYER_RAUHEIT_KS ) )
     {
       final ProfilOperation operation = new ProfilOperation( "Rauheiten einfügen", view.getProfilEventManager(), true );
-      if( !profil.hasPointProperty( IWspmTuhhConstants.POINTMARKER_PROPERTY_RAUHEIT ) )
-        operation.addChange( new PointPropertyAdd( profil, IWspmConstants.POINT_PROPERTY_RAUHEIT, 0 ) );
-      operation.addChange( new ProfilPropertyEdit( profil, IWspmTuhhConstants.RAUHEIT_TYP, IWspmTuhhConstants.RAUHEIT_TYP_KS ) );
+      if( profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST ) )
+      {
+        operation.addChange( new PointPropertyAdd( profil, IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS, ProfilUtil.getValuesFor( profil, IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST ) ) );
+        operation.addChange( new PointPropertyRemove( profil, IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST ) );
+      }
+      else
+        operation.addChange( new PointPropertyAdd( profil, IWspmConstants.POINT_PROPERTY_RAUHEIT_KS, 0 ) );
       new ProfilOperationJob( operation ).schedule();
       return new IProfilChartLayer[] { new ExtendedRauheitLayer( view, layerId, "Rauheit-ks" ) };
     }
@@ -175,9 +179,13 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
     if( layerId.equals( IWspmTuhhConstants.LAYER_RAUHEIT_KST ) )
     {
       final ProfilOperation operation = new ProfilOperation( "Rauheiten einfügen", view.getProfilEventManager(), true );
-      if( !profil.hasPointProperty( IWspmTuhhConstants.POINTMARKER_PROPERTY_RAUHEIT ) )
-        operation.addChange( new PointPropertyAdd( profil, IWspmConstants.POINT_PROPERTY_RAUHEIT, 0 ) );
-      operation.addChange( new ProfilPropertyEdit( profil, IWspmTuhhConstants.RAUHEIT_TYP, IWspmTuhhConstants.RAUHEIT_TYP_KST ) );
+      if( profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS ) )
+      {
+        operation.addChange( new PointPropertyAdd( profil, IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST, ProfilUtil.getValuesFor( profil, IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS ) ) );
+        operation.addChange( new PointPropertyRemove( profil, IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS ) );
+      }
+      else
+        operation.addChange( new PointPropertyAdd( profil, IWspmConstants.POINT_PROPERTY_RAUHEIT_KST, 0 ) );
       new ProfilOperationJob( operation ).schedule();
       return new IProfilChartLayer[] { new ExtendedRauheitLayer( view, layerId, "Rauheit-kst" ) };
     }
@@ -290,23 +298,12 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
       layerToAdd.add( IWspmTuhhConstants.LAYER_GEOKOORDINATEN );
     if( view.getResults().length > 0 )
       layerToAdd.add( IWspmTuhhConstants.LAYER_WASSERSPIEGEL );
-    if( profile.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT ) )
-    {
-      if( IWspmTuhhConstants.RAUHEIT_TYP_KS.equals( profile.getProperty( IWspmTuhhConstants.RAUHEIT_TYP ) ) )
-        layerToAdd.add( IWspmTuhhConstants.LAYER_RAUHEIT_KS );
-      else if( IWspmTuhhConstants.RAUHEIT_TYP_KST.equals( profile.getProperty( IWspmTuhhConstants.RAUHEIT_TYP ) ) )
-        layerToAdd.add( IWspmTuhhConstants.LAYER_RAUHEIT_KST );
-      // TODO Kim mal reingenommen, damits immer nen layer gibt, sonst kann man nämlich noch mal Rauheiten hinzufügen
-      // und das gibt Schrott
-      // HM, ne geht auch nicht...
-      else
-        layerToAdd.add( IWspmTuhhConstants.LAYER_RAUHEIT_KS );
-    }
-    if( !profile.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT ) )
-    {
-      // TODO: Kim: mal auskommentiert, weil in diesem Fall der Layer ne exception wirft
-// layerToAdd.add( IWspmTuhhConstants.LAYER_RAUHEIT_QUICKVIEW );
-    }
+
+    if( profile.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST ) )
+      layerToAdd.add( IWspmTuhhConstants.LAYER_RAUHEIT_KST );
+    if( profile.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS ) )
+      layerToAdd.add( IWspmTuhhConstants.LAYER_RAUHEIT_KS );
+
     return layerToAdd.toArray( new String[0] );
   }
 

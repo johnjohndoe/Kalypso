@@ -79,7 +79,10 @@ public interface IWspmConstants
 
   public static final String POINT_PROPERTY_HOEHE = POINT_PROPERTY + "HOEHE";
 
-  public static final String POINT_PROPERTY_RAUHEIT = POINT_PROPERTY + "RAUHEIT";
+// Die Id im Dictionary bleibt "Rauheit" wird aber im IProfil als Typ "ks" interpretiert
+  public static final String POINT_PROPERTY_RAUHEIT_KS = POINT_PROPERTY + "RAUHEIT";
+
+  public static final String POINT_PROPERTY_RAUHEIT_KST = POINT_PROPERTY + "RAUHEIT_KST";
 
   public static final String POINT_PROPERTY_RECHTSWERT = POINT_PROPERTY + "RECHTSWERT";
 

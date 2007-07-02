@@ -139,13 +139,13 @@ public interface IWspmTuhhConstants extends IWspmConstants
   public static final String PROFIL_PROPERTY_WASSERSPIEGEL = PROFIL_PROPERTY + "WASSERSPIEGEL";
 
   /* Rauheiten */
-  public static final String RAUHEIT_TYP = "org.kalypso.model.wspm.tuhh.core.profil.RAUHEIT_TYP_";
-
-  public static final String RAUHEIT_TYP_KS = RAUHEIT_TYP + "KS";
-
-  public static final String RAUHEIT_TYP_KST = RAUHEIT_TYP + "KST";
-
-  public static final String DEFAULT_RAUHEIT_TYP = RAUHEIT_TYP_KS;
+//  public static final String RAUHEIT_TYP = "org.kalypso.model.wspm.tuhh.core.profil.RAUHEIT_TYP_";
+//
+//  public static final String RAUHEIT_TYP_KS = RAUHEIT_TYP + "KS";
+//
+//  public static final String RAUHEIT_TYP_KST = RAUHEIT_TYP + "KST";
+//
+//  public static final String DEFAULT_RAUHEIT_TYP = RAUHEIT_TYP_KS;
 
   /* Wehrtypen */
   /* MUST keep this -wrong- id string in order to be backwards-compatible! */
@@ -196,11 +196,9 @@ public interface IWspmTuhhConstants extends IWspmConstants
    * {@link org.kalypso.model.wspm.core.profil.impl.ProfilEventManager#getColorRegistry()} using this keys
    */
 
-  public static String LAYER_RAUHEIT_COLOR_BACKGROUND = PROFILE_LAYER + "RAUHEIT_COLOR_BACKGROUND";
-
-  public static String LAYER_BRUECKE_COLOR_TOP = LAYER_BRUECKE + "COLOR_TOP";
-
-  public static String LAYER_BRUECKE_COLOR_BOTTOM = LAYER_BRUECKE + "COLOR_BOTTOM";
+//  public static String LAYER_BRUECKE_COLOR_TOP = LAYER_BRUECKE + "COLOR_TOP";
+//
+//  public static String LAYER_BRUECKE_COLOR_BOTTOM = LAYER_BRUECKE + "COLOR_BOTTOM";
 
   public static String PROFIL_TYPE_PASCHE = "org.kalypso.model.wspm.tuhh.profiletype";
 

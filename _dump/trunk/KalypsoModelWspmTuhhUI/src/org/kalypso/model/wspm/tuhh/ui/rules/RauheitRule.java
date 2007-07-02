@@ -60,7 +60,12 @@ public class RauheitRule extends AbstractValidatorRule
   {
     if( profil == null )
       return;
-    if( !profil.hasPointProperty(  IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT ) )
+    String pointProp = null; 
+    if( profil.hasPointProperty(  IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS ) )
+      pointProp =   IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS ;
+    if( profil.hasPointProperty(  IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST ) )
+      pointProp =   IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST ;
+    if(pointProp==null)
       return;
     final List<IProfilPoint> points = ProfilUtil.getInnerPoints( profil, IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
     if( points == null )
@@ -71,10 +76,10 @@ public class RauheitRule extends AbstractValidatorRule
     {
       try
       {
-        final double rh = point.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT );
+        final double rh = point.getValueFor(pointProp );
         if( rh <= 0.0 )
         {
-          collector.createProfilMarker( true, "unzulässiger Rauheitswert [" + rh + "]", "", i, IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT.toString(), pluginId, null );
+          collector.createProfilMarker( true, "unzulässiger Rauheitswert [" + rh + "]", "", i, pointProp, pluginId, null );
           break;
         }
         i++;

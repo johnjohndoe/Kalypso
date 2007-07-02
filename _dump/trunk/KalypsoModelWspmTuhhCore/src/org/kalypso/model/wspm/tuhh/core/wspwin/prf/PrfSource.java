@@ -46,9 +46,10 @@ import java.io.Reader;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.StringTokenizer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.commons.KalypsoCommonsPlugin;
 import org.kalypso.commons.math.Range;
 import org.kalypso.commons.math.geom.PolyLine;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -69,7 +70,6 @@ import org.kalypso.wspwin.core.prf.datablock.IDataBlock;
  */
 public class PrfSource implements IProfilSource
 {
-  private final static Logger m_logger = Logger.getLogger( PrfSource.class.getName() );
 
   private void readSource( final PrfReader pr, final IProfil p )
   {
@@ -100,8 +100,7 @@ public class PrfSource implements IProfilSource
     }
     catch( IllegalArgumentException e )
     {
-      m_logger.log( Level.SEVERE, e.getMessage() );
-      e.printStackTrace();
+      KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, "", 0, e.getMessage(), e ) );
     }
   }
 
@@ -273,13 +272,13 @@ public class PrfSource implements IProfilSource
       }
       catch( IllegalArgumentException e )
       {
-        m_logger.log( Level.SEVERE, e.getMessage() );
+        KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, "", 0, e.getMessage(), e ) );
         return false;
       }
 
     }
     else
-      m_logger.log( Level.SEVERE, "Fehler beim Lesen der Bauwerkseigenschaft: " + property.toString() );
+      KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, "", 0, "Fehler beim Lesen der Bauwerkseigenschaft: " + property.toString(), null ) );
     return false;
   }
 
@@ -294,7 +293,7 @@ public class PrfSource implements IProfilSource
     final StringTokenizer sT = new StringTokenizer( dbu.getSecondLine(), " " );
     if( sT.countTokens() > 4 )
     {
-      m_logger.log( Level.WARNING, "Ungültige Anzahl von Eigenschaften für die Brücke. Es werden nur die ersten Vier ausgewertet." );
+      KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.WARNING, "", 0, "Ungültige Anzahl von Eigenschaften für die Brücke. Es werden nur die ersten Vier ausgewertet.", null ) );
     }
     writeBuildingProperty( bridge, sT, IWspmTuhhConstants.BUILDING_PROPERTY_UNTERWASSER );
     writeBuildingProperty( bridge, sT, IWspmTuhhConstants.BUILDING_PROPERTY_BREITE );
@@ -351,25 +350,28 @@ public class PrfSource implements IProfilSource
     final IDataBlock db = pr.getDataBlock( "RAU" );
     if( db == null )
       return;
-    p.addPointProperty( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT );
+
     final String rks = db.getSecondLine().toUpperCase();
+    String rTyp = IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS;
     if( rks.startsWith( "KST" ) )
     {
-      p.setProperty( IWspmTuhhConstants.RAUHEIT_TYP, IWspmTuhhConstants.RAUHEIT_TYP_KST );
+      rTyp = IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST;
     }
-    else if( rks.startsWith( "KS" ) )
+    else if( rks.startsWith( "KS" ) || rks.startsWith( "K-S " ) )
     {
-      p.setProperty( IWspmTuhhConstants.RAUHEIT_TYP, IWspmTuhhConstants.RAUHEIT_TYP_KS );
+      rTyp = IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS;
     }
-    else if( rks.startsWith( "K-S " ) )
+    else
     {
-      p.setProperty( IWspmTuhhConstants.RAUHEIT_TYP, IWspmTuhhConstants.RAUHEIT_TYP_KS );
+      KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.INFO, "", 0, "Unbekannter Rauheits-typ[" + rks + "], wird 'ks' interpretiert.", null ) );
     }
+
+    p.addPointProperty( rTyp );
     for( int i = 0; i < db.getCoordCount(); i++ )
     {
       final IProfilPoint point = ProfilUtil.findPoint( p, i, db.getX()[i], 0 );
       if( point != null )
-        point.setValueFor( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT, db.getY()[i] );
+        point.setValueFor( rTyp, db.getY()[i] );
     }
   }
 
@@ -399,22 +401,22 @@ public class PrfSource implements IProfilSource
       pos2 = (int) db.getY()[1];
     }
     if( pCount > 2 )
-      m_logger.log( Level.INFO, "mehr als 2 Datensätze für Trennflächen können an Station(" + p.getStation() + ") nicht ausgewertet werden" );
+      KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.INFO, "", 0, "mehr als 2 Datensätze für Trennflächen können an Station(" + p.getStation() + ") nicht ausgewertet werden", null ) );
 
     // TODO: KIM in den Reparator verschieben
     // --------------------
-    if( p1 == null )
-    {
-      p1 = points.getFirst();
-      pos1 = 0;
-      m_logger.log( Level.INFO, "Erzeuge Trennfläche für Station(" + p.getStation() + ")  an Position [" + Double.toString( p1.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ) + "]" );
-    }
-    if( p2 == null )
-    {
-      p2 = points.getLast();
-      pos2 = 0;
-      m_logger.log( Level.INFO, "Erzeuge Trennfläche für Station(" + p.getStation() + ")  an Position [" + Double.toString( p2.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ) + "]" );
-    }
+//    if( p1 == null )
+//    {
+//      p1 = points.getFirst();
+//      pos1 = 0;
+//      m_logger.log( Level.INFO, "Erzeuge Trennfläche für Station(" + p.getStation() + ")  an Position [" + Double.toString( p1.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ) + "]" );
+//    }
+//    if( p2 == null )
+//    {
+//      p2 = points.getLast();
+//      pos2 = 0;
+//      m_logger.log( Level.INFO, "Erzeuge Trennfläche für Station(" + p.getStation() + ")  an Position [" + Double.toString( p2.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ) + "]" );
+//    }
     // --------------------
     if( p1 != null )
     {
@@ -452,21 +454,22 @@ public class PrfSource implements IProfilSource
       p2 = ProfilUtil.findPoint( p, db.getX()[1], 0 );
     }
     if( pCount > 2 )
-      m_logger.log( Level.INFO, "mehr als 2 Datensätze an Station(" + p.getStation() + ")  für Durchströmte Bereiche können nicht ausgewertet werden" );
+      KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.INFO, "", 0, "mehr als 2 Datensätze an Station(" + p.getStation() + ")  für Durchströmte Bereiche können nicht ausgewertet werden", null ) );
+
     // TODO: KIM in den Reparator verschieben
     // -------------
-    if( p1 == null )
-    {
-      p1 = points.getFirst();
-      m_logger.log( Level.INFO, "Erzeuge Durchströmten Bereich für Station(" + p.getStation() + ")  an Position [" + Double.toString( p1.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ) )
-          + "]" );
-    }
-    if( p2 == null )
-    {
-      p2 = points.getLast();
-      m_logger.log( Level.INFO, "Erzeuge Durchströmten Bereich für Station(" + p.getStation() + ")  an Position [" + Double.toString( p2.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ) )
-          + "]" );
-    }
+//    if( p1 == null )
+//    {
+//      p1 = points.getFirst();
+//      m_logger.log( Level.INFO, "Erzeuge Durchströmten Bereich für Station(" + p.getStation() + ")  an Position [" + Double.toString( p1.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ) )
+//          + "]" );
+//    }
+//    if( p2 == null )
+//    {
+//      p2 = points.getLast();
+//      m_logger.log( Level.INFO, "Erzeuge Durchströmten Bereich für Station(" + p.getStation() + ")  an Position [" + Double.toString( p2.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ) )
+//          + "]" );
+//    }
     // ---------------
     if( p1 != null )
     {
@@ -600,19 +603,20 @@ public class PrfSource implements IProfilSource
       p2 = ProfilUtil.findPoint( p, db.getX()[1], 0 );
     }
     if( pCount > 2 )
-      m_logger.log( Level.INFO, "mehr als 2 Datensätze für Bordvollpunkte können an Station(" + p.getStation() + ") nicht ausgewertet werden" );
+      KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.INFO, "", 0, "mehr als 2 Datensätze für Bordvollpunkte können an Station(" + p.getStation() + ") nicht ausgewertet werden", null ) );
+
     // TODO: KIM in den Reparator verschieben
     // ---------------
-    if( p1 == null )
-    {
-      p1 = points.getFirst();
-      m_logger.log( Level.INFO, "Erzeuge Bordvollpunkt für Station(" + p.getStation() + ") an Position [" + Double.toString( p1.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ) + "]" );
-    }
-    if( p2 == null )
-    {
-      p2 = points.getLast();
-      m_logger.log( Level.INFO, "Erzeuge Bordvollpunkt für Station(" + p.getStation() + ") an Position [" + Double.toString( p2.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ) + "]" );
-    }
+//    if( p1 == null )
+//    {
+//      p1 = points.getFirst();
+//      m_logger.log( Level.INFO, "Erzeuge Bordvollpunkt für Station(" + p.getStation() + ") an Position [" + Double.toString( p1.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ) + "]" );
+//    }
+//    if( p2 == null )
+//    {
+//      p2 = points.getLast();
+//      m_logger.log( Level.INFO, "Erzeuge Bordvollpunkt für Station(" + p.getStation() + ") an Position [" + Double.toString( p2.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ) + "]" );
+//    }
     // ----------------------------
     if( p1 != null )
     {

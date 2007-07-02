@@ -81,9 +81,9 @@ public class DeviderProvider implements IProfilPointMarkerProvider
   public IProfilPointMarker createMarker( String markerId )
   {
     if( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE.equals( markerId ) )
-      return new ProfilDevider( markerId, "Trennfläche", new String[] { IWspmTuhhConstants.POINTMARKER_PROPERTY_BOESCHUNG, IWspmTuhhConstants.POINTMARKER_PROPERTY_RAUHEIT } );
+      return new ProfilDevider( markerId, "Trennfläche", new String[] { IWspmTuhhConstants.POINTMARKER_PROPERTY_BOESCHUNG, IWspmTuhhConstants.POINTMARKER_PROPERTY_RAUHEIT} );
     if( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE.equals( markerId ) )
-      return new ProfilDevider( markerId, "Durchströmter Bereich", new String[] { IWspmTuhhConstants.POINTMARKER_PROPERTY_RAUHEIT } );
+      return new ProfilDevider( markerId, "Durchströmter Bereich", new String[] { IWspmTuhhConstants.POINTMARKER_PROPERTY_RAUHEIT} );
     if( IWspmTuhhConstants.MARKER_TYP_BORDVOLL.equals( markerId ) )
       return new ProfilDevider( markerId, "Bordvollpunkt", new String[0] );
     if( IWspmTuhhConstants.MARKER_TYP_WEHR.equals( markerId ) )

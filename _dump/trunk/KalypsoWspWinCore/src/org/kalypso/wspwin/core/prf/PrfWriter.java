@@ -113,81 +113,88 @@ public class PrfWriter
 
   {
     final DataBlockHeader dbh = new DataBlockHeader();
+
     if( key.startsWith( "GEL" ) )
     {
       dbh.setFirstLine( "GELAENDE-" );
       dbh.setSecondLine( "HOEHE" );
     }
-    if( key.startsWith( "TRENNF" ) )
+    else if( key.startsWith( "TRENNF" ) )
     {
       dbh.setFirstLine( "TRENNFLAECHEN" );
     }
-    if( key.startsWith( "DUR" ) )
+    else if( key.startsWith( "DUR" ) )
     {
       dbh.setFirstLine( "DURCHSTROEMTE" );
       dbh.setSecondLine( "BEREICHE" );
     }
-    if( key.startsWith( "RAU" ) )
+    else if( key.startsWith( "KST" ) )
     {
       dbh.setFirstLine( "RAUHEIT" );
+      dbh.setSecondLine( "kst   m" );
     }
-    if( key.startsWith( "REC" ) )
+    else if( key.startsWith( "KS" ) )
+    {
+      dbh.setFirstLine( "RAUHEIT" );
+      dbh.setSecondLine( "k-s   m" );
+    }
+    else if( key.startsWith( "REC" ) )
     {
       dbh.setFirstLine( "RECHTSWERT" );
     }
-    if( key.startsWith( "HOC" ) )
+    else if( key.startsWith( "HOC" ) )
     {
       dbh.setFirstLine( "HOCHWERT" );
     }
-    if( key.startsWith( "UK-B" ) )
+    else if( key.startsWith( "UK-B" ) )
     {
       dbh.setFirstLine( "UK-BRUECKE" );
     }
-    if( key.startsWith( "OK-B" ) )
+    else if( key.startsWith( "OK-B" ) )
     {
       dbh.setFirstLine( "OK-BRUECKE" );
     }
-    if( key.startsWith( "KOM" ) )
+    else if( key.startsWith( "KOM" ) )
     {
       dbh.setFirstLine( "KOMMENTAR:" );
     }
-    if( key.startsWith( "BOR" ) )
+    else if( key.startsWith( "BOR" ) )
     {
       dbh.setFirstLine( "BORDVOLL" );
     }
-    if( key.startsWith( "AX" ) )
+    else if( key.startsWith( "AX" ) )
     {
       dbh.setFirstLine( "AX   m" );
     }
-    if( key.startsWith( "AY" ) )
+    else if( key.startsWith( "AY" ) )
     {
       dbh.setFirstLine( "AY   m" );
     }
-    if( key.startsWith( "DP" ) )
+    else if( key.startsWith( "DP" ) )
     {
       dbh.setFirstLine( "DP   m" );
     }
-    if( key.startsWith( "EI" ) )
+    else if( key.startsWith( "EI" ) )
     {
       dbh.setFirstLine( "EI" );
     }
-    if( key.startsWith( "KRE" ) )
+    else if( key.startsWith( "KRE" ) )
     {
       dbh.setFirstLine( "KREIS" );
     }
-    if( key.startsWith( "TRA" ) )
+    else if( key.startsWith( "TRA" ) )
     {
       dbh.setFirstLine( "TRAPEZ" );
     }
-    if( key.startsWith( "MAU" ) )
+    else if( key.startsWith( "MAU" ) )
     {
       dbh.setFirstLine( "MAULPROFIL" );
     }
-    if( key.startsWith( "OK-W" ) )
+    else if( key.startsWith( "OK-W" ) )
     {
       dbh.setFirstLine( "OK-WEHR" );
     }
-    if( key.startsWith( "TRENNL" ) )
+    else if( key.startsWith( "TRENNL" ) )
     {
       dbh.setFirstLine( "TRENNLINIE" );
       dbh.setSecondLine( "WEHR" );

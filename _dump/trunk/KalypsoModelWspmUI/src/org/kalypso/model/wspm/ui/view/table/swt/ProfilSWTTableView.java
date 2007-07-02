@@ -348,8 +348,9 @@ public class ProfilSWTTableView extends AbstractProfilView
       addColumn( struct, null ).setResizable( false );
 
       final IProfilPointProperty[] tableDataKeys = profil.getPointProperties();
+      
       for( final IProfilPointProperty key : tableDataKeys )
-        addColumn( struct, key );
+        if(getViewData().isVisible( key.getId() ))addColumn( struct, key );
     }
 
     m_viewer.setInput( getProfilEventManager() );
@@ -701,7 +702,7 @@ public ProfilCellModifier getCellModifier()
       return;
 
     final IProfilPointProperty activeProperty = profil.getActiveProperty();
-    final String propertyName = activeProperty == null ? null : activeProperty.toString();
+    final String propertyName = activeProperty == null ? null : activeProperty.getId();
 
     final Table table = m_viewer.getTable();
     if( table == null || table.isDisposed() )

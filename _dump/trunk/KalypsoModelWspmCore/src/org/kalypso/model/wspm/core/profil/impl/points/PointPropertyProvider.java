@@ -63,7 +63,8 @@ public class PointPropertyProvider implements IProfilPointPropertyProvider
     m_properties.put( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP, null );
     m_properties.put( IWspmConstants.POINT_PROPERTY_HOCHWERT, null );
     m_properties.put( IWspmConstants.POINT_PROPERTY_RECHTSWERT, null );
-    m_properties.put( IWspmConstants.POINT_PROPERTY_RAUHEIT, null );
+    m_properties.put( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS, null );
+    m_properties.put( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST, null );
   }
 
   /**
@@ -75,7 +76,7 @@ public class PointPropertyProvider implements IProfilPointPropertyProvider
      * the order in the array is the columnsort_order in the tableview
      */
     return new String[] { IWspmConstants.POINT_PROPERTY_BREITE, IWspmConstants.POINT_PROPERTY_HOEHE, IWspmConstants.POINT_PROPERTY_HOCHWERT, IWspmConstants.POINT_PROPERTY_RECHTSWERT,
-        IWspmConstants.POINT_PROPERTY_RAUHEIT, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP };
+         IWspmConstants.POINT_PROPERTY_RAUHEIT_KS,IWspmConstants.POINT_PROPERTY_RAUHEIT_KST,IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP };
   }
 
   private final IProfilPointProperty createPointProperty( final String property )
@@ -94,8 +95,10 @@ public class PointPropertyProvider implements IProfilPointPropertyProvider
       return new PointProperty( property, "Rechtswert", 0.0001, new String[] { IWspmConstants.POINT_PROPERTY_HOEHE }, true, true );
     if( property.equals( IWspmConstants.POINT_PROPERTY_HOCHWERT ) )
       return new PointProperty( property, "Hochwert", 0.0001, new String[] { IWspmConstants.POINT_PROPERTY_RECHTSWERT }, true, true );
-    if( property.equals( IWspmConstants.POINT_PROPERTY_RAUHEIT ) )
-      return new PointProperty( property, "Rauheit", 0.0001, new String[0], false, false );
+    if( property.equals( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS ) )
+      return new PointProperty( property, "Rauheit-ks", 0.0001, new String[0], false, false );
+    if( property.equals( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ) )
+      return new PointProperty( property, "Rauheit-kst", 0.0001, new String[0], false, false );
     return null;
   }
 

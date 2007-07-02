@@ -96,15 +96,15 @@ public class BrueckeBuildingLayer extends AbstractPolyLineLayer
   {
     
    
-    if( !cr.getKeySet().contains( IWspmTuhhConstants.LAYER_BRUECKE_COLOR_TOP ) )
+    if( !cr.getKeySet().contains( IWspmTuhhConstants.LAYER_BRUECKE+"_COLOR_TOP") )
     {
-      cr.put( IWspmTuhhConstants.LAYER_BRUECKE_COLOR_TOP , new RGB(0, 128, 0 ));
+      cr.put( IWspmTuhhConstants.LAYER_BRUECKE+"_COLOR_TOP" , new RGB(0, 128, 0 ));
     }
-    if( !cr.getKeySet().contains( IWspmTuhhConstants.LAYER_BRUECKE_COLOR_BOTTOM) )
+    if( !cr.getKeySet().contains( IWspmTuhhConstants.LAYER_BRUECKE+"_COLOR_BOTTOM") )
     {
-      cr.put( IWspmTuhhConstants.LAYER_BRUECKE_COLOR_BOTTOM, new RGB(0, 128,179 ));
+      cr.put( IWspmTuhhConstants.LAYER_BRUECKE+"_COLOR_BOTTOM", new RGB(0, 128,179 ));
     }
-    return new Color[]{cr.get(  IWspmTuhhConstants.LAYER_BRUECKE_COLOR_TOP ),cr.get( IWspmTuhhConstants.LAYER_BRUECKE_COLOR_BOTTOM )};
+    return new Color[]{cr.get(  IWspmTuhhConstants.LAYER_BRUECKE+"_COLOR_TOP"),cr.get( IWspmTuhhConstants.LAYER_BRUECKE+"_COLOR_BOTTOM")};
   }
   @Override
   public void paintLegend( GCWrapper gc )
