@@ -44,6 +44,7 @@ import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitable;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitor;
 
@@ -71,6 +72,11 @@ class TriangleData implements ISurfacePatchVisitable<GM_SurfacePatch>
 
   public TriangleData( final LinearRing ring )
   {
+    // TODO: there is no need to divide the triangles anymore, because now they get split at
+    // the real borders. Therefore convert the ring into an Triangle an paint it.
+
+    // TODO: give the paint method the right border.
+
     this.ring = ring;
     // Choice of the Triangle Division Algoritm
     /* 1. */_divider = new TriangleFourDividerAlgorithm( ring );

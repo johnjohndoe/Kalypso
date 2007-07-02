@@ -236,7 +236,7 @@ public class FERoughnessDisplayElement implements DisplayElementDecorator
       final GM_SurfacePatch patch = surface.get( 0 );
       final GM_Position[] ex = patch.getExteriorRing();
 
-      final Area areaouter = SurfacePatchVisitableDisplayElement.areaFromRing( projection, width, ex );
+      final Area areaouter = new Area (SurfacePatchVisitableDisplayElement.areaFromRing( projection, width, ex ));
 
       return areaouter;
     }

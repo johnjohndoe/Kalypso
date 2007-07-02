@@ -46,6 +46,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitor;
 
 /**
@@ -56,12 +57,12 @@ public interface ITriangleAlgorithm
 {
   public boolean furtherDivisionNeeded( GM_Position[] coOrds );
 
-  public Map<GM_SurfacePatch, Double> visitThisDivisionSurface( GM_SurfacePatch patch );
+  public Map<GM_Triangle, Double> visitThisDivisionSurface( final GM_SurfacePatch patch );
 
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitable#aceptSurfacePatches(org.kalypsodeegree.model.geometry.GM_Envelope,
    *      org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitor)
    */
-  public void acceptSurfacePatches( GM_Envelope envToVisit, ISurfacePatchVisitor surfacePatchVisitor ) throws GM_Exception;
+  public void acceptSurfacePatches( GM_Envelope envToVisit, ISurfacePatchVisitor<GM_SurfacePatch> surfacePatchVisitor ) throws GM_Exception;
 
 }

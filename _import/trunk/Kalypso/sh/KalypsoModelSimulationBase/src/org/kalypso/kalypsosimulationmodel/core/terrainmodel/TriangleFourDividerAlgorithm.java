@@ -50,6 +50,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitable;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitor;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -65,11 +66,11 @@ import com.vividsolutions.jts.geom.LinearRing;
  * an another triangle. This approach would result in more number of Comparisions in dividing the triangle and much
  * efficient then the TriangleThreeDividerAlgorithm.java
  */
-public class TriangleFourDividerAlgorithm implements ITriangleAlgorithm, ISurfacePatchVisitable<GM_SurfacePatch>
+public class TriangleFourDividerAlgorithm implements ITriangleAlgorithm, ISurfacePatchVisitable<GM_Triangle>
 {
   private final LinearRing ring;
 
-  private Map<GM_SurfacePatch, Double> toBeVisited = new HashMap<GM_SurfacePatch, Double>();
+  private Map<GM_Triangle, Double> toBeVisited = new HashMap<GM_Triangle, Double>();
 
   public TriangleFourDividerAlgorithm( final LinearRing _ring )
   {
@@ -127,12 +128,12 @@ public class TriangleFourDividerAlgorithm implements ITriangleAlgorithm, ISurfac
    * Given a GM_Surface, this method returns the List of divided GM_Surfaces that each representing an elevation with
    * the variation that should comply with standard Elevation Discretisation
    */
-  public Map<GM_SurfacePatch, Double> visitThisDivisionSurface( final GM_SurfacePatch surfacePatch )
+  public Map<GM_Triangle, Double> visitThisDivisionSurface( final GM_SurfacePatch surfacePatch )
   {
     final CS_CoordinateSystem crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
 
     final List<GM_Position[]> toSplit = new ArrayList<GM_Position[]>();
-    final HashMap<GM_SurfacePatch, Double> notToSplit = new HashMap<GM_SurfacePatch, Double>();
+    final HashMap<GM_Triangle, Double> notToSplit = new HashMap<GM_Triangle, Double>();
     toSplit.add( surfacePatch.getExteriorRing() );
     while( !toSplit.isEmpty() )
     {
@@ -172,8 +173,15 @@ public class TriangleFourDividerAlgorithm implements ITriangleAlgorithm, ISurfac
            * Creates a GM_Surface using the coordinates and adds it to the HashMap along with the center coordinate of
            * GM_Surface.
            */
-          final GM_SurfacePatch patch = GeometryFactory.createGM_SurfacePatch( splitCandidate, HMOTerrainElevationModel.NO_INTERIOR_POS, null, crs );
-          notToSplit.put( patch, PlaneUtils.calculateCenterCoOrdinate( splitCandidate ).getZ() );
+//          final GM_SurfacePatch patch = GeometryFactory.createGM_SurfacePatch( splitCandidate, HMOTerrainElevationModel.NO_INTERIOR_POS, null, crs );
+          GM_Position pos1 = splitCandidate[0];
+          GM_Position pos2 = splitCandidate[1];
+          GM_Position pos3 = splitCandidate[2];
+
+          final GM_Triangle createGM_Surface = GeometryFactory.createGM_Triangle( pos1, pos2, pos3, crs );
+
+          
+          notToSplit.put( createGM_Surface, PlaneUtils.calculateCenterCoOrdinate( splitCandidate ).getZ() );
         }
         catch( final Throwable e )
         {
@@ -197,8 +205,15 @@ public class TriangleFourDividerAlgorithm implements ITriangleAlgorithm, ISurfac
         coordinates[0].x, coordinates[0].y, coordinates[0].z };
 
     final CS_CoordinateSystem crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
-    final GM_SurfacePatch surfacePatch = GeometryFactory.createGM_SurfacePatch( exterior, HMOTerrainElevationModel.NO_INTERIOR, 3, crs );
+//    final GM_SurfacePatch surfacePatch = GeometryFactory.createGM_SurfacePatch( exterior, HMOTerrainElevationModel.NO_INTERIOR, 3, crs );
 
+    GM_Position pos1 = GeometryFactory.createGM_Position( coordinates[0].x, coordinates[0].y, coordinates[0].z );
+    GM_Position pos2 = GeometryFactory.createGM_Position( coordinates[1].x, coordinates[1].y, coordinates[1].z );
+    GM_Position pos3 = GeometryFactory.createGM_Position( coordinates[2].x, coordinates[2].y, coordinates[2].z );
+
+    final GM_Triangle surfacePatch = GeometryFactory.createGM_Triangle( pos1, pos2, pos3, crs );
+
+    
     /**
      * toBeVisited HashMap is cached..this prevents from recalculating the Triangles from a Given Surface
      */
@@ -210,7 +225,7 @@ public class TriangleFourDividerAlgorithm implements ITriangleAlgorithm, ISurfac
       /**
        * iterates through the complete HashMap and paints all the triangles
        */
-      for( final Map.Entry<GM_SurfacePatch, Double> entry : toBeVisited.entrySet() )
+      for( final Map.Entry<GM_Triangle, Double> entry : toBeVisited.entrySet() )
       {
         surfacePatchVisitor.visit( entry.getKey(), entry.getValue() );
       }
