@@ -44,15 +44,10 @@ import java.util.Properties;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.actions.DeleteResourceAction;
 import org.eclipse.ui.intro.IIntroSite;
 import org.eclipse.ui.intro.config.IIntroAction;
-import org.kalypso.afgui.scenarios.Scenario;
-import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
-
-import de.renew.workflow.connector.context.ActiveWorkContext;
 
 /**
  * @author Gernot Belger

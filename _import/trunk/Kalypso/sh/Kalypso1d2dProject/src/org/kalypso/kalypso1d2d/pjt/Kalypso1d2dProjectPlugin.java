@@ -31,7 +31,6 @@ import de.renew.workflow.cases.Case;
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 import de.renew.workflow.connector.context.ActiveWorkContext;
 import de.renew.workflow.connector.context.CaseHandlingProjectNature;
-import de.renew.workflow.connector.worklist.ITaskExecutor;
 import de.renew.workflow.contexts.WorkflowContextHandlerFactory;
 
 /**

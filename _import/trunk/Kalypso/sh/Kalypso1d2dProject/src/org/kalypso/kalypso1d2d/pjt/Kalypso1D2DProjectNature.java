@@ -44,7 +44,6 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.List;
 import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBException;
@@ -72,11 +71,9 @@ import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.afgui.scenarios.ScenarioManager;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.simulation.core.ISimulationService;
 import org.kalypso.simulation.core.KalypsoSimulationCorePlugin;
 import org.kalypso.simulation.core.simspec.Modeldata;
-import org.kalypso.simulation.core.simspec.Modeldata.Input;
 import org.kalypso.simulation.ui.calccase.CalcJobHandler;
 import org.kalypso.simulation.ui.calccase.ModelNature;
 

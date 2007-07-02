@@ -57,25 +57,31 @@ import java.util.logging.Logger;
 import java.util.logging.StreamHandler;
 import java.util.logging.XMLFormatter;
 
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.ISources;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.commons.java.lang.ProcessHelper;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter;
 import org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv;
 import org.kalypso.kalypsomodel1d2d.conv.Weir1D2DConverter;
 import org.kalypso.kalypsomodel1d2d.conv.WeirIDProvider;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
-import org.kalypso.kalypsomodel1d2d.schema.binding.model.IPseudoOPerationalModel;
-import org.kalypso.kalypsosimulationmodel.core.Util;
-import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
@@ -85,6 +91,9 @@ import org.kalypso.simulation.core.KalypsoSimulationCorePlugin;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.simspec.Modeldata;
 import org.kalypso.simulation.ui.calccase.CalcJobHandler;
+import org.kalypso.simulation.ui.calccase.ModelNature;
+
+import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 
 /**
  * TODO: Do notjust copy.paste everything! No one will ever be able to manage this code ever!
@@ -322,17 +331,23 @@ public class CalculationUnitSimMode1D2DCalcJob implements ISimulation
   {
     monitor.beginTask( "Modellrechnung wird durchgeführt", 5 );
 
+    final IWorkbench workbench = PlatformUI.getWorkbench();
+    final IHandlerService service = (IHandlerService) workbench.getService( IHandlerService.class );
+    final IEvaluationContext currentState = service.getCurrentState();
+    final Shell shell = (Shell) currentState.getVariable( ISources.ACTIVE_SHELL_NAME );
+    final IFolder scenarioFolder = (IFolder) currentState.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
+
     try
     {
-      final IFolder scenarioFolder = Util.getScenarioFolder();
 
-      final Modeldata modelspec = new Modeldata();// loadModelspec();
-      Util.addModelInputSpec( modelspec, RMA10SimModelConstants.CONTROL_ID, IControlModelGroup.class );
-      Util.addModelInputSpec( modelspec, RMA10SimModelConstants.TERRAINMODEL_ID, ITerrainModel.class );
-      Util.addModelInputSpec( modelspec, RMA10SimModelConstants.DISCRETISATIOMODEL_ID, IFEDiscretisationModel1d2d.class );
-      Util.addModelInputSpec( modelspec, RMA10SimModelConstants.FLOWRELATIONSHIPMODEL_ID, IFlowRelationshipModel.class );
-      Util.addModelInputSpec( modelspec, RMA10SimModelConstants.DISCRETISATIOMODEL_ID, IFEDiscretisationModel1d2d.class );
-      Util.addModelInputSpec( modelspec, RMA10SimModelConstants.OPERATIONALMODEL_ID, IPseudoOPerationalModel.class );
+      final Modeldata modelspec = loadModelspec(scenarioFolder.getProject());
+//      final String typeID = modelspec.getTypeID();
+//      Util.addModelInputSpec( modelspec, RMA10SimModelConstants.TERRAINMODEL_ID, ITerrainModel.class );
+//      Util.addModelInputSpec( modelspec, RMA10SimModelConstants.DISCRETISATIOMODEL_ID, IFEDiscretisationModel1d2d.class );
+//      Util.addModelInputSpec( modelspec, RMA10SimModelConstants.FLOWRELATIONSHIPMODEL_ID, IFlowRelationshipModel.class );
+//      Util.addModelInputSpec( modelspec, RMA10SimModelConstants.DISCRETISATIOMODEL_ID, IFEDiscretisationModel1d2d.class );
+//      Util.addModelInputSpec( modelspec, RMA10SimModelConstants.OPERATIONALMODEL_ID, IPseudoOPerationalModel.class );
+//      Util.addModelInputSpec( modelspec, RMA10SimModelConstants.CONTROL_ID, IControlModelGroup.class );
 
       final CalculationUnitBasedModeldata calUnitModelSpec = new CalculationUnitBasedModeldata( calUnit.getGmlID(), modelspec );
       calUnitModelSpec.setTypeID( "CalculationUnitKalypsoModel1D2D" );
@@ -348,5 +363,29 @@ public class CalculationUnitSimMode1D2DCalcJob implements ISimulation
     {
       monitor.done();
     }
+    
   }
+  private static Modeldata loadModelspec(IProject project ) throws CoreException
+  {
+    try
+    {
+      final IFolder modelFolder = project.getFolder( ModelNature.MODELLTYP_FOLDER );
+      final IFile file = modelFolder.getFile( ModelNature.MODELLTYP_MODELSPEC_XML );
+      if( !file.exists() )
+        return null;
+
+      final Unmarshaller unmarshaller = ModelNature.JC_SPEC.createUnmarshaller();
+      
+      Modeldata modelData = (Modeldata) unmarshaller.unmarshal( file.getContents() );
+      return modelData;
+     
+    }
+    catch( final JAXBException e )
+    {
+      e.printStackTrace();
+
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Fehler beim Laden der Modell-Spezifikation" ) );
+    }
+  }
+
 }
