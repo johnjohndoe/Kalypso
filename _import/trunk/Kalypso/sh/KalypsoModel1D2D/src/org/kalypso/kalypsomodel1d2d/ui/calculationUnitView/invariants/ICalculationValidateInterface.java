@@ -38,12 +38,12 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.validate.test.calculation_unit;
+package org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.invariants;
 
 import java.util.List;
 
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
+import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.IProblem;
 
 /**
  * @author Madanagopal
@@ -53,7 +53,8 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 public interface ICalculationValidateInterface
 {
 
-  public List<IBoundaryLine> getBoundaryLines();
-  public List<ICalculationUnit> getCalculationUnit();  
-  public List< ? > checkAllInvariants();
+  //public List<IBoundaryLine> getBoundaryLines();
+  public ICalculationUnit getCalculationUnit();  
+  public void checkAllInvariants();
+  public List<IProblem> getBrokenInvariantMessages(); 
 }

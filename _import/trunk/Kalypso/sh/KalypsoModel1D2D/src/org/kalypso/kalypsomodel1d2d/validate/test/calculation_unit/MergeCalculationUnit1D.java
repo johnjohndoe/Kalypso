@@ -20,7 +20,7 @@ public class MergeCalculationUnit1D extends MergeCalculationUnit {
 	/** Default constructor for CalculationUnit1D
 	 */
 	public MergeCalculationUnit1D() {
-	  super(null);
+	  super(null,null);
 		if ( usesAllInstances ) {
 			allInstances.add(this);
 		}

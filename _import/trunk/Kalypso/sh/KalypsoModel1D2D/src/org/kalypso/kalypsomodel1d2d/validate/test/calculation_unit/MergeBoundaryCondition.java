@@ -12,6 +12,8 @@ import java.util.List;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.BoundaryCondition;
+import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.IProblem;
+import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.invariants.ICalculationValidateInterface;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.validate.calculation_unit.utilities.MergeInvariantError;
@@ -207,10 +209,7 @@ public class MergeBoundaryCondition extends BoundaryCondition implements ICalcul
   /**
    * @see org.kalypso.kalypsomodel1d2d.validate.test.calculation_unit.ICalculationValidateInterface#getCalculationUnit()
    */
-  public List<ICalculationUnit> getCalculationUnit( )
-  {
-    return null;
-  }
+
   
   public IDiscretisationModel getDiscretisationModel()
   {
@@ -230,6 +229,24 @@ public class MergeBoundaryCondition extends BoundaryCondition implements ICalcul
     
     
     return (List<ICalculationUnit>) dataModel.getData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST );    
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.validate.test.calculation_unit.ICalculationValidateInterface#getBrokenInvariantMessages()
+   */
+  public List<IProblem> getBrokenInvariantMessages( )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.validate.test.calculation_unit.ICalculationValidateInterface#getCalculationUnit()
+   */
+  public ICalculationUnit getCalculationUnit( )
+  {
+    // TODO Auto-generated method stub
+    return null;
   }
 
 }

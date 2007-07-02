@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView;
+package org.kalypso.kalypsomodel1d2d.ui.calculationUnitView;
 
 import java.awt.Graphics;
 import java.awt.Point;

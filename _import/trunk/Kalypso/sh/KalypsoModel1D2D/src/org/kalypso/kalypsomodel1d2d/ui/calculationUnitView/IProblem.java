@@ -38,30 +38,30 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView;
+package org.kalypso.kalypsomodel1d2d.ui.calculationUnitView;
 
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
-import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
+import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
  * @author Madanagopal
  *
  */
-public class InvariantOverlappingElements
+@SuppressWarnings("unchecked")
+public interface IProblem
 {
-
-  private ICalculationUnit1D2D calc1D2D;
-  private CalculationUnitDataModel dataModel;
-
-  public InvariantOverlappingElements( ICalculationUnit1D2D calc1D2D, CalculationUnitDataModel dataModel )
-  {
-    this.calc1D2D = calc1D2D;
-    this.dataModel = dataModel;
-  }
+  public void setName(String name);
+  public String getName();
   
-  public void checkInvariant()
-  {
-    
-  }
-
+  public void setMessageDescription(String Description);
+  public String getMessageDescription();
+  
+  public void setParentCalculationUnit(ICalculationUnit calculationUnit);
+  public ICalculationUnit getParentCalculationUnit();
+  
+  public void navigateToProblem(MapPanel panel);
+  
+  // Sets focus on Any Feature added
+  public IFeatureWrapper2 showFocusOn();
 }

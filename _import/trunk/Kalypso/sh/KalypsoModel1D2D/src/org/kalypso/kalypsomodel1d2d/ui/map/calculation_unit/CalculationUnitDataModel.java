@@ -40,12 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
-import org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView.IProblem;
+import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.IProblem;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 
@@ -102,24 +103,66 @@ public class CalculationUnitDataModel extends KeyBasedDataModel
     setData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST, calculationUnits );
   }
 
-  public void setValidatingMessages(ICalculationUnit key, List<IProblem> strList)
+/*  public void addValidatingMessage(ICalculationUnit key, IProblem problem)
   {
+    boolean copyExist = false;
     if (validateMessages.containsKey( key ))
     {
        List<IProblem> messages = validateMessages.get( key );
-       messages.addAll( strList );
-       validateMessages.put( key, messages );
-      //validateMessages.get( key ).addAll( strList );
+       for (IProblem prob: messages)
+       {
+         if (prob.getMessageDescription().equals( problem.getMessageDescription()))
+         {
+           copyExist = true;
+         }
+       }
+       
+       if (!copyExist)
+       {
+         messages.add( problem );
+         validateMessages.put( key, messages );         
+       }
     }
     else
     {
-      validateMessages.put( key, strList );
+      
+      ArrayList<IProblem> arrayList = new ArrayList<IProblem>();
+      arrayList.add( problem );
+      validateMessages.put( key, arrayList );
     }
+  }*/
+
+  public void setValidatingMessages(ICalculationUnit key, List<IProblem> strList)
+  {
+    validateMessages.put( key, strList );
+    
+//    if (validateMessages.containsKey( key ))
+//    {
+//       List<IProblem> messages = validateMessages.get( key );
+//       if (!strList.isEmpty())
+//       {
+//         messages.addAll( strList );
+//         validateMessages.put( key, messages );
+//       }
+//    }
+//    else
+//    {
+//      if (!strList.isEmpty())
+//      {
+//        validateMessages.put( key, strList );
+//      } 
+//    }
   }
 
   public List<IProblem> getValidatingMessages(ICalculationUnit key)
   {
     return validateMessages.get( key );
+  }
+
+  public void addValidatingMessage( ICalculationUnit key, List<IProblem> problemList )
+  {
+    validateMessages.put( key, problemList );
+    
   }
 
 }

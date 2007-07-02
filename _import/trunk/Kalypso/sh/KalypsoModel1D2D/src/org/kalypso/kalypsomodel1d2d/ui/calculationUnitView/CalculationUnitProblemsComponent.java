@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView;
+package org.kalypso.kalypsomodel1d2d.ui.calculationUnitView;
 
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -60,15 +60,12 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListener;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * @author Madanagopal
@@ -125,8 +122,7 @@ public class CalculationUnitProblemsComponent
         {
           if( firstElement instanceof IProblem )
           {
-            IProblem problem = (IProblem) firstElement;
-            
+            IProblem problem = (IProblem) firstElement;           
             
             MapPanel mapPanel = 
               dataModel.getData( MapPanel.class, ICommonKeys.KEY_MAP_PANEL );
@@ -214,6 +210,7 @@ public class CalculationUnitProblemsComponent
     if (newValue instanceof ICalculationUnit) 
     {
       ICalculationUnit selCalcUnit = (ICalculationUnit) dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
+      //problemTableViewer.refresh();
       problemTableViewer.setInput( dataModel.getValidatingMessages( selCalcUnit ));
       }
   }

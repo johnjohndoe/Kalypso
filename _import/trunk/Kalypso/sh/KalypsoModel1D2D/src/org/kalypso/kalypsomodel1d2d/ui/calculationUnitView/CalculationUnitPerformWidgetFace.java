@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView;
+package org.kalypso.kalypsomodel1d2d.ui.calculationUnitView;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;

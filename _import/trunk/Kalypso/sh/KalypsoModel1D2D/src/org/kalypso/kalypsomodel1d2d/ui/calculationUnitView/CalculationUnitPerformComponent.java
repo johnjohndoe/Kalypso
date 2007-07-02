@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView;
+package org.kalypso.kalypsomodel1d2d.ui.calculationUnitView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,16 +50,18 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DUIImages;
-import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit2D;
 import org.kalypso.kalypsomodel1d2d.sim.CalculationUnitSimMode1D2DCalcJob;
+import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.invariants.InvariantBConditionWithBLine;
+import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.invariants.InvariantCheckBoundaryConditions;
+import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.invariants.InvariantOverlappingElements;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitViewerLabelProvider;
 import org.kalypso.kalypsomodel1d2d.ui.map.editor.FeatureWrapperListEditor;
 import org.kalypso.kalypsomodel1d2d.ui.map.editor.IButtonConstants;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
-import org.kalypso.kalypsomodel1d2d.validate.test.calculation_unit.MergeCalculationUnit;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
@@ -136,23 +138,36 @@ public class CalculationUnitPerformComponent extends FeatureWrapperListEditor im
   @Override
   protected void validateCalculationUnits( )
   {
-    if (getCurrentSelection() instanceof ICalculationUnit)
+    
+    IFeatureWrapper2 currentSelection = getCurrentSelection();
+    if (currentSelection instanceof ICalculationUnit2D)
     {
-      ICalculationUnit orgCalc = (ICalculationUnit) getCurrentSelection();
-      MergeCalculationUnit mergeCal = new MergeCalculationUnit(orgCalc);
-      mergeCal.addToBoundaryLine(CalUnitOps.getBoundaryLines(orgCalc));
-      mergeCal.checkAllInvariants();
-      dataModel.setValidatingMessages( orgCalc, mergeCal.getBrokenInvariantsMessage() );      
+      List<IProblem> tempProblemList = new ArrayList<IProblem>();
+      ICalculationUnit orgCalc = (ICalculationUnit) currentSelection;
+      InvariantCheckBoundaryConditions checkBC = new InvariantCheckBoundaryConditions(orgCalc,dataModel);
+      checkBC.checkAllInvariants();
+      tempProblemList.addAll( checkBC.getBrokenInvariantMessages() );
+      
+//      MergeCalculationUnit mergeCal = new MergeCalculationUnit(orgCalc, dataModel);
+//      mergeCal.addToBoundaryLine(CalUnitOps.getBoundaryLines(orgCalc));
+//      mergeCal.checkAllInvariants();
+//      tempProblemList.addAll( mergeCal.getBrokenInvariantMessages());
+            
       //FindInvalidElements findEle = new FindInvalidElements(orgCalc);
       
       InvariantBConditionWithBLine invBConditionBLine = new InvariantBConditionWithBLine(orgCalc, dataModel);
-      dataModel.setValidatingMessages( orgCalc,invBConditionBLine.getBrokenInvariantsMessage() );
-      
-      if (orgCalc instanceof ICalculationUnit1D2D)
-      {
-        ICalculationUnit1D2D calc1D2D = (ICalculationUnit1D2D) orgCalc;
-        InvariantOverlappingElements overlappingElements = new InvariantOverlappingElements(calc1D2D, dataModel);
-      }
+      invBConditionBLine.checkAllInvariants();
+      tempProblemList.addAll( invBConditionBLine.getBrokenInvariantMessages() );
+      dataModel.addValidatingMessage( orgCalc, tempProblemList );
+    } 
+    if (currentSelection instanceof ICalculationUnit1D2D)
+    {
+      List<IProblem> tempProblemList = new ArrayList<IProblem>();
+      ICalculationUnit1D2D calc1D2D = (ICalculationUnit1D2D) currentSelection;
+      InvariantOverlappingElements overlappingElements = new InvariantOverlappingElements(calc1D2D, dataModel);
+      overlappingElements.checkAllInvariants();
+      tempProblemList.addAll( overlappingElements.getBrokenInvariantMessages() );
+      dataModel.addValidatingMessage( calc1D2D, tempProblemList );
       
     }
     

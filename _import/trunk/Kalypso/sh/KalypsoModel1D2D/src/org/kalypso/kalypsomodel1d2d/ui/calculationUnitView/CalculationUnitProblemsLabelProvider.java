@@ -38,30 +38,33 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView;
+package org.kalypso.kalypsomodel1d2d.ui.calculationUnitView;
 
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
-import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.swt.graphics.Image;
 
 /**
  * @author Madanagopal
  *
  */
-@SuppressWarnings("unchecked")
-public interface IProblem
+public class CalculationUnitProblemsLabelProvider extends LabelProvider
 {
-  public void setName(String name);
-  public String getName();
+
+  public CalculationUnitProblemsLabelProvider( )
+  {
+      // Nothing Inside
+  }
+  @Override
+  public Image getImage(Object element)
+  {
+    return null;    
+  }
   
-  public void setMessageDescription(String Description);
-  public String getMessageDescription();
+  @Override
+  public String getText(Object element)
+  {
+    
+    return (String) element;    
+  }
   
-  public void setParentCalculationUnit(ICalculationUnit calculationUnit);
-  public ICalculationUnit getParentCalculationUnit();
-  
-  public void navigateToProblem(MapPanel panel);
-  
-  // Sets focus on Any Feature added
-  public IFeatureWrapper2 showFocusOn();
 }

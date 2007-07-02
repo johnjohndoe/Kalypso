@@ -38,33 +38,47 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView;
+package org.kalypso.kalypsomodel1d2d.ui.calculationUnitView;
 
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
  * @author Madanagopal
  *
  */
-public class CalculationUnitProblemsLabelProvider extends LabelProvider
+public class ProblemsListLabelProvider extends LabelProvider
 {
+  
+  public ProblemsListLabelProvider( )
+  {
+  }
+  
+  public Image getImage( Object element )
+  {
+    return null;
+  }
 
-  public CalculationUnitProblemsLabelProvider( )
+  public String getText( Object element )
   {
-      // Nothing Inside
+    if( element instanceof IProblem )
+    {
+
+      String name = ((IProblem)element).getMessageDescription();
+      if( name != null )
+      {
+        return name;
+      }
+      else
+      {
+        return "";
+      }
+    }
+    else
+    {
+      throw new RuntimeException( "Only Valid Messages Supported:" + (element == null ? null : element.getClass()) + "\n\t value=" + element );
+    }
   }
-  @Override
-  public Image getImage(Object element)
-  {
-    return null;    
-  }
-  
-  @Override
-  public String getText(Object element)
-  {
-    
-    return (String) element;    
-  }
-  
+
 }

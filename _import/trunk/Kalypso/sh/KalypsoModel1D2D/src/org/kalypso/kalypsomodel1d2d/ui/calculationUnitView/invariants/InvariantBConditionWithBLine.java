@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView;
+package org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.invariants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +48,8 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
+import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.IProblem;
+import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.ProblemDescriptor;
 import org.kalypso.kalypsomodel1d2d.ui.map.IGrabDistanceProvider;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
@@ -59,7 +61,7 @@ import org.kalypsodeegree.model.feature.Feature;
  * @author Madanagopal
  * 
  */
-public class InvariantBConditionWithBLine
+public class InvariantBConditionWithBLine implements ICalculationValidateInterface
 {
 
   private ICalculationUnit calculationUnit;
@@ -69,7 +71,7 @@ public class InvariantBConditionWithBLine
   private CalculationUnitDataModel dataModel;
 
   private List<IBoundaryCondition> boundaryConditions;
-  private List<IProblem> invariantErrorMessages;
+  private List<IProblem> invariantErrorMessages = new ArrayList<IProblem>();
 
   public InvariantBConditionWithBLine( ICalculationUnit calc, CalculationUnitDataModel dataModel )
   {
@@ -77,7 +79,25 @@ public class InvariantBConditionWithBLine
     this.dataModel = dataModel;
   }
 
-  public void CheckBoundaryConditionsOnBoundaryLines( )
+   public List<IBoundaryCondition> getBoundaryConditions( )
+  {
+    final CommandableWorkspace workspace = dataModel.getData( CommandableWorkspace.class, ICommonKeys.KEY_BOUNDARY_CONDITION_CMD_WORKSPACE );
+    final Feature bcHolderFeature = workspace.getRootFeature();
+    IFlowRelationshipModel flowRelationship = (IFlowRelationshipModel) bcHolderFeature.getAdapter( IFlowRelationshipModel.class );
+    List<IBoundaryCondition> conditions = new ArrayList<IBoundaryCondition>( (List) flowRelationship );
+    return conditions;
+  }
+
+  public double getGrabDistance()
+  {
+    IGrabDistanceProvider grabDistanceProvider = dataModel.getData( IGrabDistanceProvider.class, ICommonKeys.KEY_GRAB_DISTANCE_PROVIDER );
+    return grabDistanceProvider.getGrabDistance();
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.validate.test.calculation_unit.ICalculationValidateInterface#checkAllInvariants()
+   */
+  public void checkAllInvariants( )
   {
     boundaryLines = CalUnitOps.getBoundaryLines( calculationUnit );
     boundaryConditions = CalUnitOps.getBoundaryConditions( getBoundaryConditions(), calculationUnit, getGrabDistance() );
@@ -94,30 +114,24 @@ public class InvariantBConditionWithBLine
       // @TODO 
     }
  // @TODO 
-    invariantErrorMessages.add( new ProblemDescriptor(null, null, calculationUnit, null) );
+    
+    //dataModel.addValidatingMessage( calculationUnit, new ProblemDescriptor(null,"Boundary Condition with out boundary Line "+calculationUnit,calculationUnit,calculationUnit ) );
+    invariantErrorMessages.add( new ProblemDescriptor(null, "Boundary Condition with out boundary Line "+calculationUnit, calculationUnit, null) );
   }
 
-  public List<IBoundaryCondition> getBoundaryConditions( )
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.validate.test.calculation_unit.ICalculationValidateInterface#getBrokenInvariantMessages()
+   */
+  public List<IProblem> getBrokenInvariantMessages( )
   {
-    final CommandableWorkspace workspace = dataModel.getData( CommandableWorkspace.class, ICommonKeys.KEY_BOUNDARY_CONDITION_CMD_WORKSPACE );
-    final Feature bcHolderFeature = workspace.getRootFeature();
-    IFlowRelationshipModel flowRelationship = (IFlowRelationshipModel) bcHolderFeature.getAdapter( IFlowRelationshipModel.class );
-    List<IBoundaryCondition> conditions = new ArrayList<IBoundaryCondition>( (List) flowRelationship );
-    return conditions;
+    return invariantErrorMessages; 
   }
 
-  public double getGrabDistance()
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.validate.test.calculation_unit.ICalculationValidateInterface#getCalculationUnit()
+   */
+  public ICalculationUnit getCalculationUnit( )
   {
-    IGrabDistanceProvider grabDistanceProvider = dataModel.getData( IGrabDistanceProvider.class, ICommonKeys.KEY_GRAB_DISTANCE_PROVIDER );
-    return grabDistanceProvider.getGrabDistance();
+    return calculationUnit;
   }
-  
-  public List<IProblem> getBrokenInvariantsMessage()
-  {
-    if (invariantErrorMessages == null)
-      return new ArrayList<IProblem>();
-    else
-      return invariantErrorMessages;    
-  }
-
 }

@@ -12,8 +12,10 @@ import java.util.List;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
-import org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView.IProblem;
-import org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView.ProblemDescriptor;
+import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.IProblem;
+import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.ProblemDescriptor;
+import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.invariants.ICalculationValidateInterface;
+import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
 import org.kalypso.kalypsomodel1d2d.validate.calculation_unit.utilities.MergeInvariantError;
 import org.kalypso.kalypsomodel1d2d.validate.calculation_unit.utilities.MergeInvariantException;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
@@ -30,14 +32,17 @@ public class MergeCalculationUnit implements ICalculationUnit,ICalculationValida
   static private List allInstances = new ArrayList();
   private List<IProblem> invResults = new ArrayList<IProblem>();
   private ICalculationUnit mainCalculationUnit;
+  private CalculationUnitDataModel dataModel;
   
-  public MergeCalculationUnit(ICalculationUnit mainCalc)
+  public MergeCalculationUnit(ICalculationUnit mainCalc, CalculationUnitDataModel dataModel)
   {
     
     if ( usesAllInstances ) {
             allInstances.add(this);
     }
+    
     this.mainCalculationUnit = mainCalc;
+    this.dataModel = dataModel;
   }
 
 	/** Implements the setter for feature '+ boundaryLine : Set(BoundaryLine)'
@@ -167,12 +172,16 @@ public class MergeCalculationUnit implements ICalculationUnit,ICalculationValida
 			e.printStackTrace();
 		}
 		if ( ! result ) {
-			String message = "invariant self.boundaryLine->size() >= 2 ";
-			message = message + "is broken in object '";
-			message = message + this.getIdString();
-			message = message + "' of type '" + this.getClass().getName() + "'";
-			System.out.println("INVARIANT "+ message);			
+		  
+//			String message = "invariant self.boundaryLine->size() >= 2 ";
+//			message = message + "is broken in object '";
+//			message = message + this.getIdString();
+//			message = message + "' of type '" + this.getClass().getName() + "'";
+		    String message = "Invalid Num of BoundaryLines in : "+getMainCalculationUnit().getName();
+            System.out.println("INVARIANT "+ message);			
 			invResults.add( new ProblemDescriptor(null,message,getMainCalculationUnit(),getMainCalculationUnit() ));
+			//dataModel.addValidatingMessage( mainCalculationUnit, new ProblemDescriptor(null,message,getMainCalculationUnit(),getMainCalculationUnit() ) );
+			
 			throw new MergeInvariantException(this, message);
 		}
 	}
@@ -303,9 +312,13 @@ public class MergeCalculationUnit implements ICalculationUnit,ICalculationValida
     
   }
   
-  public List<IProblem> getBrokenInvariantsMessage()
-  {    
-    return invResults;    
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.validate.test.calculation_unit.ICalculationValidateInterface#getBrokenInvariantMessages()
+   */
+  public List<IProblem> getBrokenInvariantMessages( )
+  {
+    return invResults;
   }
   
 }
