@@ -83,6 +83,7 @@ public class InvariantOverlappingElements implements ICalculationValidateInterfa
   public void checkAllInvariants()
   {
     subUnits = mainCalculation1D2D.getSubUnits();
+    
     for (IFeatureWrapper2 subUnit : subUnits)
     {
       if (subUnit instanceof ICalculationUnit2D)
@@ -95,7 +96,10 @@ public class InvariantOverlappingElements implements ICalculationValidateInterfa
         if (subUnit_ instanceof ICalculationUnit2D)
         {
           toCompareCalcUnit = (ICalculationUnit2D)subUnit_;
-          if ((thisCalcUnit != toCompareCalcUnit) && (!bufferList.contains( toCompareCalcUnit )))
+          if (thisCalcUnit.equals( toCompareCalcUnit ))
+            continue;
+          
+//          if ((thisCalcUnit != toCompareCalcUnit) && (!bufferList.isEmpty()))
           { 
             bufSubUnits = thisCalcUnit.getElements();
             for (IFeatureWrapper2 element : bufSubUnits)

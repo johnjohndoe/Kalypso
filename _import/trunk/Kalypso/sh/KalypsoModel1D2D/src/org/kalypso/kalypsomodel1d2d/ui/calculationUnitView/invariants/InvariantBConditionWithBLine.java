@@ -123,7 +123,7 @@ public class InvariantBConditionWithBLine implements ICalculationValidateInterfa
       }
       if( !hasBc )
       {
-        invariantErrorMessages.add( new ProblemDescriptor(null, "Boundary Condition with out boundary Line "+calculationUnit, calculationUnit, line) );        
+        invariantErrorMessages.add( new ProblemDescriptor(null, "Boundary Line without boundary condition in "+calculationUnit.getName(), calculationUnit, line) );        
       }
     }
   }

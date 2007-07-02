@@ -92,15 +92,15 @@ public class InvariantCheckBoundaryConditions implements ICalculationValidateInt
    */
   public void checkAllInvariants( )
   {    
-    if (this.getBoundaryLines().size() <= 2 && (this.getBoundaryLines().size()>0 ))
+    if ((this.getBoundaryLines().size() < 2) && (this.getBoundaryLines().size()>0 ))
         {
-          String message = "No BoundaryLines in : "+calculationUnit.getName();
+          String message = "Invalid Num of BoundaryLines in : "+calculationUnit.getName();
           System.out.println("INVARIANT "+ message);          
           invResults .add( new ProblemDescriptor(null,message,calculationUnit,calculationUnit ));
         }
     else if (this.getBoundaryLines().size() == 0)
         {
-          String message = "Invalid Num of BoundaryLines in : "+calculationUnit.getName();
+          String message = "No BoundaryLines in : "+calculationUnit.getName();
           System.out.println("INVARIANT "+ message);          
           invResults .add( new ProblemDescriptor(null,message,calculationUnit,calculationUnit ));          
         }    
