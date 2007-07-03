@@ -207,7 +207,7 @@ public class NAZMLGenerator
 
   private static void createGRAPFile( Writer writer, String valueAxisType, IObservation observation ) throws Exception
   {
-    final DateFormat dateFormat = NATimeSettings.getInstance().getTimeZonedDateFormat( new SimpleDateFormat( "yyMMddHH" ) );
+    final DateFormat dateFormat = NATimeSettings.getInstance().getTimeZonedDateFormat( new SimpleDateFormat( "yyyyMMddHHmm" ) );
 
     // write standard header
 
@@ -226,8 +226,7 @@ public class NAZMLGenerator
       if( i == 0 )
       {
         writer.write( "\n" );
-        writer.write( "    " + dateFormat.format( date ) + "000  0\n" );
-        // writer.write( " 95090100000 0\n" );
+        writer.write( "       " + dateFormat.format( date ) + "\n" );
         writer.write( "grap\n" );
 
       }
