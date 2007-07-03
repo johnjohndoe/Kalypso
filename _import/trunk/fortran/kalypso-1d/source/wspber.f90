@@ -1646,6 +1646,9 @@ Hauptschleife: DO i = 1, maxger
         ELSE
 
           !  ENDE DER PROFILSCHLEIFE AM ENDE DES PROGRAMMS
+          !WP 03.07.2007 Datei muss geschlossen werden Fehler sonst Fehler beim
+          !WP erneuten Oeffnen mit APPEND
+          IF (idr1.eq.'j') close (UNIT_OUT_PRO)
           CYCLE Hauptschleife
 
         !   ENDIF ZU (ibridge.eq.'b'.and.ibruecke.eq.'j')???

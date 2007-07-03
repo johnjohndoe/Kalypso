@@ -52,7 +52,7 @@ LOGICAL :: offen
 write (UNIT=*, FMT=1000)
 1000 format (//1X, 'Dateien werden geschlossen...')
 
-do lunit = 10, 200
+do lunit = 10, 500
 
   INQUIRE (UNIT = lunit, OPENED = offen)
 
