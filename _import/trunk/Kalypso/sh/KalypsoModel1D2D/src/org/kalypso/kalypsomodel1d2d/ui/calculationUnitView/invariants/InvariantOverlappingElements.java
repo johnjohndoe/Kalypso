@@ -83,42 +83,50 @@ public class InvariantOverlappingElements implements ICalculationValidateInterfa
   public void checkAllInvariants()
   {
     subUnits = mainCalculation1D2D.getSubUnits();
+    System.out.println("subUnits "+subUnits.size());
     
     for (IFeatureWrapper2 subUnit : subUnits)
     {
+      
       if (subUnit instanceof ICalculationUnit2D)
       {
+        
         thisCalcUnit = (ICalculationUnit2D)subUnit;
+        System.out.println(thisCalcUnit.getName());
         
       }
       for (IFeatureWrapper2 subUnit_ : subUnits)
+        
       {
+        System.out.println("subUnits "+subUnits.size());
         if (subUnit_ instanceof ICalculationUnit2D)
         {
           toCompareCalcUnit = (ICalculationUnit2D)subUnit_;
+          System.out.println(toCompareCalcUnit.getName());
+          
           if (thisCalcUnit.equals( toCompareCalcUnit ))
             continue;
-          
-//          if ((thisCalcUnit != toCompareCalcUnit) && (!bufferList.isEmpty()))
-          { 
-            bufSubUnits = thisCalcUnit.getElements();
-            for (IFeatureWrapper2 element : bufSubUnits)
+          if (bufferList.contains( thisCalcUnit ))
+            continue;
+          bufSubUnits = thisCalcUnit.getElements();
+          System.out.println(bufSubUnits.size());
+          for (IFeatureWrapper2 element : bufSubUnits)
+          {
+            if (toCompareCalcUnit.getElements().contains( element ))                
             {
-              if (toCompareCalcUnit.getElements().contains( element ))                
-              {
-                //@TODO Can Change the Focus to particular Calculation Unit                
-                invariantErrorMessages.add( new ProblemDescriptor(null,"Overlapping Elements in "+ toCompareCalcUnit.getName(),mainCalculation1D2D,mainCalculation1D2D ) );
-              }
+              //@TODO Can Change the Focus to particular Calculation Unit                
+              invariantErrorMessages.add( new ProblemDescriptor(null,
+                  "Overlapping Elements in "+ toCompareCalcUnit.getName(),
+                  mainCalculation1D2D,mainCalculation1D2D ) );
+              System.out.println("Overlapping Elements in "+ toCompareCalcUnit.getName());
             }
-            bufferList.add( toCompareCalcUnit );            
           }
+          bufferList.add( thisCalcUnit );
         }
       }
-        
-    }    
+    }
   }
-
-
+  
   /**
    * @see org.kalypso.kalypsomodel1d2d.validate.test.calculation_unit.ICalculationValidateInterface#getBrokenInvariantMessages()
    */

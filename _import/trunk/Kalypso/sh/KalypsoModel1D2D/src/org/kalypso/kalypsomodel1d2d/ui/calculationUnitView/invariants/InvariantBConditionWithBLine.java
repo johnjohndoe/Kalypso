@@ -46,6 +46,7 @@ import java.util.List;
 import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.IProblem;
 import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.ProblemDescriptor;
@@ -98,6 +99,7 @@ public class InvariantBConditionWithBLine implements ICalculationValidateInterfa
    * Runs the validating Checks
    * @see org.kalypso.kalypsomodel1d2d.validate.test.calculation_unit.ICalculationValidateInterface#checkAllInvariants()
    */
+  @SuppressWarnings("unchecked")
   public void checkAllInvariants( )
   {
     final double grabDistance = getGrabDistance();
@@ -123,8 +125,60 @@ public class InvariantBConditionWithBLine implements ICalculationValidateInterfa
       }
       if( !hasBc )
       {
-        invariantErrorMessages.add( new ProblemDescriptor(null, "Boundary Line without boundary condition in "+calculationUnit.getName(), calculationUnit, line) );        
+        invariantErrorMessages.add( new ProblemDescriptor(null, 
+            "Boundary Line may not have Boundary condition or have not yet been assigned to "+calculationUnit.getName(),
+            calculationUnit, line) );        
       }
+    }
+    
+    if (calculationUnit instanceof ICalculationUnit1D) 
+    {
+      if (boundaryLines.size() == 0)
+      {
+        invariantErrorMessages.add( new ProblemDescriptor(null,
+            "Boundary Line must be present or have yet to be assigned "+calculationUnit.getName(), calculationUnit, calculationUnit) );
+      }
+      
+      ICalculationUnit1D calculationUnit_ = (ICalculationUnit1D) calculationUnit;
+      final List<IBoundaryLine> boundaryLines_ = CalUnitOps.getBoundaryLines( calculationUnit_ );
+      for (IBoundaryLine line_ : boundaryLines_)
+      {
+        int size1 = line_.getEdges().size();
+        if (size1 == 2)
+        {   
+          invariantErrorMessages.add( new ProblemDescriptor(null,
+              "Boundary Line must exist in the corner of 1D Line in "+calculationUnit.getName(), calculationUnit, line_) );          
+        }
+      }
+      
+      
+//      IFE1D2DElement ele= (IFE1D2DElement)calculationUnit_;
+//      IFE1D2DNode firstNode = (IFE1D2DNode) ele.getNodes().get( 0 );
+//      IFE1D2DNode lastNode = (IFE1D2DNode) ele.getNodes().get( ele.getNodes().size() );
+//      
+//      boolean hasSet = false;
+//      for( IBoundaryLine bl: boundaryLines )
+//      {
+//        try
+//        {
+//          if(( bl.recalculateElementGeometry().distance( firstNode.getPoint())<grabDistance ) ||
+//          ( bl.recalculateElementGeometry().distance( lastNode.getPoint())<grabDistance ))
+//          {
+//            hasSet=true;
+//          }
+//        }
+//        catch( GM_Exception e )
+//        {
+//          e.printStackTrace();
+//          hasSet = false;
+//        }
+//        if( !hasSet )
+//        {
+//          invariantErrorMessages.add( new ProblemDescriptor(null, "Boundary Line may not be Set in the Corner Nodes in "+calculationUnit.getName(), calculationUnit, bl) );        
+//        }
+//      }
+//      
+      
     }
   }
 
