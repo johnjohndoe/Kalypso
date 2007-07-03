@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" xmlns:na="org.kalypso.namodell.control" xmlns:obslink="obslink.zml.kalypso.org" targetNamespace="org.kalypso.namodell.control" elementFormDefault="qualified" version="0.6">
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" xmlns:na="org.kalypso.namodell.control" xmlns:obslink="obslink.zml.kalypso.org" targetNamespace="org.kalypso.namodell.control" elementFormDefault="qualified" version="0.8">
+	<annotation>
+		<appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>2.1.2</kapp:gmlVersion>
+		</appinfo>
+	</annotation>
 	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
 	<import namespace="obslink.zml.kalypso.org" schemaLocation="obslink.xsd"/>
 	<element name="NAModellControl" type="na:_NAModellControlType"/>

@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSpy v2005 sp1 U (http://www.xmlspy.com) by Dipl.-Ing. Jessica Hübsch (Technische Universität Hamburg-Harburg) -->
 <schema xmlns:naLog="http://www.tuhh.de/NAFortranLog" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:obslink="obslink.zml.kalypso.org" xmlns:zmlinline="inline.zml.kalypso.org" targetNamespace="http://www.tuhh.de/NAFortranLog" elementFormDefault="qualified" version="1.0">
+	<annotation>
+		<appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>2.1.2</kapp:gmlVersion>
+		</appinfo>
+	</annotation>
 	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
 	<element name="LogMessage" type="naLog:LogType"/>
 	<complexType name="LogType">
@@ -35,23 +40,13 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Level</label>
-								<tooltip>
-									Einstufung der Log Nachricht
-								</tooltip>
-								<description>
-									Einstufung der Log Nachricht
-								</description>
+								<tooltip>Einstufung der Log Nachricht</tooltip>
+								<description>Einstufung der Log Nachricht</description>
 							</documentation>
 							<documentation xml:lang="en">
 								<label>Level</label>
-								<tooltip>
-									Level/ Importance of the log
-									message.
-								</tooltip>
-								<description>
-									Level/ Importance of the log
-									message.
-								</description>
+								<tooltip>Level/ Importance of the log message.</tooltip>
+								<description>Level/ Importance of the log message.</description>
 							</documentation>
 						</annotation>
 					</element>
