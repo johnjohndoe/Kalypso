@@ -37,14 +37,14 @@
     <para>Kalypso ist eine in JAVA programmierte Open-Source-Software und
     basiert auf dem vom IBM entwickelten Framework Eclipse (<ulink
     url="http://www.eclipse.org/">http://www.eclipse.org/</ulink>). Die
-    Berücksichtigung der durch das Open Geospatial Consortium (<ulink
+    Berücksichtigung der durch das Open Geospatial Consortium (GGC) (<ulink
     url="http://www.opengeospatial.org/">http://www.opengeospatial.org/</ulink>)
     spezifizierten Schnittstellen garantiert einen reibungslosen Austausch von
     Geodaten durch Zugriffe auf standardisierte Dienste zwischen verschiedenen
     Systemen.</para>
 
-    <para>Bezüglich näherer Informationen und Support wenden Sie sich bitte
-    an:</para>
+    <para id="Kontakt">Bezüglich näherer Informationen und Support wenden Sie
+    sich bitte an:</para>
 
     <itemizedlist>
       <listitem>
@@ -287,37 +287,34 @@
     <para>Kalypso ist eine Client-Server-Anwendung, mit einem über
     Modell-Plugins realisierten modularen Funktionsumfang. Das Programm
     beinhaltet standardmäßig die Client Komponente, welche über den vollen
-    Funktionsumfang der Oberfläche sowie die folgenden freien Rechendienste
-    verfügt:<itemizedlist>
+    Funktionsumfang der Oberfläche sowie eine Auswahl der folgenden
+    Rechendienste und Tools verfügt:<itemizedlist>
         <listitem>
           <para>KalypsoNA (Niederschlag-Abfluss Modell)</para>
         </listitem>
 
         <listitem>
           <para>KalypsoWSPM (Eindimensionales Spiegellinienmodell)</para>
+        </listitem>
 
-          <para>Zukünftig werden zusätzlich folgende Modelle
-          integriert:</para>
+        <listitem>
+          <para>Kalypso1D2D (gekoppeltes 1D-2D instationäres Modell) - nicht
+          frei verfügbar</para>
+        </listitem>
 
-          <itemizedlist>
-            <listitem>
-              <para>Kalypso1D2D (gekoppeltes 1D-2D instationäres
-              Modell)</para>
-            </listitem>
+        <listitem>
+          <para>Kalypso Flood Modeller (Ermittlung von
+          Überschwemmungsgebieten)</para>
+        </listitem>
 
-            <listitem>
-              <para>Kalypso Flood Modeller</para>
-            </listitem>
-
-            <listitem>
-              <para>Kalypso Risk</para>
-            </listitem>
-          </itemizedlist>
+        <listitem>
+          <para>Kalypso Risk Modeller (Schadensermittlung)</para>
         </listitem>
       </itemizedlist></para>
 
-    <para>Zusätzlich hierzu kann eine Server Komponente installiert werden,
-    welche folgende Zusatzdienste bietet:</para>
+    <para>Die Serverkomponente kann wahlweise z. B. von größeren Betrieben
+    oder Behörden beauftragt werden. Hierzu stehen folgende
+    Zusatzfunktionalitäten zur Verfügung:</para>
 
     <itemizedlist>
       <listitem>
@@ -330,7 +327,8 @@
       </listitem>
 
       <listitem>
-        <para>Modelldaten lesen und schreiben (Modelldaten-Dienst)</para>
+        <para>Modelldaten lesen, schreiben und archivieren
+        (Modelldaten-Dienst)</para>
       </listitem>
 
       <listitem>
@@ -347,8 +345,8 @@
 
       <para>Die Server-Installation bedarf aufgrund der spezifischen
       Systemeigenschaften einer direkten Abstimmung und Anpassung an die vor
-      Ort vorhandenen Begebenheiten. Weitere Auskünfte hierzu erhalten sie
-      unter den Kontaktadressen.</para>
+      Ort vorhandenen Gebenheiten. Weitere Auskünfte hierzu erhalten sie unter
+      den Kontaktadressen.</para>
     </section>
 
     <section id="client-installation">
@@ -367,14 +365,14 @@
       <para><orderedlist>
           <listitem>
             <para>Entpacken des Archivs an den gewünschten Installationsort
-            (<abbrev>z. B.</abbrev> C:\Programme) Das Installationsarchiv
+            (<abbrev>z. B.</abbrev> C:\Programme). Das Installationsarchiv
             enthält alle zur Anwendung erforderliche Plugins sowie ein
             eigenständiges Java Runtime Environment, um Java Versionskonflikte
             zu vermeiden.</para>
           </listitem>
 
           <listitem>
-            <para>Anpassen der Konfiguration (kalypso.ini) beim Programmstart
+            <para>Anpassen der Konfiguration (kalypso.ini) beim Programmstart.
             Um beim Programmstart einige Konfigurationen durchführen zu
             können, ist es ratsam die Konfigurationsdatei anzupassen. Diese
             befindet sich im Installationsordner und kann mit einem Texteditor
@@ -433,12 +431,12 @@
           </listitem>
 
           <listitem>
-            <para>Triangulationsanwendung bereitstellen Für die im Model
-            KalypsoWSPM verwendete Triangulation ist ein Eintrag in die
-            Umgebungsvariabeln notwendig. Für diese Konfiguration ist es
-            notwendig Administrationsrechte auf dem PC zu besitzen, da eine
-            Umgebungsvariable in der Systemsteuerung hinzugefügt werden
-            muss:</para>
+            <para>Triangulationsanwendung bereitstellen. Für die im Model
+            KalypsoWSPM, KalypsoFloodModeller und Kalypso1D2D verwendete
+            Triangulation ist ein Eintrag in die Umgebungsvariabeln notwendig.
+            Für diese Konfiguration ist es notwendig Administrationsrechte auf
+            dem PC zu besitzen, da eine Umgebungsvariable in der
+            Systemsteuerung hinzugefügt werden muss:</para>
 
             <itemizedlist>
               <listitem>
@@ -465,8 +463,8 @@
           </listitem>
         </orderedlist></para>
 
-      <para>Nachdem die Installation durchgeführt wurde kann das Programm
-      gestartet werden (siehe <xref linkend="programm_start" />). </para>
+      <para>Nachdem die Installation durchgeführt wurde kann Kalypso gestartet
+      werden (siehe <xref linkend="programm_start" />).</para>
     </section>
 
     <section>
@@ -622,10 +620,32 @@
     </itemizedlist>
   </section>
 
-  <section>
+  <section id="dokumentation" vendor="hh_ingenieurbueros,KalypsoModeller">
+    <title>Dokumentation</title>
+
+    <para>Für das Programmsystem KALYPSO liegen Dokumentationen für
+    verschiedene Anwendungsbereiche und Benutzergruppen vor, die im Folgenden
+    aufgelistet sind.</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>KALYPSO-Anwenderhandbuch (auch als Online-Hilfe)</para>
+      </listitem>
+
+      <listitem>
+        <para>KALYPSO-Grafik Anwenderhandbuch (auch als Online-Hilfe)</para>
+      </listitem>
+    </itemizedlist>
+  </section>
+
+  <section vendor="hh_ingenieurbueros,KalypsoModeller">
     <title vendor="KalypsoModeller,hh_ingenieurbueros">Support</title>
 
-    <para>Offenes User Forum unter <ulink
-    url="https://www.kalypso.wb.tu-harburg.de/">https://www.kalypso.wb.tu-harburg.de/</ulink>.</para>
+    <para>Für den Austausch der Anwender untereinander wird ein offenes User
+    Forum unter <ulink
+    url="https://www.kalypso.wb.tu-harburg.de/">https://www.kalypso.wb.tu-harburg.de/</ulink>
+    gepfelgt. Sollten Sie hierüber hin aus einen persönlichen Support für
+    Ihren Betrieb wünschen, so wenden sie sich bitte an den Support (siehe
+    <xref linkend="Kontakt" />).</para>
   </section>
 </chapter>
