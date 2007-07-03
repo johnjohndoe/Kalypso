@@ -296,6 +296,7 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 		 -->
 		 
 		<!-- TODO: there is no context with this ID -->
+		<!-- 
 		<Task context="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Calc"
 			URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__StartCalculation">
 			<Help>
@@ -303,12 +304,13 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 			</Help>
 			<Name>Berechnung durchführen</Name>
 		</Task>
+		 -->
 		<Task context="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Calc"
 			URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__StartCalculationWithProblemsView">
 			<Help>
 				<![CDATA[Startet die Berechnung unter Verwendung eines Kontrolldisplays]]>
 			</Help>
-			<Name>Berechnung durchführen-1</Name>
+			<Name>Berechnung durchführen</Name>
 		</Task>
 	</TaskGroup>
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="Cp1252" standalone="yes"?>
-<mapv:gismapview name="Grundlagen" xmlns:ns9="types.template.kalypso.org" xmlns:mapv="gismapview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <mapv:extent top="5987535.986626388" srs="EPSG:31467" right="3552986.4360490046" left="3552721.478261934" bottom="5987035.780277799"/>
+<mapv:gismapview name="Grundlagen" xmlns:ns0="types.template.kalypso.org" xmlns:mapv="gismapview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <mapv:extent top="5989255.447333696" srs="EPSG:31467" right="3553814.1700282535" left="3553061.399878447" bottom="5988340.984311617"/>
     <mapv:layers>
         <mapv:layer visible="false" name="TK100" id="ID_2" featurePath="" linktype="wms" xlink:type="simple" xlink:href="URL=http://localhost/cgi-bin/mapserv.exe?map=../htdocs/usr/local/www/docs/mapserver3/rasterdaten.map&amp;SERVICE=WMS&amp;VERSION=1.0.0&amp;Request=GetMap#LAYERS=TK100#STYLES=default" xlink:actuate="onRequest"/>
         <mapv:layer visible="false" name="TK25" id="ID_3" featurePath="" linktype="wms" xlink:type="simple" xlink:href="URL=http://localhost/cgi-bin/mapserv.exe?map=../htdocs/usr/local/www/docs/mapserver3/rasterdaten.map&amp;SERVICE=WMS&amp;VERSION=1.0.0&amp;Request=GetMap#LAYERS=TK100#STYLES=default#LAYERS=TK25#STYLES=default" xlink:actuate="onRequest"/>

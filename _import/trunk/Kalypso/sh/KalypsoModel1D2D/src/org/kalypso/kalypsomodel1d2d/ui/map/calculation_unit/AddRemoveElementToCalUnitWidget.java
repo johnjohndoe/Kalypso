@@ -113,9 +113,9 @@ public class AddRemoveElementToCalUnitWidget extends FENetConceptSelectionWidget
       KeyBasedDataModelUtil.resetCurrentEntry( 
                               dataModel, 
                               ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
-      KeyBasedDataModelUtil.repaintMapPanel( 
-                              dataModel, 
-                              ICommonKeys.KEY_MAP_PANEL );
+//      KeyBasedDataModelUtil.repaintMapPanel( 
+//                              dataModel, 
+//                              ICommonKeys.KEY_MAP_PANEL );
       
     }
   }
@@ -165,9 +165,9 @@ public class AddRemoveElementToCalUnitWidget extends FENetConceptSelectionWidget
           dataModel, 
           ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER
           ); 
-      KeyBasedDataModelUtil.repaintMapPanel( 
-          dataModel, 
-          ICommonKeys.KEY_MAP_PANEL );
+//      KeyBasedDataModelUtil.repaintMapPanel( 
+//          dataModel, 
+//          ICommonKeys.KEY_MAP_PANEL );
     }
   }
 
@@ -305,6 +305,7 @@ public class AddRemoveElementToCalUnitWidget extends FENetConceptSelectionWidget
         {
           ICalculationUnit calUnit = (ICalculationUnit)selectedWrapper;
           RemoveElementFromCalculationUnitWithPostCall command = null;
+                    
           for(Feature feature:selectedFeatures)
           {           
             IFE1D2DElement ele = (IFE1D2DElement) feature.getAdapter( IFE1D2DElement.class );

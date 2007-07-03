@@ -9,6 +9,13 @@
               typeID="KalypsoModel1D2D"/>
      </extension>
      <extension
+           point="org.kalypso.simulation.core.simulation">
+        <simulation
+              catalogClass="org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D"
+              simulationClass="org.kalypso.kalypsomodel1d2d.sim.CalculationUnitSimMode1D2DCalcJob"
+              typeID="CalculationUnitKalypsoModel1D2D"/>
+     </extension>
+     <extension
            point="org.kalypso.contribs.java.urlCatalog">
         <catalog
               class="org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D"
@@ -87,11 +94,15 @@
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.model.IStaticModel1D2D"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D"/>
+         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2DCollection"/>
+         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup"/>
+         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.model.IPseudoOPerationalModel"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.model.IOperationalModel1D2D"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionContext1DTo2D"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionContext1DToCLine"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine"/>
+         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine1D"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.ILineElement"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D"/>

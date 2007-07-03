@@ -41,6 +41,7 @@
 package org.kalypso.kalypsomodel1d2d.ops;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.EdgeInv;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IEdgeInv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
@@ -50,11 +51,15 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEMiddleNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ILineElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.geometry.GM_CurveBoundary;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
@@ -65,6 +70,16 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public class EdgeOps
 {
+  /**
+   * CW
+   */
+  public static final char ORIENTATION_LEFT ='-';
+  
+  /**
+   * CCW
+   */
+  public static final char ORIENTATION_RIGHT ='+';
+  
   private EdgeOps( )
   {
 
@@ -170,6 +185,76 @@ public class EdgeOps
     return true;
   }
 
+  public static final char isOrientationConterClockWise(IPolyElement<IFE1D2DComplexElement, IFE1D2DEdge> ele)
+  {
+    
+    IFeatureWrapperCollection<IFE1D2DEdge> edges = ele.getEdges();
+    if( edges.size()<3)
+    {
+      throw new IllegalArgumentException("PolyElement has less than 3 edges:"+edges.size());
+    }
+    IFE1D2DEdge edge0 = edges.get( 0 );
+    IFE1D2DEdge edge1 = edges.get( 1 );
+    double vectorProduct = getVectorProduct( edge0, edge1 );
+    if( vectorProduct>0.0 )
+    {
+      return ORIENTATION_LEFT;
+    }
+    else
+    {
+      return ORIENTATION_RIGHT;
+    }
+  }
+  
+  public static final double getVectorProduct(IFE1D2DEdge edge0, IFE1D2DEdge edge1)
+  {
+    GM_Point node00 = edge0.getNode( 0 ).getPoint();
+    GM_Point node01 = edge0.getNode( 1 ).getPoint();
+    
+    GM_Point node10 = edge1.getNode( 0 ).getPoint();
+    GM_Point node11 = edge1.getNode( 1 ).getPoint();
+    GM_Point diff = GeometryFactory.createGM_Point( node10.getX()-node01.getX(), node10.getY()-node01.getY() , node00.getCoordinateSystem() );
+    GM_Point translated01 = GeometryFactory.createGM_Point( node11.getX()-diff.getX(), node11.getY()-diff.getY(), node00.getCoordinateSystem() );
+    
+    
+    //(xi - xi-1) * (yi+1 - yi) - (yi - yi-1) * (xi+1 - xi)
+    double crossProduct = (node01.getX()-node00.getX())*(translated01.getY()-node01.getY())-(node01.getY()-node00.getY())*(translated01.getX()-node01.getX());
+    return crossProduct;
+  }
+  
+  public static final char getOrientation(GM_Surface surface)
+  {
+    double vectorProduct = getVectorProduct( surface );
+    if( vectorProduct>0.0 )
+    {
+      return ORIENTATION_LEFT;
+    }
+    else
+    {
+      return ORIENTATION_RIGHT;
+    }
+  }
+  
+  public static final double getVectorProduct(GM_Surface surface)
+  {
+    GM_Ring exteriorRing = surface.getSurfaceBoundary().getExteriorRing();
+    GM_CurveBoundary curveBoundary = exteriorRing.getCurveBoundary();
+    GM_Position[] poses = exteriorRing.getPositions();
+//    GM_Point node00 = exteriorRing.edge0.getNode( 0 ).getPoint();
+//    GM_Point node01 = edge0.getNode( 1 ).getPoint();
+//    
+//    GM_Point node10 = edge1.getNode( 0 ).getPoint();
+//    GM_Point node11 = edge1.getNode( 1 ).getPoint();
+//    GM_Point diff = GeometryFactory.createGM_Point( node10.getX()-node01.getX(), node10.getY()-node01.getY() , node00.getCoordinateSystem() );
+//    GM_Point translated01 = GeometryFactory.createGM_Point( node11.getX()-diff.getX(), node11.getY()-diff.getY(), node00.getCoordinateSystem() );
+    
+    
+    //(xi - xi-1) * (yi+1 - yi) - (yi - yi-1) * (xi+1 - xi)
+    double crossProduct = 
+      (poses[1].getX()-poses[0].getX())*(poses[2].getY()-poses[1].getY())-
+      (poses[1].getY()-poses[0].getY())*(poses[2].getX()-poses[1].getX());
+    return crossProduct;
+  }
   /**
    * 
    */
@@ -178,6 +263,22 @@ public class EdgeOps
     return getLeftRight( edge, '-' );
   }
 
+  public static final IFE1D2DElement getLeftRightElement( ICalculationUnit unit, IFE1D2DEdge edge, char reqOrientation  )
+  {
+    IFE1D2DElement leftRight = getLeftRight( edge, reqOrientation );
+    if( leftRight == null )
+    {
+      return null;
+    }
+    else if( CalUnitOps.isFiniteElementOf( unit, leftRight ) )
+    {
+      return leftRight;
+    }
+    else
+    {
+      return null;
+    }
+  }
   /**
    * 
    */
@@ -220,7 +321,7 @@ public class EdgeOps
         final GM_Object object = ele.recalculateElementGeometry();
         if( object instanceof GM_Surface )
         {
-          final char orientation = ((GM_Surface) object).getOrientation();
+          final char orientation = getOrientation( (GM_Surface) object );//((GM_Surface) object).getOrientation();
           if( orientation == reqOrientation )// +(Conter clock wise) -(CW)
           {
             return ele;
@@ -251,7 +352,7 @@ public class EdgeOps
           final GM_Object object = ele.recalculateElementGeometry();
           if( object instanceof GM_Surface )
           {
-            final char orientation = ((GM_Surface) object).getOrientation();
+            final char orientation = getOrientation( (GM_Surface) object );//((GM_Surface) object).getOrientation();
             if( orientation != reqOrientation )// +(Conter clock wise) -(CW)
             {
               return ele;

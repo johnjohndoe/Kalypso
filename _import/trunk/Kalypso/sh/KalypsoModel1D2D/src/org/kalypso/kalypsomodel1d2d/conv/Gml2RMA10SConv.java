@@ -273,8 +273,11 @@ public class Gml2RMA10SConv
       }
       else if( TypeInfo.is2DEdge( edge ) )
       {
-        final int leftParent = getID( EdgeOps.getLeftElement( edge ) );
-        final int rightParent = getID( EdgeOps.getRightElement( edge ) );
+        
+        final IFE1D2DElement leftElement = EdgeOps.getLeftRightElement( m_calcultionUnit, edge, EdgeOps.ORIENTATION_LEFT );        
+        final IFE1D2DElement rightElement = EdgeOps.getLeftRightElement( m_calcultionUnit, edge, EdgeOps.ORIENTATION_RIGHT );
+        final int leftParent = getID( leftElement );
+        final int rightParent = getID( rightElement );
         formatter.format( "AR%10d%10d%10d%10d%10d%10d%n", cnt++, node0ID, node1ID, leftParent, rightParent, middleNodeID );
       }
       else
