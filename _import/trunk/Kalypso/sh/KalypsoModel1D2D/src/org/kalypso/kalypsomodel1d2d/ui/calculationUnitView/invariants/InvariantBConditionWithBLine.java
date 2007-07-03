@@ -44,9 +44,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
+import org.kalypso.kalypsomodel1d2d.ops.EdgeOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.IProblem;
 import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.ProblemDescriptor;
@@ -141,15 +145,52 @@ public class InvariantBConditionWithBLine implements ICalculationValidateInterfa
       
       ICalculationUnit1D calculationUnit_ = (ICalculationUnit1D) calculationUnit;
       final List<IBoundaryLine> boundaryLines_ = CalUnitOps.getBoundaryLines( calculationUnit_ );
-      for (IBoundaryLine line_ : boundaryLines_)
+      List<IBoundaryCondition> boundaryConditions_ = CalUnitOps.getBoundaryConditions( getBoundaryConditions(), calculationUnit_, getGrabDistance() );
+      
+      for (IBoundaryCondition condition_ : boundaryConditions_)
       {
-        int size1 = line_.getEdges().size();
-        if (size1 == 2)
-        {   
-          invariantErrorMessages.add( new ProblemDescriptor(null,
-              "Boundary Line must exist in the corner of 1D Line in "+calculationUnit.getName(), calculationUnit, line_) );          
+        IBoundaryLine thisLine = CalUnitOps.getAssignedBoundaryConditionLine( calculationUnit_, condition_, grabDistance );
+        System.out.println(thisLine.getEdges().size());
+        if (thisLine.getEdges().size()== 1)
+        {
+          List<IFE1D2DEdge> edges = thisLine.getEdges();
+          if (EdgeOps.find1DEdgeEndNode( edges.get( 0 )) != null)
+          {
+            IFE1D2DNode findThisNode = EdgeOps.find1DEdgeEndNode( edges.get( 0 ));
+            if (findThisNode.getPoint().distance( condition_.getPosition() ) < grabDistance)
+            {
+              
+            }
+            
+          }
+          else
+          {
+            invariantErrorMessages.add( new ProblemDescriptor(null,
+                "Boundary Line & BC must be present on End Node "+calculationUnit.getName(), calculationUnit, calculationUnit) );
+          }
+          
+         
         }
       }
+      
+      
+      
+      
+      
+      
+      
+      
+      
+//      for (IBoundaryLine line_ : boundaryLines_)
+//      {
+//        CalUnitOps.getAssignedBoundaryConditionLine( calculationUnit_, bCondition, grabDistance )
+//        int size1 = line_.getEdges().size();
+//        if (size1 == 2)
+//        {   
+//          invariantErrorMessages.add( new ProblemDescriptor(null,
+//              "Boundary Line must exist in the corner of 1D Line in "+calculationUnit.getName(), calculationUnit, line_) );          
+//        }
+//      }
       
       
 //      IFE1D2DElement ele= (IFE1D2DElement)calculationUnit_;

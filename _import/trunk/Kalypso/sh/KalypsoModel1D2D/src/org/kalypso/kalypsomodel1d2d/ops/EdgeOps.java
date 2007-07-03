@@ -42,6 +42,7 @@ package org.kalypso.kalypsomodel1d2d.ops;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.EdgeInv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IEdgeInv;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DContinuityLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
@@ -131,12 +132,12 @@ public class EdgeOps
       throw new IllegalArgumentException( "Must be 1D node but is:" + "\n\tElementQName=" + elementEdge.getWrappedFeature().getFeatureType().getQName() + "\n\tValue=" + elementEdge );
     }
     IFE1D2DNode node1 = elementEdge.getNode( 1 );
-    if( node1.getContainers().size() == 1 )
+    if( node1.getContainers().countFeatureWrappers( IElement1D.class ) == 1 )
     {
       return node1;
     }
     IFE1D2DNode node0 = elementEdge.getNode( 0 );
-    if( node0.getContainers().size() == 1 )
+    if( node0.getContainers().countFeatureWrappers( IElement1D.class ) == 1 )
     {
       return node0;
     }
