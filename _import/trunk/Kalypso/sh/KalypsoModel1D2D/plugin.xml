@@ -8,15 +8,6 @@
               simulationClass="org.kalypso.kalypsomodel1d2d.sim.SimMode1D2DCalcJob"
               typeID="KalypsoModel1D2D"/>
      </extension>
-     
-     <extension
-           point="org.kalypso.simulation.core.simulation">
-        <simulation
-              catalogClass="org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D"
-              simulationClass="org.kalypso.kalypsomodel1d2d.sim.CalculationUnitSimMode1D2DCalcJob"
-              typeID="CalculationUnitKalypsoModel1D2D"/>
-     </extension>
-     
      <extension
            point="org.kalypso.contribs.java.urlCatalog">
         <catalog
@@ -96,15 +87,11 @@
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.model.IStaticModel1D2D"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D"/>
-         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2DCollection"/>
-         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup"/>
-         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.model.IPseudoOPerationalModel"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.model.IOperationalModel1D2D"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionContext1DTo2D"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionContext1DToCLine"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine"/>
-         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine1D"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.ILineElement"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D"/>
@@ -207,12 +194,12 @@
 			</action>
    <action
          disabledIcon="icons/dlcl16/select_profile_disable.gif"
-         icon="icons/elcl16/select_profile_enable.gif"
+         icon="icons/elcl16/16_select_profile_enable.gif"
          id="org.kalypso.kalypsomodel1d2d.ui.map.SelectProfileWidgetAction"
          label="Profil selektieren"
          style="radio"
          toolbarPath="tools"
-         tooltip="Profil selektieren und in der Karte anzeigen">
+         tooltip="Profil selektieren und in  Karte anzeigen">
 	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
 	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
 	                     	value="org.kalypso.model.wspm.ui.view.map.SelectionOneProfileWidget"/>
@@ -337,9 +324,9 @@
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
 	                value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateNodalBCFlowrelationWidget"/>
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
-                    value="icons/elcl16/flowrelation_addNodalBC.gif"/>
+                    value="icons/elcl16/13_flowrelation_add_NodalBC.gif"/>
 			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
-                    value="Eine neue Randbedingung zuordnen"/>              
+                    value="Randbedingung zuordnen"/>              
             </class>
 		 </handler>
 		 <!--*** DeleteElement handlers ***-->
@@ -414,7 +401,7 @@
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
 	                value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.DeleteFlowrelationWidget"/>
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
-                    value="icons/elcl16/flowRelation_deleteNodalBC.png"/>
+                    value="icons/elcl16/14_flowrelation_cut_NodalBC.gif"/>
 			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
                     value="Randbedingungen markieren und löschen"/>              
             </class>
@@ -479,9 +466,9 @@
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
 	                value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditFlowrelationWidget"/>
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
-                    value="icons/elcl16/flowRelation_editNodalBC.gif"/>
+                    value="icons/elcl16/15_flowrelation_edit_NodalBC.gif"/>
 			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
-                    value="Zugeordnete Randbedingungen bearbeiten"/>              
+                    value="Randbedingungen bearbeiten"/>              
             </class>
 		 </handler>		 
      </extension>
