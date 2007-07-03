@@ -74,4 +74,6 @@ public interface IBoundaryLine1D<
     *           the line
     */
    public void setAtEdgeEnd(boolean isAtEdgeEnd);
+   
+   public IFE1D2DNode getTargetNode();
 }

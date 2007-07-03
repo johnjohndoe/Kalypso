@@ -5,7 +5,16 @@
         <mapv:layer visible="true" name="Strömungsvektoren" id="ID_2" featurePath="#fid#root/nodeResultMember" linktype="gml" xlink:type="simple" xlink:href="results.gml" xlink:actuate="onRequest">
             <ns9:style style="Vector Style" linktype="sld" xlink:type="simple" xlink:href="result.sld" xlink:actuate="onRequest"/>
         </mapv:layer>
-        <mapv:layer visible="true" name="FE-Net" id="ID_3" linktype="gmt" xlink:type="simple" xlink:href="../../maps/fenet.gmt" xlink:actuate="onRequest"/>
+        <mapv:layer visible="true" name="Wasserspiegellagen" id="ID_3" featurePath="" linktype="gml" xlink:type="simple" xlink:href="Tin/tin_VELOCITY.gml" xlink:actuate="onRequest">
+            <ns0:style style="lineStyle" linktype="sld" xlink:type="simple" xlink:href="Styles/tin_wsp.sld" xlink:actuate="onRequest"/>
+        </mapv:layer>
+        <mapv:layer visible="true" name="Geschwindigkeiten" id="ID_4" featurePath="" linktype="gml" xlink:type="simple" xlink:href="Tin/tin_VELOCITY.gml" xlink:actuate="onRequest">
+            <ns0:style style="lineStyle" linktype="sld" xlink:type="simple" xlink:href="Styles/tin_velo.sld" xlink:actuate="onRequest"/>
+        </mapv:layer>
+        <mapv:layer visible="true" name="Fließtiefen" id="ID_5" featurePath="" linktype="gml" xlink:type="simple" xlink:href="Tin/tin_DEPTH.gml" xlink:actuate="onRequest">
+            <ns0:style style="lineStyle" linktype="sld" xlink:type="simple" xlink:href="Styles/tin_depth.sld" xlink:actuate="onRequest"/>
+        </mapv:layer>
+        <mapv:layer visible="true" name="FE-Net" id="ID_6" linktype="gmt" xlink:type="simple" xlink:href="../../maps/fenet.gmt" xlink:actuate="onRequest"/>
     </mapv:layers>
 </mapv:gismapview>
 

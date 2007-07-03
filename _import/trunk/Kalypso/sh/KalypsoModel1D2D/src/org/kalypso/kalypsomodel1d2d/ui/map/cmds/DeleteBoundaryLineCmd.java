@@ -143,7 +143,7 @@ public class DeleteBoundaryLineCmd implements IDiscrModel1d2dChangeCommand
      {
        unlinkEdges( bLine, model1d2d );
        unlinkComplexElement(bLine);
-       model1d2d.getElements().remove( bLine );
+       boolean removed= model1d2d.getElements().remove( bLine );
        done = true;
      }
     }

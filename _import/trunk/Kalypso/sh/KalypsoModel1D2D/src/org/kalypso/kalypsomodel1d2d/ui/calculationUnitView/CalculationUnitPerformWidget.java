@@ -56,6 +56,7 @@ import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.IPseudoOPerationalModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.IGrabDistanceProvider;
 import org.kalypso.kalypsomodel1d2d.ui.map.IWidgetWithStrategy;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
@@ -64,6 +65,8 @@ import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListe
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
 import org.kalypso.kalypsomodel1d2d.ui.map.merge.Model1d2dCalUnitTheme;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
+import org.kalypso.kalypsosimulationmodel.core.Util;
+import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
@@ -198,6 +201,9 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions,
         this );
     dataModel.setData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST, CalUnitOps.getModelCalculationUnits( m_model));
     
+    IFlowRelationshipModel bcModel =
+      Util.getModel( IPseudoOPerationalModel.class );//(IFlowRelationshipModel) bcHolderModelFeature.getAdapter( IFlowRelationshipModel.class );
+    calUnitTheme.setModelBoundaryConditions( bcModel );
    }
 
 

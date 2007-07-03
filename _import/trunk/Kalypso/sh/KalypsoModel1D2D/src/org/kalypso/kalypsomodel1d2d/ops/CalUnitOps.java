@@ -654,6 +654,7 @@ public class CalUnitOps
     }
     List<IFE1D2DComplexElement> containers = 
       new ArrayList<IFE1D2DComplexElement>( bcLine.getContainers() );
+    
     final List<GM_MultiPoint> muliPointScopeMarks = bCondition.getScopeMark();
     
     multiPointScanning: for(GM_MultiPoint multiPoint: muliPointScopeMarks )
@@ -699,6 +700,91 @@ public class CalUnitOps
     }    
     return false;
   }
+  
+  
+  /**
+   * To get the boundary line used in the assignment of the given
+   * boundary condition in the provided unit
+   * @param unit the unit given the assignement contex
+   * @param bCondition the boundary condition which line is to be get
+   * @param grabDistance distance used for geo-searching
+   * @return the assigned boundary condition line or null if there is none
+   * @throws IllegalArgumentException if unit or bCondition is null or grabDistance is null
+   */
+  public static final IBoundaryLine getAssignedBoundaryConditionLine(
+                                                  final ICalculationUnit unit,
+                                                  final IBoundaryCondition bCondition,
+                                                  final double grabDistance)
+  {
+    Assert.throwIAEOnNullParam( unit, "unit" );
+    Assert.throwIAEOnNullParam( bCondition, "bCondition" );
+    Assert.throwIAEOnLessThan0( grabDistance, "grab distance must be greater or equals to 0" );
+    
+    final GM_Point bPosition = bCondition.getPosition();
+    Feature unitParent = unit.getWrappedFeature().getParent();
+    IFEDiscretisationModel1d2d model1d2d = 
+    (IFEDiscretisationModel1d2d) unitParent.getAdapter( IFEDiscretisationModel1d2d.class );
+    if( model1d2d == null )
+    {
+      throw new IllegalArgumentException("Unit must have a model 1d2d as parent");
+    }
+    if( bPosition == null )
+    {
+      return null;
+    }
+    final IBoundaryLine<IFE1D2DComplexElement, IFE1D2DEdge> bcLine = 
+      getLineElement( unit, bPosition,grabDistance, IBoundaryLine.class );
+    if( bcLine == null )
+    {
+      return null;
+    }
+    List<IFE1D2DComplexElement> containers = 
+    new ArrayList<IFE1D2DComplexElement>( bcLine.getContainers() );
+    final List<GM_MultiPoint> muliPointScopeMarks = bCondition.getScopeMark();
+    
+    multiPointScanning: for(GM_MultiPoint multiPoint: muliPointScopeMarks )
+    {
+    //final List<GM_MultiPoint> scopeMarks;
+    //containers.remove( bcLine );
+    if( multiPoint.getSize()<1 )
+    {
+      containers = 
+        new ArrayList<IFE1D2DComplexElement>( bcLine.getContainers() );
+     return null;
+    }
+    
+      for( GM_Point currentPoint : multiPoint.getAllPoints() )
+      {
+      
+        final IBoundaryLine<IFE1D2DComplexElement, IFE1D2DEdge> otherLine = 
+          getLineElement( unit, currentPoint,grabDistance, IBoundaryLine.class );
+        
+        if( otherLine == null )
+        {
+        containers = 
+        new ArrayList<IFE1D2DComplexElement>( bcLine.getContainers() );
+        continue multiPointScanning;
+        }
+        
+        if( bcLine.equals( otherLine ) )
+        {
+          containers = 
+          new ArrayList<IFE1D2DComplexElement>( bcLine.getContainers() );
+          continue multiPointScanning;
+        }
+  
+        containers.retainAll( otherLine.getContainers() );
+        if( containers.isEmpty() )
+        {
+        containers = 
+        new ArrayList<IFE1D2DComplexElement>( bcLine.getContainers() );
+        continue multiPointScanning;
+        }   
+      }
+      return bcLine;
+    }    
+    return null;
+}
   
   
   /**

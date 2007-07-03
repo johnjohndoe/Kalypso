@@ -41,9 +41,11 @@
 package org.kalypso.kalypsomodel1d2d.conv;
 
 import java.util.Date;
+import java.util.Iterator;
 
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.observation.util.TupleResultIndex;
 
@@ -91,7 +93,11 @@ public class BoundaryConditionInfo implements ITimeStepinfo
   {
     final Number result;
     if( date == null )
-      result = (Number) m_index.getIterator().next().getValue( m_valueComponent );
+    {
+      Iterator<IRecord> iterator = m_index.getIterator();
+      IRecord next = iterator.next();
+      result = (Number) next.getValue( m_valueComponent );
+    }
     else
       result = (Number) m_index.getValue( m_valueComponent, date );
 

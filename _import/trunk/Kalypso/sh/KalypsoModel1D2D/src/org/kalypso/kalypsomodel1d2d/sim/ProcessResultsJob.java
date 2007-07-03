@@ -190,10 +190,16 @@ public class ProcessResultsJob extends Job
         multiEater.addEater( gmlTriangleEater );
 
         /* HMO(s) */
-        final File resultHMOFile = new File( "D:/Projekte/kalypso_dev/post-processing/output.hmo" );
-        final HMOTriangleEater hmoTriangleEater = new HMOTriangleEater( resultHMOFile, parameter );
+        try
+        {
+          final File resultHMOFile = new File( "D:/Projekte/kalypso_dev/post-processing/output.hmo" );
+          final HMOTriangleEater hmoTriangleEater = new HMOTriangleEater( resultHMOFile, parameter );
+          multiEater.addEater( hmoTriangleEater );
+        }
+        catch (Exception e) {
+          e.printStackTrace();
+        }
 
-        multiEater.addEater( hmoTriangleEater );
       }
 
       final IRMA10SModelElementHandler handler = new NodeResultsHandler( resultWorkspace, multiEater, m_calculation );

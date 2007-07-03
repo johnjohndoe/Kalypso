@@ -57,7 +57,7 @@
 							<Opacity>1.0</Opacity>
 							<Size>
 								<ogc:Mul>
-									<ogc:Literal>30</ogc:Literal>
+									<ogc:Literal>100</ogc:Literal>
 									<ogc:PropertyName>
 										velocityNorm
 									</ogc:PropertyName>

@@ -58,6 +58,7 @@ import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtils;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D;
@@ -281,7 +282,8 @@ public class RMA10Calculation
 //    }
 //    return list;
     ICalculationUnit calcultionUnit = getCalcultionUnit();
-    return CalUnitOps.getBoundaryLines( calcultionUnit );
+    List<IBoundaryLine> boundaryLines = CalUnitOps.getBoundaryLines( calcultionUnit );
+    return boundaryLines;
   }
 
   public BoundaryLineInfo[] getContinuityLineInfo( )
@@ -313,8 +315,16 @@ public class RMA10Calculation
     int contiCount = 1;
     for( final IBoundaryLine<IFE1D2DComplexElement, IFE1D2DEdge> line : continuityLineList )
     {
-      final List<IFE1D2DNode> nodes = line.getNodes();
-      final IFE1D2DNode[] nodeArray = nodes.toArray( new IFE1D2DNode[nodes.size()] );
+      final IFE1D2DNode[] nodeArray;
+      if( line instanceof IBoundaryLine1D )
+      {
+        nodeArray = new IFE1D2DNode[]{ ((IBoundaryLine1D)line).getTargetNode() };
+      } 
+      else
+      {
+        final List<IFE1D2DNode> nodes = line.getNodes();
+        nodeArray = nodes.toArray( new IFE1D2DNode[nodes.size()] );
+      }
       final BoundaryLineInfo info = new BoundaryLineInfo( contiCount++, nodeArray );
       result.add( info );
       contiMap.put( line, info );
@@ -323,6 +333,8 @@ public class RMA10Calculation
     /* Add all boundary conditions. */
     final IFEDiscretisationModel1d2d discModel = (IFEDiscretisationModel1d2d) m_disModelWorkspace.getRootFeature().getAdapter( IFEDiscretisationModel1d2d.class );
     final IFlowRelationshipModel model = (IFlowRelationshipModel) m_operationalModelWorkspace.getRootFeature().getAdapter( IFlowRelationshipModel.class );
+    final ICalculationUnit unit = getCalcultionUnit();
+    final double grabDistance = 11;
     for( final IFlowRelationship relationship : model )
     {
       if( relationship instanceof IBoundaryCondition )
@@ -330,11 +342,12 @@ public class RMA10Calculation
         final IBoundaryCondition bc = (IBoundaryCondition) relationship;
         final IObservation<TupleResult> obs = bc.getObservation();
         final TupleResult obsResult = obs.getResult();
-
+//        CalUnitOps.getAssignedBoundaryConditionLine( unit, bCondition, grabDistance );
         // HACK: 0.5 as grab distance?? normally 0.0 should be enough, but then the contilines are not found, why?
         // TODO: at least find everything in this distance, if mroe than one element is found, take nearest...
-        final IFeatureWrapper2 wrapper2 = DiscretisationModelUtils.findModelElementForBC( discModel, bc.getPosition(), 0.001 );
-
+        final boolean boundaryConditionOf = CalUnitOps.isBoundaryConditionOf( unit, bc, grabDistance );
+        final IFeatureWrapper2 wrapper2 = CalUnitOps.getAssignedBoundaryConditionLine( unit, bc, grabDistance );//DiscretisationModelUtils.findModelElementForBC( discModel, bc.getPosition(), 0.001 );
+        
         if( wrapper2 instanceof IBoundaryLine )
         {
           final IBoundaryLine<IFE1D2DComplexElement, IFE1D2DEdge> contiLine = (IBoundaryLine<IFE1D2DComplexElement, IFE1D2DEdge>) wrapper2;

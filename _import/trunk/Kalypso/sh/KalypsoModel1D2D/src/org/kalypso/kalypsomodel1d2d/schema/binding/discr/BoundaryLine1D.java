@@ -157,6 +157,25 @@ public class BoundaryLine1D<
   }
   
   /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine1D#getTargetNode()
+   */
+  public IFE1D2DNode getTargetNode( )
+  {
+    IFeatureWrapperCollection<ET> edges2 = getEdges();
+    if(edges2.size() <1 )
+    {
+      return null;
+    }
+    else
+    {
+      ET edge0 = edges2.get( 0 );
+      int targetPostion = isAtEdgeEnd()?1:0;
+      IFE1D2DNode node = edge0.getNode( targetPostion );
+      return node;
+    }
+  }
+  
+  /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.LineElement#recalculateElementGeometry()
    */
   @Override
