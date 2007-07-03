@@ -149,52 +149,62 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
 
   public Integer getIEDSW( )
   {
-    return (Integer) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_IEDSW );
+    final Integer property = (Integer) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_IEDSW );
+    return property!=null ? property : 0;
   }
 
   public Double getTBFACT( )
   {
-    return (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_TBFACT );
+    final Double property = (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_TBFACT );
+    return property!=null ? property : 0.0;
   }
 
   public Double getTBMIN( )
   {
-    return (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_TBMIN );
+    final Double property = (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_TBMIN );
+    return property!=null ? property : 0.0;
   }
 
   public Double getOMEGA( )
   {
-    return (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_OMEGA );
+    final Double property = (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_OMEGA );
+    return property!=null ? property : 0.0;
   }
 
   public Double getELEV( )
   {
-    return (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_ELEV );
+    final Double property = (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_ELEV );
+    return property!=null ? property : 0.0;
   }
 
   public Double getUDIR( )
   {
-    return (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_UDIR );
+    final Double property = (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_UDIR );
+    return property!=null ? property : 0.0;
   }
 
   public Double getUNOM( )
   {
-    return (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_UNOM );
+    final Double property = (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_UNOM );
+    return property!=null ? property : 0.0;
   }
 
   public Double getHMIN( )
   {
-    return (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_HMIN );
+    final Double property = (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_HMIN );
+    return property!=null ? property : 0.0;
   }
 
   public Double getDSET( )
   {
-    return (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_DSET );
+    final Double property = (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_DSET );
+    return property!=null ? property : 0.0;
   }
 
   public Double getDSETD( )
   {
-    return (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_DSETD );
+    final Double property = (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_DSETD );
+    return property!=null ? property : 0.0;
   }
 
   public Integer getNITI( )
@@ -213,32 +223,38 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
 
   public Integer getNCYC( )
   {
-    return (Integer) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_NCYC );
+    final Integer property = (Integer) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_NCYC );
+    return property!=null ? property : 0;
   }
 
   public Double getCONV_1( )
   {
-    return (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_CONV_1 );
+    final Double property = (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_CONV_1 );
+    return property!=null ? property : 0.0;
   }
 
   public Double getCONV_2( )
   {
-    return (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_CONV_2 );
+    final Double property = (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_CONV_2 );
+    return property!=null ? property : 0.0;
   }
 
   public Double getCONV_3( )
   {
-    return (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_CONV_3 );
+    final Double property = (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_CONV_3 );
+    return property!=null ? property : 0.0;
   }
 
   public Integer getIDRPT( )
   {
-    return (Integer) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_IDRPT );
+    final Integer property = (Integer) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_IDRPT );
+    return property!=null ? property : 0;
   }
 
   public Double getDRFACT( )
   {
-    return (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_DRFACT );
+    final Double property = (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_DRFACT );
+    return property!=null ? property : 0.0;
   }
 
   public boolean getVegeta( )
@@ -248,17 +264,20 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
 
   public Double getAC1( )
   {
-    return (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_AC1 );
+    final Double property = (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_AC1 );
+    return property!=null ? property : 0.0;
   }
 
   public Double getAC2( )
   {
-    return (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_AC2 );
+    final Double property = (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_AC2 );
+    return property!=null ? property : 0.0;
   }
 
   public Double getAC3( )
   {
-    return (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_AC3 );
+    final Double property = (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_AC3 );
+    return property!=null ? property : 0.0;
   }
 
   /**
