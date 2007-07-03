@@ -6,22 +6,24 @@
     <primary>Beschreibung der Startseite</primary>
   </indexterm>
 
-  <para>Der Programm-Start von KALYPSO ist abhängig von den Zugriffsrechten
-  des Benutzers. Die Benutzerrechte sind dabei klassifiziert nach den in <xref
-  linkend="anwendungsfaelle" /> beschriebenen Anwendungsfällen und Anwendern.
-  Die Benutzerrechte werden bei einer vorhandenen Schnittstelle zu einer
-  zentralen Benutzerverwaltung durch diese übergeben.</para>
+  <para vendor="sachsen,sachsen-anhalt">Der Programm-Start von KALYPSO ist
+  abhängig von den Zugriffsrechten des Benutzers. Die Benutzerrechte sind
+  dabei klassifiziert nach den in <xref linkend="anwendungsfaelle" />
+  beschriebenen Anwendungsfällen und Anwendern. Die Benutzerrechte werden bei
+  einer vorhandenen Schnittstelle zu einer zentralen Benutzerverwaltung durch
+  diese übergeben.</para>
 
-  <para>Ist eine Benutzerverwaltung nicht vorgesehen, so erfolgt der Login
-  durch ein einheitliches Passwort. Wird die Rechteverwaltung nicht benötigt,
-  so erfolgt der Login automatisch.</para>
+  <para vendor="sachsen,sachsen-anhalt">Ist eine Benutzerverwaltung nicht
+  vorgesehen, so erfolgt der Login durch ein einheitliches Passwort. Wird die
+  Rechteverwaltung nicht benötigt, so erfolgt der Login automatisch.</para>
 
-  <para>Der Programm-Start von KALYPSO erfolgt durch das Ausführen des in
-  <xref linkend="client-installation" /> erstellten Linkes <inlinemediaobject>
+  <para>Der Programm-Start von KALYPSO erfolgt durch das Ausführen der in
+  <xref linkend="client-installation" /> erfolgten Programminstallation. Das
+  programm wird nach doppelklicken der <inlinemediaobject>
       <imageobject>
         <imagedata fileref="img/Programm-Start/kalypso_icon.png" />
       </imageobject>
-    </inlinemediaobject> .</para>
+    </inlinemediaobject> Kalypso.exe gestartet.</para>
 
   <section id="kalypso_login" vendor="sachsen-anhalt">
     <title>Anmeldung</title>
@@ -93,7 +95,27 @@
     </figure>
   </section>
 
-  <section id="kalypso_startseite">
+  <section vendor="hh_ingenieurbueros, KalypsoModeller">
+    <title>Welcome Seite</title>
+
+    <para>Nach erfolgreichem Start des Programmes erscheint zunächst die
+    Welcome Seite mit einer Auflistung aller verfügbarer Modelle und Tool. Der
+    Einstieg in die Anwendung erfolgt durch die Auswahl eines der Module. Der
+    Wechsel zwischen den Modulen ist durch einen erneuten Aufruf der Welcome
+    Seite möglich (Menü <guimenu>Hilfe</guimenu>).</para>
+
+    <figure>
+      <title>Welcome Seite</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/Programm-Start/Welcome_Modeller.png" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+  </section>
+
+  <section id="kalypso_startseite" vendor="sachsen, sachsen-anhalt">
     <title>Startseite</title>
 
     <indexterm>
@@ -182,37 +204,93 @@
     </note>
   </section>
 
-  <section vendor="hh_ingenieurbueros">
+  <section vendor="hh_ingenieurbueros, KalypsoModeller">
     <title>Benutzerdefinierte Einstellungen</title>
 
     <para>Nach dem ersten Programmstart müssen einmalig einige
     Voreinstellungen getroffen werden. Zunächst ist im Menü
-    <guimenuitem>Fenster -&gt; Voreinstellungen -&gt; Kalypso</guimenuitem>
-    der evtl. vorhandene Server zu Konfigurieren. Außerdem werden hier
-    allgemeine Angaben zum globalen Koordinatensystem (In diesem
-    Koordinatensystem erfolgt die Kartenansicht - Geometriedaten werden ggf.
-    transformiert) und zur globalen Zeitzone (In dieser Zeitzone werden die
-    Zeitangaben und Zeitreihen dargestellt) erwartet.</para>
+    <guimenu>Fenster</guimenu> <guimenuitem>-&gt; Voreinstellungen -&gt;
+    Kalypso</guimenuitem> der evtl. vorhandene Server zu Konfigurieren.
+    Außerdem werden hier allgemeine Angaben zum globalen Koordinatensystem (In
+    diesem Koordinatensystem erfolgt die Kartenansicht - Geometriedaten werden
+    ggf. transformiert) und zur globalen Zeitzone (In dieser Zeitzone werden
+    die Zeitangaben und Zeitreihen dargestellt) erwartet.</para>
+
+    <para>Das räumliche Bezugssystem (Koordinatensystem) kann durch eine
+    mathematische Formel spezifiziert werden. Im Kontext des OGC sind alle SRS
+    in der EPSG-Syntax (<emphasis role="bold">E</emphasis>uropean <emphasis
+    role="bold">P</emphasis>etroleum <emphasis role="bold">S</emphasis>urvey
+    <emphasis role="bold">G</emphasis>roup) kodiert. In der folgenden Tabelle
+    sind einige Bezugssysteme aufgeführt. Weitere Informationen zur
+    EPSG-Syntaxsind unter <ulink
+    url="http://www.epsg.org">http://www.epsg.org</ulink> zu finden.</para>
 
     <table>
-      <title>Beispielkoordinatensysteme</title>
+      <title>Auszug der Bezugssysteme</title>
 
       <tgroup cols="2">
         <tbody>
           <row>
-            <entry>Angabe</entry>
+            <entry><emphasis role="bold">Angabe</emphasis></entry>
 
-            <entry>Bedeutung</entry>
+            <entry><emphasis role="bold">Bedeutung</emphasis></entry>
           </row>
 
           <row>
             <entry>EPSG:31467</entry>
 
-            <entry>Gauss-Krüger Streifen 3</entry>
+            <entry>Gauss-Krüger Streifen 2 (Bessel)</entry>
+          </row>
+
+          <row>
+            <entry>EPSG:31467</entry>
+
+            <entry>Gauss-Krüger Streifen 3 (Bessel)</entry>
+          </row>
+
+          <row>
+            <entry>EPSG:31468</entry>
+
+            <entry>Gauss-Krüger Streifen 4 (Bessel)</entry>
+          </row>
+
+          <row>
+            <entry>EPSG:31469</entry>
+
+            <entry>Gauss-Krüger Streifen 5 (Bessel)</entry>
+          </row>
+
+          <row>
+            <entry>EPSG:2166</entry>
+
+            <entry>Gauss Krüger Streifen 3 (Krassowski 3 Grad)</entry>
+          </row>
+
+          <row>
+            <entry>EPSG:2167</entry>
+
+            <entry>Gauss Krüger Streifen 4 (Krassowski 3 Grad)</entry>
+          </row>
+
+          <row>
+            <entry>EPSG:2168</entry>
+
+            <entry>Gauss Krüger Streifen 5 (Krassowski 3 Grad)</entry>
+          </row>
+
+          <row>
+            <entry>EPSG:25832</entry>
+
+            <entry>ETRS89</entry>
           </row>
         </tbody>
       </tgroup>
     </table>
+
+    <para>Die Zeitzone bestimmt die Darstellung der Zeitreihen in Kalypso.
+    Empfehlenswert ist es innerhalb Deutschlands die Zeitzone der deutschen
+    Winterzeit zu verwenden, da auch die Messnetze (z. B. Deutscher
+    Wetterdienst) in Winterzeit betrieben werden.</para>
 
     <table>
       <title>Beispielzeitzonen</title>
@@ -220,15 +298,21 @@
       <tgroup cols="2">
         <tbody>
           <row>
-            <entry>Angabe</entry>
+            <entry><emphasis role="bold">Angabe</emphasis></entry>
 
-            <entry>Bedeutung</entry>
+            <entry><emphasis role="bold">Bedeutung</emphasis></entry>
           </row>
 
           <row>
             <entry>Etc/GMT-1</entry>
 
             <entry>GMT+1 (Deutsche Winterzeit)</entry>
+          </row>
+
+          <row>
+            <entry>Etc/GMT-2</entry>
+
+            <entry>GMT+2 (Deutsche Sommerzeit)</entry>
           </row>
         </tbody>
       </tgroup>
