@@ -60,7 +60,7 @@ public class DefaultPathGenerator
     final String observationTitle = getObservationTitle( feature, titleProperty );
     
     final String annotationName = getAnnotationName( feature );
-    final String result = "Berechnet/" + annotationName + "/" + observationTitle + extraString + "/" + getTitleForSuffix( suffix ) + ".zml";
+    final String result = annotationName + "/" + observationTitle + extraString + "/" + getTitleForSuffix( suffix ) + ".zml";
 //    return result.replaceAll( "Node", "Knoten" );
     return result;
   }

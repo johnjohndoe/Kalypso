@@ -251,7 +251,7 @@ public class LzsimManager
           }
         }
       }
-      final String resultPathRelative = "Ergebnisse/Berechnet/Anfangswerte/" + formatFileName.format( initialDate ) + ".gml";
+      final String resultPathRelative = "Ergebnisse/Aktuell/Anfangswerte/" + formatFileName.format( initialDate ) + ".gml";
       final File resultFile = new File( outputDir, resultPathRelative );
       resultFile.getParentFile().mkdirs();
       GmlSerializer.serializeWorkspace( resultFile, lzWorkspace, "UTF-8" );

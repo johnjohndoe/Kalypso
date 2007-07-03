@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <modelspec xmlns="simspec.core.simulation.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="BodeV1.0">
-
 	<input id="MetaSteuerdaten" description="Steuerdaten - Allgemein"/>
 	<input id="Modell" description="Modelldaten"/>
 	<input id="AnalyseModellXSD" description="Schema der Modelldaten fue Analyse" optional="true"/>
@@ -12,12 +11,6 @@
 	<input id="LZSIM_IN" description="zu verwendende Anfangswerte" optional="false"/>	
 
 	<!-- Ergebnis-Dateien/Verzeichnisse -->
-	<output id="OUT_ZML" description="Verzeichnis der Berechnungsergebnisse"/>
+	<output id="OUT_ZML" description="Verzeichnis aller Berechnungsergebnisse und Logs"/>
 	<output id="OUT_OPTIMIZEFILE" description="Optimierte Parameter Datei"/>
-	<output id="LOG_EXE_STDOUT" description="Standard Ergebnisausgabe des Fortran Programmes (Bildschirmausgabe)"/>
-	<output id="LOG_EXE_ERROUT" description="Fehlerausgabe Fortran"/>
-	<output id="LOG_OUTRES" description="Ergebnisausgabe des Fortran Programmes"/>
-	<output id="LOG_OUTERR" description="Fehlerausgabe des Fortran Programmes"/>
-	<output id="LOG_INFO" description="bisher noch nicht identifizierter Output"/>
-	
 </modelspec>

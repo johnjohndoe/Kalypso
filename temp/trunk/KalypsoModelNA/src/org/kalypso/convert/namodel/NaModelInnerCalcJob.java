@@ -54,7 +54,9 @@ import java.io.Reader;
 import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -159,6 +161,8 @@ public class NaModelInnerCalcJob implements ISimulation
 
   final private List<String> m_resultMap = new ArrayList<String>();
 
+  private String m_dateString;
+
   public NaModelInnerCalcJob( )
   {
     m_urlUtilities = new UrlUtilities();
@@ -179,16 +183,16 @@ public class NaModelInnerCalcJob implements ISimulation
    *      org.kalypso.services.calculation.job.ICalcDataProvider, org.kalypso.services.calculation.job.ICalcResultEater,
    *      org.kalypso.services.calculation.job.ICalcMonitor)
    */
-  // public void run( File tmpdir, ICalcDataProvider inputProvider, ICalcResultEater resultEater, ICalcMonitor monitor )
-  // throws CalcJobServiceException
   public void run( File tmpdir, ISimulationDataProvider inputProvider, ISimulationResultEater resultEater, ISimulationMonitor monitor ) throws SimulationException
   {
+    final File resultDir = new File( tmpdir, NaModelConstants.OUTPUT_DIR_NAME );
     final Logger logger = Logger.getAnonymousLogger();
     Formatter f = new XMLFormatter();
     Handler h = null;
     try
     {
-      File loggerFile = new File( tmpdir, "infoLog.txt" );
+      File loggerFile = new File( resultDir, "Ergebnisse/Aktuell/Log/infoLog.txt" );
+      loggerFile.getParentFile().mkdirs();
 
       h = new StreamHandler( new FileOutputStream( loggerFile ), f );
       logger.addHandler( h );
@@ -199,9 +203,10 @@ public class NaModelInnerCalcJob implements ISimulation
       e1.printStackTrace();
       logger.fine( e1.getLocalizedMessage() );
     }
-    final Date date = new Date( Calendar.getInstance().getTimeInMillis() );
-    logger.log( Level.INFO, "Zeitpunkt Start Berechnung: " + date.toString() + " (Serverzeit)\n" );
-    final File resultDir = new File( tmpdir, NaModelConstants.OUTPUT_DIR_NAME );
+    Date startRunDate = new Date( Calendar.getInstance().getTimeInMillis() );
+    final DateFormat format = new SimpleDateFormat( "yyyy-MM-dd(HH-mm-ss)" );
+    m_dateString = format.format( startRunDate );
+    logger.log( Level.INFO, "Zeitpunkt Start Berechnung: " + m_dateString + " (Serverzeit)\n" );
     try
     {
       monitor.setMessage( "richte Berechnungsverzeichnis ein" );
@@ -280,13 +285,35 @@ public class NaModelInnerCalcJob implements ISimulation
       {
         monitor.setMessage( "Simulation erfolgreich beendet - lade Ergebnisse" );
         logger.log( Level.FINEST, "Simulation erfolgreich beendet - lade Ergebnisse" );
-        loadResults( tmpdir, modellWorkspace, naControlWorkspace, logger, resultDir, resultEater, conf );
+        loadResults( tmpdir, modellWorkspace, naControlWorkspace, logger, resultDir, conf );
+        loadLogs( tmpdir, logger, modellWorkspace, conf, resultDir );
       }
       else
       {
         monitor.setMessage( "Simulation konnte nicht erfolgreich durchgeführt werden - lade Log-Dateien" );
         logger.log( Level.SEVERE, "Simulation konnte nicht erfolgreich durchgeführt werden - lade Log-Dateien" );
-        loadLogs( tmpdir, logger, resultEater, modellWorkspace, conf );
+        loadLogs( tmpdir, logger, modellWorkspace, conf, resultDir );
+      }
+      // Copy results to restore the actual results in the dateDir as well... .
+      final File resultDirFrom = new File( resultDir, "Ergebnisse/Aktuell" );
+      final File resultDirTo = new File( resultDir, "Ergebnisse/" + m_dateString );
+      resultDirTo.mkdirs();
+      if( resultDirFrom.exists() && resultDirTo.exists() )
+      {
+        final FileCopyVisitor copyVisitor = new FileCopyVisitor( resultDirFrom, resultDirTo, true );
+        FileUtilities.accept( resultDirFrom, copyVisitor, true );
+      }
+      final File[] files = resultDir.listFiles();
+      if( files != null )
+      {
+        for( int i = 0; i < files.length; i++ )
+        {
+          if( files[i].isDirectory() ) // Ergebnisse
+          {
+            resultEater.addResult( NaModelConstants.OUT_ZML, files[i] );
+            return;
+          }
+        }
       }
     }
     catch( Exception e )
@@ -296,21 +323,6 @@ public class NaModelInnerCalcJob implements ISimulation
     }
 
   }
-
-  // private String getLogHeader( )
-  // {
-  // return ("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-  // + "\n"
-  // + "<LogMessage xmlns=\"http://www.tuhh.de/NAFortranLog\" xmlns:gml=\"http://www.opengis.net/gml\"
-  // xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:zmlinline=\"inline.zml.kalypso.org\"
-  // xmlns:obslink=\"obslink.zml.kalypso.org\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">"
-  // + "\n" + "<log>" + "\n");
-  // }
-  //
-  // private String getLogFooter( )
-  // {
-  // return ("</log>" + "\n" + "</LogMessage>");
-  // }
 
   /**
    * @param naControlWorkspace
@@ -846,7 +858,7 @@ public class NaModelInnerCalcJob implements ISimulation
 
   /**
    * @param kalypsoNAVersion
-   *          name/version of simulation kernel
+   *            name/version of simulation kernel
    */
   private void chooseSimulationExe( final String kalypsoNAVersion )
   {
@@ -970,7 +982,7 @@ public class NaModelInnerCalcJob implements ISimulation
     }
   }
 
-  private void loadResults( final File tmpdir, final GMLWorkspace modellWorkspace, final GMLWorkspace naControlWorkspace, final Logger logger, final File resultDir, ISimulationResultEater resultEater, final NAConfiguration conf ) throws Exception
+  private void loadResults( final File tmpdir, final GMLWorkspace modellWorkspace, final GMLWorkspace naControlWorkspace, final Logger logger, final File resultDir, final NAConfiguration conf ) throws Exception
   {
     loadTSResults( tmpdir, modellWorkspace, logger, resultDir, conf );
     try
@@ -987,19 +999,7 @@ public class NaModelInnerCalcJob implements ISimulation
       final LzsimManager lzsimManager = new LzsimManager();
       lzsimManager.initialValues( conf.getIdManager(), tmpdir, logger, resultDir, conf );
     }
-    loadLogs( tmpdir, logger, resultEater, modellWorkspace, conf );
-    final File[] files = resultDir.listFiles();
-    if( files != null )
-    {
-      for( int i = 0; i < files.length; i++ )
-      {
-        if( files[i].isDirectory() ) // Ergebnisse
-        {
-          resultEater.addResult( NaModelConstants.OUT_ZML, files[i] );
-          return;
-        }
-      }
-    }
+
   }
 
   private void loadTSResults( final File inputDir, final GMLWorkspace modellWorkspace, final Logger logger, final File outputDir, final NAConfiguration conf ) throws Exception
@@ -1164,16 +1164,14 @@ public class NaModelInnerCalcJob implements ISimulation
           {
             logger.info( "kein ergebnislink gesetzt für FID=#" + feature.getId() + " ." );
           }
-          resultPathRelative = resultLink.getHref();
+          String href = resultLink.getHref();
+          resultPathRelative = href.substring( 19 );
         }
         catch( Exception e )
         {
           // if there is target defined or there are some problems with that
           // we generate one
-          resultPathRelative = "Ergebnisse/" + DefaultPathGenerator.generateResultPathFor( feature, titlePropName, suffix, null );
-          // resultPathRelative = "Ergebnisse/Berechnet/" + annotationLabel + "/" + observationTitle + "/" +
-          // getTitleForSuffix( suffix ) + ".zml";
-          //
+          resultPathRelative = DefaultPathGenerator.generateResultPathFor( feature, titlePropName, suffix, null );
         }
         if( !m_resultMap.contains( resultPathRelative ) )
         {
@@ -1182,12 +1180,12 @@ public class NaModelInnerCalcJob implements ISimulation
         else
         {
           logger.info( "Datei existiert bereits: " + resultPathRelative + "." );
-          resultPathRelative = "Ergebnisse/" + DefaultPathGenerator.generateResultPathFor( feature, titlePropName, suffix, "(ID" + Integer.toString( idManager.getAsciiID( feature ) ).trim() + ")" );
+          resultPathRelative = DefaultPathGenerator.generateResultPathFor( feature, titlePropName, suffix, "(ID" + Integer.toString( idManager.getAsciiID( feature ) ).trim() + ")" );
           m_resultMap.add( resultPathRelative );
           logger.info( "Der Dateiname wurde daher um die ObjektID erweitert: " + resultPathRelative + "." );
         }
 
-        final File resultFile = new File( outputDir, resultPathRelative );
+        final File resultFile = new File( outputDir, "Ergebnisse/Aktuell/" + resultPathRelative );
         resultFile.getParentFile().mkdirs();
 
         // create observation object
@@ -1304,7 +1302,7 @@ public class NaModelInnerCalcJob implements ISimulation
         // read ascii result file
         logger.info( "kopiere Ergebnissdatei " + qgsFiles[i].getName() + "\n" );
 
-        String resultPathRelative = "Ergebnisse/Berechnet/Bilanz/Bilanz.txt";
+        String resultPathRelative = "Ergebnisse/Aktuell/Bilanz/Bilanz.txt";
         final String inputPath = inputDir.getName() + qgsFiles[i].getName();
         final File resultFile = new File( outputDir, resultPathRelative );
         resultFile.getParentFile().mkdirs();
@@ -1326,6 +1324,10 @@ public class NaModelInnerCalcJob implements ISimulation
           e.printStackTrace();
           System.out.println( "ERR: " + inputPath + " may not exist" );
         }
+        finally
+        {
+          IOUtils.closeQuietly( FileIS );
+        }
       }
     }
   }
@@ -1341,37 +1343,8 @@ public class NaModelInnerCalcJob implements ISimulation
     }
   }
 
-  private void loadLogs( final File tmpDir, final Logger logger, ISimulationResultEater resultEater, final GMLWorkspace modellWorkspace, final NAConfiguration conf )
+  private void loadLogs( final File tmpDir, final Logger logger, final GMLWorkspace modellWorkspace, final NAConfiguration conf, File resultDir )
   {
-
-    try
-    {
-      resultEater.addResult( NaModelConstants.LOG_EXE_STDOUT_ID, new File( tmpDir, "exe.log" ) );
-    }
-    catch( SimulationException e )
-    {
-      e.printStackTrace();
-      logger.info( e.getMessage() );
-    }
-    try
-    {
-      resultEater.addResult( NaModelConstants.LOG_EXE_ERROUT_ID, new File( tmpDir, "exe.err" ) );
-    }
-    catch( SimulationException e )
-    {
-      e.printStackTrace();
-      logger.info( e.getMessage() );
-    }
-
-    try
-    {
-      resultEater.addResult( NaModelConstants.LOG_OUTRES_ID, new File( tmpDir, "start/output.res" ) );
-    }
-    catch( SimulationException e )
-    {
-      e.printStackTrace();
-      logger.info( e.getMessage() );
-    }
     File logFile = new File( tmpDir, "start/error.gml" );
     GMLWorkspace naFortranLogWorkspace = null;
     try
@@ -1408,14 +1381,31 @@ public class NaModelInnerCalcJob implements ISimulation
     {
       e.printStackTrace();
     }
+    String resultPathRelative = "Ergebnisse/Aktuell/Log/error.gml";
+    final String inputPath = logFile.getPath();
+    final File resultFile = new File( resultDir, resultPathRelative );
+    resultFile.getParentFile().mkdirs();
+    FileInputStream fortranLogFileIS = null;
     try
     {
-      resultEater.addResult( NaModelConstants.LOG_OUTERR_ID, logFile );
+      fortranLogFileIS = new FileInputStream( logFile );
     }
-    catch( SimulationException e )
+    catch( FileNotFoundException e1 )
+    {
+      e1.printStackTrace();
+    }
+    try
+    {
+      FileUtilities.makeFileFromStream( false, resultFile, fortranLogFileIS );
+    }
+    catch( IOException e )
     {
       e.printStackTrace();
-      logger.info( e.getMessage() );
+      System.out.println( "ERR: " + inputPath + " may not exist" );
+    }
+    finally
+    {
+      IOUtils.closeQuietly( fortranLogFileIS );
     }
 
     Handler[] handlers = logger.getHandlers();
@@ -1425,18 +1415,6 @@ public class NaModelInnerCalcJob implements ISimulation
       h.flush();
       h.close();
     }
-    try
-    {
-
-      File loggerFile = new File( tmpDir, "infoLog.txt" );
-      resultEater.addResult( NaModelConstants.LOG_INFO_ID, loggerFile );
-    }
-    catch( SimulationException e )
-    {
-      e.printStackTrace();
-      logger.info( e.getMessage() );
-    }
-
   }
 
   private GMLWorkspace readLog( GMLWorkspace naFortranLogWorkspace, GMLWorkspace modellWorkspace, final NAConfiguration conf ) throws ParseException
