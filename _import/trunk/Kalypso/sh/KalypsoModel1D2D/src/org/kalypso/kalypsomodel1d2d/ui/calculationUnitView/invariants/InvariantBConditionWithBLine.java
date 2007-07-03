@@ -109,6 +109,7 @@ public class InvariantBConditionWithBLine implements ICalculationValidateInterfa
     final double grabDistance = getGrabDistance();
     final List<IBoundaryLine> boundaryLines = CalUnitOps.getBoundaryLines( calculationUnit );
     final List<IBoundaryCondition> boundaryConditions = CalUnitOps.getBoundaryConditions( getBoundaryConditions(), calculationUnit, getGrabDistance() );
+    
     for (IBoundaryLine line:boundaryLines)
     {
       boolean hasBc=false;
@@ -135,6 +136,7 @@ public class InvariantBConditionWithBLine implements ICalculationValidateInterfa
       }
     }
     
+    
     if (calculationUnit instanceof ICalculationUnit1D) 
     {
       if (boundaryLines.size() == 0)
@@ -146,7 +148,7 @@ public class InvariantBConditionWithBLine implements ICalculationValidateInterfa
       ICalculationUnit1D calculationUnit_ = (ICalculationUnit1D) calculationUnit;
       final List<IBoundaryLine> boundaryLines_ = CalUnitOps.getBoundaryLines( calculationUnit_ );
       List<IBoundaryCondition> boundaryConditions_ = CalUnitOps.getBoundaryConditions( getBoundaryConditions(), calculationUnit_, getGrabDistance() );
-      
+      boolean foundEndBLine = false;
       for (IBoundaryCondition condition_ : boundaryConditions_)
       {
         IBoundaryLine thisLine = CalUnitOps.getAssignedBoundaryConditionLine( calculationUnit_, condition_, grabDistance );
@@ -154,23 +156,29 @@ public class InvariantBConditionWithBLine implements ICalculationValidateInterfa
         if (thisLine.getEdges().size()== 1)
         {
           List<IFE1D2DEdge> edges = thisLine.getEdges();
+          
           if (EdgeOps.find1DEdgeEndNode( edges.get( 0 )) != null)
           {
             IFE1D2DNode findThisNode = EdgeOps.find1DEdgeEndNode( edges.get( 0 ));
             if (findThisNode.getPoint().distance( condition_.getPosition() ) < grabDistance)
             {
-              
+             foundEndBLine = true; 
             }
             
           }
-          else
+          
+          if (!foundEndBLine)            
           {
             invariantErrorMessages.add( new ProblemDescriptor(null,
-                "Boundary Line & BC must be present on End Node "+calculationUnit.getName(), calculationUnit, calculationUnit) );
-          }
-          
-         
+                "Add Boundary Line & BC on End Node "+calculationUnit.getName(), calculationUnit, calculationUnit) );
+          }        
         }
+        if (thisLine.getEdges().size()>1)
+        {
+          invariantErrorMessages.add( new ProblemDescriptor(null,
+              "Boundary Line & BC must be present on End Node "+calculationUnit.getName(), calculationUnit, calculationUnit) );
+        }
+        
       }
       
       
