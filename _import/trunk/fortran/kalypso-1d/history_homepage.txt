@@ -306,5 +306,21 @@ Kalypso 2.0.0        04. Mai 2007
                           
                                                       Monika Donner, 04.05.2007
 
-	 
+ Kalypso 2.0.1        27. Juni 2007
+-----------------------------------
+
+1.)  Anpassung der Ausgabe in den *.km-Dateien. In der ersten (Kopf-)Zeile
+     wird nun zusätzlich die bordvolle Höhe ausgegeben. Dies dient der angepassten
+     Berechnung der Kalinin-Miljukow-Parameter k und n.
+     
+                                                         Wolf Plöger, 27.06.2007     
+                                                    
+ Kalypso 2.0.2        03. Juli 2007
+-----------------------------------
+
+1.)  Bugfix: Bei der Stationär-ungleichförmigen Bordvollberechnung bei gleichzeitiger
+     Ausgabe der W-Q-Dateien (*.pro) ist bei der Interpolation von Profilen im 
+     Brückenbereich ein Fehler aufgetreten -> Behoben.
+
+                                                         Wolf Plöger, 03.07.2007	 
 	                                                 
