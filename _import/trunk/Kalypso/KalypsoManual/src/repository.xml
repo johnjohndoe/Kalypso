@@ -17,12 +17,7 @@
     spezielle Perspektive vorgesehen: Der sogenannte KALYPSO
     Zeitreihenbrowser. Die Perspektive KALYPSO Zeitreihenbrowser gewährt den
     Zugang zur bzw. die Sicht auf die Zeitreihen-Quellen - wir sprechen in
-    diesem Zusammenhang generell von der Zeitreihen-Ablage. Der
-    Zeitreihenbrowser ist eng mit dem Expertenmodus verbunden und somit aus
-    dem Anwendungsbetrieb (Assistenten-gesteuert) nicht zugänglich (siehe
-    <xref linkend="anwendungsfaelle" />). Die Perspektive erscheint
-    standardmäßig in der KALYPSO-Oberfläche des Experten, gleichgeordnet mit
-    den Perspektiven KALYPSO Modeler und Hochwasser Vorhersage. Die
+    diesem Zusammenhang generell von der Zeitreihen-Ablage. Die
     Perspektive kann, sofern sie geschlossen wurde, über das Menü
     <guimenu>Fenster</guimenu> hinzugefügt werden (siehe <xref
     linkend="arbeiten_mit_ansichten" />).</para>
