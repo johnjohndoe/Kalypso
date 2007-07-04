@@ -292,6 +292,9 @@ public class DisplayElementFactory
       System.out.println( "symbolizer...?: " + symbolizer );
     }
 
+    if( displayElement == null )
+      return null;
+
     // TODO Patrice Check changes
     // decorate the display with another get through adapation
     // TODO: next line is strange: if we adapt to DisplayElementDecorator, of course
@@ -407,7 +410,7 @@ public class DisplayElementFactory
    * @param sym style information
    * @return constructed <tt>PointDisplayElement</tt>
    */
-  public static PointDisplayElement buildPointDisplayElement( final Feature feature, final GM_Object geom, final PointSymbolizer sym ) throws IncompatibleGeometryTypeException
+  public static PointDisplayElement buildPointDisplayElement( final Feature feature, final GM_Object geom, final PointSymbolizer sym )
   {
     if( geom == null )
       return null;
@@ -415,7 +418,7 @@ public class DisplayElementFactory
     final GM_Point[] points = (GM_Point[]) geom.getAdapter( GM_Point[].class );
 
     if( points == null )
-      throw new IncompatibleGeometryTypeException( "Could not create PointDisplayElement from geometry: " + geom.getClass().getName() );
+      return null;
 
     return new PointDisplayElement_Impl( feature, points, sym );
   }
@@ -430,14 +433,14 @@ public class DisplayElementFactory
    * @param sym style information
    * @return constructed <tt>LineStringDisplayElement</tt>
    */
-  public static LineStringDisplayElement buildLineStringDisplayElement( final Feature feature, final GM_Object geom, final LineSymbolizer sym ) throws IncompatibleGeometryTypeException
+  public static LineStringDisplayElement buildLineStringDisplayElement( final Feature feature, final GM_Object geom, final LineSymbolizer sym )
   {
     if( geom == null )
       return null;
 
     final GM_Curve[] curves = (GM_Curve[]) geom.getAdapter( GM_Curve[].class );
     if( curves == null )
-      throw new IncompatibleGeometryTypeException( "Could not create LineStringDisplayElement from geometry: " + geom.getClass().getName() );
+      return null;
     return new LineStringDisplayElement_Impl( feature, curves, sym );
   }
 
@@ -449,18 +452,16 @@ public class DisplayElementFactory
    *            associated <tt>Feature<tt>
    * @param gmObject geometry information
    * @param sym style information
-   * @throws IncompatibleGeometryTypeException if the geometry property is not
-   *         a <tt>GM_Surface</tt> or a <tt>GM_MultiSurface</tt>
    * @return constructed <tt>PolygonDisplayElement</tt>
    */
-  public static PolygonDisplayElement buildPolygonDisplayElement( final Feature feature, final GM_Object geom, final PolygonSymbolizer sym ) throws IncompatibleGeometryTypeException
+  public static PolygonDisplayElement buildPolygonDisplayElement( final Feature feature, final GM_Object geom, final PolygonSymbolizer sym )
   {
     if( geom == null )
       return null;
 
     final GM_Surface< ? >[] surfaces = (GM_Surface[]) geom.getAdapter( GM_Surface[].class );
     if( surfaces == null )
-      throw new IncompatibleGeometryTypeException( "Could not create PolygonDisplayElement from geometry: " + geom.getClass().getName() );
+      return null;
 
     return new PolygonDisplayElement_Impl( feature, surfaces, sym );
   }
