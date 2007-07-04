@@ -221,9 +221,6 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
      * 
      * IT IS NECESSARY, THAT THE ELEMENTS ARE STANDING BELOW THE ARCS IN THE 2D-RESULT FILE!!
      */
-    if( id == 12764 )
-      id = id;
-
     if( m_elemIndex.containsKey( id ) == true )
     {
       // get the element

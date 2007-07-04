@@ -82,7 +82,7 @@ public class ElevationModelDisplayElementFactory
         {
           public ISurfacePatchVisitor<GM_Triangle> createVisitor( final Graphics g, final GeoTransform projection, final IElevationColorModel model )
           {
-            return new SurfacePaintPlainTriangleVisitor<GM_Triangle>( g, projection, colorModel );
+            return new SurfacePaintPlainTriangleVisitor<GM_Triangle>( feature, g, projection, colorModel );
           }
         };
 
