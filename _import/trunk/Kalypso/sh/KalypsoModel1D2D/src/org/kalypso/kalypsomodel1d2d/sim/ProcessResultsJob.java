@@ -53,7 +53,6 @@ import javax.xml.namespace.QName;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.xmlbeans.impl.inst2xsd.util.Type;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -64,13 +63,11 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler;
 import org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv;
-import org.kalypso.kalypsomodel1d2d.conv.results.HMOTriangleEater;
 import org.kalypso.kalypsomodel1d2d.conv.results.MultiTriangleEater;
 import org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultType;
 import org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceTriangleEater;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
-import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.simulation.core.ISimulationDataProvider;
@@ -190,6 +187,7 @@ public class ProcessResultsJob extends Job
         multiEater.addEater( gmlTriangleEater );
 
         /* HMO(s) */
+        /*
         try
         {
           final File resultHMOFile = new File( "D:/Projekte/kalypso_dev/post-processing/output.hmo" );
@@ -199,7 +197,7 @@ public class ProcessResultsJob extends Job
         catch (Exception e) {
           e.printStackTrace();
         }
-
+        */
       }
 
       final IRMA10SModelElementHandler handler = new NodeResultsHandler( resultWorkspace, multiEater, m_calculation );

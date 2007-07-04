@@ -137,7 +137,7 @@ public class HMOTriangleEater implements ITriangleEater
 
         buf.write( "P:  " + nodeID + "  " + x + "  " + y + "  " + z + "\n" );
 
-        KalypsoModel1D2DDebug.TRIANGLEEATER.printf( "%s %d %d %d %d", "HMOTriangleEater: P: ", nodeID, x, y, z );
+//        KalypsoModel1D2DDebug.TRIANGLEEATER.printf( "%s %d %f20.8 %f20.8 %f20.8%n", "HMOTriangleEater: P: ", nodeID, x, y, z );
       }
       /* triangle list */
       for( int i = 0; i < m_triangles.size(); i++ )
@@ -152,7 +152,7 @@ public class HMOTriangleEater implements ITriangleEater
         final int n3 = triangle[2];
         buf.write( "D:  " + triangleID + "  " + n1 + "  " + n2 + "  " + n3 + "\n" );
 
-        KalypsoModel1D2DDebug.TRIANGLEEATER.printf( "%s %d %d %d %d", "HMOTriangleEater: D: ", triangleID, n1, n2, n3 );
+//        KalypsoModel1D2DDebug.TRIANGLEEATER.printf( "%s %d %d %d %d%n", "HMOTriangleEater: D: ", triangleID, n1, n2, n3 );
       }
       buf.close();
     }
