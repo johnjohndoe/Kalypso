@@ -1,4 +1,4 @@
-!     Last change:  MD    4 Jul 2007    2:25 pm
+!     Last change:  MD    4 Jul 2007    5:24 pm
 !--------------------------------------------------------------------------
 ! This code, pasche.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -735,6 +735,10 @@ DO 1 WHILE(abs (vlam - vbmwv) .gt. (epsi * 50.) )
             !ST  Widerstandsbeiwerte der Trennflächen
             l_tr (i1) = (1. / ( - 2.03 * log10 (c3 * (fakt * bmwvor (i1) &
                         &  / bf (i1) ) **c4 * omega) ) ) **2
+
+            IF (l_tr (i1) .gt. 2.D0) THEN
+              l_tr (i1) = 2.D0
+            END IF
 
             IF (itere2.eq.1.and.iter1.le.1.and.iter5.le.1.and.i1.eq.1) then
               l_tr (2) = l_tr (i1)
