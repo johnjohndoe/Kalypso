@@ -313,7 +313,16 @@ public class LabelChoiceFactory
     final double height = bounds.getHeight();
 
     // get screen coordinates of the line
-    final int[][] pos = LabelFactory.calcScreenCoordinates( projection, curve );
+    int[][] pos;
+    try
+    {
+      pos = LabelFactory.calcScreenCoordinates( projection, curve );
+    }
+    catch( GM_Exception e )
+    {
+      e.printStackTrace();
+      return new ArrayList<LabelChoice>();
+    }
 
     // ideal distance from the line
     double delta = height / 2.0 + lineWidth / 2.0;

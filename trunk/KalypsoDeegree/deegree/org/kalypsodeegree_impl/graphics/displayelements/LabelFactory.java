@@ -90,6 +90,7 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.Debug;
 
@@ -235,7 +236,7 @@ public class LabelFactory
         // the screen surface and the polygon geometry
         if( pPlacement.isAuto() )
         {
-          final GM_Surface screenSurface = GeometryFactory.createGM_Surface( projection.getSourceRect(), null );
+          final GM_Surface<GM_SurfacePatch> screenSurface = GeometryFactory.createGM_Surface( projection.getSourceRect(), null );
           final GM_Object intersection = screenSurface.intersection( geometry );
           if( intersection != null )
           {
@@ -255,7 +256,7 @@ public class LabelFactory
     }
     else if( geometry instanceof GM_Curve || geometry instanceof GM_MultiCurve )
     {
-      final GM_Surface screenSurface = GeometryFactory.createGM_Surface( projection.getSourceRect(), null );
+      final GM_Surface<GM_SurfacePatch> screenSurface = GeometryFactory.createGM_Surface( projection.getSourceRect(), null );
       final GM_Object intersection = screenSurface.intersection( geometry );
       if( intersection != null )
       {
@@ -357,7 +358,16 @@ public class LabelFactory
     final double height = bounds.getHeight();
 
     // get screen coordinates of the line
-    final int[][] pos = calcScreenCoordinates( projection, curve );
+    int[][] pos;
+    try
+    {
+      pos = calcScreenCoordinates( projection, curve );
+    }
+    catch( GM_Exception e )
+    {
+      e.printStackTrace();
+      return new ArrayList<Label>();
+    }
 
     // ideal distance from the line
     double delta = height / 2.0 + lineWidth / 2.0;
@@ -678,19 +688,9 @@ public class LabelFactory
   /**
    * Calculates the screen coordinates of the given <tt>GM_Curve</tt>.
    */
-  public static int[][] calcScreenCoordinates( final GeoTransform projection, final GM_Curve curve )
+  public static int[][] calcScreenCoordinates( final GeoTransform projection, final GM_Curve curve ) throws GM_Exception
   {
-
-    GM_LineString lineString = null;
-    try
-    {
-      lineString = curve.getAsLineString();
-    }
-    catch( final GM_Exception e )
-    {
-      //  
-    }
-
+    final GM_LineString lineString = curve.getAsLineString();
     final int count = lineString.getNumberOfPoints();
     final int[][] pos = new int[3][];
     pos[0] = new int[count];

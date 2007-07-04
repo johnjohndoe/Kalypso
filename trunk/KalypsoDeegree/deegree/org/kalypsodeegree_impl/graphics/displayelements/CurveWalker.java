@@ -102,9 +102,8 @@ public class CurveWalker
    * @param pos
    * @return ArrayList containing Arrays of Label-objects
    */
-  public ArrayList createPositions( int[][] pos, double width )
+  public List<double[]> createPositions( int[][] pos, double width )
   {
-
     // walk along the linestring and "collect" possible placement positions
     int w = (int)width;
     int lastX = pos[0][0];
@@ -113,7 +112,7 @@ public class CurveWalker
     int boxStartX = lastX;
     int boxStartY = lastY;
 
-    ArrayList labels = new ArrayList( 100 );
+    final ArrayList<double[]> labels = new ArrayList<double[]>( 100 );
     List eCandidates = Collections.synchronizedList( new ArrayList( 100 ) );
     int i = 0;
 
