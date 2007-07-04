@@ -43,7 +43,6 @@ package org.kalypsodeegree_impl.graphics.displayelements;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.Area;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -51,6 +50,7 @@ import java.util.List;
 import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
@@ -74,7 +74,7 @@ public class SurfacePaintPlainTriangleVisitor<T extends GM_SurfacePatch> impleme
 
   private static final double VAL_EPS = 0.0000001;
 
-  public SurfacePaintPlainTriangleVisitor( final Graphics gc, final GeoTransform projection, final IElevationColorModel colorModel )
+  public SurfacePaintPlainTriangleVisitor( Feature feature, final Graphics gc, final GeoTransform projection, final IElevationColorModel colorModel )
   {
     m_gc = gc;
     m_projection = projection;
@@ -91,10 +91,7 @@ public class SurfacePaintPlainTriangleVisitor<T extends GM_SurfacePatch> impleme
     {
       final GM_Triangle triangle = (GM_Triangle) patch;
 
-      // TODO: either paint isoines or isoareas
-      final double delta = 0.1;
-      // paintTriangleIsoLines( triangle, m_classes);
-      getTriangleSurface( triangle, delta );
+      getTriangleSurface( triangle );
     }
     else
       paintThisSurface( patch, elevationSample );
@@ -102,7 +99,7 @@ public class SurfacePaintPlainTriangleVisitor<T extends GM_SurfacePatch> impleme
     return true;
   }
 
-  private void getTriangleSurface( GM_Triangle triangle, double delta )
+  private void getTriangleSurface( GM_Triangle triangle )
   {
     // get value range of the triangle
     double minValue = Double.POSITIVE_INFINITY;
@@ -120,250 +117,255 @@ public class SurfacePaintPlainTriangleVisitor<T extends GM_SurfacePatch> impleme
 
 // final BigDecimal minDecimal = new BigDecimal( minValue ).setScale( 1, BigDecimal.ROUND_FLOOR );
 
-    // TODO: instead of calculating the border by using a fix delta, get the border values directly from the color
-    // model.
+    int numOfClasses = m_colorModel.getNumOfClasses();
 
-    /* calculate start value */
-    final double factor = 1.0 / delta;
-    final double minValueFactor = Math.floor( factor * minValue );
-    double min = minValueFactor / factor;
-
-    /* loop over all classes of the current triangle */
-    for( double currentValue = min; currentValue <= maxValue; currentValue += delta )
+    /* loop over all classes */
+    for( int currentClass = 0; currentClass <= numOfClasses; currentClass++ )
     {
-      /* code below was taken from BCE-2D - bce_FarbFlaechenInAllenDreiecken and a little bit adapted */
-
       /* aktuelles von und bis setzen */
-      final double startValue = currentValue;
-      final double endValue = startValue + delta;
+      final double startValue = m_colorModel.getFrom( currentClass );
+      final double endValue = m_colorModel.getTo( currentClass );
 
-      /* Prüfung für jede Kante und deren Knotenhöhen, Vergleich mit Intervallgrenzen von - bis */
-      if( startValue <= positions[0].getZ() && positions[0].getZ() <= endValue && startValue <= positions[1].getZ() && positions[1].getZ() <= endValue && startValue <= positions[2].getZ()
-          && positions[2].getZ() <= endValue )
+      if( triangleLiesInsideColorClass( minValue, maxValue, startValue, endValue ) == true )
       {
-        /* paint whole triangle in one color and exit loop */
-        Area areaFromRing = new Area( SurfacePatchVisitableDisplayElement.areaFromRing( m_projection, 0, positions ) );
 
-        /* get the mean elevation of the current ring */
-        double meanValue = getMeanValue( positions );
-        if( meanValue - minValue < VAL_EPS )
-          meanValue = meanValue + VAL_EPS;
-        else if( meanValue - maxValue < VAL_EPS )
-          meanValue = meanValue - VAL_EPS;
+        /* code below was taken from BCE-2D - bce_FarbFlaechenInAllenDreiecken and a little bit adapted */
 
-        /* get the color from the color model and paint the triangle */
-        m_gc.setColor( m_colorModel.getColor( meanValue ) );
-        ((Graphics2D) m_gc).fill( areaFromRing );
-        break;
-      }
-      else
-      {
-        /* get the intersection points */
-        final List<GM_Position> posList = new LinkedList<GM_Position>();
-
-        /* loop over all arcs */
-        for( int j = 0; j < positions.length - 1; j++ )
+        /* Prüfung für jede Kante und deren Knotenhöhen, Vergleich mit Intervallgrenzen von - bis */
+        if( startValue <= positions[0].getZ() && positions[0].getZ() <= endValue && startValue <= positions[1].getZ() && positions[1].getZ() <= endValue && startValue <= positions[2].getZ()
+            && positions[2].getZ() <= endValue )
         {
-          GM_Position pos1 = positions[j];
-          GM_Position pos2 = positions[j + 1];
+          /* paint whole triangle in one color and exit loop */
+          Area areaFromRing = new Area( SurfacePatchVisitableDisplayElement.areaFromRing( m_projection, 0, positions ) );
 
-          double x1 = pos1.getX();
-          double y1 = pos1.getY();
-          double z1 = pos1.getZ();
+          /* get the mean elevation of the current ring */
+          double meanValue = getMeanValue( positions );
+          if( meanValue - minValue < VAL_EPS )
+            meanValue = meanValue + VAL_EPS;
+          else if( meanValue - maxValue < VAL_EPS )
+            meanValue = meanValue - VAL_EPS;
 
-          double x2 = pos2.getX();
-          double y2 = pos2.getY();
-          double z2 = pos2.getZ();
-
-          double x = 0;
-          double y = 0;
-          double z = 0;
-
-          /* ====================== Fallunterscheidungen ========================= */
-
-          /*
-           * Knoten 1 liegt innerhalb, Knoten 2 liegt innerhalb Knoten 1.z = Knoten 2.z des aktuell betrachteten
-           * Intervalls
-           */
-          if( z1 == z2 && z1 >= startValue && z1 <= endValue )
-          {
-            posList.add( GeometryFactory.createGM_Position( x1, y1, z1 ) );
-
-            posList.add( GeometryFactory.createGM_Position( x2, y2, z2 ) );
-          }
-
-          /*
-           * Knoten 1 liegt innnerhalb, Knoten 2 liegt oberhalb Knoten 1.z < Knoten 2.z des aktuell betrachteten
-           * Intervalls
-           */
-          else if( startValue <= z1 && z1 < endValue && endValue <= z2 )
-          {
-            posList.add( GeometryFactory.createGM_Position( x1, y1, z1 ) );
-
-            x = x1 + (x2 - x1) * (endValue - z1) / (z2 - z1);
-            y = y1 + (y2 - y1) * (endValue - z1) / (z2 - z1);
-            z = endValue;
-            posList.add( GeometryFactory.createGM_Position( x, y, z ) );
-          }
-
-          /*
-           * Knoten 1 liegt unterhalb, Knoten 2 liegt oberhalb Knoten 1.z < Knoten 2.z des aktuell betrachteten
-           * Intervalls
-           */
-          else if( z1 < startValue && startValue < z2 && z1 < endValue && endValue < z2 )
-          {
-            x = x1 + (x2 - x1) * (startValue - z1) / (z2 - z1);
-            y = y1 + (y2 - y1) * (startValue - z1) / (z2 - z1);
-            z = startValue;
-            posList.add( GeometryFactory.createGM_Position( x, y, z ) );
-
-            x = x1 + (x2 - x1) * (endValue - z1) / (z2 - z1);
-            y = y1 + (y2 - y1) * (endValue - z1) / (z2 - z1);
-            z = endValue;
-            posList.add( GeometryFactory.createGM_Position( x, y, z ) );
-          }
-
-          /*
-           * Knoten 1 liegt unterhalb, Knoten 2 liegt innerhalb Knoten 1.z < Knoten 2.z des aktuell betrachteten
-           * Intervalls
-           */
-          else if( z1 <= startValue && startValue < z2 && z2 <= endValue )
-          {
-            x = x1 + (x2 - x1) * (startValue - z1) / (z2 - z1);
-            y = y1 + (y2 - y1) * (startValue - z1) / (z2 - z1);
-            z = startValue;
-            posList.add( GeometryFactory.createGM_Position( x, y, z ) );
-
-            posList.add( GeometryFactory.createGM_Position( x2, y2, z2 ) );
-          }
-
-          /*
-           * Knoten 1 liegt innerhalb, Knoten 2 liegt innerhalb Knoten 1.z < Knoten 2.z des aktuell betrachteten
-           * Intervalls
-           */
-          else if( startValue <= z1 && z2 <= endValue && z1 < z2 )
-          {
-            posList.add( GeometryFactory.createGM_Position( x1, y1, z1 ) );
-
-            posList.add( GeometryFactory.createGM_Position( x2, y2, z2 ) );
-          }
-
-          /*
-           * Knoten 1 liegt oberhalb, Knoten 2 liegt innerhalb Knoten 1.z < Knoten 2.z des aktuell betrachteten
-           * Intervalls
-           */
-          else if( startValue <= z2 && z2 < endValue && endValue <= z1 )
-          {
-            x = x1 + (x2 - x1) * (endValue - z1) / (z2 - z1);
-            y = y1 + (y2 - y1) * (endValue - z1) / (z2 - z1);
-            z = endValue;
-            posList.add( GeometryFactory.createGM_Position( x, y, z ) );
-
-            posList.add( GeometryFactory.createGM_Position( x2, y2, z2 ) );
-          }
-
-          /*
-           * Knoten 1 liegt innerhalb, Knoten 2 liegt unterhalb Knoten 1.z > Knoten 2.z des aktuell betrachteten
-           * Intervalls
-           */
-          else if( z2 < startValue && startValue < z1 && z2 < endValue && endValue < z1 )
-          {
-            x = x1 + (x2 - x1) * (endValue - z1) / (z2 - z1);
-            y = y1 + (y2 - y1) * (endValue - z1) / (z2 - z1);
-            z = endValue;
-            posList.add( GeometryFactory.createGM_Position( x, y, z ) );
-
-            x = x1 + (x2 - x1) * (startValue - z1) / (z2 - z1);
-            y = y1 + (y2 - y1) * (startValue - z1) / (z2 - z1);
-            z = startValue;
-            posList.add( GeometryFactory.createGM_Position( x, y, z ) );
-          }
-
-          /*
-           * Knoten 1 liegt innerhalb, Knoten 2 liegt unterhalb Knoten 1.z > Knoten 2.z des aktuell betrachteten
-           * Intervalls
-           */
-          else if( z2 <= startValue && startValue < z1 && z1 <= endValue )
-          {
-            posList.add( GeometryFactory.createGM_Position( x1, y1, z1 ) );
-
-            x = x1 + (x2 - x1) * (startValue - z1) / (z2 - z1);
-            y = y1 + (y2 - y1) * (startValue - z1) / (z2 - z1);
-            z = startValue;
-            posList.add( GeometryFactory.createGM_Position( x, y, z ) );
-          }
-
-          /*
-           * Knoten 1 liegt innerhalb, Knoten 2 liegt innerhalb Knoten 2.z > Knoten 1.z des aktuell betrachteten
-           * Intervalls
-           */
-          else if( startValue <= z2 && z1 <= endValue && z2 < z1 )
-          {
-            posList.add( GeometryFactory.createGM_Position( x1, y1, z1 ) );
-
-            posList.add( GeometryFactory.createGM_Position( x2, y2, z2 ) );
-          }
-        }
-
-        /*
-         * Markieren doppelt erzeugter Punkte und gleichzeitiges Löschen (Nicht-kopieren in 2te Liste aufgrund der
-         * Orientierung der triangulierten Ausgangsdreiecke sind erzeugten Farbflächen-Polygone ebenfalls automatisch
-         * orientiert.
-         */
-        int numDoublePoints = 0; // Anzahl nicht doppelter Punkte in Farbklasse (bäh, unschön gelöst!)
-
-        final List<GM_Position> posList2 = new ArrayList<GM_Position>();
-        if( posList.size() < 2 )
+          /* get the color from the color model and paint the triangle */
+          m_gc.setColor( m_colorModel.getColor( meanValue ) );
+          ((Graphics2D) m_gc).fill( areaFromRing );
           break;
-
-        posList2.add( posList.get( 0 ) );
-
-        /* Schleife über alle erzeugte Knoten */
-        for( int k = 0; k < posList.size() - 1; k++ )
+        }
+        else
         {
-          /* Abstand zweier Punkte berechnen */
-          final double distance = posList.get( k + 1 ).getDistance( posList.get( numDoublePoints ) );
+          /* get the intersection points */
+          final List<GM_Position> posList = new LinkedList<GM_Position>();
+
+          /* loop over all arcs */
+          for( int j = 0; j < positions.length - 1; j++ )
+          {
+            GM_Position pos1 = positions[j];
+            GM_Position pos2 = positions[j + 1];
+
+            double x1 = pos1.getX();
+            double y1 = pos1.getY();
+            double z1 = pos1.getZ();
+
+            double x2 = pos2.getX();
+            double y2 = pos2.getY();
+            double z2 = pos2.getZ();
+
+            double x = 0;
+            double y = 0;
+            double z = 0;
+
+            /* ====================== Fallunterscheidungen ========================= */
+
+            /*
+             * Knoten 1 liegt innerhalb, Knoten 2 liegt innerhalb Knoten 1.z = Knoten 2.z des aktuell betrachteten
+             * Intervalls
+             */
+            if( z1 == z2 && z1 >= startValue && z1 <= endValue )
+            {
+              posList.add( GeometryFactory.createGM_Position( x1, y1, z1 ) );
+
+              posList.add( GeometryFactory.createGM_Position( x2, y2, z2 ) );
+            }
+
+            /*
+             * Knoten 1 liegt innnerhalb, Knoten 2 liegt oberhalb Knoten 1.z < Knoten 2.z des aktuell betrachteten
+             * Intervalls
+             */
+            else if( startValue <= z1 && z1 < endValue && endValue <= z2 )
+            {
+              posList.add( GeometryFactory.createGM_Position( x1, y1, z1 ) );
+
+              x = x1 + (x2 - x1) * (endValue - z1) / (z2 - z1);
+              y = y1 + (y2 - y1) * (endValue - z1) / (z2 - z1);
+              z = endValue;
+              posList.add( GeometryFactory.createGM_Position( x, y, z ) );
+            }
+
+            /*
+             * Knoten 1 liegt unterhalb, Knoten 2 liegt oberhalb Knoten 1.z < Knoten 2.z des aktuell betrachteten
+             * Intervalls
+             */
+            else if( z1 < startValue && startValue < z2 && z1 < endValue && endValue < z2 )
+            {
+              x = x1 + (x2 - x1) * (startValue - z1) / (z2 - z1);
+              y = y1 + (y2 - y1) * (startValue - z1) / (z2 - z1);
+              z = startValue;
+              posList.add( GeometryFactory.createGM_Position( x, y, z ) );
+
+              x = x1 + (x2 - x1) * (endValue - z1) / (z2 - z1);
+              y = y1 + (y2 - y1) * (endValue - z1) / (z2 - z1);
+              z = endValue;
+              posList.add( GeometryFactory.createGM_Position( x, y, z ) );
+            }
+
+            /*
+             * Knoten 1 liegt unterhalb, Knoten 2 liegt innerhalb Knoten 1.z < Knoten 2.z des aktuell betrachteten
+             * Intervalls
+             */
+            else if( z1 <= startValue && startValue < z2 && z2 <= endValue )
+            {
+              x = x1 + (x2 - x1) * (startValue - z1) / (z2 - z1);
+              y = y1 + (y2 - y1) * (startValue - z1) / (z2 - z1);
+              z = startValue;
+              posList.add( GeometryFactory.createGM_Position( x, y, z ) );
+
+              posList.add( GeometryFactory.createGM_Position( x2, y2, z2 ) );
+            }
+
+            /*
+             * Knoten 1 liegt innerhalb, Knoten 2 liegt innerhalb Knoten 1.z < Knoten 2.z des aktuell betrachteten
+             * Intervalls
+             */
+            else if( startValue <= z1 && z2 <= endValue && z1 < z2 )
+            {
+              posList.add( GeometryFactory.createGM_Position( x1, y1, z1 ) );
+
+              posList.add( GeometryFactory.createGM_Position( x2, y2, z2 ) );
+            }
+
+            /*
+             * Knoten 1 liegt oberhalb, Knoten 2 liegt innerhalb Knoten 1.z < Knoten 2.z des aktuell betrachteten
+             * Intervalls
+             */
+            else if( startValue <= z2 && z2 < endValue && endValue <= z1 )
+            {
+              x = x1 + (x2 - x1) * (endValue - z1) / (z2 - z1);
+              y = y1 + (y2 - y1) * (endValue - z1) / (z2 - z1);
+              z = endValue;
+              posList.add( GeometryFactory.createGM_Position( x, y, z ) );
+
+              posList.add( GeometryFactory.createGM_Position( x2, y2, z2 ) );
+            }
+
+            /*
+             * Knoten 1 liegt innerhalb, Knoten 2 liegt unterhalb Knoten 1.z > Knoten 2.z des aktuell betrachteten
+             * Intervalls
+             */
+            else if( z2 < startValue && startValue < z1 && z2 < endValue && endValue < z1 )
+            {
+              x = x1 + (x2 - x1) * (endValue - z1) / (z2 - z1);
+              y = y1 + (y2 - y1) * (endValue - z1) / (z2 - z1);
+              z = endValue;
+              posList.add( GeometryFactory.createGM_Position( x, y, z ) );
+
+              x = x1 + (x2 - x1) * (startValue - z1) / (z2 - z1);
+              y = y1 + (y2 - y1) * (startValue - z1) / (z2 - z1);
+              z = startValue;
+              posList.add( GeometryFactory.createGM_Position( x, y, z ) );
+            }
+
+            /*
+             * Knoten 1 liegt innerhalb, Knoten 2 liegt unterhalb Knoten 1.z > Knoten 2.z des aktuell betrachteten
+             * Intervalls
+             */
+            else if( z2 <= startValue && startValue < z1 && z1 <= endValue )
+            {
+              posList.add( GeometryFactory.createGM_Position( x1, y1, z1 ) );
+
+              x = x1 + (x2 - x1) * (startValue - z1) / (z2 - z1);
+              y = y1 + (y2 - y1) * (startValue - z1) / (z2 - z1);
+              z = startValue;
+              posList.add( GeometryFactory.createGM_Position( x, y, z ) );
+            }
+
+            /*
+             * Knoten 1 liegt innerhalb, Knoten 2 liegt innerhalb Knoten 2.z > Knoten 1.z des aktuell betrachteten
+             * Intervalls
+             */
+            else if( startValue <= z2 && z1 <= endValue && z2 < z1 )
+            {
+              posList.add( GeometryFactory.createGM_Position( x1, y1, z1 ) );
+
+              posList.add( GeometryFactory.createGM_Position( x2, y2, z2 ) );
+            }
+          }
 
           /*
-           * Wenn Abstand groß genug ist, Punkt übernehmen und zu dicht gelegene Punkte ignorieren
+           * Markieren doppelt erzeugter Punkte und gleichzeitiges Löschen (Nicht-kopieren in 2te Liste aufgrund der
+           * Orientierung der triangulierten Ausgangsdreiecke sind erzeugten Farbflächen-Polygone ebenfalls automatisch
+           * orientiert.
            */
-          if( distance > VAL_EPS )
+          int numDoublePoints = 0; // Anzahl nicht doppelter Punkte in Farbklasse (bäh, unschön gelöst!)
+
+          final List<GM_Position> posList2 = new ArrayList<GM_Position>();
+          if( posList.size() < 2 )
+            break;
+
+          posList2.add( posList.get( 0 ) );
+
+          /* Schleife über alle erzeugte Knoten */
+          for( int k = 0; k < posList.size() - 1; k++ )
           {
-            posList2.add( posList.get( k + 1 ) );
-            numDoublePoints = numDoublePoints + 1;
+            /* Abstand zweier Punkte berechnen */
+            final double distance = posList.get( k + 1 ).getDistance( posList.get( numDoublePoints ) );
+
+            /*
+             * Wenn Abstand groß genug ist, Punkt übernehmen und zu dicht gelegene Punkte ignorieren
+             */
+            if( distance > VAL_EPS )
+            {
+              posList2.add( posList.get( k + 1 ) );
+              numDoublePoints = numDoublePoints + 1;
+            }
           }
-        }
 
-        if( numDoublePoints > 0 )
-        {
-          // ersten mit letztem Punkt vegleichen
-          final double distance = posList2.get( 0 ).getDistance( posList2.get( posList2.size() - 1 ) );
-
-          if( distance < VAL_EPS )
-            numDoublePoints = numDoublePoints - 1;
-
-          if( numDoublePoints >= 2 )// mindestens 3 verschiedene Punkte
+          if( numDoublePoints > 0 )
           {
-            posList2.add( posList2.get( 0 ) );
-            GM_Position[] posArray = posList2.toArray( new GM_Position[posList2.size()] );
+            // ersten mit letztem Punkt vegleichen
+            final double distance = posList2.get( 0 ).getDistance( posList2.get( posList2.size() - 1 ) );
 
-            Area areaFromRing = new Area( SurfacePatchVisitableDisplayElement.areaFromRing( m_projection, 0, posArray ) );
+            if( distance < VAL_EPS )
+              numDoublePoints = numDoublePoints - 1;
 
-            /* get the mean elevation of the current ring */
-            double meanValue = getMeanValue( posArray );
-            if( meanValue - minValue < VAL_EPS )
-              meanValue = meanValue + VAL_EPS;
-            else if( meanValue - maxValue < VAL_EPS )
-              meanValue = meanValue - VAL_EPS;
+            if( numDoublePoints >= 2 )// mindestens 3 verschiedene Punkte
+            {
+              posList2.add( posList2.get( 0 ) );
+              GM_Position[] posArray = posList2.toArray( new GM_Position[posList2.size()] );
 
-            /* get the color from the color model and paint the polygon */
-            m_gc.setColor( m_colorModel.getColor( meanValue ) );
-            ((Graphics2D) m_gc).fill( areaFromRing );
+              Area areaFromRing = new Area( SurfacePatchVisitableDisplayElement.areaFromRing( m_projection, 0, posArray ) );
 
+              /* get the mean elevation of the current ring */
+              double meanValue = getMeanValue( posArray );
+              if( meanValue - minValue < VAL_EPS )
+                meanValue = meanValue + VAL_EPS;
+              else if( meanValue - maxValue < VAL_EPS )
+                meanValue = meanValue - VAL_EPS;
+
+              /* get the color from the color model and paint the polygon */
+              ((Graphics2D) m_gc).fill( areaFromRing );
+
+            }
           }
         }
       }
     }
+  }
+
+  private boolean triangleLiesInsideColorClass( final double min, final double max, final double from, final double to )
+  {
+    if( (from <= min && min <= to) || (from <= max && max <= to) )
+      return true;
+    else
+      return false;
   }
 
   private double getMeanValue( GM_Position[] positions )
@@ -420,11 +422,6 @@ public class SurfacePaintPlainTriangleVisitor<T extends GM_SurfacePatch> impleme
     }
 
     return null;
-  }
-
-  public static final double distance( final double x1, final double y1, final double x2, final double y2 )
-  {
-    return Math.sqrt( (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1) );
   }
 
 }

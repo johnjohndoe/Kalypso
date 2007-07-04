@@ -40,12 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.graphics.displayelements;
 
+import java.awt.Color;
 import java.awt.Graphics;
-import java.util.ArrayList;
+import java.awt.Graphics2D;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
@@ -70,13 +73,11 @@ public class SurfacePaintIsolinesVisitor<T extends GM_SurfacePatch> implements I
 
   private static final double VAL_EPS = 0.0000001;
 
-  public SurfacePaintIsolinesVisitor( final Graphics gc, final GeoTransform projection, final IElevationColorModel colorModel )
+  public SurfacePaintIsolinesVisitor( Feature feature, final Graphics gc, final GeoTransform projection, final IElevationColorModel colorModel )
   {
     m_gc = gc;
     m_projection = projection;
     m_colorModel = colorModel;
-
-    // TODO: get classes from color model
 
   }
 
@@ -90,13 +91,7 @@ public class SurfacePaintIsolinesVisitor<T extends GM_SurfacePatch> implements I
     {
       final GM_Triangle triangle = (GM_Triangle) patch;
 
-      // TODO: create own paintTriangle method
-      // TODO: either paint isoines or isoareas
-      // TODO really split the patch along the isolines of the color-model
-
-      final double delta = 0.1;
-      // paintTriangleIsoLines( triangle, m_classes);
-      getTriangleIsoLines( triangle, delta );
+      getTriangleIsoLines( triangle );
     }
     else
       paintThisSurface( patch, elevationSample );
@@ -104,7 +99,7 @@ public class SurfacePaintIsolinesVisitor<T extends GM_SurfacePatch> implements I
     return true;
   }
 
-  private void getTriangleIsoLines( GM_Triangle triangle, double delta )
+  private void getTriangleIsoLines( GM_Triangle triangle )
   {
     // get value range of the triangle
     double minValue = Double.POSITIVE_INFINITY;
@@ -120,43 +115,44 @@ public class SurfacePaintIsolinesVisitor<T extends GM_SurfacePatch> implements I
         maxValue = position.getZ();
     }
 
-    // loop over all intervals
-    // TODO: get a proper start interval
-    final double factor = 1.0 / delta;
-    final double minValueFactor = Math.floor( factor * minValue );
+    int numOfClasses = m_colorModel.getNumOfClasses();
 
-    for( double currentValue = minValueFactor / factor; currentValue <= maxValue; currentValue += delta )
+    /* loop over all classes */
+    for( int currentClass = 0; currentClass < numOfClasses; currentClass++ )
     {
+      /* aktuelles von und bis setzen */
+      final double classValue = m_colorModel.getClassValue( currentClass );
 
-      // get the intersection points
-      final List<GM_Position> posList = new ArrayList<GM_Position>();
-
-      for( int j = 0; j < positions.length - 1; j++ )
+      if( minValue <= classValue && classValue <= maxValue == true )
       {
-        GM_Position pos1 = positions[j];
-        GM_Position pos2 = positions[j + 1];
+        final List<GM_Position> posList = new LinkedList<GM_Position>();
 
-        // check, if positions
+        for( int j = 0; j < positions.length - 1; j++ )
+        {
+          GM_Position pos1 = positions[j];
+          GM_Position pos2 = positions[j + 1];
 
-        if( Math.abs( pos1.getZ() - currentValue ) < VAL_EPS )
-        {
-          if( pos2.getZ() > currentValue )
-            pos1 = lowerPoint( pos1 );
+          if( Math.abs( pos1.getZ() - classValue ) < VAL_EPS )
+          {
+            if( pos2.getZ() > classValue )
+              pos1 = lowerPoint( pos1 );
+          }
+          if( Math.abs( pos2.getZ() - classValue ) < VAL_EPS )
+          {
+            if( pos1.getZ() > classValue )
+              pos2 = lowerPoint( pos2 );
+          }
+          final GM_Position pos = interpolate( pos1, pos2, classValue );
+          if( pos != null )
+            posList.add( pos );
         }
-        if( Math.abs( pos2.getZ() - currentValue ) < VAL_EPS )
+
+        if( posList.size() == 2 )
         {
-          if( pos1.getZ() > currentValue )
-            pos2 = lowerPoint( pos2 );
+
+          paintIsoLine( posList.get( 0 ), posList.get( 1 ), currentClass );
         }
-        final GM_Position pos = interpolate( pos1, pos2, currentValue );
-        if( pos != null )
-          posList.add( pos );
       }
-
-      if( posList.size() == 2 )
-        paintIsoLine( posList.get( 0 ), posList.get( 1 ) );
-      else
-        return;
     }
   }
 
@@ -169,16 +165,26 @@ public class SurfacePaintIsolinesVisitor<T extends GM_SurfacePatch> implements I
     return GeometryFactory.createGM_Position( x, y, z - VAL_EPS );
   }
 
-  private void paintIsoLine( final GM_Position position1, final GM_Position position2 )
+  private void paintIsoLine( final GM_Position position1, final GM_Position position2, final int currentClass )
   {
     final GM_Position screenPos1 = m_projection.getDestPoint( position1 );
     final GM_Position screenPos2 = m_projection.getDestPoint( position2 );
 
-    final int x1 = (int) screenPos1.getX();
-    final int y1 = (int) screenPos1.getY();
-    final int x2 = (int) screenPos2.getX();
-    final int y2 = (int) screenPos2.getY();
-    m_gc.drawLine( x1, y1, x2, y2 );
+    final int[][] pos = new int[3][];
+    pos[0] = new int[2];
+    pos[1] = new int[2];
+    pos[2] = new int[1];
+
+    pos[0][0] = (int) screenPos1.getX();
+    pos[1][0] = (int) screenPos1.getY();
+    pos[0][1] = (int) screenPos2.getX();
+    pos[1][1] = (int) screenPos2.getY();
+    pos[2][0] = 2;
+
+    StrokeLinePainter painter = m_colorModel.getLinePainter( currentClass );
+
+    painter.paintPoses( (Graphics2D) m_gc, pos );
+
   }
 
   /**
@@ -219,4 +225,8 @@ public class SurfacePaintIsolinesVisitor<T extends GM_SurfacePatch> implements I
     // TODO optional paint outline of triangle for debug purpose
   }
 
+  public static final double distance( final double x1, final double y1, final double x2, final double y2 )
+  {
+    return Math.sqrt( (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1) );
+  }
 }

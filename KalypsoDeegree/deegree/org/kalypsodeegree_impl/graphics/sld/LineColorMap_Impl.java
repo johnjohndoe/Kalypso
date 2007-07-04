@@ -38,49 +38,65 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.graphics.displayelements;
+package org.kalypsodeegree_impl.graphics.sld;
 
-import java.awt.Color;
+import java.util.LinkedList;
+import java.util.List;
+
+import org.kalypsodeegree.graphics.sld.LineColorMapEntry;
 
 /**
- * Interface for color model used in the elevation visualization
- * 
- * @author Madanagopal
- * @author Patrice Congo
+ * @author Thomas Jung
  */
-public interface IElevationColorModel
+public class LineColorMap_Impl implements LineColorMap
 {
-  /**
-   * To get the color for the given elevation
-   * 
-   * @return an {@link Color} for the given elevation
-   */
-  public Color getColor( double elevation );
+  private final List<LineColorMapEntry> m_colorMap = new LinkedList<LineColorMapEntry>();
 
-  /**
-   * To set a new min and max elevation for the color model
-   * 
-   * @return an {@link Color} for the given elevation
-   */
-  public void setElevationMinMax( double min, double max );
+  public LineColorMap_Impl( )
+  {
+    this( new LinkedList<LineColorMapEntry>() );
+  }
 
-  /**
-   * To get the min and max elevation for the color model
-   * 
-   * @return an {@link Color} for the given elevation
-   */
-  public double[] getElevationMinMax( );
+  public LineColorMap_Impl( final List<LineColorMapEntry> colorMap )
+  {
+    setColorMap( colorMap );
+  }
 
-  public double getDiscretisationInterval( );
+  public LineColorMapEntry[] getColorMap( )
+  {
+    return m_colorMap.toArray( new LineColorMapEntry[m_colorMap.size()] );
+  }
 
-  public int getNumOfClasses( );
+  public void setColorMap( final List<LineColorMapEntry> colorMap )
+  {
+    m_colorMap.addAll( colorMap );
+  }
 
-  public double getFrom( int currentClass );
+  public void addColorMapClass( final LineColorMapEntry colorMapEntry )
+  {
+    m_colorMap.add( colorMapEntry );
+  }
 
-  public double getTo( int currentClass );
+  public String exportAsXML( )
+  {
+    final StringBuffer sb = new StringBuffer( 1000 );
+    sb.append( "<SurfaceLineSymbolizer>" );
+    sb.append( "<LineColorMap>" );
 
-  public double getClassValue( int currentClass );
+    if( m_colorMap != null )
+    {
+      for( int i = 0; i < m_colorMap.size(); i++ )
+      {
+        final LineColorMapEntry lineColorMapEntry = m_colorMap.get( i );
+        sb.append( lineColorMapEntry.exportAsXML() );
+      }
+    }
 
-  public StrokeLinePainter getLinePainter( int currentClass );
+    sb.append( "</LineColorMap>" );
+    sb.append( "</SurfaceLineSymbolizer>" );
+
+    return sb.toString();
+
+  }
 
 }
