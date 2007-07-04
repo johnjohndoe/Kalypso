@@ -362,6 +362,7 @@ public class RMA10Calculation implements INativeIDProvider
           final IComponent timeComponent = TupleResultUtilities.findComponentById( obsResult, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );
           final IComponent qComponent = TupleResultUtilities.findComponentById( obsResult, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
           final IComponent hComponent = TupleResultUtilities.findComponentById( obsResult, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL );
+          info.setSteadyValue( bc.getStationaryCondition() );
           if( qComponent != null )
             info.setObservation( obs, timeComponent, qComponent, ITimeStepinfo.TYPE.CONTI_BC_Q );
           else if( hComponent != null )
@@ -380,6 +381,7 @@ public class RMA10Calculation implements INativeIDProvider
           final IComponent timeComponent = TupleResultUtilities.findComponentById( obsResult, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );
           final IComponent qComponent = TupleResultUtilities.findComponentById( obsResult, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
           final IComponent hComponent = TupleResultUtilities.findComponentById( obsResult, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL );
+          info.setSteadyValue( bc.getStationaryCondition() );
           if( qComponent != null )
             info.setObservation( obs, timeComponent, qComponent, ITimeStepinfo.TYPE.CONTI_BC_Q );
           else if( hComponent != null )
@@ -404,6 +406,7 @@ public class RMA10Calculation implements INativeIDProvider
           final IComponent valueComponent = qComponent == null ? hComponent : qComponent;
 
           info.setObservation( obs, timeComponent, valueComponent );
+          info.setSteadyValue( bc.getStationaryCondition() );
 
           result.add( info );
         }

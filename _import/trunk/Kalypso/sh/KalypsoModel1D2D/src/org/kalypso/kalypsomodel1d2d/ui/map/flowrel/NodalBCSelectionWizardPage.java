@@ -48,6 +48,9 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
@@ -59,6 +62,8 @@ public class NodalBCSelectionWizardPage extends WizardPage
   private final IBoundaryConditionDescriptor[] m_descriptors;
 
   private final NodalBCDescriptorPage m_descriptorPage;
+
+  private Text m_bcValue;
 
   protected NodalBCSelectionWizardPage( final String pageName, final IBoundaryConditionDescriptor[] descriptors, final NodalBCDescriptorPage descriptorPage )
   {
@@ -79,18 +84,50 @@ public class NodalBCSelectionWizardPage extends WizardPage
   {
     final Composite container = new Composite( parent, SWT.NULL );
     final GridLayout gridLayout = new GridLayout();
-    gridLayout.numColumns = 3;
+    gridLayout.numColumns = 2;
     container.setLayout( gridLayout );
     setControl( container );
-
+    
+    new Label(container, SWT.NONE).setText( "Stationäre randbedinung:" );
+    m_bcValue = new Text(container, SWT.BORDER);
+    m_bcValue.setText( "20.0" );
+    m_bcValue.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+//    bcValue.addKeyListener( new KeyListener()
+//  {
+//
+//    public void keyPressed( KeyEvent e )
+//    {
+//      // Empty
+//    }
+//
+//    public void keyReleased( KeyEvent e )
+//    {
+//      cacheNewName();
+//      if( updateListener != null )
+//      {
+//        updateListener.update();
+//      }
+//    }
+//
+//  };
+//) )
+    final GridData radioGroupGridData = new GridData( SWT.FILL, SWT.FILL, true, true );
+    radioGroupGridData.horizontalSpan = 2;
+    radioGroupGridData.verticalIndent = 15;
+    final Group radioGroup = new Group(container, SWT.NONE);
+    radioGroup.setLayoutData( radioGroupGridData );
+    radioGroup.setLayout( (new GridLayout(1, false)));
+    radioGroup.setText( " Instationäre randbedinungen " );
     for( int i = 0; i < m_radioBtnGroup.length; i++ )
     {
-      final GridData gridData = new GridData( SWT.FILL, SWT.CENTER, true, false );
-      gridData.horizontalSpan = 3;
-      final Button radio = new Button( container, SWT.RADIO );
-      m_radioBtnGroup[i] = radio;
+      final GridData radioButtonGridData = new GridData( SWT.FILL, SWT.BEGINNING, true, false );
+      radioButtonGridData.horizontalSpan = 1;
+      radioButtonGridData.horizontalIndent = 10;
+      radioButtonGridData.verticalIndent = 5;
+      final Button radio = new Button( radioGroup, SWT.RADIO );
       radio.setText( m_descriptors[i].getName() );
-      radio.setLayoutData( gridData );
+      radio.setLayoutData( radioButtonGridData );
+      m_radioBtnGroup[i] = radio;
 
       final IBoundaryConditionDescriptor selectedDescriptor = m_descriptors[i];
 
@@ -107,7 +144,7 @@ public class NodalBCSelectionWizardPage extends WizardPage
       } );
     }
 
-    m_radioBtnGroup[0].setFocus();
+    m_radioBtnGroup[0].setSelection( true );
   }
 
   protected void setDescriptor( final IBoundaryConditionDescriptor selectedDescriptor )
@@ -115,5 +152,10 @@ public class NodalBCSelectionWizardPage extends WizardPage
     m_descriptorPage.setDescriptor( selectedDescriptor );
 
     getContainer().updateButtons();
+  }
+  
+  protected double getSteadyValue( )
+  {
+    return Double.parseDouble( m_bcValue.getText());
   }
 }

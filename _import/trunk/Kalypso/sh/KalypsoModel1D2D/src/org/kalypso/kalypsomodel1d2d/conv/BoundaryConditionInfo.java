@@ -41,11 +41,9 @@
 package org.kalypso.kalypsomodel1d2d.conv;
 
 import java.util.Date;
-import java.util.Iterator;
 
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.observation.util.TupleResultIndex;
 
@@ -62,10 +60,13 @@ public class BoundaryConditionInfo implements ITimeStepinfo
 
   private TupleResultIndex m_index;
 
+  private double m_steadyValue;
+
   public BoundaryConditionInfo( final int id, final TYPE type )
   {
     m_id = id;
     m_type = type;
+    m_steadyValue = -1.0;
   }
 
   public int getID( )
@@ -94,9 +95,15 @@ public class BoundaryConditionInfo implements ITimeStepinfo
     final Number result;
     if( date == null )
     {
-      Iterator<IRecord> iterator = m_index.getIterator();
-      IRecord next = iterator.next();
-      result = (Number) next.getValue( m_valueComponent );
+      if( m_steadyValue == -1.0 )
+      {
+        throw new RuntimeException("Steady value not defined.");
+//        Iterator<IRecord> iterator = m_index.getIterator();
+//        IRecord next = iterator.next();
+//        result = (Number) next.getValue( m_valueComponent );
+      }
+      else
+        return m_steadyValue;
     }
     else
       result = (Number) m_index.getValue( m_valueComponent, date );
@@ -120,4 +127,8 @@ public class BoundaryConditionInfo implements ITimeStepinfo
     m_index = new TupleResultIndex( obs.getResult(), domainComponent );
   }
 
+  public void setSteadyValue( final double value )
+  {
+    m_steadyValue = value;
+  }
 }
