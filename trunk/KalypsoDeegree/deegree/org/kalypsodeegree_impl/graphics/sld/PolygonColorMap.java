@@ -38,49 +38,24 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.graphics.displayelements;
+package org.kalypsodeegree_impl.graphics.sld;
 
-import java.awt.Color;
+import java.util.List;
+
+import org.kalypsodeegree.graphics.sld.PolygonColorMapEntry;
 
 /**
- * Interface for color model used in the elevation visualization
- * 
- * @author Madanagopal
- * @author Patrice Congo
+ * @author Thomas Jung
  */
-public interface IElevationColorModel
+public interface PolygonColorMap
 {
-  /**
-   * To get the color for the given elevation
-   * 
-   * @return an {@link Color} for the given elevation
-   */
-  public Color getColor( double elevation );
 
-  /**
-   * To set a new min and max elevation for the color model
-   * 
-   * @return an {@link Color} for the given elevation
-   */
-  public void setElevationMinMax( double min, double max );
+  final String SLDNS_EXT = "http://www.opengis.net/sldExt";
 
-  /**
-   * To get the min and max elevation for the color model
-   * 
-   * @return an {@link Color} for the given elevation
-   */
-  public double[] getElevationMinMax( );
+  public PolygonColorMapEntry[] getColorMap( );
 
-  public double getDiscretisationInterval( );
+  public void setColorMap( final List<PolygonColorMapEntry> colorMap );
 
-  public int getNumOfClasses( );
-
-  public double getFrom( int currentClass );
-
-  public double getTo( int currentClass );
-
-  public double getClassValue( int currentClass );
-
-  public StrokeLinePainter getLinePainter( int currentClass );
+  public void addColorMapClass( final PolygonColorMapEntry colorMapEntry );
 
 }

@@ -38,49 +38,59 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.graphics.displayelements;
+package org.kalypsodeegree_impl.graphics.sld;
 
-import java.awt.Color;
+import java.util.LinkedList;
+import java.util.List;
+
+import org.kalypsodeegree.graphics.sld.PolygonColorMapEntry;
 
 /**
- * Interface for color model used in the elevation visualization
- * 
- * @author Madanagopal
- * @author Patrice Congo
+ * @author Thomas Jung
  */
-public interface IElevationColorModel
+public class PolygonColorMap_Impl implements PolygonColorMap
 {
-  /**
-   * To get the color for the given elevation
-   * 
-   * @return an {@link Color} for the given elevation
-   */
-  public Color getColor( double elevation );
+
+  private final List<PolygonColorMapEntry> m_colorMap = new LinkedList<PolygonColorMapEntry>();
 
   /**
-   * To set a new min and max elevation for the color model
-   * 
-   * @return an {@link Color} for the given elevation
+   * @see org.kalypsodeegree_impl.graphics.sld.PolygonColorMap#getColorMap()
    */
-  public void setElevationMinMax( double min, double max );
+  public PolygonColorMapEntry[] getColorMap( )
+  {
+    return (PolygonColorMapEntry[]) m_colorMap.toArray();
+  }
 
-  /**
-   * To get the min and max elevation for the color model
-   * 
-   * @return an {@link Color} for the given elevation
-   */
-  public double[] getElevationMinMax( );
+  public void setColorMap( final List<PolygonColorMapEntry> colorMap )
+  {
+    m_colorMap.addAll( colorMap );
+  }
 
-  public double getDiscretisationInterval( );
+  public void addColorMapClass( final PolygonColorMapEntry colorMapEntry )
+  {
+    m_colorMap.add( colorMapEntry );
+  }
 
-  public int getNumOfClasses( );
+  public String exportAsXML( )
+  {
+    final StringBuffer sb = new StringBuffer( 1000 );
+    sb.append( "<SurfacePolygonSymbolizer>" );
+    sb.append( "<PolygonColorMap>" );
 
-  public double getFrom( int currentClass );
+    if( m_colorMap != null )
+    {
+      for( int i = 0; i < m_colorMap.size(); i++ )
+      {
+        final PolygonColorMapEntry polygonColorMapEntry = m_colorMap.get( i );
+        sb.append( polygonColorMapEntry.exportAsXML() );
+      }
+    }
 
-  public double getTo( int currentClass );
+    sb.append( "</PolygonColorMap>" );
+    sb.append( "</SurfacePolygonSymbolizer>" );
 
-  public double getClassValue( int currentClass );
+    return sb.toString();
 
-  public StrokeLinePainter getLinePainter( int currentClass );
+  }
 
 }

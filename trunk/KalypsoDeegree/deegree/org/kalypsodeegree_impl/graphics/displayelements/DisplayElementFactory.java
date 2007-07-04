@@ -60,13 +60,11 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.graphics.displayelements;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 
 import javax.xml.namespace.QName;
 
-import org.eclipse.swt.graphics.RGB;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypsodeegree.filterencoding.Filter;
@@ -86,6 +84,8 @@ import org.kalypsodeegree.graphics.sld.PointSymbolizer;
 import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
 import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
 import org.kalypsodeegree.graphics.sld.Rule;
+import org.kalypsodeegree.graphics.sld.SurfaceLineSymbolizer;
+import org.kalypsodeegree.graphics.sld.SurfacePolygonSymbolizer;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.graphics.sld.TextSymbolizer;
 import org.kalypsodeegree.graphics.sld.UserStyle;
@@ -103,9 +103,12 @@ import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitor;
 import org.kalypsodeegree_impl.filterencoding.PropertyName;
 import org.kalypsodeegree_impl.graphics.displayelements.SurfacePatchVisitableDisplayElement.IVisitorFactory;
+import org.kalypsodeegree_impl.graphics.sld.LineColorMap;
 import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.PointSymbolizer_Impl;
+import org.kalypsodeegree_impl.graphics.sld.PolygonColorMap;
 import org.kalypsodeegree_impl.graphics.sld.PolygonSymbolizer_Impl;
+import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
 import org.kalypsodeegree_impl.tools.Debug;
 
 /**
@@ -276,51 +279,17 @@ public class DisplayElementFactory
     {
       displayElement = buildRasterDisplayElement( feature, (RasterSymbolizer) symbolizer );
     }
-    // TODO: replace with symbolizer read from sld
-    
-    else if( symbolizer == null && feature.getDefaultGeometryProperty() instanceof GM_TriangulatedSurface )
+    else if( symbolizer instanceof SurfacePolygonSymbolizer )
     {
-      final IElevationColorModel colorModel = new IElevationColorModel()
-      {
-        public Color getColor( double elevation )
-        {
-          final int hue = (int)( Math.random() * 255 );
-//          System.out.println( hue );
-          final RGB rgb = new RGB( hue, 128, 128 );
-          
-          return new Color( rgb.red, rgb.green, rgb.blue );
-        }
-
-        public double getDiscretisationInterval( )
-        {
-          return 0;
-        }
-
-        public double[] getElevationMinMax( )
-        {
-          return null;
-        }
-
-        public void setElevationMinMax( double min, double max )
-        {
-        }
-      };
-
-      final GM_TriangulatedSurface tin = (GM_TriangulatedSurface) feature.getDefaultGeometryProperty();
-      final IVisitorFactory<GM_Triangle> visitorFactory = new SurfacePatchVisitableDisplayElement.IVisitorFactory<GM_Triangle>()
-      {
-        public ISurfacePatchVisitor<GM_Triangle> createVisitor( final Graphics g, final GeoTransform projection, final IElevationColorModel model )
-        {
-//          return new SurfacePaintIsolinesVisitor<GM_Triangle>( g, projection, colorModel );
-          return new SurfacePaintPlainTriangleVisitor<GM_Triangle>( g, projection, colorModel );
-        }
-      };
-
-      return new SurfacePatchVisitableDisplayElement<GM_Triangle>( feature, tin, colorModel, visitorFactory );
+      displayElement = buildSurfacePolygonDisplayElement( feature, geoProperty, (SurfacePolygonSymbolizer) symbolizer );
+    }
+    else if( symbolizer instanceof SurfaceLineSymbolizer )
+    {
+      displayElement = buildSurfaceLineDisplayElement( feature, geoProperty, (SurfaceLineSymbolizer) symbolizer );
     }
     else
     {
-      System.out.println( "symbolizer...?" );
+      System.out.println( "symbolizer...?: " + symbolizer );
     }
 
     // TODO Patrice Check changes
@@ -335,6 +304,45 @@ public class DisplayElementFactory
     }
 
     return displayElement;
+  }
+
+  private static DisplayElement buildSurfaceLineDisplayElement( final Feature feature, final GM_Object geoProperty, final SurfaceLineSymbolizer symbolizer ) throws IncompatibleGeometryTypeException
+  {
+    final LineColorMap colorMap = symbolizer.getColorMap();
+
+    if( !(geoProperty instanceof GM_TriangulatedSurface) )
+      throw new IncompatibleGeometryTypeException( "Tried to create a SurfaceDisplayElement from a geometry with an incompatible / unsupported type: '" + geoProperty.getClass().getName() + "'!" );
+    final GM_TriangulatedSurface tin = (GM_TriangulatedSurface) geoProperty;
+
+    final IVisitorFactory<GM_Triangle> visitorFactory = new SurfacePatchVisitableDisplayElement.IVisitorFactory<GM_Triangle>()
+    {
+      public ISurfacePatchVisitor<GM_Triangle> createVisitor( final Graphics g, final GeoTransform projection, final IElevationColorModel model )
+      {
+        final UOM uom = symbolizer.getUom();
+        return new SurfacePaintIsolinesVisitor<GM_Triangle>( feature, g, projection, new ColorMapConverter( colorMap, feature, uom, projection ) );
+      }
+    };
+
+    return new SurfacePatchVisitableDisplayElement<GM_Triangle>( feature, tin, null, visitorFactory );
+  }
+
+  private static DisplayElement buildSurfacePolygonDisplayElement( final Feature feature, final GM_Object geoProperty, SurfacePolygonSymbolizer symbolizer ) throws IncompatibleGeometryTypeException
+  {
+    final PolygonColorMap colorMap = symbolizer.getColorMap();
+
+    if( !(geoProperty instanceof GM_TriangulatedSurface) )
+      throw new IncompatibleGeometryTypeException( "Tried to create a SurfaceDisplayElement from a geometry with an incompatible / unsupported type: '" + geoProperty.getClass().getName() + "'!" );
+    final GM_TriangulatedSurface tin = (GM_TriangulatedSurface) geoProperty;
+
+    final IVisitorFactory<GM_Triangle> visitorFactory = new SurfacePatchVisitableDisplayElement.IVisitorFactory<GM_Triangle>()
+    {
+      public ISurfacePatchVisitor<GM_Triangle> createVisitor( final Graphics g, final GeoTransform projection, final IElevationColorModel model )
+      {
+        return new SurfacePaintPlainTriangleVisitor<GM_Triangle>( feature, g, projection, new ColorMapConverter( colorMap, feature ) );
+      }
+    };
+
+    return new SurfacePatchVisitableDisplayElement<GM_Triangle>( feature, tin, null, visitorFactory );
   }
 
   /**

@@ -101,6 +101,7 @@ import org.kalypsodeegree.graphics.sld.LabelPlacement;
 import org.kalypsodeegree.graphics.sld.Layer;
 import org.kalypsodeegree.graphics.sld.LayerFeatureConstraints;
 import org.kalypsodeegree.graphics.sld.LegendGraphic;
+import org.kalypsodeegree.graphics.sld.LineColorMapEntry;
 import org.kalypsodeegree.graphics.sld.LinePlacement;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
 import org.kalypsodeegree.graphics.sld.Mark;
@@ -109,6 +110,7 @@ import org.kalypsodeegree.graphics.sld.NamedStyle;
 import org.kalypsodeegree.graphics.sld.ParameterValueType;
 import org.kalypsodeegree.graphics.sld.PointPlacement;
 import org.kalypsodeegree.graphics.sld.PointSymbolizer;
+import org.kalypsodeegree.graphics.sld.PolygonColorMapEntry;
 import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
 import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
 import org.kalypsodeegree.graphics.sld.RemoteOWS;
@@ -116,6 +118,8 @@ import org.kalypsodeegree.graphics.sld.Rule;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.graphics.sld.Style;
 import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
+import org.kalypsodeegree.graphics.sld.SurfaceLineSymbolizer;
+import org.kalypsodeegree.graphics.sld.SurfacePolygonSymbolizer;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.graphics.sld.TextSymbolizer;
 import org.kalypsodeegree.graphics.sld.UserLayer;
@@ -152,6 +156,8 @@ import org.xml.sax.SAXException;
  */
 public class SLDFactory
 {
+
+  private static final String SLDNS_EXT = "http://www.opengis.net/sldExt";
 
   private static String ogcNS = "http://www.opengis.net/ogc";
 
@@ -1013,12 +1019,13 @@ public class SLDFactory
     final ArrayList symbolizerList = new ArrayList();
 
     for( int i = 0; i < symbolizerNL.getLength(); i++ )
+    {
       if( symbolizerNL.item( i ) instanceof Element )
       {
         final Element symbolizerElement = (Element) symbolizerNL.item( i );
         final String namespace = symbolizerElement.getNamespaceURI();
 
-        if( !CommonNamespaces.SLDNS.equals( namespace ) )
+        if( !( CommonNamespaces.SLDNS.equals( namespace ) || SLDNS_EXT.equals( namespace ) ) )
           continue;
 
         /*
@@ -1043,7 +1050,12 @@ public class SLDFactory
           symbolizerList.add( SLDFactory.createTextSymbolizer( urlResolver, symbolizerElement, min, max, uom ) );
         else if( symbolizerName.equals( "RasterSymbolizer" ) )
           symbolizerList.add( SLDFactory.createRasterSymbolizer( symbolizerElement, uom ) );
+        else if( symbolizerName.equals( "SurfaceLineSymbolizer" ) )
+          symbolizerList.add( SLDFactory.createSurfaceLineSymbolizer( urlResolver, symbolizerElement, min, max, uom ) );
+        else if( symbolizerName.equals( "SurfacePolygonSymbolizer" ) )
+          symbolizerList.add( SLDFactory.createSurfacePolygonSymbolizer( urlResolver, symbolizerElement, min, max, uom ) );
       }
+    }
 
     final Symbolizer[] symbolizers = (Symbolizer[]) symbolizerList.toArray( new Symbolizer[symbolizerList.size()] );
 
@@ -1158,6 +1170,170 @@ public class SLDFactory
       stroke = SLDFactory.createStroke( urlResolver, strokeElement );
 
     return new PolygonSymbolizer_Impl( fill, stroke, geometry, min, max, uom );
+  }
+
+  /**
+   * Creates a <tt>SurfaceLineSymbolizer</tt> -instance according to the contents of the DOM-subtree starting at the
+   * given 'SurfaceLineSymbolizer'- <tt>Element</tt>.
+   * <p>
+   * 
+   * @param element
+   *            the 'SurfaceLineSymbolizer'- <tt>Element</tt>
+   * @param min
+   *            scale-constraint to be used
+   * @param max
+   *            scale-constraint to be used
+   * @throws XMLParsingException
+   *             if a syntactic or semantic error in the DOM-subtree is encountered
+   * @return the constructed <tt>SurfaceLineSymbolizer</tt> -instance
+   */
+  private static SurfaceLineSymbolizer createSurfaceLineSymbolizer( final IUrlResolver2 urlResolver, final Element element, final double min, final double max, final UOM uom ) throws XMLParsingException
+  {
+    // optional: <Geometry>
+    Geometry geometry = null;
+    final Element geometryElement = XMLTools.getChildByName( "Geometry", CommonNamespaces.SLDNS, element );
+    if( geometryElement != null )
+      geometry = SLDFactory.createGeometry( geometryElement );
+
+    // <LineColorMap>
+    final Element colorMapElement = XMLTools.getChildByName( "LineColorMap", SLDNS_EXT, element );
+
+    if( colorMapElement == null )
+      throw new XMLParsingException( "Missing required 'LineColorMap' element" );
+
+    LineColorMap colorMap = createLineColorMap( urlResolver, colorMapElement );
+
+    return new SurfaceLineSymbolizer_Impl( colorMap, geometry, min, max, uom );
+  }
+
+  /**
+   * Creates a <tt>SurfacePolygonSymbolizer</tt> -instance according to the contents of the DOM-subtree starting at
+   * the given 'SurfaceLineSymbolizer'- <tt>Element</tt>.
+   * <p>
+   * 
+   * @param element
+   *            the 'SurfacePolygonSymbolizer'- <tt>Element</tt>
+   * @param min
+   *            scale-constraint to be used
+   * @param max
+   *            scale-constraint to be used
+   * @throws XMLParsingException
+   *             if a syntactic or semantic error in the DOM-subtree is encountered
+   * @return the constructed <tt>SurfacePolygonSymbolizer</tt> -instance
+   */
+  private static SurfacePolygonSymbolizer createSurfacePolygonSymbolizer( final IUrlResolver2 urlResolver, final Element element, final double min, final double max, final UOM uom ) throws XMLParsingException
+  {
+    // optional: <Geometry>
+    Geometry geometry = null;
+    final Element geometryElement = XMLTools.getChildByName( "Geometry", CommonNamespaces.SLDNS, element );
+    if( geometryElement != null )
+      geometry = SLDFactory.createGeometry( geometryElement );
+
+    // <PolygonColorMap>
+    final Element colorMapElement = XMLTools.getChildByName( "PolygonColorMap", SLDNS_EXT, element );
+
+    if( colorMapElement == null )
+      throw new XMLParsingException( "Missing required 'PolygonColorMap' element" );
+
+    PolygonColorMap colorMap = createPolygonColorMap( urlResolver, colorMapElement );
+
+    return new SurfacePolygonSymbolizer_Impl( colorMap, geometry, min, max, uom );
+  }
+
+  private static PolygonColorMap createPolygonColorMap( IUrlResolver2 urlResolver, Element element ) throws XMLParsingException
+  {
+    // <PolygonColorMapEntry>
+    final ElementList colorMapEntryElementList = XMLTools.getChildElementsByName( "PolygonColorMapEntry", SLDNS_EXT, element );
+
+    if( colorMapEntryElementList == null )
+      throw new XMLParsingException( "Missing required 'PolygonColorMapEntry' element" );
+
+    final PolygonColorMap colorMap = new PolygonColorMap_Impl();
+
+    for( int i = 0; i < colorMapEntryElementList.getLength(); i++ )
+    {
+      Element item = colorMapEntryElementList.item( i );
+      PolygonColorMapEntry colorMapEntry = createPolygonColorMapEntry( urlResolver, item );
+
+      colorMap.addColorMapClass( colorMapEntry );
+    }
+
+    return colorMap;
+  }
+
+  private static LineColorMap createLineColorMap( IUrlResolver2 urlResolver, Element element ) throws XMLParsingException
+  {
+    // <LineColorMapEntry>
+    final ElementList colorMapEntryElementList = XMLTools.getChildElementsByName( "LineColorMapEntry", SLDNS_EXT, element );
+
+    if( colorMapEntryElementList == null )
+      throw new XMLParsingException( "Missing required 'LineColorMapEntry' element" );
+
+    final LineColorMap colorMap = new LineColorMap_Impl();
+
+    for( int i = 0; i < colorMapEntryElementList.getLength(); i++ )
+    {
+      Element item = colorMapEntryElementList.item( i );
+      LineColorMapEntry colorMapEntry = createLineColorMapEntry( urlResolver, item );
+
+      colorMap.addColorMapClass( colorMapEntry );
+    }
+
+    return colorMap;
+  }
+
+  private static PolygonColorMapEntry createPolygonColorMapEntry( IUrlResolver2 urlResolver, Element element ) throws XMLParsingException
+  {
+    // <PolygonColorMapEntry>
+    final Element colorMapEntryElement = XMLTools.getChildByName( "PolygonColorMapEntry", SLDNS_EXT, element );
+
+    if( colorMapEntryElement == null )
+      throw new XMLParsingException( "Missing required 'PolygonColorMapEntry' element" );
+
+    // <Fill>
+    Fill fill = null;
+    final Element fillElement = XMLTools.getChildByName( "Fill", CommonNamespaces.SLDNS, element );
+
+    if( fillElement != null )
+      fill = SLDFactory.createFill( urlResolver, fillElement );
+
+    // <label>
+    final Element labelElt = XMLTools.getChildByName( "label", SLDNS_EXT, element );
+    final ParameterValueType label = createParameterValueType( labelElt );
+
+    // <from>
+    final Element fromElt = XMLTools.getChildByName( "from", SLDNS_EXT, element );
+    final ParameterValueType from = createParameterValueType( fromElt );
+
+    // <to>
+    final Element toElt = XMLTools.getChildByName( "to", SLDNS_EXT, element );
+    final ParameterValueType to = createParameterValueType( toElt );
+
+    final PolygonColorMapEntry colorMapEntry = new PolygonColorMapEntry_Impl( fill, label, from, to );
+
+    return colorMapEntry;
+  }
+
+  private static LineColorMapEntry createLineColorMapEntry( IUrlResolver2 urlResolver, Element element ) throws XMLParsingException
+  {
+    // <Stroke>
+    Stroke stroke = null;
+    final Element strokeElement = XMLTools.getChildByName( "Stroke", CommonNamespaces.SLDNS, element );
+
+    if( strokeElement != null )
+      stroke = SLDFactory.createStroke( urlResolver, strokeElement );
+
+    // <label>
+    final Element labelElt = XMLTools.getChildByName( "label", SLDNS_EXT, element );
+    final ParameterValueType label = createParameterValueType( labelElt );
+
+    // <quantity>
+    final Element quantityElt = XMLTools.getChildByName( "quantity", SLDNS_EXT, element );
+    final ParameterValueType quantity = createParameterValueType( quantityElt );
+
+    final LineColorMapEntry colorMapEntry = new LineColorMapEntry_Impl( stroke, label, quantity );
+
+    return colorMapEntry;
   }
 
   /**

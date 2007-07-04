@@ -42,7 +42,6 @@ package org.kalypsodeegree_impl.graphics.displayelements;
 
 import java.awt.Graphics;
 import java.awt.Polygon;
-import java.awt.geom.Area;
 
 import org.eclipse.core.runtime.Assert;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
@@ -89,6 +88,8 @@ public class SurfacePatchVisitableDisplayElement<P extends GM_SurfacePatch> impl
     Assert.isNotNull( surfacePatchVisitable, "surfacePatchVisitable" );
 
     m_feature = feature;
+    
+    // TODO: remove this color-model stuff
     m_colorModel = colorModel;
 
     m_surfacePatchVisitable = surfacePatchVisitable;
