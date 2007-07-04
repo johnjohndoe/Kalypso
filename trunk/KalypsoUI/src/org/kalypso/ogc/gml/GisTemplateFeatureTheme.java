@@ -335,6 +335,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     {
       // alles abfangen, damit der Pool trotzdem weitermacht
       e.printStackTrace();
+      // TODO: change status
     }
 
     invalidate( getBoundingBox() );

@@ -129,8 +129,7 @@ public abstract class AbstractCreateGeometeryWidget extends AbstractWidget
 
     try
     {
-      final GM_Object gm_geometry;
-      gm_geometry = createGeometry( testList );
+      final GM_Object gm_geometry = createGeometry( testList );
       final Geometry geometry = JTSAdapter.export( gm_geometry );
       if( geometry.isValid() && geometry.isSimple() )
       {
@@ -142,12 +141,12 @@ public abstract class AbstractCreateGeometeryWidget extends AbstractWidget
       else
         m_validGeometryValue = null;
     }
-    catch( NotEnoughPointsExeption e )
+    catch( final NotEnoughPointsExeption e )
     {
       m_points.add( p );
       m_validGeometryValue = null;
     }
-    catch( GM_Exception e )
+    catch( final GM_Exception e )
     {
       e.printStackTrace();
       m_validGeometryValue = null;
@@ -159,14 +158,14 @@ public abstract class AbstractCreateGeometeryWidget extends AbstractWidget
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#dragged(java.awt.Point)
    */
   @Override
-  public void dragged( Point p )
+  public void dragged( final Point p )
   {
     if( m_points.isEmpty() || m_points.get( m_points.size() - 1 ).distance( p ) > MIN_DRAG_DISTANCE_PIXEL )
       leftClicked( p );
-    
-    //TODO: check if this repaint is really necessary
-    MapPanel panel = getMapPanel();
-    if (panel != null)
+
+    // TODO: check if this repaint is really necessary
+    final MapPanel panel = getMapPanel();
+    if( panel != null )
       panel.repaint();
 
   }
@@ -175,17 +174,17 @@ public abstract class AbstractCreateGeometeryWidget extends AbstractWidget
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#dragged(java.awt.Point)
    */
   @Override
-  public void moved( Point p )
+  public void moved( final Point p )
   {
     if( !m_points.isEmpty() )
-      {
+    {
       m_currentPoint = p;
 
-//    TODO: check if this repaint is necessary for the widget
-      MapPanel panel = getMapPanel();
-      if ( panel != null)
+// TODO: check if this repaint is necessary for the widget
+      final MapPanel panel = getMapPanel();
+      if( panel != null )
         panel.repaint();
-      }
+    }
   }
 
   /**
@@ -222,7 +221,7 @@ public abstract class AbstractCreateGeometeryWidget extends AbstractWidget
 
   private void drawHandles( final Graphics g, final int[] x, final int[] y )
   {
-    int sizeOuter = 6;
+    final int sizeOuter = 6;
     for( int i = 0; i < y.length; i++ )
       g.drawRect( x[i] - sizeOuter / 2, y[i] - sizeOuter / 2, sizeOuter, sizeOuter );
   }
@@ -235,7 +234,7 @@ public abstract class AbstractCreateGeometeryWidget extends AbstractWidget
     final List<Integer> yArray = new ArrayList<Integer>();
     for( int i = 0; i < m_points.size(); i++ )
     {
-      Point p = m_points.get( i );
+      final Point p = m_points.get( i );
       yArray.add( new Integer( (int) p.getY() ) );
     }
     if( m_currentPoint != null )
@@ -270,7 +269,7 @@ public abstract class AbstractCreateGeometeryWidget extends AbstractWidget
     final GM_Object validGeometryValue = getValidGeometryValue();
     if( validGeometryValue == null ) // nothing to perform
       return;
-    
+
     try
     {
       performIntern( validGeometryValue );
@@ -291,8 +290,8 @@ public abstract class AbstractCreateGeometeryWidget extends AbstractWidget
     for( int i = 0; i < listPoints.size(); i++ )
     {
       final Point p = listPoints.get( i );
-      int x = (int) p.getX();
-      int y = (int) p.getY();
+      final int x = (int) p.getX();
+      final int y = (int) p.getY();
       final GM_Position pos = GeometryFactory.createGM_Position( getProjection().getSourceX( x ), getProjection().getSourceY( y ) );
       positions.add( pos );
     }
@@ -325,7 +324,7 @@ public abstract class AbstractCreateGeometeryWidget extends AbstractWidget
    * @see org.kalypso.ogc.gml.widgets.IWidget#doubleClickedLeft(java.awt.Point)
    */
   @Override
-  public void doubleClickedLeft( Point p )
+  public void doubleClickedLeft( final Point p )
   {
     if( !canEdit() )
       return;
@@ -345,7 +344,7 @@ public abstract class AbstractCreateGeometeryWidget extends AbstractWidget
    * @see org.kalypso.ogc.gml.widgets.IWidget#doubleClickedRight(java.awt.Point)
    */
   @Override
-  public void doubleClickedRight( Point p )
+  public void doubleClickedRight( final Point p )
   {
     // nothing
   }
@@ -355,17 +354,17 @@ public abstract class AbstractCreateGeometeryWidget extends AbstractWidget
    *      org.kalypso.ogc.gml.map.MapPanel)
    */
   @Override
-  public void activate( ICommandTarget commandPoster, MapPanel mapPanel )
+  public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel )
   {
     super.activate( commandPoster, mapPanel );
     update( mapPanel );
   }
-  
+
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#keyReleased(java.awt.event.KeyEvent)
    */
   @Override
-  public void keyReleased( KeyEvent e )
+  public void keyReleased( final KeyEvent e )
   {
     if( e.getKeyCode() == KeyEvent.VK_ESCAPE )
     {
@@ -386,11 +385,10 @@ public abstract class AbstractCreateGeometeryWidget extends AbstractWidget
 
   protected abstract void update( final MapPanel mapPanel );
 
-  protected abstract CS_CoordinateSystem getCoordinatesSystem();
+  protected abstract CS_CoordinateSystem getCoordinatesSystem( );
 
   protected abstract GeoTransform getProjection( );
-  
+
   protected abstract Class getGeometryClass( );
 
-  
 }
