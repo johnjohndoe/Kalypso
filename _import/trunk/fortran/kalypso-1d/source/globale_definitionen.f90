@@ -1,4 +1,4 @@
-!     Last change:  MD    4 May 2007    5:44 pm
+!     Last change:  MD    4 Jul 2007    3:09 pm
 !--------------------------------------------------------------------------
 ! This code, globale_definitionen.f90, contains the shared memory modules
 ! and functions of the hydrodynamic modell for
@@ -42,8 +42,8 @@ implicit none
 
 save
 
-CHARACTER(LEN=29), parameter :: VERSIONNR   = ' KALYPSO-1D, VERSION 2.0.2   '
-CHARACTER(LEN=17), parameter :: VERSIONDATE = 'Stand: 03.07.2007'
+CHARACTER(LEN=29), parameter :: VERSIONNR   = ' KALYPSO-1D, VERSION 2.0.3   '
+CHARACTER(LEN=17), parameter :: VERSIONDATE = 'Stand: 04.07.2007'
 
 end module VERSION
 
@@ -122,6 +122,7 @@ INTEGER	:: UNIT_OUT_ALPHA       ! Beiwerte.aus, Ausgabe der Energiestrom und Imp
 INTEGER	:: UNIT_OUT_PRO         ! WQ-Tabelle altes WspWin Format
 INTEGER	:: UNIT_OUT_WSL         ! Laengschnitt im WspWin Blockformat
 INTEGER	:: UNIT_OUT_LAENGS      ! Neuer Laengsschnitt im Tabellenformat (leangsschnitt.txt)
+INTEGER	:: UNIT_OUT_QLAENGS     ! Neuer Abfluss-Laengsschnitt im Tabellenformat (Qschnitt.txt)
 INTEGER	:: UNIT_OUT_QB1         ! Laengschnitt im WspWin Blockformat bei Bordvoll-Berechnung
 INTEGER	:: UNIT_OUT_QB2         ! Laengschnitt im WspWin Blockformat bei Bordvoll-Berechnung
 INTEGER	:: UNIT_OUT_WEHR        ! Ausgabedatei fuer innere Abflussstaffelung am Wehr
@@ -161,6 +162,7 @@ CHARACTER(LEN=nch80) 			:: NAME_OUT_ALPHA       ! Beiwerte.aus, Ausgabe der Ener
 CHARACTER(LEN=nch80),DIMENSION(1:maxger):: NAME_OUT_PRO         ! WQ-Tabelle altes WspWin Format
 CHARACTER(LEN=nch80) 			:: NAME_OUT_WSL         ! Laengschnitt im WspWin Blockformat
 CHARACTER(LEN=nch80) 			:: NAME_OUT_LAENGS      ! Neuer Laengsschnitt im Tabellenformat (leangsschnitt.txt)
+CHARACTER(LEN=nch80) 			:: NAME_OUT_QLAENGS     ! Neuer Abfluss-Laengsschnitt im Tabellenformat (Qschnitt.txt)
 CHARACTER(LEN=nch80) 			:: NAME_OUT_QB1         ! Laengschnitt im WspWin Blockformat bei Bordvoll-Berechnung
 CHARACTER(LEN=nch80) 			:: NAME_OUT_QB2         ! Laengschnitt im WspWin Blockformat bei Bordvoll-Berechnung
 CHARACTER(LEN=nch80) 			:: NAME_OUT_WEHR        ! Ausgabedatei fuer innere Abflussstaffelung am Wehr
@@ -217,6 +219,8 @@ TYPE :: ergebnis_profil
   REAL :: BrueckUK      ! Brueckenunterkante [mNN], falls keine Bruecke, dann -999.99
   REAL :: BrueckB       ! Brueckenbreite [m], falls keine Bruecke, dann -999.99
   REAL :: RohrD         ! Rohrdurchmesser [m], falls kein Rohr, dann -999.99
+  REAL :: alphaIW       ! Impulsstrombeiwert [-]
+  REAL :: alphaEW       ! Energiestrombeiwert [-]
   LOGICAL :: interpol   ! Profil ist interpoliert (.TRUE.) oder urspruenglich (.FALSE.), wichtig bei Bruecken
   CHARACTER(LEN=1) :: chr_kenn ! Kennung fuer das Profil (i = Interpoliert, n = Normal, b = Bruecke, w = Wehr, d = Durchlass)
 END TYPE ergebnis_profil
@@ -303,6 +307,8 @@ REAL, DIMENSION(maxger)         :: fp_li, fp_fl, fp_re = 0.0
 REAL, DIMENSION(maxger)         :: rk_li, rk_fl, rk_re = 0.0
 REAL, DIMENSION(maxger)         :: br_li, br_fl, br_re = 0.0
 REAL, DIMENSION(maxger)         :: tau_fl = 0.0
+REAL, DIMENSION(maxger)         :: Alpha_IW = 0.0
+REAL, DIMENSION(maxger)         :: Alpha_EW = 0.0
 
 CHARACTER(LEN=10) :: num5 (maxger)
 
