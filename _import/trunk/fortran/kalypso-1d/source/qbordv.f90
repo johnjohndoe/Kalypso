@@ -1,4 +1,4 @@
-!     Last change:  MD   11 Apr 2007   11:39 am
+!     Last change:  MD    4 Jul 2007    3:10 pm
 !--------------------------------------------------------------------------
 ! This code, qbordv.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -812,7 +812,7 @@ pfad_qb2 = unit2
 
 ! Zuweisung des Pfades fuer NAME_OUT_LAENGS in MAIN (=wsp.f90)
 !MD CALL lapro1 (pfad_qb1, pfad_qb2, nbv, mark, NAME_OUT_LAENGS)
-CALL lapro1 (pfad_qb1, pfad_qb2, nbv, NAME_OUT_LAENGS)
+CALL lapro1 (pfad_qb1, pfad_qb2, nbv, NAME_OUT_LAENGS, NAME_OUT_QLAENGS)
 
 END SUBROUTINE qbordv
 
@@ -1087,6 +1087,8 @@ do i = nr_prof, anz_prof(j)-1
   out_PROF(i,j)%RohrD  		= out_PROF(i+1,j)%RohrD
   out_PROF(i,j)%interpol	= out_PROF(i+1,j)%interpol
   out_PROF(i,j)%chr_kenn	= out_PROF(i+1,j)%chr_kenn
+  out_PROF(i,j)%alphaIW         = out_PROF(i+1,j)%alphaIW
+  out_PROF(i,j)%alphaEW         = out_PROF(i+1,j)%alphaEW
 
 end do
 
