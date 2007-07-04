@@ -44,6 +44,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -74,7 +75,7 @@ public class MapView extends AbstractMapPart implements IViewPart
 
   private static final String MEMENTO_FILE = "mapFile";
 
-  private String m_memento_file;
+  private IFile m_memento_file;
 
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
@@ -88,18 +89,26 @@ public class MapView extends AbstractMapPart implements IViewPart
     final String reloadOnOpen = getConfigurationElement().getAttribute( MapView.RELOAD_MAP_ON_OPEN );
     if( (m_memento_file != null) && "true".equals( reloadOnOpen ) )
     {
-      final IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile( new Path( m_memento_file ) );
-      setFile( file );
-      if( file != null )
-        startLoadJob( file );
+      setFile( m_memento_file );
+      startLoadJob( m_memento_file );
     }
   }
 
+  /**
+   * @see org.eclipse.ui.IViewPart#init(org.eclipse.ui.IViewSite, org.eclipse.ui.IMemento)
+   */
   public void init( final IViewSite site, final IMemento memento )
   {
     init( site );
     if( memento != null )
-      m_memento_file = memento.getString( MapView.MEMENTO_FILE );
+    {
+      final String fullPath = memento.getString( MapView.MEMENTO_FILE );
+      if( fullPath != null )
+      {
+        final IPath path = Path.fromPortableString( fullPath );
+        m_memento_file = ResourcesPlugin.getWorkspace().getRoot().getFile( path );
+      }
+    }
   }
 
   /**
@@ -110,8 +119,9 @@ public class MapView extends AbstractMapPart implements IViewPart
     final IFile file = getFile();
     if( file != null )
     {
-      final String string = file.getFullPath().toString();
-      memento.putString( MapView.MEMENTO_FILE, string );
+      final IPath fullPath = file.getFullPath();
+      if( fullPath != null )
+        memento.putString( MapView.MEMENTO_FILE, fullPath.toPortableString() );
     }
   }
 
