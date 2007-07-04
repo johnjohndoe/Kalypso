@@ -1,4 +1,4 @@
-!     Last change:  MD   18 Apr 2007   10:29 am
+!     Last change:  MD    4 Jul 2007    6:30 pm
 !--------------------------------------------------------------------------
 ! This code, zeila.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -41,7 +41,7 @@
 
 
 ! ----------------------------------------------------------------
-SUBROUTINE zeila (unit5, nprof, pfad2, NAME_OUT_LAENGS)
+SUBROUTINE zeila (unit5, nprof, pfad2, NAME_OUT_LAENGS, NAME_OUT_QLAENGS)
 ! SUBROUTINE zeila (unit5, nprof, pfad2, mark, NAME_OUT_LAENGS)
 !
 ! geschrieben:  p.koch     01.08.1989
@@ -79,7 +79,8 @@ INTEGER, INTENT(IN) :: nprof                    ! Anzahl Profile
 
 !ST 29.03.2005
 !Variable für Laengschnitt.txt
-CHARACTER(LEN=nch80), INTENT(IN) :: NAME_OUT_LAENGS ! Pfad- und Dateinamen fuer Ergebnisstabelle \Dath\laengsschnitt.txt
+CHARACTER(LEN=nch80), INTENT(IN) :: NAME_OUT_LAENGS     ! Pfad- und Dateinamen fuer Ergebnisstabelle \Dath\laengsschnitt.txt
+CHARACTER(LEN=nch80), INTENT(IN) :: NAME_OUT_QLAENGS    ! Variable für Q_LangSchnitt.txt
 !ST
 
 
@@ -551,49 +552,61 @@ If (BERECHNUNGSMODUS == 'WATERLEVEL' .or. BERECHNUNGSMODUS == 'BF_NON_UNI' .or. 
                           & 'N/m^2', '-', '-', '-', 'm^2', 'm^2', 'm', 'm', 'm', 'm', &
                           & 'mNN',    'mNN',      'mNN',      'm',       'm'
 
- ! IF (BERECHNUNGSMODUS /= 'WATERLEVEL') then
- !  do j = 1, anz_q   ! Anzahl der Abfluesse
- !    do i = 1, anz_prof(j)   ! Anzahl der Profile
 
-      !WP 16.06.2006
-      !WP Durch die komplizierten Iterationsschleifen bei der Lambda-Berechnung kann
-      !WP Lambda sehr groß werden. Das ist unrealistisch. Um das Format zu wahren,
-      !WP werden die Lambda-Werte bei der Ausgabe auf 99.9999 begrenzt!
+  WRITE (UNIT_OUT_QLAENGS, 81) 'Stat', 'Kenn', 'Abfluss', 'Sohle', 'h_WSP', 'hen', 'h_BV', 'Boe_li', 'Boe_re', 'v_m', &
+                          & 'tau_fl',    'Q_li',    'Q_fl',    'Q_re', 'lamb_li', 'lamb_fl', 'lamb_re', &
+                          & 'f_li', 'f_fl', 'f_re', 'br_li', 'br_fl', 'br_re', &
+                          & 'WehrOK', 'BrueckOK', 'BrueckUK', 'BrueckB', 'RohrDN' , 'AlphaIW', 'AlphaEW'
 
- !     do k = 1, 3
- !       if (out_IND(i,j,k)%lambda > 99.9999) then
- !         out_IND(i,j,k)%lambda = 99.9999
- !       end if
- !     end do
- !     write (UNIT_OUT_LAENGS, 90) out_PROF(i,j)%stat, out_PROF(i,j)%chr_kenn, out_PROF(i,j)%qges, &
- !                            & out_PROF(i,j)%sohle, out_PROF(i,j)%wsp, &
- !                            & out_PROF(i,j)%hen, out_PROF(i,j)%hbv, out_PROF(i,j)%boeli, out_PROF(i,j)%boere, &
- !                            & out_PROF(i,j)%vm, out_PROF(i,j)%tau, &
- !                            & out_IND(i,j,1)%lambda, out_IND(i,j,2)%lambda, out_IND(i,j,3)%lambda, &
- !                            & out_IND(i,j,1)%A, out_IND(i,j,2)%A, out_IND(i,j,3)%A, &
- !                            & out_IND(i,j,1)%B, out_IND(i,j,2)%B, out_IND(i,j,3)%B, &
- !                            & out_PROF(i,j)%WehrOK, out_PROF(i,j)%BrueckOK, out_PROF(i,j)%BrueckUK, &
- !                            & out_PROF(i,j)%BrueckB, out_PROF(i,j)%RohrD
- !     END DO    ! Ueber alle Abfluesse
- !   END DO    ! Ueber alle Profile
+  WRITE (UNIT_OUT_QLAENGS, 81) 'km'  ,  '-', 'm^3/s', 'mNN'  , 'mNN'  , 'mNN', 'mNN' , 'mNN'   , 'mNN'   , 'm/s', &
+                          & 'N/m^2',   'm^3/s',   'm^3/s',   'm^3/s', '-', '-', '-', 'm^2', 'm^2', 'm', 'm', 'm', 'm', &
+                          & 'mNN',    'mNN',      'mNN',      'm',       'm',       '-',       '-'
 
- ! ELSEIF (BERECHNUNGSMODUS == 'WATERLEVEL') then
-    do i = 1, anz_prof(1)   ! Anzahl der Profile
+ IF (BERECHNUNGSMODUS /= 'WATERLEVEL') then
+   do j = 1, anz_q     ! Anzahl der Abfluesse
+     do i = 1, anz_prof(j)   ! Anzahl der Profile
+
+     !WP 16.06.2006
+     !WP Durch die komplizierten Iterationsschleifen bei der Lambda-Berechnung kann
+     !WP Lambda sehr groß werden. Das ist unrealistisch. Um das Format zu wahren,
+     !WP werden die Lambda-Werte bei der Ausgabe auf 99.9999 begrenzt!
+
       do k = 1, 3
-        if (out_IND(i,1,k)%lambda > 99.9999) then
-          out_IND(i,1,k)%lambda = 99.9999
+        if (out_IND(i,j,k)%lambda > 99.9999) then
+          out_IND(i,j,k)%lambda = 99.9999
         end if
       end do
-    write (UNIT_OUT_LAENGS, 90) out_PROF(i,1)%stat, out_PROF(i,1)%chr_kenn, out_PROF(i,1)%qges, &
-                             & out_PROF(i,1)%sohle, out_PROF(i,1)%wsp, &
-                             & out_PROF(i,1)%hen, out_PROF(i,1)%hbv, out_PROF(i,1)%boeli, out_PROF(i,1)%boere, &
-                             & out_PROF(i,1)%vm, out_PROF(i,1)%tau, &
-                             & out_IND(i,1,1)%lambda, out_IND(i,1,2)%lambda, out_IND(i,1,3)%lambda, &
-                             & out_IND(i,1,1)%A, out_IND(i,1,2)%A, out_IND(i,1,3)%A, &
-                             & out_IND(i,1,1)%B, out_IND(i,1,2)%B, out_IND(i,1,3)%B, &
-                             & out_PROF(i,1)%WehrOK, out_PROF(i,1)%BrueckOK, out_PROF(i,1)%BrueckUK, &
-                             & out_PROF(i,1)%BrueckB, out_PROF(i,1)%RohrD
-    END DO
+      write (UNIT_OUT_QLAENGS, 91) out_PROF(i,j)%stat, out_PROF(i,j)%chr_kenn, out_PROF(i,j)%qges, &
+                             & out_PROF(i,j)%sohle, out_PROF(i,j)%wsp, &
+                             & out_PROF(i,j)%hen, out_PROF(i,j)%hbv, out_PROF(i,j)%boeli, out_PROF(i,j)%boere, &
+                             & out_PROF(i,j)%vm, out_PROF(i,j)%tau, &
+                             & out_IND(i,j,1)%Q, out_IND(i,j,2)%Q, out_IND(i,j,3)%Q, &
+                             & out_IND(i,j,1)%lambda, out_IND(i,j,2)%lambda, out_IND(i,j,3)%lambda, &
+                             & out_IND(i,j,1)%A, out_IND(i,j,2)%A, out_IND(i,j,3)%A, &
+                             & out_IND(i,j,1)%B, out_IND(i,j,2)%B, out_IND(i,j,3)%B, &
+                             & out_PROF(i,j)%WehrOK, out_PROF(i,j)%BrueckOK, out_PROF(i,j)%BrueckUK, &
+                             & out_PROF(i,j)%BrueckB, out_PROF(i,j)%RohrD, &
+                             & out_PROF(i,j)%alphaIW, out_PROF(i,j)%alphaEW
+      END DO    ! Ueber alle Abfluesse
+    END DO    ! Ueber alle Profile
+  ENDIF
+ ! ELSEIF (BERECHNUNGSMODUS == 'WATERLEVEL') then
+  do i = 1, anz_prof(1)   ! Anzahl der Profile
+    do k = 1, 3
+      if (out_IND(i,1,k)%lambda > 99.9999) then
+        out_IND(i,1,k)%lambda = 99.9999
+      end if
+    end do
+  write (UNIT_OUT_LAENGS, 90) out_PROF(i,1)%stat, out_PROF(i,1)%chr_kenn, out_PROF(i,1)%qges, &
+                           & out_PROF(i,1)%sohle, out_PROF(i,1)%wsp, &
+                           & out_PROF(i,1)%hen, out_PROF(i,1)%hbv, out_PROF(i,1)%boeli, out_PROF(i,1)%boere, &
+                           & out_PROF(i,1)%vm, out_PROF(i,1)%tau, &
+                           & out_IND(i,1,1)%lambda, out_IND(i,1,2)%lambda, out_IND(i,1,3)%lambda, &
+                           & out_IND(i,1,1)%A, out_IND(i,1,2)%A, out_IND(i,1,3)%A, &
+                           & out_IND(i,1,1)%B, out_IND(i,1,2)%B, out_IND(i,1,3)%B, &
+                           & out_PROF(i,1)%WehrOK, out_PROF(i,1)%BrueckOK, out_PROF(i,1)%BrueckUK, &
+                           & out_PROF(i,1)%BrueckB, out_PROF(i,1)%RohrD
+  END DO
  ! ENDIF
 
   7  FORMAT (1X, A8, ', ', A8, ' Uhr')
@@ -602,7 +615,9 @@ If (BERECHNUNGSMODUS == 'WATERLEVEL' .or. BERECHNUNGSMODUS == 'BF_NON_UNI' .or. 
   9  FORMAT (1x, 7F10.4, F8.3, F8.2, 3F8.4, 3F10.3, 3F10.3)
 
   80 FORMAT (1X, A10,   A5, 7A10,   A8,   A8,   3A8,   3A10,   3A10,   5A10)
+  81 FORMAT (1X, A10,   A5, 7A10,   A8,   A8,   3A10,   3A8,   3A10,   3A10,   7A10)
   90 format (1X, F10.4, A5, 7F10.3, F8.3, F8.2, 3F8.4, 3F10.3, 3F10.3, 5F10.3)
+  91 format (1X, F10.4, A5, 7F10.3, F8.3, F8.2, 3F10.3, 3F8.4, 3F10.3, 3F10.3, 5F10.3, 2F10.5)
   ! ST --------------------------------------------------------------------
 
 ENDIF !MD Ende fuer BERECHNUNGSMODUS == 'WATERLEVEL'.or.'BF_NON_UNI'.or.'REIB_KONST'
