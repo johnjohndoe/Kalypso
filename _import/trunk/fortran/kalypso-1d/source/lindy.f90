@@ -1,4 +1,4 @@
-!     Last change:  WP   12 Mar 2006    2:10 pm
+!     Last change:  MD    4 Jul 2007    1:50 pm
 !--------------------------------------------------------------------------
 ! This code, lindy.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -321,8 +321,15 @@ ENDIF
 
 !UT   Berechnung von Lamda_Vorland, Formel 11, BWK, S.18
 lamvog = aln_mi + lamv
+
 !UT   Berechnung Geschw. Vorland, Formle 6, BWK, S.15
-vxmvor = (2. * g * is * dhyd / lamvog) **0.5
+!MD   Abfangen von x/0
+if (dhyd.gt.0.D0 .and. lamvog.gt.0.D0) then
+  vxmvor = (2. * g * is * dhyd / lamvog) **0.5
+else
+  vxmvor = 0.0
+end if
+
 !                                /* anfangswert schleife 4
 
 
@@ -386,7 +393,8 @@ DO 3000 WHILE(abs (cwr - cwn) .gt.1.e-02)
 
     !UT   u_mi - benetzter Umfang des Teilabschnittes des Vorlandes
     !UT   FALLS u_mi VORLIEGT RECHNUNG, SONST ALLES NULL UND ENDE DER SUB
-    IF (u_mi.ge.1.e-4) then
+    !MD   Abfangen von x/0
+    IF (u_mi.ge.1.e-04 .and. lamvog.gt.0.D0) then
       !UT  FORMEL 6, S.15, BWK
       vxmvor = (2. * g * dhyd * is / lamvog) **0.5
       re_mi = vxmvor * dhyd / nue
@@ -1050,7 +1058,12 @@ DO 3000 WHILE(abs (cwr - cwn) .gt.1.e-02)
                                                            ! al_re changed
 
       !UT           STROEMUNGSGESCHWINDIGKEIT IM VORLAND
-      vxmvor = (2. * g * is * dhyg / lamvog) **0.5
+      if (dhyg.gt.0.D0 .and. lamvog.gt.0.D0) then
+        vxmvor = (2. * g * is * dhyg / lamvog) **0.5
+      else
+        vxmvor = 0.0D0
+      end if
+
 
       !UT           BERECHNE NEUE REYZAHLEN, MITTE, LINKS, RECHTS
       ren_mi = vxmvor * dh_mi / nue
@@ -1089,17 +1102,23 @@ DO 3000 WHILE(abs (cwr - cwn) .gt.1.e-02)
     !UT       BERECHNUNG HYDRAULISCHER DURCHMESSER MITTE MIT
     !UT       lamv DURCH BEWUCHS
                                                          ! al_mi changed
-    dhn_mi = (aln_mi + lamv) / lamvog * dhyg
+    if (dhyd.gt.0.D0 .and. lamvog.gt.0.D0) then
+      dhn_mi = (aln_mi + lamv) / lamvog * dhyg
+    else
+      dhn_mi = 0.0
+    endif
                                                                         
     !         Gemaess Pasche-Verfahren (DVWK-Heft 220) ist bei der Rauheits-
     !         ueberlagerung im Vorland die bewuchsbedingte Rauheit zur Be-
     !         rechnung des hydrl. Durchmessers nicht mit anzusetzen.
                                                                         
-                                                         ! al_li changed
-    dhn_li = aln_li / lamvog * dhyg
-                                                         ! al_re changed
-    dhn_re = aln_re / lamvog * dhyg
-                                                                        
+    if (dhyd.gt.0.D0 .and. lamvog.gt.0.D0) then
+      dhn_li = aln_li / lamvog * dhyg                   ! al_li changed
+      dhn_re = aln_re / lamvog * dhyg                   ! al_re changed
+     else
+      dhn_li = 0.0
+      dhn_re = 0.0
+    endif                                                                    
                                                                         
     !***********************************************************************
     !     DK, 15/05/01
@@ -1164,8 +1183,11 @@ DO 3000 WHILE(abs (cwr - cwn) .gt.1.e-02)
 !      PRINT *,'It is returning to EBKSN!'                              
 !      PRINT *                                                          
 !***********************************************************************
-                                                                        
-                                                                        
+! PRINT *,'Sub LINDY'
+! PRINT *,'lamvog:',lamvog
+! PRINT *,'vxmvor:',vxmvor
+! PRINT *,'is:',is
+
 !UT   BERECHNUNG DER FEHLERBELEGUNG                                     
 ifehl = il_fr30 + il2730 + il2720 + il2710 + il3000
                                                                         

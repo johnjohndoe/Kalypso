@@ -1,4 +1,4 @@
-!     Last change:  WP   10 Mar 2006    8:56 pm
+!     Last change:  MD    2 Jul 2007    7:14 pm
 !--------------------------------------------------------------------------
 ! This code, alpha_dru.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -154,8 +154,7 @@ COMMON / h_trenn / trenn_li, trenn_re
 !HB   Berechnung des lambda-Widerstandsbeiwertes fuer das               
 !HB   Gesamt-Profil                                                     
 !HB   Berechnung:  lambda_gesamt=(I*A**3*8*g)/(l_gesamtumfang*Q**2)     
-      lambda_g (i) = (gefaelle * gesamt_a (i) **3 * 8 * g) / (umfang_g (&
-      i) * qs (i) **2)                                                  
+      lambda_g (i) = (gefaelle * gesamt_a(i) **3 * 8 * g) / (umfang_g(i) * qs(i) **2)
                                                                         
 !HB   ***************************************************************** 
 !HB   Ausdruck der Werte                                                

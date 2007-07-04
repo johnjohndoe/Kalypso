@@ -1,4 +1,4 @@
-!     Last change:  WP    6 Jun 2006    4:28 pm
+!     Last change:  MD    4 Jul 2007    2:25 pm
 !--------------------------------------------------------------------------
 ! This code, pasche.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -827,7 +827,7 @@ DO 1 WHILE(abs (vlam - vbmwv) .gt. (epsi * 50.) )
           rhytr (i1) = l_tr (i1) / l_hg * r_hg 
           a_kt(i1) = 0.854 * rhytr(i1) * omega * (1.7 * bmwvor(i1) / bf(i1) ) **c4
           dqvor(i1) = 0.25 * u_tr(i1) * bmwvor(i1) * (v_tr(i1) - v_ks(ik) )
-          l_ks(ik) = 8. * g * r_ks(ik) * isener / ( (dqvor(i1) + q_ks(ik) ) / a_ks(ik) ) **2
+          l_ks(ik) = 8. * g * r_ks(ik) * isener / ( ( (dqvor(i1) + q_ks(ik)) /a_ks(ik)) **2.D0)
         ELSE 
           a_kt (i1) = 0. 
           dqvor (i1) = 0. 

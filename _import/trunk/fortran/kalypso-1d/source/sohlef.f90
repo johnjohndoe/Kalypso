@@ -1,4 +1,4 @@
-!     Last change:  WP    2 Jun 2006   11:36 pm
+!     Last change:  MD    3 Jul 2007    5:59 pm
 !--------------------------------------------------------------------------
 ! This code, sohlef.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -646,7 +646,7 @@ DO 3000 WHILE(abs (sumdd) .gt.0.005)
            resof (i) = v_hg * 4 * rhynn (i) / nue
 
            !UT              BERECHNUNG LAMBDA
-           ln_ks(i) = (1. / (-2.0 * alog10(factor+k_ks(i) / (4. * rhynn(i)*3.71) ) ) ) ** 2
+           ln_ks(i) = (1. / (-2.03 * LOG10 (factor+ (k_ks(i) / (4.* rhynn(i)*3.71)) ) ) ) ** 2
 
            !ln_ks(i)  = GET_LAMBDA(v_hg, rhynn(i), ks_iter, fbw)
 

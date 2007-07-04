@@ -1,4 +1,4 @@
-!     Last change:  WP   26 Apr 2006   12:00 pm
+!     Last change:  MD    4 Jul 2007    1:51 pm
 !--------------------------------------------------------------------------
 ! This code, drucktab.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -87,6 +87,11 @@ CHARACTER(LEN=nch80)    :: alph_aus     ! Projektpfad fuer Beiwerte.AUS
 COMMON / alph_pf / alph_aus, nr_alph
 ! ----------------------------------------------------------------------------------
 
+!HB   Boussineq-Beiwertes/ ---------------------------------------------------------
+INTEGER :: pn_alpha
+REAL :: st_alpha, alpha_EW (maxkla), alpha_IW (maxkla), gesamt_a (maxkla)
+COMMON / nr_alpha / pn_alpha, st_alpha, gesamt_a, alpha_EW, alpha_IW
+! ----------------------------------------------------------------------------------
 
 ! COMMON-Block /AUSGABELAMBDA/ -----------------------------------------------------
 REAL, DIMENSION(maxkla) :: lambda_teilflaeche
@@ -193,10 +198,8 @@ REAL                    :: v
   out_PROF(i,nr_q)%hbv    = MIN(bolip(i), borep(i)) 	! minimale Bordvollhoehe [mNN]
   out_PROF(i,nr_q)%vm     = vmp(i)              	! mittlere Fliessgeschwindigkeit [m/s]
   out_PROF(i,nr_q)%tau    = (rkp(i,2)/8)*rho*vp(i,2)**2 ! Sohlschubspannung im Flussschlauch [N/m2]
-
-
-
-
+  out_PROF(i,nr_q)%alphaIW  = Alpha_IW(i)               ! Impulsstrombeiwert aus eb2ks [-]
+  out_PROF(i,nr_q)%alphaEW  = Alpha_EW(i)               ! Energiestrombeiwert aus eb2ks [-]
 !end if
 
 ifbr = 0
