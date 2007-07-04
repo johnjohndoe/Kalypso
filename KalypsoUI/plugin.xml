@@ -139,7 +139,7 @@
         id="org.kalypso.ui.views.mapView"
         name="Map"
         saveMapOnClose="true"
-        reloadMapOnOpen="true"/>
+        reloadMapOnOpen="false"/>
   <view
         allowMultiple="false"
         category="org.kalypso.ui.kalypso"
@@ -153,7 +153,8 @@
         class="org.kalypso.ui.editor.featureeditor.FeatureTemplateView"
         icon="icons/kalypso_gtt.gif"
         id="org.kalypso.ui.views.featuretemplateview"
-        name="Feature View"/>
+        name="Feature View"
+        reloadMapOnOpen="false"/>
 	</extension>
 	<extension id="editorActions" name="editorActions"
 		point="org.eclipse.ui.editorActions">

@@ -55,7 +55,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -73,9 +72,6 @@ import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.command.DefaultCommandManager;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilitites;
-import org.kalypso.ogc.gml.map.BaseMapSchedulingRule;
 import org.kalypso.template.featureview.Featuretemplate;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 
@@ -87,6 +83,8 @@ public class FeatureTemplateView extends ViewPart
   public static final String ID = "org.kalypso.ui.views.featuretemplateview";
 
   private static final String MEMENTO_FILE = "file";
+
+  private static final String RELOAD_MAP_ON_OPEN = "reloadMapOnOpen";
 
   private final Runnable m_dirtyRunnable = new Runnable()
   {
@@ -117,7 +115,6 @@ public class FeatureTemplateView extends ViewPart
   /**
    * @see org.eclipse.ui.part.ViewPart#init(org.eclipse.ui.IViewSite, org.eclipse.ui.IMemento)
    */
-  @SuppressWarnings("restriction")
   @Override
   public void init( final IViewSite site, final IMemento memento ) throws PartInitException
   {
@@ -155,7 +152,10 @@ public class FeatureTemplateView extends ViewPart
   public void createPartControl( final Composite parent )
   {
     m_templateviewer.createControls( parent, SWT.BORDER );
-    if( m_file != null )
+
+    // Stefan: Now we can restore the file if the view is configured to do so
+    final String reloadOnOpen = getConfigurationElement().getAttribute( RELOAD_MAP_ON_OPEN );
+    if( m_file != null && "true".equals( reloadOnOpen ) )
     {
       loadFromTemplate( m_file );
     }
@@ -240,36 +240,36 @@ public class FeatureTemplateView extends ViewPart
     }
   }
 
-  @Override
-  public void dispose( )
-  {
-    m_commandTarget.dispose();
-    if( m_templateviewer != null )
-    {
-      saveFeature();
-      m_templateviewer.dispose();
-    }
-    super.dispose();
-  }
+// @Override
+// public void dispose( )
+// {
+// m_commandTarget.dispose();
+// if( m_templateviewer != null )
+// {
+// saveFeature();
+// m_templateviewer.dispose();
+// }
+// super.dispose();
+// }
 
-  /**
-   * Saves the feature being edited
-   */
-  private void saveFeature( )
-  {
-    final Job job = new Job( "Daten speichern" )
-    {
-      @Override
-      public IStatus run( final IProgressMonitor monitor )
-      {
-        
-          return m_templateviewer.saveGML( monitor );
-      }
-    };
-    job.setRule( m_file.getProject() );
-    job.setUser( true );
-    job.schedule();    
-  }
+// /**
+// * Saves the feature being edited
+// */
+// private void saveFeature( )
+// {
+// final Job job = new Job( "Daten speichern" )
+// {
+// @Override
+// public IStatus run( final IProgressMonitor monitor )
+// {
+//
+// return m_templateviewer.saveGML( monitor );
+// }
+// };
+// job.setRule( m_file.getProject() );
+// job.setUser( true );
+// job.schedule();
+// }
 
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
