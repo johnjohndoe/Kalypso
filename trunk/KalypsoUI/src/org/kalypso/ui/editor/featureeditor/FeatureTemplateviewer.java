@@ -40,7 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.featureeditor;
 
-import java.io.Reader;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 import java.util.Properties;
@@ -190,13 +190,13 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
     return Status.OK_STATUS;
   }
 
-  public final Featuretemplate loadInput( final Reader reader, final URL context, final IProgressMonitor monitor, Properties props ) throws CoreException
+  public final Featuretemplate loadInput( final InputStream inputStream, final URL context, final IProgressMonitor monitor, Properties props ) throws CoreException
   {
     monitor.beginTask( "Ansicht laden", 1000 );
     Featuretemplate template = null;
     try
     {
-      final InputSource is = new InputSource( reader );
+      final InputSource is = new InputSource( inputStream );
 
       final Unmarshaller unmarshaller = JC.createUnmarshaller();
 

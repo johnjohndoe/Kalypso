@@ -40,15 +40,14 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.featureeditor;
 
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
+import java.io.BufferedInputStream;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Properties;
 
-import org.eclipse.core.resources.IEncodedStorage;
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -272,20 +271,17 @@ public class FeatureEditor extends EditorPart
   {
     monitor.beginTask( "Ansicht laden", 1000 );
 
+    InputStream contents = null;
     try
     {
       final IStorage storage = input.getStorage();
-
-      final Reader r;
-      if( storage instanceof IEncodedStorage )
-        r = new InputStreamReader( storage.getContents(), ( (IEncodedStorage)storage ).getCharset() );
-      else
-        r = new InputStreamReader( storage.getContents() );
+      contents = new BufferedInputStream( storage.getContents() );
 
       final IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile( storage.getFullPath() );
       final URL context = ResourceUtilities.createURL( file );
 
-      m_viewer.loadInput( r, context, monitor, new Properties() );
+      m_viewer.loadInput( contents, context, monitor, new Properties() );
+      contents.close();
     }
     catch( final MalformedURLException e )
     {
@@ -293,20 +289,21 @@ public class FeatureEditor extends EditorPart
 
       throw new CoreException( StatusUtilities.statusFromThrowable( e, "Fehler beim Parsen der Context-URL" ) );
     }
-    catch( final UnsupportedEncodingException e )
+    catch( final CoreException e )
+    {
+      e.printStackTrace();
+      
+      throw e;
+    }
+    catch( final Throwable e )
     {
       e.printStackTrace();
 
       throw new CoreException( StatusUtilities.statusFromThrowable( e, "Fehler beim Lesen von XML" ) );
     }
-    catch( final CoreException e )
-    {
-      e.printStackTrace();
-
-      throw e;
-    }
     finally
     {
+      IOUtils.closeQuietly( contents );
       monitor.done();
     }
   }
