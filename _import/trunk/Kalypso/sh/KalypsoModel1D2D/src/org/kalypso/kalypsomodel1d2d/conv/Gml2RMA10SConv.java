@@ -69,7 +69,6 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.FlowRelationUtilitite
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IKingFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IWeirFlowRelation;
-import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
@@ -131,7 +130,7 @@ public class Gml2RMA10SConv
     m_flowrelationModel = calculation.getFlowModel();
     m_calcultionUnit = calculation.getCalcultionUnit();
     m_calUnitBBox = CalUnitOps.getBoundingBox( m_calcultionUnit );
-    
+
     // initialize Roughness IDs
     for( final Object o : calculation.getRoughnessClassList() )
     {
@@ -224,11 +223,11 @@ public class Gml2RMA10SConv
   {
     final List<IFE1D2DEdge> edgeInBBox = edges.query( m_calUnitBBox );
     int cnt = 1;
-    for( final IFE1D2DEdge edge : edgeInBBox/*edges*/ )
+    for( final IFE1D2DEdge edge : edgeInBBox/* edges */)
     {
       if( edge instanceof IEdgeInv )
         continue;
-      
+
       final int node0ID = getID( edge.getNode( 0 ) );
       final int node1ID = getID( edge.getNode( 1 ) );
 
@@ -273,8 +272,8 @@ public class Gml2RMA10SConv
       }
       else if( TypeInfo.is2DEdge( edge ) )
       {
-        
-        final IFE1D2DElement leftElement = EdgeOps.getLeftRightElement( m_calcultionUnit, edge, EdgeOps.ORIENTATION_LEFT );        
+
+        final IFE1D2DElement leftElement = EdgeOps.getLeftRightElement( m_calcultionUnit, edge, EdgeOps.ORIENTATION_LEFT );
         final IFE1D2DElement rightElement = EdgeOps.getLeftRightElement( m_calcultionUnit, edge, EdgeOps.ORIENTATION_RIGHT );
         final int leftParent = getID( leftElement );
         final int rightParent = getID( rightElement );
@@ -290,8 +289,8 @@ public class Gml2RMA10SConv
 
   private void writeNodes( final Formatter formatter, final IFeatureWrapperCollection<IFE1D2DNode> nodes ) throws SimulationException
   {
-    List<IFE1D2DNode> nodesInBBox = nodes.query( m_calUnitBBox );
-    for( final IFE1D2DNode<IFE1D2DEdge> node : nodesInBBox/*nodes*/ )
+    final List<IFE1D2DNode> nodesInBBox = nodes.query( m_calUnitBBox );
+    for( final IFE1D2DNode<IFE1D2DEdge> node : nodesInBBox/* nodes */)
     {
       /* The node itself */
       final int nodeID = getID( node );
@@ -410,21 +409,20 @@ public class Gml2RMA10SConv
   private void writeElements( final Formatter formatter, final LinkedHashMap<String, String> roughnessIDProvider, final IFeatureWrapperCollection<IFE1D2DElement> elements, final IRoughnessPolygonCollection roughnessPolygonCollection ) throws GM_Exception, SimulationException
   {
     final List<IFE1D2DElement> elementsInBBox = elements.query( m_calUnitBBox );
-    
-    for( final IFE1D2DElement element : elementsInBBox/*elements*/ )
+
+    for( final IFE1D2DElement element : elementsInBBox/* elements */)
     {
-      if( !CalUnitOps.isFiniteElementOf( m_calcultionUnit, element ))
+      if( !CalUnitOps.isFiniteElementOf( m_calcultionUnit, element ) )
       {
         continue;
       }
-      
+
       final int id = getID( element );
 
       if( element instanceof IElement1D )
       {
         /* 1D-Elements get special handling. */
         final IElement1D element1D = (IElement1D) element;
-        
 
         final IWeirFlowRelation weir = FlowRelationUtilitites.findWeirElement1D( element1D, m_flowrelationModel );
         if( weir != null )
@@ -443,7 +441,7 @@ public class Gml2RMA10SConv
         else
         {
           // TODO: give hint what 1D-element is was?
-          throw new SimulationException( "1D-Element ohne Bauwerk bzw. ohne Netzparameter: "+element1D.getGmlID(), null );
+          throw new SimulationException( "1D-Element ohne Bauwerk bzw. ohne Netzparameter: " + element1D.getGmlID(), null );
         }
       }
       else if( element instanceof IPolyElement )

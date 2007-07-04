@@ -49,7 +49,12 @@ public class PerspectiveWatcher<T extends Case> implements IActiveContextChangeL
 
       if( workbench.isClosing() )
       {
-        activePage.closePerspective( perspective, true, false );
+        final IPerspectiveDescriptor[] perspectives = activeWorkbenchWindow.getWorkbench().getPerspectiveRegistry().getPerspectives();
+        for( final IPerspectiveDescriptor pd : perspectives )
+        {
+          if( pd.getId().equals( Perspective.ID ) )
+            activePage.closePerspective( pd, true, false );
+        }
       }
       else if( perspective.getId().equals( Perspective.ID ) )
       {

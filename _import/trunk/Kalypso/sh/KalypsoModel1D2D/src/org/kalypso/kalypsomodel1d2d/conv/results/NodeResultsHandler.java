@@ -208,7 +208,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
    *      int)
    */
   @SuppressWarnings("unchecked")
-  public void handleElement( final String lineString, int id, final int currentRougthnessClassID, final int previousRoughnessClassID, final int eleminationNumber )
+  public void handleElement( final String lineString, final int id, final int currentRougthnessClassID, final int previousRoughnessClassID, final int eleminationNumber )
   {
     // For each element calculate the geometry (elemID, cornernode1, midsidenode1, cornernode2, midsidenode2,
 
@@ -367,6 +367,13 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     // get the profile Curves of the two nodes defining the current element
     final GM_Curve nodeCurve1 = getProfileCurveFor1dNode( nodeDown );
     final GM_Curve nodeCurve2 = getProfileCurveFor1dNode( nodeUp );
+
+    if( nodeCurve1 == null || nodeCurve2 == null )
+    {
+      /* Probably profile information missing */
+      // TODO: write warning into som elog
+      return;
+    }
 
     final double curveDistance = nodeCurve1.distance( nodeCurve2 );
 
@@ -719,9 +726,10 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     if( flowRelationship instanceof ITeschkeFlowRelation )
     {
       final ITeschkeFlowRelation teschkeRelation = (ITeschkeFlowRelation) flowRelationship;
-      // teschkeRelation.getPolynomials();
-
       final WspmProfile profile = teschkeRelation.getProfile();
+      if( profile == null )
+        return null;
+
       final IProfil profil = profile.getProfil();
 
       /* cut the profile at the intersection points with the water level */
