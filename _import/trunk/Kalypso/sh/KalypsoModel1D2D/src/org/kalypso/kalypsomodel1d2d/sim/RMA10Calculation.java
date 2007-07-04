@@ -46,6 +46,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -53,6 +54,7 @@ import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.kalypsomodel1d2d.conv.BoundaryConditionInfo;
 import org.kalypso.kalypsomodel1d2d.conv.BoundaryLineInfo;
+import org.kalypso.kalypsomodel1d2d.conv.INativeIDProvider;
 import org.kalypso.kalypsomodel1d2d.conv.ITimeStepinfo;
 import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
@@ -95,7 +97,7 @@ import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
  * @author huebsch <a href="mailto:j.huebsch@tuhh.de">Jessica Huebsch</a>
  */
 @SuppressWarnings( { "unchecked", "hiding" })
-public class RMA10Calculation
+public class RMA10Calculation implements INativeIDProvider
 {
   private GMLWorkspace m_disModelWorkspace = null;
 
@@ -115,6 +117,9 @@ public class RMA10Calculation
 
   private List<ITimeStepinfo> m_timeStepInfos;
 
+  private final LinkedHashMap<IBoundaryLine, Integer> m_boundaryLineIDProvider =
+    new LinkedHashMap<IBoundaryLine, Integer>(32);
+  
   public RMA10Calculation( final ISimulationDataProvider inputProvider ) throws SimulationException, Exception
   {
     final Map<String, String> specialUrls = new HashMap<String, String>();
@@ -328,6 +333,7 @@ public class RMA10Calculation
       final BoundaryLineInfo info = new BoundaryLineInfo( contiCount++, nodeArray );
       result.add( info );
       contiMap.put( line, info );
+      m_boundaryLineIDProvider.put( line, new Integer( contiCount ) );
     }
 
     /* Add all boundary conditions. */
@@ -429,5 +435,19 @@ public class RMA10Calculation
 
     return (IControlModel1D2D) controlModelFeature.getAdapter( IControlModel1D2D.class );
   }
-
+  
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.conv.INativeIDProvider#getID(org.kalypsodeegree.model.feature.binding.IFeatureWrapper2)
+   */
+  public int getID( IFeatureWrapper2 object )
+  {
+    if( object instanceof IBoundaryLine )
+    {
+     return m_boundaryLineIDProvider.get( object ); 
+    }
+    else
+    {
+      throw new RuntimeException("Type not supported");
+    }
+  }
 }

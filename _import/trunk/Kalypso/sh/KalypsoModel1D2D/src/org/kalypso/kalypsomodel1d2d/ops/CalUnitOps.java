@@ -56,6 +56,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionContext1DToCLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ILineElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
@@ -288,10 +289,11 @@ public class CalUnitOps
     }
     else if( calUnit instanceof ICalculationUnit1D )
     {
-      return calUnit.getElements().size();      
+      return calUnit.getElements().countFeatureWrappers( IElement1D.class );      
     }
     else if( calUnit instanceof ICalculationUnit1D2D )
     {
+      System.out.println("Getting element of 1d2d calunit");
       int num=0; 
       for( Object ele : calUnit.getElements() )
       {
@@ -557,7 +559,25 @@ public class CalUnitOps
     Assert.throwIAEOnNullParam( unit, "unit" );
     Assert.throwIAEOnNullParam( element, "element" );
     final IFeatureWrapperCollection containers = element.getContainers();
-    return containers.contains( unit );
+//    return containers.contains( unit );
+    
+    LinkedList<ICalculationUnit> subUnits = new LinkedList<ICalculationUnit>( );
+    subUnits.add( unit );
+    while(!subUnits.isEmpty())
+    {
+      ICalculationUnit currentSubUnit = subUnits.remove( 0 );
+      if( currentSubUnit instanceof ICalculationUnit1D2D )
+      {
+        subUnits.addAll( ((ICalculationUnit1D2D)currentSubUnit ).getSubUnits() );
+      }
+      
+      if( containers.contains( currentSubUnit ) )
+      {
+        return true;
+      }
+      
+    }
+    return false;
   }
   
   /**
@@ -985,5 +1005,25 @@ public class CalUnitOps
     }
     
     return count;
+  }
+  
+  /**
+   * Answer whether the provided junction contect is joining subunits of the given combined unit 1d2d.
+   * The test is base on the inclusion ofthe juntion 1d element in a subunit
+   * 
+   * @param unit the combined unit which gives the test context
+   * @param jContext the junction context to text for being part of combined unit
+   * @return true if jContext is joining sub unit of the combined unit otherwise false 
+   */
+  public static boolean isJunctionContextOf(ICalculationUnit1D2D unit, IJunctionContext1DToCLine jContext)
+  {
+    IElement1D element1D = jContext.getElement1D();
+    if( element1D == null )
+    {
+      return false;
+    }
+     
+    return isFiniteElementOf( unit, element1D );
+    
   }
 }

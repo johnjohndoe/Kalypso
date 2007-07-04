@@ -254,13 +254,13 @@ public class SelectedCalculationComponent
             getBoundaryConditions(), 
             (ICalculationUnit)newValue, 
              grabDistance );
-        int bcCont1 =
-          CalUnitOps.getBoundaryConditions( 
-                          getBoundaryConditions(), 
-                          (ICalculationUnit)newValue, 
-                          grabDistance ).size();
+//        int bcCont1 =
+//          CalUnitOps.getBoundaryConditions( 
+//                          getBoundaryConditions(), 
+//                          (ICalculationUnit)newValue, 
+//                          grabDistance ).size();
         textCountBC.setText(
-            String.valueOf( bcCount ) + " "+bcCont1);
+            String.valueOf( bcCount ));
     }
     else
     {
