@@ -1,4 +1,4 @@
-!     Last change:  WP    2 Jun 2006   10:25 pm
+!     Last change:  MD    4 Jul 2007    7:36 pm
 !--------------------------------------------------------------------------
 ! This code, qks_qkst.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -538,7 +538,8 @@ phiun = 0.0
 
 DO ii = ischl, itrli - 1
   !JK   FUER LINKES VORLAND
-  IF (l_ks (ii) .gt.1.e-6) then
+  IF (l_ks (ii) .gt.1.e-4 .and. u_ks(ii).gt.1.e-3 .and. a_ks(ii).gt.1.e-3) then
+    r_ks(ii) = a_ks(ii) /u_ks(ii)
     phion = phion + a_ks (ii) * ( (r_ks (ii) / l_ks (ii) ) **1.5)
     phiun = phiun + a_ks (ii) * ( (r_ks (ii) / l_ks (ii) ) **0.5)
   ENDIF
@@ -546,7 +547,8 @@ END DO
 
 DO ii = itrre, ischl - 1
   !JK   DAZU RECHTES VORLAND
-  IF (l_ks (ii) .gt.1.e-6) then
+  IF (l_ks (ii) .gt.1.e-4 .and. u_ks(ii).gt.1.e-3 .and. a_ks(ii).gt.1.e-3) then
+    r_ks(ii) = a_ks(ii) /u_ks(ii)
     phion = phion + a_ks (ii) * ( (r_ks (ii) / l_ks (ii) ) **1.5)
     phiun = phiun + a_ks (ii) * ( (r_ks (ii) / l_ks (ii) ) **0.5)
   ENDIF
@@ -557,7 +559,15 @@ phion = phion + a_hg * ( (r_hg / l_hg) **1.5)
 phiun = phiun + a_hg * ( (r_hg / l_hg) **0.5)
 
 !JK   WIRKSAMEN GESCHWINDIGKEITSVERLUST
-hv = phion / phiun**3 * qgs * qgs / 9.81 / 2.
+! hv = phion / phiun**3 * qgs * qgs / 9.81 / 2.
+
+!MD  NEU: NEU  04.07.2007
+!MD  Durch diese Veraenderung wird weniger haeufig die Grenztiefe angesetzt
+!MD  BERECHNUNG VERLUSTHOEHE ANLEHNUNG FORMEL 9, S.17 BWK
+!MD   => hv = (1/(phiun**2)) *q*q / (9.81*8.)
+ hv = (qgs*qgs)/(phiun**2.D0) / g / 8.0D0
+
+
 
 
 !JK   UNSINNIGE ABFRAGE----------------------------------------------
