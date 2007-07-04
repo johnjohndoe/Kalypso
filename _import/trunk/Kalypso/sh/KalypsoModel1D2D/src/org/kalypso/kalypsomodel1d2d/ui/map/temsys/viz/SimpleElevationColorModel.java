@@ -45,7 +45,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.kalypsodeegree_impl.graphics.displayelements.IElevationColorModel;
-import org.kalypsodeegree_impl.graphics.displayelements.StrokeLinePainter;
 
 /**
  * @author Patrice Congo
@@ -306,50 +305,4 @@ public class SimpleElevationColorModel implements IElevationColorModel
   {
     return Math.abs( (m_maxElevation - m_minElevation) ) / m_numOfClasses;
   }
-
-  /**
-   * @see org.kalypsodeegree_impl.graphics.displayelements.IElevationColorModel#getClassValue(int)
-   */
-  public double getClassValue( int currentClass )
-  {
-    // TODO Auto-generated method stub
-    return 0;
-  }
-
-  /**
-   * @see org.kalypsodeegree_impl.graphics.displayelements.IElevationColorModel#getFrom(int)
-   */
-  public double getFrom( int currentClass )
-  {
-    // TODO Auto-generated method stub
-    return 0;
-  }
-
-  /**
-   * @see org.kalypsodeegree_impl.graphics.displayelements.IElevationColorModel#getNumOfClasses()
-   */
-  public int getNumOfClasses( )
-  {
-    // TODO Auto-generated method stub
-    return 0;
-  }
-
-  /**
-   * @see org.kalypsodeegree_impl.graphics.displayelements.IElevationColorModel#getTo(int)
-   */
-  public double getTo( int currentClass )
-  {
-    // TODO Auto-generated method stub
-    return 0;
-  }
-
-  /**
-   * @see org.kalypsodeegree_impl.graphics.displayelements.IElevationColorModel#getLinePainter(int)
-   */
-  public StrokeLinePainter getLinePainter( int currentClass )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
 }
