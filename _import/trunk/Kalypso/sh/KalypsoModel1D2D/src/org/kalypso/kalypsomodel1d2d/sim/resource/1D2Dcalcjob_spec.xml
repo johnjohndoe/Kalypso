@@ -7,8 +7,9 @@
 	<input id="TerrainModel" description="Geländemodelle - z.Zt. auch Rauheiten usw. TODO: nur die Rauheiten übergeben" optional="true"/>
 	<input id="SimulationControlModel" description="Steuerungsdaten"/>	
     <input id="Roughness" description="Rauheitsdatenbank"/>
-    <input id="ResultStyle" description="Ergbnisdarstellung"/>
-	<input id="PseudoResults" description="Zip mit Ergebnisdaten. Falls da, wird nicht gerechnet sondern nur dieses zip entpackt." optional="true"/>		
+
+    <input id="ResultTemplate" description="Dieses ZIP wird komlpett in das Ergebnisverzeichnis kopiert."/>
+    <input id="ResultStepTemplate" description="Dieses ZIP wird komplett in das Ergebnisverzeichnis eines Zeitschritts kopiert."/>
     	
 	<!-- Ergebnis-Dateien/Verzeichnisse -->
 	<output id="RESULT_DIR_NAME" description="Verzeichnis der Berechnungsergebnisse"/>

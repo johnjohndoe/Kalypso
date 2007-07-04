@@ -52,7 +52,6 @@ import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
-import org.kalypsodeegree.graphics.displayelements.IncompatibleGeometryTypeException;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -91,7 +90,7 @@ public class LinePointCollector
 
   private final int highlightDeltaX = 1;
 
-// private int pointRectSize = 6;
+  // private int pointRectSize = 6;
 
   private int selection = -1;
 
@@ -149,7 +148,7 @@ public class LinePointCollector
       isFinished = true;
       return getLastPoint();
       // FIXME changed to prevent the curve geometry not to be drawn
-// return createGeometry( poses );
+      // return createGeometry( poses );
     }
     else
     {
@@ -174,8 +173,8 @@ public class LinePointCollector
   public void paint( final Graphics g, final GeoTransform projection, final Point currentPoint, final int pointRectSize )
   {
 
-// Color curColor=g.getColor();
-// g.setColor( Color.BLUE );
+    // Color curColor=g.getColor();
+    // g.setColor( Color.BLUE );
 
     // IMPORTANT: we remeber GM_Points (not Point's) and retransform them for painting
     // because the projection depends on the current map-extent, so this builder
@@ -204,11 +203,11 @@ public class LinePointCollector
         g.drawPolyline( arrayX, arrayY, arrayX.length );
 
         // paintLine(g, projection, width , color );
-// if(!isFinished)
-// {
+        // if(!isFinished)
+        // {
         // do not draw handle if finish and not selected
         drawHandles( g, arrayX, arrayY, pointRectSize, selection );
-// }
+        // }
 
         drawPoints = points;
       }
@@ -660,16 +659,8 @@ public class LinePointCollector
     // stroke.setDashArray( dArray );
     symb.setStroke( stroke );
 
-    try
-    {
-      final DisplayElement de = DisplayElementFactory.buildLineStringDisplayElement( null, curve, symb );
-      de.paint( g, projection );
-    }
-    catch( final IncompatibleGeometryTypeException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
+    final DisplayElement de = DisplayElementFactory.buildLineStringDisplayElement( null, curve, symb );
+    de.paint( g, projection );
 
     // Set the Stroke back to default
     symb.setStroke( defaultstroke );

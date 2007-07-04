@@ -80,7 +80,6 @@ import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
-import org.kalypsodeegree.graphics.displayelements.IncompatibleGeometryTypeException;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
 import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
@@ -250,11 +249,6 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
         final DisplayElement de = DisplayElementFactory.buildPolygonDisplayElement( m_modelElement.getWrappedFeature(), surface, symb );
         de.paint( g, getMapPanel().getProjection() );
       }
-    }
-    catch( final IncompatibleGeometryTypeException e )
-    {
-      // should never happen
-      e.printStackTrace();
     }
     catch( final GM_Exception e )
     {

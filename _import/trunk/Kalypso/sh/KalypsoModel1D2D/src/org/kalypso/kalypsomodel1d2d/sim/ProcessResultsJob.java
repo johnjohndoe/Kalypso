@@ -51,7 +51,6 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -137,11 +136,8 @@ public class ProcessResultsJob extends Job
     if( dataProvider != null )
     {
       /* Write template sld into result folder */
-      final URL resultStyleURL = (URL) dataProvider.getInputForID( "ResultStyle" );
-      FileUtils.copyURLToFile( resultStyleURL, new File( outputDir, "result.sld" ) );
-
-      final URL resultURL = (URL) dataProvider.getInputForID( "ResultMap" );
-      FileUtils.copyURLToFile( resultURL, new File( outputDir, "result.gmt" ) );
+      final URL resultStyleURL = (URL) dataProvider.getInputForID( "ResultStepTemplate" );
+      ZipUtilities.unzip( resultStyleURL, outputDir );
     }
 
     final File gmlResultFile = new File( outputDir, "results.gml" );
@@ -168,16 +164,16 @@ public class ProcessResultsJob extends Job
       // move workspace creation into multi-eater
 
       final CS_CoordinateSystem crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
-      MultiTriangleEater multiEater = new MultiTriangleEater();
+      final MultiTriangleEater multiEater = new MultiTriangleEater();
 
-      for( ResultType.TYPE parameter : parameters )
+      for( final ResultType.TYPE parameter : parameters )
       {
         /* GML(s) */
-        
+
         /* create TIN-Dir */
         final File tinPath = new File( outputDir, "Tin" );
         tinPath.mkdirs();
-        
+
         final File tinResultFile = new File( tinPath, "tin.gml" );
         final GMLWorkspace triangleWorkspace = FeatureFactory.createGMLWorkspace( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "TinResult" ), tinResultFile.toURL(), null );
         final GM_TriangulatedSurface surface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_TriangulatedSurface( crs );
@@ -188,16 +184,10 @@ public class ProcessResultsJob extends Job
 
         /* HMO(s) */
         /*
-        try
-        {
-          final File resultHMOFile = new File( "D:/Projekte/kalypso_dev/post-processing/output.hmo" );
-          final HMOTriangleEater hmoTriangleEater = new HMOTriangleEater( resultHMOFile, parameter );
-          multiEater.addEater( hmoTriangleEater );
-        }
-        catch (Exception e) {
-          e.printStackTrace();
-        }
-        */
+         * try { final File resultHMOFile = new File( "D:/Projekte/kalypso_dev/post-processing/output.hmo" ); final
+         * HMOTriangleEater hmoTriangleEater = new HMOTriangleEater( resultHMOFile, parameter ); multiEater.addEater(
+         * hmoTriangleEater ); } catch (Exception e) { e.printStackTrace(); }
+         */
       }
 
       final IRMA10SModelElementHandler handler = new NodeResultsHandler( resultWorkspace, multiEater, m_calculation );

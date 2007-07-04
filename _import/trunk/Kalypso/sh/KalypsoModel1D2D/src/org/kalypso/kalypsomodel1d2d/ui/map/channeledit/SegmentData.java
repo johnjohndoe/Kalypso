@@ -63,7 +63,6 @@ import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
-import org.kalypsodeegree.graphics.displayelements.IncompatibleGeometryTypeException;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.model.feature.Feature;
@@ -420,8 +419,8 @@ public class SegmentData
     }
     dZ = dArea / wi;
 
-// String t = String.format( "Schlauchgenerator: Anpassung der Profilhöhen um: %f ", dZ, " m." );
-// System.out.println( t );
+    // String t = String.format( "Schlauchgenerator: Anpassung der Profilhöhen um: %f ", dZ, " m." );
+    // System.out.println( t );
 
     // start point will not be changed
     tmpProfil.addPoint( profilPointList.get( 0 ).clonePoint() );
@@ -460,9 +459,10 @@ public class SegmentData
     final double diffArea = targetArea - areaNew;
     if( diffArea > 0.10 )
     {
-// String s = String.format( "Schlauchgenerator: Flächenausgleich nicht hinreichend genau: %f - %f", targetArea, areaNew
-// );
-// System.out.println( s );
+      // String s = String.format( "Schlauchgenerator: Flächenausgleich nicht hinreichend genau: %f - %f", targetArea,
+      // areaNew
+      // );
+      // System.out.println( s );
     }
 
     return tmpProfil;
@@ -641,8 +641,7 @@ public class SegmentData
    * @param wspmprofile
    *            original profile (WSPMProfile) to be intersected
    * @param prof
-   *            additional informations of the corresponding intersection points of that profile (upstream /
-   *            downstream)
+   *            additional informations of the corresponding intersection points of that profile (upstream / downstream)
    */
   private IProfil createCroppedIProfile( final WspmProfile wspmprofile, final CreateChannelData.PROF prof ) throws Exception
   {
@@ -652,8 +651,8 @@ public class SegmentData
     // convert WSPM-Profil into IProfil an add the additional intersection width points.
     final IProfil orgIProfil = wspmprofile.getProfil();
 
-    final Point firstPoint = getIntersPoint( prof, CreateChannelData.WIDTHORDER.FIRST ); 
-    final Point lastPoint = getIntersPoint( prof, CreateChannelData.WIDTHORDER.LAST ); 
+    final Point firstPoint = getIntersPoint( prof, CreateChannelData.WIDTHORDER.FIRST );
+    final Point lastPoint = getIntersPoint( prof, CreateChannelData.WIDTHORDER.LAST );
     final double startWidth;
     final double endWidth;
     final Point geoPoint1;
@@ -663,10 +662,10 @@ public class SegmentData
     {
       startWidth = width2;
       endWidth = width1;
-      //TODO: strange: geopoint1 is always firstpoint ??? check this!!
-//      geoPoint1 = firstPoint;
+      // TODO: strange: geopoint1 is always firstpoint ??? check this!!
+      // geoPoint1 = firstPoint;
       geoPoint1 = lastPoint;
-//      geoPoint2 = lastPoint;
+      // geoPoint2 = lastPoint;
       geoPoint2 = firstPoint;
     }
     else
@@ -1468,15 +1467,8 @@ public class SegmentData
     stroke.setStroke( color );
     symb.setStroke( stroke );
 
-    try
-    {
-      final DisplayElement de = DisplayElementFactory.buildLineStringDisplayElement( null, Curve, symb );
-      de.paint( g, mapPanel.getProjection() );
-    }
-    catch( final IncompatibleGeometryTypeException e )
-    {
-      e.printStackTrace();
-    }
+    final DisplayElement de = DisplayElementFactory.buildLineStringDisplayElement( null, Curve, symb );
+    de.paint( g, mapPanel.getProjection() );
 
     // Set the Stroke back to default
     symb.setStroke( defaultstroke );

@@ -42,22 +42,32 @@ package org.kalypso.kalypsomodel1d2d.sim;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.xml.bind.JAXBException;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.contribs.java.io.filter.PrefixSuffixFilter;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.simulation.core.ISimulationDataProvider;
+import org.kalypso.simulation.core.SimulationException;
+import org.kalypso.template.gismapview.Gismapview;
+import org.kalypso.template.gismapview.Gismapview.Layers;
+import org.kalypso.template.types.StyledLayerType;
 
 /**
  * This runnable will be called while running the 2d-exe and will check for new .2d result files.
@@ -73,6 +83,8 @@ public class ResultManager implements Runnable
   private final static MutexRule m_mutex = new MutexRule();
 
   private static final FilenameFilter FILTER_2D = new PrefixSuffixFilter( "", ".2d" );
+
+  private static final FilenameFilter FILTER_GMT = new PrefixSuffixFilter( "", ".gmt" );
 
   private final List<File> m_found2dFiles = new ArrayList<File>();
 
@@ -199,7 +211,7 @@ public class ResultManager implements Runnable
     return status;
   }
 
-  public void finish( )
+  public void finish( ) throws SimulationException
   {
     /* Process all remaining .2d files. */
     run();
@@ -210,6 +222,59 @@ public class ResultManager implements Runnable
       System.out.println( resultProcessingStatus );
     // TODO: evaluate status
 
-    // TODO: other, generell postprocessing stuff.
+    /* other, generell postprocessing stuff. */
+    try
+    {
+      processTemplates();
+    }
+    catch( final SimulationException se )
+    {
+      throw se;
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      throw new SimulationException( "Fehler bei der Ergesbnisauswertung", e );
+    }
+  }
+
+  private void processTemplates( ) throws SimulationException, IOException, JAXBException
+  {
+    /* Write template sld into result folder */
+    final URL resultStyleURL = (URL) m_dataProvider.getInputForID( "ResultTemplate" );
+    ZipUtilities.unzip( resultStyleURL, m_outputDir );
+
+    final File gmtTotalFile = new File( m_outputDir, "Gesamtergebnis.gmt" );
+
+    final Gismapview totalTemplate = GisTemplateHelper.loadGisMapView( gmtTotalFile );
+
+    /* Add sub-map for each step-subdirectory */
+    final File[] childFiles = m_outputDir.listFiles();
+    for( final File childFile : childFiles )
+    {
+      if( childFile.isDirectory() )
+        addChildMaps( totalTemplate, childFile );
+    }
+
+    GisTemplateHelper.saveGisMapView( totalTemplate, gmtTotalFile, "UTF-8" );
+  }
+
+  private void addChildMaps( final Gismapview totalTemplate, final File childFile )
+  {
+    final Layers layers = totalTemplate.getLayers();
+    final List<StyledLayerType> layerList = layers.getLayer();
+
+    final File[] gmtFiles = childFile.listFiles( FILTER_GMT );
+    for( final File file : gmtFiles )
+    {
+      final StyledLayerType layer = GisTemplateHelper.OF_TEMPLATE_TYPES.createStyledLayerType();
+      layer.setId( "SUB_" + childFile.getName() + "_" + file.getName() );
+      layer.setName( childFile.getName() + " - " + file.getName() );
+      layer.setHref( childFile.getName() + "/" + file.getName() );
+      layer.setVisible( false );
+      layer.setLinktype( "gmt" );
+
+      layerList.add( layer );
+    }
   }
 }
