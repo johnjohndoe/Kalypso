@@ -135,11 +135,12 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
     {
       final String id = component.getId();
 
-// final int style = styleForComponent( component );
+      final int styleForComponent = styleForComponent( component );
       // TODO: style should be independend from alignment of values
       // introduce own attribute for column-header style
-      final int style = SWT.CENTER;
-      final int ro = (style & SWT.READ_ONLY);
+      // final int style = SWT.CENTER;
+      final int style = styleForComponent & ~SWT.READ_ONLY;
+      final int ro = styleForComponent & SWT.READ_ONLY;
 
       final CellEditor editor;
       final String label = component.getName();

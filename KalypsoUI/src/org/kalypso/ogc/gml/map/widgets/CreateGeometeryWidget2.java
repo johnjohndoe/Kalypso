@@ -52,9 +52,9 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  */
 public class CreateGeometeryWidget2 extends AbstractFeatureGeometeryWidget
 {
-  private final Class m_apreferedGeometryClass;
+  private final Class< ? extends GM_Object> m_apreferedGeometryClass;
 
-  public CreateGeometeryWidget2( final String name, final String toolTip, final Class geometryClass )
+  public CreateGeometeryWidget2( final String name, final String toolTip, final Class< ? extends GM_Object> geometryClass )
   {
     super( name, toolTip );
 
@@ -85,24 +85,27 @@ public class CreateGeometeryWidget2 extends AbstractFeatureGeometeryWidget
   protected void editFeature( final GM_Object validGeometryValue, final Object toEdit ) throws Exception
   {
     final FeatureToEdit featureToEdit = (FeatureToEdit) toEdit;
-    
+
     final Map<IPropertyType, Object> valueMap = new HashMap<IPropertyType, Object>();
     valueMap.put( featureToEdit.getGeometryProperty(), validGeometryValue );
 
     // TODO ask for substitutions
-    CommandableWorkspace workspace = featureToEdit.getWorkspace();
+    final CommandableWorkspace workspace = featureToEdit.getWorkspace();
 
     final ICommand command = new AddFeatureCommand( workspace, featureToEdit.getFeatureType(), featureToEdit.getParentFeature(), featureToEdit.getLinkProperty(), 0, valueMap, null, 0 );
     workspace.postCommand( command );
   }
-  
+
+  @SuppressWarnings("unchecked")
   @Override
-  protected Class getGeometryClass( )
+  protected Class< ? extends GM_Object> getGeometryClass( )
   {
     final FeatureToEdit featureToEdit = (FeatureToEdit) getFeatureToEdit();
-    return featureToEdit == null ? null : featureToEdit.getGeometryProperty().getValueClass();
+    return m_apreferedGeometryClass;
+// return (Class< ? extends GM_Object>) (featureToEdit == null ? null :
+// featureToEdit.getGeometryProperty().getValueClass());
   }
-  
+
   private static final class FeatureToEdit
   {
     private final Feature m_parentFeature;
