@@ -1065,4 +1065,40 @@ Kalypso 1.3.1.1      25. April 2007
      (Die Unit UNIT_OUT_PRO wurde in diesem Fall nicht ordnungsgemäß geschlossen).
      Fehlerbehebung in WSPBER.
                                                          Wolf Plöger, 03.07.2007
+
+ Kalypso 2.0.3        04. Juli 2007
+-----------------------------------
+
+1.)  Bugfix: Der Impulsstrombeiwert (alpha_IW) und Energiestrombeiwert (alpha_EW) nahmen 
+     bislang bei hohen Abflüssen unsinnige Werte von bis über 100 an. In der SubR eb2ks wurde
+     daher folgende Einflüsse auf den Impuls- bzw. Energiestrombeiwert abgefangen:
+     -  Teilen durch kleine lambdas oder lambda = 0
+     -  die Berücksichtigung von Teil-Flächen kleiner 0.001 m² für den Impulsstrombeiwert
+     -  die Berücksichtigung von benetzen Umfängen kleiner 0.001 m für den Impulsstrombeiwert
+
+2.)  Bugfix: Der Fall, das sich das berechnete Energieliniegefälle "is" (in Subr eb2ks) grösser 
+     eins oder kleiner Null wird wurde Abgefangen durch ein Zurücksetzen des Energieliniegefälle 
+     auf 0.001 (= Anfangswert für die erste Iteration am ersten Profil). 
+     Problem trat auf im Oberwasser eines Wehres bei der inneren Abflussschleife mit konstantem
+     Reibungsgefälle bei Will-Pad da Energieliniegefälle = "Inf" wurde, also Unendlich. In Folge
+     dieses Wertes wurden lambda (1 und 3) und alle Fließgeschwindigkeit zu "NaN".
+
+
+3.)  Bugfix: Der Verlusthoehe infolge Reibung (hv) wurde bislang mit einer nicht nachvollziehbaren
+     Gleichung berechnet. Korrektur dieser Gleichung auf Basis des BWK-Merkblattes S19 glch13 
+     in der Subroutine eb2ks und qks. Diese Veränderung erzeugte eine deutliche Reduzierung der
+     Ansätze mit Grenztiefe des Rechenkerns für hohe Abflusswerte.
+
+4.)  Erzeugung einer neuen Ausgabedatei für alle Berechnungen unter einer Abflussstaffelung
+     Es wird ein Längsschnitt mit allen Profilen und allen Abflüssen erzeugt. Zusätzlich sind 
+     die Teilabflüsse Q, Impulsstrombeiwert (alpha_IW) und Energiestrombeiwert (alpha_EW) enthalten.
+     Routinen: zeila, qbordv, lapro, wspber, globale definitionen
+
+5.)  Bugfix: Der Trennflächen-Widerstandbeiwertes (Lambda) wurde in der SubR Pasche auf ein 
+     Maximum von 2.00 begrenzt. Das Problem: Bei hohen Abflüssen greift der Rechenkern immer wieder
+     auf die Grenztiefen zurück, da die Energiegefälle-Iteration kein konvergierendes Ergebnis. 
+     Die Folge ist Lambda-Trennfläche geht gegen unendlich. 
+     HINWEIS: Problem wurde noch nicht vollständig behoben
+                                                       Monika Donner/ Wolf Plöger, 04.07.2007
+
                                                          
