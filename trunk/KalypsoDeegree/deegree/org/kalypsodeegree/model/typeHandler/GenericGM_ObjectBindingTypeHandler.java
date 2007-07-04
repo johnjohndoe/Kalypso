@@ -65,7 +65,7 @@ import org.xml.sax.XMLReader;
  */
 public class GenericGM_ObjectBindingTypeHandler extends GenericBindingTypeHandler
 {
-  public GenericGM_ObjectBindingTypeHandler( final JAXBContextProvider jaxbContextProvider, final QName xmlTypeQName, final QName xmlTagQName, final Class gm_objectClass, final boolean isGeometry )
+  public GenericGM_ObjectBindingTypeHandler( final JAXBContextProvider jaxbContextProvider, final QName xmlTypeQName, final QName xmlTagQName, final Class< ? > gm_objectClass, final boolean isGeometry )
   {
     super( jaxbContextProvider, xmlTypeQName, xmlTagQName, gm_objectClass, isGeometry, false, true );
   }
@@ -84,7 +84,7 @@ public class GenericGM_ObjectBindingTypeHandler extends GenericBindingTypeHandle
         Object geometryValue = null;
         try
         {
-          final Class geometryClass = getValueClass();
+          final Class< ? > geometryClass = getValueClass();
 
           try
           {
@@ -106,7 +106,6 @@ public class GenericGM_ObjectBindingTypeHandler extends GenericBindingTypeHandle
             }
           }
 
-          // geometryValue = BindingToValueAdapter_GML31.createGM_Object( bindingGeometry, geometryClass );
           marshalResultEater.unmarshallSuccesful( geometryValue );
         }
         catch( final Exception e )

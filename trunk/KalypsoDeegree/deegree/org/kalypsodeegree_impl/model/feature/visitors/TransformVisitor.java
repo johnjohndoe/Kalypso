@@ -49,36 +49,31 @@ public class TransformVisitor implements FeatureVisitor
    */
   public boolean visit( final Feature f )
   {
-    final IPropertyType[] ftps = f.getFeatureType().getProperties();
-    for( final IPropertyType ftp : ftps )
-    {
-      if( GeometryUtilities.isGeometry( ftp ) )
-      {
-        if( ftp.isList() )
-        {
-          final List<GM_Object> geomList = (List<GM_Object>) f.getProperty( ftp );
-          for( final GM_Object object : geomList )
-            transformProperty( f, ftp, object );
-        }
-        else
-        {
-          final GM_Object object = (GM_Object) f.getProperty( ftp );
-          transformProperty( f, ftp, object );
-        }
-      }
-    }
-
-    return true;
-  }
-
-  private void transformProperty( final Feature f, final IPropertyType ftp, final GM_Object object )
-  {
     try
     {
-      if( object != null )
+      final IPropertyType[] ftps = f.getFeatureType().getProperties();
+      for( final IPropertyType ftp : ftps )
       {
-        final GM_Object newGeo = m_transformer.transform( object );
-        f.setProperty( ftp, newGeo );
+        if( GeometryUtilities.isGeometry( ftp ) )
+        {
+          if( ftp.isList() )
+          {
+            final List<GM_Object> geomList = (List<GM_Object>) f.getProperty( ftp );
+            final int size = geomList.size();
+            for( int i = 0; i < size; i++ )
+            {
+              final GM_Object geom = geomList.get( i );
+              final GM_Object transformedGeom = transformProperty( f, ftp, geom );
+              geomList.set( i, transformedGeom );
+            }
+          }
+          else
+          {
+            final GM_Object object = (GM_Object) f.getProperty( ftp );
+            final GM_Object transformedGeom = transformProperty( f, ftp, object );
+            f.setProperty( ftp, transformedGeom );
+          }
+        }
       }
     }
     catch( final Exception e )
@@ -86,6 +81,13 @@ public class TransformVisitor implements FeatureVisitor
       e.printStackTrace();
       m_exceptions.put( f, e );
     }
+
+    return true;
+  }
+
+  private GM_Object transformProperty( final Feature f, final IPropertyType ftp, final GM_Object object ) throws Exception
+  {
+    return m_transformer.transform( object );
   }
 
 }
