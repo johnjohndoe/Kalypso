@@ -38,24 +38,46 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package de.renew.workflow.connector.worklist;
+package org.kalypso.afgui.views;
+
+import java.util.List;
+
+import org.eclipse.jface.viewers.TreePath;
 
 import de.renew.workflow.base.Task;
-import de.renew.workflow.connector.cases.TaskExecutionException;
+import de.renew.workflow.base.TaskGroup;
+import de.renew.workflow.base.Workflow;
 
 /**
  * @author Stefan Kurzbach
+ * 
  */
-public interface ITaskExecutor
+public class TaskHelper
 {
 
-  /**
-   * Called when a task needs to be executed
-   */
-  public void execute( final Task task ) throws TaskExecutionException;
+  public static TreePath findPart( final String uri, final Workflow workflow )
+  {
+    return findPartInTaskGroups( uri, workflow.getTasks(), TreePath.EMPTY );
+  }
 
-  public Task getActiveTask( );
-
-  public void stopActiveTask( );
-
+  public static TreePath findPartInTaskGroups( final String uri, final List< ? extends Task> taskOrTaskGroups, final TreePath prefix )
+  {
+    TreePath result = null;
+    for( final Task taskOrTaskGroup : taskOrTaskGroups )
+    {
+      if( taskOrTaskGroup.getURI().equals( uri ) )
+      {
+        return prefix.createChildPath( taskOrTaskGroup );
+      }
+      else if( taskOrTaskGroup instanceof TaskGroup )
+      {
+        result = findPartInTaskGroups( uri, ((TaskGroup) taskOrTaskGroup).getTasks(), prefix.createChildPath( taskOrTaskGroup ) );
+      }
+      if( result != null )
+      {
+        return result;
+      }
+    }
+    return result;
+  }
 }

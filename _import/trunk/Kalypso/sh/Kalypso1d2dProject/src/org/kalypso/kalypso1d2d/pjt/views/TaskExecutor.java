@@ -50,14 +50,15 @@ import org.eclipse.core.commands.Category;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.commands.NotHandledException;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
-import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypso1d2d.pjt.perspective.Perspective;
 import org.kalypso.kalypso1d2d.pjt.perspective.PerspectiveWatcher;
 import org.kalypso.ogc.gml.outline.GisMapOutlineView;
 
+import de.renew.workflow.base.EActivityType;
 import de.renew.workflow.base.Task;
 import de.renew.workflow.base.TaskGroup;
 import de.renew.workflow.connector.cases.TaskExecutionException;
@@ -66,11 +67,11 @@ import de.renew.workflow.connector.context.ContextActivationException;
 import de.renew.workflow.connector.worklist.ITaskExecutionAuthority;
 import de.renew.workflow.connector.worklist.ITaskExecutor;
 import de.renew.workflow.connector.worklist.TaskExecutionListener;
-import de.renew.workflow.contexts.WorkbenchSiteContext;
 import de.renew.workflow.contexts.ContextType;
 import de.renew.workflow.contexts.IContextHandlerFactory;
-import de.renew.workflow.contexts.WorkbenchPartContextType;
 import de.renew.workflow.contexts.ViewContext;
+import de.renew.workflow.contexts.WorkbenchPartContextType;
+import de.renew.workflow.contexts.WorkbenchSiteContext;
 
 /**
  * @author Stefan Kurzbach
@@ -100,6 +101,21 @@ public class TaskExecutor implements ITaskExecutor
     return m_activeTask;
   }
 
+  public void stopActiveTask( )
+  {
+    if( m_activeTask != null || !m_authority.canStopTask( m_activeTask ) )
+    {
+      final Collection<String> partsToKeep = new ArrayList<String>();
+      partsToKeep.add( WorkflowView.ID );
+      partsToKeep.add( Perspective.SCENARIO_VIEW_ID );
+      partsToKeep.add( GisMapOutlineView.ID );
+      final IWorkbench workbench = PlatformUI.getWorkbench();
+      PerspectiveWatcher.cleanPerspective( workbench, partsToKeep );
+      // here execute a command that stops the active task
+      // m_handlerService.executeCommand( command.getId(), null );
+    }
+  }
+
   /**
    * @see de.renew.workflow.connector.ITaskExecutor#execute(de.renew.workflow.base.Task)
    */
@@ -108,12 +124,15 @@ public class TaskExecutor implements ITaskExecutor
     // HACK: in order to make sure the SzenarioSourceProvider is initialized, call this method each time
     // a task is executed. It would be better if this happened automatically on plug-in-start, but
     // TODO: is this still necessary?
-    Kalypso1d2dProjectPlugin.getDefault().getDataProvider();
+    // Kalypso1d2dProjectPlugin.getDefault().getDataProvider();
 
-    if( m_activeTask != null )
-    {      
+    if( m_activeTask != null && m_activeTask.getType() == EActivityType.ASYNCHRONOUS )
+    {
+      // if the same task is executed again, but it is asynchronous, or if the task cannot be stopped, don't do anything
       if( m_activeTask == task || !m_authority.canStopTask( m_activeTask ) )
+      {
         return;
+      }
     }
     final String name = task.getURI();
     final Command command = getCommand( m_commandService, name, task instanceof TaskGroup ? TaskExecutionListener.CATEGORY_TASKGROUP : TaskExecutionListener.CATEGORY_TASK );
@@ -125,7 +144,8 @@ public class TaskExecutor implements ITaskExecutor
       partsToKeep.add( WorkflowView.ID );
       partsToKeep.add( Perspective.SCENARIO_VIEW_ID );
       partsToKeep.add( GisMapOutlineView.ID );
-      PerspectiveWatcher.cleanPerspective( PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), partsToKeep );
+      final IWorkbench workbench = PlatformUI.getWorkbench();
+      PerspectiveWatcher.cleanPerspective( workbench, partsToKeep );
     }
     try
     {

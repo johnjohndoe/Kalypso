@@ -108,7 +108,21 @@ public class ActiveWorkContext<T extends Case> implements IResourceChangeListene
 
   private void log( final CoreException e )
   {
-    WorkflowConnectorPlugin.getDefault().getLog().log( e.getStatus() );
+    log( e, "" );
+  }
+
+  private void log( final Exception e, final String message )
+  {
+    final IStatus status;
+    if( e instanceof CoreException )
+    {
+      status = ((CoreException) e).getStatus();
+    }
+    else
+    {
+      status = new Status( Status.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, message );
+    }
+    WorkflowConnectorPlugin.getDefault().getLog().log( status );
   }
 
   /**
@@ -160,40 +174,12 @@ public class ActiveWorkContext<T extends Case> implements IResourceChangeListene
 
   public void addActiveContextChangeListener( final IActiveContextChangeListener<T> l )
   {
-    if( l == null )
-    {
-      return;
-    }
-    else
-    {
-      if( m_activeContextChangeListeners.contains( l ) )
-      {
-        return;
-      }
-      else
-      {
-        m_activeContextChangeListeners.add( l );
-      }
-    }
+    m_activeContextChangeListeners.add( l );
   }
 
   public void removeActiveContextChangeListener( final IActiveContextChangeListener<T> l )
   {
-    if( l == null )
-    {
-      return;
-    }
-    else
-    {
-      if( m_activeContextChangeListeners.contains( l ) )
-      {
-        m_activeContextChangeListeners.add( l );
-      }
-      else
-      {
-        // empty
-      }
-    }
+    m_activeContextChangeListeners.remove( l );
   }
 
   private void fireActiveContextChanged( final CaseHandlingProjectNature newProject, final T caze )

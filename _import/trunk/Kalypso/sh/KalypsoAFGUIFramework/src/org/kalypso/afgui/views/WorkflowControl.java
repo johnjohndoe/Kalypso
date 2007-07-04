@@ -3,12 +3,13 @@
  */
 package org.kalypso.afgui.views;
 
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -34,12 +35,12 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IMemento;
+import org.eclipse.ui.progress.UIJob;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.i18n.Messages;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 
 import de.renew.workflow.base.Task;
-import de.renew.workflow.base.TaskGroup;
 import de.renew.workflow.base.Workflow;
 import de.renew.workflow.base.Task.Help;
 import de.renew.workflow.connector.IWorklistChangeListener;
@@ -272,32 +273,6 @@ public class WorkflowControl implements IWorklistChangeListener
     }
   }
 
-  private TreePath findPart( final String uri, final Workflow workflow )
-  {
-    return findPartInTaskGroups( uri, workflow.getTasks(), TreePath.EMPTY );
-  }
-
-  private TreePath findPartInTaskGroups( final String uri, final List< ? extends Task> taskOrTaskGroups, final TreePath prefix )
-  {
-    TreePath result = null;
-    for( final Task taskOrTaskGroup : taskOrTaskGroups )
-    {
-      if( taskOrTaskGroup.getURI().equals( uri ) )
-      {
-        return prefix.createChildPath( taskOrTaskGroup );
-      }
-      else if( taskOrTaskGroup instanceof TaskGroup )
-      {
-        result = findPartInTaskGroups( uri, ((TaskGroup) taskOrTaskGroup).getTasks(), prefix.createChildPath( taskOrTaskGroup ) );
-      }
-      if( result != null )
-      {
-        return result;
-      }
-    }
-    return result;
-  }
-
   public void restoreState( final IMemento memento )
   {
     if( memento != null )
@@ -323,11 +298,34 @@ public class WorkflowControl implements IWorklistChangeListener
       m_treeViewer.collapseAll();
       if( m_selectionFromMemento != null && workflow != null )
       {
-        final TreePath findPart = findPart( m_selectionFromMemento, workflow );
+        final TreePath findPart = TaskHelper.findPart( m_selectionFromMemento, workflow );
         if( findPart != null && findPart.getParentPath() != null && findPart.getParentPath().getSegmentCount() != 0 )
         {
           final TreeSelection newSelection = new TreeSelection( findPart.getParentPath() );
           m_treeViewer.setSelection( newSelection, true );
+//          final Task task = (Task) findPart.getLastSegment();
+//          final UIJob job = new UIJob( "Letzten Arbeitskontext wiederherstellen" )
+//          {
+//            @SuppressWarnings("unchecked")
+//            @Override
+//            public IStatus runInUIThread( final IProgressMonitor monitor )
+//            {
+//              try
+//              {
+//                m_taskExecutor.execute( task );
+//              }
+//              catch( final TaskExecutionException e )
+//              {
+//                final Display display = m_treeViewer.getControl().getDisplay();
+//                final Shell activeShell = display.getActiveShell();
+//                final IStatus status = StatusUtilities.statusFromThrowable( e );
+//                ErrorDialog.openError( activeShell, "Warnung", "Die letzte Tätigkeit konnte nicht wiederhergestellt werden", status );
+//                return Status.CANCEL_STATUS;
+//              }
+//              return Status.OK_STATUS;
+//            }
+//          };
+//          job.schedule();
         }
         m_selectionFromMemento = null;
       }
