@@ -186,7 +186,7 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 					</Help>
 					<Name>Randbedingungen</Name>
 				</Task>		
-				<Task type="ASYNCHRONOUS" context="FenetMap"
+				<Task type="ASYNCHRONOUS" context="Context2dElementTheme"
 					URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__CalculationUnit">
 					<Help>
 						<![CDATA[Berechnungseinheiten modellieren]]>
@@ -223,14 +223,14 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 				</Help>
 				<Name>Rauheitswerte bearbeiten</Name>
 			</Task>
-			<Task type="ASYNCHRONOUS" context="FenetMap"
+			<Task type="ASYNCHRONOUS" context="Context2dElementTheme"
 				URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__RoughnessFENETColor">
 				<Help>
 					<![CDATA[Zeigt die den 2D-Elementen zugewiesenen Rauheitsklassen an.]]>
 				</Help>
 				<Name>Rauheitsklassen anzeigen</Name>
 			</Task>
-			<Task type="ASYNCHRONOUS" context="FenetMap"
+			<Task type="ASYNCHRONOUS" context="Context2dElementTheme"
 				URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__roughness_correction_modelling">
 				<Help>
 					<![CDATA[Rauheitskorrektur an Finit-Elemente modellieren.]]>
@@ -319,55 +319,18 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 			<![CDATA[Nach der Druchführung der Strömungsberechungen können die Ergebnisse hier ausgewertet und visualisiert werden.]]>
 		</Help>
 		<Name>Postprocessing: Ergebnisauswertungen</Name>
-		<TaskGroup URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__PlanView">
+		
+		<TaskGroup URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ResultMapGroup" context="ResultMap">
 			<Help>
 				<![CDATA[Hier werden die Ergebnisauswertungen zur Darstellung in einer Karte durchgeführt.]]>
 			</Help>
-			<Name>Einstellungen Kartenansicht</Name>
-			<Task type="ASYNCHRONOUS" context="ResultMap" URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__VectorDispl">
+			<Name>Kartenansicht</Name>
+			<Task type="ASYNCHRONOUS" context="ResultMapHydrograph" URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ResultMapAll">
 				<Help>
-					<![CDATA[Stellt Strömungsgeschwindigkeiten anhand von Vektoren dar.]]>
+					<![CDATA[Stellt die Ergebnisse in einer Gesamtübersicht dar.]]>
 				</Help>
-				<Name>Vektorendarstellung</Name>
+				<Name>Ergebnisübersicht</Name>
 			</Task>
-			<Task type="ASYNCHRONOUS" context="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__PlanView"
-				URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ColoredDispl">
-				<Help>
-					<![CDATA[Stellt Berechnungsergebnisse anhand von Farbflächen dar.]]>
-				</Help>
-				<Name>Farbflächendarstellung</Name>
-			</Task>
-			<Task type="ASYNCHRONOUS" context="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__PlanView"
-				URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__IsolineDispl">
-				<Help>
-					<![CDATA[Stellt Berechnungsergebnisse anhand von Isolinien dar.]]>
-				</Help>
-				<Name>Isoliniendarstellung</Name>
-			</Task>
-		</TaskGroup>
-		<TaskGroup URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Section">
-			<Help>Darstellung von Längs- oder Querschnitten</Help>
-			<Name>Schnittdarstellungen</Name>
-			<Task type="ASYNCHRONOUS" context="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Section"
-				URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__CrossSecDef">
-				<Help>
-					<![CDATA[Ermöglicht die Erstellung oder Bearbeitung von beliebigen Schnitten durch das Gebiet]]>
-				</Help>
-				<Name>einzelne Schnitte</Name>
-			</Task>
-			<Task type="ASYNCHRONOUS" context="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Section"
-				URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__LongSecDef">
-				<Help>
-					<![CDATA[Ermöglicht die Erstellung von Gewässerlängsschnitten auf Basis zuvor definierter Querschnitte]]>
-				</Help>
-				<Name>Längsschnitt</Name>
-			</Task>
-			<!-- auskommentiert, da nicht in LANU-Angebot enthalten (TJ)			
-				<Task context="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Section" URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__TimeSeriesDispl">
-				<Help>Ermöglicht die Gangliniendarstellung selektierter Ergebnisgeometrien</Help>
-				<Name>Gangliniendarstellung</Name>
-				</Task>
-			-->
 		</TaskGroup>
 	</TaskGroup>
 	<Perspectives>
@@ -487,6 +450,12 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 					</con:ExtensionContext>
 					<con:ExtensionContext id="ResultMap" parent="MapContext"
 						handlerFactoryId="kalypsoContextHandlerFactory">
+						<con:ExtensionContext id="ResultMapHydrograph" parent="ResultMap"
+							handlerFactoryId="kalypsoContextHandlerFactory">
+							<con:Parameter name="type" value="themeContext" />
+							<con:Parameter name="input"
+								value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}Hydrograph" />
+						</con:ExtensionContext>
 						<con:Parameter name="type" value="mapViewInputContext" />
 						<con:Parameter name="input" value="results/result.gmt" />
 					</con:ExtensionContext>
