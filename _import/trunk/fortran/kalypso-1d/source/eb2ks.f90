@@ -1,4 +1,4 @@
-!     Last change:  MD   10 Apr 2007    7:01 pm
+!     Last change:  MD    4 Jul 2007    3:10 pm
 !--------------------------------------------------------------------------
 ! This code, ebksn.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -51,7 +51,7 @@ SUBROUTINE eb2ks (iprof, hv, rg, rg_alt, q, q_alt, itere1, nstat, hr, nknot)
 !**   DIREKT ÜBERGEBENE VARIABLEN                                       
 !**   ---------------------------                                       
 !**   hr      -                                                         
-!**   hv      -                                                         
+!**   hv      - Verlusthoehe infolge Reibung
 !**   iprof   -                                                         
 !**   itere1  - Zahl der Iterationen                                    
 !**   nstat
@@ -289,7 +289,7 @@ COMMON / rough / tbr1, tbr2, tbr3, tgr1, tgr2, tgr3
 
 
 ! Local variables
-INTEGER :: if_l (maxkla)        	! if_l = Fehlervariable für die Subroutine lindy
+INTEGER :: if_l (maxkla)      ! if_l = Fehlervariable für die Subroutine lindy
 REAL    :: isener, isenen, isenk
 REAL 	:: hvor (maxkla), cwr (maxkla), alp (maxkla)
 REAL 	:: also (maxkla), anl (maxkla), anb (maxkla)
@@ -304,7 +304,6 @@ REAL 	:: cm                           !JK   ZUSATZ FUER ERWEITERUNG VON JANA KIE
 REAL 	:: phi_o_li, phi_u_li, phi_o_re, phi_u_re, phi_o_fl, phi_u_fl
 REAL 	:: psi_o_li, psi_o_re, psi_o_fl, psion
 REAL 	:: a_vor_li, a_vor_re, alpha_E, alpha_I
-
                                                                         
 !WP 10.05.2004                                                          
 ibed = 0
@@ -339,6 +338,12 @@ ELSEIF (itere1.gt.1) then
     isenen = q * q / rg / rg
   ENDIF
 ENDIF
+
+!MD Vermeidung von Unendlichgroßem Gefaelle oder negativem Gefaelle
+IF (isenen.gt.1 .or. isenen.le.0) then
+  isenen = 0.001
+ENDIF
+
 
 !UT   STARTPARAMETER FUER DIE DIFFERENZ difi = abs(isener-isenen)/isener
 difi = 1000.
@@ -614,8 +619,17 @@ DO 15 WHILE(difi.gt.0.01)
     !JK   PROGRAMMERWEITERUNG, 23. JUNI 2000, JANA KIEKBUSCH
     !JK   ------------------------------------------------------------------
     !      if (maean_ber.eq.'bwk') then
+
     l_ks (ii) = cm * l_ks (ii)
     v_ks (ii) = v_ks (ii) / SQRT (cm)
+
+    !MD Abfangen von Extremwerten
+    IF (l_ks(ii).le.1.e-06) THEN
+      l_ks(ii) = 0.0
+    END IF
+    IF (v_ks(ii).le.1.e-05) THEN
+      v_ks(ii) = 0.0
+    END IF
     !          q_ks(ii)=v_ks(ii)*a_ks(ii)
 
 
@@ -692,11 +706,11 @@ DO 15 WHILE(difi.gt.0.01)
 
   !UT   FALLS FLAECHE RECHTES VORLAND GROESSER NULL
   !UT   rk = WIDERSTANDSBEIWERT, v = GESCHWINDIGKEIT, qt = ABFLUSS
-  IF (f (1) .gt.1.e-06) then
+  IF (f(1).gt.1.e-06 .and. qt(1).gt.1.e-06) then
 
     IF (actu.gt.0.and.actf.gt.0) then
       ! rk(1)=alsum/actu
-      v (1) = qt (1) / actf
+      v(1) = qt (1) / actf
 
       !***********************************************************************
       !DK   22/05/01 - calculation l=(v_i/v)^2*r_hy/r_hy,i*l_i
@@ -888,8 +902,17 @@ DO 15 WHILE(difi.gt.0.01)
     !JK   PROGRAMMERWEITERUNG, 23. JUNI 2000, JANA KIEKBUSCH
     !JK   ------------------------------------------------------------------
     !      if (maean_ber.eq.'bwk') then
+
     l_ks (ii) = cm * l_ks (ii)
     v_ks (ii) = v_ks (ii) / SQRT (cm)
+
+    !MD Abfangen von Extremwerten
+    IF (l_ks(ii).le.1.e-06) THEN
+      l_ks(ii) = 0.0
+    END IF
+    IF (v_ks(ii).le.1.e-05) THEN
+      v_ks(ii) = 0.0
+    END IF
 
     !          q_ks(ii)=v_ks(ii)*a_ks(ii)
 
@@ -963,7 +986,8 @@ DO 15 WHILE(difi.gt.0.01)
 
   !UT   FALLS FLAECHE RECHTES VORLAND GROESSER NULL
   !UT   rk = WIDERSTANDSBEIWERT, v = GESCHWINDIGKEIT, qt = ABFLUSS
-  IF (f (3) .gt.1.e-06) then
+  IF (f(3).gt.1.e-06 .and. qt(3).gt.1.e-06) then
+
     IF (actu.gt.0.and.actf.gt.0) then
       ! rk(3)=alsum/actu
       v(3) = qt(3) / actf
@@ -1483,9 +1507,12 @@ psi_o_fl = 0
 phi_u_fl = 0
 a_vor_li = 0
 a_vor_re = 0
-gesamt_a = 0
+gesamt_a(pn_alpha) = 0
 alpha_E = 0
+alpha_I = 0
 psion = 0
+phiun = 0
+phion = 0
 
 !HB   Berechnung der einzelnen Summen des linken Vorlandes des Energie-
 !HB   strombeiwert (ohne Flaeche A) für Zaehler und Nenner
@@ -1495,18 +1522,20 @@ psion = 0
 !HB   nach FORMEL 15, BWK1/99, S.19 (psi_o_li)
 
 !WP 210 CONTINUE ! Never Used
-
+ii = 0
+! PRINT *,'Linkes Vorland'
+! PRINT *,'ischl:',ischl
+! PRINT *,'itrli-1:',itrli-1
 DO ii = ischl, itrli - 1
-  IF (l_ks (ii) .gt.1.e-6) then
+  IF (l_ks(ii).gt.1.e-3 .and. u_ks(ii).gt.1.e-3 .and. a_ks(ii).gt.1.e-3) then
+    r_ks(ii) = a_ks(ii) /u_ks(ii)
     !HB  Zaehler Energiestrombeiwert
-    phi_o_li = phi_o_li + a_ks (ii) * ( (r_ks (ii) / l_ks (ii) ) ** 1.5)
+    phi_o_li = phi_o_li + (a_ks(ii) * ((r_ks(ii) / l_ks(ii)) ** 1.5))
     !HB  Nenner Energiestrombeiwert und Boussinesq-Beiwert
-    phi_u_li = phi_u_li + a_ks (ii) * ( (r_ks (ii) / l_ks (ii) ) ** 0.5)
+    phi_u_li = phi_u_li + (a_ks(ii) * ((r_ks(ii) / l_ks(ii)) ** 0.5))
     !HB  Zaehler Boussinesq-Beiwert
-    psi_o_li = psi_o_li + a_ks (ii) * (r_ks (ii) / l_ks (ii) )
-    ! PRINT *,'Linkes Vorland'
-    ! PRINT *,'ischl:',ischl
-    ! PRINT *,'itrli-1:',itrli-1
+    psi_o_li = psi_o_li + (a_ks(ii) * (r_ks(ii) / l_ks(ii) ))
+
     ! PRINT *,'ii:',ii
     ! PRINT *,'a_ks(ii):',a_ks(ii)
     ! PRINT *,'r_ks(ii):',r_ks(ii)
@@ -1515,29 +1544,28 @@ DO ii = ischl, itrli - 1
     ! PRINT *,'phi_o_li:',phi_o_li
     ! PRINT *,'phi_u_li:',phi_u_li
     !HB  Uebergabe der durchstroemten Flaechen um Summe der
-    !HB  Einzelflaechen zu erhalten (fuer Beiwertberechnung)
-    a_vor_li = a_vor_li + a_ks (ii)
+    !HB  Einzelflaechen zu erhalten (fuer Beiwertberechnung
+    a_vor_li = a_vor_li + a_ks(ii)
   ENDIF
 END DO
 
+
 !HB   Berechnung der einzelnen Summen des rechten Vorlandes des Energie-
 !HB   strombeiwert (ohne Flaeche A) fuer Zaehler und Nenner
-!HB   nach FORMEL 14, BWK1/99, S.19 (phi_o_re und phi_u_re)
-!HB   sowie Berechnung der einzelnen Summen des rechten Vorlandes des
-!HB   Boussinesq-Beiwertes (ohne Flaeche A) fuer Zaehler und Nenner
-!HB   nach FORMEL 15, BWK1/99, S.19 (psi_o_re)
-
+! PRINT*,'Rechtes Vorland'
+! PRINT*,'itrre:',itrre
+! PRINT*,'ischr - 1:',ischr - 1
+ii = 0
 DO ii = itrre, ischr - 1
-  IF (l_ks (ii) .gt.1.e-6) then
+  IF (l_ks (ii) .gt.1.e-3 .and. u_ks(ii).gt.1.e-3 .and. a_ks(ii).gt.1.e-3) then
+    r_ks(ii) = a_ks(ii) /u_ks(ii)
     !HB  Zaehler Energiestrombeiwert
-    phi_o_re = phi_o_re+a_ks (ii) * ( (r_ks (ii) / l_ks (ii) ) ** 1.5)
+    phi_o_re = phi_o_re+ (a_ks(ii) * ((r_ks(ii) / l_ks(ii)) ** 1.5))
     !HB  Nenner Energiestrombeiwert und Boussinesq-Beiwert
-    phi_u_re = phi_u_re+a_ks (ii) * ( (r_ks (ii) / l_ks (ii) ) ** 0.5)
+    phi_u_re = phi_u_re+ (a_ks(ii) * ((r_ks(ii) / l_ks(ii)) ** 0.5))
     !HB  Zaehler Boussinesq-Beiwert
-    psi_o_re = psi_o_re+a_ks (ii) * (r_ks (ii) / l_ks (ii) )
-    ! PRINT*,'Rechtes Vorland'
-    ! PRINT*,'ischl:',ischl
-    ! PRINT*,'itrli-1:',itrli-1
+    psi_o_re = psi_o_re+ (a_ks(ii) * (r_ks(ii) / l_ks(ii)))
+
     ! PRINT*,'ii:',ii
     ! PRINT*,'a_ks(ii):',a_ks(ii)
     ! PRINT*,'r_ks(ii):',r_ks(ii)
@@ -1547,7 +1575,7 @@ DO ii = itrre, ischr - 1
     ! PRINT*,'phi_u_re:',phi_u_re
     !HB  Uebergabe der durchstroemten Flaechen um Summe der
     !HB  Einzelflaechen zu erhalten (fuer Beiwertberechnung)
-    a_vor_re = a_vor_re+a_ks (ii)
+    a_vor_re = a_vor_re + a_ks(ii)
   ENDIF
 END DO
 
@@ -1557,8 +1585,10 @@ END DO
 !HB   Flusschlauch nach FORMEL 15, BWK1/99, S.19 (psi_o_fl)
 !WP 260 CONTINUE Never Used
 
-phi_o_fl = a_hg * ( (r_hg / l_hg) **1.5)
-phi_u_fl = a_hg * ( (r_hg / l_hg) **0.5)
+r_hg = a_hg /u_hg
+
+phi_o_fl = a_hg * ((r_hg / l_hg) **1.5)
+phi_u_fl = a_hg * ((r_hg / l_hg) **0.5)
 psi_o_fl = a_hg * (r_hg / l_hg)
 ! PRINT*,'Flusschlauch'
 ! PRINT*,'Flaeche a_hg:',a_hg
@@ -1571,41 +1601,40 @@ psi_o_fl = a_hg * (r_hg / l_hg)
 !HB   Berechnung Summe des Zaehlers fuer:
 !HB   (1.) weitere Berechnung von Verlusthoehe
 !HB   (2.) Energiestrombeiwert
-phion = phi_o_li + phi_o_re+phi_o_fl
+phion = phi_o_li + phi_o_re + phi_o_fl
 
 !HB   Berechnung Summe des Nenners fuer:
 !HB   (1.) weitere Berechnung von Verlusthoehe
 !HB   (2.) Energiestrombeiwert
 !HB   (3.) Boussinesq-Beiwert
-phiun = phi_u_li + phi_u_re+phi_u_fl
+phiun = phi_u_li + phi_u_re + phi_u_fl
+psion = psi_o_li + psi_o_re + psi_o_fl
+
 ! PRINT*,'Zaehler und Nenner'
 ! PRINT*,'phion:',phion
 ! PRINT*,'phiun:',phiun
-
-!HB   Berechnung der Summe des Zaehlers fuer:
-!HB   (1.) Boussinesq-Beiwert
-psion = psi_o_li + psi_o_re+psi_o_fl
 ! PRINT*,'psion:',psion
 
 !HB   Gesamte durchstroemte Flaeche
-gesamt_a (pn_alpha) = a_vor_li + a_vor_re+a_hg
+gesamt_a(pn_alpha) = a_vor_li + a_vor_re + a_hg
 ! PRINT*,'Gesamtflaeche',gesamt_a
 
 !HB   -----------------------------------------------------------------
 !HB   Berechnung des Energiestrombeiwertes und des Boussinesq-Beiwertes
 !HB   -----------------------------------------------------------------
-!HB   Energiestrombeiwert, BWK1/99, Formel 14, Seite 19
-alpha_E = (gesamt_a (pn_alpha) **2) * phion / (phiun**3)
-! PRINT*,'Energiestrombeiwert.',alpha_E
 
-!HB   Energiestrombeiwert in Abhaengigkeit von der Profilnummer
-alpha_EW (pn_alpha) = alpha_E
+!HB   Energiestrombeiwert, BWK1/99, Formel 14, Seite 19
+!HB   Coriolis-Beiwert in Abhaengigkeit von der Profilnummer
+alpha_E = (gesamt_a(pn_alpha) **2.D0) * phion / (phiun**3.D0)
+alpha_EW(pn_alpha) = alpha_E
+
+!HB   Impulsstrombeiwert in Abhaengigkeit von der Profilnummer
 !HB   Boussinesq-Beiwert, BWK1/99, Formel 15, Seite 19
-alpha_I = gesamt_a (pn_alpha) * psion / (phiun**2)
-!HB   Boussinesq-Beiwert in Abhaengigkeit von der Profilnummer
-alpha_IW (pn_alpha) = alpha_I
+alpha_I = gesamt_a(pn_alpha) * psion / (phiun**2.D0)
+alpha_IW(pn_alpha) = alpha_I
+
+! PRINT*,'Impulsstrombeiwert:',alpha_I
 ! PRINT*,'Energiestrombeiwert:',alpha_E
-! PRINT*,'Boussinesq-Beiwert:',alpha_I
 ! PRINT*,'Beiwert in abh. von Profilnummer:',alpha_EW(pn_alpha
 ! PRINT*,'pn_alpha:',pn_alpha
 ! PRINT*,'st_alpha:',st_alpha
@@ -1614,10 +1643,16 @@ alpha_IW (pn_alpha) = alpha_I
 !HB   ****************************************************************
 
 !JK   BERECHNUNG VERLUSTHOEHE ANLEHNUNG FORMEL 6, S.15 BWK?, UT
-!UT   => hv = (phion/(phiun**3)) *q*q / (9.81*2.)
+!UT   => hv = (phion/(phiun**3)) *q*q / (9.81*2.)     ???
 !HB   Der Verlusthoehe wird die Energiebilanz zugrundegelegt,
 !HB   so dass der Nenner in dritter Potenz vorliegt
 hv = phion / phiun**3 * q * q / g / 2.
+
+
+!MD  BERECHNUNG VERLUSTHOEHE ANLEHNUNG FORMEL 9, S.17 BWK
+!MD   => hv = (1/(phiun**2)) *q*q / (9.81*8.)
+hv = (q*q)/(phiun**2.D0) / g / 8.D0
+
 
 iergeb = 0
 
