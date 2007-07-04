@@ -40,12 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.tools;
 
+import java.util.List;
+
 import javax.xml.namespace.QName;
 
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -569,36 +573,17 @@ public class GeometryUtilities
     return false;
   }
 
-  // public static Class getClass( IPropertyType ftp )
-  // {
-  // if( isPointGeometry( ftp ) )
-  // return getPointClass();
-  // if( isMultiPointGeometry( ftp ) )
-  // return getMultiPointClass();
-  // if( isLineStringGeometry( ftp ) )
-  // return getLineStringClass();
-  // if( isMultiLineStringGeometry( ftp ) )
-  // return getMultiLineStringClass();
-  // if( isPolygonGeometry( ftp ) )
-  // return getPolygonClass();
-  // if( isMultiPolygonGeometry( ftp ) )
-  // return getMultiPolygonClass();
-  // if( isAnyMultiGeometry( ftp ) )
-  // return null;
-  // return null;
-  // }
-
-  public static Class< ? extends Object> getPointClass( )
+  public static Class< ? extends GM_Object> getPointClass( )
   {
     return GM_Point.class;
   }
 
-  public static Class< ? extends Object> getMultiPointClass( )
+  public static Class< ? extends GM_Object> getMultiPointClass( )
   {
     return GM_MultiPoint.class;
   }
 
-  public static Class< ? extends Object> getLineStringClass( )
+  public static Class< ? extends GM_Object> getLineStringClass( )
   {
     return GM_Curve.class;
   }
@@ -608,17 +593,17 @@ public class GeometryUtilities
     return GM_MultiCurve.class;
   }
 
-  public static Class< ? extends Object> getPolygonClass( )
+  public static Class< ? extends GM_Object> getPolygonClass( )
   {
     return GM_Surface.class;
   }
 
-  public static Class< ? extends Object> getMultiPolygonClass( )
+  public static Class< ? extends GM_Object> getMultiPolygonClass( )
   {
     return GM_MultiSurface.class;
   }
 
-  public static Class< ? extends Object> getUndefinedGeometryClass( )
+  public static Class< ? extends GM_Object> getUndefinedGeometryClass( )
   {
     return GM_Object.class;
   }
@@ -706,7 +691,7 @@ public class GeometryUtilities
     IValuePropertyType geometryProperty = null;
     for( final IValuePropertyType property : allGeomteryProperties )
     {
-      if( aPreferedGeometryClass == null || property.getValueClass() == aPreferedGeometryClass )
+      if( aPreferedGeometryClass == null || property.getValueClass().isAssignableFrom( aPreferedGeometryClass ) )
       {
         geometryProperty = property;
         break;
@@ -778,6 +763,31 @@ public class GeometryUtilities
 
     final GM_Envelope reqEnvelope = GeometryFactory.createGM_Envelope( minPos, maxPos );
     return reqEnvelope;
+  }
+
+  @SuppressWarnings( { "unchecked" })
+  public static Feature findNearestFeature( final GM_Point point, final double grabDistance, final FeatureList modelList, final QName geoQName )
+  {
+    final GM_Envelope reqEnvelope = GeometryUtilities.grabEnvelopeFromDistance( point, grabDistance );
+    final List<Feature> foundElements = modelList.query( reqEnvelope, null );
+    double min = Double.MAX_VALUE;
+    Feature nearest = null;
+
+    for( final Feature feature : foundElements )
+    {
+      final GM_Object geom = (GM_Object) feature.getProperty( geoQName );
+
+      if( geom != null )
+      {
+        final double curDist = point.distance( geom );
+        if( min > curDist && curDist < grabDistance )
+        {
+          nearest = feature;
+          min = curDist;
+        }
+      }
+    }
+    return nearest;
   }
 
 }
