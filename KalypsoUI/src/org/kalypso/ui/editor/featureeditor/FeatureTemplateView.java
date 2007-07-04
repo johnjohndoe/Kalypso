@@ -40,16 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.featureeditor;
 
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
+import java.io.BufferedInputStream;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Properties;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -72,6 +70,7 @@ import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.command.DefaultCommandManager;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.template.featureview.Featuretemplate;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 
@@ -106,7 +105,7 @@ public class FeatureTemplateView extends ViewPart
 
   protected final JobExclusiveCommandTarget m_commandTarget = new JobExclusiveCommandTarget( new DefaultCommandManager(), m_dirtyRunnable );
 
-  FeatureTemplateviewer m_templateviewer = new FeatureTemplateviewer( m_commandTarget, 0, 0 );
+  private FeatureTemplateviewer m_templateviewer = new FeatureTemplateviewer( m_commandTarget, 0, 0 );
 
   protected IFile m_file;
 
@@ -169,6 +168,7 @@ public class FeatureTemplateView extends ViewPart
   public void loadFromTemplate( final IFile file )
   {
     final Display display = m_templateviewer.getControl().getDisplay();
+    final FeatureTemplateviewer templateviewer = m_templateviewer;
     final UIJob job = new UIJob( display, "Feature Template laden" )
     {
       /**
@@ -178,13 +178,15 @@ public class FeatureTemplateView extends ViewPart
       public IStatus runInUIThread( final IProgressMonitor monitor )
       {
         String partName = null;
+        InputStream contents = null;
         try
         {
           if( file != null && file.exists() )
           {
-            final Reader reader = new InputStreamReader( file.getContents(), file.getCharset() );
+            contents = new BufferedInputStream( file.getContents() );
             final URL context = ResourceUtilities.createURL( file );
-            final Featuretemplate template = m_templateviewer.loadInput( reader, context, monitor, new Properties() );
+            final Featuretemplate template = templateviewer.loadInput( contents, context, monitor, new Properties() );
+            contents.close();
             partName = template.getName();
             m_file = file;
             final String fileName = m_file != null ? FileUtilities.nameWithoutExtension( m_file.getName() ) : "<input not a file>";
@@ -196,31 +198,18 @@ public class FeatureTemplateView extends ViewPart
           }
           return Status.OK_STATUS;
         }
-        catch( CoreException e )
+        catch( final Throwable e )
         {
           e.printStackTrace();
+          return StatusUtilities.statusFromThrowable( e );
         }
-        catch( UnsupportedEncodingException e )
+        finally
         {
-          e.printStackTrace();
+          IOUtils.closeQuietly( contents );
         }
-        catch( MalformedURLException e )
-        {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-        }
-        return Status.CANCEL_STATUS;
       }
     };
     job.schedule();
-
-    // final IStatus status = job.getResult();
-    // if( !status.isOK() )
-    // {
-    // ErrorDialog.openError( display.getActiveShell(), "Feature Template laden", "Fehler beim Laden der Vorlage" +
-    // file.getName(), status );
-    // m_templateviewer.dispose();
-    // }
   }
 
   public void setCustomName( final String name )
