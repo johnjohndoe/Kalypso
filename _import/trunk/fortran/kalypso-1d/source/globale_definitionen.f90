@@ -1,4 +1,4 @@
-!     Last change:  MD    4 Jul 2007    3:09 pm
+!     Last change:  MD    4 Jul 2007    6:24 pm
 !--------------------------------------------------------------------------
 ! This code, globale_definitionen.f90, contains the shared memory modules
 ! and functions of the hydrodynamic modell for
