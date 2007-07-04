@@ -1,4 +1,4 @@
-!     Last change:  MD    2 May 2007   12:08 pm
+!     Last change:  MD    4 Jul 2007    3:10 pm
 !--------------------------------------------------------------------------
 ! This code, wspber.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -469,17 +469,29 @@ if (isch == 1) then
     call stop_programm(0)
   end if
 
-
   UNIT_OUT_QWEHR = ju0gfu ()
   OPEN (unit = UNIT_OUT_QWEHR, file = NAME_OUT_QWEHR, status = 'REPLACE', iostat = istat)
   if (istat /= 0) then
-    write (*, 9007) NAME_OUT_QWEHR
+    write (*, 9008) NAME_OUT_QWEHR
     9008 format (1X, 'Fehler beim Oeffnen der Datei ', A, /, &
        & 1X, 'Programm wird beendet!')
     call stop_programm(0)
   end if
   WRITE (UNIT_OUT_QWEHR, '(5x,''Profil'',4x,''Q_OW '',3x,''Q-wehr'',5x,''h_ow'',7x,''h_uw'',4x,''Ü-Art'')')
 end if
+
+! Eroeffnen der neuen AusgabeDatei 'Q_LangSchnitt.txt'
+ilen = LEN_TRIM(NAME_PFAD_DATH)
+NAME_OUT_QLAENGS = NAME_PFAD_DATH(1:ilen) // 'Q_LangSchnitt.txt'
+UNIT_OUT_QLAENGS = ju0gfu ()
+OPEN (unit = UNIT_OUT_QLAENGS, file = NAME_OUT_QLAENGS, status = 'REPLACE', iostat = istat)
+if (istat /= 0) then
+ write (*, 9009) NAME_OUT_QLAENGS
+  9009 format (1X, 'Fehler beim Oeffnen der Datei ', A, /, &
+     & 1X, 'Programm wird beendet!')
+  call stop_programm(0)
+end if
+
 
 
 ! Wenn BEIWERTE.AUS erzeugt wird
@@ -1050,7 +1062,7 @@ Hauptschleife: DO i = 1, maxger
         IF (nz .gt. 50) then
           nblatt = nblatt + 1
           CALL kopf (nblatt, nz, UNIT_OUT_TAB, UNIT_OUT_PRO, idr1)
-        END IF
+        ENDIF
 
         CALL speicher (nprof, hr, hv, hvst, hrst, q, stat (nprof), indmax, ikenn)
 
@@ -1063,11 +1075,13 @@ Hauptschleife: DO i = 1, maxger
             ay (i1) = 0.0
             dp (i1) = 0.0
           END DO
-        END IF
+        ENDIF
 
         CALL intdat (staso, ifehl)
 
-        IF (ifehl.ne.0) STOP
+        IF (ifehl.ne.0) then
+          STOP
+        ENDIF
 
         nprof = nprof + 1
 
@@ -1389,7 +1403,7 @@ Hauptschleife: DO i = 1, maxger
 
 
         WRITE (UNIT_OUT_WEHR, '(/,5x,'' Wehrberechnung an Station km'',f8.4)') stat (nprof)
-        WRITE (UNIT_OUT_WEHR, '(5x,'' Aeusserer Abfluss q_out ='',f8.4)') q_out
+        WRITE (UNIT_OUT_WEHR, '(,5x,'' Aeusserer Abfluss q_out ='',f8.4)') q_out
         WRITE (UNIT_OUT_WEHR, '(5x,''-----------------------------'')')
         WRITE (UNIT_OUT_WEHR, '(5x,'' Q_OW '',6x,''h_ow'',5x,''v_ow'',7x,''he_ow'',3x,''mue'',6x,  &
                &''Q-wehr'',2x,''h-ue'',5x,''A-ue'',4x,''Ü-Art'',13x,''he-wehr'',4x,''h_uw'',5x,''v_uw'',7x,''he_uw'')')
@@ -1988,7 +2002,7 @@ IF (BERECHNUNGSMODUS == 'WATERLEVEL') then
 
   !MD mark = 1
   !MD CALL lapro1 (NAME_OUT_WSL, pfad2, nprof, mark, NAME_OUT_LAENGS)
-  CALL lapro1 (NAME_OUT_WSL, pfad2, nprof, NAME_OUT_LAENGS)
+  CALL lapro1 (NAME_OUT_WSL, pfad2, nprof, NAME_OUT_LAENGS, NAME_OUT_QLAENGS)
 ENDIF
 
 
