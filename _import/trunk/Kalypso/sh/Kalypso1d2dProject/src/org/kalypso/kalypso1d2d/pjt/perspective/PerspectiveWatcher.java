@@ -7,6 +7,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
@@ -29,6 +30,11 @@ public class PerspectiveWatcher<T extends Case> implements IActiveContextChangeL
 
   private T m_currentScenario;
 
+  public PerspectiveWatcher( final T currentScenario )
+  {
+    m_currentScenario = currentScenario;
+  }
+
   /**
    * @see org.kalypso.kalypso1d2d.pjt.IActiveContextChangeListener#activeProjectChanged(org.eclipse.core.resources.IProject)
    */
@@ -37,73 +43,86 @@ public class PerspectiveWatcher<T extends Case> implements IActiveContextChangeL
     if( newProject != m_currentProject || scenario != m_currentScenario )
     {
       final IWorkbench workbench = PlatformUI.getWorkbench();
+      final IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
+      final IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
+      final IPerspectiveDescriptor perspective = activePage.getPerspective();
+
       if( workbench.isClosing() )
-        return;
-
-      if( workbench.getActiveWorkbenchWindow().getActivePage().getPerspective().getId().equals( Perspective.ID ) )
       {
-        final UIJob job = new UIJob( "Perspektive öffnen" )
-        {
-          @SuppressWarnings("unchecked")
-          @Override
-          public IStatus runInUIThread( final IProgressMonitor monitor )
-          {
-            final IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
-            final IWorkbenchPage workbenchPage = activeWorkbenchWindow.getActivePage();
-            cleanPerspective( workbenchPage, Collections.EMPTY_LIST );
-            return Status.OK_STATUS;
-          }
-
-        };
-        job.schedule();
+        activePage.closePerspective( perspective, true, false );
+      }
+      else if( perspective.getId().equals( Perspective.ID ) )
+      {
+        cleanPerspective( workbench, Collections.EMPTY_LIST );
       }
       m_currentProject = newProject;
       m_currentScenario = scenario;
     }
   }
 
-  public static void cleanPerspective( final IWorkbenchPage workbenchPage, final Collection<String> partsToKeep )
+  public static void cleanPerspective( final IWorkbench workbench, final Collection<String> partsToKeep )
   {
-    final IViewReference[] viewReferences = workbenchPage.getViewReferences();
-    for( final IViewReference reference : viewReferences )
+    final UIJob job = new UIJob( "Arbeitskontext anpassen" )
     {
-      if( !partsToKeep.contains( reference.getId() ) && !shouldKeepPart( reference ) )
+      @SuppressWarnings("unchecked")
+      @Override
+      public IStatus runInUIThread( final IProgressMonitor monitor )
       {
-        workbenchPage.hideView( reference );
-      }
-    }
-    final IEditorReference[] editorReferences = workbenchPage.getEditorReferences();
-    for( final IEditorReference reference : editorReferences )
-    {
-      if( !partsToKeep.contains( reference.getId() ) && !shouldKeepPart( reference ) )
-      {
-        workbenchPage.closeEditor( reference.getEditor( true ), true );
-      }
-    }
-    if( workbenchPage.getEditorReferences().length == 0 )
-    {
-      workbenchPage.setEditorAreaVisible( false );
-    }
-  }
+        final IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
+        if( activeWorkbenchWindow == null )
+        {
+          return Status.CANCEL_STATUS;
+        }
+        final IWorkbenchPage workbenchPage = activeWorkbenchWindow.getActivePage();
+        if( workbenchPage == null )
+        {
+          return Status.CANCEL_STATUS;
+        }
 
-  private static boolean shouldKeepPart( final IWorkbenchPartReference reference )
-  {
-    final String viewId = reference.getId();
-    if( WorkflowView.ID.equals( viewId ) )
-    {
-      return true;
-    }
-    else if( Perspective.SCENARIO_VIEW_ID.equals( viewId ) )
-    {
-      return true;
-    }
-    else if( reference.getPartName().equals( "Welcome" ) )
-    {
-      return true;
-    }
-    else
-    {
-      return false;
-    }
+        final IViewReference[] viewReferences = workbenchPage.getViewReferences();
+        for( final IViewReference reference : viewReferences )
+        {
+          if( !partsToKeep.contains( reference.getId() ) && !shouldKeepPart( reference ) )
+          {
+            workbenchPage.hideView( reference );
+          }
+        }
+        final IEditorReference[] editorReferences = workbenchPage.getEditorReferences();
+        for( final IEditorReference reference : editorReferences )
+        {
+          if( !partsToKeep.contains( reference.getId() ) && !shouldKeepPart( reference ) )
+          {
+            workbenchPage.closeEditor( reference.getEditor( true ), true );
+          }
+        }
+        if( workbenchPage.getEditorReferences().length == 0 )
+        {
+          workbenchPage.setEditorAreaVisible( false );
+        }
+        return Status.OK_STATUS;
+      }
+
+      private boolean shouldKeepPart( final IWorkbenchPartReference reference )
+      {
+        final String viewId = reference.getId();
+        if( WorkflowView.ID.equals( viewId ) )
+        {
+          return true;
+        }
+        else if( Perspective.SCENARIO_VIEW_ID.equals( viewId ) )
+        {
+          return true;
+        }
+        else if( reference.getPartName().equals( "Welcome" ) )
+        {
+          return true;
+        }
+        else
+        {
+          return false;
+        }
+      }
+    };
+    job.schedule();
   }
 }

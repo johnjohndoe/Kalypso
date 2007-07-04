@@ -31,6 +31,7 @@ import de.renew.workflow.cases.Case;
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 import de.renew.workflow.connector.context.ActiveWorkContext;
 import de.renew.workflow.connector.context.CaseHandlingProjectNature;
+import de.renew.workflow.connector.worklist.ITaskExecutor;
 import de.renew.workflow.contexts.WorkflowContextHandlerFactory;
 
 /**
@@ -51,7 +52,7 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
 
   public static final String KEY_ICON_SIM_MODEL = "_ICON_SIM_MODEL_";
 
-  private final PerspectiveWatcher<Scenario> m_perspectiveWatcher = new PerspectiveWatcher<Scenario>();
+  private PerspectiveWatcher<Scenario> m_perspectiveWatcher;
 
   private ActiveWorkContext<Scenario> m_activeWorkContext;
 
@@ -61,7 +62,7 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
 
   private TaskExecutionAuthority m_taskExecutionAuthority;
 
-  private TaskExecutor m_taskExecutor;
+  private ITaskExecutor m_taskExecutor;
 
   /**
    * The constructor
@@ -111,6 +112,7 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
       {
         if( !forced && m_taskExecutionAuthority.canStopTask( m_taskExecutor.getActiveTask() ) )
         {
+          m_taskExecutor.stopActiveTask();
           stopSzenarioSourceProvider();
           return true;
         }
@@ -137,8 +139,8 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
     plugin = null;
     super.stop( context );
   }
-  
-  public TaskExecutor getTaskExecutor( )
+
+  public ITaskExecutor getTaskExecutor( )
   {
     return m_taskExecutor;
   }
@@ -204,6 +206,7 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
       m_szenarioDataProvider = new SzenarioDataProvider();
       m_szenarioSourceProvider = new CaseHandlingSourceProvider<Scenario, IFeatureWrapper2>( m_activeWorkContext, m_szenarioDataProvider );
       handlerService.addSourceProvider( m_szenarioSourceProvider );
+      m_perspectiveWatcher = new PerspectiveWatcher<Scenario>( m_activeWorkContext.getCurrentCase() );
       m_activeWorkContext.addActiveContextChangeListener( m_perspectiveWatcher );
     }
   }
@@ -231,7 +234,7 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
     }
 
     if( PlatformUI.isWorkbenchRunning() )
-    {      
+    {
       try
       {
         m_activeWorkContext.setCurrentCase( null );
@@ -239,7 +242,7 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
       catch( final CoreException e )
       {
         e.printStackTrace();
-      }      
+      }
       m_activeWorkContext.removeActiveContextChangeListener( m_perspectiveWatcher );
     }
   }
