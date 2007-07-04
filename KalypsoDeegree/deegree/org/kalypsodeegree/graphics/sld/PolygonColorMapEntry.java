@@ -69,6 +69,8 @@ public interface PolygonColorMapEntry
 {
   public Fill getFill( );
 
+  public Stroke getStroke( );
+
   public double getFrom( Feature feature );
 
   public double getTo( Feature feature );

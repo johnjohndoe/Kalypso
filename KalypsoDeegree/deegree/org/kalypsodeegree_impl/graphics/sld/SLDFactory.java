@@ -1285,10 +1285,10 @@ public class SLDFactory
   private static PolygonColorMapEntry createPolygonColorMapEntry( IUrlResolver2 urlResolver, Element element ) throws XMLParsingException
   {
     // <PolygonColorMapEntry>
-    final Element colorMapEntryElement = XMLTools.getChildByName( "PolygonColorMapEntry", SLDNS_EXT, element );
-
-    if( colorMapEntryElement == null )
-      throw new XMLParsingException( "Missing required 'PolygonColorMapEntry' element" );
+//    final Element colorMapEntryElement = XMLTools.getChildByName( "PolygonColorMapEntry", SLDNS_EXT, element );
+//
+//    if( colorMapEntryElement == null )
+//      throw new XMLParsingException( "Missing required 'PolygonColorMapEntry' element" );
 
     // <Fill>
     Fill fill = null;
@@ -1296,6 +1296,13 @@ public class SLDFactory
 
     if( fillElement != null )
       fill = SLDFactory.createFill( urlResolver, fillElement );
+
+    // <Stroke>
+    Stroke stroke = null;
+    final Element strokeElement = XMLTools.getChildByName( "Stroke", CommonNamespaces.SLDNS, element );
+
+    if( strokeElement != null )
+      stroke = SLDFactory.createStroke( urlResolver, strokeElement );
 
     // <label>
     final Element labelElt = XMLTools.getChildByName( "label", SLDNS_EXT, element );
@@ -1309,7 +1316,7 @@ public class SLDFactory
     final Element toElt = XMLTools.getChildByName( "to", SLDNS_EXT, element );
     final ParameterValueType to = createParameterValueType( toElt );
 
-    final PolygonColorMapEntry colorMapEntry = new PolygonColorMapEntry_Impl( fill, label, from, to );
+    final PolygonColorMapEntry colorMapEntry = new PolygonColorMapEntry_Impl( fill, stroke, label, from, to );
 
     return colorMapEntry;
   }

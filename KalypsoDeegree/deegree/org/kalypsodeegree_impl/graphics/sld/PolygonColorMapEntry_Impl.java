@@ -44,6 +44,7 @@ import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.Fill;
 import org.kalypsodeegree.graphics.sld.ParameterValueType;
 import org.kalypsodeegree.graphics.sld.PolygonColorMapEntry;
+import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -59,12 +60,15 @@ public class PolygonColorMapEntry_Impl implements PolygonColorMapEntry
 
   private Fill m_fill;
 
-  public PolygonColorMapEntry_Impl( Fill fill, ParameterValueType label, ParameterValueType from, ParameterValueType to )
+  private Stroke m_stroke;
+
+  public PolygonColorMapEntry_Impl( Fill fill, Stroke stroke, ParameterValueType label, ParameterValueType from, ParameterValueType to )
   {
     m_fill = fill;
     m_label = label;
     m_from = from;
     m_to = to;
+    m_stroke = stroke;
   }
 
   /**
@@ -82,13 +86,17 @@ public class PolygonColorMapEntry_Impl implements PolygonColorMapEntry
     return sb.toString();
   }
 
-
   /**
    * @see org.kalypsodeegree.graphics.sld.PolygonColorMapEntry#getFill()
    */
   public Fill getFill( )
   {
     return m_fill;
+  }
+
+  public Stroke getStroke( )
+  {
+    return m_stroke;
   }
 
   /**

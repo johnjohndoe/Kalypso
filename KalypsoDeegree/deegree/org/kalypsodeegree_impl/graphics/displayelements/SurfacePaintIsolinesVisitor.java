@@ -40,20 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.graphics.displayelements;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.kalypsodeegree.graphics.sld.LineSymbolizer;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitor;
-import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
@@ -61,40 +56,30 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  * 
  * @author Gernot Belger, Thomas Jung
  */
-public class SurfacePaintIsolinesVisitor<T extends GM_SurfacePatch> implements ISurfacePatchVisitor<T>
+public class SurfacePaintIsolinesVisitor implements ISurfacePatchVisitor<GM_Triangle>
 {
-  private static final LineSymbolizer m_defaultSymbolizer = new LineSymbolizer_Impl();
-
   private final Graphics m_gc;
 
   private final GeoTransform m_projection;
 
-  private final IElevationColorModel m_colorModel;
+  private final ColorMapConverter m_colorModel;
 
   private static final double VAL_EPS = 0.0000001;
 
-  public SurfacePaintIsolinesVisitor( Feature feature, final Graphics gc, final GeoTransform projection, final IElevationColorModel colorModel )
+  public SurfacePaintIsolinesVisitor( final Graphics gc, final GeoTransform projection, final ColorMapConverter colorModel )
   {
     m_gc = gc;
     m_projection = projection;
     m_colorModel = colorModel;
-
   }
 
   /**
    * @see org.kalypsodeegree.model.geometry.ISurfacePatchVisitor#visit(org.kalypsodeegree.model.geometry.GM_SurfacePatch,
    *      double)
    */
-  public boolean visit( final T patch, final double elevationSample ) throws Exception
+  public boolean visit( final GM_Triangle triangle, final double elevationSample ) throws Exception
   {
-    if( patch instanceof GM_Triangle )
-    {
-      final GM_Triangle triangle = (GM_Triangle) patch;
-
-      getTriangleIsoLines( triangle );
-    }
-    else
-      paintThisSurface( patch, elevationSample );
+    getTriangleIsoLines( triangle );
 
     return true;
   }
@@ -207,8 +192,6 @@ public class SurfacePaintIsolinesVisitor<T extends GM_SurfacePatch> implements I
       z2 = -1000.0;
     }
 
-// final double value = m_grenzen[index];
-
     if( (z1 <= value && value < z2) || (z2 <= value && value < z1) )
       zFaktor = (value - z1) / (z2 - z1);
 
@@ -218,15 +201,5 @@ public class SurfacePaintIsolinesVisitor<T extends GM_SurfacePatch> implements I
     final double x = zFaktor * (c2.getX() - c1.getX()) + c1.getX();
     final double y = zFaktor * (c2.getY() - c1.getY()) + c1.getY();
     return GeometryFactory.createGM_Position( x, y, value );
-  }
-
-  private void paintThisSurface( final GM_SurfacePatch patch, final double elevation ) throws Exception
-  {
-    // TODO optional paint outline of triangle for debug purpose
-  }
-
-  public static final double distance( final double x1, final double y1, final double x2, final double y2 )
-  {
-    return Math.sqrt( (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1) );
   }
 }
