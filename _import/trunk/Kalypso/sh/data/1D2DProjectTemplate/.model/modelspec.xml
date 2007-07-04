@@ -7,12 +7,9 @@
 	<input id="TerrainModel" path="models/terrain.gml" relativeToCalcCase="true"/>
 	<input id="SimulationControlModel" path="models/control.gml" relativeToCalcCase="true"/>
 	<input id="Roughness" path=".metadata/roughness.gml" relativeToCalcCase="false"/>
-	<input id="ResultStyle" path=".metadata/result/result.sld" relativeToCalcCase="false"/>
-	<input id="ResultMap" path=".metadata/result/result.gmt" relativeToCalcCase="false"/>	
-	
-	<!--  this entry is just for testing the result visualisation and can be removed when the calc job will create really calculated result files (TJ) -->    
-	<input id="PseudoResults" path=".metadata/result/pseudoResult.zip" relativeToCalcCase="false" optional="true"/>
 
+    <input id="ResultTemplate" path=".metadata/result/generel.zip" relativeToCalcCase="false"/>
+    <input id="ResultStepTemplate" path=".metadata/result/step.zip" relativeToCalcCase="false"/>
 
 <output id="RESULT_DIR_NAME" path="results" relativeToCalcCase="true"/>
 </modeldata>

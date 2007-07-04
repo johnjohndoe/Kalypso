@@ -457,7 +457,7 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 								value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}Hydrograph" />
 						</con:ExtensionContext>
 						<con:Parameter name="type" value="mapViewInputContext" />
-						<con:Parameter name="input" value="results/result.gmt" />
+						<con:Parameter name="input" value="results/Gesamtergebnis.gmt" />
 					</con:ExtensionContext>
 				</con:ViewContext>
 			</con:WorkbenchSiteContext>
