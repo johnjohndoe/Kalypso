@@ -40,6 +40,11 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -57,6 +62,7 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IEncodedStorage;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IStorage;
@@ -102,6 +108,9 @@ import org.xml.sax.XMLReader;
  */
 public class GisTemplateHelper
 {
+  public static final ObjectFactory OF_GISMAPVIEW = new ObjectFactory();
+
+  public static final org.kalypso.template.types.ObjectFactory OF_TEMPLATE_TYPES = new org.kalypso.template.types.ObjectFactory();
 
   private GisTemplateHelper( )
   {
@@ -139,6 +148,24 @@ public class GisTemplateHelper
     return loadGisMapView( is );
   }
 
+  public static final Gismapview loadGisMapView( final File file ) throws IOException, JAXBException
+  {
+    BufferedInputStream inputStream = null;
+    try
+    {
+      inputStream = new BufferedInputStream( new FileInputStream( file ) );
+      final Gismapview gisMapView = loadGisMapView( new InputSource( inputStream ) );
+      inputStream.close();
+      return gisMapView;
+    }
+    finally
+    {
+      IOUtils.closeQuietly( inputStream );
+    }
+
+  }
+
+  // TODO: for all calling methods: close streams!
   public static final Gismapview loadGisMapView( final InputSource is ) throws JAXBException
   {
     final Unmarshaller unmarshaller = TemplateUtilitites.JC_GISMAPVIEW.createUnmarshaller();
@@ -146,13 +173,14 @@ public class GisTemplateHelper
     try
     {
       // XInclude awareness
-      SAXParserFactory spf = SAXParserFactory.newInstance();
+      final SAXParserFactory spf = SAXParserFactory.newInstance();
       spf.setNamespaceAware( true );
       spf.setXIncludeAware( true );
-      XMLReader xr = spf.newSAXParser().getXMLReader();
+      final XMLReader xr = spf.newSAXParser().getXMLReader();
       xr.setContentHandler( unmarshaller.getUnmarshallerHandler() );
       xr.parse( is );
     }
+    // TODO: throw all these exceptions!
     catch( final SAXException e )
     {
       e.printStackTrace();
@@ -232,7 +260,7 @@ public class GisTemplateHelper
           return transformer.transformEnvelope( env, orgSRSName );
         }
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         // we just print the error, but asume that we can return an envelope that is not converted
         e.printStackTrace();
@@ -241,7 +269,7 @@ public class GisTemplateHelper
     return env;
   }
 
-  public static void fillLayerType( final StyledLayerType layer, String id, String name, boolean visible, KalypsoWMSTheme wmsTheme )
+  public static void fillLayerType( final StyledLayerType layer, final String id, final String name, final boolean visible, final KalypsoWMSTheme wmsTheme )
   {
     layer.setName( name );
     layer.setFeaturePath( "" ); //$NON-NLS-1$
@@ -261,14 +289,12 @@ public class GisTemplateHelper
   public static Gismapview emptyGisView( )
   {
     final GM_Envelope dummyBBox = GeometryFactory.createGM_Envelope( 0, 0, 100, 100 );
-    final ObjectFactory maptemplateFactory = new ObjectFactory();
-    final org.kalypso.template.types.ObjectFactory extentedFactory = new org.kalypso.template.types.ObjectFactory();
-    final Gismapview gismapview = maptemplateFactory.createGismapview();
-    final Layers layersType = maptemplateFactory.createGismapviewLayers();
+    final Gismapview gismapview = OF_GISMAPVIEW.createGismapview();
+    final Layers layersType = OF_GISMAPVIEW.createGismapviewLayers();
     layersType.setActive( null );
     if( dummyBBox != null )
     {
-      final ExtentType extentType = extentedFactory.createExtentType();
+      final ExtentType extentType = OF_TEMPLATE_TYPES.createExtentType();
       extentType.setTop( dummyBBox.getMax().getY() );
       extentType.setBottom( dummyBBox.getMin().getY() );
       extentType.setLeft( dummyBBox.getMin().getX() );
@@ -326,7 +352,8 @@ public class GisTemplateHelper
 
   /**
    * @param strictType
-   *          If true, use the real FeatureType of the first feature of the given collection to strictly type the layer.
+   *            If true, use the real FeatureType of the first feature of the given collection to strictly type the
+   *            layer.
    */
   public static Gismapview createGisMapView( final Map<Feature, IRelationType> layersToCreate, final boolean strictType )
   {
@@ -395,5 +422,21 @@ public class GisTemplateHelper
   {
     final Unmarshaller unmarshaller = TemplateUtilitites.JC_GISTREEVIEW.createUnmarshaller();
     return (Gistreeview) unmarshaller.unmarshal( is );
+  }
+
+  public static void saveGisMapView( final Gismapview gisMapView, final File outFile, final String encoding ) throws IOException, JAXBException
+  {
+    BufferedOutputStream os = null;
+    try
+    {
+      os = new BufferedOutputStream( new FileOutputStream( outFile ) );
+      saveGisMapView( gisMapView, os, encoding );
+      os.close();
+    }
+    finally
+    {
+      IOUtils.closeQuietly( os );
+    }
+
   }
 }

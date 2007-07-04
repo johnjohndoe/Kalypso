@@ -212,7 +212,7 @@ public class CascadingKalypsoTheme extends AbstractKalypsoTheme implements ITemp
 
   public CascadingKalypsoTheme( final StyledLayerType layerType, final URL context, final IFeatureSelectionManager selectionManager, final IMapModell mapModel ) throws Exception
   {
-    super( layerType.getHref(), "Cascading", mapModel );
+    super( layerType.getName(), "Cascading", mapModel );
 
     m_mapViewRefUrl = layerType.getHref();
 
@@ -266,8 +266,12 @@ public class CascadingKalypsoTheme extends AbstractKalypsoTheme implements ITemp
     try
     {
       innerGisView = GisTemplateHelper.loadGisMapView( inputSource );
-      ((IMapModell) this).setName( innerGisView.getName() );
-      ((IKalypsoTheme) this).setName( innerGisView.getName() );
+      final String innerName = innerGisView.getName();
+      if( innerName != null )
+      {
+        ((IMapModell) this).setName( innerName );
+        ((IKalypsoTheme) this).setName( innerName );
+      }
       m_innerMapModel.createFromTemplate( innerGisView );
       fireContextChanged();
       fireStatusChanged();

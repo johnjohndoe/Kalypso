@@ -166,15 +166,16 @@ public class GisTemplateMapModell implements IMapModell
     final String[] arrImgTypes = new String[] { "tif", "jpg", "png", "gif", "gmlpic" };
 
     final CS_CoordinateSystem defaultCS = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
-    if( "wms".equals( layerType.getLinktype() ) ) //$NON-NLS-1$
+    final String linktype = layerType.getLinktype();
+    if( "wms".equals( linktype ) ) //$NON-NLS-1$
     {
       final String layerName = layerType.getName();
       final String source = layerType.getHref();
-      return new KalypsoWMSTheme( layerType.getLinktype(), layerName, source, defaultCS, this );
+      return new KalypsoWMSTheme( linktype, layerName, source, defaultCS, this );
     }
-    else if( ArrayUtils.contains( arrImgTypes, layerType.getLinktype().toLowerCase() ) )
+    else if( ArrayUtils.contains( arrImgTypes, linktype.toLowerCase() ) )
       return KalypsoPictureTheme.getPictureTheme( layerType, context, this, defaultCS );
-    else if( "gmt".equals( layerType.getLinktype() ) )
+    else if( "gmt".equals( linktype ) )
       return new CascadingKalypsoTheme( layerType, context, m_selectionManager, this );
     else
       // TODO: returns handling of gml files - part of else?!? dont assume it, proof it!
