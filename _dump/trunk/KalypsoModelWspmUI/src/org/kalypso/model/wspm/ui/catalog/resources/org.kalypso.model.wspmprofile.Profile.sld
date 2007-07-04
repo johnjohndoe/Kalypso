@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <FeatureTypeStyle xmlns="http://www.opengis.net/sld" xmlns:ogc="http://www.opengis.net/ogc">
-    <Name>default</Name>
-    <Title>Profilsegment (TU-HH)</Title>
+    <Name>profileLocation</Name>
+    <Title>Profillinie</Title>
     <FeatureTypeName>{org.kalypso.model.wspmprofile}Profile</FeatureTypeName>
     <Rule>
-        <Name>default</Name>
-        <Title>default</Title>
-        <Abstract>default</Abstract>
+        <Name>profileLine</Name>
+        <Title>Profillinie</Title>
+        <Abstract/>
         <MinScaleDenominator>0.0</MinScaleDenominator>
         <MaxScaleDenominator>9.9999999901E8</MaxScaleDenominator>
 		<TextSymbolizer>
