@@ -190,7 +190,7 @@
 								<xs:label>Ganglinie</xs:label>
 							</xs:documentation>
 							<xs:documentation xml:lang="en">
-								<xs:label>Hydropgraph</xs:label>
+								<xs:label>Hydrograph</xs:label>
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>

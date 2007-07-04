@@ -38,29 +38,26 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.ui.map.flowrel;
+package org.kalypso.kalypsomodel1d2d.ui.map.result;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.PlatformUI;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrograph;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.AbstractSelectFlowrelationWidget;
-import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
+import org.kalypso.ogc.gml.command.CompositeCommand;
+import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
-import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Gernot Belger
  */
-public class EditFlowrelationWidget extends AbstractSelectFlowrelationWidget
+public class DeleteHydrographWidget extends AbstractSelectFlowrelationWidget
 {
-  public EditFlowrelationWidget( )
+  public DeleteHydrographWidget( )
   {
-    super( "Parameter bearbeiten", "Zugeordnete Parameter eines FE-Knoten bearbeiten", false, IFlowRelationship.QNAME, IFlowRelationship.QNAME_PROP_POSITION );
+    super( "Ganglinie entfernen", "Löscht eine Ganglinie aus der Karte", true, IHydrograph.QNAME, IHydrograph.QNAME_PROP_LOCATION );
   }
 
   /**
@@ -70,45 +67,22 @@ public class EditFlowrelationWidget extends AbstractSelectFlowrelationWidget
   @Override
   protected void flowRelationGrabbed( final CommandableWorkspace workspace, final Feature[] selectedFeatures ) throws Exception
   {
+    // TODO: ask
+
     /* Select the feature */
     final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
 
-    final Feature featureToSelect = selectedFeatures[0];
-    final EasyFeatureWrapper easyToSelect = new EasyFeatureWrapper( workspace, featureToSelect, featureToSelect.getParent(), featureToSelect.getParentRelation() );
-
-    final Feature[] featuresToRemove = FeatureSelectionHelper.getFeatures( selectionManager );
-    selectionManager.changeSelection( featuresToRemove, new EasyFeatureWrapper[] { easyToSelect } );
-
-    /* Open the feature view */
-    final Display display = PlatformUI.getWorkbench().getDisplay();
-    display.asyncExec( new Runnable()
+    final CompositeCommand compositeCommand = new CompositeCommand( "Parameter löschen" );
+    for( final Feature featureToRemove : selectedFeatures )
     {
-      public void run( )
-      {
-        try
-        {
-          PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView( "org.kalypso.featureview.views.FeatureView" );
-        }
-        catch( final Throwable pie )
-        {
-          final IStatus status = StatusUtilities.statusFromThrowable( pie );
-          KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
-          pie.printStackTrace();
-        }
-      }
-    } );
-  }
+      selectionManager.changeSelection( new Feature[] { featureToRemove }, new EasyFeatureWrapper[] {} );
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#finish()
-   */
-  @Override
-  public void finish( )
-  {
-    /* Deselect all */
-    final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
-    selectionManager.clear();
+      final Feature parent = featureToRemove.getParent();
+      final IRelationType parentRelation = featureToRemove.getParentRelation();
+      final DeleteFeatureCommand command = new DeleteFeatureCommand( workspace, parent, parentRelation, featureToRemove );
+      compositeCommand.addCommand( command );
+    }
 
-    super.finish();
+    workspace.postCommand( compositeCommand );
   }
 }

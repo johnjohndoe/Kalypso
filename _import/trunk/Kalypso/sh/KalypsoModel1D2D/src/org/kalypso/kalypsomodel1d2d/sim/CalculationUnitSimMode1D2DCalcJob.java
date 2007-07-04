@@ -41,16 +41,11 @@
 package org.kalypso.kalypsomodel1d2d.sim;
 
 import java.io.BufferedOutputStream;
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintWriter;
-import java.io.StringBufferInputStream;
-import java.io.StringReader;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.text.DateFormat;
@@ -72,19 +67,15 @@ import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.commons.java.lang.ProcessHelper;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -210,16 +201,10 @@ public class CalculationUnitSimMode1D2DCalcJob implements ISimulation
 
       copyExecutable( tmpDir, calculation.getKalypso1D2DKernelPath() );
 
-      final ResultProcessRunnable resultRunner = new ResultProcessRunnable( tmpDir, outputDir, "A", inputProvider, calculation );
+      final ResultManager resultRunner = new ResultManager( tmpDir, outputDir, "A", inputProvider, calculation );
       startCalculation( tmpDir, monitor, resultRunner, calculation );
       /* Run a last time so nothing is forgotten... */
-      resultRunner.run();
-
-      /* We need to wait until all result process jobs have finished. */
-      final IStatus resultProcessingStatus = resultRunner.waitForResultProcessing();
-      if( resultProcessingStatus != null )
-        System.out.println( resultProcessingStatus );
-      // TODO: evaluate status
+      resultRunner.finish();
 
       /** check succeeded and load results */
       handleError( tmpDir, outputDir, monitor, logger );
@@ -341,13 +326,11 @@ public class CalculationUnitSimMode1D2DCalcJob implements ISimulation
     }
   }
 
-  public static void startCalculation( 
-//                  final IProgressMonitor monitor, 
-                  final ICalculationUnit calUnit,
-                  final IWorkbench workbench,
-                  final IWorkbenchWindow activeWorkbenchWindow ) throws CoreException
+  public static void startCalculation(
+  // final IProgressMonitor monitor,
+  final ICalculationUnit calUnit, final IWorkbench workbench, final IWorkbenchWindow activeWorkbenchWindow ) throws CoreException
   {
-    IRunnableWithProgress runnable = new IRunnableWithProgress()
+    final IRunnableWithProgress runnable = new IRunnableWithProgress()
     {
 
       public void run( final IProgressMonitor monitor ) throws InvocationTargetException, InterruptedException
@@ -356,7 +339,7 @@ public class CalculationUnitSimMode1D2DCalcJob implements ISimulation
         IControlModelGroup model = Util.getModel( IControlModelGroup.class );
         final String calcUnitGmlID = calUnit.getGmlID();
         boolean activeSet = false;
-        for( IControlModel1D2D cm: model.getModel1D2DCollection())
+        for( IControlModel1D2D cm : model.getModel1D2DCollection() )
         {
           ICalculationUnit current = cm.getCalculationUnit();
           if( current != null )
@@ -364,37 +347,36 @@ public class CalculationUnitSimMode1D2DCalcJob implements ISimulation
             if( calcUnitGmlID.equals( current.getGmlID() ) )
             {
               model.getModel1D2DCollection().setActiveControlModel( cm );
-              Util.saveAllModel(workbench, workbench.getActiveWorkbenchWindow());
-              activeSet=true;
+              Util.saveAllModel( workbench, workbench.getActiveWorkbenchWindow() );
+              activeSet = true;
             }
           }
         }
         if( !activeSet )
         {
-          throw new RuntimeException("Could not found and set active control model for: "+calUnit.getGmlID());
+          throw new RuntimeException( "Could not found and set active control model for: " + calUnit.getGmlID() );
         }
-        
-        
-    //    final IWorkbench workbench = PlatformUI.getWorkbench();
+
+        // final IWorkbench workbench = PlatformUI.getWorkbench();
         final IHandlerService service = (IHandlerService) workbench.getService( IHandlerService.class );
         final IEvaluationContext currentState = service.getCurrentState();
         final Shell shell = (Shell) currentState.getVariable( ISources.ACTIVE_SHELL_NAME );
         final IFolder scenarioFolder = (IFolder) currentState.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
-    
+
         try
         {
-          final Modeldata modelspec = loadModelspec(scenarioFolder.getProject());
-          
+          final Modeldata modelspec = loadModelspec( scenarioFolder.getProject() );
+
           final String typeID = modelspec.getTypeID();
-    
-          final ISimulationService calcService = 
-                  KalypsoSimulationCorePlugin.findCalculationServiceForType( typeID );
-    
+
+          final ISimulationService calcService = KalypsoSimulationCorePlugin.findCalculationServiceForType( typeID );
+
           monitor.worked( 1 );
           final CalcJobHandler cjHandler = new CalcJobHandler( modelspec, calcService );
           cjHandler.runJob( scenarioFolder, new SubProgressMonitor( monitor, 4 ) );
         }
-        catch (Exception e) {
+        catch( Exception e )
+        {
           e.printStackTrace();
         }
         finally
@@ -407,11 +389,13 @@ public class CalculationUnitSimMode1D2DCalcJob implements ISimulation
     {
       workbench.getProgressService().run( true, false, runnable );
     }
-    catch (Exception e) {
+    catch( final Exception e )
+    {
       e.printStackTrace();
     }
   }
-  private static Modeldata loadModelspec(IProject project ) throws CoreException
+
+  private static Modeldata loadModelspec( final IProject project ) throws CoreException
   {
     try
     {
@@ -421,10 +405,10 @@ public class CalculationUnitSimMode1D2DCalcJob implements ISimulation
         return null;
 
       final Unmarshaller unmarshaller = ModelNature.JC_SPEC.createUnmarshaller();
-      
-      Modeldata modelData = (Modeldata) unmarshaller.unmarshal( file.getContents() );
+
+      final Modeldata modelData = (Modeldata) unmarshaller.unmarshal( file.getContents() );
       return modelData;
-     
+
     }
     catch( final JAXBException e )
     {

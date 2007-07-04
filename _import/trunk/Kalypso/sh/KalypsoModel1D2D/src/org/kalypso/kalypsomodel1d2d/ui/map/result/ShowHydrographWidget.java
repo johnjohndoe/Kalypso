@@ -38,15 +38,15 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.ui.map.flowrel;
+package org.kalypso.kalypsomodel1d2d.ui.map.result;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrograph;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.AbstractSelectFlowrelationWidget;
-import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
@@ -56,20 +56,22 @@ import org.kalypsodeegree.model.feature.Feature;
 /**
  * @author Gernot Belger
  */
-public class EditFlowrelationWidget extends AbstractSelectFlowrelationWidget
+public class ShowHydrographWidget extends AbstractSelectFlowrelationWidget
 {
-  public EditFlowrelationWidget( )
+  public ShowHydrographWidget( )
   {
-    super( "Parameter bearbeiten", "Zugeordnete Parameter eines FE-Knoten bearbeiten", false, IFlowRelationship.QNAME, IFlowRelationship.QNAME_PROP_POSITION );
+    super( "Ganglinie selektieren", "Selektiert eine Ganglinie und stellt diese in der Feature Ansicht dar.", false, IHydrograph.QNAME, IHydrograph.QNAME_PROP_LOCATION );
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.ui.map.util.AbstractSelectFlowrelationWidget#flowRelationGrabbed(org.kalypso.ogc.gml.mapmodel.CommandableWorkspace,
-   *      org.kalypsodeegree.model.feature.Feature[])
+   * @see org.kalypso.kalypsomodel1d2d.ui.map.flowrel.AbstractSelectFlowrelationWidget#flowRelationGrabbed(org.kalypsodeegree.model.feature.Feature[])
    */
   @Override
   protected void flowRelationGrabbed( final CommandableWorkspace workspace, final Feature[] selectedFeatures ) throws Exception
   {
+    if( selectedFeatures.length == 0 )
+      return;
+
     /* Select the feature */
     final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
 
@@ -111,4 +113,5 @@ public class EditFlowrelationWidget extends AbstractSelectFlowrelationWidget
 
     super.finish();
   }
+
 }

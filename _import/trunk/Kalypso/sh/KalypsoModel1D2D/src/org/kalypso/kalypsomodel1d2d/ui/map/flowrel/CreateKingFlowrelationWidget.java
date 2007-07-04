@@ -88,6 +88,7 @@ public class CreateKingFlowrelationWidget extends AbstractCreateFlowrelationWidg
   }
 
   /** Made static in order to be reused by teschke-widget. */
+  @SuppressWarnings("unchecked")
   public static IFeatureWrapper2 findModelElementFromPosition( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance )
   {
     final IFE1D2DNode node = discModel.findNode( currentPos, grabDistance );

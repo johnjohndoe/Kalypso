@@ -482,6 +482,63 @@
                     value="Randbedingungen bearbeiten"/>              
             </class>
 		 </handler>		 
+		 <handler
+		       commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditElement">
+		    <activeWhen>   
+		       <with variable="activeContexts">
+		          <iterate operator="or">		                                    		 
+               		<equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}Hydrograph"/>
+		          </iterate>
+		       </with>
+		     </activeWhen>		 		     
+      		<class
+            	class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+              <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+	                value="org.kalypso.kalypsomodel1d2d.ui.map.result.ShowHydrographWidget"/>
+              <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
+                    value="icons/elcl16/hydrograph_show.gif"/>
+			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
+                    value="Ganglinie darstellen"/>              
+            </class>
+		 </handler>		 
+		 <handler
+		       commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement">
+		    <activeWhen>   
+		       <with variable="activeContexts">
+		          <iterate operator="or">		                                    		 
+               		<equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}Hydrograph"/>
+		          </iterate>
+		       </with>
+		     </activeWhen>		 		     
+      		<class
+            	class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+              <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+	                value="org.kalypso.kalypsomodel1d2d.ui.map.result.DeleteHydrographWidget"/>
+              <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
+                    value="icons/elcl16/hydrograph_delete.png"/>
+			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
+                    value="Ganglinie entfernen"/>              
+            </class>
+		 </handler>		 
+		 <handler
+		       commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateElement">
+		    <activeWhen>   
+		       <with variable="activeContexts">
+		          <iterate operator="or">		                                    		 
+               		<equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}Hydrograph"/>
+		          </iterate>
+		       </with>
+		     </activeWhen>		 		     
+      		<class
+            	class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+              <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+	                value="org.kalypso.kalypsomodel1d2d.ui.map.result.CreateHydrographWidget"/>
+              <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
+                    value="icons/elcl16/hydrograph_create.gif"/>
+			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
+                    value="Ganglinie erstellen"/>              
+            </class>
+		 </handler>		 
      </extension>
      <extension
            point="org.eclipse.ui.commands">

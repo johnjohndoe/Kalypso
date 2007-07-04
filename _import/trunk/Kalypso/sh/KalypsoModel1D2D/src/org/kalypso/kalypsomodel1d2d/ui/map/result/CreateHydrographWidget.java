@@ -38,46 +38,18 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.schema.binding.results;
+package org.kalypso.kalypsomodel1d2d.ui.map.result;
 
-import java.util.List;
-
-import javax.xml.namespace.QName;
-
-import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
+import org.kalypso.ogc.gml.map.widgets.CreateGeometeryWidget2;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
- * @author jung
- * 
+ * @author Gernot Belger
  */
-public interface INodeResult
+public class CreateHydrographWidget extends CreateGeometeryWidget2
 {
-  public final static QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "NodeResult" );
-
-  public abstract void setCalcId( final int id );
-
-  public abstract void setLocation( final double x, final double y, final double z, final CS_CoordinateSystem crs );
-
-  public abstract void setResultValues( final double vx, final double vy, final double virtualDepth, final double waterlevel );
-
-  public abstract void setMidSide( final boolean isMidSide );
-
-  public abstract GM_Point getPoint( );
-
-  public abstract void setWaterlevel( final double waterlevel );
-
-  public abstract void setDepth( final double depth );
-
-  public double getDepth( );
-
-  public double getWaterlevel( );
-
-  public boolean isWet( );
-
-  public abstract void setVelocity( List<Double> velocity );
-
-  public abstract double getAbsoluteVelocity( );
-
+  public CreateHydrographWidget( )
+  {
+    super( "Ganglinie erstellen", "Legt die Lage einer Ganglinie fest", GM_Point.class );
+  }
 }

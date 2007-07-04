@@ -70,8 +70,6 @@ import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
-import org.kalypso.simulation.core.internal.queued.ModelspecData;
-import org.kalypso.simulation.core.util.UnzippedJarSimulationDataProvider;
 
 /**
  * Implements the {@link ISimulation} interface to provide the simulation job for the 1d2d model
@@ -90,7 +88,7 @@ public class SimMode1D2DCalcJob implements ISimulation
   {
     final Logger logger = Logger.getAnonymousLogger();
     final Formatter f = new XMLFormatter();
-    
+
     try
     {
       final File loggerFile = new File( tmpDir, "simulation.log" );
@@ -172,16 +170,10 @@ public class SimMode1D2DCalcJob implements ISimulation
 
       copyExecutable( tmpDir, calculation.getKalypso1D2DKernelPath() );
 
-      final ResultProcessRunnable resultRunner = new ResultProcessRunnable( tmpDir, outputDir, "A", inputProvider, calculation );
+      final ResultManager resultRunner = new ResultManager( tmpDir, outputDir, "A", inputProvider, calculation );
       startCalculation( tmpDir, monitor, resultRunner, calculation );
       /* Run a last time so nothing is forgotten... */
-      resultRunner.run();
-
-      /* We need to wait until all result process jobs have finished. */
-      final IStatus resultProcessingStatus = resultRunner.waitForResultProcessing();
-      if( resultProcessingStatus != null )
-        System.out.println( resultProcessingStatus );
-      // TODO: evaluate status
+      resultRunner.finish();
 
       /** check succeeded and load results */
       handleError( tmpDir, outputDir, monitor, logger );

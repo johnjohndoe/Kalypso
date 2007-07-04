@@ -41,8 +41,8 @@
 package org.kalypso.kalypsomodel1d2d.ui.map.flowrel;
 
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.kalypsomodel1d2d.ui.map.util.AbstractSelectFlowrelationWidget;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
-import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.command.CompositeCommand;
 import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -57,33 +57,27 @@ public class DeleteFlowrelationWidget extends AbstractSelectFlowrelationWidget
 {
   public DeleteFlowrelationWidget( )
   {
-    super( "Parameter löschen", "einem FE-Koten zugeordnete Parameter löschen", true );
+    super( "Parameter löschen", "einem FE-Koten zugeordnete Parameter löschen", true, IFlowRelationship.QNAME, IFlowRelationship.QNAME_PROP_POSITION );
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.ui.map.element1d.AbstractSelectFlowrelationWidget#flowRelationGrabbed(org.kalypso.ogc.gml.IKalypsoFeatureTheme,
-   *      org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship)
+   * @see org.kalypso.kalypsomodel1d2d.ui.map.util.AbstractSelectFlowrelationWidget#flowRelationGrabbed(org.kalypso.ogc.gml.mapmodel.CommandableWorkspace,
+   *      org.kalypsodeegree.model.feature.Feature[])
    */
   @Override
-  protected void flowRelationGrabbed( final IKalypsoFeatureTheme flowTheme, final IFlowRelationship[] flowRelations ) throws Exception
+  protected void flowRelationGrabbed( final CommandableWorkspace workspace, final Feature[] selectedFeatures ) throws Exception
   {
     /* Select the feature */
     final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
-    final CommandableWorkspace workspace = flowTheme.getWorkspace();
 
     final CompositeCommand compositeCommand = new CompositeCommand( "Parameter löschen" );
-    for( final IFlowRelationship flowRelation : flowRelations )
+    for( final Feature featureToRemove : selectedFeatures )
     {
-      if( flowRelation == null )
-        continue;
-
-      final Feature featureToRemove = flowRelation.getWrappedFeature();
       selectionManager.changeSelection( new Feature[] { featureToRemove }, new EasyFeatureWrapper[] {} );
 
-      final Feature feature = flowRelation.getWrappedFeature();
-      final Feature parent = feature.getParent();
-      final IRelationType parentRelation = feature.getParentRelation();
-      final DeleteFeatureCommand command = new DeleteFeatureCommand( workspace, parent, parentRelation, feature );
+      final Feature parent = featureToRemove.getParent();
+      final IRelationType parentRelation = featureToRemove.getParentRelation();
+      final DeleteFeatureCommand command = new DeleteFeatureCommand( workspace, parent, parentRelation, featureToRemove );
       compositeCommand.addCommand( command );
     }
 

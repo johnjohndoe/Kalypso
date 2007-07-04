@@ -94,7 +94,6 @@ import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -125,7 +124,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
   private final ITriangleEater m_triangleEater;
 
-  private RMA10Calculation m_calculation;
+  private final RMA10Calculation m_calculation;
 
   private static final long PROCESS_TIMEOUT = 50000;
 
@@ -240,6 +239,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       GMLNodeResult nodeUp = m_nodeIndex.get( currentArc.node2ID );
 
       // is it a 1d- or 2d-element
+      // TODO: @Thomas: kann auch 904+ sein: dann ists ein Wehr/Brücke
       if( currentRougthnessClassID == 89 ) // 1d
       {
         try
@@ -362,7 +362,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     }
   }
 
-  private void handle1dElement( GMLNodeResult nodeDown, GMLNodeResult nodeUp ) throws Exception, FileNotFoundException, IOException, CoreException, InterruptedException, GM_Exception
+  private void handle1dElement( final GMLNodeResult nodeDown, final GMLNodeResult nodeUp ) throws Exception, FileNotFoundException, IOException, CoreException, InterruptedException, GM_Exception
   {
     // get the profile Curves of the two nodes defining the current element
     final GM_Curve nodeCurve1 = getProfileCurveFor1dNode( nodeDown );
@@ -375,7 +375,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   }
 
   @SuppressWarnings("unchecked")
-  private void create1dTriangles( GMLNodeResult nodeDown, GMLNodeResult nodeUp, final GM_Curve nodeCurve1, final GM_Curve nodeCurve2, final double curveDistance ) throws FileNotFoundException, IOException, CoreException, InterruptedException, GM_Exception
+  private void create1dTriangles( final GMLNodeResult nodeDown, final GMLNodeResult nodeUp, final GM_Curve nodeCurve1, final GM_Curve nodeCurve2, final double curveDistance ) throws FileNotFoundException, IOException, CoreException, InterruptedException, GM_Exception
   {
     BufferedReader nodeReader = null;
     BufferedReader eleReader = null;
@@ -452,7 +452,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   }
 
   @SuppressWarnings("unchecked")
-  private void createJunctionTriangles( GMLNodeResult nodeResult1d, FeatureList resultList, final GM_Curve nodeCurve1d, final GM_Curve boundaryCurve, final double curveDistance ) throws FileNotFoundException, IOException, CoreException, InterruptedException, GM_Exception
+  private void createJunctionTriangles( final GMLNodeResult nodeResult1d, final FeatureList resultList, final GM_Curve nodeCurve1d, final GM_Curve boundaryCurve, final double curveDistance ) throws FileNotFoundException, IOException, CoreException, InterruptedException, GM_Exception
   {
     BufferedReader nodeReader = null;
     BufferedReader eleReader = null;
@@ -527,7 +527,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     }
   }
 
-  private void feedTriangleEaterWithJunctionResults( GMLNodeResult nodeResult1d, FeatureList resultList, GM_Curve nodeCurve1d, GM_Curve boundaryCurve, double curveDistance, CS_CoordinateSystem crs, GM_Position[] ring )
+  private void feedTriangleEaterWithJunctionResults( final GMLNodeResult nodeResult1d, final FeatureList resultList, final GM_Curve nodeCurve1d, final GM_Curve boundaryCurve, final double curveDistance, final CS_CoordinateSystem crs, final GM_Position[] ring )
   {
 
     final List<INodeResult> nodes = new LinkedList<INodeResult>();
@@ -546,7 +546,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
       final GM_Point point = GeometryFactory.createGM_Point( position, crs );
 
-      double grabDistance = curveDistance / 2;
+      final double grabDistance = curveDistance / 2;
       final GM_Object buffer = point.getBuffer( grabDistance );
 
       // TODO: what happens, if the boundaryCurve intersects the 1d-profile ?
@@ -565,11 +565,11 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
           wsp = nodeResult1d.getWaterlevel(); // water level is the same for all junction nodes
 
           // search for the nearest nodeResult in the FeatureList
-          Feature feature = findElement( point, grabDistance, resultList, GMLNodeResult.QNAME_PROP_LOCATION );
+          final Feature feature = GeometryUtilities.findNearestFeature( point, grabDistance, resultList, GMLNodeResult.QNAME_PROP_LOCATION );
 
           if( feature instanceof GMLNodeResult )
           {
-            GMLNodeResult node = (GMLNodeResult) feature;
+            final GMLNodeResult node = (GMLNodeResult) feature;
 
             vx = node.getVelocity().get( 0 );
             vy = node.getVelocity().get( 1 );
@@ -695,8 +695,8 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     {
       // at this point no quality meshing because it produces interpolation errors end zero-value points
 
-// cmd.append( "-q" );
-// cmd.append( qualityMinAngle.doubleValue() );
+      // cmd.append( "-q" );
+      // cmd.append( qualityMinAngle.doubleValue() );
     }
 
     cmd.append( ' ' );
@@ -719,7 +719,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     if( flowRelationship instanceof ITeschkeFlowRelation )
     {
       final ITeschkeFlowRelation teschkeRelation = (ITeschkeFlowRelation) flowRelationship;
-// teschkeRelation.getPolynomials();
+      // teschkeRelation.getPolynomials();
 
       final WspmProfile profile = teschkeRelation.getProfile();
       final IProfil profil = profile.getProfil();
@@ -791,20 +791,20 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       if( checkIfTriangleWet( nodes ) == true )
       {
 
-// int orient = checkOrientation( nodes );
+        // int orient = checkOrientation( nodes );
 
-// if( orient == 1 )
-// {
+        // if( orient == 1 )
+        // {
         nodeList.add( nodes[0] );
         nodeList.add( nodes[1] );
         nodeList.add( nodes[2] );
-// }
-// else
-// {
-// nodeList.add( nodes[0] );
-// nodeList.add( nodes[2] );
-// nodeList.add( nodes[1] );
-// }
+        // }
+        // else
+        // {
+        // nodeList.add( nodes[0] );
+        // nodeList.add( nodes[2] );
+        // nodeList.add( nodes[1] );
+        // }
 
         /* check, if the triangle is partially flooded */
         if( checkPartiallyFlooded( nodeList ) == true )
@@ -848,12 +848,12 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         // nodeList.add( nodes[1] );
         // }
 
-/*
- * nodeList.add( elementResult.getMidsideNodes( i ) ); if( i < numMidsideNodes - 1 ) nodeList.add(
- * elementResult.getCornerNodes( i + 1 ) ); else nodeList.add( elementResult.getCornerNodes( 0 ) );
- * 
- * nodeList.add( elementResult.getCenterNode() );
- */
+        /*
+         * nodeList.add( elementResult.getMidsideNodes( i ) ); if( i < numMidsideNodes - 1 ) nodeList.add(
+         * elementResult.getCornerNodes( i + 1 ) ); else nodeList.add( elementResult.getCornerNodes( 0 ) );
+         * 
+         * nodeList.add( elementResult.getCenterNode() );
+         */
         /* check, if the triangle is partially flooded */
         if( checkPartiallyFlooded( nodeList ) == true )
         {
@@ -1357,7 +1357,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     if( nodeDown.getDepth() <= 0 && nodeUp.getDepth() <= 0 )
     {
       interpolateMidsideNodeData( nodeDown, nodeUp, midsideNode );
-// midsideNode.setResultValues( 0, 0, 0, midsideNode.getPoint().getZ() - 1 );
+      // midsideNode.setResultValues( 0, 0, 0, midsideNode.getPoint().getZ() - 1 );
       return;
     }
 
@@ -1457,7 +1457,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       result.setName( "" + id );
 
       // TODO: description: beschreibt, welche Rechenvariante und so weiter... oder noch besser an der collection
-// result.setDescription( "" + id );
+      // result.setDescription( "" + id );
 
       result.setCalcId( id );
       result.setLocation( easting, northing, elevation, m_crs );
@@ -1532,7 +1532,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleTime(java.lang.String, double, int)
    */
-  public void handleTime( String line, double time, int timestep )
+  public void handleTime( final String line, final double time, final int timestep )
   {
     m_triangleEater.setTime( time );
     m_triangleEater.setTimestep( timestep );
@@ -1543,16 +1543,16 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
    *      int)
    */
   @SuppressWarnings("unchecked")
-  public void handleJunction( String parseLine, int junctionID, int element1dID, int boundaryLine2dID, int node1dID )
+  public void handleJunction( final String parseLine, final int junctionID, final int element1dID, final int boundaryLine2dID, final int node1dID )
   {
 
     /* get 1d node */
     // get node result for 1d node
-    Map<Object, Feature> indexedFeatures = FeatureIndex.indexFeature( m_resultList, GMLNodeResult.QNAME_PROP_CALCID );
+    final Map<Object, Feature> indexedFeatures = FeatureIndex.indexFeature( m_resultList, GMLNodeResult.QNAME_PROP_CALCID );
     final FeatureList resultList = null;
 
     final GMLNodeResult nodeResult1d = (GMLNodeResult) indexedFeatures.get( node1dID );
-// resultList.add( nodeResult1d );
+    // resultList.add( nodeResult1d );
     final double waterlevel = nodeResult1d.getWaterlevel(); // we know, that the water level at the boundary nodes is
     // unique for all nodes
 
@@ -1563,14 +1563,14 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
       /* get the 2d nodes */
       // get nodes of the boundary line
-      BoundaryLineInfo[] continuityLineInfo = m_calculation.getContinuityLineInfo();
-      GM_Point[] linePoints = getLinePoints( boundaryLine2dID, continuityLineInfo );
+      final BoundaryLineInfo[] continuityLineInfo = m_calculation.getContinuityLineInfo();
+      final GM_Point[] linePoints = getLinePoints( boundaryLine2dID, continuityLineInfo );
 
       // here, we just use the corner nodes of the mesh. mid-side nodes are not used.
       // get the node results of that points and add it to the Featurelist
       INodeResult nodeResult2d;
 
-      for( GM_Point point : linePoints )
+      for( final GM_Point point : linePoints )
       {
         nodeResult2d = getNodeResult( point );
         if( nodeResult2d != null )
@@ -1587,12 +1587,12 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       /* now we have two curves and use Triangle in order to get the triangles */
       createJunctionTriangles( nodeResult1d, resultList, nodeCurve1d, boundaryCurve, curveDistance );
     }
-    catch( GM_Exception e )
+    catch( final GM_Exception e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -1603,7 +1603,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
   }
 
-  private GM_Curve getCurveForBoundaryLine( GM_Point[] linePoints, double waterlevel ) throws GM_Exception, Exception
+  private GM_Curve getCurveForBoundaryLine( final GM_Point[] linePoints, final double waterlevel ) throws GM_Exception, Exception
   {
     // we create a profile in order to use already implemented methods
     final IProfil boundaryProfil = ProfilFactory.createProfil( IWspmTuhhConstants.PROFIL_TYPE_PASCHE );
@@ -1635,10 +1635,10 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
   }
 
-  private INodeResult getNodeResult( GM_Point point )
+  private INodeResult getNodeResult( final GM_Point point )
   {
     final double searchDistance = 0.5;
-    final Feature feature = findElement( point, searchDistance, m_resultList, GMLNodeResult.QNAME_PROP_LOCATION );
+    final Feature feature = GeometryUtilities.findNearestFeature( point, searchDistance, m_resultList, GMLNodeResult.QNAME_PROP_LOCATION );
 
     if( feature instanceof GMLNodeResult )
       return (GMLNodeResult) feature;
@@ -1646,38 +1646,13 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       return null;
   }
 
-  @SuppressWarnings( { "unchecked" })
-  private static Feature findElement( final GM_Point point, final double grabDistance, final FeatureList modelList, final QName geoQName )
-  {
-    final GM_Envelope reqEnvelope = GeometryUtilities.grabEnvelopeFromDistance( point, grabDistance );
-    final List<Feature> foundElements = modelList.query( reqEnvelope, null );
-    double min = Double.MAX_VALUE;
-    Feature nearest = null;
-
-    for( final Feature feature : foundElements )
-    {
-      final GM_Object geom = (GM_Object) feature.getProperty( geoQName );
-
-      if( geom != null )
-      {
-        final double curDist = point.distance( geom );
-        if( min > curDist && curDist < grabDistance )
-        {
-          nearest = feature;
-          min = curDist;
-        }
-      }
-    }
-    return nearest;
-  }
-
   @SuppressWarnings("unchecked")
-  private GM_Point[] getLinePoints( int boundaryLine2dID, BoundaryLineInfo[] continuityLineInfo )
+  private GM_Point[] getLinePoints( final int boundaryLine2dID, final BoundaryLineInfo[] continuityLineInfo )
   {
     IFE1D2DNode[] nodes2D = null;
-    GM_Point[] points = null;
+    final GM_Point[] points = null;
 
-    for( BoundaryLineInfo line : continuityLineInfo )
+    for( final BoundaryLineInfo line : continuityLineInfo )
     {
       if( line.getID() == boundaryLine2dID )
       {

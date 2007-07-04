@@ -53,6 +53,7 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.contribs.java.io.filter.PrefixSuffixFilter;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
@@ -63,10 +64,11 @@ import org.kalypso.simulation.core.ISimulationDataProvider;
  * <p>
  * Every new 2d result file we be processed in order to return it to the kalypso client.
  * </p>
+ * TODO: - write System.out in simulation-log
  * 
  * @author Gernot Belger
  */
-public class ResultProcessRunnable implements Runnable
+public class ResultManager implements Runnable
 {
   private final static MutexRule m_mutex = new MutexRule();
 
@@ -86,7 +88,7 @@ public class ResultProcessRunnable implements Runnable
 
   private final RMA10Calculation m_calculation;
 
-  public ResultProcessRunnable( final File inputDir, final File outputDir, final String resultFilePattern, final ISimulationDataProvider dataProvider, final RMA10Calculation calculation )
+  public ResultManager( final File inputDir, final File outputDir, final String resultFilePattern, final ISimulationDataProvider dataProvider, final RMA10Calculation calculation )
   {
     m_inputDir = inputDir;
     m_outputDir = outputDir;
@@ -99,6 +101,11 @@ public class ResultProcessRunnable implements Runnable
   }
 
   /**
+   * This method should be run often during the real calculation (i.e. execution of the RMA10S.exe).
+   * <p>
+   * Each time, it is checked if new result files are present and if this is the case they are processed.
+   * </p>
+   * 
    * @see java.lang.Runnable#run()
    */
   public void run( )
@@ -107,37 +114,39 @@ public class ResultProcessRunnable implements Runnable
     for( final File file : existing2dFiles )
     {
       if( !m_found2dFiles.contains( file ) )
-      {
-        final String resultFileName = FileUtilities.nameWithoutExtension( file.getName() );
-
-        System.out.println( "Found new 2d-file: " + resultFileName );
-        // check for 2d files
-
-        // start a job for each unknown 2d file.
-
-        final Matcher matcher = m_resultFilePattern.matcher( resultFileName );
-        final String outDirName;
-        if( matcher.matches() )
-        {
-          final String countStr = matcher.group( 1 );
-          final int count = Integer.parseInt( countStr ) - 1;
-          outDirName = "timestep-" + count;
-        }
-        else
-          outDirName = resultFileName;
-
-        final File resultOutputDir = new File( m_outputDir, outDirName );
-        resultOutputDir.mkdirs();
-        final ProcessResultsJob processResultsJob = new ProcessResultsJob( file, resultOutputDir, m_dataProvider, m_calculation );
-        m_resultJobs.add( processResultsJob );
-
-        /* Schedule job: wait some time in order to make sure file was written to disk. */
-        processResultsJob.setRule( m_mutex );
-        processResultsJob.schedule( 1000 );
-
-        m_found2dFiles.add( file );
-      }
+        addResultFile( file );
     }
+  }
+
+  private void addResultFile( final File file )
+  {
+    final String resultFileName = FileUtilities.nameWithoutExtension( file.getName() );
+
+    System.out.println( "Found new 2d-file: " + resultFileName );
+    // check for 2d files
+
+    // start a job for each unknown 2d file.
+    final Matcher matcher = m_resultFilePattern.matcher( resultFileName );
+    final String outDirName;
+    if( matcher.matches() )
+    {
+      final String countStr = matcher.group( 1 );
+      final int count = Integer.parseInt( countStr ) - 1;
+      outDirName = "timestep-" + count;
+    }
+    else
+      outDirName = resultFileName;
+
+    final File resultOutputDir = new File( m_outputDir, outDirName );
+    resultOutputDir.mkdirs();
+    final ProcessResultsJob processResultsJob = new ProcessResultsJob( file, resultOutputDir, m_dataProvider, m_calculation );
+    m_resultJobs.add( processResultsJob );
+
+    /* Schedule job: wait some time in order to make sure file was written to disk. */
+    processResultsJob.setRule( m_mutex );
+    processResultsJob.schedule( 1000 );
+
+    m_found2dFiles.add( file );
   }
 
   public Job[] getResultJobs( )
@@ -146,7 +155,7 @@ public class ResultProcessRunnable implements Runnable
   }
 
   /** After calculation, wait until all result process jobs have finished. */
-  public IStatus waitForResultProcessing( )
+  private IStatus waitForResultProcessing( )
   {
     // TODO: timeout
     for( int i = 0; i < 1000; i++ )
@@ -165,8 +174,8 @@ public class ResultProcessRunnable implements Runnable
       }
     }
 
-    // Timeout reached, maybe produce error status instead?
-    return null;
+    // Timeout reached, produce error status
+    return StatusUtilities.createWarningStatus( "Zeitüberschreitung beim Prozessieren der Ergebnisdateien, möglicherweise können nicht lale Ergebnisdaten übertragen werden." );
   }
 
   /**
@@ -188,5 +197,19 @@ public class ResultProcessRunnable implements Runnable
     }
 
     return status;
+  }
+
+  public void finish( )
+  {
+    /* Process all remaining .2d files. */
+    run();
+
+    /* We need to wait until all result process jobs have finished. */
+    final IStatus resultProcessingStatus = waitForResultProcessing();
+    if( resultProcessingStatus != null )
+      System.out.println( resultProcessingStatus );
+    // TODO: evaluate status
+
+    // TODO: other, generell postprocessing stuff.
   }
 }

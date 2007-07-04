@@ -68,7 +68,6 @@ import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
@@ -91,19 +90,15 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
   private NodalBCDescriptorPage m_descriptorPage;
 
   private IBoundaryCondition m_boundaryCondition;
-  
+
   private GM_Point m_boundaryPosition;
-  
+
   private IFeatureSelectionManager m_selectionManager;
 
   /**
    * Construct a new instance and initialize the dialog settings for this instance.
    */
-  public NodalBCSelectionWizard( 
-            final IBoundaryConditionDescriptor[] descriptors, 
-            final CommandableWorkspace workspace, 
-            final Feature parentFeature, 
-            final IRelationType parentRelation )
+  public NodalBCSelectionWizard( final IBoundaryConditionDescriptor[] descriptors, final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation )
   {
     m_descriptors = descriptors;
     m_workspace = workspace;
@@ -135,7 +130,7 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
     final IFeatureType newFT = m_workspace.getGMLSchema().getFeatureType( IBoundaryCondition.QNAME );
     final Feature newFeature = m_workspace.createFeature( m_parentFeature, m_parentRelation, newFT, -1 );
     final IBoundaryCondition bc = (IBoundaryCondition) newFeature.getAdapter( IBoundaryCondition.class );
-    System.out.println("PROP="+m_parentFeature.getProperty( m_parentRelation ));
+    System.out.println( "PROP=" + m_parentFeature.getProperty( m_parentRelation ) );
     final ICoreRunnableWithProgress runnable = new ICoreRunnableWithProgress()
     {
       @SuppressWarnings("synthetic-access")
@@ -153,16 +148,7 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
         if( m_boundaryPosition != null )
         {
           bc.setPosition( m_boundaryPosition );
-          final AddFeatureCommand command = 
-                  new AddFeatureCommand( 
-                      m_workspace, 
-                      m_parentFeature, 
-                      m_parentRelation, 
-                      -1, 
-                      newFeature, 
-                      m_selectionManager, 
-                      true, 
-                      true )
+          final AddFeatureCommand command = new AddFeatureCommand( m_workspace, m_parentFeature, m_parentRelation, -1, newFeature, m_selectionManager, true, true )
           {
             /**
              * @see org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand#process()
@@ -173,13 +159,12 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
               super.process();
               if( m_selectionManager != null )
               {
-                EasyFeatureWrapper easyFeatureWrapper =
-                  new EasyFeatureWrapper(m_workspace, newFeature, m_parentFeature, m_parentRelation );
-                
+                EasyFeatureWrapper easyFeatureWrapper = new EasyFeatureWrapper( m_workspace, newFeature, m_parentFeature, m_parentRelation );
+
                 try
                 {
                   PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView( "org.kalypso.featureview.views.FeatureView", null, IWorkbenchPage.VIEW_VISIBLE );
-                  m_selectionManager.setSelection( new EasyFeatureWrapper[]{easyFeatureWrapper} );
+                  m_selectionManager.setSelection( new EasyFeatureWrapper[] { easyFeatureWrapper } );
                 }
                 catch( final Throwable pie )
                 {
@@ -194,8 +179,7 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
           try
           {
             m_workspace.postCommand( command );
-            
-            
+
           }
           catch( final Throwable e )
           {
@@ -222,21 +206,22 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
   {
     return m_boundaryCondition;
   }
-  
+
   /**
    * Sets the target position of the boundary condition to be created.
    * 
-   * @param boundaryPosition the target position
+   * @param boundaryPosition
+   *            the target position
    * 
    */
-  public void setBoundaryPosition(GM_Point boundaryPosition)
+  public void setBoundaryPosition( final GM_Point boundaryPosition )
   {
-    this.m_boundaryPosition= boundaryPosition;
+    this.m_boundaryPosition = boundaryPosition;
   }
 
-  public void setSelectionManager(IFeatureSelectionManager selectionManager)
+  public void setSelectionManager( final IFeatureSelectionManager selectionManager )
   {
     this.m_selectionManager = selectionManager;
   }
-  
+
 }

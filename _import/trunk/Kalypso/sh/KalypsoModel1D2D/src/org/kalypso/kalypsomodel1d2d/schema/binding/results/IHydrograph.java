@@ -40,44 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.results;
 
-import java.util.List;
-
 import javax.xml.namespace.QName;
 
+import org.kalypso.commons.xml.NS;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
-import org.kalypsodeegree.model.geometry.GM_Point;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
- * @author jung
- * 
+ * @author Gernot Belger
  */
-public interface INodeResult
+public class IHydrograph
 {
-  public final static QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "NodeResult" );
+  public final static QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "Hydrograph" );
 
-  public abstract void setCalcId( final int id );
-
-  public abstract void setLocation( final double x, final double y, final double z, final CS_CoordinateSystem crs );
-
-  public abstract void setResultValues( final double vx, final double vy, final double virtualDepth, final double waterlevel );
-
-  public abstract void setMidSide( final boolean isMidSide );
-
-  public abstract GM_Point getPoint( );
-
-  public abstract void setWaterlevel( final double waterlevel );
-
-  public abstract void setDepth( final double depth );
-
-  public double getDepth( );
-
-  public double getWaterlevel( );
-
-  public boolean isWet( );
-
-  public abstract void setVelocity( List<Double> velocity );
-
-  public abstract double getAbsoluteVelocity( );
-
+  public static final QName QNAME_PROP_LOCATION = new QName( NS.GML3, "location" );
 }

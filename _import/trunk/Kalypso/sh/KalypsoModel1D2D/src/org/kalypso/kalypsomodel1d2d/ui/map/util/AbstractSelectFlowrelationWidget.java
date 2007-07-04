@@ -38,11 +38,13 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.ui.map.flowrel;
+package org.kalypso.kalypsomodel1d2d.ui.map.util;
 
 import java.awt.Graphics;
 import java.awt.Point;
 import java.util.List;
+
+import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -55,23 +57,23 @@ import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.kalypsosimulationmodel.core.flowrel.FlowRelationship;
-import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
-import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
 import org.kalypso.ogc.gml.map.widgets.mapfunctions.RectangleSelector;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * This widget lets the user grab a flow relation.
@@ -82,21 +84,27 @@ public abstract class AbstractSelectFlowrelationWidget extends AbstractWidget
 {
   private final int m_grabRadius = 20;
 
-  private IFlowRelationshipModel m_flowRelCollection = null;
+  private IKalypsoFeatureTheme m_theme = null;
 
-  private IKalypsoFeatureTheme m_flowTheme = null;
+  private FeatureList m_featureList = null;
 
-  private IFlowRelationship m_flowRelation = null;
+  private Feature m_foundFeature = null;
 
   private RectangleSelector m_rectangleSelector = null;
 
   private final boolean m_allowMultipleSelection;
 
-  public AbstractSelectFlowrelationWidget( final String name, final String toolTip, final boolean allowMultipleSelection )
+  private QName m_geomQName = null;
+
+  private final QName m_qnameToSelect;
+
+  public AbstractSelectFlowrelationWidget( final String name, final String toolTip, final boolean allowMultipleSelection, final QName qnameToSelect, final QName geomQName )
   {
     super( name, toolTip );
 
     m_allowMultipleSelection = allowMultipleSelection;
+    m_qnameToSelect = qnameToSelect;
+    m_geomQName = geomQName;
   }
 
   /**
@@ -113,25 +121,23 @@ public abstract class AbstractSelectFlowrelationWidget extends AbstractWidget
 
   private void reinit( )
   {
-    m_flowRelCollection = null;
+    m_theme = null;
+    m_featureList = null;
+    m_foundFeature = null;
     m_rectangleSelector = null;
 
     final MapPanel mapPanel = getMapPanel();
     final IMapModell mapModell = mapPanel.getMapModell();
 
-    mapPanel.setMessage( "Klicken Sie in die Karte um einen Parameter hinzuzufügen." );
-
     final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
     final IFeatureType activeFT = activeTheme instanceof IKalypsoFeatureTheme ? ((IKalypsoFeatureTheme) activeTheme).getFeatureType() : null;
-    if( activeFT != null && GMLSchemaUtilities.substitutes( activeFT, IFlowRelationship.QNAME ) )
-      m_flowTheme = (IKalypsoFeatureTheme) activeTheme;
+    if( activeFT != null && GMLSchemaUtilities.substitutes( activeFT, m_qnameToSelect ) )
+      m_theme = (IKalypsoFeatureTheme) activeTheme;
 
-    if( m_flowTheme == null )
+    if( m_theme == null )
       return;
 
-    final FeatureList featureList = m_flowTheme.getFeatureList();
-    final Feature parentFeature = featureList.getParentFeature();
-    m_flowRelCollection = (IFlowRelationshipModel) parentFeature.getAdapter( IFlowRelationshipModel.class );
+    m_featureList = m_theme.getFeatureList();
   }
 
   /**
@@ -140,16 +146,16 @@ public abstract class AbstractSelectFlowrelationWidget extends AbstractWidget
   @Override
   public void moved( final Point p )
   {
-    m_flowRelation = null;
+    m_foundFeature = null;
 
     final GM_Point currentPos = MapUtilities.transform( getMapPanel(), p );
 
     /* Grab next flowrelation */
-    if( m_flowTheme == null || m_flowRelCollection == null )
+    if( m_featureList == null )
       return;
 
     final double grabDistance = MapUtilities.calculateWorldDistance( getMapPanel(), currentPos, m_grabRadius * 2 );
-    m_flowRelation = m_flowRelCollection.findFlowrelationship( currentPos.getPosition(), grabDistance );
+    m_foundFeature = GeometryUtilities.findNearestFeature( currentPos, grabDistance, m_featureList, m_geomQName );
 
     final MapPanel panel = getMapPanel();
     if( panel != null )
@@ -189,10 +195,14 @@ public abstract class AbstractSelectFlowrelationWidget extends AbstractWidget
       }
     }
 
-    if( m_flowRelation == null )
+    if( m_foundFeature == null )
       return;
+    final GM_Object geom = (GM_Object) m_foundFeature.getProperty( m_geomQName );
+    if( geom == null )
+      return;
+
     final int smallRect = 10;
-    final Point nodePoint = MapUtilities.retransform( getMapPanel(), m_flowRelation.getPosition() );
+    final Point nodePoint = MapUtilities.retransform( getMapPanel(), geom.getCentroid() );
     g.drawRect( (int) nodePoint.getX() - smallRect, (int) nodePoint.getY() - smallRect, smallRect * 2, smallRect * 2 );
   }
 
@@ -200,9 +210,9 @@ public abstract class AbstractSelectFlowrelationWidget extends AbstractWidget
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#leftPressed(java.awt.Point)
    */
   @Override
-  public void leftPressed( Point p )
+  public void leftPressed( final Point p )
   {
-    if( m_allowMultipleSelection )
+    if( m_allowMultipleSelection && m_featureList != null )
       m_rectangleSelector = new RectangleSelector( new org.eclipse.swt.graphics.Point( p.x, p.y ) );
   }
 
@@ -229,19 +239,13 @@ public abstract class AbstractSelectFlowrelationWidget extends AbstractWidget
           final GM_Point maxPoint = MapUtilities.transform( mapPanel, pmax );
 
           final GM_Envelope envelope = GeometryFactory.createGM_Envelope( minPoint.getPosition(), maxPoint.getPosition() );
-          final GMLWorkspace workspace = m_flowRelCollection.getWrappedFeature().getWorkspace();
-          final List result = m_flowRelCollection.getWrappedList().query( envelope, null );
-          final IFlowRelationship[] flowRels = new IFlowRelationship[result.size()];
-          for( int i = 0; i < flowRels.length; i++ )
-          {
-            final Feature feature = FeatureHelper.getFeature( workspace, result.get( i ) );
-            // we cannot adapt to IFlowRelation, but this works
-            flowRels[i] = new FlowRelationship( feature, IFlowRelationship.QNAME )
-            {
-            };
-          }
+          final GMLWorkspace workspace = m_featureList.getParentFeature().getWorkspace();
+          final List result = m_featureList.query( envelope, null );
+          final Feature[] selectedFeatures = new Feature[result.size()];
+          for( int i = 0; i < selectedFeatures.length; i++ )
+            selectedFeatures[i] = FeatureHelper.getFeature( workspace, result.get( i ) );
 
-          flowRelationGrabbed( m_flowTheme, flowRels );
+          flowRelationGrabbed( m_theme.getWorkspace(), selectedFeatures );
         }
         catch( final Throwable t )
         {
@@ -256,10 +260,11 @@ public abstract class AbstractSelectFlowrelationWidget extends AbstractWidget
             }
           } );
         }
-
-        reinit();
-        mapPanel.repaint();
-        return;
+        finally
+        {
+          reinit();
+          mapPanel.repaint();
+        }
       }
     }
   }
@@ -271,8 +276,8 @@ public abstract class AbstractSelectFlowrelationWidget extends AbstractWidget
   public void leftClicked( final Point p )
   {
     final String problemMessage;
-    if( m_flowRelation == null )
-      problemMessage = "Hier ist kein 1D-Netzparameter.";
+    if( m_foundFeature == null )
+      problemMessage = "Kein Feature gefunden.";
     else
       problemMessage = null;
 
@@ -291,12 +296,12 @@ public abstract class AbstractSelectFlowrelationWidget extends AbstractWidget
     }
 
     /* Check preconditions */
-    if( m_flowRelCollection == null )
+    if( m_featureList == null )
       return;
 
     try
     {
-      flowRelationGrabbed( m_flowTheme, new IFlowRelationship[] { m_flowRelation } );
+      flowRelationGrabbed( m_theme.getWorkspace(), new Feature[] { m_foundFeature } );
 
       getMapPanel().repaint();
     }
@@ -309,11 +314,11 @@ public abstract class AbstractSelectFlowrelationWidget extends AbstractWidget
         public void run( )
         {
           final Shell shell = display.getActiveShell();
-          ErrorDialog.openError( shell, getName(), "Fehler beim Hinzufügen eines Parameters", status );
+          ErrorDialog.openError( shell, getName(), "Selektion konnte nicht durchgeführt werden", status );
         }
       } );
     }
   }
 
-  protected abstract void flowRelationGrabbed( final IKalypsoFeatureTheme flowTheme, final IFlowRelationship[] flowRels ) throws Exception;
+  protected abstract void flowRelationGrabbed( final CommandableWorkspace workspace, final Feature[] selectedFeatures ) throws Exception;
 }
