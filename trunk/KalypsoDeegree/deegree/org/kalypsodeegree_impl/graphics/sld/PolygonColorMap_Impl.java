@@ -58,7 +58,7 @@ public class PolygonColorMap_Impl implements PolygonColorMap
    */
   public PolygonColorMapEntry[] getColorMap( )
   {
-    return (PolygonColorMapEntry[]) m_colorMap.toArray();
+    return m_colorMap.toArray( new PolygonColorMapEntry[m_colorMap.size()] );
   }
 
   public void setColorMap( final List<PolygonColorMapEntry> colorMap )

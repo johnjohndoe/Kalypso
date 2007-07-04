@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.graphics.displayelements;
 
-import java.awt.Color;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -58,12 +57,12 @@ import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
 /**
  * Converts a LineColorMap or a PolygonColorMap into an ElevationColorModel
  * 
+ * TODO: zwei klassen draus machen, für isolines und isoflächen!
+ * 
  * @author Thomas Jung
  */
-public class ColorMapConverter implements IElevationColorModel
+public class ColorMapConverter
 {
-  /* lists for Isolines */
-
   private List<ColorMapConverterData> m_lister = new LinkedList<ColorMapConverterData>();
 
   public ColorMapConverter( final LineColorMap colorMap, final Feature feature, UOM uom, GeoTransform projection )
@@ -79,9 +78,17 @@ public class ColorMapConverter implements IElevationColorModel
     }
   }
 
-  public ColorMapConverter( final PolygonColorMap colorMap, final Feature feature )
+  public ColorMapConverter( final PolygonColorMap colorMap, final Feature feature, UOM uom, GeoTransform projection )
   {
-    convertPolygonColorMap( colorMap, feature );
+    try
+    {
+      convertPolygonColorMap( colorMap, feature, uom, projection );
+    }
+    catch( FilterEvaluationException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
   }
 
   private void convertLineColorMap( final LineColorMap colorMap, final Feature feature, UOM uom, GeoTransform projection ) throws FilterEvaluationException
@@ -98,54 +105,19 @@ public class ColorMapConverter implements IElevationColorModel
 
   }
 
-  private void convertPolygonColorMap( final PolygonColorMap colorMap, final Feature feature )
+  private void convertPolygonColorMap( final PolygonColorMap colorMap, final Feature feature, UOM uom, GeoTransform projection ) throws FilterEvaluationException
   {
     PolygonColorMapEntry[] entries = colorMap.getColorMap();
     for( int i = 0; i < entries.length; i++ )
     {
       final Fill fill = entries[i].getFill();
+      final Stroke stroke = entries[i].getStroke();
       final String label = entries[i].getLabel( feature );
       final double from = entries[i].getFrom( feature );
       final double to = entries[i].getTo( feature );
-      ColorMapConverterData data = new ColorMapConverterData( fill, label, from, to );
+      ColorMapConverterData data = new ColorMapConverterData( fill, stroke, feature, uom, projection, label, from, to );
       m_lister.add( data );
     }
-  }
-
-  /**
-   * @see org.kalypsodeegree_impl.graphics.displayelements.IElevationColorModel#getColor(double)
-   */
-  public Color getColor( double elevation )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  /**
-   * @see org.kalypsodeegree_impl.graphics.displayelements.IElevationColorModel#getDiscretisationInterval()
-   */
-  public double getDiscretisationInterval( )
-  {
-    // TODO Auto-generated method stub
-    return 0;
-  }
-
-  /**
-   * @see org.kalypsodeegree_impl.graphics.displayelements.IElevationColorModel#getElevationMinMax()
-   */
-  public double[] getElevationMinMax( )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  /**
-   * @see org.kalypsodeegree_impl.graphics.displayelements.IElevationColorModel#setElevationMinMax(double, double)
-   */
-  public void setElevationMinMax( double min, double max )
-  {
-    // TODO Auto-generated method stub
-
   }
 
   /**
@@ -186,6 +158,14 @@ public class ColorMapConverter implements IElevationColorModel
   public StrokeLinePainter getLinePainter( int currentClass )
   {
     return m_lister.get( currentClass ).getLinePainter();
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.graphics.displayelements.IElevationColorModel#getFillPolygonPainter(int)
+   */
+  public FillPolygonPainter getFillPolygonPainter( int currentClass )
+  {
+    return m_lister.get( currentClass ).getPolygonPainter();
   }
 
 }

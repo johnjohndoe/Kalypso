@@ -72,15 +72,4 @@ public interface IElevationColorModel
   public double[] getElevationMinMax( );
 
   public double getDiscretisationInterval( );
-
-  public int getNumOfClasses( );
-
-  public double getFrom( int currentClass );
-
-  public double getTo( int currentClass );
-
-  public double getClassValue( int currentClass );
-
-  public StrokeLinePainter getLinePainter( int currentClass );
-
 }

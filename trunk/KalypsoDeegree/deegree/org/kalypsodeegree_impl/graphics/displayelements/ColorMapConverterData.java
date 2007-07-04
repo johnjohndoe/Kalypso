@@ -69,21 +69,26 @@ public class ColorMapConverterData
 
   private StrokeLinePainter m_linePainter;
 
-  public ColorMapConverterData( Stroke stroke, Feature feature, UOM uom,  final GeoTransform projection ,String label, double quantity ) throws FilterEvaluationException
+  private FillPolygonPainter m_polygonPainter;
+
+  public ColorMapConverterData( Stroke stroke, Feature feature, UOM uom, final GeoTransform projection, String label, double quantity ) throws FilterEvaluationException
   {
     m_stroke = stroke;
     m_label = label;
     m_quantity = quantity;
-    
-    m_linePainter = new StrokeLinePainter(m_stroke, feature, uom, projection);
+
+    m_linePainter = new StrokeLinePainter( m_stroke, feature, uom, projection );
   }
 
-  public ColorMapConverterData( Fill fill, String label, double from, double to )
+  public ColorMapConverterData( Fill fill, Stroke stroke, Feature feature, UOM uom, final GeoTransform projection, String label, double from, double to ) throws FilterEvaluationException
   {
     m_fill = fill;
+    m_stroke = stroke;
     m_label = label;
     m_from = from;
     m_to = to;
+
+    m_polygonPainter = new FillPolygonPainter( m_fill, m_stroke, feature, uom, projection );
   }
 
   public Stroke getStroke( )
@@ -124,6 +129,11 @@ public class ColorMapConverterData
   public StrokeLinePainter getLinePainter( )
   {
     return m_linePainter;
+  }
+
+  public FillPolygonPainter getPolygonPainter( )
+  {
+    return m_polygonPainter;
   }
 
 }

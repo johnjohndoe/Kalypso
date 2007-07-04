@@ -319,14 +319,14 @@ public class DisplayElementFactory
       public ISurfacePatchVisitor<GM_Triangle> createVisitor( final Graphics g, final GeoTransform projection, final IElevationColorModel model )
       {
         final UOM uom = symbolizer.getUom();
-        return new SurfacePaintIsolinesVisitor<GM_Triangle>( feature, g, projection, new ColorMapConverter( colorMap, feature, uom, projection ) );
+        return new SurfacePaintIsolinesVisitor( g, projection, new ColorMapConverter( colorMap, feature, uom, projection ) );
       }
     };
 
     return new SurfacePatchVisitableDisplayElement<GM_Triangle>( feature, tin, null, visitorFactory );
   }
 
-  private static DisplayElement buildSurfacePolygonDisplayElement( final Feature feature, final GM_Object geoProperty, SurfacePolygonSymbolizer symbolizer ) throws IncompatibleGeometryTypeException
+  private static DisplayElement buildSurfacePolygonDisplayElement( final Feature feature, final GM_Object geoProperty, final SurfacePolygonSymbolizer symbolizer ) throws IncompatibleGeometryTypeException
   {
     final PolygonColorMap colorMap = symbolizer.getColorMap();
 
@@ -338,7 +338,8 @@ public class DisplayElementFactory
     {
       public ISurfacePatchVisitor<GM_Triangle> createVisitor( final Graphics g, final GeoTransform projection, final IElevationColorModel model )
       {
-        return new SurfacePaintPlainTriangleVisitor<GM_Triangle>( feature, g, projection, new ColorMapConverter( colorMap, feature ) );
+        final UOM uom = symbolizer.getUom();
+        return new SurfacePaintPolygoneVisitor( g, new ColorMapConverter( colorMap, feature, uom, projection ) );
       }
     };
 
