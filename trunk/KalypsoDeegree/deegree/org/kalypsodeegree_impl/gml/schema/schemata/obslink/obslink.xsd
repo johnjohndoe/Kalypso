@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema targetNamespace="obslink.zml.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:obslink="obslink.zml.kalypso.org">
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:obslink="obslink.zml.kalypso.org" targetNamespace="obslink.zml.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<annotation>
+		<appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>2.1.2</kapp:gmlVersion>
+		</appinfo>
+	</annotation>
 	<import namespace="http://www.w3.org/1999/xlink" schemaLocation="../gml2_2002/xlinks.xsd"/>
 	<complexType name="TimeseriesLinkFeatureProperty">
 		<annotation>

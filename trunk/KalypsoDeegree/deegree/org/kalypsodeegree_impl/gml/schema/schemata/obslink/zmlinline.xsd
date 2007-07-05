@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:inlinezml="inline.zml.kalypso.org" targetNamespace="inline.zml.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified" version="0.9">
+	<annotation>
+		<appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>2.1.2</kapp:gmlVersion>
+		</appinfo>
+	</annotation>
 	<simpleType name="ZmlInlineType">
 		<restriction base="string"/>
 	</simpleType>
