@@ -279,6 +279,7 @@ public class Control1D2DConverter
     final int niti = controlModel.getNITI();
 
     final String msg = "Steady State Input Data";
+    // FIXME (@dejan) stedy state should have urf as well defined by the user!!! (jessica)
     final float uRValSteady = ((BigDecimal) firstRecord.getValue( compUnderRelax )).floatValue();
     writeTimeStep( formatter, msg, null, null, uRValSteady, niti, timeStepInfos );
 
@@ -300,7 +301,7 @@ public class Control1D2DConverter
     }
   }
 
-  private void writeTimeStep( final Formatter formatter, final String message, final Calendar stepCal, final Calendar lastStepCal, final float uRVal, final int nit, final ITimeStepinfo[] timeStepInfos ) throws SimulationException
+  private void writeTimeStep( final Formatter formatter, final String message, final Calendar stepCal, final Calendar lastStepCal, final float uRVal, final int niti, final ITimeStepinfo[] timeStepInfos ) throws SimulationException
   {
     final String dashes = StringUtils.repeat( "-", message.length() );
     formatter.format( "com %s%n", dashes );
@@ -313,6 +314,7 @@ public class Control1D2DConverter
     final int dayOfYear;
     final double ihre;
 
+    // unsteady
     if( stepCal != null )
     {
       dayOfYear = stepCal.get( Calendar.DAY_OF_YEAR );
@@ -322,6 +324,7 @@ public class Control1D2DConverter
       timeStepHours = (double) timeStepInterval / (60 * 60 * 1000);
       ihre = getTimeInPercentage( stepCal );
     }
+    // steady don´t need startdate
     else
     {
       dayOfYear = 0;
@@ -333,10 +336,10 @@ public class Control1D2DConverter
     formatter.format( "DT%14.2f%8d%8d%8.2f", timeStepHours, year, dayOfYear, ihre );
 
     // BC lines
-    if( nit == 0 )
+    if( niti == 0 )
       formatter.format( "%nBC%n" );
     else
-      formatBC( formatter, uRVal, nit );
+      formatBC( formatter, uRVal, niti );
 
     formatBoundCondLines( formatter, stepCal, timeStepInfos, TYPE.CONTI_BC_Q );
     formatBoundCondLines( formatter, stepCal, timeStepInfos, TYPE.CONTI_BC_H );
@@ -437,11 +440,13 @@ public class Control1D2DConverter
     final IControlModel1D2D controlModel = calculation.getControlModel();
     final IObservation<TupleResult> tupleSet = controlModel.getTimeSteps();
     final TupleResult result = tupleSet.getResult();
+    final IComponent compTime = result.getComponents()[0];
+    final TupleResultIndex index = new TupleResultIndex( result, compTime );
     // todo check if result is not empty
-    if(result == null || result.size() == 0)
+    final Iterator<IRecord> iterator = index.getIterator();
+    if( !iterator.hasNext() )
       throw new SimulationException( "Zeitschritte leer, keine Rechnung möglich.", null );
-    final IRecord record = result.get( 0 );
-    final IComponent res_C_0 = result.getComponents()[0];
-    return DateUtilities.toDate( (XMLGregorianCalendar) record.getValue( res_C_0 ) );
+    final IRecord firstRecord = iterator.next();
+    return DateUtilities.toDate( (XMLGregorianCalendar) firstRecord.getValue( compTime ) );
   }
 }
