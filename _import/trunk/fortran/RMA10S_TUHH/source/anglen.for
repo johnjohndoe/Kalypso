@@ -1,4 +1,4 @@
-C     Last change:  K    14 May 2007   11:26 am
+C     Last change:  EF   25 May 2007   10:57 am
 cipk  last update dec 2003   add iedsw dependence
 CIPK  LAST UPDATE MAR 18 2003 add diffusion switch ( default of  0 uses old formulations
 cipk  last update Jan 12 2001 add test for IMAT
@@ -38,6 +38,9 @@ cipk OCT 96 add new options
 cipk nov97 clarify options see below      IF(IEDSW .EQ. 0  ) GO TO 90
 CIPK OCT96      IF (EEXXYY(1,LL) .GE. 0.) GO TO 90  
       IF(IEDSW .EQ. 0  .AND.  EEXXYY(1,LL) .GE. 0.) GO TO 90
+      !EFa may07, necessary for new turbulence subroutine
+      IF(IEDSW .ge. 10  .AND.  EEXXYY(1,LL) .GE. 0.) GO TO 90
+      !-
 C
 C  1-D ELEMENTS
        IF (NOPS(LL,6) .EQ. 0)  then
