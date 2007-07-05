@@ -140,13 +140,13 @@ public class TaskExecutor implements ITaskExecutor
     if( context != null )
     {
       activateContext( context );
-      final Collection<String> partsToKeep = collectOpenedViews( context );
-      partsToKeep.add( WorkflowView.ID );
-      partsToKeep.add( Perspective.SCENARIO_VIEW_ID );
-      partsToKeep.add( GisMapOutlineView.ID );
-      final IWorkbench workbench = PlatformUI.getWorkbench();
-      PerspectiveWatcher.cleanPerspective( workbench, partsToKeep );
     }
+    final Collection<String> partsToKeep = collectOpenedViews( context );
+    partsToKeep.add( WorkflowView.ID );
+    partsToKeep.add( Perspective.SCENARIO_VIEW_ID );
+    partsToKeep.add( GisMapOutlineView.ID );
+    final IWorkbench workbench = PlatformUI.getWorkbench();
+    PerspectiveWatcher.cleanPerspective( workbench, partsToKeep );
     try
     {
       m_handlerService.executeCommand( command.getId(), null );
@@ -169,6 +169,9 @@ public class TaskExecutor implements ITaskExecutor
 
   private Collection<String> collectOpenedViews( final ContextType context )
   {
+    if(context == null) {
+      return new ArrayList<String>();
+    }
     final ContextType cause = context.getParent();
     final Collection<String> result;
     if( cause != null )
