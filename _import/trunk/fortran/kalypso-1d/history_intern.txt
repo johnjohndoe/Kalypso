@@ -1043,7 +1043,6 @@ Kalypso 1.3.1.1      25. April 2007
 2.) Umstellung der Abfrage nach der Berechnungsvarainte in der Routine zeila und lapro.
     Die Art der Berechnung wird nun nur noch über den Parameter "Berechnungsart" erfragt und nicht mehr 
     über den Integer "mark". Dies steuert in zeila die Ausgaben.
-
                           
                                                          Monika Donner, 04.05.2007
 						
@@ -1105,5 +1104,14 @@ Kalypso 1.3.1.1      25. April 2007
 -----------------------------------
 1.)  Bugfix: Bei der stat.-unglf. Berechnung wurde die neue Datei "Q_LangSchnitt.txt" nicht
      richtig geschlossen.
-                                                         Wolf Plöger, 05.07.2007     
+                                                         Wolf Plöger, 05.07.2007  
+
+Kalypso 2.0.3.2      05. Juli 2007
+-----------------------------------
+1.)  Einfuegen des Reibungsgefaelles in den Q-Laengsschnitt. Deswegen ist "gefaelle" jetzt 
+     eine gobale Variable (siehe globale definitionen). 
+
+2.)  Eroeffnen der Ausgabedatei 'Laengs_QWehre.txt' und 'HOW-Qwehr-HUW' auch von wspber 
+     in qbordv verschoben
+                                                         Monika Donner, 05.07.2007   
                                                          
