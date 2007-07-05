@@ -1,4 +1,4 @@
-C     Last change:  K    20 Apr 2007    2:41 pm
+C     Last change:  EF    2 Jul 2007    3:46 pm
       MODULE ParaKALYPS
 !NiS,mar06:     Parameter for Kalypso-program-structure and for CVFEM-control as far as necessary to implement parts of
 !               Kalypso-2D into RMA10S.
@@ -49,7 +49,10 @@ C     Last change:  K    20 Apr 2007    2:41 pm
       !if restart with kalypso 2D-file, then RESTARTSwitch = 1, else RESTARTSwitch = 0
       INTEGER                  :: RESTARTSwitch
 
-
+      !EFa may07, the following variables are necessary for the implementation of the subroutine turbulence
+      REAL(KIND=8)             :: dsid(1:5)
+      REAL(KIND=8)             :: semp,dside,gsc1,gsc2,artr1,artr2,gscal
+      !-
 !FEM            switch for the control of CVFEM; switch is parat but the CVFEM-code is not yet translated to RMA10S
 
 
