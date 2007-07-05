@@ -41,7 +41,6 @@
 package org.kalypso.kalypsomodel1d2d.schema.binding.model;
 
 import java.io.File;
-import java.net.URI;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -50,10 +49,6 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.FileLocator;
-import org.kalypso.commons.resources.FileUtilities;
-import org.kalypso.contribs.java.net.UrlResolver;
-import org.kalypso.contribs.java.net.UrlResolverSingleton;
-import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
@@ -223,8 +218,8 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
 
   public Integer getNCYC( )
   {
-    final Integer property = (Integer) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_NCYC );
-    return property!=null ? property : 0;
+    final Integer property = getTimeSteps().getResult().size() -1;
+    return getNITN()!=null ? property : 0; // Not needed, while no definition of unsteady timesteps
   }
 
   public Double getCONV_1( )

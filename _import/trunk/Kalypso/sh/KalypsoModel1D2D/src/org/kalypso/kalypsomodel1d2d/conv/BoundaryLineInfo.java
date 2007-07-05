@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.conv;
 
+import java.math.BigInteger;
+
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
@@ -72,4 +74,10 @@ public class BoundaryLineInfo extends BoundaryConditionInfo
     super.setObservation( obs, timeComponent, valueComponent );
     setType( type );
   }
+
+  public void setTheta( double direction )
+  {
+    super.setTheta( direction );
+  }
+
 }

@@ -196,8 +196,6 @@ public class Kalypso1D2DSchemaConstants
 
   public final static QName WB1D2DCONTROL_PROP_NITN = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "NITN" );
 
-  public final static QName WB1D2DCONTROL_PROP_NCYC = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "NCYC" );
-
   public final static QName WB1D2DCONTROL_PROP_CONV_1 = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "CONV_1" );
 
   public final static QName WB1D2DCONTROL_PROP_CONV_2 = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "CONV_2" );

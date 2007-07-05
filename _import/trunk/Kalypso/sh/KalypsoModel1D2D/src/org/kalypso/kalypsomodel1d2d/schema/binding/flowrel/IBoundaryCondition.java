@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.flowrel;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -102,5 +103,6 @@ public interface IBoundaryCondition extends IFlowRelationship
   public double getStationaryCondition();
   
   public void setStationaryCondition( double statCond);
-  
+
+  public double getDirection();
 }

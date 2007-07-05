@@ -45,7 +45,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,13 +65,11 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
@@ -117,9 +114,8 @@ public class RMA10Calculation implements INativeIDProvider
 
   private List<ITimeStepinfo> m_timeStepInfos;
 
-  private final LinkedHashMap<IBoundaryLine, Integer> m_boundaryLineIDProvider =
-    new LinkedHashMap<IBoundaryLine, Integer>(32);
-  
+  private final LinkedHashMap<IBoundaryLine, Integer> m_boundaryLineIDProvider = new LinkedHashMap<IBoundaryLine, Integer>( 32 );
+
   public RMA10Calculation( final ISimulationDataProvider inputProvider ) throws SimulationException, Exception
   {
     final Map<String, String> specialUrls = new HashMap<String, String>();
@@ -273,19 +269,20 @@ public class RMA10Calculation implements INativeIDProvider
 
   public List<IBoundaryLine> getContinuityLineList( )
   {
-//    // implemented like this, or search for BoundaryConditions (operational model) which fits to ContinuityLines
-//    // (discretisation model)
-//    final IFEDiscretisationModel1d2d adapter = (IFEDiscretisationModel1d2d) m_disModelWorkspace.getRootFeature().getAdapter( IFEDiscretisationModel1d2d.class );
-//    final IFeatureWrapperCollection<IFE1D2DElement> elements = adapter.getElements();
-//    final List<IBoundaryLine> list = new ArrayList<IBoundaryLine>();
-//    final Iterator<IFE1D2DElement> iterator = elements.iterator();
-//    while( iterator.hasNext() )
-//    {
-//      final IFE1D2DElement element = iterator.next();
-//      if( element instanceof IBoundaryLine )
-//        list.add( (IBoundaryLine) element );
-//    }
-//    return list;
+// // implemented like this, or search for BoundaryConditions (operational model) which fits to ContinuityLines
+// // (discretisation model)
+// final IFEDiscretisationModel1d2d adapter = (IFEDiscretisationModel1d2d)
+// m_disModelWorkspace.getRootFeature().getAdapter( IFEDiscretisationModel1d2d.class );
+// final IFeatureWrapperCollection<IFE1D2DElement> elements = adapter.getElements();
+// final List<IBoundaryLine> list = new ArrayList<IBoundaryLine>();
+// final Iterator<IFE1D2DElement> iterator = elements.iterator();
+// while( iterator.hasNext() )
+// {
+// final IFE1D2DElement element = iterator.next();
+// if( element instanceof IBoundaryLine )
+// list.add( (IBoundaryLine) element );
+// }
+// return list;
     ICalculationUnit calcultionUnit = getCalcultionUnit();
     List<IBoundaryLine> boundaryLines = CalUnitOps.getBoundaryLines( calcultionUnit );
     return boundaryLines;
@@ -311,7 +308,7 @@ public class RMA10Calculation implements INativeIDProvider
 
   private List<ITimeStepinfo> calculateBoundaryConditionInfos( ) throws SimulationException
   {
-    //TOFILTER 
+    // TOFILTER
     final List<ITimeStepinfo> result = new ArrayList<ITimeStepinfo>();
 
     /* Take all conti lines which are defined in the discretisation model. */
@@ -323,8 +320,8 @@ public class RMA10Calculation implements INativeIDProvider
       final IFE1D2DNode[] nodeArray;
       if( line instanceof IBoundaryLine1D )
       {
-        nodeArray = new IFE1D2DNode[]{ ((IBoundaryLine1D)line).getTargetNode() };
-      } 
+        nodeArray = new IFE1D2DNode[] { ((IBoundaryLine1D) line).getTargetNode() };
+      }
       else
       {
         final List<IFE1D2DNode> nodes = line.getNodes();
@@ -348,12 +345,16 @@ public class RMA10Calculation implements INativeIDProvider
         final IBoundaryCondition bc = (IBoundaryCondition) relationship;
         final IObservation<TupleResult> obs = bc.getObservation();
         final TupleResult obsResult = obs.getResult();
-//        CalUnitOps.getAssignedBoundaryConditionLine( unit, bCondition, grabDistance );
+// CalUnitOps.getAssignedBoundaryConditionLine( unit, bCondition, grabDistance );
         // HACK: 0.5 as grab distance?? normally 0.0 should be enough, but then the contilines are not found, why?
         // TODO: at least find everything in this distance, if mroe than one element is found, take nearest...
         final boolean boundaryConditionOf = CalUnitOps.isBoundaryConditionOf( unit, bc, grabDistance );
-        final IFeatureWrapper2 wrapper2 = CalUnitOps.getAssignedBoundaryConditionLine( unit, bc, grabDistance );//DiscretisationModelUtils.findModelElementForBC( discModel, bc.getPosition(), 0.001 );
-        
+        final IFeatureWrapper2 wrapper2 = CalUnitOps.getAssignedBoundaryConditionLine( unit, bc, grabDistance );// DiscretisationModelUtils.findModelElementForBC(
+        // discModel,
+        // bc.getPosition(),
+        // 0.001
+        // );
+
         if( wrapper2 instanceof IBoundaryLine )
         {
           final IBoundaryLine<IFE1D2DComplexElement, IFE1D2DEdge> contiLine = (IBoundaryLine<IFE1D2DComplexElement, IFE1D2DEdge>) wrapper2;
@@ -364,7 +365,10 @@ public class RMA10Calculation implements INativeIDProvider
           final IComponent hComponent = TupleResultUtilities.findComponentById( obsResult, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL );
           info.setSteadyValue( bc.getStationaryCondition() );
           if( qComponent != null )
+          {
             info.setObservation( obs, timeComponent, qComponent, ITimeStepinfo.TYPE.CONTI_BC_Q );
+            info.setTheta( bc.getDirection() );
+          }
           else if( hComponent != null )
             info.setObservation( obs, timeComponent, hComponent, ITimeStepinfo.TYPE.CONTI_BC_H );
           else
@@ -383,7 +387,10 @@ public class RMA10Calculation implements INativeIDProvider
           final IComponent hComponent = TupleResultUtilities.findComponentById( obsResult, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL );
           info.setSteadyValue( bc.getStationaryCondition() );
           if( qComponent != null )
+          {
             info.setObservation( obs, timeComponent, qComponent, ITimeStepinfo.TYPE.CONTI_BC_Q );
+            info.setTheta( bc.getDirection() );
+          }
           else if( hComponent != null )
             info.setObservation( obs, timeComponent, hComponent, ITimeStepinfo.TYPE.CONTI_BC_H );
           else
@@ -418,7 +425,6 @@ public class RMA10Calculation implements INativeIDProvider
     return result;
   }
 
-  
   public ICalculationUnit getCalcultionUnit( )
   {
     IControlModel1D2D controlModel = getControlModel();
@@ -428,7 +434,7 @@ public class RMA10Calculation implements INativeIDProvider
     ICalculationUnit realUnit = (ICalculationUnit) feature.getAdapter( ICalculationUnit.class );
     return realUnit;
   }
-  
+
   public IControlModel1D2D getControlModel( )
   {
     final Feature controlModelCollection = (Feature) m_controlModelRoot.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_FP_MODEL_COLLECTION );
@@ -438,7 +444,7 @@ public class RMA10Calculation implements INativeIDProvider
 
     return (IControlModel1D2D) controlModelFeature.getAdapter( IControlModel1D2D.class );
   }
-  
+
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.INativeIDProvider#getID(org.kalypsodeegree.model.feature.binding.IFeatureWrapper2)
    */
@@ -446,11 +452,11 @@ public class RMA10Calculation implements INativeIDProvider
   {
     if( object instanceof IBoundaryLine )
     {
-     return m_boundaryLineIDProvider.get( object ); 
+      return m_boundaryLineIDProvider.get( object );
     }
     else
     {
-      throw new RuntimeException("Type not supported");
+      throw new RuntimeException( "Type not supported" );
     }
   }
 }
