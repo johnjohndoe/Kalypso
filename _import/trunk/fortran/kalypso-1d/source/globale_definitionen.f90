@@ -42,8 +42,8 @@ implicit none
 
 save
 
-CHARACTER(LEN=29), parameter :: VERSIONNR   = ' KALYPSO-1D, VERSION 2.0.3   '
-CHARACTER(LEN=17), parameter :: VERSIONDATE = 'Stand: 04.07.2007'
+CHARACTER(LEN=29), parameter :: VERSIONNR   = ' KALYPSO-1D, VERSION 2.0.3.1 '
+CHARACTER(LEN=17), parameter :: VERSIONDATE = 'Stand: 05.07.2007'
 
 end module VERSION
 

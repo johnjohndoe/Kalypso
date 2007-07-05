@@ -323,4 +323,30 @@ Kalypso 2.0.0        04. Mai 2007
      Brückenbereich ein Fehler aufgetreten -> Behoben.
 
                                                          Wolf Plöger, 03.07.2007	 
-	                                                 
+
+ Kalypso 2.0.3        04. Juli 2007
+-----------------------------------
+
+1.)  Bugfix: Der Impulsstrombeiwert (alpha_IW) und Energiestrombeiwert (alpha_EW) nahmen 
+     bislang bei hohen Abflüssen unsinnige Werte von bis über 100 an.
+
+2.)  Bugfix: Der Fall, das sich das berechnete Energieliniegefälle "is" (in Subr eb2ks) grösser 
+     eins oder kleiner Null wird, wurde Abgefangen durch ein Zurücksetzen des Energieliniegefälle 
+     auf 0.001 (= Anfangswert für die erste Iteration am ersten Profil). 
+
+3.)  Bugfix: Berechnung der Verlusthoehe infolge Reibung.
+
+4.)  Erzeugung einer neuen Ausgabedatei für alle Berechnungen unter einer Abflussstaffelung
+     Es wird ein Längsschnitt mit allen Profilen und allen Abflüssen erzeugt. Zusätzlich sind 
+     die Teilabflüsse Q, Impulsstrombeiwert (alpha_IW) und Energiestrombeiwert (alpha_EW) enthalten.
+
+5.)  Verbesserung: Der Trennflächen-Widerstandbeiwertes (Lambda) wurde auf ein 
+     Maximum von 2.00 begrenzt. 
+                                                       Monika Donner/ Wolf Plöger, 04.07.2007
+
+ Kalypso 2.0.3.1      04. Juli 2007
+-----------------------------------
+1.)  Bugfix: Bei der stat.-unglf. Berechnung wurde die neue Datei "Q_LangSchnitt.txt" nicht
+     richtig geschlossen.
+                                                         Wolf Plöger, 05.07.2007     
+                                                         	                                                 

@@ -327,6 +327,17 @@ write (*,*) 'NAME_OUT_WSL = ', NAME_OUT_WSL
 If (BERECHNUNGSMODUS == 'BF_NON_UNI' .OR. BERECHNUNGSMODUS == 'REIB_KONST') then
 !MD  if (BERECHNUNGSMODUS == 'BF_NON_UNI') then
 
+  ! Eroeffnen der neuen AusgabeDatei 'Q_LangSchnitt.txt'
+  ilen = LEN_TRIM(NAME_PFAD_DATH)
+  NAME_OUT_QLAENGS = NAME_PFAD_DATH(1:ilen) // 'Q_LangSchnitt.txt'
+  UNIT_OUT_QLAENGS = ju0gfu ()
+  OPEN (unit = UNIT_OUT_QLAENGS, file = NAME_OUT_QLAENGS, status = 'REPLACE', iostat = istat)
+  if (istat /= 0) then
+    write (*, 9009) NAME_OUT_QLAENGS
+    9009 format (1X, 'Fehler beim Oeffnen der Datei ', A, /, &
+               & 1X, 'Programm wird beendet!')
+    call stop_programm(0)
+  end if
 
   DO i = 1, maxger
     jkenn (i) = 0

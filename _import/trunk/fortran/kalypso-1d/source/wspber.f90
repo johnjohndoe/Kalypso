@@ -480,20 +480,6 @@ if (isch == 1) then
   WRITE (UNIT_OUT_QWEHR, '(5x,''Profil'',4x,''Q_OW '',3x,''Q-wehr'',5x,''h_ow'',7x,''h_uw'',4x,''Ü-Art'')')
 end if
 
-! Eroeffnen der neuen AusgabeDatei 'Q_LangSchnitt.txt'
-ilen = LEN_TRIM(NAME_PFAD_DATH)
-NAME_OUT_QLAENGS = NAME_PFAD_DATH(1:ilen) // 'Q_LangSchnitt.txt'
-UNIT_OUT_QLAENGS = ju0gfu ()
-OPEN (unit = UNIT_OUT_QLAENGS, file = NAME_OUT_QLAENGS, status = 'REPLACE', iostat = istat)
-if (istat /= 0) then
- write (*, 9009) NAME_OUT_QLAENGS
-  9009 format (1X, 'Fehler beim Oeffnen der Datei ', A, /, &
-     & 1X, 'Programm wird beendet!')
-  call stop_programm(0)
-end if
-
-
-
 ! Wenn BEIWERTE.AUS erzeugt wird
 IF (alpha_ja.eq.1) then
 
@@ -1402,8 +1388,8 @@ Hauptschleife: DO i = 1, maxger
         Q_Abfrage = 'NO_SCHLEIFE'
 
 
-        WRITE (UNIT_OUT_WEHR, '(/,5x,'' Wehrberechnung an Station km'',f8.4)') stat (nprof)
-        WRITE (UNIT_OUT_WEHR, '(,5x,'' Aeusserer Abfluss q_out ='',f8.4)') q_out
+        WRITE (UNIT_OUT_WEHR, '(/5x,'' Wehrberechnung an Station km'',f8.4)') stat (nprof)
+        WRITE (UNIT_OUT_WEHR, '(5x,'' Aeusserer Abfluss q_out ='',f8.4)') q_out
         WRITE (UNIT_OUT_WEHR, '(5x,''-----------------------------'')')
         WRITE (UNIT_OUT_WEHR, '(5x,'' Q_OW '',6x,''h_ow'',5x,''v_ow'',7x,''he_ow'',3x,''mue'',6x,  &
                &''Q-wehr'',2x,''h-ue'',5x,''A-ue'',4x,''Ü-Art'',13x,''he-wehr'',4x,''h_uw'',5x,''v_uw'',7x,''he_uw'')')
