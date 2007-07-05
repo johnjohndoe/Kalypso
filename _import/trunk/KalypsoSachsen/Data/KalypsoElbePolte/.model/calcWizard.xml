@@ -24,7 +24,7 @@ ToDo: Help-Ids setzen!!! -->
 		<arg name="rightSash" value="50"/>
 		<!--  -->
 		<arg name="zmlTableShow" value="all"/>
-		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname%#linkColumn=ganglinie_gesamt"/>
+		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% [%axisunit%]#linkColumn=ganglinie_gesamt"/>
 		<!--  -->
 		<arg name="ignoreType1" value="Q"/>
 		<arg name="ignoreType2" value="W"/>
@@ -41,13 +41,13 @@ ToDo: Help-Ids setzen!!! -->
 		<!--  -->
 		<arg name="mapTemplate" value=".templates/calcCase/wiz02_elbepegel.gmt"/>
 		<arg name="maximizeMap" value="true"/>
-		<arg name="mapWidgetID" value="SELECT"/>
+		<!-- <arg name="mapWidgetID" value="SELECT"/> -->
 		<!--  -->
 		<arg name="mainSash" value="40"/>
 		<arg name="rightSash" value="50"/>
 		<!--  -->
-		<arg name="timeserie1" value="nameColumn=Name#nameString=Messwerte#linkColumn=ganglinie_messwerte#color=0x0000ff"/>
-		<arg name="timeserie2" value="nameColumn=Name#nameString=Modellwerte#linkColumn=ganglinie_modellwerte#color=0xff0000"/>
+		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% [%axisunit%] - Modellwerte#linkColumn=ganglinie_modellwerte#color=0xff0000"/>
+		<arg name="timeserie2" value="nameColumn=name#nameString=%featureprop% [%axisunit%] - Messwerte#linkColumn=ganglinie_messwerte#color=0x0000ff"/>
 		<!--  -->
 		<arg name="ignoreType1" value="Q"/>
 		<arg name="ignoreType2" value="W"/>
@@ -68,7 +68,7 @@ ToDo: Help-Ids setzen!!! -->
 		<arg name="rightSash" value="50"/>
 		<!--  -->
 		<arg name="zmlTableShow" value="all"/>
-		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname%#linkColumn=ganglinie_gesamt"/>
+		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% [%axisunit%]#linkColumn=ganglinie_gesamt"/>
 		<!--  -->
 		<arg name="ignoreType1" value="W"/>
 	</page>
@@ -89,7 +89,7 @@ ToDo: Help-Ids setzen!!! -->
 		<arg name="mapTemplate" value=".templates/calcCase/wiz04_modellparameter.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="true"/>
-		<arg name="mapWidgetID" value=""/>
+		<!-- <arg name="mapWidgetID" value="SELECT"/> -->
 		<!--
 			FeatureView -->
 		<arg name="featureTemplate" value=".templates/calcCase/wiz04_modellparameter.gft"/>
@@ -97,8 +97,8 @@ ToDo: Help-Ids setzen!!! -->
 		<arg name="featureControlStyle" value="SWT.NONE"/>
 		<!-- 
 			Diagramm -->
-		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname%#linkColumn=ganglinie_gesamt"/>
-		<arg name="timeserie2" value="nameColumn=Name#nameString=Modellwerte#linkColumn=ganglinie_messwerte"/>
+		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% [%axisunit%]#linkColumn=ganglinie_gesamt"/>
+		<arg name="timeserie2" value="nameColumn=name#nameString=%featureprop% [%axisunit%]#linkColumn=ganglinie_messwerte"/>
 		<!--  -->
 		<arg name="ignoreType1" value="Q"/>
 		<arg name="ignoreType2" value="W"/>
@@ -109,7 +109,7 @@ ToDo: Help-Ids setzen!!! -->
 
 	<!-- Phase 2: Eingabe streckenbezogene Parameter und Berechnung -->
 	<!-- streckenbezogene Parameter -->
-	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Allgemeine Modellparameter" imageLocation="icons/calcwizard/kalypso32.gif">
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Streckenparameter und Berechnung" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!--  
 			HTML-Navigation und pageID-->
 		<arg name="pageID" value="Streckenparameter"/>
@@ -125,21 +125,26 @@ ToDo: Help-Ids setzen!!! -->
 		<arg name="mapTemplate" value=".templates/calcCase/wiz05_streckenparameter.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="true"/>
-		<arg name="mapWidgetID" value="SELECT"/>
+		<!-- <arg name="mapWidgetID" value="SELECT"/> -->
 		<!--
-			FeatureView -->
-		<arg name="featureTemplate" value=".templates/calcCase/wiz05_streckenparameter.gft"/>
-		<arg name="selectFeatureID" value="root"/>
-		<arg name="featureControlStyle" value="SWT.NONE"/>
+			TableView -->
+		<arg name="tableTemplate" value=".templates/calcCase/wiz05_streckenparameter.gtt"/>
+		
 		<!-- 
 			Diagramm -->
-		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname%#linkColumn=ganglinie_gesamt"/>
-		<arg name="timeserie2" value="nameColumn=Name#nameString=Modellwerte#linkColumn=ganglinie_messwerte"/>
+		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% [%axisunit%]#linkColumn=ganglinie_gesamt"/>
+		<arg name="timeserie2" value="nameColumn=name#nameString=%featureprop% [%axisunit%]#linkColumn=ganglinie_messwerte"/>		
+		<arg name="timeserie3" value="nameColumn=name#nameString=%featureprop% [%axisunit%] (Vorhersage CZ)#linkColumn=ganglinie_vorhersage_cz"/>
 		<!--  -->
 		<arg name="ignoreType1" value="Q"/>
 		<arg name="ignoreType2" value="W"/>
 		<arg name="ignoreLabel1" value="Wasserstand"/>
 		<arg name="ignoreLabel2" value="Abfluss"/>
+		
+		<arg name="buttonText" value="Berechnung durchführen"/>
+		<arg name="buttonLaunch" value="runCalculation"/>
+		<arg name="buttonTooltip" value="Führt die Modellrechnung durch"/>
+		<arg name="buttonProperties"/>
 	</page>
 	
 	
@@ -161,7 +166,7 @@ ToDo: Help-Ids setzen!!! -->
 		<arg name="mapTemplate" value=".templates/calcCase/wiz06_berichtsablage.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="true"/>
-		<arg name="mapWidgetID" value="SELECT"/>
+		<!--<arg name="mapWidgetID" value="SELECT"/>-->
 		
 		<!-- 
 			Diagramm -->
@@ -171,28 +176,20 @@ ToDo: Help-Ids setzen!!! -->
 		<arg name="ignoreType2" value="W"/>
 		<arg name="ignoreLabel1" value="Wasserstand"/>
 		<arg name="ignoreLabel2" value="Abfluss"/>
+		
+		<arg name="timeserie1" value="nameString=Rechnung#linkColumn=ganglinie_modellwerte#color=0xff0000"/>
+		<arg name="timeserie2" value="nameString=Beobachtung#linkColumn=ganglinie_messwerte#color=0x0000ff"/>
+		<!-- im Modell wird nicht differenziert zwischen Rechnung und Vorhersage...
+			<arg name="timeserie4" value="nameString=Vorhersage#linkColumn=Wasserstand_vorhersage#color=0x008040"/> -->
+		<!-- sonst wird es so voll
+			<arg name="timeserie4" value="nameString=tschechische Vorhersage#linkColumn=ganglinie_vorhersage_cz#color=0x008040"/> -->
+		
+		<arg name="timeserie5" value="nameString=untere Umhüllende#linkColumn=ganglinie_modellwerte_unten#lineDash=4f#color=0x008040"/>
+		<arg name="timeserie6" value="nameString=obere Umhüllende#linkColumn=ganglinie_modellwerte_oben#lineDash=4f#color=0x008040"/>
 		<!--  -->
-		<arg name="pegelNameProperty" value="Name"/>
+		<arg name="pegelNameProperty" value="name"/>
 		<arg name="resultProperty" value="ganglinie_modellwerte"/>
 		
-		<!-- ALTER Rest -->
-
-		<arg name="selectFeatureID" value="EZ_1"/>
-<!-- tschechische Vorhersage auch mit anzeigen -->
-		<arg name="timeserie1" value="nameString=%axisname%#linkColumn=Niederschlag_rechnung"/>
-		<arg name="timeserie2" value="nameString=Beobachtung#linkColumn=Wasserstand_gemessen#color=0x0000ff"/>
-		<arg name="timeserie3" value="nameString=Rechnung#linkColumn=Wasserstand_gerechnet#color=0xff0000"/>
-		<arg name="timeserie4" value="nameString=Vorhersage#linkColumn=Wasserstand_vorhersage#color=0x008040"/>
-		<arg name="timeserie5" value="nameString=untere Umhüllende#linkColumn=Wasserstand_vorhersage_unten#lineDash=4f#color=0x008040"/>
-		<arg name="timeserie6" value="nameString=obere Umhüllende#linkColumn=Wasserstand_vorhersage_oben#lineDash=4f#color=0x008040"/>
-		
-		
-		
-		
-
-
-
-
 		<!-- Exporter fangen hier an... -->
 		<arg name="exporter1">
 			<arg name="id" value="featureWithTemplateExporter"/>

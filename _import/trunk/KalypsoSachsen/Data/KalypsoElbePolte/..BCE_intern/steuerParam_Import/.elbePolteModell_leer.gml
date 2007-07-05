@@ -71,6 +71,8 @@
       <river>labe</river>
       <ganglinie_messwerte/>
       <ganglinie_modellwerte/>
+      <ganglinie_modellwerte_unten/>
+      <ganglinie_modellwerte_oben/>
     </ElbePegel>
   </pegelMember>
   <pegelMember>
@@ -89,6 +91,8 @@
       <river>elbe</river>
       <ganglinie_messwerte/>
       <ganglinie_modellwerte/>
+      <ganglinie_modellwerte_unten/>
+      <ganglinie_modellwerte_oben/>
     </ElbePegel>
   </pegelMember>
   <pegelMember>
@@ -107,6 +111,8 @@
       <river>elbe</river>
       <ganglinie_messwerte/>
       <ganglinie_modellwerte/>
+      <ganglinie_modellwerte_unten/>
+      <ganglinie_modellwerte_oben/>
     </ElbePegel>
   </pegelMember>
   <pegelMember>
@@ -125,6 +131,8 @@
       <river>elbe</river>
       <ganglinie_messwerte/>
       <ganglinie_modellwerte/>
+      <ganglinie_modellwerte_unten/>
+      <ganglinie_modellwerte_oben/>
     </ElbePegel>
   </pegelMember>
   <pegelMember>
@@ -143,6 +151,8 @@
       <river>elbe</river>
       <ganglinie_messwerte/>
       <ganglinie_modellwerte/>
+      <ganglinie_modellwerte_unten/>
+      <ganglinie_modellwerte_oben/>
     </ElbePegel>
   </pegelMember>
   <pegelMember>
@@ -161,6 +171,8 @@
       <river>elbe</river>
       <ganglinie_messwerte/>
       <ganglinie_modellwerte/>
+      <ganglinie_modellwerte_unten/>
+      <ganglinie_modellwerte_oben/>
     </ElbePegel>
   </pegelMember>
   <zwgZuflussMember>
