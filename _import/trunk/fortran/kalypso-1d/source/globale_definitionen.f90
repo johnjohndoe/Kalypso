@@ -42,7 +42,7 @@ implicit none
 
 save
 
-CHARACTER(LEN=29), parameter :: VERSIONNR   = ' KALYPSO-1D, VERSION 2.0.3.1 '
+CHARACTER(LEN=29), parameter :: VERSIONNR   = ' KALYPSO-1D, VERSION 2.0.3.2 '
 CHARACTER(LEN=17), parameter :: VERSIONDATE = 'Stand: 05.07.2007'
 
 end module VERSION
@@ -221,6 +221,7 @@ TYPE :: ergebnis_profil
   REAL :: RohrD         ! Rohrdurchmesser [m], falls kein Rohr, dann -999.99
   REAL :: alphaIW       ! Impulsstrombeiwert [-]
   REAL :: alphaEW       ! Energiestrombeiwert [-]
+  REAL :: gefaelle      ! Reibungsgefaelle [-]
   LOGICAL :: interpol   ! Profil ist interpoliert (.TRUE.) oder urspruenglich (.FALSE.), wichtig bei Bruecken
   CHARACTER(LEN=1) :: chr_kenn ! Kennung fuer das Profil (i = Interpoliert, n = Normal, b = Bruecke, w = Wehr, d = Durchlass)
 END TYPE ergebnis_profil
