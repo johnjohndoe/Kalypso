@@ -14,6 +14,7 @@
      <c1d2d:IEDSW>10</c1d2d:IEDSW>
      <c1d2d:TBFACT>0.2</c1d2d:TBFACT>
      <c1d2d:TBMIN>2.0</c1d2d:TBMIN>
+     <c1d2d:_p_bottom>1.0</c1d2d:_p_bottom>
      <c1d2d:OMEGA>42.0</c1d2d:OMEGA>
      <c1d2d:ELEV>1.0</c1d2d:ELEV>
      <c1d2d:UNOM>0.5</c1d2d:UNOM>

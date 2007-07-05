@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--  
-	Provides gml schema types and elemen to model rougthnesses.
-	Basic element is the Roughness element which can be gouped 
+	Provides gml schema types and elements to model roughness.
+	Basic element is the Roughness element which can be grouped 
 	in a collection
 	
 	@author Patrice Congo
