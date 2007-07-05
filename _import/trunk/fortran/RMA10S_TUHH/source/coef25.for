@@ -316,7 +316,37 @@ C-
         DY=CORD(N,2)-CORD(MR,2)
         XL(K)=DX*CX+DY*SA
         YL(K)=-DX*SA+DY*CX
+        !EFa may07, necessary for subroutine turbulence
+        dside=SQRT(dx*dx+dy*dy)
+        IF(k.eq.3) dsid(1)=dside
+        IF(k.eq.5) dsid(3)=dside
+        IF(k.eq.7) dsid(5)=dside
+        !-
       ENDDO
+      !EFa may07, necessary for subroutine turbulence
+      do k=5,ncn,2
+        n=nop(nn,k)
+        mr=nop(nn,k-2)
+        dx=cord(n,1)-cord(mr,1)
+        dy=cord(n,2)-cord(mr,2)
+        dside=SQRT(dx*dx+dy*dy)
+        IF(k.eq.5) dsid(2)=dside
+        IF(k.eq.7) dsid(4)=dside
+      end do
+      !area computation for triangular elements
+      semp=(dsid(1)+dsid(2)+dsid(3))/2
+      artr1=SQRT(semp*(semp-dsid(1))*(semp-dsid(2))*(semp-dsid(3)))
+      gsc1=SQRT(4*artr1/SQRT(3.))
+      gscal=gsc1
+      !area computation for the complementary triangle within a
+      !quadrilateral element (for quadrilateral elements only)
+      if (ncn.gt.6) then
+        semp=(dsid(3)+dsid(4)+dsid(5))/2
+        artr2=SQRT(semp*(semp-dsid(3))*(semp-dsid(4))*(semp-dsid(5)))
+        gsc2=SQRT(4*artr2/SQRT(3.))
+        gscal=(gsc1+gsc2)/2.
+      end if
+      !-
 CIPK JAN03 add momentum
       EINA=EINX(NN)*CX+EINY(NN)*SA
       EINB=-EINX(NN)*SA+EINY(NN)*SA
@@ -1126,6 +1156,15 @@ CIPK AUG06 ADD QIN
       ENDIF
 cipk jun05
       IF(NR .GT. 90  .and.  nr .lt. 100) GO TO 291
+
+      !EFa may07, new subroutine for turbulence modell
+      if (iedsw.ge.10) then
+        call turbulence(nn,iedsw,tbmin,eexxyy(1,nn),eexxyy(2,nn),
+     +       eexxyy(3,nn),eexxyy(4,nn),epsx,epsxz,epszx,epsz,roavg,
+     +       p_bottom,tbfact,ffact,vecq,h,drdx,drdz,dsdx,dsdz,gscal)
+      end if
+      !-
+
 CIPK MAR01 CLEANUP LOGIC
 	IF(ICYC .LE. 0) THEN
         FRN = 0.0
