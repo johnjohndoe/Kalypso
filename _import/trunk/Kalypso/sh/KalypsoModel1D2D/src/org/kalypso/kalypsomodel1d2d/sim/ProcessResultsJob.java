@@ -92,6 +92,8 @@ public class ProcessResultsJob extends Job
 
   private static RMA10Calculation m_calculation;
 
+  private final NodeResultMinMaxCatcher m_resultMinMaxCatcher = new NodeResultMinMaxCatcher();
+
   public ProcessResultsJob( final File inputFile, final File outputDir, final ISimulationDataProvider dataProvider, final RMA10Calculation calculation )
   {
     super( "1D2D-Ergebnisse auswerten: " + inputFile.getName() );
@@ -118,7 +120,7 @@ public class ProcessResultsJob extends Job
       monitor.worked( 1 );
 
       /* Read into NodeResults */
-      read2DIntoGmlResults( m_inputFile, m_outputDir, m_dataProvider );
+      read2DIntoGmlResults( m_inputFile, m_outputDir, m_dataProvider, m_resultMinMaxCatcher );
     }
     catch( final Throwable e )
     {
@@ -129,7 +131,7 @@ public class ProcessResultsJob extends Job
     return Status.OK_STATUS;
   }
 
-  public static File read2DIntoGmlResults( final File result2dFile, final File outputDir, final ISimulationDataProvider dataProvider ) throws IOException, InvocationTargetException, GmlSerializeException, SimulationException, GM_Exception
+  public static File read2DIntoGmlResults( final File result2dFile, final File outputDir, final ISimulationDataProvider dataProvider, NodeResultMinMaxCatcher minMaxCatcher ) throws IOException, InvocationTargetException, GmlSerializeException, SimulationException, GM_Exception
   {
     final TimeLogger logger = new TimeLogger( "Start: lese .2d Ergebnisse" );
 
@@ -190,7 +192,7 @@ public class ProcessResultsJob extends Job
          */
       }
 
-      final IRMA10SModelElementHandler handler = new NodeResultsHandler( resultWorkspace, multiEater, m_calculation );
+      final IRMA10SModelElementHandler handler = new NodeResultsHandler( resultWorkspace, multiEater, m_calculation, minMaxCatcher );
       conv.setRMA10SModelElementHandler( handler );
 
       logger.takeInterimTime();
@@ -218,5 +220,11 @@ public class ProcessResultsJob extends Job
       logger.takeInterimTime();
       logger.printCurrentInterim( "Fertig mit Schreiben in : " );
     }
+  }
+
+  public NodeResultMinMaxCatcher getMinMaxData( )
+  {
+    return m_resultMinMaxCatcher;
+
   }
 }

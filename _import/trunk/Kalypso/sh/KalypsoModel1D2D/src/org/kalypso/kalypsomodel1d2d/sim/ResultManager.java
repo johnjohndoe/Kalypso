@@ -54,7 +54,10 @@ import javax.xml.bind.JAXBException;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
@@ -99,6 +102,20 @@ public class ResultManager implements Runnable
   private final ISimulationDataProvider m_dataProvider;
 
   private final RMA10Calculation m_calculation;
+
+  private final NodeResultMinMaxCatcher m_minMaxCatcher = new NodeResultMinMaxCatcher();
+
+  private IJobChangeListener m_finishListener = new JobChangeAdapter()
+  {
+    /**
+     * @see org.eclipse.core.runtime.jobs.JobChangeAdapter#done(org.eclipse.core.runtime.jobs.IJobChangeEvent)
+     */
+    @Override
+    public void done( final IJobChangeEvent event )
+    {
+      resultJobDone( event );
+    }
+  };
 
   public ResultManager( final File inputDir, final File outputDir, final String resultFilePattern, final ISimulationDataProvider dataProvider, final RMA10Calculation calculation )
   {
@@ -152,6 +169,8 @@ public class ResultManager implements Runnable
     final File resultOutputDir = new File( m_outputDir, outDirName );
     resultOutputDir.mkdirs();
     final ProcessResultsJob processResultsJob = new ProcessResultsJob( file, resultOutputDir, m_dataProvider, m_calculation );
+    processResultsJob.addJobChangeListener( m_finishListener );
+
     m_resultJobs.add( processResultsJob );
 
     /* Schedule job: wait some time in order to make sure file was written to disk. */
@@ -211,6 +230,12 @@ public class ResultManager implements Runnable
     return status;
   }
 
+  protected void resultJobDone( final IJobChangeEvent event )
+  {
+    final ProcessResultsJob job = (ProcessResultsJob) event.getJob();
+    m_minMaxCatcher.addNodeResultMinMaxCatcher( job.getMinMaxData() );
+  }
+
   public void finish( ) throws SimulationException
   {
     /* Process all remaining .2d files. */
@@ -226,6 +251,7 @@ public class ResultManager implements Runnable
     try
     {
       processTemplates();
+      processStyles();
     }
     catch( final SimulationException se )
     {
@@ -236,6 +262,12 @@ public class ResultManager implements Runnable
       e.printStackTrace();
       throw new SimulationException( "Fehler bei der Ergesbnisauswertung", e );
     }
+  }
+
+  private void processStyles( )
+  {
+    // TODO Auto-generated method stub
+    
   }
 
   private void processTemplates( ) throws SimulationException, IOException, JAXBException

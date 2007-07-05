@@ -46,6 +46,7 @@ import java.net.MalformedURLException;
 import junit.framework.TestCase;
 
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.kalypsomodel1d2d.sim.NodeResultMinMaxCatcher;
 import org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -77,12 +78,12 @@ public class NodeResultsHandlerTest extends TestCase
       {
         try
         {
-          if( "FlowRelationshipModel".equals( id ))
+          if( "FlowRelationshipModel".equals( id ) )
             return flowModelFile.toURL();
-          
-          if( "DiscretisationModel".equals( id ))
+
+          if( "DiscretisationModel".equals( id ) )
             return discModelFile.toURL();
-          
+
           // TODO Auto-generated method stub
           return null;
         }
@@ -100,6 +101,6 @@ public class NodeResultsHandlerTest extends TestCase
       }
     };
 
-    ProcessResultsJob.read2DIntoGmlResults( result2dFile, outputDir, provider );
+    ProcessResultsJob.read2DIntoGmlResults( result2dFile, outputDir, provider, new NodeResultMinMaxCatcher() );
   }
 }

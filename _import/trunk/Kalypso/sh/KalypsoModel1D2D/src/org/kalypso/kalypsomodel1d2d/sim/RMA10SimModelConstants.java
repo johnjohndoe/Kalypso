@@ -46,7 +46,7 @@ package org.kalypso.kalypsomodel1d2d.sim;
 public interface RMA10SimModelConstants
 {
 
-  public static final long PROCESS_TIMEOUT = 1000l * 60l * 60l * 24l; // max 60 * 24 minutes = 1 day
+  public static final long PROCESS_TIMEOUT = 1000 * 60 * 60 * 24; // max 60 * 24 minutes = 1 day
 
   public static final String OUTPUT_DIR_NAME = "Ergebnisse";
 

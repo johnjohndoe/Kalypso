@@ -79,6 +79,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.results.ElementResult;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.GMLNodeResult;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.SimpleNodeResult;
+import org.kalypso.kalypsomodel1d2d.sim.NodeResultMinMaxCatcher;
 import org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.model.wspm.core.IWspmConstants;
@@ -128,11 +129,14 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
   private static final long PROCESS_TIMEOUT = 50000;
 
-  public NodeResultsHandler( final GMLWorkspace resultWorkspace, final ITriangleEater triangleEater, final RMA10Calculation calculation )
+  private final NodeResultMinMaxCatcher m_resultMinMaxCatcher;
+
+  public NodeResultsHandler( final GMLWorkspace resultWorkspace, final ITriangleEater triangleEater, final RMA10Calculation calculation, NodeResultMinMaxCatcher resultMinMaxCatcher )
   {
     m_resultWorkspace = resultWorkspace;
     m_triangleEater = triangleEater;
     m_calculation = calculation;
+    m_resultMinMaxCatcher = resultMinMaxCatcher;
     m_resultList = (FeatureList) m_resultWorkspace.getRootFeature().getProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "nodeResultMember" ) );
 
     m_crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
@@ -143,6 +147,8 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
    */
   public void end( )
   {
+    
+
   }
 
   /**
@@ -371,7 +377,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     if( nodeCurve1 == null || nodeCurve2 == null )
     {
       /* Probably profile information missing */
-      // TODO: write warning into som elog
+      // TODO: write warning into some log
       return;
     }
 
@@ -1469,6 +1475,10 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
       result.setCalcId( id );
       result.setLocation( easting, northing, elevation, m_crs );
+      
+      /* check min/max values */
+      m_resultMinMaxCatcher.addNodeResult( result );
+      
     }
     catch( final Exception e )
     {
