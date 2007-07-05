@@ -66,13 +66,13 @@ public class RougnessValuesPropertyFunction extends FeaturePropertyFunction
 
   private final static QName m_vegetationTypeName = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "vegetationTypeName" );
 
-//  private final static QName m_colorStyle = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "colorStyle" );
+  // private final static QName m_colorStyle = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "colorStyle" );
 
   /**
    * @see org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction#init(java.util.Map)
    */
   @Override
-  public void init( Map<String, String> properties )
+  public void init( final Map<String, String> properties )
   {
   }
 
@@ -81,16 +81,16 @@ public class RougnessValuesPropertyFunction extends FeaturePropertyFunction
    *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
    */
   @SuppressWarnings("unchecked")
-  public Object getValue( Feature feature, IPropertyType pt, Object currentValue )
+  public Object getValue( final Feature feature, final IPropertyType pt, final Object currentValue )
   {
-    QName ptQName = pt.getQName();
+    final QName ptQName = pt.getQName();
     Feature member = null;
-//    if( ptQName.equals( m_colorStyle ) )
-//    {
-//      return currentValue;
-//    }
-//    else 
-      if( ptQName.equals( m_groundTypeName ) )
+    // if( ptQName.equals( m_colorStyle ) )
+    // {
+    // return currentValue;
+    // }
+    // else
+    if( ptQName.equals( m_groundTypeName ) )
     {
       member = (Feature) feature.getProperty( m_groundClsMember );
       if( member == null )
@@ -107,53 +107,42 @@ public class RougnessValuesPropertyFunction extends FeaturePropertyFunction
         return getValue( member.getProperty( m_name ) );
     }
     member = (Feature) feature.getProperty( m_vegetationClsMember );
-    try
-    {
-     // TODO: here very often NPE fly... which is slow
-      return getValue( member.getProperty( ptQName ) );
-    }
-    catch( Exception e1 )
-    {
+    if( member == null )
       member = (Feature) feature.getProperty( m_groundClsMember );
-      try
-      {
-        return getValue( member.getProperty( ptQName ) );
-      }
-      catch( Exception e2 )
-      {
-        return null;
-      }
-    }
+    if( member == null )
+      return null;
+
+    return getValue( member.getProperty( ptQName ) );
   }
 
   /**
    * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#setValue(org.kalypsodeegree.model.feature.Feature,
    *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
    */
-  public Object setValue( Feature feature, IPropertyType pt, Object valueToSet )
+  public Object setValue( final Feature feature, final IPropertyType pt, final Object valueToSet )
   {
-//    QName ptQName = pt.getQName();
-//    if( !ptQName.equals( m_colorStyle ) )
-//      return null;
-//    Object existingValue = feature.getProperty( m_colorStyle );
-//    if( !valueToSet.equals( existingValue ) )
-//    {
-//      // TODO: modify roughness sld!!!
-//      IDocumentReference[] documentReferences = feature.getParentRelation().getDocumentReferences();
-//      String reference = documentReferences[0].getReference();
-//      
-////      final URL styleURL = feature.getWorkspace().getContext();
-////      System.out.println(styleURL);
-//      System.out.println( "Feature: " + feature.getProperty( m_name ) );
-//      System.out.println( "Old color: " + existingValue );
-//      System.out.println( "New color: " + valueToSet.toString() );
-//    }
-//    return valueToSet;
+    // QName ptQName = pt.getQName();
+    // if( !ptQName.equals( m_colorStyle ) )
+    // return null;
+    // Object existingValue = feature.getProperty( m_colorStyle );
+    // if( !valueToSet.equals( existingValue ) )
+    // {
+    // // TODO: modify roughness sld!!!
+    // IDocumentReference[] documentReferences = feature.getParentRelation().getDocumentReferences();
+    // String reference = documentReferences[0].getReference();
+    //      
+    // // final URL styleURL = feature.getWorkspace().getContext();
+    // // System.out.println(styleURL);
+    // System.out.println( "Feature: " + feature.getProperty( m_name ) );
+    // System.out.println( "Old color: " + existingValue );
+    // System.out.println( "New color: " + valueToSet.toString() );
+    // }
+    // return valueToSet;
     return null;
   }
 
   @SuppressWarnings("unchecked")
-  private Object getValue( Object object )
+  private Object getValue( final Object object )
   {
     if( object == null )
       return "";

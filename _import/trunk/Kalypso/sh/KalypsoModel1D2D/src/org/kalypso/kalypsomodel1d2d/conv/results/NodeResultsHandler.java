@@ -131,7 +131,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
   private final NodeResultMinMaxCatcher m_resultMinMaxCatcher;
 
-  public NodeResultsHandler( final GMLWorkspace resultWorkspace, final ITriangleEater triangleEater, final RMA10Calculation calculation, NodeResultMinMaxCatcher resultMinMaxCatcher )
+  public NodeResultsHandler( final GMLWorkspace resultWorkspace, final ITriangleEater triangleEater, final RMA10Calculation calculation, final NodeResultMinMaxCatcher resultMinMaxCatcher )
   {
     m_resultWorkspace = resultWorkspace;
     m_triangleEater = triangleEater;
@@ -147,7 +147,6 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
    */
   public void end( )
   {
-    
 
   }
 
@@ -1475,10 +1474,11 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
       result.setCalcId( id );
       result.setLocation( easting, northing, elevation, m_crs );
-      
+
       /* check min/max values */
+      // TODO: velocity not yet set here?
       m_resultMinMaxCatcher.addNodeResult( result );
-      
+      // TODO: move to handleResult stuff?
     }
     catch( final Exception e )
     {

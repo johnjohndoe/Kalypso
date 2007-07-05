@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.sim;
 
+import java.awt.Color;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -52,6 +53,7 @@ import java.util.regex.Pattern;
 
 import javax.xml.bind.JAXBException;
 
+import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
@@ -71,6 +73,22 @@ import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gismapview.Gismapview.Layers;
 import org.kalypso.template.types.StyledLayerType;
+import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
+import org.kalypsodeegree.graphics.sld.LineColorMapEntry;
+import org.kalypsodeegree.graphics.sld.NamedLayer;
+import org.kalypsodeegree.graphics.sld.ParameterValueType;
+import org.kalypsodeegree.graphics.sld.Rule;
+import org.kalypsodeegree.graphics.sld.Stroke;
+import org.kalypsodeegree.graphics.sld.Style;
+import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
+import org.kalypsodeegree.graphics.sld.SurfaceLineSymbolizer;
+import org.kalypsodeegree.graphics.sld.Symbolizer;
+import org.kalypsodeegree.graphics.sld.UserStyle;
+import org.kalypsodeegree.xml.XMLParsingException;
+import org.kalypsodeegree_impl.graphics.sld.LineColorMap;
+import org.kalypsodeegree_impl.graphics.sld.LineColorMapEntry_Impl;
+import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
+import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 
 /**
  * This runnable will be called while running the 2d-exe and will check for new .2d result files.
@@ -105,7 +123,7 @@ public class ResultManager implements Runnable
 
   private final NodeResultMinMaxCatcher m_minMaxCatcher = new NodeResultMinMaxCatcher();
 
-  private IJobChangeListener m_finishListener = new JobChangeAdapter()
+  private final IJobChangeListener m_finishListener = new JobChangeAdapter()
   {
     /**
      * @see org.eclipse.core.runtime.jobs.JobChangeAdapter#done(org.eclipse.core.runtime.jobs.IJobChangeEvent)
@@ -257,17 +275,11 @@ public class ResultManager implements Runnable
     {
       throw se;
     }
-    catch( final Exception e )
+    catch( final Throwable e )
     {
       e.printStackTrace();
       throw new SimulationException( "Fehler bei der Ergesbnisauswertung", e );
     }
-  }
-
-  private void processStyles( )
-  {
-    // TODO Auto-generated method stub
-    
   }
 
   private void processTemplates( ) throws SimulationException, IOException, JAXBException
@@ -308,5 +320,76 @@ public class ResultManager implements Runnable
 
       layerList.add( layer );
     }
+  }
+
+  private void processStyles( ) throws IOException, XMLParsingException
+  {
+    // TODO: refactor in order to call same method for several files/parameters
+
+    /* Read sld from template */
+    final File styleDir = new File( m_outputDir, "Styles" );
+    final File tinStyleFile = new File( styleDir, "tinStyles.sld" );
+    final StyledLayerDescriptor sld = SLDFactory.createSLD( tinStyleFile );
+
+    final NamedLayer[] namedLayers = sld.getNamedLayers();
+    for( final NamedLayer namedLayer : namedLayers )
+    {
+      // TODO: move these search functions into helper class? Or into the parent-clas itself?
+      if( "tinStyles".equals( namedLayer.getName() ) )
+      {
+        final Style[] styles = namedLayer.getStyles();
+        for( final Style style : styles )
+        {
+          if( "tinWSPStyle".equals( style.getName() ) && style instanceof UserStyle )
+          {
+            final UserStyle userStyle = (UserStyle) style;
+            final FeatureTypeStyle[] featureTypeStyles = userStyle.getFeatureTypeStyles();
+            for( final FeatureTypeStyle featureTypeStyle : featureTypeStyles )
+            {
+              if( "tinWSPFeatureTypeStyle".equals( featureTypeStyle.getName() ) )
+              {
+                final Rule[] rules = featureTypeStyle.getRules();
+                for( final Rule rule : rules )
+                {
+                  if( "tinWSPRule".equals( rule.getName() ) )
+                  {
+                    final Symbolizer[] symbolizers = rule.getSymbolizers();
+                    for( final Symbolizer symbolizer : symbolizers )
+                    {
+                      if( symbolizer instanceof SurfaceLineSymbolizer )
+                      {
+                        configureLineSymbolizer( (SurfaceLineSymbolizer) symbolizer );
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    /* Write SLD back to file */
+    final String sldXML = sld.exportAsXML();
+    final String sldXMLwithHeader = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + sldXML;
+    FileUtils.writeStringToFile( tinStyleFile, sldXMLwithHeader, "UTF-8" );
+  }
+
+  private void configureLineSymbolizer( final SurfaceLineSymbolizer symbolizer )
+  {
+    final LineColorMap colorMap = symbolizer.getColorMap();
+
+    // TODO: make lots of lines!
+
+    final Stroke stroke = StyleFactory.createStroke( new Color( 0, 1, 2 ) ); // TODO: there are other nice createStroke
+    // methods
+    final ParameterValueType label = StyleFactory.createParameterValueType( "Hallo Thomas: meine schöne Isolinie" );
+    final ParameterValueType quantity = StyleFactory.createParameterValueType( 23.45 );
+    final LineColorMapEntry colorMapEntry = new LineColorMapEntry_Impl( stroke, label, quantity );
+    colorMap.addColorMapClass( colorMapEntry );
+
+    // TODO Auto-generated method stub
+
   }
 }

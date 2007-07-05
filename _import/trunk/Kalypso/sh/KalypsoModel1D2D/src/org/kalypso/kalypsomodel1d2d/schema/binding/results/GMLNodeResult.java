@@ -86,7 +86,7 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
     return m_arcs;
   }
 
-  public void setArc( ArcResult arc )
+  public void setArc( final ArcResult arc )
   {
     m_arcs.add( arc );
   }
@@ -178,7 +178,7 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setVelocity(java.util.List)
    */
-  public void setVelocity( List<Double> velocity )
+  public void setVelocity( final List<Double> velocity )
   {
     // TODO Auto-generated method stub
 
@@ -213,9 +213,11 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
    */
   public double getAbsoluteVelocity( )
   {
-    List<Double> velocity = getVelocity();
-    
-    return Math.sqrt( velocity.get( 0 )*velocity.get( 0 ) + velocity.get( 1 ) * velocity.get( 1 ));
+    final List<Double> velocity = getVelocity();
+    if( velocity == null )
+      return Double.NaN;
+
+    return Math.sqrt( velocity.get( 0 ) * velocity.get( 0 ) + velocity.get( 1 ) * velocity.get( 1 ) );
   }
 
 }
