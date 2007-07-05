@@ -61,7 +61,11 @@
 package org.kalypsodeegree_impl.graphics.sld;
 
 import java.awt.Color;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.net.MalformedURLException;
@@ -80,6 +84,7 @@ import javax.xml.namespace.QName;
 import ogc2.www.opengis.net.sld.ColorMap;
 import ogc2.www.opengis.net.sld.ObjectFactory;
 
+import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.net.IUrlResolver2;
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypsodeegree.filterencoding.Expression;
@@ -189,7 +194,10 @@ public class SLDFactory
    * @throws XMLParsingException
    *             if a syntactic or semantic error in the XML document is encountered
    * @return the constructed <tt>StyledLayerDescriptor</tt> -instance
+   * @deprecated Use the inputStream version instead: {@link #createSLD(IUrlResolver2, InputStream)}, because with
+   *             reader's the xml-encoding is not handled properly.
    */
+  @Deprecated
   public static StyledLayerDescriptor createSLD( final IUrlResolver2 urlResolver, final Reader reader ) throws XMLParsingException
   {
     StyledLayerDescriptor sld = null;
@@ -209,6 +217,57 @@ public class SLDFactory
     }
 
     return sld;
+  }
+
+  /**
+   * Creates a <tt>StyledLayerDescriptor</tt> -instance from the given Reader.
+   * <p>
+   * 
+   * @param reader
+   *            provides the XML document
+   * @throws XMLParsingException
+   *             if a syntactic or semantic error in the XML document is encountered
+   * @return the constructed <tt>StyledLayerDescriptor</tt> -instance
+   */
+  public static StyledLayerDescriptor createSLD( final IUrlResolver2 urlResolver, final InputStream is ) throws XMLParsingException
+  {
+    try
+    {
+      final Document doc = XMLTools.parse( is );
+      return SLDFactory.createStyledLayerDescriptor( urlResolver, doc.getDocumentElement() );
+    }
+    catch( final IOException e )
+    {
+      throw new XMLParsingException( "IOException encountered while parsing SLD-Document: " + e.getMessage() );
+    }
+    catch( final SAXException e )
+    {
+      throw new XMLParsingException( "SAXException encountered while parsing SLD-Document: " + e.getMessage() );
+    }
+  }
+
+  public static StyledLayerDescriptor createSLD( final File file ) throws IOException, XMLParsingException
+  {
+    final IUrlResolver2 urlResolver = new IUrlResolver2()
+    {
+      public URL resolveURL( final String relativeOrAbsolute ) throws MalformedURLException
+      {
+        return new URL( file.toURL(), relativeOrAbsolute );
+      }
+    };
+
+    InputStream is = null;
+    try
+    {
+      is = new BufferedInputStream( new FileInputStream( file ) );
+      final StyledLayerDescriptor sld = createSLD( urlResolver, is );
+      is.close();
+      return sld;
+    }
+    finally
+    {
+      IOUtils.closeQuietly( is );
+    }
   }
 
   public static StyledLayerDescriptor createStyledLayerDescriptor( final String name, final String title, final String version, final String abstract_, final Layer[] layers )
@@ -1025,7 +1084,7 @@ public class SLDFactory
         final Element symbolizerElement = (Element) symbolizerNL.item( i );
         final String namespace = symbolizerElement.getNamespaceURI();
 
-        if( !( CommonNamespaces.SLDNS.equals( namespace ) || SLDNS_EXT.equals( namespace ) ) )
+        if( !(CommonNamespaces.SLDNS.equals( namespace ) || SLDNS_EXT.equals( namespace )) )
           continue;
 
         /*
@@ -1201,7 +1260,7 @@ public class SLDFactory
     if( colorMapElement == null )
       throw new XMLParsingException( "Missing required 'LineColorMap' element" );
 
-    LineColorMap colorMap = createLineColorMap( urlResolver, colorMapElement );
+    final LineColorMap colorMap = createLineColorMap( urlResolver, colorMapElement );
 
     return new SurfaceLineSymbolizer_Impl( colorMap, geometry, min, max, uom );
   }
@@ -1235,12 +1294,12 @@ public class SLDFactory
     if( colorMapElement == null )
       throw new XMLParsingException( "Missing required 'PolygonColorMap' element" );
 
-    PolygonColorMap colorMap = createPolygonColorMap( urlResolver, colorMapElement );
+    final PolygonColorMap colorMap = createPolygonColorMap( urlResolver, colorMapElement );
 
     return new SurfacePolygonSymbolizer_Impl( colorMap, geometry, min, max, uom );
   }
 
-  private static PolygonColorMap createPolygonColorMap( IUrlResolver2 urlResolver, Element element ) throws XMLParsingException
+  private static PolygonColorMap createPolygonColorMap( final IUrlResolver2 urlResolver, final Element element ) throws XMLParsingException
   {
     // <PolygonColorMapEntry>
     final ElementList colorMapEntryElementList = XMLTools.getChildElementsByName( "PolygonColorMapEntry", SLDNS_EXT, element );
@@ -1252,8 +1311,8 @@ public class SLDFactory
 
     for( int i = 0; i < colorMapEntryElementList.getLength(); i++ )
     {
-      Element item = colorMapEntryElementList.item( i );
-      PolygonColorMapEntry colorMapEntry = createPolygonColorMapEntry( urlResolver, item );
+      final Element item = colorMapEntryElementList.item( i );
+      final PolygonColorMapEntry colorMapEntry = createPolygonColorMapEntry( urlResolver, item );
 
       colorMap.addColorMapClass( colorMapEntry );
     }
@@ -1261,7 +1320,7 @@ public class SLDFactory
     return colorMap;
   }
 
-  private static LineColorMap createLineColorMap( IUrlResolver2 urlResolver, Element element ) throws XMLParsingException
+  private static LineColorMap createLineColorMap( final IUrlResolver2 urlResolver, final Element element ) throws XMLParsingException
   {
     // <LineColorMapEntry>
     final ElementList colorMapEntryElementList = XMLTools.getChildElementsByName( "LineColorMapEntry", SLDNS_EXT, element );
@@ -1273,8 +1332,8 @@ public class SLDFactory
 
     for( int i = 0; i < colorMapEntryElementList.getLength(); i++ )
     {
-      Element item = colorMapEntryElementList.item( i );
-      LineColorMapEntry colorMapEntry = createLineColorMapEntry( urlResolver, item );
+      final Element item = colorMapEntryElementList.item( i );
+      final LineColorMapEntry colorMapEntry = createLineColorMapEntry( urlResolver, item );
 
       colorMap.addColorMapClass( colorMapEntry );
     }
@@ -1282,13 +1341,13 @@ public class SLDFactory
     return colorMap;
   }
 
-  private static PolygonColorMapEntry createPolygonColorMapEntry( IUrlResolver2 urlResolver, Element element ) throws XMLParsingException
+  private static PolygonColorMapEntry createPolygonColorMapEntry( final IUrlResolver2 urlResolver, final Element element ) throws XMLParsingException
   {
     // <PolygonColorMapEntry>
-//    final Element colorMapEntryElement = XMLTools.getChildByName( "PolygonColorMapEntry", SLDNS_EXT, element );
+// final Element colorMapEntryElement = XMLTools.getChildByName( "PolygonColorMapEntry", SLDNS_EXT, element );
 //
-//    if( colorMapEntryElement == null )
-//      throw new XMLParsingException( "Missing required 'PolygonColorMapEntry' element" );
+// if( colorMapEntryElement == null )
+// throw new XMLParsingException( "Missing required 'PolygonColorMapEntry' element" );
 
     // <Fill>
     Fill fill = null;
@@ -1321,7 +1380,7 @@ public class SLDFactory
     return colorMapEntry;
   }
 
-  private static LineColorMapEntry createLineColorMapEntry( IUrlResolver2 urlResolver, Element element ) throws XMLParsingException
+  private static LineColorMapEntry createLineColorMapEntry( final IUrlResolver2 urlResolver, final Element element ) throws XMLParsingException
   {
     // <Stroke>
     Stroke stroke = null;
