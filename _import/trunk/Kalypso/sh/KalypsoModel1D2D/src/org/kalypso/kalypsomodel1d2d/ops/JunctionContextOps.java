@@ -83,6 +83,7 @@ public class JunctionContextOps
     //check 2d edge for being a border edge
     for(IFE1D2DEdge edge2D: edge2DList)
     {
+      EdgeOps.removeInvalidContainerLinks( edge2D );
       if(!TypeInfo.isBorderEdge( edge2D ))
       {
         String message = 
@@ -94,6 +95,7 @@ public class JunctionContextOps
     }
     
     //check 1dedge for being a real 1d edge and having a junctable point
+    EdgeOps.removeInvalidContainerLinks( edge1D );
     if(!TypeInfo.is1DEdge( edge1D ))
     {
       String message = 
@@ -145,6 +147,7 @@ public class JunctionContextOps
                   IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge2D)
   {
     //check 2d edge for being a border edge
+    EdgeOps.removeInvalidContainerLinks( edge2D );
     if(!TypeInfo.isBorderEdge( edge2D ))
     {
     String message = 
@@ -155,6 +158,7 @@ public class JunctionContextOps
     }
     
     //check 1dedge for being a real 1d edge and having a junctable point
+    EdgeOps.removeInvalidContainerLinks( edge1D );
     if(!TypeInfo.is1DEdge( edge1D ))
     {
     String message = 

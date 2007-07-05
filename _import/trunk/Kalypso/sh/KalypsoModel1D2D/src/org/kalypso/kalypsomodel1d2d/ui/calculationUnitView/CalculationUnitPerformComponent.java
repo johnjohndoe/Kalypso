@@ -146,28 +146,28 @@ public class CalculationUnitPerformComponent extends FeatureWrapperListEditor im
     
     IFeatureWrapper2 currentSelection = getCurrentSelection();
     
-    if (currentSelection instanceof ICalculationUnit)
-    {
-      List<IProblem> tempProblemList = new ArrayList<IProblem>();
-      ICalculationUnit orgCalc = (ICalculationUnit) currentSelection;
-      InvariantCheckBoundaryConditions checkBC = new InvariantCheckBoundaryConditions(orgCalc,dataModel);
-      checkBC.checkAllInvariants();
-      tempProblemList.addAll( checkBC.getBrokenInvariantMessages() );
-      InvariantBConditionWithBLine invBConditionBLine = new InvariantBConditionWithBLine(orgCalc, dataModel);
-      invBConditionBLine.checkAllInvariants();
-      tempProblemList.addAll( invBConditionBLine.getBrokenInvariantMessages() );
-      dataModel.addValidatingMessage( orgCalc, tempProblemList );
-      
-      if (currentSelection instanceof ICalculationUnit1D2D)
-      {
-        List<IProblem> tempProblemList1 = new ArrayList<IProblem>();
-        ICalculationUnit1D2D calc1D2D = (ICalculationUnit1D2D) currentSelection;
-        InvariantOverlappingElements overlappingElements = new InvariantOverlappingElements(calc1D2D, dataModel);
-        overlappingElements.checkAllInvariants();
-        tempProblemList1.addAll( overlappingElements.getBrokenInvariantMessages() );
-        dataModel.addValidatingMessage( calc1D2D, tempProblemList1 );
-      }
-    } 
+//    if (currentSelection instanceof ICalculationUnit)
+//    {
+//      List<IProblem> tempProblemList = new ArrayList<IProblem>();
+//      ICalculationUnit orgCalc = (ICalculationUnit) currentSelection;
+//      InvariantCheckBoundaryConditions checkBC = new InvariantCheckBoundaryConditions(orgCalc,dataModel);
+//      checkBC.checkAllInvariants();
+//      tempProblemList.addAll( checkBC.getBrokenInvariantMessages() );
+//      InvariantBConditionWithBLine invBConditionBLine = new InvariantBConditionWithBLine(orgCalc, dataModel);
+//      invBConditionBLine.checkAllInvariants();
+//      tempProblemList.addAll( invBConditionBLine.getBrokenInvariantMessages() );
+//      dataModel.addValidatingMessage( orgCalc, tempProblemList );
+//      
+//      if (currentSelection instanceof ICalculationUnit1D2D)
+//      {
+//        List<IProblem> tempProblemList1 = new ArrayList<IProblem>();
+//        ICalculationUnit1D2D calc1D2D = (ICalculationUnit1D2D) currentSelection;
+//        InvariantOverlappingElements overlappingElements = new InvariantOverlappingElements(calc1D2D, dataModel);
+//        overlappingElements.checkAllInvariants();
+//        tempProblemList1.addAll( overlappingElements.getBrokenInvariantMessages() );
+//        dataModel.addValidatingMessage( calc1D2D, tempProblemList1 );
+//      }
+//    } 
 
     /*
     if (currentSelection instanceof ICalculationUnit2D)

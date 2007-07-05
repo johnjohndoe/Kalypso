@@ -70,28 +70,28 @@ public interface IFEDiscretisationModel1d2d extends IModel
    * 
    * @return the complex elements this discretisation model contains as {@link IFeatureWrapperCollection}
    */
-  public IFeatureWrapperCollection<IFE1D2DComplexElement> getComplexElements( );
+  public IFeatureWrapperCollection<IFE1D2DComplexElement> getComplexElements();
 
   /**
    * Gets the element this discretisation model contains
    * 
    * @return the elements of this discretisation model as {@link IFeatureWrapperCollection}
    */
-  public IFeatureWrapperCollection<IFE1D2DElement> getElements( );
+  public IFeatureWrapperCollection<IFE1D2DElement> getElements();
 
   /**
    * To get the edges this feature wrapper contains s
    * 
    * @return the edges that this discetisation model contains as {@link IFeatureWrapperCollection}
    */
-  public IFeatureWrapperCollection<IFE1D2DEdge> getEdges( );
+  public IFeatureWrapperCollection<IFE1D2DEdge> getEdges();
 
   /**
    * gets the nodes this discretisation model contains.
    * 
    * @return the nodes that this discretisation model contains as {@link IFeatureWrapperCollection}
    */
-  public IFeatureWrapperCollection<IFE1D2DNode> getNodes( );
+  public IFeatureWrapperCollection<IFE1D2DNode> getNodes();
 
   /**
    * Finds the node within nearest not at the given position within a search rectangle wich center is given by

@@ -54,6 +54,8 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ILineElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_CurveBoundary;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -371,5 +373,24 @@ public class EdgeOps
       throw new RuntimeException( "unable to recompute the edge container geometrie" );
     }
     return null;
+  }
+  
+  public static void removeInvalidContainerLinks(IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge )
+  {
+     GMLWorkspace discWS = edge.getWrappedFeature().getWorkspace();
+     FeatureList wrappedList = edge.getContainers().getWrappedList();
+     for(int i = wrappedList.size()-1; i>=0; i-- )
+     {
+       Object link = wrappedList.get( i );
+       if( link instanceof String )
+       {
+         if( discWS.getFeature( (String)link ) == null )
+         {
+           System.out.println("Removing dead link:"+link);
+           wrappedList.remove( i );
+         }
+       }
+     }
+    
   }
 }

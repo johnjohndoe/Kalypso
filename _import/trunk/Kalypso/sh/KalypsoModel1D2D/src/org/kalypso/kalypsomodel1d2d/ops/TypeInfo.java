@@ -52,6 +52,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionContext1DToCLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ILineElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
@@ -296,34 +297,17 @@ public class TypeInfo
     {
       IFeatureWrapperCollection<IFeatureWrapper2> edgeContainer = edge.getContainers();
       //get numer of containing poly elemnt
-      int numPoly = 0;
-      for(IFeatureWrapper2 ele: edgeContainer )
-      {
-        if( isPolyElementFeature( ele ))
-        {
-          numPoly = numPoly +1;
-        }
-      }
-      
-      if( numPoly!=1 )
-      {
-        return false;      
-      }
+      int numPoly = edgeContainer.countFeatureWrappers( IPolyElement.class );
       
       IEdgeInv edgeInv = edge.getEdgeInv();
       if( edgeInv != null )
       {
         final IFeatureWrapperCollection<IFeatureWrapper2> edgeInvContainers = 
                       edgeInv.getContainers();
-        for( IFeatureWrapper2 ele : edgeInvContainers )
-        {
-          if(isPolyElementFeature( ele ))
-          {
-            return false;
-          }
-        }
+        numPoly = numPoly+edgeInvContainers.countFeatureWrappers( IPolyElement.class );
       }
-      return true;
+      
+      return numPoly==1;
     }
     else if ( is1DEdge( edge ) )
     {

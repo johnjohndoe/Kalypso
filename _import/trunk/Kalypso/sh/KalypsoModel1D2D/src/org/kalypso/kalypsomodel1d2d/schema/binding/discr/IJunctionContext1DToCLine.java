@@ -59,6 +59,9 @@ public interface IJunctionContext1DToCLine
    */
   public IElement1D getElement1D();
   
+  
+  public IFE1D2DNode getTarget1DNode();
+  
   /**
    * To get the continuity line of this junction context
    * @return the continuity line of this juntion context or null

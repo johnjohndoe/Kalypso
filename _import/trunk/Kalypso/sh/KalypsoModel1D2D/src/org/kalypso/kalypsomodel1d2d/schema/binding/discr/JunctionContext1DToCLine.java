@@ -110,7 +110,15 @@ public class JunctionContext1DToCLine
         IElement1D.class );
     return resolvedLink;
   }
-
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionContext1DToCLine#getTarget1DNode()
+   */
+  public IFE1D2DNode getTarget1DNode( )
+  {
+    IElement1D element1D = getElement1D();
+    IFE1D2DNode<IFE1D2DEdge> target1dNode = EdgeOps.find1DEdgeEndNode( element1D.getEdge() );
+    return target1dNode;
+  }
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DComplexElement#addElementAsRef(org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement)
    */

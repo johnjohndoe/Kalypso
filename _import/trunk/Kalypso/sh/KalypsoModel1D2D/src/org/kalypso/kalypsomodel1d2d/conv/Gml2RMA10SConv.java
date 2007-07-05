@@ -401,8 +401,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
         else
           throw new SimulationException( "Unbekannte Flieﬂrelation gefunden: " + relationship, null );
       }
-
-      formatNode( formatter, nodeID, point, station );
+        formatNode( formatter, nodeID, point, station );
     }
   }
 

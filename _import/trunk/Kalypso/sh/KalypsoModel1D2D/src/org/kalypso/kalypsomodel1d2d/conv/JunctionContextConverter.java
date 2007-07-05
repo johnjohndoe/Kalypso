@@ -41,10 +41,21 @@
 package org.kalypso.kalypsomodel1d2d.conv;
 
 import java.util.Formatter;
+import java.util.List;
 
+import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
+import org.kalypso.kalypsomodel1d2d.ops.TypeInfo;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionContext1DTo2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionContext1DToCLine;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ILineElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 
 /**
  * Convert calculation unit Junction context to RMA10S 
@@ -61,7 +72,6 @@ public class JunctionContextConverter
   final Formatter formatter2dFile;
   final ICalculationUnit1D2D calUnit;
   final INativeIDProvider nativeIDProvider;
-  
   public JunctionContextConverter(
           IFEDiscretisationModel1d2d discModel1d2d, 
           ICalculationUnit1D2D calUnit, 
@@ -73,7 +83,6 @@ public class JunctionContextConverter
     this.calUnit = calUnit;
     this.nativeIDProvider = nativeIDProvider;
     this.formatter2dFile = formatter2dFile;
-    
   }
   
   /**
@@ -81,7 +90,40 @@ public class JunctionContextConverter
    */
   public void write( )
   {
-
+    List<IFE1D2DComplexElement> complexElements = discModel1d2d.getComplexElements();
+    for (IFE1D2DComplexElement complexElement:complexElements)
+    {
+//      if (TypeInfo.isJuntionContext( complexElement ))
+      if (complexElement instanceof IJunctionContext1DTo2D)
+      {
+        IJunctionContext1DTo2D ele1D2D = (IJunctionContext1DTo2D) complexElement;
+//        if (CalUnitOps.isJunctionContextOf( calUnit, ele1D2D ))
+//        {
+//          ILineElement continuityLine = ele1D2D.getContinuityLine();
+//          IElement1D element1D = ele1D2D.getElement1D();
+//          IPolyElement element2D = ele1D2D.getElement2D();
+//          IFE1D2DNode target1DNode = ele1D2D.getTarget1DNode();
+//          formatter2dFile.format( "CCL%10d%10.1d%n", nativeIDProvider.getID(continuityLine));
+//        }        
+      }
+      if (complexElement instanceof IJunctionContext1DToCLine)
+      {
+        IJunctionContext1DToCLine ele1DToCLine = (IJunctionContext1DToCLine) complexElement;
+        if (CalUnitOps.isJunctionContextOf( calUnit, ele1DToCLine ))
+        {
+          ILineElement continuityLine = ele1DToCLine.getContinuityLine();
+          IElement1D element1D = ele1DToCLine.getElement1D();
+          IFE1D2DNode target1DNode = ele1DToCLine.getTarget1DNode();
+          formatter2dFile.format( "TL%10d%10.1d%10.1d%10.1d%n", 
+              nativeIDProvider.getID( ele1DToCLine ),
+              nativeIDProvider.getID( element1D ),
+              nativeIDProvider.getID( target1DNode ));
+          
+        }
+      }
+      }
+    
+    
   }
   
   public static final void write(
