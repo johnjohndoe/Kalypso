@@ -311,7 +311,37 @@ C-
         DY=CORD(N,2)-CORD(MR,2)
         XL(K)=DX*CX+DY*SA
         YL(K)=-DX*SA+DY*CX
+        !EFa may07, necessary for subroutine turbulence
+        dside=SQRT(dx*dx+dy*dy)
+        IF(k.eq.3) dsid(1)=dside
+        IF(k.eq.5) dsid(3)=dside
+        IF(k.eq.7) dsid(5)=dside
+        !-
       ENDDO
+      !EFa may07, necessary for subroutine turbulence
+      do k=5,ncn,2
+        n=nop(nn,k)
+        mr=nop(nn,k-2)
+        dx=cord(n,1)-cord(mr,1)
+        dy=cord(n,2)-cord(mr,2)
+        dside=SQRT(dx*dx+dy*dy)
+        IF(k.eq.5) dsid(2)=dside
+        IF(k.eq.7) dsid(4)=dside
+      end do
+      !area computation for triangular elements
+      semp=(dsid(1)+dsid(2)+dsid(3))/2
+      artr1=SQRT(semp*(semp-dsid(1))*(semp-dsid(2))*(semp-dsid(3)))
+      gsc1=SQRT(4*artr1/SQRT(3.))
+      gscal=gsc1
+      !area computation for the complementary triangle within a
+      !quadrilateral element (for quadrilateral elements only)
+      if (ncn.gt.6) then
+        semp=(dsid(3)+dsid(4)+dsid(5))/2
+        artr2=SQRT(semp*(semp-dsid(3))*(semp-dsid(4))*(semp-dsid(5)))
+        gsc2=SQRT(4*artr2/SQRT(3.))
+        gscal=(gsc1+gsc2)/2.
+      end if
+      !-
 CIPK JAN03 add momentum
       EINA=EINX(NN)*CX+EINY(NN)*SA
       EINB=-EINX(NN)*SA+EINY(NN)*SA
@@ -401,6 +431,7 @@ CIPK JAN97      ELSEIF(IEDSW .EQ. 4) THEN
       ENDIF
 cipk mar03 end changes
    72 CONTINUE
+
       NGP=7
 CIPK JUN05      NEF=NCN*NDF
 C-
@@ -1141,6 +1172,14 @@ CIPK AUG06
           QIN=BETA3/H+(DRDX+DSDZ)+(R*DHDX+S*DHDZ)/H
       ENDIF
 
+      !EFa may07, new subroutine for turbulence modell
+      if (iedsw.ge.10) then
+        call turbulence(nn,iedsw,tbmin,eexxyy(1,nn),eexxyy(2,nn),
+     +       eexxyy(3,nn),eexxyy(4,nn),epsx,epsxz,epszx,epsz,roavg,
+     +       p_bottom,tbfact,ffact,vecq,h,drdx,drdz,dsdx,dsdz,gscal)
+      end if
+      !-
+
 
 CIPK MAR01 CLEANUP LOGIC
 	IF(ICYC .LE. 0) THEN
@@ -1283,10 +1322,13 @@ C  N*N
      +       +SIDFT)
 
 C  N*DNX
-      T2=AMS*AKX*H*R
+      !EFa may07, added dhdx*epsx and dhdz*epsxz
+      T2=AMS*(AKX*H*R+epsx*dhdx)
 
 C  N*DNY
-      T3=AMS*H*S
+
+      T3=AMS*(H*S+epsxz*dhdz)
+      !-
 
 C  N*N ON V
       T4=AMS*(H*(DRDZ-OMEGA)+(TFRIC+TDRAGX*H)*UBF*R*S*UBF*VBF)
@@ -1384,8 +1426,10 @@ CIPK MAR01      T1=AMS*(AKY*H*DSDZ+TFRIC*VBF*(2.*(S*VBF)**2+(R*UBF)**2)+SIDF(NN)
 C IPK MAR01 REPLACE SIDF(NN) WITH SIDFT  
       T1=AMS*(AKY*H*DSDZ+(TFRIC+TDRAGY*H)*VBF*(2.*(S*VBF)**2+(R*UBF)**2)
      +       +SIDFT)
-      T2=AMS*AKY*H*R
-      T3=AMS*H*S
+      !EFa may07, added dhdx * epszx and dhdz * epsz
+      T2=AMS*(AKY*H*R+dhdx*epszx)
+      T3=AMS*(H*S+dhdz*epsz)
+      !-
 CIPK MAR01 ADD DRAG TERMS      T4=AMS*(H*(DSDX+OMEGA)+TFRIC*VBF*R*S*UBF*VBF)
       T4=AMS*(H*(DSDX+OMEGA)+(TFRIC+TDRAGY*H)*VBF*R*S*UBF*VBF)
       T5=AMS*EPSZX*H
