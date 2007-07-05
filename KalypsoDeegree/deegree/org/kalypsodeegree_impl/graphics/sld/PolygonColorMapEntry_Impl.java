@@ -46,6 +46,7 @@ import org.kalypsodeegree.graphics.sld.ParameterValueType;
 import org.kalypsodeegree.graphics.sld.PolygonColorMapEntry;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.xml.Marshallable;
 
 /**
  * @author Thomas Jung
@@ -77,9 +78,13 @@ public class PolygonColorMapEntry_Impl implements PolygonColorMapEntry
   public String exportAsXML( )
   {
     final StringBuffer sb = new StringBuffer( 1000 );
-    sb.append( "<PolygonColorMapEntry>" );
+    sb.append( "<PolygonColorMapEntry xmlns:sldExt=\"TODOSLDEXTNAMESPACE\">" );
 
-    // TODO
+    sb.append( ((Marshallable)m_stroke).exportAsXML() );
+
+    sb.append( "<sldExt:label>" );
+    sb.append( ((Marshallable)m_label).exportAsXML() );
+    sb.append( "</sldExt:label>" );
 
     sb.append( "</PolygonColorMapEntry>" );
 
