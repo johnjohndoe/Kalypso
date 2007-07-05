@@ -1100,7 +1100,7 @@ do i = nr_prof, anz_prof(j)-1
   out_PROF(i,j)%chr_kenn	= out_PROF(i+1,j)%chr_kenn
   out_PROF(i,j)%alphaIW         = out_PROF(i+1,j)%alphaIW
   out_PROF(i,j)%alphaEW         = out_PROF(i+1,j)%alphaEW
-
+  out_PROF(i,j)%gefaelle        = out_PROF(i+1,j)%gefaelle
 end do
 
 anz_prof(j) = anz_prof(j) - 1

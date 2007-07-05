@@ -1,4 +1,4 @@
-!     Last change:  MD    2 Jul 2007    7:14 pm
+!     Last change:  MD    5 Jul 2007   11:27 am
 !--------------------------------------------------------------------------
 ! This code, alpha_dru.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -109,7 +109,7 @@ COMMON / gef_sohl / g_sohl
 
 
 INTEGER i, i_zaehl
-REAL gefaelle, umfang_g (maxkla), geschw_g (maxkla), lambda_g (maxkla)
+REAL umfang_g (maxkla), geschw_g (maxkla), lambda_g (maxkla)
 REAL stat (maxger), wsp (maxger), hen (maxger), up (maxger, maxkla)
 REAL qs (maxger)
                                                                         

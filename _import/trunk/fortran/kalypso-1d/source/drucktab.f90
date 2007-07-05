@@ -1,4 +1,4 @@
-!     Last change:  MD    4 Jul 2007    1:51 pm
+!     Last change:  MD    5 Jul 2007   11:31 am
 !--------------------------------------------------------------------------
 ! This code, drucktab.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -135,7 +135,12 @@ COMMON / laengs / bolip, borep, sohlp, stat, hbv, isstat, hmingp, k_kp
 INTEGER 	:: alpha_ja
 COMMON / ob_alpha / alpha_ja
 ! -----------------------------------------------------------------------------
-                                                                        
+
+
+!HB   Uebergabe Sohlgefaelle aus SUB NORMBER
+REAL             :: g_sohl
+COMMON / gef_sohl / g_sohl
+! -----------------------------------------------------------------------------
 
 ! COMMON-Block /P2/ -----------------------------------------------------------
 REAL 		 :: x1 (maxkla), h1 (maxkla), rau (maxkla)
@@ -200,6 +205,7 @@ REAL                    :: v
   out_PROF(i,nr_q)%tau    = (rkp(i,2)/8)*rho*vp(i,2)**2 ! Sohlschubspannung im Flussschlauch [N/m2]
   out_PROF(i,nr_q)%alphaIW  = Alpha_IW(i)               ! Impulsstrombeiwert aus eb2ks [-]
   out_PROF(i,nr_q)%alphaEW  = Alpha_EW(i)               ! Energiestrombeiwert aus eb2ks [-]
+  out_PROF(i,nr_q)%gefaelle = SQRT (g_sohl**2)         ! Reibungsgefaelle [-]
 !end if
 
 ifbr = 0
