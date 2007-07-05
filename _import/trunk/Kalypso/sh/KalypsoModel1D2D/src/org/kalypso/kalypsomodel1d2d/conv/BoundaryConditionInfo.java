@@ -46,6 +46,7 @@ import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.observation.util.TupleResultIndex;
+import org.kalypso.simulation.core.SimulationException;
 
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
@@ -66,7 +67,7 @@ public class BoundaryConditionInfo implements ITimeStepinfo
   {
     m_id = id;
     m_type = type;
-    m_steadyValue = -1.0;
+    m_steadyValue = Double.NaN;
   }
 
   public int getID( )
@@ -90,14 +91,14 @@ public class BoundaryConditionInfo implements ITimeStepinfo
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.ITimeStepinfo#getValue(java.util.Date)
    */
-  public double getValue( final Date date )
+  public double getValue( final Date date ) throws SimulationException
   {
     final Number result;
     if( date == null )
     {
-      if( m_steadyValue == -1.0 )
+      if( Double.isNaN( m_steadyValue ) )
       {
-        throw new RuntimeException("Steady value not defined.");
+        throw new SimulationException("Steady value not defined.", new RuntimeException());
 //        Iterator<IRecord> iterator = m_index.getIterator();
 //        IRecord next = iterator.next();
 //        result = (Number) next.getValue( m_valueComponent );
@@ -108,7 +109,7 @@ public class BoundaryConditionInfo implements ITimeStepinfo
     else
       result = (Number) m_index.getValue( m_valueComponent, date );
 
-    return result == null ? 0.0 : result.doubleValue();
+    return (result==null || Double.isNaN( result.doubleValue() ) )? 0.0 : result.doubleValue();
   }
 
   /**

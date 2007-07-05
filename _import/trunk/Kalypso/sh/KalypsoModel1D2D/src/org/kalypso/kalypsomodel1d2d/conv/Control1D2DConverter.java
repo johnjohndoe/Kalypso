@@ -367,7 +367,7 @@ public class Control1D2DConverter
   }
 
   /** Formats the lines for one type of boundary condition (QC or HC or ... ). */
-  private void formatBoundCondLines( final Formatter formatter, final Calendar stepCal, final ITimeStepinfo[] timeStepInfos, final TYPE contiType )
+  private void formatBoundCondLines( final Formatter formatter, final Calendar stepCal, final ITimeStepinfo[] timeStepInfos, final TYPE contiType ) throws SimulationException
   {
     // Boundary Conditions
     for( final ITimeStepinfo item : timeStepInfos )

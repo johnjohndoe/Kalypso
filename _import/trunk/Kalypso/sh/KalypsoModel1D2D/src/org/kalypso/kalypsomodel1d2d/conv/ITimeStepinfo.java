@@ -42,6 +42,8 @@ package org.kalypso.kalypsomodel1d2d.conv;
 
 import java.util.Date;
 
+import org.kalypso.simulation.core.SimulationException;
+
 /**
  * @author antanas
  */
@@ -71,7 +73,7 @@ public interface ITimeStepinfo
    * If the date is <code>null</code>, return the valeu for the steady state case.
    * </p>
    */
-  public double getValue( final Date date );
+  public double getValue( final Date date ) throws SimulationException;
 
   public double getTheta( );
 }
