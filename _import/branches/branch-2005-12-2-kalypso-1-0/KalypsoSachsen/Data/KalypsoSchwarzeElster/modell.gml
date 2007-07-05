@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <SpreeModell fid="root" xmlns:ombrometer="org.kalypso.spree.ombrometer" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:obslink="obslink.zml.kalypso.org" xmlns="org.kalypso.spree.modell" xmlns:gml="http://www.opengis.net/gml" xsi:schemaLocation="org.kalypso.spree.modell http://lfug-kv-01:8080/KalypsoConf/schemata/spree/modell.xsd">
   <PegelCollectionAssociation>
-    <PegelCollection fid="EZC_1">
+    <PegelCollection fid="EZC_1MONI">
       <PegelMember>
         <Einzugsgebiet fid="EZ_1">
           <Name>Trado 1</Name>
