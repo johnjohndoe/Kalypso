@@ -1,4 +1,4 @@
-!     Last change:  MD    4 Jul 2007    5:38 pm
+!     Last change:  MD    5 Jul 2007    3:14 pm
 !--------------------------------------------------------------------------
 ! This code, wspber.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -453,32 +453,6 @@ if (istat /= 0) then
   call stop_programm(0)
 end if
 
-
-! Eroeffnen der Ausgabedatei 'Laengs_QWehre.txt'
-if (isch == 1) then
-  ilen = LEN_TRIM(NAME_PFAD_DATH)
-  NAME_OUT_WEHR = NAME_PFAD_DATH(1:ilen) // 'Laengs_QWehre.txt'
-  NAME_OUT_QWEHR = NAME_PFAD_DATH(1:ilen) // 'HOW_QWehr_HUW.txt'
-
-  UNIT_OUT_WEHR = ju0gfu ()
-  OPEN (unit = UNIT_OUT_WEHR, file = NAME_OUT_WEHR, status = 'REPLACE', iostat = istat)
-  if (istat /= 0) then
-    write (*, 9007) NAME_OUT_WEHR
-    9007 format (1X, 'Fehler beim Oeffnen der Datei ', A, /, &
-       & 1X, 'Programm wird beendet!')
-    call stop_programm(0)
-  end if
-
-  UNIT_OUT_QWEHR = ju0gfu ()
-  OPEN (unit = UNIT_OUT_QWEHR, file = NAME_OUT_QWEHR, status = 'REPLACE', iostat = istat)
-  if (istat /= 0) then
-    write (*, 9008) NAME_OUT_QWEHR
-    9008 format (1X, 'Fehler beim Oeffnen der Datei ', A, /, &
-       & 1X, 'Programm wird beendet!')
-    call stop_programm(0)
-  end if
-  WRITE (UNIT_OUT_QWEHR, '(5x,''Profil'',4x,''Q_OW '',3x,''Q-wehr'',5x,''h_ow'',7x,''h_uw'',4x,''Ü-Art'')')
-end if
 
 ! Wenn BEIWERTE.AUS erzeugt wird
 IF (alpha_ja.eq.1) then
