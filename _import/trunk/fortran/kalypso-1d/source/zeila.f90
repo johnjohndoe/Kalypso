@@ -1,4 +1,4 @@
-!     Last change:  MD    4 Jul 2007    6:30 pm
+!     Last change:  MD    5 Jul 2007   11:30 am
 !--------------------------------------------------------------------------
 ! This code, zeila.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -556,11 +556,11 @@ If (BERECHNUNGSMODUS == 'WATERLEVEL' .or. BERECHNUNGSMODUS == 'BF_NON_UNI' .or. 
   WRITE (UNIT_OUT_QLAENGS, 81) 'Stat', 'Kenn', 'Abfluss', 'Sohle', 'h_WSP', 'hen', 'h_BV', 'Boe_li', 'Boe_re', 'v_m', &
                           & 'tau_fl',    'Q_li',    'Q_fl',    'Q_re', 'lamb_li', 'lamb_fl', 'lamb_re', &
                           & 'f_li', 'f_fl', 'f_re', 'br_li', 'br_fl', 'br_re', &
-                          & 'WehrOK', 'BrueckOK', 'BrueckUK', 'BrueckB', 'RohrDN' , 'AlphaIW', 'AlphaEW'
+                          & 'WehrOK', 'BrueckOK', 'BrueckUK', 'BrueckB', 'RohrDN' , 'AlphaIW', 'AlphaEW',  'I_Reib'
 
   WRITE (UNIT_OUT_QLAENGS, 81) 'km'  ,  '-', 'm^3/s', 'mNN'  , 'mNN'  , 'mNN', 'mNN' , 'mNN'   , 'mNN'   , 'm/s', &
                           & 'N/m^2',   'm^3/s',   'm^3/s',   'm^3/s', '-', '-', '-', 'm^2', 'm^2', 'm', 'm', 'm', 'm', &
-                          & 'mNN',    'mNN',      'mNN',      'm',       'm',       '-',       '-'
+                          & 'mNN',    'mNN',      'mNN',      'm',       'm',       '-',       '-',       '-'
 
  IF (BERECHNUNGSMODUS /= 'WATERLEVEL') then
    do j = 1, anz_q     ! Anzahl der Abfluesse
@@ -586,7 +586,7 @@ If (BERECHNUNGSMODUS == 'WATERLEVEL' .or. BERECHNUNGSMODUS == 'BF_NON_UNI' .or. 
                              & out_IND(i,j,1)%B, out_IND(i,j,2)%B, out_IND(i,j,3)%B, &
                              & out_PROF(i,j)%WehrOK, out_PROF(i,j)%BrueckOK, out_PROF(i,j)%BrueckUK, &
                              & out_PROF(i,j)%BrueckB, out_PROF(i,j)%RohrD, &
-                             & out_PROF(i,j)%alphaIW, out_PROF(i,j)%alphaEW
+                             & out_PROF(i,j)%alphaIW, out_PROF(i,j)%alphaEW, out_PROF(i,nr_q)%gefaelle
       END DO    ! Ueber alle Abfluesse
     END DO    ! Ueber alle Profile
   ENDIF
@@ -615,9 +615,9 @@ If (BERECHNUNGSMODUS == 'WATERLEVEL' .or. BERECHNUNGSMODUS == 'BF_NON_UNI' .or. 
   9  FORMAT (1x, 7F10.4, F8.3, F8.2, 3F8.4, 3F10.3, 3F10.3)
 
   80 FORMAT (1X, A10,   A5, 7A10,   A8,   A8,   3A8,   3A10,   3A10,   5A10)
-  81 FORMAT (1X, A10,   A5, 7A10,   A8,   A8,   3A10,   3A8,   3A10,   3A10,   7A10)
+  81 FORMAT (1X, A10,   A5, 7A10,   A8,   A8,   3A10,   3A8,   3A10,   3A10,   8A10)
   90 format (1X, F10.4, A5, 7F10.3, F8.3, F8.2, 3F8.4, 3F10.3, 3F10.3, 5F10.3)
-  91 format (1X, F10.4, A5, 7F10.3, F8.3, F8.2, 3F10.3, 3F8.4, 3F10.3, 3F10.3, 5F10.3, 2F10.5)
+  91 format (1X, F10.4, A5, 7F10.3, F8.3, F8.2, 3F10.3, 3F8.4, 3F10.3, 3F10.3, 5F10.3, 3F10.5)
   ! ST --------------------------------------------------------------------
 
 ENDIF !MD Ende fuer BERECHNUNGSMODUS == 'WATERLEVEL'.or.'BF_NON_UNI'.or.'REIB_KONST'
