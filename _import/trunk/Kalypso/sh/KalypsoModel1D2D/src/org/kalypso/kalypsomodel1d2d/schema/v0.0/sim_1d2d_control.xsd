@@ -235,66 +235,90 @@
 								<enumeration value="0">
 									<annotation>
 										<documentation xml:lang="de">
-											<label><![CDATA[use ed3 data(?)]]></label>
+											<label><![CDATA[00 konst. Wirbelviskosität (RMA)]]></label>
+										</documentation>
+										<documentation xml:lang="en">
+											<label><![CDATA[00 const. eddy viscosity (RMA)]]></label>
 										</documentation>
 									</annotation>
 								</enumeration>
 								<enumeration value="2">
 									<annotation>
 										<documentation xml:lang="de">
-											<label><![CDATA[Smagorinsky]]></label>
+											<label><![CDATA[02 Smagorinsky Ansatz (RMA)]]></label>
+										</documentation>
+										<documentation xml:lang="en">
+											<label><![CDATA[02 Smagorinsky approach (RMA)]]></label>
 										</documentation>
 									</annotation>
 								</enumeration>
 								<enumeration value="10">
 									<annotation>
 										<documentation xml:lang="de">
-											<label><![CDATA[konstante Eingabedaten ohne Skalierung]]></label>
+											<label><![CDATA[10 konst. Wirbelviskosität (BCE)]]></label>
 										</documentation>
 										<documentation xml:lang="en">
-											<label><![CDATA[constant eddy viscosity]]></label>
+											<label><![CDATA[10 const. eddy viscosity (BCE)]]></label>
 										</documentation>
 									</annotation>
 								</enumeration>
 								<enumeration value="11">
 									<annotation>
 										<documentation xml:lang="de">
-											<label><![CDATA[Skalierung über Elementlänge]]></label>
+											<label><![CDATA[11 sohlinduzierte Turbulenz]]></label>
+										</documentation>
+										<documentation xml:lang="en">
+											<label><![CDATA[11 bottom generated turbulence]]></label>
 										</documentation>
 									</annotation>
 								</enumeration>
 								<enumeration value="12">
 									<annotation>
 										<documentation xml:lang="de">
-											<label><![CDATA[Smagorinsky-Ansatz]]></label>
+											<label><![CDATA[12 Prandtl'scher Mischungswegansatz (konst.)]]></label>
+										</documentation>
+										<documentation xml:lang="en">
+											<label><![CDATA[12 Prandtl's mixing length (const.)]]></label>
 										</documentation>
 									</annotation>
 								</enumeration>
 								<enumeration value="13">
 									<annotation>
 										<documentation xml:lang="de">
-											<label><![CDATA[Skalierung über Elementlänge, mit Fliessrichtung]]></label>
+											<label><![CDATA[13 Smagorinsky Ansatz (BCE)]]></label>
+										</documentation>
+										<documentation xml:lang="en">
+											<label><![CDATA[13 Smagorinsky approach (BCE)]]></label>
 										</documentation>
 									</annotation>
 								</enumeration>
 								<enumeration value="14">
 									<annotation>
 										<documentation xml:lang="de">
-											<label><![CDATA[Superposition aus 1 and 3]]></label>
+											<label><![CDATA[14 konst. Wirbelviskosität m. sohlind. Turb.]]></label>
+										</documentation>
+										<documentation xml:lang="en">
+											<label><![CDATA[14 const. eddy viscosity w. bottom induced turb.]]></label>
 										</documentation>
 									</annotation>
 								</enumeration>
 								<enumeration value="15">
 									<annotation>
 										<documentation xml:lang="de">
-											<label><![CDATA[Konstante Wirbelviskosität]]></label>
+											<label><![CDATA[15 Prandtl'scher Mischungsweg u. sohlind. Turb.]]></label>
 										</documentation>
+										<documentation xml:lang="en">
+											<label><![CDATA[15 Prandtl's mixing length w. bottom induced turb.]]></label>
+										</documentation>c
 									</annotation>
 								</enumeration>
 								<enumeration value="16">
 									<annotation>
 										<documentation xml:lang="de">
-											<label><![CDATA[free shear-layer]]></label>
+											<label><![CDATA[16 Smagorinsky (BCE) mit sohlinduzierter Turbulenz]]></label>
+										</documentation>
+										<documentation xml:lang="en">
+											<label><![CDATA[16 Smagorinsky (BCE) with bottom induced turbulence]]></label>
 										</documentation>
 									</annotation>
 								</enumeration>
@@ -337,6 +361,13 @@
 									Minimale Wirbelviskosität beim
 									Smagorinsky-Ansatz [m²/s]
 								</tooltip>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="_p_bottom" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Modellparameter</label>
 							</documentation>
 						</annotation>
 					</element>
@@ -441,7 +472,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="DSET" type="double">
+					<element name="DSET" type="double" default="0.1">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Trockenfalltiefe [m]</label>
@@ -452,7 +483,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="DSETD" type="double">
+					<element name="DSETD" type="double" default="0.11">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Wiederbenetzungstiefe [m]</label>

@@ -243,9 +243,9 @@
         <extensionControl
               class="org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimestepFillerControlFactory"
               id="org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimestepFillerControlFactory"/>
-     </extension>
-     <extension
-           point="org.kalypso.ui.featureViewExtensionControl">
+        <extensionControl
+              class="org.kalypso.kalypsomodel1d2d.ui.featurecontrols.RestartSelectorControlFactory"
+              id="org.kalypso.kalypsomodel1d2d.ui.featurecontrols.RestartSelectorControlFactory"/>
         <extensionControl
               class="org.kalypso.kalypsomodel1d2d.ui.featurecontrols.ControlModelDeleteControlFactory"
               id="org.kalypso.kalypsomodel1d2d.ui.featurecontrols.ControlModelDeleteControlFactory"/>
