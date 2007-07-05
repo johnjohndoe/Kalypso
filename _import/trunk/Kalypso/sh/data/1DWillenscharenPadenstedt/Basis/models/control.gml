@@ -23,9 +23,8 @@
      <c1d2d:DSETD/>
      <c1d2d:_steady>true</c1d2d:_steady>
      <c1d2d:_unsteady>true</c1d2d:_unsteady>
-     <c1d2d:NITI>1</c1d2d:NITI>
-     <c1d2d:NCYC/>
-     <c1d2d:NITN>3</c1d2d:NITN>
+     <c1d2d:NITI>25</c1d2d:NITI>
+     <c1d2d:NITN>10</c1d2d:NITN>
      <c1d2d:CONV_1>0.01</c1d2d:CONV_1>
      <c1d2d:CONV_2>0.01</c1d2d:CONV_2>
      <c1d2d:CONV_3>0.0010</c1d2d:CONV_3>
