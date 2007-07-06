@@ -120,7 +120,7 @@ Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodu
 					<Help>Bearbeitung von 2D-Elementen</Help>
 					<Name>Netz bearbeiten</Name>
 				</Task>
-				<Task type="ASYNCHRONOUS" context="Context2dElementTheme" URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Chan2DGen">
+				<Task type="ASYNCHRONOUS" context="FenetMap" URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Chan2DGen">
 					<Help>
 						<![CDATA[Generiert Flussschlauchelemente aus Profilendaten. 
 Vorraussetzung hierfür ist ein in der Karte vorhandenes Profillinienthema,
@@ -128,14 +128,14 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 					</Help>
 					<Name>Flussschlauchgenerator</Name>
 				</Task>
-				<Task type="ASYNCHRONOUS" context="Context2dElementTheme" URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__BandGen">
+				<Task type="ASYNCHRONOUS" context="FenetMap" URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__BandGen">
 					<Help>
 						<![CDATA[Generiert ein regelmäßiges FE-2D-Elementenetz mittels Definition vier gegenüberliegender Linienzüge.]]>
 					</Help>
 					<Name>Bandgenerator</Name>
 				</Task>
 
-				<Task type="ASYNCHRONOUS" context="Context2dElementTheme" URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__AssignElevs">
+				<Task type="ASYNCHRONOUS" context="FenetMap" URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__AssignElevs">
 					<Help>
 						<![CDATA[Weist den FE-2D-Elementknoten mittels zuvor importierter Geländemodelle Höhen zu.]]>
 					</Help>

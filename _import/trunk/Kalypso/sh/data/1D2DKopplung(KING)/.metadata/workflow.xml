@@ -120,7 +120,7 @@ Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodu
 					<Help>Bearbeitung von 2D-Elementen</Help>
 					<Name>Netz bearbeiten</Name>
 				</Task>
-				<Task type="ASYNCHRONOUS" context="Context2dElementTheme" URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Chan2DGen">
+				<Task type="ASYNCHRONOUS" context="FenetMap" URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Chan2DGen">
 					<Help>
 						<![CDATA[Generiert Flussschlauchelemente aus Profilendaten. 
 Vorraussetzung hierfür ist ein in der Karte vorhandenes Profillinienthema,
@@ -128,14 +128,14 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 					</Help>
 					<Name>Flussschlauchgenerator</Name>
 				</Task>
-				<Task type="ASYNCHRONOUS" context="Context2dElementTheme" URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__BandGen">
+				<Task type="ASYNCHRONOUS" context="FenetMap" URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__BandGen">
 					<Help>
 						<![CDATA[Generiert ein regelmäßiges FE-2D-Elementenetz mittels Definition vier gegenüberliegender Linienzüge.]]>
 					</Help>
 					<Name>Bandgenerator</Name>
 				</Task>
 
-				<Task type="ASYNCHRONOUS" context="Context2dElementTheme" URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__AssignElevs">
+				<Task type="ASYNCHRONOUS" context="FenetMap" URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__AssignElevs">
 					<Help>
 						<![CDATA[Weist den FE-2D-Elementknoten mittels zuvor importierter Geländemodelle Höhen zu.]]>
 					</Help>
@@ -167,14 +167,13 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 			<TaskGroup URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__TransGroup">
 				<Help></Help>
 				<Name>Berechnungseinheiten und Randbedingungen</Name>
-			<!-- 			
 				<Task context="JunctionContextTheme"
 					URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__SetEltLineTrans">
 					<Help>
 						<![CDATA[Ermöglicht die Erstellung einer Kopplung von 1D zu 2D zwischen einem 1D-Element und einer 2D-Randlinie.]]>
 					</Help>
 					<Name>1D-2D-Linienkopplung</Name>
-				</Task> -->
+				</Task>
 				<Task type="ASYNCHRONOUS" context="ContLineTheme" URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ContilineGen">
 					<Help>Definieren von Rand- und Übergangslinien von Modellierungseinheiten (keine Ausgabedefinition)</Help>
 					<Name>Ränder und Übergänge definieren</Name>
@@ -193,13 +192,13 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 					</Help>
 					<Name>Berechnungseinheiten modellieren</Name>
 				</Task>
-				<!-- <Task context="JunctionContextTheme"
+				<Task context="JunctionContextTheme"
 					URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__SetEltEltTrans">
 					<Help>
 						<![CDATA[Ermöglicht die Erstellung einer Kopplung von 1D zu 2D zwischen zwei Elementen.]]>
 					</Help>
 					<Name>1D-2D-Elementkopplung</Name>
-				</Task> -->
+				</Task>
 			</TaskGroup>
 		</TaskGroup>
 		<TaskGroup URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__RoughMod">
@@ -305,7 +304,7 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 			<Name>Berechnung durchführen</Name>
 		</Task>
 		 -->
-		<Task type="ASYNCHRONOUS" context="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Calc"
+		<Task type="ASYNCHRONOUS" context="FenetMap"
 			URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__StartCalculationWithProblemsView">
 			<Help>
 				<![CDATA[Startet die Berechnung unter Verwendung eines Kontrolldisplays]]>
