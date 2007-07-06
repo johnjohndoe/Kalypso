@@ -44,6 +44,7 @@ import java.awt.Color;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -67,12 +68,14 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.contribs.java.io.filter.PrefixSuffixFilter;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.conv.results.ResultType;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gismapview.Gismapview.Layers;
 import org.kalypso.template.types.StyledLayerType;
+import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.LineColorMapEntry;
 import org.kalypsodeegree.graphics.sld.NamedLayer;
@@ -87,6 +90,7 @@ import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.xml.XMLParsingException;
 import org.kalypsodeegree_impl.graphics.sld.LineColorMap;
 import org.kalypsodeegree_impl.graphics.sld.LineColorMapEntry_Impl;
+import org.kalypsodeegree_impl.graphics.sld.LineColorMap_Impl;
 import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
 import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 
@@ -122,6 +126,14 @@ public class ResultManager implements Runnable
   private final RMA10Calculation m_calculation;
 
   private final NodeResultMinMaxCatcher m_minMaxCatcher = new NodeResultMinMaxCatcher();
+
+  /* just for test purposes */
+  private final List<ResultType.TYPE> m_parameters = new ArrayList<ResultType.TYPE>();
+  {
+    m_parameters.add( ResultType.TYPE.DEPTH );
+    m_parameters.add( ResultType.TYPE.WATERLEVEL );
+    m_parameters.add( ResultType.TYPE.VELOCITY );
+  }
 
   private final IJobChangeListener m_finishListener = new JobChangeAdapter()
   {
@@ -186,7 +198,7 @@ public class ResultManager implements Runnable
 
     final File resultOutputDir = new File( m_outputDir, outDirName );
     resultOutputDir.mkdirs();
-    final ProcessResultsJob processResultsJob = new ProcessResultsJob( file, resultOutputDir, m_dataProvider, m_calculation );
+    final ProcessResultsJob processResultsJob = new ProcessResultsJob( file, resultOutputDir, m_dataProvider, m_calculation, m_parameters );
     processResultsJob.addJobChangeListener( m_finishListener );
 
     m_resultJobs.add( processResultsJob );
@@ -324,46 +336,45 @@ public class ResultManager implements Runnable
 
   private void processStyles( ) throws IOException, XMLParsingException
   {
-    // TODO: refactor in order to call same method for several files/parameters
-
     /* Read sld from template */
     final File styleDir = new File( m_outputDir, "Styles" );
     final File tinStyleFile = new File( styleDir, "tinStyles.sld" );
     final StyledLayerDescriptor sld = SLDFactory.createSLD( tinStyleFile );
 
-    final NamedLayer[] namedLayers = sld.getNamedLayers();
-    for( final NamedLayer namedLayer : namedLayers )
+    // make the isolines-SLD for each defined flow parameter
+    for( ResultType.TYPE parameter : m_parameters )
     {
-      // TODO: move these search functions into helper class? Or into the parent-clas itself?
-      if( "tinStyles".equals( namedLayer.getName() ) )
+      final String layerName = "tin" + parameter.name() + "Style";
+      final String featureTypeStyleName = "tin" + parameter.name() + "FeatureTypeStyle";
+      final String ruleName = "tin" + parameter.name() + "Rule";
+
+      final NamedLayer namedLayer = sld.getNamedLayer( "tinStyles" );
+      if( namedLayer == null )
+        continue;
+
+      final Style style = namedLayer.getStyle( layerName );
+      if( style instanceof UserStyle )
       {
-        final Style[] styles = namedLayer.getStyles();
-        for( final Style style : styles )
+        final UserStyle userStyle = (UserStyle) style;
+        final FeatureTypeStyle featureTypeStyle = userStyle.getFeatureTypeStyle( featureTypeStyleName );
+        if( featureTypeStyleName == null )
+          continue;
+        final Rule rule = featureTypeStyle.getRule( ruleName );
+        if( rule == null )
+          continue;
+        final Symbolizer[] symbolizers = rule.getSymbolizers();
+        for( final Symbolizer symbolizer : symbolizers )
         {
-          if( "tinWSPStyle".equals( style.getName() ) && style instanceof UserStyle )
+          if( symbolizer instanceof SurfaceLineSymbolizer )
           {
-            final UserStyle userStyle = (UserStyle) style;
-            final FeatureTypeStyle[] featureTypeStyles = userStyle.getFeatureTypeStyles();
-            for( final FeatureTypeStyle featureTypeStyle : featureTypeStyles )
+            try
             {
-              if( "tinWSPFeatureTypeStyle".equals( featureTypeStyle.getName() ) )
-              {
-                final Rule[] rules = featureTypeStyle.getRules();
-                for( final Rule rule : rules )
-                {
-                  if( "tinWSPRule".equals( rule.getName() ) )
-                  {
-                    final Symbolizer[] symbolizers = rule.getSymbolizers();
-                    for( final Symbolizer symbolizer : symbolizers )
-                    {
-                      if( symbolizer instanceof SurfaceLineSymbolizer )
-                      {
-                        configureLineSymbolizer( (SurfaceLineSymbolizer) symbolizer );
-                      }
-                    }
-                  }
-                }
-              }
+              configureLineSymbolizer( (SurfaceLineSymbolizer) symbolizer, parameter );
+            }
+            catch( FilterEvaluationException e )
+            {
+              // TODO Auto-generated catch block
+              e.printStackTrace();
             }
           }
         }
@@ -376,20 +387,97 @@ public class ResultManager implements Runnable
     FileUtils.writeStringToFile( tinStyleFile, sldXMLwithHeader, "UTF-8" );
   }
 
-  private void configureLineSymbolizer( final SurfaceLineSymbolizer symbolizer )
+  /**
+   * sets the parameters for the colormap of an isoline
+   */
+  private void configureLineSymbolizer( final SurfaceLineSymbolizer symbolizer, final ResultType.TYPE parameter ) throws FilterEvaluationException
   {
-    final LineColorMap colorMap = symbolizer.getColorMap();
+    final LineColorMap templateColorMap = symbolizer.getColorMap();
+//    StyleFactory.createlineColorMap();
+    final LineColorMap newColorMap = new LineColorMap_Impl();
 
-    // TODO: make lots of lines!
+    final LineColorMapEntry fromEntry = templateColorMap.findEntry( "from", null );
+    final LineColorMapEntry toEntry = templateColorMap.findEntry( "to", null );
+    final LineColorMapEntry fatEntry = templateColorMap.findEntry( "fat", null );
+    
+    fromEntry.getStroke().getStroke( null );
+    
+    // TODO: retrieve stuff from template-entries
+    final double minValue;
+    final double maxValue;
+    final Color color;
+    switch( parameter )
+    {
+      case WATERLEVEL:
+        // get min/max-values of the simulation
+        minValue = m_minMaxCatcher.getMinWaterlevel();
+        maxValue = m_minMaxCatcher.getMaxWaterlevel();
+        color = new Color( 255, 10, 10 );
+        
+        break;
+      case VELOCITY:
+        // get min/max-values of the simulation
+        minValue = m_minMaxCatcher.getMinVelocityAbs();
+        maxValue = m_minMaxCatcher.getMaxVelocityAbs();
+        color = new Color( 10, 10, 255 );
+        break;
+      case DEPTH:
+        // get min/max-values of the simulation
+        minValue = m_minMaxCatcher.getMinDepth();
+        maxValue = m_minMaxCatcher.getMaxDepth();
+        color = new Color( 10, 255, 10 );
+        break;
 
-    final Stroke stroke = StyleFactory.createStroke( new Color( 0, 1, 2 ) ); // TODO: there are other nice createStroke
-    // methods
-    final ParameterValueType label = StyleFactory.createParameterValueType( "Hallo Thomas: meine schöne Isolinie" );
-    final ParameterValueType quantity = StyleFactory.createParameterValueType( 23.45 );
-    final LineColorMapEntry colorMapEntry = new LineColorMapEntry_Impl( stroke, label, quantity );
-    colorMap.addColorMapClass( colorMapEntry );
+      default:
+        // take the waterlevel by default
+        minValue = m_minMaxCatcher.getMinWaterlevel();
+        maxValue = m_minMaxCatcher.getMaxWaterlevel();
+        color = new Color( 255, 10, 10 );
+        break;
+    }
 
-    // TODO Auto-generated method stub
+    // get rounded values below min and above max (rounded by first decimal)
+    // as a first try we will generate isolines using class steps of 0.1
+    // later, the classes will be done by using user defined class steps.
+    // for that we fill an array of calculated (later user defined values) from max to min
+    final BigDecimal minDecimal = new BigDecimal( minValue ).setScale( 1, BigDecimal.ROUND_FLOOR );
+    final BigDecimal maxDecimal = new BigDecimal( maxValue ).setScale( 1, BigDecimal.ROUND_CEILING );
+
+    // defines which isolines were drawn with a fat line
+    final double fatValue = fatEntry.getQuantity( null );
+
+    BigDecimal stepWidth = new BigDecimal( 0.1 ).setScale( 1 );
+    final int numOfClasses = (maxDecimal.subtract( minDecimal ).divide( stepWidth )).intValue() + 1;
+
+    for( int currentClass = 0; currentClass < numOfClasses; currentClass++ )
+    {
+      final double currentValue = minDecimal.doubleValue() + currentClass * stepWidth.doubleValue();
+
+// if you will use different colors for each isoline, use this method
+// final Color color = getColor (currentClass, numOfClasses);
+
+      final ParameterValueType quantity = StyleFactory.createParameterValueType( currentValue );
+      final ParameterValueType label = StyleFactory.createParameterValueType( "Isolinie " + currentClass );
+
+      final int strokeWidth;
+      if( currentValue % fatValue == 0 )
+        strokeWidth = 3;
+      else
+        strokeWidth = 1;
+
+      final Stroke stroke = StyleFactory.createStroke( new Color( 255, 20, 20 ), strokeWidth );
+
+      final LineColorMapEntry colorMapEntry = new LineColorMapEntry_Impl( stroke, label, quantity );
+      newColorMap.addColorMapClass( colorMapEntry );
+    }
+    
+    symbolizer.setColorMap( newColorMap );
+  }
+
+  private Color getColor( int currentClass, int numOfClasses )
+  {
+    return null;
 
   }
+
 }

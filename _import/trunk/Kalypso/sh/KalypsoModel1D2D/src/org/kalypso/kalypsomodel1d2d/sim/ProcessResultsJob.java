@@ -66,6 +66,7 @@ import org.kalypso.kalypsomodel1d2d.conv.results.MultiTriangleEater;
 import org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultType;
 import org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceTriangleEater;
+import org.kalypso.kalypsomodel1d2d.conv.results.ResultType.TYPE;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -92,9 +93,13 @@ public class ProcessResultsJob extends Job
 
   private static RMA10Calculation m_calculation;
 
+
+
   private final NodeResultMinMaxCatcher m_resultMinMaxCatcher = new NodeResultMinMaxCatcher();
 
-  public ProcessResultsJob( final File inputFile, final File outputDir, final ISimulationDataProvider dataProvider, final RMA10Calculation calculation )
+  private static List<TYPE> m_parameters;
+
+  public ProcessResultsJob( final File inputFile, final File outputDir, final ISimulationDataProvider dataProvider, final RMA10Calculation calculation, final List<ResultType.TYPE> parameter )
   {
     super( "1D2D-Ergebnisse auswerten: " + inputFile.getName() );
 
@@ -102,6 +107,7 @@ public class ProcessResultsJob extends Job
     m_outputDir = outputDir;
     m_dataProvider = dataProvider;
     m_calculation = calculation;
+    m_parameters = parameter;
   }
 
   /**
@@ -168,7 +174,7 @@ public class ProcessResultsJob extends Job
       final CS_CoordinateSystem crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
       final MultiTriangleEater multiEater = new MultiTriangleEater();
 
-      for( final ResultType.TYPE parameter : parameters )
+      for( final ResultType.TYPE parameter : m_parameters )
       {
         /* GML(s) */
 
