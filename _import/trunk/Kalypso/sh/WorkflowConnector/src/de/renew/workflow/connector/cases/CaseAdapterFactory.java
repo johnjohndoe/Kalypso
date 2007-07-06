@@ -2,6 +2,7 @@ package de.renew.workflow.connector.cases;
 
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.ui.model.IWorkbenchAdapter;
+import org.eclipse.ui.model.IWorkbenchAdapter2;
 
 
 public class CaseAdapterFactory implements IAdapterFactory
@@ -20,7 +21,7 @@ public class CaseAdapterFactory implements IAdapterFactory
 
   public Class[] getAdapterList( )
   {
-    return new Class[] { IWorkbenchAdapter.class };
+    return new Class[] { IWorkbenchAdapter.class, IWorkbenchAdapter2.class };
   }
 
 }
