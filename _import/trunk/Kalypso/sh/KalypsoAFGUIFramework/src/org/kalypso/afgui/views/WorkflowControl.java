@@ -76,6 +76,11 @@ public class WorkflowControl implements IWorklistChangeListener
   {
     m_taskExecutor = taskExecutor;
   }
+  
+  public ITaskExecutor getTaskExecutor( )
+  {
+    return m_taskExecutor;
+  }
 
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
@@ -183,12 +188,12 @@ public class WorkflowControl implements IWorklistChangeListener
 
     // Tree columns
     final TreeColumn column1 = new TreeColumn( tree, SWT.NONE );
-    column1.setWidth( 275 );
+    column1.setWidth( 500 );
     final TreeColumn column2 = new TreeColumn( tree, SWT.NONE );
     column2.setWidth( 18 );
 
     // Label provider
-    m_treeViewer.setLabelProvider( new WorkflowLabelProvider( m_treeViewer ) );
+    m_treeViewer.setLabelProvider( new WorkflowLabelProvider( this ) );
 
     // Listen to open events
 
@@ -251,6 +256,11 @@ public class WorkflowControl implements IWorklistChangeListener
         }
       }
     } );
+  }
+  
+  public TreeViewer getTreeViewer( )
+  {
+    return m_treeViewer;
   }
 
   final void doTask( final Task task )

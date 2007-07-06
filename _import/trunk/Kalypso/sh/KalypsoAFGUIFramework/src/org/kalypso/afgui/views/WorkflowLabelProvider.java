@@ -7,6 +7,7 @@ import org.eclipse.jface.viewers.ITableFontProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
@@ -19,6 +20,7 @@ import de.renew.workflow.base.TaskGroup;
 
 public class WorkflowLabelProvider extends LabelProvider implements ITableLabelProvider, ITableFontProvider, ITableColorProvider
 {
+
   private final Image IMAGE_TASK;
 
   private final Image IMAGE_GROUP;
@@ -27,21 +29,29 @@ public class WorkflowLabelProvider extends LabelProvider implements ITableLabelP
 
   private final Font FONT_TASK;
 
+  private final Font FONT_ACTIVE_TASK;
+
   private final Image IMAGE_UNAVAILABLE = KalypsoAFGUIFrameworkPlugin.getImageDescriptor( "icons/remove.gif" ).createImage();
 
   private final Image IMAGE_RUNNNING = KalypsoAFGUIFrameworkPlugin.getImageDescriptor( "icons/eclipse/running.gif" ).createImage();
 
   private final Image IMAGE_FINISHED = KalypsoAFGUIFrameworkPlugin.getImageDescriptor( "icons/eclipse/finished.gif" ).createImage();
 
-  public WorkflowLabelProvider( final TreeViewer viewer )
+  private final WorkflowControl m_workflowControl;
+
+  public WorkflowLabelProvider( final WorkflowControl workflowControl )
   {
-    final Display display = viewer.getControl().getDisplay();
+    m_workflowControl = workflowControl;
+    final Display display = workflowControl.getTreeViewer().getControl().getDisplay();
     final ImageDescriptor taskImage = KalypsoAFGUIFrameworkPlugin.getImageDescriptor( "icons/nuvola_select/kig.png" );
     final ImageDescriptor groupImage = KalypsoAFGUIFrameworkPlugin.getImageDescriptor( "icons/nuvola_select/forward.png" );
     IMAGE_TASK = ImageDescriptor.createFromImageData( taskImage.getImageData().scaledTo( 16, 16 ) ).createImage();
     IMAGE_GROUP = ImageDescriptor.createFromImageData( groupImage.getImageData().scaledTo( 16, 16 ) ).createImage();
     final FontData[] fontData = JFaceResources.getFontRegistry().getFontData( JFaceResources.DIALOG_FONT );
     FONT_TASK = new Font( display, fontData );
+    fontData[0].setStyle( SWT.BOLD );
+    FONT_ACTIVE_TASK = new Font( display, fontData );
+    fontData[0].setStyle( SWT.NORMAL );
     fontData[0].setHeight( fontData[0].getHeight() + 1 );
     FONT_TASKGROUP = new Font( display, fontData );
   }
@@ -103,7 +113,10 @@ public class WorkflowLabelProvider extends LabelProvider implements ITableLabelP
     }
     else
     {
-      return FONT_TASK;
+      if( m_workflowControl.getTaskExecutor().getActiveTask() == element )
+        return FONT_ACTIVE_TASK;
+      else
+        return FONT_TASK;
     }
   }
 
