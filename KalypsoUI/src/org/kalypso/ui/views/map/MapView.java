@@ -131,6 +131,7 @@ public class MapView extends AbstractMapPart implements IViewPart
   @Override
   public void dispose( )
   {
+    getMapPanel().getWidgetManager().setActualWidget( null );
     final String saveOnCloseString = getConfigurationElement().getAttribute( MapView.SAVE_MAP_ON_CLOSE );
     if( "true".equals( saveOnCloseString ) )
     {
