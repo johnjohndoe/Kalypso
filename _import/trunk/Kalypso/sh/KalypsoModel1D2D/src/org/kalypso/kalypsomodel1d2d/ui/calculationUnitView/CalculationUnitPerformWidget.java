@@ -161,12 +161,6 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions,
     
     dataModel.setData( ICommonKeys.KEY_MAP_PANEL, mapPanel );
     IMapModell mapModell = mapPanel.getMapModell();
-//    if(mapModell == null)
-//    {
-//      // set empty Modell:
-//      final KalypsoCorePlugin plugin = KalypsoCorePlugin.getDefault();
-//      mapModell = new MapModell( plugin.getCoordinatesSystem(), null );
-//    }
     IFEDiscretisationModel1d2d m_model = UtilMap.findFEModelTheme( mapModell );
     dataModel.setData( 
         ICommonKeys.KEY_DISCRETISATION_MODEL, m_model );
