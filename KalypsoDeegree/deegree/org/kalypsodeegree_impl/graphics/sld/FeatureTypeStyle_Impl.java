@@ -66,6 +66,7 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.commons.xml.NS;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
+import org.kalypsodeegree.graphics.sld.NamedLayer;
 import org.kalypsodeegree.graphics.sld.Rule;
 import org.kalypsodeegree.xml.Marshallable;
 
@@ -137,7 +138,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
    * feature style in some feature-style library. Sets the <Name>o
    * 
    * @param name
-   *          the name
+   *            the name
    */
   public void setName( String name )
   {
@@ -158,7 +159,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
    * sets the <Title>
    * 
    * @param title
-   *          the title of the FeatureTypeStyle
+   *            the title of the FeatureTypeStyle
    */
   public void setTitle( String title )
   {
@@ -179,7 +180,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
    * sets <Abstract>
    * 
    * @param abstract_
-   *          an abstract of the FeatureTypeStyle
+   *            an abstract of the FeatureTypeStyle
    */
   public void setAbstract( String abstract_ )
   {
@@ -200,7 +201,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
    * sets the name of the affected feature type
    * 
    * @param featureTypeName
-   *          the name of the FeatureTypeStyle
+   *            the name of the FeatureTypeStyle
    */
   public void setFeatureTypeName( QName featureTypeQName )
   {
@@ -226,7 +227,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
    * Sets the SemanticTypeIdentifiers.
    * 
    * @param semanticTypeIdentifiers
-   *          SemanticTypeIdentifiers for the FeatureTypeStyle
+   *            SemanticTypeIdentifiers for the FeatureTypeStyle
    */
   public void setSemanticTypeIdentifier( String[] semanticTypeIdentifiers )
   {
@@ -245,7 +246,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
    * adds the <SemanticTypeIdentifier>
    * 
    * @param semanticTypeIdentifier
-   *          SemanticTypeIdentifier to add
+   *            SemanticTypeIdentifier to add
    */
   public void addSemanticTypeIdentifier( String semanticTypeIdentifier )
   {
@@ -256,7 +257,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
    * Removes an <SemanticTypeIdentifier>.
    * 
    * @param semanticTypeIdentifier
-   *          SemanticTypeIdentifier to remove
+   *            SemanticTypeIdentifier to remove
    */
   public void removeSemanticTypeIdentifier( String semanticTypeIdentifier )
   {
@@ -275,10 +276,23 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
   }
 
   /**
+   * @see org.kalypsodeegree.graphics.sld.FeatureTypeStyle#getRule(java.lang.String)
+   */
+  public Rule getRule( String ruleName )
+  {
+    for( int i = 0; i < m_rules.size(); i++ )
+    {
+      if( m_rules.get( i ) instanceof Rule && ((Rule) m_rules.get( i )).getName().equals( ruleName ) )
+        return (Rule) m_rules.get( i );
+    }
+    return null;
+  }
+
+  /**
    * sets the <Rules>
    * 
    * @param rules
-   *          the rules of the FeatureTypeStyle as Array
+   *            the rules of the FeatureTypeStyle as Array
    */
   public void setRules( Rule[] rules )
   {
@@ -297,7 +311,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
    * adds the <Rules>
    * 
    * @param rule
-   *          a rule
+   *            a rule
    */
   public void addRule( Rule rule )
   {
@@ -308,7 +322,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
    * removes a rule
    * 
    * @param rule
-   *          a rule
+   *            a rule
    */
   public void removeRule( Rule rule )
   {
@@ -323,7 +337,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
   public String exportAsXML( )
   {
     StringBuffer sb = new StringBuffer( 1000 );
-    sb.append( "<FeatureTypeStyle xmlns=\""+NS.SLD+"\" xmlns:ogc=\""+NS.OGC+"\">" );
+    sb.append( "<FeatureTypeStyle xmlns=\"" + NS.SLD + "\" xmlns:ogc=\"" + NS.OGC + "\">" );
     if( m_name != null && !m_name.equals( "" ) )
     {
       sb.append( "<Name>" ).append( m_name ).append( "</Name>" );
@@ -352,4 +366,5 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
 
     return sb.toString();
   }
+
 }

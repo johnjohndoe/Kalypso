@@ -44,6 +44,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.kalypsodeegree.graphics.sld.LineColorMapEntry;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Thomas Jung
@@ -97,6 +98,20 @@ public class LineColorMap_Impl implements LineColorMap
 
     return sb.toString();
 
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.graphics.sld.LineColorMap#findEntry(java.lang.String)
+   */
+  public LineColorMapEntry findEntry( final String label, final Feature feature )
+  {
+    for( final LineColorMapEntry entry : m_colorMap )
+    {
+      if( entry.getLabel( feature ).equals( label ) )
+        return entry;
+    }
+
+    return null;
   }
 
 }

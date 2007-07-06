@@ -55,7 +55,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 /**
  * @author Gernot Belger, Thomas Jung
  */
-public class SurfacePaintPolygoneVisitor implements ISurfacePatchVisitor<GM_Triangle>
+public class SurfacePaintPolygonVisitor implements ISurfacePatchVisitor<GM_Triangle>
 {
   private final Graphics m_gc;
 
@@ -63,7 +63,7 @@ public class SurfacePaintPolygoneVisitor implements ISurfacePatchVisitor<GM_Tria
 
   private static final double VAL_EPS = 0.0000001;
 
-  public SurfacePaintPolygoneVisitor( final Graphics gc, final ColorMapConverter colorModel )
+  public SurfacePaintPolygonVisitor( final Graphics gc, final ColorMapConverter colorModel )
   {
     m_gc = gc;
     m_colorModel = colorModel;

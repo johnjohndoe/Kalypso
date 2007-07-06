@@ -161,7 +161,6 @@ import org.xml.sax.SAXException;
  */
 public class SLDFactory
 {
-
   private static final String SLDNS_EXT = "http://www.opengis.net/sldExt";
 
   private static String ogcNS = "http://www.opengis.net/ogc";

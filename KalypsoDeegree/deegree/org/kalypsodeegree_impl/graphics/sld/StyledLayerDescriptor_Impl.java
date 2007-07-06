@@ -133,7 +133,7 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
    * Sets Layers
    * 
    * @param layers
-   *          the Layers as Array
+   *            the Layers as Array
    */
   public void setLayers( Layer[] layers )
   {
@@ -152,7 +152,7 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
    * adds the <Layer>
    * 
    * @param layer
-   *          a Layer to add
+   *            a Layer to add
    */
   public void addLayer( Layer layer )
   {
@@ -163,7 +163,7 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
    * removes the <Layer>
    * 
    * @param layer
-   *          a Layer to remove
+   *            a Layer to remove
    */
   public void removeLayer( Layer layer )
   {
@@ -212,6 +212,22 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
   }
 
   /**
+   * A NamedLayer uses the "name" attribute to identify a layer known to the WMS and can contain zero or more styles,
+   * either NamedStyles or UserStyles. In the absence of any styles the default style for the layer is used.
+   * 
+   * @return the NamedLayers as Array
+   */
+  public NamedLayer getNamedLayer( String layerName )
+  {
+    for( int i = 0; i < m_layers.size(); i++ )
+    {
+      if( m_layers.get( i ) instanceof NamedLayer && ((NamedLayer) m_layers.get( i )).getName().equals( layerName ) )
+        return (NamedLayer) m_layers.get( i );
+    }
+    return null;
+  }
+
+  /**
    * The version attribute gives the SLD version of an SLD document, to facilitate backward compatibility with static
    * documents stored in various different versions of the SLD spec. The string has the format x.y.z, the same as in
    * other OpenGIS Web Server specs. For example, an SLD document stored according to this spec would have the version
@@ -228,7 +244,7 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
    * sets the <Version>
    * 
    * @param version
-   *          the version of the SLD
+   *            the version of the SLD
    */
   public void setVersion( String version )
   {
@@ -245,7 +261,7 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
 
   /**
    * @param abstract_
-   *          The abstract_ to set.
+   *            The abstract_ to set.
    */
   public void setAbstract( String abstract_ )
   {
@@ -262,7 +278,7 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
 
   /**
    * @param name
-   *          The name to set.
+   *            The name to set.
    */
   public void setName( String name )
   {
@@ -279,7 +295,7 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
 
   /**
    * @param title
-   *          The title to set.
+   *            The title to set.
    */
   public void setTitle( String title )
   {
