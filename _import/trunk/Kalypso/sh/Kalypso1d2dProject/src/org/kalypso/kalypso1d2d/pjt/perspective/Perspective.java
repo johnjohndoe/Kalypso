@@ -10,8 +10,11 @@ import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DNewProjectWizard;
 import org.kalypso.kalypso1d2d.pjt.views.WorkflowView;
 import org.kalypso.model.wspm.ui.view.chart.ChartView;
 import org.kalypso.ogc.gml.outline.GisMapOutlineView;
+import org.kalypso.ogc.sensor.view.DiagramViewPart;
+import org.kalypso.ogc.sensor.view.TableViewPart;
 import org.kalypso.ui.editor.featureeditor.FeatureTemplateView;
 import org.kalypso.ui.editor.mapeditor.views.ActionOptionsView;
+import org.kalypso.ui.repository.view.RepositoryExplorerPart;
 import org.kalypso.ui.views.map.MapView;
 
 // TODO: move the perspective to the KalypsoModelProduct
@@ -42,12 +45,15 @@ public class Perspective implements IPerspectiveFactory
 
     leftBottom.addView( SCENARIO_VIEW_ID );
     leftBottom.addView( GisMapOutlineView.ID );
+    leftBottom.addView( RepositoryExplorerPart.ID );
 
     rightTop.addPlaceholder( MapView.ID );
     rightTop.addPlaceholder( FeatureTemplateView.ID );
+    rightTop.addPlaceholder( DiagramViewPart.ID );
 
     rightBottom.addPlaceholder( FeatureView.ID );
     rightBottom.addPlaceholder( ChartView.ID );
+    rightBottom.addPlaceholder( TableViewPart.ID );
 
     veryRight.addPlaceholder( ActionOptionsView.ID );
 
@@ -61,6 +67,12 @@ public class Perspective implements IPerspectiveFactory
     layout.getViewLayout( WorkflowView.ID ).setMoveable( false );
     layout.getViewLayout( SCENARIO_VIEW_ID ).setCloseable( false );
     layout.getViewLayout( SCENARIO_VIEW_ID ).setMoveable( false );
+    layout.getViewLayout( RepositoryExplorerPart.ID ).setCloseable( false );
+    layout.getViewLayout( RepositoryExplorerPart.ID ).setMoveable( false );
+    layout.getViewLayout( DiagramViewPart.ID ).setCloseable( false );
+    layout.getViewLayout( DiagramViewPart.ID ).setMoveable( false );
+    layout.getViewLayout( TableViewPart.ID ).setCloseable( false );
+    layout.getViewLayout( TableViewPart.ID ).setMoveable( false );
     // TODO: secondary id does not work here: gives assertion failed
     // layout.getViewLayout( MapView.ID + ":*").setCloseable( false );
     layout.getViewLayout( MapView.ID ).setCloseable( false );

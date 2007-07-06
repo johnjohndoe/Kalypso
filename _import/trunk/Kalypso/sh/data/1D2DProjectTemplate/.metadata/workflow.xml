@@ -370,6 +370,14 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 					</con:ExtensionContext>
 				</con:ViewContext>
 			</con:WorkbenchSiteContext>
+			<con:WorkbenchSiteContext id="TimeSeriesContext" parent="Context1d2dModelling">
+				<con:ViewContext id="TimeSeriesRepositoryView" partId="org.kalypso.ui.repository.view.RepositoryExplorerPart" parent="TimeSeriesContext" />
+				<con:ViewContext id="TimeSeriesDiagramView" partId="org.kalypso.ogc.sensor.view.DiagramViewPart" parent="TimeSeriesContext" />
+				<con:ViewContext id="TimeSeriesTableView" partId="org.kalypso.ogc.sensor.view.TableViewPart" parent="TimeSeriesContext" />
+				<con:WizardContext id="ImportObservations"
+					wizardId="org.kalypso.ui.wizards.imports.observation.ImportObservationWizard" wizardType="NEW_WIZARD"
+					parent="TimeSeriesContext" />
+			</con:WorkbenchSiteContext>
 			<con:WorkbenchSiteContext id="MapContext" parent="Context1d2dModelling">
 				<con:ViewContext id="MapOutlineView" partId="org.kalypso.ui.views.outline" parent="MapContext" />
 				<con:ViewContext id="MapView" partId="org.kalypso.ui.views.mapView" parent="MapContext">
@@ -377,9 +385,6 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 						handlerFactoryId="kalypsoContextHandlerFactory">
 						<con:WizardContext id="ImportBaseMap"
 							wizardId="org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizard" wizardType="NEW_WIZARD" parent="BaseMap" />
-						<con:WizardContext id="ImportObservations"
-							wizardId="org.kalypso.ui.wizards.imports.observation.ImportObservationWizard" wizardType="NEW_WIZARD"
-							parent="BaseMap" />
 						<!-- 
 							<WizardContext id="ImportShape" wizardId="org.kalypso.ui.wizards.imports.lineShp.ImportLineShpWizard" wizardType="NEW_WIZARD" parent="BaseMap" />
 						-->
