@@ -253,9 +253,10 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
     removeComponentListener( this );
 
     m_selectionManager.removeSelectionListener( m_globalSelectionListener );
-    setMapModell( null );
 
     m_widgetManager.dispose();
+    
+    setMapModell( null );
 
     // REMARK: this should not be necessary, but fixes the memory leak problem when opening/closing a .gmt file.
     // TODO: where is this ma panel still referenced from?
