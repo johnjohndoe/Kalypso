@@ -63,14 +63,14 @@ public class TransformVisitor implements FeatureVisitor
             for( int i = 0; i < size; i++ )
             {
               final GM_Object geom = geomList.get( i );
-              final GM_Object transformedGeom = transformProperty( f, ftp, geom );
+              final GM_Object transformedGeom = transformProperty( geom );
               geomList.set( i, transformedGeom );
             }
           }
           else
           {
             final GM_Object object = (GM_Object) f.getProperty( ftp );
-            final GM_Object transformedGeom = transformProperty( f, ftp, object );
+            final GM_Object transformedGeom = transformProperty( object );
             f.setProperty( ftp, transformedGeom );
           }
         }
@@ -85,8 +85,11 @@ public class TransformVisitor implements FeatureVisitor
     return true;
   }
 
-  private GM_Object transformProperty( final Feature f, final IPropertyType ftp, final GM_Object object ) throws Exception
+  private GM_Object transformProperty( final GM_Object object ) throws Exception
   {
+    if( object == null )
+      return null;
+
     return m_transformer.transform( object );
   }
 
