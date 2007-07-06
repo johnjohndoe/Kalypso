@@ -42,10 +42,10 @@ public class Perspective implements IPerspectiveFactory
     final IPlaceholderFolderLayout veryRight = layout.createPlaceholderFolder( "veryRight", IPageLayout.RIGHT, 0.7f, "rightTop" );
 
     leftTop.addView( WorkflowView.ID );
-
     leftBottom.addView( SCENARIO_VIEW_ID );
-    leftBottom.addView( GisMapOutlineView.ID );
-    leftBottom.addView( RepositoryExplorerPart.ID );
+    
+    leftBottom.addPlaceholder( GisMapOutlineView.ID );
+    leftBottom.addPlaceholder( RepositoryExplorerPart.ID );
 
     rightTop.addPlaceholder( MapView.ID );
     rightTop.addPlaceholder( FeatureTemplateView.ID );
