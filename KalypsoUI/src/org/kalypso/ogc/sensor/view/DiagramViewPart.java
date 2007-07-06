@@ -74,6 +74,8 @@ import org.kalypso.ui.repository.view.RepositoryExplorerPart;
  */
 public class DiagramViewPart extends ViewPart implements ISelectionChangedListener, IPartListener
 {
+  public static final String ID = "org.kalypso.ogc.sensor.view.DiagramViewPart";
+
   protected final DiagView m_diagView = new DiagView( true );
 
   private ObservationChart m_chart;
