@@ -75,7 +75,9 @@ public class ResultDB
    * File name of the result meta data
    */
   public static final String META_DATA_FILE_NAME ="result_meta_data.gml";
+  
   private GMLWorkspace workspace;
+  
   private ISimulationDescriptionCollection simDB;
    
   public ResultDB(IPath folderPath)

@@ -41,11 +41,14 @@
 package org.kalypso.kalypsomodel1d2d.schema.binding.metadata;
 
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypsodeegree.model.feature.Feature;
+
+import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 
 /**
  * Default implementation of {@link IResultModelDescriptor}
@@ -72,23 +75,35 @@ public class ResultModelDescriptor extends ModelDescriptor implements IResultMod
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IResultModelDescriptor#getTime()
    */
-  public Date getTime( )
+  public GregorianCalendar getTime( )
   {
-   Date date = 
+    XMLGregorianCalendarImpl gc = 
      getProperty( 
          Kalypso1D2DSchemaConstants.SIMMETA_PROP_TIME, 
-         Date.class ); 
-    return date;
+         XMLGregorianCalendarImpl.class );
+   if( gc == null )
+   {
+     return null;
+   }
+   else
+   {
+     return gc.toGregorianCalendar();
+   }
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IResultModelDescriptor#setTime(java.util.Date)
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IResultModelDescriptor#setTime(java.util.GregorianCalendar)
    */
-  public void setTime( Date value )
+  public void setTime( GregorianCalendar value )
   {
+    XMLGregorianCalendarImpl xmlGc = null;
+    if( value != null )
+    {
+      xmlGc =  new XMLGregorianCalendarImpl(value);
+    }
     setProperty( 
         Kalypso1D2DSchemaConstants.SIMMETA_PROP_TIME, 
-        value );
+        xmlGc );
 
   }
 

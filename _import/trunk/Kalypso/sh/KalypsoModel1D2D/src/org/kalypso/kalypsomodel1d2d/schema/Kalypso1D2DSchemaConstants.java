@@ -11,6 +11,8 @@ import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
 public class Kalypso1D2DSchemaConstants
 {
 
+  public final static QName GML_PROP_BOUNDED_BY = new QName( NS.GML3, "boundedBy" );
+
   public static final QName SIMULATION_MODEL1D2D = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "SimulationModelType1D2D" );
 
   // //fem
@@ -234,7 +236,8 @@ public class Kalypso1D2DSchemaConstants
 
   public final static QName SIMMETA_F_MODELDESCRIPTOR = new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "ModelDescriptor" );
 
-  public final static QName SIMMETA_F_RESULT = new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "ResultDescriptor" );
+  public final static QName SIMMETA_F_RESULT = 
+    new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "ResultModelDescriptor" );
 
   public final static QName SIMMETA_PROP_MODEL_ID = 
       new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "modelID" );

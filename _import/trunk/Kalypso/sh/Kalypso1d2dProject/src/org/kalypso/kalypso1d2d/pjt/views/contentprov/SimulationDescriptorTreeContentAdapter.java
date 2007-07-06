@@ -85,7 +85,7 @@ public class SimulationDescriptorTreeContentAdapter extends WorkbenchAdapter
     {
       final ISimulationDescriptor simulationDescriptor = (ISimulationDescriptor) o;
       final String scenarioName = simulationDescriptor.getScenarioName();
-      final Date endTime = simulationDescriptor.getEndTime();
+      final Date endTime = simulationDescriptor.getEndTime().getTime();
       return scenarioName + "(" + endTime + ")";
     }
     return null;

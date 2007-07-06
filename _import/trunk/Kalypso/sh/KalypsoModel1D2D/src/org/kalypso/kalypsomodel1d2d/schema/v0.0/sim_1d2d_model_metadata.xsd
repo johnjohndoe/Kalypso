@@ -95,7 +95,7 @@
 		<xs:complexContent>
 			<xs:extension base="simMeta1d2d:ModelDescriptorType">
 				<xs:sequence>
-					<xs:element name="time" type="xs:time" />
+					<xs:element name="time" type="xs:dateTime"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -132,9 +132,9 @@
 					
 					<xs:element name="scenarioName" type="xs:string"/>
 					
-					<xs:element name="startTime" type="xs:time"/>
+					<xs:element name="startTime" type="xs:dateTime"/>
 					
-					<xs:element name="endTime" type="xs:time"/>
+					<xs:element name="endTime" type="xs:dateTime"/>
 					
 					<xs:element name="restarted" 
 						type="xs:boolean" default="false" />

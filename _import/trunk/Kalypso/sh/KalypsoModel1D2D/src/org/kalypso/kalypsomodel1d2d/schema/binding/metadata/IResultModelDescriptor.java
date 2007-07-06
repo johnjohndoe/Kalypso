@@ -41,6 +41,7 @@
 package org.kalypso.kalypsomodel1d2d.schema.binding.metadata;
 
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 /**
  * @author Patrice Congo
@@ -49,8 +50,8 @@ import java.util.Date;
  */
 public interface IResultModelDescriptor extends IModelDescriptor
 {
-  public Date getTime( );
+  public GregorianCalendar getTime( );
 
-  public void setTime( Date value );
+  public void setTime( GregorianCalendar value );
 
 }

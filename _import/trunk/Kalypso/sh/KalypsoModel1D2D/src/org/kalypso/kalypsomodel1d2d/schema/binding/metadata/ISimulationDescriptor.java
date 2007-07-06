@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.metadata;
 
-import java.util.Date;
+import java.util.GregorianCalendar;
 
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
@@ -75,13 +75,13 @@ public interface ISimulationDescriptor extends IFeatureWrapper2
 
   public void setSimulationType( SIMULATIONTYPE value );
 
-  public Date getStartTime( );
+  public GregorianCalendar getStartTime( );
 
-  public void setStartTime( Date value );
+  public void setStartTime( GregorianCalendar value );
 
-  public Date getEndTime( );
+  public GregorianCalendar getEndTime( );
 
-  public void setEndTime( Date value );
+  public void setEndTime( GregorianCalendar value );
   
   /**
    * To get the descriptor of the control model used in the simulation

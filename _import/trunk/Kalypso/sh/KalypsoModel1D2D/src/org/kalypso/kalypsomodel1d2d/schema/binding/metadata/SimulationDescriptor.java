@@ -41,6 +41,7 @@
 package org.kalypso.kalypsomodel1d2d.schema.binding.metadata;
 
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import javax.xml.namespace.QName;
 
@@ -51,6 +52,8 @@ import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
+
+import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 
 /**
  * Default implementation of {@link ISimulationDescriptor}
@@ -67,7 +70,7 @@ public class SimulationDescriptor extends AbstractFeatureBinder implements ISimu
   {
     this(
         featureToBind,
-        Kalypso1D2DSchemaConstants.SIMMETA_F_MODELDESCRIPTOR);
+        Kalypso1D2DSchemaConstants.SIMMETA_F_SIMDESCRIPTOR );
   }
   
   public SimulationDescriptor( Feature featureToBind, QName qnameToBind )
@@ -83,13 +86,20 @@ public class SimulationDescriptor extends AbstractFeatureBinder implements ISimu
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptor#getEndTime()
    */
-  public Date getEndTime( )
+  public GregorianCalendar getEndTime( )
   {
-    Date date = 
+    XMLGregorianCalendarImpl date = 
       getProperty( 
           Kalypso1D2DSchemaConstants.SIMMETA_PROP_END_TIME, 
-          Date.class ); 
-    return date;
+          XMLGregorianCalendarImpl.class ); 
+    if( date == null )
+    {
+      return null;
+    }
+    else
+    {
+      return date.toGregorianCalendar();
+    }
   }
 
   /**
@@ -108,13 +118,20 @@ public class SimulationDescriptor extends AbstractFeatureBinder implements ISimu
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptor#getStartTime()
    */
-  public Date getStartTime( )
+  public GregorianCalendar getStartTime( )
   {
-    Date date = 
+    XMLGregorianCalendarImpl date = 
       getProperty( 
           Kalypso1D2DSchemaConstants.SIMMETA_PROP_START_TIME, 
-          Date.class ); 
-    return date;
+          XMLGregorianCalendarImpl.class );
+    if( date == null )
+    {
+      return null;
+    }
+    else
+    {
+      return date.toGregorianCalendar();
+    }
   }
 
   /**
@@ -169,12 +186,18 @@ public class SimulationDescriptor extends AbstractFeatureBinder implements ISimu
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptor#setEndTime(java.util.Date)
    */
-  public void setEndTime( Date value )
+  public void setEndTime( GregorianCalendar value )
   {
+    XMLGregorianCalendarImpl xmlGc = null;
+    if( value != null )
+    {
+      xmlGc = new XMLGregorianCalendarImpl(value);
+    }
+      
     Assert.throwIAEOnNullParam( value, "value" );
     setProperty( 
         Kalypso1D2DSchemaConstants.SIMMETA_PROP_END_TIME, 
-        value );
+        xmlGc );
   }
 
   /**
@@ -201,12 +224,17 @@ public class SimulationDescriptor extends AbstractFeatureBinder implements ISimu
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptor#setStartTime(java.util.Date)
    */
-  public void setStartTime( Date value )
+  public void setStartTime( GregorianCalendar value )
   {
     Assert.throwIAEOnNullParam( value, "value" );
+    XMLGregorianCalendarImpl xmlGc =  null;
+    if( value!=null )
+    {
+      xmlGc = new XMLGregorianCalendarImpl(value);
+    }
     setProperty( 
         Kalypso1D2DSchemaConstants.SIMMETA_PROP_START_TIME, 
-        value );
+        xmlGc );
   }
 
   /**
