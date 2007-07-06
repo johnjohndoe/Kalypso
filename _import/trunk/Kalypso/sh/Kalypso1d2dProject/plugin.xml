@@ -10,6 +10,20 @@
          <run class="org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature"/>
       </runtime>
    </extension>
+   
+   <extension
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptor"
+            class="org.kalypso.kalypso1d2d.pjt.views.contentprov.SimulationDescriptorAdapterFactory">
+         <adapter
+               type="org.eclipse.ui.model.IWorkbenchAdapter2">
+         </adapter>
+         <adapter
+               type="org.eclipse.ui.model.IWorkbenchAdapter">
+         </adapter>
+      </factory>
+   </extension>
 
 	<extension
        point="org.eclipse.ui.newWizards">
@@ -86,6 +100,13 @@
              icon="icons/tree.gif"
              id="org.kalypso.kalypso1d2d.pjt.views.ScenarioView"
              name="Szenarien">
+       </view>
+       <view
+             allowMultiple="false"
+             class="org.eclipse.ui.navigator.CommonNavigator"
+             icon="icons/tree.gif"
+             id="org.kalypso.kalypso1d2d.pjt.views.ResultNavigator"
+             name="Ergebnisse">
        </view>               
    </extension>
    
@@ -302,6 +323,18 @@
             </contentExtension>
          </includes>
       </viewerContentBinding>
+      <viewer
+            viewerId="org.kalypso.kalypso1d2d.pjt.views.ResultNavigator">
+      </viewer>
+      <viewerContentBinding
+            viewerId="org.kalypso.kalypso1d2d.pjt.views.ResultNavigator">
+         <includes>
+            <contentExtension
+                  isRoot="true"
+                  pattern="org.kalypso.kalypso1d2d.pjt.navigator.ResultContent">
+            </contentExtension>
+         </includes>
+      </viewerContentBinding>
    </extension>   
    <extension
          point="org.eclipse.ui.navigator.navigatorContent">
@@ -350,6 +383,25 @@
             </not>
          </filterExpression>
       </commonFilter>
+      <navigatorContent
+            activeByDefault="true"
+            contentProvider="org.kalypso.kalypso1d2d.pjt.views.contentprov.ResultNavigatorContentProvider"
+            id="org.kalypso.kalypso1d2d.pjt.navigator.ResultContent"
+            labelProvider="org.eclipse.ui.model.WorkbenchLabelProvider"
+            name="Ergebnisse"
+            priority="highest"
+            providesSaveables="false">
+         <enablement>
+            <or>
+               <adapt
+                     type="org.eclipse.core.resources.IWorkspaceRoot">
+               </adapt>
+               <instanceof
+                     value="org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptor">
+               </instanceof>
+            </or>
+         </enablement>
+      </navigatorContent>
    </extension>
    <extension
          point="org.eclipse.ui.commands">
