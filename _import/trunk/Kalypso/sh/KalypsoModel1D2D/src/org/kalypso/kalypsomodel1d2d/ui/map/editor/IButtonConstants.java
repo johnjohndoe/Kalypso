@@ -48,7 +48,7 @@ public interface IButtonConstants
 {
   public String BTN_MOVE_UP = "MOVE_UP";
   public String BTN_MOVE_DOWN = "MOVE_DOWN";
-  public String BTN_CLICK_TO_RUN = "CLICK_TO_RUN";
+  public String BTN_SHOW_AND_MAXIMIZE = "SHOW_AND_MAXIMIZE";
   public String BTN_REMOVE = "REMOVE";
   public String BTN_ADD = "ADD";
   public String BTN_CLICK_TO_CALCULATE = "CLICK_TO_CALCULATE";

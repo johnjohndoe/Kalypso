@@ -48,15 +48,11 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.ScrolledForm;
-import org.eclipse.ui.forms.widgets.Section;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IPseudoOPerationalModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.IGrabDistanceProvider;
 import org.kalypso.kalypsomodel1d2d.ui.map.IWidgetWithStrategy;
@@ -71,9 +67,7 @@ import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.mapmodel.MapModell;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 
@@ -161,6 +155,12 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions,
     
     dataModel.setData( ICommonKeys.KEY_MAP_PANEL, mapPanel );
     IMapModell mapModell = mapPanel.getMapModell();
+//    if(mapModell == null)
+//    {
+//      // set empty Modell:
+//      final KalypsoCorePlugin plugin = KalypsoCorePlugin.getDefault();
+//      mapModell = new MapModell( plugin.getCoordinatesSystem(), null );
+//    }
     IFEDiscretisationModel1d2d m_model = UtilMap.findFEModelTheme( mapModell );
     dataModel.setData( 
         ICommonKeys.KEY_DISCRETISATION_MODEL, m_model );

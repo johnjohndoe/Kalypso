@@ -43,7 +43,6 @@ package org.kalypso.kalypsomodel1d2d;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
-import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * @author jung
@@ -64,7 +63,6 @@ public class KalypsoModel1D2DUIImages
 
   public static final ImageDescriptor ID_ADD = id( "icons/elcl16/addrepo_rep.gif" );
 
-  
   public static final ImageDescriptor IMG_RUN_SIM = id( "icons/elcl16/pan.gif" );
   
   public static final ImageDescriptor IMG_DESC_ZOOM_WITH_RECT = id( "icons/elcl16/zoomin.gif" );

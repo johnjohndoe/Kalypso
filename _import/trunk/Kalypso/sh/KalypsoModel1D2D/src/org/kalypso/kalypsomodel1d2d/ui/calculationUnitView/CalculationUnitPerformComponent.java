@@ -41,7 +41,9 @@
 package org.kalypso.kalypsomodel1d2d.ui.calculationUnitView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -77,6 +79,7 @@ public class CalculationUnitPerformComponent extends FeatureWrapperListEditor im
 {
 
   private CalculationUnitDataModel dataModel;
+  private Map<String,String> btnDescription = new HashMap<String, String>();
   
   private Action performCalButton = 
     new Action("Perform", KalypsoModel1D2DUIImages.IMG_RUN_SIM )
@@ -105,20 +108,42 @@ public class CalculationUnitPerformComponent extends FeatureWrapperListEditor im
         throw new RuntimeException(e);
       }
     }
+    /**
+     * @see org.eclipse.jface.action.Action#getToolTipText()
+     */
+    @Override
+    public String getToolTipText( )
+    {
+      String toolTipText2 = super.getToolTipText();
+      if( toolTipText2 == null )
+      {
+        toolTipText2="Berechnung Starten";
+      }
+      return toolTipText2;
+    }
   };
   
   public CalculationUnitPerformComponent(CalculationUnitDataModel dataModel)
   {	  
 	    super(null,null,null);
-	    setRequiredButtons( BTN_CLICK_TO_RUN,
-	                        //BTN_REMOVE,
-	                        //BTN_ADD,
-	                        BTN_CLICK_TO_CALCULATE);
+	    setRequiredButtons( BTN_SHOW_AND_MAXIMIZE                        
+	                        /*BTN_CLICK_TO_CALCULATE*/);
 	    
+	    btnDescription.put( "SHOW_AND_MAXIMIZE", "Berechnungseinheit anzeigen und maximieren" );
+//	    setBtnsDescription();
 	    setNonGenericActions( new IAction[]{performCalButton} );
 	    this.dataModel = dataModel;
-  }
+  }  
   
+  @Override
+  protected String getBtnDescription(String key)
+  { 
+    if (btnDescription.get( key )!= null)
+      return btnDescription.get( key );
+    else
+      return null;
+  }
+
   @Override
   protected ILabelProvider getLabelProvider(Display display)
   {    

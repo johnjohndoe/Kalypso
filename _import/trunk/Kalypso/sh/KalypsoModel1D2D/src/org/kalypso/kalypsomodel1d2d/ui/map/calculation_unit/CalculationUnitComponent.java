@@ -41,7 +41,9 @@
 package org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.wizard.WizardDialog;
@@ -72,15 +74,19 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 public class CalculationUnitComponent 
       extends FeatureWrapperListEditor 
       implements IButtonConstants
-{
+{ 
+  private Map<String,String> btnDescription = new HashMap<String,String>();
 
-  
+
   public CalculationUnitComponent()
   {
     super(null,null,null);
-    setRequiredButtons( BTN_CLICK_TO_RUN,
+    setRequiredButtons( BTN_SHOW_AND_MAXIMIZE,
                         BTN_REMOVE,
                         BTN_ADD);
+    btnDescription.put( "SHOW_AND_MAXIMIZE", "Berechnungseinheit anzeigen und maximieren" );
+    btnDescription.put( "REMOVE", "Berechnungseinheit Löschen" );
+    btnDescription.put( "ADD", "Berechnungseinheit hinzufügen" );
   }
 
   /**
@@ -97,6 +103,20 @@ public class CalculationUnitComponent
     wizardDialog.open();
   } 
   
+  @SuppressWarnings("unused")
+  private void getDescriptionList()
+  {
+    
+  }
+  
+  @Override
+  protected String getBtnDescription(String key)
+  { 
+    if (btnDescription.get( key )!= null)
+      return btnDescription.get( key );
+    else
+      return null;
+  }
   @Override
   public void refreshOtherSections(){    
     

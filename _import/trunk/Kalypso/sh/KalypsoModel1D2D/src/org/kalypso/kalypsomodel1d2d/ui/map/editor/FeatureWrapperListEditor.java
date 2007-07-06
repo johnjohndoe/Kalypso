@@ -332,7 +332,7 @@ public class FeatureWrapperListEditor implements IButtonConstants
   private Text descriptionText;
 
   private String[] buttonsList;
-
+  
   private Button saveButton;
 
 //  private IFeatureWrapper2 currentElementSelection;
@@ -438,6 +438,9 @@ public class FeatureWrapperListEditor implements IButtonConstants
               "icons/elcl16/list_up.gif" ).getImageData() );
       moveUpBtn.setImage( imageUp );
       moveUpBtn.addSelectionListener( this.moveUpListener );
+      
+      moveUpBtn.setToolTipText( getBtnDescription(IButtonConstants.BTN_MOVE_UP)!= null ? 
+                                      getBtnDescription( IButtonConstants.BTN_MOVE_UP ): "Move Up #" );
     }
     
     if (searchForThisString( IButtonConstants.BTN_MOVE_DOWN ))
@@ -449,30 +452,34 @@ public class FeatureWrapperListEditor implements IButtonConstants
                 "icons/elcl16/list_down.gif" ).getImageData() );
         moveDownBtn.setImage( imageDown );
         moveDownBtn.addSelectionListener( this.moveDownListener );
+        moveDownBtn.setToolTipText( getBtnDescription( IButtonConstants.BTN_MOVE_DOWN)!=null ? 
+                                      getBtnDescription( IButtonConstants.BTN_MOVE_DOWN ): "Move Down #");
       }
     
-    if (searchForThisString( IButtonConstants.BTN_CLICK_TO_RUN ))
+    if (searchForThisString( IButtonConstants.BTN_SHOW_AND_MAXIMIZE ))
       {
-        Button showTerrain = new Button( btnComposite, SWT.PUSH );
-        showTerrain.setToolTipText( bTextMaximizeSelected );
+        Button clickToRunBtn = new Button( btnComposite, SWT.PUSH );
+        //clickToRunBtn.setToolTipText( bTextMaximizeSelected );
         image = new Image( btnComposite.getDisplay(),
             KalypsoModel1D2DPlugin.imageDescriptorFromPlugin(
                 PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
                 "icons/elcl16/goTo_Terrain.gif" ).getImageData() );
-        showTerrain.setImage( image );
-        showTerrain.addSelectionListener( new SelectionAdapter()
+        clickToRunBtn.setImage( image );
+        clickToRunBtn.addSelectionListener( new SelectionAdapter()
         {
           public void widgetSelected( SelectionEvent event )
           {            
             maximizeSelected();
           }        
-        } );      
+        } );
+        clickToRunBtn.setToolTipText( getBtnDescription( IButtonConstants.BTN_SHOW_AND_MAXIMIZE)!=null ? 
+            getBtnDescription( IButtonConstants.BTN_SHOW_AND_MAXIMIZE ): "Run #");
       }
     
     if (searchForThisString( IButtonConstants.BTN_REMOVE ))
       {
        Button deleteButton = new Button( btnComposite, SWT.PUSH );
-        deleteButton.setToolTipText( deleteSelected );
+       // deleteButton.setToolTipText( deleteSelected );
         image = new Image( btnComposite.getDisplay(),
             KalypsoModel1D2DPlugin.imageDescriptorFromPlugin(
                 PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
@@ -492,13 +499,15 @@ public class FeatureWrapperListEditor implements IButtonConstants
               th.printStackTrace();
             }
           }
-        } );     
+        } );
+        deleteButton.setToolTipText( getBtnDescription( IButtonConstants.BTN_REMOVE)!=null ? 
+            getBtnDescription( IButtonConstants.BTN_REMOVE ): "Remove #");
       }
     
     if (searchForThisString( IButtonConstants.BTN_ADD ))
     {
       Button addButton = new Button( btnComposite, SWT.PUSH );
-      addButton.setToolTipText( deleteSelected );
+      //addButton.setToolTipText( deleteSelected );
       image = new Image( btnComposite.getDisplay(),
           KalypsoModel1D2DPlugin.imageDescriptorFromPlugin(
               PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
@@ -517,13 +526,15 @@ public class FeatureWrapperListEditor implements IButtonConstants
             th.printStackTrace();
           }
         }
-      } );           
+      } );
+      addButton.setToolTipText( getBtnDescription( IButtonConstants.BTN_ADD)!=null ? 
+          getBtnDescription( IButtonConstants.BTN_ADD ): "Add #");
     }
     
     if (searchForThisString( IButtonConstants.BTN_CLICK_TO_CALCULATE ))
     {
       Button calculateButton = new Button( btnComposite, SWT.PUSH );
-      calculateButton.setToolTipText( calculateSelected );
+   //   calculateButton.setToolTipText( calculateSelected );
       image = new Image( btnComposite.getDisplay(),
           KalypsoModel1D2DPlugin.imageDescriptorFromPlugin(
               PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
@@ -542,7 +553,9 @@ public class FeatureWrapperListEditor implements IButtonConstants
             th.printStackTrace();
           }
         }
-      } );           
+      } );
+      calculateButton.setToolTipText( getBtnDescription( IButtonConstants.BTN_CLICK_TO_CALCULATE)!=null ? 
+          getBtnDescription( IButtonConstants.BTN_CLICK_TO_CALCULATE ): "Calculate #");
     }
     
     for( final IAction action : nonGenericActions )
@@ -618,20 +631,35 @@ public class FeatureWrapperListEditor implements IButtonConstants
 
   protected void deleteSelected( ) throws Exception
   {
+    
   }
 
   protected void moveSelection( int delta )
   {
+    
   }
 
+  /**
+   * Template Method -- Override by inheriting Class
+   */
   protected void maximizeSelected( )
   {
+    
   }
 
   public void setRequiredButtons( String... buttonsList )
   {
     this.buttonsList = buttonsList;
   }
+  
+  /**
+   * Template Method -- Override by inheriting Class
+   */
+  protected String getBtnDescription( String key )
+  {
+   return null;
+  }
+  
   
   public boolean searchForThisString(String searchStr)
   {
@@ -656,6 +684,7 @@ public class FeatureWrapperListEditor implements IButtonConstants
   
   public void createFeatureWrapper()
   {
+    
   }
   
   
@@ -736,13 +765,13 @@ public class FeatureWrapperListEditor implements IButtonConstants
   }
   
   public void refreshOtherSections()
-  {    
+  {
+    
   }
   
   
   protected List<ICalculationUnit> setInputContentProvider()
-  {
-   
+  {   
     return null;
   }
   
