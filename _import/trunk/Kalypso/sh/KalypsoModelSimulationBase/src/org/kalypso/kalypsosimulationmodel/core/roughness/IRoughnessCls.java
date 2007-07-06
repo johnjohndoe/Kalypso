@@ -16,7 +16,10 @@ public interface IRoughnessCls extends IFeatureWrapper2
 	{
 		ILLEGAL_VALUE_KS,
 		ILLEGAL_VALUE_DP,
-		ILLEGAL_VALUE_EDDY,
+		ILLEGAL_VALUE_EDDY_XX,
+        ILLEGAL_VALUE_EDDY_YX,
+        ILLEGAL_VALUE_EDDY_XY,
+        ILLEGAL_VALUE_EDDY_YY,
 		ILLEGAL_VALUE_AXAY,
 		ILLEGAL_VALUE_MARSH,
 		ILLEGAL_VALUE_NAME,
@@ -71,7 +74,10 @@ public interface IRoughnessCls extends IFeatureWrapper2
 	 *  
 	 * @return the eddy  viskosity of this roughness
 	 */
-	public double getEddy();
+	public double getEddyXX();
+    public double getEddyYX();
+    public double getEddyXY();
+    public double getEddyYY();
 	
 	/**
 	 * Sets a new eddy viscosity for this roughness
@@ -81,9 +87,10 @@ public interface IRoughnessCls extends IFeatureWrapper2
 	 * @throws IllegalArgumentException if eddy is negative
 	 * 
 	 */
-	public void setEddy(
-				double eddy)
-				throws IllegalArgumentException;
+	public void setEddyXX(double eddy_xx) throws IllegalArgumentException;
+    public void setEddyYX(double eddy_yx) throws IllegalArgumentException;
+    public void setEddyXY(double eddy_xy) throws IllegalArgumentException;
+    public void setEddyYY(double eddy_yy) throws IllegalArgumentException;
 	
 	/**
 	 * Configure this roughness with the given feature
@@ -103,7 +110,10 @@ public interface IRoughnessCls extends IFeatureWrapper2
 									double ks,
 									double axay,
 									double dp,
-									double eddy,
+									double eddy_xx,
+                                    double eddy_yx,
+                                    double eddy_xy,
+                                    double eddy_yy,
 									double marsh);
 	/**
 	 * To validates the current configuration of this 

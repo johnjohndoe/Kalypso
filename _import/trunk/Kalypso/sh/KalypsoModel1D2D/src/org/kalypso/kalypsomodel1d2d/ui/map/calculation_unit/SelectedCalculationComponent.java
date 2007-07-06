@@ -74,6 +74,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.IGrabDistanceProvider;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListener;
+import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -276,9 +277,11 @@ public class SelectedCalculationComponent
 
   public List<IBoundaryCondition> getBoundaryConditions()
   {
-    final CommandableWorkspace workspace = dataModel.getData(
-        CommandableWorkspace.class, 
-        ICommonKeys.KEY_BOUNDARY_CONDITION_CMD_WORKSPACE );
+    final CommandableWorkspace workspace =
+      KeyBasedDataModelUtil.getBCWorkSpace( dataModel );//TODO check bc workspace remove
+//      dataModel.getData(
+//        CommandableWorkspace.class, 
+//        ICommonKeys.KEY_BOUNDARY_CONDITION_CMD_WORKSPACE );
     final Feature bcHolderFeature = workspace.getRootFeature();//bcTheme.getFeatureList().getParentFeature();
     //TODO Patrice replace with operational model
     IFlowRelationshipModel flowRelationship =

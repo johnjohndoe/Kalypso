@@ -331,10 +331,10 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
 //                         dataModel.getData( 
 //                             IKalypsoFeatureTheme.class, 
 //                             ICommonKeys.KEY_BOUNDARY_CONDITION_THEME );
-             CommandableWorkspace workspace = //bcTheme.getWorkspace();
-               dataModel.getData( 
-                   CommandableWorkspace.class, 
-                   ICommonKeys.KEY_BOUNDARY_CONDITION_CMD_WORKSPACE );
+             CommandableWorkspace workspace = KeyBasedDataModelUtil.getBCWorkSpace( dataModel );//bcTheme.getWorkspace();
+//               dataModel.getData( 
+//                   CommandableWorkspace.class, 
+//                   ICommonKeys.KEY_BOUNDARY_CONDITION_CMD_WORKSPACE );
              ///model is to be  get from the calculation unit
              final Feature opModelFeature = workspace.getRootFeature();
              IFlowRelationshipModel opModel = 

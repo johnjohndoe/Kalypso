@@ -43,6 +43,9 @@
 						minOccurs="0" maxOccurs="unbounded" />
 					<xs:element ref="wbr:roughness_VegetationClsMember"
 						minOccurs="0" maxOccurs="unbounded" />
+					<xs:element
+						ref="wbr:roughness_EddyViscosityClsMember" minOccurs="0"
+						maxOccurs="unbounded" />
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -79,6 +82,18 @@
 	<xs:complexType name="Roughness_VegetationClsPropertyType">
 		<xs:sequence>
 			<xs:element ref="wbr:Roughness_VegetationCls" minOccurs="0" />
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+	</xs:complexType>
+	<!-- =================================================================
+		roughnessMember; Roughness_EddyViscosityClsPropertyType
+		================================================================== -->
+	<xs:element name="roughness_EddyViscosityClsMember"
+		type="wbr:Roughness_EddyViscosityClsPropertyType" />
+	<xs:complexType name="Roughness_EddyViscosityClsPropertyType">
+		<xs:sequence>
+			<xs:element ref="wbr:Roughness_EddyViscosityCls"
+				minOccurs="0" />
 		</xs:sequence>
 		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
 	</xs:complexType>
@@ -132,6 +147,22 @@
 			</xs:documentation>
 		</xs:annotation>
 	</xs:element>
+	<xs:element name="Roughness_EddyViscosityCls"
+		type="wbr:Roughness_EddyViscosityClsType"
+		substitutionGroup="gml:_Feature">
+		<xs:annotation>
+			<xs:documentation xml:lang="de">
+				<xs:label>
+					<![CDATA[${listProperty:http://www.opengis.net/gml#name;0;-no name-}]]>
+				</xs:label>
+			</xs:documentation>
+			<xs:documentation xml:lang="en">
+				<xs:label>
+					<![CDATA[${listProperty:http://www.opengis.net/gml#name;0;-no name-}]]>
+				</xs:label>
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
 	<!-- =================================================================
 		Roughness
 		================================================================== -->
@@ -140,39 +171,48 @@
 			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
 				<kapp:functionProperty
 					kapp:functionId="org.kalypso.ui.wizards.imports.roughness.RougnessValuesPropertyFunction"
-					kapp:property="wbr:groundTypeName" 
-					kapp:isVirtual = "true" 
-					kapp:valueType="xs:string"/>
+					kapp:property="wbr:groundTypeName" kapp:isVirtual="true"
+					kapp:valueType="xs:string" />
 				<kapp:functionProperty
 					kapp:functionId="org.kalypso.ui.wizards.imports.roughness.RougnessValuesPropertyFunction"
-					kapp:property="wbr:vegetationTypeName" 
-					kapp:isVirtual = "true" 
-					kapp:valueType="xs:string"/>
+					kapp:property="wbr:vegetationTypeName" kapp:isVirtual="true"
+					kapp:valueType="xs:string" />
 				<kapp:functionProperty
 					kapp:functionId="org.kalypso.ui.wizards.imports.roughness.RougnessValuesPropertyFunction"
-					kapp:property="wbr:ks" 
-					kapp:isVirtual = "true" 
-					kapp:valueType="xs:double"/>
+					kapp:property="wbr:eddyViscosityTypeName" kapp:isVirtual="true"
+					kapp:valueType="xs:string" />
 				<kapp:functionProperty
 					kapp:functionId="org.kalypso.ui.wizards.imports.roughness.RougnessValuesPropertyFunction"
-					kapp:property="wbr:axay" 
-					kapp:isVirtual = "true" 
-					kapp:valueType="xs:double"/>
+					kapp:property="wbr:ks" kapp:isVirtual="true"
+					kapp:valueType="xs:double" />
 				<kapp:functionProperty
 					kapp:functionId="org.kalypso.ui.wizards.imports.roughness.RougnessValuesPropertyFunction"
-					kapp:property="wbr:dp" 
-					kapp:isVirtual = "true" 
-					kapp:valueType="xs:double"/>
+					kapp:property="wbr:axay" kapp:isVirtual="true"
+					kapp:valueType="xs:double" />
 				<kapp:functionProperty
 					kapp:functionId="org.kalypso.ui.wizards.imports.roughness.RougnessValuesPropertyFunction"
-					kapp:property="wbr:eddy" 
-					kapp:isVirtual = "true" 
-					kapp:valueType="xs:double"/>
+					kapp:property="wbr:dp" kapp:isVirtual="true"
+					kapp:valueType="xs:double" />
 				<kapp:functionProperty
 					kapp:functionId="org.kalypso.ui.wizards.imports.roughness.RougnessValuesPropertyFunction"
-					kapp:property="wbr:charactV" 
-					kapp:isVirtual = "true" 
-					kapp:valueType="xs:double"/>
+					kapp:property="wbr:exx" kapp:isVirtual="true"
+					kapp:valueType="xs:double" />
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.ui.wizards.imports.roughness.RougnessValuesPropertyFunction"
+					kapp:property="wbr:eyx" kapp:isVirtual="true"
+					kapp:valueType="xs:double" />
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.ui.wizards.imports.roughness.RougnessValuesPropertyFunction"
+					kapp:property="wbr:exy" kapp:isVirtual="true"
+					kapp:valueType="xs:double" />
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.ui.wizards.imports.roughness.RougnessValuesPropertyFunction"
+					kapp:property="wbr:eyy" kapp:isVirtual="true"
+					kapp:valueType="xs:double" />
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.ui.wizards.imports.roughness.RougnessValuesPropertyFunction"
+					kapp:property="wbr:charactV" kapp:isVirtual="true"
+					kapp:valueType="xs:double" />
 			</xs:appinfo>
 		</xs:annotation>
 		<xs:complexContent>
@@ -200,28 +240,45 @@
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
+					<xs:element name="roughness_EddyViscosityLink"
+						type="wbr:RoughnessEddyViscosityLinkType">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Wirbelviskosität</xs:label>
+							</xs:documentation>
+							<xs:documentation xml:lang="en">
+								<xs:label>Eddy viscosity</xs:label>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<!--xs:element name="groundTypeName"
 						type="xs:string">
-					</xs:element>
-					<xs:element name="vegetationTypeName"
+						</xs:element>
+						<xs:element name="vegetationTypeName"
 						type="xs:string">
-					</xs:element-->
+						</xs:element-->
 					<!--xs:element name="ks" type="xs:double" / -->
 					<!--xs:element name="axay" type="xs:double" / -->
 					<!--xs:element name="dp" type="xs:double" / -->
-					
-					<xs:element name="colorStyle" type="common:color" >
-					<xs:annotation>
+
+					<xs:element name="colorStyle" type="common:color">
+						<xs:annotation>
 							<xs:documentation xml:lang="de">
 								<xs:label>Farbdarstellung</xs:label>
-								<xs:tooltip>Farbdarstellung der Rauheitsklasse in der Karte</xs:tooltip>
+								<xs:tooltip>
+									Farbdarstellung der Rauheitsklasse
+									in der Karte
+								</xs:tooltip>
 							</xs:documentation>
 							<xs:documentation xml:lang="en">
 								<xs:label>Color style</xs:label>
-								<xs:tooltip>Color of roughness classes in the map</xs:tooltip>
+								<xs:tooltip>
+									Color of roughness classes in the
+									map
+								</xs:tooltip>
 							</xs:documentation>
 						</xs:annotation>
-						</xs:element>
+					</xs:element>
 				</xs:sequence>
 				<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
 			</xs:extension>
@@ -232,6 +289,21 @@
 		<xs:annotation>
 			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
 				<kapp:documentReference>roughness.gml</kapp:documentReference>
+			
+			<!-- 
+			IMPORTANT!!!
+				
+				<kapp:documentReference>roughness.gml</kapp:documentReference>
+				should be written in one line, exactly like this!
+				
+				Please check if your auto-formatting breaks it into:
+					<kapp:documentReference>
+						roughness.gml
+					</kapp:documentReference>
+				than fix it manually...
+			 
+			-->
+			
 			</xs:appinfo>
 		</xs:annotation>
 		<xs:sequence>
@@ -245,6 +317,21 @@
 		<xs:annotation>
 			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
 				<kapp:documentReference>roughness.gml</kapp:documentReference>
+			
+			<!-- 
+			IMPORTANT!!!
+				
+				<kapp:documentReference>roughness.gml</kapp:documentReference>
+				should be written in one line, exactly like this!
+				
+				Please check if your auto-formatting breaks it into:
+					<kapp:documentReference>
+						roughness.gml
+					</kapp:documentReference>
+				than fix it manually...
+			 
+			-->
+			
 			</xs:appinfo>
 		</xs:annotation>
 		<xs:sequence>
@@ -252,6 +339,83 @@
 				maxOccurs="0" />
 		</xs:sequence>
 		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+	</xs:complexType>
+
+	<xs:complexType name="RoughnessEddyViscosityLinkType">
+		<xs:annotation>
+			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+				<kapp:documentReference>roughness.gml</kapp:documentReference>
+			
+			<!-- 
+			IMPORTANT!!!
+				
+				<kapp:documentReference>roughness.gml</kapp:documentReference>
+				should be written in one line, exactly like this!
+				
+				Please check if your auto-formatting breaks it into:
+					<kapp:documentReference>
+						roughness.gml
+					</kapp:documentReference>
+				than fix it manually...
+			 
+			-->
+			
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="wbr:Roughness_EddyViscosityCls"
+				minOccurs="0" maxOccurs="0" />
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+	</xs:complexType>
+
+	<xs:complexType name="Roughness_EddyViscosityClsType">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element name="exx" type="xs:double" default="500.0">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>ε(xx) [Pa/s]</xs:label>
+							</xs:documentation>
+							<xs:documentation xml:lang="en">
+								<xs:label>ε(x) [Pa/s]</xs:label>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="eyx" type="xs:double" default="500.0">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>ε(yx) [Pa/s]</xs:label>
+							</xs:documentation>
+							<xs:documentation xml:lang="en">
+								<xs:label>ε(y) [Pa/s]</xs:label>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="exy" type="xs:double" default="500.0">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>ε(xy) [Pa/s]</xs:label>
+							</xs:documentation>
+							<xs:documentation xml:lang="en">
+								<xs:label>ε(xy) [Pa/s]</xs:label>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="eyy" type="xs:double" default="500.0">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>ε(yy) [Pa/s]</xs:label>
+							</xs:documentation>
+							<xs:documentation xml:lang="en">
+								<xs:label>ε(yy) [Pa/s]</xs:label>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
 	</xs:complexType>
 
 	<xs:complexType name="Roughness_VegetationClsType">

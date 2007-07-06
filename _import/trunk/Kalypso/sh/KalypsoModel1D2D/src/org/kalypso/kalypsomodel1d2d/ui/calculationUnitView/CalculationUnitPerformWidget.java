@@ -51,6 +51,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
@@ -72,6 +73,7 @@ import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.mapmodel.MapModell;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 
@@ -159,6 +161,12 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions,
     
     dataModel.setData( ICommonKeys.KEY_MAP_PANEL, mapPanel );
     IMapModell mapModell = mapPanel.getMapModell();
+//    if(mapModell == null)
+//    {
+//      // set empty Modell:
+//      final KalypsoCorePlugin plugin = KalypsoCorePlugin.getDefault();
+//      mapModell = new MapModell( plugin.getCoordinatesSystem(), null );
+//    }
     IFEDiscretisationModel1d2d m_model = UtilMap.findFEModelTheme( mapModell );
     dataModel.setData( 
         ICommonKeys.KEY_DISCRETISATION_MODEL, m_model );
@@ -183,18 +191,18 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions,
     //the commandable workspace of the target theme is taken
     dataModel.setData( ICommonKeys.KEY_COMMAND_MANAGER, m_model.getWrappedFeature().getWorkspace());
     
-    IKalypsoFeatureTheme bcTheme = UtilMap.findEditableTheme( 
-        mapModell, 
-        IBoundaryCondition.QNAME );
-    if( bcTheme == null )
-    {
-      throw new RuntimeException("Could not find boundary condition theme");
-    }
-
-    final CommandableWorkspace bcWorkspace = bcTheme.getWorkspace();
-    dataModel.setData( 
-        ICommonKeys.KEY_BOUNDARY_CONDITION_CMD_WORKSPACE, 
-        bcWorkspace );
+//    IKalypsoFeatureTheme bcTheme = UtilMap.findEditableTheme( 
+//        mapModell, 
+//        IBoundaryCondition.QNAME );
+//    if( bcTheme == null )
+//    {
+//      throw new RuntimeException("Could not find boundary condition theme");
+//    }
+//
+//    final CommandableWorkspace bcWorkspace = bcTheme.getWorkspace();
+//    dataModel.setData( 
+//        ICommonKeys.KEY_BOUNDARY_CONDITION_CMD_WORKSPACE, 
+//        bcWorkspace );
     
     dataModel.setData( 
         ICommonKeys.KEY_GRAB_DISTANCE_PROVIDER, 

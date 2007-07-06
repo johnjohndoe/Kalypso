@@ -221,19 +221,48 @@ public class RMA10Calculation implements INativeIDProvider
     return m_kalypso1D2DKernelPath;
   }
 
-  public Double getViskosity( final Feature roughnessFE )
+  public Double[] getViskosity( final Feature roughnessFE )
   {
+    Double[] result = new Double[4];
     final int iedsw = getControlModel().getIEDSW();
+    
+    // turbulence combo (iedsw):
     if( iedsw == 0 )
     {
-      return getEddy( roughnessFE );
+      result[0] = getEddyXX( roughnessFE );
+      result[1] = getEddyYX( roughnessFE );
+      result[2] = getEddyXY( roughnessFE );
+      result[3] = getEddyYY( roughnessFE );
     }
-    return getcharactV( roughnessFE );
+    else
+    {
+      result[0] = 0.4;
+      result[1] = 0.4;
+      result[2] = 0.4;
+      result[3] = 0.4;
+    }
+      return result;
+    //return getcharactV( roughnessFE ); 0.4
   }
 
-  public Double getEddy( final Feature roughnessFE )
+  public Double getEddyXX( final Feature roughnessFE )
   {
-    return (Double) roughnessFE.getProperty( KalypsoModelRoughnessConsts.WBR_PROP_EDDY );
+    return FeatureHelper.getAsDouble( roughnessFE, KalypsoModelRoughnessConsts.WBR_PROP_EDDY_XX, 500.0 );
+  }
+
+  public Double getEddyYX( final Feature roughnessFE )
+  {
+    return FeatureHelper.getAsDouble( roughnessFE, KalypsoModelRoughnessConsts.WBR_PROP_EDDY_YX, 500.0 );
+  }
+
+  public Double getEddyXY( final Feature roughnessFE )
+  {
+    return FeatureHelper.getAsDouble( roughnessFE, KalypsoModelRoughnessConsts.WBR_PROP_EDDY_XY, 500.0 );
+  }
+
+  public Double getEddyYY( final Feature roughnessFE )
+  {
+    return FeatureHelper.getAsDouble( roughnessFE, KalypsoModelRoughnessConsts.WBR_PROP_EDDY_YY, 500.0 );
   }
 
   public Double getcharactV( final Feature roughnessFE )

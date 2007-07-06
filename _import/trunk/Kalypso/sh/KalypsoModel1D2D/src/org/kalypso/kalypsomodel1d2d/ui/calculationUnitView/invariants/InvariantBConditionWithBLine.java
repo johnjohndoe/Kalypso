@@ -59,6 +59,7 @@ import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.ProblemDescriptor;
 import org.kalypso.kalypsomodel1d2d.ui.map.IGrabDistanceProvider;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
+import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
 import org.kalypso.kalypsosimulationmodel.core.discr.IFENode;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -84,7 +85,8 @@ public class InvariantBConditionWithBLine implements ICalculationValidateInterfa
 
    public List<IBoundaryCondition> getBoundaryConditions( )
   {
-    final CommandableWorkspace workspace = dataModel.getData( CommandableWorkspace.class, ICommonKeys.KEY_BOUNDARY_CONDITION_CMD_WORKSPACE );
+    final CommandableWorkspace workspace = 
+      KeyBasedDataModelUtil.getBCWorkSpace( dataModel );// dataModel.getData( CommandableWorkspace.class, ICommonKeys.KEY_BOUNDARY_CONDITION_CMD_WORKSPACE );
     final Feature bcHolderFeature = workspace.getRootFeature();
     IFlowRelationshipModel flowRelationship = (IFlowRelationshipModel) bcHolderFeature.getAdapter( IFlowRelationshipModel.class );
     List<IBoundaryCondition> conditions = new ArrayList<IBoundaryCondition>( (List) flowRelationship );

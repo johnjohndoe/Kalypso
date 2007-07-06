@@ -111,6 +111,26 @@ public class Util
   /**
    * Gets the szenario model
    */
+  public static final ICaseDataProvider<IFeatureWrapper2> getScenarioDataProvider( )
+  {
+    try
+    {
+      final IWorkbench workbench = PlatformUI.getWorkbench();
+      final IHandlerService service = (IHandlerService) workbench.getService( IHandlerService.class );
+      final IEvaluationContext currentState = service.getCurrentState();
+      final ICaseDataProvider<IFeatureWrapper2> caseDataProvider = (ICaseDataProvider<IFeatureWrapper2>) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+      return caseDataProvider;
+    }
+    catch( final Throwable th )
+    {
+      th.printStackTrace();
+      return null;
+    }
+  }
+  
+  /**
+   * Gets the szenario model
+   */
   public static final <T extends IFeatureWrapper2> T getModel( final Class<T> modelClass )
   {
     try

@@ -60,11 +60,15 @@ public class RougnessValuesPropertyFunction extends FeaturePropertyFunction
 
   private final static QName m_vegetationClsMember = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "roughness_VegetationLink" );
 
+  private final static QName m_eddyViscosityClsMember = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "roughness_EddyViscosityLink" );
+
   private final static QName m_name = new QName( NS.GML3, "name" );
 
   private final static QName m_groundTypeName = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "groundTypeName" );
 
   private final static QName m_vegetationTypeName = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "vegetationTypeName" );
+
+  private final static QName m_eddyViscosityTypeName = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "eddyViscosityTypeName" );
 
   // private final static QName m_colorStyle = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "colorStyle" );
 
@@ -106,9 +110,19 @@ public class RougnessValuesPropertyFunction extends FeaturePropertyFunction
       else
         return getValue( member.getProperty( m_name ) );
     }
+    else if( ptQName.equals( m_eddyViscosityTypeName ) )
+    {
+      member = (Feature) feature.getProperty( m_eddyViscosityClsMember );
+      if( member == null )
+        return "";
+      else
+        return getValue( member.getProperty( m_name ) );
+    }
     member = (Feature) feature.getProperty( m_vegetationClsMember );
     if( member == null )
       member = (Feature) feature.getProperty( m_groundClsMember );
+    if( member == null )
+      member = (Feature) feature.getProperty( m_eddyViscosityClsMember );
     if( member == null )
       return null;
 

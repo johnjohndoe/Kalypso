@@ -65,6 +65,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
 import org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget;
+import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
 import org.kalypso.ogc.gml.map.MapPanel;
@@ -149,10 +150,10 @@ public class AddRemoveBoundaryConditionToCalUnitWidget extends FENetConceptSelec
       {
         
         
-        final CommandableWorkspace cmdWorkspace = 
-          dataModel.getData( 
-              CommandableWorkspace.class, 
-              ICommonKeys.KEY_BOUNDARY_CONDITION_CMD_WORKSPACE );
+        final CommandableWorkspace cmdWorkspace = KeyBasedDataModelUtil.getBCWorkSpace( dataModel );
+//          dataModel.getData( 
+//              CommandableWorkspace.class, 
+//              ICommonKeys.KEY_BOUNDARY_CONDITION_CMD_WORKSPACE );
         final Feature parentFeature =
            cmdWorkspace.getRootFeature();
         final IFlowRelationshipModel bcHolder = 
@@ -184,6 +185,7 @@ public class AddRemoveBoundaryConditionToCalUnitWidget extends FENetConceptSelec
                     dataModel, ICommonKeys.KEY_MAP_PANEL );
               }
             };
+            
             KeyBasedDataModelUtil.postCommand( dataModel, delCmd );
           }
         }

@@ -16,7 +16,13 @@ public class KalypsoModelRoughnessConsts
 
   public static final QName WBR_PROP_DP = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "dp" );
 
-  public static final QName WBR_PROP_EDDY = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "eddy" );
+  public static final QName WBR_PROP_EDDY_XX = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "exx" );
+
+  public static final QName WBR_PROP_EDDY_YX = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "eyx" );
+
+  public static final QName WBR_PROP_EDDY_XY = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "exy" );
+
+  public static final QName WBR_PROP_EDDY_YY = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "eyy" );
 
   public static final QName WBR_PROP_CHARACTV = new QName( UrlCatalogRoughness.NS_ROUGHNESS_MODEL, "charactV" );
 

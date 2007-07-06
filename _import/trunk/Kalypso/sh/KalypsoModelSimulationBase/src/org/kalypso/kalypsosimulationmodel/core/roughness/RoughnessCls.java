@@ -109,13 +109,28 @@ public class RoughnessCls
    * 
    * @see org.kalypso.kalypsosimulationmodel.core.roughness.IRoughness#getEddy()
    */
-  public double getEddy( )
+  public double getEddyXX( )
   {
     final Feature feature = getFeature();
-    return FeatureHelper.getAsDouble( 
-              feature, 
-              KalypsoModelRoughnessConsts.WBR_PROP_EDDY, 
-              Double.NaN );
+    return FeatureHelper.getAsDouble( feature, KalypsoModelRoughnessConsts.WBR_PROP_EDDY_XX, 500.0 );
+  }
+
+  public double getEddyYX( )
+  {
+    final Feature feature = getFeature();
+    return FeatureHelper.getAsDouble( feature, KalypsoModelRoughnessConsts.WBR_PROP_EDDY_YX, 500.0 );
+  }
+
+  public double getEddyXY( )
+  {
+    final Feature feature = getFeature();
+    return FeatureHelper.getAsDouble( feature, KalypsoModelRoughnessConsts.WBR_PROP_EDDY_XY, 500.0 );
+  }
+
+  public double getEddyYY( )
+  {
+    final Feature feature = getFeature();
+    return FeatureHelper.getAsDouble( feature, KalypsoModelRoughnessConsts.WBR_PROP_EDDY_YY, 500.0 );
   }
 
   /*
@@ -169,11 +184,28 @@ public class RoughnessCls
    * 
    * @see org.kalypso.kalypsosimulationmodel.core.roughness.IRoughness#setEddy(double)
    */
-  public void setEddy( double eddy ) throws IllegalArgumentException
+  public void setEddyXX( double eddy ) throws IllegalArgumentException
   {
     final Feature feature = getFeature();
-    feature.setProperty( 
-        KalypsoModelRoughnessConsts.WBR_PROP_EDDY, Double.valueOf( eddy ) );
+    feature.setProperty( KalypsoModelRoughnessConsts.WBR_PROP_EDDY_XX, Double.valueOf( eddy ) );
+  }
+
+  public void setEddyYX( double eddy ) throws IllegalArgumentException
+  {
+    final Feature feature = getFeature();
+    feature.setProperty( KalypsoModelRoughnessConsts.WBR_PROP_EDDY_YX, Double.valueOf( eddy ) );
+  }
+
+  public void setEddyXY( double eddy ) throws IllegalArgumentException
+  {
+    final Feature feature = getFeature();
+    feature.setProperty( KalypsoModelRoughnessConsts.WBR_PROP_EDDY_XY, Double.valueOf( eddy ) );
+  }
+
+  public void setEddyYY( double eddy ) throws IllegalArgumentException
+  {
+    final Feature feature = getFeature();
+    feature.setProperty( KalypsoModelRoughnessConsts.WBR_PROP_EDDY_YY, Double.valueOf( eddy ) );
   }
 
   /*
@@ -218,9 +250,9 @@ public class RoughnessCls
    * @see org.kalypso.kalypsosimulationmodel.core.roughness.IRoughness#configure(java.lang.String, double, double,
    *      double, double)
    */
-  public RoughnessConfigConsistency configure( String name, double ks, double axay, double dp, double eddy, double marsh )
+  public RoughnessConfigConsistency configure( String name, double ks, double axay, double dp, double eddy_xx, double eddy_yx, double eddy_xy, double eddy_yy, double marsh )
   {
-    RoughnessConfigConsistency check = validate( name, ks, axay, dp, eddy, marsh );
+    RoughnessConfigConsistency check = validate( name, ks, axay, dp, eddy_xx, eddy_yx, eddy_xy, eddy_yy, marsh );
     if( check != RoughnessConfigConsistency.OK )
     {
       return check;
@@ -229,13 +261,16 @@ public class RoughnessCls
     feature.setProperty( KalypsoModelRoughnessConsts.GML_PROP_NAME, name );
     feature.setProperty( KalypsoModelRoughnessConsts.WBR_PROP_KS, Double.valueOf( ks ) );
     feature.setProperty( KalypsoModelRoughnessConsts.WBR_PROP_DP, Double.valueOf( dp ) );
-    feature.setProperty( KalypsoModelRoughnessConsts.WBR_PROP_EDDY, Double.valueOf( eddy ) );
+    feature.setProperty( KalypsoModelRoughnessConsts.WBR_PROP_EDDY_XX, Double.valueOf( eddy_xx ) );
+    feature.setProperty( KalypsoModelRoughnessConsts.WBR_PROP_EDDY_YX, Double.valueOf( eddy_yx ) );
+    feature.setProperty( KalypsoModelRoughnessConsts.WBR_PROP_EDDY_XY, Double.valueOf( eddy_xy ) );
+    feature.setProperty( KalypsoModelRoughnessConsts.WBR_PROP_EDDY_YY, Double.valueOf( eddy_yy ) );
     feature.setProperty( KalypsoModelRoughnessConsts.WBR_PROP_AXAY, Double.valueOf( axay ) );
 
     return RoughnessConfigConsistency.OK;
   }
 
-  public static RoughnessConfigConsistency validate( String name, double ks, double axay, double dp, double eddy, double marsh )
+  public static RoughnessConfigConsistency validate( String name, double ks, double axay, double dp, double eddy_xx, double eddy_yx, double eddy_xy, double eddy_yy, double marsh )
   {
 
     if( Assert.isNullOrEmpty( name ) )
@@ -248,9 +283,21 @@ public class RoughnessCls
       return RoughnessConfigConsistency.ILLEGAL_VALUE_KS;
     }
 
-    if( eddy < 0 )
+    if( eddy_xx <= 0 )
     {
-      return RoughnessConfigConsistency.ILLEGAL_VALUE_EDDY;
+      return RoughnessConfigConsistency.ILLEGAL_VALUE_EDDY_XX;
+    }
+    if( eddy_yx <= 0 )
+    {
+      return RoughnessConfigConsistency.ILLEGAL_VALUE_EDDY_YX;
+    }
+    if( eddy_xy <= 0 )
+    {
+      return RoughnessConfigConsistency.ILLEGAL_VALUE_EDDY_XY;
+    }
+    if( eddy_yy <= 0 )
+    {
+      return RoughnessConfigConsistency.ILLEGAL_VALUE_EDDY_YY;
     }
     if( dp < 0 )
     {
@@ -424,8 +471,17 @@ public class RoughnessCls
     buf.append( ", dp=" );
     buf.append( getDp() );
 
-    buf.append( ", eddy=" );
-    buf.append( getEddy() );
+    buf.append( ", eddy_xx=" );
+    buf.append( getEddyXX() );
+
+    buf.append( ", eddy_yx=" );
+    buf.append( getEddyYX() );
+
+    buf.append( ", eddy_xy=" );
+    buf.append( getEddyXY() );
+
+    buf.append( ", eddy_yy=" );
+    buf.append( getEddyYY() );
 
     buf.append( ",ks=" );
     buf.append( getKs() );

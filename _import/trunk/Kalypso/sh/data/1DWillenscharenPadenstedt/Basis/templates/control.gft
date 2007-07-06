@@ -1182,7 +1182,7 @@
 			</gft:validatorlabel>
 			<!--Smagorinsky-Parameter-->
 
-			<gft:label text="Faktor Smagorinsky-Ansatz [-]"
+			<gft:label text="Smagorinsky-Faktor"
 				visible="true" tooltip="Alfa Wert des Smagorinsky Ansatzes [-]"
 				style="SWT.NONE">
 				<gft:gridData verticalAlignment="GridData.CENTER"
@@ -1314,7 +1314,7 @@
 				</gft:enabledOperation>
 			</gft:validatorlabel>
 
-			<gft:label text="Another label" visible="true"
+			<gft:label text="Scherschichtdicke" visible="true"
 				style="SWT.NONE">
 				<gft:gridData verticalAlignment="GridData.CENTER"
 					horizontalAlignment="GridData.BEGINNING"
@@ -1433,7 +1433,7 @@
 					grabExcessHorizontalSpace="false" />
 			</gft:validatorlabel>
 
-			<gft:label text="Modellparameter" visible="true"
+			<gft:label text="Dispersionskoefizient" visible="true"
 				style="SWT.NONE">
 				<gft:gridData verticalAlignment="GridData.CENTER"
 					horizontalAlignment="GridData.BEGINNING"

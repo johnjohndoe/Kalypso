@@ -56,7 +56,7 @@ public class TestRougnessCls extends TestCase
 		
 		assertEquals(
 				0.4, 
-				roughnessCls.getEddy());
+				roughnessCls.getEddyXX());
 		assertEquals(
 				0.5, 
 				roughnessCls.getMarsh());
@@ -82,10 +82,10 @@ public class TestRougnessCls extends TestCase
 				0.22, 
 				roughnessCls.getDp());
 		
-		roughnessCls.setEddy(0.33);
+		roughnessCls.setEddyXX(0.33);
 		assertEquals(
 				0.33, 
-				roughnessCls.getEddy());
+				roughnessCls.getEddyXX());
 		
 		roughnessCls.setKs(0.44);
 		assertEquals(
@@ -125,7 +125,7 @@ public class TestRougnessCls extends TestCase
 						TestWorkspaces.GML_PROP_FEATURE_MEMBER);
 			assertEquals(Double.NaN, r.getAxAy());
 			assertEquals(Double.NaN, r.getDp());
-			assertEquals(Double.NaN, r.getEddy());
+			assertEquals(500.0, r.getEddyXX());
 			assertEquals(Double.NaN, r.getKs());
 			assertEquals(Double.NaN, r.getMarsh());
 			assertNull(r.getDescription());
@@ -137,8 +137,8 @@ public class TestRougnessCls extends TestCase
 			r.setDp(0.2);
 			assertEquals(0.2, r.getDp());
 			
-			r.setEddy(0.3);
-			assertEquals(0.3, r.getEddy());
+			r.setEddyXX(0.3);
+			assertEquals(0.3, r.getEddyXX());
 			
 			r.setKs(0.4);
 			assertEquals(0.4, r.getKs());

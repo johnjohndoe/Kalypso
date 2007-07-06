@@ -40,12 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.facedata;
 
+import javax.xml.namespace.QName;
+
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandManager;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
+import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
@@ -218,5 +225,37 @@ public class KeyBasedDataModelUtil
     ((Display)displayEntry).asyncExec( repaintRunnable );
   }
   
+  public static final CommandableWorkspace getBCWorkSpace(KeyBasedDataModel dataModel)
+  {
+    return getCommandableWorkspace( dataModel, IBoundaryCondition.QNAME  );
+  }
+  public static final CommandableWorkspace getCommandableWorkspace(
+                      KeyBasedDataModel dataModel,
+                      QName themeQName )
+  {
+    
+    
+      MapPanel mapPanel = dataModel.getData( MapPanel.class, ICommonKeys.KEY_MAP_PANEL );
+      if( mapPanel == null )
+      {
+        throw new RuntimeException( "Could not found map panel" );
+      }
+      IMapModell mapModell = mapPanel.getMapModell();
+      if( mapModell == null )
+      {
+        throw new RuntimeException(
+            "Could not get map model");
+      }
+    IKalypsoFeatureTheme bcTheme = 
+      UtilMap.findEditableTheme( 
+        mapModell, 
+        themeQName//
+        );
+    if( bcTheme == null )
+    {
+      throw new RuntimeException("Could not find boundary condition theme");
+    }
+    return bcTheme.getWorkspace();
+  }
   
 }
