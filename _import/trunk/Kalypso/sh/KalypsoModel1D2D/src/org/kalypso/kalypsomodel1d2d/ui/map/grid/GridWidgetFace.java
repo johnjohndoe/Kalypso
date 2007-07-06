@@ -289,7 +289,7 @@ class GridWidgetFace
     // fd.top = new FormAttachment( 0, 0 );
 
     Section workStatus = toolkit.createSection( scrolledForm.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
-    workStatus.setText( "aktueller Bearbeitungsstatus" );
+    workStatus.setText( "Aktueller Bearbeitungsstatus" );
     TableWrapData tableWrapData = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
     tableWrapData.grabHorizontal = true;
     workStatus.setLayoutData( tableWrapData );

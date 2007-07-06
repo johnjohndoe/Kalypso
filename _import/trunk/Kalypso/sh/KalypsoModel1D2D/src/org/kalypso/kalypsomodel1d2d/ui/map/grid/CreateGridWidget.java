@@ -52,7 +52,7 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
 
   public CreateGridWidget( )
   {
-    super( "New Grid complex element", "Creates automaticaly element from a grid" );
+    super( "Bandgenerator", "Erstellt ein 2D Eelement Band" );
   }
 
   /**
