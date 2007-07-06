@@ -47,6 +47,8 @@ import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
+import com.sun.corba.se.impl.orbutil.GetPropertyAction;
+
 /**
  * Abstract helper class to implement 'binding' classes for specific feature (types).
  * 
@@ -154,5 +156,30 @@ public class AbstractFeatureBinder implements IFeatureWrapper2
   {
     return new HashCodeBuilder().append( m_featureToBind.getId() ).append( m_featureToBind.getWorkspace() ).toHashCode();
   }
-
+  
+  /**
+   * Returns the property  of bind feature given the property 
+   * {@link QName}
+   * @param propertyQName the {@link QName} of the property
+   *            to get.
+   */
+  protected <T>T getProperty( QName propertyQName, Class<T> propClass)
+  {
+    Object prop = m_featureToBind.getProperty( propertyQName );
+    try
+    {
+      return (T)prop;
+    }
+    catch (ClassCastException e) 
+    {
+      throw new RuntimeException(
+          "Property of type["+propClass +"] expected "+
+          "\n\tbut found this type :"+prop.getClass());
+    }
+  }
+  
+  protected void setProperty( QName propertyQName, Object newValue )
+  {
+     m_featureToBind.setProperty( propertyQName, newValue );
+  }
 }
