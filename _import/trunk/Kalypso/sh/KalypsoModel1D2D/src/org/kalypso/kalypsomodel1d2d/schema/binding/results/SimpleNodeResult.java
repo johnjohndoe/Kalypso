@@ -42,6 +42,7 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.results;
 
 import java.util.List;
 
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -173,6 +174,54 @@ public class SimpleNodeResult implements INodeResult
   public double getAbsoluteVelocity( )
   {
     return Math.sqrt( m_vx * m_vx + m_vy * m_vy );
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getDescription()
+   */
+  public String getDescription( )
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getGmlID()
+   */
+  public String getGmlID( )
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getName()
+   */
+  public String getName( )
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getWrappedFeature()
+   */
+  public Feature getWrappedFeature( )
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setDescription(java.lang.String)
+   */
+  public void setDescription( String desc )
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setName(java.lang.String)
+   */
+  public void setName( String name )
+  {
+    throw new UnsupportedOperationException();
   }
 
 }

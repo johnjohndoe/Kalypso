@@ -40,35 +40,56 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.metadata;
 
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import java.util.Date;
+
+import javax.xml.namespace.QName;
+
+import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * @author Patrice Congo
- * @author Dejan Antanaskovic
+ * Default implementation of {@link IResultModelDescriptor}
  * 
+ * @author Patrice Congo
+ *
  */
-public interface ISimulationDescriptionCollection extends IFeatureWrapper2
+public class ResultModelDescriptor extends ModelDescriptor implements IResultModelDescriptor
 {
-  public IFeatureWrapperCollection<IModelDescriptor> getModelDescriptors( );
+
+  public ResultModelDescriptor( Feature featureToBind )
+  {
+    this(
+        featureToBind,
+        Kalypso1D2DSchemaConstants.SIMMETA_F_RESULT );
+  }
   
-  public IFeatureWrapperCollection<ISimulationDescriptor> getSimulationDescriptors( );
-  
+  public ResultModelDescriptor( 
+              Feature featureToBind, QName qnameToBind )
+  {
+    super( featureToBind, qnameToBind );
+  }
+
   /**
-   * This a Model descriptor for the given feature wrapper 
-   * to this wrapper
-   * @param modelFeatureWrapper the feature wrapper which descriptor
-   *        is to be added to this collection.
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IResultModelDescriptor#getTime()
    */
-  public IModelDescriptor addModelDescriptor(
-                IFeatureWrapper2 modelFeatureWrapper );
-  
+  public Date getTime( )
+  {
+   Date date = 
+     getProperty( 
+         Kalypso1D2DSchemaConstants.SIMMETA_PROP_TIME, 
+         Date.class ); 
+    return date;
+  }
+
   /**
-   * To get the existing descriptor entry for the given feature
-   * @param featureWrapper2 the feature which descriptor is to be get
-   * @return an {@link IModelDescriptor} representing the existing 
-   *    descriptor entry for the feature or null if no entry is available for the feature
-   *    
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IResultModelDescriptor#setTime(java.util.Date)
    */
-  public IModelDescriptor getExistingEntry(IFeatureWrapper2 featureWrapper2 );
+  public void setTime( Date value )
+  {
+    setProperty( 
+        Kalypso1D2DSchemaConstants.SIMMETA_PROP_TIME, 
+        value );
+
+  }
+
 }

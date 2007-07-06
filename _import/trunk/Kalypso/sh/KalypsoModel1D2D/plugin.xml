@@ -107,7 +107,11 @@
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit2D"/>
-         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D"/>         
+         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D"/>   
+         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptionCollection"/>
+         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptor"/>
+         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IModelDescriptor"/>
+         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IResultModelDescriptor"/>      
       </factory>
    </extension>
      

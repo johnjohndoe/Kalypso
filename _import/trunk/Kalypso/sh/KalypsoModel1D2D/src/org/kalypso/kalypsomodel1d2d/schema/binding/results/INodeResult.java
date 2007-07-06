@@ -45,6 +45,7 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.opengis.cs.CS_CoordinateSystem;
 
@@ -52,7 +53,7 @@ import org.opengis.cs.CS_CoordinateSystem;
  * @author jung
  * 
  */
-public interface INodeResult
+public interface INodeResult extends  IFeatureWrapper2
 {
   public final static QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "NodeResult" );
 

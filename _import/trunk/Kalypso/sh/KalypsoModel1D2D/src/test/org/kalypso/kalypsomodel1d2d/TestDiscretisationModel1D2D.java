@@ -79,7 +79,7 @@ public class TestDiscretisationModel1D2D extends TestCase
     super( name );
   }
 
-  private static final IFEDiscretisationModel1d2d createTestDiscretisationModel()
+  public static final IFEDiscretisationModel1d2d createTestDiscretisationModel()
   {
     File tmpFile=null;
     GMLWorkspace workspace =null;

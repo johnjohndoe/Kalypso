@@ -348,14 +348,19 @@ public class RMA10Calculation implements INativeIDProvider
 // CalUnitOps.getAssignedBoundaryConditionLine( unit, bCondition, grabDistance );
         // HACK: 0.5 as grab distance?? normally 0.0 should be enough, but then the contilines are not found, why?
         // TODO: at least find everything in this distance, if mroe than one element is found, take nearest...
-        final boolean boundaryConditionOf = CalUnitOps.isBoundaryConditionOf( unit, bc, grabDistance );
+//        final boolean boundaryConditionOf = CalUnitOps.isBoundaryConditionOf( unit, bc, grabDistance );
         final IFeatureWrapper2 wrapper2 = CalUnitOps.getAssignedBoundaryConditionLine( unit, bc, grabDistance );// DiscretisationModelUtils.findModelElementForBC(
         // discModel,
         // bc.getPosition(),
         // 0.001
         // );
 
-        if( wrapper2 instanceof IBoundaryLine )
+        if( wrapper2 == null )
+        {
+          System.out.println(
+              "Skiping boundary condition since it is not part of calunit:"+relationship.getGmlID());
+        }
+        else if( wrapper2 instanceof IBoundaryLine )
         {
           final IBoundaryLine<IFE1D2DComplexElement, IFE1D2DEdge> contiLine = (IBoundaryLine<IFE1D2DComplexElement, IFE1D2DEdge>) wrapper2;
           final BoundaryLineInfo info = contiMap.get( contiLine );

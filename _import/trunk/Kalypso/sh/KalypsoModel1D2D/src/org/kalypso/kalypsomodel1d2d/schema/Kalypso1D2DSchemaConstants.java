@@ -236,15 +236,23 @@ public class Kalypso1D2DSchemaConstants
 
   public final static QName SIMMETA_F_RESULT = new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "ResultDescriptor" );
 
-  public final static QName SIMMETA_PROP_GMLID = new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "gmlID" );
+  public final static QName SIMMETA_PROP_MODEL_ID = 
+      new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "modelID" );
 
-  public final static QName SIMMETA_PROP_NAME = new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "name" );
+  public final static QName SIMMETA_PROP_MODEL_NAME = 
+        new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "modelName" );
 
   public final static QName SIMMETA_PROP_MODEL_TYPE = new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "modelType" );
 
   public final static QName SIMMETA_PROP_WORKSPACE_PATH = new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "workspacePath" );
 
   public final static QName SIMMETA_PROP_TIME = new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "time" );
+
+  public final static QName SIMMETA_PROP_CONTROL_MODEL = 
+    new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "controlModel" );
+
+  public final static QName SIMMETA_PROP_SCENARIO_NAME = 
+    new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "scenarioName" );
 
   public final static QName SIMMETA_PROP_SIMULATION_TYPE = new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "simulationType" );
 
@@ -281,5 +289,12 @@ public class Kalypso1D2DSchemaConstants
   public static final QName OP1D2D_PROP_STATIONARY_COND = 
     new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "stationaryCondition" );
   
+  
+  public static final QName RES_1D2D_F_NODE_RES_COLLECTION = 
+      new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "NodeResultCollection" );
+  
+  public static final QName RES_1D2D_F_NODE_RES_MEMBER = 
+    new QName(UrlCatalog1D2D.MODEL_1D2DResults_NS, "nodeResultMember" );
 
+  
 }

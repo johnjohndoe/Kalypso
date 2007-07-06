@@ -40,13 +40,21 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.metadata;
 
+import java.net.URL;
+
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.IResultModel1d2d;
+import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
+
+import com.sun.org.apache.xerces.internal.impl.dv.xs.DecimalDV;
 
 /**
  * @author Patrice Congo
@@ -58,11 +66,19 @@ public class SimulationDescriptionCollection extends AbstractFeatureBinder imple
   private IFeatureWrapperCollection<IModelDescriptor> m_modelDescriptors;
   private IFeatureWrapperCollection<ISimulationDescriptor> m_simulationDescriptors;
 
+  public SimulationDescriptionCollection( Feature featureToBind)
+  {
+    this(
+        featureToBind, 
+        Kalypso1D2DSchemaConstants.SIMMETA_F_SIMDESCRIPTOR_COLLECTION );
+  }
+  
   public SimulationDescriptionCollection( Feature featureToBind, QName qnameToBind )
   {
     super( featureToBind, qnameToBind );
     m_modelDescriptors = new FeatureWrapperCollection<IModelDescriptor>(featureToBind, IModelDescriptor.class, Kalypso1D2DSchemaConstants.SIMMETA_PROP_MODELDESCRIPTOR);
-    m_simulationDescriptors = new FeatureWrapperCollection<ISimulationDescriptor>(featureToBind, ISimulationDescriptor.class, Kalypso1D2DSchemaConstants.SIMMETA_PROP_SIMDESCRIPTOR);
+    m_simulationDescriptors = 
+      new FeatureWrapperCollection<ISimulationDescriptor>(featureToBind, ISimulationDescriptor.class, Kalypso1D2DSchemaConstants.SIMMETA_PROP_SIMDESCRIPTOR);
   }
 
   /**
@@ -81,4 +97,74 @@ public class SimulationDescriptionCollection extends AbstractFeatureBinder imple
     return m_simulationDescriptors;
   }
 
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptionCollection#addModelDescriptor(org.kalypsodeegree.model.feature.binding.IFeatureWrapper2)
+   */
+  public IModelDescriptor addModelDescriptor( IFeatureWrapper2 modelFeatureWrapper )
+  {
+    IModelDescriptor existingEntry = getExistingEntry( modelFeatureWrapper );
+    if( existingEntry != null )
+    {
+      return existingEntry;
+    }
+    Assert.throwIAEOnNullParam( modelFeatureWrapper, "modelFeatureWrapper" );
+    final QName newChildType;
+    if( modelFeatureWrapper instanceof IResultModel1d2d )
+    {
+      newChildType = Kalypso1D2DSchemaConstants.SIMMETA_F_RESULT;
+    }
+    else
+    {
+      newChildType = Kalypso1D2DSchemaConstants.SIMMETA_F_MODELDESCRIPTOR;
+    }
+    IModelDescriptor addNew = m_modelDescriptors.addNew( newChildType );
+    String modelGmlID = modelFeatureWrapper.getGmlID();
+    addNew.setModelID( modelGmlID );
+    
+    String name = modelFeatureWrapper.getName();
+    addNew.setModelName( isNullOrEmptyString( name )?modelGmlID:name );
+    addNew.setModelType( newChildType.toString() );
+    
+    //workspace path
+    GMLWorkspace workspace = modelFeatureWrapper.getWrappedFeature().getWorkspace();
+    URL context = workspace.getContext();
+    addNew.setWorkspacePath( context.toString() );
+    return addNew;
+  }
+  
+  private boolean isNullOrEmptyString(String str)
+  {
+   if( str==null)
+   {
+     return true;
+   }
+   else if( str.trim().length()==0)
+   {
+     return true;
+   }
+   else
+   {
+     return false;
+   }
+  }
+  
+  public IModelDescriptor getExistingEntry(IFeatureWrapper2 featureWrapper2 )
+  {
+    GMLWorkspace workspace = featureWrapper2.getWrappedFeature().getWorkspace();
+    final String path = workspace.getContext().toString();
+    final String featureGmlID = featureWrapper2.getGmlID();
+    for(IModelDescriptor desc:m_modelDescriptors)
+    {
+     if( path.equals( desc.getWorkspacePath() ) &&
+         featureGmlID.equals( featureGmlID ) )
+     {
+       return desc;
+     }
+    }
+    
+    return null;
+  }
+  
+  
+  
 }

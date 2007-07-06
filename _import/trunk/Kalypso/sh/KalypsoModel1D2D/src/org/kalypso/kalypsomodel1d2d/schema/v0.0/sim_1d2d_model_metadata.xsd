@@ -10,10 +10,7 @@
 	xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:gml="http://www.opengis.net/gml"
-	xmlns:om="http://www.opengis.net/om"
-	xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase"
 	xmlns:simMeta1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/simulationmetadatamodel"
-	xmlns:obs1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/observation"
 	elementFormDefault="qualified" attributeFormDefault="unqualified">
 
 	<xs:annotation>
@@ -25,29 +22,26 @@
 	<xs:import namespace="http://www.opengis.net/gml"
 		schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd" />
 
-	<!-- ======================================================== 
-		Simulation Description Collection Model
-		==========================================================-->
+
 	<xs:element name="SimulationDescriptionCollection"
 		type="simMeta1d2d:SimulationDescriptionCollectionType"
-		substitutionGroup="gml:FeatureCollection">
+		substitutionGroup="gml:_FeatureCollection">
 	</xs:element>
 	<xs:complexType name="SimulationDescriptionCollectionType">
 		<xs:complexContent>
-			<xs:extension base="gml:FeatureCollection">
+			<xs:extension base="gml:AbstractFeatureCollectionType">
 				<xs:sequence>
 					<xs:element ref="simMeta1d2d:modelDescriptor"
-						minOccurs="0" maxOccurs="unbound" />
+						minOccurs="0" maxOccurs="unbounded" />
+				<!-- -->
 					<xs:element ref="simMeta1d2d:simulationDescriptor"
-						minOccurs="0" maxOccurs="unbound" />
+						minOccurs="0" maxOccurs="unbounded" />
+						<!-- -->
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 
-	<!-- =================================================================
-		
-		================================================================== -->
 	<xs:element name="modelDescriptor"
 		type="simMeta1d2d:ModelDescriptorPropertyType" />
 	<xs:complexType name="ModelDescriptorPropertyType">
@@ -55,15 +49,12 @@
 			<xs:documentation>later</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element ref="simMeta1d2d:ModelDescriptor" minOccurs="0"
-				maxOccurs="1" />
+			<xs:element ref="simMeta1d2d:ModelDescriptor" 
+						minOccurs="0" maxOccurs="1" />
 		</xs:sequence>
 		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
 	</xs:complexType>
 
-	<!-- =======================================================
-		ModelDescriptor
-		======================================================== -->
 	<xs:element name="ModelDescriptor"
 		type="simMeta1d2d:ModelDescriptorType"
 		substitutionGroup="gml:_Feature">
@@ -72,18 +63,15 @@
 		<xs:complexContent>
 			<xs:extension base="gml:AbstractFeatureType">
 				<xs:sequence>
-					<xs:element name="gmlID" type="xs:string" />
-					<xs:element name="name" type="xs:string" />
-					<xs:element name="modelType" type="xs:QName" />
-					<xs:element name="workspacePath" type="xs:anyURI" />
+					<xs:element name="modelID" type="xs:string" />
+					<xs:element name="modelName" type="xs:string" />
+					<xs:element name="modelType" type="xs:string"/>
+					<xs:element name="workspacePath" type="xs:string" />
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 
-	<!-- =================================================================
-		
-		================================================================== -->
 
 	<xs:element name="resultModelDescriptor"
 		type="simMeta1d2d:ResultModelDescriptorPropertyType" />
@@ -98,14 +86,12 @@
 		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
 	</xs:complexType>
 
-	<!-- =======================================================
-		ModelDescriptor
-		======================================================== -->
+
 	<xs:element name="ResultModelDescriptor"
 		type="simMeta1d2d:ResultModelDescriptorType"
-		substitutionGroup="gml:_Feature">
+		substitutionGroup="simMeta1d2d:ModelDescriptor">
 	</xs:element>
-	<xs:complexType name="ModelDescriptorType">
+	<xs:complexType name="ResultModelDescriptorType">
 		<xs:complexContent>
 			<xs:extension base="simMeta1d2d:ModelDescriptorType">
 				<xs:sequence>
@@ -114,16 +100,10 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-
-	<!-- =================================================================
-		
-		================================================================== -->
+<!-- -->
 	<xs:element name="simulationDescriptor"
 		type="simMeta1d2d:SimulationDescriptorPropertyType" />
 	<xs:complexType name="SimulationDescriptorPropertyType">
-		<xs:annotation>
-			<xs:documentation>later</xs:documentation>
-		</xs:annotation>
 		<xs:sequence>
 			<xs:element ref="simMeta1d2d:SimulationDescriptor"
 				minOccurs="0" maxOccurs="1" />
@@ -131,17 +111,15 @@
 		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
 	</xs:complexType>
 
-	<!-- =======================================================
-		Initial condition
-		======================================================== -->
 	<xs:element name="SimulationDescriptor"
 		type="simMeta1d2d:SimulationDescriptorType"
-		substitutionGroup="gml:_Feature">
+		substitutionGroup="gml:_FeatureCollection">
 	</xs:element>
 	<xs:complexType name="SimulationDescriptorType">
 		<xs:complexContent>
-			<xs:extension base="gml:AbstractFeatureType">
+			<xs:extension base="gml:AbstractFeatureCollectionType">
 				<xs:sequence>
+				
 					<xs:element name="simulationType">
 						<xs:simpleType>
 							<xs:restriction base="xs:string">
@@ -151,19 +129,27 @@
 							</xs:restriction>
 						</xs:simpleType>
 					</xs:element>
+					
+					<xs:element name="scenarioName" type="xs:string"/>
+					
 					<xs:element name="startTime" type="xs:time"/>
+					
 					<xs:element name="endTime" type="xs:time"/>
-					<xs:element name="restarted" type="xs:boolean"
-						default="false" />
-					<xs:element name="autoconverged" type="xs:boolean"
-						default="false" />
+					
+					<xs:element name="restarted" 
+						type="xs:boolean" default="false" />
+					<xs:element name="autoconverged" type="xs:boolean" default="false" />
+					
 					<xs:element name="calculationUnit"
-						type="simMeta1d2d:modelDescriptor" />
+						type="simMeta1d2d:ModelDescriptorPropertyType" />
+					
 					<xs:element name="controlModel"
-						type="simMeta1d2d:modelDescriptor" />
+						type="simMeta1d2d:ModelDescriptorPropertyType" />
 					<xs:element name="result"
-						type="simMeta1d2d:resultModelDescriptor" minOccurs="1"
-						maxOccurs="unbounded" />
+						type="simMeta1d2d:ResultModelDescriptorPropertyType" 
+						minOccurs="1" maxOccurs="unbounded" />
+					<!--
+					-->
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>

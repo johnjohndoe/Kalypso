@@ -11,6 +11,14 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IModelDescriptor;
+import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IResultModelDescriptor;
+import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptionCollection;
+import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptor;
+import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ModelDescriptor;
+import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ResultModelDescriptor;
+import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.SimulationDescriptionCollection;
+import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.SimulationDescriptor;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IPseudoOPerationalModel;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.BoundaryLine;
@@ -725,7 +733,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
     };
     cMap.put( IWeirFlowRelation.class, cTor );
 
-    // BoundaraCondition
+    // BoundaryCondition
     cTor = new AdapterConstructor()
     {
       public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
@@ -744,8 +752,79 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
       }
     };
     cMap.put( IBoundaryCondition.class, cTor );
+    
+  //Simulation descriptor collection
+    cTor = new AdapterConstructor()
+    {
+      public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
+      {
+        final QName featureQName = feature.getFeatureType().getQName();
 
+        if( featureQName.equals( 
+              Kalypso1D2DSchemaConstants.SIMMETA_F_SIMDESCRIPTOR_COLLECTION ) )
+        {
+          return new SimulationDescriptionCollection( feature );
+        }
+        else
+        {
+          warnUnableToAdapt( feature, featureQName, ISimulationDescriptionCollection.class );
+          return null;
+        }
+      }
+    };
+    cMap.put( ISimulationDescriptionCollection.class, cTor );
+    
+  //Simulation descriptor collection
+    cTor = new AdapterConstructor()
+    {
+      public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
+      {
+        final QName featureQName = feature.getFeatureType().getQName();
+
+        if( featureQName.equals( 
+              Kalypso1D2DSchemaConstants.SIMMETA_F_MODELDESCRIPTOR ) )
+        {
+          return new ModelDescriptor( feature );
+        }
+        if( featureQName.equals( 
+            Kalypso1D2DSchemaConstants.SIMMETA_F_RESULT ) )
+        {
+          return new ResultModelDescriptor( feature );
+        }
+        else
+        {
+          warnUnableToAdapt( feature, featureQName, IBoundaryCondition.class );
+          return null;
+        }
+      }
+    };
+    cMap.put( IModelDescriptor.class, cTor );
+    cMap.put( IResultModelDescriptor.class, cTor );
+    
+    //simulation descrip
+    cTor = new AdapterConstructor()
+    {
+      public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
+      {
+        final QName featureQName = feature.getFeatureType().getQName();
+
+        if( featureQName.equals( 
+              Kalypso1D2DSchemaConstants.SIMMETA_F_SIMDESCRIPTOR ) )
+        {
+          return new SimulationDescriptor( feature );
+        }
+        else
+        {
+          warnUnableToAdapt( feature, featureQName, IBoundaryCondition.class );
+          return null;
+        }
+      }
+    };
+    cMap.put( ISimulationDescriptor.class, cTor );
+    
     return Collections.unmodifiableMap( cMap );
   }
-
+ 
 }
+
+

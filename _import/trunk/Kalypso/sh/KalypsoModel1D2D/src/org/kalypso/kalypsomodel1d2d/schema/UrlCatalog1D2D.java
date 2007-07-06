@@ -87,6 +87,7 @@ public class UrlCatalog1D2D extends AbstractUrlCatalog
     catalog.put( MODEL_1D2DObservation_NS, myClass.getResource( "v0.0/sim_1d2d_observation.xsd" ) );
     catalog.put( MODEL_1D2DResults_NS, myClass.getResource( "v0.0/sim_1d2d_results.xsd" ) );
     catalog.put( MODEL_1D2DSIMMETA_NS, myClass.getResource( "v0.0/sim_1d2d_model_metadata.xsd" ) );
+    System.out.println("CataEntry:"+catalog.get( MODEL_1D2DSIMMETA_NS ));
     prefixes.put( MODEL_1D2D_NS, MODEL_1D2D_NS_PREFIX );
     prefixes.put( MODEL_1D2DControl_NS, MODEL_1D2DControl_NS_PREFIX );
     prefixes.put( MODEL_1D2DOperational_NS, MODEL_1D2DOperational_NS_PREFIX );
