@@ -142,4 +142,6 @@ public interface StyledLayerDescriptor extends Marshallable
 
   /** Finds a user style by its name */
   public UserStyle findUserStyle( final String name );
+  
+  public NamedLayer getNamedLayer( String layerName );
 }

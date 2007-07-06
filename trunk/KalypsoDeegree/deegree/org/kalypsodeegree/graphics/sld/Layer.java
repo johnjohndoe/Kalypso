@@ -61,7 +61,6 @@
 package org.kalypsodeegree.graphics.sld;
 
 /**
- * 
  * <p>
  * ----------------------------------------------------------------------
  * </p>
@@ -78,13 +77,13 @@ public interface Layer
    * 
    * @return the name of the layer
    */
-  String getName();
+  String getName( );
 
   /**
    * sets the <Name>
    * 
    * @param name
-   *          the name of the layer
+   *            the name of the layer
    */
   void setName( String name );
 
@@ -95,13 +94,13 @@ public interface Layer
    * 
    * @return the LayerFeatureConstraints
    */
-  LayerFeatureConstraints getLayerFeatureConstraints();
+  LayerFeatureConstraints getLayerFeatureConstraints( );
 
   /**
    * Sets the LayerFeatureConstraints for the Layer.
    * 
    * @param layerFeatureConstraints
-   *          the LayerFeatureConstraints
+   *            the LayerFeatureConstraints
    */
   void setLayerFeatureConstraints( LayerFeatureConstraints layerFeatureConstraints );
 
@@ -114,13 +113,24 @@ public interface Layer
    * 
    * @return the styles of the layer als ArrayList
    */
-  Style[] getStyles();
+  Style[] getStyles( );
+
+  /**
+   * Returns the style associated to the Layer. This may be UserStyle or NamedStyle
+   * <p>
+   * </p>
+   * A UserStyle is at the same semantic level as a NamedStyle used in the context of a WMS. In a sense, a named style
+   * can be thought of as a reference to a hidden UserStyle that is stored inside of a map server.
+   * 
+   * @return the style of the layer
+   */
+  Style getStyle( String style );
 
   /**
    * Adds styles to the Layer.
    * 
    * @param styles
-   *          the styles for the layer as Array
+   *            the styles for the layer as Array
    */
   void setStyles( Style[] styles );
 
@@ -128,7 +138,7 @@ public interface Layer
    * Adds a style to the Layer.
    * 
    * @param style
-   *          a style to add
+   *            a style to add
    */
   void addStyle( Style style );
 
@@ -136,7 +146,7 @@ public interface Layer
    * Removes a style from the Layer.
    * 
    * @param style
-   *          a style to remove
+   *            a style to remove
    */
   void removeStyle( Style style );
 }

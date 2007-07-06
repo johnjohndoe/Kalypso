@@ -92,14 +92,14 @@ public interface Rule
    * 
    * @return the name of the rule
    */
-  String getName();
+  String getName( );
 
   /**
    * Sets the name attribute's value of the rule.
    * 
    * @param name
-   *          the name of the rule
-   *          <p>
+   *            the name of the rule
+   *            <p>
    */
   void setName( String name );
 
@@ -108,14 +108,14 @@ public interface Rule
    * 
    * @return the title of the rule
    */
-  String getTitle();
+  String getTitle( );
 
   /**
    * Sets the title attribute's value of the rule.
    * 
    * @param title
-   *          the title of the rule
-   *          <p>
+   *            the title of the rule
+   *            <p>
    */
   void setTitle( String title );
 
@@ -124,13 +124,13 @@ public interface Rule
    * 
    * @return the abstract of the rule
    */
-  String getAbstract();
+  String getAbstract( );
 
   /**
    * Sets the abstract attribute's value of the Rule.
    * 
    * @param abstract_
-   *          the abstract of the rule
+   *            the abstract of the rule
    */
   void setAbstract( String abstract_ );
 
@@ -139,13 +139,13 @@ public interface Rule
    * 
    * @return the legendGraphic of the rule
    */
-  LegendGraphic getLegendGraphic();
+  LegendGraphic getLegendGraphic( );
 
   /**
    * Sets the LegendGraphic element
    * 
    * @param legendGraphic
-   *          the legendGraphic of the rule
+   *            the legendGraphic of the rule
    */
   void setLegendGraphic( LegendGraphic legendGraphic );
 
@@ -155,13 +155,13 @@ public interface Rule
    * 
    * @return the filter element
    */
-  Filter getFilter();
+  Filter getFilter( );
 
   /**
    * Sets the Filter.
    * 
    * @param filter
-   *          the filter element
+   *            the filter element
    */
   void setFilter( Filter filter );
 
@@ -171,13 +171,13 @@ public interface Rule
    * 
    * @return true if the rule has an elseFilter
    */
-  boolean hasElseFilter();
+  boolean hasElseFilter( );
 
   /**
    * sets the <ElseFilter>
    * 
    * @param elseFilter
-   *          an elseFilter
+   *            an elseFilter
    */
   public void setElseFilter( boolean elseFilter );
 
@@ -188,13 +188,13 @@ public interface Rule
    * 
    * @return the MinScaleDenominator for the rule
    */
-  double getMinScaleDenominator();
+  double getMinScaleDenominator( );
 
   /**
    * Sets the MinScaleDenominator.
    * 
    * @param minScaleDenominator
-   *          the MinScaleDenominator for the rule
+   *            the MinScaleDenominator for the rule
    */
   void setMinScaleDenominator( double minScaleDenominator );
 
@@ -205,13 +205,13 @@ public interface Rule
    * 
    * @return the MaxScaleDenominator for the rule
    */
-  double getMaxScaleDenominator();
+  double getMaxScaleDenominator( );
 
   /**
    * Sets the MaxScaleDenominator.
    * 
    * @param maxScaleDenominator
-   *          the MaxScaleDenominator for the rule
+   *            the MaxScaleDenominator for the rule
    */
   void setMaxScaleDenominator( double maxScaleDenominator );
 
@@ -229,13 +229,19 @@ public interface Rule
    * 
    * @return the Symbolizer for the rule
    */
-  Symbolizer[] getSymbolizers();
+  Symbolizer[] getSymbolizers( );
+
+  /**
+   * 
+   * @return the Symbolizer for the rule
+   */
+  Symbolizer getSymbolizer( String SymbolizerName );
 
   /**
    * Sets a set of <Symbolizer>s.
    * 
    * @param symbolizers
-   *          symbolizers for the rule
+   *            symbolizers for the rule
    */
   void setSymbolizers( Symbolizer[] symbolizers );
 
@@ -243,7 +249,7 @@ public interface Rule
    * Adds a <Symbolizer>to a set of Symbolizers.
    * 
    * @param symbolizer
-   *          symbolizer to add
+   *            symbolizer to add
    */
   void addSymbolizer( Symbolizer symbolizer );
 
@@ -251,7 +257,7 @@ public interface Rule
    * Removes a <Symbolizer>from a set of Symbolizers.
    * 
    * @param symbolizer
-   *          symbolizer to remove
+   *            symbolizer to remove
    */
   void removeSymbolizer( Symbolizer symbolizer );
 }

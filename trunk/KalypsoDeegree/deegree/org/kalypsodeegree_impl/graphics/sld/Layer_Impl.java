@@ -64,6 +64,7 @@ import java.util.ArrayList;
 
 import org.kalypsodeegree.graphics.sld.Layer;
 import org.kalypsodeegree.graphics.sld.LayerFeatureConstraints;
+import org.kalypsodeegree.graphics.sld.NamedLayer;
 import org.kalypsodeegree.graphics.sld.Style;
 
 /**
@@ -99,7 +100,7 @@ public class Layer_Impl implements Layer
    * 
    * @return the name of the layer
    */
-  public String getName()
+  public String getName( )
   {
     return name;
   }
@@ -108,7 +109,7 @@ public class Layer_Impl implements Layer
    * sets the <Name>
    * 
    * @param name
-   *          the name of the layer
+   *            the name of the layer
    */
   public void setName( String name )
   {
@@ -122,7 +123,7 @@ public class Layer_Impl implements Layer
    * 
    * @return the LayerFeatureConstraints
    */
-  public LayerFeatureConstraints getLayerFeatureConstraints()
+  public LayerFeatureConstraints getLayerFeatureConstraints( )
   {
     return layerFeatureConstraints;
   }
@@ -131,7 +132,7 @@ public class Layer_Impl implements Layer
    * sets the <LayerFeatureConstraints>
    * 
    * @param layerFeatureConstraints
-   *          the LayerFeatureConstraints
+   *            the LayerFeatureConstraints
    */
   public void setLayerFeatureConstraints( LayerFeatureConstraints layerFeatureConstraints )
   {
@@ -147,16 +148,29 @@ public class Layer_Impl implements Layer
    * 
    * @return the Styles of the Layer as ArrayList
    */
-  public Style[] getStyles()
+  public Style[] getStyles( )
   {
-    return (Style[])styles.toArray( new Style[styles.size()] );
+    return (Style[]) styles.toArray( new Style[styles.size()] );
+  }
+
+  /**
+   * @see org.kalypsodeegree.graphics.sld.Layer#getStyle()
+   */
+  public Style getStyle( String styleName )
+  {
+    for( int i = 0; i < styles.size(); i++ )
+    {
+      if( styles.get( i ) instanceof Style && ((Style) styles.get( i )).getName().equals( styleName ) )
+        return (Style) styles.get( i );
+    }
+    return null;
   }
 
   /**
    * Adds styles to the Layer.
    * 
    * @param styles
-   *          the styles for the layer as Array
+   *            the styles for the layer as Array
    */
   public void setStyles( Style[] styles )
   {
@@ -174,7 +188,7 @@ public class Layer_Impl implements Layer
   /**
    * @see org.kalypsodeegree_impl.graphics.sld.Layer_Impl#getStyles()
    * @param style
-   *          a style to add
+   *            a style to add
    */
   public void addStyle( Style style )
   {
@@ -184,7 +198,7 @@ public class Layer_Impl implements Layer
   /**
    * @see org.kalypsodeegree_impl.graphics.sld.Layer_Impl#getStyles()
    * @param style
-   *          a style to remove
+   *            a style to remove
    */
   public void removeStyle( Style style )
   {
@@ -196,12 +210,12 @@ public class Layer_Impl implements Layer
    * 
    * @return the layer as String
    */
-  public String toString()
+  public String toString( )
   {
     String ret = getClass().getName() + "\n";
     ret = "name = " + name + "\n";
-    ret += ( "layerFeatureConstraints = " + layerFeatureConstraints + "\n" );
-    ret += ( "styles = " + styles + "\n" );
+    ret += ("layerFeatureConstraints = " + layerFeatureConstraints + "\n");
+    ret += ("styles = " + styles + "\n");
 
     return ret;
   }

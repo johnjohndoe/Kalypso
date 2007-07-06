@@ -342,7 +342,7 @@ public class DisplayElementFactory
       public ISurfacePatchVisitor<GM_Triangle> createVisitor( final Graphics g, final GeoTransform projection, final IElevationColorModel model )
       {
         final UOM uom = symbolizer.getUom();
-        return new SurfacePaintPolygoneVisitor( g, new ColorMapConverter( colorMap, feature, uom, projection ) );
+        return new SurfacePaintPolygonVisitor( g, new ColorMapConverter( colorMap, feature, uom, projection ) );
       }
     };
 

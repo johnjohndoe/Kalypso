@@ -422,4 +422,13 @@ public class Rule_Impl implements Rule, Marshallable
     Debug.debugMethodEnd();
     return sb.toString();
   }
+
+  /**
+   * @see org.kalypsodeegree.graphics.sld.Rule#getSymbolizer(java.lang.String)
+   */
+  public Symbolizer getSymbolizer( String SymbolizerName )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
 }

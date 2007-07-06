@@ -79,7 +79,7 @@ import org.kalypsodeegree.xml.Marshallable;
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @version $Revision$ $Date$
  */
-public interface FeatureTypeStyle extends  Marshallable
+public interface FeatureTypeStyle extends Marshallable
 {
 
   /**
@@ -95,7 +95,7 @@ public interface FeatureTypeStyle extends  Marshallable
    * feature style in some feature-style library. Sets the <Name>
    * 
    * @param name
-   *          the name
+   *            the name
    */
   void setName( String name );
 
@@ -110,7 +110,7 @@ public interface FeatureTypeStyle extends  Marshallable
    * sets the <Title>
    * 
    * @param title
-   *          the title of the FeatureTypeStyle
+   *            the title of the FeatureTypeStyle
    */
   void setTitle( String title );
 
@@ -125,7 +125,7 @@ public interface FeatureTypeStyle extends  Marshallable
    * human-readable information about the style
    * 
    * @param abstract_
-   *          an abstract of the FeatureTypeStyle
+   *            an abstract of the FeatureTypeStyle
    */
   void setAbstract( String abstract_ );
 
@@ -140,7 +140,7 @@ public interface FeatureTypeStyle extends  Marshallable
    * sets the name of the affected feature type
    * 
    * @param featureTypeName
-   *          the name of the FeatureTypeStyle
+   *            the name of the FeatureTypeStyle
    */
   void setFeatureTypeName( QName featureTypeQName );
 
@@ -160,7 +160,7 @@ public interface FeatureTypeStyle extends  Marshallable
    * Sets the SemanticTypeIdentifiers.
    * 
    * @param semanticTypeIdentifiers
-   *          SemanticTypeIdentifiers for the FeatureTypeStyle
+   *            SemanticTypeIdentifiers for the FeatureTypeStyle
    */
   void setSemanticTypeIdentifier( String[] semanticTypeIdentifiers );
 
@@ -168,7 +168,7 @@ public interface FeatureTypeStyle extends  Marshallable
    * Adds a SemanticTypeIdentifier.
    * 
    * @param semanticTypeIdentifier
-   *          SemanticTypeIdentifier to add
+   *            SemanticTypeIdentifier to add
    */
   void addSemanticTypeIdentifier( String semanticTypeIdentifier );
 
@@ -176,7 +176,7 @@ public interface FeatureTypeStyle extends  Marshallable
    * Removes a SemanticTypeIdentifier.
    * 
    * @param semanticTypeIdentifier
-   *          SemanticTypeIdentifier to remove
+   *            SemanticTypeIdentifier to remove
    */
   void removeSemanticTypeIdentifier( String semanticTypeIdentifier );
 
@@ -192,7 +192,7 @@ public interface FeatureTypeStyle extends  Marshallable
    * Sets the Rules.
    * 
    * @param rules
-   *          the rules of the FeatureTypeStyle as Array
+   *            the rules of the FeatureTypeStyle as Array
    */
   void setRules( Rule[] rules );
 
@@ -200,7 +200,7 @@ public interface FeatureTypeStyle extends  Marshallable
    * Adds a Rule.
    * 
    * @param rule
-   *          a rule
+   *            a rule
    */
   void addRule( Rule rule );
 
@@ -208,7 +208,9 @@ public interface FeatureTypeStyle extends  Marshallable
    * Removes a Rule.
    * 
    * @param rule
-   *          a rule
+   *            a rule
    */
   void removeRule( Rule rule );
+
+  Rule getRule( String ruleName );
 }

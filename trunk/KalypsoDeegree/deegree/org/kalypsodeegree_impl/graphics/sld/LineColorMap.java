@@ -43,19 +43,18 @@ package org.kalypsodeegree_impl.graphics.sld;
 import java.util.List;
 
 import org.kalypsodeegree.graphics.sld.LineColorMapEntry;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Thomas Jung
  */
 public interface LineColorMap
 {
-
-  final String SLDNS_EXT = "http://www.opengis.net/sldExt";
-
   public LineColorMapEntry[] getColorMap( );
 
   public void setColorMap( final List<LineColorMapEntry> colorMap );
 
   public void addColorMapClass( final LineColorMapEntry colorMapEntry );
 
+  public LineColorMapEntry findEntry( final String string, final Feature feature );
 }

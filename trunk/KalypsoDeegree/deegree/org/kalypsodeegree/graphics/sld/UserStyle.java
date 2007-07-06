@@ -82,13 +82,13 @@ public interface UserStyle extends Style
    * 
    * @return the title of the User-Style
    */
-  String getTitle();
+  String getTitle( );
 
   /**
    * Sets the title.
    * 
    * @param title
-   *          the title of the User-Style
+   *            the title of the User-Style
    */
   void setTitle( String title );
 
@@ -97,13 +97,13 @@ public interface UserStyle extends Style
    * 
    * @return the abstract of the User-Style
    */
-  String getAbstract();
+  String getAbstract( );
 
   /**
    * Sets the Abstract.
    * 
    * @param abstract_
-   *          the abstract of the User-Style
+   *            the abstract of the User-Style
    */
   void setAbstract( String abstract_ );
 
@@ -113,7 +113,7 @@ public interface UserStyle extends Style
    * 
    * @return true if the style ist the default style
    */
-  boolean isDefault();
+  boolean isDefault( );
 
   /**
    * sets the <Default>
@@ -135,13 +135,28 @@ public interface UserStyle extends Style
    * 
    * @return the FeatureTypeStyles of a User-Style
    */
-  FeatureTypeStyle[] getFeatureTypeStyles();
+  FeatureTypeStyle[] getFeatureTypeStyles( );
+
+  /**
+   * A UserStyle can contain one or more FeatureTypeStyles which allow the rendering of features of specific types.
+   * <p>
+   * </p>
+   * The FeatureTypeStyle defines the styling that is to be applied to a single feature type of a layer.
+   * <p>
+   * </p>
+   * The FeatureTypeStyle element identifies that explicit separation in SLD between the handling of layers and the
+   * handling of features of specific feature types. The layer concept is unique to WMS and SLD, but features are used
+   * more generally, such as in WFS and GML, so this explicit separation is important.
+   * 
+   * @return a FeatureTypeStyle of a User-Style
+   */
+  FeatureTypeStyle getFeatureTypeStyle( String featureTypeStyleName );
 
   /**
    * Sets FeatureTypeStyles
    * 
    * @param featureTypeStyles
-   *          the FeatureTypeStyles of a User-Style
+   *            the FeatureTypeStyles of a User-Style
    */
   void setFeatureTypeStyles( FeatureTypeStyle[] featureTypeStyles );
 
@@ -149,7 +164,7 @@ public interface UserStyle extends Style
    * Adds a <FeatureTypeStyle>
    * 
    * @param featureTypeStyle
-   *          a FeatureTypeStyle to add
+   *            a FeatureTypeStyle to add
    */
   void addFeatureTypeStyle( FeatureTypeStyle featureTypeStyle );
 
@@ -157,7 +172,7 @@ public interface UserStyle extends Style
    * Removes a <FeatureTypeStyle>
    * 
    * @param featureTypeStyle
-   *          a FeatureTypeStyle to remove
+   *            a FeatureTypeStyle to remove
    */
   void removeFeatureTypeStyle( FeatureTypeStyle featureTypeStyle );
 }

@@ -63,6 +63,7 @@ package org.kalypsodeegree_impl.graphics.sld;
 import java.util.ArrayList;
 
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
+import org.kalypsodeegree.graphics.sld.Style;
 import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.xml.Marshallable;
 import org.kalypsodeegree_impl.tools.Debug;
@@ -94,8 +95,7 @@ public class UserStyle_Impl extends Style_Impl implements UserStyle, Marshallabl
   /**
    * constructor initializing the class with the <UserStyle>
    */
-  public UserStyle_Impl( String name, String title, String abstract_, boolean default_,
-      FeatureTypeStyle[] featureTypeStyles )
+  public UserStyle_Impl( String name, String title, String abstract_, boolean default_, FeatureTypeStyle[] featureTypeStyles )
   {
     super( name );
 
@@ -112,7 +112,7 @@ public class UserStyle_Impl extends Style_Impl implements UserStyle, Marshallabl
    * 
    * @return the title of the User-Style
    */
-  public String getTitle()
+  public String getTitle( )
   {
     return title;
   }
@@ -121,7 +121,7 @@ public class UserStyle_Impl extends Style_Impl implements UserStyle, Marshallabl
    * sets the <Title>
    * 
    * @param title
-   *          the title of the User-Style
+   *            the title of the User-Style
    */
   public void setTitle( String title )
   {
@@ -133,7 +133,7 @@ public class UserStyle_Impl extends Style_Impl implements UserStyle, Marshallabl
    * 
    * @return the abstract of the User-Style
    */
-  public String getAbstract()
+  public String getAbstract( )
   {
     return abstract_;
   }
@@ -142,7 +142,7 @@ public class UserStyle_Impl extends Style_Impl implements UserStyle, Marshallabl
    * sets the <Abstract>
    * 
    * @param abstract_
-   *          the abstract of the User-Style
+   *            the abstract of the User-Style
    */
   public void setAbstract( String abstract_ )
   {
@@ -155,7 +155,7 @@ public class UserStyle_Impl extends Style_Impl implements UserStyle, Marshallabl
    * 
    * @return true if the style ist the default style
    */
-  public boolean isDefault()
+  public boolean isDefault( )
   {
     return default_;
   }
@@ -183,18 +183,31 @@ public class UserStyle_Impl extends Style_Impl implements UserStyle, Marshallabl
    * 
    * @return the FeatureTypeStyles of a User-Style
    */
-  public FeatureTypeStyle[] getFeatureTypeStyles()
+  public FeatureTypeStyle[] getFeatureTypeStyles( )
   {
     FeatureTypeStyle[] ft = new FeatureTypeStyle[featureTypeStyles.size()];
 
-    return (FeatureTypeStyle[])featureTypeStyles.toArray( ft );
+    return (FeatureTypeStyle[]) featureTypeStyles.toArray( ft );
+  }
+
+  /**
+   * @see org.kalypsodeegree.graphics.sld.UserStyle#getFeatureTypeStyle(java.lang.String)
+   */
+  public FeatureTypeStyle getFeatureTypeStyle( String featureTypeStyleName )
+  {
+    for( int i = 0; i < featureTypeStyles.size(); i++ )
+    {
+      if( featureTypeStyles.get( i ) instanceof FeatureTypeStyle && ((FeatureTypeStyle) featureTypeStyles.get( i )).getName().equals( featureTypeStyleName ) )
+        return (FeatureTypeStyle) featureTypeStyles.get( i );
+    }
+    return null;
   }
 
   /**
    * sets the <FeatureTypeStyle>
    * 
    * @param featureTypeStyles
-   *          the FeatureTypeStyles of a User-Style
+   *            the FeatureTypeStyles of a User-Style
    */
   public void setFeatureTypeStyles( FeatureTypeStyle[] featureTypeStyles )
   {
@@ -213,7 +226,7 @@ public class UserStyle_Impl extends Style_Impl implements UserStyle, Marshallabl
    * Adds a <FeatureTypeStyle>
    * 
    * @param featureTypeStyle
-   *          a FeatureTypeStyle to add
+   *            a FeatureTypeStyle to add
    */
   public void addFeatureTypeStyle( FeatureTypeStyle featureTypeStyle )
   {
@@ -236,7 +249,7 @@ public class UserStyle_Impl extends Style_Impl implements UserStyle, Marshallabl
    * 
    * @return xml representation of the UserStyle
    */
-  public String exportAsXML()
+  public String exportAsXML( )
   {
     Debug.debugMethodBegin();
 
@@ -260,7 +273,7 @@ public class UserStyle_Impl extends Style_Impl implements UserStyle, Marshallabl
     }
     for( int i = 0; i < featureTypeStyles.size(); i++ )
     {
-      sb.append( ( (Marshallable)featureTypeStyles.get( i ) ).exportAsXML() );
+      sb.append( ((Marshallable) featureTypeStyles.get( i )).exportAsXML() );
     }
     sb.append( "</UserStyle>" );
 

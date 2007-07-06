@@ -49,6 +49,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.kalypso.contribs.eclipse.core.runtime.SafeRunnable;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
+import org.kalypsodeegree.graphics.sld.NamedLayer;
 import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.xml.Marshallable;
 
@@ -129,6 +130,14 @@ public class KalypsoUserStyle implements UserStyle, Marshallable, IWorkbenchAdap
   public void setFeatureTypeStyles( final FeatureTypeStyle[] featureTypeStyles )
   {
     m_userStyle.setFeatureTypeStyles( featureTypeStyles );
+  }
+
+  /**
+   * @see org.kalypsodeegree.graphics.sld.UserStyle#getFeatureTypeStyle(java.lang.String)
+   */
+  public FeatureTypeStyle getFeatureTypeStyle( String featureTypeStyleName )
+  {
+    return m_userStyle.getFeatureTypeStyle( featureTypeStyleName );
   }
 
   public void setName( final String name )
