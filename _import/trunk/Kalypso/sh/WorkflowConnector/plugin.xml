@@ -32,11 +32,6 @@
             description="Category for workflow task groups"
             id="de.renew.workflow.taskgroups.category"
             name="de.renew.workflow.taskgroups.category"/>            
-      <command
-            categoryId="de.renew.workflow.tasks.category"
-            defaultHandler="de.renew.workflow.connector.context.NewProjectHandler"
-            id="de.renew.workflow.connector.NewProject"
-            name="Projekt mit Workflowserver verbinden"/>
 	  <command
             categoryId="de.renew.workflow.tasks.category"
             id="de.renew.workflow.connector.DeleteProject"
