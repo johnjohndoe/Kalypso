@@ -57,7 +57,7 @@ import org.eclipse.swt.widgets.Text;
  */
 public class NodalBCSelectionWizardPage extends WizardPage
 {
-  private final Button[] m_radioBtnGroup;
+  protected final Button[] m_radioBtnGroup;
 
   private final IBoundaryConditionDescriptor[] m_descriptors;
 
@@ -87,36 +87,36 @@ public class NodalBCSelectionWizardPage extends WizardPage
     gridLayout.numColumns = 2;
     container.setLayout( gridLayout );
     setControl( container );
-    
-    new Label(container, SWT.NONE).setText( "Stationäre randbedinung:" );
-    m_bcValue = new Text(container, SWT.BORDER);
+
+    new Label( container, SWT.NONE ).setText( "Stationäre randbedinung:" );
+    m_bcValue = new Text( container, SWT.BORDER );
     m_bcValue.setText( "20.0" );
     m_bcValue.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-//    bcValue.addKeyListener( new KeyListener()
-//  {
+// bcValue.addKeyListener( new KeyListener()
+// {
 //
-//    public void keyPressed( KeyEvent e )
-//    {
-//      // Empty
-//    }
+// public void keyPressed( KeyEvent e )
+// {
+// // Empty
+// }
 //
-//    public void keyReleased( KeyEvent e )
-//    {
-//      cacheNewName();
-//      if( updateListener != null )
-//      {
-//        updateListener.update();
-//      }
-//    }
+// public void keyReleased( KeyEvent e )
+// {
+// cacheNewName();
+// if( updateListener != null )
+// {
+// updateListener.update();
+// }
+// }
 //
-//  };
-//) )
+// };
+// ) )
     final GridData radioGroupGridData = new GridData( SWT.FILL, SWT.FILL, true, true );
     radioGroupGridData.horizontalSpan = 2;
     radioGroupGridData.verticalIndent = 15;
-    final Group radioGroup = new Group(container, SWT.NONE);
+    final Group radioGroup = new Group( container, SWT.NONE );
     radioGroup.setLayoutData( radioGroupGridData );
-    radioGroup.setLayout( (new GridLayout(1, false)));
+    radioGroup.setLayout( (new GridLayout( 1, false )) );
     radioGroup.setText( " Instationäre randbedinungen " );
     for( int i = 0; i < m_radioBtnGroup.length; i++ )
     {
@@ -143,19 +143,41 @@ public class NodalBCSelectionWizardPage extends WizardPage
         }
       } );
     }
-
-    m_radioBtnGroup[0].setSelection( true );
+// m_radioBtnGroup[0].setSelection( true );
+// m_descriptorPage.setDescriptor( m_descriptors[0] );
+// m_selectionPage.setDescriptor( m_descriptors[0] );
   }
 
+  /**
+   * @see org.eclipse.jface.wizard.WizardPage#isPageComplete()
+   */
+  @Override
+  public boolean isPageComplete( )
+  {
+    for( int i = 0; i < m_radioBtnGroup.length; i++ )
+      if( m_radioBtnGroup[i].getSelection() == true )
+        return true;
+    return false;
+  }
+  
+  /**
+   * @see org.eclipse.jface.wizard.WizardPage#canFlipToNextPage()
+   */
+  @Override
+  public boolean canFlipToNextPage( )
+  {
+    return isPageComplete();
+  }
+  
   protected void setDescriptor( final IBoundaryConditionDescriptor selectedDescriptor )
   {
     m_descriptorPage.setDescriptor( selectedDescriptor );
 
     getContainer().updateButtons();
   }
-  
+
   protected double getSteadyValue( )
   {
-    return Double.parseDouble( m_bcValue.getText());
+    return Double.parseDouble( m_bcValue.getText() );
   }
 }
