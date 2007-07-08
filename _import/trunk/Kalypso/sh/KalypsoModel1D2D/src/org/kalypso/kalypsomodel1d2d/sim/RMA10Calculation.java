@@ -227,19 +227,27 @@ public class RMA10Calculation implements INativeIDProvider
     final int iedsw = getControlModel().getIEDSW();
     
     // turbulence combo (iedsw):
-    if( iedsw == 0 )
+    if( iedsw == 0 || iedsw == 10 || iedsw == 13)
     {
-      result[0] = getEddyXX( roughnessFE );
-      result[1] = getEddyYX( roughnessFE );
-      result[2] = getEddyXY( roughnessFE );
-      result[3] = getEddyYY( roughnessFE );
+      final double defaultValue = 2900.0;
+      result[0] = defaultValue;
+      result[1] = defaultValue;
+      result[2] = defaultValue;
+      result[3] = defaultValue;
+//      result[0] = getEddyXX( roughnessFE );
+//      result[1] = getEddyYX( roughnessFE );
+//      result[2] = getEddyXY( roughnessFE );
+//      result[3] = getEddyYY( roughnessFE );
     }
     else
     {
-      result[0] = 0.4;
-      result[1] = 0.4;
-      result[2] = 0.4;
-      result[3] = 0.4;
+      // TODO: strange values, check again with Nico
+//      final double defaultValue = 0.4;
+      final double defaultValue = 2900.0;
+      result[0] = defaultValue;
+      result[1] = defaultValue;
+      result[2] = defaultValue;
+      result[3] = defaultValue;
     }
       return result;
     //return getcharactV( roughnessFE ); 0.4

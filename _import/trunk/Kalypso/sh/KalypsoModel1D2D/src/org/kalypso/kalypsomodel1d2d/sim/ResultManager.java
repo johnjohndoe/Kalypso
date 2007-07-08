@@ -111,6 +111,11 @@ public class ResultManager implements Runnable
 
   private static final FilenameFilter FILTER_GMT = new PrefixSuffixFilter( "", ".gmt" );
 
+  /**
+   * Time step id for steady calculation
+   */
+  private static final int PSEUDO_STEADY_TIME_STEP_NR = -1;
+
   private final List<File> m_found2dFiles = new ArrayList<File>();
 
   private final List<Job> m_resultJobs = new ArrayList<Job>();
@@ -187,18 +192,24 @@ public class ResultManager implements Runnable
     // start a job for each unknown 2d file.
     final Matcher matcher = m_resultFilePattern.matcher( resultFileName );
     final String outDirName;
+    final int timeStepNum;
     if( matcher.matches() )
     {
       final String countStr = matcher.group( 1 );
       final int count = Integer.parseInt( countStr ) - 1;
       outDirName = "timestep-" + count;
+      timeStepNum = count;
     }
     else
+    {
       outDirName = resultFileName;
+      timeStepNum = PSEUDO_STEADY_TIME_STEP_NR;
+    }
 
     final File resultOutputDir = new File( m_outputDir, outDirName );
     resultOutputDir.mkdirs();
-    final ProcessResultsJob processResultsJob = new ProcessResultsJob( file, resultOutputDir, m_dataProvider, m_calculation, m_parameters );
+    final ProcessResultsJob processResultsJob = 
+        new ProcessResultsJob( file, resultOutputDir, m_dataProvider, m_calculation, m_parameters, timeStepNum );
     processResultsJob.addJobChangeListener( m_finishListener );
 
     m_resultJobs.add( processResultsJob );
@@ -382,9 +393,9 @@ public class ResultManager implements Runnable
     }
 
     /* Write SLD back to file */
-    final String sldXML = sld.exportAsXML();
-    final String sldXMLwithHeader = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + sldXML;
-    FileUtils.writeStringToFile( tinStyleFile, sldXMLwithHeader, "UTF-8" );
+//    final String sldXML = sld.exportAsXML();
+//    final String sldXMLwithHeader = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + sldXML;
+//    FileUtils.writeStringToFile( tinStyleFile, sldXMLwithHeader, "UTF-8" );
   }
 
   /**

@@ -1477,7 +1477,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
       /* check min/max values */
       // TODO: velocity not yet set here?
-      m_resultMinMaxCatcher.addNodeResult( result );
+//      m_resultMinMaxCatcher.addNodeResult( result );
       // TODO: move to handleResult stuff?
     }
     catch( final Exception e )
@@ -1545,6 +1545,8 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     }
 
     result.setResultValues( vx, vy, virtualDepth, waterlevel );
+    m_resultMinMaxCatcher.addNodeResult( result );
+
   }
 
   /**

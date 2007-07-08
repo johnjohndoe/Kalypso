@@ -119,7 +119,7 @@ public interface IControlModel1D2D extends IControlModel
 
   public Double getAC3( );
 
-  public Double get_p_bottom( );
+  public Double get_P_BOTTOM( );
 
   public void setCalculationUnit( ICalculationUnit calUnit );
 

@@ -312,7 +312,7 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#get_p_bottom()
    */
-  public Double get_p_bottom( )
+  public Double get_P_BOTTOM( )
   {
     final Double property = (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_P_BOTTOM );
     return property!=null ? property : 0.0;

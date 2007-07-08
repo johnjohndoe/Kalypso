@@ -139,14 +139,14 @@ public class Control1D2DConverter
     // // C0
     final Object[] c0Props = new Object[] { 0, controlModel.getIDNOPT(), calendarForFirstTimeStep.get( Calendar.YEAR ), calendarForFirstTimeStep.get( Calendar.DAY_OF_YEAR ),
         getTimeInPercentage( calendarForFirstTimeStep ), controlModel.getIEDSW(), controlModel.getTBFACT(), controlModel.getTBMIN(), 0 };
-    // TODO: also write the (at the moment) constant values with the corrct format strings (%xxx.yyf),so later we
-    // can easily exchange the given values without thinking about format any more (applies to all Cx)
     formatter.format( "C0%14d%8d%8d%8d%8.2f%8d%8.3f%8.2f%8d%n", c0Props );
 
     // C1
     formatter.format( "C1%14d%8d%8d%8d%8d%8d%8d%8d%8d%n", 0, 1, 1, 0, 0, 0, 0, 0, 0 );
 
     // C2
+    // TODO: P_BOTTOM still not implemented, ask Nico
+//    formatter.format( "C2%14.2f%8.3f%8.1f%8.1f%8.1f%8d%8.3f%n", controlModel.getOMEGA(), controlModel.getELEV(), 1.0, 1.0, 1.0, 1, controlModel.get_P_BOTTOM() );
     formatter.format( "C2%14.2f%8.3f%8.1f%8.1f%8.1f%8d%n", controlModel.getOMEGA(), controlModel.getELEV(), 1.0, 1.0, 1.0, 1 );
 
     // C3
@@ -181,9 +181,8 @@ public class Control1D2DConverter
       final Feature roughnessCL = (Feature) elt;
       final int roughnessAsciiID = getRoughnessID( roughnessCL.getId() );
 
-      // Double eddy = calculation.getViskosity( roughnessCL );
-      // TODO: why it is fixed now?
-      final double val = 2900.0;
+      Double[] eddy = calculation.getViskosity( roughnessCL );
+      // final double val = 2900.0;
 
       final Double ks = calculation.getKs( roughnessCL );
       final Double axAy = calculation.getAxAy( roughnessCL );
@@ -195,12 +194,21 @@ public class Control1D2DConverter
       final Double axayCorrected = axAy == null ? 0.0 : axAy;
       final Double dpCorrected = dp == null ? 0.0 : dp;
 
-      writeEDBlock( formatter, roughnessAsciiID, val, ks, axayCorrected, dpCorrected );
+      writeEDBlock( formatter, roughnessAsciiID, eddy, ks, axayCorrected, dpCorrected );
     }
 
     final Map<Integer, IWeirFlowRelation> weirMap = m_weirProvider.getWeirData();
     for( final Integer weirID : weirMap.keySet() )
       writeEDBlock( formatter, weirID, 0.0, 0.0, 0.0, 0.0 );
+  }
+
+  private void writeEDBlock( Formatter formatter, int roughnessAsciiID, Double[] eddy, Double ks, Double axayCorrected, Double dpCorrected )
+  {
+    if( eddy.length < 4 )
+      throw new IllegalArgumentException( "Irregular eddy viscosity parameter." );
+    formatter.format( "ED1%13d%8.1f%8.1f%8.1f%8.1f%8.1f%8.3f%8.3f%n", roughnessAsciiID, eddy[0], eddy[1], eddy[2], eddy[3], -1.0, 1.0, 1.0 );
+    formatter.format( "ED2%13.1f%8.1f%8.3f%16.1f%n", 0.5, 0.5, 0.001, 20.0 );
+    formatter.format( "ED4%21.2f%8.1f%8.2f%n", ks, axayCorrected, dpCorrected );
   }
 
   private void writeEDBlock( final Formatter formatter, final int roughnessAsciiID, final double val, final Double ks, final Double axayCorrected, final Double dpCorrected )
