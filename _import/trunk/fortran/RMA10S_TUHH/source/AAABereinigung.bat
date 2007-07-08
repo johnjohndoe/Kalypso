@@ -7,6 +7,7 @@ del *.fwd
 del *.obj
 del *.map
 del *.k
+del *.wp
 cd..
 cd objs
 del *.obj
