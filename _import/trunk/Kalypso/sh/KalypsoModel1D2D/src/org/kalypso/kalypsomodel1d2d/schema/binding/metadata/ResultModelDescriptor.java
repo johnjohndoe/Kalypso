@@ -46,6 +46,8 @@ import java.util.GregorianCalendar;
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptor.SIMULATIONTYPE;
+import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.feature.Feature;
 
 import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
@@ -105,6 +107,24 @@ public class ResultModelDescriptor extends ModelDescriptor implements IResultMod
         Kalypso1D2DSchemaConstants.SIMMETA_PROP_TIME, 
         xmlGc );
 
+  }
+  
+  public void setSimulationType( SIMULATIONTYPE value )
+  {
+    Assert.throwIAEOnNullParam( value, "value" );
+    setProperty( 
+        Kalypso1D2DSchemaConstants.SIMMETA_PROP_SIMULATION_TYPE, 
+        value.toString() );
+  }
+  
+  public SIMULATIONTYPE getSimulationType( )
+  {
+    String type =
+        getProperty( 
+            Kalypso1D2DSchemaConstants.SIMMETA_PROP_SIMULATION_TYPE, 
+            String.class );
+    return SIMULATIONTYPE.valueOf( type );
+    
   }
 
 }

@@ -113,4 +113,13 @@ public interface IModelDescriptor extends IFeatureWrapper2
    */
   public void setWorkspacePath(String workspacePath);
   
+  /**
+   * Answer whether or not this descriptor is describing the feature represented by
+   * the given {@link IFeatureWrapper2}
+   * @param featureWrapper2 the feature wrapper describing the feature to check
+   * @return true if this descriptor is describing this feature otherwise fasle
+   * @throws IllegalArgumentException if featureWrapper2 is null
+   */
+  public boolean isDescribing(IFeatureWrapper2 featureWrapper2);
+  
 }

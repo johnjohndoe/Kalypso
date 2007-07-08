@@ -43,6 +43,8 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.metadata;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptor.SIMULATIONTYPE;
+
 /**
  * @author Patrice Congo
  * @author Dejan Antanaskovic
@@ -53,5 +55,9 @@ public interface IResultModelDescriptor extends IModelDescriptor
   public GregorianCalendar getTime( );
 
   public void setTime( GregorianCalendar value );
+  
+  public SIMULATIONTYPE getSimulationType( );
+
+  public void setSimulationType( SIMULATIONTYPE value );
 
 }

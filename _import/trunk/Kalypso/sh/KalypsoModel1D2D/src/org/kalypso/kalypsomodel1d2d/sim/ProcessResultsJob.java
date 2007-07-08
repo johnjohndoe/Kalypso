@@ -97,9 +97,17 @@ public class ProcessResultsJob extends Job
 
   private final NodeResultMinMaxCatcher m_resultMinMaxCatcher = new NodeResultMinMaxCatcher();
 
+  private int m_timeStepNr;
+
   private static List<TYPE> m_parameters;
 
-  public ProcessResultsJob( final File inputFile, final File outputDir, final ISimulationDataProvider dataProvider, final RMA10Calculation calculation, final List<ResultType.TYPE> parameter )
+  public ProcessResultsJob( 
+              final File inputFile, 
+              final File outputDir, 
+              final ISimulationDataProvider dataProvider, 
+              final RMA10Calculation calculation, 
+              final List<ResultType.TYPE> parameter,
+              final int timeStepNr)
   {
     super( "1D2D-Ergebnisse auswerten: " + inputFile.getName() );
 
@@ -108,6 +116,7 @@ public class ProcessResultsJob extends Job
     m_dataProvider = dataProvider;
     m_calculation = calculation;
     m_parameters = parameter;
+    m_timeStepNr = timeStepNr;
   }
 
   /**

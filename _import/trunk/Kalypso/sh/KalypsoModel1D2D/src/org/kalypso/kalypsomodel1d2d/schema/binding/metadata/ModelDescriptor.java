@@ -43,8 +43,11 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.metadata;
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
+
 
 /**
  * Default implementation of {@link IModelDescriptor}
@@ -164,5 +167,17 @@ public class ModelDescriptor
         workspacePath );  
   }
 
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IModelDescriptor#isDescribing(org.kalypsodeegree.model.feature.binding.IFeatureWrapper2)
+   */
+  public boolean isDescribing( IFeatureWrapper2 featureWrapper2 )
+  {
+    Assert.throwIAEOnNullParam( featureWrapper2, "featureWrapper2" );
+    Feature feature = featureWrapper2.getWrappedFeature();
+    String testeeContext = feature.getWorkspace().getContext().toString();
+    String testeeGmlID = feature.getId();
+    
+    return testeeContext.equals( getWorkspacePath() ) && testeeGmlID.equals( getModelID() );
+  }
   
 }
