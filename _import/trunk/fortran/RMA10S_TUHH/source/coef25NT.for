@@ -1180,7 +1180,6 @@ CIPK AUG06
       end if
       !-
 
-
 CIPK MAR01 CLEANUP LOGIC
 	IF(ICYC .LE. 0) THEN
         FRN = 0.0
@@ -1323,10 +1322,13 @@ C  N*N
 
 C  N*DNX
       !EFa may07, added dhdx*epsx and dhdz*epsxz
+      !T2=AMS*AKX*H*R
       T2=AMS*(AKX*H*R+epsx*dhdx)
+      !-
 
 C  N*DNY
-
+      !EFa may07, added dhdx*epsx and dhdz*epsxz
+      !T3=AMS*H*S
       T3=AMS*(H*S+epsxz*dhdz)
       !-
 
@@ -1427,6 +1429,8 @@ C IPK MAR01 REPLACE SIDF(NN) WITH SIDFT
       T1=AMS*(AKY*H*DSDZ+(TFRIC+TDRAGY*H)*VBF*(2.*(S*VBF)**2+(R*UBF)**2)
      +       +SIDFT)
       !EFa may07, added dhdx * epszx and dhdz * epsz
+      !T2=AMS*AKY*H*R
+      !T3=AMS*H*S
       T2=AMS*(AKY*H*R+dhdx*epszx)
       T3=AMS*(H*S+dhdz*epsz)
       !-
@@ -1888,6 +1892,7 @@ C-
       VX=VEL(1,M)*COS(ALFA(M))+VEL(2,M)*SIN(ALFA(M))
       DO 1200 J=1,NEF
  1200 ESTIFM(IRW,J)=0.
+
       IF(MOD(N,2) .EQ. 0) GO TO 1250
       IF(AC2 .EQ. 0.) THEN
         ESTIFM(IRW,IRW)=AREA(NN)*VEL(3,M)
@@ -1949,28 +1954,17 @@ CIPK NOV97
  
 CIPK JUN05
  1320 CONTINUE
-      !nis,jun07,testing
-      !WRITE(*,*) 'Element: ', nn
-      !-
+
       IF(IDNOPT .LT. 0) THEN
         DO N=1,NEF
-          !nis,jun07,testing
-          !WRITE(*,*) 'Freiheitsgrad: ', n
-          !-
           DO M=1,NCNX
             MM=(M-1)*NDF*2+3
-            !nis,jun07,testing
-            !WRITE(*,*) 'Abltng nach DOF: ', M, ' = ', MM, 'te Gleichung'
-            !WRITE(*,*) 'effektive Porositaet: ', efpornn(m)
-            !-
             ESTIFM(N,MM)=ESTIFM(N,MM)*EFPORNN(M)
           ENDDO
         ENDDO
       ENDIF
-      !nis,jun07,testing
-      !pause
-      !-
 
+      !nis,com: writing elt's Jacobian into global matrix
       DO 1450 I=1,NCN
         J=NCON(I)
         IA=NDF*(I-1)
@@ -1980,23 +1974,14 @@ CIPK JUN05
           IF(JA.GT.0) THEN
             R1(JA)=R1(JA)+F(IA)
 
-            !nis,may07,testing
-            !if (ja == 994 .or. ja == 995) then
-            !  WRITE(*,*) ' Element: ', nn
-            !  WRITE(*,*) 'Freiheit: ', ja
-            !  WRITE(*,*) 'neu Wert: ', r1(ja)
-            !  pause
-            !end if
-            !-
-
 C            rkeepeq(ja)=rkeepeq(ja)+f(ia)
           ENDIF
  1400   CONTINUE
  1450 CONTINUE
 
 
-      !matrix in datei
-      if (nn >= 313 .and. nn <= 320) then
+      !nis,com: Writing elt's Jacobian in file
+      if (nn == 92 .or. nn == 93 .or. nn == 95) then
         !active degreecount
         dca = 0
         !active positions
@@ -2027,20 +2012,18 @@ C            rkeepeq(ja)=rkeepeq(ja)+f(ia)
         write(FMT2, '(a14,i2.2,a18)')
      +    '(a1,i1,a2,i10,', dca+1, '(1x,f10.2),1x,i10)'
 
-        WRITE(9919,*) 'Element ', nn, 'coef2nt'
+        WRITE(9919,*) 'Element ', nn, 'coef2nt, ',dca,'active equations'
         WRITE(9919, FMT1)
      +    ( nbc (nop(nn, nbct(j,1)), nbct(j,2)), j=1, dca)
         DO i = 1, dca
-          IF (MOD(i,4)/=0) THEN
-            k = (nbct(i,1) - 1) * 4 + nbct(i,2)
-            WRITE(9919, FMT2)
-     +       sort(i), nbct(i,1), ': ',
-     +       nbc( nop(nn, nbct(i,1)), nbct(i,2)),
-!     +       f(nbc( nop(nn, nbct(i,1)), nbct(i,2))),
-     +       f(k),
-     +       (estifm(k, (nbct(j,1) - 1) * 4 + nbct(j,2)), j=1, dca),
-     +       nbc( nop(nn, nbct(i,1)), nbct(i,2))
-          ENDIF
+          k = (nbct(i,1) - 1) * 4 + nbct(i,2)
+          WRITE(9919, FMT2)
+     +     sort(i), nbct(i,1), ': ',
+     +     nbc( nop(nn, nbct(i,1)), nbct(i,2)),
+!     +     f(nbc( nop(nn, nbct(i,1)), nbct(i,2))),
+     +     f(k),
+     +     (estifm(k, (nbct(j,1) - 1) * 4 + nbct(j,2)), j=1, dca),
+     +     nbc( nop(nn, nbct(i,1)), nbct(i,2))
         ENDDO
         WRITE(9919,*)
         WRITE(9919,*)

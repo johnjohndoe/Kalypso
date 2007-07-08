@@ -1871,16 +1871,14 @@ CIPK JUN05
         WRITE(9919, FMT1)
      +    ( nbc (nop(nn, nbct(j,1)), nbct(j,2)), j=1, dca)
         DO i = 1, dca
-          IF (MOD(i,4)/=0) THEN
-            k = (nbct(i,1) - 1) * 4 + nbct(i,2)
-            WRITE(9919, FMT2)
-     +       sort(i), nbct(i,1), ': ',
-     +       nbc( nop(nn, nbct(i,1)), nbct(i,2)),
-!     +       f(nbc( nop(nn, nbct(i,1)), nbct(i,2))),
-     +       f(k),
-     +       (estifm(k, (nbct(j,1) - 1) * 4 + nbct(j,2)), j=1, dca),
-     +       nbc( nop(nn, nbct(i,1)), nbct(i,2))
-          ENDIF
+          k = (nbct(i,1) - 1) * 4 + nbct(i,2)
+          WRITE(9919, FMT2)
+     +     sort(i), nbct(i,1), ': ',
+     +     nbc( nop(nn, nbct(i,1)), nbct(i,2)),
+!     +     f(nbc( nop(nn, nbct(i,1)), nbct(i,2))),
+     +     f(k),
+     +     (estifm(k, (nbct(j,1) - 1) * 4 + nbct(j,2)), j=1, dca),
+     +     nbc( nop(nn, nbct(i,1)), nbct(i,2))
         ENDDO
         WRITE(9919,*)
         WRITE(9919,*)

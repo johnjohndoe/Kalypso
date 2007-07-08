@@ -1851,35 +1851,15 @@ C...... For 1D - 2D junctions adjust equation for direction
 C-
       DO 1050 N=1,NCN,2           !NiS,jun06,com: just the corner nodes
         M=NCON(N)                 !NiS,jun06,com: get the node number
-!NiS,may06: testing other nodes
-!      IF(adif(m).eq.0.and.(nn.eq.4464 .or. nn.eq. 4463 .or.
-!     +  nn.eq.4462.or.nn.eq.1901))
-!     +  then
-!        WRITE(*,*) 'element: ', NN
-!        WRITE(*,*)'nbc(node=',M,',2): ', nbc(M,2)
-!      endif
-!-
         IF(ADIF(M) .NE. 0.) THEN  !NiS,jun06,com: ADIF(M).ne.0 if it is a junction-corner-node
           NEQ=NDF*NCN             !NiS,jun06,com: number of element equations
           IA=NDF*(N-1)+1          !NiS,jun06,com: get the element-DOF of the 1. junction-corner-node DOF
 
-!NiS,may06:testing
-!      WRITE(*,*)'element: ',NN
-!      WRITE(*,*)'NEQ: ',NEQ
-!      WRITE(*,*)'IA: ',IA
-!      WRITE(*,*)'nbc(node=',M,',2): ', nbc(M,2)
-!      WRITE(*,*)SIN(adif(m)), COS(adif(m)), SIN(adif(m))/COS(adif(m))
-!-
           DO 1040 I=1,NEQ
             !NiS,jun06,com: Because it is only one direction, the part of the junction-corner-node DOF as to be projected on the correct direction for processing
             ESTIFM(I,IA)=ESTIFM(I,IA)+ESTIFM(I,IA+1)*SIN(ADIF(M))
      1                   /COS(ADIF(M))
  1040     CONTINUE
-!NiS,jun06:testing
-!            write (*,*)M,(estifm(zzz,ia),zzz=1,3)
-!           write (*,*)M,(estifm(zzz,ia+1),zzz=1,3)
-!           write (*,*)M,(estifm(zzz,ia+2),zzz=1,3)
-!-
 
         ENDIF
  1050 CONTINUE
@@ -1913,11 +1893,14 @@ C-
       VX=VEL(1,M)*COS(ALFA(M))+VEL(2,M)*SIN(ALFA(M))
       DO 1200 J=1,NEF
  1200 ESTIFM(IRW,J)=0.
+
       IF(MOD(N,2) .EQ. 0) GO TO 1250
+      !nis,com: AC2.eq.0, if there was no h-Q-relationship, but just a water level BC
       IF(AC2 .EQ. 0.) THEN
         ESTIFM(IRW,IRW)=AREA(NN)*VEL(3,M)
         ESTIFM(IRW,IRH)=AREA(NN)*VX
         F(IRW)=AREA(NN)*(SPEC(M,1)-VX*VEL(3,M))
+      !nis,com: Otherwise (AC2.ne.0), there is an h-Q-relationship present
       ELSE
         AF=VEL(3,M)/ASC
 CIPK NOV97    F(IRW)=AREA(NN)*(AF*(AC1+AC2*(VEL(3,M)+AO(M)-E0)**CP)-VX
@@ -1996,7 +1979,7 @@ C            rkeepeq(ja)=rkeepeq(ja)+f(ia)
  1450 CONTINUE
 
       !matrix in datei
-      if (nn >= 313 .and. nn <= 320) then
+      if (nn == 92 .or. nn == 93 .or. nn == 95) then
         !active degreecount
         dca = 0
         !active positions
@@ -2031,16 +2014,14 @@ C            rkeepeq(ja)=rkeepeq(ja)+f(ia)
         WRITE(9919, FMT1)
      +    ( nbc (nop(nn, nbct(j,1)), nbct(j,2)), j=1, dca)
         DO i = 1, dca
-          IF (MOD(i,4)/=0) THEN
-            k = (nbct(i,1) - 1) * 4 + nbct(i,2)
-            WRITE(9919, FMT2)
-     +       sort(i), nbct(i,1), ': ',
-     +       nbc( nop(nn, nbct(i,1)), nbct(i,2)),
-!     +       f(nbc( nop(nn, nbct(i,1)), nbct(i,2))),
-     +       f(k),
-     +       (estifm(k, (nbct(j,1) - 1) * 4 + nbct(j,2)), j=1, dca),
-     +       nbc( nop(nn, nbct(i,1)), nbct(i,2))
-          ENDIF
+          k = (nbct(i,1) - 1) * 4 + nbct(i,2)
+          WRITE(9919, FMT2)
+     +     sort(i), nbct(i,1), ': ',
+     +     nbc( nop(nn, nbct(i,1)), nbct(i,2)),
+!     +     f(nbc( nop(nn, nbct(i,1)), nbct(i,2))),
+     +     f(k),
+     +     (estifm(k, (nbct(j,1) - 1) * 4 + nbct(j,2)), j=1, dca),
+     +     nbc( nop(nn, nbct(i,1)), nbct(i,2))
         ENDDO
         WRITE(9919,*)
         WRITE(9919,*)
