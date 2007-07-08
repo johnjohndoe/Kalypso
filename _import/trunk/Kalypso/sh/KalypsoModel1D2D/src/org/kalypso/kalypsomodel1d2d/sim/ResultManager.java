@@ -77,20 +77,26 @@ import org.kalypso.template.gismapview.Gismapview.Layers;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
+import org.kalypsodeegree.graphics.sld.Fill;
 import org.kalypsodeegree.graphics.sld.LineColorMapEntry;
 import org.kalypsodeegree.graphics.sld.NamedLayer;
 import org.kalypsodeegree.graphics.sld.ParameterValueType;
+import org.kalypsodeegree.graphics.sld.PolygonColorMapEntry;
 import org.kalypsodeegree.graphics.sld.Rule;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.graphics.sld.Style;
 import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
 import org.kalypsodeegree.graphics.sld.SurfaceLineSymbolizer;
+import org.kalypsodeegree.graphics.sld.SurfacePolygonSymbolizer;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.xml.XMLParsingException;
 import org.kalypsodeegree_impl.graphics.sld.LineColorMap;
 import org.kalypsodeegree_impl.graphics.sld.LineColorMapEntry_Impl;
 import org.kalypsodeegree_impl.graphics.sld.LineColorMap_Impl;
+import org.kalypsodeegree_impl.graphics.sld.PolygonColorMap;
+import org.kalypsodeegree_impl.graphics.sld.PolygonColorMapEntry_Impl;
+import org.kalypsodeegree_impl.graphics.sld.PolygonColorMap_Impl;
 import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
 import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 
@@ -288,7 +294,7 @@ public class ResultManager implements Runnable
       System.out.println( resultProcessingStatus );
     // TODO: evaluate status
 
-    /* other, generell postprocessing stuff. */
+    /* other, general post-processing stuff. */
     try
     {
       processTemplates();
@@ -355,6 +361,34 @@ public class ResultManager implements Runnable
     // make the isolines-SLD for each defined flow parameter
     for( ResultType.TYPE parameter : m_parameters )
     {
+      final double minValue;
+      final double maxValue;
+      switch( parameter )
+      {
+        case WATERLEVEL:
+          // get min/max-values of the simulation
+          minValue = m_minMaxCatcher.getMinWaterlevel();
+          maxValue = m_minMaxCatcher.getMaxWaterlevel();
+
+          break;
+        case VELOCITY:
+          // get min/max-values of the simulation
+          minValue = m_minMaxCatcher.getMinVelocityAbs();
+          maxValue = m_minMaxCatcher.getMaxVelocityAbs();
+          break;
+        case DEPTH:
+          // get min/max-values of the simulation
+          minValue = m_minMaxCatcher.getMinDepth();
+          maxValue = m_minMaxCatcher.getMaxDepth();
+          break;
+
+        default:
+          // take the waterlevel by default
+          minValue = m_minMaxCatcher.getMinWaterlevel();
+          maxValue = m_minMaxCatcher.getMaxWaterlevel();
+          break;
+      }
+
       final String layerName = "tin" + parameter.name() + "Style";
       final String featureTypeStyleName = "tin" + parameter.name() + "FeatureTypeStyle";
       final String ruleName = "tin" + parameter.name() + "Rule";
@@ -380,7 +414,19 @@ public class ResultManager implements Runnable
           {
             try
             {
-              configureLineSymbolizer( (SurfaceLineSymbolizer) symbolizer, parameter );
+              configureLineSymbolizer( (SurfaceLineSymbolizer) symbolizer, minValue, maxValue );
+            }
+            catch( FilterEvaluationException e )
+            {
+              // TODO Auto-generated catch block
+              e.printStackTrace();
+            }
+          }
+          else if( symbolizer instanceof SurfacePolygonSymbolizer )
+          {
+            try
+            {
+              configurePolygonSymbolizer( (SurfacePolygonSymbolizer) symbolizer, minValue, maxValue );
             }
             catch( FilterEvaluationException e )
             {
@@ -398,54 +444,82 @@ public class ResultManager implements Runnable
 //    FileUtils.writeStringToFile( tinStyleFile, sldXMLwithHeader, "UTF-8" );
   }
 
+  private void configurePolygonSymbolizer( SurfacePolygonSymbolizer symbolizer, double minValue, double maxValue ) throws FilterEvaluationException
+  {
+    final PolygonColorMap templateColorMap = symbolizer.getColorMap();
+    final PolygonColorMap newColorMap = new PolygonColorMap_Impl();
+
+    // retrieve stuff from template-entries
+    final PolygonColorMapEntry fromEntry = templateColorMap.findEntry( "from", null );
+    final PolygonColorMapEntry toEntry = templateColorMap.findEntry( "to", null );
+
+    final Color fromColor = fromEntry.getStroke().getStroke( null );
+    final Color toColor = toEntry.getStroke().getStroke( null );
+    final double opacity = fromEntry.getStroke().getOpacity( null );
+
+    // get rounded values below min and above max (rounded by first decimal)
+    // as a first try we will generate isareas by using class steps of 0.1
+    // later, the classes will be created by using user defined class steps.
+    // for that we fill an array of calculated (later user defined values) from max to min
+    final BigDecimal minDecimal = new BigDecimal( minValue ).setScale( 1, BigDecimal.ROUND_FLOOR );
+    final BigDecimal maxDecimal = new BigDecimal( maxValue ).setScale( 1, BigDecimal.ROUND_CEILING );
+
+    BigDecimal stepWidth = new BigDecimal( 0.1 ).setScale( 1 );
+    final int numOfClasses = (maxDecimal.subtract( minDecimal ).divide( stepWidth )).intValue() + 1;
+
+    for( int currentClass = 0; currentClass < numOfClasses; currentClass++ )
+    {
+      final double fromValue = minDecimal.doubleValue() + currentClass * stepWidth.doubleValue();
+      final double toValue = minDecimal.doubleValue() + (currentClass + 1) * stepWidth.doubleValue();
+
+      // Stroke
+      Color lineColor;
+      if( fromColor == toColor )
+        lineColor = fromColor;
+      else
+        lineColor = interpolateColor( fromColor, toColor, currentClass, numOfClasses );
+
+      final Stroke stroke = StyleFactory.createStroke( lineColor, opacity );
+
+      // Fill
+      final Color polygonColor = interpolateColor( fromColor, toColor, currentClass, numOfClasses );
+
+      final Fill fill = StyleFactory.createFill( polygonColor, opacity );
+
+      final ParameterValueType label = StyleFactory.createParameterValueType( "Isofläche " + currentClass );
+      final ParameterValueType from = StyleFactory.createParameterValueType( fromValue );
+      final ParameterValueType to = StyleFactory.createParameterValueType( toValue );
+
+      final PolygonColorMapEntry colorMapEntry = new PolygonColorMapEntry_Impl( fill, stroke, label, from, to );
+      newColorMap.addColorMapClass( colorMapEntry );
+    }
+
+    symbolizer.setColorMap( newColorMap );
+  }
+
   /**
    * sets the parameters for the colormap of an isoline
    */
-  private void configureLineSymbolizer( final SurfaceLineSymbolizer symbolizer, final ResultType.TYPE parameter ) throws FilterEvaluationException
+  private void configureLineSymbolizer( final SurfaceLineSymbolizer symbolizer, final double minValue, final double maxValue ) throws FilterEvaluationException
   {
     final LineColorMap templateColorMap = symbolizer.getColorMap();
-//    StyleFactory.createlineColorMap();
     final LineColorMap newColorMap = new LineColorMap_Impl();
 
+    // retrieve stuff from template-entries
     final LineColorMapEntry fromEntry = templateColorMap.findEntry( "from", null );
     final LineColorMapEntry toEntry = templateColorMap.findEntry( "to", null );
     final LineColorMapEntry fatEntry = templateColorMap.findEntry( "fat", null );
-    
-    fromEntry.getStroke().getStroke( null );
-    
-    // TODO: retrieve stuff from template-entries
-    final double minValue;
-    final double maxValue;
-    final Color color;
-    switch( parameter )
-    {
-      case WATERLEVEL:
-        // get min/max-values of the simulation
-        minValue = m_minMaxCatcher.getMinWaterlevel();
-        maxValue = m_minMaxCatcher.getMaxWaterlevel();
-        color = new Color( 255, 10, 10 );
-        
-        break;
-      case VELOCITY:
-        // get min/max-values of the simulation
-        minValue = m_minMaxCatcher.getMinVelocityAbs();
-        maxValue = m_minMaxCatcher.getMaxVelocityAbs();
-        color = new Color( 10, 10, 255 );
-        break;
-      case DEPTH:
-        // get min/max-values of the simulation
-        minValue = m_minMaxCatcher.getMinDepth();
-        maxValue = m_minMaxCatcher.getMaxDepth();
-        color = new Color( 10, 255, 10 );
-        break;
 
-      default:
-        // take the waterlevel by default
-        minValue = m_minMaxCatcher.getMinWaterlevel();
-        maxValue = m_minMaxCatcher.getMaxWaterlevel();
-        color = new Color( 255, 10, 10 );
-        break;
-    }
+    final Color fromColor = fromEntry.getStroke().getStroke( null );
+    final Color toColor = toEntry.getStroke().getStroke( null );
+    final double opacity = fromEntry.getStroke().getOpacity( null );
+// StyleFactory.createlineColorMap(fromColor, toColor );
+
+    final double normalWidth = fromEntry.getStroke().getWidth( null );
+    final double fatWidth = fatEntry.getStroke().getWidth( null );
+
+    // defines which isolines are drawn with a fat line
+    final double fatValue = fatEntry.getQuantity( null );
 
     // get rounded values below min and above max (rounded by first decimal)
     // as a first try we will generate isolines using class steps of 0.1
@@ -454,9 +528,6 @@ public class ResultManager implements Runnable
     final BigDecimal minDecimal = new BigDecimal( minValue ).setScale( 1, BigDecimal.ROUND_FLOOR );
     final BigDecimal maxDecimal = new BigDecimal( maxValue ).setScale( 1, BigDecimal.ROUND_CEILING );
 
-    // defines which isolines were drawn with a fat line
-    final double fatValue = fatEntry.getQuantity( null );
-
     BigDecimal stepWidth = new BigDecimal( 0.1 ).setScale( 1 );
     final int numOfClasses = (maxDecimal.subtract( minDecimal ).divide( stepWidth )).intValue() + 1;
 
@@ -464,31 +535,61 @@ public class ResultManager implements Runnable
     {
       final double currentValue = minDecimal.doubleValue() + currentClass * stepWidth.doubleValue();
 
-// if you will use different colors for each isoline, use this method
-// final Color color = getColor (currentClass, numOfClasses);
-
-      final ParameterValueType quantity = StyleFactory.createParameterValueType( currentValue );
-      final ParameterValueType label = StyleFactory.createParameterValueType( "Isolinie " + currentClass );
-
-      final int strokeWidth;
-      if( currentValue % fatValue == 0 )
-        strokeWidth = 3;
+      Color lineColor;
+      if( fromColor == toColor )
+        lineColor = fromColor;
       else
-        strokeWidth = 1;
+        lineColor = interpolateColor( fromColor, toColor, currentClass, numOfClasses );
 
-      final Stroke stroke = StyleFactory.createStroke( new Color( 255, 20, 20 ), strokeWidth );
+      final double strokeWidth;
+      if( currentValue % fatValue == 0 )
+        strokeWidth = fatWidth;
+      else
+        strokeWidth = normalWidth;
+
+      final Stroke stroke = StyleFactory.createStroke( lineColor, strokeWidth, opacity );
+
+      final ParameterValueType label = StyleFactory.createParameterValueType( "Isolinie " + currentClass );
+      final ParameterValueType quantity = StyleFactory.createParameterValueType( currentValue );
 
       final LineColorMapEntry colorMapEntry = new LineColorMapEntry_Impl( stroke, label, quantity );
       newColorMap.addColorMapClass( colorMapEntry );
     }
-    
+
     symbolizer.setColorMap( newColorMap );
   }
 
-  private Color getColor( int currentClass, int numOfClasses )
+  /**
+   * returns the interpolated color of a colormap defined by start and end color.F
+   * 
+   * @param currentClass
+   *            current class
+   * @param numOfClasses
+   *            number of all classes in which the colormap is divided.
+   */
+  private Color interpolateColor( Color minColor, Color maxColor, int currentClass, int numOfClasses )
   {
-    return null;
+    // interpolate color
+    final float[] minhsb = Color.RGBtoHSB( minColor.getRed(), minColor.getGreen(), minColor.getBlue(), null );
+    final float[] maxhsb = Color.RGBtoHSB( maxColor.getRed(), maxColor.getGreen(), maxColor.getBlue(), null );
 
+    float minHue = minhsb[0];
+    float maxHue = maxhsb[0];
+
+    float minSat = minhsb[1];
+    float maxSat = maxhsb[1];
+
+    float minBri = minhsb[2];
+    float maxBri = maxhsb[2];
+
+    final double Hue = minHue + (currentClass * (maxHue - minHue) / (numOfClasses - 1));
+    final double Sat = minSat + (currentClass * (maxSat - minSat) / (numOfClasses - 1));
+    final double Bri = minBri + (currentClass * (maxBri - minBri) / (numOfClasses - 1));
+
+    final Color hsbColor = Color.getHSBColor( (float) Hue, (float) Sat, (float) Bri );
+    final Color rgbColor = new Color( hsbColor.getRed(), hsbColor.getGreen(), hsbColor.getBlue() );
+
+    return rgbColor;
   }
 
 }
