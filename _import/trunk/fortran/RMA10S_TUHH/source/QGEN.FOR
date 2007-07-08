@@ -1,4 +1,4 @@
-C     Last change:  K    28 Jun 2007   11:54 am
+C     Last change:  WP    8 Jul 2007    6:25 pm
 cipk  last update feb 09 2001 allow for zero length cc lines
 
       SUBROUTINE QGEN(J,QREQ,THET,QQAL)
@@ -1325,8 +1325,10 @@ C-
             IF (na.gt.0) call bform (na)
   901     END DO
 
-        !nis,sep06,com: npr stands for the iteration number in steady case
-        ELSEIF (npr.gt.0) then
+        !nis,jul07: replacing npr with niti, question is just steady or not?
+        !ELSEIF (npr.gt.0) then
+        ELSEIF (niti.gt.0) then
+        !-
 
           DO 555 k = 1, lmt (j)
            na = line (j, k)

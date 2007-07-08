@@ -1,4 +1,4 @@
-C     Last change:  K     6 Jun 2007    2:13 pm
+C     Last change:  WP    8 Jul 2007    7:17 pm
 CIPK  LAST UPDATE JUNE 27 2005 ADD CONTROL STRUCTURES
 cipk  last update sep20 2001 revise test for NSPL to allow for NSPL=2
 CIPK  LAST UPDATE DEC 21 2000 ALLOW FOR GATE STRUCTURE
@@ -7,9 +7,9 @@ cipk  last update Sep 3 1996   Add ocean boundary capability
       SUBROUTINE BLINE(NTR) 
 !NiS,may06,com:
 !NTR shows calling position
-!NTR.eq.0 steady start
-!NTR.eq.1 dynamic start
-!NTR.gt.1 during iteration
+!NTR = 0: steady start
+!NTR = 1: dynamic start
+!NTR > 1: during iteration
 !-
 
       USE BLK10MOD
@@ -267,7 +267,11 @@ C-
       DO 701 N=1,NPM
 
         NFIX(N)=NFIXK(N)
-        IF (ITEQV(MAXN) .EQ. 2)  GOTO 701
+        !nis,jul07 (work around): iteqv(0) is not defined. This happens, when BLINE(NTR==1) ist called, the beginning of a dynamic time step
+        if (maxn > 0) then
+          IF (ITEQV(MAXN) .EQ. 2)  GOTO 701
+        end if
+        !-
 
 CIPK OCT98  CONVERT TO F90
         NFTYP=NFIXK(N)

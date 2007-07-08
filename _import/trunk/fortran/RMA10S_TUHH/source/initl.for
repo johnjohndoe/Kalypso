@@ -1,4 +1,4 @@
-C     Last change:  K    22 Jun 2007    8:54 am
+C     Last change:  WP    8 Jul 2007    7:25 pm
 CIPK  LAST UPDATE SEP 05 2006 ADD DEPRATO AND TO TMD
 CIPK  LAST UPDATE APR 05 2006 ADD IPASST ALLOCATION
 CIPK  LAST UPDATE MAR 22 2006 FIX NCQOBS BUG
@@ -882,6 +882,12 @@ CIPK MAR01
       end do
       !nis,jun07: maxfil is not zero, if there was a scratch file, otherwise it should be zero, ALWAYS
       MAXFIL = 0
+      !-
+      !nis,jul07: following values are causing problems somewhere, therefore initialize them
+      TETH = 0.0
+
+      iwndmet = 0
+      ihtmet = 0
       !-
 
 !nis,may07
