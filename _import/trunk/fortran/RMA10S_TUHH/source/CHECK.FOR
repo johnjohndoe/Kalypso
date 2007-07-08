@@ -1,4 +1,4 @@
-C     Last change:  K    27 Jun 2007   11:40 am
+C     Last change:  WP    6 Jul 2007    7:36 am
 CIPK  LAST UPDATE sEP 10 2001 FIX BUG FOR MULTIPLE TRIANGLES
 cipk  last update apr 17 2001 fix case for laterally averaged flows
 cipk  last update apr 12 2001 fix averages for zero flow case
@@ -55,10 +55,6 @@ C-
       !nis,sep06,com: Run through every CCL to overgive the real number of nodes
       DO 125 J = 1, NCL
         M = LMT(J)
-        !nis,jan07,testing
-        !WRITE(*,*) 'Erreiche Check.subroutine', J, M, MaxLT
-        !pause
-        !-
 cipk feb01  skip out for zero lines
         !nis,sep06,com: Cycle loop, if CCL has no node
         IF(M .EQ. 0) GO TO 125
@@ -137,12 +133,6 @@ CIPK OCT98 CONVERT TO F90
               !nis,sep06: Note the roughness class of the of the adjacent element, if it is a boundary node
               lineimat(j,l+1) = ABS(imat(jj))
 
-                !nis,testing
-                !WRITE(*,*) 'Overgiving Lineimat(',j,',',k,'): ',
-!     +                      lineimat(j,l), lineimat(j,l+1)
-                !-
-              !-
-
               !nis,sep06,com: end loop, if the correct midside node is found and go back
               !               to cycle loop over CCL segments
               GO TO 124
@@ -152,17 +142,17 @@ CIPK JUL02 TEST FOR FAILURE TO FIND CONTINUITY LINE
           IF(LINE(J,L+1) .EQ. 0) THEN
 CIPK SEP04
             IF(IERR .NE. 1) THEN
-	        CLOSE(75)
-	        OPEN(75,file='ERROR.OUT')
-	      ENDIF
-	      WRITE(*,*) 'ERROR PROCESSING CONTINUITY LINE ',J
-	      WRITE(75,*) 'ERROR PROCESSING CONTINUITY LINE ',J
-	      WRITE(*,*) ' UNABLE TO FIND NODE BETWEEN NODES ',
+              CLOSE(75)
+              OPEN(75,file='ERROR.OUT')
+            ENDIF
+            WRITE(*,*) 'ERROR PROCESSING CONTINUITY LINE ',J
+            WRITE(75,*) 'ERROR PROCESSING CONTINUITY LINE ',J
+            WRITE(*,*) ' UNABLE TO FIND NODE BETWEEN NODES ',
      +      LINE(J,L),LINE(J,L+2)
-	      WRITE(75,*) ' UNABLE TO FIND NODE BETWEEN NODES ',
+            WRITE(75,*) ' UNABLE TO FIND NODE BETWEEN NODES ',
      +      LINE(J,L),LINE(J,L+2)
-	      IERR=1
-		ENDIF
+            IERR=1
+          ENDIF
   124   CONTINUE
 
       !nis,nov06: Here the Continuity lines are complete. Now the midside nodes at 1D-2D-line-transitions can be set with alfak. It is the
@@ -176,11 +166,6 @@ CIPK SEP04
 
             !test, whether actual Continuityline is a Transitionline
             if (J.eq.TransLines(i,2)) then
-
-              !nis,jan07,testing
-              !WRITE(*,*) 'Erreiche line transition Winkelübergabe'
-              !pause
-              !-
 
               !LMT of the Line must be .ge.5, because the minimum element number is 2 (tested in GETGEO.subroutine)
               DO nodeno=2,LMT(J),2
@@ -196,37 +181,33 @@ CIPK SEP04
                 !leads to the taken choice.
                 alfak(LINE(J,nodeno)) = alfak(LINE(J,3))
 
-                !nis,jan07,testing
-                !WRITE(*,*) alfak(line(j,3)), line(j,3), lmt(j), nodeno
-                !pause
-                !-
-
               END DO
               !jump out of loop over all transitions
               EXIT Transitiontest
             end if
           end do Transitiontest
         end if
-      !-
 
   125 CONTINUE
 
-      !nis,nov06: Check, whether all 1D-2D-line-Transitions are connected. The Question ist, whether connecting node is part of the transition line:
+      !nis,jun07: deactivating line check appeareance
+      ! !nis,nov06: Check, whether all 1D-2D-line-Transitions are connected. The Question ist, whether connecting node is part of the transition line:
       if (MaxLT.ne.0) then
         call check_linetransition
       end if
+      ! !-
       !-
 
 CIPK JUL02
       IF(IERR .EQ. 1) THEN
-	  WRITE(*,*) 
+        WRITE(*,*)
      +   'EXECUTION TERMINATED - FULL LIST OF ERRORS IN ERROR.OUT'
-	  STOP
-	ENDIF      
+        STOP
+      ENDIF
 
 CIPK JUL01
       IF(IOCON .GT. 0) THEN
-	  WRITE(IOCON,6200) (J,J=1,NCL)
+        WRITE(IOCON,6200) (J,J=1,NCL)
  6200	  FORMAT('      TOTAL CONTINUITY LINE FLOWS BY CONTINUITY LINE NUM
      +BER'//'  DAY      HOUR',I9,19I11)
       ENDIF
@@ -241,15 +222,15 @@ CIPK OCT98        NTL=1
         SUMY = 0.0
 cipk jul01
         TOTAL(J) =0.0
-	  SUMXS= 0.0
+        SUMXS= 0.0
         SUMXT= 0.0
         SUMXSD=0.0
-	  SUMYS= 0.0
+        SUMYS= 0.0
         SUMYT= 0.0
         SUMYSD=0.0
 cipk feb01  skip out for zero lines
         IF(LMT(j) .EQ. 0) THEN
-	    GO TO 180
+          GO TO 180
         ELSEIF(LMT(J) .EQ. 1) THEN
           NA=LINE(J,1)
           IF(NDEP(NA) .LT. 2) THEN
@@ -278,9 +259,9 @@ cipk feb01  skip out for zero lines
               SUMX=SQRT(VEL(1,NA)**2+VEL(2,NA)**2)*VEL(3,NA)*
      +           (2.*WIDTH(NA)+(SS1(NA)+SS2(NA))*VEL(3,NA))/2.
 cipk mar01 add constituents
-	      SUMXS=SUMX*VEL(4,NA)
+            SUMXS=SUMX*VEL(4,NA)
             SUMXT=SUMX*VEL(5,NA)
-	      SUMXSD=SUMX*VEL(6,NA)
+            SUMXSD=SUMX*VEL(6,NA)
             endif
             !-
           ELSE
@@ -313,21 +294,21 @@ CIPK JAN99
 
 CIPK JAN99              SUMX=SUMX+(V1+V2+V3)/6.*VEL(3,NA)*FL*WIDTH(NA)
 CIPK MAR01  ADD OTHER CONSTITUENTS
-	        S1=V1*VEL(4,M1)/6.*VEL(3,NA)*FL
-	        T1=V1*VEL(5,M1)/6.*VEL(3,NA)*FL
+              S1=V1*VEL(4,M1)/6.*VEL(3,NA)*FL
+              T1=V1*VEL(5,M1)/6.*VEL(3,NA)*FL
               SD1=V1*VEL(6,M1)/6.*VEL(3,NA)*FL
 cip apr01 fix error using V1 for lines below
-	        S2=V2*VEL(4,M+1)/6.*VEL(3,NA)*FL
-	        T2=V2*VEL(5,M+1)/6.*VEL(3,NA)*FL
+              S2=V2*VEL(4,M+1)/6.*VEL(3,NA)*FL
+              T2=V2*VEL(5,M+1)/6.*VEL(3,NA)*FL
               SD2=V2*VEL(6,M+1)/6.*VEL(3,NA)*FL
-	        S3=V3*VEL(4,M+2)/6.*VEL(3,NA)*FL
-	        T3=V3*VEL(5,M+2)/6.*VEL(3,NA)*FL
+              S3=V3*VEL(4,M+2)/6.*VEL(3,NA)*FL
+              T3=V3*VEL(5,M+2)/6.*VEL(3,NA)*FL
               SD3=V3*VEL(6,M+2)/6.*VEL(3,NA)*FL
               TEMP=(V1+V2+V3)/6.*VEL(3,NA)*FL
               SUMX=SUMX+TEMP
-	        SUMXS=SUMXS+(S1+S2+S3)
-	        SUMXT=SUMXT+(T1+T2+T3)
-	        SUMXSD=SUMXSD+(SD1+SD2+SD3)
+              SUMXS=SUMXS+(S1+S2+S3)
+              SUMXT=SUMXT+(T1+T2+T3)
+              SUMXSD=SUMXSD+(SD1+SD2+SD3)
   160       CONTINUE
           ENDIF
         ELSE
@@ -379,7 +360,7 @@ C-
 C-.....COPY PROPER WEIGHTING FUNCTIONS.....
 C-
                       NGP = 9
-	                NCN = 8
+                      NCN = 8
 C-
 C-.....COPY SHAPE FUNCTIONS
 C-
@@ -405,18 +386,18 @@ C-
                   SD1=VEL(6,I1)*XN(1)+VEL(6,I2)*XN(2)+VEL(6,I3)*XN(3)
      +              +VEL(6,J2)*XN(4)+VEL(6,K3)*XN(5)+VEL(6,K2)*XN(6)
      +              +VEL(6,K1)*XN(7)+VEL(6,J1)*XN(8)
-	                  IF(LA .EQ. 1) THEN
+                        IF(LA .EQ. 1) THEN
                           SUMXS=SUMXS+AREAC(LA)*VX*S1*WAITX(I)
                           SUMXT=SUMXT+AREAC(LA)*VX*T1*WAITX(I)
                           SUMXSD=SUMXSD+AREAC(LA)*VX*SD1*WAITX(I)
-	                  ELSE
+                        ELSE
                           SUMYS=SUMYS+AREAC(LA)*VX*S1*WAITX(I)
                           SUMYT=SUMYT+AREAC(LA)*VX*T1*WAITX(I)
                           SUMYSD=SUMYSD+AREAC(LA)*VX*SD1*WAITX(I)
-	                  ENDIF
-	                ENDDO
+                        ENDIF
+                      ENDDO
 
-	              ENDDO
+                    ENDDO
                     SUMX=SUMX+FLW(1)
                     SUMY=SUMY+FLW(2)
 cipk jul01
@@ -468,16 +449,16 @@ C-
      +              +VEL(5,K2)*XN(4)+VEL(5,K1)*XN(5)+VEL(5,J1)*XN(6)
                   SD1=VEL(6,I3)*XN(1)+VEL(6,J2)*XN(2)+VEL(6,K3)*XN(3)
      +              +VEL(6,K2)*XN(4)+VEL(6,K1)*XN(5)+VEL(6,J1)*XN(6)
-	                  IF(LA .EQ. 1) THEN
+                        IF(LA .EQ. 1) THEN
                           SUMXS=SUMXS+AREAC(LA)*VX*S1*WAITX(I)
                           SUMXT=SUMXT+AREAC(LA)*VX*T1*WAITX(I)
                           SUMXSD=SUMXSD+AREAC(LA)*VX*SD1*WAITX(I)
-	                  ELSE
+                        ELSE
                           SUMYS=SUMYS+AREAC(LA)*VX*S1*WAITX(I)
                           SUMYT=SUMYT+AREAC(LA)*VX*T1*WAITX(I)
                           SUMYSD=SUMYSD+AREAC(LA)*VX*SD1*WAITX(I)
-	                  ENDIF
-	                ENDDO
+                        ENDIF
+                      ENDDO
 
   425               CONTINUE
                     SUMX=SUMX+FLW(1)
@@ -533,7 +514,7 @@ C-
      +              +VEL(5,J2)*XN(4)+VEL(5,K3)*XN(5)+VEL(5,J1)*XN(6)
                   SD1=VEL(6,I1)*XN(1)+VEL(6,I2)*XN(2)+VEL(6,I3)*XN(3)
      +              +VEL(6,J2)*XN(4)+VEL(6,K3)*XN(5)+VEL(6,J1)*XN(6)
-	                IF(LA .EQ. 1) THEN
+                      IF(LA .EQ. 1) THEN
                         SUMXS=SUMXS+AREAC(LA)*VX*S1*WAITX(I)
                         SUMXT=SUMXT+AREAC(LA)*VX*T1*WAITX(I)
                         SUMXSD=SUMXSD+AREAC(LA)*VX*SD1*WAITX(I)
@@ -541,8 +522,8 @@ C-
                         SUMYS=SUMYS+AREAC(LA)*VX*S1*WAITX(I)
                         SUMYT=SUMYT+AREAC(LA)*VX*T1*WAITX(I)
                         SUMYSD=SUMYSD+AREAC(LA)*VX*SD1*WAITX(I)
-	                ENDIF
-	              ENDDO
+                      ENDIF
+                    ENDDO
 
   475             CONTINUE
                   SUMX=SUMX+FLW(1)
@@ -601,9 +582,9 @@ CIPK JUL01
 cipk apr01
 CIPK JUL01
         IF(TOTAL(J) .NE. 0.) THEN
-	  AVES(J) = (SUMXS - SUMYS)/TOTAL(J)
-	  AVET(J) = (SUMXT - SUMYT)/TOTAL(J)
-	  AVESD(J)= (SUMXSD - SUMYSD)/TOTAL(J)
+        AVES(J) = (SUMXS - SUMYS)/TOTAL(J)
+        AVET(J) = (SUMXT - SUMYT)/TOTAL(J)
+        AVESD(J)= (SUMXSD - SUMYSD)/TOTAL(J)
         ELSE
           AVES(J)=0.
           AVET(J)=0.
@@ -621,16 +602,16 @@ CIPK OCT98        MX = LMT(J)
       NB = ND
 CIPK JUL01
       IF(IOCON .GT. 0) THEN
-	  DO JJ=1,NCL,20
-	    JT=MIN(JJ+19,NCL)
+        DO JJ=1,NCL,20
+          JT=MIN(JJ+19,NCL)
           IF(JJ .EQ. 1) THEN
-	      WRITE(IOCON,'(I5,F10.2,1P20E11.3)')
+            WRITE(IOCON,'(I5,F10.2,1P20E11.3)')
      +		 DAYOFY,TET,(TOTAL(J),J=JJ,JT)
           ELSE
-	      WRITE(IOCON,'(15X,1P20E11.3)') (TOTAL(J),J=JJ,JT)
-	    ENDIF
-	  ENDDO
-	ENDIF
+            WRITE(IOCON,'(15X,1P20E11.3)') (TOTAL(J),J=JJ,JT)
+          ENDIF
+        ENDDO
+      ENDIF
       RETURN
  6030 FORMAT( // 10X, 'CONTINUITY CHECKS' //  10X, 'LINE          TOTAL
      1         X FLOW         Y FLOW   PERCENT  AVE-SALT  AVE-TEMP   AVE
