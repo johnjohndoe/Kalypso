@@ -1,4 +1,4 @@
-C     Last change:  K    21 Jun 2007    7:32 pm
+C     Last change:  WP    6 Jul 2007    4:05 pm
 CIPK  LAST UPDATE AUGUST 30 2006 ADD CONSV AND AVEL OPTIONS
 CIPK  LAST UPDATE APRIL 05 2006 MODIFY CALL TO GETINIT
 CIPK  LAST UPDATE MARCH 25 2006 ADD TESTMODE
@@ -296,8 +296,8 @@ cipk sep04
  6997   FORMAT('UNABLE TO FIND LINE TYPE -C2- FOUND LINE TYPE ',A2)
         STOP 'LOOKING FOR C2'
       ENDIF 
-      READ(DLIN,'(5F8.0,2I8)') OMEGA,ELEV,XSCALE,YSCALE,ZSCALE,IDEBUG,
-     +                         Moment_off
+      READ(DLIN,'(5F8.0,I8,f8.2,I8)')
+     + OMEGA, ELEV, XSCALE, YSCALE, ZSCALE, IDEBUG, p_bottom, Moment_off
       !nis,jun07: Set default values
       if (Moment_off == 0) then
         Moment_off = 15
@@ -356,7 +356,7 @@ cipk sep96 add to 3 lines below for ocean exchange percentantage and mixing
 
       READ(DLIN,5021) SALI,TEMPI,SEDI,UINP,VINP,prcnt,DMIX,beient
       write(*,*) 'read c4'
-      !nis,jun07: Set default values
+      !default values; what's that
       if (beient == 0) then
         beient = 0
       end if
@@ -1054,7 +1054,7 @@ C-
               stop
             end if
           END DO
-	  CALL GINPT(lin,ID,DLIN)
+          CALL GINPT(lin,ID,DLIN)
         ENDIF
       ENDIF
 
@@ -1169,17 +1169,17 @@ C-
 CIPK JUN02 GET LIST OF ACTIVE NODES INCLUDING NODES WITH ORT NON ZERO
       
       DO N=1,NP
-	  IBNA(N)=0
-	ENDDO
-	DO N=1,NE
-	  IF(IMAT(N) .GT. 0) THEN
-	    IF(ORT(IMAT(N),1) .NE. 0.) THEN
-	      DO K=1,NCORN(N)
-	        IBNA(NOP(N,K))=IBNA(NOP(N,K))+1
+        IBNA(N)=0
+      ENDDO
+      DO N=1,NE
+        IF(IMAT(N) .GT. 0) THEN
+          IF(ORT(IMAT(N),1) .NE. 0.) THEN
+            DO K=1,NCORN(N)
+              IBNA(NOP(N,K))=IBNA(NOP(N,K))+1
             ENDDO
           ENDIF
-	  ENDIF
-	ENDDO
+        ENDIF
+      ENDDO
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 CIPK JUN02   IBNA IS NOW ZERO FOR INACTIVE NODES
@@ -1436,9 +1436,9 @@ cipk sep04
 
 CIPK MAY01
 
-	IF(LSAND .NE. 0  .OR.  LBED .NE. 0) CALL INSAND
+      IF(LSAND .NE. 0  .OR.  LBED .NE. 0) CALL INSAND
 
-	IF(LSS .NE. 0) CALL SPROP
+      IF(LSS .NE. 0) CALL SPROP
 
 C
 C...... Initialize CHECK
