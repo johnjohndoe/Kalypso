@@ -227,8 +227,9 @@ CIPK APR05
       H1=VEL(3,J)
       CALL AMF(H,H1,AKP(J),ADT(J),ADB(J),AAT,D1,0)
       if(inotr .eq. 1) then
+        !nis,comment: efpor is updated for every node by usage of amf.subroutine
         EX=EX*EFPOR
-	endif
+      endif
       VN=VEL(3,J)+EX
 c
 c      Check sign of depth change
