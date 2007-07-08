@@ -61,10 +61,13 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.lang.ProcessHelper;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter;
 import org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv;
 import org.kalypso.kalypsomodel1d2d.conv.Weir1D2DConverter;
 import org.kalypso.kalypsomodel1d2d.conv.WeirIDProvider;
+import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ResultDB;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
@@ -169,7 +172,9 @@ public class SimMode1D2DCalcJob implements ISimulation
       monitor.setProgress( 20 );
 
       copyExecutable( tmpDir, calculation.getKalypso1D2DKernelPath() );
-
+      
+      calculation.addToResultDB();
+      
       final ResultManager resultRunner = new ResultManager( tmpDir, outputDir, "A", inputProvider, calculation );
       startCalculation( tmpDir, monitor, resultRunner, calculation );
       /* Run a last time so nothing is forgotten... */

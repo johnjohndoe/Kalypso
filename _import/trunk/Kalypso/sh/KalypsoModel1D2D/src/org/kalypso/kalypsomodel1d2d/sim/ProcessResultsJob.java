@@ -68,6 +68,7 @@ import org.kalypso.kalypsomodel1d2d.conv.results.ResultType;
 import org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceTriangleEater;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultType.TYPE;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.IResultModel1d2d;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.simulation.core.ISimulationDataProvider;
@@ -225,7 +226,11 @@ public class ProcessResultsJob extends Job
 
       /* Node-GML in Datei schreiben */
       GmlSerializer.serializeWorkspace( gmlResultFile, resultWorkspace, "UTF-8" );
-
+      
+      IResultModel1d2d resModel1d2d =
+        (IResultModel1d2d) resultWorkspace.getRootFeature().getAdapter( IResultModel1d2d.class );
+      m_calculation.addToSimulationDescriptor( resModel1d2d );
+      
       return gmlResultFile;
     }
     finally

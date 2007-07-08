@@ -39,6 +39,7 @@ public class KalypsoModel1D2DPlugin extends AbstractUIPlugin
     }
   }
 
+    
   /**
    * This method is called when the plug-in is stopped
    */

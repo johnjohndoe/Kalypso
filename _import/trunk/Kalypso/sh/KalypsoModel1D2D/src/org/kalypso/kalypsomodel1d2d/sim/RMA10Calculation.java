@@ -51,6 +51,7 @@ import java.util.Map;
 
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.net.UrlResolver;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.BoundaryConditionInfo;
 import org.kalypso.kalypsomodel1d2d.conv.BoundaryLineInfo;
 import org.kalypso.kalypsomodel1d2d.conv.INativeIDProvider;
@@ -68,8 +69,15 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
+import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IModelDescriptor;
+import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IResultModelDescriptor;
+import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptor;
+import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ResultDB;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.IResultModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
+import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
@@ -115,6 +123,8 @@ public class RMA10Calculation implements INativeIDProvider
   private List<ITimeStepinfo> m_timeStepInfos;
 
   private final LinkedHashMap<IBoundaryLine, Integer> m_boundaryLineIDProvider = new LinkedHashMap<IBoundaryLine, Integer>( 32 );
+
+  private ISimulationDescriptor m_simulationDesciptor;
 
   public RMA10Calculation( final ISimulationDataProvider inputProvider ) throws SimulationException, Exception
   {
@@ -487,6 +497,38 @@ public class RMA10Calculation implements INativeIDProvider
     return (IControlModel1D2D) controlModelFeature.getAdapter( IControlModel1D2D.class );
   }
 
+  /**
+   * Adds a simulation descriptor for this rma10 simulation
+   * to the result db
+   */
+  public void addToResultDB()
+  {
+    /**Descriptor for this simulation*/
+    ResultDB resultDB = 
+       KalypsoModel1D2DPlugin.getDefault().getResultDB();
+    m_simulationDesciptor = resultDB.addRMACalculation( this );
+  }
+  
+  /**
+   * Adds a descriptor for this result model to the simulation descriptor of this
+   * rma10s simulation
+   * 
+   * @param resultModel the result model to add to the rma10 simulation
+   * @return the added result descriptor
+   */
+  public IResultModelDescriptor addToSimulationDescriptor(IResultModel1d2d resultModel)
+  {
+    Assert.throwIAEOnNullParam( resultModel, "resultModel" );
+    ResultDB resultDB = 
+      KalypsoModel1D2DPlugin.getDefault().getResultDB();
+    IResultModelDescriptor resDescriptor = 
+      (IResultModelDescriptor) resultDB.addModelDescriptor( resultModel );
+    IFeatureWrapperCollection<IResultModelDescriptor> resultModels = 
+                                    m_simulationDesciptor.getResultModel();
+    resultModels.addRef( resDescriptor );
+    return resDescriptor;
+  }
+  
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.INativeIDProvider#getID(org.kalypsodeegree.model.feature.binding.IFeatureWrapper2)
    */

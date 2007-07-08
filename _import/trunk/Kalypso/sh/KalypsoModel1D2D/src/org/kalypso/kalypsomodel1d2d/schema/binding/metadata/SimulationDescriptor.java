@@ -194,7 +194,6 @@ public class SimulationDescriptor extends AbstractFeatureBinder implements ISimu
       xmlGc = new XMLGregorianCalendarImpl(value);
     }
       
-    Assert.throwIAEOnNullParam( value, "value" );
     setProperty( 
         Kalypso1D2DSchemaConstants.SIMMETA_PROP_END_TIME, 
         xmlGc );
@@ -215,10 +214,15 @@ public class SimulationDescriptor extends AbstractFeatureBinder implements ISimu
    */
   public void setSimulationType( SIMULATIONTYPE value )
   {
-    Assert.throwIAEOnNullParam( value, "value" );
+//    Assert.throwIAEOnNullParam( value, "value" );
+    String strValue = null;
+    if( value != null )
+    {
+      strValue = value.toString();
+    }
     setProperty( 
         Kalypso1D2DSchemaConstants.SIMMETA_PROP_SIMULATION_TYPE, 
-        value.toString() );
+        strValue );
   }
 
   /**
@@ -226,7 +230,6 @@ public class SimulationDescriptor extends AbstractFeatureBinder implements ISimu
    */
   public void setStartTime( GregorianCalendar value )
   {
-    Assert.throwIAEOnNullParam( value, "value" );
     XMLGregorianCalendarImpl xmlGc =  null;
     if( value!=null )
     {

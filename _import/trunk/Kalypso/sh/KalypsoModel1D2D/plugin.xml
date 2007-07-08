@@ -94,6 +94,8 @@
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.model.IStaticModel1D2D"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D"/>
+         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.model.IResultModel1d2d"/>
+         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.model.INodeResultCollection"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2DCollection"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.model.IPseudoOPerationalModel"/>

@@ -44,6 +44,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.net.URL;
+import java.util.GregorianCalendar;
+
+import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -58,6 +61,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
@@ -88,10 +92,10 @@ public class ResultDB
    System.out.println(metaDataFile.toFile()+"\n"+exists);
    
    createMetaDataFile( metaDataFile );
-   simDB =
-     (ISimulationDescriptionCollection)workspace.getRootFeature().getAdapter( 
-                           ISimulationDescriptionCollection.class );
-   System.out.println(workspace);
+   Feature rootFeature = workspace.getRootFeature();
+  simDB =
+     new SimulationDescriptionCollection(rootFeature);
+   System.out.println("\n\tsimdB created="+ simDB);
   }
   
   private void createMetaDataFile( IPath metaDataPath )
@@ -261,7 +265,7 @@ public class ResultDB
     
     IControlModel1D2D controlModel = rma10Calculation.getControlModel();
     ICalculationUnit calcultionUnit = rma10Calculation.getCalcultionUnit();
-    ITimeStepinfo[] timeStepInfos = rma10Calculation.getTimeStepInfos();
+//    ITimeStepinfo[] timeStepInfos = rma10Calculation.getTimeStepInfos();
     
     IModelDescriptor controlModelDesc = addModelDescriptor( controlModel );
     IModelDescriptor calUnitDescr = addModelDescriptor( calcultionUnit );
@@ -269,7 +273,16 @@ public class ResultDB
     simDesc.setRestarted( controlModel.getRestart() );
     simDesc.setCalculationUnit( calUnitDescr );
     simDesc.setControlModel( controlModelDesc );
-    simDesc.setStartTime( controlModel.getStartCalendar().toGregorianCalendar() );
+    //start time
+    XMLGregorianCalendar startCalendar = controlModel.getStartCalendar();
+    if( startCalendar !=  null )
+    {
+      simDesc.setStartTime( startCalendar.toGregorianCalendar() );
+    }
+    else
+    {
+      simDesc.setStartTime( null );
+    }
     simDesc.setEndTime( null );//TODO
     simDesc.setSimulationType( null );//TODO
     

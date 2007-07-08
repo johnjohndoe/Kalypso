@@ -74,8 +74,11 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.model.ControlModelGroup;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2DCollection;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.INodeResultCollection;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IOperationalModel1D2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.IResultModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IStaticModel1D2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.NodeResultCollection;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.OperationalModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.PseudoOPerationalModel;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.SimulationModel1D2D;
@@ -822,9 +825,33 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
     };
     cMap.put( ISimulationDescriptor.class, cTor );
     
+//result model 1d2d
+    cTor = new AdapterConstructor()
+    {
+      public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
+      {
+        final QName featureQName = feature.getFeatureType().getQName();
+        
+        if( featureQName.equals( 
+              Kalypso1D2DSchemaConstants.RES_1D2D_F_NODE_RES_COLLECTION ) )
+        {
+          return new NodeResultCollection( feature );
+        }
+        else
+        {
+          warnUnableToAdapt( feature, featureQName, IBoundaryCondition.class );
+          return null;
+        }
+      }
+    };
+    cMap.put( IResultModel1d2d.class, cTor );
+    cMap.put( INodeResultCollection.class, cTor );
+    
+    
     return Collections.unmodifiableMap( cMap );
   }
- 
+  
 }
+ 
 
 
