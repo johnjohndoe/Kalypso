@@ -2008,4 +2008,5 @@ public class StyleFactory
       b = "0" + b;
     return "#" + r + g + b;
   }
+
 }

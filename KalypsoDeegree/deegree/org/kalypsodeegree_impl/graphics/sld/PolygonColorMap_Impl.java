@@ -43,7 +43,9 @@ package org.kalypsodeegree_impl.graphics.sld;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.kalypsodeegree.graphics.sld.LineColorMapEntry;
 import org.kalypsodeegree.graphics.sld.PolygonColorMapEntry;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Thomas Jung
@@ -91,6 +93,21 @@ public class PolygonColorMap_Impl implements PolygonColorMap
 
     return sb.toString();
 
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.graphics.sld.PolygonColorMap#findEntry(java.lang.String,
+   *      org.kalypsodeegree.model.feature.Feature)
+   */
+  public PolygonColorMapEntry findEntry( String label, Feature feature )
+  {
+    for( final PolygonColorMapEntry entry : m_colorMap )
+    {
+      if( entry.getLabel( feature ).equals( label ) )
+        return entry;
+    }
+
+    return null;
   }
 
 }
