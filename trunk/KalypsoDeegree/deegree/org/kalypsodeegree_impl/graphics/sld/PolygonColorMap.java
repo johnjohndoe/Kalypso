@@ -43,6 +43,7 @@ package org.kalypsodeegree_impl.graphics.sld;
 import java.util.List;
 
 import org.kalypsodeegree.graphics.sld.PolygonColorMapEntry;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Thomas Jung
@@ -57,5 +58,7 @@ public interface PolygonColorMap
   public void setColorMap( final List<PolygonColorMapEntry> colorMap );
 
   public void addColorMapClass( final PolygonColorMapEntry colorMapEntry );
+
+  public PolygonColorMapEntry findEntry( String string, final Feature feature );
 
 }
