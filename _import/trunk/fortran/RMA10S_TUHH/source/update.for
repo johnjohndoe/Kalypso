@@ -1,4 +1,4 @@
-C     Last change:  K    25 May 2007    2:11 pm
+C     Last change:  EF    2 Jul 2007    3:52 pm
 CIPK  LAST UPDATE SEP 6 2004  add error file
 CIPK  LAST UPDATE AUG 22 2001 REORGANIZE CONVERGENCE TESTING
 CIPK  LAST UYPDATE APRIL 03  2001 ADD UPDATE OF WATER SURFACE ELEVATION 
@@ -13,6 +13,10 @@ CIPK  LAST UPDATE APR 30 1996
       USE BLKDRMOD
       !EFa Jan07, neues Modul für Teschke-Elemente
       USE PARAFlow1dFE
+      !-
+      !EFa jun07, autoconverge
+      USE parakalyps
+      !-
       SAVE
 C-
 CIPK AUG05      INCLUDE 'BLK10.COM'
@@ -50,6 +54,14 @@ C-
 C-
 C-.....SETUP FOR SOLUTION CORRECTIONS.....
 C-
+
+      !EFa jun07, testing autoconverge
+      if (beiauto.gt.0.) then
+        OPEN(789,FILE='autoconverge.txt')
+      end if
+      !-
+
+
       IF(MAXN .EQ. 1) THEN
 cipk aug01
 CIPK MAY02 EXPAND TO 7
@@ -229,7 +241,7 @@ CIPK APR05
       if(inotr .eq. 1) then
         !nis,comment: efpor is updated for every node by usage of amf.subroutine
         EX=EX*EFPOR
-      endif
+	endif
       VN=VEL(3,J)+EX
 c
 c      Check sign of depth change
@@ -301,6 +313,12 @@ CIPK AUG01
       IF(ABS(EMAX(K)) .GT. CONV(K)) NCNV(K)=1      
   160 CONTINUE
       WRITE(75,'(''NCNV-160'',9i5)') MAXN,(NCNV(I),I=1,7),nconv
+      !EFa jun07, autoconverge
+      if (beiauto.gt.0.) then
+        rss(maxn)=SQRT(eavg(1)**2+eavg(2)**2)
+        WRITE(789,6111)maxn,rss(maxn)
+      end if
+      !-
 C-
 C-.....OUTPUT RESULTS OF CHANGES.....
 C-
@@ -463,6 +481,12 @@ C......PRINT AND/OR TERMINATE ON LARGE HEAD CHANGES
 C-
       IF(    ABS(EMAX(3)) .GT. 100.  .OR.  ABS(EMAX(1)) .GT.  50.
      +  .OR. ABS(EMAX(2)) .GT.  50.) THEN
+      !EFa jun07, hier muss durch autoconverge abgefangen werden
+        if (beiauto.gt.0.) then
+          exterr = 1.
+          return
+        end if
+      !-
         CALL OUTPUT(2)
 cipk sep04
         CLOSE(75)
@@ -483,6 +507,9 @@ C-
  6010 FORMAT(I10,2F15.4,I10,4X,2A4)
 C AUG93IPK 6011 FORMAT(I10,2F15.4,I10,4X,2A4,'  CYCLE NO ',I5)
  6011 FORMAT(I10,2F15.4,I10,4X,2A4,'STEP',I4,' ITER',I3)
+      !EFa jun07, testing
+ 6111 FORMAT(i4,' rss :',F10.5)
+      !-
 C 6020 FORMAT(10X,'VELOCITY HEAD AND SALINITY SIMULATED')
 C 6021 FORMAT(10X,'VELOCITY AND HEAD SIMULATED')
 C 6022 FORMAT(10X,'SALINITY SIMULATED')
