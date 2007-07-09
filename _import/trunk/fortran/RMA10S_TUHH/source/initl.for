@@ -1,4 +1,4 @@
-C     Last change:  WP    8 Jul 2007    7:25 pm
+C     Last change:  EF    2 Jul 2007   12:18 pm
 CIPK  LAST UPDATE SEP 05 2006 ADD DEPRATO AND TO TMD
 CIPK  LAST UPDATE APR 05 2006 ADD IPASST ALLOCATION
 CIPK  LAST UPDATE MAR 22 2006 FIX NCQOBS BUG
@@ -888,6 +888,19 @@ CIPK MAR01
 
       iwndmet = 0
       ihtmet = 0
+      !-
+
+
+      !EFa jun07, necessary for autoconverge
+      beiauto = 0.0
+      nnnunst = 0.0
+      nnnst = 0.0
+      linlog = 0.0
+      hhh = 0.0
+      hhh2 = 0.0
+      qqq = 0.0
+      qqqdir = 0.0
+      exterr = 0.0
       !-
 
 !nis,may07

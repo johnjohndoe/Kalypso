@@ -1,4 +1,4 @@
-C     Last change:  K    15 Jun 2007    3:25 pm
+C     Last change:  EF    5 Jul 2007    5:47 pm
 cipk  last update feb 09 2001 allow for zero length cc lines
 CIPK  LAST UPDATE AUG 1 2000 ADD SLOPING ELEVATION SET
 CIPK  LAST UPDATE DEC 16 1997 
@@ -13,10 +13,16 @@ C-
 C...... Generate specified head boundary conditions
 C-
 cipk aug05      INCLUDE 'BLK10.COM'
-      DIMENSION QQAL(3),WTS(90)
+      DIMENSION QQAL(3)
 CIPK AUG00
       DISTS(N1,N2)=SQRT((CORD(N2,1)-CORD(N1,1))**2
      +                 +(CORD(N2,2)-CORD(N1,2))**2)
+      !EFa jun07, changed dimension for autoconverge
+      !,WTS(65)
+      REAL,ALLOCATABLE :: wts(:)
+
+      ALLOCATE (wts(nita))
+      !-
 
 CIPK DEC97 ADD TO DIMENSION
 C-
@@ -48,7 +54,6 @@ CIPK AUG00
         ELSE
           FACT=DISTS(NA,NST)/CONLEN
           SPEC(NA,3)=HREQ+FACT*(HREQ2-HREQ)
-
         ENDIF
         IF(MOD(NFIX(NA),1000) .LT. 200) THEN
           NFIX(NA)=NFIX(NA)+200
@@ -119,5 +124,8 @@ cipk jan96 save data to a scratch file
   400   CONTINUE         
       ENDIF
 cipk dec97 end changes
+      !EFa jun07
+      deallocate (wts)
+      !-
       RETURN
       END
