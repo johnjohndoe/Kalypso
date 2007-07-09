@@ -63,6 +63,8 @@ public class BoundaryConditionInfo implements ITimeStepinfo
 
   private double m_steadyValue;
 
+  private double m_theta;
+
   public BoundaryConditionInfo( final int id, final TYPE type )
   {
     m_id = id;
@@ -98,10 +100,10 @@ public class BoundaryConditionInfo implements ITimeStepinfo
     {
       if( Double.isNaN( m_steadyValue ) )
       {
-        throw new SimulationException("Steady value not defined.", new RuntimeException());
-//        Iterator<IRecord> iterator = m_index.getIterator();
-//        IRecord next = iterator.next();
-//        result = (Number) next.getValue( m_valueComponent );
+        throw new SimulationException( "Steady value not defined.", new RuntimeException() );
+// Iterator<IRecord> iterator = m_index.getIterator();
+// IRecord next = iterator.next();
+// result = (Number) next.getValue( m_valueComponent );
       }
       else
         return m_steadyValue;
@@ -109,7 +111,7 @@ public class BoundaryConditionInfo implements ITimeStepinfo
     else
       result = (Number) m_index.getValue( m_valueComponent, date );
 
-    return (result==null || Double.isNaN( result.doubleValue() ) )? 0.0 : result.doubleValue();
+    return (result == null || Double.isNaN( result.doubleValue() )) ? 0.0 : result.doubleValue();
   }
 
   /**
@@ -117,19 +119,22 @@ public class BoundaryConditionInfo implements ITimeStepinfo
    */
   public double getTheta( )
   {
-    // TODO Auto-generated method stub
-    return Math.PI;
+    return m_theta;
   }
 
   public void setObservation( final IObservation<TupleResult> obs, final IComponent domainComponent, final IComponent valueComponent )
   {
     m_valueComponent = valueComponent;
-
     m_index = new TupleResultIndex( obs.getResult(), domainComponent );
   }
 
   public void setSteadyValue( final double value )
   {
     m_steadyValue = value;
+  }
+
+  public void setTheta( final double thetaGrad )
+  {
+    m_theta = -thetaGrad / 180d * Math.PI;
   }
 }
