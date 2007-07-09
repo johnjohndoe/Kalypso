@@ -377,7 +377,7 @@ public abstract class AbstractCreateGeometeryWidget extends AbstractWidget
     return m_validGeometryValue;
   }
 
-  private static class NotEnoughPointsExeption extends Exception
+  public static class NotEnoughPointsExeption extends Exception
   {
   }
 

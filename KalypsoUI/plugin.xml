@@ -5,7 +5,6 @@
 		schema="schema/org.kalypso.ui.mapview.action.exsd" />
    	<extension-point id="featureViewExtensionControl" name="featureViewExtensionControl" schema="schema/featureViewExtensionControl.exsd"/>
 
-
 	<extension id="preferences" name="preferences"
 		point="org.eclipse.core.runtime.preferences">
 		<initializer
@@ -777,6 +776,19 @@
            id="org.kalypso.ui.actions.OpenPropertyDialogAction"
            label="Eigenschaften (Dialog)"
            tooltip="Öffnet den Eigenschaftendialog für das selektierte Thema">
+     </action>
+  </objectContribution>
+  <objectContribution
+        id="org.kalypso.objectclass.featureTheme"
+        objectClass="org.kalypso.ogc.gml.IKalypsoFeatureTheme">
+     <action
+           class="org.kalypso.ui.actions.ExportGml2ShapeThemeAction"
+           icon="icons/full/obj16/exportGml2Shp.gif"
+           id="org.kalypso.ui.actions.ExportGml2ShapeThemeAction"
+           label="Shape..."
+           menubarPath="exports"
+           style="push"
+           tooltip="Die Daten des Themas als ESRI Shape exportieren.">
      </action>
   </objectContribution>
 	</extension>
