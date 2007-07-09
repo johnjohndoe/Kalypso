@@ -125,7 +125,30 @@ public class CalculationUnitComponent
   @Override
   protected void maximizeSelected( )
   {
-    final KeyBasedDataModel dataModel = getDataModel();
+    maximizeSelected( getDataModel() );
+//    final KeyBasedDataModel dataModel = getDataModel();
+//    ICalculationUnit calUnitToMax = dataModel.getData( 
+//        ICalculationUnit.class,
+//        ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
+//    if( calUnitToMax == null )
+//    {
+//      System.out.println("current selection is null");
+//      return;
+//    }
+//    GM_Envelope boundingBox = CalUnitOps.getBoundingBox( calUnitToMax );
+//    if( boundingBox == null )
+//    {
+//      System.out.println("BBox is null");
+//      return;
+//    }
+//    MapPanel mapPanel = 
+//      dataModel.getData( MapPanel.class, ICommonKeys.KEY_MAP_PANEL );
+//    mapPanel.setBoundingBox( boundingBox );
+  }
+  
+  public static final void maximizeSelected( final KeyBasedDataModel dataModel)
+  {
+//    final KeyBasedDataModel dataModel = getDataModel();
     ICalculationUnit calUnitToMax = dataModel.getData( 
         ICalculationUnit.class,
         ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );

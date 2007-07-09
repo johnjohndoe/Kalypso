@@ -56,12 +56,8 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DUIImages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit2D;
 import org.kalypso.kalypsomodel1d2d.sim.CalculationUnitSimMode1D2DCalcJob;
-import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.invariants.InvariantBConditionWithBLine;
-import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.invariants.InvariantCheckBoundaryConditions;
-import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.invariants.InvariantOverlappingElements;
+import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitComponent;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitViewerLabelProvider;
 import org.kalypso.kalypsomodel1d2d.ui.map.editor.FeatureWrapperListEditor;
@@ -164,6 +160,10 @@ public class CalculationUnitPerformComponent extends FeatureWrapperListEditor im
     return calcList;
   }
   
+  protected void maximizeSelected( )
+  {
+    CalculationUnitComponent.maximizeSelected( getDataModel() );
+  }
   
   @Override
   protected void validateCalculationUnits( )
