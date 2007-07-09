@@ -71,13 +71,14 @@ public class ProfilStartTarget extends AbstractPointsTarget
     final IProfilChange[] changes = new IProfilChange[pointsCount];
     try
     {
-      final IProfilPoint targetPkt = pem.getProfil().getPoints().getFirst();
-      final double deltaX = points.getLast().getValueFor( IWspmConstants.POINT_PROPERTY_BREITE ) - targetPkt.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
-      final double deltaY = points.getLast().getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE ) - targetPkt.getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE );
+      final LinkedList<IProfilPoint> existingPoints = pem.getProfil().getPoints();
+      final IProfilPoint targetPkt =existingPoints.size()==0?null: existingPoints.getFirst();
+      final double deltaX = targetPkt == null ? 0.0 : points.getLast().getValueFor( IWspmConstants.POINT_PROPERTY_BREITE ) - targetPkt.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
+      final double deltaY = targetPkt == null ? 0.0 : points.getLast().getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE ) - targetPkt.getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE );
       int i = pointsCount - 1;
       for( IProfilPoint point : points )
       {
-        final IProfilPoint newPoint = targetPkt.clonePoint();
+        final IProfilPoint newPoint = targetPkt == null ? pem.getProfil().createProfilPoint(): targetPkt.clonePoint();
         newPoint.setValueFor( IWspmConstants.POINT_PROPERTY_BREITE, point.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE ) - deltaX );
         newPoint.setValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, point.getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE ) - deltaY );
         for( IProfilPointProperty prop : existingProps )

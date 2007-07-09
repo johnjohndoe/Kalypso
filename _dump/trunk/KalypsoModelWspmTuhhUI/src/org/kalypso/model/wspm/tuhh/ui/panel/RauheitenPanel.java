@@ -509,9 +509,9 @@ public class RauheitenPanel extends AbstractProfilView
       Double value = durchstroemte[0].getPoint().getValueFor( m_rauheitTyp );
       for( final IProfilPoint point : getProfil().getPoints() )
       {
-        if( point.equals( trennflaechen[0] ) )
+        if( point.equals( trennflaechen[0].getPoint() ) )
           value = trennflaechen[0].getPoint().getValueFor( m_rauheitTyp );
-        else if( point.equals( trennflaechen[0] ) )
+        else if( point.equals( trennflaechen[trennflaechen.length - 1].getPoint() ) )
           value = trennflaechen[trennflaechen.length - 1].getPoint().getValueFor( m_rauheitTyp );
         else if( value != point.getValueFor( m_rauheitTyp ) )
           return false;

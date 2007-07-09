@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil;
 
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.impl.PlainProfil;
 
 /**
@@ -49,6 +50,14 @@ public class ProfilFactory
 {
   public static IProfil createProfil( final String type )
   {
+    if( "org.kalypso.model.wspm.tuhh.profiletype".equals( type ) )
+    {
+      final PlainProfil tuhhProfile = new PlainProfil( type );
+      tuhhProfile.addPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
+      tuhhProfile.addPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
+     // tuhhProfile.addPoint( tuhhProfile.createProfilPoint() );
+      return tuhhProfile;
+    }
     return new PlainProfil( type );
   }
 }

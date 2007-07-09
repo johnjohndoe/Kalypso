@@ -64,6 +64,23 @@
    </swe:representation>
   </swe:ItemDefinition>
  </gml:dictionaryEntry>
+ 
+ <gml:dictionaryEntry>
+   <swe:ItemDefinition gml:id="RAUHEIT_KST">
+    <gml:name>Rauheit kst</gml:name>
+    <swe:property>
+     <swe:Phenomenon gml:id="Phenomenon_Rauheit_kst">
+      <gml:description/>
+      <gml:name>Rauheit kst</gml:name>
+     </swe:Phenomenon>
+    </swe:property>
+    <swe:representation>
+     <swe:Number>
+      <gml:unitOfMeasure uom="kst"/>
+     </swe:Number>
+    </swe:representation>
+   </swe:ItemDefinition>
+ </gml:dictionaryEntry>
 
  <gml:dictionaryEntry>
   <swe:ItemDefinition gml:id="HOCHWERT">

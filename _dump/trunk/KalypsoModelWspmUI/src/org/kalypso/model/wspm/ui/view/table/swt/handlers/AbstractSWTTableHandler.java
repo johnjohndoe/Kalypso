@@ -82,13 +82,13 @@ public abstract class AbstractSWTTableHandler extends AbstractHandler implements
     {
       final ProfilSWTTableView swtTableView = ((TableView) adapterObject).getTableView();
       final IStructuredSelection selection = (IStructuredSelection) swtTableView.getSelectionProvider().getSelection();
-      final Object selObj = selection.getFirstElement();
-      if( selObj instanceof IProfilPoint )
+      final LinkedList<IProfilPoint> pntLst = new LinkedList<IProfilPoint>();
+      for( final Object obj : selection.toList() )
       {
-        final LinkedList<IProfilPoint> pntLst = new LinkedList<IProfilPoint>();
-        pntLst.addAll( selection.toList() );
-        return executeEvent( pntLst, swtTableView );
+        if( obj instanceof IProfilPoint )
+          pntLst.add((IProfilPoint)obj );
       }
+      return executeEvent( pntLst, swtTableView );
     }
 
     throw new ExecutionException( "Active part has no Table." );

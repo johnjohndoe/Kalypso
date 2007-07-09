@@ -71,10 +71,11 @@ public class ProfilEndTarget extends AbstractPointsTarget
     final IProfilChange[] changes = new IProfilChange[pointsCount];
     try
     {
-      final IProfilPoint activePkt = pem.getProfil().getPoints().getLast();
-      final IProfilPoint targetPkt = (activePkt != null) ? activePkt : pem.getProfil().getPoints().getLast();
-      final double deltaX = points.getFirst().getValueFor( IWspmConstants.POINT_PROPERTY_BREITE ) - targetPkt.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
-      final double deltaY = points.getFirst().getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE ) - targetPkt.getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE );
+      final LinkedList<IProfilPoint> existingPoints = pem.getProfil().getPoints();
+      final IProfilPoint targetPkt = existingPoints.size() == 0 ? pem.getProfil().createProfilPoint() : existingPoints.getLast();
+      // final IProfilPoint targetPkt = (activePkt != null) ? activePkt : pem.getProfil().getPoints().getLast();
+      final double deltaX = existingPoints.size() == 0 ? 0.0 : points.getFirst().getValueFor( IWspmConstants.POINT_PROPERTY_BREITE ) - targetPkt.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
+      final double deltaY = existingPoints.size() == 0 ? 0.0 : points.getFirst().getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE ) - targetPkt.getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE );
       int i = changes.length - 1;
       for( IProfilPoint point : points )
       {
@@ -90,7 +91,7 @@ public class ProfilEndTarget extends AbstractPointsTarget
               newPoint.setValueFor( propId, point.getValueFor( propId ) );
           }
         }
-        changes[i--] = new PointAdd( pem.getProfil(), targetPkt, newPoint );
+        changes[i--] = new PointAdd( pem.getProfil(), existingPoints.size() == 0 ?null:targetPkt, newPoint );
       }
     }
     catch( Exception e )
@@ -100,52 +101,6 @@ public class ProfilEndTarget extends AbstractPointsTarget
     }
     final ProfilOperation operation = new ProfilOperation( "Punkte einfügen", pem, changes, false );
     new ProfilOperationJob( operation ).schedule();
-
-    //    
-    //    
-    // final int pointsCount = points.getPoints().size();
-    //
-    // final Collection<POINT_PROPERTY> existingProps = pem.getProfil().getPointProperties( false );
-    // final Collection<POINT_PROPERTY> newProps = points.getPoints().getFirst().getProperties();
-    // Collection<POINT_PROPERTY> propsToAdd = new ArrayList<POINT_PROPERTY>();
-    // for( POINT_PROPERTY prop : newProps )
-    // {
-    // if( !existingProps.contains( prop ) )
-    // propsToAdd.add( prop );
-    // }
-    // final IProfilChange[] changes = new IProfilChange[pointsCount + propsToAdd.size()];
-    // int ii = 0;
-    // for( POINT_PROPERTY prop : existingProps )
-    // {
-    // points.addProperty( prop );
-    // }
-    // for( POINT_PROPERTY prop : propsToAdd )
-    // {
-    // changes[ii++] = new PointPropertyAdd( pem.getProfil(), prop, 0.0 );
-    // }
-    // try
-    // {
-    //
-    // final IProfilPoint targetPkt = pem.getProfil().getPoints().getLast();
-    // final double deltaX = points.getPoints().getFirst().getValueFor( POINT_PROPERTY.BREITE ) - targetPkt.getValueFor(
-    // POINT_PROPERTY.BREITE );
-    // final double deltaY = points.getPoints().getFirst().getValueFor( POINT_PROPERTY.HOEHE ) - targetPkt.getValueFor(
-    // POINT_PROPERTY.HOEHE );
-    // int i = changes.length - 1;
-    // for( IProfilPoint point : points.getPoints() )
-    // {
-    // point.setValueFor( POINT_PROPERTY.BREITE, point.getValueFor( POINT_PROPERTY.BREITE ) - deltaX );
-    // point.setValueFor( POINT_PROPERTY.HOEHE, point.getValueFor( POINT_PROPERTY.HOEHE ) - deltaY );
-    // changes[i--] = new PointAdd( pem.getProfil(), targetPkt, point );
-    // }
-    // }
-    // catch( IllegalProfileOperationException e )
-    // {
-    // // should never happen, raise NullPointerException in ProfilOperation.doChange
-    // changes[0] = null;
-    // }
-    // final ProfilOperation operation = new ProfilOperation( "Punkte einfügen", pem, changes );
-    // new ProfilOperationJob( operation ).schedule();
 
   }
 }

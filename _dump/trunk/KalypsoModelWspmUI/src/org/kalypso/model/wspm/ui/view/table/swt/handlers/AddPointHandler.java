@@ -78,7 +78,7 @@ public class AddPointHandler extends AbstractSWTTableHandler
 
     final IProfilPoint thePointBefore = selection.isEmpty() ? null : selection.getLast();
     final IProfilPoint thePointAfter = thePointBefore == null ? null : ProfilUtil.getPointAfter( tableView.getProfil(), thePointBefore );
-    IProfilPoint thePoint = thePointAfter == null ? thePointBefore.clonePoint() : ProfilUtil.splitSegment( tableView.getProfil(), thePointBefore, thePointAfter );
+    IProfilPoint thePoint = thePointAfter == null ? tableView.getProfil().createProfilPoint() : ProfilUtil.splitSegment( tableView.getProfil(), thePointBefore, thePointAfter );
     final IProfilChange[] changes = new IProfilChange[2];
     changes[0] = new PointAdd( tableView.getProfil(), thePointBefore, thePoint );
     changes[1] = new ActiveObjectEdit( tableView.getProfil(), thePoint, IWspmConstants.POINT_PROPERTY_BREITE );

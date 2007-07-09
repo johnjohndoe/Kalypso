@@ -70,7 +70,7 @@ public class ProfilMidTarget extends AbstractPointsTarget
     try
     {
       final IProfilPoint activePkt = pem.getProfil().getActivePoint();
-      final IProfilPoint targetPkt = (activePkt != null) ? activePkt : pem.getProfil().getPoints().getLast();
+      final IProfilPoint targetPkt = (activePkt != null) ? activePkt : pem.getProfil().createProfilPoint();
       final double deltaX = points.getFirst().getValueFor( IWspmConstants.POINT_PROPERTY_BREITE ) - targetPkt.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
       final double deltaY = points.getFirst().getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE ) - targetPkt.getValueFor( IWspmConstants.POINT_PROPERTY_HOEHE );
       int i = changes.length - 1;
