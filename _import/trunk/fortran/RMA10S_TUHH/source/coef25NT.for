@@ -27,7 +27,7 @@ cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
 cipk  last update Jan 21 1998
 cipk  last update Dec 16 1997
-C     Last change:  K    22 Jun 2007    8:09 am
+C     Last change:  EF    4 Jun 2007   12:59 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 cipk  last update Jan 22 1997
 cipk  last update Oct 1 1996 add new formulations for EXX and EYY
@@ -1180,6 +1180,7 @@ CIPK AUG06
       end if
       !-
 
+
 CIPK MAR01 CLEANUP LOGIC
 	IF(ICYC .LE. 0) THEN
         FRN = 0.0
@@ -1322,13 +1323,10 @@ C  N*N
 
 C  N*DNX
       !EFa may07, added dhdx*epsx and dhdz*epsxz
-      !T2=AMS*AKX*H*R
       T2=AMS*(AKX*H*R+epsx*dhdx)
-      !-
 
 C  N*DNY
-      !EFa may07, added dhdx*epsx and dhdz*epsxz
-      !T3=AMS*H*S
+
       T3=AMS*(H*S+epsxz*dhdz)
       !-
 
@@ -1429,8 +1427,6 @@ C IPK MAR01 REPLACE SIDF(NN) WITH SIDFT
       T1=AMS*(AKY*H*DSDZ+(TFRIC+TDRAGY*H)*VBF*(2.*(S*VBF)**2+(R*UBF)**2)
      +       +SIDFT)
       !EFa may07, added dhdx * epszx and dhdz * epsz
-      !T2=AMS*AKY*H*R
-      !T3=AMS*H*S
       T2=AMS*(AKY*H*R+dhdx*epszx)
       T3=AMS*(H*S+dhdz*epsz)
       !-
