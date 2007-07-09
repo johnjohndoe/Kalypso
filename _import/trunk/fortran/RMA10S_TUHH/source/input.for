@@ -1,4 +1,4 @@
-C     Last change:  WP    6 Jul 2007    4:05 pm
+C     Last change:  EF    6 Jul 2007    1:38 pm
 CIPK  LAST UPDATE AUGUST 30 2006 ADD CONSV AND AVEL OPTIONS
 CIPK  LAST UPDATE APRIL 05 2006 MODIFY CALL TO GETINIT
 CIPK  LAST UPDATE MARCH 25 2006 ADD TESTMODE
@@ -392,6 +392,15 @@ cipk sep04
 !           This timestep is saved in the global variable iaccyc. If the value is (iaccyc > 1), it means, that the beginning time step is not
 !           the over all beginning. For that reason, no steady calculation can be started. This means, that the user has to be informed about
 !           the occuring error, if  (iaccyc > 1) .and. (NITI /= 0)
+      !EFa jun07, necessary for autoconverge
+      nitizero = niti
+      nitnzero = nitn
+      if (niti.ne.0.) then
+        nitazero = niti
+      ELSE
+        nitazero = nitn
+      end if
+      !-
       IF (iaccyc > 1 .and. NITI /= 0) THEN
         WRITE (*,*)' If you want to start a steady state calculation, ',
      +    'no beginning time step > 1 should be entered.'
@@ -582,6 +591,14 @@ cipk apr97
      +            ,F8.4)
       endif
 cipk apr97
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!EFa jun07, autoconverge option
+
+      IF(ID(1:2) .EQ. 'AC') THEN
+        READ(dlin,'(4i8)')beiauto,linlog,nnnst,nnnunst
+        CALL GINPT(LIN,ID,DLIN)
+      ENDIF
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 CIPK  FEB04 add IOV option
@@ -972,6 +989,18 @@ C-
         IF (id == 'SCL') THEN
           READ(DLIN,*) NCL
           kmax = NCL
+          !EFa jun07, necessary for autoconverge
+          ALLOCATE (speccc(kmax,8))
+          ALLOCATE (specccold(kmax,8))
+          ALLOCATE (specccfut(kmax,8))
+          do i = 1, kmax
+            do k=1,8
+              speccc(i,k) = 0.0
+              specccold(i,k) = 0.0
+              specccfut(i,k) = 0.0
+            end do
+          end do
+          !-
           IF (NCL > 0) THEN
             READ(lin,'(A3,A5,A72)') ID, IDString ,DLIN
             all_CL: DO k=1,kmax
@@ -1450,8 +1479,6 @@ C-
       write(*,*) 'going to getbc', ibin
       CALL GETBC(IBIN)
 
-
-
 cipk jan99 set directions
        do n=1,ne
          if(imat(n) .gt. 900) then
@@ -1617,6 +1644,7 @@ C
 C....... Call ANGLEN to find major axis and scale velocity terms
 C
       CALL ANGLEN
+
 CZZZ
       CALL GETCON
 
@@ -2177,6 +2205,7 @@ cipk may06
       IF(LSS .GT. 0) THEN
         CALL GETMAS
       ENDIF
+
 
 CIPK JUL01
       CALL FILE(2,ANAME)

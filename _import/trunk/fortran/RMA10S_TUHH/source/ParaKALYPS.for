@@ -53,6 +53,17 @@ C     Last change:  EF    2 Jul 2007    3:46 pm
       REAL(KIND=8)             :: dsid(1:5)
       REAL(KIND=8)             :: semp,dside,gsc1,gsc2,artr1,artr2,gscal
       !-
+
+      !EFa jun07, autoconverge
+      REAL,       ALLOCATABLE 	:: rss(:), specccold(:,:),speccc(:,:),
+     +                             specccfut(:,:)
+      REAL                      :: rrr,hhh,hhh2,qqq,qqqdir
+      INTEGER                   :: nitnzero,nitazero,nitizero,extranita,
+     +                             beiauto,nnnunst,nnnst,linlog,exterr
+      !-
+
+
+
 !FEM            switch for the control of CVFEM; switch is parat but the CVFEM-code is not yet translated to RMA10S
 
 
