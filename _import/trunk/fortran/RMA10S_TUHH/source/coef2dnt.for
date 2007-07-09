@@ -1744,6 +1744,25 @@ C-
       ELSE
         AC2=0.
       ENDIF
+
+      !nis,jul07: Write 1D-2D-line-Transition values to equation system
+      if (TransitionMember(M)) then
+        !get momentum equation of 2D-node at transition
+        IRW = NDF * (N - 1) + 1
+        IRH = NDF * (N - 1) + 3
+        !calculate absolute velocity
+        VX  = VEL (1,M) * COS (ALFA (M)) + VEL (2,M) * SIN (ALFA (M))
+        !reset Jacobian
+        do j = 1, nef
+          estifm(irw, j) = 0.0
+        enddo
+        !form specific discharge values like inner boundary condition
+        F (IRW)           = spec(M, 1) - vx * vel(3, M)
+        ESTIFM (IRW, IRW) = vel(3, M)  - dspecdv(M)
+        ESTIFM (IRW, IRH) = vx         - dspecdh(M)
+      end if
+      !-
+
       NFX=NFIX(M)/1000
       IF(NFX .LT. 13) GO TO 1300
       IRW=NDF*(N-1)+1

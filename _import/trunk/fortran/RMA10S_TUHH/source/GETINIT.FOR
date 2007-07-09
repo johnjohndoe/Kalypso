@@ -42,9 +42,11 @@ CIPK APR06
       REAL(KIND=8)         :: VAAA, HTP, H, HS
 !-
 
-!nis,jan07: Needs a switch for line transitions
-      INTEGER              :: TransLineMember
+!nis,jul07:
+      INTEGER         :: TNode, LiNo, LiLe, na
+      REAL (KIND = 8) :: waspi, TDep, TDepv
 !-
+
 
 C-
 C-.....INPUT INITIAL CONDITIONS, IF SPECIFIED.....
@@ -310,24 +312,13 @@ C-
 	IF(NOP(N,6) .GT. 0) GO TO 173
 cipk revised nov06	IF(IMAT(N) .GT. 900) GO TO 173
 	IF(IMAT(N) .GT. 900  .and. IMAT(N) .LT. 904) GO TO 173
-	
-        !nis,jan07: Checking, whether element is part of a transition line
-        TransLineMember = 0
-        do i=1,MaxLT
-          if (n.eq. TransLines(i,1)) TransLineMember = 1
-        end do
-        !-
 
-        !nis,jan07,com: For the original 1D-2D-transitions the initial guess for 1D is just set at the nodes, that are not belonging to the
-        !               transition construct
-        !nis,jan07: Enlarging the test
 	IF(NCRN(N) .EQ. 5) THEN
-        !IF(NCRN(N) .EQ. 5 .or. TransLineMember.eq.1) THEN
-        !-
 	  NLM=2
 	ELSE
 	  NLM=3
 	ENDIF
+
 	DO 172 M=1,NLM
 	  NA=NOP(N,M)
 
@@ -335,7 +326,9 @@ cipk revised nov06	IF(IMAT(N) .GT. 900) GO TO 173
           if (imat(n) == 89) then
             vel(3,na) = 0.5 * (hhmin(na) + hhmax(na))
           end if
+
 	  VEL(1,NA)=UNOM
+
   172   CONTINUE
   173 CONTINUE
   175 CONTINUE
@@ -410,6 +403,50 @@ CIPK APR01  NOW RESET FOR MID-SIDES
             ENDDO
           ENDIF
         ENDDO
+
+        !nis,jul07: update transition line depths
+        TransitionDepths: do j = 1, MaxLT
+          TNode = TransLines(j, 3)
+          if (TNode == 0) CYCLE TransitionDepths
+
+          LiNo  = TransLines(j, 2)
+          LiLe  = lmt (LiNo)
+          waspi = 0.0
+          TDep  = vel(3, TNode)
+          TDepv = 0.0
+
+          !marsh-option not active
+          if (idnopt == 0) then
+            !calculate water level
+            waspi = ao(TNode) + TDep
+
+          !marsh-option active
+          else
+            !calculate water level with marsh-option, first transform virtual depth to "real" flow depth and then add bottom elevation of marsh-range
+            CALL amf (TDepv, TDep, akp (TNode),
+     +                adt (TNode), adb (TNode), dum1, dum2, 0)
+            waspi = ado(TNode) + TDepV
+          end if
+
+          !Assign water depth to nodes of transition
+          if (idnopt == 0) then
+            do k = 1, LiLe
+              na        = line(LiNo, k)
+              Vel(3,na) = waspi - ao(na)
+              WSLL(na) = waspi
+            end do
+          else
+            do k = 1, LiLe
+              na = line(LiNo, k)
+              tmpdepth = waspi - ado(na)
+              CALL amf (tmpdepth, vel(3,na), akp(na),
+     +                  adt (na), adb (na), dum1, dum2, 1)
+              WSLL(na) = waspi
+            end do
+          end if
+        end do TransitionDepths
+        !-
+
        RETURN
  5032  FORMAT( I5,6E10.0 )
        END

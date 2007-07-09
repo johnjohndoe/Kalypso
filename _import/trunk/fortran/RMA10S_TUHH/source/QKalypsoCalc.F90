@@ -1,4 +1,4 @@
-!     Last change:  K    22 Jun 2007    8:29 am
+!     Last change:  K     4 Jul 2007    7:01 pm
 !purpose of the subroutine is to calculate the average water level along a CCL.
 
 subroutine getLineAverageWaterLevel(CCL, waspi)
@@ -47,15 +47,6 @@ DO k = 1, lmt (CCL)
 
   !Test whether node exists, if so get the flow depth
   IF (na > 0) fliesstiefe = vel (3, na)
-
-    !nis,jun07,testing
-    !CALL amf (d3, fliesstiefe, akp (na), adt (na), adb (na), amec (k), d2, 0)
-    !WRITE(*,*) 'Knoten: ', na
-    !WRITE(*,*) d3, fliesstiefe
-    !WRITE(*,*) ado(na), ao(na)
-    !WRITE(*,*) d3 + ado(na), fliesstiefe + ao(na)
-    !pause
-    !-
 
   if (idnopt == 0) then
   !nis,sep06,com: Very small flow depth

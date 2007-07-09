@@ -1,4 +1,4 @@
-!     Last change:  K    25 Apr 2007    3:47 pm
+!     Last change:  WP    6 Jul 2007    5:51 pm
 !nis,nov06: This subroutine checks all the 1D-2D-line-Transitions on consistency
 !           That is:
 !           - well definition
@@ -14,6 +14,7 @@ subroutine check_linetransition
 
 !Modules
 USE BLK10MOD
+USE ParaKalyps
 
 !This is good standard
 implicit none
@@ -22,7 +23,7 @@ implicit none
 INTEGER :: matchno
 
 !Counters and Temps (Counter, Counter, Linenumber, 1D-Connectionnode, Linelength)
-INTEGER        :: J, I, LiNo, CoNode, LiLe
+INTEGER        :: I, J, K, LiNo, CoNode, LiLe
 !line lengths: line's x-length, line's y-length, line's euclidean length
 REAL (KIND=4)  :: lxlen, lylen, leulen
 !distances for checking the transitioning 1D-element's corner node
@@ -72,14 +73,14 @@ DO J = 1, MaxLT
     !objective 1
     !Checking, whether assignments are correct, that is easily done by comparing the nodal storage of transitioning element with the connection node
     !-----------------------------------------
-    if (CoNode .ne. nop(TransLines(J,1),3)) then
-      WRITE(*,*) 'ERROR - the assignment of the connecting node was not successful'
-      WRITE(*,*) 'Check, whether the connecting element and the transition line defintion'
-      WRITE(*,*) 'use the same connecting node'
-      WRITE(*,*) 'Program can not be executed'
-      WRITE(*,*) 'STOP'
-      stop
-    end if
+    !if (CoNode .ne. nop(TransLines(J,1),3)) then
+    !  WRITE(*,*) 'ERROR - the assignment of the connecting node was not successful'
+    !  WRITE(*,*) 'Check, whether the connecting element and the transition line defintion'
+    !  WRITE(*,*) 'use the same connecting node'
+    !  WRITE(*,*) 'Program can not be executed'
+    !  WRITE(*,*) 'STOP'
+    !  stop
+    !end if
 
 
     !objective 2
@@ -152,6 +153,23 @@ DO J = 1, MaxLT
 
     endif
   end if
+
+  !nis,jul07: Adding logical variable of nodes being part of a 2D-line in 1D-2D-transitions
+  WRITE(*,*) 'line has ', lmt(lino), ' nodes'
+  WRITE(*,*) 'nodes are'
+  WRITE(*,*) (line(lino,k), k=1, lmt(lino))
+  !Connected 1D-node becomes Member of a transition line
+  Transitionmember(TransLines(J, 3)) = .true.
+  !Connected 2D-nodes become Member of a transition line
+  do k = 1, lmt (LiNo)
+    if (TransitionMember (line (LiNo, k))) then
+      WRITE(*,*) 'Node in more than one transition!'
+      WRITE(*,*) "That doesn't work"
+      WRITE(*,*) 'Program stopped'
+      stop
+    end if
+    TransitionMember (line (LiNo,k)) = .true.
+  end do
 END DO
 
 end subroutine

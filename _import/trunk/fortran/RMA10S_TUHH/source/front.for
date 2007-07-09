@@ -1,4 +1,4 @@
-C     Last change:  K    22 Jun 2007    7:47 am
+C     Last change:  WP    9 Jul 2007   11:10 am
 CIPK  LAST UPDATE JUNE 27 2005 ALLOW FOR CONTROL STRUCTURES 
 CIPK  LAST UPDATE MAR 25 2005
 CIPK  LAST UPDATE SEP 06 2004 CREATE ERROR FILE
@@ -588,33 +588,36 @@ CIPK FEB04
       STOP
    54 CONTINUE
 
-        !nis,nov06: introduce a scaling factor, that is in general 1.0, but changes at connections. It may be also used for other
-        !           node to node relationships
-        do node = 1,ncn
-          !for every degree of freedom, because NBN = NDF * NCN
-          do degree = 1,ndf
-            !get line in Matrix
-            temp_nbn = node * degree
-            !get the factor; the factor is .ne. 1.0, if the node is     in a line-Connection
-            !                the factor is .eq. 1.0, if the node is not in a line-Connection
-            !WRITE(*,*) nop(n,node), node, n, degree, temp_nbn
-            if (degree == 1 .or. degree == 2) then
-              fac(temp_nbn) = EqScale(nop(n,node), degree)
-            ELSEIF (degree == 3) then
-              fac(temp_nbn) = 1.0
-            end if
-            !testing
-            !if (fac(temp_nbn).ne.1.0) then
-            !  WRITE(*,*) 'Factor wird angewendet:'
-            !  WRITE(*,*) fac(temp_nbn), nop(n,node), n, degree
-            !  WRITE(*,*) 'Faktor, Knoten, Element, freiheitsgrad'
-            !end if
-            !-
-          enddo
-        end do
-        !-
+!nis,jul07: equation scaling is no more useful
+!
+!        !nis,nov06: introduce a scaling factor, that is in general 1.0, but changes at connections. It may be also used for other
+!        !           node to node relationships
+!        do node = 1,ncn
+!          !for every degree of freedom, because NBN = NDF * NCN
+!          do degree = 1,ndf
+!            !get line in Matrix
+!            temp_nbn = node * degree
+!            !get the factor; the factor is .ne. 1.0, if the node is     in a line-Connection
+!            !                the factor is .eq. 1.0, if the node is not in a line-Connection
+!            !WRITE(*,*) nop(n,node), node, n, degree, temp_nbn
+!            if (degree == 1 .or. degree == 2) then
+!              fac(temp_nbn) = EqScale(nop(n,node), degree)
+!            ELSEIF (degree == 3) then
+!              fac(temp_nbn) = 1.0
+!            end if
+!            !testing
+!            !if (fac(temp_nbn).ne.1.0) then
+!            !  WRITE(*,*) 'Factor wird angewendet:'
+!            !  WRITE(*,*) fac(temp_nbn), nop(n,node), n, degree
+!            !  WRITE(*,*) 'Faktor, Knoten, Element, freiheitsgrad'
+!            !end if
+!            !-
+!          enddo
+!        end do
+!        !-
+!-
 
-      !NiS,jun06,comment: Assembly of global matrix within the solution window
+      !NiS,jun06,com: Assembly of global matrix within the solution window
       !nis,jun06,com: for every nodal degree of freedom (row of element matrix)
       DO 57 L=1,NBN
         !nis,jun06,com: if equation is present
@@ -625,29 +628,32 @@ CIPK FEB04
           DO 56 K=1,NBN
 	  IF(NK(K) .NE. 0) THEN
 	    KK=LDEST(K)
-!nis,nov06: Insert scaling factor for e.g. line-Transitions. The factor scales the coefficients in the column of the local matrix. The factor
-!           gives a relation between the local nodal degree of freedom value and the referenced value. It is calculated from the solution of
-!           the initial guess/solution of the equation system.
+!nis,jul07: equation scaling is no more useful
 !
-!           SWITCH EXPLANATION
-!           If there is a 1D-2D-coupling, then coming from the initial guess, the relation between
-!           the 1D-coupling point and each of the coupled 2D-points is known and can be expressed as a factor. For the iteration step it is assumed,
-!           that this relation is the end-relation. The result of the line-scaling is, that the variable in all local equation systems, that are
-!           connected to one coupling point can be collapsed to one point with two degrees of freedom. The local equations at the coupling can then
-!           all come together.
-!           EQ(LL,KK)=EQ(LL,KK)+ESTIFM(K,L)
-            !nis,nov06,testing:
-            !WRITE(*,*) 'Fac(L)=', fac(l)
-            !-
-            !nis,feb07,testing:
-            !if (fac(l) /= 1.0) then
-            !  WRITE(*,*) 'Spalte', LL, 'Zeile', KK
-            !  WRITE(*,*)  'Wert: ', EQ(ll,KK), 'Scaling: ', Fac(L)
-            !endif
-            !-
-            !IF(n == 1910) then
-
-            EQ(LL,KK) = EQ(LL,KK) + ESTIFM(K,L) * Fac(L)
+!!nis,nov06: Insert scaling factor for e.g. line-Transitions. The factor scales the coefficients in the column of the local matrix. The factor
+!!           gives a relation between the local nodal degree of freedom value and the referenced value. It is calculated from the solution of
+!!           the initial guess/solution of the equation system.
+!!
+!!           SWITCH EXPLANATION
+!!           If there is a 1D-2D-coupling, then coming from the initial guess, the relation between
+!!           the 1D-coupling point and each of the coupled 2D-points is known and can be expressed as a factor. For the iteration step it is assumed,
+!!           that this relation is the end-relation. The result of the line-scaling is, that the variable in all local equation systems, that are
+!!           connected to one coupling point can be collapsed to one point with two degrees of freedom. The local equations at the coupling can then
+!!           all come together.
+           EQ(LL,KK)=EQ(LL,KK)+ESTIFM(K,L)
+!            !nis,nov06,testing:
+!            !WRITE(*,*) 'Fac(L)=', fac(l)
+!            !-
+!            !nis,feb07,testing:
+!            !if (fac(l) /= 1.0) then
+!            !  WRITE(*,*) 'Spalte', LL, 'Zeile', KK
+!            !  WRITE(*,*)  'Wert: ', EQ(ll,KK), 'Scaling: ', Fac(L)
+!            !endif
+!            !-
+!            !IF(n == 1910) then
+!
+!            EQ(LL,KK) = EQ(LL,KK) + ESTIFM(K,L) * Fac(L)
+!!-
 !-
 	  ENDIF
    56     CONTINUE

@@ -13,10 +13,7 @@ CIPK  LAST UPDATE APR 30 1996
       USE BLKDRMOD
       !EFa Jan07, neues Modul für Teschke-Elemente
       USE PARAFlow1dFE
-      !-
-      !EFa jun07, autoconverge
-      USE parakalyps
-      !-
+      USE ParaKalyps
       SAVE
 C-
 CIPK AUG05      INCLUDE 'BLK10.COM'
@@ -185,12 +182,19 @@ c
         ENDIF
       ENDIF
 
-      !EX=R1(I)*URFC*urfcc
-      if (k == 1 .or. k == 2) then
-        EX=R1(I)*URFC*urfcc * eqscale(j,k)
-      else
-        EX=R1(I)*URFC*urfcc
-      end if
+      EX=R1(I)*URFC*urfcc
+
+      !if (TransitionMember(j)) then
+      !  WRITE(*,*) 'node:     ', j, 'DOF: ', k
+      !  WRITE(*,*) 'r1:       ', r1 (nbc (j, k)), 'nbc: ', nbc (j, k)
+      !  WRITE(*,*) 'H bzw. v: ', vel (k, j), WSLL (j)
+      !  pause
+      !end if
+      !if (k == 1 .or. k == 2) then
+      !  EX=R1(I)*URFC*urfcc * eqscale(j,k)
+      !else
+      !  EX=R1(I)*URFC*urfcc
+      !end if
 
 cik dec97 end changes
       AEX = ABS( EX )
@@ -282,9 +286,6 @@ cipk jun05
         emax(k)=hel(j)-horg
         NMX(K)=J
       ENDIF
-
-
-
 
 CIPK APR01 UPDATE WATER SURFACE ELEVATION
 

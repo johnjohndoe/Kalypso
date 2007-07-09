@@ -45,6 +45,12 @@ C     Last change:  EF    2 Jul 2007    3:46 pm
 !nis,feb07: Add array for midside nodes of Flow1DFE elements
       INTEGER, ALLOCATABLE     :: FFFmidsidenodes(:)
 !-
+      !nis,jun07: Adding specific discharge and difference quotients of that over h and v for alle transition nodes
+      !           Add pointer for all nodes to be part of a transition or not
+      logical, allocatable :: TransitionMember(:)
+      REAL   , allocatable :: dspecdh (:), dspecdv (:)
+      REAL   :: q2d(1:50)
+      !-
 
       !if restart with kalypso 2D-file, then RESTARTSwitch = 1, else RESTARTSwitch = 0
       INTEGER                  :: RESTARTSwitch

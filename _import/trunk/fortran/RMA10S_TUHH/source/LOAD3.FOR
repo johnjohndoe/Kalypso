@@ -7,7 +7,7 @@ CIPK  LAST UPDATE DEC 21 2000 ALLOW FOR GATE STRUCTURE
 cipk  last update Nov 12 1999 add dropout of nodes for 3-d to 2-d
 CIPK  LAST UPDATE JAN 12 1999 FIX 2DV JUNCTION LOGIC
 cipk  last update Dec 5 1998 fix error at transitions
-C     Last change:  K    20 Jun 2007   12:02 pm
+C     Last change:  WP    6 Jul 2007    1:57 pm
 cipk  last update Feb 4 1998 correct zero subscript test and for HCN
 CIPK  LAST UPDATE JAN 22 1998
 cipk  last update Dec 16 1997
@@ -956,9 +956,14 @@ cipk oct98 update to f90
             !get copy of node number
             nd = line(LiNo,k)
             !Initialize the momentum equations. The velocities are a result of the distribution calculation. This is done for every node
-            DO eqdof = 1, 2
-              NBC(ND,eqdof) = 0
-            ENDDO
+            !DO eqdof = 1, 2
+            !  NBC(ND,eqdof) = 0
+            !ENDDO
+
+            !nis,jul07: activate the velocity component in main direction
+            NBC(ND,1) = 1
+            NBC(ND,2) = 0
+            !-
 
             !the same node must not be processed on
             IF(NLN == nd) CYCLE equationassigning
@@ -989,12 +994,12 @@ cipk oct98 update to f90
           ENDDO
 
           !testoutput
-          do iii = 1, LiLe
-            WRITE (*, '(1x,i5,6(1x,i5))') line(LiNo, iii),
-     +            (nbc(line(LiNo, iii), jjj), jjj=1, 6)
-          end do
-          WRITE (*,'(1x,i5,6(1x,i5))') CoNode,
-     +          (nbc(CoNode, jjj), jjj=1, 6)
+          !do iii = 1, LiLe
+          !  WRITE (*, '(1x,i5,6(1x,i5))') line(LiNo, iii),
+     +    !        (nbc(line(LiNo, iii), jjj), jjj=1, 6)
+          !end do
+          !WRITE (*,'(1x,i5,6(1x,i5))') CoNode,
+     +    !      (nbc(CoNode, jjj), jjj=1, 6)
           !pause
           !-
 

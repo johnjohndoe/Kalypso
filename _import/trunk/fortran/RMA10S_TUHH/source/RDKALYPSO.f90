@@ -1,4 +1,4 @@
-!     Last change:  K    22 Jun 2007    8:27 am
+!     Last change:  K     3 Jul 2007    3:41 pm
 !-----------------------------------------------------------------------
 ! This code, data_in.f90, performs reading and validation of model
 ! inputa data in the library 'Kalypso-2D'.
@@ -2362,10 +2362,12 @@ if (maxlt.ne.0) then
       end if
       !-
 
-      !turn the corner nodes around
-      noptemp = nop(TransLines(i,1),1)
-      nop(TransLines(i,1),1) = nop(TransLines(i,1),3)
-      nop(TransLines(i,1),3) = noptemp
+      !nis,jun07: element turning is not necessary
+      ! !turn the corner nodes around
+      ! noptemp = nop(TransLines(i,1),1)
+      ! nop(TransLines(i,1),1) = nop(TransLines(i,1),3)
+      ! nop(TransLines(i,1),3) = noptemp
+      !-
 
     end if
   end do elementturning
@@ -2373,9 +2375,9 @@ endif
 !-
 
 !nis,nov06: Check, whether all 1D-2D-line-Transitions are connected. The Question ist, whether connecting node is part of the transition line:
-if (MaxLT.ne.0) then
-  call check_linetransition
-end if
+!if (MaxLT.ne.0) then
+!  call check_linetransition
+!end if
 !-
 
 ! REORDERING -------------------------------------------------------------------

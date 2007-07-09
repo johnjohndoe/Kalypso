@@ -356,12 +356,6 @@ c
            MC = 2 * M - 1
            N = NOP(NN,MC)
            HS = VEL(3,N)
-           !nis,jun07,testing
-           !if (hs <= 0.0) then
-           !  WRITE(*,*) 'Knoten: ', N, 'Tiefe: ', hs
-           !  pause
-           !end if
-           !-
            ISWT = 0
            CALL AMF(DUM1,HS,AKP(N),ADT(N),ADB(N),AME(M),DAME(M),ISWT)
 cipk apr05
@@ -431,7 +425,6 @@ CIPK JAN97      ELSEIF(IEDSW .EQ. 4) THEN
       ENDIF
 cipk mar03 end changes
    72 CONTINUE
-
       NGP=7
 CIPK JUN05      NEF=NCN*NDF
 C-
@@ -1180,7 +1173,6 @@ CIPK AUG06
       end if
       !-
 
-
 CIPK MAR01 CLEANUP LOGIC
 	IF(ICYC .LE. 0) THEN
         FRN = 0.0
@@ -1323,10 +1315,11 @@ C  N*N
 
 C  N*DNX
       !EFa may07, added dhdx*epsx and dhdz*epsxz
+      !T2=AMS*AKX*H*R
       T2=AMS*(AKX*H*R+epsx*dhdx)
 
 C  N*DNY
-
+!      T3=AMS*H*S
       T3=AMS*(H*S+epsxz*dhdz)
       !-
 
@@ -1427,6 +1420,8 @@ C IPK MAR01 REPLACE SIDF(NN) WITH SIDFT
       T1=AMS*(AKY*H*DSDZ+(TFRIC+TDRAGY*H)*VBF*(2.*(S*VBF)**2+(R*UBF)**2)
      +       +SIDFT)
       !EFa may07, added dhdx * epszx and dhdz * epsz
+      !T2=AMS*AKY*H*R
+      !T3=AMS*H*S
       T2=AMS*(AKY*H*R+dhdx*epszx)
       T3=AMS*(H*S+dhdz*epsz)
       !-
@@ -1880,6 +1875,25 @@ C-
       ELSE
         AC2=0.
       ENDIF
+
+      !nis,jul07: Write 1D-2D-line-Transition values to equation system
+      if (TransitionMember(M)) then
+        !get momentum equation of 2D-node at transition
+        IRW = NDF * (N - 1) + 1
+        IRH = NDF * (N - 1) + 3
+        !calculate absolute velocity
+        VX  = VEL (1,M) * COS (ALFA (M)) + VEL (2,M) * SIN (ALFA (M))
+        !reset Jacobian
+        do j = 1, nef
+          estifm(irw, j) = 0.0
+        enddo
+        !form specific discharge values like inner boundary condition
+        F (IRW)           = spec(M, 1) - vx * vel(3, M)
+        ESTIFM (IRW, IRW) = vel(3, M)  - dspecdv(M)
+        ESTIFM (IRW, IRH) = vx         - dspecdh(M)
+      end if
+      !-
+
       NFX=NFIX(M)/1000
       IF(NFX .LT. 13) GO TO 1300
       IRW=NDF*(N-1)+1

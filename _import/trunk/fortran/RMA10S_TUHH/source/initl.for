@@ -771,6 +771,15 @@ CIPK MAR01
         TransMember(i) = 0
       end do
 !-
+!nis,jun07: Add initializaton of membership of nodes in a transition
+      ALLOCATE (TransitionMember(1:MaxP))
+      ALLOCATE (dspecdh(1:MaxP), dspecdv(1:MaxP))
+      do i = 1, MaxP
+        TransitionMember(i) = .false.
+        dspecdh (i) = 0.0
+        dspecdv (i) = 0.0
+      end do
+!-
 
 !nis,nov06: allocating Transition lines for 1D 2D line transition;
 !           1. 1D element number of the coupling
@@ -879,6 +888,7 @@ CIPK MAR01
       end do
       do i = 1, 50
         lmt(i) = 0
+        q2D(i) = 0.0
       end do
       !nis,jun07: maxfil is not zero, if there was a scratch file, otherwise it should be zero, ALWAYS
       MAXFIL = 0

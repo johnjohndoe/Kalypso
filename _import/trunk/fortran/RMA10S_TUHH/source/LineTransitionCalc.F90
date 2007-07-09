@@ -1,4 +1,4 @@
-!     Last change:  K     6 Jun 2007    4:25 pm
+!     Last change:  WP    9 Jul 2007   10:26 am
 
 subroutine TransVelDistribution
 
@@ -14,6 +14,7 @@ subroutine TransVelDistribution
 !************
 
 USE BLK10MOD
+USE BLKDRMOD
 USE PARAKalyps
 USE paraFlow1dFE
 
@@ -28,9 +29,10 @@ CHARACTER (LEN=25) :: filename_out
 !TransDep  :: maximum (1D) depth at line transition
 !discharge :: discharge at line transition (input value for velocity distribution of 2D elements at transition)
 !localVel  :: velocity at actual 2D node while processing the 2D part of the transition
-INTEGER            :: teststat
+
 !teststat  :: iostat variable for testfile
-!-
+INTEGER            :: teststat
+REAL (KIND = 8) :: Dh, dv
 
 
 !nis,jan07: Getting the equation factors for the 1D-2D line transition
@@ -44,10 +46,13 @@ INTEGER            :: teststat
 !step1: only process, if it was not the 1st iteration
 !******
 
-  teststat = 0
-  WRITE(filename_out,*) 'Transitionoutput',maxn,'.txt'
-  OPEN(999,filename_out, IOSTAT=teststat)
-  if (teststat.ne.0) STOP 'error with kopplungsoutput.txt'
+teststat = 0
+WRITE(filename_out,*) 'Transitionoutput',maxn,'.txt'
+OPEN(999,filename_out, IOSTAT=teststat)
+if (teststat.ne.0) STOP 'error with kopplungsoutput.txt'
+
+Dh = 0.0001
+dv = 0.001
 
 !if (maxn /= 1 .or. RESTARTSwitch /= 0) then
   !for every line transition
@@ -55,116 +60,158 @@ INTEGER            :: teststat
 
     !step2: getting the discharge through transition with values from last iteration, differ between King-1D-elements and Teschke-1D-elements
     !******
-
-
     !if transition is empty, cycle loop.
     if (TransLines(i,1) == 0) CYCLE transitionloop
+
     !get the line number and the 1D-transitioning node number
     TransLi = TransLines(i,2)
     TransNo = nop(TransLines(i,1),3)
 
-    !testing
-    !WRITE(*,*) transno, 'Iteration: ', maxn
-    !WRITE(*,*) vel(1,transno), vel(2,transno)
-    !pause
-    !-
+    !allocating the temporary velocity and specific discharge placeholder
+    ALLOCATE (TransitionVels ( 1 : lmt(TransLi) ), TransSpec(1:lmt(TransLi), 1:2) )
 
-    !get the 1D-velocity; the transition node is always the 3rd one of the 1D-part definition nop(j,3)
-    TransVel = SQRT((vel(1,TransNo))**2 + (vel(2,TransNo))**2)
-    TransDep = vel(3,TransNo)
-    !get the discharge area
-    !if width is not zero it is a King element (testing, the value should be less then machine accuracy)
-    CSArea = 0.0
+    do j = 1, 5
+      !j = 1: Calculate nominal value of specific discharge at nodes
+      !j = 2: Calculate numeric derivative (difference quotient) due to LOWER water depth
+      !j = 3: Calculate numeric derivative (difference quotient) due to HIGHER water depth and average numeric derivative
+      !j = 4: Calculate numeric derivative (difference quotient) due to lower flow velocity at a particular node
+      !j = 5: Calculate numeric derivative (difference quotient) due to higher flow velocity at a particular node
 
-    !if width is not zero a trapezoidal profile of the original RMA10S code is used
-    if (ABS(width(TransNo)) > 1.e-7) then
-      CSArea = (width(TransNo) + 0.5 * (ss1(TransNo) + ss2(TransNo))*TransDep) *TransDep
 
-    !if width is zero, but the element is 1D it can only be a Teschke element
-    else
-     !polynomial calculation
-     DO k = 0, 12
-       CSArea = CSArea + apoly(TransNo,k) * TransDep**(k)
-     ENDDO
-    end if
-
-    !Calculate discharge
-    Discharge = CSArea * TransVel
-
-    !nis,jan07,testing
-    WRITE(999,*) 'Values from 1D-part'
-    WRITE(999,*) 'Area:',CSArea
-    WRITE(999,*) 'TransNo', ', width(TransNo)', ', TransDep'
-    WRITE(999,*) TransNo, width(TransNo), TransDep
-    WRITE(999,*) 'TransLi', ', discharge', ', TransVel'
-    WRITE(999,*) TransLi, discharge, TransVel
-    !-
-
-    !step3: getting the 2D-velocities with the QGEN-subroutine part
-    !******
-
-    !allocating and initializing the temporary velocity saver
-    ALLOCATE (TransitionVels(3,lmt(TransLi)))
-    do l = 1, lmt(TransLi)
-      do m = 1, 3
-        TransitionVels(m,l) = 0.0
+      !initializing the temporary velocity and specific discharge placeholder
+      do l = 1, lmt(TransLi)
+        TransitionVels(l) = 0.0
+        TransSpec(l, 1) = 0.0
+        TransSpec(l, 2) = 0.0
       end do
-    end do
 
-    !some needed input values:
-    !j    = is line, where to set the velocities;                        here it equals 'TransLi'
-    !QREQ = is the discharge to determine the velocity distribution for; here it equals 'Discharge'
-    !THET = is the flow angle at boundaries;                             here the angle of the 3rd node of the TL can be taken
-    !                                                                    'alfa(line(TransLi,3))'
-    !QQAL = is a value for the quality constituent;                      here it is a dummy argument: 20 degrees
+      !get the 1D-velocity; the transition node is always the 3rd one of the 1D-part definition nop(j,3)
+      TransVel = SQRT((vel(1,TransNo))**2 + (vel(2,TransNo))**2)
+      TransDep = vel(3,TransNo)
 
-    !Getting the TransitionVels of the 1D-2D-line Transition
-    call QGENtrans (TransLi, TransNo, Discharge, 0.0, TransDep)
-    !              (TransLi, TransNo, Discharge, alfa(line(TransLi,3)), TransDep)
 
-    !nis,jan07: Write test lines
-    WRITE(999,*) 'Applying factors'
-    WRITE(999,*) '1D-water vel and h'
-    WRITE(999,*) TransVel, TransDep
-    WRITE(999,*) 'x-vel-factor, y-vel-factor, h-factor, ', 'xvel, yvel, h'
-    !-
+      IF (j == 2) THEN
+        TransDep = TransDep - Dh
+      ELSEIF (j == 3) then
+        TransDep = TransDep + 2 * Dh
+      END IF
 
-    !step4 and step5: Calculation of the velocity factors and the depth factors
-    !****************
+      !get the discharge area
+      !if width is not zero it is a King element (testing, the value should be less then machine accuracy)
+      CSArea = 0.0
 
-    do l = 1, lmt(TransLi)
+      !if width is not zero a trapezoidal profile of the original RMA10S code is used
+      if (ABS(width(TransNo)) > 1.e-7) then
+        CSArea = (width(TransNo) + 0.5 * (ss1(TransNo) + ss2(TransNo))*TransDep) * TransDep
 
-      !euclidic length of velocity vector
-      localVel = SQRT(TransitionVels(1,l)**2 + TransitionVels(2,l)**2)
-
-      !nis,may07: Update the velocity-values at the transition coming from the distribution calculation
-      Vel(1, line(TransLi,l)) = TransitionVels(1,l)
-      Vel(2, line(TransLi,l)) = TransitionVels(2,l)
-
-      !x-component (parallel component)
-      !EqScale(line(TransLi,l),1) = TransVel/ localVel
-      EqScale(line(TransLi,l),1) = localVel / TransVel
-      !WRITE(999,*) 'lokale Absolutgeschwindigkeit:',localvel
-      !WRITE(*,*) 'Node: ', line(TransLi,l)
-      !y-component (perpendicular component) (no value perpendicular to settled flow direction!)
-      EqScale(line(TransLi,l),2) = EqScale(line(TransLi,l),1)
-      !depth-component
-      !EqScale(line(TransLi,l),3) = (TransDep + ao(TransNo) - ao(line(TransLi,l)) ) / TransitionVels(3,l)
-      EqScale(line(TransLi,l),3) = TransitionVels(3,l)/ TransDep
-
-      if (EqScale(line(Transli,l),3) < 0.0) then
-        EqScale(line(Transli,l),3) =0.0
+      !if width is zero, but the element is 1D it can only be a Teschke element
+      else
+       !polynomial calculation
+       DO k = 0, 12
+         CSArea = CSArea + apoly(TransNo,k) * TransDep**(k)
+       ENDDO
       end if
 
-      !nis,jan07: Write testing lines
-      WRITE(999,'(a7,i2,1x,a8,i2,1x,a7,i5,1x,a10,1x,3(f5.3,1x),a7,3(f7.3,1x),a9,1x,f7.3,a19,2(1x,f7.3))')                    &
-      &                         'Linie: ', Transli, 'Knoten: ', l, 'global ',  line(Transli,l),                              &
-      &                         'Faktoren: ', (EqScale(line(Transli,l),n), n=1,3),'Werte: ',  (TransitionVels(m,l), m=1, 3), &
-      &                         'Spiegel: ', Vel(3,line(Transli,l)) + ao(line(Transli,l)),                                   &
-      &                         'Geschwindigkeiten: ', (vel(o,line(Transli,l)),o=1,2)
-      !-
-    end do
-    DEALLOCATE (TransitionVels)
+      !Calculate discharge
+      Discharge = CSArea * TransVel
+
+      !testing
+      WRITE(999,*) 'Values from 1D-part'
+      WRITE(999,*) 'Area:',CSArea
+      WRITE(999,*) 'TransNo', ', width(TransNo)', ', TransDep'
+      WRITE(999,*) TransNo, width(TransNo), TransDep
+      WRITE(999,*) 'TransLi', ', discharge', ', TransVel'
+      WRITE(999,*) TransLi, discharge, TransVel
+
+      !step3: getting the 2D-specific discharges with the QGEN-subroutine part
+      !******
+
+    if (j < 4) then
+      !some needed input values:
+      !j    = is line, where to set the velocities;                        here it equals 'TransLi'
+      !QREQ = is the discharge to determine the velocity distribution for; here it equals 'Discharge'
+      !THET = the angle related to the direction of the continuity line; defaults and unchangable thet = 0.0
+
+      !Getting the specific discharges at the transition
+      call QGENtrans (TransLi, TransNo, Discharge, 0.0, TransDep)
+
+      !Write test output lines
+      WRITE(999,*) 'Applying factors'
+      WRITE(999,*) '1D-water vel and h'
+      WRITE(999,*) TransVel, TransDep
+      WRITE(999,*) 'x-vel-factor, y-vel-factor, h-factor, ', 'xvel, yvel, h'
+
+      !copy values of the specific discharge and the values of the derivatives
+      if (j == 1) then
+        do k = 1, lmt(TransLi)
+          na = line (TransLi, k)
+          spec(na, 1) = SQRT(TransSpec(k, 1)**2 + TransSpec(k, 2)**2)
+          spec(na, 2) = alfa(na)
+        end do
+      ELSEIF (j == 2) then
+        do k = 1, lmt(TransLi)
+          na = line(TransLi, k)
+          dspecdh (na) = (spec(na, 1) - SQRT( TransSpec(k, 1)**2 + TransSpec(k, 2)**2)) / Dh
+        end do
+      ELSEIF (j == 3) then
+        do k = 1, lmt(TransLi)
+          na = line(TransLi, k)
+          dspecdh (na) = 0.5 * (dspecdh (na) + (SQRT( TransSpec(k, 1)**2 + TransSpec(k, 2)**2) - spec(na, 1)) / Dh)
+        end do
+      else
+        WRITE(*,*) 'ERROR - this is not possible'
+        STOP 'in LineTransitionCalc'
+      end if
+    ELSEIF (j == 4) then
+      do k = 1, lmt(TransLi)
+        na = line(TransLi, k)
+        vel(1, na) = vel(1, na) - Dv * COS (alfa(na))
+        vel(2, na) = vel(2, na) - Dv * SIN (alfa(na))
+        call QGENtrans (TransLi, TransNo, Discharge, 0.0, TransDep)
+        dspecdv (na) = (spec(na, 1) - SQRT( TransSpec(k, 1)**2 + TransSpec(k, 2)**2)) / Dv
+        vel(1, na) = vel(1, na) + Dv * COS (alfa(na))
+        vel(2, na) = vel(2, na) + Dv * SIN (alfa(na))
+      end do
+    ELSEIF (j == 5) then
+      do k = 1, lmt(TransLi)
+        na = line(TransLi, k)
+        vel(1, na) = vel(1, na) + Dv * COS (alfa(na))
+        vel(2, na) = vel(2, na) + Dv * SIN (alfa(na))
+        call QGENtrans (TransLi, TransNo, Discharge, 0.0, TransDep)
+        dspecdv (na) = 0.5 * (dspecdv (na) + (SQRT( TransSpec(k, 1)**2 + TransSpec(k, 2)**2) - spec(na, 1)) / Dv)
+        vel(1, na) = vel(1, na) - Dv * COS (alfa(na))
+        vel(2, na) = vel(2, na) - Dv * SIN (alfa(na))
+      end do
+    endif
+    ENDDO
+
+    DEALLOCATE (TransitionVels, TransSpec)
+
+    sumx = 0.0
+    sumy = 0.0
+    GetDischarge: do k = 1, lmt(TransLi) - 2, 2
+      NA = LINE (TransLi, K)
+      NB = LINE (TransLi, K + 1)
+      NC = LINE (TransLi, K + 2)
+      DX = (CORD (NC, 1) - CORD (NA, 1))
+      DY = (CORD (NC, 2) - CORD (NA, 2))
+      D1 = VEL (3, NA)
+      D3 = VEL (3, NC)
+      IF (D1 <= DSET  .OR.  D3 <= DSET) CYCLE GetDischarge
+      D2 = (D1 + D3) / 2.
+      SUMX = SUMX + DY * (VEL (1, NA) * D1 + 4.0 * VEL (1, NB) * D2 + VEL (1, NC) * D3) / 6.
+      SUMY = SUMY + DX * (VEL (2, NA) * D1 + 4.0 * VEL (2, NB) * D2 + VEL (2, NC) * D3) / 6.
+    end do GetDischarge
+
+    q2D(i) = (SUMX - SUMY)
+
+    !WRITE(*,*) 'Linie: ', TransLi
+    !do k = 1, lmt(TransLi)
+    !  na = line(TransLi, k)
+    !  WRITE(*,'(1x,a8,1x,i4,3(1x,f10.5))') 'Knoten: ', na, spec(na,1), dspecdh(na), dspecdv(na)
+    !end do
+    !pause
+
   end do transitionloop
   !-
 !endif
