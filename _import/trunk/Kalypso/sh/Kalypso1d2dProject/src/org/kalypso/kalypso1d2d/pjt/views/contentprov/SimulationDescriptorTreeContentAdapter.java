@@ -41,9 +41,13 @@
 package org.kalypso.kalypso1d2d.pjt.views.contentprov;
 
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import org.eclipse.ui.model.WorkbenchAdapter;
+import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IModelDescriptor;
+import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IResultModelDescriptor;
 import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptor;
+import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 
 /**
  * @author Stefan Kurzbach
@@ -63,7 +67,14 @@ public class SimulationDescriptorTreeContentAdapter extends WorkbenchAdapter
   @Override
   public Object[] getChildren( final Object o )
   {
-    return NO_CHILDREN;
+    final ISimulationDescriptor descriptor = (ISimulationDescriptor) o;
+    final IFeatureWrapperCollection<IResultModelDescriptor> resultModel = descriptor.getResultModel();
+    if( resultModel != null )
+    {
+      return resultModel.toArray();
+    }
+    else
+      return NO_CHILDREN;
   }
 
 // /**
@@ -81,13 +92,13 @@ public class SimulationDescriptorTreeContentAdapter extends WorkbenchAdapter
   @Override
   public String getLabel( final Object o )
   {
-    if( o instanceof ISimulationDescriptor )
+    final ISimulationDescriptor simulationDescriptor = (ISimulationDescriptor) o;
+    final IModelDescriptor calculationUnit = simulationDescriptor.getCalculationUnit();
+    if( calculationUnit != null )
     {
-      final ISimulationDescriptor simulationDescriptor = (ISimulationDescriptor) o;
-      final String scenarioName = simulationDescriptor.getScenarioName();
-      final Date endTime = simulationDescriptor.getEndTime().getTime();
-      return scenarioName + "(" + endTime + ")";
+      return calculationUnit.getModelName();
     }
-    return null;
+    else
+      return "<Berechnungseinheit nicht gefunden>";
   }
 }
