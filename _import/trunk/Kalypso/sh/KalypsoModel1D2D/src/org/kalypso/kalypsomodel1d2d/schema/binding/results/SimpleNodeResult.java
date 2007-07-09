@@ -49,12 +49,11 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
- * @author jung
+ * @author Thomas Jung
  * 
  */
 public class SimpleNodeResult implements INodeResult
 {
-
   private GM_Point m_point;
 
   private double m_vx;
@@ -86,7 +85,7 @@ public class SimpleNodeResult implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setCalcId(int)
    */
-  public void setCalcId( int id )
+  public void setCalcId( final int id )
   {
     // TODO Auto-generated method stub
 
@@ -96,7 +95,7 @@ public class SimpleNodeResult implements INodeResult
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setLocation(double, double, double,
    *      org.opengis.cs.CS_CoordinateSystem)
    */
-  public void setLocation( double x, double y, double z, CS_CoordinateSystem crs )
+  public void setLocation( final double x, final double y, final double z, final CS_CoordinateSystem crs )
   {
     final GM_Position position = GeometryFactory.createGM_Position( x, y, z );
     m_point = GeometryFactory.createGM_Point( position, crs );
@@ -105,7 +104,7 @@ public class SimpleNodeResult implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setMidSide(boolean)
    */
-  public void setMidSide( boolean isMidSide )
+  public void setMidSide( final boolean isMidSide )
   {
     // TODO Auto-generated method stub
 
@@ -115,7 +114,7 @@ public class SimpleNodeResult implements INodeResult
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setResultValues(double, double, double,
    *      double)
    */
-  public void setResultValues( double vx, double vy, double depth, double waterlevel )
+  public void setResultValues( final double vx, final double vy, final double depth, final double waterlevel )
   {
     m_vx = vx;
     m_vy = vy;
@@ -126,7 +125,7 @@ public class SimpleNodeResult implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setDepth(double)
    */
-  public void setDepth( double depth )
+  public void setDepth( final double depth )
   {
     m_depth = depth;
   }
@@ -134,7 +133,7 @@ public class SimpleNodeResult implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setWaterlevel(double)
    */
-  public void setWaterlevel( double waterlevel )
+  public void setWaterlevel( final double waterlevel )
   {
     m_waterlevel = waterlevel;
   }
@@ -150,7 +149,7 @@ public class SimpleNodeResult implements INodeResult
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setVelocity(java.util.List)
    */
-  public void setVelocity( List<Double> velocity )
+  public void setVelocity( final List<Double> velocity )
   {
     m_velocity = velocity;
     m_vx = velocity.get( 0 );
@@ -211,7 +210,7 @@ public class SimpleNodeResult implements INodeResult
   /**
    * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setDescription(java.lang.String)
    */
-  public void setDescription( String desc )
+  public void setDescription( final String desc )
   {
     throw new UnsupportedOperationException();
   }
@@ -219,7 +218,7 @@ public class SimpleNodeResult implements INodeResult
   /**
    * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setName(java.lang.String)
    */
-  public void setName( String name )
+  public void setName( final String name )
   {
     throw new UnsupportedOperationException();
   }

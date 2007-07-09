@@ -64,7 +64,7 @@ public class KalypsoModel1D2DUIImages
   public static final ImageDescriptor ID_ADD = id( "icons/elcl16/addrepo_rep.gif" );
 
   public static final ImageDescriptor IMG_RUN_SIM = id( "icons/startCalculation.gif" );
-  
+
   public static final ImageDescriptor IMG_DESC_ZOOM_WITH_RECT = id( "icons/elcl16/zoomin.gif" );
 
   public static final ImageDescriptor IMG_DESC_PAN = id( "icons/elcl16/pan.gif" );
@@ -81,6 +81,5 @@ public class KalypsoModel1D2DUIImages
     final KalypsoModel1D2DPlugin plugin = KalypsoModel1D2DPlugin.getDefault();
     return AbstractUIPlugin.imageDescriptorFromPlugin( PluginUtilities.id( plugin ), iconPath );
   }
-
 
 }

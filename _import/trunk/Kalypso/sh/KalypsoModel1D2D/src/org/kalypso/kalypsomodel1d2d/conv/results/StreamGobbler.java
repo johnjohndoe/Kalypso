@@ -8,17 +8,19 @@ import java.io.InputStreamReader;
 import org.kalypso.contribs.eclipse.core.runtime.Debug;
 
 /**
+ * TODO: move this to a contribution plug-in.
+ * 
  * This class can handle one stream from an external process.
  * 
  * @author Holger Albert
  */
 class StreamGobbler extends Thread
 {
-  private InputStream m_is;
+  private final InputStream m_is;
 
-  private String m_type;
+  private final String m_type;
 
-  private Debug m_debug;
+  private final Debug m_debug;
 
   /**
    * The constructor.
@@ -30,7 +32,7 @@ class StreamGobbler extends Thread
    * @param debug
    *            If the stream should be written to some console other then System.out, use this parameter.
    */
-  public StreamGobbler( InputStream is, String type, Debug debug )
+  public StreamGobbler( final InputStream is, final String type, final Debug debug )
   {
     m_is = is;
     m_type = type;
@@ -45,8 +47,8 @@ class StreamGobbler extends Thread
   {
     try
     {
-      InputStreamReader isr = new InputStreamReader( m_is );
-      BufferedReader br = new BufferedReader( isr );
+      final InputStreamReader isr = new InputStreamReader( m_is );
+      final BufferedReader br = new BufferedReader( isr );
       String line = null;
       while( (line = br.readLine()) != null )
       {
@@ -56,7 +58,7 @@ class StreamGobbler extends Thread
           m_debug.printf( m_type + ": " + line + "\n" );
       }
     }
-    catch( IOException ioe )
+    catch( final IOException ioe )
     {
       ioe.printStackTrace();
     }
