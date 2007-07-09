@@ -53,6 +53,7 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
@@ -63,6 +64,8 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
+import org.kalypso.kalypsomodel1d2d.ui.featureinput.AddMetaDataToFeatureDialog;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteBoundaryLineCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.AddBoundaryLineToCalculationUnitCmd;
@@ -105,6 +108,9 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
   private static final String TXT_REMOVE_BOUNDARY_LINE_FROM_UNIT = 
                          "Remove boundary line from unit";// "Remove Up Stream boundary line";
 
+
+  private static final String TXT_ADD_META_DATA = 
+                          "Add Meta Data";//"Add Metadata for Boundary Line";
   private static final String TXT_ADD_BOUNDARY_LINE_TO_UNIT = 
                           "Add boundary line to calculation unit";//"Add Up Stream Boundary Line";
 
@@ -114,7 +120,8 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
 
   private static final String TXT_REMOVE_BOUNDARY_LINE_FROM_MODEL = "Remove Boundary Line From Model";
 
-  private static final String[][] MENU_ITEM_SPECS = { 
+  private static final String[][] MENU_ITEM_SPECS = {
+      {TXT_ADD_META_DATA, ICONS_ELCL16_ADD_GIF},
       { TXT_ADD_BOUNDARY_LINE_TO_UNIT, ICONS_ELCL16_ADD_GIF }, 
 //      { TXT_ADD_BOUNDARY_LINE_DOWN_STREAM, ICONS_ELCL16_ADD_GIF },
       { TXT_REMOVE_BOUNDARY_LINE_FROM_UNIT, ICONS_ELCL16_REMOVE_GIF },
@@ -303,6 +310,30 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
     {
       return;
     }
+    else if (TXT_ADD_META_DATA.equals( text ))
+    {
+        final IBoundaryLine bLine = getSelectedBoundaryLine();
+        
+        final Display display = (Display) dataModel.getData( ICommonKeys.KEY_SELECTED_DISPLAY );
+        Runnable runnable = new Runnable()
+        {
+          public void run( )
+          {
+            Shell shell = display.getActiveShell();          
+            final AddMetaDataToFeatureDialog setFeatureDialog = new AddMetaDataToFeatureDialog(shell);
+            setFeatureDialog.open();          
+            if (setFeatureDialog.getName()!= null)
+            {
+              bLine.setName( setFeatureDialog.getName() );
+            }
+            if (setFeatureDialog.getDescription()!= null)
+            {
+              bLine.setDescription( setFeatureDialog.getDescription() );
+            }             
+          }            
+        };
+        display.asyncExec( runnable  );
+    }
     else if( TXT_ADD_BOUNDARY_LINE_TO_UNIT.equals( text ))// || TXT_ADD_BOUNDARY_LINE_DOWN_STREAM.equals( text ) )
     {
       actionAddBoundaryLineToUnit( text );
@@ -324,15 +355,7 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
           {
              final IBoundaryConditionDescriptor[] descriptors = 
                CreateNodalBCFlowrelationWidget.createTimeserieDescriptors( getSelectedBoundaryLine(),Util.getScenarioFolder() );
-             
-//             final IKalypsoFeatureTheme bcTheme =
-//                         dataModel.getData( 
-//                             IKalypsoFeatureTheme.class, 
-//                             ICommonKeys.KEY_BOUNDARY_CONDITION_THEME );
              CommandableWorkspace workspace = KeyBasedDataModelUtil.getBCWorkSpace( dataModel );//bcTheme.getWorkspace();
-//               dataModel.getData( 
-//                   CommandableWorkspace.class, 
-//                   ICommonKeys.KEY_BOUNDARY_CONDITION_CMD_WORKSPACE );
              ///model is to be  get from the calculation unit
              final Feature opModelFeature = workspace.getRootFeature();
              IFlowRelationshipModel opModel = 
@@ -341,8 +364,7 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
                        opModel.getWrappedList().getParentFeatureTypeProperty();
              
              GMLWorkspace opWorkspace = opModel.getWrappedFeature().getWorkspace();
-             
-            NodalBCSelectionWizard wizard = new NodalBCSelectionWizard(
+             NodalBCSelectionWizard wizard = new NodalBCSelectionWizard(
                                               descriptors,
                                               workspace,
                                               opModelFeature,
@@ -378,7 +400,8 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
       System.out.println( "Not supported menu action:" + text );
     }
   }
-   /**
+
+  /**
     * To get the boundary position. This is defined as the middle
     * of the nearest edge to the klicked point in the selected boundary line
     * @return a {@link GM_Point} representing the boundary condition position

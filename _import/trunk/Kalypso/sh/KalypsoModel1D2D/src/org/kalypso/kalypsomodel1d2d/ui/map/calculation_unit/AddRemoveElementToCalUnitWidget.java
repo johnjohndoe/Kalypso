@@ -211,6 +211,12 @@ public class AddRemoveElementToCalUnitWidget extends FENetConceptSelectionWidget
     MapPanel mapPanel = (MapPanel) dataModel.getData( ICommonKeys.KEY_MAP_PANEL );
     JPopupMenu popupMenu = new JPopupMenu();
     
+//    JMenuItem addNameDescription = new JMenuItem();
+//    addNameDescription.setText( "Add Metadata" );
+//    addNameDescription.setIcon( new ImageIcon(PluginUtilities.findResource(
+//        KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(),
+//        "icons/elcl16/add.gif" )));
+//    addNameDescription.addActionListener( addNameDescriptionActionListener() );
     JMenuItem addElement = new JMenuItem();
     addElement.setText( "Add Element" );
     addElement.setIcon( new ImageIcon(PluginUtilities.findResource(
@@ -224,12 +230,25 @@ public class AddRemoveElementToCalUnitWidget extends FENetConceptSelectionWidget
                                   KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(),
                                   "icons/elcl16/remove.gif" )));
     removeElement.addActionListener( makeRemoveElementActionListener() );
-    
+   // popupMenu.add( addNameDescription );
     popupMenu.add( addElement);
     popupMenu.add( removeElement);
     popupMenu.show( mapPanel, p.x, p.y );    
   }
   
+//  private ActionListener addNameDescriptionActionListener( )
+//  {
+//    ActionListener al = new ActionListener(){
+//
+//      public void actionPerformed( ActionEvent e )
+//      {
+//        
+//      }
+//      
+//    };
+//    return null;
+//  }
+
   private ActionListener makeAddElementActionListener()
   {
     ActionListener al = new ActionListener()

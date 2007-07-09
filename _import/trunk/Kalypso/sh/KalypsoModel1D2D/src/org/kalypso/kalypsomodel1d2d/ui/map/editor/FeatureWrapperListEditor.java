@@ -325,16 +325,10 @@ public class FeatureWrapperListEditor implements IButtonConstants
   };
 
   private Label descriptionLabel;
-
   private Group descriptionGroupText;
-
   private Text descriptionText;
-
-  private String[] buttonsList;
-  
+  private String[] buttonsList;  
   private Button saveButton;
-
-//  private IFeatureWrapper2 currentElementSelection;
 
   private KeyBasedDataModelChangeListener dataModelListener = 
       new KeyBasedDataModelChangeListener()

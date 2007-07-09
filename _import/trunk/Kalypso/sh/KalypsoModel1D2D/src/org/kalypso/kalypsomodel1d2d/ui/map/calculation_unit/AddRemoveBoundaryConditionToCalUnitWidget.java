@@ -43,14 +43,17 @@ package org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.xml.namespace.QName;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
@@ -59,18 +62,17 @@ import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
+import org.kalypso.kalypsomodel1d2d.ui.featureinput.AddMetaDataToFeatureDialog;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.AddBoundaryConditionToCalculationUnitCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.RemoveBoundaryConditionFromCalculationUnitCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
 import org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget;
-import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -105,6 +107,13 @@ public class AddRemoveBoundaryConditionToCalUnitWidget extends FENetConceptSelec
     MapPanel mapPanel = (MapPanel) dataModel.getData( ICommonKeys.KEY_MAP_PANEL );
     JPopupMenu popupMenu = new JPopupMenu();
     
+    JMenuItem addNameDescription = new JMenuItem();
+    addNameDescription.setText( "Add Metadata" );
+    addNameDescription.setIcon( new ImageIcon(PluginUtilities.findResource(
+        KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(),
+        "icons/elcl16/add.gif" )));
+    addNameDescription.addActionListener( addNameDescriptionActionListener() );
+    
     JMenuItem addBoundaryCondition = new JMenuItem();
     addBoundaryCondition.setText( "Add Boundary Condition" );
     addBoundaryCondition.setIcon( new ImageIcon(PluginUtilities.findResource(
@@ -133,6 +142,7 @@ public class AddRemoveBoundaryConditionToCalUnitWidget extends FENetConceptSelec
                                   "icons/elcl16/remove.gif" )));
     deleteBoundaryCondition.addActionListener( makeDeleteBoundaryConditionFromModelListener() );
     
+    popupMenu.add( addNameDescription );
     popupMenu.add( addBoundaryCondition );
     popupMenu.add( editBoundaryCondition );
     popupMenu.add( removeBoundaryCondition );
@@ -141,19 +151,63 @@ public class AddRemoveBoundaryConditionToCalUnitWidget extends FENetConceptSelec
     
   }
 
+  private ActionListener addNameDescriptionActionListener( )
+  {
+    ActionListener al = new ActionListener()
+    {
+      public void actionPerformed( ActionEvent e )
+      {
+        final Feature[] selectedFeatures = getSelectedFeature();
+        for(Feature feature:selectedFeatures)
+        {
+          final IBoundaryCondition bc = 
+            (IBoundaryCondition)feature.getAdapter( IBoundaryCondition.class );
+          if( bc == null )
+          {
+            System.out.println("could not adapt to boundary ");
+            return ;
+          }
+          
+          
+          final Display display = (Display) dataModel.getData( ICommonKeys.KEY_SELECTED_DISPLAY );
+          Runnable runnable = new Runnable(){
+
+            public void run( )
+            {
+              Shell shell = display.getActiveShell();          
+              final AddMetaDataToFeatureDialog setFeatureDialog = new AddMetaDataToFeatureDialog(shell);
+              
+              setFeatureDialog.open();          
+              
+              if (setFeatureDialog.getName()!= null)
+              {
+                bc.setName( setFeatureDialog.getName() );
+                
+              }
+              
+              if (setFeatureDialog.getDescription()!= null)
+              {
+                bc.setDescription( setFeatureDialog.getDescription() );
+                
+              }             
+            }            
+          };
+          display.asyncExec( runnable  );
+        }
+      }      
+    };
+    return al;
+  }
+  
+  
   private ActionListener makeDeleteBoundaryConditionFromModelListener( )
   {
     ActionListener al = new ActionListener()
     {  
       @SuppressWarnings("unchecked")
       public void actionPerformed( ActionEvent e )
-      {
-        
-        
+      {        
         final CommandableWorkspace cmdWorkspace = KeyBasedDataModelUtil.getBCWorkSpace( dataModel );
-//          dataModel.getData( 
-//              CommandableWorkspace.class, 
-//              ICommonKeys.KEY_BOUNDARY_CONDITION_CMD_WORKSPACE );
         final Feature parentFeature =
            cmdWorkspace.getRootFeature();
         final IFlowRelationshipModel bcHolder = 
@@ -184,8 +238,7 @@ public class AddRemoveBoundaryConditionToCalUnitWidget extends FENetConceptSelec
                 KeyBasedDataModelUtil.repaintMapPanel( 
                     dataModel, ICommonKeys.KEY_MAP_PANEL );
               }
-            };
-            
+            };            
             KeyBasedDataModelUtil.postCommand( dataModel, delCmd );
           }
         }
@@ -211,16 +264,12 @@ public class AddRemoveBoundaryConditionToCalUnitWidget extends FENetConceptSelec
         final ICalculationUnit calUnit = 
           (ICalculationUnit) dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
         IFEDiscretisationModel1d2d model1d2d = 
-          (IFEDiscretisationModel1d2d) dataModel.getData( ICommonKeys.KEY_DISCRETISATION_MODEL );
-        
+          (IFEDiscretisationModel1d2d) dataModel.getData( ICommonKeys.KEY_DISCRETISATION_MODEL );        
         if( selectedFeatures.length == 0 )
         {
           System.out.println("Please select at least one boundary condition");
           return;
-        }
-        
-        
-        
+        }       
         for(Feature feature:selectedFeatures)
         {
           final IBoundaryCondition bc = 
@@ -280,9 +329,7 @@ public class AddRemoveBoundaryConditionToCalUnitWidget extends FENetConceptSelec
         {
           System.out.println("Please select at least one boundary condition");
           return;
-        }
-        
-        
+        }       
         
         for(Feature feature:selectedFeatures)
         {
@@ -323,8 +370,5 @@ public class AddRemoveBoundaryConditionToCalUnitWidget extends FENetConceptSelec
       
     };
     return al;
-
   }
-  
-
 }
