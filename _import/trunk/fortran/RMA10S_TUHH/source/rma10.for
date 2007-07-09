@@ -1,4 +1,4 @@
-C     Last change:  K    29 Jun 2007    1:19 pm
+C     Last change:  EF    6 Jul 2007    5:00 pm
 cipk  last update sep 05 2006 add depostion/erosion rates to wave file
 CNis  LAST UPDATE NOV XX 2006 Changes for usage of TUHH capabilities
 CIPK  LAST UPDATE MAR 22 2006 ADD OUTPUT FILE REWIND and KINVIS initialization
@@ -22,7 +22,7 @@ CIPK  NEW ROUTINE jULY 9 2001
       USE BLKSEDMOD
       USE BLKSANMOD
       USE BLKSSTMOD
-      USE WBMMODS ! djw 02/11/04
+	USE WBMMODS ! djw 02/11/04
 !NiS,apr06: add module for new Kalypso-2D-specific calculations
       USE PARAKalyps
 !-
@@ -56,13 +56,19 @@ cipk aug98 add character statement
       INTEGER :: teststat
 !-
 
+!EFa jun07, autoconverge
+      Integer :: temp_maxnn,temp_iteqs,temp_iteqv,temp_iurvl,temp_itlvl
+!-
+
       DATA (IREC(I),I=1,40) / 40*0 /
       DATA (FREC(I),I=1,40) / 40*0. /
 ! djw 02/11/04  - Hook for WBM Routines 
       LOGICAL WBM
 ! djw 02/11/04  - Hook for WBM Routines
 
-
+!EFa jun07, necessary for autoconverge
+      extranita=50.
+!-
       CALL SECOND(TA)       
       ALLOCATE (VSING(8,MAXP))
 C-
@@ -107,7 +113,6 @@ cipk feb01 add thetcn
 C-
 C......INPUT GEOMETRY ETC
 C-
-
       CALL INPUT(IBIN)
 
 CIPK MAR00  ADD FORMATION AND OUTPUT OF HEADER
@@ -140,40 +145,40 @@ CIPK JUN02    ADD OUTPUT OF HEADER FOR SMS FORMAT
       
       IF(ISMSFM .GT. 0) THEN
 
-        IREC(1) = 435
+	  IREC(1) = 435
         MFLG = 120
         WRITE (ISMSFM) MFLG, IREC(1), NP, NEM
-      ENDIF
+	ENDIF
 CIPK AUG02
       IF(ISMSFM1 .GT. 0) THEN
         IREC(1) = 431     
-        MFLG = 140
+	  MFLG = 140   
         WRITE (ISMSFM1) MFLG, IREC(1), NP, NEM
-      ENDIF
+	ENDIF
 
 CIPK JAN03
       IF(ISMSFM2 .GT. 0) THEN
         IREC(1) = 435     
-        MFLG = 120
+	  MFLG = 120   
         WRITE (ISMSFM2) MFLG, IREC(1), NP, NEM
-      ENDIF
+	ENDIF
 
       IF(ISMSFM .GT. 0  .OR.  ISMSFM1 .GT. 0  .OR.  ISMSFM2 .GT. 0) THEN
         IWRT1 = 1200
-        DO I=11,1200
-          IPACKB(I)='    '
-        ENDDO
-        IPACKB(1)='RMA '
-        IPACKB(2)='IMPL'
-        IPACKB(3)='EMEN'
-        IPACKB(4)='TATI'
-        IPACKB(5)='ON O'
-        IPACKB(6)='F SM'
-        IPACKB(7)='S OU'
-        IPACKB(8)='TPUT'
-        IPACKB(9)=' FOR'
-        IPACKB(10)='MAT '
-
+	  DO I=11,1200
+	    IPACKB(I)='    '
+	  ENDDO
+  	  IPACKB(1)='RMA '
+	  IPACKB(2)='IMPL'
+	  IPACKB(3)='EMEN'
+	  IPACKB(4)='TATI'
+	  IPACKB(5)='ON O'
+	  IPACKB(6)='F SM'
+	  IPACKB(7)='S OU'
+	  IPACKB(8)='TPUT'
+	  IPACKB(9)=' FOR'
+	  IPACKB(10)='MAT '
+	
         IF(ISMSFM .GT. 0) THEN
           WRITE (ISMSFM) IWRT1, (IPACKB(I),I= 1,IWRT1)
         ENDIF
@@ -189,22 +194,22 @@ CIPK JAN03
         IF(ISMSFM .GT. 0) THEN
           WRITE (ISMSFM) IWRT2, IWRT3,
      *              (IREC(I),I=1, IWRT2), (FREC(I),I=1,IWRT3)
-        ENDIF
+	  ENDIF
         IF(ISMSFM1 .GT. 0) THEN
           WRITE (ISMSFM1) IWRT2, IWRT3,
      *              (IREC(I),I=1, IWRT2), (FREC(I),I=1,IWRT3)
-        ENDIF
+	  ENDIF
 CIPK JAN03
         IF(ISMSFM2 .GT. 0) THEN
           WRITE (ISMSFM2) IWRT2, IWRT3,
      *              (IREC(I),I=1, IWRT2), (FREC(I),I=1,IWRT3)
-      ENDIF
-        DO I=1,77
-          IPACKT(I)='    '
+	  ENDIF
+	  DO I=1,77
+	    IPACKT(I)='    '
           IF(I .LT. 73) THEN
-            IPACKT(I)(1:1)=TITLE(I:I)
-          ENDIF
-        ENDDO
+	      IPACKT(I)(1:1)=TITLE(I:I)
+	    ENDIF
+	  ENDDO
         IWRT4 = 77
         IF(ISMSFM .GT. 0) THEN
           WRITE (ISMSFM) IWRT4, (IPACKT(I),I= 1,IWRT4)
@@ -251,11 +256,121 @@ C......TEST FOR STEADY STATE
 C-
       IF(NITI .EQ. 0) GO TO 350
       NITA=NITI
+
+      !EFa jun07, autoconverge
+      if (beiauto.gt.0.) then
+
+        call feldgroesse(3,nita)
+
+      end if
+      !-
 C-
 C......PROCESS STEADY VALUES
 C-
+      !EFa jul07, necessary for autoconverge
+      if (beiauto.ne.0.) then
+
+        deltindex = 0.
+        temp_delt = 1000.
+        deltsum = temp_delt
+        deltn = 1000.
+
+        do i = 1,ncl
+
+          if (speccc(i,1).eq.1.5) then
+
+            specccold(i,1) = specccfut(i,1)
+            specccold(i,2) = elev
+
+            if (specccfut(i,3).ne.0.) then
+
+              specccold(i,3) = specccold(i,2)
+
+            end if
+
+            if (lmt(i).eq.1.0) then
+
+              if (width(line(i,1)).eq.0.0) then
+
+                specccold(i,2) = (hhmax(line(i,1))-hhmin(line(i,1)))/2.+
+     +                            hhmin(line(i,1))
+
+                if (specccfut(i,3).ne.0.0) then
+
+                  specccold(i,3) = specccold(i,2)
+
+                end if
+
+              end if
+
+            end if
+
+            do k = 4,8
+
+              specccold(i,k) = specccfut(i,k)
+
+            end do
+
+          elseif ((speccc(i,1)).eq. 2.5) then
+
+            specccold(i,1) = specccfut(i,1)
+            specccold(i,2) = 0.0
+
+            do k = 3,8
+
+              specccold(i,k) = specccfut(i,k)
+
+            end do
+
+          end if
+
+        end do
+
+      end if
+      !-
       MAXN=0
   200 MAXN=MAXN+1
+
+      !EFa jun07, autoconverge
+      if (beiauto.gt.0.) then
+
+        if (maxn.eq.1.0.and.exterr.ne.1.0) then
+
+          temp_iteqs=iteqs(1)
+          temp_iteqv=iteqv(1)
+          temp_iurvl=iurvl(1)
+          temp_itlvl=itlvl(1)
+
+        elseif (maxn.ge.2) then
+
+          iteqs(maxn)=temp_iteqs
+          iteqv(maxn)=temp_iteqv
+          iurvl(maxn)=temp_iurvl
+          itlvl(maxn)=temp_itlvl
+
+        end if
+
+        if (exterr.eq.1.0) then
+
+          do k = 1,np
+
+            do i = 1,ndf
+
+              vel(i,k) = vold(i,k)
+              vdoto(i,k) = v2ol(i,k)
+              vdot(i,k) = vdoto(i,k)
+
+            end do
+
+          end do
+
+        end if
+
+        exterr = 0.0
+
+      end if
+      !-
+
 C     REWIND IVS
 
 !NiS,sep06: For usage of boundary condition in the way of Kalypso-2D, a special counter for the number of
@@ -320,7 +435,6 @@ cipk aug00 experimental
 !-
 
        write(*,*) 'entering load'
-
       CALL LOAD
 
 C-
@@ -358,17 +472,83 @@ CIPK JAN97 END CHANGES
       IDRYC=IDRYC-1
       CALL UPDATE
 
+      !EFa jul07, necessary for autoconverge
+      if (exterr.eq.1.0) then
+
+        MAXN = 0.
+
+        if (temp_iurvl.le.8.0) then
+
+          iurvl(1) = iurvl(1) + 1
+          temp_iurvl = iurvl(1)
+
+        else
+
+          deltn = deltn / nnnst
+          delt  = deltn
+          MAXN = 0.
+
+          if (deltindex.eq.0.) then
+
+            deltsum = delt
+
+          end if
+
+          do i = 1,ncl
+
+            if ((speccc(i,1)).eq. 1.5) then
+
+              call autoboundaryh(specccfut(i,2),specccold(i,2),
+     +             specccfut(i,3),specccold(i,3),temp_delt,deltsum,
+     +             linlog,hhh,hhh2)
+
+              speccc(i,2) = hhh
+              speccc(i,3) = hhh2
+
+              call hgen(specccfut(i,4),i,hhh,hhh2,specccfut(i,5),
+     +             specccfut(i,6),specccfut(i,7),specccfut(i,8))
+
+            ELSEIF ((speccc(i,2)).eq.2.5) then
+
+              call autoboundaryQ(specccfut(i,2),specccold(i,2),
+     +             specccfut(i,3),specccold(i,3),temp_delt,deltsum,
+     +             linlog,qqq,qqqdir)
+
+              speccc(i,2) = qqq
+              speccc(i,3) = qqqdir
+
+              call qgen(i, qqq,qqqdir,speccc(i,6),speccc(i,7),
+     +             speccc(i,8))
+
+            end if
+
+          end do
+
+          call bform(0)
+
+            !WRITE(*,*)'delt        :',delt
+            !WRITE(*,*)'spec(14,1)  :',spec(14,1)
+            !WRITE(*,*)'spec(14,2)  :',spec(14,2)
+            !WRITE(*,*)'spec(242,3) :',spec(242,3)
+
+        end if
+
+        GOTO 200
+
+      end if
+      !-
+
 C      CALL CHECK
 C     REWIND IVS
       IF(ITEQV(MAXN) .NE. 5  .AND.  ITEQV(MAXN) .NE. 2
      +  .AND.  ITEQV(MAXN) .LT. 8) CALL VRTVEL
 CIPK AUG04 REVISE TEST
 
-      IF(NPRTI .EQ. 0) THEN
-        IPRTF=NITA
-      ELSE
-        IPRTF=NPRTI
-      ENDIF
+	IF(NPRTI .EQ. 0) THEN
+	  IPRTF=NITA
+	ELSE
+	  IPRTF=NPRTI
+	ENDIF
 CIPK AUG04      IPRTF=IABS(NPRTF)
 
       IF(MOD(MAXN,IPRTF) .EQ. 0  .OR.  MAXN .EQ. NITA
@@ -441,9 +621,9 @@ CIPK MAY96 ADD YEAR TO FILE
      +     ,(hel(j),hdet(j),j=1,np)
      +     ,(DELBED(J),ELEVB(J),TTHICK(J),J=1,NP)
 CIPK SEP02 ADD WRITE STATEMENT FOR ICE THICKNESS ON RESTART FILE
-        IF(ICESW .GT. 0) THEN
-          WRITE(NLL) (ICETHK(J),J=1,NPM)
-        ENDIF
+	  IF(ICESW .GT. 0) THEN
+	    WRITE(NLL) (ICETHK(J),J=1,NPM)
+	  ENDIF
 CIPK SEP02 ADD RESTART DATA FOR BED
 cipk aug98 add line above for consistent restart
       ENDIF
@@ -483,15 +663,15 @@ cipk dec97  MOVE SKIP   350 IF(NCYC .GT. 0) GO TO 400
 !
 !*************************************************************************
       SalLowPerm = 0.0001
-      SalHighPerm = 300
+	SalHighPerm = 300
       Do J = 1,NP
-        If (Vel(4,J).LT.SalLowPerm) Then
+	  If (Vel(4,J).LT.SalLowPerm) Then
           Vel(4,J) = SalLowPerm
         End If
-        If (Vel(4,J).GT.SalHighPerm) Then
+	  If (Vel(4,J).GT.SalHighPerm) Then
           Vel(4,J) = SalHighPerm
-        End If
-      End Do
+	  End If
+	End Do
 !*************************************************************************END DJW 04/08/04
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -517,6 +697,217 @@ C-
 cipk mar95 add a line to save dhdt
         VSING(7,J)=VDOT(3,J)
   320 CONTINUE
+
+        !EFa jun07, autoconverge
+        if (beiauto.gt.0.) then
+
+          if (nconv.eq.0.)then
+
+            call statistic(maxn,rss,rrr,nitazero,extranita)
+
+            WRITE(*,*)'rrr       :',rrr
+            WRITE(*,*)'deltsum   :',deltsum
+            WRITE(*,*)'temp_delt :',temp_delt
+
+            IF(rrr.lt.0.)then
+
+              WRITE(*,*)'rrr lower than zero'
+
+              call feldgroesse(6,nita)
+
+              nitn=nitn+extranita
+              nita=nita+extranita
+
+              call feldgroesse(5,nita)
+
+              do i=nita-extranita,nita
+
+                iteqv(i)=temp_iteqv
+                iteqs(i)=temp_iteqs
+                itlvl(i)=temp_itlvl
+                iurvl(i)=temp_iurvl
+
+              end do
+
+              GOTO 200
+
+            else
+
+              WRITE(*,*)'rrr higher than zero'
+
+              if (temp_iurvl.le.8.) then
+
+                call feldgroesse(6,nita)
+
+                nitn=nitn+extranita
+                nita=nita+extranita
+                temp_iurvl=temp_iurvl+1
+
+                call feldgroesse(5,nita)
+
+                do i=nita-extranita,nita
+
+                  iteqv(i)=temp_iteqv
+                  iteqs(i)=temp_iteqs
+                  itlvl(i)=temp_itlvl
+                  iurvl(i)=temp_iurvl
+
+                end do
+
+                iurvl(1) = iurvl(1) + 1
+
+                GOTO 200
+
+              else
+
+                deltn = delt / nnnst
+
+                delt = deltn
+
+                maxn = 0
+
+                if (deltindex.eq.0.) then
+
+                  deltsum = delt
+
+                end if
+
+                do i = 1,ncl
+
+                  if (speccc(i,1)==1.5) then
+
+                    call autoboundaryh(specccfut(i,2),specccold(i,2),
+     +                   specccfut(i,3),specccold(i,3),temp_delt,
+     +                   deltsum,linlog,hhh,hhh2)
+
+                    speccc(i,2) = hhh
+                    speccc(i,3) = hhh2
+
+                    call hgen(specccfut(i,4),i,hhh,hhh2,specccfut(i,5),
+     +                   specccfut(i,6),specccfut(i,7),specccfut(i,8))
+
+                  ELSEIF ((speccc(i,2)).eq.2.5) then
+
+                    call autoboundaryQ(specccfut(i,2),specccold(i,2),
+     +                   specccfut(i,3),specccold(i,3),temp_delt,deltsum
+     +                   ,linlog,qqq,qqqdir)
+
+                    speccc(i,2) = qqq
+                    speccc(i,3) = qqqdir
+
+                    call qgen(i, qqq,qqqdir,speccc(i,6),speccc(i,7),
+     +                   speccc(i,8))
+
+                  end if
+
+                end do
+
+                call bform(0)
+
+                do i = 1, np
+
+                  do k = 1, ndf
+
+                    vel(k,j) = vold(k,j)
+                    vdoto(k,j) = v2ol(k,j)
+                    vdot(k,j) = vdoto(k,j)
+
+                  end do
+
+                end do
+
+                GOTO 200
+
+              end if
+
+            endif
+
+         else
+
+           if (deltsum.lt.temp_delt) then
+
+             if (deltindex.eq.0.) then
+
+               deltsum = 0.
+
+             end if
+
+             deltindex = deltindex + 1
+
+             deltsum = delt + deltsum
+
+             maxn = 0
+
+             do i = 1,ncl
+
+               if (speccc(i,1)==1.5) then
+
+                 call autoboundaryh(specccfut(i,2),specccold(i,2),
+     +                specccfut(i,3),specccold(i,3),temp_delt,
+     +                deltsum,linlog,hhh,hhh2)
+
+                      speccc(i,2) = hhh
+                      speccc(i,3) = hhh2
+
+                 call hgen(specccfut(i,4),i,hhh,hhh2,specccfut(i,5),
+     +                specccfut(i,6),specccfut(i,7),specccfut(i,8))
+
+               ELSEIF ((speccc(i,2)).eq.2.5) then
+
+                 call autoboundaryQ(specccfut(i,2),specccold(i,2),
+     +                specccfut(i,3),specccold(i,3),temp_delt,deltsum
+     +               ,linlog,qqq,qqqdir)
+
+                 speccc(i,2) = qqq
+                 speccc(i,3) = qqqdir
+
+                 call qgen(i, qqq,qqqdir,speccc(i,6),speccc(i,7),
+     +                speccc(i,8))
+
+               end if
+
+             end do
+
+             call bform(0)
+
+             do i = 1, np
+
+               do k = 1, ndf
+
+                 vold(k,j) = vel(k,j)
+                 v2ol(k,j) = vdoto(k,j)
+                 vdoto(k,j) = vdot(k,j)
+
+               end do
+
+             end do
+
+             GOTO 200
+
+           endif
+
+           do i = 1,ncl
+
+             do k = 1,3
+
+               specccold(i,k) = specccfut(i,k)
+
+             end do
+
+           end do
+
+           call feldgroesse(6,nita)
+
+           nitn=nitnzero
+           nita=nitazero
+
+           call feldgroesse(5,65)
+
+          end if
+
+        endif
+        !-
+
 
 !-
 !NiS,may06,comment: Writing output files in different formats
@@ -545,8 +936,8 @@ CIPK AUG02
       !NiS,apr06,comment: Writing SMS-outputfile after steady state converged solution
       IF(ISMSFM .GT. 0) THEN
         DO JJ=1,NEM
-          IMATL(JJ)=IMAT(JJ)
-        ENDDO
+	    IMATL(JJ)=IMAT(JJ)
+	  ENDDO
         WRITE (ISMSFM) TETT, NPM, ((VSING(J,K),J=1,3), K = 1, NPM), 
      *                         (NDRY(K), K = 1, NPM), 
      *                    NEM,  (IMATL(JJ), JJ = 1, NEM), 
@@ -561,7 +952,7 @@ CIPK AUG02
         WRITE (ISMSFM1) TETT, NQAL,NPM,
      +   ((VSING(J,K),K=1,NPM),J=4,6),
      *   NEM,  (IMATL(JJ), JJ = 1, NEM)
-      ENDIF
+  	ENDIF
 
 
       !NiS,apr06,comment: writing control output file after steady state converged solution
@@ -575,8 +966,19 @@ CIPK MAR95 ADD DHDT TO WRITE     1  ,J=1,NP),(DFCT(J),J=1,NE)
 CIPK DEC97 MOVE SKIP TO DYNAMIC SOLUTION
 
 !NiS,apr06,comment: End option, if just steady state is desired
+
       IF(NCYC .GT. 0) GO TO 400
       CALL ZVRS(1)
+
+      !EFa jul07, necessary for autoconverge
+      do i=1,ncl
+        do k=1,3
+          specccold(i,k)=specccfut(i,k)
+        end do
+      end do
+      !-
+
+
 CIPK JUL01      STOP
       RETURN
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -587,9 +989,75 @@ C......DYNAMIC SOLUTION DESIRED
 C-
 C 400 NCYC=TMAX*3600./DELT+0.5
   400 CONTINUE
+
+      !EFa jun07, autoconverge
+      if (beiauto.gt.0.) then
+
+        nitazero = nitn
+
+        if (niti.eq.0.) then
+
+          do i = 1,ncl
+
+            if (speccc(i,1).eq.1.5) then
+
+              specccold(i,1) = specccfut(i,1)
+              specccold(i,2) = elev
+
+              if (specccfut(i,3).ne.0.0) then
+
+                 specccold(i,3) = specccold(i,2)
+
+              end if
+
+              if (lmt(i).eq.1.0) then
+
+                if (width(line(i,1)).eq.0.0) then
+
+                  specccold(i,2) = (hhmax(line(i,1))-hhmin(line(i,1)))/
+     +                              2.+hhmin(line(i,1))
+
+                  if (specccfut(i,3).ne.0.0) then
+
+                    specccold(i,3) = specccold(i,2)
+
+                  end if
+
+                end if
+
+              end if
+
+              do k = 4,8
+
+                specccold(i,k) = specccfut(i,k)
+
+              end do
+
+            ELSEIF (speccc(i,1).eq.2.5)then
+
+              specccold(i,1) = specccfut(i,1)
+              specccold(i,2) = 0.0
+
+              do k = 3,8
+
+                specccold(i,k) = specccfut(i,k)
+             
+              end do
+
+            end if
+
+          end do
+
+          call feldgroesse(3,65)
+
+        end if
+
+      end if
+      !-
+
       IDRYC=0
 CIPK JUN02
-      MAXN=0
+	MAXN=0
 
 !nis,sep06: Initialize the iteration counter for steady case
       NPR = maxn
@@ -599,7 +1067,7 @@ C-
 C......LOOP ON NUMBER OF TIME STEPS
 C-
         IF(LBED .GT. 0) THEN
-            CALL KINVIS
+	      CALL KINVIS
           CALL SANDX
         ENDIF
 
@@ -624,7 +1092,7 @@ C-
           CYCLE Main_dynamic_Loop
           !-
         ELSE
-CIPK MAR06  REWIND OUTPUT FILE AT SPECIFIED INTERVAL      
+CIPK MAR06  REWIND OUTPUT FILE AT SPECIFIED INTERVAL
       IF(MOD(N,IOUTRWD) .EQ. 0) THEN
         REWIND LOUT
       ENDIF 
@@ -658,6 +1126,7 @@ C-
 C...... UPDATE OF BOUNDARY CONDITIONS
 C-
           CALL INPUTD(IBIN)
+          
 
         ENDIF LaterTimestep
 !-
@@ -670,11 +1139,11 @@ C        CALL HEATEX(ORT,NMAT,DELT,LOUT,IYRR,TET)
           CALL GETWAVE
         ENDIF
 
-        IF(IWVFC .EQ. 102) THEN
-          CALL GETSST
-        ELSEIF(IWVFC .EQ. 104) THEN
-          CALL GETDRSST
-        ENDIF
+	  IF(IWVFC .EQ. 102) THEN
+	    CALL GETSST
+	  ELSEIF(IWVFC .EQ. 104) THEN
+	    CALL GETDRSST
+	  ENDIF
 
         CALL SWANDT
 
@@ -694,7 +1163,7 @@ C
 C.....   If NIPT not equal to zero read velocities,depth from file
 C
         IF(NIPT .GT. 0) THEN
-          WRITE(*,*) 'GETTING VELS'
+	    WRITE(*,*) 'GETTING VELS'
           DO 455 J=1,NP
             DO 452 K=1,NDF
               VOLD(K,J)=VEL(K,J)
@@ -850,8 +1319,8 @@ CIPK APR01  NOW RESET FOR MID-SIDES
 
 CIPK OCT02  SET ICETHKOL
         DO J=1,NPM
-          ICETHKOL(J)=ICETHK(J)
-        ENDDO
+  	    ICETHKOL(J)=ICETHK(J)
+	  ENDDO
 
 CIPK JUN03
 
@@ -865,10 +1334,10 @@ cipk mar06
           CALL KINVIS
 ciat mar06 adding new wbm bedshear stress subroutines for cohesive sediment calcs
 !NiS,Nov06: Seems, that the name of the first shear-Subroutine is not correct. Change SHEAR1 to WSHEAR1
-!          CALL SHEAR1
-          CALL WSHEAR1
+!		CALL SHEAR1
+		CALL WSHEAR1
 !-
-          CALL WSHEAR2
+		CALL WSHEAR2      
 c          CALL SHEAR
 CIPK JUN97
 c          CALL WSHEAR1
@@ -876,7 +1345,7 @@ ciat mar06 end changes
           CALL DEPSN
           CALL MEROSN
           CALL SEROSN
-        ENDIF
+	  ENDIF
 
 C        DO NNN=1,NPM
 C        WRITE(240,'(I6,6E15.5)') NNN,BSHEAR(NNN),SERAT(NNN),EDOT(NNN)
@@ -884,23 +1353,75 @@ C     +   ,THICK(NNN,1),THICK(NNN,2),DEPRAT(NNN)
 C        ENDDO
 C-
 C......ITERATION LOOP     !NiS,apr06:     starting iteration sequence
-C-                        !               initialization:
+C-                        !		initialization:
         NITA=NITN         !               NITA = maximum number of iterations of timestep, local copy
         MAXN=0            !               NITN = maximum number of iterations of timestep, global value
-        ITPAS=0             !               ITPAS= ???
+	  ITPAS=0             !               ITPAS= ???
+
+        !EFa jun07, necessary for autoconverge
+        if (beiauto.ne.0.0) then
+
+          deltindex = 0
+          temp_delt = delt
+          deltsum = temp_delt
+          deltn = delt
+
+        end if
+
   465   MAXN=MAXN+1       !               MAXN = actual iteration number; first initialized, then incremented
                           !-
+
+       !EFa jun07, autoconverge
+       if (beiauto.gt.0.) then
+
+         if (maxn.eq.1.and.exterr.ne.1.0) then
+
+          temp_iteqs=iteqs(1)
+          temp_iteqv=iteqv(1)
+          temp_iurvl=iurvl(1)
+          temp_itlvl=itlvl(1)
+
+         elseif (maxn.ge.2) then
+
+           iteqs(maxn)=temp_iteqs
+           iteqv(maxn)=temp_iteqv
+           iurvl(maxn)=temp_iurvl
+           itlvl(maxn)=temp_itlvl
+
+         end if
+
+         if (exterr.eq.1.0) then
+
+           do k = 1,np
+
+             do i = 1, ndf
+
+               vel(i,k) = vold(i,k)
+               vdoto(i,k) = v2ol(i,k)
+               vdot(i,k) = vdoto(i,k)
+
+             end do
+
+           end do
+
+         end if
+
+         exterr = 0.0
+
+       end if
+       !-
+
 cipk oct02
         IF(MAXN .EQ. 1) THEN
-                write(75,*) 'going to heatex-535',n,maxn,TET,itpas
+	          write(75,*) 'going to heatex-535',n,maxn,TET,itpas
 CIPK AUG05          CALL HEATEX(ORT,NMAT,DELT,LOUT,IYRR,TET,ITPAS)
           CALL HEATEX(NMAT,DELT,LOUT,IYRR,TET,ITPAS)
-          ITPAS=1
-        ELSEIF(ITEQV(MAXN) .EQ. 8) THEN
-                write(75,*) 'going to heatex-540',n,maxn,TET,itpas
+	    ITPAS=1
+	  ELSEIF(ITEQV(MAXN) .EQ. 8) THEN
+	          write(75,*) 'going to heatex-540',n,maxn,TET,itpas
 CIPK AUG05          CALL HEATEX(ORT,NMAT,DELT,LOUT,IYRR,TET,ITPAS)
           CALL HEATEX(NMAT,DELT,LOUT,IYRR,TET,ITPAS)
-        ENDIF
+	  ENDIF
 C     DO 700 MAXN=1,NITN
 C     REWIND IVS
 
@@ -952,12 +1473,12 @@ cipk aug00 experimental
 CIPK MAY02 UPDATE SHEARS ETC
 
         IF((LSAND .GT. 0  .OR.  LBED .GT. 0) .and. ick .eq. 6) THEN
-          CALL KINVIS
+	    CALL KINVIS
 c          CALL SHEAR
           CALL SANDX
           CALL BEDXCG
 
-        ENDIF
+	  ENDIF
 
 CIPK OCT02
   470   CONTINUE
@@ -986,8 +1507,68 @@ CIPK JAN97 END CHANGES
 
         CALL UPDATE
 
-
         WRITE(*,*) 'nach update: ', icyc, maxn
+
+      !EFa jul07, necessary for autoconverge
+      if (exterr.eq.1.0) then
+
+        MAXN = 0.
+
+        if (temp_iurvl.le.8.0) then
+
+          iurvl(1) = iurvl(1) + 1.
+          temp_iurvl = iurvl(1)
+
+        else
+
+          deltn = deltn / nnnunst
+          delt  = deltn
+          MAXN = 0.
+
+          if (deltindex.eq.0.) then
+
+            deltsum = delt
+
+          end if
+
+          do i = 1,ncl
+
+            if ((speccc(i,1)).eq. 1.5) then
+
+              call autoboundaryh(specccfut(i,2),specccold(i,2),
+     +             specccfut(i,3),specccold(i,3),temp_delt,deltsum,
+     +             linlog,hhh,hhh2)
+
+              speccc(i,2) = hhh
+              speccc(i,3) = hhh2
+
+              call hgen(speccc(i,4),i,hhh,hhh2,speccc(i,5),speccc(i,6),
+     +             speccc(i,7),speccc(i,8))
+
+            elseif ((speccc(i,1)).eq. 2.5) then
+
+              call autoboundaryQ(specccfut(i,2),specccold(i,2),
+     +             specccfut(i,3),specccold(i,3),temp_delt,deltsum,
+     +             linlog,qqq,qqqdir)
+
+              speccc(i,2) = qqq
+              speccc(i,3) = qqqdir
+
+              call qgen(i, qqq,qqqdir,speccc(i,6),speccc(i,7),
+     +             speccc(i,8))
+
+            end if
+
+          end do
+
+          call bform(0)
+
+        end if
+
+        GOTO 465
+
+      end if
+      !-
 
 C      CALL CHECK
 C     REWIND IVS
@@ -1031,12 +1612,12 @@ CIPK MAR98
 CIPK OCT02  CHECK FOR NEGATIVE TEMPS
 
       IF(ICESW .GT. 0  .AND. ITEQV(MAXN) .EQ. 8  .AND. ITPAS .LT. 4)THEN
-          ITPAS=ITPAS+1
-          DO J=1,NPM
-            IF(VEL(5,J) .LT. TMED) GO TO 570
-          ENDDO
+	    ITPAS=ITPAS+1
+	    DO J=1,NPM
+	      IF(VEL(5,J) .LT. TMED) GO TO 570
+	    ENDDO
         ENDIF
-        GO TO 580
+	  GO TO 580
   570   CONTINUE
         WRITE(75,*) 'GOING TO HEATEX-570',N,MAXN,TET,ITPAS
 CIPK AUG05        CALL HEATEX(ORT,NMAT,DELT,LOUT,IYRR,TET,ITPAS)
@@ -1053,8 +1634,9 @@ CIPK MAY96 RESTORE TETT AS HOURS IN YEAR
         WRITE(75,*) 'TET,DAYOFY',TET,TETT,DAYOFY
 
         !NiS,apr06,comment: If convergent result files for this timestep have to be written
-        IF(NCONV .EQ. 2) GO TO 750                              
+        IF(NCONV .EQ. 2) GO TO 750
   700   CONTINUE
+
 
 C      END OF ITERATION LOOP
 
@@ -1079,10 +1661,10 @@ C      END OF ITERATION LOOP
 !-
 
         !NiS,apr06,comment: Start next iteration, until maximum number of iterations is reached
-        IF (MAXN .LT. NITA) GO TO 465                           
+        IF (MAXN .LT. NITA) GO TO 465
 
         !NiS,apr06,comment: Writing results after the timestep
-  750   CONTINUE                                                
+  750   CONTINUE
         write(75,*) 'rma10-668 at 750 continue'
 CIPK MAY02 UPDATE BED INFORMATION FOR SAND CASE
         IF(LSAND .GT. 0) THEN
@@ -1094,9 +1676,9 @@ C
           CALL NEWBED(2)
         ENDIF
 
-        IF(LBED .GT. 0) THEN
+	  IF(LBED .GT. 0) THEN
         write(75,*) 'rma10-674 going to bedlbed'
-          CALL BEDLBED
+	    CALL BEDLBED
         ENDIF
 
 !NiS,apr06: calculating the cwr-values for trees.
@@ -1131,7 +1713,7 @@ CIPK MAY96 ADD YEAR TO FILE
      +           ,VVEL(J),J=1,NP)
      +     ,(hel(j),hdet(j),j=1,np)
      +   ,(DELBED(J),ELEVB(J),TTHICK(J),J=1,NP)
-        ELSE
+	  ELSE
           WRITE(NLL) TETT,NP,NDFF,IYRR,((VEL(K,J),VDOT(K,J),K=1,7)
      +           ,VVEL(J),J=1,NP)
      +     ,(hel(j),hdet(j),j=1,np)
@@ -1148,10 +1730,221 @@ C     &     ,SMVAL(I,J),J=1,NLAYO(I)),I=1,NP)
         ENDIF	    
         IF(ICESW .GT. 0) THEN
           WRITE(NLL) (ICETHK(J) ,J=1,NPM)
-          ENDIF
+  	  ENDIF
 CIPK SEP02 ADD RESTART DATA FOR BED
 cipk aug98 add line above for consistent restart
   600   CONTINUE
+
+        !EFa jun07, autoconverge
+        if (beiauto.gt.0.) then
+
+          if (nconv.eq.0.)then
+
+            call statistic(maxn,rss,rrr,nitazero,extranita)
+
+            !WRITE(*,*)'rrr       :',rrr
+            !WRITE(*,*)'deltsum   :',deltsum
+            !WRITE(*,*)'temp_delt :',temp_delt
+
+            IF(rrr.lt.0.)then
+
+              WRITE(*,*)'rrr lower than zero'
+
+              call feldgroesse(6,nita)
+
+              nitn=nitn+extranita
+              nita=nita+extranita
+
+              call feldgroesse(5,nita)
+
+              do i=nita-extranita,nita
+
+                iteqv(i)=temp_iteqv
+                iteqs(i)=temp_iteqs
+                itlvl(i)=temp_itlvl
+                iurvl(i)=temp_iurvl
+
+              end do
+
+              GOTO 465
+
+            else
+
+              WRITE(*,*)'rrr higher than zero'
+
+              if (temp_iurvl.le.8.and.nconv.eq.0.) then
+
+                call feldgroesse(6,nita)
+
+                nitn=nitn+extranita
+                nita=nita+extranita
+                temp_iurvl=temp_iurvl+1
+
+                call feldgroesse(5,nita)
+
+                do i=nita-extranita,nita
+
+                  iteqv(i)=temp_iteqv
+                  iteqs(i)=temp_iteqs
+                  itlvl(i)=temp_itlvl
+                  iurvl(i)=temp_iurvl
+
+                end do
+
+                iurvl(1) = iurvl(1) + 1.
+
+                GOTO 465
+
+              else
+
+                deltn = delt / nnnunst
+
+                delt = deltn
+
+                maxn = 0
+
+                if (deltindex.eq.0.) then
+
+                  deltsum = delt
+
+                end if
+
+                do i = 1,ncl
+
+                  if (speccc(i,1)==1.5) then
+
+                    call autoboundaryh(specccfut(i,2),specccold(i,2),
+     +                   specccfut(i,3),specccold(i,3),temp_delt,
+     +                   deltsum,linlog,hhh,hhh2)
+
+                    speccc(i,2) = hhh
+                    speccc(i,3) = hhh2
+
+                    call hgen(speccc(i,4),i,hhh,hhh2,speccc(i,5),
+     +                   speccc(i,6),speccc(i,7),speccc(i,8))
+
+                  ELSEIF (speccc(i,1)==2.5) then
+
+                    call autoboundaryQ(specccfut(i,2),specccold(i,2),
+     +                   specccfut(i,3),specccold(i,3),temp_delt,
+     +                   deltsum,linlog,qqq,qqqdir)
+
+                    speccc(i,2) = qqq
+                    speccc(i,3) = qqqdir
+
+                    call qgen(i,qqq,qqqdir,speccc(i,6),speccc(i,7),
+     +                   speccc(i,8))
+
+                  end if
+
+                end do
+
+                call bform(0)
+
+                do i = 1, np
+
+                  do k = 1, ndf
+
+                    vel(k,j) = vold(k,j)
+                    vdoto(k,j) = v2ol(k,j)
+                    vdot(k,j) = vdoto(k,j)
+
+                  end do
+
+                end do
+
+                GOTO 465
+
+              endif
+
+            end if
+
+          else
+
+            if (deltsum.lt.temp_delt) then
+
+              if (deltindex.eq.0.) then
+
+                deltsum = 0.
+
+              end if
+
+              deltindex = deltindex + 1
+
+              deltsum = delt + deltsum
+
+              maxn = 0
+
+              do i = 1,ncl
+
+                if (speccc(i,1)==1.5) then
+
+                  call autoboundaryh(specccfut(i,2),specccold(i,2),
+     +                 specccfut(i,3),specccold(i,3),temp_delt,
+     +                 deltsum,linlog,hhh,hhh2)
+
+                  speccc(i,2) = hhh
+                  speccc(i,3) = hhh2
+
+                  call hgen(speccc(i,4),i,hhh,hhh2,speccc(i,5),
+     +                 speccc(i,6),speccc(i,7),speccc(i,8))
+
+                ELSEIF (speccc(i,1)==2.5) then
+
+                  call autoboundaryQ(specccfut(i,2),specccold(i,2),
+     +                 specccfut(i,3),specccold(i,3),temp_delt,
+     +                 deltsum,linlog,qqq,qqqdir)
+
+                  speccc(i,2) = qqq
+                  speccc(i,3) = qqqdir
+
+                  call qgen(i,qqq,qqqdir,speccc(i,6),speccc(i,7),
+     +                 speccc(i,8))
+
+                end if
+
+              end do
+
+              call bform(0)
+
+              do i = 1, np
+
+                do k = 1, ndf
+
+                  vold(k,j) = vel(k,j)
+                  v2ol(k,j) = vdoto(k,j)
+                  vdoto(k,j) = vdot(k,j)
+
+                end do
+
+              end do
+
+              GOTO 465
+
+            endif
+
+            do i = 1,ncl
+
+              do k = 1,3
+
+                specccold(i,k) = specccfut(i,k)
+
+              end do
+
+            end do
+
+            call feldgroesse(6,nita)
+
+            nitn=nitnzero
+            nita=nitazero
+
+            call feldgroesse(5,65)
+
+          end if
+
+        endif
+        !-
+
 C-
 C......SAVE ON RESULTS FILE
 C-
@@ -1179,7 +1972,7 @@ cipk mar95 add a line to save dhdt
 CIPK NOV02 This is now water column potential and bed elevation
  
               VSING(7,J)=VEL(7,J)
-              VSING(8,J)=AO(J)
+	        VSING(8,J)=AO(J)
   770       CONTINUE
 CIPK MAR00
             IF(IRMAFM .GT. 0  .AND. MOD(N,NBSFRQ) .EQ. 0) THEN
@@ -1216,8 +2009,8 @@ c      14   VSING subscript(7)  water column potential by node
 CIPK AUG02
             IF(ISMSFM .GT. 0  .AND. MOD(N,NBSFRQ) .EQ. 0) THEN
               DO JJ=1,NEM
-                IMATL(JJ)=IMAT(JJ)
-              ENDDO
+	          IMATL(JJ)=IMAT(JJ)
+	        ENDDO
             WRITE (ISMSFM) TETT, NPM, ((VSING(J,K),J=1,3), K = 1, NPM), 
      *                         (NDRY(K), K = 1, NPM), 
      *                    NEM,  (IMATL(JJ), JJ = 1, NEM), 
@@ -1226,8 +2019,8 @@ CIPK AUG02
 
             IF(ISMSFM1 .GT. 0  .AND. MOD(N,NBSFRQ) .EQ. 0) THEN
               DO JJ=1,NEM
-                IMATL(JJ)=IMAT(JJ)
-              ENDDO
+	          IMATL(JJ)=IMAT(JJ)
+	        ENDDO
 
 CIPK DEC02 REVISE TO ADD BED ELEVATION AS 7TH COMPONENT
 cipk aug05 correct to get BSHEAR OUTPUT
@@ -1235,7 +2028,7 @@ cipk aug05 correct to get BSHEAR OUTPUT
             NQAL=9 ! djw 16/08/04 To enable addition of wave force x & wave force y
             NQAL=11 ! djw 16/08/04 To enable addition of bed form height and roughness
             !
-            !  Initiates Bed form info if necessary ! djw 2/11/04
+	      !  Initiates Bed form info if necessary ! djw 2/11/04
             !
             WBM = .FALSE.
             IF (WBM) THEN
@@ -1245,9 +2038,9 @@ cipk aug05 correct to get BSHEAR OUTPUT
 !-
                 CALL BedRoughInitiate(NPM,wbm_Initiated,wbm_MannTrans,
      +          wbm_NodeCounter,wbm_IT, wbm_MannTransOld, wbm_BedHeight)
-               END IF
+ 	        END IF
             END IF
-            IF (WBM) THEN
+	      IF (WBM) THEN
               WRITE (ISMSFM1) TETT, NQAL,NPM,       
      +          ((VSING(J,K),K=1,NPM),J=4,7),(VSING(8,K),K=1,NPM),
      +         (DELBED(J),J=1,NP),(BSHEAR(J),J=1,NPM), 
@@ -1263,7 +2056,7 @@ cipk aug05 correct to get BSHEAR OUTPUT
      *                    NEM,  (IMATL(JJ), JJ = 1, NEM) 
             ELSE
               NQAL = 9
-              WRITE (ISMSFM1) TETT, NQAL,NPM,
+	        WRITE (ISMSFM1) TETT, NQAL,NPM,       
      +          ((VSING(J,K),K=1,NPM),J=4,7),(VSING(8,K),K=1,NPM),
      +          (DELBED(J),J=1,NP),(BSHEAR(J),J=1,NPM), 
 !
@@ -1274,8 +2067,8 @@ cipk aug05 correct to get BSHEAR OUTPUT
 !  DJW 16/08/04  end djw 16/08/04
 !
      +          NEM,  (IMATL(JJ), JJ = 1, NEM) 
-            END IF
-          ENDIF
+	      END IF
+	    ENDIF
 c     1   TETT                Time in hours (Julian)
 c     2   NQAL                Number of constituents = 7
 c     3   NP                  Number of nodes
@@ -1288,8 +2081,8 @@ c     9   DELBED              Bed change by node		CONST 6
 c    10   BSHEAR              Shear stress by node		CONST 7
             IF(ISMSFM2 .GT. 0  .AND. MOD(N,NBSFRQ) .EQ. 0) THEN
               DO JJ=1,NEM
-                IMATL(JJ)=IMAT(JJ)
-              ENDDO
+	          IMATL(JJ)=IMAT(JJ)
+	        ENDDO
               TETT=(DAYOFY-1)*24.+TET
               IF(LSAND .GT. 0) THEN
                 WRITE (ISMSFM2) TETT, NPM 
@@ -1336,7 +2129,7 @@ c    11   VVEL                w-vel by node
 c    12   DFCT                stratification multiplier by element
 c    13   VSING subscript(7)  water column potential by node
             IF(IBEDOT .GT. 0) THEN
-              NQL=10
+	        NQL=10
 cipk aug05 correct to get BSHEAR OUTPUT
 CIPK MAR06 CORRECT TO GET SAND OUTPUT
               if(LSS .GT. 0) THEN
@@ -1421,8 +2214,8 @@ C  Save restart file every IOURST timesteps
               CLOSE (131)
 CIPK SEP04
 !              WRITE(INUM,'(I4.4)') N
-              WRITE(INUM,'(I6.6)') N ! Override djw 31/10/05 enables write of more than 9990 TS restart file
-              FRST=FNAM(1:LNNAM) // 'RST'//INUM//'.RST'
+	        WRITE(INUM,'(I6.6)') N ! Override djw 31/10/05 enables write of more than 9990 TS restart file
+	        FRST=FNAM(1:LNNAM) // 'RST'//INUM//'.RST'
               OPEN(131,FILE=FRST,FORM='UNFORMATTED',STATUS='UNKNOWN')
               IF(LSAND .EQ. 0   .AND.  LSS .EQ. 0) THEN
                 WRITE(131) TETT,NP,NDFF,IYRR,((VEL(K,J),VDOT(K,J),K=1,7)
@@ -1434,7 +2227,7 @@ CIPK SEP04
      +           ,VVEL(J),J=1,NP)
      +           ,(hel(j),hdet(j),j=1,np)
      +           ,(DELBED(J),ELEVB(J),TTHICK(J),J=1,NP)
-              ELSE
+	        ELSE
                 WRITE(131) TETT,NP,NDFF,IYRR,((VEL(K,J),VDOT(K,J),K=1,7)
      +           ,VVEL(J),J=1,NP)
      +          ,(hel(j),hdet(j),j=1,np)
@@ -1445,7 +2238,7 @@ CIPK SEP04
               ENDIF	    
               IF(ICESW .GT. 0) THEN
                 WRITE(131) (ICETHK(J) ,J=1,NPM)
-                ENDIF
+  	        ENDIF
 CIPK SEP02 ADD RESTART DATA FOR BED
             ENDIF 
 
