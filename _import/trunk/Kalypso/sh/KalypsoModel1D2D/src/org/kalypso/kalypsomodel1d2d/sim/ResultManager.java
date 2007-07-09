@@ -214,8 +214,7 @@ public class ResultManager implements Runnable
 
     final File resultOutputDir = new File( m_outputDir, outDirName );
     resultOutputDir.mkdirs();
-    final ProcessResultsJob processResultsJob = 
-        new ProcessResultsJob( file, resultOutputDir, m_dataProvider, m_calculation, m_parameters, timeStepNum );
+    final ProcessResultsJob processResultsJob = new ProcessResultsJob( file, resultOutputDir, m_dataProvider, m_calculation, m_parameters, timeStepNum );
     processResultsJob.addJobChangeListener( m_finishListener );
 
     m_resultJobs.add( processResultsJob );
@@ -422,26 +421,26 @@ public class ResultManager implements Runnable
               e.printStackTrace();
             }
           }
-          else if( symbolizer instanceof SurfacePolygonSymbolizer )
-          {
-            try
-            {
-              configurePolygonSymbolizer( (SurfacePolygonSymbolizer) symbolizer, minValue, maxValue );
-            }
-            catch( FilterEvaluationException e )
-            {
-              // TODO Auto-generated catch block
-              e.printStackTrace();
-            }
-          }
+//          else if( symbolizer instanceof SurfacePolygonSymbolizer )
+//          {
+//            try
+//            {
+//              configurePolygonSymbolizer( (SurfacePolygonSymbolizer) symbolizer, minValue, maxValue );
+//            }
+//            catch( FilterEvaluationException e )
+//            {
+//              // TODO Auto-generated catch block
+//              e.printStackTrace();
+//            }
+//          }
         }
       }
     }
 
     /* Write SLD back to file */
-//    final String sldXML = sld.exportAsXML();
-//    final String sldXMLwithHeader = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + sldXML;
-//    FileUtils.writeStringToFile( tinStyleFile, sldXMLwithHeader, "UTF-8" );
+    final String sldXML = sld.exportAsXML();
+    final String sldXMLwithHeader = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + sldXML;
+    FileUtils.writeStringToFile( tinStyleFile, sldXMLwithHeader, "UTF-8" );
   }
 
   private void configurePolygonSymbolizer( SurfacePolygonSymbolizer symbolizer, double minValue, double maxValue ) throws FilterEvaluationException
@@ -465,7 +464,7 @@ public class ResultManager implements Runnable
     final BigDecimal maxDecimal = new BigDecimal( maxValue ).setScale( 1, BigDecimal.ROUND_CEILING );
 
     BigDecimal stepWidth = new BigDecimal( 0.1 ).setScale( 1 );
-    final int numOfClasses = (maxDecimal.subtract( minDecimal ).divide( stepWidth )).intValue() + 1;
+    final int numOfClasses = (maxDecimal.subtract( minDecimal ).divide( stepWidth )).intValue();
 
     for( int currentClass = 0; currentClass < numOfClasses; currentClass++ )
     {
