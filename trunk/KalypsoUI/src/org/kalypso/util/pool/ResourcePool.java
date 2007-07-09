@@ -154,12 +154,12 @@ public class ResourcePool
     {
       final List<KeyInfo> infosToDispose = new ArrayList<KeyInfo>();
 
-      for( final Iterator iter = m_keyInfos.entrySet().iterator(); iter.hasNext(); )
+      for( final Iterator<Entry<IPoolableObjectType, KeyInfo>> iter = m_keyInfos.entrySet().iterator(); iter.hasNext(); )
       {
-        final Map.Entry entry = (Entry) iter.next();
+        final Entry<IPoolableObjectType, KeyInfo> entry = iter.next();
 
-        final IPoolableObjectType key = (IPoolableObjectType) entry.getKey();
-        final KeyInfo info = (KeyInfo) entry.getValue();
+        final IPoolableObjectType key = entry.getKey();
+        final KeyInfo info = entry.getValue();
         if( info.removeListener( l ) && info.isEmpty() )
         {
           if( DO_LOG )

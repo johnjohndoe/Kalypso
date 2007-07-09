@@ -43,7 +43,6 @@ package org.kalypso.ogc.gml.serialize;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -125,7 +124,7 @@ public class ShapeSerializer
    * @param filenameBase
    *            Der Ausgabename für das Shape (.shp, .dbf, und. shx)
    */
-  public static void serializeFeatures( final Feature[] features, final Map mapping, final String geoName, final String filenameBase ) throws GmlSerializeException
+  public static void serializeFeatures( final Feature[] features, final Map<String, String> mapping, final String geoName, final String filenameBase ) throws GmlSerializeException
   {
     if( features.length == 0 )
     {
@@ -136,21 +135,18 @@ public class ShapeSerializer
     final IValuePropertyType geoPt = (IValuePropertyType) featureType.getProperty( geoName );
 
     final IPropertyType[] ftps = new IPropertyType[mapping.size() + 1];
-    // ftps[0] = FeatureFactory.createFeatureTypeProperty( "GEOM", geoPt.getValueClass(), true );
     final IMarshallingTypeHandler typeHandler = geoPt.getTypeHandler();
     ftps[0] = GMLSchemaFactory.createValuePropertyType( new QName( "namespace", "GEOM" ), typeHandler.getTypeName(), typeHandler, 0, 1, false );
 
     int count = 1;
-    for( final Iterator mIt = mapping.entrySet().iterator(); mIt.hasNext(); )
+    for( final Map.Entry<String, String> entry : mapping.entrySet() )
     {
-      final Map.Entry entry = (Entry) mIt.next();
-
-      final IValuePropertyType ftp = (IValuePropertyType) featureType.getProperty( (String) entry.getValue() );
+      final IValuePropertyType ftp = (IValuePropertyType) featureType.getProperty( entry.getValue() );
 
       // ftps[count] = FeatureFactory.createFeatureTypeProperty( (String) entry.getKey(), ftp.getValueClass(),
       // ftp.isNullable() );
       final IMarshallingTypeHandler typeHandler2 = ftp.getTypeHandler();
-      ftps[count] = GMLSchemaFactory.createValuePropertyType( new QName( "namespace", (String) entry.getKey() ), typeHandler2.getTypeName(), typeHandler2, 1, 1, false );
+      ftps[count] = GMLSchemaFactory.createValuePropertyType( new QName( "namespace", entry.getKey() ), typeHandler2.getTypeName(), typeHandler2, 1, 1, false );
       count++;
     }
 
@@ -170,12 +166,8 @@ public class ShapeSerializer
         data[0] = kalypsoFeature.getProperty( geoName );
 
         int datacount = 1;
-        for( final Iterator mIt = mapping.entrySet().iterator(); mIt.hasNext(); )
-        {
-          final Map.Entry entry = (Entry) mIt.next();
-
-          data[datacount++] = kalypsoFeature.getProperty( (String) entry.getValue() );
-        }
+        for( final Entry<String, String> entry : mapping.entrySet() )
+          data[datacount++] = kalypsoFeature.getProperty( entry.getValue() );
 
         final Feature feature = FeatureFactory.createFeature( null, null, "" + i, shapeFeatureType, data );
         shapeFeatures.add( feature );
@@ -186,6 +178,73 @@ public class ShapeSerializer
       shapeFile.close();
     }
     catch( final Exception e )
+    {
+      e.printStackTrace();
+
+      throw new GmlSerializeException( "Shape konnte nicht geschrieben werden", e );
+    }
+  }
+
+  /**
+   * Schreibt ein Array von Features in eine Shape-Datei. Dabei werden nicht einfach alle Properties geschrieben,
+   * sondern nur die über ein vorher festgelegt Mapping.
+   * 
+   * @param features
+   *            Properties dieser Features werden geschrieben.
+   * @param mapping
+   *            keys: Spaltennamen der Shape-Datei; Values: Property-Namen des Features
+   * @param geoName
+   *            Der Name der Property mit der Geometry
+   * @param filenameBase
+   *            Der Ausgabename für das Shape (.shp, .dbf, und. shx)
+   */
+  public static void serializeFeatures( final Feature[] features, final Map<String, QName> mapping, final QName geomProperty, final String filenameBase ) throws GmlSerializeException
+  {
+    if( features.length == 0 )
+      throw new GmlSerializeException( "Keine Daten vorhanden. Leere Shape Datei kann nicht geschrieben werden." );
+
+    final IFeatureType featureType = features[0].getFeatureType();
+    final IValuePropertyType geoPt = (IValuePropertyType) featureType.getProperty( geomProperty );
+
+    final IPropertyType[] ftps = new IPropertyType[mapping.size() + 1];
+    final IMarshallingTypeHandler geoTypeHandler = geoPt.getTypeHandler();
+    ftps[0] = GMLSchemaFactory.createValuePropertyType( new QName( "namespace", "GEOM" ), geoTypeHandler.getTypeName(), geoTypeHandler, 0, 1, false );
+
+    int count = 1;
+    for( final Entry<String, QName> entry : mapping.entrySet() )
+    {
+      final IValuePropertyType ftp = (IValuePropertyType) featureType.getProperty( entry.getValue() );
+      final IMarshallingTypeHandler typeHandler = ftp.getTypeHandler();
+      ftps[count] = GMLSchemaFactory.createValuePropertyType( new QName( "namespace", entry.getKey() ), typeHandler.getTypeName(), typeHandler, 1, 1, false );
+      count++;
+    }
+
+    final IFeatureType shapeFeatureType = GMLSchemaFactory.createFeatureType( new QName( "namespace", "shapeType" ), ftps );
+
+    try
+    {
+      final Collection<Feature> shapeFeatures = new ArrayList<Feature>( features.length );
+      for( int i = 0; i < features.length; i++ )
+      {
+        final Feature kalypsoFeature = features[i];
+
+        final Object[] data = new Object[ftps.length];
+
+        data[0] = kalypsoFeature.getProperty( geomProperty );
+
+        int datacount = 1;
+        for( final Entry<String, QName> entry : mapping.entrySet() )
+          data[datacount++] = kalypsoFeature.getProperty( entry.getValue() );
+
+        final Feature feature = FeatureFactory.createFeature( null, null, "" + i, shapeFeatureType, data );
+        shapeFeatures.add( feature );
+      }
+
+      final ShapeFile shapeFile = new ShapeFile( filenameBase, "rw" );
+      shapeFile.writeShape( shapeFeatures.toArray( new Feature[shapeFeatures.size()] ) );
+      shapeFile.close();
+    }
+    catch( final Throwable e )
     {
       e.printStackTrace();
 
