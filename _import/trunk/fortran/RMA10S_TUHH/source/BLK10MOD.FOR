@@ -82,13 +82,17 @@ CIPK MAR06 ADD IOUTRWD
 !EFa may07, dispersion-coefficient for turbulence modell
      +          ,p_bottom
 
+
       REAL      CINT(100),CPOW(100),AJ(100),BJ(100),CJ(100)
      +         ,GAMJ(100),QD(100),DJ(100)
-     INTEGER   LINE(50,350),LMT(50),JLIN(50),ITLVL(90),ITEQV(90)
-     +         ,ITEQS(90),IURVL(90),NCNV(7)
+      INTEGER   LINE(50,350),LMT(50),JLIN(50),NCNV(7)
 !Nis,sep06: adding lineimat(50,350) for storage of material of line segments
      +         ,lineimat(50,350)
 !-
+      !EFa jun07, changed dimension for autoconverge
+      !+         ,ITEQS(65),IURVL(65),ITLVL(65),ITEQV(65)
+      INTEGER,ALLOCATABLE :: ITEQS(:),IURVL(:),ITLVL(:),ITEQV(:)
+      !-
       REAL      STQ(50),STQA(50),STQE(50),STQC(50),STQT(50),ALN(50)
      +         ,CONV(7)
      

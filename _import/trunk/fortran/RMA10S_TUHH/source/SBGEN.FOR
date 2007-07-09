@@ -8,7 +8,7 @@ CIPK  LAST UPDATE SEP 4 2000 REVISED OUTPUT OF ERROR MESSAGES
 cipk  last update Feb 4 1998
 CIPK  LAST UPDATE DEC 16 1997
 CIPK  LAST UPDATE NOV 26 1997
-C     Last change:  K    26 Mar 2007   12:12 pm
+C     Last change:  EF    6 Jul 2007    5:02 pm
 CIPK  LAST UPDATED AUGUST 28 1995
       SUBROUTINE SBGEN(IBIN)
       USE BLK10MOD
@@ -17,6 +17,8 @@ CIPK  LAST UPDATED AUGUST 28 1995
       USE BLKSBG
       !EFa Dec06, neues Modul für 1d-Teschke-ELemente
       USE PARAFlow1dFE
+      !EFa jun07, modul necessary for autoconverge
+      USE parakalyps
       SAVE
 C-
 C...... Input special boundary conditions
@@ -162,6 +164,15 @@ CIPK DEC97 END ADDITION
           ! QQAL = 3 values (array) for the three concentrations of salinity, temperature and sediment
           ! LABL = 1 for using a hydrograph file in dynamic solution; chose 0 for a steady or specified solution
           !-
+          !EFa jul07, necessary for autoconverge
+          specccfut(j,1) = 2.5
+          specccfut(j,2) = qf
+          specccfut(j,3) = qdir
+          specccfut(j,6) = qqal(1)
+          specccfut(j,7) = qqal(2)
+          specccfut(j,8) = qqal(3)
+          !-
+
 
 CIPK NOV97          READ(IBIN,7000) ID,DLIN
           !nis,sep06,com: read new file line into memory
@@ -372,6 +383,18 @@ CIPK AUG00
 CIPK APR01
         READ(DLIN,5031) J,LN,HF,QQAL,LABL,HF2
  5031   FORMAT(2I8,4F8.0,I8,F8.0)
+
+        !EFa jul07, necessary for autoconverge
+        specccfut(j,1) = 1.5
+        specccfut(j,2) = hf
+        specccfut(j,3) = hf2
+        specccfut(j,4) = ibin
+        specccfut(j,5) = iinterp(ihgnn)
+        specccfut(j,6) = qqal(1)
+        specccfut(j,7) = qqal(2)
+        specccfut(j,8) = qqal(3)
+        !-
+
 cipk nov97        READ(IBIN,7000) ID,DLIN
         call ginpt(ibin,id,dlin)
 cipk APR96 save data to a scratch file
@@ -405,6 +428,7 @@ CIPK APR01
 CIPK DEC97 CALLING SEQUENCE CHANGED
 CIPK AUG00
           CALL HGEN(IBIN,J,HF,HF2,IINTERP(IHGNN),QQAL)
+
 CIPK DEC97  ALLOW FOR "HCN" INPUT
           IF(J .LT. 0) THEN
             JLIN(IHGNN)=-J
@@ -425,6 +449,15 @@ C
         ENDIF
         GO TO 208
       ENDIF
+
+
+      !EFa jul07, necessary for autoconverge
+      do i=1,ncl
+        do k=1,8
+          speccc(i,k)=specccfut(i,k)
+        end do
+      end do
+      !-
 C-
 C...... Input stage-flow for a continuity line if required
 C-

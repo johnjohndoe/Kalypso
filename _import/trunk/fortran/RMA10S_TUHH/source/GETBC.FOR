@@ -6,7 +6,7 @@ cipk  last update Mar 23 1998
 cipk  last update Nov 26 1997
 cipk  last update Oct 29 1996
 CIPK  LAST UPDATE OCT 16 1996
-C     Last change:  K    15 Nov 2006   11:36 am
+C     Last change:  EF   20 Jun 2007    4:19 pm
 cipk  last updated April 25 1996
 CIPK  LAST UPDATED SEP7 1995
       SUBROUTINE GETBC(IBIN)
@@ -28,7 +28,13 @@ c      TET=TSTART
       ELSE
 	NITA=NITN
       ENDIF
-      write(*,*) 'nita,niti',nita,niti
+
+
+      !EFa jun07, necessary for autoconverge
+      nitazero=niti
+      call feldgroesse(1,65)
+      !-
+
 CIPKFEB94    NOTE THAT ALL READS FROM NOW ON WILL USE IBIN NOT LIN
 C
       IBK=0
