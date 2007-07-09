@@ -51,6 +51,7 @@ import java.util.Locale;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.jts.JTSUtilities;
+import org.kalypso.kalypsomodel1d2d.conv.results.RestartEater;
 import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
 import org.kalypso.kalypsomodel1d2d.ops.EdgeOps;
 import org.kalypso.kalypsomodel1d2d.ops.TypeInfo;
@@ -70,6 +71,10 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.FlowRelationUtilitite
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IKingFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IWeirFlowRelation;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.INodeResultCollection;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.NodeResultCollection;
+import org.kalypso.kalypsomodel1d2d.schema.binding.results.GMLNodeResult;
+import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
 import org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
@@ -99,15 +104,15 @@ import com.vividsolutions.jts.geom.Point;
  */
 public class Gml2RMA10SConv implements INativeIDProvider
 {
-  private final LinkedHashMap<String, String> m_roughnessIDProvider = new LinkedHashMap<String, String>( 100 );
+  private final LinkedHashMap<String, Integer> m_roughnessIDProvider = new LinkedHashMap<String, Integer>( 100 );
 
-  private final LinkedHashMap<String, String> m_nodesIDProvider = new LinkedHashMap<String, String>( 100000 );
+  private final LinkedHashMap<String, Integer> m_nodesIDProvider = new LinkedHashMap<String, Integer>( 100000 );
 
-  private final LinkedHashMap<String, String> m_elementsIDProvider = new LinkedHashMap<String, String>( 50000 );
+  private final LinkedHashMap<String, Integer> m_elementsIDProvider = new LinkedHashMap<String, Integer>( 50000 );
 
-  private final LinkedHashMap<String, String> m_complexElementsIDProvider = new LinkedHashMap<String, String>();
+  private final LinkedHashMap<String, Integer> m_complexElementsIDProvider = new LinkedHashMap<String, Integer>();
 
-  private final LinkedHashMap<String, String> m_edgesIDProvider = new LinkedHashMap<String, String>( 100000 );
+  private final LinkedHashMap<String, Integer> m_edgesIDProvider = new LinkedHashMap<String, Integer>( 100000 );
 
   private final WeirIDProvider m_weirIDProvider = new WeirIDProvider();
 
@@ -119,32 +124,43 @@ public class Gml2RMA10SConv implements INativeIDProvider
 
   private final IFlowRelationshipModel m_flowrelationModel;
 
-  private ICalculationUnit m_calcultionUnit;
+  private ICalculationUnit m_calculationUnit;
 
-  private GM_Envelope m_calUnitBBox;
-
-//  private Formatter formatter;
-//
-//  private PrintWriter stream;
-  private RMA10Calculation calculation;
+  private GM_Envelope m_calcUnitBBox;
   
+  private RestartEater m_restartEater;
+
+// private Formatter formatter;
+//
+// private PrintWriter stream;
+  private RMA10Calculation m_calculation;
+
+  private boolean m_restart;
+
   public Gml2RMA10SConv( final File rma10sOutputFile, final RMA10Calculation calculation )
   {
     m_outputFile = rma10sOutputFile;
     m_discretisationModel1d2d = calculation.getDiscModel();
     m_terrainModel = calculation.getTerrainModel();
     m_flowrelationModel = calculation.getFlowModel();
-    m_calcultionUnit = calculation.getCalcultionUnit();
-    m_calUnitBBox = CalUnitOps.getBoundingBox( m_calcultionUnit );
-    
-    //provides the ids for the boundaryline
-    this.calculation = calculation;
-    
+    m_calculationUnit = calculation.getCalculationUnit();
+    m_calcUnitBBox = CalUnitOps.getBoundingBox( m_calculationUnit );
+
+    // provides the ids for the boundaryline
+    m_calculation = calculation;
+
     // initialize Roughness IDs
     for( final Object o : calculation.getRoughnessClassList() )
     {
       final Feature roughnessCL = (Feature) o;
       getID( m_roughnessIDProvider, roughnessCL.getId() );
+    }
+    m_restart = m_calculation.getControlModel().getRestart();
+    if(m_restart)
+    {
+      m_restartEater = new RestartEater();
+      // TODO: load m_restartEater with the list of result GML files 
+//      m_restartEater.addResultFile( file );
     }
   }
 
@@ -154,6 +170,8 @@ public class Gml2RMA10SConv implements INativeIDProvider
     m_discretisationModel1d2d = discretisationModel1d2d;
     m_terrainModel = terrainModel;
     m_flowrelationModel = flowrelationModel;
+    
+    m_restart = false;
   }
 
   public int getID( final IFeatureWrapper2 i1d2dObject )
@@ -169,9 +187,9 @@ public class Gml2RMA10SConv implements INativeIDProvider
     {
       return getID( m_edgesIDProvider, id );
     }
-    else if(i1d2dObject instanceof IBoundaryLine)
+    else if( i1d2dObject instanceof IBoundaryLine )
     {
-      return calculation.getID( i1d2dObject );
+      return m_calculation.getID( i1d2dObject );
     }
     else if( i1d2dObject instanceof IFE1D2DElement )
     {
@@ -187,13 +205,16 @@ public class Gml2RMA10SConv implements INativeIDProvider
     }
   }
 
-  private int getID( final LinkedHashMap<String, String> map, final String gmlID )
+  private int getID( final LinkedHashMap<String, Integer> map, final String gmlID )
   {
-    // TODO: why the String to Integer and back conversion???
-    // at least, comment why this is better than putting the Integer directly into the map!
     if( !map.containsKey( gmlID ) )
-      map.put( gmlID, Integer.toString( map.size() + 1 ) );
-    return Integer.parseInt( map.get( gmlID ) );
+    {
+      final int id = map.size() + 1;
+      map.put( gmlID, id );
+      return id;
+    }
+    else
+      return map.get( gmlID );
   }
 
   public void toRMA10sModel( ) throws IllegalStateException, SimulationException
@@ -219,18 +240,18 @@ public class Gml2RMA10SConv implements INativeIDProvider
     }
   }
 
-//  /**
-//   * Call after boundary lines writing because it requires the IDs
-//   */
-//  public void writeJuntionContextTRMA10sModel(  ) throws SimulationException, GM_Exception
-//  {
-//    JunctionContextConverter.write( 
-//        m_discretisationModel1d2d, 
-//        m_calcultionUnit, 
-//        this, 
-//        formatter );
-//  }
-  
+// /**
+// * Call after boundary lines writing because it requires the IDs
+// */
+// public void writeJuntionContextTRMA10sModel( ) throws SimulationException, GM_Exception
+// {
+// JunctionContextConverter.write(
+// m_discretisationModel1d2d,
+// m_calcultionUnit,
+// this,
+// formatter );
+// }
+
   private void writeRMA10sModel( final PrintWriter stream ) throws SimulationException, GM_Exception
   {
     final IFeatureWrapperCollection<IFE1D2DElement> elements = m_discretisationModel1d2d.getElements();
@@ -252,22 +273,18 @@ public class Gml2RMA10SConv implements INativeIDProvider
     }
     writeNodes( formatter, nodes );
     writeEdges( formatter, edges );
-    JunctionContextConverter.write( 
-        m_discretisationModel1d2d, 
-        m_calcultionUnit, 
-        this, 
-        formatter );
+    JunctionContextConverter.write( m_discretisationModel1d2d, m_calculationUnit, this, formatter );
   }
 
   private void writeEdges( final Formatter formatter, final IFeatureWrapperCollection<IFE1D2DEdge> edges ) throws GM_Exception
   {
-    final List<IFE1D2DEdge> edgeInBBox = edges.query( m_calUnitBBox );
+    final List<IFE1D2DEdge> edgeInBBox = edges.query( m_calcUnitBBox );
     int cnt = 1;
-    for( final IFE1D2DEdge edge : edgeInBBox/*edges*/ )
+    for( final IFE1D2DEdge edge : edgeInBBox/* edges */)
     {
       if( edge instanceof IEdgeInv )
         continue;
-      
+
       final int node0ID = getID( edge.getNode( 0 ) );
       final int node1ID = getID( edge.getNode( 1 ) );
 
@@ -312,9 +329,9 @@ public class Gml2RMA10SConv implements INativeIDProvider
       }
       else if( TypeInfo.is2DEdge( edge ) )
       {
-        
-        final IFE1D2DElement leftElement = EdgeOps.getLeftRightElement( m_calcultionUnit, edge, EdgeOps.ORIENTATION_LEFT );        
-        final IFE1D2DElement rightElement = EdgeOps.getLeftRightElement( m_calcultionUnit, edge, EdgeOps.ORIENTATION_RIGHT );
+
+        final IFE1D2DElement leftElement = EdgeOps.getLeftRightElement( m_calculationUnit, edge, EdgeOps.ORIENTATION_LEFT );
+        final IFE1D2DElement rightElement = EdgeOps.getLeftRightElement( m_calculationUnit, edge, EdgeOps.ORIENTATION_RIGHT );
         final int leftParent = getID( leftElement );
         final int rightParent = getID( rightElement );
         formatter.format( "AR%10d%10d%10d%10d%10d%10d%n", cnt++, node0ID, node1ID, leftParent, rightParent, middleNodeID );
@@ -329,8 +346,8 @@ public class Gml2RMA10SConv implements INativeIDProvider
 
   private void writeNodes( final Formatter formatter, final IFeatureWrapperCollection<IFE1D2DNode> nodes ) throws SimulationException
   {
-    List<IFE1D2DNode> nodesInBBox = nodes.query( m_calUnitBBox );
-    for( final IFE1D2DNode<IFE1D2DEdge> node : nodesInBBox/*nodes*/ )
+    List<IFE1D2DNode> nodesInBBox = nodes.query( m_calcUnitBBox );
+    for( final IFE1D2DNode<IFE1D2DEdge> node : nodesInBBox/* nodes */)
     {
       /* The node itself */
       final int nodeID = getID( node );
@@ -399,7 +416,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
         else
           throw new SimulationException( "Unbekannte Flieﬂrelation gefunden: " + relationship, null );
       }
-        formatNode( formatter, nodeID, point, station );
+      formatNode( formatter, nodeID, point, station );
     }
   }
 
@@ -421,6 +438,8 @@ public class Gml2RMA10SConv implements INativeIDProvider
       formatter.format( "FP%10d%20.7f%20.7f%20.7f%n", nodeID, x, y, z );
     else
       formatter.format( "FP%10d%20.7f%20.7f%20.7f%20.7f%n", nodeID, x, y, z, station );
+    if(m_restart)
+      writeRestartLines(formatter, nodeID, x, y, z);
   }
 
   private void writePolynome( final Formatter formatter, final String kind, final int nodeID, final IPolynomial1D poly, final int coeffStart, final int coeffStop, final Double extraValue )
@@ -445,24 +464,23 @@ public class Gml2RMA10SConv implements INativeIDProvider
     formatter.format( "%n" );
   }
 
-  private void writeElements( final Formatter formatter, final LinkedHashMap<String, String> roughnessIDProvider, final IFeatureWrapperCollection<IFE1D2DElement> elements, final IRoughnessPolygonCollection roughnessPolygonCollection ) throws GM_Exception, SimulationException
+  private void writeElements( final Formatter formatter, final LinkedHashMap<String, Integer> roughnessIDProvider, final IFeatureWrapperCollection<IFE1D2DElement> elements, final IRoughnessPolygonCollection roughnessPolygonCollection ) throws GM_Exception, SimulationException
   {
-    final List<IFE1D2DElement> elementsInBBox = elements.query( m_calUnitBBox );
-    
-    for( final IFE1D2DElement element : elementsInBBox/*elements*/ )
+    final List<IFE1D2DElement> elementsInBBox = elements.query( m_calcUnitBBox );
+
+    for( final IFE1D2DElement element : elementsInBBox/* elements */)
     {
-      if( !CalUnitOps.isFiniteElementOf( m_calcultionUnit, element ))
+      if( !CalUnitOps.isFiniteElementOf( m_calculationUnit, element ) )
       {
         continue;
       }
-      
+
       final int id = getID( element );
 
       if( element instanceof IElement1D )
       {
         /* 1D-Elements get special handling. */
         final IElement1D element1D = (IElement1D) element;
-        
 
         final IWeirFlowRelation weir = FlowRelationUtilitites.findWeirElement1D( element1D, m_flowrelationModel );
         if( weir != null )
@@ -481,7 +499,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
         else
         {
           // TODO: give hint what 1D-element is was?
-          throw new SimulationException( "1D-Element ohne Bauwerk bzw. ohne Netzparameter: "+element1D.getGmlID(), null );
+          throw new SimulationException( "1D-Element ohne Bauwerk bzw. ohne Netzparameter: " + element1D.getGmlID(), null );
         }
       }
       else if( element instanceof IPolyElement )
@@ -503,7 +521,33 @@ public class Gml2RMA10SConv implements INativeIDProvider
     }
   }
 
-  private int calculateRoughnessID( final LinkedHashMap<String, String> roughnessIDProvider, final IRoughnessPolygonCollection roughnessPolygonCollection, final IFE1D2DElement element ) throws GM_Exception, SimulationException
+  private void writeRestartLines( final Formatter formatter, int nodeID, double x, double y, double z) {
+    final INodeResult node = m_restartEater.getNodeResultAtPosition( x, y );
+    double vx = 0.0;
+    double vy = 0.0;
+    if( node instanceof GMLNodeResult )
+    {
+      final List<Double> velocity = ((GMLNodeResult)node).getVelocity();
+      if(velocity != null)
+      {
+        vx = velocity.get( 0 );
+        vy = velocity.get( 1 );
+      }
+      else
+      {
+        vx = node.getAbsoluteVelocity();
+        vy = vx;
+      }
+    }
+    else
+    {
+      vx = node.getAbsoluteVelocity();
+      vy = vx;
+    }
+    formatter.format( "VA%10d%20.7f%20.7f%20.7f%20.7f%n", nodeID, vx, vy, node.getDepth(), node.getWaterlevel() );
+  }
+  
+  private int calculateRoughnessID( final LinkedHashMap<String, Integer> roughnessIDProvider, final IRoughnessPolygonCollection roughnessPolygonCollection, final IFE1D2DElement element ) throws GM_Exception, SimulationException
   {
     final IRoughnessEstimateSpec roughnessEstimateSpec = roughnessPolygonCollection.getRoughnessEstimateSpec( element.recalculateElementGeometry() );
     if( roughnessEstimateSpec != null )
@@ -516,12 +560,12 @@ public class Gml2RMA10SConv implements INativeIDProvider
     throw new SimulationException( "Keine Rauheitszone gefunden: " + element, null );
   }
 
-  public final LinkedHashMap<String, String> getRoughnessIDProvider( )
+  public final LinkedHashMap<String, Integer> getRoughnessIDProvider( )
   {
     return m_roughnessIDProvider;
   }
 
-  public final LinkedHashMap<String, String> getNodesIDProvider( )
+  public final LinkedHashMap<String, Integer> getNodesIDProvider( )
   {
     return m_nodesIDProvider;
   }

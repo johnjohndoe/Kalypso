@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.featurecontrols;
 
+import java.io.File;
+
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -109,16 +111,14 @@ public class RestartSelectorControl extends AbstractFeatureControl implements IF
       /**
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
-      @SuppressWarnings("synthetic-access")
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
         final Shell shell = display.getActiveShell();
-        final TimeStepFillerWizard wizard = new TimeStepFillerWizard( getFeature() );
+        final RestartSelectWizard wizard = new RestartSelectWizard( getFeature() );
         final WizardDialog wizardDialog = new WizardDialog( shell, wizard );
         wizardDialog.open();
-        final FeatureChange[] changes = wizard.getFeatureChange();
-        fireFeatureChange( changes );
+        final File[] changes = wizard.getSelectedFiles();
       }
     } );
     return control;

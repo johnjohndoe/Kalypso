@@ -38,25 +38,63 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.schema.binding.metadata;
+package org.kalypso.kalypsomodel1d2d.ui.featurecontrols;
 
-import java.util.GregorianCalendar;
+import java.io.File;
 
-import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptor.SIMULATIONTYPE;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.ui.INewWizard;
+import org.eclipse.ui.IWorkbench;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * @author Patrice Congo
  * @author Dejan Antanaskovic
- * 
+ *
  */
-public interface IResultModelDescriptor extends IModelDescriptor
+public class RestartSelectWizard extends Wizard implements INewWizard
 {
-  public GregorianCalendar getTime( );
 
-  public void setTime( GregorianCalendar value );
+  private RestartSelectWizardPage m_restartSelectWizardPage;
+
+  public RestartSelectWizard( Feature feature )
+  {
+    // TODO Auto-generated constructor stub
+  }
   
-  public SIMULATIONTYPE getSimulationType( );
+  /**
+   * @see org.eclipse.jface.wizard.Wizard#addPages()
+   */
+  @Override
+  public void addPages( )
+  {
+    setWindowTitle( "Berechnungszeitschritte definieren" );
+    m_restartSelectWizardPage = new RestartSelectWizardPage();
+    addPage( m_restartSelectWizardPage );
+  }
+  
+  /**
+   * @see org.eclipse.jface.wizard.Wizard#performFinish()
+   */
+  @Override
+  public boolean performFinish( )
+  {
+    return true;
+  }
 
-  public void setSimulationType( SIMULATIONTYPE value );
+  /**
+   * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench, org.eclipse.jface.viewers.IStructuredSelection)
+   */
+  public void init( IWorkbench workbench, IStructuredSelection selection )
+  {
+    // TODO Auto-generated method stub
+    
+  }
+
+  public File[] getSelectedFiles( )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
 
 }

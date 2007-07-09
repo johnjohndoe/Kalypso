@@ -123,7 +123,7 @@ public class SimulationDescriptionCollection extends AbstractFeatureBinder imple
     
     String name = modelFeatureWrapper.getName();
     addNew.setModelName( isNullOrEmptyString( name )?modelGmlID:name );
-    addNew.setModelType( newChildType.toString() );
+    addNew.setModelType( modelFeatureWrapper.getWrappedFeature().getFeatureType().getQName().toString() );
     
     //workspace path
     GMLWorkspace workspace = modelFeatureWrapper.getWrappedFeature().getWorkspace();
@@ -155,8 +155,10 @@ public class SimulationDescriptionCollection extends AbstractFeatureBinder imple
     final String featureGmlID = featureWrapper2.getGmlID();
     for(IModelDescriptor desc:m_modelDescriptors)
     {
-     if( path.equals( desc.getWorkspacePath() ) &&
-         featureGmlID.equals( featureGmlID ) )
+     //String descPath = desc.getWorkspacePath();
+     //path cannot be used since calculation uses tm file
+    if( /*path.equals( descPath ) &&*/
+         featureGmlID.equals( desc.getModelID() ) )
      {
        return desc;
      }

@@ -205,7 +205,14 @@ public class ResultDB
    */
   public IModelDescriptor addModelDescriptor( IFeatureWrapper2 modelFeatureWrapper )
   {
-    return simDB.addModelDescriptor( modelFeatureWrapper );
+    
+    IModelDescriptor existingEntry = simDB.getExistingEntry( modelFeatureWrapper );
+    if( existingEntry == null )
+    {
+      existingEntry = simDB.addModelDescriptor( modelFeatureWrapper ); 
+    }
+    
+    return existingEntry; 
   }
   
   public void save()
@@ -238,7 +245,7 @@ public class ResultDB
   public ISimulationDescriptor getSimulationDescriptorFor(RMA10Calculation rma10Calculation )
   {
 //    IControlModel1D2D controlModel = rma10Calculation.getControlModel();
-    ICalculationUnit calcultionUnit = rma10Calculation.getCalcultionUnit();
+    ICalculationUnit calcultionUnit = rma10Calculation.getCalculationUnit();
     IFeatureWrapperCollection<ISimulationDescriptor> simDescs = getSimulationDescriptors();
     for(ISimulationDescriptor sd:simDescs)
     {
@@ -264,7 +271,7 @@ public class ResultDB
     }
     
     IControlModel1D2D controlModel = rma10Calculation.getControlModel();
-    ICalculationUnit calcultionUnit = rma10Calculation.getCalcultionUnit();
+    ICalculationUnit calcultionUnit = rma10Calculation.getCalculationUnit();
 //    ITimeStepinfo[] timeStepInfos = rma10Calculation.getTimeStepInfos();
     
     IModelDescriptor controlModelDesc = addModelDescriptor( controlModel );

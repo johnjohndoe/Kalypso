@@ -140,8 +140,8 @@ public class SimMode1D2DCalcJob implements ISimulation
         /* Control model */
         r10pw = new PrintWriter( new File( tmpDir, RMA10SimModelConstants.R10_File ) );
         final WeirIDProvider weirProvider = converter2D.getWeirProvider();
-        final LinkedHashMap<String, String> roughnessIDProvider = converter2D.getRoughnessIDProvider();
-        final LinkedHashMap<String, String> nodesIDProvider = converter2D.getNodesIDProvider();
+        final LinkedHashMap<String, Integer> roughnessIDProvider = converter2D.getRoughnessIDProvider();
+        final LinkedHashMap<String, Integer> nodesIDProvider = converter2D.getNodesIDProvider();
         final Control1D2DConverter controlConverter = new Control1D2DConverter( nodesIDProvider, roughnessIDProvider, weirProvider );
         controlConverter.writeR10File( calculation, r10pw );
         r10pw.close();
@@ -179,7 +179,7 @@ public class SimMode1D2DCalcJob implements ISimulation
       startCalculation( tmpDir, monitor, resultRunner, calculation );
       /* Run a last time so nothing is forgotten... */
       resultRunner.finish();
-
+      KalypsoModel1D2DPlugin.getDefault().getResultDB().save();
       /** check succeeded and load results */
       handleError( tmpDir, outputDir, monitor, logger );
     }

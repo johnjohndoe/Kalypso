@@ -77,13 +77,16 @@ import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.kalypso.commons.KalypsoCommonsPlugin;
 import org.kalypso.commons.java.lang.ProcessHelper;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter;
 import org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv;
 import org.kalypso.kalypsomodel1d2d.conv.Weir1D2DConverter;
 import org.kalypso.kalypsomodel1d2d.conv.WeirIDProvider;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
+import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ResultDB;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
 import org.kalypso.kalypsosimulationmodel.core.Util;
@@ -168,8 +171,8 @@ public class CalculationUnitSimMode1D2DCalcJob implements ISimulation
         /* Control model */
         r10pw = new PrintWriter( new File( tmpDir, RMA10SimModelConstants.R10_File ) );
         final WeirIDProvider weirProvider = converter2D.getWeirProvider();
-        final LinkedHashMap<String, String> roughnessIDProvider = converter2D.getRoughnessIDProvider();
-        final LinkedHashMap<String, String> nodesIDProvider = converter2D.getNodesIDProvider();
+        final LinkedHashMap<String, Integer> roughnessIDProvider = converter2D.getRoughnessIDProvider();
+        final LinkedHashMap<String, Integer> nodesIDProvider = converter2D.getNodesIDProvider();
         final Control1D2DConverter controlConverter = new Control1D2DConverter( nodesIDProvider, roughnessIDProvider, weirProvider );
         controlConverter.writeR10File( calculation, r10pw );
         r10pw.close();
@@ -335,10 +338,13 @@ public class CalculationUnitSimMode1D2DCalcJob implements ISimulation
 
       public void run( final IProgressMonitor monitor ) throws InvocationTargetException, InterruptedException
       {
+        
+        //
         monitor.beginTask( "Modellrechnung wird durchgeführt", 5 );
         IControlModelGroup model = Util.getModel( IControlModelGroup.class );
         final String calcUnitGmlID = calUnit.getGmlID();
-        boolean activeSet = false;
+//        boolean activeSet = false;
+        IControlModel1D2D activeControlModel = null;
         for( IControlModel1D2D cm : model.getModel1D2DCollection() )
         {
           ICalculationUnit current = cm.getCalculationUnit();
@@ -346,17 +352,23 @@ public class CalculationUnitSimMode1D2DCalcJob implements ISimulation
           {
             if( calcUnitGmlID.equals( current.getGmlID() ) )
             {
+              activeControlModel = cm;
               model.getModel1D2DCollection().setActiveControlModel( cm );
               Util.saveAllModel( workbench, workbench.getActiveWorkbenchWindow() );
-              activeSet = true;
+//              activeSet = true;
             }
           }
         }
-        if( !activeSet )
+        if( activeControlModel == null )
         {
           throw new RuntimeException( "Could not found and set active control model for: " + calUnit.getGmlID() );
         }
 
+        //adds scenarion model to the result db
+        ResultDB resultDB = KalypsoModel1D2DPlugin.getDefault().getResultDB();
+        resultDB.addModelDescriptor( calUnit );
+        resultDB.addModelDescriptor( activeControlModel );
+        
         // final IWorkbench workbench = PlatformUI.getWorkbench();
         final IHandlerService service = (IHandlerService) workbench.getService( IHandlerService.class );
         final IEvaluationContext currentState = service.getCurrentState();

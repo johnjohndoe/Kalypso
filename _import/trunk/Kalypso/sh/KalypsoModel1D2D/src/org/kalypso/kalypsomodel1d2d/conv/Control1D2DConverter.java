@@ -78,13 +78,13 @@ import org.kalypsodeegree_impl.model.feature.binding.NamedFeatureHelper;
  */
 public class Control1D2DConverter
 {
-  private final LinkedHashMap<String, String> m_nodesIDProvider;
+  private final LinkedHashMap<String, Integer> m_nodesIDProvider;
 
-  private final LinkedHashMap<String, String> m_roughnessIDProvider;
+  private final LinkedHashMap<String, Integer> m_roughnessIDProvider;
 
   private final WeirIDProvider m_weirProvider;
 
-  public Control1D2DConverter( final LinkedHashMap<String, String> nodesIDProvider, final LinkedHashMap<String, String> roughnessIDProvider, final WeirIDProvider weirProvider )
+  public Control1D2DConverter( final LinkedHashMap<String, Integer> nodesIDProvider, final LinkedHashMap<String, Integer> roughnessIDProvider, final WeirIDProvider weirProvider )
   {
     m_nodesIDProvider = nodesIDProvider;
     m_roughnessIDProvider = roughnessIDProvider;
@@ -93,7 +93,7 @@ public class Control1D2DConverter
 
   private int getRoughnessID( final String gmlID )
   {
-    return Integer.parseInt( m_roughnessIDProvider.get( gmlID ) );
+    return m_roughnessIDProvider.get( gmlID );
   }
 
   public void writeR10File( final RMA10Calculation calculation, final PrintWriter pw ) throws SimulationException
@@ -146,8 +146,8 @@ public class Control1D2DConverter
 
     // C2
     // TODO: P_BOTTOM still not implemented, ask Nico
-//    formatter.format( "C2%14.2f%8.3f%8.1f%8.1f%8.1f%8d%8.3f%n", controlModel.getOMEGA(), controlModel.getELEV(), 1.0, 1.0, 1.0, 1, controlModel.get_P_BOTTOM() );
-    formatter.format( "C2%14.2f%8.3f%8.1f%8.1f%8.1f%8d%n", controlModel.getOMEGA(), controlModel.getELEV(), 1.0, 1.0, 1.0, 1 );
+    formatter.format( "C2%14.2f%8.3f%8.1f%8.1f%8.1f%8d%8.3f%n", controlModel.getOMEGA(), controlModel.getELEV(), 1.0, 1.0, 1.0, 1, controlModel.get_P_BOTTOM() );
+//    formatter.format( "C2%14.2f%8.3f%8.1f%8.1f%8.1f%8d%n", controlModel.getOMEGA(), controlModel.getELEV(), 1.0, 1.0, 1.0, 1 );
 
     // C3
     formatter.format( "C3%14.3f%8.3f%8.3f%8.1f%8.3f%8.3f%8.3f%n", 1.0, 1.0, controlModel.getUNOM(), controlModel.getUDIR(), controlModel.getHMIN(), controlModel.getDSET(), controlModel.getDSETD() );
@@ -162,7 +162,9 @@ public class Control1D2DConverter
     // CV
     formatter.format( "CV%14.2g%8.2g%8.2g%8.2g%8.2g%16d%8.2f%n", controlModel.getCONV_1(), controlModel.getCONV_2(), controlModel.getCONV_3(), 0.05, 0.05, controlModel.getIDRPT(), controlModel.getDRFACT() );
 
-    formatter.format( "IOP%n" );
+    // IOP line deleted because Nico said that it is an ugly, baaad line...  :)
+    // (IOP has something to do with reordering, and this is not working properly with 1D-2D copling)
+    //    formatter.format( "IOP%n" );
 
     // VEGETA
     if( controlModel.getVegeta() )
@@ -238,7 +240,7 @@ public class Control1D2DConverter
       for( int i = 0; i < nodes.length; i++ )
       {
         final IFE1D2DNode node = nodes[i];
-        final int nodeID = Integer.parseInt( m_nodesIDProvider.get( node.getGmlID() ) );
+        final int nodeID = m_nodesIDProvider.get( node.getGmlID() );
 
         /* Write start stuff */
         if( i == 0 )

@@ -330,7 +330,7 @@ public class RMA10Calculation implements INativeIDProvider
 // list.add( (IBoundaryLine) element );
 // }
 // return list;
-    ICalculationUnit calcultionUnit = getCalcultionUnit();
+    ICalculationUnit calcultionUnit = getCalculationUnit();
     List<IBoundaryLine> boundaryLines = CalUnitOps.getBoundaryLines( calcultionUnit );
     return boundaryLines;
   }
@@ -383,7 +383,7 @@ public class RMA10Calculation implements INativeIDProvider
     /* Add all boundary conditions. */
     final IFEDiscretisationModel1d2d discModel = (IFEDiscretisationModel1d2d) m_disModelWorkspace.getRootFeature().getAdapter( IFEDiscretisationModel1d2d.class );
     final IFlowRelationshipModel model = (IFlowRelationshipModel) m_operationalModelWorkspace.getRootFeature().getAdapter( IFlowRelationshipModel.class );
-    final ICalculationUnit unit = getCalcultionUnit();
+    final ICalculationUnit unit = getCalculationUnit();
     final double grabDistance = 11;
     for( final IFlowRelationship relationship : model )
     {
@@ -477,7 +477,7 @@ public class RMA10Calculation implements INativeIDProvider
     return result;
   }
 
-  public ICalculationUnit getCalcultionUnit( )
+  public ICalculationUnit getCalculationUnit( )
   {
     IControlModel1D2D controlModel = getControlModel();
     ICalculationUnit linkedCalculationUnit = controlModel.getCalculationUnit();
