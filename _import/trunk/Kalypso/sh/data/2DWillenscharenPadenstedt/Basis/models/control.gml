@@ -11,12 +11,12 @@
      <c1d2d:VEGETA>true</c1d2d:VEGETA>
      <c1d2d:IDNOPT>-1</c1d2d:IDNOPT>
      <c1d2d:startsim/>
-     <c1d2d:IEDSW>10</c1d2d:IEDSW>
+     <c1d2d:IEDSW>0</c1d2d:IEDSW>
      <c1d2d:TBFACT>0.2</c1d2d:TBFACT>
      <c1d2d:TBMIN>2.0</c1d2d:TBMIN>
      <c1d2d:_p_bottom>1.0</c1d2d:_p_bottom>
      <c1d2d:OMEGA>42.0</c1d2d:OMEGA>
-     <c1d2d:ELEV>1.0</c1d2d:ELEV>
+     <c1d2d:ELEV>8.4</c1d2d:ELEV>
      <c1d2d:UNOM>0.5</c1d2d:UNOM>
      <c1d2d:UDIR>0.0</c1d2d:UDIR>
      <c1d2d:HMIN>0.2</c1d2d:HMIN>
@@ -41,23 +41,27 @@
       <c1d2d:TimestepsObservation gml:id="TimestepsObservation11834502446251">
        <gml:name>Zeitschritt Definition</gml:name>
        <om:resultDefinition xmlns:om="http://www.opengis.net/om">
-        <sweExt:SortedRecordDefinition gml:id="SortedRecordDefinition11834504809534">
+        <sweExt:SortedRecordDefinition gml:id="SortedRecordDefinition11839727849661">
          <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time"/>
          <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#UnderRelaxationFactor"/>
          <sweExt:sortedComponent xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time"/>
         </sweExt:SortedRecordDefinition>
        </om:resultDefinition>
-       <om:result xmlns:om="http://www.opengis.net/om"><![CDATA[2007-07-03T00%3A00%3A00.000%2B02%3A00 1.000
-2007-07-03T01%3A00%3A00.000%2B02%3A00 1.000
-2007-07-03T02%3A00%3A00.000%2B02%3A00 1.000
-2007-07-03T03%3A00%3A00.000%2B02%3A00 1.000
-2007-07-03T04%3A00%3A00.000%2B02%3A00 1.000
-2007-07-03T05%3A00%3A00.000%2B02%3A00 1.000
-2007-07-03T06%3A00%3A00.000%2B02%3A00 1.000
-2007-07-03T07%3A00%3A00.000%2B02%3A00 1.000
-2007-07-03T08%3A00%3A00.000%2B02%3A00 1.000
-2007-07-03T09%3A00%3A00.000%2B02%3A00 1.000
-2007-07-03T10%3A00%3A00.000%2B02%3A00 1.000
+       <om:result xmlns:om="http://www.opengis.net/om"><![CDATA[2007-01-01T19%3A00%3A00.000%2B01%3A00 0.600
+2007-01-02T03%3A20%3A00.000%2B01%3A00 0.600
+2007-01-02T11%3A40%3A00.000%2B01%3A00 0.600
+2007-01-02T20%3A00%3A00.000%2B01%3A00 0.600
+2007-01-03T04%3A20%3A00.000%2B01%3A00 0.600
+2007-01-03T12%3A40%3A00.000%2B01%3A00 0.600
+2007-01-03T21%3A00%3A00.000%2B01%3A00 0.600
+2007-01-04T05%3A20%3A00.000%2B01%3A00 0.600
+2007-01-04T13%3A40%3A00.000%2B01%3A00 0.600
+2007-01-04T22%3A00%3A00.000%2B01%3A00 0.600
+2007-01-05T06%3A20%3A00.000%2B01%3A00 0.600
+2007-01-05T14%3A40%3A00.000%2B01%3A00 0.600
+2007-01-05T23%3A00%3A00.000%2B01%3A00 0.600
+2007-01-06T07%3A20%3A00.000%2B01%3A00 0.600
+2007-01-06T15%3A40%3A00.000%2B01%3A00 0.600
 ]]></om:result>
       </c1d2d:TimestepsObservation>
      </c1d2d:timestepsMember>
