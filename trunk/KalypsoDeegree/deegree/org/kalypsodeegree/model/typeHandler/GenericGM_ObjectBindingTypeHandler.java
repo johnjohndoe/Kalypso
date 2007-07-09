@@ -42,6 +42,7 @@ package org.kalypsodeegree.model.typeHandler;
 
 import java.net.URL;
 
+import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.types.GenericBindingTypeHandler;
@@ -128,8 +129,10 @@ public class GenericGM_ObjectBindingTypeHandler extends GenericBindingTypeHandle
     try
     {
       final AdapterValueToGMLBinding valueToGMLBindingAdapter = AdapterGmlIO.getGM_ObjectToGMLBindingAdapter( gmlVersion );
-      final Object bindingObject = valueToGMLBindingAdapter.wrapToBinding( (GM_Object) geometry );
-      super.marshal( propQName, bindingObject, reader, context, gmlVersion );
+      final Object geomObject = valueToGMLBindingAdapter.wrapToBinding( (GM_Object) geometry );
+      final JAXBElement< ? extends Object> geomElement = valueToGMLBindingAdapter.createJAXBGeometryElement( geomObject );
+
+      super.marshal( propQName, geomElement, reader, gmlVersion );
     }
     catch( final GM_Exception e )
     {
@@ -147,21 +150,18 @@ public class GenericGM_ObjectBindingTypeHandler extends GenericBindingTypeHandle
     {
       // TODO: the unmarshalling/marshalling (especially the adapting to the bindng stuff)
       // takes veeeery long!
-      // better implement/fix the clone method if GM_Object's
+      // better implement/fix the clone method of GM_Object's
       final GM_Object geometry = (GM_Object) objectToClone;
 
-      // final String gmlVersion = "3.1";
-      //
       final AdapterValueToGMLBinding objectToGMLBindingAdapter = AdapterGmlIO.getGM_ObjectToGMLBindingAdapter( gmlVersion );
       final AdapterBindingToValue bindingToGM_ObjectAdapter = AdapterGmlIO.getGMLBindingToGM_ObjectAdapter( gmlVersion );
 
-      final Object bindingGeometry = objectToGMLBindingAdapter.wrapToBinding( geometry );
+      final Object geoObject = objectToGMLBindingAdapter.wrapToBinding( geometry );
 
-      final Object clonedBindingGeometry = super.cloneObject( bindingGeometry, gmlVersion );
+      final Object clonedBindingGeometry = super.cloneObject( geoObject, gmlVersion );
 
-      final Class geometryClass = getValueClass();
-      final Object result = bindingToGM_ObjectAdapter.wrapFromBinding( clonedBindingGeometry, geometryClass );
-      return result;
+      final Class< ? > geometryClass = getValueClass();
+      return bindingToGM_ObjectAdapter.wrapFromBinding( clonedBindingGeometry, geometryClass );
     }
     catch( final GM_Exception e )
     {

@@ -86,7 +86,7 @@ import org.w3c.dom.Element;
  */
 public class AdapterValueToBinding_GML2x implements AdapterValueToGMLBinding
 {
-  final static ObjectFactory gml2Fac = new ObjectFactory();
+  public final static ObjectFactory OF_GML2 = new ObjectFactory();
 
   private static final String COORDINATES_SEPARATOR = " ";
 
@@ -131,10 +131,10 @@ public class AdapterValueToBinding_GML2x implements AdapterValueToGMLBinding
     throw new UnsupportedOperationException( geometry.getClass().getName() + " is not supported" );
   }
 
-  private Object createMultiPolygonType( final GM_MultiSurface multiSurface, final String csNameDefault )
+  private MultiPolygonType createMultiPolygonType( final GM_MultiSurface multiSurface, final String csNameDefault )
   {
     final String csName = getCSName( multiSurface, csNameDefault );
-    final MultiPolygonType multiPolygonType = AdapterValueToBinding_GML2x.gml2Fac.createMultiPolygonType();
+    final MultiPolygonType multiPolygonType = AdapterValueToBinding_GML2x.OF_GML2.createMultiPolygonType();
     final GM_Surface[] allSurfaces = multiSurface.getAllSurfaces();
 
     final List<JAXBElement< ? extends GeometryAssociationType>> geometryMember = multiPolygonType.getGeometryMember();
@@ -142,20 +142,20 @@ public class AdapterValueToBinding_GML2x implements AdapterValueToGMLBinding
     for( final GM_Surface surface : allSurfaces )
     {
       final PolygonType polygonType = createPolygonType( surface, csName );
-      final PolygonMemberType polygonMemberType = AdapterValueToBinding_GML2x.gml2Fac.createPolygonMemberType();
-      final JAXBElement<PolygonType> polygonElement = AdapterValueToBinding_GML2x.gml2Fac.createPolygon( polygonType );
+      final PolygonMemberType polygonMemberType = AdapterValueToBinding_GML2x.OF_GML2.createPolygonMemberType();
+      final JAXBElement<PolygonType> polygonElement = AdapterValueToBinding_GML2x.OF_GML2.createPolygon( polygonType );
       polygonMemberType.setGeometry( polygonElement );
-      final JAXBElement<PolygonMemberType> polygonMember = AdapterValueToBinding_GML2x.gml2Fac.createPolygonMember( polygonMemberType );
+      final JAXBElement<PolygonMemberType> polygonMember = AdapterValueToBinding_GML2x.OF_GML2.createPolygonMember( polygonMemberType );
       geometryMember.add( polygonMember );
     }
     multiPolygonType.setSrsName( csName );
     return multiPolygonType;
   }
 
-  private Object createMultiLineStringType( final GM_MultiCurve multiCurve, final String csNameDefault ) throws GM_Exception
+  private MultiLineStringType createMultiLineStringType( final GM_MultiCurve multiCurve, final String csNameDefault ) throws GM_Exception
   {
     final String csName = getCSName( multiCurve, csNameDefault );
-    final MultiLineStringType multiLineStringType = AdapterValueToBinding_GML2x.gml2Fac.createMultiLineStringType();
+    final MultiLineStringType multiLineStringType = AdapterValueToBinding_GML2x.OF_GML2.createMultiLineStringType();
     final GM_Curve[] allCurves = multiCurve.getAllCurves();
 
     final List<JAXBElement< ? extends GeometryAssociationType>> geometryMember = multiLineStringType.getGeometryMember();
@@ -163,10 +163,10 @@ public class AdapterValueToBinding_GML2x implements AdapterValueToGMLBinding
     for( final GM_Curve curve : allCurves )
     {
       final LineStringType curveType = createLineStringType( curve, csName );
-      final LineStringMemberType lineStringMemberType = AdapterValueToBinding_GML2x.gml2Fac.createLineStringMemberType();
-      final JAXBElement<LineStringType> lineStringElement = AdapterValueToBinding_GML2x.gml2Fac.createLineString( curveType );
+      final LineStringMemberType lineStringMemberType = AdapterValueToBinding_GML2x.OF_GML2.createLineStringMemberType();
+      final JAXBElement<LineStringType> lineStringElement = AdapterValueToBinding_GML2x.OF_GML2.createLineString( curveType );
       lineStringMemberType.setGeometry( lineStringElement );
-      final JAXBElement<LineStringMemberType> lineStringMember = AdapterValueToBinding_GML2x.gml2Fac.createLineStringMember( lineStringMemberType );
+      final JAXBElement<LineStringMemberType> lineStringMember = AdapterValueToBinding_GML2x.OF_GML2.createLineStringMember( lineStringMemberType );
       geometryMember.add( lineStringMember );
     }
     multiLineStringType.setSrsName( csName );
@@ -176,18 +176,17 @@ public class AdapterValueToBinding_GML2x implements AdapterValueToGMLBinding
   private MultiPointType createMultiPointType( final GM_MultiPoint multiPoint, final String csNameDefault )
   {
     final String csName = getCSName( multiPoint, csNameDefault );
-    final MultiPointType multiPointType = AdapterValueToBinding_GML2x.gml2Fac.createMultiPointType();
+    final MultiPointType multiPointType = AdapterValueToBinding_GML2x.OF_GML2.createMultiPointType();
     final GM_Point[] allPoints = multiPoint.getAllPoints();
 
     final List<JAXBElement< ? extends GeometryAssociationType>> pointList = multiPointType.getGeometryMember();
-    for( int i = 0; i < allPoints.length; i++ )
+    for( final GM_Point point : allPoints )
     {
-      final GM_Point point = allPoints[i];
       final PointType pointType = createPointType( point, csName );
-      final PointMemberType type = AdapterValueToBinding_GML2x.gml2Fac.createPointMemberType();
-      final JAXBElement<PointType> pointElement = AdapterValueToBinding_GML2x.gml2Fac.createPoint( pointType );
+      final PointMemberType type = AdapterValueToBinding_GML2x.OF_GML2.createPointMemberType();
+      final JAXBElement<PointType> pointElement = AdapterValueToBinding_GML2x.OF_GML2.createPoint( pointType );
       type.setGeometry( pointElement );
-      final JAXBElement<PointMemberType> pointMember = AdapterValueToBinding_GML2x.gml2Fac.createPointMember( type );
+      final JAXBElement<PointMemberType> pointMember = AdapterValueToBinding_GML2x.OF_GML2.createPointMember( type );
       pointList.add( pointMember );
     }
     multiPointType.setSrsName( csName );
@@ -201,14 +200,14 @@ public class AdapterValueToBinding_GML2x implements AdapterValueToGMLBinding
     final GM_Ring exteriorRing = surfaceBoundary.getExteriorRing();
     final GM_Ring[] interiorRings = surfaceBoundary.getInteriorRings();
 
-    final PolygonType polygonType = AdapterValueToBinding_GML2x.gml2Fac.createPolygonType();
+    final PolygonType polygonType = AdapterValueToBinding_GML2x.OF_GML2.createPolygonType();
 
     // exterior
-    final LinearRingType outerLinearRingType = AdapterValueToBinding_GML2x.gml2Fac.createLinearRingType();
+    final LinearRingType outerLinearRingType = AdapterValueToBinding_GML2x.OF_GML2.createLinearRingType();
     final CoordinatesType outerRingCoordinatesType = createCoordinatesType( exteriorRing.getPositions() );
     outerLinearRingType.setCoordinates( outerRingCoordinatesType );
-    final JAXBElement<LinearRingType> outerLinearRing = AdapterValueToBinding_GML2x.gml2Fac.createLinearRing( outerLinearRingType );
-    final LinearRingMemberType outerLinearRingMemberType = AdapterValueToBinding_GML2x.gml2Fac.createLinearRingMemberType();
+    final JAXBElement<LinearRingType> outerLinearRing = AdapterValueToBinding_GML2x.OF_GML2.createLinearRing( outerLinearRingType );
+    final LinearRingMemberType outerLinearRingMemberType = AdapterValueToBinding_GML2x.OF_GML2.createLinearRingMemberType();
     outerLinearRingMemberType.setGeometry( outerLinearRing );
     polygonType.setOuterBoundaryIs( outerLinearRingMemberType );
 
@@ -216,14 +215,13 @@ public class AdapterValueToBinding_GML2x implements AdapterValueToGMLBinding
 
     final List<LinearRingMemberType> interiorContainer = polygonType.getInnerBoundaryIs();
     if( interiorRings != null )
-      for( int i = 0; i < interiorRings.length; i++ )
+      for( final GM_Ring ring : interiorRings )
       {
-        final GM_Ring ring = interiorRings[i];
-        final LinearRingType innerLinearRingType = AdapterValueToBinding_GML2x.gml2Fac.createLinearRingType();
+        final LinearRingType innerLinearRingType = AdapterValueToBinding_GML2x.OF_GML2.createLinearRingType();
         final CoordinatesType innerRingCoordinatesType = createCoordinatesType( ring.getPositions() );
         innerLinearRingType.setCoordinates( innerRingCoordinatesType );
-        final JAXBElement<LinearRingType> innerLinearRing = AdapterValueToBinding_GML2x.gml2Fac.createLinearRing( innerLinearRingType );
-        final LinearRingMemberType innerLinearRingMemberType = AdapterValueToBinding_GML2x.gml2Fac.createLinearRingMemberType();
+        final JAXBElement<LinearRingType> innerLinearRing = AdapterValueToBinding_GML2x.OF_GML2.createLinearRing( innerLinearRingType );
+        final LinearRingMemberType innerLinearRingMemberType = AdapterValueToBinding_GML2x.OF_GML2.createLinearRingMemberType();
         innerLinearRingMemberType.setGeometry( innerLinearRing );
         interiorContainer.add( innerLinearRingMemberType );
       }
@@ -235,7 +233,7 @@ public class AdapterValueToBinding_GML2x implements AdapterValueToGMLBinding
   private LineStringType createLineStringType( final GM_Curve lineString, final String csNameDefault ) throws GM_Exception
   {
     final String csName = getCSName( lineString, csNameDefault );
-    final LineStringType lineStringType = AdapterValueToBinding_GML2x.gml2Fac.createLineStringType();
+    final LineStringType lineStringType = AdapterValueToBinding_GML2x.OF_GML2.createLineStringType();
     final GM_LineString asLineString = lineString.getAsLineString();
     final GM_Position[] positions = asLineString.getPositions();
     final CoordinatesType coordinatesType = createCoordinatesType( positions );
@@ -246,7 +244,7 @@ public class AdapterValueToBinding_GML2x implements AdapterValueToGMLBinding
 
   private PointType createPointType( final GM_Point point, final String csNameDefault )
   {
-    final PointType pointType = AdapterValueToBinding_GML2x.gml2Fac.createPointType();
+    final PointType pointType = AdapterValueToBinding_GML2x.OF_GML2.createPointType();
     final GM_Position position = point.getPosition();
     final CoordinatesType coordinatesType = createCoordinatesType( new GM_Position[] { position } );
     pointType.setSrsName( csNameDefault );
@@ -256,7 +254,7 @@ public class AdapterValueToBinding_GML2x implements AdapterValueToGMLBinding
 
   private CoordinatesType createCoordinatesType( final GM_Position[] positions )
   {
-    final CoordinatesType coordinatesType = AdapterValueToBinding_GML2x.gml2Fac.createCoordinatesType();
+    final CoordinatesType coordinatesType = AdapterValueToBinding_GML2x.OF_GML2.createCoordinatesType();
     coordinatesType.setCs( AdapterValueToBinding_GML2x.COORDINATES_SEPARATOR );
     coordinatesType.setDecimal( AdapterValueToBinding_GML2x.DECIMAL_SEPARATOR );
     coordinatesType.setTs( AdapterValueToBinding_GML2x.TUPPLE_SEPARATOR );
@@ -304,21 +302,20 @@ public class AdapterValueToBinding_GML2x implements AdapterValueToGMLBinding
     }
   }
 
-  private JAXBElement createJAXBGeometryElement( final Object geometry )
+  public JAXBElement< ? extends Object> createJAXBGeometryElement( final Object geometry )
   {
     if( geometry instanceof PointType )
-      return AdapterValueToBinding_GML2x.gml2Fac.createPoint( (PointType) geometry );
+      return AdapterValueToBinding_GML2x.OF_GML2.createPoint( (PointType) geometry );
     if( geometry instanceof LineStringType )
-      return AdapterValueToBinding_GML2x.gml2Fac.createLineString( (LineStringType) geometry );
+      return AdapterValueToBinding_GML2x.OF_GML2.createLineString( (LineStringType) geometry );
     if( geometry instanceof PolygonType )
-      return AdapterValueToBinding_GML2x.gml2Fac.createPolygon( (PolygonType) geometry );
-
+      return AdapterValueToBinding_GML2x.OF_GML2.createPolygon( (PolygonType) geometry );
     if( geometry instanceof MultiPointType )
-      return AdapterValueToBinding_GML2x.gml2Fac.createMultiPoint( (MultiPointType) geometry );
+      return AdapterValueToBinding_GML2x.OF_GML2.createMultiPoint( (MultiPointType) geometry );
     if( geometry instanceof MultiLineStringType )
-      return AdapterValueToBinding_GML2x.gml2Fac.createMultiLineString( (MultiLineStringType) geometry );
+      return AdapterValueToBinding_GML2x.OF_GML2.createMultiLineString( (MultiLineStringType) geometry );
     if( geometry instanceof MultiPolygonType )
-      return AdapterValueToBinding_GML2x.gml2Fac.createMultiPolygon( (MultiPolygonType) geometry );
+      return AdapterValueToBinding_GML2x.OF_GML2.createMultiPolygon( (MultiPolygonType) geometry );
     throw new UnsupportedOperationException();
   }
 
@@ -327,7 +324,7 @@ public class AdapterValueToBinding_GML2x implements AdapterValueToGMLBinding
    */
   public Object wrapToBinding( final GM_Envelope geometry )
   {
-    final BoxType boxType = AdapterValueToBinding_GML2x.gml2Fac.createBoxType();
+    final BoxType boxType = AdapterValueToBinding_GML2x.OF_GML2.createBoxType();
     final GM_Position[] positions = new GM_Position[] { geometry.getMin(), geometry.getMax() };
     final CoordinatesType coordinatesType = createCoordinatesType( positions );
     boxType.setCoordinates( coordinatesType );

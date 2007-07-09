@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.geometry;
 
+import javax.xml.bind.JAXBElement;
+
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -51,6 +53,12 @@ import org.w3c.dom.Element;
 public interface AdapterValueToGMLBinding
 {
   /**
+   * wrap {@link GM_Object } to BindingType
+   * 
+   * @param geometry
+   *            the geometry to wrap
+   * @param gmlVersion
+   *            requested compatibility or <code>null</code>for unspecified GML compatibility
    * @return binding type elements
    */
   public Object wrapToBinding( final GM_Object geometry ) throws GM_Exception;
@@ -62,4 +70,5 @@ public interface AdapterValueToGMLBinding
 
   public Element wrapToElement( GM_Object geometry ) throws GM_Exception;
 
+  public JAXBElement< ? extends Object> createJAXBGeometryElement( Object geometry );
 }
