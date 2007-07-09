@@ -133,9 +133,7 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
     m_lastLineLabelProvider = new LastLineLabelProvider( m_tupleResultLabelProvider, m_lastLineBackground );
 
     if( m_viewerFilter != null )
-    {
       m_viewer.addFilter( m_viewerFilter );
-    }
 
     final TupleResultCellModifier tupleResultCellModifier = new TupleResultCellModifier( m_tupleResultContentProvider );
 
@@ -147,9 +145,7 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
       {
         final TupleResult result = tupleResultContentProvider.getResult();
         if( result != null )
-        {
           return result.createRecord();
-        }
 
         return null;
       }
@@ -214,17 +210,13 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
 
     final Feature feature = getObservationFeature();
     if( m_tupleResult != null )
-    {
       m_tupleResult.removeChangeListener( this );
-    }
 
     final IObservation<TupleResult> obs = feature == null ? null : ObservationFeatureFactory.toObservation( feature );
     m_tupleResult = obs == null ? null : obs.getResult();
 
     if( m_tupleResult != null )
-    {
       m_tupleResult.addChangeListener( this );
-    }
 
     m_viewer.setInput( m_tupleResult );
   }
@@ -304,7 +296,7 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
 
   private void fireChanges( final boolean definitionChanged )
   {
-    final Feature obsFeature = getFeature();
+    final Feature obsFeature = getObservationFeature();
     final IFeatureType obsFT = obsFeature.getFeatureType();
     final IRelationType resultDefPT = (IRelationType) obsFT.getProperty( ObservationFeatureFactory.OM_RESULTDEFINITION );
     final IPropertyType resultPT = obsFT.getProperty( ObservationFeatureFactory.OM_RESULT );
@@ -331,18 +323,14 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
   public void setColumnDescriptors( final ColumnDescriptor[] cd )
   {
     for( final ColumnDescriptor descriptor : cd )
-    {
       m_columnDescriptors.put( descriptor.getComponent(), descriptor );
-    }
   }
 
   /** dto. for feature type comparement */
   public void setColumnTypeDescriptor( final ColumnTypeDescriptor[] cd )
   {
     for( final ColumnTypeDescriptor descr : cd )
-    {
       m_columnTypeDescriptors.put( descr.getComponent(), descr );
-    }
   }
 
   /**
