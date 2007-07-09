@@ -122,9 +122,7 @@ public class FeatureCompositeGFTWrapper
     final List<FeatureviewType> view = m_template.getView();
 
     for( final FeatureviewType featureviewType : view )
-    {
       cfvFactory.addView( featureviewType );
-    }
 
     m_compFeature = new FeatureComposite( feature, KalypsoCorePlugin.getDefault().getSelectionManager(), cfvFactory );
     m_compFeature.setFormToolkit( toolkit );
@@ -154,24 +152,18 @@ public class FeatureCompositeGFTWrapper
      * loadGML() is at least called once.
      */
     if( workspace == null )
-    {
       throw new IllegalStateException( "Workspace not initialized." );
-    }
 
     /* If a FeatureComposite exists, then the listeners can be attached. */
     if( m_compFeature == null )
-    {
       throw new IllegalStateException( "There was no FeatureComposite." );
-    }
 
     /*
      * Are there already listeners created?
      */
     if( (m_ifFtrChLstner != null) )
-    {
       /* There are already listeners specified. Remove them first. */
       throw new IllegalStateException( "There are already listener attached, remove them first." );
-    }
 
     /* ModellListener erzeugen. */
     final ModellEventListener listener = new ModellEventListener()
@@ -182,18 +174,14 @@ public class FeatureCompositeGFTWrapper
         {
           final Control control = getFeatureComposite().getControl();
           if( (control != null) && !control.isDisposed() )
-          {
             control.getDisplay().asyncExec( new Runnable()
             {
               public void run( )
               {
                 if( !control.isDisposed() )
-                {
                   getFeatureComposite().updateControl();
-                }
               }
             } );
-          }
         }
       }
     };
@@ -240,12 +228,12 @@ public class FeatureCompositeGFTWrapper
    * @param gmlId
    *            the id which will be replaced
    */
-  public void createGftFile( final IProject project, final String templateFilePath, final File gftFile, final String gmlId ) throws IOException, CoreException
+  public static void createGftFile( final IProject project, final String templateFilePath, final File gftFile, final String gmlId ) throws IOException, CoreException
   {
     final HashMap<String, String> replacement = new HashMap<String, String>();
     replacement.put( "%PLACEHOLDER%", gmlId );
 
-    createGftFile( project, templateFilePath, gftFile, replacement );
+    FeatureCompositeGFTWrapper.createGftFile( project, templateFilePath, gftFile, replacement );
   }
 
   /**
@@ -260,12 +248,10 @@ public class FeatureCompositeGFTWrapper
    * @param hReplacements
    *            index[key, value] - keys will be replaced with their assigned values
    */
-  public void createGftFile( final IProject project, final String templateFilePath, final File gftFile, final Map<String, String> hReplacements ) throws IOException, CoreException
+  public static void createGftFile( final IProject project, final String templateFilePath, final File gftFile, final Map<String, String> hReplacements ) throws IOException, CoreException
   {
     if( (project == null) || (templateFilePath == null) || (gftFile == null) || (hReplacements == null) )
-    {
       return;
-    }
 
     final IFile iFile = project.getFile( templateFilePath );
     final String sTempLocation = iFile.getLocation().toOSString();
@@ -273,28 +259,21 @@ public class FeatureCompositeGFTWrapper
     final FileReader input = new FileReader( sTempLocation );
 
     if( input == null )
-    {
       return;
-    }
 
     String content = "";
     int c;
 
     while( (c = input.read()) != -1 )
-    {
       // $ANALYSIS-IGNORE,codereview.java.rules.casting.RuleCastingPrimitives
       content += (char) c;
-
-    }
 
     input.close();
 
     final Set<Entry<String, String>> entrySet = hReplacements.entrySet();
 
     for( final Entry<String, String> entry : entrySet )
-    {
       content = content.replaceAll( entry.getKey(), entry.getValue() );
-    }
 
     final FileWriter writer = new FileWriter( gftFile );
     writer.write( content );
