@@ -53,6 +53,8 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypsodeegree.model.feature.Feature;
@@ -305,8 +307,39 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
    */
   public ICalculationUnit getCalculationUnit( )
   {
-    ICalculationUnit resolveLink = FeatureHelper.resolveLink( this, Kalypso1D2DSchemaConstants.WB1D2D_PROP_CALC_UNIT, ICalculationUnit.class );
-    return resolveLink;
+    try
+    {
+      ICalculationUnit resolveLink = FeatureHelper.resolveLink( this, Kalypso1D2DSchemaConstants.WB1D2D_PROP_CALC_UNIT, ICalculationUnit.class );
+      return resolveLink;
+    }
+    catch ( IllegalStateException e) 
+    {
+      //appends if the gml are not saved yet
+      //hacking by getting the feature id and returning 
+      //the one id the control workspace with the same id
+      //this will only work in the same scenario context
+      Feature resolveLink = 
+        FeatureHelper.resolveLink( this.getFeature(), Kalypso1D2DSchemaConstants.WB1D2D_PROP_CALC_UNIT );
+      if( !( resolveLink instanceof XLinkedFeature_Impl ) )
+      {
+        throw e;
+      }
+      String featureId = ((XLinkedFeature_Impl)resolveLink).getFeatureId();
+      IFEDiscretisationModel1d2d model = Util.getModel( IFEDiscretisationModel1d2d.class );
+      if( model == null )
+      {
+        throw e;
+      }
+      GMLWorkspace modelWorkspace = model.getWrappedFeature().getWorkspace();
+      Feature calUnitFeature = modelWorkspace.getFeature( featureId );
+      if( calUnitFeature == null )
+      {
+        return null;
+      }
+      ICalculationUnit adapter = 
+        (ICalculationUnit) calUnitFeature.getAdapter( ICalculationUnit.class );
+      return adapter;
+    }
   }
 
   /**

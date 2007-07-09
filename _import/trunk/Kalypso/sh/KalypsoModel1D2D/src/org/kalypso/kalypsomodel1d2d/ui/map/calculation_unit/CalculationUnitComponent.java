@@ -53,6 +53,7 @@ import org.eclipse.ui.PlatformUI;
 import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards.CreateCalculationUnitWizard;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.DeleteCalculationUnitCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.editor.FeatureWrapperListEditor;
@@ -60,6 +61,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.editor.IButtonConstants;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
+import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -177,6 +179,10 @@ public class CalculationUnitComponent
         ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
     if( calUnitToDel != null )
     {
+      
+      //find control model and removes
+      CalUnitOps.removeUnitControlModel( calUnitToDel );
+      //
       final IFEDiscretisationModel1d2d model1d2d =
           dataModel.getData( 
               IFEDiscretisationModel1d2d.class, 
@@ -207,6 +213,8 @@ public class CalculationUnitComponent
       KeyBasedDataModelUtil.postCommand( dataModel, delCmd );
     }
   }
+  
+  
   
   @Override
   protected ILabelProvider getLabelProvider(Display display)
