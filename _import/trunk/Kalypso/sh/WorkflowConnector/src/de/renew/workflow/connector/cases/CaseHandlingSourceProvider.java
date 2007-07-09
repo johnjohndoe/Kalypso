@@ -26,7 +26,7 @@ public class CaseHandlingSourceProvider<T extends Case, D extends Object> extend
       LOGGER.setUseParentHandlers( false );
   }
 
-  private static final String[] PROVIDED_SOURCE_NAMES = new String[] { ACTIVE_CASE_FOLDER_NAME, ACTIVE_CASE_DATA_PROVIDER_NAME };
+  private static final String[] PROVIDED_SOURCE_NAMES = new String[] { ACTIVE_CASE_FOLDER_NAME, ACTIVE_CASE_DATA_PROVIDER_NAME, ACTIVE_CASE_URI_NAME };
 
   protected ActiveWorkContext<T> m_activeWorkContext;
 
@@ -71,6 +71,7 @@ public class CaseHandlingSourceProvider<T extends Case, D extends Object> extend
     final Map currentState = new TreeMap();
     currentState.put( ACTIVE_CASE_FOLDER_NAME, getSzenarioFolder() );
     currentState.put( ACTIVE_CASE_DATA_PROVIDER_NAME, getDataProvider() );
+    currentState.put( ACTIVE_CASE_URI_NAME, getSzenarioUri() );
     return currentState;
   }
 
@@ -80,7 +81,18 @@ public class CaseHandlingSourceProvider<T extends Case, D extends Object> extend
   public String[] getProvidedSourceNames( )
   {
     return PROVIDED_SOURCE_NAMES;
-  }  
+  }
+
+  private String getSzenarioUri( )
+  {
+    final T currentCase = m_activeWorkContext.getCurrentCase();
+    if( currentCase == null )
+      return null;
+    else
+    {
+      return currentCase.getURI();
+    }
+  }
 
   private IContainer getSzenarioFolder( )
   {

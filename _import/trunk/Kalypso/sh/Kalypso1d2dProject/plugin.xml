@@ -325,6 +325,15 @@
       </viewerContentBinding>
       <viewer
             viewerId="org.kalypso.kalypso1d2d.pjt.views.ResultNavigator">
+            <options>
+            	<!-- Hide the "Link with Editor" action from the toolbar of the viewer -->
+				<property name="org.eclipse.ui.navigator.hideLinkWithEditorAction"
+						  value="true"/>
+				<!-- Hide the "Available Extensions" tab in the "Available Customizations" 
+					dialog (available from the "Filters" action -->
+				<!--<property name="org.eclipse.ui.navigator.hideAvailableExtensionsTab"
+						  value="true"/>-->
+			</options>
       </viewer>
       <viewerContentBinding
             viewerId="org.kalypso.kalypso1d2d.pjt.views.ResultNavigator">
@@ -332,6 +341,9 @@
             <contentExtension
                   isRoot="true"
                   pattern="org.kalypso.kalypso1d2d.pjt.navigator.ResultContent">
+            </contentExtension>
+            <contentExtension
+                  pattern="org.kalypso.kalypso1d2d.pjt.navigator.ActiveScenarioFilter">
             </contentExtension>
          </includes>
       </viewerContentBinding>
@@ -402,6 +414,20 @@
             </or>
          </enablement>
       </navigatorContent>
+      <commonFilter
+            activeByDefault="false"
+            description="Nur Ergebnisse des aktiven Szenarios anzeigen"
+            id="org.kalypso.kalypso1d2d.pjt.navigator.ActiveScenarioFilter"
+            name="Aktives Szenario">
+         <filterExpression>
+         	   <not>
+               <test
+                     forcePluginActivation="true"
+                     property="org.kalypso.kalypso1d2d.activeCaseUri">
+               </test>
+               </not>
+         </filterExpression>
+      </commonFilter>
    </extension>
    <extension
          point="org.eclipse.ui.commands">
@@ -502,5 +528,15 @@
             </visibleWhen>
          </command>
       </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.core.expressions.propertyTesters">
+      <propertyTester
+            class="org.kalypso.kalypso1d2d.pjt.views.contentprov.SimulationDescriptorTester"
+            id="org.kalypso.kalypso1d2d.pjt.views.contentprov.SimulationDescriptorTester"
+            namespace="org.kalypso.kalypso1d2d"
+            properties="activeCaseUri"
+            type="org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptor">
+      </propertyTester>
    </extension>
 </plugin>

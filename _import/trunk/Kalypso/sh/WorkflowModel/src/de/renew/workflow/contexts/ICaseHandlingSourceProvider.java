@@ -53,4 +53,6 @@ public interface ICaseHandlingSourceProvider extends ISourceProvider
   public static final String ACTIVE_CASE_DATA_PROVIDER_NAME = "activeSzenarioDataProvider";
 
   public static final String ACTIVE_CASE_FOLDER_NAME = "activeSimulationModelBaseFolder";
+  
+  public static final String ACTIVE_CASE_URI_NAME = "activeCaseUri";
 }
