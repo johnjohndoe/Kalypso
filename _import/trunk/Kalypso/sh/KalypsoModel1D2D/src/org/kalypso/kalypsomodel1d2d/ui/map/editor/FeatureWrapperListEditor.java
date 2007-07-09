@@ -385,11 +385,6 @@ public class FeatureWrapperListEditor implements IButtonConstants
     this.nonGenericActions = nonGenericActions;
   }
   
-  protected void validateCalculationUnits( )
-  {
- 
-  }
-
   public void createControl( KeyBasedDataModel dataModel, FormToolkit toolkit, Composite parent )
   {
     this.toolkit = toolkit;
@@ -744,8 +739,7 @@ public class FeatureWrapperListEditor implements IButtonConstants
         }
         descriptionText.setText( desc );
         descriptionText.redraw();
-        validateCalculationUnits();
-      }      
+        }      
     };    
     Display display = parent.getDisplay();    
     display.syncExec( runnable );

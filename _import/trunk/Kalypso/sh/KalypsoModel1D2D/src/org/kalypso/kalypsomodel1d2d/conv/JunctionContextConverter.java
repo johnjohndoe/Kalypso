@@ -44,18 +44,15 @@ import java.util.Formatter;
 import java.util.List;
 
 import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
-import org.kalypso.kalypsomodel1d2d.ops.TypeInfo;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionContext1DTo2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionContext1DToCLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ILineElement;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 
 /**
  * Convert calculation unit Junction context to RMA10S 

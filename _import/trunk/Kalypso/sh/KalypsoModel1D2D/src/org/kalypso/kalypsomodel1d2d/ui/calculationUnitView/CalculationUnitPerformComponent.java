@@ -56,8 +56,12 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DUIImages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit2D;
 import org.kalypso.kalypsomodel1d2d.sim.CalculationUnitSimMode1D2DCalcJob;
-import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitComponent;
+import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.invariants.InvariantBConditionWithBLine;
+import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.invariants.InvariantCheckBoundaryConditions;
+import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.invariants.InvariantOverlappingElements;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitViewerLabelProvider;
 import org.kalypso.kalypsomodel1d2d.ui.map.editor.FeatureWrapperListEditor;
@@ -77,8 +81,7 @@ public class CalculationUnitPerformComponent extends FeatureWrapperListEditor im
   private CalculationUnitDataModel dataModel;
   private Map<String,String> btnDescription = new HashMap<String, String>();
   
-  private Action performCalButton = 
-    new Action("Perform", KalypsoModel1D2DUIImages.IMG_RUN_SIM )
+  private Action performCalButton = new Action("Perform", KalypsoModel1D2DUIImages.IMG_RUN_SIM )
   {
     /**
      * @see org.eclipse.jface.action.Action#run()
@@ -126,7 +129,6 @@ public class CalculationUnitPerformComponent extends FeatureWrapperListEditor im
 	                        /*BTN_CLICK_TO_CALCULATE*/);
 	    
 	    btnDescription.put( "SHOW_AND_MAXIMIZE", "Berechnungseinheit anzeigen und maximieren" );
-//	    setBtnsDescription();
 	    setNonGenericActions( new IAction[]{performCalButton} );
 	    this.dataModel = dataModel;
   }  
@@ -158,65 +160,5 @@ public class CalculationUnitPerformComponent extends FeatureWrapperListEditor im
     }    
     List<ICalculationUnit> calcList = (List<ICalculationUnit>) dataModel.getData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST );
     return calcList;
-  }
-  
-  protected void maximizeSelected( )
-  {
-    CalculationUnitComponent.maximizeSelected( getDataModel() );
-  }
-  
-  @Override
-  protected void validateCalculationUnits( )
-  {
-    
-    IFeatureWrapper2 currentSelection = getCurrentSelection();
-    
-//    if (currentSelection instanceof ICalculationUnit)
-//    {
-//      List<IProblem> tempProblemList = new ArrayList<IProblem>();
-//      ICalculationUnit orgCalc = (ICalculationUnit) currentSelection;
-//      InvariantCheckBoundaryConditions checkBC = new InvariantCheckBoundaryConditions(orgCalc,dataModel);
-//      checkBC.checkAllInvariants();
-//      tempProblemList.addAll( checkBC.getBrokenInvariantMessages() );
-//      InvariantBConditionWithBLine invBConditionBLine = new InvariantBConditionWithBLine(orgCalc, dataModel);
-//      invBConditionBLine.checkAllInvariants();
-//      tempProblemList.addAll( invBConditionBLine.getBrokenInvariantMessages() );
-//      dataModel.addValidatingMessage( orgCalc, tempProblemList );
-//      
-//      if (currentSelection instanceof ICalculationUnit1D2D)
-//      {
-//        List<IProblem> tempProblemList1 = new ArrayList<IProblem>();
-//        ICalculationUnit1D2D calc1D2D = (ICalculationUnit1D2D) currentSelection;
-//        InvariantOverlappingElements overlappingElements = new InvariantOverlappingElements(calc1D2D, dataModel);
-//        overlappingElements.checkAllInvariants();
-//        tempProblemList1.addAll( overlappingElements.getBrokenInvariantMessages() );
-//        dataModel.addValidatingMessage( calc1D2D, tempProblemList1 );
-//      }
-//    } 
-
-    /*
-    if (currentSelection instanceof ICalculationUnit2D)
-    {
-      List<IProblem> tempProblemList = new ArrayList<IProblem>();
-      ICalculationUnit orgCalc = (ICalculationUnit) currentSelection;
-      InvariantCheckBoundaryConditions checkBC = new InvariantCheckBoundaryConditions(orgCalc,dataModel);
-      checkBC.checkAllInvariants();
-      tempProblemList.addAll( checkBC.getBrokenInvariantMessages() );
-      
-      InvariantBConditionWithBLine invBConditionBLine = new InvariantBConditionWithBLine(orgCalc, dataModel);
-      invBConditionBLine.checkAllInvariants();
-      tempProblemList.addAll( invBConditionBLine.getBrokenInvariantMessages() );
-      dataModel.addValidatingMessage( orgCalc, tempProblemList );
-    } 
-    if (currentSelection instanceof ICalculationUnit1D2D)
-    {
-      List<IProblem> tempProblemList = new ArrayList<IProblem>();
-      ICalculationUnit1D2D calc1D2D = (ICalculationUnit1D2D) currentSelection;
-      InvariantOverlappingElements overlappingElements = new InvariantOverlappingElements(calc1D2D, dataModel);
-      overlappingElements.checkAllInvariants();
-      tempProblemList.addAll( overlappingElements.getBrokenInvariantMessages() );
-      dataModel.addValidatingMessage( calc1D2D, tempProblemList );
-    }
-*/
-  }
+  } 
 }

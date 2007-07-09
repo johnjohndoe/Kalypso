@@ -40,6 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.calculationUnitView;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -57,15 +64,23 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
+import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.invariants.InvariantBConditionWithBLine;
+import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.invariants.InvariantCheckBoundaryConditions;
+import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.invariants.InvariantOverlappingElements;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListener;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
  * @author Madanagopal
@@ -138,6 +153,7 @@ public class CalculationUnitProblemsComponent
     }
     
   };
+  private ICalculationUnit selCalcUnit;
 
   public void createControl( CalculationUnitDataModel dataModel, FormToolkit toolkit, Composite parent )
   {
@@ -178,24 +194,29 @@ public class CalculationUnitProblemsComponent
           @Override
           public void widgetSelected( SelectionEvent e )
           {
-            
-          }
-          
+            IProgressMonitor monitor = new NullProgressMonitor();
+            IWorkbench workbench = PlatformUI.getWorkbench();
+            IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
+            validateInvariants(workbench,activeWorkbenchWindow);
+            //selCalcUnit = (ICalculationUnit) dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
+            if (getCalculationUnit()!= null)
+            {
+              problemTableViewer.setInput(dataModel.getValidatingMessages(getCalculationUnit()));
+              problemTableViewer.refresh();
+            }            
+          }         
         });
         
         formData = new FormData();
         formData.left = new FormAttachment(nameText,10);
-        formData.top = new FormAttachment(0,5);
-        
-        refreshButton.setLayoutData( formData );
-        
+        formData.top = new FormAttachment(0,5);        
+        refreshButton.setLayoutData( formData );        
         problemTableViewer = new TableViewer( rootComposite, SWT.FILL | SWT.BORDER );
         problemsTable = problemTableViewer.getTable();
         problemTableViewer.setLabelProvider( new ProblemsListLabelProvider());
         problemTableViewer.setContentProvider( new ArrayContentProvider() );
         problemTableViewer.addSelectionChangedListener( selectionChangedListener  );
         problemsTable.setLinesVisible( true );
-        problemsTable.setLayoutData( formData ); 
         
         formData = new FormData();
         formData.left = new FormAttachment(0,5);
@@ -204,14 +225,76 @@ public class CalculationUnitProblemsComponent
         problemsTable.setLayoutData( formData );       
   }
   
+  protected void validateInvariants(IWorkbench workbench, IWorkbenchWindow activeWorkbenchWindow )
+  {
+    final IRunnableWithProgress runnable = new IRunnableWithProgress(){
+
+      public void run( IProgressMonitor monitor ) throws InvocationTargetException, InterruptedException
+      {
+        monitor.beginTask( "Starts Validating", 5 );
+        IFeatureWrapper2 currentSelection = getCalculationUnit();
+        
+        try
+        {
+          if (currentSelection instanceof ICalculationUnit)
+          {
+            List<IProblem> tempProblemList = new ArrayList<IProblem>();
+            ICalculationUnit orgCalc = (ICalculationUnit) currentSelection;
+            InvariantCheckBoundaryConditions checkBC = new InvariantCheckBoundaryConditions(orgCalc,dataModel);
+            checkBC.checkAllInvariants();
+            tempProblemList.addAll( checkBC.getBrokenInvariantMessages() );
+            InvariantBConditionWithBLine invBConditionBLine = new InvariantBConditionWithBLine(orgCalc, dataModel);
+            invBConditionBLine.checkAllInvariants();
+            tempProblemList.addAll( invBConditionBLine.getBrokenInvariantMessages() );
+            dataModel.addValidatingMessage( orgCalc, tempProblemList );
+            monitor.worked( 5 );
+            
+            if (currentSelection instanceof ICalculationUnit1D2D)
+            {
+              List<IProblem> tempProblemList1 = new ArrayList<IProblem>();
+              ICalculationUnit1D2D calc1D2D = (ICalculationUnit1D2D) currentSelection;
+              InvariantOverlappingElements overlappingElements = new InvariantOverlappingElements(calc1D2D, dataModel);
+              overlappingElements.checkAllInvariants();
+              tempProblemList1.addAll( overlappingElements.getBrokenInvariantMessages() );
+              dataModel.addValidatingMessage( calc1D2D, tempProblemList1 );
+              monitor.worked(5);
+            }            
+          }
+        }
+        catch( RuntimeException e )
+        {
+          e.printStackTrace();
+        }
+        finally
+        {
+          //monitor.worked( 90 );
+          monitor.done();
+        }
+      }      
+    };
+    try
+    {
+      workbench.getProgressService().run( true, false, runnable );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+    } 
+  }
+
   private void updateThisSection( Object newValue )
   {
     Assert.throwIAEOnNullParam( newValue, "newValue" );    
     if (newValue instanceof ICalculationUnit) 
-    {
-      ICalculationUnit selCalcUnit = (ICalculationUnit) dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
-      //problemTableViewer.refresh();
-      problemTableViewer.setInput( dataModel.getValidatingMessages( selCalcUnit ));
+    {       
+      selCalcUnit = (ICalculationUnit) dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
+      problemTableViewer.setInput(dataModel.getValidatingMessages(selCalcUnit));
+      problemTableViewer.refresh();
       }
+  }
+  
+  private ICalculationUnit getCalculationUnit()
+  {
+    return selCalcUnit;
   }
 }
