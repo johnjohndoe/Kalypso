@@ -393,4 +393,9 @@ public class XLinkedFeature_Impl extends AbstractFeature implements Feature
   {
     return m_uri;
   }
+
+  public String getFeatureId( )
+  {
+    return m_featureId;
+  }
 }
