@@ -1,4 +1,4 @@
-!Last change:  K    22 Jun 2007    5:21 pm
+!Last change:  WP    9 Jul 2007   11:23 am
 
 !****************************************************************
 !1D subroutine for calculation of elements, whose corner nodes are described with
@@ -1598,71 +1598,49 @@ QBCAssign: DO N=1, NCN, 2
   F(IRW)          = (SPEC(M,1) - VT * ah(m)) * area(nn)
 ENDDO QBCAssign
 
+
 !Correction for Coupling
 CouplingCorrection: do l = 1, ncn, 2
   if (byparts == 2 .or. byparts == 3) EXIT couplingcorrection
-  if (byparts == 1) EXIT couplingcorrection
+  !if (byparts == 1) EXIT couplingcorrection
 
-  m = ncon(l)
+  !get node number
+  M = NCON(l)
 
-  if (l==1) p = 1
-  if (l==3) p = 2
+  !check for Transition membership
+  if (TransitionMember (M)) then
 
-  do i = 1, MaxLT
-    !WRITE(*,*) 'Kopplungstest: ', (translines(i,j), j=1, 3), maxlt
-    !pause
-    if (m == TransLines(i,3)) then
-      fzsBC    = 0.0
-      dfzsdhBC = 0.0
-      zsBC     = 0.0
-      dzsdhBC  = 0.0
-      do j = 0, 12
-        fzsBC    = fzsBC    + apoly(m, j) * j / (j+1) * vel(3,m)**(j+1)
-        dfzsdhBC = dfzsdhBC + apoly(m, j) * j * vel(3,m)**(j)
-      ENDDO
-      zsBC    = fzsBC / ah(m)
-      dzsdhBC = (ah(m) * dfzsdhBC - dahdh(m) * fzsBC) / ah(m)**2
+    !Find line number and exit, if found
+    throughLines: do i = 1, MaxLT
+      if (TransLines(i, 3) == M) then
+        LiNo = TransLines(i, 2)
+        TrID = i
+        EXIT throughLines
+      end if
+    enddo throughLines
 
-      WRITE(*,*) '   depth: ', vel(3,m)
-      WRITE(*,*) '     fzs: ', fzsBC
-      WRITE(*,*) '  dfzsdh: ', dfzsdhBC
-      WRITE(*,*) '      zs: ', zsBC
-      WRITE(*,*) '   dzsdh: ', dzsdhBC
-      WRITE(*,*) '   ah(m): ', ah(m)
-      WRITE(*,*) 'dahdh(m): ', dahdh(m)
-      !pause
+    !this is the former momentum equation of the coupling node
+    IRW = (l-1) * NDF + 1
+    IRH = IRW + 2
 
-      XHT = ELEV - AO(N1)
-      NA  = (L - 1) * NDF + 1
-      RHO = DEN(N1)
-      PPL = RHO * grav
+    !get flow direction
+    CX = COS(alfa(m))
+    SA = SIN(alfa(m))
+    !get velocity
+    VT = vel(1,m) * CX + vel(2,m) * sa
 
-      WRITE(*,*) 'Kontrolle'
-      WRITE(*,*) 'Knoten m: ', m
-      WRITE(*,*) ' Tiefe t: ', vel(3,m)
-      WRITE(*,*) 'Fläche A: ', ah(m)
-      WRITE(*,*) 'Schwerp.: ', zsBC
-      WRITE(*,*) '   dzsdh: ', dzsdhBC
-      WRITE(*,*) '     xht: ', xht, inotr
-      WRITE(*,*) '  Dichte: ', rho
-      WRITE(*,*) '    grav: ', grav
-      WRITE(*,*) '    Term: ', rho*grav*zsBC*ah(m)
-      WRITE(*,*) 'on Korr.: ', f(na)
+    !reset the Jacobian
+    do j = 1, nef
+      ESTIFM (irw, j) = 0.0
+    end do
 
-      IF(L .EQ. 1) PPL = -PPL
-       if (inotr == 1) then
-          F(NA)           = F(NA) - PPL * zsBC * ah(m)
-          ESTIFM(NA,NA+2) = ESTIFM(NA,NA+2) + PPL * (dzsdhBC * ah(m) + zsBC * dahdh(m))
-        else
-          f(na)           = f(na) + PPL * zsBC * ah(m) * XHT
-          ESTIFM(NA,NA+2) = ESTIFM(NA,NA+2) - PPL * (dzsdhBC * ah(m) + zsBC * dahdh(m)) * xht
-        endif
-      !WRITE(*,*) ppl, grav, rho, zsBC, ah(m)
-      WRITE(*,*) ' + Korr.: ', f(na)
-      WRITE(*,*) 'Korrektur ', - PPL * zsBC * ah(m)
-      !pause
-    end if
-  end do
+    !set residual entry for 1D-node - 2D-line identity
+    f (irw)           = ah(m) * VT - q2D(TrID)
+    !set derivative over velocity
+    estifm (irw, irw) = - ah(m) ! / dahdh(m)
+    !set derivative over depth
+    estifm (irw, irh) = - VT * dahdh(m)
+  end if
 end do CouplingCorrection
 !-
 
@@ -1746,7 +1724,7 @@ if (testoutput > -1) then
  1234 format (i6, 6(1x, f10.2))
 endif
 
-!end of subroutine
+!end of normal subroutine run
 RETURN
 
 !*-
