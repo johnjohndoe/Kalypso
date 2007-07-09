@@ -44,6 +44,7 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 
+import org.apache.tools.ant.types.Assertions.DisabledAssertion;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -61,6 +62,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListe
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
 import org.kalypso.kalypsomodel1d2d.ui.map.merge.Model1d2dCalUnitTheme;
 import org.kalypso.kalypsomodel1d2d.ui.map.popup.PopupBlocker;
+import org.kalypso.kalypsomodel1d2d.ui.map.toolbar.MapActionDisabler;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -117,6 +119,8 @@ public class CalculationUnitWidget
    * Used to prevent the swt popup to show
    */
   final PopupBlocker popupBlocker = new PopupBlocker();
+
+  private MapActionDisabler mapActionDisabler;
 
   public CalculationUnitWidget()
   {
@@ -190,6 +194,8 @@ public class CalculationUnitWidget
 
 
     popupBlocker.registerPopupBlockerToActiveMapView();
+    mapActionDisabler = new MapActionDisabler();
+    mapActionDisabler.disableActions();
   }
 
   /**
@@ -285,6 +291,16 @@ public class CalculationUnitWidget
   {
     try
     {
+      if( mapActionDisabler!=null )
+      {
+        mapActionDisabler.enableActions();
+      }
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+    }
+    try
+    {
       MapPanel mapPanel =
         (MapPanel) dataModel.getData( ICommonKeys.KEY_MAP_PANEL );
       IMapModell mapModell = mapPanel.getMapModell();
@@ -297,6 +313,8 @@ public class CalculationUnitWidget
     {
       e.printStackTrace();
     }
+    
+    
 
     try
     {
