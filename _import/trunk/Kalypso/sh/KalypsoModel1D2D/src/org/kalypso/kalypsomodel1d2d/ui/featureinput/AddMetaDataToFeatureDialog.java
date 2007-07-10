@@ -69,13 +69,17 @@ public class AddMetaDataToFeatureDialog extends Dialog
   public AddMetaDataToFeatureDialog( Shell parentShell )
   {
     super( parentShell);
-    parentShell.setText( "Add Meta Data" );
   }
 
+  @Override
+  protected void configureShell(Shell shell)
+  {
+    super.configureShell( shell );
+    shell.setText( "Add Meta Data" );
+  }
   protected Control createDialogArea( Composite parent )
   {
     Composite comp = (Composite) super.createDialogArea( parent );
-
     GridLayout layout = (GridLayout) comp.getLayout();
     layout.numColumns = 2;
 

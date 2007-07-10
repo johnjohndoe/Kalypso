@@ -64,7 +64,6 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.ui.featureinput.AddMetaDataToFeatureDialog;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteBoundaryLineCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand;
@@ -111,10 +110,9 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
 
   private static final String TXT_ADD_META_DATA = 
                           "Add Meta Data";//"Add Metadata for Boundary Line";
+
   private static final String TXT_ADD_BOUNDARY_LINE_TO_UNIT = 
                           "Add boundary line to calculation unit";//"Add Up Stream Boundary Line";
-
-//  private static final String TXT_ADD_BOUNDARY_LINE_DOWN_STREAM = "Add Down Stream Boundary Line";
 
   private static final String TXT_SET_BOUNDARY_CONDITION = "Set Boundary Condition";
 
@@ -123,9 +121,7 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
   private static final String[][] MENU_ITEM_SPECS = {
       {TXT_ADD_META_DATA, ICONS_ELCL16_ADD_GIF},
       { TXT_ADD_BOUNDARY_LINE_TO_UNIT, ICONS_ELCL16_ADD_GIF }, 
-//      { TXT_ADD_BOUNDARY_LINE_DOWN_STREAM, ICONS_ELCL16_ADD_GIF },
       { TXT_REMOVE_BOUNDARY_LINE_FROM_UNIT, ICONS_ELCL16_REMOVE_GIF },
-// {TXT_REMOVE_BOUNDARY_LINE_DOWN_STREAM, ICONS_ELCL16_REMOVE_GIF},
       { TXT_SET_BOUNDARY_CONDITION, ICONS_ELCL16_SET_BOUNDARY_GIF }, 
       { TXT_REMOVE_BOUNDARY_LINE_FROM_MODEL, ICONS_ELCL16_SET_BOUNDARY_GIF } };
 
@@ -187,9 +183,7 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
           return;
         }
         doMenuAction( ((JMenuItem) source).getText() );
-
       }
-
     };
     return al;
   }
@@ -203,10 +197,7 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
       {
         updateAddUpStreamMenu( item );
       }
-//      else if( TXT_ADD_BOUNDARY_LINE_DOWN_STREAM.equals( text ) )
-//      {
-//        updateAddUpStreamMenu( item );
-//      }
+
       else if( TXT_REMOVE_BOUNDARY_LINE_FROM_UNIT.equals( text ) )
       {
         updateRemoveUpStreamMenu( item );
@@ -228,8 +219,6 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
 
   private void updateRemoveBoundaryLineMenu( JMenuItem item )
   {
-    // updateGeneralBadSelection( item );
-
     item.setEnabled( true );
     final IBoundaryLine selectedBoundaryLine = getSelectedBoundaryLine();
     if( selectedBoundaryLine == null )
@@ -244,7 +233,6 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
     if( item.isEnabled() )
     {
       final ICalculationUnit calUnit = dataModel.getData( ICalculationUnit.class, ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
-
       final IBoundaryLine selectedBoundaryLine = getSelectedBoundaryLine();
       if( selectedBoundaryLine != null && calUnit != null )
       {
@@ -347,8 +335,6 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
       final Display display = (Display) dataModel.getData(ICommonKeys.KEY_SELECTED_DISPLAY);
       final Runnable runnable = new Runnable()
       {
-//        private CommandableWorkspace workspace;
-
         public void run( )
         {   
           try
