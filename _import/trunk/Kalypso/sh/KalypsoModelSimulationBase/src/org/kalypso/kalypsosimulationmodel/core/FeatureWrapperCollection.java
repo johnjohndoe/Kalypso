@@ -303,9 +303,16 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
 
 	@SuppressWarnings("unchecked")
 	public FWCls get(int index) {
-		final Feature f = FeatureHelper.getFeature(featureCol.getWorkspace(),
-				featureList.get(index));
-
+		Object property = featureList.get(index);
+        final Feature f = 
+          FeatureHelper.getFeature(
+                featureCol.getWorkspace(),
+				property );
+		if( f == null )
+		{
+		  System.out.println( "Bad Link=" + property );
+		  return null;
+		}
 		FWCls adapted = (FWCls) f.getAdapter(fwClass);
 		return adapted;
 	}
@@ -329,8 +336,18 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
              * during the move IfeatureWrapper to kalypso deegree 
              * 
              */
-			for (int i = 0; i < size(); i++) {
+			for (int i = size()-1; i >=0; i--) 
+			{
 				final FWCls cls = get(i);
+				if( cls == null )
+				{
+				  //bad link removing it
+				  System.out.println(
+				      "removing bad link:" + featureList.get( i ) );
+				  remove( i );
+				  continue;
+				}
+				
 				if (cls.equals(o))
 					return i;
 			}
