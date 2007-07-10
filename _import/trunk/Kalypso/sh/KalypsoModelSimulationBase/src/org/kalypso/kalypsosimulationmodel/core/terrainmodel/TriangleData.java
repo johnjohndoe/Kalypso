@@ -40,11 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
-import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypso.jts.JTSUtilities;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
-import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitable;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitor;
 
@@ -83,7 +82,7 @@ class TriangleData implements ISurfacePatchVisitable<GM_SurfacePatch>
     /* 2. */// _divider = new TriangleDivider(ring);
     polygon = new Polygon( ring, null, ring.getFactory() );
     final Coordinate[] coords = ring.getCoordinates();
-    planeEquation = calculateTrianglePlaneEquation( coords );
+    planeEquation = JTSUtilities.calculateTrianglePlaneEquation( coords );
     centerElevation = calculateCenterElevation( coords );
   }
 
@@ -122,56 +121,6 @@ class TriangleData implements ISurfacePatchVisitable<GM_SurfacePatch>
   public double getCenterElevation( )
   {
     return centerElevation;// ring.getCoordinateN( 0 ).z;//Centroid().getCoordinate().z;
-  }
-
-  /**
-   * Given 3 coordinate this methode return the equation of a plan containing those points. The return equation as the
-   * form: z = Q*x+P*y+O The coefficients Q, P amd O are return as array
-   * 
-   * @param coords
-   *            coordinate of 3 plane points
-   * @return the cooeficients of the plane equation z = Q*x+P*y+O as array of double {Q,P,O}
-   */
-  public static final double[] calculateTrianglePlaneEquation( final Coordinate[] coords )
-  {
-    Assert.throwIAEOnNullParam( coords, "coords" );
-    if( coords.length < 3 )
-    {
-      throw new IllegalArgumentException( "Param coord which represent the point of a triangle must " + "have a minimum length of 3: current length=" + coords.length );
-    }
-
-    Coordinate coord = coords[0];
-
-    final double x1 = coord.x;
-    final double y1 = coord.y;
-    final double z1 = coord.z;
-
-    coord = coords[1];
-    final double x2 = coord.x;
-    final double y2 = coord.y;
-    final double z2 = coord.z;
-
-    coord = coords[2];
-    final double x3 = coord.x;
-    final double y3 = coord.y;
-    final double z3 = coord.z;
-    if( z1 == z2 && z2 == z3 )
-    {
-      // z=-A/Cx-B/Cy-D/C = Q*x+P*y+O
-      return new double[] { 0, 0, z1 };
-    }
-    else
-    {
-      // build the equation Ax + By + Cz - D = 0
-      double A = y1 * (z2 - z3) + y2 * (z3 - z1) + y3 * (z1 - z2);
-      double B = z1 * (x2 - x3) + z2 * (x3 - x1) + z3 * (x1 - x2);
-      final double C = x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2);
-      final double D = x1 * (y2 * z3 - y3 * z2) + x2 * (y3 * z1 - y1 * z3) + x3 * (y1 * z2 - y2 * z1);
-
-      // C=-C;
-      // z=-A/Cx-B/Cy-D/C = Q*x+P*y+O
-      return new double[] { -A / C, -B / C, D / C };
-    }
   }
 
   /**
@@ -252,7 +201,7 @@ class TriangleData implements ISurfacePatchVisitable<GM_SurfacePatch>
 
   public double computeZOfTrianglePlanePoint( final double x, final double y )
   {
-    return planeEquation[0] * x + planeEquation[1] * y + planeEquation[2];
+    return JTSUtilities.calculateTriangleZ( planeEquation, x, y );
   }
 
   public LinearRing getRing( )

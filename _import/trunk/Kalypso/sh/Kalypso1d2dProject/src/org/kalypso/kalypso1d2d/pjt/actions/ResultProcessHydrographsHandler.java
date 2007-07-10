@@ -40,10 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypso1d2d.pjt.actions;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Date;
+import java.util.Map;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -66,7 +66,7 @@ import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilitites;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultsAcessor;
-import org.kalypso.ogc.gml.serialize.GmlSerializeException;
+import org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrographCollection;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.pool.PoolableObjectType;
@@ -124,27 +124,21 @@ public class ResultProcessHydrographsHandler extends AbstractHandler
           final GMLWorkspace hydrographWorkspace = (GMLWorkspace) pool.getObject( hydrographKey );
           monitor.worked( 1 );
 
-          // iterate through timesteps
+          // get files to process
+          // TODO: change to access to ResultDB
+          final Map<Date, IFile> wspTimestepResults = resultsAcessor.getTimestepsFiles();
 
-          // iterate through hydrographs
+          final IHydrographCollection graphs = (IHydrographCollection) hydrographWorkspace.getRootFeature().getAdapter( IHydrographCollection.class );
+          processHydrographs( graphs, wspTimestepResults, overwriteExistingHydrographs );
 
           // save hydrograph.gml
           GmlSerializer.serializeWorkspace( hydrographFile.getLocation().toFile(), hydrographWorkspace, "UTF-8" );
           monitor.worked( 2 );
           hydrographFile.refreshLocal( IResource.DEPTH_ONE, new SubProgressMonitor( monitor, 1 ) );
         }
-        catch( final MalformedURLException e )
+        catch( final Throwable e )
         {
           throw new InvocationTargetException( e );
-        }
-        catch( IOException e )
-        {
-          throw new InvocationTargetException( e );
-        }
-        catch( GmlSerializeException e )
-        {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
         }
         finally
         {
@@ -156,5 +150,10 @@ public class ResultProcessHydrographsHandler extends AbstractHandler
     final IStatus status = ProgressUtilitites.busyCursorWhile( operation, null );
     ErrorDialog.openError( shell, DIALOG_TITEL, "Ganglinien konnten nicht erzeugt werden.", status );
     return status;
+  }
+
+  protected void processHydrographs( final IHydrographCollection graphs, final Map<Date, IFile> wspTimestepResults, final boolean overwriteExistingHydrographs )
+  {
+    // TODO Auto-generated method stub
   }
 }
