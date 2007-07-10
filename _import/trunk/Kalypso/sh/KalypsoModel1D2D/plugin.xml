@@ -232,6 +232,7 @@
    </action>
    <action
          class="org.kalypso.kalypsomodel1d2d.ui.map.tin.TinInfoWidgetDelegate"
+         icon="icons/elcl16/tin_info.gif"
          id="org.kalypso.kalypsomodel1d2d.ui.map.tin.TinInfoWidgetAction"
          label="TIN-Info"
          style="radio"

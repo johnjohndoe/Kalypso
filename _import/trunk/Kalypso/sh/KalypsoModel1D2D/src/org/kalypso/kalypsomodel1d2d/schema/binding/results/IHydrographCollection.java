@@ -42,16 +42,16 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.results;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.commons.xml.NS;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 
 /**
  * @author Gernot Belger
+ * 
  */
-public interface IHydrograph extends IFeatureWrapper2
+public interface IHydrographCollection extends IFeatureWrapperCollection<IHydrograph>
 {
-  public final static QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "Hydrograph" );
+  public final static QName QNAME_PROP_HYDROGRAPH_MEMBER = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "hydrographMember" );
 
-  public static final QName QNAME_PROP_LOCATION = new QName( NS.GML3, "location" );
+  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "HydrographCollection" );
 }

@@ -54,21 +54,14 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class NodeResultCollection extends FeatureWrapperCollection<INodeResult> implements INodeResultCollection
 {
-
-  
-  public NodeResultCollection( Feature featureCol )
+  public NodeResultCollection( final Feature featureCol )
   {
-    this(featureCol, INodeResult.class, Kalypso1D2DSchemaConstants.RES_1D2D_F_NODE_RES_MEMBER);
+    this( featureCol, INodeResult.class, Kalypso1D2DSchemaConstants.RES_1D2D_F_NODE_RES_MEMBER );
   }
-  
-  public NodeResultCollection( 
-            Feature featureCol, 
-            Class<INodeResult> fwClass, 
-            QName featureMemberProp )
+
+  public NodeResultCollection( final Feature featureCol, final Class<INodeResult> fwClass, final QName featureMemberProp )
   {
     super( featureCol, fwClass, featureMemberProp );
   }
 
-  
-  
 }

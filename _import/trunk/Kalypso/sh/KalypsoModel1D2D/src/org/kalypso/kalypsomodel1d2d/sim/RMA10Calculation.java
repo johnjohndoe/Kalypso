@@ -233,34 +233,34 @@ public class RMA10Calculation implements INativeIDProvider
 
   public Double[] getViskosity( final Feature roughnessFE )
   {
-    Double[] result = new Double[4];
+    final Double[] result = new Double[4];
     final int iedsw = getControlModel().getIEDSW();
-    
+
     // turbulence combo (iedsw):
-    if( iedsw == 0 || iedsw == 10 || iedsw == 13)
+    if( iedsw == 0 || iedsw == 10 || iedsw == 13 )
     {
       final double defaultValue = 2900.0;
       result[0] = defaultValue;
       result[1] = defaultValue;
       result[2] = defaultValue;
       result[3] = defaultValue;
-//      result[0] = getEddyXX( roughnessFE );
-//      result[1] = getEddyYX( roughnessFE );
-//      result[2] = getEddyXY( roughnessFE );
-//      result[3] = getEddyYY( roughnessFE );
+      // result[0] = getEddyXX( roughnessFE );
+      // result[1] = getEddyYX( roughnessFE );
+      // result[2] = getEddyXY( roughnessFE );
+      // result[3] = getEddyYY( roughnessFE );
     }
     else
     {
       // TODO: strange values, check again with Nico
-//      final double defaultValue = 0.4;
+      // final double defaultValue = 0.4;
       final double defaultValue = 2900.0;
       result[0] = defaultValue;
       result[1] = defaultValue;
       result[2] = defaultValue;
       result[3] = defaultValue;
     }
-      return result;
-    //return getcharactV( roughnessFE ); 0.4
+    return result;
+    // return getcharactV( roughnessFE ); 0.4
   }
 
   public Double getEddyXX( final Feature roughnessFE )
@@ -316,22 +316,22 @@ public class RMA10Calculation implements INativeIDProvider
 
   public List<IBoundaryLine> getContinuityLineList( )
   {
-// // implemented like this, or search for BoundaryConditions (operational model) which fits to ContinuityLines
-// // (discretisation model)
-// final IFEDiscretisationModel1d2d adapter = (IFEDiscretisationModel1d2d)
-// m_disModelWorkspace.getRootFeature().getAdapter( IFEDiscretisationModel1d2d.class );
-// final IFeatureWrapperCollection<IFE1D2DElement> elements = adapter.getElements();
-// final List<IBoundaryLine> list = new ArrayList<IBoundaryLine>();
-// final Iterator<IFE1D2DElement> iterator = elements.iterator();
-// while( iterator.hasNext() )
-// {
-// final IFE1D2DElement element = iterator.next();
-// if( element instanceof IBoundaryLine )
-// list.add( (IBoundaryLine) element );
-// }
-// return list;
-    ICalculationUnit calcultionUnit = getCalculationUnit();
-    List<IBoundaryLine> boundaryLines = CalUnitOps.getBoundaryLines( calcultionUnit );
+    // // implemented like this, or search for BoundaryConditions (operational model) which fits to ContinuityLines
+    // // (discretisation model)
+    // final IFEDiscretisationModel1d2d adapter = (IFEDiscretisationModel1d2d)
+    // m_disModelWorkspace.getRootFeature().getAdapter( IFEDiscretisationModel1d2d.class );
+    // final IFeatureWrapperCollection<IFE1D2DElement> elements = adapter.getElements();
+    // final List<IBoundaryLine> list = new ArrayList<IBoundaryLine>();
+    // final Iterator<IFE1D2DElement> iterator = elements.iterator();
+    // while( iterator.hasNext() )
+    // {
+    // final IFE1D2DElement element = iterator.next();
+    // if( element instanceof IBoundaryLine )
+    // list.add( (IBoundaryLine) element );
+    // }
+    // return list;
+    final ICalculationUnit calcultionUnit = getCalculationUnit();
+    final List<IBoundaryLine> boundaryLines = CalUnitOps.getBoundaryLines( calcultionUnit );
     return boundaryLines;
   }
 
@@ -392,10 +392,10 @@ public class RMA10Calculation implements INativeIDProvider
         final IBoundaryCondition bc = (IBoundaryCondition) relationship;
         final IObservation<TupleResult> obs = bc.getObservation();
         final TupleResult obsResult = obs.getResult();
-// CalUnitOps.getAssignedBoundaryConditionLine( unit, bCondition, grabDistance );
+        // CalUnitOps.getAssignedBoundaryConditionLine( unit, bCondition, grabDistance );
         // HACK: 0.5 as grab distance?? normally 0.0 should be enough, but then the contilines are not found, why?
         // TODO: at least find everything in this distance, if mroe than one element is found, take nearest...
-//        final boolean boundaryConditionOf = CalUnitOps.isBoundaryConditionOf( unit, bc, grabDistance );
+        // final boolean boundaryConditionOf = CalUnitOps.isBoundaryConditionOf( unit, bc, grabDistance );
         final IFeatureWrapper2 wrapper2 = CalUnitOps.getAssignedBoundaryConditionLine( unit, bc, grabDistance );// DiscretisationModelUtils.findModelElementForBC(
         // discModel,
         // bc.getPosition(),
@@ -404,8 +404,7 @@ public class RMA10Calculation implements INativeIDProvider
 
         if( wrapper2 == null )
         {
-          System.out.println(
-              "Skiping boundary condition since it is not part of calunit:"+relationship.getGmlID());
+          System.out.println( "Skiping boundary condition since it is not part of calunit:" + relationship.getGmlID() );
         }
         else if( wrapper2 instanceof IBoundaryLine )
         {
@@ -479,11 +478,11 @@ public class RMA10Calculation implements INativeIDProvider
 
   public ICalculationUnit getCalculationUnit( )
   {
-    IControlModel1D2D controlModel = getControlModel();
-    ICalculationUnit linkedCalculationUnit = controlModel.getCalculationUnit();
-    IFEDiscretisationModel1d2d discModel = getDiscModel();
-    Feature feature = discModel.getWrappedFeature().getWorkspace().getFeature( linkedCalculationUnit.getGmlID() );
-    ICalculationUnit realUnit = (ICalculationUnit) feature.getAdapter( ICalculationUnit.class );
+    final IControlModel1D2D controlModel = getControlModel();
+    final ICalculationUnit linkedCalculationUnit = controlModel.getCalculationUnit();
+    final IFEDiscretisationModel1d2d discModel = getDiscModel();
+    final Feature feature = discModel.getWrappedFeature().getWorkspace().getFeature( linkedCalculationUnit.getGmlID() );
+    final ICalculationUnit realUnit = (ICalculationUnit) feature.getAdapter( ICalculationUnit.class );
     return realUnit;
   }
 
@@ -498,41 +497,36 @@ public class RMA10Calculation implements INativeIDProvider
   }
 
   /**
-   * Adds a simulation descriptor for this rma10 simulation
-   * to the result db
+   * Adds a simulation descriptor for this rma10 simulation to the result db
    */
-  public void addToResultDB()
+  public void addToResultDB( )
   {
-    /**Descriptor for this simulation*/
-    ResultDB resultDB = 
-       KalypsoModel1D2DPlugin.getDefault().getResultDB();
+    /** Descriptor for this simulation */
+    final ResultDB resultDB = KalypsoModel1D2DPlugin.getDefault().getResultDB();
     m_simulationDesciptor = resultDB.addRMACalculation( this );
   }
-  
+
   /**
-   * Adds a descriptor for this result model to the simulation descriptor of this
-   * rma10s simulation
+   * Adds a descriptor for this result model to the simulation descriptor of this rma10s simulation
    * 
-   * @param resultModel the result model to add to the rma10 simulation
+   * @param resultModel
+   *            the result model to add to the rma10 simulation
    * @return the added result descriptor
    */
-  public IResultModelDescriptor addToSimulationDescriptor(IResultModel1d2d resultModel)
+  public IResultModelDescriptor addToSimulationDescriptor( final IResultModel1d2d resultModel )
   {
     Assert.throwIAEOnNullParam( resultModel, "resultModel" );
-    ResultDB resultDB = 
-      KalypsoModel1D2DPlugin.getDefault().getResultDB();
-    IResultModelDescriptor resDescriptor = 
-      (IResultModelDescriptor) resultDB.addModelDescriptor( resultModel );
-    IFeatureWrapperCollection<IResultModelDescriptor> resultModels = 
-                                    m_simulationDesciptor.getResultModel();
+    final ResultDB resultDB = KalypsoModel1D2DPlugin.getDefault().getResultDB();
+    final IResultModelDescriptor resDescriptor = (IResultModelDescriptor) resultDB.addModelDescriptor( resultModel );
+    final IFeatureWrapperCollection<IResultModelDescriptor> resultModels = m_simulationDesciptor.getResultModel();
     resultModels.addRef( resDescriptor );
     return resDescriptor;
   }
-  
+
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.INativeIDProvider#getID(org.kalypsodeegree.model.feature.binding.IFeatureWrapper2)
    */
-  public int getID( IFeatureWrapper2 object )
+  public int getID( final IFeatureWrapper2 object )
   {
     if( object instanceof IBoundaryLine )
     {

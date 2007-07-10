@@ -42,44 +42,75 @@ package org.kalypso.kalypsomodel1d2d.ui.map.tin;
 
 import java.awt.Graphics;
 import java.awt.Point;
+import java.util.ArrayList;
+import java.util.Formatter;
+import java.util.List;
 
-import org.eclipse.core.commands.contexts.Context;
+import javax.xml.namespace.QName;
+
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
-import org.eclipse.ui.IViewPart;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.contexts.IContextService;
 import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.commons.xml.NS;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidget;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
 import org.kalypso.ogc.gml.outline.GisMapOutlineView;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @author jung
- *
+ * 
  */
 public class TinInfoWidget extends AbstractWidget
 {
+  private final ISelectionChangedListener m_selectionListener = new ISelectionChangedListener()
+  {
+    public void selectionChanged( final SelectionChangedEvent event )
+    {
+      handleSelectionChanged( event.getSelection() );
+    }
+  };
+
   private String m_info = null;
+
   private Point m_point;
-  private ISelectionChangedListener m_selectionListener;
+
+  private ISelectionProvider m_selectionProvider = null;
+
+  private static final QName QNAME_TRIANGULATED_SURFACE = new QName( NS.GML3, "TriangulatedSurface" );
+
+  private final List<TinInfoProvider> m_tins = new ArrayList<TinInfoProvider>();
 
   public TinInfoWidget( )
   {
     super( "TIN-Info", "Zeigt TIN-Werte an" );
   }
-  
-  public TinInfoWidget( final String name, String toolTip )
+
+  public TinInfoWidget( final String name, final String toolTip )
   {
     super( name, toolTip );
   }
 
   /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#activate(org.kalypso.commons.command.ICommandTarget, org.kalypso.ogc.gml.map.MapPanel)
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#activate(org.kalypso.commons.command.ICommandTarget,
+   *      org.kalypso.ogc.gml.map.MapPanel)
    */
   @Override
   public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel )
@@ -95,7 +126,7 @@ public class TinInfoWidget extends AbstractWidget
       System.out.println( "Keine Outline gefunden." );
       return;
     }
-    
+
     final MapPanel outlineMapPanel = outlineView.getMapPanel();
     if( outlineMapPanel != mapPanel )
     {
@@ -103,24 +134,23 @@ public class TinInfoWidget extends AbstractWidget
       return;
     }
 
-    m_selectionProvider( outlineView ).addSelectionChangedListener( m_selectionListener );
+    m_selectionProvider = outlineView.getSite().getSelectionProvider();
+    m_selectionProvider.addSelectionChangedListener( m_selectionListener );
   }
 
-  private ISelectionProvider m_selectionProvider( final GisMapOutlineView outlineView )
-  {
-    return outlineView.getSite().getSelectionProvider();
-  }
-  
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#finish()
    */
   @Override
   public void finish( )
   {
-    // TODO Auto-generated method stub
     super.finish();
-    
-    // unhook selection-listener
+
+    if( m_selectionProvider != null )
+    {
+      m_selectionProvider.removeSelectionChangedListener( m_selectionListener );
+      m_selectionProvider = null;
+    }
   }
 
   /**
@@ -129,15 +159,29 @@ public class TinInfoWidget extends AbstractWidget
   @Override
   public void moved( final Point p )
   {
+    final GM_Point location = MapUtilities.transform( getMapPanel(), p );
+
     // get height from selection and remember it
-    
+    final StringBuffer sb = new StringBuffer();
+    final Formatter formatter = new Formatter( sb );
+    for( final TinInfoProvider info : m_tins )
+    {
+      final String label = info.getLabel();
+      final double elevation = info.getValue( location );
+
+      if( Double.isNaN( elevation ) )
+        formatter.format( "%20s: -%n", label, elevation );
+      else
+        formatter.format( "%20s: %.2f%n", label, elevation );
+    }
+
     // repaint map if tooltip has changed
-    m_info = "Schöner Text";
+    m_info = sb.toString();
     m_point = p;
-    
+
     getMapPanel().repaint();
   }
-  
+
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#paint(java.awt.Graphics)
    */
@@ -146,5 +190,70 @@ public class TinInfoWidget extends AbstractWidget
   {
     ApplyElevationWidget.drawToolTip( m_info, m_point, g );
   }
-  
+
+  protected void handleSelectionChanged( final ISelection selection )
+  {
+    m_tins.clear();
+
+    final IStructuredSelection sel = (IStructuredSelection) selection;
+    final Object[] selectedElements = sel.toArray();
+    for( final Object object : selectedElements )
+    {
+      if( object instanceof IKalypsoFeatureTheme )
+      {
+        final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) object;
+        final IFeatureType featureType = theme.getFeatureType();
+        final IValuePropertyType[] geomProperties = featureType.getAllGeomteryProperties();
+        for( final IValuePropertyType geomPT : geomProperties )
+        {
+          final QName valueQName = geomPT.getValueQName();
+          if( QNAME_TRIANGULATED_SURFACE.equals( valueQName ) )
+          {
+            final TinInfoProvider tinInfoProvider = new TinInfoProvider( theme, geomPT );
+            m_tins.add( tinInfoProvider );
+          }
+        }
+      }
+    }
+  }
+
+  private final static class TinInfoProvider
+  {
+    private final IKalypsoFeatureTheme m_theme;
+
+    private final IValuePropertyType m_geomPT;
+
+    public TinInfoProvider( final IKalypsoFeatureTheme theme, final IValuePropertyType geomPT )
+    {
+      m_theme = theme;
+      m_geomPT = geomPT;
+    }
+
+    public String getLabel( )
+    {
+      return m_theme.getName();
+    }
+
+    public final double getValue( final GM_Point location )
+    {
+      // find first theme wich covers the position
+      final FeatureList featureList = m_theme.getFeatureList();
+      if( featureList == null || featureList.size() == 0 )
+        return Double.NaN;
+
+      final GMLWorkspace workspace = m_theme.getWorkspace();
+      for( final Object object : featureList )
+      {
+        final Feature feature = FeatureHelper.getFeature( workspace, object );
+        if( feature == null )
+          continue;
+
+        final GM_TriangulatedSurface surface = (GM_TriangulatedSurface) feature.getProperty( m_geomPT );
+        return surface.getValue( location );
+      }
+
+      return Double.NaN;
+    }
+  }
+
 }

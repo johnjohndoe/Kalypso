@@ -40,18 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.results;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.commons.xml.NS;
-import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
 
 /**
  * @author Gernot Belger
  */
-public interface IHydrograph extends IFeatureWrapper2
+public class Hydrograph extends AbstractFeatureBinder implements IHydrograph
 {
-  public final static QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "Hydrograph" );
+  public Hydrograph( final Feature featureToBind )
+  {
+    super( featureToBind, QNAME );
+  }
 
-  public static final QName QNAME_PROP_LOCATION = new QName( NS.GML3, "location" );
 }

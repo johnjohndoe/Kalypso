@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.conv.results;
 
+import java.util.Date;
+import java.util.Map;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 
@@ -69,6 +72,12 @@ public class ResultsAcessor
   public IFolder getResultsFolder( )
   {
     return m_resultFolder;
+  }
+
+  public Map<Date, IFile> getTimestepsFiles( )
+  {
+    // TODO Auto-generated method stub
+    return null;
   }
 
 }

@@ -43,6 +43,7 @@ package org.kalypso.kalypsomodel1d2d.ui.map.temsys;
 import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.font.LineMetrics;
@@ -244,6 +245,8 @@ public class ApplyElevationWidget extends FENetConceptSelectionWidget// Abstract
 
   public static void drawToolTip( final String tooltip, final Point p, final Graphics g )
   {
+    final Graphics2D g2d = (Graphics2D) g;
+
     if( tooltip == null )
       return;
     final Rectangle2D rectangle = g.getFontMetrics().getStringBounds( tooltip, g );

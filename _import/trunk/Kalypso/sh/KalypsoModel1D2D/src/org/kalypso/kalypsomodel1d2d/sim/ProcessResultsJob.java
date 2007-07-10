@@ -94,21 +94,13 @@ public class ProcessResultsJob extends Job
 
   private static RMA10Calculation m_calculation;
 
-
-
   private final NodeResultMinMaxCatcher m_resultMinMaxCatcher = new NodeResultMinMaxCatcher();
 
-  private int m_timeStepNr;
+  private final int m_timeStepNr;
 
   private static List<TYPE> m_parameters;
 
-  public ProcessResultsJob( 
-              final File inputFile, 
-              final File outputDir, 
-              final ISimulationDataProvider dataProvider, 
-              final RMA10Calculation calculation, 
-              final List<ResultType.TYPE> parameter,
-              final int timeStepNr)
+  public ProcessResultsJob( final File inputFile, final File outputDir, final ISimulationDataProvider dataProvider, final RMA10Calculation calculation, final List<ResultType.TYPE> parameter, final int timeStepNr )
   {
     super( "1D2D-Ergebnisse auswerten: " + inputFile.getName() );
 
@@ -147,7 +139,7 @@ public class ProcessResultsJob extends Job
     return Status.OK_STATUS;
   }
 
-  public static File read2DIntoGmlResults( final File result2dFile, final File outputDir, final ISimulationDataProvider dataProvider, NodeResultMinMaxCatcher minMaxCatcher ) throws IOException, InvocationTargetException, GmlSerializeException, SimulationException, GM_Exception
+  public static File read2DIntoGmlResults( final File result2dFile, final File outputDir, final ISimulationDataProvider dataProvider, final NodeResultMinMaxCatcher minMaxCatcher ) throws IOException, InvocationTargetException, GmlSerializeException, SimulationException, GM_Exception
   {
     final TimeLogger logger = new TimeLogger( "Start: lese .2d Ergebnisse" );
 
@@ -177,9 +169,6 @@ public class ProcessResultsJob extends Job
       parameters.add( ResultType.TYPE.DEPTH );
       parameters.add( ResultType.TYPE.WATERLEVEL );
       parameters.add( ResultType.TYPE.VELOCITY );
-
-      // TODO: use multi-eater to write multiple triangles at once
-      // move workspace creation into multi-eater
 
       final CS_CoordinateSystem crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
       final MultiTriangleEater multiEater = new MultiTriangleEater();
@@ -226,11 +215,10 @@ public class ProcessResultsJob extends Job
 
       /* Node-GML in Datei schreiben */
       GmlSerializer.serializeWorkspace( gmlResultFile, resultWorkspace, "UTF-8" );
-      
-      IResultModel1d2d resModel1d2d =
-        (IResultModel1d2d) resultWorkspace.getRootFeature().getAdapter( IResultModel1d2d.class );
+
+      final IResultModel1d2d resModel1d2d = (IResultModel1d2d) resultWorkspace.getRootFeature().getAdapter( IResultModel1d2d.class );
       m_calculation.addToSimulationDescriptor( resModel1d2d );
-      
+
       return gmlResultFile;
     }
     finally

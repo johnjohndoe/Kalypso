@@ -42,16 +42,22 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.results;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.commons.xml.NS;
-import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Gernot Belger
  */
-public interface IHydrograph extends IFeatureWrapper2
+public class HydrographCollection extends FeatureWrapperCollection<IHydrograph> implements IHydrographCollection
 {
-  public final static QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "Hydrograph" );
+  public HydrographCollection( final Feature featureCol )
+  {
+    this( featureCol, IHydrograph.class, IHydrographCollection.QNAME_PROP_HYDROGRAPH_MEMBER );
+  }
 
-  public static final QName QNAME_PROP_LOCATION = new QName( NS.GML3, "location" );
+  public HydrographCollection( final Feature featureCol, final Class<IHydrograph> fwClass, final QName featureMemberProp )
+  {
+    super( featureCol, fwClass, featureMemberProp );
+  }
+
 }

@@ -83,6 +83,10 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.model.OperationalModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.PseudoOPerationalModel;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.SimulationModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.StaticModel1D2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.results.Hydrograph;
+import org.kalypso.kalypsomodel1d2d.schema.binding.results.HydrographCollection;
+import org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrograph;
+import org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrographCollection;
 import org.kalypso.kalypsomodel1d2d.ui.map.merge.FERoughnessDisplayElement;
 import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.ElevationModelDisplayElementFactory;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
@@ -423,37 +427,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
     };
     cMap.put( IRiverChannel1D.class, cTor );
 
-    // // JunctionContext
-    // cTor = new AdapterConstructor()
-    // {
-    // public Object constructAdapter(
-    // Feature feature,
-    // Class cls)
-    // throws IllegalArgumentException
-    // {
-    // QName featureQName = feature.getFeatureType().getQName();
-    // if(featureQName.equals(
-    // Kalypso1D2DSchemaConstants.WB1D2D_F_JUNTCION_CONTEXT_1D_2D) )
-    // {
-    // return new JunctionContext1DTo2D(feature);
-    // }
-    // else if(featureQName.equals(
-    // Kalypso1D2DSchemaConstants.WB1D2D_F_JUNTCION_CONTEXT_1D_CLINE) )
-    // {
-    // return new JunctionContext1DToCLine(feature);
-    // }
-    // else
-    // {
-    // return null;
-    // }
-    // }
-    // };
-    // cMap.put(IJunctionContext1DTo2D.class, cTor);
-    // cMap.put( IJunctionContext1DToCLine.class, cTor );
-
-    
- // DiscretisationModel
-    
+    // DiscretisationModel
     cTor = new AdapterConstructor()
     {
       public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
@@ -472,7 +446,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
       }
     };
     cMap.put( IControlModelGroup.class, cTor );
-    
+
     cTor = new AdapterConstructor()
     {
       public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
@@ -491,7 +465,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
       }
     };
     cMap.put( IControlModel1D2DCollection.class, cTor );
-    
+
     // DiscretisationModel
     cTor = new AdapterConstructor()
     {
@@ -532,7 +506,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
     };
     cMap.put( IStaticModel1D2D.class, cTor );
 
- // Operational model
+    // Operational model
     cTor = new AdapterConstructor()
     {
       public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
@@ -551,8 +525,8 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
       }
     };
     cMap.put( IOperationalModel1D2D.class, cTor );
-    
-    //Pseudo
+
+    // Pseudo
     cTor = new AdapterConstructor()
     {
       public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
@@ -571,7 +545,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
       }
     };
     cMap.put( IPseudoOPerationalModel.class, cTor );
-    
+
     // ControlModel
     cTor = new AdapterConstructor()
     {
@@ -600,6 +574,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
       }
     };
     cMap.put( IControlModel1D2D.class, cTor );
+
     // SimulationModel
     cTor = new AdapterConstructor()
     {
@@ -755,16 +730,15 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
       }
     };
     cMap.put( IBoundaryCondition.class, cTor );
-    
-  //Simulation descriptor collection
+
+    // Simulation descriptor collection
     cTor = new AdapterConstructor()
     {
       public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
       {
         final QName featureQName = feature.getFeatureType().getQName();
 
-        if( featureQName.equals( 
-              Kalypso1D2DSchemaConstants.SIMMETA_F_SIMDESCRIPTOR_COLLECTION ) )
+        if( featureQName.equals( Kalypso1D2DSchemaConstants.SIMMETA_F_SIMDESCRIPTOR_COLLECTION ) )
         {
           return new SimulationDescriptionCollection( feature );
         }
@@ -776,21 +750,19 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
       }
     };
     cMap.put( ISimulationDescriptionCollection.class, cTor );
-    
-  //Simulation descriptor collection
+
+    // Simulation descriptor collection
     cTor = new AdapterConstructor()
     {
       public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
       {
         final QName featureQName = feature.getFeatureType().getQName();
 
-        if( featureQName.equals( 
-              Kalypso1D2DSchemaConstants.SIMMETA_F_MODELDESCRIPTOR ) )
+        if( featureQName.equals( Kalypso1D2DSchemaConstants.SIMMETA_F_MODELDESCRIPTOR ) )
         {
           return new ModelDescriptor( feature );
         }
-        if( featureQName.equals( 
-            Kalypso1D2DSchemaConstants.SIMMETA_F_RESULT ) )
+        if( featureQName.equals( Kalypso1D2DSchemaConstants.SIMMETA_F_RESULT ) )
         {
           return new ResultModelDescriptor( feature );
         }
@@ -803,16 +775,15 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
     };
     cMap.put( IModelDescriptor.class, cTor );
     cMap.put( IResultModelDescriptor.class, cTor );
-    
-    //simulation descrip
+
+    // simulation descrip
     cTor = new AdapterConstructor()
     {
       public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
       {
         final QName featureQName = feature.getFeatureType().getQName();
 
-        if( featureQName.equals( 
-              Kalypso1D2DSchemaConstants.SIMMETA_F_SIMDESCRIPTOR ) )
+        if( featureQName.equals( Kalypso1D2DSchemaConstants.SIMMETA_F_SIMDESCRIPTOR ) )
         {
           return new SimulationDescriptor( feature );
         }
@@ -824,16 +795,15 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
       }
     };
     cMap.put( ISimulationDescriptor.class, cTor );
-    
-//result model 1d2d
+
+    // result model 1d2d
     cTor = new AdapterConstructor()
     {
       public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
       {
         final QName featureQName = feature.getFeatureType().getQName();
-        
-        if( featureQName.equals( 
-              Kalypso1D2DSchemaConstants.RES_1D2D_F_NODE_RES_COLLECTION ) )
+
+        if( featureQName.equals( Kalypso1D2DSchemaConstants.RES_1D2D_F_NODE_RES_COLLECTION ) )
         {
           return new NodeResultCollection( feature );
         }
@@ -846,12 +816,48 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
     };
     cMap.put( IResultModel1d2d.class, cTor );
     cMap.put( INodeResultCollection.class, cTor );
-    
-    
+
+    // hydrograph collection
+    cTor = new AdapterConstructor()
+    {
+      public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
+      {
+        final QName featureQName = feature.getFeatureType().getQName();
+
+        if( featureQName.equals( IHydrographCollection.QNAME ) )
+        {
+          return new HydrographCollection( feature );
+        }
+        else
+        {
+          warnUnableToAdapt( feature, featureQName, IBoundaryCondition.class );
+          return null;
+        }
+      }
+    };
+    cMap.put( IHydrographCollection.class, cTor );
+
+    // hydrograph
+    cTor = new AdapterConstructor()
+    {
+      public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
+      {
+        final QName featureQName = feature.getFeatureType().getQName();
+
+        if( featureQName.equals( IHydrograph.QNAME ) )
+        {
+          return new Hydrograph( feature );
+        }
+        else
+        {
+          warnUnableToAdapt( feature, featureQName, IBoundaryCondition.class );
+          return null;
+        }
+      }
+    };
+    cMap.put( IHydrographCollection.class, cTor );
+
     return Collections.unmodifiableMap( cMap );
   }
-  
+
 }
- 
-
-
