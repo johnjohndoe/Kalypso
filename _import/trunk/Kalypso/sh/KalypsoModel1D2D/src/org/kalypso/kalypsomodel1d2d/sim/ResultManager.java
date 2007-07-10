@@ -67,6 +67,7 @@ import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.contribs.java.io.filter.PrefixSuffixFilter;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DDebug;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultType;
 import org.kalypso.ogc.gml.GisTemplateHelper;
@@ -306,7 +307,7 @@ public class ResultManager implements Runnable
     catch( final Throwable e )
     {
       e.printStackTrace();
-      throw new SimulationException( "Fehler bei der Ergesbnisauswertung", e );
+      throw new SimulationException( "Fehler bei der Ergebnisauswertung", e );
     }
   }
 
@@ -388,59 +389,58 @@ public class ResultManager implements Runnable
           break;
       }
 
-      final String layerName = "tin" + parameter.name() + "Style";
-      final String featureTypeStyleName = "tin" + parameter.name() + "FeatureTypeStyle";
-      final String ruleName = "tin" + parameter.name() + "Rule";
-
-      final NamedLayer namedLayer = sld.getNamedLayer( "tinStyles" );
-      if( namedLayer == null )
-        continue;
-
-      final Style style = namedLayer.getStyle( layerName );
-      if( style instanceof UserStyle )
-      {
-        final UserStyle userStyle = (UserStyle) style;
-        final FeatureTypeStyle featureTypeStyle = userStyle.getFeatureTypeStyle( featureTypeStyleName );
-        if( featureTypeStyleName == null )
-          continue;
-        final Rule rule = featureTypeStyle.getRule( ruleName );
-        if( rule == null )
-          continue;
-        final Symbolizer[] symbolizers = rule.getSymbolizers();
-        for( final Symbolizer symbolizer : symbolizers )
-        {
-          if( symbolizer instanceof SurfaceLineSymbolizer )
-          {
-            try
-            {
-              configureLineSymbolizer( (SurfaceLineSymbolizer) symbolizer, minValue, maxValue );
-            }
-            catch( FilterEvaluationException e )
-            {
-              // TODO Auto-generated catch block
-              e.printStackTrace();
-            }
-          }
-//          else if( symbolizer instanceof SurfacePolygonSymbolizer )
-//          {
-//            try
-//            {
-//              configurePolygonSymbolizer( (SurfacePolygonSymbolizer) symbolizer, minValue, maxValue );
-//            }
-//            catch( FilterEvaluationException e )
-//            {
-//              // TODO Auto-generated catch block
-//              e.printStackTrace();
-//            }
-//          }
-        }
-      }
+      processStyle( "Line", minValue, maxValue, parameter, sld );
+      processStyle( "Polygon", minValue, maxValue, parameter, sld );
     }
 
     /* Write SLD back to file */
+
     final String sldXML = sld.exportAsXML();
     final String sldXMLwithHeader = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + sldXML;
     FileUtils.writeStringToFile( tinStyleFile, sldXMLwithHeader, "UTF-8" );
+  }
+
+  private void processStyle( String string, final double minValue, final double maxValue, final ResultType.TYPE parameter, final StyledLayerDescriptor sld )
+  {
+    final String layerName = "tin" + parameter.name() + string + "Style";
+    final String featureTypeStyleName = "tin" + parameter.name() + "FeatureTypeStyle";
+    final String ruleName = "tin" + parameter.name() + "Rule";
+
+    final NamedLayer namedLayer = sld.getNamedLayer( "tinStyles" );
+    if( namedLayer == null )
+      return;
+
+    final Style style = namedLayer.getStyle( layerName );
+    if( style instanceof UserStyle )
+    {
+      final UserStyle userStyle = (UserStyle) style;
+      final FeatureTypeStyle featureTypeStyle = userStyle.getFeatureTypeStyle( featureTypeStyleName );
+      if( featureTypeStyleName == null )
+        return;
+      final Rule rule = featureTypeStyle.getRule( ruleName );
+      if( rule == null )
+        return;
+      final Symbolizer[] symbolizers = rule.getSymbolizers();
+      for( final Symbolizer symbolizer : symbolizers )
+      {
+        try
+        {
+          if( symbolizer instanceof SurfaceLineSymbolizer )
+          {
+            configureLineSymbolizer( (SurfaceLineSymbolizer) symbolizer, minValue, maxValue );
+          }
+          else if( symbolizer instanceof SurfacePolygonSymbolizer )
+          {
+            configurePolygonSymbolizer( (SurfacePolygonSymbolizer) symbolizer, minValue, maxValue );
+          }
+        }
+        catch( FilterEvaluationException e )
+        {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+      }
+    }
   }
 
   private void configurePolygonSymbolizer( SurfacePolygonSymbolizer symbolizer, double minValue, double maxValue ) throws FilterEvaluationException
@@ -452,9 +452,22 @@ public class ResultManager implements Runnable
     final PolygonColorMapEntry fromEntry = templateColorMap.findEntry( "from", null );
     final PolygonColorMapEntry toEntry = templateColorMap.findEntry( "to", null );
 
-    final Color fromColor = fromEntry.getStroke().getStroke( null );
-    final Color toColor = toEntry.getStroke().getStroke( null );
-    final double opacity = fromEntry.getStroke().getOpacity( null );
+    // Fill
+    final Color fromPolygonColor = fromEntry.getFill().getFill( null );
+    final Color toPolygonColor = toEntry.getFill().getFill( null );
+    final double polygonOpacity = fromEntry.getFill().getOpacity( null );
+
+    // Stroke
+    final Color fromLineColor = fromEntry.getStroke().getStroke( null );
+    final Color toLineColor = toEntry.getStroke().getStroke( null );
+    final double lineOpacity = fromEntry.getStroke().getOpacity( null );
+
+    // step width
+    final double stepWidth = fromEntry.getTo( null );
+
+    // scale of the step width
+    final BigDecimal setScale = new BigDecimal( fromEntry.getFrom( null ) ).setScale( 0, BigDecimal.ROUND_FLOOR );
+    final int stepWidthScale = setScale.intValue();
 
     // get rounded values below min and above max (rounded by first decimal)
     // as a first try we will generate isareas by using class steps of 0.1
@@ -463,27 +476,27 @@ public class ResultManager implements Runnable
     final BigDecimal minDecimal = new BigDecimal( minValue ).setScale( 1, BigDecimal.ROUND_FLOOR );
     final BigDecimal maxDecimal = new BigDecimal( maxValue ).setScale( 1, BigDecimal.ROUND_CEILING );
 
-    BigDecimal stepWidth = new BigDecimal( 0.1 ).setScale( 1 );
-    final int numOfClasses = (maxDecimal.subtract( minDecimal ).divide( stepWidth )).intValue();
+    BigDecimal polygonStepWidth = new BigDecimal( stepWidth ).setScale( stepWidthScale, BigDecimal.ROUND_FLOOR );
+    final int numOfClasses = (maxDecimal.subtract( minDecimal ).divide( polygonStepWidth )).intValue();
 
     for( int currentClass = 0; currentClass < numOfClasses; currentClass++ )
     {
-      final double fromValue = minDecimal.doubleValue() + currentClass * stepWidth.doubleValue();
-      final double toValue = minDecimal.doubleValue() + (currentClass + 1) * stepWidth.doubleValue();
+      final double fromValue = minDecimal.doubleValue() + currentClass * polygonStepWidth.doubleValue();
+      final double toValue = minDecimal.doubleValue() + (currentClass + 1) * polygonStepWidth.doubleValue();
 
       // Stroke
       Color lineColor;
-      if( fromColor == toColor )
-        lineColor = fromColor;
+      if( fromLineColor == toLineColor )
+        lineColor = fromLineColor;
       else
-        lineColor = interpolateColor( fromColor, toColor, currentClass, numOfClasses );
+        lineColor = interpolateColor( fromLineColor, toLineColor, currentClass, numOfClasses );
 
-      final Stroke stroke = StyleFactory.createStroke( lineColor, opacity );
+      final Stroke stroke = StyleFactory.createStroke( lineColor, lineOpacity );
 
       // Fill
-      final Color polygonColor = interpolateColor( fromColor, toColor, currentClass, numOfClasses );
+      final Color polygonColor = interpolateColor( fromPolygonColor, toPolygonColor, currentClass, numOfClasses );
 
-      final Fill fill = StyleFactory.createFill( polygonColor, opacity );
+      final Fill fill = StyleFactory.createFill( polygonColor, polygonOpacity );
 
       final ParameterValueType label = StyleFactory.createParameterValueType( "Isofläche " + currentClass );
       final ParameterValueType from = StyleFactory.createParameterValueType( fromValue );
@@ -509,17 +522,23 @@ public class ResultManager implements Runnable
     final LineColorMapEntry toEntry = templateColorMap.findEntry( "to", null );
     final LineColorMapEntry fatEntry = templateColorMap.findEntry( "fat", null );
 
+    if( fromEntry == null )
+      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( IStatus.ERROR, "'from' color-map entry missing in .sld-Template." );
+    if( toEntry == null )
+      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( IStatus.ERROR, "'to' color-map entry missing in .sld-Template." );
+    if( fatEntry == null )
+      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( IStatus.ERROR, "'fat' color-map entry missing in .sld-Template." );
+
     final Color fromColor = fromEntry.getStroke().getStroke( null );
     final Color toColor = toEntry.getStroke().getStroke( null );
     final double opacity = fromEntry.getStroke().getOpacity( null );
-// StyleFactory.createlineColorMap(fromColor, toColor );
 
     final double normalWidth = fromEntry.getStroke().getWidth( null );
     final double fatWidth = fatEntry.getStroke().getWidth( null );
 
     // defines which isolines are drawn with a fat line
     final double fatValue = fatEntry.getQuantity( null );
-
+// TODO: get setep / scale from quantity
     // get rounded values below min and above max (rounded by first decimal)
     // as a first try we will generate isolines using class steps of 0.1
     // later, the classes will be done by using user defined class steps.
@@ -527,7 +546,7 @@ public class ResultManager implements Runnable
     final BigDecimal minDecimal = new BigDecimal( minValue ).setScale( 1, BigDecimal.ROUND_FLOOR );
     final BigDecimal maxDecimal = new BigDecimal( maxValue ).setScale( 1, BigDecimal.ROUND_CEILING );
 
-    BigDecimal stepWidth = new BigDecimal( 0.1 ).setScale( 1 );
+    final BigDecimal stepWidth = new BigDecimal( 0.1 ).setScale( 1, BigDecimal.ROUND_HALF_UP );
     final int numOfClasses = (maxDecimal.subtract( minDecimal ).divide( stepWidth )).intValue() + 1;
 
     for( int currentClass = 0; currentClass < numOfClasses; currentClass++ )

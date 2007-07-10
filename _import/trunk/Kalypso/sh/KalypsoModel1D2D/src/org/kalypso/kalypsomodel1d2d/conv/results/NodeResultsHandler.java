@@ -376,7 +376,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     if( nodeCurve1 == null || nodeCurve2 == null )
     {
       /* Probably profile information missing */
-      // TODO: write warning into some log
+      System.out.print( "Error while handling 1d-result file: There are no information of the profile in the model." );
       return;
     }
 
@@ -1477,7 +1477,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
       /* check min/max values */
       // TODO: velocity not yet set here?
-//      m_resultMinMaxCatcher.addNodeResult( result );
+// m_resultMinMaxCatcher.addNodeResult( result );
       // TODO: move to handleResult stuff?
     }
     catch( final Exception e )
