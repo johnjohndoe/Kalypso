@@ -87,7 +87,7 @@ public class CalculationUnitComponent
                         BTN_REMOVE,
                         BTN_ADD);
     btnDescription.put( "SHOW_AND_MAXIMIZE", "Berechnungseinheit anzeigen und maximieren" );
-    btnDescription.put( "REMOVE", "Berechnungseinheit Löschen" );
+    btnDescription.put( "REMOVE", "Berechnungseinheit löschen" );
     btnDescription.put( "ADD", "Berechnungseinheit hinzufügen" );
   }
 
