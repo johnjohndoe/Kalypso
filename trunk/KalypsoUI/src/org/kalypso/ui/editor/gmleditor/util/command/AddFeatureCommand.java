@@ -225,4 +225,5 @@ public class AddFeatureCommand implements ICommand
   {
     m_dropSelection = dropSelection;
   }
+  
 }
