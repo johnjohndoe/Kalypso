@@ -52,6 +52,7 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfaceBoundary;
@@ -508,4 +509,23 @@ public class GM_TriangulatedSurface_Impl extends GM_OrientableSurface_Impl imple
     m_index.query( searchEnv, visitor );
   }
 
+  /**
+   * @see org.kalypsodeegree.model.geometry.GM_TriangulatedSurface#getValue(org.kalypsodeegree.model.geometry.GM_Position)
+   */
+  @SuppressWarnings("unchecked")
+  public double getValue( final GM_Point location )
+  {
+    // TODO: transform to my own crs
+
+    final GM_Position position = location.getPosition();
+    final Envelope searchEnv = new Envelope( position.getX(), position.getY(), position.getX(), position.getY() );
+    final List<GM_Triangle> query = m_index.query( searchEnv );
+    for( final GM_Triangle triangle : query )
+    {
+      if( triangle.contains( location ) )
+        return triangle.getValue( location );
+    }
+
+    return Double.NaN;
+  }
 }

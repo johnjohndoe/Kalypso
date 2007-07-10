@@ -40,11 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.geometry;
 
+import org.kalypso.jts.JTSUtilities;
 import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_SurfaceInterpolation;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.opengis.cs.CS_CoordinateSystem;
+
+import com.vividsolutions.jts.geom.Coordinate;
 
 /**
  * @author Gernot Belger
@@ -84,5 +88,22 @@ public class GM_Triangle_Impl extends GM_Polygon_Impl implements GM_Triangle
   public GM_SurfaceInterpolation getInterpolation( )
   {
     return PLANAR_INTERPOLATION;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.geometry.GM_Triangle#getValue(org.kalypsodeegree.model.geometry.GM_Point)
+   */
+  public double getValue( final GM_Point location )
+  {
+    final double x = location.getPosition().getX();
+    final double y = location.getPosition().getY();
+
+    final GM_Position[] exteriorRing = getExteriorRing();
+    final Coordinate c0 = JTSAdapter.export( exteriorRing[0] );
+    final Coordinate c1 = JTSAdapter.export( exteriorRing[1] );
+    final Coordinate c2 = JTSAdapter.export( exteriorRing[2] );
+    final Coordinate[] coords = new Coordinate[] { c0, c1, c2 };
+    final double[] planarEquation = JTSUtilities.calculateTrianglePlaneEquation( coords );
+    return JTSUtilities.calculateTriangleZ( planarEquation, x, y );
   }
 }
