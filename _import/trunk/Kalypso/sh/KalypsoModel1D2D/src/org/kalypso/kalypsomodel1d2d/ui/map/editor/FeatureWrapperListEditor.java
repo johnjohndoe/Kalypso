@@ -451,7 +451,7 @@ public class FeatureWrapperListEditor implements IButtonConstants
         image = new Image( btnComposite.getDisplay(),
             KalypsoModel1D2DPlugin.imageDescriptorFromPlugin(
                 PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
-                "icons/elcl16/goTo_Terrain.gif" ).getImageData() );
+                "icons/elcl16/17_show_calculationunit.gif" ).getImageData() );
         clickToRunBtn.setImage( image );
         clickToRunBtn.addSelectionListener( new SelectionAdapter()
         {
@@ -471,7 +471,7 @@ public class FeatureWrapperListEditor implements IButtonConstants
         image = new Image( btnComposite.getDisplay(),
             KalypsoModel1D2DPlugin.imageDescriptorFromPlugin(
                 PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
-                "icons/elcl16/remove.gif" ).getImageData() );
+                "icons/elcl16/19_cut_calculationunit.gif" ).getImageData() );
         deleteButton.setImage( image );
         deleteButton.addSelectionListener( new SelectionAdapter()
         {
@@ -499,7 +499,7 @@ public class FeatureWrapperListEditor implements IButtonConstants
       image = new Image( btnComposite.getDisplay(),
           KalypsoModel1D2DPlugin.imageDescriptorFromPlugin(
               PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
-              "icons/elcl16/add.gif" ).getImageData() );
+              "icons/elcl16/18_add_calculationunit.gif" ).getImageData() );
       addButton.setImage( image );
       addButton.addSelectionListener( new SelectionAdapter()
       {
