@@ -118,11 +118,12 @@ public class PolynomeHelper
   private static File preparePolynomes( final File tmpDir, final File dathDir, final LogHelper log )
   {
     /* The files needed from the 1D-calculation */
+    final File lsQFile = new File( dathDir, "Q_LangSchnitt.txt" );
     final File lsFile = new File( dathDir, "laengsschnitt.txt" );
-    final File ausFile = new File( dathDir, "Beiwerte.AUS" );
     final File weirFile = new File( dathDir, WEIR_FILE_NAME );
+    final File beiwerteFile = new File( dathDir, "Beiwerte.AUS" );
 
-    final File[] dathFiles = new File[] { lsFile, ausFile, weirFile };
+    final File[] dathFiles = new File[] { lsQFile, lsFile, weirFile, beiwerteFile };
 
     /* Check input data */
     for( final File file : dathFiles )
