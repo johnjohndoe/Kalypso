@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.metadata;
 
-import java.io.File;
-
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
@@ -53,24 +51,25 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 public interface ISimulationDescriptionCollection extends IFeatureWrapper2
 {
   public IFeatureWrapperCollection<IModelDescriptor> getModelDescriptors( );
-  
+
   public IFeatureWrapperCollection<ISimulationDescriptor> getSimulationDescriptors( );
-  
+
   /**
-   * This a Model descriptor for the given feature wrapper 
-   * to this wrapper
-   * @param modelFeatureWrapper the feature wrapper which descriptor
-   *        is to be added to this collection.
+   * This a Model descriptor for the given feature wrapper to this wrapper
+   * 
+   * @param modelFeatureWrapper
+   *            the feature wrapper which descriptor is to be added to this collection.
    */
-  public IModelDescriptor addModelDescriptor(
-      IFeatureWrapper2 modelFeatureWrapper );
-  
+  public IModelDescriptor addModelDescriptor( IFeatureWrapper2 modelFeatureWrapper );
+
   /**
    * To get the existing descriptor entry for the given feature
-   * @param featureWrapper2 the feature which descriptor is to be get
-   * @return an {@link IModelDescriptor} representing the existing 
-   *    descriptor entry for the feature or null if no entry is available for the feature
-   *    
+   * 
+   * @param featureWrapper2
+   *            the feature which descriptor is to be get
+   * @return an {@link IModelDescriptor} representing the existing descriptor entry for the feature or null if no entry
+   *         is available for the feature
+   * 
    */
-  public IModelDescriptor getExistingEntry(IFeatureWrapper2 featureWrapper2 );
+  public IModelDescriptor getExistingEntry( IFeatureWrapper2 featureWrapper2 );
 }

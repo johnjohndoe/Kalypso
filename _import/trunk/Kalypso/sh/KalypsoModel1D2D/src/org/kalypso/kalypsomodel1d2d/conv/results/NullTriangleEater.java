@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.conv.results;
 
+import java.util.Date;
 import java.util.List;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
@@ -52,7 +53,7 @@ public class NullTriangleEater implements ITriangleEater
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.results.ITriangleEater#add(java.util.List)
    */
-  public void add( List<INodeResult> nodes )
+  public void add( final List<INodeResult> nodes )
   {
   }
 
@@ -66,19 +67,7 @@ public class NullTriangleEater implements ITriangleEater
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.results.ITriangleEater#setTime(double)
    */
-  public void setTime( double time )
+  public void setTime( final Date time )
   {
-    // TODO Auto-generated method stub
-    
   }
-
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.results.ITriangleEater#setTimestep(int)
-   */
-  public void setTimestep( int timestep )
-  {
-    // TODO Auto-generated method stub
-    
-  }
-
 }

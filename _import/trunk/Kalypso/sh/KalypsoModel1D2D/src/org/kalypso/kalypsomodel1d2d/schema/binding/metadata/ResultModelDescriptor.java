@@ -46,6 +46,7 @@ import java.util.GregorianCalendar;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptor.SIMULATIONTYPE;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
@@ -57,20 +58,16 @@ import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl
  * Default implementation of {@link IResultModelDescriptor}
  * 
  * @author Patrice Congo
- *
+ * 
  */
 public class ResultModelDescriptor extends ModelDescriptor implements IResultModelDescriptor
 {
-
-  public ResultModelDescriptor( Feature featureToBind )
+  public ResultModelDescriptor( final Feature featureToBind )
   {
-    this(
-        featureToBind,
-        Kalypso1D2DSchemaConstants.SIMMETA_F_RESULT );
+    this( featureToBind, Kalypso1D2DSchemaConstants.SIMMETA_F_RESULT );
   }
-  
-  public ResultModelDescriptor( 
-              Feature featureToBind, QName qnameToBind )
+
+  public ResultModelDescriptor( final Feature featureToBind, final QName qnameToBind )
   {
     super( featureToBind, qnameToBind );
   }
@@ -78,54 +75,45 @@ public class ResultModelDescriptor extends ModelDescriptor implements IResultMod
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IResultModelDescriptor#getTime()
    */
-  public GregorianCalendar getTime( )
+  public Date getTime( )
   {
-    XMLGregorianCalendarImpl gc = 
-     getProperty( 
-         Kalypso1D2DSchemaConstants.SIMMETA_PROP_TIME, 
-         XMLGregorianCalendarImpl.class );
-   if( gc == null )
-   {
-     return null;
-   }
-   else
-   {
-     return gc.toGregorianCalendar();
-   }
+    final XMLGregorianCalendarImpl gc = getProperty( Kalypso1D2DSchemaConstants.SIMMETA_PROP_TIME, XMLGregorianCalendarImpl.class );
+    return DateUtilities.toDate( gc );
   }
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IResultModelDescriptor#setTime(java.util.GregorianCalendar)
    */
-  public void setTime( GregorianCalendar value )
+  public void setTime( final Date value )
   {
+    final GregorianCalendar gregorianCalendar;
+    if( value == null )
+      gregorianCalendar = null;
+    else
+    {
+      gregorianCalendar = new GregorianCalendar();
+      gregorianCalendar.setTime( value );
+    }
+
     XMLGregorianCalendarImpl xmlGc = null;
     if( value != null )
     {
-      xmlGc =  new XMLGregorianCalendarImpl(value);
+      xmlGc = new XMLGregorianCalendarImpl( gregorianCalendar );
     }
-    setProperty( 
-        Kalypso1D2DSchemaConstants.SIMMETA_PROP_TIME, 
-        xmlGc );
-
+    setProperty( Kalypso1D2DSchemaConstants.SIMMETA_PROP_TIME, xmlGc );
   }
-  
-  public void setSimulationType( SIMULATIONTYPE value )
+
+  public void setSimulationType( final SIMULATIONTYPE value )
   {
     Assert.throwIAEOnNullParam( value, "value" );
-    setProperty( 
-        Kalypso1D2DSchemaConstants.SIMMETA_PROP_SIMULATION_TYPE, 
-        value.toString() );
+    setProperty( Kalypso1D2DSchemaConstants.SIMMETA_PROP_SIMULATION_TYPE, value.toString() );
   }
-  
+
   public SIMULATIONTYPE getSimulationType( )
   {
-    String type =
-        getProperty( 
-            Kalypso1D2DSchemaConstants.SIMMETA_PROP_SIMULATION_TYPE, 
-            String.class );
+    final String type = getProperty( Kalypso1D2DSchemaConstants.SIMMETA_PROP_SIMULATION_TYPE, String.class );
     return SIMULATIONTYPE.valueOf( type );
-    
+
   }
 
   /**
@@ -133,10 +121,7 @@ public class ResultModelDescriptor extends ModelDescriptor implements IResultMod
    */
   public String getTinDepth( )
   {
-    String prop =
-      getProperty( 
-          Kalypso1D2DSchemaConstants.SIMMETA_PROP_TIN_DEPTH, 
-          String.class );
+    final String prop = getProperty( Kalypso1D2DSchemaConstants.SIMMETA_PROP_TIN_DEPTH, String.class );
     return prop;
   }
 
@@ -145,10 +130,7 @@ public class ResultModelDescriptor extends ModelDescriptor implements IResultMod
    */
   public String getTinVelocity( )
   {
-    String prop =
-      getProperty( 
-          Kalypso1D2DSchemaConstants.SIMMETA_PROP_TIN_VELOCITY, 
-          String.class );
+    final String prop = getProperty( Kalypso1D2DSchemaConstants.SIMMETA_PROP_TIN_VELOCITY, String.class );
     return prop;
   }
 
@@ -157,41 +139,32 @@ public class ResultModelDescriptor extends ModelDescriptor implements IResultMod
    */
   public String getTinWaterLevel( )
   {
-    String prop =
-      getProperty( 
-          Kalypso1D2DSchemaConstants.SIMMETA_PROP_TIN_WATERLEVEL, 
-          String.class );
+    final String prop = getProperty( Kalypso1D2DSchemaConstants.SIMMETA_PROP_TIN_WATERLEVEL, String.class );
     return prop;
   }
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IResultModelDescriptor#setTinDepth(java.lang.String)
    */
-  public void setTinDepth( String newValue )
+  public void setTinDepth( final String newValue )
   {
-    setProperty( 
-          Kalypso1D2DSchemaConstants.SIMMETA_PROP_TIN_DEPTH, 
-          newValue );
+    setProperty( Kalypso1D2DSchemaConstants.SIMMETA_PROP_TIN_DEPTH, newValue );
   }
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IResultModelDescriptor#setTinVelocity(java.lang.String)
    */
-  public void setTinVelocity( String newValue )
+  public void setTinVelocity( final String newValue )
   {
-    setProperty( 
-        Kalypso1D2DSchemaConstants.SIMMETA_PROP_TIN_VELOCITY, 
-        newValue );
+    setProperty( Kalypso1D2DSchemaConstants.SIMMETA_PROP_TIN_VELOCITY, newValue );
   }
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IResultModelDescriptor#setTinWaterLevel(java.lang.String)
    */
-  public void setTinWaterLevel( String newValue )
+  public void setTinWaterLevel( final String newValue )
   {
-    setProperty( 
-        Kalypso1D2DSchemaConstants.SIMMETA_PROP_TIN_WATERLEVEL, 
-        newValue );    
+    setProperty( Kalypso1D2DSchemaConstants.SIMMETA_PROP_TIN_WATERLEVEL, newValue );
   }
 
   /**
@@ -199,10 +172,7 @@ public class ResultModelDescriptor extends ModelDescriptor implements IResultMod
    */
   public String getGmt( )
   {
-    String prop =
-      getProperty( 
-          Kalypso1D2DSchemaConstants.SIMMETA_PROP_GMT, 
-          String.class );
+    final String prop = getProperty( Kalypso1D2DSchemaConstants.SIMMETA_PROP_GMT, String.class );
     return prop;
   }
 
@@ -211,34 +181,26 @@ public class ResultModelDescriptor extends ModelDescriptor implements IResultMod
    */
   public BigInteger getTimeStepNum( )
   {
-    BigInteger prop =
-      getProperty( 
-          Kalypso1D2DSchemaConstants.SIMMETA_PROP_TIME_STEP_NUM, 
-          BigInteger.class );
-    
+    final BigInteger prop = getProperty( Kalypso1D2DSchemaConstants.SIMMETA_PROP_TIME_STEP_NUM, BigInteger.class );
+
     return prop;
   }
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IResultModelDescriptor#setGmt(java.lang.String)
    */
-  public void setGmt( String newValue )
+  public void setGmt( final String newValue )
   {
-    setProperty( 
-        Kalypso1D2DSchemaConstants.SIMMETA_PROP_GMT, 
-        newValue );  
-    
+    setProperty( Kalypso1D2DSchemaConstants.SIMMETA_PROP_GMT, newValue );
+
   }
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IResultModelDescriptor#setTimeStepNum(BigInteger)
    */
-  public void setTimeStepNum( BigInteger newValue )
+  public void setTimeStepNum( final BigInteger newValue )
   {
-    setProperty( 
-        Kalypso1D2DSchemaConstants.SIMMETA_PROP_TIME_STEP_NUM, 
-        newValue );    
+    setProperty( Kalypso1D2DSchemaConstants.SIMMETA_PROP_TIME_STEP_NUM, newValue );
   }
-  
 
 }

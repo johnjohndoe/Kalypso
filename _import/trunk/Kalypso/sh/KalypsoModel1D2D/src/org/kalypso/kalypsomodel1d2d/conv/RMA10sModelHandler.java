@@ -40,8 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.conv;
 
-
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import org.kalypso.kalypsomodel1d2d.ops.ModelOps;
@@ -60,54 +60,52 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
- * An handler that convert the discretisation model element and link events into
- * rma10s elements
+ * An handler that convert the discretisation model element and link events into rma10s elements
  * 
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
- *
+ * 
  */
 @SuppressWarnings("unchecked")
 public class RMA10sModelHandler implements IRMA10SModelElementHandler
 {
   /**
-   * The model to fill with the parsed fe element from 
+   * The model to fill with the parsed fe element from
    */
-  private IFEDiscretisationModel1d2d model;
-  
-  private IFeatureWrapperCollection<IFE1D2DNode> modelNodes;
-  private IFeatureWrapperCollection<IFE1D2DEdge> modelEdges;
-  private IFeatureWrapperCollection<IFE1D2DElement> modelElements;
-//  private CS_CoordinateSystem coordinateSystem;
-  private GMLWorkspace workspace;
-  
+  private final IFEDiscretisationModel1d2d model;
+
+  private final IFeatureWrapperCollection<IFE1D2DNode> modelNodes;
+
+  private final IFeatureWrapperCollection<IFE1D2DEdge> modelEdges;
+
+  private final IFeatureWrapperCollection<IFE1D2DElement> modelElements;
+
+  // private CS_CoordinateSystem coordinateSystem;
+  private final GMLWorkspace workspace;
+
   /**
-   * The provider used for convertion of native roughness
-   * ids to gml model roughness id. 
+   * The provider used for convertion of native roughness ids to gml model roughness id.
    */
   private IRoughnessIDProvider roughnessIDProvider;
-  
+
   /**
-   * The provider used for conversion bettween native and gml
-   * ids
+   * The provider used for conversion bettween native and gml ids
    */
   private IModelElementIDProvider modelElementIDProvider;
-  
-  private IPositionProvider positionProvider;
+
+  private final IPositionProvider positionProvider;
+
   /**
    * 
    */
-  public RMA10sModelHandler(
-                             IFEDiscretisationModel1d2d model,
-                             IPositionProvider positionProvider,
-                             IModelElementIDProvider modelElementIDProvider)
+  public RMA10sModelHandler( final IFEDiscretisationModel1d2d model, final IPositionProvider positionProvider, final IModelElementIDProvider modelElementIDProvider )
   {
-    this.model=model;
-    workspace=model.getWrappedFeature().getWorkspace();
-    modelNodes=model.getNodes();
-    modelEdges=model.getEdges();
-    modelElements=model.getElements();
-    this.positionProvider=positionProvider;
-    this.modelElementIDProvider=modelElementIDProvider;
+    this.model = model;
+    workspace = model.getWrappedFeature().getWorkspace();
+    modelNodes = model.getNodes();
+    modelEdges = model.getEdges();
+    modelElements = model.getElements();
+    this.positionProvider = positionProvider;
+    this.modelElementIDProvider = modelElementIDProvider;
   }
 
   /**
@@ -115,220 +113,179 @@ public class RMA10sModelHandler implements IRMA10SModelElementHandler
    */
   public void end( )
   {
-    for(IFE1D2DElement el:modelElements)
+    for( final IFE1D2DElement el : modelElements )
     {
-      ModelOps.sortElementEdges( el );      
+      ModelOps.sortElementEdges( el );
     }
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleArc(java.lang.String, int, int, int, int, int, int)
+   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleArc(java.lang.String, int, int, int, int,
+   *      int, int)
    */
-  public void handleArc( 
-                  String lineString, 
-                  int id, 
-                  int node1ID, 
-                  int node2ID, 
-                  int elementLeftID, 
-                  int elementRightID, 
-                  int middleNodeID )
+  public void handleArc( final String lineString, final int id, final int node1ID, final int node2ID, final int elementLeftID, final int elementRightID, final int middleNodeID )
   {
-    
-    String edgeID=
-      modelElementIDProvider.rma10sToGmlID( ERma10sModelElementKey.AR, id);
-    String gmlNode1ID=
-      modelElementIDProvider.rma10sToGmlID( 
-                    ERma10sModelElementKey.PE, node1ID);
-    String gmlNode2ID=
-      modelElementIDProvider.rma10sToGmlID( 
-                    ERma10sModelElementKey.PE, node2ID);
-    
-    IFE1D2DNode<IFE1D2DEdge> node1=getNode( gmlNode1ID );
-    IFE1D2DNode<IFE1D2DEdge> node2=getNode( gmlNode2ID );
-    Feature edgeFeature=workspace.getFeature( edgeID );
+
+    final String edgeID = modelElementIDProvider.rma10sToGmlID( ERma10sModelElementKey.AR, id );
+    final String gmlNode1ID = modelElementIDProvider.rma10sToGmlID( ERma10sModelElementKey.PE, node1ID );
+    final String gmlNode2ID = modelElementIDProvider.rma10sToGmlID( ERma10sModelElementKey.PE, node2ID );
+
+    final IFE1D2DNode<IFE1D2DEdge> node1 = getNode( gmlNode1ID );
+    final IFE1D2DNode<IFE1D2DEdge> node2 = getNode( gmlNode2ID );
+    final Feature edgeFeature = workspace.getFeature( edgeID );
     IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge = null;
-    if(edgeFeature!=null)
+    if( edgeFeature != null )
     {
-      edge=(IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>)
-              edgeFeature.getAdapter( IFE1D2DEdge.class );
+      edge = (IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>) edgeFeature.getAdapter( IFE1D2DEdge.class );
     }
     else
     {
-       edge=model.findEdge( node1, node2 );
+      edge = model.findEdge( node1, node2 );
     }
-    
-    boolean isNew=false;
-    if(edge==null)
+
+    if( edge == null )
     {
-      edge=
-        modelEdges.addNew( 
-          Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE, 
-          edgeID );
+      edge = modelEdges.addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE, edgeID );
       edge.addNode( gmlNode1ID );
-      edge.addNode( gmlNode2ID);
-      isNew=true;
+      edge.addNode( gmlNode2ID );
     }
-    //TODO set elements
-    if(elementLeftID==elementRightID)
+    // TODO set elements
+    if( elementLeftID == elementRightID )
     {
-      //one d element
-      throw new RuntimeException("2d ONLY for now");
+      // one d element
+      throw new RuntimeException( "2d ONLY for now" );
     }
     else
     {
-      if(elementLeftID!=0)
+      if( elementLeftID != 0 )
       {
         try
         {
-          String gmlID=
-            modelElementIDProvider.rma10sToGmlID( 
-                                  ERma10sModelElementKey.FE, 
-                                  elementLeftID);
-          IPolyElement eleLeft=getElement2D(gmlID);
-          int size=eleLeft.getEdges().size();
+          final String gmlID = modelElementIDProvider.rma10sToGmlID( ERma10sModelElementKey.FE, elementLeftID );
+          final IPolyElement eleLeft = getElement2D( gmlID );
+          final int size = eleLeft.getEdges().size();
           eleLeft.addEdge( edgeID );
-          if(eleLeft.getEdges().size()-size!=1)
+          if( eleLeft.getEdges().size() - size != 1 )
           {
-            System.out.println("BAd Increment="+gmlID+" AR"+edgeID);
+            System.out.println( "BAd Increment=" + gmlID + " AR" + edgeID );
           }
-          
+
           edge.addContainer( gmlID );
         }
-        catch(Throwable th)
+        catch( final Throwable th )
         {
           th.printStackTrace();
         }
       }
       else
       {
-        System.out.println("BorderEdge="+edgeID);
+        System.out.println( "BorderEdge=" + edgeID );
       }
-      
-      if(elementRightID!=0)
+
+      if( elementRightID != 0 )
       {
         try
         {
-          String gmlID=
-            modelElementIDProvider.rma10sToGmlID( 
-                        ERma10sModelElementKey.FE, elementRightID);
-          IPolyElement eleRight=getElement2D(gmlID);
-          //TODO remove dependencies to the inv edge use find node instead
-          //change the api to get the whether is was newly created or not
-          IEdgeInv inv= new EdgeInv(edge,model);
-          int size=eleRight.getEdges().size();
+          final String gmlID = modelElementIDProvider.rma10sToGmlID( ERma10sModelElementKey.FE, elementRightID );
+          final IPolyElement eleRight = getElement2D( gmlID );
+          // TODO remove dependencies to the inv edge use find node instead
+          // change the api to get the whether is was newly created or not
+          final IEdgeInv inv = new EdgeInv( edge, model );
+          final int size = eleRight.getEdges().size();
           eleRight.addEdge( inv.getGmlID() );
-          if(eleRight.getEdges().size()-size!=1)
+          if( eleRight.getEdges().size() - size != 1 )
           {
-            System.out.println("BAd Increment="+gmlID+" AR"+inv.getGmlID());
+            System.out.println( "BAd Increment=" + gmlID + " AR" + inv.getGmlID() );
           }
           inv.addContainer( gmlID );
         }
-        catch( Throwable th )
+        catch( final Throwable th )
         {
           th.printStackTrace();
         }
-      } 
+      }
       else
       {
-        System.out.println("BorderEdge="+edgeID);
+        System.out.println( "BorderEdge=" + edgeID );
       }
     }
-    //TODO add middle node
-    
+    // TODO add middle node
+
   }
 
-  private final IFE1D2DNode<IFE1D2DEdge> getNode(String gmlID)
+  private final IFE1D2DNode<IFE1D2DEdge> getNode( final String gmlID )
   {
-    Feature nodeFeature=
-      workspace.getFeature(gmlID);
-    
-    IFE1D2DNode<IFE1D2DEdge> node=
-        (IFE1D2DNode<IFE1D2DEdge>)nodeFeature.getAdapter(IFE1D2DNode.class);
+    final Feature nodeFeature = workspace.getFeature( gmlID );
+
+    final IFE1D2DNode<IFE1D2DEdge> node = (IFE1D2DNode<IFE1D2DEdge>) nodeFeature.getAdapter( IFE1D2DNode.class );
     return node;
   }
-  
-  
-  private final IPolyElement getElement2D(String gmlID)
+
+  private final IPolyElement getElement2D( final String gmlID )
   {
-    Feature eleFeature=workspace.getFeature( gmlID );
-    if(eleFeature==null)
+    final Feature eleFeature = workspace.getFeature( gmlID );
+    if( eleFeature == null )
     {
-     return modelElements.addNew( 
-                Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT,
-                gmlID, IPolyElement.class);
+      return modelElements.addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT, gmlID, IPolyElement.class );
     }
     else
     {
-      return (IPolyElement)eleFeature.getAdapter( IFE1D2DElement.class );
+      return (IPolyElement) eleFeature.getAdapter( IFE1D2DElement.class );
     }
   }
-  
+
   /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleElement(java.lang.String, int, int, int, int)
+   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleElement(java.lang.String, int, int, int,
+   *      int)
    */
-  public void handleElement( 
-                    String lineString, 
-                    int id, 
-                    int currentRougthnessClassID, 
-                    int previousRoughnessClassID, 
-                    int eleminationNumber )
+  public void handleElement( final String lineString, final int id, final int currentRougthnessClassID, final int previousRoughnessClassID, final int eleminationNumber )
   {
-    
+
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleNode(java.lang.String, int, double, double, double)
+   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleNode(java.lang.String, int, double, double,
+   *      double)
    */
-  public void handleNode( 
-                String lineString, 
-                int id, 
-                double easting, 
-                double northing, 
-                double elevation )
+  public void handleNode( final String lineString, final int id, final double easting, final double northing, final double elevation )
   {
-    //TODO use model.createNode to create from position
-       String gmlID=
-           modelElementIDProvider.rma10sToGmlID( ERma10sModelElementKey.PE, id );
-       if(workspace.getFeature( gmlID ) !=null)
-       {
-           return ;
-       }
-       
-       IFE1D2DNode<IFE1D2DEdge> node= 
-                     modelNodes.addNew( 
-                           Kalypso1D2DSchemaConstants.WB1D2D_F_NODE,
-                           gmlID );
-//       node.setPoint( 
-//           GeometryFactory.createGM_Point(
-//                             easting+35*100000,
-//                             northing+35*100000,
-//                             elevation,
-//                             coordinateSystem ));
-       GM_Point newLocation =   
-             positionProvider.getGMPoint( 
-                  easting,//nativeX, 
-                  northing/*nativeY*/, 
-                  elevation//nativeZ 
-                  );
-       node.setPoint( newLocation );
-       
+    // TODO use model.createNode to create from position
+    final String gmlID = modelElementIDProvider.rma10sToGmlID( ERma10sModelElementKey.PE, id );
+    if( workspace.getFeature( gmlID ) != null )
+    {
+      return;
+    }
+
+    final IFE1D2DNode<IFE1D2DEdge> node = modelNodes.addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE, gmlID );
+    // node.setPoint(
+    // GeometryFactory.createGM_Point(
+    // easting+35*100000,
+    // northing+35*100000,
+    // elevation,
+    // coordinateSystem ));
+    final GM_Point newLocation = positionProvider.getGMPoint( easting,// nativeX,
+    northing/* nativeY */, elevation// nativeZ
+    );
+    node.setPoint( newLocation );
+
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handlerError(java.lang.String, org.kalypso.kalypsomodel1d2d.conv.EReadError)
+   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handlerError(java.lang.String,
+   *      org.kalypso.kalypsomodel1d2d.conv.EReadError)
    */
-  public void handlerError( String lineString, EReadError errorHints )
+  public void handlerError( final String lineString, final EReadError errorHints )
   {
-    //FIXE redaw me
-    //throw new RuntimeException("bad line="+lineString);
+    // FIXE redaw me
+    // throw new RuntimeException("bad line="+lineString);
   }
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handlerUnIdentifyable(java.lang.String)
    */
-  public void handlerUnIdentifyable( String lineString )
+  public void handlerUnIdentifyable( final String lineString )
   {
-    
+
   }
 
   /**
@@ -336,29 +293,25 @@ public class RMA10sModelHandler implements IRMA10SModelElementHandler
    */
   public void start( )
   {
-    System.out.println("Parse start");
+    System.out.println( "Parse start" );
   }
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#setIRoughnessIDProvider(org.kalypso.kalypsomodel1d2d.conv.IRoughnessIDProvider)
    */
-  public void setIRoughnessIDProvider( 
-                        IRoughnessIDProvider roughnessIDProvider ) 
-                        throws IllegalArgumentException
+  public void setIRoughnessIDProvider( final IRoughnessIDProvider roughnessIDProvider ) throws IllegalArgumentException
   {
-    this.roughnessIDProvider=roughnessIDProvider;
+    this.roughnessIDProvider = roughnessIDProvider;
   }
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#setModelElementIDProvider(org.kalypso.kalypsomodel1d2d.conv.IModelElementIDProvider)
    */
-  public void setModelElementIDProvider( 
-                    IModelElementIDProvider modelElementIDProvider ) 
-                    throws IllegalArgumentException
+  public void setModelElementIDProvider( final IModelElementIDProvider modelElementIDProvider ) throws IllegalArgumentException
   {
-    this.modelElementIDProvider=modelElementIDProvider;
+    this.modelElementIDProvider = modelElementIDProvider;
   }
-  
+
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#getCreatedFeatures()
    */
@@ -368,31 +321,32 @@ public class RMA10sModelHandler implements IRMA10SModelElementHandler
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleResult(java.lang.String, int, double, double, double, double)
+   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleResult(java.lang.String, int, double,
+   *      double, double, double)
    */
-  public void handleResult( String lineString, int id, double vx, double vy, double depth, double waterlevel )
+  public void handleResult( final String lineString, final int id, final double vx, final double vy, final double depth, final double waterlevel )
   {
-    //do nothing, because here just the model is beeing read.
-    
+    // do nothing, because here just the model is beeing read.
+
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleTime(java.lang.String, double, int)
+   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleTime(java.lang.String, java.util.Date)
    */
-  public void handleTime( String line, double time, int timestep )
+  public void handleTime( final String line, final Date time )
   {
     // TODO Auto-generated method stub
-    
+
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleJunction(java.lang.String, int, int, int, int)
+   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleJunction(java.lang.String, int, int, int,
+   *      int)
    */
-  public void handleJunction( String line, int junctionID, int element1dID, int boundaryLine2dID, int node1dID )
+  public void handleJunction( final String line, final int junctionID, final int element1dID, final int boundaryLine2dID, final int node1dID )
   {
     // TODO Auto-generated method stub
-    
+
   }
-  
 
 }

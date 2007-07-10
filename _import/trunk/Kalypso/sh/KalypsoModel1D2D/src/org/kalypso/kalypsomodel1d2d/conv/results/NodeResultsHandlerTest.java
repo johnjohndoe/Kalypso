@@ -48,11 +48,7 @@ import junit.framework.TestCase;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.kalypsomodel1d2d.sim.NodeResultMinMaxCatcher;
 import org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob;
-import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
-import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.simulation.core.ISimulationDataProvider;
-import org.kalypso.simulation.core.SimulationException;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author Thomas Jung
@@ -74,7 +70,7 @@ public class NodeResultsHandlerTest extends TestCase
       {
       }
 
-      public Object getInputForID( final String id ) throws SimulationException
+      public Object getInputForID( final String id )
       {
         try
         {
@@ -101,6 +97,6 @@ public class NodeResultsHandlerTest extends TestCase
       }
     };
 
-    ProcessResultsJob.read2DIntoGmlResults( result2dFile, outputDir, provider, new NodeResultMinMaxCatcher() );
+    ProcessResultsJob.read2DIntoGmlResults( result2dFile, outputDir, provider, new NodeResultMinMaxCatcher(), 0 );
   }
 }

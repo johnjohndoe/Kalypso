@@ -119,12 +119,14 @@
 	<xs:element name="SimulationDescriptor"
 		type="simMeta1d2d:SimulationDescriptorType"
 		substitutionGroup="gml:_FeatureCollection">
+<!--  TODO: do not inherit from FeatureCollection, this is disadvised by GML-Documentation...
+	Moreover: this feature has now an arbitrary collections of features plus an collection of simulationTypes, this is probably not what is intended.
+ -->		
 	</xs:element>
 	<xs:complexType name="SimulationDescriptorType">
 		<xs:complexContent>
 			<xs:extension base="gml:AbstractFeatureCollectionType">
 				<xs:sequence>
-				
 					<xs:element name="simulationType">
 						<xs:simpleType>
 							<xs:restriction base="xs:string">

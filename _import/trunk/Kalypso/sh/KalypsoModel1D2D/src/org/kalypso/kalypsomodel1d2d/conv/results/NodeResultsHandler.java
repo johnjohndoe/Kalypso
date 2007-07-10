@@ -51,6 +51,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -893,30 +894,6 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     return false;
   }
 
-  // determine orientation based on the signed area
-  private int checkOrientation( final INodeResult[] nodes )
-  {
-    final double signedArea = getSignedArea( nodes );
-    if( signedArea > 0.0 )
-      return 1;
-    if( signedArea < 0.0 )
-      return -1;
-    return 0;
-  }
-
-  private double getSignedArea( final INodeResult[] nodes )
-  {
-    // calculate the signed area
-    final GM_Point a = nodes[0].getPoint();
-    final GM_Point b = nodes[1].getPoint();
-    final GM_Point c = nodes[2].getPoint();
-
-    final double signedArea = 0.5 * (a.getX() * (b.getY() - c.getY()) + b.getX() * (c.getY() - a.getY()) + c.getX() * (a.getY() - b.getY()));
-
-    return signedArea;
-
-  }
-
   /**
    * checks if the triangle has wet and dry nodes.
    */
@@ -1477,7 +1454,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
       /* check min/max values */
       // TODO: velocity not yet set here?
-// m_resultMinMaxCatcher.addNodeResult( result );
+      // m_resultMinMaxCatcher.addNodeResult( result );
       // TODO: move to handleResult stuff?
     }
     catch( final Exception e )
@@ -1544,19 +1521,18 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       return;
     }
 
-    //check if node is dry
+    // check if node is dry
     result.setResultValues( vx, vy, virtualDepth, waterlevel );
     m_resultMinMaxCatcher.addNodeResult( result );
 
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleTime(java.lang.String, double, int)
+   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleTime(java.lang.String, java.util.Date)
    */
-  public void handleTime( final String line, final double time, final int timestep )
+  public void handleTime( final String line, final Date time )
   {
     m_triangleEater.setTime( time );
-    m_triangleEater.setTimestep( timestep );
   }
 
   /**

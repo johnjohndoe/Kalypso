@@ -45,8 +45,10 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.math.BigInteger;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -68,6 +70,7 @@ import org.kalypso.kalypsomodel1d2d.conv.results.ResultType;
 import org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceTriangleEater;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultType.TYPE;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IResultModelDescriptor;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IResultModel1d2d;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -128,7 +131,7 @@ public class ProcessResultsJob extends Job
       monitor.worked( 1 );
 
       /* Read into NodeResults */
-      read2DIntoGmlResults( m_inputFile, m_outputDir, m_dataProvider, m_resultMinMaxCatcher );
+      read2DIntoGmlResults( m_inputFile, m_outputDir, m_dataProvider, m_resultMinMaxCatcher, m_timeStepNr );
     }
     catch( final Throwable e )
     {
@@ -139,7 +142,7 @@ public class ProcessResultsJob extends Job
     return Status.OK_STATUS;
   }
 
-  public static File read2DIntoGmlResults( final File result2dFile, final File outputDir, final ISimulationDataProvider dataProvider, final NodeResultMinMaxCatcher minMaxCatcher ) throws IOException, InvocationTargetException, GmlSerializeException, SimulationException, GM_Exception
+  public static File read2DIntoGmlResults( final File result2dFile, final File outputDir, final ISimulationDataProvider dataProvider, final NodeResultMinMaxCatcher minMaxCatcher, final int timeStepNum ) throws IOException, InvocationTargetException, GmlSerializeException, SimulationException, GM_Exception
   {
     final TimeLogger logger = new TimeLogger( "Start: lese .2d Ergebnisse" );
 
@@ -216,8 +219,8 @@ public class ProcessResultsJob extends Job
       /* Node-GML in Datei schreiben */
       GmlSerializer.serializeWorkspace( gmlResultFile, resultWorkspace, "UTF-8" );
 
-      final IResultModel1d2d resModel1d2d = (IResultModel1d2d) resultWorkspace.getRootFeature().getAdapter( IResultModel1d2d.class );
-      m_calculation.addToSimulationDescriptor( resModel1d2d );
+      final Date time = null; // TODO:
+      addToResultDB( resultWorkspace, timeStepNum, outputDir, time );
 
       return gmlResultFile;
     }
@@ -228,6 +231,22 @@ public class ProcessResultsJob extends Job
       logger.takeInterimTime();
       logger.printCurrentInterim( "Fertig mit Schreiben in : " );
     }
+  }
+
+  private static void addToResultDB( final GMLWorkspace resultWorkspace, final int timeStepNum, final File outputDir, final Date time )
+  {
+    final IResultModel1d2d resModel1d2d = (IResultModel1d2d) resultWorkspace.getRootFeature().getAdapter( IResultModel1d2d.class );
+    final IResultModelDescriptor resultModelDescriptor = m_calculation.addToSimulationDescriptor( resModel1d2d );
+
+    resultModelDescriptor.setDescription( outputDir.getName() ); // TODO
+
+    resultModelDescriptor.setTime( time );
+    resultModelDescriptor.setTimeStepNum( new BigInteger( "" + timeStepNum ) );
+
+    // HACK: TODO: at the moment this pathes get put here totally hard-coded
+    final String baseDir = outputDir.getParentFile().getName() + "/" + outputDir.getName();
+    resultModelDescriptor.setWorkspacePath( baseDir + "results.gml" );
+    resultModelDescriptor.setGmt( baseDir + "Ergebniskarte.gmt" );
   }
 
   public NodeResultMinMaxCatcher getMinMaxData( )

@@ -42,6 +42,7 @@ package org.kalypso.kalypsomodel1d2d.conv.results;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DDebug;
@@ -68,10 +69,6 @@ public class TriangulatedSurfaceTriangleEater implements ITriangleEater
   private final GMLWorkspace m_workspace;
 
   private final File m_tinResultFile;
-
-  private double m_time;
-
-  private int m_timestep;
 
   public TriangulatedSurfaceTriangleEater( final File tinResultFile, final GMLWorkspace workspace, final GM_TriangulatedSurface surface, final ResultType.TYPE parameter )
   {
@@ -141,7 +138,7 @@ public class TriangulatedSurfaceTriangleEater implements ITriangleEater
    */
   public void finished( )
   {
-    String name = m_tinResultFile.getPath();
+    final String name = m_tinResultFile.getPath();
 
     final int extensionIndex = name.lastIndexOf( "." );
 
@@ -170,18 +167,9 @@ public class TriangulatedSurfaceTriangleEater implements ITriangleEater
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.results.ITriangleEater#setTime(double)
+   * @see org.kalypso.kalypsomodel1d2d.conv.results.ITriangleEater#setTime(java.util.Date)
    */
-  public void setTime( double time )
+  public void setTime( final Date time )
   {
-    m_time = time;
-
   }
-
-  public void setTimestep( int timestep )
-  {
-    m_timestep = timestep;
-
-  }
-
 }

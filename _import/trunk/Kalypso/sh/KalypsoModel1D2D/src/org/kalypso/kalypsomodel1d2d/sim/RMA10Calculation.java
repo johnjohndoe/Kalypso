@@ -41,7 +41,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.sim;
 
-import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -381,7 +380,6 @@ public class RMA10Calculation implements INativeIDProvider
     }
 
     /* Add all boundary conditions. */
-    final IFEDiscretisationModel1d2d discModel = (IFEDiscretisationModel1d2d) m_disModelWorkspace.getRootFeature().getAdapter( IFEDiscretisationModel1d2d.class );
     final IFlowRelationshipModel model = (IFlowRelationshipModel) m_operationalModelWorkspace.getRootFeature().getAdapter( IFlowRelationshipModel.class );
     final ICalculationUnit unit = getCalculationUnit();
     final double grabDistance = 11;
@@ -517,9 +515,11 @@ public class RMA10Calculation implements INativeIDProvider
   {
     Assert.throwIAEOnNullParam( resultModel, "resultModel" );
     final ResultDB resultDB = KalypsoModel1D2DPlugin.getDefault().getResultDB();
+
     final IResultModelDescriptor resDescriptor = (IResultModelDescriptor) resultDB.addModelDescriptor( resultModel );
     final IFeatureWrapperCollection<IResultModelDescriptor> resultModels = m_simulationDesciptor.getResultModel();
     resultModels.addRef( resDescriptor );
+
     return resDescriptor;
   }
 

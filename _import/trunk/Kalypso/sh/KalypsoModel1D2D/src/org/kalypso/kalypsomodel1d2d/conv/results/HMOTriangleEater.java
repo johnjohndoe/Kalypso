@@ -44,6 +44,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -65,21 +66,19 @@ public class HMOTriangleEater implements ITriangleEater
 
   private int m_nodeIndex = 0;
 
-  private File m_output;
+  private final File m_output;
 
-  private ResultType.TYPE m_parameter;
+  private final ResultType.TYPE m_parameter;
 
-  private double m_time;
+  private Date m_time;
 
-  private int m_timestep;
-
-  public HMOTriangleEater( final File filename, ResultType.TYPE parameter )
+  public HMOTriangleEater( final File filename, final ResultType.TYPE parameter )
   {
     m_output = filename;
     m_parameter = parameter;
   }
 
-  public void add( List<INodeResult> nodes )
+  public void add( final List<INodeResult> nodes )
   {
     final Integer[] triangle = new Integer[3];
 
@@ -100,14 +99,14 @@ public class HMOTriangleEater implements ITriangleEater
     m_triangles.add( triangle );
   }
 
-  private void writeHMOFile( File paramFile ) throws IOException
+  private void writeHMOFile( final File paramFile ) throws IOException
   {
     /* node list */
     BufferedWriter buf = null;
     try
     {
       buf = new BufferedWriter( new FileWriter( paramFile ) );
-      for( INodeResult node : m_nodes.keySet() )
+      for( final INodeResult node : m_nodes.keySet() )
       {
         final double x = node.getPoint().getX();
         final double y = node.getPoint().getY();
@@ -137,7 +136,8 @@ public class HMOTriangleEater implements ITriangleEater
 
         buf.write( "P:  " + nodeID + "  " + x + "  " + y + "  " + z + "\n" );
 
-//        KalypsoModel1D2DDebug.TRIANGLEEATER.printf( "%s %d %f20.8 %f20.8 %f20.8%n", "HMOTriangleEater: P: ", nodeID, x, y, z );
+        // KalypsoModel1D2DDebug.TRIANGLEEATER.printf( "%s %d %f20.8 %f20.8 %f20.8%n", "HMOTriangleEater: P: ", nodeID,
+        // x, y, z );
       }
       /* triangle list */
       for( int i = 0; i < m_triangles.size(); i++ )
@@ -152,7 +152,8 @@ public class HMOTriangleEater implements ITriangleEater
         final int n3 = triangle[2];
         buf.write( "D:  " + triangleID + "  " + n1 + "  " + n2 + "  " + n3 + "\n" );
 
-//        KalypsoModel1D2DDebug.TRIANGLEEATER.printf( "%s %d %d %d %d%n", "HMOTriangleEater: D: ", triangleID, n1, n2, n3 );
+        // KalypsoModel1D2DDebug.TRIANGLEEATER.printf( "%s %d %d %d %d%n", "HMOTriangleEater: D: ", triangleID, n1, n2,
+        // n3 );
       }
       buf.close();
     }
@@ -164,7 +165,7 @@ public class HMOTriangleEater implements ITriangleEater
 
   public void finished( )
   {
-    String name = m_output.getPath();
+    final String name = m_output.getPath();
 
     final int extensionIndex = name.lastIndexOf( "." );
 
@@ -173,14 +174,16 @@ public class HMOTriangleEater implements ITriangleEater
 
     /* create filename */
     final String param = m_parameter.name();
-    final String paramName = substring + "_" + param + "_" + m_timestep + extension;
+    // FIXME: chang to file name based on time, we have no timestep any more
+    final int timestep = 0;
+    final String paramName = substring + "_" + param + "_" + timestep + extension;
     final File paramFile = new File( paramName );
 
     try
     {
       writeHMOFile( paramFile );
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       KalypsoModel1D2DDebug.TRIANGLEEATER.printf( "%s", "HMOTriangleEater: error while finishing eater." );
 
@@ -190,24 +193,10 @@ public class HMOTriangleEater implements ITriangleEater
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.results.ITriangleEater#setTime(double)
+   * @see org.kalypso.kalypsomodel1d2d.conv.results.ITriangleEater#setTime(java.util.Date)
    */
-  public void setTime( double time )
+  public void setTime( final Date time )
   {
     m_time = time;
-
   }
-
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.results.ITriangleEater#setTimestep(int)
-   */
-  public void setTimestep( int timestep )
-  {
-    {
-      m_timestep = timestep;
-
-    }
-
-  }
-
 }

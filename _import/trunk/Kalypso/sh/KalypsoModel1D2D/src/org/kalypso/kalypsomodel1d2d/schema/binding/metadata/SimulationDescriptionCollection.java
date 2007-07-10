@@ -44,14 +44,6 @@ import java.io.File;
 
 import javax.xml.namespace.QName;
 
-import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.ISources;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IResultModel1d2d;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
@@ -62,8 +54,6 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
 
-import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
-
 /**
  * @author Patrice Congo
  * @author Dejan Antanaskovic
@@ -71,22 +61,20 @@ import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
  */
 public class SimulationDescriptionCollection extends AbstractFeatureBinder implements ISimulationDescriptionCollection
 {
-  private IFeatureWrapperCollection<IModelDescriptor> m_modelDescriptors;
-  private IFeatureWrapperCollection<ISimulationDescriptor> m_simulationDescriptors;
+  private final IFeatureWrapperCollection<IModelDescriptor> m_modelDescriptors;
 
-  public SimulationDescriptionCollection( Feature featureToBind)
+  private final IFeatureWrapperCollection<ISimulationDescriptor> m_simulationDescriptors;
+
+  public SimulationDescriptionCollection( final Feature featureToBind )
   {
-    this(
-        featureToBind, 
-        Kalypso1D2DSchemaConstants.SIMMETA_F_SIMDESCRIPTOR_COLLECTION );
+    this( featureToBind, Kalypso1D2DSchemaConstants.SIMMETA_F_SIMDESCRIPTOR_COLLECTION );
   }
-  
-  public SimulationDescriptionCollection( Feature featureToBind, QName qnameToBind )
+
+  public SimulationDescriptionCollection( final Feature featureToBind, final QName qnameToBind )
   {
     super( featureToBind, qnameToBind );
-    m_modelDescriptors = new FeatureWrapperCollection<IModelDescriptor>(featureToBind, IModelDescriptor.class, Kalypso1D2DSchemaConstants.SIMMETA_PROP_MODELDESCRIPTOR);
-    m_simulationDescriptors = 
-      new FeatureWrapperCollection<ISimulationDescriptor>(featureToBind, ISimulationDescriptor.class, Kalypso1D2DSchemaConstants.SIMMETA_PROP_SIMDESCRIPTOR);
+    m_modelDescriptors = new FeatureWrapperCollection<IModelDescriptor>( featureToBind, IModelDescriptor.class, Kalypso1D2DSchemaConstants.SIMMETA_PROP_MODELDESCRIPTOR );
+    m_simulationDescriptors = new FeatureWrapperCollection<ISimulationDescriptor>( featureToBind, ISimulationDescriptor.class, Kalypso1D2DSchemaConstants.SIMMETA_PROP_SIMDESCRIPTOR );
   }
 
   /**
@@ -108,9 +96,9 @@ public class SimulationDescriptionCollection extends AbstractFeatureBinder imple
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptionCollection#addModelDescriptor(org.kalypsodeegree.model.feature.binding.IFeatureWrapper2)
    */
-  public IModelDescriptor addModelDescriptor( IFeatureWrapper2 modelFeatureWrapper )
+  public IModelDescriptor addModelDescriptor( final IFeatureWrapper2 modelFeatureWrapper )
   {
-    IModelDescriptor existingEntry = getExistingEntry( modelFeatureWrapper );
+    final IModelDescriptor existingEntry = getExistingEntry( modelFeatureWrapper );
     if( existingEntry != null )
     {
       return existingEntry;
@@ -125,63 +113,63 @@ public class SimulationDescriptionCollection extends AbstractFeatureBinder imple
     {
       newChildType = Kalypso1D2DSchemaConstants.SIMMETA_F_MODELDESCRIPTOR;
     }
-    IModelDescriptor addNew = m_modelDescriptors.addNew( newChildType );
-    String modelGmlID = modelFeatureWrapper.getGmlID();
+    final IModelDescriptor addNew = m_modelDescriptors.addNew( newChildType );
+    final String modelGmlID = modelFeatureWrapper.getGmlID();
     addNew.setModelID( modelGmlID );
-    
-    String name = modelFeatureWrapper.getName();
-    addNew.setModelName( isNullOrEmptyString( name )?modelGmlID:name );
+
+    final String name = modelFeatureWrapper.getName();
+    addNew.setModelName( isNullOrEmptyString( name ) ? modelGmlID : name );
     addNew.setModelType( modelFeatureWrapper.getWrappedFeature().getFeatureType().getQName().toString() );
-    
-    //workspace path
-//    final IWorkbench workbench = PlatformUI.getWorkbench();
-//    final IHandlerService service = (IHandlerService) workbench.getService( IHandlerService.class );
-//    final IEvaluationContext currentState = service.getCurrentState();
-//    final IFolder scenarioFolder = (IFolder) currentState.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
-//    IFile file = scenarioFolder.getFile( modelFeatureWrapper.getWrappedFeature().getWorkspace().getContext().getFile() );
-    
+
+    // workspace path
+    // final IWorkbench workbench = PlatformUI.getWorkbench();
+    // final IHandlerService service = (IHandlerService) workbench.getService( IHandlerService.class );
+    // final IEvaluationContext currentState = service.getCurrentState();
+    // final IFolder scenarioFolder = (IFolder) currentState.getVariable(
+    // CaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
+    // IFile file = scenarioFolder.getFile(
+    // modelFeatureWrapper.getWrappedFeature().getWorkspace().getContext().getFile() );
+
     final GMLWorkspace workspace = modelFeatureWrapper.getWrappedFeature().getWorkspace();
-    addNew.setWorkspacePath( new File(workspace.getContext().getFile()).toString() );
-    
-//    addNew.setWorkspacePath( file.getFullPath().toOSString() );
+    addNew.setWorkspacePath( new File( workspace.getContext().getFile() ).toString() );
+
+    // addNew.setWorkspacePath( file.getFullPath().toOSString() );
     return addNew;
   }
-  
-  private boolean isNullOrEmptyString(String str)
+
+  private boolean isNullOrEmptyString( final String str )
   {
-   if( str==null)
-   {
-     return true;
-   }
-   else if( str.trim().length()==0)
-   {
-     return true;
-   }
-   else
-   {
-     return false;
-   }
+    if( str == null )
+    {
+      return true;
+    }
+    else if( str.trim().length() == 0 )
+    {
+      return true;
+    }
+    else
+    {
+      return false;
+    }
   }
-  
-  public IModelDescriptor getExistingEntry(IFeatureWrapper2 featureWrapper2 )
+
+  public IModelDescriptor getExistingEntry( final IFeatureWrapper2 featureWrapper2 )
   {
-    GMLWorkspace workspace = featureWrapper2.getWrappedFeature().getWorkspace();
+    final GMLWorkspace workspace = featureWrapper2.getWrappedFeature().getWorkspace();
     final String path = workspace.getContext().toString();
     final String featureGmlID = featureWrapper2.getGmlID();
-    for(IModelDescriptor desc:m_modelDescriptors)
+    for( final IModelDescriptor desc : m_modelDescriptors )
     {
-     //String descPath = desc.getWorkspacePath();
-     //path cannot be used since calculation uses tm file
-    if( /*path.equals( descPath ) &&*/
-         featureGmlID.equals( desc.getModelID() ) )
-     {
-       return desc;
-     }
+      // String descPath = desc.getWorkspacePath();
+      // path cannot be used since calculation uses tm file
+      if( /* path.equals( descPath ) && */
+      featureGmlID.equals( desc.getModelID() ) )
+      {
+        return desc;
+      }
     }
-    
+
     return null;
   }
-  
-  
-  
+
 }

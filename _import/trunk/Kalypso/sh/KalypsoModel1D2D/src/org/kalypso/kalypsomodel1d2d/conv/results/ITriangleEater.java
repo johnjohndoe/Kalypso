@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.conv.results;
 
+import java.util.Date;
 import java.util.List;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
@@ -50,13 +51,9 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
  */
 public interface ITriangleEater
 {
-
-  void  add( List<INodeResult> nodes );
+  void add( List<INodeResult> nodes );
 
   void finished( );
 
-  void setTime( double time );
-
-  void setTimestep( int timestep );
-
+  void setTime( final Date time );
 }
