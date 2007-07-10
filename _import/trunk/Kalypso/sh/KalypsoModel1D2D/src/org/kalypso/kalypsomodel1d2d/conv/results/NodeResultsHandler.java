@@ -132,6 +132,8 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
   private final NodeResultMinMaxCatcher m_resultMinMaxCatcher;
 
+  private Date m_time;
+
   public NodeResultsHandler( final GMLWorkspace resultWorkspace, final ITriangleEater triangleEater, final RMA10Calculation calculation, final NodeResultMinMaxCatcher resultMinMaxCatcher )
   {
     m_resultWorkspace = resultWorkspace;
@@ -1532,7 +1534,16 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
    */
   public void handleTime( final String line, final Date time )
   {
+    m_time = time;
     m_triangleEater.setTime( time );
+  }
+
+  /**
+   * Returns the time which was read from the .2d file.
+   */
+  public Date getTime( )
+  {
+    return m_time;
   }
 
   /**
