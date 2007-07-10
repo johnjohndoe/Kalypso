@@ -166,7 +166,7 @@
 				grabExcessVerticalSpace="true" />
 			<gft:gridLayout numColumns="6" horizontalSpacing="10" />
 
-			<gft:label text="Stätionar Berechnung" visible="true"
+			<gft:label text="Stationäre Berechnung" visible="true"
 				style="SWT.NONE">
 				<gft:gridData verticalAlignment="GridData.CENTER"
 					horizontalAlignment="GridData.BEGINNING"
@@ -231,11 +231,12 @@
 				</gft:enabledOperation>
 			</gft:validatorlabel>
 
-			<gft:label text="Instätionar Berechnung" visible="true"
+			<gft:label text="Instationäre Berechnung" visible="true"
 				style="SWT.NONE">
 				<gft:gridData verticalAlignment="GridData.CENTER"
 					horizontalAlignment="GridData.BEGINNING"
 					grabExcessHorizontalSpace="false" />
+					<!--
 				<gft:enabledOperation>
 					<or>
 						<ogc:PropertyIsLike wildCard="*" singleChar="?"
@@ -254,12 +255,14 @@
 						</ogc:PropertyIsLike>
 					</or>
 				</gft:enabledOperation>
+				-->
 			</gft:label>
 			<gft:checkbox editable="true" property="c1d2d:_unsteady"
 				style="SWT.NONE">
 				<gft:gridData horizontalSpan="1"
 					horizontalAlignment="GridData.FILL"
 					grabExcessHorizontalSpace="true" />
+					<!--
 				<gft:enabledOperation>
 					<or>
 						<ogc:PropertyIsLike wildCard="*" singleChar="?"
@@ -278,6 +281,7 @@
 						</ogc:PropertyIsLike>
 					</or>
 				</gft:enabledOperation>
+				-->
 			</gft:checkbox>
 
 			<gft:label
@@ -288,7 +292,9 @@
 					horizontalAlignment="GridData.BEGINNING"
 					grabExcessHorizontalSpace="false" />
 				<gft:enabledOperation>
+				<!--
 					<and>
+					-->
 						<ogc:PropertyIsLike wildCard="*" singleChar="?"
 							escape="\" xmlns:ogc="http://www.opengis.net/ogc">
 							<ogc:PropertyName>
@@ -296,6 +302,7 @@
 							</ogc:PropertyName>
 							<ogc:Literal>true</ogc:Literal>
 						</ogc:PropertyIsLike>
+						<!--
 						<or>
 							<ogc:PropertyIsLike wildCard="*"
 								singleChar="?" escape="\"
@@ -315,6 +322,7 @@
 							</ogc:PropertyIsLike>
 						</or>
 					</and>
+					-->
 				</gft:enabledOperation>
 			</gft:label>
 			<gft:text editable="true" property="c1d2d:NITN"
@@ -324,7 +332,9 @@
 					horizontalAlignment="GridData.FILL"
 					grabExcessHorizontalSpace="true" />
 				<gft:enabledOperation>
+				<!--
 					<and>
+					-->
 						<ogc:PropertyIsLike wildCard="*" singleChar="?"
 							escape="\" xmlns:ogc="http://www.opengis.net/ogc">
 							<ogc:PropertyName>
@@ -332,6 +342,7 @@
 							</ogc:PropertyName>
 							<ogc:Literal>true</ogc:Literal>
 						</ogc:PropertyIsLike>
+						<!--
 						<or>
 							<ogc:PropertyIsLike wildCard="*"
 								singleChar="?" escape="\"
@@ -351,6 +362,7 @@
 							</ogc:PropertyIsLike>
 						</or>
 					</and>
+					-->
 				</gft:enabledOperation>
 			</gft:text>
 			<gft:label visible="false" style="SWT.NONE">
@@ -571,7 +583,7 @@
 				</gft:checkbox>
 			-->
 			<gft:extensioncontrol property="c1d2d:Version"
-				extension-id="org.kalypso.kalypsomodel1d2d.ui.featurecontrols.RestartSelectorControlFactory"
+				extension-id="org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectorControlFactory"
 				style="SWT.NONE">
 				<gft:gridData horizontalSpan="2"
 					horizontalAlignment="GridData.BEGINNING"

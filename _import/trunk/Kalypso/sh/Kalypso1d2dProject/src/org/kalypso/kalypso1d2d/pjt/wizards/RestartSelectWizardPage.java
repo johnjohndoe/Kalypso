@@ -1,0 +1,159 @@
+package org.kalypso.kalypso1d2d.pjt.wizards;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.StringTokenizer;
+
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.model.WorkbenchLabelProvider;
+import org.kalypso.kalypso1d2d.pjt.views.contentprov.ResultNavigatorContentProvider;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptor;
+import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ResultDB;
+import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.SimulationDescriptor;
+import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
+
+/**
+ * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
+ */
+public class RestartSelectWizardPage extends WizardPage
+{
+  private Text m_selectedResultNames;
+
+  private Map<String, String> m_selectedResultPaths; // map that contains <path, name> pairs of the result files
+
+  private final String m_initialSelection;
+
+  private class ResultFilter extends ViewerFilter
+  {
+    @Override
+    public boolean select( final Viewer viewer, final Object parentElement, final Object element )
+    {
+      return true;
+// if( element instanceof File )
+// return ((File) element).getName().endsWith( ".gml" );
+// return true;
+    }
+  }
+
+  protected RestartSelectWizardPage( final String initialSelection )
+  {
+    super( "Example" );
+    m_initialSelection = initialSelection;
+    setTitle( "Select restart file(s)" );
+    setDescription( "Please select one or more restart files that you want to use for your next calculation" );
+  }
+
+  public void createControl( Composite parent )
+  {
+    final Composite topComposite = new Composite( parent, SWT.NONE );
+    final GridLayout gridLayout = new GridLayout();
+    gridLayout.numColumns = 4;
+    gridLayout.makeColumnsEqualWidth = true;
+    topComposite.setLayout( gridLayout );
+    setControl( topComposite );
+
+    final Composite innerComposite = new SashForm( topComposite, SWT.HORIZONTAL | SWT.NULL );
+    GridData data = new GridData();
+    data.horizontalAlignment = GridData.FILL;
+    data.verticalAlignment = GridData.FILL;
+    data.horizontalSpan = 4;
+    data.grabExcessHorizontalSpace = true;
+    data.grabExcessVerticalSpace = true;
+    innerComposite.setLayoutData( data );
+
+    final TreeViewer allResultsViewer = new TreeViewer( innerComposite, SWT.BORDER );
+
+    allResultsViewer.setContentProvider( new ResultNavigatorContentProvider() );
+    allResultsViewer.setLabelProvider( new WorkbenchLabelProvider() );
+    allResultsViewer.setInput( new File( "." ) );
+
+    allResultsViewer.addFilter( new ResultFilter() );
+
+    m_selectedResultPaths = new HashMap<String, String>();
+    m_selectedResultNames = new Text( innerComposite, SWT.MULTI | SWT.BORDER );
+    m_selectedResultNames.setEditable( false );
+    m_selectedResultNames.setText( "" );
+
+    loadInitialSelection();
+
+    allResultsViewer.addDoubleClickListener( new IDoubleClickListener()
+    {
+
+      public void doubleClick( DoubleClickEvent event )
+      {
+        final StructuredSelection selection = (StructuredSelection) event.getSelection();
+        final ISimulationDescriptor descriptor = (SimulationDescriptor) selection.getFirstElement();
+        setSelection( descriptor, false );
+      }
+
+    } );
+
+  }
+
+  private void loadInitialSelection( )
+  {
+    String[] selections = m_initialSelection.split( ";" );
+
+    final ResultDB resultDB = KalypsoModel1D2DPlugin.getDefault().getResultDB();
+    final IFeatureWrapperCollection<ISimulationDescriptor> simulationDescriptors = resultDB.getSimulationDescriptors();
+    for( ISimulationDescriptor descriptor : simulationDescriptors )
+    {
+      final String path = descriptor.getResultModel().get( 0 ).getWorkspacePath();
+      for( int i = 0; i < selections.length; i++ )
+        if( selections[i].equals( path ) )
+          setSelection( descriptor, true );
+    }
+  }
+
+  private void setSelection( final ISimulationDescriptor descriptor, boolean initial )
+  {
+    final String path = descriptor.getResultModel().get( 0 ).getWorkspacePath();
+    final String value = descriptor.getResultModel().get( 0 ).getModelName();
+    if( m_selectedResultPaths.containsKey( path ) )
+    {
+      if( initial )
+        return;
+      m_selectedResultPaths.remove( path );
+    }
+    else
+      m_selectedResultPaths.put( path, value );
+
+    String text = "";
+    for( String key : m_selectedResultPaths.keySet() )
+    {
+      text = text.concat( m_selectedResultPaths.get( key ) ).concat( m_selectedResultNames.getLineDelimiter() );
+    }
+    if( text.length() == 0 )
+      m_selectedResultNames.setText( "" );
+    else
+      m_selectedResultNames.setText( text.substring( 0, text.length() - m_selectedResultNames.getLineDelimiter().length() ) );
+  }
+
+  public String getSelectedPath( )
+  {
+    String text = "";
+    for( String key : m_selectedResultPaths.keySet() )
+    {
+      text = text.concat( key ).concat( ";" );
+    }
+    if( text.length() == 0 )
+      return "";
+    else
+      return text.substring( 0, text.length() - 1 );
+  }
+
+}

@@ -84,6 +84,12 @@
               name="Import 1D2D"
               project="false"/>
 	</extension>	
+     <extension
+           point="org.kalypso.ui.featureViewExtensionControl">
+        <extensionControl
+              class="org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectorControlFactory"
+              id="org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectorControlFactory"/>
+     </extension>
 	<!-- perspectives-->
 	<extension
          point="org.eclipse.ui.perspectives">
