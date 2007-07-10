@@ -47,4 +47,17 @@ package org.kalypsodeegree.model.geometry;
  */
 public interface GM_TriangulatedSurface extends GM_Surface<GM_Triangle>
 {
+  /**
+   * Returns the value of the triangulated at the given position.
+   * <p>
+   * The value is obtained by finding the first triangle which covers the given position and calculating the z-value of
+   * the position of the linear-equation defined by the (corner-coordiantes of the) triangle.
+   * </p>
+   * 
+   * @param positionMust
+   *            be in the same coordinate system as the tirangulated surface.
+   * @return The linearly interpolated z-value of the first triangle covering the position. <code>Double.NaN</code> if
+   *         no covering triangle was found.
+   */
+  public double getValue( final GM_Point location );
 }
