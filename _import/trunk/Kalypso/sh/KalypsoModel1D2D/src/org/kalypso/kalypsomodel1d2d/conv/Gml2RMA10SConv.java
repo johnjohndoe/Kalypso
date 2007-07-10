@@ -300,10 +300,10 @@ public class Gml2RMA10SConv implements INativeIDProvider
         continue;
       }
       
-      if( !CalUnitOps.isEdgeOf( m_calculationUnit, edge ) )
-      {
-        continue;
-      }
+//      if( !CalUnitOps.isEdgeOf( m_calculationUnit, edge ) )
+//      {
+//        continue;
+//      }
 
       final int node0ID = getID( edge.getNode( 0 ) );
       final int node1ID = getID( edge.getNode( 1 ) );
@@ -369,10 +369,10 @@ public class Gml2RMA10SConv implements INativeIDProvider
     List<IFE1D2DNode> nodesInBBox = nodes.query( m_calcUnitBBox );
     for( final IFE1D2DNode<IFE1D2DEdge> node : nodesInBBox/* nodes */)
     {
-      if( !CalUnitOps.isNodeOf( m_calculationUnit, node ) )
-      {
-        continue;
-      }
+//      if( !CalUnitOps.isNodeOf( m_calculationUnit, node ) )
+//      {
+//        continue;
+//      }
       /* The node itself */
       final int nodeID = getID( node );
       final GM_Point point = node.getPoint();
