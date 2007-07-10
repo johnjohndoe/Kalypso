@@ -162,11 +162,12 @@ public class TestResultDB extends TestCase
       modelDesc.setTinVelocity( "_velocity" );
       modelDesc.setTinWaterLevel( "newValue" );
       modelDesc.setGmt( "_gmt" );
-
-      // GmlSerializer.serializeWorkspace(
-      // new OutputStreamWriter(System.out),
-      // modelDesc.getWrappedFeature().getWorkspace() );
-
+      modelDesc.setSimulationType( ISimulationDescriptor.SIMULATIONTYPE.Qsteady );
+      
+//      GmlSerializer.serializeWorkspace( 
+//          new OutputStreamWriter(System.out), 
+//          modelDesc.getWrappedFeature().getWorkspace() );
+      
       saveWorkSpace( modelDesc );
       // File realFile=new File("C:\\Temp\\aaaaTest\\gml_time.txt");
       final IResultModelDescriptor modelDescReloaded = loadRootFeature( tmpFile, IResultModelDescriptor.class );
@@ -178,6 +179,7 @@ public class TestResultDB extends TestCase
       assertEquals( modelDesc.getTinVelocity(), modelDescReloaded.getTinVelocity() );
       assertEquals( modelDesc.getTinWaterLevel(), modelDescReloaded.getTinWaterLevel() );
       assertEquals( modelDesc.getGmt(), modelDescReloaded.getGmt() );
+      assertEquals( modelDesc.getSimulationType(), modelDescReloaded.getSimulationType() );
     }
     catch( final Exception e )
     {

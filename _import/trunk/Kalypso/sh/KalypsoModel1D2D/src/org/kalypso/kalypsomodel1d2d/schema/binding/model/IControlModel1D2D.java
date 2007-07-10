@@ -132,5 +132,15 @@ public interface IControlModel1D2D extends IControlModel
   public void setCalculationUnit( ICalculationUnit calUnit );
 
   public ICalculationUnit getCalculationUnit( );
+  
+  /**
+   * true if checkbox "Steady calculation" in control model view is selected, false otherwise 
+   */
+  public boolean isSteadySelected( );
+  
+  /**
+   * true if checkbox "Unsteady calculation" in control model view is selected, false otherwise 
+   */
+  public boolean isUnsteadySelected( );
 
 }

@@ -45,6 +45,7 @@ import java.util.GregorianCalendar;
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptor.SIMULATIONTYPE;
 import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
@@ -109,8 +110,7 @@ public class SimulationDescriptor extends AbstractFeatureBinder implements ISimu
         getProperty( 
             Kalypso1D2DSchemaConstants.SIMMETA_PROP_SIMULATION_TYPE, 
             String.class );
-    return SIMULATIONTYPE.valueOf( type );
-    
+    return type!=null?SIMULATIONTYPE.valueOf( type ):null;
   }
 
   /**

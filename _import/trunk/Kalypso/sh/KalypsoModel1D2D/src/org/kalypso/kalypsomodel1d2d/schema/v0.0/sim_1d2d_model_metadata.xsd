@@ -85,7 +85,16 @@
 		</xs:sequence>
 		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
 	</xs:complexType>
-
+	
+	<xs:element name="simulationType">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="Steady" />
+				<xs:enumeration value="Qsteady" />
+				<xs:enumeration value="Unsteady" />
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
 
 	<xs:element name="ResultModelDescriptor"
 		type="simMeta1d2d:ResultModelDescriptorType"
@@ -95,6 +104,7 @@
 		<xs:complexContent>
 			<xs:extension base="simMeta1d2d:ModelDescriptorType">
 				<xs:sequence>
+					<xs:element ref="simMeta1d2d:simulationType"/>
 					<xs:element name="time" type="xs:dateTime"/>
 					<xs:element name="timeStepNum" type="xs:integer"/>
 					<xs:element name="tinDepth" type="xs:string"/>
@@ -127,15 +137,7 @@
 		<xs:complexContent>
 			<xs:extension base="gml:AbstractFeatureCollectionType">
 				<xs:sequence>
-					<xs:element name="simulationType">
-						<xs:simpleType>
-							<xs:restriction base="xs:string">
-								<xs:enumeration value="Steady" />
-								<xs:enumeration value="Qsteady" />
-								<xs:enumeration value="Unsteady" />
-							</xs:restriction>
-						</xs:simpleType>
-					</xs:element>
+					<xs:element ref="simMeta1d2d:simulationType"/>
 					
 					<xs:element name="scenarioName" type="xs:string"/>
 					

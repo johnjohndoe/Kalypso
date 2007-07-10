@@ -111,9 +111,11 @@ public class ResultModelDescriptor extends ModelDescriptor implements IResultMod
 
   public SIMULATIONTYPE getSimulationType( )
   {
-    final String type = getProperty( Kalypso1D2DSchemaConstants.SIMMETA_PROP_SIMULATION_TYPE, String.class );
-    return SIMULATIONTYPE.valueOf( type );
-
+    String type =
+        getProperty( 
+            Kalypso1D2DSchemaConstants.SIMMETA_PROP_SIMULATION_TYPE, 
+            String.class );
+    return type!=null?SIMULATIONTYPE.valueOf( type ):null;
   }
 
   /**

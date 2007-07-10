@@ -3,7 +3,6 @@ package org.kalypso.kalypso1d2d.pjt.wizards;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.StringTokenizer;
 
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -24,7 +23,6 @@ import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IResultModelDescriptor;
 import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptor;
 import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ResultDB;
-import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.SimulationDescriptor;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 
 /**
@@ -97,9 +95,11 @@ public class RestartSelectWizardPage extends WizardPage
       public void doubleClick( DoubleClickEvent event )
       {
         final StructuredSelection selection = (StructuredSelection) event.getSelection();
-        final ISimulationDescriptor descriptor = (SimulationDescriptor) selection.getFirstElement();
-        if( descriptor.getResultModel().size() > 0 )
-          setSelection( descriptor, false );
+        try
+        {
+          setSelection( (IResultModelDescriptor) selection.getFirstElement(), false );
+        }
+        catch(ClassCastException e){}
       }
 
     } );
@@ -115,20 +115,20 @@ public class RestartSelectWizardPage extends WizardPage
     for( ISimulationDescriptor descriptor : simulationDescriptors )
     {
       final IFeatureWrapperCollection<IResultModelDescriptor> resultModel = descriptor.getResultModel();
-      if( resultModel.size() > 0 )
+      for(int i=0; i<resultModel.size(); i++)
       {
-        final String path = resultModel.get( 0 ).getWorkspacePath();
-        for( int i = 0; i < selections.length; i++ )
-          if( selections[i].equals( path ) )
-            setSelection( descriptor, true );
+        final String path = resultModel.get( i ).getWorkspacePath();
+        for( int k = 0; k < selections.length; k++ )
+          if( selections[k].equals( path ) )
+            setSelection( resultModel.get( i ), true );
       }
     }
   }
 
-  private void setSelection( final ISimulationDescriptor descriptor, boolean initial )
+  private void setSelection( final IResultModelDescriptor descriptor, boolean initial )
   {
-    final String path = descriptor.getResultModel().get( 0 ).getWorkspacePath();
-    final String value = descriptor.getResultModel().get( 0 ).getModelName();
+    final String path = descriptor.getWorkspacePath();
+    final String value = descriptor.getModelName();
     if( m_selectedResultPaths.containsKey( path ) )
     {
       if( initial )

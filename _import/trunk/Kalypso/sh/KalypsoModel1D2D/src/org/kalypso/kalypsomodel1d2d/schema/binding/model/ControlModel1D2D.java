@@ -241,6 +241,8 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
 
   public Integer getNITI( )
   {
+    if( !isSteadySelected() )
+      return 0;
     Integer property = (Integer) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_NITI );
     if( property == null )
       property = 0;
@@ -249,6 +251,8 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
 
   public Integer getNITN( )
   {
+    if( !isUnsteadySelected() )
+      return 0;
     Integer property = (Integer) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_NITN );
     if( property == null )
       property = 0;
@@ -394,4 +398,15 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
     return (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_STEADY_BC );
   }
 
+  public boolean isSteadySelected( )
+  {
+    final Boolean property = (Boolean) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_STEADY_CHECKBOX );
+    return property != null ? property.booleanValue() : false;
+  }
+
+  public boolean isUnsteadySelected( )
+  {
+    final Boolean property = (Boolean) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_UNSTEADY_CHECKBOX );
+    return property != null ? property.booleanValue() : false;
+  }
 }
