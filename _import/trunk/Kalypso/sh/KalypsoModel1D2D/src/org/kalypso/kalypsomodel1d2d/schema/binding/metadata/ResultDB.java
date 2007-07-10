@@ -57,6 +57,7 @@ import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation;
+import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
@@ -80,7 +81,13 @@ public class ResultDB
   private GMLWorkspace workspace;
   
   private ISimulationDescriptionCollection simDB;
-   
+  
+  public ResultDB( ISimulationDescriptionCollection simDB )
+  {
+    Assert.throwIAEOnNullParam( simDB, "simDB" );
+    this.simDB = simDB; 
+  }
+  
   public ResultDB(IPath folderPath)
   {
    IPath metaDataFile = 

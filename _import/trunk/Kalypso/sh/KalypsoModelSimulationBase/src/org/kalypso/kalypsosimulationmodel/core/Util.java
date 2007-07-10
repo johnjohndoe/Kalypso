@@ -41,6 +41,7 @@
 package org.kalypso.kalypsosimulationmodel.core;
 
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -58,6 +59,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.IGMLSchema;
@@ -65,6 +67,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelRoughnessConsts;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.simulation.core.simspec.Modeldata;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -125,6 +128,59 @@ public class Util
     {
       th.printStackTrace();
       return null;
+    }
+  }
+  
+  public static final CommandableWorkspace getCommandableWorkspace( final Class<? extends IFeatureWrapper2> modelClass )
+  {
+    try
+    {
+      final IWorkbench workbench = PlatformUI.getWorkbench();
+      final IHandlerService service = (IHandlerService) workbench.getService( IHandlerService.class );
+      final IEvaluationContext currentState = service.getCurrentState();
+      final ICaseDataProvider<IFeatureWrapper2> caseDataProvider = 
+            (ICaseDataProvider<IFeatureWrapper2>) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+      if( caseDataProvider instanceof ICommandPoster )
+      {
+        CommandableWorkspace commandableWorkSpace =
+          ((ICommandPoster)caseDataProvider).getCommandableWorkSpace( modelClass );
+        return commandableWorkSpace;
+      }
+      else
+      {
+        throw new RuntimeException("Could not found command poster");
+      }
+      
+    }
+    catch( final Throwable th )
+    {
+      th.printStackTrace();
+      return null;
+    }
+  }
+  
+  public static final void postCommand( final Class<? extends IFeatureWrapper2> modelClass, ICommand command )
+  {
+    try
+    {
+      final IWorkbench workbench = PlatformUI.getWorkbench();
+      final IHandlerService service = (IHandlerService) workbench.getService( IHandlerService.class );
+      final IEvaluationContext currentState = service.getCurrentState();
+      final ICaseDataProvider<IFeatureWrapper2> caseDataProvider = (ICaseDataProvider<IFeatureWrapper2>) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+      if( caseDataProvider instanceof ICommandPoster )
+      {
+        ((ICommandPoster)caseDataProvider).postCommand( modelClass, command );
+      }
+      else
+      {
+        throw new RuntimeException("Could not found command poster");
+      }
+      
+    }
+    catch( final Throwable th )
+    {
+      th.printStackTrace();
+      throw new RuntimeException(th);
     }
   }
   

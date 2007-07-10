@@ -71,6 +71,7 @@ import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.afgui.scenarios.ScenarioManager;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ResultDB;
 import org.kalypso.simulation.core.ISimulationService;
 import org.kalypso.simulation.core.KalypsoSimulationCorePlugin;
 import org.kalypso.simulation.core.simspec.Modeldata;
@@ -114,6 +115,9 @@ public class Kalypso1D2DProjectNature extends CaseHandlingProjectNature
       final NullProgressMonitor monitor = new NullProgressMonitor();
       final URL zipLocation = getClass().getResource( EMPTY_PROJECT_ZIP_PATH );
       unzipToContainer( zipLocation, getProject(), monitor );
+      
+      ResultDB resultDB = new ResultDB( metaFolder.getLocation() );
+      metaFolder.refreshLocal( IResource.DEPTH_INFINITE, monitor );
     }
   }
 

@@ -200,7 +200,8 @@ public class CreateCalculationUnitWizard extends Wizard implements INewWizard
 //    {
 //      final Feature f = ((XLinkedFeature_Impl) property).getFeature();
       final IRelationType relationType = (IRelationType) parentFeature.getFeatureType().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_CONTROL_MODEL_MEMBER );//ParentRelation();
-      final CommandableWorkspace commandableWorkspace = new CommandableWorkspace( parentFeature.getWorkspace() );
+      final CommandableWorkspace commandableWorkspace = 
+        Util.getCommandableWorkspace( IControlModelGroup.class );//new CommandableWorkspace( parentFeature.getWorkspace() );
       final int pos = 0;
       final IGMLSchema schema = parentFeature.getFeatureType().getGMLSchema();
       final IFeatureType controlModelFeatureType = 
@@ -288,6 +289,7 @@ public class CreateCalculationUnitWizard extends Wizard implements INewWizard
       };
       try
       {
+        
         commandableWorkspace.postCommand( command );
       }
       catch( Exception e1 )
