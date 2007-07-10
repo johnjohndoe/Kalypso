@@ -261,7 +261,7 @@ public class TimeStepFillerWizardPage extends WizardPage implements SelectionLis
 
     Label uRelFactorLabel = new Label( container, SWT.NONE );
     uRelFactorLabel.setLayoutData( gridBeginning );
-    uRelFactorLabel.setText( "Wichtungsfaktor [-]:" );
+    uRelFactorLabel.setText( "Relaxationsfaktor [-]:" );
 
     m_uRelFactorCombo = new Combo( container, SWT.NONE );
     final String possibleURFValues[] = { "0.1", "0.2", "0.3", "0.4", "0.5", "0.6", "0.7", "0.8", "0.9", "1.0" };

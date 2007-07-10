@@ -177,9 +177,9 @@ public class SimMode1D2DCalcJob implements ISimulation
       
       final ResultManager resultRunner = new ResultManager( tmpDir, outputDir, "A", inputProvider, calculation );
       startCalculation( tmpDir, monitor, resultRunner, calculation );
+      KalypsoModel1D2DPlugin.getDefault().getResultDB().save();
       /* Run a last time so nothing is forgotten... */
       resultRunner.finish();
-      KalypsoModel1D2DPlugin.getDefault().getResultDB().save();
       /** check succeeded and load results */
       handleError( tmpDir, outputDir, monitor, logger );
     }

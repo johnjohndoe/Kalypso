@@ -5,9 +5,12 @@
 	@author Antanaskovic Dejan
 -->
 
-<xs:schema targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/operationalmodel"
-	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink"
-	xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om"
+<xs:schema
+	targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/operationalmodel"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:gml="http://www.opengis.net/gml"
+	xmlns:om="http://www.opengis.net/om"
 	xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase"
 	xmlns:op1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/operationalmodel"
 	xmlns:obs1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/observation"
@@ -19,129 +22,111 @@
 		</xs:appinfo>
 	</xs:annotation>
 
-	
+
 	<xs:import namespace="http://www.opengis.net/gml"
 		schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd" />
 	<xs:import namespace="http://www.opengis.net/om"
 		schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/om/1.0.30/om.xsd" />
-	<xs:import namespace="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase"  />
-	<xs:import namespace="http://www.tu-harburg.de/wb/kalypso/schemata/observation"  />
+	<xs:import
+		namespace="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" />
+	<xs:import
+		namespace="http://www.tu-harburg.de/wb/kalypso/schemata/observation" />
 
 	<!-- ======================================================== 
 		Flow Resistance Model
-	==========================================================-->	
-	<xs:element 
-			name="OperationalModel"
-			type="op1d2d:OperationalModelType"
-			substitutionGroup="simBase:OperationalModel">
-		</xs:element>
-	<xs:complexType 
-		name="OperationalModelType">
+		==========================================================-->
+	<xs:element name="OperationalModel"
+		type="op1d2d:OperationalModelType"
+		substitutionGroup="simBase:OperationalModel">
+	</xs:element>
+	<xs:complexType name="OperationalModelType">
 		<xs:complexContent>
-			<xs:extension 
-				base="simBase:AbstractOperationalModelType">
+			<xs:extension base="simBase:AbstractOperationalModelType">
 				<xs:sequence>
-					<xs:element
-						name="boundaryZone1"
-						type="gml:PointPropertyType"
-						minOccurs="0" maxOccurs="1"/>
-					
-					<xs:element
-						name="boundaryZone2"
-						type="gml:PointPropertyType"
-						minOccurs="0" maxOccurs="1"/>
-						
-					<xs:element
-						ref="op1d2d:boundaryCondition"
-						minOccurs="0" maxOccurs="unbounded"/>
-						
-					<xs:element
-						ref="op1d2d:initialCondition"
-						minOccurs="0" maxOccurs="unbounded"/>
-						
-					<xs:element ref="op1d2d:operationalModel"/>
+					<xs:element name="boundaryZone1"
+						type="gml:PointPropertyType" minOccurs="0" maxOccurs="1" />
+
+					<xs:element name="boundaryZone2"
+						type="gml:PointPropertyType" minOccurs="0" maxOccurs="1" />
+
+					<xs:element ref="op1d2d:boundaryCondition"
+						minOccurs="0" maxOccurs="unbounded" />
+
+					<xs:element ref="op1d2d:initialCondition"
+						minOccurs="0" maxOccurs="unbounded" />
+
+					<xs:element ref="op1d2d:operationalModel" />
 				</xs:sequence>
 			</xs:extension>
-		</xs:complexContent>		
+		</xs:complexContent>
 	</xs:complexType>
-	
+
 	<!-- =================================================================
-	
-	================================================================== -->
-	<xs:element 
-		name="operationalModel"
-		type="op1d2d:OperationalModelPropertyType"/>
+		
+		================================================================== -->
+	<xs:element name="operationalModel"
+		type="op1d2d:OperationalModelPropertyType" />
 	<xs:complexType name="OperationalModelPropertyType">
 		<xs:annotation>
 			<xs:documentation>
-				Property to hold an InitialCondition
-				element, or a substitute
+				Property to hold an InitialCondition element, or a
+				substitute
 			</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element 
-				ref="op1d2d:OperationalModel"
-				minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="op1d2d:OperationalModel" minOccurs="0"
+				maxOccurs="1" />
 		</xs:sequence>
-		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
 	</xs:complexType>
-	
+
 	<!-- =======================================================
 		Initial condition
-	======================================================== -->
-	<xs:element 
-		name="initialCondition"
-		type="op1d2d:InitialConditionPropertyType"/>
+		======================================================== -->
+	<xs:element name="initialCondition"
+		type="op1d2d:InitialConditionPropertyType" />
 	<xs:complexType name="InitialConditionPropertyType">
 		<xs:annotation>
 			<xs:documentation>
-				Property to hold an InitialCondition
-				element, or a substitute
+				Property to hold an InitialCondition element, or a
+				substitute
 			</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element 
-				ref="op1d2d:InitialCondition"
-				minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="op1d2d:InitialCondition" minOccurs="0"
+				maxOccurs="1" />
 		</xs:sequence>
-		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
 	</xs:complexType>
-	
+
 	<!--  Is it still used? There is no content,no docuemntation, ... -->
-	<xs:element 
-			name="InitialCondition"
-			type="op1d2d:InitialConditionType"
-			substitutionGroup="gml:_Feature">
-		</xs:element>
-	<xs:complexType 
-		name="InitialConditionType">
+	<xs:element name="InitialCondition"
+		type="op1d2d:InitialConditionType" substitutionGroup="gml:_Feature">
+	</xs:element>
+	<xs:complexType name="InitialConditionType">
 		<xs:complexContent>
-			<xs:extension 
-				base="gml:AbstractFeatureType">
-			</xs:extension>
-		</xs:complexContent>		
+			<xs:extension base="gml:AbstractFeatureType"></xs:extension>
+		</xs:complexContent>
 	</xs:complexType>
-	
+
 	<!-- ================================================
 		Boundary conditions
 		================================================== -->
-	<xs:element 
-		name="boundaryCondition"
-		type="op1d2d:BoundaryConditionPropertyType"/>
+	<xs:element name="boundaryCondition"
+		type="op1d2d:BoundaryConditionPropertyType" />
 	<xs:complexType name="BoundaryConditionPropertyType">
 		<xs:annotation>
-			<xs:documentation>
-			</xs:documentation>
+			<xs:documentation></xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element 
-				ref="op1d2d:BoundaryCondition"
-				minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="op1d2d:BoundaryCondition" minOccurs="0"
+				maxOccurs="1" />
 		</xs:sequence>
-		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
 	</xs:complexType>
-	
-	<xs:element name="BoundaryCondition" type="op1d2d:BoundaryConditionType"
+
+	<xs:element name="BoundaryCondition"
+		type="op1d2d:BoundaryConditionType"
 		substitutionGroup="simBase:_FlowRelationship">
 		<xs:annotation>
 			<xs:documentation xml:lang="de">
@@ -159,7 +144,8 @@
 		<xs:complexContent>
 			<xs:extension base="simBase:AbstractFlowRelationshipType">
 				<xs:sequence>
-					<xs:element name="observation" type="obs1d2d:ObservationWithSourcePropertyType">
+					<xs:element name="observation"
+						type="obs1d2d:ObservationWithSourcePropertyType">
 						<xs:annotation>
 							<xs:documentation xml:lang="de">
 								<xs:label>Randbedingung</xs:label>
@@ -171,22 +157,32 @@
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element
-						name="scopeMark"
-						type="gml:MultiPointPropertyType"
-						minOccurs="0" maxOccurs="unbounded">
+					<xs:element name="scopeMark"
+						type="gml:MultiPointPropertyType" minOccurs="0"
+						maxOccurs="unbounded">
 						<xs:annotation>
 							<xs:documentation xml:lang="de">
 								<xs:label>scopeMark</xs:label>
 								<xs:tooltip>scopeMark</xs:tooltip>
 							</xs:documentation>
 							<xs:documentation xml:lang="en">
-								This points make it possible to assign the boundary condition to the
-								a calculation unit by scoping the boundary lines of the calculation unit.
+								This points make it possible to assign
+								the boundary condition to the
+								calculation unit by scoping the boundary
+								lines of the calculation unit.
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="stationaryCondition" type="xs:double"/>
+					<xs:element name="stationaryCondition"
+						type="xs:double">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>
+									Stationäre Randbedingung
+								</xs:label>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>

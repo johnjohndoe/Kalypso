@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.metadata;
 
+import java.io.File;
+
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
@@ -61,7 +63,7 @@ public interface ISimulationDescriptionCollection extends IFeatureWrapper2
    *        is to be added to this collection.
    */
   public IModelDescriptor addModelDescriptor(
-                IFeatureWrapper2 modelFeatureWrapper );
+      IFeatureWrapper2 modelFeatureWrapper );
   
   /**
    * To get the existing descriptor entry for the given feature

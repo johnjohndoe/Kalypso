@@ -41,9 +41,13 @@
 package org.kalypso.kalypsomodel1d2d.schema.binding.model;
 
 import java.io.File;
+import java.math.BigInteger;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.StringTokenizer;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
@@ -66,6 +70,7 @@ import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
 /**
  * @author Patrice Congo
  * @author Madanagopal
+ * @author Dejan Antanaskovic
  * 
  */
 @SuppressWarnings("unchecked")
@@ -120,12 +125,37 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
 
   public Integer getIaccyc( )
   {
-    return (Integer) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_IACCYC );
+    final Object property = getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_IACCYC );
+    if( property instanceof BigInteger )
+      return ((BigInteger) property).intValue();
+    return (Integer) property;
   }
 
   public boolean getRestart( )
   {
     return ((Boolean) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_RESTART )).booleanValue();
+  }
+
+  public List<String> getRestartPaths( )
+  {
+    final StringTokenizer tokenizer = new StringTokenizer( getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_RESTART_PATH ).toString(), ";" );
+    final List<String> list = new ArrayList<String>();
+    while( tokenizer.hasMoreTokens() )
+      list.add( tokenizer.nextToken() );
+    return list;
+  }
+
+  public void setRestartPaths( List<String> list )
+  {
+    if( list != null && list.size() > 0 )
+    {
+      String paths = list.get( 0 );
+      for( int i = 1; i < list.size(); i++ )
+        paths.concat( ";" ).concat( list.get( i ) );
+      getFeature().setProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_RESTART_PATH, paths );
+    }
+    else
+      getFeature().setProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_RESTART_PATH, "" );
   }
 
   public XMLGregorianCalendar getStartCalendar( )
@@ -147,111 +177,113 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
   public Integer getIEDSW( )
   {
     final Integer property = (Integer) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_IEDSW );
-    return property!=null ? property : 0;
+    return property != null ? property : 0;
   }
 
   public Double getTBFACT( )
   {
     final Double property = (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_TBFACT );
-    return property!=null ? property : 0.0;
+    return property != null ? property : 0.0;
   }
 
   public Double getTBMIN( )
   {
     final Double property = (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_TBMIN );
-    return property!=null ? property : 0.0;
+    return property != null ? property : 0.0;
   }
 
   public Double getOMEGA( )
   {
     final Double property = (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_OMEGA );
-    return property!=null ? property : 0.0;
+    return property != null ? property : 0.0;
   }
 
   public Double getELEV( )
   {
     final Double property = (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_ELEV );
-    return property!=null ? property : 0.0;
+    return property != null ? property : 0.0;
   }
 
   public Double getUDIR( )
   {
     final Double property = (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_UDIR );
-    return property!=null ? property : 0.0;
+    return property != null ? property : 0.0;
   }
 
   public Double getUNOM( )
   {
     final Double property = (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_UNOM );
-    return property!=null ? property : 0.0;
+    return property != null ? property : 0.0;
   }
 
   public Double getHMIN( )
   {
     final Double property = (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_HMIN );
-    return property!=null ? property : 0.0;
+    return property != null ? property : 0.0;
   }
 
   public Double getDSET( )
   {
     final Double property = (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_DSET );
-    return property!=null ? property : 0.0;
+    return property != null ? property : 0.0;
   }
 
   public Double getDSETD( )
   {
     final Double property = (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_DSETD );
-    return property!=null ? property : 0.0;
+    return property != null ? property : 0.0;
   }
 
   public Integer getNITI( )
   {
     Integer property = (Integer) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_NITI );
-    if(property == null) property = 0;
+    if( property == null )
+      property = 0;
     return property;
   }
 
   public Integer getNITN( )
   {
     Integer property = (Integer) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_NITN );
-    if(property == null) property = 0;
+    if( property == null )
+      property = 0;
     return property;
   }
 
   public Integer getNCYC( )
   {
-    final Integer property = getTimeSteps().getResult().size() -1;
-    return getNITN()!=null ? property : 0; // Not needed, while no definition of unsteady timesteps
+    final Integer property = getTimeSteps().getResult().size() - 1;
+    return getNITN() != null ? property : 0; // Not needed, while no definition of unsteady timesteps
   }
 
   public Double getCONV_1( )
   {
     final Double property = (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_CONV_1 );
-    return property!=null ? property : 0.0;
+    return property != null ? property : 0.0;
   }
 
   public Double getCONV_2( )
   {
     final Double property = (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_CONV_2 );
-    return property!=null ? property : 0.0;
+    return property != null ? property : 0.0;
   }
 
   public Double getCONV_3( )
   {
     final Double property = (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_CONV_3 );
-    return property!=null ? property : 0.0;
+    return property != null ? property : 0.0;
   }
 
   public Integer getIDRPT( )
   {
     final Integer property = (Integer) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_IDRPT );
-    return property!=null ? property : 0;
+    return property != null ? property : 0;
   }
 
   public Double getDRFACT( )
   {
     final Double property = (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_DRFACT );
-    return property!=null ? property : 0.0;
+    return property != null ? property : 0.0;
   }
 
   public boolean getVegeta( )
@@ -262,19 +294,19 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
   public Double getAC1( )
   {
     final Double property = (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_AC1 );
-    return property!=null ? property : 0.0;
+    return property != null ? property : 0.0;
   }
 
   public Double getAC2( )
   {
     final Double property = (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_AC2 );
-    return property!=null ? property : 0.0;
+    return property != null ? property : 0.0;
   }
 
   public Double getAC3( )
   {
     final Double property = (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_AC3 );
-    return property!=null ? property : 0.0;
+    return property != null ? property : 0.0;
   }
 
   /**
@@ -285,23 +317,23 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
     try
     {
       Feature wrappedFeature = calUnit.getWrappedFeature();
-      Feature parentFeature = getFeature();//control to link to 
+      Feature parentFeature = getFeature();// control to link to
       IPropertyType property = parentFeature.getFeatureType().getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_CALC_UNIT );
-      
+
       GMLWorkspace workspace = calUnit.getWrappedFeature().getWorkspace();
-      URL context = workspace.getContext();      
-      File filee = new File(FileLocator.resolve( context ).getFile() );
-      String name = filee.getName();//new java.io.File( uri ).getName();
-      XLinkedFeature_Impl linkedFeature =
-        (XLinkedFeature_Impl) FeatureHelper.createLinkToID( name+"#"+calUnit.getGmlID(),parentFeature, (IRelationType) property, wrappedFeature.getFeatureType() );
+      URL context = workspace.getContext();
+      File filee = new File( FileLocator.resolve( context ).getFile() );
+      String name = filee.getName();// new java.io.File( uri ).getName();
+      XLinkedFeature_Impl linkedFeature = (XLinkedFeature_Impl) FeatureHelper.createLinkToID( name + "#" + calUnit.getGmlID(), parentFeature, (IRelationType) property, wrappedFeature.getFeatureType() );
       parentFeature.setProperty( property, linkedFeature );
     }
-    catch (Exception e) {
+    catch( Exception e )
+    {
       e.printStackTrace();
       throw new RuntimeException( "Exception while setting calunit link to control", e );
     }
   }
-  
+
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#getCalculationUnit()
    */
@@ -348,7 +380,7 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
   public Double get_P_BOTTOM( )
   {
     final Double property = (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_P_BOTTOM );
-    return property!=null ? property : 0.0;
+    return property != null ? property : 0.0;
   }
-  
+
 }

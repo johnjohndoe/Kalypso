@@ -40,13 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.metadata;
 
-import java.util.Date;
 import java.util.GregorianCalendar;
 
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
-import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;

@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.model;
 
+import java.util.List;
+
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
@@ -68,6 +70,10 @@ public interface IControlModel1D2D extends IControlModel
   public Integer getIaccyc( );
 
   public boolean getRestart( );
+  
+  public List<String> getRestartPaths( );
+  
+  public void setRestartPaths( List<String> list );
 
   public XMLGregorianCalendar getStartCalendar( );
 

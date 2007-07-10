@@ -418,7 +418,7 @@ public class Control1D2DConverter
   private void formatBC( final Formatter formatter, final float uRVal, final int nitn ) throws SimulationException
   {
     if( uRVal < 0.0 || uRVal > 1.0 )
-      throw new SimulationException( "Wichtungsfaktor muss zwischen 0.0 und 1.0 liegen.", null );
+      throw new SimulationException( "Relaxationsfaktor muss zwischen 0.0 und 1.0 liegen.", null );
 
     final int buffVal;
     if( uRVal == (float) 1.0 )

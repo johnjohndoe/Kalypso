@@ -1,18 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om" xmlns:kapp="org.kalypso.appinfo" xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" xmlns:c1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl" xmlns:wb1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d" targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl" elementFormDefault="qualified" attributeFormDefault="unqualified">
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:gml="http://www.opengis.net/gml"
+	xmlns:om="http://www.opengis.net/om" xmlns:kapp="org.kalypso.appinfo"
+	xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase"
+	xmlns:c1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl"
+	xmlns:wb1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d"
+	targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl"
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<annotation>
 		<appinfo xmlns:kapp="org.kalypso.appinfo">
 			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
 		</appinfo>
 	</annotation>
-	<import namespace="http://www.opengis.net/gml" schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd"/>
-	<import namespace="http://www.opengis.net/om" schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/om/1.0.30/om.xsd"/>
-	<import namespace="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" schemaLocation="platform:/resource/KalypsoModelSimulationBase/src/org/kalypso/kalypsosimulationmodel/schema/v0.0.0/simulation_model.xsd"/>
-	<import namespace="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d" schemaLocation="sim_1d2d_discretisation.xsd"/>
+	<import namespace="http://www.opengis.net/gml"
+		schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd" />
+	<import namespace="http://www.opengis.net/om"
+		schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/om/1.0.30/om.xsd" />
+	<import
+		namespace="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase"
+		schemaLocation="platform:/resource/KalypsoModelSimulationBase/src/org/kalypso/kalypsosimulationmodel/schema/v0.0.0/simulation_model.xsd" />
+	<import
+		namespace="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d"
+		schemaLocation="sim_1d2d_discretisation.xsd" />
 	<!-- =================================================================
 		ControlModelGroup
 		================================================================== -->
-	<element name="ControlModelGroup" type="c1d2d:ControlModelGroupType" substitutionGroup="simBase:_Model"/>
+	<element name="ControlModelGroup" type="c1d2d:ControlModelGroupType"
+		substitutionGroup="simBase:_Model" />
 	<complexType name="ControlModelGroupType">
 		<annotation>
 			<documentation>Defined a ...</documentation>
@@ -20,7 +35,7 @@
 		<complexContent>
 			<extension base="simBase:AbstractModelType">
 				<sequence>
-					<element ref="c1d2d:controlModelCollection"/>
+					<element ref="c1d2d:controlModelCollection" />
 				</sequence>
 			</extension>
 		</complexContent>
@@ -31,21 +46,26 @@
 	<element name="controlModelCollection">
 		<complexType>
 			<sequence>
-				<element ref="c1d2d:ControlModelCollection" minOccurs="0"/>
+				<element ref="c1d2d:ControlModelCollection"
+					minOccurs="0" />
 			</sequence>
-			<attributeGroup ref="gml:AssociationAttributeGroup"/>
+			<attributeGroup ref="gml:AssociationAttributeGroup" />
 		</complexType>
 	</element>
 	<!-- =================================================================
 		ControlModelCollectionType
 		================================================================== -->
-	<element name="ControlModelCollection" type="c1d2d:ControlModelCollectionType" substitutionGroup="gml:_Feature"/>
+	<element name="ControlModelCollection"
+		type="c1d2d:ControlModelCollectionType"
+		substitutionGroup="gml:_Feature" />
 	<complexType name="ControlModelCollectionType">
 		<complexContent>
 			<restriction base="gml:AbstractFeatureCollectionType">
 				<sequence>
-					<element name="activeModelID" type="c1d2d:ActiveModelIDType"/>
-					<element ref="c1d2d:controlModelMember" minOccurs="0" maxOccurs="unbounded"/>
+					<element name="activeModelID"
+						type="c1d2d:ActiveModelIDType" />
+					<element ref="c1d2d:controlModelMember"
+						minOccurs="0" maxOccurs="unbounded" />
 				</sequence>
 			</restriction>
 		</complexContent>
@@ -55,24 +75,27 @@
 		================================================================== -->
 	<complexType name="ActiveModelIDType">
 		<sequence>
-			<element ref="c1d2d:ControlModel" minOccurs="0" maxOccurs="0"/>
+			<element ref="c1d2d:ControlModel" minOccurs="0"
+				maxOccurs="0" />
 		</sequence>
-		<attributeGroup ref="gml:AssociationAttributeGroup"/>
+		<attributeGroup ref="gml:AssociationAttributeGroup" />
 	</complexType>
 	<!-- =================================================================
 		ControlModelMemberPropertyType member or property 
 		===================================================================-->
-	<element name="controlModelMember" type="c1d2d:ControlModelMemberPropertyType"/>
+	<element name="controlModelMember"
+		type="c1d2d:ControlModelMemberPropertyType" />
 	<complexType name="ControlModelMemberPropertyType">
 		<sequence>
-			<element ref="c1d2d:ControlModel" minOccurs="0"/>
+			<element ref="c1d2d:ControlModel" minOccurs="0" />
 		</sequence>
-		<attributeGroup ref="gml:AssociationAttributeGroup"/>
+		<attributeGroup ref="gml:AssociationAttributeGroup" />
 	</complexType>
 	<!-- =================================================================
 		
 		================================================================== -->
-	<element name="ControlModel" type="c1d2d:ControlModelType" substitutionGroup="gml:_Feature">
+	<element name="ControlModel" type="c1d2d:ControlModelType"
+		substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
 				<label><![CDATA[${listProperty:http://www.opengis.net/gml#name;0;-no name-}]]></label>
@@ -86,7 +109,7 @@
 		<complexContent>
 			<extension base="simBase:AbstractControlModelType">
 				<sequence>
-					<element ref="wb1d2d:calculationUnit"/>
+					<element ref="wb1d2d:calculationUnit" />
 					<element name="Version" default="NEW">
 						<annotation>
 							<documentation xml:lang="de">
@@ -108,13 +131,14 @@
 										</documentation>
 									</annotation>
 								</enumeration>
-								<enumeration value="Version3.5"/>
-								<enumeration value="Test"/>
+								<enumeration value="Version3.5" />
+								<enumeration value="Test" />
 							</restriction>
 						</simpleType>
 					</element>
 					<!-- ControlDataBlock-->
-					<element name="VEGETA" type="boolean" default="true">
+					<element name="VEGETA" type="boolean"
+						default="true">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Berücksichtigung Bewuchs</label>
@@ -309,7 +333,8 @@
 										</documentation>
 										<documentation xml:lang="en">
 											<label><![CDATA[15 Prandtl's mixing length w. bottom induced turb.]]></label>
-										</documentation>c
+										</documentation>
+										c
 									</annotation>
 								</enumeration>
 								<enumeration value="16">
@@ -346,8 +371,8 @@
 						</annotation>
 						<simpleType>
 							<restriction base="double">
-								<minInclusive value="0.02"/>
-								<maxExclusive value="0.5"/>
+								<minInclusive value="0.02" />
+								<maxExclusive value="0.5" />
 							</restriction>
 						</simpleType>
 					</element>
@@ -454,8 +479,8 @@
 						</annotation>
 						<simpleType>
 							<restriction base="double">
-								<minInclusive value="0.0"/>
-								<maxInclusive value="360.0"/>
+								<minInclusive value="0.0" />
+								<maxInclusive value="360.0" />
 							</restriction>
 						</simpleType>
 					</element>
@@ -483,7 +508,8 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="DSETD" type="double" default="0.09">
+					<element name="DSETD" type="double"
+						default="0.09">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Wiederbenetzungstiefe [m]</label>
@@ -494,14 +520,16 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="_steady" type="boolean" default="true">
+					<element name="_steady" type="boolean"
+						default="true">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Stätionar Berechnung</label>
 							</documentation>
 						</annotation>
 					</element>
-					<element name="_unsteady" type="boolean" default="false">
+					<element name="_unsteady" type="boolean"
+						default="false">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Instätionar Berechnung</label>
@@ -524,22 +552,22 @@
 						</annotation>
 						<simpleType>
 							<restriction base="int">
-								<minInclusive value="1"/>
-								<maxInclusive value="100"/>
+								<minInclusive value="1" />
+								<maxInclusive value="100" />
 							</restriction>
 						</simpleType>
 					</element>
 					<!-- not needed - get it from timeseries count -1 -->
-<!--					<element name="NCYC" type="int">
+					<!--					<element name="NCYC" type="int">
 						<annotation>
-							<documentation xml:lang="de">
-								<label>
-									Anzahl der Zeitschritte
-									(instationär)
-								</label>
-							</documentation>
+						<documentation xml:lang="de">
+						<label>
+						Anzahl der Zeitschritte
+						(instationär)
+						</label>
+						</documentation>
 						</annotation>
-					</element>-->
+						</element>-->
 					<element name="NITN" default="1">
 						<annotation>
 							<documentation xml:lang="de">
@@ -555,13 +583,14 @@
 						</annotation>
 						<simpleType>
 							<restriction base="int">
-								<minInclusive value="1"/>
-								<maxInclusive value="50"/>
+								<minInclusive value="1" />
+								<maxInclusive value="50" />
 							</restriction>
 						</simpleType>
 					</element>
 					<!--CV-->
-					<element name="CONV_1" type="double" default="0.01">
+					<element name="CONV_1" type="double"
+						default="0.01">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Konvergenzschranke vx [-]</label>
@@ -572,7 +601,8 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="CONV_2" type="double" default="0.01">
+					<element name="CONV_2" type="double"
+						default="0.01">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Konvergenzschranke vy [-]</label>
@@ -580,11 +610,12 @@
 									Maximale Änderung der
 									Geschwindigkeit in y-Richtung [-]
 								</tooltip>
-								<tooltip/>
+								<tooltip />
 							</documentation>
 						</annotation>
 					</element>
-					<element name="CONV_3" type="double" default="0.001">
+					<element name="CONV_3" type="double"
+						default="0.001">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Konvergenzschranke h [-]</label>
@@ -592,7 +623,7 @@
 									Maximale Änderung der Wassertiefe
 									[-]
 								</tooltip>
-								<tooltip/>
+								<tooltip />
 							</documentation>
 						</annotation>
 					</element>
@@ -640,7 +671,8 @@
 							</restriction>
 						</simpleType>
 					</element>
-					<element name="DRFACT" type="double" default="0.05">
+					<element name="DRFACT" type="double"
+						default="0.05">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>
@@ -688,7 +720,8 @@
 					</element>
 					<!--CV-->
 					<!--TODO: aus vorhandenen Lösungen auswählen...-->
-					<element name="_restart" type="boolean" default="false">
+					<element name="_restart" type="boolean"
+						default="false">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Restart</label>
@@ -697,6 +730,14 @@
 									(bei 0 wird eine neue Berechnung
 									gestartet).
 								</tooltip>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="_restart_path" type="string"
+						minOccurs="0" maxOccurs="1">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Restart file paths</label>
 							</documentation>
 						</annotation>
 					</element>
@@ -719,7 +760,8 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="timestepsMember" type="c1d2d:TimestepsObservationPropertyType">
+					<element name="timestepsMember"
+						type="c1d2d:TimestepsObservationPropertyType">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Zeitschritte</label>
@@ -733,14 +775,15 @@
 	</complexType>
 	<complexType name="TimestepsObservationPropertyType">
 		<sequence>
-			<element ref="c1d2d:TimestepsObservation" minOccurs="0"/>
+			<element ref="c1d2d:TimestepsObservation" minOccurs="0" />
 		</sequence>
 		<!-- 
 			<attributeGroup ref="gml:AssociationAttributeGroup" />
 		-->
 	</complexType>
 	<!--quasi Stationär Zeitschrittvorgabe -->
-	<element name="TimestepsObservation" type="om:ObservationType" substitutionGroup="om:Observation">
+	<element name="TimestepsObservation" type="om:ObservationType"
+		substitutionGroup="om:Observation">
 		<annotation>
 			<documentation xml:lang="de">
 				<label>Zeitschrittvorgabe</label>

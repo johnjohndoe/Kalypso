@@ -43,7 +43,9 @@ package org.kalypso.kalypsomodel1d2d.conv;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
+import java.net.MalformedURLException;
 import java.util.Formatter;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -127,7 +129,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
   private ICalculationUnit m_calculationUnit;
 
   private GM_Envelope m_calcUnitBBox;
-  
+
   private RestartEater m_restartEater;
 
 // private Formatter formatter;
@@ -156,11 +158,22 @@ public class Gml2RMA10SConv implements INativeIDProvider
       getID( m_roughnessIDProvider, roughnessCL.getId() );
     }
     m_restart = m_calculation.getControlModel().getRestart();
-    if(m_restart)
+    if( m_restart )
     {
       m_restartEater = new RestartEater();
-      // TODO: load m_restartEater with the list of result GML files 
-//      m_restartEater.addResultFile( file );
+      for( final String path : m_calculation.getControlModel().getRestartPaths() )
+      {
+        final File file = new File(path);
+        try
+        {
+          m_restartEater.addResultFile( file );
+        }
+        catch( Exception e )
+        {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+      }
     }
   }
 
@@ -170,7 +183,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
     m_discretisationModel1d2d = discretisationModel1d2d;
     m_terrainModel = terrainModel;
     m_flowrelationModel = flowrelationModel;
-    
+
     m_restart = false;
   }
 
@@ -438,8 +451,8 @@ public class Gml2RMA10SConv implements INativeIDProvider
       formatter.format( "FP%10d%20.7f%20.7f%20.7f%n", nodeID, x, y, z );
     else
       formatter.format( "FP%10d%20.7f%20.7f%20.7f%20.7f%n", nodeID, x, y, z, station );
-    if(m_restart)
-      writeRestartLines(formatter, nodeID, x, y, z);
+    if( m_restart )
+      writeRestartLines( formatter, nodeID, x, y, z );
   }
 
   private void writePolynome( final Formatter formatter, final String kind, final int nodeID, final IPolynomial1D poly, final int coeffStart, final int coeffStop, final Double extraValue )
@@ -521,14 +534,15 @@ public class Gml2RMA10SConv implements INativeIDProvider
     }
   }
 
-  private void writeRestartLines( final Formatter formatter, int nodeID, double x, double y, double z) {
+  private void writeRestartLines( final Formatter formatter, int nodeID, double x, double y, double z )
+  {
     final INodeResult node = m_restartEater.getNodeResultAtPosition( x, y );
     double vx = 0.0;
     double vy = 0.0;
     if( node instanceof GMLNodeResult )
     {
-      final List<Double> velocity = ((GMLNodeResult)node).getVelocity();
-      if(velocity != null)
+      final List<Double> velocity = ((GMLNodeResult) node).getVelocity();
+      if( velocity != null )
       {
         vx = velocity.get( 0 );
         vy = velocity.get( 1 );
@@ -546,7 +560,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
     }
     formatter.format( "VA%10d%20.7f%20.7f%20.7f%20.7f%n", nodeID, vx, vy, node.getDepth(), node.getWaterlevel() );
   }
-  
+
   private int calculateRoughnessID( final LinkedHashMap<String, Integer> roughnessIDProvider, final IRoughnessPolygonCollection roughnessPolygonCollection, final IFE1D2DElement element ) throws GM_Exception, SimulationException
   {
     final IRoughnessEstimateSpec roughnessEstimateSpec = roughnessPolygonCollection.getRoughnessEstimateSpec( element.recalculateElementGeometry() );

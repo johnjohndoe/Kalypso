@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.metadata;
 
+import java.math.BigInteger;
 import java.util.GregorianCalendar;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptor.SIMULATIONTYPE;
@@ -58,5 +59,26 @@ public interface IResultModelDescriptor extends IModelDescriptor
   public SIMULATIONTYPE getSimulationType( );
 
   public void setSimulationType( SIMULATIONTYPE value );
-
+  
+  /**
+   * To get the path to the tin velocity gml for the result described by this
+   * descriptor
+   * @return a string representing the path for the velocity tin for model
+   *            described here
+   */
+  public String getTinDepth( );
+  public void setTinDepth( String newValue );
+  
+  public String getTinWaterLevel( );
+  public void setTinWaterLevel( String newValue );
+  
+  public String getTinVelocity( );
+  public void setTinVelocity( String newValue );
+  
+  public String getGmt( );
+  public void setGmt( String newValue );
+  
+  public BigInteger getTimeStepNum( );
+  public void setTimeStepNum( BigInteger newValue );
+  
 }

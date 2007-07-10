@@ -46,6 +46,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
+import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
@@ -169,6 +170,11 @@ public class TestResultDB extends TestCase
       modelDesc.setTime( new GregorianCalendar() );
       modelDesc.setModelID( "modelID_ididid" );
       modelDesc.setModelName( "modelName_namemmemem" );
+      modelDesc.setTimeStepNum( new BigInteger("1") );
+      modelDesc.setTinDepth( "_depth" );
+      modelDesc.setTinVelocity( "_velocity" );
+      modelDesc.setTinWaterLevel( "newValue" );
+      modelDesc.setGmt( "_gmt" );
       
 //      GmlSerializer.serializeWorkspace( 
 //          new OutputStreamWriter(System.out), 
@@ -182,7 +188,10 @@ public class TestResultDB extends TestCase
       assertEquals( modelDesc.getTime(), modelDescReloaded.getTime() );
       assertEquals( modelDesc.getModelID(), modelDescReloaded.getModelID() );
       assertEquals( modelDesc.getModelType(), modelDescReloaded.getModelType() );
-      modelDescReloaded.getTime();
+      assertEquals( modelDesc.getTinDepth(), modelDescReloaded.getTinDepth() );
+      assertEquals( modelDesc.getTinVelocity(), modelDescReloaded.getTinVelocity() );
+      assertEquals( modelDesc.getTinWaterLevel(), modelDescReloaded.getTinWaterLevel() );
+      assertEquals( modelDesc.getGmt(), modelDescReloaded.getGmt() );
     }
     catch( Exception e )
     {

@@ -44,7 +44,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.net.URL;
-import java.util.GregorianCalendar;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
@@ -54,7 +53,6 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypso.kalypsomodel1d2d.conv.ITimeStepinfo;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
@@ -205,13 +203,11 @@ public class ResultDB
    */
   public IModelDescriptor addModelDescriptor( IFeatureWrapper2 modelFeatureWrapper )
   {
-    
     IModelDescriptor existingEntry = simDB.getExistingEntry( modelFeatureWrapper );
     if( existingEntry == null )
     {
       existingEntry = simDB.addModelDescriptor( modelFeatureWrapper ); 
     }
-    
     return existingEntry; 
   }
   

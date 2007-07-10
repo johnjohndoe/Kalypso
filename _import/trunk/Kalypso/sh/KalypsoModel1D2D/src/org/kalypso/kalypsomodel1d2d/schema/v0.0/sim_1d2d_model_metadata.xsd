@@ -96,6 +96,11 @@
 			<xs:extension base="simMeta1d2d:ModelDescriptorType">
 				<xs:sequence>
 					<xs:element name="time" type="xs:dateTime"/>
+					<xs:element name="timeStepNum" type="xs:integer"/>
+					<xs:element name="tinDepth" type="xs:string"/>
+					<xs:element name="tinVelocity" type="xs:string"/>
+					<xs:element name="tinWaterLevel" type="xs:string"/>
+					<xs:element name="gmt" type="xs:string"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>

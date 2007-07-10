@@ -177,7 +177,7 @@ public class ModelDescriptor
     String testeeContext = feature.getWorkspace().getContext().toString();
     String testeeGmlID = feature.getId();
     
-    return testeeContext.equals( getWorkspacePath() ) && testeeGmlID.equals( getModelID() );
+    return /*testeeContext.equals( getWorkspacePath() ) &&*/ testeeGmlID.equals( getModelID() );
   }
   
 }

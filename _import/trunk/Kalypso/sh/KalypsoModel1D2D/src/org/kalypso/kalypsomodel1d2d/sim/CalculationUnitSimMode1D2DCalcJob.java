@@ -89,6 +89,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ResultDB;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.IResultModel1d2d;
 import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;

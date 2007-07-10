@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.metadata;
 
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -126,5 +127,118 @@ public class ResultModelDescriptor extends ModelDescriptor implements IResultMod
     return SIMULATIONTYPE.valueOf( type );
     
   }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IResultModelDescriptor#getTinDepth()
+   */
+  public String getTinDepth( )
+  {
+    String prop =
+      getProperty( 
+          Kalypso1D2DSchemaConstants.SIMMETA_PROP_TIN_DEPTH, 
+          String.class );
+    return prop;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IResultModelDescriptor#getTinVelocity()
+   */
+  public String getTinVelocity( )
+  {
+    String prop =
+      getProperty( 
+          Kalypso1D2DSchemaConstants.SIMMETA_PROP_TIN_VELOCITY, 
+          String.class );
+    return prop;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IResultModelDescriptor#getTinWaterLevel()
+   */
+  public String getTinWaterLevel( )
+  {
+    String prop =
+      getProperty( 
+          Kalypso1D2DSchemaConstants.SIMMETA_PROP_TIN_WATERLEVEL, 
+          String.class );
+    return prop;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IResultModelDescriptor#setTinDepth(java.lang.String)
+   */
+  public void setTinDepth( String newValue )
+  {
+    setProperty( 
+          Kalypso1D2DSchemaConstants.SIMMETA_PROP_TIN_DEPTH, 
+          newValue );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IResultModelDescriptor#setTinVelocity(java.lang.String)
+   */
+  public void setTinVelocity( String newValue )
+  {
+    setProperty( 
+        Kalypso1D2DSchemaConstants.SIMMETA_PROP_TIN_VELOCITY, 
+        newValue );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IResultModelDescriptor#setTinWaterLevel(java.lang.String)
+   */
+  public void setTinWaterLevel( String newValue )
+  {
+    setProperty( 
+        Kalypso1D2DSchemaConstants.SIMMETA_PROP_TIN_WATERLEVEL, 
+        newValue );    
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IResultModelDescriptor#getGmt()
+   */
+  public String getGmt( )
+  {
+    String prop =
+      getProperty( 
+          Kalypso1D2DSchemaConstants.SIMMETA_PROP_GMT, 
+          String.class );
+    return prop;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IResultModelDescriptor#getTimeStepNum()
+   */
+  public BigInteger getTimeStepNum( )
+  {
+    BigInteger prop =
+      getProperty( 
+          Kalypso1D2DSchemaConstants.SIMMETA_PROP_TIME_STEP_NUM, 
+          BigInteger.class );
+    
+    return prop;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IResultModelDescriptor#setGmt(java.lang.String)
+   */
+  public void setGmt( String newValue )
+  {
+    setProperty( 
+        Kalypso1D2DSchemaConstants.SIMMETA_PROP_GMT, 
+        newValue );  
+    
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IResultModelDescriptor#setTimeStepNum(BigInteger)
+   */
+  public void setTimeStepNum( BigInteger newValue )
+  {
+    setProperty( 
+        Kalypso1D2DSchemaConstants.SIMMETA_PROP_TIME_STEP_NUM, 
+        newValue );    
+  }
+  
 
 }

@@ -40,10 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.metadata;
 
-import java.net.URL;
+import java.io.File;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.ISources;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IResultModel1d2d;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
@@ -54,7 +62,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
 
-import com.sun.org.apache.xerces.internal.impl.dv.xs.DecimalDV;
+import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 
 /**
  * @author Patrice Congo
@@ -126,9 +134,16 @@ public class SimulationDescriptionCollection extends AbstractFeatureBinder imple
     addNew.setModelType( modelFeatureWrapper.getWrappedFeature().getFeatureType().getQName().toString() );
     
     //workspace path
-    GMLWorkspace workspace = modelFeatureWrapper.getWrappedFeature().getWorkspace();
-    URL context = workspace.getContext();
-    addNew.setWorkspacePath( context.toString() );
+//    final IWorkbench workbench = PlatformUI.getWorkbench();
+//    final IHandlerService service = (IHandlerService) workbench.getService( IHandlerService.class );
+//    final IEvaluationContext currentState = service.getCurrentState();
+//    final IFolder scenarioFolder = (IFolder) currentState.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
+//    IFile file = scenarioFolder.getFile( modelFeatureWrapper.getWrappedFeature().getWorkspace().getContext().getFile() );
+    
+    final GMLWorkspace workspace = modelFeatureWrapper.getWrappedFeature().getWorkspace();
+    addNew.setWorkspacePath( new File(workspace.getContext().getFile()).toString() );
+    
+//    addNew.setWorkspacePath( file.getFullPath().toOSString() );
     return addNew;
   }
   

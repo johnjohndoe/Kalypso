@@ -41,6 +41,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.sim;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -69,7 +70,6 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
-import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IModelDescriptor;
 import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IResultModelDescriptor;
 import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptor;
 import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ResultDB;

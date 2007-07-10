@@ -41,8 +41,7 @@
 package org.kalypso.kalypsomodel1d2d.conv.results;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
+import java.io.FileNotFoundException;
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -50,12 +49,13 @@ import javax.xml.namespace.QName;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.GMLNodeResult;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -70,20 +70,26 @@ public class RestartEater
   private FeatureList m_nodes;
 
   private double m_distance = 0.5;
-  
+
   private boolean m_any_results = false;
 
   public final static String GAUS_KRUEGER = "EPSG:31467";
 
   private static final CS_CoordinateSystem CS = ConvenienceCSFactory.getInstance().getOGCCSByName( GAUS_KRUEGER );
 
-  public void addResultFile( final File file ) throws MalformedURLException, InvocationTargetException
+  public void addResultFile( final File file ) throws Exception
   {
-    final GMLWorkspace resultWorkspace = FeatureFactory.createGMLWorkspace( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "NodeResultCollection" ), file.toURL(), null );
-    FeatureList nodeList = (FeatureList) resultWorkspace.getRootFeature().getProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "nodeResultMember" ) );
+    if(file == null)
+      throw new SimulationException("Restart file(s) not defined.".concat( file.toString() ), new FileNotFoundException());
+    if(!file.exists())
+      throw new SimulationException("Restart file(s) does not exists: ".concat( file.toString() ), new FileNotFoundException());
+    final GMLWorkspace resultWorkspace = GmlSerializer.createGMLWorkspace( file.toURL(), null );
+//    final GMLWorkspace resultWorkspace = FeatureFactory.createGMLWorkspace( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "NodeResultCollection" ), file.toURL(), GmlSerializer.DEFAULT_FACTORY );
+    final Feature rootFeature = resultWorkspace.getRootFeature();
+    FeatureList nodeList = (FeatureList) rootFeature.getProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "nodeResultMember" ) );
     addNodes( nodeList );
   }
-  
+
   /**
    * Set search distance for finding nodes, default is 0.5
    */
@@ -103,7 +109,7 @@ public class RestartEater
 
   private void addNodes( List<INodeResult> nodes )
   {
-    if(m_any_results)
+    if( m_any_results )
       m_nodes.addAll( nodes );
     else
       m_nodes = (FeatureList) nodes;
@@ -113,11 +119,7 @@ public class RestartEater
   private INodeResult getNodeResult( final GM_Point point )
   {
     final Feature feature = GeometryUtilities.findNearestFeature( point, m_distance, m_nodes, GMLNodeResult.QNAME_PROP_LOCATION );
-
-    if( feature instanceof GMLNodeResult )
-      return (GMLNodeResult) feature;
-    else
-      return null;
+    return new GMLNodeResult(feature);
   }
 
 }
