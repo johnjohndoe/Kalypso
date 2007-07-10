@@ -38,31 +38,20 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypso1d2d.pjt.wizards;
-
-import java.io.File;
+package org.kalypso.ui.wizards.results;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
-import org.kalypsodeegree.model.feature.Feature;
+import org.eclipse.ui.IWorkbenchWizard;
+import org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectWizardPage;
 
 /**
- * @author Dejan Antanaskovic
- * 
+ * @author GernotBelger
  */
-public class RestartSelectWizard extends Wizard implements INewWizard
+public class ConfigureResultsWizard extends Wizard implements IWorkbenchWizard
 {
   private RestartSelectWizardPage m_restartSelectWizardPage;
-
-  private final Feature m_feature;
-
-  public RestartSelectWizard( final Feature feature )
-  {
-    m_feature = feature;
-  }
 
   /**
    * @see org.eclipse.jface.wizard.Wizard#addPages()
@@ -70,9 +59,9 @@ public class RestartSelectWizard extends Wizard implements INewWizard
   @Override
   public void addPages( )
   {
-    setWindowTitle( "Berechnungszeitschritte definieren" );
-    final Object property = m_feature.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_RESTART_PATH );
-    m_restartSelectWizardPage = new RestartSelectWizardPage( property == null ? "" : property.toString() );
+    setWindowTitle( "Ergebniskarte konfigurieren" );
+
+    m_restartSelectWizardPage = new RestartSelectWizardPage( "" );
     addPage( m_restartSelectWizardPage );
   }
 
@@ -82,9 +71,11 @@ public class RestartSelectWizard extends Wizard implements INewWizard
   @Override
   public boolean performFinish( )
   {
-    final String selectedPath = m_restartSelectWizardPage.getSelectedPath();
-    m_feature.setProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_RESTART_PATH, selectedPath );
-    return true;
+    // TODO Auto-generated method stub
+
+    // add selected results to map
+
+    return false;
   }
 
   /**
@@ -95,12 +86,10 @@ public class RestartSelectWizard extends Wizard implements INewWizard
   {
     // TODO Auto-generated method stub
 
-  }
+    // find currently open map
 
-  public File[] getSelectedFiles( )
-  {
-    // TODO Auto-generated method stub
-    return null;
+    // find already existent results
+
   }
 
 }

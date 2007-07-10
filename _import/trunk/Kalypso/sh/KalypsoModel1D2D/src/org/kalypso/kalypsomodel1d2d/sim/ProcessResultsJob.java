@@ -138,7 +138,6 @@ public class ProcessResultsJob extends Job
       return StatusUtilities.statusFromThrowable( e, "Fehler beim Lesen der Ergebnisdaten" );
     }
 
-    // TODO Auto-generated method stub
     return Status.OK_STATUS;
   }
 
@@ -244,7 +243,10 @@ public class ProcessResultsJob extends Job
     resultModelDescriptor.setTimeStepNum( new BigInteger( "" + timeStepNum ) );
 
     // HACK: TODO: at the moment this pathes get put here totally hard-coded
-    final String baseDir = outputDir.getParentFile().getName() + "/" + outputDir.getName();
+    // We create a scenario-relative path here
+    final File calcUnitDir = outputDir.getParentFile();
+    final File resultsDir = calcUnitDir.getParentFile();
+    final String baseDir = resultsDir.getName() + "/" + calcUnitDir.getName() + "/" + outputDir.getName();
     resultModelDescriptor.setWorkspacePath( baseDir + "results.gml" );
     resultModelDescriptor.setGmt( baseDir + "Ergebniskarte.gmt" );
   }

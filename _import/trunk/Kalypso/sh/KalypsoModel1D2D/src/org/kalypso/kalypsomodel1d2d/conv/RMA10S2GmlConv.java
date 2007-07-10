@@ -177,10 +177,16 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
         final String hourString = line.substring( 18, 33 );
 
         final int year = Integer.parseInt( yearString );
-        final double hour = Integer.parseInt( hourString );
+        final double hours = Integer.parseInt( hourString );
 
         final Calendar calendar = new GregorianCalendar();
         calendar.set( year, 0, 0 );
+
+        final int wholeHours = (int) Math.floor( hours );
+        final int wholeMinutes = (int) Math.floor( hours * 60 );
+
+        calendar.add( Calendar.HOUR, wholeHours );
+        calendar.add( Calendar.MINUTE, wholeMinutes );
 
         handler.handleTime( line, calendar.getTime() );
       }

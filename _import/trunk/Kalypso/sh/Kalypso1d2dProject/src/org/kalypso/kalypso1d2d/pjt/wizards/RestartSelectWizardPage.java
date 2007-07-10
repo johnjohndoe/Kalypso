@@ -42,13 +42,13 @@ public class RestartSelectWizardPage extends WizardPage
     public boolean select( final Viewer viewer, final Object parentElement, final Object element )
     {
       return true;
-// if( element instanceof File )
-// return ((File) element).getName().endsWith( ".gml" );
-// return true;
+      // if( element instanceof File )
+      // return ((File) element).getName().endsWith( ".gml" );
+      // return true;
     }
   }
 
-  protected RestartSelectWizardPage( final String initialSelection )
+  public RestartSelectWizardPage( final String initialSelection )
   {
     super( "Example" );
     m_initialSelection = initialSelection;
@@ -56,7 +56,7 @@ public class RestartSelectWizardPage extends WizardPage
     setDescription( "Please select one or more restart files that you want to use for your next calculation" );
   }
 
-  public void createControl( Composite parent )
+  public void createControl( final Composite parent )
   {
     final Composite topComposite = new Composite( parent, SWT.NONE );
     final GridLayout gridLayout = new GridLayout();
@@ -66,7 +66,7 @@ public class RestartSelectWizardPage extends WizardPage
     setControl( topComposite );
 
     final Composite innerComposite = new SashForm( topComposite, SWT.HORIZONTAL | SWT.NULL );
-    GridData data = new GridData();
+    final GridData data = new GridData();
     data.horizontalAlignment = GridData.FILL;
     data.verticalAlignment = GridData.FILL;
     data.horizontalSpan = 4;
@@ -92,14 +92,16 @@ public class RestartSelectWizardPage extends WizardPage
     allResultsViewer.addDoubleClickListener( new IDoubleClickListener()
     {
 
-      public void doubleClick( DoubleClickEvent event )
+      public void doubleClick( final DoubleClickEvent event )
       {
         final StructuredSelection selection = (StructuredSelection) event.getSelection();
         try
         {
           setSelection( (IResultModelDescriptor) selection.getFirstElement(), false );
         }
-        catch(ClassCastException e){}
+        catch( final ClassCastException e )
+        {
+        }
       }
 
     } );
@@ -108,24 +110,24 @@ public class RestartSelectWizardPage extends WizardPage
 
   private void loadInitialSelection( )
   {
-    String[] selections = m_initialSelection.split( ";" );
+    final String[] selections = m_initialSelection.split( ";" );
 
     final ResultDB resultDB = KalypsoModel1D2DPlugin.getDefault().getResultDB();
     final IFeatureWrapperCollection<ISimulationDescriptor> simulationDescriptors = resultDB.getSimulationDescriptors();
-    for( ISimulationDescriptor descriptor : simulationDescriptors )
+    for( final ISimulationDescriptor descriptor : simulationDescriptors )
     {
       final IFeatureWrapperCollection<IResultModelDescriptor> resultModel = descriptor.getResultModel();
-      for(int i=0; i<resultModel.size(); i++)
+      for( int i = 0; i < resultModel.size(); i++ )
       {
         final String path = resultModel.get( i ).getWorkspacePath();
-        for( int k = 0; k < selections.length; k++ )
-          if( selections[k].equals( path ) )
+        for( final String element : selections )
+          if( element.equals( path ) )
             setSelection( resultModel.get( i ), true );
       }
     }
   }
 
-  private void setSelection( final IResultModelDescriptor descriptor, boolean initial )
+  private void setSelection( final IResultModelDescriptor descriptor, final boolean initial )
   {
     final String path = descriptor.getWorkspacePath();
     final String value = descriptor.getModelName();
@@ -139,7 +141,7 @@ public class RestartSelectWizardPage extends WizardPage
       m_selectedResultPaths.put( path, value );
 
     String text = "";
-    for( String key : m_selectedResultPaths.keySet() )
+    for( final String key : m_selectedResultPaths.keySet() )
     {
       text = text.concat( m_selectedResultPaths.get( key ) ).concat( m_selectedResultNames.getLineDelimiter() );
     }
@@ -152,7 +154,7 @@ public class RestartSelectWizardPage extends WizardPage
   public String getSelectedPath( )
   {
     String text = "";
-    for( String key : m_selectedResultPaths.keySet() )
+    for( final String key : m_selectedResultPaths.keySet() )
     {
       text = text.concat( key ).concat( ";" );
     }

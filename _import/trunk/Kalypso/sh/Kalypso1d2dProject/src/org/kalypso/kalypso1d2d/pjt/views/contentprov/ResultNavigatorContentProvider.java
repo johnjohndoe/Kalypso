@@ -16,6 +16,7 @@ public class ResultNavigatorContentProvider extends WorkbenchContentProvider imp
 
   public ResultNavigatorContentProvider( )
   {
+    // TODO: isn't it more eclipse-like to use db as input (instead of non-used file object?)
     m_db = KalypsoModel1D2DPlugin.getDefault().getResultDB();
     // maybe listen to changes to the db and update the viewer
   }
@@ -24,7 +25,7 @@ public class ResultNavigatorContentProvider extends WorkbenchContentProvider imp
    * @see org.eclipse.ui.model.BaseWorkbenchContentProvider#getElements(java.lang.Object)
    */
   @Override
-  public Object[] getElements( Object element )
+  public Object[] getElements( final Object element )
   {
     // consider setting a specific input, now only static access to db is possible
     final IFeatureWrapperCollection<ISimulationDescriptor> simulationDescriptors = m_db.getSimulationDescriptors();
