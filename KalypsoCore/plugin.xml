@@ -136,5 +136,15 @@
        point="org.eclipse.core.runtime.preferences">
     <initializer class="org.kalypso.core.preferences.KalypsoCorePreferenceInitializer"/>
  </extension>
+ <extension
+       point="org.eclipse.core.expressions.propertyTesters">
+    <propertyTester
+          class="org.kalypso.ogc.gml.KalypsoFeatureThemeTester"
+          id="org.kalypso.ogc.gml.FeatureThemeTester"
+          namespace="org.kalypso.core"
+          properties="featureType"
+          type="org.kalypso.ogc.gml.IFeatureTheme">
+    </propertyTester>
+ </extension>
 
 </plugin>
