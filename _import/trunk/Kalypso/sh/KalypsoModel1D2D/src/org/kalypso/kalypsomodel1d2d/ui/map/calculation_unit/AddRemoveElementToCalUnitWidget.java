@@ -83,25 +83,36 @@ public class AddRemoveElementToCalUnitWidget extends FENetConceptSelectionWidget
   private class AddElementToCalculationUnitWithPostCall extends AddElementToCalculationUnitCmd
   {
 
-    public AddElementToCalculationUnitWithPostCall( ICalculationUnit calculationUnit, IFE1D2DElement[] elementsToAdd, IFEDiscretisationModel1d2d model1d2d )
+    public AddElementToCalculationUnitWithPostCall( 
+                ICalculationUnit calculationUnit, 
+                IFE1D2DElement[] elementsToAdd, 
+                IFEDiscretisationModel1d2d model1d2d )
+    {
+      super( calculationUnit, elementsToAdd, model1d2d );
+    }
+    
+    public AddElementToCalculationUnitWithPostCall( 
+        ICalculationUnit calculationUnit, 
+        Feature[] elementsToAdd, 
+        IFEDiscretisationModel1d2d model1d2d )
     {
       super( calculationUnit, elementsToAdd, model1d2d );
     }
 
-    public AddElementToCalculationUnitWithPostCall( ICalculationUnit1D calculationUnit, IElement1D[] elementsToAdd, IFEDiscretisationModel1d2d model1d2d )
-    {
-      super( calculationUnit, elementsToAdd, model1d2d );
-    }
-
-    public AddElementToCalculationUnitWithPostCall( ICalculationUnit1D2D calculationUnit, IFE1D2DElement[] elementsToAdd, IFEDiscretisationModel1d2d model1d2d )
-    {
-      super( calculationUnit, elementsToAdd, model1d2d );
-    }
-
-    public AddElementToCalculationUnitWithPostCall( ICalculationUnit2D<IElement2D> calculationUnit, IElement2D[] elementsToAdd, IFEDiscretisationModel1d2d model1d2d )
-    {
-      super( calculationUnit, elementsToAdd, model1d2d );
-    }
+//    public AddElementToCalculationUnitWithPostCall( ICalculationUnit1D calculationUnit, IElement1D[] elementsToAdd, IFEDiscretisationModel1d2d model1d2d )
+//    {
+//      super( calculationUnit, elementsToAdd, model1d2d );
+//    }
+//
+//    public AddElementToCalculationUnitWithPostCall( ICalculationUnit1D2D calculationUnit, IFE1D2DElement[] elementsToAdd, IFEDiscretisationModel1d2d model1d2d )
+//    {
+//      super( calculationUnit, elementsToAdd, model1d2d );
+//    }
+//
+//    public AddElementToCalculationUnitWithPostCall( ICalculationUnit2D<IElement2D> calculationUnit, IElement2D[] elementsToAdd, IFEDiscretisationModel1d2d model1d2d )
+//    {
+//      super( calculationUnit, elementsToAdd, model1d2d );
+//    }
     
     /**
      * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.AddElementToCalculationUnit#process()
@@ -113,9 +124,9 @@ public class AddRemoveElementToCalUnitWidget extends FENetConceptSelectionWidget
       KeyBasedDataModelUtil.resetCurrentEntry( 
                               dataModel, 
                               ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
-//      KeyBasedDataModelUtil.repaintMapPanel( 
-//                              dataModel, 
-//                              ICommonKeys.KEY_MAP_PANEL );
+      KeyBasedDataModelUtil.repaintMapPanel( 
+                              dataModel, 
+                              ICommonKeys.KEY_MAP_PANEL );
       
     }
   }
@@ -131,28 +142,35 @@ public class AddRemoveElementToCalUnitWidget extends FENetConceptSelectionWidget
     }
 
     public RemoveElementFromCalculationUnitWithPostCall( 
-                                    ICalculationUnit1D calculationUnit,
-                                    IElement1D[] elementsToRemove,
-                                    IFEDiscretisationModel1d2d model1d2d )
+        ICalculationUnit calculationUnit,
+        Feature[] elementsToRemove,
+        IFEDiscretisationModel1d2d model1d2d )
     {
       super( calculationUnit, elementsToRemove, model1d2d );
     }
+//    public RemoveElementFromCalculationUnitWithPostCall( 
+//                                    ICalculationUnit1D calculationUnit,
+//                                    IElement1D[] elementsToRemove,
+//                                    IFEDiscretisationModel1d2d model1d2d )
+//    {
+//      super( calculationUnit, elementsToRemove, model1d2d );
+//    }
 
-    public RemoveElementFromCalculationUnitWithPostCall( 
-                                    ICalculationUnit1D2D calculationUnit,
-                                    IFE1D2DElement[] elementsToRemove,
-                                    IFEDiscretisationModel1d2d model1d2d )
-    {
-      super( calculationUnit, elementsToRemove, model1d2d );
-    }
+//    public RemoveElementFromCalculationUnitWithPostCall( 
+//                                    ICalculationUnit1D2D calculationUnit,
+//                                    IFE1D2DElement[] elementsToRemove,
+//                                    IFEDiscretisationModel1d2d model1d2d )
+//    {
+//      super( calculationUnit, elementsToRemove, model1d2d );
+//    }
 
-    public RemoveElementFromCalculationUnitWithPostCall( 
-                                    ICalculationUnit2D<IElement2D> calculationUnit,
-                                    IElement2D[] elementsToRemove,
-                                    IFEDiscretisationModel1d2d model1d2d )
-    {
-      super( calculationUnit, elementsToRemove, model1d2d );
-    }
+//    public RemoveElementFromCalculationUnitWithPostCall( 
+//                                    ICalculationUnit2D<IElement2D> calculationUnit,
+//                                    IElement2D[] elementsToRemove,
+//                                    IFEDiscretisationModel1d2d model1d2d )
+//    {
+//      super( calculationUnit, elementsToRemove, model1d2d );
+//    }
     
     /**
      * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.AddElementToCalculationUnit#process()
@@ -165,9 +183,9 @@ public class AddRemoveElementToCalUnitWidget extends FENetConceptSelectionWidget
           dataModel, 
           ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER
           ); 
-//      KeyBasedDataModelUtil.repaintMapPanel( 
-//          dataModel, 
-//          ICommonKeys.KEY_MAP_PANEL );
+      KeyBasedDataModelUtil.repaintMapPanel( 
+          dataModel, 
+          ICommonKeys.KEY_MAP_PANEL );
     }
   }
 
@@ -263,47 +281,9 @@ public class AddRemoveElementToCalUnitWidget extends FENetConceptSelectionWidget
         if( selectedWrapper instanceof ICalculationUnit )
         {
           ICalculationUnit calUnit = (ICalculationUnit)selectedWrapper;
-          
-          for(Feature feature:selectedFeatures)
-          {
-            AddElementToCalculationUnitCmd command = null;
-            IFE1D2DElement ele = (IFE1D2DElement) feature.getAdapter( IFE1D2DElement.class );
-            if( calUnit instanceof ICalculationUnit1D &&
-                ele instanceof IElement1D )
-            {
-              command = new AddElementToCalculationUnitWithPostCall(
-                        (ICalculationUnit1D)calUnit, 
-                        new IElement1D[]{(IElement1D)ele},
-                        model1d2d);
-              
-            }
-            else if( calUnit instanceof ICalculationUnit2D &&
-                ele instanceof IElement2D )
-            {
-              command = new AddElementToCalculationUnitWithPostCall(
-                        (ICalculationUnit2D)calUnit, 
-                        new IElement2D[]{(IElement2D)ele},
-                        model1d2d);
-              
-            }
-            else if( calUnit instanceof ICalculationUnit1D2D &&
-                      ele instanceof IFE1D2DElement )
-            {
-              command = new AddElementToCalculationUnitWithPostCall(
-                        (ICalculationUnit1D2D)calUnit, 
-                        new IFE1D2DElement[]{(IFE1D2DElement)ele},
-                        model1d2d);
-              
-            }
-            else
-            {
-              System.out.println("Bad constellation:"+feature+ " "+calUnit);
-            }
-            if( command != null )
-            {
-              KeyBasedDataModelUtil.postCommand( dataModel, command );
-            }            
-          }       
+          AddElementToCalculationUnitWithPostCall command=
+            new AddElementToCalculationUnitWithPostCall(calUnit,selectedFeatures,model1d2d);          
+          KeyBasedDataModelUtil.postCommand( dataModel, command );
         }
       }
     };
@@ -323,42 +303,43 @@ public class AddRemoveElementToCalUnitWidget extends FENetConceptSelectionWidget
         if( selectedWrapper instanceof ICalculationUnit )
         {
           ICalculationUnit calUnit = (ICalculationUnit)selectedWrapper;
-          RemoveElementFromCalculationUnitWithPostCall command = null;
-                    
-          for(Feature feature:selectedFeatures)
-          {           
-            IFE1D2DElement ele = (IFE1D2DElement) feature.getAdapter( IFE1D2DElement.class );
-            LinksOps.delRelationshipElementAndComplexElement( ele, calUnit );
-            
-            if( calUnit instanceof ICalculationUnit1D &&
-                ele instanceof IElement1D )
-            {
-              command = new RemoveElementFromCalculationUnitWithPostCall(
-                  (ICalculationUnit1D)calUnit, 
-                        new IElement1D[]{(IElement1D)ele},
-                        model1d2d);
-            }
-            else if( calUnit instanceof ICalculationUnit2D &&
-                ele instanceof IElement2D )
-            {
-              command = new RemoveElementFromCalculationUnitWithPostCall(
-                        (ICalculationUnit2D)calUnit, 
-                              new IElement2D[]{(IElement2D)ele},
-                              model1d2d);
-            }
-            else if( calUnit instanceof ICalculationUnit1D2D &&
-                ele instanceof IFE1D2DElement)
-            {
-              command = new RemoveElementFromCalculationUnitWithPostCall(
-                        (ICalculationUnit2D)calUnit, 
-                              new IFE1D2DElement[]{(IFE1D2DElement)ele},
-                              model1d2d);
-            }            
-          }           
-          if( command != null )
-          {
-            KeyBasedDataModelUtil.postCommand( dataModel, command );
-          }
+          RemoveElementFromCalculationUnitWithPostCall command = 
+            new RemoveElementFromCalculationUnitWithPostCall(calUnit,selectedFeatures,model1d2d);
+          KeyBasedDataModelUtil.postCommand( dataModel, command );          
+//          for(Feature feature:selectedFeatures)
+//          {           
+//            IFE1D2DElement ele = (IFE1D2DElement) feature.getAdapter( IFE1D2DElement.class );
+//            LinksOps.delRelationshipElementAndComplexElement( ele, calUnit );
+//            
+//            if( calUnit instanceof ICalculationUnit1D &&
+//                ele instanceof IElement1D )
+//            {
+//              command = new RemoveElementFromCalculationUnitWithPostCall(
+//                  (ICalculationUnit1D)calUnit, 
+//                        new IElement1D[]{(IElement1D)ele},
+//                        model1d2d);
+//            }
+//            else if( calUnit instanceof ICalculationUnit2D &&
+//                ele instanceof IElement2D )
+//            {
+//              command = new RemoveElementFromCalculationUnitWithPostCall(
+//                        (ICalculationUnit2D)calUnit, 
+//                              new IElement2D[]{(IElement2D)ele},
+//                              model1d2d);
+//            }
+//            else if( calUnit instanceof ICalculationUnit1D2D &&
+//                ele instanceof IFE1D2DElement)
+//            {
+//              command = new RemoveElementFromCalculationUnitWithPostCall(
+//                        (ICalculationUnit2D)calUnit, 
+//                              new IFE1D2DElement[]{(IFE1D2DElement)ele},
+//                              model1d2d);
+//            }            
+//          }           
+//          if( command != null )
+//          {
+//            KeyBasedDataModelUtil.postCommand( dataModel, command );
+//          }
         }
       }      
     };

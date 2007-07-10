@@ -51,6 +51,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
@@ -59,11 +60,14 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
+import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+
+import de.renew.workflow.connector.cases.ICaseDataProvider;
 
 /**
  * 
@@ -297,6 +301,26 @@ public class ResultDB
     simDesc.setSimulationType( null );//TODO
     
     return simDesc;
+  }
+  
+  /**
+   * To get the current scenario/project result db.
+   * 
+   * @return the current result db
+   * @throws CoreException rethrow from {@link IResultDbProvider#getResultDB()}
+   */
+  public static final ResultDB getCurrentResultDB() throws CoreException
+  {
+    ICaseDataProvider<IFeatureWrapper2> scenarioDataProvider = 
+                                   Util.getScenarioDataProvider();
+    if(scenarioDataProvider instanceof IResultDbProvider )
+    {
+      return ((IResultDbProvider)scenarioDataProvider).getResultDB();
+    }
+    else
+    {
+      return null;
+    }
   }
   
 }

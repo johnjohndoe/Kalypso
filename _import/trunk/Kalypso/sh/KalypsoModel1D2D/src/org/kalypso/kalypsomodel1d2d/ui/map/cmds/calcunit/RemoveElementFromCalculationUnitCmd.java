@@ -43,6 +43,7 @@ package org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
 import org.kalypso.kalypsomodel1d2d.ops.LinksOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
@@ -71,14 +72,26 @@ public class RemoveElementFromCalculationUnitCmd implements IDiscrModel1d2dChang
   private final ICalculationUnit calculationUnit;
   private final IFEDiscretisationModel1d2d model1d2d;
   
-  @SuppressWarnings("hiding")
+//  @SuppressWarnings("hiding")
+//  public RemoveElementFromCalculationUnitCmd(
+//                      ICalculationUnit1D calculationUnit,
+//                      IElement1D[] elementsToRemove,
+//                      IFEDiscretisationModel1d2d model1d2d )
+//  {
+//    this.calculationUnit = calculationUnit;
+//    this.elementsToRemove = elementsToRemove;
+//    this.model1d2d = model1d2d;
+//  }
+  
+  
   public RemoveElementFromCalculationUnitCmd(
-                      ICalculationUnit1D calculationUnit,
-                      IElement1D[] elementsToRemove,
-                      IFEDiscretisationModel1d2d model1d2d )
+      ICalculationUnit calculationUnit,
+      Feature[] elementsToRemove,
+      IFEDiscretisationModel1d2d model1d2d )
   {
     this.calculationUnit = calculationUnit;
-    this.elementsToRemove = elementsToRemove;
+    this.elementsToRemove = 
+      CalUnitOps.toAddableElements( calculationUnit, elementsToRemove );
     this.model1d2d = model1d2d;
   }
   
@@ -88,28 +101,29 @@ public class RemoveElementFromCalculationUnitCmd implements IDiscrModel1d2dChang
       IFEDiscretisationModel1d2d model1d2d )
   {
     this.calculationUnit = calculationUnit;
-    this.elementsToRemove = elementsToRemove;
+    this.elementsToRemove = 
+      CalUnitOps.toAddableElements( calculationUnit, elementsToRemove );
     this.model1d2d = model1d2d;
   }
-  public RemoveElementFromCalculationUnitCmd(
-      ICalculationUnit2D calculationUnit,
-      IElement2D[] elementsToRemove,
-      IFEDiscretisationModel1d2d model1d2d )
-  {
-    this.calculationUnit = calculationUnit;
-    this.elementsToRemove = elementsToRemove;
-    this.model1d2d = model1d2d;
-  }
+//  public RemoveElementFromCalculationUnitCmd(
+//      ICalculationUnit2D calculationUnit,
+//      IElement2D[] elementsToRemove,
+//      IFEDiscretisationModel1d2d model1d2d )
+//  {
+//    this.calculationUnit = calculationUnit;
+//    this.elementsToRemove = elementsToRemove;
+//    this.model1d2d = model1d2d;
+//  }
   
-  public RemoveElementFromCalculationUnitCmd(
-      ICalculationUnit1D2D calculationUnit,
-      IFE1D2DElement[] elementsToRemove,
-      IFEDiscretisationModel1d2d model1d2d )
-  {
-    this.calculationUnit = calculationUnit;
-    this.elementsToRemove = elementsToRemove;
-    this.model1d2d = model1d2d;
-  }
+//  public RemoveElementFromCalculationUnitCmd(
+//      ICalculationUnit1D2D calculationUnit,
+//      IFE1D2DElement[] elementsToRemove,
+//      IFEDiscretisationModel1d2d model1d2d )
+//  {
+//    this.calculationUnit = calculationUnit;
+//    this.elementsToRemove = elementsToRemove;
+//    this.model1d2d = model1d2d;
+//  }
   
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand#getChangedFeature()
@@ -153,7 +167,7 @@ public class RemoveElementFromCalculationUnitCmd implements IDiscrModel1d2dChang
       LinksOps.delRelationshipElementAndComplexElement( element, calculationUnit );
     }
     fireProcessChanges();
-    }
+  }
 
   private final void fireProcessChanges()
   {

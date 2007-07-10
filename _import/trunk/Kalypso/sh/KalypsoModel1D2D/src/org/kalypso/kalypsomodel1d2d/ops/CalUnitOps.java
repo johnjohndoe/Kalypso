@@ -124,6 +124,83 @@ public class CalUnitOps
     return false;
   }
   
+  
+  public static final IFE1D2DElement[] toAddableElements(
+      ICalculationUnit calculationUnit,
+      IFE1D2DElement[] elementsToAdd )
+  {
+    ArrayList<IFE1D2DElement> eleList =
+    new ArrayList<IFE1D2DElement>(elementsToAdd.length);
+    
+    if(calculationUnit instanceof ICalculationUnit1D )
+    {
+      for( IFE1D2DElement ele: elementsToAdd )
+      {
+        if( ele instanceof IPolyElement )
+        {
+          eleList.add( ele );
+        }
+      }
+    
+    }
+    else if( calculationUnit instanceof ICalculationUnit2D )
+    {
+      for( IFE1D2DElement ele: elementsToAdd )
+      {
+        if( ele instanceof IElement1D )
+        {
+          eleList.add( ele );
+        }
+      }
+    }
+    else
+    {
+      for( IFE1D2DElement ele: elementsToAdd )
+      {
+        if( ele!=null )
+        {
+          eleList.add( ele );
+        }
+      }
+    }
+    IFE1D2DElement[] array = eleList.toArray( new IFE1D2DElement[eleList.size()] );
+    return array;
+  }
+  
+  public static final IFE1D2DElement[] toAddableElements(
+                                          ICalculationUnit calculationUnit,
+                                          Feature[] elementsToAdd )
+  {
+      ArrayList<IFE1D2DElement> eleList =
+        new ArrayList<IFE1D2DElement>(elementsToAdd.length);
+      final Class adapterCls;
+      if( calculationUnit instanceof ICalculationUnit1D )
+      {
+        adapterCls = IElement1D.class;
+      }
+      else if( calculationUnit instanceof ICalculationUnit2D )
+      {
+        adapterCls = IPolyElement.class;
+      }
+      else
+      {
+        adapterCls = IFE1D2DElement.class;
+      }
+      
+      for( Feature f: elementsToAdd )
+      {
+        IFE1D2DElement ele = f==null? null:(IFE1D2DElement) f.getAdapter( adapterCls );
+        if( ele != null )
+        {
+          eleList.add( ele );
+        }
+      }
+      
+      IFE1D2DElement[] array = 
+          eleList.toArray( new IFE1D2DElement[eleList.size()] );
+      return array;
+  }
+  
   /**
    * To get the parent units of the given unit inside the specified 
    * model
