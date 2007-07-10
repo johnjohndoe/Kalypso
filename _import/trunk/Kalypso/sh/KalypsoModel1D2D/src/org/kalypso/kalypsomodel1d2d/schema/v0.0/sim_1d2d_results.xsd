@@ -5,12 +5,17 @@
 	@author Thomas Jung
 -->
 
-<xs:schema targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults"
+<xs:schema
+	targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults"
 	xmlns:res1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults"
-	xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" xmlns:math="org.kalypso.gml.common.math"
-	xmlns:wspmprof="org.kalypso.model.wspmprofile" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om"
-	elementFormDefault="qualified" attributeFormDefault="unqualified">
+	xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase"
+	xmlns:math="org.kalypso.gml.common.math"
+	xmlns:wspmprof="org.kalypso.model.wspmprofile"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:gml="http://www.opengis.net/gml"
+	xmlns:om="http://www.opengis.net/om" elementFormDefault="qualified"
+	attributeFormDefault="unqualified">
 
 	<xs:annotation>
 		<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
@@ -22,13 +27,16 @@
 	<xs:import namespace="http://www.opengis.net/om" />
 
 	<!-- NodeResultCollection -->
-	<xs:element name="NodeResultCollection" type="res1d2d:NodeResultCollectionType" substitutionGroup="gml:_Feature" />
+	<xs:element name="NodeResultCollection"
+		type="res1d2d:NodeResultCollectionType"
+		substitutionGroup="gml:_Feature" />
 
 	<xs:complexType name="NodeResultCollectionType">
 		<xs:complexContent>
 			<xs:extension base="gml:AbstractFeatureType">
 				<xs:sequence>
-					<xs:element name="nodeResultMember" type="res1d2d:NodeResultPropertyType" minOccurs="0"
+					<xs:element name="nodeResultMember"
+						type="res1d2d:NodeResultPropertyType" minOccurs="0"
 						maxOccurs="unbounded" />
 				</xs:sequence>
 			</xs:extension>
@@ -37,24 +45,29 @@
 
 	<xs:complexType name="NodeResultPropertyType">
 		<xs:sequence>
-			<xs:element ref="res1d2d:NodeResult" minOccurs="1" maxOccurs="1" />
+			<xs:element ref="res1d2d:NodeResult" minOccurs="1"
+				maxOccurs="1" />
 		</xs:sequence>
 	</xs:complexType>
 
 	<!-- NodeResult -->
 
-	<xs:element name="NodeResult" type="res1d2d:NodeResultType" substitutionGroup="gml:_Feature" />
+	<xs:element name="NodeResult" type="res1d2d:NodeResultType"
+		substitutionGroup="gml:_Feature" />
 
 	<xs:complexType name="NodeResultType">
 		<xs:annotation>
-			<xs:documentation xml:lang="en">The results on one node of a 1d2d calculation.</xs:documentation>
+			<xs:documentation xml:lang="en">
+				The results on one node of a 1d2d calculation.
+			</xs:documentation>
 			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
 				<kapp:functionProperty
 					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.NodeResultVelocityFunction"
-					kapp:property="res1d2d:velocityNorm" kapp:isVirtual="true" kapp:valueType="xs:double">
+					kapp:property="res1d2d:velocityNorm" kapp:isVirtual="true"
+					kapp:valueType="xs:double">
 					<kapp:parameter>
 						<kapp:name>vectorProperty</kapp:name>
-						<kapp:value>{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}velocity</kapp:value>
+						<kapp:value><![CDATA[{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}velocity]]></kapp:value>
 					</kapp:parameter>
 					<kapp:parameter>
 						<kapp:name>resultKind</kapp:name>
@@ -63,14 +76,28 @@
 				</kapp:functionProperty>
 				<kapp:functionProperty
 					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.NodeResultVelocityFunction"
-					kapp:property="res1d2d:velocityRotation" kapp:isVirtual="true" kapp:valueType="xs:double">
+					kapp:property="res1d2d:velocityRotation" kapp:isVirtual="true"
+					kapp:valueType="xs:double">
 					<kapp:parameter>
 						<kapp:name>vectorProperty</kapp:name>
-						<kapp:value>{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}velocity</kapp:value>
+						<kapp:value><![CDATA[{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}velocity]]></kapp:value>
 					</kapp:parameter>
 					<kapp:parameter>
 						<kapp:name>resultKind</kapp:name>
 						<kapp:value>rotation</kapp:value>
+					</kapp:parameter>
+				</kapp:functionProperty>
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.NodeResultDepthFunction"
+					kapp:property="res1d2d:depth" kapp:isVirtual="true"
+					kapp:valueType="xs:double">
+					<kapp:parameter>
+						<kapp:name>location</kapp:name>
+						<kapp:value><![CDATA[{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}location]]></kapp:value>
+					</kapp:parameter>
+					<kapp:parameter>
+						<kapp:name>waterlevel</kapp:name>
+						<kapp:value><![CDATA[{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}waterlevel]]></kapp:value>
 					</kapp:parameter>
 				</kapp:functionProperty>
 			</xs:appinfo>
@@ -83,17 +110,22 @@
 						<xs:annotation>
 							<xs:documentation xml:lang="de">
 								<xs:label>Knotennummer</xs:label>
-								<xs:tooltip>Knotennummer der Berechnung</xs:tooltip>
-								<xs:description>Knotennummer der Berechnung</xs:description>
+								<xs:tooltip><![CDATA[Knotennummer der Berechnung]]></xs:tooltip>
+								<xs:description><![CDATA[Knotennummer der Berechnung]]></xs:description>
 							</xs:documentation>
 							<xs:documentation xml:lang="en">
 								<xs:label>Node ID</xs:label>
-								<xs:tooltip>Calculation Node ID</xs:tooltip>
-								<xs:description>Calculation Node ID</xs:description>
+								<xs:tooltip>
+									Calculation Node ID
+								</xs:tooltip>
+								<xs:description>
+									Calculation Node ID
+								</xs:description>
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="location" type="gml:PointPropertyType">
+					<xs:element name="location"
+						type="gml:PointPropertyType">
 						<xs:annotation>
 							<xs:documentation xml:lang="de">
 								<xs:label>Lage</xs:label>
@@ -149,13 +181,15 @@
 	</xs:complexType>
 
 	<!-- TIN Result -->
-	<xs:element name="TinResult" type="res1d2d:TinResultType" substitutionGroup="gml:_Feature" />
+	<xs:element name="TinResult" type="res1d2d:TinResultType"
+		substitutionGroup="gml:_Feature" />
 
 	<xs:complexType name="TinResultType">
 		<xs:complexContent>
 			<xs:extension base="gml:AbstractFeatureType">
 				<xs:sequence>
-					<xs:element name="triangulatedSurfaceMember" type="res1d2d:TriangulatedSurfacePropertyType" />
+					<xs:element name="triangulatedSurfaceMember"
+						type="res1d2d:TriangulatedSurfacePropertyType" />
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -168,7 +202,9 @@
 	</xs:complexType>
 
 	<!-- Hydrograph Results -->
-	<xs:element name="HydrographCollection" type="res1d2d:HydrographCollectionType" substitutionGroup="gml:_Feature">
+	<xs:element name="HydrographCollection"
+		type="res1d2d:HydrographCollectionType"
+		substitutionGroup="gml:_Feature">
 		<xs:annotation>
 			<xs:documentation xml:lang="de">
 				<xs:label>Ganglinien</xs:label>
@@ -183,7 +219,8 @@
 		<xs:complexContent>
 			<xs:extension base="gml:AbstractFeatureType">
 				<xs:sequence>
-					<xs:element name="hydrographMember" type="res1d2d:HydrographPropertyType" minOccurs="0"
+					<xs:element name="hydrographMember"
+						type="res1d2d:HydrographPropertyType" minOccurs="0"
 						maxOccurs="unbounded">
 						<xs:annotation>
 							<xs:documentation xml:lang="de">
@@ -201,13 +238,15 @@
 
 	<xs:complexType name="HydrographPropertyType">
 		<xs:sequence>
-			<xs:element ref="res1d2d:Hydrograph" minOccurs="1" maxOccurs="1" />
+			<xs:element ref="res1d2d:Hydrograph" minOccurs="1"
+				maxOccurs="1" />
 		</xs:sequence>
 	</xs:complexType>
 
 	<!-- NodeResult -->
 
-	<xs:element name="Hydrograph" type="res1d2d:HydrographType" substitutionGroup="om:Observation">
+	<xs:element name="Hydrograph" type="res1d2d:HydrographType"
+		substitutionGroup="om:Observation">
 		<xs:annotation>
 			<xs:documentation xml:lang="de">
 				<xs:label>Ganglinie</xs:label>

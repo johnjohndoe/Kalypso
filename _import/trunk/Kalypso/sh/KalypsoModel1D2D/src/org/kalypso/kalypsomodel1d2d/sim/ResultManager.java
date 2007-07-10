@@ -491,11 +491,15 @@ public class ResultManager implements Runnable
       else
         lineColor = interpolateColor( fromLineColor, toLineColor, currentClass, numOfClasses );
 
-      final Stroke stroke = StyleFactory.createStroke( lineColor, lineOpacity );
+      // test
+//      lineColor = new Color( 255, 255, 255 );
+
 
       // Fill
       final Color polygonColor = interpolateColor( fromPolygonColor, toPolygonColor, currentClass, numOfClasses );
+      lineColor = polygonColor;
 
+      final Stroke stroke = StyleFactory.createStroke( lineColor, lineOpacity );
       final Fill fill = StyleFactory.createFill( polygonColor, polygonOpacity );
 
       final ParameterValueType label = StyleFactory.createParameterValueType( "Isofläche " + currentClass );

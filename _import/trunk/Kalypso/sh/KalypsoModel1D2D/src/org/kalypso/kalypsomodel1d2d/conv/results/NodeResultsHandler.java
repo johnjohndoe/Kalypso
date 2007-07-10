@@ -1544,6 +1544,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       return;
     }
 
+    //check if node is dry
     result.setResultValues( vx, vy, virtualDepth, waterlevel );
     m_resultMinMaxCatcher.addNodeResult( result );
 

@@ -242,7 +242,7 @@ public class ApplyElevationWidget extends FENetConceptSelectionWidget// Abstract
       mapPanel.repaint();
   }
 
-  private void drawToolTip( final String tooltip, final Point p, final Graphics g )
+  public static void drawToolTip( final String tooltip, final Point p, final Graphics g )
   {
     final Rectangle2D rectangle = g.getFontMetrics().getStringBounds( tooltip, g );
 
@@ -254,25 +254,6 @@ public class ApplyElevationWidget extends FENetConceptSelectionWidget// Abstract
 
     /* Tooltip zeichnen. */
     g.drawString( tooltip, (int) p.getX() + 5, (int) p.getY() + 35 );
-
-  }
-
-  private String getElevationMessage( final GM_Point nodePoint )
-  {
-    final StringBuffer nodeElevationText = new StringBuffer( 64 );
-    if( nodePoint.getCoordinateDimension() <= 2 )
-    {
-      nodeElevationText.append( "keine Netzhöhe" );
-    }
-    else
-    {
-      nodeElevationText.append( "Netzhöhe = " );
-      nodeElevationText.append( String.format( "%.3f", nodePoint.getZ() ) );
-      nodeElevationText.append( " m" );
-    }
-
-    final String elevationMessage = nodeElevationText.toString();
-    return elevationMessage;
   }
 
   private final void drawElevationData( final Graphics g, final Point p )

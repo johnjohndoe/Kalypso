@@ -61,6 +61,10 @@
                id="org.kalypso.kalypsomodel1d2d.schema.functions.NodeResultVelocityFunction"
                name="NodeResultVelocityFunction"/>
          <function
+               class="org.kalypso.kalypsomodel1d2d.schema.functions.NodeResultDepthFunction"
+               id="org.kalypso.kalypsomodel1d2d.schema.functions.NodeResultDepthFunction"
+               name="NodeResultDepthFunction"/>
+         <function
                class="org.kalypso.kalypsomodel1d2d.schema.functions.StaticModelBBoxFunc"
                id="org.kalypso.kalypsomodel1d2d.schema.functions.StaticModelBBoxFunc"
                name="StaticModelBBoxFunc"/>
@@ -225,6 +229,24 @@
 	                    <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context" 
 	                     	value="SelectOneProfile"/>
 	       			</class>
+   </action>
+   <action
+         id="org.kalypso.kalypsomodel1d2d.ui.map.tin.TinInfoWidgetAction"
+         label="TIN-Info"
+         style="radio"
+         toolbarPath="tools"
+         tooltip="TIN-Werte anzeigen">
+      <class
+            class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
+         <parameter
+               name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+               value="org.kalypso.kalypsomodel1d2d.ui.map.tin.TinInfoWidget">
+         </parameter>
+         <parameter
+               name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin"
+               value="org.kalypso.model1d2d">
+         </parameter>
+      </class>
    </action>
         </viewContribution>
      </extension>
