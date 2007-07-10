@@ -81,8 +81,7 @@ public class LineColorMap_Impl implements LineColorMap
   public String exportAsXML( )
   {
     final StringBuffer sb = new StringBuffer( 1000 );
-    sb.append( "<SurfaceLineSymbolizer>" );
-    sb.append( "<LineColorMap>" );
+    sb.append( "<sldExt:LineColorMap>" );
 
     if( m_colorMap != null )
     {
@@ -93,8 +92,7 @@ public class LineColorMap_Impl implements LineColorMap
       }
     }
 
-    sb.append( "</LineColorMap>" );
-    sb.append( "</SurfaceLineSymbolizer>" );
+    sb.append( "</sldExt:LineColorMap>" );
 
     return sb.toString();
 

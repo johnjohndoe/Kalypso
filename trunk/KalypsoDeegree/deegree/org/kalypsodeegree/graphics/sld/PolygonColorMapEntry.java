@@ -61,11 +61,12 @@
 package org.kalypsodeegree.graphics.sld;
 
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.xml.Marshallable;
 
 /**
  * @author Thomas Jung
  */
-public interface PolygonColorMapEntry
+public interface PolygonColorMapEntry extends Marshallable
 {
   public Fill getFill( );
 

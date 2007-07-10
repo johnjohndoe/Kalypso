@@ -45,6 +45,7 @@ import org.kalypsodeegree.graphics.sld.LineColorMapEntry;
 import org.kalypsodeegree.graphics.sld.ParameterValueType;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.xml.Marshallable;
 
 /**
  * @author Thomas Jung
@@ -71,11 +72,22 @@ public class LineColorMapEntry_Impl implements LineColorMapEntry
   public String exportAsXML( )
   {
     final StringBuffer sb = new StringBuffer( 1000 );
-    sb.append( "<LineColorMapEntry>" );
+    sb.append( "<sldExt:LineColorMapEntry>" );
 
-    // TODO
+    if( m_stroke != null )
+    {
+      sb.append( ((Marshallable) m_stroke).exportAsXML() );
+    }
 
-    sb.append( "</LineColorMapEntry>" );
+    sb.append( "<sldExt:label>" );
+    sb.append( ((Marshallable) m_label).exportAsXML() );
+    sb.append( "</sldExt:label>" );
+
+    sb.append( "<sldExt:quantity>" );
+    sb.append( ((Marshallable) m_quantity).exportAsXML() );
+    sb.append( "</sldExt:quantity>" );
+
+    sb.append( "</sldExt:LineColorMapEntry>" );
 
     return sb.toString();
   }
