@@ -231,22 +231,12 @@
 	       			</class>
    </action>
    <action
+         class="org.kalypso.kalypsomodel1d2d.ui.map.tin.TinInfoWidgetDelegate"
          id="org.kalypso.kalypsomodel1d2d.ui.map.tin.TinInfoWidgetAction"
          label="TIN-Info"
          style="radio"
          toolbarPath="tools"
          tooltip="TIN-Werte anzeigen">
-      <class
-            class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
-         <parameter
-               name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
-               value="org.kalypso.kalypsomodel1d2d.ui.map.tin.TinInfoWidget">
-         </parameter>
-         <parameter
-               name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin"
-               value="org.kalypso.model1d2d">
-         </parameter>
-      </class>
    </action>
         </viewContribution>
      </extension>

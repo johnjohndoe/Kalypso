@@ -244,6 +244,8 @@ public class ApplyElevationWidget extends FENetConceptSelectionWidget// Abstract
 
   public static void drawToolTip( final String tooltip, final Point p, final Graphics g )
   {
+    if( tooltip == null )
+      return;
     final Rectangle2D rectangle = g.getFontMetrics().getStringBounds( tooltip, g );
 
     g.setColor( new Color( 255, 255, 225 ) );

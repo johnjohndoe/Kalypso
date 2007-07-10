@@ -43,10 +43,20 @@ package org.kalypso.kalypsomodel1d2d.ui.map.tin;
 import java.awt.Graphics;
 import java.awt.Point;
 
+import org.eclipse.core.commands.contexts.Context;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.contexts.IContextService;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidget;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
+import org.kalypso.ogc.gml.outline.GisMapOutlineView;
 
 /**
  * @author jung
@@ -56,6 +66,7 @@ public class TinInfoWidget extends AbstractWidget
 {
   private String m_info = null;
   private Point m_point;
+  private ISelectionChangedListener m_selectionListener;
 
   public TinInfoWidget( )
   {
@@ -73,13 +84,31 @@ public class TinInfoWidget extends AbstractWidget
   @Override
   public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel )
   {
-    // TODO Auto-generated method stub
     super.activate( commandPoster, mapPanel );
+
+    final IWorkbench workbench = PlatformUI.getWorkbench();
+    final IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
+    final IWorkbenchPage page = window.getActivePage();
+    final GisMapOutlineView outlineView = (GisMapOutlineView) page.findView( GisMapOutlineView.ID );
+    if( outlineView == null )
+    {
+      System.out.println( "Keine Outline gefunden." );
+      return;
+    }
     
-    // find outline
-    
-    // listen to outline-selection
-    
+    final MapPanel outlineMapPanel = outlineView.getMapPanel();
+    if( outlineMapPanel != mapPanel )
+    {
+      System.out.println( "Outline map panel passt nicht." );
+      return;
+    }
+
+    m_selectionProvider( outlineView ).addSelectionChangedListener( m_selectionListener );
+  }
+
+  private ISelectionProvider m_selectionProvider( final GisMapOutlineView outlineView )
+  {
+    return outlineView.getSite().getSelectionProvider();
   }
   
   /**
