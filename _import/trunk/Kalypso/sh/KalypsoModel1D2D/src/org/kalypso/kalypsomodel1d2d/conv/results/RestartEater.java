@@ -66,7 +66,6 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public class RestartEater
 {
-
   private FeatureList m_nodes;
 
   private double m_distance = 0.5;
@@ -79,21 +78,22 @@ public class RestartEater
 
   public void addResultFile( final File file ) throws Exception
   {
-    if(file == null)
-      throw new SimulationException("Restart file(s) not defined.".concat( file.toString() ), new FileNotFoundException());
-    if(!file.exists())
-      throw new SimulationException("Restart file(s) does not exists: ".concat( file.toString() ), new FileNotFoundException());
+    if( file == null )
+      throw new SimulationException( "Restart file(s) not defined.".concat( file.toString() ), new FileNotFoundException() );
+    if( !file.exists() )
+      throw new SimulationException( "Restart file(s) does not exists: ".concat( file.toString() ), new FileNotFoundException() );
     final GMLWorkspace resultWorkspace = GmlSerializer.createGMLWorkspace( file.toURL(), null );
-//    final GMLWorkspace resultWorkspace = FeatureFactory.createGMLWorkspace( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "NodeResultCollection" ), file.toURL(), GmlSerializer.DEFAULT_FACTORY );
+    // final GMLWorkspace resultWorkspace = FeatureFactory.createGMLWorkspace( new QName(
+    // UrlCatalog1D2D.MODEL_1D2DResults_NS, "NodeResultCollection" ), file.toURL(), GmlSerializer.DEFAULT_FACTORY );
     final Feature rootFeature = resultWorkspace.getRootFeature();
-    FeatureList nodeList = (FeatureList) rootFeature.getProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "nodeResultMember" ) );
+    final FeatureList nodeList = (FeatureList) rootFeature.getProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "nodeResultMember" ) );
     addNodes( nodeList );
   }
 
   /**
    * Set search distance for finding nodes, default is 0.5
    */
-  public void setSearchDistance( double distance )
+  public void setSearchDistance( final double distance )
   {
     m_distance = distance;
   }
@@ -101,13 +101,13 @@ public class RestartEater
   /**
    * Returns parameters for node at certain position, or nearest (depends on search distance)
    */
-  public INodeResult getNodeResultAtPosition( double x, double y )
+  public INodeResult getNodeResultAtPosition( final double x, final double y )
   {
     final GM_Point point = GeometryFactory.createGM_Point( x, y, CS );
     return getNodeResult( point );
   }
 
-  private void addNodes( List<INodeResult> nodes )
+  private void addNodes( final List<INodeResult> nodes )
   {
     if( m_any_results )
       m_nodes.addAll( nodes );
@@ -119,7 +119,7 @@ public class RestartEater
   private INodeResult getNodeResult( final GM_Point point )
   {
     final Feature feature = GeometryUtilities.findNearestFeature( point, m_distance, m_nodes, GMLNodeResult.QNAME_PROP_LOCATION );
-    return new GMLNodeResult(feature);
+    return new GMLNodeResult( feature );
   }
 
 }

@@ -66,8 +66,7 @@ import org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter;
 import org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv;
 import org.kalypso.kalypsomodel1d2d.conv.Weir1D2DConverter;
 import org.kalypso.kalypsomodel1d2d.conv.WeirIDProvider;
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
-import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ResultDB;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
@@ -154,15 +153,18 @@ public class SimMode1D2DCalcJob implements ISimulation
       }
       finally
       {
-        /* Alwaysw close stream in a finally block */
+        /* Always close stream in a finally block */
         IOUtils.closeQuietly( r10pw );
         IOUtils.closeQuietly( weirPw );
       }
 
       /* Prepare the result directory */
       final File outputDir = new File( tmpDir, RMA10SimModelConstants.OUTPUT_DIR_NAME );
-      outputDir.mkdirs();
       resultEater.addResult( RMA10SimModelConstants.RESULT_DIR_NAME_ID, outputDir );
+      final ICalculationUnit calculationUnit = calculation.getControlModel().getCalculationUnit();
+      final String calcUnitID = calculationUnit.getWrappedFeature().getId();
+      final File calcUnitOutputDir = new File( outputDir, calcUnitID );
+      calcUnitOutputDir.mkdirs();
 
       /** start calculation... */
       monitor.setMessage( "Starte Rechenkern..." );
@@ -172,16 +174,19 @@ public class SimMode1D2DCalcJob implements ISimulation
       monitor.setProgress( 20 );
 
       copyExecutable( tmpDir, calculation.getKalypso1D2DKernelPath() );
-      
+
       calculation.addToResultDB();
-      
-      final ResultManager resultRunner = new ResultManager( tmpDir, outputDir, "A", inputProvider, calculation );
+
+      final ResultManager resultRunner = new ResultManager( tmpDir, calcUnitOutputDir, "A", inputProvider, calculation );
       startCalculation( tmpDir, monitor, resultRunner, calculation );
-      KalypsoModel1D2DPlugin.getDefault().getResultDB().save();
       /* Run a last time so nothing is forgotten... */
       resultRunner.finish();
-      /** check succeeded and load results */
-      handleError( tmpDir, outputDir, monitor, logger );
+
+      /* Save result model after all results are processed */
+      KalypsoModel1D2DPlugin.getDefault().getResultDB().save();
+
+      /* check succeeded and load results */
+      handleError( tmpDir, calcUnitOutputDir, monitor, logger );
     }
     catch( final SimulationException se )
     {

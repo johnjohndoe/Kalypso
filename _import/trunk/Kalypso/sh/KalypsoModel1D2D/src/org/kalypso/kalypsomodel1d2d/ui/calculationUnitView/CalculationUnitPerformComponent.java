@@ -45,23 +45,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DUIImages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit2D;
 import org.kalypso.kalypsomodel1d2d.sim.CalculationUnitSimMode1D2DCalcJob;
-import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.invariants.InvariantBConditionWithBLine;
-import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.invariants.InvariantCheckBoundaryConditions;
-import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.invariants.InvariantOverlappingElements;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitViewerLabelProvider;
 import org.kalypso.kalypsomodel1d2d.ui.map.editor.FeatureWrapperListEditor;
@@ -72,41 +68,37 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 /**
  * @author Patrice Congo
  * @author Madanagopal
- *
+ * 
  */
 @SuppressWarnings("unchecked")
 public class CalculationUnitPerformComponent extends FeatureWrapperListEditor implements IButtonConstants
 {
+  private final CalculationUnitDataModel dataModel;
 
-  private CalculationUnitDataModel dataModel;
-  private Map<String,String> btnDescription = new HashMap<String, String>();
-  
-  private Action performCalButton = new Action("Perform", KalypsoModel1D2DUIImages.IMG_RUN_SIM )
+  private final Map<String, String> btnDescription = new HashMap<String, String>();
+
+  private final Action performCalButton = new Action( "Perform", KalypsoModel1D2DUIImages.IMG_RUN_SIM )
   {
     /**
-     * @see org.eclipse.jface.action.Action#run()
+     * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
      */
     @Override
-    public void run( )
+    public void runWithEvent( final Event event )
     {
-      try
+      final Shell shell = event.display.getActiveShell();
+
+      final ICalculationUnit unit = dataModel.getSelectedCalculationUnit();
+      if( unit != null )
       {
-        ICalculationUnit unit = dataModel.getSelectedCalculationUnit();
-        if( unit != null )
-        {
-          IProgressMonitor monitor = new NullProgressMonitor();
-          IWorkbench workbench = PlatformUI.getWorkbench();
-          IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
-          CalculationUnitSimMode1D2DCalcJob.startCalculation( 
-              unit, workbench, activeWorkbenchWindow );
-        }
+        final IWorkbench workbench = PlatformUI.getWorkbench();
+        final IStatus result = CalculationUnitSimMode1D2DCalcJob.startCalculation( unit, workbench );
+        ErrorDialog.openError( shell, "Berechnung durchführen", "Berechnung konnte nicht durchgeführt werden.", result );
       }
-      catch (Exception e) 
-      {
-        e.printStackTrace();
-        throw new RuntimeException(e);
-      }
+
+      // TODO: message if else
+
     }
+
     /**
      * @see org.eclipse.jface.action.Action#getToolTipText()
      */
@@ -116,49 +108,48 @@ public class CalculationUnitPerformComponent extends FeatureWrapperListEditor im
       String toolTipText2 = super.getToolTipText();
       if( toolTipText2 == null )
       {
-        toolTipText2="Berechnung Starten";
+        toolTipText2 = "Berechnung Starten";
       }
       return toolTipText2;
     }
   };
-  
-  public CalculationUnitPerformComponent(CalculationUnitDataModel dataModel)
-  {	  
-	    super(null,null,null);
-	    setRequiredButtons( BTN_SHOW_AND_MAXIMIZE                        
-	                        /*BTN_CLICK_TO_CALCULATE*/);
-	    
-	    btnDescription.put( "SHOW_AND_MAXIMIZE", "Berechnungseinheit anzeigen und maximieren" );
-	    setNonGenericActions( new IAction[]{performCalButton} );
-	    this.dataModel = dataModel;
-  }  
-  
+
+  public CalculationUnitPerformComponent( final CalculationUnitDataModel dataModel )
+  {
+    super( null, null, null );
+    setRequiredButtons( BTN_SHOW_AND_MAXIMIZE
+    /* BTN_CLICK_TO_CALCULATE */);
+
+    btnDescription.put( "SHOW_AND_MAXIMIZE", "Berechnungseinheit anzeigen und maximieren" );
+    setNonGenericActions( new IAction[] { performCalButton } );
+    this.dataModel = dataModel;
+  }
+
   @Override
-  protected String getBtnDescription(String key)
-  { 
-    if (btnDescription.get( key )!= null)
+  protected String getBtnDescription( final String key )
+  {
+    if( btnDescription.get( key ) != null )
       return btnDescription.get( key );
     else
       return null;
   }
 
   @Override
-  protected ILabelProvider getLabelProvider(Display display)
-  {    
-    return new CalculationUnitViewerLabelProvider(display);    
+  protected ILabelProvider getLabelProvider( final Display display )
+  {
+    return new CalculationUnitViewerLabelProvider( display );
   }
-  
+
   @Override
-  protected List<ICalculationUnit> setInputContentProvider(){
-    Object inputData = 
-      dataModel.getData( 
-        ICommonKeys.KEY_FEATURE_WRAPPER_LIST );
-    if (inputData == null)
+  protected List<ICalculationUnit> setInputContentProvider( )
+  {
+    Object inputData = dataModel.getData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST );
+    if( inputData == null )
     {
       inputData = new ArrayList<IFeatureWrapper2>();
       return (List<ICalculationUnit>) inputData;
-    }    
-    List<ICalculationUnit> calcList = (List<ICalculationUnit>) dataModel.getData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST );
+    }
+    final List<ICalculationUnit> calcList = (List<ICalculationUnit>) dataModel.getData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST );
     return calcList;
-  } 
+  }
 }

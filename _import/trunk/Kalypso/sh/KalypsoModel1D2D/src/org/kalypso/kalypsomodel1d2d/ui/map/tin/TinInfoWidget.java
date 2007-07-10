@@ -176,7 +176,10 @@ public class TinInfoWidget extends AbstractWidget
     }
 
     // repaint map if tooltip has changed
-    m_info = sb.toString();
+    m_info = sb.toString().trim();
+    if( m_info.length() == 0 )
+      m_info = "- selektieren Sie ein TIN-Thema in der Gliederung -";
+
     m_point = p;
 
     getMapPanel().repaint();

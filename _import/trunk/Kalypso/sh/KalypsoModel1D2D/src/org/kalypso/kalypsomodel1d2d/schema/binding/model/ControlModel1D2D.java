@@ -138,18 +138,23 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
 
   public List<String> getRestartPaths( )
   {
-    final StringTokenizer tokenizer = new StringTokenizer( getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_RESTART_PATH ).toString(), ";" );
     final List<String> list = new ArrayList<String>();
+    final Object property = getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_RESTART_PATH );
+    if( property == null )
+      return list;
+
+    // TODO: what about String.split?
+    final StringTokenizer tokenizer = new StringTokenizer( property.toString(), ";" );
     while( tokenizer.hasMoreTokens() )
       list.add( tokenizer.nextToken() );
     return list;
   }
 
-  public void setRestartPaths( List<String> list )
+  public void setRestartPaths( final List<String> list )
   {
     if( list != null && list.size() > 0 )
     {
-      String paths = list.get( 0 );
+      final String paths = list.get( 0 );
       for( int i = 1; i < list.size(); i++ )
         paths.concat( ";" ).concat( list.get( i ) );
       getFeature().setProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_RESTART_PATH, paths );
@@ -312,22 +317,22 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#setCalculationUnit(org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit)
    */
-  public void setCalculationUnit( ICalculationUnit calUnit )
+  public void setCalculationUnit( final ICalculationUnit calUnit )
   {
     try
     {
-      Feature wrappedFeature = calUnit.getWrappedFeature();
-      Feature parentFeature = getFeature();// control to link to
-      IPropertyType property = parentFeature.getFeatureType().getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_CALC_UNIT );
+      final Feature wrappedFeature = calUnit.getWrappedFeature();
+      final Feature parentFeature = getFeature();// control to link to
+      final IPropertyType property = parentFeature.getFeatureType().getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_CALC_UNIT );
 
-      GMLWorkspace workspace = calUnit.getWrappedFeature().getWorkspace();
-      URL context = workspace.getContext();
-      File filee = new File( FileLocator.resolve( context ).getFile() );
-      String name = filee.getName();// new java.io.File( uri ).getName();
-      XLinkedFeature_Impl linkedFeature = (XLinkedFeature_Impl) FeatureHelper.createLinkToID( name + "#" + calUnit.getGmlID(), parentFeature, (IRelationType) property, wrappedFeature.getFeatureType() );
+      final GMLWorkspace workspace = calUnit.getWrappedFeature().getWorkspace();
+      final URL context = workspace.getContext();
+      final File filee = new File( FileLocator.resolve( context ).getFile() );
+      final String name = filee.getName();// new java.io.File( uri ).getName();
+      final XLinkedFeature_Impl linkedFeature = (XLinkedFeature_Impl) FeatureHelper.createLinkToID( name + "#" + calUnit.getGmlID(), parentFeature, (IRelationType) property, wrappedFeature.getFeatureType() );
       parentFeature.setProperty( property, linkedFeature );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       throw new RuntimeException( "Exception while setting calunit link to control", e );
@@ -341,35 +346,33 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
   {
     try
     {
-      ICalculationUnit resolveLink = FeatureHelper.resolveLink( this, Kalypso1D2DSchemaConstants.WB1D2D_PROP_CALC_UNIT, ICalculationUnit.class );
+      final ICalculationUnit resolveLink = FeatureHelper.resolveLink( this, Kalypso1D2DSchemaConstants.WB1D2D_PROP_CALC_UNIT, ICalculationUnit.class );
       return resolveLink;
     }
-    catch ( IllegalStateException e) 
+    catch( final IllegalStateException e )
     {
-      //appends if the gml are not saved yet
-      //hacking by getting the feature id and returning 
-      //the one id the control workspace with the same id
-      //this will only work in the same scenario context
-      Feature resolveLink = 
-        FeatureHelper.resolveLink( this.getFeature(), Kalypso1D2DSchemaConstants.WB1D2D_PROP_CALC_UNIT );
-      if( !( resolveLink instanceof XLinkedFeature_Impl ) )
+      // appends if the gml are not saved yet
+      // hacking by getting the feature id and returning
+      // the one id the control workspace with the same id
+      // this will only work in the same scenario context
+      final Feature resolveLink = FeatureHelper.resolveLink( this.getFeature(), Kalypso1D2DSchemaConstants.WB1D2D_PROP_CALC_UNIT );
+      if( !(resolveLink instanceof XLinkedFeature_Impl) )
       {
         throw e;
       }
-      String featureId = ((XLinkedFeature_Impl)resolveLink).getFeatureId();
-      IFEDiscretisationModel1d2d model = Util.getModel( IFEDiscretisationModel1d2d.class );
+      final String featureId = ((XLinkedFeature_Impl) resolveLink).getFeatureId();
+      final IFEDiscretisationModel1d2d model = Util.getModel( IFEDiscretisationModel1d2d.class );
       if( model == null )
       {
         throw e;
       }
-      GMLWorkspace modelWorkspace = model.getWrappedFeature().getWorkspace();
-      Feature calUnitFeature = modelWorkspace.getFeature( featureId );
+      final GMLWorkspace modelWorkspace = model.getWrappedFeature().getWorkspace();
+      final Feature calUnitFeature = modelWorkspace.getFeature( featureId );
       if( calUnitFeature == null )
       {
         return null;
       }
-      ICalculationUnit adapter = 
-        (ICalculationUnit) calUnitFeature.getAdapter( ICalculationUnit.class );
+      final ICalculationUnit adapter = (ICalculationUnit) calUnitFeature.getAdapter( ICalculationUnit.class );
       return adapter;
     }
   }

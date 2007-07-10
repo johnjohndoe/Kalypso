@@ -40,29 +40,9 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.sim;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
-import java.text.DateFormat;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.logging.Formatter;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.logging.StreamHandler;
-import java.util.logging.XMLFormatter;
-
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -71,33 +51,19 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.IHandlerService;
-import org.kalypso.commons.KalypsoCommonsPlugin;
-import org.kalypso.commons.java.lang.ProcessHelper;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter;
-import org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv;
-import org.kalypso.kalypsomodel1d2d.conv.Weir1D2DConverter;
-import org.kalypso.kalypsomodel1d2d.conv.WeirIDProvider;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ResultDB;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
-import org.kalypso.kalypsomodel1d2d.schema.binding.model.IResultModel1d2d;
 import org.kalypso.kalypsosimulationmodel.core.Util;
-import org.kalypso.simulation.core.ISimulation;
-import org.kalypso.simulation.core.ISimulationDataProvider;
-import org.kalypso.simulation.core.ISimulationMonitor;
-import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.ISimulationService;
 import org.kalypso.simulation.core.KalypsoSimulationCorePlugin;
-import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.simspec.Modeldata;
 import org.kalypso.simulation.ui.calccase.CalcJobHandler;
 import org.kalypso.simulation.ui.calccase.ModelNature;
@@ -112,239 +78,21 @@ import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
  * @author huebsch <a href="mailto:j.huebsch@tuhh.de">Jessica Huebsch</a>
  * @author Patrice Congo
  */
-public class CalculationUnitSimMode1D2DCalcJob implements ISimulation
+public class CalculationUnitSimMode1D2DCalcJob
 {
-  /**
-   * @see org.kalypso.services.calculation.job.ICalcJob#run(java.io.File,
-   *      org.kalypso.services.calculation.job.ICalcDataProvider, org.kalypso.services.calculation.job.ICalcResultEater,
-   *      org.kalypso.services.calculation.job.ICalcMonitor)
-   */
-  public void run( final File tmpDir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
+  public static IStatus startCalculation( final ICalculationUnit calUnit, final IWorkbench workbench )
   {
-    final Logger logger = Logger.getAnonymousLogger();
-    final Formatter f = new XMLFormatter();
-
-    try
+    final ICoreRunnableWithProgress runnable = new ICoreRunnableWithProgress()
     {
-      final File loggerFile = new File( tmpDir, "simulation.log" );
-
-      final Handler h = new StreamHandler( new BufferedOutputStream( new FileOutputStream( loggerFile ) ), f );
-      logger.addHandler( h );
-    }
-    catch( final FileNotFoundException e1 )
-    {
-      e1.printStackTrace();
-      logger.fine( e1.getLocalizedMessage() );
-    }
-
-    final String nowString = DateFormat.getDateTimeInstance().format( new Date() );
-    logger.log( Level.INFO, "Starte Berechnung: " + nowString + " (Serverzeit)\n" );
-
-    try
-    {
-      monitor.setMessage( "Generiere Ascii Files für FE-Simulation..." );
-      if( monitor.isCanceled() )
-        return;
-
-      final RMA10Calculation calculation = new RMA10Calculation( inputProvider );
-
-      /** convert discretisation model stuff... */
-      // write merged *.2d file for calc core / Dejan
-      final File modelFile = new File( tmpDir, "model.2d" );
-      final Gml2RMA10SConv converter2D = new Gml2RMA10SConv( modelFile, calculation );
-
-      if( monitor.isCanceled() )
-        return;
-
-      monitor.setMessage( "Generiere 2D Netz..." );
-      converter2D.toRMA10sModel();
-
-      /** convert control/resistance stuff... */
-      // first this because we need roughness classes IDs for creating 2D net later
-      monitor.setMessage( "Generiere Randbedingungen und Berechnungssteuerung..." );
-      if( monitor.isCanceled() )
-        return;
-
-      PrintWriter r10pw = null;
-      PrintWriter weirPw = null;
-      try
+      /**
+       * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
+       */
+      public IStatus execute( final IProgressMonitor monitor ) throws CoreException
       {
-        /* Control model */
-        r10pw = new PrintWriter( new File( tmpDir, RMA10SimModelConstants.R10_File ) );
-        final WeirIDProvider weirProvider = converter2D.getWeirProvider();
-        final LinkedHashMap<String, Integer> roughnessIDProvider = converter2D.getRoughnessIDProvider();
-        final LinkedHashMap<String, Integer> nodesIDProvider = converter2D.getNodesIDProvider();
-        final Control1D2DConverter controlConverter = new Control1D2DConverter( nodesIDProvider, roughnessIDProvider, weirProvider );
-        controlConverter.writeR10File( calculation, r10pw );
-        r10pw.close();
-
-        /* Weir File */
-        weirPw = new PrintWriter( new File( tmpDir, RMA10SimModelConstants.WEIR_File ) );
-        final Weir1D2DConverter weirConverter = new Weir1D2DConverter( weirProvider );
-        weirConverter.writeWeirFile( new java.util.Formatter( weirPw ) );
-        weirPw.close();
-      }
-      finally
-      {
-        /* Alwaysw close stream in a finally block */
-        IOUtils.closeQuietly( r10pw );
-        IOUtils.closeQuietly( weirPw );
-      }
-
-      /* Prepare the result directory */
-      final File outputDir = new File( tmpDir, RMA10SimModelConstants.OUTPUT_DIR_NAME );
-      outputDir.mkdirs();
-      resultEater.addResult( RMA10SimModelConstants.RESULT_DIR_NAME_ID, outputDir );
-
-      /** start calculation... */
-      monitor.setMessage( "Starte Rechenkern..." );
-      if( monitor.isCanceled() )
-        return;
-
-      monitor.setProgress( 20 );
-
-      copyExecutable( tmpDir, calculation.getKalypso1D2DKernelPath() );
-
-      final ResultManager resultRunner = new ResultManager( tmpDir, outputDir, "A", inputProvider, calculation );
-      startCalculation( tmpDir, monitor, resultRunner, calculation );
-      /* Run a last time so nothing is forgotten... */
-      resultRunner.finish();
-
-      /** check succeeded and load results */
-      handleError( tmpDir, outputDir, monitor, logger );
-    }
-    catch( final SimulationException se )
-    {
-      throw se;
-    }
-    catch( final Throwable e )
-    {
-      e.printStackTrace();
-      final String localizedMessage = e.getLocalizedMessage();
-      final String msg = localizedMessage == null ? e.toString() : localizedMessage;
-      throw new SimulationException( "Simulation couldn't be finished: " + msg, e );
-    }
-    finally
-    {
-      final Handler[] handlers = logger.getHandlers();
-      for( final Handler handl : handlers )
-        handl.close();
-    }
-  }
-
-  private void handleError( final File tmpDir, final File outputDir, final ISimulationMonitor monitor, final Logger logger ) throws IOException
-  {
-    final File errorDatFile = new File( tmpDir, "ERROR.DAT" );
-    final File errorOutFile = new File( tmpDir, "ERROR.OUT" );
-    final File errorFile;
-    if( errorDatFile.exists() )
-      errorFile = errorDatFile;
-    else if( errorOutFile.exists() )
-      errorFile = errorOutFile;
-    else
-      errorFile = null;
-
-    if( errorFile != null )
-    {
-      final String message = "Fehler bei der Berechnung - übertrage Zwischenergebnisse und Logdateien...";
-      monitor.setMessage( message );
-      logger.log( Level.FINEST, message );
-
-      handleErrorOut( errorFile, outputDir, monitor );
-    }
-  }
-
-  private void handleErrorOut( final File errorFile, final File outputDir, final ISimulationMonitor monitor ) throws IOException
-  {
-    final String errorMessage = FileUtils.readFileToString( errorFile, null );
-    // TODO: translate error message to Kalypso
-    monitor.setFinishInfo( IStatus.ERROR, errorMessage );
-
-    FileUtils.copyFile( errorFile, new File( outputDir, "ERROR.DAT" ) );
-  }
-
-  /**
-   * copy the executable to from the resources
-   */
-  private void copyExecutable( final File tmpdir, final String simulationExeName )
-  {
-    final String exeResource = RMA10SimModelConstants.RESOURCEBASE + simulationExeName;
-    final File destFile = new File( tmpdir, simulationExeName );
-    if( !destFile.exists() )
-    {
-      try
-      {
-        final URL exeUrl = getClass().getResource( exeResource );
-        FileUtils.copyURLToFile( exeUrl, destFile );
-      }
-      catch( final Exception e )
-      {
-        e.printStackTrace();
-        // TODO: use monitor/logger
-        System.out.println( "ERR: " + exeResource + " may not exist" );
-      }
-      finally
-      {
-      }
-    }
-  }
-
-  /**
-   * @see org.kalypso.services.calculation.job.ICalcJob#getSpezifikation()
-   */
-  public URL getSpezifikation( )
-  {
-    return getClass().getResource( RMA10SimModelConstants.CALCJOB_SPEC );
-  }
-
-  /**
-   * starts 2D simulation
-   */
-  private void startCalculation( final File basedir, final ISimulationMonitor monitor, final Runnable resultRunner, final RMA10Calculation calculation ) throws SimulationException
-  {
-    /*
-     * Creates the result folder for the .exe file, must be same as in Control-Converter (maybe give as an argument?)
-     */
-    new File( basedir, "result" ).mkdirs();
-
-    final File exeFile = new File( basedir, calculation.getKalypso1D2DKernelPath() );
-    final File exeDir = exeFile.getParentFile();
-    final String commandString = exeFile.getAbsolutePath();
-    FileOutputStream logOS = null;
-    FileOutputStream errorOS = null;
-    try
-    {
-      logOS = new FileOutputStream( new File( basedir, "exe.log" ) );
-      errorOS = new FileOutputStream( new File( basedir, "exe.err" ) );
-      ProcessHelper.startProcess( commandString, new String[0], exeDir, monitor, RMA10SimModelConstants.PROCESS_TIMEOUT, logOS, errorOS, null, 500, resultRunner );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-      throw new SimulationException( "Fehler beim Ausfuehren der Berechnung", e );
-    }
-    finally
-    {
-      IOUtils.closeQuietly( logOS );
-      IOUtils.closeQuietly( errorOS );
-    }
-  }
-
-  public static void startCalculation(
-  // final IProgressMonitor monitor,
-  final ICalculationUnit calUnit, final IWorkbench workbench, final IWorkbenchWindow activeWorkbenchWindow ) throws CoreException
-  {
-    final IRunnableWithProgress runnable = new IRunnableWithProgress()
-    {
-
-      public void run( final IProgressMonitor monitor ) throws InvocationTargetException, InterruptedException
-      {
-        
-        //
         monitor.beginTask( "Modellrechnung wird durchgeführt", 5 );
         IControlModelGroup model = Util.getModel( IControlModelGroup.class );
         final String calcUnitGmlID = calUnit.getGmlID();
-//        boolean activeSet = false;
+        // boolean activeSet = false;
         IControlModel1D2D activeControlModel = null;
         for( IControlModel1D2D cm : model.getModel1D2DCollection() )
         {
@@ -356,24 +104,23 @@ public class CalculationUnitSimMode1D2DCalcJob implements ISimulation
               activeControlModel = cm;
               model.getModel1D2DCollection().setActiveControlModel( cm );
               Util.saveAllModel( workbench, workbench.getActiveWorkbenchWindow() );
-//              activeSet = true;
+              // activeSet = true;
             }
           }
         }
         if( activeControlModel == null )
         {
-          throw new RuntimeException( "Could not found and set active control model for: " + calUnit.getGmlID() );
+          return StatusUtilities.createErrorStatus( "Could not found and set active control model for: " + calUnit.getGmlID() );
         }
 
-        //adds scenarion model to the result db
+        // adds scenarion model to the result db
         ResultDB resultDB = KalypsoModel1D2DPlugin.getDefault().getResultDB();
         resultDB.addModelDescriptor( calUnit );
         resultDB.addModelDescriptor( activeControlModel );
-        
-        // final IWorkbench workbench = PlatformUI.getWorkbench();
+
+        // TODO: scenarioFolder etc. should come from outside
         final IHandlerService service = (IHandlerService) workbench.getService( IHandlerService.class );
         final IEvaluationContext currentState = service.getCurrentState();
-        final Shell shell = (Shell) currentState.getVariable( ISources.ACTIVE_SHELL_NAME );
         final IFolder scenarioFolder = (IFolder) currentState.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
 
         try
@@ -386,11 +133,7 @@ public class CalculationUnitSimMode1D2DCalcJob implements ISimulation
 
           monitor.worked( 1 );
           final CalcJobHandler cjHandler = new CalcJobHandler( modelspec, calcService );
-          cjHandler.runJob( scenarioFolder, new SubProgressMonitor( monitor, 4 ) );
-        }
-        catch( Exception e )
-        {
-          e.printStackTrace();
+          return cjHandler.runJob( scenarioFolder, new SubProgressMonitor( monitor, 4 ) );
         }
         finally
         {
@@ -398,14 +141,8 @@ public class CalculationUnitSimMode1D2DCalcJob implements ISimulation
         }
       }
     };
-    try
-    {
-      workbench.getProgressService().run( true, false, runnable );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
+
+    return RunnableContextHelper.execute( workbench.getProgressService(), true, false, runnable );
   }
 
   private static Modeldata loadModelspec( final IProject project ) throws CoreException
