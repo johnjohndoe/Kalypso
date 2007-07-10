@@ -44,11 +44,12 @@ import java.util.List;
 
 import org.kalypsodeegree.graphics.sld.PolygonColorMapEntry;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.xml.Marshallable;
 
 /**
  * @author Thomas Jung
  */
-public interface PolygonColorMap
+public interface PolygonColorMap  extends Marshallable
 {
 
   final String SLDNS_EXT = "http://www.opengis.net/sldExt";

@@ -43,7 +43,6 @@ package org.kalypsodeegree_impl.graphics.sld;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.kalypsodeegree.graphics.sld.LineColorMapEntry;
 import org.kalypsodeegree.graphics.sld.PolygonColorMapEntry;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -76,8 +75,7 @@ public class PolygonColorMap_Impl implements PolygonColorMap
   public String exportAsXML( )
   {
     final StringBuffer sb = new StringBuffer( 1000 );
-    sb.append( "<SurfacePolygonSymbolizer>" );
-    sb.append( "<PolygonColorMap>" );
+    sb.append( "<sldExt:PolygonColorMap>" );
 
     if( m_colorMap != null )
     {
@@ -88,8 +86,7 @@ public class PolygonColorMap_Impl implements PolygonColorMap
       }
     }
 
-    sb.append( "</PolygonColorMap>" );
-    sb.append( "</SurfacePolygonSymbolizer>" );
+    sb.append( "</sldExt:PolygonColorMap>" );
 
     return sb.toString();
 

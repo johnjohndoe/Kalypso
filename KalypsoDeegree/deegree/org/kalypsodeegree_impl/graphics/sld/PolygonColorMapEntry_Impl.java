@@ -78,15 +78,25 @@ public class PolygonColorMapEntry_Impl implements PolygonColorMapEntry
   public String exportAsXML( )
   {
     final StringBuffer sb = new StringBuffer( 1000 );
-    sb.append( "<PolygonColorMapEntry xmlns:sldExt=\"TODOSLDEXTNAMESPACE\">" );
+    sb.append( "<sldExt:PolygonColorMapEntry>" );
 
-    sb.append( ((Marshallable)m_stroke).exportAsXML() );
+    sb.append( ((Marshallable) m_fill).exportAsXML() );
+
+    sb.append( ((Marshallable) m_stroke).exportAsXML() );
 
     sb.append( "<sldExt:label>" );
-    sb.append( ((Marshallable)m_label).exportAsXML() );
+    sb.append( ((Marshallable) m_label).exportAsXML() );
     sb.append( "</sldExt:label>" );
 
-    sb.append( "</PolygonColorMapEntry>" );
+    sb.append( "<sldExt:from>" );
+    sb.append( ((Marshallable) m_from).exportAsXML() );
+    sb.append( "</sldExt:from>" );
+
+    sb.append( "<sldExt:to>" );
+    sb.append( ((Marshallable) m_to).exportAsXML() );
+    sb.append( "</sldExt:to>" );
+
+    sb.append( "</sldExt:PolygonColorMapEntry>" );
 
     return sb.toString();
   }

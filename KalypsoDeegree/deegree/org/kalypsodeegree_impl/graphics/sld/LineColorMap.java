@@ -44,11 +44,12 @@ import java.util.List;
 
 import org.kalypsodeegree.graphics.sld.LineColorMapEntry;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.xml.Marshallable;
 
 /**
  * @author Thomas Jung
  */
-public interface LineColorMap
+public interface LineColorMap extends Marshallable
 {
   public LineColorMapEntry[] getColorMap( );
 

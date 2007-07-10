@@ -116,7 +116,7 @@ public class SurfaceLineSymbolizer_Impl extends Symbolizer_Impl implements Surfa
   {
     final StringBuffer sb = new StringBuffer();
     sb.append( "scale constraint:  >=" + getMinScaleDenominator() + " AND <" + getMaxScaleDenominator() + "\n" );
-    sb.append( "<SurfaceLineSymbolizer>\n" );
+    sb.append( "<SurfaceLineSymbolizer xmlns:sldExt=\""+ SLDFactory.SLDNS_EXT + "\">\n" );
 
     if( getGeometry() != null )
     {
@@ -143,7 +143,7 @@ public class SurfaceLineSymbolizer_Impl extends Symbolizer_Impl implements Surfa
     Debug.debugMethodBegin();
 
     final StringBuffer sb = new StringBuffer( 1000 );
-    sb.append( "<SurfaceLineSymbolizer>" );
+    sb.append( "<SurfaceLineSymbolizer xmlns:sldExt=\""+ SLDFactory.SLDNS_EXT + "\">\n" );
     final Geometry geometry = getGeometry();
     if( geometry != null )
     {

@@ -40,12 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.graphics.sld;
 
-import org.eclipse.swt.graphics.GC;
-import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.Geometry;
 import org.kalypsodeegree.graphics.sld.SurfacePolygonSymbolizer;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.xml.Marshallable;
+import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * @author Thomas Jung
@@ -90,94 +88,56 @@ public class SurfacePolygonSymbolizer_Impl extends Symbolizer_Impl implements Su
   }
 
   /**
-   * @see org.kalypsodeegree.graphics.sld.Symbolizer#getGeometry()
+   * Produces a textual representation of this object.
+   * 
+   * @return the textual representation
    */
-  public Geometry getGeometry( )
+  @Override
+  public String toString( )
   {
-    // TODO Auto-generated method stub
-    return null;
+    final StringBuffer sb = new StringBuffer();
+    sb.append( "scale constraint:  >=" + getMinScaleDenominator() + " AND <" + getMaxScaleDenominator() + "\n" );
+    sb.append( "<SurfacePolygonSymbolizer xmlns:sldExt=\"" + SLDFactory.SLDNS_EXT + "\">\n" );
+
+    if( getGeometry() != null )
+    {
+      sb.append( getGeometry() ).append( "\n" );
+    }
+
+    if( getColorMap() != null )
+    {
+      sb.append( getColorMap() ).append( "\n" );
+    }
+
+    sb.append( "</SurfacePolygonSymbolizer>\n" );
+
+    return sb.toString();
   }
 
   /**
-   * @see org.kalypsodeegree.graphics.sld.Symbolizer#getMaxScaleDenominator()
-   */
-  public double getMaxScaleDenominator( )
-  {
-    // TODO Auto-generated method stub
-    return 0;
-  }
-
-  /**
-   * @see org.kalypsodeegree.graphics.sld.Symbolizer#getMinScaleDenominator()
-   */
-  public double getMinScaleDenominator( )
-  {
-    // TODO Auto-generated method stub
-    return 0;
-  }
-
-  /**
-   * @see org.kalypsodeegree.graphics.sld.Symbolizer#getUom()
-   */
-  public UOM getUom( )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  /**
-   * @see org.kalypsodeegree.graphics.sld.Symbolizer#paint(org.eclipse.swt.graphics.GC,
-   *      org.kalypsodeegree.model.feature.Feature)
-   */
-  public void paint( GC gc, Feature feature ) throws FilterEvaluationException
-  {
-    // TODO Auto-generated method stub
-
-  }
-
-  /**
-   * @see org.kalypsodeegree.graphics.sld.Symbolizer#setGeometry(org.kalypsodeegree.graphics.sld.Geometry)
-   */
-  public void setGeometry( Geometry geometry )
-  {
-    // TODO Auto-generated method stub
-
-  }
-
-  /**
-   * @see org.kalypsodeegree.graphics.sld.Symbolizer#setMaxScaleDenominator(double)
-   */
-  public void setMaxScaleDenominator( double maxScaleDenominator )
-  {
-    // TODO Auto-generated method stub
-
-  }
-
-  /**
-   * @see org.kalypsodeegree.graphics.sld.Symbolizer#setMinScaleDenominator(double)
-   */
-  public void setMinScaleDenominator( double minScaleDenominator )
-  {
-    // TODO Auto-generated method stub
-
-  }
-
-  /**
-   * @see org.kalypsodeegree.graphics.sld.Symbolizer#setUom(org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM)
-   */
-  public void setUom( UOM uom )
-  {
-    // TODO Auto-generated method stub
-
-  }
-
-  /**
-   * @see org.kalypsodeegree.xml.Marshallable#exportAsXML()
+   * exports the content of the PolygonSymbolizer as XML formated String
+   * 
+   * @return xml representation of the PolygonSymbolizer
    */
   public String exportAsXML( )
   {
-    // TODO Auto-generated method stub
-    return null;
+    Debug.debugMethodBegin();
+
+    final StringBuffer sb = new StringBuffer( 1000 );
+    sb.append( "<SurfacePolygonSymbolizer xmlns:sldExt=\""+ SLDFactory.SLDNS_EXT + "\">\n" );
+    final Geometry geometry = getGeometry();
+    if( geometry != null )
+    {
+      sb.append( ((Marshallable) geometry).exportAsXML() );
+    }
+    if( m_colorMap != null )
+    {
+      sb.append( ((Marshallable) m_colorMap).exportAsXML() );
+    }
+    sb.append( "</SurfacePolygonSymbolizer>" );
+
+    Debug.debugMethodEnd();
+    return sb.toString();
   }
 
 }
