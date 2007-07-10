@@ -41,38 +41,19 @@
 package org.kalypso.kalypso1d2d.pjt.views.contentprov;
 
 import org.eclipse.ui.model.WorkbenchAdapter;
-import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IModelDescriptor;
 import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IResultModelDescriptor;
-import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptor;
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
+import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptor.SIMULATIONTYPE;
 
 /**
  * @author Stefan Kurzbach
- * TODO: rename to SimulationDescriptorWorkbenchAdapter
  * 
  */
-public class SimulationDescriptorTreeContentAdapter extends WorkbenchAdapter
+public class ResultModelDescriptorWorkbenchAdapter extends WorkbenchAdapter
 {
 // private final ImageDescriptor m_resultImage;
 
-  public SimulationDescriptorTreeContentAdapter( )
+  public ResultModelDescriptorWorkbenchAdapter( )
   {
-  }
-
-  /**
-   * @see org.eclipse.ui.model.IWorkbenchAdapter#getChildren(java.lang.Object)
-   */
-  @Override
-  public Object[] getChildren( final Object o )
-  {
-    final ISimulationDescriptor descriptor = (ISimulationDescriptor) o;
-    final IFeatureWrapperCollection<IResultModelDescriptor> resultModel = descriptor.getResultModel();
-    if( resultModel != null )
-    {
-      return resultModel.toArray();
-    }
-    else
-      return NO_CHILDREN;
   }
 
 // /**
@@ -90,13 +71,13 @@ public class SimulationDescriptorTreeContentAdapter extends WorkbenchAdapter
   @Override
   public String getLabel( final Object o )
   {
-    final ISimulationDescriptor simulationDescriptor = (ISimulationDescriptor) o;
-    final IModelDescriptor calculationUnit = simulationDescriptor.getCalculationUnit();
-    if( calculationUnit != null )
+    final IResultModelDescriptor resultModelDescriptor = (IResultModelDescriptor) o;
+    final SIMULATIONTYPE simulationType = resultModelDescriptor.getSimulationType();
+    String result = resultModelDescriptor.getModelName();
+    if( simulationType != null )
     {
-      return calculationUnit.getModelName();
+      result += "(" + simulationType + ")";
     }
-    else
-      return "<Berechnungseinheit nicht gefunden>";
+    return result;
   }
 }

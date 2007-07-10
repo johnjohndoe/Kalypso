@@ -23,6 +23,16 @@
                type="org.eclipse.ui.model.IWorkbenchAdapter">
          </adapter>
       </factory>
+      <factory
+            adaptableType="org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IResultModelDescriptor"
+            class="org.kalypso.kalypso1d2d.pjt.views.contentprov.SimulationDescriptorAdapterFactory">
+         <adapter
+               type="org.eclipse.ui.model.IWorkbenchAdapter2">
+         </adapter>
+         <adapter
+               type="org.eclipse.ui.model.IWorkbenchAdapter">
+         </adapter>
+      </factory>
    </extension>
 
 	<extension
