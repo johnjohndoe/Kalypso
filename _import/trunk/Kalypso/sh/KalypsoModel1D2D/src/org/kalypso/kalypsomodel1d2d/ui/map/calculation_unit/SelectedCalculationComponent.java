@@ -60,6 +60,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
@@ -385,7 +386,10 @@ public class SelectedCalculationComponent
     });
     tableViewer.setContentProvider( new ArrayContentProvider() );
     tableViewer.setLabelProvider( new CalculationUnitViewerLabelProvider(subCalculationComposite.getDisplay()));//ListLabelProvider(this) );    
-    table.setLinesVisible( true );   
+    table.setLinesVisible( true ); 
+    
+    final TableColumn lineColumn = new TableColumn( table, SWT.LEFT );
+    lineColumn.setWidth( 100 );
     
     formData = new FormData();
     formData.top = new FormAttachment(titleSubCalculation,5);
@@ -399,7 +403,7 @@ public class SelectedCalculationComponent
     formData = new FormData();
     formData.left = new FormAttachment( table, 5 );
     formData.top = new FormAttachment( titleSubCalculation, 10 );
-    formData.right = new FormAttachment(100,0);
+    formData.right = new FormAttachment(100,-5);
     formData.bottom = new FormAttachment( 100, 0 );
     descriptionGroupText.setLayoutData( formData );
 

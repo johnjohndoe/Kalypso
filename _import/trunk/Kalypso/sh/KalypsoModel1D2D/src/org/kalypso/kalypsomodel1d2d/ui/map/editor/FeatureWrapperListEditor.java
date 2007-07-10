@@ -411,7 +411,7 @@ public class FeatureWrapperListEditor implements IButtonConstants
     table.setLayoutData( formData );
 
     final TableColumn lineColumn = new TableColumn( table, SWT.LEFT );
-    lineColumn.setWidth( 50 );
+    lineColumn.setWidth( 100 );
 
     tableViewer.setInput( setInputContentProvider() );
     tableViewer.addSelectionChangedListener( this.elevationModelSelectListener );

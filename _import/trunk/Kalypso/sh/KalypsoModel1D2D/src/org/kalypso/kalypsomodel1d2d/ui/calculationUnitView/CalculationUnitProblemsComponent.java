@@ -64,6 +64,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -210,7 +211,8 @@ public class CalculationUnitProblemsComponent
         formData = new FormData();
         formData.left = new FormAttachment(nameText,10);
         formData.top = new FormAttachment(0,5);        
-        refreshButton.setLayoutData( formData );        
+        refreshButton.setLayoutData( formData );
+        
         problemTableViewer = new TableViewer( rootComposite, SWT.FILL | SWT.BORDER );
         problemsTable = problemTableViewer.getTable();
         problemTableViewer.setLabelProvider( new ProblemsListLabelProvider());
@@ -218,10 +220,13 @@ public class CalculationUnitProblemsComponent
         problemTableViewer.addSelectionChangedListener( selectionChangedListener  );
         problemsTable.setLinesVisible( true );
         
+        final TableColumn lineColumn = new TableColumn( problemsTable, SWT.LEFT );
+        lineColumn.setWidth( 200 );
+        
         formData = new FormData();
         formData.left = new FormAttachment(0,5);
         formData.top = new FormAttachment(refreshButton,5);
-        formData.width = 300;        
+        formData.right = new FormAttachment(100,-5);
         problemsTable.setLayoutData( formData );       
   }
   

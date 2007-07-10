@@ -61,6 +61,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
@@ -222,11 +223,14 @@ public class ElevationModelSystemEditorComponent
     elevFormData.height = 90;
 
     elevationListTableViewer = new TableViewer( elevationComposite, SWT.FILL | SWT.BORDER );
-    Table elevationList = elevationListTableViewer.getTable();
+    Table elevationListTable = elevationListTableViewer.getTable();
     elevationListTableViewer.setContentProvider( new ArrayContentProvider() );
     elevationListTableViewer.setLabelProvider( new ElevationListLabelProvider() );
-    elevationList.setLinesVisible( true );
-    elevationList.setLayoutData( elevFormData );
+    elevationListTable.setLinesVisible( true );
+    elevationListTable.setLayoutData( elevFormData );
+    
+    final TableColumn lineColumn = new TableColumn( elevationListTable, SWT.LEFT );
+    lineColumn.setWidth( 100 );
     
     
     ITerrainElevationModelSystem elevationModelSystem = dataModel.getElevationModelSystem();
@@ -251,7 +255,7 @@ public class ElevationModelSystemEditorComponent
     elevationListTableViewer.addSelectionChangedListener( this.elevationModelSelectListener);
 
     elevFormData = new FormData();
-    elevFormData.left = new FormAttachment( elevationList, 5 );
+    elevFormData.left = new FormAttachment( elevationListTable, 5 );
     elevFormData.top = new FormAttachment( terrainModelLabel, 5 );
     Button moveUpBtn = new Button( elevationComposite, SWT.PUSH );
     image_Up = new Image( 
@@ -263,7 +267,7 @@ public class ElevationModelSystemEditorComponent
     moveUpBtn.setLayoutData( elevFormData );
     moveUpBtn.addSelectionListener( this.moveUpListener  );
     elevFormData = new FormData();
-    elevFormData.left = new FormAttachment( elevationList, 5 );
+    elevFormData.left = new FormAttachment( elevationListTable, 5 );
     elevFormData.top = new FormAttachment( moveUpBtn, 3 );
 
     Button moveDownBtn = new Button( elevationComposite, SWT.PUSH );
@@ -277,7 +281,7 @@ public class ElevationModelSystemEditorComponent
     moveDownBtn.addSelectionListener( this.moveDownListener  );
 
     elevFormData = new FormData();
-    elevFormData.left = new FormAttachment( elevationList, 5 );
+    elevFormData.left = new FormAttachment( elevationListTable, 5 );
     elevFormData.top = new FormAttachment(moveDownBtn,2);
 //    elevFormData.bottom = new FormAttachment( 100, 0 );
 
@@ -306,7 +310,7 @@ public class ElevationModelSystemEditorComponent
     
     ////delete
     elevFormData = new FormData();
-    elevFormData.left = new FormAttachment( elevationList, 5 );
+    elevFormData.left = new FormAttachment( elevationListTable, 5 );
     elevFormData.top = new FormAttachment(showTerrain,2);
     elevFormData.bottom = new FormAttachment( 100, 0 );
     Button deleteTerrain = new Button( elevationComposite, SWT.PUSH );

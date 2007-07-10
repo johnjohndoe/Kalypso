@@ -89,15 +89,18 @@ public class CalculationUnitPerformWidgetFace
     m_parent = parent;
     toolkit = new FormToolkit(parent.getDisplay());
     form = toolkit.createScrolledForm(parent);
+    form.setExpandHorizontal(true);
+    form.setExpandVertical(true);
     form.setText("Calculation Unit Perform"); 
     form.getBody().setLayout(new TableWrapLayout());
+    
 
     // Calculation Unit Section     
     selectCalcUnitSection = toolkit.createSection( form.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
     selectCalcUnitSection.setText( "Berechnungseinheiten" );
     final TableWrapData tableWrapDataCU = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
-    tableWrapDataCU.grabHorizontal = true;
-    tableWrapDataCU.grabVertical = true;
+//    tableWrapDataCU.grabHorizontal = true;
+//    tableWrapDataCU.grabVertical = true;
     selectCalcUnitSection.setLayoutData( tableWrapDataCU );
     selectCalcUnitSection.setExpanded(true);
 
@@ -105,8 +108,8 @@ public class CalculationUnitPerformWidgetFace
     calculationElementUnitSection = toolkit.createSection( form.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
     calculationElementUnitSection.setText( "Status der selektierten Berechnungseinheit" );
     TableWrapData tableWrapDataCE = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
-    tableWrapDataCE.grabHorizontal = true;
-    tableWrapDataCE.grabVertical = true;
+//    tableWrapDataCE.grabHorizontal = true;
+//    tableWrapDataCE.grabVertical = true;
     calculationElementUnitSection.setLayoutData( tableWrapDataCE );
     calculationElementUnitSection.setExpanded( true );
     
@@ -114,8 +117,8 @@ public class CalculationUnitPerformWidgetFace
     problemsSection = toolkit.createSection( form.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
     problemsSection.setText( "Berechnungseinheit Verwalten" );
     final TableWrapData tableWrapDataPU = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
-    tableWrapDataPU.grabHorizontal = true;
-    tableWrapDataPU.grabVertical = true;
+//    tableWrapDataPU.grabHorizontal = true;
+//    tableWrapDataPU.grabVertical = true;
     problemsSection.setLayoutData( tableWrapDataPU );
     problemsSection.setExpanded(true);
     
