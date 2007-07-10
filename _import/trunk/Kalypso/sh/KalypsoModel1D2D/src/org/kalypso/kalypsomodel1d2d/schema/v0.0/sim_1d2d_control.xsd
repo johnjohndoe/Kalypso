@@ -760,6 +760,18 @@
 							</documentation>
 						</annotation>
 					</element>
+					<element name="_steadyBC">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Relaxationsfaktor</label>
+							</documentation>
+						</annotation>
+						<simpleType>
+							<restriction base="double">
+								<minInclusive value="0.0" />
+							</restriction>
+						</simpleType>
+					</element>
 					<element name="timestepsMember"
 						type="c1d2d:TimestepsObservationPropertyType">
 						<annotation>

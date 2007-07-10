@@ -71,7 +71,8 @@ public class RestartSelectWizard extends Wizard implements INewWizard
   public void addPages( )
   {
     setWindowTitle( "Berechnungszeitschritte definieren" );
-    m_restartSelectWizardPage = new RestartSelectWizardPage(m_feature.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_RESTART_PATH ).toString());
+    final Object property = m_feature.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_RESTART_PATH );
+    m_restartSelectWizardPage = new RestartSelectWizardPage(property==null?"":property.toString());
     addPage( m_restartSelectWizardPage );
   }
   

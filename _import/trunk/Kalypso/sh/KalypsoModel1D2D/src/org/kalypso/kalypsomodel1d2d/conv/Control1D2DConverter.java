@@ -289,9 +289,12 @@ public class Control1D2DConverter
     final int niti = controlModel.getNITI();
 
     final String msg = "Steady State Input Data";
-    // FIXME (@dejan) stedy state should have urf as well defined by the user!!! (jessica)
-    final float uRValSteady = ((BigDecimal) firstRecord.getValue( compUnderRelax )).floatValue();
-    writeTimeStep( formatter, msg, null, null, uRValSteady, niti, timeStepInfos );
+    
+    final Double uRValSteady = controlModel.get_steadyBC();
+    if(uRValSteady == null || uRValSteady.isNaN())
+      throw new SimulationException( "Stationär Relaxationsfaktor leer, keine Rechnung möglich.", null );
+//    final float uRValSteady = ((BigDecimal) firstRecord.getValue( compUnderRelax )).floatValue();
+    writeTimeStep( formatter, msg, null, null, uRValSteady.floatValue(), niti, timeStepInfos );
 
     /* Unsteady state: a block for each time step */
     Calendar lastStepCal = ((XMLGregorianCalendar) firstRecord.getValue( compTime )).toGregorianCalendar();

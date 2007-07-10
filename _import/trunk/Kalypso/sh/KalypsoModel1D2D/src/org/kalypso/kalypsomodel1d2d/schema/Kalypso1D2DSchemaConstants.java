@@ -224,6 +224,8 @@ public class Kalypso1D2DSchemaConstants
 
   public final static QName WB1D2DCONTROL_PROP_P_BOTTOM = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "_p_bottom" );
 
+  public final static QName WB1D2DCONTROL_PROP_STEADY_BC = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "_steadyBC" );
+
   public final static QName WB1D2DCONTROL_PROP_TIMESTEPS_MEMBER = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "timestepsMember" );
 
   public final static QName WB1D2DCONTROL_F_TIMESTEPS_OBSERVATION = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "TimestepsObservation" );

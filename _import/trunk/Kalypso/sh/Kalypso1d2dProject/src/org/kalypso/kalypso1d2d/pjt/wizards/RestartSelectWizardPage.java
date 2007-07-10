@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.kalypso.kalypso1d2d.pjt.views.contentprov.ResultNavigatorContentProvider;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IResultModelDescriptor;
 import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptor;
 import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ResultDB;
 import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.SimulationDescriptor;
@@ -97,7 +98,8 @@ public class RestartSelectWizardPage extends WizardPage
       {
         final StructuredSelection selection = (StructuredSelection) event.getSelection();
         final ISimulationDescriptor descriptor = (SimulationDescriptor) selection.getFirstElement();
-        setSelection( descriptor, false );
+        if( descriptor.getResultModel().size() > 0 )
+          setSelection( descriptor, false );
       }
 
     } );
@@ -112,10 +114,14 @@ public class RestartSelectWizardPage extends WizardPage
     final IFeatureWrapperCollection<ISimulationDescriptor> simulationDescriptors = resultDB.getSimulationDescriptors();
     for( ISimulationDescriptor descriptor : simulationDescriptors )
     {
-      final String path = descriptor.getResultModel().get( 0 ).getWorkspacePath();
-      for( int i = 0; i < selections.length; i++ )
-        if( selections[i].equals( path ) )
-          setSelection( descriptor, true );
+      final IFeatureWrapperCollection<IResultModelDescriptor> resultModel = descriptor.getResultModel();
+      if( resultModel.size() > 0 )
+      {
+        final String path = resultModel.get( 0 ).getWorkspacePath();
+        for( int i = 0; i < selections.length; i++ )
+          if( selections[i].equals( path ) )
+            setSelection( descriptor, true );
+      }
     }
   }
 

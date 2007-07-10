@@ -127,6 +127,8 @@ public interface IControlModel1D2D extends IControlModel
 
   public Double get_P_BOTTOM( );
 
+  public Double get_steadyBC( );
+
   public void setCalculationUnit( ICalculationUnit calUnit );
 
   public ICalculationUnit getCalculationUnit( );

@@ -40,23 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypso1d2d.pjt.wizards;
 
-import java.io.File;
-
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.PlatformUI;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.ogc.gml.command.FeatureChange;
-import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
-import org.kalypso.ogc.gml.featureview.control.ButtonFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -66,19 +59,6 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class RestartSelectorControl extends AbstractFeatureControl implements IFeatureControl
 {
-  private IFeatureControl m_featureControl;
-
-  private final IFeatureChangeListener m_fcl = new IFeatureChangeListener()
-  {
-    public void featureChanged( final FeatureChange[] changes )
-    {
-    }
-
-    public void openFeatureRequested( final Feature feature, final IPropertyType ftp )
-    {
-    }
-  };
-
   public RestartSelectorControl( Feature feature, IPropertyType pt )
   {
     super( feature, pt );
@@ -89,24 +69,17 @@ public class RestartSelectorControl extends AbstractFeatureControl implements IF
    */
   public void addModifyListener( ModifyListener l )
   {
-    // TODO Auto-generated method stub
-
   }
 
   /**
    * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#createControl(org.eclipse.swt.widgets.Composite, int)
    */
-  public Control createControl( Composite parent, int style )
+  public Control createControl( final Composite parent, int style )
   {
-    final Display display = PlatformUI.getWorkbench().getDisplay();
-    final Feature feature = getFeature();
-    m_featureControl = new ButtonFeatureControl( feature, getFeatureTypeProperty() );
-// m_featureControl = new ButtonFeatureControl( feature, feature.getFeatureType().getProperty( new QName("result") ) );
-    m_featureControl.addChangeListener( m_fcl );
-    final Button control = (Button) m_featureControl.createControl( parent, style );
-    control.setText( "Select restart file(s)" );
+    final Button button = new Button(parent, SWT.PUSH);
+    button.setText( "Select restart file(s)" );
 
-    control.addSelectionListener( new SelectionAdapter()
+    button.addSelectionListener( new SelectionAdapter()
     {
       /**
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
@@ -114,14 +87,12 @@ public class RestartSelectorControl extends AbstractFeatureControl implements IF
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
-        final Shell shell = display.getActiveShell();
         final RestartSelectWizard wizard = new RestartSelectWizard( getFeature() );
-        final WizardDialog wizardDialog = new WizardDialog( shell, wizard );
+        final WizardDialog wizardDialog = new WizardDialog( parent.getDisplay().getActiveShell(), wizard );
         wizardDialog.open();
-        final File[] changes = wizard.getSelectedFiles();
       }
     } );
-    return control;
+    return button;
   }
 
   /**
@@ -146,13 +117,4 @@ public class RestartSelectorControl extends AbstractFeatureControl implements IF
   {
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl#setFeature(org.kalypsodeegree.model.feature.Feature)
-   */
-  @Override
-  public void setFeature( final Feature feature )
-  {
-    // TODO Auto-generated method stub
-    super.setFeature( feature );
-  }
 }

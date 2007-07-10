@@ -386,4 +386,12 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
     return property != null ? property : 0.0;
   }
 
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#get_steadyBC()
+   */
+  public Double get_steadyBC( )
+  {
+    return (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_STEADY_BC );
+  }
+
 }

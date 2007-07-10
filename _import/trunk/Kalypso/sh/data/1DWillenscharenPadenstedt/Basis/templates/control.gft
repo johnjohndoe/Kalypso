@@ -231,6 +231,62 @@
 				</gft:enabledOperation>
 			</gft:validatorlabel>
 
+			<gft:label visible="false" style="SWT.NONE">
+				<gft:gridData horizontalAlignment="GridData.BEGINNING" horizontalSpan="2"
+					grabExcessHorizontalSpace="false" />
+			</gft:label>
+			<gft:label
+				text="Relaxationsfaktor (stationär)" visible="true"
+				tooltip="Der Relaxationsfaktor für stationäre Berechnung"
+				style="SWT.NONE">
+				<gft:gridData verticalAlignment="GridData.CENTER"
+					horizontalAlignment="GridData.BEGINNING"
+					grabExcessHorizontalSpace="false" />
+				<gft:enabledOperation>
+					<ogc:PropertyIsLike wildCard="*" singleChar="?"
+						escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+						<ogc:PropertyName>
+							c1d2d:_steady
+						</ogc:PropertyName>
+						<ogc:Literal>true</ogc:Literal>
+					</ogc:PropertyIsLike>
+				</gft:enabledOperation>
+			</gft:label>
+			<gft:text editable="true" property="c1d2d:_steadyBC"
+				tooltip="Der Relaxationsfaktor für stationäre Berechnung"
+				style="SWT.BORDER">
+				<gft:gridData horizontalSpan="1"
+					horizontalAlignment="GridData.FILL"
+					grabExcessHorizontalSpace="true" />
+				<gft:enabledOperation>
+					<ogc:PropertyIsLike wildCard="*" singleChar="?"
+						escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+						<ogc:PropertyName>
+							c1d2d:_steady
+						</ogc:PropertyName>
+						<ogc:Literal>true</ogc:Literal>
+					</ogc:PropertyIsLike>
+				</gft:enabledOperation>
+			</gft:text>
+			<gft:label visible="false" style="SWT.NONE">
+				<gft:gridData horizontalAlignment="GridData.BEGINNING"
+					grabExcessHorizontalSpace="false" />
+			</gft:label>
+			<gft:validatorlabel property="c1d2d:_steadyBC" visible="true"
+				style="SWT.NONE">
+				<gft:gridData horizontalAlignment="GridData.BEGINNING"
+					grabExcessHorizontalSpace="false" />
+				<gft:enabledOperation>
+					<ogc:PropertyIsLike wildCard="*" singleChar="?"
+						escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+						<ogc:PropertyName>
+							c1d2d:_steady
+						</ogc:PropertyName>
+						<ogc:Literal>true</ogc:Literal>
+					</ogc:PropertyIsLike>
+				</gft:enabledOperation>
+			</gft:validatorlabel>
+
 			<gft:label text="Instationäre Berechnung" visible="true"
 				style="SWT.NONE">
 				<gft:gridData verticalAlignment="GridData.CENTER"

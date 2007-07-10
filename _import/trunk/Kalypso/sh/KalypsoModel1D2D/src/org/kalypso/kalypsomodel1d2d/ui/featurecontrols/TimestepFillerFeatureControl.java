@@ -41,20 +41,16 @@
 package org.kalypso.kalypsomodel1d2d.ui.featurecontrols;
 
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.PlatformUI;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.command.FeatureChange;
-import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
-import org.kalypso.ogc.gml.featureview.control.ButtonFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -63,22 +59,6 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class TimestepFillerFeatureControl extends AbstractFeatureControl implements IFeatureControl
 {
-  private IFeatureControl m_featureControl;
-
-  private final IFeatureChangeListener m_fcl = new IFeatureChangeListener()
-  {
-    public void featureChanged( final FeatureChange[] changes )
-    {
-    }
-
-    public void openFeatureRequested( final Feature feature, final IPropertyType ftp )
-    {
-      // just show this feature in the view, don't change the selection this doesn't work
-      // don't change the command manager, changing the feature only work inside the same workspace
-      // activateFeature( feature, false, null );
-    }
-  };
-
   public TimestepFillerFeatureControl( final Feature feature, final IPropertyType ftp )
   {
     super( feature, ftp );
@@ -96,15 +76,9 @@ public class TimestepFillerFeatureControl extends AbstractFeatureControl impleme
    */
   public Control createControl( final Composite parent, final int style )
   {
-    final Display display = PlatformUI.getWorkbench().getDisplay();
-    final Feature feature = getFeature();
-    m_featureControl = new ButtonFeatureControl( feature, getFeatureTypeProperty() );
-//    m_featureControl = new ButtonFeatureControl( feature, feature.getFeatureType().getProperty( new QName("result") ) );
-    m_featureControl.addChangeListener( m_fcl );
-    final Button control = (Button) m_featureControl.createControl( parent, style );
-    control.setText( "Zeitschritte definieren" );
-
-    control.addSelectionListener( new SelectionAdapter()
+    final Button button = new Button(parent, SWT.PUSH);
+    button.setText( "Zeitschritte definieren" );
+    button.addSelectionListener( new SelectionAdapter()
     {
       /**
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
@@ -113,15 +87,14 @@ public class TimestepFillerFeatureControl extends AbstractFeatureControl impleme
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
-        final Shell shell = display.getActiveShell();
         final TimeStepFillerWizard wizard = new TimeStepFillerWizard( getFeature() );
-        final WizardDialog wizardDialog = new WizardDialog( shell, wizard );
+        final WizardDialog wizardDialog = new WizardDialog( parent.getDisplay().getActiveShell(), wizard );
         wizardDialog.open();
         final FeatureChange[] changes = wizard.getFeatureChange();
         fireFeatureChange( changes );
       }
     } );
-    return control;
+    return button;
   }
 
   /**
@@ -144,16 +117,6 @@ public class TimestepFillerFeatureControl extends AbstractFeatureControl impleme
    */
   public void updateControl( )
   {
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl#setFeature(org.kalypsodeegree.model.feature.Feature)
-   */
-  @Override
-  public void setFeature( final Feature feature )
-  {
-    // TODO Auto-generated method stub
-    super.setFeature( feature );
   }
 
 }
