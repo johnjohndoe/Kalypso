@@ -770,6 +770,7 @@ public class GeometryUtilities
   {
     final GM_Envelope reqEnvelope = GeometryUtilities.grabEnvelopeFromDistance( point, grabDistance );
     final List<Feature> foundElements = modelList.query( reqEnvelope, null );
+
     double min = Double.MAX_VALUE;
     Feature nearest = null;
 
