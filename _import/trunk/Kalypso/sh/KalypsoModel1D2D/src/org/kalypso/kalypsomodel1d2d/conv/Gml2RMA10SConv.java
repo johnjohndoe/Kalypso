@@ -171,7 +171,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
       final IFolder scenarioFolder = Util.getScenarioFolder( );
       for( final String path : m_calculation.getControlModel().getRestartPaths() )
       {
-        IFile ifile = scenarioFolder.getProject().getFile( path );
+        IFile ifile = scenarioFolder.getFile( path );
         final File file = ifile.getRawLocation().toFile();
         try
         {
