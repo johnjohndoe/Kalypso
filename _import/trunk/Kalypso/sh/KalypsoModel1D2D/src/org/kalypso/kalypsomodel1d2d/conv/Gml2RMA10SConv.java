@@ -196,6 +196,37 @@ public class Gml2RMA10SConv implements INativeIDProvider
     m_restart = false;
   }
 
+  public boolean containsID( final IFeatureWrapper2 i1d2dObject )
+  {
+    if( i1d2dObject == null )
+      return false;
+    final String id = i1d2dObject.getGmlID();
+    if( i1d2dObject instanceof IFE1D2DNode )
+    {
+      return m_nodesIDProvider.containsKey( id );
+    }
+    else if( i1d2dObject instanceof IFE1D2DEdge )
+    {
+      return m_edgesIDProvider.containsKey( id );
+    }
+    else if( i1d2dObject instanceof IBoundaryLine )
+    {
+      return m_calculation.containsID( i1d2dObject );
+    }
+    else if( i1d2dObject instanceof IFE1D2DElement )
+    {
+      return m_elementsIDProvider.containsKey( id );
+    }
+    else if( i1d2dObject instanceof IFE1D2DComplexElement )
+    {
+      return m_complexElementsIDProvider.containsKey( id );
+    }
+    else
+    {
+      return false;
+    }
+  }
+  
   public int getID( final IFeatureWrapper2 i1d2dObject )
   {
     if( i1d2dObject == null )
@@ -459,6 +490,10 @@ public class Gml2RMA10SConv implements INativeIDProvider
 //      {
 //        continue;
 //      }
+      if( containsID( node ) )
+      {
+        continue;
+      }
       /* The node itself */
       final int nodeID = getID( node );
       final GM_Point point = node.getPoint();
