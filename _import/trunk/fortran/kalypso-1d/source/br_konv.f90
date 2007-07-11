@@ -1,4 +1,4 @@
-!     Last change:  WP    1 Aug 2006   11:15 am
+!     Last change:  MD   10 Jul 2007    6:31 pm
 !--------------------------------------------------------------------------
 ! This code, br_konv.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -539,6 +539,7 @@ IF (nz.gt.50) then
   nblatt = nblatt + 1
   CALL kopf (nblatt, nz, UNIT_OUT_TAB, UNIT_OUT_PRO, idr1)
 ENDIF
+
 
 he3 = hen (nprof)
 
@@ -1620,8 +1621,8 @@ IF (iartt.eq.2) then
   hrbv = hokmax
   hming = hsohl
 
-  CALL normber (strbr, q, q1, nprof, hr, hv, rg, hvst, hrst,      &
-  indmax, psieins, psiorts, hgrenz, ikenn, froud, nblatt, nz)
+  CALL normber (strbr, q, q1, nprof, hr, hv, rg, hvst, hrst,   &
+   &  indmax, psieins, psiorts, hgrenz, ikenn, froud, nblatt, nz)
 
 
   ikenn = ikenn + ifkonv
