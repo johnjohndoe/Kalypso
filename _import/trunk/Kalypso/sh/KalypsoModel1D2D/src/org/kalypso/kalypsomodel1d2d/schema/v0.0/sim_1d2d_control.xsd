@@ -769,6 +769,7 @@
 						<simpleType>
 							<restriction base="double">
 								<minInclusive value="0.0" />
+								<maxInclusive value="1.0"/>
 							</restriction>
 						</simpleType>
 					</element>

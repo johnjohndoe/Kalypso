@@ -261,6 +261,8 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
 
   public Integer getNCYC( )
   {
+    if( !isUnsteadySelected() )
+      return 0;
     final Integer property = getTimeSteps().getResult().size() - 1;
     return getNITN() != null ? property : 0; // Not needed, while no definition of unsteady timesteps
   }
