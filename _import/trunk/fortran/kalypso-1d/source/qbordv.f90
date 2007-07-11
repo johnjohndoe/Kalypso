@@ -1,4 +1,4 @@
-!     Last change:  MD    5 Jul 2007    3:17 pm
+!     Last change:  MD   11 Jul 2007   12:30 pm
 !--------------------------------------------------------------------------
 ! This code, qbordv.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -344,6 +344,8 @@ If (BERECHNUNGSMODUS == 'BF_NON_UNI' .OR. BERECHNUNGSMODUS == 'REIB_KONST') then
     ilen = LEN_TRIM(NAME_PFAD_DATH)
     NAME_OUT_WEHR = NAME_PFAD_DATH(1:ilen) // 'Laengs_QWehre.txt'
     NAME_OUT_QWEHR = NAME_PFAD_DATH(1:ilen) // 'HOW_QWehr_HUW.txt'
+    NAME_OUT_BRUECKE = NAME_PFAD_DATH(1:ilen) // 'Laengs_QBruecke.txt'
+    NAME_OUT_QBRUECKE = NAME_PFAD_DATH(1:ilen) // 'HOW_QBruecke_HUW.txt'
 
     UNIT_OUT_WEHR = ju0gfu ()
     OPEN (unit = UNIT_OUT_WEHR, file = NAME_OUT_WEHR, status = 'REPLACE', iostat = istat)
@@ -362,9 +364,28 @@ If (BERECHNUNGSMODUS == 'BF_NON_UNI' .OR. BERECHNUNGSMODUS == 'REIB_KONST') then
         & 1X, 'Programm wird beendet!')
       call stop_programm(0)
     end if
-    WRITE (UNIT_OUT_QWEHR, '(5x,''Profil'',4x,''Q_OW '',3x,''Q-wehr'',5x,''h_ow'',7x,''h_uw'',4x,''Ü-Art'')')
-  end if
+    WRITE (UNIT_OUT_QWEHR, '(5x,''Profil'',6x,''Q_OW'',4x,''Q-wehr'',6x,''h_ow'',6x,''h_uw'',3x,''Ü-Art'')')
 
+    UNIT_OUT_BRUECKE  = ju0gfu ()
+    OPEN (unit = UNIT_OUT_BRUECKE , file = NAME_OUT_BRUECKE , status = 'REPLACE', iostat = istat)
+    if (istat /= 0) then
+      write (*, 9010) NAME_OUT_BRUECKE
+      9010 format (1X, 'Fehler beim Oeffnen der Datei ', A, /, &
+         & 1X, 'Programm wird beendet!')
+      call stop_programm(0)
+    end if
+
+    UNIT_OUT_QBRUECKE  = ju0gfu ()
+    OPEN (unit = UNIT_OUT_QBRUECKE , file = NAME_OUT_QBRUECKE , status = 'REPLACE', iostat = istat)
+    if (istat /= 0) then
+      write (*, 9011) NAME_OUT_QBRUECKE
+      9011 format (1X, 'Fehler beim Oeffnen der Datei ', A, /, &
+         & 1X, 'Programm wird beendet!')
+      call stop_programm(0)
+    end if
+    WRITE (UNIT_OUT_QBRUECKE, '(5x,''Profil'',6x,''Q_UW'',1x,''Q-Bruecke'',6x,''h_ow'',6x,''h_uw'',6x,''h_en'')')
+
+  end if
 
 
   DO i = 1, maxger
