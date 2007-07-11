@@ -175,8 +175,8 @@
 			<gft:checkbox editable="true" property="c1d2d:_steady"
 				style="SWT.NONE">
 				<gft:gridData horizontalSpan="1"
-					horizontalAlignment="GridData.FILL"
-					grabExcessHorizontalSpace="true" />
+					horizontalAlignment="GridData.CENTER"
+					grabExcessHorizontalSpace="false" />
 			</gft:checkbox>
 
 			<gft:label
