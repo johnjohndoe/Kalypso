@@ -133,86 +133,6 @@
         <viewContribution
               id="org.kalypso.ui.views.mapView.widgets1d2d"
               targetID="org.kalypso.ui.views.mapView">         	
-          <action
-                icon="icons/elcl16/08_add_weir.gif"
-                id="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateWeirFlowrelationWidgetAction"
-                label="Wehr hinzufügen"
-                style="radio"
-                toolbarPath="tools"
-                tooltip="Wehr zuordnen">
-	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
-	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
-	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateWeirFlowrelationWidget"/>
-                     	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin" 
-	                     	value="org.kalypso.model1d2d"/>
-	                    <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context" 
-	                     	value="Parameters1D"/>
-	       			</class>
-			</action>    
-          <action
-                icon="icons/elcl16/09_add_parameter_teschke.gif"
-                id="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateTeschkeFlowrelationWidgetAction"
-                label="Teschke-Parameter hinzufügen"
-                style="radio"
-                toolbarPath="tools"
-                tooltip="Polynomfunktion zuordnen">
-	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
-	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
-	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateTeschkeFlowrelationWidget"/>
-                     	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin" 
-	                     	value="org.kalypso.model1d2d"/>
-	                    <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context" 
-	                     	value="Parameters1D"/>
-	       			</class>
-			</action>    
-          <action
-                icon="icons/elcl16/10_add_parameter_king.gif"
-                id="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateKingFlowrelationWidgetAction"
-                label="King-Parameter hinzufügen"
-                style="radio"
-                toolbarPath="tools"
-                tooltip="Kanalprofilparameter zuordnen">
-	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
-	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
-	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateKingFlowrelationWidget"/>
-                     	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin" 
-	                     	value="org.kalypso.model1d2d"/>
-	                    <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context" 
-	                     	value="Parameters1D"/>
-	       			</class>
-			</action>    
-          <action
-                icon="icons/elcl16/11_flowRelation_edit.gif"
-                id="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditFlowrelationWidget"
-                label="Parameter bearbeiten"
-                style="radio"
-                toolbarPath="tools"
-                tooltip="Zugeordnete Parameter bearbeiten">
-	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
-	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
-	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditFlowrelationWidget"/>
-                     	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin" 
-	                     	value="org.kalypso.model1d2d"/>
-	                    <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context" 
-	                     	value="Parameters1D"/>
-	       			</class>
-			</action>    
-			<action
-	           icon="icons/elcl16/12_flowRelation_delete.gif"
-	           id="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.DeleteFlowrelationWidgetAction"               
-	           label="Parameter löschen"
-	           style="radio"
-	           toolbarPath="tools"
-	           tooltip="Zugeordnete Parameter löschen">
-	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
-	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
-	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.DeleteFlowrelationWidget"/>
-                     	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin" 
-	                     	value="org.kalypso.model1d2d"/>
-	                    <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context" 
-	                     	value="Parameters1D"/>
-	       			</class>
-			</action>
    <action
          disabledIcon="icons/dlcl16/select_profile_disable.gif"
          icon="icons/elcl16/16_select_profile_enable.gif"
@@ -446,7 +366,31 @@
             </class>
 		 </handler>
 		 
-		 <!--*** EditElement handlers ***-->
+   <!--*** EditElement handlers ***-->
+   <handler
+         commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement">
+      <activeWhen>
+         <reference
+               definitionId="org.kalypso.ui.views.mapView.expressions.param1d">
+         </reference>
+      </activeWhen>
+      <class
+            class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+         <parameter
+               name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+               value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.DeleteFlowrelationWidget">
+         </parameter>
+         <parameter
+               name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
+               value="icons/elcl16/12_flowRelation_delete.gif">
+         </parameter>
+         <parameter
+               name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
+               value="Zugeordnete Parameter löschen">
+         </parameter>
+      </class>
+   </handler>
+
 		 <handler
 		       commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditElement">
 		    <activeWhen>   
@@ -507,7 +451,30 @@
 			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
                     value="Ganglinie darstellen"/>              
             </class>
-		 </handler>		 
+		 </handler>
+   <handler
+         commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditElement">
+      <activeWhen>
+         <reference
+               definitionId="org.kalypso.ui.views.mapView.expressions.param1d">
+         </reference>
+      </activeWhen>
+      <class
+            class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+         <parameter
+               name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+               value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditFlowrelationWidget">
+         </parameter>
+         <parameter
+               name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
+               value="icons/elcl16/11_flowRelation_edit.gif">
+         </parameter>
+         <parameter
+               name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
+               value="Zugeordnete Parameter bearbeiten">
+         </parameter>
+      </class>
+   </handler>		 
 		 <handler
 		       commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement">
 		    <activeWhen>   
@@ -572,6 +539,42 @@
                   value="org.kalypso.kalypsomodel1d2d.ui.map.tin.TinInfoWidget">
             </parameter>
          </defaultHandler>
+      </command>
+      <command
+            categoryId="org.kalypso.ogc.gml.map.category"
+            id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateTeschkeFlowRelation"
+            name="Teschke-Parameter hinzufügen">
+         <defaultHandler
+               class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+            <parameter
+                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+                  value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateTeschkeFlowrelationWidget">
+            </parameter>
+         </defaultHandler>
+      </command>
+      <command
+            categoryId="org.kalypso.ogc.gml.map.category"
+            id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateKingFlowRelation"
+            name="King-Parameter hinzufügen">
+         <defaultHandler
+               class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+            <parameter
+                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+                  value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateKingFlowrelationWidget">
+            </parameter>
+         </defaultHandler>
+      </command>
+      <command
+            categoryId="org.kalypso.ogc.gml.map.category"
+            id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateWeirFlowRelation"
+            name="Wehr hinzufügen">
+         <defaultHandler
+               class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+            <parameter
+                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+                  value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateWeirFlowrelationWidget">
+            </parameter>
+         </defaultHandler>
       </command>           
      </extension>
 	 <extension
@@ -625,6 +628,46 @@
               </visibleWhen>
            </command>
         </menuContribution>
+        <menuContribution
+              locationURI="menu:org.kalypso.ui.view.mapView.createParameterMenu">
+           <command
+                 commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateTeschkeFlowRelation"
+                 icon="icons/elcl16/09_add_parameter_teschke.gif"
+                 label="Teschke-Parameter hinzufügen"
+                 style="radio"
+                 tooltip="Polynomfunktion zuordnen">
+           </command>
+           <command
+                 commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateKingFlowRelation"
+                 icon="icons/elcl16/10_add_parameter_king.gif"
+                 label="King-Parameter hinzufügen"
+                 style="radio"
+                 tooltip="Kanalprofilparameter zuordnen">
+           </command>
+           <command
+                 commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateWeirFlowRelation"
+                 icon="icons/elcl16/08_add_weir.gif"
+                 label="Wehr hinzufügen"
+                 style="radio"
+                 tooltip="Wehr zuordnen">
+           </command>
+        </menuContribution>
+        <menuContribution
+              locationURI="toolbar:org.kalypso.ui.views.mapView?after=actions">
+           <command
+                 commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateTeschkeFlowRelation"
+                 icon="icons/elcl16/09_add_parameter_teschke.gif"
+                 id="org.kalypso.ui.view.mapView.createParameterMenu"
+                 label="Teschke-Parameter hinzufügen"
+                 style="pulldown"
+                 tooltip="Polynomfunktion zuordnen">
+              <visibleWhen>
+                 <reference
+                       definitionId="org.kalypso.ui.views.mapView.expressions.param1d">
+                 </reference>
+              </visibleWhen>
+           </command>
+        </menuContribution>
      </extension>
   <extension
         point="org.eclipse.ui.popupMenus">
@@ -651,5 +694,20 @@
            id="org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView.CalculationUnitPerformView"
            name="CalculationUnitView">
      </view>
+  </extension>
+  <extension
+        point="org.eclipse.core.expressions.definitions">
+     <definition
+           id="org.kalypso.ui.views.mapView.expressions.param1d">
+        <with
+              variable="activeContexts">
+           <iterate
+                 operator="or">
+              <equals
+                    value="{http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase}_FlowRelationship">
+              </equals>
+           </iterate>
+        </with>
+     </definition>
   </extension>     
 </plugin>
