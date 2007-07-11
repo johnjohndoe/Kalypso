@@ -1,4 +1,4 @@
-!     Last change:  MD    2 May 2007   12:04 pm
+!     Last change:  MD   11 Jul 2007   12:06 pm
 !--------------------------------------------------------------------------
 ! This code, w_ber.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -1275,7 +1275,7 @@ DO 5000 j = 1, nwfd
        & 3x,a,1x,f10.3,1x,f10.3,1x,f8.3,1x,f10.3)')  &
        & qw, h_ow, v_ow, he, cq (j), q_w (j), huew (j), auew (j), uearttxt, he_q, h_uw, v_uw, hen1
 
-    WRITE (UNIT_OUT_QWEHR, '(4x,f8.4,1x,f7.3,1x,f7.3,1x,f10.3,1x,f10.3,3x,a)')  &
+    WRITE (UNIT_OUT_QWEHR, '(1x,F10.4,4F10.3,3x,a)')  &
        & stat (np), qw, q_w (j), h_ow, h_uw, uearttxt
   endif
 
