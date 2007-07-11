@@ -133,8 +133,13 @@ public class ProcessResultsJob extends Job
     try
     {
       /* Zip .2d file to outputDir */
+      final File exeLog = new File(m_inputFile.getParentFile().toString() + "/exe.log");
+      final File exeErr = new File(m_inputFile.getParentFile().toString() + "/exe.err");
+      final File outputOut = new File(m_inputFile.getParentFile().toString() + "/result/Output.out");
+      File[] files = new File[] { m_inputFile, exeLog, exeErr, outputOut };
       final File outputZip2d = new File( m_outputDir, "original.2d.zip" );
-      ZipUtilities.zip( outputZip2d, new File[] { m_inputFile }, m_inputFile.getParentFile() );
+//      ZipUtilities.zip( outputZip2d, new File[] { m_inputFile }, m_inputFile.getParentFile() );
+      ZipUtilities.zip( outputZip2d, files, m_inputFile.getParentFile() );
       monitor.worked( 1 );
 
       /* Read into NodeResults */
