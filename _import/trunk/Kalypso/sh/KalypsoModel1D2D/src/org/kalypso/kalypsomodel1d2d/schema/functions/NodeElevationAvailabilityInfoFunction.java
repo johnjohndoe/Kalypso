@@ -53,9 +53,16 @@ public class NodeElevationAvailabilityInfoFunction extends FeaturePropertyFuncti
         final GM_Point point = node.getPoint();
         if( point == null )
         {
-          return false;
+          return Boolean.FALSE;
         }
-        return point.getCoordinateDimension() == 3;
+        if( point.getCoordinateDimension() == 3 )
+        {
+          return Boolean.TRUE;
+        }
+        else
+        {
+          return Boolean.FALSE;
+        }
       }
       catch( final Throwable th )
       {

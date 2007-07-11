@@ -43,6 +43,7 @@ package org.kalypso.kalypsomodel1d2d.ui.map.temsys;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeIFeatureWrapper2NameCmd;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ICellEditorValidator;
@@ -65,6 +66,7 @@ import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
@@ -79,7 +81,9 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeNodePositionCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ele.ChangeTerrainElevationSystemCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListener;
+import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.INativeTerrainElevationModelWrapper;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
@@ -88,6 +92,7 @@ import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 
@@ -108,6 +113,7 @@ public class AssignNodeElevationFaceComponent
   private List<IFE1D2DNode> selectionNodeList = new ArrayList<IFE1D2DNode>();
 
   private TableViewer nodeElevationViewer;
+  
 
   private ICellModifier modifier = new ICellModifier()
   {
@@ -149,16 +155,18 @@ public class AssignNodeElevationFaceComponent
     public void modify( Object element, String property, Object value )
     {
 
-      IFE1D2DNode node = null;
+      final IFE1D2DNode node;// = null;
       if( element instanceof TableItem )
       {
         Object data = ((TableItem) element).getData();
-        if( data instanceof IFE1D2DNode )
-        {
-          node = (IFE1D2DNode) data;
-        }
-
+        node =  ( data instanceof IFE1D2DNode )? (IFE1D2DNode) data : null;
+        
       }
+      else
+      {
+        return;
+      }
+      
       if( property.equals( nodeElevationViewer.getColumnProperties()[1] ) )
       {
         if( FENodeLabelProvider.getElevationString( node ).equals( value ) )
@@ -167,9 +175,12 @@ public class AssignNodeElevationFaceComponent
           return;
         }
 
-        IFEDiscretisationModel1d2d model1d2d = dataModel.getDiscretisationModel();
-        if( model1d2d != null )
+        final IFEDiscretisationModel1d2d model1d2d = dataModel.getDiscretisationModel();
+        if( model1d2d == null )
         {
+          System.out.println("Could not find discretisation model");
+          return;
+        }
           double newElevation;
 
           try
@@ -184,42 +195,65 @@ public class AssignNodeElevationFaceComponent
           }
 
           // return FENodeLabelProvider.getElevationString( (IFE1D2DNode) element );
-          ChangeNodePositionCommand command = new ChangeNodePositionCommand( model1d2d, node, newElevation );
-          IKalypsoFeatureTheme nodeTheme = (IKalypsoFeatureTheme) dataModel.getData( ApplyElevationWidgetDataModel.NODE_THEME );
-
+          final IKalypsoFeatureTheme nodeTheme = 
+            (IKalypsoFeatureTheme) dataModel.getData( ApplyElevationWidgetDataModel.NODE_THEME );
           if( nodeTheme == null )
           {
-            return;
-          }
-          try
-          {
-            // manual execute of the command needed because otherwise update done
-            // before the command execution by the framework sothat the table does
-            // not display the right label
-            command.process();
-
-            CommandableWorkspace workspace = nodeTheme.getWorkspace();
-            // get notification fired for the nodes
-            FeatureStructureChangeModellEvent modellEvent = new FeatureStructureChangeModellEvent( 
-                workspace, model1d2d.getWrappedFeature(), 
-                new Feature[] { node.getWrappedFeature(), model1d2d.getWrappedFeature() },// changedFeaturesArray,
-            FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_MOVE );
-            workspace.fireModellEvent( modellEvent );
-//            nodeTheme.fireModellEvent( modellEvent );
-            ChangeTerrainElevationSystemCommand changeTE = new ChangeTerrainElevationSystemCommand( workspace, model1d2d );
-            changeTE.addCommand( command );
-            workspace.postCommand( changeTE );
-            MapPanel mapPanel = dataModel.getMapPanel();
-            mapPanel.repaint();  
-            
-          }
-          catch( Throwable th )
-          {
-            th.printStackTrace();
+            System.out.println("could not find node theme");
           }
           
-          nodeElevationViewer.refresh( node, true );
-        }
+          final CommandableWorkspace workspace = 
+            Util.getCommandableWorkspace( IFEDiscretisationModel1d2d.class );//nodeTheme.getWorkspace();
+          
+          final Runnable updateTable = new Runnable()
+          {
+            public void run() {
+              try
+              {
+                MapPanel mapPanel = dataModel.getMapPanel();
+                mapPanel.setValidMap( false );
+                mapPanel.repaint();  
+                nodeElevationViewer.refresh( node, true );
+                
+              }
+              catch( Throwable th )
+              {
+                th.printStackTrace();
+              }
+              
+            }
+          };
+          
+          final ChangeNodePositionCommand command = 
+              new ChangeNodePositionCommand( model1d2d, node, newElevation )
+          {
+            /**
+             * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeNodePositionCommand#process()
+             */
+            @Override
+            public void process( ) throws Exception
+            {
+              super.process();
+              
+              // get notification fired for the nodes
+              FeatureStructureChangeModellEvent modellEvent = 
+                new FeatureStructureChangeModellEvent( 
+                  workspace, model1d2d.getWrappedFeature(), 
+                  new Feature[] { getMovedNode().getWrappedFeature(), model1d2d.getWrappedFeature() },// changedFeaturesArray,
+              FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD );
+              workspace.fireModellEvent( modellEvent );
+              Display display = table.getDisplay();
+              display.asyncExec( updateTable );
+            }
+          };
+         try
+         {
+           workspace.postCommand(command);
+         }
+         catch ( Exception e) 
+         {
+           e.printStackTrace();
+         }
       }
       else if( property.equals( nodeElevationViewer.getColumnProperties()[0] ) )
       {
@@ -228,8 +262,61 @@ public class AssignNodeElevationFaceComponent
           System.out.println( "No name change!" );
           return;
         }
-        node.setName( (String) value );
-        nodeElevationViewer.refresh();// true);//, new String[]{property});
+        final CommandableWorkspace workspace = 
+          Util.getCommandableWorkspace( IFEDiscretisationModel1d2d.class );
+        
+        final Runnable updateTable = new Runnable()
+        {
+          public void run() {
+            try
+            {
+              nodeElevationViewer.refresh( node, true );
+              
+            }
+            catch( Throwable th )
+            {
+              th.printStackTrace();
+            }
+            
+          }
+        };
+        
+        final ChangeIFeatureWrapper2NameCmd cmd = 
+          new ChangeIFeatureWrapper2NameCmd(
+            node,
+            (String) value ){
+          /**
+           * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeIFeatureWrapper2NameCmd#process()
+           */
+          @Override
+          public void process( ) throws Exception
+          {
+            super.process();
+            Display display = table.getDisplay();
+            display.asyncExec( updateTable );
+          }
+        };
+        try
+        {
+          workspace.postCommand(cmd);
+        }
+        catch( Exception e )
+        {
+          e.printStackTrace();
+        }
+//        node.setName( (String) value );
+//        Feature nodeFeature = node.getWrappedFeature();
+//        
+//        
+//        Feature nodeParent = nodeFeature.getParent();
+//        final FeatureStructureChangeModellEvent modellEvent = 
+//          new FeatureStructureChangeModellEvent( 
+//            workspace, 
+//            nodeParent, 
+//            new Feature[] { nodeFeature, nodeParent  },
+//            FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD );
+//        workspace.fireModellEvent( modellEvent );
+//        nodeElevationViewer.refresh();
       }
       else
       {
@@ -238,21 +325,6 @@ public class AssignNodeElevationFaceComponent
     }
 
   };
-
-  // FocusListener focusListener = new FocusListener()
-  // {
-  //
-  // public void focusGained( FocusEvent e )
-  // {
-  // dataModel.setIgnoreMapSelection( true );
-  // }
-  //
-  // public void focusLost( FocusEvent e )
-  // {
-  // dataModel.setIgnoreMapSelection( false );
-  // }
-  //    
-  // };
 
   MouseListener mouseListener = new MouseListener()
   {

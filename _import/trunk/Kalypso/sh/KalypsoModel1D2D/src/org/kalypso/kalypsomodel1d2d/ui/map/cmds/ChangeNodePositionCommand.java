@@ -179,6 +179,8 @@ public class ChangeNodePositionCommand implements IDiscrModel1d2dChangeCommand
     return new IFeatureWrapper2[]{movedNode};
   }
   
+  
+  
   /**
    * @see xp.IDiscrMode1d2dlChangeCommand#getDiscretisationModel1d2d()
    */
@@ -198,5 +200,10 @@ public class ChangeNodePositionCommand implements IDiscrModel1d2dChangeCommand
     buf.append( newNodePoint );
     buf.append( ']' );
     return buf.toString();
+  }
+
+  public IFE1D2DNode<IFE1D2DEdge> getMovedNode( )
+  {
+    return movedNode;
   }
 }
