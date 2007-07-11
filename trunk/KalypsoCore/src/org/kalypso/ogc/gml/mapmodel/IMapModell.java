@@ -46,7 +46,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -114,14 +113,14 @@ public interface IMapModell extends IWorkbenchAdapter
   // TODO: move to utility class
   public IKalypsoFeatureTheme getScrabLayer( );
 
-  public void accept( KalypsoThemeVisitor visitor, int depth );
+  public void accept( final IKalypsoThemeVisitor visitor, int depth );
 
   /**
    * Iterates through all themes of this modell, starting at the given theme.
    * 
    * @see #accept(KalypsoThemeVisitor, int).
    */
-  public void accept( final KalypsoThemeVisitor visitor, final int depth, final IKalypsoTheme theme );
+  public void accept( final IKalypsoThemeVisitor visitor, final int depth, final IKalypsoTheme theme );
 
   public void setName( final String name );
 

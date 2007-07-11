@@ -57,10 +57,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
 import org.kalypso.ogc.gml.mapmodel.MapModellAdapter;
-import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.types.LayerType;
@@ -108,7 +108,7 @@ public class CascadingKalypsoTheme extends AbstractKalypsoTheme implements ITemp
         }
         catch( final Exception e )
         {
-          // TODO something useful
+          // TODO something useful; set status to theme
           e.printStackTrace();
         }
       }
@@ -520,9 +520,9 @@ public class CascadingKalypsoTheme extends AbstractKalypsoTheme implements ITemp
   }
 
   /**
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#accept(org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor, int)
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#accept(org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor, int)
    */
-  public void accept( final KalypsoThemeVisitor visitor, final int depth_infinite )
+  public void accept( final IKalypsoThemeVisitor visitor, final int depth_infinite )
   {
     m_innerMapModel.accept( visitor, depth_infinite );
 
@@ -538,10 +538,10 @@ public class CascadingKalypsoTheme extends AbstractKalypsoTheme implements ITemp
   }
 
   /**
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#accept(org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor, int,
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#accept(org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor, int,
    *      org.kalypso.ogc.gml.IKalypsoTheme)
    */
-  public void accept( final KalypsoThemeVisitor visitor, final int depth_infinite, final IKalypsoTheme theme )
+  public void accept( final IKalypsoThemeVisitor visitor, final int depth_infinite, final IKalypsoTheme theme )
   {
     m_innerMapModel.accept( visitor, depth_infinite, theme );
   }
@@ -606,6 +606,14 @@ public class CascadingKalypsoTheme extends AbstractKalypsoTheme implements ITemp
     Assert.isLegal( object == this );
 
     return KalypsoGisPlugin.getImageProvider().getImageDescriptor( ImageProvider.DESCRIPTORS.IMAGE_THEME_CASCADING );
+  }
+
+  /**
+   * Returns the reference to the cascaded .gmt file.
+   */
+  public String getMapViewRefUrl( )
+  {
+    return m_mapViewRefUrl;
   }
 
 }
