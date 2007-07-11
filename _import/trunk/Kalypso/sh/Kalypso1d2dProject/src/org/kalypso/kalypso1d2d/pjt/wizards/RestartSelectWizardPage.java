@@ -2,7 +2,9 @@ package org.kalypso.kalypso1d2d.pjt.wizards;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -37,6 +39,8 @@ public class RestartSelectWizardPage extends WizardPage
   private final String m_initialSelection;
 
   private final ViewerFilter m_resultFilter;
+
+  private final Set<IResultModelDescriptor> m_selectedResults = new HashSet<IResultModelDescriptor>();
 
   public static class ResultFilter extends ViewerFilter
   {
@@ -132,6 +136,12 @@ public class RestartSelectWizardPage extends WizardPage
 
   private void setSelection( final IResultModelDescriptor descriptor, final boolean initial )
   {
+    if( m_selectedResults.contains( descriptor ) )
+      m_selectedResults.remove( descriptor );
+    else
+      m_selectedResults.add( descriptor );
+
+    // TODO: refactor: do not remember pathes directly rather than a list of models; produce map if needed on the fly
     final String path = descriptor.getWorkspacePath();
     final String value = descriptor.getModelName();
     if( m_selectedResultPaths.containsKey( path ) )
@@ -143,6 +153,7 @@ public class RestartSelectWizardPage extends WizardPage
     else
       m_selectedResultPaths.put( path, value );
 
+    // Update text-control
     String text = "";
     for( final String key : m_selectedResultPaths.keySet() )
     {
@@ -165,6 +176,11 @@ public class RestartSelectWizardPage extends WizardPage
       return "";
     else
       return text.substring( 0, text.length() - 1 );
+  }
+
+  public IResultModelDescriptor[] getSelectedResults( )
+  {
+    return m_selectedResults.toArray( new IResultModelDescriptor[m_selectedResults.size()] );
   }
 
 }

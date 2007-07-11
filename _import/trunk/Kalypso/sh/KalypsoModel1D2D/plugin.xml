@@ -531,17 +531,12 @@
          </parameter>
       </class>
       <activeWhen>
-         <with
+ <with
                variable="selection">
-            <iterate>
-               <test
-                     forcePluginActivation="true"
-                     property="org.kalypso.core.featureType"
-                     value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}TinResult">
-               </test>
-            </iterate>
-         </with>
-      </activeWhen>
+            <count
+                  value="0+">
+            </count>
+         </with>      </activeWhen>
    </handler>		 
      </extension>
      <extension
@@ -641,21 +636,6 @@
                  label="TIN-Info"
                  style="radio"
                  tooltip="TIN-Werte anzeigen">
-              <visibleWhen>
-                 <with
-                       variable="selection">
-                    <count
-                          value="1">
-                    </count>
-                    <iterate>
-                       <test
-                             forcePluginActivation="true"
-                             property="org.kalypso.core.featureType"
-                             value="insert feature type qname here">
-                       </test>
-                    </iterate>
-                 </with>
-              </visibleWhen>
            </command>
         </menuContribution>
         <menuContribution

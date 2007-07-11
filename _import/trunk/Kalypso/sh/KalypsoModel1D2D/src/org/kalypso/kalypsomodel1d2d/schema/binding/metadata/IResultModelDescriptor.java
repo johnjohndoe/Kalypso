@@ -85,4 +85,9 @@ public interface IResultModelDescriptor extends IModelDescriptor
 
   public void setTimeStepNum( BigInteger newValue );
 
+  /**
+   * TODO: It would be nice if that worked, but the metadata-structure is flat and does not reflect the structure of the
+   * results....
+   */
+  public ISimulationDescriptor getParent( );
 }

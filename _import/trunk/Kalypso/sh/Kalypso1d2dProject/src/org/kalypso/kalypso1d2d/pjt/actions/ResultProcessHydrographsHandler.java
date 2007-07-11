@@ -65,8 +65,15 @@ import org.eclipse.ui.ISources;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilitites;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultsAcessor;
+import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IModelDescriptor;
+import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IResultModelDescriptor;
+import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptionCollection;
+import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptor;
+import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ResultDB;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrographCollection;
+import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.pool.PoolableObjectType;
@@ -126,6 +133,22 @@ public class ResultProcessHydrographsHandler extends AbstractHandler
 
           // get files to process
           // TODO: change to access to ResultDB
+          // TODO: change to project dependend db
+          final ResultDB resultDB = KalypsoModel1D2DPlugin.getDefault().getResultDB();
+          final ISimulationDescriptionCollection simDB = resultDB.getSimDB();
+          final IFeatureWrapperCollection<ISimulationDescriptor> simulationDescriptors = simDB.getSimulationDescriptors();
+          for( final ISimulationDescriptor simulationDescriptor : simulationDescriptors )
+          {
+            final IModelDescriptor calculationUnit = simulationDescriptor.getCalculationUnit();
+
+            final IFeatureWrapperCollection<IResultModelDescriptor> resultModel = simulationDescriptor.getResultModel();
+            for( final IResultModelDescriptor resultModelDescriptor : resultModel )
+            {
+              resultModelDescriptor.getTinDepth();
+              resultModelDescriptor.getTime();
+            }
+          }
+
           final Map<Date, IFile> wspTimestepResults = resultsAcessor.getTimestepsFiles();
 
           final IHydrographCollection graphs = (IHydrographCollection) hydrographWorkspace.getRootFeature().getAdapter( IHydrographCollection.class );

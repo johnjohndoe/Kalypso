@@ -52,8 +52,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.io.IOUtils;
@@ -64,8 +62,6 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.commons.performance.TimeLogger;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.java.util.DateUtilities;
-import org.kalypso.contribs.java.xml.XMLUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv;
 import org.kalypso.kalypsomodel1d2d.conv.results.MultiTriangleEater;
@@ -86,8 +82,6 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.opengis.cs.CS_CoordinateSystem;
-
-import com.sun.tools.ws.util.xml.XmlUtil;
 
 /**
  * This job processed one 2d-result file.
@@ -200,7 +194,7 @@ public class ProcessResultsJob extends Job
         final GM_TriangulatedSurface surface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_TriangulatedSurface( crs );
         final Feature triangleFeature = triangleWorkspace.getRootFeature();
         triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "triangulatedSurfaceMember" ), surface );
-        
+
         switch( parameter )
         {
           case DEPTH:
@@ -255,7 +249,7 @@ public class ProcessResultsJob extends Job
       multiEater.finished();
 
       /* Node-GML in Datei schreiben */
-      GmlSerializer.serializeWorkspace( gmlResultFile, resultWorkspace, "UTF-8" );
+      GmlSerializer.serializeWorkspace( gmlResultFile, resultWorkspace, "CP1252" );
 
       final Date time = handler.getTime();
       addToResultDB( resultWorkspace, timeStepNum, outputDir, time );
@@ -293,7 +287,10 @@ public class ProcessResultsJob extends Job
     final File calcUnitDir = outputDir.getParentFile();
     final String baseDir = "results/" + calcUnitDir.getName() + "/" + outputDir.getName();
     resultModelDescriptor.setWorkspacePath( baseDir + "/results.gml" );
-    resultModelDescriptor.setGmt( baseDir + "Ergebniskarte.gmt" );
+    resultModelDescriptor.setGmt( baseDir + "/Einzelergebnis.gmt" );
+    resultModelDescriptor.setTinDepth( baseDir + "/Tin/tin_DEPTH.gml" );
+    resultModelDescriptor.setTinWaterLevel( baseDir + "/Tin/tin_WATERLEVEL.gml" );
+    resultModelDescriptor.setTinVelocity( baseDir + "/Tin/tin_VELOCITY.gml" );
   }
 
   public NodeResultMinMaxCatcher getMinMaxData( )

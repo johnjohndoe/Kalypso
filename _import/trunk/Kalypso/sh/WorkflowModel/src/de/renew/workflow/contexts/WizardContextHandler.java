@@ -37,9 +37,9 @@ public class WizardContextHandler extends AbstractHandler implements IExecutable
   private EWizardType m_wizardType;
 
   private String m_wizardId;
-  
+
   public WizardContextHandler( )
-  {   
+  {
   }
 
   /**
@@ -54,7 +54,7 @@ public class WizardContextHandler extends AbstractHandler implements IExecutable
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
+  @SuppressWarnings("unchecked")
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
@@ -66,7 +66,7 @@ public class WizardContextHandler extends AbstractHandler implements IExecutable
       // FIXME: This is not good!!! As these wizards are also registered within the export/import/new extension-points,
       // they appear also in the eclipse-ui, but there, they won't work because of the missing context...
       // This MUST be fixed, else Kalypso-Expert Mode is not usable any more!!!
-      
+
       final IWizardRegistry wizardRegistry;
       switch( m_wizardType )
       {
@@ -91,7 +91,7 @@ public class WizardContextHandler extends AbstractHandler implements IExecutable
 
         if( wizardDialog.open() == Window.OK && wizard instanceof IDialogWithResult )
         {
-          return ((IDialogWithResult) wizardDialog).getResult();
+          return ((IDialogWithResult) wizard).getResult();
         }
         else
         {

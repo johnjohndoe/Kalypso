@@ -40,18 +40,36 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.wizards.results;
 
+import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
+
 import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWizard;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectWizardPage;
+import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IResultModelDescriptor;
+import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptor;
+import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ui.action.AddThemeCommand;
+import org.kalypso.ui.editor.mapeditor.AbstractMapPart;
 
+import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 import de.renew.workflow.contexts.IDialogWithResult;
 
 /**
@@ -60,6 +78,12 @@ import de.renew.workflow.contexts.IDialogWithResult;
 public class ConfigureResultsWizard extends Wizard implements IWorkbenchWizard, IDialogWithResult
 {
   private RestartSelectWizardPage m_restartSelectWizardPage;
+
+  private IFolder m_szenarioFolder;
+
+  private AbstractMapPart m_part;
+
+  private IStatus m_result;
 
   /**
    * @see org.eclipse.jface.wizard.Wizard#addPages()
@@ -82,11 +106,64 @@ public class ConfigureResultsWizard extends Wizard implements IWorkbenchWizard, 
   @Override
   public boolean performFinish( )
   {
-    // TODO Auto-generated method stub
+    final IResultModelDescriptor[] selectedResults = m_restartSelectWizardPage.getSelectedResults();
 
-    // add/remove selected results from/to map
+    final MapPanel panel = m_part == null ? null : (MapPanel) m_part.getAdapter( MapPanel.class );
+    final GisTemplateMapModell modell = (GisTemplateMapModell) (panel == null ? null : panel.getMapModell());
 
-    return false;
+    final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
+    {
+      public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
+      {
+        monitor.beginTask( "", selectedResults.length );
+
+        try
+        {
+          // TODO: remove already existent results from list
+
+          // add/remove selected results from/to map
+
+          for( final IResultModelDescriptor result : selectedResults )
+          {
+            final String gmt = result.getGmt();
+            final IFile file = m_szenarioFolder.getFile( new Path( gmt ) );
+            final URL gmtUrl = ResourceUtilities.createURL( file );
+
+            final ISimulationDescriptor simulationDescriptor = result.getParent();
+            final String calcUnitName = simulationDescriptor == null ? "?" : simulationDescriptor.getName();
+            final String themeLabel = "Ergebniskarte - " + calcUnitName + " -  " + result.getModelName();
+
+            final AddThemeCommand cmd = new AddThemeCommand( modell, themeLabel, "gmt", "", gmtUrl.toExternalForm() );
+            m_part.postCommand( cmd, null );
+
+            monitor.worked( 1 );
+          }
+          return Status.OK_STATUS;
+        }
+        // catch( final CoreException ce )
+        // {
+        // throw ce;
+        // }
+        catch( final Throwable e )
+        {
+          e.printStackTrace();
+
+          throw new InvocationTargetException( e );
+        }
+        finally
+        {
+          monitor.done();
+        }
+      }
+    };
+
+    if( modell == null )
+      m_result = StatusUtilities.createErrorStatus( "Keine Karte vorhanden." );
+    else
+      m_result = RunnableContextHelper.execute( getContainer(), true, false, operation );
+    ErrorDialog.openError( getShell(), getWindowTitle(), "Themen konnten nicht hinzugefügt werden.", m_result );
+
+    return m_result.isOK();
   }
 
   /**
@@ -98,15 +175,8 @@ public class ConfigureResultsWizard extends Wizard implements IWorkbenchWizard, 
     // find currently open map
     final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
     final IEvaluationContext currentState = handlerService.getCurrentState();
-    // final SzenarioDataProvider szenarioDataProvider = (SzenarioDataProvider) currentState.getVariable(
-    // CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
-    final IWorkbenchPart part = (IWorkbenchPart) currentState.getVariable( ISources.ACTIVE_PART_NAME );
-    // m_mapPart = (AbstractMapPart) part;
-    final MapPanel panel = part == null ? null : (MapPanel) part.getAdapter( MapPanel.class );
-    final IMapModell modell = panel == null ? null : panel.getMapModell();
-    // final GisTemplateMapModell templateModell = (GisTemplateMapModell) modell;
-    // find already existent results
-
+    m_szenarioFolder = (IFolder) currentState.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
+    m_part = (AbstractMapPart) currentState.getVariable( ISources.ACTIVE_PART_NAME );
   }
 
   /**
@@ -114,8 +184,7 @@ public class ConfigureResultsWizard extends Wizard implements IWorkbenchWizard, 
    */
   public Object getResult( )
   {
-    // TODO Auto-generated method stub
-    return null;
+    return m_result;
   }
 
 }

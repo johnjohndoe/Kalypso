@@ -76,16 +76,12 @@ import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gismapview.Gismapview.Layers;
 import org.kalypso.template.types.StyledLayerType;
-import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.Fill;
-import org.kalypsodeegree.graphics.sld.Graphic;
 import org.kalypsodeegree.graphics.sld.LineColorMapEntry;
-import org.kalypsodeegree.graphics.sld.Mark;
 import org.kalypsodeegree.graphics.sld.NamedLayer;
 import org.kalypsodeegree.graphics.sld.ParameterValueType;
-import org.kalypsodeegree.graphics.sld.PointSymbolizer;
 import org.kalypsodeegree.graphics.sld.PolygonColorMapEntry;
 import org.kalypsodeegree.graphics.sld.Rule;
 import org.kalypsodeegree.graphics.sld.Stroke;
@@ -96,7 +92,6 @@ import org.kalypsodeegree.graphics.sld.SurfacePolygonSymbolizer;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.xml.XMLParsingException;
-import org.kalypsodeegree_impl.graphics.sld.Graphic_Impl;
 import org.kalypsodeegree_impl.graphics.sld.LineColorMap;
 import org.kalypsodeegree_impl.graphics.sld.LineColorMapEntry_Impl;
 import org.kalypsodeegree_impl.graphics.sld.LineColorMap_Impl;
@@ -357,7 +352,7 @@ public class ResultManager implements Runnable
     }
   }
 
-  private void processVectorStyles( ) throws IOException, XMLParsingException
+  private void processVectorStyles( )
   {
     /* Read sld from template */
     final File styleDir = new File( m_outputDir, "Styles" );
@@ -376,7 +371,7 @@ public class ResultManager implements Runnable
     final StyledLayerDescriptor sld = SLDFactory.createSLD( tinStyleFile );
 
     // make the isolines-SLD for each defined flow parameter
-    for( ResultType.TYPE parameter : m_parameters )
+    for( final ResultType.TYPE parameter : m_parameters )
     {
       final double minValue;
       final double maxValue;
@@ -417,11 +412,11 @@ public class ResultManager implements Runnable
     FileUtils.writeStringToFile( tinStyleFile, sldXMLwithHeader, "UTF-8" );
   }
 
-  private void processVectorStyle( final double maxValue, File vectorStyleFile, File styleDir )
+  private void processVectorStyle( final double maxValue, final File vectorStyleFile, final File styleDir )
   {
     try
     {
-      String string = FileUtils.readFileToString( vectorStyleFile, "UTF-8" );
+      final String string = FileUtils.readFileToString( vectorStyleFile, "UTF-8" );
 
       // we assume, that the mean distance of mesh nodes is about 30 m, so that the vectors are expanded by an factor
       // which delivers vector lengths of 30 m as maximum.
@@ -433,17 +428,17 @@ public class ResultManager implements Runnable
 
       final String factor = factorValue.toString();
 
-      String replacedString = string.replaceAll( "VECTORFACTOR", factor );
+      final String replacedString = string.replaceAll( "VECTORFACTOR", factor );
       FileUtils.writeStringToFile( new File( styleDir, "vector.sld" ), replacedString, "UTF-8" );
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
   }
 
-  private void processTinStyle( String string, final double minValue, final double maxValue, final ResultType.TYPE parameter, final StyledLayerDescriptor sld )
+  private void processTinStyle( final String string, final double minValue, final double maxValue, final ResultType.TYPE parameter, final StyledLayerDescriptor sld )
   {
     final String layerName = "tin" + parameter.name() + string + "Style";
     final String featureTypeStyleName = "tin" + parameter.name() + "FeatureTypeStyle";
@@ -477,7 +472,7 @@ public class ResultManager implements Runnable
             configurePolygonSymbolizer( (SurfacePolygonSymbolizer) symbolizer, minValue, maxValue );
           }
         }
-        catch( FilterEvaluationException e )
+        catch( final FilterEvaluationException e )
         {
           // TODO Auto-generated catch block
           e.printStackTrace();
@@ -486,7 +481,7 @@ public class ResultManager implements Runnable
     }
   }
 
-  private void configurePolygonSymbolizer( SurfacePolygonSymbolizer symbolizer, double minValue, double maxValue ) throws FilterEvaluationException
+  private void configurePolygonSymbolizer( final SurfacePolygonSymbolizer symbolizer, final double minValue, final double maxValue ) throws FilterEvaluationException
   {
     final PolygonColorMap templateColorMap = symbolizer.getColorMap();
     final PolygonColorMap newColorMap = new PolygonColorMap_Impl();
@@ -519,7 +514,7 @@ public class ResultManager implements Runnable
     final BigDecimal minDecimal = new BigDecimal( minValue ).setScale( 1, BigDecimal.ROUND_FLOOR );
     final BigDecimal maxDecimal = new BigDecimal( maxValue ).setScale( 1, BigDecimal.ROUND_CEILING );
 
-    BigDecimal polygonStepWidth = new BigDecimal( stepWidth ).setScale( stepWidthScale, BigDecimal.ROUND_FLOOR );
+    final BigDecimal polygonStepWidth = new BigDecimal( stepWidth ).setScale( stepWidthScale, BigDecimal.ROUND_FLOOR );
     final int numOfClasses = (maxDecimal.subtract( minDecimal ).divide( polygonStepWidth )).intValue();
 
     for( int currentClass = 0; currentClass < numOfClasses; currentClass++ )
@@ -535,7 +530,7 @@ public class ResultManager implements Runnable
         lineColor = interpolateColor( fromLineColor, toLineColor, currentClass, numOfClasses );
 
       // test
-// lineColor = new Color( 255, 255, 255 );
+      // lineColor = new Color( 255, 255, 255 );
 
       // Fill
       final Color polygonColor = interpolateColor( fromPolygonColor, toPolygonColor, currentClass, numOfClasses );
@@ -584,7 +579,7 @@ public class ResultManager implements Runnable
 
     // defines which isolines are drawn with a fat line
     final double fatValue = fatEntry.getQuantity( null );
-// TODO: get setep / scale from quantity
+    // TODO: get setep / scale from quantity
     // get rounded values below min and above max (rounded by first decimal)
     // as a first try we will generate isolines using class steps of 0.1
     // later, the classes will be done by using user defined class steps.
@@ -631,20 +626,20 @@ public class ResultManager implements Runnable
    * @param numOfClasses
    *            number of all classes in which the colormap is divided.
    */
-  private Color interpolateColor( Color minColor, Color maxColor, int currentClass, int numOfClasses )
+  private Color interpolateColor( final Color minColor, final Color maxColor, final int currentClass, final int numOfClasses )
   {
     // interpolate color
     final float[] minhsb = Color.RGBtoHSB( minColor.getRed(), minColor.getGreen(), minColor.getBlue(), null );
     final float[] maxhsb = Color.RGBtoHSB( maxColor.getRed(), maxColor.getGreen(), maxColor.getBlue(), null );
 
-    float minHue = minhsb[0];
-    float maxHue = maxhsb[0];
+    final float minHue = minhsb[0];
+    final float maxHue = maxhsb[0];
 
-    float minSat = minhsb[1];
-    float maxSat = maxhsb[1];
+    final float minSat = minhsb[1];
+    final float maxSat = maxhsb[1];
 
-    float minBri = minhsb[2];
-    float maxBri = maxhsb[2];
+    final float minBri = minhsb[2];
+    final float maxBri = maxhsb[2];
 
     final double Hue = minHue + (currentClass * (maxHue - minHue) / (numOfClasses - 1));
     final double Sat = minSat + (currentClass * (maxSat - minSat) / (numOfClasses - 1));

@@ -111,11 +111,8 @@ public class ResultModelDescriptor extends ModelDescriptor implements IResultMod
 
   public SIMULATIONTYPE getSimulationType( )
   {
-    String type =
-        getProperty( 
-            Kalypso1D2DSchemaConstants.SIMMETA_PROP_SIMULATION_TYPE, 
-            String.class );
-    return type!=null?SIMULATIONTYPE.valueOf( type ):null;
+    final String type = getProperty( Kalypso1D2DSchemaConstants.SIMMETA_PROP_SIMULATION_TYPE, String.class );
+    return type != null ? SIMULATIONTYPE.valueOf( type ) : null;
   }
 
   /**
@@ -203,6 +200,18 @@ public class ResultModelDescriptor extends ModelDescriptor implements IResultMod
   public void setTimeStepNum( final BigInteger newValue )
   {
     setProperty( Kalypso1D2DSchemaConstants.SIMMETA_PROP_TIME_STEP_NUM, newValue );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IResultModelDescriptor#getParent()
+   */
+  public ISimulationDescriptor getParent( )
+  {
+    final Feature parent = getWrappedFeature().getParent();
+    if( parent == null )
+      return null;
+
+    return (ISimulationDescriptor) parent.getAdapter( ISimulationDescriptor.class );
   }
 
 }

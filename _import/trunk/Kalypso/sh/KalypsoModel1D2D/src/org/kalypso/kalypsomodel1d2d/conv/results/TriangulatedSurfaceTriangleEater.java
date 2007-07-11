@@ -159,7 +159,7 @@ public class TriangulatedSurfaceTriangleEater implements ITriangleEater
 
     try
     {
-      GmlSerializer.serializeWorkspace( paramFile, m_workspace, "UTF-8" );
+      GmlSerializer.serializeWorkspace( paramFile, m_workspace, "CP1252" );
     }
     catch( final IOException e )
     {
@@ -186,10 +186,10 @@ public class TriangulatedSurfaceTriangleEater implements ITriangleEater
     {
       try
       {
-        XMLGregorianCalendar gregorianCalendar = DateUtilities.toXMLGregorianCalendar( date );
+        final XMLGregorianCalendar gregorianCalendar = DateUtilities.toXMLGregorianCalendar( date );
         triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "date" ), gregorianCalendar );
       }
-      catch( DatatypeConfigurationException e )
+      catch( final DatatypeConfigurationException e )
       {
         // TODO Auto-generated catch block
         e.printStackTrace();

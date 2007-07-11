@@ -170,7 +170,7 @@ public class TinInfoWidget extends AbstractWidget
     final Formatter formatter = new Formatter( sb );
     for( final TinInfoProvider info : m_tins )
     {
-      final String label = info.getThemeLabel();
+      // final String label = info.getThemeLabel();
       final String unit = info.getFeatureUnit();
       final Date featureDate = info.getFeatureDate();
       final String date;
@@ -183,7 +183,7 @@ public class TinInfoWidget extends AbstractWidget
       final double elevation = info.getValue( location );
 
       if( Double.isNaN( elevation ) )
-        formatter.format( "%17s:  -%n %4s (%s)%n", parameter, elevation, unit, date );
+        formatter.format( "%17s:  -%n", parameter );
       else
         formatter.format( "%17s: %.2f %4s (%s)%n", parameter, elevation, unit, date );
     }

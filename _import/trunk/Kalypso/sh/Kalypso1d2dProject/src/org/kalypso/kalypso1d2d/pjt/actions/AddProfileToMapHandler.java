@@ -46,22 +46,17 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchSite;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ListDialog;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetworkCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
-import org.kalypso.model.wspm.ui.view.chart.ChartView;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.SoureAndPathThemePredicate;
@@ -99,23 +94,22 @@ public class AddProfileToMapHandler extends AbstractHandler
      * Show profiles view: TODO: as the workflow works at the moment, this normally should go into the workflow.xml as
      * context, but this is not possible.
      */
-//    final IWorkbenchSite site = (IWorkbenchSite) context.getVariable( ISources.ACTIVE_SITE_NAME );
-//    final IWorkbenchPage page = site == null ? null : site.getPage();
-//    if( page != null )
-//    {
-//      try
-//      {
-//        page.showView( ChartView.ID, null, IWorkbenchPage.VIEW_VISIBLE );
-//      }
-//      catch( final PartInitException e )
-//      {
-//        // The next line throws another exception, thats why i dont use it now
-//        /* final String title = event.getCommand().getDescription(); */
-//        final String title = "Profile in Karte anzeigen";
-//        ErrorDialog.openError( shell, title, "Profilansicht konnte nicht geöffnet werden.", e.getStatus() );
-//      }
-//    }
-
+    // final IWorkbenchSite site = (IWorkbenchSite) context.getVariable( ISources.ACTIVE_SITE_NAME );
+    // final IWorkbenchPage page = site == null ? null : site.getPage();
+    // if( page != null )
+    // {
+    // try
+    // {
+    // page.showView( ChartView.ID, null, IWorkbenchPage.VIEW_VISIBLE );
+    // }
+    // catch( final PartInitException e )
+    // {
+    // // The next line throws another exception, thats why i dont use it now
+    // /* final String title = event.getCommand().getDescription(); */
+    // final String title = "Profile in Karte anzeigen";
+    // ErrorDialog.openError( shell, title, "Profilansicht konnte nicht geöffnet werden.", e.getStatus() );
+    // }
+    // }
     /* Get the map */
     final MapView mapView = (MapView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView( MapView.ID );
     if( mapView == null )
