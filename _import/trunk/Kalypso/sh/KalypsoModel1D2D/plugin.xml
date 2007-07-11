@@ -513,6 +513,36 @@
                     value="Ganglinie erstellen"/>              
             </class>
 		 </handler>
+   <handler
+         commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.TinInfo">
+      <class
+            class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+         <parameter
+               name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+               value="org.kalypso.kalypsomodel1d2d.ui.map.result.CreateHydrographWidget">
+         </parameter>
+         <parameter
+               name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
+               value="TIN-Werte anzeigen">
+         </parameter>
+         <parameter
+               name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
+               value="icons/elcl16/tin_info.gif">
+         </parameter>
+      </class>
+      <activeWhen>
+         <with
+               variable="selection">
+            <iterate>
+               <test
+                     forcePluginActivation="true"
+                     property="org.kalypso.core.featureType"
+                     value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}TinResult">
+               </test>
+            </iterate>
+         </with>
+      </activeWhen>
+   </handler>		 
      </extension>
      <extension
            point="org.eclipse.ui.commands">
