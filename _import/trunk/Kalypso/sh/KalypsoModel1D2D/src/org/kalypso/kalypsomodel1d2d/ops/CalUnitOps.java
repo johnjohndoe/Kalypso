@@ -55,6 +55,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IEdgeInv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
@@ -111,8 +112,10 @@ public class CalUnitOps
     }
     return false;
   }
+  
   public static final boolean isEdgeOf( ICalculationUnit unit, IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge )
   {
+   
     IFeatureWrapperCollection<IFE1D2DElement> containers = edge.getContainers();
     for(IFE1D2DElement ele : containers )
     {
@@ -121,6 +124,35 @@ public class CalUnitOps
         return true;
       }
     }
+    //test the inverted
+    containers = null;
+    if( edge instanceof IEdgeInv )
+    {
+      IFE1D2DEdge inverted = ((IEdgeInv)edge).getInverted();
+      if( inverted != null )
+      {
+        containers = inverted.getContainers();
+      }
+    }
+    else
+    {
+      IFE1D2DEdge inverted = edge.getEdgeInv();
+      if( inverted != null )
+      {
+        containers = inverted.getContainers();
+      }
+    }
+    if( containers != null )
+    {
+      for(IFE1D2DElement ele : containers )
+      {
+        if( isFiniteElementOf( unit, ele ) )
+        {
+          return true;
+        }
+      }
+    }
+    
     return false;
   }
   
