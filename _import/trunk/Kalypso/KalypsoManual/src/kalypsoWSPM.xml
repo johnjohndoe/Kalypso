@@ -705,53 +705,6 @@
               </listitem>
             </itemizedlist></para>
         </footnote></emphasis></para>
-
-      <section id="kalypso_wspm-exportieren_in_wspwin">
-        <title>Export von Daten in WspWin</title>
-
-        <indexterm>
-          <primary>Daten von KalypsoWSPM nach WspWin exportieren</primary>
-        </indexterm>
-
-        <para>Mit einem Export können nur geänderte Profile ausgelagert werden
-        und in Verbindung mit einem ursprünglichem WspWin-Projekt mit dem
-        Ordner Dath und Prof verwendet werden.</para>
-
-        <itemizedlist>
-          <listitem>
-            <para>Gehen Sie im Navigator mit der rechten Maustaste auf
-            <filename>modell.gml</filename></para>
-          </listitem>
-
-          <listitem>
-            <para><guimenuitem>Exportieren &gt; Andere... &gt; WspWin Format
-            &gt; Weiter</guimenuitem></para>
-          </listitem>
-
-          <listitem>
-            <para>Wählen Sie den Ordner aus, wo das Projekt angelegt werden
-            soll und gehen Sie anschließen auf <guibutton>Fertig
-            stellen</guibutton></para>
-          </listitem>
-        </itemizedlist>
-
-        <note>
-          <para>Nur der Prof-Ordner wird angelegt</para>
-        </note>
-
-        <figure>
-          <title>WspWin Projekt exportieren</title>
-
-          <mediaobject>
-            <imageobject>
-              <imagedata fileref="img/WSPM/Projekt_exportierenWspWin.png" />
-            </imageobject>
-          </mediaobject>
-        </figure>
-
-        <para>Neu angelegte Berechnungsfälle, Zustände oder Ergebnisse können
-        nicht in WspWin zurückgeführt werden.</para>
-      </section>
     </section>
 
     <section id="kalypso_wspm-vorhandene_Projekte_bearbeiten">
@@ -993,6 +946,71 @@
           </listitem>
         </itemizedlist>
       </caution>
+    </section>
+  </section>
+
+  <section id="kalypso_wspm-wspwin_Schnittstelle">
+    <title>WspWin Schnittstelle</title>
+
+    <indexterm>
+      <primary>KalypsoWSPM WspWin Schnittstelle</primary>
+    </indexterm>
+
+    <section>
+      <title>Import von Daten aus WspWin</title>
+
+      <indexterm>
+        <primary>WspWin-Projekte in KalypsoWSPM importieren</primary>
+      </indexterm>
+
+      <para><xref linkend="kalypso_wspm-wspwin_Projekt_importieren" /></para>
+    </section>
+
+    <section id="kalypso_wspm-exportieren_in_wspwin">
+      <title>Export von Daten in WspWin</title>
+
+      <indexterm>
+        <primary>Daten von KalypsoWSPM nach WspWin exportieren</primary>
+      </indexterm>
+
+      <para>Mit einem Export können nur geänderte Profile ausgelagert werden
+      und in Verbindung mit einem ursprünglichem WspWin-Projekt mit dem Ordner
+      Dath und Prof verwendet werden.</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Gehen Sie im Navigator mit der rechten Maustaste auf
+          <filename>modell.gml</filename></para>
+        </listitem>
+
+        <listitem>
+          <para><guimenuitem>Exportieren &gt; Andere... &gt; WspWin Format
+          &gt; Weiter</guimenuitem></para>
+        </listitem>
+
+        <listitem>
+          <para>Wählen Sie den Ordner aus, wo das Projekt angelegt werden soll
+          und gehen Sie anschließen auf <guibutton>Fertig
+          stellen</guibutton></para>
+        </listitem>
+      </itemizedlist>
+
+      <note>
+        <para>Nur der Prof-Ordner wird angelegt</para>
+      </note>
+
+      <figure>
+        <title>WspWin Projekt exportieren</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/WSPM/Projekt_exportierenWspWin.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Neu angelegte Berechnungsfälle, Zustände oder Ergebnisse können
+      nicht in WspWin zurückgeführt werden.</para>
     </section>
   </section>
 
