@@ -275,13 +275,14 @@ public class MapModell implements IMapModell
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#accept(org.kalypso.kalypsomodel1d2d.ui.map.channeledit.KalypsoThemeVisitor,
    *      int)
    */
-  public void accept( final KalypsoThemeVisitor ktv, final int depth )
+  public void accept( final IKalypsoThemeVisitor ktv, final int depth )
   {
-    for( int j = 0; j < getAllThemes().length; j++ )
-      accept( ktv, depth, getTheme( j ) );
+    final IKalypsoTheme[] allThemes = getAllThemes();
+    for( final IKalypsoTheme element : allThemes )
+      accept( ktv, depth, element );
   }
 
-  public void accept( final KalypsoThemeVisitor ktv, final int depth, final IKalypsoTheme theme )
+  public void accept( final IKalypsoThemeVisitor ktv, final int depth, final IKalypsoTheme theme )
   {
     final boolean recurse = ktv.visit( theme );
 
