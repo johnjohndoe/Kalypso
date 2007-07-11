@@ -106,6 +106,8 @@ public class PolynomeHelper
 
   private static final String WEIR_FILE_NAME = "HOW_QWehr_HUW.txt";
 
+  private static final String QLANG_FILE_NAME = "Q_LangSchnitt.txt";
+
   /**
    * Prepares the input files for the polynome process
    * 
@@ -118,12 +120,10 @@ public class PolynomeHelper
   private static File preparePolynomes( final File tmpDir, final File dathDir, final LogHelper log )
   {
     /* The files needed from the 1D-calculation */
-    final File lsQFile = new File( dathDir, "Q_LangSchnitt.txt" );
-    final File lsFile = new File( dathDir, "laengsschnitt.txt" );
+    final File lsQFile = new File( dathDir, QLANG_FILE_NAME );
     final File weirFile = new File( dathDir, WEIR_FILE_NAME );
-    final File beiwerteFile = new File( dathDir, "Beiwerte.AUS" );
 
-    final File[] dathFiles = new File[] { lsQFile, lsFile, weirFile, beiwerteFile };
+    final File[] dathFiles = new File[] { lsQFile, weirFile };
 
     /* Check input data */
     for( final File file : dathFiles )
@@ -293,8 +293,7 @@ public class PolynomeHelper
 
       pw.println( "Steuerdatei fuer die Polynomfunktionen je Profil" );
       pw.println( "-------------------------------------------------" );
-      pw.println( "01 Beiwerte(Pfad) 01Eingang\\Beiwerte.AUS " );
-      pw.println( "02 Längsschnitt(Pfad) 01Eingang\\laengsschnitt.txt" );
+      pw.printf( "02 Längsschnitt(Pfad) 01Eingang\\%s%n", QLANG_FILE_NAME );
       pw.println( "03 PolyGrad(2,3,4) " + calculation.getPolynomialDeegree() );
       pw.printf( "04 DreiTeil(J/N) %s%n", isTriple ? "J" : "N" );
       pw.println( "05 PolyReduce(J/N) J" );
