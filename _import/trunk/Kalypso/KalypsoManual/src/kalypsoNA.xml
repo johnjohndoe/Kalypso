@@ -585,7 +585,77 @@
         <primary>Zeitreihenaufbereitung KalypsoNA</primary>
       </indexterm>
 
-      <para></para>
+      <para>Generell erfolgt eine Aufteilung der Modellierung in zwei
+      Schritten. Zum einen gibt es die Langzeitsimulationen zur Abbildung der
+      langfristigen Prozesse und zur Einstellung des langzeitlichen
+      Wasserhaushaltes und zum anderen die Kurzzeitsimulation zur möglichst
+      genauen Abbildung von einzelnen Ereignissen auf Grundlage der
+      Langzeitberechnungen. Die hierfür benötigten Daten beschränken sich auf
+      die diskreten Pegeldaten wie den Niederschlag, die Verdunstung
+      (Sekundärdaten aus Sonnenscheindauer, Temperatur, Wind und Luftfeuchte),
+      dem Pegel selbst und den sonstigen Modellganglinien.</para>
+
+      <para>Zur Vorbereitung und weiteren Aufbereitung müssen nun die
+      Verdunstungsdaten aus den Inputdaten mit dem Verfahren von
+      Penman-Monteith berechnet werden.</para>
+
+      <figure>
+        <title>Penman-Monteith-Formel</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/kalypso_na/Kapitel_2/monteith_na.png"
+                       scale="" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <note>
+        <para>Quelle: DVWK 238, Gl. 6.34, S.54</para>
+      </note>
+
+      <para>Dies erfolgt mit Hilfe eines kleinen Tools, wobei die
+      Windgeschwindigkeiten in m/s benötigt werden, was eventuell eine
+      Umwandlung aus Beaufort notwendig macht. Weiterhin müssen die Ganglinien
+      auf ein für Kalypso-NA lesbareres Format transformiert werden (z.B.
+      grap-Format, siehe XXXXXXX) und abschließend die diskreten
+      Niederschlagsdaten auf flächenhafte Gebiete verteilt werden. Diese
+      Verteilung erfolgt nach dem Gebietsmodell, wobei in Kalypso jedem
+      Teilgebiet eine Niederschlags- und Verdunstungskennlinie zugewiesen
+      wird. Zum einen gibt es hier die Möglichkeit des
+      Gebietsniederschlagsmodells nach Kriging und zum anderen die
+      Thiessen-Polygon-Methode.</para>
+
+      <para><emphasis role="bold">Gebietsniederschlag nach Kriging:
+      </emphasis></para>
+
+      <para>Bei diesem Interpolationsverfahren erfolgt eine Schätzung des
+      Niederschlages der Beobachtungsvariablen an einem nicht gemessenen Ort,
+      durch den Wert eines gewichteten Mittels der Einfluss nehmenden
+      Niederschlagsstationen. Hierbei werden die Gewichte so optimiert, dass
+      im Mittel der wahre Wert geschätzt wird und kein systematischer Fehler
+      auftritt.</para>
+
+      <para><emphasis role="bold">Thiessen-Polygon-Methode:</emphasis></para>
+
+      <para>Hier erfolgt im Grunde die Referenzierung einer Station zu einem
+      ermittelten Teilgebiet. Die eingeladenen Pegelstandorte werden
+      untereinander durch gedachte Linien verbunden. Daraufhin werden zwischen
+      jeweils zwei Stationen die Mittelsenkrechten dieser Verbindungslinien
+      errichtet. Die daraus entstehenden Schnittpunkte der Mittelsenkrechten
+      bilden dann die Eckpunkte eines Teilgebietes um eine Station. Nun werden
+      die Daten der Station zu dem umschließenden Polygon referenziert und
+      stehen zur weiteren Berechnung zur Verfügung. </para>
+
+      <figure>
+        <title>Niederschlag-Thiessen-Methode</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/kalypso_na/Kapitel_2/thiessen_na.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
     </section>
 
     <section id="kalypso_na-hydraulische-Berechnung">
