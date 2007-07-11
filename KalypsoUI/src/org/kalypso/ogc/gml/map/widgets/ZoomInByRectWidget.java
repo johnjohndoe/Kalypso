@@ -58,9 +58,9 @@ public class ZoomInByRectWidget extends AbstractWidget
   /*
    * @author doemming
    */
-  public ZoomInByRectWidget( String name, String toolTip )
+  public ZoomInByRectWidget( )
   {
-    super( name, toolTip );
+    super( "zoom in", "");
 
   }
 

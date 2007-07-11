@@ -1064,36 +1064,43 @@
             name="Map Commands"/>
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
+            defaultHandler="org.kalypso.ogc.gml.map.handlers.ZoomOutHandler"
             description="Zoom out"
             id="org.kalypso.ogc.gml.map.ZoomOutCommand"
             name="Zoom Out"/>
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
+            defaultHandler="org.kalypso.ogc.gml.map.handlers.ZoomInStaticHandler"
             description="Zoom in (statisch)"
             id="org.kalypso.ogc.gml.map.ZoomInStaticCommand"
             name="Zoom In (statisch)"/> 
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
+            defaultHandler="org.kalypso.ogc.gml.map.handlers.MoveRightHandler"
             description="Move right"
             id="org.kalypso.ogc.gml.map.MoveRightCommand"
             name="Move right"/> 
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
+            defaultHandler="org.kalypso.ogc.gml.map.handlers.MoveDownHandler"
             description="Move down"
             id="org.kalypso.ogc.gml.map.MoveDownCommand"
             name="Move down"/> 
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
+            defaultHandler="org.kalypso.ogc.gml.map.handlers.MoveUpHandler"
             description="Move up"
             id="org.kalypso.ogc.gml.map.MoveUpCommand"
             name="Move up"/> 
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
+            defaultHandler="org.kalypso.ogc.gml.map.handlers.MoveLeftHandler"
             description="Move left"
             id="org.kalypso.ogc.gml.map.MoveLeftCommand"
             name="Move left"/>                                     
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
+            defaultHandler="org.kalypso.ogc.gml.map.handlers.ZoomToActiveLayerHandler"
             description="Zoom to active layer"
             id="org.kalypso.ogc.gml.map.ZoomToActiveLayerCommand"
             name="Zoom to active layer"/>
@@ -1104,144 +1111,48 @@
             parentId="org.eclipse.ui.contexts.window"/>
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
+            defaultHandler="org.kalypso.ogc.gml.map.handlers.ZoomToSelectedFeatures"
             description="Zoom to selected features"
             id="org.kalypso.ogc.gml.map.ZoomToSelectedFeaturesCommand"
             name="Zoom to selected features"/>
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
+            defaultHandler="org.kalypso.ogc.gml.map.handlers.ZoomToSelectedFeaturesByLayer"
             description="Zoom to selected features of a layer"
             id="org.kalypso.ogc.gml.map.ZoomToSelectedFeaturesByLayerCommand"
             name="Zoom to selected features of a layer"/>
+      <command
+            categoryId="org.kalypso.ogc.gml.map.category"
+            defaultHandler="org.kalypso.ogc.gml.map.handlers.FullExtentHandler"
+            id="org.kalypso.ogc.gml.map.FullExtentCommand"
+            name="%org.kalypso.ui.editor.mapeditor.actiondelegates.FullExtentDelegate.label">
+      </command>
+      <command
+            categoryId="org.kalypso.ogc.gml.map.category"
+            id="org.kalypso.ogc.gml.map.ZoomInByRectCommand"
+            name="%org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomInByRectWidgetDelegate.label">
+         <defaultHandler
+               class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+            <parameter
+                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+                  value="org.kalypso.ogc.gml.map.widgets.ZoomInByRectWidget">
+            </parameter>
+         </defaultHandler>
+      </command>
+      <command
+            id="org.kalypso.ogc.gml.map.PanToCommand"
+            name="%org.kalypso.ui.editor.mapeditor.actiondelegates.PanToWidgetDelegate.label">
+         <defaultHandler
+               class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+            <parameter
+                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+                  value="org.kalypso.ogc.gml.map.widgets.PanToWidget">
+            </parameter>
+         </defaultHandler>
+      </command>
       </extension>
  <extension
        point="org.eclipse.ui.viewActions">
-    <viewContribution
-          id="org.kalypso.ui.views.mapView.actions"
-          targetID="org.kalypso.ui.views.mapView">
-<!-- 
-TODO: unfortunately the save button is always disabled
-
-			<action disabledIcon="icons/map/save_edit_disabled.gif"
-				toolbarPath="karte/actions"
-				label="%org.kalypso.ui.editor.mapeditor.actiondelegates.SaveThemeDelegate.label"
-				tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.SaveThemeDelegate.tooltip"
-				icon="icons/feature/save_GML.gif"
-				class="org.kalypso.ui.editor.mapeditor.actiondelegates.SaveThemeDelegate"
-				style="push"
-				menubarPath="org.kalypso.ui.editors.mapeditor.menu/edit"
-				id="org.kalypso.ui.editor.mapeditor.action.SaveDataAction">
-			</action>
--->
-			<action
-         class="org.kalypso.ui.editor.mapeditor.actiondelegates.FullExtentDelegate"
-         icon="icons/map/maximize2.gif"
-         id="org.kalypso.ui.editor.mapeditor.action.FullExtentAction"
-         label="%org.kalypso.ui.editor.mapeditor.actiondelegates.FullExtentDelegate.label"
-         style="push"
-         toolbarPath="actions"
-         tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.FullExtentDelegate.tooltip">
-			</action>
-            <action
-                  icon="icons/map/zoomoutstatic.gif"
-                  id="org.kalypso.ui.editor.mapeditor.action.ZoomOutAction"
-                  label="%org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomOutDelegate.label"
-                  style="push"
-                  toolbarPath="actions"
-                  tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomOutDelegate.tooltip">
-           		<class class="org.kalypso.ui.GenericCommandActionDelegate">
-          			<parameter name="commandId" 
-                     	value="org.kalypso.ogc.gml.map.ZoomOutCommand"/>
-       			</class>
-			</action>
-			<action
-         icon="icons/map/zoominstatic.gif"
-         id="org.kalypso.ui.editor.mapeditor.action.ZoomInStaticAction"
-         label="%org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomInStaticDelegate.label"
-         style="push"
-         toolbarPath="actions"
-         tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomInStaticDelegate.tooltip">
-           		<class class="org.kalypso.ui.GenericCommandActionDelegate">
-          			<parameter name="commandId" 
-                     	value="org.kalypso.ogc.gml.map.ZoomInStaticCommand"/>
-       			</class>
-			</action>
-			<action
-         icon="icons/map/moveright.gif"
-         id="org.kalypso.ui.editor.mapeditor.action.MoveRightAction"
-         label="%org.kalypso.ui.editor.mapeditor.actiondelegates.MoveRightDelegate.label"
-         style="push"
-         toolbarPath="actions"
-         tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.MoveRightDelegate.tooltip">
-           		<class class="org.kalypso.ui.GenericCommandActionDelegate">
-          			<parameter name="commandId" 
-                     	value="org.kalypso.ogc.gml.map.MoveRightCommand"/>
-       			</class>
-			</action>			
-			<action
-         icon="icons/map/movedown.gif"
-         id="org.kalypso.ui.editor.mapeditor.action.MoveDownAction"
-         label="%org.kalypso.ui.editor.mapeditor.actiondelegates.MoveDownDelegate.label"
-         style="push"
-         toolbarPath="actions"
-         tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.MoveDownDelegate.tooltip">
-           		<class class="org.kalypso.ui.GenericCommandActionDelegate">
-          			<parameter name="commandId" 
-                     	value="org.kalypso.ogc.gml.map.MoveDownCommand"/>
-       			</class>
-			</action>	
-			<action
-				label="%org.kalypso.ui.editor.mapeditor.actiondelegates.MoveUpDelegate.label"
-				icon="icons/map/moveup.gif" style="push"
-				tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.MoveUpDelegate.tooltip"
-				toolbarPath="actions"
-				id="org.kalypso.ui.editor.mapeditor.action.MoveUpAction">
-           		<class class="org.kalypso.ui.GenericCommandActionDelegate">
-          			<parameter name="commandId" 
-                     	value="org.kalypso.ogc.gml.map.MoveUpCommand"/>
-       			</class>
-			</action>			
-			<action
-				label="%org.kalypso.ui.editor.mapeditor.actiondelegates.MoveLeftDelegate.label"
-				icon="icons/map/moveleft.gif" style="push"
-				tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.MoveLeftDelegate.tooltip"
-				toolbarPath="actions"
-				id="org.kalypso.ui.editor.mapeditor.action.MoveLeftAction">
-           		<class class="org.kalypso.ui.GenericCommandActionDelegate">
-          			<parameter name="commandId" 
-                     	value="org.kalypso.ogc.gml.map.MoveLeftCommand"/>
-       			</class>
-			</action>																
-			<action
-				label="%org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomToActiveLayerDelegate.label"
-				icon="icons/map/zoomactivelayer2.gif" style="push"
-				tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomToActiveLayerDelegate.tooltip"
-				toolbarPath="actions"
-				id="org.kalypso.ui.editor.mapeditor.action.ZoomToActiveLayer">
-           		<class class="org.kalypso.ui.GenericCommandActionDelegate">
-          			<parameter name="commandId" 
-                     	value="org.kalypso.ogc.gml.map.ZoomToActiveLayerCommand"/>
-       			</class>
-			</action>		  																
-			<action
-				label="%org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomInByRectWidgetDelegate.label"
-				icon="icons/map/zoomin.gif" style="radio"
-				tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomInByRectWidgetDelegate.tooltip"
-				class="org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomInByRectWidgetDelegate"
-				menubarPath="tools"
-				toolbarPath="tools"
-				id="org.kalypso.ui.editor.mapeditor.action.ZoomInAction">
-			</action>
-			<action state="false" style="radio"
-				id="org.kalypso.ui.editor.mapeditor.action.PanAction"
-				toolbarPath="tools"
-				class="org.kalypso.ui.editor.mapeditor.actiondelegates.PanToWidgetDelegate"
-				icon="icons/map/pan.gif"
-				label="%org.kalypso.ui.editor.mapeditor.actiondelegates.PanToWidgetDelegate.label"
-				menubarPath="tools"
-				tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.PanToWidgetDelegate.tooltip">
-			</action>
-
-		</viewContribution>
     <viewContribution
           id="org.kalypso.ui.views.outline.actions"
           targetID="org.kalypso.ui.views.outline">
@@ -1275,37 +1186,6 @@ TODO: unfortunately the save button is always disabled
              label="Tools"
              path="outline/tools"/>
     </viewContribution>
- </extension>
- <extension
-       point="org.eclipse.ui.handlers">
-    <handler
-          class="org.kalypso.ogc.gml.map.handlers.ZoomOutHandler"
-          commandId="org.kalypso.ogc.gml.map.ZoomOutCommand"/>
-    <handler
-          class="org.kalypso.ogc.gml.map.handlers.ZoomInStaticHandler"
-          commandId="org.kalypso.ogc.gml.map.ZoomInStaticCommand"/>   
-    <handler
-          class="org.kalypso.ogc.gml.map.handlers.MoveLeftHandler"
-          commandId="org.kalypso.ogc.gml.map.MoveLeftCommand"/>
-    <handler
-          class="org.kalypso.ogc.gml.map.handlers.MoveRightHandler"
-          commandId="org.kalypso.ogc.gml.map.MoveRightCommand"/>
-    <handler
-          class="org.kalypso.ogc.gml.map.handlers.MoveUpHandler"
-          commandId="org.kalypso.ogc.gml.map.MoveUpCommand">
-    </handler>
-    <handler
-          class="org.kalypso.ogc.gml.map.handlers.MoveDownHandler"
-          commandId="org.kalypso.ogc.gml.map.MoveDownCommand"/>                                               
-    <handler
-          class="org.kalypso.ogc.gml.map.handlers.ZoomToActiveLayerHandler"
-          commandId="org.kalypso.ogc.gml.map.ZoomToActiveLayerCommand"/>
-    <handler
-          class="org.kalypso.ogc.gml.map.handlers.ZoomToSelectedFeatures"
-          commandId="org.kalypso.ogc.gml.map.ZoomToSelectedFeaturesCommand"/>
-    <handler
-          class="org.kalypso.ogc.gml.map.handlers.ZoomToSelectedFeaturesByLayer"
-          commandId="org.kalypso.ogc.gml.map.ZoomToSelectedFeaturesByLayerCommand"/>
  </extension>
  <extension
        point="org.eclipse.ui.bindings">
@@ -1424,5 +1304,91 @@ TODO: unfortunately the save button is always disabled
           </instanceof>
        </enabledWhen>
     </page>
+ </extension>
+ <extension
+       point="org.eclipse.ui.menus">
+    <menuContribution
+          locationURI="toolbar:org.kalypso.ui.views.mapView">
+       <separator
+             name="actions"
+             visible="true">
+       </separator>
+    </menuContribution>
+    <menuContribution
+          locationURI="toolbar:org.kalypso.ui.views.mapView?after=actions">
+       <command
+             commandId="org.kalypso.ogc.gml.map.ZoomOutCommand"
+             icon="icons/map/zoomoutstatic.gif"
+             label="%org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomOutDelegate.label"
+             style="push"
+             tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomOutDelegate.tooltip">
+       </command>
+       <command
+             commandId="org.kalypso.ogc.gml.map.ZoomInStaticCommand"
+             icon="icons/map/zoominstatic.gif"
+             label="%org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomInStaticDelegate.label"
+             style="push"
+             tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomInStaticDelegate.tooltip">
+       </command>
+       <command
+             commandId="org.kalypso.ogc.gml.map.MoveRightCommand"
+             icon="icons/map/moveright.gif"
+             label="%org.kalypso.ui.editor.mapeditor.actiondelegates.MoveRightDelegate.label"
+             style="push"
+             tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.MoveRightDelegate.tooltip">
+       </command>
+       <command
+             commandId="org.kalypso.ogc.gml.map.MoveDownCommand"
+             icon="icons/map/movedown.gif"
+             label="%org.kalypso.ui.editor.mapeditor.actiondelegates.MoveDownDelegate.label"
+             style="push"
+             tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.MoveDownDelegate.tooltip">
+       </command>
+       <command
+             commandId="org.kalypso.ogc.gml.map.MoveUpCommand"
+             icon="icons/map/moveup.gif"
+             label="%org.kalypso.ui.editor.mapeditor.actiondelegates.MoveUpDelegate.label"
+             style="push"
+             tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.MoveUpDelegate.tooltip">
+       </command>
+       <command
+             commandId="org.kalypso.ogc.gml.map.MoveLeftCommand"
+             icon="icons/map/moveleft.gif"
+             label="%org.kalypso.ui.editor.mapeditor.actiondelegates.MoveLeftDelegate.label"
+             style="push"
+             tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.MoveLeftDelegate.tooltip">
+       </command>
+       <command
+             commandId="org.kalypso.ogc.gml.map.FullExtentCommand"
+             icon="icons/map/maximize2.gif"
+             label="%org.kalypso.ui.editor.mapeditor.actiondelegates.FullExtentDelegate.label"
+             style="push"
+             tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.FullExtentDelegate.tooltip">
+       </command>
+       <command
+             commandId="org.kalypso.ogc.gml.map.ZoomToActiveLayerCommand"
+             icon="icons/map/zoomactivelayer2.gif"
+             label="%org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomToActiveLayerDelegate.label"
+             style="push"
+             tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomToActiveLayerDelegate.tooltip">
+       </command>
+    </menuContribution>
+    <menuContribution
+          locationURI="toolbar:org.kalypso.ui.views.mapView?before=actions">
+       <command
+             commandId="org.kalypso.ogc.gml.map.ZoomInByRectCommand"
+             icon="icons/map/zoomin.gif"
+             label="%org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomInByRectWidgetDelegate.label"
+             style="radio"
+             tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomInByRectWidgetDelegate.tooltip">
+       </command>
+       <command
+             commandId="org.kalypso.ogc.gml.map.PanToCommand"
+             icon="icons/map/pan.gif"
+             label="%org.kalypso.ui.editor.mapeditor.actiondelegates.PanToWidgetDelegate.label"
+             style="radio"
+             tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.PanToWidgetDelegate.tooltip">
+       </command>
+    </menuContribution>
  </extension>
 </plugin>

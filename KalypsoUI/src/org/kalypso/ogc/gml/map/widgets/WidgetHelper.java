@@ -76,9 +76,9 @@ public class WidgetHelper
     if( MapPanel.WIDGET_ZOOM_IN.equals( widgetID ) )
       return (new ZoomInWidget( "zoom in", "" ));
     else if( MapPanel.WIDGET_ZOOM_IN_RECT.equals( widgetID ) )
-      return (new ZoomInByRectWidget( "zoom in", "" ));
+      return (new ZoomInByRectWidget( ));
     else if( MapPanel.WIDGET_PAN.equals( widgetID ) )
-      return (new PanToWidget( "pan to", "" ));
+      return (new PanToWidget( ));
     else if( widgetID.startsWith( MapPanel.WIDGET_EDIT_FEATURE_GEOMETRY ) )
       return (new EditFeatureGeometryWidget( "Replace Geometry", "Replace The First Geometry Of The Selected Feature", null, null, null ));
     else if( widgetID.startsWith( MapPanel.WIDGET_CREATE_FEATURE_WITH_POINT ) )
