@@ -105,6 +105,12 @@ public class CalculationUnitComponent
     wizardDialog.open();
   } 
   
+  @Override
+  protected boolean showDescription()
+  {
+    return true;
+  }
+  
   @SuppressWarnings("unused")
   private void getDescriptionList()
   {

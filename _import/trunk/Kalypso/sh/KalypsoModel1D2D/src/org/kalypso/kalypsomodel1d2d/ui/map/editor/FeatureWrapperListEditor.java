@@ -545,6 +545,8 @@ public class FeatureWrapperListEditor implements IButtonConstants
       // } );
     }
 
+    if (showDescription())
+    {
     descriptionGroupText = new Group( parent, SWT.NONE );
     descriptionGroupText.setText( titleDescriptionGroup );
     formData = new FormData();
@@ -585,6 +587,7 @@ public class FeatureWrapperListEditor implements IButtonConstants
         }
       }
     } );
+    }
 
     // setup cell editing
     final TextCellEditor textCellEditor = new TextCellEditor( table );
@@ -592,6 +595,14 @@ public class FeatureWrapperListEditor implements IButtonConstants
     tableViewer.setCellEditors( editors );
     tableViewer.setCellModifier( modifier );
     tableViewer.setColumnProperties( new String[] { "Name" } );
+  }
+
+  /*
+   * Template Method
+   */
+  protected boolean showDescription( )
+  {
+    return false;
   }
 
   protected IBaseLabelProvider getLabelProvider( final Display display )

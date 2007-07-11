@@ -289,8 +289,6 @@ public class Control1D2DConverter
     /* Steady state, just one block for the Starting Date. */
     final int niti = controlModel.getNITI();
 
-    if( niti > 0 )
-    {
       final String msg = "Steady State Input Data";
 
       final Double uRValSteady = controlModel.get_steadyBC();
@@ -298,7 +296,6 @@ public class Control1D2DConverter
         throw new SimulationException( "Stationär Relaxationsfaktor leer, keine Rechnung möglich.", null );
 // final float uRValSteady = ((BigDecimal) firstRecord.getValue( compUnderRelax )).floatValue();
       writeTimeStep( formatter, msg, null, null, uRValSteady.floatValue(), niti, timeStepInfos );
-    }
     final int nitn = controlModel.getNITN();
 
     if( nitn > 0 )
