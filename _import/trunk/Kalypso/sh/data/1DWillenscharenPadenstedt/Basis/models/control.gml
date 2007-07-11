@@ -20,12 +20,12 @@
      <c1d2d:UNOM>0.5</c1d2d:UNOM>
      <c1d2d:UDIR>0.0</c1d2d:UDIR>
      <c1d2d:HMIN>0.2</c1d2d:HMIN>
-     <c1d2d:DSET/>
-     <c1d2d:DSETD/>
+     <c1d2d:DSET>0.1</c1d2d:DSET>
+     <c1d2d:DSETD>0.09</c1d2d:DSETD>
      <c1d2d:_steady>true</c1d2d:_steady>
-     <c1d2d:_unsteady>true</c1d2d:_unsteady>
+     <c1d2d:_unsteady>false</c1d2d:_unsteady>
      <c1d2d:NITI>25</c1d2d:NITI>
-     <c1d2d:NITN>10</c1d2d:NITN>
+     <c1d2d:NITN>20</c1d2d:NITN>
      <c1d2d:CONV_1>0.01</c1d2d:CONV_1>
      <c1d2d:CONV_2>0.01</c1d2d:CONV_2>
      <c1d2d:CONV_3>0.0010</c1d2d:CONV_3>
@@ -35,8 +35,10 @@
      <c1d2d:AC2>0.67</c1d2d:AC2>
      <c1d2d:AC3>0.04</c1d2d:AC3>
      <c1d2d:_restart>false</c1d2d:_restart>
+     <c1d2d:_restart_path/>
      <c1d2d:IACCYC>1</c1d2d:IACCYC>
      <c1d2d:FNAM3/>
+     <c1d2d:_steadyBC>0.2</c1d2d:_steadyBC>
      <c1d2d:timestepsMember>
       <c1d2d:TimestepsObservation gml:id="TimestepsObservation11834502446251">
        <gml:name>Zeitschritt Definition</gml:name>
