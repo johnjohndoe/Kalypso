@@ -143,7 +143,7 @@ public class RoughnessCorrectionWidgetFace
     tableWrapData.grabVertical = true;
     eleWiseSection.setLayoutData( tableWrapData );
     eleWiseSection.setExpanded( false );
-    eleWiseSection.setEnabled( true );
+    eleWiseSection.setEnabled( false );
     
     //sub controls
     stylingControl =
