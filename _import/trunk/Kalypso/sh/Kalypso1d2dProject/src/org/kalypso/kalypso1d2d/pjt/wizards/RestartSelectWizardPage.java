@@ -1,17 +1,13 @@
 package org.kalypso.kalypso1d2d.pjt.wizards;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
@@ -34,37 +30,28 @@ public class RestartSelectWizardPage extends WizardPage
 {
   private Text m_selectedResultNames;
 
-  private Map<String, String> m_selectedResultPaths; // map that contains <path, name> pairs of the result files
-
   private final String m_initialSelection;
-
-  private final ViewerFilter m_resultFilter;
 
   private final Set<IResultModelDescriptor> m_selectedResults = new HashSet<IResultModelDescriptor>();
 
-  public static class ResultFilter extends ViewerFilter
+  private final IResultModelDescriptor[] m_initialDescriptors;
+
+  public RestartSelectWizardPage( final String pageName, final String initialSelection )
   {
-    @Override
-    public boolean select( final Viewer viewer, final Object parentElement, final Object element )
-    {
-      return true;
-      // if( element instanceof File )
-      // return ((File) element).getName().endsWith( ".gml" );
-      // return true;
-    }
+    this( pageName, initialSelection, new IResultModelDescriptor[0] );
   }
 
-  public RestartSelectWizardPage( final String initialSelection )
+  public RestartSelectWizardPage( final String pageName, final IResultModelDescriptor[] existingResultDescriptors )
   {
-    this( initialSelection, "Example", new ResultFilter() );
+    this( pageName, "", existingResultDescriptors );
   }
 
-  public RestartSelectWizardPage( final String initialSelection, final String pageName, final ViewerFilter resultFilter )
+  public RestartSelectWizardPage( final String pageName, final String initialSelection, final IResultModelDescriptor[] initialDescriptors )
   {
     super( pageName );
 
     m_initialSelection = initialSelection;
-    m_resultFilter = resultFilter;
+    m_initialDescriptors = initialDescriptors;
   }
 
   public void createControl( final Composite parent )
@@ -91,28 +78,24 @@ public class RestartSelectWizardPage extends WizardPage
     allResultsViewer.setLabelProvider( new WorkbenchLabelProvider() );
     allResultsViewer.setInput( new File( "." ) );
 
-    allResultsViewer.addFilter( m_resultFilter );
-
-    m_selectedResultPaths = new HashMap<String, String>();
     m_selectedResultNames = new Text( innerComposite, SWT.MULTI | SWT.BORDER );
     m_selectedResultNames.setEditable( false );
     m_selectedResultNames.setText( "" );
 
     loadInitialSelection();
+    if( m_initialDescriptors != null )
+      loadInitialDescriptors();
 
     allResultsViewer.addDoubleClickListener( new IDoubleClickListener()
     {
-
       public void doubleClick( final DoubleClickEvent event )
       {
         final StructuredSelection selection = (StructuredSelection) event.getSelection();
         final Object firstElement = selection.getFirstElement();
         if( firstElement instanceof IResultModelDescriptor )
-          setSelection( (IResultModelDescriptor) firstElement, false );
+          setSelection( (IResultModelDescriptor) firstElement );
       }
-
     } );
-
   }
 
   private void loadInitialSelection( )
@@ -120,6 +103,7 @@ public class RestartSelectWizardPage extends WizardPage
     final String[] selections = m_initialSelection.split( ";" );
 
     final ResultDB resultDB = KalypsoModel1D2DPlugin.getDefault().getResultDB();
+
     final IFeatureWrapperCollection<ISimulationDescriptor> simulationDescriptors = resultDB.getSimulationDescriptors();
     for( final ISimulationDescriptor descriptor : simulationDescriptors )
     {
@@ -129,35 +113,30 @@ public class RestartSelectWizardPage extends WizardPage
         final String path = resultModel.get( i ).getWorkspacePath();
         for( final String element : selections )
           if( element.equals( path ) )
-            setSelection( resultModel.get( i ), true );
+            setSelection( resultModel.get( i ) );
       }
     }
   }
 
-  private void setSelection( final IResultModelDescriptor descriptor, final boolean initial )
+  private void loadInitialDescriptors( )
+  {
+    for( final IResultModelDescriptor desc : m_initialDescriptors )
+      setSelection( desc );
+  }
+
+  protected void setSelection( final IResultModelDescriptor descriptor )
   {
     if( m_selectedResults.contains( descriptor ) )
       m_selectedResults.remove( descriptor );
     else
       m_selectedResults.add( descriptor );
 
-    // TODO: refactor: do not remember pathes directly rather than a list of models; produce map if needed on the fly
-    final String path = descriptor.getWorkspacePath();
-    final String value = descriptor.getModelName();
-    if( m_selectedResultPaths.containsKey( path ) )
-    {
-      if( initial )
-        return;
-      m_selectedResultPaths.remove( path );
-    }
-    else
-      m_selectedResultPaths.put( path, value );
-
     // Update text-control
     String text = "";
-    for( final String key : m_selectedResultPaths.keySet() )
+    for( final IResultModelDescriptor key : m_selectedResults )
     {
-      text = text.concat( m_selectedResultPaths.get( key ) ).concat( m_selectedResultNames.getLineDelimiter() );
+      final String modelName = key.getModelName();
+      text = text.concat( modelName ).concat( m_selectedResultNames.getLineDelimiter() );
     }
     if( text.length() == 0 )
       m_selectedResultNames.setText( "" );
@@ -168,9 +147,9 @@ public class RestartSelectWizardPage extends WizardPage
   public String getSelectedPath( )
   {
     String text = "";
-    for( final String key : m_selectedResultPaths.keySet() )
+    for( final IResultModelDescriptor key : m_selectedResults )
     {
-      text = text.concat( key ).concat( ";" );
+      text = text.concat( key.getWorkspacePath() ).concat( ";" );
     }
     if( text.length() == 0 )
       return "";

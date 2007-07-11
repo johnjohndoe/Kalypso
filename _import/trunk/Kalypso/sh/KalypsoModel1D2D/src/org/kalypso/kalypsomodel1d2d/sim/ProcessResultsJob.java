@@ -270,7 +270,7 @@ public class ProcessResultsJob extends Job
     final IResultModel1d2d resModel1d2d = (IResultModel1d2d) resultWorkspace.getRootFeature().getAdapter( IResultModel1d2d.class );
     final IResultModelDescriptor resultModelDescriptor = m_calculation.addToSimulationDescriptor( resModel1d2d );
 
-    // TODO: retreivce timezone from central plugin preferences
+    // TODO: retrieve timezone from central plugin preferences
     final DateFormat dateFormatter = DateFormat.getDateTimeInstance();
 
     if( time == null )

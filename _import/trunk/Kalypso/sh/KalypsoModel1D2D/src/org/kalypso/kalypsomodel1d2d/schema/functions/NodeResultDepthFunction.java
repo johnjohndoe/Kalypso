@@ -78,6 +78,8 @@ public class NodeResultDepthFunction extends FeaturePropertyFunction
     final Double waterlevel = (Double) feature.getProperty( m_waterlevelProperty );
     final GM_Point point = (GM_Point) feature.getProperty( m_locationProperty );
 
+    if( waterlevel == null )
+      return Double.NaN;
     if( waterlevel.doubleValue() > point.getZ() )
       return (waterlevel.doubleValue() - point.getZ());
     else

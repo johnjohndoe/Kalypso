@@ -41,9 +41,12 @@
 package org.kalypso.kalypsomodel1d2d.schema.binding.metadata;
 
 import java.io.File;
+import java.net.URL;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.httpclient.URIException;
+import org.apache.commons.httpclient.util.URIUtil;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IResultModel1d2d;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
@@ -114,8 +117,24 @@ public class SimulationDescriptionCollection extends AbstractFeatureBinder imple
       newChildType = Kalypso1D2DSchemaConstants.SIMMETA_F_MODELDESCRIPTOR;
     }
     final IModelDescriptor addNew = m_modelDescriptors.addNew( newChildType );
+
+    // TODO: gml id of the model cannot be used, as this is not unique (models can be saved in different files)
+
     final String modelGmlID = modelFeatureWrapper.getGmlID();
-    addNew.setModelID( modelGmlID );
+    final URL context = modelFeatureWrapper.getWrappedFeature().getWorkspace().getContext();
+
+    String modelID;
+    try
+    {
+      final String endocedUri = URIUtil.encodeAll( context.toExternalForm() );
+      modelID = endocedUri + modelGmlID;
+    }
+    catch( final URIException e )
+    {
+      e.printStackTrace();
+      modelID = modelFeatureWrapper.getGmlID();
+    }
+    addNew.setModelID( modelID );
 
     final String name = modelFeatureWrapper.getName();
     addNew.setModelName( isNullOrEmptyString( name ) ? modelGmlID : name );

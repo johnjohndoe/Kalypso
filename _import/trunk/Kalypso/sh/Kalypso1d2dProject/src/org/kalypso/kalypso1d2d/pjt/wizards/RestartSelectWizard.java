@@ -73,7 +73,7 @@ public class RestartSelectWizard extends Wizard implements INewWizard
     setWindowTitle( "Berechnungszeitschritte definieren" );
     final Object property = m_feature.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_RESTART_PATH );
 
-    m_restartSelectWizardPage = new RestartSelectWizardPage( property == null ? "" : property.toString() );
+    m_restartSelectWizardPage = new RestartSelectWizardPage( "restartSelectionPage", property == null ? "" : property.toString() );
     m_restartSelectWizardPage.setTitle( "Restart Ergebnisse auswählen" );
     m_restartSelectWizardPage.setDescription( "Hier können Sie ein oder mehrere Ergebnisse für den Restart auswählen." );
 
