@@ -1,4 +1,4 @@
-!     Last change:  MD    5 Jul 2007    3:14 pm
+!     Last change:  MD   11 Jul 2007    1:04 pm
 !--------------------------------------------------------------------------
 ! This code, wspber.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -132,6 +132,7 @@ SUBROUTINE wspber ()
                                                                         
 !WP 01.02.2005
 USE DIM_VARIABLEN
+USE KONSTANTEN
 USE VERSION
 USE IO_UNITS
 USE IO_NAMES
@@ -405,12 +406,30 @@ REAL :: xl (maxkla), hl (maxkla), raul (maxkla)
 REAL :: x11 (maxkla), h11 (maxkla), ax1 (maxkla), ay1 (maxkla), dp1 (maxkla), rau1 (maxkla)
 
 
-!**   Lokale Variablen fuer die SSicherung der Zahlschleifen-Parameter aus der Routine qbordv
-!     als sogenannte äußere Abflussschleife
+!**   Lokale Variablen fuer die Sicherung der Zahlschleifen-Parameter aus der Routine qbordv
+!     als sogenannte aeußere Abflussschleife
 INTEGER :: isch_out
 INTEGER :: nr_q_out
+INTEGER :: in_count
+INTEGER :: nprof_save
+! INTEGER :: i_OW_Br          ! Zaheler fuer das n-Profil im OW der Bruecke
+
+REAL:: wsp_save (maxger)      ! Wasserspiegel wsp(m+nn) = hr
+REAL:: fgesp_save (maxger)    ! Insgesamt durchflossene Flaeche (m**2)
+REAL:: brg_save (maxger)      ! Gesamt durchstroemte Breite
+REAL:: vmp_save (maxger)      ! Mittleres v
+REAL:: froudp_save (maxger)   ! Froudzahl
+REAL:: hvs_save (maxger)      ! Geschwindigkeitsverlust hv
+REAL:: hrs_save (maxger)      ! Reibungsverlust
+REAL:: hs_save (maxger)       ! Gesamtverlust
+REAL:: hen_save (maxger)      ! Energiehoehe (m+nn)
+REAL:: k_kp_save (maxger)     ! mittlere Rauhigkeit: akges
+REAL:: igrenz_save (maxger)   ! Hinweis auf grenztiefe
+REAL:: rg_save (maxger)       ! hydraulischer Radius (?)
+REAL:: tm
 REAL :: q_out       ! aktueller Abflusswert der aeusseren Q-Schleife
 REAL :: qvar_in     ! Abflusswert in der inneren Q-Schleife
+
 CHARACTER(LEN=11):: Q_Abfrage !Abfrage fuer Ende der Inneren Q-Schleife
 
 
@@ -908,9 +927,676 @@ Hauptschleife: DO i = 1, maxger
                & 1X, '  Brueckenbreite BREITE      = ', F12.3/)
 
 
-      statgem = stat (nprof)              !WP Station gemerkt?
+      statgem = stat (nprof)              !WP Station gemerkt
       stat1 = stat (nprof - 1)
       strecke = (statgem - stat1) * 1000. !WP Distanz zwischen Bruecke und Unterwasser
+
+
+
+      !--------------------------------------------------------------------------------------
+      !MD  NEUE BERECHNUNGS-VARIANTE !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      !MD  INNERE ABFLUSSSCHLEIFE UEBER DIE BREUCKE
+      !--------------------------------------------------------------------------------------
+      IF (BERECHNUNGSMODUS == 'REIB_KONST') then
+
+        !MD  Sichern der Werte aus der äusseren Abflussschleife
+        isch_out = isch
+        nr_q_out = nr_q
+        q_out = q
+
+        !MD  Belegung der neuen Werte für die innere Abflussschleife
+        qvar_in = MIN_Q
+        in_count = 1
+        Q_Abfrage = 'BR_SCHLEIFE'
+        VERZOEGERUNGSVERLUST = 'BWK '
+
+        !MD Sicherung der alten UW-Ergebnisse
+        wsp_save (nprof-1)    = wsp (nprof-1)          ! Wasserspiegel wsp(m+nn) = hr
+        fgesp_save (nprof-1)  = fgesp (nprof-1)        ! Insgesamt durchflossene Flaeche (m**2)
+        brg_save (nprof-1)    = brg (nprof-1)          ! Gesamt durchstroemte Breite
+        vmp_save (nprof-1)    = vmp (nprof-1)          ! Mittleres v
+        froudp_save (nprof-1) = froudp (nprof-1)      ! Froudzahl
+        hvs_save (nprof-1)    = hvs (nprof-1)          ! Geschwindigkeitsverlust hv
+        hrs_save (nprof-1)    = hrs (nprof-1)          ! Reibungsverlust
+        hs_save (nprof-1)     = hs (nprof-1)           ! Gesamtverlust
+        hen_save (nprof-1)    = hen (nprof-1)          ! Energiehoehe (m+nn)
+        k_kp_save (nprof-1)   = k_kp (nprof-1)         ! mittlere Rauhigkeit: akges
+        igrenz_save (nprof-1) = igrenz (nprof-1)      ! Hinweis auf grenztiefe
+        rg_save (nprof-1)     = rg                    ! hydraulischer Radius (?)
+        tm = fgesp_save (nprof-1) / brg_save (nprof-1)
+        nprof_save = nprof
+
+        !MD  Zwischenausgabe im Kontroll-file
+        WRITE (UNIT_OUT_LOG, '('' stat (nprof)='',f8.4)') stat (nprof)
+        WRITE (UNIT_OUT_LOG, '(/,5x,'' Brueckenberechnung an Station km'',f8.4)') stat (nprof)
+        WRITE (UNIT_OUT_TAB, '(/,5x,'' Brueckenberechnung an Station km'',f8.4)') stat (nprof)
+        WRITE (UNIT_OUT_TAB, '(/,'' Innere Q-Schleife ueber Brueckenberechnung'')')
+
+        WRITE (UNIT_OUT_BRUECKE, '(/,5x,'' Brueckenberechnung an Station km'',f8.4)') stat (nprof)
+        WRITE (UNIT_OUT_BRUECKE, 811) 'Stat', 'Kenn', 'Abfluss', 'Q_out', 'h_WSP', 'h_WSP_UW','hen', 'v_m', &
+                          &     'Q_li',    'Q_fl',    'Q_re', &
+                          &     'f_li', 'f_fl', 'f_re',  'BrueckOK', 'BrueckUK', 'BrueckB'
+
+        WRITE (UNIT_OUT_BRUECKE, 811) 'km'  ,  '-', 'm^3/s', 'm^3/s', 'mNN'  , 'mNN'  , 'mNN', 'm/s', &
+                          & 'm^3/s',   'm^3/s',   'm^3/s',  'm^2', 'm^2', 'm^2', 'mNN',      'mNN',      'm'
+        811 FORMAT (1X, A10,   A5, 5A10,   A8,   3A10,   3A10,   3A10)
+
+
+        ! Schleife zur Bordvoll-Berechung, ISCH ist Zaehler fuer Abflusses
+        DO in_count = 1, anz_q
+
+          ! Zuweisung der Abfluss-Nummer zu dem globalen Modul MOD_ERG
+          nr_q = in_count
+          q = qvar_in
+
+          IF (qvar_in.gt.MAX_Q) then
+            qvar_in = MAX_Q
+          ENDIF
+
+          !MD Rueckholen des richtigen i-zaehlers
+          nprof = nprof_save
+
+          !MD Fixierung der Unterwasserwerte
+          wsp (nprof-1)    = wsp_save (nprof-1)
+          fges             = fgesp_save (nprof-1)
+          vmp (nprof-1)    = q / fges                                     ! Anpassung von Fliessgeschw. v
+          froudp (nprof-1) = (vmp(nprof-1) * vmp(nprof-1)) / (tm * g)     ! Anpassung der Froudzahl
+          hvs (nprof-1)    = (vmp(nprof-1) ** 2.D0) / (2.D0 * g)          ! Anpassung des Geschwindigkeitsverlustes
+          hen (nprof-1)    = wsp (nprof-1) + hvs (nprof-1)                ! Anpassung de Energiehoehe (m+nn)
+
+          brg (nprof-1)    = brg_save (nprof-1)
+          hv = hvs (nprof-1)
+          hr = wsp (nprof-1)
+          rg = rg_save (nprof-1)
+          hvst = hv
+          hrst = hrs_save (nprof-1)
+
+          out_PROF(nprof,nr_q)%BrueckOK 	= -999.999
+          out_PROF(nprof,nr_q)%BrueckUK 	= -999.999
+          out_PROF(nprof,nr_q)%BrueckB  	= -999.999
+
+          !     SCHREIBEN IN KONTROLLFILE
+          write (UNIT_OUT_LOG, 233) statgem
+          233 FORMAT (/,5x,'Brueckenberechnung an Station km   ',f7.3,' : ',/)
+
+          WRITE (UNIT_OUT_LOG, '(''  Aeusserer Abfluss q_out ='',f8.4)') q_out
+          WRITE (UNIT_OUT_LOG, '(''  Innerer Abfluss qvar_in ='',f8.4)') qvar_in
+
+          WRITE (UNIT_OUT_TAB, '(5x,''   fuer Zufluss-OW qvar_in ='',f8.4)') qvar_in
+          WRITE (UNIT_OUT_TAB, '(5x,''   fuer Abfluss-uW q_out ='',f8.4)') q_out
+
+
+          ! 1.) Berechnung Profilwerte/Profilabstand Profil 'a' (uw)
+          !     (zur beruecksichtigung aufweitungsverlust --> profilabstand
+          !     < 4*(bges(nprof-1)-bnetto(bruecke profil '1'))
+          ! -----------------------------------------------------------------------------------      --
+
+          ! Breite Nettoprofil '1': /* siehe beschreibung und hec
+          br1   = x1 (iwr) - x1 (iwl)
+          delta = 4. * (brg (nprof - 1) - br1)    ! brg(): Breite gesamt an einem Profil
+
+          IF ( (delta - 5.) .lt. 0.01) delta = 5.
+
+          ! Brueckenbreite: Falls nicht definiert BREITE = 10 m
+          IF (breite .lt. 1.e-6) then
+            PRINT * , 'Brueckenbreite in Profildatei nicht definiert.'
+            PRINT * , 'Default-Wert der Breite von 10 m in weiterer Be-'
+            PRINT * , 'rechnung angesetzt!!!'
+            breite = 10.
+          ENDIF
+
+          delta1 = delta + breite  ! Abstand des moeglichen Profils 'a' vom Brueckenprofil
+
+          write (UNIT_OUT_LOG, 244) delta1, strecke
+          244 format (1X, 'Delta1: ', F10.3, '  Strecke: ', F10.3)
+
+
+    
+          ! ----------------------------------------------------------------------------------------------
+          ! P R O F I L   "A"
+          ! =================
+          ! Falls es zu einem nennenswerten Aufweitungsverlust kommt, muss am Unterwasser
+          ! ein Profil ('a') eingefuegt werden.
+          ! ----------------------------------------------------------------------------------------------
+          IF (strecke .gt. delta1) then
+
+            stat(nprof) = stat1 + (strecke-delta1) / 1000.
+            str1 = (stat (nprof) - stat (nprof - 1) ) * 1000.
+            prof_it(nprof) = 1
+
+            out_PROF(nprof,nr_q)%stat = stat(nprof)         !WP Zuweisung der Stationierung in globalen Array
+                                                            !WP Hinweis: Je nach Abflusszustand kann sich die
+                                                            !WP Anzahl der interpolierten Profile aendern
+            out_PROF(nprof,nr_q)%interpol = .TRUE.  	    !WP In dem globalen Ergebnis TYPE wird sich gemerkt,
+            out_PROF(nprof,nr_q)%chr_kenn = 'i'             !WP dass dieses Profil bei dem aktuellen Abfluss interpoliert wurde.
+            out_PROF(nprof,nr_q)%qges = q
+
+            num (nprof) = '0'
+
+            write (UNIT_OUT_LOG,101) stat (nprof)
+            101 format (/1X, '       Profil "a" (Bruecke): ', F10.4)
+
+            dif = hmin - sohlp(nprof - 1)
+            d1 = dif / strecke * delta
+            d2 = ( (brg (nprof - 1) - br1) * delta / strecke+br1)  / br1
+            x1wr = x1 (iwr)
+
+            write (UNIT_OUT_LOG, 255) dif, d1, d2, x1wr
+            255 format (/1X, 'DIF:  ', F12.4, /, &
+                      & 1X, 'D1:   ', F12.4, /, &
+                      & 1X, 'D2:   ', F12.4, /, &
+                      & 1X, 'X1WR: ', F12.4, / )
+
+            DO i1 = 1, nknot
+              h1 (i1) = h1 (i1) - d1
+              IF (i1.gt.iwl.and.i1.le.iwr) then
+                x1 (i1) = x1 (iwl) + (x1 (i1) - x1 (iwl) ) * d2
+              ELSEIF (i1.gt.iwr) then
+                x1 (i1) = (x1 (i1) - x1wr) + x1 (iwr)
+              ENDIF
+            END DO
+
+            hmin  = hmin  - d1
+            boli  = boli  - d1
+            bore  = bore  - d1
+            hrbv  = hrbv  - d1
+            hming = hming - d1
+            htrre = htrre - d1
+            htrli = htrli - d1
+
+            CALL normber (str1, q, q1, nprof, hr, hv, rg, hvst, hrst, &
+             & indmax, psieins, psiorts, hgrenz, ikenn, froud, nblatt, nz)
+
+            write (UNIT_OUT_LOG, 266) hmin, hr
+            266 format (/1X, 'Sohlhoehe HMIN: ', F12.4,/, &
+                     &  1X, 'WSP:            ', F12.4,/)
+
+            CALL speicher (nprof, hr, hv, hvst, hrst, q, stat (nprof), indmax, ikenn)
+
+            CALL drucktab (nprof, indmax, nz, UNIT_OUT_TAB, nblatt, stat, UNIT_OUT_PRO, idr1)
+
+            !**  Original Profilwerte herstellen:
+            if (FLIESSGESETZ == 'DW_M_FORMBW' .or. FLIESSGESETZ == 'DW_O_FORMBW') then
+              DO i1 = 1, nknot
+                ax (i1) = 0.0
+                ay (i1) = 0.0
+                dp (i1) = 0.0
+              END DO
+            ENDIF
+
+            CALL intdat (staso, ifehl)
+
+            IF (ifehl.ne.0) then
+              STOP
+            ENDIF
+
+            IF (out_PROF(nprof,nr_q)%chr_kenn .eq. 'i') THEN
+              out_PROF(nprof,nr_q)%BrueckOK 	= -999.999
+              out_PROF(nprof,nr_q)%BrueckUK 	= -999.999
+              out_PROF(nprof,nr_q)%BrueckB  	= -999.999
+            END IF
+
+
+            !MD Ausgabe der Daten am profil "a"
+            ! ------------------------------------
+            do k = 1, 3
+              if (out_IND(nprof,nr_q,k)%lambda > 99.9999) then
+                out_IND(nprof,nr_q,k)%lambda = 99.9999
+              end if
+            end do
+
+            write (UNIT_OUT_BRUECKE, 911) out_PROF(nprof,nr_q)%stat, 'a', &
+                             & out_PROF(nprof,nr_q)%qges, q_out, out_PROF(nprof,nr_q)%wsp, &
+                             & wsp_save (nprof_save-1), out_PROF(nprof,nr_q)%hen, out_PROF(nprof,nr_q)%vm,  &
+                             & out_IND(nprof,nr_q,1)%Q, out_IND(nprof,nr_q,2)%Q, out_IND(nprof,nr_q,3)%Q,  &
+                             & out_IND(nprof,nr_q,1)%A, out_IND(nprof,nr_q,2)%A, out_IND(nprof,nr_q,3)%A, &
+                             & out_PROF(nprof,nr_q)%BrueckOK, out_PROF(nprof,nr_q)%BrueckUK, out_PROF(nprof,nr_q)%BrueckB
+            ! Ende der Ausgabe -----------
+
+            nprof = nprof + 1
+
+          ENDIF
+
+
+          ! ----------------------------------------------------------------------------------------------
+          ! P R O F I L   "3"
+          ! =================
+          stat (nprof) = statgem - breite / 1000.
+          str1 = (stat (nprof) - stat (nprof - 1) ) * 1000.
+          prof_it (nprof) = 1
+          num (nprof) = '0'
+
+          out_PROF(nprof,nr_q)%stat = stat(nprof)   !WP Zuweisung der Stationierung in globalen Array
+          out_PROF(nprof,nr_q)%interpol = .TRUE.    !WP In dem globalen Ergebnis TYPE wird sich gemerkt,
+          out_PROF(nprof,nr_q)%chr_kenn = 'i'       !WP dass dieses Profil bei dem aktuellen Abfluss interpoliert wurde.
+          out_PROF(nprof,nr_q)%qges = q
+
+          write (UNIT_OUT_LOG,102) stat (nprof)
+          102 format (/1X, '       Profil "3" (Bruecke): ', F10.4)
+
+          CALL br_konv (staso, str1, q, q1, nprof, hr, hv, rg, hvst,  &
+           & hrst, indmax, psieins, psiorts, nblatt, nz, idr1, hgrenz, ikenn, ifroud, iwehrb)
+
+          !write (*,*) 'In WSPBER. zurueck aus BR_KONV.'
+          ! mit vorgebenem wsp hr3 in wspanf --> berechnen wsp unverbautes
+
+          staso = stat (nprof)
+          if (FLIESSGESETZ == 'DW_M_FORMBW' .or. FLIESSGESETZ == 'DW_O_FORMBW') then
+            DO i1 = 1, nknot
+              ax (i1) = 0.0
+              ay (i1) = 0.0
+              dp (i1) = 0.0
+            END DO
+          ENDIF
+    
+          CALL intdat (staso, ifehl)
+
+          stat (nprof) = statgem                          !WP Original Brueckenstation (Profil i)!
+
+          out_PROF(nprof,nr_q)%stat = stat(nprof)         !WP Zuweisung der Stationierung in globalen Array
+          out_PROF(nprof,nr_q)%BrueckOK = hokmin
+          out_PROF(nprof,nr_q)%BrueckUK = hukmax
+          out_PROF(nprof,nr_q)%BrueckB = breite
+          out_PROF(nprof,nr_q)%chr_kenn = 'b'
+          out_PROF(nprof,nr_q)%qges = q
+          prof_it (nprof) = 0
+          num (nprof) = prof_nr (1:10)
+
+
+          !**   ------------------------------------------------------------------
+          !**   Zusammensetzen der Profillinie (mit '*' gekennzeichnete Linie)
+          !**   ------------------------------------------------------------------
+          !
+          !     *************....................****************
+          !     ............*.......... .........*..............
+          !               . *         . .       **
+          !                 ****      . .     *
+          !                     *     . .    *
+          !                     *************
+          !
+
+          CALL linier (hokmax, x1, h1, rau, nknot, iwl, iwr, npl, xl, hl, raul)
+
+          !**   ------------------------------------------------------------------
+          !**   Berechnung des WSP im ungestoerten, eingeengten Profil '3'
+          !**   ------------------------------------------------------------------
+          !**     hsohl WIRD NICHT WEITER BENUTZT, 12.01.00, UT
+          hsohl = hmin
+          hmax = hokmax
+
+          !**    SCHREIBEN IN KONTROLLFILE
+          WRITE (UNIT_OUT_LOG, 288) iokl, iokr
+          288 format (/1X, 'IOKL (Nummer des Punktes der Oberkante links):  ', I3, /, &
+                    & 1X, 'IOKR (Nummer des Punktes der Oberkante rechts): ', I3)
+
+          i1 = iokl
+          i2 = iokl + npl
+
+          if (FLIESSGESETZ == 'DW_M_FORMBW' .or. FLIESSGESETZ == 'DW_O_FORMBW') then
+            DO j = i1, i2
+              ax (j) = 0.0
+              ay (j) = 0.0
+              dp (j) = 0.0
+            END DO
+          ENDIF
+
+          IF (iokl .gt. 1) then
+            DO j = 1, iokl
+              rau (j) = rau (j)
+              IF (j.eq.iokl) rau (j) = raub
+            END DO
+          ELSE
+            raul (1) = raub
+          ENDIF
+    
+
+          IF (iokr .lt. nknot) then
+            DO j = iokr, nknot
+              x11 (j) = x1 (j)
+              h11 (j) = h1 (j)
+              rau1 (j) = rau (j)
+              !**      dp1 WIRD NICHT WEITER BENUTZT, 12.01.00, UT
+              if (FLIESSGESETZ == 'DW_M_FORMBW' .or. FLIESSGESETZ == 'DW_O_FORMBW') then
+                ax1 (j) = ax (j)
+                ay1 (j) = ay (j)
+                dp1 (j) = dp (j)
+              ENDIF
+            END DO
+
+            DO j = iokr, nknot
+              i2 = i2 + 1
+              x1 (i2) = x11 (j)
+              h1 (i2) = h11 (j)
+              rau (i2) = rau1 (j)
+              if (FLIESSGESETZ == 'DW_M_FORMBW' .or. FLIESSGESETZ == 'DW_O_FORMBW') then
+                ax (i2) = ax1 (j)
+                ay (i2) = ay1 (j)
+                dp (i2) = dp (j)
+              ENDIF
+            END DO
+
+          ELSE     !**   ELSE ZU (iokr.lt.nknot)
+            i2 = i2 + 1
+            x1 (i2) = x1 (nknot)
+            h1 (i2) = h1 (nknot)
+            rau (i2) = rau (nknot)
+          ENDIF    !**  END ZU (iokr.lt.nknot)
+
+          nknot = i2
+          ianf = 2
+          iend = npl
+          hminn = 1000.
+          hming = 1.e+06
+
+          DO ii1 = 1, npl
+            i1 = i1 + 1
+            x1 (i1) = xl (ii1)
+            h1 (i1) = hl (ii1)
+            rau (i1) = raul (ii1)
+
+            IF (ii1.eq.npl) rau (i1) = raub
+    
+            IF (ii1.ge.ianf.and.ii1.le.iend) then
+              IF (h1 (i1) .lt.hminn) then
+                isohl = i1
+                hminn = h1 (i1)
+              ENDIF
+            ENDIF
+
+            IF (hming.gt.h1 (i1) ) then
+              hming = h1 (i1)
+              iming = i1
+            ENDIF
+
+          END DO
+
+          hming = hmin
+          ianf = iokl + 1
+          iend = iokl + npl
+
+          !**    SCHREIBEN IN KONTROLLFILE
+          WRITE (UNIT_OUT_LOG, '('' ianf='',i3,'' iend='',i3)' ) ianf, iend
+    
+          boli = h1 (ianf)
+          bore = h1 (iend)
+          hrbv = hokmax
+
+          itrli = iokl + 1
+          itrre = iokl + npl
+
+          htrli = h1 (itrli)
+          htrre = h1 (itrre)
+
+          !   SCHREIBEN IN KONTROLLFILE UNIT_OUT_LOG
+          WRITE (UNIT_OUT_LOG, '('' itrli='',i3,'' itrre='',i3)') itrli, itrre
+
+          DO j = 1, nknot
+
+            if (FLIESSGESETZ == 'DW_M_FORMBW' .or. FLIESSGESETZ == 'DW_O_FORMBW') then
+              WRITE (UNIT_OUT_LOG, '(''i='',i3,''x1='',f8.3,'' h1='',f8.3,'' rau='',f8.3, &
+               & '' ax='',f8.3,'' ay='',f8.3,'' dp='',f8.3)') j, x1 (j), &
+               & h1 (j) , rau (j) , ax (j) , ay (j) , dp (j)
+            ELSE
+              WRITE (UNIT_OUT_LOG, '(''i='',i3,''x1='',f8.3,'' h1='',f8.3,''rau='',f8.3)') &
+               & j, x1 (j) , h1 (j) , rau (j)
+            ENDIF
+
+          END DO
+
+
+          IF (out_PROF(nprof-1,nr_q)%chr_kenn .eq. 'i') THEN
+            out_PROF(nprof-1,nr_q)%BrueckOK 	= -999.999
+            out_PROF(nprof-1,nr_q)%BrueckUK 	= -999.999
+            out_PROF(nprof-1,nr_q)%BrueckB  	= -999.999
+          END IF
+
+          !MD Ausgabe der Daten am profil "3"
+          ! -------------------------------------------
+          do k = 1, 3
+            if (out_IND(nprof,nr_q,k)%lambda > 99.9999) then
+              out_IND(nprof,nr_q,k)%lambda = 99.9999
+            end if
+          end do
+
+          911 format (1X, F10.4, A5, 5F10.3, F8.3, 3F10.3, 3F10.3, 3F10.3)
+
+          write (UNIT_OUT_BRUECKE, 911) out_PROF(nprof-1,nr_q)%stat, out_PROF(nprof-1,nr_q)%chr_kenn, &
+                           & out_PROF(nprof-1,nr_q)%qges, q_out, out_PROF(nprof-1,nr_q)%wsp, &
+                           & wsp_save (nprof_save-1), out_PROF(nprof-1,nr_q)%hen, out_PROF(nprof-1,nr_q)%vm,  &
+                           & out_IND(nprof-1,nr_q,1)%Q,  out_IND(nprof-1,nr_q,2)%Q, out_IND(nprof-1,nr_q,3)%Q,  &
+                           & out_IND(nprof-1,nr_q,1)%A,  out_IND(nprof-1,nr_q,2)%A, out_IND(nprof-1,nr_q,3)%A, &
+                           & out_PROF(nprof-1,nr_q)%BrueckOK, out_PROF(nprof-1,nr_q)%BrueckUK, out_PROF(nprof-1,nr_q)%BrueckB
+
+
+
+
+          WRITE (UNIT_OUT_TAB, '(/,t10,'' Profil "1":'')')
+
+          ! ----------------------------------------------------------------------------------------------
+          ! P R O F I L   "1"
+          ! =================
+          ! ----------------------------------------------------------------------------------------------
+          !**       --> hr oder hgrenz (wsanf = 0.)
+          IF (ifroud.eq.1) then
+            strbr = breite
+            wsanf1 = 0.
+          ELSE
+            strbr = 0.
+            wsanf1 = hr
+          ENDIF
+          !write (*,*) 'In WSPBER. Vor Berechnung Profil 1, IWEHRB = ', iwehrb
+
+          ! iwehrb kommt aus BR_KONV, ist 0 oder 1
+          IF (iwehrb.eq.0) then
+            CALL wspanf (wsanf1, strbr, q, q1, hr, hv, rg, indmax,    &
+             & hvst, hrst, psieins, psiorts, nprof, hgrenz, ikenn, nblatt, nz, idr1)
+          ELSE
+            henow = hr
+            CALL wspow (henow, strbr, q, q1, hr, hv, rg, indmax, hvst,&
+             & hrst, psieins, psiorts, nprof, hgrenz, ikenn, nblatt, nz, idr1)
+
+          ENDIF
+
+          !MD NEU:: Ablegen der Ergebnisse an der Bruecke
+          CALL speicher (nprof, hr, hv, hvst, hrst, q, stat (nprof), indmax, ikenn)
+          CALL drucktab (nprof, indmax, nz, UNIT_OUT_TAB, nblatt, stat, UNIT_OUT_PRO, idr1)
+
+
+          IF (out_PROF(nprof,nr_q)%chr_kenn .eq. 'i') THEN
+             out_PROF(nprof,nr_q)%BrueckOK 	= -999.999
+             out_PROF(nprof,nr_q)%BrueckUK 	= -999.999
+             out_PROF(nprof,nr_q)%BrueckB  	= -999.999
+          END IF
+
+          !MD Ausgabe der Daten am profil "1"
+          ! ---------------------------------
+          do k = 1, 3
+            if (out_IND(nprof,j,k)%lambda > 99.9999) then
+              out_IND(nprof,j,k)%lambda = 99.9999
+            end if
+          end do
+
+          912 format (1X, F10.4, 5F10.3)
+          write (UNIT_OUT_BRUECKE, 911) out_PROF(nprof,nr_q)%stat, out_PROF(nprof,nr_q)%chr_kenn, &
+                           & out_PROF(nprof,nr_q)%qges, q_out, out_PROF(nprof,nr_q)%wsp, &
+                           & wsp_save (nprof_save-1), out_PROF(nprof,nr_q)%hen, out_PROF(nprof,nr_q)%vm,  &
+                           & out_IND(nprof,nr_q,1)%Q, out_IND(nprof,nr_q,2)%Q, out_IND(nprof,nr_q,3)%Q, &
+                           & out_IND(nprof,nr_q,1)%A, out_IND(nprof,nr_q,2)%A, out_IND(nprof,nr_q,3)%A, &
+                           & out_PROF(nprof,nr_q)%BrueckOK, out_PROF(nprof,nr_q)%BrueckUK, out_PROF(nprof,nr_q)%BrueckB
+
+
+          !  Einlesen aus flussname.dat:
+          ! ------------------------------------
+          READ (UNIT_EIN_STR, '(a)', end = 5000) dummy
+          CALL ju0chr (dummy, feldr, ianz, char, ichar, int, iint, ifehl)
+          IF (ifehl.ne.0.or.ianz.eq.0) then
+            PRINT * , 'Fehlerhaftes Format in der Profil.dat-datei.'
+            PRINT * , 'Es wurde keine Station gelesen.'
+            PRINT * , 'Eingelesen wurde : ', dummy
+            STOP 0
+          ENDIF
+
+          statneu = feldr (1)
+          BACKSPACE (UNIT_EIN_STR)
+          statgrz = stat (nprof) + 5. / 1000.
+
+
+          ! ----------------------------------------------------------------------------------------------
+          ! P R O F I L   "B"
+          ! =================
+      
+          IF (statneu.gt. statgrz+0.001) then
+
+            staso = stat (nprof)
+
+            CALL intdat (staso, ifehl)
+
+            ibridge = ' '
+            nprof = nprof + 1
+            prof_it (nprof) = 1
+            num (nprof) = '0'
+            stat (nprof) = stat (nprof - 1) + 5. / 1000.
+            out_PROF(nprof,nr_q)%stat = stat(nprof)	!WP Zuweisung der Stationierung in globalen Array
+            out_PROF(nprof,nr_q)%interpol = .TRUE.  	!WP In dem globalen Ergebnis TYPE wird sich gemerkt,
+            out_PROF(nprof,nr_q)%chr_kenn = 'i'       	!WP dass dieses Profil bei dem aktuellen Abfluss
+            out_PROF(nprof,nr_q)%qges = q
+
+            write (UNIT_OUT_LOG,103) stat (nprof)
+            103 format (/1X, '       Profil "B" (Bruecke): ', F10.4)
+       !MD  WRITE (UNIT_OUT_TAB, '(/,t10,'' Profil "b":'')')
+
+            d1 = 0.05
+            hminn = 1000.
+            DO i1 = 1, nknot
+              h1 (i1) = h1 (i1) + d1
+              IF (i1.ge.ianf.and.i1.le.iend) then
+                IF (h1 (i1) .lt.hminn) then
+                  isohl = i1
+                  hminn = h1 (i1)
+                ENDIF
+              ENDIF
+            END DO
+
+            hsohl = hmin + d1
+            hmax = hmax + d1
+            htrre = htrre+d1
+            htrli = htrli + d1
+
+            boli = h1 (ianf)
+            bore = h1 (iend)
+            hrbv = hrbv + d1
+            hming = hming + d1
+            hmin = hmin + d1
+
+            str = (stat (nprof) - stat (nprof - 1) ) * 1000.
+
+            CALL normber (str, q, q1, nprof, hr, hv, rg, hvst, hrst, &
+             & indmax, psieins, psiorts, hgrenz, ikenn, froud,  nblatt, nz)
+
+            CALL speicher (nprof, hr, hv, hvst, hrst, q, stat(nprof), indmax, ikenn)
+
+            ! Ausdrucken der Ergebisse im .tab-file
+            ! -----------------------------------------------------------
+            CALL drucktab (nprof, indmax, nz, UNIT_OUT_TAB, nblatt, stat, UNIT_OUT_PRO, idr1)
+
+
+       !MD   ELSE     ! ELSE ZU (statneu.gt.statgrz+0.001)???
+            !  ENDE DER PROFILSCHLEIFE AM ENDE DES PROGRAMMS
+            !WP 03.07.2007 Datei muss geschlossen werden Fehler sonst Fehler beim
+            !WP erneuten Oeffnen mit APPEND
+       !MD  IF (idr1.eq.'j') close (UNIT_OUT_PRO)
+       !MD  CYCLE Hauptschleife
+
+
+            !MD Ausgabe der Daten am profil "B"
+            ! ---------------------------------
+            IF (out_PROF(nprof,nr_q)%chr_kenn .eq. 'i') THEN
+               out_PROF(nprof,nr_q)%BrueckOK 	= -999.999
+               out_PROF(nprof,nr_q)%BrueckUK 	= -999.999
+               out_PROF(nprof,nr_q)%BrueckB  	= -999.999
+            END IF
+
+            do k = 1, 3
+              if (out_IND(nprof,j,k)%lambda > 99.9999) then
+                out_IND(nprof,j,k)%lambda = 99.9999
+              end if
+            end do
+
+            write (UNIT_OUT_BRUECKE, 911) out_PROF(nprof,nr_q)%stat, 'ow', &
+                             & out_PROF(nprof,nr_q)%qges, q_out, out_PROF(nprof,nr_q)%wsp, &
+                             & wsp_save (nprof_save-1), out_PROF(nprof,nr_q)%hen, out_PROF(nprof,nr_q)%vm,  &
+                             & out_IND(nprof,nr_q,1)%Q, out_IND(nprof,nr_q,2)%Q, out_IND(nprof,nr_q,3)%Q, &
+                             & out_IND(nprof,nr_q,1)%A, out_IND(nprof,nr_q,2)%A, out_IND(nprof,nr_q,3)%A, &
+                             & out_PROF(nprof,nr_q)%BrueckOK, out_PROF(nprof,nr_q)%BrueckUK, out_PROF(nprof,nr_q)%BrueckB
+
+            write (UNIT_OUT_QBRUECKE, 912) out_PROF(nprof-1,nr_q)%stat, q_out, out_PROF(nprof,nr_q)%qges, &
+                             & out_PROF(nprof,nr_q)%wsp, wsp_save (nprof_save-1), out_PROF(nprof,nr_q)%hen
+
+          ! wenn kein Profil "B" erzeugt wird
+          ELSE
+            ! Ausgabe der Daten an der Bruecke
+            write (UNIT_OUT_QBRUECKE, 912) out_PROF(nprof,nr_q)%stat, q_out, out_PROF(nprof,nr_q)%qges, &
+                             & out_PROF(nprof,nr_q)%wsp, wsp_save (nprof_save-1), out_PROF(nprof,nr_q)%hen
+
+          ENDIF
+          !------------------------------------------------------------
+
+
+
+           !MD Hochzaehlen des Inneren Abflusses
+           ! ---------------------------------------
+           qvar_in = qvar_in + DELTA_Q
+
+
+        END DO   !MD  ENDE der inneren Abfluss-Schleife
+
+
+      !MD ZURUECKSETZEN DER WERTE
+      !----------------------------------------------------------------
+        VERZOEGERUNGSVERLUST = 'NON '
+        Q_Abfrage = 'IN_SCHLEIFE'
+
+        !MD  Rueckholen der Werte fuer die äussere Abflussschleife
+        isch = isch_out
+        nr_q = nr_q_out
+        q = q_out
+
+        !MD Rueckholen der alten UW-Ergebnisse
+        wsp (nprof-1)     = wsp_save (nprof-1)     ! Wasserspiegel wsp(m+nn) = hr
+        fgesp (nprof-1)   = fgesp_save (nprof-1)   ! Insgesamt durchflossene Flaeche (m**2)
+        brg (nprof-1)     = brg_save (nprof-1)     ! Gesamt durchstroemte Breite
+        vmp (nprof-1)     = vmp_save (nprof-1)     ! Mittleres v
+        froudp (nprof-1)  = froudp_save (nprof-1)  ! Froudzahl
+        hvs (nprof-1)     = hvs_save (nprof-1)     ! Geschwindigkeitsverlust hv
+        hrs (nprof-1)     = hrs_save (nprof-1)     ! Reibungsverlust
+        hs (nprof-1)      = hs_save (nprof-1)      ! Gesamtverlust
+        hen (nprof-1)     = hen_save (nprof-1)     ! Energiehoehe (m+nn)
+        k_kp (nprof-1)    = k_kp_save (nprof-1)    ! mittlere Rauhigkeit: akges
+        igrenz (nprof-1)  = igrenz_save (nprof-1)  ! Hinweis auf grenztiefe
+        rg                = rg_save (nprof-1)      ! hydraulischer Radius (?)
+        tm = fgesp_save (nprof-1) / brg_save (nprof-1)
+        nprof = nprof_save
+
+        hv = hvs (nprof-1)
+        hr = wsp (nprof-1)
+        hvst = hv
+        hrst = hrs_save (nprof-1)
+
+        WRITE (UNIT_OUT_TAB, '(/,'' Innere Q-Schleife ueber Brueckenberechnung abgeschlossen'')')
+
+      END IF
+      ! -------------------------------------------------------------------------------------
+      ! Ende ::  innere Abflussschleife mit konstantem Reibungsgefaelle
+      ! -------------------------------------------------------------------------------------
+
+
+
+
+      ! -------------------------------------------------------------------------------------
+      ! -------------------------------------------------------------------------------------
+      ! Normale Brueckenberechnung ohne innere Abflussstaffelung
+      ! -------------------------------------------------------------
+      ! -------------------------------------------------------------------------------------
 
       !     SCHREIBEN IN KONTROLLFILE
       write (UNIT_OUT_LOG, 23) stat (nprof)
@@ -918,11 +1604,10 @@ Hauptschleife: DO i = 1, maxger
       23 FORMAT (/,5x,'Brueckenberechnung an Station km   ',f7.3,' : ',/)
 
 
-
       ! 1.) Berechnung Profilwerte/Profilabstand Profil 'a' (uw)
       !     (zur beruecksichtigung aufweitungsverlust --> profilabstand
       !     < 4*(bges(nprof-1)-bnetto(bruecke profil '1'))
-      ! -----------------------------------------------------------------------------------      --
+      ! -------------------------------------------------------------------------------------
 
       ! Breite Nettoprofil '1': /* siehe beschreibung und hec
       br1   = x1 (iwr) - x1 (iwl)
@@ -991,9 +1676,7 @@ Hauptschleife: DO i = 1, maxger
                   & 1X, 'X1WR: ', F12.4, / )
 
         DO i1 = 1, nknot
-
           h1 (i1) = h1 (i1) - d1
-
           IF (i1.gt.iwl.and.i1.le.iwr) then
             x1 (i1) = x1 (iwl) + (x1 (i1) - x1 (iwl) ) * d2
           ELSEIF (i1.gt.iwr) then
@@ -1054,9 +1737,7 @@ Hauptschleife: DO i = 1, maxger
       ! =================
 
       stat (nprof) = statgem - breite / 1000.
-
       str1 = (stat (nprof) - stat (nprof - 1) ) * 1000.
-
       prof_it (nprof) = 1
 
       num (nprof) = '0'
@@ -1111,7 +1792,6 @@ Hauptschleife: DO i = 1, maxger
       out_PROF(nprof,nr_q)%BrueckB = breite
 
       out_PROF(nprof,nr_q)%chr_kenn = 'b'
-
       out_PROF(nprof,nr_q)%qges = q
 
       prof_it (nprof) = 0
@@ -1213,7 +1893,6 @@ Hauptschleife: DO i = 1, maxger
 
       !**   ELSE ZU (iokr.lt.nknot)
       ELSE
-
         i2 = i2 + 1
         x1 (i2) = x1 (nknot)
         h1 (i2) = h1 (nknot)
@@ -1222,15 +1901,11 @@ Hauptschleife: DO i = 1, maxger
       !**   END ZU (iokr.lt.nknot)
       ENDIF
 
-
       nknot = i2
-
       ianf = 2
-
       iend = npl
       hminn = 1000.
       hming = 1.e+06
-
 
       DO ii1 = 1, npl
 
@@ -1293,16 +1968,13 @@ Hauptschleife: DO i = 1, maxger
 
       END DO
 
-
       WRITE (UNIT_OUT_TAB, '(/,t10,'' Profil "1":'')')
-
 
 
 
       ! ----------------------------------------------------------------------------------------------
       ! P R O F I L   "1"
       ! =================
-
       !**       --> hr oder hgrenz (wsanf = 0.)
       IF (ifroud.eq.1) then
         strbr = breite
@@ -1452,6 +2124,7 @@ Hauptschleife: DO i = 1, maxger
     ! UT   ELSE FUER nprof=1, im FOLGENDEN nprof groesser 1!
 
 
+
     ELSEIF (BERECHNUNGSMODUS /= 'REIB_KONST') then
     ! ---------------------------------------------------------------
     ! Normale Berechnung fuer alle weiteren Profile ausser nprof=1
@@ -1542,15 +2215,10 @@ Hauptschleife: DO i = 1, maxger
           CALL intdat (staso, ifehl)
 
           ibridge = ' '
-
           nprof = nprof + 1
-
           prof_it (nprof) = 1
-
           num (nprof) = '0'
-
           stat (nprof) = stat (nprof - 1) + 5. / 1000.
-
           out_PROF(nprof,nr_q)%stat = stat(nprof)	!WP Zuweisung der Stationierung in globalen Array
                                                         !WP Hinweis: Je nach Abflusszustand kann sich die
                                                         !WP Anzahl der interpolierten Profile aendern
