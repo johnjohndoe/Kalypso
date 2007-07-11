@@ -537,4 +537,16 @@ public class RMA10Calculation implements INativeIDProvider
       throw new RuntimeException( "Type not supported" );
     }
   }
+  
+  public boolean containsID( final IFeatureWrapper2 i1d2dObject )
+  {
+    if( i1d2dObject instanceof IBoundaryLine )
+    {
+      return m_boundaryLineIDProvider.containsKey( (IBoundaryLine)i1d2dObject );
+    }
+    else
+    {
+      throw new RuntimeException( "Type not supported" );
+    }
+  }
 }
