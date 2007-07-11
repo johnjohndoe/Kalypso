@@ -1113,5 +1113,61 @@ Kalypso 2.0.3.2      05. Juli 2007
 
 2.)  Eroeffnen der Ausgabedatei 'Laengs_QWehre.txt' und 'HOW-Qwehr-HUW' auch von wspber 
      in qbordv verschoben
-                                                         Monika Donner, 05.07.2007   
-                                                         
+                                                         Monika Donner, 05.07.2007 
+
+
+Kalypso 2.0.4        11. Juli 2007
+-----------------------------------
+1.)  Weiterentwicklung der neuen Berechnungsvariante unter konstantem Reibungsgefälle zur
+     Generierung von Datentabellen für die instationäre Berechnung an Brückenprofilen.
+     So wird in der Subroutinen wspber eine Schleife um jedes Brückenprofil mit einem 
+     inneren Abflussintervall gelegt. Dabei werden an der Brücke auch alle lokalen Verluste
+     berücksichtigt. Aus der äußeren Abflussschleife wird der Wasserstand im Unterwasser
+     H_uw(Q_out) berechnete und dort festgehalten. Mit diesem festen Wasserstand wird dann die innere 
+     Abflussschleife über die Brücke gestartet.
+     Nach Abschluss des inneren Abflussintervalls wird, die Brückenberechnung noch 
+     einmal mit dem äußeren Abfluss und dem zugehörigen Wasserstand im Unterwasser berechnet.  
+     Der Wasserstand im Unterwasser-Profil (n) der Brücke ist unabhängig vom Bauwerk und kann daher
+     auch Startprofil eines Gewässerstranges sein. Bei dieser Berechnungsvariante mit einem 
+     schrittweise festen Unterwasserstand muss die Kontinuitätsbedingung an der Brücke eingehalten
+     werden. Daher wird auf Basis des aktuellen Abflusses über die Brücke die Energiehöhe
+     über eine zunehmende Fließgeschwindigkeit im Unterwasser erhöht.
+      
+     Anmerkung zur Rechenzeit:
+     Die innere Abflussschleife verminderte die Berechnung um den Faktor des Q-Intervalls:
+               Beispiel: Berechnung von 3-Q-intervallen (1, 2 und 3m³/s) 
+               --> 9 Berechnungen je Bauwerk: Also dreimal so langsam
+     Abflussintervalle sollte nicht zu groß gewählt werden (delta Q < 10 m3/s), da sonst keine 
+     Konvergenz in der Berechnung erreicht wird.  
+
+3.)  Für die die neuen Berechnungsvariante müssen folgende wichtigen Vorgaben erfolgen:
+     - Konstantes stationäres Gefälle = angenommenes Reibungsgefälle
+     - Ein Abflussintervall mit Qmin, Qmax und dQ
+     - KEIN Verlustbeiwert beta (infolge Einschnürung oder Aufweitung)
+     - Fließwiderstand ausschließlich für Darcy-Weisbach ohne Formwiderstand (kein kst)
+
+     Folgende Routinen haben Änderungen bei der Einbindung der inneren Schleife um die Brücken 
+     erfahren:
+     - qbordv: Defintion der zwei neuen Ausgabe-Dateien: "HOW_QBreucke_HUW" und "Laengs_QBruecke"
+     - wspber: Innere Schleife um die Brückenberechnung/ neue Ausgaben/ neue Variablen zur Sicherung
+               der Ergebnisse im UW
+     - br_konv: bugfix (siehe unten)
+     - w_ber: nur Ausgabeformate fuer die innere Schleife ueber die Wehre angepasst
+     
+     Alle Deatils zum Berechnungsablauf, Theorie und zur Umsetzung im Rechenkern kann im Dokument:
+     <Konzeption_neue_WSPM-Berech-Variante.doc>  
+
+4.)  Bugfix in der br_konv:
+     --> es fehlte ein "&" im letzten Block bei "CALL normber"
+
+5.)  Eigenen Anmerkung: 
+     -------------------
+     Die Brückenberechnung verwendet NIE die Wehrberechnung (w_ber) sondern arbeitet 
+     mit einer eigenen Impulsbilanz in "br_konv" für den vollkommenen Überfall. Fuer den 
+     unvollk. Überfall (iwehr=iwehrb=1) wird die "wspow" in wspber aufgerufen. Diese berechnet 
+     aber nur den Oberwasserstand am Wehr auf Basis eines bereits berechneten Wasserstandes
+     und Abflusses im Wehr. Eine Wehrberechnung wird hier immer nur mittels Impulsbilanz 
+     (wenn überhaupt) vorgenommen. Die Impulsbilanz überschätzt den Wasserstand häufig 
+     (das hat sich bei den Wehren gezeigt), ist aber dafür stabiler.
+
+                                                          Monika Donner, 11.07.2007                                                          
