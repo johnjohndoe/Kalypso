@@ -720,8 +720,11 @@ public class FeatureWrapperListEditor implements IButtonConstants
         {
           throw new IllegalArgumentException( "IfeatureWrapper2 expected but got:" + currentSelection );
         }
-        descriptionText.setText( desc );
-        descriptionText.redraw();
+        if (showDescription())
+        {
+          descriptionText.setText( desc );
+          descriptionText.redraw();
+        }
       }
     };
     final Display display = parent.getDisplay();
