@@ -51,9 +51,9 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  */
 public class PanToWidget extends AbstractWidget
 {
-  public PanToWidget( String name, String toolTip )
+  public PanToWidget( )
   {
-    super( name, toolTip );
+    super( "pan to", "");
   }
 
   private Point endPoint = null;
