@@ -43,9 +43,7 @@ package org.kalypso.kalypsomodel1d2d.conv;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
-import java.net.MalformedURLException;
 import java.util.Collection;
 import java.util.Formatter;
 import java.util.HashSet;
@@ -54,6 +52,11 @@ import java.util.List;
 import java.util.Locale;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.FileLocator;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypso.kalypsomodel1d2d.conv.results.RestartEater;
 import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
@@ -75,12 +78,11 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.FlowRelationUtilitite
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IKingFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IWeirFlowRelation;
-import org.kalypso.kalypsomodel1d2d.schema.binding.model.INodeResultCollection;
-import org.kalypso.kalypsomodel1d2d.schema.binding.model.NodeResultCollection;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.GMLNodeResult;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
 import org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
+import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
@@ -166,9 +168,11 @@ public class Gml2RMA10SConv implements INativeIDProvider
     if( m_restart )
     {
       m_restartEater = new RestartEater();
+      final IFolder scenarioFolder = Util.getScenarioFolder( );
       for( final String path : m_calculation.getControlModel().getRestartPaths() )
       {
-        final File file = new File(path);
+        IFile ifile = scenarioFolder.getProject().getFile( path );
+        final File file = ifile.getRawLocation().toFile();
         try
         {
           m_restartEater.addResultFile( file );
