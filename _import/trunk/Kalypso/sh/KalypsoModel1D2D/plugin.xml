@@ -567,19 +567,13 @@
       <activeWhen>
          <with
                variable="selection">
-            <and>
-               <count
-                     value="1">
-               </count>
-               <instanceof
-                     value="org.kalypso.ogc.gml.IKalypsoFeatureTheme">
-               </instanceof>
+            <iterate>
                <test
                      forcePluginActivation="true"
                      property="org.kalypso.core.featureType"
                      value="insert feature type qname here">
                </test>
-            </and>
+            </iterate>
          </with>
       </activeWhen>
    </handler>		 
@@ -594,7 +588,11 @@
             name="Element entfernen"/>
       <command
             id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditElement"
-            name="Element editieren"/>           
+            name="Element editieren"/>
+      <command
+            id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.TinInfo"
+            name="Tin-Info">
+      </command>           
      </extension>
 	 <extension
            point="org.eclipse.ui.menus">
