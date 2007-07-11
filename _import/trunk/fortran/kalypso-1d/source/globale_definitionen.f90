@@ -1,4 +1,4 @@
-!     Last change:  MD    4 Jul 2007    6:24 pm
+!     Last change:  MD   11 Jul 2007    1:39 pm
 !--------------------------------------------------------------------------
 ! This code, globale_definitionen.f90, contains the shared memory modules
 ! and functions of the hydrodynamic modell for
@@ -42,8 +42,8 @@ implicit none
 
 save
 
-CHARACTER(LEN=29), parameter :: VERSIONNR   = ' KALYPSO-1D, VERSION 2.0.3.2 '
-CHARACTER(LEN=17), parameter :: VERSIONDATE = 'Stand: 05.07.2007'
+CHARACTER(LEN=29), parameter :: VERSIONNR   = ' KALYPSO-1D, VERSION 2.0.4   '
+CHARACTER(LEN=17), parameter :: VERSIONDATE = 'Stand: 10.07.2007'
 
 end module VERSION
 
@@ -127,6 +127,8 @@ INTEGER	:: UNIT_OUT_QB1         ! Laengschnitt im WspWin Blockformat bei Bordvol
 INTEGER	:: UNIT_OUT_QB2         ! Laengschnitt im WspWin Blockformat bei Bordvoll-Berechnung
 INTEGER	:: UNIT_OUT_WEHR        ! Ausgabedatei fuer innere Abflussstaffelung am Wehr
 INTEGER	:: UNIT_OUT_QWEHR       ! Ausgabedatei fuer Wasserstand-Abfluss-Beziehung ums Wehr
+INTEGER	:: UNIT_OUT_BRUECKE     ! Ausgabedatei fuer innere Abflussstaffelung an Bruecken
+INTEGER	:: UNIT_OUT_QBRUECKE    ! Ausgabedatei fuer Wasserstand-Abfluss-Beziehung an Bruecken
 
 end module IO_UNITS
 
@@ -162,11 +164,13 @@ CHARACTER(LEN=nch80) 			:: NAME_OUT_ALPHA       ! Beiwerte.aus, Ausgabe der Ener
 CHARACTER(LEN=nch80),DIMENSION(1:maxger):: NAME_OUT_PRO         ! WQ-Tabelle altes WspWin Format
 CHARACTER(LEN=nch80) 			:: NAME_OUT_WSL         ! Laengschnitt im WspWin Blockformat
 CHARACTER(LEN=nch80) 			:: NAME_OUT_LAENGS      ! Neuer Laengsschnitt im Tabellenformat (leangsschnitt.txt)
-CHARACTER(LEN=nch80) 			:: NAME_OUT_QLAENGS     ! Neuer Abfluss-Laengsschnitt im Tabellenformat (Qschnitt.txt)
+CHARACTER(LEN=nch80) 			:: NAME_OUT_QLAENGS     ! Neuer Abfluss-Laengsschnitt im Tabellenformat (Q_LangSchnitt.txt)
 CHARACTER(LEN=nch80) 			:: NAME_OUT_QB1         ! Laengschnitt im WspWin Blockformat bei Bordvoll-Berechnung
 CHARACTER(LEN=nch80) 			:: NAME_OUT_QB2         ! Laengschnitt im WspWin Blockformat bei Bordvoll-Berechnung
 CHARACTER(LEN=nch80) 			:: NAME_OUT_WEHR        ! Ausgabedatei fuer innere Abflussstaffelung am Wehr
 CHARACTER(LEN=nch80) 			:: NAME_OUT_QWEHR       ! Ausgabedatei fuer Wasserstand-Abfluss-Beziehung ums Wehr
+CHARACTER(LEN=nch80) 			:: NAME_OUT_BRUECKE     ! Ausgabedatei fuer innere Abflussstaffelung an Bruecken
+CHARACTER(LEN=nch80) 			:: NAME_OUT_QBRUECKE    ! Ausgabedatei fuer Wasserstand-Abfluss-Beziehung an Bruecken
 
 end module IO_NAMES
 
