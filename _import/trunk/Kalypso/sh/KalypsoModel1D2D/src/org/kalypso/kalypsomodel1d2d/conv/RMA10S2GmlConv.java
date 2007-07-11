@@ -47,6 +47,7 @@ import java.io.LineNumberReader;
 import java.io.Reader;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -120,7 +121,7 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
         // result LINEID, ID, vx, vy, depth, waterlevel
         interpreteResultLine( line, m_handler );
       }
-      else if( char0 == 'D' && char1 == 'D' )
+      else if( char0 == 'D' && char1 == 'A' )
       {
         // result TIMESTEP
         // DA 2001 19.0000000
@@ -169,21 +170,23 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
 
   private void interpreteTimeLine( final String line, final IRMA10SModelElementHandler handler )
   {
-    if( line.length() >= 33 )
+    if( line.length() >= 32 )
     {
       try
       {
-        final String yearString = line.substring( 9, 13 );
-        final String hourString = line.substring( 18, 33 );
+        final String yearString = line.substring( 6, 13 ).trim();
+        final String hourString = line.substring( 18, 32 ).trim();
 
         final int year = Integer.parseInt( yearString );
-        final double hours = Integer.parseInt( hourString );
+        final double hours = Double.parseDouble( hourString );
 
-        final Calendar calendar = new GregorianCalendar();
-        calendar.set( year, 0, 0 );
+        final Calendar calendar = new GregorianCalendar( TimeZone.getTimeZone( "UTM" ) );
+        calendar.clear();
+        calendar.set( year, 0, 1 );
 
         final int wholeHours = (int) Math.floor( hours );
-        final int wholeMinutes = (int) Math.floor( hours * 60 );
+        final int minutesInHours = (int) (hours - wholeHours);
+        final int wholeMinutes = (int) Math.floor( minutesInHours * 60 );
 
         calendar.add( Calendar.HOUR, wholeHours );
         calendar.add( Calendar.MINUTE, wholeMinutes );

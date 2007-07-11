@@ -127,12 +127,12 @@ public class ProcessResultsJob extends Job
     try
     {
       /* Zip .2d file to outputDir */
-      final File exeLog = new File(m_inputFile.getParentFile().toString() + "/exe.log");
-      final File exeErr = new File(m_inputFile.getParentFile().toString() + "/exe.err");
-      final File outputOut = new File(m_inputFile.getParentFile().toString() + "/result/Output.out");
-      File[] files = new File[] { m_inputFile, exeLog, exeErr, outputOut };
+      final File exeLog = new File( m_inputFile.getParentFile().toString() + "/exe.log" );
+      final File exeErr = new File( m_inputFile.getParentFile().toString() + "/exe.err" );
+      final File outputOut = new File( m_inputFile.getParentFile().toString() + "/result/Output.out" );
+      final File[] files = new File[] { m_inputFile, exeLog, exeErr, outputOut };
       final File outputZip2d = new File( m_outputDir, "original.2d.zip" );
-//      ZipUtilities.zip( outputZip2d, new File[] { m_inputFile }, m_inputFile.getParentFile() );
+      // ZipUtilities.zip( outputZip2d, new File[] { m_inputFile }, m_inputFile.getParentFile() );
       ZipUtilities.zip( outputZip2d, files, m_inputFile.getParentFile() );
       monitor.worked( 1 );
 
@@ -270,12 +270,13 @@ public class ProcessResultsJob extends Job
     final IResultModel1d2d resModel1d2d = (IResultModel1d2d) resultWorkspace.getRootFeature().getAdapter( IResultModel1d2d.class );
     final IResultModelDescriptor resultModelDescriptor = m_calculation.addToSimulationDescriptor( resModel1d2d );
 
+    // TODO: retreivce timezone from central plugin preferences
     final DateFormat dateFormatter = DateFormat.getDateTimeInstance();
 
     if( time == null )
       resultModelDescriptor.setModelName( "Stationär" );
     else
-      resultModelDescriptor.setModelID( String.format( "Zeitschritt: " + dateFormatter.format( time ) ) );
+      resultModelDescriptor.setModelName( String.format( "Zeitschritt: " + dateFormatter.format( time ) ) );
 
     resultModelDescriptor.setDescription( outputDir.getName() ); // TODO
 
