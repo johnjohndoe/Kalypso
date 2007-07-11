@@ -87,6 +87,11 @@ public class ShapeSerializer
 
   private static final QName ROOT_FEATURETYPE = new QName( "namespace", "featureCollection" );
 
+  /**
+   * Pseudo QNAME, placeholder for the gml-id to be written.
+   */
+  public static final QName QNAME_GMLID = new QName( Gml2ShapeConverter.class.getName() + "gmlid" );
+
   private ShapeSerializer( )
   {
     // wird nicht instantiiert
@@ -213,9 +218,21 @@ public class ShapeSerializer
     int count = 1;
     for( final Entry<String, QName> entry : mapping.entrySet() )
     {
-      final IValuePropertyType ftp = (IValuePropertyType) featureType.getProperty( entry.getValue() );
-      final IMarshallingTypeHandler typeHandler = ftp.getTypeHandler();
-      ftps[count] = GMLSchemaFactory.createValuePropertyType( new QName( "namespace", entry.getKey() ), typeHandler.getTypeName(), typeHandler, 1, 1, false );
+      final QName qname = entry.getValue();
+
+      if( qname == QNAME_GMLID )
+      {
+        /* If it is the pseudo gml-id qname, create a string-property */
+        final IMarshallingTypeHandler typeHandler = MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "string" ) );
+        ftps[count] = GMLSchemaFactory.createValuePropertyType( new QName( "namespace", entry.getKey() ), typeHandler.getTypeName(), typeHandler, 1, 1, false );
+      }
+      else
+      {
+        /* for each given value property create a corresponding type */
+        final IValuePropertyType ftp = (IValuePropertyType) featureType.getProperty( qname );
+        final IMarshallingTypeHandler typeHandler = ftp.getTypeHandler();
+        ftps[count] = GMLSchemaFactory.createValuePropertyType( new QName( "namespace", entry.getKey() ), typeHandler.getTypeName(), typeHandler, 1, 1, false );
+      }
       count++;
     }
 
@@ -234,7 +251,13 @@ public class ShapeSerializer
 
         int datacount = 1;
         for( final Entry<String, QName> entry : mapping.entrySet() )
-          data[datacount++] = kalypsoFeature.getProperty( entry.getValue() );
+        {
+          final QName qname = entry.getValue();
+          if( qname == QNAME_GMLID )
+            data[datacount++] = kalypsoFeature.getId();
+          else
+            data[datacount++] = kalypsoFeature.getProperty( qname );
+        }
 
         final Feature feature = FeatureFactory.createFeature( null, null, "" + i, shapeFeatureType, data );
         shapeFeatures.add( feature );

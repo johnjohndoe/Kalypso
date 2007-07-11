@@ -89,6 +89,9 @@ public class Gml2ShapeConverter
       }
     }
 
+    /* also write gmlID */
+    propertyMap.put( "gmlID", ShapeSerializer.QNAME_GMLID );
+
     final IValuePropertyType geomProp = featureType.getDefaultGeometryProperty();
 
     return new Gml2ShapeConverter( propertyMap, geomProp.getQName() );

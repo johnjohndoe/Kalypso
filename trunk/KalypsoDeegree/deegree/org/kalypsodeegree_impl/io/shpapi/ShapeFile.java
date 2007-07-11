@@ -62,6 +62,7 @@ package org.kalypsodeegree_impl.io.shpapi;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
@@ -158,7 +159,7 @@ public class ShapeFile
     catch( final IOException e )
     {
       hasDBaseFile = false;
-      
+
       e.printStackTrace();
     }
 
@@ -187,11 +188,11 @@ public class ShapeFile
         e.printStackTrace();
       }
 
-      for( int i = 0; i < s.length; i++ )
+      for( final String element : s )
       {
         try
         {
-          dBaseIndexes.put( s[i], new DBaseIndex( url + "$" + s[i] ) );
+          dBaseIndexes.put( element, new DBaseIndex( url + "$" + element ) );
         }
         catch( final IOException e )
         {
@@ -331,7 +332,7 @@ public class ShapeFile
    * stored into the dbase file.
    * 
    * @param allowNull
-   *          if true, everything wich cannot parsed gets 'null' instaed of ""
+   *            if true, everything wich cannot parsed gets 'null' instaed of ""
    */
   public Feature getFeatureByRecNo( final Feature parent, final IRelationType parentRelation, final int RecNo, final boolean allowNull ) throws IOException, HasNoDBaseFileException, DBaseException
   {
@@ -385,7 +386,7 @@ public class ShapeFile
 
       final GM_Curve[] curves = shpwks.transformPolyLine( null, shppolyline );
 
-      if( curves != null  )
+      if( curves != null )
       {
         // create multi curve
         final GM_MultiCurve mc = GeometryFactory.createGM_MultiCurve( curves );
@@ -465,7 +466,7 @@ public class ShapeFile
     }
     else
     {
-      throw(new NotImplementedException());
+      throw (new NotImplementedException());
     }
 
     return geom;
@@ -782,7 +783,7 @@ public class ShapeFile
       {
         fieldList.add( new FieldDescriptor( s, "D", (byte) 12, (byte) 0 ) );
       }
-      else if( clazz == Long.class )
+      else if( clazz == Long.class || clazz == BigInteger.class )
       {
         fieldList.add( new FieldDescriptor( s, "N", (byte) 30, (byte) 0 ) );
       }
@@ -853,6 +854,10 @@ public class ShapeFile
         {
           vec.add( new Double( ((java.math.BigDecimal) value).doubleValue() ) );
         }
+        else if( clazz == BigInteger.class )
+        {
+          vec.add( new Long( ((BigInteger) value).longValue() ) );
+        }
       }
 
       // write the ArrayList (properties) to the dbase file
@@ -867,7 +872,7 @@ public class ShapeFile
       }
 
       // Get Geometry Type of i'th feature
-      
+
       // TODO: this is bad! Like that, shape files with mixed shape-types may be produced
       // Better: get global type from outside, and check if found geometry fits
       // If not, write null-shape
@@ -1054,8 +1059,8 @@ public class ShapeFile
   {
     return m_dbf.getFeatureType();
   }
-  
-  public int getFileShapeType()
+
+  public int getFileShapeType( )
   {
     return shp.getFileShapeType();
   }
