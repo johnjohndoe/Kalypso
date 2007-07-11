@@ -139,7 +139,7 @@
                 label="Wehr hinzufügen"
                 style="radio"
                 toolbarPath="tools"
-                tooltip="Wehr einem FE-Element zuordnen">
+                tooltip="Wehr zuordnen">
 	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
 	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
 	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateWeirFlowrelationWidget"/>
@@ -152,10 +152,10 @@
           <action
                 icon="icons/elcl16/09_add_parameter_teschke.gif"
                 id="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateTeschkeFlowrelationWidgetAction"
-                label="Teschke Parameter hinzufügen"
+                label="Teschke-Parameter hinzufügen"
                 style="radio"
                 toolbarPath="tools"
-                tooltip="Plolynomfunktion zuordnen">
+                tooltip="Polynomfunktion zuordnen">
 	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
 	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
 	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateTeschkeFlowrelationWidget"/>
@@ -168,7 +168,7 @@
           <action
                 icon="icons/elcl16/10_add_parameter_king.gif"
                 id="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateKingFlowrelationWidgetAction"
-                label="King Parameter hinzufügen"
+                label="King-Parameter hinzufügen"
                 style="radio"
                 toolbarPath="tools"
                 tooltip="Kanalprofilparameter zuordnen">
@@ -187,7 +187,7 @@
                 label="Parameter bearbeiten"
                 style="radio"
                 toolbarPath="tools"
-                tooltip="Zugeordnete Parameter eines FE-Knoten bearbeiten">
+                tooltip="Zugeordnete Parameter bearbeiten">
 	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
 	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
 	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditFlowrelationWidget"/>
@@ -203,7 +203,7 @@
 	           label="Parameter löschen"
 	           style="radio"
 	           toolbarPath="tools"
-	           tooltip="Zugeordnete Parameter eines FE-Knoten löschen">
+	           tooltip="Zugeordnete Parameter löschen">
 	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
 	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
 	                     	value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.DeleteFlowrelationWidget"/>
@@ -220,7 +220,7 @@
          label="Profil selektieren"
          style="radio"
          toolbarPath="tools"
-         tooltip="Profil selektieren und in  Karte anzeigen">
+         tooltip="Profil selektieren und in Karte anzeigen">
 	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
 	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
 	                     	value="org.kalypso.model.wspm.ui.view.map.SelectionOneProfileWidget"/>
@@ -229,15 +229,6 @@
 	                    <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context" 
 	                     	value="SelectOneProfile"/>
 	       			</class>
-   </action>
-   <action
-         class="org.kalypso.kalypsomodel1d2d.ui.map.tin.TinInfoWidgetDelegate"
-         icon="icons/elcl16/tin_info.gif"
-         id="org.kalypso.kalypsomodel1d2d.ui.map.tin.TinInfoWidgetAction"
-         label="TIN-Info"
-         style="radio"
-         toolbarPath="tools"
-         tooltip="TIN-Werte anzeigen">
    </action>
         </viewContribution>
      </extension>
@@ -555,49 +546,38 @@
                     value="Ganglinie erstellen"/>              
             </class>
 		 </handler>
-   <handler
-         commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.TinInfo">
-      <class
-            class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
-         <parameter
-               name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
-               value="org.kalypso.kalypsomodel1d2d.ui.map.result.CreateHydrographWidget">
-         </parameter>
-      </class>
-      <activeWhen>
-         <with
-               variable="selection">
-            <iterate>
-               <test
-                     forcePluginActivation="true"
-                     property="org.kalypso.core.featureType"
-                     value="insert feature type qname here">
-               </test>
-            </iterate>
-         </with>
-      </activeWhen>
-   </handler>		 
      </extension>
      <extension
            point="org.eclipse.ui.commands">
 	  <command
-            id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateElement"
-            name="Element erzeugen"/>                   
+         categoryId="org.kalypso.ogc.gml.map.category"
+         id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateElement"
+         name="Element erzeugen"/>                   
 	  <command
-            id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement"
-            name="Element entfernen"/>
+         categoryId="org.kalypso.ogc.gml.map.category"
+         id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement"
+         name="Element entfernen"/>
       <command
+            categoryId="org.kalypso.ogc.gml.map.category"
             id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditElement"
             name="Element editieren"/>
       <command
+            categoryId="org.kalypso.ogc.gml.map.category"
             id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.TinInfo"
             name="Tin-Info">
+         <defaultHandler
+               class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+            <parameter
+                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+                  value="org.kalypso.kalypsomodel1d2d.ui.map.tin.TinInfoWidget">
+            </parameter>
+         </defaultHandler>
       </command>           
      </extension>
 	 <extension
            point="org.eclipse.ui.menus">
         <menuContribution
-              locationURI="toolbar:org.kalypso.ui.views.mapView">
+              locationURI="toolbar:org.kalypso.ui.views.mapView?before=actions">
            <command
                  commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateElement"
                  icon="icons/elcl16/add.gif"
@@ -619,15 +599,30 @@
                  style="radio"
                  tooltip="Ein Element editieren">
            </command>
-           <separator
-                 name="editSep"
-                 visible="true">
-           </separator>
+        </menuContribution>
+        <menuContribution
+              locationURI="toolbar:org.kalypso.ui.views.mapView?before=actions">
            <command
                  commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.TinInfo"
+                 icon="icons/elcl16/tin_info.gif"
                  label="TIN-Info"
                  style="radio"
                  tooltip="TIN-Werte anzeigen">
+              <visibleWhen>
+                 <with
+                       variable="selection">
+                    <count
+                          value="1">
+                    </count>
+                    <iterate>
+                       <test
+                             forcePluginActivation="true"
+                             property="org.kalypso.core.featureType"
+                             value="insert feature type qname here">
+                       </test>
+                    </iterate>
+                 </with>
+              </visibleWhen>
            </command>
         </menuContribution>
      </extension>
