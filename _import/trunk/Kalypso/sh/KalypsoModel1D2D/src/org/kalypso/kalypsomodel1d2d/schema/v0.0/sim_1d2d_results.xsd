@@ -190,6 +190,12 @@
 				<xs:sequence>
 					<xs:element name="triangulatedSurfaceMember"
 						type="res1d2d:TriangulatedSurfacePropertyType" />
+						<xs:element name="unit" type="xs:string">
+						</xs:element>
+						<xs:element name="parameter" type="xs:string">
+						</xs:element>
+						<xs:element name="date" type="xs:dateTime">
+						</xs:element>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
