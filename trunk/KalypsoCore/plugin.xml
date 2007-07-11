@@ -143,7 +143,7 @@
           id="org.kalypso.ogc.gml.FeatureThemeTester"
           namespace="org.kalypso.core"
           properties="featureType"
-          type="org.kalypso.ogc.gml.IFeatureTheme">
+          type="org.kalypso.ogc.gml.IKalypsoFeatureTheme">
     </propertyTester>
  </extension>
 
