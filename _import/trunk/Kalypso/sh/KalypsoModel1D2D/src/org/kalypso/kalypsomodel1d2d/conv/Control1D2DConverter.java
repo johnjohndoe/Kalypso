@@ -147,7 +147,8 @@ public class Control1D2DConverter
     // C2
     // TODO: P_BOTTOM still not implemented, ask Nico
     formatter.format( "C2%14.2f%8.3f%8.1f%8.1f%8.1f%8d%8.3f%n", controlModel.getOMEGA(), controlModel.getELEV(), 1.0, 1.0, 1.0, 1, controlModel.get_P_BOTTOM() );
-//    formatter.format( "C2%14.2f%8.3f%8.1f%8.1f%8.1f%8d%n", controlModel.getOMEGA(), controlModel.getELEV(), 1.0, 1.0, 1.0, 1 );
+// formatter.format( "C2%14.2f%8.3f%8.1f%8.1f%8.1f%8d%n", controlModel.getOMEGA(), controlModel.getELEV(), 1.0, 1.0,
+// 1.0, 1 );
 
     // C3
     formatter.format( "C3%14.3f%8.3f%8.3f%8.1f%8.3f%8.3f%8.3f%n", 1.0, 1.0, controlModel.getUNOM(), controlModel.getUDIR(), controlModel.getHMIN(), controlModel.getDSET(), controlModel.getDSETD() );
@@ -162,9 +163,9 @@ public class Control1D2DConverter
     // CV
     formatter.format( "CV%14.2g%8.2g%8.2g%8.2g%8.2g%16d%8.2f%n", controlModel.getCONV_1(), controlModel.getCONV_2(), controlModel.getCONV_3(), 0.05, 0.05, controlModel.getIDRPT(), controlModel.getDRFACT() );
 
-    // IOP line deleted because Nico said that it is an ugly, baaad line...  :)
+    // IOP line deleted because Nico said that it is an ugly, baaad line... :)
     // (IOP has something to do with reordering, and this is not working properly with 1D-2D copling)
-    //    formatter.format( "IOP%n" );
+    // formatter.format( "IOP%n" );
 
     // VEGETA
     if( controlModel.getVegeta() )
@@ -288,29 +289,35 @@ public class Control1D2DConverter
     /* Steady state, just one block for the Starting Date. */
     final int niti = controlModel.getNITI();
 
-    final String msg = "Steady State Input Data";
-    
-    final Double uRValSteady = controlModel.get_steadyBC();
-    if(uRValSteady == null || uRValSteady.isNaN())
-      throw new SimulationException( "Stationär Relaxationsfaktor leer, keine Rechnung möglich.", null );
-//    final float uRValSteady = ((BigDecimal) firstRecord.getValue( compUnderRelax )).floatValue();
-    writeTimeStep( formatter, msg, null, null, uRValSteady.floatValue(), niti, timeStepInfos );
-
-    /* Unsteady state: a block for each time step */
-    Calendar lastStepCal = ((XMLGregorianCalendar) firstRecord.getValue( compTime )).toGregorianCalendar();
-
-    for( int stepCount = 1; iterator.hasNext(); stepCount++ )
+    if( niti > 0 )
     {
-      final IRecord record = iterator.next();
-      final float uRVal = ((BigDecimal) record.getValue( compUnderRelax )).floatValue();
-      final int nitn = controlModel.getNITN();
+      final String msg = "Steady State Input Data";
 
-      final Calendar stepCal = ((XMLGregorianCalendar) record.getValue( compTime )).toGregorianCalendar();
+      final Double uRValSteady = controlModel.get_steadyBC();
+      if( uRValSteady == null || uRValSteady.isNaN() )
+        throw new SimulationException( "Stationär Relaxationsfaktor leer, keine Rechnung möglich.", null );
+// final float uRValSteady = ((BigDecimal) firstRecord.getValue( compUnderRelax )).floatValue();
+      writeTimeStep( formatter, msg, null, null, uRValSteady.floatValue(), niti, timeStepInfos );
+    }
+    final int nitn = controlModel.getNITN();
 
-      final String unsteadyMsg = String.format( "Unsteady State Input Data; Step: %4d", stepCount );
-      writeTimeStep( formatter, unsteadyMsg, stepCal, lastStepCal, uRVal, nitn, timeStepInfos );
+    if( nitn > 0 )
+    {
+      /* Unsteady state: a block for each time step */
+      Calendar lastStepCal = ((XMLGregorianCalendar) firstRecord.getValue( compTime )).toGregorianCalendar();
 
-      lastStepCal = stepCal;
+      for( int stepCount = 1; iterator.hasNext(); stepCount++ )
+      {
+        final IRecord record = iterator.next();
+        final float uRVal = ((BigDecimal) record.getValue( compUnderRelax )).floatValue();
+
+        final Calendar stepCal = ((XMLGregorianCalendar) record.getValue( compTime )).toGregorianCalendar();
+
+        final String unsteadyMsg = String.format( "Unsteady State Input Data; Step: %4d", stepCount );
+        writeTimeStep( formatter, unsteadyMsg, stepCal, lastStepCal, uRVal, nitn, timeStepInfos );
+
+        lastStepCal = stepCal;
+      }
     }
   }
 
