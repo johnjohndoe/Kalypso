@@ -47,6 +47,7 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigInteger;
 import java.net.URL;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -62,7 +63,6 @@ import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.commons.performance.TimeLogger;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler;
 import org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv;
 import org.kalypso.kalypsomodel1d2d.conv.results.MultiTriangleEater;
 import org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler;
@@ -199,7 +199,7 @@ public class ProcessResultsJob extends Job
          */
       }
 
-      final IRMA10SModelElementHandler handler = new NodeResultsHandler( resultWorkspace, multiEater, m_calculation, minMaxCatcher );
+      final NodeResultsHandler handler = new NodeResultsHandler( resultWorkspace, multiEater, m_calculation, minMaxCatcher );
       conv.setRMA10SModelElementHandler( handler );
 
       logger.takeInterimTime();
@@ -218,7 +218,7 @@ public class ProcessResultsJob extends Job
       /* Node-GML in Datei schreiben */
       GmlSerializer.serializeWorkspace( gmlResultFile, resultWorkspace, "UTF-8" );
 
-      final Date time = null; // TODO:
+      final Date time = handler.getTime();
       addToResultDB( resultWorkspace, timeStepNum, outputDir, time );
 
       return gmlResultFile;
@@ -237,6 +237,13 @@ public class ProcessResultsJob extends Job
     final IResultModel1d2d resModel1d2d = (IResultModel1d2d) resultWorkspace.getRootFeature().getAdapter( IResultModel1d2d.class );
     final IResultModelDescriptor resultModelDescriptor = m_calculation.addToSimulationDescriptor( resModel1d2d );
 
+    final DateFormat dateFormatter = DateFormat.getDateTimeInstance();
+
+    if( time == null )
+      resultModelDescriptor.setModelName( "Stationär" );
+    else
+      resultModelDescriptor.setModelID( String.format( "Zeitschritt: " + dateFormatter.format( time ) ) );
+
     resultModelDescriptor.setDescription( outputDir.getName() ); // TODO
 
     resultModelDescriptor.setTime( time );
@@ -245,9 +252,8 @@ public class ProcessResultsJob extends Job
     // HACK: TODO: at the moment this pathes get put here totally hard-coded
     // We create a scenario-relative path here
     final File calcUnitDir = outputDir.getParentFile();
-    final File resultsDir = calcUnitDir.getParentFile();
-    final String baseDir = resultsDir.getName() + "/" + calcUnitDir.getName() + "/" + outputDir.getName();
-    resultModelDescriptor.setWorkspacePath( baseDir + "results.gml" );
+    final String baseDir = "results/" + calcUnitDir.getName() + "/" + outputDir.getName();
+    resultModelDescriptor.setWorkspacePath( baseDir + "/results.gml" );
     resultModelDescriptor.setGmt( baseDir + "Ergebniskarte.gmt" );
   }
 

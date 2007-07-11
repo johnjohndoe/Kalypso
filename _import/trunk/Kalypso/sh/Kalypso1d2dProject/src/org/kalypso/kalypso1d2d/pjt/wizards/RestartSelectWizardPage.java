@@ -36,7 +36,9 @@ public class RestartSelectWizardPage extends WizardPage
 
   private final String m_initialSelection;
 
-  private class ResultFilter extends ViewerFilter
+  private final ViewerFilter m_resultFilter;
+
+  public static class ResultFilter extends ViewerFilter
   {
     @Override
     public boolean select( final Viewer viewer, final Object parentElement, final Object element )
@@ -50,10 +52,15 @@ public class RestartSelectWizardPage extends WizardPage
 
   public RestartSelectWizardPage( final String initialSelection )
   {
-    super( "Example" );
+    this( initialSelection, "Example", new ResultFilter() );
+  }
+
+  public RestartSelectWizardPage( final String initialSelection, final String pageName, final ViewerFilter resultFilter )
+  {
+    super( pageName );
+
     m_initialSelection = initialSelection;
-    setTitle( "Select restart file(s)" );
-    setDescription( "Please select one or more restart files that you want to use for your next calculation" );
+    m_resultFilter = resultFilter;
   }
 
   public void createControl( final Composite parent )
@@ -80,7 +87,7 @@ public class RestartSelectWizardPage extends WizardPage
     allResultsViewer.setLabelProvider( new WorkbenchLabelProvider() );
     allResultsViewer.setInput( new File( "." ) );
 
-    allResultsViewer.addFilter( new ResultFilter() );
+    allResultsViewer.addFilter( m_resultFilter );
 
     m_selectedResultPaths = new HashMap<String, String>();
     m_selectedResultNames = new Text( innerComposite, SWT.MULTI | SWT.BORDER );
@@ -95,13 +102,9 @@ public class RestartSelectWizardPage extends WizardPage
       public void doubleClick( final DoubleClickEvent event )
       {
         final StructuredSelection selection = (StructuredSelection) event.getSelection();
-        try
-        {
-          setSelection( (IResultModelDescriptor) selection.getFirstElement(), false );
-        }
-        catch( final ClassCastException e )
-        {
-        }
+        final Object firstElement = selection.getFirstElement();
+        if( firstElement instanceof IResultModelDescriptor )
+          setSelection( (IResultModelDescriptor) firstElement, false );
       }
 
     } );

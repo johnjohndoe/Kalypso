@@ -45,7 +45,6 @@ import java.util.GregorianCalendar;
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
-import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptor.SIMULATIONTYPE;
 import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
@@ -58,28 +57,22 @@ import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl
  * Default implementation of {@link ISimulationDescriptor}
  * 
  * @author Patrice Congo
- *
+ * 
  */
 public class SimulationDescriptor extends AbstractFeatureBinder implements ISimulationDescriptor
 {
-  
+
   final IFeatureWrapperCollection<IResultModelDescriptor> resultModels;
-  
-  public SimulationDescriptor( Feature featureToBind )
+
+  public SimulationDescriptor( final Feature featureToBind )
   {
-    this(
-        featureToBind,
-        Kalypso1D2DSchemaConstants.SIMMETA_F_SIMDESCRIPTOR );
+    this( featureToBind, Kalypso1D2DSchemaConstants.SIMMETA_F_SIMDESCRIPTOR );
   }
-  
-  public SimulationDescriptor( Feature featureToBind, QName qnameToBind )
+
+  public SimulationDescriptor( final Feature featureToBind, final QName qnameToBind )
   {
     super( featureToBind, qnameToBind );
-    resultModels = 
-      new FeatureWrapperCollection<IResultModelDescriptor>(
-          featureToBind,
-          IResultModelDescriptor.class, 
-          Kalypso1D2DSchemaConstants.SIMMETA_PROP_RESULT);
+    resultModels = new FeatureWrapperCollection<IResultModelDescriptor>( featureToBind, IResultModelDescriptor.class, Kalypso1D2DSchemaConstants.SIMMETA_PROP_RESULT );
   }
 
   /**
@@ -87,10 +80,7 @@ public class SimulationDescriptor extends AbstractFeatureBinder implements ISimu
    */
   public GregorianCalendar getEndTime( )
   {
-    XMLGregorianCalendarImpl date = 
-      getProperty( 
-          Kalypso1D2DSchemaConstants.SIMMETA_PROP_END_TIME, 
-          XMLGregorianCalendarImpl.class ); 
+    final XMLGregorianCalendarImpl date = getProperty( Kalypso1D2DSchemaConstants.SIMMETA_PROP_END_TIME, XMLGregorianCalendarImpl.class );
     if( date == null )
     {
       return null;
@@ -106,11 +96,8 @@ public class SimulationDescriptor extends AbstractFeatureBinder implements ISimu
    */
   public SIMULATIONTYPE getSimulationType( )
   {
-    String type =
-        getProperty( 
-            Kalypso1D2DSchemaConstants.SIMMETA_PROP_SIMULATION_TYPE, 
-            String.class );
-    return type!=null?SIMULATIONTYPE.valueOf( type ):null;
+    final String type = getProperty( Kalypso1D2DSchemaConstants.SIMMETA_PROP_SIMULATION_TYPE, String.class );
+    return type != null ? SIMULATIONTYPE.valueOf( type ) : null;
   }
 
   /**
@@ -118,10 +105,7 @@ public class SimulationDescriptor extends AbstractFeatureBinder implements ISimu
    */
   public GregorianCalendar getStartTime( )
   {
-    XMLGregorianCalendarImpl date = 
-      getProperty( 
-          Kalypso1D2DSchemaConstants.SIMMETA_PROP_START_TIME, 
-          XMLGregorianCalendarImpl.class );
+    final XMLGregorianCalendarImpl date = getProperty( Kalypso1D2DSchemaConstants.SIMMETA_PROP_START_TIME, XMLGregorianCalendarImpl.class );
     if( date == null )
     {
       return null;
@@ -137,10 +121,7 @@ public class SimulationDescriptor extends AbstractFeatureBinder implements ISimu
    */
   public boolean isAutoconverged( )
   {
-    Boolean bool = 
-      getProperty( 
-          Kalypso1D2DSchemaConstants.SIMMETA_PROP_AUTOCONVERGED, 
-          Boolean.class ); 
+    final Boolean bool = getProperty( Kalypso1D2DSchemaConstants.SIMMETA_PROP_AUTOCONVERGED, Boolean.class );
     if( bool == null )
     {
       return false;
@@ -156,10 +137,7 @@ public class SimulationDescriptor extends AbstractFeatureBinder implements ISimu
    */
   public boolean isRestarted( )
   {
-    Boolean bool = 
-      getProperty( 
-          Kalypso1D2DSchemaConstants.SIMMETA_PROP_RESTARTED, 
-          Boolean.class ); 
+    final Boolean bool = getProperty( Kalypso1D2DSchemaConstants.SIMMETA_PROP_RESTARTED, Boolean.class );
     if( bool == null )
     {
       return false;
@@ -173,69 +151,59 @@ public class SimulationDescriptor extends AbstractFeatureBinder implements ISimu
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptor#setAutoconverged(boolean)
    */
-  public void setAutoconverged( boolean value )
+  public void setAutoconverged( final boolean value )
   {
-    setProperty( 
-        Kalypso1D2DSchemaConstants.SIMMETA_PROP_AUTOCONVERGED, 
-        Boolean.valueOf( value ) );
+    setProperty( Kalypso1D2DSchemaConstants.SIMMETA_PROP_AUTOCONVERGED, Boolean.valueOf( value ) );
 
   }
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptor#setEndTime(java.util.Date)
    */
-  public void setEndTime( GregorianCalendar value )
+  public void setEndTime( final GregorianCalendar value )
   {
     XMLGregorianCalendarImpl xmlGc = null;
     if( value != null )
     {
-      xmlGc = new XMLGregorianCalendarImpl(value);
+      xmlGc = new XMLGregorianCalendarImpl( value );
     }
-      
-    setProperty( 
-        Kalypso1D2DSchemaConstants.SIMMETA_PROP_END_TIME, 
-        xmlGc );
+
+    setProperty( Kalypso1D2DSchemaConstants.SIMMETA_PROP_END_TIME, xmlGc );
   }
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptor#setRestarted(boolean)
    */
-  public void setRestarted( boolean value )
+  public void setRestarted( final boolean value )
   {
-    setProperty( 
-        Kalypso1D2DSchemaConstants.SIMMETA_PROP_RESTARTED, 
-        Boolean.valueOf( value ) );
+    setProperty( Kalypso1D2DSchemaConstants.SIMMETA_PROP_RESTARTED, Boolean.valueOf( value ) );
   }
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptor#setSimulationType(org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptor.SIMULATIONTYPE)
    */
-  public void setSimulationType( SIMULATIONTYPE value )
+  public void setSimulationType( final SIMULATIONTYPE value )
   {
-//    Assert.throwIAEOnNullParam( value, "value" );
+    // Assert.throwIAEOnNullParam( value, "value" );
     String strValue = null;
     if( value != null )
     {
       strValue = value.toString();
     }
-    setProperty( 
-        Kalypso1D2DSchemaConstants.SIMMETA_PROP_SIMULATION_TYPE, 
-        strValue );
+    setProperty( Kalypso1D2DSchemaConstants.SIMMETA_PROP_SIMULATION_TYPE, strValue );
   }
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptor#setStartTime(java.util.Date)
    */
-  public void setStartTime( GregorianCalendar value )
+  public void setStartTime( final GregorianCalendar value )
   {
-    XMLGregorianCalendarImpl xmlGc =  null;
-    if( value!=null )
+    XMLGregorianCalendarImpl xmlGc = null;
+    if( value != null )
     {
-      xmlGc = new XMLGregorianCalendarImpl(value);
+      xmlGc = new XMLGregorianCalendarImpl( value );
     }
-    setProperty( 
-        Kalypso1D2DSchemaConstants.SIMMETA_PROP_START_TIME, 
-        xmlGc );
+    setProperty( Kalypso1D2DSchemaConstants.SIMMETA_PROP_START_TIME, xmlGc );
   }
 
   /**
@@ -243,11 +211,7 @@ public class SimulationDescriptor extends AbstractFeatureBinder implements ISimu
    */
   public IModelDescriptor getCalculationUnit( )
   {
-    IModelDescriptor resolveLink = 
-      FeatureHelper.resolveLink( 
-        this, 
-        Kalypso1D2DSchemaConstants.SIMMETA_PROP_CALCULATION_UNIT, 
-        IModelDescriptor.class );
+    final IModelDescriptor resolveLink = FeatureHelper.resolveLink( this, Kalypso1D2DSchemaConstants.SIMMETA_PROP_CALCULATION_UNIT, IModelDescriptor.class );
     return resolveLink;
   }
 
@@ -256,11 +220,7 @@ public class SimulationDescriptor extends AbstractFeatureBinder implements ISimu
    */
   public IModelDescriptor getControlModel( )
   {
-    IModelDescriptor resolveLink = 
-      FeatureHelper.resolveLink( 
-        this, 
-        Kalypso1D2DSchemaConstants.SIMMETA_PROP_CONTROL_MODEL, 
-        IModelDescriptor.class );
+    final IModelDescriptor resolveLink = FeatureHelper.resolveLink( this, Kalypso1D2DSchemaConstants.SIMMETA_PROP_CONTROL_MODEL, IModelDescriptor.class );
     return resolveLink;
   }
 
@@ -275,42 +235,34 @@ public class SimulationDescriptor extends AbstractFeatureBinder implements ISimu
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptor#setControlModel(org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IModelDescriptor)
    */
-  public void setControlModel( IModelDescriptor modelDescriptor )
+  public void setControlModel( final IModelDescriptor modelDescriptor )
   {
-    setProperty( 
-        Kalypso1D2DSchemaConstants.SIMMETA_PROP_CONTROL_MODEL, 
-        modelDescriptor.getGmlID() );
+    setProperty( Kalypso1D2DSchemaConstants.SIMMETA_PROP_CONTROL_MODEL, modelDescriptor.getGmlID() );
   }
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptor#setCalculationUnit(org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IModelDescriptor)
    */
-  public void setCalculationUnit( IModelDescriptor modelDescriptor )
+  public void setCalculationUnit( final IModelDescriptor modelDescriptor )
   {
-    setProperty( 
-        Kalypso1D2DSchemaConstants.SIMMETA_PROP_CALCULATION_UNIT, 
-        modelDescriptor.getGmlID() );
-    
+    setProperty( Kalypso1D2DSchemaConstants.SIMMETA_PROP_CALCULATION_UNIT, modelDescriptor.getGmlID() );
+
   }
-  
+
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptor#getScenarioName()
    */
   public String getScenarioName( )
   {
-    String name = getProperty( 
-        Kalypso1D2DSchemaConstants.SIMMETA_PROP_SCENARIO_NAME, 
-        String.class );
+    final String name = getProperty( Kalypso1D2DSchemaConstants.SIMMETA_PROP_SCENARIO_NAME, String.class );
     return name;
   }
-  
+
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptor#setScenarioName(java.lang.String)
    */
-  public void setScenarioName( String scenarioName )
+  public void setScenarioName( final String scenarioName )
   {
-    setProperty( 
-        Kalypso1D2DSchemaConstants.SIMMETA_PROP_SCENARIO_NAME, 
-        scenarioName );
+    setProperty( Kalypso1D2DSchemaConstants.SIMMETA_PROP_SCENARIO_NAME, scenarioName );
   }
 }

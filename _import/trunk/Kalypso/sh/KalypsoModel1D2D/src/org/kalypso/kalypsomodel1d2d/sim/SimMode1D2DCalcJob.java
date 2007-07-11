@@ -183,7 +183,6 @@ public class SimMode1D2DCalcJob implements ISimulation
       resultRunner.finish();
 
       /* Save result model after all results are processed */
-      KalypsoModel1D2DPlugin.getDefault().getResultDB().save();
 
       /* check succeeded and load results */
       handleError( tmpDir, calcUnitOutputDir, monitor, logger );
@@ -204,6 +203,10 @@ public class SimMode1D2DCalcJob implements ISimulation
       final Handler[] handlers = logger.getHandlers();
       for( final Handler handl : handlers )
         handl.close();
+
+      // always save result-db, maybe some results have been updated
+      // TODO: save to other other result db
+      KalypsoModel1D2DPlugin.getDefault().getResultDB().save();
     }
   }
 

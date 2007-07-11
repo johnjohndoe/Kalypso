@@ -40,16 +40,24 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.wizards.results;
 
+import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWizard;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectWizardPage;
+import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
+
+import de.renew.workflow.contexts.IDialogWithResult;
 
 /**
  * @author GernotBelger
  */
-public class ConfigureResultsWizard extends Wizard implements IWorkbenchWizard
+public class ConfigureResultsWizard extends Wizard implements IWorkbenchWizard, IDialogWithResult
 {
   private RestartSelectWizardPage m_restartSelectWizardPage;
 
@@ -62,6 +70,9 @@ public class ConfigureResultsWizard extends Wizard implements IWorkbenchWizard
     setWindowTitle( "Ergebniskarte konfigurieren" );
 
     m_restartSelectWizardPage = new RestartSelectWizardPage( "" );
+    m_restartSelectWizardPage.setTitle( "Ergebnisse auswählen" );
+    m_restartSelectWizardPage.setDescription( "Hier können Sie ein oder mehrere Ergebnisse für die Ergebsnikarte auswählen." );
+
     addPage( m_restartSelectWizardPage );
   }
 
@@ -73,7 +84,7 @@ public class ConfigureResultsWizard extends Wizard implements IWorkbenchWizard
   {
     // TODO Auto-generated method stub
 
-    // add selected results to map
+    // add/remove selected results from/to map
 
     return false;
   }
@@ -84,12 +95,27 @@ public class ConfigureResultsWizard extends Wizard implements IWorkbenchWizard
    */
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
-    // TODO Auto-generated method stub
-
     // find currently open map
-
+    final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
+    final IEvaluationContext currentState = handlerService.getCurrentState();
+    // final SzenarioDataProvider szenarioDataProvider = (SzenarioDataProvider) currentState.getVariable(
+    // CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+    final IWorkbenchPart part = (IWorkbenchPart) currentState.getVariable( ISources.ACTIVE_PART_NAME );
+    // m_mapPart = (AbstractMapPart) part;
+    final MapPanel panel = part == null ? null : (MapPanel) part.getAdapter( MapPanel.class );
+    final IMapModell modell = panel == null ? null : panel.getMapModell();
+    // final GisTemplateMapModell templateModell = (GisTemplateMapModell) modell;
     // find already existent results
 
+  }
+
+  /**
+   * @see de.renew.workflow.contexts.IDialogWithResult#getResult()
+   */
+  public Object getResult( )
+  {
+    // TODO Auto-generated method stub
+    return null;
   }
 
 }
