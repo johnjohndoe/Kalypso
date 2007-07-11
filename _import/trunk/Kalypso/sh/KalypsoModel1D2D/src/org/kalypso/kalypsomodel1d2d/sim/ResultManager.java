@@ -76,12 +76,16 @@ import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gismapview.Gismapview.Layers;
 import org.kalypso.template.types.StyledLayerType;
+import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.Fill;
+import org.kalypsodeegree.graphics.sld.Graphic;
 import org.kalypsodeegree.graphics.sld.LineColorMapEntry;
+import org.kalypsodeegree.graphics.sld.Mark;
 import org.kalypsodeegree.graphics.sld.NamedLayer;
 import org.kalypsodeegree.graphics.sld.ParameterValueType;
+import org.kalypsodeegree.graphics.sld.PointSymbolizer;
 import org.kalypsodeegree.graphics.sld.PolygonColorMapEntry;
 import org.kalypsodeegree.graphics.sld.Rule;
 import org.kalypsodeegree.graphics.sld.Stroke;
@@ -92,6 +96,7 @@ import org.kalypsodeegree.graphics.sld.SurfacePolygonSymbolizer;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.xml.XMLParsingException;
+import org.kalypsodeegree_impl.graphics.sld.Graphic_Impl;
 import org.kalypsodeegree_impl.graphics.sld.LineColorMap;
 import org.kalypsodeegree_impl.graphics.sld.LineColorMapEntry_Impl;
 import org.kalypsodeegree_impl.graphics.sld.LineColorMap_Impl;
@@ -298,7 +303,8 @@ public class ResultManager implements Runnable
     try
     {
       processTemplates();
-      processStyles();
+      processVectorStyles();
+      processTinStyles();
     }
     catch( final SimulationException se )
     {
@@ -351,7 +357,18 @@ public class ResultManager implements Runnable
     }
   }
 
-  private void processStyles( ) throws IOException, XMLParsingException
+  private void processVectorStyles( ) throws IOException, XMLParsingException
+  {
+    /* Read sld from template */
+    final File styleDir = new File( m_outputDir, "Styles" );
+    final File vectorStyleFile = new File( styleDir, "vector.sld" );
+
+    final double maxValue = m_minMaxCatcher.getMaxVelocityAbs();
+
+    processVectorStyle( maxValue, vectorStyleFile, styleDir );
+  }
+
+  private void processTinStyles( ) throws IOException, XMLParsingException
   {
     /* Read sld from template */
     final File styleDir = new File( m_outputDir, "Styles" );
@@ -389,8 +406,8 @@ public class ResultManager implements Runnable
           break;
       }
 
-      processStyle( "Line", minValue, maxValue, parameter, sld );
-      processStyle( "Polygon", minValue, maxValue, parameter, sld );
+      processTinStyle( "Line", minValue, maxValue, parameter, sld );
+      processTinStyle( "Polygon", minValue, maxValue, parameter, sld );
     }
 
     /* Write SLD back to file */
@@ -400,7 +417,33 @@ public class ResultManager implements Runnable
     FileUtils.writeStringToFile( tinStyleFile, sldXMLwithHeader, "UTF-8" );
   }
 
-  private void processStyle( String string, final double minValue, final double maxValue, final ResultType.TYPE parameter, final StyledLayerDescriptor sld )
+  private void processVectorStyle( final double maxValue, File vectorStyleFile, File styleDir )
+  {
+    try
+    {
+      String string = FileUtils.readFileToString( vectorStyleFile, "UTF-8" );
+
+      // we assume, that the mean distance of mesh nodes is about 30 m, so that the vectors are expanded by an factor
+      // which delivers vector lengths of 30 m as maximum.
+      final BigDecimal factorValue;
+      if( maxValue > 0 )
+        factorValue = new BigDecimal( 30 / maxValue ).setScale( 0, BigDecimal.ROUND_CEILING );
+      else
+        factorValue = new BigDecimal( 100 ).setScale( 0, BigDecimal.ROUND_CEILING );
+
+      final String factor = factorValue.toString();
+
+      String replacedString = string.replaceAll( "VECTORFACTOR", factor );
+      FileUtils.writeStringToFile( new File( styleDir, "vector.sld" ), replacedString, "UTF-8" );
+    }
+    catch( IOException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+  }
+
+  private void processTinStyle( String string, final double minValue, final double maxValue, final ResultType.TYPE parameter, final StyledLayerDescriptor sld )
   {
     final String layerName = "tin" + parameter.name() + string + "Style";
     final String featureTypeStyleName = "tin" + parameter.name() + "FeatureTypeStyle";
@@ -492,8 +535,7 @@ public class ResultManager implements Runnable
         lineColor = interpolateColor( fromLineColor, toLineColor, currentClass, numOfClasses );
 
       // test
-//      lineColor = new Color( 255, 255, 255 );
-
+// lineColor = new Color( 255, 255, 255 );
 
       // Fill
       final Color polygonColor = interpolateColor( fromPolygonColor, toPolygonColor, currentClass, numOfClasses );
