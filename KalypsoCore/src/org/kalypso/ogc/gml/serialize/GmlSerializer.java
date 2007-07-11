@@ -211,6 +211,7 @@ public final class GmlSerializer
 
     try
     {
+      // TODO: this is bad! The encoding should be taken from the xml-header, never from the eclipse settings.
       final InputStreamReader isr = urlResolver.createReader( gmlURL );
       if( isr.getEncoding() == null )
       {
