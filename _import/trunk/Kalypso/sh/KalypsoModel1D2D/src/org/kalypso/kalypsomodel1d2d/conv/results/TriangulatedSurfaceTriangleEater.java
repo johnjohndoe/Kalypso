@@ -45,10 +45,17 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.XMLGregorianCalendar;
+import javax.xml.namespace.QName;
+
+import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DDebug;
+import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -169,7 +176,25 @@ public class TriangulatedSurfaceTriangleEater implements ITriangleEater
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.results.ITriangleEater#setTime(java.util.Date)
    */
-  public void setTime( final Date time )
+  public void setTime( final Date date )
   {
+    if( m_workspace == null )
+      return;
+
+    final Feature triangleFeature = m_workspace.getRootFeature();
+    if( triangleFeature != null )
+    {
+      try
+      {
+        XMLGregorianCalendar gregorianCalendar = DateUtilities.toXMLGregorianCalendar( date );
+        triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "date" ), gregorianCalendar );
+      }
+      catch( DatatypeConfigurationException e )
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+    }
+
   }
 }
