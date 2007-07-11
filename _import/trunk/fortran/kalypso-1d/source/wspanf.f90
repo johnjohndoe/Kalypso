@@ -1,4 +1,4 @@
-!     Last change:  MD   11 Apr 2007   10:26 am
+!     Last change:  MD   10 Jul 2007    1:14 pm
 !--------------------------------------------------------------------------
 ! This code, wspanf.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
