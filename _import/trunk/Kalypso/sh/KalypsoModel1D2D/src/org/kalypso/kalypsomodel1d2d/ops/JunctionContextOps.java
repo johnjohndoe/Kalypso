@@ -189,7 +189,7 @@ public class JunctionContextOps
 //        break found_container_cline;
 //      }
 //    }
-    if( cLine == null )
+    if( !isOneEdgeBoundaryLine( cLine, edge2D ) )//cLine == null )
     {
       cLine = 
       elements.addNew( 
@@ -213,6 +213,46 @@ public class JunctionContextOps
     return jc1d2d;
   }
 
+  /**
+   * Answer whether the specified boundary line is only made of
+   * of given edge
+   * @param cLine the boundary line to test
+   * @param edge the potential line edge
+   * @return true if cLine is a boundary line made only of the given edge
+   *            otherwise false (including the case where cLine or edge is null)
+   */
+  public static final boolean isOneEdgeBoundaryLine(
+      IBoundaryLine<IFE1D2DComplexElement, IFE1D2DEdge> cLine,
+      IFE1D2DEdge edge )
+  {
+    if( cLine == null || edge == null )
+    {
+      return false;
+    }
+    IFeatureWrapperCollection<IFE1D2DEdge> edges = cLine.getEdges();
+    if( edges.size()!=1 )
+    {
+      return false;
+    }
+    IFE1D2DEdge cLineEdge = edges.get( 0 );
+    if( edge.equals( cLineEdge ) )
+    {
+      return true;
+    }
+//    return false;
+    final IFE1D2DEdge invertedEdge;
+    if( edge instanceof IEdgeInv )
+    {
+      invertedEdge = ((IEdgeInv)edge).getInverted();
+    }
+    else
+    {
+     invertedEdge = edge.getEdgeInv(); 
+    }
+    
+    return cLineEdge.equals( invertedEdge );
+  }
+  
   /**
    * 
    */
