@@ -23,7 +23,7 @@
      <c1d2d:DSET>0.1</c1d2d:DSET>
      <c1d2d:DSETD>0.09</c1d2d:DSETD>
      <c1d2d:_steady>true</c1d2d:_steady>
-     <c1d2d:_unsteady>false</c1d2d:_unsteady>
+     <c1d2d:_unsteady>true</c1d2d:_unsteady>
      <c1d2d:NITI>25</c1d2d:NITI>
      <c1d2d:NITN>20</c1d2d:NITN>
      <c1d2d:CONV_1>0.01</c1d2d:CONV_1>
@@ -35,7 +35,7 @@
      <c1d2d:AC2>0.67</c1d2d:AC2>
      <c1d2d:AC3>0.04</c1d2d:AC3>
      <c1d2d:_restart>false</c1d2d:_restart>
-     <c1d2d:_restart_path/>
+     <c1d2d:_restart_path>results/CalculationUnit1D1183450244625149/steady/results.gml</c1d2d:_restart_path>
      <c1d2d:IACCYC>1</c1d2d:IACCYC>
      <c1d2d:FNAM3/>
      <c1d2d:_steadyBC>0.2</c1d2d:_steadyBC>
@@ -43,23 +43,18 @@
       <c1d2d:TimestepsObservation gml:id="TimestepsObservation11834502446251">
        <gml:name>Zeitschritt Definition</gml:name>
        <om:resultDefinition xmlns:om="http://www.opengis.net/om">
-        <sweExt:SortedRecordDefinition gml:id="SortedRecordDefinition11834504809534">
+        <sweExt:SortedRecordDefinition gml:id="SortedRecordDefinition11841654546561">
          <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time"/>
          <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#UnderRelaxationFactor"/>
          <sweExt:sortedComponent xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time"/>
         </sweExt:SortedRecordDefinition>
        </om:resultDefinition>
-       <om:result xmlns:om="http://www.opengis.net/om"><![CDATA[2007-07-03T00%3A00%3A00.000%2B02%3A00 1.000
-2007-07-03T01%3A00%3A00.000%2B02%3A00 1.000
-2007-07-03T02%3A00%3A00.000%2B02%3A00 1.000
-2007-07-03T03%3A00%3A00.000%2B02%3A00 1.000
-2007-07-03T04%3A00%3A00.000%2B02%3A00 1.000
-2007-07-03T05%3A00%3A00.000%2B02%3A00 1.000
-2007-07-03T06%3A00%3A00.000%2B02%3A00 1.000
-2007-07-03T07%3A00%3A00.000%2B02%3A00 1.000
-2007-07-03T08%3A00%3A00.000%2B02%3A00 1.000
-2007-07-03T09%3A00%3A00.000%2B02%3A00 1.000
-2007-07-03T10%3A00%3A00.000%2B02%3A00 1.000
+       <om:result xmlns:om="http://www.opengis.net/om"><![CDATA[2001-01-01T10%3A00%3A00.000%2B01%3A00 0.700
+2001-01-01T11%3A00%3A00.000%2B01%3A00 0.700
+2001-01-01T12%3A00%3A00.000%2B01%3A00 0.700
+2001-01-01T13%3A00%3A00.000%2B01%3A00 0.700
+2001-01-01T14%3A00%3A00.000%2B01%3A00 0.700
+2001-01-01T15%3A00%3A00.000%2B01%3A00 0.700
 ]]></om:result>
       </c1d2d:TimestepsObservation>
      </c1d2d:timestepsMember>
