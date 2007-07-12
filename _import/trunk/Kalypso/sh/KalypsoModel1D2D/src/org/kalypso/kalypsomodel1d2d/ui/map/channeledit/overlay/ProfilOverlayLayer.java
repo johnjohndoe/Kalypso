@@ -63,11 +63,14 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.util.ProfilComparator;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilChartLayer;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 import org.kalypso.model.wspm.ui.view.chart.AbstractPolyLineLayer.EditData;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.opengis.cs.CS_CoordinateSystem;
 
 import de.belger.swtchart.EditInfo;
 import de.belger.swtchart.axis.AxisRange;
@@ -194,8 +197,8 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
     }
 
     /* check that the point is lying inside the orig. profile */
-    final double firstProfileWidth = m_data.getProfilEventManager().getProfil().getPoints().getFirst().getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
-    final double lastProfileWidth = m_data.getProfilEventManager().getProfil().getPoints().getLast().getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
+    final double firstProfileWidth = origProfil.getPoints().getFirst().getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
+    final double lastProfileWidth = origProfil.getPoints().getLast().getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
 
     /* if not force it to do so */
     if( width < firstProfileWidth )
@@ -207,10 +210,13 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
     /* and get the geo coordinates for the moved profile point */
     double heigth = 0;
     GM_Point gmPoint = null;
+    GM_Point geoPoint = null;
     try
     {
-      heigth = WspmProfileHelper.getHeigthPositionByWidth( width, m_data.getProfilEventManager().getProfil() );
-      gmPoint = WspmProfileHelper.getGeoPosition( width, m_data.getProfilEventManager().getProfil() );
+      heigth = WspmProfileHelper.getHeigthPositionByWidth( width, origProfil );
+      gmPoint = WspmProfileHelper.getGeoPosition( width, origProfil );
+      String srsName = (String) m_profile.getProperty( IWspmConstants.PROFIL_PROPERTY_CRS );
+      geoPoint = WspmGeometryUtilities.pointFromPoint( gmPoint, srsName );
     }
     catch( Exception e )
     {
@@ -224,8 +230,8 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
     /* set the new values for the moved profile point */
     profilePoint.setValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, heigth );
     profilePoint.setValueFor( IWspmConstants.POINT_PROPERTY_BREITE, width );
-    profilePoint.setValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT, gmPoint.getX() );
-    profilePoint.setValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT, gmPoint.getY() );
+    profilePoint.setValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT, geoPoint.getX() );
+    profilePoint.setValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT, geoPoint.getY() );
 
     /* sort profile points by width */
     final LinkedList<IProfilPoint> points = m_profile.getPoints();
@@ -272,10 +278,10 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
   {
     IProfilPoint firstPoint = m_profile.getPoints().getFirst();
     IProfilPoint lastPoint = m_profile.getPoints().getLast();
-    
+
     final double newStartWidth = firstPoint.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
     final double newEndWidth = lastPoint.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
-    
+
     CreateChannelData.PROF prof = m_data.getCurrentProfile();
 
     /* get the current segment to set the new intersectionpoint for it */

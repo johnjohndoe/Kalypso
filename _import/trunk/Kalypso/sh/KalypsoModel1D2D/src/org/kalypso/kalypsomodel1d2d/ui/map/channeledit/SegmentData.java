@@ -69,6 +69,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
@@ -648,9 +649,6 @@ public class SegmentData
     final double width1 = calcWidthCoord( wspmprofile, prof, CreateChannelData.WIDTHORDER.FIRST );
     final double width2 = calcWidthCoord( wspmprofile, prof, CreateChannelData.WIDTHORDER.LAST );
 
-    // convert WSPM-Profil into IProfil an add the additional intersection width points.
-    final IProfil orgIProfil = wspmprofile.getProfil();
-
     final Point firstPoint = getIntersPoint( prof, CreateChannelData.WIDTHORDER.FIRST );
     final Point lastPoint = getIntersPoint( prof, CreateChannelData.WIDTHORDER.LAST );
     final double startWidth;
@@ -662,10 +660,8 @@ public class SegmentData
     {
       startWidth = width2;
       endWidth = width1;
-      // TODO: strange: geopoint1 is always firstpoint ??? check this!!
-      // geoPoint1 = firstPoint;
+
       geoPoint1 = lastPoint;
-      // geoPoint2 = lastPoint;
       geoPoint2 = firstPoint;
     }
     else
@@ -676,11 +672,17 @@ public class SegmentData
       geoPoint2 = lastPoint;
     }
 
+    // convert WSPM-Profil into IProfil an add the additional intersection width points.
+    final IProfil orgIProfil = wspmprofile.getProfil();
+
     // calculate elevations
     final double heigth1 = WspmProfileHelper.getHeigthPositionByWidth( startWidth, orgIProfil );
     final double heigth2 = WspmProfileHelper.getHeigthPositionByWidth( endWidth, orgIProfil );
 
     final LinkedList<IProfilPoint> profilPointList = wspmprofile.getProfil().getPoints();
+
+    GM_Curve line = wspmprofile.getLine();
+
     final IProfil tmpProfil = ProfilFactory.createProfil( wspmprofile.getProfil().getType() );
 
     tmpProfil.addPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
@@ -704,10 +706,14 @@ public class SegmentData
     point2.setValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT, geoPoint2.getY() );
 
     tmpProfil.addPoint( point1 );
+    GM_LineString lineString = line.getAsLineString(); // in the linestring the coordinates are already projected
 
-    for( final IProfilPoint point : profilPointList )
+    for( int i = 0; i < profilPointList.size(); i++ )
     {
+      IProfilPoint point = profilPointList.get( i );
+
       final double currentWidth = point.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
+
       if( currentWidth > startWidth & currentWidth < endWidth )
       {
         final IProfilPoint pt = tmpProfil.createProfilPoint();
@@ -719,6 +725,11 @@ public class SegmentData
           final double value = point.getValueFor( propertyId );
           pt.setValueFor( propertyId, value );
         }
+
+        // set rw/hw to the projected coordinates
+        pt.setValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT, lineString.getPositionAt( i ).getX() );
+        pt.setValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT, lineString.getPositionAt( i ).getY() );
+
         tmpProfil.addPoint( pt );
       }
     }
@@ -1264,7 +1275,6 @@ public class SegmentData
 
         final GeometryFactory factory = new GeometryFactory();
         m_upIntersLinestring = factory.createLineString( convertProfileToCoordinates( m_upIntersProfile ) );
-        // TODO: change bankline linestring if corner node has been moved ->
 
       }
       catch( final Exception e )
@@ -1617,7 +1627,7 @@ public class SegmentData
     {
       Coordinate[] coords = new Coordinate[m_numBankIntersections];
       coords = m_bankRightInters.getCoordinates();
-      coords[m_numBankIntersections - 1].setCoordinate( newPoint.getCoordinate());
+      coords[m_numBankIntersections - 1].setCoordinate( newPoint.getCoordinate() );
 
       final GeometryFactory factory = new GeometryFactory();
       m_bankRightOrg = factory.createLineString( coords );
