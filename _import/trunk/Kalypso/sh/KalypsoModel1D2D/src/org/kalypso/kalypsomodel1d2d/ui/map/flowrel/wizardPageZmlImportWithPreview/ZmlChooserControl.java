@@ -239,7 +239,7 @@ public abstract class ZmlChooserControl
         }
         catch( final ParseException e1 )
         {
-// e1.printStackTrace();
+          // e1.printStackTrace();
           m_diagView.removeAllItems();
           setComplete( false );
         }
@@ -381,17 +381,9 @@ public abstract class ZmlChooserControl
     return m_dateTo;
   }
 
-  public ITuppleModel getTuppleModel( )
+  public IObservation getObservation( )
   {
-    try
-    {
-      return m_observation.getValues( null );
-    }
-    catch( final SensorException e )
-    {
-      e.printStackTrace();
-      return null;
-    }
+    return m_observation;
   }
 
   protected abstract void setComplete( final boolean complete );

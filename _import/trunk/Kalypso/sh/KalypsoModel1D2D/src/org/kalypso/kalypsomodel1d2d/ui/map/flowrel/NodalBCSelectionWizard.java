@@ -117,7 +117,7 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
     addPage( m_selectionPage );
     addPage( m_descriptorPage );
   }
-  
+
   /**
    * This method is called by the wizard framework when the user presses the Finish button.
    */
@@ -130,7 +130,7 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
     final IFeatureType newFT = m_workspace.getGMLSchema().getFeatureType( IBoundaryCondition.QNAME );
     final Feature newFeature = m_workspace.createFeature( m_parentFeature, m_parentRelation, newFT, -1 );
     final IBoundaryCondition bc = (IBoundaryCondition) newFeature.getAdapter( IBoundaryCondition.class );
-// System.out.println("PROP="+m_parentFeature.getProperty( m_parentRelation ));
+    // System.out.println("PROP="+m_parentFeature.getProperty( m_parentRelation ));
     final ICoreRunnableWithProgress runnable = new ICoreRunnableWithProgress()
     {
       @SuppressWarnings("synthetic-access")
@@ -138,8 +138,6 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
       {
         bc.setName( descriptor.getName() );
         bc.setDescription( DF.format( new Date() ) );
-
-// bc.setStationaryCondition( statCond );
 
         /* Initialize observation with components */
         final String domainComponentUrn = descriptor.getDomainComponentUrn();

@@ -126,26 +126,28 @@ public class ZmlChooserStepDescriptor implements IBoundaryConditionDescriptor
     final IComponent valueComponent = components[1];
     result.setSortComponents( new IComponent[] { domainComponent } );
 
-    final ITuppleModel model = m_wizardPageZmlChooser.getTuppleModel();
-    IAxis dateAxis;
-    IAxis valueAxis;
-    // System.out.println(model.getAxisList()[0].getDataClass());
-    // System.out.println(model.getAxisList()[1].getDataClass());
-    // TODO: this is dangerous, tere is a utility class to find the axes
-    if( model.getAxisList()[0].getDataClass().equals( Date.class ) )
-    {
-      dateAxis = model.getAxisList()[0];
-      valueAxis = model.getAxisList()[1];
-    }
-    else
-    {
-      dateAxis = model.getAxisList()[1];
-      valueAxis = model.getAxisList()[0];
-    }
-    int cntFrom;
-    int cntTo;
     try
     {
+      final org.kalypso.ogc.sensor.IObservation zmlObservation = m_wizardPageZmlChooser.getObservation();
+      final ITuppleModel model = zmlObservation.getValues( null );
+
+      IAxis dateAxis;
+      IAxis valueAxis;
+      // System.out.println(model.getAxisList()[0].getDataClass());
+      // System.out.println(model.getAxisList()[1].getDataClass());
+      // TODO: this is dangerous, tere is a utility class to find the axes
+      if( model.getAxisList()[0].getDataClass().equals( Date.class ) )
+      {
+        dateAxis = model.getAxisList()[0];
+        valueAxis = model.getAxisList()[1];
+      }
+      else
+      {
+        dateAxis = model.getAxisList()[1];
+        valueAxis = model.getAxisList()[0];
+      }
+      int cntFrom;
+      int cntTo;
       for( cntFrom = 0; cntFrom < model.getCount(); cntFrom++ )
       {
         final Date date = (Date) model.getElement( cntFrom, dateAxis );

@@ -92,7 +92,7 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
       final IFeatureType directedFT = workspace.getGMLSchema().getFeatureType( QNAME_DIRECTED_OBSERVATION );
       final Feature newObsFeature = workspace.createFeature( parentFeature, currentObsFeature.getParentRelation(), directedFT );
       parentFeature.setProperty( QNAME_P_OBSERVATION, newObsFeature );
-      newObsFeature.setProperty( QNAME_P_DIRECTION, 180 );
+      newObsFeature.setProperty( QNAME_P_DIRECTION, new BigInteger( "180" ) );
       obsFeature = newObsFeature;
     }
     else
@@ -132,7 +132,7 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition#addScopeMark(org.kalypsodeegree.model.geometry.GM_Point)
    */
-  public void addScopeMark( GM_MultiPoint scopeMark )
+  public void addScopeMark( final GM_MultiPoint scopeMark )
   {
     Assert.throwIAEOnNullParam( scopeMark, "scopeMark" );
     final Feature feature = getWrappedFeature();
@@ -165,23 +165,23 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition#removeScopeMark(org.kalypsodeegree.model.geometry.GM_Point,
    *      double)
    */
-  public void removeScopeMark( GM_MultiPoint scopeMark, double searchRadius )
+  public void removeScopeMark( final GM_MultiPoint scopeMark, final double searchRadius )
   {
     final Feature feature = getWrappedFeature();
     final List scopeMarks = (List) feature.getProperty( Kalypso1D2DSchemaConstants.OP1D2D_PROP_SCOPE_MARK );
     scopeMarks.remove( scopeMark );
-// throw new UnsupportedOperationException();
-// final Feature feature = getWrappedFeature();
-// final List scopeMarks =
-// (List) feature.getProperty( Kalypso1D2DSchemaConstants.OP1D2D_PROP_SCOPE_MARK );
-// for( int i = scopeMarks.size()-1; i>=0 ; i-- )
-// {
-// GM_Point currentMark = (GM_Point) scopeMarks.get( i );
-// if( scopeMark.distance( currentMark ) <= searchRadius)
-// {
-// scopeMarks.remove( i );
-// }
-// }
+    // throw new UnsupportedOperationException();
+    // final Feature feature = getWrappedFeature();
+    // final List scopeMarks =
+    // (List) feature.getProperty( Kalypso1D2DSchemaConstants.OP1D2D_PROP_SCOPE_MARK );
+    // for( int i = scopeMarks.size()-1; i>=0 ; i-- )
+    // {
+    // GM_Point currentMark = (GM_Point) scopeMarks.get( i );
+    // if( scopeMark.distance( currentMark ) <= searchRadius)
+    // {
+    // scopeMarks.remove( i );
+    // }
+    // }
   }
 
   /**
@@ -190,7 +190,7 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
   public double getStationaryCondition( )
   {
     final Feature feature = getWrappedFeature();
-    Object property = feature.getProperty( Kalypso1D2DSchemaConstants.OP1D2D_PROP_STATIONARY_COND );
+    final Object property = feature.getProperty( Kalypso1D2DSchemaConstants.OP1D2D_PROP_STATIONARY_COND );
     if( property instanceof Double )
     {
       return ((Double) property).doubleValue();
@@ -204,7 +204,7 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition#setStationaryCondition(double)
    */
-  public void setStationaryCondition( double statCond )
+  public void setStationaryCondition( final double statCond )
   {
     Double dValue;
     if( Double.isNaN( statCond ) )
@@ -224,7 +224,7 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
    */
   public double getDirection( )
   {
-    Feature observation = (Feature) getWrappedFeature().getProperty( QNAME_P_OBSERVATION );
+    final Feature observation = (Feature) getWrappedFeature().getProperty( QNAME_P_OBSERVATION );
     return ((BigInteger) observation.getProperty( QNAME_P_DIRECTION )).doubleValue();
   }
 
