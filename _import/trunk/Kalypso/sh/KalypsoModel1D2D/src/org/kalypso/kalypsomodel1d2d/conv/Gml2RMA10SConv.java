@@ -89,7 +89,6 @@ import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessEstimateSpec;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.TerrainModel;
 import org.kalypso.model.wspm.tuhh.schema.schemata.IWspmTuhhQIntervallConstants;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.Feature;
@@ -109,7 +108,7 @@ import com.vividsolutions.jts.geom.Point;
  * 
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  */
-@SuppressWarnings( { "unchecked" })
+@SuppressWarnings({"unchecked"})
 public class Gml2RMA10SConv implements INativeIDProvider
 {
   private final LinkedHashMap<String, Integer> m_roughnessIDProvider = new LinkedHashMap<String, Integer>( 100 );
@@ -144,7 +143,9 @@ public class Gml2RMA10SConv implements INativeIDProvider
   private RMA10Calculation m_calculation;
 
   private boolean m_restart;
-
+  
+  
+  
   public Gml2RMA10SConv( final File rma10sOutputFile, final RMA10Calculation calculation )
   {
     m_outputFile = rma10sOutputFile;
@@ -167,7 +168,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
     if( m_restart )
     {
       m_restartEater = new RestartEater();
-      final IFolder scenarioFolder = Util.getScenarioFolder();
+      final IFolder scenarioFolder = Util.getScenarioFolder( );
       for( final String path : m_calculation.getControlModel().getRestartPaths() )
       {
         IFile ifile = scenarioFolder.getFile( path );
@@ -225,7 +226,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
       return false;
     }
   }
-
+  
   public int getID( final IFeatureWrapper2 i1d2dObject )
   {
     if( i1d2dObject == null )
@@ -313,39 +314,31 @@ public class Gml2RMA10SConv implements INativeIDProvider
     /* Made a central formatter with US locale, so no locale parameter for each format is needed any more . */
     final Formatter formatter = new Formatter( stream, Locale.US );
 
-    // first method not supporting filtering not working properly
-// if( m_terrainModel != null )
-// {
-// final IRoughnessPolygonCollection roughnessPolygonCollection = m_terrainModel.getRoughnessPolygonCollection();
-// writeElements( formatter, m_roughnessIDProvider, elements, roughnessPolygonCollection );
-// }
-// else
-// {
-// // TODO: is this reallly possible? Better: throw an exception?
-// writeElements( formatter, elements );
-// }
-// writeNodes( formatter, nodes );
-// writeEdges( formatter, edges );
-// JunctionContextConverter.write( m_discretisationModel1d2d, m_calculationUnit, this, formatter );
-
-    // second methods with filtering of edges and nodes
-    if( m_terrainModel != null )
-    {
-      final IRoughnessPolygonCollection roughnessPolygonCollection = m_terrainModel.getRoughnessPolygonCollection();
-      writeElementsNodesAndEdges( formatter, m_roughnessIDProvider, elements, roughnessPolygonCollection );
-      JunctionContextConverter.write( m_discretisationModel1d2d, m_calculationUnit, this, formatter );
-
-    }
-    else
-    {
-      writeElementsNodesAndEdges( formatter, null, elements, null );
-      JunctionContextConverter.write( m_discretisationModel1d2d, m_calculationUnit, this, formatter );
-    }
+    //first method not supporting filtering not working properly
+//    if( m_terrainModel != null )
+//    {
+//      final IRoughnessPolygonCollection roughnessPolygonCollection = m_terrainModel.getRoughnessPolygonCollection();
+//      writeElements( formatter, m_roughnessIDProvider, elements, roughnessPolygonCollection );
+//    }
+//    else
+//    {
+//      // TODO: is this reallly possible? Better: throw an exception?
+//      writeElements( formatter, elements );
+//    }
+//    writeNodes( formatter, nodes );
+//    writeEdges( formatter, edges );
+//    JunctionContextConverter.write( m_discretisationModel1d2d, m_calculationUnit, this, formatter );
+    
+    //second methods with filtering of edges and nodes
+    final IRoughnessPolygonCollection roughnessPolygonCollection = m_terrainModel.getRoughnessPolygonCollection();
+    writeElementsNodesAndEdges( formatter, m_roughnessIDProvider, elements, roughnessPolygonCollection );
+    JunctionContextConverter.write( m_discretisationModel1d2d, m_calculationUnit, this, formatter );
+    
   }
 
   private void writeEdgeSet( final Formatter formatter, final Collection<IFE1D2DEdge> edges ) throws GM_Exception
   {
-
+    
     int cnt = 1;
     for( final IFE1D2DEdge edge : edges )
     {
@@ -353,7 +346,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
       {
         continue;
       }
-
+      
       final int node0ID = getID( edge.getNode( 0 ) );
       final int node1ID = getID( edge.getNode( 1 ) );
 
@@ -412,7 +405,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
       }
     }
   }
-
+  
   private void writeEdges( final Formatter formatter, final IFeatureWrapperCollection<IFE1D2DEdge> edges ) throws GM_Exception
   {
     final List<IFE1D2DEdge> edgeInBBox = edges.query( m_calcUnitBBox );
@@ -423,11 +416,11 @@ public class Gml2RMA10SConv implements INativeIDProvider
       {
         continue;
       }
-
-// if( !CalUnitOps.isEdgeOf( m_calculationUnit, edge ) )
-// {
-// continue;
-// }
+      
+//      if( !CalUnitOps.isEdgeOf( m_calculationUnit, edge ) )
+//      {
+//        continue;
+//      }
 
       final int node0ID = getID( edge.getNode( 0 ) );
       final int node1ID = getID( edge.getNode( 1 ) );
@@ -493,10 +486,10 @@ public class Gml2RMA10SConv implements INativeIDProvider
     List<IFE1D2DNode> nodesInBBox = nodes.query( m_calcUnitBBox );
     for( final IFE1D2DNode<IFE1D2DEdge> node : nodesInBBox/* nodes */)
     {
-// if( !CalUnitOps.isNodeOf( m_calculationUnit, node ) )
-// {
-// continue;
-// }
+//      if( !CalUnitOps.isNodeOf( m_calculationUnit, node ) )
+//      {
+//        continue;
+//      }
       if( containsID( node ) )
       {
         continue;
@@ -663,138 +656,103 @@ public class Gml2RMA10SConv implements INativeIDProvider
   }
 
   /**
-   * write elements nodes and edges in a way which avoids the filtering of edges and nodes
+   * write elements nodes and edges in a way which avoids the
+   * filtering of edges and nodes
    * 
    */
-  private void writeElementsNodesAndEdges( final Formatter formatter, final LinkedHashMap<String, Integer> roughnessIDProvider, final IFeatureWrapperCollection<IFE1D2DElement> elements, final IRoughnessPolygonCollection roughnessPolygonCollection ) throws GM_Exception, SimulationException
+  private void writeElementsNodesAndEdges( 
+                    final Formatter formatter, 
+                    final LinkedHashMap<String, Integer> roughnessIDProvider, 
+                    final IFeatureWrapperCollection<IFE1D2DElement> elements, 
+                    final IRoughnessPolygonCollection roughnessPolygonCollection ) throws GM_Exception, SimulationException
   {
-
+    
     final List<IFE1D2DElement> elementsInBBox = elements.query( m_calcUnitBBox );
-    final HashSet<IFE1D2DEdge> edgeSet = new HashSet<IFE1D2DEdge>( elementsInBBox.size() * 2 );
-    if( m_calcUnitBBox != null )
+    final HashSet<IFE1D2DEdge> edgeSet = new HashSet<IFE1D2DEdge>(elementsInBBox.size()*2);
+
+    for( final IFE1D2DElement element : elementsInBBox/* elements */)
     {
-      for( final IFE1D2DElement element : elementsInBBox/* elements */)
+      if( !CalUnitOps.isFiniteElementOf( m_calculationUnit, element ) )
       {
-        if( !CalUnitOps.isFiniteElementOf( m_calculationUnit, element ) )
+        continue;
+      }
+
+      final int id = getID( element );
+
+      if( element instanceof IElement1D )
+      {
+        contributeToSet( element, edgeSet );
+        /* 1D-Elements get special handling. */
+        final IElement1D element1D = (IElement1D) element;
+
+        final IWeirFlowRelation weir = FlowRelationUtilitites.findWeirElement1D( element1D, m_flowrelationModel );
+        if( weir != null )
         {
-          continue;
+          /* A Weir? Create dynamic weir number and use it as weir ID. */
+          final int weirID = m_weirIDProvider.addWeir( weir );
+          final IFE1D2DNode upstreamNode = weir.getUpstreamNode();
+          final int upstreamNodeID = getID( upstreamNode );
+          formatter.format( "FE%10d%10d%10s%10s%10d%n", id, weirID, "", "", upstreamNodeID );
         }
-
-        final int id = getID( element );
-
-        if( element instanceof IElement1D )
+        else if( FlowRelationUtilitites.isTeschkeElement1D( element1D, m_flowrelationModel ) )
         {
-          contributeToSet( element, edgeSet );
-          /* 1D-Elements get special handling. */
-          final IElement1D element1D = (IElement1D) element;
-
-          final IWeirFlowRelation weir = FlowRelationUtilitites.findWeirElement1D( element1D, m_flowrelationModel );
-          if( weir != null )
-          {
-            /* A Weir? Create dynamic weir number and use it as weir ID. */
-            final int weirID = m_weirIDProvider.addWeir( weir );
-            final IFE1D2DNode upstreamNode = weir.getUpstreamNode();
-            final int upstreamNodeID = getID( upstreamNode );
-            formatter.format( "FE%10d%10d%10s%10s%10d%n", id, weirID, "", "", upstreamNodeID );
-          }
-          else if( FlowRelationUtilitites.isTeschkeElement1D( element1D, m_flowrelationModel ) )
-          {
-            /* Element without building: The special roughness-class '89' should be used. */
-            formatter.format( "FE%10d%10d%n", id, 89 );
-          }
-          else
-          {
-            // TODO: give hint what 1D-element is was?
-            throw new SimulationException( "1D-Element ohne Bauwerk bzw. ohne Netzparameter: " + element1D.getGmlID(), null );
-          }
+          /* Element without building: The special roughness-class '89' should be used. */
+          formatter.format( "FE%10d%10d%n", id, 89 );
         }
-        else if( element instanceof IPolyElement )
+        else
         {
-          contributeToSet( element, edgeSet );
-          final int roughnessID = calculateRoughnessID( roughnessIDProvider, roughnessPolygonCollection, element );
-          formatter.format( "FE%10d%10d%n", id, roughnessID );
+          // TODO: give hint what 1D-element is was?
+          throw new SimulationException( "1D-Element ohne Bauwerk bzw. ohne Netzparameter: " + element1D.getGmlID(), null );
         }
       }
-    }
-    else
-    {
-
-      for( final IFE1D2DElement element : elements/* elements */)
+      else if( element instanceof IPolyElement )
       {
-
-        final int id = getID( element );
-
-        if( element instanceof IElement1D )
-        {
-          contributeToSet( element, edgeSet );
-          /* 1D-Elements get special handling. */
-          final IElement1D element1D = (IElement1D) element;
-
-          final IWeirFlowRelation weir = FlowRelationUtilitites.findWeirElement1D( element1D, m_flowrelationModel );
-          if( weir != null )
-          {
-            /* A Weir? Create dynamic weir number and use it as weir ID. */
-            final int weirID = m_weirIDProvider.addWeir( weir );
-            final IFE1D2DNode upstreamNode = weir.getUpstreamNode();
-            final int upstreamNodeID = getID( upstreamNode );
-            formatter.format( "FE%10d%10d%10s%10s%10d%n", id, weirID, "", "", upstreamNodeID );
-          }
-          else if( FlowRelationUtilitites.isTeschkeElement1D( element1D, m_flowrelationModel ) )
-          {
-            /* Element without building: The special roughness-class '89' should be used. */
-            formatter.format( "FE%10d%10d%n", id, 89 );
-          }
-          else
-          {
-            // TODO: give hint what 1D-element is was?
-            throw new SimulationException( "1D-Element ohne Bauwerk bzw. ohne Netzparameter: " + element1D.getGmlID(), null );
-          }
-        }
-        else if( element instanceof IPolyElement )
-        {
-          contributeToSet( element, edgeSet );
-          formatter.format( "FE%10d%10d%n", id, 0 );
-        }
+        contributeToSet( element, edgeSet );
+        final int roughnessID = calculateRoughnessID( roughnessIDProvider, roughnessPolygonCollection, element );
+        formatter.format( "FE%10d%10d%n", id, roughnessID );
       }
     }
-    // write edge set nodes
-    for( IFE1D2DEdge edge : edgeSet )
+    
+    //write edge set nodes
+    for(IFE1D2DEdge edge : edgeSet )
     {
       writeNodes( formatter, edge.getNodes() );
     }
-
-    // write edges
+    
+    //write edges
     writeEdgeSet( formatter, edgeSet );
   }
-
+  
   /**
    * Collects the element edges and put them into the provides set
    * 
    */
-  private static final void contributeToSet( IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge> ele, HashSet<IFE1D2DEdge> edgeSet )
+  private static final void contributeToSet(
+      IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge> ele,
+      HashSet<IFE1D2DEdge> edgeSet )
   {
     if( ele instanceof IElement1D )
     {
-      IFE1D2DEdge edge = ((IElement1D) ele).getEdge();
+      IFE1D2DEdge edge = ((IElement1D)ele).getEdge();
       if( edge instanceof IEdgeInv )
       {
-        edge = ((IEdgeInv) edge).getInverted();
+        edge = ((IEdgeInv)edge).getInverted();
       }
-      edgeSet.add( edge );
+      edgeSet.add( edge );            
     }
     else if( ele instanceof IPolyElement )
     {
-      for( IFE1D2DEdge edge : ((IPolyElement<IFE1D2DComplexElement, IFE1D2DEdge>) ele).getEdges() )
+      for ( IFE1D2DEdge edge :((IPolyElement<IFE1D2DComplexElement, IFE1D2DEdge>)ele).getEdges() )
       {
         if( edge instanceof IEdgeInv )
         {
-          edge = ((IEdgeInv) edge).getInverted();
+          edge = ((IEdgeInv)edge).getInverted();
         }
         edgeSet.add( edge );
       }
     }
   }
-
+  
   private void writeElements( final Formatter formatter, final IFeatureWrapperCollection<IFE1D2DElement> elements )
   {
     for( final IFE1D2DElement element : elements )
