@@ -49,7 +49,8 @@ import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IMemento;
@@ -117,9 +118,15 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView
   public void createPartControl( final Composite parent )
   {
     final Composite container = new Composite( parent, SWT.FILL );
-    container.setLayout( new FillLayout() );
+    final GridLayout gridLayout = new GridLayout();
+    gridLayout.horizontalSpacing = 0;
+    gridLayout.verticalSpacing = 0;
+    gridLayout.marginHeight = 0;
+    gridLayout.marginWidth = 0;
+    container.setLayout( gridLayout );
     m_viewer = new GisMapOutlineViewer( null, null );
     m_viewer.createControl( container );
+    m_viewer.getControl().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     final IWorkbenchPartSite site = getSite();
     site.setSelectionProvider( m_viewer );
 

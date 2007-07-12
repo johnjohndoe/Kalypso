@@ -66,7 +66,6 @@ import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.jface.viewers.ITooltipProvider;
-import org.kalypso.contribs.eclipse.swt.events.CustomDrawListener;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.EnableThemeCommand;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate;
@@ -146,11 +145,6 @@ public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget, 
     } );
 
     /* Allow the tree item to draw themselves. */
-    final CustomDrawListener drawListener = new CustomDrawListener();
-    tree.addListener( SWT.MeasureItem, drawListener );
-    tree.addListener( SWT.EraseItem, drawListener );
-    tree.addListener( SWT.PaintItem, drawListener );
-
     tree.addListener( SWT.EraseItem, new Listener()
     {
       public void handleEvent( final Event event )
@@ -159,20 +153,22 @@ public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget, 
 
         if( (event.detail & SWT.SELECTED) == 0 )
           return; /* item not selected */
-        final Color red = c.getDisplay().getSystemColor( SWT.COLOR_TITLE_BACKGROUND_GRADIENT );
-        final Color yellow = c.getDisplay().getSystemColor( SWT.COLOR_WHITE );
+        final Color leftColor = c.getDisplay().getSystemColor( SWT.COLOR_TITLE_BACKGROUND_GRADIENT );
+        final Color rightColor = c.getDisplay().getSystemColor( SWT.COLOR_WHITE );
 
         final GC gc = event.gc;
         final int clientWidth = event.width;
 
         final Color oldForeground = gc.getForeground();
         final Color oldBackground = gc.getBackground();
-        gc.setForeground( red );
-        gc.setBackground( yellow );
+        gc.setForeground( leftColor );
+        gc.setBackground( rightColor );
         gc.fillGradientRectangle( 0, event.y, clientWidth, event.height, false );
         gc.setForeground( oldForeground );
         gc.setBackground( oldBackground );
         event.detail &= ~SWT.SELECTED;
+
+        gc.setForeground( rightColor );
       }
     } );
 
