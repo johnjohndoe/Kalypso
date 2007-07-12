@@ -1217,6 +1217,14 @@ public class SegmentData
       m_bankRightInters = intersectLineString( m_bankRightOrg, m_numBankIntersections );
   }
 
+  public void updateBankIntersection2( )
+  {
+    if( m_bankLeftInters != null )
+      m_bankLeftInters = intersectLineString( m_bankLeftInters, m_numBankIntersections );
+    if( m_bankRightInters != null )
+      m_bankRightInters = intersectLineString( m_bankRightInters, m_numBankIntersections );
+  }
+
   /**
    * manages the update of the profile data, after the intersected profiles were chaged by the chart view layer in the
    * gui. things to do: -update the intersection points -> will be done by the layer -update the intersected banklines
@@ -1256,6 +1264,7 @@ public class SegmentData
 
         final GeometryFactory factory = new GeometryFactory();
         m_upIntersLinestring = factory.createLineString( convertProfileToCoordinates( m_upIntersProfile ) );
+        // TODO: change bankline linestring if corner node has been moved ->
 
       }
       catch( final Exception e )
@@ -1577,7 +1586,7 @@ public class SegmentData
       coords[0] = newPoint.getCoordinate();
 
       final GeometryFactory factory = new GeometryFactory();
-      m_bankLeftInters = factory.createLineString( coords );
+      m_bankLeftOrg = factory.createLineString( coords );
     }
 
     point = m_bankLeftInters.getPointN( m_numBankIntersections - 1 );
@@ -1588,7 +1597,7 @@ public class SegmentData
       coords[m_numBankIntersections - 1] = newPoint.getCoordinate();
 
       final GeometryFactory factory = new GeometryFactory();
-      m_bankLeftInters = factory.createLineString( coords );
+      m_bankLeftOrg = factory.createLineString( coords );
     }
 
     point = m_bankRightInters.getPointN( 0 );
@@ -1599,7 +1608,7 @@ public class SegmentData
       coords[0] = newPoint.getCoordinate();
 
       final GeometryFactory factory = new GeometryFactory();
-      m_bankRightInters = factory.createLineString( coords );
+      m_bankRightOrg = factory.createLineString( coords );
 
     }
 
@@ -1608,10 +1617,11 @@ public class SegmentData
     {
       Coordinate[] coords = new Coordinate[m_numBankIntersections];
       coords = m_bankRightInters.getCoordinates();
-      coords[m_numBankIntersections - 1] = newPoint.getCoordinate();
+      coords[m_numBankIntersections - 1].setCoordinate( newPoint.getCoordinate());
 
       final GeometryFactory factory = new GeometryFactory();
-      m_bankRightInters = factory.createLineString( coords );
+      m_bankRightOrg = factory.createLineString( coords );
     }
   }
+
 }

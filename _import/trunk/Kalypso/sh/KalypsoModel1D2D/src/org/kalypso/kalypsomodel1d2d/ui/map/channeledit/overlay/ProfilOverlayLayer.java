@@ -263,15 +263,19 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
    * segments).
    * 
    * @param oldStartWdith
-   *          the width coordinate of the first intersection profile point before user interaction
+   *            the width coordinate of the first intersection profile point before user interaction
    * @param oldEndWdith
-   *          the width coordinate of the last intersection profile point before user interaction
+   *            the width coordinate of the last intersection profile point before user interaction
    */
   @SuppressWarnings("unchecked")
   private void checkIntersectionPoints( double oldStartWdith, double oldEndWdith ) throws Exception
   {
-    final double newStartWidth = m_profile.getPoints().getFirst().getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
-    final double newEndWidth = m_profile.getPoints().getLast().getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
+    IProfilPoint firstPoint = m_profile.getPoints().getFirst();
+    IProfilPoint lastPoint = m_profile.getPoints().getLast();
+    
+    final double newStartWidth = firstPoint.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
+    final double newEndWidth = lastPoint.getValueFor( IWspmConstants.POINT_PROPERTY_BREITE );
+    
     CreateChannelData.PROF prof = m_data.getCurrentProfile();
 
     /* get the current segment to set the new intersectionpoint for it */
@@ -296,7 +300,7 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
       /* update the first intersection point */
       currentSegment.setIntersPoint( point1, prof, widthorder1, width1 );
       /* intersection points have to have the same heigth as the orig profile */
-      m_profile.getPoints().getFirst().setValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, point1.getZ() );
+      firstPoint.setValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, point1.getZ() );
 
       // LAST
       final WIDTHORDER widthorder2 = CreateChannelData.WIDTHORDER.LAST;
@@ -306,7 +310,7 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
       /* update the last intersection point */
       currentSegment.setIntersPoint( point2, prof, widthorder2, width2 );
       /* intersection points have to have the same heigth as the orig profile */
-      m_profile.getPoints().getLast().setValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, point2.getZ() );
+      lastPoint.setValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, point2.getZ() );
 
       /* update the intersected profile */
       currentSegment.setNewIntersectedProfile( m_profile, prof );
@@ -325,7 +329,7 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
       /* update the last intersection point */
       currentSegment.setIntersPoint( point, prof, widthorder, width );
       /* intersection points have to have the same heigth as the orig profile */
-      m_profile.getPoints().getFirst().setValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, point.getZ() );
+      firstPoint.setValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, point.getZ() );
 
       /* update the intersected profile */
       currentSegment.setNewIntersectedProfile( m_profile, prof );
@@ -343,7 +347,7 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
       /* update the last intersection point */
       currentSegment.setIntersPoint( point, prof, widthorder, width );
       /* intersection points have to have the same heigth as the orig profile */
-      m_profile.getPoints().getLast().setValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, point.getZ() );
+      lastPoint.setValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, point.getZ() );
 
       /* update the intersected profile */
       currentSegment.setNewIntersectedProfile( m_profile, prof );
@@ -361,23 +365,23 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
    * updates both intersection points of the corresponding profile of the neighbouring segment.
    * 
    * @param prof
-   *          profile side of the current segment (up/down)
+   *            profile side of the current segment (up/down)
    * @param currentSegment
-   *          segment data of the current segment
+   *            segment data of the current segment
    * @param neighbourSegments
-   *          list of the neighbouring segments
+   *            list of the neighbouring segments
    * @param widthorder1
-   *          widthorder of the first intersection point (first/last)
+   *            widthorder of the first intersection point (first/last)
    * @param width1
-   *          width coordinate of the new intersection point
+   *            width coordinate of the new intersection point
    * @param point1
-   *          geo coords of the new intersection point
+   *            geo coords of the new intersection point
    * @param widthorder2
-   *          widthorder of the second intersection point (first/last)
+   *            widthorder of the second intersection point (first/last)
    * @param width2
-   *          width coordinate of the new intersection point
+   *            width coordinate of the new intersection point
    * @param point2
-   *          geo coords of the new intersection point
+   *            geo coords of the new intersection point
    */
   private void updateNeighbourSegment( CreateChannelData.PROF prof, final SegmentData currentSegment, final List<SegmentData> neighbourSegments, final WIDTHORDER widthorder1, final double width1, final GM_Point point1, final WIDTHORDER widthorder2, final double width2, final GM_Point point2 )
   {
@@ -411,17 +415,17 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
    * updates one intersection point of the corresponding profile of the neighbouring segment.
    * 
    * @param prof
-   *          profile side of the current segment (up/down)
+   *            profile side of the current segment (up/down)
    * @param currentSegment
-   *          segment data of the current segment
+   *            segment data of the current segment
    * @param neighbourSegments
-   *          list of the neighbouring segments
+   *            list of the neighbouring segments
    * @param widthorder1
-   *          widthorder of the first intersection point (first/last)
+   *            widthorder of the first intersection point (first/last)
    * @param width1
-   *          width coordinate of the new intersection point
+   *            width coordinate of the new intersection point
    * @param point1
-   *          geo coords of the new intersection point
+   *            geo coords of the new intersection point
    */
   private void updateNeighbourSegment( GM_Point point, CreateChannelData.PROF prof, final SegmentData currentSegment, final List<SegmentData> neighbourSegments, WIDTHORDER widthorder, double width )
   {
@@ -628,7 +632,7 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
    * gets the nearest intersection profile point and returns it in screen coordinates.
    * 
    * @param currentWidth
-   *          width coordinate of the current screen point
+   *            width coordinate of the current screen point
    */
   private Point getNearestProfileScreenPoint( final IProfil profile, final double currentWidth )
   {

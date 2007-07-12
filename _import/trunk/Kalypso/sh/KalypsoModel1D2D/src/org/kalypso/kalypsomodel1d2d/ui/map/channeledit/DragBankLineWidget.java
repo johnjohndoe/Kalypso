@@ -260,14 +260,14 @@ public class DragBankLineWidget extends AbstractWidget
       if( m_side == 1 )
       {
         m_currentSegment.setBankLeftInters( (LineString) JTSAdapter.export( m_newCurve ) );
-        // m_currentSegment.setBankLeftOrg( (LineString) JTSAdapter.export( m_newCurve ) );
+         m_currentSegment.setBankLeftOrg( (LineString) JTSAdapter.export( m_newCurve ) );
         m_data.updateSegments( true );
 
       }
       else
       {
         m_currentSegment.setBankRightInters( (LineString) JTSAdapter.export( m_newCurve ) );
-        // m_currentSegment.setBankRightOrg( (LineString) JTSAdapter.export( m_newCurve ) );
+         m_currentSegment.setBankRightOrg( (LineString) JTSAdapter.export( m_newCurve ) );
         m_data.updateSegments( true );
       }
 

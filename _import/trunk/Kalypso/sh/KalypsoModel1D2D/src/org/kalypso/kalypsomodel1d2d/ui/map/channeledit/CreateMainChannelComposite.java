@@ -172,7 +172,7 @@ public class CreateMainChannelComposite extends Composite
 
     final ScrolledCompositeCreator creator = new ScrolledCompositeCreator( null )
     {
-      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
+      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
       @Override
       protected Control createContents( final Composite parent, final int style )
       {
@@ -217,7 +217,7 @@ public class CreateMainChannelComposite extends Composite
           }
         } );
 
-        m_toolkit.createLabel( compConversion, Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.42"), SWT.NULL ); //$NON-NLS-1$
+        m_toolkit.createLabel( compConversion, Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.42" ), SWT.NULL ); //$NON-NLS-1$
 
         return contentCompo;
       }
@@ -228,7 +228,7 @@ public class CreateMainChannelComposite extends Composite
     m_toolkit.adapt( creator.getScrolledComposite() );
 
     updateControl( true );
-    
+
     if( m_bankEdit1 == true )
     {
       m_buttonEditBank1.setSelection( true );
@@ -304,7 +304,7 @@ public class CreateMainChannelComposite extends Composite
     /* zoom to extend button */
     final Button buttonZoomToExtend = new Button( sectionClient, SWT.CHECK );
     buttonZoomToExtend.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.2" ) ); //$NON-NLS-1$
-    buttonZoomToExtend.setToolTipText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.43") ); //$NON-NLS-1$
+    buttonZoomToExtend.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.43" ) ); //$NON-NLS-1$
     buttonZoomToExtend.setSelection( m_ButtonStateZoom );
     buttonZoomToExtend.addSelectionListener( new SelectionAdapter()
     {
@@ -377,6 +377,10 @@ public class CreateMainChannelComposite extends Composite
             panel.repaint();
           }
         }
+        if( m_buttonEditBank1.getSelection() == true )
+          editButtonUpdateBank1();
+        else if( m_buttonEditBank2.getSelection() == true )
+          editButtonUpdateBank2();
         updateControl( true );
       }
     } );
@@ -434,6 +438,10 @@ public class CreateMainChannelComposite extends Composite
         m_data.setNumBankIntersections( spinnerSegment.getSelection(), spinnerNumIntersSegment.getSelection() );
         // just update the selected segment
         updateSegmentData( false, m_currentSegmentNum );
+        if( m_buttonEditBank1.getSelection() == true )
+          editButtonUpdateBank1();
+        else if( m_buttonEditBank2.getSelection() == true )
+          editButtonUpdateBank2();
         m_widget.getPanel().repaint();
       }
     } );
@@ -901,7 +909,7 @@ public class CreateMainChannelComposite extends Composite
 
       final Label label = m_toolkit.createLabel( sectionClient, "", SWT.BORDER | SWT.CENTER ); //$NON-NLS-1$
       label.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-      label.setText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.11") + pem.getProfil().getStation() ); //$NON-NLS-1$
+      label.setText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.11" ) + pem.getProfil().getStation() ); //$NON-NLS-1$
       label.setBackground( label.getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
 
       final Control profilControl = profilChartView.createControl( sectionClient, SWT.BORDER );
@@ -930,12 +938,12 @@ public class CreateMainChannelComposite extends Composite
       manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.MAXIMIZE ) );
       manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.EXPORT_IMAGE ) );
 
-      final IAction action = new Action( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.44"), IAction.AS_PUSH_BUTTON ) //$NON-NLS-1$
+      final IAction action = new Action( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.44" ), IAction.AS_PUSH_BUTTON ) //$NON-NLS-1$
       {
         /**
          * @see org.eclipse.jface.action.Action#run()
          */
-        @SuppressWarnings("synthetic-access") //$NON-NLS-1$
+        @SuppressWarnings("synthetic-access")//$NON-NLS-1$
         @Override
         public void run( )
         {
@@ -944,7 +952,7 @@ public class CreateMainChannelComposite extends Composite
           updateProfilSection();
         }
       };
-      action.setToolTipText( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.14") ); //$NON-NLS-1$
+      action.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.14" ) ); //$NON-NLS-1$
       action.setImageDescriptor( KalypsoModel1D2DUIImages.ID_CHANGE );
       manager.add( action );
 
@@ -1061,7 +1069,7 @@ public class CreateMainChannelComposite extends Composite
       }
     };
     final IStatus status = ProgressUtilitites.busyCursorWhile( operation, null );
-    ErrorDialog.openError( getShell(), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.46"), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.45"), status ); //$NON-NLS-1$ //$NON-NLS-2$
+    ErrorDialog.openError( getShell(), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.46" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.45" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
     if( status.isOK() == true )
     {
       m_data.resetSelectedProfiles();

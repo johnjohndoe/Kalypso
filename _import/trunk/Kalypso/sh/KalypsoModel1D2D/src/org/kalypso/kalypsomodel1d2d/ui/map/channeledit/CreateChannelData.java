@@ -340,12 +340,18 @@ public class CreateChannelData
 
   public IProfilEventManager getProfilEventManager( )
   {
+    if( m_selectedProfiles == null )
+      return new ProfilEventManager( null, null );
+
     if( m_selectedProfiles.size() <= 1 )
+      return new ProfilEventManager( null, null );
+    
+    if( m_segmentList.size() <= (getSelectedSegment() - 1) )
       return new ProfilEventManager( null, null );
 
     if( getSelectedSegment() == 0 )
       return new ProfilEventManager( null, null );
-
+    
     final SegmentData segment = m_segmentList.get( getSelectedSegment() - 1 );
 
     if( segment == null )
@@ -489,6 +495,12 @@ public class CreateChannelData
         lines[3] = segment.getBankLeftInters();
         lines = checkLineOrientation( lines );
 
+        if( lines == null )
+        {
+          initSegments();
+          updateSegment( true, i + 1 );
+          return;
+        }
         // now the two lines are right oriented...
         final LineString topLine = lines[0];
         final LineString rightLine = lines[1];
@@ -650,6 +662,8 @@ public class CreateChannelData
       lineArray[1] = line2;
     }
 
+    if( lineArray[0] == null || lineArray[1] == null )
+      return null;
     // now the first two lines have the same orientation...
     // update the corresponding start and end point informations
     startpoint1 = lineArray[0].getStartPoint();
@@ -683,6 +697,7 @@ public class CreateChannelData
     {
       // this should actually never happen!!
       error = true;
+      return null;
     }
 
     // now the first three lines have the same orientation...
@@ -715,6 +730,8 @@ public class CreateChannelData
     {
       // this should actually never happen!!
       error = true;
+      System.out.println( "Flussschlauchgenerator: An error during the orientation of the segment lines occured " );
+      return null;
     }
 
     // final check: the last point of the last line should be the same as the first point of the first line
@@ -857,7 +874,12 @@ public class CreateChannelData
         lineCoords[0] = element[j];
         lineCoords[1] = element[j + 1];
         final LineString line = factory.createLineString( lineCoords );
-        final GM_Curve curve = (GM_Curve) JTSAdapter.wrap( line );
+        final GM_Curve curve;
+
+        if( lineCoords[1] == null || lineCoords[0] == null )
+          curve = (GM_Curve) JTSAdapter.wrap( line );
+        else
+          curve = (GM_Curve) JTSAdapter.wrap( line );
         de = DisplayElementFactory.buildLineStringDisplayElement( null, curve, symb );
         de.paint( g, mapPanel.getProjection() );
       }
@@ -967,6 +989,8 @@ public class CreateChannelData
     else if( segment != null & edit == true )
     {
       // commits the done edits
+      segment.updateBankIntersection2();
+      segment.updateProfileIntersection();
 
       // segment.updateBank();
       // segment.updateProfile();
