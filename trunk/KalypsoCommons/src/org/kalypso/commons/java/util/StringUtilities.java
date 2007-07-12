@@ -282,4 +282,13 @@ public final class StringUtilities
   {
     return s.substring( 0, s.length() - 1 );
   }
+
+  /**
+   * removes all whitespaces at beginning and end of an string (see perl, ruby, etc)
+   */
+  public static String chop( final String s )
+  {
+    // s.replaceAll("\\s\$", "")
+    return s.trim();
+  }
 }
