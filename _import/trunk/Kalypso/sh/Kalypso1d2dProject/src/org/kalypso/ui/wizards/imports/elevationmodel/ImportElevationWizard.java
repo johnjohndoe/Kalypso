@@ -81,8 +81,6 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
-import de.renew.workflow.connector.cases.ICaseDataProvider;
-
 /**
  * @author Madanagopal
  * @author Patrice Congo
