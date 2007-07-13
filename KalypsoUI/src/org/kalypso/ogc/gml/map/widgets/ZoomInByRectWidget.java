@@ -55,6 +55,10 @@ import org.kalypso.ogc.gml.map.MapPanel;
 public class ZoomInByRectWidget extends AbstractWidget
 {
 
+  public ZoomInByRectWidget(String name, String tooltip )
+  {
+    super(name,tooltip);
+  }
   /*
    * @author doemming
    */
