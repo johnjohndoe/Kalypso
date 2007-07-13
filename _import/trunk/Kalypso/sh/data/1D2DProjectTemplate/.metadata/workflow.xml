@@ -16,17 +16,17 @@ Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodu
 			<Help>Daten aus dem Dateisystem in das Projekt laden</Help>
 			<Name>Daten laden</Name>
 			<Task context="ImportBaseMap" URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__MapLoad">
-				<Help>Einladen von Hintergrundkarten (TIFF)</Help>
+				<Help>Einladen von Hintergrundkarten</Help>
 				<Name>Import von Hintergrundkarten</Name>
 			</Task>
 			<!-- 
 				<Task context="ImportElevation" URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ElevLoad">
-				<Help>Einladen von Höhendaten (TIN/GRID)</Help>
+				<Help>Einladen von Höhendaten</Help>
 				<Name>Import von Höhendaten</Name>
 				</Task>
 			-->
 			<Task context="FenetMap" URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ElevLoad">
-				<Help>Einladen von Höhendaten (TIN/GRID)</Help>
+				<Help>Einladen von Höhendaten</Help>
 				<Name>Import von Höhendaten</Name>
 			</Task>
 			<!--		
@@ -41,12 +41,12 @@ Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodu
 			-->
 			<Task context="ImportRoughness" URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__RoughLoad">
 				<Help>
-					<![CDATA[Einladen von Polygonen zur Rauheitszonenabgrenzung (SHP)]]>
+					<![CDATA[Einladen von Polygonen zur Rauheitszonenabgrenzung]]>
 				</Help>
 				<Name>Import von Rauheitsshapes</Name>
 			</Task>
 			<Task context="ImportObservations" URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__TimeSerLoad">
-				<Help>Einladen von Zeitreihendaten (WISKI)</Help>
+				<Help>Einladen von Zeitreihendaten</Help>
 				<Name>Import von Zeitreihen</Name>
 			</Task>
 			<!-- 
@@ -113,8 +113,8 @@ Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodu
 				<Help></Help>
 				<Name>2D-Netz</Name>
 				<Task context="Import2dNet" URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Net2DImport">
-					<Help>Importiert ein 2D-Netz (KALYPSO2D)</Help>
-					<Name>BCE-2D-Netz importieren</Name>
+					<Help>Importiert ein 2D-Netz (BCE 2D Format)</Help>
+					<Name>2D-Netz importieren</Name>
 				</Task>
 				<Task type="ASYNCHRONOUS" context="Context2dElementTheme" URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__EditNet2D">
 					<Help>Bearbeitung von 2D-Elementen</Help>
@@ -130,7 +130,7 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 				</Task>
 				<Task type="ASYNCHRONOUS" context="FenetMap" URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__BandGen">
 					<Help>
-						<![CDATA[Generiert ein regelmäßiges FE-2D-Elementenetz mittels Definition vier gegenüberliegender Linienzüge.]]>
+						<![CDATA[Generiert ein regelmäßiges 2D-Elementenetz mittels Definition vier gegenüberliegender Linienzüge.]]>
 					</Help>
 					<Name>Bandgenerator</Name>
 				</Task>
@@ -167,13 +167,6 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 			<TaskGroup URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__TransGroup">
 				<Help></Help>
 				<Name>Berechnungseinheiten und Randbedingungen</Name>
-				<Task context="JunctionContextTheme"
-					URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__SetEltLineTrans">
-					<Help>
-						<![CDATA[Ermöglicht die Erstellung einer Kopplung von 1D zu 2D zwischen einem 1D-Element und einer 2D-Randlinie.]]>
-					</Help>
-					<Name>1D-2D-Linienkopplung</Name>
-				</Task>
 				<Task type="ASYNCHRONOUS" context="ContLineTheme" URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ContilineGen">
 					<Help>Definieren von Rand- und Übergangslinien von Modellierungseinheiten (keine Ausgabedefinition)</Help>
 					<Name>Ränder und Übergänge definieren</Name>
@@ -193,12 +186,20 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 					<Name>Berechnungseinheiten modellieren</Name>
 				</Task>
 				<Task context="JunctionContextTheme"
+					URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__SetEltLineTrans">
+					<Help>
+						<![CDATA[Ermöglicht die Erstellung einer Kopplung von 1D zu 2D zwischen einem 1D-Element und einer 2D-Randlinie.]]>
+					</Help>
+					<Name>1D-2D-Linienkopplung</Name>
+				</Task>
+				<!--
+				<Task context="JunctionContextTheme"
 					URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__SetEltEltTrans">
 					<Help>
 						<![CDATA[Ermöglicht die Erstellung einer Kopplung von 1D zu 2D zwischen zwei Elementen.]]>
 					</Help>
 					<Name>1D-2D-Elementkopplung</Name>
-				</Task>
+				</Task>-->
 			</TaskGroup>
 		</TaskGroup>
 		<TaskGroup URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__RoughMod">
@@ -229,13 +230,14 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 				</Help>
 				<Name>Rauheitsklassen anzeigen</Name>
 			</Task>
+			<!--
 			<Task type="ASYNCHRONOUS" context="FenetMap"
 				URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__roughness_correction_modelling">
 				<Help>
 					<![CDATA[Rauheitskorrektur an Finit-Elemente modellieren.]]>
 				</Help>
 				<Name>Rauheitskorrektur modellieren</Name>
-			</Task>
+			</Task>-->
 		</TaskGroup>
 	<!-- 	
 		<Task context="BoundaryConditionTheme" 
@@ -330,6 +332,7 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 				</Help>
 				<Name>Ergebniskarte konfigurieren</Name>
 			</Task>
+			<!--
 			<Task type="ASYNCHRONOUS" context="ResultMapHydrograph" URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ResultMapAll">
 				<Help>
 					<![CDATA[Die Lage der Ganglinienauswertung festlegen.]]>
@@ -341,7 +344,7 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 					<![CDATA[Liest die zuvor definierten Ganglinien aus den Ergebnisdaten aus.]]>
 				</Help>
 				<Name>Ganglinien erzeugen</Name>
-			</Task>
+			</Task>-->
 		</TaskGroup>
 	</TaskGroup>
 	<Perspectives>
