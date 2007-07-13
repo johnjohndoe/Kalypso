@@ -204,7 +204,7 @@ public class JTSUtilities
     final double length = lineJTS.getLength();
     final double distance = length / 100.0 * percent;
 
-    return pointOnLine( lineJTS, (int) distance );
+    return pointOnLine( lineJTS, distance );
   }
 
   /**
