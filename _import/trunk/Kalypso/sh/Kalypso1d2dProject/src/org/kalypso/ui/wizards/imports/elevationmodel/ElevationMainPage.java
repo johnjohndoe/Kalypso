@@ -132,6 +132,7 @@ public class ElevationMainPage extends WizardPage
     gridData.horizontalSpan = 2;
     nameForFileText.setLayoutData( gridData );
     
+
     final Label descriptionForFile = new Label( container, SWT.NONE );
     descriptionForFile.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING ) );
     descriptionForFile.setText( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.8" ) ); //$NON-NLS-1$
@@ -156,7 +157,7 @@ public class ElevationMainPage extends WizardPage
   {
     if( !(selection instanceof IStructuredSelection) )
       return;
-    
+
     fileExtensions.add( "hmo" );
     fileExtensions.add( "asc" );
     fileExtensions.add( "asg" );
@@ -164,7 +165,7 @@ public class ElevationMainPage extends WizardPage
     Iterator iter = ((IStructuredSelection) selection).iterator();
     while( iter.hasNext() )
     {
-      Object item = (Object)iter.next();
+      Object item = (Object) iter.next();
       if( item instanceof IFile )
       {
         IFile file = (IFile) item;
@@ -280,7 +281,7 @@ public class ElevationMainPage extends WizardPage
   private IPath browse( IPath path, boolean mustExist )
   {
     FileDialog dialog = new FileDialog( getShell(), SWT.OPEN );
-    dialog.setFilterExtensions( new String[] { "*.hmo", "*.asc" , "*.asg" } );
+    dialog.setFilterExtensions( new String[] { "*.hmo; *.asc; *.asg" } );
     if( path != null )
     {
       if( path.segmentCount() > 1 )
@@ -301,7 +302,7 @@ public class ElevationMainPage extends WizardPage
   {
     String text = sourceFileField.getText().trim();
     if( text.length() == 0 )
-    return null;
+      return null;
     IPath path = new Path( text );
     if( !path.isAbsolute() )
       path = ResourcesPlugin.getWorkspace().getRoot().getLocation().append( path );

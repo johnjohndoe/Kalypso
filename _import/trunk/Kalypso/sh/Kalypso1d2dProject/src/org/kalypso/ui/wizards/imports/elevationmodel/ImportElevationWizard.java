@@ -90,12 +90,14 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
   private IStructuredSelection initialSelection;
 
   private ElevationMainPage mPage;
+
   /**
    * Folder containing the terrain model
    */
   private IFolder modelFolder;
 
-  private static Map<String,String> fileNumbersMap = new HashMap<String, String>(); 
+  private static Map<String, String> fileNumbersMap = new HashMap<String, String>();
+
   private ITerrainModel terrainModel;
 
   // private String m_scenarioFolder;
@@ -119,9 +121,9 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
    * </ul>
    * 
    * @param workbench
-   *          the current workbench
+   *            the current workbench
    * @param selection
-   *          the current object selection
+   *            the current object selection
    */
   public void init( IWorkbench workbench, IStructuredSelection selection )
   {
@@ -166,25 +168,26 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
             }
 
             GMLWorkspace workspace = temSys.getWrappedFeature().getWorkspace();
-            
+
             // Decoding the White Spaces present in the File Paths.
             File modelFolderFile = getUTF_DecodedFile( new File( FileLocator.toFileURL( workspace.getContext() ).getFile() ).getParentFile() );
             File temFolderFile = getUTF_DecodedFile( new File( FileLocator.toFileURL( temFolder.getLocationURI().toURL() ).getFile() ) );
             final File srcFileTif = getUTF_DecodedFile( sourcePath.toFile() );
-           
+
             File dstFileTif = null;
-            
-            if( (new File( temFolderFile, srcFileTif.getName())).exists() )
+
+            if( (new File( temFolderFile, srcFileTif.getName() )).exists() )
             {
-                   dstFileTif = new File( temFolderFile, getNewFileName(temFolderFile,srcFileTif));
+              dstFileTif = new File( temFolderFile, getNewFileName( temFolderFile, srcFileTif ) );
             }
-            else{
+            else
+            {
               dstFileTif = new File( temFolderFile, srcFileTif.getName() ); // mPage.getSourceLocation().lastSegment()
             }
-            
+
             copy( srcFileTif, dstFileTif, monitor );
             modelFolder.getProject().refreshLocal( IResource.DEPTH_INFINITE, null/* new NullProgressMonitor() */);
-            String nativeTEMRelPath = modelFolderFile.toURI().relativize( new File(URLDecoder.decode(dstFileTif.toString(),"UTF-8")).toURI() ).toString();
+            String nativeTEMRelPath = modelFolderFile.toURI().relativize( new File( URLDecoder.decode( dstFileTif.toString(), "UTF-8" ) ).toURI() ).toString();
             if( nativeTEMRelPath == null )
             {
               nativeTEMRelPath = getUTF_DecodedFile( dstFileTif ).toString();
@@ -212,38 +215,24 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
             {
               tem.setDescription( replaceText );
             }
-            
-            if (selectedCoordinateSystem.compareTo("")!=0)
+
+            if( selectedCoordinateSystem.compareTo( "" ) != 0 )
             {
               tem.setCoordinateSystem( selectedCoordinateSystem );
             }
-            
-            
+
             final Feature temFeature = tem.getWrappedFeature();
-            workspace.fireModellEvent( 
-                new FeatureStructureChangeModellEvent( 
-                            workspace, 
-                            temSys.getWrappedFeature(), 
-                            temFeature, 
-                            FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
-            workspace.fireModellEvent( 
-                new FeatureStructureChangeModellEvent( 
-                            workspace, 
-                            temFeature.getParent(), 
-                            temFeature, 
-                            FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+            workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, temSys.getWrappedFeature(), temFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+            workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, temFeature.getParent(), temFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
             // TODO check why saving thow pool does not work
             SzenarioDataProvider caseDataProvider = Util.getCaseDataProvider();
-            caseDataProvider.postCommand( 
-                ITerrainModel.class, 
-                new AddTerrainelevationModelCmd());
-            
+            caseDataProvider.postCommand( ITerrainModel.class, new AddTerrainelevationModelCmd() );
+
             caseDataProvider.saveModel( ITerrainModel.class, null );
-            
-//            pool.saveObject( workspace, new SubProgressMonitor( monitor, 1 ) );
+
+// pool.saveObject( workspace, new SubProgressMonitor( monitor, 1 ) );
           }
-          
-          
+
           catch( Exception e )
           {
             e.printStackTrace();
@@ -251,8 +240,7 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
           }
         }
       } );
-      
-      
+
     }
     catch( Throwable th )
     {
@@ -262,25 +250,25 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
 
     return true;
   }
-  
+
   String getNewFileName( File folder, File srcFileTif )
   {
-//   int i = 1;
-//   if (!fileNumbersMap.containsKey(srcFileTif.getName()))
-//     fileNumbersMap.put( srcFileTif.getName(),i+""); 
-//   else
-//   {
-//     i = Integer.valueOf( fileNumbersMap.get( srcFileTif.getName() ) ).intValue();
-//     fileNumbersMap.put( srcFileTif.getName(), (i++)+"");
-//   }    
-    Random generator = new Random(126545);
+// int i = 1;
+// if (!fileNumbersMap.containsKey(srcFileTif.getName()))
+// fileNumbersMap.put( srcFileTif.getName(),i+"");
+// else
+// {
+// i = Integer.valueOf( fileNumbersMap.get( srcFileTif.getName() ) ).intValue();
+// fileNumbersMap.put( srcFileTif.getName(), (i++)+"");
+// }
+    Random generator = new Random( 126545 );
     int key = generator.nextInt();
-    System.out.println("key :"+key);
-    
-    if(new File(folder,getFileNameNoExtension( srcFileTif )+"_"+key+"."+getExtension( srcFileTif ).toString()).exists())
+    System.out.println( "key :" + key );
+
+    if( new File( folder, getFileNameNoExtension( srcFileTif ) + "_" + key + "." + getExtension( srcFileTif ).toString() ).exists() )
       getNewFileName( folder, srcFileTif );
-    
-      return  getFileNameNoExtension( srcFileTif )+"_"+key+"."+getExtension( srcFileTif );    
+
+    return getFileNameNoExtension( srcFileTif ) + "_" + key + "." + getExtension( srcFileTif );
   }
 
   public static String getExtension( File f )
@@ -312,7 +300,7 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
   boolean copy( File src, File dst, IProgressMonitor monitor2 )
   {
     InputStream in;
-    OutputStream out;    
+    OutputStream out;
     try
     {
       in = new FileInputStream( src );
@@ -404,12 +392,12 @@ public class ImportElevationWizard extends Wizard implements INewWizard/* INewWi
 
     };
   }
-  
+
   public File getUTF_DecodedFile( File file )
   {
     try
     {
-      return new File( URLDecoder.decode( file.toString(), "UTF-8" ));
+      return new File( URLDecoder.decode( file.toString(), "UTF-8" ) );
     }
     catch( UnsupportedEncodingException e )
     {

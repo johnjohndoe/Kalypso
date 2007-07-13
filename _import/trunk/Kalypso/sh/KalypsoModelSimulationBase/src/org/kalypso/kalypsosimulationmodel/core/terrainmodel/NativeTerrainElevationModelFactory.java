@@ -94,6 +94,13 @@ public class NativeTerrainElevationModelFactory
       cache.addObject( filePath, terrainElevationModel );
       return terrainElevationModel;
     }
+    // It is the same as asc!!!
+    else if( filePath.endsWith( ".asg" ) )
+    {
+      final ASCTerrainElevationModel terrainElevationModel = new ASCTerrainElevationModel( ascFile.toURL() );
+      cache.addObject( filePath, terrainElevationModel );
+      return terrainElevationModel;
+    }
     else if( filePath.endsWith( ".hmo" ) )
     {
       try
