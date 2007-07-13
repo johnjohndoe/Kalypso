@@ -152,7 +152,7 @@ public class ASCTerrainElevationModel implements IElevationProvider, ISurfacePat
       N_ROWS = Integer.parseInt( data[1] );
       xllcorner = Double.parseDouble( data[2] );
       yllcorner = Double.parseDouble( data[3] );
-      cellSize = Integer.parseInt( data[4] );
+      cellSize = Double.parseDouble( data[4] );
       final double noDataValue = Double.parseDouble( data[5] );
       double currentValue;
 
