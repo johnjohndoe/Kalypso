@@ -60,6 +60,7 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.MetadataList;
+import org.kalypso.ogc.sensor.ObservationConstants;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
@@ -71,11 +72,13 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
  */
 public class NativeObservationZrxAdapter implements INativeObservationAdapter
 {
-  private DateFormat m_zrxDateFormat = new SimpleDateFormat( "yyyyMMddHHmmss" );
+  private DateFormat m_zrxDateFormat = new SimpleDateFormat( "yyyyMMddHHmm" );
+
+  private DateFormat m_zrxDateFormatSec = new SimpleDateFormat( "yyyyMMddHHmmss" );
 
   public static Pattern m_zrxHeaderPattern = Pattern.compile( "#.*" );
 
-  public static Pattern m_zrxDataPattern = Pattern.compile( "([0-9]{14})\\s+([0-9]+(.[0-9]*))\\s*" );
+  public static Pattern m_zrxDataPattern = Pattern.compile( "([0-9]{12,14})\\s+(-??[0-9]+(.[0-9]*))\\s*" );
 
   public static Pattern m_zrxSNAMEPattern = Pattern.compile( "(#\\S*SNAME)(\\w+)(\\|\\*\\|\\S*)" );
 
@@ -103,6 +106,7 @@ public class NativeObservationZrxAdapter implements INativeObservationAdapter
   public IObservation createObservationFromSource( File source, boolean continueWithErrors ) throws Exception
   {
     final MetadataList metaDataList = new MetadataList();
+    metaDataList.put( ObservationConstants.MD_ORIGIN, source.getAbsolutePath() );
     // TODO: allgemein setzten im Import dialog!
     TimeZone timeZone = TimeZone.getTimeZone( "GMT+1" );
     m_zrxDateFormat.setTimeZone( timeZone );
@@ -137,14 +141,29 @@ public class NativeObservationZrxAdapter implements INativeObservationAdapter
         {
           Date date = null;
           Double value = null;
-          try
+          if( matcher.group( 1 ).length() == 14 ) // date with seconds
           {
-            date = m_zrxDateFormat.parse( matcher.group( 1 ) );
+            try
+            {
+              date = m_zrxDateFormatSec.parse( matcher.group( 1 ) );
+            }
+            catch( Exception e )
+            {
+              errorBuffer.append( "line " + reader.getLineNumber() + " date not parseable: \"" + lineIn + "\"\n" );
+              numberOfErrors++;
+            }
           }
-          catch( Exception e )
+          else
           {
-            errorBuffer.append( "line " + reader.getLineNumber() + " date not parseable: \"" + lineIn + "\"\n" );
-            numberOfErrors++;
+            try
+            {
+              date = m_zrxDateFormat.parse( matcher.group( 1 ) );
+            }
+            catch( Exception e )
+            {
+              errorBuffer.append( "line " + reader.getLineNumber() + " date not parseable: \"" + lineIn + "\"\n" );
+              numberOfErrors++;
+            }
           }
           try
           {
