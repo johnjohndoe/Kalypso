@@ -359,13 +359,23 @@ public class Gml2RMA10SConv implements INativeIDProvider
         middleNodeID = getID( getNodesIDProvider(), gmlID );
 
         /* Calculate middle of arc. */
-        final GM_Curve curve = edge.getCurve();
-        final LineString edgeLine = (LineString) JTSAdapter.export( curve );
-        final Point point = JTSUtilities.pointOnLinePercent( edgeLine, 50 );
-        final GM_Point middleNodePoint = (GM_Point) JTSAdapter.wrap( point );
-
+        
+        
+        /**
+         * JTSUtilities.pointOnLinePercent( edgeLine, 50 ) doesn't give the proper middle node of the edge!
+         */
+//        final GM_Curve curve = edge.getCurve();
+//        final LineString edgeLine = (LineString) JTSAdapter.export( curve );
+//        final Point point = JTSUtilities.pointOnLinePercent( edgeLine, 50 );
+//        final GM_Point middleNodePoint = (GM_Point) JTSAdapter.wrap( point );
+//
+//        final GM_Point edgeMN = edge.getMiddleNodePoint();
+//        System.out.println(middleNodePoint.getX()+";"+edgeMN.getX()+";"+middleNodePoint.getY()+";"+edgeMN.getY()+";"+(middleNodePoint.getX()-edgeMN.getX())+";"+(middleNodePoint.getY()-edgeMN.getY()));
+        
+        
         /* Write it: Station is not needed, because the element length is taken from real nodes. */
-        formatNode( formatter, middleNodeID, middleNodePoint, null );
+        formatNode( formatter, middleNodeID, edge.getMiddleNodePoint(), null );
+        
       }
       else
       {

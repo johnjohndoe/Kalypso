@@ -273,7 +273,8 @@ public class ProcessResultsJob extends Job
     // TODO: retrieve timezone from central plugin preferences
     final DateFormat dateFormatter = DateFormat.getDateTimeInstance();
 
-    if( time == null )
+    if( outputDir.getName().equals( "steady" ) )
+//    if( time == null )
       resultModelDescriptor.setModelName( "Stationär" );
     else
       resultModelDescriptor.setModelName( String.format( "Zeitschritt: " + dateFormatter.format( time ) ) );

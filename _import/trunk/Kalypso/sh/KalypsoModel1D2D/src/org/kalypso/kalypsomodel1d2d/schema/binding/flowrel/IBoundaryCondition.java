@@ -40,16 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.flowrel;
 
-import java.math.BigInteger;
 import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.kalypsodeegree.model.geometry.GM_MultiPoint;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
+import org.kalypsodeegree.model.geometry.GM_MultiPoint;
 
 /**
  * @author Gernot Belger

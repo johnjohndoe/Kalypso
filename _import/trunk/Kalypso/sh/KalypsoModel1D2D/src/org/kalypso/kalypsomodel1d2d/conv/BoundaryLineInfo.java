@@ -83,22 +83,22 @@ public class BoundaryLineInfo extends BoundaryConditionInfo
     if( m_nodeArray.length > 1 )
     {
       // second point should be the one, which is more west!
-      if( m_nodeArray[0].getPoint().getX() < m_nodeArray[m_nodeArray.length-1].getPoint().getX() )
+      if( m_nodeArray[0].getPoint().getX() < m_nodeArray[m_nodeArray.length - 1].getPoint().getX() )
       {
-        deltaX = m_nodeArray[0].getPoint().getX() - m_nodeArray[m_nodeArray.length-1].getPoint().getX();
-        deltaY = m_nodeArray[0].getPoint().getY() - m_nodeArray[m_nodeArray.length-1].getPoint().getY();
+        deltaX = m_nodeArray[0].getPoint().getX() - m_nodeArray[m_nodeArray.length - 1].getPoint().getX();
+        deltaY = m_nodeArray[0].getPoint().getY() - m_nodeArray[m_nodeArray.length - 1].getPoint().getY();
       }
       else
       {
-        deltaX = m_nodeArray[m_nodeArray.length-1].getPoint().getX() - m_nodeArray[0].getPoint().getX();
-        deltaY = m_nodeArray[m_nodeArray.length-1].getPoint().getY() - m_nodeArray[0].getPoint().getY();
+        deltaX = m_nodeArray[m_nodeArray.length - 1].getPoint().getX() - m_nodeArray[0].getPoint().getX();
+        deltaY = m_nodeArray[m_nodeArray.length - 1].getPoint().getY() - m_nodeArray[0].getPoint().getY();
       }
       double l = Math.sqrt( Math.pow( deltaX, 2 ) + Math.pow( deltaY, 2 ) );
 
       if( deltaY > 0 )
         theta = direction - 180d + Math.acos( deltaX / l );
       else if( deltaY < 0 )
-        theta = direction + 180d - (Math.acos( deltaX / l )/ Math.PI * 180d);
+        theta = direction + 180d - (Math.acos( deltaX / l ) / Math.PI * 180d);
       else if( deltaY == 0 && deltaX > 0 )
         theta = direction - 180d;
       else

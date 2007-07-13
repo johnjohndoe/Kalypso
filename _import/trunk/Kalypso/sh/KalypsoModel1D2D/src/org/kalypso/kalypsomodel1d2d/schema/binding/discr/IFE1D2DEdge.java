@@ -43,108 +43,135 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.discr.IFEEdge;
 import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
- * Interface fo class representing an finite element edge.
- * An edge typicaly have 2 nodes and an posibibly inverted edge. 
+ * Interface for the class that represents a finite element edge. An edge typicaly have 2 nodes and (possibly) inverted
+ * edge.
  * 
  * @author Patrice Congo
+ * @author Dejan Antanaskovic
  */
 public interface IFE1D2DEdge<CT extends IFE1D2DElement, ET extends IFE1D2DNode> extends IFEEdge
 {
   /**
    * To get the computed geometry of this edge as curve
+   * 
    * @return a {@link GM_Curve} representing the edge geometry
    */
   public GM_Curve getCurve( );
 
   /**
-   * Adds the a container to this edge. edge container are typically
-   * finite elements.
-   * @param containerID the id of the container
+   * Adds the a container to this edge. edge container are typically finite elements.
+   * 
+   * @param containerID
+   *            the id of the container
    */
   public void addContainer( String containerID );
-  
+
   /**
    * Remove the given element as container of this edge
-   * @param containerToRemove the element to be removed as container
+   * 
+   * @param containerToRemove
+   *            the element to be removed as container
    * @return true if the given element has been removed, false otherwise
    * 
    */
-  public boolean removeContainerAsRef(CT containerToRemove);
+  public boolean removeContainerAsRef( CT containerToRemove );
 
   /**
    * To get the edge node at the given index
-   * @param index the index of the node; valid values are 0, 1
    * 
-   * @throws IndexOutOfBoundsException if the index is
-   *    <ul>
-   *        <li/> less than 0 or greater than 1
-   *        <li/> but also if the edge contains no element or the edge contains
-   *            1 node and the index is 1
-   *    <ul>
+   * @param index
+   *            the index of the node; valid values are 0, 1
+   * 
+   * @throws IndexOutOfBoundsException
+   *             if the index is
+   *             <ul>
+   *             <li/> less than 0 or greater than 1 <li/> but also if the edge contains no element or the edge contains
+   *             1 node and the index is 1
+   *             <ul>
    * @see #getNodes()
    */
   public ET getNode( int index ) throws IndexOutOfBoundsException;
 
   /**
    * Add a node to this edge.
-   * @param the id of the node
-   * @throws IllegalArgumentException if nodeID is null
-   * @throws ArrayIndexOutOfBoundsException if there are 
-   *        allready 2 node in this edge
-   *   
+   * 
+   * @param the
+   *            id of the node
+   * @throws IllegalArgumentException
+   *             if nodeID is null
+   * @throws ArrayIndexOutOfBoundsException
+   *             if there are allready 2 node in this edge
+   * 
    */
   public void addNode( String nodeID );
 
-  
   /**
    * Sets the inverted edge of this node
-   * @param invEdgeID the id of the inverted edge
-   * @throws IllegalArgumentException if inveEdge is null
-   *    or empty
+   * 
+   * @param invEdgeID
+   *            the id of the inverted edge
+   * @throws IllegalArgumentException
+   *             if inveEdge is null or empty
    */
-  public void setInvEdge(String invEdgeID);
-  
+  public void setInvEdge( String invEdgeID );
+
   /**
    * reset the inverted edd of this edge
    * 
    */
-  public void resetInvEdge();
-  
+  public void resetInvEdge( );
+
   /**
-   *Gets the inverted edge of this edge
-   *@return the inverted edge of this edge or null
-   *    if this edge does not have an inverted edge associated 
-   *    with it 
+   * Gets the inverted edge of this edge
+   * 
+   * @return the inverted edge of this edge or null if this edge does not have an inverted edge associated with it
    */
-  public IEdgeInv getEdgeInv();
-  
+  public IEdgeInv getEdgeInv( );
+
   /**
-   * Return the middle node of this edge.
-   * Note that the middle node is not necessarely the 
-   * center of the edge
+   * Returns the middle node of this edge, or <code>null</code> if it is not defined.
+   * 
    * @return the middle node of the edge
    */
-  public IFEMiddleNode getMiddleNode();
+  public IFEMiddleNode getMiddleNode( );
+
+  /**
+   * Returns the middle node of this edge.
+   * 
+   * @param createIfNotExists
+   *            if true, middle node will be created if not exists (same as {@link #getMiddleNode()})<br>
+   *            if false, middle node will be returned if exists, <code>null</code> otherwise
+   * 
+   * @see #getMiddleNode()
+   * @return the middle node of the edge
+   */
+  public GM_Point getMiddleNodePoint( );
+
   /**
    * Sets the middle node of this edge
-   * @param  middleNode  the new middle node of this edge.
-   *            null is a legal value.
-   *    
+   * 
+   * @param middleNode
+   *            the new middle node of this edge. null is a legal value.
+   * 
    */
-  public void setMiddleNode(IFEMiddleNode  middleNode);
-  
+  public void setMiddleNode( IFEMiddleNode middleNode );
+
   /**
    * To get the containers(typically elements) of this edge
-   * @return the containers of this edge as {@link IFeatureWrapperCollection} 
+   * 
+   * @return the containers of this edge as {@link IFeatureWrapperCollection}
    */
-  public IFeatureWrapperCollection<CT> getContainers();
-  
+  public IFeatureWrapperCollection<CT> getContainers( );
+
   /**
-   * To get the nodes of this edge 
-   * @param to get the node of this edge as {@link IFeatureWrapperCollection}
+   * To get the nodes of this edge
+   * 
+   * @param to
+   *            get the node of this edge as {@link IFeatureWrapperCollection}
    * @see #getNode(int)
    */
-  public IFeatureWrapperCollection<ET> getNodes();
+  public IFeatureWrapperCollection<ET> getNodes( );
 }

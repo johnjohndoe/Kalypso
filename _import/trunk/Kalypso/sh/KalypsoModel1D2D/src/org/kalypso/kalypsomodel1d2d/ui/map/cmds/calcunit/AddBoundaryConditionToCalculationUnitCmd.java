@@ -43,11 +43,8 @@ package org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.namespace.QName;
-
 import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand;
@@ -59,38 +56,36 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
  * @author madanago
- *
+ * 
  */
-@SuppressWarnings({"unchecked","hiding"})
+@SuppressWarnings( { "unchecked", "hiding" })
 public class AddBoundaryConditionToCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
 {
 
   private final IBoundaryCondition boundaryConditionToAdd;
+
   private final ICalculationUnit calculationUnit;
+
   private final IFEDiscretisationModel1d2d model1d2d;
-  
+
   private boolean done = false;
+
   private double grabDistance;
-  
-//  private final QName relationToCalUnit;
-  
-  public AddBoundaryConditionToCalculationUnitCmd(
-                      ICalculationUnit calculationUnit,
-                      IBoundaryCondition boundaryConditionToAdd,
-                      IFEDiscretisationModel1d2d model1d2d,
-                      double grabDistance )
+
+// private final QName relationToCalUnit;
+
+  public AddBoundaryConditionToCalculationUnitCmd( ICalculationUnit calculationUnit, IBoundaryCondition boundaryConditionToAdd, IFEDiscretisationModel1d2d model1d2d, double grabDistance )
   {
     Assert.throwIAEOnNullParam( calculationUnit, "calculationUnit" );
     Assert.throwIAEOnNullParam( boundaryConditionToAdd, "boundaryConditionToAdd" );
     Assert.throwIAEOnNullParam( model1d2d, "model1d2d" );
-    
+
     this.calculationUnit = calculationUnit;
     this.boundaryConditionToAdd = boundaryConditionToAdd;
     this.model1d2d = model1d2d;
     this.grabDistance = grabDistance;
-//    this.relationToCalUnit = relationToCalUnit;
+// this.relationToCalUnit = relationToCalUnit;
   }
-  
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand#getChangedFeature()
@@ -99,11 +94,11 @@ public class AddBoundaryConditionToCalculationUnitCmd implements IDiscrModel1d2d
   {
     if( done )
     {
-      return new IFeatureWrapper2[]{ calculationUnit, boundaryConditionToAdd };
+      return new IFeatureWrapper2[] { calculationUnit, boundaryConditionToAdd };
     }
     else
     {
-      return new IFeatureWrapper2[]{};
+      return new IFeatureWrapper2[] {};
     }
   }
 
@@ -140,50 +135,43 @@ public class AddBoundaryConditionToCalculationUnitCmd implements IDiscrModel1d2d
     {
       if( !done )
       {
-        CalUnitOps.markAsBoundaryCondition( 
-            calculationUnit, 
-            boundaryConditionToAdd,
-            grabDistance );
+        CalUnitOps.markAsBoundaryCondition( calculationUnit, boundaryConditionToAdd, grabDistance );
         fireProcessChanges();
-        
+
       }
     }
     catch( Throwable th )
     {
       th.printStackTrace();
     }
-     
+
   }
 
   private void fireProcessChanges( )
   {
     final Feature calUnitFeature = calculationUnit.getWrappedFeature();
     final Feature model1d2dFeature = model1d2d.getWrappedFeature();
-    List<Feature> features = 
-      new ArrayList<Feature>( );
+    List<Feature> features = new ArrayList<Feature>();
     features.add( calUnitFeature );
     features.add( boundaryConditionToAdd.getWrappedFeature() );
-    
-    GMLWorkspace workspace = 
-          calUnitFeature.getWorkspace();
-    FeatureStructureChangeModellEvent event = 
-        new FeatureStructureChangeModellEvent(
-            workspace,//final GMLWorkspace workspace, 
-            model1d2dFeature,// Feature parentFeature, 
-            features.toArray( new Feature[features.size()] ),//final Feature[] changedFeature, 
-            FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE//final int changeType
-            );
-    workspace.fireModellEvent( event );
-    
-  }
 
+    GMLWorkspace workspace = calUnitFeature.getWorkspace();
+    FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( workspace,// final GMLWorkspace
+                                                                                                // workspace,
+    model1d2dFeature,// Feature parentFeature,
+    features.toArray( new Feature[features.size()] ),// final Feature[] changedFeature,
+    FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE// final int changeType
+    );
+    workspace.fireModellEvent( event );
+
+  }
 
   /**
    * @see org.kalypso.commons.command.ICommand#redo()
    */
   public void redo( ) throws Exception
   {
-    
+
   }
 
   /**
@@ -191,7 +179,7 @@ public class AddBoundaryConditionToCalculationUnitCmd implements IDiscrModel1d2d
    */
   public void undo( ) throws Exception
   {
-    
+
   }
 
 }
