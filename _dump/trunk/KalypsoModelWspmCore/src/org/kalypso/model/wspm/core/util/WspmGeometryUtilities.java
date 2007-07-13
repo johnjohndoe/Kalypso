@@ -79,16 +79,28 @@ public class WspmGeometryUtilities
   {
     String crsName = null;
 
-    /* We assume here that we have a GAUSS-KRUEGER crs in a profile. */
-    if( crsName == null )
-      crsName = TimeserieUtils.getCoordinateSystemNameForGkr( Double.toString( rw ) );
+    return pointFromRwHw( rw, hw, h, crsName );
+  }
 
+  public static GM_Point pointFromRwHw( final double rw, final double hw, final double h, String crsName ) throws Exception
+  {
     final GM_Position position = GeometryFactory.createGM_Position( rw, hw, h );
 
+    /* If CRS is not know, we assume here that we have a GAUSS-KRUEGER crs in a profile. */
+    if( crsName == null )
+      crsName = TimeserieUtils.getCoordinateSystemNameForGkr( Double.toString( rw ) );
+    
     final CS_CoordinateSystem crs = crsName == null ? null : org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory.getInstance().getOGCCSByName( crsName );
 
     final GM_Point point = GeometryFactory.createGM_Point( position, crs );
     return (GM_Point) GEO_TRANSFORMER.transform( point );
+  }
+  
+  public static GM_Point pointFromPoint( final GM_Point inPoint, final String crsName ) throws Exception
+  {
+    final GM_Position position = inPoint.getPosition();
+   
+    return pointFromRwHw(position.getX(),position.getY(),position.getZ(), crsName);
   }
 
 

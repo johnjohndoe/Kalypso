@@ -301,6 +301,9 @@ public class ProfileFeatureFactory implements IWspmConstants
     final BigDecimal station = getProfileStation( profileFeature );
     profil.setStation( station == null ? Double.NaN : station.doubleValue() );
 
+    final String srsName = (String) profileFeature.getProperty( WspmProfile.QNAME_SRS );
+    profil.setProperty( IWspmConstants.PROFIL_PROPERTY_CRS, srsName );
+    
     //
     // Building
     //

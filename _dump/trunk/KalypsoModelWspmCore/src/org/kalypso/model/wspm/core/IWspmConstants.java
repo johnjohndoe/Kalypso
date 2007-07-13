@@ -86,4 +86,7 @@ public interface IWspmConstants
 
   public static final String POINT_PROPERTY_RECHTSWERT = POINT_PROPERTY + "RECHTSWERT";
 
+  /** Constant for coordinate-system of profile rw/hw. For example, it will be set by the GML-Profile converter. */
+  public static final String PROFIL_PROPERTY_CRS = "COORDINATE_SYSTEM";
+
 }
