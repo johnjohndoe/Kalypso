@@ -54,9 +54,6 @@ import java.util.Locale;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.FileLocator;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypso.kalypsomodel1d2d.conv.results.RestartEater;
 import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
@@ -666,7 +663,6 @@ public class Gml2RMA10SConv implements INativeIDProvider
                     final IFeatureWrapperCollection<IFE1D2DElement> elements, 
                     final IRoughnessPolygonCollection roughnessPolygonCollection ) throws GM_Exception, SimulationException
   {
-    
     final List<IFE1D2DElement> elementsInBBox = elements.query( m_calcUnitBBox );
     final HashSet<IFE1D2DEdge> edgeSet = new HashSet<IFE1D2DEdge>(elementsInBBox.size()*2);
 
