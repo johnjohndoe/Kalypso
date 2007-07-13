@@ -51,6 +51,12 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  */
 public class PanToWidget extends AbstractWidget
 {
+  //Patrice Congo: So people stop removing things
+  public PanToWidget( String name, String toolTip )
+  {
+    super( name, toolTip );
+  }
+  
   public PanToWidget( )
   {
     super( "pan to", "");
