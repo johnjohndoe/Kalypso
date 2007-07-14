@@ -50,9 +50,9 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IPseudoOPerationalModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.IGrabDistanceProvider;
 import org.kalypso.kalypsomodel1d2d.ui.map.IWidgetWithStrategy;
@@ -73,198 +73,167 @@ import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 
 /**
  * @author Madanagopal
- *
+ * 
  */
-public class CalculationUnitPerformWidget implements IWidgetWithOptions, 
-                                                     IWidget, 
-                                                     IWidgetWithStrategy,
-                                                     IGrabDistanceProvider
+public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget, IWidgetWithStrategy, IGrabDistanceProvider
 {
-  private CalculationUnitDataModel dataModel = new CalculationUnitDataModel();
-  private CalculationUnitPerformWidgetFace calcWidgetFace = new CalculationUnitPerformWidgetFace(dataModel);
-  private String toolTip;
+  private final CalculationUnitDataModel dataModel = new CalculationUnitDataModel();
+
+  private final CalculationUnitPerformWidgetFace calcWidgetFace = new CalculationUnitPerformWidgetFace( dataModel );
+
+  private final String toolTip;
+
   private IWidget strategy;
-  private String name;
+
+  private final String name;
+
   private Model1d2dCalUnitTheme calUnitTheme;
+
   /**
    * The constructor.
    */
-  
-  public CalculationUnitPerformWidget() {
-    this("Calculation Unit Perform","Berechnungseinheiten Modellieren");
+
+  public CalculationUnitPerformWidget( )
+  {
+    this( "Calculation Unit Perform", "Berechnungseinheiten Modellieren" );
   }
 
-  public CalculationUnitPerformWidget(String name, String toolTip ){
+  public CalculationUnitPerformWidget( final String name, final String toolTip )
+  {
     this.name = name;
     this.toolTip = toolTip;
   }
-  private KeyBasedDataModelChangeListener calThemeUpdater =
-    new KeyBasedDataModelChangeListener()
-{
 
-  public void dataChanged( String key, Object newValue )
+  private final KeyBasedDataModelChangeListener calThemeUpdater = new KeyBasedDataModelChangeListener()
   {
-    if( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER.equals( key ) )
+    public void dataChanged( String key, Object newValue )
     {
-      calUnitTheme.setCalulationUnit( (ICalculationUnit) newValue );
-      KeyBasedDataModelUtil.repaintMapPanel( 
-                  dataModel, ICommonKeys.KEY_MAP_PANEL );
+      if( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER.equals( key ) )
+      {
+        calUnitTheme.setCalulationUnit( (ICalculationUnit) newValue );
+        KeyBasedDataModelUtil.repaintMapPanel( dataModel, ICommonKeys.KEY_MAP_PANEL );
+      }
     }
-  }
-  
-};
+
+  };
 
   /**
-   * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#createControl(org.eclipse.swt.widgets.Composite, org.eclipse.ui.forms.widgets.FormToolkit)
+   * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#createControl(org.eclipse.swt.widgets.Composite,
+   *      org.eclipse.ui.forms.widgets.FormToolkit)
    */
-  public Control createControl( Composite parent, FormToolkit toolkit )
+  public Control createControl( final Composite parent, final FormToolkit toolkit )
   {
     try
     {
-      dataModel.setData( 
-          ICommonKeys.KEY_SELECTED_DISPLAY,
-          parent.getDisplay() );
+      dataModel.setData( ICommonKeys.KEY_SELECTED_DISPLAY, parent.getDisplay() );
       return calcWidgetFace.createControl( parent );
     }
-    catch (Throwable th) 
+    catch( final Throwable th )
     {
       th.printStackTrace();
       return null;
     }
   }
 
-
   /**
    * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#disposeControl()
    */
   public void disposeControl( )
   {
-    if(calcWidgetFace!=null)
+    if( calcWidgetFace != null )
     {
       calcWidgetFace.disposeControl();
     }
-    
+
   }
 
-
   /**
-   * @see org.kalypso.ogc.gml.widgets.IWidget#activate(org.kalypso.commons.command.ICommandTarget, org.kalypso.ogc.gml.map.MapPanel)
+   * @see org.kalypso.ogc.gml.widgets.IWidget#activate(org.kalypso.commons.command.ICommandTarget,
+   *      org.kalypso.ogc.gml.map.MapPanel)
    */
-  public void activate( ICommandTarget commandPoster, MapPanel mapPanel )
+  public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel )
   {
-    
     dataModel.setData( ICommonKeys.KEY_MAP_PANEL, mapPanel );
-    IMapModell mapModell = mapPanel.getMapModell();
-//    if(mapModell == null)
-//    {
-//      // set empty Modell:
-//      final KalypsoCorePlugin plugin = KalypsoCorePlugin.getDefault();
-//      mapModell = new MapModell( plugin.getCoordinatesSystem(), null );
-//    }
-    IFEDiscretisationModel1d2d m_model = UtilMap.findFEModelTheme( mapModell );
-    dataModel.setData( 
-        ICommonKeys.KEY_DISCRETISATION_MODEL, m_model );
-    dataModel.setData(
-        ICommonKeys.KEY_FEATURE_WRAPPER_LIST, 
-        CalUnitOps.getModelCalculationUnits( m_model ) );
+    final IMapModell mapModell = mapPanel.getMapModell();
+
+    final IFEDiscretisationModel1d2d m_model = UtilMap.findFEModelTheme( mapModell );
+    dataModel.setData( ICommonKeys.KEY_DISCRETISATION_MODEL, m_model );
+    dataModel.setData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST, CalUnitOps.getModelCalculationUnits( m_model ) );
     dataModel.setData( ICommonKeys.WIDGET_WITH_STRATEGY, this );
-    
-    IKalypsoFeatureTheme targetTheme = UtilMap.findEditableTheme( 
-        mapModell, 
-        Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT );
-    dataModel.setData( 
-        ICommonKeys.KEY_COMMAND_MANAGER, 
-        targetTheme.getWorkspace());
-    calUnitTheme = 
-      new Model1d2dCalUnitTheme("Aktuelle CalUnit",mapModell);
-//    mapModell.addTheme( calUnitTheme );
+
+    // TODO: what is the purpose of this extra theme??! This is completely senseless!
+    calUnitTheme = new Model1d2dCalUnitTheme( "Aktuelles Teilmodell", mapModell );
     mapModell.insertTheme( calUnitTheme, 0 );
     dataModel.addKeyBasedDataChangeListener( calThemeUpdater );
-    
-    //command manager since it is use in the dirty pool object framework
-    //the commandable workspace of the target theme is taken
-    dataModel.setData( ICommonKeys.KEY_COMMAND_MANAGER, m_model.getWrappedFeature().getWorkspace());
-    
-//    IKalypsoFeatureTheme bcTheme = UtilMap.findEditableTheme( 
-//        mapModell, 
-//        IBoundaryCondition.QNAME );
-//    if( bcTheme == null )
-//    {
-//      throw new RuntimeException("Could not find boundary condition theme");
-//    }
-//
-//    final CommandableWorkspace bcWorkspace = bcTheme.getWorkspace();
-//    dataModel.setData( 
-//        ICommonKeys.KEY_BOUNDARY_CONDITION_CMD_WORKSPACE, 
-//        bcWorkspace );
-    
-    dataModel.setData( 
-        ICommonKeys.KEY_GRAB_DISTANCE_PROVIDER, 
-        this );
-    dataModel.setData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST, CalUnitOps.getModelCalculationUnits( m_model));
-    
-    IFlowRelationshipModel bcModel =
-      Util.getModel( IPseudoOPerationalModel.class );//(IFlowRelationshipModel) bcHolderModelFeature.getAdapter( IFlowRelationshipModel.class );
-    calUnitTheme.setModelBoundaryConditions( bcModel );
-   }
 
+    // command manager since it is use in the dirty pool object framework
+    // the commandable workspace of the target theme is taken
+    // TODO: that cannot work, as the models workspace is not a commandable workspace
+    dataModel.setData( ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL, m_model.getWrappedFeature().getWorkspace() );
+
+    dataModel.setData( ICommonKeys.KEY_GRAB_DISTANCE_PROVIDER, this );
+    dataModel.setData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST, CalUnitOps.getModelCalculationUnits( m_model ) );
+
+    final IKalypsoFeatureTheme operationalTheme = UtilMap.findEditableTheme( mapModell, IBoundaryCondition.QNAME );
+    dataModel.setData( ICommonKeys.KEY_BOUNDARY_CONDITION_CMD_WORKSPACE, operationalTheme.getWorkspace() );
+
+    final IFlowRelationshipModel bcModel = Util.getModel( IPseudoOPerationalModel.class );// (IFlowRelationshipModel)
+
+    calUnitTheme.setModelBoundaryConditions( bcModel );
+  }
 
   /**
-   * @see org.kalypso.ogc.gml.widgets.IWidget#canBeActivated(org.eclipse.jface.viewers.ISelection, org.kalypso.ogc.gml.map.MapPanel)
+   * @see org.kalypso.ogc.gml.widgets.IWidget#canBeActivated(org.eclipse.jface.viewers.ISelection,
+   *      org.kalypso.ogc.gml.map.MapPanel)
    */
-  public boolean canBeActivated( ISelection selection, MapPanel mapPanel )
+  public boolean canBeActivated( final ISelection selection, final MapPanel mapPanel )
   {
     return true;
   }
 
-
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#clickPopup(java.awt.Point)
    */
-  public void clickPopup( Point p )
+  public void clickPopup( final Point p )
   {
     if( strategy != null )
     {
       strategy.clickPopup( p );
-    } 
+    }
   }
-
 
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#doubleClickedLeft(java.awt.Point)
    */
-  public void doubleClickedLeft( Point p )
+  public void doubleClickedLeft( final Point p )
   {
     if( strategy != null )
     {
       strategy.doubleClickedLeft( p );
-    } 
+    }
   }
-
 
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#doubleClickedRight(java.awt.Point)
    */
-  public void doubleClickedRight( Point p )
+  public void doubleClickedRight( final Point p )
   {
     if( strategy != null )
     {
       strategy.doubleClickedRight( p );
-    } 
+    }
   }
-
 
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#dragged(java.awt.Point)
    */
-  public void dragged( Point p )
+  public void dragged( final Point p )
   {
     if( strategy != null )
     {
       strategy.dragged( p );
-    } 
+    }
   }
-
 
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#finish()
@@ -273,19 +242,18 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions,
   {
     try
     {
-      MapPanel mapPanel =
-        (MapPanel) dataModel.getData( ICommonKeys.KEY_MAP_PANEL );
-      IMapModell mapModell = mapPanel.getMapModell();
+      final MapPanel mapPanel = (MapPanel) dataModel.getData( ICommonKeys.KEY_MAP_PANEL );
+      final IMapModell mapModell = mapPanel.getMapModell();
       if( mapModell != null )
       {
         mapModell.removeTheme( calUnitTheme );
       }
     }
-    catch ( Exception e)
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
-    
+
     try
     {
       if( strategy != null )
@@ -293,12 +261,11 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions,
         strategy.finish();
       }
     }
-    catch (Exception e)
+    catch( final Exception e )
     {
       e.printStackTrace();
-    }    
+    }
   }
-
 
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#getName()
@@ -308,7 +275,6 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions,
     return name;
   }
 
-
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#getToolTip()
    */
@@ -317,135 +283,124 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions,
     return toolTip;
   }
 
-
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#keyPressed(java.awt.event.KeyEvent)
    */
-  public void keyPressed( KeyEvent e )
+  public void keyPressed( final KeyEvent e )
   {
     if( strategy != null )
     {
       strategy.keyPressed( e );
-    }    
+    }
   }
-
 
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#keyReleased(java.awt.event.KeyEvent)
    */
-  public void keyReleased( KeyEvent e )
+  public void keyReleased( final KeyEvent e )
   {
     if( strategy != null )
     {
       strategy.keyReleased( e );
-    }    
+    }
   }
-
 
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#keyTyped(java.awt.event.KeyEvent)
    */
-  public void keyTyped( KeyEvent e )
+  public void keyTyped( final KeyEvent e )
   {
     if( strategy != null )
     {
       strategy.keyTyped( e );
-    }    
+    }
   }
-
 
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#leftClicked(java.awt.Point)
    */
-  public void leftClicked( Point p )
+  public void leftClicked( final Point p )
   {
     if( strategy != null )
     {
       strategy.leftClicked( p );
-    }    
+    }
   }
-
 
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#leftPressed(java.awt.Point)
    */
-  public void leftPressed( Point p )
+  public void leftPressed( final Point p )
   {
     if( strategy != null )
     {
       strategy.leftPressed( p );
-    }    
-    
-  }
+    }
 
+  }
 
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#leftReleased(java.awt.Point)
    */
-  public void leftReleased( Point p )
+  public void leftReleased( final Point p )
   {
     if( strategy != null )
     {
       strategy.leftReleased( p );
-    }    
-    
-  }
+    }
 
+  }
 
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#middleClicked(java.awt.Point)
    */
-  public void middleClicked( Point p )
+  public void middleClicked( final Point p )
   {
     if( strategy != null )
     {
       strategy.middleClicked( p );
-    }    
-    
-  }
+    }
 
+  }
 
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#middlePressed(java.awt.Point)
    */
-  public void middlePressed( Point p )
+  public void middlePressed( final Point p )
   {
     if( strategy != null )
     {
       strategy.middlePressed( p );
-    }   
+    }
   }
-
 
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#middleReleased(java.awt.Point)
    */
-  public void middleReleased( Point p )
+  public void middleReleased( final Point p )
   {
     if( strategy != null )
     {
       strategy.middleReleased( p );
-    }    
-    
-  }
+    }
 
+  }
 
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#moved(java.awt.Point)
    */
-  public void moved( Point p )
+  public void moved( final Point p )
   {
     if( strategy != null )
     {
       strategy.moved( p );
-    }        
+    }
   }
-
 
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#paint(java.awt.Graphics)
    */
-  public void paint( Graphics g )
+  public void paint( final Graphics g )
   {
     if( strategy != null )
     {
@@ -453,78 +408,71 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions,
     }
   }
 
-
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#rightClicked(java.awt.Point)
    */
-  public void rightClicked( Point p )
+  public void rightClicked( final Point p )
   {
     if( strategy != null )
     {
       strategy.rightClicked( p );
-    }    
+    }
   }
-
 
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#rightPressed(java.awt.Point)
    */
-  public void rightPressed( Point p )
+  public void rightPressed( final Point p )
   {
     if( strategy != null )
     {
       strategy.rightPressed( p );
-    }    
-    
-  }
+    }
 
+  }
 
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#rightReleased(java.awt.Point)
    */
-  public void rightReleased( Point p )
+  public void rightReleased( final Point p )
   {
     if( strategy != null )
     {
       strategy.rightReleased( p );
-    }    
-    
-  }
+    }
 
+  }
 
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#setSelection(org.eclipse.jface.viewers.ISelection)
    */
-  public void setSelection( ISelection selection )
+  public void setSelection( final ISelection selection )
   {
     if( strategy != null )
     {
       strategy.setSelection( selection );
-    }   
+    }
   }
-
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.IWidgetWithStrategy#setStrategy(org.kalypso.ogc.gml.widgets.IWidget)
    */
-  public void setStrategy( IWidget strategy )
+  public void setStrategy( final IWidget strategy )
   {
     if( this.strategy != null )
     {
       this.strategy.finish();
     }
-    
+
     this.strategy = strategy;
     if( this.strategy != null )
     {
-     ICommandTarget commandPoster = 
-       (ICommandTarget) dataModel.getData( ICommonKeys.KEY_COMMAND_TARGET );
-     MapPanel mapPanel = 
-         (MapPanel) dataModel.getData( ICommonKeys.KEY_MAP_PANEL );
-     this.strategy.activate( commandPoster, mapPanel ); 
-    }    
+      // TODO: this is probably no talways the right command targert
+      final ICommandTarget commandPoster = (ICommandTarget) dataModel.getData( ICommonKeys.KEY_COMMAND_TARGET_DISC_MODEL );
+      final MapPanel mapPanel = (MapPanel) dataModel.getData( ICommonKeys.KEY_MAP_PANEL );
+      this.strategy.activate( commandPoster, mapPanel );
+    }
   }
-
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.IGrabDistanceProvider#getGrabDistance()
@@ -533,14 +481,13 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions,
   {
     if( strategy instanceof IGrabDistanceProvider )
     {
-      return ((IGrabDistanceProvider)strategy).getGrabDistance();
+      return ((IGrabDistanceProvider) strategy).getGrabDistance();
     }
-    
-    System.out.println("getting fix grab distance");
-    
-    final MapPanel mapPanel = 
-      dataModel.getData( MapPanel.class, ICommonKeys.KEY_MAP_PANEL );
-    return MapUtilities.calculateWorldDistance( mapPanel , 6 );
+
+    System.out.println( "getting fix grab distance" );
+
+    final MapPanel mapPanel = dataModel.getData( MapPanel.class, ICommonKeys.KEY_MAP_PANEL );
+    return MapUtilities.calculateWorldDistance( mapPanel, 6 );
   }
 
 }

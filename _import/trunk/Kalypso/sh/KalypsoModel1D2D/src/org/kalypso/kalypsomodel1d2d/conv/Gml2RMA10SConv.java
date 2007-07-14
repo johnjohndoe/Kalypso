@@ -134,12 +134,12 @@ public class Gml2RMA10SConv implements INativeIDProvider
 
   private RestartEater m_restartEater;
 
-// private Formatter formatter;
-//
-// private PrintWriter stream;
+  // private Formatter formatter;
+  //
+  // private PrintWriter stream;
   private RMA10Calculation m_calculation;
 
-  private boolean m_restart;
+  private final boolean m_restart;
 
   public Gml2RMA10SConv( final File rma10sOutputFile, final RMA10Calculation calculation )
   {
@@ -166,13 +166,13 @@ public class Gml2RMA10SConv implements INativeIDProvider
       final IFolder scenarioFolder = Util.getScenarioFolder();
       for( final String path : m_calculation.getControlModel().getRestartPaths() )
       {
-        IFile ifile = scenarioFolder.getFile( path );
+        final IFile ifile = scenarioFolder.getFile( path );
         final File file = ifile.getRawLocation().toFile();
         try
         {
           m_restartEater.addResultFile( file );
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
           // TODO Auto-generated catch block
           e.printStackTrace();
@@ -288,17 +288,17 @@ public class Gml2RMA10SConv implements INativeIDProvider
     }
   }
 
-// /**
-// * Call after boundary lines writing because it requires the IDs
-// */
-// public void writeJuntionContextTRMA10sModel( ) throws SimulationException, GM_Exception
-// {
-// JunctionContextConverter.write(
-// m_discretisationModel1d2d,
-// m_calcultionUnit,
-// this,
-// formatter );
-// }
+  // /**
+  // * Call after boundary lines writing because it requires the IDs
+  // */
+  // public void writeJuntionContextTRMA10sModel( ) throws SimulationException, GM_Exception
+  // {
+  // JunctionContextConverter.write(
+  // m_discretisationModel1d2d,
+  // m_calcultionUnit,
+  // this,
+  // formatter );
+  // }
 
   private void writeRMA10sModel( final PrintWriter stream ) throws SimulationException, GM_Exception
   {
@@ -310,19 +310,19 @@ public class Gml2RMA10SConv implements INativeIDProvider
     final Formatter formatter = new Formatter( stream, Locale.US );
 
     // first method not supporting filtering not working properly
-// if( m_terrainModel != null )
-// {
-// final IRoughnessPolygonCollection roughnessPolygonCollection = m_terrainModel.getRoughnessPolygonCollection();
-// writeElements( formatter, m_roughnessIDProvider, elements, roughnessPolygonCollection );
-// }
-// else
-// {
-// // TODO: is this reallly possible? Better: throw an exception?
-// writeElements( formatter, elements );
-// }
-// writeNodes( formatter, nodes );
-// writeEdges( formatter, edges );
-// JunctionContextConverter.write( m_discretisationModel1d2d, m_calculationUnit, this, formatter );
+    // if( m_terrainModel != null )
+    // {
+    // final IRoughnessPolygonCollection roughnessPolygonCollection = m_terrainModel.getRoughnessPolygonCollection();
+    // writeElements( formatter, m_roughnessIDProvider, elements, roughnessPolygonCollection );
+    // }
+    // else
+    // {
+    // // TODO: is this reallly possible? Better: throw an exception?
+    // writeElements( formatter, elements );
+    // }
+    // writeNodes( formatter, nodes );
+    // writeEdges( formatter, edges );
+    // JunctionContextConverter.write( m_discretisationModel1d2d, m_calculationUnit, this, formatter );
 
     // second methods with filtering of edges and nodes
     final IRoughnessPolygonCollection roughnessPolygonCollection = m_terrainModel.getRoughnessPolygonCollection();
@@ -356,7 +356,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
         final String gmlID = "VirtualMiddleNode" + edge.getGmlID(); // Pseudo id, but unique within this context
         middleNodeID = getID( getNodesIDProvider(), gmlID );
 
-        /* Calculate middle of arc. */
+       /* Calculate middle of arc. */
         /**
          * JTSUtilities.pointOnLinePercent( edgeLine, 50 ) doesn't give the proper middle node of the edge!
          * 
@@ -422,10 +422,10 @@ public class Gml2RMA10SConv implements INativeIDProvider
         continue;
       }
 
-// if( !CalUnitOps.isEdgeOf( m_calculationUnit, edge ) )
-// {
-// continue;
-// }
+      // if( !CalUnitOps.isEdgeOf( m_calculationUnit, edge ) )
+      // {
+      // continue;
+      // }
 
       final int node0ID = getID( edge.getNode( 0 ) );
       final int node1ID = getID( edge.getNode( 1 ) );
@@ -488,13 +488,13 @@ public class Gml2RMA10SConv implements INativeIDProvider
 
   private void writeNodes( final Formatter formatter, final IFeatureWrapperCollection<IFE1D2DNode> nodes ) throws SimulationException
   {
-    List<IFE1D2DNode> nodesInBBox = nodes.query( m_calcUnitBBox );
+    final List<IFE1D2DNode> nodesInBBox = nodes.query( m_calcUnitBBox );
     for( final IFE1D2DNode<IFE1D2DEdge> node : nodesInBBox/* nodes */)
     {
-// if( !CalUnitOps.isNodeOf( m_calculationUnit, node ) )
-// {
-// continue;
-// }
+      // if( !CalUnitOps.isNodeOf( m_calculationUnit, node ) )
+      // {
+      // continue;
+      // }
       if( containsID( node ) )
       {
         continue;
@@ -713,7 +713,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
     }
 
     // write edge set nodes
-    for( IFE1D2DEdge edge : edgeSet )
+    for( final IFE1D2DEdge edge : edgeSet )
     {
       writeNodes( formatter, edge.getNodes() );
     }
@@ -726,7 +726,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
    * Collects the element edges and put them into the provides set
    * 
    */
-  private static final void contributeToSet( IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge> ele, HashSet<IFE1D2DEdge> edgeSet )
+  private static final void contributeToSet( final IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge> ele, final HashSet<IFE1D2DEdge> edgeSet )
   {
     if( ele instanceof IElement1D )
     {
@@ -761,7 +761,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
     }
   }
 
-  private void writeRestartLines( final Formatter formatter, int nodeID, double x, double y, double z )
+  private void writeRestartLines( final Formatter formatter, final int nodeID, final double x, final double y, final double z )
   {
     final INodeResult node = m_restartEater.getNodeResultAtPosition( x, y );
     double vx = 0.0;

@@ -156,8 +156,7 @@ public class FeatureWrapperListEditor implements IButtonConstants
       };
       button.addSelectionListener( seL );
     }
-
-  };
+  }
 
   private final ICellModifier modifier = new ICellModifier()
   {
@@ -199,7 +198,6 @@ public class FeatureWrapperListEditor implements IButtonConstants
 
     public void modify( Object element, String property, Object value )
     {
-
       IFeatureWrapper2 featureWrapper = null;
       if( element instanceof TableItem )
       {
@@ -237,7 +235,9 @@ public class FeatureWrapperListEditor implements IButtonConstants
             refreshTableView();
           }
         };
-        KeyBasedDataModelUtil.postCommand( dataModel, renameCommand );
+
+        // TODO: this is probably not always the right key!
+        KeyBasedDataModelUtil.postCommand( dataModel, renameCommand, ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL );
       }
       else
       {
@@ -545,48 +545,48 @@ public class FeatureWrapperListEditor implements IButtonConstants
       // } );
     }
 
-    if (showDescription())
+    if( showDescription() )
     {
-    descriptionGroupText = new Group( parent, SWT.NONE );
-    descriptionGroupText.setText( titleDescriptionGroup );
-    formData = new FormData();
-    formData.left = new FormAttachment( btnComposite, 5 );
-    formData.top = new FormAttachment( 0, 10 );
-    formData.bottom = new FormAttachment( 100, 0 );
-    descriptionGroupText.setLayoutData( formData );
+      descriptionGroupText = new Group( parent, SWT.NONE );
+      descriptionGroupText.setText( titleDescriptionGroup );
+      formData = new FormData();
+      formData.left = new FormAttachment( btnComposite, 5 );
+      formData.top = new FormAttachment( 0, 10 );
+      formData.bottom = new FormAttachment( 100, 0 );
+      descriptionGroupText.setLayoutData( formData );
 
-    final FormLayout formDescription = new FormLayout();
-    descriptionGroupText.setLayout( formDescription );
+      final FormLayout formDescription = new FormLayout();
+      descriptionGroupText.setLayout( formDescription );
 
-    descriptionText = new Text( descriptionGroupText, SWT.MULTI | SWT.WRAP );
-    descriptionText.setText( defaultTestDecription );
+      descriptionText = new Text( descriptionGroupText, SWT.MULTI | SWT.WRAP );
+      descriptionText.setText( defaultTestDecription );
 
-    final FormData formDescripData = new FormData();
-    formDescripData.left = new FormAttachment( 0, 0 );
-    formDescripData.right = new FormAttachment( 100, 0 );
-    formDescripData.top = new FormAttachment( 0, 0 );
-    descriptionText.setLayoutData( formDescripData );
+      final FormData formDescripData = new FormData();
+      formDescripData.left = new FormAttachment( 0, 0 );
+      formDescripData.right = new FormAttachment( 100, 0 );
+      formDescripData.top = new FormAttachment( 0, 0 );
+      descriptionText.setLayoutData( formDescripData );
 
-    saveButton = new Button( descriptionGroupText, SWT.PUSH );
-    saveButton.setText( "Sichern" );
-    saveButton.setToolTipText( saveToolTip );
-    image = new Image( descriptionGroupText.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/save.gif" ).getImageData() );
-    saveButton.setImage( image );
-    formData = new FormData();
-    formData.right = new FormAttachment( 100, 0 );
-    formData.bottom = new FormAttachment( 100, 0 );
-    saveButton.setLayoutData( formData );
-    saveButton.addSelectionListener( new SelectionAdapter()
-    {
-      @Override
-      public void widgetSelected( final SelectionEvent event )
+      saveButton = new Button( descriptionGroupText, SWT.PUSH );
+      saveButton.setText( "Sichern" );
+      saveButton.setToolTipText( saveToolTip );
+      image = new Image( descriptionGroupText.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/save.gif" ).getImageData() );
+      saveButton.setImage( image );
+      formData = new FormData();
+      formData.right = new FormAttachment( 100, 0 );
+      formData.bottom = new FormAttachment( 100, 0 );
+      saveButton.setLayoutData( formData );
+      saveButton.addSelectionListener( new SelectionAdapter()
       {
-        if( getCurrentSelection() != null )
+        @Override
+        public void widgetSelected( final SelectionEvent event )
         {
-          getCurrentSelection().setDescription( descriptionText.getText() );
+          if( getCurrentSelection() != null )
+          {
+            getCurrentSelection().setDescription( descriptionText.getText() );
+          }
         }
-      }
-    } );
+      } );
     }
 
     // setup cell editing
@@ -720,7 +720,7 @@ public class FeatureWrapperListEditor implements IButtonConstants
         {
           throw new IllegalArgumentException( "IfeatureWrapper2 expected but got:" + currentSelection );
         }
-        if (showDescription())
+        if( showDescription() )
         {
           descriptionText.setText( desc );
           descriptionText.redraw();

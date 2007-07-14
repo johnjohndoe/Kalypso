@@ -138,7 +138,6 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
     final Feature feature = getWrappedFeature();
     final List scopeMarks = (List) feature.getProperty( Kalypso1D2DSchemaConstants.OP1D2D_PROP_SCOPE_MARK );
     scopeMarks.add( scopeMark );
-
   }
 
   /**

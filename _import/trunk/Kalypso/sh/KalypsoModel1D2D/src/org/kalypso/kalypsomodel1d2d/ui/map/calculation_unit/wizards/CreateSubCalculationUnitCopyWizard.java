@@ -63,7 +63,7 @@ import org.kalypso.kalypsosimulationmodel.core.Util;
 public class CreateSubCalculationUnitCopyWizard extends Wizard implements INewWizard
 {
 
-  private CalculationUnitDataModel dataModel;
+  private final CalculationUnitDataModel dataModel;
 
   private IStructuredSelection selection;
 
@@ -71,11 +71,12 @@ public class CreateSubCalculationUnitCopyWizard extends Wizard implements INewWi
 
   private ICalculationUnit1D2D calculation1D2D;
 
-  public CreateSubCalculationUnitCopyWizard( CalculationUnitDataModel dataModel )
+  public CreateSubCalculationUnitCopyWizard( final CalculationUnitDataModel dataModel )
   {
     this.dataModel = dataModel;
   }
 
+  @Override
   public void addPages( )
   {
     firstPage = new CreateSubCalculationUnitCopyWizardPage( dataModel );
@@ -89,54 +90,43 @@ public class CreateSubCalculationUnitCopyWizard extends Wizard implements INewWi
   @Override
   public boolean performFinish( )
   {
-    calculation1D2D = (ICalculationUnit1D2D) dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER);
-    RemoveSubCalcUnitsFromCalcUnit1D2DCmd cmdToRemove = 
-              new RemoveSubCalcUnitsFromCalcUnit1D2DCmd( 
-                  new ArrayList<ICalculationUnit>( 
-                      calculation1D2D.getSubUnits() ),
-                      calculation1D2D, 
-                      Util.getModel( IFEDiscretisationModel1d2d.class ) )
-                      {
-                        @Override
-                        public void process( )
-                        {
-                          try
-                          {
-                            super.process();
-                          }
-                          catch( Exception e )
-                          {
-                            e.printStackTrace();
-                          }
-                          dataModel.setData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, 
-                              dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER ) );
-                        }
-                  
-                      };
-    KeyBasedDataModelUtil.postCommand( dataModel, cmdToRemove );
-    AddSubCalcUnitsToCalcUnit1D2DCmd cmdToAdd = 
-             new AddSubCalcUnitsToCalcUnit1D2DCmd(
-                       firstPage.getInputListCalSubUnits(),
-                       calculation1D2D,
-                       Util.getModel( IFEDiscretisationModel1d2d.class ) )
-                      {
-                  
-                        @Override
-                        public void process( )
-                        {
-                          try
-                          {
-                            super.process();
-                          }
-                          catch( Exception e )
-                          {
-                            e.printStackTrace();
-                          }
-                          dataModel.setData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, 
-                              dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER ) );
-                        }
-                      };
-    KeyBasedDataModelUtil.postCommand( dataModel, cmdToAdd );
+    calculation1D2D = (ICalculationUnit1D2D) dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
+    final RemoveSubCalcUnitsFromCalcUnit1D2DCmd cmdToRemove = new RemoveSubCalcUnitsFromCalcUnit1D2DCmd( new ArrayList<ICalculationUnit>( calculation1D2D.getSubUnits() ), calculation1D2D, Util.getModel( IFEDiscretisationModel1d2d.class ) )
+    {
+      @Override
+      public void process( )
+      {
+        try
+        {
+          super.process();
+        }
+        catch( Exception e )
+        {
+          e.printStackTrace();
+        }
+        dataModel.setData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER ) );
+      }
+
+    };
+    KeyBasedDataModelUtil.postCommand( dataModel, cmdToRemove, ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL );
+    final AddSubCalcUnitsToCalcUnit1D2DCmd cmdToAdd = new AddSubCalcUnitsToCalcUnit1D2DCmd( firstPage.getInputListCalSubUnits(), calculation1D2D, Util.getModel( IFEDiscretisationModel1d2d.class ) )
+    {
+
+      @Override
+      public void process( )
+      {
+        try
+        {
+          super.process();
+        }
+        catch( Exception e )
+        {
+          e.printStackTrace();
+        }
+        dataModel.setData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER ) );
+      }
+    };
+    KeyBasedDataModelUtil.postCommand( dataModel, cmdToAdd, ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL );
     return true;
   }
 
@@ -144,7 +134,7 @@ public class CreateSubCalculationUnitCopyWizard extends Wizard implements INewWi
    * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
    *      org.eclipse.jface.viewers.IStructuredSelection)
    */
-  public void init( IWorkbench workbench, IStructuredSelection selection )
+  public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
     this.selection = selection;
   }

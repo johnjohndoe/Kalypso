@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,116 +52,55 @@ import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 /**
  * @author Madanagopal
  * @author Patrice Congo
- *
+ * 
  */
 @SuppressWarnings("unchecked")
 public class CalculationUnitDataModel extends KeyBasedDataModel
 {
-  Map<ICalculationUnit,List<IProblem>> validateMessages = new HashMap<ICalculationUnit,List<IProblem>>();
+  private final Map<ICalculationUnit, List<IProblem>> validateMessages = new HashMap<ICalculationUnit, List<IProblem>>();
 
   public CalculationUnitDataModel( )
   {
-    super(
-        new String[]{
-              ICommonKeys.KEY_FEATURE_WRAPPER_LIST,
-              ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER,
-              ICommonKeys.KEY_DISCRETISATION_MODEL,
-              ICommonKeys.KEY_MAP_PANEL,
-              ICommonKeys.KEY_COMMAND_TARGET,
-              ICommonKeys.WIDGET_WITH_STRATEGY,
-              ICommonKeys.KEY_COMMAND_MANAGER,
-              ICommonKeys.KEY_SELECTED_DISPLAY,
-              ICommonKeys.KEY_BOUNDARY_CONDITION_CMD_WORKSPACE,
-              ICommonKeys.KEY_GRAB_DISTANCE_PROVIDER,
-              },
-        null
-        );
+    super( new String[] { ICommonKeys.KEY_FEATURE_WRAPPER_LIST, ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, ICommonKeys.KEY_DISCRETISATION_MODEL, ICommonKeys.KEY_MAP_PANEL,
+        ICommonKeys.KEY_COMMAND_TARGET_DISC_MODEL, ICommonKeys.WIDGET_WITH_STRATEGY, ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL, ICommonKeys.KEY_SELECTED_DISPLAY,
+        ICommonKeys.KEY_BOUNDARY_CONDITION_CMD_WORKSPACE, ICommonKeys.KEY_GRAB_DISTANCE_PROVIDER, }, null );
   }
 
-  public ICalculationUnit getSelectedCalculationUnit()
+  public ICalculationUnit getSelectedCalculationUnit( )
   {
-    Object data2 = getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
-    return (ICalculationUnit)data2;
+    final Object data2 = getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
+    return (ICalculationUnit) data2;
   }
 
-  public void setSelectedCalculationUnit(
-                                  ICalculationUnit calculationUnit )
+  public void setSelectedCalculationUnit( final ICalculationUnit calculationUnit )
   {
     setData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, calculationUnit );
   }
 
-  public List<ICalculationUnit> getCalculationUnits()
+  public List<ICalculationUnit> getCalculationUnits( )
   {
-    Object data2 = getData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST );
-    return (List<ICalculationUnit>)data2;
+    final Object data2 = getData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST );
+    return (List<ICalculationUnit>) data2;
   }
 
-  public void setSelectedCalculationUnit(
-                                  List<ICalculationUnit> calculationUnits )
+  public void setSelectedCalculationUnit( final List<ICalculationUnit> calculationUnits )
   {
     setData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST, calculationUnits );
   }
 
-/*  public void addValidatingMessage(ICalculationUnit key, IProblem problem)
-  {
-    boolean copyExist = false;
-    if (validateMessages.containsKey( key ))
-    {
-       List<IProblem> messages = validateMessages.get( key );
-       for (IProblem prob: messages)
-       {
-         if (prob.getMessageDescription().equals( problem.getMessageDescription()))
-         {
-           copyExist = true;
-         }
-       }
-       
-       if (!copyExist)
-       {
-         messages.add( problem );
-         validateMessages.put( key, messages );         
-       }
-    }
-    else
-    {
-      
-      ArrayList<IProblem> arrayList = new ArrayList<IProblem>();
-      arrayList.add( problem );
-      validateMessages.put( key, arrayList );
-    }
-  }*/
-
-  public void setValidatingMessages(ICalculationUnit key, List<IProblem> strList)
+  public void setValidatingMessages( final ICalculationUnit key, final List<IProblem> strList )
   {
     validateMessages.put( key, strList );
-    
-//    if (validateMessages.containsKey( key ))
-//    {
-//       List<IProblem> messages = validateMessages.get( key );
-//       if (!strList.isEmpty())
-//       {
-//         messages.addAll( strList );
-//         validateMessages.put( key, messages );
-//       }
-//    }
-//    else
-//    {
-//      if (!strList.isEmpty())
-//      {
-//        validateMessages.put( key, strList );
-//      } 
-//    }
   }
 
-  public List<IProblem> getValidatingMessages(ICalculationUnit key)
+  public List<IProblem> getValidatingMessages( final ICalculationUnit key )
   {
     return validateMessages.get( key );
   }
 
-  public void addValidatingMessage( ICalculationUnit key, List<IProblem> problemList )
+  public void addValidatingMessage( final ICalculationUnit key, final List<IProblem> problemList )
   {
     validateMessages.put( key, problemList );
-    
   }
 
 }

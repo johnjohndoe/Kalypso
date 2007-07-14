@@ -45,7 +45,6 @@ import javax.xml.namespace.QName;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandManager;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
@@ -53,9 +52,6 @@ import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 
 /**
  * Utils method arround {@link KeyBasedDataModel}
@@ -73,73 +69,28 @@ public class KeyBasedDataModelUtil
    * @param command
    *            the command to post
    */
-  public static final void postCommand( KeyBasedDataModel dataModel, ICommand command )
+  public static final void postCommand( final KeyBasedDataModel dataModel, final ICommand command, final String key )
   {
     Assert.throwIAEOnNullParam( dataModel, "dataModel" );
     Assert.throwIAEOnNullParam( command, "command" );
 
-// final ICommandTarget cmdTarget =
-// dataModel.getData(
-// ICommandTarget.class,
-// ICommonKeys.KEY_COMMAND_TARGET );
-// if( cmdTarget == null )
-// {
-// throw new RuntimeException(
-// "Could not found command target in the model:key="+
-// ICommonKeys.KEY_COMMAND_TARGET );
-// }
-// cmdTarget.postCommand( command, null );
-    final ICommandManager commandManager = dataModel.getData( ICommandManager.class, ICommonKeys.KEY_COMMAND_MANAGER );
+    if( key != ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL && key != ICommonKeys.KEY_BOUNDARY_CONDITION_CMD_WORKSPACE )
+      throw new RuntimeException( "Only commands to discretisation modell or operational modell are supported: " + key );
+
+    final ICommandManager commandManager = dataModel.getData( ICommandManager.class, key );
     if( commandManager == null )
     {
-      throw new RuntimeException( "Could not found command target in the model:key=" + ICommonKeys.KEY_COMMAND_MANAGER );
+      throw new RuntimeException( "Could not found command target in the model:key=" + key );
     }
     try
     {
       commandManager.postCommand( command );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       throw new RuntimeException( e );
     }
-  }
-
-  /**
-   * Primarily used to notify the workflow about the change in discretisation model after using a command that changes
-   * an sub feature of the discretisation model but does not include the discretisation model in the change event
-   * 
-   * @param dataModel
-   *            the dataModel holding the discretisation model
-   * @throws IllegalArgumentException
-   *             if dataModel is null or does not hold a discretisation model with the key
-   *             {@link ICommonKeys#KEY_DISCRETISATION_MODEL}
-   * 
-   */
-  private static final void fireDiscretisationModelChanged( KeyBasedDataModel dataModel )
-  {
-    Assert.throwIAEOnNullParam( dataModel, "dataModel" );
-    Object modelObject = dataModel.getData( ICommonKeys.KEY_DISCRETISATION_MODEL );
-    if( !(modelObject instanceof IFEDiscretisationModel1d2d) )
-    {
-      String message = String.format( "Data model does not contain a discretisation model:" + "\n\t key=%s " + "\n\t found data=%s", ICommonKeys.KEY_DISCRETISATION_MODEL, modelObject );
-      throw new IllegalArgumentException( message );
-    }
-
-    try
-    {
-
-      final Feature modelFeature = ((IFEDiscretisationModel1d2d) modelObject).getWrappedFeature();
-      GMLWorkspace workspace = modelFeature.getWorkspace();
-
-      final FeaturesChangedModellEvent event = new FeaturesChangedModellEvent( workspace, new Feature[] { modelFeature } );
-      workspace.fireModellEvent( event );
-    }
-    catch( Throwable th )
-    {
-      th.printStackTrace();
-    }
-
   }
 
   /**
@@ -153,7 +104,7 @@ public class KeyBasedDataModelUtil
    * @throws IllegalArgumentException
    *             if dataModel or key is null
    */
-  public static final void resetCurrentEntry( KeyBasedDataModel dataModel, String key )
+  public static final void resetCurrentEntry( final KeyBasedDataModel dataModel, final String key )
   {
     Assert.throwIAEOnNullParam( dataModel, "dataModel" );
     Assert.throwIAEOnNullParam( key, "key" );
@@ -171,7 +122,7 @@ public class KeyBasedDataModelUtil
    *             if dataModel or key is null or if the data corresponding to key is not a MapPanel; this also include
    *             null values
    */
-  public static void repaintMapPanel( KeyBasedDataModel dataModel, String key )
+  public static void repaintMapPanel( final KeyBasedDataModel dataModel, final String key )
   {
     Assert.throwIAEOnNullParam( key, "key" );
     Assert.throwIAEOnNullParam( dataModel, "dataModel" );
@@ -202,25 +153,25 @@ public class KeyBasedDataModelUtil
     ((Display) displayEntry).asyncExec( repaintRunnable );
   }
 
-  public static final CommandableWorkspace getBCWorkSpace( KeyBasedDataModel dataModel )
+  public static final CommandableWorkspace getBCWorkSpace( final KeyBasedDataModel dataModel )
   {
     return getCommandableWorkspace( dataModel, IBoundaryCondition.QNAME );
   }
 
-  public static final CommandableWorkspace getCommandableWorkspace( KeyBasedDataModel dataModel, QName themeQName )
+  public static final CommandableWorkspace getCommandableWorkspace( final KeyBasedDataModel dataModel, final QName themeQName )
   {
 
-    MapPanel mapPanel = dataModel.getData( MapPanel.class, ICommonKeys.KEY_MAP_PANEL );
+    final MapPanel mapPanel = dataModel.getData( MapPanel.class, ICommonKeys.KEY_MAP_PANEL );
     if( mapPanel == null )
     {
       throw new RuntimeException( "Could not found map panel" );
     }
-    IMapModell mapModell = mapPanel.getMapModell();
+    final IMapModell mapModell = mapPanel.getMapModell();
     if( mapModell == null )
     {
       throw new RuntimeException( "Could not get map model" );
     }
-    IKalypsoFeatureTheme bcTheme = UtilMap.findEditableTheme( mapModell, themeQName//
+    final IKalypsoFeatureTheme bcTheme = UtilMap.findEditableTheme( mapModell, themeQName//
     );
     if( bcTheme == null )
     {

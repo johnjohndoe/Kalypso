@@ -67,7 +67,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
-import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
@@ -84,43 +83,56 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
  * @author Madanagopal
- *
+ * 
  */
 public class CreateSubCalculationUnitCopyDialog extends Dialog
 {
-  
+
   private static final int RESET_ID = IDialogConstants.NO_TO_ALL_ID + 1;
+
   public static final int OK_APPLIED = IDialogConstants.OK_ID;
 
-  private ArrayList<ICalculationUnit> inputListWithNo1D2D = new ArrayList<ICalculationUnit>();
-  private ArrayList<ICalculationUnit>/*IFeatureWrapperCollection*/ inputListCalSubUnits;
+  private final ArrayList<ICalculationUnit> inputListWithNo1D2D = new ArrayList<ICalculationUnit>();
+
+  private ArrayList<ICalculationUnit>/* IFeatureWrapperCollection */inputListCalSubUnits;
+
   private TableViewer subCalculationUnits;
+
   private Table subCalcUnitsTable;
+
   private ICalculationUnit1D2D calculation1D2D;
+
   private ICalculationUnit1D2D parentCalcUnit1D2D;
- 
-  private Composite parent;
+
+  private final Composite parent;
+
   private Combo typeCombo;
-  private CalculationUnitDataModel dataModel;
+
+  private final CalculationUnitDataModel dataModel;
+
   private TableViewer calculationUnits;
-  private ArrayList<ICalculationUnit> buffInputListWithNo1D2D = new ArrayList<ICalculationUnit>();
-  private ArrayList<ICalculationUnit> buffInputListCalSubUnits = new ArrayList<ICalculationUnit>();
-  
+
+  private final ArrayList<ICalculationUnit> buffInputListWithNo1D2D = new ArrayList<ICalculationUnit>();
+
+  private final ArrayList<ICalculationUnit> buffInputListCalSubUnits = new ArrayList<ICalculationUnit>();
+
   class calculationUnitsSelectionFilter extends ViewerFilter
   {
-    private ArrayList<ICalculationUnit> inputList;
-    public calculationUnitsSelectionFilter( ArrayList<ICalculationUnit> inputList)
+    private final ArrayList<ICalculationUnit> inputList;
+
+    public calculationUnitsSelectionFilter( final ArrayList<ICalculationUnit> inputList )
     {
       this.inputList = inputList;
     }
-    
-    public boolean select( Viewer viewer, Object parentElement, Object element )
-    {      
-        return (!inputList.contains((ICalculationUnit)element));
-    }    
+
+    @Override
+    public boolean select( final Viewer viewer, final Object parentElement, final Object element )
+    {
+      return (!inputList.contains( element ));
+    }
   }
- 
-  protected CreateSubCalculationUnitCopyDialog( Shell parentShell, CalculationUnitDataModel dataModel )
+
+  protected CreateSubCalculationUnitCopyDialog( final Shell parentShell, final CalculationUnitDataModel dataModel )
   {
     super( parentShell );
     parentShell.setText( "Sub - Berechnungseinheiten Verwalten" );
@@ -128,214 +140,195 @@ public class CreateSubCalculationUnitCopyDialog extends Dialog
     this.dataModel = dataModel;
   }
 
-  
-  protected Control createDialogArea(Composite parent)
+  @Override
+  protected Control createDialogArea( final Composite parent )
   {
-    parentCalcUnit1D2D = (ICalculationUnit1D2D) dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER);
-    Composite comp = (Composite)super.createDialogArea(parent);
-    
-    FormLayout layout = new FormLayout();
+    parentCalcUnit1D2D = (ICalculationUnit1D2D) dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
+    final Composite comp = (Composite) super.createDialogArea( parent );
+
+    final FormLayout layout = new FormLayout();
     comp.setLayout( layout );
-    
+
     FormData formData = new FormData();
-    
-    formData.left = new FormAttachment(0,5);
-    formData.top = new FormAttachment(0,5);
-    
-    Label name1D2D = new Label(comp,SWT.NONE);
-    name1D2D.setText("1D/2D Berechnungseinheit :");
+
+    formData.left = new FormAttachment( 0, 5 );
+    formData.top = new FormAttachment( 0, 5 );
+
+    final Label name1D2D = new Label( comp, SWT.NONE );
+    name1D2D.setText( "1D/2D Berechnungseinheit :" );
     name1D2D.setLayoutData( formData );
-    
+
     formData = new FormData();
-    formData.left = new FormAttachment(name1D2D,5);
-    formData.right = new FormAttachment(100,-5);
-    formData.top = new FormAttachment(0,5);
-    
-    Text name1D2DText = new Text(comp,SWT.BORDER);
-    name1D2DText.setText(parentCalcUnit1D2D.getName());
+    formData.left = new FormAttachment( name1D2D, 5 );
+    formData.right = new FormAttachment( 100, -5 );
+    formData.top = new FormAttachment( 0, 5 );
+
+    final Text name1D2DText = new Text( comp, SWT.BORDER );
+    name1D2DText.setText( parentCalcUnit1D2D.getName() );
     name1D2DText.setLayoutData( formData );
-        
+
     formData = new FormData();
-    formData.left = new FormAttachment(0,5);
-    formData.top = new FormAttachment(name1D2D,5);
+    formData.left = new FormAttachment( 0, 5 );
+    formData.top = new FormAttachment( name1D2D, 5 );
     formData.height = 150;
-    
-    Group fromCalculationUnitGroup = new Group( comp, SWT.NONE );
-    fromCalculationUnitGroup.setText( "Vorhandene Einheiten" );//Modelle Knoten Suchen    
+
+    final Group fromCalculationUnitGroup = new Group( comp, SWT.NONE );
+    fromCalculationUnitGroup.setText( "Vorhandene Einheiten" );// Modelle Knoten Suchen
     fromCalculationUnitGroup.setLayoutData( formData );
-    fromCalculationUnitGroup.setLayout( new GridLayout(1,false) );
-       
-    calculationUnits = new TableViewer(fromCalculationUnitGroup);
-    calculationUnits.setContentProvider(new ArrayContentProvider());
+    fromCalculationUnitGroup.setLayout( new GridLayout( 1, false ) );
+
+    calculationUnits = new TableViewer( fromCalculationUnitGroup );
+    calculationUnits.setContentProvider( new ArrayContentProvider() );
     calculationUnits.setLabelProvider( new CalculationUnit1D2DLabelProvider() );
-    System.out.println(dataModel.getData(ICommonKeys.KEY_FEATURE_WRAPPER_LIST ));
-    
-    Object inputData = dataModel.getData(ICommonKeys.KEY_FEATURE_WRAPPER_LIST );
-    
-    if (inputData == null)
+    System.out.println( dataModel.getData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST ) );
+
+    Object inputData = dataModel.getData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST );
+
+    if( inputData == null )
     {
       inputData = new ArrayList<IFeatureWrapper2>();
     }
     else
-    {      
-      for (ICalculationUnit cUnit : (List<ICalculationUnit>)inputData){
-        if ((cUnit instanceof ICalculationUnit1D) || 
-              (cUnit instanceof ICalculationUnit2D))
+    {
+      for( final ICalculationUnit cUnit : (List<ICalculationUnit>) inputData )
+      {
+        if( (cUnit instanceof ICalculationUnit1D) || (cUnit instanceof ICalculationUnit2D) )
         {
-          inputListWithNo1D2D.add(cUnit);
-        }        
+          inputListWithNo1D2D.add( cUnit );
+        }
       }
     }
-    
-    calculationUnits.setInput(inputListWithNo1D2D );    
-    
+
+    calculationUnits.setInput( inputListWithNo1D2D );
+
     final Table calcUnitsTable = calculationUnits.getTable();
     calcUnitsTable.setLinesVisible( true );
-    calcUnitsTable.setLayoutData( new GridData(GridData.FILL_BOTH) );   
-    
-    Button addButton = new Button (comp, SWT.PUSH);
-    //addButton.setText( "ADD");
-    Image addImage = new Image( comp.getDisplay(), 
-        KalypsoModel1D2DPlugin.imageDescriptorFromPlugin(
-            PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
-        "icons/elcl16/forward.gif" ).getImageData() );  
+    calcUnitsTable.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+
+    final Button addButton = new Button( comp, SWT.PUSH );
+    // addButton.setText( "ADD");
+    final Image addImage = new Image( comp.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/forward.gif" ).getImageData() );
     addButton.setImage( addImage );
     formData = new FormData();
-    formData.left = new FormAttachment(fromCalculationUnitGroup,5);
-    formData.top = new FormAttachment(45);
+    formData.left = new FormAttachment( fromCalculationUnitGroup, 5 );
+    formData.top = new FormAttachment( 45 );
     addButton.setLayoutData( formData );
-    
-    addButton.addSelectionListener( new SelectionAdapter(){
-      public void widgetSelected( SelectionEvent e )
+
+    addButton.addSelectionListener( new SelectionAdapter()
+    {
+      @Override
+      public void widgetSelected( final SelectionEvent e )
       {
-        inputListCalSubUnits.add(inputListWithNo1D2D.get( calcUnitsTable.getSelectionIndex()));
-        inputListWithNo1D2D.remove(calcUnitsTable.getSelectionIndex());
+        inputListCalSubUnits.add( inputListWithNo1D2D.get( calcUnitsTable.getSelectionIndex() ) );
+        inputListWithNo1D2D.remove( calcUnitsTable.getSelectionIndex() );
         subCalculationUnits.refresh();
         calculationUnits.refresh();
       }
-      
-    });
-    
-    Button removeButton = new Button (comp, SWT.PUSH);
-    //removeButton.setText( "MOVE");
-    Image removeImage = new Image( comp.getDisplay(), 
-        KalypsoModel1D2DPlugin.imageDescriptorFromPlugin(
-            PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
-        "icons/elcl16/backward.gif" ).getImageData() );  
+
+    } );
+
+    final Button removeButton = new Button( comp, SWT.PUSH );
+    // removeButton.setText( "MOVE");
+    final Image removeImage = new Image( comp.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/backward.gif" ).getImageData() );
     removeButton.setImage( removeImage );
     formData = new FormData();
-    formData.left = new FormAttachment(fromCalculationUnitGroup,5);
-    formData.top = new FormAttachment(addButton,10);
+    formData.left = new FormAttachment( fromCalculationUnitGroup, 5 );
+    formData.top = new FormAttachment( addButton, 10 );
     removeButton.setLayoutData( formData );
-    removeButton.addSelectionListener( new SelectionAdapter(){
-      public void widgetSelected( SelectionEvent e )
+    removeButton.addSelectionListener( new SelectionAdapter()
+    {
+      @Override
+      public void widgetSelected( final SelectionEvent e )
       {
-        inputListWithNo1D2D.add((ICalculationUnit) inputListCalSubUnits.get( subCalcUnitsTable.getSelectionIndex()));
+        inputListWithNo1D2D.add( inputListCalSubUnits.get( subCalcUnitsTable.getSelectionIndex() ) );
         inputListCalSubUnits.remove( subCalcUnitsTable.getSelectionIndex() );
         calculationUnits.refresh();
         subCalculationUnits.refresh();
-      }      
-    });
-    
-    formData = new FormData();
-    formData.left = new FormAttachment(removeButton,5);
-    formData.top = new FormAttachment(name1D2D,5);
-    formData.height = 150;
-    formData.right = new FormAttachment(100,-5);
-    
-    Group fromCalculationSubUnitGroup = new Group( comp, SWT.NONE );
-    fromCalculationSubUnitGroup.setText( "Aktuale Sub-Einheiten" );//Modelle Knoten Suchen    
-    fromCalculationSubUnitGroup.setLayoutData( formData );
-    fromCalculationSubUnitGroup.setLayout( new GridLayout(1,false) );
+      }
+    } );
 
-    subCalculationUnits = new TableViewer(fromCalculationSubUnitGroup);
+    formData = new FormData();
+    formData.left = new FormAttachment( removeButton, 5 );
+    formData.top = new FormAttachment( name1D2D, 5 );
+    formData.height = 150;
+    formData.right = new FormAttachment( 100, -5 );
+
+    final Group fromCalculationSubUnitGroup = new Group( comp, SWT.NONE );
+    fromCalculationSubUnitGroup.setText( "Aktuale Sub-Einheiten" );// Modelle Knoten Suchen
+    fromCalculationSubUnitGroup.setLayoutData( formData );
+    fromCalculationSubUnitGroup.setLayout( new GridLayout( 1, false ) );
+
+    subCalculationUnits = new TableViewer( fromCalculationSubUnitGroup );
     subCalculationUnits.setContentProvider( new ArrayContentProvider() );
-    subCalculationUnits.setLabelProvider( new CalculationUnit1D2DLabelProvider());    
-      
-    if (parentCalcUnit1D2D.getSubUnits() == null){
-      subCalculationUnits.setInput(new Object[]{});      
+    subCalculationUnits.setLabelProvider( new CalculationUnit1D2DLabelProvider() );
+
+    if( parentCalcUnit1D2D.getSubUnits() == null )
+    {
+      subCalculationUnits.setInput( new Object[] {} );
     }
     else
     {
-      inputListCalSubUnits = new ArrayList<ICalculationUnit>(parentCalcUnit1D2D.getSubUnits());//(IFeatureWrapperCollection) parentCalcUnit1D2D.getSubUnits();
+      inputListCalSubUnits = new ArrayList<ICalculationUnit>( parentCalcUnit1D2D.getSubUnits() );// (IFeatureWrapperCollection)
+                                                                                                  // parentCalcUnit1D2D.getSubUnits();
       subCalculationUnits.setInput( inputListCalSubUnits );
-    }    
-    
+    }
+
     subCalcUnitsTable = subCalculationUnits.getTable();
     subCalcUnitsTable.setLinesVisible( true );
-    subCalcUnitsTable.setLayoutData( new GridData(GridData.FILL_BOTH) );    
-    
-    calculationUnitsSelectionFilter unitsSelectionFilter = new calculationUnitsSelectionFilter(inputListCalSubUnits);
+    subCalcUnitsTable.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
-    if (inputListCalSubUnits.size() != 0){
-      
-      for (ICalculationUnit ele : inputListCalSubUnits){
-        if (inputListWithNo1D2D.contains( ele )){
+    final calculationUnitsSelectionFilter unitsSelectionFilter = new calculationUnitsSelectionFilter( inputListCalSubUnits );
+
+    if( inputListCalSubUnits.size() != 0 )
+    {
+
+      for( final ICalculationUnit ele : inputListCalSubUnits )
+      {
+        if( inputListWithNo1D2D.contains( ele ) )
+        {
           inputListWithNo1D2D.remove( ele );
         }
       }
       calculationUnits.refresh();
-      
+
     }
-    
-    buffInputListWithNo1D2D.addAll(inputListWithNo1D2D);
-    buffInputListCalSubUnits.addAll(inputListCalSubUnits);
-    return comp;  
+
+    buffInputListWithNo1D2D.addAll( inputListWithNo1D2D );
+    buffInputListCalSubUnits.addAll( inputListCalSubUnits );
+    return comp;
   }
 
-  protected void createButtonsForButtonBar(Composite parent)
+  @Override
+  protected void createButtonsForButtonBar( final Composite parent )
   {
-    super.createButtonsForButtonBar(parent);
-    createButton(parent, RESET_ID, "Reset All", false);
+    super.createButtonsForButtonBar( parent );
+    createButton( parent, RESET_ID, "Reset All", false );
   }
-  
-  protected void buttonPressed(int buttonId)
+
+  @Override
+  protected void buttonPressed( final int buttonId )
   {
-    calculation1D2D = (ICalculationUnit1D2D) dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER);
-    if(buttonId == RESET_ID)
+    calculation1D2D = (ICalculationUnit1D2D) dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
+    if( buttonId == RESET_ID )
     {
       inputListWithNo1D2D.clear();
       inputListWithNo1D2D.addAll( buffInputListWithNo1D2D );
       inputListCalSubUnits.clear();
       inputListCalSubUnits.addAll( buffInputListCalSubUnits );
       calculationUnits.refresh();
-      subCalculationUnits.refresh();      
-      
-      System.out.println(buffInputListWithNo1D2D.size());
-      System.out.println(buffInputListCalSubUnits.size());      
+      subCalculationUnits.refresh();
+
+      System.out.println( buffInputListWithNo1D2D.size() );
+      System.out.println( buffInputListCalSubUnits.size() );
     }
-    if (buttonId == OK_APPLIED)
+    if( buttonId == OK_APPLIED )
     {
-      RemoveSubCalcUnitsFromCalcUnit1D2DCmd cmdToRemove
-          = new RemoveSubCalcUnitsFromCalcUnit1D2DCmd( 
-              new ArrayList<ICalculationUnit>(calculation1D2D.getSubUnits()),//inputListCalSubUnits,
-              calculation1D2D,
-              Util.getModel( IFEDiscretisationModel1d2d.class )){
-          @Override
-          public void process(){
-            try
-            {
-              super.process();
-            }
-            catch( Exception e )
-            {
-              e.printStackTrace();
-            }
-           dataModel.setData(
-               ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER,
-               dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER));
-          }
-          
-        }; 
-        KeyBasedDataModelUtil.postCommand( dataModel, cmdToRemove );
-      AddSubCalcUnitsToCalcUnit1D2DCmd cmdToAdd 
-          = new AddSubCalcUnitsToCalcUnit1D2DCmd(
-                  inputListCalSubUnits,
-                  calculation1D2D,
-                  Util.getModel( IFEDiscretisationModel1d2d.class )){
-        
+      final RemoveSubCalcUnitsFromCalcUnit1D2DCmd cmdToRemove = new RemoveSubCalcUnitsFromCalcUnit1D2DCmd( new ArrayList<ICalculationUnit>( calculation1D2D.getSubUnits() ),// inputListCalSubUnits,
+      calculation1D2D, Util.getModel( IFEDiscretisationModel1d2d.class ) )
+      {
         @Override
-        public void process(){
+        public void process( )
+        {
           try
           {
             super.process();
@@ -344,17 +337,34 @@ public class CreateSubCalculationUnitCopyDialog extends Dialog
           {
             e.printStackTrace();
           }
-          dataModel.setData(
-              ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER,
-              dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER));
+          dataModel.setData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER ) );
+        }
+
+      };
+      KeyBasedDataModelUtil.postCommand( dataModel, cmdToRemove, ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL );
+      final AddSubCalcUnitsToCalcUnit1D2DCmd cmdToAdd = new AddSubCalcUnitsToCalcUnit1D2DCmd( inputListCalSubUnits, calculation1D2D, Util.getModel( IFEDiscretisationModel1d2d.class ) )
+      {
+
+        @Override
+        public void process( )
+        {
+          try
+          {
+            super.process();
+          }
+          catch( Exception e )
+          {
+            e.printStackTrace();
+          }
+          dataModel.setData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER ) );
         }
       };
-      KeyBasedDataModelUtil.postCommand( dataModel, cmdToAdd );
-      super.okPressed();   
+      KeyBasedDataModelUtil.postCommand( dataModel, cmdToAdd, ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL );
+      super.okPressed();
     }
     else
     {
-      super.buttonPressed(buttonId);
+      super.buttonPressed( buttonId );
     }
-  }   
+  }
 }

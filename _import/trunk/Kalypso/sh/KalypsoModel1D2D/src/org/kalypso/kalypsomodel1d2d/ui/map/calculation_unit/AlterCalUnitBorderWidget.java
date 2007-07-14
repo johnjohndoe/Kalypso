@@ -104,46 +104,39 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
 
   private static final String ICONS_ELCL16_SET_BOUNDARY_GIF = "icons/elcl16/addBoundary.gif";
 
-  private static final String TXT_REMOVE_BOUNDARY_LINE_FROM_UNIT = 
-                         "Remove boundary line from unit";// "Remove Up Stream boundary line";
+  private static final String TXT_REMOVE_BOUNDARY_LINE_FROM_UNIT = "Remove boundary line from unit";// "Remove Up Stream
+                                                                                                    // boundary line";
 
+  private static final String TXT_ADD_META_DATA = "Add Meta Data";// "Add Metadata for Boundary Line";
 
-  private static final String TXT_ADD_META_DATA = 
-                          "Add Meta Data";//"Add Metadata for Boundary Line";
-
-  private static final String TXT_ADD_BOUNDARY_LINE_TO_UNIT = 
-                          "Add boundary line to calculation unit";//"Add Up Stream Boundary Line";
+  private static final String TXT_ADD_BOUNDARY_LINE_TO_UNIT = "Add boundary line to calculation unit";// "Add Up Stream
+                                                                                                      // Boundary Line";
 
   private static final String TXT_SET_BOUNDARY_CONDITION = "Set Boundary Condition";
 
   private static final String TXT_REMOVE_BOUNDARY_LINE_FROM_MODEL = "Remove Boundary Line From Model";
 
-  private static final String[][] MENU_ITEM_SPECS = {
-      {TXT_ADD_META_DATA, ICONS_ELCL16_ADD_GIF},
-      { TXT_ADD_BOUNDARY_LINE_TO_UNIT, ICONS_ELCL16_ADD_GIF }, 
-      { TXT_REMOVE_BOUNDARY_LINE_FROM_UNIT, ICONS_ELCL16_REMOVE_GIF },
-      { TXT_SET_BOUNDARY_CONDITION, ICONS_ELCL16_SET_BOUNDARY_GIF }, 
+  private static final String[][] MENU_ITEM_SPECS = { { TXT_ADD_META_DATA, ICONS_ELCL16_ADD_GIF }, { TXT_ADD_BOUNDARY_LINE_TO_UNIT, ICONS_ELCL16_ADD_GIF },
+      { TXT_REMOVE_BOUNDARY_LINE_FROM_UNIT, ICONS_ELCL16_REMOVE_GIF }, { TXT_SET_BOUNDARY_CONDITION, ICONS_ELCL16_SET_BOUNDARY_GIF },
       { TXT_REMOVE_BOUNDARY_LINE_FROM_MODEL, ICONS_ELCL16_SET_BOUNDARY_GIF } };
 
-  private KeyBasedDataModel dataModel;
+  private final KeyBasedDataModel dataModel;
 
   private JPopupMenu popupMenu;
 
-  private List<JMenuItem> items = new ArrayList<JMenuItem>();
+  private final List<JMenuItem> items = new ArrayList<JMenuItem>();
 
-  public AlterCalUnitBorderWidget( KeyBasedDataModel dataModel )
+  public AlterCalUnitBorderWidget( final KeyBasedDataModel dataModel )
   {
-    this( new QName[] { 
-            Kalypso1D2DSchemaConstants.WB1D2D_F_BOUNDARY_LINE }, 
-            "Select Elements and add to the current calculation unit", "Select Elements and add to the current calculation unit", dataModel );
+    this( new QName[] { Kalypso1D2DSchemaConstants.WB1D2D_F_BOUNDARY_LINE }, "Select Elements and add to the current calculation unit", "Select Elements and add to the current calculation unit", dataModel );
   }
 
-  protected AlterCalUnitBorderWidget( QName themeElementsQName, String name, String toolTip, KeyBasedDataModel dataModel )
+  protected AlterCalUnitBorderWidget( final QName themeElementsQName, final String name, final String toolTip, final KeyBasedDataModel dataModel )
   {
     this( new QName[] { themeElementsQName }, name, toolTip, dataModel );
   }
 
-  protected AlterCalUnitBorderWidget( QName[] themeElementsQNames, String name, String toolTip, KeyBasedDataModel dataModel )
+  protected AlterCalUnitBorderWidget( final QName[] themeElementsQNames, final String name, final String toolTip, final KeyBasedDataModel dataModel )
   {
     super( themeElementsQNames, name, toolTip );
     this.dataModel = dataModel;
@@ -153,9 +146,9 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
    * @see org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget#clickPopup(java.awt.Point)
    */
   @Override
-  public void clickPopup( Point p )
+  public void clickPopup( final Point p )
   {
-    MapPanel mapPanel = (MapPanel) dataModel.getData( ICommonKeys.KEY_MAP_PANEL );
+    final MapPanel mapPanel = (MapPanel) dataModel.getData( ICommonKeys.KEY_MAP_PANEL );
     if( popupMenu == null )
     {
       popupMenu = createMenu();
@@ -164,15 +157,15 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
     popupMenu.show( mapPanel, p.x, p.y );
   }
 
-  private ImageIcon getImageIcon( String pluginRelativPath )
+  private ImageIcon getImageIcon( final String pluginRelativPath )
   {
-    ImageIcon imageIcon = new ImageIcon( PluginUtilities.findResource( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), pluginRelativPath ) );
+    final ImageIcon imageIcon = new ImageIcon( PluginUtilities.findResource( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), pluginRelativPath ) );
     return imageIcon;
   }
 
   private ActionListener makeActionListener( )
   {
-    ActionListener al = new ActionListener()
+    final ActionListener al = new ActionListener()
     {
 
       public void actionPerformed( ActionEvent e )
@@ -190,7 +183,7 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
 
   private void updateMenuItem( )
   {
-    for( JMenuItem item : items )
+    for( final JMenuItem item : items )
     {
       final String text = item.getText();
       if( TXT_ADD_BOUNDARY_LINE_TO_UNIT.equals( text ) )
@@ -217,7 +210,7 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
     }
   }
 
-  private void updateRemoveBoundaryLineMenu( JMenuItem item )
+  private void updateRemoveBoundaryLineMenu( final JMenuItem item )
   {
     item.setEnabled( true );
     final IBoundaryLine selectedBoundaryLine = getSelectedBoundaryLine();
@@ -227,7 +220,7 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
     }
   }
 
-  private void updateAddUpStreamMenu( JMenuItem item )
+  private void updateAddUpStreamMenu( final JMenuItem item )
   {
     updateGeneralBadSelection( item );
     if( item.isEnabled() )
@@ -236,7 +229,8 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
       final IBoundaryLine selectedBoundaryLine = getSelectedBoundaryLine();
       if( selectedBoundaryLine != null && calUnit != null )
       {
-        if( CalUnitOps.isBoundaryLineOf( selectedBoundaryLine, calUnit ))// || CalUnitOps.isUpStreamBoundaryLine( calUnit, selectedBoundaryLine ) )
+        if( CalUnitOps.isBoundaryLineOf( selectedBoundaryLine, calUnit ) )// || CalUnitOps.isUpStreamBoundaryLine(
+                                                                          // calUnit, selectedBoundaryLine ) )
         {
           item.setEnabled( false );
         }
@@ -244,21 +238,24 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
     }
   }
 
-  private void updateRemoveUpStreamMenu( JMenuItem item )
+  private void updateRemoveUpStreamMenu( final JMenuItem item )
   {
     updateGeneralBadSelection( item );
     if( item.isEnabled() )
     {
-      ICalculationUnit calUnit = dataModel.getData( ICalculationUnit.class, ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
+      final ICalculationUnit calUnit = dataModel.getData( ICalculationUnit.class, ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
 
-      IBoundaryLine selectedBoundaryLine = getSelectedBoundaryLine();
+      final IBoundaryLine selectedBoundaryLine = getSelectedBoundaryLine();
       if( selectedBoundaryLine == null || calUnit == null )
       {
         item.setEnabled( false );
       }
       else
       {
-        if( !CalUnitOps.isBoundaryLineOf( selectedBoundaryLine, calUnit ))// !CalUnitOps.isDownStreamBoundaryLine( calUnit, selectedBoundaryLine ) && !CalUnitOps.isUpStreamBoundaryLine( calUnit, selectedBoundaryLine ) )
+        if( !CalUnitOps.isBoundaryLineOf( selectedBoundaryLine, calUnit ) )// !CalUnitOps.isDownStreamBoundaryLine(
+                                                                            // calUnit, selectedBoundaryLine ) &&
+                                                                            // !CalUnitOps.isUpStreamBoundaryLine(
+                                                                            // calUnit, selectedBoundaryLine ) )
         {
           item.setEnabled( false );
         }
@@ -266,14 +263,14 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
     }
   }
 
-  private void updateSetBoundaryMenu( JMenuItem item )
+  private void updateSetBoundaryMenu( final JMenuItem item )
   {
     updateGeneralBadSelection( item );
   }
 
-  private void updateGeneralBadSelection( JMenuItem item )
+  private void updateGeneralBadSelection( final JMenuItem item )
   {
-    Feature[] selectedFeature = getSelectedFeature();
+    final Feature[] selectedFeature = getSelectedFeature();
     item.setEnabled( true );
 
     if( selectedFeature == null )
@@ -290,39 +287,39 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
     }
   }
 
-    synchronized void doMenuAction( String text )
+  synchronized void doMenuAction( final String text )
   {
-     final IFeatureWrapper2 boundaryFeature = (IFeatureWrapper2) dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
-      
+    final IFeatureWrapper2 boundaryFeature = (IFeatureWrapper2) dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
+
     if( text == null )
     {
       return;
     }
-    else if (TXT_ADD_META_DATA.equals( text ))
+    else if( TXT_ADD_META_DATA.equals( text ) )
     {
-        final IBoundaryLine bLine = getSelectedBoundaryLine();
-        
-        final Display display = (Display) dataModel.getData( ICommonKeys.KEY_SELECTED_DISPLAY );
-        Runnable runnable = new Runnable()
+      final IBoundaryLine bLine = getSelectedBoundaryLine();
+
+      final Display display = (Display) dataModel.getData( ICommonKeys.KEY_SELECTED_DISPLAY );
+      final Runnable runnable = new Runnable()
+      {
+        public void run( )
         {
-          public void run( )
+          Shell shell = display.getActiveShell();
+          final AddMetaDataToFeatureDialog setFeatureDialog = new AddMetaDataToFeatureDialog( shell );
+          setFeatureDialog.open();
+          if( setFeatureDialog.getName() != null )
           {
-            Shell shell = display.getActiveShell();          
-            final AddMetaDataToFeatureDialog setFeatureDialog = new AddMetaDataToFeatureDialog(shell);
-            setFeatureDialog.open();          
-            if (setFeatureDialog.getName()!= null)
-            {
-              bLine.setName( setFeatureDialog.getName() );
-            }
-            if (setFeatureDialog.getDescription()!= null)
-            {
-              bLine.setDescription( setFeatureDialog.getDescription() );
-            }             
-          }            
-        };
-        display.asyncExec( runnable  );
+            bLine.setName( setFeatureDialog.getName() );
+          }
+          if( setFeatureDialog.getDescription() != null )
+          {
+            bLine.setDescription( setFeatureDialog.getDescription() );
+          }
+        }
+      };
+      display.asyncExec( runnable );
     }
-    else if( TXT_ADD_BOUNDARY_LINE_TO_UNIT.equals( text ))// || TXT_ADD_BOUNDARY_LINE_DOWN_STREAM.equals( text ) )
+    else if( TXT_ADD_BOUNDARY_LINE_TO_UNIT.equals( text ) )// || TXT_ADD_BOUNDARY_LINE_DOWN_STREAM.equals( text ) )
     {
       actionAddBoundaryLineToUnit( text );
     }
@@ -332,50 +329,40 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
     }
     else if( TXT_SET_BOUNDARY_CONDITION.equals( text ) )
     {
-      final Display display = (Display) dataModel.getData(ICommonKeys.KEY_SELECTED_DISPLAY);
+      final Display display = (Display) dataModel.getData( ICommonKeys.KEY_SELECTED_DISPLAY );
       final Runnable runnable = new Runnable()
       {
         public void run( )
-        {   
+        {
           try
           {
-             final IBoundaryConditionDescriptor[] descriptors = 
-               CreateNodalBCFlowrelationWidget.createTimeserieDescriptors( getSelectedBoundaryLine(),Util.getScenarioFolder() );
-             CommandableWorkspace workspace = KeyBasedDataModelUtil.getBCWorkSpace( dataModel );//bcTheme.getWorkspace();
-             ///model is to be  get from the calculation unit
-             final Feature opModelFeature = workspace.getRootFeature();
-             IFlowRelationshipModel opModel = 
-               (IFlowRelationshipModel) opModelFeature.getAdapter( IFlowRelationshipModel.class );
-             final IRelationType parentRelation = 
-                       opModel.getWrappedList().getParentFeatureTypeProperty();
-             
-             GMLWorkspace opWorkspace = opModel.getWrappedFeature().getWorkspace();
-             NodalBCSelectionWizard wizard = new NodalBCSelectionWizard(
-                                              descriptors,
-                                              workspace,
-                                              opModelFeature,
-                                              parentRelation ); 
-            System.out.println("OpWorkspace:"+opWorkspace.getContext());
+            final IBoundaryConditionDescriptor[] descriptors = CreateNodalBCFlowrelationWidget.createTimeserieDescriptors( getSelectedBoundaryLine(), Util.getScenarioFolder() );
+            CommandableWorkspace workspace = KeyBasedDataModelUtil.getBCWorkSpace( dataModel );// bcTheme.getWorkspace();
+            // /model is to be get from the calculation unit
+            final Feature opModelFeature = workspace.getRootFeature();
+            IFlowRelationshipModel opModel = (IFlowRelationshipModel) opModelFeature.getAdapter( IFlowRelationshipModel.class );
+            final IRelationType parentRelation = opModel.getWrappedList().getParentFeatureTypeProperty();
+
+            GMLWorkspace opWorkspace = opModel.getWrappedFeature().getWorkspace();
+            NodalBCSelectionWizard wizard = new NodalBCSelectionWizard( descriptors, workspace, opModelFeature, parentRelation );
+            System.out.println( "OpWorkspace:" + opWorkspace.getContext() );
             GM_Point boundaryPosition = getBoundaryPosition();
             wizard.setBoundaryPosition( boundaryPosition );
-            final MapPanel mapPanel = 
-                    dataModel.getData( MapPanel.class, ICommonKeys.KEY_MAP_PANEL );
+            final MapPanel mapPanel = dataModel.getData( MapPanel.class, ICommonKeys.KEY_MAP_PANEL );
             wizard.setSelectionManager( mapPanel.getSelectionManager() );
             final WizardDialog wizardDialog = new WizardDialog( display.getActiveShell(), wizard );
             wizardDialog.open();
           }
-          catch (Exception e) {
+          catch( Exception e )
+          {
             e.printStackTrace();
-            throw new RuntimeException(e);
+            throw new RuntimeException( e );
           }
         }
 
-        
       };
-      display.syncExec( runnable );     
+      display.syncExec( runnable );
     }
-    
-    
 
     else if( TXT_REMOVE_BOUNDARY_LINE_FROM_MODEL.equals( text ) )
     {
@@ -388,87 +375,91 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
   }
 
   /**
-    * To get the boundary position. This is defined as the middle
-    * of the nearest edge to the klicked point in the selected boundary line
-    * @return a {@link GM_Point} representing the boundary condition position
-    */ 
-    private GM_Point getBoundaryPosition( )
+   * To get the boundary position. This is defined as the middle of the nearest edge to the klicked point in the
+   * selected boundary line
+   * 
+   * @return a {@link GM_Point} representing the boundary condition position
+   */
+  private GM_Point getBoundaryPosition( )
+  {
+    final IBoundaryLine selectedBoundaryLine = getSelectedBoundaryLine();
+
+    if( selectedBoundaryLine instanceof IBoundaryLine1D )
     {
-      IBoundaryLine selectedBoundaryLine = getSelectedBoundaryLine();
-      
-      if( selectedBoundaryLine instanceof IBoundaryLine1D )
+      final IBoundaryLine1D boundaryLine1D = ((IBoundaryLine1D) selectedBoundaryLine);
+      final IFeatureWrapperCollection edges = boundaryLine1D.getEdges();
+      final IFE1D2DEdge edge1D = (IFE1D2DEdge) edges.get( 0 );
+      if( boundaryLine1D.isAtEdgeEnd() )
       {
-       IBoundaryLine1D boundaryLine1D = ((IBoundaryLine1D)selectedBoundaryLine);
-       IFeatureWrapperCollection edges = boundaryLine1D.getEdges();
-       final IFE1D2DEdge edge1D  = (IFE1D2DEdge)edges.get( 0 );
-       if( boundaryLine1D.isAtEdgeEnd() )
-       {
-         return edge1D.getNode( 1 ).getPoint();
-       }
-       else
-       {
-         return edge1D.getNode( 0 ).getPoint();
-       }
-           
+        return edge1D.getNode( 1 ).getPoint();
       }
       else
       {
-        final GM_Point klickedPoint = getCurrentPoint();
-        
-        //find the nearest edge
-        IFeatureWrapperCollection<IFE1D2DEdge> edges = selectedBoundaryLine.getEdges();
-        double minDist = Double.MAX_VALUE;
-        GM_Point selectedEdgeCentroid = null; 
-        for( IFE1D2DEdge edge: edges )
-        {
-          final GM_Curve curve = edge.getCurve();
-          final double curDist = klickedPoint.distance( curve );
-          System.out.println("curDist"+curDist);
-          if( curDist<minDist)
-          {
-            selectedEdgeCentroid = curve.getCentroid();
-            minDist = curDist;
-          }
-        }
-        return selectedEdgeCentroid;
+        return edge1D.getNode( 0 ).getPoint();
       }
-    }
-    
-//    private IBoundaryConditionDescriptor[] createTimeserieDescriptors( final IFeatureWrapper2 modelElement, final IFolder scenarioFolder )
-//    {
-//      final TimeserieStepDescriptor wstTimeDescriptor = new TimeserieStepDescriptor( "Wasserstand - Zeitreihe", Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL );
-//      final TimeserieStepDescriptor qTimeDescriptor = new TimeserieStepDescriptor( "Abfluss - Zeitreihe", Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
-//      final TimeserieStepDescriptor specQ1TimeDescriptor = new TimeserieStepDescriptor( "Spezifische Abfluss - Zeitreihe", Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE_1D );
-//      final TimeserieStepDescriptor specQ2TimeDescriptor = new TimeserieStepDescriptor( "Spezifische Abfluss - Zeitreihe", Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE_2D );
-//      final WQStepDescriptor wqDescriptor = new WQStepDescriptor( "W/Q - Beziehung" );
-//
-//      final IFolder importFolder = scenarioFolder.getProject().getFolder( "imports" ).getFolder( "timeseries" );
-//      final ZmlChooserStepDescriptor zmlChooser = new ZmlChooserStepDescriptor( "Importierte Zeitreihe", importFolder );
-//
-//      // TODO: ask ingenieurs what is right here:
-//      if( modelElement instanceof IElement1D )
-//        return new IBoundaryConditionDescriptor[] { specQ1TimeDescriptor, wqDescriptor, zmlChooser };
-//
-//      if( modelElement instanceof IPolyElement )
-//        return new IBoundaryConditionDescriptor[] { specQ2TimeDescriptor, zmlChooser };
-//
-//      if( modelElement instanceof IFE1D2DNode )
-//        return new IBoundaryConditionDescriptor[] { wstTimeDescriptor, qTimeDescriptor, zmlChooser };
-//
-//      if( modelElement instanceof ILineElement)
-//        return new IBoundaryConditionDescriptor[] { wstTimeDescriptor, qTimeDescriptor, zmlChooser };
-//      
-//      return new IBoundaryConditionDescriptor[] {};
-//    }
 
-  private void actionRemoveBoundaryLineFromModel( String itemText )
+    }
+    else
+    {
+      final GM_Point klickedPoint = getCurrentPoint();
+
+      // find the nearest edge
+      final IFeatureWrapperCollection<IFE1D2DEdge> edges = selectedBoundaryLine.getEdges();
+      double minDist = Double.MAX_VALUE;
+      GM_Point selectedEdgeCentroid = null;
+      for( final IFE1D2DEdge edge : edges )
+      {
+        final GM_Curve curve = edge.getCurve();
+        final double curDist = klickedPoint.distance( curve );
+        System.out.println( "curDist" + curDist );
+        if( curDist < minDist )
+        {
+          selectedEdgeCentroid = curve.getCentroid();
+          minDist = curDist;
+        }
+      }
+      return selectedEdgeCentroid;
+    }
+  }
+
+  // private IBoundaryConditionDescriptor[] createTimeserieDescriptors( final IFeatureWrapper2 modelElement, final
+  // IFolder scenarioFolder )
+  // {
+  // final TimeserieStepDescriptor wstTimeDescriptor = new TimeserieStepDescriptor( "Wasserstand - Zeitreihe",
+  // Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL );
+  // final TimeserieStepDescriptor qTimeDescriptor = new TimeserieStepDescriptor( "Abfluss - Zeitreihe",
+  // Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
+  // final TimeserieStepDescriptor specQ1TimeDescriptor = new TimeserieStepDescriptor( "Spezifische Abfluss -
+  // Zeitreihe", Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE_1D );
+  // final TimeserieStepDescriptor specQ2TimeDescriptor = new TimeserieStepDescriptor( "Spezifische Abfluss -
+  // Zeitreihe", Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE_2D );
+  // final WQStepDescriptor wqDescriptor = new WQStepDescriptor( "W/Q - Beziehung" );
+  //
+  // final IFolder importFolder = scenarioFolder.getProject().getFolder( "imports" ).getFolder( "timeseries" );
+  // final ZmlChooserStepDescriptor zmlChooser = new ZmlChooserStepDescriptor( "Importierte Zeitreihe", importFolder );
+  //
+  // // TODO: ask ingenieurs what is right here:
+  // if( modelElement instanceof IElement1D )
+  // return new IBoundaryConditionDescriptor[] { specQ1TimeDescriptor, wqDescriptor, zmlChooser };
+  //
+  // if( modelElement instanceof IPolyElement )
+  // return new IBoundaryConditionDescriptor[] { specQ2TimeDescriptor, zmlChooser };
+  //
+  // if( modelElement instanceof IFE1D2DNode )
+  // return new IBoundaryConditionDescriptor[] { wstTimeDescriptor, qTimeDescriptor, zmlChooser };
+  //
+  // if( modelElement instanceof ILineElement)
+  // return new IBoundaryConditionDescriptor[] { wstTimeDescriptor, qTimeDescriptor, zmlChooser };
+  //      
+  // return new IBoundaryConditionDescriptor[] {};
+  // }
+
+  private void actionRemoveBoundaryLineFromModel( final String itemText )
   {
     final IBoundaryLine bLine = getSelectedBoundaryLine();
-    final IFEDiscretisationModel1d2d model1d2d = 
-              dataModel.getData( IFEDiscretisationModel1d2d.class, ICommonKeys.KEY_DISCRETISATION_MODEL );
-    final MapPanel mapPanel = 
-              dataModel.getData( MapPanel.class, ICommonKeys.KEY_MAP_PANEL );
-    IDiscrModel1d2dChangeCommand delCmd = new DeleteBoundaryLineCmd( model1d2d, bLine )
+    final IFEDiscretisationModel1d2d model1d2d = dataModel.getData( IFEDiscretisationModel1d2d.class, ICommonKeys.KEY_DISCRETISATION_MODEL );
+    final MapPanel mapPanel = dataModel.getData( MapPanel.class, ICommonKeys.KEY_MAP_PANEL );
+    final IDiscrModel1d2dChangeCommand delCmd = new DeleteBoundaryLineCmd( model1d2d, bLine )
     {
       /**
        * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteBoundaryLineCmd#process()
@@ -477,20 +468,16 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
       public void process( ) throws Exception
       {
         super.process();
-        
-        KeyBasedDataModelUtil.resetCurrentEntry( 
-                dataModel,
-                ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
-        KeyBasedDataModelUtil.repaintMapPanel( 
-                dataModel, 
-                ICommonKeys.KEY_MAP_PANEL );
+
+        KeyBasedDataModelUtil.resetCurrentEntry( dataModel, ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
+        KeyBasedDataModelUtil.repaintMapPanel( dataModel, ICommonKeys.KEY_MAP_PANEL );
       }
     };
-    KeyBasedDataModelUtil.postCommand( dataModel, delCmd );
+    KeyBasedDataModelUtil.postCommand( dataModel, delCmd, ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL );
 
   }
 
-  private void actionAddBoundaryLineToUnit( String itemText )
+  private void actionAddBoundaryLineToUnit( final String itemText )
   {
     final ICalculationUnit calUnit = dataModel.getData( ICalculationUnit.class, ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
     final IBoundaryLine bLine = getSelectedBoundaryLine();
@@ -499,22 +486,17 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
     {
       relationType = Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE_UPSTREAM;
     }
-//    else if( itemText.equals( TXT_ADD_BOUNDARY_LINE_DOWN_STREAM ) )
-//    {
-//      relationType = Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE_DOWNSTREAM;
-//    }
+    // else if( itemText.equals( TXT_ADD_BOUNDARY_LINE_DOWN_STREAM ) )
+    // {
+    // relationType = Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE_DOWNSTREAM;
+    // }
     else
     {
       throw new RuntimeException( "Unknown itemText:" + itemText );
     }
 
-    IFEDiscretisationModel1d2d model1d2d = 
-          dataModel.getData( 
-              IFEDiscretisationModel1d2d.class, 
-              ICommonKeys.KEY_DISCRETISATION_MODEL );
-    final AddBoundaryLineToCalculationUnitCmd cmd = 
-          new AddBoundaryLineToCalculationUnitCmd( 
-                  calUnit, bLine, model1d2d, relationType )
+    final IFEDiscretisationModel1d2d model1d2d = dataModel.getData( IFEDiscretisationModel1d2d.class, ICommonKeys.KEY_DISCRETISATION_MODEL );
+    final AddBoundaryLineToCalculationUnitCmd cmd = new AddBoundaryLineToCalculationUnitCmd( calUnit, bLine, model1d2d, relationType )
     {
       /**
        * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.AddBoundaryLineToCalculationUnit#process()
@@ -525,23 +507,19 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
         super.process();
         try
         {
-          KeyBasedDataModelUtil.resetCurrentEntry( 
-              dataModel,  
-              ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
-          KeyBasedDataModelUtil.repaintMapPanel(
-              dataModel, 
-              ICommonKeys.KEY_MAP_PANEL );
+          KeyBasedDataModelUtil.resetCurrentEntry( dataModel, ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
+          KeyBasedDataModelUtil.repaintMapPanel( dataModel, ICommonKeys.KEY_MAP_PANEL );
         }
-        catch (Exception e) 
+        catch( Exception e )
         {
           e.printStackTrace();
         }
       }
     };
-    KeyBasedDataModelUtil.postCommand( dataModel, cmd );
+    KeyBasedDataModelUtil.postCommand( dataModel, cmd, ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL );
   }
 
-  private void actionRemoveBoundaryLineFromUnit( String itemText )
+  private void actionRemoveBoundaryLineFromUnit( final String itemText )
   {
     final ICalculationUnit calUnit = dataModel.getData( ICalculationUnit.class, ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
     final IBoundaryLine bLine = getSelectedBoundaryLine();
@@ -556,30 +534,28 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
       public void process( ) throws Exception
       {
         super.process();
-        KeyBasedDataModelUtil.resetCurrentEntry( 
-                  dataModel, ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
-        KeyBasedDataModelUtil.repaintMapPanel( 
-                  dataModel, ICommonKeys.KEY_MAP_PANEL );
+        KeyBasedDataModelUtil.resetCurrentEntry( dataModel, ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
+        KeyBasedDataModelUtil.repaintMapPanel( dataModel, ICommonKeys.KEY_MAP_PANEL );
       }
     };
 
-    KeyBasedDataModelUtil.postCommand( dataModel, cmd );
+    KeyBasedDataModelUtil.postCommand( dataModel, cmd, ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL );
 
   }
 
   synchronized private JPopupMenu createMenu( )
   {
 
-    JPopupMenu menu = new JPopupMenu();
+    final JPopupMenu menu = new JPopupMenu();
     final ActionListener actionListener = makeActionListener();
 
-    for( String[] spec : MENU_ITEM_SPECS )
+    for( final String[] spec : MENU_ITEM_SPECS )
     {
       if( spec.length != 2 )
       {
         throw new RuntimeException( "Spec must have length 2, but has:" + spec.length );
       }
-      String text = spec[0];
+      final String text = spec[0];
 
       if( SEPARATOR_PSEUDO_TEXT.equals( text ) )
       {
@@ -587,7 +563,7 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
       }
       else
       {
-        JMenuItem addElement = new JMenuItem();
+        final JMenuItem addElement = new JMenuItem();
         addElement.setText( text );
         addElement.setIcon( getImageIcon( spec[1] ) );
         addElement.addActionListener( actionListener );
@@ -600,7 +576,7 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
 
   private final IBoundaryLine getSelectedBoundaryLine( )
   {
-    IBoundaryLine[] bLines = getWrappedSelectedFeature( IBoundaryLine.class );
+    final IBoundaryLine[] bLines = getWrappedSelectedFeature( IBoundaryLine.class );
     if( bLines == null )
     {
       return null;

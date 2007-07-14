@@ -52,7 +52,7 @@ import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
-import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
+import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 
 /**
  * @author madanago
@@ -61,30 +61,22 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 @SuppressWarnings( { "unchecked", "hiding" })
 public class AddBoundaryConditionToCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
 {
+  private final IBoundaryCondition m_boundaryConditionToAdd;
 
-  private final IBoundaryCondition boundaryConditionToAdd;
-
-  private final ICalculationUnit calculationUnit;
-
-  private final IFEDiscretisationModel1d2d model1d2d;
+  private final ICalculationUnit m_calculationUnit;
 
   private boolean done = false;
 
-  private double grabDistance;
+  private final double m_grabDistance;
 
-// private final QName relationToCalUnit;
-
-  public AddBoundaryConditionToCalculationUnitCmd( ICalculationUnit calculationUnit, IBoundaryCondition boundaryConditionToAdd, IFEDiscretisationModel1d2d model1d2d, double grabDistance )
+  public AddBoundaryConditionToCalculationUnitCmd( final ICalculationUnit calculationUnit, final IBoundaryCondition boundaryConditionToAdd, final double grabDistance )
   {
     Assert.throwIAEOnNullParam( calculationUnit, "calculationUnit" );
     Assert.throwIAEOnNullParam( boundaryConditionToAdd, "boundaryConditionToAdd" );
-    Assert.throwIAEOnNullParam( model1d2d, "model1d2d" );
 
-    this.calculationUnit = calculationUnit;
-    this.boundaryConditionToAdd = boundaryConditionToAdd;
-    this.model1d2d = model1d2d;
-    this.grabDistance = grabDistance;
-// this.relationToCalUnit = relationToCalUnit;
+    m_calculationUnit = calculationUnit;
+    m_boundaryConditionToAdd = boundaryConditionToAdd;
+    m_grabDistance = grabDistance;
   }
 
   /**
@@ -94,7 +86,7 @@ public class AddBoundaryConditionToCalculationUnitCmd implements IDiscrModel1d2d
   {
     if( done )
     {
-      return new IFeatureWrapper2[] { calculationUnit, boundaryConditionToAdd };
+      return new IFeatureWrapper2[] { m_calculationUnit, m_boundaryConditionToAdd };
     }
     else
     {
@@ -135,12 +127,11 @@ public class AddBoundaryConditionToCalculationUnitCmd implements IDiscrModel1d2d
     {
       if( !done )
       {
-        CalUnitOps.markAsBoundaryCondition( calculationUnit, boundaryConditionToAdd, grabDistance );
+        CalUnitOps.markAsBoundaryCondition( m_calculationUnit, m_boundaryConditionToAdd, m_grabDistance );
         fireProcessChanges();
-
       }
     }
-    catch( Throwable th )
+    catch( final Throwable th )
     {
       th.printStackTrace();
     }
@@ -149,21 +140,13 @@ public class AddBoundaryConditionToCalculationUnitCmd implements IDiscrModel1d2d
 
   private void fireProcessChanges( )
   {
-    final Feature calUnitFeature = calculationUnit.getWrappedFeature();
-    final Feature model1d2dFeature = model1d2d.getWrappedFeature();
-    List<Feature> features = new ArrayList<Feature>();
-    features.add( calUnitFeature );
-    features.add( boundaryConditionToAdd.getWrappedFeature() );
+    final Feature bcFeature = m_boundaryConditionToAdd.getWrappedFeature();
+    final List<Feature> features = new ArrayList<Feature>();
+    features.add( bcFeature );
 
-    GMLWorkspace workspace = calUnitFeature.getWorkspace();
-    FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( workspace,// final GMLWorkspace
-                                                                                                // workspace,
-    model1d2dFeature,// Feature parentFeature,
-    features.toArray( new Feature[features.size()] ),// final Feature[] changedFeature,
-    FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE// final int changeType
-    );
+    final GMLWorkspace workspace = bcFeature.getWorkspace();
+    final FeaturesChangedModellEvent event = new FeaturesChangedModellEvent( workspace, features.toArray( new Feature[features.size()] ) );
     workspace.fireModellEvent( event );
-
   }
 
   /**

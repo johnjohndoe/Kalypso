@@ -76,50 +76,49 @@ import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Madanagopal
- * 
  */
 public class AddRemoveBoundaryConditionToCalUnitWidget extends FENetConceptSelectionWidget
 {
   private KeyBasedDataModel dataModel;
 
-  public AddRemoveBoundaryConditionToCalUnitWidget( KeyBasedDataModel dataModel )
+  public AddRemoveBoundaryConditionToCalUnitWidget( final KeyBasedDataModel dataModel )
   {
     this( new QName[] { Kalypso1D2DSchemaConstants.WB1D2D_F_BOUNDARY_LINE, IBoundaryCondition.QNAME }, " Removes Boundary Condition ", " Removes Boundary Condition", dataModel );
     this.dataModel = dataModel;
   }
 
-  public AddRemoveBoundaryConditionToCalUnitWidget( QName[] names, String name, String toolTip, KeyBasedDataModel dataModel )
+  public AddRemoveBoundaryConditionToCalUnitWidget( final QName[] names, final String name, final String toolTip, final KeyBasedDataModel dataModel )
   {
     super( names, name, toolTip );
   }
 
   @Override
-  public void clickPopup( Point p )
+  public void clickPopup( final Point p )
   {
-    MapPanel mapPanel = (MapPanel) dataModel.getData( ICommonKeys.KEY_MAP_PANEL );
-    JPopupMenu popupMenu = new JPopupMenu();
+    final MapPanel mapPanel = (MapPanel) dataModel.getData( ICommonKeys.KEY_MAP_PANEL );
+    final JPopupMenu popupMenu = new JPopupMenu();
 
-    JMenuItem addNameDescription = new JMenuItem();
+    final JMenuItem addNameDescription = new JMenuItem();
     addNameDescription.setText( "Add Metadata" );
     addNameDescription.setIcon( new ImageIcon( PluginUtilities.findResource( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), "icons/elcl16/add.gif" ) ) );
     addNameDescription.addActionListener( addNameDescriptionActionListener() );
 
-    JMenuItem addBoundaryCondition = new JMenuItem();
+    final JMenuItem addBoundaryCondition = new JMenuItem();
     addBoundaryCondition.setText( "Add Boundary Condition" );
     addBoundaryCondition.setIcon( new ImageIcon( PluginUtilities.findResource( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), "icons/elcl16/add.gif" ) ) );
     addBoundaryCondition.addActionListener( makeAddBoundaryConditionListener() );
 
-    JMenuItem editBoundaryCondition = new JMenuItem();
+    final JMenuItem editBoundaryCondition = new JMenuItem();
     editBoundaryCondition.setText( "Edit Boundary Condition" );
     editBoundaryCondition.setIcon( new ImageIcon( PluginUtilities.findResource( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), "icons/elcl16/edit.gif" ) ) );
     editBoundaryCondition.addActionListener( makeEditBoundaryConditionListener() );
 
-    JMenuItem removeBoundaryCondition = new JMenuItem();
+    final JMenuItem removeBoundaryCondition = new JMenuItem();
     removeBoundaryCondition.setText( "Remove Boundary Condition from calculation unit" );
     removeBoundaryCondition.setIcon( new ImageIcon( PluginUtilities.findResource( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), "icons/elcl16/remove.gif" ) ) );
     removeBoundaryCondition.addActionListener( makeRemoveBoundaryConditionListener() );
 
-    JMenuItem deleteBoundaryCondition = new JMenuItem();
+    final JMenuItem deleteBoundaryCondition = new JMenuItem();
     deleteBoundaryCondition.setText( "Delete Boundary Condition from model" );
     deleteBoundaryCondition.setIcon( new ImageIcon( PluginUtilities.findResource( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), "icons/elcl16/remove.gif" ) ) );
     deleteBoundaryCondition.addActionListener( makeDeleteBoundaryConditionFromModelListener() );
@@ -135,7 +134,7 @@ public class AddRemoveBoundaryConditionToCalUnitWidget extends FENetConceptSelec
 
   private ActionListener addNameDescriptionActionListener( )
   {
-    ActionListener al = new ActionListener()
+    final ActionListener al = new ActionListener()
     {
       public void actionPerformed( ActionEvent e )
       {
@@ -182,7 +181,7 @@ public class AddRemoveBoundaryConditionToCalUnitWidget extends FENetConceptSelec
 
   private ActionListener makeDeleteBoundaryConditionFromModelListener( )
   {
-    ActionListener al = new ActionListener()
+    final ActionListener al = new ActionListener()
     {
       @SuppressWarnings("unchecked")
       public void actionPerformed( ActionEvent e )
@@ -213,7 +212,7 @@ public class AddRemoveBoundaryConditionToCalUnitWidget extends FENetConceptSelec
                 KeyBasedDataModelUtil.repaintMapPanel( dataModel, ICommonKeys.KEY_MAP_PANEL );
               }
             };
-            KeyBasedDataModelUtil.postCommand( dataModel, delCmd );
+            KeyBasedDataModelUtil.postCommand( dataModel, delCmd, ICommonKeys.KEY_BOUNDARY_CONDITION_CMD_WORKSPACE );
           }
         }
       }
@@ -229,7 +228,7 @@ public class AddRemoveBoundaryConditionToCalUnitWidget extends FENetConceptSelec
 
   private ActionListener makeRemoveBoundaryConditionListener( )
   {
-    ActionListener al = new ActionListener()
+    final ActionListener al = new ActionListener()
     {
       @SuppressWarnings("unchecked")
       public void actionPerformed( ActionEvent e )
@@ -266,7 +265,7 @@ public class AddRemoveBoundaryConditionToCalUnitWidget extends FENetConceptSelec
 
           if( command != null )
           {
-            KeyBasedDataModelUtil.postCommand( dataModel, command );
+            KeyBasedDataModelUtil.postCommand( dataModel, command, ICommonKeys.KEY_BOUNDARY_CONDITION_CMD_WORKSPACE );
           }
         }
       }
@@ -276,9 +275,8 @@ public class AddRemoveBoundaryConditionToCalUnitWidget extends FENetConceptSelec
 
   private ActionListener makeAddBoundaryConditionListener( )
   {
-    ActionListener al = new ActionListener()
+    final ActionListener al = new ActionListener()
     {
-
       @SuppressWarnings("unchecked")
       public void actionPerformed( ActionEvent e )
       {
@@ -301,7 +299,7 @@ public class AddRemoveBoundaryConditionToCalUnitWidget extends FENetConceptSelec
             return;
           }
 
-          final AddBoundaryConditionToCalculationUnitCmd command = new AddBoundaryConditionToCalculationUnitCmd( calUnit, bc, model1d2d, getGrabDistance() )
+          final AddBoundaryConditionToCalculationUnitCmd command = new AddBoundaryConditionToCalculationUnitCmd( calUnit, bc, getGrabDistance() )
           {
             /**
              * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.AddBoundaryConditionToCalculationUnitCmd#process()
@@ -316,7 +314,7 @@ public class AddRemoveBoundaryConditionToCalUnitWidget extends FENetConceptSelec
 
           if( command != null )
           {
-            KeyBasedDataModelUtil.postCommand( dataModel, command );
+            KeyBasedDataModelUtil.postCommand( dataModel, command, ICommonKeys.KEY_BOUNDARY_CONDITION_CMD_WORKSPACE );
           }
         }
       }

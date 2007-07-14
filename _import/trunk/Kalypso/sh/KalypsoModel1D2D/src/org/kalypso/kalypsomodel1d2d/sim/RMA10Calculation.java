@@ -379,9 +379,13 @@ public class RMA10Calculation implements INativeIDProvider
       m_boundaryLineIDProvider.put( line, new Integer( contiCount ) );
     }
 
+    // TODO: instead of this stupit code above, we should iterate through all boundary conditions below as before
+    // and check for each of them if it is contained in a calc-unit
+
     /* Add all boundary conditions. */
     final IFlowRelationshipModel model = (IFlowRelationshipModel) m_operationalModelWorkspace.getRootFeature().getAdapter( IFlowRelationshipModel.class );
     final ICalculationUnit unit = getCalculationUnit();
+    // TODO: this is very bad! a grab distance of 11 is much too big!!!
     final double grabDistance = 11;
     for( final IFlowRelationship relationship : model )
     {
@@ -422,9 +426,12 @@ public class RMA10Calculation implements INativeIDProvider
             info.setObservation( obs, timeComponent, hComponent, ITimeStepinfo.TYPE.CONTI_BC_H );
           else
             throw new SimulationException( "Falsche Parameter an Kontinuitätslinien-Randbedingung: " + bc.getName(), null );
-          
-          result.add( info );
+
+          // TODO: at the moment, we should comment this line out;
+          // Sadly, the calc unit concept does not apply at all to non-boundary.line connected boundary conditions.
+          // result.add( info );
         }
+        // TODO: the following elses never get called any more
         else if( wrapper2 instanceof IFE1D2DNode && DiscretisationModelUtils.is1DNode( (IFE1D2DNode<IFE1D2DEdge>) wrapper2 ) )
         {
           // create new contiline
@@ -467,7 +474,7 @@ public class RMA10Calculation implements INativeIDProvider
           result.add( info );
         }
         else
-          throw new SimulationException( "Nicht zugeorndete Randbedingung: " + bc.getName(), null );
+          throw new SimulationException( "Nicht zugeordnete Randbedingung: " + bc.getName(), null );
       }
     }
 
@@ -537,12 +544,12 @@ public class RMA10Calculation implements INativeIDProvider
       throw new RuntimeException( "Type not supported" );
     }
   }
-  
+
   public boolean containsID( final IFeatureWrapper2 i1d2dObject )
   {
     if( i1d2dObject instanceof IBoundaryLine )
     {
-      return m_boundaryLineIDProvider.containsKey( (IBoundaryLine)i1d2dObject );
+      return m_boundaryLineIDProvider.containsKey( i1d2dObject );
     }
     else
     {

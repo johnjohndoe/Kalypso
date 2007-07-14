@@ -74,42 +74,40 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public class UtilMap
 {
-  
+
   /**
-   * To get the map view. The view with the ID {@link MapView#ID}
-   * in the active workbench page is returned.
+   * To get the map view. The view with the ID {@link MapView#ID} in the active workbench page is returned.
    * 
-   * @return a {@link IViewPart} representing the map view in the active 
-   *            workbench
+   * @return a {@link IViewPart} representing the map view in the active workbench
    */
   public static final IViewPart getMapView( )
   {
-    IWorkbench workbench = PlatformUI.getWorkbench();
+    final IWorkbench workbench = PlatformUI.getWorkbench();
     if( workbench == null )
     {
-      System.out.println("Could not get Workbench");
+      System.out.println( "Could not get Workbench" );
       return null;
     }
-    IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
+    final IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
     if( activeWorkbenchWindow == null )
     {
-      System.out.println("no active workbench available");
+      System.out.println( "no active workbench available" );
       return null;
     }
-    IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
+    final IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
     if( activePage == null )
     {
-      System.out.println("No active page available");
+      System.out.println( "No active page available" );
       return null;
     }
-    IViewPart findView = activePage.findView( MapView.ID );
+    final IViewPart findView = activePage.findView( MapView.ID );
     return findView;
   }
-  
+
   /**
    * Get First Theme which is showing elements substituable to the specified QName (i.e. substituting it).
    */
-  static public IKalypsoFeatureTheme findEditableTheme( IMapModell mapModel, QName editElementQName )
+  static public IKalypsoFeatureTheme findEditableTheme( final IMapModell mapModel, final QName editElementQName )
   {
     Assert.throwIAEOnNullParam( mapModel, "mapModel" );
     Assert.throwIAEOnNullParam( editElementQName, "editElementQName" );
@@ -152,6 +150,7 @@ public class UtilMap
 
   /**
    * Find a discretisation model within the mapModel themes.
+   * 
    * @return The first discretisation model encountered in the list of themes.
    */
   static public IFEDiscretisationModel1d2d findFEModelTheme( final IMapModell mapModel )
@@ -182,10 +181,7 @@ public class UtilMap
     return null;
   }
 
-  
-  static public <T> T findTheme( 
-                                  final IMapModell mapModel,
-                                  final Class<T> themeType )
+  static public <T> T findTheme( final IMapModell mapModel, final Class<T> themeType )
   {
     Assert.throwIAEOnNullParam( mapModel, "mapModel" );
     final IKalypsoTheme[] allThemes = mapModel.getAllThemes();
@@ -193,24 +189,25 @@ public class UtilMap
     {
       if( themeType.isInstance( theme ) )
       {
-        return (T)theme;
+        return (T) theme;
       }
     }
     return null;
   }
+
   /**
    * Answer whether the theme is showing feature of the given type. This check is made based on substitution
    * 
    * @param featureTheme
-   *          the theme to check, must not be null
+   *            the theme to check, must not be null
    * @param featureTypeQName
-   *          the type of feature to check whether they can be part of the theme
+   *            the type of feature to check whether they can be part of the theme
    */
-  static public final boolean isShowingFeatureType( IKalypsoFeatureTheme featureTheme, QName featureTypeQName )
+  static public final boolean isShowingFeatureType( final IKalypsoFeatureTheme featureTheme, final QName featureTypeQName )
   {
     Assert.throwIAEOnNullParam( featureTheme, "featureTheme" );
     Assert.throwIAEOnNullParam( featureTypeQName, "featureTypeQName" );
-    IFeatureType featureType = featureTheme.getFeatureType();
+    final IFeatureType featureType = featureTheme.getFeatureType();
     if( GMLSchemaUtilities.substitutes( featureType, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE ) )
     {
       return true;
@@ -220,35 +217,29 @@ public class UtilMap
       return false;
     }
   }
+
   /**
    * Convert the given bounding box into a {@link GM_Curve}
    */
-  public static final GM_Curve toGM_Curve( 
-                                  GM_Envelope bBox, 
-                                  CS_CoordinateSystem crs )
+  public static final GM_Curve toGM_Curve( final GM_Envelope bBox, final CS_CoordinateSystem crs )
   {
     Assert.throwIAEOnNullParam( bBox, "bBox" );
     Assert.throwIAEOnNullParam( crs, "crs" );
-    
-    //System.out.println("getting shape:"+feature);
+
+    // System.out.println("getting shape:"+feature);
     try
     {
-      GM_Position min = bBox.getMin();
-      GM_Position max = bBox.getMax();
-      
-      double minx=min.getX();
-      double miny=min.getY();
-      
-      double maxx=max.getX();
-      double maxy=max.getY();
-      
-      double[] coords = 
-        new double[]{minx,miny, maxx,miny , maxx,maxy, minx,maxy, minx,miny,};
-      GM_Curve curve = 
-          GeometryFactory.createGM_Curve( 
-                                    coords ,
-                                    2,
-                                    crs );      
+      final GM_Position min = bBox.getMin();
+      final GM_Position max = bBox.getMax();
+
+      final double minx = min.getX();
+      final double miny = min.getY();
+
+      final double maxx = max.getX();
+      final double maxy = max.getY();
+
+      final double[] coords = new double[] { minx, miny, maxx, miny, maxx, maxy, minx, maxy, minx, miny, };
+      final GM_Curve curve = GeometryFactory.createGM_Curve( coords, 2, crs );
       return curve;
     }
     catch( final Throwable e )

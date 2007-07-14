@@ -128,7 +128,8 @@ public class WeirParameters
     if( discharge != null )
       return discharge;
 
-    System.out.format( "Unknown discharge for: (US: %.3f DW: %.3f)%n", upstreamWaterlevel, downstreamWaterlevel );
+    // TODO: discuss with nico/moni what to do about unknown values
+    // System.out.format( "Unknown discharge for: (US: %.3f DW: %.3f)%n", upstreamWaterlevel, downstreamWaterlevel );
 
     return UNKNOWN_DISCHARGE;
   }

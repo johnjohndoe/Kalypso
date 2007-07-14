@@ -53,7 +53,6 @@ import org.eclipse.ui.PlatformUI;
 import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards.CreateCalculationUnitWizard;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.DeleteCalculationUnitCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.editor.FeatureWrapperListEditor;
@@ -61,7 +60,6 @@ import org.kalypso.kalypsomodel1d2d.ui.map.editor.IButtonConstants;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
-import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -70,22 +68,17 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  * 
  * @author Madanagopal
  * @author Patrice Congo
- *
+ * 
  */
-@SuppressWarnings({"unchecked", "hiding"})
-public class CalculationUnitComponent 
-      extends FeatureWrapperListEditor 
-      implements IButtonConstants
-{ 
-  private Map<String,String> btnDescription = new HashMap<String,String>();
+@SuppressWarnings( { "unchecked", "hiding" })
+public class CalculationUnitComponent extends FeatureWrapperListEditor implements IButtonConstants
+{
+  private final Map<String, String> btnDescription = new HashMap<String, String>();
 
-
-  public CalculationUnitComponent()
+  public CalculationUnitComponent( )
   {
-    super(null,null,null);
-    setRequiredButtons( BTN_SHOW_AND_MAXIMIZE,
-                        BTN_REMOVE,
-                        BTN_ADD);
+    super( null, null, null );
+    setRequiredButtons( BTN_SHOW_AND_MAXIMIZE, BTN_REMOVE, BTN_ADD );
     btnDescription.put( "SHOW_AND_MAXIMIZE", "Berechnungseinheit anzeigen und maximieren" );
     btnDescription.put( "REMOVE", "Berechnungseinheit löschen" );
     btnDescription.put( "ADD", "Berechnungseinheit hinzufügen" );
@@ -95,106 +88,98 @@ public class CalculationUnitComponent
    * @see org.kalypso.kalypsomodel1d2d.ui.map.editor.FeatureWrapperListEditor#templateDialog()
    */
   @Override
-  public void createFeatureWrapper()
+  public void createFeatureWrapper( )
   {
     final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-    
-    final CreateCalculationUnitWizard calculationWizard = 
-        new CreateCalculationUnitWizard(getDataModel());
+
+    final CreateCalculationUnitWizard calculationWizard = new CreateCalculationUnitWizard( getDataModel() );
     final WizardDialog wizardDialog = new WizardDialog( shell, calculationWizard );
     wizardDialog.open();
-  } 
-  
+  }
+
   @Override
-  protected boolean showDescription()
+  protected boolean showDescription( )
   {
     return true;
   }
-  
+
   @SuppressWarnings("unused")
-  private void getDescriptionList()
+  private void getDescriptionList( )
   {
-    
+
   }
-  
+
   @Override
-  protected String getBtnDescription(String key)
-  { 
-    if (btnDescription.get( key )!= null)
+  protected String getBtnDescription( final String key )
+  {
+    if( btnDescription.get( key ) != null )
       return btnDescription.get( key );
     else
       return null;
   }
+
   @Override
-  public void refreshOtherSections(){    
-    
+  public void refreshOtherSections( )
+  {
+
   }
-  
+
   @Override
   protected void maximizeSelected( )
   {
     maximizeSelected( getDataModel() );
-//    final KeyBasedDataModel dataModel = getDataModel();
-//    ICalculationUnit calUnitToMax = dataModel.getData( 
-//        ICalculationUnit.class,
-//        ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
-//    if( calUnitToMax == null )
-//    {
-//      System.out.println("current selection is null");
-//      return;
-//    }
-//    GM_Envelope boundingBox = CalUnitOps.getBoundingBox( calUnitToMax );
-//    if( boundingBox == null )
-//    {
-//      System.out.println("BBox is null");
-//      return;
-//    }
-//    MapPanel mapPanel = 
-//      dataModel.getData( MapPanel.class, ICommonKeys.KEY_MAP_PANEL );
-//    mapPanel.setBoundingBox( boundingBox );
+    // final KeyBasedDataModel dataModel = getDataModel();
+    // ICalculationUnit calUnitToMax = dataModel.getData(
+    // ICalculationUnit.class,
+    // ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
+    // if( calUnitToMax == null )
+    // {
+    // System.out.println("current selection is null");
+    // return;
+    // }
+    // GM_Envelope boundingBox = CalUnitOps.getBoundingBox( calUnitToMax );
+    // if( boundingBox == null )
+    // {
+    // System.out.println("BBox is null");
+    // return;
+    // }
+    // MapPanel mapPanel =
+    // dataModel.getData( MapPanel.class, ICommonKeys.KEY_MAP_PANEL );
+    // mapPanel.setBoundingBox( boundingBox );
   }
-  
-  public static final void maximizeSelected( final KeyBasedDataModel dataModel)
+
+  public static final void maximizeSelected( final KeyBasedDataModel dataModel )
   {
-//    final KeyBasedDataModel dataModel = getDataModel();
-    ICalculationUnit calUnitToMax = dataModel.getData( 
-        ICalculationUnit.class,
-        ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
+    // final KeyBasedDataModel dataModel = getDataModel();
+    final ICalculationUnit calUnitToMax = dataModel.getData( ICalculationUnit.class, ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
     if( calUnitToMax == null )
     {
-      System.out.println("current selection is null");
+      System.out.println( "current selection is null" );
       return;
     }
-    GM_Envelope boundingBox = CalUnitOps.getBoundingBox( calUnitToMax );
+    final GM_Envelope boundingBox = CalUnitOps.getBoundingBox( calUnitToMax );
     if( boundingBox == null )
     {
-      System.out.println("BBox is null");
+      System.out.println( "BBox is null" );
       return;
     }
-    MapPanel mapPanel = 
-      dataModel.getData( MapPanel.class, ICommonKeys.KEY_MAP_PANEL );
+    final MapPanel mapPanel = dataModel.getData( MapPanel.class, ICommonKeys.KEY_MAP_PANEL );
     mapPanel.setBoundingBox( boundingBox );
   }
-  
+
   @Override
-  protected void deleteSelected()
+  protected void deleteSelected( )
   {
     final KeyBasedDataModel dataModel = getDataModel();
-    ICalculationUnit calUnitToDel = dataModel.getData( 
-        ICalculationUnit.class,
-        ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
+    final ICalculationUnit calUnitToDel = dataModel.getData( ICalculationUnit.class, ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
     if( calUnitToDel != null )
     {
-      
-      //find control model and removes
+
+      // find control model and removes
       CalUnitOps.removeUnitControlModel( calUnitToDel );
       //
-      final IFEDiscretisationModel1d2d model1d2d =
-          dataModel.getData( 
-              IFEDiscretisationModel1d2d.class, 
-              ICommonKeys.KEY_DISCRETISATION_MODEL );
-      DeleteCalculationUnitCmd delCmd = 
-          new DeleteCalculationUnitCmd( model1d2d, calUnitToDel)
+      final IFEDiscretisationModel1d2d model1d2d = dataModel.getData( IFEDiscretisationModel1d2d.class, ICommonKeys.KEY_DISCRETISATION_MODEL );
+      final DeleteCalculationUnitCmd delCmd = new DeleteCalculationUnitCmd( model1d2d, calUnitToDel )
       {
         /**
          * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.DeleteCalculationUnit#process()
@@ -203,47 +188,36 @@ public class CalculationUnitComponent
         public void process( ) throws Exception
         {
           super.process();
-          //reset with list from model
-          IFEDiscretisationModel1d2d model1d2d =
-            (IFEDiscretisationModel1d2d) 
-            dataModel.getData( ICommonKeys.KEY_DISCRETISATION_MODEL );
-          List<ICalculationUnit> calUnits = 
-            CalUnitOps.getModelCalculationUnits( model1d2d );
+          // reset with list from model
+          IFEDiscretisationModel1d2d model1d2d = (IFEDiscretisationModel1d2d) dataModel.getData( ICommonKeys.KEY_DISCRETISATION_MODEL );
+          List<ICalculationUnit> calUnits = CalUnitOps.getModelCalculationUnits( model1d2d );
           dataModel.setData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST, calUnits );
-          //set current selection to null
-          dataModel.setData(  
-              ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER,
-              null );
+          // set current selection to null
+          dataModel.setData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, null );
         }
       };
-      KeyBasedDataModelUtil.postCommand( dataModel, delCmd );
+      KeyBasedDataModelUtil.postCommand( dataModel, delCmd, ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL );
     }
   }
-  
-  
-  
-  @Override
-  protected ILabelProvider getLabelProvider(Display display)
-  {    
-    return new CalculationUnitViewerLabelProvider(display);
-    
-  }
-  
 
   @Override
-  protected List<ICalculationUnit> setInputContentProvider(){
-    KeyBasedDataModel dataModel = getDataModel();
-    Object inputData = 
-      dataModel.getData( 
-        ICommonKeys.KEY_FEATURE_WRAPPER_LIST );
-    if (inputData == null)
+  protected ILabelProvider getLabelProvider( final Display display )
+  {
+    return new CalculationUnitViewerLabelProvider( display );
+  }
+
+  @Override
+  protected List<ICalculationUnit> setInputContentProvider( )
+  {
+    final KeyBasedDataModel dataModel = getDataModel();
+    Object inputData = dataModel.getData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST );
+    if( inputData == null )
     {
       inputData = new ArrayList<IFeatureWrapper2>();
       return (List<ICalculationUnit>) inputData;
-    }    
-    List<ICalculationUnit> calcList = (List<ICalculationUnit>) dataModel.getData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST );
+    }
+    final List<ICalculationUnit> calcList = (List<ICalculationUnit>) dataModel.getData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST );
     return calcList;
   }
-  
-  
+
 }
