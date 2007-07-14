@@ -44,12 +44,13 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import org.eclipse.core.resources.IFile;
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -73,7 +74,6 @@ import de.renew.workflow.connector.cases.ICaseDataProvider;
  * 
  * @author Patrice Congo
  */
-@SuppressWarnings( { "unchecked", "hiding" })
 public class ResultDB
 {
 
@@ -82,97 +82,77 @@ public class ResultDB
    */
   public static final String META_DATA_FILE_NAME = "result_meta_data.gml";
 
-  private GMLWorkspace workspace;
+  private GMLWorkspace m_workspace;
 
-  private ISimulationDescriptionCollection simDB;
+  private ISimulationDescriptionCollection m_resultDB;
 
-  public ResultDB( ISimulationDescriptionCollection simDB )
+  private File m_metaDataFile;
+
+  private static final Logger logger = Logger.getLogger( ResultDB.class.getName() );
+
+  public ResultDB( ISimulationDescriptionCollection resultDB )
   {
-    Assert.throwIAEOnNullParam( simDB, "simDB" );
-    this.simDB = simDB;
+    Assert.throwIAEOnNullParam( resultDB, "resultDB" );
+    this.m_resultDB = resultDB;
   }
 
   public ResultDB( IPath folderPath )
   {
-    IPath metaDataFile = folderPath.append( META_DATA_FILE_NAME );
-    boolean exists = ResourcesPlugin.getWorkspace().getRoot().exists( metaDataFile );
-    System.out.println( metaDataFile.toFile() + "\n" + exists );
-
-    createMetaDataFile( metaDataFile );
-    Feature rootFeature = workspace.getRootFeature();
-    simDB = new SimulationDescriptionCollection( rootFeature );
-    System.out.println( "\n\tsimdB created=" + simDB );
-  }
-
-  private void createMetaDataFile( IPath metaDataPath )
-  {
+    m_metaDataFile = folderPath.append( META_DATA_FILE_NAME ).toFile();
+    Feature rootFeature = null;
+    boolean fileExists = m_metaDataFile.exists();
+    if( !fileExists )
+    {
+      try
+      {
+        createMetaDataFile();
+      }
+      catch( Exception e1 )
+      {
+        throw new RuntimeException( "Result database cannot be created. Check filesystem access rights.", e1 );
+      }
+    }
     try
     {
-      File file = metaDataPath.toFile();
-      IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-      root.refreshLocal( IResource.DEPTH_INFINITE, null );
-      IFile metaDataFile = root.getFile( metaDataPath );
-      if( !file.exists() )
-      {
-        if( !file.createNewFile() )
-        {
-          throw new RuntimeException( "Could not create file:" + file );
-        }
-// URL resource = ResultDB.class.getResource( "result_db.xml" );
-//        
-// IOUtils.copy(
-// resource.openStream(),
-// new FileOutputStream(file) );
-
-        workspace = FeatureFactory.createGMLWorkspace( Kalypso1D2DSchemaConstants.SIMMETA_F_SIMDESCRIPTOR_COLLECTION, file.toURL(), GmlSerializer.DEFAULT_FACTORY );
-        OutputStreamWriter outStreanWriter = new OutputStreamWriter( new FileOutputStream( file ) );
-        GmlSerializer.serializeWorkspace( outStreanWriter, workspace );
-        outStreanWriter.close();
-        return;
-      }
-      else
-      {
-        workspace = GmlSerializer.createGMLWorkspace( file.toURL(), null );
-      }
+      rootFeature = m_workspace.getRootFeature();
     }
     catch( Exception e )
     {
-      e.printStackTrace();
-      throw new RuntimeException( "Cannot create meta gml" );
+      // the file is probably corrupted, so we will re-create it first...
+      logger.log( Level.WARNING, "General result database is corrupted and will be re-created.");
+      try
+      {
+        // TODO: create a copy of the existing database (or rename it) and store it in the same folder with another extension 
+        m_metaDataFile.delete();
+        createMetaDataFile();
+      }
+      catch( Exception e2 )
+      {
+        throw new RuntimeException( "Result database is corrupted and cannot be re-created. Check filesystem access rights.", e2 );
+      }
+      rootFeature = m_workspace.getRootFeature();
     }
+    m_resultDB = new SimulationDescriptionCollection( rootFeature );
   }
 
-// private void createMetaDataFile_old( IPath metaDataPath )
-// {
-// try
-// {
-// File file = metaDataPath.toFile();
-// IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-// root.refreshLocal( IResource.DEPTH_INFINITE, null );
-// IFile metaDataFile = root.getFile( metaDataPath );
-// if( !file.exists() )
-// {
-// if( !file.createNewFile() )
-// {
-// throw new RuntimeException("Could not create file:"+file);
-// }
-// URL resource = ResultDB.class.getResource( "result_db.xml" );
-//        
-// IOUtils.copy(
-// resource.openStream(),
-// new FileOutputStream(file) );
-// }
-// workspace =
-// GmlSerializer.createGMLWorkspace(
-// file.toURL(),
-// null );
-//
-// }
-// catch (Exception e) {
-// e.printStackTrace();
-// throw new RuntimeException("Cannot create meta gml");
-// }
-// }
+  /**
+   * Creates metadata gml file. If file allready exists, it will be overwritten
+   */
+  private void createMetaDataFile( ) throws Exception
+  {
+    m_metaDataFile.createNewFile();
+    ResourcesPlugin.getWorkspace().getRoot().refreshLocal( IResource.DEPTH_INFINITE, null );
+    m_workspace = FeatureFactory.createGMLWorkspace( Kalypso1D2DSchemaConstants.SIMMETA_F_SIMDESCRIPTOR_COLLECTION, m_metaDataFile.toURL(), GmlSerializer.DEFAULT_FACTORY );
+    final OutputStreamWriter outStreamWriter = new OutputStreamWriter( new FileOutputStream( m_metaDataFile ) );
+    try
+    {
+      GmlSerializer.serializeWorkspace( outStreamWriter, m_workspace );
+    }
+    finally
+    {
+      IOUtils.closeQuietly( outStreamWriter );
+    }
+  }
 
   public static final IPath getFolder( )
   {
@@ -183,17 +163,17 @@ public class ResultDB
 
   public IFeatureWrapperCollection<ISimulationDescriptor> getSimulationDescriptors( )
   {
-    return simDB.getSimulationDescriptors();
+    return m_resultDB.getSimulationDescriptors();
   }
 
   public IFeatureWrapperCollection<IModelDescriptor> getModelDescriptors( )
   {
-    return simDB.getModelDescriptors();
+    return m_resultDB.getModelDescriptors();
   }
 
   public ISimulationDescriptionCollection getSimDB( )
   {
-    return simDB;
+    return m_resultDB;
   }
 
   /**
@@ -203,10 +183,10 @@ public class ResultDB
    */
   public IModelDescriptor addModelDescriptor( IFeatureWrapper2 modelFeatureWrapper )
   {
-    IModelDescriptor existingEntry = simDB.getExistingEntry( modelFeatureWrapper );
+    IModelDescriptor existingEntry = m_resultDB.getExistingEntry( modelFeatureWrapper );
     if( existingEntry == null )
     {
-      existingEntry = simDB.addModelDescriptor( modelFeatureWrapper );
+      existingEntry = m_resultDB.addModelDescriptor( modelFeatureWrapper );
     }
     return existingEntry;
   }
@@ -215,11 +195,11 @@ public class ResultDB
   {
     try
     {
-      URL context = workspace.getContext();
+      URL context = m_workspace.getContext();
       File file = new File( context.getFile() );
 
       OutputStreamWriter outStreamWriter = new OutputStreamWriter( new FileOutputStream( file ) );
-      GmlSerializer.serializeWorkspace( outStreamWriter, workspace );
+      GmlSerializer.serializeWorkspace( outStreamWriter, m_workspace );
       outStreamWriter.close();
     }
     catch( Exception e )
