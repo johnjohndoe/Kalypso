@@ -41,7 +41,6 @@
 package org.kalypso.ui.editor.mapeditor.views;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
@@ -121,9 +120,8 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
     windowOpened( activeWorkbenchWindow );
 
     final IWorkbenchPage[] pages = activeWorkbenchWindow.getPages();
-    for( int i = 0; i < pages.length; i++ )
+    for( final IWorkbenchPage workbenchPage : pages )
     {
-      final IWorkbenchPage workbenchPage = pages[i];
       pageOpened( workbenchPage );
       final IWorkbenchPart activePart = workbenchPage.getActivePart();
       if( activePart != null )
@@ -150,7 +148,7 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
   /**
    * @see org.eclipse.ui.IWindowListener#windowActivated(org.eclipse.ui.IWorkbenchWindow)
    */
-  public void windowActivated( IWorkbenchWindow window )
+  public void windowActivated( final IWorkbenchWindow window )
   {
     // nothing
   }
@@ -158,7 +156,7 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
   /**
    * @see org.eclipse.ui.IWindowListener#windowDeactivated(org.eclipse.ui.IWorkbenchWindow)
    */
-  public void windowDeactivated( IWorkbenchWindow window )
+  public void windowDeactivated( final IWorkbenchWindow window )
   {
     // nothing
   }
@@ -166,7 +164,7 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
   /**
    * @see org.eclipse.ui.IPageListener#pageActivated(org.eclipse.ui.IWorkbenchPage)
    */
-  public void pageActivated( IWorkbenchPage page )
+  public void pageActivated( final IWorkbenchPage page )
   {
     // nothing
   }
@@ -183,7 +181,7 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
   /**
    * @see org.eclipse.ui.IWindowListener#windowClosed(org.eclipse.ui.IWorkbenchWindow)
    */
-  public void windowClosed( IWorkbenchWindow window )
+  public void windowClosed( final IWorkbenchWindow window )
   {
     window.removePageListener( this );
     m_registries.remove( window );
@@ -192,7 +190,7 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
   /**
    * @see org.eclipse.ui.IPageListener#pageOpened(org.eclipse.ui.IWorkbenchPage)
    */
-  public void pageOpened( IWorkbenchPage page )
+  public void pageOpened( final IWorkbenchPage page )
   {
     page.addPartListener( this );
     m_registries.add( page );
@@ -201,7 +199,7 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
   /**
    * @see org.eclipse.ui.IPageListener#pageClosed(org.eclipse.ui.IWorkbenchPage)
    */
-  public void pageClosed( IWorkbenchPage page )
+  public void pageClosed( final IWorkbenchPage page )
   {
     page.removePartListener( this );
     m_registries.remove( page );
@@ -210,11 +208,11 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
   /**
    * @see org.eclipse.ui.IPartListener#partActivated(org.eclipse.ui.IWorkbenchPart)
    */
-  public void partActivated( IWorkbenchPart part )
+  public void partActivated( final IWorkbenchPart part )
   {
     if( part instanceof AbstractMapPart )
     {
-      AbstractMapPart editor = (AbstractMapPart) part;
+      final AbstractMapPart editor = (AbstractMapPart) part;
       if( m_topLevel != null && !m_topLevel.isDisposed() )
         m_topLevel.setVisible( true );
       final WidgetManager widgetManager = editor.getMapPanel().getWidgetManager();
@@ -232,7 +230,7 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
   /**
    * @see org.eclipse.ui.IPartListener#partDeactivated(org.eclipse.ui.IWorkbenchPart)
    */
-  public void partDeactivated( IWorkbenchPart part )
+  public void partDeactivated( final IWorkbenchPart part )
   {
     if( part instanceof AbstractMapPart )
     {
@@ -246,7 +244,7 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
   /**
    * @see org.eclipse.ui.IPartListener#partBroughtToTop(org.eclipse.ui.IWorkbenchPart)
    */
-  public void partBroughtToTop( IWorkbenchPart part )
+  public void partBroughtToTop( final IWorkbenchPart part )
   {
     // nothing
   }
@@ -254,7 +252,7 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
   /**
    * @see org.eclipse.ui.IPartListener#partClosed(org.eclipse.ui.IWorkbenchPart)
    */
-  public void partClosed( IWorkbenchPart part )
+  public void partClosed( final IWorkbenchPart part )
   {
     // nothing
   }
@@ -262,7 +260,7 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
   /**
    * @see org.eclipse.ui.IPartListener#partOpened(org.eclipse.ui.IWorkbenchPart)
    */
-  public void partOpened( IWorkbenchPart part )
+  public void partOpened( final IWorkbenchPart part )
   {
     // nothing
   }
@@ -277,10 +275,10 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
 
     m_topLevel = new Composite( parent, SWT.NONE );
 
-    Layout gridLayout = new FillLayout();
+    final Layout gridLayout = new FillLayout();
     m_topLevel.setLayout( gridLayout );
 
-    GridData data = new GridData();
+    final GridData data = new GridData();
     data.horizontalAlignment = GridData.FILL;
     data.verticalAlignment = GridData.FILL;
     data.grabExcessHorizontalSpace = true;
@@ -288,13 +286,13 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
     m_topLevel.setLayoutData( data );
 
     m_group = new Group( m_topLevel, SWT.NONE );
-    GridData datag = new GridData();
+    final GridData datag = new GridData();
     datag.horizontalAlignment = GridData.FILL;
     datag.verticalAlignment = GridData.FILL;
     datag.grabExcessHorizontalSpace = true;
     datag.grabExcessVerticalSpace = true;
 
-    GridLayout layout = new GridLayout();
+    final GridLayout layout = new GridLayout();
     m_group.setLayout( layout );
     m_group.setText( "Optionen" );
     m_group.setLayoutData( datag );
@@ -325,7 +323,14 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
     // create new Content
     m_activeWidget = newWidget;
     if( newWidget == null && m_group != null && !m_group.isDisposed() )
-      m_group.setText( "keine Aktion selektiert" );
+    {
+      if( m_group != null && !m_group.isDisposed() )
+        m_group.setText( "keine Aktion selektiert" );
+      else
+      {
+        // what to do?
+      }
+    }
     else
     {
       final String name = newWidget.getName();
@@ -362,9 +367,8 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
     if( m_topLevel != null && !m_topLevel.isDisposed() )
       m_topLevel.dispose();
     // remove all listeners
-    for( Iterator iter = m_registries.iterator(); iter.hasNext(); )
+    for( final Object registry : m_registries )
     {
-      final Object registry = iter.next();
       if( registry instanceof WidgetManager )
         ((WidgetManager) registry).removeWidgetChangeListener( this );
       if( registry instanceof IWorkbench )
