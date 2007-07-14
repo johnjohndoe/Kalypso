@@ -42,6 +42,7 @@ package org.kalypso.kalypsomodel1d2d.conv;
 
 import java.math.BigDecimal;
 import java.util.Formatter;
+import java.util.Locale;
 import java.util.Map;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IWeirFlowRelation;
@@ -91,16 +92,16 @@ public class Weir1D2DConverter
     formatDischarges( format, upstreamWaterlevels, downstreamWaterlevels, weirParameters );
   }
 
-  private void formatBlock( final Formatter format, final String name, final BigDecimal[] upstreamWaterlevels )
+  private void formatBlock( final Formatter format, final String name, final BigDecimal[] values )
   {
-    for( int i = 0; i < upstreamWaterlevels.length; i++ )
+    for( int i = 0; i < values.length; )
     {
-      format.format( "%8s", name );
+      format.format( "%3s     ", name );
 
-      for( int j = 0; j < 9; j++, i++ )
+      for( int j = 0; j < 7; j++, i++ )
       {
-        if( i < upstreamWaterlevels.length )
-          format.format( "%8.3f", upstreamWaterlevels[i] );
+        if( i < values.length )
+          format.format( Locale.US, "%8.3f", values[i] ); // write decimals with '.'
       }
       format.format( "%n" );
     }

@@ -97,10 +97,10 @@ public class CalUnitOps
     // i hate being instantiated
   }
 
-  public static final boolean isNodeOf( ICalculationUnit unit, IFE1D2DNode<IFE1D2DEdge> node )
+  public static final boolean isNodeOf( final ICalculationUnit unit, final IFE1D2DNode<IFE1D2DEdge> node )
   {
     final IFeatureWrapperCollection<IFE1D2DEdge> containers = node.getContainers();
-    for( IFE1D2DEdge edge : containers )
+    for( final IFE1D2DEdge edge : containers )
     {
       if( isEdgeOf( unit, edge ) )
       {
@@ -110,11 +110,11 @@ public class CalUnitOps
     return false;
   }
 
-  public static final boolean isEdgeOf( ICalculationUnit unit, IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge )
+  public static final boolean isEdgeOf( final ICalculationUnit unit, final IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge )
   {
 
     IFeatureWrapperCollection<IFE1D2DElement> containers = edge.getContainers();
-    for( IFE1D2DElement ele : containers )
+    for( final IFE1D2DElement ele : containers )
     {
       if( isFiniteElementOf( unit, ele ) )
       {
@@ -125,7 +125,7 @@ public class CalUnitOps
     containers = null;
     if( edge instanceof IEdgeInv )
     {
-      IFE1D2DEdge inverted = ((IEdgeInv) edge).getInverted();
+      final IFE1D2DEdge inverted = ((IEdgeInv) edge).getInverted();
       if( inverted != null )
       {
         containers = inverted.getContainers();
@@ -133,7 +133,7 @@ public class CalUnitOps
     }
     else
     {
-      IFE1D2DEdge inverted = edge.getEdgeInv();
+      final IFE1D2DEdge inverted = edge.getEdgeInv();
       if( inverted != null )
       {
         containers = inverted.getContainers();
@@ -141,7 +141,7 @@ public class CalUnitOps
     }
     if( containers != null )
     {
-      for( IFE1D2DElement ele : containers )
+      for( final IFE1D2DElement ele : containers )
       {
         if( isFiniteElementOf( unit, ele ) )
         {
@@ -153,13 +153,13 @@ public class CalUnitOps
     return false;
   }
 
-  public static final IFE1D2DElement[] toAddableElements( ICalculationUnit calculationUnit, IFE1D2DElement[] elementsToAdd )
+  public static final IFE1D2DElement[] toAddableElements( final ICalculationUnit calculationUnit, final IFE1D2DElement[] elementsToAdd )
   {
-    ArrayList<IFE1D2DElement> eleList = new ArrayList<IFE1D2DElement>( elementsToAdd.length );
+    final ArrayList<IFE1D2DElement> eleList = new ArrayList<IFE1D2DElement>( elementsToAdd.length );
 
     if( calculationUnit instanceof ICalculationUnit1D )
     {
-      for( IFE1D2DElement ele : elementsToAdd )
+      for( final IFE1D2DElement ele : elementsToAdd )
       {
         if( ele instanceof IPolyElement )
         {
@@ -170,7 +170,7 @@ public class CalUnitOps
     }
     else if( calculationUnit instanceof ICalculationUnit2D )
     {
-      for( IFE1D2DElement ele : elementsToAdd )
+      for( final IFE1D2DElement ele : elementsToAdd )
       {
         if( ele instanceof IElement1D )
         {
@@ -180,7 +180,7 @@ public class CalUnitOps
     }
     else
     {
-      for( IFE1D2DElement ele : elementsToAdd )
+      for( final IFE1D2DElement ele : elementsToAdd )
       {
         if( ele != null )
         {
@@ -188,13 +188,13 @@ public class CalUnitOps
         }
       }
     }
-    IFE1D2DElement[] array = eleList.toArray( new IFE1D2DElement[eleList.size()] );
+    final IFE1D2DElement[] array = eleList.toArray( new IFE1D2DElement[eleList.size()] );
     return array;
   }
 
-  public static final IFE1D2DElement[] toAddableElements( ICalculationUnit calculationUnit, Feature[] elementsToAdd )
+  public static final IFE1D2DElement[] toAddableElements( final ICalculationUnit calculationUnit, final Feature[] elementsToAdd )
   {
-    ArrayList<IFE1D2DElement> eleList = new ArrayList<IFE1D2DElement>( elementsToAdd.length );
+    final ArrayList<IFE1D2DElement> eleList = new ArrayList<IFE1D2DElement>( elementsToAdd.length );
     final Class adapterCls;
     if( calculationUnit instanceof ICalculationUnit1D )
     {
@@ -209,16 +209,16 @@ public class CalUnitOps
       adapterCls = IFE1D2DElement.class;
     }
 
-    for( Feature f : elementsToAdd )
+    for( final Feature f : elementsToAdd )
     {
-      IFE1D2DElement ele = f == null ? null : (IFE1D2DElement) f.getAdapter( adapterCls );
+      final IFE1D2DElement ele = f == null ? null : (IFE1D2DElement) f.getAdapter( adapterCls );
       if( ele != null )
       {
         eleList.add( ele );
       }
     }
 
-    IFE1D2DElement[] array = eleList.toArray( new IFE1D2DElement[eleList.size()] );
+    final IFE1D2DElement[] array = eleList.toArray( new IFE1D2DElement[eleList.size()] );
     return array;
   }
 
@@ -237,13 +237,13 @@ public class CalUnitOps
   {
     Assert.throwIAEOnNullParam( calculationUnit, "calculationUnit" );
     Assert.throwIAEOnNullParam( model1d2d, "model1d2d" );
-    IFeatureWrapperCollection<IFE1D2DComplexElement> complexElements = model1d2d.getComplexElements();
+    final IFeatureWrapperCollection<IFE1D2DComplexElement> complexElements = model1d2d.getComplexElements();
     final Collection<ICalculationUnit1D2D> parents = new ArrayList<ICalculationUnit1D2D>();
-    for( IFE1D2DComplexElement ce : complexElements )
+    for( final IFE1D2DComplexElement ce : complexElements )
     {
       if( ce instanceof ICalculationUnit1D2D )
       {
-        ICalculationUnit1D2D parent = (ICalculationUnit1D2D) ce;
+        final ICalculationUnit1D2D parent = (ICalculationUnit1D2D) ce;
         if( parent.getSubUnits().contains( calculationUnit ) )
         {
           parents.add( parent );
@@ -262,12 +262,12 @@ public class CalUnitOps
    * @throws IllegalArgumentException
    *             if the argument model1d2d is null
    */
-  public static final List<ICalculationUnit> getModelCalculationUnits( IFEDiscretisationModel1d2d model1d2d ) throws IllegalArgumentException
+  public static final List<ICalculationUnit> getModelCalculationUnits( final IFEDiscretisationModel1d2d model1d2d ) throws IllegalArgumentException
   {
     Assert.throwIAEOnNullParam( model1d2d, "model1d2d" );
     final List<ICalculationUnit> calUnits = new ArrayList<ICalculationUnit>();
-    IFeatureWrapperCollection<IFE1D2DComplexElement> complexElements = model1d2d.getComplexElements();
-    for( IFE1D2DComplexElement ce : complexElements )
+    final IFeatureWrapperCollection<IFE1D2DComplexElement> complexElements = model1d2d.getComplexElements();
+    for( final IFE1D2DComplexElement ce : complexElements )
     {
       if( ce instanceof ICalculationUnit )
       {
@@ -286,7 +286,7 @@ public class CalUnitOps
    * @throws IllegalArgumentException
    *             if calUnit is null
    */
-  public static int getNum2DElement( ICalculationUnit calUnit )
+  public static int getNum2DElement( final ICalculationUnit calUnit )
   {
     Assert.throwIAEOnNullParam( calUnit, "calUnit" );
     if( calUnit instanceof ICalculationUnit1D )
@@ -302,7 +302,7 @@ public class CalUnitOps
       final LinkedList<ICalculationUnit> calUnitsToCheck = new LinkedList<ICalculationUnit>();
       calUnitsToCheck.add( calUnit );
       int num = 0;
-      for( ICalculationUnit<IFE1D2DElement> currentUnit : calUnitsToCheck )
+      for( final ICalculationUnit<IFE1D2DElement> currentUnit : calUnitsToCheck )
       {
         num = num + currentUnit.getElements().countFeatureWrappers( IPolyElement.class );
         if( currentUnit instanceof ICalculationUnit1D2D )
@@ -318,12 +318,12 @@ public class CalUnitOps
     }
   }
 
-  public static final int countUnitElements( ICalculationUnit calUnit, Class eleClass )
+  public static final int countUnitElements( final ICalculationUnit calUnit, final Class eleClass )
   {
     final LinkedList<ICalculationUnit> calUnitsToCheck = new LinkedList<ICalculationUnit>();
     calUnitsToCheck.add( calUnit );
     int num = 0;
-    for( ICalculationUnit<IFE1D2DElement> currentUnit : calUnitsToCheck )
+    for( final ICalculationUnit<IFE1D2DElement> currentUnit : calUnitsToCheck )
     {
       num = num + currentUnit.getElements().countFeatureWrappers( eleClass );
       if( currentUnit instanceof ICalculationUnit1D2D )
@@ -341,12 +341,12 @@ public class CalUnitOps
    *            the calculation unit which boundary line are to be count
    * @return an int representing the number of boundary lines belonging to calUnit
    */
-  public static int getNumBoundaryLine( ICalculationUnit calUnit )
+  public static int getNumBoundaryLine( final ICalculationUnit calUnit )
   {
     Assert.throwIAEOnNullParam( calUnit, "calUnit" );
     int num = 0;
     final IFeatureWrapperCollection<IFE1D2DElement> elements = calUnit.getElements();
-    for( IFE1D2DElement ele : elements )
+    for( final IFE1D2DElement ele : elements )
     {
       if( ele instanceof IBoundaryLine )
       {
@@ -356,12 +356,12 @@ public class CalUnitOps
     return num;
   }
 
-  public static List<IBoundaryLine> getBoundaryLines( ICalculationUnit calUnit )
+  public static List<IBoundaryLine> getBoundaryLines( final ICalculationUnit calUnit )
   {
     Assert.throwIAEOnNullParam( calUnit, "calUnit" );
     final IFeatureWrapperCollection<IFE1D2DElement> elements = calUnit.getElements();
     final List<IBoundaryLine> boundaryLines = new ArrayList<IBoundaryLine>();
-    for( IFE1D2DElement ele : elements )
+    for( final IFE1D2DElement ele : elements )
     {
       if( ele instanceof IBoundaryLine )
       {
@@ -380,7 +380,7 @@ public class CalUnitOps
    * @throws IllegalArgumentException
    *             if calUnit is null
    */
-  public static int getNum1DElement( ICalculationUnit calUnit ) throws IllegalArgumentException
+  public static int getNum1DElement( final ICalculationUnit calUnit ) throws IllegalArgumentException
   {
     Assert.throwIAEOnNullParam( calUnit, "calUnit" );
     if( calUnit instanceof ICalculationUnit2D )
@@ -395,7 +395,7 @@ public class CalUnitOps
     {
       System.out.println( "Getting element of 1d2d calunit" );
       int num = 0;
-      for( Object ele : calUnit.getElements() )
+      for( final Object ele : calUnit.getElements() )
       {
         if( ele instanceof IElement1D )
         {
@@ -410,160 +410,160 @@ public class CalUnitOps
     }
   }
 
-// /**
-// * Answer whether the given calculation unit has an up-stream
-// * boundary line
-// *
-// * @param calUnit the calculation unit to assert
-// * @return true if the calculation unit has an upstream boundary
-// * line otherwise false
-// * @throws IllegalArgumentException if the argument calUnit is null
-// */
-// public static boolean hasUpBoundary(
-// ICalculationUnit calUnit )
-// throws IllegalArgumentException
-// {
-// Assert.throwIAEOnNullParam( calUnit, "calUnit" );
-// return calUnit.getUpStreamBoundaryLine() !=null;
-// }
+  // /**
+  // * Answer whether the given calculation unit has an up-stream
+  // * boundary line
+  // *
+  // * @param calUnit the calculation unit to assert
+  // * @return true if the calculation unit has an upstream boundary
+  // * line otherwise false
+  // * @throws IllegalArgumentException if the argument calUnit is null
+  // */
+  // public static boolean hasUpBoundary(
+  // ICalculationUnit calUnit )
+  // throws IllegalArgumentException
+  // {
+  // Assert.throwIAEOnNullParam( calUnit, "calUnit" );
+  // return calUnit.getUpStreamBoundaryLine() !=null;
+  // }
 
-// /**
-// * Answer whether the given calculation unit has a down-stream
-// * boundary line
-// *
-// * @param calUnit the calculation unit to assert
-// * @return true if the calculation unit has a boundary line
-// * otherwise false
-// * @throws IllegalArgumentException if the argument calUnit is null
-// */
-// public static boolean hasDownBoundary(
-// ICalculationUnit calUnit )
-// throws IllegalArgumentException
-// {
-// Assert.throwIAEOnNullParam( calUnit, "calUnit" );
-// return calUnit.getDownStreamBoundaryLine() !=null;
-// }
+  // /**
+  // * Answer whether the given calculation unit has a down-stream
+  // * boundary line
+  // *
+  // * @param calUnit the calculation unit to assert
+  // * @return true if the calculation unit has a boundary line
+  // * otherwise false
+  // * @throws IllegalArgumentException if the argument calUnit is null
+  // */
+  // public static boolean hasDownBoundary(
+  // ICalculationUnit calUnit )
+  // throws IllegalArgumentException
+  // {
+  // Assert.throwIAEOnNullParam( calUnit, "calUnit" );
+  // return calUnit.getDownStreamBoundaryLine() !=null;
+  // }
 
-// public static final boolean isCalculationUnitBoundaryRelationType(
-// QName relationType )
-// {
-// Assert.throwIAEOnNullParam( relationType, "relationType" );
-// if( relationType.equals(
-// Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE_DOWNSTREAM)||
-// relationType.equals(
-// Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE_UPSTREAM))
-// {
-// return true;
-// }
-// else
-// {
-// return false;
-// }
-// }
+  // public static final boolean isCalculationUnitBoundaryRelationType(
+  // QName relationType )
+  // {
+  // Assert.throwIAEOnNullParam( relationType, "relationType" );
+  // if( relationType.equals(
+  // Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE_DOWNSTREAM)||
+  // relationType.equals(
+  // Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE_UPSTREAM))
+  // {
+  // return true;
+  // }
+  // else
+  // {
+  // return false;
+  // }
+  // }
 
-// /**
-// * To get the boundary line linked to the given calculation
-// * unit by the specified relation.
-// * @param calUnit the calculation unit which boundary is to be
-// * found
-// * @param relationType the type of the relation between boundary
-// * line and calculation unit
-// */
-// public static final IBoundaryLine getLinkedBoundaryLine(
-// ICalculationUnit calUnit,
-// QName relationType )
-// {
-// Assert.throwIAEOnNullParam( calUnit, "calUnit" );
-// Assert.throwIAEOnNullParam( relationType, "relaytionType" );
-//    
-// if( relationType.equals(
-// Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE_DOWNSTREAM))
-// {
-// return calUnit.getDownStreamBoundaryLine();
-// }
-// else if( relationType.equals(
-// Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE_UPSTREAM))
-// {
-// return calUnit.getUpStreamBoundaryLine();
-// }
-// else
-// {
-// throw new RuntimeException(
-// "Unable to get related boundary: relationType="+relationType);
-// }
-//      
-//      
-// }
+  // /**
+  // * To get the boundary line linked to the given calculation
+  // * unit by the specified relation.
+  // * @param calUnit the calculation unit which boundary is to be
+  // * found
+  // * @param relationType the type of the relation between boundary
+  // * line and calculation unit
+  // */
+  // public static final IBoundaryLine getLinkedBoundaryLine(
+  // ICalculationUnit calUnit,
+  // QName relationType )
+  // {
+  // Assert.throwIAEOnNullParam( calUnit, "calUnit" );
+  // Assert.throwIAEOnNullParam( relationType, "relaytionType" );
+  //    
+  // if( relationType.equals(
+  // Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE_DOWNSTREAM))
+  // {
+  // return calUnit.getDownStreamBoundaryLine();
+  // }
+  // else if( relationType.equals(
+  // Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE_UPSTREAM))
+  // {
+  // return calUnit.getUpStreamBoundaryLine();
+  // }
+  // else
+  // {
+  // throw new RuntimeException(
+  // "Unable to get related boundary: relationType="+relationType);
+  // }
+  //      
+  //      
+  // }
 
-// /**
-// * Tests whether a given boundary is the upstream boundary line of the specified
-// * calculation unit.
-// * @param calUnit the calculation unit which up stream boundary is to be tested
-// * @param boundaryLine the boundary line to assert
-// * @return true if the provided boundary line is the upstream boundary of the given
-// * calculation unit otherwise false.
-// */
-// public static final boolean isUpStreamBoundaryLine(
-// ICalculationUnit calUnit,
-// IBoundaryLine boundaryLine)
-// {
-// Assert.throwIAEOnNullParam( calUnit, "calUnit" );
-// Assert.throwIAEOnNullParam( boundaryLine, "boundaryLine" );
-// IBoundaryLine upLine = calUnit.getUpStreamBoundaryLine();
-// if( upLine == null )
-// {
-// return false;
-// }
-// else
-// {
-// return boundaryLine.equals( upLine );
-// }
-// }
+  // /**
+  // * Tests whether a given boundary is the upstream boundary line of the specified
+  // * calculation unit.
+  // * @param calUnit the calculation unit which up stream boundary is to be tested
+  // * @param boundaryLine the boundary line to assert
+  // * @return true if the provided boundary line is the upstream boundary of the given
+  // * calculation unit otherwise false.
+  // */
+  // public static final boolean isUpStreamBoundaryLine(
+  // ICalculationUnit calUnit,
+  // IBoundaryLine boundaryLine)
+  // {
+  // Assert.throwIAEOnNullParam( calUnit, "calUnit" );
+  // Assert.throwIAEOnNullParam( boundaryLine, "boundaryLine" );
+  // IBoundaryLine upLine = calUnit.getUpStreamBoundaryLine();
+  // if( upLine == null )
+  // {
+  // return false;
+  // }
+  // else
+  // {
+  // return boundaryLine.equals( upLine );
+  // }
+  // }
 
-// /**
-// * Tests whether a given boundary is the downstream boundary line of the specified
-// * calculation unit.
-// * @param calUnit the calculation unit which down stream boundary is to be tested
-// * @param boundaryLine the boundary line to assert
-// * @return true if the provided boundary line is the down stream boundary of the given
-// * calculation unit otherwise false.
-// */
-// public static final boolean isDownStreamBoundaryLine(
-// ICalculationUnit calUnit,
-// IBoundaryLine boundaryLine)
-// {
-// Assert.throwIAEOnNullParam( calUnit, "calUnit" );
-// Assert.throwIAEOnNullParam( boundaryLine, "boundaryLine" );
-// IBoundaryLine upLine = calUnit.getDownStreamBoundaryLine();
-// if( upLine == null )
-// {
-// return false;
-// }
-// else
-// {
-// return boundaryLine.equals( upLine );
-// }
-// }
+  // /**
+  // * Tests whether a given boundary is the downstream boundary line of the specified
+  // * calculation unit.
+  // * @param calUnit the calculation unit which down stream boundary is to be tested
+  // * @param boundaryLine the boundary line to assert
+  // * @return true if the provided boundary line is the down stream boundary of the given
+  // * calculation unit otherwise false.
+  // */
+  // public static final boolean isDownStreamBoundaryLine(
+  // ICalculationUnit calUnit,
+  // IBoundaryLine boundaryLine)
+  // {
+  // Assert.throwIAEOnNullParam( calUnit, "calUnit" );
+  // Assert.throwIAEOnNullParam( boundaryLine, "boundaryLine" );
+  // IBoundaryLine upLine = calUnit.getDownStreamBoundaryLine();
+  // if( upLine == null )
+  // {
+  // return false;
+  // }
+  // else
+  // {
+  // return boundaryLine.equals( upLine );
+  // }
+  // }
 
-// public static final QName getRelationType(
-// ICalculationUnit calUnit,
-// IBoundaryLine bLine)
-// {
-// Assert.throwIAEOnNullParam( calUnit, "calUnit" );
-// Assert.throwIAEOnNullParam( bLine, "bLine" );
-// if( isDownStreamBoundaryLine( calUnit, bLine ))
-// {
-// return Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE_DOWNSTREAM;
-// }
-// else if( isUpStreamBoundaryLine( calUnit, bLine ))
-// {
-// return Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE_UPSTREAM;
-// }
-// else
-// {
-// return null;
-// }
-// }
+  // public static final QName getRelationType(
+  // ICalculationUnit calUnit,
+  // IBoundaryLine bLine)
+  // {
+  // Assert.throwIAEOnNullParam( calUnit, "calUnit" );
+  // Assert.throwIAEOnNullParam( bLine, "bLine" );
+  // if( isDownStreamBoundaryLine( calUnit, bLine ))
+  // {
+  // return Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE_DOWNSTREAM;
+  // }
+  // else if( isUpStreamBoundaryLine( calUnit, bLine ))
+  // {
+  // return Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE_UPSTREAM;
+  // }
+  // else
+  // {
+  // return null;
+  // }
+  // }
 
   /**
    * Tests whether a given boundary is a boundary line of the specified calculation unit.
@@ -574,11 +574,11 @@ public class CalUnitOps
    *            the calculation unit which stream boundary is to be tested
    * @return true if the provided boundary line is a boundary of the given calculation unit otherwise false.
    */
-  public static final boolean isBoundaryLineOf( IBoundaryLine boundaryLine, ICalculationUnit calUnit )
+  public static final boolean isBoundaryLineOf( final IBoundaryLine boundaryLine, final ICalculationUnit calUnit )
   {
     Assert.throwIAEOnNullParam( calUnit, "calUnit" );
     Assert.throwIAEOnNullParam( boundaryLine, "boundaryLine" );
-    IFeatureWrapperCollection containers = boundaryLine.getContainers();
+    final IFeatureWrapperCollection containers = boundaryLine.getContainers();
     final boolean answer = containers.contains( calUnit );
     return answer;
   }
@@ -591,19 +591,19 @@ public class CalUnitOps
    * @return an {@link GM_Envelope} representing the bounding box of the calculation unit.
    * 
    */
-  public static final GM_Envelope getBoundingBox( ICalculationUnit calUnit )
+  public static final GM_Envelope getBoundingBox( final ICalculationUnit calUnit )
   {
     Assert.throwIAEOnNullParam( calUnit, "calUnit" );
-    LinkedList<GM_Envelope> contributingBBox = new LinkedList<GM_Envelope>();
+    final LinkedList<GM_Envelope> contributingBBox = new LinkedList<GM_Envelope>();
 
     // collect all contributing bboxes
     contributingBBox.add( calUnit.getElements().getWrappedList().getBoundingBox() );
     if( calUnit instanceof ICalculationUnit1D2D )
     {
-      LinkedList<ICalculationUnit> subUnits = new LinkedList<ICalculationUnit>( ((ICalculationUnit1D2D) calUnit).getSubUnits() );
+      final LinkedList<ICalculationUnit> subUnits = new LinkedList<ICalculationUnit>( ((ICalculationUnit1D2D) calUnit).getSubUnits() );
       while( !subUnits.isEmpty() )
       {
-        ICalculationUnit removed = subUnits.remove( 0 );
+        final ICalculationUnit removed = subUnits.remove( 0 );
         contributingBBox.add( removed.getElements().getWrappedList().getBoundingBox() );
         if( removed instanceof ICalculationUnit1D2D )
         {
@@ -616,7 +616,7 @@ public class CalUnitOps
     // find the first non null
     find_first_non_null: while( !contributingBBox.isEmpty() )
     {
-      GM_Envelope removeBB = contributingBBox.removeFirst();
+      final GM_Envelope removeBB = contributingBBox.removeFirst();
       if( removeBB != null )
       {
         boundingBox = removeBB;
@@ -627,7 +627,7 @@ public class CalUnitOps
     // widden box the include following non nulls
     while( !contributingBBox.isEmpty() )
     {
-      GM_Envelope removeBB = contributingBBox.removeFirst();
+      final GM_Envelope removeBB = contributingBBox.removeFirst();
       if( removeBB != null )
       {
         boundingBox = boundingBox.getMerged( removeBB );
@@ -645,18 +645,18 @@ public class CalUnitOps
    *            the calculation unit
    * @param element
    */
-  public static final boolean isFiniteElementOf( ICalculationUnit unit, IFE1D2DElement element )
+  public static final boolean isFiniteElementOf( final ICalculationUnit unit, final IFE1D2DElement element )
   {
     Assert.throwIAEOnNullParam( unit, "unit" );
     Assert.throwIAEOnNullParam( element, "element" );
     final IFeatureWrapperCollection containers = element.getContainers();
-// return containers.contains( unit );
+    // return containers.contains( unit );
 
-    LinkedList<ICalculationUnit> subUnits = new LinkedList<ICalculationUnit>();
+    final LinkedList<ICalculationUnit> subUnits = new LinkedList<ICalculationUnit>();
     subUnits.add( unit );
     while( !subUnits.isEmpty() )
     {
-      ICalculationUnit currentSubUnit = subUnits.remove( 0 );
+      final ICalculationUnit currentSubUnit = subUnits.remove( 0 );
       if( currentSubUnit instanceof ICalculationUnit1D2D )
       {
         subUnits.addAll( ((ICalculationUnit1D2D) currentSubUnit).getSubUnits() );
@@ -680,7 +680,7 @@ public class CalUnitOps
    * @param bCondition
    *            the boundary condition to mark
    */
-  public static final void markAsBoundaryCondition( ICalculationUnit<IFE1D2DElement> unit, IBoundaryCondition bCondition, double grabDistance )
+  public static final void markAsBoundaryCondition( final ICalculationUnit<IFE1D2DElement> unit, final IBoundaryCondition bCondition, final double grabDistance )
   {
     Assert.throwIAEOnNullParam( unit, "unit" );
     Assert.throwIAEOnNullParam( bCondition, "bCondition" );
@@ -691,13 +691,14 @@ public class CalUnitOps
     final IBoundaryLine targetLine = getLineElement( unit, bcPosition, grabDistance, IBoundaryLine.class );
     if( targetLine == null )
     {
+      // TODO: this message is not shown to the user! Do it
       throw new IllegalArgumentException( "Boundary condition does not have a target line:" + "\n\tgrabDistance=" + grabDistance );
     }
     // compute the other lines and set their middle nodes as
     // boundary line
-    ArrayList<GM_Point> points = new ArrayList<GM_Point>();
+    final ArrayList<GM_Point> points = new ArrayList<GM_Point>();
 
-    for( IFE1D2DElement ele : unit.getElements() )
+    for( final IFE1D2DElement ele : unit.getElements() )
     {
       if( ele instanceof IBoundaryLine )
       {
@@ -711,7 +712,7 @@ public class CalUnitOps
     }
     if( points.size() > 0 )
     {
-      GM_MultiPoint multiPoint = GeometryFactory.createGM_MultiPoint( points.toArray( new GM_Point[points.size()] ), points.get( 0 ).getCoordinateSystem() );
+      final GM_MultiPoint multiPoint = GeometryFactory.createGM_MultiPoint( points.toArray( new GM_Point[points.size()] ), points.get( 0 ).getCoordinateSystem() );
       bCondition.addScopeMark( multiPoint );
     }
 
@@ -736,8 +737,8 @@ public class CalUnitOps
     Assert.throwIAEOnLessThan0( grabDistance, "grab distance must be greater or equals to 0" );
 
     final GM_Point bPosition = bCondition.getPosition();
-    Feature unitParent = unit.getWrappedFeature().getParent();
-    IFEDiscretisationModel1d2d model1d2d = (IFEDiscretisationModel1d2d) unitParent.getAdapter( IFEDiscretisationModel1d2d.class );
+    final Feature unitParent = unit.getWrappedFeature().getParent();
+    final IFEDiscretisationModel1d2d model1d2d = (IFEDiscretisationModel1d2d) unitParent.getAdapter( IFEDiscretisationModel1d2d.class );
     if( model1d2d == null )
     {
       throw new IllegalArgumentException( "Unit must have a model 1d2d as parent" );
@@ -755,17 +756,17 @@ public class CalUnitOps
 
     final List<GM_MultiPoint> muliPointScopeMarks = bCondition.getScopeMark();
 
-    multiPointScanning: for( GM_MultiPoint multiPoint : muliPointScopeMarks )
+    multiPointScanning: for( final GM_MultiPoint multiPoint : muliPointScopeMarks )
     {
-// final List<GM_MultiPoint> scopeMarks;
-// containers.remove( bcLine );
+      // final List<GM_MultiPoint> scopeMarks;
+      // containers.remove( bcLine );
       if( multiPoint.getSize() < 1 )
       {
         containers = new ArrayList<IFE1D2DComplexElement>( bcLine.getContainers() );
         return false;
       }
 
-      for( GM_Point currentPoint : multiPoint.getAllPoints() )
+      for( final GM_Point currentPoint : multiPoint.getAllPoints() )
       {
 
         final IBoundaryLine<IFE1D2DComplexElement, IFE1D2DEdge> otherLine = getLineElement( unit, currentPoint, grabDistance, IBoundaryLine.class );
@@ -814,8 +815,8 @@ public class CalUnitOps
     Assert.throwIAEOnLessThan0( grabDistance, "grab distance must be greater or equals to 0" );
 
     final GM_Point bPosition = bCondition.getPosition();
-    Feature unitParent = unit.getWrappedFeature().getParent();
-    IFEDiscretisationModel1d2d model1d2d = (IFEDiscretisationModel1d2d) unitParent.getAdapter( IFEDiscretisationModel1d2d.class );
+    final Feature unitParent = unit.getWrappedFeature().getParent();
+    final IFEDiscretisationModel1d2d model1d2d = (IFEDiscretisationModel1d2d) unitParent.getAdapter( IFEDiscretisationModel1d2d.class );
     if( model1d2d == null )
     {
       throw new IllegalArgumentException( "Unit must have a model 1d2d as parent" );
@@ -832,7 +833,7 @@ public class CalUnitOps
     List<IFE1D2DComplexElement> containers = new ArrayList<IFE1D2DComplexElement>( bcLine.getContainers() );
     final List<GM_MultiPoint> muliPointScopeMarks = bCondition.getScopeMark();
 
-    multiPointScanning: for( GM_MultiPoint multiPoint : muliPointScopeMarks )
+    multiPointScanning: for( final GM_MultiPoint multiPoint : muliPointScopeMarks )
     {
       // final List<GM_MultiPoint> scopeMarks;
       // containers.remove( bcLine );
@@ -842,7 +843,7 @@ public class CalUnitOps
         return null;
       }
 
-      for( GM_Point currentPoint : multiPoint.getAllPoints() )
+      for( final GM_Point currentPoint : multiPoint.getAllPoints() )
       {
 
         final IBoundaryLine<IFE1D2DComplexElement, IFE1D2DEdge> otherLine = getLineElement( unit, currentPoint, grabDistance, IBoundaryLine.class );
@@ -890,8 +891,8 @@ public class CalUnitOps
     Assert.throwIAEOnLessThan0( grabDistance, "grab distance must be greater or equals to 0" );
 
     final GM_Point bPosition = bCondition.getPosition();
-    Feature unitParent = unit.getWrappedFeature().getParent();
-    IFEDiscretisationModel1d2d model1d2d = (IFEDiscretisationModel1d2d) unitParent.getAdapter( IFEDiscretisationModel1d2d.class );
+    final Feature unitParent = unit.getWrappedFeature().getParent();
+    final IFEDiscretisationModel1d2d model1d2d = (IFEDiscretisationModel1d2d) unitParent.getAdapter( IFEDiscretisationModel1d2d.class );
     if( model1d2d == null )
     {
       throw new IllegalArgumentException( "Unit must have a model 1d2d as parent" );
@@ -911,14 +912,14 @@ public class CalUnitOps
     boolean found = false;
     multiPointScanning: for( int i = muliPointScopeMarks.size() - 1; i >= 0; i-- )
     {
-      GM_MultiPoint multiPoint = muliPointScopeMarks.get( i );
+      final GM_MultiPoint multiPoint = muliPointScopeMarks.get( i );
       if( multiPoint.getSize() < 1 )
       {
         containers = new ArrayList<IFE1D2DComplexElement>( bcLine.getContainers() );
         return false;
       }
 
-      for( GM_Point currentPoint : multiPoint.getAllPoints() )
+      for( final GM_Point currentPoint : multiPoint.getAllPoints() )
       {
 
         final IBoundaryLine<IFE1D2DComplexElement, IFE1D2DEdge> otherLine = getLineElement( unit, currentPoint, grabDistance, IBoundaryLine.class );
@@ -961,34 +962,34 @@ public class CalUnitOps
    *            the type of line to be selected
    * @return a {@link ILineElement} representing the nearest line element in the proximity of the given position.
    */
-  public static final <T extends ILineElement> T getLineElement( ICalculationUnit<IFE1D2DElement> unit, GM_Point bcPosition, double grabDistance, Class<T> lineType )
+  public static final <T extends ILineElement> T getLineElement( final ICalculationUnit<IFE1D2DElement> unit, final GM_Point bcPosition, final double grabDistance, final Class<T> lineType )
   {
     Assert.throwIAEOnNullParam( unit, "unit" );
     Assert.throwIAEOnNullParam( bcPosition, "bcPosition" );
     Assert.throwIAEOnNullParam( lineType, "lineType" );
     Assert.throwIAEOnLessThan0( grabDistance, "grab distance must be greater or equals to 0" );
-    GM_Envelope env = GeometryUtilities.grabEnvelopeFromDistance( bcPosition, grabDistance );
+    final GM_Envelope env = GeometryUtilities.grabEnvelopeFromDistance( bcPosition, grabDistance );
 
     final List<IFE1D2DElement> targetLines = unit.getElements().query( env );
     double minDistance = Double.MAX_VALUE;
     T targetLine = null;
     for( int i = targetLines.size() - 1; i >= 0; i-- )
     {
-      IFE1D2DElement ele = targetLines.get( i );
+      final IFE1D2DElement ele = targetLines.get( i );
 
       if( lineType.isAssignableFrom( ele.getClass() ) )
       {
         try
         {
-          GM_Object line = ele.recalculateElementGeometry();
-          double currentDist = bcPosition.distance( line );
+          final GM_Object line = ele.recalculateElementGeometry();
+          final double currentDist = bcPosition.distance( line );
           if( currentDist < minDistance )
           {
             minDistance = currentDist;
             targetLine = (T) ele;
           }
         }
-        catch( GM_Exception e )
+        catch( final GM_Exception e )
         {
           e.printStackTrace();
           throw new RuntimeException( e );
@@ -1016,8 +1017,8 @@ public class CalUnitOps
     Assert.throwIAEOnNullParam( unit, "unit" );
     Assert.throwIAEOnLessThan0( grabDistance, "grab distance must be greater or equals to 0" );
 
-    List<IBoundaryCondition> assignedConditions = new ArrayList<IBoundaryCondition>();
-    for( IBoundaryCondition condition : conditions )
+    final List<IBoundaryCondition> assignedConditions = new ArrayList<IBoundaryCondition>();
+    for( final IBoundaryCondition condition : conditions )
     {
       if( isBoundaryConditionOf( unit, condition, grabDistance ) )
       {
@@ -1049,7 +1050,7 @@ public class CalUnitOps
     Assert.throwIAEOnNullParam( unit, "unit" );
     Assert.throwIAEOnLessThan0( grabDistance, "grab distance must be greater or equals to 0" );
     int count = 0;
-    for( IBoundaryCondition condition : conditions )
+    for( final IBoundaryCondition condition : conditions )
     {
       if( isBoundaryConditionOf( unit, condition, grabDistance ) )
       {
@@ -1070,9 +1071,9 @@ public class CalUnitOps
    *            the junction context to text for being part of combined unit
    * @return true if jContext is joining sub unit of the combined unit otherwise false
    */
-  public static boolean isJunctionContextOf( ICalculationUnit1D2D unit, IJunctionContext1DToCLine jContext )
+  public static boolean isJunctionContextOf( final ICalculationUnit1D2D unit, final IJunctionContext1DToCLine jContext )
   {
-    IElement1D element1D = jContext.getElement1D();
+    final IElement1D element1D = jContext.getElement1D();
     if( element1D == null )
     {
       return false;
@@ -1093,15 +1094,15 @@ public class CalUnitOps
    *             if controlModelGroup is null or calUnit is null.
    * @returns an Instance of {@link IControlModel1D2D} which is linked to the passed calculation unit
    */
-  public static final IControlModel1D2D findControlModel( IControlModelGroup controlModelGroup, ICalculationUnit calUnit )
+  public static final IControlModel1D2D findControlModel( final IControlModelGroup controlModelGroup, final ICalculationUnit calUnit )
   {
     Assert.throwIAEOnNullParam( controlModelGroup, "controlModelGroup" );
     Assert.throwIAEOnNullParam( calUnit, "calUnit" );
     final String refGmlID = calUnit.getGmlID();
-    IControlModel1D2DCollection model1D2DCollection = controlModelGroup.getModel1D2DCollection();
-    for( IControlModel1D2D cm : model1D2DCollection )
+    final IControlModel1D2DCollection model1D2DCollection = controlModelGroup.getModel1D2DCollection();
+    for( final IControlModel1D2D cm : model1D2DCollection )
     {
-      ICalculationUnit cmCalUnit = cm.getCalculationUnit();
+      final ICalculationUnit cmCalUnit = cm.getCalculationUnit();
       if( cmCalUnit != null )
       {
         if( refGmlID.equals( cmCalUnit.getGmlID() ) )
@@ -1113,9 +1114,9 @@ public class CalUnitOps
     return null;
   }
 
-  public static final void removeUnitControlModel( ICalculationUnit calUnit )
+  public static final void removeUnitControlModel( final ICalculationUnit calUnit )
   {
-    IControlModelGroup controlModelGroup = Util.getModel( IControlModelGroup.class );
+    final IControlModelGroup controlModelGroup = Util.getModel( IControlModelGroup.class );
     if( controlModelGroup == null )
     {
       return;
@@ -1126,22 +1127,22 @@ public class CalUnitOps
     {
       return;
     }
-    Feature cmFeature = cmToDel.getWrappedFeature();
-    Feature parentFeature = controlModelGroup.getWrappedFeature();// cmFeature.getParent();
-    IFeatureType parentFT = parentFeature.getFeatureType();
+    final Feature cmFeature = cmToDel.getWrappedFeature();
+    final Feature parentFeature = controlModelGroup.getWrappedFeature();// cmFeature.getParent();
+    final IFeatureType parentFT = parentFeature.getFeatureType();
 
-    IPropertyType propType = parentFT.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_CONTROL_MODEL_MEMBER );
+    final IPropertyType propType = parentFT.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_CONTROL_MODEL_MEMBER );
     if( !(propType instanceof IRelationType) )
     {
       return;
     }
     final CommandableWorkspace cmdWorkspace = new CommandableWorkspace( cmFeature.getWorkspace() );
-    DeleteFeatureCommand delControlCmd = new DeleteFeatureCommand( cmdWorkspace, parentFeature, (IRelationType) parentFT, cmFeature );
+    final DeleteFeatureCommand delControlCmd = new DeleteFeatureCommand( cmdWorkspace, parentFeature, (IRelationType) parentFT, cmFeature );
     try
     {
       cmdWorkspace.postCommand( delControlCmd );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }

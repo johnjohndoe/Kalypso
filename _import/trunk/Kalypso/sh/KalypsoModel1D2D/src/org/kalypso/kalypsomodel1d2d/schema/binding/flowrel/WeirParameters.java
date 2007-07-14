@@ -43,8 +43,9 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.flowrel;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
 import org.kalypso.observation.IObservation;
@@ -76,8 +77,8 @@ public class WeirParameters
     final IComponent compDownstream = TupleResultUtilities.findComponentById( result, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL_DOWNSTREAM );
     final IComponent compDischarge = TupleResultUtilities.findComponentById( result, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
 
-    final List<BigDecimal> upstreamValues = new ArrayList<BigDecimal>();
-    final List<BigDecimal> downstreamValues = new ArrayList<BigDecimal>();
+    final SortedSet<BigDecimal> upstreamValues = new TreeSet<BigDecimal>();
+    final SortedSet<BigDecimal> downstreamValues = new TreeSet<BigDecimal>();
 
     for( final IRecord record : result )
     {
@@ -99,16 +100,22 @@ public class WeirParameters
   private Object createWaterlevelTupel( final BigDecimal upstream, final BigDecimal downstream )
   {
     final ArrayList<BigDecimal> tuple = new ArrayList<BigDecimal>( 2 );
-    tuple.set( 0, upstream );
-    tuple.set( 1, downstream );
+    tuple.add( upstream );
+    tuple.add( downstream );
     return tuple;
   }
 
+  /**
+   * Returns all known upstream waterlevels, sorted by size.
+   */
   public BigDecimal[] getUpstreamWaterlevels( )
   {
     return m_upstreamVals;
   }
 
+  /**
+   * Returns all known downstream waterlevels, sorted by size.
+   */
   public BigDecimal[] getDownstreamWaterlevels( )
   {
     return m_downstramVals;
@@ -120,6 +127,8 @@ public class WeirParameters
     final BigDecimal discharge = m_dischargeMap.get( tupel );
     if( discharge != null )
       return discharge;
+
+    System.out.format( "Unknown discharge for: (US: %.3f DW: %.3f)%n", upstreamWaterlevel, downstreamWaterlevel );
 
     return UNKNOWN_DISCHARGE;
   }

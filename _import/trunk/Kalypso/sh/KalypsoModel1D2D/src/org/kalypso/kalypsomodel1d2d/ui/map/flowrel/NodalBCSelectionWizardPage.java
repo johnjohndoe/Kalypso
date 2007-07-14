@@ -88,29 +88,29 @@ public class NodalBCSelectionWizardPage extends WizardPage
     container.setLayout( gridLayout );
     setControl( container );
 
-    new Label( container, SWT.NONE ).setText( "Stationäre randbedinung:" );
+    new Label( container, SWT.NONE ).setText( "Stationäre Randbedingung:" );
     m_bcValue = new Text( container, SWT.BORDER );
     m_bcValue.setText( "20.0" );
     m_bcValue.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-// bcValue.addKeyListener( new KeyListener()
-// {
-//
-// public void keyPressed( KeyEvent e )
-// {
-// // Empty
-// }
-//
-// public void keyReleased( KeyEvent e )
-// {
-// cacheNewName();
-// if( updateListener != null )
-// {
-// updateListener.update();
-// }
-// }
-//
-// };
-// ) )
+    // bcValue.addKeyListener( new KeyListener()
+    // {
+    //
+    // public void keyPressed( KeyEvent e )
+    // {
+    // // Empty
+    // }
+    //
+    // public void keyReleased( KeyEvent e )
+    // {
+    // cacheNewName();
+    // if( updateListener != null )
+    // {
+    // updateListener.update();
+    // }
+    // }
+    //
+    // };
+    // ) )
     final GridData radioGroupGridData = new GridData( SWT.FILL, SWT.FILL, true, true );
     radioGroupGridData.horizontalSpan = 2;
     radioGroupGridData.verticalIndent = 15;
@@ -143,9 +143,9 @@ public class NodalBCSelectionWizardPage extends WizardPage
         }
       } );
     }
-// m_radioBtnGroup[0].setSelection( true );
-// m_descriptorPage.setDescriptor( m_descriptors[0] );
-// m_selectionPage.setDescriptor( m_descriptors[0] );
+    // m_radioBtnGroup[0].setSelection( true );
+    // m_descriptorPage.setDescriptor( m_descriptors[0] );
+    // m_selectionPage.setDescriptor( m_descriptors[0] );
   }
 
   /**
@@ -154,12 +154,12 @@ public class NodalBCSelectionWizardPage extends WizardPage
   @Override
   public boolean isPageComplete( )
   {
-    for( int i = 0; i < m_radioBtnGroup.length; i++ )
-      if( m_radioBtnGroup[i].getSelection() == true )
+    for( final Button element : m_radioBtnGroup )
+      if( element.getSelection() == true )
         return true;
     return false;
   }
-  
+
   /**
    * @see org.eclipse.jface.wizard.WizardPage#canFlipToNextPage()
    */
@@ -168,7 +168,7 @@ public class NodalBCSelectionWizardPage extends WizardPage
   {
     return isPageComplete();
   }
-  
+
   protected void setDescriptor( final IBoundaryConditionDescriptor selectedDescriptor )
   {
     m_descriptorPage.setDescriptor( selectedDescriptor );

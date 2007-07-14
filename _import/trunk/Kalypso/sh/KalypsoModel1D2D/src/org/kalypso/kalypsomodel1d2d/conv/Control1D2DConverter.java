@@ -126,7 +126,7 @@ public class Control1D2DConverter
       formatter.format( "RESTART%n" );
 
     /* We always write a weir file, even if it is empty. */
-    formatter.format( "INCSTR  %30s%n", RMA10SimModelConstants.WEIR_File );
+    formatter.format( "INCSTR  %s%n", RMA10SimModelConstants.WEIR_File );
 
     formatter.format( "ENDFIL%n" );
 
@@ -147,8 +147,8 @@ public class Control1D2DConverter
     // C2
     // TODO: P_BOTTOM still not implemented, ask Nico
     formatter.format( "C2%14.2f%8.3f%8.1f%8.1f%8.1f%8d%8.3f%n", controlModel.getOMEGA(), controlModel.getELEV(), 1.0, 1.0, 1.0, 1, controlModel.get_P_BOTTOM() );
-// formatter.format( "C2%14.2f%8.3f%8.1f%8.1f%8.1f%8d%n", controlModel.getOMEGA(), controlModel.getELEV(), 1.0, 1.0,
-// 1.0, 1 );
+    // formatter.format( "C2%14.2f%8.3f%8.1f%8.1f%8.1f%8d%n", controlModel.getOMEGA(), controlModel.getELEV(), 1.0, 1.0,
+    // 1.0, 1 );
 
     // C3
     formatter.format( "C3%14.3f%8.3f%8.3f%8.1f%8.3f%8.3f%8.3f%n", 1.0, 1.0, controlModel.getUNOM(), controlModel.getUDIR(), controlModel.getHMIN(), controlModel.getDSET(), controlModel.getDSETD() );
@@ -184,7 +184,7 @@ public class Control1D2DConverter
       final Feature roughnessCL = (Feature) elt;
       final int roughnessAsciiID = getRoughnessID( roughnessCL.getId() );
 
-      Double[] eddy = calculation.getViskosity( roughnessCL );
+      final Double[] eddy = calculation.getViskosity( roughnessCL );
       // final double val = 2900.0;
 
       final Double ks = calculation.getKs( roughnessCL );
@@ -205,7 +205,7 @@ public class Control1D2DConverter
       writeEDBlock( formatter, weirID, 0.0, 0.0, 0.0, 0.0 );
   }
 
-  private void writeEDBlock( Formatter formatter, int roughnessAsciiID, Double[] eddy, Double ks, Double axayCorrected, Double dpCorrected )
+  private void writeEDBlock( final Formatter formatter, final int roughnessAsciiID, final Double[] eddy, final Double ks, final Double axayCorrected, final Double dpCorrected )
   {
     if( eddy.length < 4 )
       throw new IllegalArgumentException( "Irregular eddy viscosity parameter." );
@@ -289,13 +289,13 @@ public class Control1D2DConverter
     /* Steady state, just one block for the Starting Date. */
     final int niti = controlModel.getNITI();
 
-      final String msg = "Steady State Input Data";
+    final String msg = "Steady State Input Data";
 
-      final Double uRValSteady = controlModel.get_steadyBC();
-      if( uRValSteady == null || uRValSteady.isNaN() )
-        throw new SimulationException( "Stationär Relaxationsfaktor leer, keine Rechnung möglich.", null );
-// final float uRValSteady = ((BigDecimal) firstRecord.getValue( compUnderRelax )).floatValue();
-      writeTimeStep( formatter, msg, null, null, uRValSteady.floatValue(), niti, timeStepInfos );
+    final Double uRValSteady = controlModel.get_steadyBC();
+    if( uRValSteady == null || uRValSteady.isNaN() )
+      throw new SimulationException( "Stationär Relaxationsfaktor leer, keine Rechnung möglich.", null );
+    // final float uRValSteady = ((BigDecimal) firstRecord.getValue( compUnderRelax )).floatValue();
+    writeTimeStep( formatter, msg, null, null, uRValSteady.floatValue(), niti, timeStepInfos );
     final int nitn = controlModel.getNITN();
 
     if( nitn > 0 )
