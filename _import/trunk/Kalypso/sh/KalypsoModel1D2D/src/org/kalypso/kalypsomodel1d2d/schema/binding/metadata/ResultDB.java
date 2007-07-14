@@ -106,6 +106,7 @@ public class ResultDB
       try
       {
         createMetaDataFile();
+        logger.log( Level.INFO, "General result database not found; initial database is created." );
       }
       catch( Exception e1 )
       {
@@ -114,15 +115,18 @@ public class ResultDB
     }
     try
     {
+      if( m_workspace == null )
+        m_workspace = GmlSerializer.createGMLWorkspace( m_metaDataFile.toURL(), null );
       rootFeature = m_workspace.getRootFeature();
     }
     catch( Exception e )
     {
       // the file is probably corrupted, so we will re-create it first...
-      logger.log( Level.WARNING, "General result database is corrupted and will be re-created.");
+      logger.log( Level.WARNING, "General result database is corrupted and will be re-created." );
       try
       {
-        // TODO: create a copy of the existing database (or rename it) and store it in the same folder with another extension 
+        // TODO: create a copy of the existing database (or rename it) and store it in the same folder with another
+        // extension
         m_metaDataFile.delete();
         createMetaDataFile();
       }

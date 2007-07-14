@@ -174,20 +174,10 @@ public class SimulationDescriptionCollection extends AbstractFeatureBinder imple
 
   public IModelDescriptor getExistingEntry( final IFeatureWrapper2 featureWrapper2 )
   {
-    final GMLWorkspace workspace = featureWrapper2.getWrappedFeature().getWorkspace();
-    final String path = workspace.getContext().toString();
     final String featureGmlID = featureWrapper2.getGmlID();
     for( final IModelDescriptor desc : m_modelDescriptors )
-    {
-      // String descPath = desc.getWorkspacePath();
-      // path cannot be used since calculation uses tm file
-      if( /* path.equals( descPath ) && */
-      featureGmlID.equals( desc.getModelID() ) )
-      {
+      if( desc.getModelID().endsWith( featureGmlID ) )
         return desc;
-      }
-    }
-
     return null;
   }
 
