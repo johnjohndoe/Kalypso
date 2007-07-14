@@ -52,37 +52,36 @@ import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
- * Theme that shows elements with rougness 
+ * Theme that shows elements with rougness
  * 
  * @author Patrice Congo
- *
+ * 
  */
 public class Model1D2DElementRoughnessTheme extends AbstractKalypsoTheme
 {
-  
+
   private FERoughnessDisplayElement feRoughnessDisplayElement;
-  
+
   private IStaticModel1D2D staticModel;
-  
+
   public Model1D2DElementRoughnessTheme( String name, IMapModell mapModel )
   {
-    super( name, "Elemente+Rauhheiten", mapModel);
+    super( name, "Elemente+Rauhheiten", mapModel );
   }
-  
+
   public void setStaticModel( IStaticModel1D2D staticModel )
   {
     this.staticModel = staticModel;
     if( staticModel != null )
     {
-      feRoughnessDisplayElement = 
-            new FERoughnessDisplayElement(staticModel);
+      feRoughnessDisplayElement = new FERoughnessDisplayElement( staticModel );
     }
     else
     {
       feRoughnessDisplayElement = null;
     }
   }
-  
+
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#getBoundingBox()
    */
@@ -90,7 +89,7 @@ public class Model1D2DElementRoughnessTheme extends AbstractKalypsoTheme
   {
     if( staticModel == null )
     {
-      return null;      
+      return null;
     }
     IFEDiscretisationModel1d2d discrModel = staticModel.getDiscretisationModel();
     if( discrModel == null )
@@ -99,19 +98,17 @@ public class Model1D2DElementRoughnessTheme extends AbstractKalypsoTheme
     }
     IFeatureWrapperCollection<IFE1D2DElement> elements = discrModel.getElements();
     GM_Envelope bbox = elements.getWrappedList().getBoundingBox();
-    
+
     return bbox;
-    
+
   }
 
   /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics, org.kalypsodeegree.graphics.transformation.GeoTransform, double, org.kalypsodeegree.model.geometry.GM_Envelope, boolean)
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics,
+   *      org.kalypsodeegree.graphics.transformation.GeoTransform, double,
+   *      org.kalypsodeegree.model.geometry.GM_Envelope, boolean)
    */
-  public void paint(  Graphics g, 
-                      GeoTransform p, 
-                      double scale, 
-                      GM_Envelope bbox, 
-                      boolean selected )
+  public void paint( Graphics g, GeoTransform p, double scale, GM_Envelope bbox, boolean selected )
   {
     if( selected )
     {
@@ -121,9 +118,9 @@ public class Model1D2DElementRoughnessTheme extends AbstractKalypsoTheme
     {
       feRoughnessDisplayElement.paint( g, p );
     }
-   
+
   }
-  
+
   /**
    * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#isLoaded()
    */
@@ -131,8 +128,8 @@ public class Model1D2DElementRoughnessTheme extends AbstractKalypsoTheme
   {
     return super.isLoaded();
   }
-  
-   /**
+
+  /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#getType()
    */
   public String getType( )
@@ -140,5 +137,4 @@ public class Model1D2DElementRoughnessTheme extends AbstractKalypsoTheme
     return "GML_MERGE";
   }
 
-  
 }

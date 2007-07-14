@@ -73,40 +73,37 @@ import de.renew.workflow.connector.cases.ICaseDataProvider;
  * 
  * @author Patrice Congo
  */
-@SuppressWarnings({"unchecked","hiding"})
+@SuppressWarnings( { "unchecked", "hiding" })
 public class ResultDB
 {
-  
+
   /**
    * File name of the result meta data
    */
-  public static final String META_DATA_FILE_NAME ="result_meta_data.gml";
-  
+  public static final String META_DATA_FILE_NAME = "result_meta_data.gml";
+
   private GMLWorkspace workspace;
-  
+
   private ISimulationDescriptionCollection simDB;
-  
+
   public ResultDB( ISimulationDescriptionCollection simDB )
   {
     Assert.throwIAEOnNullParam( simDB, "simDB" );
-    this.simDB = simDB; 
+    this.simDB = simDB;
   }
-  
-  public ResultDB(IPath folderPath)
+
+  public ResultDB( IPath folderPath )
   {
-   IPath metaDataFile = 
-       folderPath.append( META_DATA_FILE_NAME );
-   boolean exists =
-     ResourcesPlugin.getWorkspace().getRoot().exists( metaDataFile );
-   System.out.println(metaDataFile.toFile()+"\n"+exists);
-   
-   createMetaDataFile( metaDataFile );
-   Feature rootFeature = workspace.getRootFeature();
-  simDB =
-     new SimulationDescriptionCollection(rootFeature);
-   System.out.println("\n\tsimdB created="+ simDB);
+    IPath metaDataFile = folderPath.append( META_DATA_FILE_NAME );
+    boolean exists = ResourcesPlugin.getWorkspace().getRoot().exists( metaDataFile );
+    System.out.println( metaDataFile.toFile() + "\n" + exists );
+
+    createMetaDataFile( metaDataFile );
+    Feature rootFeature = workspace.getRootFeature();
+    simDB = new SimulationDescriptionCollection( rootFeature );
+    System.out.println( "\n\tsimdB created=" + simDB );
   }
-  
+
   private void createMetaDataFile( IPath metaDataPath )
   {
     try
@@ -119,89 +116,81 @@ public class ResultDB
       {
         if( !file.createNewFile() )
         {
-          throw new RuntimeException("Could not create file:"+file);
+          throw new RuntimeException( "Could not create file:" + file );
         }
-//        URL resource = ResultDB.class.getResource( "result_db.xml" );
+// URL resource = ResultDB.class.getResource( "result_db.xml" );
 //        
-//        IOUtils.copy( 
-//            resource.openStream(), 
-//            new FileOutputStream(file) );
-        
+// IOUtils.copy(
+// resource.openStream(),
+// new FileOutputStream(file) );
 
-      workspace =
-      FeatureFactory.createGMLWorkspace(
-          Kalypso1D2DSchemaConstants.SIMMETA_F_SIMDESCRIPTOR_COLLECTION, 
-          file.toURL(), 
-          GmlSerializer.DEFAULT_FACTORY );
-      OutputStreamWriter outStreanWriter = 
-        new OutputStreamWriter(new FileOutputStream(file));
-      GmlSerializer.serializeWorkspace( outStreanWriter, workspace );
-      outStreanWriter.close();
+        workspace = FeatureFactory.createGMLWorkspace( Kalypso1D2DSchemaConstants.SIMMETA_F_SIMDESCRIPTOR_COLLECTION, file.toURL(), GmlSerializer.DEFAULT_FACTORY );
+        OutputStreamWriter outStreanWriter = new OutputStreamWriter( new FileOutputStream( file ) );
+        GmlSerializer.serializeWorkspace( outStreanWriter, workspace );
+        outStreanWriter.close();
         return;
       }
       else
       {
-        workspace =
-          GmlSerializer.createGMLWorkspace( 
-            file.toURL(), 
-            null );
+        workspace = GmlSerializer.createGMLWorkspace( file.toURL(), null );
       }
     }
-    catch (Exception e) {
+    catch( Exception e )
+    {
       e.printStackTrace();
-      throw new RuntimeException("Cannot create meta gml");
+      throw new RuntimeException( "Cannot create meta gml" );
     }
   }
-//  private void createMetaDataFile_old( IPath metaDataPath )
-//  {
-//    try
-//    {
-//      File file = metaDataPath.toFile();
-//      IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-//      root.refreshLocal( IResource.DEPTH_INFINITE, null );
-//      IFile metaDataFile = root.getFile( metaDataPath );
-//      if( !file.exists() )
-//      {
-//        if( !file.createNewFile() )
-//        {
-//          throw new RuntimeException("Could not create file:"+file);
-//        }
-//        URL resource = ResultDB.class.getResource( "result_db.xml" );
+
+// private void createMetaDataFile_old( IPath metaDataPath )
+// {
+// try
+// {
+// File file = metaDataPath.toFile();
+// IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+// root.refreshLocal( IResource.DEPTH_INFINITE, null );
+// IFile metaDataFile = root.getFile( metaDataPath );
+// if( !file.exists() )
+// {
+// if( !file.createNewFile() )
+// {
+// throw new RuntimeException("Could not create file:"+file);
+// }
+// URL resource = ResultDB.class.getResource( "result_db.xml" );
 //        
-//        IOUtils.copy( 
-//            resource.openStream(), 
-//            new FileOutputStream(file) );
-//      }
-//        workspace =
-//          GmlSerializer.createGMLWorkspace( 
-//            file.toURL(), 
-//            null );
+// IOUtils.copy(
+// resource.openStream(),
+// new FileOutputStream(file) );
+// }
+// workspace =
+// GmlSerializer.createGMLWorkspace(
+// file.toURL(),
+// null );
 //
-//    }
-//    catch (Exception e) {
-//      e.printStackTrace();
-//      throw new RuntimeException("Cannot create meta gml");
-//    }
-//  }
-  
-  public static final IPath getFolder()
+// }
+// catch (Exception e) {
+// e.printStackTrace();
+// throw new RuntimeException("Cannot create meta gml");
+// }
+// }
+
+  public static final IPath getFolder( )
   {
-    KalypsoModel1D2DPlugin modelPlugin = 
-            KalypsoModel1D2DPlugin.getDefault();
+    KalypsoModel1D2DPlugin modelPlugin = KalypsoModel1D2DPlugin.getDefault();
     IPath stateLocation = modelPlugin.getStateLocation();
     return stateLocation;
   }
-  
-  public IFeatureWrapperCollection<ISimulationDescriptor> getSimulationDescriptors()
+
+  public IFeatureWrapperCollection<ISimulationDescriptor> getSimulationDescriptors( )
   {
     return simDB.getSimulationDescriptors();
   }
-  
-  public IFeatureWrapperCollection<IModelDescriptor> getModelDescriptors()
+
+  public IFeatureWrapperCollection<IModelDescriptor> getModelDescriptors( )
   {
-   return simDB.getModelDescriptors(); 
+    return simDB.getModelDescriptors();
   }
-  
+
   public ISimulationDescriptionCollection getSimDB( )
   {
     return simDB;
@@ -217,49 +206,50 @@ public class ResultDB
     IModelDescriptor existingEntry = simDB.getExistingEntry( modelFeatureWrapper );
     if( existingEntry == null )
     {
-      existingEntry = simDB.addModelDescriptor( modelFeatureWrapper ); 
+      existingEntry = simDB.addModelDescriptor( modelFeatureWrapper );
     }
-    return existingEntry; 
+    return existingEntry;
   }
-  
-  public void save()
+
+  public void save( )
   {
     try
     {
       URL context = workspace.getContext();
-      File file = new File(context.getFile());
-      
-      OutputStreamWriter outStreamWriter=
-        new OutputStreamWriter(new FileOutputStream(file));
+      File file = new File( context.getFile() );
+
+      OutputStreamWriter outStreamWriter = new OutputStreamWriter( new FileOutputStream( file ) );
       GmlSerializer.serializeWorkspace( outStreamWriter, workspace );
       outStreamWriter.close();
     }
-    catch (Exception e) {
+    catch( Exception e )
+    {
       e.printStackTrace();
-      throw new RuntimeException(e);
+      throw new RuntimeException( e );
     }
 
   }
-  
+
   /**
    * To get the simulation descriptor for the given rma10 calculation
-   * @param rma10Calculation the rma calculation which simulation descriptor 
-   *            is to be retrieved
-   * @return an {@link ISimulationDescriptor} for the given rma10s calculation or 
-   *            null is this {@link ResultDB} does not hold such a descriptor
+   * 
+   * @param rma10Calculation
+   *            the rma calculation which simulation descriptor is to be retrieved
+   * @return an {@link ISimulationDescriptor} for the given rma10s calculation or null is this {@link ResultDB} does not
+   *         hold such a descriptor
    * 
    */
-  public ISimulationDescriptor getSimulationDescriptorFor(RMA10Calculation rma10Calculation )
+  public ISimulationDescriptor getSimulationDescriptorFor( RMA10Calculation rma10Calculation )
   {
-//    IControlModel1D2D controlModel = rma10Calculation.getControlModel();
+// IControlModel1D2D controlModel = rma10Calculation.getControlModel();
     ICalculationUnit calcultionUnit = rma10Calculation.getCalculationUnit();
     IFeatureWrapperCollection<ISimulationDescriptor> simDescs = getSimulationDescriptors();
-    for(ISimulationDescriptor sd:simDescs)
+    for( ISimulationDescriptor sd : simDescs )
     {
       IModelDescriptor calUnitDesc = sd.getCalculationUnit();
       if( calUnitDesc != null )
       {
-        if( calUnitDesc.isDescribing( calcultionUnit ))
+        if( calUnitDesc.isDescribing( calcultionUnit ) )
         {
           return sd;
         }
@@ -267,7 +257,7 @@ public class ResultDB
     }
     return null;
   }
-  
+
   public ISimulationDescriptor addRMACalculation( RMA10Calculation rma10Calculation )
   {
     ISimulationDescriptor simDesc = getSimulationDescriptorFor( rma10Calculation );
@@ -276,20 +266,20 @@ public class ResultDB
       IFeatureWrapperCollection<ISimulationDescriptor> simDescs = getSimulationDescriptors();
       simDesc = simDescs.addNew( Kalypso1D2DSchemaConstants.SIMMETA_F_SIMDESCRIPTOR );
     }
-    
+
     IControlModel1D2D controlModel = rma10Calculation.getControlModel();
     ICalculationUnit calcultionUnit = rma10Calculation.getCalculationUnit();
-//    ITimeStepinfo[] timeStepInfos = rma10Calculation.getTimeStepInfos();
-    
+// ITimeStepinfo[] timeStepInfos = rma10Calculation.getTimeStepInfos();
+
     IModelDescriptor controlModelDesc = addModelDescriptor( controlModel );
     IModelDescriptor calUnitDescr = addModelDescriptor( calcultionUnit );
-    simDesc.setAutoconverged( false );//TODO
+    simDesc.setAutoconverged( false );// TODO
     simDesc.setRestarted( controlModel.getRestart() );
     simDesc.setCalculationUnit( calUnitDescr );
     simDesc.setControlModel( controlModelDesc );
-    //start time
+    // start time
     XMLGregorianCalendar startCalendar = controlModel.getStartCalendar();
-    if( startCalendar !=  null )
+    if( startCalendar != null )
     {
       simDesc.setStartTime( startCalendar.toGregorianCalendar() );
     }
@@ -297,30 +287,30 @@ public class ResultDB
     {
       simDesc.setStartTime( null );
     }
-    simDesc.setEndTime( null );//TODO
-    simDesc.setSimulationType( null );//TODO
-    
+    simDesc.setEndTime( null );// TODO
+    simDesc.setSimulationType( null );// TODO
+
     return simDesc;
   }
-  
+
   /**
    * To get the current scenario/project result db.
    * 
    * @return the current result db
-   * @throws CoreException rethrow from {@link IResultDbProvider#getResultDB()}
+   * @throws CoreException
+   *             rethrow from {@link IResultDbProvider#getResultDB()}
    */
-  public static final ResultDB getCurrentResultDB() throws CoreException
+  public static final ResultDB getCurrentResultDB( ) throws CoreException
   {
-    ICaseDataProvider<IFeatureWrapper2> scenarioDataProvider = 
-                                   Util.getScenarioDataProvider();
-    if(scenarioDataProvider instanceof IResultDbProvider )
+    ICaseDataProvider<IFeatureWrapper2> scenarioDataProvider = Util.getScenarioDataProvider();
+    if( scenarioDataProvider instanceof IResultDbProvider )
     {
-      return ((IResultDbProvider)scenarioDataProvider).getResultDB();
+      return ((IResultDbProvider) scenarioDataProvider).getResultDB();
     }
     else
     {
       return null;
     }
   }
-  
+
 }

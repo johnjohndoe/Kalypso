@@ -15,7 +15,7 @@ public class KalypsoModel1D2DPlugin extends AbstractUIPlugin
 
   // The shared instance.
   private static KalypsoModel1D2DPlugin plugin;
-  
+
   private ResultDB resultDB;
 
   public KalypsoModel1D2DPlugin( )
@@ -32,14 +32,15 @@ public class KalypsoModel1D2DPlugin extends AbstractUIPlugin
     super.start( context );
     try
     {
-      resultDB = new ResultDB(ResultDB.getFolder());
-    }catch (Exception e) {
+      resultDB = new ResultDB( ResultDB.getFolder() );
+    }
+    catch( Exception e )
+    {
       e.printStackTrace();
       resultDB = null;
     }
   }
 
-    
   /**
    * This method is called when the plug-in is stopped
    */
@@ -50,11 +51,11 @@ public class KalypsoModel1D2DPlugin extends AbstractUIPlugin
     {
       resultDB.save();
     }
-    catch (Exception e) 
+    catch( Exception e )
     {
       e.printStackTrace();
     }
-    
+
     super.stop( context );
     plugin = null;
   }
@@ -66,8 +67,8 @@ public class KalypsoModel1D2DPlugin extends AbstractUIPlugin
   {
     return plugin;
   }
-  
-  public ResultDB getResultDB()
+
+  public ResultDB getResultDB( )
   {
     return resultDB;
   }

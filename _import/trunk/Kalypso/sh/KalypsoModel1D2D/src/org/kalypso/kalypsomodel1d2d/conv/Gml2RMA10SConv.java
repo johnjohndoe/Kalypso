@@ -105,7 +105,7 @@ import com.vividsolutions.jts.geom.Point;
  * 
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  */
-@SuppressWarnings({"unchecked"})
+@SuppressWarnings( { "unchecked" })
 public class Gml2RMA10SConv implements INativeIDProvider
 {
   private final LinkedHashMap<String, Integer> m_roughnessIDProvider = new LinkedHashMap<String, Integer>( 100 );
@@ -140,9 +140,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
   private RMA10Calculation m_calculation;
 
   private boolean m_restart;
-  
-  
-  
+
   public Gml2RMA10SConv( final File rma10sOutputFile, final RMA10Calculation calculation )
   {
     m_outputFile = rma10sOutputFile;
@@ -165,7 +163,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
     if( m_restart )
     {
       m_restartEater = new RestartEater();
-      final IFolder scenarioFolder = Util.getScenarioFolder( );
+      final IFolder scenarioFolder = Util.getScenarioFolder();
       for( final String path : m_calculation.getControlModel().getRestartPaths() )
       {
         IFile ifile = scenarioFolder.getFile( path );
@@ -223,7 +221,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
       return false;
     }
   }
-  
+
   public int getID( final IFeatureWrapper2 i1d2dObject )
   {
     if( i1d2dObject == null )
@@ -311,31 +309,31 @@ public class Gml2RMA10SConv implements INativeIDProvider
     /* Made a central formatter with US locale, so no locale parameter for each format is needed any more . */
     final Formatter formatter = new Formatter( stream, Locale.US );
 
-    //first method not supporting filtering not working properly
-//    if( m_terrainModel != null )
-//    {
-//      final IRoughnessPolygonCollection roughnessPolygonCollection = m_terrainModel.getRoughnessPolygonCollection();
-//      writeElements( formatter, m_roughnessIDProvider, elements, roughnessPolygonCollection );
-//    }
-//    else
-//    {
-//      // TODO: is this reallly possible? Better: throw an exception?
-//      writeElements( formatter, elements );
-//    }
-//    writeNodes( formatter, nodes );
-//    writeEdges( formatter, edges );
-//    JunctionContextConverter.write( m_discretisationModel1d2d, m_calculationUnit, this, formatter );
-    
-    //second methods with filtering of edges and nodes
+    // first method not supporting filtering not working properly
+// if( m_terrainModel != null )
+// {
+// final IRoughnessPolygonCollection roughnessPolygonCollection = m_terrainModel.getRoughnessPolygonCollection();
+// writeElements( formatter, m_roughnessIDProvider, elements, roughnessPolygonCollection );
+// }
+// else
+// {
+// // TODO: is this reallly possible? Better: throw an exception?
+// writeElements( formatter, elements );
+// }
+// writeNodes( formatter, nodes );
+// writeEdges( formatter, edges );
+// JunctionContextConverter.write( m_discretisationModel1d2d, m_calculationUnit, this, formatter );
+
+    // second methods with filtering of edges and nodes
     final IRoughnessPolygonCollection roughnessPolygonCollection = m_terrainModel.getRoughnessPolygonCollection();
     writeElementsNodesAndEdges( formatter, m_roughnessIDProvider, elements, roughnessPolygonCollection );
     JunctionContextConverter.write( m_discretisationModel1d2d, m_calculationUnit, this, formatter );
-    
+
   }
 
   private void writeEdgeSet( final Formatter formatter, final Collection<IFE1D2DEdge> edges ) throws GM_Exception
   {
-    
+
     int cnt = 1;
     for( final IFE1D2DEdge edge : edges )
     {
@@ -343,7 +341,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
       {
         continue;
       }
-      
+
       final int node0ID = getID( edge.getNode( 0 ) );
       final int node1ID = getID( edge.getNode( 1 ) );
 
@@ -359,23 +357,23 @@ public class Gml2RMA10SConv implements INativeIDProvider
         middleNodeID = getID( getNodesIDProvider(), gmlID );
 
         /* Calculate middle of arc. */
-        
-        
         /**
          * JTSUtilities.pointOnLinePercent( edgeLine, 50 ) doesn't give the proper middle node of the edge!
+         * 
+         * 
+         * final GM_Curve curve = edge.getCurve(); final LineString edgeLine = (LineString) JTSAdapter.export( curve );
+         * final Point point = JTSUtilities.pointOnLinePercent( edgeLine, 50 ); final GM_Point middleNodePoint =
+         * (GM_Point) JTSAdapter.wrap( point );
+         * 
+         * final GM_Point edgeMN = edge.getMiddleNodePoint();
+         * 
+         * System.out.println(middleNodePoint.getX()+";"+edgeMN.getX()+";"+middleNodePoint.getY()+";"+edgeMN.getY()+";"+(middleNodePoint.getX()-edgeMN.getX())+";"+(middleNodePoint.getY()-edgeMN.getY()));
+         * 
          */
-//        final GM_Curve curve = edge.getCurve();
-//        final LineString edgeLine = (LineString) JTSAdapter.export( curve );
-//        final Point point = JTSUtilities.pointOnLinePercent( edgeLine, 50 );
-//        final GM_Point middleNodePoint = (GM_Point) JTSAdapter.wrap( point );
-//
-//        final GM_Point edgeMN = edge.getMiddleNodePoint();
-//        System.out.println(middleNodePoint.getX()+";"+edgeMN.getX()+";"+middleNodePoint.getY()+";"+edgeMN.getY()+";"+(middleNodePoint.getX()-edgeMN.getX())+";"+(middleNodePoint.getY()-edgeMN.getY()));
-        
-        
+
         /* Write it: Station is not needed, because the element length is taken from real nodes. */
         formatNode( formatter, middleNodeID, edge.getMiddleNodePoint(), null );
-        
+
       }
       else
       {
@@ -412,7 +410,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
       }
     }
   }
-  
+
   private void writeEdges( final Formatter formatter, final IFeatureWrapperCollection<IFE1D2DEdge> edges ) throws GM_Exception
   {
     final List<IFE1D2DEdge> edgeInBBox = edges.query( m_calcUnitBBox );
@@ -423,11 +421,11 @@ public class Gml2RMA10SConv implements INativeIDProvider
       {
         continue;
       }
-      
-//      if( !CalUnitOps.isEdgeOf( m_calculationUnit, edge ) )
-//      {
-//        continue;
-//      }
+
+// if( !CalUnitOps.isEdgeOf( m_calculationUnit, edge ) )
+// {
+// continue;
+// }
 
       final int node0ID = getID( edge.getNode( 0 ) );
       final int node1ID = getID( edge.getNode( 1 ) );
@@ -493,10 +491,10 @@ public class Gml2RMA10SConv implements INativeIDProvider
     List<IFE1D2DNode> nodesInBBox = nodes.query( m_calcUnitBBox );
     for( final IFE1D2DNode<IFE1D2DEdge> node : nodesInBBox/* nodes */)
     {
-//      if( !CalUnitOps.isNodeOf( m_calculationUnit, node ) )
-//      {
-//        continue;
-//      }
+// if( !CalUnitOps.isNodeOf( m_calculationUnit, node ) )
+// {
+// continue;
+// }
       if( containsID( node ) )
       {
         continue;
@@ -663,18 +661,13 @@ public class Gml2RMA10SConv implements INativeIDProvider
   }
 
   /**
-   * write elements nodes and edges in a way which avoids the
-   * filtering of edges and nodes
+   * write elements nodes and edges in a way which avoids the filtering of edges and nodes
    * 
    */
-  private void writeElementsNodesAndEdges( 
-                    final Formatter formatter, 
-                    final LinkedHashMap<String, Integer> roughnessIDProvider, 
-                    final IFeatureWrapperCollection<IFE1D2DElement> elements, 
-                    final IRoughnessPolygonCollection roughnessPolygonCollection ) throws GM_Exception, SimulationException
+  private void writeElementsNodesAndEdges( final Formatter formatter, final LinkedHashMap<String, Integer> roughnessIDProvider, final IFeatureWrapperCollection<IFE1D2DElement> elements, final IRoughnessPolygonCollection roughnessPolygonCollection ) throws GM_Exception, SimulationException
   {
     final List<IFE1D2DElement> elementsInBBox = elements.query( m_calcUnitBBox );
-    final HashSet<IFE1D2DEdge> edgeSet = new HashSet<IFE1D2DEdge>(elementsInBBox.size()*2);
+    final HashSet<IFE1D2DEdge> edgeSet = new HashSet<IFE1D2DEdge>( elementsInBBox.size() * 2 );
 
     for( final IFE1D2DElement element : elementsInBBox/* elements */)
     {
@@ -718,47 +711,45 @@ public class Gml2RMA10SConv implements INativeIDProvider
         formatter.format( "FE%10d%10d%n", id, roughnessID );
       }
     }
-    
-    //write edge set nodes
-    for(IFE1D2DEdge edge : edgeSet )
+
+    // write edge set nodes
+    for( IFE1D2DEdge edge : edgeSet )
     {
       writeNodes( formatter, edge.getNodes() );
     }
-    
-    //write edges
+
+    // write edges
     writeEdgeSet( formatter, edgeSet );
   }
-  
+
   /**
    * Collects the element edges and put them into the provides set
    * 
    */
-  private static final void contributeToSet(
-      IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge> ele,
-      HashSet<IFE1D2DEdge> edgeSet )
+  private static final void contributeToSet( IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge> ele, HashSet<IFE1D2DEdge> edgeSet )
   {
     if( ele instanceof IElement1D )
     {
-      IFE1D2DEdge edge = ((IElement1D)ele).getEdge();
+      IFE1D2DEdge edge = ((IElement1D) ele).getEdge();
       if( edge instanceof IEdgeInv )
       {
-        edge = ((IEdgeInv)edge).getInverted();
+        edge = ((IEdgeInv) edge).getInverted();
       }
-      edgeSet.add( edge );            
+      edgeSet.add( edge );
     }
     else if( ele instanceof IPolyElement )
     {
-      for ( IFE1D2DEdge edge :((IPolyElement<IFE1D2DComplexElement, IFE1D2DEdge>)ele).getEdges() )
+      for( IFE1D2DEdge edge : ((IPolyElement<IFE1D2DComplexElement, IFE1D2DEdge>) ele).getEdges() )
       {
         if( edge instanceof IEdgeInv )
         {
-          edge = ((IEdgeInv)edge).getInverted();
+          edge = ((IEdgeInv) edge).getInverted();
         }
         edgeSet.add( edge );
       }
     }
   }
-  
+
   private void writeElements( final Formatter formatter, final IFeatureWrapperCollection<IFE1D2DElement> elements )
   {
     for( final IFE1D2DElement element : elements )

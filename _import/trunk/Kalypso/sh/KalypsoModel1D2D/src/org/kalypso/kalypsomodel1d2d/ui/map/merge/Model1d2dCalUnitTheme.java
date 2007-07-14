@@ -43,7 +43,6 @@ package org.kalypso.kalypsomodel1d2d.ui.map.merge;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.ImageObserver;
-import java.util.List;
 
 import javax.swing.ImageIcon;
 
@@ -52,7 +51,6 @@ import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.ogc.gml.AbstractKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -62,50 +60,41 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
- * Theme that shows a calculation unit 
+ * Theme that shows a calculation unit
  * 
  * @author Patrice Congo
- *
+ * 
  */
-@SuppressWarnings({"unchecked", "hiding"})
+@SuppressWarnings( { "unchecked", "hiding" })
 public class Model1d2dCalUnitTheme extends AbstractKalypsoTheme
 {
- 
-  
+
   private CalUnitDisplayElement calUnitDisplayElement;
-  
+
   private ICalculationUnit calUnit;
-  
+
   private IFlowRelationshipModel modelBoundaryConditions;
 
-  private final ImageIcon imgIcon = 
-    new ImageIcon(
-      PluginUtilities.findResource( 
-          KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), 
-          "icons/elcl16/apply.png" ) );
-  
+  private final ImageIcon imgIcon = new ImageIcon( PluginUtilities.findResource( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), "icons/elcl16/apply.png" ) );
+
   public Model1d2dCalUnitTheme( String name, IMapModell mapModel )
   {
-    super( 
-        name, 
-        "Aktuelle Berechnungseinheit", 
-        mapModel);
+    super( name, "Aktuelle Berechnungseinheit", mapModel );
   }
-  
+
   public void setCalulationUnit( ICalculationUnit calUnit )
   {
     this.calUnit = calUnit;
     if( calUnit != null )
     {
-      calUnitDisplayElement = 
-            new CalUnitDisplayElement(calUnit);
+      calUnitDisplayElement = new CalUnitDisplayElement( calUnit );
     }
     else
     {
       calUnitDisplayElement = null;
     }
   }
-  
+
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#getBoundingBox()
    */
@@ -113,22 +102,20 @@ public class Model1d2dCalUnitTheme extends AbstractKalypsoTheme
   {
     if( calUnit == null )
     {
-      return null;      
+      return null;
     }
     GM_Envelope bbox = CalUnitOps.getBoundingBox( calUnit );
-    
+
     return bbox;
-    
+
   }
 
   /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics, org.kalypsodeegree.graphics.transformation.GeoTransform, double, org.kalypsodeegree.model.geometry.GM_Envelope, boolean)
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics,
+   *      org.kalypsodeegree.graphics.transformation.GeoTransform, double,
+   *      org.kalypsodeegree.model.geometry.GM_Envelope, boolean)
    */
-  public void paint(  Graphics g, 
-                      GeoTransform p, 
-                      double scale, 
-                      GM_Envelope bbox, 
-                      boolean selected )
+  public void paint( Graphics g, GeoTransform p, double scale, GM_Envelope bbox, boolean selected )
   {
     if( selected )
     {
@@ -140,42 +127,36 @@ public class Model1d2dCalUnitTheme extends AbstractKalypsoTheme
     }
     markAppliedBoundaryConditions( g, p );
   }
-  
-  private void markAppliedBoundaryConditions(
-                                Graphics g,   
-                                GeoTransform p )
+
+  private void markAppliedBoundaryConditions( Graphics g, GeoTransform p )
   {
-    if( modelBoundaryConditions != null  && calUnit != null )
+    if( modelBoundaryConditions != null && calUnit != null )
     {
-//      List<IBoundaryCondition> appliedBCs = CalUnitOps.getBoundaryConditions( 
-//          modelBoundaryConditions, 
-//          calUnit, 
-//          20 );
-      
+// List<IBoundaryCondition> appliedBCs = CalUnitOps.getBoundaryConditions(
+// modelBoundaryConditions,
+// calUnit,
+// 20 );
+
       final Image img = imgIcon.getImage();
-      final int yTrans = (int)(imgIcon.getIconHeight()/-2.0) ;
-      final int xTrans = (int)(imgIcon.getIconWidth()/-2.0);
-      for(IFeatureWrapper2 bc :modelBoundaryConditions )
+      final int yTrans = (int) (imgIcon.getIconHeight() / -2.0);
+      final int xTrans = (int) (imgIcon.getIconWidth() / -2.0);
+      for( IFeatureWrapper2 bc : modelBoundaryConditions )
       {
         if( bc instanceof IBoundaryCondition )
         {
-          if( CalUnitOps.isBoundaryConditionOf( 
-                      calUnit, 
-                      (IBoundaryCondition)bc, 
-                      20 ) )
+          if( CalUnitOps.isBoundaryConditionOf( calUnit, (IBoundaryCondition) bc, 20 ) )
           {
-            GM_Point position = 
-                  ((IBoundaryCondition)bc).getPosition();
-            double gPosX = p.getDestX( position.getX() )+ xTrans;
-            double gPosY = p.getDestY( position.getY() )+ yTrans;
+            GM_Point position = ((IBoundaryCondition) bc).getPosition();
+            double gPosX = p.getDestX( position.getX() ) + xTrans;
+            double gPosY = p.getDestY( position.getY() ) + yTrans;
             ImageObserver observer = null;
-            g.drawImage( img,(int)gPosX, (int)gPosY, observer );
+            g.drawImage( img, (int) gPosX, (int) gPosY, observer );
           }
         }
       }
     }
   }
-  
+
   /**
    * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#isLoaded()
    */
@@ -184,8 +165,8 @@ public class Model1d2dCalUnitTheme extends AbstractKalypsoTheme
   {
     return super.isLoaded();
   }
-  
-   /**
+
+  /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#getType()
    */
   @Override
@@ -194,10 +175,9 @@ public class Model1d2dCalUnitTheme extends AbstractKalypsoTheme
     return "GML_MERGE";
   }
 
-  public void setModelBoundaryConditions( 
-            IFlowRelationshipModel bcs )
+  public void setModelBoundaryConditions( IFlowRelationshipModel bcs )
   {
     this.modelBoundaryConditions = bcs;
   }
-  
+
 }

@@ -360,7 +360,7 @@ public class RMA10Calculation implements INativeIDProvider
     /* Take all conti lines which are defined in the discretisation model. */
     final Map<IBoundaryLine, BoundaryLineInfo> contiMap = new HashMap<IBoundaryLine, BoundaryLineInfo>();
     final List<IBoundaryLine> continuityLineList = getContinuityLineList();
-    int contiCount = 1;
+    int contiCount = 0;
     for( final IBoundaryLine<IFE1D2DComplexElement, IFE1D2DEdge> line : continuityLineList )
     {
       final IFE1D2DNode[] nodeArray;
@@ -373,7 +373,7 @@ public class RMA10Calculation implements INativeIDProvider
         final List<IFE1D2DNode> nodes = line.getNodes();
         nodeArray = nodes.toArray( new IFE1D2DNode[nodes.size()] );
       }
-      final BoundaryLineInfo info = new BoundaryLineInfo( contiCount++, nodeArray );
+      final BoundaryLineInfo info = new BoundaryLineInfo( ++contiCount, nodeArray );
       result.add( info );
       contiMap.put( line, info );
       m_boundaryLineIDProvider.put( line, new Integer( contiCount ) );
@@ -429,7 +429,7 @@ public class RMA10Calculation implements INativeIDProvider
         {
           // create new contiline
           final IFE1D2DNode[] nodeArray = new IFE1D2DNode[] { (IFE1D2DNode) wrapper2 };
-          final BoundaryLineInfo info = new BoundaryLineInfo( contiCount++, nodeArray );
+          final BoundaryLineInfo info = new BoundaryLineInfo( ++contiCount, nodeArray );
 
           final IComponent timeComponent = TupleResultUtilities.findComponentById( obsResult, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );
           final IComponent qComponent = TupleResultUtilities.findComponentById( obsResult, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );

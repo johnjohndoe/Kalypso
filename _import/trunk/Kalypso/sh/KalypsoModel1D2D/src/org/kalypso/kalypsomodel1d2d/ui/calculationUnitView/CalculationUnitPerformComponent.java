@@ -140,14 +140,12 @@ public class CalculationUnitPerformComponent extends FeatureWrapperListEditor im
     return new CalculationUnitViewerLabelProvider( display );
   }
 
-  
-  
   @Override
   protected boolean showDescription( )
   {
     return false;
   }
-  
+
   @Override
   protected List<ICalculationUnit> setInputContentProvider( )
   {
