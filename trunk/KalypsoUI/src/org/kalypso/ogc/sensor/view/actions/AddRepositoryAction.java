@@ -40,24 +40,9 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.view.actions;
 
-import java.lang.reflect.InvocationTargetException;
-
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.window.Window;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.dialogs.ListDialog;
-import org.eclipse.ui.progress.IProgressService;
 import org.kalypso.ogc.sensor.view.ObservationChooser;
-import org.kalypso.repository.IRepository;
-import org.kalypso.repository.RepositoriesExtensions;
-import org.kalypso.repository.RepositoryException;
-import org.kalypso.repository.conf.RepositoryFactoryConfig;
-import org.kalypso.repository.factory.IRepositoryFactory;
 import org.kalypso.ui.ImageProvider;
 
 /**
@@ -76,67 +61,10 @@ public class AddRepositoryAction extends AbstractObservationChooserAction
    * @see org.eclipse.jface.action.IAction#run()
    */
   @Override
-  public void run()
+  public void run( )
   {
-    final ListDialog dlg = new ListDialog( getShell() );
-    dlg.setLabelProvider( new ChooseRepositoryLabelProvider() );
-    dlg.setContentProvider( new ArrayContentProvider() );
-    dlg.setTitle( "Repository Typ auswählen" );
-
-    try
-    {
-      dlg.setInput( RepositoriesExtensions.retrieveExtensions() );
-
-      if( dlg.open() != Window.OK )
-        return;
-
-      final RepositoryFactoryConfig cfg = (RepositoryFactoryConfig)dlg.getResult()[0];
-
-      final IRepositoryFactory f = cfg.createFactory( getClass().getClassLoader() );
-
-      if( f.configureRepository() )
-      {
-        final IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
-        progressService.busyCursorWhile( new IRunnableWithProgress()
-        {
-          public void run( IProgressMonitor monitor ) throws InvocationTargetException
-          {
-            monitor.beginTask( "Repository hinzufügen", 2 );
-
-            final IRepository rep;
-            try
-            {
-              rep = f.createRepository();
-
-              monitor.worked( 1 );
-
-              getRepositoryContainer().addRepository( rep );
-
-              monitor.worked( 1 );
-            }
-            catch( RepositoryException e )
-            {
-              throw new InvocationTargetException( e );
-            }
-            finally
-            {
-              monitor.done();
-            }
-          }
-        } );
-      }
-    }
-    catch( final InvocationTargetException e )
-    {
-      e.getCause().printStackTrace();
-
-      MessageDialog.openError( getShell(), "Repository hinzufügen", e.getTargetException().getLocalizedMessage() );
-    }
-    catch( Exception e )
-    {
-      e.printStackTrace();
-      MessageDialog.openError( getShell(), "Repository hinzufügen", e.getLocalizedMessage() );
-    }
+    final Runnable runnable = new AddRepositoryRunnable( getRepositoryContainer(), getShell() );
+    runnable.run();
   }
 
   /**
@@ -144,29 +72,29 @@ public class AddRepositoryAction extends AbstractObservationChooserAction
    */
   public static class ChooseRepositoryLabelProvider extends LabelProvider
   {
-    private Image m_image;
+    private final Image m_image;
 
-    public ChooseRepositoryLabelProvider()
+    public ChooseRepositoryLabelProvider( )
     {
       m_image = ImageProvider.IMAGE_ZML_REPOSITORY.createImage();
     }
-    
+
     /**
      * @see org.eclipse.jface.viewers.LabelProvider#dispose()
      */
     @Override
-    public void dispose()
+    public void dispose( )
     {
       m_image.dispose();
-      
+
       super.dispose();
     }
-    
+
     /**
      * @see org.eclipse.jface.viewers.LabelProvider#getImage(java.lang.Object)
      */
     @Override
-    public Image getImage( Object element )
+    public Image getImage( final Object element )
     {
       return m_image;
     }
