@@ -40,11 +40,12 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.view.actions;
 
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.swt.widgets.Shell;
 import org.kalypso.ogc.sensor.view.ObservationChooser;
 import org.kalypso.repository.IRepository;
+import org.kalypso.repository.container.IRepositoryContainer;
 import org.kalypso.ui.ImageProvider;
 
 /**
@@ -63,7 +64,7 @@ public class RemoveRepositoryAction extends AbstractObservationChooserAction imp
     setEnabled( explorer.isRepository( explorer.getSelection() ) != null );
   }
 
-  public void dispose()
+  public void dispose( )
   {
     getExplorer().removeSelectionChangedListener( this );
   }
@@ -74,15 +75,14 @@ public class RemoveRepositoryAction extends AbstractObservationChooserAction imp
   @Override
   public void run( )
   {
+
+    final IRepositoryContainer container = getExplorer().getRepositoryContainer();
     final IRepository rep = getExplorer().isRepository( getExplorer().getSelection() );
-    if( rep == null )
-      return;
+    final Shell shell = getShell();
 
-    if( !MessageDialog.openConfirm( getShell(), "Repository entfernen", "Repository '" + rep.toString()
-        + "' wirklich entfernen?" ) )
-      return;
+    final Runnable runnable = new RemoveRepositoryRunnable( container, rep, shell );
+    runnable.run();
 
-    getExplorer().getRepositoryContainer().removeRepository( rep );
   }
 
   /**
