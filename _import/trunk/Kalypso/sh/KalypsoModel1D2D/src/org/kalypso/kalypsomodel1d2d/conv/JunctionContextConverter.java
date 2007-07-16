@@ -87,6 +87,7 @@ public class JunctionContextConverter
    */
   public void write( )
   {
+    int tlCounter = 1;
     List<IFE1D2DComplexElement> complexElements = discModel1d2d.getComplexElements();
     for (IFE1D2DComplexElement complexElement:complexElements)
     {
@@ -111,9 +112,10 @@ public class JunctionContextConverter
           ILineElement continuityLine = ele1DToCLine.getContinuityLine();
           IElement1D element1D = ele1DToCLine.getElement1D();
           IFE1D2DNode target1DNode = ele1DToCLine.getTarget1DNode();
-          formatter2dFile.format( "TL%10d%10.1d%10.1d%10.1d%n", 
-              nativeIDProvider.getID( ele1DToCLine ),
+          formatter2dFile.format( "TL%10d%10d%10d%10d%n", 
+              tlCounter++, 
               nativeIDProvider.getID( element1D ),
+              nativeIDProvider.getID( continuityLine ),
               nativeIDProvider.getID( target1DNode ));
           
         }

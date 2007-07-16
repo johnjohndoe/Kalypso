@@ -537,7 +537,14 @@ public class RMA10Calculation implements INativeIDProvider
   {
     if( object instanceof IBoundaryLine )
     {
-      return m_boundaryLineIDProvider.get( object );
+      final Integer integer = m_boundaryLineIDProvider.get( object );
+      if(integer == null)
+      {
+        final int id = m_boundaryLineIDProvider.size()+1;
+        m_boundaryLineIDProvider.put( (IBoundaryLine)object, id );
+        return id;
+      }
+      return integer;
     }
     else
     {
