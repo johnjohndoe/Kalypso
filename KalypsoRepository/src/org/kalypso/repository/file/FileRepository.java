@@ -67,16 +67,15 @@ public class FileRepository extends AbstractRepository
    * @param factory
    * @param conf
    * @param location
-   *          path of the root
+   *            path of the root
    * @param identifier
-   *          user defined identifier for this repository
+   *            user defined identifier for this repository
    * @param readOnly
-   *          if true the repository is read only
+   *            if true the repository is read only
    * @param filter
-   *          [optional] if null an <code>AcceptAllFileFilter</code> is used.
+   *            [optional] if null an <code>AcceptAllFileFilter</code> is used.
    */
-  public FileRepository( String factory, String conf, String location, String identifier, boolean readOnly,
-      FileFilter filter )
+  public FileRepository( final String factory, final String conf, final String location, final String identifier, final boolean readOnly, final FileFilter filter )
   {
     super( identifier, factory, conf, readOnly );
 
@@ -99,10 +98,9 @@ public class FileRepository extends AbstractRepository
    * @param location
    * @param identifier
    * @param readOnly
-   * 
    * @see FileRepository#FileRepository(String, String, String, String, boolean, FileFilter)
    */
-  public FileRepository( String factory, String conf, String location, String identifier, boolean readOnly )
+  public FileRepository( final String factory, final String conf, final String location, final String identifier, final boolean readOnly )
   {
     this( factory, conf, location, identifier, readOnly, null );
   }
@@ -119,7 +117,7 @@ public class FileRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepositoryItem#getChildren()
    */
-  public IRepositoryItem[] getChildren()
+  public IRepositoryItem[] getChildren( )
   {
     return createItem( m_root ).getChildren();
   }
@@ -127,12 +125,12 @@ public class FileRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepositoryItem#hasChildren()
    */
-  public boolean hasChildren()
+  public boolean hasChildren( )
   {
     return m_root.isDirectory();
   }
 
-  public FileFilter getFilter()
+  public FileFilter getFilter( )
   {
     return m_filter;
   }
@@ -153,7 +151,7 @@ public class FileRepository extends AbstractRepository
    * 
    * @see org.kalypso.repository.IRepository#getIdentifier()
    */
-  public String getIdentifier()
+  public String getIdentifier( )
   {
     return m_identifier;
   }
@@ -161,9 +159,9 @@ public class FileRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepository#reload()
    */
-  public void reload()
+  public void reload( )
   {
-  // nothing to do
+    // nothing to do
   }
 
   /**
@@ -185,7 +183,7 @@ public class FileRepository extends AbstractRepository
     final String strRoot = m_root.getAbsolutePath().replace( '\\', '/' );
 
     // replaceFirst can not handle "$" in itemId, so replaced by next line
-    //    final String path = itemId.replaceFirst( scheme, strRoot );
+    // final String path = itemId.replaceFirst( scheme, strRoot );
     final String path = strRoot + itemId.replaceFirst( scheme, "" );
     final File f = new File( path );
 
@@ -199,5 +197,17 @@ public class FileRepository extends AbstractRepository
       return null;
 
     return createItem( f );
+  }
+
+  /**
+   * @see org.kalypso.repository.AbstractRepository#getAdapter(java.lang.Class)
+   */
+  @Override
+  public Object getAdapter( final Class anotherClass )
+  {
+    if( File.class.equals( anotherClass ) )
+      return m_root;
+
+    return super.getAdapter( anotherClass );
   }
 }
