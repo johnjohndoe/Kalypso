@@ -392,12 +392,13 @@ public class Control1D2DConverter
     // Boundary Conditions
     for( final ITimeStepinfo item : timeStepInfos )
     {
-      final double itemValue = item.getValue( stepCal == null ? null : stepCal.getTime() );
+      /* Write only considered lines */
       final TYPE type = item.getType();
 
-      /* Write only considered lines */
       if( type != contiType )
         continue;
+
+      final double itemValue = item.getValue( stepCal == null ? null : stepCal.getTime() );
 
       switch( type )
       {

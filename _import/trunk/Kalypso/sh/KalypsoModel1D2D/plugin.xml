@@ -117,7 +117,10 @@
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptionCollection"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptor"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IModelDescriptor"/>
-         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IResultModelDescriptor"/>      
+         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IResultModelDescriptor"/>
+         <adapter
+               type="org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult">
+         </adapter>      
       </factory>
    </extension>
      

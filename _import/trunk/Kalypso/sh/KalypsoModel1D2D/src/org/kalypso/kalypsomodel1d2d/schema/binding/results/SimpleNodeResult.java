@@ -157,6 +157,14 @@ public class SimpleNodeResult implements INodeResult
   }
 
   /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getVelocity()
+   */
+  public List<Double> getVelocity( )
+  {
+    return m_velocity;
+  }
+
+  /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#isWet()
    */
   public boolean isWet( )

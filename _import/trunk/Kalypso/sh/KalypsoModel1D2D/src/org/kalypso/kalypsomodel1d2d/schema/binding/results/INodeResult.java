@@ -53,7 +53,7 @@ import org.opengis.cs.CS_CoordinateSystem;
  * @author jung
  * 
  */
-public interface INodeResult extends  IFeatureWrapper2
+public interface INodeResult extends IFeatureWrapper2
 {
   public final static QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "NodeResult" );
 
@@ -78,6 +78,8 @@ public interface INodeResult extends  IFeatureWrapper2
   public boolean isWet( );
 
   public abstract void setVelocity( List<Double> velocity );
+
+  public abstract List<Double> getVelocity( );
 
   public abstract double getAbsoluteVelocity( );
 

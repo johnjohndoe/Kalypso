@@ -104,6 +104,7 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.model.feature.index.FeatureIndex;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.model.sort.SplitSort;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 import org.opengis.cs.CS_CoordinateSystem;
 
@@ -467,7 +468,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   }
 
   @SuppressWarnings("unchecked")
-  private void createJunctionTriangles( final GMLNodeResult nodeResult1d, final FeatureList resultList, final GM_Curve nodeCurve1d, final GM_Curve boundaryCurve, final double curveDistance ) throws FileNotFoundException, IOException, CoreException, InterruptedException, GM_Exception
+  private void createJunctionTriangles( final INodeResult nodeResult1d, final FeatureList resultList, final GM_Curve nodeCurve1d, final GM_Curve boundaryCurve, final double curveDistance ) throws FileNotFoundException, IOException, CoreException, InterruptedException, GM_Exception
   {
     BufferedReader nodeReader = null;
     BufferedReader eleReader = null;
@@ -542,9 +543,8 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     }
   }
 
-  private void feedTriangleEaterWithJunctionResults( final GMLNodeResult nodeResult1d, final FeatureList resultList, final GM_Curve nodeCurve1d, final GM_Curve boundaryCurve, final double curveDistance, final CS_CoordinateSystem crs, final GM_Position[] ring )
+  private void feedTriangleEaterWithJunctionResults( final INodeResult nodeResult1d, final FeatureList resultList, final GM_Curve nodeCurve1d, final GM_Curve boundaryCurve, final double curveDistance, final CS_CoordinateSystem crs, final GM_Position[] ring )
   {
-
     final List<INodeResult> nodes = new LinkedList<INodeResult>();
 
     for( int i = 0; i < ring.length - 1; i++ )
@@ -581,10 +581,10 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
           // search for the nearest nodeResult in the FeatureList
           final Feature feature = GeometryUtilities.findNearestFeature( point, grabDistance, resultList, GMLNodeResult.QNAME_PROP_LOCATION );
-
-          if( feature instanceof GMLNodeResult )
+          final INodeResult nodeResult = feature == null ? null : (INodeResult) feature.getAdapter( INodeResult.class );
+          if( nodeResult != null )
           {
-            final GMLNodeResult node = (GMLNodeResult) feature;
+            final INodeResult node = (INodeResult) feature;
 
             vx = node.getVelocity().get( 0 );
             vy = node.getVelocity().get( 1 );
@@ -1553,21 +1553,20 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   @SuppressWarnings("unchecked")
   public void handleJunction( final String parseLine, final int junctionID, final int element1dID, final int boundaryLine2dID, final int node1dID )
   {
-
     /* get 1d node */
     // get node result for 1d node
     final Map<Object, Feature> indexedFeatures = FeatureIndex.indexFeature( m_resultList, GMLNodeResult.QNAME_PROP_CALCID );
-    final FeatureList resultList = null;
 
-    final GMLNodeResult nodeResult1d = (GMLNodeResult) indexedFeatures.get( node1dID );
-    // resultList.add( nodeResult1d );
+    final Feature feature = indexedFeatures.get( node1dID );
+    // TODO this should work, but it does not! Implement the adapter in the feature-adapter-factory
+    // final INodeResult nodeResult1d = (INodeResult) feature.getAdapter( INodeResult.class );
+    final INodeResult nodeResult1d = new GMLNodeResult( feature );
     final double waterlevel = nodeResult1d.getWaterlevel(); // we know, that the water level at the boundary nodes is
     // unique for all nodes
 
     try
     {
-      GM_Curve nodeCurve1d = null;
-      nodeCurve1d = getProfileCurveFor1dNode( nodeResult1d );
+      final GM_Curve nodeCurve1d = getProfileCurveFor1dNode( nodeResult1d );
 
       /* get the 2d nodes */
       // get nodes of the boundary line
@@ -1576,11 +1575,10 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
       // here, we just use the corner nodes of the mesh. mid-side nodes are not used.
       // get the node results of that points and add it to the Featurelist
-      INodeResult nodeResult2d;
-
+      final FeatureList resultList = new SplitSort( null, null );
       for( final GM_Point point : linePoints )
       {
-        nodeResult2d = getNodeResult( point );
+        final INodeResult nodeResult2d = getNodeResult( point );
         if( nodeResult2d != null )
         {
           resultList.add( nodeResult2d );
@@ -1647,31 +1645,25 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   {
     final double searchDistance = 0.5;
     final Feature feature = GeometryUtilities.findNearestFeature( point, searchDistance, m_resultList, GMLNodeResult.QNAME_PROP_LOCATION );
-
-    if( feature instanceof GMLNodeResult )
-      return (GMLNodeResult) feature;
-    else
-      return null;
+    return (INodeResult) feature.getAdapter( INodeResult.class );
   }
 
   @SuppressWarnings("unchecked")
   private GM_Point[] getLinePoints( final int boundaryLine2dID, final BoundaryLineInfo[] continuityLineInfo )
   {
-    IFE1D2DNode[] nodes2D = null;
-    final GM_Point[] points = null;
-
     for( final BoundaryLineInfo line : continuityLineInfo )
     {
       if( line.getID() == boundaryLine2dID )
       {
-        nodes2D = continuityLineInfo[0].getNodes();
+        final IFE1D2DNode[] nodes2D = line.getNodes();
+        final GM_Point[] points = new GM_Point[nodes2D.length];
         for( int i = 0; i < nodes2D.length; i++ )
         {
           points[i] = nodes2D[i].getPoint();
         }
-        break;
+        return points;
       }
     }
-    return points;
+    return null;
   }
 }

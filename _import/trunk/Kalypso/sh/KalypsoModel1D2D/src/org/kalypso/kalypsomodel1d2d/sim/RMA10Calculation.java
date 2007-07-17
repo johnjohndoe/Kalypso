@@ -66,6 +66,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
@@ -315,23 +316,20 @@ public class RMA10Calculation implements INativeIDProvider
 
   public List<IBoundaryLine> getContinuityLineList( )
   {
-    // // implemented like this, or search for BoundaryConditions (operational model) which fits to ContinuityLines
-    // // (discretisation model)
-    // final IFEDiscretisationModel1d2d adapter = (IFEDiscretisationModel1d2d)
-    // m_disModelWorkspace.getRootFeature().getAdapter( IFEDiscretisationModel1d2d.class );
-    // final IFeatureWrapperCollection<IFE1D2DElement> elements = adapter.getElements();
-    // final List<IBoundaryLine> list = new ArrayList<IBoundaryLine>();
-    // final Iterator<IFE1D2DElement> iterator = elements.iterator();
-    // while( iterator.hasNext() )
-    // {
-    // final IFE1D2DElement element = iterator.next();
-    // if( element instanceof IBoundaryLine )
-    // list.add( (IBoundaryLine) element );
-    // }
-    // return list;
-    final ICalculationUnit calcultionUnit = getCalculationUnit();
-    final List<IBoundaryLine> boundaryLines = CalUnitOps.getBoundaryLines( calcultionUnit );
-    return boundaryLines;
+    // TODO: at the moment, we write ALL boundary lines again...
+
+    // implemented like this, or search for BoundaryConditions (operational model) which fits to ContinuityLines
+    // (discretisation model)
+    final IFEDiscretisationModel1d2d discModel = getDiscModel();
+    final List<IBoundaryLine> list = new ArrayList<IBoundaryLine>();
+    final IFeatureWrapperCollection<IFE1D2DElement> elements = discModel.getElements();
+    for( final IFE1D2DElement element : elements )
+    {
+      if( element instanceof IBoundaryLine )
+        list.add( (IBoundaryLine) element );
+    }
+    return list;
+
   }
 
   public BoundaryLineInfo[] getContinuityLineInfo( )
@@ -341,6 +339,8 @@ public class RMA10Calculation implements INativeIDProvider
     for( final ITimeStepinfo info : m_timeStepInfos )
     {
       if( info instanceof BoundaryLineInfo )
+        // TODO: This is a discrace, what else should be there??
+        // Also: for every BC we need a conti line!
         continuityLineInfos.add( (BoundaryLineInfo) info );
     }
 
@@ -537,14 +537,11 @@ public class RMA10Calculation implements INativeIDProvider
   {
     if( object instanceof IBoundaryLine )
     {
-      final Integer integer = m_boundaryLineIDProvider.get( object );
-      if(integer == null)
-      {
-        final int id = m_boundaryLineIDProvider.size()+1;
-        m_boundaryLineIDProvider.put( (IBoundaryLine)object, id );
-        return id;
-      }
-      return integer;
+      final Integer id = m_boundaryLineIDProvider.get( object );
+      if( id == null )
+        return -1;
+
+      return id;
     }
     else
     {

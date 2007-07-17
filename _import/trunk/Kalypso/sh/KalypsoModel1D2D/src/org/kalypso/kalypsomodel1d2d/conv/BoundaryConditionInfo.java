@@ -101,9 +101,6 @@ public class BoundaryConditionInfo implements ITimeStepinfo
       if( Double.isNaN( m_steadyValue ) )
       {
         throw new SimulationException( "Steady value not defined.", new RuntimeException() );
-// Iterator<IRecord> iterator = m_index.getIterator();
-// IRecord next = iterator.next();
-// result = (Number) next.getValue( m_valueComponent );
       }
       else
         return m_steadyValue;

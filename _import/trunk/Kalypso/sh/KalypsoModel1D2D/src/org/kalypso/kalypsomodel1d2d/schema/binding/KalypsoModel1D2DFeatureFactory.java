@@ -83,10 +83,12 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.model.OperationalModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.PseudoOPerationalModel;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.SimulationModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.StaticModel1D2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.results.GMLNodeResult;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.Hydrograph;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.HydrographCollection;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrograph;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrographCollection;
+import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
 import org.kalypso.kalypsomodel1d2d.ui.map.merge.FERoughnessDisplayElement;
 import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.ElevationModelDisplayElementFactory;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
@@ -816,6 +818,26 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
     };
     cMap.put( IResultModel1d2d.class, cTor );
     cMap.put( INodeResultCollection.class, cTor );
+
+    // node result
+    cTor = new AdapterConstructor()
+    {
+      public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
+      {
+        final QName featureQName = feature.getFeatureType().getQName();
+
+        if( featureQName.equals( INodeResult.QNAME ) )
+        {
+          return new GMLNodeResult( feature );
+        }
+        else
+        {
+          warnUnableToAdapt( feature, featureQName, IBoundaryCondition.class );
+          return null;
+        }
+      }
+    };
+    cMap.put( INodeResult.class, cTor );
 
     // hydrograph collection
     cTor = new AdapterConstructor()

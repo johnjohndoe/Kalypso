@@ -356,6 +356,7 @@ public class CalUnitOps
     return num;
   }
 
+  // TODO: move into calcUnit class
   public static List<IBoundaryLine> getBoundaryLines( final ICalculationUnit calUnit )
   {
     Assert.throwIAEOnNullParam( calUnit, "calUnit" );
@@ -364,10 +365,16 @@ public class CalUnitOps
     for( final IFE1D2DElement ele : elements )
     {
       if( ele instanceof IBoundaryLine )
-      {
         boundaryLines.add( (IBoundaryLine) ele );
+      // TODO: This will never happen, juntion-elts are no elements!
+      else if( ele instanceof IJunctionContext1DToCLine )
+      {
+        /* conti lines of transition elements get automatically added to the boundary lines of this calc-unit */
+        final ILineElement continuityLine = ((IJunctionContext1DToCLine) ele).getContinuityLine();
+        boundaryLines.add( (IBoundaryLine) continuityLine );
       }
     }
+    // TODO: consider sub-units!
     return boundaryLines;
   }
 
