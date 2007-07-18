@@ -56,7 +56,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypso.kalypsomodel1d2d.conv.results.RestartEater;
-import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
+import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.ops.EdgeOps;
 import org.kalypso.kalypsomodel1d2d.ops.TypeInfo;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtils;
@@ -148,7 +148,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
     m_terrainModel = calculation.getTerrainModel();
     m_flowrelationModel = calculation.getFlowModel();
     m_calculationUnit = calculation.getCalculationUnit();
-    m_calcUnitBBox = CalUnitOps.getBoundingBox( m_calculationUnit );
+    m_calcUnitBBox = CalcUnitOps.getBoundingBox( m_calculationUnit );
 
     // provides the ids for the boundaryline
     m_calculation = calculation;
@@ -620,7 +620,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
 
     for( final IFE1D2DElement element : elementsInBBox/* elements */)
     {
-      if( !CalUnitOps.isFiniteElementOf( m_calculationUnit, element ) )
+      if( !CalcUnitOps.isFiniteElementOf( m_calculationUnit, element ) )
       {
         continue;
       }
@@ -671,7 +671,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
 
     for( final IFE1D2DElement element : elementsInBBox/* elements */)
     {
-      if( !CalUnitOps.isFiniteElementOf( m_calculationUnit, element ) )
+      if( !CalcUnitOps.isFiniteElementOf( m_calculationUnit, element ) )
       {
         continue;
       }

@@ -272,7 +272,7 @@ public class EdgeOps
     {
       return null;
     }
-    else if( CalUnitOps.isFiniteElementOf( unit, leftRight ) )
+    else if( CalcUnitOps.isFiniteElementOf( unit, leftRight ) )
     {
       return leftRight;
     }

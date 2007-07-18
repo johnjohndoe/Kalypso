@@ -46,7 +46,7 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
+import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
@@ -198,7 +198,7 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
     }
     
     final Collection<ICalculationUnit1D2D> parentUnits = 
-                                CalUnitOps.getParentUnit( cuToDel, model1d2d );
+                                CalcUnitOps.getParentUnit( cuToDel, model1d2d );
     oldParentUnits = parentUnits.toArray( new ICalculationUnit1D2D[0] );
     oldQName = cuToDel.getWrappedFeature().getFeatureType().getQName();
     final IFeatureWrapperCollection elements = cuToDel.getElements();

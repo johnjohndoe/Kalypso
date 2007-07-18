@@ -65,7 +65,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
+import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
@@ -194,14 +194,14 @@ public class SelectedCalculationComponent
         if (newValue instanceof ICalculationUnit1D)
         {
           int num1DElement = 
-                CalUnitOps.getNum1DElement((ICalculationUnit) newValue);
+                CalcUnitOps.getNum1DElement((ICalculationUnit) newValue);
           element1DLabel.setEnabled( true );
           element1D.setEnabled( true );
           element1D.setText( 
               String.valueOf( num1DElement ) );
           bLineText.setText( 
               String.valueOf( 
-                  CalUnitOps.getNumBoundaryLine( (ICalculationUnit)newValue  )) );
+                  CalcUnitOps.getNumBoundaryLine( (ICalculationUnit)newValue  )) );
         }
         else 
         {
@@ -212,14 +212,14 @@ public class SelectedCalculationComponent
         
         if (newValue instanceof ICalculationUnit2D)
         {
-          int num2DElement = CalUnitOps.getNum2DElement((ICalculationUnit) newValue);
+          int num2DElement = CalcUnitOps.getNum2DElement((ICalculationUnit) newValue);
           element2DLabel.setEnabled( true );
           element2D.setEnabled( true );        
           element2D.setText( 
               String.valueOf( num2DElement ) );
           bLineText.setText( 
               String.valueOf( 
-                  CalUnitOps.getNumBoundaryLine( (ICalculationUnit)newValue  )) );
+                  CalcUnitOps.getNumBoundaryLine( (ICalculationUnit)newValue  )) );
         }
         else
         {
@@ -236,7 +236,7 @@ public class SelectedCalculationComponent
           descriptionText.setEnabled( true );
           bLineText.setText( 
               String.valueOf( 
-                  CalUnitOps.getNumBoundaryLine( (ICalculationUnit)newValue  )) );
+                  CalcUnitOps.getNumBoundaryLine( (ICalculationUnit)newValue  )) );
           tableViewer.setInput( ((ICalculationUnit1D2D)newValue).getSubUnits().toArray());
         }
         else
@@ -252,7 +252,7 @@ public class SelectedCalculationComponent
         
         final double grabDistance = grabDistanceProvider.getGrabDistance();
         
-        int bcCount = CalUnitOps.countAssignedBoundaryConditions( 
+        int bcCount = CalcUnitOps.countAssignedBoundaryConditions( 
             getBoundaryConditions(), 
             (ICalculationUnit)newValue, 
              grabDistance );

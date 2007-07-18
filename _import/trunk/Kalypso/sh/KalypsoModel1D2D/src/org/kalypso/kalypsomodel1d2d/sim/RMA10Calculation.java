@@ -56,7 +56,7 @@ import org.kalypso.kalypsomodel1d2d.conv.BoundaryConditionInfo;
 import org.kalypso.kalypsomodel1d2d.conv.BoundaryLineInfo;
 import org.kalypso.kalypsomodel1d2d.conv.INativeIDProvider;
 import org.kalypso.kalypsomodel1d2d.conv.ITimeStepinfo;
-import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
+import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtils;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
@@ -398,7 +398,7 @@ public class RMA10Calculation implements INativeIDProvider
         // HACK: 0.5 as grab distance?? normally 0.0 should be enough, but then the contilines are not found, why?
         // TODO: at least find everything in this distance, if mroe than one element is found, take nearest...
         // final boolean boundaryConditionOf = CalUnitOps.isBoundaryConditionOf( unit, bc, grabDistance );
-        final IFeatureWrapper2 wrapper2 = CalUnitOps.getAssignedBoundaryConditionLine( unit, bc, grabDistance );// DiscretisationModelUtils.findModelElementForBC(
+        final IFeatureWrapper2 wrapper2 = CalcUnitOps.getAssignedBoundaryConditionLine( unit, bc, grabDistance );// DiscretisationModelUtils.findModelElementForBC(
         // discModel,
         // bc.getPosition(),
         // 0.001
@@ -406,7 +406,7 @@ public class RMA10Calculation implements INativeIDProvider
 
         if( wrapper2 == null )
         {
-          System.out.println( "Skiping boundary condition since it is not part of calunit:" + relationship.getGmlID() );
+          System.out.println( "Skiping boundary condition since it is not part of calcUnit:" + relationship.getGmlID() );
         }
         else if( wrapper2 instanceof IBoundaryLine )
         {
@@ -458,7 +458,7 @@ public class RMA10Calculation implements INativeIDProvider
         {
           final IElement2D<IFE1D2DComplexElement, IFE1D2DEdge> ele2d = (IElement2D<IFE1D2DComplexElement, IFE1D2DEdge>) wrapper2;
 
-          final String gmlID = ele2d.getGmlID();
+//          final String gmlID = ele2d.getGmlID();
           final int id = 0; // TODO: get ascii element id for gmlid
 
           final BoundaryConditionInfo info = new BoundaryConditionInfo( id, ITimeStepinfo.TYPE.ELE_BCE_2D );

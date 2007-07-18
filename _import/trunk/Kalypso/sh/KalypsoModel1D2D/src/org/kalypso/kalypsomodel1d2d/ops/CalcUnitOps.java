@@ -45,10 +45,6 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
@@ -65,14 +61,8 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionContext1DToCLi
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ILineElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
-import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2DCollection;
-import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
-import org.kalypso.kalypsosimulationmodel.core.Util;
-import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -89,12 +79,12 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  */
 
 @SuppressWarnings( { "unchecked", "hiding" })
-public class CalUnitOps
+public class CalcUnitOps
 {
 
-  private CalUnitOps( )
+  private CalcUnitOps( )
   {
-    // i hate being instantiated
+    // Do not instantiate this class!
   }
 
   public static final boolean isNodeOf( final ICalculationUnit unit, final IFE1D2DNode<IFE1D2DEdge> node )
@@ -1026,13 +1016,8 @@ public class CalUnitOps
 
     final List<IBoundaryCondition> assignedConditions = new ArrayList<IBoundaryCondition>();
     for( final IBoundaryCondition condition : conditions )
-    {
       if( isBoundaryConditionOf( unit, condition, grabDistance ) )
-      {
         assignedConditions.add( condition );
-      }
-    }
-
     return assignedConditions;
   }
 
@@ -1055,16 +1040,11 @@ public class CalUnitOps
   {
     Assert.throwIAEOnNullParam( conditions, "conditions" );
     Assert.throwIAEOnNullParam( unit, "unit" );
-    Assert.throwIAEOnLessThan0( grabDistance, "grab distance must be greater or equals to 0" );
+    Assert.throwIAEOnLessThan0( grabDistance, "grab distance must be greater or equal to 0" );
     int count = 0;
     for( final IBoundaryCondition condition : conditions )
-    {
       if( isBoundaryConditionOf( unit, condition, grabDistance ) )
-      {
-        count = count + 1;
-      }
-    }
-
+        count++;
     return count;
   }
 
@@ -1082,77 +1062,7 @@ public class CalUnitOps
   {
     final IElement1D element1D = jContext.getElement1D();
     if( element1D == null )
-    {
       return false;
-    }
-
     return isFiniteElementOf( unit, element1D );
-
-  }
-
-  /**
-   * Finds the control model for th given calculation unit in the soecified control model group.
-   * 
-   * @param controlModelGroup
-   *            the control model group holding th group of control model to check
-   * @param calUnit
-   *            the calculation unit for which a calculation unit is to be find
-   * @throws IllegalArgumentException
-   *             if controlModelGroup is null or calUnit is null.
-   * @returns an Instance of {@link IControlModel1D2D} which is linked to the passed calculation unit
-   */
-  public static final IControlModel1D2D findControlModel( final IControlModelGroup controlModelGroup, final ICalculationUnit calUnit )
-  {
-    Assert.throwIAEOnNullParam( controlModelGroup, "controlModelGroup" );
-    Assert.throwIAEOnNullParam( calUnit, "calUnit" );
-    final String refGmlID = calUnit.getGmlID();
-    final IControlModel1D2DCollection model1D2DCollection = controlModelGroup.getModel1D2DCollection();
-    for( final IControlModel1D2D cm : model1D2DCollection )
-    {
-      final ICalculationUnit cmCalUnit = cm.getCalculationUnit();
-      if( cmCalUnit != null )
-      {
-        if( refGmlID.equals( cmCalUnit.getGmlID() ) )
-        {
-          return cm;
-        }
-      }
-    }
-    return null;
-  }
-
-  public static final void removeUnitControlModel( final ICalculationUnit calUnit )
-  {
-    final IControlModelGroup controlModelGroup = Util.getModel( IControlModelGroup.class );
-    if( controlModelGroup == null )
-    {
-      return;
-    }
-
-    final IControlModel1D2D cmToDel = CalUnitOps.findControlModel( controlModelGroup, calUnit );
-    if( cmToDel == null )
-    {
-      return;
-    }
-    final Feature cmFeature = cmToDel.getWrappedFeature();
-    final Feature parentFeature = controlModelGroup.getWrappedFeature();// cmFeature.getParent();
-    final IFeatureType parentFT = parentFeature.getFeatureType();
-
-    final IPropertyType propType = parentFT.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_CONTROL_MODEL_MEMBER );
-    if( !(propType instanceof IRelationType) )
-    {
-      return;
-    }
-    final CommandableWorkspace cmdWorkspace = new CommandableWorkspace( cmFeature.getWorkspace() );
-    final DeleteFeatureCommand delControlCmd = new DeleteFeatureCommand( cmdWorkspace, parentFeature, (IRelationType) parentFT, cmFeature );
-    try
-    {
-      cmdWorkspace.postCommand( delControlCmd );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
-
   }
 }

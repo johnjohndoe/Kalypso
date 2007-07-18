@@ -43,7 +43,7 @@ package org.kalypso.kalypsomodel1d2d.conv;
 import java.util.Formatter;
 import java.util.List;
 
-import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
+import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
@@ -64,20 +64,20 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ILineElement;
 @SuppressWarnings( { "unchecked", "hiding" })
 public class JunctionContextConverter
 {
-  final IFEDiscretisationModel1d2d discModel1d2d;
+  final IFEDiscretisationModel1d2d m_discModel1d2d;
 
-  final Formatter formatter2dFile;
+  final Formatter m_formatter;
 
-  final ICalculationUnit1D2D calUnit;
+  final ICalculationUnit1D2D m_calcUnit;
 
-  final INativeIDProvider nativeIDProvider;
+  final INativeIDProvider m_nativeIDProvider;
 
   public JunctionContextConverter( final IFEDiscretisationModel1d2d discModel1d2d, final ICalculationUnit1D2D calUnit, final INativeIDProvider nativeIDProvider, final Formatter formatter2dFile )
   {
-    this.discModel1d2d = discModel1d2d;
-    this.calUnit = calUnit;
-    this.nativeIDProvider = nativeIDProvider;
-    this.formatter2dFile = formatter2dFile;
+    this.m_discModel1d2d = discModel1d2d;
+    this.m_calcUnit = calUnit;
+    this.m_nativeIDProvider = nativeIDProvider;
+    this.m_formatter = formatter2dFile;
   }
 
   /**
@@ -86,7 +86,7 @@ public class JunctionContextConverter
   public void write( )
   {
     // TODO: the junction elements must be filtered by the calc-unit (org got from the calc-unit)
-    final List<IFE1D2DComplexElement> complexElements = discModel1d2d.getComplexElements();
+    final List<IFE1D2DComplexElement> complexElements = m_discModel1d2d.getComplexElements();
     for( final IFE1D2DComplexElement complexElement : complexElements )
     {
       // if (TypeInfo.isJuntionContext( complexElement ))
@@ -105,22 +105,21 @@ public class JunctionContextConverter
       if( complexElement instanceof IJunctionContext1DToCLine )
       {
         final IJunctionContext1DToCLine ele1DToCLine = (IJunctionContext1DToCLine) complexElement;
-        if( CalUnitOps.isJunctionContextOf( calUnit, ele1DToCLine ) )
+        if( CalcUnitOps.isJunctionContextOf( m_calcUnit, ele1DToCLine ) )
         {
           final ILineElement continuityLine = ele1DToCLine.getContinuityLine();
           final IElement1D element1D = ele1DToCLine.getElement1D();
           final IFE1D2DNode target1DNode = ele1DToCLine.getTarget1DNode();
 
-          final int transitionElementID = nativeIDProvider.getID( ele1DToCLine );
-          final int element1DID = nativeIDProvider.getID( element1D );
-          final int boundaryLineID = nativeIDProvider.getID( continuityLine );
-          final int node1DID = nativeIDProvider.getID( target1DNode );
+          final int transitionElementID = m_nativeIDProvider.getID( ele1DToCLine );
+          final int element1DID = m_nativeIDProvider.getID( element1D );
+          final int boundaryLineID = m_nativeIDProvider.getID( continuityLine );
+          final int node1DID = m_nativeIDProvider.getID( target1DNode );
 
-          formatter2dFile.format( "TL%10d%10d%10d%10d%n", transitionElementID, element1DID, boundaryLineID, node1DID );
+          m_formatter.format( "TL%10d%10d%10d%10d%n", transitionElementID, element1DID, boundaryLineID, node1DID );
         }
       }
     }
-
   }
 
   public static final void write( final IFEDiscretisationModel1d2d discModel1d2d, final ICalculationUnit calUnit, final INativeIDProvider nativeIDProvider, final Formatter formatter2dFile )

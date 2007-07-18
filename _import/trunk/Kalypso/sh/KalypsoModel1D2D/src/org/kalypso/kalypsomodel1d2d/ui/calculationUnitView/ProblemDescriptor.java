@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.calculationUnitView;
 
-import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
+import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
@@ -92,7 +92,7 @@ public class ProblemDescriptor implements IProblem
   {
     //@TODO Madan - Must change the below statement to show 
     //     the element that should get the Focus.. using showFocusOn() 
-    GM_Envelope boundingBox = CalUnitOps.getBoundingBox( getParentCalculationUnit() );
+    GM_Envelope boundingBox = CalcUnitOps.getBoundingBox( getParentCalculationUnit() );
     if( boundingBox == null )
     {
       System.out.println("BBox is null");

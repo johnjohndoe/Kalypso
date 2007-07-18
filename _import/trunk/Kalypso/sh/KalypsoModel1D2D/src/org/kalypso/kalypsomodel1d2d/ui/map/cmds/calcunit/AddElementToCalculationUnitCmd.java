@@ -45,7 +45,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 import org.kalypso.contribs.java.lang.MultiException;
-import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
+import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
@@ -97,7 +97,7 @@ public class AddElementToCalculationUnitCmd implements IDiscrModel1d2dChangeComm
   {
     this.calculationUnit = calculationUnit;
     
-    this.elementsToAdd = CalUnitOps.toAddableElements( calculationUnit, elementsToAdd );
+    this.elementsToAdd = CalcUnitOps.toAddableElements( calculationUnit, elementsToAdd );
     this.model1d2d = model1d2d;
   }
   
@@ -108,7 +108,7 @@ public class AddElementToCalculationUnitCmd implements IDiscrModel1d2dChangeComm
   {
     this.calculationUnit = calculationUnit;
     
-    this.elementsToAdd = CalUnitOps.toAddableElements( calculationUnit, elementsToAdd );
+    this.elementsToAdd = CalcUnitOps.toAddableElements( calculationUnit, elementsToAdd );
     this.model1d2d = model1d2d;
   }
   

@@ -43,7 +43,7 @@ package org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
+import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
@@ -129,7 +129,7 @@ public class RemoveBoundaryConditionFromCalculationUnitCmd implements IDiscrMode
 //          fireProcessChanges();
 //          done = true;
 //        }
-        done = CalUnitOps.removeBoundaryConditionFromUnit( calculationUnit, boundaryCondition, grabDistance );
+        done = CalcUnitOps.removeBoundaryConditionFromUnit( calculationUnit, boundaryCondition, grabDistance );
         fireProcessChanges();
       }
     }

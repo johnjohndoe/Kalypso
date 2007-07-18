@@ -43,7 +43,7 @@ package org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
+import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.ops.LinksOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
@@ -91,7 +91,7 @@ public class RemoveElementFromCalculationUnitCmd implements IDiscrModel1d2dChang
   {
     this.calculationUnit = calculationUnit;
     this.elementsToRemove = 
-      CalUnitOps.toAddableElements( calculationUnit, elementsToRemove );
+      CalcUnitOps.toAddableElements( calculationUnit, elementsToRemove );
     this.model1d2d = model1d2d;
   }
   
@@ -102,7 +102,7 @@ public class RemoveElementFromCalculationUnitCmd implements IDiscrModel1d2dChang
   {
     this.calculationUnit = calculationUnit;
     this.elementsToRemove = 
-      CalUnitOps.toAddableElements( calculationUnit, elementsToRemove );
+      CalcUnitOps.toAddableElements( calculationUnit, elementsToRemove );
     this.model1d2d = model1d2d;
   }
 //  public RemoveElementFromCalculationUnitCmd(

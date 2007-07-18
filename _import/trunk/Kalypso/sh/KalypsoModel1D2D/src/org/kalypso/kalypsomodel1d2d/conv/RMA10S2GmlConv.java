@@ -57,8 +57,8 @@ import org.kalypso.kalypsosimulationmodel.core.Assert;
 /**
  * Provides algorithm to convert from a bce2d model to a 1d2d discretisation model
  * 
- * @author Patrice Congo
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
+ * @author Patrice Congo
  */
 public class RMA10S2GmlConv implements IRMA10SModelReader
 {
@@ -82,7 +82,13 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
   {
     Assert.throwIAEOnNullParam( reader, "inputStreamReader" );
     final LineNumberReader lnr = new LineNumberReader( reader );
-    char char0, char1;
+    final Pattern lineFP = Pattern.compile( "FP.*" );
+    final Pattern lineFE = Pattern.compile( "FE.*" );
+    final Pattern lineAR = Pattern.compile( "AR.*" );
+    final Pattern lineRK = Pattern.compile( "RK.*" );
+    final Pattern lineVA = Pattern.compile( "VA.*" );
+    final Pattern lineDA = Pattern.compile( "DA.*" );
+    final Pattern lineTL = Pattern.compile( "TL.*" );
 
     // signal parsing start
     m_handler.start();
@@ -90,53 +96,26 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
     for( String line = lnr.readLine(); line != null; line = lnr.readLine() )
     {
       if( line.length() < 2 )
-      {
         continue;
-      }
-
-      char0 = line.charAt( 0 );
-      char1 = line.charAt( 1 );
-
-      if( char0 == 'F' && char1 == 'P' )
+      if( lineFP.matcher( line ).matches() )
+        interpreteNodeLine( line );
+      else if( lineFE.matcher( line ).matches() )
+        interpreteElementLine( line );
+      else if( lineAR.matcher( line ).matches() )
+        interpreteArcLine( line );
+      else if( lineRK.matcher( line ).matches() )
       {
-        interpreteNodeLine( line, m_handler );
-
+        // still not implemented
       }
-      else if( char0 == 'F' && char1 == 'E' )
-      {
-        // LineID, ID
-        interpreteElementLine( line, m_handler );
-      }
-      else if( char0 == 'A' && char1 == 'R' )
-      {
-        // edge LINEID, ID, node1, node2, ellinks, elrechts, mid-side node (after calculation)
-        interpreteArcLine( line, m_handler );
-      }
-      else if( char0 == 'R' && char1 == 'K' )
-      {
-
-      }
-      else if( char0 == 'V' && char1 == 'A' )
-      {
-        // result LINEID, ID, vx, vy, depth, waterlevel
-        interpreteResultLine( line, m_handler );
-      }
-      else if( char0 == 'D' && char1 == 'A' )
-      {
-        // result TIMESTEP
-        // DA 2001 19.0000000
-        interpreteTimeLine( line, m_handler );
-      }
-      else if( char0 == 'T' && char1 == 'L' )
-      {
-        // TL JunctionID, 1d-ElementID, BoundaryLineID, 1d-NodeID
-        interprete1d2dJunctionElement( line, m_handler );
-      }
+      else if( lineVA.matcher( line ).matches() )
+        interpreteResultLine( line );
+      else if( lineDA.matcher( line ).matches() )
+        interpreteTimeLine( line );
+      else if( lineTL.matcher( line ).matches() )
+        interprete1d2dJunctionElement( line );
       else
-      {
         if( verboseMode )
           System.out.println( "Unsupported section:" + line );
-      }
     }
 
     // signal parsing stop
@@ -144,8 +123,9 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
 
   }
 
-  private void interprete1d2dJunctionElement( final String line, final IRMA10SModelElementHandler handler )
+  private void interprete1d2dJunctionElement( final String line )
   {
+ // TL JunctionID, 1d-ElementID, BoundaryLineID, 1d-NodeID
     final Pattern linePattern = Pattern.compile( "TL\\s*([0-9]+)\\s*([0-9]+)\\s*([0-9]+)\\s*([0-9]+)" );
     final Matcher matcher = linePattern.matcher( line );
     if( matcher.matches() )
@@ -157,19 +137,20 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
         final int boundaryLine2dID = Integer.parseInt( matcher.group( 3 ) );
         final int mode1dID = Integer.parseInt( matcher.group( 4 ) );
 
-        handler.handleJunction( line, junctionID, element1dID, boundaryLine2dID, mode1dID );
+        m_handler.handleJunction( line, junctionID, element1dID, boundaryLine2dID, mode1dID );
       }
       catch( final NumberFormatException e )
       {
-        handler.handlerError( line, EReadError.ILLEGAL_SECTION );
+        m_handler.handlerError( line, EReadError.ILLEGAL_SECTION );
       }
     }
     else
-      handler.handlerError( line, EReadError.ILLEGAL_SECTION );
+      m_handler.handlerError( line, EReadError.ILLEGAL_SECTION );
   }
 
-  private void interpreteTimeLine( final String line, final IRMA10SModelElementHandler handler )
+  private void interpreteTimeLine( final String line )
   {
+    // TODO implement Pattern-like parsing, instead of getting line parts via string index
     if( line.length() >= 32 )
     {
       try
@@ -191,21 +172,22 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
         calendar.add( Calendar.HOUR, wholeHours );
         calendar.add( Calendar.MINUTE, wholeMinutes );
 
-        handler.handleTime( line, calendar.getTime() );
+        m_handler.handleTime( line, calendar.getTime() );
       }
       catch( final NumberFormatException e )
       {
-        handler.handlerError( line, EReadError.ILLEGAL_SECTION );
+        m_handler.handlerError( line, EReadError.ILLEGAL_SECTION );
       }
     }
     else
-      handler.handlerError( line, EReadError.ILLEGAL_SECTION );
+      m_handler.handlerError( line, EReadError.ILLEGAL_SECTION );
 
   }
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelReader#setModelElementIDProvider(org.kalypso.kalypsomodel1d2d.conv.IModelElementIDProvider)
    */
+  @Deprecated
   public void setModelElementIDProvider( final IModelElementIDProvider idProvider ) throws IllegalArgumentException
   {
     // this.idProvider=idProvider;
@@ -222,16 +204,13 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
   static public void toDiscretisationModel( final InputStream rma10sModelInput, final IFEDiscretisationModel1d2d targetModel, final IPositionProvider positionProvider, final IModelElementIDProvider idProvider ) throws IllegalStateException, IOException
   {
     final IRMA10SModelReader reader = new RMA10S2GmlConv();
-
     final IRMA10SModelElementHandler handler = new DiscretisationModel1d2dHandler( targetModel, positionProvider, idProvider );
-    reader.setModelElementIDProvider( idProvider );
+//    reader.setModelElementIDProvider( idProvider );
     reader.setRMA10SModelElementHandler( handler );
     reader.parse( rma10sModelInput );
-
-    return;
   }
 
-  private static final void interpreteNodeLine( final String line, final IRMA10SModelElementHandler handler )
+  private void interpreteNodeLine( final String line )
   {
     final Pattern linePattern = Pattern.compile( "FP\\s*([0-9]+)\\s+([0-9]+\\.[0-9]*)\\s+([0-9]+\\.[0-9]*)\\s+([\\+\\-]?[0-9]+\\.[0-9]*).*" );
     final Matcher matcher = linePattern.matcher( line );
@@ -246,18 +225,18 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
         // TODO: the value '-9999' represents the NODATA-value, should be discussed
         if( elevation == -9999 )
           elevation = Double.NaN;
-        handler.handleNode( line, id, easting, northing, elevation );
+        m_handler.handleNode( line, id, easting, northing, elevation );
       }
       catch( final NumberFormatException e )
       {
-        handler.handlerError( line, EReadError.ILLEGAL_SECTION );
+        m_handler.handlerError( line, EReadError.ILLEGAL_SECTION );
       }
     }
     else
-      handler.handlerError( line, EReadError.ILLEGAL_SECTION );
+      m_handler.handlerError( line, EReadError.ILLEGAL_SECTION );
   }
 
-  private static final void interpreteResultLine( final String line, final IRMA10SModelElementHandler handler )
+  private void interpreteResultLine( final String line )
   {
     final String[] strings = line.split( "\\s+" );
     if( strings.length == 6 )
@@ -269,18 +248,18 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
         final double vy = Double.parseDouble( strings[3] );
         final double depth = Double.parseDouble( strings[4] );
         final double waterlevel = Double.parseDouble( strings[5] );
-        handler.handleResult( line, id, vx, vy, depth, waterlevel );
+        m_handler.handleResult( line, id, vx, vy, depth, waterlevel );
       }
       catch( final NumberFormatException e )
       {
-        handler.handlerError( line, EReadError.ILLEGAL_SECTION );
+        m_handler.handlerError( line, EReadError.ILLEGAL_SECTION );
       }
     }
     else
-      handler.handlerError( line, EReadError.ILLEGAL_SECTION );
+      m_handler.handlerError( line, EReadError.ILLEGAL_SECTION );
   }
 
-  private static final void interpreteArcLine( final String line, final IRMA10SModelElementHandler handler )
+  private void interpreteArcLine( final String line )
   {
     final Pattern middleNodePattern = Pattern.compile( "AR\\s*([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+([0-9]+).*" );
     Matcher matcher = middleNodePattern.matcher( line );
@@ -294,7 +273,7 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
         final int elementLeftID = Integer.parseInt( matcher.group( 4 ) );
         final int elementRightID = Integer.parseInt( matcher.group( 5 ) );
         final int middleNodeID = Integer.parseInt( matcher.group( 6 ) );
-        handler.handleArc( line, id, node1ID, node2ID, elementLeftID, elementRightID, middleNodeID );
+        m_handler.handleArc( line, id, node1ID, node2ID, elementLeftID, elementRightID, middleNodeID );
       }
       else
       {
@@ -307,19 +286,19 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
           final int node2ID = Integer.parseInt( matcher.group( 3 ) );
           final int elementLeftID = Integer.parseInt( matcher.group( 4 ) );
           final int elementRightID = Integer.parseInt( matcher.group( 5 ) );
-          handler.handleArc( line, id, node1ID, node2ID, elementLeftID, elementRightID, -1 );
+          m_handler.handleArc( line, id, node1ID, node2ID, elementLeftID, elementRightID, -1 );
         }
         else
-          handler.handlerError( line, EReadError.ILLEGAL_SECTION );
+          m_handler.handlerError( line, EReadError.ILLEGAL_SECTION );
       }
     }
     catch( final NumberFormatException e )
     {
-      handler.handlerError( line, EReadError.ILLEGAL_SECTION );
+      m_handler.handlerError( line, EReadError.ILLEGAL_SECTION );
     }
   }
 
-  private static final void interpreteElementLine( final String line, final IRMA10SModelElementHandler handler )
+  private void interpreteElementLine( final String line )
   {
     Matcher matcher = null;
     final Pattern fourParamLinePattern = Pattern.compile( "FE\\s*([0-9]+)\\s+([\\+\\-]?[0-9]+)\\s+([\\+\\-]?[0-9]+)\\s+([0-9]+).*" );
@@ -332,7 +311,7 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
         final int currentRougthnessClassID = Integer.parseInt( matcher.group( 2 ) );
         final int previousRoughnessClassID = Integer.parseInt( matcher.group( 3 ) );
         final int eleminationNumber = Integer.parseInt( matcher.group( 4 ) );
-        handler.handleElement( line, id, currentRougthnessClassID, previousRoughnessClassID, eleminationNumber );
+        m_handler.handleElement( line, id, currentRougthnessClassID, previousRoughnessClassID, eleminationNumber );
       }
       else
       {
@@ -343,7 +322,7 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
           final int id = Integer.parseInt( matcher.group( 1 ) );
           final int currentRougthnessClassID = Integer.parseInt( matcher.group( 2 ) );
           final int previousRoughnessClassID = Integer.parseInt( matcher.group( 3 ) );
-          handler.handleElement( line, id, currentRougthnessClassID, previousRoughnessClassID, -1 );
+          m_handler.handleElement( line, id, currentRougthnessClassID, previousRoughnessClassID, -1 );
         }
         else
         {
@@ -353,7 +332,7 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
           {
             final int id = Integer.parseInt( matcher.group( 1 ) );
             final int currentRougthnessClassID = Integer.parseInt( matcher.group( 2 ) );
-            handler.handleElement( line, id, currentRougthnessClassID, -1, -1 );
+            m_handler.handleElement( line, id, currentRougthnessClassID, -1, -1 );
           }
           else
           {
@@ -362,17 +341,17 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
             if( matcher.matches() )
             {
               final int id = Integer.parseInt( matcher.group( 1 ) );
-              handler.handleElement( line, id, -1, -1, -1 );
+              m_handler.handleElement( line, id, -1, -1, -1 );
             }
             else
-              handler.handlerError( line, EReadError.LINE_TOO_SHORT );
+              m_handler.handlerError( line, EReadError.LINE_TOO_SHORT );
           }
         }
       }
     }
     catch( final NumberFormatException e )
     {
-      handler.handlerError( line, EReadError.ILLEGAL_SECTION );
+      m_handler.handlerError( line, EReadError.ILLEGAL_SECTION );
     }
   }
 

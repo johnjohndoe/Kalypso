@@ -50,7 +50,7 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
-import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
+import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards.CreateCalculationUnitWizard;
@@ -157,7 +157,7 @@ public class CalculationUnitComponent extends FeatureWrapperListEditor implement
       System.out.println( "current selection is null" );
       return;
     }
-    final GM_Envelope boundingBox = CalUnitOps.getBoundingBox( calUnitToMax );
+    final GM_Envelope boundingBox = CalcUnitOps.getBoundingBox( calUnitToMax );
     if( boundingBox == null )
     {
       System.out.println( "BBox is null" );
@@ -171,15 +171,11 @@ public class CalculationUnitComponent extends FeatureWrapperListEditor implement
   protected void deleteSelected( )
   {
     final KeyBasedDataModel dataModel = getDataModel();
-    final ICalculationUnit calUnitToDel = dataModel.getData( ICalculationUnit.class, ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
-    if( calUnitToDel != null )
+    final ICalculationUnit calcUnitToDel = dataModel.getData( ICalculationUnit.class, ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
+    if( calcUnitToDel != null )
     {
-
-      // find control model and removes
-      CalUnitOps.removeUnitControlModel( calUnitToDel );
-      //
       final IFEDiscretisationModel1d2d model1d2d = dataModel.getData( IFEDiscretisationModel1d2d.class, ICommonKeys.KEY_DISCRETISATION_MODEL );
-      final DeleteCalculationUnitCmd delCmd = new DeleteCalculationUnitCmd( model1d2d, calUnitToDel )
+      final DeleteCalculationUnitCmd delCmd = new DeleteCalculationUnitCmd( model1d2d, calcUnitToDel )
       {
         /**
          * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.DeleteCalculationUnit#process()
@@ -188,9 +184,10 @@ public class CalculationUnitComponent extends FeatureWrapperListEditor implement
         public void process( ) throws Exception
         {
           super.process();
+          calcUnitToDel.deleteControlModel();
           // reset with list from model
           IFEDiscretisationModel1d2d model1d2d = (IFEDiscretisationModel1d2d) dataModel.getData( ICommonKeys.KEY_DISCRETISATION_MODEL );
-          List<ICalculationUnit> calUnits = CalUnitOps.getModelCalculationUnits( model1d2d );
+          List<ICalculationUnit> calUnits = CalcUnitOps.getModelCalculationUnits( model1d2d );
           dataModel.setData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST, calUnits );
           // set current selection to null
           dataModel.setData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, null );

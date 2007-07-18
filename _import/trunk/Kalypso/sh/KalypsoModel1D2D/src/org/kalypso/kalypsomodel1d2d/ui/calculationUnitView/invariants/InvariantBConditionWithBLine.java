@@ -43,7 +43,7 @@ package org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.invariants;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
+import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.ops.EdgeOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine1D;
@@ -119,7 +119,7 @@ public class InvariantBConditionWithBLine implements ICalculationValidateInterfa
   private void invariant_CheckBC_On_EndNode( ICalculationUnit1D calc )
   {
     
-    final List<IBoundaryLine> bLines = CalUnitOps.getBoundaryLines( calc );
+    final List<IBoundaryLine> bLines = CalcUnitOps.getBoundaryLines( calc );
     
     List <IFE1D2DElement> elements = calc.getElements();
     List <IFE1D2DNode> endNodes = new ArrayList<IFE1D2DNode>();
@@ -135,7 +135,7 @@ public class InvariantBConditionWithBLine implements ICalculationValidateInterfa
       }
     }    
     
-    List<IBoundaryCondition> bConditions_ = CalUnitOps.getBoundaryConditions( getBoundaryConditions(), calc, getGrabDistance() );
+    List<IBoundaryCondition> bConditions_ = CalcUnitOps.getBoundaryConditions( getBoundaryConditions(), calc, getGrabDistance() );
     boolean foundEndBLine = false;
     for (IBoundaryCondition condition_ : bConditions_)
     {
@@ -159,7 +159,7 @@ public class InvariantBConditionWithBLine implements ICalculationValidateInterfa
   @SuppressWarnings("unchecked")
   private void invariant_CheckForBLExist(ICalculationUnit1D calc )
   {
-    final List<IBoundaryLine> boundaryLines = CalUnitOps.getBoundaryLines( calc );
+    final List<IBoundaryLine> boundaryLines = CalcUnitOps.getBoundaryLines( calc );
     if (boundaryLines.size() == 0)
     {
       invariantErrorMessages.add( new ProblemDescriptor(null,
@@ -170,8 +170,8 @@ public class InvariantBConditionWithBLine implements ICalculationValidateInterfa
   @SuppressWarnings("unchecked")
   private void invariant_CheckEachBLhasBC()
   {    
-    final List<IBoundaryLine> boundaryLines = CalUnitOps.getBoundaryLines( calculationUnit );
-    final List<IBoundaryCondition> boundaryConditions = CalUnitOps.getBoundaryConditions( getBoundaryConditions(), calculationUnit, getGrabDistance() );
+    final List<IBoundaryLine> boundaryLines = CalcUnitOps.getBoundaryLines( calculationUnit );
+    final List<IBoundaryCondition> boundaryConditions = CalcUnitOps.getBoundaryConditions( getBoundaryConditions(), calculationUnit, getGrabDistance() );
     
     for (IBoundaryLine line:boundaryLines)
     {

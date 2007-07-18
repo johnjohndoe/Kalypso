@@ -57,7 +57,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
+import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine1D;
@@ -229,7 +229,7 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
       final IBoundaryLine selectedBoundaryLine = getSelectedBoundaryLine();
       if( selectedBoundaryLine != null && calUnit != null )
       {
-        if( CalUnitOps.isBoundaryLineOf( selectedBoundaryLine, calUnit ) )// || CalUnitOps.isUpStreamBoundaryLine(
+        if( CalcUnitOps.isBoundaryLineOf( selectedBoundaryLine, calUnit ) )// || CalUnitOps.isUpStreamBoundaryLine(
                                                                           // calUnit, selectedBoundaryLine ) )
         {
           item.setEnabled( false );
@@ -252,7 +252,7 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
       }
       else
       {
-        if( !CalUnitOps.isBoundaryLineOf( selectedBoundaryLine, calUnit ) )// !CalUnitOps.isDownStreamBoundaryLine(
+        if( !CalcUnitOps.isBoundaryLineOf( selectedBoundaryLine, calUnit ) )// !CalUnitOps.isDownStreamBoundaryLine(
                                                                             // calUnit, selectedBoundaryLine ) &&
                                                                             // !CalUnitOps.isUpStreamBoundaryLine(
                                                                             // calUnit, selectedBoundaryLine ) )

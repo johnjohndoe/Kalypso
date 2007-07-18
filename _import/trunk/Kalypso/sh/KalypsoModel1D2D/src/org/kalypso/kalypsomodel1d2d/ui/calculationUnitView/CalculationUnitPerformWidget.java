@@ -49,7 +49,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
+import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
@@ -158,7 +158,7 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
 
     final IFEDiscretisationModel1d2d m_model = UtilMap.findFEModelTheme( mapModell );
     dataModel.setData( ICommonKeys.KEY_DISCRETISATION_MODEL, m_model );
-    dataModel.setData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST, CalUnitOps.getModelCalculationUnits( m_model ) );
+    dataModel.setData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST, CalcUnitOps.getModelCalculationUnits( m_model ) );
     dataModel.setData( ICommonKeys.WIDGET_WITH_STRATEGY, this );
 
     // TODO: what is the purpose of this extra theme??! This is completely senseless!
@@ -172,7 +172,7 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
     dataModel.setData( ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL, m_model.getWrappedFeature().getWorkspace() );
 
     dataModel.setData( ICommonKeys.KEY_GRAB_DISTANCE_PROVIDER, this );
-    dataModel.setData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST, CalUnitOps.getModelCalculationUnits( m_model ) );
+    dataModel.setData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST, CalcUnitOps.getModelCalculationUnits( m_model ) );
 
     final IKalypsoFeatureTheme operationalTheme = UtilMap.findEditableTheme( mapModell, IBoundaryCondition.QNAME );
     dataModel.setData( ICommonKeys.KEY_BOUNDARY_CONDITION_CMD_WORKSPACE, operationalTheme.getWorkspace() );

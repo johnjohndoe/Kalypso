@@ -49,7 +49,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
+import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
@@ -136,7 +136,7 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
     final IFEDiscretisationModel1d2d model1d2d = UtilMap.findFEModelTheme( mapModell );
     // TODO check model1d2d for null and do something
     dataModel.setData( ICommonKeys.KEY_DISCRETISATION_MODEL, model1d2d );
-    dataModel.setData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST, CalUnitOps.getModelCalculationUnits( model1d2d ) );
+    dataModel.setData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST, CalcUnitOps.getModelCalculationUnits( model1d2d ) );
     dataModel.setData( ICommonKeys.WIDGET_WITH_STRATEGY, this );
 
     // command manager since it is use in the dirty pool object framework
