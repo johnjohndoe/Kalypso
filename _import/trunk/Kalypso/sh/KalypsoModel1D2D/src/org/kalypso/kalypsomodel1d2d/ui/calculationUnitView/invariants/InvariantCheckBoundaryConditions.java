@@ -43,7 +43,7 @@ package org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.invariants;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
+import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.IProblem;
@@ -111,7 +111,7 @@ public class InvariantCheckBoundaryConditions implements ICalculationValidateInt
 
   private List<IBoundaryLine> getBoundaryLines()
   {
-    return CalUnitOps.getBoundaryLines(calculationUnit);    
+    return CalcUnitOps.getBoundaryLines(calculationUnit);    
   }
 
 }
