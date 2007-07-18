@@ -48,7 +48,7 @@ import javax.swing.ImageIcon;
 
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypso.kalypsomodel1d2d.ops.CalUnitOps;
+import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
@@ -104,7 +104,7 @@ public class Model1d2dCalUnitTheme extends AbstractKalypsoTheme
     {
       return null;
     }
-    GM_Envelope bbox = CalUnitOps.getBoundingBox( calUnit );
+    GM_Envelope bbox = CalcUnitOps.getBoundingBox( calUnit );
 
     return bbox;
 
@@ -144,7 +144,7 @@ public class Model1d2dCalUnitTheme extends AbstractKalypsoTheme
       {
         if( bc instanceof IBoundaryCondition )
         {
-          if( CalUnitOps.isBoundaryConditionOf( calUnit, (IBoundaryCondition) bc, 20 ) )
+          if( CalcUnitOps.isBoundaryConditionOf( calUnit, (IBoundaryCondition) bc, 20 ) )
           {
             GM_Point position = ((IBoundaryCondition) bc).getPosition();
             double gPosX = p.getDestX( position.getX() ) + xTrans;
