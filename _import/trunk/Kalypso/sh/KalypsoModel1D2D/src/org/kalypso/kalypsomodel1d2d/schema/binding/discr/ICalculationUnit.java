@@ -40,24 +40,35 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
+
 /**
- * Tagging interface for classes representing a
- * wb1d2d:CalculationUnit
+ * Tagging interface for classes representing a wb1d2d:CalculationUnit
  * 
  * @author Patrice Congo
- *
+ * 
  */
-@SuppressWarnings("unchecked")
-public interface ICalculationUnit<T extends IFE1D2DElement> 
-                          extends IFE1D2DComplexElement<T>
-                          
+public interface ICalculationUnit<T extends IFE1D2DElement> extends IFE1D2DComplexElement<T>
 {
+  /**
+   * Finds the control model for the given calculation unit from the control model group.
+   * 
+   * @param controlModelGroup
+   *            the control model group holding the group of control models to check
+   * @throws IllegalArgumentException
+   *             if controlModelGroup is null
+   * @returns an Instance of {@link IControlModel1D2D} which is linked to this calculation unit
+   */
+  public IControlModel1D2D getControlModel( final IControlModelGroup controlModelGroup );
   
-//  public IBoundaryLine getUpStreamBoundaryLine();
+  public void deleteControlModel();
+
+// public IBoundaryLine getUpStreamBoundaryLine();
 //  
-//  public void setUpStreamBoundaryLine( IBoundaryLine line);
+// public void setUpStreamBoundaryLine( IBoundaryLine line);
 //  
-//  public IBoundaryLine getDownStreamBoundaryLine();
+// public IBoundaryLine getDownStreamBoundaryLine();
 //  
-//  public void setDownStreamBoundaryLine( IBoundaryLine line);
+// public void setDownStreamBoundaryLine( IBoundaryLine line);
 }

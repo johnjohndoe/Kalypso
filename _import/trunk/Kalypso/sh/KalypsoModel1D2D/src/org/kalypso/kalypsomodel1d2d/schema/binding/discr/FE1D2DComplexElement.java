@@ -52,37 +52,30 @@ import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
  * The default implementation of the {@link IFE1D2DComplexElement} interface.
  * 
  * @author Patrice Congo
- *
+ * 
  */
-public class FE1D2DComplexElement <ET extends IFE1D2DElement>
-        extends AbstractFeatureBinder 
-        implements IFE1D2DComplexElement< ET> 
+public class FE1D2DComplexElement<ET extends IFE1D2DElement> extends AbstractFeatureBinder implements IFE1D2DComplexElement<ET>
 {
-  
+
   private final IFeatureWrapperCollection<ET> elements;
-  
+
   /**
    * Construct a new wrapper object for the given feature
    * 
-   * @param featureToBind the feature to wrap
-   * @param qnameToBind the {@link QName} given the type of the feature to wrap
-   * @param elementListPropQName the {@link QName} of the list property
-   *            holding the property
-   * @param eleClass the base wrapper class for the elements
+   * @param featureToBind
+   *            the feature to wrap
+   * @param qnameToBind
+   *            the {@link QName} given the type of the feature to wrap
+   * @param elementListPropQName
+   *            the {@link QName} of the list property holding the property
+   * @param eleClass
+   *            the base wrapper class for the elements
    */
-  public FE1D2DComplexElement( 
-                          Feature featureToBind, 
-                          QName qnameToBind ,
-                          QName elementListPropQName,
-                          Class<ET> wrapperClass)
+  public FE1D2DComplexElement( Feature featureToBind, QName qnameToBind, QName elementListPropQName, Class<ET> wrapperClass )
   {
-    super(featureToBind, qnameToBind);
-    elements = Util.<ET>get( 
-        featureToBind, 
-        qnameToBind, 
-        elementListPropQName, 
-        wrapperClass,//IFE1D2DElement.class, 
-        true);    
+    super( featureToBind, qnameToBind );
+    elements = Util.<ET> get( featureToBind, qnameToBind, elementListPropQName, wrapperClass,// IFE1D2DElement.class,
+    true );
   }
 
   /**
@@ -93,8 +86,6 @@ public class FE1D2DComplexElement <ET extends IFE1D2DElement>
     return elements;
   }
 
-
-
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper#getWrappedFeature()
    */
@@ -102,8 +93,6 @@ public class FE1D2DComplexElement <ET extends IFE1D2DElement>
   {
     return getFeature();
   }
-
-
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DComplexElement#addElementAsRef(org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement)
@@ -113,8 +102,6 @@ public class FE1D2DComplexElement <ET extends IFE1D2DElement>
     Assert.throwIAEOnNullParam( element, "element" );
     return elements.addRef( element );
   }
-
-
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DComplexElement#removeElementAsRef(org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement)

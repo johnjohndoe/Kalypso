@@ -42,8 +42,17 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.ops.LinksOps;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2DCollection;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
+import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
@@ -51,29 +60,16 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  * Default implementation for {@link ICalculationUnit}
  * 
  * @author Patrice Congo
- *
+ * 
  */
-@SuppressWarnings("unchecked")
-public class CalculationUnit
-                <ET extends IFE1D2DElement>
-                extends FE1D2DComplexElement<ET>
-                implements ICalculationUnit<ET>
+public class CalculationUnit<ET extends IFE1D2DElement> extends FE1D2DComplexElement<ET> implements ICalculationUnit<ET>
 {
+  private IControlModel1D2D m_controlModel1D2D = null;
+  private IControlModelGroup m_controlModelGroup;
 
-  
- 
-  public CalculationUnit( 
-              Feature featureToBind, 
-              QName qnameToBind, 
-              QName elementListPropQName, 
-              Class<ET> wrapperClass )
+  public CalculationUnit( Feature featureToBind, QName qnameToBind, QName elementListPropQName, Class<ET> wrapperClass )
   {
-    super( 
-        featureToBind, 
-        qnameToBind, 
-        elementListPropQName, 
-        wrapperClass );
- 
+    super( featureToBind, qnameToBind, elementListPropQName, wrapperClass );
   }
 
   /**
@@ -81,11 +77,7 @@ public class CalculationUnit
    */
   public IBoundaryLine getDownStreamBoundaryLine( )
   {
-    final IBoundaryLine resolvedLink = 
-      FeatureHelper.resolveLink( 
-        this, 
-        Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE_DOWNSTREAM, 
-        IBoundaryLine.class );
+    final IBoundaryLine resolvedLink = FeatureHelper.resolveLink( this, Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE_DOWNSTREAM, IBoundaryLine.class );
     return resolvedLink;
   }
 
@@ -94,31 +86,24 @@ public class CalculationUnit
    */
   public void setDownStreamBoundaryLine( IBoundaryLine line )
   {
-    //unlink old boundary
+    // unlink old boundary
     final IBoundaryLine oldLine = getDownStreamBoundaryLine();
     if( oldLine != null )
     {
       LinksOps.delRelationshipElementAndComplexElement( oldLine, this );
     }
-    
-    //set new boundary
-    FeatureHelper.setLocalLink( 
-        this, 
-        Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE_DOWNSTREAM, 
-        line );
+
+    // set new boundary
+    FeatureHelper.setLocalLink( this, Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE_DOWNSTREAM, line );
     line.getContainers().addRef( this );
   }
-  
+
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit#getUpStreamBoundaryLine()
    */
   public IBoundaryLine getUpStreamBoundaryLine( )
   {
-    final IBoundaryLine resolvedLink = 
-      FeatureHelper.resolveLink( 
-        this, 
-        Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE_UPSTREAM, 
-        IBoundaryLine.class );
+    final IBoundaryLine resolvedLink = FeatureHelper.resolveLink( this, Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE_UPSTREAM, IBoundaryLine.class );
     return resolvedLink;
   }
 
@@ -127,16 +112,59 @@ public class CalculationUnit
    */
   public void setUpStreamBoundaryLine( IBoundaryLine line )
   {
-    //unlink old boundary
+    // unlink old boundary
     final IBoundaryLine oldLine = getUpStreamBoundaryLine();
     if( oldLine != null )
     {
       LinksOps.delRelationshipElementAndComplexElement( oldLine, this );
-    }    
-    //set new boundary
-    FeatureHelper.setLocalLink( 
-        this, 
-        Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE_UPSTREAM, 
-        line );
+    }
+    // set new boundary
+    FeatureHelper.setLocalLink( this, Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE_UPSTREAM, line );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit#getControlModel(org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup)
+   */
+  public IControlModel1D2D getControlModel( IControlModelGroup controlModelGroup )
+  {
+    Assert.throwIAEOnNullParam( controlModelGroup, "controlModelGroup" );
+    m_controlModelGroup = controlModelGroup;
+    final IControlModel1D2DCollection model1D2DCollection = controlModelGroup.getModel1D2DCollection();
+    for( final IControlModel1D2D cm : model1D2DCollection )
+    {
+      final ICalculationUnit cmCalcUnit = cm.getCalculationUnit();
+      if( cmCalcUnit != null && getGmlID().equals( cmCalcUnit.getGmlID() ) )
+      {
+        m_controlModel1D2D = cm;
+        return cm;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit#deleteControlModel()
+   */
+  public void deleteControlModel( )
+  {
+    if( m_controlModel1D2D == null )
+      return;
+    final Feature cmFeature = m_controlModel1D2D.getWrappedFeature();
+    final Feature parentFeature = m_controlModelGroup.getWrappedFeature();// cmFeature.getParent();
+    final IFeatureType parentFT = parentFeature.getFeatureType();
+
+    final IPropertyType propType = parentFT.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_CONTROL_MODEL_MEMBER );
+    if( !(propType instanceof IRelationType) )
+      return;
+    final CommandableWorkspace cmdWorkspace = new CommandableWorkspace( cmFeature.getWorkspace() );
+    final DeleteFeatureCommand delControlCmd = new DeleteFeatureCommand( cmdWorkspace, parentFeature, (IRelationType) parentFT, cmFeature );
+    try
+    {
+      cmdWorkspace.postCommand( delControlCmd );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+    }
   }
 }
