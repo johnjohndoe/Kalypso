@@ -73,14 +73,14 @@ public class MapUtilities
    * Snaps the given AWT-Point to a given geometry, if it lies into a specified radius.
    * 
    * @param mapPanel
-   *          The MapPanel of the map.
+   *            The MapPanel of the map.
    * @param p
-   *          The AWT-Point which should be snapped.
+   *            The AWT-Point which should be snapped.
    * @param radiusPx
-   *          This radius will be converted to a world coord radius. Within this circle, the AWT-Point is beeing
-   *          snapped.
+   *            This radius will be converted to a world coord radius. Within this circle, the AWT-Point is beeing
+   *            snapped.
    * @param type
-   *          This type of snapping will be used. {@link SNAP_TYPE}
+   *            This type of snapping will be used. {@link SNAP_TYPE}
    * @return The GM_Point snapped on the geometry.
    */
   public static GM_Point snap( MapPanel mapPanel, GM_Object geometry, Point p, int radiusPx, SNAP_TYPE type ) throws GM_Exception
@@ -123,8 +123,10 @@ public class MapUtilities
   /**
    * This method transforms the AWT-Point to a GM_Point.
    * 
+   * @param mapPanel
+   *            The MapPanel of the map.
    * @param p
-   *          The AWT-Point.
+   *            The AWT-Point.
    */
   public static GM_Point transform( MapPanel mapPanel, Point p )
   {
@@ -140,8 +142,10 @@ public class MapUtilities
   /**
    * This method transforms the GM_Point to a AWT-Point.
    * 
+   * @param mapPanel
+   *            The MapPanel of the map.
    * @param p
-   *          The GM_Point.
+   *            The GM_Point.
    */
   public static Point retransform( MapPanel mapPanel, GM_Point p )
   {
@@ -157,11 +161,11 @@ public class MapUtilities
    * This function transforms a distance in pixel to the world distance.
    * 
    * @param mapPanel
-   *          The MapPanel of the map.
+   *            The MapPanel of the map.
    * @param reference
-   *          The reference point.
+   *            The reference point.
    * @param distancePx
-   *          The distance to be calculated.
+   *            The distance to be calculated.
    * @return The distance in the world coords.
    */
   public static double calculateWorldDistance( MapPanel mapPanel, GM_Point reference, int distancePx )
@@ -172,23 +176,21 @@ public class MapUtilities
     GM_Point destination = transform( mapPanel, point );
     return destination.getX() - reference.getX();
   }
-  
+
   /**
    * This function transforms a distance in pixel to the world distance.
    * 
    * @param mapPanel
-   *          The MapPanel of the map. 
+   *            The MapPanel of the map.
    * @param distancePx
-   *          The distance in pixel to be calculated.
+   *            The distance in pixel to be calculated.
    * @return The distance in the world coordinates system.
    */
   public static double calculateWorldDistance( MapPanel mapPanel, int distancePx )
   {
     final GM_Position minPosition = mapPanel.getBoundingBox().getMin();
-    final GM_Point reference = GeometryFactory.createGM_Point( 
-        minPosition.getX(), 
-        minPosition.getY(), 
-        mapPanel.getMapModell().getCoordinatesSystem() );
+    final GM_Point reference = GeometryFactory.createGM_Point( minPosition.getX(), minPosition.getY(), mapPanel.getMapModell().getCoordinatesSystem() );
+    
     return calculateWorldDistance( mapPanel, reference, distancePx );
   }
 }
