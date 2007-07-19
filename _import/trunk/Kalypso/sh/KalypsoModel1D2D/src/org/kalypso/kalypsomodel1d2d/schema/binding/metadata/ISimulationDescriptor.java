@@ -59,10 +59,10 @@ public interface ISimulationDescriptor extends IFeatureWrapper2
     Unsteady
   }
 
-  public String getScenarioName();
-  
-  public void setScenarioName(String scenarioName);
-  
+  public String getScenarioName( );
+
+  public void setScenarioName( String scenarioName );
+
   public boolean isRestarted( );
 
   public void setRestarted( boolean value );
@@ -82,49 +82,48 @@ public interface ISimulationDescriptor extends IFeatureWrapper2
   public GregorianCalendar getEndTime( );
 
   public void setEndTime( GregorianCalendar value );
-  
+
   /**
-   * To get the descriptor of the control model used in the simulation
-   * being described
-   * @param an {@link IModelDescriptor} which describe the control model
-   *    used in the simulation being described 
+   * To get the descriptor of the control model used in the simulation being described
+   * 
+   * @param an
+   *            {@link IModelDescriptor} which describe the control model used in the simulation being described
    */
-  public IModelDescriptor getControlModel();
-  
+  public IModelDescriptor getControlModel( );
+
   /**
-   * Sets the descriptor of the control model used for the simulation
-   * being described by this descriptor
-   * @param modelDescriptor the model descriptor simulation control model
-   *   
+   * Sets the descriptor of the control model used for the simulation being described by this descriptor
+   * 
+   * @param modelDescriptor
+   *            the model descriptor simulation control model
+   * 
    */
-  public void setControlModel(IModelDescriptor modelDescriptor);
-  
+  public void setControlModel( IModelDescriptor modelDescriptor );
+
   /**
    * To get the description of the calculation unit the describe simulation is for
    * 
    * @return {@link IModelDescriptor} of the calculation unit this
-   *    
-   *    
-   */
-  public IModelDescriptor getCalculationUnit();
-  
-  
-  /**
-   * Sets the descriptor of the calculation unit model simulated by the simulation
-   * being described by this descriptor
-   * @param modelDescriptor the model descriptor foe the simulated calculation unit
+   * 
    * 
    */
-  public void setCalculationUnit(IModelDescriptor modelDescriptor);
-  
+  public IModelDescriptor getCalculationUnit( );
+
   /**
-   * To get the list of descriptor for the result of the simulation being
-   * described
+   * Sets the descriptor of the calculation unit model simulated by the simulation being described by this descriptor
    * 
-   * @return a {@link org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection}
-   *            containing the list of descriptors for the result of the simualtion being
-   *            described. 
+   * @param modelDescriptor
+   *            the model descriptor foe the simulated calculation unit
+   * 
    */
-  public IFeatureWrapperCollection<IResultModelDescriptor> getResultModel();
-  
+  public void setCalculationUnit( IModelDescriptor modelDescriptor );
+
+  /**
+   * To get the list of descriptor for the result of the simulation being described
+   * 
+   * @return a {@link org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection} containing the list of
+   *         descriptors for the result of the simualtion being described.
+   */
+  public IFeatureWrapperCollection<IResultModelDescriptor> getResultModel( );
+
 }

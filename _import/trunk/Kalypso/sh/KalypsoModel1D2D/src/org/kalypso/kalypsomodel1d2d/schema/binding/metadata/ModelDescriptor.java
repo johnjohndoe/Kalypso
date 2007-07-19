@@ -48,30 +48,27 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
 
-
 /**
  * Default implementation of {@link IModelDescriptor}
  * 
  * @author Patrice Congo
- *
+ * 
  */
-public class ModelDescriptor 
-                extends AbstractFeatureBinder
-                implements IModelDescriptor
+public class ModelDescriptor extends AbstractFeatureBinder implements IModelDescriptor
 {
 
-  
-  public ModelDescriptor( Feature featureToBind)
+  public ModelDescriptor( Feature featureToBind )
   {
-    this( 
-        featureToBind,
-        Kalypso1D2DSchemaConstants.SIMMETA_F_MODELDESCRIPTOR);
+    this( featureToBind, Kalypso1D2DSchemaConstants.SIMMETA_F_MODELDESCRIPTOR );
   }
-  
+
   /**
    * Creates a model descriptor object binding the given descriptor feature.
-   * @param featureToBind the descriptor feature to bind
-   * @param qnameToBind the qname of the feature to bind
+   * 
+   * @param featureToBind
+   *            the descriptor feature to bind
+   * @param qnameToBind
+   *            the qname of the feature to bind
    */
   public ModelDescriptor( Feature featureToBind, QName qnameToBind )
   {
@@ -83,12 +80,9 @@ public class ModelDescriptor
    */
   public String getModelID( )
   {
-    String modelName =
-      getProperty( 
-          Kalypso1D2DSchemaConstants.SIMMETA_PROP_MODEL_ID,
-          String.class);
+    String modelName = getProperty( Kalypso1D2DSchemaConstants.SIMMETA_PROP_MODEL_ID, String.class );
     return modelName;
-    
+
   }
 
   /**
@@ -96,10 +90,7 @@ public class ModelDescriptor
    */
   public String getModelName( )
   {
-    String modelName =
-      getProperty( 
-          Kalypso1D2DSchemaConstants.SIMMETA_PROP_MODEL_NAME,
-          String.class);
+    String modelName = getProperty( Kalypso1D2DSchemaConstants.SIMMETA_PROP_MODEL_NAME, String.class );
     return modelName;
   }
 
@@ -108,10 +99,7 @@ public class ModelDescriptor
    */
   public String getModelType( )
   {
-    String modelName =
-      getProperty( 
-          Kalypso1D2DSchemaConstants.SIMMETA_PROP_MODEL_TYPE,
-          String.class);
+    String modelName = getProperty( Kalypso1D2DSchemaConstants.SIMMETA_PROP_MODEL_TYPE, String.class );
     return modelName;
   }
 
@@ -120,10 +108,7 @@ public class ModelDescriptor
    */
   public String getWorkspacePath( )
   {
-    String path =
-      getProperty( 
-          Kalypso1D2DSchemaConstants.SIMMETA_PROP_WORKSPACE_PATH,
-          String.class);
+    String path = getProperty( Kalypso1D2DSchemaConstants.SIMMETA_PROP_WORKSPACE_PATH, String.class );
     return path;
   }
 
@@ -132,9 +117,7 @@ public class ModelDescriptor
    */
   public void setModelID( String modelID )
   {
-    setProperty( 
-        Kalypso1D2DSchemaConstants.SIMMETA_PROP_MODEL_ID, 
-        modelID );    
+    setProperty( Kalypso1D2DSchemaConstants.SIMMETA_PROP_MODEL_ID, modelID );
   }
 
   /**
@@ -142,9 +125,7 @@ public class ModelDescriptor
    */
   public void setModelName( String model )
   {
-    setProperty( 
-        Kalypso1D2DSchemaConstants.SIMMETA_PROP_MODEL_NAME, 
-        model );   
+    setProperty( Kalypso1D2DSchemaConstants.SIMMETA_PROP_MODEL_NAME, model );
   }
 
   /**
@@ -152,9 +133,7 @@ public class ModelDescriptor
    */
   public void setModelType( String modelType )
   {
-    setProperty( 
-        Kalypso1D2DSchemaConstants.SIMMETA_PROP_MODEL_TYPE, 
-        modelType );  
+    setProperty( Kalypso1D2DSchemaConstants.SIMMETA_PROP_MODEL_TYPE, modelType );
   }
 
   /**
@@ -162,9 +141,7 @@ public class ModelDescriptor
    */
   public void setWorkspacePath( String workspacePath )
   {
-    setProperty( 
-        Kalypso1D2DSchemaConstants.SIMMETA_PROP_WORKSPACE_PATH, 
-        workspacePath );  
+    setProperty( Kalypso1D2DSchemaConstants.SIMMETA_PROP_WORKSPACE_PATH, workspacePath );
   }
 
   /**
@@ -176,8 +153,8 @@ public class ModelDescriptor
     Feature feature = featureWrapper2.getWrappedFeature();
     String testeeContext = feature.getWorkspace().getContext().toString();
     String testeeGmlID = feature.getId();
-    
-    return /*testeeContext.equals( getWorkspacePath() ) &&*/ testeeGmlID.equals( getModelID() );
+
+    return /* testeeContext.equals( getWorkspacePath() ) && */testeeGmlID.equals( getModelID() );
   }
-  
+
 }
