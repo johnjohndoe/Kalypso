@@ -60,6 +60,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.ct;
 
+import org.kalypso.transformation.TransformUtilities;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_CurveSegment;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -163,6 +164,10 @@ final public class GeoTransformer
    */
   public GM_Object transform( GM_Object geo ) throws Exception
   {
+    /* If no transformation should be done, return the input object. */
+    if( TransformUtilities.shouldTransform() == false )
+      return geo;
+
     final CoordinateSystem cs = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().wrap( geo.getCoordinateSystem() );
 
     if( cs == null || cs.equals( m_targetCS ) )
@@ -458,6 +463,10 @@ final public class GeoTransformer
    */
   public GM_Envelope transformEnvelope( final GM_Envelope envelope, final CS_CoordinateSystem sourceCRS ) throws Exception
   {
+    /* If no transformation should be done, return the input object. */
+    if( TransformUtilities.shouldTransform() == false )
+      return envelope;
+
     // Debug.debugMethodBegin( this, "transformPositions" );
     //
     final GM_Surface asSurface = GeometryFactory.createGM_Surface( envelope, sourceCRS );
