@@ -47,69 +47,78 @@ import java.util.Map;
 import org.kalypso.contribs.java.net.AbstractUrlCatalog;
 
 /**
- * Catalog which provides the url to the simulation model base schema. This
- * schema contains base type and elements to constract other gml simulation
- * model schema
+ * Catalog which provides the url to the simulation model base schema. This schema contains base type and elements to
+ * constract other gml simulation model schema
  * 
  * @author Patrice Congo
  */
-public class UrlCatalogModelSimulationBase extends AbstractUrlCatalog {
-	/**
-	 * Latest version for schema
-	 */
-	final static public String CURRENT_VERSION = "v0.0.0";
+public class UrlCatalogModelSimulationBase extends AbstractUrlCatalog
+{
+  /**
+   * Latest version for schema
+   */
+  final static public String CURRENT_VERSION = "v0.0.0";
 
-	/**
-	 * path for simulation base schema file
-	 */
-	final static public String SIM_MODEL_REL_PATH = CURRENT_VERSION
-			+ "/simulation_model_base.xsd";
+  /**
+   * path for simulation base schema file
+   */
+  final static public String SIM_MODEL_REL_PATH = CURRENT_VERSION + "/simulation_model_base.xsd";
 
-	/**
-	 * Url for simulation base model schema
-	 */
-	final static public URL SIM_MODEL_SCHEMA_URL = UrlCatalogModelSimulationBase.class
-			.getResource(SIM_MODEL_REL_PATH);
+  /**
+   * Namespace for simulation model base
+   */
+  final static public String SIM_MODEL_NS = "http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase";
 
-	/**
-	 * Namespace for simulation model base
-	 */
-	final static public String SIM_MODEL_NS = "http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase";
+  /**
+   * Prefix for the simulation model base
+   */
+  final static public String SIM_MODEL_NS_PREFIX = "simBase";
 
-	/**
-	 * Prefix for the simulation model base
-	 */
-	final static public String SIM_MODEL_NS_PREFIX = "simBase";
+  /**
+   * path for simulation base result metadata schema file
+   */
+  final static public String SIM_MODEL_RESULT_REL_PATH = CURRENT_VERSION + "/simulation_model_result.xsd";
 
-    final static public String GML_IMITATIONS_REL_PATH = CURRENT_VERSION
-    + "/gml_imitations.xsd";
+  /**
+   * Namespace for simulation model base result metadata
+   */
+  final static public String SIM_MODEL_RESULT_NS = "http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase/result/meta";
 
-    /**
-     * Namespace for gml_imitations
-     */
-    final static public String GML_IMITATIONS_NS = "http://www.tu-harburg.de/wb/kalypso/schemata/wbgml";
+  /**
+   * Prefix for the simulation model base result metadata
+   */
+  final static public String SIM_MODEL_RESULT_NS_PREFIX = "resultMeta";
 
-    /**
-     * Prefix for the simulation model base
-     */
-    final static public String GML_IMITATIONS_NS_PREFIX = "wbGml";
+  final static public String GML_IMITATIONS_REL_PATH = CURRENT_VERSION + "/gml_imitations.xsd";
 
-	/**
-	 * Fills the catalog with the roughness and model simulation base schemas
-	 * schema elements
-	 * 
-	 * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class,
-	 *      java.util.Map)
-	 */
-	@Override
-	protected void fillCatalog(final Class<?> myClass,
-			final Map<String, URL> catalog, Map<String, String> prefixes) {
+  /**
+   * Namespace for gml_imitations
+   */
+  final static public String GML_IMITATIONS_NS = "http://www.tu-harburg.de/wb/kalypso/schemata/wbgml";
 
-		catalog.put(SIM_MODEL_NS, myClass.getResource(SIM_MODEL_REL_PATH));
-		prefixes.put(SIM_MODEL_NS, SIM_MODEL_NS_PREFIX);
+  /**
+   * Prefix for the simulation model base
+   */
+  final static public String GML_IMITATIONS_NS_PREFIX = "wbGml";
 
-        catalog.put(GML_IMITATIONS_NS, myClass.getResource(GML_IMITATIONS_REL_PATH));
-        prefixes.put(GML_IMITATIONS_NS, GML_IMITATIONS_NS_PREFIX);
-	}
+  /**
+   * Fills the catalog with the roughness and model simulation base schemas schema elements
+   * 
+   * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)
+   */
+  @Override
+  protected void fillCatalog( final Class< ? > myClass, final Map<String, URL> catalog, Map<String, String> prefixes )
+  {
+
+    catalog.put( SIM_MODEL_NS, myClass.getResource( SIM_MODEL_REL_PATH ) );
+    prefixes.put( SIM_MODEL_NS, SIM_MODEL_NS_PREFIX );
+
+    catalog.put( SIM_MODEL_RESULT_NS, myClass.getResource( SIM_MODEL_RESULT_REL_PATH ) );
+    prefixes.put( SIM_MODEL_RESULT_NS, SIM_MODEL_RESULT_NS_PREFIX );
+
+    // TODO: this (not used schema!) is registered twice
+    catalog.put( GML_IMITATIONS_NS, myClass.getResource( GML_IMITATIONS_REL_PATH ) );
+    prefixes.put( GML_IMITATIONS_NS, GML_IMITATIONS_NS_PREFIX );
+  }
 
 }

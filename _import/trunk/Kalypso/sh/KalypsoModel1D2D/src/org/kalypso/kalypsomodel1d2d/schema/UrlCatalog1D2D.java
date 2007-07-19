@@ -61,6 +61,8 @@ public class UrlCatalog1D2D extends AbstractUrlCatalog
 
   final static public String MODEL_1D2DObservation_NS = "http://www.tu-harburg.de/wb/kalypso/schemata/observation";
 
+  final static public String MODEL_1D2DResult_NS = "http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResultMeta";
+
   final static public String MODEL_1D2DResults_NS = "http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults";
 
   final static public String MODEL_1D2DSIMMETA_NS = "http://www.tu-harburg.de/wb/kalypso/schemata/simulationmetadatamodel";
@@ -70,6 +72,8 @@ public class UrlCatalog1D2D extends AbstractUrlCatalog
   final static public String MODEL_1D2DControl_NS_PREFIX = "c1d2d";
 
   final static public String MODEL_1D2DOperational_NS_PREFIX = "op1d2d";
+
+  final static public String MODEL_1D2DResult_NS_PREFIX = "resultMeta1d2d";
 
   final static public String MODEL_1D2DResults_NS_PREFIX = "res1d2d";
 
@@ -85,12 +89,13 @@ public class UrlCatalog1D2D extends AbstractUrlCatalog
     catalog.put( MODEL_1D2DControl_NS, myClass.getResource( "v0.0/sim_1d2d_control.xsd" ) );
     catalog.put( MODEL_1D2DOperational_NS, myClass.getResource( "v0.0/sim_1d2d_operational.xsd" ) );
     catalog.put( MODEL_1D2DObservation_NS, myClass.getResource( "v0.0/sim_1d2d_observation.xsd" ) );
+    catalog.put( MODEL_1D2DResult_NS, myClass.getResource( "v0.0/sim_1d2d_result.xsd" ) );
     catalog.put( MODEL_1D2DResults_NS, myClass.getResource( "v0.0/sim_1d2d_results.xsd" ) );
     catalog.put( MODEL_1D2DSIMMETA_NS, myClass.getResource( "v0.0/sim_1d2d_model_metadata.xsd" ) );
-    System.out.println("CataEntry:"+catalog.get( MODEL_1D2DSIMMETA_NS ));
     prefixes.put( MODEL_1D2D_NS, MODEL_1D2D_NS_PREFIX );
     prefixes.put( MODEL_1D2DControl_NS, MODEL_1D2DControl_NS_PREFIX );
     prefixes.put( MODEL_1D2DOperational_NS, MODEL_1D2DOperational_NS_PREFIX );
+    prefixes.put( MODEL_1D2DResult_NS, MODEL_1D2DResult_NS_PREFIX );
     prefixes.put( MODEL_1D2DResults_NS, MODEL_1D2DResults_NS_PREFIX );
     prefixes.put( MODEL_1D2DSIMMETA_NS, MODEL_1D2DSIMMETA_NS_PREFIX );
   }
