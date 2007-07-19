@@ -257,31 +257,6 @@ public class KalypsoNAFileImportPage extends WizardPage
     fileGroup.pack();
   }
 
-//  private IFeatureType getSourceFT()
-//  {
-//    Feature rootFeature = sourceWorkspace.getRootFeature();
-//
-//    IFeatureType rootFT = rootFeature.getFeatureType();
-//    FeatureAssociationTypeProperty ftp = (FeatureAssociationTypeProperty)rootFT
-//        .getProperty( "featureMember" );
-//
-//    IFeatureType[] associationFeatureTypes = ftp.getAssociationFeatureTypes();
-//    IFeatureType shapeFT = associationFeatureTypes[0];
-//    return shapeFT;
-//  }
-
-//  private void handelResetSelection()
-//  {
-//    Control[] cArray = sourceGroup.getChildren();
-//    for( int i = 0; i < cArray.length; i++ )
-//    {
-//      Combo combo = (Combo)cArray[i];
-//      combo.setData( SOURCE_KEY, NULL_KEY );
-//      combo.setRedraw( true );
-//    }
-//    sourceGroup.redraw();
-//    setPageComplete( false );
-//  }//handelRestSelection
 
   /**
    * Uses the standard container selection dialog to choose the new value for

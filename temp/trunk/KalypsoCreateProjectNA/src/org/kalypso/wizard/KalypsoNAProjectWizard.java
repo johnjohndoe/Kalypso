@@ -57,6 +57,7 @@ import javax.xml.namespace.QName;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.NotImplementedException;
+import org.deegree.gml.GMLMultiLineString;
 import org.eclipse.core.internal.resources.ProjectDescription;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -92,6 +93,8 @@ import org.kalypso.ui.ImageProvider;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_MultiCurve;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Surface;
@@ -532,11 +535,12 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
         final String sourcekey = (String) mapping.get( targetkey );
         final Object so = sourceFeature.getProperty( sourcekey );
         final IPropertyType pt = targetFeature.getFeatureType().getProperty( targetkey );
-        if( so instanceof GM_Surface )
+        if( so instanceof GM_MultiSurface )
         {
-          final Long area = new Long( (long) ((GM_Surface) so).getArea() );
+          final GM_Surface[] surfaces = new GM_Surface[] { ((GM_MultiSurface) so).getSurfaceAt( 0 ) };
+          final Long area = new Long( (long) (surfaces[0]).getArea() );
           targetFeature.setProperty( flaechPT, area );
-          targetFeature.setProperty( targetkey, so );
+          targetFeature.setProperty( targetkey, surfaces[0] );
         }
         else if( pt instanceof IValuePropertyType )
         {
@@ -736,8 +740,13 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
           continue;
         final Object so = sourceFeature.getProperty( sourcekey );
         final IPropertyType pt = targetFeature.getFeatureType().getProperty( targetkey );
-        if( so instanceof GM_Object )
-          targetFeature.setProperty( targetkey, so );
+        if( so instanceof GM_MultiCurve )
+        {
+          final GM_Curve[] curves = new GM_Curve[] { ((GM_MultiCurve) so).getCurveAt( 0 ) };
+          targetFeature.setProperty( targetkey, curves[0] );
+        }
+//        if( so instanceof GMLMultiLineString )
+//          targetFeature.setProperty( targetkey, so );
         else if( pt instanceof IValuePropertyType )
         {
           final IValuePropertyType vpt = (IValuePropertyType) pt;

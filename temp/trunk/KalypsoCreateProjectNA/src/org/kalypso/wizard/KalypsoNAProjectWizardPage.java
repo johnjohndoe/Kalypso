@@ -370,19 +370,22 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
     IPropertyType[] targetFtp = targetFT.getProperties();
     for( int j = 0; j < targetFtp.length; j++ )
     {
-      Combo combo = new Combo( sourceGroup, SWT.READ_ONLY | SWT.DROP_DOWN | SWT.SINGLE );
-      combo.setData( TARGET_KEY, targetFtp[j].getQName().getLocalPart() );
-      combo.addSelectionListener( new SelectionAdapter()
+      if( !targetFtp[j].getQName().getLocalPart().equals( "boundedBy" ) && targetFtp[j] instanceof IValuePropertyType )
       {
-        @Override
-        public void widgetSelected( SelectionEvent e )
+        Combo combo = new Combo( sourceGroup, SWT.READ_ONLY | SWT.DROP_DOWN | SWT.SINGLE );
+        combo.setData( TARGET_KEY, targetFtp[j].getQName().getLocalPart() );
+        combo.addSelectionListener( new SelectionAdapter()
         {
-          Widget w = e.widget;
-          storeSelectionData( w );
-        }
-      } );
-      combo.add( NULL_KEY );
-      combo.select( 0 );
+          @Override
+          public void widgetSelected( SelectionEvent e )
+          {
+            Widget w = e.widget;
+            storeSelectionData( w );
+          }
+        } );
+        combo.add( NULL_KEY );
+        combo.select( 0 );
+      }
     }
     Point sizeSourceG = sourceGroup.computeSize( SWT.DEFAULT, SWT.DEFAULT );
     sourceGroup.setSize( sizeSourceG );
@@ -404,10 +407,13 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
     targetGroup.setText( WizardMessages.getString( "KalypsoNAProjectWizardPage.TargetGroupText" ) ); //$NON-NLS-1$
     for( int i = 0; i < targetFtp.length; i++ )
     {
-      IPropertyType featureTypeProperty = targetFtp[i];
-      Text text = new Text( targetGroup, SWT.NONE | SWT.READ_ONLY );
-      text.setText( getAnnotation( featureTypeProperty, LABEL ) );
-      text.setToolTipText( getAnnotation( featureTypeProperty, TOOL_TIP ) );
+      if( !targetFtp[i].getQName().getLocalPart().equals( "boundedBy" ) && targetFtp[i] instanceof IValuePropertyType )
+      {
+        IPropertyType featureTypeProperty = targetFtp[i];
+        Text text = new Text( targetGroup, SWT.NONE | SWT.READ_ONLY );
+        text.setText( getAnnotation( featureTypeProperty, LABEL ) );
+        text.setToolTipText( getAnnotation( featureTypeProperty, TOOL_TIP ) );
+      }
     }
     targetGroup.pack();
     // OK and Reset buttons group
@@ -591,28 +597,32 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
     IPropertyType[] ftp = srcFT.getProperties();
     IPropertyType[] targetFTP = targetFT.getProperties();
     Control[] cArray = sourceGroup.getChildren();
-    for( int i = 0; i < cArray.length; i++ )
+    int k = 0;
+    for( int i = 0; i < targetFTP.length; i++ )
     {
-      Combo combo = (Combo) cArray[i];
-      combo.setData( SOURCE_KEY, null );
-      combo.removeAll();
-      combo.setSize( maxSourceComboWidth * 10, SWT.DEFAULT );
-      for( int j = 0; j < ftp.length; j++ )
+      if( targetFTP[i] instanceof IValuePropertyType && !targetFTP[i].getQName().getLocalPart().equals( "boundedBy" ) )
       {
-        if( j == 0 )
-          combo.add( NULL_KEY );
-        // checks if the mapping between types is possible
-        if( ftp[j] instanceof IValuePropertyType && targetFTP[i] instanceof IValuePropertyType )
+        Combo combo = (Combo) cArray[k];
+        combo.setData( SOURCE_KEY, null );
+        combo.removeAll();
+        combo.setSize( maxSourceComboWidth * 10, SWT.DEFAULT );
+        for( int j = 0; j < ftp.length; j++ )
         {
-          final IValuePropertyType fromPT = (IValuePropertyType) ftp[j];
-          final IValuePropertyType toPT = (IValuePropertyType) targetFTP[i];
-          if( SpecialPropertyMapper.isValidMapping( fromPT.getValueClass(), toPT.getValueClass() ) )
-            combo.add( ftp[j].getQName().getLocalPart() );
-        }
-      }// for j
-      combo.select( 0 );
-    }// for i
-
+          if( j == 0 )
+            combo.add( NULL_KEY );
+          // checks if the mapping between types is possible
+          if( ftp[j] instanceof IValuePropertyType && targetFTP[i] instanceof IValuePropertyType )
+          {
+            final IValuePropertyType fromPT = (IValuePropertyType) ftp[j];
+            final IValuePropertyType toPT = (IValuePropertyType) targetFTP[i];
+            if( SpecialPropertyMapper.isValidMapping( fromPT.getValueClass(), toPT.getValueClass() ) )
+              combo.add( ftp[j].getQName().getLocalPart() );
+          }
+        }// for j
+        combo.select( 0 );
+        k += 1;
+      }// for i
+    }
   }
 
   public boolean validateFile( URL url )
