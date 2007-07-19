@@ -41,6 +41,7 @@
 package org.kalypso.ogc.gml.map.actions;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
@@ -55,10 +56,14 @@ public abstract class AbstractCommandAction extends Action
 
   private final ICommandTarget m_commandTarget;
 
-  public AbstractCommandAction( final ICommandTarget commandTarget, final MapPanel mapPanel, final String text,
-      final ImageDescriptor imageDescriptor, final String tooltiptext )
+  public AbstractCommandAction( final ICommandTarget commandTarget, final MapPanel mapPanel, final String text, final ImageDescriptor imageDescriptor, final String tooltiptext )
   {
-    super( text, AS_PUSH_BUTTON );
+    this( commandTarget, mapPanel, text, imageDescriptor, tooltiptext, IAction.AS_PUSH_BUTTON );
+  }
+
+  public AbstractCommandAction( final ICommandTarget commandTarget, final MapPanel mapPanel, final String text, final ImageDescriptor imageDescriptor, final String tooltiptext, final int buttonType )
+  {
+    super( text, buttonType );
 
     setToolTipText( tooltiptext );
     setImageDescriptor( imageDescriptor );
@@ -67,20 +72,25 @@ public abstract class AbstractCommandAction extends Action
     m_commandTarget = commandTarget;
   }
 
-  protected abstract ICommand runInternal();
+  protected abstract ICommand runInternal( );
 
   /**
    * @see org.eclipse.jface.action.Action#run()
    */
   @Override
-  public final void run()
+  public final void run( )
   {
     postCommand( runInternal(), null );
   }
 
-  protected final MapPanel getMapPanel()
+  protected final MapPanel getMapPanel( )
   {
     return m_mapPanel;
+  }
+
+  protected final ICommandTarget getCommandTarget( )
+  {
+    return m_commandTarget;
   }
 
   protected final void postCommand( final ICommand command, final Runnable runAfter )
