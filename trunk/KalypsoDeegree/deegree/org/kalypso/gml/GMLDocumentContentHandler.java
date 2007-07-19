@@ -223,9 +223,11 @@ public class GMLDocumentContentHandler extends DelegateContentHandler
     }
     catch( final Exception e )
     {
+      /* Log it, because the following SaxException eats the innner exception */
+      KalypsoDeegreePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
       if( schema == null )
         schemaNotFoundExceptions.addException( new SAXException( "Schema unknown. Could not load schema with namespace: " + uri + " (schemaLocationHint was " + schemaLocationHint
-            + ") (schemaLocation was " + schemaLocationString + ")", e ) );
+            + ") (schemaLocation was " + schemaLocationString + "): ", e ) );
     }
 
     // 3. try
@@ -238,7 +240,7 @@ public class GMLDocumentContentHandler extends DelegateContentHandler
       }
       catch( final Exception e )
       {
-        /* Log it, because the following SaxExyception eats the innner exception */
+        /* Log it, because the following SaxException eats the innner exception */
         KalypsoDeegreePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
         schemaNotFoundExceptions.addException( new SAXException( "Schema unknown. Could not load schema with namespace: " + uri + " (schemaLocationHint was " + schemaLocationHint
             + ") (schemaLocation was " + schemaLocationString + ")", e ) );
