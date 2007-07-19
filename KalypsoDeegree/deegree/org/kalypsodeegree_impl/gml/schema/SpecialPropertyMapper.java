@@ -6,10 +6,11 @@ package org.kalypsodeegree_impl.gml.schema;
 
 import java.util.HashMap;
 
+import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_MultiCurve;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * @author kuepfer
@@ -32,6 +33,24 @@ public class SpecialPropertyMapper
         final GM_Surface surface = (GM_Surface) srcObject;
         final GM_Surface[] surfaces = new GM_Surface[] { surface };
         return GeometryFactory.createGM_MultiSurface( surfaces, surface.getCoordinateSystem() );
+      }
+    } );
+    m_instance.register( m_instance.new SpecialMapper( GM_MultiSurface.class, GM_Surface.class )
+    {
+      @Override
+      public Object map( Object srcObject )
+      {
+        final GM_Surface[] surfaces = new GM_Surface[] { ((GM_MultiSurface) srcObject).getSurfaceAt( 0 ) };
+        return surfaces[0];
+      }
+    } );
+    m_instance.register( m_instance.new SpecialMapper( GM_MultiCurve.class, GM_Curve.class )
+    {
+      @Override
+      public Object map( Object srcObject )
+      {
+        final GM_Curve[] curves = new GM_Curve[] { ((GM_MultiCurve) srcObject).getCurveAt( 0 ) };
+        return curves[0];
       }
     } );
 
@@ -236,7 +255,7 @@ public class SpecialPropertyMapper
    * @param targetClass
    * @param doCastNull
    * @param mustClone
-   *          TODO mustClone not supported yet
+   *            TODO mustClone not supported yet
    * @return castedObject
    * @throws Exception
    */
