@@ -1,4 +1,4 @@
-C     Last change:  K    29 Jun 2007    5:18 pm
+C     Last change:  EF   19 Jun 2007    1:35 pm
       MODULE BLK10MOD
 
 CIPK AUG05      INCLUDE 'PARAM.COM'
@@ -82,10 +82,10 @@ CIPK MAR06 ADD IOUTRWD
 !EFa may07, dispersion-coefficient for turbulence modell
      +          ,p_bottom
 
+
       REAL      CINT(100),CPOW(100),AJ(100),BJ(100),CJ(100)
      +         ,GAMJ(100),QD(100),DJ(100)
-      INTEGER   LINE(50,350),LMT(50),JLIN(50),ITLVL(90),ITEQV(90)
-!     +         ,ITEQS(90),IURVL(90),NCNV(7)
+      INTEGER   LINE(50,350),LMT(50),JLIN(50),NCNV(7)
 !Nis,sep06: adding lineimat(50,350) for storage of material of line segments
      +         ,lineimat(50,350)
 !-
