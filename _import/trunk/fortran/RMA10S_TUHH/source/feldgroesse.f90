@@ -1,4 +1,4 @@
-!     Last change:  EF   19 Jun 2007    1:37 pm
+!     Last change:  EF   17 Jul 2007   12:01 pm
 ! __________________________________________________________________________________________________________
 
 
@@ -32,6 +32,7 @@ if (p==1.0) then
   ALLOCATE (iteqv(nita_auto))
   ALLOCATE (iurvl(nita_auto))
   ALLOCATE (itlvl(nita_auto))
+
   do i=1,nita_auto
     iteqs(i)=0.0
     iteqv(i)=0.0
@@ -64,6 +65,7 @@ ELSEIF (p==5.0) then
   ALLOCATE (iurvl(nita_auto))
   ALLOCATE (itlvl(nita_auto))
   ALLOCATE (rss(nita_auto))
+
   do i=1,nita_auto
     iteqs(i)=0.0
     iteqv(i)=0.0
