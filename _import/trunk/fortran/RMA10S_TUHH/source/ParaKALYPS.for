@@ -1,4 +1,4 @@
-C     Last change:  EF    2 Jul 2007    3:46 pm
+C     Last change:  EF   18 Jul 2007    4:32 pm
       MODULE ParaKALYPS
 !NiS,mar06:     Parameter for Kalypso-program-structure and for CVFEM-control as far as necessary to implement parts of
 !               Kalypso-2D into RMA10S.
@@ -62,10 +62,13 @@ C     Last change:  EF    2 Jul 2007    3:46 pm
 
       !EFa jun07, autoconverge
       REAL,       ALLOCATABLE 	:: rss(:), specccold(:,:),speccc(:,:),
-     +                             specccfut(:,:)
+     +                             specccfut(:,:),temp_vel(:,:),
+     +                             temp_vdot(:,:),temp_vdoto(:,:)
       REAL                      :: rrr,hhh,hhh2,qqq,qqqdir
       INTEGER                   :: nitnzero,nitazero,nitizero,extranita,
      +                             beiauto,nnnunst,nnnst,linlog,exterr
+      !+                             ,temp_nan
+      ALLOCATABLE               :: temp_nbc(:,:)
       !-
 
 

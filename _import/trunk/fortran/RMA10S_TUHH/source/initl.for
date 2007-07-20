@@ -1,4 +1,4 @@
-C     Last change:  EF    2 Jul 2007   12:18 pm
+C     Last change:  EF   20 Jul 2007   12:00 pm
 CIPK  LAST UPDATE SEP 05 2006 ADD DEPRATO AND TO TMD
 CIPK  LAST UPDATE APR 05 2006 ADD IPASST ALLOCATION
 CIPK  LAST UPDATE MAR 22 2006 FIX NCQOBS BUG
@@ -911,6 +911,17 @@ CIPK MAR01
       qqq = 0.0
       qqqdir = 0.0
       exterr = 0.0
+      !temp_nan = 0.0
+      ALLOCATE(temp_vel(7,maxp))
+      ALLOCATE(temp_vdot(7,maxp))
+      ALLOCATE(temp_vdoto(7,maxp))
+      do i = 1,maxp
+        do k = 1,7
+          temp_vel(k,i) = 0
+          temp_vdot(k,i) = 0
+          temp_vdoto(k,i) = 0
+        end do
+      end do
       !-
 
 !nis,may07

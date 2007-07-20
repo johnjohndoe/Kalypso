@@ -1,4 +1,4 @@
-C     Last change:  EF    2 Jul 2007    3:52 pm
+C     Last change:  EF   20 Jul 2007   12:00 pm
 CIPK  LAST UPDATE SEP 6 2004  add error file
 CIPK  LAST UPDATE AUG 22 2001 REORGANIZE CONVERGENCE TESTING
 CIPK  LAST UYPDATE APRIL 03  2001 ADD UPDATE OF WATER SURFACE ELEVATION 
@@ -13,7 +13,10 @@ CIPK  LAST UPDATE APR 30 1996
       USE BLKDRMOD
       !EFa Jan07, neues Modul für Teschke-Elemente
       USE PARAFlow1dFE
-      USE ParaKalyps
+      !-
+      !EFa jun07, autoconverge
+      USE parakalyps
+      !-
       SAVE
 C-
 CIPK AUG05      INCLUDE 'BLK10.COM'
@@ -51,12 +54,6 @@ C-
 C-
 C-.....SETUP FOR SOLUTION CORRECTIONS.....
 C-
-
-      !EFa jun07, testing autoconverge
-      if (beiauto.gt.0.) then
-        OPEN(789,FILE='autoconverge.txt')
-      end if
-      !-
 
 
       IF(MAXN .EQ. 1) THEN
@@ -317,7 +314,6 @@ CIPK AUG01
       !EFa jun07, autoconverge
       if (beiauto.gt.0.) then
         rss(maxn)=SQRT(eavg(1)**2+eavg(2)**2)
-        WRITE(789,6111)maxn,rss(maxn)
       end if
       !-
 C-
@@ -482,7 +478,7 @@ C......PRINT AND/OR TERMINATE ON LARGE HEAD CHANGES
 C-
       IF(    ABS(EMAX(3)) .GT. 100.  .OR.  ABS(EMAX(1)) .GT.  50.
      +  .OR. ABS(EMAX(2)) .GT.  50.) THEN
-      !EFa jun07, hier muss durch autoconverge abgefangen werden
+      !EFa jun07, necessary for autoconverge
         if (beiauto.gt.0.) then
           exterr = 1.
           return
