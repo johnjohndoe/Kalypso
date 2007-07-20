@@ -1,4 +1,4 @@
-C     Last change:  K     6 May 2007    2:15 am
+C     Last change:  EF   16 Jul 2007    3:16 pm
 CIPK  LAST UPDATE OCT 4 2002 ADD ICE THICKNESS TO OUTPUT
 CIPK  LAST UPDATE JAN 12 20010 CHANGE AME TO AME1
 CIPK  LAST UPDATE MAR 22 2000 ADD WSLL
@@ -74,6 +74,16 @@ C-
       N=0
       DO 245 J = 1, NPM
       N=N+1
+      !EFa jul07, necessary for autoconverge
+      !do m=1,ndf
+      !  if (vel(m,j).lt.10000.and.vel(m,j).gt.(-10.000)) then
+      !  else
+      !    WRITE(*,*)'degree of freedom not defined'
+      !    temp_nan = 1.
+      !    GOTO 246
+      !  end if
+      !end do
+      !-
       XVEL(1,N) = VEL(1,J)
       XVEL(2,N) = VEL(2,J)
       XVEL(3,N) = VEL(3,J)
@@ -121,6 +131,9 @@ CIPK OCT02
       LAB(N)=M
   242 CONTINUE
   245 CONTINUE
+      !EFa jul07, necessary for autoconverge
+  !246 continue
+      !-
 
 !NiS,apr06: transformation of output for subroutine write_Kalypso and cwr-calculation. Part taken from Kalypso-2D; and changed
 !           with proper arrays
