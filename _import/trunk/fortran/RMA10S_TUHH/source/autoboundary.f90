@@ -1,4 +1,4 @@
-!     Last change:  EF    5 Jul 2007    2:21 pm
+!     Last change:  EF   17 Jul 2007   12:02 pm
 ! __________________________________________________________________________________________________________
 
 
@@ -113,27 +113,15 @@ REAL,INTENT (out):: qqq,qqqdir
 
 REAL :: a,b,tini,tttn
 
-!WRITE(*,*)'curve :',curve
-!WRITE(*,*)'qfin  :',qfin
-!WRITE(*,*)'qini  :',qini
-!WRITE(*,*)'tfin  :',tfin
-!WRITE(*,*)'ttt   :',ttt
-
 if (curve == 0.) then
 
   !y = a * x + b
 
   a = (qfin - qini) / (tfin)
 
-  !WRITE(*,*)'a     :',a
-
   b = qfin - a * tfin
 
-  !WRITE(*,*)'b     :',b
-
   qqq = a * ttt + b
-
-  !WRITE(*,*)'qqq   :',qqq
 
   a = (qdirfin - qdirini) / (tfin)
 
@@ -153,27 +141,15 @@ tttn = ttt +100.
 
   a = (qfin - qini) / (LOG(tfinn / tini))
 
-  !WRITE(*,*)'a     :',a
-
   b = qfin - a * LOG(tfinn)
-
-  !WRITE(*,*)'b     :',b
 
   qqq = a * LOG(tttn) + b
 
-  !WRITE(*,*)'qqq   :',qqq
-
   a = (qdirfin - qdirini) / (LOG(tfinn / tini))
-
-  !WRITE(*,*)'a     :',a
 
   b = qdirfin - a * LOG(tfinn)
 
-  !WRITE(*,*)'b     :',b
-
   qqqdir = a * LOG(tttn) + b
-
-  !WRITE(*,*)'qqqdir:',qqqdir
 
 end if
 
