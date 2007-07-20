@@ -110,7 +110,9 @@ public class MapfunctionHelper
   }
 
   /**
-   * Find one feature on a map within a rectangle.
+   * Find one feature on a map within a rectangle.<br>
+   * <br>
+   * REMARK: This function is use for processing shape file workspace (see new QName("namespace", "type"))
    */
   public static Feature[] findFeatureToSelect( final MapPanel mapPanel, final Rectangle rectangle, final Feature[] features, final int radius )
   {
