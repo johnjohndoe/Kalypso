@@ -33,8 +33,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
- * Provides a widget functionality to  route a line element.
- * The user will draw a line string and double click at the and
+ * Provides a widget functionality to route a line element. The user will draw a line string and double click at the and
  * to route the line element
  * 
  * @author Patrice Congo
@@ -55,30 +54,28 @@ public class RouteLineElementWidget<T extends ILineElement> extends AbstractWidg
    * Class to which the created line element should be adapted
    */
   final private Class<T> adapterTargetClass;
-  
-//  /**
-//   * The latest routed element
-//   */
-//  T lastRouted;
+
+// /**
+// * The latest routed element
+// */
+// T lastRouted;
 //  
-  
+
   /**
    * Creates a route line widget.
    * 
-   * @param name the name of the new widget
-   * @param tooltip the tool tip associated with the new widget
-   * @param adapterTargetClass the target adapter class for the 
-   *            line element to be created
-   * @param lineElementQName the q-name of the line element to be
-   *            created
+   * @param name
+   *            the name of the new widget
+   * @param tooltip
+   *            the tool tip associated with the new widget
+   * @param adapterTargetClass
+   *            the target adapter class for the line element to be created
+   * @param lineElementQName
+   *            the q-name of the line element to be created
    */
-  public RouteLineElementWidget(
-              final String name,
-              final String tooltip,
-              final Class<T> adapterTargetClass,
-              final QName lineElementQName )
+  public RouteLineElementWidget( final String name, final String tooltip, final Class<T> adapterTargetClass, final QName lineElementQName )
   {
-    super( name,tooltip );
+    super( name, tooltip );
     Assert.throwIAEOnNullParam( adapterTargetClass, "adapterTargetClass" );
     Assert.throwIAEOnNullParam( lineElementQName, "lineElementQName" );
     this.adapterTargetClass = adapterTargetClass;
@@ -116,13 +113,13 @@ public class RouteLineElementWidget<T extends ILineElement> extends AbstractWidg
       getMapPanel().repaint();
     }
   }
-  
+
   @Override
   public void moved( final Point p )
   {
     m_currentPoint = p;
     final MapPanel panel = getMapPanel();
-    if ( panel != null)
+    if( panel != null )
       panel.repaint();
   }
 
@@ -139,7 +136,7 @@ public class RouteLineElementWidget<T extends ILineElement> extends AbstractWidg
         final GM_Point currentPos = MapUtilities.transform( getMapPanel(), m_currentPoint );
 
         m_builder.addPoint( currentPos );
-        
+
       }
     }
     catch( final Exception e )
@@ -149,7 +146,7 @@ public class RouteLineElementWidget<T extends ILineElement> extends AbstractWidg
     finally
     {
       getMapPanel().repaint();
-      
+
     }
   }
 
@@ -166,42 +163,33 @@ public class RouteLineElementWidget<T extends ILineElement> extends AbstractWidg
       // validate geometry: doppelte punkte
 
       final IMapModell mapModell = getMapPanel().getMapModell();
-      final IFEDiscretisationModel1d2d model = 
-          UtilMap.findFEModelTheme( mapModell );
-      final IKalypsoTheme theme =
-        UtilMap.findEditableTheme( 
-          mapModell, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
-      final CommandableWorkspace workspace =
-        ((IKalypsoFeatureTheme)theme).getWorkspace();
-      
-//      lastRouted = 
-//        ContinuityLineOps.lineElementFromCurve( 
-//            lineElementQName, 
-//            adapterTargetClass, 
-//            curve, 
-//            model );//contilineFromCurve( curve, model );
-//      lastRouted.getWrappedFeature().invalidEnvelope();
+      final IFEDiscretisationModel1d2d model = UtilMap.findFEModelTheme( mapModell );
+      final IKalypsoTheme theme = UtilMap.findEditableTheme( mapModell, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
+      final CommandableWorkspace workspace = ((IKalypsoFeatureTheme) theme).getWorkspace();
+
+// lastRouted =
+// ContinuityLineOps.lineElementFromCurve(
+// lineElementQName,
+// adapterTargetClass,
+// curve,
+// model );//contilineFromCurve( curve, model );
+// lastRouted.getWrappedFeature().invalidEnvelope();
 //      
-//      final Feature parentFeature = model.getWrappedFeature();
-//      final IRelationType rt = 
-//          (IRelationType) parentFeature.getFeatureType().getProperty( 
-//              Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS);
-//      final AddFeatureCommand addElementCommand = 
-//                  new AddFeatureCommand( 
-//                      workspace, parentFeature, rt, -1, 
-//                      lastRouted.getWrappedFeature(), null, true );
-//      workspace.postCommand( addElementCommand );
-      final RouteLineElementCommand command =
-          new RouteLineElementCommand(
-                  model,
-                  curve,
-                  adapterTargetClass,
-                  lineElementQName );
+// final Feature parentFeature = model.getWrappedFeature();
+// final IRelationType rt =
+// (IRelationType) parentFeature.getFeatureType().getProperty(
+// Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS);
+// final AddFeatureCommand addElementCommand =
+// new AddFeatureCommand(
+// workspace, parentFeature, rt, -1,
+// lastRouted.getWrappedFeature(), null, true );
+// workspace.postCommand( addElementCommand );
+      final RouteLineElementCommand command = new RouteLineElementCommand( model, curve, adapterTargetClass, lineElementQName );
       workspace.postCommand( command );
     }
     catch( final Exception e )
     {
-//      lastRouted = null;
+// lastRouted = null;
       e.printStackTrace();
       KalypsoModel1D2DPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
 
@@ -212,7 +200,7 @@ public class RouteLineElementWidget<T extends ILineElement> extends AbstractWidg
       {
         public void run( )
         {
-          ErrorDialog.openError( shell, getName(), Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.CreateFEContlineWidget.2"), status ); //$NON-NLS-1$
+          ErrorDialog.openError( shell, getName(), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.CreateFEContlineWidget.2" ), status ); //$NON-NLS-1$
         }
       } );
     }
@@ -237,16 +225,16 @@ public class RouteLineElementWidget<T extends ILineElement> extends AbstractWidg
       g.drawRect( (int) currentPoint.getX() - 10, (int) currentPoint.getY() - 10, 20, 20 );
     }
   }
- 
-//  /**
-//   * To get the last routed line element
-//   * 
-//   * @return the lastly routed line element by this widget or
-//   *            null if there is no such element
-//   */
-//  public T getLastRooted()
-//  {
-//    return lastRouted;
-//  }
+
+// /**
+// * To get the last routed line element
+// *
+// * @return the lastly routed line element by this widget or
+// * null if there is no such element
+// */
+// public T getLastRooted()
+// {
+// return lastRouted;
+// }
 
 }

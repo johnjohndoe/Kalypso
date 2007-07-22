@@ -51,11 +51,10 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine1D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IEdgeInv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DContinuityLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
@@ -85,71 +84,58 @@ public class ContinuityLineOps
     // do not instantiate
   }
 
-//  public static IFE1D2DContinuityLine contilineFromCurve( final GM_Curve curve, final IFEDiscretisationModel1d2d model ) throws CoreException
-//  {
-//    IFE1D2DContinuityLine cLine = 
-//        lineElementFromCurve( 
-//            Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DContinuityLine, 
-//            IFE1D2DContinuityLine.class, 
-//            curve, 
-//            model );
-//    return cLine;
+// public static IFE1D2DContinuityLine contilineFromCurve( final GM_Curve curve, final IFEDiscretisationModel1d2d model
+// ) throws CoreException
+// {
+// IFE1D2DContinuityLine cLine =
+// lineElementFromCurve(
+// Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DContinuityLine,
+// IFE1D2DContinuityLine.class,
+// curve,
+// model );
+// return cLine;
 //    
-//  }
-  
-  
-  public static <T extends ILineElement> T boundaryLine1DFromCurve(
-                    final QName lineElementQName,
-                    final Class<T> adapterTargetClass,
-                    final GM_Curve curve, 
-                    final IFEDiscretisationModel1d2d model ) throws CoreException
+// }
+
+  public static <T extends ILineElement> T boundaryLine1DFromCurve( final QName lineElementQName, final Class<T> adapterTargetClass, final GM_Curve curve, final IFEDiscretisationModel1d2d model ) throws CoreException
   {
     try
     {
-      final double grabDistance = curve.getLength()/2;
+      final double grabDistance = curve.getLength() / 2;
       final GM_Point endPoint = curve.getEndPoint();
       final IElement1D find1DElement = model.find1DElement( endPoint, grabDistance );
       if( find1DElement == null )
       {
-        throw new RuntimeException(
-            "Could not found an 1d element");
+        throw new RuntimeException( "Could not found an 1d element" );
       }
       IFE1D2DEdge edge1D = find1DElement.getEdge();
-      //find target position
+      // find target position
       final IFE1D2DNode node0 = edge1D.getNode( 0 );
       final IFE1D2DNode node1 = edge1D.getNode( 1 );
-      
-      boolean targetAtEdgeEnd = 
-        endPoint.distance( node0.getPoint() )>endPoint.distance( node1.getPoint() );
-      
+
+      boolean targetAtEdgeEnd = endPoint.distance( node0.getPoint() ) > endPoint.distance( node1.getPoint() );
+
       IFeatureWrapperCollection<IFE1D2DElement> elements = model.getElements();
-      IBoundaryLine1D bline1D = elements.addNew( 
-                      lineElementQName, IBoundaryLine1D.class );
+      IBoundaryLine1D bline1D = elements.addNew( lineElementQName, IBoundaryLine1D.class );
       bline1D.addEdge( edge1D.getGmlID() );
       bline1D.setAtEdgeEnd( targetAtEdgeEnd );
-      
+
       edge1D.addContainer( bline1D.getGmlID() );
-      
-      
+
       return (T) bline1D;
     }
-    catch ( Exception e ) 
+    catch( Exception e )
     {
       e.printStackTrace();
-      throw new RuntimeException("Could not create boundary line from curve", e);
+      throw new RuntimeException( "Could not create boundary line from curve", e );
     }
   }
-  
-  public static <T extends ILineElement> T lineElementFromCurve( 
-                                              final QName lineElementQName,
-                                              final Class<T> adapterTargetClass,
-                                              final GM_Curve curve, 
-                                              final IFEDiscretisationModel1d2d model ) throws CoreException
+
+  public static <T extends ILineElement> T lineElementFromCurve( final QName lineElementQName, final Class<T> adapterTargetClass, final GM_Curve curve, final IFEDiscretisationModel1d2d model ) throws CoreException
   {
     if( Kalypso1D2DSchemaConstants.WB1D2D_F_BOUNDARY_LINE1D.equals( lineElementQName ) )
     {
-      return boundaryLine1DFromCurve( lineElementQName, adapterTargetClass, curve, model ); 
-     
+      return boundaryLine1DFromCurve( lineElementQName, adapterTargetClass, curve, model );
     }
     final boolean doTrace = Boolean.parseBoolean( Platform.getDebugOption( "KalypsoModel1D2D/debug/ops/continuity/routing" ) );
     // foreach segment of curve:
@@ -176,7 +162,6 @@ public class ContinuityLineOps
         // linie beiben)
         final IFE1D2DNode startNode = NodeOps.findNode( (GM_Point) JTSAdapter.wrap( startPoint ), model );
         final IFE1D2DNode endNode = NodeOps.findNode( (GM_Point) JTSAdapter.wrap( endPoint ), model );
-
         if( startNode != null && endNode != null )
         {
           if( doTrace )
@@ -185,8 +170,7 @@ public class ContinuityLineOps
             System.out.println( "Found end node: " + endNode.getWrappedFeature().getId() );
           }
 
-          final IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>[] edges = 
-                              ModelOps.routing( startNode, endNode );
+          final IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>[] edges = ModelOps.routing( startNode, endNode );
           edgeList.addAll( Arrays.asList( edges ) );
         }
         else
@@ -205,20 +189,31 @@ public class ContinuityLineOps
       }
       else
       {
-//        final IFE1D2DContinuityLine contiLine = model.createContinuityLine();
-        final IFeatureWrapperCollection<IFE1D2DElement> elements = model.getElements();
-        T lineElement = elements.addNew( lineElementQName, adapterTargetClass );
-        final IFeatureWrapperCollection edgesList =  lineElement.getEdges();//WrappedFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE );
-        final String cLineGmlID=lineElement.getGmlID();
-        
-        
-        for( final IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge : edgeList )
+        IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> firstEdge = edgeList.get( 0 );
+        if( firstEdge instanceof IEdgeInv )
+          firstEdge = ((IEdgeInv) firstEdge).getInverted();
+        if( TypeInfo.is1DEdge( firstEdge ) )
         {
-          edgesList.addRef( edge );
-          edge.getContainers().getWrappedList().add( cLineGmlID );
+          return boundaryLine1DFromCurve( Kalypso1D2DSchemaConstants.WB1D2D_F_BOUNDARY_LINE1D, adapterTargetClass, curve, model );
         }
+        else
+        {
+// final IFE1D2DContinuityLine contiLine = model.createContinuityLine();
+          final IFeatureWrapperCollection<IFE1D2DElement> elements = model.getElements();
+          T lineElement = elements.addNew( lineElementQName, adapterTargetClass );
+          final IFeatureWrapperCollection edgesList = lineElement.getEdges();// WrappedFeature().getProperty(
+          // Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE
+          // );
+          final String cLineGmlID = lineElement.getGmlID();
 
-        return lineElement;
+          for( final IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge : edgeList )
+          {
+            edgesList.addRef( edge );
+            edge.getContainers().getWrappedList().add( cLineGmlID );
+          }
+          return lineElement;
+        }
+        
       }
 
     }
@@ -228,28 +223,27 @@ public class ContinuityLineOps
       throw new CoreException( status );
     }
   }
-  
+
   /**
-   * To get the middle node of this line.
-   * the middle node is the node with the index:
-   * <code>
+   * To get the middle node of this line. the middle node is the node with the index: <code>
    * Math.ceil( nodes.size()/2.0 )
    * </code>
-   * @param lineElement the line which middle node is to be computed
-   * @return an {@link IFE1D2DNode} representing the middle node of the 
-   *        given line element
-   *    
+   * 
+   * @param lineElement
+   *            the line which middle node is to be computed
+   * @return an {@link IFE1D2DNode} representing the middle node of the given line element
+   * 
    */
   public static final IFE1D2DNode getMiddleNode( ILineElement lineElement )
   {
-    
+
     Assert.throwIAEOnNullParam( lineElement, "lineElement" );
     if( lineElement instanceof IBoundaryLine1D )
     {
-     //boundary line is based on a single 1d node so its target 
-      //point is used as middle node
-      IFE1D2DEdge edge1D = ((IBoundaryLine1D<IFE1D2DComplexElement, IFE1D2DEdge>)lineElement).getEdges().get( 0 );
-      if( ((IBoundaryLine1D)lineElement).isAtEdgeEnd() )
+      // boundary line is based on a single 1d node so its target
+      // point is used as middle node
+      IFE1D2DEdge edge1D = ((IBoundaryLine1D<IFE1D2DComplexElement, IFE1D2DEdge>) lineElement).getEdges().get( 0 );
+      if( ((IBoundaryLine1D) lineElement).isAtEdgeEnd() )
       {
         return edge1D.getNode( 1 );
       }
@@ -261,9 +255,9 @@ public class ContinuityLineOps
     else
     {
       List nodes = lineElement.getNodes();
-      int middle = (int)Math.ceil( nodes.size()/2.0 );
+      int middle = (int) Math.ceil( nodes.size() / 2.0 );
       return (IFE1D2DNode) nodes.get( middle );
     }
   }
-  
+
 }

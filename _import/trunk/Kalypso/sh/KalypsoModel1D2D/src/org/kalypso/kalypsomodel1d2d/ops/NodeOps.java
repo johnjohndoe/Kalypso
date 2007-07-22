@@ -76,6 +76,8 @@ public class NodeOps
                       final GM_Point point, 
                       final IFEDiscretisationModel1d2d model )
   {
+    return model.findNode( point, 10.0 );
+    /*
     Assert.throwIAEOnNullParam( point, "point" );
     Assert.throwIAEOnNullParam( model, "model" );
     
@@ -98,6 +100,7 @@ public class NodeOps
     
     // 2. try: nearest node, brute force
     return nearestNodeOfElements( point, element2DList );
+    */
   }
   
   public static final IFE1D2DNode findeNodeImpl(

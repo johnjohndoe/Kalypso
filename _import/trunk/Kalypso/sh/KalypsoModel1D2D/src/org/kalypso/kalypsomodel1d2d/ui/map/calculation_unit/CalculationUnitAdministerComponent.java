@@ -86,7 +86,7 @@ import org.kalypso.ogc.gml.widgets.IWidget;
 
 /**
  * @author Madanagopal
- *
+ * 
  */
 public class CalculationUnitAdministerComponent
 {
@@ -94,17 +94,16 @@ public class CalculationUnitAdministerComponent
   {
 
     private final IWidgetWithStrategy widgetWithStrategy;
+
     private final Class<T> strategyClass;
+
     private final ImageDescriptor imageDescriptor;
+
     private final String name;
+
     private final String tooltip;
 
-    public ActivateStrategyWidgetAction(
-                      final IWidgetWithStrategy widgetWithStrategy,
-                      final Class<T> strategyClass,
-                      final String name,
-                      final String tooltip,
-                      final ImageDescriptor imageDescriptor )
+    public ActivateStrategyWidgetAction( final IWidgetWithStrategy widgetWithStrategy, final Class<T> strategyClass, final String name, final String tooltip, final ImageDescriptor imageDescriptor )
     {
       this.widgetWithStrategy = widgetWithStrategy;
       this.strategyClass = strategyClass;
@@ -112,6 +111,7 @@ public class CalculationUnitAdministerComponent
       this.tooltip = tooltip;
       this.imageDescriptor = imageDescriptor;
     }
+
     /**
      * @see org.eclipse.jface.action.Action#run()
      */
@@ -121,11 +121,10 @@ public class CalculationUnitAdministerComponent
 
       try
       {
-        Constructor<T> constructor =
-          strategyClass.getConstructor( new Class[]{String.class, String.class });
-        IWidget widget = constructor.newInstance( new Object[]{name, tooltip} );
+        Constructor<T> constructor = strategyClass.getConstructor( new Class[] { String.class, String.class } );
+        IWidget widget = constructor.newInstance( new Object[] { name, tooltip } );
         widgetWithStrategy.setStrategy( widget );
-        System.out.println("Strategy set");
+        System.out.println( "Strategy set" );
       }
       catch( Throwable e )
       {
@@ -166,7 +165,7 @@ public class CalculationUnitAdministerComponent
     @Override
     public String getId( )
     {
-      return "ID_"+name;
+      return "ID_" + name;
     }
 
   }
@@ -187,42 +186,51 @@ public class CalculationUnitAdministerComponent
 
   private Image goImage;
 
-  /** holds button that activate wiget strategies*/
-//  private CoolBar coolbar;
+  /** holds button that activate wiget strategies */
+// private CoolBar coolbar;
   private ToolBarManager toolbarManager;
 
   private static final String ACTION_KEY_ADMINISTER = "Verwalten";
+
   private static final String ACTION_KEY_DRAW = "New Zeichnen";
 
   private static final String ELEMENTS_KEY_ELEMENTS = "Elemente";
+
   private static final String ELEMENTS_KEY_SUBUNITS = "Sub-Einheiten";
+
   private static final String ELEMENTS_KEY_BOUNDARY_UP = "Rand-Linien";
+
   private static final String ELEMENTS_KEY_BOUNDARY_CONDITIONS = "Rand-Bedingung";
-  private KeyBasedDataModelChangeListener settingsKeyListener = new KeyBasedDataModelChangeListener(){
+
+  private KeyBasedDataModelChangeListener settingsKeyListener = new KeyBasedDataModelChangeListener()
+  {
 
     public void dataChanged( final String key, final Object newValue )
     {
 
-        Display display = parent.getDisplay();
-        final Runnable runnable = new Runnable()
+      Display display = parent.getDisplay();
+      final Runnable runnable = new Runnable()
+      {
+        public void run( )
         {
-          public void run( )
+          if( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER.equals( key ) )
           {
-            if( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER.equals( key ) ){
-              if (newValue != null){
+            if( newValue != null )
+            {
               updateThisSection( newValue );
-              }
             }
           }
+        }
 
-        };
-        display.syncExec( runnable );
+      };
+      display.syncExec( runnable );
     }
 
   };
+
   private void updateThisSection( Object newValue )
   {
-    if (newValue instanceof ICalculationUnit2D)
+    if( newValue instanceof ICalculationUnit2D )
     {
       actionsCombo.removeAll();
       elementsCombo.removeAll();
@@ -230,9 +238,9 @@ public class CalculationUnitAdministerComponent
       actionsCombo.add( ACTION_KEY_ADMINISTER );
       elementsCombo.add( ELEMENTS_KEY_ELEMENTS );
       elementsCombo.add( ELEMENTS_KEY_BOUNDARY_UP );
-      elementsCombo.add(ELEMENTS_KEY_BOUNDARY_CONDITIONS);
+      elementsCombo.add( ELEMENTS_KEY_BOUNDARY_CONDITIONS );
     }
-    else if (newValue instanceof ICalculationUnit1D)
+    else if( newValue instanceof ICalculationUnit1D )
     {
       actionsCombo.removeAll();
       elementsCombo.removeAll();
@@ -240,16 +248,16 @@ public class CalculationUnitAdministerComponent
       actionsCombo.add( ACTION_KEY_ADMINISTER );
       elementsCombo.add( ELEMENTS_KEY_ELEMENTS );
       elementsCombo.add( ELEMENTS_KEY_BOUNDARY_UP );
-      elementsCombo.add(ELEMENTS_KEY_BOUNDARY_CONDITIONS);
+      elementsCombo.add( ELEMENTS_KEY_BOUNDARY_CONDITIONS );
     }
-    else if (newValue instanceof ICalculationUnit1D2D)
+    else if( newValue instanceof ICalculationUnit1D2D )
     {
       actionsCombo.removeAll();
       elementsCombo.removeAll();
       actionsCombo.add( ACTION_KEY_DRAW );
       actionsCombo.add( ACTION_KEY_ADMINISTER );
-      elementsCombo.add(ELEMENTS_KEY_BOUNDARY_CONDITIONS);
-//      elementsCombo.add(ELEMENTS_KEY_BOUNDARY_CONDITIONS);
+      elementsCombo.add( ELEMENTS_KEY_BOUNDARY_CONDITIONS );
+// elementsCombo.add(ELEMENTS_KEY_BOUNDARY_CONDITIONS);
     }
     else
     {
@@ -258,13 +266,12 @@ public class CalculationUnitAdministerComponent
       actionsCombo.add( ACTION_KEY_DRAW );
       actionsCombo.add( ACTION_KEY_ADMINISTER );
       elementsCombo.add( ELEMENTS_KEY_ELEMENTS );
-      elementsCombo.add(ELEMENTS_KEY_SUBUNITS);
+      elementsCombo.add( ELEMENTS_KEY_SUBUNITS );
       elementsCombo.add( ELEMENTS_KEY_BOUNDARY_UP );
-      elementsCombo.add(ELEMENTS_KEY_BOUNDARY_CONDITIONS);
+      elementsCombo.add( ELEMENTS_KEY_BOUNDARY_CONDITIONS );
     }
 
   }
-
 
   public void createControl( CalculationUnitDataModel dataModel, FormToolkit toolkit, Composite parent )
   {
@@ -277,67 +284,66 @@ public class CalculationUnitAdministerComponent
 
   private void guiComboSelections( Composite parentComposite )
   {
-    rootComposite = new Composite(parentComposite,SWT.FLAT);
-    rootComposite.setLayout( new GridLayout(3,false) );
-//    CoolBarManager cbMng = new CoolBarManager();
-//    CoolBar coolBar = cbMng.createControl( rootComposite );
-//    coolBar.setLayout( new FillLayout() );
+    rootComposite = new Composite( parentComposite, SWT.FLAT );
+    rootComposite.setLayout( new GridLayout( 3, false ) );
+// CoolBarManager cbMng = new CoolBarManager();
+// CoolBar coolBar = cbMng.createControl( rootComposite );
+// coolBar.setLayout( new FillLayout() );
 //
-//    GridData data1 = new GridData(GridData.FILL_HORIZONTAL|GridData.FILL_VERTICAL);
-//    data1.horizontalSpan = 3;
-//    coolBar.setLayoutData( data1 );
-//    cbMng.add( createSetZoomWidgetAction() );
+// GridData data1 = new GridData(GridData.FILL_HORIZONTAL|GridData.FILL_VERTICAL);
+// data1.horizontalSpan = 3;
+// coolBar.setLayoutData( data1 );
+// cbMng.add( createSetZoomWidgetAction() );
 //
-//    IToolBarManager item;
-//    System.out.println("ItemSize="+cbMng.getControl().getItemSizes().length);
+// IToolBarManager item;
+// System.out.println("ItemSize="+cbMng.getControl().getItemSizes().length);
 
     toolbarManager = new ToolBarManager();
     ToolBar toolbar = toolbarManager.createControl( rootComposite );
     toolbar.setLayout( new FillLayout() );
-    GridData data1 = new GridData(GridData.FILL_HORIZONTAL|GridData.FILL_VERTICAL);
+    GridData data1 = new GridData( GridData.FILL_HORIZONTAL | GridData.FILL_VERTICAL );
     data1.horizontalSpan = 3;
     toolbar.setLayoutData( data1 );
     populateToolbar( toolbarManager );
     toolbarManager.update( true );
 
-    actionsCombo = new Combo(rootComposite, SWT.RIGHT|SWT.READ_ONLY|SWT.BORDER);
-   // actionsCombo.add( ACTION_KEY_ADMINISTER );
-   // actionsCombo.add( ACTION_KEY_DRAW );
-    GridData data = new GridData(GridData.FILL_HORIZONTAL);
+    actionsCombo = new Combo( rootComposite, SWT.RIGHT | SWT.READ_ONLY | SWT.BORDER );
+    // actionsCombo.add( ACTION_KEY_ADMINISTER );
+    // actionsCombo.add( ACTION_KEY_DRAW );
+    GridData data = new GridData( GridData.FILL_HORIZONTAL );
     actionsCombo.setLayoutData( data );
-    actionsCombo.addModifyListener( new ModifyListener(){
+    actionsCombo.addModifyListener( new ModifyListener()
+    {
 
       public void modifyText( ModifyEvent e )
       {
-        if (getSelectedCalcUnit() instanceof ICalculationUnit1D2D)
+        if( getSelectedCalcUnit() instanceof ICalculationUnit1D2D )
         {
-            if (actionsCombo.getText().equals( ACTION_KEY_DRAW )){
-              elementsCombo.removeAll();
-              elementsCombo.add(ELEMENTS_KEY_BOUNDARY_UP);
-            }
-            else if (actionsCombo.getText().equals( ACTION_KEY_ADMINISTER ))
-            {
-              elementsCombo.removeAll();
-              elementsCombo.add(ELEMENTS_KEY_SUBUNITS);
-              elementsCombo.add(ELEMENTS_KEY_BOUNDARY_UP);
-              elementsCombo.add(ELEMENTS_KEY_BOUNDARY_CONDITIONS);
-            }
+          if( actionsCombo.getText().equals( ACTION_KEY_DRAW ) )
+          {
+            elementsCombo.removeAll();
+            elementsCombo.add( ELEMENTS_KEY_BOUNDARY_UP );
+          }
+          else if( actionsCombo.getText().equals( ACTION_KEY_ADMINISTER ) )
+          {
+            elementsCombo.removeAll();
+            elementsCombo.add( ELEMENTS_KEY_SUBUNITS );
+            elementsCombo.add( ELEMENTS_KEY_BOUNDARY_UP );
+            elementsCombo.add( ELEMENTS_KEY_BOUNDARY_CONDITIONS );
+          }
         }
-    }
-    });
+      }
+    } );
 
-    elementsCombo = new Combo(rootComposite, SWT.RIGHT|SWT.READ_ONLY|SWT.BORDER);
+    elementsCombo = new Combo( rootComposite, SWT.RIGHT | SWT.READ_ONLY | SWT.BORDER );
 
-    data = new GridData(GridData.FILL_HORIZONTAL);
+    data = new GridData( GridData.FILL_HORIZONTAL );
     elementsCombo.setLayoutData( data );
 
-    goButton = new Button(rootComposite,SWT.PUSH);
+    goButton = new Button( rootComposite, SWT.PUSH );
     goButton.setToolTipText( "Funktion aktivieren" );
 
-    goImage = new Image( rootComposite.getDisplay(),
-        KalypsoModel1D2DPlugin.imageDescriptorFromPlugin(
-            PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
-        "icons/elcl16/nav_go.gif" ).getImageData() );
+    goImage = new Image( rootComposite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/nav_go.gif" ).getImageData() );
     goButton.setImage( goImage );
     final SelectionListener goButtonListener = new SelectionListener()
     {
@@ -352,34 +358,20 @@ public class CalculationUnitAdministerComponent
         changeStategy();
       }
     };
-    goButton.addSelectionListener( goButtonListener  );
+    goButton.addSelectionListener( goButtonListener );
 
   }
 
   private void populateToolbar( ToolBarManager mng )
   {
 
-    IWidgetWithStrategy widgetWithStrategy =
-      (IWidgetWithStrategy) dataModel.getData( ICommonKeys.WIDGET_WITH_STRATEGY );
+    IWidgetWithStrategy widgetWithStrategy = (IWidgetWithStrategy) dataModel.getData( ICommonKeys.WIDGET_WITH_STRATEGY );
 
-    mng.add(
-      new ActivateStrategyWidgetAction<ZoomInByRectWidget>(
-          widgetWithStrategy,
-          ZoomInByRectWidget.class,
-          "Zoom in",
-          "Zoom in descr",
-          KalypsoModel1D2DUIImages.IMG_DESC_ZOOM_WITH_RECT ) );
+    mng.add( new ActivateStrategyWidgetAction<ZoomInByRectWidget>( widgetWithStrategy, ZoomInByRectWidget.class, "Zoom in", "Zoom in descr", KalypsoModel1D2DUIImages.IMG_DESC_ZOOM_WITH_RECT ) );
 
-    mng.add(
-        new ActivateStrategyWidgetAction<PanToWidget>(
-            widgetWithStrategy,
-            PanToWidget.class,
-            "Pan to",
-            "Pan to",
-            KalypsoModel1D2DUIImages.IMG_DESC_PAN ) );
-    //save action
-    Action saveAction =
-      new Action()
+    mng.add( new ActivateStrategyWidgetAction<PanToWidget>( widgetWithStrategy, PanToWidget.class, "Pan to", "Pan to", KalypsoModel1D2DUIImages.IMG_DESC_PAN ) );
+    // save action
+    Action saveAction = new Action()
     {
       /**
        * @see org.eclipse.jface.action.Action#run()
@@ -402,88 +394,74 @@ public class CalculationUnitAdministerComponent
 
     saveAction.setText( "Save all models" );
     saveAction.setToolTipText( "Save All models" );
-    mng.add(saveAction);
+    mng.add( saveAction );
   }
 
-
   /**
-   *
+   * 
    */
-  public void changeStategy()
+  public void changeStategy( )
   {
     final String selectedType = elementsCombo.getText();
     final String selectedAction = actionsCombo.getText();
-    IWidgetWithStrategy widgetWithStrategy =
-      (IWidgetWithStrategy) dataModel.getData( ICommonKeys.WIDGET_WITH_STRATEGY );
+    IWidgetWithStrategy widgetWithStrategy = (IWidgetWithStrategy) dataModel.getData( ICommonKeys.WIDGET_WITH_STRATEGY );
 
     final Object selectedWrapper = dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
 
     IWidget strategy = null;
 
-    if( ACTION_KEY_ADMINISTER.equals( selectedAction) )
+    if( ACTION_KEY_ADMINISTER.equals( selectedAction ) )
     {
-      if( ELEMENTS_KEY_BOUNDARY_UP.equals( selectedType )  )
+      if( ELEMENTS_KEY_BOUNDARY_UP.equals( selectedType ) )
       {
-        strategy = new AlterCalUnitBorderWidget(dataModel);
+        strategy = new AlterCalUnitBorderWidget( dataModel );
       }
-      else if( ELEMENTS_KEY_ELEMENTS.equals( selectedType ))
+      else if( ELEMENTS_KEY_ELEMENTS.equals( selectedType ) )
       {
-        strategy= new AddRemoveElementToCalUnitWidget(dataModel);
+        strategy = new AddRemoveElementToCalUnitWidget( dataModel );
       }
-      else if( ELEMENTS_KEY_SUBUNITS.equals( selectedType )  )
+      else if( ELEMENTS_KEY_SUBUNITS.equals( selectedType ) )
       {
         final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-        final CreateSubCalculationUnitCopyWizard calculationSubWizard =
-                                            new CreateSubCalculationUnitCopyWizard(dataModel);
+        final CreateSubCalculationUnitCopyWizard calculationSubWizard = new CreateSubCalculationUnitCopyWizard( dataModel );
         final WizardDialog wizardDialog = new WizardDialog( shell, calculationSubWizard );
         wizardDialog.open();
       }
-      else if (ELEMENTS_KEY_BOUNDARY_CONDITIONS.equals( selectedType ))
+      else if( ELEMENTS_KEY_BOUNDARY_CONDITIONS.equals( selectedType ) )
       {
-        strategy = new AddRemoveBoundaryConditionToCalUnitWidget(dataModel);
+        strategy = new AddRemoveBoundaryConditionToCalUnitWidget( dataModel );
       }
     }
-    else if( ACTION_KEY_DRAW.equals( selectedAction) )
+    else if( ACTION_KEY_DRAW.equals( selectedAction ) )
     {
-      if( ELEMENTS_KEY_BOUNDARY_UP.equals( selectedType )  )
+      if( ELEMENTS_KEY_BOUNDARY_UP.equals( selectedType ) )
       {
-        if (selectedWrapper instanceof ICalculationUnit1D)
+        if( selectedWrapper instanceof ICalculationUnit1D )
         {
-          strategy =
-            new RouteLineElementWidget<IBoundaryLine1D>(
-                    "Route boundary line",
-                    "Route boundary line",
-                    IBoundaryLine1D.class,
-                    Kalypso1D2DSchemaConstants.WB1D2D_F_BOUNDARY_LINE1D
-                    );
+          strategy = new RouteLineElementWidget<IBoundaryLine1D>( "Route boundary line", "Route boundary line", IBoundaryLine1D.class, Kalypso1D2DSchemaConstants.WB1D2D_F_BOUNDARY_LINE1D );
         }
         else
         {
-          strategy =
-            new RouteLineElementWidget<IBoundaryLine>(
-                    "Route boundary line",
-                    "Route boundary line",
-                    IBoundaryLine.class,
-                    Kalypso1D2DSchemaConstants.WB1D2D_F_BOUNDARY_LINE );
+          strategy = new RouteLineElementWidget<IBoundaryLine>( "Route boundary line", "Route boundary line", IBoundaryLine.class, Kalypso1D2DSchemaConstants.WB1D2D_F_BOUNDARY_LINE );
         }
       }
-      else if (ELEMENTS_KEY_ELEMENTS.equals( selectedType ))
+      else if( ELEMENTS_KEY_ELEMENTS.equals( selectedType ) )
       {
-        if (selectedWrapper instanceof ICalculationUnit1D)
+        if( selectedWrapper instanceof ICalculationUnit1D )
           strategy = new CreateFEElement1DWidget();
-        if (selectedWrapper instanceof ICalculationUnit2D)
+        if( selectedWrapper instanceof ICalculationUnit2D )
           strategy = new CreateFE2DElementWidget();
       }
       else
       {
-        System.out.println("Drawing not supported for:"+selectedType);
+        System.out.println( "Drawing not supported for:" + selectedType );
       }
 
     }
     widgetWithStrategy.setStrategy( strategy );
   }
 
-  public Object getSelectedCalcUnit()
+  public Object getSelectedCalcUnit( )
   {
     return dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
   }
