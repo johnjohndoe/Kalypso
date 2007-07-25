@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.cmds;
 
-
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
@@ -48,76 +47,34 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
-
 /**
- * Undoable command to change the position of a node.
- * the change can be specified as a point or a change 
- * elevation
+ * Undoable command to change the position of a node. the change can be specified as a point or a change elevation
  * 
  * 
  * @author Patrice Congo
  */
 public class ChangeNodePositionCommand implements IDiscrModel1d2dChangeCommand
 {
-  
-  private IFE1D2DNode<IFE1D2DEdge>  movedNode;
+
+  private IFE1D2DNode<IFE1D2DEdge> movedNode;
+
   private GM_Point newNodePoint;
+
   private IFEDiscretisationModel1d2d discretisationModel;
+
   private GM_Point oldPosition = null;
-  
-  public ChangeNodePositionCommand(
-              IFEDiscretisationModel1d2d model,
-              IFE1D2DNode nodeToChange,
-              GM_Point newNodePoint1)
+
+  public ChangeNodePositionCommand( IFEDiscretisationModel1d2d model, IFE1D2DNode nodeToChange, double elevation )
   {
-    this.discretisationModel=model;
-    this.movedNode=nodeToChange;
-    if (newNodePoint1.getCoordinateDimension()==3)
-    {
-      this.newNodePoint=
-        GeometryFactory.createGM_Point(
-                newNodePoint1.getX(),
-                newNodePoint1.getY(),
-                newNodePoint1.getZ(),
-                newNodePoint1.getCoordinateSystem());
-    }
+    this.discretisationModel = model;
+    this.movedNode = nodeToChange;
+    GM_Point oldPos = nodeToChange.getPoint();
+    if( Double.isNaN( elevation ) )
+      this.newNodePoint = GeometryFactory.createGM_Point( oldPos.getX(), oldPos.getY(), oldPos.getCoordinateSystem() );
     else
-    {
-      this.newNodePoint=
-        GeometryFactory.createGM_Point(
-                newNodePoint1.getX(),
-                newNodePoint1.getY(),
-                newNodePoint1.getCoordinateSystem());
-    }    
+      this.newNodePoint = GeometryFactory.createGM_Point( oldPos.getX(), oldPos.getY(), elevation, oldPos.getCoordinateSystem() );
   }
-  
-  public ChangeNodePositionCommand(
-                IFEDiscretisationModel1d2d model,
-                IFE1D2DNode nodeToChange,
-                double elevation)
-  {
-    this.discretisationModel=model;
-    this.movedNode=nodeToChange;
-    GM_Point oldPos=nodeToChange.getPoint();
-    if (Double.isNaN( elevation ))
-    {
-      this.newNodePoint=
-        GeometryFactory.createGM_Point(
-                oldPos.getX(),
-                oldPos.getY(),
-                oldPos.getCoordinateSystem());
-    }
-    else
-    {
-      this.newNodePoint=
-        GeometryFactory.createGM_Point(
-                oldPos.getX(),
-                oldPos.getY(),
-                elevation,
-                oldPos.getCoordinateSystem());
-    }    
-  }
-  
+
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
@@ -139,7 +96,7 @@ public class ChangeNodePositionCommand implements IDiscrModel1d2dChangeCommand
    */
   public void process( ) throws Exception
   {
-    oldPosition=movedNode.getPoint();
+    oldPosition = movedNode.getPoint();
     movedNode.setPoint( newNodePoint );
   }
 
@@ -148,7 +105,7 @@ public class ChangeNodePositionCommand implements IDiscrModel1d2dChangeCommand
    */
   public void redo( ) throws Exception
   {
-    if(oldPosition==null)
+    if( oldPosition == null )
     {
       process();
     }
@@ -159,28 +116,26 @@ public class ChangeNodePositionCommand implements IDiscrModel1d2dChangeCommand
    */
   public void undo( ) throws Exception
   {
-    if(oldPosition!=null)
+    if( oldPosition != null )
     {
       movedNode.setPoint( oldPosition );
       oldPosition = null;
     }
   }
 
-//  public IFE1D2DNode<IFE1D2DEdge> getAddedNode( )
-//  {
-//    return movedNode;
-//  }
-  
+// public IFE1D2DNode<IFE1D2DEdge> getAddedNode( )
+// {
+// return movedNode;
+// }
+
   /**
    * @see xp.IDiscrMode1d2dlChangeCommand#getChangedFeature()
    */
   public IFeatureWrapper2[] getChangedFeature( )
   {
-    return new IFeatureWrapper2[]{movedNode};
+    return new IFeatureWrapper2[] { movedNode };
   }
-  
-  
-  
+
   /**
    * @see xp.IDiscrMode1d2dlChangeCommand#getDiscretisationModel1d2d()
    */
@@ -188,14 +143,14 @@ public class ChangeNodePositionCommand implements IDiscrModel1d2dChangeCommand
   {
     return discretisationModel;
   }
-  
+
   /**
    * @see java.lang.Object#toString()
    */
   @Override
   public String toString( )
   {
-    StringBuffer buf= new StringBuffer();
+    StringBuffer buf = new StringBuffer();
     buf.append( "ChangeNodePositionCommand[" );
     buf.append( newNodePoint );
     buf.append( ']' );

@@ -28,9 +28,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1
 import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IResultDbProvider;
 import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptionCollection;
 import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ResultDB;
-import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
-import org.kalypso.kalypsomodel1d2d.schema.binding.model.IOperationalModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IPseudoOPerationalModel;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IStaticModel1D2D;
 import org.kalypso.kalypsosimulationmodel.core.ICommandPoster;
@@ -59,9 +57,7 @@ import de.renew.workflow.connector.cases.ICaseDataProvider;
  * 
  * @author Gernot Belger
  */
-public class SzenarioDataProvider 
-                implements ICaseDataProvider<IFeatureWrapper2>,
-                            ICommandPoster, IResultDbProvider
+public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>, ICommandPoster, IResultDbProvider
 {
   /**
    * Maps the (adapted) feature-wrapper-classes onto the (szenario-relative) path of its gml-file.
@@ -83,7 +79,7 @@ public class SzenarioDataProvider
     LOCATION_MAP.put( IControlModelGroup.class, MODELS_FOLDER + "/control.gml" );
     LOCATION_MAP.put( IStaticModel1D2D.class, MODELS_FOLDER + "/static_model.gml" );
     LOCATION_MAP.put( IRoughnessClsCollection.class, "project:/.metadata/roughness.gml" );
-    LOCATION_MAP.put( ISimulationDescriptionCollection.class, "project:/.metadata/result_meta_data.gml"  );
+    LOCATION_MAP.put( ISimulationDescriptionCollection.class, "project:/.metadata/result_meta_data.gml" );
     // TODO: put the roughness database here, in order to have save mechanism...
     // LOCATION_MAP.put( ISimulationModel.class, MODELS_FOLDER + "/simulation.gml" );
     // TODO: add other model types here
@@ -401,7 +397,7 @@ public class SzenarioDataProvider
       monitor.done();
     }
   }
-  
+
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.ICommandPoster#getCommandableWorkSpace(java.lang.Class)
    */
@@ -409,14 +405,13 @@ public class SzenarioDataProvider
   {
     return getModelWorkspace( wrapperClass );
   }
-  
+
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IResultDbProvider#getResultDB()
    */
   public ResultDB getResultDB( ) throws CoreException
   {
-    ISimulationDescriptionCollection modelResultDB = 
-                getModel( ISimulationDescriptionCollection.class );
-    return new ResultDB(modelResultDB);
+    ISimulationDescriptionCollection modelResultDB = getModel( ISimulationDescriptionCollection.class );
+    return new ResultDB( modelResultDB );
   }
 }

@@ -54,7 +54,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.contribs.eclipse.jface.wizard.WizardComposite;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
@@ -84,14 +83,8 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  * @author Madanagopal
  * 
  */
-public class ApplyElevationWidget extends FENetConceptSelectionWidget// AbstractWidget
-    implements IWidgetWithOptions/* , IEvaluationContextConsumer */
+public class ApplyElevationWidget extends FENetConceptSelectionWidget implements IWidgetWithOptions
 {
-
-  private Composite rootComposite;
-
-  private WizardComposite wizardComposite;
-
   ApplyElevationWidgetDataModel dataModel = new ApplyElevationWidgetDataModel();
 
   private final ApplyElevationWidgetFace widgetFace = new ApplyElevationWidgetFace( dataModel );
@@ -120,7 +113,7 @@ public class ApplyElevationWidget extends FENetConceptSelectionWidget// Abstract
 
     final IMapModell mapModell = mapPanel.getMapModell();
     final IFEDiscretisationModel1d2d model1d2d = UtilMap.findFEModelTheme( mapModell );
-    dataModel.setDiscretisationModel( model1d2d );
+//    dataModel.setDiscretisationModel( model1d2d );
     dataModel.setMapModell( mapModell );
     dataModel.setMapPanel( mapPanel );
 

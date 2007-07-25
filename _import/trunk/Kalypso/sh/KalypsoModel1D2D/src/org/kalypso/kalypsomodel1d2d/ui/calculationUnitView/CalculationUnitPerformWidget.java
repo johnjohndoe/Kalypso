@@ -110,7 +110,7 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
     {
       if( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER.equals( key ) )
       {
-        calUnitTheme.setCalulationUnit( (ICalculationUnit) newValue );
+        calUnitTheme.setCalculationUnit( (ICalculationUnit) newValue );
         KeyBasedDataModelUtil.repaintMapPanel( dataModel, ICommonKeys.KEY_MAP_PANEL );
       }
     }

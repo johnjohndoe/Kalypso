@@ -56,9 +56,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
@@ -202,19 +200,21 @@ public class FE1D2DDiscretisationModel extends AbstractFeatureBinder implements 
     }
     else
     {
-      double min = Double.MAX_VALUE, curDist;
-      IFE1D2DNode nearest = null, curNode;
+      double minDistance = Double.MAX_VALUE;
+      IFE1D2DNode nearestNode = null;
       for( final Feature feature : foundNodes )
       {
-        curNode = new FE1D2DNode( feature );
-        curDist = nodeLocation.distance( curNode.getPoint() );
-        if( min > curDist )
+        if( feature == null )
+          continue;
+        final IFE1D2DNode currentNode = new FE1D2DNode( feature );
+        final double currentDistance = nodeLocation.distance( currentNode.getPoint() );
+        if( minDistance > currentDistance )
         {
-          nearest = curNode;
-          min = curDist;
+          nearestNode = currentNode;
+          minDistance = currentDistance;
         }
       }
-      return nearest;
+      return nearestNode;
     }
   }
 
@@ -229,8 +229,7 @@ public class FE1D2DDiscretisationModel extends AbstractFeatureBinder implements 
     return (IPolyElement) findElement( position, grabDistance, IPolyElement.class );
   }
 
-  public <T extends IFE1D2DElement> T findElement( 
-              final GM_Point position, final double grabDistance, final Class<T> elementClass )
+  public <T extends IFE1D2DElement> T findElement( final GM_Point position, final double grabDistance, final Class<T> elementClass )
   {
     final FeatureList modelList = m_elements.getWrappedList();
     final GM_Envelope reqEnvelope = GeometryUtilities.grabEnvelopeFromDistance( position, grabDistance );
@@ -240,8 +239,8 @@ public class FE1D2DDiscretisationModel extends AbstractFeatureBinder implements 
     for( final Feature feature : foundElements )
     {
       // TODO: remove next line
-//      final GM_Object geom = feature.getProperty( geoQName );
-      
+// final GM_Object geom = feature.getProperty( geoQName );
+
       final IFeatureWrapper2 current = (IFeatureWrapper2) feature.getAdapter( elementClass );
       if( current != null )
       {
@@ -251,7 +250,7 @@ public class FE1D2DDiscretisationModel extends AbstractFeatureBinder implements 
           final double curDist = position.distance( geometryFromNetItem );
           if( min > curDist && curDist < grabDistance )
           {
-            nearest = (T)current;
+            nearest = (T) current;
             min = curDist;
           }
         }
@@ -292,7 +291,6 @@ public class FE1D2DDiscretisationModel extends AbstractFeatureBinder implements 
     }
 
   }
-
 
   /**
    * Finds a continuity line near the given position.

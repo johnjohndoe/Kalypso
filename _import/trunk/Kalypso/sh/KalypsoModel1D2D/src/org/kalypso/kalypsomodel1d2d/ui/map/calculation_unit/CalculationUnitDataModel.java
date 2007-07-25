@@ -61,9 +61,18 @@ public class CalculationUnitDataModel extends KeyBasedDataModel
 
   public CalculationUnitDataModel( )
   {
-    super( new String[] { ICommonKeys.KEY_FEATURE_WRAPPER_LIST, ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, ICommonKeys.KEY_DISCRETISATION_MODEL, ICommonKeys.KEY_MAP_PANEL,
-        ICommonKeys.KEY_COMMAND_TARGET_DISC_MODEL, ICommonKeys.WIDGET_WITH_STRATEGY, ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL, ICommonKeys.KEY_SELECTED_DISPLAY,
-        ICommonKeys.KEY_BOUNDARY_CONDITION_CMD_WORKSPACE, ICommonKeys.KEY_GRAB_DISTANCE_PROVIDER, }, null );
+    super( new String[] { 
+        ICommonKeys.KEY_FEATURE_WRAPPER_LIST, 
+        ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, 
+        ICommonKeys.KEY_DISCRETISATION_MODEL, 
+        ICommonKeys.KEY_MAP_PANEL,
+        ICommonKeys.KEY_COMMAND_TARGET_DISC_MODEL, 
+        ICommonKeys.WIDGET_WITH_STRATEGY, 
+        ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL, 
+        ICommonKeys.KEY_SELECTED_DISPLAY,
+        ICommonKeys.KEY_BOUNDARY_CONDITION_CMD_WORKSPACE, 
+        ICommonKeys.KEY_GRAB_DISTANCE_PROVIDER
+        }, null );
   }
 
   public ICalculationUnit getSelectedCalculationUnit( )

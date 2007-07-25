@@ -53,60 +53,47 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
- * Composite command used to change the discretisation command.
- * This composite takes the responsibility to nodifies the 
- * commandable workspace about the chnage introduced by its
- * sub command 
+ * Composite command used to change the discretisation command. This composite takes the responsibility to nodifies the
+ * commandable workspace about the chnage introduced by its sub command
  * 
  * 
  * @author Patrice Congo
- *
+ * 
  */
 public class ChangeTerrainElevationSystemCommand implements ICommand
 {
-  public static final String DEFAULT_DESCRIPTION=
-                            "Change Discretisation model";
-  
-  private String description;
-  
-  private IFEDiscretisationModel1d2d model1d2d;
-  
-  private CommandableWorkspace commandableWorkspace;
-  
-  private List<IFeatureChangeCommand> commands = 
-                      new ArrayList<IFeatureChangeCommand>();
-  private boolean isUndoable=true;
+  public static final String DEFAULT_DESCRIPTION = "Change Discretisation model";
 
+  private final CommandableWorkspace m_commandableWorkspace;
 
-  
-  public ChangeTerrainElevationSystemCommand( 
-                          CommandableWorkspace commandableWorkspace,   
-                          IFEDiscretisationModel1d2d model1d2d)
+  private List<IFeatureChangeCommand> commands = new ArrayList<IFeatureChangeCommand>();
+
+  private boolean isUndoable = true;
+
+  private final IFEDiscretisationModel1d2d m_model1d2d;
+
+  private final String m_description;
+
+  public ChangeTerrainElevationSystemCommand( CommandableWorkspace commandableWorkspace, IFEDiscretisationModel1d2d model1d2d )
   {
-    this(   
-        commandableWorkspace,
-        model1d2d,  
-        DEFAULT_DESCRIPTION );
+    this( commandableWorkspace, model1d2d, DEFAULT_DESCRIPTION );
   }
-  
-  public ChangeTerrainElevationSystemCommand(
-                      CommandableWorkspace commandableWorkspace,
-                      IFEDiscretisationModel1d2d model1d2d,
-                      String description)
+
+  public ChangeTerrainElevationSystemCommand( CommandableWorkspace commandableWorkspace, IFEDiscretisationModel1d2d model1d2d, String description )
   {
     Assert.throwIAEOnNullParam( model1d2d, "model1d2d" );
     Assert.throwIAEOnNullParam( description, "description" );
-    this.description=description;
-    this.model1d2d=model1d2d;
-    this.commandableWorkspace=commandableWorkspace;
+    m_commandableWorkspace = commandableWorkspace;
+    m_model1d2d = model1d2d;
+    m_description = description;
   }
-  
+
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
   public String getDescription( )
   {
-    return description;
+    return m_description;
   }
 
   /**
@@ -123,22 +110,21 @@ public class ChangeTerrainElevationSystemCommand implements ICommand
   @SuppressWarnings("deprecation")
   public void process( ) throws Exception
   {
-    List<Feature> changedFeatures= new ArrayList<Feature>();
-    for(IFeatureChangeCommand command:commands)
+    List<Feature> changedFeatures = new ArrayList<Feature>();
+    for( IFeatureChangeCommand command : commands )
     {
       try
       {
         command.process();
-        IFeatureWrapper2[] changedFeatures2= command.getChangedFeature();
-        if(changedFeatures2!=null)
+        IFeatureWrapper2[] changedFeatures2 = command.getChangedFeature();
+        if( changedFeatures2 != null )
         {
-          for(IFeatureWrapper2 changedFeature :changedFeatures2)
+          for( IFeatureWrapper2 changedFeature : changedFeatures2 )
           {
-            if(changedFeature!=null)
+            if( changedFeature != null )
             {
-              Feature wrappedFeature = 
-                        changedFeature.getWrappedFeature();
-              if(wrappedFeature!=null)
+              Feature wrappedFeature = changedFeature.getWrappedFeature();
+              if( wrappedFeature != null )
               {
                 changedFeatures.add( wrappedFeature );
                 wrappedFeature.invalidEnvelope();
@@ -147,41 +133,37 @@ public class ChangeTerrainElevationSystemCommand implements ICommand
           }
         }
       }
-      catch (Exception e) 
+      catch( Exception e )
       {
         e.printStackTrace();
-      }      
+      }
     }
-    
-    model1d2d.getEdges().getWrappedList().invalidate();
-    model1d2d.getElements().getWrappedList().invalidate();
-    model1d2d.getNodes().getWrappedList().invalidate();
-    fireStructureChange( changedFeatures );    
+
+    m_model1d2d.getEdges().getWrappedList().invalidate();
+    m_model1d2d.getElements().getWrappedList().invalidate();
+    m_model1d2d.getNodes().getWrappedList().invalidate();
+    fireStructureChange( changedFeatures );
   }
 
-  private final void fireStructureChange(List<Feature> changedFeatures)
+  private final void fireStructureChange( List<Feature> changedFeatures )
   {
-    Feature[] changedFeaturesArray=new Feature[changedFeatures.size()];
+    Feature[] changedFeaturesArray = new Feature[changedFeatures.size()];
     changedFeatures.toArray( changedFeaturesArray );
-    commandableWorkspace.fireModellEvent( 
-        new FeatureStructureChangeModellEvent( 
-                          commandableWorkspace, 
-                          model1d2d.getWrappedFeature(), 
-                          changedFeaturesArray, 
-                          FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+    m_commandableWorkspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_commandableWorkspace, m_model1d2d.getWrappedFeature(), changedFeaturesArray, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
   }
+
   /**
    * @see org.kalypso.commons.command.ICommand#redo()
    */
   public void redo( ) throws Exception
   {
-    for(IFeatureChangeCommand command:commands)
+    for( IFeatureChangeCommand command : commands )
     {
       try
       {
         command.redo();
       }
-      catch (Throwable th) 
+      catch( Throwable th )
       {
         th.printStackTrace();
       }
@@ -193,30 +175,30 @@ public class ChangeTerrainElevationSystemCommand implements ICommand
    */
   public void undo( ) throws Exception
   {
-    
-//  reverse order  is taken because of eventual dependencies
+
+// reverse order is taken because of eventual dependencies
     IFeatureChangeCommand command;
-    for(int index=commands.size()-1;index>=0;index-- )
+    for( int index = commands.size() - 1; index >= 0; index-- )
     {
-      command=commands.get( index );
+      command = commands.get( index );
       try
       {
         command.undo();
       }
-      catch (Exception e) 
+      catch( Exception e )
       {
         e.printStackTrace();
       }
     }
-    
+
   }
-  
-  public void addCommand(IFeatureChangeCommand command)
+
+  public void addCommand( IFeatureChangeCommand command )
   {
     Assert.throwIAEOnNullParam( command, "command" );
     commands.add( command );
-    
-    isUndoable=isUndoable && command.isUndoable();
-    
+
+    isUndoable = isUndoable && command.isUndoable();
+
   }
 }

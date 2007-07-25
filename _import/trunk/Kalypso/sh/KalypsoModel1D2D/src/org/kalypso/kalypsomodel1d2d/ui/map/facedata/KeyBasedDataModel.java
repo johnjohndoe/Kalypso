@@ -49,32 +49,30 @@ import org.kalypso.kalypsosimulationmodel.core.Assert;
 /**
  * @author Madanagopal
  * @author Patrice Congo
- *
+ * 
  */
 public class KeyBasedDataModel
 {
   private static final int NO_POS = -1;
 
-  final List<KeyBasedDataModelChangeListener> listeners = 
-                    new ArrayList<KeyBasedDataModelChangeListener>();
+  final List<KeyBasedDataModelChangeListener> listeners = new ArrayList<KeyBasedDataModelChangeListener>();
+
   final String[] keys;
-  
+
   final Object[] data;
-  
+
   final IDataModelCheck[] dataChecks;
-  
+
   IDataModelCheck modelCheck;
-  
-  public KeyBasedDataModel(
-                      String[] keys,
-                      IDataModelCheck modelCheck)
+
+  public KeyBasedDataModel( String[] keys, IDataModelCheck modelCheck )
   {
     Assert.throwIAEOnNullParam( keys, "keys" );
     String[] tempKeys = new String[keys.length];
     String currentKey;
     try
     {
-      for(int i=keys.length-1;i>=0;i-- )
+      for( int i = keys.length - 1; i >= 0; i-- )
       {
         currentKey = keys[i];
         tempKeys[i] = Assert.throwIAEOnNullOrEmpty( currentKey );
@@ -85,19 +83,19 @@ public class KeyBasedDataModel
       e.printStackTrace();
       throw e;
     }
-    
+
     this.keys = tempKeys;
     this.data = new Object[keys.length];
     this.dataChecks = new IDataModelCheck[keys.length];
     this.modelCheck = modelCheck;
   }
-  
-  public Object getData(String key)
+
+  public Object getData( String key )
   {
-    
-    key=Assert.throwIAEOnNullOrEmpty(key);
-    int pos=findPosition( key );
-    if(pos==NO_POS)
+
+    key = Assert.throwIAEOnNullOrEmpty( key );
+    int pos = findPosition( key );
+    if( pos == NO_POS )
     {
       return null;
     }
@@ -106,7 +104,8 @@ public class KeyBasedDataModel
       return data[pos];
     }
   }
-  public <T> T  getData( Class<T> dataType, String key)
+
+  public <T> T getData( Class<T> dataType, String key )
   {
     Object obj = getData( key );
     if( obj == null )
@@ -115,30 +114,22 @@ public class KeyBasedDataModel
     }
     else if( dataType.isInstance( obj ) )
     {
-      return (T)obj;
+      return (T) obj;
     }
     else
     {
-      String message = 
-        String.format( 
-            "Illegal type in model:"+
-              " \n\texpected=%s"+
-              "\n\tcurrent=%s"+
-              "\n\tkey=%s", 
-              dataType, 
-              obj.getClass(),
-              key);
-      throw new RuntimeException(message);
+      String message = String.format( "Illegal type in model:" + " \n\texpected=%s" + "\n\tcurrent=%s" + "\n\tkey=%s", dataType, obj.getClass(), key );
+      throw new RuntimeException( message );
     }
-    
+
   }
-  
-  public IDataModelCheck getDataCheck(String key)
+
+  public IDataModelCheck getDataCheck( String key )
   {
-    
-    key=Assert.throwIAEOnNullOrEmpty(key);
-    int pos=findPosition( key );
-    if( pos==NO_POS )
+
+    key = Assert.throwIAEOnNullOrEmpty( key );
+    int pos = findPosition( key );
+    if( pos == NO_POS )
     {
       return null;
     }
@@ -147,63 +138,52 @@ public class KeyBasedDataModel
       return dataChecks[pos];
     }
   }
-  
-  public void setData(String key, Object newEntry)
+
+  public void setData( String key, Object newEntry )
   {
     setData( key, newEntry, true );
   }
-  
-  protected void setData(
-                    String key, 
-                    Object newEntry, 
-                    boolean doNotify)
+
+  protected void setData( String key, Object newEntry, boolean doNotify )
   {
-    key=Assert.throwIAEOnNullOrEmpty(key);
-    int pos=findPosition( key );
-    if(pos==NO_POS)
+    key = Assert.throwIAEOnNullOrEmpty( key );
+    int pos = findPosition( key );
+    if( pos == NO_POS )
     {
-      throw new IllegalArgumentException(
-          "Key not available:"+
-          "\n\tCurrent key="+key+
-          "\n\tavailablekeys="+Arrays.asList( keys ));
+      throw new IllegalArgumentException( "Key not available:" + "\n\tCurrent key=" + key + "\n\tavailablekeys=" + Arrays.asList( keys ) );
     }
     else
     {
-      data[pos]=newEntry;
-      if(dataChecks[pos]!=null)
+      data[pos] = newEntry;
+      if( dataChecks[pos] != null )
       {
         dataChecks[pos].update( key, newEntry, this );
       }
-      if(modelCheck!=null)
+      if( modelCheck != null )
       {
         modelCheck.update( key, newEntry, this );
       }
-      if(doNotify)
+      if( doNotify )
       {
         fireDataChanged( key, newEntry );
       }
     }
   }
-  
-  public void setDataCheck(
-      String key, 
-      IDataModelCheck newEntry)
+
+  public void setDataCheck( String key, IDataModelCheck newEntry )
   {
-    key=Assert.throwIAEOnNullOrEmpty(key);
-    int pos=findPosition( key );
-    if(pos==NO_POS)
+    key = Assert.throwIAEOnNullOrEmpty( key );
+    int pos = findPosition( key );
+    if( pos == NO_POS )
     {
-      throw new IllegalArgumentException(
-      "Key not available:"+
-      "\n\tCurrent key="+key+
-      "\n\tavailablekeys="+Arrays.asList( keys ));
+      throw new IllegalArgumentException( "Key not available:" + "\n\tCurrent key=" + key + "\n\tavailablekeys=" + Arrays.asList( keys ) );
     }
     else
     {
-        dataChecks[pos]=newEntry;
-      }
+      dataChecks[pos] = newEntry;
+    }
   }
-  
+
   public IDataModelCheck getModelCheck( )
   {
     return modelCheck;
@@ -214,51 +194,48 @@ public class KeyBasedDataModel
     this.modelCheck = modelCheck;
   }
 
-  private final int findPosition(String key)
+  private final int findPosition( String key )
   {
-    for(int i=0;i<keys.length;i++)
+    for( int i = 0; i < keys.length; i++ )
     {
-      if(key.equals( keys[i] ))
+      if( key.equals( keys[i] ) )
       {
         return i;
-      }      
+      }
     }
-    
+
     return NO_POS;
   }
-  
-  public void addKeyBasedDataChangeListener(
-                    KeyBasedDataModelChangeListener newListener)
+
+  public void addKeyBasedDataChangeListener( KeyBasedDataModelChangeListener newListener )
   {
     Assert.throwIAEOnNullParam( newListener, "newListener" );
-    if(!listeners.contains( newListener ))
+    if( !listeners.contains( newListener ) )
     {
       listeners.add( newListener );
     }
   }
-  
-  public void removeKeyBasedDataChangeListener(
-                    KeyBasedDataModelChangeListener newListener)
+
+  public void removeKeyBasedDataChangeListener( KeyBasedDataModelChangeListener newListener )
   {
     Assert.throwIAEOnNullParam( newListener, "newListener" );
-    if(listeners.contains( newListener ))
+    if( listeners.contains( newListener ) )
     {
       listeners.remove( newListener );
     }
   }
-  
-  
-  public void fireDataChanged(String key, Object newValue)
+
+  public void fireDataChanged( String key, Object newValue )
   {
-    
-    for(KeyBasedDataModelChangeListener l:listeners)
+
+    for( KeyBasedDataModelChangeListener l : listeners )
     {
       l.dataChanged( key, newValue );
     }
   }
-  
+
   public void removeAllListeners( )
   {
-     listeners.clear();    
+    listeners.clear();
   }
 }

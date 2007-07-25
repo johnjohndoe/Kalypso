@@ -68,10 +68,9 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 @SuppressWarnings( { "unchecked", "hiding" })
 public class Model1d2dCalUnitTheme extends AbstractKalypsoTheme
 {
-
   private CalUnitDisplayElement calUnitDisplayElement;
 
-  private ICalculationUnit calUnit;
+  private ICalculationUnit m_calcUnit;
 
   private IFlowRelationshipModel modelBoundaryConditions;
 
@@ -82,17 +81,13 @@ public class Model1d2dCalUnitTheme extends AbstractKalypsoTheme
     super( name, "Aktuelle Berechnungseinheit", mapModel );
   }
 
-  public void setCalulationUnit( ICalculationUnit calUnit )
+  public void setCalculationUnit( ICalculationUnit calcUnit )
   {
-    this.calUnit = calUnit;
-    if( calUnit != null )
-    {
-      calUnitDisplayElement = new CalUnitDisplayElement( calUnit );
-    }
+    m_calcUnit = calcUnit;
+    if( m_calcUnit != null )
+      calUnitDisplayElement = new CalUnitDisplayElement( m_calcUnit );
     else
-    {
       calUnitDisplayElement = null;
-    }
   }
 
   /**
@@ -100,14 +95,9 @@ public class Model1d2dCalUnitTheme extends AbstractKalypsoTheme
    */
   public GM_Envelope getBoundingBox( )
   {
-    if( calUnit == null )
-    {
+    if( m_calcUnit == null )
       return null;
-    }
-    GM_Envelope bbox = CalcUnitOps.getBoundingBox( calUnit );
-
-    return bbox;
-
+    return CalcUnitOps.getBoundingBox( m_calcUnit );
   }
 
   /**
@@ -130,7 +120,7 @@ public class Model1d2dCalUnitTheme extends AbstractKalypsoTheme
 
   private void markAppliedBoundaryConditions( Graphics g, GeoTransform p )
   {
-    if( modelBoundaryConditions != null && calUnit != null )
+    if( modelBoundaryConditions != null && m_calcUnit != null )
     {
 // List<IBoundaryCondition> appliedBCs = CalUnitOps.getBoundaryConditions(
 // modelBoundaryConditions,
@@ -144,7 +134,7 @@ public class Model1d2dCalUnitTheme extends AbstractKalypsoTheme
       {
         if( bc instanceof IBoundaryCondition )
         {
-          if( CalcUnitOps.isBoundaryConditionOf( calUnit, (IBoundaryCondition) bc, 20 ) )
+          if( CalcUnitOps.isBoundaryConditionOf( m_calcUnit, (IBoundaryCondition) bc, 20 ) )
           {
             GM_Point position = ((IBoundaryCondition) bc).getPosition();
             double gPosX = p.getDestX( position.getX() ) + xTrans;

@@ -81,17 +81,17 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidgetWithStrategy, IGrabDistanceProvider
 {
-  private IWidget strategy = null;
+  private IWidget m_strategy = null;
 
-  private final CalculationUnitDataModel dataModel = new CalculationUnitDataModel();
+  private final CalculationUnitDataModel m_dataModel = new CalculationUnitDataModel();
 
-  private final CalculationUnitWidgetFace widgetFace = new CalculationUnitWidgetFace( dataModel );
+  private final CalculationUnitWidgetFace m_widgetFace = new CalculationUnitWidgetFace( m_dataModel );
 
-  private final String name;
+  private final String m_name;
 
-  private final String tooltip;
+  private final String m_toolTip;
 
-  private Model1d2dCalUnitTheme calUnitTheme;
+  private Model1d2dCalUnitTheme m_calcUnitTheme;
 
   private final KeyBasedDataModelChangeListener calThemeUpdater = new KeyBasedDataModelChangeListener()
   {
@@ -99,8 +99,8 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
     {
       if( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER.equals( key ) )
       {
-        calUnitTheme.setCalulationUnit( (ICalculationUnit) newValue );
-        KeyBasedDataModelUtil.repaintMapPanel( dataModel, ICommonKeys.KEY_MAP_PANEL );
+        m_calcUnitTheme.setCalculationUnit( (ICalculationUnit) newValue );
+        KeyBasedDataModelUtil.repaintMapPanel( m_dataModel, ICommonKeys.KEY_MAP_PANEL );
       }
     }
   };
@@ -119,8 +119,8 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
 
   public CalculationUnitWidget( final String name, final String toolTip )
   {
-    this.name = name;
-    this.tooltip = toolTip;
+    m_name = name;
+    m_toolTip = toolTip;
   }
 
   /**
@@ -130,24 +130,24 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
   // @Override
   public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel )
   {
-    dataModel.setData( ICommonKeys.KEY_MAP_PANEL, mapPanel );
-    dataModel.setData( ICommonKeys.KEY_COMMAND_TARGET_DISC_MODEL, commandPoster );
+    m_dataModel.setData( ICommonKeys.KEY_MAP_PANEL, mapPanel );
+    m_dataModel.setData( ICommonKeys.KEY_COMMAND_TARGET_DISC_MODEL, commandPoster );
     final IMapModell mapModell = mapPanel.getMapModell();
     final IFEDiscretisationModel1d2d model1d2d = UtilMap.findFEModelTheme( mapModell );
     // TODO check model1d2d for null and do something
-    dataModel.setData( ICommonKeys.KEY_DISCRETISATION_MODEL, model1d2d );
-    dataModel.setData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST, CalcUnitOps.getModelCalculationUnits( model1d2d ) );
-    dataModel.setData( ICommonKeys.WIDGET_WITH_STRATEGY, this );
+    m_dataModel.setData( ICommonKeys.KEY_DISCRETISATION_MODEL, model1d2d );
+    m_dataModel.setData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST, CalcUnitOps.getModelCalculationUnits( model1d2d ) );
+    m_dataModel.setData( ICommonKeys.WIDGET_WITH_STRATEGY, this );
 
     // command manager since it is use in the dirty pool object framework
     // the commandable workspace of the target theme is taken
     final IKalypsoFeatureTheme targetTheme = UtilMap.findEditableTheme( mapModell, Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT );
-    dataModel.setData( ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL, targetTheme.getWorkspace() );
+    m_dataModel.setData( ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL, targetTheme.getWorkspace() );
 
-    calUnitTheme = new Model1d2dCalUnitTheme( "Aktuelle CalUnit", mapModell );
+    m_calcUnitTheme = new Model1d2dCalUnitTheme( "Aktuelle CalUnit", mapModell );
     // mapModell.addTheme( calUnitTheme );
-    mapModell.insertTheme( calUnitTheme, 0 );
-    dataModel.addKeyBasedDataChangeListener( calThemeUpdater );
+    mapModell.insertTheme( m_calcUnitTheme, 0 );
+    m_dataModel.addKeyBasedDataChangeListener( calThemeUpdater );
 
     final IKalypsoFeatureTheme bcTheme = UtilMap.findEditableTheme( mapModell, IBoundaryCondition.QNAME );
     if( bcTheme == null )
@@ -159,13 +159,13 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
     // ICommonKeys.KEY_BOUNDARY_CONDITION_THEME,
     // bcTheme );
     final CommandableWorkspace bcWorkspace = bcTheme.getWorkspace();
-    dataModel.setData( ICommonKeys.KEY_BOUNDARY_CONDITION_CMD_WORKSPACE, bcWorkspace );
-    dataModel.setData( ICommonKeys.KEY_GRAB_DISTANCE_PROVIDER, this );
+    m_dataModel.setData( ICommonKeys.KEY_BOUNDARY_CONDITION_CMD_WORKSPACE, bcWorkspace );
+    m_dataModel.setData( ICommonKeys.KEY_GRAB_DISTANCE_PROVIDER, this );
 
     // set bc list to calunit theme for display
     final Feature bcHolderModelFeature = bcWorkspace.getRootFeature();
     final IFlowRelationshipModel bcModel = (IFlowRelationshipModel) bcHolderModelFeature.getAdapter( IFlowRelationshipModel.class );
-    calUnitTheme.setModelBoundaryConditions( bcModel );
+    m_calcUnitTheme.setModelBoundaryConditions( bcModel );
 
     popupBlocker.registerPopupBlockerToActiveMapView();
     mapActionDisabler = new MapActionDisabler();
@@ -179,8 +179,8 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
   {
     try
     {
-      dataModel.setData( ICommonKeys.KEY_SELECTED_DISPLAY, parent.getDisplay() );
-      return widgetFace.createControl( parent );
+      m_dataModel.setData( ICommonKeys.KEY_SELECTED_DISPLAY, parent.getDisplay() );
+      return m_widgetFace.createControl( parent );
     }
     catch( final Throwable th )
     {
@@ -194,9 +194,9 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
    */
   public void disposeControl( )
   {
-    if( widgetFace != null )
+    if( m_widgetFace != null )
     {
-      widgetFace.disposeControl();
+      m_widgetFace.disposeControl();
     }
   }
 
@@ -215,9 +215,9 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
 
   public void clickPopup( final Point p )
   {
-    if( strategy != null )
+    if( m_strategy != null )
     {
-      strategy.clickPopup( p );
+      m_strategy.clickPopup( p );
     }
   }
 
@@ -226,9 +226,9 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
    */
   public void doubleClickedLeft( final Point p )
   {
-    if( strategy != null )
+    if( m_strategy != null )
     {
-      strategy.doubleClickedLeft( p );
+      m_strategy.doubleClickedLeft( p );
     }
 
   }
@@ -238,9 +238,9 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
    */
   public void doubleClickedRight( final Point p )
   {
-    if( strategy != null )
+    if( m_strategy != null )
     {
-      strategy.doubleClickedRight( p );
+      m_strategy.doubleClickedRight( p );
     }
   }
 
@@ -249,9 +249,9 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
    */
   public void dragged( final Point p )
   {
-    if( strategy != null )
+    if( m_strategy != null )
     {
-      strategy.dragged( p );
+      m_strategy.dragged( p );
     }
   }
 
@@ -273,11 +273,11 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
     }
     try
     {
-      final MapPanel mapPanel = (MapPanel) dataModel.getData( ICommonKeys.KEY_MAP_PANEL );
+      final MapPanel mapPanel = (MapPanel) m_dataModel.getData( ICommonKeys.KEY_MAP_PANEL );
       final IMapModell mapModell = mapPanel.getMapModell();
       if( mapModell != null )
       {
-        mapModell.removeTheme( calUnitTheme );
+        mapModell.removeTheme( m_calcUnitTheme );
       }
     }
     catch( final Exception e )
@@ -287,9 +287,9 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
 
     try
     {
-      if( strategy != null )
+      if( m_strategy != null )
       {
-        strategy.finish();
+        m_strategy.finish();
       }
     }
     catch( final Exception e )
@@ -305,7 +305,7 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
    */
   public String getName( )
   {
-    return name;
+    return m_name;
   }
 
   /**
@@ -313,7 +313,7 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
    */
   public String getToolTip( )
   {
-    return tooltip;
+    return m_toolTip;
   }
 
   /**
@@ -321,9 +321,9 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
    */
   public void keyPressed( final KeyEvent e )
   {
-    if( strategy != null )
+    if( m_strategy != null )
     {
-      strategy.keyPressed( e );
+      m_strategy.keyPressed( e );
     }
 
   }
@@ -333,9 +333,9 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
    */
   public void keyReleased( final KeyEvent e )
   {
-    if( strategy != null )
+    if( m_strategy != null )
     {
-      strategy.keyReleased( e );
+      m_strategy.keyReleased( e );
     }
   }
 
@@ -344,9 +344,9 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
    */
   public void keyTyped( final KeyEvent e )
   {
-    if( strategy != null )
+    if( m_strategy != null )
     {
-      strategy.keyTyped( e );
+      m_strategy.keyTyped( e );
     }
 
   }
@@ -356,9 +356,9 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
    */
   public void leftClicked( final Point p )
   {
-    if( strategy != null )
+    if( m_strategy != null )
     {
-      strategy.leftClicked( p );
+      m_strategy.leftClicked( p );
     }
 
   }
@@ -368,9 +368,9 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
    */
   public void leftPressed( final Point p )
   {
-    if( strategy != null )
+    if( m_strategy != null )
     {
-      strategy.leftPressed( p );
+      m_strategy.leftPressed( p );
     }
 
   }
@@ -380,9 +380,9 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
    */
   public void leftReleased( final Point p )
   {
-    if( strategy != null )
+    if( m_strategy != null )
     {
-      strategy.leftReleased( p );
+      m_strategy.leftReleased( p );
     }
 
   }
@@ -392,9 +392,9 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
    */
   public void middleClicked( final Point p )
   {
-    if( strategy != null )
+    if( m_strategy != null )
     {
-      strategy.middleClicked( p );
+      m_strategy.middleClicked( p );
     }
   }
 
@@ -403,9 +403,9 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
    */
   public void middlePressed( final Point p )
   {
-    if( strategy != null )
+    if( m_strategy != null )
     {
-      strategy.middlePressed( p );
+      m_strategy.middlePressed( p );
     }
   }
 
@@ -414,9 +414,9 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
    */
   public void middleReleased( final Point p )
   {
-    if( strategy != null )
+    if( m_strategy != null )
     {
-      strategy.middleReleased( p );
+      m_strategy.middleReleased( p );
     }
   }
 
@@ -425,9 +425,9 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
    */
   public void moved( final Point p )
   {
-    if( strategy != null )
+    if( m_strategy != null )
     {
-      strategy.moved( p );
+      m_strategy.moved( p );
     }
   }
 
@@ -436,9 +436,9 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
    */
   public void paint( final Graphics g )
   {
-    if( strategy != null )
+    if( m_strategy != null )
     {
-      strategy.paint( g );
+      m_strategy.paint( g );
     }
   }
 
@@ -447,9 +447,9 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
    */
   public void rightClicked( final Point p )
   {
-    if( strategy != null )
+    if( m_strategy != null )
     {
-      strategy.rightClicked( p );
+      m_strategy.rightClicked( p );
     }
   }
 
@@ -458,9 +458,9 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
    */
   public void rightPressed( final Point p )
   {
-    if( strategy != null )
+    if( m_strategy != null )
     {
-      strategy.rightPressed( p );
+      m_strategy.rightPressed( p );
     }
   }
 
@@ -469,9 +469,9 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
    */
   public void rightReleased( final Point p )
   {
-    if( strategy != null )
+    if( m_strategy != null )
     {
-      strategy.rightReleased( p );
+      m_strategy.rightReleased( p );
     }
   }
 
@@ -480,9 +480,9 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
    */
   public void setSelection( final ISelection selection )
   {
-    if( strategy != null )
+    if( m_strategy != null )
     {
-      strategy.setSelection( selection );
+      m_strategy.setSelection( selection );
     }
   }
 
@@ -494,17 +494,17 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
    */
   public void setStrategy( final IWidget strategy )
   {
-    if( this.strategy != null )
+    if( m_strategy != null )
     {
-      this.strategy.finish();
+      m_strategy.finish();
     }
 
-    this.strategy = strategy;
-    if( this.strategy != null )
+    m_strategy = strategy;
+    if( m_strategy != null )
     {
-      final ICommandTarget commandPoster = (ICommandTarget) dataModel.getData( ICommonKeys.KEY_COMMAND_TARGET_DISC_MODEL );
-      final MapPanel mapPanel = (MapPanel) dataModel.getData( ICommonKeys.KEY_MAP_PANEL );
-      this.strategy.activate( commandPoster, mapPanel );
+      final ICommandTarget commandPoster = (ICommandTarget) m_dataModel.getData( ICommonKeys.KEY_COMMAND_TARGET_DISC_MODEL );
+      final MapPanel mapPanel = (MapPanel) m_dataModel.getData( ICommonKeys.KEY_MAP_PANEL );
+      m_strategy.activate( commandPoster, mapPanel );
     }
   }
 
@@ -513,14 +513,14 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
    */
   public double getGrabDistance( )
   {
-    if( strategy instanceof IGrabDistanceProvider )
+    if( m_strategy instanceof IGrabDistanceProvider )
     {
-      return ((IGrabDistanceProvider) strategy).getGrabDistance();
+      return ((IGrabDistanceProvider) m_strategy).getGrabDistance();
     }
 
     System.out.println( "getting fix grab distance" );
 
-    final MapPanel mapPanel = dataModel.getData( MapPanel.class, ICommonKeys.KEY_MAP_PANEL );
+    final MapPanel mapPanel = m_dataModel.getData( MapPanel.class, ICommonKeys.KEY_MAP_PANEL );
     return MapUtilities.calculateWorldDistance( mapPanel, 6 );
   }
 }
