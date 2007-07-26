@@ -2,13 +2,8 @@ package org.kalypso.afgui.views;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.jface.viewers.ITableColorProvider;
-import org.eclipse.jface.viewers.ITableFontProvider;
-import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
@@ -18,9 +13,12 @@ import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import de.renew.workflow.base.Task;
 import de.renew.workflow.base.TaskGroup;
 
-public class WorkflowLabelProvider extends LabelProvider implements ITableLabelProvider, ITableFontProvider, ITableColorProvider
+/**
+ * @author Stefan Kurzbach
+ * 
+ */
+public class WorkflowLabelProvider extends ColumnLabelProvider
 {
-
   private final Image IMAGE_TASK;
 
   private final Image IMAGE_GROUP;
@@ -30,12 +28,6 @@ public class WorkflowLabelProvider extends LabelProvider implements ITableLabelP
   private final Font FONT_TASK;
 
   private final Font FONT_ACTIVE_TASK;
-
-  private final Image IMAGE_UNAVAILABLE = KalypsoAFGUIFrameworkPlugin.getImageDescriptor( "icons/remove.gif" ).createImage();
-
-  private final Image IMAGE_RUNNNING = KalypsoAFGUIFrameworkPlugin.getImageDescriptor( "icons/eclipse/running.gif" ).createImage();
-
-  private final Image IMAGE_FINISHED = KalypsoAFGUIFrameworkPlugin.getImageDescriptor( "icons/eclipse/finished.gif" ).createImage();
 
   private final WorkflowControl m_workflowControl;
 
@@ -57,7 +49,7 @@ public class WorkflowLabelProvider extends LabelProvider implements ITableLabelP
   }
 
   /**
-   * @see org.eclipse.jface.viewers.LabelProvider#getImage(java.lang.Object)
+   * @see org.eclipse.jface.viewers.ColumnLabelProvider#getImage(java.lang.Object)
    */
   @Override
   public Image getImage( final Object element )
@@ -74,7 +66,7 @@ public class WorkflowLabelProvider extends LabelProvider implements ITableLabelP
   }
 
   /**
-   * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
+   * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
    */
   @Override
   public String getText( final Object element )
@@ -88,23 +80,22 @@ public class WorkflowLabelProvider extends LabelProvider implements ITableLabelP
   }
 
   /**
-   * @see org.eclipse.jface.viewers.LabelProvider#dispose()
+   * @see org.eclipse.jface.viewers.BaseLabelProvider#dispose()
    */
   @Override
   public void dispose( )
   {
     IMAGE_TASK.dispose();
     IMAGE_GROUP.dispose();
-    IMAGE_UNAVAILABLE.dispose();
-    IMAGE_RUNNNING.dispose();
-    IMAGE_FINISHED.dispose();
     FONT_TASK.dispose();
     FONT_TASKGROUP.dispose();
+    super.dispose();
   }
 
   /**
-   * @see org.eclipse.jface.viewers.IFontProvider#getFont(java.lang.Object)
+   * @see org.eclipse.jface.viewers.ColumnLabelProvider#getFont(java.lang.Object)
    */
+  @Override
   public Font getFont( final Object element )
   {
     if( element instanceof TaskGroup )
@@ -121,78 +112,19 @@ public class WorkflowLabelProvider extends LabelProvider implements ITableLabelP
   }
 
   /**
-   * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
+   * @see org.eclipse.jface.viewers.CellLabelProvider#getToolTipText(java.lang.Object)
    */
-  public Image getColumnImage( final Object element, final int columnIndex )
+  @Override
+  public String getToolTipText( final Object element )
   {
     if( element instanceof Task )
     {
-      // Task task = (Task) element;
-      if( columnIndex == 0 )
-      {
-        return getImage( element );
-      }
-      // else if( columnIndex == 1 )
-      // {
-      // switch( task.getState() )
-      // {
-      // case RUNNING:
-      // return IMAGE_RUNNNING;
-      // case FINISHED:
-      // return IMAGE_FINISHED;
-      // case UNAVAILABLE:
-      // return IMAGE_UNAVAILABLE;
-      // default:
-      // return null;
-      // }
-      // }
-      else
-      {
-        return null;
-      }
+      Task task = (Task) element;
+      return task.getHelp().getValue();
     }
     else
     {
       return null;
     }
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
-   */
-  public String getColumnText( final Object element, final int columnIndex )
-  {
-    if( columnIndex == 0 )
-    {
-      return getText( element );
-    }
-    else
-    {
-      return null;
-    }
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.ITableFontProvider#getFont(java.lang.Object, int)
-   */
-  public Font getFont( final Object element, final int columnIndex )
-  {
-    return getFont( element );
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.ITableColorProvider#getBackground(java.lang.Object, int)
-   */
-  public Color getBackground( final Object element, final int columnIndex )
-  {
-    return null;
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.ITableColorProvider#getForeground(java.lang.Object, int)
-   */
-  public Color getForeground( final Object element, final int columnIndex )
-  {
-    return null;
   }
 }
