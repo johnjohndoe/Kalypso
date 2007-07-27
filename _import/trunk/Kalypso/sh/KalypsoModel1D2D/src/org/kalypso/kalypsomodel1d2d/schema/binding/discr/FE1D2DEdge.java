@@ -382,6 +382,12 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
     final GM_Point point2 = m_nodes.get( 1 ).getPoint();
     final double x = (point1.getX() + point2.getX()) / 2;
     final double y = (point1.getY() + point2.getY()) / 2;
-    return GeometryFactory.createGM_Point( x, y, point1.getCoordinateSystem() );
+    if( point1.getCoordinateDimension() > 2 && point2.getCoordinateDimension() > 2 )
+    {
+      final double z = (point1.getZ() + point2.getZ()) / 2;
+      return GeometryFactory.createGM_Point( x, y, z, point1.getCoordinateSystem() );
+    }
+    else
+      return GeometryFactory.createGM_Point( x, y, point1.getCoordinateSystem() );
   }
 }

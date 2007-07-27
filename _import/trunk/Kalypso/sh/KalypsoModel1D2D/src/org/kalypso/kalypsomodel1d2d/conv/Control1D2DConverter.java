@@ -42,11 +42,13 @@ package org.kalypso.kalypsomodel1d2d.conv;
 
 import java.io.PrintWriter;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Formatter;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -227,10 +229,31 @@ public class Control1D2DConverter
 
   private void writeR10ContinuityLineDataBlock( final RMA10Calculation calculation, final Formatter formatter ) throws SimulationException
   {
-    final BoundaryLineInfo[] infos = calculation.getContinuityLineInfo();
+    final BoundaryLineInfo[] rawInfos = calculation.getContinuityLineInfo();
 
-    if( infos.length == 0 )
+    if( rawInfos.length == 0 )
       throw new SimulationException( "Keine Randbedingungen definiert, Rechnung wird abgebrochen.", null );
+
+    // Because we might don't have info about all nodes (submodel), we have to filter SCL/CCx lines
+    final List<BoundaryLineInfo> filteredInfosList = new ArrayList<BoundaryLineInfo>();
+    for( final BoundaryLineInfo info : rawInfos )
+    {
+      final IFE1D2DNode[] nodes = info.getNodes();
+      boolean allNodesPresent = true;
+      for( int i = 0; i < nodes.length; i++ )
+      {
+        final Integer nodeID = m_nodesIDProvider.get( nodes[i].getGmlID() );
+        if( nodeID == null )
+        {
+          allNodesPresent = false;
+          break;
+        }
+      }
+      if( allNodesPresent )
+        filteredInfosList.add( info );
+    }
+    final BoundaryLineInfo[] infos = new BoundaryLineInfo[filteredInfosList.size()];
+    filteredInfosList.toArray( infos );
 
     formatter.format( "SCL%9d%n", infos.length );
 
@@ -241,12 +264,11 @@ public class Control1D2DConverter
       for( int i = 0; i < nodes.length; i++ )
       {
         final IFE1D2DNode node = nodes[i];
-        final Integer nodeID = m_nodesIDProvider.get( node.getGmlID() );
-        if( nodeID == null )
-          continue;
+        final int nodeID = m_nodesIDProvider.get( node.getGmlID() );
         /* Write start stuff */
         if( i == 0 )
-          formatter.format( "CC1 %4d", info.getID() );
+// formatter.format( "CC1 %4d", info.getID() );
+          formatter.format( "CC1     " );
         else if( i % 9 == 0 )
           formatter.format( "%nCC2     " );
 
@@ -290,7 +312,8 @@ public class Control1D2DConverter
       if( controlModel.isSteadySelected() )
         throw new SimulationException( "Stationär Relaxationsfaktor leer, keine Rechnung möglich.", null );
       else
-        uRValSteady = 0.5;
+        // Not used anyway (1.0 should be default value)
+        uRValSteady = 1.0;
     writeTimeStep( formatter, msg, null, null, uRValSteady.floatValue(), niti, timeStepInfos );
 
     if( controlModel.isUnsteadySelected() )

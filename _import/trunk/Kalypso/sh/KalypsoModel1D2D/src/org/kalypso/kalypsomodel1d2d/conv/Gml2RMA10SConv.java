@@ -259,7 +259,6 @@ public class Gml2RMA10SConv implements INativeIDProvider
     {
       final int id = map.size() + 1;
       map.put( gmlID, id );
-      System.out.println( id + "\t" + gmlID );
       return id;
     }
     else
@@ -577,7 +576,6 @@ public class Gml2RMA10SConv implements INativeIDProvider
     final double x = point.getX();
     final double y = point.getY();
     double z = Double.NaN;
-
     // TODO: Here we should decide what we do with non-elevation-assigned nodes. For now the elevation of these nodes
     // will be set to '-9999'
     if( point.getCoordinateDimension() == 3 )
