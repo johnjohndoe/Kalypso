@@ -646,8 +646,11 @@ public class CalcUnitOps
   {
     Assert.throwIAEOnNullParam( unit, "unit" );
     Assert.throwIAEOnNullParam( element, "element" );
-    final IFeatureWrapperCollection containers = element.getContainers();
-    // return containers.contains( unit );
+    final IFeatureWrapperCollection<IFE1D2DComplexElement> containers = element.getContainers();
+    final List list = new ArrayList<String>();
+    for( int i = 0; i < containers.size(); i++ )
+      list.add( (containers.get( i )).getGmlID() );
+// return containers.contains( unit );
 
     final LinkedList<ICalculationUnit> subUnits = new LinkedList<ICalculationUnit>();
     subUnits.add( unit );
@@ -655,15 +658,9 @@ public class CalcUnitOps
     {
       final ICalculationUnit currentSubUnit = subUnits.remove( 0 );
       if( currentSubUnit instanceof ICalculationUnit1D2D )
-      {
         subUnits.addAll( ((ICalculationUnit1D2D) currentSubUnit).getSubUnits() );
-      }
-
-      if( containers.contains( currentSubUnit ) )
-      {
+      if( list.contains( currentSubUnit.getGmlID() ) )
         return true;
-      }
-
     }
     return false;
   }

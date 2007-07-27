@@ -277,7 +277,6 @@ public class Util
   {
     try
     {
-
       final IHandlerService service = (IHandlerService) workbench.getService( IHandlerService.class );
       final IEvaluationContext currentState = service.getCurrentState();
       final ICaseDataProvider<IFeatureWrapper2> caseDataProvider = (ICaseDataProvider<IFeatureWrapper2>) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );

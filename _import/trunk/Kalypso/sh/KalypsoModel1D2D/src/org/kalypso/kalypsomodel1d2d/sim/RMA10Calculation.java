@@ -126,6 +126,8 @@ public class RMA10Calculation implements INativeIDProvider
 
   private ISimulationDescriptor m_simulationDesciptor;
 
+  private ICalculationUnit m_calculationUnit;
+
   public RMA10Calculation( final ISimulationDataProvider inputProvider ) throws SimulationException, Exception
   {
     final Map<String, String> specialUrls = new HashMap<String, String>();
@@ -180,13 +182,6 @@ public class RMA10Calculation implements INativeIDProvider
     m_roughnessRootWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( RMA10SimModelConstants.ROUGHNESS_ID ), factory ).getRootFeature();
 
     m_timeStepInfos = calculateBoundaryConditionInfos();
-  }
-
-  public RMA10Calculation( final GMLWorkspace disModelWorkspace, final Feature controlRoot, final Feature roughnessRoot )
-  {
-    m_disModelWorkspace = disModelWorkspace;
-    m_controlModelRoot = controlRoot;
-    m_roughnessRootWorkspace = roughnessRoot;
   }
 
   public GMLWorkspace getOperationalModelWorkspace( )
@@ -412,7 +407,8 @@ public class RMA10Calculation implements INativeIDProvider
         {
           final IBoundaryLine<IFE1D2DComplexElement, IFE1D2DEdge> contiLine = (IBoundaryLine<IFE1D2DComplexElement, IFE1D2DEdge>) wrapper2;
           final BoundaryLineInfo info = contiMap.get( contiLine );
-
+          
+          if(info == null) continue;
           final IComponent timeComponent = TupleResultUtilities.findComponentById( obsResult, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );
           final IComponent qComponent = TupleResultUtilities.findComponentById( obsResult, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
           final IComponent hComponent = TupleResultUtilities.findComponentById( obsResult, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL );
@@ -458,7 +454,7 @@ public class RMA10Calculation implements INativeIDProvider
         {
           final IElement2D<IFE1D2DComplexElement, IFE1D2DEdge> ele2d = (IElement2D<IFE1D2DComplexElement, IFE1D2DEdge>) wrapper2;
 
-//          final String gmlID = ele2d.getGmlID();
+// final String gmlID = ele2d.getGmlID();
           final int id = 0; // TODO: get ascii element id for gmlid
 
           final BoundaryConditionInfo info = new BoundaryConditionInfo( id, ITimeStepinfo.TYPE.ELE_BCE_2D );
@@ -483,12 +479,19 @@ public class RMA10Calculation implements INativeIDProvider
 
   public ICalculationUnit getCalculationUnit( )
   {
-    final IControlModel1D2D controlModel = getControlModel();
-    final ICalculationUnit linkedCalculationUnit = controlModel.getCalculationUnit();
-    final IFEDiscretisationModel1d2d discModel = getDiscModel();
-    final Feature feature = discModel.getWrappedFeature().getWorkspace().getFeature( linkedCalculationUnit.getGmlID() );
-    final ICalculationUnit realUnit = (ICalculationUnit) feature.getAdapter( ICalculationUnit.class );
-    return realUnit;
+    if( m_calculationUnit == null )
+    {
+      final IControlModel1D2D controlModel = getControlModel();
+      
+      m_calculationUnit = controlModel.getCalculationUnit();
+      /*
+      final ICalculationUnit linkedCalculationUnit = controlModel.getCalculationUnit();
+      final IFEDiscretisationModel1d2d discModel = getDiscModel();
+      final Feature feature = discModel.getWrappedFeature().getWorkspace().getFeature( linkedCalculationUnit.getGmlID() );
+      m_calculationUnit = (ICalculationUnit) feature.getAdapter( ICalculationUnit.class );
+      */
+    }
+    return m_calculationUnit;
   }
 
   public IControlModel1D2D getControlModel( )
@@ -533,7 +536,7 @@ public class RMA10Calculation implements INativeIDProvider
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.INativeIDProvider#getID(org.kalypsodeegree.model.feature.binding.IFeatureWrapper2)
    */
-  public int getID( final IFeatureWrapper2 object )
+  public int getBoundaryLineID( final IFeatureWrapper2 object )
   {
     if( object instanceof IBoundaryLine )
     {

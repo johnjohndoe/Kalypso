@@ -40,25 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit;
 
-import java.util.List;
-
-import org.eclipse.jface.preference.ColorSelector;
-import org.eclipse.jface.preference.FieldEditor;
-import org.eclipse.jface.preference.IntegerFieldEditor;
-import org.eclipse.jface.util.IPropertyChangeListener;
-import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.jface.viewers.ListViewer;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
@@ -72,42 +60,45 @@ import org.eclipse.ui.forms.widgets.TableWrapLayout;
  */
 class CalculationUnitWidgetFace
 {
-  
+
   static int index = 0;
+
   private Composite rootPanel;
+
   private FormToolkit toolkit;
 
-  private ListViewer complexElementViewer;
-  private Section elevationColorSection;
-
-  private TableViewer elevationListTableViewer;
   private Section calculationUnitSection;
+
   private CalculationUnitComponent calcGUI;
+
   private CalculationUnitDataModel dataModel;
+
   private Section calculationSettingsSection;
+
   private Composite sectionFirstComposite;
+
   private Composite sectionThirdComposite;
+
   private SelectedCalculationComponent calcElementGUI;
+
   private Section calculationElementUnitSection;
+
   private Composite sectionSecondComposite;
-  private Combo elementsCombo;
-  private Combo actionsCombo;
-  private Button goButton;
+
   private CalculationUnitAdministerComponent calcComplexSelectionGUI;
+
   public CalculationUnitWidgetFace( )
   {
-    
+
   }
+
   public CalculationUnitWidgetFace( CalculationUnitDataModel dataModel )
   {
     this.dataModel = dataModel;
   }
 
-
   public Control createControl( Composite parent )
   {
-    initStoreDefaults();
-    
     parent.setLayout( new FillLayout() );
     rootPanel = new Composite( parent, SWT.FILL );
     rootPanel.setLayout( new FillLayout() );
@@ -118,7 +109,7 @@ class CalculationUnitWidgetFace
 
     scrolledForm.getBody().setLayout( new TableWrapLayout() );
 
-    // Calculation Unit Section     
+    // Calculation Unit Section
     calculationUnitSection = toolkit.createSection( scrolledForm.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
     calculationUnitSection.setText( "Berechnungseinheiten" );
     tableWrapData = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
@@ -127,7 +118,7 @@ class CalculationUnitWidgetFace
     calculationUnitSection.setLayoutData( tableWrapData );
     calculationUnitSection.setExpanded( true );
 
- // Creates Section for "Calculation Settings Unit"
+    // Creates Section for "Calculation Settings Unit"
     calculationSettingsSection = toolkit.createSection( scrolledForm.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
     calculationSettingsSection.setText( "Berechnungseinheit Verwalten" );
     tableWrapData = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
@@ -135,8 +126,8 @@ class CalculationUnitWidgetFace
     tableWrapData.grabVertical = true;
     calculationSettingsSection.setLayoutData( tableWrapData );
     calculationSettingsSection.setExpanded( true );
- 
- // Creates Section for "Calculation Elements Unit"
+
+    // Creates Section for "Calculation Elements Unit"
     calculationElementUnitSection = toolkit.createSection( scrolledForm.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
     calculationElementUnitSection.setText( "Status der selektierten Berechnungseinheit" );
     tableWrapData = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
@@ -144,10 +135,10 @@ class CalculationUnitWidgetFace
     tableWrapData.grabVertical = true;
     calculationElementUnitSection.setLayoutData( tableWrapData );
     calculationElementUnitSection.setExpanded( true );
-    
+
     createCalculationUnit( calculationUnitSection );
-    createCalculationSettingsSection(calculationSettingsSection);
-    createCalculationElements(calculationElementUnitSection);
+    createCalculationSettingsSection( calculationSettingsSection );
+    createCalculationElements( calculationElementUnitSection );
 
     return rootPanel;
   }
@@ -163,102 +154,55 @@ class CalculationUnitWidgetFace
     formData.left = new FormAttachment( 0, 5 );
     formData.top = new FormAttachment( 0, 5 );
     sectionFirstComposite.setLayoutData( formData );
-    calcGUI= new CalculationUnitComponent();    
+    calcGUI = new CalculationUnitComponent();
     calcGUI.createControl( dataModel, toolkit, sectionFirstComposite );
   }
-  
+
   private void createCalculationSettingsSection( Section settingsSection )
   {
     settingsSection.setLayout( new FillLayout() );
     sectionSecondComposite = toolkit.createComposite( settingsSection, SWT.FLAT );
     settingsSection.setClient( sectionSecondComposite );
-    
+
     FormLayout formLayout = new FormLayout();
     sectionSecondComposite.setLayout( formLayout );
     FormData formData = new FormData();
     formData.left = new FormAttachment( 0, 5 );
     formData.top = new FormAttachment( sectionFirstComposite, 5 );
-    //formData.bottom = new FormAttachment( sectionThirdComposite, -5 );
+    // formData.bottom = new FormAttachment( sectionThirdComposite, -5 );
     sectionSecondComposite.setLayoutData( formData );
-    
+
     calcComplexSelectionGUI = new CalculationUnitAdministerComponent();
-    calcComplexSelectionGUI.createControl( dataModel, toolkit, sectionSecondComposite );    
+    calcComplexSelectionGUI.createControl( dataModel, toolkit, sectionSecondComposite );
   }
 
   private void createCalculationElements( Section elementStatusSection )
   {
-    
+
     elementStatusSection.setLayout( new FillLayout() );
     sectionThirdComposite = toolkit.createComposite( elementStatusSection, SWT.FLAT );
     elementStatusSection.setClient( sectionThirdComposite );
     FormLayout formLayout = new FormLayout();
     sectionThirdComposite.setLayout( formLayout );
-    
+
     FormData formData = new FormData();
     formData.left = new FormAttachment( 0, 5 );
     formData.top = new FormAttachment( sectionThirdComposite, 5 );
     formData.bottom = new FormAttachment( 100, -5 );
     sectionThirdComposite.setLayoutData( formData );
-    
-    calcElementGUI= new SelectedCalculationComponent();    
-    calcElementGUI.createControl( dataModel, toolkit, sectionThirdComposite );    
+
+    calcElementGUI = new SelectedCalculationComponent();
+    calcElementGUI.createControl( dataModel, toolkit, sectionThirdComposite );
   }
 
   public void disposeControl( )
   {
-  
     if( rootPanel == null )
-    {
-      System.out.println( "Disposing null root panel" );
       return;
-    }
     if( !rootPanel.isDisposed() )
     {
       rootPanel.dispose();
       toolkit.dispose();
     }
-  
   }
-  
-  private IntegerFieldEditor handleWidth;
-
-  public static final String HANDLE_WIDTH_NAME = "x.handleWidth";
-
-  private List selectionNodeList;
-
-  private Table table;
-  
-  private TableViewer nodeElevationViewer;
-  private void initStoreDefaults( )
-  {
-
-      //@TODO in case of using preferences 
-  }
-  
-  private IPropertyChangeListener createPropertyChangeLis( )
-  {
-    return new IPropertyChangeListener()
-    {
-
-      public void propertyChange( PropertyChangeEvent event )
-      {
-        Object source = event.getSource();
-        String property = event.getProperty();
-
-        if( source instanceof FieldEditor )
-        {
-          ((FieldEditor) source).store();
-        }
-        else if( source instanceof ColorSelector )
-        {
-        }
-        else
-        {
-          System.out.println( "Property changed=" + event.getProperty() + " " + event.getNewValue() + " " + source.getClass() );
-        }
-      }
-
-    };
-  }
-
 }

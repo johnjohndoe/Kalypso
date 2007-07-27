@@ -76,7 +76,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
-import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeIFeatureWrapper2NameCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
@@ -90,7 +89,6 @@ import org.kalypsodeegree_impl.model.sort.IEnvelopeProvider;
  * 
  * @author Madanagopal
  */
-@SuppressWarnings( { "synthetic-access", "hiding", "unchecked" })
 public class FeatureWrapperListEditor implements IButtonConstants
 {
   /* ======================================================================== */
@@ -751,25 +749,6 @@ public class FeatureWrapperListEditor implements IButtonConstants
 
   protected List<ICalculationUnit> setInputContentProvider( )
   {
-    return null;
-  }
-
-  public List<IBoundaryCondition> getBoundaryConditions( final ICalculationUnit orgCalc )
-  {
-    //    
-    // final CommandableWorkspace workspace = dataModel.getData(
-    // CommandableWorkspace.class,
-    // ICommonKeys.KEY_BOUNDARY_CONDITION_CMD_WORKSPACE );
-    //
-    // final Feature bcHolderFeature = workspace.getRootFeature();//bcTheme.getFeatureList().getParentFeature();
-    //
-    // IFlowRelationshipModel flowRelationship =
-    // (IFlowRelationshipModel) bcHolderFeature.getAdapter( IFlowRelationshipModel.class );
-    //  
-    // List<IBoundaryCondition> conditions =
-    // new ArrayList<IBoundaryCondition>((List)flowRelationship);
-    //    
-    // CalUnitOps.getNumBoundaryLine( calUnit )getBoundaryConditions(conditions,orgCalc., grabDistance );
     return null;
   }
 

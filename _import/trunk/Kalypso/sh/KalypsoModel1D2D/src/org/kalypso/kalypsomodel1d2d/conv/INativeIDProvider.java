@@ -55,7 +55,7 @@ public interface INativeIDProvider
   /**
    * Gets the ID native id for the given feature wrapper
    */
-  public int getID( final IFeatureWrapper2 i1d2dObject );
+  public int getBoundaryLineID( final IFeatureWrapper2 i1d2dObject );
   
   /**
    * Answers whether this native id provider already contains an id for the given

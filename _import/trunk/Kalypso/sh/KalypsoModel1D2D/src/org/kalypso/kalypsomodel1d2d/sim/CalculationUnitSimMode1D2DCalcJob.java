@@ -57,16 +57,21 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ResultDB;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
 import org.kalypso.kalypsosimulationmodel.core.Util;
+import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
+import org.kalypso.ogc.gml.command.FeatureChange;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.simulation.core.ISimulationService;
 import org.kalypso.simulation.core.KalypsoSimulationCorePlugin;
 import org.kalypso.simulation.core.simspec.Modeldata;
 import org.kalypso.simulation.ui.calccase.CalcJobHandler;
 import org.kalypso.simulation.ui.calccase.ModelNature;
+import org.kalypsodeegree.model.feature.Feature;
 
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 
@@ -80,7 +85,7 @@ import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
  */
 public class CalculationUnitSimMode1D2DCalcJob
 {
-  public static IStatus startCalculation( final ICalculationUnit calUnit, final IWorkbench workbench )
+  public static IStatus startCalculation( final ICalculationUnit calculationUnit, final IWorkbench workbench )
   {
     final ICoreRunnableWithProgress runnable = new ICoreRunnableWithProgress()
     {
@@ -91,18 +96,31 @@ public class CalculationUnitSimMode1D2DCalcJob
       {
         monitor.beginTask( "Modellrechnung wird durchgeführt", 5 );
         IControlModelGroup model = Util.getModel( IControlModelGroup.class );
-        final String calcUnitGmlID = calUnit.getGmlID();
+        final String calcUnitGmlID = calculationUnit.getGmlID();
         // boolean activeSet = false;
         IControlModel1D2D activeControlModel = null;
-        for( IControlModel1D2D cm : model.getModel1D2DCollection() )
+        for( IControlModel1D2D controlModel : model.getModel1D2DCollection() )
         {
-          ICalculationUnit current = cm.getCalculationUnit();
-          if( current != null )
+          ICalculationUnit currentCalcUnit = controlModel.getCalculationUnit();
+          if( currentCalcUnit != null )
           {
-            if( calcUnitGmlID.equals( current.getGmlID() ) )
+            if( calcUnitGmlID.equals( currentCalcUnit.getGmlID() ) )
             {
-              activeControlModel = cm;
-              model.getModel1D2DCollection().setActiveControlModel( cm );
+              final CommandableWorkspace commandableWorkspace = Util.getCommandableWorkspace( IControlModelGroup.class );
+              final Feature feature = model.getModel1D2DCollection().getWrappedFeature();
+              final FeatureChange change = new FeatureChange(feature, feature.getFeatureType().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_XP_ACTIVE_MODEL), controlModel.getGmlID());
+              final ChangeFeaturesCommand command = new ChangeFeaturesCommand(feature.getWorkspace(), new FeatureChange[]{change});
+              try
+              {
+                commandableWorkspace.postCommand( command );
+              }
+              catch( Exception e )
+              {
+                e.printStackTrace();
+                return StatusUtilities.createErrorStatus( "Could not set active control model for: " + calculationUnit.getGmlID() );
+              }
+              activeControlModel = controlModel;
+
               Util.saveAllModel( workbench, workbench.getActiveWorkbenchWindow() );
               // activeSet = true;
             }
@@ -110,12 +128,12 @@ public class CalculationUnitSimMode1D2DCalcJob
         }
         if( activeControlModel == null )
         {
-          return StatusUtilities.createErrorStatus( "Could not found and set active control model for: " + calUnit.getGmlID() );
+          return StatusUtilities.createErrorStatus( "Could not found active control model for: " + calculationUnit.getGmlID() );
         }
 
         // adds scenarion model to the result db
         ResultDB resultDB = KalypsoModel1D2DPlugin.getDefault().getResultDB();
-        resultDB.addModelDescriptor( calUnit );
+        resultDB.addModelDescriptor( calculationUnit );
         resultDB.addModelDescriptor( activeControlModel );
 
         // TODO: scenarioFolder etc. should come from outside

@@ -44,12 +44,11 @@ import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 
 /**
  * Interface for classes representing a wb1d2d:CalculationUnit2D
+ * 
  * @author Patrice Congo
- *
+ * 
  */
-@SuppressWarnings("unchecked")
-public interface ICalculationUnit1D2D<T extends IFE1D2DElement>
-                                  extends ICalculationUnit<T>
+public interface ICalculationUnit1D2D<T extends IFE1D2DElement> extends ICalculationUnit<T>
 {
-  IFeatureWrapperCollection<ICalculationUnit> getSubUnits();
+  IFeatureWrapperCollection<ICalculationUnit> getSubUnits( );
 }

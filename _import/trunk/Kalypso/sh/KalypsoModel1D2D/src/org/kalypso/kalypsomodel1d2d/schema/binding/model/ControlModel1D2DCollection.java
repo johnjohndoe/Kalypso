@@ -56,7 +56,6 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class ControlModel1D2DCollection extends FeatureWrapperCollection<IControlModel1D2D> implements IControlModel1D2DCollection
 {
-
   public ControlModel1D2DCollection( Feature featureCol)
   {
    this(featureCol, IControlModel1D2D.class, Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_CONTROL_MODEL_MEMBER); 
@@ -72,6 +71,8 @@ public class ControlModel1D2DCollection extends FeatureWrapperCollection<IContro
    */
   public void setActiveControlModel( IControlModel1D2D newControlModel )
   {
+    // TODO: model doesn't get dirty after this!!!
+    
     Feature feature = getFeature();
     feature.setProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_XP_ACTIVE_MODEL, newControlModel.getGmlID() );
   }

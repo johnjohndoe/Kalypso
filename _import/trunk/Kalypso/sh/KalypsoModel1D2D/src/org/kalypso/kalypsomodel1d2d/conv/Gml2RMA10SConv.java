@@ -222,7 +222,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
     }
   }
 
-  public int getID( final IFeatureWrapper2 i1d2dObject )
+  public int getBoundaryLineID( final IFeatureWrapper2 i1d2dObject )
   {
     if( i1d2dObject == null )
       return 0;
@@ -237,7 +237,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
     }
     else if( i1d2dObject instanceof IBoundaryLine )
     {
-      return m_calculation.getID( i1d2dObject );
+      return m_calculation.getBoundaryLineID( i1d2dObject );
     }
     else if( i1d2dObject instanceof IFE1D2DElement )
     {
@@ -259,6 +259,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
     {
       final int id = map.size() + 1;
       map.put( gmlID, id );
+      System.out.println( id + "\t" + gmlID );
       return id;
     }
     else
@@ -303,8 +304,8 @@ public class Gml2RMA10SConv implements INativeIDProvider
   private void writeRMA10sModel( final PrintWriter stream ) throws SimulationException, GM_Exception
   {
     final IFeatureWrapperCollection<IFE1D2DElement> elements = m_discretisationModel1d2d.getElements();
-    final IFeatureWrapperCollection<IFE1D2DNode> nodes = m_discretisationModel1d2d.getNodes();
-    final IFeatureWrapperCollection<IFE1D2DEdge> edges = m_discretisationModel1d2d.getEdges();
+// final IFeatureWrapperCollection<IFE1D2DNode> nodes = m_discretisationModel1d2d.getNodes();
+// final IFeatureWrapperCollection<IFE1D2DEdge> edges = m_discretisationModel1d2d.getEdges();
 
     /* Made a central formatter with US locale, so no locale parameter for each format is needed any more . */
     final Formatter formatter = new Formatter( stream, Locale.US );
@@ -342,8 +343,8 @@ public class Gml2RMA10SConv implements INativeIDProvider
         continue;
       }
 
-      final int node0ID = getID( edge.getNode( 0 ) );
-      final int node1ID = getID( edge.getNode( 1 ) );
+      final int node0ID = getBoundaryLineID( edge.getNode( 0 ) );
+      final int node1ID = getBoundaryLineID( edge.getNode( 1 ) );
 
       /*
        * If we have no middle node (which is always the case), create it on the fly (just takes middle of edge). This is
@@ -356,7 +357,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
         final String gmlID = "VirtualMiddleNode" + edge.getGmlID(); // Pseudo id, but unique within this context
         middleNodeID = getID( getNodesIDProvider(), gmlID );
 
-       /* Calculate middle of arc. */
+        /* Calculate middle of arc. */
         /**
          * JTSUtilities.pointOnLinePercent( edgeLine, 50 ) doesn't give the proper middle node of the edge!
          * 
@@ -377,7 +378,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
       }
       else
       {
-        middleNodeID = getID( edge.getMiddleNode() );
+        middleNodeID = getBoundaryLineID( edge.getMiddleNode() );
       }
 
       /* Directly format into the string, this is quickest! */
@@ -390,7 +391,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
           final Object object = edge.getContainers().get( 0 );
 
           if( object instanceof IElement1D )
-            leftRightID = getID( ((IElement1D) object) );
+            leftRightID = getBoundaryLineID( ((IElement1D) object) );
         }
         formatter.format( "AR%10d%10d%10d%10d%10d%10d%n", cnt++, node0ID, node1ID, leftRightID, leftRightID, middleNodeID );
       }
@@ -399,8 +400,8 @@ public class Gml2RMA10SConv implements INativeIDProvider
 
         final IFE1D2DElement leftElement = EdgeOps.getLeftRightElement( m_calculationUnit, edge, EdgeOps.ORIENTATION_LEFT );
         final IFE1D2DElement rightElement = EdgeOps.getLeftRightElement( m_calculationUnit, edge, EdgeOps.ORIENTATION_RIGHT );
-        final int leftParent = getID( leftElement );
-        final int rightParent = getID( rightElement );
+        final int leftParent = getBoundaryLineID( leftElement );
+        final int rightParent = getBoundaryLineID( rightElement );
         formatter.format( "AR%10d%10d%10d%10d%10d%10d%n", cnt++, node0ID, node1ID, leftParent, rightParent, middleNodeID );
       }
       else
@@ -427,8 +428,8 @@ public class Gml2RMA10SConv implements INativeIDProvider
       // continue;
       // }
 
-      final int node0ID = getID( edge.getNode( 0 ) );
-      final int node1ID = getID( edge.getNode( 1 ) );
+      final int node0ID = getBoundaryLineID( edge.getNode( 0 ) );
+      final int node1ID = getBoundaryLineID( edge.getNode( 1 ) );
 
       /*
        * If we have no middle node (which is always the case), create it on the fly (just takes middle of edge). This is
@@ -452,7 +453,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
       }
       else
       {
-        middleNodeID = getID( edge.getMiddleNode() );
+        middleNodeID = getBoundaryLineID( edge.getMiddleNode() );
       }
 
       /* Directly format into the string, this is quickest! */
@@ -465,7 +466,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
           final Object object = edge.getContainers().get( 0 );
 
           if( object instanceof IElement1D )
-            leftRightID = getID( ((IElement1D) object) );
+            leftRightID = getBoundaryLineID( ((IElement1D) object) );
         }
         formatter.format( "AR%10d%10d%10d%10d%10d%10d%n", cnt++, node0ID, node1ID, leftRightID, leftRightID, middleNodeID );
       }
@@ -474,8 +475,8 @@ public class Gml2RMA10SConv implements INativeIDProvider
 
         final IFE1D2DElement leftElement = EdgeOps.getLeftRightElement( m_calculationUnit, edge, EdgeOps.ORIENTATION_LEFT );
         final IFE1D2DElement rightElement = EdgeOps.getLeftRightElement( m_calculationUnit, edge, EdgeOps.ORIENTATION_RIGHT );
-        final int leftParent = getID( leftElement );
-        final int rightParent = getID( rightElement );
+        final int leftParent = getBoundaryLineID( leftElement );
+        final int rightParent = getBoundaryLineID( rightElement );
         formatter.format( "AR%10d%10d%10d%10d%10d%10d%n", cnt++, node0ID, node1ID, leftParent, rightParent, middleNodeID );
       }
       else
@@ -500,7 +501,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
         continue;
       }
       /* The node itself */
-      final int nodeID = getID( node );
+      final int nodeID = getBoundaryLineID( node );
       final GM_Point point = node.getPoint();
       BigDecimal station = null;
 
@@ -625,7 +626,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
         continue;
       }
 
-      final int id = getID( element );
+      final int id = getBoundaryLineID( element );
 
       if( element instanceof IElement1D )
       {
@@ -638,7 +639,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
           /* A Weir? Create dynamic weir number and use it as weir ID. */
           final int weirID = m_weirIDProvider.addWeir( weir );
           final IFE1D2DNode upstreamNode = weir.getUpstreamNode();
-          final int upstreamNodeID = getID( upstreamNode );
+          final int upstreamNodeID = getBoundaryLineID( upstreamNode );
           formatter.format( "FE%10d%10d%10s%10s%10d%n", id, weirID, "", "", upstreamNodeID );
         }
         else if( FlowRelationUtilitites.isTeschkeElement1D( element1D, m_flowrelationModel ) )
@@ -672,11 +673,9 @@ public class Gml2RMA10SConv implements INativeIDProvider
     for( final IFE1D2DElement element : elementsInBBox/* elements */)
     {
       if( !CalcUnitOps.isFiniteElementOf( m_calculationUnit, element ) )
-      {
         continue;
-      }
 
-      final int id = getID( element );
+      final int id = getBoundaryLineID( element );
 
       if( element instanceof IElement1D )
       {
@@ -690,7 +689,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
           /* A Weir? Create dynamic weir number and use it as weir ID. */
           final int weirID = m_weirIDProvider.addWeir( weir );
           final IFE1D2DNode upstreamNode = weir.getUpstreamNode();
-          final int upstreamNodeID = getID( upstreamNode );
+          final int upstreamNodeID = getBoundaryLineID( upstreamNode );
           formatter.format( "FE%10d%10d%10s%10s%10d%n", id, weirID, "", "", upstreamNodeID );
         }
         else if( FlowRelationUtilitites.isTeschkeElement1D( element1D, m_flowrelationModel ) )
@@ -757,7 +756,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
       // TODO: this FE line only makes sense for 2D elements; handle cases of 1D Elements as well
       // BUT: only if this code is really used, see todo above
       if( element instanceof IElement2D )
-        formatter.format( "FE%10d%10d%10d%10d%n", getID( element ), 0, 1, 0 );
+        formatter.format( "FE%10d%10d%10d%10d%n", getBoundaryLineID( element ), 0, 1, 0 );
     }
   }
 
@@ -797,7 +796,6 @@ public class Gml2RMA10SConv implements INativeIDProvider
       if( cls.length > 0 && cls[0] != null )
         return getID( roughnessIDProvider, cls[0].getGmlID() );
     }
-
     throw new SimulationException( "Keine Rauheitszone gefunden: " + element, null );
   }
 

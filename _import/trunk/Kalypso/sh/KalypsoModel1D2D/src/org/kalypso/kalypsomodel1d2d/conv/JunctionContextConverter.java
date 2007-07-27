@@ -111,10 +111,10 @@ public class JunctionContextConverter
           final IElement1D element1D = ele1DToCLine.getElement1D();
           final IFE1D2DNode target1DNode = ele1DToCLine.getTarget1DNode();
 
-          final int transitionElementID = m_nativeIDProvider.getID( ele1DToCLine );
-          final int element1DID = m_nativeIDProvider.getID( element1D );
-          final int boundaryLineID = m_nativeIDProvider.getID( continuityLine );
-          final int node1DID = m_nativeIDProvider.getID( target1DNode );
+          final int transitionElementID = m_nativeIDProvider.getBoundaryLineID( ele1DToCLine );
+          final int element1DID = m_nativeIDProvider.getBoundaryLineID( element1D );
+          final int boundaryLineID = m_nativeIDProvider.getBoundaryLineID( continuityLine );
+          final int node1DID = m_nativeIDProvider.getBoundaryLineID( target1DNode );
 
           m_formatter.format( "TL%10d%10d%10d%10d%n", transitionElementID, element1DID, boundaryLineID, node1DID );
         }

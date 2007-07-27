@@ -241,8 +241,9 @@ public class Control1D2DConverter
       for( int i = 0; i < nodes.length; i++ )
       {
         final IFE1D2DNode node = nodes[i];
-        final int nodeID = m_nodesIDProvider.get( node.getGmlID() );
-
+        final Integer nodeID = m_nodesIDProvider.get( node.getGmlID() );
+        if( nodeID == null )
+          continue;
         /* Write start stuff */
         if( i == 0 )
           formatter.format( "CC1 %4d", info.getID() );
@@ -279,41 +280,47 @@ public class Control1D2DConverter
     final IComponent compTime = result.getComponents()[0];
     final IComponent compUnderRelax = result.getComponents()[1];
 
-    /* Sort records by time */
-    final TupleResultIndex index = new TupleResultIndex( result, compTime );
-    final Iterator<IRecord> iterator = index.getIterator();
-    if( !iterator.hasNext() )
-      throw new SimulationException( "Zeitschritte leer, keine Rechnung möglich.", null );
-    final IRecord firstRecord = iterator.next();
-
     /* Steady state, just one block for the Starting Date. */
     final int niti = controlModel.getNITI();
 
     final String msg = "Steady State Input Data";
 
-    final Double uRValSteady = controlModel.get_steadyBC();
+    Double uRValSteady = controlModel.get_steadyBC();
     if( uRValSteady == null || uRValSteady.isNaN() )
-      throw new SimulationException( "Stationär Relaxationsfaktor leer, keine Rechnung möglich.", null );
-    // final float uRValSteady = ((BigDecimal) firstRecord.getValue( compUnderRelax )).floatValue();
+      if( controlModel.isSteadySelected() )
+        throw new SimulationException( "Stationär Relaxationsfaktor leer, keine Rechnung möglich.", null );
+      else
+        uRValSteady = 0.5;
     writeTimeStep( formatter, msg, null, null, uRValSteady.floatValue(), niti, timeStepInfos );
-    final int nitn = controlModel.getNITN();
 
-    if( nitn > 0 )
+    if( controlModel.isUnsteadySelected() )
     {
-      /* Unsteady state: a block for each time step */
-      Calendar lastStepCal = ((XMLGregorianCalendar) firstRecord.getValue( compTime )).toGregorianCalendar();
+      /* Sort records by time */
+      final TupleResultIndex index = new TupleResultIndex( result, compTime );
+      final Iterator<IRecord> iterator = index.getIterator();
+      if( !iterator.hasNext() )
+        throw new SimulationException( "Zeitschritte leer, keine Rechnung möglich.", null );
+      final IRecord firstRecord = iterator.next();
 
-      for( int stepCount = 1; iterator.hasNext(); stepCount++ )
+      final int nitn = controlModel.getNITN();
+
+      if( nitn > 0 )
       {
-        final IRecord record = iterator.next();
-        final float uRVal = ((BigDecimal) record.getValue( compUnderRelax )).floatValue();
+        /* Unsteady state: a block for each time step */
+        Calendar lastStepCal = ((XMLGregorianCalendar) firstRecord.getValue( compTime )).toGregorianCalendar();
 
-        final Calendar stepCal = ((XMLGregorianCalendar) record.getValue( compTime )).toGregorianCalendar();
+        for( int stepCount = 1; iterator.hasNext(); stepCount++ )
+        {
+          final IRecord record = iterator.next();
+          final float uRVal = ((BigDecimal) record.getValue( compUnderRelax )).floatValue();
 
-        final String unsteadyMsg = String.format( "Unsteady State Input Data; Step: %4d", stepCount );
-        writeTimeStep( formatter, unsteadyMsg, stepCal, lastStepCal, uRVal, nitn, timeStepInfos );
+          final Calendar stepCal = ((XMLGregorianCalendar) record.getValue( compTime )).toGregorianCalendar();
 
-        lastStepCal = stepCal;
+          final String unsteadyMsg = String.format( "Unsteady State Input Data; Step: %4d", stepCount );
+          writeTimeStep( formatter, unsteadyMsg, stepCal, lastStepCal, uRVal, nitn, timeStepInfos );
+
+          lastStepCal = stepCal;
+        }
       }
     }
   }
