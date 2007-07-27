@@ -47,8 +47,6 @@ import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
-import com.sun.corba.se.impl.orbutil.GetPropertyAction;
-
 /**
  * Abstract helper class to implement 'binding' classes for specific feature (types).
  * 

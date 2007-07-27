@@ -163,6 +163,7 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
     {
       m_pluginIdFromExtension = config.getContributor().getName();
     }
+    
   }
 
   /**
