@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <featuretemplate xmlns="featureview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<layer id="foo" featurePath="" linktype="gml" xlink:href=".calculation"/>
-	<view typename="SpreeControl" style="0" tooltip="TopLevel">
+	<view typename="ElbePolteControl" style="0" tooltip="TopLevel">
 		<gridData grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" horizontalAlignment="4" verticalAlignment="4"/>
 		<gridLayout numColumns="1" horizontalSpacing="10"/>
 		<label text="Steuerparameter eingeben" style="0"/>

@@ -18,7 +18,9 @@
       <id>1</id>
       <nr>001</nr>
       <river>labe</river>
-      <ganglinie_gesamt/>
+      <ganglinie_gesamt>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Pegel/Brandys.zml"/>
+      </ganglinie_gesamt>
     </StartPegel>
   </pegelMember>
   <pegelMember>
@@ -35,7 +37,9 @@
       <id>2</id>
       <nr>002</nr>
       <river>viatava</river>
-      <ganglinie_gesamt/>
+      <ganglinie_gesamt>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Pegel/Praha.zml"/>
+      </ganglinie_gesamt>
     </StartPegel>
   </pegelMember>
   <pegelMember>
@@ -52,7 +56,9 @@
       <id>5</id>
       <nr>004</nr>
       <river>ohre</river>
-      <ganglinie_gesamt/>
+      <ganglinie_gesamt>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Pegel/Louny.zml"/>
+      </ganglinie_gesamt>
     </StartPegel>
   </pegelMember>
   <pegelMember>
@@ -69,10 +75,21 @@
       <id>5</id>
       <nr>007</nr>
       <river>labe</river>
-      <ganglinie_messwerte/>
-      <ganglinie_modellwerte/>
-      <ganglinie_modellwerte_unten/>
-      <ganglinie_modellwerte_oben/>
+      <ganglinie_messwerte>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Pegel/Usti.zml"/>
+      </ganglinie_messwerte>
+      <ganglinie_modellwerte>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/Pegel/Usti.zml"/>
+      </ganglinie_modellwerte>
+      <ganglinie_modellwerte_unten>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/Pegel/Usti_unten.zml"/>
+      </ganglinie_modellwerte_unten>
+      <ganglinie_modellwerte_oben>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/Pegel/Usti_oben.zml"/>
+      </ganglinie_modellwerte_oben>
+      <ganglinie_vorhersage_cz>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Pegel/Vorhersage_Cz/Usti.zml"/>
+      </ganglinie_vorhersage_cz>
     </ElbePegel>
   </pegelMember>
   <pegelMember>
@@ -89,10 +106,18 @@
       <id>501010</id>
       <nr>008</nr>
       <river>elbe</river>
-      <ganglinie_messwerte/>
-      <ganglinie_modellwerte/>
-      <ganglinie_modellwerte_unten/>
-      <ganglinie_modellwerte_oben/>
+      <ganglinie_messwerte>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Pegel/Schoena.zml"/>
+      </ganglinie_messwerte>
+      <ganglinie_modellwerte>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/Pegel/Schoena.zml"/>
+      </ganglinie_modellwerte>
+      <ganglinie_modellwerte_unten>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/Pegel/Schoena_unten.zml"/>
+      </ganglinie_modellwerte_unten>
+      <ganglinie_modellwerte_oben>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/Pegel/Schoena_oben.zml"/>
+      </ganglinie_modellwerte_oben>
     </ElbePegel>
   </pegelMember>
   <pegelMember>
@@ -109,10 +134,18 @@
       <id>501060</id>
       <nr>010</nr>
       <river>elbe</river>
-      <ganglinie_messwerte/>
-      <ganglinie_modellwerte/>
-      <ganglinie_modellwerte_unten/>
-      <ganglinie_modellwerte_oben/>
+      <ganglinie_messwerte>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Pegel/Dresden.zml"/>
+      </ganglinie_messwerte>
+      <ganglinie_modellwerte>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/Pegel/Dresden.zml"/>
+      </ganglinie_modellwerte>
+      <ganglinie_modellwerte_unten>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/Pegel/Dresden_unten.zml"/>
+      </ganglinie_modellwerte_unten>
+      <ganglinie_modellwerte_oben>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/Pegel/Dresden_oben.zml"/>
+      </ganglinie_modellwerte_oben>
     </ElbePegel>
   </pegelMember>
   <pegelMember>
@@ -129,10 +162,18 @@
       <id>501110</id>
       <nr>012</nr>
       <river>elbe</river>
-      <ganglinie_messwerte/>
-      <ganglinie_modellwerte/>
-      <ganglinie_modellwerte_unten/>
-      <ganglinie_modellwerte_oben/>
+      <ganglinie_messwerte>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Pegel/Riesa.zml"/>
+      </ganglinie_messwerte>
+      <ganglinie_modellwerte>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/Pegel/Riesa.zml"/>
+      </ganglinie_modellwerte>
+      <ganglinie_modellwerte_unten>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/Pegel/Riesa_unten.zml"/>
+      </ganglinie_modellwerte_unten>
+      <ganglinie_modellwerte_oben>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/Pegel/Riesa_oben.zml"/>
+      </ganglinie_modellwerte_oben>
     </ElbePegel>
   </pegelMember>
   <pegelMember>
@@ -149,10 +190,18 @@
       <id>501261</id>
       <nr>013</nr>
       <river>elbe</river>
-      <ganglinie_messwerte/>
-      <ganglinie_modellwerte/>
-      <ganglinie_modellwerte_unten/>
-      <ganglinie_modellwerte_oben/>
+      <ganglinie_messwerte>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Pegel/Torgau.zml"/>
+      </ganglinie_messwerte>
+      <ganglinie_modellwerte>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/Pegel/Torgau.zml"/>
+      </ganglinie_modellwerte>
+      <ganglinie_modellwerte_unten>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/Pegel/Torgau_unten.zml"/>
+      </ganglinie_modellwerte_unten>
+      <ganglinie_modellwerte_oben>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/Pegel/Torgau_oben.zml"/>
+      </ganglinie_modellwerte_oben>
     </ElbePegel>
   </pegelMember>
   <pegelMember>
@@ -169,10 +218,18 @@
       <id>501420</id>
       <nr>015</nr>
       <river>elbe</river>
-      <ganglinie_messwerte/>
-      <ganglinie_modellwerte/>
-      <ganglinie_modellwerte_unten/>
-      <ganglinie_modellwerte_oben/>
+      <ganglinie_messwerte>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Pegel/Wittenberg.zml"/>
+      </ganglinie_messwerte>
+      <ganglinie_modellwerte>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/Pegel/Wittenberg.zml"/>
+      </ganglinie_modellwerte>
+      <ganglinie_modellwerte_unten>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/Pegel/Wittenberg_unten.zml"/>
+      </ganglinie_modellwerte_unten>
+      <ganglinie_modellwerte_oben>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/Pegel/Wittenberg_oben.zml"/>
+      </ganglinie_modellwerte_oben>
     </ElbePegel>
   </pegelMember>
   <zwgZuflussMember>
@@ -182,14 +239,16 @@
           <gml:coordinates cs="," decimal="." ts=" ">5411711.00012051,5658455.008342351</gml:coordinates>
         </gml:Point>
       </lage>
-      <name>Usti - Dresden</name>
-      <name_de>Usti - Dresden</name_de>
+      <name>Usti / Dresden</name>
+      <name_de>Usti / Dresden</name_de>
       <name_cz/>
       <description/>
       <id/>
       <nr>009</nr>
       <river>elbe</river>
-      <ganglinie_gesamt/>
+      <ganglinie_gesamt>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Zwischengebiete/UstiDresden.zml"/>
+      </ganglinie_gesamt>
     </ZwgZufluss>
   </zwgZuflussMember>
   <zwgZuflussMember>
@@ -199,14 +258,16 @@
           <gml:coordinates cs="," decimal="." ts=" ">5362127.72794425,5715116.619987543</gml:coordinates>
         </gml:Point>
       </lage>
-      <name>Dresden - Torgau</name>
-      <name_de>Dresden - Torgau</name_de>
+      <name>Dresden / Torgau</name>
+      <name_de>Dresden / Torgau</name_de>
       <name_cz/>
       <description/>
       <id/>
       <nr>011</nr>
       <river>elbe</river>
-      <ganglinie_gesamt/>
+      <ganglinie_gesamt>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Zwischengebiete/DresdenTorgau.zml"/>
+      </ganglinie_gesamt>
     </ZwgZufluss>
   </zwgZuflussMember>
   <zwgZuflussMember>
@@ -223,7 +284,9 @@
       <id/>
       <nr>014</nr>
       <river>schwarze elster</river>
-      <ganglinie_gesamt/>
+      <ganglinie_gesamt>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Zwischengebiete/Loeben.zml"/>
+      </ganglinie_gesamt>
     </ZwgZufluss>
   </zwgZuflussMember>
   <internerHPegelMember>

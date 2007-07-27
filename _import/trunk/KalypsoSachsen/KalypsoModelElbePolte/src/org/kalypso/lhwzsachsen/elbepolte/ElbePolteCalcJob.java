@@ -1,47 +1,42 @@
-/**----------------    FILE HEADER KALYPSO ------------------------------------------
-*
-*  This file is part of kalypso.
-*  Copyright (C) 2004 by:
-* 
-*  Technical University Hamburg-Harburg (TUHH)
-*  Institute of River and coastal engineering
-*  Denickestraße 22
-*  21073 Hamburg, Germany
-*  http://www.tuhh.de/wb
-* 
-*  and
-*  
-*  Bjoernsen Consulting Engineers (BCE)
-*  Maria Trost 3
-*  56070 Koblenz, Germany
-*  http://www.bjoernsen.de
-* 
-*  This library is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU Lesser General Public
-*  License as published by the Free Software Foundation; either
-*  version 2.1 of the License, or (at your option) any later version.
-* 
-*  This library is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-*  Lesser General Public License for more details.
-* 
-*  You should have received a copy of the GNU Lesser General Public
-*  License along with this library; if not, write to the Free Software
-*  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-* 
-*  Contact:
-* 
-*  E-Mail:
-*  g.belger@bjoernsen.de
-*  m.schlienger@bjoernsen.de
-*  v.doemming@tuhh.de
-*   
-*  ---------------------------------------------------------------------------*/
+/**
+ * ---------------- FILE HEADER KALYPSO ------------------------------------------
+ * 
+ * This file is part of kalypso. Copyright (C) 2004 by:
+ * 
+ * Technical University Hamburg-Harburg (TUHH) Institute of River and coastal engineering Denickestraße 22 21073
+ * Hamburg, Germany http://www.tuhh.de/wb
+ * 
+ * and
+ * 
+ * Bjoernsen Consulting Engineers (BCE) Maria Trost 3 56070 Koblenz, Germany http://www.bjoernsen.de
+ * 
+ * This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ * 
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ * 
+ * Contact:
+ * 
+ * E-Mail: g.belger@bjoernsen.de m.schlienger@bjoernsen.de v.doemming@tuhh.de
+ * 
+ * ---------------------------------------------------------------------------
+ */
 package org.kalypso.lhwzsachsen.elbepolte;
-import java.io.File;
-import java.net.URL;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.net.URL;
+import java.util.Map;
+import java.util.Properties;
+
+import org.kalypso.services.calculation.common.ICalcServiceConstants;
 import org.kalypso.services.calculation.job.ICalcDataProvider;
 import org.kalypso.services.calculation.job.ICalcJob;
 import org.kalypso.services.calculation.job.ICalcMonitor;
@@ -49,29 +44,116 @@ import org.kalypso.services.calculation.job.ICalcResultEater;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
 
 /**
- *
- * TODO: insert type comment here
- *
+ * 
+ * <p>
+ * CalcJob for river Elbe (modelling software by IB Polte)
+ * </p>
+ * 
  * @author thuel2
  */
 public class ElbePolteCalcJob implements ICalcJob
 {
 
   /**
-   *
-   */
-
-  public ElbePolteCalcJob()
-  {
-    super();
-
-  }
-
-  /**
-   * @see org.kalypso.services.calculation.job.ICalcJob#run(java.io.File, org.kalypso.services.calculation.job.ICalcDataProvider, org.kalypso.services.calculation.job.ICalcResultEater, org.kalypso.services.calculation.job.ICalcMonitor)
+   * @see org.kalypso.services.calculation.job.ICalcJob#run(java.io.File,
+   *      org.kalypso.services.calculation.job.ICalcDataProvider, org.kalypso.services.calculation.job.ICalcResultEater,
+   *      org.kalypso.services.calculation.job.ICalcMonitor)
    */
   public void run( File tmpdir, ICalcDataProvider inputProvider, ICalcResultEater resultEater, ICalcMonitor monitor )
       throws CalcJobServiceException
+  {
+    final File outputdir = new File( tmpdir, ICalcServiceConstants.OUTPUT_DIR_NAME );
+
+    outputdir.mkdirs();
+    final File logfile = new File( outputdir, "elbePolte.log" );
+
+    PrintWriter pw = null;
+
+    try
+    {
+      pw = new PrintWriter( new FileWriter( logfile ) );
+      pw.println( "Modell Berechnung wird gestartet" );
+      pw.println();
+
+      if( monitor.isCanceled() )
+        return;
+      final Properties props = new Properties();
+      monitor.setMessage( "Dateien für Rechenkern werden erzeugt" );
+      pw.println( "Dateien für Rechenkern werden erzeugt" );
+
+      final File nativedir = new File( tmpdir, ".native" );
+      final File nativeindir = new File( nativedir, "in" );
+      final File nativeoutdir = new File( nativedir, "out" );
+      nativedir.mkdirs();
+      nativeindir.mkdirs();
+      nativeoutdir.mkdirs();
+
+      final File exedir = ElbePolteInputWorker.createNativeInput( tmpdir, inputProvider, pw, props, nativeindir );
+
+      resultEater.addResult( "NATIVE_IN_DIR", nativeindir );
+
+      monitor.setProgress( 33 );
+      if( monitor.isCanceled() )
+        return;
+
+      monitor.setMessage( "Rechenkern wird aufgerufen" );
+      pw.println( "Rechenkern wird aufgerufen" );
+      startCalculation( exedir, props, pw, monitor, nativeoutdir );
+
+      resultEater.addResult( "NATIVE_OUT_DIR", nativeoutdir );
+
+      monitor.setProgress( 33 );
+      if( monitor.isCanceled() )
+        return;
+
+      monitor.setMessage( "Ergebnisse werden zurückgelesen" );
+      pw.println( "Ergebnisse werden zurückgelesen" );
+      try
+      {
+        writeResultsToFolder( outputdir );
+      }
+      catch( final Exception e )
+      {
+        e.printStackTrace();
+        throw new CalcJobServiceException( "Fehler beim Schreiben der Ergebnis-Zeitreihen", e );
+      }
+
+      monitor.setProgress( 34 );
+      if( monitor.isCanceled() )
+        return;
+
+      pw.println( "Berechnung beendet" );
+
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+
+      throw new CalcJobServiceException( "Fehler bei der Berechnung:\n" + e.getLocalizedMessage(), e );
+    }
+    finally
+    {
+      if( pw != null )
+        pw.close();
+
+      resultEater.addResult( "ERGEBNISSE", outputdir );
+    }
+  }
+
+  /**
+   * @param outputdir
+   */
+  private void writeResultsToFolder( File outputdir )
+  {}
+
+  /**
+   * @param exedir
+   * @param props
+   * @param pw
+   * @param monitor
+   * @param nativeoutdir
+   */
+  private void startCalculation( File exedir, Properties props, PrintWriter pw, ICalcMonitor monitor, File nativeoutdir )
   {}
 
   /**
@@ -79,7 +161,9 @@ public class ElbePolteCalcJob implements ICalcJob
    */
   public URL getSpezifikation()
   {
-    return null;
+    return getClass().getResource( ElbePolteConst.CALCJOB_SPEC );
   }
-
+  //  private void startCalculation( final File exedir, final PrintWriter logwriter,
+  //      final ICalcMonitor monitor ) throws CalcJobServiceException
+  //  {}
 }

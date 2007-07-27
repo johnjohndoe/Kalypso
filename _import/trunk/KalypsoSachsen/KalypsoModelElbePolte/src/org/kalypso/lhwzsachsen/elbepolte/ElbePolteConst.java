@@ -81,4 +81,26 @@ public class ElbePolteConst
   {
     HWVS_DATE_FORMAT_HOUR.setTimeZone( TimeZone.getTimeZone( "GMT+1" ) );
   }
+
+  //
+  public static final String CALCJOB_SPEC = "elbepoltecalcjob_spec.xml";
+
+  public static final String DATA_STARTFORECAST_DATE = "startforecast_date";
+
+  public static final String DATA_GML = "data_gml";
+
+  public static final String GML_STRECKE_COLL = "streckeMember";//[Strecke]
+  public static final String GML_START_UND_ELBE_PEGEL_COLL = "pegelMember";
+  public static final String GML_START_PEGEL_COLL = "pegelMember[StartPegel]";//[StartPegel]
+
+  public static final String GML_ELBE_PEGEL_COLL = "pegelMember[ElbePegel]";//[ElbePegel]
+  public static final String GML_ZWG_ZUFLUSS_COLL = "zwgZuflussMember";//[ZwgZufluss]
+
+  public static final String PAR_FILE_SEP = "\t";
+
+  public static final String PAR_NUMBER_FORMAT_LANG = "%8.5f";
+  public static final String PAR_NUMBER_FORMAT_Kurz = "%3.1f";
+
+  public static final String RECHENKERN_ZIP = "HWObereElbe.zip";
+  public static final String RECHENKERN_EXE = "HWObereElbe.exe";
 }

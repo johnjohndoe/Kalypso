@@ -2,7 +2,7 @@
 <gistableview xmlns="gistableview.template.kalypso.org">
     <layer featurePath="streckeMember[Strecke]" id="id" linktype="gml" ns1:actuate="onRequest" ns1:href="calcCase.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
         <column alignment="16384" editable="true" format="" name="nr" width="37"/>
-        <column alignment="16384" editable="true" format="" name="name" width="57"/>
+        <column alignment="16384" editable="true" format="" name="name" width="168"/>
         <column alignment="16384" editable="true" format="" name="zwg_zuschlag" width="166"/>
         <column alignment="16384" editable="true" format="" name="db" width="212"/>
         <column alignment="16384" editable="true" format="" name="lt" width="229"/>

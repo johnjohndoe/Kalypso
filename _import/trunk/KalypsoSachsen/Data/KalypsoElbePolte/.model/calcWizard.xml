@@ -41,7 +41,6 @@ ToDo: Help-Ids setzen!!! -->
 		<!--  -->
 		<arg name="mapTemplate" value=".templates/calcCase/wiz02_elbepegel.gmt"/>
 		<arg name="maximizeMap" value="true"/>
-		<!-- <arg name="mapWidgetID" value="SELECT"/> -->
 		<!--  -->
 		<arg name="mainSash" value="40"/>
 		<arg name="rightSash" value="50"/>
@@ -64,7 +63,7 @@ ToDo: Help-Ids setzen!!! -->
 		<arg name="maximizeMap" value="true"/>
 		<arg name="mapWidgetID" value="SELECT"/>
 		<!--  -->
-		<arg name="mainSash" value="50"/>
+		<arg name="mainSash" value="40"/>
 		<arg name="rightSash" value="50"/>
 		<!--  -->
 		<arg name="zmlTableShow" value="all"/>
@@ -81,7 +80,7 @@ ToDo: Help-Ids setzen!!! -->
 		<arg name="helpId" value="&hid;sec_Assi_elbePolte_05_Modellparameter"/>
 		<!-- 
 			Page-Layout -->
-		<arg name="mainSash" value="50"/>
+		<arg name="mainSash" value="40"/>
 		<arg name="rightSash" value="30"/>
 		<arg name="hideCalcButton" value="true"/>
 		<!-- 
@@ -89,12 +88,12 @@ ToDo: Help-Ids setzen!!! -->
 		<arg name="mapTemplate" value=".templates/calcCase/wiz04_modellparameter.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="true"/>
-		<!-- <arg name="mapWidgetID" value="SELECT"/> -->
 		<!--
 			FeatureView -->
 		<arg name="featureTemplate" value=".templates/calcCase/wiz04_modellparameter.gft"/>
-		<arg name="selectFeatureID" value="root"/>
+		<!--<arg name="selectFeatureID" value="root"/>-->
 		<arg name="featureControlStyle" value="SWT.NONE"/>
+		<arg name="featureViewListensToMap" value="false"/>
 		<!-- 
 			Diagramm -->
 		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% [%axisunit%]#linkColumn=ganglinie_gesamt"/>
@@ -117,7 +116,7 @@ ToDo: Help-Ids setzen!!! -->
 		<arg name="helpId" value="&hid;sec_Assi_elbePolte_06_Streckenparameter_Berechnung"/>
 		<!-- 
 			Page-Layout -->
-		<arg name="mainSash" value="50"/>
+		<arg name="mainSash" value="40"/>
 		<arg name="rightSash" value="30"/>
 		<arg name="hideCalcButton" value="true"/>
 		<!-- 
@@ -125,7 +124,6 @@ ToDo: Help-Ids setzen!!! -->
 		<arg name="mapTemplate" value=".templates/calcCase/wiz05_streckenparameter.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="true"/>
-		<!-- <arg name="mapWidgetID" value="SELECT"/> -->
 		<!--
 			TableView -->
 		<arg name="tableTemplate" value=".templates/calcCase/wiz05_streckenparameter.gtt"/>
@@ -159,15 +157,13 @@ ToDo: Help-Ids setzen!!! -->
 		<arg name="helpId" value="&hid;sec_Assi_elbePolte_07_Berichtsablage"/>
 		<!-- 
 			Page-Layout -->
-		<arg name="mainSash" value="50"/>
+		<arg name="mainSash" value="40"/>
 		<arg name="rightSash" value="30"/>
 		<!-- 
 			Karte -->
 		<arg name="mapTemplate" value=".templates/calcCase/wiz06_berichtsablage.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="true"/>
-		<!--<arg name="mapWidgetID" value="SELECT"/>-->
-		
 		<!-- 
 			Diagramm -->
 		

@@ -145,7 +145,6 @@
 			
 			<clearAfterCalc path="Ergebnisse" relativeToCalcCase="true"/>
 		</kalypso.runCalculation>
-		<copy file="${calc.dir}/Ergebnisse/calcCase.gml" tofile="${calc.dir}/calcCase.gml" overwrite="true" failonerror="false"/>		
 	</target>
 	
     <!-- ================================= 

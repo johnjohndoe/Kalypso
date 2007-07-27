@@ -374,16 +374,36 @@
                             </documentation>
                         </annotation>
                     </element>
-                    <element name="ganglinie_modellwerte" type="obslink:TimeseriesLinkFeatureProperty">
-                        <annotation>
-                            <documentation xml:lang="de">
-                                <name>Modellwerte</name>
-                                <label>Modellwerte</label>
-                                <tooltip>Modellwerte</tooltip>
-                                <description>Modellwerte</description>
-                            </documentation>
-                        </annotation>
-                    </element>
+                        <element name="ganglinie_modellwerte" type="obslink:TimeseriesLinkFeatureProperty">
+                            <annotation>
+                                <documentation xml:lang="de">
+                                    <name>Modellwerte</name>
+                                    <label>Modellwerte</label>
+                                    <tooltip>Modellwerte</tooltip>
+                                    <description>Modellwerte</description>
+                                </documentation>
+                            </annotation>
+                        </element>
+                        <element name="ganglinie_modellwerte_unten" type="obslink:TimeseriesLinkFeatureProperty">
+                            <annotation>
+                                <documentation xml:lang="de">
+                                    <name>Modellwerte (Untere Umhüllende)</name>
+                                    <label>Modellwerte (Untere Umhüllende)</label>
+                                    <tooltip>Modellwerte (Untere Umhüllende)</tooltip>
+                                    <description>Modellwerte (Untere Umhüllende)</description>
+                                </documentation>
+                            </annotation>
+                        </element>
+                        <element name="ganglinie_modellwerte_oben" type="obslink:TimeseriesLinkFeatureProperty">
+                            <annotation>
+                                <documentation xml:lang="de">
+                                    <name>Modellwerte (Obere Umhüllende)</name>
+                                    <label>Modellwerte (Obere Umhüllende)</label>
+                                    <tooltip>Modellwerte (Obere Umhüllende)</tooltip>
+                                    <description>Modellwerte (Obere Umhüllende)</description>
+                                </documentation>
+                            </annotation>
+                        </element>
                     <element name="ganglinie_vorhersage_cz" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0">
                         <annotation>
                             <documentation xml:lang="de">
@@ -576,7 +596,7 @@
                         <annotation>
                             <documentation xml:lang="de">
                                 <name>Streckenname</name>
-                                <label>Streckenname</label>
+                                <label>Strecke</label>
                                 <tooltip>Streckenname</tooltip>
                                 <description>Streckenname</description>
                             </documentation>
@@ -653,7 +673,7 @@
                         <annotation>
                             <documentation xml:lang="de">
                                 <name>Strecken-Nr.</name>
-                                <label>Strecken-Nr.</label>
+                                <label>Nr.</label>
                                 <tooltip>Strecken-Nr.</tooltip>
                                 <description>Strecken-Nr.</description>
                             </documentation>
@@ -793,7 +813,7 @@
                             </documentation>
                         </annotation>
                     </element>
-                    <element ref="modell:stufenParamSetMember" minOccurs="1" maxOccurs="3">
+                    <element ref="modell:stufenParamSetMember" minOccurs="0" maxOccurs="3">
                         <annotation>
                             <documentation xml:lang="de">
                                 <name>Stufen-Parameter-Sätze</name>

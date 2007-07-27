@@ -265,11 +265,28 @@ public class ElbePolteConverter
 
       if( urlConTest != null )
       {
-        final Writer wrtrHwvs = new OutputStreamWriter( new FileOutputStream( fleHwvs ),
-            ElbePolteConst.ELBEPOLTE_CODEPAGE );
-        zml2Hwvs( obsZml, wrtrHwvs );
-        IOUtils.closeQuietly( wrtrHwvs );
+        zml2Hwvs( obsZml, fleHwvs );
+
       }
+    }
+    catch( Exception e )
+    {
+      // TODO: handle exception
+    }
+  }
+
+  /**
+   * @param observation
+   * @param fleHwvs
+   */
+  public static void zml2Hwvs( IObservation obsZml, File fleHwvs )
+  {
+    try
+    {
+      final Writer wrtrHwvs = new OutputStreamWriter( new FileOutputStream( fleHwvs ),
+          ElbePolteConst.ELBEPOLTE_CODEPAGE );
+      zml2Hwvs( obsZml, wrtrHwvs );
+      IOUtils.closeQuietly( wrtrHwvs );
     }
     catch( Exception e )
     {
@@ -358,8 +375,7 @@ public class ElbePolteConverter
   public static void main( String[] args )
   {
 
-
-      File fleHwvsIn = new File( ElbePolteConverter.class.getResource( "resources/test/Daten/Daten.001" ).getFile() );
+    File fleHwvsIn = new File( ElbePolteConverter.class.getResource( "resources/test/Daten/Daten.001" ).getFile() );
     File fleZml = new File( System.getProperty( "java.io.tmpdir" ), "Daten.001.zml" );
     File fleHwvsOut = new File( System.getProperty( "java.io.tmpdir" ), "Daten.001" );
     hwvs2zml( fleHwvsIn, fleZml );
