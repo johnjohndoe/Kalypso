@@ -1,81 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ElbePolteModell fid="root" xmlns:commons="org.kalypso.elbepolte.commons" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:obslink="obslink.zml.kalypso.org" xmlns:gml="http://www.opengis.net/gml" xmlns="org.kalypso.elbepolte.modell" xsi:schemaLocation="org.kalypso.elbepolte.modell modell.xsd">
+<ElbePolteModell fid="root" xmlns:commons="org.kalypso.elbepolte.commons" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink"
+  xmlns:obslink="obslink.zml.kalypso.org" xmlns:gml="http://www.opengis.net/gml" xmlns="org.kalypso.elbepolte.modell" xsi:schemaLocation="org.kalypso.elbepolte.modell modell.xsd">
   <name>Elbe-Modell</name>
   <description>Modell der Oberen Elbe</description>
   <hw_type>1</hw_type>
   <rido>false</rido>
   <streckeMember>
-    <Strecke fid="Strecke8">
+    <Strecke fid="Strecke1">
       <name/>
       <description/>
       <river/>
       <zwg_zuschlag/>
-      <nr>8</nr>
-      <db/>
-      <lt/>
-      <replaceValues/>
-      <nr_feko/>
-    </Strecke>
-  </streckeMember>
-  <streckeMember>
-    <Strecke fid="Strecke7">
-      <name/>
-      <description/>
-      <river/>
-      <zwg_zuschlag/>
-      <nr>7</nr>
-      <db/>
-      <lt/>
-      <replaceValues/>
-      <nr_feko/>
-    </Strecke>
-  </streckeMember>
-  <streckeMember>
-    <Strecke fid="Strecke6">
-      <name/>
-      <description/>
-      <river/>
-      <zwg_zuschlag/>
-      <nr>6</nr>
-      <db/>
-      <lt/>
-      <replaceValues/>
-      <nr_feko/>
-    </Strecke>
-  </streckeMember>
-  <streckeMember>
-    <Strecke fid="Strecke5">
-      <name/>
-      <description/>
-      <river/>
-      <zwg_zuschlag/>
-      <nr>5</nr>
-      <db/>
-      <lt/>
-      <replaceValues/>
-      <nr_feko/>
-    </Strecke>
-  </streckeMember>
-  <streckeMember>
-    <Strecke fid="Strecke4">
-      <name/>
-      <description/>
-      <river/>
-      <zwg_zuschlag/>
-      <nr>4</nr>
-      <db/>
-      <lt/>
-      <replaceValues/>
-      <nr_feko/>
-    </Strecke>
-  </streckeMember>
-  <streckeMember>
-    <Strecke fid="Strecke3">
-      <name/>
-      <description/>
-      <river/>
-      <zwg_zuschlag/>
-      <nr>3</nr>
+      <nr>1</nr>
       <db/>
       <lt/>
       <replaceValues/>
@@ -96,12 +32,77 @@
     </Strecke>
   </streckeMember>
   <streckeMember>
-    <Strecke fid="Strecke1">
+    <Strecke fid="Strecke3">
       <name/>
       <description/>
       <river/>
       <zwg_zuschlag/>
-      <nr>1</nr>
+      <nr>3</nr>
+      <db/>
+      <lt/>
+      <replaceValues/>
+      <nr_feko/>
+    </Strecke>
+  </streckeMember>
+  <streckeMember>
+    <Strecke fid="Strecke4">
+      <name/>
+      <description/>
+      <river/>
+      <zwg_zuschlag/>
+      <nr>4</nr>
+      <db/>
+      <lt/>
+      <replaceValues/>
+      <nr_feko/>
+    </Strecke>
+  </streckeMember>
+  <streckeMember>
+    <Strecke fid="Strecke5">
+      <name/>
+      <description/>
+      <river/>
+      <zwg_zuschlag/>
+      <nr>5</nr>
+      <db/>
+      <lt/>
+      <replaceValues/>
+      <nr_feko/>
+    </Strecke>
+  </streckeMember>
+  <streckeMember>
+    <Strecke fid="Strecke6">
+      <name/>
+      <description/>
+      <river/>
+      <zwg_zuschlag/>
+      <nr>6</nr>
+      <db/>
+      <lt/>
+      <replaceValues/>
+      <nr_feko/>
+    </Strecke>
+  </streckeMember>
+  <streckeMember>
+    <Strecke fid="Strecke7">
+      <name/>
+      <description/>
+      <river/>
+      <zwg_zuschlag/>
+      <nr>7</nr>
+      <db/>
+      <lt/>
+      <replaceValues/>
+      <nr_feko/>
+    </Strecke>
+  </streckeMember>
+  <streckeMember>
+    <Strecke fid="Strecke8">
+      <name/>
+      <description/>
+      <river/>
+      <zwg_zuschlag/>
+      <nr>8</nr>
       <db/>
       <lt/>
       <replaceValues/>
@@ -211,16 +212,16 @@
       <nr>008</nr>
       <river>elbe</river>
       <ganglinie_messwerte>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Pegel/Schoena.zml"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Pegel/Schöna.zml"/>
       </ganglinie_messwerte>
       <ganglinie_modellwerte>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/Pegel/Schoena.zml"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/Pegel/Schöna.zml"/>
       </ganglinie_modellwerte>
       <ganglinie_modellwerte_unten>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/Pegel/Schoena_unten.zml"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/Pegel/Schöna_unten.zml"/>
       </ganglinie_modellwerte_unten>
       <ganglinie_modellwerte_oben>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/Pegel/Schoena_oben.zml"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/Pegel/Schöna_oben.zml"/>
       </ganglinie_modellwerte_oben>
     </ElbePegel>
   </pegelMember>

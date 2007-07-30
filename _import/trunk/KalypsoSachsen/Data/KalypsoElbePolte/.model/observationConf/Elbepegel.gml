@@ -38,7 +38,7 @@
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="PSI (Testbetrieb)"/>
       </in1ObservationLink>
       <outObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Pegel/Schoena.zml"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Pegel/Schöna.zml"/>
       </outObservationLink>
     </MappingObservation>
   </mappingMember>

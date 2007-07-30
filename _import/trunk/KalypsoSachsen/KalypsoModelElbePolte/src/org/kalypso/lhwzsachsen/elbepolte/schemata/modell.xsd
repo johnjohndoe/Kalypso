@@ -414,6 +414,20 @@
                             </documentation>
                         </annotation>
                     </element>
+                        <element name="accuracyPrediction" type="double" minOccurs="0">
+                            <annotation>
+                                <documentation xml:lang="de">
+                                    <label>Vorhersagegenauigkeit [%/(60h)]</label>
+                                    <tooltip>Genauigkeit der Vorhersage in % pro 60 Stunden zur Berechnung der Umhüllenden</tooltip>
+                                    <description>Genauigkeit der Vorhersage in % pro 60 Stunden zur Berechnung der Umhüllenden</description>
+                                </documentation>
+                                <documentation xml:lang="en">
+                                    <label>Forecast Accuracy [%/(60h)]</label>
+                                    <tooltip>Accuracy of prediction in % per 60 hours in order to calculate confidence interval</tooltip>
+                                    <description>Accuracy of prediction in % per 60 hours in order to calculate confidence interval</description>
+                                </documentation>
+                            </annotation>
+                        </element>
                 </sequence>
             </extension>
         </complexContent>
@@ -653,7 +667,7 @@
                         </annotation>
                     </element>
                     <!-- StreckenParameter  -->
-                    <element name="zwg_zuschlag" type="double" default="0.0">
+                    <element name="zwg_zuschlag" type="int" default="0">
                         <annotation>
                             <documentation xml:lang="de">
                                 <name>Zwischengebietszuschlag [%]</name>
@@ -663,9 +677,9 @@
                             </documentation>
                         </annotation>
                         <!--  <simpleType>
-                            <restriction base="double">
-                            <minInclusive value="0.0"/>
-                            <maxInclusive value="100.0"/>
+                            <restriction base="int">
+                            <minInclusive value="0"/>
+                            <maxInclusive value="100"/>
                             </restriction>
                             </simpleType> -->
                     </element>
@@ -679,7 +693,7 @@
                             </documentation>
                         </annotation>
                     </element>
-                    <element name="db" type="double" default="0.0">
+                    <element name="db" type="int" default="0">
                         <annotation>
                             <documentation xml:lang="de">
                                 <name>Änderung des Basisdurchflusses [m³/s]</name>
@@ -762,7 +776,7 @@
                             </documentation>
                         </annotation>
                     </element>
-                    <element name="QL1" type="double">
+                    <element name="QL1" type="int">
                         <annotation>
                             <documentation xml:lang="de">
                                 <name>max. Durchfluss der ersten Gewässerstufe [m³/s]</name>
@@ -772,7 +786,7 @@
                             </documentation>
                         </annotation>
                     </element>
-                    <element name="QL2" type="double">
+                    <element name="QL2" type="int">
                         <annotation>
                             <documentation xml:lang="de">
                                 <name>max. Durchfluss der zweiten Gewässerstufe [m³/s]</name>
@@ -840,7 +854,7 @@
         <complexContent>
             <extension base="commons:EmptyFeatureBaseType">
                 <sequence>
-                    <element name="tl" type="double">
+                    <element name="tl" type="int">
                         <annotation>
                             <documentation xml:lang="de">
                                 <name>Systemlaufzeit in der Strecke</name>

@@ -99,8 +99,9 @@ public class ElbePolteConst
   public static final String PAR_FILE_SEP = "\t";
   public static final String PAR_LINE_END = " / ";
 
-  public static final String PAR_NUMBER_FORMAT_LANG = "%9.5f";
-  public static final String PAR_NUMBER_FORMAT_Kurz = "%3.1f";
+  public static final String PAR_NUMBER_FORMAT_LONG = "%9.5f";
+  public static final String PAR_NUMBER_FORMAT_SHORT = "%3.1f";
+  public static final String PAR_NUMBER_FORMAT_INTEGER = "%i";
 
   public static final String RECHENKERN_ZIP = "HWObereElbe.zip";
   public static final String RECHENKERN_EXE = "HWObereElbe.exe";

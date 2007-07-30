@@ -40,14 +40,18 @@ import java.io.PrintWriter;
 import java.net.URL;
 import java.util.Properties;
 
+import org.kalypso.commons.java.io.FileCopyVisitor;
+import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.lang.ProcessHelper;
 import org.kalypso.commons.java.lang.ProcessHelper.ProcessTimeoutException;
+import org.kalypso.lhwzsachsen.elbepolte.visitors.FileVisitorHwvs2Zml;
 import org.kalypso.services.calculation.common.ICalcServiceConstants;
 import org.kalypso.services.calculation.job.ICalcDataProvider;
 import org.kalypso.services.calculation.job.ICalcJob;
 import org.kalypso.services.calculation.job.ICalcMonitor;
 import org.kalypso.services.calculation.job.ICalcResultEater;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * 
@@ -68,10 +72,10 @@ public class ElbePolteCalcJob implements ICalcJob
   public void run( File tmpdir, ICalcDataProvider inputProvider, ICalcResultEater resultEater, ICalcMonitor monitor )
       throws CalcJobServiceException
   {
-    final File outputdir = new File( tmpdir, ICalcServiceConstants.OUTPUT_DIR_NAME );
+    final File outputDir = new File( tmpdir, ICalcServiceConstants.OUTPUT_DIR_NAME );
+    outputDir.mkdirs();
 
-    outputdir.mkdirs();
-    final File logfile = new File( outputdir, "elbePolte.log" );
+    final File logfile = new File( outputDir, "elbePolte.log" );
 
     PrintWriter pw = null;
 
@@ -104,7 +108,7 @@ public class ElbePolteCalcJob implements ICalcJob
 
       monitor.setMessage( "Rechenkern wird aufgerufen" );
       pw.println( "Rechenkern wird aufgerufen" );
-      startCalculation( exeDir, props, pw, monitor, nativeOutDir );
+      startCalculation( exeDir, props, pw, monitor, nativeOutDir, nativeInDir );
 
       resultEater.addResult( "NATIVE_OUT_DIR", nativeOutDir );
 
@@ -116,7 +120,7 @@ public class ElbePolteCalcJob implements ICalcJob
       pw.println( "Ergebnisse werden zurückgelesen" );
       try
       {
-        writeResultsToFolder( outputdir );
+        writeResultsToFolder( nativeOutDir, outputDir, props );
       }
       catch( final Exception e )
       {
@@ -142,17 +146,25 @@ public class ElbePolteCalcJob implements ICalcJob
       if( pw != null )
         pw.close();
 
-      resultEater.addResult( "ERGEBNISSE", outputdir );
+      resultEater.addResult( "ERGEBNISSE", outputDir );
     }
   }
 
   /**
    * @param outputDir
+   * @param props
+   * @param outputDir
+   * @throws IOException
    */
-  
-  // TODO hier geht es weiter....
-  private void writeResultsToFolder( File outputDir )
-  {}
+
+  private void writeResultsToFolder( File nativeOutDir, File outputDir, Properties props ) throws Exception
+  {
+
+    final FileVisitorHwvs2Zml fleVisitor = new FileVisitorHwvs2Zml( nativeOutDir, outputDir, props,
+        ElbePolteConst.GML_ELBE_PEGEL_COLL, "Modellwerte", "Pegel", true );
+    FileUtilities.accept( nativeOutDir, fleVisitor, true );
+
+  }
 
   /**
    * @param exeDir
@@ -160,9 +172,11 @@ public class ElbePolteCalcJob implements ICalcJob
    * @param pw
    * @param monitor
    * @param nativeOutDir
+   * @param nativeInDir
+   *          TODO
    */
-  private void startCalculation( File exeDir, Properties props, PrintWriter pw, ICalcMonitor monitor, File nativeOutDir )
-      throws CalcJobServiceException
+  private void startCalculation( File exeDir, Properties props, PrintWriter pw, ICalcMonitor monitor,
+      File nativeOutDir, File nativeInDir ) throws CalcJobServiceException
   {
     final String commandString = exeDir + File.separator + "HWObereElbe.exe";
 
@@ -186,7 +200,8 @@ public class ElbePolteCalcJob implements ICalcJob
     finally
     {
       // fehler.txt lesen und analysieren
-      final File fleFehler = new File( new File( exeDir, "Modell" ), "Fehler.txt" );
+      File exeModellDir = new File( exeDir, "Modell" );
+      final File fleFehler = new File( exeModellDir, "Fehler.txt" );
       try
       {
         final InputStreamReader isr = new InputStreamReader( new FileInputStream( fleFehler ) );
@@ -210,9 +225,20 @@ public class ElbePolteCalcJob implements ICalcJob
         pw.println();
 
         if( processOut2.startsWith( "Keine Fehler" ) )
+        {
           pw.println( "Rechnung erfolgreich beendet." );
+          final File nativeOutModellDir = new File( nativeOutDir, "Modell" );
+          if( nativeOutDir.exists() && exeModellDir.exists() )
+          {
+            final FileCopyVisitor copyVisitor = new FileCopyVisitor( exeModellDir, nativeOutModellDir, true );
+            FileUtilities.accept( exeModellDir, copyVisitor, true );
+          }
+        }
         else
+        {
           pw.println( "Rechnung nicht erfolgreich beendet." );
+          throw new Exception( processOut2, new Exception() );
+        }
       }
       catch( Exception e )
       {

@@ -194,7 +194,7 @@ public class ElbePolteConverter
           // Format: lfd_Nummer, Jahr, Monat, Tag, Stunde, Wert
           if( sEingabeZeile.length() > 25 )
           {
-            String strDate = sEingabeZeile.substring( 10, 27 );
+            String strDate = sEingabeZeile.substring( 10, 40 );
             dtDatum = ElbePolteConst.HWVS_DATE_FORMAT.parse( strDate );
             calendar.setTime( dtDatum );
 
