@@ -255,7 +255,6 @@ public class ElbePolteConverter
 
   public static void zml2Hwvs( final File fleZml, final File fleHwvs )
   {
-
     try
     {
       final URL url = fleZml.toURL();
@@ -265,7 +264,9 @@ public class ElbePolteConverter
 
       if( urlConTest != null )
       {
-        zml2Hwvs( obsZml, fleHwvs );
+        // TODO Zeitraum wäre noch schön :-)
+        final String sComment = fleHwvs.getName() + ": " + obsZml.getIdentifier();
+        zml2Hwvs( obsZml, fleHwvs, sComment );
 
       }
     }
@@ -279,13 +280,14 @@ public class ElbePolteConverter
    * @param observation
    * @param fleHwvs
    */
-  public static void zml2Hwvs( IObservation obsZml, File fleHwvs )
+  public static void zml2Hwvs( final IObservation obsZml, final File fleHwvs, final String sComment )
   {
     try
     {
       final Writer wrtrHwvs = new OutputStreamWriter( new FileOutputStream( fleHwvs ),
           ElbePolteConst.ELBEPOLTE_CODEPAGE );
-      zml2Hwvs( obsZml, wrtrHwvs );
+
+      zml2Hwvs( obsZml, wrtrHwvs, sComment );
       IOUtils.closeQuietly( wrtrHwvs );
     }
     catch( Exception e )
@@ -294,10 +296,8 @@ public class ElbePolteConverter
     }
   }
 
-  public static void zml2Hwvs( final IObservation obsZml, final Writer wrtr )
+  public static void zml2Hwvs( final IObservation obsZml, final Writer wrtr, String sComment )
   {
-    // TODO Kommentar von außen mitgeben?
-    final String sComment;
     final PrintWriter pWrtr;
     final InterpolationFilter intpolFlt;
     final ITuppleModel tplWerte;
@@ -317,9 +317,9 @@ public class ElbePolteConverter
 
       intpolFlt.initFilter( null, obsZml, null );
 
-      // Kommentar aus ZML-Datei lesen und in ElbePolte-Datei schreiben
-      //      TODO create new comment
-      sComment = intpolFlt.getMetadataList().getProperty( ElbePolteConst.PROP_COMMENT, "REM " );
+      // Kommentar aus ZML-Datei lesen, anhängen und in ElbePolte-Datei schreiben
+      sComment = sComment + " " + intpolFlt.getMetadataList().getProperty( ElbePolteConst.PROP_COMMENT, "REM " );
+
       pWrtr.println( sComment );
 
       tplWerte = intpolFlt.getValues( null );

@@ -97,8 +97,9 @@ public class ElbePolteConst
   public static final String GML_ZWG_ZUFLUSS_COLL = "zwgZuflussMember";//[ZwgZufluss]
 
   public static final String PAR_FILE_SEP = "\t";
+  public static final String PAR_LINE_END = " / ";
 
-  public static final String PAR_NUMBER_FORMAT_LANG = "%8.5f";
+  public static final String PAR_NUMBER_FORMAT_LANG = "%9.5f";
   public static final String PAR_NUMBER_FORMAT_Kurz = "%3.1f";
 
   public static final String RECHENKERN_ZIP = "HWObereElbe.zip";

@@ -87,25 +87,25 @@ public class ElbePolteInputWorker
   }
 
   /**
-   * @param tmpdir
+   * @param tmpDir
    * @param inputProvider
    * @param props
-   * @param nativeindir
+   * @param nativeInDir
    * @param pw
    * @return
    * @throws Exception
    */
-  public static File createNativeInput( File tmpdir, ICalcDataProvider inputProvider, PrintWriter logwriter,
-      Properties props, File nativeindir ) throws Exception
+  public static File createNativeInput( File tmpDir, ICalcDataProvider inputProvider, PrintWriter logWriter,
+      Properties props, File nativeInDir ) throws Exception
   {
     try
     {
-      final File exeDir = new File( tmpdir, "exe" );
+      final File exeDir = new File( tmpDir, "exe" );
       exeDir.mkdirs();
 
       final URL controlGmlURL = inputProvider.getURLForID( "CONTROL_GML" );
 
-      logwriter.println( "Lese Steuerparameter: " + controlGmlURL.toString() );
+      logWriter.println( "Lese Steuerparameter: " + controlGmlURL.toString() );
 
       final Map map = parseControlFile( controlGmlURL );
       props.putAll( map );
@@ -114,23 +114,23 @@ public class ElbePolteInputWorker
 
       props.put( ElbePolteConst.DATA_GML, workspace );
 
-      logwriter.println( "Schreibe Parameterdatei" );
-      writeParFile( workspace, exeDir, logwriter );
+      logWriter.println( "Schreibe Parameterdatei" );
+      final File paramDir = new File( exeDir, "Param" );
+      paramDir.mkdirs();
+      writeParFile( workspace, paramDir, logWriter );
 
-      logwriter.println( "Erzeuge Zeitreihen" );
+      logWriter.println( "Erzeuge Zeitreihen" );
       // TODO hat das was mit den Umhüllenden zu tun???
       //      applyAccuracyPrediction( workspace, tsmap );
       writeTimeseries( props, exeDir, inputProvider.getURLForID( "GML" ) );
-      
-      // TODO kopiere noch Inhalt von exeDir nach nativeIn, damit der User die Rechenvarianten nachvollziehen kann
-      
-      if( exeDir.exists() && nativeindir.exists() )
+
+       if( exeDir.exists() && nativeInDir.exists() )
       {
-        final FileCopyVisitor copyVisitor = new FileCopyVisitor( exeDir, nativeindir, true );
+        final FileCopyVisitor copyVisitor = new FileCopyVisitor( exeDir, nativeInDir, true );
         FileUtilities.accept( exeDir, copyVisitor, true );
       }
-     
-      logwriter.println( "Kopiere Rechenkern" );
+
+      logWriter.println( "Kopiere Rechenkern" );
       copyAndUnzipRechenkern( exeDir );
 
       return exeDir;
@@ -144,28 +144,33 @@ public class ElbePolteInputWorker
 
   /**
    * @param props
-   * @param nativedir
+   * @param nativeDir
    * @throws Exception
    */
-  private static void writeTimeseries( Properties props, File nativedir, URL context ) throws Exception
+  private static void writeTimeseries( Properties props, File nativeDir, URL context ) throws Exception
   {
     // workspace holen
     final GMLWorkspace wks = (GMLWorkspace)props.get( ElbePolteConst.DATA_GML );
     // für die einzelnen Pegeltypen Zeitreihen schreiben
-    final File modelldir = new File( nativedir, "Modell" );
-    modelldir.mkdirs();
-    final File datendir = new File( nativedir, "Daten" );
-    datendir.mkdirs();
+    final File modellDir = new File( nativeDir, "Modell" );
+    modellDir.mkdirs();
+    final File datenDir = new File( nativeDir, "Data" );
+    datenDir.mkdirs();
+    
 
-    // Zeitreihen an Startpegeln
+    // Zeitreihen an Startpegeln (Data UND Modell)
     FeatureVisitorZml2Hwvs.writeTimeseries( wks, ElbePolteConst.GML_START_PEGEL_COLL, "ganglinie_gesamt", "nr",
-        "Modell", modelldir, context );
-    // Zeitreihen der Zwischengebietszuflüsse
+        "Modell", modellDir, context );
+    FeatureVisitorZml2Hwvs.writeTimeseries( wks, ElbePolteConst.GML_START_PEGEL_COLL, "ganglinie_gesamt", "nr",
+        "Daten", datenDir, context );
+    // Zeitreihen der Zwischengebietszuflüsse (Data UND Modell)
     FeatureVisitorZml2Hwvs.writeTimeseries( wks, ElbePolteConst.GML_ZWG_ZUFLUSS_COLL, "ganglinie_gesamt", "nr",
-        "Modell", modelldir, context );
+        "Modell", modellDir, context );
+    FeatureVisitorZml2Hwvs.writeTimeseries( wks, ElbePolteConst.GML_ZWG_ZUFLUSS_COLL, "ganglinie_gesamt", "nr",
+        "Daten", datenDir, context );
     // Zeitreihen an Elbepegeln
     FeatureVisitorZml2Hwvs.writeTimeseries( wks, ElbePolteConst.GML_ELBE_PEGEL_COLL, "ganglinie_messwerte", "nr",
-        "Daten", datendir, context );
+        "Daten", datenDir, context );
 
   }
 
@@ -258,8 +263,9 @@ public class ElbePolteInputWorker
       final int nrFeko = ( (Integer)featStrecke.getProperty( "nr_feko" ) ).intValue();
 
       final String sep = ElbePolteConst.PAR_FILE_SEP;
-      wrtr.println( nr + sep + db + sep + lt + sep + zwgZuschlag + sep + replaceVals + sep + nrFeko );
-      wrtr.println( (String)featStrecke.getProperty( "name" ) );
+      final String lneEnd = ElbePolteConst.PAR_LINE_END;
+      wrtr.println( nr + sep + db + sep + lt + sep + zwgZuschlag + sep + replaceVals + sep + nrFeko + lneEnd );
+      wrtr.println( (String)featStrecke.getProperty( "name" ) + lneEnd );
 
       // ParamSets
       final FeatureList paramSetList = (FeatureList)featStrecke.getProperty( "paramSetMember" );
@@ -290,7 +296,8 @@ public class ElbePolteInputWorker
       final double is = ( (Double)featParamSet.getProperty( "is" ) ).doubleValue();
 
       final String sep = ElbePolteConst.PAR_FILE_SEP;
-      wrtr.println( ql1 + sep + ql2 + sep + km + sep + ce + sep + is );
+      final String lneEnd = ElbePolteConst.PAR_LINE_END;
+      wrtr.println( ql1 + sep + ql2 + sep + km + sep + ce + sep + is + lneEnd );
 
       // StufenParamSets
       final FeatureList stufenParamSetList = (FeatureList)featParamSet.getProperty( "stufenParamSetMember" );
@@ -310,6 +317,7 @@ public class ElbePolteInputWorker
   {
 
     final String sep = ElbePolteConst.PAR_FILE_SEP;
+    final String lneEnd = ElbePolteConst.PAR_LINE_END;
     final int cntSPS = stufenParamSetList.size();
     for( final Iterator itStufenParamSet = stufenParamSetList.iterator(); itStufenParamSet.hasNext(); )
     {
@@ -350,12 +358,12 @@ public class ElbePolteInputWorker
         Format.fprintf( wrtr, ElbePolteConst.PAR_NUMBER_FORMAT_LANG, new Object[]
         { fProp } );
       }
-      wrtr.println();
+      wrtr.println( lneEnd );
     }
 
     for( int ii = cntSPS; ii < 3; ii++ )
     {
-      wrtr.println( "-1" );
+      wrtr.println( "-1" + lneEnd );
     }
   }
 
@@ -369,7 +377,7 @@ public class ElbePolteInputWorker
     logwriter.println( "- allg. Modellparamter" );
     final String hwTyp = ( modell.getProperty( "hw_type" ) ).toString();
     final String nachfRIDO = ( (Boolean)modell.getProperty( "rido" ) ).booleanValue() ? "1" : "0";
-    wrtr.println( hwTyp + ElbePolteConst.PAR_FILE_SEP + nachfRIDO );
+    wrtr.println( hwTyp + ElbePolteConst.PAR_FILE_SEP + nachfRIDO + ElbePolteConst.PAR_LINE_END );
   }
 
   public static Map parseControlFile( final URL gmlURL ) throws CalcJobServiceException

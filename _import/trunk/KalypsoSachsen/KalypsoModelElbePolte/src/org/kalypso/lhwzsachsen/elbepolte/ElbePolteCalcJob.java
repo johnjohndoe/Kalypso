@@ -29,13 +29,19 @@
  */
 package org.kalypso.lhwzsachsen.elbepolte;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.LineNumberReader;
 import java.io.PrintWriter;
 import java.net.URL;
-import java.util.Map;
 import java.util.Properties;
 
+import org.kalypso.commons.java.lang.ProcessHelper;
+import org.kalypso.commons.java.lang.ProcessHelper.ProcessTimeoutException;
 import org.kalypso.services.calculation.common.ICalcServiceConstants;
 import org.kalypso.services.calculation.job.ICalcDataProvider;
 import org.kalypso.services.calculation.job.ICalcJob;
@@ -82,15 +88,15 @@ public class ElbePolteCalcJob implements ICalcJob
       pw.println( "Dateien für Rechenkern werden erzeugt" );
 
       final File nativedir = new File( tmpdir, ".native" );
-      final File nativeindir = new File( nativedir, "in" );
-      final File nativeoutdir = new File( nativedir, "out" );
+      final File nativeInDir = new File( nativedir, "in" );
+      final File nativeOutDir = new File( nativedir, "out" );
       nativedir.mkdirs();
-      nativeindir.mkdirs();
-      nativeoutdir.mkdirs();
+      nativeInDir.mkdirs();
+      nativeOutDir.mkdirs();
 
-      final File exedir = ElbePolteInputWorker.createNativeInput( tmpdir, inputProvider, pw, props, nativeindir );
+      final File exeDir = ElbePolteInputWorker.createNativeInput( tmpdir, inputProvider, pw, props, nativeInDir );
 
-      resultEater.addResult( "NATIVE_IN_DIR", nativeindir );
+      resultEater.addResult( "NATIVE_IN_DIR", nativeInDir );
 
       monitor.setProgress( 33 );
       if( monitor.isCanceled() )
@@ -98,9 +104,9 @@ public class ElbePolteCalcJob implements ICalcJob
 
       monitor.setMessage( "Rechenkern wird aufgerufen" );
       pw.println( "Rechenkern wird aufgerufen" );
-      startCalculation( exedir, props, pw, monitor, nativeoutdir );
+      startCalculation( exeDir, props, pw, monitor, nativeOutDir );
 
-      resultEater.addResult( "NATIVE_OUT_DIR", nativeoutdir );
+      resultEater.addResult( "NATIVE_OUT_DIR", nativeOutDir );
 
       monitor.setProgress( 33 );
       if( monitor.isCanceled() )
@@ -141,20 +147,79 @@ public class ElbePolteCalcJob implements ICalcJob
   }
 
   /**
-   * @param outputdir
+   * @param outputDir
    */
-  private void writeResultsToFolder( File outputdir )
+  
+  // TODO hier geht es weiter....
+  private void writeResultsToFolder( File outputDir )
   {}
 
   /**
-   * @param exedir
+   * @param exeDir
    * @param props
    * @param pw
    * @param monitor
-   * @param nativeoutdir
+   * @param nativeOutDir
    */
-  private void startCalculation( File exedir, Properties props, PrintWriter pw, ICalcMonitor monitor, File nativeoutdir )
-  {}
+  private void startCalculation( File exeDir, Properties props, PrintWriter pw, ICalcMonitor monitor, File nativeOutDir )
+      throws CalcJobServiceException
+  {
+    final String commandString = exeDir + File.separator + "HWObereElbe.exe";
+
+    pw.println( commandString );
+
+    try
+    {
+      // timeout after 10 sec
+      ProcessHelper.startProcess( commandString, null, exeDir, monitor, 10000, null, null );
+    }
+    catch( final IOException e )
+    {
+      e.printStackTrace();
+      throw new CalcJobServiceException( "Fehler beim Ausführen der HWObereElbe.exe", e );
+    }
+    catch( final ProcessTimeoutException e )
+    {
+      e.printStackTrace();
+      throw new CalcJobServiceException( "Fehler beim Ausführen der HWObereElbe.exe", e );
+    }
+    finally
+    {
+      // fehler.txt lesen und analysieren
+      final File fleFehler = new File( new File( exeDir, "Modell" ), "Fehler.txt" );
+      try
+      {
+        final InputStreamReader isr = new InputStreamReader( new FileInputStream( fleFehler ) );
+        final BufferedReader reader = new BufferedReader( isr );
+
+        pw.println( "Ausgaben des Rechenkerns" );
+        pw.println( "========================" );
+        pw.println( "=   Standard-Ausgabe   =" );
+        pw.println( "========================" );
+        final LineNumberReader lneNumRead = new LineNumberReader( reader );
+        String processOut = lneNumRead.readLine();
+        String processOut2 = "";
+
+        while( processOut != null )
+        {
+          pw.println( processOut );
+          processOut2 = processOut;
+          processOut = lneNumRead.readLine();
+        }
+        pw.println( "========================" );
+        pw.println();
+
+        if( processOut2.startsWith( "Keine Fehler" ) )
+          pw.println( "Rechnung erfolgreich beendet." );
+        else
+          pw.println( "Rechnung nicht erfolgreich beendet." );
+      }
+      catch( Exception e )
+      {
+        throw new CalcJobServiceException( e.getLocalizedMessage(), e );
+      }
+    }
+  }
 
   /**
    * @see org.kalypso.services.calculation.job.ICalcJob#getSpezifikation()
@@ -163,7 +228,4 @@ public class ElbePolteCalcJob implements ICalcJob
   {
     return getClass().getResource( ElbePolteConst.CALCJOB_SPEC );
   }
-  //  private void startCalculation( final File exedir, final PrintWriter logwriter,
-  //      final ICalcMonitor monitor ) throws CalcJobServiceException
-  //  {}
 }

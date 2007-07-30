@@ -148,7 +148,9 @@ public class FeatureVisitorZml2Hwvs implements FeatureVisitor
           //        Ziel-Datei erstellen
           final File fleHwvs = new File( m_fileDir, sFileNme );
           // Zml2Hwvs ausführen
-          ElbePolteConverter.zml2Hwvs( observation, fleHwvs );
+          // TODO Zeitraum wäre noch schön
+          final String sComment = fleHwvs.getName() + ": " +observation.getIdentifier() ; 
+          ElbePolteConverter.zml2Hwvs( observation, fleHwvs, sComment );
         }
         else
         {
