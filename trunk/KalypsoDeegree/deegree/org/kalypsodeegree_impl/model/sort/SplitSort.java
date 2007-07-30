@@ -35,13 +35,13 @@ public class SplitSort implements FeatureList
       else if( object instanceof Feature )
       {
         final Feature fe = (Feature) object;
-        
+
         // HACK: if the workspace is null, we are probably still loading
         // so do not access the envelope, whichs may cause problems now
         final GMLWorkspace workspace = fe.getWorkspace();
         if( workspace == null )
           return null;
-        
+
         return fe.getEnvelope();
       }
       else if( object instanceof String )
@@ -89,8 +89,8 @@ public class SplitSort implements FeatureList
     m_parentFeatureTypeProperty = parentFTP;
     m_envelopeProvider = envelopeProvider == null ? DEFAULT_ENV_PROVIDER : envelopeProvider;
 
-     m_index = new SplitSortSpatialIndex( m_envelopeProvider, env );
-//    m_index = new QuadTreeIndex( m_envelopeProvider );
+    m_index = new SplitSortSpatialIndex( m_envelopeProvider, env );
+// m_index = new QuadTreeIndex( m_envelopeProvider );
   }
 
   public boolean add( final Object object )
@@ -140,7 +140,7 @@ public class SplitSort implements FeatureList
   public boolean remove( final Object object )
   {
     final GM_Envelope env = getEnvelope( object );
-    remove(  env, object );
+    remove( env, object );
 
     return m_objects.remove( object );
   }
@@ -229,7 +229,7 @@ public class SplitSort implements FeatureList
   /**
    * @see java.util.List#add(int, java.lang.Object)
    */
-  public void add( int index, Object object )
+  public void add( final int index, final Object object )
   {
     final GM_Envelope env = getEnvelope( object );
     spacialAdd( env, object );
@@ -240,7 +240,7 @@ public class SplitSort implements FeatureList
   /**
    * @see java.util.List#indexOf(java.lang.Object)
    */
-  public int indexOf( Object o )
+  public int indexOf( final Object o )
   {
     return m_objects.indexOf( o );
   }
@@ -248,7 +248,7 @@ public class SplitSort implements FeatureList
   /**
    * @see java.util.List#lastIndexOf(java.lang.Object)
    */
-  public int lastIndexOf( Object o )
+  public int lastIndexOf( final Object o )
   {
     return m_objects.lastIndexOf( o );
   }
@@ -258,7 +258,7 @@ public class SplitSort implements FeatureList
    * 
    * @see java.util.List#contains(java.lang.Object)
    */
-  public boolean contains( Object o )
+  public boolean contains( final Object o )
   {
     return m_objects.contains( o );
   }
@@ -266,7 +266,7 @@ public class SplitSort implements FeatureList
   /**
    * @see java.util.List#addAll(int, java.util.Collection)
    */
-  public boolean addAll( int index, Collection c )
+  public boolean addAll( final int index, final Collection c )
   {
     throw new UnsupportedOperationException();
   }
@@ -274,7 +274,7 @@ public class SplitSort implements FeatureList
   /**
    * @see java.util.List#addAll(java.util.Collection)
    */
-  public boolean addAll( Collection c )
+  public boolean addAll( final Collection c )
   {
     boolean changed = false;
     for( final Iterator iter = c.iterator(); iter.hasNext(); )
@@ -290,7 +290,7 @@ public class SplitSort implements FeatureList
   /**
    * @see java.util.List#containsAll(java.util.Collection)
    */
-  public boolean containsAll( Collection c )
+  public boolean containsAll( final Collection c )
   {
     return m_objects.containsAll( c );
   }
@@ -310,7 +310,7 @@ public class SplitSort implements FeatureList
   /**
    * @see java.util.List#retainAll(java.util.Collection)
    */
-  public boolean retainAll( Collection c )
+  public boolean retainAll( final Collection c )
   {
     throw new UnsupportedOperationException();
   }
@@ -371,7 +371,7 @@ public class SplitSort implements FeatureList
    * @see java.util.List#toArray(java.lang.Object[])
    */
   @SuppressWarnings("unchecked")
-  public Object[] toArray( Object[] a )
+  public Object[] toArray( final Object[] a )
   {
     return m_objects.toArray( a );
   }

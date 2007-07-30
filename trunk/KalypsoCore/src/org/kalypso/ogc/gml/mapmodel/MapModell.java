@@ -46,7 +46,10 @@ import java.util.HashSet;
 import java.util.Vector;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.ISafeRunnable;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.kalypso.contribs.eclipse.core.runtime.SafeRunnable;
@@ -171,14 +174,23 @@ public class MapModell implements IMapModell
 
   public void paint( final Graphics g, final GeoTransform p, final GM_Envelope bbox, final double scale, final boolean selected )
   {
-    // directly access themes in order to avoid synchronization problems
-    final IKalypsoTheme[] themes = m_themes.toArray( new IKalypsoTheme[m_themes.size()] );
-    // paint themes in reverse order
-    for( int i = themes.length; i > 0; i-- )
+    final IProgressMonitor monitor = new NullProgressMonitor();
+
+    try
     {
-      final IKalypsoTheme theme = themes[i - 1];
-      if( theme.isVisible() )
-        theme.paint( g, p, scale, bbox, selected );
+      // directly access themes in order to avoid synchronization problems
+      final IKalypsoTheme[] themes = m_themes.toArray( new IKalypsoTheme[m_themes.size()] );
+      // paint themes in reverse order
+      for( int i = themes.length; i > 0; i-- )
+      {
+        final IKalypsoTheme theme = themes[i - 1];
+        if( theme.isVisible() )
+          theme.paint( g, p, scale, bbox, selected, monitor );
+      }
+    }
+    catch( final CoreException e )
+    {
+// e.printStackTrace();
     }
   }
 

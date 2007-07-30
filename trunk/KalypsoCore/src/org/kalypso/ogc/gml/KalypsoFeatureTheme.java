@@ -41,22 +41,32 @@
 package org.kalypso.ogc.gml;
 
 import java.awt.Graphics;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
+import org.kalypsodeegree.filterencoding.Filter;
+import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
+import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
+import org.kalypsodeegree.graphics.sld.Rule;
+import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
@@ -78,9 +88,10 @@ import org.kalypsodeegree_impl.model.sort.SplitSort;
  */
 public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalypsoFeatureTheme, ModellEventListener, IKalypsoUserStyleListener
 {
-  final CommandableWorkspace m_workspace;
+  /* Preserve order of styles. */
+  private final Map<KalypsoUserStyle, StyleDisplayMap> m_styleDisplayMap = new LinkedHashMap<KalypsoUserStyle, StyleDisplayMap>();
 
-  private final HashMap<KalypsoUserStyle, StyleDisplayMap> m_styleDisplayMap = new HashMap<KalypsoUserStyle, StyleDisplayMap>();
+  private final CommandableWorkspace m_workspace;
 
   private final IFeatureType m_featureType;
 
@@ -129,6 +140,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     final KalypsoUserStyle[] styles = set.toArray( new KalypsoUserStyle[set.size()] );
     for( final KalypsoUserStyle element : styles )
       removeStyle( element );
+
     m_workspace.removeModellListener( this );
 
     super.dispose();
@@ -136,9 +148,6 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
 
   private void setDirty( )
   {
-    for( final StyleDisplayMap styleDisplayMap : m_styleDisplayMap.values() )
-      styleDisplayMap.setDirty();
-
     invalidate( getBoundingBox() );
   }
 
@@ -158,53 +167,25 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics,
    *      org.kalypsodeegree.graphics.transformation.GeoTransform, double,
-   *      org.kalypsodeegree.model.geometry.GM_Envelope, boolean)
+   *      org.kalypsodeegree.model.geometry.GM_Envelope, boolean,
+   *      org.kalypso.contribs.eclipse.core.runtime.IProgressMonitorWithFactory)
    */
-  public void paint( final Graphics graphics, final GeoTransform projection, final double scale, final GM_Envelope bbox, final boolean selected )
+  public void paint( final Graphics graphics, final GeoTransform projection, final double scale, final GM_Envelope bbox, final boolean selected, final IProgressMonitor monitor ) throws CoreException
   {
-    // find all selected/unselected features in this theme
-    final FeatureList featureList = getFeatureList();
-    if( featureList == null )
+    final Collection<StyleDisplayMap> styles = m_styleDisplayMap.values();
+    final StyleDisplayMap[] styleArray = styles.toArray( new StyleDisplayMap[styles.size()] );
+
+    final SubMonitor progress = SubMonitor.convert( monitor, "Zeichne Styles", styleArray.length );
+
+    if( m_featureList == null )
       return;
 
-    final List<Feature> globalSelectedFeatures = m_selectionManager.toList();
-    final List featuresFilter = new ArrayList( featureList.size() );
-
-    final Feature parentFeature = featureList.getParentFeature();
-    final GMLWorkspace workspace;
-    if( parentFeature == null )
+    for( final StyleDisplayMap map : styleArray )
     {
-      // this handles the special case where we are just showing the root feature
-      if( featureList.size() > 0 )
-      {
-        final Object object = featureList.get( 0 );
-        workspace = object instanceof Feature ? ((Feature) object).getWorkspace() : null;
-      }
-      else
-        workspace = null;
+      final SubMonitor childProgress = progress.newChild( 1 );
+      map.paintSelected( graphics, projection, scale, bbox, m_featureList, selected, childProgress );
+      ProgressUtilities.done( childProgress );
     }
-    else
-      workspace = parentFeature.getWorkspace();
-
-    for( final Object o : featureList )
-    {
-      final Feature feature;
-      if( workspace == null )
-        feature = o instanceof Feature ? (Feature) o : null;
-      else
-        feature = FeatureHelper.getFeature( workspace, o );
-
-      if( feature != null )
-        featuresFilter.add( feature );
-    }
-
-    if( selected )
-      featuresFilter.retainAll( globalSelectedFeatures );
-    else
-      featuresFilter.removeAll( globalSelectedFeatures );
-
-    for( final StyleDisplayMap map : m_styleDisplayMap.values() )
-      map.paintSelected( graphics, projection, scale, bbox, featuresFilter );
   }
 
   public void addStyle( final KalypsoUserStyle style )
@@ -238,7 +219,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     {
       // my workspace ?
       final GMLWorkspace changedWorkspace = ((IGMLWorkspaceModellEvent) modellEvent).getGMLWorkspace();
-      if( (m_workspace == null) || ((changedWorkspace != m_workspace) && (changedWorkspace != m_workspace.getWorkspace())) )
+      if( (changedWorkspace != m_workspace && changedWorkspace != m_workspace.getWorkspace()) )
         return; // not my workspace
 
       if( modellEvent instanceof FeaturesChangedModellEvent )
@@ -247,7 +228,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
         final Feature[] features = featuresChangedModellEvent.getFeatures();
 
         // TODO: BOTH ways (if and else) are mayor performance bugs.
-        // we MUST first determine if we zhave to restyle at all that is, if this modell event
+        // we MUST first determine if we have to restyle at all that is, if this modell event
         // did change any features belonging to me
 
         // optimize: i think it is faster to restyle all than to find and
@@ -255,18 +236,17 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
         if( features.length > m_featureList.size() / 5 )
           setDirty();
         else
+        {
           for( final Feature feature : features )
-            // my feature ?
-            // TODO: SLOW!!
-            if( m_featureList.contains( feature ) )
-              restyleFeature( feature );
-
+            restyleFeature( feature );
+        }
       }
       else if( modellEvent instanceof FeatureStructureChangeModellEvent )
       {
         final FeatureStructureChangeModellEvent fscme = (FeatureStructureChangeModellEvent) modellEvent;
         final Feature[] parents = fscme.getParentFeatures();
         for( final Feature parent : parents )
+        {
           if( m_featureList.getParentFeature() == parent )
             switch( fscme.getChangeType() )
             {
@@ -278,6 +258,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
               default:
                 setDirty();
             }
+        }
       }
     }
     else
@@ -288,9 +269,13 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
 
   private void restyleFeature( final Feature feature )
   {
-    for( final StyleDisplayMap styleDisplayMap : m_styleDisplayMap.values() )
-      styleDisplayMap.restyle( feature );
+    // my feature ?
+    // TODO: SLOW!!
+    if( !m_featureList.contains( feature ) )
+      return;
 
+    // TODO: invalidation should made via the screen-rectangle of this feature
+    // depending on the syled geometry
     invalidate( feature.getEnvelope() );
   }
 
@@ -337,6 +322,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     }
     catch( final Exception e )
     {
+      // TODO: error handling
       e.printStackTrace();
     }
     if( runnable != null )
@@ -353,126 +339,147 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
 
   public class StyleDisplayMap
   {
-    private final Map<Feature, DisplayElement[]> m_displayElements = new HashMap<Feature, DisplayElement[]>();
-
-    private final UserStyle[] m_style;
-
-    private GM_Envelope m_vaildEnvelope = null;
-
-    private int m_maxDisplayArray = 0;
+    private final UserStyle m_style;
 
     public StyleDisplayMap( final UserStyle style )
     {
-      m_style = new UserStyle[] { style };
+      m_style = style;
     }
 
     public Set<Feature> queryVisibleFeatures( final GM_Envelope env, Set<Feature> result )
     {
       if( result == null )
         result = new HashSet<Feature>();
-      m_vaildEnvelope = null;
-      restyle( env );
+
+      final Map<Feature, DisplayElement[]> displayElements = restyle( env );
 
       // iterate through array to avoid concurrent modification exception
-      final Set<Feature> keySet = m_displayElements.keySet();
+      final Set<Feature> keySet = displayElements.keySet();
       final Feature[] features = keySet.toArray( new Feature[keySet.size()] );
       for( final Feature f : features )
         result.add( f );
       return result;
     }
 
-    public void setDirty( )
+    public void paintSelected( final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox, final FeatureList features, final boolean selected, final IProgressMonitor monitor ) throws CoreException
     {
-      m_vaildEnvelope = null;
-      m_displayElements.clear();
-      // TODO ??
-      m_maxDisplayArray = 0;
-    }
+      final FeatureTypeStyle[] fts = m_style.getFeatureTypeStyles();
 
-    /**
-     * @return List of display elements that fit to selectionMask <br>
-     */
-    public List<DisplayElement[]> getSelectedDisplayElements( final List featuresToFilter, final GM_Envelope bbox )
-    {
-      final List<DisplayElement[]> result = new ArrayList<DisplayElement[]>();
+      final SubMonitor progress = SubMonitor.convert( monitor, "Zeichne Display-Elemente", fts.length );
 
-      for( final Object f : featuresToFilter )
+      for( final FeatureTypeStyle element : fts )
       {
-        final Feature feature = (Feature) f;
-        final GM_Envelope envelope = feature.getEnvelope();
-        if( (envelope != null) && envelope.intersects( bbox ) )
-        {
-          final DisplayElement[] elements = m_displayElements.get( feature );
-          if( elements != null )
-            result.add( elements );
-        }
+        final SubMonitor childProgres = progress.newChild( 1 );
+        paintFeatureTypeStyle( g, p, scale, bbox, features, selected, childProgres, element );
+        ProgressUtilities.done( childProgres );
       }
-
-      return result;
     }
 
-    public void paintSelected( final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox, final List featureFilter )
+    private void paintFeatureTypeStyle( final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox, final FeatureList features, final boolean selected, final IProgressMonitor monitor, final FeatureTypeStyle element ) throws CoreException
     {
-      restyle( bbox );
+      final Rule[] rules = element.getRules();
 
-      final List<DisplayElement[]> selectedDE = getSelectedDisplayElements( featureFilter, bbox );
-      // final List<DisplayElement[]> selectedDE = m_displayElements;
+      final SubMonitor progress = SubMonitor.convert( monitor, rules.length );
 
-      final List<DisplayElement>[] layerList = new List[m_maxDisplayArray];
-
-      // try to keep order of rules in userstyle
-      for( int i = 0; i < layerList.length; i++ )
-        layerList[i] = new ArrayList<DisplayElement>();
-
-      for( final DisplayElement[] element : selectedDE )
-        for( int i = 0; i < element.length; i++ )
-          if( element[i].doesScaleConstraintApply( scale ) )
-            layerList[i].add( element[i] );
-
-      for( final List<DisplayElement> element : layerList )
-        for( final DisplayElement de : element )
-          de.paint( g, p );
+      for( final Rule rule : rules )
+      {
+        final SubMonitor childProgress = progress.newChild( 1 );
+        paintRule( g, p, scale, bbox, features, selected, childProgress, rule );
+        ProgressUtilities.done( monitor );
+      }
     }
 
-    public void restyle( final GM_Envelope env )
+    private void paintRule( final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox, final FeatureList features, final boolean selected, final IProgressMonitor monitor, final Rule rule ) throws CoreException
     {
-      if( (m_featureList != null) && (env != null) && ((m_vaildEnvelope == null) || !m_vaildEnvelope.contains( env )) )
-      { // restyle
-        if( m_vaildEnvelope == null )
-          m_vaildEnvelope = env;
-        else
-          m_vaildEnvelope = m_vaildEnvelope.getMerged( env );
-        m_displayElements.clear();
-        m_maxDisplayArray = 0;
-        final List features = m_featureList.query( m_vaildEnvelope, null );
-        for( final Object next : features )
+      // does the filter rule apply?
+      final Filter filter = rule.getFilter();
+
+      final SubMonitor progress = SubMonitor.convert( monitor, "Zeichne Rule", 100 );
+
+      final List visibleFeatures = features.query( bbox, null );
+
+      ProgressUtilities.worked( progress, 15 );
+
+      final SubMonitor loopProgress = progress.newChild( 85 ).setWorkRemaining( visibleFeatures.size() );
+
+      for( final Object o : visibleFeatures )
+      {
+        final SubMonitor childProgress = loopProgress.newChild( 1 );
+        paintFeature( g, p, scale, bbox, selected, rule, filter, o, childProgress );
+        ProgressUtilities.done( childProgress );
+      }
+    }
+
+    private void paintFeature( final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox, final boolean selected, final Rule rule, final Filter filter, final Object featureOrLink, final IProgressMonitor monitor )
+    {
+      /* resolve any links */
+      final Feature feature = FeatureHelper.getFeature( getWorkspace(), featureOrLink );
+
+      try
+      {
+        /* Only paint really visible features */
+        if( filterFeature( feature, selected, bbox, filter ) )
         {
-          if( next instanceof Feature )
-            addDisplayElements( (Feature) next );
-
-          if( next instanceof String )
+          final Symbolizer[] symbolizers = rule.getSymbolizers();
+          for( final Symbolizer symbolizer : symbolizers )
           {
-            final GMLWorkspace workspace = m_featureList.getParentFeature().getWorkspace();
-            final Feature feature = FeatureHelper.getFeature( workspace, next );
-            addDisplayElements( feature );
+            final DisplayElement displayElement = DisplayElementFactory.buildDisplayElement( feature, symbolizer );
+            if( displayElement != null )
+            {
+              /* does scale apply? */
+              if( displayElement.doesScaleConstraintApply( scale ) )
+                displayElement.paint( g, p );
+            }
           }
         }
       }
+      catch( final Exception e )
+      {
+        // TODO: handle exception
+        e.printStackTrace();
+      }
     }
 
-    private void addDisplayElements( final Feature feature )
+    /**
+     * Determines if a feature should be drawn or now
+     */
+    private boolean filterFeature( final Feature feature, final boolean selected, final GM_Envelope bbox, final Filter filter ) throws FilterEvaluationException
     {
-      final DisplayElement[] elements = DisplayElementFactory.createDisplayElement( feature, m_style );
-      if( elements.length > 0 )
-        m_displayElements.put( feature, elements );
-      if( elements.length > m_maxDisplayArray )
-        m_maxDisplayArray = elements.length;
+      /* Is selected/unselected ? */
+      final boolean featureIsSelected = m_selectionManager.isSelected( feature );
+
+      if( selected && !featureIsSelected )
+        return false;
+
+      if( !selected && featureIsSelected )
+        return false;
+
+      if( filter == null )
+        return true;
+
+      return filter.evaluate( feature );
     }
 
-    public void restyle( final Feature feature )
+    private Map<Feature, DisplayElement[]> restyle( final GM_Envelope env )
     {
-      m_displayElements.remove( feature );
-      addDisplayElements( feature );
+      final Map<Feature, DisplayElement[]> displayElements = new HashMap<Feature, DisplayElement[]>();
+
+      if( m_featureList != null && env != null )
+      {
+        final List features = m_featureList.query( env, null );
+        for( final Object next : features )
+        {
+          /* resolve any links */
+          final Feature feature = FeatureHelper.getFeature( getWorkspace(), next );
+          final DisplayElement[] elements = DisplayElementFactory.createDisplayElement( feature, m_style );
+          // TODO: we do not need the display element any more, so inline the createDispplayElement method and only
+          // filter
+          if( elements.length > 0 )
+            displayElements.put( feature, elements );
+        }
+      }
+
+      return displayElements;
     }
   }
 

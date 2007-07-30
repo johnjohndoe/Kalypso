@@ -124,76 +124,68 @@ public class DisplayElementFactory
   /**
    * returns the display elements associated to a feature
    */
-  public static DisplayElement[] createDisplayElement( final Feature feature, final UserStyle[] styles )
+  public static DisplayElement[] createDisplayElement( final Feature feature, final UserStyle style )
   {
-    final ArrayList<DisplayElement> list = new ArrayList<DisplayElement>( styles.length );
+    final ArrayList<DisplayElement> list = new ArrayList<DisplayElement>();
 
     try
     {
       final IFeatureType featureType = feature.getFeatureType();
       final QName featureTypeQName = featureType.getQName();
 
-      for( final UserStyle userStyle : styles )
+      if( style == null )
       {
-        if( userStyle == null )
-        {
-          // create display element from default style
-          final DisplayElement de = buildDisplayElement( feature );
-          if( de != null )
-            list.add( de );
-        }
-        else
-        {
-          final FeatureTypeStyle[] fts = userStyle.getFeatureTypeStyles();
+        // create display element from default style
+        final DisplayElement de = buildDisplayElement( feature );
+        if( de != null )
+          list.add( de );
+      }
+      else
+      {
+        final FeatureTypeStyle[] fts = style.getFeatureTypeStyles();
 
-          for( final FeatureTypeStyle element : fts )
+        for( final FeatureTypeStyle element : fts )
+        {
+          final QName styleFTQName = element.getFeatureTypeName();
+          if( styleFTQName == null //
+              // || featureTypeQName.equals( styleFTQName ) //
+              || GMLSchemaUtilities.substitutes( featureType, styleFTQName ) //
+              || featureTypeQName.getLocalPart().equals( styleFTQName.getLocalPart() ) )
           {
-            final QName styleFTQName = element.getFeatureTypeName();
-            if( styleFTQName == null //
-                // || featureTypeQName.equals( styleFTQName ) //
-                || GMLSchemaUtilities.substitutes( featureType, styleFTQName ) //
-                || featureTypeQName.getLocalPart().equals( styleFTQName.getLocalPart() ) )
+            final Rule[] rules = element.getRules();
+
+            for( final Rule element2 : rules )
             {
-              final Rule[] rules = element.getRules();
+              // does the filter rule apply?
+              final Filter filter = element2.getFilter();
 
-              for( final Rule element2 : rules )
+              if( filter != null )
               {
-
-                // does the filter rule apply?
-                final Filter filter = element2.getFilter();
-
-                if( filter != null )
+                try
                 {
-                  try
-                  {
-                    if( !filter.evaluate( feature ) )
-                      continue;
-                  }
-                  catch( final FilterEvaluationException e )
-                  {
-                    System.out.println( "Error evaluating filter: " + e );
-
+                  if( !filter.evaluate( feature ) )
                     continue;
-                  }
                 }
-
-                // Filter expression is true for this
-                // feature, so a
-                // corresponding DisplayElement has to be
-                // added to the
-                // list
-                final Symbolizer[] symbolizers = element2.getSymbolizers();
-
-                for( final Symbolizer symbolizer : symbolizers )
+                catch( final FilterEvaluationException e )
                 {
-                  final DisplayElement displayElement = DisplayElementFactory.buildDisplayElement( feature, symbolizer );
-                  if( displayElement != null )
-                    list.add( displayElement );
-                }
+                  System.out.println( "Error evaluating filter: " + e );
 
-                // TODO: test, remove
-                if( symbolizers.length == 0 )
-                  list.add( DisplayElementFactory.buildDisplayElement( feature, null ) );
+                  continue;
+                }
+              }
+
+              // Filter expression is true for this
+              // feature, so a
+              // corresponding DisplayElement has to be
+              // added to the
+              // list
+              final Symbolizer[] symbolizers = element2.getSymbolizers();
+
+              for( final Symbolizer symbolizer : symbolizers )
+              {
+                final DisplayElement displayElement = DisplayElementFactory.buildDisplayElement( feature, symbolizer );
+                if( displayElement != null )
+                  list.add( displayElement );
               }
             }
           }

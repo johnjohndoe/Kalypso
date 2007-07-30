@@ -185,6 +185,13 @@ final class KalypsoRemoteWMService extends RemoteWMService
 //
 // System.out.println();
 
+    parameterMap.put( "LAYERS", "dummy" );
+    parameterMap.put( "FORMAT", "image/gif" );
+    parameterMap.put( "WIDTH", "100" );
+    parameterMap.put( "HEIGHT", "100" );
+    parameterMap.put( "SRS", "100" );
+    parameterMap.put( "BBOX", "100" );
+
     return parameterMap;
   }
 

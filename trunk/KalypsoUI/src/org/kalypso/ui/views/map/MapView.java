@@ -52,6 +52,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewSite;
+import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ui.editor.mapeditor.AbstractMapPart;
 
 /**
@@ -132,6 +133,8 @@ public class MapView extends AbstractMapPart implements IViewPart
   public void dispose( )
   {
     getMapPanel().getWidgetManager().setActualWidget( null );
+
+    // TODO: is this really the right place to save the map??
     final String saveOnCloseString = getConfigurationElement().getAttribute( MapView.SAVE_MAP_ON_CLOSE );
     if( "true".equals( saveOnCloseString ) )
     {
@@ -139,6 +142,21 @@ public class MapView extends AbstractMapPart implements IViewPart
       saveMap( file );
     }
     super.dispose();
+  }
+
+  /**
+   * @see org.kalypso.ui.editor.mapeditor.AbstractMapPart#setMapModell(org.kalypso.ogc.gml.GisTemplateMapModell)
+   */
+  @Override
+  protected void setMapModell( final GisTemplateMapModell mapModell )
+  {
+    // dispose old one
+    // TODO: shouldnt this be done by the one who creates it?
+    final GisTemplateMapModell oldModell = getMapModell();
+    if( oldModell != null )
+      oldModell.dispose();
+
+    super.setMapModell( mapModell );
   }
 
   private void saveMap( final IFile file )

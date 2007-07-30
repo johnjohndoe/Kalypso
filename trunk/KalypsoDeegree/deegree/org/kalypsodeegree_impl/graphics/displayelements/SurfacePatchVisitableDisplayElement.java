@@ -65,9 +65,9 @@ public class SurfacePatchVisitableDisplayElement<P extends GM_SurfacePatch> impl
 {
   public interface IVisitorFactory<P2 extends GM_SurfacePatch>
   {
-    public ISurfacePatchVisitor<P2> createVisitor( final Graphics g, final GeoTransform projection, final IElevationColorModel model);
+    public ISurfacePatchVisitor<P2> createVisitor( final Graphics g, final GeoTransform projection, final IElevationColorModel model );
   }
-  
+
   private final IElevationColorModel m_colorModel;
 
   private final ISurfacePatchVisitable<P> m_surfacePatchVisitable;
@@ -88,7 +88,7 @@ public class SurfacePatchVisitableDisplayElement<P extends GM_SurfacePatch> impl
     Assert.isNotNull( surfacePatchVisitable, "surfacePatchVisitable" );
 
     m_feature = feature;
-    
+
     // TODO: remove this color-model stuff
     m_colorModel = colorModel;
 
@@ -129,7 +129,7 @@ public class SurfacePatchVisitableDisplayElement<P extends GM_SurfacePatch> impl
     }
     else
     {
-      return this.m_isHighlighted;
+      return m_isHighlighted;
     }
   }
 
@@ -144,7 +144,7 @@ public class SurfacePatchVisitableDisplayElement<P extends GM_SurfacePatch> impl
     }
     else
     {
-      return this.m_isSelected;
+      return m_isSelected;
     }
   }
 
@@ -169,7 +169,7 @@ public class SurfacePatchVisitableDisplayElement<P extends GM_SurfacePatch> impl
     {
       m_decorated.setSelected( selected );
     }
-    this.m_isSelected = selected;
+    m_isSelected = selected;
   }
 
   public void paint( final Graphics g, final GeoTransform projection )

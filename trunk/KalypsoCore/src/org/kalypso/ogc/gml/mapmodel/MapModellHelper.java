@@ -204,7 +204,6 @@ public class MapModellHelper
     final Rectangle bounds = new Rectangle( width, height );
 
     return MapModellHelper.createImageFromModell( transform, boundingBox, bounds, bounds.width, bounds.height, mapModell );
-
   }
 
   /**

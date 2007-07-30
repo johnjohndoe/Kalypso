@@ -40,19 +40,26 @@ public interface IFeatureSelectionManager extends IFeatureSelection
 {
   /** Completely resets the current selection. */
   public void setSelection( final EasyFeatureWrapper[] selectedFeatures );
-  
+
   public void changeSelection( final Feature[] featuresToRemove, final EasyFeatureWrapper[] featuresToAdd );
-  
-  public void clear();
-  
+
+  public void clear( );
+
   public void addSelectionListener( final IFeatureSelectionListener l );
 
   public void removeSelectionListener( final IFeatureSelectionListener l );
-  
+
   /**
    * Return the list of features
    * 
    * @see org.eclipse.jface.viewers.IStructuredSelection#toList()
    */
-  public List<Feature> toList();
+  public List<Feature> toList( );
+
+  /**
+   * Checks if a feature is contained in this selection manager.
+   * 
+   * @return <code>true</code>, if the given feature is selected, <code>false</code> otherwise.
+   */
+  public boolean isSelected( final Feature feature );
 }

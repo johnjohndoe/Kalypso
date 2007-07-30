@@ -178,7 +178,7 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
         m_commandTarget.resetDirty();
         fireDirty();
       }
-      catch( CoreException e )
+      catch( final CoreException e )
       {
         e.printStackTrace();
 
@@ -244,7 +244,7 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
   {
     IProgressMonitor pm = null;
 
-    IStatusLineManager manager = getStatusLineManager();
+    final IStatusLineManager manager = getStatusLineManager();
     if( manager != null )
       pm = manager.getProgressMonitor();
 
@@ -440,6 +440,7 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#getAdapter(java.lang.Class)
    */
+  @SuppressWarnings("unchecked")
   @Override
   public Object getAdapter( final Class adapter )
   {

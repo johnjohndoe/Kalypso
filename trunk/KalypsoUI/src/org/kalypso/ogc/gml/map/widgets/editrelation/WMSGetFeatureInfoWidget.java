@@ -304,10 +304,11 @@ public class WMSGetFeatureInfoWidget extends AbstractWidget implements IWidgetWi
    */
   public Control createControl( final Composite parent, final FormToolkit toolkit )
   {
-    m_topLevel = new Composite( parent, SWT.NONE );
+    m_topLevel = toolkit.createComposite( parent, SWT.NONE );
     m_topLevel.setLayout( new GridLayout( 1, false ) );
 
     m_formatCombo = new Combo( m_topLevel, SWT.SINGLE );
+    toolkit.adapt( m_formatCombo );
     m_formatCombo.setLayoutData( new GridData( GridData.GRAB_HORIZONTAL ) );
     // formats are not queryable (bug in deegree, Collection of formats does not support toArray() )
     final String[] formats = new String[] { "application/vnd.ogc.gml"
@@ -318,8 +319,7 @@ public class WMSGetFeatureInfoWidget extends AbstractWidget implements IWidgetWi
     m_formatCombo.setItems( formats );
     m_formatCombo.select( 0 );
 
-    m_textInfo = new Text( m_topLevel, SWT.READ_ONLY | SWT.MULTI | SWT.WRAP );
-    m_textInfo.setText( "WMS-GetFeatureInfo" );
+    m_textInfo = toolkit.createText( m_topLevel, "WMS-GetFeatureInfo", SWT.READ_ONLY | SWT.MULTI | SWT.WRAP );
     m_textInfo.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
     return m_topLevel;

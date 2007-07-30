@@ -41,7 +41,6 @@
 package org.kalypso.ui.editor.mapeditor;
 
 import java.awt.Rectangle;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 
 import org.apache.commons.configuration.Configuration;
@@ -86,9 +85,7 @@ import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter2;
-import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilitites;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.metadoc.IExportableObjectFactory;
@@ -191,7 +188,6 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
       /* Update the text. */
       display.asyncExec( new Runnable()
       {
-
         @SuppressWarnings("restriction")
         public void run( )
         {
@@ -268,6 +264,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   public void init( final IViewSite site )
   {
     setSite( site );
+
     initMapPanel( site );
   }
 
@@ -284,9 +281,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     actionBars.updateActionBars();
 
     /* Register this view at the mapPanel. */
-
-    final KalypsoCorePlugin plugin = KalypsoCorePlugin.getDefault();
-    m_mapPanel = new MapPanel( this, plugin.getCoordinatesSystem(), m_selectionManager );
+    m_mapPanel = new MapPanel( this, m_selectionManager );
     m_mapPanel.getWidgetManager().addWidgetChangeListener( m_wcl );
     m_mapPanel.addMapPanelListener( m_mapPanelListener );
 
@@ -427,7 +422,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     final IWorkbenchPartSite site = getSite();
     String partName = null;
     try
-    {      
+    {
       // prepare for exception
       setMapModell( null );
 
@@ -558,16 +553,17 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
 
   protected void setMapModell( final GisTemplateMapModell mapModell )
   {
-    // dispose old one
-    // TODO: shouldnt this be done by the one who creates it?
-    if( m_mapModell != null )
-      m_mapModell.dispose();
-
     m_mapModell = mapModell;
+
     m_mapModellContextSwitcher.setMapModell( mapModell );
 
     if( m_mapPanel != null )
       m_mapPanel.setMapModell( m_mapModell );
+  }
+
+  protected GisTemplateMapModell getMapModell( )
+  {
+    return m_mapModell;
   }
 
   /**

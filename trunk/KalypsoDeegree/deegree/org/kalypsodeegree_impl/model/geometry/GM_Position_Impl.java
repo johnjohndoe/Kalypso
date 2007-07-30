@@ -67,7 +67,6 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 /**
  * A sequence of decimals numbers which when written on a width are a sequence of coordinate positions. The width is
  * derived from the CRS or coordinate dimension of the container.
- * 
  * <p>
  * -----------------------------------------------------------------------
  * </p>
@@ -83,59 +82,48 @@ class GM_Position_Impl implements GM_Position, Serializable
 
   private double[] point = null;
 
-  private double mute = 0.000001;
+  private final double mute = 0.000001;
 
   /**
    * constructor. initializes a point to the coordinate 0/0
    */
-  GM_Position_Impl()
+  GM_Position_Impl( )
   {
-    point = new double[]
-    {
-        0,
-        0,
-        0 };
+    point = new double[] { 0, 0, 0 };
   }
 
   /**
    * constructor
    * 
    * @param x
-   *          x-value of the point
+   *            x-value of the point
    * @param y
-   *          y-value of the point
+   *            y-value of the point
    */
-  GM_Position_Impl( double x, double y )
+  GM_Position_Impl( final double x, final double y )
   {
-    point = new double[]
-    {
-        x,
-        y };
+    point = new double[] { x, y };
   }
 
   /**
    * constructor
    * 
    * @param x
-   *          x-value of the point
+   *            x-value of the point
    * @param y
-   *          y-value of the point
+   *            y-value of the point
    * @param z
-   *          z-value of the point
+   *            z-value of the point
    */
-  GM_Position_Impl( double x, double y, double z )
+  GM_Position_Impl( final double x, final double y, final double z )
   {
-    point = new double[]
-    {
-        x,
-        y,
-        z };
+    point = new double[] { x, y, z };
   }
 
   /**
    * constructor.
    */
-  GM_Position_Impl( double[] coords )
+  GM_Position_Impl( final double[] coords )
   {
     point = coords;
   }
@@ -144,7 +132,7 @@ class GM_Position_Impl implements GM_Position, Serializable
    * returns a shallow copy of the geometry.
    */
   @Override
-  public Object clone()
+  public Object clone( )
   {
     return new GM_Position_Impl( point.clone() );
   }
@@ -152,7 +140,7 @@ class GM_Position_Impl implements GM_Position, Serializable
   /**
    * returns the x-value of this point
    */
-  public double getX()
+  public double getX( )
   {
     return point[0];
   }
@@ -160,7 +148,7 @@ class GM_Position_Impl implements GM_Position, Serializable
   /**
    * returns the y-value of this point
    */
-  public double getY()
+  public double getY( )
   {
     return point[1];
   }
@@ -168,7 +156,7 @@ class GM_Position_Impl implements GM_Position, Serializable
   /**
    * returns the z-value of this point
    */
-  public double getZ()
+  public double getZ( )
   {
     return point[2];
   }
@@ -176,16 +164,16 @@ class GM_Position_Impl implements GM_Position, Serializable
   /**
    * returns the position as a array the first field contains the x- the second field the y-value etc.
    */
-  public double[] getAsArray()
+  public double[] getAsArray( )
   {
-    //return (double[])point.clone();
+    // return (double[])point.clone();
     return point;
   }
 
   /**
    * translate the point by the submitted values. the <code>dz</code>- value will be ignored.
    */
-  public void translate( double[] d )
+  public void translate( final double[] d )
   {
     for( int i = 0; i < d.length; i++ )
     {
@@ -197,10 +185,10 @@ class GM_Position_Impl implements GM_Position, Serializable
    * compares if all field of other are equal to the corresponding fields of this position
    */
   @Override
-  public boolean equals( Object other )
+  public boolean equals( final Object other )
   {
     boolean eq = true;
-    double[] other_ = ( (GM_Position)other ).getAsArray();
+    final double[] other_ = ((GM_Position) other).getAsArray();
 
     if( other_.length != point.length )
     {
@@ -223,13 +211,13 @@ class GM_Position_Impl implements GM_Position, Serializable
   }
 
   @Override
-  public String toString()
+  public String toString( )
   {
     String ret = "GM_Position: ";
 
-    for( int i = 0; i < point.length; i++ )
+    for( final double element : point )
     {
-      ret += ( point[i] + " " );
+      ret += (element + " ");
     }
 
     return ret;
@@ -238,14 +226,24 @@ class GM_Position_Impl implements GM_Position, Serializable
   /**
    * @see org.kalypsodeegree.model.geometry.GM_Position#getDistance(org.kalypsodeegree.model.geometry.GM_Position)
    */
-  public double getDistance( GM_Position other )
+  public double getDistance( final GM_Position other )
   {
-    final double[] otherPos = other.getAsArray();
-    final double[] pos = getAsArray();
-    double square = 0;
-    //    for( int j = 0; j < pos.length; j++ )
-    for( int j = 0; j < 2; j++ )
-      square += Math.pow( pos[j] - otherPos[j], 2d );
-    return Math.pow( square, 0.5d );
+    final double[] otherPoint = other.getAsArray();
+
+    // final double[] pos = getAsArray();
+    // double square = 0;
+    // for( int j = 0; j < 2; j++ )
+    // square += Math.pow( pos[j] - otherPos[j], 2d );
+    //
+    // return Math.pow( square, 0.5d );
+
+    // RMARK: calculating the square / power of 2 directly instead via Math.pow
+    // is noticeable faster.
+
+    final double dx = point[0] - otherPoint[0];
+    final double dy = point[1] - otherPoint[1];
+    final double d = dx * dx + dy * dy;
+    return Math.sqrt( d );
+
   }
 }

@@ -60,6 +60,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree.graphics.sld;
 
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 import org.eclipse.swt.graphics.GC;
@@ -139,5 +140,8 @@ public interface Mark
 
   BufferedImage getAsImage( Feature feature, int intSize ) throws FilterEvaluationException;
 
+  void paintAwt( final Graphics2D g, final Feature feature, final int size ) throws FilterEvaluationException;
+
   void paint( final GC gc, final Feature feature ) throws FilterEvaluationException;
+
 }

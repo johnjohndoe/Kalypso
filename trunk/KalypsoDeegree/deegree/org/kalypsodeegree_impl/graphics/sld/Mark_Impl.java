@@ -97,6 +97,8 @@ public class Mark_Impl implements Mark, Marshallable
 
   private Stroke m_stroke = null;
 
+  private BufferedImage m_image;
+
   /**
    * Constructor for the default <tt>Mark</tt>.
    */
@@ -162,7 +164,7 @@ public class Mark_Impl implements Mark, Marshallable
    */
   public void setFill( final Fill fill )
   {
-    this.m_fill = fill;
+    m_fill = fill;
   }
 
   /**
@@ -186,17 +188,33 @@ public class Mark_Impl implements Mark, Marshallable
    */
   public void setStroke( final Stroke stroke )
   {
-    this.m_stroke = stroke;
+    m_stroke = stroke;
   }
 
   /**
-   * DOCUMENT ME!
-   * 
-   * @param size
-   *            DOCUMENT ME!
-   * @return DOCUMENT ME!
+   * @see org.kalypsodeegree.graphics.sld.Mark#getAsImage(org.kalypsodeegree.model.feature.Feature, int)
    */
   public BufferedImage getAsImage( final Feature feature, final int size ) throws FilterEvaluationException
+  {
+    if( m_image == null )
+    {
+      m_image = new BufferedImage( size + 1, size + 1, BufferedImage.TYPE_INT_ARGB );
+      final Graphics2D g2D = m_image.createGraphics();
+      g2D.setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
+
+      paintAwt( g2D, feature, size );
+
+      g2D.dispose();
+    }
+
+    return m_image;
+  }
+
+  /**
+   * @see org.kalypsodeegree.graphics.sld.Mark#paintAwt(java.awt.Graphics2D, org.kalypsodeegree.model.feature.Feature,
+   *      int)
+   */
+  public void paintAwt( final Graphics2D g, final Feature feature, final int size ) throws FilterEvaluationException
   {
     double fillOpacity = 1.0;
     double strokeOpacity = 1.0;
@@ -220,10 +238,11 @@ public class Mark_Impl implements Mark, Marshallable
       m_wellKnownName = "square";
     }
 
-    final BufferedImage image = new BufferedImage( size + 1, size + 1, BufferedImage.TYPE_INT_ARGB );
-    final Graphics2D g2D = (Graphics2D) image.getGraphics();
-    g2D.setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
+    drawImage( g, size, fillOpacity, strokeOpacity, fillColor, strokeColor );
+  }
 
+  private void drawImage( final Graphics2D g2D, final int size, final double fillOpacity, final double strokeOpacity, final Color fillColor, final Color strokeColor )
+  {
     if( m_wellKnownName.equalsIgnoreCase( "circle" ) )
     {
       drawCircle( g2D, size, fillOpacity, fillColor, strokeOpacity, strokeColor );
@@ -247,10 +266,8 @@ public class Mark_Impl implements Mark, Marshallable
     }
     else
     {
-      return drawSquare( size, fillOpacity, fillColor, strokeOpacity, strokeColor );
+      drawSquare( g2D, size, fillOpacity, fillColor, strokeOpacity, strokeColor );
     }
-
-    return image;
   }
 
   /**
@@ -413,13 +430,9 @@ public class Mark_Impl implements Mark, Marshallable
    *            opacity value for the stroked parts of the image
    * @param strokeColor
    *            <tt>Color</tt> to be used for the strokes
-   * @return image displaying a square
    */
-  public BufferedImage drawSquare( final int size, final double fillOpacity, final Color fillColor, final double strokeOpacity, final Color strokeColor )
+  public void drawSquare( final Graphics2D g2D, final int size, final double fillOpacity, final Color fillColor, final double strokeOpacity, final Color strokeColor )
   {
-    final BufferedImage image = new BufferedImage( size, size, BufferedImage.TYPE_INT_ARGB );
-
-    final Graphics2D g2D = (Graphics2D) image.getGraphics();
     setColor( g2D, fillColor, fillOpacity );
     g2D.fillRect( 0, 0, size, size );
 
@@ -428,8 +441,6 @@ public class Mark_Impl implements Mark, Marshallable
     // this is all unclear! should be 0, 0, size, size
     // there is still an unknown bug.
     g2D.drawRect( 0, 0, size - 1, size - 1 );
-
-    return image;
   }
 
   /**

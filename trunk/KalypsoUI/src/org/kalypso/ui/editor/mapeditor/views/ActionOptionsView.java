@@ -110,8 +110,8 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
    */
   public ActionOptionsView( )
   {
-    super();
     // register as windowlistener at workbench
+
     final IWorkbench workbench = PlatformUI.getWorkbench();
     workbench.addWindowListener( this );
     m_registries.add( workbench );
@@ -273,7 +273,8 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
   {
     m_toolkit = new FormToolkit( parent.getDisplay() );
 
-    m_topLevel = new Composite( parent, SWT.NONE );
+    m_topLevel = m_toolkit.createComposite( parent, SWT.NONE );
+// m_topLevel = new Composite( parent, SWT.NONE );
 
     final Layout gridLayout = new FillLayout();
     m_topLevel.setLayout( gridLayout );
@@ -286,6 +287,8 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
     m_topLevel.setLayoutData( data );
 
     m_group = new Group( m_topLevel, SWT.NONE );
+    m_toolkit.adapt( m_group );
+
     final GridData datag = new GridData();
     datag.horizontalAlignment = GridData.FILL;
     datag.verticalAlignment = GridData.FILL;
@@ -297,7 +300,6 @@ public class ActionOptionsView extends ViewPart implements IWindowListener, IPag
     m_group.setText( "Optionen" );
     m_group.setLayoutData( datag );
     m_topLevel.layout();
-    // m_topLevel.pack();
 
     // update content
     m_modeForce = true;

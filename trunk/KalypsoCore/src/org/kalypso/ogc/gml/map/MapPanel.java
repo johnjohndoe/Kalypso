@@ -45,18 +45,19 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.Point;
-import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.SafeRunner;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -64,6 +65,7 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -71,7 +73,6 @@ import org.kalypso.ogc.gml.KalypsoFeatureThemeSelection;
 import org.kalypso.ogc.gml.command.JMSelector;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
-import org.kalypso.ogc.gml.mapmodel.MapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModellAdapter;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
@@ -88,13 +89,17 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.graphics.transformation.WorldToScreenTransform;
 import org.kalypsodeegree_impl.model.geometry.GM_Envelope_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author vdoemming
  */
 public class MapPanel extends Canvas implements ComponentListener, ISelectionProvider
 {
+  static
+  {
+    System.setProperty( "sun.awt.noerasebackground", "true" );
+  }
+
   // TODO: put this concept into a separate class, in preference an extra map layer
   public List<PointOfinterest> m_pointofInterests = new ArrayList<PointOfinterest>();
 
@@ -148,17 +153,13 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
 
   public static final String WIDGET_SINGLE_SELECT = "SINGLE_SELECT";
 
-  private Image m_mapImage = null;
-
-  private int xOffset = 0;
-
-  private int yOffset = 0;
-
   private int m_width = 0;
 
   private int m_height = 0;
 
-  private boolean validMap = false;
+  private int xOffset = 0;
+
+  private int yOffset = 0;
 
   private IMapModell m_model = null;
 
@@ -229,19 +230,26 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
 
   };
 
-  public MapPanel( final ICommandTarget viewCommandTarget, final CS_CoordinateSystem crs, final IFeatureSelectionManager manager )
+  /** One mutex-rule per panel, so painting jobs for one panel run one after another. */
+  private final ISchedulingRule m_painterMutex = new MutexRule();
+
+  private IPainter m_modellPainter = null;
+
+  public MapPanel( final ICommandTarget viewCommandTarget, final IFeatureSelectionManager manager )
   {
     m_selectionManager = manager;
     m_selectionManager.addSelectionListener( m_globalSelectionListener );
 
     // set empty Modell:
-    final IMapModell mapModell = new MapModell( crs, null );
-    setMapModell( mapModell );
+    setMapModell( null );
+
     m_widgetManager = new WidgetManager( viewCommandTarget, this );
     addMouseListener( m_widgetManager );
     addMouseMotionListener( m_widgetManager );
     addKeyListener( m_widgetManager );
     addComponentListener( this );
+
+    // really needed?
     setVisible( true );
   }
 
@@ -255,15 +263,15 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
     m_selectionManager.removeSelectionListener( m_globalSelectionListener );
 
     m_widgetManager.dispose();
-    
+
     setMapModell( null );
 
     // REMARK: this should not be necessary, but fixes the memory leak problem when opening/closing a .gmt file.
     // TODO: where is this ma panel still referenced from?
     m_selectionListeners.clear();
     m_mapPanelListeners.clear();
-    m_mapImage = null;
 
+    m_modellPainter.dispose();
   }
 
   public void setOffset( final int dx, final int dy ) // used by pan method
@@ -271,13 +279,6 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
     xOffset = dx;
     yOffset = dy;
 
-    repaint();
-  }
-
-  public void clearOffset( ) // used by pan method
-  {
-    xOffset = 0;
-    yOffset = 0;
     repaint();
   }
 
@@ -296,118 +297,126 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
    * @see java.awt.Component#paint(java.awt.Graphics)
    */
   @Override
-  public synchronized void paint( final Graphics g )
+  public void paint( final Graphics outerG )
   {
-    paintMap( g );
+    final Graphics2D outerG2 = (Graphics2D) outerG;
+    outerG2.setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
+    outerG2.setRenderingHint( RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON );
+
+    final int height = getHeight();
+    final int width = getWidth();
+
+    if( height == 0 || width == 0 )
+      return;
+
+    // update dimension
+    if( height != m_height || width != m_width )
+    {
+      m_height = height;
+      m_width = width;
+    }
+
+    final BufferedImage image = new BufferedImage( width, height, BufferedImage.TYPE_INT_ARGB );
+    final Graphics2D g = (Graphics2D) image.getGraphics();
+
+    /* Clear background */
+    g.setColor( Color.white );
+    g.fillRect( 0, 0, width, height );
+
+    g.setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
+    g.setRenderingHint( RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON );
+
+    m_modellPainter.paint( g );
+
+    // TODO: move points of interests out of map panel
+    paintPointOfInterests( g );
 
     paintWidget( g );
-  }
 
-  private void paintMap( final Graphics g )
-  {
-    // to avoid threading issues, get reference once
-    final IMapModell model = m_model;
-
-    if( (model == null) || (model.getThemeSize() == 0) ) // no maps ...
-    {
-      String welcomeText = "Kartenvorlage wird geladen ...";
-
-      if( (model != null) && (model.getThemeSize() == 0) )
-        welcomeText = "Keine Themen vorhanden";
-
-      g.setColor( Color.white );
-      g.fillRect( 0, 0, getWidth(), getHeight() );
-      g.setColor( Color.black );
-      g.drawString( welcomeText, getWidth() / 2 - (g.getFontMetrics().stringWidth( welcomeText ) / 2), getHeight() / 2 );
-      return;
-    }
-
-    if( (getHeight() == 0) || (getWidth() == 0) )
-      return;
-
-    if( (getHeight() != m_height) || (getWidth() != m_width) )
-    { // update dimension
-      m_height = getHeight();
-      m_width = getWidth();
-    }
-
-    if( !hasValidMap() || (m_mapImage == null) )
-    {
-      final Rectangle clipBounds = g.getClipBounds();
-      if( clipBounds != null )
-      {
-        // BUGFIX: see method comment: the synchronization problem was exactly at this point, when the getBoundingBox
-        // method was
-        // called and immediatly afterwards the painting of the mapModell was called.
-        // Problem was, that the repaint method after setting the boundingBox did not
-        // cause a real repaint (maybe Swing checks if we are already repainting?)
-        // remark: even calling a repaint in a SwingWorker did not help
-
-        // we are optimistic and set valid map true, so while creating new image, other methods can invalidate the map
-        // this fixes the error that sometimes a layer is not visible when a mapview opens
-        setValidMap( true );
-
-        final GeoTransform projection = getProjection();
-        final GM_Envelope boundingBox = getBoundingBox();
-        // TODO: have a look at the #createImage methods
-        m_mapImage = MapModellHelper.createImageFromModell( projection, boundingBox, clipBounds, getWidth(), getHeight(), model );
-        if( m_mapImage == null )
-          setValidMap( false );
-        else
-          paintPointOfInterests( m_mapImage.getGraphics() );
-      }
-    }
-
-    if( (xOffset != 0) && (yOffset != 0) ) // to clear backround ...
+    // If offset is set, fill the rest with the background color
+    if( xOffset != 0 || yOffset != 0 ) // to clear backround ...
     {
       final int left = Math.max( 0, xOffset );
-      final int right = Math.min( getWidth(), xOffset + getWidth() );
+      final int right = Math.min( width, xOffset + width );
       final int top = Math.max( 0, yOffset );
-      final int bottom = Math.min( getHeight(), yOffset + getHeight() );
+      final int bottom = Math.min( height, yOffset + height );
 
-      g.setColor( getBackground() );
-      // g.setColor( Color.black );
-
-      g.fillRect( 0, 0, left, getHeight() ); // left
-      g.fillRect( left, 0, right - left, top ); // top
-      g.fillRect( left, bottom, right - left, getHeight() - bottom ); // bottom
-      g.fillRect( right, 0, getWidth() - right, getHeight() ); // right
+      outerG2.setColor( getBackground() );
+      outerG2.fillRect( 0, 0, left, height ); // left
+      outerG2.fillRect( left, 0, right - left, top ); // top
+      outerG2.fillRect( left, bottom, right - left, height - bottom ); // bottom
+      outerG2.fillRect( right, 0, width - right, height ); // right
     }
 
-    // draw map:
-    g.drawImage( m_mapImage, xOffset, yOffset, null );
-    g.setPaintMode();
+    outerG2.drawImage( image, xOffset, yOffset, null );
   }
 
   @Override
   public void update( final Graphics g )
   {
+    // do not clear backround, it flicker even if we double buffer
     paint( g );
   }
 
+  /**
+   * Lets the active widget paint itself.
+   */
   private void paintWidget( final Graphics g )
   {
-    // final Color color = Color.red;
     final Color color = new Color( Color.red.getRed(), Color.red.getGreen(), Color.red.getBlue(), 150 );
+    // why not just use Color.red?
     g.setColor( color );
 
-    g.setClip( 0, 0, getWidth(), getHeight() );
     m_widgetManager.paintWidget( g );
   }
 
-  public void setValidMap( final boolean status )
+  /**
+   * Invalidates the whole map, all data is redrawn freshly.
+   * <p>
+   * Calls {@link #repaint()}.
+   */
+  public void invalidateMap( )
   {
-    validMap = status;
-  }
+    final int x = 0;
+    final int y = 0;
+    final int w = getWidth();
+    final int h = getHeight();
 
-  private boolean hasValidMap( )
-  {
-    return validMap;
-  }
+    synchronized( this )
+    {
+      /* Cancel old job if still running. */
+      if( m_modellPainter != null )
+      {
+        m_modellPainter.dispose();
+        // do not set to null, else we may get NPE in the unsynchronized 'paint'-call
+      }
 
-  private void setValidAll( final boolean status )
-  {
-    setValidMap( status );
+      /* Determine painter depending on state of modell. */
+      if( m_model == null )
+      {
+        if( m_modellPainter == null )
+          m_modellPainter = new TextPainter( "Kartenvorlage wird geladen...", w, h );
+        else
+          m_modellPainter = new TextPainter( "Keine Daten vorhanden...", w, h );
+      }
+      else if( m_model != null && m_model.getThemeSize() == 0 )
+        m_modellPainter = new TextPainter( "Keine Kartenthemen vorhanden", w, h );
+      else
+      {
+        // Why -2 ?
+        m_projection.setDestRect( x - 2, y - 2, w + x, h + y );
+
+        final double scale = MapModellHelper.calcScale( m_model, getBoundingBox(), w, h );
+
+        final ThemePainter themePainter = new ThemePainter( m_model, getProjection(), getBoundingBox(), scale );
+        final MapModellPainter modellPainter = new MapModellPainter( this, themePainter, w, h );
+        modellPainter.setRule( m_painterMutex );
+        modellPainter.schedule();
+        m_modellPainter = modellPainter;
+      }
+    }
+
+    repaint();
   }
 
   /**
@@ -433,6 +442,8 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
     if( m_model != null )
       m_model.addMapModelListener( m_modellListener );
 
+    invalidateMap();
+
     fireMapModelChanged( oldModel, m_model );
   }
 
@@ -441,8 +452,10 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
    */
   protected final void forceRepaint( )
   {
-    setValidAll( false );
-    clearOffset();
+    xOffset = 0;
+    yOffset = 0;
+
+    invalidateMap();
   }
 
   public GM_Envelope getPanToLocationBoundingBox( final double gisMX, final double gisMY )
@@ -515,9 +528,8 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
       // onModellChange( null );
 
       // instead invalidate the map yourself
-      setValidAll( false );
-      clearOffset();
-      repaint();
+      setOffset( 0, 0 );
+      invalidateMap();
     }
 
     fireExtentChanged( oldExtent, m_boundingBox );
@@ -627,8 +639,7 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
       // TODO: only repaint, if selection contains features contained in my themes changes
     }
 
-    setValidAll( false );
-    repaint();
+    invalidateMap();
 
     // TODO: should be fired in the SWT thread, because the global selection listeners
     // need this
@@ -799,9 +810,11 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
   public void addPointOfInterest( final PointOfinterest pointOfInterest )
   {
     m_pointofInterests.add( pointOfInterest );
-    setValidAll( false );
+
     repaint();
+
     final long duration = pointOfInterest.getDuration();
+    final List<PointOfinterest> pointsOfInterest = m_pointofInterests;
     final Thread thread = new Thread()
     {
       /**
@@ -814,21 +827,15 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
         {
           Thread.sleep( duration );
         }
-        catch( InterruptedException e )
+        catch( final InterruptedException e )
         {
           // nothing
         }
-        removePointOfInterest( pointOfInterest );
+        pointsOfInterest.remove( pointOfInterest );
+        repaint();
       }
     };
     thread.start();
-  }
-
-  public void removePointOfInterest( final PointOfinterest pointOfInterest )
-  {
-    m_pointofInterests.remove( pointOfInterest );
-    setValidAll( false );
-    repaint();
   }
 
   private void paintPointOfInterests( final Graphics g )
@@ -965,6 +972,15 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
         l.onMapModelChanged( MapPanel.this, oldModel, newModel );
       }
     } );
+  }
+
+  /**
+   * @see java.awt.Component#isDoubleBuffered()
+   */
+  @Override
+  public boolean isDoubleBuffered( )
+  {
+    return true;
   }
 
 }

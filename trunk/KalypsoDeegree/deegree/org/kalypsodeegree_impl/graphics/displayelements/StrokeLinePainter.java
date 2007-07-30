@@ -60,34 +60,27 @@ import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
  */
 public class StrokeLinePainter
 {
-  private final Stroke m_stroke;
+  private final Image m_image;
 
-  private Image m_image;
+  private final Color m_color;
 
-  private double m_opacity;
+  private final float[] m_dashArray;
 
-  private Color m_color;
+  private final float m_width;
 
-  private float[] m_dashArray;
+  private final int m_cap;
 
-  private float m_width;
+  private final int m_join;
 
-  private int m_cap;
-
-  private int m_join;
-
-  private float m_dashOffset;
+  private final float m_dashOffset;
 
   public StrokeLinePainter( final Stroke stroke, final Feature feature, final UOM uom, final GeoTransform projection ) throws FilterEvaluationException
   {
-    m_stroke = stroke;
+    m_color = FillPolygonPainter.makeColorWithAlpha( stroke.getStroke( feature ), stroke.getOpacity( feature ) );
 
-    m_color = stroke.getStroke( feature );
-    m_opacity = stroke.getOpacity( feature );
-    
-    m_dashArray = m_stroke.getDashArray( feature );
+    m_dashArray = stroke.getDashArray( feature );
     m_dashOffset = stroke.getDashOffset( feature );
-    
+
     m_width = (float) stroke.getWidth( feature );
     m_cap = stroke.getLineCap( feature );
     m_join = stroke.getLineJoin( feature );
@@ -96,7 +89,7 @@ public class StrokeLinePainter
     m_image = graphicStroke == null ? null : graphicStroke.getGraphic().getAsImage( feature, uom, projection );
   }
 
-  public void paintPoses( final Graphics2D g2, final int[][] pos ) 
+  public void paintPoses( final Graphics2D g2, final int[][] pos )
   {
     if( m_image != null )
     {
@@ -114,7 +107,7 @@ public class StrokeLinePainter
       drawLine( g2, pos );
     }
   }
-  
+
   private static void paintImage( final Image image, final Graphics2D g, final int x, final int y, final double rotation )
   {
     // get the current transform
@@ -140,7 +133,7 @@ public class StrokeLinePainter
   {
     // Color & Opacity
     final Graphics2D g2 = (Graphics2D) g;
-    setColor( g2, m_color, m_opacity );
+    g2.setColor( m_color );
 
     // use a simple Stroke if dash == null or its length < 2
     // that's faster
@@ -157,19 +150,4 @@ public class StrokeLinePainter
     g2.setStroke( bs2 );
     g2.drawPolyline( pos[0], pos[1], pos[2][0] );
   }
-
-  private static void setColor( final Graphics2D g2, Color color, final double opacity )
-  {
-    if( opacity < 0.999 )
-    {
-      final int alpha = (int) Math.round( opacity * 255 );
-      final int red = color.getRed();
-      final int green = color.getGreen();
-      final int blue = color.getBlue();
-      color = new Color( red, green, blue, alpha );
-    }
-
-    g2.setColor( color );
-  }
-  
 }

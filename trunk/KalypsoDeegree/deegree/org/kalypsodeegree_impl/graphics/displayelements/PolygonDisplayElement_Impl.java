@@ -62,7 +62,6 @@ package org.kalypsodeegree_impl.graphics.displayelements;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.geom.Area;
 import java.io.Serializable;
 
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
@@ -116,7 +115,6 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
   @Override
   public void paint( final Graphics g, final GeoTransform projection )
   {
-
     final Graphics2D g2 = (Graphics2D) g;
 
     final PolygonSymbolizer sym = (PolygonSymbolizer) getSymbolizer();
