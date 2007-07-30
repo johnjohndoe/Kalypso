@@ -75,7 +75,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.swt.custom.ScrolledCompositeCreator;
-import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilitites;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DUIImages;
 import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.PROF;
@@ -1068,7 +1068,7 @@ public class CreateMainChannelComposite extends Composite
         return Status.OK_STATUS;
       }
     };
-    final IStatus status = ProgressUtilitites.busyCursorWhile( operation, null );
+    final IStatus status = ProgressUtilities.busyCursorWhile( operation, null );
     ErrorDialog.openError( getShell(), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.46" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.45" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
     if( status.isOK() == true )
     {

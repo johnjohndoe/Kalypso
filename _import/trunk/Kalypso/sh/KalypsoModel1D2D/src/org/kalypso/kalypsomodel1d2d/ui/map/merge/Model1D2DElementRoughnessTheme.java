@@ -42,6 +42,7 @@ package org.kalypso.kalypsomodel1d2d.ui.map.merge;
 
 import java.awt.Graphics;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IStaticModel1D2D;
@@ -64,12 +65,12 @@ public class Model1D2DElementRoughnessTheme extends AbstractKalypsoTheme
 
   private IStaticModel1D2D staticModel;
 
-  public Model1D2DElementRoughnessTheme( String name, IMapModell mapModel )
+  public Model1D2DElementRoughnessTheme( final String name, final IMapModell mapModel )
   {
     super( name, "Elemente+Rauhheiten", mapModel );
   }
 
-  public void setStaticModel( IStaticModel1D2D staticModel )
+  public void setStaticModel( final IStaticModel1D2D staticModel )
   {
     this.staticModel = staticModel;
     if( staticModel != null )
@@ -91,13 +92,13 @@ public class Model1D2DElementRoughnessTheme extends AbstractKalypsoTheme
     {
       return null;
     }
-    IFEDiscretisationModel1d2d discrModel = staticModel.getDiscretisationModel();
+    final IFEDiscretisationModel1d2d discrModel = staticModel.getDiscretisationModel();
     if( discrModel == null )
     {
       return null;
     }
-    IFeatureWrapperCollection<IFE1D2DElement> elements = discrModel.getElements();
-    GM_Envelope bbox = elements.getWrappedList().getBoundingBox();
+    final IFeatureWrapperCollection<IFE1D2DElement> elements = discrModel.getElements();
+    final GM_Envelope bbox = elements.getWrappedList().getBoundingBox();
 
     return bbox;
 
@@ -106,9 +107,9 @@ public class Model1D2DElementRoughnessTheme extends AbstractKalypsoTheme
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics,
    *      org.kalypsodeegree.graphics.transformation.GeoTransform, double,
-   *      org.kalypsodeegree.model.geometry.GM_Envelope, boolean)
+   *      org.kalypsodeegree.model.geometry.GM_Envelope, boolean, org.eclipse.core.runtime.IProgressMonitor)
    */
-  public void paint( Graphics g, GeoTransform p, double scale, GM_Envelope bbox, boolean selected )
+  public void paint( final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox, final boolean selected, final IProgressMonitor monitor )
   {
     if( selected )
     {
@@ -124,6 +125,7 @@ public class Model1D2DElementRoughnessTheme extends AbstractKalypsoTheme
   /**
    * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#isLoaded()
    */
+  @Override
   public boolean isLoaded( )
   {
     return super.isLoaded();
@@ -132,6 +134,7 @@ public class Model1D2DElementRoughnessTheme extends AbstractKalypsoTheme
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#getType()
    */
+  @Override
   public String getType( )
   {
     return "GML_MERGE";

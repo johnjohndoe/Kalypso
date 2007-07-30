@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.merge;
 
@@ -46,6 +46,7 @@ import java.awt.image.ImageObserver;
 
 import javax.swing.ImageIcon;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
@@ -76,12 +77,12 @@ public class Model1d2dCalUnitTheme extends AbstractKalypsoTheme
 
   private final ImageIcon imgIcon = new ImageIcon( PluginUtilities.findResource( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), "icons/elcl16/apply.png" ) );
 
-  public Model1d2dCalUnitTheme( String name, IMapModell mapModel )
+  public Model1d2dCalUnitTheme( final String name, final IMapModell mapModel )
   {
     super( name, "Aktuelle Berechnungseinheit", mapModel );
   }
 
-  public void setCalculationUnit( ICalculationUnit calcUnit )
+  public void setCalculationUnit( final ICalculationUnit calcUnit )
   {
     m_calcUnit = calcUnit;
     if( m_calcUnit != null )
@@ -103,9 +104,9 @@ public class Model1d2dCalUnitTheme extends AbstractKalypsoTheme
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics,
    *      org.kalypsodeegree.graphics.transformation.GeoTransform, double,
-   *      org.kalypsodeegree.model.geometry.GM_Envelope, boolean)
+   *      org.kalypsodeegree.model.geometry.GM_Envelope, boolean, org.eclipse.core.runtime.IProgressMonitor)
    */
-  public void paint( Graphics g, GeoTransform p, double scale, GM_Envelope bbox, boolean selected )
+  public void paint( final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox, final boolean selected, final IProgressMonitor monitor )
   {
     if( selected )
     {
@@ -118,28 +119,28 @@ public class Model1d2dCalUnitTheme extends AbstractKalypsoTheme
     markAppliedBoundaryConditions( g, p );
   }
 
-  private void markAppliedBoundaryConditions( Graphics g, GeoTransform p )
+  private void markAppliedBoundaryConditions( final Graphics g, final GeoTransform p )
   {
     if( modelBoundaryConditions != null && m_calcUnit != null )
     {
-// List<IBoundaryCondition> appliedBCs = CalUnitOps.getBoundaryConditions(
-// modelBoundaryConditions,
-// calUnit,
-// 20 );
+      // List<IBoundaryCondition> appliedBCs = CalUnitOps.getBoundaryConditions(
+      // modelBoundaryConditions,
+      // calUnit,
+      // 20 );
 
       final Image img = imgIcon.getImage();
       final int yTrans = (int) (imgIcon.getIconHeight() / -2.0);
       final int xTrans = (int) (imgIcon.getIconWidth() / -2.0);
-      for( IFeatureWrapper2 bc : modelBoundaryConditions )
+      for( final IFeatureWrapper2 bc : modelBoundaryConditions )
       {
         if( bc instanceof IBoundaryCondition )
         {
           if( CalcUnitOps.isBoundaryConditionOf( m_calcUnit, (IBoundaryCondition) bc, 20 ) )
           {
-            GM_Point position = ((IBoundaryCondition) bc).getPosition();
-            double gPosX = p.getDestX( position.getX() ) + xTrans;
-            double gPosY = p.getDestY( position.getY() ) + yTrans;
-            ImageObserver observer = null;
+            final GM_Point position = ((IBoundaryCondition) bc).getPosition();
+            final double gPosX = p.getDestX( position.getX() ) + xTrans;
+            final double gPosY = p.getDestY( position.getY() ) + yTrans;
+            final ImageObserver observer = null;
             g.drawImage( img, (int) gPosX, (int) gPosY, observer );
           }
         }
@@ -165,7 +166,7 @@ public class Model1d2dCalUnitTheme extends AbstractKalypsoTheme
     return "GML_MERGE";
   }
 
-  public void setModelBoundaryConditions( IFlowRelationshipModel bcs )
+  public void setModelBoundaryConditions( final IFlowRelationshipModel bcs )
   {
     this.modelBoundaryConditions = bcs;
   }

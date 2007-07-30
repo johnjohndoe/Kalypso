@@ -140,14 +140,11 @@ public class KeyBasedDataModelUtil
 
     final Runnable repaintRunnable = new Runnable()
     {
-
       public void run( )
       {
-        System.out.println( "repainting the mappppppppp!" );
-        ((MapPanel) mapPanelEntry).setValidMap( false );
-        ((MapPanel) mapPanelEntry).repaint();
+        // TODO: probably wrong to call it from here; instead let the theme fire the corresponding event
+        ((MapPanel) mapPanelEntry).invalidateMap();
       }
-
     };
 
     ((Display) displayEntry).asyncExec( repaintRunnable );
