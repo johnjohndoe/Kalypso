@@ -60,6 +60,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.graphics.sld;
 
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -203,6 +204,19 @@ public class ExternalGraphic_Impl implements ExternalGraphic, Marshallable
 
     }
     return m_image;
+  }
+
+  /**
+   * @see org.kalypsodeegree.graphics.sld.ExternalGraphic#paintAwt(java.awt.Graphics2D)
+   */
+  public void paintAwt( final Graphics2D g )
+  {
+    /* Make sure buffered image is created */
+    getAsImage();
+
+    // Is there a better way? Is it possible to render a Jai-Image directly into an awt-graphics?
+    if( m_image != null )
+      g.drawImage( m_image, 0, 0, m_image.getWidth(), m_image.getHeight(), null );
   }
 
   /**

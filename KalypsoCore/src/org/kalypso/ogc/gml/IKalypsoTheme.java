@@ -42,7 +42,9 @@ package org.kalypso.ogc.gml;
 
 import java.awt.Graphics;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -69,7 +71,7 @@ public interface IKalypsoTheme extends IAdaptable, IWorkbenchAdapter
 
   public void dispose( );
 
-  public void paint( final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox, final boolean selected );
+  public void paint( final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox, final boolean selected, final IProgressMonitor monitor ) throws CoreException;
 
   /**
    * returns the name of the layer

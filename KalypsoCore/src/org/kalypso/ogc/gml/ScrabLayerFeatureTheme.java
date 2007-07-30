@@ -34,6 +34,8 @@ import java.awt.Graphics;
 import java.net.URL;
 import java.util.ArrayList;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -202,13 +204,12 @@ public class ScrabLayerFeatureTheme extends AbstractKalypsoTheme implements IKal
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics,
    *      org.kalypsodeegree.graphics.transformation.GeoTransform, double,
-   *      org.kalypsodeegree.model.geometry.GM_Envelope, boolean)
+   *      org.kalypsodeegree.model.geometry.GM_Envelope, boolean, org.eclipse.core.runtime.IProgressMonitor)
    */
-  public void paint( final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox, final boolean selected )
+  public void paint( final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox, final boolean selected, final IProgressMonitor monitor ) throws CoreException
   {
     if( m_scrabLayerTheme != null )
-      m_scrabLayerTheme.paint( g, p, scale, bbox, selected );
-
+      m_scrabLayerTheme.paint( g, p, scale, bbox, selected, monitor );
   }
 
   /**

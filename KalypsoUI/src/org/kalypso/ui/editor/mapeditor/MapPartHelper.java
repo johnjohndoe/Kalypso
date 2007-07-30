@@ -93,7 +93,7 @@ public class MapPartHelper
 
   public static Control createMapPanelPartControl( final Composite parent, final MapPanel mapPanel, final IWorkbenchPartSite site )
   {
-    final Composite composite = new Composite( parent, SWT.RIGHT | SWT.EMBEDDED );
+    final Composite composite = new Composite( parent, SWT.RIGHT | SWT.EMBEDDED | SWT.NO_BACKGROUND );
     // create MapPanel
     final Frame virtualFrame = SWT_AWT.new_Frame( composite );
     virtualFrame.setVisible( true );
@@ -136,7 +136,7 @@ public class MapPartHelper
     {
       manager.add( new GroupMarker( "themeActions" ) );
 
-      /* Add a 'new'  menu corresponding to the theme's feature type. */
+      /* Add a 'new' menu corresponding to the theme's feature type. */
       final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) activeTheme;
       final ThemeFeatureSelection themeFeatureSelection = new ThemeFeatureSelection( theme );
       final IMenuManager newManager = FeatureActionUtilities.createFeatureNewMenu( themeFeatureSelection, selectionManager );
@@ -171,14 +171,14 @@ public class MapPartHelper
     // add additions seperator: if not, eclipse whines
     manager.add( new Separator( IWorkbenchActionConstants.MB_ADDITIONS ) );
   }
-  
+
   private static class ThemeFeatureSelection implements IFeatureSelection
   {
     private final IKalypsoFeatureTheme m_theme;
 
-    private FeatureAssociationTypeElement m_fate;
+    private final FeatureAssociationTypeElement m_fate;
 
-    private List<FeatureAssociationTypeElement> m_selection;
+    private final List<FeatureAssociationTypeElement> m_selection;
 
     public ThemeFeatureSelection( final IKalypsoFeatureTheme theme )
     {
@@ -240,7 +240,7 @@ public class MapPartHelper
     /**
      * @see org.kalypso.ogc.gml.selection.IFeatureSelection#getWorkspace(org.kalypsodeegree.model.feature.Feature)
      */
-    public CommandableWorkspace getWorkspace( Feature feature )
+    public CommandableWorkspace getWorkspace( final Feature feature )
     {
       return m_theme.getWorkspace();
     }

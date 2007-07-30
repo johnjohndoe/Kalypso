@@ -60,6 +60,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree.graphics.sld;
 
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 import org.eclipse.swt.graphics.GC;
@@ -105,6 +106,17 @@ public interface Graphic
    *             if the evaluation fails
    */
   BufferedImage getAsImage( final Feature feature, final UOM uom, final GeoTransform transform ) throws FilterEvaluationException;
+
+  /**
+   * Paints this object into an awt graphics context.
+   * <p>
+   * The graphics must be correctly rotated and centered onto the target position.
+   * </p>
+   * 
+   * @throws FilterEvaluationException
+   *             if the evaluation fails
+   */
+  public void paintAwt( final Graphics2D g, final int size, final Feature feature ) throws FilterEvaluationException;
 
   public void paint( final GC gc, final Feature feature ) throws FilterEvaluationException;
 
@@ -212,4 +224,5 @@ public interface Graphic
    *            rotation to be set for the graphic
    */
   void setRotation( double rotation );
+
 }

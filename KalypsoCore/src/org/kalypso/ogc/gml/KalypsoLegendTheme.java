@@ -48,6 +48,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
@@ -137,9 +138,9 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics,
    *      org.kalypsodeegree.graphics.transformation.GeoTransform, double,
-   *      org.kalypsodeegree.model.geometry.GM_Envelope, boolean)
+   *      org.kalypsodeegree.model.geometry.GM_Envelope, boolean, org.eclipse.core.runtime.IProgressMonitor)
    */
-  public void paint( final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox, final boolean selected )
+  public void paint( final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox, final boolean selected, final IProgressMonitor monitor )
   {
     if( selected )
       return;
@@ -272,7 +273,7 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
     g.clipRect( 0, 0, width, height );
     final Feature feature = FeatureFactory.createFeature( null, null, "legende", ft, false );
     KalypsoLegendUtilities.updatePropertiesForLegend( feature );
-    final DisplayElement[] des = DisplayElementFactory.createDisplayElement( feature, new UserStyle[] { style } );
+    final DisplayElement[] des = DisplayElementFactory.createDisplayElement( feature, style );
     for( final DisplayElement de : des )
     {
       de.paint( g, transform );

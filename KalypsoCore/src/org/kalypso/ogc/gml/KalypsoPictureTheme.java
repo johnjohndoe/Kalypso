@@ -36,6 +36,7 @@ import java.util.logging.Logger;
 import javax.media.jai.TiledImage;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -92,9 +93,9 @@ abstract public class KalypsoPictureTheme extends AbstractKalypsoTheme
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics,
    *      org.kalypsodeegree.graphics.transformation.GeoTransform, double,
-   *      org.kalypsodeegree.model.geometry.GM_Envelope, boolean)
+   *      org.kalypsodeegree.model.geometry.GM_Envelope, boolean, org.eclipse.core.runtime.IProgressMonitor)
    */
-  public void paint( final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox, final boolean selected )
+  public void paint( final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox, final boolean selected, final IProgressMonitor monitor )
   {
     if( selected )
     {

@@ -52,9 +52,9 @@ import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
  */
 public class ColorMapConverterData
 {
-  private Stroke m_stroke;
+  private final Stroke m_stroke;
 
-  private String m_label;
+  private final String m_label;
 
   private double m_quantity;
 
@@ -71,7 +71,7 @@ public class ColorMapConverterData
 
   private FillPolygonPainter m_polygonPainter;
 
-  public ColorMapConverterData( Stroke stroke, Feature feature, UOM uom, final GeoTransform projection, String label, double quantity ) throws FilterEvaluationException
+  public ColorMapConverterData( final Stroke stroke, final Feature feature, final UOM uom, final GeoTransform projection, final String label, final double quantity ) throws FilterEvaluationException
   {
     m_stroke = stroke;
     m_label = label;
@@ -80,7 +80,7 @@ public class ColorMapConverterData
     m_linePainter = new StrokeLinePainter( m_stroke, feature, uom, projection );
   }
 
-  public ColorMapConverterData( Fill fill, Stroke stroke, Feature feature, UOM uom, final GeoTransform projection, String label, double from, double to ) throws FilterEvaluationException
+  public ColorMapConverterData( final Fill fill, final Stroke stroke, final Feature feature, final UOM uom, final GeoTransform projection, final String label, final double from, final double to ) throws FilterEvaluationException
   {
     m_fill = fill;
     m_stroke = stroke;

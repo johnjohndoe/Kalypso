@@ -304,7 +304,7 @@ public class Graphic_Impl implements Graphic, Marshallable
   }
 
   /**
-   * Returns the size in pixel, interprted in the defined units, any default behaviours are applied.
+   * Returns the size in pixel, interpreted in the defined units, any default behaviours are applied.
    */
   public int getNormalizedSize( final Feature feature, final UOM uom, final GeoTransform transform ) throws FilterEvaluationException
   {
@@ -313,14 +313,15 @@ public class Graphic_Impl implements Graphic, Marshallable
     // if size is unspecified, use the height of the first ExternalGraphic
     if( size < 0 )
     {
+      // TODO: this probably leads to unexpected results
+      // Better paint each image individually?
       for( int i = 0; i < m_marksAndExtGraphics.size(); i++ )
       {
         final Object o = m_marksAndExtGraphics.get( i );
-        BufferedImage extImage = null;
 
         if( o instanceof ExternalGraphic )
         {
-          extImage = ((ExternalGraphic) o).getAsImage();
+          final BufferedImage extImage = ((ExternalGraphic) o).getAsImage();
           size = extImage.getHeight();
           break;
         }
@@ -334,8 +335,8 @@ public class Graphic_Impl implements Graphic, Marshallable
     switch( uom )
     {
       case meter:
-        // REMARK: we transform here a length near the origina of the coordinate sytem, which is not correct
-        // for all coordinate systems.
+        // REMARK: we transform here a length near the origin of the coordinate sytem, which is probably not correct
+        // for most coordinate systems.
         final GM_Envelope sourceRect = transform.getSourceRect();
         final double sizeFromNull = transform.getDestX( sourceRect.getMin().getX() );
         final double sizeFromMeters = transform.getDestX( sourceRect.getMin().getX() + size );
@@ -348,7 +349,6 @@ public class Graphic_Impl implements Graphic, Marshallable
       case pixel:
       default:
         return (int) size;
-
     }
   }
 
@@ -360,9 +360,8 @@ public class Graphic_Impl implements Graphic, Marshallable
    */
   public void setSize( final double size )
   {
-    ParameterValueType pvt = null;
-    pvt = StyleFactory.createParameterValueType( "" + size );
-    this.m_size = pvt;
+    final ParameterValueType pvt = StyleFactory.createParameterValueType( "" + size );
+    m_size = pvt;
   }
 
   /**
@@ -406,9 +405,8 @@ public class Graphic_Impl implements Graphic, Marshallable
    */
   public void setRotation( final double rotation )
   {
-    ParameterValueType pvt = null;
-    pvt = StyleFactory.createParameterValueType( "" + rotation );
-    this.m_rotation = pvt;
+    final ParameterValueType pvt = StyleFactory.createParameterValueType( "" + rotation );
+    m_rotation = pvt;
   }
 
   /**
@@ -423,45 +421,57 @@ public class Graphic_Impl implements Graphic, Marshallable
    */
   public BufferedImage getAsImage( final Feature feature, final UOM uom, final GeoTransform transform ) throws FilterEvaluationException
   {
-    // TODO: replace with the new swt paint method
-    // problems: drawing the a rotated image later changes the palette somehow...
-
-    final int intSize = getNormalizedSize( feature, uom, transform );
-    if( intSize <= 0 )
+    final int size = getNormalizedSize( feature, uom, transform );
+    if( size <= 0 )
       return new BufferedImage( 1, 1, BufferedImage.TYPE_INT_ARGB );
 
-    final BufferedImage image = new BufferedImage( intSize + 1, intSize + 1, BufferedImage.TYPE_INT_ARGB );
-
-    final Graphics2D g = (Graphics2D) image.getGraphics();
+    final BufferedImage image = new BufferedImage( size + 1, size + 1, BufferedImage.TYPE_INT_ARGB );
+    final Graphics2D g = image.createGraphics();
     g.setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
+
+    paintAwt( g, size, feature );
+
+    g.dispose();
+
+    return image;
+  }
+
+  /**
+   * Paints this Graphics object directly into the awt-graphics.
+   * <p>
+   * This is much faster than creating a BufferedImage as in {@link #getAsImage(Feature, UOM, GeoTransform)} and should
+   * be therefore used in preference.
+   * </p>
+   * 
+   * @see org.kalypsodeegree.graphics.sld.Graphic#paintAwt(java.awt.Graphics2D,
+   *      org.kalypsodeegree.model.feature.Feature, org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM,
+   *      org.kalypsodeegree.graphics.transformation.GeoTransform)
+   */
+  public void paintAwt( final Graphics2D g, final int size, final Feature feature ) throws FilterEvaluationException
+  {
+    if( size <= 0 )
+      return; // if size is too small, just do nothing
+
+    if( m_marksAndExtGraphics.size() == 0 )
+    {
+      // use the default Mark if there are no Marks / ExternalGraphics specified at all
+      new Mark_Impl().paintAwt( g, feature, size );
+      return;
+    }
 
     for( int i = 0; i < m_marksAndExtGraphics.size(); i++ )
     {
       final Object o = m_marksAndExtGraphics.get( i );
-      BufferedImage extImage = null;
-
-      if( o instanceof ExternalGraphic )
-      {
-        extImage = ((ExternalGraphic) o).getAsImage();
-      }
-      else
-      {
-        extImage = ((Mark) o).getAsImage( feature, intSize );
-      }
-
-      g.drawImage( extImage, 0, 0, intSize + 1, intSize + 1, null );
+      paintAwtMarkAndExtGraphic( g, feature, size, o );
     }
+  }
 
-    // use the default Mark if there are no Marks / ExternalGraphics
-    // specified at all
-    if( m_marksAndExtGraphics.size() == 0 )
-    {
-      final Mark mark = new Mark_Impl();
-      final BufferedImage extImage = mark.getAsImage( feature, intSize );
-      g.drawImage( extImage, 0, 0, intSize + 1, intSize + 1, null );
-    }
-
-    return image;
+  private void paintAwtMarkAndExtGraphic( final Graphics2D g, final Feature feature, final int size, final Object o ) throws FilterEvaluationException
+  {
+    if( o instanceof ExternalGraphic )
+      ((ExternalGraphic) o).paintAwt( g );
+    else
+      ((Mark) o).paintAwt( g, feature, size );
   }
 
   /**

@@ -241,9 +241,9 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics,
    *      org.kalypsodeegree.graphics.transformation.GeoTransform, double,
-   *      org.kalypsodeegree.model.geometry.GM_Envelope, boolean)
+   *      org.kalypsodeegree.model.geometry.GM_Envelope, boolean, org.eclipse.core.runtime.IProgressMonitor)
    */
-  public void paint( final Graphics g, final GeoTransform geoTransform, final double scale, final GM_Envelope bbox, final boolean selected )
+  public void paint( final Graphics g, final GeoTransform geoTransform, final double scale, final GM_Envelope bbox, final boolean selected, final IProgressMonitor monitor )
   {
     if( selected ) // image can not be selected
       return;

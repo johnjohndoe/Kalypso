@@ -61,6 +61,7 @@
 
 package org.kalypsodeegree.graphics.sld;
 
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -123,6 +124,11 @@ public interface ExternalGraphic
    * @return the external graphic as BufferedImage
    */
   BufferedImage getAsImage( );
+
+  /**
+   * Paints the external graphic into an awt graphics context.
+   */
+  void paintAwt( final Graphics2D g );
 
   void paint( final GC gc );
 

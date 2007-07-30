@@ -43,28 +43,29 @@ package org.kalypso.ogc.gml.loader;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.net.UrlResolver;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
-import org.kalypsodeegree_impl.model.feature.visitors.ResortVisitor;
 import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author Belger
- *  
  */
 public class ShapeLoader extends AbstractLoader
 {
@@ -73,7 +74,7 @@ public class ShapeLoader extends AbstractLoader
   /**
    * @see org.kalypso.loader.ILoader#getDescription()
    */
-  public String getDescription()
+  public String getDescription( )
   {
     return "ESRI Shape";
   }
@@ -83,9 +84,11 @@ public class ShapeLoader extends AbstractLoader
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  protected Object loadIntern( final String location, final URL context, final IProgressMonitor monitor )
-      throws LoaderException
+  protected Object loadIntern( final String location, final URL context, final IProgressMonitor monitor ) throws LoaderException
   {
+    /* Files that get deleted at the end of this operation. */
+    final List<File> filesToDelete = new ArrayList<File>();
+
     try
     {
       // eventuelle vorhandenen Information zum CRS abschneiden
@@ -96,11 +99,11 @@ public class ShapeLoader extends AbstractLoader
       if( index != -1 && index + 1 < location.length() )
       {
         sourceSrs = location.substring( index + 1 );
-
         shpSource = location.substring( 0, index );
       }
       else
       {
+        // TODO: better change to Kalypso default crs
         sourceSrs = "EPSG:4326";
         shpSource = location;
       }
@@ -118,7 +121,7 @@ public class ShapeLoader extends AbstractLoader
       final URL shxURL = urlResolver.resolveURL( context, shpSource + ".shx" );
 
       // leider können Shapes nicht aus URL geladen werden -> protocoll checken
-      File sourceFile = null;
+      final File sourceFile;
       final IPath resource = ResourceUtilities.findPathFromURL( sourceURL );
       if( resource != null )
       {
@@ -128,10 +131,28 @@ public class ShapeLoader extends AbstractLoader
         dbfResource = ResourceUtilities.findFileFromURL( dbfURL );
         shxResource = ResourceUtilities.findFileFromURL( shxURL );
       }
+      else if( sourceURL.getProtocol().startsWith( "file" ) )
+      {
+        sourceFile = new File( sourceURL.getPath() );
+      }
       else
       {
-        if( sourceURL.getProtocol().startsWith( "file:" ) )
-          sourceFile = new File( sourceURL.getPath() );
+        /* If everything else fails, we copy the resources to local files */
+        sourceFile = File.createTempFile( "shapeLocalizedFiled", "" );
+        final String sourceFilePath = sourceFile.getAbsolutePath();
+
+        final File shpFile = new File( sourceFilePath + ".shp" );
+        final File dbfFile = new File( sourceFilePath + ".dbf" );
+        final File shxFile = new File( sourceFilePath + ".shx" );
+
+        filesToDelete.add( sourceFile );
+        filesToDelete.add( shpFile );
+        filesToDelete.add( dbfFile );
+        filesToDelete.add( shxFile );
+
+        FileUtils.copyURLToFile( shpURL, shpFile );
+        FileUtils.copyURLToFile( dbfURL, dbfFile );
+        FileUtils.copyURLToFile( shxURL, shxFile );
       }
 
       if( sourceFile == null )
@@ -139,17 +160,16 @@ public class ShapeLoader extends AbstractLoader
 
       // Workspace laden
       final ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
-      final CS_CoordinateSystem sourceCrs = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export(
-          csFac.getCSByName( sourceSrs ) );
+      final CS_CoordinateSystem sourceCrs = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export( csFac.getCSByName( sourceSrs ) );
 
-      final CS_CoordinateSystem targetCRS = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
+      final CS_CoordinateSystem targetCRS = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
       final GMLWorkspace gmlWorkspace = ShapeSerializer.deserialize( sourceFile.getAbsolutePath(), sourceCrs );
       final CommandableWorkspace workspace = new CommandableWorkspace( gmlWorkspace );
 
       try
       {
         workspace.accept( new TransformVisitor( targetCRS ), workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
-        workspace.accept( new ResortVisitor(), workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
+// workspace.accept( new ResortVisitor(), workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
       }
       catch( final Throwable e1 )
       {
@@ -170,6 +190,11 @@ public class ShapeLoader extends AbstractLoader
       e.printStackTrace();
       throw new LoaderException( e );
     }
+    finally
+    {
+      for( final File file : filesToDelete )
+        file.delete();
+    }
   }
 
   @Override
@@ -177,8 +202,8 @@ public class ShapeLoader extends AbstractLoader
   {
     try
     {
-      final GMLWorkspace workspace = (GMLWorkspace)data;
-      URL shpURL = m_urlResolver.resolveURL( context, source.split( "#" )[0] );
+      final GMLWorkspace workspace = (GMLWorkspace) data;
+      final URL shpURL = m_urlResolver.resolveURL( context, source.split( "#" )[0] );
 
       final IFile file = ResourceUtilities.findFileFromURL( shpURL );
       if( file != null )
@@ -190,7 +215,7 @@ public class ShapeLoader extends AbstractLoader
       else
         throw new LoaderException( "Die URL kann nicht beschrieben werden: " + shpURL );
     }
-    catch( MalformedURLException e )
+    catch( final MalformedURLException e )
     {
       e.printStackTrace();
       throw new LoaderException( "Der angegebene Pfad ist ungültig: " + source + "\n" + e.getLocalizedMessage(), e );

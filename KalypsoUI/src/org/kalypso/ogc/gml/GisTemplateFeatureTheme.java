@@ -190,10 +190,10 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
    *      org.kalypsodeegree.graphics.transformation.GeoTransform, double,
    *      org.kalypsodeegree.model.geometry.GM_Envelope, boolean)
    */
-  public void paint( final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox, final boolean selected )
+  public void paint( final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox, final boolean selected, final IProgressMonitor monitor ) throws CoreException
   {
     if( m_theme != null )
-      m_theme.paint( g, p, scale, bbox, selected );
+      m_theme.paint( g, p, scale, bbox, selected, monitor );
   }
 
   /**

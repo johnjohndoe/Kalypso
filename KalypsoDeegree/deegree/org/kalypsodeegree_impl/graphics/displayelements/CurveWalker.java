@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,27 +36,27 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- 
+
+
  history:
- 
+
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
- interface-compatibility to deegree is wanted but not retained always. 
- 
- If you intend to use this software in other ways than in kalypso 
+ interface-compatibility to deegree is wanted but not retained always.
+
+ If you intend to use this software in other ways than in kalypso
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
 
- all modifications are licensed as deegree, 
+ all modifications are licensed as deegree,
  original copyright:
- 
+
  Copyright (C) 2001 by:
  EXSE, Department of Geography, University of Bonn
  http://www.giub.uni-bonn.de/exse/
  lat/lon GmbH
  http://www.lat-lon.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.graphics.displayelements;
 
@@ -77,21 +77,19 @@ import java.util.List;
 public class CurveWalker
 {
 
-  private int minX, minY, maxX, maxY;
+  private final int minX, minY, maxX, maxY;
 
   /**
-   * 
-   * 
    * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
    * @version 2.11.2002
    */
-  public CurveWalker( Rectangle bounds )
+  public CurveWalker( final Rectangle bounds )
   {
-    minX = (int)( bounds.getMinX() + 0.5 );
-    minY = (int)( bounds.getMinY() + 0.5 );
-    maxX = (int)( bounds.getMaxX() + 0.5 );
-    maxY = (int)( bounds.getMaxY() + 0.5 );
-    //System.out.println (minX + "," + minY + " " + maxX + "," + maxY);
+    minX = (int) (bounds.getMinX() + 0.5);
+    minY = (int) (bounds.getMinY() + 0.5);
+    maxX = (int) (bounds.getMaxX() + 0.5);
+    maxY = (int) (bounds.getMaxY() + 0.5);
+    // System.out.println (minX + "," + minY + " " + maxX + "," + maxY);
   }
 
   /**
@@ -102,18 +100,18 @@ public class CurveWalker
    * @param pos
    * @return ArrayList containing Arrays of Label-objects
    */
-  public List<double[]> createPositions( int[][] pos, double width )
+  public List<double[]> createPositions( final int[][] pos, final double width )
   {
     // walk along the linestring and "collect" possible placement positions
-    int w = (int)width;
+    final int w = (int) width;
     int lastX = pos[0][0];
     int lastY = pos[1][0];
-    int count = pos[2][0];
+    final int count = pos[2][0];
     int boxStartX = lastX;
     int boxStartY = lastY;
 
     final ArrayList<double[]> labels = new ArrayList<double[]>( 100 );
-    List eCandidates = Collections.synchronizedList( new ArrayList( 100 ) );
+    final List<int[]> eCandidates = Collections.synchronizedList( new ArrayList<int[]>( 100 ) );
     int i = 0;
 
     while( i < count )
@@ -125,71 +123,52 @@ public class CurveWalker
       if( getDistance( boxStartX, boxStartY, x, y ) >= w )
       {
 
-        int[] p0 = new int[]
-        {
-            boxStartX,
-            boxStartY };
-        int[] p1 = new int[]
-        {
-            lastX,
-            lastY };
-        int[] p2 = new int[]
-        {
-            x,
-            y };
+        final int[] p0 = new int[] { boxStartX, boxStartY };
+        final int[] p1 = new int[] { lastX, lastY };
+        final int[] p2 = new int[] { x, y };
 
-        int[] p = findPointWithDistance( p0, p1, p2, w );
+        final int[] p = findPointWithDistance( p0, p1, p2, w );
         x = p[0];
         y = p[1];
 
         lastX = x;
         lastY = y;
-        int boxEndX = x;
-        int boxEndY = y;
+        final int boxEndX = x;
+        final int boxEndY = y;
 
         // does the linesegment run from right to left?
-        //				if (x <= boxStartX) {
-        //					boxEndX = boxStartX;
-        //					boxEndY = boxStartY;
-        //					boxStartX = x;
-        //					boxStartY = y;
-        //					x = boxEndX;
-        //					y = boxEndY;
-        //				}
+        // if (x <= boxStartX) {
+        // boxEndX = boxStartX;
+        // boxEndY = boxStartY;
+        // boxStartX = x;
+        // boxStartY = y;
+        // x = boxEndX;
+        // y = boxEndY;
+        // }
 
-        //				if (boxEndX <= boxStartX) {
-        //					// left to right
-        //					int tmpX = boxStartX;
-        //					int tmpY = boxStartY;
-        //					boxStartX = boxEndX;
-        //					boxStartY = boxEndY;
-        //					boxEndX = tmpX;
-        //					boxEndY = tmpY;
-        //				}
+        // if (boxEndX <= boxStartX) {
+        // // left to right
+        // int tmpX = boxStartX;
+        // int tmpY = boxStartY;
+        // boxStartX = boxEndX;
+        // boxStartY = boxEndY;
+        // boxEndX = tmpX;
+        // boxEndY = tmpY;
+        // }
 
-        double rotation = getRotation( boxStartX, boxStartY, boxEndX, boxEndY );
-        calcDeviation( new int[]
-        {
-            boxStartX,
-            boxStartY }, new int[]
-        {
-            boxEndX,
-            boxEndY }, eCandidates );
+        final double rotation = getRotation( boxStartX, boxStartY, boxEndX, boxEndY );
+        calcDeviation( new int[] { boxStartX, boxStartY }, new int[] { boxEndX, boxEndY }, eCandidates );
 
         // only add position if it is visible
         if( boxStartX >= minX && boxStartX <= maxX && boxStartY >= minY && boxStartY <= maxY )
         {
-          labels.add( new double[]
-          {
-              boxStartX,
-              boxStartY,
-              rotation } );
-          //					if (boxEndX >= boxStartX) {
-          //						labels.add (new double [] {boxStartX, boxStartY, rotation +
+          labels.add( new double[] { boxStartX, boxStartY, rotation } );
+          // if (boxEndX >= boxStartX) {
+          // labels.add (new double [] {boxStartX, boxStartY, rotation +
           // Math.PI});
-          //					} else {
-          //						labels.add (new double [] {boxStartX, boxStartY, rotation});
-          //					}
+          // } else {
+          // labels.add (new double [] {boxStartX, boxStartY, rotation});
+          // }
         }
 
         boxStartX = lastX;
@@ -198,10 +177,7 @@ public class CurveWalker
       }
       else
       {
-        eCandidates.add( new int[]
-        {
-            x,
-            y } );
+        eCandidates.add( new int[] { x, y } );
         lastX = x;
         lastY = y;
         i++;
@@ -219,25 +195,25 @@ public class CurveWalker
    * <p>
    * 
    * @param start
-   *          starting point of the linestring
+   *            starting point of the linestring
    * @param end
-   *          end point of the linestring
+   *            end point of the linestring
    * @param points
-   *          points in between
+   *            points in between
    */
-  public double[] calcDeviation( int[] start, int[] end, List points )
+  public double[] calcDeviation( int[] start, int[] end, final List<int[]> points )
   {
 
     // extreme deviation to the left
     double d1 = 0.0;
     // extreme deviation to the right
     double d2 = 0.0;
-    Iterator it = points.iterator();
+    final Iterator<int[]> it = points.iterator();
 
     // eventually swap start and end point
     if( start[0] > end[0] )
     {
-      int[] tmp = start;
+      final int[] tmp = start;
       start = end;
       end = tmp;
     }
@@ -250,14 +226,11 @@ public class CurveWalker
         // label orientation is not completly horizontal
         while( it.hasNext() )
         {
-          int[] point = (int[])it.next();
-          double u = ( (double)end[1] - (double)start[1] ) / ( (double)end[0] - (double)start[0] );
-          double x = ( u * u * start[0] - u * ( (double)start[1] - (double)point[1] ) + point[0] ) / ( 1.0 + u * u );
-          double y = ( x - start[0] ) * u + start[1];
-          double d = getDistance( point, new int[]
-          {
-              (int)( x + 0.5 ),
-              (int)( y + 0.5 ) } );
+          final int[] point = it.next();
+          final double u = ((double) end[1] - (double) start[1]) / ((double) end[0] - (double) start[0]);
+          final double x = (u * u * start[0] - u * ((double) start[1] - (double) point[1]) + point[0]) / (1.0 + u * u);
+          final double y = (x - start[0]) * u + start[1];
+          final double d = getDistance( point, new int[] { (int) (x + 0.5), (int) (y + 0.5) } );
           if( y >= point[1] )
           {
             // candidate for left extreme value
@@ -278,7 +251,7 @@ public class CurveWalker
         // label orientation is completly horizontal
         while( it.hasNext() )
         {
-          int[] point = (int[])it.next();
+          final int[] point = it.next();
           double d = point[1] - start[1];
           if( d < 0 )
           {
@@ -301,7 +274,7 @@ public class CurveWalker
       // label orientation is completly vertical
       while( it.hasNext() )
       {
-        int[] point = (int[])it.next();
+        final int[] point = it.next();
         double d = point[0] - start[0];
         if( d < 0 )
         {
@@ -318,10 +291,7 @@ public class CurveWalker
         }
       }
     }
-    return new double[]
-    {
-        d1,
-        d2 };
+    return new double[] { d1, d2 };
   }
 
   /**
@@ -330,32 +300,31 @@ public class CurveWalker
    * <p>
    * 
    * @param p0
-   *          point that is used as reference point for the distance
+   *            point that is used as reference point for the distance
    * @param p1
-   *          starting point of the line
+   *            starting point of the line
    * @param p2
-   *          end point of the line
+   *            end point of the line
    * @param d
-   *          distance
+   *            distance
    */
-  public static int[] findPointWithDistance( int[] p0, int[] p1, int[] p2, int d )
+  public static int[] findPointWithDistance( final int[] p0, final int[] p1, final int[] p2, final int d )
   {
 
     double x, y;
-    double x0 = p0[0];
-    double y0 = p0[1];
-    double x1 = p1[0];
-    double y1 = p1[1];
-    double x2 = p2[0];
-    double y2 = p2[1];
+    final double x0 = p0[0];
+    final double y0 = p0[1];
+    final double x1 = p1[0];
+    final double y1 = p1[1];
+    final double x2 = p2[0];
+    final double y2 = p2[1];
 
     if( x1 != x2 )
     {
       // line segment does not run vertical
-      double u = ( y2 - y1 ) / ( x2 - x1 );
-      double p = -2 * ( x0 + u * u * x1 - u * ( y1 - y0 ) ) / ( u * u + 1 );
-      double q = ( ( y1 - y0 ) * ( y1 - y0 ) + u * u * x1 * x1 + x0 * x0 - 2 * u * x1 * ( y1 - y0 ) - d * d )
-          / ( u * u + 1 );
+      final double u = (y2 - y1) / (x2 - x1);
+      double p = -2 * (x0 + u * u * x1 - u * (y1 - y0)) / (u * u + 1);
+      final double q = ((y1 - y0) * (y1 - y0) + u * u * x1 * x1 + x0 * x0 - 2 * u * x1 * (y1 - y0) - d * d) / (u * u + 1);
       int minX = p1[0];
       int maxX = p2[0];
       int minY = p1[1];
@@ -374,18 +343,18 @@ public class CurveWalker
       if( x1 < x2 )
       {
         // to the right
-        x = -p / 2 + Math.sqrt( ( p / 2 ) * ( p / 2 ) - q );
+        x = -p / 2 + Math.sqrt( (p / 2) * (p / 2) - q );
       }
       else
       {
         // to the left
-        x = -p / 2 - Math.sqrt( ( p / 2 ) * ( p / 2 ) - q );
+        x = -p / 2 - Math.sqrt( (p / 2) * (p / 2) - q );
       }
 
-      //			if ((int) (x + 0.5) <= minX || (int) (x + 0.5) >= maxX) {
-      //				x = -p / 2 + Math.sqrt ((p / 2) * (p / 2) - q);
-      //			}
-      y = ( x - x1 ) * u + y1;
+      // if ((int) (x + 0.5) <= minX || (int) (x + 0.5) >= maxX) {
+      // x = -p / 2 + Math.sqrt ((p / 2) * (p / 2) - q);
+      // }
+      y = (x - x1) * u + y1;
     }
     else
     {
@@ -401,34 +370,31 @@ public class CurveWalker
       }
 
       double p = -2 * y0;
-      double q = y0 * y0 + ( x1 - x0 ) * ( x1 - x0 ) - d * d;
+      final double q = y0 * y0 + (x1 - x0) * (x1 - x0) - d * d;
 
       if( y1 > y2 )
       {
         // down
-        y = -p / 2 - Math.sqrt( ( p / 2 ) * ( p / 2 ) - q );
+        y = -p / 2 - Math.sqrt( (p / 2) * (p / 2) - q );
       }
       else
       {
         // up
-        y = -p / 2 + Math.sqrt( ( p / 2 ) * ( p / 2 ) - q );
+        y = -p / 2 + Math.sqrt( (p / 2) * (p / 2) - q );
       }
 
-      //			y = -p / 2 - Math.sqrt ((p / 2) * (p / 2) - q);
-      //			if ((int) (y + 0.5) <= minY || (int) (y + 0.5) >= maxY) {
-      //				y = -p / 2 + Math.sqrt ((p / 2) * (p / 2) - q);
-      //			}
+      // y = -p / 2 - Math.sqrt ((p / 2) * (p / 2) - q);
+      // if ((int) (y + 0.5) <= minY || (int) (y + 0.5) >= maxY) {
+      // y = -p / 2 + Math.sqrt ((p / 2) * (p / 2) - q);
+      // }
     }
-    return new int[]
-    {
-        (int)( x + 0.5 ),
-        (int)( y + 0.5 ) };
+    return new int[] { (int) (x + 0.5), (int) (y + 0.5) };
   }
 
-  public double getRotation( double x1, double y1, double x2, double y2 )
+  public double getRotation( final double x1, final double y1, final double x2, final double y2 )
   {
-    double dx = x2 - x1;
-    double dy = -( y2 - y1 );
+    final double dx = x2 - x1;
+    final double dy = -(y2 - y1);
     double rotation = 0.0;
 
     if( dx <= 0 )
@@ -460,17 +426,17 @@ public class CurveWalker
     return rotation;
   }
 
-  public double getDistance( int[] p1, int[] p2 )
+  public double getDistance( final int[] p1, final int[] p2 )
   {
-    double dx = p1[0] - p2[0];
-    double dy = p1[1] - p2[1];
+    final double dx = p1[0] - p2[0];
+    final double dy = p1[1] - p2[1];
     return Math.sqrt( dx * dx + dy * dy );
   }
 
-  public double getDistance( double x1, double y1, double x2, double y2 )
+  public double getDistance( final double x1, final double y1, final double x2, final double y2 )
   {
-    double dx = x2 - x1;
-    double dy = y2 - y1;
+    final double dx = x2 - x1;
+    final double dy = y2 - y1;
     return Math.sqrt( dx * dx + dy * dy );
   }
 }

@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
@@ -337,7 +337,8 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
 
   public void invalidate( final GM_Envelope bbox )
   {
-    m_mapModel.invalidate( bbox );
+    if( isVisible() )
+      m_mapModel.invalidate( bbox );
   }
 
   /**

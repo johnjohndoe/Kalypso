@@ -43,7 +43,6 @@ package org.kalypso.ogc.gml.map.widgets.editrelation;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -344,14 +343,13 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     final Feature targetFeature = m_targetFE;
     if( srcFeature == null || targetFeature == null )
       return;
-    final List fitList = getFitList( srcFeature, targetFeature );
+    final List<IRelationType> fitList = getFitList( srcFeature, targetFeature );
     m_topLevel.getDisplay().asyncExec( new Runnable()
     {
       public void run( )
       {
-        for( final Iterator iter = fitList.iterator(); iter.hasNext(); )
+        for( final IRelationType element : fitList )
         {
-          final IRelationType element = (IRelationType) iter.next();
           System.out.println( element.toString() );
         }
         // TODO handle fitList.size()>1 with dialog
@@ -360,19 +358,17 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
         final IRelationType relation;
         if( fitList.size() == 1 )
         {
-          relation = (IRelationType) fitList.get( 0 );
+          relation = fitList.get( 0 );
         }
         else
         {
           final IStructuredContentProvider cProvider = new IStructuredContentProvider()
           {
-            // private Object m_input = null;
-
             public Object[] getElements( Object inputElement )
             {
               if( inputElement instanceof List )
               {
-                return ((List) inputElement).toArray();
+                return ((List< ? >) inputElement).toArray();
               }
               return null;
             }
@@ -569,7 +565,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
    */
   public Control createControl( final Composite parent, final FormToolkit toolkit )
   {
-    m_topLevel = new Composite( parent, SWT.NONE );
+    m_topLevel = toolkit.createComposite( parent, SWT.NONE );
     final Layout gridLayout = new GridLayout( 1, false );
 
     m_topLevel.setLayout( gridLayout );
@@ -582,6 +578,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     data3.grabExcessVerticalSpace = false;
 
     m_modeCombo = new Combo( parent, SWT.READ_ONLY );
+    toolkit.adapt( m_modeCombo );
     m_modeCombo.setItems( m_modeItems );
     m_modeCombo.setText( m_modeItems[m_modificationMode] );
     m_modeCombo.setLayoutData( data3 );
@@ -605,16 +602,16 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     // m_viewer = new CheckboxTreeViewer( parent, SWT.FILL );
     final TreeViewer viewer = new TreeViewer( m_topLevel, SWT.FILL );
     m_viewer = viewer;
-    viewer.getControl().setLayoutData( data2 );
+    final Control treeControl = viewer.getControl();
+    toolkit.adapt( treeControl, true, true );
+    treeControl.setLayoutData( data2 );
     viewer.setContentProvider( m_contentProvider );
     m_labelProvider = new EditRelationOptionsLabelProvider( m_contentProvider );
     viewer.setLabelProvider( m_labelProvider );
 
-    m_textInfo = new Text( m_topLevel, SWT.READ_ONLY | SWT.MULTI | SWT.BORDER | SWT.WRAP );
-    m_textInfo.setText( "Info" );
+    m_textInfo = toolkit.createText( m_topLevel, "Info", SWT.READ_ONLY | SWT.MULTI | SWT.BORDER | SWT.WRAP );
+    m_textProblem = toolkit.createText( m_topLevel, "Problem", SWT.READ_ONLY | SWT.MULTI | SWT.WRAP );
 
-    m_textProblem = new Text( m_topLevel, SWT.READ_ONLY | SWT.MULTI | SWT.WRAP );
-    m_textProblem.setText( "Problem" );
     viewer.setAutoExpandLevel( 2 );
     viewer.getTree().addMouseListener( new MouseAdapter()
     {

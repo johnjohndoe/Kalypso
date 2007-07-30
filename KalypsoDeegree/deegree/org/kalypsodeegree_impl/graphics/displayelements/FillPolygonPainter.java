@@ -67,83 +67,79 @@ import org.kalypsodeegree_impl.tools.Debug;
  */
 public class FillPolygonPainter
 {
+  private double m_width;
 
-  private final Stroke m_stroke;
+  private final Color m_fillColor;
 
-  private final Fill m_fill;
+  private final Color m_strokeColor;
 
-  private float m_width;
+  private final GraphicFill m_gFill;
 
-  private double m_strokeOpacity;
+  private final BufferedImage m_texture;
 
-  private double m_fillOpacity;
+  private final float[] m_dash;
 
-  private Color m_fillColor;
+  private final int m_cap;
 
-  private Color m_strokeColor;
+  private final int m_join;
 
-  private GraphicFill m_gFill;
+  private final float m_dashOffset;
 
-  private BufferedImage m_texture;
+  private final GeoTransform m_projection;
 
-  private float[] m_dash;
-
-  private int m_cap;
-
-  private int m_join;
-
-  private float m_dashOffset;
-
-  private GeoTransform m_projection;
-
-  public FillPolygonPainter( Fill fill, Stroke stroke, Feature feature, UOM uom, GeoTransform projection ) throws FilterEvaluationException
+  public FillPolygonPainter( final Fill fill, final Stroke stroke, final Feature feature, final UOM uom, final GeoTransform projection ) throws FilterEvaluationException
   {
-
-    m_fill = fill;
-
-    m_stroke = stroke;
-
     m_projection = projection;
 
     if( stroke != null )
     {
-      m_width = (float) stroke.getWidth( feature );
-
-      m_strokeOpacity = stroke.getOpacity( feature );
-
-      m_strokeColor = m_stroke.getStroke( feature );
+      m_width = stroke.getWidth( feature );
+      m_strokeColor = makeColorWithAlpha( stroke.getStroke( feature ), stroke.getOpacity( feature ) );
       m_dash = stroke.getDashArray( feature );
-
       m_cap = stroke.getLineCap( feature );
-
       m_join = stroke.getLineJoin( feature );
-
       m_dashOffset = stroke.getDashOffset( feature );
-
+    }
+    else
+    {
+      m_strokeColor = null;
+      m_width = 1;
+      m_dash = null;
+      m_cap = 0;
+      m_join = 0;
+      m_dashOffset = 0;
     }
 
-    m_fillColor = m_fill.getFill( feature );
-
-    m_fillOpacity = fill.getOpacity( feature );
+    m_fillColor = makeColorWithAlpha( fill.getFill( feature ), fill.getOpacity( feature ) );
 
     m_gFill = fill.getGraphicFill();
+
     if( m_gFill != null )
       m_texture = m_gFill.getGraphic().getAsImage( feature, uom, projection );
-
+    else
+      m_texture = null;
   }
 
-  public <T extends GM_SurfacePatch> Area calcTargetCoordinates( final GM_Surface<T> surface ) throws Exception
+  public static Color makeColorWithAlpha( final Color color, final double opacity )
+  {
+    final int alpha = (int) Math.round( opacity * 255 );
+    final int red = color.getRed();
+    final int green = color.getGreen();
+    final int blue = color.getBlue();
+    return new Color( red, green, blue, alpha );
+  }
+
+  // TODO: make static and move to helper class
+  // give non-static stuff from outside
+  private <T extends GM_SurfacePatch> Area calcTargetCoordinates( final GM_Position[] outerRing, final GM_Position[][] innerRings ) throws Exception
   {
     try
     {
-      final GM_SurfacePatch patch = surface.get( 0 );
-      final GM_Position[] ex = patch.getExteriorRing();
-      final GM_Position[][] inner = patch.getInteriorRings();
-
-      final Area areaouter = areaFromRing( ex );
-      if( inner != null )
+      // TODO: slow!
+      final Area areaouter = areaFromRing( outerRing );
+      if( innerRings != null )
       {
-        for( final GM_Position[] innerRing : inner )
+        for( final GM_Position[] innerRing : innerRings )
         {
           if( innerRing != null )
             areaouter.subtract( areaFromRing( innerRing ) );
@@ -160,14 +156,18 @@ public class FillPolygonPainter
     return null;
   }
 
-  public Area areaFromRing( final GM_Position[] ex )
+  // TODO: make static and move to helper class
+  // give non-static stuff from outside
+  private Area areaFromRing( final GM_Position[] ex )
   {
-    float width = 0;
-    if( m_stroke != null )
-    {
-      width = 0;
-    }
+    final Polygon polygon = polygonFromRing( ex );
+    return new Area( polygon );
+  }
 
+  // TODO: make static and move to helper class
+  // give non-static stuff from outside
+  private Polygon polygonFromRing( final GM_Position[] ex )
+  {
     final int[] x = new int[ex.length];
     final int[] y = new int[ex.length];
 
@@ -180,7 +180,9 @@ public class FillPolygonPainter
 
       if( k > 0 && k < ex.length - 1 )
       {
-        if( distance( xx, yy, x[k - 1], y[k - 1] ) > width )
+        // PERFORMANCE: We ignore points whichs distance is smaller than 'm_width'
+        // TODO: maybe even round to next smaller int? May enhance if width == 0
+        if( distance( xx, yy, x[k - 1], y[k - 1] ) > m_width )
         {
           x[k] = xx;
           y[k] = yy;
@@ -195,94 +197,83 @@ public class FillPolygonPainter
       }
     }
 
-    final Polygon polygon = new Polygon( x, y, k - 1 );
-    return new Area( polygon );
+    return new Polygon( x, y, k - 1 );
   }
 
-  private double distance( final double x1, final double y1, final double x2, final double y2 )
+  private static double distance( final double x1, final double y1, final double x2, final double y2 )
   {
     return Math.sqrt( (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1) );
   }
 
-  public void paintShape( final Graphics2D g2, Shape shape ) throws Exception
+  public void paintShape( final Graphics2D g2, final Shape shape ) throws Exception
   {
-
-    if( m_fill != null )
+    // is completly transparent
+    // if not fill polygon
+    if( m_fillColor != null && m_fillColor.getAlpha() > 0 )
     {
-      // is completly transparent
-      // if not fill polygon
-      if( m_fillOpacity > 0.01 )
+      g2.setColor( m_fillColor );
+
+      if( m_gFill != null )
       {
-        Color color = m_fillColor;
-        final int alpha = (int) Math.round( m_fillOpacity * 255 );
-        final int red = color.getRed();
-        final int green = color.getGreen();
-        final int blue = color.getBlue();
-        color = new Color( red, green, blue, alpha );
-
-        g2.setColor( color );
-
-        if( m_gFill != null )
+        // TODO: rotation is not considered here
+        if( m_texture != null )
         {
-          // TODO: rotation is not considered here
-          if( m_texture != null )
-          {
-            final Rectangle anchor = new Rectangle( 0, 0, m_texture.getWidth( null ), m_texture.getHeight( null ) );
-            g2.setPaint( new TexturePaint( m_texture, anchor ) );
-          }
+          final Rectangle anchor = new Rectangle( 0, 0, m_texture.getWidth( null ), m_texture.getHeight( null ) );
+          g2.setPaint( new TexturePaint( m_texture, anchor ) );
         }
-
-        g2.fill( shape );
-
       }
+
+      g2.fill( shape );
     }
 
-    // only stroke outline, if Stroke-Element is given
-    if( m_stroke != null )
+    if( m_strokeColor != null && m_strokeColor.getAlpha() > 0 )
     {
-      if( m_strokeOpacity > 0.01 )
+      g2.setColor( m_strokeColor );
+
+      // use a simple Stroke if dash == null or dash length < 2
+      BasicStroke bs2 = null;
+      final float w = (float) m_width;
+
+      if( (m_dash == null) || (m_dash.length < 2) )
       {
-        Color color = m_strokeColor;
-        final int alpha = (int) Math.round( m_strokeOpacity * 255 );
-        final int red = color.getRed();
-        final int green = color.getGreen();
-        final int blue = color.getBlue();
-        color = new Color( red, green, blue, alpha );
-
-        g2.setColor( color );
-
-        // use a simple Stroke if dash == null or dash length < 2
-        BasicStroke bs2 = null;
-        final float w = m_width;
-
-        if( (m_dash == null) || (m_dash.length < 2) )
-        {
-          bs2 = new BasicStroke( w );
-        }
-        else
-        {
-          bs2 = new BasicStroke( w, m_cap, m_join, 10.0f, m_dash, m_dashOffset );
-        }
-
-        g2.setStroke( bs2 );
-
-        g2.draw( shape );
-
+        bs2 = new BasicStroke( w );
       }
+      else
+      {
+        bs2 = new BasicStroke( w, m_cap, m_join, 10.0f, m_dash, m_dashOffset );
+      }
+
+      g2.setStroke( bs2 );
+
+      g2.draw( shape );
     }
 
   }
 
-  public void paintRing( Graphics2D gc, GM_Position[] ring ) throws Exception
+  public void paintRing( final Graphics2D gc, final GM_Position[] ring ) throws Exception
   {
-    final Area area = areaFromRing( ring );
+    final Shape area = polygonFromRing( ring );
     paintShape( gc, area );
   }
 
-  public void paintSurface( Graphics2D g2, GM_Surface< ? > element ) throws Exception
+  public void paintSurface( final Graphics2D g2, final GM_Surface< ? > surface ) throws Exception
   {
-    final Shape area = calcTargetCoordinates( element );
-    paintShape( g2, area );
+    final GM_SurfacePatch patch = surface.get( 0 );
+    final GM_Position[] ex = patch.getExteriorRing();
+    final GM_Position[][] inner = patch.getInteriorRings();
+
+    final Shape shape;
+    if( inner == null || inner.length == 0 )
+    {
+      // OPTIMIZATION: If we have no inner rings, only create a polygone, this is much faster.
+      shape = polygonFromRing( ex );
+    }
+    else
+    {
+      shape = calcTargetCoordinates( ex, inner );
+    }
+
+    paintShape( g2, shape );
   }
 
 }

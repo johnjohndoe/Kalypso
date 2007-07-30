@@ -53,7 +53,8 @@ import org.kalypsodeegree.model.geometry.ISurfacePatchVisitor;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
- * @author Gernot Belger, Thomas Jung
+ * @author Gernot Belger
+ * @author Thomas Jung
  */
 public class SurfacePaintPolygonVisitor implements ISurfacePatchVisitor<GM_Triangle>
 {
@@ -79,7 +80,7 @@ public class SurfacePaintPolygonVisitor implements ISurfacePatchVisitor<GM_Trian
     return true;
   }
 
-  private void getTriangleSurface( GM_Triangle triangle )
+  private void getTriangleSurface( final GM_Triangle triangle )
   {
     // get value range of the triangle
     double minValue = Double.POSITIVE_INFINITY;
@@ -87,7 +88,7 @@ public class SurfacePaintPolygonVisitor implements ISurfacePatchVisitor<GM_Trian
 
     final GM_Position[] positions = triangle.getExteriorRing();
 
-    for( GM_Position position : positions )
+    for( final GM_Position position : positions )
     {
       if( position.getZ() < minValue )
         minValue = position.getZ();
@@ -97,7 +98,7 @@ public class SurfacePaintPolygonVisitor implements ISurfacePatchVisitor<GM_Trian
 
 // final BigDecimal minDecimal = new BigDecimal( minValue ).setScale( 1, BigDecimal.ROUND_FLOOR );
 
-    int numOfClasses = m_colorModel.getNumOfClasses();
+    final int numOfClasses = m_colorModel.getNumOfClasses();
 
     /* loop over all classes */
     for( int currentClass = 0; currentClass < numOfClasses; currentClass++ )
@@ -108,7 +109,6 @@ public class SurfacePaintPolygonVisitor implements ISurfacePatchVisitor<GM_Trian
 
       if( triangleLiesInsideColorClass( minValue, maxValue, startValue, endValue ) == true )
       {
-
         /* code below was taken from BCE-2D - bce_FarbFlaechenInAllenDreiecken and a little bit adapted */
 
         /* Prüfung für jede Kante und deren Knotenhöhen, Vergleich mit Intervallgrenzen von - bis */
@@ -126,6 +126,7 @@ public class SurfacePaintPolygonVisitor implements ISurfacePatchVisitor<GM_Trian
 
           /* get the color from the color model and paint the triangle */
 
+          // TODO: check if triangle is too small (i.e. < stroke.width) and paint it as one point
           paintSurface( positions, currentClass );
           break;
         }
@@ -137,16 +138,16 @@ public class SurfacePaintPolygonVisitor implements ISurfacePatchVisitor<GM_Trian
           /* loop over all arcs */
           for( int j = 0; j < positions.length - 1; j++ )
           {
-            GM_Position pos1 = positions[j];
-            GM_Position pos2 = positions[j + 1];
+            final GM_Position pos1 = positions[j];
+            final GM_Position pos2 = positions[j + 1];
 
-            double x1 = pos1.getX();
-            double y1 = pos1.getY();
-            double z1 = pos1.getZ();
+            final double x1 = pos1.getX();
+            final double y1 = pos1.getY();
+            final double z1 = pos1.getZ();
 
-            double x2 = pos2.getX();
-            double y2 = pos2.getY();
-            double z2 = pos2.getZ();
+            final double x2 = pos2.getX();
+            final double y2 = pos2.getY();
+            final double z2 = pos2.getZ();
 
             double x = 0;
             double y = 0;
@@ -285,10 +286,10 @@ public class SurfacePaintPolygonVisitor implements ISurfacePatchVisitor<GM_Trian
            */
           int numDoublePoints = 0; // Anzahl nicht doppelter Punkte in Farbklasse (bäh, unschön gelöst!)
 
-          final List<GM_Position> posList2 = new ArrayList<GM_Position>();
           if( posList.size() < 2 )
             continue;
 
+          final List<GM_Position> posList2 = new ArrayList<GM_Position>();
           posList2.add( posList.get( 0 ) );
 
           /* Schleife über alle erzeugte Knoten */
@@ -300,6 +301,7 @@ public class SurfacePaintPolygonVisitor implements ISurfacePatchVisitor<GM_Trian
             /*
              * Wenn Abstand groß genug ist, Punkt übernehmen und zu dicht gelegene Punkte ignorieren
              */
+            // TODO: Sollte sich diese Grösse nicht an der Strichstärke orientieren?
             if( distance > VAL_EPS )
             {
               posList2.add( posList.get( k + 1 ) );
@@ -309,7 +311,7 @@ public class SurfacePaintPolygonVisitor implements ISurfacePatchVisitor<GM_Trian
 
           if( numDoublePoints > 0 )
           {
-            // ersten mit letztem Punkt vegleichen
+            // ersten mit letztem Punkt vergleichen
             final double distance = posList2.get( 0 ).getDistance( posList2.get( posList2.size() - 1 ) );
 
             if( distance < VAL_EPS )
@@ -318,7 +320,7 @@ public class SurfacePaintPolygonVisitor implements ISurfacePatchVisitor<GM_Trian
             if( numDoublePoints >= 2 )// mindestens 3 verschiedene Punkte
             {
               posList2.add( posList2.get( 0 ) );
-              GM_Position[] posArray = posList2.toArray( new GM_Position[posList2.size()] );
+              final GM_Position[] posArray = posList2.toArray( new GM_Position[posList2.size()] );
 
               /* get the mean elevation of the current ring */
               double meanValue = getMeanValue( posArray );
@@ -329,8 +331,9 @@ public class SurfacePaintPolygonVisitor implements ISurfacePatchVisitor<GM_Trian
 
               /* get the color from the color model and paint the polygon */
 
+              // TODO: check if current surface is too small (i.e. < stroke.width) and if this is the case
+              // only draw a point with that color or something similar
               paintSurface( posArray, currentClass );
-
             }
           }
         }
@@ -338,20 +341,20 @@ public class SurfacePaintPolygonVisitor implements ISurfacePatchVisitor<GM_Trian
     }
   }
 
-  private void paintSurface( GM_Position[] posArray, int currentClass )
+  private void paintSurface( final GM_Position[] posArray, final int currentClass )
   {
-    FillPolygonPainter painter = m_colorModel.getFillPolygonPainter( currentClass );
+    final FillPolygonPainter painter = m_colorModel.getFillPolygonPainter( currentClass );
 
     try
     {
       painter.paintRing( (Graphics2D) m_gc, posArray );
     }
-    catch( GM_Exception e )
+    catch( final GM_Exception e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -367,11 +370,11 @@ public class SurfacePaintPolygonVisitor implements ISurfacePatchVisitor<GM_Trian
       return false;
   }
 
-  private double getMeanValue( GM_Position[] positions )
+  private double getMeanValue( final GM_Position[] positions )
   {
     double zSum = 0;
 
-    for( GM_Position position : positions )
+    for( final GM_Position position : positions )
     {
       zSum = zSum + position.getZ();
     }
