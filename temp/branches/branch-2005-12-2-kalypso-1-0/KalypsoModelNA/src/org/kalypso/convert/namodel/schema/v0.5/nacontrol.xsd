@@ -568,18 +568,18 @@
 						</annotation>
 					</element>
                     <element name="accuracyPrediction" type="double" minOccurs="0">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Vorhersagegenauigkeit</label>
-								<tooltip>Genauigkeit der Vorhersage in cm pro Tag zur Berechnung der Umhuellenden</tooltip>
-								<description>Genauigkeit der Vorhersage in cm pro Tag zur Berechnung der Umhuellenden</description>
-							</documentation>
-							<documentation xml:lang="en">
-								<label>accuracy prediction</label>
-								<tooltip>Accuracy of prediction in cm per day in order to calculate confidence interval</tooltip>
-								<description>Accuracy of prediction in cm per day in order to calculate confidence interval</description>
-							</documentation>
-						</annotation>
+                    	<annotation>
+                    		<documentation xml:lang="de">
+                    			<label>Vorhersagegenauigkeit [%/(60h)]</label>
+                    			<tooltip>Genauigkeit der Vorhersage in % pro 60 Stunden zur Berechnung der Umhüllenden</tooltip>
+                    			<description>Genauigkeit der Vorhersage in % pro 60 Stunden zur Berechnung der Umhüllenden</description>
+                    		</documentation>
+                    		<documentation xml:lang="en">
+                    			<label>Forecast Accuracy [%/(60h)]</label>
+                    			<tooltip>Accuracy of prediction in % per 60 hours in order to calculate confidence interval</tooltip>
+                    			<description>Accuracy of prediction in % per 60 hours in order to calculate confidence interval</description>
+                    		</documentation>
+                    	</annotation>
 					</element>
                     <element name="useOffsetStartPrediction" type="boolean" minOccurs="0">
 						<annotation>
