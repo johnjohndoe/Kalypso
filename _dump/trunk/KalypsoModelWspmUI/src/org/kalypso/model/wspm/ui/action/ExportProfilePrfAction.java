@@ -66,7 +66,7 @@ import org.eclipse.ui.actions.ActionDelegate;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilitites;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
@@ -171,7 +171,7 @@ public class ExportProfilePrfAction extends ActionDelegate implements IObjectAct
           return resultStatus;
         }
       };
-      final IStatus status = ProgressUtilitites.busyCursorWhile( op, "Konnte Datei nicht schreiben" );
+      final IStatus status = ProgressUtilities.busyCursorWhile( op, "Konnte Datei nicht schreiben" );
       ErrorDialog.openError( shell, STR_DIALOG_TITLE, "Fehler beim Umwandeln der Profile", status, IStatus.ERROR | IStatus.WARNING | IStatus.CANCEL );
     }
     catch( final CoreException e )
