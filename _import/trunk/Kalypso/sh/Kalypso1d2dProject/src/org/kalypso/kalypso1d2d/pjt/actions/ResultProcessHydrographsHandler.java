@@ -64,7 +64,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilitites;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultsAcessor;
 import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IModelDescriptor;
@@ -170,7 +170,7 @@ public class ResultProcessHydrographsHandler extends AbstractHandler
       }
     };
 
-    final IStatus status = ProgressUtilitites.busyCursorWhile( operation, null );
+    final IStatus status = ProgressUtilities.busyCursorWhile( operation, null );
     ErrorDialog.openError( shell, DIALOG_TITEL, "Ganglinien konnten nicht erzeugt werden.", status );
     return status;
   }

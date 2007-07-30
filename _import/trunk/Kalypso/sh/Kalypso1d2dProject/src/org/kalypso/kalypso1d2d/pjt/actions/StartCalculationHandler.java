@@ -57,7 +57,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilitites;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 
@@ -108,7 +108,7 @@ public class StartCalculationHandler extends AbstractHandler implements IHandler
           return nature.startCalculation( scenarioFolder, new SubProgressMonitor( monitor, 10 ) );
         }
       };
-      final IStatus status = ProgressUtilitites.busyCursorWhile( runnable );
+      final IStatus status = ProgressUtilities.busyCursorWhile( runnable );
       ErrorDialog.openError( shell, "Modellrechnung", "Fehler bei der Modellrechnung", status );
     }
     catch( final CoreException e )
