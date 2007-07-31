@@ -1,4 +1,4 @@
-!     Last change:  MD   11 Jul 2007    1:04 pm
+!     Last change:  MD   31 Jul 2007    3:31 pm
 !--------------------------------------------------------------------------
 ! This code, wspber.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -1194,6 +1194,7 @@ Hauptschleife: DO i = 1, maxger
           stat (nprof) = statgem                          !WP Original Brueckenstation (Profil i)!
 
           out_PROF(nprof,nr_q)%stat = stat(nprof)         !WP Zuweisung der Stationierung in globalen Array
+          out_PROF(nprof,nr_q)%interpol = .FALSE.
           out_PROF(nprof,nr_q)%BrueckOK = hokmin
           out_PROF(nprof,nr_q)%BrueckUK = hukmax
           out_PROF(nprof,nr_q)%BrueckB = breite
@@ -1786,7 +1787,7 @@ Hauptschleife: DO i = 1, maxger
       out_PROF(nprof,nr_q)%stat = stat(nprof)         !WP Zuweisung der Stationierung in globalen Array
                                                       !WP Hinweis: Je nach Abflusszustand kann sich die
                                                       !WP Anzahl der interpolierten Profile aendern
-
+      out_PROF(nprof,nr_q)%interpol = .FALSE.
       out_PROF(nprof,nr_q)%BrueckOK = hokmin
       out_PROF(nprof,nr_q)%BrueckUK = hukmax
       out_PROF(nprof,nr_q)%BrueckB = breite
