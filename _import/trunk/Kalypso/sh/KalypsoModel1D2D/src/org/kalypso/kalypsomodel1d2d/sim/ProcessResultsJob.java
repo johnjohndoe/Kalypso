@@ -169,7 +169,7 @@ public class ProcessResultsJob extends Job
       final GMLWorkspace resultWorkspace = FeatureFactory.createGMLWorkspace( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "NodeResultCollection" ), gmlResultFile.toURL(), null );
 
       /* .2d Datei lesen und GML füllen */
-      final RMA10S2GmlConv conv = new RMA10S2GmlConv();
+      final RMA10S2GmlConv conv = new RMA10S2GmlConv(null);
 
       /* just for test purposes */
       final List<ResultType.TYPE> parameters = new ArrayList<ResultType.TYPE>();

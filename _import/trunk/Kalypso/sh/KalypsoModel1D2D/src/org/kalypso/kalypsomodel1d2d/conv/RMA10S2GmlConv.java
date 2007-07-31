@@ -51,7 +51,8 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 
 /**
@@ -60,41 +61,57 @@ import org.kalypso.kalypsosimulationmodel.core.Assert;
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  * @author Patrice Congo
  */
-public class RMA10S2GmlConv implements IRMA10SModelReader
+public class RMA10S2GmlConv
 {
   private IRMA10SModelElementHandler m_handler;
 
-  public static boolean verboseMode = false;
+  public static boolean VERBOSE_MODE = false;
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelReader#parse(java.io.InputStream)
-   */
-  public void parse( final InputStream inputStream ) throws IllegalStateException, IOException
+  private final IProgressMonitor m_monitor;
+
+  public RMA10S2GmlConv( final IProgressMonitor monitor )
   {
-    Assert.throwIAEOnNullParam( inputStream, "inputStream" );
-    this.parse( new InputStreamReader( inputStream ) );
+    if( monitor == null )
+      m_monitor = new NullProgressMonitor();
+    else
+      m_monitor = monitor;
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelReader#parse(java.io.InputStreamReader)
-   */
+  public void parse( final InputStream inputStream ) throws IllegalStateException, IOException
+  {
+    Assert.throwIAEOnNullParam( inputStream, "inputStream" ); //$NON-NLS-1$
+    parse( new InputStreamReader( inputStream ) );
+  }
+
   public void parse( final Reader reader ) throws IllegalStateException, IOException
   {
-    Assert.throwIAEOnNullParam( reader, "inputStreamReader" );
-    final LineNumberReader lnr = new LineNumberReader( reader );
-    final Pattern lineFP = Pattern.compile( "FP.*" );
-    final Pattern lineFE = Pattern.compile( "FE.*" );
-    final Pattern lineAR = Pattern.compile( "AR.*" );
-    final Pattern lineRK = Pattern.compile( "RK.*" );
-    final Pattern lineVA = Pattern.compile( "VA.*" );
-    final Pattern lineDA = Pattern.compile( "DA.*" );
-    final Pattern lineTL = Pattern.compile( "TL.*" );
+    Assert.throwIAEOnNullParam( reader, "inputStreamReader" ); //$NON-NLS-1$
+    final LineNumberReader lnReader = new LineNumberReader( reader );
+    long numberOfLines = 0;
+    for( String line = lnReader.readLine(); line != null; line = lnReader.readLine() )
+      numberOfLines++;
+    final long monitorStep = numberOfLines / 100;
+    lnReader.reset();
 
-    // signal parsing start
+    final Pattern lineFP = Pattern.compile( "FP.*" ); //$NON-NLS-1$
+    final Pattern lineFE = Pattern.compile( "FE.*" ); //$NON-NLS-1$
+    final Pattern lineAR = Pattern.compile( "AR.*" ); //$NON-NLS-1$
+    final Pattern lineRK = Pattern.compile( "RK.*" ); //$NON-NLS-1$
+    final Pattern lineVA = Pattern.compile( "VA.*" ); //$NON-NLS-1$
+    final Pattern lineDA = Pattern.compile( "DA.*" ); //$NON-NLS-1$
+    final Pattern lineTL = Pattern.compile( "TL.*" ); //$NON-NLS-1$
+
+    m_monitor.beginTask( Messages.RMA10S2GmlConv_0, 100 );
     m_handler.start();
 
-    for( String line = lnr.readLine(); line != null; line = lnr.readLine() )
+    numberOfLines = 0;
+    for( String line = lnReader.readLine(); line != null; line = lnReader.readLine() )
     {
+      if( ++numberOfLines == monitorStep )
+      {
+        numberOfLines = 0;
+        m_monitor.worked( 1 );
+      }
       if( line.length() < 2 )
         continue;
       if( lineFP.matcher( line ).matches() )
@@ -113,9 +130,8 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
         interpreteTimeLine( line );
       else if( lineTL.matcher( line ).matches() )
         interprete1d2dJunctionElement( line );
-      else
-        if( verboseMode )
-          System.out.println( "Unsupported section:" + line );
+      else if( VERBOSE_MODE )
+        System.out.println( Messages.RMA10S2GmlConv_1 + line );
     }
 
     // signal parsing stop
@@ -125,8 +141,8 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
 
   private void interprete1d2dJunctionElement( final String line )
   {
- // TL JunctionID, 1d-ElementID, BoundaryLineID, 1d-NodeID
-    final Pattern linePattern = Pattern.compile( "TL\\s*([0-9]+)\\s*([0-9]+)\\s*([0-9]+)\\s*([0-9]+)" );
+    // TL JunctionID, 1d-ElementID, BoundaryLineID, 1d-NodeID
+    final Pattern linePattern = Pattern.compile( "TL\\s*([0-9]+)\\s*([0-9]+)\\s*([0-9]+)\\s*([0-9]+)" ); //$NON-NLS-1$
     final Matcher matcher = linePattern.matcher( line );
     if( matcher.matches() )
     {
@@ -141,11 +157,11 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
       }
       catch( final NumberFormatException e )
       {
-        m_handler.handlerError( line, EReadError.ILLEGAL_SECTION );
+        m_handler.handleError( line, EReadError.ILLEGAL_SECTION );
       }
     }
     else
-      m_handler.handlerError( line, EReadError.ILLEGAL_SECTION );
+      m_handler.handleError( line, EReadError.ILLEGAL_SECTION );
   }
 
   private void interpreteTimeLine( final String line )
@@ -161,7 +177,7 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
         final int year = Integer.parseInt( yearString );
         final double hours = Double.parseDouble( hourString );
 
-        final Calendar calendar = new GregorianCalendar( TimeZone.getTimeZone( "UTM" ) );
+        final Calendar calendar = new GregorianCalendar( TimeZone.getTimeZone( "UTM" ) ); //$NON-NLS-1$
         calendar.clear();
         calendar.set( year, 0, 1 );
 
@@ -176,21 +192,12 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
       }
       catch( final NumberFormatException e )
       {
-        m_handler.handlerError( line, EReadError.ILLEGAL_SECTION );
+        m_handler.handleError( line, EReadError.ILLEGAL_SECTION );
       }
     }
     else
-      m_handler.handlerError( line, EReadError.ILLEGAL_SECTION );
+      m_handler.handleError( line, EReadError.ILLEGAL_SECTION );
 
-  }
-
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelReader#setModelElementIDProvider(org.kalypso.kalypsomodel1d2d.conv.IModelElementIDProvider)
-   */
-  @Deprecated
-  public void setModelElementIDProvider( final IModelElementIDProvider idProvider ) throws IllegalArgumentException
-  {
-    // this.idProvider=idProvider;
   }
 
   /**
@@ -201,18 +208,9 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
     m_handler = handler;
   }
 
-  static public void toDiscretisationModel( final InputStream rma10sModelInput, final IFEDiscretisationModel1d2d targetModel, final IPositionProvider positionProvider, final IModelElementIDProvider idProvider ) throws IllegalStateException, IOException
-  {
-    final IRMA10SModelReader reader = new RMA10S2GmlConv();
-    final IRMA10SModelElementHandler handler = new DiscretisationModel1d2dHandler( targetModel, positionProvider, idProvider );
-//    reader.setModelElementIDProvider( idProvider );
-    reader.setRMA10SModelElementHandler( handler );
-    reader.parse( rma10sModelInput );
-  }
-
   private void interpreteNodeLine( final String line )
   {
-    final Pattern linePattern = Pattern.compile( "FP\\s*([0-9]+)\\s+([0-9]+\\.[0-9]*)\\s+([0-9]+\\.[0-9]*)\\s+([\\+\\-]?[0-9]+\\.[0-9]*).*" );
+    final Pattern linePattern = Pattern.compile( "FP\\s*([0-9]+)\\s+([0-9]+\\.[0-9]*)\\s+([0-9]+\\.[0-9]*)\\s+([\\+\\-]?[0-9]+\\.[0-9]*).*" ); //$NON-NLS-1$
     final Matcher matcher = linePattern.matcher( line );
     if( matcher.matches() )
     {
@@ -229,16 +227,16 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
       }
       catch( final NumberFormatException e )
       {
-        m_handler.handlerError( line, EReadError.ILLEGAL_SECTION );
+        m_handler.handleError( line, EReadError.ILLEGAL_SECTION );
       }
     }
     else
-      m_handler.handlerError( line, EReadError.ILLEGAL_SECTION );
+      m_handler.handleError( line, EReadError.ILLEGAL_SECTION );
   }
 
   private void interpreteResultLine( final String line )
   {
-    final String[] strings = line.split( "\\s+" );
+    final String[] strings = line.split( "\\s+" ); //$NON-NLS-1$
     if( strings.length == 6 )
     {
       try
@@ -252,16 +250,16 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
       }
       catch( final NumberFormatException e )
       {
-        m_handler.handlerError( line, EReadError.ILLEGAL_SECTION );
+        m_handler.handleError( line, EReadError.ILLEGAL_SECTION );
       }
     }
     else
-      m_handler.handlerError( line, EReadError.ILLEGAL_SECTION );
+      m_handler.handleError( line, EReadError.ILLEGAL_SECTION );
   }
 
   private void interpreteArcLine( final String line )
   {
-    final Pattern middleNodePattern = Pattern.compile( "AR\\s*([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+([0-9]+).*" );
+    final Pattern middleNodePattern = Pattern.compile( "AR\\s*([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+([0-9]+).*" ); //$NON-NLS-1$
     Matcher matcher = middleNodePattern.matcher( line );
     try
     {
@@ -277,7 +275,7 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
       }
       else
       {
-        final Pattern noMiddleNodePattern = Pattern.compile( "AR\\s*([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+([0-9]+).*" );
+        final Pattern noMiddleNodePattern = Pattern.compile( "AR\\s*([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+([0-9]+).*" ); //$NON-NLS-1$
         matcher = noMiddleNodePattern.matcher( line );
         if( matcher.matches() )
         {
@@ -289,19 +287,19 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
           m_handler.handleArc( line, id, node1ID, node2ID, elementLeftID, elementRightID, -1 );
         }
         else
-          m_handler.handlerError( line, EReadError.ILLEGAL_SECTION );
+          m_handler.handleError( line, EReadError.ILLEGAL_SECTION );
       }
     }
     catch( final NumberFormatException e )
     {
-      m_handler.handlerError( line, EReadError.ILLEGAL_SECTION );
+      m_handler.handleError( line, EReadError.ILLEGAL_SECTION );
     }
   }
 
   private void interpreteElementLine( final String line )
   {
     Matcher matcher = null;
-    final Pattern fourParamLinePattern = Pattern.compile( "FE\\s*([0-9]+)\\s+([\\+\\-]?[0-9]+)\\s+([\\+\\-]?[0-9]+)\\s+([0-9]+).*" );
+    final Pattern fourParamLinePattern = Pattern.compile( "FE\\s*([0-9]+)\\s+([\\+\\-]?[0-9]+)\\s+([\\+\\-]?[0-9]+)\\s+([0-9]+).*" ); //$NON-NLS-1$
     matcher = fourParamLinePattern.matcher( line );
     try
     {
@@ -315,7 +313,7 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
       }
       else
       {
-        final Pattern threeParamLinePattern = Pattern.compile( "FE\\s*([0-9]+)\\s+([\\+\\-]?[0-9]+)\\s+([\\+\\-]?[0-9]+).*" );
+        final Pattern threeParamLinePattern = Pattern.compile( "FE\\s*([0-9]+)\\s+([\\+\\-]?[0-9]+)\\s+([\\+\\-]?[0-9]+).*" ); //$NON-NLS-1$
         matcher = threeParamLinePattern.matcher( line );
         if( matcher.matches() )
         {
@@ -326,7 +324,7 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
         }
         else
         {
-          final Pattern twoParamLinePattern = Pattern.compile( "FE\\s*([0-9]+)\\s+([0-9]+).*" );
+          final Pattern twoParamLinePattern = Pattern.compile( "FE\\s*([0-9]+)\\s+([0-9]+).*" ); //$NON-NLS-1$
           matcher = twoParamLinePattern.matcher( line );
           if( matcher.matches() )
           {
@@ -336,7 +334,7 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
           }
           else
           {
-            final Pattern oneParamLinePattern = Pattern.compile( "FE\\s*([0-9]+).*" );
+            final Pattern oneParamLinePattern = Pattern.compile( "FE\\s*([0-9]+).*" ); //$NON-NLS-1$
             matcher = oneParamLinePattern.matcher( line );
             if( matcher.matches() )
             {
@@ -344,14 +342,14 @@ public class RMA10S2GmlConv implements IRMA10SModelReader
               m_handler.handleElement( line, id, -1, -1, -1 );
             }
             else
-              m_handler.handlerError( line, EReadError.LINE_TOO_SHORT );
+              m_handler.handleError( line, EReadError.LINE_TOO_SHORT );
           }
         }
       }
     }
     catch( final NumberFormatException e )
     {
-      m_handler.handlerError( line, EReadError.ILLEGAL_SECTION );
+      m_handler.handleError( line, EReadError.ILLEGAL_SECTION );
     }
   }
 

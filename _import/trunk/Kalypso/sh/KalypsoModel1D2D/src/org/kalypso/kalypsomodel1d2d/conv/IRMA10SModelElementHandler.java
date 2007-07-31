@@ -16,7 +16,7 @@ public interface IRMA10SModelElementHandler
   /**
    * Invoqued to signal the start the reading process
    */
-  public void start( );
+  public void start();
 
   /**
    * Invoke to signal the end of the reading process
@@ -83,9 +83,9 @@ public interface IRMA10SModelElementHandler
   /**
    * Handle error the Reader
    */
-  public void handlerError( String lineString, EReadError errorHints );
+  public void handleError( String lineString, EReadError errorHints );
 
-  public void setModelElementIDProvider( IModelElementIDProvider modelElementIDProvider ) throws IllegalArgumentException;
+  public void setModelElementIDProvider( ConversionIDProvider modelElementIDProvider ) throws IllegalArgumentException;
 
   public void setIRoughnessIDProvider( IRoughnessIDProvider roughnessIDProvider ) throws IllegalArgumentException;
 

@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package test.org.kalypso.kalypsomodel1d2d;
 
-
 import junit.framework.TestCase;
 
 import org.kalypso.kalypsomodel1d2d.ops.EdgeOps;
@@ -49,41 +48,35 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * @author antanas
- *
+ * 
  */
 public class TestOrientation extends TestCase
 {
-  public void testOrientation()
+  public void testOrientation( )
   {
     try
     {
-      double[] ccwExterior = {0,0, 1,0, 0,1, 0,0};
-      double[] cwExterior = {0,0, 0,1, 1,0, 0,0};
-      double[] ccwExterior1 = {0,0, 1,0.5, 0,1, 0,0};
-      double[] cwExterior1 = {0,0, 0.3,1, 1,0, 0,0};
-      GM_Surface ccwSurface = GeometryFactory.createGM_Surface( 
-          ccwExterior , new double[0][], 2, TestWorkspaces.getGaussKrueger() );
-      GM_Surface cwSurface = GeometryFactory.createGM_Surface( 
-          cwExterior , new double[0][], 2, TestWorkspaces.getGaussKrueger() );
-      GM_Surface ccwSurface1 = GeometryFactory.createGM_Surface( 
-          ccwExterior , new double[0][], 2, TestWorkspaces.getGaussKrueger() );
-      GM_Surface cwSurface1 = GeometryFactory.createGM_Surface( 
-          cwExterior , new double[0][], 2, TestWorkspaces.getGaussKrueger() );
-      
-      System.out.println("ccwO"+EdgeOps.getOrientation( ccwSurface )+ " cwO"+EdgeOps.getOrientation(cwSurface));
-      assertEquals( "CW",EdgeOps.ORIENTATION_RIGHT, EdgeOps.getOrientation( cwSurface ) );
-      assertEquals( "CW",EdgeOps.ORIENTATION_RIGHT, EdgeOps.getOrientation( cwSurface1 ) );
-      
-      assertEquals( "CCW",EdgeOps.ORIENTATION_LEFT, EdgeOps.getOrientation( ccwSurface ) );
-      assertEquals( "CCW",EdgeOps.ORIENTATION_LEFT, EdgeOps.getOrientation( ccwSurface1 ) );
-      
-      System.out.println("ccwO"+ccwSurface.getOrientation()+ " cwO"+cwSurface.getOrientation());
-      System.out.println("ccwS"+ccwSurface.getArea()+ " cwS"+cwSurface.getArea());
-      
-      
-      
+      double[] ccwExterior = { 0, 0, 1, 0, 0, 1, 0, 0 };
+      double[] cwExterior = { 0, 0, 0, 1, 1, 0, 0, 0 };
+      double[] ccwExterior1 = { 0, 0, 1, 0.5, 0, 1, 0, 0 };
+      double[] cwExterior1 = { 0, 0, 0.3, 1, 1, 0, 0, 0 };
+      GM_Surface ccwSurface = GeometryFactory.createGM_Surface( ccwExterior, new double[0][], 2, TestWorkspaces.getGaussKrueger() );
+      GM_Surface cwSurface = GeometryFactory.createGM_Surface( cwExterior, new double[0][], 2, TestWorkspaces.getGaussKrueger() );
+      GM_Surface ccwSurface1 = GeometryFactory.createGM_Surface( ccwExterior, new double[0][], 2, TestWorkspaces.getGaussKrueger() );
+      GM_Surface cwSurface1 = GeometryFactory.createGM_Surface( cwExterior, new double[0][], 2, TestWorkspaces.getGaussKrueger() );
+
+      System.out.println( "ccwO" + EdgeOps.getOrientation( ccwSurface ) + " cwO" + EdgeOps.getOrientation( cwSurface ) );
+      assertEquals( "CW", EdgeOps.ORIENTATION_RIGHT, EdgeOps.getOrientation( cwSurface ) );
+      assertEquals( "CW", EdgeOps.ORIENTATION_RIGHT, EdgeOps.getOrientation( cwSurface1 ) );
+
+      assertEquals( "CCW", EdgeOps.ORIENTATION_LEFT, EdgeOps.getOrientation( ccwSurface ) );
+      assertEquals( "CCW", EdgeOps.ORIENTATION_LEFT, EdgeOps.getOrientation( ccwSurface1 ) );
+
+      System.out.println( "ccwO" + ccwSurface.getOrientation() + " cwO" + cwSurface.getOrientation() );
+      System.out.println( "ccwS" + ccwSurface.getArea() + " cwS" + cwSurface.getArea() );
+
     }
-    catch (Exception e) 
+    catch( Exception e )
     {
       e.printStackTrace();
     }

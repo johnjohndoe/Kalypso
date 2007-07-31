@@ -163,11 +163,11 @@ public class TestResultDB extends TestCase
       modelDesc.setTinWaterLevel( "newValue" );
       modelDesc.setGmt( "_gmt" );
       modelDesc.setSimulationType( ISimulationDescriptor.SIMULATIONTYPE.Qsteady );
-      
-//      GmlSerializer.serializeWorkspace( 
-//          new OutputStreamWriter(System.out), 
-//          modelDesc.getWrappedFeature().getWorkspace() );
-      
+
+// GmlSerializer.serializeWorkspace(
+// new OutputStreamWriter(System.out),
+// modelDesc.getWrappedFeature().getWorkspace() );
+
       saveWorkSpace( modelDesc );
       // File realFile=new File("C:\\Temp\\aaaaTest\\gml_time.txt");
       final IResultModelDescriptor modelDescReloaded = loadRootFeature( tmpFile, IResultModelDescriptor.class );

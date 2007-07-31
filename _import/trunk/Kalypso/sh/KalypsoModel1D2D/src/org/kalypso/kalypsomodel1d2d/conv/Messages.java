@@ -40,45 +40,26 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.conv;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
+import org.eclipse.osgi.util.NLS;
 
-public interface IRMA10SModelReader
+/**
+ * @author antanas
+ *
+ */
+public class Messages extends NLS
 {
+  private static final String BUNDLE_NAME = "org.kalypso.kalypsomodel1d2d.conv.messages"; //$NON-NLS-1$
 
-  /**
-   * configure this reader with the handler that will handle the read and parsed element notification
-   * 
-   * @param handler
-   *          the model element handler
-   * @throws IllegalArgumentException
-   *           id handler parameter is null
-   */
-  public void setRMA10SModelElementHandler( IRMA10SModelElementHandler handler ) throws IllegalArgumentException;
+  public static String RMA10S2GmlConv_0;
 
-  /**
-   * Sets the id provide which will be ask to conver rma10s ids to gml id
-   * 
-   * @param idProvider
-   *          the id provider
-   * @param throw
-   *          {@link IllegalArgumentException} if the passed provided is null
-   */
-  public void setModelElementIDProvider( IModelElementIDProvider idProvider ) throws IllegalArgumentException;
+  public static String RMA10S2GmlConv_1;
+  static
+  {
+// initialize resource bundle
+    NLS.initializeMessages( BUNDLE_NAME, Messages.class );
+  }
 
-  /**
-   * Parse the model in the given input stream
-   * 
-   * @param inputStreamReader
-   *          the input stream to read the model from
-   * @throws IllegalArgumentException
-   *           if the passed input stream is null
-   * @throws IOException
-   *           to signal that an io exception occurs while reading from the stream
-   */
-  public void parse( final Reader reader ) throws IllegalStateException, IOException;
-
-  public void parse( final InputStream inputStream ) throws IllegalStateException, IOException;
-
+  private Messages( )
+  {
+  }
 }

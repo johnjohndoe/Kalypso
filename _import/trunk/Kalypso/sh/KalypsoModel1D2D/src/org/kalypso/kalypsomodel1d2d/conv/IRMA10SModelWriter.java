@@ -65,7 +65,7 @@ public interface IRMA10SModelWriter
    * @param throw
    *          {@link IllegalArgumentException} if the passed provided is null
    */
-  public void setModelElementIDProvider( IModelElementIDProvider idProvider ) throws IllegalArgumentException;
+  public void setModelElementIDProvider( ConversionIDProvider idProvider ) throws IllegalArgumentException;
 
   /**
    * Parse the model in the given input stream

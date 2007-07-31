@@ -254,9 +254,10 @@ public class Control1D2DConverter
     }
     final BoundaryLineInfo[] infos = new BoundaryLineInfo[filteredInfosList.size()];
     filteredInfosList.toArray( infos );
-
+    
     formatter.format( "SCL%9d%n", infos.length );
-
+    
+    int infoCnt = 1;
     for( final BoundaryLineInfo info : infos )
     {
       final IFE1D2DNode[] nodes = info.getNodes();
@@ -268,7 +269,7 @@ public class Control1D2DConverter
         /* Write start stuff */
         if( i == 0 )
 // formatter.format( "CC1 %4d", info.getID() );
-          formatter.format( "CC1     " );
+        formatter.format( "CC1 %4d", infoCnt++ );
         else if( i % 9 == 0 )
           formatter.format( "%nCC2     " );
 
@@ -425,11 +426,11 @@ public class Control1D2DConverter
       /* Write only considered lines */
       final TYPE type = item.getType();
 
-      if( type != contiType )
-        continue;
+//      if( type != contiType )
+//        continue;
 
       final double itemValue = item.getValue( stepCal == null ? null : stepCal.getTime() );
-
+      
       switch( type )
       {
         case CONTI_BC_Q:
@@ -458,16 +459,17 @@ public class Control1D2DConverter
     if( uRVal < 0.0 || uRVal > 1.0 )
       throw new SimulationException( "Relaxationsfaktor muss zwischen 0.0 und 1.0 liegen.", null );
 
-    final int buffVal;
+    final int buffVal = 10 - (int)(uRVal * 10);
+    /*
     if( uRVal == (float) 1.0 )
       buffVal = 0;
     else
       buffVal = 10 - (int) (((uRVal * 10)));
-
+    */
     for( int j = 0; j < nitn; j++ )
     {
       if( j % 9 == 0 )
-        formatter.format( "%nBC      " );
+        formatter.format( "%nBC%5s", " " );
 
       formatter.format( "%5d010", buffVal );
     }
