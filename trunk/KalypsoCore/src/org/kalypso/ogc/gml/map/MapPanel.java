@@ -306,11 +306,11 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
     final int height = getHeight();
     final int width = getWidth();
 
-    if( height == 0 || width == 0 )
+    if( (height == 0) || (width == 0) )
       return;
 
     // update dimension
-    if( height != m_height || width != m_width )
+    if( (height != m_height) || (width != m_width) )
     {
       m_height = height;
       m_width = width;
@@ -334,7 +334,7 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
     paintWidget( g );
 
     // If offset is set, fill the rest with the background color
-    if( xOffset != 0 || yOffset != 0 ) // to clear backround ...
+    if( (xOffset != 0) || (yOffset != 0) ) // to clear backround ...
     {
       final int left = Math.max( 0, xOffset );
       final int right = Math.min( width, xOffset + width );
@@ -386,10 +386,8 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
     {
       /* Cancel old job if still running. */
       if( m_modellPainter != null )
-      {
         m_modellPainter.dispose();
-        // do not set to null, else we may get NPE in the unsynchronized 'paint'-call
-      }
+      // do not set to null, else we may get NPE in the unsynchronized 'paint'-call
 
       /* Determine painter depending on state of modell. */
       if( m_model == null )
@@ -399,7 +397,7 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
         else
           m_modellPainter = new TextPainter( "Keine Daten vorhanden...", w, h );
       }
-      else if( m_model != null && m_model.getThemeSize() == 0 )
+      else if( (m_model != null) && (m_model.getThemeSize() == 0) )
         m_modellPainter = new TextPainter( "Keine Kartenthemen vorhanden", w, h );
       else
       {
@@ -411,7 +409,8 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
         final ThemePainter themePainter = new ThemePainter( m_model, getProjection(), getBoundingBox(), scale );
         final MapModellPainter modellPainter = new MapModellPainter( this, themePainter, w, h );
         modellPainter.setRule( m_painterMutex );
-        modellPainter.schedule();
+        // delay the Schedule, so if another invalidate comes within that timespan, no repaint happens
+        modellPainter.schedule( 250 );
         m_modellPainter = modellPainter;
       }
     }
@@ -528,7 +527,8 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
       // onModellChange( null );
 
       // instead invalidate the map yourself
-      setOffset( 0, 0 );
+      xOffset = 0;
+      yOffset = 0;
       invalidateMap();
     }
 
