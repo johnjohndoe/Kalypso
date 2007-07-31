@@ -128,16 +128,16 @@ public class MapModellPainter extends Job implements IPainter
     Job repaintJob = null;
     try
     {
-      repaintJob = new ComponentRepaintJob( m_mapPanel, MAP_REPAINT_MILLIS );
+      repaintJob = new ComponentRepaintJob( m_mapPanel, MapModellPainter.MAP_REPAINT_MILLIS );
       repaintJob.setSystem( true );
-      repaintJob.setPriority( LONG );
+      repaintJob.setPriority( Job.LONG );
       repaintJob.schedule( 500 );
 
       final SubMonitor progress = SubMonitor.convert( monitor, "Karte wird gezeichnet", 100 );
 
       ProgressUtilities.worked( progress, 0 );
 
-      if( m_width > 0 && m_height > 0 )
+      if( (m_width > 0) && (m_height > 0) )
       {
         gr = createImage( progress.newChild( 10 ) );
         // if image is null, wokbench is probably shutting down,
@@ -173,7 +173,7 @@ public class MapModellPainter extends Job implements IPainter
       monitor.done();
 
       /* Force at least one repaint at the end of this operation. */
-      m_mapPanel.repaint( MAP_REPAINT_MILLIS );
+      m_mapPanel.repaint( MapModellPainter.MAP_REPAINT_MILLIS );
     }
 
     return Status.OK_STATUS;
