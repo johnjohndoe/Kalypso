@@ -1170,4 +1170,20 @@ Kalypso 2.0.4        11. Juli 2007
      (wenn überhaupt) vorgenommen. Die Impulsbilanz überschätzt den Wasserstand häufig 
      (das hat sich bei den Wehren gezeigt), ist aber dafür stabiler.
 
-                                                          Monika Donner, 11.07.2007                                                          
+                                                          Monika Donner, 11.07.2007 
+
+Kalypso 2.0.4.1      31. Juli 2007
+-----------------------------------
+Bugfix Brückenverluste im Längsschnitt
+     Behalten der Brückenprofile in der Laengsschnitt.txt und Q_LangSchnitt.txt. 
+     Beim Erzeugen von interpolierten Profilen für die Brückenberechnung wurde
+     bei einer Anzahl von 2 interpolierten Profilen im Unterwasser versehentlich
+     auch die Brücke als "%interpol = .True." Profil gemerkt. Dadurch wurden die Ergebnisse an
+     der Brücke dann bei der nachfolgenden Aufräumaktion in der SUBR Qbordv entsorgt und 
+     tauchen nicht mehr im Laengsschnitt auf.
+     Jetzt wird die Brücke 'b' nochmal in SUBR wspber bewußt als nichtinterpoliertes
+     Profil gespeichert. 
+
+                                                         Monika Donner, 31.07.2007 
+
+                                                         
