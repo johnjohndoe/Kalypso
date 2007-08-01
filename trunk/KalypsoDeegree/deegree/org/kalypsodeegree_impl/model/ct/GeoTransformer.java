@@ -90,11 +90,13 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 final public class GeoTransformer
 {
+  private static final ConvenienceCSFactory m_csFactory = ConvenienceCSFactory.getInstance();
+
   private CS_CoordinateSystem m_targetOGCCS = null;
 
-  private ConvenienceCSFactory m_csFactory = null;
-
   private CoordinateSystem m_targetCS = null;
+
+  private final boolean m_shouldTransform;
 
   /**
    * Creates a new GeoTransformer object.
@@ -104,9 +106,18 @@ final public class GeoTransformer
    */
   public GeoTransformer( final String targetCS ) throws Exception
   {
-    m_csFactory = ConvenienceCSFactory.getInstance();
-    this.m_targetCS = m_csFactory.getCSByName( targetCS );
-    setTargetCS( this.m_targetCS );
+    this( targetCS, TransformUtilities.shouldTransform() );
+  }
+
+  /**
+   * Creates a new GeoTransformer object.
+   * 
+   * @param targetCS
+   * @throws Exception
+   */
+  public GeoTransformer( final String targetCS, final boolean shouldTransform ) throws Exception
+  {
+    this( m_csFactory.getCSByName( targetCS ), shouldTransform );
   }
 
   /**
@@ -117,8 +128,19 @@ final public class GeoTransformer
    */
   public GeoTransformer( final CoordinateSystem targetCS ) throws Exception
   {
+    this( targetCS, TransformUtilities.shouldTransform() );
+  }
+
+  /**
+   * Creates a new GeoTransformer object.
+   * 
+   * @param targetCS
+   * @throws Exception
+   */
+  public GeoTransformer( final CoordinateSystem targetCS, final boolean shouldTransform ) throws Exception
+  {
     setTargetCS( targetCS );
-    m_csFactory = ConvenienceCSFactory.getInstance();
+    m_shouldTransform = shouldTransform;
   }
 
   /**
@@ -129,8 +151,19 @@ final public class GeoTransformer
    */
   public GeoTransformer( final CS_CoordinateSystem targetCS ) throws Exception
   {
+    this( targetCS, TransformUtilities.shouldTransform() );
+  }
+
+  /**
+   * Creates a new GeoTransformer object.
+   * 
+   * @param targetCS
+   * @throws Exception
+   */
+  public GeoTransformer( final CS_CoordinateSystem targetCS, final boolean shouldTransform ) throws Exception
+  {
     setTargetCS( targetCS );
-    m_csFactory = ConvenienceCSFactory.getInstance();
+    m_shouldTransform = shouldTransform;
   }
 
   /**
@@ -147,7 +180,7 @@ final public class GeoTransformer
    */
   public void setTargetCS( final CoordinateSystem targetCS ) throws Exception
   {
-    this.m_targetCS = targetCS;
+    m_targetCS = targetCS;
     m_targetOGCCS = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export( targetCS );
   }
 
@@ -164,8 +197,7 @@ final public class GeoTransformer
    */
   public GM_Object transform( GM_Object geo ) throws Exception
   {
-    /* If no transformation should be done, return the input object. */
-    if( TransformUtilities.shouldTransform() == false )
+    if( !m_shouldTransform )
       return geo;
 
     final CoordinateSystem cs = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().wrap( geo.getCoordinateSystem() );
@@ -464,21 +496,12 @@ final public class GeoTransformer
   public GM_Envelope transformEnvelope( final GM_Envelope envelope, final CS_CoordinateSystem sourceCRS ) throws Exception
   {
     /* If no transformation should be done, return the input object. */
-    if( TransformUtilities.shouldTransform() == false )
+    if( !m_shouldTransform )
       return envelope;
 
     // Debug.debugMethodBegin( this, "transformPositions" );
     //
     final GM_Surface asSurface = GeometryFactory.createGM_Surface( envelope, sourceCRS );
     return transform( asSurface ).getEnvelope();
-    // GM_Point min = GeometryFactory.createGM_Point( envelope.getMin().getX(), envelope.getMin().getY(), sourceCRS );
-    // GM_Point max = GeometryFactory.createGM_Point( envelope.getMax().getX(), envelope.getMax().getY(), sourceCRS );
-    // min = (GM_Point)transform( min );
-    // max = (GM_Point)transform( max );
-    // // create bounding box with coordinates in the EPSG:4326 reference system
-    // envelope = GeometryFactory.createGM_Envelope( min.getX(), min.getY(), max.getX(), max.getY() );
-    //
-    // Debug.debugMethodEnd();
-    // return envelope;
   }
 }

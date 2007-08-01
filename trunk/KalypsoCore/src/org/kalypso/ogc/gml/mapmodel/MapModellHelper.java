@@ -87,7 +87,7 @@ public class MapModellHelper
       if( !crs.getName().equalsIgnoreCase( "EPSG:4326" ) )
       {
         // transform the bounding box of the request to EPSG:4326
-        final GeoTransformer transformer = new GeoTransformer( "EPSG:4326" );
+        final GeoTransformer transformer = new GeoTransformer( "EPSG:4326", true );
         box = transformer.transformEnvelope( bbox, crs );
       }
       else
@@ -143,7 +143,7 @@ public class MapModellHelper
       final double scale = MapModellHelper.calcScale( model, bbox, bounds.width, bounds.height );
       try
       {
-        // TODO How to initialize the themes without painting?
+        // necessary for WMS themes: they only start loading the image frmo WMS in the paint call
         model.paint( gr, p, bbox, scale, false );
 
         final IKalypsoTheme[] allThemes = model.getAllThemes();
@@ -157,7 +157,7 @@ public class MapModellHelper
               isLoading = true;
 
           /* If the timeout was reached the last run, stop waiting. */
-          if( timeout >= 15000 )
+          if( timeout >= 30000 )
             break;
 
           /* Wait for one second, if it is still loading. */
@@ -169,6 +169,9 @@ public class MapModellHelper
         }
 
         model.paint( gr, p, bbox, scale, false );
+
+        // maybe use ThemePainter instaed?
+// new ThemePainter();
       }
       catch( final Exception e )
       {

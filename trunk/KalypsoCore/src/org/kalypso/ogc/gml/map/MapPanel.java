@@ -316,22 +316,7 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
       m_width = width;
     }
 
-    final BufferedImage image = new BufferedImage( width, height, BufferedImage.TYPE_INT_ARGB );
-    final Graphics2D g = (Graphics2D) image.getGraphics();
-
-    /* Clear background */
-    g.setColor( Color.white );
-    g.fillRect( 0, 0, width, height );
-
-    g.setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
-    g.setRenderingHint( RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON );
-
-    m_modellPainter.paint( g );
-
-    // TODO: move points of interests out of map panel
-    paintPointOfInterests( g );
-
-    paintWidget( g );
+    final BufferedImage image = paintBuffer( height, width );
 
     // If offset is set, fill the rest with the background color
     if( (xOffset != 0) || (yOffset != 0) ) // to clear backround ...
@@ -349,6 +334,38 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
     }
 
     outerG2.drawImage( image, xOffset, yOffset, null );
+  }
+
+  private BufferedImage paintBuffer( final int height, final int width )
+  {
+    final BufferedImage image = new BufferedImage( width, height, BufferedImage.TYPE_INT_ARGB );
+    
+    Graphics2D g = null;
+
+    try
+    {
+      g = (Graphics2D) image.getGraphics();
+
+      /* Clear background */
+      g.setColor( Color.white );
+      g.fillRect( 0, 0, width, height );
+
+      g.setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
+      g.setRenderingHint( RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON );
+
+      m_modellPainter.paint( g );
+
+      // TODO: move points of interests out of map panel
+      paintPointOfInterests( g );
+
+      paintWidget( g );
+      return image;
+    }
+    finally
+    {
+      if( g != null )
+        g.dispose();
+    }
   }
 
   @Override

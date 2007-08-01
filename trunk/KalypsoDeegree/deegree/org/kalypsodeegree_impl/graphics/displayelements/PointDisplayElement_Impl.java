@@ -167,19 +167,22 @@ class PointDisplayElement_Impl extends GeometryDisplayElement_Impl implements Po
 
     final int size = graphic == null ? defaultImg.getWidth( null ) : graphic.getNormalizedSize( feature, uom, projection );
 
-    /* Center graphics context on middle of excpted image and rotate according to rotation. */
-    final int x_ = x - (size >> 1);
-    final int y_ = y - (size >> 1);
+    /* Center graphics context on middle of excepted image and rotate according to rotation. */
+    final int halfSize = size >> 1;
+    final int x_ = x - halfSize;
+    final int y_ = y - halfSize;
 
-    g.translate( x_, y_ );
+    g.translate( x, y );
     g.rotate( Math.toRadians( rotation ) );
-
+    g.translate( -halfSize, -halfSize );
+    
     if( graphic == null )
       g.drawImage( defaultImg, x_, y_, null );
     else
       graphic.paintAwt( g, size, feature );
 
+    g.translate( halfSize, halfSize );
     g.rotate( -Math.toRadians( rotation ) );
-    g.translate( -x_, -y_ );
+    g.translate( -x, -y );
   }
 }
