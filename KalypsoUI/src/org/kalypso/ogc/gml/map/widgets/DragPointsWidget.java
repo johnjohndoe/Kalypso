@@ -243,9 +243,9 @@ public class DragPointsWidget extends AbstractWidget
     for( IHandle handle : m_handles )
     {
       if( handle.isActive() )
-        handle.paint( getMapPanel().getGraphics(), getMapPanel().getProjection(), m_startPoint, m_currentPoint );
+        handle.paint( g, getMapPanel().getProjection(), m_startPoint, m_currentPoint );
       else
-        handle.paint( getMapPanel().getGraphics(), getMapPanel().getProjection(), null, null );
+        handle.paint( g, getMapPanel().getProjection(), null, null );
     }
   }
 
