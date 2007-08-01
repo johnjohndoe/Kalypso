@@ -95,6 +95,7 @@ public class ElbePolteConst
 
   public static final String GML_ELBE_PEGEL_COLL = "pegelMember[ElbePegel]";//[ElbePegel]
   public static final String GML_ZWG_ZUFLUSS_COLL = "zwgZuflussMember";//[ZwgZufluss]
+  public static final String GML_H_PEGEL_COLL = "internerHPegelMember";//[InternerHPegel]
 
   public static final String PAR_FILE_SEP = "\t";
   public static final String PAR_LINE_END = " / ";

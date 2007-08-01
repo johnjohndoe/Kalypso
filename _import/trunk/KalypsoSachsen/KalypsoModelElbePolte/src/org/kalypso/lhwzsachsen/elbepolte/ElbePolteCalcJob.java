@@ -51,7 +51,6 @@ import org.kalypso.services.calculation.job.ICalcJob;
 import org.kalypso.services.calculation.job.ICalcMonitor;
 import org.kalypso.services.calculation.job.ICalcResultEater;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * 
@@ -108,7 +107,7 @@ public class ElbePolteCalcJob implements ICalcJob
 
       monitor.setMessage( "Rechenkern wird aufgerufen" );
       pw.println( "Rechenkern wird aufgerufen" );
-      startCalculation( exeDir, props, pw, monitor, nativeOutDir, nativeInDir );
+      startCalculation( exeDir, pw, monitor, nativeOutDir );
 
       resultEater.addResult( "NATIVE_OUT_DIR", nativeOutDir );
 
@@ -146,37 +145,39 @@ public class ElbePolteCalcJob implements ICalcJob
       if( pw != null )
         pw.close();
 
-      resultEater.addResult( "ERGEBNISSE", outputDir );
+      resultEater.addResult( "ERGEBNISSE", new File( outputDir, "Ergebnisse" ) );
     }
   }
 
   /**
+   * @param nativeOutDir
    * @param outputDir
    * @param props
-   * @param outputDir
    * @throws IOException
    */
 
   private void writeResultsToFolder( File nativeOutDir, File outputDir, Properties props ) throws Exception
   {
 
-    final FileVisitorHwvs2Zml fleVisitor = new FileVisitorHwvs2Zml( nativeOutDir, outputDir, props,
-        ElbePolteConst.GML_ELBE_PEGEL_COLL, "Modellwerte", "Pegel", true );
-    FileUtilities.accept( nativeOutDir, fleVisitor, true );
+    final FileVisitorHwvs2Zml fleVisitorPegel = new FileVisitorHwvs2Zml( outputDir, props,
+        ElbePolteConst.GML_ELBE_PEGEL_COLL, "ganglinie_modellwerte", true );
+    FileUtilities.accept( nativeOutDir, fleVisitorPegel, true );
+
+    
+    final FileVisitorHwvs2Zml fleVisitorZwge = new FileVisitorHwvs2Zml( outputDir, props,
+        ElbePolteConst.GML_H_PEGEL_COLL, "ganglinie_modellwerte", true );
+    FileUtilities.accept( nativeOutDir, fleVisitorZwge, true );
 
   }
 
   /**
    * @param exeDir
-   * @param props
    * @param pw
    * @param monitor
    * @param nativeOutDir
-   * @param nativeInDir
-   *          TODO
    */
-  private void startCalculation( File exeDir, Properties props, PrintWriter pw, ICalcMonitor monitor,
-      File nativeOutDir, File nativeInDir ) throws CalcJobServiceException
+  private void startCalculation( File exeDir, PrintWriter pw, ICalcMonitor monitor, File nativeOutDir )
+      throws CalcJobServiceException
   {
     final String commandString = exeDir + File.separator + "HWObereElbe.exe";
 

@@ -40,11 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.lhwzsachsen.elbepolte.visitors;
 
-import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -56,19 +53,17 @@ import java.util.Properties;
 import java.util.StringTokenizer;
 
 import org.apache.commons.io.IOUtils;
-import org.eclipse.core.runtime.CoreException;
 import org.kalypso.lhwzsachsen.elbepolte.ElbePolteConst;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.FeatureProperty;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.IPropertiesFeatureVisitor;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
  * 
- * TODO: insert type comment here
+ * visitor to import native PAR file into modell.gml (used in *.gmc)
  * 
  * @author thuel2
  */
@@ -141,11 +136,12 @@ public class ImportParFileVisitor implements IPropertiesFeatureVisitor
 
   private String m_paramPath;
   private String m_context;
+  private Collection m_exceptions = new ArrayList();
 
   /**
    * @see org.kalypsodeegree.model.feature.IPropertiesFeatureVisitor#init(java.util.Properties)
    */
-  public void init( Properties properties ) throws CoreException
+  public void init( Properties properties ) 
   {
     m_paramPath = properties.getProperty( "paramPath", null );
 
@@ -200,22 +196,9 @@ public class ImportParFileVisitor implements IPropertiesFeatureVisitor
         sZeile = rdrParams.readLine();
       }
     }
-
-    catch( MalformedURLException e )
-    {
-      e.printStackTrace();
-    }
-    catch( UnsupportedEncodingException e1 )
-    {
-      e1.printStackTrace();
-    }
-    catch( FileNotFoundException e1 )
-    {
-      e1.printStackTrace();
-    }
     catch( Exception e )
     {
-      e.printStackTrace();
+      m_exceptions.add( e );
     }
     finally
     {
@@ -248,7 +231,7 @@ public class ImportParFileVisitor implements IPropertiesFeatureVisitor
       return;
     }
     final Strecke strecke = (Strecke)objStrecke;
-    f.setProperty("name", strecke.getStreckeName());
+    f.setProperty( "name", strecke.getStreckeName() );
 
     // DB, LT, ZZG, EFM, nrFEKO setzen (StreckeInfo) werden überschrieben
     final String streckeInfo = strecke.getStreckeInfo();
@@ -257,8 +240,8 @@ public class ImportParFileVisitor implements IPropertiesFeatureVisitor
     f.setProperty( "db", sInfoTok.nextToken() );
     f.setProperty( "lt", sInfoTok.nextToken() );
     f.setProperty( "zwg_zuschlag", sInfoTok.nextToken() );
-    final String nextToken = sInfoTok.nextToken() ;
-    f.setProperty( "replaceValues", "1".equals(nextToken) ? "true" : "false" );
+    final String nextToken = sInfoTok.nextToken();
+    f.setProperty( "replaceValues", "1".equals( nextToken ) ? "true" : "false" );
     f.setProperty( "nr_feko", sInfoTok.nextToken() );
 
     final String sParamSetMem = "paramSetMember";
@@ -280,12 +263,6 @@ public class ImportParFileVisitor implements IPropertiesFeatureVisitor
       // neues element StreckeParams
       final StreckeParams sParams = (StreckeParams)iter.next();
       final StringTokenizer hwTypInfoTok = new StringTokenizer( sParams.getHwTypeInfo() );
-
-      // TODO: sicherstellen, dass Reihenfolgen beibehalten werden bei LIST!!!
-
-      //      final double weight = sParams.getWeight();
-      //      final String targetId = sParams.getTargetId();
-      //      final String ombrometerHref = "Ombrometer-" + targetId;
       final String elementId = f.getId() + "-params-" + count++;
 
       // neues Feature: 'paramSetMember'
@@ -336,7 +313,9 @@ public class ImportParFileVisitor implements IPropertiesFeatureVisitor
           final String a2 = paramSetTok.nextToken();
           final String[] bWerte = new String[bCount];
           for( int ii = 0; ii < bCount; ii++ )
-          {bWerte[ii] = paramSetTok.nextToken();}
+          {
+            bWerte[ii] = paramSetTok.nextToken();
+          }
 
           Feature elementSet;
           if( paramSetTok.hasMoreTokens() )
@@ -390,4 +369,15 @@ public class ImportParFileVisitor implements IPropertiesFeatureVisitor
       list.add( element );
     }
   }
+
+  public boolean hasException()
+  {
+    return !m_exceptions.isEmpty();
+  }
+
+  public Exception[] getExceptions()
+  {
+    return (Exception[])m_exceptions.toArray( new Exception[m_exceptions.size()] );
+  }
+
 }

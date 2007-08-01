@@ -70,7 +70,7 @@ import com.braju.format.Format;
 
 /**
  * 
- * TODO: insert type comment here
+ * methods for creating native input files
  * 
  * @author thuel2
  */
@@ -78,21 +78,12 @@ public class ElbePolteInputWorker
 {
 
   /**
-   *  
-   */
-
-  public ElbePolteInputWorker()
-  {
-  // will not be instantiated
-  }
-
-  /**
    * @param tmpDir
    * @param inputProvider
    * @param props
    * @param nativeInDir
-   * @param pw
-   * @return
+   * @param logWriter
+   * @return directory (File)
    * @throws Exception
    */
   public static File createNativeInput( File tmpDir, ICalcDataProvider inputProvider, PrintWriter logWriter,
@@ -120,8 +111,6 @@ public class ElbePolteInputWorker
       writeParFile( workspace, paramDir, logWriter );
 
       logWriter.println( "Erzeuge Zeitreihen" );
-      // TODO hat das was mit den Umhüllenden zu tun???
-      //      applyAccuracyPrediction( workspace, tsmap );
       writeTimeseries( props, exeDir, inputProvider.getURLForID( "GML" ) );
 
       if( exeDir.exists() && nativeInDir.exists() )
@@ -255,7 +244,7 @@ public class ElbePolteInputWorker
       final String nr = (String)featStrecke.getProperty( "nr" );
       final int db = ( (Integer)featStrecke.getProperty( "db" ) ).intValue();
       final int lt = ( (Integer)featStrecke.getProperty( "lt" ) ).intValue();
-      final int zwgZuschlag = ( (Integer)featStrecke.getProperty( "zwg_zuschlag" ) ).intValue();
+      final double zwgZuschlag = ( (Double)featStrecke.getProperty( "zwg_zuschlag" ) ).doubleValue();
       final String replaceVals = ( (Boolean)featStrecke.getProperty( "replaceValues" ) ).booleanValue() ? "1" : "0";
       final int nrFeko = ( (Integer)featStrecke.getProperty( "nr_feko" ) ).intValue();
 
@@ -266,7 +255,7 @@ public class ElbePolteInputWorker
 
       // ParamSets
       final FeatureList paramSetList = (FeatureList)featStrecke.getProperty( "paramSetMember" );
-      writeStreckeParamSets( paramSetList, wrtr, logwriter );
+      writeStreckeParamSets( paramSetList, wrtr );
     }
 
   }
@@ -274,11 +263,9 @@ public class ElbePolteInputWorker
   /**
    * @param paramSetList
    * @param wrtr
-   * @param logwriter
    * @throws IOException
    */
-  private static void writeStreckeParamSets( FeatureList paramSetList, PrintWriter wrtr, PrintWriter logwriter )
-      throws IOException
+  private static void writeStreckeParamSets( FeatureList paramSetList, PrintWriter wrtr ) throws IOException
   {
 
     for( final Iterator itParamSet = paramSetList.iterator(); itParamSet.hasNext(); )
@@ -298,19 +285,17 @@ public class ElbePolteInputWorker
 
       // StufenParamSets
       final FeatureList stufenParamSetList = (FeatureList)featParamSet.getProperty( "stufenParamSetMember" );
-      writeStreckeStufenParamSets( stufenParamSetList, wrtr, logwriter );
-
+      writeStreckeStufenParamSets( stufenParamSetList, wrtr );
     }
   }
 
   /**
    * @param stufenParamSetList
    * @param wrtr
-   * @param logwriter
    * @throws IOException
    */
-  private static void writeStreckeStufenParamSets( FeatureList stufenParamSetList, PrintWriter wrtr,
-      PrintWriter logwriter ) throws IOException
+  private static void writeStreckeStufenParamSets( FeatureList stufenParamSetList, PrintWriter wrtr )
+      throws IOException
   {
 
     final String sep = ElbePolteConst.PAR_FILE_SEP;

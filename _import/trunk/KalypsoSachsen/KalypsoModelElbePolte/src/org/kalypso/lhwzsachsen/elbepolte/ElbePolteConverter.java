@@ -185,6 +185,7 @@ public class ElbePolteConverter
 
       sEingabeZeile = lneNumRdr.readLine();
       strTok = new StringTokenizer( sEingabeZeile );
+      String strDate = "";
       int lfdNum = 0;
       if( strTok.hasMoreTokens() )
       {
@@ -194,21 +195,18 @@ public class ElbePolteConverter
           // Format: lfd_Nummer, Jahr, Monat, Tag, Stunde, Wert
           if( sEingabeZeile.length() > 25 )
           {
-            String strDate = sEingabeZeile.substring( 10, 40 );
-            dtDatum = ElbePolteConst.HWVS_DATE_FORMAT.parse( strDate );
-            calendar.setTime( dtDatum );
-
             strTok = new StringTokenizer( sEingabeZeile );
             if( strTok.hasMoreTokens() )
             {
               // die ersten Einträge werden übersprungen
               lfdNum = Integer.valueOf( strTok.nextToken() ).intValue();
+              strDate = strTok.nextToken() + " " + strTok.nextToken() + " " + strTok.nextToken() + " "
+                  + strTok.nextToken();
+              dtDatum = ElbePolteConst.HWVS_DATE_FORMAT.parse( strDate );
+              calendar.setTime( dtDatum );
+
               if( lfdNum == cntValuesPast )
                 vorhersageDte = dtDatum;
-              strTok.nextToken();
-              strTok.nextToken();
-              strTok.nextToken();
-              strTok.nextToken();
 
               lstEingDatum.add( calendar.getTime() );
               lstEingWerte.add( new Double( strTok.nextToken() ) );
@@ -253,47 +251,54 @@ public class ElbePolteConverter
     return obsOut;
   }
 
-  public static void zml2Hwvs( final File fleZml, final File fleHwvs )
+  public static void zml2Hwvs( final File fleZml, final File fleHwvs ) throws Exception
   {
-    try
+
+    final URL url = fleZml.toURL();
+
+    if( !zml2Hwvs( url, fleHwvs, url.toString() ) )
     {
-      final URL url = fleZml.toURL();
-      final IObservation obsZml = ZmlFactory.parseXML( url, url.toString() );
-
-      final URLConnection urlConTest = UrlUtilities.connectQuietly( url );
-
-      if( urlConTest != null )
-      {
-        // TODO Zeitraum wäre noch schön :-)
-        final String sComment = fleHwvs.getName() + ": " + obsZml.getIdentifier();
-        zml2Hwvs( obsZml, fleHwvs, sComment );
-
-      }
-    }
-    catch( Exception e )
-    {
-      // TODO: handle exception
+      throw new Exception( "Zeitreihe " + url.toString()
+          + " kann nicht geöffnet werden (da vielleicht nicht vorhanden)." );
     }
   }
 
   /**
-   * @param observation
+   * @param zmlUrl
    * @param fleHwvs
+   * @return has zml (URL) successfully been written to fleHwvs
+   * @throws Exception
    */
-  public static void zml2Hwvs( final IObservation obsZml, final File fleHwvs, final String sComment )
+  public static boolean zml2Hwvs( final URL zmlUrl, final File fleHwvs, final String zmlId ) throws Exception
   {
-    try
-    {
-      final Writer wrtrHwvs = new OutputStreamWriter( new FileOutputStream( fleHwvs ),
-          ElbePolteConst.ELBEPOLTE_CODEPAGE );
+    final IObservation obsZml = ZmlFactory.parseXML( zmlUrl, zmlId );
 
-      zml2Hwvs( obsZml, wrtrHwvs, sComment );
-      IOUtils.closeQuietly( wrtrHwvs );
-    }
-    catch( Exception e )
+    final URLConnection urlConTest = UrlUtilities.connectQuietly( zmlUrl );
+
+    if( urlConTest != null )
     {
-      // TODO: handle exception
+      // TODO Zeitraum in Kommentarzeile wäre noch schön :-)
+      final String sComment = fleHwvs.getName() + ": " + obsZml.getIdentifier();
+      zml2Hwvs( obsZml, fleHwvs, sComment );
+      return true;
     }
+    return false;
+  }
+
+  /**
+   * @param obsZml
+   * @param fleHwvs
+   * @param sComment
+   * @throws Exception
+   */
+  public static void zml2Hwvs( final IObservation obsZml, final File fleHwvs, final String sComment ) throws Exception
+
+  {
+
+    final Writer wrtrHwvs = new OutputStreamWriter( new FileOutputStream( fleHwvs ), ElbePolteConst.ELBEPOLTE_CODEPAGE );
+
+    zml2Hwvs( obsZml, wrtrHwvs, sComment );
+    IOUtils.closeQuietly( wrtrHwvs );
   }
 
   public static void zml2Hwvs( final IObservation obsZml, final Writer wrtr, String sComment )
@@ -374,36 +379,82 @@ public class ElbePolteConverter
 
   public static void main( String[] args )
   {
+    try
 
-    File fleHwvsIn = new File( ElbePolteConverter.class.getResource( "resources/test/Daten/Daten.001" ).getFile() );
-    File fleZml = new File( System.getProperty( "java.io.tmpdir" ), "Daten.001.zml" );
-    File fleHwvsOut = new File( System.getProperty( "java.io.tmpdir" ), "Daten.001" );
-    hwvs2zml( fleHwvsIn, fleZml );
-    zml2Hwvs( fleZml, fleHwvsOut );
+    {
 
-    fleHwvsIn = new File( ElbePolteConverter.class.getResource( "resources/test/Modell/Modell.001" ).getFile() );
-    fleZml = new File( System.getProperty( "java.io.tmpdir" ), "Modell.001.zml" );
-    fleHwvsOut = new File( System.getProperty( "java.io.tmpdir" ), "Modell.001" );
-    hwvs2zml( fleHwvsIn, fleZml );
-    zml2Hwvs( fleZml, fleHwvsOut );
+      File fleHwvsIn = new File( "c:/temp/polte_zr/Dresden_Torgau.001" );
+      File fleZml = new File( "c:/temp/polte_zr", "Dresden_Torgau.001.zml" );
+      hwvs2zml( fleHwvsIn, fleZml );
 
-    fleHwvsIn = new File( ElbePolteConverter.class.getResource( "resources/test/ZWG/Dresden_Torgau.001" ).getFile() );
-    fleZml = new File( System.getProperty( "java.io.tmpdir" ), "Dresden_Torgau.001.zml" );
-    fleHwvsOut = new File( System.getProperty( "java.io.tmpdir" ), "Dresden_Torgau.001" );
-    hwvs2zml( fleHwvsIn, fleZml );
-    zml2Hwvs( fleZml, fleHwvsOut );
+      
+       fleHwvsIn = new File( "c:/temp/polte_zr/Usti_Dresden.001" );
+       fleZml = new File( "c:/temp/polte_zr", "Usti_Dresden.001.zml" );
+      hwvs2zml( fleHwvsIn, fleZml );
 
-    fleHwvsIn = new File( ElbePolteConverter.class.getResource( "resources/test/ZWG/Loeben.001" ).getFile() );
-    fleZml = new File( System.getProperty( "java.io.tmpdir" ), "Loeben.001.zml" );
-    fleHwvsOut = new File( System.getProperty( "java.io.tmpdir" ), "Loeben.001" );
-    hwvs2zml( fleHwvsIn, fleZml );
-    zml2Hwvs( fleZml, fleHwvsOut );
+       fleHwvsIn = new File( "c:/temp/polte_zr/Loeben.001" );
+       fleZml = new File( "c:/temp/polte_zr", "Loeben.001.zml" );
+      hwvs2zml( fleHwvsIn, fleZml );
 
-    fleHwvsIn = new File( ElbePolteConverter.class.getResource( "resources/test/ZWG/Usti_Dresden.001" ).getFile() );
-    fleZml = new File( System.getProperty( "java.io.tmpdir" ), "Usti_Dresden.001.zml" );
-    fleHwvsOut = new File( System.getProperty( "java.io.tmpdir" ), "Usti_Dresden.001" );
-    hwvs2zml( fleHwvsIn, fleZml );
-    zml2Hwvs( fleZml, fleHwvsOut );
+      //      for( int ii = 1; ii <= 15; ii++ )
+      //      {
+      //        File fleHwvsIn = new File( "c:/temp/polte_zr/Modell.0" + ii );
+      //        File fleZml = new File( "c:/temp/polte_zr", "Modell.0" + ii + ".zml" );
+      //        if( fleHwvsIn.exists() )
+      //          hwvs2zml( fleHwvsIn, fleZml );
+      //
+      //        fleHwvsIn = new File( "c:/temp/polte_zr/Modell.00" + ii );
+      //        fleZml = new File( "c:/temp/polte_zr", "Modell.00" + ii + ".zml" );
+      //        if( fleHwvsIn.exists() )
+      //          hwvs2zml( fleHwvsIn, fleZml );
+      //
+      //        fleHwvsIn = new File( "c:/temp/polte_zr/Daten.0" + ii );
+      //        fleZml = new File( "c:/temp/polte_zr", "Daten.0" + ii + ".zml" );
+      //        if( fleHwvsIn.exists() )
+      //          hwvs2zml( fleHwvsIn, fleZml );
+      //
+      //        fleHwvsIn = new File( "c:/temp/polte_zr/Daten.00" + ii );
+      //        fleZml = new File( "c:/temp/polte_zr", "Daten.00" + ii + ".zml" );
+      //        if( fleHwvsIn.exists() )
+      //          hwvs2zml( fleHwvsIn, fleZml );
+      //      }
 
+      //      File fleHwvsIn = new File( ElbePolteConverter.class.getResource( "resources/test/Daten/Daten.001" ).getFile()
+      // );
+      //      File fleZml = new File( System.getProperty( "java.io.tmpdir" ), "Daten.001.zml" );
+      //      File fleHwvsOut = new File( System.getProperty( "java.io.tmpdir" ), "Daten.001" );
+      //      hwvs2zml( fleHwvsIn, fleZml );
+      //      zml2Hwvs( fleZml, fleHwvsOut );
+      //
+      //      fleHwvsIn = new File( ElbePolteConverter.class.getResource( "resources/test/Modell/Modell.001" ).getFile() );
+      //      fleZml = new File( System.getProperty( "java.io.tmpdir" ), "Modell.001.zml" );
+      //      fleHwvsOut = new File( System.getProperty( "java.io.tmpdir" ), "Modell.001" );
+      //      hwvs2zml( fleHwvsIn, fleZml );
+      //      zml2Hwvs( fleZml, fleHwvsOut );
+      //
+      //      fleHwvsIn = new File( ElbePolteConverter.class.getResource( "resources/test/ZWG/Dresden_Torgau.001" ).getFile()
+      // );
+      //      fleZml = new File( System.getProperty( "java.io.tmpdir" ), "Dresden_Torgau.001.zml" );
+      //      fleHwvsOut = new File( System.getProperty( "java.io.tmpdir" ), "Dresden_Torgau.001" );
+      //      hwvs2zml( fleHwvsIn, fleZml );
+      //      zml2Hwvs( fleZml, fleHwvsOut );
+      //
+      //      fleHwvsIn = new File( ElbePolteConverter.class.getResource( "resources/test/ZWG/Loeben.001" ).getFile() );
+      //      fleZml = new File( System.getProperty( "java.io.tmpdir" ), "Loeben.001.zml" );
+      //      fleHwvsOut = new File( System.getProperty( "java.io.tmpdir" ), "Loeben.001" );
+      //      hwvs2zml( fleHwvsIn, fleZml );
+      //      zml2Hwvs( fleZml, fleHwvsOut );
+      //
+      //      fleHwvsIn = new File( ElbePolteConverter.class.getResource( "resources/test/ZWG/Usti_Dresden.001" ).getFile()
+      // );
+      //      fleZml = new File( System.getProperty( "java.io.tmpdir" ), "Usti_Dresden.001.zml" );
+      //      fleHwvsOut = new File( System.getProperty( "java.io.tmpdir" ), "Usti_Dresden.001" );
+      //      hwvs2zml( fleHwvsIn, fleZml );
+      //      zml2Hwvs( fleZml, fleHwvsOut );
+    }
+    catch( Exception e )
+    {
+      e.printStackTrace();
+    }
   }
 }

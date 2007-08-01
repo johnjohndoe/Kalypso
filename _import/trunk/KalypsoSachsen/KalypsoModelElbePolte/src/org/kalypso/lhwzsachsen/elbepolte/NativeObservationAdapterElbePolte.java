@@ -53,7 +53,7 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 
 /**
  * 
- * TODO: insert type comment here
+ * helpers to create ZML files
  * 
  * @author thuel2
  */

@@ -41,8 +41,9 @@
 package org.kalypso.lhwzsachsen.elbepolte.visitors;
 
 import java.io.File;
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Properties;
 
@@ -59,6 +60,7 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.timeseries.envelope.TranProLinFilterUtilities;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
+import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -66,54 +68,49 @@ import org.xml.sax.InputSource;
 
 /**
  * 
- * TODO: insert type comment here
+ * converts native (HWVS) files to ZML files
  * 
  * @author thuel2
  */
 public class FileVisitorHwvs2Zml implements FileVisitor
 {
-  private final File m_nativeOutDir;
 
   private final File m_outputDir;
 
   private final Properties m_props;
   private final GMLWorkspace m_wkspce;
   private final FeatureList m_fList;
-  private final String m_dirPath;
-  private final File m_filePath;
   private final boolean m_writeUmhuellende;
+  private Collection m_exceptions = new ArrayList();
+
+  private final String m_propZmlLink;
 
   /**
-   * @param nativeOutDir
    * @param outputDir
    * @param props
    * @param propFeatList
+   * @param propZmlLink
    * @param writeUmhuellende
    *  
    */
 
-  public FileVisitorHwvs2Zml( File nativeOutDir, File outputDir, Properties props, String propFeatList,
-      String propZmlLink, String dirPath, boolean writeUmhuellende )
+  public FileVisitorHwvs2Zml( File outputDir, Properties props, String propFeatList, String propZmlLink,
+      boolean writeUmhuellende )
   {
-    m_nativeOutDir = nativeOutDir;
     m_outputDir = outputDir;
     m_props = props;
 
-    m_wkspce = (GMLWorkspace)props.get( ElbePolteConst.DATA_GML );
+    m_wkspce = (GMLWorkspace)m_props.get( ElbePolteConst.DATA_GML );
     m_fList = (FeatureList)m_wkspce.getFeatureFromPath( propFeatList );
-    m_dirPath = dirPath;
-    // TODO eigentlich müssten die neuen Pfade aus propZmlLink zusammengebastelt werden, dann wäre auch dirPath
-    // überflüssig...
-    m_filePath = new File( new File( m_outputDir, "Zeitreihen" ), m_dirPath );
-    m_filePath.mkdirs();
     m_writeUmhuellende = writeUmhuellende;
+    m_propZmlLink = propZmlLink;
 
   }
 
   /**
    * @see org.kalypso.contribs.java.io.FileVisitor#visit(java.io.File)
    */
-  public boolean visit( File fleHwvs ) throws IOException
+  public boolean visit( File fleHwvs )
   {
     // kontrollieren, ob file (per ID) in featureList auftaucht
     if( fleHwvs.isFile() )
@@ -126,72 +123,81 @@ public class FileVisitorHwvs2Zml implements FileVisitor
         final String id = (String)f.getProperty( "nr" );
         if( fleExt.equals( id ) )
         {
-          final String sZmlFileBaseName = (String)f.getProperty( "name" );
-          final String sZmlFileName = sZmlFileBaseName + ".zml";
 
-          final File fleZml = new File( m_filePath, sZmlFileName );
-          ElbePolteConverter.hwvs2zml( fleHwvs, fleZml );
-          final Object objAccuracy = f.getProperty( "accuracyPrediction" );
-          double accuracy = LhwzHelper.getDefaultUmhuellendeAccuracy();
-          if( objAccuracy instanceof Double )
-            accuracy = ( (Double)objAccuracy ).doubleValue();
-
-          // und Umhüllende "_unten", "_oben"
-          final InputSource is = new InputSource( fleZml.getAbsolutePath() );
-          try
+          final Object objTSLink = f.getProperty( m_propZmlLink );
+          if( objTSLink instanceof TimeseriesLinkType )
           {
-            final IObservation obsZml = ZmlFactory.parseXML( is, "", null );
+            final TimeseriesLinkType tlt = (TimeseriesLinkType)objTSLink;
+            final String sFlePath = tlt.getHref();
 
-            if( m_writeUmhuellende )
+            final File fleZml = new File( m_outputDir, sFlePath ) ;
+            fleZml.getParentFile().mkdirs();
+            
+            final String sZmlFileBaseName =  fleZml.getName().replaceAll(".zml", "");
+
+            ElbePolteConverter.hwvs2zml( fleHwvs, fleZml );
+            final Object objAccuracy = f.getProperty( "accuracyPrediction" );
+            double accuracy = LhwzHelper.getDefaultUmhuellendeAccuracy();
+            if( objAccuracy instanceof Double )
+              accuracy = ( (Double)objAccuracy ).doubleValue();
+
+            // und Umhüllende "_unten", "_oben"
+            final InputSource is = new InputSource( fleZml.getAbsolutePath() );
+            try
             {
+              final IObservation obsZml = ZmlFactory.parseXML( is, "", null );
 
-              // get first and last date of observation
-              final IAxis dateAxis = ObservationUtilities.findAxisByType( obsZml.getAxisList(),
-                  TimeserieConstants.TYPE_DATE );
-              final IAxis valueAxis = ObservationUtilities.findAxisByType( obsZml.getAxisList(),
-                  TimeserieConstants.TYPE_RUNOFF );
-              final ITuppleModel values = obsZml.getValues( null );
-              final int valueCount = values.getCount();
-              if( valueCount > 1 )
+              if( m_writeUmhuellende )
               {
 
-                final org.kalypso.ogc.sensor.DateRange forecastRange = TimeserieUtils.isForecast( obsZml );
-                if( forecastRange != null )
+                // get first and last date of observation
+                final IAxis dateAxis = ObservationUtilities.findAxisByType( obsZml.getAxisList(),
+                    TimeserieConstants.TYPE_DATE );
+                final IAxis valueAxis = ObservationUtilities.findAxisByType( obsZml.getAxisList(),
+                    TimeserieConstants.TYPE_RUNOFF );
+                final ITuppleModel values = obsZml.getValues( null );
+                final int valueCount = values.getCount();
+                if( valueCount > 1 )
                 {
-                  final Date startPrediction = forecastRange.getFrom();
 
-                  // final Date endPrediction = forecastRange.getTo();
-                  // sicher ist sicher...
-                  final Date endPrediction = (Date)values.getElement( valueCount - 1, dateAxis );
-                  final Double endValue = (Double)values.getElement( valueCount - 1, valueAxis );
+                  final org.kalypso.ogc.sensor.DateRange forecastRange = TimeserieUtils.isForecast( obsZml );
+                  if( forecastRange != null )
+                  {
+                    final Date startPrediction = forecastRange.getFrom();
 
-                  final Calendar calBegin = Calendar.getInstance();
-                  calBegin.setTime( startPrediction );
+                    // final Date endPrediction = forecastRange.getTo();
+                    // sicher ist sicher...
+                    final Date endPrediction = (Date)values.getElement( valueCount - 1, dateAxis );
+                    final Double endValue = (Double)values.getElement( valueCount - 1, valueAxis );
 
-                  final Calendar calEnd = Calendar.getInstance();
-                  calEnd.setTime( endPrediction );
+                    final Calendar calBegin = Calendar.getInstance();
+                    calBegin.setTime( startPrediction );
 
-                  final long millisOf60hours = 1000 * 60 * 60 * 60;
+                    final Calendar calEnd = Calendar.getInstance();
+                    calEnd.setTime( endPrediction );
 
-                  final double endAccuracy = accuracy
-                      * ( ( (double)( endPrediction.getTime() - startPrediction.getTime() ) ) / ( (double)millisOf60hours ) );
+                    final long millisOf60hours = 1000 * 60 * 60 * 60;
 
-                  final double endOffset = Math.abs( endValue.doubleValue() * endAccuracy / 100 );
+                    final double endAccuracy = accuracy
+                        * ( ( (double)( endPrediction.getTime() - startPrediction.getTime() ) ) / ( (double)millisOf60hours ) );
 
-                  TranProLinFilterUtilities.transformAndWrite( obsZml, calBegin, calEnd, 0, endOffset, "-",
-                      TimeserieConstants.TYPE_RUNOFF, KalypsoStati.BIT_DERIVATED, new File( m_filePath,
-                          sZmlFileBaseName + "_unten.zml" ), "- Spur Unten" );
-                  TranProLinFilterUtilities.transformAndWrite( obsZml, calBegin, calEnd, 0, endOffset, "+",
-                      TimeserieConstants.TYPE_RUNOFF, KalypsoStati.BIT_DERIVATED, new File( m_filePath,
-                          sZmlFileBaseName + "_oben.zml" ), "- Spur Oben" );
+                    final double endOffset = Math.abs( endValue.doubleValue() * endAccuracy / 100 );
 
+                    TranProLinFilterUtilities.transformAndWrite( obsZml, calBegin, calEnd, 0, endOffset, "-",
+                        TimeserieConstants.TYPE_RUNOFF, KalypsoStati.BIT_DERIVATED, new File( fleZml.getParentFile(),
+                            sZmlFileBaseName + "_unten.zml" ), "- Spur Unten" );
+                    TranProLinFilterUtilities.transformAndWrite( obsZml, calBegin, calEnd, 0, endOffset, "+",
+                        TimeserieConstants.TYPE_RUNOFF, KalypsoStati.BIT_DERIVATED, new File( fleZml.getParentFile(),
+                            sZmlFileBaseName + "_oben.zml" ), "- Spur Oben" );
+
+                  }
                 }
               }
             }
-          }
-          catch( Exception se )
-          {
-            // TODO ggf. auch hier nen Exception-Array aufbauen...
+            catch( Exception e )
+            {
+              m_exceptions.add( e );
+            }
           }
         }
       }
@@ -219,4 +225,15 @@ public class FileVisitorHwvs2Zml implements FileVisitor
     }
     return ext;
   }
+
+  public boolean hasException()
+  {
+    return !m_exceptions.isEmpty();
+  }
+
+  public Exception[] getExceptions()
+  {
+    return (Exception[])m_exceptions.toArray( new Exception[m_exceptions.size()] );
+  }
+
 }

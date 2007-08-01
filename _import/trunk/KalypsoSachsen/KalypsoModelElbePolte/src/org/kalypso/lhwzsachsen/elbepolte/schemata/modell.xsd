@@ -471,7 +471,18 @@
     <complexType name="InternerHPegelType">
         <complexContent>
             <extension base="modell:AbstractPegelType">
-                <sequence> </sequence>
+                <sequence>
+                    <element name="ganglinie_modellwerte" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0">
+                        <annotation>
+                            <documentation xml:lang="de">
+                                <name>Modellwerte</name>
+                                <label>Modellwerte</label>
+                                <tooltip>Modellwerte</tooltip>
+                                <description>Modellwerte</description>
+                            </documentation>
+                        </annotation>
+                    </element>
+                </sequence>
             </extension>
         </complexContent>
     </complexType>
@@ -667,7 +678,7 @@
                         </annotation>
                     </element>
                     <!-- StreckenParameter  -->
-                    <element name="zwg_zuschlag" type="int" default="0">
+                    <element name="zwg_zuschlag" type="double" default="0.0">
                         <annotation>
                             <documentation xml:lang="de">
                                 <name>Zwischengebietszuschlag [%]</name>

@@ -42,14 +42,11 @@ package org.kalypso.lhwzsachsen.elbepolte.visitors;
 
 import java.io.File;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collection;
 
 import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.lhwzsachsen.elbepolte.ElbePolteConverter;
-import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -58,7 +55,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * 
- * TODO: insert type comment here
+ * feature visitor to create ZML files from native (HWVS) files
  * 
  * @author thuel2
  */
@@ -109,7 +106,6 @@ public class FeatureVisitorZml2Hwvs implements FeatureVisitor
    * @param prefixFile
    * @param fileDir
    * @param context
-   *          TODO
    *  
    */
 
@@ -134,34 +130,18 @@ public class FeatureVisitorZml2Hwvs implements FeatureVisitor
     {
       final TimeseriesLinkType tlt = (TimeseriesLinkType)objZmlProp;
       final String href = tlt.getHref();
+      final File fleHwvs = new File( m_fileDir, sFileNme );
 
       final URL url;
       try
       {
         url = m_urlresolver.resolveURL( m_context, href );
 
-        final URLConnection urlConTest = UrlUtilities.connectQuietly( url );
-
-        if( urlConTest != null )
-        {
-          final IObservation observation = ZmlFactory.parseXML( url, f.getId() );
-          //        Ziel-Datei erstellen
-          final File fleHwvs = new File( m_fileDir, sFileNme );
-          // Zml2Hwvs ausführen
-          // TODO Zeitraum wäre noch schön
-          final String sComment = fleHwvs.getName() + ": " +observation.getIdentifier() ; 
-          ElbePolteConverter.zml2Hwvs( observation, fleHwvs, sComment );
-        }
-        else
-        {
-          m_exceptions.add( new Exception( "Zeitreihe " + href.toString()
-              + " kann nicht geöffnet werden (da vielleicht nicht vorhanden)." ) );
-        }
+        ElbePolteConverter.zml2Hwvs( url, fleHwvs, f.getId() );
       }
       catch( final Exception e )
       {
         m_exceptions.add( e );
-
       }
     }
 
