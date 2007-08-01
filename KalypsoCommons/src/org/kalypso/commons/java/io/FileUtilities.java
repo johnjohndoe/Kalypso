@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.commons.java.io;
 
@@ -80,18 +80,18 @@ public class FileUtilities
    * 
    * @param charMode
    * @param prefix
-   *          prefix of new file name
+   *            prefix of new file name
    * @param suffix
-   *          suffix of new file name
+   *            suffix of new file name
    * @param url
-   *          data is read from this url
+   *            data is read from this url
    * @param useCache
-   *          if true tries to use an existing file with these prefix/suffix
+   *            if true tries to use an existing file with these prefix/suffix
    * @return newly created file
    * @throws IOException
-   *           there are problems!
+   *             there are problems!
    */
-  public static File makeFileFromUrl( boolean charMode, final String prefix, final String suffix, final URL url, boolean useCache ) throws IOException
+  public static File makeFileFromUrl( final boolean charMode, final String prefix, final String suffix, final URL url, final boolean useCache ) throws IOException
   {
     InputStream is = null;
     try
@@ -112,11 +112,11 @@ public class FileUtilities
    * 
    * @param charMode
    * @param url
-   *          data is read from this url
+   *            data is read from this url
    * @param the
-   *          content of the url is written into this file
+   *            content of the url is written into this file
    * @throws IOException
-   *           there are problems!
+   *             there are problems!
    */
   public static void makeFileFromUrl( final URL url, final File file, final boolean charMode ) throws IOException
   {
@@ -139,18 +139,18 @@ public class FileUtilities
    * 
    * @param charMode
    * @param prefix
-   *          prefix of file name
+   *            prefix of file name
    * @param suffix
-   *          suffix of file name
+   *            suffix of file name
    * @param ins
-   *          the input stream, that is the source
+   *            the input stream, that is the source
    * @param useCache
-   *          if true tries to use an existing file with these prefix/suffix
+   *            if true tries to use an existing file with these prefix/suffix
    * @return the newly created file or null if an exception was thrown.
    * @throws IOException
-   *           problems reading from stream or writing to temp. file
+   *             problems reading from stream or writing to temp. file
    */
-  public static File makeFileFromStream( boolean charMode, final String prefix, final String suffix, InputStream ins, boolean useCache ) throws IOException
+  public static File makeFileFromStream( final boolean charMode, final String prefix, final String suffix, final InputStream ins, final boolean useCache ) throws IOException
   {
     if( useCache )
     {
@@ -166,7 +166,7 @@ public class FileUtilities
       }
     }
 
-    File tmp = File.createTempFile( prefix, suffix );
+    final File tmp = File.createTempFile( prefix, suffix );
     tmp.deleteOnExit();
 
     makeFileFromStream( charMode, tmp, ins );
@@ -208,24 +208,24 @@ public class FileUtilities
    * more than one such file is found, returns the first of them.
    * 
    * @param prefix
-   *          name of the file should begin with this prefix
+   *            name of the file should begin with this prefix
    * @param suffix
-   *          name of the file should end with this suffix
+   *            name of the file should end with this suffix
    * @param path
    * @return the (first) File found
    * @throws FileNotFoundException
-   *           when file was not found or path does not denote a directory
+   *             when file was not found or path does not denote a directory
    * @see PrefixSuffixFilter
    */
-  public static File fileExistsInDir( String prefix, String suffix, String path ) throws FileNotFoundException
+  public static File fileExistsInDir( final String prefix, final String suffix, final String path ) throws FileNotFoundException
   {
-    File dir = new File( path );
+    final File dir = new File( path );
 
     if( dir.isDirectory() )
     {
-      PrefixSuffixFilter filter = new PrefixSuffixFilter( prefix, suffix );
+      final PrefixSuffixFilter filter = new PrefixSuffixFilter( prefix, suffix );
 
-      File[] files = dir.listFiles( filter );
+      final File[] files = dir.listFiles( filter );
 
       if( files.length > 0 )
         return files[0];
@@ -238,8 +238,8 @@ public class FileUtilities
    * Rekursives löschen von Dateien und Verzeichnissen
    * 
    * @param file
-   *          Falls das Argument eine Datei ist, wird diese gelöscht. Ist es ein Verzeichnis, wird dieses mitsamt aller
-   *          darin liegenden Verzeichnisse und Dateien gelöscht.
+   *            Falls das Argument eine Datei ist, wird diese gelöscht. Ist es ein Verzeichnis, wird dieses mitsamt
+   *            aller darin liegenden Verzeichnisse und Dateien gelöscht.
    */
   public static void deleteRecursive( final File file )
   {
@@ -249,8 +249,8 @@ public class FileUtilities
     if( file.isDirectory() )
     {
       final File[] files = file.listFiles();
-      for( int i = 0; i < files.length; i++ )
-        deleteRecursive( files[i] );
+      for( final File element : files )
+        deleteRecursive( element );
     }
 
     file.delete();
@@ -308,7 +308,7 @@ public class FileUtilities
    * this method won't produce a good result. Use the <code>getRelativeFileTo()</code> method instead.
    * 
    * @param basedir
-   *          if null, the absolute path of absoluteFile is returned.
+   *            if null, the absolute path of absoluteFile is returned.
    * @param absoluteFile
    * @return the relative path from absoluteFile to basedir
    */
@@ -321,22 +321,22 @@ public class FileUtilities
     return getRelativePathTo( baseAbs, absAbs );
   }
 
-  public static String getRelativePathTo( String base, String absolute )
+  public static String getRelativePathTo( String base, final String absolute )
   {
     if( !absolute.startsWith( base ) )
     {
       if( base.lastIndexOf( "/" ) > -1 )
         base = base.substring( 0, base.lastIndexOf( "/" ) );
       // base=base.replaceAll(File.separator+".+$","");
-      String difference = StringUtils.difference( base, absolute );
+      final String difference = StringUtils.difference( base, absolute );
       if( difference == null || "".equals( difference ) )
         return null;
       final int index = absolute.indexOf( difference );
       if( index < 5 )
         return null;
-      String back = base.substring( index );
+      final String back = base.substring( index );
       // TODO change regExp to "everything except fileseparator"
-      String x = back.replaceAll( "([a-zA-Z0-9]|\\.|_)+", ".." );
+      final String x = back.replaceAll( "([a-zA-Z0-9]|\\.|_)+", ".." );
       if( x.length() > 0 )
         return x + "/" + difference;
       return difference;
@@ -370,7 +370,7 @@ public class FileUtilities
 
   /**
    * @param name
-   *          name of path of the file
+   *            name of path of the file
    * @return characters after last "." of given file name
    */
   public static String getSuffix( final String name )
@@ -396,10 +396,14 @@ public class FileUtilities
    * Example:
    * 
    * <pre>
-   *    
+   * 
    *     test.foo -- test
    *     robert.tt -- robert
-   *     
+   * 
+   * 
+   * 
+   * 
+   * 
    * </pre>
    * 
    * @param fileName
@@ -418,7 +422,7 @@ public class FileUtilities
    * Lässt den FileVisitor die angegebene Datei bzw. Verzeichnis und alle darin enthaltenen Dateien besuchen.
    * 
    * @param recurse
-   *          Falls true, werden auch Unterverzeichnisse besucht
+   *            Falls true, werden auch Unterverzeichnisse besucht
    * @throws IOException
    */
   public static void accept( final File root, final FileVisitor visitor, final boolean recurse ) throws IOException
@@ -435,16 +439,14 @@ public class FileUtilities
     if( files == null )
       return;
 
-    for( int i = 0; i < files.length; i++ )
+    for( final File file : files )
     {
-      final File file = files[i];
-
       if( file.isFile() || (file.isDirectory() && recurse) )
         accept( file, visitor, recurse );
     }
   }
 
-  public static void copyShapeFileToDirectory( String shapeBase, File target )
+  public static void copyShapeFileToDirectory( final String shapeBase, final File target )
   {
     File _shp;
     File _dbf;
@@ -478,11 +480,11 @@ public class FileUtilities
           FileUtils.copyFileToDirectory( _sbx, target );
 
       }
-      catch( MalformedURLException e )
+      catch( final MalformedURLException e )
       {
         e.printStackTrace();
       }
-      catch( IOException e )
+      catch( final IOException e )
       {
         e.printStackTrace();
       }
@@ -536,7 +538,7 @@ public class FileUtilities
    * after the last '.') it will be replaced.
    * 
    * @param suffix
-   *          The suffix without the point '.'
+   *            The suffix without the point '.'
    */
   public static String setSuffix( final String fileName, final String suffix )
   {
@@ -546,4 +548,30 @@ public class FileUtilities
 
     return fileName.substring( 0, index ) + suffix;
   }
+
+  /**
+   * Copies the content of a url into a string.
+   * 
+   * @param encoding
+   *            The encoding to read the content, if <code>null</code> the platforms default encoding will be used.
+   */
+  public static String toString( final URL input, final String encoding ) throws IOException
+  {
+    InputStream is = null;
+    try
+    {
+      is = input.openStream();
+
+      if( encoding == null )
+        return IOUtils.toString( is );
+
+      return IOUtils.toString( is, encoding );
+    }
+    finally
+    {
+      IOUtils.closeQuietly( is );
+    }
+
+  }
+
 }
