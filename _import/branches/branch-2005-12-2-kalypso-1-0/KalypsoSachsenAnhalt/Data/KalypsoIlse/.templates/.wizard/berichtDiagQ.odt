@@ -4,7 +4,7 @@
 	<legend title="" visible="true"/>
 
 	<axis id="D" datatype="date" label="Datum" unit="" direction="horizontal" position="bottom" />
-	<axis id="Q" datatype="double" label="Abfluss" unit="m³" direction="vertical" position="left" />
+	<axis id="Q" datatype="double" label="Abfluss" unit="m³/s" direction="vertical" position="left" />
    	<axis id="N" datatype="double" label="Niederschlag" unit="cm" direction="vertical" position="right" inverted="true" upperMargin="0.8"/>
    	
    	<!-- Kodierung color:
