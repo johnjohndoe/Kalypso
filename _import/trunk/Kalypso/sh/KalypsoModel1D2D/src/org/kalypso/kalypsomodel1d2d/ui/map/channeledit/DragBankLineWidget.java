@@ -314,7 +314,7 @@ public class DragBankLineWidget extends AbstractWidget
       i = i + 1;
       if( handle.isActive() )
       {
-        handle.paint( getMapPanel().getGraphics(), getMapPanel().getProjection(), m_startPoint, m_currentPoint );
+        handle.paint( g, getMapPanel().getProjection(), m_startPoint, m_currentPoint );
 
         if( m_currentPoint != null )
           positions[i] = MapUtilities.transform( getMapPanel(), m_currentPoint ).getPosition();
@@ -326,7 +326,7 @@ public class DragBankLineWidget extends AbstractWidget
       }
       else
       {
-        handle.paint( getMapPanel().getGraphics(), getMapPanel().getProjection(), null, null );
+        handle.paint( g, getMapPanel().getProjection(), null, null );
 
         final GM_Position position = handle.getPosition();
         positions[i] = GeometryFactory.createGM_Point( position, m_bankline.getCoordinateSystem() ).getPosition();
