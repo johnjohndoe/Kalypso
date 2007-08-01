@@ -40,15 +40,24 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.views.properties;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributor;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
+import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ui.editor.mapeditor.AbstractMapPart;
 
 /**
+ * Generel adapter factory for {@link AbstractMapPart}.
+ * <p>
+ * Some adapterTypes (like {@link MapPanel}) are exposed via this factory (instead of directly using
+ * {@link AbstractMapPart#getAdapter(Class)}, because the expression frameworks 'adapt'-element does only recognise
+ * types handled via adapter factories.
+ * 
  * @author Gernot Belger
  */
-public class ContentOutlinePropertyAdapterFactory implements IAdapterFactory
+public class MapPartAdapterFactory implements IAdapterFactory
 {
   private static final String CONTENT_OUTLINE_PROPERTY_CONTRIBUTOR = "org.kalypso.ui.ContentOutlinePropertyContributor";
 
@@ -58,6 +67,10 @@ public class ContentOutlinePropertyAdapterFactory implements IAdapterFactory
   @SuppressWarnings("unchecked")
   public Object getAdapter( final Object adaptableObject, final Class adapterType )
   {
+    Assert.isLegal( adaptableObject instanceof AbstractMapPart, "This adapter factory is only suitable for AbstractMapPart's: " + adaptableObject );
+
+    final AbstractMapPart mapPart = (AbstractMapPart) adaptableObject;
+
     if( adapterType == IPropertySheetPage.class )
     {
       return new TabbedPropertySheetPage( new ITabbedPropertySheetPageContributor()
@@ -69,6 +82,9 @@ public class ContentOutlinePropertyAdapterFactory implements IAdapterFactory
       } );
     }
 
+    if( adapterType == MapPanel.class )
+      return mapPart.getMapPanel();
+
     return null;
   }
 
@@ -78,7 +94,7 @@ public class ContentOutlinePropertyAdapterFactory implements IAdapterFactory
   @SuppressWarnings("unchecked")
   public Class[] getAdapterList( )
   {
-    return new Class[] { IPropertySheetPage.class };
+    return new Class[] { IPropertySheetPage.class, MapPanel.class };
   }
 
 }
