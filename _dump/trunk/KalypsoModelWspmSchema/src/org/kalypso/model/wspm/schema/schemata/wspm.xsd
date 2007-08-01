@@ -20,7 +20,7 @@
 	<import namespace="org.kalypso.model.wspmprofile" schemaLocation="profile.xsd"/>
 	<!-- schema for WSPM = 'water surface profile model' -->
 	<!-- TODO: KALYPSO-Header einfügen -->
-	<!-- 
+	<!--
 	_________________________________________________________________________________________
 	ELEMENTS
 	_________________________________________________________________________________________
@@ -42,7 +42,7 @@
 	</element>
 	<element name="AbstractCalculation" abstract="true" type="wspm:AbstractCalculationType"
 		substitutionGroup="gml:_Feature"/>
-	<!-- 
+	<!--
 	-->
 	<element name="waterBodyMember" type="wspm:WaterBodyPropertyType">
 		<annotation>
@@ -75,7 +75,7 @@
 			</documentation>
 		</annotation>
 	</element>
-	<!-- 
+	<!--
 	-->
 	<element name="reachMember" type="wspm:ReachPropertyType">
 		<annotation>
@@ -91,7 +91,7 @@
 			</documentation>
 		</annotation>
 	</element>
-	
+
 	<element name="AbstractReach" type="wspm:AbstractReachType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
@@ -143,7 +143,7 @@
 			</documentation>
 		</annotation>
 	</element>
-	<!-- 
+	<!--
 	-->
 	<element name="roughnessDefinitionMember" type="wspm:RoughnessDefinitionPropertyType"
 		substitutionGroup="gml:featureMember">
@@ -179,7 +179,7 @@
 			</documentation>
 		</annotation>
 	</element>
-	<!-- 
+	<!--
 	-->
 	<element name="vegetationDefinitionCollectionMember"
 		type="wspm:VegetationDefinitionCollectionPropertyType" substitutionGroup="gml:featureMember">
@@ -215,7 +215,7 @@
 			</documentation>
 		</annotation>
 	</element>
-	<!-- 
+	<!--
 	-->
 	<element name="vegetationDefinitionMember" type="wspm:VegetationDefinitionPropertyType"
 		substitutionGroup="gml:featureMember">
@@ -250,7 +250,7 @@
 			</documentation>
 		</annotation>
 	</element>
-	<!-- 
+	<!--
 	-->
 	<element name="CalcCreation" type="wspm:calcCreationType" substitutionGroup="gml:_Feature">
 		<annotation>
@@ -268,7 +268,7 @@
 			</documentation>
 		</annotation>
 	</element>
-	<!-- 
+	<!--
 	_________________________________________________________________________________________
 	TYPES
 	_________________________________________________________________________________________
@@ -305,14 +305,14 @@
 			</extension>
 		</complexContent>
 	</complexType>
-	<!-- 
+	<!--
 	-->
 	<complexType name="ReachPropertyType">
 		<sequence>
 			<element ref="wspm:AbstractReach"/>
 		</sequence>
 	</complexType>
-	
+
 	<complexType name="AbstractReachType" abstract="true">
 		<complexContent>
 			<extension base="gml:AbstractFeatureType"/>
@@ -367,18 +367,18 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Stationierung beginnt an der Mündung</label>
-								<tooltip><![CDATA[ Angabe der Stationierungsrichtung. 
+								<tooltip><![CDATA[ Angabe der Stationierungsrichtung.
 Falls angekreuzt, wird die Stationierung entgegen der Fließrichtung gewählt. ]]>
 								</tooltip>
-								<description><![CDATA[ Angabe der Stationierungsrichtung. 
+								<description><![CDATA[ Angabe der Stationierungsrichtung.
 Falls angekreuzt, wird die Stationierung entgegen der Fließrichtung gewählt. ]]></description>
 							</documentation>
 							<documentation xml:lang="en">
 								<label>Stationing starts at mouth</label>
-								<tooltip><![CDATA[ Stationing direction. 
+								<tooltip><![CDATA[ Stationing direction.
 Selection means that stationing will be against flow direction. ]]>
 								</tooltip>
-								<description><![CDATA[ Stationing direction. 
+								<description><![CDATA[ Stationing direction.
 Selection means that stationing will be against flow direction. ]]></description>
 							</documentation>
 						</annotation>
@@ -481,7 +481,7 @@ Selection means that stationing will be against flow direction. ]]></description
 		<attributeGroup ref="gml:AssociationAttributeGroup"/>
 	</complexType>
 	-->
-	<!-- 
+	<!--
 	-->
 	<!--	<complexType name="ResultPropertyType">
 		<complexContent>
@@ -520,7 +520,7 @@ Selection means that stationing will be against flow direction. ]]></description
 			</extension>
 		</complexContent>
 	</complexType>-->
-	<!-- 
+	<!--
 	-->
 	<!--	<complexType name="DocumentPropertyType">
 		<complexContent>
@@ -547,7 +547,7 @@ Selection means that stationing will be against flow direction. ]]></description
 					<element name="filePath" type="string">
 						<annotation>
 							<documentation xml:lang="de"><![CDATA[
-								TODO: eigenen Typ definieren + 
+								TODO: eigenen Typ definieren +
 								type handler (z.B. datei öffnen beim klick)]]>
 								<label>???filePath</label>
 								<tooltip>???tooltip</tooltip>
@@ -559,7 +559,7 @@ Selection means that stationing will be against flow direction. ]]></description
 			</extension>
 		</complexContent>
 	</complexType>-->
-	<!-- 
+	<!--
 	-->
 	<complexType name="RoughnessDefinitionCollectionPropertyType">
 		<complexContent>
@@ -580,7 +580,7 @@ Selection means that stationing will be against flow direction. ]]></description
 			</extension>
 		</complexContent>
 	</complexType>
-	<!-- 
+	<!--
 	-->
 	<complexType name="RoughnessDefinitionPropertyType">
 		<complexContent>
@@ -635,7 +635,7 @@ Selection means that stationing will be against flow direction. ]]></description
 			</extension>
 		</complexContent>
 	</complexType>
-	<!-- 
+	<!--
 	-->
 	<complexType name="VegetationDefinitionCollectionPropertyType">
 		<complexContent>
@@ -656,7 +656,7 @@ Selection means that stationing will be against flow direction. ]]></description
 			</extension>
 		</complexContent>
 	</complexType>
-	<!-- 
+	<!--
 	-->
 	<complexType name="VegetationDefinitionPropertyType">
 		<complexContent>
@@ -720,7 +720,7 @@ Selection means that stationing will be against flow direction. ]]></description
 			</extension>
 		</complexContent>
 	</complexType>
-	<!-- 
+	<!--
 	-->
 	<complexType name="calcCreationInlinePropertyType">
 		<sequence minOccurs="1" maxOccurs="1">
@@ -731,7 +731,7 @@ Selection means that stationing will be against flow direction. ]]></description
 		<complexContent>
 			<extension base="wspmcommon:EmptyFeatureBaseType">
 				<sequence>
-					<element name="user" type="string">
+					<element name="user" type="string" nillable="true">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Erstellt von</label>
@@ -745,7 +745,7 @@ Selection means that stationing will be against flow direction. ]]></description
 							</documentation>
 						</annotation>
 					</element>
-					<element name="date" type="dateTime">
+					<element name="date" type="dateTime" nillable="true">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Erstellt am</label>

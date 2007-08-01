@@ -44,11 +44,11 @@
 		<gft:param name="featureKeyName" value="theResultFeatureKey" />
 	</gft:extensioncontrol>
 
-	<gft:group style="SWT.V_SCROLL" text="Wehr Parameter">
+	<gft:group style="SWT.V_SCROLL" text="Bauwerks-Parameter">
 		<gft:visibleOperation>
 			<ogc:Not>
 				<ogc:PropertyIsNull>
-					<ogc:PropertyName>tuhh:weirParameterMember</ogc:PropertyName>
+					<ogc:PropertyName>tuhh:buildingParameterMember</ogc:PropertyName>
 				</ogc:PropertyIsNull>
 			</ogc:Not>
 		</gft:visibleOperation>
@@ -56,12 +56,12 @@
 			verticalAlignment="GridData.FILL" grabExcessVerticalSpace="true" heightHint="200">
 			<gft:excludeOperation>
 				<ogc:PropertyIsNull>
-					<ogc:PropertyName>tuhh:weirParameterMember</ogc:PropertyName>
+					<ogc:PropertyName>tuhh:buildingParameterMember</ogc:PropertyName>
 				</ogc:PropertyIsNull>
 			</gft:excludeOperation>
 		</gft:gridData>
 		<gft:gridLayout numColumns="1" />
-		<gft:tupleResult style="SWT.BORDER" property="tuhh:weirParameterMember">
+		<gft:tupleResult style="SWT.BORDER" property="tuhh:buildingParameterMember">
 			<gft:gridData horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"
 				verticalAlignment="GridData.FILL" grabExcessVerticalSpace="true" />
 		</gft:tupleResult>

@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core;
 
@@ -50,6 +50,16 @@ import org.kalypso.model.wspm.core.IWspmConstants;
 public interface IWspmTuhhConstants extends IWspmConstants
 {
   public static String NS_WSPM_TUHH = "org.kalypso.model.wspm.tuhh";
+
+  /**
+   * The scale (i.e. fraction digits) for station values.
+   * 
+   * @see BigDecimal
+   */
+  public static final int STATION_SCALE = 4;
+
+  /** The encoding used by the Kalypso-1D.exe. */
+  public static final String WSPMTUHH_CODEPAGE = "Cp1252";
 
   /*
    * sind Tuhh-Konstanten werden aber wegen der Abw‰rtskompatibilit‰t in
@@ -139,14 +149,13 @@ public interface IWspmTuhhConstants extends IWspmConstants
   public static final String PROFIL_PROPERTY_WASSERSPIEGEL = PROFIL_PROPERTY + "WASSERSPIEGEL";
 
   /* Rauheiten */
-//  public static final String RAUHEIT_TYP = "org.kalypso.model.wspm.tuhh.core.profil.RAUHEIT_TYP_";
+// public static final String RAUHEIT_TYP = "org.kalypso.model.wspm.tuhh.core.profil.RAUHEIT_TYP_";
 //
-//  public static final String RAUHEIT_TYP_KS = RAUHEIT_TYP + "KS";
+// public static final String RAUHEIT_TYP_KS = RAUHEIT_TYP + "KS";
 //
-//  public static final String RAUHEIT_TYP_KST = RAUHEIT_TYP + "KST";
+// public static final String RAUHEIT_TYP_KST = RAUHEIT_TYP + "KST";
 //
-//  public static final String DEFAULT_RAUHEIT_TYP = RAUHEIT_TYP_KS;
-
+// public static final String DEFAULT_RAUHEIT_TYP = RAUHEIT_TYP_KS;
   /* Wehrtypen */
   /* MUST keep this -wrong- id string in order to be backwards-compatible! */
   public static final String WEHR_TYP = "org.kalypso.model.wspm.core.profil.IProfil.WEHR_TYP_";
@@ -173,7 +182,7 @@ public interface IWspmTuhhConstants extends IWspmConstants
   public static String LAYER_RAUHEIT_KST = PROFILE_LAYER + "RAUHEIT_KST";
 
   public static String LAYER_RAUHEIT_KS = PROFILE_LAYER + "RAUHEIT_KS";
-  
+
   public static String LAYER_RAUHEIT_QUICKVIEW = PROFILE_LAYER + "RAUHEIT_QUICKVIEW";
 
   public static String LAYER_BRUECKE = PROFILE_LAYER + "BRUECKE";
@@ -196,10 +205,9 @@ public interface IWspmTuhhConstants extends IWspmConstants
    * {@link org.kalypso.model.wspm.core.profil.impl.ProfilEventManager#getColorRegistry()} using this keys
    */
 
-//  public static String LAYER_BRUECKE_COLOR_TOP = LAYER_BRUECKE + "COLOR_TOP";
+// public static String LAYER_BRUECKE_COLOR_TOP = LAYER_BRUECKE + "COLOR_TOP";
 //
-//  public static String LAYER_BRUECKE_COLOR_BOTTOM = LAYER_BRUECKE + "COLOR_BOTTOM";
-
+// public static String LAYER_BRUECKE_COLOR_BOTTOM = LAYER_BRUECKE + "COLOR_BOTTOM";
   public static String PROFIL_TYPE_PASCHE = "org.kalypso.model.wspm.tuhh.profiletype";
 
 }

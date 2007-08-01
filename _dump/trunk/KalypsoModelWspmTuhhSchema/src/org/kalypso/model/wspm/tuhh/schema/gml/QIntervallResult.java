@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.schema.gml;
 
@@ -52,6 +52,7 @@ import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
+import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.schema.schemata.IWspmTuhhQIntervallConstants;
 import org.kalypso.observation.IObservation;
@@ -76,9 +77,11 @@ public class QIntervallResult extends AbstractFeatureBinder
 
   public static final QName QNAME_P_QIntervallResult_slope = new QName( IWspmTuhhConstants.NS_WSPM_TUHH, "slope" );
 
+  private static final QName QNAME_P_QIntervallResult_buildingId = new QName( IWspmTuhhConstants.NS_WSPM_TUHH, "buildingId" );
+
   public static final QName QNAME_P_QIntervallResult_pointsMember = new QName( IWspmTuhhConstants.NS_WSPM_TUHH, "pointsMember" );
 
-  public static final QName QNAME_P_QIntervallResult_weirMember = new QName( IWspmTuhhConstants.NS_WSPM_TUHH, "weirParameterMember" );
+  public static final QName QNAME_P_QIntervallResult_buildingMember = new QName( IWspmTuhhConstants.NS_WSPM_TUHH, "buildingParameterMember" );
 
   public static final QName QNAME_P_QIntervallResult_polynomialMember = new QName( IWspmTuhhConstants.NS_WSPM_TUHH, "polynomialMember" );
 
@@ -86,7 +89,7 @@ public class QIntervallResult extends AbstractFeatureBinder
 
   public static final QName QNAME_F_WPointsObservation = new QName( IWspmTuhhConstants.NS_WSPM_TUHH, "WPointsObservation" );
 
-  public static final QName QNAME_F_WeirObservation = new QName( NS.OM, "Observation" );
+  public static final QName QNAME_F_BuildingObservation = new QName( NS.OM, "Observation" );
 
   public QIntervallResult( final Feature featureToBind )
   {
@@ -140,7 +143,13 @@ public class QIntervallResult extends AbstractFeatureBinder
     ObservationFeatureFactory.toFeature( observation, obsFeature );
   }
 
-  public void setProfile( final WspmProfile profile )
+  /**
+   * Sets a link to the given profile into the modell-gml which must reside at project:/modell.gml.
+   * <p>
+   * Also sets the building-phenomenon
+   * </p>
+   */
+  public void setProfileLink( final WspmProfile profile )
   {
     final Feature feature = getFeature();
     final IGMLSchema schema = feature.getWorkspace().getGMLSchema();
@@ -152,6 +161,15 @@ public class QIntervallResult extends AbstractFeatureBinder
     final String href = "project:/modell.gml#" + profile.getGmlID();
     final Feature profileFeatureRef = new XLinkedFeature_Impl( feature, profileRelation, ftProfile, href, "", "", "", "", "" );
     feature.setProperty( profileRelation, profileFeatureRef );
+
+    final IProfileObject building = profile.getProfil().getProfileObject();
+    if( building != null )
+      feature.setProperty( QNAME_P_QIntervallResult_buildingId, building.getId() );
+  }
+
+  public String getBuildingId( )
+  {
+    return (String) getFeature().getProperty( QNAME_P_QIntervallResult_buildingId );
   }
 
   /** Creates and sets the polynomial. */
@@ -179,10 +197,10 @@ public class QIntervallResult extends AbstractFeatureBinder
    * <p>
    * If the observation is changed afterwards, {@link #setWeirObservation(IObservation) has to be called.
    */
-  public IObservation<TupleResult> getWeirObservation( final boolean createIfEmpty )
+  public IObservation<TupleResult> getBuildingObservation( final boolean createIfEmpty )
   {
     final Feature feature = getFeature();
-    final Object propertyValue = feature.getProperty( QNAME_P_QIntervallResult_weirMember );
+    final Object propertyValue = feature.getProperty( QNAME_P_QIntervallResult_buildingMember );
     if( propertyValue != null )
       return ObservationFeatureFactory.toObservation( (Feature) propertyValue );
 
@@ -192,11 +210,11 @@ public class QIntervallResult extends AbstractFeatureBinder
     final GMLWorkspace workspace = feature.getWorkspace();
     final IGMLSchema schema = workspace.getGMLSchema();
     final IFeatureType ftQIntervallResult = schema.getFeatureType( QIntervallResult.QNAME_F_QIntervallResult );
-    final IFeatureType ftObservation = schema.getFeatureType( QNAME_F_WeirObservation );
-    final IRelationType pointsObsRelation = (IRelationType) ftQIntervallResult.getProperty( QNAME_P_QIntervallResult_weirMember );
+    final IFeatureType ftObservation = schema.getFeatureType( QNAME_F_BuildingObservation );
+    final IRelationType pointsObsRelation = (IRelationType) ftQIntervallResult.getProperty( QNAME_P_QIntervallResult_buildingMember );
 
     final Feature obsFeature = workspace.createFeature( feature, pointsObsRelation, ftObservation );
-    feature.setProperty( QNAME_P_QIntervallResult_weirMember, obsFeature );
+    feature.setProperty( QNAME_P_QIntervallResult_buildingMember, obsFeature );
 
     final IComponent[] pointsComponents = createWeirComponents( obsFeature );
 
@@ -206,7 +224,7 @@ public class QIntervallResult extends AbstractFeatureBinder
 
   public void setWeirObservation( final IObservation<TupleResult> observation )
   {
-    final Feature obsFeature = (Feature) getFeature().getProperty( QNAME_P_QIntervallResult_weirMember );
+    final Feature obsFeature = (Feature) getFeature().getProperty( QNAME_P_QIntervallResult_buildingMember );
 
     ObservationFeatureFactory.toFeature( observation, obsFeature );
   }

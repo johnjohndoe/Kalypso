@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.schema.simulation;
 
@@ -51,25 +51,16 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.URL;
-import java.util.Arrays;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.eclipse.core.runtime.IStatus;
-import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.lang.ProcessHelper;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
-import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
-import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
-import org.kalypso.model.wspm.tuhh.core.gml.TuhhSegmentStationComparator;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation.MODE;
 import org.kalypso.model.wspm.tuhh.core.wspwin.WspWinExporter;
-import org.kalypso.observation.IObservation;
-import org.kalypso.observation.result.TupleResult;
-import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
@@ -89,8 +80,6 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 public class WspmTuhhCalcJob implements ISimulation
 {
   public static final String CALCJOB_SPEC = "WspmTuhhCalcJob_spec.xml";
-
-  public static final String WSPMTUHH_CODEPAGE = "Cp1252";
 
   // Timeout beim Rechnen([ms])
   public static final int PROCESS_TIMEOUT = 10 * 60 * 1000;
@@ -124,8 +113,6 @@ public class WspmTuhhCalcJob implements ISimulation
 
     PrintWriter pwSimuLog = null;
     InputStream zipInputStream = null;
-    InputStream headerInputStream = null;
-    InputStream footerInputStream = null;
     OutputStream strmKernelLog = null;
     OutputStream strmKernelErr = null;
     PrintWriter pwInParams = null;
@@ -247,176 +234,84 @@ public class WspmTuhhCalcJob implements ISimulation
 
       final MODE calcMode = calculation.getCalcMode();
 
-      //
-      // laengsschnitt.txt
-      //
-      final File lenSecFile = new File( dathDir, "laengsschnitt.txt" );
+      if( log.checkCanceled() )
+        return;
+
       final TuhhReach reach = calculation.getReach();
-      if( lenSecFile.exists() )
-      {
-        resultEater.addResult( "LengthSection", lenSecFile );
-        log.log( false, " - Längsschnitt erzeugt." );
-
-        // process lenghtsection to result observation (laengsschnitt.gml): concatenate new header + laengsschnitt
-        // (without header) + new footer
-        final File lengthSectionGmlFile = new File( tmpDir, "lengthSectionGml.gml" );
-
-        headerInputStream = getClass().getResourceAsStream( "resources/headerLenghSection.txt" );
-        footerInputStream = getClass().getResourceAsStream( "resources/footerLenghSection.txt" );
-
-        // Info: gml header file contains same encoding
-        final String strHeader = IOUtils.toString( headerInputStream, WSPMTUHH_CODEPAGE );
-        final String strFooter = IOUtils.toString( footerInputStream, WSPMTUHH_CODEPAGE );
-        String strLengthSection = FileUtils.readFileToString( lenSecFile, WSPMTUHH_CODEPAGE );
-
-        // introduce space around 'NaN' and '***' values to make it parseable
-        strLengthSection = strLengthSection.replaceAll( "NaN", " -999.999 " );
-        // strLengthSection = strLengthSection.replaceAll( "\\**" , " NaN " );
-
-        // remove first two rows (old header) from laengsschnitt.txt
-        int pos = strLengthSection.indexOf( "\n" );
-        pos = strLengthSection.indexOf( "\n", pos + 1 );
-        strLengthSection = org.apache.commons.lang.StringUtils.right( strLengthSection, strLengthSection.length() - pos );
-
-        FileUtils.writeStringToFile( lengthSectionGmlFile, strHeader + strLengthSection + strFooter, WSPMTUHH_CODEPAGE );
-        if( lengthSectionGmlFile.exists() )
-        {
-          resultEater.addResult( "LengthSectionGml", lengthSectionGmlFile );
-          log.log( false, " - Längsschnitt (als GML) erzeugt." );
-
-          // Read Length-Section GML
-          final GMLWorkspace obsWks = GmlSerializer.createGMLWorkspace( lengthSectionGmlFile.toURL(), null );
-          final Feature rootFeature = obsWks.getRootFeature();
-
-          final IObservation<TupleResult> lengthSectionObs = ObservationFeatureFactory.toObservation( rootFeature );
-          final TupleResult result = lengthSectionObs.getResult();
-          final String strStationierung = "urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation";
-          final String strWsp = "urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionWaterlevel";
-          final TuhhReachProfileSegment[] reachProfileSegments = reach.getReachProfileSegments();
-          /* sort the segments */
-          final boolean isDirectionUpstreams = reach.getWaterBody().isDirectionUpstreams();
-          Arrays.sort( reachProfileSegments, new TuhhSegmentStationComparator( isDirectionUpstreams ) );
-
-          //
-          // Diagramm
-          //
-          try
-          {
-            final File diagFile = new File( tmpDir, "Längsschnitt.kod" );
-
-            final WspmWaterBody waterBody = reach.getWaterBody();
-            LaengsschnittHelper.createDiagram( diagFile, lengthSectionObs, waterBody.isDirectionUpstreams() );
-            if( diagFile.exists() )
-            {
-              resultEater.addResult( "LengthSectionDiag", diagFile );
-              log.log( false, " - Längsschnitt-Diagramm erzeugt." );
-            }
-          }
-          catch( final Exception e )
-          {
-            log.log( e, "Längsschnitt-Diagramm konnte nicht erzeugt werden: %s", e.getLocalizedMessage() );
-          }
-
-          if( log.checkCanceled() )
-            return;
-
-          //
-          // Table
-          //
-          try
-          {
-            final File tableFile = new File( tmpDir, "table.gft" );
-            final URL tableUrl = getClass().getResource( "resources/table.gft" );
-            FileUtilities.makeFileFromUrl( tableUrl, tableFile, false );
-
-            resultEater.addResult( "LengthSectionTab", tableFile );
-            log.log( false, " - Tabelle erzeugt." );
-          }
-          catch( final Exception e )
-          {
-            log.log( e, "Tabelle konnte nicht erzeugt werden: %s", e.getLocalizedMessage() );
-          }
-
-          if( log.checkCanceled() )
-            return;
-
-          //
-          // Breaklines
-          //
-          try
-          {
-            final File breaklineFile = new File( tmpDir, "Bruchkanten.gml" );
-            BreakLinesHelper.createBreaklines( reachProfileSegments, result, strStationierung, strWsp, Double.valueOf( epsThinning ), breaklineFile );
-            if( breaklineFile.exists() )
-            {
-              resultEater.addResult( "Bruchkanten", breaklineFile );
-              log.log( false, " - Bruchkanten erzeugt." );
-            }
-          }
-          catch( final Exception e )
-          {
-            log.log( e, "Bruchkanten konnten nicht erzeugt werden: %s", e.getLocalizedMessage() );
-          }
-
-          if( log.checkCanceled() )
-            return;
-
-          //
-          // Model-Boundaries
-          //
-          try
-          {
-            final File file = new File( tmpDir, "Modellgrenzen.gml" );
-            BreakLinesHelper.createModelBoundary( reachProfileSegments, result, strStationierung, strWsp, file, false );
-            if( file.exists() )
-            {
-              resultEater.addResult( "Modellgrenzen", file );
-              log.log( false, " - Modellgrenzen erzeugt." );
-            }
-          }
-          catch( final Exception e )
-          {
-            log.log( e, "Modellgrenzen konnten nicht erzeugt werden: %s", e.getLocalizedMessage() );
-          }
-
-          if( log.checkCanceled() )
-            return;
-
-          //
-          // Waterlevel
-          //
-          try
-          {
-            final File file = new File( tmpDir, "Überschwemmungslinie.gml" );
-            BreakLinesHelper.createModelBoundary( reachProfileSegments, result, strStationierung, strWsp, file, true );
-            if( file.exists() )
-            {
-              resultEater.addResult( "Ueberschwemmungslinie", file );
-              log.log( false, " - Überschwemmungslinie erzeugt." );
-            }
-          }
-          catch( final Exception e )
-          {
-            log.log( e, "Überschwemmungslinie konnte nicht erzeugt werden: %s", e.getLocalizedMessage() );
-          }
-
-          if( log.checkCanceled() )
-            return;
-        }
-      }
-      else
-      {
-        if( calcMode == MODE.WATERLEVEL || calcMode == MODE.BF_NON_UNIFORM )
-          log.log( false, "Ergebnisdatei %s fehlt, vermutlich ein Fehler bei der Berechnung. Bitte prüfen Sie die Ergebnis-Logs.", lenSecFile.getName() );
-      }
 
       switch( calcMode )
       {
         case WATERLEVEL:
         {
+          final LengthSectionParser lsProcessor = new LengthSectionParser( reach, new File( dathDir, "laengsschnitt.txt" ), resultEater, tmpDir, epsThinning, false );
+          final IStatus lsResult = lsProcessor.process( log );
+          if( lsResult.getSeverity() == IStatus.ERROR )
+          {
+            monitor.setFinishInfo( IStatus.ERROR, "Fehler bei der Berechnung. Bitte prüfen Sie die Ergebnis-Logs." );
+            return;
+          }
+
+          if( log.checkCanceled() )
+            return;
+
+          final LengthSectionProcessor[] processedLengthSections = lsProcessor.getProcessedLengthSections();
+          if( processedLengthSections.length != 1 )
+          {
+            monitor.setFinishInfo( IStatus.ERROR, "Fehler bei der Ergebnisauswertung. Bitte prüfen Sie die Ergebnis-Logs." );
+            return;
+          }
+
+          final LengthSectionProcessor processedLS = processedLengthSections[0];
+
+          final File gmlFile = processedLS.getGmlFile();
+          if( gmlFile.exists() )
+          {
+            resultEater.addResult( "LengthSectionGml", gmlFile );
+            log.log( false, " - Längsschnitt (als GML) erzeugt." );
+          }
+
+          final File diagFile = processedLS.getDiagFile();
+          if( diagFile.exists() )
+          {
+            resultEater.addResult( "LengthSectionDiag", diagFile );
+            log.log( false, " - Längsschnitt-Diagramm erzeugt." );
+          }
+
+          final File tableFile = processedLS.getTableFile();
+          if( tableFile.exists() )
+          {
+            resultEater.addResult( "LengthSectionTab", tableFile );
+            log.log( false, " - Tabelle erzeugt." );
+          }
+
+          final File breaklineFile = processedLS.getBreaklineFile();
+          if( breaklineFile.exists() )
+          {
+            resultEater.addResult( "Bruchkanten", breaklineFile );
+            log.log( false, " - Bruchkanten erzeugt." );
+          }
+
+          final File boundaryFile = processedLS.getBoundaryFile();
+          if( boundaryFile.exists() )
+          {
+            resultEater.addResult( "Modellgrenzen", boundaryFile );
+            log.log( false, " - Modellgrenzen erzeugt." );
+          }
+
+          final File waterlevelFile = processedLS.getWaterlevelFile();
+          if( waterlevelFile.exists() )
+          {
+            resultEater.addResult( "Ueberschwemmungslinie", waterlevelFile );
+            log.log( false, " - Überschwemmungslinie erzeugt." );
+          }
+
+          if( log.checkCanceled() )
+            return;
+
           //
           // overview map (generated by token replacement) either from OVW_MAP_SPECIAL or OVW_MAP_GENERAL
           //
+          // TODO: maybe move into LengthSectionProcessor?
           if( ovwMapURL != null )
           {
             mapContentStream = ovwMapURL.openStream();
@@ -450,6 +345,7 @@ public class WspmTuhhCalcJob implements ISimulation
 
           break;
         }
+
         case BF_UNIFORM:
         {
           // bankfull uniform
@@ -476,10 +372,12 @@ public class WspmTuhhCalcJob implements ISimulation
 
           break;
         }
+
         case BF_NON_UNIFORM:
-        case REIB_KONST:
         {
           // bankfull nonuniform
+
+          // TODO: also parse QLang-File?
 
           // TODO :check everything below if it still makes sense?
 
@@ -494,18 +392,32 @@ public class WspmTuhhCalcJob implements ISimulation
             log.log( false, " - Längsschnitt (bordvoll) erzeugt (*.qb1)." );
           }
 
-          // *.tb (Ergebnislisten für jeden Abfluss -> Verzeichnis)
-          final FileFilter resNonUniFilter = FileFilterUtils.suffixFileFilter( ".tb" );
-          final File[] resNonUniFiles = dathDir.listFiles( resNonUniFilter );
-          final File resNonUniDir = new File( dathDir, "ResultLists" );
-          resNonUniDir.mkdirs();
-          for( final File file : resNonUniFiles )
-            FileUtils.copyFileToDirectory( file, resNonUniDir );
-          if( resNonUniDir.exists() )
+          /* break */
+          // FALL THROUGH
+        }
+
+        case REIB_KONST:
+        {
+          /* Process length sections */
+          /* Parse Q_LangSchnitt.txt into severel length-sections */
+          final File lsOutDir = new File( tmpDir, "LengthSections" );
+          lsOutDir.mkdirs();
+          resultEater.addResult( "resultListsNonUni", lsOutDir );
+
+          final LengthSectionParser lsProcessor = new LengthSectionParser( reach, new File( dathDir, "Q_LangSchnitt.txt" ), resultEater, lsOutDir, epsThinning, true );
+          final IStatus lsResult = lsProcessor.process( log );
+          if( lsResult.getSeverity() == IStatus.ERROR )
           {
-            resultEater.addResult( "resultListsNonUni", resNonUniDir );
-            log.log( false, " - Ergebnislisten pro Abfluss erzeugt." );
+            monitor.setFinishInfo( IStatus.ERROR, "Fehler bei der Berechnung. Bitte prüfen Sie die Ergebnis-Logs." );
+            return;
           }
+
+          log.log( false, " - Ergebnislisten pro Abfluss erzeugt." );
+          if( log.checkCanceled() )
+            return;
+
+          if( log.checkCanceled() )
+            return;
 
           /* Calculate and fetch Polynomes */
           final File polynomeTmpDir = new File( tmpDir, "polynome" );
@@ -524,8 +436,6 @@ public class WspmTuhhCalcJob implements ISimulation
     {
       IOUtils.closeQuietly( pwSimuLog );
       IOUtils.closeQuietly( zipInputStream );
-      IOUtils.closeQuietly( headerInputStream );
-      IOUtils.closeQuietly( footerInputStream );
       IOUtils.closeQuietly( strmKernelLog );
       IOUtils.closeQuietly( strmKernelErr );
       IOUtils.closeQuietly( pwInParams );
