@@ -21,48 +21,48 @@ public class ExportDiscrModelaction implements IObjectActionDelegate
 {
   private IFeatureSelection m_selection;
 
-  private IWorkbenchPart m_targetPart;  
-  
-  public void run( IAction action )
+  private IWorkbenchPart m_targetPart;
+
+  public void run( final IAction action )
   {
     final Feature[] features = FeatureSelectionHelper.getFeatures( m_selection );
     final Feature discFeature = features[0];
 
-    final IFEDiscretisationModel1d2d discModel  = (IFEDiscretisationModel1d2d) discFeature.getAdapter( IFEDiscretisationModel1d2d.class );
-    
+    final IFEDiscretisationModel1d2d discModel = (IFEDiscretisationModel1d2d) discFeature.getAdapter( IFEDiscretisationModel1d2d.class );
+
     /* open file dialog */
     final Shell shell = m_targetPart.getSite().getShell();
-    
-    final FileDialog dialog = new FileDialog(shell, SWT.SAVE );
-    
+
+    final FileDialog dialog = new FileDialog( shell, SWT.SAVE );
+
     dialog.setText( "Model Export" );
     dialog.setFilterExtensions( new String[] { "*.2d", "*.*" } );
-    dialog.setFilterNames( new String[] { "BCE2D-Format (*.2d)", "*.*" }  );
+    dialog.setFilterNames( new String[] { "BCE2D-Format (*.2d)", "*.*" } );
     dialog.open();
 
     final String filterPath = dialog.getFilterPath();
     final String fileName = dialog.getFileName();
-    final String name = fileName; 
-   
-    File modelFile = new File( filterPath, name );
-    
+    final String name = fileName;
+
+    final File modelFile = new File( filterPath, name );
+
     if( modelFile.exists() )
     {
       if( !MessageDialog.openQuestion( shell, "Modelexport", "Datei existiert bereits. Überschreiben?" ) )
         return;
     }
 
-    final Gml2RMA10SConv converter2D = new Gml2RMA10SConv( modelFile, discModel, null, null,null );
-    
+    final Gml2RMA10SConv converter2D = new Gml2RMA10SConv( modelFile, discModel, null, null );
+
     try
     {
       converter2D.toRMA10sModel();
     }
-    catch( IllegalStateException e )
+    catch( final IllegalStateException e )
     {
       e.printStackTrace();
     }
-    catch( SimulationException e )
+    catch( final SimulationException e )
     {
       e.printStackTrace();
     }
@@ -78,12 +78,13 @@ public class ExportDiscrModelaction implements IObjectActionDelegate
   }
 
   /**
-   * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.action.IAction, org.eclipse.ui.IWorkbenchPart)
+   * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.action.IAction,
+   *      org.eclipse.ui.IWorkbenchPart)
    */
   public void setActivePart( final IAction action, final IWorkbenchPart targetPart )
   {
     m_targetPart = targetPart;
-    
+
     action.setEnabled( m_targetPart != null );
   }
 

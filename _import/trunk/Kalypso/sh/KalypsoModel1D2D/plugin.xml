@@ -93,6 +93,12 @@
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IKingFlowRelation"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IWeirFlowRelation"/>
+         <adapter
+               type="org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBridgeFlowRelation">
+         </adapter>
+         <adapter
+               type="org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation">
+         </adapter>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D"/>
@@ -603,6 +609,18 @@
                   value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateWeirFlowrelationWidget">
             </parameter>
          </defaultHandler>
+      </command>
+      <command
+            categoryId="org.kalypso.ogc.gml.map.category"
+            id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateBridgeFlowRelation"
+            name="Brücke hinzufen">
+         <defaultHandler
+               class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+            <parameter
+                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+                  value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateBridgeFlowrelationWidget">
+            </parameter>
+         </defaultHandler>
       </command>           
      </extension>
 	 <extension
@@ -662,7 +680,14 @@
                  icon="icons/elcl16/08_add_weir.gif"
                  label="Wehr hinzufügen"
                  style="radio"
-                 tooltip="Wehr zuordnen">
+                 tooltip="Einem 1D-Element ein Wehr zuordnen">
+           </command>
+           <command
+                 commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateBridgeFlowRelation"
+                 icon="icons/elcl16/08a_add_bridge.gif"
+                 label="Brücke hinzufügen"
+                 style="radio"
+                 tooltip="Einem 1D-Element eine Brücke zuordnen">
            </command>
         </menuContribution>
         <menuContribution
