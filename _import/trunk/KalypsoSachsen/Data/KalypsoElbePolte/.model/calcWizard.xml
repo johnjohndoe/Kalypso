@@ -44,8 +44,8 @@ ToDo: Help-Ids setzen!!! -->
 		<arg name="mainSash" value="40"/>
 		<arg name="rightSash" value="50"/>
 		<!--  -->
-		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% [%axisunit%] - Modellwerte#linkColumn=ganglinie_modellwerte#color=0xff0000"/>
-		<arg name="timeserie2" value="nameColumn=name#nameString=%featureprop% [%axisunit%] - Messwerte#linkColumn=ganglinie_messwerte#color=0x0000ff"/>
+		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% [%axisunit%] - Rechnung#linkColumn=ganglinie_modellwerte#color=0xff0000"/>
+		<arg name="timeserie2" value="nameColumn=name#nameString=%featureprop% [%axisunit%] - Beobachtung#linkColumn=ganglinie_messwerte#color=0x0000ff"/>
 		<!--  -->
 		<arg name="ignoreType1" value="Q"/>
 		<arg name="ignoreType2" value="W"/>
@@ -183,13 +183,11 @@ ToDo: Help-Ids setzen!!! -->
 			<arg name="height" value="768"/>
 			<arg name="imageFormat" value="png"/>
 			<arg name="tokens">
-				<arg name="title" value="Name"/>
-				<arg name="href1" value="Wasserstand_gemessen"/>
-				<arg name="href2" value="Wasserstand_gerechnet"/>
-				<arg name="href3" value="Wasserstand_vorhersage"/>
-				<arg name="href4" value="Niederschlag_rechnung"/>
-				<arg name="href5" value="Wasserstand_vorhersage_unten"/>
-				<arg name="href6" value="Wasserstand_vorhersage_oben"/>
+				<arg name="title" value="name"/>
+				<arg name="href1" value="ganglinie_messwerte"/>
+				<arg name="href3" value="ganglinie_modellwerte"/>
+				<arg name="href5" value="ganglinie_modellwerte_unten"/>
+				<arg name="href6" value="ganglinie_modellwerte_oben"/>
 			</arg>
 			<arg name="templateDiagQ">
 				<arg name="label" value="Abflussgrafik"/>
@@ -226,20 +224,28 @@ ToDo: Help-Ids setzen!!! -->
 				<arg name="timeUnit" value="HOUR"/>
 				<arg name="timeStep" value="6"/>
 				<arg name="obs1">
-					<arg name="label" value="Trado 1"/>
-					<arg name="href" value="./Ergebnisse/Zeitreihen/QV_TRADO.zml"/>
+					<arg name="label" value="Usti"/>
+					<arg name="href" value="./Ergebnisse/Zeitreihen/Pegel/Usti.zml"/>
 				</arg>
 				<arg name="obs2">
-					<arg name="label" value="Schönau"/>
-					<arg name="href" value="./Ergebnisse/Zeitreihen/QV_SCHOEN.zml"/>
+					<arg name="label" value="Schöna"/>
+					<arg name="href" value="./Ergebnisse/Zeitreihen/Pegel/Schöna.zml"/>
 				</arg>
 				<arg name="obs3">
-					<arg name="label" value="Zescha"/>
-					<arg name="href" value="./Ergebnisse/Zeitreihen/QV_ZESCHA.zml"/>
+					<arg name="label" value="Dresden"/>
+					<arg name="href" value="./Ergebnisse/Zeitreihen/Pegel/Dresden.zml"/>
 				</arg>
 				<arg name="obs4">
-					<arg name="label" value="Neuwiese"/>
-					<arg name="href" value="./Ergebnisse/Zeitreihen/QV_NEUWIE.zml"/>
+					<arg name="label" value="Riesa"/>
+					<arg name="href" value="./Ergebnisse/Zeitreihen/Pegel/Riesa.zml"/>
+				</arg>
+				<arg name="obs5">
+					<arg name="label" value="Torgau"/>
+					<arg name="href" value="./Ergebnisse/Zeitreihen/Pegel/Torgau.zml"/>
+				</arg>
+				<arg name="obs6">
+					<arg name="label" value="Wittenberg"/>
+					<arg name="href" value="./Ergebnisse/Zeitreihen/Pegel/Wittenberg.zml"/>
 				</arg>
 			</arg>
 			<arg name="exporter4">
@@ -259,21 +265,45 @@ ToDo: Help-Ids setzen!!! -->
 				<arg name="timeUnit" value="HOUR"/>
 				<arg name="timeStep" value="6"/>
 				<arg name="obs1">
-					<arg name="label" value="Trado 1"/>
-					<arg name="href" value="./Ergebnisse/Zeitreihen/QV_TRADO.zml"/>
+					<arg name="label" value="Usti"/>
+					<arg name="href" value="./Ergebnisse/Zeitreihen/Pegel/Usti.zml"/>
 				</arg>
 				<arg name="obs2">
-					<arg name="label" value="Schönau"/>
-					<arg name="href" value="./Ergebnisse/Zeitreihen/QV_SCHOEN.zml"/>
+					<arg name="label" value="Schöna"/>
+					<arg name="href" value="./Ergebnisse/Zeitreihen/Pegel/Schöna.zml"/>
 				</arg>
 				<arg name="obs3">
-					<arg name="label" value="Zescha"/>
-					<arg name="href" value="./Ergebnisse/Zeitreihen/QV_ZESCHA.zml"/>
+					<arg name="label" value="Dresden"/>
+					<arg name="href" value="./Ergebnisse/Zeitreihen/Pegel/Dresden.zml"/>
 				</arg>
 				<arg name="obs4">
-					<arg name="label" value="Neuwiese"/>
-					<arg name="href" value="./Ergebnisse/Zeitreihen/QV_NEUWIE.zml"/>
+					<arg name="label" value="Riesa"/>
+					<arg name="href" value="./Ergebnisse/Zeitreihen/Pegel/Riesa.zml"/>
 				</arg>
+				<arg name="obs5">
+					<arg name="label" value="Torgau"/>
+					<arg name="href" value="./Ergebnisse/Zeitreihen/Pegel/Torgau.zml"/>
+				</arg>
+				<arg name="obs6">
+					<arg name="label" value="Wittenberg"/>
+					<arg name="href" value="./Ergebnisse/Zeitreihen/Pegel/Wittenberg.zml"/>
+				</arg>
+			</arg>
+		</arg>
+		<arg name="exporter5">
+			<arg name="id" value="simpleTemplateExporter"/>
+			<arg name="name" value="Längsschnitte"/>
+			<arg name="templateDiagLS_Q">
+				<arg name="documentName" value="LängsschnittQ"/>
+				<arg name="label" value="Längsschnitt - Abfluss"/>
+				<arg name="category" value="Längsschnitt Pegel;Elbe Abfluss"/>
+				<arg name="href" value="project:/.templates/calcCase/berichtLängsschnitt_Q.odt"/>
+			</arg>
+			<arg name="templateDiagLS_W">
+				<arg name="documentName" value="LängsschnittW"/>
+				<arg name="label" value="Längsschnitt - Wasserstand"/>
+				<arg name="category" value="Längsschnitt Pegel;Elbe Wasserstand"/>
+				<arg name="href" value="project:/.templates/calcCase/berichtLängsschnitt_W.odt"/>
 			</arg>
 		</arg>
 	</page>

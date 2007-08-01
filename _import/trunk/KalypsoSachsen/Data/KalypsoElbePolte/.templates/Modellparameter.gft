@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <featuretemplate xmlns="featureview.template.kalypso.org">
-    <layer featurePath="#fid#root" id="layer_1" linktype="gml" ns1:href="platform:/resource//KalypsoElbePolte/..BCE_intern/steuerParam_Import/.elbePolteModell_leer.gml"
+    <layer featurePath="#fid#root" id="layer_1" linktype="gml" ns1:href="calcCase.gml"
         xmlns:ns1="http://www.w3.org/1999/xlink"/>
     <view typename="ElbePolteModell" style="SWT.NONE">
         <gridData grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL"/>

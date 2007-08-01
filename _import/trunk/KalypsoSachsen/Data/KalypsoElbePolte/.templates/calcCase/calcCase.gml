@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ElbePolteModell fid="root" xmlns:commons="org.kalypso.elbepolte.commons" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink"
-  xmlns:obslink="obslink.zml.kalypso.org" xmlns:gml="http://www.opengis.net/gml" xmlns="org.kalypso.elbepolte.modell" xsi:schemaLocation="org.kalypso.elbepolte.modell modell.xsd">
+<ElbePolteModell fid="root" xmlns:commons="org.kalypso.elbepolte.commons" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:obslink="obslink.zml.kalypso.org" xmlns:gml="http://www.opengis.net/gml" xmlns="org.kalypso.elbepolte.modell" xsi:schemaLocation="org.kalypso.elbepolte.modell modell.xsd">
   <name>Elbe-Modell</name>
   <description>Modell der Oberen Elbe</description>
   <hw_type>1</hw_type>
-  <rido>false</rido>
+  <rido>true</rido>
   <streckeMember>
     <Strecke fid="Strecke1">
       <name>BRANDYS+PRAG - LITOMERICE</name>
@@ -15,7 +14,7 @@
       <db>0</db>
       <lt>0</lt>
       <replaceValues>false</replaceValues>
-      <nr_feko>0</nr_feko>
+      <nr_feko>2</nr_feko>
       <paramSetMember>
         <ParamSet fid="Strecke1-params-0">
           <hw_type>1</hw_type>
@@ -31,7 +30,7 @@
               <a2>0.15388</a2>
               <bMember>
                 <B fid="Strecke1-params-0-paramSet-0-bMember-0">
-                  <b>0.00000</b>
+                  <b>0.0</b>
                 </B>
               </bMember>
               <bMember>
@@ -59,12 +58,12 @@
               <a2>0.48727</a2>
               <bMember>
                 <B fid="Strecke1-params-0-paramSet-1-bMember-0">
-                  <b>0.00000</b>
+                  <b>0.0</b>
                 </B>
               </bMember>
               <bMember>
                 <B fid="Strecke1-params-0-paramSet-1-bMember-1">
-                  <b>0.00018</b>
+                  <b>1.8E-4</b>
                 </B>
               </bMember>
               <bMember>
@@ -82,7 +81,7 @@
                   <b>0.05275</b>
                 </B>
               </bMember>
-              <f>10</f>
+              <f>10.0</f>
             </StufenParamSet>
           </stufenParamSetMember>
           <stufenParamSetMember>
@@ -92,7 +91,7 @@
               <a2>0.45721</a2>
               <bMember>
                 <B fid="Strecke1-params-0-paramSet-2-bMember-0">
-                  <b>0.00000</b>
+                  <b>0.0</b>
                 </B>
               </bMember>
               <bMember>
@@ -107,7 +106,7 @@
               </bMember>
               <bMember>
                 <B fid="Strecke1-params-0-paramSet-2-bMember-3">
-                  <b>0.02070</b>
+                  <b>0.0207</b>
                 </B>
               </bMember>
               <f>4.4</f>
@@ -130,7 +129,7 @@
               <a2>0.08807</a2>
               <bMember>
                 <B fid="Strecke1-params-1-paramSet-0-bMember-0">
-                  <b>0.00086</b>
+                  <b>8.6E-4</b>
                 </B>
               </bMember>
               <bMember>
@@ -140,7 +139,7 @@
               </bMember>
               <bMember>
                 <B fid="Strecke1-params-1-paramSet-0-bMember-2">
-                  <b>0.09210</b>
+                  <b>0.0921</b>
                 </B>
               </bMember>
               <f/>
@@ -153,12 +152,12 @@
               <a2>0.60493</a2>
               <bMember>
                 <B fid="Strecke1-params-1-paramSet-1-bMember-0">
-                  <b>0.00000</b>
+                  <b>0.0</b>
                 </B>
               </bMember>
               <bMember>
                 <B fid="Strecke1-params-1-paramSet-1-bMember-1">
-                  <b>0.00027</b>
+                  <b>2.7E-4</b>
                 </B>
               </bMember>
               <bMember>
@@ -186,7 +185,7 @@
               <a2>0.45721</a2>
               <bMember>
                 <B fid="Strecke1-params-1-paramSet-2-bMember-0">
-                  <b>0.00000</b>
+                  <b>0.0</b>
                 </B>
               </bMember>
               <bMember>
@@ -201,7 +200,7 @@
               </bMember>
               <bMember>
                 <B fid="Strecke1-params-1-paramSet-2-bMember-3">
-                  <b>0.02070</b>
+                  <b>0.0207</b>
                 </B>
               </bMember>
               <f>4.4</f>
@@ -215,8 +214,8 @@
           <QL1>1500</QL1>
           <QL2>7000</QL2>
           <km>72.7</km>
-          <ce>3</ce>
-          <is>0</is>
+          <ce>3.0</ce>
+          <is>0.0</is>
           <stufenParamSetMember>
             <StufenParamSet fid="Strecke1-params-2-paramSet-0">
               <tl>8</tl>
@@ -224,7 +223,7 @@
               <a2>0.11976</a2>
               <bMember>
                 <B fid="Strecke1-params-2-paramSet-0-bMember-0">
-                  <b>0.00000</b>
+                  <b>0.0</b>
                 </B>
               </bMember>
               <bMember>
@@ -239,7 +238,7 @@
               </bMember>
               <bMember>
                 <B fid="Strecke1-params-2-paramSet-0-bMember-3">
-                  <b>0.05970</b>
+                  <b>0.0597</b>
                 </B>
               </bMember>
               <f/>
@@ -252,17 +251,17 @@
               <a2>0.51416</a2>
               <bMember>
                 <B fid="Strecke1-params-2-paramSet-1-bMember-0">
-                  <b>0.00000</b>
+                  <b>0.0</b>
                 </B>
               </bMember>
               <bMember>
                 <B fid="Strecke1-params-2-paramSet-1-bMember-1">
-                  <b>0.00012</b>
+                  <b>1.2E-4</b>
                 </B>
               </bMember>
               <bMember>
                 <B fid="Strecke1-params-2-paramSet-1-bMember-2">
-                  <b>0.01030</b>
+                  <b>0.0103</b>
                 </B>
               </bMember>
               <bMember>
@@ -280,7 +279,7 @@
                   <b>0.00996</b>
                 </B>
               </bMember>
-              <f>0</f>
+              <f>0.0</f>
             </StufenParamSet>
           </stufenParamSetMember>
         </ParamSet>
@@ -289,7 +288,7 @@
   </streckeMember>
   <streckeMember>
     <Strecke fid="Strecke2">
-      <name>LOUNY - LITOMERICE </name>
+      <name>LOUNY - LITOMERICE  </name>
       <description/>
       <river/>
       <zwg_zuschlag>0</zwg_zuschlag>
@@ -297,23 +296,23 @@
       <db>0</db>
       <lt>0</lt>
       <replaceValues>false</replaceValues>
-      <nr_feko>0</nr_feko>
+      <nr_feko>2</nr_feko>
       <paramSetMember>
         <ParamSet fid="Strecke2-params-0">
           <hw_type>1</hw_type>
           <QL1>200</QL1>
           <QL2>7000</QL2>
           <km>54.0</km>
-          <ce>3</ce>
-          <is>0</is>
+          <ce>3.0</ce>
+          <is>0.0</is>
           <stufenParamSetMember>
             <StufenParamSet fid="Strecke2-params-0-paramSet-0">
               <tl>15</tl>
-              <a1>-1.08240</a1>
+              <a1>-1.0824</a1>
               <a2>0.29361</a2>
               <bMember>
                 <B fid="Strecke2-params-0-paramSet-0-bMember-0">
-                  <b>0.00000</b>
+                  <b>0.0</b>
                 </B>
               </bMember>
               <bMember>
@@ -323,7 +322,7 @@
               </bMember>
               <bMember>
                 <B fid="Strecke2-params-0-paramSet-0-bMember-2">
-                  <b>0.09020</b>
+                  <b>0.0902</b>
                 </B>
               </bMember>
               <bMember>
@@ -346,7 +345,7 @@
               <a2>0.19526</a2>
               <bMember>
                 <B fid="Strecke2-params-0-paramSet-1-bMember-0">
-                  <b>0.00001</b>
+                  <b>1.0E-5</b>
                 </B>
               </bMember>
               <bMember>
@@ -364,7 +363,7 @@
                   <b>0.01792</b>
                 </B>
               </bMember>
-              <f>0</f>
+              <f>0.0</f>
             </StufenParamSet>
           </stufenParamSetMember>
         </ParamSet>
@@ -375,16 +374,16 @@
           <QL1>200</QL1>
           <QL2>7000</QL2>
           <km>54.0</km>
-          <ce>3</ce>
-          <is>0</is>
+          <ce>3.0</ce>
+          <is>0.0</is>
           <stufenParamSetMember>
             <StufenParamSet fid="Strecke2-params-1-paramSet-0">
               <tl>15</tl>
-              <a1>-1.08240</a1>
+              <a1>-1.0824</a1>
               <a2>0.29361</a2>
               <bMember>
                 <B fid="Strecke2-params-1-paramSet-0-bMember-0">
-                  <b>0.00000</b>
+                  <b>0.0</b>
                 </B>
               </bMember>
               <bMember>
@@ -394,7 +393,7 @@
               </bMember>
               <bMember>
                 <B fid="Strecke2-params-1-paramSet-0-bMember-2">
-                  <b>0.09020</b>
+                  <b>0.0902</b>
                 </B>
               </bMember>
               <bMember>
@@ -417,7 +416,7 @@
               <a2>0.19526</a2>
               <bMember>
                 <B fid="Strecke2-params-1-paramSet-1-bMember-0">
-                  <b>0.00001</b>
+                  <b>1.0E-5</b>
                 </B>
               </bMember>
               <bMember>
@@ -435,7 +434,7 @@
                   <b>0.01792</b>
                 </B>
               </bMember>
-              <f>0</f>
+              <f>0.0</f>
             </StufenParamSet>
           </stufenParamSetMember>
         </ParamSet>
@@ -446,16 +445,16 @@
           <QL1>200</QL1>
           <QL2>7000</QL2>
           <km>54.0</km>
-          <ce>3</ce>
-          <is>0</is>
+          <ce>3.0</ce>
+          <is>0.0</is>
           <stufenParamSetMember>
             <StufenParamSet fid="Strecke2-params-2-paramSet-0">
               <tl>15</tl>
-              <a1>-1.08240</a1>
+              <a1>-1.0824</a1>
               <a2>0.29361</a2>
               <bMember>
                 <B fid="Strecke2-params-2-paramSet-0-bMember-0">
-                  <b>0.00000</b>
+                  <b>0.0</b>
                 </B>
               </bMember>
               <bMember>
@@ -465,7 +464,7 @@
               </bMember>
               <bMember>
                 <B fid="Strecke2-params-2-paramSet-0-bMember-2">
-                  <b>0.09020</b>
+                  <b>0.0902</b>
                 </B>
               </bMember>
               <bMember>
@@ -488,7 +487,7 @@
               <a2>0.19526</a2>
               <bMember>
                 <B fid="Strecke2-params-2-paramSet-1-bMember-0">
-                  <b>0.00001</b>
+                  <b>1.0E-5</b>
                 </B>
               </bMember>
               <bMember>
@@ -506,7 +505,7 @@
                   <b>0.01792</b>
                 </B>
               </bMember>
-              <f>0</f>
+              <f>0.0</f>
             </StufenParamSet>
           </stufenParamSetMember>
         </ParamSet>
@@ -515,10 +514,10 @@
   </streckeMember>
   <streckeMember>
     <Strecke fid="Strecke3">
-      <name>LITOMERICE - USTI </name>
+      <name>LITOMERICE - USTI  </name>
       <description/>
       <river/>
-      <zwg_zuschlag>0</zwg_zuschlag>
+      <zwg_zuschlag>10</zwg_zuschlag>
       <nr>3</nr>
       <db>0</db>
       <lt>0</lt>
@@ -544,7 +543,7 @@
               </bMember>
               <bMember>
                 <B fid="Strecke3-params-0-paramSet-0-bMember-1">
-                  <b>0.72470</b>
+                  <b>0.7247</b>
                 </B>
               </bMember>
               <bMember>
@@ -575,7 +574,7 @@
                   <b>0.10465</b>
                 </B>
               </bMember>
-              <f>10</f>
+              <f>10.0</f>
             </StufenParamSet>
           </stufenParamSetMember>
           <stufenParamSetMember>
@@ -585,7 +584,7 @@
               <a2>0.09483</a2>
               <bMember>
                 <B fid="Strecke3-params-0-paramSet-2-bMember-0">
-                  <b>0.00074</b>
+                  <b>7.4E-4</b>
                 </B>
               </bMember>
               <bMember>
@@ -636,7 +635,7 @@
               <a2>0.11412</a2>
               <bMember>
                 <B fid="Strecke3-params-1-paramSet-1-bMember-0">
-                  <b>0.00004</b>
+                  <b>4.0E-5</b>
                 </B>
               </bMember>
               <bMember>
@@ -651,7 +650,7 @@
               </bMember>
               <bMember>
                 <B fid="Strecke3-params-1-paramSet-1-bMember-3">
-                  <b>0.01740</b>
+                  <b>0.0174</b>
                 </B>
               </bMember>
               <f>21.6</f>
@@ -664,7 +663,7 @@
               <a2>0.09483</a2>
               <bMember>
                 <B fid="Strecke3-params-1-paramSet-2-bMember-0">
-                  <b>0.00074</b>
+                  <b>7.4E-4</b>
                 </B>
               </bMember>
               <bMember>
@@ -688,8 +687,8 @@
           <QL1>1500</QL1>
           <QL2>7000</QL2>
           <km>26.4</km>
-          <ce>3</ce>
-          <is>0</is>
+          <ce>3.0</ce>
+          <is>0.0</is>
           <stufenParamSetMember>
             <StufenParamSet fid="Strecke3-params-2-paramSet-0">
               <tl>3</tl>
@@ -702,7 +701,7 @@
               </bMember>
               <bMember>
                 <B fid="Strecke3-params-2-paramSet-0-bMember-1">
-                  <b>0.45100</b>
+                  <b>0.451</b>
                 </B>
               </bMember>
               <f/>
@@ -728,7 +727,7 @@
                   <b>0.08453</b>
                 </B>
               </bMember>
-              <f>0</f>
+              <f>0.0</f>
             </StufenParamSet>
           </stufenParamSetMember>
         </ParamSet>
@@ -737,7 +736,7 @@
   </streckeMember>
   <streckeMember>
     <Strecke fid="Strecke4">
-      <name>USTI - SCHOENA </name>
+      <name>USTI - SCHOENA    </name>
       <description/>
       <river/>
       <zwg_zuschlag>0</zwg_zuschlag>
@@ -752,8 +751,8 @@
           <QL1>1000</QL1>
           <QL2>1700</QL2>
           <km>45.3</km>
-          <ce>8</ce>
-          <is>2</is>
+          <ce>8.0</ce>
+          <is>2.0</is>
           <stufenParamSetMember>
             <StufenParamSet fid="Strecke4-params-0-paramSet-0">
               <tl>7</tl>
@@ -761,7 +760,7 @@
               <a2>-0.02526</a2>
               <bMember>
                 <B fid="Strecke4-params-0-paramSet-0-bMember-0">
-                  <b>0.02080</b>
+                  <b>0.0208</b>
                 </B>
               </bMember>
               <bMember>
@@ -780,7 +779,7 @@
           <stufenParamSetMember>
             <StufenParamSet fid="Strecke4-params-0-paramSet-1">
               <tl>5</tl>
-              <a1>-0.41450</a1>
+              <a1>-0.4145</a1>
               <a2>-0.01233</a2>
               <bMember>
                 <B fid="Strecke4-params-0-paramSet-1-bMember-0">
@@ -797,14 +796,14 @@
                   <b>0.08476</b>
                 </B>
               </bMember>
-              <f>7</f>
+              <f>7.0</f>
             </StufenParamSet>
           </stufenParamSetMember>
           <stufenParamSetMember>
             <StufenParamSet fid="Strecke4-params-0-paramSet-2">
               <tl>5</tl>
-              <a1>-0.41650</a1>
-              <a2>0.03170</a2>
+              <a1>-0.4165</a1>
+              <a2>0.0317</a2>
               <bMember>
                 <B fid="Strecke4-params-0-paramSet-2-bMember-0">
                   <b>0.00172</b>
@@ -820,7 +819,7 @@
                   <b>0.19491</b>
                 </B>
               </bMember>
-              <f>4</f>
+              <f>4.0</f>
             </StufenParamSet>
           </stufenParamSetMember>
         </ParamSet>
@@ -832,7 +831,7 @@
           <QL2>2150</QL2>
           <km>45.3</km>
           <ce>7.6</ce>
-          <is>2</is>
+          <is>2.0</is>
           <stufenParamSetMember>
             <StufenParamSet fid="Strecke4-params-1-paramSet-0">
               <tl>7</tl>
@@ -859,7 +858,7 @@
           <stufenParamSetMember>
             <StufenParamSet fid="Strecke4-params-1-paramSet-1">
               <tl>5</tl>
-              <a1>-0.27150</a1>
+              <a1>-0.2715</a1>
               <a2>-0.03672</a2>
               <bMember>
                 <B fid="Strecke4-params-1-paramSet-1-bMember-0">
@@ -876,13 +875,13 @@
                   <b>0.08509</b>
                 </B>
               </bMember>
-              <f>0</f>
+              <f>0.0</f>
             </StufenParamSet>
           </stufenParamSetMember>
           <stufenParamSetMember>
             <StufenParamSet fid="Strecke4-params-1-paramSet-2">
               <tl>5</tl>
-              <a1>-0.56550</a1>
+              <a1>-0.5655</a1>
               <a2>0.02811</a2>
               <bMember>
                 <B fid="Strecke4-params-1-paramSet-2-bMember-0">
@@ -910,8 +909,8 @@
           <QL1>1000</QL1>
           <QL2>1700</QL2>
           <km>45.3</km>
-          <ce>4</ce>
-          <is>0</is>
+          <ce>4.0</ce>
+          <is>0.0</is>
           <stufenParamSetMember>
             <StufenParamSet fid="Strecke4-params-2-paramSet-0">
               <tl>7</tl>
@@ -950,7 +949,7 @@
                   <b>0.2824</b>
                 </B>
               </bMember>
-              <f>20</f>
+              <f>20.0</f>
             </StufenParamSet>
           </stufenParamSetMember>
           <stufenParamSetMember>
@@ -968,7 +967,7 @@
                   <b>0.2824</b>
                 </B>
               </bMember>
-              <f>10</f>
+              <f>10.0</f>
             </StufenParamSet>
           </stufenParamSetMember>
         </ParamSet>
@@ -984,7 +983,7 @@
       <nr>5</nr>
       <db>0</db>
       <lt>0</lt>
-      <replaceValues>true</replaceValues>
+      <replaceValues>false</replaceValues>
       <nr_feko>2</nr_feko>
       <paramSetMember>
         <ParamSet fid="Strecke5-params-0">
@@ -992,16 +991,16 @@
           <QL1>1000</QL1>
           <QL2>1700</QL2>
           <km>98.8</km>
-          <ce>8</ce>
-          <is>2</is>
+          <ce>8.0</ce>
+          <is>2.0</is>
           <stufenParamSetMember>
             <StufenParamSet fid="Strecke5-params-0-paramSet-0">
               <tl>12</tl>
               <a1>-1.18387</a1>
-              <a2>0.36400</a2>
+              <a2>0.364</a2>
               <bMember>
                 <B fid="Strecke5-params-0-paramSet-0-bMember-0">
-                  <b>0.00000</b>
+                  <b>0.0</b>
                 </B>
               </bMember>
               <bMember>
@@ -1025,11 +1024,11 @@
           <stufenParamSetMember>
             <StufenParamSet fid="Strecke5-params-0-paramSet-1">
               <tl>12</tl>
-              <a1>-0.98840</a1>
+              <a1>-0.9884</a1>
               <a2>0.26003</a2>
               <bMember>
                 <B fid="Strecke5-params-0-paramSet-1-bMember-0">
-                  <b>0.00000</b>
+                  <b>0.0</b>
                 </B>
               </bMember>
               <bMember>
@@ -1047,7 +1046,7 @@
                   <b>0.08851</b>
                 </B>
               </bMember>
-              <f>7</f>
+              <f>7.0</f>
             </StufenParamSet>
           </stufenParamSetMember>
           <stufenParamSetMember>
@@ -1057,7 +1056,7 @@
               <a2>0.19576</a2>
               <bMember>
                 <B fid="Strecke5-params-0-paramSet-2-bMember-0">
-                  <b>0.00000</b>
+                  <b>0.0</b>
                 </B>
               </bMember>
               <bMember>
@@ -1080,7 +1079,7 @@
                   <b>0.06544</b>
                 </B>
               </bMember>
-              <f>4</f>
+              <f>4.0</f>
             </StufenParamSet>
           </stufenParamSetMember>
         </ParamSet>
@@ -1092,7 +1091,7 @@
           <QL2>2150</QL2>
           <km>98.8</km>
           <ce>7.6</ce>
-          <is>2</is>
+          <is>2.0</is>
           <stufenParamSetMember>
             <StufenParamSet fid="Strecke5-params-1-paramSet-0">
               <tl>12</tl>
@@ -1100,7 +1099,7 @@
               <a2>0.39275</a2>
               <bMember>
                 <B fid="Strecke5-params-1-paramSet-0-bMember-0">
-                  <b>0.00000</b>
+                  <b>0.0</b>
                 </B>
               </bMember>
               <bMember>
@@ -1124,11 +1123,11 @@
           <stufenParamSetMember>
             <StufenParamSet fid="Strecke5-params-1-paramSet-1">
               <tl>12</tl>
-              <a1>-0.78010</a1>
+              <a1>-0.7801</a1>
               <a2>0.13012</a2>
               <bMember>
                 <B fid="Strecke5-params-1-paramSet-1-bMember-0">
-                  <b>0.00000</b>
+                  <b>0.0</b>
                 </B>
               </bMember>
               <bMember>
@@ -1143,43 +1142,10 @@
               </bMember>
               <bMember>
                 <B fid="Strecke5-params-1-paramSet-1-bMember-3">
-                  <b>0.03200</b>
+                  <b>0.032</b>
                 </B>
               </bMember>
-              <f>0</f>
-            </StufenParamSet>
-          </stufenParamSetMember>
-          <stufenParamSetMember>
-            <StufenParamSet fid="Strecke5-params-1-paramSet-2">
-              <tl>12</tl>
-              <a1>-1.11593</a1>
-              <a2>0.32109</a2>
-              <bMember>
-                <B fid="Strecke5-params-1-paramSet-2-bMember-0">
-                  <b>0.00000</b>
-                </B>
-              </bMember>
-              <bMember>
-                <B fid="Strecke5-params-1-paramSet-2-bMember-1">
-                  <b>0.00331</b>
-                </B>
-              </bMember>
-              <bMember>
-                <B fid="Strecke5-params-1-paramSet-2-bMember-2">
-                  <b>0.07193</b>
-                </B>
-              </bMember>
-              <bMember>
-                <B fid="Strecke5-params-1-paramSet-2-bMember-3">
-                  <b>0.10204</b>
-                </B>
-              </bMember>
-              <bMember>
-                <B fid="Strecke5-params-1-paramSet-2-bMember-4">
-                  <b>0.02789</b>
-                </B>
-              </bMember>
-              <f>4.2</f>
+              <f>0.0</f>
             </StufenParamSet>
           </stufenParamSetMember>
         </ParamSet>
@@ -1190,8 +1156,8 @@
           <QL1>1000</QL1>
           <QL2>1700</QL2>
           <km>98.8</km>
-          <ce>4</ce>
-          <is>0</is>
+          <ce>4.0</ce>
+          <is>0.0</is>
           <stufenParamSetMember>
             <StufenParamSet fid="Strecke5-params-2-paramSet-0">
               <tl>12</tl>
@@ -1199,7 +1165,7 @@
               <a2>0.19164</a2>
               <bMember>
                 <B fid="Strecke5-params-2-paramSet-0-bMember-0">
-                  <b>0.00000</b>
+                  <b>0.0</b>
                 </B>
               </bMember>
               <bMember>
@@ -1227,7 +1193,7 @@
               <a2>0.18991</a2>
               <bMember>
                 <B fid="Strecke5-params-2-paramSet-1-bMember-0">
-                  <b>0.00000</b>
+                  <b>0.0</b>
                 </B>
               </bMember>
               <bMember>
@@ -1245,7 +1211,7 @@
                   <b>0.04006</b>
                 </B>
               </bMember>
-              <f>20</f>
+              <f>20.0</f>
             </StufenParamSet>
           </stufenParamSetMember>
           <stufenParamSetMember>
@@ -1255,7 +1221,7 @@
               <a2>0.18991</a2>
               <bMember>
                 <B fid="Strecke5-params-2-paramSet-2-bMember-0">
-                  <b>0.00000</b>
+                  <b>0.0</b>
                 </B>
               </bMember>
               <bMember>
@@ -1273,7 +1239,7 @@
                   <b>0.04006</b>
                 </B>
               </bMember>
-              <f>10</f>
+              <f>10.0</f>
             </StufenParamSet>
           </stufenParamSetMember>
         </ParamSet>
@@ -1282,7 +1248,7 @@
   </streckeMember>
   <streckeMember>
     <Strecke fid="Strecke6">
-      <name>DRESDEN - RIESA </name>
+      <name>DRESDEN - RIESA   </name>
       <description/>
       <river/>
       <zwg_zuschlag>0</zwg_zuschlag>
@@ -1297,8 +1263,8 @@
           <QL1>850</QL1>
           <QL2>1600</QL2>
           <km>52.8</km>
-          <ce>2</ce>
-          <is>3</is>
+          <ce>2.0</ce>
+          <is>3.0</is>
           <stufenParamSetMember>
             <StufenParamSet fid="Strecke6-params-0-paramSet-0">
               <tl>10</tl>
@@ -1306,7 +1272,7 @@
               <a2>0.14478</a2>
               <bMember>
                 <B fid="Strecke6-params-0-paramSet-0-bMember-0">
-                  <b>0.00000</b>
+                  <b>0.0</b>
                 </B>
               </bMember>
               <bMember>
@@ -1334,7 +1300,7 @@
               <a2>0.07397</a2>
               <bMember>
                 <B fid="Strecke6-params-0-paramSet-1-bMember-0">
-                  <b>0.00130</b>
+                  <b>0.0013</b>
                 </B>
               </bMember>
               <bMember>
@@ -1347,7 +1313,7 @@
                   <b>0.10694</b>
                 </B>
               </bMember>
-              <f>8</f>
+              <f>8.0</f>
             </StufenParamSet>
           </stufenParamSetMember>
           <stufenParamSetMember>
@@ -1357,7 +1323,7 @@
               <a2>0.16944</a2>
               <bMember>
                 <B fid="Strecke6-params-0-paramSet-2-bMember-0">
-                  <b>0.00001</b>
+                  <b>1.0E-5</b>
                 </B>
               </bMember>
               <bMember>
@@ -1375,7 +1341,7 @@
                   <b>0.01716</b>
                 </B>
               </bMember>
-              <f>6</f>
+              <f>6.0</f>
             </StufenParamSet>
           </stufenParamSetMember>
         </ParamSet>
@@ -1387,7 +1353,7 @@
           <QL2>2092</QL2>
           <km>52.8</km>
           <ce>2.1</ce>
-          <is>4</is>
+          <is>4.0</is>
           <stufenParamSetMember>
             <StufenParamSet fid="Strecke6-params-1-paramSet-0">
               <tl>10</tl>
@@ -1395,7 +1361,7 @@
               <a2>0.06645</a2>
               <bMember>
                 <B fid="Strecke6-params-1-paramSet-0-bMember-0">
-                  <b>0.00000</b>
+                  <b>0.0</b>
                 </B>
               </bMember>
               <bMember>
@@ -1451,7 +1417,7 @@
               <a2>0.26441</a2>
               <bMember>
                 <B fid="Strecke6-params-1-paramSet-2-bMember-0">
-                  <b>0.00000</b>
+                  <b>0.0</b>
                 </B>
               </bMember>
               <bMember>
@@ -1461,7 +1427,7 @@
               </bMember>
               <bMember>
                 <B fid="Strecke6-params-1-paramSet-2-bMember-2">
-                  <b>0.12970</b>
+                  <b>0.1297</b>
                 </B>
               </bMember>
               <bMember>
@@ -1469,7 +1435,7 @@
                   <b>0.04218</b>
                 </B>
               </bMember>
-              <f>11</f>
+              <f>11.0</f>
             </StufenParamSet>
           </stufenParamSetMember>
         </ParamSet>
@@ -1480,16 +1446,16 @@
           <QL1>800</QL1>
           <QL2>1600</QL2>
           <km>52.8</km>
-          <ce>5</ce>
-          <is>0</is>
+          <ce>5.0</ce>
+          <is>0.0</is>
           <stufenParamSetMember>
             <StufenParamSet fid="Strecke6-params-2-paramSet-0">
               <tl>10</tl>
               <a1>-0.76842</a1>
-              <a2>0.10360</a2>
+              <a2>0.1036</a2>
               <bMember>
                 <B fid="Strecke6-params-2-paramSet-0-bMember-0">
-                  <b>0.00046</b>
+                  <b>4.6E-4</b>
                 </B>
               </bMember>
               <bMember>
@@ -1508,11 +1474,11 @@
           <stufenParamSetMember>
             <StufenParamSet fid="Strecke6-params-2-paramSet-1">
               <tl>9</tl>
-              <a1>-0.72320</a1>
+              <a1>-0.7232</a1>
               <a2>0.08593</a2>
               <bMember>
                 <B fid="Strecke6-params-2-paramSet-1-bMember-0">
-                  <b>0.00075</b>
+                  <b>7.5E-4</b>
                 </B>
               </bMember>
               <bMember>
@@ -1525,7 +1491,7 @@
                   <b>0.14322</b>
                 </B>
               </bMember>
-              <f>8</f>
+              <f>8.0</f>
             </StufenParamSet>
           </stufenParamSetMember>
           <stufenParamSetMember>
@@ -1548,7 +1514,7 @@
                   <b>0.08091</b>
                 </B>
               </bMember>
-              <f>12</f>
+              <f>12.0</f>
             </StufenParamSet>
           </stufenParamSetMember>
         </ParamSet>
@@ -1572,8 +1538,8 @@
           <QL1>850</QL1>
           <QL2>1600</QL2>
           <km>99.0</km>
-          <ce>2</ce>
-          <is>3</is>
+          <ce>2.0</ce>
+          <is>3.0</is>
           <stufenParamSetMember>
             <StufenParamSet fid="Strecke7-params-0-paramSet-0">
               <tl>18</tl>
@@ -1581,17 +1547,17 @@
               <a2>0.46277</a2>
               <bMember>
                 <B fid="Strecke7-params-0-paramSet-0-bMember-0">
-                  <b>0.00000</b>
+                  <b>0.0</b>
                 </B>
               </bMember>
               <bMember>
                 <B fid="Strecke7-params-0-paramSet-0-bMember-1">
-                  <b>0.00032</b>
+                  <b>3.2E-4</b>
                 </B>
               </bMember>
               <bMember>
                 <B fid="Strecke7-params-0-paramSet-0-bMember-2">
-                  <b>0.02560</b>
+                  <b>0.0256</b>
                 </B>
               </bMember>
               <bMember>
@@ -1614,7 +1580,7 @@
               <a2>0.40508</a2>
               <bMember>
                 <B fid="Strecke7-params-0-paramSet-1-bMember-0">
-                  <b>0.00000</b>
+                  <b>0.0</b>
                 </B>
               </bMember>
               <bMember>
@@ -1637,7 +1603,7 @@
                   <b>0.01375</b>
                 </B>
               </bMember>
-              <f>8</f>
+              <f>8.0</f>
             </StufenParamSet>
           </stufenParamSetMember>
           <stufenParamSetMember>
@@ -1647,12 +1613,12 @@
               <a2>0.58224</a2>
               <bMember>
                 <B fid="Strecke7-params-0-paramSet-2-bMember-0">
-                  <b>0.00000</b>
+                  <b>0.0</b>
                 </B>
               </bMember>
               <bMember>
                 <B fid="Strecke7-params-0-paramSet-2-bMember-1">
-                  <b>0.00034</b>
+                  <b>3.4E-4</b>
                 </B>
               </bMember>
               <bMember>
@@ -1670,7 +1636,7 @@
                   <b>0.01918</b>
                 </B>
               </bMember>
-              <f>6</f>
+              <f>6.0</f>
             </StufenParamSet>
           </stufenParamSetMember>
         </ParamSet>
@@ -1682,7 +1648,7 @@
           <QL2>2092</QL2>
           <km>99.0</km>
           <ce>2.1</ce>
-          <is>4</is>
+          <is>4.0</is>
           <stufenParamSetMember>
             <StufenParamSet fid="Strecke7-params-1-paramSet-0">
               <tl>18</tl>
@@ -1690,12 +1656,12 @@
               <a2>0.47795</a2>
               <bMember>
                 <B fid="Strecke7-params-1-paramSet-0-bMember-0">
-                  <b>0.00000</b>
+                  <b>0.0</b>
                 </B>
               </bMember>
               <bMember>
                 <B fid="Strecke7-params-1-paramSet-0-bMember-1">
-                  <b>0.00031</b>
+                  <b>3.1E-4</b>
                 </B>
               </bMember>
               <bMember>
@@ -1720,10 +1686,10 @@
             <StufenParamSet fid="Strecke7-params-1-paramSet-1">
               <tl>17</tl>
               <a1>-1.15185</a1>
-              <a2>0.27360</a2>
+              <a2>0.2736</a2>
               <bMember>
                 <B fid="Strecke7-params-1-paramSet-1-bMember-0">
-                  <b>0.00000</b>
+                  <b>0.0</b>
                 </B>
               </bMember>
               <bMember>
@@ -1751,12 +1717,12 @@
               <a2>0.56357</a2>
               <bMember>
                 <B fid="Strecke7-params-1-paramSet-2-bMember-0">
-                  <b>0.00000</b>
+                  <b>0.0</b>
                 </B>
               </bMember>
               <bMember>
                 <B fid="Strecke7-params-1-paramSet-2-bMember-1">
-                  <b>0.00050</b>
+                  <b>5.0E-4</b>
                 </B>
               </bMember>
               <bMember>
@@ -1774,7 +1740,7 @@
                   <b>0.01612</b>
                 </B>
               </bMember>
-              <f>11</f>
+              <f>11.0</f>
             </StufenParamSet>
           </stufenParamSetMember>
         </ParamSet>
@@ -1785,8 +1751,8 @@
           <QL1>800</QL1>
           <QL2>1600</QL2>
           <km>99.0</km>
-          <ce>5</ce>
-          <is>0</is>
+          <ce>5.0</ce>
+          <is>0.0</is>
           <stufenParamSetMember>
             <StufenParamSet fid="Strecke7-params-2-paramSet-0">
               <tl>18</tl>
@@ -1794,7 +1760,7 @@
               <a2>0.35619</a2>
               <bMember>
                 <B fid="Strecke7-params-2-paramSet-0-bMember-0">
-                  <b>0.00000</b>
+                  <b>0.0</b>
                 </B>
               </bMember>
               <bMember>
@@ -1827,7 +1793,7 @@
               <a2>0.35404</a2>
               <bMember>
                 <B fid="Strecke7-params-2-paramSet-1-bMember-0">
-                  <b>0.00000</b>
+                  <b>0.0</b>
                 </B>
               </bMember>
               <bMember>
@@ -1847,10 +1813,10 @@
               </bMember>
               <bMember>
                 <B fid="Strecke7-params-2-paramSet-1-bMember-4">
-                  <b>0.02350</b>
+                  <b>0.0235</b>
                 </B>
               </bMember>
-              <f>8</f>
+              <f>8.0</f>
             </StufenParamSet>
           </stufenParamSetMember>
           <stufenParamSetMember>
@@ -1860,12 +1826,12 @@
               <a2>0.60682</a2>
               <bMember>
                 <B fid="Strecke7-params-2-paramSet-2-bMember-0">
-                  <b>0.00000</b>
+                  <b>0.0</b>
                 </B>
               </bMember>
               <bMember>
                 <B fid="Strecke7-params-2-paramSet-2-bMember-1">
-                  <b>0.00031</b>
+                  <b>3.1E-4</b>
                 </B>
               </bMember>
               <bMember>
@@ -1883,7 +1849,7 @@
                   <b>0.01465</b>
                 </B>
               </bMember>
-              <f>12</f>
+              <f>12.0</f>
             </StufenParamSet>
           </stufenParamSetMember>
         </ParamSet>
@@ -1907,8 +1873,8 @@
           <QL1>900</QL1>
           <QL2>1500</QL2>
           <km>59.5</km>
-          <ce>2</ce>
-          <is>13</is>
+          <ce>2.0</ce>
+          <is>13.0</is>
           <stufenParamSetMember>
             <StufenParamSet fid="Strecke8-params-0-paramSet-0">
               <tl>21</tl>
@@ -1916,7 +1882,7 @@
               <a2>0.30737</a2>
               <bMember>
                 <B fid="Strecke8-params-0-paramSet-0-bMember-0">
-                  <b>0.00000</b>
+                  <b>0.0</b>
                 </B>
               </bMember>
               <bMember>
@@ -1926,7 +1892,7 @@
               </bMember>
               <bMember>
                 <B fid="Strecke8-params-0-paramSet-0-bMember-2">
-                  <b>0.06960</b>
+                  <b>0.0696</b>
                 </B>
               </bMember>
               <bMember>
@@ -1944,12 +1910,12 @@
               <a2>0.57621</a2>
               <bMember>
                 <B fid="Strecke8-params-0-paramSet-1-bMember-0">
-                  <b>0.00000</b>
+                  <b>0.0</b>
                 </B>
               </bMember>
               <bMember>
                 <B fid="Strecke8-params-0-paramSet-1-bMember-1">
-                  <b>0.00025</b>
+                  <b>2.5E-4</b>
                 </B>
               </bMember>
               <bMember>
@@ -1977,12 +1943,12 @@
               <a2>0.52349</a2>
               <bMember>
                 <B fid="Strecke8-params-0-paramSet-2-bMember-0">
-                  <b>0.00000</b>
+                  <b>0.0</b>
                 </B>
               </bMember>
               <bMember>
                 <B fid="Strecke8-params-0-paramSet-2-bMember-1">
-                  <b>0.00021</b>
+                  <b>2.1E-4</b>
                 </B>
               </bMember>
               <bMember>
@@ -2000,7 +1966,7 @@
                   <b>0.04063</b>
                 </B>
               </bMember>
-              <f>20</f>
+              <f>20.0</f>
             </StufenParamSet>
           </stufenParamSetMember>
         </ParamSet>
@@ -2020,7 +1986,7 @@
               <a2>0.33968</a2>
               <bMember>
                 <B fid="Strecke8-params-1-paramSet-0-bMember-0">
-                  <b>0.00000</b>
+                  <b>0.0</b>
                 </B>
               </bMember>
               <bMember>
@@ -2048,12 +2014,12 @@
               <a2>0.51969</a2>
               <bMember>
                 <B fid="Strecke8-params-1-paramSet-1-bMember-0">
-                  <b>0.00000</b>
+                  <b>0.0</b>
                 </B>
               </bMember>
               <bMember>
                 <B fid="Strecke8-params-1-paramSet-1-bMember-1">
-                  <b>0.00016</b>
+                  <b>1.6E-4</b>
                 </B>
               </bMember>
               <bMember>
@@ -2063,7 +2029,7 @@
               </bMember>
               <bMember>
                 <B fid="Strecke8-params-1-paramSet-1-bMember-3">
-                  <b>0.06960</b>
+                  <b>0.0696</b>
                 </B>
               </bMember>
               <bMember>
@@ -2071,7 +2037,7 @@
                   <b>0.04729</b>
                 </B>
               </bMember>
-              <f>3</f>
+              <f>3.0</f>
             </StufenParamSet>
           </stufenParamSetMember>
           <stufenParamSetMember>
@@ -2105,8 +2071,8 @@
           <QL1>700</QL1>
           <QL2>1400</QL2>
           <km>59.5</km>
-          <ce>5</ce>
-          <is>0</is>
+          <ce>5.0</ce>
+          <is>0.0</is>
           <stufenParamSetMember>
             <StufenParamSet fid="Strecke8-params-2-paramSet-0">
               <tl>21</tl>
@@ -2114,7 +2080,7 @@
               <a2>0.38352</a2>
               <bMember>
                 <B fid="Strecke8-params-2-paramSet-0-bMember-0">
-                  <b>0.00000</b>
+                  <b>0.0</b>
                 </B>
               </bMember>
               <bMember>
@@ -2147,12 +2113,12 @@
               <a2>0.55112</a2>
               <bMember>
                 <B fid="Strecke8-params-2-paramSet-1-bMember-0">
-                  <b>0.00000</b>
+                  <b>0.0</b>
                 </B>
               </bMember>
               <bMember>
                 <B fid="Strecke8-params-2-paramSet-1-bMember-1">
-                  <b>0.00063</b>
+                  <b>6.3E-4</b>
                 </B>
               </bMember>
               <bMember>
@@ -2167,10 +2133,10 @@
               </bMember>
               <bMember>
                 <B fid="Strecke8-params-2-paramSet-1-bMember-4">
-                  <b>0.01450</b>
+                  <b>0.0145</b>
                 </B>
               </bMember>
-              <f>0</f>
+              <f>0.0</f>
             </StufenParamSet>
           </stufenParamSetMember>
           <stufenParamSetMember>
@@ -2180,12 +2146,12 @@
               <a2>0.54636</a2>
               <bMember>
                 <B fid="Strecke8-params-2-paramSet-2-bMember-0">
-                  <b>0.00000</b>
+                  <b>0.0</b>
                 </B>
               </bMember>
               <bMember>
                 <B fid="Strecke8-params-2-paramSet-2-bMember-1">
-                  <b>0.00075</b>
+                  <b>7.5E-4</b>
                 </B>
               </bMember>
               <bMember>
@@ -2195,7 +2161,7 @@
               </bMember>
               <bMember>
                 <B fid="Strecke8-params-2-paramSet-2-bMember-3">
-                  <b>0.03300</b>
+                  <b>0.033</b>
                 </B>
               </bMember>
               <bMember>
@@ -2203,7 +2169,7 @@
                   <b>0.01244</b>
                 </B>
               </bMember>
-              <f>0</f>
+              <f>0.0</f>
             </StufenParamSet>
           </stufenParamSetMember>
         </ParamSet>
@@ -2313,16 +2279,16 @@
       <nr>008</nr>
       <river>elbe</river>
       <ganglinie_messwerte>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Pegel/Schoena.zml"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Pegel/Schöna.zml"/>
       </ganglinie_messwerte>
       <ganglinie_modellwerte>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/Pegel/Schoena.zml"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/Pegel/Schöna.zml"/>
       </ganglinie_modellwerte>
       <ganglinie_modellwerte_unten>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/Pegel/Schoena_unten.zml"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/Pegel/Schöna_unten.zml"/>
       </ganglinie_modellwerte_unten>
       <ganglinie_modellwerte_oben>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/Pegel/Schoena_oben.zml"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/Pegel/Schöna_oben.zml"/>
       </ganglinie_modellwerte_oben>
     </ElbePegel>
   </pegelMember>
@@ -2491,7 +2457,7 @@
       <nr>014</nr>
       <river>schwarze elster</river>
       <ganglinie_gesamt>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Zwischengebiete/Loeben.zml"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Zwischengebiete/Löben.zml"/>
       </ganglinie_gesamt>
     </ZwgZufluss>
   </zwgZuflussMember>
@@ -2509,6 +2475,9 @@
       <id/>
       <nr>003</nr>
       <river>labe</river>
+      <ganglinie_modellwerte>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/HPegel/Litomerice_Labe.zml"/>
+      </ganglinie_modellwerte>
     </InternerHPegel>
   </internerHPegelMember>
   <internerHPegelMember>
@@ -2525,6 +2494,9 @@
       <id/>
       <nr>005</nr>
       <river>ohre</river>
+      <ganglinie_modellwerte>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/HPegel/Litomerice_Ohre.zml"/>
+      </ganglinie_modellwerte>
     </InternerHPegel>
   </internerHPegelMember>
   <internerHPegelMember>
@@ -2541,6 +2513,9 @@
       <id/>
       <nr>006</nr>
       <river>labe</river>
+      <ganglinie_modellwerte>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/HPegel/Litomerice_gesamt.zml"/>
+      </ganglinie_modellwerte>
     </InternerHPegel>
   </internerHPegelMember>
 </ElbePolteModell>

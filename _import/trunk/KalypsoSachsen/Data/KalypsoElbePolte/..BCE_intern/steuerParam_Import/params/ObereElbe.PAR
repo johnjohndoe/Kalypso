@@ -1,5 +1,5 @@
-1    1    				/ ID=3		HW-Typ,  SelNFG=1: Nachfï¿½hrung RIDO   // alle int
-1      0	0    0    0   0  		/ 		Strecken - Nr.  DB,  LT, ZZG, EFM, nrFEKO=0 kein feko
+1    1    				/ ID=3		HW-Typ,  SelNFG=1: Nachführung RIDO   // alle int
+1      0	0    0.0    0   0  		/ 		Strecken - Nr.  DB,  LT, ZZG, EFM, nrFEKO=0 kein feko
 BRANDYS+PRAG - LITOMERICE
 1500	2675       72.7     0.1   2.2  /						mittl. Par neu id=3h
  8      4    -0.63264   0.15388  		0.00000 0.00564 0.23237 0.28322   / 
@@ -13,7 +13,7 @@ BRANDYS+PRAG - LITOMERICE
  8      4     -0.70537   0.11976     	0.00000 0.08709 0.26759 0.05970    / 
 26     6    -1.42307   0.51416     	0.00000 0.00012 0.01030 0.03915 0.03156 0.00996     0  /    
 -1  /
-2     0     0    0    0    0  		/		Strecken - Nr.  DB,  LT, ZZG, EFM, nrFEKO=0 kein feko
+2     0     0    0.0    0    0  		/		Strecken - Nr.  DB,  LT, ZZG, EFM, nrFEKO=0 kein feko
 LOUNY - LITOMERICE  
  200   7000           54.0     3     0 /						mittl. Par neu id=3h
 15      5   -1.08240   0.29361   	0.00000 0.00635 0.09020 0.09468 0.01998  /
@@ -27,7 +27,7 @@ LOUNY - LITOMERICE
 15      5   -1.08240   0.29361   	0.00000 0.00635 0.09020 0.09468 0.01998  /
 18      4   -1.00289   0.19526   	0.00001 0.05789 0.11655 0.01792   0  /
 -1  /
-3     0	0    0    0    2  		/ 		Strecken - Nr.  DB,  LT, ZZG, EFM, nrFEKO=0 kein feko
+3     0	0    0.0    0    2  		/ 		Strecken - Nr.  DB,  LT, ZZG, EFM, nrFEKO=0 kein feko
 LITOMERICE - USTI  
 1500   2675            26.4     0.1     2.2 /						mittl. Par neu id=3h
  3      3   	-0.16278    0.00306     	0.04207   0.72470   0.07352          /	
@@ -41,7 +41,7 @@ LITOMERICE - USTI
  3      2   	-0.27029  -0.01517   	0.26354   0.45100  /
  9      3   	-0.60189  -0.00797    	0.00998   0.29563   0.08453     0   /
 -1  /
-4       0	0    0    0  2  		/ 		Strecken - Nr.  DB,  LT, ZZG, EFM, nrFEKO=0 kein feko
+4       0	0    0.0    0  2  		/ 		Strecken - Nr.  DB,  LT, ZZG, EFM, nrFEKO=0 kein feko
 USTI - SCHOENA    
 1000   1700            45.3     8     2 /						mittl. Par neu id=3h
  7      3   -0.49346  -0.02526     	0.02080   0.37575   0.08472      /
@@ -55,7 +55,7 @@ USTI - SCHOENA
  7      3   -0.32371  -0.06912    	0.05315   0.45645   0.09757/     			
  5      2   -0.35742  -0.03933   		0.2946  0.2824                         20 /  			
  5      2   -0.35742  -0.03933   		0.2946  0.2824                        10 /   
-5      0	0    0    1    2  		/ 		Strecken - Nr.  DB,  LT, ZZG, EFM, nrFEKO=0 kein feko
+5      0	0    0.0    0    2  		/ 		Strecken - Nr.  DB,  LT, ZZG, EFM, nrFEKO=0 kein feko
 USTI - DRESDEN
 1000   1700            98.8     8     2 /						mittl. Par neu id=3h
 12      4   -1.18387  0.36400      	0.00000 0.01126 0.10202 0.06685         /
@@ -64,12 +64,12 @@ USTI - DRESDEN
  989   2150            98.8    7.6     2 /						Sommer 2002. Par neu id=3h
 12      4   -1.26296   0.39275         	0.00000 0.01089 0.07684 0.04206               /
 12      4   -0.78010   0.13012         	0.00000 0.10363 0.21438 0.03200        0 /   
-12      5   -1.11593   0.32109           	0.00000 0.00331 0.07193 0.10204 0.02789   4.2  /
+12      5   -1.11593 A2:  0.32109           	0.00000 0.00331 0.07193 0.10204 0.02789   4.2  /
 1000   1700            98.8     4      0 /						mittl. Par alt id=3h
 12      4   -0.93368   0.19164         	0.00000 0.06014 0.16399 0.03383        /
 12      4   -0.91614   0.18991         	0.00000 0.05823 0.17547 0.04006    20 /   
 12      4   -0.91614   0.18991         	0.00000 0.05823 0.17547 0.04006    10 /   
-6     0	0    0    0    2  		/ 		Strecken - Nr.  DB,  LT, ZZG, EFM, nrFEKO=0 kein feko
+6     0	0    0.0    0    2  		/ 		Strecken - Nr.  DB,  LT, ZZG, EFM, nrFEKO=0 kein feko
 DRESDEN - RIESA   
  850   1600            52.8     2     3 /						mittl. Par neu id=3h
 10      4   -0.68337   0.14478 		0.00000 0.02432 0.27058 0.16651	/
@@ -83,7 +83,7 @@ DRESDEN - RIESA
 10      3   -0.76842   0.10360 		0.00046 0.19142 0.14329   		/
  9       3   -0.72320   0.08593 		0.00075 0.21875 0.14322   		8 /  
  9       3   -0.85188   0.07506 		0.00103 0.14125 0.08091  		12 /
-7     0	0    0    0   2  		/ 		Strecken - Nr.  DB,  LT, ZZG, EFM, nrFEKO=0 kein feko
+7     0	0    0.0    0   2  		/ 		Strecken - Nr.  DB,  LT, ZZG, EFM, nrFEKO=0 kein feko
 DRESDEN - TORGAU
  850   1600            99.0     2     3 /						mittl. Par neu id=3h
 18      5   -1.30767   0.46277   	0.00000 0.00032 0.02560 0.08259 0.04659        /		
@@ -97,7 +97,7 @@ DRESDEN - TORGAU
 18      5  -1.19866    0.35619         	0.00000 0.00195 0.04808 0.07907 0.02843   /
 17      5   -1.17988   0.35404    	0.00000 0.00307 0.06202 0.08557 0.02350      8 /   
 30      5   -1.55014   0.60682   	0.00000 0.00031 0.01235 0.02936 0.01465     12 /	
-8     0	0    0    0  2  		/ 		Strecken - Nr.  DB,  LT, ZZG, EFM, nrFEKO=0 kein feko
+8     0	0    0.0    0  2  		/ 		Strecken - Nr.  DB,  LT, ZZG, EFM, nrFEKO=0 kein feko
 TORGAU - WITTENBERG
  900   1500            59.5     2     13 /						mittl. Par neu id=3h
 21      4    -1.19769   0.30737 		0.00000 0.02004 0.06960 0.02004		/

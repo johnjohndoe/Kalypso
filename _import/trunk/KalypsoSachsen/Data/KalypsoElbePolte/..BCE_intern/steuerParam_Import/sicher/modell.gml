@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ElbePolteModell fid="root" xmlns:commons="org.kalypso.elbepolte.commons" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink"
-  xmlns:obslink="obslink.zml.kalypso.org" xmlns:gml="http://www.opengis.net/gml" xmlns="org.kalypso.elbepolte.modell" xsi:schemaLocation="org.kalypso.elbepolte.modell modell.xsd">
+<ElbePolteModell fid="root" xmlns:commons="org.kalypso.elbepolte.commons" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:obslink="obslink.zml.kalypso.org" xmlns:gml="http://www.opengis.net/gml" xmlns="org.kalypso.elbepolte.modell" xsi:schemaLocation="org.kalypso.elbepolte.modell modell.xsd">
   <name>Elbe-Modell</name>
   <description>Modell der Oberen Elbe</description>
   <hw_type>1</hw_type>
-  <rido>false</rido>
+  <rido>true</rido>
   <streckeMember>
     <Strecke fid="Strecke1">
       <name/>
@@ -390,7 +389,7 @@
       <nr>014</nr>
       <river>schwarze elster</river>
       <ganglinie_gesamt>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Zwischengebiete/Loeben.zml"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Zwischengebiete/Löben.zml"/>
       </ganglinie_gesamt>
     </ZwgZufluss>
   </zwgZuflussMember>
@@ -408,6 +407,9 @@
       <id/>
       <nr>003</nr>
       <river>labe</river>
+      <ganglinie_modellwerte>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/HPegel/Litomerice_Labe.zml"/>
+      </ganglinie_modellwerte>
     </InternerHPegel>
   </internerHPegelMember>
   <internerHPegelMember>
@@ -424,6 +426,9 @@
       <id/>
       <nr>005</nr>
       <river>ohre</river>
+      <ganglinie_modellwerte>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/HPegel/Litomerice_Ohre.zml"/>
+      </ganglinie_modellwerte>
     </InternerHPegel>
   </internerHPegelMember>
   <internerHPegelMember>
@@ -440,6 +445,9 @@
       <id/>
       <nr>006</nr>
       <river>labe</river>
+      <ganglinie_modellwerte>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/HPegel/Litomerice_gesamt.zml"/>
+      </ganglinie_modellwerte>
     </InternerHPegel>
   </internerHPegelMember>
 </ElbePolteModell>
