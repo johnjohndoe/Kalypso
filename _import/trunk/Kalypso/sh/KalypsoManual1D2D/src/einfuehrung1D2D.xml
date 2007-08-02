@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="Kalypso1D2DAllgemeines">
+  <title>Allgemeine Einführung HN-Modell Kalypso1D2D</title>
+
+  <para>Das zweidimensionale Strömungsmodell Kalypso1D2D wird über den Ansatz
+  der zweidimensionalen, tiefengemittelten, Reynolds-gemittelten
+  Flachwassergleichungen formuliert. Im polynombasierten eindimensionalen
+  Modell werden die Saint-Venant-Gleichungen verwendet. Mit diesem Ansatz
+  können auch komplexe Gewässerprofile auf Basis einer stationär
+  ungleichförmigen Spiegellinienberechnung berechnet werden, in der die
+  beschreibenden Polynome bestimmt werden. Die Lösung in Kalypso1D2D erfolgt
+  über eine Diskretisierung des Modellgebietes nach dem
+  Finite-Elemente-Verfahren mit der Methode der gewichteten Residuen nach
+  Galerkin. Für die Diskretisierung können unterschiedliche Elementformen
+  verwendet werden: Zweidimensionale Gebiete werden über planare Dreiecke oder
+  Vierecke modelliert. Eindimensionale Bereiche werden über rein lineare
+  Elemente mit zwei Eckknoten für den polynombasierten Berechnungsansatz
+  modelliert. Die Zeitabhängigkeit wird über ein modifiziertes Crank-Nicholson
+  Verfahren abgebildet, wobei das Newton-Raphson Verfahren verwendet wird.
+  Innovative Ansätze sind in den Bereichen Rauheitsmodellierung und Turbulenz
+  enthalten. Die Rauheitsmodellierung erfolgt über das Colebrook-White’sche
+  Widerstandsgesetz und beinhalten die Modellierung von Fliessverlusten
+  infolge von überströmtem und durchströmtem Bewuchs. Verschiedene
+  Turbulenzmodelle sind bei der Simulation verfügbar: Ein konstantes
+  Wirbelviskositätsmodell, ein bodeninduziertes Turbulenz-Modell, der
+  Prandtl’sche Mischungswegansatz und das Smagorinsky Modell. Das
+  hydrodynamische Model Kalypso1D2D berechnet Wasserstände und horizontale
+  Komponenten der Fliessgeschwindigkeiten sowohl für strömenden als auch
+  schiessenden Abfluss in offenen Gewässern.</para>
+
+  <section id="Kalypso1D2DProjektbearbeitung">
+    <title>Projektbearbeitung</title>
+
+    <para><indexterm>
+        <primary>Neues Kalypso1D2D Projekt anlegen</primary>
+      </indexterm></para>
+
+    <para>Nach dem Start der Software erscheinen auf der Welcome Seite alle
+    vorhandenen Modelle und Tools, welche für die Bearbeitung bereit stehen.
+    Zum Starten des HN-Modells ist das Icon Kalypso 1D2D Modell zu
+    wählen.</para>
+
+    <para>Auf der Einführungsseite in das HN-Modell können Sie zunächst
+    zwischen den folgenden Aktionen wählen:<itemizedlist>
+        <listitem>
+          <para>Neues Projekt erstellen</para>
+        </listitem>
+
+        <listitem>
+          <para>Vorhandene Projekte öffnen oder löschen</para>
+        </listitem>
+      </itemizedlist></para>
+
+    <figure>
+      <title>Startseite des 1D2D Modells</title>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/1D2D/welcome.png" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+
+    <section id="Kalypso1D2DNeuesProjekt">
+      <title>Neues Projekt</title>
+
+      <para>Ein Assistent führt durch die Projekterstellung. Hierbei müssen
+      Sie den Projektnamen und den Speicherort des anzulegenden Projektes
+      definieren. Voreingestellt wird als Speicherort immer das festgelegte
+      Arbeitsberzeichnis gewählt. Der Assisten wird durch den Button
+      <guibutton>Fertig stellen</guibutton> abgeschlossen. Zugleich wird das
+      neue Projekt angelegt und die 1D2D Perspektive (siehe <xref
+      linkend="Kalypso1D2DPerspektive" />) geöffnet.</para>
+    </section>
+
+    <section id="Kalypso1D2DVorhProjekt">
+      <title>Vorhandenes Projekt bearbeiten/ Projektaufbau</title>
+
+      <para>Sind bereits 1D2D Modell Projekte im Arbeitsverzeichnis vorhanden,
+      so kann die Bearbeitung dieser durch die Auswahl auf der Titelseite
+      fortgeführt werden. Nach der Projektauswahl werdenb die daten des
+      Projektes geladen und die 1D2D Perspektive geöffnet. Nachdem alle Daten
+      des Projektes geladen wurden, kann mit der Bearbeitung entsprechend des
+      Workflows (siehe <xref linkend="Kalypso1D2DWorkflow" />) fortgefahren
+      werden.</para>
+
+      <para>Ebenfalls kann ein vorhandenes Projekt von der Startseite entfernt
+      werden. Hierbei ist es möglich, dass Projekt lediglich aus der
+      Darstellung im Arbeitsverzeichnis oder aber auch vollständig (physisch)
+      zu löschen.</para>
+    </section>
+  </section>
+
+  <section id="Kalypso1D2DPerspektive">
+    <title>Die Kalypso 1D2D Perspektive</title>
+
+    <para>Die Bearbeitung der Kalypso1D2D projekte erfolgt Einheitlich in der
+    Kalypso1D2D Perspektive. Hauptelement der Perspektive ist die
+    Workflowansicht, welche den Arbeitsablauf durch die Bereitstellung der zu
+    bearbeitenden Aufgaben steuert. Neben der Workflowansicht ist die
+    Szenarienansicht in der Perspektive verfügbar. Durch die Szenarienansicht
+    ist die Organisation der Szenarien ermöglicht. Neben diesen ständig
+    vorhandenen Ansichten werden im rechten Fensterbereich je nach
+    Aufgabenbearbeitung die Kalypso Ansichten (Kartenansicht, Feature View,
+    Diagrammansicht, Tabellenansicht,..) geöffnet.</para>
+
+    <section id="Kalypso1D2DWorkflow">
+      <title>Workflow</title>
+
+      <indexterm>
+        <primary>Workflow Kalypso1D2D</primary>
+      </indexterm>
+
+      <para>Der Arbeitsablauf in Kalypso 1D2D wird über den Workflow
+      gesteuert. Der Benutzer wird in der Modellbearbeitung einem
+      Bearbeitungsschritt zum nächsten geführt. Dieser Ablauf soll verhindern,
+      dass wichtige Schritte im Modellaufbau oder der Berechnung übersehen
+      oder vergessen werden, so dass eine zielgerichtete und effektive
+      Modellbearbeitung vorgegeben wird. Der Anwender wird durch den Workflow
+      auch von der Verwaltung der verschiedenen Datein entbunden, da die
+      Datenoriganisation übergeordnet übernommen wird.</para>
+
+      <para>Der Workflow gliedert sich in die drei Hauptabschnitte
+      Preprocessing (Modellaufbau), Processing (Kalibrieren und Rechnen) und
+      Postprocessing (Ergebnisauswertung). Innerhalb dieser drei Hauptschritte
+      werden dann alle erfordelichen Unterschritte der Reihe nach
+      durchgeführt.</para>
+    </section>
+
+    <section>
+      <title>Szenarien Ansicht</title>
+
+      <para>Die Szenarien Ansicht ermöglicht den Wechsel der zu bearbeitenden
+      Szenarien und das Ableiten erweitereter Szenarien eines Modelles.</para>
+    </section>
+  </section>
+
+  <section id="Kalypso1D2DDatenakquisition">
+    <title>Datenakquisition</title>
+
+    <indexterm>
+      <primary>Datenakquisition und Aufbereitung Kalypso1D2D</primary>
+    </indexterm>
+
+    <para>Für die Modellierung eines 1D2D HN Modells müssen die in folgender
+    Liste aufgeführten Daten bereitgestellt werden.</para>
+
+    <para>Datenakquisition:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>Hintergrundkarten</para>
+      </listitem>
+
+      <listitem>
+        <para>Rauheit</para>
+      </listitem>
+
+      <listitem>
+        <para>Pegeldaten</para>
+      </listitem>
+
+      <listitem>
+        <para>Höhendaten</para>
+      </listitem>
+
+      <listitem>
+        <para>Bauwerksdaten</para>
+      </listitem>
+
+      <listitem>
+        <para>Profildaten</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>Datenaufbereitung:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>Rauheitsshape</para>
+      </listitem>
+
+      <listitem>
+        <para>Höhenmodell</para>
+      </listitem>
+
+      <listitem>
+        <para>Profildaten</para>
+      </listitem>
+
+      <listitem>
+        <para>1D Modell in KalypsoWSPM</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>Sind alle notwendigen Daten vorhanden, kann mit der Aufstellung des
+    Modelles in der Oberfläche begonnen werden.</para>
+  </section>
+</chapter>
