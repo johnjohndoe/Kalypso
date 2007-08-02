@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.conv;
 
@@ -54,7 +54,6 @@ import java.util.Locale;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.kalypso.jts.JTSUtilities;
 import org.kalypso.kalypsomodel1d2d.conv.results.RestartEater;
 import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.ops.EdgeOps;
@@ -64,7 +63,6 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IEdgeInv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
@@ -72,9 +70,9 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.FlowRelationUtilitites;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IKingFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation;
-import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IWeirFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.GMLNodeResult;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
 import org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation;
@@ -90,15 +88,10 @@ import org.kalypso.model.wspm.tuhh.schema.schemata.IWspmTuhhQIntervallConstants;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
-import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D;
-import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
-
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.Point;
 
 /**
  * Converts discretisation model to bce2d model
@@ -118,7 +111,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
 
   private final LinkedHashMap<String, Integer> m_edgesIDProvider = new LinkedHashMap<String, Integer>( 100000 );
 
-  private final WeirIDProvider m_weirIDProvider = new WeirIDProvider();
+  private final BuildingIDProvider m_buildingIDProvider = new BuildingIDProvider();
 
   private final File m_outputFile;
 
@@ -174,6 +167,9 @@ public class Gml2RMA10SConv implements INativeIDProvider
         }
         catch( final Exception e )
         {
+          // TODO: don't eat exceptions in such critical code
+          // rethrow as SimulationException
+
           // TODO Auto-generated catch block
           e.printStackTrace();
         }
@@ -181,7 +177,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
     }
   }
 
-  public Gml2RMA10SConv( final File rma10sOutputFile, final IFEDiscretisationModel1d2d discretisationModel1d2d, final ITerrainModel terrainModel, final IFlowRelationshipModel flowrelationModel, final List roughnessClassList )
+  public Gml2RMA10SConv( final File rma10sOutputFile, final IFEDiscretisationModel1d2d discretisationModel1d2d, final ITerrainModel terrainModel, final IFlowRelationshipModel flowrelationModel )
   {
     m_outputFile = rma10sOutputFile;
     m_discretisationModel1d2d = discretisationModel1d2d;
@@ -288,52 +284,20 @@ public class Gml2RMA10SConv implements INativeIDProvider
     }
   }
 
-  // /**
-  // * Call after boundary lines writing because it requires the IDs
-  // */
-  // public void writeJuntionContextTRMA10sModel( ) throws SimulationException, GM_Exception
-  // {
-  // JunctionContextConverter.write(
-  // m_discretisationModel1d2d,
-  // m_calcultionUnit,
-  // this,
-  // formatter );
-  // }
-
   private void writeRMA10sModel( final PrintWriter stream ) throws SimulationException, GM_Exception
   {
     final IFeatureWrapperCollection<IFE1D2DElement> elements = m_discretisationModel1d2d.getElements();
-// final IFeatureWrapperCollection<IFE1D2DNode> nodes = m_discretisationModel1d2d.getNodes();
-// final IFeatureWrapperCollection<IFE1D2DEdge> edges = m_discretisationModel1d2d.getEdges();
 
     /* Made a central formatter with US locale, so no locale parameter for each format is needed any more . */
     final Formatter formatter = new Formatter( stream, Locale.US );
 
-    // first method not supporting filtering not working properly
-    // if( m_terrainModel != null )
-    // {
-    // final IRoughnessPolygonCollection roughnessPolygonCollection = m_terrainModel.getRoughnessPolygonCollection();
-    // writeElements( formatter, m_roughnessIDProvider, elements, roughnessPolygonCollection );
-    // }
-    // else
-    // {
-    // // TODO: is this reallly possible? Better: throw an exception?
-    // writeElements( formatter, elements );
-    // }
-    // writeNodes( formatter, nodes );
-    // writeEdges( formatter, edges );
-    // JunctionContextConverter.write( m_discretisationModel1d2d, m_calculationUnit, this, formatter );
-
-    // second methods with filtering of edges and nodes
     final IRoughnessPolygonCollection roughnessPolygonCollection = m_terrainModel.getRoughnessPolygonCollection();
     writeElementsNodesAndEdges( formatter, m_roughnessIDProvider, elements, roughnessPolygonCollection );
     JunctionContextConverter.write( m_discretisationModel1d2d, m_calculationUnit, this, formatter );
-
   }
 
-  private void writeEdgeSet( final Formatter formatter, final Collection<IFE1D2DEdge> edges ) throws GM_Exception
+  private void writeEdgeSet( final Formatter formatter, final Collection<IFE1D2DEdge> edges )
   {
-
     int cnt = 1;
     for( final IFE1D2DEdge edge : edges )
     {
@@ -411,81 +375,6 @@ public class Gml2RMA10SConv implements INativeIDProvider
     }
   }
 
-  private void writeEdges( final Formatter formatter, final IFeatureWrapperCollection<IFE1D2DEdge> edges ) throws GM_Exception
-  {
-    final List<IFE1D2DEdge> edgeInBBox = edges.query( m_calcUnitBBox );
-    int cnt = 1;
-    for( final IFE1D2DEdge edge : edgeInBBox/* edges */)
-    {
-      if( edge instanceof IEdgeInv )
-      {
-        continue;
-      }
-
-      // if( !CalUnitOps.isEdgeOf( m_calculationUnit, edge ) )
-      // {
-      // continue;
-      // }
-
-      final int node0ID = getBoundaryLineID( edge.getNode( 0 ) );
-      final int node1ID = getBoundaryLineID( edge.getNode( 1 ) );
-
-      /*
-       * If we have no middle node (which is always the case), create it on the fly (just takes middle of edge). This is
-       * needed for the restart approach later.
-       */
-      final int middleNodeID;
-      if( edge.getMiddleNode() == null )
-      {
-        /* create virtual node id */
-        final String gmlID = "VirtualMiddleNode" + edge.getGmlID(); // Pseudo id, but unique within this context
-        middleNodeID = getID( getNodesIDProvider(), gmlID );
-
-        /* Calculate middle of arc. */
-        final GM_Curve curve = edge.getCurve();
-        final LineString edgeLine = (LineString) JTSAdapter.export( curve );
-        final Point point = JTSUtilities.pointOnLinePercent( edgeLine, 50 );
-        final GM_Point middleNodePoint = (GM_Point) JTSAdapter.wrap( point );
-
-        /* Write it: Station is not needed, because the element length is taken from real nodes. */
-        formatNode( formatter, middleNodeID, middleNodePoint, null );
-      }
-      else
-      {
-        middleNodeID = getBoundaryLineID( edge.getMiddleNode() );
-      }
-
-      /* Directly format into the string, this is quickest! */
-      // System.out.println( edge.getGmlID() + " --> " + getID( edge ) );
-      if( TypeInfo.is1DEdge( edge ) )
-      {
-        int leftRightID = 0;
-        if( edge.getContainers().size() > 0 )
-        {
-          final Object object = edge.getContainers().get( 0 );
-
-          if( object instanceof IElement1D )
-            leftRightID = getBoundaryLineID( ((IElement1D) object) );
-        }
-        formatter.format( "AR%10d%10d%10d%10d%10d%10d%n", cnt++, node0ID, node1ID, leftRightID, leftRightID, middleNodeID );
-      }
-      else if( TypeInfo.is2DEdge( edge ) )
-      {
-
-        final IFE1D2DElement leftElement = EdgeOps.getLeftRightElement( m_calculationUnit, edge, EdgeOps.ORIENTATION_LEFT );
-        final IFE1D2DElement rightElement = EdgeOps.getLeftRightElement( m_calculationUnit, edge, EdgeOps.ORIENTATION_RIGHT );
-        final int leftParent = getBoundaryLineID( leftElement );
-        final int rightParent = getBoundaryLineID( rightElement );
-        formatter.format( "AR%10d%10d%10d%10d%10d%10d%n", cnt++, node0ID, node1ID, leftParent, rightParent, middleNodeID );
-      }
-      else
-      {
-        // stream.println( "************************************** non 1d/2d edge: " + edge.getGmlID() );
-        System.out.println( "non 1d/2d edge: " + edge.getGmlID() );
-      }
-    }
-  }
-
   private void writeNodes( final Formatter formatter, final IFeatureWrapperCollection<IFE1D2DNode> nodes ) throws SimulationException
   {
     final List<IFE1D2DNode> nodesInBBox = nodes.query( m_calcUnitBBox );
@@ -526,7 +415,8 @@ public class Gml2RMA10SConv implements INativeIDProvider
         {
           final ITeschkeFlowRelation teschkeRelation = (ITeschkeFlowRelation) relationship;
           station = teschkeRelation.getStation();
-
+          if( station == null )
+            continue; // TODO: only for debug purpose, throw exception instead
           final IPolynomial1D[] polynomials = teschkeRelation.getPolynomials();
           final TeschkeRelationConverter teschkeConv = new TeschkeRelationConverter( polynomials );
           final double slope = teschkeRelation.getSlope();
@@ -536,6 +426,9 @@ public class Gml2RMA10SConv implements INativeIDProvider
           formatter.format( "MM%10d%20.7f%20.7f%n", nodeID, min, max );
 
           final IPolynomial1D[] polyArea = teschkeConv.getPolynomialsByType( IWspmTuhhQIntervallConstants.DICT_PHENOMENON_AREA );
+          if( polyArea == null )
+            continue; // TODO: only for debug purpose, throw exception instead
+
           writePolynome( formatter, "AP1", nodeID, polyArea[0], 0, 5, null );
           writePolynome( formatter, "AP2", nodeID, polyArea[0], 5, 10, null );
           writePolynome( formatter, "AP3", nodeID, polyArea[0], 10, 13, null );
@@ -588,7 +481,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
     else
       formatter.format( "FP%10d%20.7f%20.7f%20.7f%20.7f%n", nodeID, x, y, z, station );
     if( m_restart )
-      writeRestartLines( formatter, nodeID, x, y, z );
+      writeRestartLines( formatter, nodeID, x, y );
   }
 
   private void writePolynome( final Formatter formatter, final String kind, final int nodeID, final IPolynomial1D poly, final int coeffStart, final int coeffStop, final Double extraValue )
@@ -613,52 +506,6 @@ public class Gml2RMA10SConv implements INativeIDProvider
     formatter.format( "%n" );
   }
 
-  private void writeElements( final Formatter formatter, final LinkedHashMap<String, Integer> roughnessIDProvider, final IFeatureWrapperCollection<IFE1D2DElement> elements, final IRoughnessPolygonCollection roughnessPolygonCollection ) throws GM_Exception, SimulationException
-  {
-    final List<IFE1D2DElement> elementsInBBox = elements.query( m_calcUnitBBox );
-
-    for( final IFE1D2DElement element : elementsInBBox/* elements */)
-    {
-      if( !CalcUnitOps.isFiniteElementOf( m_calculationUnit, element ) )
-      {
-        continue;
-      }
-
-      final int id = getBoundaryLineID( element );
-
-      if( element instanceof IElement1D )
-      {
-        /* 1D-Elements get special handling. */
-        final IElement1D element1D = (IElement1D) element;
-
-        final IWeirFlowRelation weir = FlowRelationUtilitites.findWeirElement1D( element1D, m_flowrelationModel );
-        if( weir != null )
-        {
-          /* A Weir? Create dynamic weir number and use it as weir ID. */
-          final int weirID = m_weirIDProvider.addWeir( weir );
-          final IFE1D2DNode upstreamNode = weir.getUpstreamNode();
-          final int upstreamNodeID = getBoundaryLineID( upstreamNode );
-          formatter.format( "FE%10d%10d%10s%10s%10d%n", id, weirID, "", "", upstreamNodeID );
-        }
-        else if( FlowRelationUtilitites.isTeschkeElement1D( element1D, m_flowrelationModel ) )
-        {
-          /* Element without building: The special roughness-class '89' should be used. */
-          formatter.format( "FE%10d%10d%n", id, 89 );
-        }
-        else
-        {
-          // TODO: give hint what 1D-element is was?
-          throw new SimulationException( "1D-Element ohne Bauwerk bzw. ohne Netzparameter: " + element1D.getGmlID(), null );
-        }
-      }
-      else if( element instanceof IPolyElement )
-      {
-        final int roughnessID = calculateRoughnessID( roughnessIDProvider, roughnessPolygonCollection, element );
-        formatter.format( "FE%10d%10d%n", id, roughnessID );
-      }
-    }
-  }
-
   /**
    * write elements nodes and edges in a way which avoids the filtering of edges and nodes
    * 
@@ -681,14 +528,14 @@ public class Gml2RMA10SConv implements INativeIDProvider
         /* 1D-Elements get special handling. */
         final IElement1D element1D = (IElement1D) element;
 
-        final IWeirFlowRelation weir = FlowRelationUtilitites.findWeirElement1D( element1D, m_flowrelationModel );
-        if( weir != null )
+        final IBuildingFlowRelation building = FlowRelationUtilitites.findBuildingElement1D( element1D, m_flowrelationModel );
+        if( building != null )
         {
-          /* A Weir? Create dynamic weir number and use it as weir ID. */
-          final int weirID = m_weirIDProvider.addWeir( weir );
-          final IFE1D2DNode upstreamNode = weir.getUpstreamNode();
+          /* A Building? Create dynamic building number and use it as building ID. */
+          final int buildingID = m_buildingIDProvider.addBuilding( building );
+          final IFE1D2DNode upstreamNode = building.getUpstreamNode();
           final int upstreamNodeID = getBoundaryLineID( upstreamNode );
-          formatter.format( "FE%10d%10d%10s%10s%10d%n", id, weirID, "", "", upstreamNodeID );
+          formatter.format( "FE%10d%10d%10s%10s%10d%n", id, buildingID, "", "", upstreamNodeID );
         }
         else if( FlowRelationUtilitites.isTeschkeElement1D( element1D, m_flowrelationModel ) )
         {
@@ -747,18 +594,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
     }
   }
 
-  private void writeElements( final Formatter formatter, final IFeatureWrapperCollection<IFE1D2DElement> elements )
-  {
-    for( final IFE1D2DElement element : elements )
-    {
-      // TODO: this FE line only makes sense for 2D elements; handle cases of 1D Elements as well
-      // BUT: only if this code is really used, see todo above
-      if( element instanceof IElement2D )
-        formatter.format( "FE%10d%10d%10d%10d%n", getBoundaryLineID( element ), 0, 1, 0 );
-    }
-  }
-
-  private void writeRestartLines( final Formatter formatter, final int nodeID, final double x, final double y, final double z )
+  private void writeRestartLines( final Formatter formatter, final int nodeID, final double x, final double y )
   {
     final INodeResult node = m_restartEater.getNodeResultAtPosition( x, y );
     double vx = 0.0;
@@ -807,9 +643,9 @@ public class Gml2RMA10SConv implements INativeIDProvider
     return m_nodesIDProvider;
   }
 
-  public WeirIDProvider getWeirProvider( )
+  public BuildingIDProvider getBuildingProvider( )
   {
-    return m_weirIDProvider;
+    return m_buildingIDProvider;
   }
 
 }

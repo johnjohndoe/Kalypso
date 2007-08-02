@@ -59,7 +59,7 @@ import org.kalypso.observation.result.TupleResultUtilities;
  * 
  * @author Gernot Belger
  */
-public class WeirParameters
+public class BuildingParameters
 {
   private static final BigDecimal UNKNOWN_DISCHARGE = new BigDecimal( "-999.999" );
 
@@ -69,7 +69,7 @@ public class WeirParameters
 
   private final BigDecimal[] m_downstramVals;
 
-  public WeirParameters( final IObservation<TupleResult> weirObservation )
+  public BuildingParameters( final IObservation<TupleResult> weirObservation )
   {
     final TupleResult result = weirObservation.getResult();
 

@@ -45,10 +45,10 @@ import org.kalypsodeegree.model.feature.Feature;
 /**
  * @author Gernot Belger
  */
-public class WeirFlowRelation extends BuildingFlowRelation implements IWeirFlowRelation
+public class BridgeFlowRelation extends BuildingFlowRelation implements IBridgeFlowRelation
 {
-  public WeirFlowRelation( final Feature featureToBind )
+  public BridgeFlowRelation( final Feature featureToBind )
   {
-    super( featureToBind, IWeirFlowRelation.QNAME );
+    super( featureToBind, IBridgeFlowRelation.QNAME );
   }
 }

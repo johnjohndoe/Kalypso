@@ -38,17 +38,47 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.schema.binding.flowrel;
+package org.kalypso.kalypsomodel1d2d.conv;
 
-import org.kalypsodeegree.model.feature.Feature;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation;
+import org.kalypso.simulation.core.SimulationException;
 
 /**
+ * Saves informations about buildings and creates there IDs.
+ * 
  * @author Gernot Belger
+ * 
  */
-public class WeirFlowRelation extends BuildingFlowRelation implements IWeirFlowRelation
+public class BuildingIDProvider
 {
-  public WeirFlowRelation( final Feature featureToBind )
+  private final Map<Integer, IBuildingFlowRelation> m_ids = new HashMap<Integer, IBuildingFlowRelation>();
+
+  private final Map<Integer, IBuildingFlowRelation> m_unmodifiableIds = Collections.unmodifiableMap( m_ids );
+
+  private int m_currentID = 904;
+
+  public int addBuilding( final IBuildingFlowRelation building ) throws SimulationException
   {
-    super( featureToBind, IWeirFlowRelation.QNAME );
+    if( m_currentID > 999 )
+    {
+      final String msg = String.format( "Zu viele Bauwerke definiert. Es können nicht mehr als %d Bauwerke berechnet werden.", 1000 - 904 );
+      throw new SimulationException( msg, null );
+    }
+
+    final Integer newID = new Integer( m_currentID );
+    m_ids.put( newID, building );
+
+    m_currentID++;
+
+    return newID;
+  }
+
+  public Map<Integer, IBuildingFlowRelation> getBuildingData( )
+  {
+    return m_unmodifiableIds;
   }
 }

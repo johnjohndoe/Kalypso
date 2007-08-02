@@ -40,15 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.flowrel;
 
-import org.kalypsodeegree.model.feature.Feature;
+import javax.xml.namespace.QName;
+
+import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 
 /**
  * @author Gernot Belger
  */
-public class WeirFlowRelation extends BuildingFlowRelation implements IWeirFlowRelation
+public interface IBridgeFlowRelation extends IBuildingFlowRelation
 {
-  public WeirFlowRelation( final Feature featureToBind )
-  {
-    super( featureToBind, IWeirFlowRelation.QNAME );
-  }
+  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "BridgeFlowRelation" );
 }
