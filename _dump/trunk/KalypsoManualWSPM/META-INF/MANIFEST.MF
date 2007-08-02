@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: KalypsoManualWSPM Plug-in
+Bundle-SymbolicName: org.kalypso.KalypsoManualWSPM;singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Vendor: org.kalypso
+Require-Bundle: org.eclipse.help
+Export-Package: org.kalypso.KalypsoManualWSPM.help
