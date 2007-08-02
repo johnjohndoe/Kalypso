@@ -577,7 +577,7 @@
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
             id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateTeschkeFlowRelation"
-            name="Teschke-Parameter hinzufügen">
+            name="Polynomfunktionsparameter einem 1D Knoten hinzufügen">
          <defaultHandler
                class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
             <parameter
@@ -589,7 +589,7 @@
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
             id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateKingFlowRelation"
-            name="King-Parameter hinzufügen">
+            name="Kanalprofilparameter einem 1D Knoten hinzufügen">
          <defaultHandler
                class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
             <parameter
@@ -664,14 +664,14 @@
            <command
                  commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateTeschkeFlowRelation"
                  icon="icons/elcl16/09_add_parameter_teschke.gif"
-                 label="Teschke-Parameter hinzufügen"
+                 label="Polynomfunktionsparameter einem 1D Knoten hinzufügen"
                  style="radio"
                  tooltip="Polynomfunktion zuordnen">
            </command>
            <command
                  commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateKingFlowRelation"
                  icon="icons/elcl16/10_add_parameter_king.gif"
-                 label="King-Parameter hinzufügen"
+                 label="Kanalprofilparameter einem 1D Knoten hinzufügen"
                  style="radio"
                  tooltip="Kanalprofilparameter zuordnen">
            </command>
@@ -696,7 +696,7 @@
                  commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateTeschkeFlowRelation"
                  icon="icons/elcl16/09_add_parameter_teschke.gif"
                  id="org.kalypso.ui.view.mapView.createParameterMenu"
-                 label="Teschke-Parameter hinzufügen"
+                 label="Polynomfunktionsparameter einem 1D Knoten hinzufügen"
                  style="pulldown"
                  tooltip="Polynomfunktion zuordnen">
               <visibleWhen>
