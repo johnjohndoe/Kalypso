@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<gft:featureview typename="wb1d2d:WeirFlowRelation" style="SWT.NONE"
+<gft:featureview typename="wb1d2d:BridgeFlowRelation" style="SWT.NONE"
 	xmlns:wb1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d" xmlns:gft="featureview.template.kalypso.org"
 	xmlns:ns0="gistableview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink">
 	<gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="true"

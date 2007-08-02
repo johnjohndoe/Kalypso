@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.kalypso.kalypsomodel1d2d.schema.binding;
 
@@ -61,7 +61,10 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.JunctionContext1DToCLin
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.PolyElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.RiverChannel1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.BoundaryCondition;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.BridgeFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBridgeFlowRelation;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IKingFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IWeirFlowRelation;
@@ -111,7 +114,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
 
   public static final void warnUnableToAdapt( final Feature featureToAdapt, final QName featureQName, final Class targetClass )
   {
-    // TODO: Please dont pollute the console with stuff which happens verrrry often.
+    // TODO: Please don't pollute the console with stuff which happens verrrry often.
     // Comment this in if (and only if) a tracig option is introduced to switch it on/off.
     //
     // final String id = (featureToAdapt==null)?null:featureToAdapt.getId();
@@ -640,6 +643,10 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
         {
           return new WeirFlowRelation( feature );
         }
+        else if( featureQName.equals( IBridgeFlowRelation.QNAME ) )
+        {
+          return new BridgeFlowRelation( feature );
+        }
         else if( featureQName.equals( IBoundaryCondition.QNAME ) )
         {
           return new BoundaryCondition( feature );
@@ -652,6 +659,31 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
       }
     };
     cMap.put( IFlowRelationship.class, cTor );
+
+    // IBuildingFlowRelation
+    cTor = new AdapterConstructor()
+    {
+      public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
+      {
+        // If a generel flow relation is to be adapted, return the konkrete type instead
+        final QName featureQName = feature.getFeatureType().getQName();
+
+        if( featureQName.equals( IWeirFlowRelation.QNAME ) )
+        {
+          return new WeirFlowRelation( feature );
+        }
+        else if( featureQName.equals( IBridgeFlowRelation.QNAME ) )
+        {
+          return new BridgeFlowRelation( feature );
+        }
+        else
+        {
+          warnUnableToAdapt( feature, featureQName, IFlowRelationship.class );
+          return null;
+        }
+      }
+    };
+    cMap.put( IBuildingFlowRelation.class, cTor );
 
     // KingFlowRelation
     cTor = new AdapterConstructor()
@@ -712,6 +744,26 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
       }
     };
     cMap.put( IWeirFlowRelation.class, cTor );
+
+    // BridgeFlowRelation
+    cTor = new AdapterConstructor()
+    {
+      public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
+      {
+        final QName featureQName = feature.getFeatureType().getQName();
+
+        if( featureQName.equals( IBridgeFlowRelation.QNAME ) )
+        {
+          return new BridgeFlowRelation( feature );
+        }
+        else
+        {
+          warnUnableToAdapt( feature, featureQName, ITeschkeFlowRelation.class );
+          return null;
+        }
+      }
+    };
+    cMap.put( IBridgeFlowRelation.class, cTor );
 
     // BoundaryCondition
     cTor = new AdapterConstructor()

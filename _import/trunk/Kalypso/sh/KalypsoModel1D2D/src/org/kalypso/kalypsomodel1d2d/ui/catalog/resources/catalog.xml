@@ -10,39 +10,40 @@
 	<catalog:system systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:Element1D:sld:default" uri="Element1D.sld" />
 	<catalog:system systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:Junction1D2D:sld:default" uri="Junction1D2D.sld" />
 	<catalog:system systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:MiddleNode:sld:default" uri="MiddleNode.sld" />
-	
-	<catalog:system 
-		systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_simulationbase:NativeTerrainElevationModelWrapper:sld:default" 
+
+	<catalog:system
+		systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_simulationbase:NativeTerrainElevationModelWrapper:sld:default"
 		uri="NativeTerrainElevationModelWrapper.sld" />
-		
-	<catalog:system 
-		systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:StaticModel1D2D:sld:default" 
+
+	<catalog:system
+		systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:StaticModel1D2D:sld:default"
 		uri="static_model_1d2d.sld" />
-	
-	<catalog:system 
-		systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:JunctionContext1DToCLine:sld:default" 
+
+	<catalog:system
+		systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:JunctionContext1DToCLine:sld:default"
 		uri="JunctionContext.sld" />
-	
-	<catalog:system 
+
+	<catalog:system
 		systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_simulationbase:_FlowRelationship:sld:default" uri="http___www.tu-harburg.de_wb_kalypso_schemata_simulationbase_FlowRelationship.sld" />
 	<catalog:system systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_operationalmodel:BoundaryCondition:sld:default" uri="http___www.tu-harburg.de_wb_kalypso_schemata_operationalmodel.BoundaryCondition.sld" />
-	
+
     <catalog:system systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2dControl:Timesteps:featureview:default" uri="http___www.tu-harburg.de_wb_kalypso_schemata_1d2dControl.Timesteps.gft" />
 
     <catalog:system systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_observation:ObservationWithSource:featureview:default" uri="http___www.tu-harburg.de_wb_kalypso_schemata_observation.ObservationWithSource.gft" />
     <catalog:system systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_observation:DirectedObservationWithSource:featureview:default" uri="http___www.tu-harburg.de_wb_kalypso_schemata_observation.DirectedObservationWithSource.gft" />
 
     <catalog:system systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:TeschkeFlowRelation:featureview:default" uri="http___www.tu-harburg.de_wb_kalypso_schemata_1d2d.TeschkeFlowRelation.gft" />
-    <catalog:system systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:KingFlowRelation:featureview:default" uri="http___www.tu-harburg.de_wb_kalypso_schemata_1d2d.KingFlowRelation.gft" /> 
-    <catalog:system systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:WeirFlowRelation:featureview:default" uri="http___www.tu-harburg.de_wb_kalypso_schemata_1d2d.WeirFlowRelation.gft" /> 
-    
+    <catalog:system systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:KingFlowRelation:featureview:default" uri="http___www.tu-harburg.de_wb_kalypso_schemata_1d2d.KingFlowRelation.gft" />
+    <catalog:system systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:WeirFlowRelation:featureview:default" uri="http___www.tu-harburg.de_wb_kalypso_schemata_1d2d.WeirFlowRelation.gft" />
+    <catalog:system systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:BridgeFlowRelation:featureview:default" uri="http___www.tu-harburg.de_wb_kalypso_schemata_1d2d.BridgeFlowRelation.gft" />
+
     <!-- urn for chart configuration of King- and TeschkeParameter-FeatureView -->
     <catalog:system systemId="urn:kalypso:chart:configuration:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:TeschkeFlowRelation:default" uri="http___www.tu-harburg.de_wb_kalypso_schemata_1d2d.TeschkeFlowRelation.kod" />
     <catalog:system systemId="urn:kalypso:chart:configuration:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:KingFlowRelation:default" uri="http___www.tu-harburg.de_wb_kalypso_schemata_1d2d.KingFlowRelation.kod" />
-    
+
     <!--  Hydrograph - Results -->
     <catalog:system systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2dResults:Hydrograph:featureview:default" uri="http___www.tu-harburg.de_wb_kalypso_schemata_1d2dResults.Hydrograph.gft" />
     <catalog:system systemId="urn:kalypso:chart:configuration:http___www.tu-harburg.de_wb_kalypso_schemata_1d2dResults:Hydrograph:default" uri="http___www.tu-harburg.de_wb_kalypso_schemata_1d2dResults.Hydrograph.kod" />
-    
-    
+
+
 </catalog:catalog>

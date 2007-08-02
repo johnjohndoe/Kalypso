@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.wizard;
 
@@ -81,6 +81,8 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IRiverChannel1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.FlowRelationUtilitites;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBridgeFlowRelation;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IWeirFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
@@ -99,6 +101,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.schema.gml.ProfileCacherFeaturePropertyFunction;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
@@ -108,6 +111,7 @@ import org.kalypso.model.wspm.tuhh.schema.gml.QIntervallResultCollection;
 import org.kalypso.model.wspm.tuhh.schema.schemata.IWspmTuhhQIntervallConstants;
 import org.kalypso.model.wspm.tuhh.schema.simulation.PolynomeHelper;
 import org.kalypso.observation.IObservation;
+import org.kalypso.observation.phenomenon.IPhenomenon;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.observation.result.TupleResultUtilities;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
@@ -288,26 +292,36 @@ public class ImportWspmWizard extends Wizard implements IWizard
         // get corresponding 1d-element
         final IFE1D2DNode node = (IFE1D2DNode) PolynomeHelper.forStation( elementsByStation, station );
 
-        /* Do we have a weir? */
-        final IObservation<TupleResult> weirObs = qresult.getWeirObservation( false );
-        if( weirObs != null )
+        /* Do we have a building? */
+        final IObservation<TupleResult> buildingObs = qresult.getBuildingObservation( false );
+        if( buildingObs != null )
         {
-          // Create weir relation
-          final IWeirFlowRelation weirRelation = flowRelModel.addNew( IWeirFlowRelation.QNAME, IWeirFlowRelation.class );
-          final IObservation<TupleResult> weirFlowObservation = weirRelation.getWeirObservation();
+          // Create weir relation ord bridge relation
+          final IPhenomenon buildingPhenomenon = buildingObs.getPhenomenon();
+          final String buildingId = buildingPhenomenon.getID();
+          final QName buildingQName;
+          if( IWspmTuhhConstants.BUILDING_TYP_WEHR.equals( buildingId ) )
+            buildingQName = IWeirFlowRelation.QNAME;
+          else if( IWspmTuhhConstants.BUILDING_TYP_BRUECKE.equals( buildingId ) )
+            buildingQName = IBridgeFlowRelation.QNAME;
+          else
+            throw new IllegalStateException();
+
+          final IBuildingFlowRelation buildingRelation = flowRelModel.addNew( buildingQName, IBuildingFlowRelation.class );
+          final IObservation<TupleResult> weirFlowObservation = buildingRelation.getBuildingObservation();
 
           final GM_Point weirPos = replaceNodeWithElement( node );
-          weirRelation.setPosition( weirPos );
+          buildingRelation.setPosition( weirPos );
 
-          /* copy weir parameter from one observation to the other */
-          final TupleResult weirResult = weirObs.getResult();
+          /* copy building parameter from one observation to the other */
+          final TupleResult weirResult = buildingObs.getResult();
           final TupleResult result = weirFlowObservation.getResult();
           final Map<String, String> componentMap = new HashMap<String, String>();
           componentMap.put( IWspmTuhhQIntervallConstants.DICT_COMPONENT_RUNOFF, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
           componentMap.put( IWspmTuhhQIntervallConstants.DICT_COMPONENT_WATERLEVEL_DOWNSTREAM, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL_DOWNSTREAM );
           componentMap.put( IWspmTuhhQIntervallConstants.DICT_COMPONENT_WATERLEVEL_UPSTREAM, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL_UPSTREAM );
           TupleResultUtilities.copyValues( weirResult, result, componentMap );
-          weirRelation.setWeirObservation( weirFlowObservation );
+          buildingRelation.setBuildingObservation( weirFlowObservation );
         }
         else if( node == null )
         {

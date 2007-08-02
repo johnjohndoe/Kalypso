@@ -23,10 +23,10 @@
 	<xs:import namespace="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" />
 	<xs:import namespace="org.kalypso.model.wspmprofile" />
 	<xs:import namespace="org.kalypso.gml.common.math" />
-	<xs:import namespace="http://www.tu-harburg.de/wb/kalypso/schemata/observation" />
+	<xs:import namespace="http://www.tu-harburg.de/wb/kalypso/schemata/observation" schemaLocation="sim_1d2d_observation.xsd" />
 
 	<!-- ================================================
-		King Flow Relation		
+		King Flow Relation
 		================================================== -->
 
 	<xs:element name="KingFlowRelation" type="wb1d2d:KingFlowRelationType"
@@ -138,7 +138,7 @@
 	</xs:complexType>
 
 	<!-- ================================================
-		Polynomial Flow Relation (Teschke)		
+		Polynomial Flow Relation (Teschke)
 		================================================== -->
 	<xs:element name="TeschkeFlowRelation" type="wb1d2d:TeschkeFlowRelationType"
 		substitutionGroup="simBase:_FlowRelationship">
@@ -249,27 +249,27 @@
 
 
 	<!-- ================================================
-		WeirRelation		
+		Buildings
 		================================================== -->
 
-	<xs:element name="WeirFlowRelation" type="wb1d2d:WeirFlowRelationType" substitutionGroup="simBase:_FlowRelationship">
+	<xs:element name="BuildingFlowRelation" type="wb1d2d:AbstractBuildingFlowRelationType" abstract="true" substitutionGroup="simBase:_FlowRelationship">
 		<xs:annotation>
 			<xs:documentation xml:lang="de">
-				<xs:label>Wehr (1D)</xs:label>
-				<xs:tooltip>Wehr (1D)</xs:tooltip>
+				<xs:label>Bauwerk (1D)</xs:label>
+				<xs:tooltip>Bauwerk (1D)</xs:tooltip>
 			</xs:documentation>
 			<xs:documentation xml:lang="en">
-				<xs:label>Weir (1D)</xs:label>
-				<xs:tooltip>Weir (1D)</xs:tooltip>
+				<xs:label>Building (1D)</xs:label>
+				<xs:tooltip>Building (1D)</xs:tooltip>
 			</xs:documentation>
 		</xs:annotation>
 	</xs:element>
 
-	<xs:complexType name="WeirFlowRelationType">
+	<xs:complexType name="AbstractBuildingFlowRelationType" abstract="true">
 		<xs:complexContent>
 			<xs:extension base="simBase:AbstractFlowRelationshipType">
 				<xs:sequence>
-					<xs:element name="kind" type="wb1d2d:weirKind" fixed="10">
+					<xs:element name="kind" type="wb1d2d:buildingKind" fixed="10">
 						<xs:annotation>
 							<xs:documentation xml:lang="de">
 								<xs:label>Fließformel</xs:label>
@@ -281,7 +281,18 @@
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-
+					<xs:element name="direction" type="gml:DegreeValueType" nillable="false">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Richtung</xs:label>
+								<xs:tooltip>Fließrichtung des Bauwerks</xs:tooltip>
+							</xs:documentation>
+							<xs:documentation>
+								<xs:label>Direction</xs:label>
+								<xs:tooltip>Direction of flow for this building</xs:tooltip>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="observation" type="obs1d2d:ObservationWithSourcePropertyType">
 						<xs:annotation>
 							<xs:documentation xml:lang="de">
@@ -300,7 +311,7 @@
 		</xs:complexContent>
 	</xs:complexType>
 
-	<xs:simpleType name="weirKind" >
+	<xs:simpleType name="buildingKind" >
 		<xs:restriction base="xs:int">
 			<xs:enumeration value="1"></xs:enumeration>
 			<xs:enumeration value="2"></xs:enumeration>
@@ -321,7 +332,45 @@
 					</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
-		</xs:restriction>	
+		</xs:restriction>
 	</xs:simpleType>
+
+	<xs:element name="WeirFlowRelation" type="wb1d2d:WeirFlowRelationType" substitutionGroup="wb1d2d:BuildingFlowRelation">
+		<xs:annotation>
+			<xs:documentation xml:lang="de">
+				<xs:label>Wehr (1D)</xs:label>
+				<xs:tooltip>Wehr (1D)</xs:tooltip>
+			</xs:documentation>
+			<xs:documentation xml:lang="en">
+				<xs:label>Weir (1D)</xs:label>
+				<xs:tooltip>Weir (1D)</xs:tooltip>
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+
+	<xs:complexType name="WeirFlowRelationType">
+		<xs:complexContent>
+			<xs:extension base="wb1d2d:AbstractBuildingFlowRelationType"/>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:element name="BridgeFlowRelation" type="wb1d2d:BridgeFlowRelationType" substitutionGroup="wb1d2d:BuildingFlowRelation">
+		<xs:annotation>
+			<xs:documentation xml:lang="de">
+				<xs:label>Brücke (1D)</xs:label>
+				<xs:tooltip>Brücke (1D)</xs:tooltip>
+			</xs:documentation>
+			<xs:documentation xml:lang="en">
+				<xs:label>Brücke (1D)</xs:label>
+				<xs:tooltip>Brücke (1D)</xs:tooltip>
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+
+	<xs:complexType name="BridgeFlowRelationType">
+		<xs:complexContent>
+			<xs:extension base="wb1d2d:AbstractBuildingFlowRelationType"/>
+		</xs:complexContent>
+	</xs:complexType>
 
 </xs:schema>

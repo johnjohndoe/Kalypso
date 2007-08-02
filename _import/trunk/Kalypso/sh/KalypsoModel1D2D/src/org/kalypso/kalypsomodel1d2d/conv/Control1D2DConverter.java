@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.conv;
 
@@ -58,8 +58,8 @@ import org.apache.commons.lang.StringUtils;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.kalypsomodel1d2d.conv.ITimeStepinfo.TYPE;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
-import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IWeirFlowRelation;
-import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IWeirFlowRelation.KIND;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation.KIND;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation;
 import org.kalypso.kalypsomodel1d2d.sim.RMA10SimModelConstants;
@@ -84,13 +84,13 @@ public class Control1D2DConverter
 
   private final LinkedHashMap<String, Integer> m_roughnessIDProvider;
 
-  private final WeirIDProvider m_weirProvider;
+  private final BuildingIDProvider m_buildingProvider;
 
-  public Control1D2DConverter( final LinkedHashMap<String, Integer> nodesIDProvider, final LinkedHashMap<String, Integer> roughnessIDProvider, final WeirIDProvider weirProvider )
+  public Control1D2DConverter( final LinkedHashMap<String, Integer> nodesIDProvider, final LinkedHashMap<String, Integer> roughnessIDProvider, final BuildingIDProvider buildingProvider )
   {
     m_nodesIDProvider = nodesIDProvider;
     m_roughnessIDProvider = roughnessIDProvider;
-    m_weirProvider = weirProvider;
+    m_buildingProvider = buildingProvider;
   }
 
   private int getRoughnessID( final String gmlID )
@@ -115,6 +115,9 @@ public class Control1D2DConverter
   {
     final IControlModel1D2D controlModel = calculation.getControlModel();
 
+    // TODO: even if only stationary mode is choosen, we get an exception here
+    // if no timeserie is given; there should be a fallback in that case to a
+    // pseudo start-date; talk to nico about it
     final Date firstDate = getFirstTimeStep( calculation );
     final Calendar calendarForFirstTimeStep = Calendar.getInstance();
     calendarForFirstTimeStep.setTime( firstDate );
@@ -127,8 +130,8 @@ public class Control1D2DConverter
     if( controlModel.getRestart() )
       formatter.format( "RESTART%n" );
 
-    /* We always write a weir file, even if it is empty. */
-    formatter.format( "INCSTR  %s%n", RMA10SimModelConstants.WEIR_File );
+    /* We always write a building file, even if it is empty. */
+    formatter.format( "INCSTR  %s%n", RMA10SimModelConstants.BUILDING_File );
 
     formatter.format( "ENDFIL%n" );
 
@@ -202,9 +205,9 @@ public class Control1D2DConverter
       writeEDBlock( formatter, roughnessAsciiID, eddy, ks, axayCorrected, dpCorrected );
     }
 
-    final Map<Integer, IWeirFlowRelation> weirMap = m_weirProvider.getWeirData();
-    for( final Integer weirID : weirMap.keySet() )
-      writeEDBlock( formatter, weirID, 0.0, 0.0, 0.0, 0.0 );
+    final Map<Integer, IBuildingFlowRelation> buildingMap = m_buildingProvider.getBuildingData();
+    for( final Integer buildingID : buildingMap.keySet() )
+      writeEDBlock( formatter, buildingID, 0.0, 0.0, 0.0, 0.0 );
   }
 
   private void writeEDBlock( final Formatter formatter, final int roughnessAsciiID, final Double[] eddy, final Double ks, final Double axayCorrected, final Double dpCorrected )
@@ -240,9 +243,9 @@ public class Control1D2DConverter
     {
       final IFE1D2DNode[] nodes = info.getNodes();
       boolean allNodesPresent = true;
-      for( int i = 0; i < nodes.length; i++ )
+      for( final IFE1D2DNode element : nodes )
       {
-        final Integer nodeID = m_nodesIDProvider.get( nodes[i].getGmlID() );
+        final Integer nodeID = m_nodesIDProvider.get( element.getGmlID() );
         if( nodeID == null )
         {
           allNodesPresent = false;
@@ -254,9 +257,9 @@ public class Control1D2DConverter
     }
     final BoundaryLineInfo[] infos = new BoundaryLineInfo[filteredInfosList.size()];
     filteredInfosList.toArray( infos );
-    
+
     formatter.format( "SCL%9d%n", infos.length );
-    
+
     int infoCnt = 1;
     for( final BoundaryLineInfo info : infos )
     {
@@ -268,8 +271,8 @@ public class Control1D2DConverter
         final int nodeID = m_nodesIDProvider.get( node.getGmlID() );
         /* Write start stuff */
         if( i == 0 )
-// formatter.format( "CC1 %4d", info.getID() );
-        formatter.format( "CC1 %4d", infoCnt++ );
+          // formatter.format( "CC1 %4d", info.getID() );
+          formatter.format( "CC1 %4d", infoCnt++ );
         else if( i % 9 == 0 )
           formatter.format( "%nCC2     " );
 
@@ -392,28 +395,28 @@ public class Control1D2DConverter
     formatBoundCondLines( formatter, stepCal, timeStepInfos, TYPE.CONTI_BC_Q );
     formatBoundCondLines( formatter, stepCal, timeStepInfos, TYPE.CONTI_BC_H );
 
-    for( final Map.Entry<Integer, IWeirFlowRelation> weirData : m_weirProvider.getWeirData().entrySet() )
+    for( final Map.Entry<Integer, IBuildingFlowRelation> buildingData : m_buildingProvider.getBuildingData().entrySet() )
     {
-      final Integer weirID = weirData.getKey();
-      final IWeirFlowRelation weir = weirData.getValue();
-      final KIND kind = weir.getKind();
-      final int weirKind;
+      final Integer buildingID = buildingData.getKey();
+      final IBuildingFlowRelation building = buildingData.getValue();
+      final KIND kind = building.getKind();
+      final int buildingKind;
       switch( kind )
       {
         case TABULAR:
-          weirKind = 10;
+          buildingKind = 10;
           break;
 
         default:
-          throw new SimulationException( "Wehrtyp nicht unterstüzt: " + kind, null );
+          throw new SimulationException( "Fließformel nicht unterstüzt: " + kind, null );
       }
 
-      final double direction = weir.getDirection();
+      final double direction = building.getDirection();
 
-      formatter.format( "FC%14d%8d%8.3f%8.3f%8.3f%8.3f%8.3f%n", weirID, weirKind, 0.0, 0.0, 0.0, 0.0, direction );
+      formatter.format( "FC%14d%8d%8.3f%8.3f%8.3f%8.3f%8.3f%n", buildingID, buildingKind, 0.0, 0.0, 0.0, 0.0, direction );
     }
 
-    // add other conti lines types as well (weirs)?
+    // add other conti lines types as well (buildingss)?
     formatter.format( "ENDSTEP %s%n", message );
   }
 
@@ -426,11 +429,16 @@ public class Control1D2DConverter
       /* Write only considered lines */
       final TYPE type = item.getType();
 
-//      if( type != contiType )
-//        continue;
+      // @Dejan: I do not understand why this was commented out! This should not be done as not all boundary lines are
+      // boundary conditions pLease contact me!
+      // And of course still an exception is thrown if a boundary line is written which is not a boundary condition
+      // because in that case no values are present.
+
+      if( type != contiType )
+        continue;
 
       final double itemValue = item.getValue( stepCal == null ? null : stepCal.getTime() );
-      
+
       switch( type )
       {
         case CONTI_BC_Q:
@@ -459,13 +467,10 @@ public class Control1D2DConverter
     if( uRVal < 0.0 || uRVal > 1.0 )
       throw new SimulationException( "Relaxationsfaktor muss zwischen 0.0 und 1.0 liegen.", null );
 
-    final int buffVal = 10 - (int)(uRVal * 10);
+    final int buffVal = 10 - (int) (uRVal * 10);
     /*
-    if( uRVal == (float) 1.0 )
-      buffVal = 0;
-    else
-      buffVal = 10 - (int) (((uRVal * 10)));
-    */
+     * if( uRVal == (float) 1.0 ) buffVal = 0; else buffVal = 10 - (int) (((uRVal * 10)));
+     */
     for( int j = 0; j < nitn; j++ )
     {
       if( j % 9 == 0 )

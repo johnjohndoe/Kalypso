@@ -43,7 +43,7 @@ package org.kalypso.kalypsomodel1d2d.ui.map.flowrel;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IWeirFlowRelation;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBridgeFlowRelation;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
@@ -52,11 +52,11 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 /**
  * @author Gernot Belger
  */
-public class CreateWeirFlowrelationWidget extends AbstractCreateFlowrelationWidget
+public class CreateBridgeFlowrelationWidget extends AbstractCreateFlowrelationWidget
 {
-  public CreateWeirFlowrelationWidget( )
+  public CreateBridgeFlowrelationWidget( )
   {
-    super( "Wehr hinzufügen", "Wehr einem 1D-Element zuordnen", IWeirFlowRelation.QNAME );
+    super( "Brücke hinzufügen", "Brücke einem 1D-Element zuordnen", IBridgeFlowRelation.QNAME );
   }
 
   /**
@@ -65,15 +65,15 @@ public class CreateWeirFlowrelationWidget extends AbstractCreateFlowrelationWidg
    *      org.kalypso.gmlschema.feature.IFeatureType)
    */
   @Override
-  protected IWeirFlowRelation createNewFeature( final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation, final IFeatureWrapper2 modelElement )
+  protected IBridgeFlowRelation createNewFeature( final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation, final IFeatureWrapper2 modelElement )
   {
     // TODO: use newAdd method in FeatureWrapperCollection instead?
-    final IFeatureType newFT = workspace.getGMLSchema().getFeatureType( IWeirFlowRelation.QNAME );
+    final IFeatureType newFT = workspace.getGMLSchema().getFeatureType( IBridgeFlowRelation.QNAME );
     final Feature newFeature = workspace.createFeature( parentFeature, parentRelation, newFT, -1 );
-    final IWeirFlowRelation weirRelation = (IWeirFlowRelation) newFeature.getAdapter( IWeirFlowRelation.class );
+    final IBridgeFlowRelation buildingRelation = (IBridgeFlowRelation) newFeature.getAdapter( IBridgeFlowRelation.class );
     /* Call getObservation once to initialize it */
-    weirRelation.getBuildingObservation();
-    return weirRelation;
+    buildingRelation.getBuildingObservation();
+    return buildingRelation;
   }
 
   /**

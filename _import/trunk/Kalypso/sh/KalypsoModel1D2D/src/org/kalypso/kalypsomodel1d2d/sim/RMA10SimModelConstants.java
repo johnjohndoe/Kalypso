@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.sim;
 
@@ -56,7 +56,7 @@ public interface RMA10SimModelConstants
 
   public static final String R10_File = "control.R10";
 
-  public static final String WEIR_File = "wehr.txt";
+  public static final String BUILDING_File = "bauwerke.txt";
 
   public static final String SIM_EXE_FILE_3_5 = "RMA10S35Kalypso.exe";
 

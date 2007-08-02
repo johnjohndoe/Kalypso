@@ -64,8 +64,8 @@ import org.kalypso.commons.java.lang.ProcessHelper;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter;
 import org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv;
-import org.kalypso.kalypsomodel1d2d.conv.Weir1D2DConverter;
-import org.kalypso.kalypsomodel1d2d.conv.WeirIDProvider;
+import org.kalypso.kalypsomodel1d2d.conv.Building1D2DConverter;
+import org.kalypso.kalypsomodel1d2d.conv.BuildingIDProvider;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
@@ -138,7 +138,7 @@ public class SimMode1D2DCalcJob implements ISimulation
       {
         /* Control model */
         r10pw = new PrintWriter( new File( tmpDir, RMA10SimModelConstants.R10_File ) );
-        final WeirIDProvider weirProvider = converter2D.getWeirProvider();
+        final BuildingIDProvider weirProvider = converter2D.getBuildingProvider();
         final LinkedHashMap<String, Integer> roughnessIDProvider = converter2D.getRoughnessIDProvider();
         final LinkedHashMap<String, Integer> nodesIDProvider = converter2D.getNodesIDProvider();
         final Control1D2DConverter controlConverter = new Control1D2DConverter( nodesIDProvider, roughnessIDProvider, weirProvider );
@@ -146,9 +146,9 @@ public class SimMode1D2DCalcJob implements ISimulation
         r10pw.close();
 
         /* Weir File */
-        weirPw = new PrintWriter( new File( tmpDir, RMA10SimModelConstants.WEIR_File ) );
-        final Weir1D2DConverter weirConverter = new Weir1D2DConverter( weirProvider );
-        weirConverter.writeWeirFile( new java.util.Formatter( weirPw ) );
+        weirPw = new PrintWriter( new File( tmpDir, RMA10SimModelConstants.BUILDING_File ) );
+        final Building1D2DConverter weirConverter = new Building1D2DConverter( weirProvider );
+        weirConverter.writeBuildingFile( new java.util.Formatter( weirPw ) );
         weirPw.close();
       }
       finally
