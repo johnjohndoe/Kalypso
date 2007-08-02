@@ -55,7 +55,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
-import org.kalypso.ogc.gml.command.FeatureChange;
+import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
@@ -96,6 +96,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
 
   public DiscretisationModel1d2dHandler( final IFEDiscretisationModel1d2d model, final IPositionProvider positionProvider, final ConversionIDProvider modelElementIDProvider )
   {
+//    Util.getCommandableWorkspace( modelClass )
     m_model = model;
     m_workspace = model.getWrappedFeature().getWorkspace();
     m_modelNodes = model.getNodes();
@@ -133,7 +134,6 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
       createdFeatures[i] = m_createdFeatures.get( i ).getWrappedFeature();
       createdFeatures[i].invalidEnvelope();
     }
-
     m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_model.getWrappedFeature(), createdFeatures, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
     // workspace.fireModellEvent( new )
   }

@@ -69,12 +69,21 @@ public class RMA10S2GmlConv
 
   private final IProgressMonitor m_monitor;
 
-  public RMA10S2GmlConv( final IProgressMonitor monitor )
+  private final int m_monitorStep;
+
+  public RMA10S2GmlConv( final IProgressMonitor monitor, int numberOfLinesToProcess )
   {
+    m_monitorStep = numberOfLinesToProcess / 100;
     if( monitor == null )
       m_monitor = new NullProgressMonitor();
     else
       m_monitor = monitor;
+  }
+
+  public RMA10S2GmlConv( )
+  {
+    m_monitor = new NullProgressMonitor();
+    m_monitorStep = -1;
   }
 
   public void parse( final InputStream inputStream ) throws IllegalStateException, IOException
@@ -86,13 +95,6 @@ public class RMA10S2GmlConv
   public void parse( final Reader reader ) throws IllegalStateException, IOException
   {
     Assert.throwIAEOnNullParam( reader, "inputStreamReader" ); //$NON-NLS-1$
-    final LineNumberReader lnReader = new LineNumberReader( reader );
-    long numberOfLines = 0;
-    for( String line = lnReader.readLine(); line != null; line = lnReader.readLine() )
-      numberOfLines++;
-    final long monitorStep = numberOfLines / 100;
-    lnReader.reset();
-
     final Pattern lineFP = Pattern.compile( "FP.*" ); //$NON-NLS-1$
     final Pattern lineFE = Pattern.compile( "FE.*" ); //$NON-NLS-1$
     final Pattern lineAR = Pattern.compile( "AR.*" ); //$NON-NLS-1$
@@ -104,12 +106,14 @@ public class RMA10S2GmlConv
     m_monitor.beginTask( Messages.RMA10S2GmlConv_0, 100 );
     m_handler.start();
 
-    numberOfLines = 0;
+    int numberOfLinesProcessed = 0;
+    final boolean traceProgress = !(m_monitor instanceof NullProgressMonitor) && (m_monitorStep > 0);
+    final LineNumberReader lnReader = new LineNumberReader( reader );
     for( String line = lnReader.readLine(); line != null; line = lnReader.readLine() )
     {
-      if( ++numberOfLines == monitorStep )
+      if( traceProgress && (++numberOfLinesProcessed == m_monitorStep) )
       {
-        numberOfLines = 0;
+        numberOfLinesProcessed = 0;
         m_monitor.worked( 1 );
       }
       if( line.length() < 2 )
