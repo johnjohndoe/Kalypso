@@ -14,20 +14,16 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.ui.IEditorPart;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
-import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.commands.IElementUpdater;
 import org.eclipse.ui.menus.UIElement;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.widgets.IWidget;
-import org.kalypso.ui.editor.mapeditor.AbstractMapPart;
-import org.kalypso.ui.editor.mapeditor.GisMapEditor;
-import org.kalypso.ui.views.map.MapView;
 import org.osgi.framework.Bundle;
 
 /**
@@ -60,6 +56,10 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
   @Override
   public Object execute( final ExecutionEvent event )
   {
+    // TODO: this gets called twice if radio buttons are involved
+    // it would be nice to find out the check state of the command
+    // Maybe use Command#setState / #getState to do this?
+    
     final String widgetFromEvent = event.getParameter( PARAM_WIDGET_CLASS );
     final String widgetParameter;
     if( widgetFromEvent != null )
@@ -81,46 +81,31 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
     {
       pluginParameter = m_pluginIdFromExtension;
     }
+
     final IWidget widget = getWidgetFromBundle( pluginParameter, widgetParameter );
     final IEvaluationContext applicationContext = (IEvaluationContext) event.getApplicationContext();
-    final IEditorPart editor = (IEditorPart) applicationContext.getVariable( ISources.ACTIVE_EDITOR_NAME );
-    AbstractMapPart abstractMapPart = null;
-    final IWorkbenchWindow workbenchWindow = (IWorkbenchWindow) applicationContext.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
-    if( workbenchWindow == null )
-    {
-      return null;
-    }
 
-    final IWorkbenchPage activePage = workbenchWindow.getActivePage();
-    if( editor != null && editor.getEditorSite().getId().equals( GisMapEditor.ID ) )
-    {
-      abstractMapPart = (AbstractMapPart) editor;
-    }
-    else
-    {
-      final IViewPart mapView = activePage.findView( MapView.ID );
-      abstractMapPart = (AbstractMapPart) mapView;
-    }
+    final IWorkbenchPart activePart = (IWorkbenchPart) applicationContext.getVariable( ISources.ACTIVE_PART_NAME );
+    final Shell shell = (Shell) applicationContext.getVariable( ISources.ACTIVE_SHELL_NAME );
+    final MapPanel mapPanel = activePart == null ? null : (MapPanel) activePart.getAdapter( MapPanel.class );
+    if( mapPanel == null )
+      return StatusUtilities.createWarningStatus( "No map panel available" );
 
-    if( abstractMapPart != null )
+    if( mapPanel != null && widget != null )
     {
-      activePage.activate( abstractMapPart );
-      final MapPanel mapPanel = (MapPanel) abstractMapPart.getAdapter( MapPanel.class );
-      if( mapPanel != null && widget != null )
+      final UIJob job = new UIJob( shell.getDisplay(), "Widget auswählen" )
       {
-        final UIJob job = new UIJob( workbenchWindow.getShell().getDisplay(), "Widget auswählen" )
+        @Override
+        public IStatus runInUIThread( IProgressMonitor monitor )
         {
-          @Override
-          public IStatus runInUIThread( IProgressMonitor monitor )
-          {
-            mapPanel.getWidgetManager().setActualWidget( widget );
-            return Status.OK_STATUS;
-          }
-        };
-        job.setRule( abstractMapPart.getSchedulingRule().getSelectWidgetSchedulingRule() );
-        job.setUser( true );
-        job.schedule();
-      }
+          mapPanel.getWidgetManager().setActualWidget( widget );
+          return Status.OK_STATUS;
+        }
+      };
+      // Probably not necessary
+//      job.setRule( abstractMapPart.getSchedulingRule().getSelectWidgetSchedulingRule() );
+      job.setUser( true );
+      job.schedule();
     }
     return null;
   }
@@ -163,7 +148,7 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
     {
       m_pluginIdFromExtension = config.getContributor().getName();
     }
-    
+
   }
 
   /**
