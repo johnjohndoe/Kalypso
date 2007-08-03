@@ -2,42 +2,42 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
- * 
+ *
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.sim;
 
@@ -108,7 +108,7 @@ public class RMA10Calculation implements INativeIDProvider
 
   private GMLWorkspace m_terrainModelWorkspace = null;
 
-  private GMLWorkspace m_operationalModelWorkspace;
+  private final GMLWorkspace m_operationalModelWorkspace;
 
   private GMLWorkspace m_flowRelWorkspace = null;
 
@@ -120,7 +120,7 @@ public class RMA10Calculation implements INativeIDProvider
 
   private String m_kalypso1D2DKernelPath;
 
-  private List<ITimeStepinfo> m_timeStepInfos;
+  private final List<ITimeStepinfo> m_timeStepInfos;
 
   private final LinkedHashMap<IBoundaryLine, Integer> m_boundaryLineIDProvider = new LinkedHashMap<IBoundaryLine, Integer>( 32 );
 
@@ -407,8 +407,10 @@ public class RMA10Calculation implements INativeIDProvider
         {
           final IBoundaryLine<IFE1D2DComplexElement, IFE1D2DEdge> contiLine = (IBoundaryLine<IFE1D2DComplexElement, IFE1D2DEdge>) wrapper2;
           final BoundaryLineInfo info = contiMap.get( contiLine );
-          
-          if(info == null) continue;
+
+          if( info == null )
+            continue;
+
           final IComponent timeComponent = TupleResultUtilities.findComponentById( obsResult, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );
           final IComponent qComponent = TupleResultUtilities.findComponentById( obsResult, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
           final IComponent hComponent = TupleResultUtilities.findComponentById( obsResult, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL );
@@ -454,7 +456,7 @@ public class RMA10Calculation implements INativeIDProvider
         {
           final IElement2D<IFE1D2DComplexElement, IFE1D2DEdge> ele2d = (IElement2D<IFE1D2DComplexElement, IFE1D2DEdge>) wrapper2;
 
-// final String gmlID = ele2d.getGmlID();
+          // final String gmlID = ele2d.getGmlID();
           final int id = 0; // TODO: get ascii element id for gmlid
 
           final BoundaryConditionInfo info = new BoundaryConditionInfo( id, ITimeStepinfo.TYPE.ELE_BCE_2D );
@@ -482,14 +484,14 @@ public class RMA10Calculation implements INativeIDProvider
     if( m_calculationUnit == null )
     {
       final IControlModel1D2D controlModel = getControlModel();
-      
+
       m_calculationUnit = controlModel.getCalculationUnit();
       /*
-      final ICalculationUnit linkedCalculationUnit = controlModel.getCalculationUnit();
-      final IFEDiscretisationModel1d2d discModel = getDiscModel();
-      final Feature feature = discModel.getWrappedFeature().getWorkspace().getFeature( linkedCalculationUnit.getGmlID() );
-      m_calculationUnit = (ICalculationUnit) feature.getAdapter( ICalculationUnit.class );
-      */
+       * final ICalculationUnit linkedCalculationUnit = controlModel.getCalculationUnit(); final
+       * IFEDiscretisationModel1d2d discModel = getDiscModel(); final Feature feature =
+       * discModel.getWrappedFeature().getWorkspace().getFeature( linkedCalculationUnit.getGmlID() ); m_calculationUnit =
+       * (ICalculationUnit) feature.getAdapter( ICalculationUnit.class );
+       */
     }
     return m_calculationUnit;
   }

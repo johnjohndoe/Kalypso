@@ -32,8 +32,8 @@
 	<xs:import
 		namespace="http://www.tu-harburg.de/wb/kalypso/schemata/observation" />
 
-	<!-- ======================================================== 
-		Flow Resistance Model
+	<!-- ========================================================
+		Operational Model
 		==========================================================-->
 	<xs:element name="OperationalModel"
 		type="op1d2d:OperationalModelType"
@@ -62,7 +62,7 @@
 	</xs:complexType>
 
 	<!-- =================================================================
-		
+
 		================================================================== -->
 	<xs:element name="operationalModel"
 		type="op1d2d:OperationalModelPropertyType" />
@@ -144,6 +144,18 @@
 		<xs:complexContent>
 			<xs:extension base="simBase:AbstractFlowRelationshipType">
 				<xs:sequence>
+					<xs:element name="direction" type="gml:DegreeValueType" nillable="true">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Richtung</xs:label>
+								<xs:tooltip>Richtung der Randbedingung</xs:tooltip>
+							</xs:documentation>
+							<xs:documentation>
+								<xs:label>Direction</xs:label>
+								<xs:tooltip>Direction of this boundary condition</xs:tooltip>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="observation"
 						type="obs1d2d:ObservationWithSourcePropertyType">
 						<xs:annotation>

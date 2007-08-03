@@ -8,8 +8,8 @@
 <xs:schema targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/observation"
 	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om"
-	xmlns:obs1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/observation"
-	elementFormDefault="qualified" attributeFormDefault="unqualified">
+	xmlns:obs1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/observation" elementFormDefault="qualified"
+	attributeFormDefault="unqualified">
 
 	<xs:annotation>
 		<xs:documentation>Observation definitions. Used by boundary conditions and buildings.</xs:documentation>
@@ -18,10 +18,8 @@
 		</xs:appinfo>
 	</xs:annotation>
 
-	<xs:import namespace="http://www.opengis.net/gml"
-		/>
-	<xs:import namespace="http://www.opengis.net/om"
-		/>
+	<xs:import namespace="http://www.opengis.net/gml" />
+	<xs:import namespace="http://www.opengis.net/om" />
 
 	<xs:complexType name="ObservationWithSourcePropertyType">
 		<xs:sequence>
@@ -29,7 +27,8 @@
 		</xs:sequence>
 	</xs:complexType>
 
-	<xs:element name="ObservationWithSource" type="obs1d2d:ObservationWithSourceType" substitutionGroup="om:Observation" />
+	<xs:element name="ObservationWithSource" type="obs1d2d:ObservationWithSourceType"
+		substitutionGroup="om:Observation" />
 
 	<xs:complexType name="ObservationWithSourceType">
 		<xs:complexContent>
@@ -49,29 +48,4 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	
-	<xs:element name="DirectedObservationWithSource" type="obs1d2d:DirectedObservationWithSourceType" substitutionGroup="obs1d2d:ObservationWithSource"/>
-	
-	<xs:complexType name="DirectedObservationWithSourceType">
-		<xs:complexContent>
-			<xs:extension base="obs1d2d:ObservationWithSourceType">
-				<xs:sequence>
-					<xs:element name="direction" type="gml:DegreeValueType" nillable="false">
-						<xs:annotation>
-							<xs:documentation xml:lang="de">
-								<xs:label>Richtung</xs:label>
-								<xs:tooltip>Richtung der Zeitreihe</xs:tooltip>
-							</xs:documentation>
-							<xs:documentation>
-								<xs:label>Direction</xs:label>
-								<xs:tooltip>Direction of the Timeserie</xs:tooltip>
-							</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	
-
 </xs:schema>
