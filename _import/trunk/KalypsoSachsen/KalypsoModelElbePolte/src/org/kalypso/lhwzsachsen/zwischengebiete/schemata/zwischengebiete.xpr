@@ -7,7 +7,7 @@
     </meta>
     <projectTree name="zwischengebiete.xpr">
         <file name="commons.xsd"/>
+        <file name="constrol.xsd"/>
         <file name="modell.xsd"/>
-        <file name="pegel.xsd"/>
     </projectTree>
 </project>
