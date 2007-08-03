@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,27 +36,27 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- 
+
+
  history:
- 
+
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
- interface-compatibility to deegree is wanted but not retained always. 
- 
- If you intend to use this software in other ways than in kalypso 
+ interface-compatibility to deegree is wanted but not retained always.
+
+ If you intend to use this software in other ways than in kalypso
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
 
- all modifications are licensed as deegree, 
+ all modifications are licensed as deegree,
  original copyright:
- 
+
  Copyright (C) 2001 by:
  EXSE, Department of Geography, University of Bonn
  http://www.giub.uni-bonn.de/exse/
  lat/lon GmbH
  http://www.lat-lon.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.graphics.sld;
 
@@ -494,8 +494,6 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
    */
   public double getOpacity( final Feature feature ) throws FilterEvaluationException
   {
-    double opacity = OPACITY_DEFAULT;
-
     if( smplOpacity < 0 )
     {
       final CssParameter cssParam = (CssParameter) cssParams.get( "stroke-opacity" );
@@ -507,25 +505,23 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
 
         try
         {
-          opacity = Double.parseDouble( value );
+          final double opacity = Double.parseDouble( value );
+          if( (opacity < 0.0) || (opacity > 1.0) )
+            throw new FilterEvaluationException( "Value for parameter 'stroke-opacity' (given: '" + value + "') must be between 0.0 and 1.0!" );
+          return opacity;
         }
         catch( final NumberFormatException e )
         {
           throw new FilterEvaluationException( "Given value for parameter 'stroke-opacity' ('" + value + "') has invalid format!" );
         }
-
-        if( (opacity < 0.0) || (opacity > 1.0) )
-        {
-          throw new FilterEvaluationException( "Value for parameter 'stroke-opacity' (given: '" + value + "') must be between 0.0 and 1.0!" );
-        }
       }
+
+      return OPACITY_DEFAULT;
     }
     else
     {
-      opacity = smplOpacity;
+      return smplOpacity;
     }
-
-    return opacity;
   }
 
   /**

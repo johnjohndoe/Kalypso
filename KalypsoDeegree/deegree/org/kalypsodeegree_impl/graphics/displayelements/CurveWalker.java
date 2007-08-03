@@ -62,7 +62,6 @@ package org.kalypsodeegree_impl.graphics.displayelements;
 
 import java.awt.Rectangle;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -93,6 +92,8 @@ public class CurveWalker
   }
 
   /**
+   * TODO: buggy. something some icon are not draw, probably due to rounding errors
+   * <p>
    * Determines positions on the given <tt>GM_Curve</tt> where a caption could be drawn. For each of this positons,
    * three candidates are produced; one on the line, one above of it and one below.
    * <p>
@@ -103,31 +104,30 @@ public class CurveWalker
   public List<double[]> createPositions( final int[][] pos, final double width )
   {
     // walk along the linestring and "collect" possible placement positions
-    final int w = (int) width;
     int lastX = pos[0][0];
     int lastY = pos[1][0];
     final int count = pos[2][0];
+
     int boxStartX = lastX;
     int boxStartY = lastY;
 
     final ArrayList<double[]> labels = new ArrayList<double[]>( 100 );
-    final List<int[]> eCandidates = Collections.synchronizedList( new ArrayList<int[]>( 100 ) );
-    int i = 0;
+    final List<int[]> eCandidates = new ArrayList<int[]>( 100 );
 
+    int i = 0;
     while( i < count )
     {
       int x = pos[0][i];
       int y = pos[1][i];
 
       // segment found where endpoint of box should be located?
-      if( getDistance( boxStartX, boxStartY, x, y ) >= w )
+      if( getDistance( boxStartX, boxStartY, x, y ) > width )
       {
-
         final int[] p0 = new int[] { boxStartX, boxStartY };
         final int[] p1 = new int[] { lastX, lastY };
         final int[] p2 = new int[] { x, y };
 
-        final int[] p = findPointWithDistance( p0, p1, p2, w );
+        final int[] p = findPointWithDistance( p0, p1, p2, width );
         x = p[0];
         y = p[1];
 
@@ -136,40 +136,12 @@ public class CurveWalker
         final int boxEndX = x;
         final int boxEndY = y;
 
-        // does the linesegment run from right to left?
-        // if (x <= boxStartX) {
-        // boxEndX = boxStartX;
-        // boxEndY = boxStartY;
-        // boxStartX = x;
-        // boxStartY = y;
-        // x = boxEndX;
-        // y = boxEndY;
-        // }
-
-        // if (boxEndX <= boxStartX) {
-        // // left to right
-        // int tmpX = boxStartX;
-        // int tmpY = boxStartY;
-        // boxStartX = boxEndX;
-        // boxStartY = boxEndY;
-        // boxEndX = tmpX;
-        // boxEndY = tmpY;
-        // }
-
         final double rotation = getRotation( boxStartX, boxStartY, boxEndX, boxEndY );
         calcDeviation( new int[] { boxStartX, boxStartY }, new int[] { boxEndX, boxEndY }, eCandidates );
 
         // only add position if it is visible
         if( boxStartX >= minX && boxStartX <= maxX && boxStartY >= minY && boxStartY <= maxY )
-        {
           labels.add( new double[] { boxStartX, boxStartY, rotation } );
-          // if (boxEndX >= boxStartX) {
-          // labels.add (new double [] {boxStartX, boxStartY, rotation +
-          // Math.PI});
-          // } else {
-          // labels.add (new double [] {boxStartX, boxStartY, rotation});
-          // }
-        }
 
         boxStartX = lastX;
         boxStartY = lastY;
@@ -308,9 +280,8 @@ public class CurveWalker
    * @param d
    *            distance
    */
-  public static int[] findPointWithDistance( final int[] p0, final int[] p1, final int[] p2, final int d )
+  public static int[] findPointWithDistance( final int[] p0, final int[] p1, final int[] p2, final double d )
   {
-
     double x, y;
     final double x0 = p0[0];
     final double y0 = p0[1];

@@ -73,6 +73,7 @@ import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
+import org.kalypsodeegree_impl.graphics.sld.awt.StrokePainter;
 import org.kalypsodeegree_impl.tools.Debug;
 
 /**
@@ -130,7 +131,7 @@ class LineStringDisplayElement_Impl extends GeometryDisplayElement_Impl implemen
 
     try
     {
-      final StrokeLinePainter painter = new StrokeLinePainter( stroke, getFeature(), uom, projection  );
+      final StrokePainter painter = new StrokePainter( stroke, getFeature(), uom, projection  );
 
       for( final GM_Curve curve : curves )
         paintCurve( g2, projection, curve, painter );
@@ -147,7 +148,7 @@ class LineStringDisplayElement_Impl extends GeometryDisplayElement_Impl implemen
     Debug.debugMethodEnd();
   }
 
-  private void paintCurve( final Graphics2D g2, final GeoTransform projection, final GM_Curve curve, final StrokeLinePainter painter ) throws GM_Exception
+  private void paintCurve( final Graphics2D g2, final GeoTransform projection, final GM_Curve curve, final StrokePainter painter ) throws GM_Exception
   {
     final int[][] pos = LabelFactory.calcScreenCoordinates( projection, curve );
     painter.paintPoses( g2, pos );
