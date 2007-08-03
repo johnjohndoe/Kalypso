@@ -55,7 +55,9 @@ public interface IBuildingFlowRelation extends IFlowRelationship
 {
   public static final QName QNAME_PROP_KIND = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "kind" );
 
-  public static final QName QNAME_P_OBSERVATION = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "observation" );
+  public static final QName QNAME_PROP_DIRECTION = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "direction" );
+
+  public static final QName QNAME_PROP_OBSERVATION = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "observation" );
 
   public enum KIND
   {
@@ -71,9 +73,11 @@ public interface IBuildingFlowRelation extends IFlowRelationship
   public IFE1D2DNode getUpstreamNode( );
 
   /**
-   * The direction of the weir in radians.
+   * The direction of the weir in degrees.
    */
-  public double getDirection( );
+  public int getDirection( );
+
+  public void setDirection( final int degrees );
 
   public BuildingParameters getBuildingParameters( );
 }

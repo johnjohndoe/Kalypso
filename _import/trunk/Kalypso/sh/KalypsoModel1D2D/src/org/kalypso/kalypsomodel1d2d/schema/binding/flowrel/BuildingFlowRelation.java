@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.flowrel;
 
+import java.math.BigInteger;
+
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -96,7 +98,7 @@ public abstract class BuildingFlowRelation extends FlowRelationship implements I
 
   private Feature getObservationFeature( )
   {
-    return (Feature) getWrappedFeature().getProperty( QNAME_P_OBSERVATION );
+    return (Feature) getWrappedFeature().getProperty( QNAME_PROP_OBSERVATION );
   }
 
   /**
@@ -117,9 +119,9 @@ public abstract class BuildingFlowRelation extends FlowRelationship implements I
     {
       final Feature feature = getFeature();
       final GMLWorkspace workspace = feature.getWorkspace();
-      final IRelationType parentRelation = (IRelationType) feature.getFeatureType().getProperty( QNAME_P_OBSERVATION );
+      final IRelationType parentRelation = (IRelationType) feature.getFeatureType().getProperty( QNAME_PROP_OBSERVATION );
       obsFeature = workspace.createFeature( feature, parentRelation, parentRelation.getTargetFeatureType(), -1 );
-      feature.setProperty( QNAME_P_OBSERVATION, obsFeature );
+      feature.setProperty( QNAME_PROP_OBSERVATION, obsFeature );
     }
     else
       obsFeature = getObservationFeature();
@@ -157,10 +159,17 @@ public abstract class BuildingFlowRelation extends FlowRelationship implements I
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation#getDirection()
    */
-  public double getDirection( )
+  public int getDirection( )
   {
-    // TODO Auto-generated method stub
-    return 0;
+    return ((BigInteger) getFeature().getProperty( QNAME_PROP_DIRECTION )).intValue();
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation#setDirection(int)
+   */
+  public void setDirection( final int degrees )
+  {
+    getFeature().setProperty( QNAME_PROP_DIRECTION, BigInteger.valueOf( degrees ) );
   }
 
   /**

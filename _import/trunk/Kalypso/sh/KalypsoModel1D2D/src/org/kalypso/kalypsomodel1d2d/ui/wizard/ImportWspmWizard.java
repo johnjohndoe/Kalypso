@@ -92,6 +92,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeDiscretiationModelCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteCmdFactory;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.Util;
+import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetworkCollection;
@@ -106,6 +107,7 @@ import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReachProfileSegment;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhSegmentStationComparator;
+import org.kalypso.model.wspm.tuhh.core.gml.TuhhStationComparator;
 import org.kalypso.model.wspm.tuhh.schema.gml.QIntervallResult;
 import org.kalypso.model.wspm.tuhh.schema.gml.QIntervallResultCollection;
 import org.kalypso.model.wspm.tuhh.schema.schemata.IWspmTuhhQIntervallConstants;
@@ -125,6 +127,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * A wizard to import WSPM-Models into a 1D2D Model.
@@ -259,6 +262,12 @@ public class ImportWspmWizard extends Wizard implements IWizard
     return !status.matches( IStatus.ERROR );
   }
 
+  /**
+   * Reads a REIB_CONST result and creates polynomial and building parameters (aka 'flow-relations') from it.
+   * 
+   * @param elements
+   *            by station Must be sorted in the order of the flow direction
+   */
   protected static IStatus doReadResults( final TuhhCalculation calculation, final SortedMap<BigDecimal, IFE1D2DNode> elementsByStation, final IFlowRelationshipModel flowRelModel, final SortedMap<BigDecimal, WspmProfile> profilesByStation ) throws MalformedURLException, Exception
   {
     try
@@ -272,10 +281,6 @@ public class ImportWspmWizard extends Wizard implements IWizard
       final Feature flowRelParentFeature = flowRelModel.getWrappedFeature();
       final GMLWorkspace flowRelworkspace = flowRelParentFeature.getWorkspace();
 
-      final IFeatureType flowRelFT = flowRelworkspace.getGMLSchema().getFeatureType( ITeschkeFlowRelation.QNAME );
-      final IRelationType flowRelObsRelation = (IRelationType) flowRelFT.getProperty( ITeschkeFlowRelation.QNAME_PROP_POINTSOBSERVATION );
-      final IRelationType flowRelPolynomeRelation = (IRelationType) flowRelFT.getProperty( ITeschkeFlowRelation.QNAME_PROP_POLYNOMES );
-
       final List resultList = qResultCollection.getQResultFeatures();
 
       final List<Feature> addedFeatures = new ArrayList<Feature>();
@@ -283,88 +288,43 @@ public class ImportWspmWizard extends Wizard implements IWizard
       {
         final QIntervallResult qresult = new QIntervallResult( FeatureHelper.getFeature( qresultsWorkspace, o ) );
 
-        final BigDecimal slope = qresult.getSlope();
-        final String name = qresult.getName();
-        final String description = qresult.getDescription();
-
         final BigDecimal station = qresult.getStation();
 
         // get corresponding 1d-element
         final IFE1D2DNode node = (IFE1D2DNode) PolynomeHelper.forStation( elementsByStation, station );
 
+        final IFlowRelationship flowRel;
+
         /* Do we have a building? */
         final IObservation<TupleResult> buildingObs = qresult.getBuildingObservation( false );
-        if( buildingObs != null )
-        {
-          // Create weir relation ord bridge relation
-          final IPhenomenon buildingPhenomenon = buildingObs.getPhenomenon();
-          final String buildingId = buildingPhenomenon.getID();
-          final QName buildingQName;
-          if( IWspmTuhhConstants.BUILDING_TYP_WEHR.equals( buildingId ) )
-            buildingQName = IWeirFlowRelation.QNAME;
-          else if( IWspmTuhhConstants.BUILDING_TYP_BRUECKE.equals( buildingId ) )
-            buildingQName = IBridgeFlowRelation.QNAME;
-          else
-            throw new IllegalStateException();
-
-          final IBuildingFlowRelation buildingRelation = flowRelModel.addNew( buildingQName, IBuildingFlowRelation.class );
-          final IObservation<TupleResult> weirFlowObservation = buildingRelation.getBuildingObservation();
-
-          final GM_Point weirPos = replaceNodeWithElement( node );
-          buildingRelation.setPosition( weirPos );
-
-          /* copy building parameter from one observation to the other */
-          final TupleResult weirResult = buildingObs.getResult();
-          final TupleResult result = weirFlowObservation.getResult();
-          final Map<String, String> componentMap = new HashMap<String, String>();
-          componentMap.put( IWspmTuhhQIntervallConstants.DICT_COMPONENT_RUNOFF, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
-          componentMap.put( IWspmTuhhQIntervallConstants.DICT_COMPONENT_WATERLEVEL_DOWNSTREAM, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL_DOWNSTREAM );
-          componentMap.put( IWspmTuhhQIntervallConstants.DICT_COMPONENT_WATERLEVEL_UPSTREAM, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL_UPSTREAM );
-          TupleResultUtilities.copyValues( weirResult, result, componentMap );
-          buildingRelation.setBuildingObservation( weirFlowObservation );
-        }
-        else if( node == null )
+        if( node == null )
         {
           KalypsoModel1D2DPlugin.getDefault().getLog().log( StatusUtilities.createWarningStatus( "No node for result at station " + station ) );
+          flowRel = null;
+        }
+        else if( buildingObs != null )
+        {
+          // REMARK: it is importent that elementsByStation is sorted in upstream direction
+          final IFE1D2DNode downStreamNode = PolynomeHelper.forStationAdjacent( elementsByStation, station, false );
+          final IFE1D2DNode upStreamNode = PolynomeHelper.forStationAdjacent( elementsByStation, station, true );
+          if( downStreamNode == null || upStreamNode == null )
+          {
+            KalypsoModel1D2DPlugin.getDefault().getLog().log( StatusUtilities.createWarningStatus( "Buildings has no adjacent nodes. Import impossible for station: " + station ) );
+            flowRel = null;
+          }
+          else
+            flowRel = addBuilding( flowRelModel, node, buildingObs, downStreamNode, upStreamNode );
         }
         else
         {
-          /* create new flow relation at node position */
-          final ITeschkeFlowRelation flowRel = flowRelModel.addNew( ITeschkeFlowRelation.QNAME, ITeschkeFlowRelation.class );
-          // final Feature flowRelFeature = flowRelworkspace.createFeature( flowRelParentFeature, flowRelParentRelation,
-          // flowRelFT );
-          // flowRelworkspace.addFeatureAsComposition( flowRelParentFeature, flowRelParentRelation, -1, flowRelFeature
-          // );
+          flowRel = addTeschke( flowRelModel, node, qresult, profilesByStation );
+        }
 
-          flowRel.setName( name );
-          flowRel.setName( description );
-          flowRel.setPosition( node.getPoint() );
-          flowRel.setStation( station );
-          flowRel.setSlope( slope.setScale( 5, BigDecimal.ROUND_HALF_UP ).doubleValue() );
-
-          /* copy results into new flow relation */
-
-          /* clone observation */
-          final Feature pointObsFeature = (Feature) qresult.getWrappedFeature().getProperty( QIntervallResult.QNAME_P_QIntervallResult_pointsMember );
-          if( pointObsFeature != null )
-            FeatureHelper.cloneFeature( flowRel.getWrappedFeature(), flowRelObsRelation, pointObsFeature );
-
-          /* relink profile to corresponding profile in profile network */
-          final WspmProfile wspmProfile = profilesByStation.get( station );
-          if( wspmProfile != null )
-            flowRel.setProfileLink( "terrain.gml#" + wspmProfile.getFeature().getId() );
-
-          /* clone polynomes */
-          final List polynomeFeatures = qresult.getPolynomialFeatures();
-          if( polynomeFeatures != null )
-          {
-            for( final Object object : polynomeFeatures )
-            {
-              final Feature polynomeFeature = FeatureHelper.getFeature( qresultsWorkspace, object );
-              if( polynomeFeature != null )
-                FeatureHelper.cloneFeature( flowRel.getWrappedFeature(), flowRelPolynomeRelation, polynomeFeature );
-            }
-          }
+        if( flowRel != null )
+        {
+          /* Set common properties and add to list of freshly generated features. */
+          flowRel.setName( qresult.getName() );
+          flowRel.setDescription( qresult.getDescription() );
 
           addedFeatures.add( flowRel.getWrappedFeature() );
         }
@@ -382,6 +342,91 @@ public class ImportWspmWizard extends Wizard implements IWizard
     }
 
     return Status.OK_STATUS;
+  }
+
+  private static IFlowRelationship addTeschke( final IFlowRelationshipModel flowRelModel, final IFE1D2DNode node, final QIntervallResult qresult, final SortedMap<BigDecimal, WspmProfile> profilesByStation ) throws Exception
+  {
+    final Feature flowRelParentFeature = flowRelModel.getWrappedFeature();
+    final GMLWorkspace flowRelworkspace = flowRelParentFeature.getWorkspace();
+    final IFeatureType flowRelFT = flowRelworkspace.getGMLSchema().getFeatureType( ITeschkeFlowRelation.QNAME );
+    final IRelationType flowRelObsRelation = (IRelationType) flowRelFT.getProperty( ITeschkeFlowRelation.QNAME_PROP_POINTSOBSERVATION );
+    final IRelationType flowRelPolynomeRelation = (IRelationType) flowRelFT.getProperty( ITeschkeFlowRelation.QNAME_PROP_POLYNOMES );
+
+    /* create new flow relation at node position */
+    final ITeschkeFlowRelation flowRel = flowRelModel.addNew( ITeschkeFlowRelation.QNAME, ITeschkeFlowRelation.class );
+
+    final BigDecimal station = qresult.getStation();
+
+    flowRel.setPosition( node.getPoint() );
+    flowRel.setStation( station );
+    flowRel.setSlope( qresult.getSlope().setScale( 5, BigDecimal.ROUND_HALF_UP ).doubleValue() ); // Round to 5 fraction
+    // digits
+
+    /* copy results into new flow relation */
+
+    /* clone observation */
+    final Feature pointObsFeature = (Feature) qresult.getWrappedFeature().getProperty( QIntervallResult.QNAME_P_QIntervallResult_pointsMember );
+    if( pointObsFeature != null )
+      FeatureHelper.cloneFeature( flowRel.getWrappedFeature(), flowRelObsRelation, pointObsFeature );
+
+    /* relink profile to corresponding profile in profile network */
+    final WspmProfile wspmProfile = profilesByStation.get( station );
+    if( wspmProfile != null )
+      flowRel.setProfileLink( "terrain.gml#" + wspmProfile.getFeature().getId() );
+
+    /* clone polynomes */
+    final List polynomeFeatures = qresult.getPolynomialFeatures();
+    if( polynomeFeatures != null )
+    {
+      for( final Object object : polynomeFeatures )
+      {
+        final GMLWorkspace qresultsWorkspace = qresult.getFeature().getWorkspace();
+        final Feature polynomeFeature = FeatureHelper.getFeature( qresultsWorkspace, object );
+        if( polynomeFeature != null )
+          FeatureHelper.cloneFeature( flowRel.getWrappedFeature(), flowRelPolynomeRelation, polynomeFeature );
+      }
+    }
+
+    return flowRel;
+  }
+
+  private static IBuildingFlowRelation addBuilding( final IFlowRelationshipModel flowRelModel, final IFE1D2DNode node, final IObservation<TupleResult> buildingObs, final IFE1D2DNode downStreamNode, final IFE1D2DNode upStreamNode ) throws CoreException
+  {
+    final IPhenomenon buildingPhenomenon = buildingObs.getPhenomenon();
+    final String buildingId = buildingPhenomenon.getID();
+    final QName buildingQName;
+    if( IWspmTuhhConstants.BUILDING_TYP_WEHR.equals( buildingId ) )
+      buildingQName = IWeirFlowRelation.QNAME;
+    else if( IWspmTuhhConstants.BUILDING_TYP_BRUECKE.equals( buildingId ) )
+      buildingQName = IBridgeFlowRelation.QNAME;
+    else
+      throw new IllegalStateException();
+
+    final IBuildingFlowRelation buildingRelation = flowRelModel.addNew( buildingQName, IBuildingFlowRelation.class );
+    final IObservation<TupleResult> weirFlowObservation = buildingRelation.getBuildingObservation();
+
+    final GM_Point weirPos = replaceNodeWithElement( node );
+    buildingRelation.setPosition( weirPos );
+
+    /* Derive direction from flow-direction of adjacent results */
+    final GM_Position downStreamPosition = downStreamNode.getPoint().getPosition();
+    final GM_Position upStreamPosition = upStreamNode.getPoint().getPosition();
+
+    /* Direction goes from upstream to downstream */
+    final double degrees = GeometryUtilities.directionFromPositions( upStreamPosition, downStreamPosition );
+    buildingRelation.setDirection( (int) degrees );
+
+    /* copy building parameter from one observation to the other */
+    final TupleResult weirResult = buildingObs.getResult();
+    final TupleResult result = weirFlowObservation.getResult();
+    final Map<String, String> componentMap = new HashMap<String, String>();
+    componentMap.put( IWspmTuhhQIntervallConstants.DICT_COMPONENT_RUNOFF, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
+    componentMap.put( IWspmTuhhQIntervallConstants.DICT_COMPONENT_WATERLEVEL_DOWNSTREAM, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL_DOWNSTREAM );
+    componentMap.put( IWspmTuhhQIntervallConstants.DICT_COMPONENT_WATERLEVEL_UPSTREAM, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL_UPSTREAM );
+    TupleResultUtilities.copyValues( weirResult, result, componentMap );
+    buildingRelation.setBuildingObservation( weirFlowObservation );
+
+    return buildingRelation;
   }
 
   private static GM_Point replaceNodeWithElement( final IFE1D2DNode node ) throws CoreException
@@ -457,8 +502,10 @@ public class ImportWspmWizard extends Wizard implements IWizard
     /* add nodes to model */
     final List<IFE1D2DEdge> edgeList = new ArrayList<IFE1D2DEdge>( segments.length - 1 );
 
-    /* add elements to model */
-    final SortedMap<BigDecimal, IFE1D2DNode> nodesByStation = new TreeMap<BigDecimal, IFE1D2DNode>();
+    /* add elements to model and sort by station in flow direction */
+    // IMPORTANT: the right ordering (in flow direction) is later used by the building parameter stuff, so do not change
+    // it!
+    final SortedMap<BigDecimal, IFE1D2DNode> nodesByStation = new TreeMap<BigDecimal, IFE1D2DNode>( new TuhhStationComparator( isDirectionUpstreams ) );
     IFE1D2DNode lastNode = null;
     for( final TuhhReachProfileSegment segment : segments )
     {
@@ -483,7 +530,8 @@ public class ImportWspmWizard extends Wizard implements IWizard
 
       node.setPoint( point );
 
-      nodesByStation.put( new BigDecimal( station ), node );
+      final BigDecimal stationDecimal = WspmProfile.stationToBigDecimal( station );
+      nodesByStation.put( stationDecimal, node );
 
       if( lastNode != null )
       {
