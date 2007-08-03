@@ -1174,7 +1174,7 @@ Kalypso 2.0.4        11. Juli 2007
 
 Kalypso 2.0.4.1      31. Juli 2007
 -----------------------------------
-Bugfix Brückenverluste im Längsschnitt
+1.)  Bugfix Brückenverluste im Längsschnitt
      Behalten der Brückenprofile in der Laengsschnitt.txt und Q_LangSchnitt.txt. 
      Beim Erzeugen von interpolierten Profilen für die Brückenberechnung wurde
      bei einer Anzahl von 2 interpolierten Profilen im Unterwasser versehentlich
@@ -1186,4 +1186,17 @@ Bugfix Brückenverluste im Längsschnitt
 
                                                          Monika Donner, 31.07.2007 
 
+Kalypso 2.0.4.2      03. August 2007
+-----------------------------------
+1.)  Bugfix innere Abflussschliefe ueber die Brücken
+     Schutz der Ergebnisse an der Brücke aus der äußeren Q-Schleife vor einem Überschreiben
+     bei der Inneren Q-Schleife. Bei der inneren Q-Schleife werden neue Datenfelder belegt 
+     und somit alle Ergebnisse seperat abgelegt (siehe drucktab).
+     Betroffene SUBR: globale defintionen, br_konv, drucktab, wspber
+
+2.)  Erweiterung der Laengsschnitt.txt um die Einträge der Teilabfluesse, Impuls- und 
+     Energiestrombeiwert sowie Reibungsgefälle. Somit sind die Ausgaben mit der Q_LangSchnitt
+     identisch.
+     Betroffene SUBR: zeila
+                                                         Monika Donner, 03.08.2007 
                                                          
