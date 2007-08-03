@@ -261,9 +261,6 @@ public class Mark_Impl implements Mark, Marshallable
     final Resource[] strokeResources = LineSymbolizer_Impl.prepareGc( gc, m_stroke, feature );
     final Resource[] fillResources = PolygonSymbolizer_Impl.prepareGc( gc, m_fill, feature );
 
-    // TODO: stroke line width is not yet supported with the awt stuff, so set always to 1 here
-// gc.setLineWidth( 1 );
-
     final Transform oldTrans = new Transform( gc.getDevice() );
     gc.getTransform( oldTrans );
     try
@@ -273,17 +270,16 @@ public class Mark_Impl implements Mark, Marshallable
 
       final Rectangle clipping = gc.getClipping();
       final float clipSize = clipping.width;
-      final float size = clipSize / 2;
 
-      // HACK: in order to have a nice legend, we paint it only half sized
+      // HACK: in order to have a nice legend, we paint it only with a certain scale
       // this must be removed if this code is ever used to paint the real features
+      final float scale = .6f;
+
+      final float size = clipSize * scale - 1;
+      final float halfSize = clipSize / 2;
 
       final Transform trans = new Transform( gc.getDevice() );
-
-      trans.scale( 0.8f, 0.8f );
-      trans.translate( size, size );
-// trans.translate( -size, -size );
-
+      trans.translate( halfSize - halfSize * scale, halfSize - halfSize * scale );
       gc.setTransform( trans );
 
       if( m_wellKnownName.equalsIgnoreCase( "circle" ) )

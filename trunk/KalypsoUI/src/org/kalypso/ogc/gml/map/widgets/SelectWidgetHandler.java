@@ -24,6 +24,7 @@ import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.widgets.IWidget;
+import org.kalypso.ui.editor.mapeditor.AbstractMapPart;
 import org.osgi.framework.Bundle;
 
 /**
@@ -59,7 +60,7 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
     // TODO: this gets called twice if radio buttons are involved
     // it would be nice to find out the check state of the command
     // Maybe use Command#setState / #getState to do this?
-    
+
     final String widgetFromEvent = event.getParameter( PARAM_WIDGET_CLASS );
     final String widgetParameter;
     if( widgetFromEvent != null )
@@ -103,7 +104,8 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
         }
       };
       // Probably not necessary
-//      job.setRule( abstractMapPart.getSchedulingRule().getSelectWidgetSchedulingRule() );
+      final AbstractMapPart abstractMapPart = (AbstractMapPart) activePart;
+      job.setRule( abstractMapPart.getSchedulingRule().getSelectWidgetSchedulingRule() );
       job.setUser( true );
       job.schedule();
     }
@@ -138,7 +140,7 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
   {
     if( data != null && data instanceof Map )
     {
-      Map parameterMap = (Map) data;
+      final Map parameterMap = (Map) data;
       m_pluginIdFromExtension = (String) parameterMap.get( PARAM_PLUGIN_ID );
       m_widgetClassFromExtension = (String) parameterMap.get( PARAM_WIDGET_CLASS );
       m_widgetIconFromExtension = (String) parameterMap.get( PARAM_WIDGET_ICON );
