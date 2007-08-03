@@ -45,12 +45,15 @@ import java.util.List;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * Helper class for {@link org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship}s.
@@ -132,6 +135,44 @@ public class FlowRelationUtilitites
       return (IBuildingFlowRelation) flowRel;
 
     return null;
+  }
+
+  public static IFE1D2DNode findUpstreamNode( final IBuildingFlowRelation buildingRelation, final IFEDiscretisationModel1d2d discModel )
+  {
+    /* find element */
+    final GM_Point buildingLocation = buildingRelation.getPosition();
+    if( buildingLocation == null )
+      return null;
+
+    final IElement1D element1d = discModel.find1DElement( buildingLocation, 0.01 );
+    if( element1d == null )
+      return null;
+
+    /* find neighbour nodes */
+    final List nodes = element1d.getNodes();
+    if( nodes.size() != 2 )
+      return null;
+
+    final IFE1D2DNode startNode = (IFE1D2DNode) nodes.get( 0 );
+    final IFE1D2DNode endNode = (IFE1D2DNode) nodes.get( 1 );
+
+    // find node which is in the right direction
+    final GM_Position startPos = startNode.getPoint().getPosition();
+    final GM_Position endPos = endNode.getPoint().getPosition();
+    final GM_Position buildingPos = buildingLocation.getPosition();
+
+    final double startDirection = GeometryUtilities.directionFromPositions( buildingPos, startPos );
+    final double endDirection = GeometryUtilities.directionFromPositions( buildingPos, endPos );
+    final int buildingDirection = buildingRelation.getDirection();
+
+    /*
+     * Return the node to which the direction is WORSE than to the other, because the direction points downstreams but
+     * we are looking for the upstream node.
+     */
+    if( Math.abs( startDirection - buildingDirection ) < Math.abs( endDirection - buildingDirection ) )
+      return endNode;
+
+    return startNode;
   }
 
 }

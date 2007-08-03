@@ -411,8 +411,7 @@ public class Control1D2DConverter
           throw new SimulationException( "Fließformel nicht unterstüzt: " + kind, null );
       }
 
-      final double direction = building.getDirection();
-
+      final double direction = Math.toRadians( building.getDirection() );
       formatter.format( "FC%14d%8d%8.3f%8.3f%8.3f%8.3f%8.3f%n", buildingID, buildingKind, 0.0, 0.0, 0.0, 0.0, direction );
     }
 

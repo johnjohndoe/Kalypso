@@ -175,8 +175,10 @@ public abstract class BuildingFlowRelation extends FlowRelationship implements I
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation#getUpstreamNode()
    */
+  @SuppressWarnings("unchecked")
   public IFE1D2DNode getUpstreamNode( )
   {
+
     // TODO Auto-generated method stub
     return null;
   }

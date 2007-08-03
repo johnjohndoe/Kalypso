@@ -43,7 +43,6 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.flowrel;
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
@@ -69,8 +68,6 @@ public interface IBuildingFlowRelation extends IFlowRelationship
   public IObservation<TupleResult> getBuildingObservation( );
 
   public void setBuildingObservation( final IObservation<TupleResult> observation );
-
-  public IFE1D2DNode getUpstreamNode( );
 
   /**
    * The direction of the weir in degrees.

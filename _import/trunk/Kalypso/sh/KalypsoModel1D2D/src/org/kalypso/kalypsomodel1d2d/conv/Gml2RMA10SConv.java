@@ -220,8 +220,9 @@ public class Gml2RMA10SConv implements INativeIDProvider
 
   public int getBoundaryLineID( final IFeatureWrapper2 i1d2dObject )
   {
-    if( i1d2dObject == null )
+    if( i1d2dObject == null ) // TODO: this is probably an error in the data, throw an exception instead?
       return 0;
+
     final String id = i1d2dObject.getGmlID();
     if( i1d2dObject instanceof IFE1D2DNode )
     {
@@ -320,24 +321,8 @@ public class Gml2RMA10SConv implements INativeIDProvider
         final String gmlID = "VirtualMiddleNode" + edge.getGmlID(); // Pseudo id, but unique within this context
         middleNodeID = getID( getNodesIDProvider(), gmlID );
 
-        /* Calculate middle of arc. */
-        /**
-         * JTSUtilities.pointOnLinePercent( edgeLine, 50 ) doesn't give the proper middle node of the edge!
-         * 
-         * 
-         * final GM_Curve curve = edge.getCurve(); final LineString edgeLine = (LineString) JTSAdapter.export( curve );
-         * final Point point = JTSUtilities.pointOnLinePercent( edgeLine, 50 ); final GM_Point middleNodePoint =
-         * (GM_Point) JTSAdapter.wrap( point );
-         * 
-         * final GM_Point edgeMN = edge.getMiddleNodePoint();
-         * 
-         * System.out.println(middleNodePoint.getX()+";"+edgeMN.getX()+";"+middleNodePoint.getY()+";"+edgeMN.getY()+";"+(middleNodePoint.getX()-edgeMN.getX())+";"+(middleNodePoint.getY()-edgeMN.getY()));
-         * 
-         */
-
         /* Write it: Station is not needed, because the element length is taken from real nodes. */
         formatNode( formatter, middleNodeID, edge.getMiddleNodePoint(), null );
-
       }
       else
       {
@@ -360,7 +345,6 @@ public class Gml2RMA10SConv implements INativeIDProvider
       }
       else if( TypeInfo.is2DEdge( edge ) )
       {
-
         final IFE1D2DElement leftElement = EdgeOps.getLeftRightElement( m_calculationUnit, edge, EdgeOps.ORIENTATION_LEFT );
         final IFE1D2DElement rightElement = EdgeOps.getLeftRightElement( m_calculationUnit, edge, EdgeOps.ORIENTATION_RIGHT );
         final int leftParent = getBoundaryLineID( leftElement );
@@ -380,14 +364,21 @@ public class Gml2RMA10SConv implements INativeIDProvider
     final List<IFE1D2DNode> nodesInBBox = nodes.query( m_calcUnitBBox );
     for( final IFE1D2DNode<IFE1D2DEdge> node : nodesInBBox/* nodes */)
     {
+      // TODO: how is now checked if a node is inside the CalcUnit???
       // if( !CalUnitOps.isNodeOf( m_calculationUnit, node ) )
       // {
       // continue;
       // }
-      if( containsID( node ) )
-      {
-        continue;
-      }
+
+      // TODO: no! we want now to write all nodes. Existnce of the id does NOT make sure it was already written.
+      // for example, the building-nodes have already been accesed (hence have an id), but have not yet been written.
+      // This should be the only place where the nodes get actually written, so no filtering should happen here (except
+      // for the calulationunit).
+      // if( containsID( node ) )
+      // {
+      // continue;
+      // }
+
       /* The node itself */
       final int nodeID = getBoundaryLineID( node );
       final GM_Point point = node.getPoint();
@@ -533,7 +524,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
         {
           /* A Building? Create dynamic building number and use it as building ID. */
           final int buildingID = m_buildingIDProvider.addBuilding( building );
-          final IFE1D2DNode upstreamNode = building.getUpstreamNode();
+          final IFE1D2DNode upstreamNode = FlowRelationUtilitites.findUpstreamNode( building, m_discretisationModel1d2d );
           final int upstreamNodeID = getBoundaryLineID( upstreamNode );
           formatter.format( "FE%10d%10d%10s%10s%10d%n", id, buildingID, "", "", upstreamNodeID );
         }
