@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.tools;
 
@@ -220,7 +220,7 @@ public class GeometryUtilities
     tries--;
     if( surface.contains( pointGuess ) )
       return pointGuess;
-    // 
+    //
     // pointGuess1
     // |
     // |radius1
@@ -245,7 +245,7 @@ public class GeometryUtilities
     // |
     // |
     // pointGuess2
-    //    
+    //
     // 1. find point at surface on one side
     final double angle1 = calcAngleToSurface( surface, pointGuess );
     final double r1 = surface.distance( pointGuess );
@@ -313,8 +313,8 @@ public class GeometryUtilities
   // final GM_Point p2 = createPointFrom( firstGuessPoint, resultAngle, 2 * r );
   // // center of p1 and p2
   // final GM_Point p3 = createGM_PositionAtCenter( p1, p2 );
-  //    
-  //    
+  //
+  //
   // if(!surface.contains( p2 ) )
   // {
   // if( surface.contains( p3 ) )
@@ -791,4 +791,26 @@ public class GeometryUtilities
     return nearest;
   }
 
+  /**
+   * Calculates the direction (in degrees) from one position to another.
+   */
+  public static double directionFromPositions( final GM_Position from, final GM_Position to )
+  {
+    final double vx = to.getX() - from.getX();
+    final double vy = to.getY() - from.getY();
+
+    return directionFromVector( vx, vy );
+  }
+
+  public static double directionFromVector( final double vx, final double vy )
+  {
+    final double length = Math.sqrt( vx * vx + vy * vy );
+
+    final double alpha = Math.acos( vx / length );
+
+    if( vy < 0 )
+      return Math.toDegrees( 2 * Math.PI - alpha );
+
+    return Math.toDegrees( alpha );
+  }
 }
