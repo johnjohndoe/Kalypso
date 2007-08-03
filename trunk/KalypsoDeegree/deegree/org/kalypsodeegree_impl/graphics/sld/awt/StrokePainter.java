@@ -2,93 +2,121 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.graphics.displayelements;
+package org.kalypsodeegree_impl.graphics.sld.awt;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.geom.AffineTransform;
 import java.util.List;
 
+import org.kalypso.contribs.java.awt.ColorUtilities;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.GraphicStroke;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.graphics.displayelements.CurveWalker;
 import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
 
 /**
  * @author Thomas Jung
  */
-public class StrokeLinePainter
+public class StrokePainter
 {
   private final Image m_image;
 
   private final Color m_color;
 
-  private final float[] m_dashArray;
-
   private final float m_width;
 
-  private final int m_cap;
+  private final java.awt.Stroke m_stroke;
 
-  private final int m_join;
-
-  private final float m_dashOffset;
-
-  public StrokeLinePainter( final Stroke stroke, final Feature feature, final UOM uom, final GeoTransform projection ) throws FilterEvaluationException
+  public StrokePainter( final Stroke stroke, final Feature feature, final UOM uom, final GeoTransform projection ) throws FilterEvaluationException
   {
-    m_color = FillPolygonPainter.makeColorWithAlpha( stroke.getStroke( feature ), stroke.getOpacity( feature ) );
+    m_color = stroke == null ? null : ColorUtilities.createTransparent( stroke.getStroke( feature ), stroke.getOpacity( feature ) );
+    m_width = stroke == null ? 0.0f : (float) stroke.getWidth( feature );
 
-    m_dashArray = stroke.getDashArray( feature );
-    m_dashOffset = stroke.getDashOffset( feature );
+    final float[] dashArray = stroke == null ? null : stroke.getDashArray( feature );
+    final float dashOffset = stroke == null ? 0.0f : stroke.getDashOffset( feature );
 
-    m_width = (float) stroke.getWidth( feature );
-    m_cap = stroke.getLineCap( feature );
-    m_join = stroke.getLineJoin( feature );
+    final int cap = stroke == null ? BasicStroke.CAP_ROUND : stroke.getLineCap( feature );
+    final int join = stroke == null ? BasicStroke.JOIN_ROUND : stroke.getLineJoin( feature );
+
+    // use a simple Stroke if dash == null or its length < 2 because that's faster
+    if( stroke == null )
+      m_stroke = null;
+    else if( dashArray == null || dashArray.length < 2 )
+      m_stroke = new BasicStroke( m_width, cap, join );
+    else
+      m_stroke = new BasicStroke( m_width, cap, join, 10.0f, dashArray, dashOffset );
 
     final GraphicStroke graphicStroke = stroke == null ? null : stroke.getGraphicStroke();
-    m_image = graphicStroke == null ? null : graphicStroke.getGraphic().getAsImage( feature, uom, projection );
+    if( graphicStroke != null && uom != null && projection != null )
+      m_image = graphicStroke.getGraphic().getAsImage( feature, uom, projection );
+    else
+      m_image = null;
   }
 
+  public double getWidth( )
+  {
+    return m_width;
+  }
+
+  public boolean isVisible( )
+  {
+    return m_color != null && m_color.getAlpha() != 0;
+  }
+
+  public void prepareGraphics( final Graphics2D g2 )
+  {
+    // Color & Opacity
+    if( m_color != null )
+      g2.setColor( m_color );
+    if( m_stroke != null )
+      g2.setStroke( m_stroke );
+  }
+
+  /**
+   * Draws the list of poses as a line according to this painter.
+   */
   public void paintPoses( final Graphics2D g2, final int[][] pos )
   {
     if( m_image != null )
@@ -114,9 +142,12 @@ public class StrokeLinePainter
     final AffineTransform saveAT = g.getTransform();
 
     // translation parameters (rotation)
+
+    // TODO: verify if this is correct!
+
     final AffineTransform transform = new AffineTransform();
     transform.rotate( rotation, x, y );
-    transform.translate( -image.getWidth( null ), -image.getHeight( null ) / 2.0 );
+    transform.translate( -image.getWidth( null ), -image.getHeight( null ) >> 1 );
     g.setTransform( transform );
 
     // render the image
@@ -129,25 +160,10 @@ public class StrokeLinePainter
   /**
    * Renders a curve to the submitted graphic context. TODO: Calculate miterlimit.
    */
-  private void drawLine( final Graphics g, final int[][] pos )
+  private void drawLine( final Graphics2D g, final int[][] pos )
   {
-    // Color & Opacity
-    final Graphics2D g2 = (Graphics2D) g;
-    g2.setColor( m_color );
+    prepareGraphics( g );
 
-    // use a simple Stroke if dash == null or its length < 2
-    // that's faster
-    final BasicStroke bs2;
-    if( m_dashArray == null || m_dashArray.length < 2 )
-    {
-      bs2 = new BasicStroke( m_width, m_cap, m_join );
-    }
-    else
-    {
-      bs2 = new BasicStroke( m_width, m_cap, m_join, 10.0f, m_dashArray, m_dashOffset );
-    }
-
-    g2.setStroke( bs2 );
-    g2.drawPolyline( pos[0], pos[1], pos[2][0] );
+    g.drawPolyline( pos[0], pos[1], pos[2][0] );
   }
 }

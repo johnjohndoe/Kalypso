@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.graphics.displayelements;
 
@@ -46,10 +46,13 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitor;
+import org.kalypsodeegree_impl.graphics.sld.awt.FillPainter;
+import org.kalypsodeegree_impl.graphics.sld.awt.SldAwtUtilities;
+import org.kalypsodeegree_impl.graphics.sld.awt.StrokePainter;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
@@ -343,16 +346,13 @@ public class SurfacePaintPolygonVisitor implements ISurfacePatchVisitor<GM_Trian
 
   private void paintSurface( final GM_Position[] posArray, final int currentClass )
   {
-    final FillPolygonPainter painter = m_colorModel.getFillPolygonPainter( currentClass );
+    final StrokePainter strokePainter = m_colorModel.getLinePainter( currentClass );
+    final FillPainter fillPainter = m_colorModel.getFillPolygonPainter( currentClass );
+    final GeoTransform world2Screen = fillPainter.getWorld2Screen();
 
     try
     {
-      painter.paintRing( (Graphics2D) m_gc, posArray );
-    }
-    catch( final GM_Exception e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      SldAwtUtilities.paintRing( (Graphics2D) m_gc, posArray, world2Screen, fillPainter, strokePainter );
     }
     catch( final Exception e )
     {

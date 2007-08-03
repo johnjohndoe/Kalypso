@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,27 +36,27 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- 
+
+
  history:
- 
+
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
- interface-compatibility to deegree is wanted but not retained always. 
- 
- If you intend to use this software in other ways than in kalypso 
+ interface-compatibility to deegree is wanted but not retained always.
+
+ If you intend to use this software in other ways than in kalypso
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
 
- all modifications are licensed as deegree, 
+ all modifications are licensed as deegree,
  original copyright:
- 
+
  Copyright (C) 2001 by:
  EXSE, Department of Geography, University of Bonn
  http://www.giub.uni-bonn.de/exse/
  lat/lon GmbH
  http://www.lat-lon.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.graphics.displayelements;
 
@@ -72,6 +72,9 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.graphics.sld.PolygonSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
+import org.kalypsodeegree_impl.graphics.sld.awt.FillPainter;
+import org.kalypsodeegree_impl.graphics.sld.awt.SldAwtUtilities;
+import org.kalypsodeegree_impl.graphics.sld.awt.StrokePainter;
 import org.kalypsodeegree_impl.tools.Debug;
 
 /**
@@ -130,11 +133,12 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
 
     try
     {
-      final FillPolygonPainter painter = new FillPolygonPainter( fill, stroke, getFeature(), uom, projection );
+      final StrokePainter strokePainter = new StrokePainter( stroke, getFeature(), uom, projection );
+      final FillPainter fillPpainter = new FillPainter( fill, getFeature(), uom, projection );
 
       for( final GM_Surface< ? > element : surfaces )
       {
-        painter.paintSurface( g2, element );
+        SldAwtUtilities.paintSurface( g2, element, projection, fillPpainter, strokePainter );
       }
     }
     catch( final FilterEvaluationException e )
