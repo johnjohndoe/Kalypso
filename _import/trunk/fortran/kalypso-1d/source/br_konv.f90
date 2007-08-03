@@ -1,4 +1,4 @@
-!     Last change:  MD   10 Jul 2007    6:31 pm
+!     Last change:  MD    3 Aug 2007    5:22 pm
 !--------------------------------------------------------------------------
 ! This code, br_konv.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -42,7 +42,7 @@
 !-----------------------------------------------------------------------
 SUBROUTINE br_konv (staso, str1, q, q1, nprof, hr, hv, rg, hvst,  &
      & hrst, indmax, psieins, psiorts, nblatt, &
-     & nz, idr1, hgrenz, ikenn, ifroud, iwehr)
+     & nz, idr1, hgrenz, ikenn, ifroud, iwehr, Q_Abfrage, nr_q_out)
 !
 ! BESCHREIBUNG: KONVENTIONELLE BRUECKENBERECHNUNG
 !
@@ -246,7 +246,8 @@ REAL :: qgesb, qgesa, qw, qd
 REAL :: df, dfq, dfh
 REAL :: hpf, f                          ! Hoehenverlust, Fliesstiefe bei Pfeilerstau
 REAL :: strbr
-
+CHARACTER(LEN=11), INTENT(IN)  :: Q_Abfrage     !Abfrage fuer Ende der Inneren Q-Schleife
+INTEGER, INTENT(IN)            :: nr_q_out
 
 write (UNIT_OUT_LOG, 20) staso, str1, q, q1, nprof, hr, rg, hvst, hrst
 20 format (//1X, 'Subroutine BR_KONV', /, &
@@ -533,7 +534,10 @@ IF (nz.gt.50) then
   nblatt = nblatt + 1
   CALL kopf (nblatt, nz, UNIT_OUT_TAB, UNIT_OUT_PRO, idr1)
 ENDIF
-CALL drucktab (nprof, indmax, nz, UNIT_OUT_TAB, nblatt, stat, UNIT_OUT_PRO, idr1)
+
+CALL drucktab (nprof, indmax, nz, UNIT_OUT_TAB, nblatt, stat, &
+         & UNIT_OUT_PRO, idr1, Q_Abfrage, nr_q_out)
+
 
 IF (nz.gt.50) then
   nblatt = nblatt + 1
@@ -1578,8 +1582,9 @@ IF (iartt.eq.2) then
   ENDIF
 
   WRITE (UNIT_OUT_TAB, '(/,t10,'' profil "2":'')')
+  CALL drucktab (nprof, indmax, nz, UNIT_OUT_TAB, nblatt, stat,  &
+              & UNIT_OUT_PRO, idr1, Q_Abfrage, nr_q_out)
 
-  CALL drucktab (nprof, indmax, nz, UNIT_OUT_TAB, nblatt, stat, UNIT_OUT_PRO, idr1)
 
   IF (nz.gt.50) then
     nblatt = nblatt + 1

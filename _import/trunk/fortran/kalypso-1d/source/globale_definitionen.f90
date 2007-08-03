@@ -1,4 +1,4 @@
-!     Last change:  MD   31 Jul 2007    3:41 pm
+!     Last change:  MD    3 Aug 2007    5:08 pm
 !--------------------------------------------------------------------------
 ! This code, globale_definitionen.f90, contains the shared memory modules
 ! and functions of the hydrodynamic modell for
@@ -42,8 +42,8 @@ implicit none
 
 save
 
-CHARACTER(LEN=29), parameter :: VERSIONNR   = ' KALYPSO-1D, VERSION 2.0.4.1 '
-CHARACTER(LEN=17), parameter :: VERSIONDATE = 'Stand: 31.07.2007'
+CHARACTER(LEN=29), parameter :: VERSIONNR   = ' KALYPSO-1D, VERSION 2.0.4.2 '
+CHARACTER(LEN=17), parameter :: VERSIONDATE = 'Stand: 03.08.2007'
 
 end module VERSION
 
@@ -230,6 +230,51 @@ TYPE :: ergebnis_profil
   CHARACTER(LEN=1) :: chr_kenn ! Kennung fuer das Profil (i = Interpoliert, n = Normal, b = Bruecke, w = Wehr, d = Durchlass)
 END TYPE ergebnis_profil
 TYPE (ergebnis_profil), DIMENSION(1:maxger, 1:maxabfluesse) :: out_PROF
+
+
+! Neu fuer Innere Abflussschleife ueber Bruecken
+! -------------------------------------------------
+TYPE :: ergebnis_teilabschnitte_Qin
+  REAL :: lambda        ! Widerstandsbeiwert [-]
+  REAL :: formb         ! Formbeiwert [-]
+  REAL :: A             ! Fliessquerschnitt [m2]
+  REAL :: B             ! Wasserspiegelbreite [m]
+  REAL :: lu            ! benetzter Unfang [m]
+  REAL :: v             ! Fliessgeschwindigkeit [m/s]
+  REAL :: Q             ! Abfluss [m3/s]
+END TYPE ergebnis_teilabschnitte_Qin
+TYPE (ergebnis_teilabschnitte_Qin), DIMENSION(1:maxger, 1:maxabfluesse, 1:maxabfluesse,1:3) :: out_Qin_IND
+
+TYPE :: ergebnis_profil_Qin
+  REAL :: stat          ! Station [km]
+  REAL :: wsp           ! Wasserspiegelhoehe [mNN]
+  REAL :: hen           ! Energiehpehe [mNN]
+  REAL :: hbv           ! Bordvolle Hoehe des Profils [mNN]
+  REAL :: sohle         ! Hoehe des tiefsten Punktes im Profil [m]
+  REAL :: qges          ! Gesamtabfluss [m3/s] (links + mitte + rechts)
+  REAL :: boeli         ! Boeschungsoberkante links [mNN]
+  REAL :: boere         ! Boeschungsoberkante rechts [mNN]
+  REAL :: vm            ! Mittlere Fliessgeschwindigkeit [m/s]
+  REAL :: tau           ! Schubspannung im Flussschlauch [N/m2]
+  REAL :: hvm           ! Verlusthoehe [m]
+  REAL :: hrm           ! Verlusthoehe [m]
+  REAL :: hein          ! Verlusthoehe [m]
+  REAL :: hort          ! Verlusthoehe [m]
+  REAL :: hm            ! Verlusthoehe [m]
+  REAL :: WehrOK        ! Wehroberkante [mNN], falls kein Wehr, dann -999.99
+  REAL :: BrueckOK      ! Brueckenoberkante [mNN], falls keine Bruecke, dann -999.99
+  REAL :: BrueckUK      ! Brueckenunterkante [mNN], falls keine Bruecke, dann -999.99
+  REAL :: BrueckB       ! Brueckenbreite [m], falls keine Bruecke, dann -999.99
+  REAL :: RohrD         ! Rohrdurchmesser [m], falls kein Rohr, dann -999.99
+  REAL :: alphaIW       ! Impulsstrombeiwert [-]
+  REAL :: alphaEW       ! Energiestrombeiwert [-]
+  REAL :: gefaelle      ! Reibungsgefaelle [-]
+  LOGICAL :: interpol   ! Profil ist interpoliert (.TRUE.) oder urspruenglich (.FALSE.), wichtig bei Bruecken
+  CHARACTER(LEN=1) :: chr_kenn ! Kennung fuer das Profil (i = Interpoliert, n = Normal, b = Bruecke, w = Wehr, d = Durchlass)
+END TYPE ergebnis_profil_Qin
+TYPE (ergebnis_profil_Qin), DIMENSION(1:maxger, 1:maxabfluesse, 1:maxabfluesse) :: out_Qin_PROF
+
+
 
 INTEGER :: nr_q         	! Laufende Nummer des aktuellen Abflusses
 INTEGER :: anz_q        	! Gesamtanzahl der unterschiedlichen Abfluesse

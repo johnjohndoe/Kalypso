@@ -1,4 +1,4 @@
-!     Last change:  MD   31 Jul 2007    3:31 pm
+!     Last change:  MD    3 Aug 2007    5:22 pm
 !--------------------------------------------------------------------------
 ! This code, wspber.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -1011,9 +1011,9 @@ Hauptschleife: DO i = 1, maxger
           hvst = hv
           hrst = hrs_save (nprof-1)
 
-          out_PROF(nprof,nr_q)%BrueckOK 	= -999.999
-          out_PROF(nprof,nr_q)%BrueckUK 	= -999.999
-          out_PROF(nprof,nr_q)%BrueckB  	= -999.999
+          out_Qin_PROF(nprof,nr_q_out,nr_q)%BrueckOK 	= -999.999
+          out_Qin_PROF(nprof,nr_q_out,nr_q)%BrueckUK 	= -999.999
+          out_Qin_PROF(nprof,nr_q_out,nr_q)%BrueckB  	= -999.999
 
           !     SCHREIBEN IN KONTROLLFILE
           write (UNIT_OUT_LOG, 233) statgem
@@ -1064,12 +1064,12 @@ Hauptschleife: DO i = 1, maxger
             str1 = (stat (nprof) - stat (nprof - 1) ) * 1000.
             prof_it(nprof) = 1
 
-            out_PROF(nprof,nr_q)%stat = stat(nprof)         !WP Zuweisung der Stationierung in globalen Array
-                                                            !WP Hinweis: Je nach Abflusszustand kann sich die
-                                                            !WP Anzahl der interpolierten Profile aendern
-            out_PROF(nprof,nr_q)%interpol = .TRUE.  	    !WP In dem globalen Ergebnis TYPE wird sich gemerkt,
-            out_PROF(nprof,nr_q)%chr_kenn = 'i'             !WP dass dieses Profil bei dem aktuellen Abfluss interpoliert wurde.
-            out_PROF(nprof,nr_q)%qges = q
+            out_Qin_PROF(nprof,nr_q_out,nr_q)%stat = stat(nprof)         !WP Zuweisung der Stationierung in globalen Array
+                                                                         !WP Hinweis: Je nach Abflusszustand kann sich die
+                                                                         !WP Anzahl der interpolierten Profile aendern
+            out_Qin_PROF(nprof,nr_q_out,nr_q)%interpol = .TRUE.  	 !WP In dem globalen Ergebnis TYPE wird sich gemerkt,
+            out_Qin_PROF(nprof,nr_q_out,nr_q)%chr_kenn = 'i'             !WP dass dieses Profil bei dem aktuellen Abfluss interpoliert wurde.
+            out_Qin_PROF(nprof,nr_q_out,nr_q)%qges = q
 
             num (nprof) = '0'
 
@@ -1113,7 +1113,7 @@ Hauptschleife: DO i = 1, maxger
 
             CALL speicher (nprof, hr, hv, hvst, hrst, q, stat (nprof), indmax, ikenn)
 
-            CALL drucktab (nprof, indmax, nz, UNIT_OUT_TAB, nblatt, stat, UNIT_OUT_PRO, idr1)
+            CALL drucktab (nprof, indmax, nz, UNIT_OUT_TAB, nblatt, stat, UNIT_OUT_PRO, idr1, Q_Abfrage, nr_q_out)
 
             !**  Original Profilwerte herstellen:
             if (FLIESSGESETZ == 'DW_M_FORMBW' .or. FLIESSGESETZ == 'DW_O_FORMBW') then
@@ -1130,27 +1130,24 @@ Hauptschleife: DO i = 1, maxger
               STOP
             ENDIF
 
-            IF (out_PROF(nprof,nr_q)%chr_kenn .eq. 'i') THEN
-              out_PROF(nprof,nr_q)%BrueckOK 	= -999.999
-              out_PROF(nprof,nr_q)%BrueckUK 	= -999.999
-              out_PROF(nprof,nr_q)%BrueckB  	= -999.999
+            IF (out_Qin_PROF(nprof,nr_q_out,nr_q)%chr_kenn .eq. 'i') THEN
+              out_Qin_PROF(nprof,nr_q_out,nr_q)%BrueckOK 	= -999.999
+              out_Qin_PROF(nprof,nr_q_out,nr_q)%BrueckUK 	= -999.999
+              out_Qin_PROF(nprof,nr_q_out,nr_q)%BrueckB  	= -999.999
             END IF
 
 
             !MD Ausgabe der Daten am profil "a"
             ! ------------------------------------
-            do k = 1, 3
-              if (out_IND(nprof,nr_q,k)%lambda > 99.9999) then
-                out_IND(nprof,nr_q,k)%lambda = 99.9999
-              end if
-            end do
-
-            write (UNIT_OUT_BRUECKE, 911) out_PROF(nprof,nr_q)%stat, 'a', &
-                             & out_PROF(nprof,nr_q)%qges, q_out, out_PROF(nprof,nr_q)%wsp, &
-                             & wsp_save (nprof_save-1), out_PROF(nprof,nr_q)%hen, out_PROF(nprof,nr_q)%vm,  &
-                             & out_IND(nprof,nr_q,1)%Q, out_IND(nprof,nr_q,2)%Q, out_IND(nprof,nr_q,3)%Q,  &
-                             & out_IND(nprof,nr_q,1)%A, out_IND(nprof,nr_q,2)%A, out_IND(nprof,nr_q,3)%A, &
-                             & out_PROF(nprof,nr_q)%BrueckOK, out_PROF(nprof,nr_q)%BrueckUK, out_PROF(nprof,nr_q)%BrueckB
+            write (UNIT_OUT_BRUECKE, 911) out_Qin_PROF(nprof,nr_q_out,nr_q)%stat, 'a', &
+                        & out_Qin_PROF(nprof,nr_q_out,nr_q)%qges, q_out, out_Qin_PROF(nprof,nr_q_out,nr_q)%wsp, &
+                        & wsp_save (nprof_save-1), out_Qin_PROF(nprof,nr_q_out,nr_q)%hen, out_Qin_PROF(nprof,nr_q_out,nr_q)%vm, &
+                        & out_Qin_IND(nprof,nr_q_out,nr_q,1)%Q, out_Qin_IND(nprof,nr_q_out,nr_q,2)%Q,   &
+                        & out_Qin_IND(nprof,nr_q_out,nr_q,3)%Q,  &
+                        & out_Qin_IND(nprof,nr_q_out,nr_q,1)%A, out_Qin_IND(nprof,nr_q_out,nr_q,2)%A,   &
+                        & out_Qin_IND(nprof,nr_q_out,nr_q,3)%A,  &
+                        & out_Qin_PROF(nprof,nr_q_out,nr_q)%BrueckOK, out_Qin_PROF(nprof,nr_q_out,nr_q)%BrueckUK, &
+                        & out_Qin_PROF(nprof,nr_q_out,nr_q)%BrueckB
             ! Ende der Ausgabe -----------
 
             nprof = nprof + 1
@@ -1166,16 +1163,16 @@ Hauptschleife: DO i = 1, maxger
           prof_it (nprof) = 1
           num (nprof) = '0'
 
-          out_PROF(nprof,nr_q)%stat = stat(nprof)   !WP Zuweisung der Stationierung in globalen Array
-          out_PROF(nprof,nr_q)%interpol = .TRUE.    !WP In dem globalen Ergebnis TYPE wird sich gemerkt,
-          out_PROF(nprof,nr_q)%chr_kenn = 'i'       !WP dass dieses Profil bei dem aktuellen Abfluss interpoliert wurde.
-          out_PROF(nprof,nr_q)%qges = q
+          out_Qin_PROF(nprof,nr_q_out,nr_q)%stat = stat(nprof)   !WP Zuweisung der Stationierung in globalen Array
+          out_Qin_PROF(nprof,nr_q_out,nr_q)%interpol = .TRUE.    !WP In dem globalen Ergebnis TYPE wird sich gemerkt,
+          out_Qin_PROF(nprof,nr_q_out,nr_q)%chr_kenn = 'i'       !WP dass dieses Profil bei dem aktuellen Abfluss interpoliert wurde.
+          out_Qin_PROF(nprof,nr_q_out,nr_q)%qges = q
 
           write (UNIT_OUT_LOG,102) stat (nprof)
           102 format (/1X, '       Profil "3" (Bruecke): ', F10.4)
 
           CALL br_konv (staso, str1, q, q1, nprof, hr, hv, rg, hvst,  &
-           & hrst, indmax, psieins, psiorts, nblatt, nz, idr1, hgrenz, ikenn, ifroud, iwehrb)
+           & hrst, indmax, psieins, psiorts, nblatt, nz, idr1, hgrenz, ikenn, ifroud, iwehrb, Q_Abfrage, nr_q_out)
 
           !write (*,*) 'In WSPBER. zurueck aus BR_KONV.'
           ! mit vorgebenem wsp hr3 in wspanf --> berechnen wsp unverbautes
@@ -1193,13 +1190,13 @@ Hauptschleife: DO i = 1, maxger
 
           stat (nprof) = statgem                          !WP Original Brueckenstation (Profil i)!
 
-          out_PROF(nprof,nr_q)%stat = stat(nprof)         !WP Zuweisung der Stationierung in globalen Array
-          out_PROF(nprof,nr_q)%interpol = .FALSE.
-          out_PROF(nprof,nr_q)%BrueckOK = hokmin
-          out_PROF(nprof,nr_q)%BrueckUK = hukmax
-          out_PROF(nprof,nr_q)%BrueckB = breite
-          out_PROF(nprof,nr_q)%chr_kenn = 'b'
-          out_PROF(nprof,nr_q)%qges = q
+          out_Qin_PROF(nprof,nr_q_out,nr_q)%stat = stat(nprof)         !WP Zuweisung der Stationierung in globalen Array
+          out_Qin_PROF(nprof,nr_q_out,nr_q)%interpol = .FALSE.
+          out_Qin_PROF(nprof,nr_q_out,nr_q)%BrueckOK = hokmin
+          out_Qin_PROF(nprof,nr_q_out,nr_q)%BrueckUK = hukmax
+          out_Qin_PROF(nprof,nr_q_out,nr_q)%BrueckB = breite
+          out_Qin_PROF(nprof,nr_q_out,nr_q)%chr_kenn = 'b'
+          out_Qin_PROF(nprof,nr_q_out,nr_q)%qges = q
           prof_it (nprof) = 0
           num (nprof) = prof_nr (1:10)
 
@@ -1345,29 +1342,26 @@ Hauptschleife: DO i = 1, maxger
           END DO
 
 
-          IF (out_PROF(nprof-1,nr_q)%chr_kenn .eq. 'i') THEN
-            out_PROF(nprof-1,nr_q)%BrueckOK 	= -999.999
-            out_PROF(nprof-1,nr_q)%BrueckUK 	= -999.999
-            out_PROF(nprof-1,nr_q)%BrueckB  	= -999.999
+          IF (out_Qin_PROF(nprof-1,nr_q_out,nr_q)%chr_kenn .eq. 'i') THEN
+            out_Qin_PROF(nprof-1,nr_q_out,nr_q)%BrueckOK 	= -999.999
+            out_Qin_PROF(nprof-1,nr_q_out,nr_q)%BrueckUK 	= -999.999
+            out_Qin_PROF(nprof-1,nr_q_out,nr_q)%BrueckB  	= -999.999
           END IF
 
           !MD Ausgabe der Daten am profil "3"
           ! -------------------------------------------
-          do k = 1, 3
-            if (out_IND(nprof,nr_q,k)%lambda > 99.9999) then
-              out_IND(nprof,nr_q,k)%lambda = 99.9999
-            end if
-          end do
 
           911 format (1X, F10.4, A5, 5F10.3, F8.3, 3F10.3, 3F10.3, 3F10.3)
 
-          write (UNIT_OUT_BRUECKE, 911) out_PROF(nprof-1,nr_q)%stat, out_PROF(nprof-1,nr_q)%chr_kenn, &
-                           & out_PROF(nprof-1,nr_q)%qges, q_out, out_PROF(nprof-1,nr_q)%wsp, &
-                           & wsp_save (nprof_save-1), out_PROF(nprof-1,nr_q)%hen, out_PROF(nprof-1,nr_q)%vm,  &
-                           & out_IND(nprof-1,nr_q,1)%Q,  out_IND(nprof-1,nr_q,2)%Q, out_IND(nprof-1,nr_q,3)%Q,  &
-                           & out_IND(nprof-1,nr_q,1)%A,  out_IND(nprof-1,nr_q,2)%A, out_IND(nprof-1,nr_q,3)%A, &
-                           & out_PROF(nprof-1,nr_q)%BrueckOK, out_PROF(nprof-1,nr_q)%BrueckUK, out_PROF(nprof-1,nr_q)%BrueckB
-
+           write (UNIT_OUT_BRUECKE, 911) out_Qin_PROF(nprof-1,nr_q_out,nr_q)%stat, 'i', &
+                        & out_Qin_PROF(nprof-1,nr_q_out,nr_q)%qges, q_out, out_Qin_PROF(nprof-1,nr_q_out,nr_q)%wsp, &
+                        & wsp_save (nprof_save-1), out_Qin_PROF(nprof-1,nr_q_out,nr_q)%hen, out_Qin_PROF(nprof-1,nr_q_out,nr_q)%vm,&
+                        & out_Qin_IND(nprof-1,nr_q_out,nr_q,1)%Q, out_Qin_IND(nprof-1,nr_q_out,nr_q,2)%Q,   &
+                        & out_Qin_IND(nprof-1,nr_q_out,nr_q,3)%Q,  &
+                        & out_Qin_IND(nprof-1,nr_q_out,nr_q,1)%A, out_Qin_IND(nprof-1,nr_q_out,nr_q,2)%A,   &
+                        & out_Qin_IND(nprof-1,nr_q_out,nr_q,3)%A,  &
+                        & out_Qin_PROF(nprof-1,nr_q_out,nr_q)%BrueckOK, out_Qin_PROF(nprof-1,nr_q_out,nr_q)%BrueckUK, &
+                        & out_Qin_PROF(nprof-1,nr_q_out,nr_q)%BrueckB
 
 
 
@@ -1400,31 +1394,28 @@ Hauptschleife: DO i = 1, maxger
 
           !MD NEU:: Ablegen der Ergebnisse an der Bruecke
           CALL speicher (nprof, hr, hv, hvst, hrst, q, stat (nprof), indmax, ikenn)
-          CALL drucktab (nprof, indmax, nz, UNIT_OUT_TAB, nblatt, stat, UNIT_OUT_PRO, idr1)
+          CALL drucktab (nprof, indmax, nz, UNIT_OUT_TAB, nblatt, stat, UNIT_OUT_PRO, idr1, Q_Abfrage, nr_q_out)
 
 
-          IF (out_PROF(nprof,nr_q)%chr_kenn .eq. 'i') THEN
-             out_PROF(nprof,nr_q)%BrueckOK 	= -999.999
-             out_PROF(nprof,nr_q)%BrueckUK 	= -999.999
-             out_PROF(nprof,nr_q)%BrueckB  	= -999.999
+          IF (out_Qin_PROF(nprof,nr_q_out,nr_q)%chr_kenn .eq. 'i') THEN
+             out_Qin_PROF(nprof,nr_q_out,nr_q)%BrueckOK 	= -999.999
+             out_Qin_PROF(nprof,nr_q_out,nr_q)%BrueckUK 	= -999.999
+             out_Qin_PROF(nprof,nr_q_out,nr_q)%BrueckB  	= -999.999
           END IF
 
           !MD Ausgabe der Daten am profil "1"
           ! ---------------------------------
-          do k = 1, 3
-            if (out_IND(nprof,j,k)%lambda > 99.9999) then
-              out_IND(nprof,j,k)%lambda = 99.9999
-            end if
-          end do
-
           912 format (1X, F10.4, 5F10.3)
-          write (UNIT_OUT_BRUECKE, 911) out_PROF(nprof,nr_q)%stat, out_PROF(nprof,nr_q)%chr_kenn, &
-                           & out_PROF(nprof,nr_q)%qges, q_out, out_PROF(nprof,nr_q)%wsp, &
-                           & wsp_save (nprof_save-1), out_PROF(nprof,nr_q)%hen, out_PROF(nprof,nr_q)%vm,  &
-                           & out_IND(nprof,nr_q,1)%Q, out_IND(nprof,nr_q,2)%Q, out_IND(nprof,nr_q,3)%Q, &
-                           & out_IND(nprof,nr_q,1)%A, out_IND(nprof,nr_q,2)%A, out_IND(nprof,nr_q,3)%A, &
-                           & out_PROF(nprof,nr_q)%BrueckOK, out_PROF(nprof,nr_q)%BrueckUK, out_PROF(nprof,nr_q)%BrueckB
 
+          write (UNIT_OUT_BRUECKE, 911) out_Qin_PROF(nprof,nr_q_out,nr_q)%stat, 'b', &
+                        & out_Qin_PROF(nprof,nr_q_out,nr_q)%qges, q_out, out_Qin_PROF(nprof,nr_q_out,nr_q)%wsp, &
+                        & wsp_save (nprof_save-1), out_Qin_PROF(nprof,nr_q_out,nr_q)%hen, out_Qin_PROF(nprof,nr_q_out,nr_q)%vm, &
+                        & out_Qin_IND(nprof,nr_q_out,nr_q,1)%Q, out_Qin_IND(nprof,nr_q_out,nr_q,2)%Q,   &
+                        & out_Qin_IND(nprof,nr_q_out,nr_q,3)%Q,  &
+                        & out_Qin_IND(nprof,nr_q_out,nr_q,1)%A, out_Qin_IND(nprof,nr_q_out,nr_q,2)%A,   &
+                        & out_Qin_IND(nprof,nr_q_out,nr_q,3)%A,  &
+                        & out_Qin_PROF(nprof,nr_q_out,nr_q)%BrueckOK, out_Qin_PROF(nprof,nr_q_out,nr_q)%BrueckUK, &
+                        & out_Qin_PROF(nprof,nr_q_out,nr_q)%BrueckB
 
           !  Einlesen aus flussname.dat:
           ! ------------------------------------
@@ -1457,10 +1448,10 @@ Hauptschleife: DO i = 1, maxger
             prof_it (nprof) = 1
             num (nprof) = '0'
             stat (nprof) = stat (nprof - 1) + 5. / 1000.
-            out_PROF(nprof,nr_q)%stat = stat(nprof)	!WP Zuweisung der Stationierung in globalen Array
-            out_PROF(nprof,nr_q)%interpol = .TRUE.  	!WP In dem globalen Ergebnis TYPE wird sich gemerkt,
-            out_PROF(nprof,nr_q)%chr_kenn = 'i'       	!WP dass dieses Profil bei dem aktuellen Abfluss
-            out_PROF(nprof,nr_q)%qges = q
+            out_Qin_PROF(nprof,nr_q_out,nr_q)%stat = stat(nprof)	!WP Zuweisung der Stationierung in globalen Array
+            out_Qin_PROF(nprof,nr_q_out,nr_q)%interpol = .TRUE.  	!WP In dem globalen Ergebnis TYPE wird sich gemerkt,
+            out_Qin_PROF(nprof,nr_q_out,nr_q)%chr_kenn = 'i'       	!WP dass dieses Profil bei dem aktuellen Abfluss
+            out_Qin_PROF(nprof,nr_q_out,nr_q)%qges = q
 
             write (UNIT_OUT_LOG,103) stat (nprof)
             103 format (/1X, '       Profil "B" (Bruecke): ', F10.4)
@@ -1498,7 +1489,7 @@ Hauptschleife: DO i = 1, maxger
 
             ! Ausdrucken der Ergebisse im .tab-file
             ! -----------------------------------------------------------
-            CALL drucktab (nprof, indmax, nz, UNIT_OUT_TAB, nblatt, stat, UNIT_OUT_PRO, idr1)
+            CALL drucktab (nprof, indmax, nz, UNIT_OUT_TAB, nblatt, stat, UNIT_OUT_PRO, idr1, Q_Abfrage, nr_q_out)
 
 
        !MD   ELSE     ! ELSE ZU (statneu.gt.statgrz+0.001)???
@@ -1511,33 +1502,32 @@ Hauptschleife: DO i = 1, maxger
 
             !MD Ausgabe der Daten am profil "B"
             ! ---------------------------------
-            IF (out_PROF(nprof,nr_q)%chr_kenn .eq. 'i') THEN
-               out_PROF(nprof,nr_q)%BrueckOK 	= -999.999
-               out_PROF(nprof,nr_q)%BrueckUK 	= -999.999
-               out_PROF(nprof,nr_q)%BrueckB  	= -999.999
+            IF (out_Qin_PROF(nprof,nr_q_out,nr_q)%chr_kenn .eq. 'i') THEN
+               out_Qin_PROF(nprof,nr_q_out,nr_q)%BrueckOK 	= -999.999
+               out_Qin_PROF(nprof,nr_q_out,nr_q)%BrueckUK 	= -999.999
+               out_Qin_PROF(nprof,nr_q_out,nr_q)%BrueckB  	= -999.999
             END IF
 
-            do k = 1, 3
-              if (out_IND(nprof,j,k)%lambda > 99.9999) then
-                out_IND(nprof,j,k)%lambda = 99.9999
-              end if
-            end do
+            write (UNIT_OUT_BRUECKE, 911) out_Qin_PROF(nprof,nr_q_out,nr_q)%stat, 'ow', &
+                        & out_Qin_PROF(nprof,nr_q_out,nr_q)%qges, q_out, out_Qin_PROF(nprof,nr_q_out,nr_q)%wsp, &
+                        & wsp_save (nprof_save-1), out_Qin_PROF(nprof,nr_q_out,nr_q)%hen, out_Qin_PROF(nprof,nr_q_out,nr_q)%vm, &
+                        & out_Qin_IND(nprof,nr_q_out,nr_q,1)%Q, out_Qin_IND(nprof,nr_q_out,nr_q,2)%Q,   &
+                        & out_Qin_IND(nprof,nr_q_out,nr_q,3)%Q,  &
+                        & out_Qin_IND(nprof,nr_q_out,nr_q,1)%A, out_Qin_IND(nprof,nr_q_out,nr_q,2)%A,   &
+                        & out_Qin_IND(nprof,nr_q_out,nr_q,3)%A,  &
+                        & out_Qin_PROF(nprof,nr_q_out,nr_q)%BrueckOK, out_Qin_PROF(nprof,nr_q_out,nr_q)%BrueckUK, &
+                        & out_Qin_PROF(nprof,nr_q_out,nr_q)%BrueckB
 
-            write (UNIT_OUT_BRUECKE, 911) out_PROF(nprof,nr_q)%stat, 'ow', &
-                             & out_PROF(nprof,nr_q)%qges, q_out, out_PROF(nprof,nr_q)%wsp, &
-                             & wsp_save (nprof_save-1), out_PROF(nprof,nr_q)%hen, out_PROF(nprof,nr_q)%vm,  &
-                             & out_IND(nprof,nr_q,1)%Q, out_IND(nprof,nr_q,2)%Q, out_IND(nprof,nr_q,3)%Q, &
-                             & out_IND(nprof,nr_q,1)%A, out_IND(nprof,nr_q,2)%A, out_IND(nprof,nr_q,3)%A, &
-                             & out_PROF(nprof,nr_q)%BrueckOK, out_PROF(nprof,nr_q)%BrueckUK, out_PROF(nprof,nr_q)%BrueckB
-
-            write (UNIT_OUT_QBRUECKE, 912) out_PROF(nprof-1,nr_q)%stat, q_out, out_PROF(nprof,nr_q)%qges, &
-                             & out_PROF(nprof,nr_q)%wsp, wsp_save (nprof_save-1), out_PROF(nprof,nr_q)%hen
+            write (UNIT_OUT_QBRUECKE, 912) out_Qin_PROF(nprof-1,nr_q_out,nr_q)%stat, q_out,                    &
+                             & out_Qin_PROF(nprof,nr_q_out,nr_q)%qges, out_Qin_PROF(nprof,nr_q_out,nr_q)%wsp,  &
+                             & wsp_save (nprof_save-1), out_Qin_PROF(nprof,nr_q_out,nr_q)%hen
 
           ! wenn kein Profil "B" erzeugt wird
           ELSE
             ! Ausgabe der Daten an der Bruecke
-            write (UNIT_OUT_QBRUECKE, 912) out_PROF(nprof,nr_q)%stat, q_out, out_PROF(nprof,nr_q)%qges, &
-                             & out_PROF(nprof,nr_q)%wsp, wsp_save (nprof_save-1), out_PROF(nprof,nr_q)%hen
+            write (UNIT_OUT_QBRUECKE, 912) out_Qin_PROF(nprof,nr_q_out,nr_q)%stat, q_out,                    &
+                             & out_Qin_PROF(nprof,nr_q_out,nr_q)%qges, out_Qin_PROF(nprof,nr_q_out,nr_q)%wsp,  &
+                             & wsp_save (nprof_save-1), out_Qin_PROF(nprof,nr_q_out,nr_q)%hen
 
           ENDIF
           !------------------------------------------------------------
@@ -1650,9 +1640,7 @@ Hauptschleife: DO i = 1, maxger
         out_PROF(nprof,nr_q)%chr_kenn = 'i'         	!WP dass dieses Profil bei dem aktuellen Abfluss
                                                         !WP interpoliert wurde.
         out_PROF(nprof,nr_q)%qges = q
-        !out_IND(nprof,nr_q,1)%lambda = 0.0
-        !out_IND(nprof,nr_q,2)%lambda = 0.0
-        !out_IND(nprof,nr_q,3)%lambda = 0.0
+
 
         num (nprof) = '0'
 
@@ -1710,7 +1698,7 @@ Hauptschleife: DO i = 1, maxger
 
         CALL speicher (nprof, hr, hv, hvst, hrst, q, stat (nprof), indmax, ikenn)
 
-        CALL drucktab (nprof, indmax, nz, UNIT_OUT_TAB, nblatt, stat, UNIT_OUT_PRO, idr1)
+        CALL drucktab (nprof, indmax, nz, UNIT_OUT_TAB, nblatt, stat, UNIT_OUT_PRO, idr1, Q_Abfrage, nr_q_out)
 
         !**  Original Profilwerte herstellen:
         if (FLIESSGESETZ == 'DW_M_FORMBW' .or. FLIESSGESETZ == 'DW_O_FORMBW') then
@@ -1766,7 +1754,7 @@ Hauptschleife: DO i = 1, maxger
 
       CALL br_konv (staso, str1, q, q1, nprof, hr, hv, rg, hvst,  &
        & hrst, indmax, psieins, psiorts, nblatt,  &
-       & nz, idr1, hgrenz, ikenn, ifroud, iwehrb)
+       & nz, idr1, hgrenz, ikenn, ifroud, iwehrb, Q_Abfrage, nr_q_out)
 
       !write (*,*) 'In WSPBER. zurueck aus BR_KONV.'
 
@@ -2131,10 +2119,9 @@ Hauptschleife: DO i = 1, maxger
     ! Normale Berechnung fuer alle weiteren Profile ausser nprof=1
     ! ---------------------------------------------------------------
       num (nprof) = prof_nr (1:10)
-
       !MD  wird nie verwendet
       !MD  222 CONTINUE
-
+      out_PROF(nprof,nr_q)%interpol = .FALSE.
       !**   str = abstand zwischen 2 Profilen?
       str = (stat (nprof) - stat (nprof - 1) ) * 1000.
 
@@ -2145,6 +2132,8 @@ Hauptschleife: DO i = 1, maxger
     ! MD  Neue Berechenungsvariante mit konstantem Reibungsgefaelle
     ! MD  --> auch fuer alle anderen Profile n+1 wird die wspanf. aufgerufen!!
     ELSEIF (BERECHNUNGSMODUS == 'REIB_KONST') then
+      out_PROF(nprof,nr_q)%stat = stat(nprof)
+      out_PROF(nprof,nr_q)%interpol = .FALSE.
 
       num (nprof) = prof_nr (1:10)
 
@@ -2158,9 +2147,10 @@ Hauptschleife: DO i = 1, maxger
       CALL wspanf (wsanf, strbr, q, q1, hr, hv, rg, indmax, hvst, &
         & hrst, psieins, psiorts, nprof, hgrenz, ikenn, nblatt, nz, idr1)
 
+
+
     !**   ENDIF ZU (nprof.eq.1)
     ENDIF
-
 
 
 
@@ -2181,7 +2171,7 @@ Hauptschleife: DO i = 1, maxger
     ! Ausdrucken der Ergebisse im .tab-file
     ! ------------------------------------------------------------------
 
-    CALL drucktab (nprof, indmax, nz, UNIT_OUT_TAB, nblatt, stat, UNIT_OUT_PRO, idr1)
+    CALL drucktab (nprof, indmax, nz, UNIT_OUT_TAB, nblatt, stat, UNIT_OUT_PRO, idr1, Q_Abfrage, nr_q_out)
 
 
     IF (nprof.gt.1) then
@@ -2283,7 +2273,7 @@ Hauptschleife: DO i = 1, maxger
           ! Ausdrucken der Ergebisse im .tab-file
           ! -----------------------------------------------------------
 
-          CALL drucktab (nprof, indmax, nz, UNIT_OUT_TAB, nblatt, stat, UNIT_OUT_PRO, idr1)
+          CALL drucktab (nprof, indmax, nz, UNIT_OUT_TAB, nblatt, stat, UNIT_OUT_PRO, idr1, Q_Abfrage, nr_q_out)
 
         !**    ELSE ZU (statneu.gt.statgrz+0.001)???
         ELSE
@@ -2338,9 +2328,14 @@ Hauptschleife: DO i = 1, maxger
 
               num (nprof) = '0'
 
+
               out_PROF(nprof,nr_q)%stat = stat(nprof)   !WP Zuweisung der Stationierung in globalen Array
                                                         !WP Hinweis: Je nach Abflusszustand kann sich die
                                                         !WP Anzahl der interpolierten Profile aendern
+
+              write (UNIT_OUT_LOG, '(''Folgendes Profil wird auﬂerplanmaessig interpoliert '',a)') nprof
+              WRITE (UNIT_OUT_LOG, '('' stat (nprof)='',f8.4)') stat (nprof)
+
 
               out_PROF(nprof,nr_q)%interpol = .TRUE.  	!WP In dem globalen Ergebnis TYPE wird sich gemerkt,
               out_PROF(nprof,nr_q)%chr_kenn = 'i'   	!WP dass dieses Profil bei dem aktuellen Abfluss
@@ -2403,7 +2398,7 @@ Hauptschleife: DO i = 1, maxger
               ! Ausdrucken der Ergebisse im .tab-file
               ! ----------------------------------------------------------
 
-              CALL drucktab (nprof, indmax, nz, UNIT_OUT_TAB, nblatt, stat, UNIT_OUT_PRO, idr1)
+              CALL drucktab (nprof, indmax, nz, UNIT_OUT_TAB, nblatt, stat, UNIT_OUT_PRO, idr1, Q_Abfrage, nr_q_out)
 
             !**     ENDIF ZU (statneu.gt.statgrz+0.001)
             ENDIF
@@ -2590,7 +2585,7 @@ Hauptschleife: DO i = 1, maxger
     ! Ausdrucken der Ergebisse im .tab-file
     ! ------------------------------------------------------------------
 
-    CALL drucktab (nprof, indmax, nz, UNIT_OUT_TAB, nblatt, stat, UNIT_OUT_PRO, idr1)
+    CALL drucktab (nprof, indmax, nz, UNIT_OUT_TAB, nblatt, stat, UNIT_OUT_PRO, idr1, Q_Abfrage, nr_q_out)
 
   ENDIF
                                                                         

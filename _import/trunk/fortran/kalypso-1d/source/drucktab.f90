@@ -1,4 +1,4 @@
-!     Last change:  MD    5 Jul 2007   11:31 am
+!     Last change:  MD    3 Aug 2007    5:04 pm
 !--------------------------------------------------------------------------
 ! This code, drucktab.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -41,7 +41,7 @@
 
 
 !--------------------------------------------------------------------------
-SUBROUTINE drucktab (i, indmax, nz, jw5, nblatt, station, jw7, idr1)
+SUBROUTINE drucktab (i, indmax, nz, jw5, nblatt, station, jw7, idr1, Q_Abfrage, nr_q_out)
 !
 ! Programmbeschreibung
 ! --------------------
@@ -156,7 +156,8 @@ COMMON / p2 / x1, h1, rau, nknot, iprof, durchm, hd, sohlg, steig, &
 CHARACTER(LEN=72) 	:: textg
 INTEGER                 :: j
 REAL                    :: v
-
+CHARACTER(LEN=11), INTENT(IN)  :: Q_Abfrage     !Abfrage fuer Ende der Inneren Q-Schleife
+INTEGER, INTENT(IN)            :: nr_q_out
                                                                         
 ! *****************************************************************
 ! BERECHNUNG
@@ -180,10 +181,9 @@ REAL                    :: v
 !WP 11.03.2006
 ! Speichern der ausgegebenen Werte in dem globalen Ergebnis-Modul
 
-!IF (idr1.eq.'j') then
+IF (Q_Abfrage.eq.'IN_SCHLEIFE') then
 
   do j = 1, 3
-
     out_IND(i,nr_q,j)%lambda = rkp(i,j)         ! Lambda der Teilabschnitte
     out_IND(i,nr_q,j)%formb  = fbwp(i,j)        ! Formbeiwert der Teilabschnitte
     out_IND(i,nr_q,j)%A      = fp(i,j)		! Teilquerschnittsflaeche
@@ -191,7 +191,6 @@ REAL                    :: v
     out_IND(i,nr_q,j)%v      = vp(i,j)          ! mittlere Flieﬂgeschwindigkeit
     out_IND(i,nr_q,j)%Q      = qtp(i,j)      	! Teilabfluesse
     out_IND(i,nr_q,j)%B      = brp(i,j)      	! Wasserspiegelbreite der Teilabschnitte
-
   end do
 
   out_PROF(i,nr_q)%stat   = station(i)          	! Station in [km]
@@ -205,8 +204,36 @@ REAL                    :: v
   out_PROF(i,nr_q)%tau    = (rkp(i,2)/8)*rho*vp(i,2)**2 ! Sohlschubspannung im Flussschlauch [N/m2]
   out_PROF(i,nr_q)%alphaIW  = Alpha_IW(i)               ! Impulsstrombeiwert aus eb2ks [-]
   out_PROF(i,nr_q)%alphaEW  = Alpha_EW(i)               ! Energiestrombeiwert aus eb2ks [-]
-  out_PROF(i,nr_q)%gefaelle = SQRT (g_sohl**2)         ! Reibungsgefaelle [-]
-!end if
+  out_PROF(i,nr_q)%gefaelle = SQRT (g_sohl**2)          ! Reibungsgefaelle [-]
+
+ELSEIF (Q_Abfrage.eq.'BR_SCHLEIFE') then
+  do j = 1, 3
+    out_Qin_IND(i,nr_q_out,nr_q,j)%lambda = rkp(i,j)            ! Lambda der Teilabschnitte
+    out_Qin_IND(i,nr_q_out,nr_q,j)%formb  = fbwp(i,j)           ! Formbeiwert der Teilabschnitte
+    out_Qin_IND(i,nr_q_out,nr_q,j)%A      = fp(i,j)	        ! Teilquerschnittsflaeche
+    out_Qin_IND(i,nr_q_out,nr_q,j)%lu     = up(i,j)             ! benetzter Umfang
+    out_Qin_IND(i,nr_q_out,nr_q,j)%v      = vp(i,j)             ! mittlere Flieﬂgeschwindigkeit
+    out_Qin_IND(i,nr_q_out,nr_q,j)%Q      = qtp(i,j)            ! Teilabfluesse
+    out_Qin_IND(i,nr_q_out,nr_q,j)%B      = brp(i,j)            ! Wasserspiegelbreite der Teilabschnitte
+  end do
+
+  out_Qin_PROF(i,nr_q_out,nr_q)%stat   = station(i)          	! Station in [km]
+  out_Qin_PROF(i,nr_q_out,nr_q)%wsp    = wsp(i)              	! Wasserspiegelhoehe [mNN]
+  out_Qin_PROF(i,nr_q_out,nr_q)%hen    = hen(i)              	! Energielinienhoehe [mNN]
+  out_Qin_PROF(i,nr_q_out,nr_q)%sohle  = sohlp(i)            	! tiefster Sohlpunkt [mNN]
+  out_Qin_PROF(i,nr_q_out,nr_q)%boeli  = bolip(i)            	! Bordvollhoehe links [mNN]
+  out_Qin_PROF(i,nr_q_out,nr_q)%boere  = borep(i)                       ! Bordvollhoehe rechts [mNN]
+  out_Qin_PROF(i,nr_q_out,nr_q)%hbv    = MIN(bolip(i), borep(i))        ! minimale Bordvollhoehe [mNN]
+  out_Qin_PROF(i,nr_q_out,nr_q)%vm     = vmp(i)              	        ! mittlere Fliessgeschwindigkeit [m/s]
+  out_Qin_PROF(i,nr_q_out,nr_q)%tau    = (rkp(i,2)/8)*rho*vp(i,2)**2    ! Sohlschubspannung im Flussschlauch [N/m2]
+  out_Qin_PROF(i,nr_q_out,nr_q)%alphaIW  = Alpha_IW(i)                  ! Impulsstrombeiwert aus eb2ks [-]
+  out_Qin_PROF(i,nr_q_out,nr_q)%alphaEW  = Alpha_EW(i)                  ! Energiestrombeiwert aus eb2ks [-]
+  out_Qin_PROF(i,nr_q_out,nr_q)%gefaelle = SQRT (g_sohl**2)             ! Reibungsgefaelle [-]
+
+END if
+
+
+
 
 ifbr = 0
 ifpgs = 0
