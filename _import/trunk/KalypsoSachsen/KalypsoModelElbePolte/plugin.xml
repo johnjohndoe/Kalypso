@@ -7,6 +7,10 @@
             typeID="org.kalypso.model.elbepolte"
             catalogClass="org.kalypso.lhwzsachsen.elbepolte.ElbePolteUrlCatalog"
             jobClass="org.kalypso.lhwzsachsen.elbepolte.ElbePolteCalcJob"/>
+      <calcJob
+            typeID="org.kalypso.model.zwg"
+            catalogClass="org.kalypso.lhwzsachsen.zwischengebiete.ZwischengebieteUrlCatalog"
+            jobClass="org.kalypso.lhwzsachsen.zwischengebiete.ZwischengebieteCalcJobhengebieteCalcJob"/>
    </extension>
    <extension
          point="org.kalypso.core.nativeObsAdapter">
