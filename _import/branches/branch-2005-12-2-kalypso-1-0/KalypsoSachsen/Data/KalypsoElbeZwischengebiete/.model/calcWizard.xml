@@ -9,14 +9,14 @@ ToDo: Help-Ids setzen!!! -->
 	<!-- 
 		Phase 1: KONTROLLE DER ZEITREIHEN
 	-->
-	<!-- Kontrolle Startpegel -->
-	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Wasserstand - Startpegel "
+	<!-- Kontrolle Zwischengebietspegel -->
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Zwischengebietszuflüsse (Pegel) "
 		imageLocation="icons/calcwizard/kalypso32.gif">
-		<arg name="pageID" value="Startpegel"/>
-		<arg name="htmlFilePath" value=".model/wizardhtml/01_Startpegel.html"/>
-		<arg name="helpId" value="&hid;sec_Assi_elbePolte_02_Startpegel"/>
+		<arg name="pageID" value="Zwischengebietspegel"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/01_Zwischengebietspegel.html"/>
+		<arg name="helpId" value="&hid;sec_Assi_elbeZwge_02_Zwischengebietspegel"/>
 		<!--  -->
-		<arg name="mapTemplate" value=".templates/calcCase/wiz01_startpegel.gmt"/>
+		<arg name="mapTemplate" value=".templates/calcCase/wiz01_zwischengebietspegel.gmt"/>
 		<arg name="maximizeMap" value="true"/>
 		<arg name="mapWidgetID" value="SELECT"/>
 		<!--  -->
@@ -24,28 +24,33 @@ ToDo: Help-Ids setzen!!! -->
 		<arg name="rightSash" value="50"/>
 		<!--  -->
 		<arg name="zmlTableShow" value="all"/>
-		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname%#linkColumn=ganglinie_gesamt"/>
+		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname%#linkColumn=ganglinie_messwerte"/>
 		<!--  -->
 		<arg name="ignoreType1" value="Q"/>
 		<arg name="ignoreType2" value="W"/>
 		<arg name="ignoreLabel1" value="Wasserstand"/>
 		<arg name="ignoreLabel2" value="Abfluss"/>
-		
 	</page>
-	<!-- Kontrolle Elbepegel -->
-	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Wasserstand - Elbepegel"
+	<!-- Berechnung Zwischengebiet Usti - Dresden -->
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Berechnung Zwischengebietszufluss Usti/Dresden"
 		imageLocation="icons/calcwizard/kalypso32.gif">
-		<arg name="pageID" value="Elbepegel"/>
-		<arg name="htmlFilePath" value=".model/wizardhtml/02_Elbepegel.html"/>
-		<arg name="helpId" value="&hid;sec_Assi_elbePolte_03_Elbepegel"/>
+		<arg name="pageID" value="UstiDresden"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/02_ZWG_UstiDresden.html"/>
+		<arg name="helpId" value="&hid;sec_Assi_elbeZwge_03_ZwgUstiDresden"/>
 		<!--  -->
-		<arg name="mapTemplate" value=".templates/calcCase/wiz02_elbepegel.gmt"/>
+		<arg name="mapTemplate" value=".templates/calcCase/wiz02_ZwgUstiDresden.gmt"/>
 		<arg name="maximizeMap" value="true"/>
 		<arg name="mapWidgetID" value="SELECT"/>
 		<!--  -->
 		<arg name="mainSash" value="40"/>
 		<arg name="rightSash" value="50"/>
-		<!--  -->
+		<!--
+			FeatureView -->
+		<arg name="featureTemplate" value=".templates/calcCase/wiz02_ZwgUstiDresden.gft"/>
+		<arg name="selectFeatureID" value="root"/>
+		<arg name="featureControlStyle" value="SWT.NONE"/>
+		<!-- 
+			Diagramm -->
 		<arg name="timeserie1" value="nameColumn=Name#nameString=Messwerte#linkColumn=ganglinie_messwerte#color=0x0000ff"/>
 		<arg name="timeserie2" value="nameColumn=Name#nameString=Modellwerte#linkColumn=ganglinie_modellwerte#color=0xff0000"/>
 		<!--  -->
@@ -54,246 +59,93 @@ ToDo: Help-Ids setzen!!! -->
 		<arg name="ignoreLabel1" value="Wasserstand"/>
 		<arg name="ignoreLabel2" value="Abfluss"/>
 	</page>
-	<!-- Kontrolle Zwischengebiete -->
-	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Abfluss - Zwischengebiete" imageLocation="icons/calcwizard/kalypso32.gif">
-		<arg name="pageID" value="Zwischengebiete"/>
-		<arg name="htmlFilePath" value=".model/wizardhtml/03_Zwischengebiete.html"/>
-		<arg name="helpId" value="&hid;sec_Assi_elbePolte_04_Zwischengebiete"/>
+	<!-- Berechnung Zwischengebiet Dresden - Torgau -->
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Berechnung Zwischengebietszufluss Dresden/Torgau"
+		imageLocation="icons/calcwizard/kalypso32.gif">
+		<arg name="pageID" value="DresdenTorgau"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/03_ZWG_DresdenTorgau.html"/>
+		<arg name="helpId" value="&hid;sec_Assi_elbeZwge_04_ZwgDresdenTorgau"/>
 		<!--  -->
-		<arg name="mapTemplate" value=".templates/calcCase/wiz03_zwischengebiete.gmt"/>
+		<arg name="mapTemplate" value=".templates/calcCase/wiz03_ZwgDresdenTorgau.gmt"/>
 		<arg name="maximizeMap" value="true"/>
 		<arg name="mapWidgetID" value="SELECT"/>
 		<!--  -->
-		<arg name="mainSash" value="50"/>
+		<arg name="mainSash" value="40"/>
 		<arg name="rightSash" value="50"/>
+		<!--
+			FeatureView -->
+		<arg name="featureTemplate" value=".templates/calcCase/wiz03_ZwgDresdenTorgau.gft"/>
+		<arg name="selectFeatureID" value="root"/>
+		<arg name="featureControlStyle" value="SWT.NONE"/>
+		<!-- 
+			Diagramm -->
+		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname%#linkColumn=ganglinie_gesamt"/>
+		<arg name="timeserie2" value="nameColumn=Name#nameString=Modellwerte#linkColumn=ganglinie_messwerte"/>
+		<!--  -->
+		<arg name="ignoreType1" value="Q"/>
+		<arg name="ignoreType2" value="W"/>
+		<arg name="ignoreLabel1" value="Wasserstand"/>
+		<arg name="ignoreLabel2" value="Abfluss"/>
+	</page>
+	<!-- Kontrolle Abfluss - Zwischengebiete -->
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Abfluss - Zwischengebiete"
+		imageLocation="icons/calcwizard/kalypso32.gif">
+		<!--  
+			HTML-Navigation und pageID-->
+		<arg name="pageID" value="Zwischengebiete"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/04_ZwischengebietsErgebnisse.html"/>
+		<arg name="helpId" value="&hid;sec_Assi_elbeZwge_05_AbflussZwge"/>
+		<!-- 
+			Page-Layout -->
+		<arg name="mainSash" value="40"/>
+		<arg name="rightSash" value="30"/>
+		<arg name="hideCalcButton" value="true"/>
+		<!-- 
+			Karte -->
+		<arg name="mapTemplate" value=".templates/calcCase/wiz04_ZwischengebietsErgebnisse.gmt"/>
+		<arg name="mapTemplateContextIsCalcCase" value="true"/>
+		<arg name="maximizeMap" value="true"/>
+		<arg name="mapWidgetID" value="SELECT"/>
 		<!--  -->
 		<arg name="zmlTableShow" value="all"/>
+		<!-- 
+			Diagramm -->
 		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname%#linkColumn=ganglinie_gesamt"/>
+		<arg name="timeserie2" value="nameColumn=Name#nameString=Modellwerte#linkColumn=ganglinie_messwerte"/>
 		<!--  -->
 		<arg name="ignoreType1" value="W"/>
 	</page>
-	<!-- Modellparameter -->
-	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Allgemeine Modellparameter" imageLocation="icons/calcwizard/kalypso32.gif">
-		<!--  
-			HTML-Navigation und pageID-->
-		<arg name="pageID" value="Modellparameter"/>
-		<arg name="htmlFilePath" value=".model/wizardhtml/04_Modellparameter.html"/>
-		<arg name="helpId" value="&hid;sec_Assi_elbePolte_05_Modellparameter"/>
-		<!-- 
-			Page-Layout -->
-		<arg name="mainSash" value="50"/>
-		<arg name="rightSash" value="30"/>
-		<arg name="hideCalcButton" value="true"/>
-		<!-- 
-			Karte -->
-		<arg name="mapTemplate" value=".templates/calcCase/wiz04_modellparameter.gmt"/>
-		<arg name="mapTemplateContextIsCalcCase" value="true"/>
-		<arg name="maximizeMap" value="true"/>
-		<arg name="mapWidgetID" value=""/>
-		<!--
-			FeatureView -->
-		<arg name="featureTemplate" value=".templates/calcCase/wiz04_modellparameter.gft"/>
-		<arg name="selectFeatureID" value="root"/>
-		<arg name="featureControlStyle" value="SWT.NONE"/>
-		<!-- 
-			Diagramm -->
-		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname%#linkColumn=ganglinie_gesamt"/>
-		<arg name="timeserie2" value="nameColumn=Name#nameString=Modellwerte#linkColumn=ganglinie_messwerte"/>
-		<!--  -->
-		<arg name="ignoreType1" value="Q"/>
-		<arg name="ignoreType2" value="W"/>
-		<arg name="ignoreLabel1" value="Wasserstand"/>
-		<arg name="ignoreLabel2" value="Abfluss"/>
-	</page>
-	
-
-	<!-- Phase 2: Eingabe streckenbezogene Parameter und Berechnung -->
-	<!-- streckenbezogene Parameter -->
-	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Allgemeine Modellparameter" imageLocation="icons/calcwizard/kalypso32.gif">
-		<!--  
-			HTML-Navigation und pageID-->
-		<arg name="pageID" value="Streckenparameter"/>
-		<arg name="htmlFilePath" value=".model/wizardhtml/05_Streckenparameter_Berechnung.html"/>
-		<arg name="helpId" value="&hid;sec_Assi_elbePolte_06_Streckenparameter_Berechnung"/>
-		<!-- 
-			Page-Layout -->
-		<arg name="mainSash" value="50"/>
-		<arg name="rightSash" value="30"/>
-		<arg name="hideCalcButton" value="true"/>
-		<!-- 
-			Karte -->
-		<arg name="mapTemplate" value=".templates/calcCase/wiz05_streckenparameter.gmt"/>
-		<arg name="mapTemplateContextIsCalcCase" value="true"/>
-		<arg name="maximizeMap" value="true"/>
-		<arg name="mapWidgetID" value="SELECT"/>
-		<!--
-			FeatureView -->
-		<arg name="featureTemplate" value=".templates/calcCase/wiz05_streckenparameter.gft"/>
-		<arg name="selectFeatureID" value="root"/>
-		<arg name="featureControlStyle" value="SWT.NONE"/>
-		<!-- 
-			Diagramm -->
-		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname%#linkColumn=ganglinie_gesamt"/>
-		<arg name="timeserie2" value="nameColumn=Name#nameString=Modellwerte#linkColumn=ganglinie_messwerte"/>
-		<!--  -->
-		<arg name="ignoreType1" value="Q"/>
-		<arg name="ignoreType2" value="W"/>
-		<arg name="ignoreLabel1" value="Wasserstand"/>
-		<arg name="ignoreLabel2" value="Abfluss"/>
-	</page>
-	
-	
-	
 	<!-- Phase 3: Ergebnisdarstellung und Ablage -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ExportResultsWizardPage" pageTitle="Ergebnisbearbeitung und Veröffentlichung"
 		imageLocation="icons/calcwizard/kalypso32.gif">
 		<!--  
 			HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berichtsablage"/>
-		<arg name="htmlFilePath" value=".model/wizardhtml/06_Berichtsablage.html"/>
-		<arg name="helpId" value="&hid;sec_Assi_elbePolte_07_Berichtsablage"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/05_Berichtsablage.html"/>
+		<arg name="helpId" value="&hid;sec_Assi_elbeZwge_06_Berichtsablage"/>
 		<!-- 
 			Page-Layout -->
-		<arg name="mainSash" value="50"/>
+		<arg name="mainSash" value="40"/>
 		<arg name="rightSash" value="30"/>
 		<!-- 
 			Karte -->
-		<arg name="mapTemplate" value=".templates/calcCase/wiz06_berichtsablage.gmt"/>
+		<arg name="mapTemplate" value=".templates/calcCase/wiz05_berichtsablage.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="true"/>
 		<arg name="mapWidgetID" value="SELECT"/>
-		
 		<!-- 
 			Diagramm -->
-		
 		<!--  -->
-		<arg name="ignoreType1" value="Q"/>
-		<arg name="ignoreType2" value="W"/>
-		<arg name="ignoreLabel1" value="Wasserstand"/>
-		<arg name="ignoreLabel2" value="Abfluss"/>
+		<arg name="ignoreType1" value="W"/>
 		<!--  -->
 		<arg name="pegelNameProperty" value="Name"/>
 		<arg name="resultProperty" value="ganglinie_modellwerte"/>
-		
-		<!-- ALTER Rest -->
-
-		<arg name="selectFeatureID" value="EZ_1"/>
-<!-- tschechische Vorhersage auch mit anzeigen -->
+		<!-- tschechische Vorhersage auch mit anzeigen -->
 		<arg name="timeserie1" value="nameString=%axisname%#linkColumn=Niederschlag_rechnung"/>
 		<arg name="timeserie2" value="nameString=Beobachtung#linkColumn=Wasserstand_gemessen#color=0x0000ff"/>
 		<arg name="timeserie3" value="nameString=Rechnung#linkColumn=Wasserstand_gerechnet#color=0xff0000"/>
 		<arg name="timeserie4" value="nameString=Vorhersage#linkColumn=Wasserstand_vorhersage#color=0x008040"/>
 		<arg name="timeserie5" value="nameString=untere Umhüllende#linkColumn=Wasserstand_vorhersage_unten#lineDash=4f#color=0x008040"/>
 		<arg name="timeserie6" value="nameString=obere Umhüllende#linkColumn=Wasserstand_vorhersage_oben#lineDash=4f#color=0x008040"/>
-		
-		
-		
-		
-
-
-
-
-		<!-- Exporter fangen hier an... -->
-		<arg name="exporter1">
-			<arg name="id" value="featureWithTemplateExporter"/>
-			<arg name="name" value="Vorhersagepegel"/>
-			<arg name="nameproperty" value="Name"/>
-			<arg name="width" value="1024"/>
-			<arg name="height" value="768"/>
-			<arg name="imageFormat" value="png"/>
-			<arg name="tokens">
-				<arg name="title" value="Name"/>
-				<arg name="href1" value="Wasserstand_gemessen"/>
-				<arg name="href2" value="Wasserstand_gerechnet"/>
-				<arg name="href3" value="Wasserstand_vorhersage"/>
-				<arg name="href4" value="Niederschlag_rechnung"/>
-				<arg name="href5" value="Wasserstand_vorhersage_unten"/>
-				<arg name="href6" value="Wasserstand_vorhersage_oben"/>
-			</arg>
-			<arg name="templateDiagQ">
-				<arg name="label" value="Abflussgrafik"/>
-				<arg name="href" value="project:/.templates/calcCase/berichtDiagQ.odt"/>
-			</arg>
-			<arg name="templateDiagW">
-				<arg name="label" value="Wasserstandsgrafik"/>
-				<arg name="href" value="project:/.templates/calcCase/berichtDiagW.odt"/>
-			</arg>
-			<arg name="templateTable">
-				<arg name="label" value="Tabelle"/>
-				<arg name="href" value="project:/.templates/calcCase/berichtTabelle.ott"/>
-			</arg>
-		</arg>
-		<!-- Scheitelwert-Tabellen W / Q -->
-		<arg name="exporter3">
-			<arg name="id" value="multiExporter"/>
-			<arg name="name" value="Scheitelwerte"/>
-			<arg name="description" value="Exportiert Vorhersageeergebnisse in Form von Scheitelwerttabellen."/>
-			<arg name="exporter3a">
-				<arg name="id" value="sumUpTableExporter"/>
-				<arg name="name" value="Wasserstand"/>
-				<arg name="documentName" value="ScheitelwerteW.csv"/>
-				<arg name="separator" value=";"/>
-				<!--arg name="charset" value="cp1252"/-->
-				<arg name="delta" value="0.0001"/>
-				<arg name="dateFormat" value="dd.MM.yyyy HH:mm:ss"/>
-				<arg name="column1">
-					<arg name="position" value="1"/>
-					<arg name="label" value="Pegel"/>
-					<arg name="content" value="arg:label"/>
-				</arg>
-				<arg name="axisType" value="W"/>
-				<arg name="timeUnit" value="HOUR"/>
-				<arg name="timeStep" value="6"/>
-				<arg name="obs1">
-					<arg name="label" value="Trado 1"/>
-					<arg name="href" value="./Ergebnisse/Zeitreihen/QV_TRADO.zml"/>
-				</arg>
-				<arg name="obs2">
-					<arg name="label" value="Schönau"/>
-					<arg name="href" value="./Ergebnisse/Zeitreihen/QV_SCHOEN.zml"/>
-				</arg>
-				<arg name="obs3">
-					<arg name="label" value="Zescha"/>
-					<arg name="href" value="./Ergebnisse/Zeitreihen/QV_ZESCHA.zml"/>
-				</arg>
-				<arg name="obs4">
-					<arg name="label" value="Neuwiese"/>
-					<arg name="href" value="./Ergebnisse/Zeitreihen/QV_NEUWIE.zml"/>
-				</arg>
-			</arg>
-			<arg name="exporter4">
-				<arg name="id" value="sumUpTableExporter"/>
-				<arg name="name" value="Abfluss"/>
-				<arg name="documentName" value="ScheitelwerteQ.csv"/>
-				<arg name="separator" value=";"/>
-				<!--arg name="charset" value="cp1252"/-->
-				<arg name="delta" value="0.0001"/>
-				<arg name="dateFormat" value="dd.MM.yyyy HH:mm:ss"/>
-				<arg name="column1">
-					<arg name="position" value="1"/>
-					<arg name="label" value="Pegel"/>
-					<arg name="content" value="arg:label"/>
-				</arg>
-				<arg name="axisType" value="Q"/>
-				<arg name="timeUnit" value="HOUR"/>
-				<arg name="timeStep" value="6"/>
-				<arg name="obs1">
-					<arg name="label" value="Trado 1"/>
-					<arg name="href" value="./Ergebnisse/Zeitreihen/QV_TRADO.zml"/>
-				</arg>
-				<arg name="obs2">
-					<arg name="label" value="Schönau"/>
-					<arg name="href" value="./Ergebnisse/Zeitreihen/QV_SCHOEN.zml"/>
-				</arg>
-				<arg name="obs3">
-					<arg name="label" value="Zescha"/>
-					<arg name="href" value="./Ergebnisse/Zeitreihen/QV_ZESCHA.zml"/>
-				</arg>
-				<arg name="obs4">
-					<arg name="label" value="Neuwiese"/>
-					<arg name="href" value="./Ergebnisse/Zeitreihen/QV_NEUWIE.zml"/>
-				</arg>
-			</arg>
-		</arg>
 	</page>
 </calcwizard>
