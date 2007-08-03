@@ -73,6 +73,7 @@ import org.kalypso.commons.java.lang.ProcessHelper;
 import org.kalypso.commons.java.lang.ProcessHelper.ProcessTimeoutException;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.java.io.filter.PrefixSuffixFilter;
+import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhCalculation;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
@@ -411,16 +412,40 @@ public class PolynomeHelper
     return (WspmProfile) forStation( profileIndex, station );
   }
 
-  public static Object forStation( final SortedMap<BigDecimal, ? extends Object> profileIndex, final BigDecimal station )
+  public static Object forStation( final SortedMap<BigDecimal, ? extends Object> stationIndex, final BigDecimal station )
   {
-    final double delta = 0.00001;
-    final BigDecimal pred = new BigDecimal( station.doubleValue() - delta );
-    final BigDecimal succ = new BigDecimal( station.doubleValue() + delta );
-    final SortedMap<BigDecimal, ? extends Object> subMap = profileIndex.subMap( pred, succ );
+// final double delta = 0.00001;
+// final BigDecimal pred = new BigDecimal( station.doubleValue() - delta );
+// final BigDecimal succ = new BigDecimal( station.doubleValue() + delta );
+    final BigDecimal pred = NumberUtils.decrement( station );
+    final BigDecimal succ = NumberUtils.increment( pred );
+    final SortedMap<BigDecimal, ? extends Object> subMap = stationIndex.subMap( pred, succ );
     if( !subMap.isEmpty() )
       return subMap.values().iterator().next();
 
-    return profileIndex.get( station );
+    return stationIndex.get( station );
+  }
+
+  public static <S> S forStationAdjacent( final SortedMap<BigDecimal, S> stationIndex, final BigDecimal station, final boolean upstream )
+  {
+    final BigDecimal pred = NumberUtils.decrement( station );
+    final BigDecimal succ = NumberUtils.increment( station );
+
+    if( upstream )
+    {
+      final SortedMap<BigDecimal, ? extends Object> successors = stationIndex.tailMap( succ );
+      if( !successors.isEmpty() )
+        return stationIndex.get( successors.firstKey() );
+    }
+    else
+    {
+
+      final SortedMap<BigDecimal, ? extends Object> predecessors = stationIndex.headMap( pred );
+      if( !predecessors.isEmpty() )
+        return stationIndex.get( predecessors.lastKey() );
+    }
+
+    return null;
   }
 
   private static SortedMap<BigDecimal, WspmProfile> indexProfiles( final TuhhCalculation calculation )
