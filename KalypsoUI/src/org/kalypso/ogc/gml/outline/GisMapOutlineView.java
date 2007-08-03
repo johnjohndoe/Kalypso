@@ -135,8 +135,11 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView
     page.addPartListener( m_partListener );
     final IEditorPart activeEditor = page.getActiveEditor();
 
-    // TODO: this leads to a PartInitException (recursive attemp...)
     // maybe just start this search in a job?
+    // TODO: bad, here we lok for a specific view id; in the part-listener we look for any
+    // view wich is a AbstractMapPart! This should be done here as well.
+    // TODO: also if a Map-View is active this shoould be used in preference
+    // TODO: what about non-active editors?
     final IViewPart mapView = page.findView( MapView.ID );
     // try to find map editor first
     if( activeEditor instanceof AbstractMapPart )
