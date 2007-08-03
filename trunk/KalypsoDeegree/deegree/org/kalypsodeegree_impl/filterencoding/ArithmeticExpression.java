@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,27 +36,27 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- 
+
+
  history:
- 
+
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
- interface-compatibility to deegree is wanted but not retained always. 
- 
- If you intend to use this software in other ways than in kalypso 
+ interface-compatibility to deegree is wanted but not retained always.
+
+ If you intend to use this software in other ways than in kalypso
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
 
- all modifications are licensed as deegree, 
+ all modifications are licensed as deegree,
  original copyright:
- 
+
  Copyright (C) 2001 by:
  EXSE, Department of Geography, University of Bonn
  http://www.giub.uni-bonn.de/exse/
  lat/lon GmbH
  http://www.lat-lon.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.filterencoding;
 
@@ -83,7 +83,7 @@ public class ArithmeticExpression extends Expression_Impl
   Expression m_expr2;
 
   /** Constructs a new ArithmeticExpression. */
-  public ArithmeticExpression( int id, Expression expr1, Expression expr2 )
+  public ArithmeticExpression( final int id, final Expression expr1, final Expression expr2 )
   {
     m_id = id;
     m_expr1 = expr1;
@@ -95,13 +95,13 @@ public class ArithmeticExpression extends Expression_Impl
    * methods to validate the structure of the DOM-fragment.
    * 
    * @throws FilterConstructionException
-   *           if the structure of the DOM-fragment is invalid
+   *             if the structure of the DOM-fragment is invalid
    */
-  public static Expression buildFromDOM( Element element ) throws FilterConstructionException
+  public static Expression buildFromDOM( final Element element ) throws FilterConstructionException
   {
     // check if root element's name is 'Add' / 'Sub' / 'Mul' or 'Div'
-    String name = element.getLocalName();
-    int id = EXPRESSION_DEFINES.getIdByName( name );
+    final String name = element.getLocalName();
+    final int id = EXPRESSION_DEFINES.getIdByName( name );
     switch( id )
     {
       case ExpressionDefines.ADD:
@@ -118,12 +118,12 @@ public class ArithmeticExpression extends Expression_Impl
     }
 
     // determine the arguments
-    ElementList children = XMLTools.getChildElements( element );
+    final ElementList children = XMLTools.getChildElements( element );
     if( children.getLength() != 2 )
       throw new FilterConstructionException( "'" + name + "' requires exactly 2 elements!" );
 
-    Expression expr1 = Expression_Impl.buildFromDOM( children.item( 0 ) );
-    Expression expr2 = Expression_Impl.buildFromDOM( children.item( 1 ) );
+    final Expression expr1 = Expression_Impl.buildFromDOM( children.item( 0 ) );
+    final Expression expr2 = Expression_Impl.buildFromDOM( children.item( 1 ) );
 
     return new ArithmeticExpression( id, expr1, expr2 );
   }
@@ -132,7 +132,7 @@ public class ArithmeticExpression extends Expression_Impl
   @Override
   public StringBuffer toXML( )
   {
-    StringBuffer sb = new StringBuffer();
+    final StringBuffer sb = new StringBuffer();
 
     sb.append( "<ogc:" ).append( getExpressionName() ).append( ">" );
     sb.append( m_expr1.toXML() );
@@ -150,17 +150,21 @@ public class ArithmeticExpression extends Expression_Impl
    * @return the resulting value (as <tt>Double</tt>)
    * @throw FilterEvaluationException if the expressions are not numerical
    */
-  public Object evaluate( Feature feature ) throws FilterEvaluationException
+  public Object evaluate( final Feature feature ) throws FilterEvaluationException
   {
-    Object o1 = m_expr1.evaluate( feature );
-    Object o2 = m_expr2.evaluate( feature );
+    final Object o1 = m_expr1.evaluate( feature );
+    final Object o2 = m_expr2.evaluate( feature );
+
+    // If any of the arguments evaluates to null return null
+    if( o1 == null || o2 == null )
+      return null;
 
     if( !(o1 instanceof Number && o2 instanceof Number) )
     {
       throw new FilterEvaluationException( "ADD/SUB/DIV/MUL may only be applied to numerical expressions." );
     }
-    double d1 = ((Number) o1).doubleValue();
-    double d2 = ((Number) o2).doubleValue();
+    final double d1 = ((Number) o1).doubleValue();
+    final double d2 = ((Number) o2).doubleValue();
     switch( m_id )
     {
       case ExpressionDefines.ADD:
