@@ -137,7 +137,7 @@ public class GMLSAXFactory
     // Add schemalocation string: wouldn't it be better to create it?
     final AttributesImpl a = new AttributesImpl();
     final String schemaLocationString = workspace.getSchemaLocationString();
-    if( schemaLocationString != null && schemaLocationString.length() > 0 )
+    if( (schemaLocationString != null) && (schemaLocationString.length() > 0) )
     {
       final String qName = m_nsMapper.getPreferredPrefix( NS.XSD, null ) + ":" + "schemaLocation";
       a.addAttribute( NS.XSD, "schemaLocation", qName, "CDATA", schemaLocationString );
@@ -154,7 +154,7 @@ public class GMLSAXFactory
     String id = feature.getId();
     if( m_idMap.containsKey( id ) )
       id = m_idMap.get( id );
-    if( id != null && id.length() > 0 )
+    if( (id != null) && (id.length() > 0) )
     {
       final String version = featureType.getGMLSchema().getGMLVersion();
       final QName idQName = getPrefixedQName( GMLSchemaUtilities.getIdAttribute( version ) );
@@ -172,14 +172,12 @@ public class GMLSAXFactory
     contentHandler.startElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart, a );
 
     for( final IPropertyType pt : properties )
-    {
       if( pt instanceof IRelationType )
         process( feature, (IRelationType) pt );
       else if( pt instanceof IValuePropertyType )
         process( feature, (IValuePropertyType) pt );
       else
         throw new UnsupportedOperationException();
-    }
 
     contentHandler.endElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart );
   }
@@ -208,10 +206,8 @@ public class GMLSAXFactory
     final IMarshallingTypeHandler th = vpt.getTypeHandler();
 
     if( vpt.isList() )
-    {
       for( final Object singleValue : ((List< ? >) value) )
         processValue( prefixedQName, uri, localPart, th, null, singleValue, true, version );
-    }
     else
     {
       final boolean isMandatory = vpt.getMinOccurs() > 0;
@@ -225,23 +221,7 @@ public class GMLSAXFactory
     final ContentHandler contentHandler = m_xmlReader.getContentHandler();
 
     if( singleValue != null )
-    {
-// if( singleValue instanceof Integer )
-// {
-      // to solve problem with boundary condition direction class casting from integer to bigint
-
-      // NO! This is not a solution, now everythig else does not work any more!
-      // / Please check your schema, its very probably that you have a schema there!
-      // TODO: delete after reading this comment
-
-// BigInteger bint = new BigInteger(singleValue.toString());
-// th.marshal( prefixedQName, bint, m_xmlReader, context, gmlVersion );
-// }
-// else
-// {
       th.marshal( prefixedQName, singleValue, m_xmlReader, context, gmlVersion );
-// }
-    }
     else if( isMandatory )
     {
       contentHandler.startElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart, new AttributesImpl() );
@@ -295,7 +275,7 @@ public class GMLSAXFactory
     final String uri = prefixedQName.getNamespaceURI();
     final String localPart = prefixedQName.getLocalPart();
 
-    if( next instanceof XLinkedFeature_Impl || next instanceof String )
+    if( (next instanceof XLinkedFeature_Impl) || (next instanceof String) )
     {
       String fid;
       if( next instanceof String )

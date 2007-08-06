@@ -76,7 +76,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, KeyLis
 
   private final List<IWidgetChangeListener> m_widgetChangeListener = new ArrayList<IWidgetChangeListener>();
 
-  private IFeatureSelectionListener m_featureSelectionListener = new IFeatureSelectionListener()
+  private final IFeatureSelectionListener m_featureSelectionListener = new IFeatureSelectionListener()
   {
     public void selectionChanged( IFeatureSelection selection )
     {
@@ -100,7 +100,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, KeyLis
   }
 
   // MouseAdapter
-  public void mouseClicked( MouseEvent e )
+  public void mouseClicked( final MouseEvent e )
   {
     final IWidget actualWidget = getActualWidget();
     if( actualWidget == null )
@@ -138,43 +138,45 @@ public class WidgetManager implements MouseListener, MouseMotionListener, KeyLis
       }
   }
 
-  public void mouseMoved( MouseEvent e )
+  public void mouseMoved( final MouseEvent e )
   {
-    if( m_lastMoved == null || m_lastMoved.distance( e.getPoint() ) > MINIMUM_MOUSE_DISTANCE )
+    if( (m_lastMoved == null) || (m_lastMoved.distance( e.getPoint() ) > WidgetManager.MINIMUM_MOUSE_DISTANCE) )
       if( getActualWidget() != null )
       {
         m_lastMoved = e.getPoint();
         getActualWidget().moved( m_lastMoved );
 
-        //m_mapPanel.repaint();
+        // m_mapPanel.repaint();
       }
+
+    m_mapPanel.fireMouseMouveEvent( e );
   }
 
   // MouseMotionAdapter:
-  public void mouseDragged( MouseEvent e )
+  public void mouseDragged( final MouseEvent e )
   {
-    if( m_lastDragged == null || m_lastDragged.distance( e.getPoint() ) > MINIMUM_MOUSE_DISTANCE )
+    if( (m_lastDragged == null) || (m_lastDragged.distance( e.getPoint() ) > WidgetManager.MINIMUM_MOUSE_DISTANCE) )
 
       if( getActualWidget() != null )
       {
         m_lastDragged = e.getPoint();
         getActualWidget().dragged( m_lastDragged );
-        //m_mapPanel.repaint();  
+        // m_mapPanel.repaint();
       }
 
   }
 
-  public void mouseEntered( MouseEvent e )
+  public void mouseEntered( final MouseEvent e )
   {
     //
   }
 
-  public void mouseExited( MouseEvent e )
+  public void mouseExited( final MouseEvent e )
   {
     //
   }
 
-  public void mousePressed( MouseEvent e )
+  public void mousePressed( final MouseEvent e )
   {
     final IWidget actualWidget = getActualWidget();
     if( actualWidget == null )
@@ -201,7 +203,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, KeyLis
       }
   }
 
-  public void mouseReleased( MouseEvent e )
+  public void mouseReleased( final MouseEvent e )
   {
     final IWidget actualWidget = getActualWidget();
     if( getActualWidget() == null )
@@ -229,7 +231,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, KeyLis
       }
   }
 
-  public void paintWidget( Graphics g )
+  public void paintWidget( final Graphics g )
   {
     if( getActualWidget() != null )
       getActualWidget().paint( g );
@@ -254,10 +256,10 @@ public class WidgetManager implements MouseListener, MouseMotionListener, KeyLis
     }
 
     fireWidgetChangeEvent( newWidget );
-    
+
     if( m_mapPanel != null )
       m_mapPanel.repaint();
-    
+
   }
 
   public void addWidgetChangeListener( final IWidgetChangeListener listener )
@@ -280,7 +282,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, KeyLis
   /**
    * @see java.awt.event.KeyListener#keyTyped(java.awt.event.KeyEvent)
    */
-  public void keyTyped( KeyEvent e )
+  public void keyTyped( final KeyEvent e )
   {
     final IWidget widget = getActualWidget();
     if( widget != null )
@@ -290,7 +292,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, KeyLis
   /**
    * @see java.awt.event.KeyListener#keyPressed(java.awt.event.KeyEvent)
    */
-  public void keyPressed( KeyEvent e )
+  public void keyPressed( final KeyEvent e )
   {
     final IWidget widget = getActualWidget();
     if( widget != null )
@@ -300,7 +302,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, KeyLis
   /**
    * @see java.awt.event.KeyListener#keyReleased(java.awt.event.KeyEvent)
    */
-  public void keyReleased( KeyEvent e )
+  public void keyReleased( final KeyEvent e )
   {
     final IWidget widget = getActualWidget();
     if( widget != null )

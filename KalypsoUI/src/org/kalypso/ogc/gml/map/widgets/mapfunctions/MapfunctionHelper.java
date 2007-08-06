@@ -50,6 +50,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.command.JMSelector;
 import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapperEnvelopeProvider;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
@@ -117,7 +118,14 @@ public class MapfunctionHelper
   public static Feature[] findFeatureToSelect( final MapPanel mapPanel, final Rectangle rectangle, final Feature[] features, final int radius )
   {
     final GeoTransform transform = mapPanel.getProjection();
-    final CS_CoordinateSystem coordinatesSystem = mapPanel.getMapModell().getCoordinatesSystem();
+
+    // FIXME mappanel != null mapmodel != null
+
+    final IMapModell mapModell = mapPanel.getMapModell();
+    if( mapModell == null )
+      return new Feature[] {};
+
+    final CS_CoordinateSystem coordinatesSystem = mapModell.getCoordinatesSystem();
 
     if( features.length <= 0 )
       return new Feature[] {};
