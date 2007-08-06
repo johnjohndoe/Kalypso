@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Cp1252" standalone="yes"?>
 <Configuration xmlns="http://www.ksp.org/chart/configuration">
     <Chart name="ls">
-        <title>Längsschnitt</title>
+        <title>%TITLE%</title>
         <description>Längsschnitt</description>
         <layers>
             <LayerRef ref="wsp"/>
@@ -25,7 +25,7 @@
             <StyleRef ref="wspStyle"/>
         </style>
         <parameters>
-            <Parameter value="Daten/Längsschnitt.gml" name="href"/>
+            <Parameter value="Daten/%GMLFILENAME%" name="href"/>
             <Parameter value="" name="gxlpath"/>
             <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" name="domainComponentId"/>
             <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionWaterlevel" name="valueComponentId"/>
@@ -43,7 +43,7 @@
             <StyleRef ref="runoffStyle"/>
         </style>
         <parameters>
-            <Parameter value="Daten/Längsschnitt.gml" name="href"/>
+            <Parameter value="Daten/%GMLFILENAME%" name="href"/>
             <Parameter value="" name="gxlpath"/>
             <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" name="domainComponentId"/>
             <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionRunOff" name="valueComponentId"/>
@@ -61,7 +61,7 @@
             <StyleRef ref="soilStyle"/>
         </style>
         <parameters>
-            <Parameter value="Daten/Längsschnitt.gml" name="href"/>
+            <Parameter value="Daten/%GMLFILENAME%" name="href"/>
             <Parameter value="" name="gxlpath"/>
             <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" name="domainComponentId"/>
             <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionGround" name="valueComponentId"/>
@@ -79,7 +79,7 @@
             <StyleRef/>
         </style>
         <parameters>
-            <Parameter value="Daten/Längsschnitt.gml" name="href"/>
+            <Parameter value="Daten/%GMLFILENAME%" name="href"/>
             <Parameter value="" name="gxlpath"/>
             <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" name="domainComponentId"/>
             <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_hen" name="valueComponentId"/>
@@ -97,7 +97,7 @@
             <StyleRef ref="h_BV_Style"/>
         </style>
         <parameters>
-            <Parameter value="Daten/Längsschnitt.gml" name="href"/>
+            <Parameter value="Daten/%GMLFILENAME%" name="href"/>
             <Parameter value="" name="gxlpath"/>
             <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" name="domainComponentId"/>
             <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_h_BV" name="valueComponentId"/>
@@ -115,7 +115,7 @@
             <StyleRef ref="Boe_li_Style"/>
         </style>
         <parameters>
-            <Parameter value="Daten/Längsschnitt.gml" name="href"/>
+            <Parameter value="Daten/%GMLFILENAME%" name="href"/>
             <Parameter value="" name="gxlpath"/>
             <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" name="domainComponentId"/>
             <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_Boe_li" name="valueComponentId"/>
@@ -133,7 +133,7 @@
             <StyleRef ref="Boe_li_Style"/>
         </style>
         <parameters>
-            <Parameter value="Daten/Längsschnitt.gml" name="href"/>
+            <Parameter value="Daten/%GMLFILENAME%" name="href"/>
             <Parameter value="" name="gxlpath"/>
             <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" name="domainComponentId"/>
             <Parameter value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_Boe_re" name="valueComponentId"/>

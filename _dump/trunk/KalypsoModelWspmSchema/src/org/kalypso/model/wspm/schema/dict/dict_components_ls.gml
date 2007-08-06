@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <gml:Dictionary xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-     xsi:schemaLocation="
-     http://www.opengis.net/om http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd
-     http://www.opengis.net/gml http://dev.bjoernsen.de/ogc/schema/gml/3.1.1/base/gml.xsd
-     http://www.opengis.net/swe http://dev.bjoernsen.de/ogc/schema/sweCommon/1.0.30/swe.xsd
-     http://www.seegrid.csiro.au/xml/st http://dev.bjoernsen.de/ogc/schema/sweCommon/1.0.30/simpleTypeDerivation.xsd
-     http://www.w3.org/1999/xlink http://dev.bjoernsen.de/ogc/schema/gml/3.1.1/xlink/xlinks.xsd"
      xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:xlink="http://www.w3.org/1999/xlink"
      xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om"
      xmlns:swe="http://www.opengis.net/swe" gml:id="components">
@@ -229,12 +223,69 @@
           </swe:ItemDefinition>
      </gml:dictionaryEntry>
 
+	<!-- Q -->
+     <gml:dictionaryEntry>
+          <swe:ItemDefinition gml:id="LengthSection_Q_li">
+               <gml:name>Abfluss (links)</gml:name>
+               <swe:property>
+                    <swe:Phenomenon gml:id="phen-Q_li">
+                         <gml:name>Abfluss (links)</gml:name>
+                    </swe:Phenomenon>
+               </swe:property>
+               <swe:representation>
+                    <swe:SimpleType>
+                         <st:restriction base="decimal">
+                              <st:fractionDigits value="3"/>
+                         </st:restriction>
+                         <gml:unitOfMeasure uom="dict_uom.xml#m3_s"/>
+                    </swe:SimpleType>
+               </swe:representation>
+          </swe:ItemDefinition>
+     </gml:dictionaryEntry>
+     <gml:dictionaryEntry>
+          <swe:ItemDefinition gml:id="LengthSection_Q_fl">
+               <gml:name>Abfluss (Flussschlauch)</gml:name>
+               <swe:property>
+                    <swe:Phenomenon gml:id="phen-Q_fl">
+                         <gml:name>Abfluss (Flussschlauch)</gml:name>
+                    </swe:Phenomenon>
+               </swe:property>
+               <swe:representation>
+                    <swe:SimpleType>
+                         <st:restriction base="decimal">
+                              <st:fractionDigits value="3"/>
+                         </st:restriction>
+                         <gml:unitOfMeasure uom="dict_uom.xml#m3_s"/>
+                    </swe:SimpleType>
+               </swe:representation>
+          </swe:ItemDefinition>
+     </gml:dictionaryEntry>
+     <gml:dictionaryEntry>
+          <swe:ItemDefinition gml:id="LengthSection_Q_re">
+               <gml:name>Abfluss (rechts)</gml:name>
+               <swe:property>
+                    <swe:Phenomenon gml:id="phen-Q_re">
+                         <gml:name>Abfluss (rechts)</gml:name>
+                    </swe:Phenomenon>
+               </swe:property>
+               <swe:representation>
+                    <swe:SimpleType>
+                         <st:restriction base="decimal">
+                              <st:fractionDigits value="3"/>
+                         </st:restriction>
+                         <gml:unitOfMeasure uom="dict_uom.xml#m3_s"/>
+                    </swe:SimpleType>
+               </swe:representation>
+          </swe:ItemDefinition>
+     </gml:dictionaryEntry>
+
+	<!--  LAMBDA -->
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSection_lamb_li">
                <gml:name>lambda (links)</gml:name>
                <swe:property>
-                    <swe:Phenomenon gml:id="phen-lamb_li">
-                         <gml:name>lambda (links)</gml:name>
+                    <swe:Phenomenon gml:id="phen-lam_li">
+                         <gml:name>lambda (lins)</gml:name>
                     </swe:Phenomenon>
                </swe:property>
                <swe:representation>
@@ -502,4 +553,66 @@
                </swe:representation>
           </swe:ItemDefinition>
      </gml:dictionaryEntry>
+
+     <!-- ALPHA -->
+     <gml:dictionaryEntry>
+          <swe:ItemDefinition gml:id="LengthSection_AlphaIW">
+               <gml:name>Impulsstrombeiwert</gml:name>
+               <swe:property>
+                    <swe:Phenomenon gml:id="phen-alphaIW">
+                         <gml:name>Impulsstrombeiwert</gml:name>
+                    </swe:Phenomenon>
+               </swe:property>
+               <swe:representation>
+                    <swe:SimpleType>
+                         <st:restriction base="decimal">
+                              <st:minInclusive value="0"/>
+                              <st:fractionDigits value="5"/>
+                         </st:restriction>
+                         <swe:noScale>true</swe:noScale>
+                    </swe:SimpleType>
+               </swe:representation>
+          </swe:ItemDefinition>
+     </gml:dictionaryEntry>
+
+     <gml:dictionaryEntry>
+          <swe:ItemDefinition gml:id="LengthSection_AlphaEW">
+               <gml:name>Energiestrombeiwert</gml:name>
+               <swe:property>
+                    <swe:Phenomenon gml:id="phen-alphaEW">
+                         <gml:name>Energiestrombeiwert</gml:name>
+                    </swe:Phenomenon>
+               </swe:property>
+               <swe:representation>
+                    <swe:SimpleType>
+                         <st:restriction base="decimal">
+                              <st:minInclusive value="0"/>
+                              <st:fractionDigits value="5"/>
+                         </st:restriction>
+                         <swe:noScale>true</swe:noScale>
+                    </swe:SimpleType>
+               </swe:representation>
+          </swe:ItemDefinition>
+     </gml:dictionaryEntry>
+
+     <!-- I_REIB -->
+     <gml:dictionaryEntry>
+          <swe:ItemDefinition gml:id="LengthSection_I_Reib">
+               <gml:name>Reibungsgefälle</gml:name>
+               <swe:property>
+                    <swe:Phenomenon gml:id="phen-I_Reib">
+                         <gml:name>Reibungsgefälle</gml:name>
+                    </swe:Phenomenon>
+               </swe:property>
+               <swe:representation>
+                    <swe:SimpleType>
+                         <st:restriction base="decimal">
+                              <st:fractionDigits value="5"/>
+                         </st:restriction>
+                         <swe:noScale>true</swe:noScale>
+                    </swe:SimpleType>
+               </swe:representation>
+          </swe:ItemDefinition>
+     </gml:dictionaryEntry>
+
 </gml:Dictionary>

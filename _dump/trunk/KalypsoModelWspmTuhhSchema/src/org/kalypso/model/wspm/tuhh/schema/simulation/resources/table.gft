@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <gft:featuretemplate xmlns:gft="featureview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <gft:layer id="layer_1" featurePath="" linktype="gml" xlink:href="Daten/Längsschnitt.gml"/>
+	<!-- TODO: show title in gft-view: %TITLE% -->
+    <gft:layer id="layer_1" featurePath="" linktype="gml" xlink:href="Daten/%GMLFILENAME%"/>
     <gft:view typename="om:Observation" style="SWT.NONE" xmlns:om="http://www.opengis.net/om">
         <gft:gridData verticalAlignment="GridData.FILL" horizontalAlignment="GridData.FILL" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true"/>
         <gft:gridLayout numColumns="4"/>
@@ -28,13 +29,13 @@
         <gft:label visible="false" style="SWT.NONE">
             <gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
         </gft:label>
-        
+
         <gft:tupleResult property="gml:description" tooltip="Tabelle"
             style="SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION" xmlns:gml="http://www.opengis.net/gml">
             <gft:gridData verticalAlignment="GridData.FILL" horizontalSpan="4"
                 horizontalAlignment="GridData.FILL" heightHint="30" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true"/>
         </gft:tupleResult>
-        
+
     </gft:view>
 </gft:featuretemplate>
 

@@ -41,16 +41,31 @@
 package org.kalypso.model.wspm.tuhh.schema.simulation;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.Platform;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
@@ -61,8 +76,12 @@ import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.swtchart.configuration.ConfigLoader;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.ksp.chart.configuration.AxisType;
+import org.ksp.chart.configuration.ChartType;
+import org.ksp.chart.configuration.ConfigurationType;
 
 public class LengthSectionProcessor
 {
@@ -92,6 +111,10 @@ public class LengthSectionProcessor
 
   private IStatus m_result;
 
+  private File m_dataDir;
+
+  private final String m_titlePattern;
+
   public LengthSectionProcessor( final File outDir, final TuhhReach reach, final String header, final String footer, final String epsThinning, final boolean addRunoffToFilename )
   {
     m_outDir = outDir;
@@ -101,7 +124,8 @@ public class LengthSectionProcessor
 
     m_buffer.append( header );
 
-    m_gmlFilePattern = addRunoffToFilename ? "_%.3f" : "";
+    m_gmlFilePattern = addRunoffToFilename ? "lengthSection_%.3f.gml" : "Längsschnitt.gml";
+    m_titlePattern = addRunoffToFilename ? "Längsschnitt - %.3f" : "Längsschnitt";
   }
 
   public void close( final BigDecimal runoff )
@@ -110,19 +134,30 @@ public class LengthSectionProcessor
     {
       m_buffer.append( m_footer );
 
-      final String fileName = String.format( "lengthSection" + m_gmlFilePattern + ".gml", runoff );
-      m_gmlFile = new File( m_outDir, fileName );
+      final String fileName = String.format( m_gmlFilePattern, runoff );
+      m_dataDir = new File( m_outDir, "Daten" );
+      m_dataDir.mkdirs();
+      m_gmlFile = new File( m_dataDir, fileName );
+
+      /* Configure replace tokens for diagram/table template */
+      final Map<String, String> replaceTokens = new LinkedHashMap<String, String>();
+      replaceTokens.put( "%GMLFILENAME%", m_gmlFile.getName() );
+      replaceTokens.put( "%TITLE%", String.format( m_titlePattern, runoff ) );
+
       // process lenghtsection to result observation (laengsschnitt.gml): concatenate new header + laengsschnitt
       // (without header) + new footer
-      FileUtils.writeStringToFile( m_gmlFile, m_buffer.toString(), IWspmTuhhConstants.WSPMTUHH_CODEPAGE );
+      final String lsgml = replaceTokens( m_buffer.toString(), replaceTokens );
+      FileUtils.writeStringToFile( m_gmlFile, lsgml, IWspmTuhhConstants.WSPMTUHH_CODEPAGE );
 
       /* Clear buffer to free resources as this object will not be dereferenced immediatly */
       m_buffer.delete( 0, m_buffer.length() - 1 );
 
-      m_result = postProcess( m_gmlFile, runoff );
+      m_result = postProcess( m_gmlFile, runoff, replaceTokens );
     }
     catch( final Throwable t )
     {
+      t.printStackTrace();
+
       m_result = StatusUtilities.statusFromThrowable( t );
     }
   }
@@ -134,7 +169,7 @@ public class LengthSectionProcessor
   }
 
   /** Create stuff which depends on the observation. */
-  private IStatus postProcess( final File gmlFile, final BigDecimal runoff ) throws Exception
+  private IStatus postProcess( final File gmlFile, final BigDecimal runoff, final Map<String, String> replaceTokens ) throws Exception
   {
     if( !gmlFile.exists() )
       return StatusUtilities.createWarningStatus( "Längsschnitt GML wurde nicht erzeugt." );
@@ -147,9 +182,9 @@ public class LengthSectionProcessor
 
     m_diagFile = new File( m_outDir, diagFilename );
     m_tableFile = new File( m_outDir, tableFilename );
-    m_breaklineFile = new File( m_outDir, breaklineFilename );
-    m_boundaryFile = new File( m_outDir, boundaryFilename );
-    m_waterlevelFile = new File( m_outDir, waterlevelFilename );
+    m_breaklineFile = new File( m_dataDir, breaklineFilename );
+    m_boundaryFile = new File( m_dataDir, boundaryFilename );
+    m_waterlevelFile = new File( m_dataDir, waterlevelFilename );
 
     final MultiStatus multiStatus = new MultiStatus( PluginUtilities.id( KalypsoModelWspmTuhhSchemaPlugin.getDefault() ), -1, "", null );
 
@@ -174,7 +209,10 @@ public class LengthSectionProcessor
     try
     {
       final WspmWaterBody waterBody = m_reach.getWaterBody();
-      LaengsschnittHelper.createDiagram( m_diagFile, lengthSectionObs, waterBody.isDirectionUpstreams() );
+      createDiagram( m_diagFile, lengthSectionObs, waterBody.isDirectionUpstreams() );
+      final String diagramTemplate = FileUtils.readFileToString( m_diagFile, "UTF8" );
+      final String diagram = replaceTokens( diagramTemplate, replaceTokens );
+      FileUtils.writeStringToFile( m_diagFile, diagram, "UTF8" );
     }
     catch( final Exception e )
     {
@@ -187,7 +225,9 @@ public class LengthSectionProcessor
     try
     {
       final URL tableUrl = getClass().getResource( "resources/table.gft" );
-      FileUtilities.makeFileFromUrl( tableUrl, m_tableFile, false );
+      final String tableTemplate = FileUtilities.toString( tableUrl, "UTF8" );
+      final String table = replaceTokens( tableTemplate, replaceTokens );
+      FileUtils.writeStringToFile( m_tableFile, table, "UTF8" );
     }
     catch( final Exception e )
     {
@@ -233,6 +273,15 @@ public class LengthSectionProcessor
     return multiStatus;
   }
 
+  private String replaceTokens( final String template, final Map<String, String> tokenMap )
+  {
+    String result = template;
+    for( final Entry<String, String> entry : tokenMap.entrySet() )
+      result = result.replaceAll( entry.getKey(), entry.getValue() );
+
+    return result;
+  }
+
   public File getGmlFile( )
   {
     return m_gmlFile;
@@ -267,4 +316,54 @@ public class LengthSectionProcessor
   {
     return m_result;
   }
+
+  @SuppressWarnings("unchecked")
+  public static void createDiagram( final File diagFile, final IObservation<TupleResult> lsObs, final boolean isDirectionUpstreams ) throws JAXBException, IOException
+  {
+    // Check if optional bundle is installed
+    if( Platform.getBundle( "org.kalypso.chart" ) == null )
+      return;
+
+    /* We just load the template and tweak the direction of the station-axis */
+    final Unmarshaller unmarshaller = ConfigLoader.JC.createUnmarshaller();
+    final JAXBElement<ConfigurationType> config = (JAXBElement<ConfigurationType>) unmarshaller.unmarshal( LengthSectionProcessor.class.getResource( "resources/lengthSection.kod" ) );
+
+    final List<Object> chartOrLayerOrAxis = config.getValue().getChartOrLayerOrAxis();
+    for( final Object object : chartOrLayerOrAxis )
+    {
+      if( object instanceof ChartType )
+      {
+        final ChartType ct = (ChartType) object;
+        ct.setTitle( lsObs.getName() );
+        ct.setDescription( lsObs.getDescription() );
+      }
+      else if( object instanceof AxisType )
+      {
+        final AxisType axis = (AxisType) object;
+        if( axis.getName().equals( "Station_Axis" ) )
+        {
+          if( isDirectionUpstreams )
+            axis.setDirection( "NEGATIVE" );
+          else
+            axis.setDirection( "POSITIVE" );
+        }
+      }
+    }
+
+    final Marshaller marshaller = JaxbUtilities.createMarshaller( ConfigLoader.JC, true );
+
+    OutputStream os = null;
+
+    try
+    {
+      os = new FileOutputStream( diagFile );
+      marshaller.marshal( config, os );
+      os.close();
+    }
+    finally
+    {
+      IOUtils.closeQuietly( os );
+    }
+  }
+
 }

@@ -9,7 +9,7 @@
     "
     xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:gml="http://www.opengis.net/gml"
     xmlns:om="http://www.opengis.net/om" xmlns:swe="http://www.opengis.net/swe">
-    <gml:name>Längsschnitt</gml:name>
+    <gml:name>%TITLE%</gml:name>
     <om:time/>
     <om:procedure>
         <om:ObservationProcedure gml:id="proc_wspm_ls">
@@ -38,6 +38,9 @@
             <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_Boe_re"/>
             <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_v_m"/>
             <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_tau_fl"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_Q_li"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_Q_fl"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_Q_re"/>
             <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_lamb_li"/>
             <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_lamb_fl"/>
             <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_lamb_re"/>
@@ -52,6 +55,9 @@
             <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_BridgeUK"/>
             <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_BridgeWidth"/>
             <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_RohrDN"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_AlphaIW"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_AlphaEW"/>
+            <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_I_Reib"/>
         </swe:RecordDefinition>
     </om:resultDefinition>
     <om:result><![CDATA[
