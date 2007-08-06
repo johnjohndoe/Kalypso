@@ -793,6 +793,8 @@ public class GeometryUtilities
 
   /**
    * Calculates the direction (in degrees) from one position to another.
+   * 
+   * @return The angle in degree or {@link Double#NaN} if the points coincide.
    */
   public static double directionFromPositions( final GM_Position from, final GM_Position to )
   {
@@ -802,9 +804,20 @@ public class GeometryUtilities
     return directionFromVector( vx, vy );
   }
 
+  /**
+   * Calculates the 'direction' of a vector in degrees. The degree value represents the angle between the vector and the
+   * x-Axis in coordinate space.
+   * <p>
+   * Orientation is anti.clockwise (i.e. positive).
+   * </p>
+   * 
+   * @return The angle in degree or {@link Double#NaN} if the given vector has length 0.
+   */
   public static double directionFromVector( final double vx, final double vy )
   {
     final double length = Math.sqrt( vx * vx + vy * vy );
+    if( length == 0.0 ) // double comparison problems?
+      return Double.NaN;
 
     final double alpha = Math.acos( vx / length );
 
