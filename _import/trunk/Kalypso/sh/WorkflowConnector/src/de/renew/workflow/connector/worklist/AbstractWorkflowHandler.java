@@ -40,137 +40,82 @@
  *  ---------------------------------------------------------------------------*/
 package de.renew.workflow.connector.worklist;
 
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
-import org.eclipse.core.commands.IObjectWithState;
-import org.eclipse.core.commands.State;
-import org.eclipse.core.expressions.EvaluationResult;
-import org.eclipse.core.expressions.Expression;
-import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.ui.internal.AbstractEvaluationHandler;
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.HandlerEvent;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExecutableExtension;
 
+import de.renew.workflow.connector.IWorklistChangeListener;
 import de.renew.workflow.connector.WorkflowConnector;
 
 /**
  * @author Stefan Kurzbach
  * 
  */
-public abstract class AbstractWorkflowHandler extends AbstractEvaluationHandler implements IObjectWithState
+public abstract class AbstractWorkflowHandler extends AbstractHandler implements IWorklistChangeListener, IExecutableExtension
 {
-  private Expression enabledWhen;
 
-  /**
-   * The map of states currently held by this handler. If this handler has no state (generally, when inactive), then
-   * this will be <code>null</code>.
-   */
-  private Map states = null;
+  public static final String TASK = "task";
 
-  /**
-   * <p>
-   * Adds a state to this handler. This will add this handler as a listener to the state, and then fire a
-   * handleStateChange so that the handler can respond to the incoming state.
-   * </p>
-   * <p>
-   * Clients may extend this method, but they should call this super method first before doing anything else.
-   * </p>
-   * 
-   * @param stateId
-   *            The identifier indicating the type of state being added; must not be <code>null</code>.
-   * @param state
-   *            The state to add; must not be <code>null</code>.
-   */
-  public void addState( final String stateId, final State state )
+  private boolean m_enabled;
+
+  private String m_task;
+
+  public AbstractWorkflowHandler( )
   {
-    if( state == null )
-    {
-      throw new NullPointerException( "Cannot add a null state" ); //$NON-NLS-1$
-    }
-
-    if( states == null )
-    {
-      states = new HashMap( 3 );
-    }
-    states.put( stateId, state );
-  }
-
-  public final State getState( final String stateId )
-  {
-    if( (states == null) || (states.isEmpty()) )
-    {
-      return null;
-    }
-
-    return (State) states.get( stateId );
-  }
-
-  public final String[] getStateIds( )
-  {
-    if( (states == null) || (states.isEmpty()) )
-    {
-      return null;
-    }
-
-    final Set stateIds = states.keySet();
-    return (String[]) stateIds.toArray( new String[stateIds.size()] );
+    WorkflowConnector.getConnector().addWorklistChangeListener( this );
   }
 
   /**
-   * <p>
-   * Removes a state from this handler. This will remove this handler as a listener to the state. No event is fired to
-   * notify the handler of this change.
-   * </p>
-   * <p>
-   * Clients may extend this method, but they should call this super method first before doing anything else.
-   * </p>
-   * 
-   * @param stateId
-   *            The identifier of the state to remove; must not be <code>null</code>.
-   */
-  public void removeState( final String stateId )
-  {
-    if( stateId == null )
-    {
-      throw new NullPointerException( "Cannot remove a null state" ); //$NON-NLS-1$
-    }
-
-    final State state = (State) states.get( stateId );
-    if( state != null )
-    {
-      if( states != null )
-      {
-        states.remove( state );
-        if( states.isEmpty() )
-        {
-          states = null;
-        }
-      }
-    }
-  }
-
-  /**
-   * @see org.eclipse.ui.internal.AbstractEvaluationHandler#getEnabledWhenExpression()
+   * @see org.eclipse.core.commands.AbstractHandler#isEnabled()
    */
   @Override
-  protected Expression getEnabledWhenExpression( )
+  public boolean isEnabled( )
   {
-    if( enabledWhen == null )
-    {
-      enabledWhen = new Expression()
-      {
-        @Override
-        public EvaluationResult evaluate( final IEvaluationContext context )
-        {
-          if( WorkflowConnector.getConnector().canRequest( (String) getState( "activeTask" ).getValue() ) )
-          {
-            return EvaluationResult.TRUE;
+    return m_enabled;
+  }
 
-          }
-          return EvaluationResult.FALSE;
-        }
-      };
+  /**
+   * @see org.eclipse.core.commands.AbstractHandler#dispose()
+   */
+  @Override
+  public void dispose( )
+  {
+    WorkflowConnector.getConnector().removeWorklistChangeListener( this );
+    super.dispose();
+  }
+
+  /**
+   * @see de.renew.workflow.connector.IWorklistChangeListener#worklistChanged()
+   */
+  public void worklistChanged( )
+  {
+    final boolean newEnabled = WorkflowConnector.getConnector().canRequest( m_task );
+    if( m_enabled != newEnabled )
+    {
+      m_enabled = newEnabled;
+      fireHandlerChanged( new HandlerEvent( this, true, false ) );
     }
-    return enabledWhen;
+  }
+
+  /**
+   * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
+   *      java.lang.String, java.lang.Object)
+   */
+  public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data ) throws CoreException
+  {
+    if( data instanceof Map )
+    {
+      Map map = (Map) data;
+      m_task = (String) map.get( TASK );
+    }
+  }
+
+  public String getTask( )
+  {
+    return m_task;
   }
 }

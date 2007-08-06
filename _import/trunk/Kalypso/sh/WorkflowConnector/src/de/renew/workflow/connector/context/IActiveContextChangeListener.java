@@ -4,6 +4,7 @@
 package de.renew.workflow.connector.context;
 
 import de.renew.workflow.cases.Case;
+import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
 
 /**
  * Interface to implement in order to be notified if the active context changes as been changed

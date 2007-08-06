@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package de.renew.workflow.connector.context;
+package de.renew.workflow.connector.cases;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -54,15 +54,10 @@ import org.eclipse.ui.PlatformUI;
 
 import de.renew.workflow.cases.Case;
 import de.renew.workflow.connector.WorkflowConnectorPlugin;
-import de.renew.workflow.connector.cases.ICaseManager;
-import de.renew.workflow.connector.cases.ICaseManagerListener;
 
 /**
- * This project nature adds the possibility to handle cases inside the project and keep information about the current
+ * This project nature add the possibility to handle cases inside the project and keep information about the current
  * workflow state of cases
- * 
- * TODO: this is a nature which gets instantiated via extension point stuff. Is it really sensefull to have template
- * parameters for that class?. The type of T is never decided on compile time....
  * 
  * @author Stefan Kurzbach
  */
@@ -124,7 +119,8 @@ public abstract class CaseHandlingProjectNature implements IProjectNature, ICase
   /**
    * Constructs a path for the case relative to the project location.
    */
-  public IPath getProjectPath( final Case caze )
+  public IPath getProjectPath( @SuppressWarnings("unused")
+  final Case caze )
   {
     return Path.EMPTY;// caze.getName() );
   }

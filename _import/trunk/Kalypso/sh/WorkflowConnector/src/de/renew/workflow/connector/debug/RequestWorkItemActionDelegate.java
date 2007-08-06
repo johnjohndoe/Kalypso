@@ -13,12 +13,11 @@ import org.eclipse.ui.IWorkbenchPart;
 
 import de.renew.workflow.WorkItem;
 import de.renew.workflow.connector.WorkflowConnector;
-import de.renew.workflow.connector.WorkflowServer;
 
 public class RequestWorkItemActionDelegate implements IObjectActionDelegate
 {
 
-  private static final Logger logger = Logger.getLogger( WorkflowServer.class.getName() );
+  private static final Logger logger = Logger.getLogger( RequestWorkItemActionDelegate.class.getName() );
 
   private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "de.renew.workflow.connector/debug" ) );
 

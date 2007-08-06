@@ -43,25 +43,18 @@ package de.renew.workflow.connector;
 import de.renew.workflow.Activity;
 import de.renew.workflow.WorkItem;
 import de.renew.workflow.cases.Case;
+import de.renew.workflow.connector.context.IActiveContextChangeListener;
 
 /**
- * @author w00t
+ * @author Stefan Kurzbach
  *
  */
-public interface IWorkflowConnector
+public interface IWorkflowConnector extends IActiveContextChangeListener<Case>
 {
 
   public boolean isConnected( );
 
-  public Case getActiveCase( );
-
-  public void setActiveCase( final Case activeCase );
-
   public void connect( );
-
-  public WorkItem[] getAvailables( );
-
-  public Activity[] getRequesteds( );
 
   public void addWorklistChangeListener( final IWorklistChangeListener worklistChangeListener );
 

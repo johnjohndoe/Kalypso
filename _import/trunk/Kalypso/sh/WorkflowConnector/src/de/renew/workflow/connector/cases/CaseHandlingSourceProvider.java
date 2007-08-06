@@ -11,7 +11,6 @@ import org.eclipse.ui.AbstractSourceProvider;
 
 import de.renew.workflow.cases.Case;
 import de.renew.workflow.connector.context.ActiveWorkContext;
-import de.renew.workflow.connector.context.CaseHandlingProjectNature;
 import de.renew.workflow.connector.context.IActiveContextChangeListener;
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 

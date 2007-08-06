@@ -55,19 +55,14 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.PlatformUI;
-import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.afgui.scenarios.ScenarioManager;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -78,15 +73,12 @@ import org.kalypso.simulation.core.simspec.Modeldata;
 import org.kalypso.simulation.ui.calccase.CalcJobHandler;
 import org.kalypso.simulation.ui.calccase.ModelNature;
 
-import de.renew.workflow.cases.Case;
-import de.renew.workflow.connector.context.CaseHandlingProjectNature;
-
 /**
- * Project Nature for 1d 2d simulation
+ * Project Nature for 1d 2d simulation, requires {@link org.kalypso.afgui.ScenarioHandlingProjectNature}
  * 
  * @author Patrice Congo, Stefan Kurzbach
  */
-public class Kalypso1D2DProjectNature extends CaseHandlingProjectNature
+public class Kalypso1D2DProjectNature implements IProjectNature
 {
   public static final String ID = "org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature";
 
@@ -102,20 +94,20 @@ public class Kalypso1D2DProjectNature extends CaseHandlingProjectNature
 
   private static final String EMPTY_PROJECT_ZIP_PATH = "resources/emptyProject.zip";
 
+  private IProject m_project;
+
   /**
-   * @see org.kalypso.kalypso1d2d.pjt.CaseHandlingProjectNature#configure()
+   * @see org.eclipse.core.resources.IProjectNature#configure()
    */
-  @Override
   public void configure( ) throws CoreException
   {
-    super.configure();
     final IFolder metaFolder = getProject().getFolder( ScenarioManager.METADATA_FOLDER );
     if( !metaFolder.exists() )
     {
       final NullProgressMonitor monitor = new NullProgressMonitor();
       final URL zipLocation = getClass().getResource( EMPTY_PROJECT_ZIP_PATH );
       unzipToContainer( zipLocation, getProject(), monitor );
-      
+
       ResultDB resultDB = new ResultDB( metaFolder.getLocation() );
       metaFolder.refreshLocal( IResource.DEPTH_INFINITE, monitor );
     }
@@ -124,12 +116,6 @@ public class Kalypso1D2DProjectNature extends CaseHandlingProjectNature
   public static final boolean isOfThisNature( final IProject project ) throws CoreException
   {
     return project == null ? false : project.hasNature( ID );
-  }
-
-  public static final Kalypso1D2DProjectNature toThisNature( IProject project ) throws CoreException
-  {
-    // project.hasNature(ID);
-    return (Kalypso1D2DProjectNature) project.getNature( ID );
   }
 
   public static final void addNature( final IProject project ) throws CoreException
@@ -148,15 +134,6 @@ public class Kalypso1D2DProjectNature extends CaseHandlingProjectNature
       description.setNatureIds( newNatures );
       project.setDescription( description, new NullProgressMonitor() );
     }
-  }
-
-  /**
-   * @see org.kalypso.kalypso1d2d.pjt.CaseHandlingProjectNature#createCaseManager(org.eclipse.core.resources.IProject)
-   */
-  @Override
-  public ScenarioManager createCaseManager( final IProject project ) throws CoreException
-  {
-    return new ScenarioManager( project );
   }
 
   /**
@@ -197,93 +174,11 @@ public class Kalypso1D2DProjectNature extends CaseHandlingProjectNature
     }
   }
 
-  /**
-   * Constructs a path for the scenario relative to the project location.
-   */
-  @Override
-  public IPath getProjectPath( final Case caze )
-  {
-    final Scenario scenario = (Scenario) caze;
-    if( scenario.getParentScenario() != null )
-      return getProjectPath( scenario.getParentScenario() ).append( scenario.getName() );
-    else
-      return new Path( scenario.getName() );
-  }
-
-  /**
-   * @see org.kalypso.kalypso1d2d.pjt.CaseHandlingProjectNature#scenarioAdded(de.renew.workflow.cases.Case)
-   */
-  @Override
-  public void caseAdded( final Case caze )
-  {
-    super.caseAdded( caze );
-    final IPath projectPath = getProjectPath( caze );
-    final IFolder newFolder = getProject().getFolder( projectPath );
-
-    final Scenario scenario = (Scenario) caze;
-    final Scenario parentScenario = scenario.getParentScenario();
-    if( parentScenario == null )
-    {
-      // this is a new scenario at base level, so use empty project zip
-      final URL resource = getClass().getResource( EMPTY_PROJECT_ZIP_PATH );
-      final IPath newLocation = newFolder.getLocation();
-      try
-      {
-        ZipUtilities.unzip( resource.openStream(), "Basis/**", newLocation.toFile(), false );
-        newFolder.refreshLocal( IResource.DEPTH_INFINITE, null );
-        final IFolder basisFolder = newFolder.getFolder( "Basis" );
-        for( final IResource res : basisFolder.members() )
-        {
-          res.move( newFolder.getFullPath().append( res.getName() ), false, null );
-        }
-        basisFolder.delete( false, null );
-      }
-      catch( final Throwable e )
-      {
-        final Shell activeShell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
-        final IStatus status = StatusUtilities.statusFromThrowable( e );
-        ErrorDialog.openError( activeShell, "Problem", "Konnte neue Szenariodaten nicht erzeugen.", status );
-        Kalypso1d2dProjectPlugin.getDefault().getLog().log( status );
-      }
-    }
-    else
-    {
-      // this is a new derived scenario, so copy scenario contents of parent folder
-      final IPath parentPath = getProjectPath( parentScenario );
-      final IFolder parentFolder = getProject().getFolder( parentPath );
-      try
-      {        
-        final IResource[] members = parentFolder.members( false );
-        for( final IResource resource : members )
-        {
-          if( resource.getName().equals( newFolder.getName() ) )
-          {
-            // ignore scenario folder and .* resources
-            continue;
-          }
-          else
-          {
-            resource.copy( newFolder.getFullPath().append( resource.getName() ), false, null );
-          }
-        }
-      }
-      catch( final CoreException e )
-      {
-        final Shell activeShell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
-        final IStatus status = e.getStatus();
-        ErrorDialog.openError( activeShell, "Problem", "Konnte Szenariodaten nicht kopieren.", status );
-        Kalypso1d2dProjectPlugin.getDefault().getLog().log( status );
-      }
-    }
-  }
-
   public static Kalypso1D2DProjectNature getNature( final IProject project ) throws CoreException
   {
     return (Kalypso1D2DProjectNature) project.getNature( ID );
   }
 
- 
-  
   public IStatus startCalculation( final IFolder scenarioFolder, final IProgressMonitor monitor ) throws CoreException
   {
     monitor.beginTask( "Modellrechnung wird durchgeführt", 5 );
@@ -293,7 +188,7 @@ public class Kalypso1D2DProjectNature extends CaseHandlingProjectNature
       final Modeldata modelspec = loadModelspec();
       final String typeID = modelspec.getTypeID();
       final ISimulationService calcService = KalypsoSimulationCorePlugin.findCalculationServiceForType( typeID );
-      
+
       monitor.worked( 1 );
       final CalcJobHandler cjHandler = new CalcJobHandler( modelspec, calcService );
       return cjHandler.runJob( scenarioFolder, new SubProgressMonitor( monitor, 4 ) );
@@ -314,10 +209,10 @@ public class Kalypso1D2DProjectNature extends CaseHandlingProjectNature
         return null;
 
       final Unmarshaller unmarshaller = ModelNature.JC_SPEC.createUnmarshaller();
-      
+
       Modeldata modelData = (Modeldata) unmarshaller.unmarshal( file.getContents() );
       return modelData;
-     
+
     }
     catch( final JAXBException e )
     {
@@ -327,4 +222,27 @@ public class Kalypso1D2DProjectNature extends CaseHandlingProjectNature
     }
   }
 
+  /**
+   * @see org.eclipse.core.resources.IProjectNature#deconfigure()
+   */
+  public void deconfigure( )
+  {
+    // does nothing by default
+  }
+
+  /**
+   * @see org.eclipse.core.resources.IProjectNature#getProject()
+   */
+  public IProject getProject( )
+  {
+    return m_project;
+  }
+
+  /**
+   * @see org.eclipse.core.resources.IProjectNature#setProject(org.eclipse.core.resources.IProject)
+   */
+  public void setProject( final IProject project )
+  {
+    this.m_project = project;
+  }
 }

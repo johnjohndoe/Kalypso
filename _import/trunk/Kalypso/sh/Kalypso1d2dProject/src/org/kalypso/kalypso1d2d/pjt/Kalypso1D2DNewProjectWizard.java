@@ -14,11 +14,12 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.WorkbenchException;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
+import org.kalypso.afgui.ScenarioHandlingProjectNature;
 import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypso1d2d.pjt.perspective.Perspective;
 
-import de.renew.workflow.connector.context.CaseHandlingProjectNature;
+import de.renew.workflow.connector.WorkflowProjectNature;
 import de.renew.workflow.contexts.IDialogWithResult;
 
 /**
@@ -86,11 +87,14 @@ public class Kalypso1D2DNewProjectWizard extends BasicNewProjectResourceWizard i
       IProject project = getNewProject();
       try
       {
+        //important: add ScenarioHandlingProjectNature before Kalypso1D2DProjectNature
+        WorkflowProjectNature.addNature(project);
+        ScenarioHandlingProjectNature.addNature( project );
         Kalypso1D2DProjectNature.addNature( project );
 
         /* Also activate new project */
-        final CaseHandlingProjectNature nature = (CaseHandlingProjectNature) project.getNature( Kalypso1D2DProjectNature.ID );
-        final Scenario caze = (Scenario) nature.getCaseManager().getCases().get( 0 );
+        final ScenarioHandlingProjectNature nature = ScenarioHandlingProjectNature.toThisNature( project );
+        final Scenario caze = nature.getCaseManager().getCases().get( 0 );
         Kalypso1d2dProjectPlugin.getDefault().getActiveWorkContext().setCurrentCase( caze );
       }
       catch( CoreException e )

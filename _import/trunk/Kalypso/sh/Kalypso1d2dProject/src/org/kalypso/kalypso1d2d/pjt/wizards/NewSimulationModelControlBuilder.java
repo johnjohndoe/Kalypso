@@ -19,10 +19,10 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.afgui.ScenarioHandlingProjectNature;
 import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.afgui.scenarios.ScenarioManager;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 
@@ -218,7 +218,7 @@ public class NewSimulationModelControlBuilder
       final ActiveWorkContext<Scenario> activeWorkContext = Kalypso1d2dProjectPlugin.getDefault().getActiveWorkContext();
       try
       {
-        final Kalypso1D2DProjectNature nature = Kalypso1D2DProjectNature.toThisNature( project );
+        final ScenarioHandlingProjectNature nature = ScenarioHandlingProjectNature.toThisNature( project );
         final ScenarioManager scenarioManager = (ScenarioManager) nature.getCaseManager();
         if( scenario != null )
         {

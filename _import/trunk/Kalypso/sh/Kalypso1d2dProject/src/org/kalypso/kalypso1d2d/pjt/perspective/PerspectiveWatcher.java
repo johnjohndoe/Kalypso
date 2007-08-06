@@ -18,7 +18,7 @@ import org.eclipse.ui.progress.UIJob;
 import org.kalypso.kalypso1d2d.pjt.views.WorkflowView;
 
 import de.renew.workflow.cases.Case;
-import de.renew.workflow.connector.context.CaseHandlingProjectNature;
+import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
 import de.renew.workflow.connector.context.IActiveContextChangeListener;
 
 /**
@@ -47,7 +47,8 @@ public class PerspectiveWatcher<T extends Case> implements IActiveContextChangeL
       final IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
       final IPerspectiveDescriptor perspective = activePage.getPerspective();
 
-      if( workbench.isClosing() )
+      // handle case where eclipse is closed and the 1d2d-perspective is open, but not active
+      if( workbench.isClosing() && !perspective.getId().equals( Perspective.ID ))
       {
         final IPerspectiveDescriptor[] perspectives = activeWorkbenchWindow.getWorkbench().getPerspectiveRegistry().getPerspectives();
         for( final IPerspectiveDescriptor pd : perspectives )

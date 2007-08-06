@@ -69,7 +69,7 @@ import de.renew.workflow.connector.WorkflowConnectorPlugin;
  * @author Stefan Kurzbach
  * 
  */
-public abstract class AbstractCaseManager<T extends Case>
+public abstract class AbstractCaseManager<T extends Case> implements ICaseManager<T>
 {
   public static final String METADATA_FOLDER = ".metadata";
 
@@ -89,7 +89,6 @@ public abstract class AbstractCaseManager<T extends Case>
 
   private final IFile m_metaDataFile;
 
-  private IWorkflowSystem m_currentWorkflow;
 
   /**
    * Initializes the {@link ICaseManager} on the given project
@@ -126,8 +125,6 @@ public abstract class AbstractCaseManager<T extends Case>
     final IFile metadataFile = folder.getFile( METADATA_FILENAME );
     m_metaDataFile = metadataFile;
     loadModel();
-
-    m_currentWorkflow = new WorkflowSystem( m_project );
   }
 
   /**
@@ -254,21 +251,6 @@ public abstract class AbstractCaseManager<T extends Case>
     };
     job.setRule( m_metaDataFile.getParent() );
     job.schedule();
-  }
-
-  /**
-   * 
-   */
-  public Workflow getCurrentWorklist( )
-  {
-    if( m_currentWorkflow == null )
-    {
-      return null;
-    }
-    else
-    {
-      return m_currentWorkflow.getCurrentWorkflow();
-    }
   }
 
   /**

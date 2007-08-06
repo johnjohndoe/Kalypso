@@ -27,6 +27,16 @@
             application="org.kalypso.afgui.AFGUIApplication"
             name="GUI Framework Test"/>
    </extension>
+   <extension
+         id="org.kalypso.afgui.ScenarioHandlingProjectNature"
+         name="ScenarioHandlingProjectNature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="org.kalypso.afgui.ScenarioHandlingProjectNature">
+         </run>
+      </runtime>
+   </extension>
    
    
    <!--extension

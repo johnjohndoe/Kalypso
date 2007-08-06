@@ -22,9 +22,9 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.progress.UIJob;
+import org.kalypso.afgui.ScenarioHandlingProjectNature;
 import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.afgui.scenarios.ScenarioList;
-import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 
 import de.renew.workflow.connector.cases.ICaseManager;
@@ -64,7 +64,7 @@ public class RemoveScenarioHandler extends AbstractHandler
           final IProject project = workspace.getRoot().getProject( projectName );
           try
           {
-            final Kalypso1D2DProjectNature nature = Kalypso1D2DProjectNature.toThisNature( project );
+            final ScenarioHandlingProjectNature nature = ScenarioHandlingProjectNature.toThisNature( project );
             final ICaseManager<Scenario> scenarioManager = nature.getCaseManager();
             final List<Scenario> rootScenarios = scenarioManager.getCases();
             if( rootScenarios.contains( scenario ) && rootScenarios.size() == 1 )

@@ -9,6 +9,16 @@
 -->
 
 <plugin>
+ <extension
+       id="WorkflowProjectNature"
+       name="WorkflowProjectNature"
+       point="org.eclipse.core.resources.natures">
+    <runtime>
+       <run
+             class="de.renew.workflow.connector.WorkflowProjectNature">
+       </run>
+    </runtime>
+ </extension>
 	<extension
          point="org.eclipse.core.runtime.adapters">
       <factory
@@ -28,14 +38,6 @@
             description="Category for workflow tasks"
             id="de.renew.workflow.tasks.category"
             name="de.renew.workflow.tasks.category"/>
-      <category
-            description="Category for workflow task groups"
-            id="de.renew.workflow.taskgroups.category"
-            name="de.renew.workflow.taskgroups.category"/>            
-	  <command
-            categoryId="de.renew.workflow.tasks.category"
-            id="de.renew.workflow.connector.DeleteProject"
-            name="Projekt von Workflowserver trennen"/>                     
    </extension>   	
 </plugin>
 

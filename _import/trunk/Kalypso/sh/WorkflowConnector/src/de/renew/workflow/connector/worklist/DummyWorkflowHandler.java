@@ -41,6 +41,9 @@
 package de.renew.workflow.connector.worklist;
 
 import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.expressions.IEvaluationContext;
+
+import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
  * @author Stefan Kurzbach
@@ -55,7 +58,12 @@ public class DummyWorkflowHandler extends AbstractWorkflowHandler
   public Object execute( final ExecutionEvent event )
   {
     // does nothing
-    return null;
+    final String taskState = getTask();
+    final Object applicationContext = event.getApplicationContext();
+    final IEvaluationContext context = (IEvaluationContext) applicationContext;
+    final Object parameter = context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_NAME );
+    System.out.println( "executing " + taskState + " with parameter " + parameter );
+    return parameter;
   }
 
 }

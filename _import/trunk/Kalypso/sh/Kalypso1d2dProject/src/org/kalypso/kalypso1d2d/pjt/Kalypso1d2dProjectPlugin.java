@@ -19,6 +19,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.kalypso.afgui.ScenarioHandlingProjectNature;
 import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.kalypso1d2d.pjt.perspective.PerspectiveWatcher;
 import org.kalypso.kalypso1d2d.pjt.views.SzenarioDataProvider;
@@ -28,10 +29,11 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.osgi.framework.BundleContext;
 
 import de.renew.workflow.cases.Case;
+import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 import de.renew.workflow.connector.context.ActiveWorkContext;
-import de.renew.workflow.connector.context.CaseHandlingProjectNature;
 import de.renew.workflow.connector.worklist.ITaskExecutor;
+import de.renew.workflow.connector.worklist.TaskExecutionListener;
 import de.renew.workflow.contexts.WorkflowContextHandlerFactory;
 
 /**
@@ -64,6 +66,8 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
 
   private ITaskExecutor m_taskExecutor;
 
+  private TaskExecutionListener m_taskExecutionListener;
+
   /**
    * The constructor
    */
@@ -91,6 +95,8 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
     final IWorkbench workbench = PlatformUI.getWorkbench();
     final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
     final ICommandService commandService = (ICommandService) workbench.getService( ICommandService.class );
+    m_taskExecutionListener = new TaskExecutionListener();
+    commandService.addExecutionListener( m_taskExecutionListener );
     m_taskExecutionAuthority = new TaskExecutionAuthority();
     m_taskExecutor = new TaskExecutor( workflowContextHandlerFactory, m_taskExecutionAuthority, commandService, handlerService );
 
@@ -131,11 +137,20 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
   public void stop( final BundleContext context ) throws Exception
   {
     final IWorkbench workbench = PlatformUI.getWorkbench();
-    final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
-    if( handlerService != null )
+    if( !workbench.isClosing() )
     {
-      handlerService.removeSourceProvider( m_szenarioSourceProvider );
+      final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
+      if( handlerService != null )
+      {
+        handlerService.removeSourceProvider( m_szenarioSourceProvider );
+      }
+      final ICommandService commandService = (ICommandService) workbench.getService( ICommandService.class );
+      if( commandService != null )
+      {
+        commandService.removeExecutionListener( m_taskExecutionListener );
+      }
     }
+
     plugin = null;
     super.stop( context );
   }
@@ -200,7 +215,7 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
         }
       }
       // This can only be called if the platform has already been started
-      m_activeWorkContext = new ActiveWorkContext<Scenario>( properties, Kalypso1D2DProjectNature.ID );
+      m_activeWorkContext = new ActiveWorkContext<Scenario>( properties, ScenarioHandlingProjectNature.ID );
       final IWorkbench workbench = PlatformUI.getWorkbench();
       final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
       m_szenarioDataProvider = new SzenarioDataProvider();

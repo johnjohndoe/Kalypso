@@ -24,15 +24,15 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
-import de.renew.workflow.base.Workflow;
 import de.renew.workflow.cases.Case;
 import de.renew.workflow.connector.WorkflowConnectorPlugin;
+import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
 import de.renew.workflow.connector.cases.ICaseManager;
 
 /**
  * Represents the work context for a user.
  * 
- * @author Patrice Congo, Stefan Kurzbach
+ * @author Stefan Kurzbach
  */
 public class ActiveWorkContext<T extends Case> implements IResourceChangeListener
 {
@@ -242,11 +242,6 @@ public class ActiveWorkContext<T extends Case> implements IResourceChangeListene
     {
       e.printStackTrace();
     }
-  }
-
-  public Workflow getCurrentWorklist( )
-  {
-    return m_caseManager.getCurrentWorklist();
   }
 
   /**

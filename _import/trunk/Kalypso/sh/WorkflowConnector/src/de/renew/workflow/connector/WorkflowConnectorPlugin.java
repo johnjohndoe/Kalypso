@@ -19,41 +19,12 @@ public class WorkflowConnectorPlugin extends Plugin
 
   private static WorkflowConnectorPlugin plugin;
 
-  private TaskExecutionListener m_taskExecutionListener;
-
   /**
    * The constructor
    */
   public WorkflowConnectorPlugin( )
   {
     plugin = this;
-  }
-
-  /**
-   * @see org.eclipse.core.runtime.Plugin#start(org.osgi.framework.BundleContext)
-   */
-  @Override
-  public void start( BundleContext context ) throws Exception
-  {
-    super.start( context );
-    final IWorkbench workbench = PlatformUI.getWorkbench();
-    final ICommandService commandService = (ICommandService) workbench.getService( ICommandService.class );
-    m_taskExecutionListener = new TaskExecutionListener();
-    commandService.addExecutionListener( m_taskExecutionListener );
-  }
-
-  /**
-   * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
-   */
-  @Override
-  public void stop( BundleContext context ) throws Exception
-  {
-    final IWorkbench workbench = PlatformUI.getWorkbench();
-    if( !workbench.isClosing() )
-    {
-      final ICommandService commandService = (ICommandService) workbench.getService( ICommandService.class );
-      commandService.removeExecutionListener( m_taskExecutionListener );
-    }
   }
 
   /**

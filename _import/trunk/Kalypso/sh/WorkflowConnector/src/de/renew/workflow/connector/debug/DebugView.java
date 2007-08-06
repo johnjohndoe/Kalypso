@@ -26,7 +26,7 @@ public class DebugView extends ViewPart implements IWorklistChangeListener
 
   public static final String VIEW_NAME = "WorkflowConnector.debugView";
 
-  private IWorkflowConnector m_connector;
+  private WorkflowConnector m_connector;
 
   private TableViewer m_tableViewer;
 
@@ -81,7 +81,7 @@ public class DebugView extends ViewPart implements IWorklistChangeListener
     getSite().registerContextMenu( menuManager, m_tableViewer );
     getSite().setSelectionProvider( m_tableViewer );
 
-    m_connector = WorkflowConnector.getConnector();
+    m_connector = (WorkflowConnector) WorkflowConnector.getConnector();
     m_connector.addWorklistChangeListener( this );
   }
 

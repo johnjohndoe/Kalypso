@@ -47,25 +47,25 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IExecutionListener;
 import org.eclipse.core.commands.NotHandledException;
-import org.eclipse.core.commands.State;
 import org.eclipse.core.commands.common.NotDefinedException;
+import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 
 import de.renew.workflow.connector.WorkflowConnector;
+import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
  * A {@link TaskExecutionListener} handles requesting and confirming work items for commands. This
- * {@link ITaskExecutionListener} requests a work item from the workflow system after the command has been executed and
+ * {@link IExecutionListener} requests a work item from the workflow system after the command has been executed and
  * confirms it before the execution of the next command.
  * 
  * @author Stefan Kurzbach
  */
 public class TaskExecutionListener implements IExecutionListener
 {
-
   public static Logger logger = Logger.getLogger( TaskExecutionListener.class.getName() );
 
   private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "de.renew.workflow.connector/debug" ) );
@@ -75,6 +75,8 @@ public class TaskExecutionListener implements IExecutionListener
     if( !log )
       logger.setUseParentHandlers( false );
   }
+
+  public static final String ACTIVITY_PARAMETER = "activityParameter";
 
   public static final String CATEGORY_CONTEXT = "de.renew.workflow.contexts.category";//$NON-NLS-1$
 
@@ -98,11 +100,15 @@ public class TaskExecutionListener implements IExecutionListener
    */
   public void preExecute( final String commandId, final ExecutionEvent event )
   {
-    Object parameter = requestWorkitem( commandId );
-    State state = new State();
-    state.setId( "activityParameter" );
-    state.setValue( parameter );
-    event.getCommand().addState( state.getId(), state );
+    final Object parameter = requestWorkitem( commandId );
+    final Object applicationContext = event.getApplicationContext();
+    // for RCP applications applicationContext is always an IEvaluationContext
+    if( parameter != null && applicationContext instanceof IEvaluationContext )
+    {
+      // add only a non-null parameter
+      final IEvaluationContext context = (IEvaluationContext) applicationContext;
+      context.addVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_NAME, parameter );
+    }
   }
 
   /**
@@ -182,7 +188,7 @@ public class TaskExecutionListener implements IExecutionListener
       // the command should always be defined
       e.printStackTrace();
     }
-    if( categoryId != null && CATEGORY_TASK.equals( categoryId ) )
+    if( categoryId != null && CATEGORY_TASK.equals( categoryId ) && WorkflowConnector.getConnector().canRequest( commandId ) )
     {
       return WorkflowConnector.getConnector().request( commandId );
     }

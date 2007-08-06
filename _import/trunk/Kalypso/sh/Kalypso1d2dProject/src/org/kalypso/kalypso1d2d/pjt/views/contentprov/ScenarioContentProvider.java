@@ -11,6 +11,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.ui.model.WorkbenchContentProvider;
+import org.kalypso.afgui.ScenarioHandlingProjectNature;
 import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.afgui.scenarios.ScenarioList;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature;
@@ -48,7 +49,7 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
           if( Kalypso1D2DProjectNature.isOfThisNature( project ) )
           {
             // is of correct nature
-            final Kalypso1D2DProjectNature nature = Kalypso1D2DProjectNature.toThisNature( project );
+            final ScenarioHandlingProjectNature nature = ScenarioHandlingProjectNature.toThisNature( project );
             final List<Object> resultList = new ArrayList<Object>( children.length + 3 );
             resultList.addAll( Arrays.asList( children ) );
             final ICaseManager<Scenario> caseManager = nature.getCaseManager();
@@ -97,7 +98,7 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
         {
           if( Kalypso1D2DProjectNature.isOfThisNature( project ) )
           {
-            final Kalypso1D2DProjectNature nature = Kalypso1D2DProjectNature.toThisNature( project );
+            final ScenarioHandlingProjectNature nature = ScenarioHandlingProjectNature.toThisNature( project );
             final ICaseManager<Scenario> workflowData = nature.getCaseManager();
             final List<Scenario> rootScenarios = workflowData.getCases();
             return hasChildren || (rootScenarios != null && !rootScenarios.isEmpty());

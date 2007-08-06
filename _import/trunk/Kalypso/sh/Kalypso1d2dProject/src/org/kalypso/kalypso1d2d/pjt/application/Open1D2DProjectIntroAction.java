@@ -58,7 +58,7 @@ import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypso1d2d.pjt.perspective.Perspective;
 
-import de.renew.workflow.connector.context.CaseHandlingProjectNature;
+import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
 
 /**
  * @author Gernot Belger

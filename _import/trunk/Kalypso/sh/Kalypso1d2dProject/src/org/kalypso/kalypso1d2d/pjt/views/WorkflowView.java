@@ -4,6 +4,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.logging.Logger;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IMemento;
@@ -14,8 +15,9 @@ import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.afgui.views.WorkflowControl;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 
+import de.renew.workflow.connector.WorkflowProjectNature;
+import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
 import de.renew.workflow.connector.context.ActiveWorkContext;
-import de.renew.workflow.connector.context.CaseHandlingProjectNature;
 import de.renew.workflow.connector.context.IActiveContextChangeListener;
 
 /**
@@ -77,7 +79,15 @@ public class WorkflowView extends ViewPart
       final String projectName = newProject.getProject().getName();
       setContentDescription( "Aktives Szenario: " + projectName + scenarioPathName );
 
-      m_workflowControl.setWorkflow( m_activeWorkContext.getCurrentWorklist() );
+      try
+      {
+        m_workflowControl.setWorkflow( WorkflowProjectNature.toThisNature( newProject.getProject() ).getCurrentWorklist() );
+      }
+      catch( final CoreException e )
+      {
+        //project does not have this nature
+        m_workflowControl.setWorkflow( null );
+      }
     }
     else
     {

@@ -45,7 +45,6 @@ import java.util.List;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
-import de.renew.workflow.base.Workflow;
 import de.renew.workflow.cases.Case;
 
 /**
@@ -57,11 +56,6 @@ public interface ICaseManager<T extends Case>
    * Returns the current case
    */
   public T getCurrentCase( );
-
-  /**
-   * Returns the workflow for the current case
-   */
-  public Workflow getCurrentWorklist( );
 
   /**
    * Sets the current case
@@ -94,7 +88,7 @@ public interface ICaseManager<T extends Case>
    * method has no effect.
    * 
    * @param listener
-   *          the listener to be removed, must not be <code>null</code>
+   *            the listener to be removed, must not be <code>null</code>
    */
   public void addCaseManagerListener( final ICaseManagerListener<T> listener );
 
@@ -103,7 +97,7 @@ public interface ICaseManager<T extends Case>
    * effect.
    * 
    * @param listener
-   *          the listener to be removed
+   *            the listener to be removed
    */
   public void removeCaseManagerListener( final ICaseManagerListener<T> listener );
 

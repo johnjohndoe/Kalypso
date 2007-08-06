@@ -17,7 +17,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.PlatformUI;
 
 import de.renew.access.LoginInfo;
-import de.renew.access.Manager;
 import de.renew.remote.RemoteServerRegistry;
 import de.renew.remote.SocketFactoryDeterminer;
 import de.renew.remote.RemoteServerRegistry.ServerDescriptor;
@@ -29,11 +28,13 @@ import de.renew.workflow.AgendaChangeListener;
 import de.renew.workflow.Client;
 import de.renew.workflow.ClientImpl;
 import de.renew.workflow.WorkItem;
-import de.renew.workflow.WorkItemFilterExpression;
 import de.renew.workflow.WorkflowManager;
+import de.renew.workflow.WorkflowManagerImpl;
 import de.renew.workflow.cases.Case;
+import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
+import de.renew.workflow.connector.context.IActiveContextChangeListener;
 
-public class WorkflowConnector implements IWorkflowConnector
+public class WorkflowConnector implements IWorkflowConnector, IActiveContextChangeListener<Case>
 {
   private static final String SERVICE_NAME = "de.renew.workflow.WorkflowManager";
 
@@ -49,19 +50,21 @@ public class WorkflowConnector implements IWorkflowConnector
 
   private static final boolean m_isWorkflowMode = true;
 
-  private static IWorkflowConnector _connector;
+  private static final boolean m_disableRmi = true;
+
+  private boolean _connected = false;
+
+  private static WorkflowConnector _connector;
+
+  private WorkflowManager m_manager;
 
   private LoginInfo m_login;
+
+  private Client m_client;
 
   private List<IWorklistChangeListener> m_listenerCache = Collections.synchronizedList( new Vector<IWorklistChangeListener>() );
 
   private AgendaChangeListener m_listenerProxy;
-
-  private Manager m_manager;
-
-  private boolean _connected = false;
-
-  private Client m_client;
 
   private Case m_activeCase;
 
@@ -73,8 +76,6 @@ public class WorkflowConnector implements IWorkflowConnector
     if( _connector == null )
     {
       _connector = new WorkflowConnector();
-      if( m_isWorkflowMode )
-        _connector.connect();
     }
     return _connector;
   }
@@ -88,25 +89,19 @@ public class WorkflowConnector implements IWorkflowConnector
   {
   }
 
-  public Case getActiveCase( )
-  {
-    return m_activeCase;
-  }
-
-  public void setActiveCase( final Case activeCase )
-  {
-    m_activeCase = activeCase;
-  }
-
   public void connect( )
   {
     boolean success = false;
     try
     {
-      final RemoteServerRegistry instance = RemoteServerRegistry.instance();
-      // waitForServer(instance);
-      final ServerDescriptor descriptor = instance.connectServer( "localhost", "default" );
-      m_manager = (Manager) Naming.lookup( descriptor.getUrl( SERVICE_NAME ) );
+      if( !m_disableRmi )
+      {
+        final RemoteServerRegistry instance = RemoteServerRegistry.instance();
+        final ServerDescriptor descriptor = instance.connectServer( "localhost", "default" );
+        m_manager = (WorkflowManager) Naming.lookup( descriptor.getUrl( SERVICE_NAME ) );
+      }
+      else
+        m_manager = (WorkflowManager) WorkflowManagerImpl.getInstance();
       m_login = new LoginInfo( "Stefan", "Stefan" );
       m_manager.checkLogin( m_login );
       m_listenerProxy = new AgendaChangeListenerProxy();
@@ -132,16 +127,20 @@ public class WorkflowConnector implements IWorkflowConnector
 
     _connected = success;
     if( success )
+    {
       logger.info( "Connected to workflow server" );
+    }
     else
+    {
       logger.info( "Could not connect to workflow server" );
+    }
   }
 
   private Agenda getAgenda( ) throws RemoteException, IOException
   {
     if( m_login != null )
     {
-      return ((WorkflowManager) m_manager).getAgenda( m_login );
+      return m_manager.getAgenda( m_login );
     }
     else
     {
@@ -151,11 +150,19 @@ public class WorkflowConnector implements IWorkflowConnector
 
   public WorkItem[] getAvailables( )
   {
+    if( m_isWorkflowMode && !isConnected() )
+      _connector.connect();
+
     if( m_login != null )
     {
       try
       {
-        return getAgenda().getAvailables( new WorkItemFilterExpression( m_activeCase.getURI() ) );
+        if( m_activeCase != null )
+        {
+          // final String uri = m_activeCase.getURI();
+          // return getAgenda().getAvailables( uri );
+          return getAgenda().getAvailables( null );
+        }
       }
       catch( final RemoteException e )
       {
@@ -171,6 +178,9 @@ public class WorkflowConnector implements IWorkflowConnector
 
   public Activity[] getRequesteds( )
   {
+    if( m_isWorkflowMode && !isConnected() )
+      _connector.connect();
+
     if( m_login != null )
     {
       try
@@ -235,16 +245,20 @@ public class WorkflowConnector implements IWorkflowConnector
 
       public void run( )
       {
-        PlatformUI.getWorkbench().getDisplay().asyncExec( new Runnable()
+        if( PlatformUI.isWorkbenchRunning() )
         {
-          public void run( )
+          PlatformUI.getWorkbench().getDisplay().asyncExec( new Runnable()
           {
-            for( final IWorklistChangeListener listener : m_listenerCache )
+            @SuppressWarnings("synthetic-access")
+            public void run( )
             {
-              listener.worklistChanged();
+              for( final IWorklistChangeListener listener : m_listenerCache )
+              {
+                listener.worklistChanged();
+              }
             }
-          }
-        } );
+          } );
+        }
       }
     }
   }
@@ -312,8 +326,9 @@ public class WorkflowConnector implements IWorkflowConnector
           m_client = new ClientImpl( m_login );
         }
         final Activity activity = getWorkItem( id ).request( m_login, m_client );
-        logger.info( "requested " + activity.getWorkItem().getTask().getName() );
-        return activity.getWorkItem().getParameter();
+        final WorkItem workItem = activity.getWorkItem();
+        logger.info( "requested " + workItem.getTask().getName() );
+        return workItem.getParameter();
       }
       catch( final RemoteException e )
       {
@@ -448,5 +463,14 @@ public class WorkflowConnector implements IWorkflowConnector
   public boolean isWorkflowMode( )
   {
     return m_isWorkflowMode && isConnected();
+  }
+
+  /**
+   * @see de.renew.workflow.connector.context.IActiveContextChangeListener#activeContextChanged(de.renew.workflow.connector.context.CaseHandlingProjectNature,
+   *      de.renew.workflow.cases.Case)
+   */
+  public void activeContextChanged( final CaseHandlingProjectNature newProject, final Case caze )
+  {
+    m_activeCase = caze;
   }
 }
