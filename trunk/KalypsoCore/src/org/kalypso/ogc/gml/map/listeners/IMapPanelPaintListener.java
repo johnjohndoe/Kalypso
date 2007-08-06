@@ -38,27 +38,14 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.map;
+package org.kalypso.ogc.gml.map.listeners;
 
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
+import java.awt.Graphics;
 
 /**
- * This interface provides a set of functions for listeners, that should be notified in special events of the mapPanel.
- * 
- * @author Holger Albert
+ * @author kuch
  */
-public interface IMapPanelListener
+public interface IMapPanelPaintListener
 {
-  /**
-   * This function is invoked from the mapPanel, in cases its message has changed.
-   * 
-   * @param message
-   *            The new message, which is set in the mapPanel.
-   */
-  public void onMessageChanged( final MapPanel source, final String message );
-
-  public void onMapModelChanged( final MapPanel source, final IMapModell oldModel, final IMapModell newModel );
-
-  public void onExtentChanged( final MapPanel source, final GM_Envelope oldExtent, final GM_Envelope newExtent );
+  public void paint( final Graphics g );
 }

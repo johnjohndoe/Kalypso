@@ -38,40 +38,33 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.map;
+package org.kalypso.ogc.gml.map.listeners;
 
-import org.kalypsodeegree.model.geometry.GM_Point;
+import java.awt.Point;
+
+import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
- * @author doemming
+ * This interface provides a set of functions for listeners, that should be notified in special events of the mapPanel.
+ * 
+ * @author Holger Albert
  */
-public class PointOfinterest
+public interface IMapPanelListener
 {
-  private final String m_title;
+  public void onExtentChanged( final MapPanel source, final GM_Envelope oldExtent, final GM_Envelope newExtent );
 
-  private final long m_duration;
+  public void onMapModelChanged( final MapPanel source, final IMapModell oldModel, final IMapModell newModel );
 
-  private final GM_Point m_point;
+  /**
+   * This function is invoked from the mapPanel, in cases its message has changed.
+   * 
+   * @param message
+   *            The new message, which is set in the mapPanel.
+   */
+  public void onMessageChanged( final MapPanel source, final String message );
 
-  public PointOfinterest( final String title, final long duration, final GM_Point point )
-  {
-    m_title = title;
-    m_duration = duration;
-    m_point = point;
-  }
+  public void onMouseMoveEvent( final MapPanel source, final Point mousePosition );
 
-  public GM_Point getGeometry( )
-  {
-    return m_point;
-  }
-
-  public String getTitle( )
-  {
-    return m_title;
-  }
-  
-  public long getDuration( )
-  {
-    return m_duration;
-  }
 }

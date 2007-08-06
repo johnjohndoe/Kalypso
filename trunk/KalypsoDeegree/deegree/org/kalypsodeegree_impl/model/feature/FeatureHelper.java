@@ -69,9 +69,7 @@ public class FeatureHelper
 
       final String[] strings = argument.split( ";" );
       if( strings.length == 0 )
-      {
         return "No argument for property. Must be _qname_;[null-value];[format-string]";
-      }
 
       final String propName = strings[0];
       final String nullValue = strings.length > 1 ? strings[1] : null;
@@ -81,14 +79,10 @@ public class FeatureHelper
       final Object property = feature.getProperty( qname );
 
       if( property == null )
-      {
         return "" + nullValue;
-      }
 
       if( formatString != null )
-      {
         return String.format( formatString, property );
-      }
 
       return "" + property;
     }
@@ -107,9 +101,7 @@ public class FeatureHelper
 
       final String[] strings = argument.split( ";" );
       if( strings.length < 2 )
-      {
         return "Wrong argument for listProperty. Must be _qname_;listindex;[null-Value]";
-      }
 
       final QName qname = QNameUtilities.createQName( strings[0] );
       final int listindex = Integer.parseInt( strings[1] );
@@ -118,15 +110,11 @@ public class FeatureHelper
       final List list = (List) feature.getProperty( qname );
 
       if( listindex >= list.size() )
-      {
         return "" + nullValue;
-      }
 
       final Object propertyValue = list.get( listindex );
       if( propertyValue == null )
-      {
         return "" + nullValue;
-      }
 
       return "" + propertyValue;
     }
@@ -149,12 +137,8 @@ public class FeatureHelper
     final IPropertyType[] properties = feature.getFeatureType().getProperties();
 
     for( final IPropertyType type : properties )
-    {
       if( propName.equals( type.getQName().getLocalPart() ) )
-      {
         return type;
-      }
-    }
     return null;
   }
 
@@ -166,9 +150,7 @@ public class FeatureHelper
   {
     final Object property = feature.getProperty( propName );
     if( (property != null) && (property instanceof Boolean) )
-    {
       return ((Boolean) property).booleanValue();
-    }
     return defaultStatus;
   }
 
@@ -176,9 +158,7 @@ public class FeatureHelper
   {
     final Object property = feature.getProperty( propQName );
     if( (property != null) && (property instanceof Boolean) )
-    {
       return ((Boolean) property).booleanValue();
-    }
     return defaultStatus;
   }
 
@@ -198,18 +178,12 @@ public class FeatureHelper
   {
     final Object value = feature.getProperty( propQName );
     if( value == null )
-    {
       return defaultValue;
-    }
     if( value instanceof String )
-    {
       return Double.valueOf( (String) value ).doubleValue();
-    }
     // should be a Double
     if( value instanceof BigDecimal )
-    {
       return ((BigDecimal) value).doubleValue();
-    }
     return ((Double) value).doubleValue();
   }
 
@@ -221,13 +195,9 @@ public class FeatureHelper
   {
     final Object value = feature.getProperty( propName );
     if( value == null )
-    {
       return defaultValue;
-    }
     if( value instanceof String )
-    {
       return Double.valueOf( (String) value ).doubleValue();
-    }
     // should be a Double
     return ((Double) value).doubleValue();
   }
@@ -237,13 +207,9 @@ public class FeatureHelper
     final Object value = feature.getProperty( propName );
     // TODO use numberformat
     if( value == null )
-    {
       return null;
-    }
     if( value instanceof String )
-    {
       return (String) value;
-    }
     return value.toString();
   }
 
@@ -280,17 +246,11 @@ public class FeatureHelper
       final IValuePropertyType targetFTP = (IValuePropertyType) FeatureHelper.getPT( targetFeature, targetProp );
 
       if( sourceFTP == null )
-      {
         throw new IllegalArgumentException( "Quell-Property existiert nicht: " + sourceProp );
-      }
       if( targetFTP == null )
-      {
         throw new IllegalArgumentException( "Ziel-Property existiert nicht: " + targetProp );
-      }
       if( !sourceFTP.getValueQName().equals( targetFTP.getValueQName() ) )
-      {
         throw new IllegalArgumentException( "Typen der zugeordneten Properties sind unterschiedlich: '" + sourceProp + "' and '" + targetProp + "'" );
-      }
 
       final Object object = sourceFeature.getProperty( sourceFTP );
 
@@ -328,17 +288,13 @@ public class FeatureHelper
       newParentFeature.getWorkspace().addFeatureAsComposition( newParentFeature, newRelation, -1, newFeature );
     }
     else
-    {
       newParentFeature.setProperty( relation, newFeature );
-    }
 
     final IPropertyType[] properties = featureType.getProperties();
     for( final IPropertyType pt : properties )
     {
       if( ArrayUtils.contains( nullValuedProperties, pt.getQName() ) )
-      {
         continue;
-      }
 
       try
       {
@@ -378,9 +334,7 @@ public class FeatureHelper
         final Object cloneData = FeatureHelper.cloneData( sourceFeature, targetFeature, pt, listElement, version );
         // TODO: this is not nice! Better: d not add feature to list within the cloneFeature Method
         if( (cloneData instanceof XLinkedFeature_Impl) || !(cloneData instanceof Feature) )
-        {
           targetList.add( cloneData );
-        }
       }
 
       return targetList;
@@ -397,9 +351,7 @@ public class FeatureHelper
   private static Object cloneData( final Feature sourceFeature, final Feature targetFeature, final IPropertyType pt, final Object object, final String gmlVersion ) throws Exception
   {
     if( object == null )
-    {
       return null;
-    }
 
     if( pt instanceof IRelationType )
     {
@@ -409,28 +361,19 @@ public class FeatureHelper
       {
         // its an internal link: change to external if we change the workspace
         if( sourceFeature.getWorkspace().equals( targetFeature.getWorkspace() ) )
-        {
           return object;
-        }
         else
-        {
           // TODO: not yet supported; internal links will be broken after clone
           return null;
-        }
       }
-      else
+      else if( object instanceof XLinkedFeature_Impl )
       {
-        if( object instanceof XLinkedFeature_Impl )
-        {
-          final XLinkedFeature_Impl xlink = (XLinkedFeature_Impl) object;
-          // retarget xlink
-          return new XLinkedFeature_Impl( targetFeature, rt, xlink.getFeatureType(), xlink.getHref(), xlink.getRole(), xlink.getArcrole(), xlink.getTitle(), xlink.getShow(), xlink.getActuate() );
-        }
-        else if( object instanceof Feature )
-        {
-          return FeatureHelper.cloneFeature( targetFeature, rt, (Feature) object );
-        }
+        final XLinkedFeature_Impl xlink = (XLinkedFeature_Impl) object;
+        // retarget xlink
+        return new XLinkedFeature_Impl( targetFeature, rt, xlink.getFeatureType(), xlink.getHref(), xlink.getRole(), xlink.getArcrole(), xlink.getTitle(), xlink.getShow(), xlink.getActuate() );
       }
+      else if( object instanceof Feature )
+        return FeatureHelper.cloneFeature( targetFeature, rt, (Feature) object );
 
       return null;
     }
@@ -448,7 +391,6 @@ public class FeatureHelper
     final IMarshallingTypeHandler typeHandler = typeRegistry.getTypeHandlerFor( pt );
 
     if( typeHandler != null )
-    {
       try
       {
         return typeHandler.cloneObject( object, gmlVersion );
@@ -459,7 +401,6 @@ public class FeatureHelper
         cnse.initCause( e );
         throw cnse;
       }
-    }
     throw new CloneNotSupportedException( "Kann Datenobjekt vom Typ '" + pt.getQName() + "' nicht kopieren." );
   }
 
@@ -496,9 +437,7 @@ public class FeatureHelper
   {
     final Object property = srcFE.getProperty( linkProp );
     if( property == null )
-    {
       return false;
-    }
     if( linkProp.isList() )
     {
       // list:
@@ -515,38 +454,26 @@ public class FeatureHelper
   public static int getPositionOfAssoziation( final Feature srcFE, final IRelationType linkProp, final Feature destFE )
   {
     if( !(linkProp.isList()) )
-    {
       return 0;
-    }
 
     final List list = (List) srcFE.getProperty( linkProp );
     int pos = -1;
     pos = list.indexOf( destFE );
     if( pos > -1 )
-    {
       return pos;
-    }
     return list.indexOf( destFE.getId() );
   }
 
   public static Feature[] getFeaturess( final Object object )
   {
     if( object == null )
-    {
       return new Feature[] {};
-    }
     if( object instanceof Feature )
-    {
       return new Feature[] { (Feature) object };
-    }
     else if( object instanceof FeatureList )
-    {
       return ((FeatureList) object).toFeatures();
-    }
     else
-    {
       throw new UnsupportedOperationException( "unexcepted object, can not convert to Feature[]" );
-    }
   }
 
   /**
@@ -560,12 +487,8 @@ public class FeatureHelper
     final IFeatureType featureType = f.getFeatureType();
     final IPropertyType[] properties = featureType.getProperties();
     for( final IPropertyType property : properties )
-    {
       if( property.isList() )
-      {
         return true;
-      }
-    }
     return false;
 
   }
@@ -579,9 +502,7 @@ public class FeatureHelper
     {
       final IPropertyType property = properties[i];
       if( property instanceof IRelationType )
-      {
         res.add( new Integer( i ) );
-      }
     }
     final Integer[] positions = res.toArray( new Integer[res.size()] );
     return ArrayUtils.toPrimitive( positions );
@@ -593,12 +514,8 @@ public class FeatureHelper
     final IFeatureType featureType = feature.getFeatureType();
     final IPropertyType[] properties = featureType.getProperties();
     for( final IPropertyType property : properties )
-    {
       if( property instanceof IRelationType )
-      {
         res.add( (IRelationType) property );
-      }
-    }
     return res.toArray( new IRelationType[res.size()] );
   }
 
@@ -609,17 +526,11 @@ public class FeatureHelper
     final IPropertyType[] properties = featureType.getProperties();
 
     if( properties.length > 1 )
-    {
       return false;
-    }
 
     for( final IPropertyType property : properties )
-    {
       if( property.isList() )
-      {
         return true;
-      }
-    }
     return false;
   }
 
@@ -655,9 +566,7 @@ public class FeatureHelper
 
       String value = (String) f.getProperty( splits[1] );
       if( value == null )
-      {
         value = splits[1];
-      }
 
       properties.setProperty( splits[0], value );
     }
@@ -674,22 +583,16 @@ public class FeatureHelper
     final Object prop = feature.getProperty( property );
 
     if( prop == null )
-    {
       return null;
-    }
 
     if( prop instanceof List )
     {
       final List list = (List) prop;
 
       if( list.size() > 0 )
-      {
         return list.get( 0 );
-      }
       else
-      {
         return null;
-      }
     }
 
     return prop;
@@ -707,7 +610,6 @@ public class FeatureHelper
     final MultiException multiException = new MultiException();
     final IPropertyType[] srcFTPs = srcFE.getFeatureType().getProperties();
     for( final IPropertyType element : srcFTPs )
-    {
       try
       {
         FeatureHelper.copySimpleProperty( srcFE, targetFE, element );
@@ -716,11 +618,8 @@ public class FeatureHelper
       {
         multiException.addException( e );
       }
-    }
     if( !multiException.isEmpty() )
-    {
       throw multiException;
-    }
   }
 
   /**
@@ -749,12 +648,9 @@ public class FeatureHelper
     final IFeatureType targetFT = targetFE.getFeatureType();
     final String gmlVersion = srcFE.getWorkspace().getGMLSchema().getGMLVersion();
     if( !sourceFT.equals( targetFT ) )
-    {
       throw new CloneNotSupportedException( "source FeatureType=" + sourceFT.getQName() + " is not the same as target featureType=" + targetFT.getQName() );
-    }
     final IPropertyType[] properties = sourceFT.getProperties();
     for( final IPropertyType pt : properties )
-    {
       if( pt instanceof IValuePropertyType )
       {
         final IValuePropertyType vpt = (IValuePropertyType) pt;
@@ -762,7 +658,6 @@ public class FeatureHelper
         final Object clonedProptery = sourceTH.cloneObject( srcFE.getProperty( vpt ), gmlVersion );
         targetFE.setProperty( pt, clonedProptery );
       }
-    }
   }
 
   /**
@@ -781,18 +676,12 @@ public class FeatureHelper
     if( oldValue instanceof List )
     {
       if( newValue instanceof List )
-      {
         ((List) oldValue).addAll( (List) newValue );
-      }
       else
-      {
         ((List) oldValue).add( newValue );
-      }
     }
     else
-    {
       feature.setProperty( pt, newValue );
-    }
   }
 
   /**
@@ -814,18 +703,12 @@ public class FeatureHelper
 
     final IFeatureType newFeatureType;
     if( newFeatureName == null )
-    {
       newFeatureType = targetFeatureType;
-    }
     else
-    {
       newFeatureType = workspace.getGMLSchema().getFeatureType( newFeatureName );
-    }
 
     if( (newFeatureName != null) && !GMLSchemaUtilities.substitutes( newFeatureType, targetFeatureType.getQName() ) )
-    {
       throw new GMLSchemaException( "Type of new feature (" + newFeatureName + ") does not substitutes target feature type of the list: " + targetFeatureType.getQName() );
-    }
 
     final Feature newFeature = workspace.createFeature( parentFeature, parentFeatureTypeProperty, newFeatureType );
 
@@ -857,15 +740,11 @@ public class FeatureHelper
     else if( (featureProperties != null) && (featurePropQNames != null) )
     {
       if( featureProperties.length != featurePropQNames.length )
-      {
         throw new IllegalArgumentException( "featurePropQName and featureProperties must have the same length" );
-      }
 
     }
     else
-    {
       throw new IllegalArgumentException( "featureProperties and FeaturePropQnames must be all null or all non null with" + "the same length" );
-    }
     final FeatureList list = (FeatureList) feature.getProperty( listProperty );
     // TODO Patrice to check can the feature(param) be different from the list property parent
     final Feature parentFeature = list.getParentFeature();
@@ -876,24 +755,16 @@ public class FeatureHelper
 
     final IFeatureType newFeatureType;
     if( newFeatureName == null )
-    {
       newFeatureType = targetFeatureType;
-    }
     else
-    {
       newFeatureType = workspace.getGMLSchema().getFeatureType( newFeatureName );
-    }
 
     if( (newFeatureName != null) && !GMLSchemaUtilities.substitutes( newFeatureType, targetFeatureType.getQName() ) )
-    {
       throw new GMLSchemaException( "Type of new feature (" + newFeatureName + ") does not substitutes target feature type of the list: " + targetFeatureType.getQName() );
-    }
 
     final Feature newFeature = workspace.createFeature( parentFeature, parentFeatureTypeProperty, newFeatureType );
     for( int i = featureProperties.length - 1; i >= 0; i-- )
-    {
       newFeature.setProperty( featurePropQNames[i], featureProperties[i] );
-    }
 
     list.add( newFeature );
 
@@ -903,14 +774,12 @@ public class FeatureHelper
   public static void setProperties( final Feature result, final Map<IPropertyType, Object> props )
   {
     for( final Map.Entry<IPropertyType, Object> entry : props.entrySet() )
-    {
       result.setProperty( entry.getKey(), entry.getValue() );
-    }
   }
 
   public static Feature resolveLink( final Feature feature, final QName qname )
   {
-    return resolveLink( feature, qname, false );
+    return FeatureHelper.resolveLink( feature, qname, false );
   }
 
   /**
@@ -927,32 +796,23 @@ public class FeatureHelper
     final IRelationType property = (IRelationType) feature.getFeatureType().getProperty( qname );
     final Object value = feature.getProperty( property );
 
-    if( value instanceof XLinkedFeature_Impl && followXLinks == true )
+    if( (value instanceof XLinkedFeature_Impl) && (followXLinks == true) )
       return ((XLinkedFeature_Impl) value).getFeature();
 
     if( value instanceof Feature )
-    {
       return (Feature) value;
-    }
-    else
+    else /* Its a local link inside a xlinked-feature */
+    if( feature instanceof XLinkedFeature_Impl )
     {
-      /* Its a local link inside a xlinked-feature */
-      if( feature instanceof XLinkedFeature_Impl )
-      {
-        final XLinkedFeature_Impl xlinkedFeature = (XLinkedFeature_Impl) feature;
-        final String href = xlinkedFeature.getUri() + "#" + value;
-        return new XLinkedFeature_Impl( feature, property, property.getTargetFeatureType(), href, "", "", "", "", "" );
-      }
-      else if( value == null )
-      {
-        return null;
-      }
-      else
-      {
-        /* A normal local link inside the same workspace */
-        return feature.getWorkspace().getFeature( (String) value );
-      }
+      final XLinkedFeature_Impl xlinkedFeature = (XLinkedFeature_Impl) feature;
+      final String href = xlinkedFeature.getUri() + "#" + value;
+      return new XLinkedFeature_Impl( feature, property, property.getTargetFeatureType(), href, "", "", "", "", "" );
     }
+    else if( value == null )
+      return null;
+    else
+      /* A normal local link inside the same workspace */
+      return feature.getWorkspace().getFeature( (String) value );
 
   }
 
@@ -979,15 +839,11 @@ public class FeatureHelper
     }
     Feature propFeature = FeatureHelper.resolveLink( feature, propertyQName );
     if( propFeature == null )
-    {
       return null;
-    }
     else
     {
       if( propFeature instanceof XLinkedFeature_Impl )
-      {
         propFeature = ((XLinkedFeature_Impl) propFeature).getFeature();
-      }
       final T adaptedFeature = (T) propFeature.getAdapter( adapterTargetClass );
       return adaptedFeature;
     }
@@ -1042,9 +898,7 @@ public class FeatureHelper
       list.add( childFE );
     }
     else
-    {
       parentFE.setProperty( rt, childFE );
-    }
   }
 
   public static void addChild( final Feature parentFE, final IRelationType rt, final String featureID )
@@ -1055,9 +909,7 @@ public class FeatureHelper
       list.add( featureID );
     }
     else
-    {
       parentFE.setProperty( rt, featureID );
-    }
   }
 
   /**
@@ -1077,19 +929,13 @@ public class FeatureHelper
 
       final String crsString;
       if( input.length > 2 )
-      {
         crsString = input[2];
-      }
       else
-      {
         crsString = format;
-      }
 
       final CS_CoordinateSystem crs = ConvenienceCSFactory.getInstance().getOGCCSByName( crsString );
       if( (rwString == null) || (rwString.length() == 0) || (hwString == null) || (hwString.length() == 0) )
-      {
         return GeometryFactory.createGM_Point( 0, 0, crs );
-      }
 
       final double rw = Double.parseDouble( rwString );
       final double hw = Double.parseDouble( hwString );
@@ -1098,7 +944,6 @@ public class FeatureHelper
     }
 
     if( typeHandler != null )
-    {
       try
       {
         return typeHandler.parseType( input[0] );
@@ -1107,7 +952,6 @@ public class FeatureHelper
       {
         e.printStackTrace();
       }
-    }
 
     return null;
   }
@@ -1128,29 +972,21 @@ public class FeatureHelper
   {
     final Object value = parent.getProperty( propertyName );
     if( value instanceof Feature )
-    {
       return (Feature) value;
-    }
 
     if( value instanceof String )
-    {
       return parent.getWorkspace().getFeature( (String) value );
-    }
 
     final IFeatureType parentType = parent.getFeatureType();
     final IPropertyType property = parentType.getProperty( propertyName );
     if( !(property instanceof IRelationType) )
-    {
       throw new IllegalArgumentException( "Property is no relation: " + propertyName );
-    }
 
     final IRelationType rt = (IRelationType) property;
     final IFeatureType targetFeatureType = rt.getTargetFeatureType();
 
     if( targetFeatureType.isAbstract() )
-    {
       throw new IllegalArgumentException( "Cannot instantiate an abstract feature" );
-    }
 
     // neues machen
     final GMLWorkspace workspace = parent.getWorkspace();
@@ -1174,14 +1010,10 @@ public class FeatureHelper
   public static Feature getFeature( final GMLWorkspace wrk, final Object linkOrFeature )
   {
     if( linkOrFeature instanceof Feature )
-    {
       return (Feature) linkOrFeature;
-    }
 
     if( linkOrFeature instanceof String )
-    {
       return wrk.getFeature( (String) linkOrFeature );
-    }
 
     return null;
   }
@@ -1196,13 +1028,9 @@ public class FeatureHelper
     }
     final Feature feature = FeatureHelper.getFeature( workspace, linkOrFeature );
     if( feature == null )
-    {
       return null;
-    }
     else
-    {
       return (T) feature.getAdapter( targetAdapterClass );
-    }
   }
 
   /**
@@ -1229,9 +1057,7 @@ public class FeatureHelper
     final IAnnotation annotation = AnnotationUtilities.getAnnotation( featureType );
     // this can happen when we import a shape-file.
     if( annotation == null )
-    {
       return "no-label";
-    }
 
     final String label = annotation.getValue( annotationKey );
     return FeatureHelper.tokenReplace( feature, label );
@@ -1241,9 +1067,7 @@ public class FeatureHelper
   {
     final IAnnotation annotation = AnnotationUtilities.getAnnotation( featureType );
     if( annotation == null )
-    {
       return false;
-    }
 
     final String label = annotation.getValue( annotationKey );
     return label.contains( TokenReplacerEngine.TOKEN_START );
@@ -1296,14 +1120,10 @@ public class FeatureHelper
   public static Object createLinkToID( final String id, final Feature parentFeature, final IRelationType parentRelation, final IFeatureType ft )
   {
     if( id == null )
-    {
       return null;
-    }
 
     if( id.startsWith( "#" ) )
-    {
       return id;
-    }
 
     return new XLinkedFeature_Impl( parentFeature, parentRelation, ft, id, "", "", "", "", "" );
   }
@@ -1316,14 +1136,10 @@ public class FeatureHelper
   public static boolean isParentOfAllOrEquals( final Feature parent, final Feature[] children )
   {
     if( children.length < 1 )
-    {
       return false;
-    }
     boolean isParentOfAllOrEquals = true;
     for( final Feature child : children )
-    {
       isParentOfAllOrEquals = isParentOfAllOrEquals && FeatureHelper.isParentOrEquals( parent, child );
-    }
     return isParentOfAllOrEquals;
   }
 
@@ -1335,17 +1151,11 @@ public class FeatureHelper
   public static boolean isParentOrEquals( final Feature parent, final Feature child )
   {
     if( (parent == null) || (child == null) )
-    {
       return false;
-    }
     if( parent.equals( child ) )
-    {
       return true;
-    }
     else
-    {
       return FeatureHelper.isParent( parent, child );
-    }
   }
 
   /**
@@ -1355,14 +1165,10 @@ public class FeatureHelper
   public static boolean isParentOfAll( final Feature parent, final Feature[] children )
   {
     if( children.length < 1 )
-    {
       return false;
-    }
     boolean isParentOffAll = true;
     for( final Feature child : children )
-    {
       isParentOffAll = isParentOffAll && FeatureHelper.isParent( parent, child );
-    }
     return isParentOffAll;
   }
 
@@ -1376,23 +1182,15 @@ public class FeatureHelper
     Feature parentFeat = null;
 
     if( parent instanceof Feature )
-    {
       parentFeat = (Feature) parent;
-    }
     else
-    {
       parentFeat = workspace.getFeature( (String) parent );
-    }
 
     Feature childFeat = null;
     if( child instanceof Feature )
-    {
       childFeat = (Feature) child;
-    }
     else
-    {
       childFeat = workspace.getFeature( (String) child );
-    }
 
     return FeatureHelper.isParent( parentFeat, childFeat );
   }
@@ -1404,33 +1202,20 @@ public class FeatureHelper
   public static boolean isParent( final Feature parent, final Feature child )
   {
     if( (parent == null) || (child == null) )
-    {
       return false;
+    else if( child.getParentRelation() != null )
+    {
+      final Feature childParent = child.getParent();
+      final Feature childRoot = child.getWorkspace().getRootFeature();
+      if( parent.equals( childParent ) )
+        return true;
+      else if( childParent.equals( childRoot ) )
+        return false;
+      else
+        return FeatureHelper.isParent( parent, childParent );
     }
     else
-    {
-      if( child.getParentRelation() != null )
-      {
-        final Feature childParent = child.getParent();
-        final Feature childRoot = child.getWorkspace().getRootFeature();
-        if( parent.equals( childParent ) )
-        {
-          return true;
-        }
-        else if( childParent.equals( childRoot ) )
-        {
-          return false;
-        }
-        else
-        {
-          return FeatureHelper.isParent( parent, childParent );
-        }
-      }
-      else
-      {
-        return false;
-      }
-    }
+      return false;
   }
 
   /**
@@ -1446,16 +1231,10 @@ public class FeatureHelper
     {
       final GM_Envelope envelope = feature.getEnvelope();
       if( envelope != null )
-      {
         if( result == null )
-        {
           result = envelope;
-        }
         else
-        {
           result = result.getMerged( envelope );
-        }
-      }
     }
 
     return result;

@@ -38,8 +38,11 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.map;
+package org.kalypso.ogc.gml.map.listeners;
 
+import java.awt.Point;
+
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
@@ -73,4 +76,11 @@ public abstract class MapPanelAdapter implements IMapPanelListener
   {
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.map.IMapPanelListener#onMouseMoveEvent(org.kalypso.ogc.gml.map.MapPanel,
+   *      org.eclipse.swt.graphics.Point)
+   */
+  public void onMouseMoveEvent( final MapPanel source, final Point mousePosition )
+  {
+  }
 }

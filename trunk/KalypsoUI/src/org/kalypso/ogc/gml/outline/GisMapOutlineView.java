@@ -65,9 +65,9 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter;
-import org.kalypso.ogc.gml.map.IMapPanelListener;
 import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypso.ogc.gml.map.MapPanelAdapter;
+import org.kalypso.ogc.gml.map.listeners.IMapPanelListener;
+import org.kalypso.ogc.gml.map.listeners.MapPanelAdapter;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 import org.kalypso.ogc.gml.mapmodel.IMapModellViewListener;
@@ -143,13 +143,9 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView
     final IViewPart mapView = page.findView( MapView.ID );
     // try to find map editor first
     if( activeEditor instanceof AbstractMapPart )
-    {
       setMapPart( (AbstractMapPart) activeEditor );
-    }
     else if( mapView instanceof AbstractMapPart )
-    {
       setMapPart( (AbstractMapPart) mapView );
-    }
   }
 
   /**
@@ -167,7 +163,7 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView
       @Override
       public void partActivated( final IWorkbenchPart part )
       {
-        if( part instanceof AbstractMapPart && part instanceof IEditorPart )
+        if( (part instanceof AbstractMapPart) && (part instanceof IEditorPart) )
         {
           final IWorkbenchPartSite activatedSite = part.getSite();
           if( activatedSite != null )
@@ -176,15 +172,13 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView
             if( workbenchWindow != null )
             {
               final IWorkbenchPage activePage = workbenchWindow.getActivePage();
-              if( activePage != null && activePage.isEditorAreaVisible() )
+              if( (activePage != null) && activePage.isEditorAreaVisible() )
                 setMapPart( (AbstractMapPart) part );
             }
           }
         }
-        else if( part instanceof AbstractMapPart && part instanceof IViewPart )
-        {
+        else if( (part instanceof AbstractMapPart) && (part instanceof IViewPart) )
           setMapPart( (AbstractMapPart) part );
-        }
       }
 
       /**
@@ -194,12 +188,8 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView
       public void partClosed( final IWorkbenchPart part )
       {
         if( part instanceof AbstractMapPart )
-        {
           if( m_mapPart == part )
-          {
             setMapPart( null );
-          }
-        }
       }
     };
   }
@@ -224,9 +214,7 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView
       setMapPanel( (MapPanel) m_mapPart.getAdapter( MapPanel.class ) );
     }
     else
-    {
       setMapPanel( null );
-    }
 
     setPartName( newName );
   }
@@ -252,7 +240,7 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView
   @Override
   public void setFocus( )
   {
-    if( m_viewer != null && !m_viewer.getControl().isDisposed() )
+    if( (m_viewer != null) && !m_viewer.getControl().isDisposed() )
       m_viewer.getControl().setFocus();
   }
 

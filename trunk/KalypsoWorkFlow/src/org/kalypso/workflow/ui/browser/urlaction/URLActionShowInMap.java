@@ -43,7 +43,7 @@ package org.kalypso.workflow.ui.browser.urlaction;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypso.ogc.gml.map.PointOfinterest;
+import org.kalypso.ogc.gml.map.listeners.PointOfinterest;
 import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 import org.kalypso.workflow.ui.browser.AbstractURLAction;
 import org.kalypso.workflow.ui.browser.ICommandURL;
@@ -105,19 +105,19 @@ public class URLActionShowInMap extends AbstractURLAction
   /**
    * @see org.kalypso.workflow.ui.browser.IURLAction#run(org.kalypso.workflow.ui.browser.ICommandURL)
    */
-  public boolean run( ICommandURL commandURL )
+  public boolean run( final ICommandURL commandURL )
   {
     final IEditorReference[] editorReferences = getActivePage().getEditorReferences();
-    String title = commandURL.getParameter( PARAM_TITLE );
+    String title = commandURL.getParameter( URLActionShowInMap.PARAM_TITLE );
     if( title == null )
       title = "";
     title = title.replaceAll( "%20", " " );
     long duration = 3000l; // 3 seconds
     try
     {
-      duration = Long.parseLong( commandURL.getParameter( PARAM_DURATION ) );
+      duration = Long.parseLong( commandURL.getParameter( URLActionShowInMap.PARAM_DURATION ) );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
@@ -126,33 +126,58 @@ public class URLActionShowInMap extends AbstractURLAction
     final String crsName;
     try
     {
-      x = Double.parseDouble( commandURL.getParameter( PARAM_X ) );
-      y = Double.parseDouble( commandURL.getParameter( PARAM_Y ) );
-      crsName = commandURL.getParameter( PARAM_CRS );
+      x = Double.parseDouble( commandURL.getParameter( URLActionShowInMap.PARAM_X ) );
+      y = Double.parseDouble( commandURL.getParameter( URLActionShowInMap.PARAM_Y ) );
+      crsName = commandURL.getParameter( URLActionShowInMap.PARAM_CRS );
       final ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
       final CS_CoordinateSystem coordinateSystem = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export( csFac.getCSByName( crsName ) );
       final GM_Point point = GeometryFactory.createGM_Point( x, y, coordinateSystem );
       // final long timeInMillis = Calendar.getInstance().getTimeInMillis();
       // long validEnd = timeInMillis + 100;//duration;
-      final PointOfinterest pointOfInterest = new PointOfinterest( title, duration, point );
-      for( IEditorReference reference : editorReferences )
+
+      for( final IEditorReference reference : editorReferences )
       {
         final IEditorPart editor = reference.getEditor( false );
         if( !(editor instanceof GisMapEditor) )
           continue;
         final GisMapEditor mapEditor = (GisMapEditor) editor;
         final MapPanel mapPanel = mapEditor.getMapPanel();
+
+        final PointOfinterest poi = new PointOfinterest( mapPanel.getProjection(), title, duration, point );
+        mapPanel.addPaintListener( poi );
+
+        final Thread thread = new Thread()
+        {
+          /**
+           * @see java.lang.Thread#run()
+           */
+          @Override
+          public void run( )
+          {
+            try
+            {
+              Thread.sleep( poi.getDuration() );
+            }
+            catch( final InterruptedException e )
+            {
+              // do nothing
+            }
+            mapPanel.removePaintListener( poi );
+            mapPanel.repaint();
+          }
+        };
+        thread.start();
+
         final GM_Envelope boundingBox = mapPanel.getBoundingBox();
         if( !boundingBox.contains( point.getPosition() ) )
         {
           final GM_Envelope panToLocationBoundingBox = mapPanel.getPanToLocationBoundingBox( x, y );
           mapPanel.setBoundingBox( panToLocationBoundingBox );
         }
-        mapPanel.addPointOfInterest( pointOfInterest );
       }
       return true;
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       return false;

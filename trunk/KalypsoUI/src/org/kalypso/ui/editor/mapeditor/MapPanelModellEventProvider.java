@@ -40,9 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.mapeditor;
 
-import org.kalypso.ogc.gml.map.IMapPanelListener;
 import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypso.ogc.gml.map.MapPanelAdapter;
+import org.kalypso.ogc.gml.map.listeners.IMapPanelListener;
+import org.kalypso.ogc.gml.map.listeners.MapPanelAdapter;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
 import org.kalypso.ogc.gml.mapmodel.MapModellAdapter;
