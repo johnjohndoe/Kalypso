@@ -356,3 +356,25 @@ Bugfix Brückenverluste im Längsschnitt
      Behalten der Brückenprofile in der Laengsschnitt.txt und Q_LangSchnitt.txt.     
 
                                                          Monika Donner, 31.07.2007 
+
+Kalypso 2.0.4.2      03. August 2007
+-----------------------------------
+1.)  Bugfix innere Abflussschleife ueber die Brücken (RV: konstantes Rebungsgefaelle)
+     Schutz der Ergebnisse an der Brücke aus der äußeren Q-Schleife vor einem Überschreiben
+     bei der Inneren Q-Schleife. 
+
+2.)  Erweiterung der Laengsschnitt.txt um die Einträge der Teilabfluesse, Impuls- und 
+     Energiestrombeiwert sowie Reibungsgefälle. 
+                                                         Monika Donner, 03.08.2007 
+
+
+
+Kalypso 2.0.4.3      07. August 2007
+-----------------------------------
+1.)  Bugfix innere Abflussschleife ueber die Brücken: (RV: konstantes Rebungsgefaelle)
+     Fehler-Korrektur beim Zurückholen der alten Ergebnisse im UW der Brücke aus der äußeren 
+     Q-Schleife. 
+
+2.)  Bugfix: Energiehöhen- bzw. Verlusthöhen-Berechnung
+
+                                                       Monika Donner, 07.08.2007 

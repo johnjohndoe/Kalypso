@@ -1188,7 +1188,7 @@ Kalypso 2.0.4.1      31. Juli 2007
 
 Kalypso 2.0.4.2      03. August 2007
 -----------------------------------
-1.)  Bugfix innere Abflussschliefe ueber die Brücken
+1.)  Bugfix innere Abflussschleife ueber die Brücken
      Schutz der Ergebnisse an der Brücke aus der äußeren Q-Schleife vor einem Überschreiben
      bei der Inneren Q-Schleife. Bei der inneren Q-Schleife werden neue Datenfelder belegt 
      und somit alle Ergebnisse seperat abgelegt (siehe drucktab).
@@ -1209,7 +1209,7 @@ Kalypso 2.0.4.3      07. August 2007
      Q-Schleife. 
      Betroffene SUBR: wspber
 
-2.)  Bugfix Energiehöheberechnung (hen) bzw. Verlusthöhen-Berechnung (hv):
+2.)  Bugfix Energiehöhenberechnung (hen) bzw. Verlusthöhen-Berechnung (hv):
      Die Energiehöhe wurde bislang falsch aus der Wasserspiegelhöhe und dem Reibungsgefälle bzw. 
      Energieliniengefälle berechnet. Jetzt wird hen = wsp + v²/2g berechnet. Und hv = v²/2g. 
      Diese Korrektur wirkt sich auf alle Rechenvarianten und alle Ergebnisse aus!
