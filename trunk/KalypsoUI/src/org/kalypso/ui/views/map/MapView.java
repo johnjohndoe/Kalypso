@@ -52,7 +52,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewSite;
-import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ui.editor.mapeditor.AbstractMapPart;
 
 /**
@@ -139,36 +138,16 @@ public class MapView extends AbstractMapPart implements IViewPart
     if( "true".equals( saveOnCloseString ) )
     {
       final IFile file = getFile();
-      saveMap( file );
+      try
+      {
+        saveMap( new NullProgressMonitor(), file );
+      }
+      catch( final CoreException e )
+      {
+        // silently ignore
+      }
     }
     super.dispose();
-  }
-
-  /**
-   * @see org.kalypso.ui.editor.mapeditor.AbstractMapPart#setMapModell(org.kalypso.ogc.gml.GisTemplateMapModell)
-   */
-  @Override
-  protected void setMapModell( final GisTemplateMapModell mapModell )
-  {
-    // dispose old one
-    // TODO: shouldnt this be done by the one who creates it?
-    final GisTemplateMapModell oldModell = getMapModell();
-    if( oldModell != null )
-      oldModell.dispose();
-
-    super.setMapModell( mapModell );
-  }
-
-  private void saveMap( final IFile file )
-  {
-    try
-    {
-      saveMap( new NullProgressMonitor(), file );
-    }
-    catch( final CoreException e )
-    {
-      ErrorDialog.openError( getSite().getShell(), "Fehler", "Karte konnte nicht gespeichert werden.", e.getStatus() );
-    }
   }
 
   /**
@@ -179,7 +158,14 @@ public class MapView extends AbstractMapPart implements IViewPart
   {
     final IFile file = getFile();
     if( (file != null) && !file.equals( storage ) )
-      saveMap( file );
+      try
+      {
+        saveMap( new NullProgressMonitor(), file );
+      }
+      catch( final CoreException e )
+      {
+        ErrorDialog.openError( getSite().getShell(), "Fehler", "Karte konnte nicht gespeichert werden.", e.getStatus() );
+      }
     super.startLoadJob( storage );
   }
 }
