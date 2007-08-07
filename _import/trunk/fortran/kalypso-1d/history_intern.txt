@@ -1199,4 +1199,34 @@ Kalypso 2.0.4.2      03. August 2007
      identisch.
      Betroffene SUBR: zeila
                                                          Monika Donner, 03.08.2007 
+
+
+
+Kalypso 2.0.4.3      07. August 2007
+-----------------------------------
+1.)  Bugfix innere Abflussschleife ueber die Brücken:
+     Fehler-Korrektur beim Zurückholen der alten Ergebnisse im UW der Brücke aus der äußeren 
+     Q-Schleife. 
+     Betroffene SUBR: wspber
+
+2.)  Bugfix Energiehöheberechnung (hen) bzw. Verlusthöhen-Berechnung (hv):
+     Die Energiehöhe wurde bislang falsch aus der Wasserspiegelhöhe und dem Reibungsgefälle bzw. 
+     Energieliniengefälle berechnet. Jetzt wird hen = wsp + v²/2g berechnet. Und hv = v²/2g. 
+     Diese Korrektur wirkt sich auf alle Rechenvarianten und alle Ergebnisse aus!
+     Betroffene SUBR: eb2ks, qks_qkst
+
+3.)  Zur Verbessung der Performance an den Bauwerken:
+     Verbesserung der Stabilität bei der inneren Abflussschleife bei der Berechnung. Dabei wird
+     vor jeder Berechnung an der künstlichen Unterwasser-Randbedingung (h_uw, v_uw, hen_uw) geprüft
+     ob, der Wasserstand größer gleich der Grenztiefe ist. Wenn dies nicht der Fall ist, so wird das
+     nächste Innere-Q aufgerufen. Dies erzeugt eine stabilere Berechnung für größere Wertebereiche und 
+     beschleunigt den Berechnungsprozess.
+     Betroffene SUBR: w_ber, wspber
+
+4.)  Reduzierungen der Ausgaben in der LOG-Datei für die Innere Abflussschleife:
+     Betroffene SUBR: w_ber, wspber, br_konv
+
+
+                                                       Monika Donner, 07.08.2007 
+
                                                          
