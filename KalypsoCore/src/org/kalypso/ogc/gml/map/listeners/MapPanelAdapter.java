@@ -45,6 +45,7 @@ import java.awt.Point;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * Base implementation for the {@link IMapPanelListener}, implements everything empty.
@@ -80,7 +81,7 @@ public abstract class MapPanelAdapter implements IMapPanelListener
    * @see org.kalypso.ogc.gml.map.IMapPanelListener#onMouseMoveEvent(org.kalypso.ogc.gml.map.MapPanel,
    *      org.eclipse.swt.graphics.Point)
    */
-  public void onMouseMoveEvent( final MapPanel source, final Point mousePosition )
+  public void onMouseMoveEvent( final MapPanel source, final GM_Point gmPoint, final Point mousePosition )
   {
   }
 }

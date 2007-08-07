@@ -57,6 +57,7 @@ import org.kalypso.ogc.gml.map.listeners.IMapPanelListener;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ui.editor.mapeditor.AbstractMapPart;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * This view displays the last active map-part in an overview window.
@@ -117,9 +118,7 @@ public class MapOverView extends AbstractMapPart implements IAdapterEater<MapPan
     super.dispose();
 
     if( m_panel != null )
-    {
       m_panel.removeMapPanelListener( this );
-    }
   }
 
   /**
@@ -129,9 +128,7 @@ public class MapOverView extends AbstractMapPart implements IAdapterEater<MapPan
   public void setAdapter( final IWorkbenchPart part, final MapPanel adapter )
   {
     if( m_panel != null )
-    {
       m_panel.removeMapPanelListener( this );
-    }
 
     m_panel = adapter;
 
@@ -192,7 +189,7 @@ public class MapOverView extends AbstractMapPart implements IAdapterEater<MapPan
    * @see org.kalypso.ogc.gml.map.listeners.IMapPanelListener#onMouseMoveEvent(org.kalypso.ogc.gml.map.MapPanel,
    *      java.awt.Point)
    */
-  public void onMouseMoveEvent( final MapPanel source, final Point mousePosition )
+  public void onMouseMoveEvent( final MapPanel source, final GM_Point gmPoint, final Point mousePosition )
   {
     // TODO Auto-generated method stub
 

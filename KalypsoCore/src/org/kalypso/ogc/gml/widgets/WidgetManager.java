@@ -145,8 +145,6 @@ public class WidgetManager implements MouseListener, MouseMotionListener, KeyLis
       {
         m_lastMoved = e.getPoint();
         getActualWidget().moved( m_lastMoved );
-
-        // m_mapPanel.repaint();
       }
 
     m_mapPanel.fireMouseMouveEvent( e );

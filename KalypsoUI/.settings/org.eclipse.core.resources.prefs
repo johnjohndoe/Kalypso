@@ -1,4 +1,5 @@
-#Tue Aug 07 10:15:52 CEST 2007
+#Tue Aug 07 15:54:19 CEST 2007
 eclipse.preferences.version=1
 encoding//src/org/kalypso/ogc/gml/map/widgets/ZoomInWidget.java=UTF-8
 encoding//src/org/kalypso/ogc/gml/outline/messages.properties=8859_1
+instance/org.eclipse.core.net/org.eclipse.core.net.hasMigrated=true

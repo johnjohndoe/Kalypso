@@ -144,7 +144,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
    */
   public KalypsoGisPlugin( )
   {
-    THE_PLUGIN = this;
+    KalypsoGisPlugin.THE_PLUGIN = this;
 
     try
     {
@@ -207,7 +207,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
           // conf-file), we need to resolve them here because it's the only
           // place where we know the URL of the conf-file.
           final String value;
-          if( key != null && key.endsWith( "URL" ) )
+          if( (key != null) && key.endsWith( "URL" ) )
             value = new URL( url, conf.getProperty( key ) ).toString();
           else
             value = conf.getProperty( key );
@@ -235,7 +235,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
         else
           msg += "Es wird versucht, eine alternative Konfigurationsdatei zu laden.\nNächster Versuch:" + locs[i + 1];
 
-        LOGGER.warning( msg );
+        KalypsoGisPlugin.LOGGER.warning( msg );
       }
       finally
       {
@@ -251,7 +251,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
    */
   private void configurePool( ) throws IOException
   {
-    m_poolproperties.load( this.getClass().getResourceAsStream( POOL_PROPERTIES ) );
+    m_poolproperties.load( this.getClass().getResourceAsStream( KalypsoGisPlugin.POOL_PROPERTIES ) );
   }
 
   /**
@@ -272,9 +272,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
     final Handler[] handlers = logger.getHandlers();
     for( final Handler handler : handlers )
-    {
       handler.setLevel( Level.FINER );
-    }
   }
 
   /**
@@ -316,7 +314,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
   public static DefaultStyleFactory getDefaultStyleFactory( )
   {
-    return m_defaultStyleFactory;
+    return KalypsoGisPlugin.m_defaultStyleFactory;
   }
 
   public ResourcePool getPool( )
@@ -344,7 +342,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
     try
     {
-      m_resourceBundle = ResourceBundle.getBundle( BUNDLE_NAME );
+      m_resourceBundle = ResourceBundle.getBundle( KalypsoGisPlugin.BUNDLE_NAME );
     }
     catch( final MissingResourceException ex )
     {
@@ -392,12 +390,12 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       defaultStyleDir.mkdir();
     try
     {
-      m_defaultStyleFactory = DefaultStyleFactory.getFactory( defaultStyleDir.getAbsolutePath() );
+      KalypsoGisPlugin.m_defaultStyleFactory = DefaultStyleFactory.getFactory( defaultStyleDir.getAbsolutePath() );
     }
     catch( final Exception e )
     {
       e.printStackTrace();
-      LOGGER.warning( "Default style location was not created, DefaultStyleFactory is not available." );
+      KalypsoGisPlugin.LOGGER.warning( "Default style location was not created, DefaultStyleFactory is not available." );
     }
 
   }
@@ -410,10 +408,10 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     URL url = null;
     try
     {
-      catalogLocation = m_mainConf.getProperty( SCHEMA_CATALOG );
+      catalogLocation = m_mainConf.getProperty( KalypsoGisPlugin.SCHEMA_CATALOG );
       if( catalogLocation != null )
       {
-        LOGGER.info( SCHEMA_CATALOG + " in Kalypso.ini gefunden." );
+        KalypsoGisPlugin.LOGGER.info( KalypsoGisPlugin.SCHEMA_CATALOG + " in Kalypso.ini gefunden." );
         url = new URL( catalogLocation );
         is = new BufferedInputStream( url.openStream() );
 
@@ -426,7 +424,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     catch( final IOException e )
     {
       // exceptions ignorieren: nicht schlimm, Eintrag ist optional
-      LOGGER.info( SCHEMA_CATALOG + " in kalypso-client.ini nicht vorhanden. Schemas werden vom Rechendienst abgeholt." );
+      KalypsoGisPlugin.LOGGER.info( KalypsoGisPlugin.SCHEMA_CATALOG + " in kalypso-client.ini nicht vorhanden. Schemas werden vom Rechendienst abgeholt." );
     }
     finally
     {
@@ -454,7 +452,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     ObservationCache.clearCache();
 
     // clear the default styles
-    m_defaultStyleFactory.clear();
+    KalypsoGisPlugin.m_defaultStyleFactory.clear();
 
     if( m_tsRepositoryContainer != null )
       m_tsRepositoryContainer.dispose();
@@ -469,7 +467,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
   public static String getId( )
   {
-    return getDefault().getBundle().getSymbolicName();
+    return KalypsoGisPlugin.getDefault().getBundle().getSymbolicName();
   }
 
   /**
@@ -480,10 +478,10 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   public static KalypsoGisPlugin getDefault( )
   {
     // m_plugin should be set in the constructor
-    if( THE_PLUGIN == null )
+    if( KalypsoGisPlugin.THE_PLUGIN == null )
       throw new NullPointerException( "Plugin Kalypso noch nicht instanziert!" );
 
-    return THE_PLUGIN;
+    return KalypsoGisPlugin.THE_PLUGIN;
   }
 
   /**
@@ -526,8 +524,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     }
     catch( final Exception e )
     {
-      LOGGER.warning( e.getLocalizedMessage() );
-      LOGGER.warning( "The provided TimeZone from the KALYPSO preferences is not known, using default one." );
+      KalypsoGisPlugin.LOGGER.warning( e.getLocalizedMessage() );
+      KalypsoGisPlugin.LOGGER.warning( "The provided TimeZone from the KALYPSO preferences is not known, using default one." );
 
       return TimeZone.getDefault();
     }
@@ -596,7 +594,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   public void propertyChange( final PropertyChangeEvent event )
   {
     if( event.getProperty().equals( IKalypsoPreferences.CLIENT_CONF_URLS ) )
-    {
       try
       {
         reconfigure();
@@ -605,7 +602,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       {
         e.printStackTrace();
       }
-    }
   }
 
   public IFeatureModifierFactory createFeatureTypeCellEditorFactory( )
@@ -619,7 +615,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   {
     try
     {
-      final String location = m_mainConf.getProperty( PROGNOSE_MODELLIST, null );
+      final String location = m_mainConf.getProperty( KalypsoGisPlugin.PROGNOSE_MODELLIST, null );
       if( location == null )
         return null;
 
@@ -639,7 +635,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
   public File getServerModelRoot( )
   {
-    final String location = m_mainConf.getProperty( MODELL_REPOSITORY, null );
+    final String location = m_mainConf.getProperty( KalypsoGisPlugin.MODELL_REPOSITORY, null );
     if( location == null )
       return null;
 
@@ -660,11 +656,11 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
   public static PluginImageProvider getImageProvider( )
   {
-    return getDefault().m_imgProvider;
+    return KalypsoGisPlugin.getDefault().m_imgProvider;
   }
 
   public static DictionaryCatalog getDictionaryCatalog( )
   {
-    return getDefault().m_dictionaryCatalog;
+    return KalypsoGisPlugin.getDefault().m_dictionaryCatalog;
   }
 }

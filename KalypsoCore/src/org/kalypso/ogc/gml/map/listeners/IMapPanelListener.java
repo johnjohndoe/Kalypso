@@ -45,6 +45,7 @@ import java.awt.Point;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * This interface provides a set of functions for listeners, that should be notified in special events of the mapPanel.
@@ -65,6 +66,6 @@ public interface IMapPanelListener
    */
   public void onMessageChanged( final MapPanel source, final String message );
 
-  public void onMouseMoveEvent( final MapPanel source, final Point mousePosition );
+  public void onMouseMoveEvent( final MapPanel source, GM_Point gmPoint, final Point mousePosition );
 
 }

@@ -88,6 +88,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.graphics.transformation.WorldToScreenTransform;
 import org.kalypsodeegree_impl.model.geometry.GM_Envelope_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author vdoemming
@@ -946,16 +947,27 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
   @Override
   public void update( final Graphics g )
   {
-    // do not clear backround, it flicker even if we double buffer
+    // do not clear background, it flicker even if we double buffer
     paint( g );
   }
 
   public void fireMouseMouveEvent( final MouseEvent e )
   {
-    final Point point = e.getPoint();
+    final IMapModell mapModell = getMapModell();
+    if( mapModell == null )
+      return;
+
+    final GeoTransform transform = getProjection();
+
+    final Point mousePoint = e.getPoint();
+    final double gx = transform.getSourceX( mousePoint.getX() );
+    final double gy = transform.getSourceY( mousePoint.getY() );
+
+    final CS_CoordinateSystem cs = mapModell.getCoordinatesSystem();
+    final GM_Point gmPoint = GeometryFactory.createGM_Point( gx, gy, cs );
 
     final IMapPanelListener[] listeners = m_mapPanelListeners.toArray( new IMapPanelListener[] {} );
     for( final IMapPanelListener mpl : listeners )
-      mpl.onMouseMoveEvent( this, point );
+      mpl.onMouseMoveEvent( this, gmPoint, mousePoint );
   }
 }
