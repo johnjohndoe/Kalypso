@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
@@ -49,54 +49,36 @@ import org.kalypsodeegree.model.feature.Feature;
  * Default implementation of {@link ICalculationUnit1D}
  * 
  * @author Patrice Congo
- *
+ * 
  */
 @SuppressWarnings("unchecked")
-public class CalculationUnit1D<ET extends IFE1D2DElement>//IElement1D>
-                        extends CalculationUnit<ET>
-                        implements ICalculationUnit1D<ET>
+public class CalculationUnit1D<ET extends IFE1D2DElement> // IElement1D>
+    extends CalculationUnit<ET> implements ICalculationUnit1D<ET>
 {
 
-  public CalculationUnit1D( 
-                Feature featureToBind )
+  public CalculationUnit1D( final Feature featureToBind )
   {
-    this(
-        featureToBind,
-        Kalypso1D2DSchemaConstants.WB1D2D_F_CALC_UNIT_1D,
-        Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS,//Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT1D,
-        (Class<ET>)IFE1D2DElement.class);//IElement1D.class );
-    
+    this( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_CALC_UNIT_1D, Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS,// Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT1D,
+    (Class<ET>) IFE1D2DElement.class );// IElement1D.class );
+
   }
-  
-  public CalculationUnit1D( 
-              Feature featureToBind, 
-              QName qnameToBind, 
-              QName elementListPropQName, 
-              Class<ET> wrapperClass )
+
+  public CalculationUnit1D( final Feature featureToBind, final QName qnameToBind, final QName elementListPropQName, final Class<ET> wrapperClass )
   {
-    super( 
-        featureToBind, 
-        qnameToBind, 
-        elementListPropQName, 
-        wrapperClass );
-    
+    super( featureToBind, qnameToBind, elementListPropQName, wrapperClass );
+
   }
-  
+
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DComplexElement#addElementAsRef(org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement)
    */
   @Override
-  public boolean addElementAsRef( ET element )
+  public boolean addElementAsRef( final ET element )
   {
-    boolean isElement1dOrBoundaryLine =
-      ( element instanceof IElement1D ) ||
-      ( element instanceof IBoundaryLine );
+    final boolean isElement1dOrBoundaryLine = (element instanceof IElement1D) || (element instanceof IBoundaryLine);
     if( !isElement1dOrBoundaryLine )
     {
-      String message = String.format( 
-          "Argument must be an element 1d or a boundary line:"+
-            "\n\t value=%s", 
-            element );
+      final String message = String.format( "Argument must be an element 1d or a boundary line:" + "\n\t value=%s", element );
       throw new IllegalArgumentException( message );
     }
     return super.addElementAsRef( element );

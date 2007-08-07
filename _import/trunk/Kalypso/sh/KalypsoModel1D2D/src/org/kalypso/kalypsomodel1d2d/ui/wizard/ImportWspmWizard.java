@@ -73,13 +73,12 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtils;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IRiverChannel1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.FlowRelationUtilitites;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBridgeFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation;
@@ -90,14 +89,15 @@ import org.kalypso.kalypsomodel1d2d.ui.map.cmds.Add1DElementFromNodeCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddNodeCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeDiscretiationModelCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteCmdFactory;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.AddElementToCalculationUnitCmd;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
-import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetworkCollection;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
+import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
@@ -434,7 +434,6 @@ public class ImportWspmWizard extends Wizard implements IWizard
     final GMLWorkspace workspace = node.getWrappedFeature().getWorkspace();
     final IFEDiscretisationModel1d2d model1d2d = DiscretisationModelUtils.modelForItem( node );
 
-    // Lauter TODO-S!
     final IFE1D2DElement[] elements = node.getElements();
     if( elements.length != 2 )
       throw new CoreException( StatusUtilities.createErrorStatus( "Ein Wehr am Ende oder am Anfang eines Berechnungabschnittes kann nicht importiert werden\nFügen Sie wenigstens ein Profil im Ober- bzw. Unterwasser ein." ) );
@@ -455,6 +454,11 @@ public class ImportWspmWizard extends Wizard implements IWizard
       DeleteCmdFactory.createDeleteCmd( model1d2d, toDelete, elementDeleteCmd );
       elementDeleteCmd.process();
 
+      // REMARK: get calculation unit of element to delete
+      // We know that we have exactly one 1D-Calculation unit
+      final IFeatureWrapperCollection<ICalculationUnit1D> containersOfElement0 = elements[0].getContainers();
+      final ICalculationUnit1D calcUnit = containersOfElement0.get( 0 );
+
       /* create new edge beetween neighbour nodes */
       final ChangeDiscretiationModelCommand elementAddCmd = new ChangeDiscretiationModelCommand( workspace, model1d2d );
       final AddNodeCommand addNode0 = new AddNodeCommand( model1d2d, neighbour0.getPoint(), 0.0 );
@@ -463,7 +467,12 @@ public class ImportWspmWizard extends Wizard implements IWizard
       elementAddCmd.addCommand( addNode0 );
       elementAddCmd.addCommand( addNode1 );
       elementAddCmd.addCommand( eleCmd );
+
       elementAddCmd.process();
+
+      // REMARK: also copy the containers of the old elements to the new element
+      final AddElementToCalculationUnitCmd calcUnitCmd = new AddElementToCalculationUnitCmd( calcUnit, new IFE1D2DElement[] { eleCmd.getAddedElement() }, model1d2d );
+      calcUnitCmd.process();
 
       /* Return position of weir */
       final GM_Position position = FlowRelationUtilitites.getFlowPositionFromElement( eleCmd.getAddedElement() );
@@ -479,7 +488,8 @@ public class ImportWspmWizard extends Wizard implements IWizard
   protected static SortedMap<BigDecimal, IFE1D2DNode> doCreate1DNet( final TuhhReach reach, final IFEDiscretisationModel1d2d discretisationModel, final List<Feature> addedFeatures ) throws Exception
   {
     /* sort reach by station and direction */
-    final boolean isDirectionUpstreams = reach.getWaterBody().isDirectionUpstreams();
+    final WspmWaterBody waterBody = reach.getWaterBody();
+    final boolean isDirectionUpstreams = waterBody.isDirectionUpstreams();
     final TuhhReachProfileSegment[] segments = reach.getReachProfileSegments();
     Arrays.sort( segments, new TuhhSegmentStationComparator( isDirectionUpstreams ) );
 
@@ -489,15 +499,12 @@ public class ImportWspmWizard extends Wizard implements IWizard
     final QName discElementsMemberQName = discElementsList.getParentFeatureTypeProperty().getQName();
     final IFeatureWrapperCollection<IFE1D2DEdge> discEdges = discretisationModel.getEdges();
 
-    /* add complex-element to model */
-    // REMARK: The next line does not work because of the substitution problem with the featurelistwrapper
-    // final IRiverChannel1D riverChannel = (IRiverChannel1D) discretisationModel.getComplexElements().addNew(
-    // IRiverChannel1D.QNAME );
-    final IFeatureWrapperCollection<IFE1D2DComplexElement> discComplexElements = discretisationModel.getComplexElements();
-    final FeatureList wrappedComplexList = discComplexElements.getWrappedList();
-    final Feature riverChannelFeature = Util.createFeatureForListProp( wrappedComplexList, wrappedComplexList.getParentFeatureTypeProperty().getQName(), Kalypso1D2DSchemaConstants.WB1D2D_F_RIVER_CHANNEL1D/* IRiverChannel1D.QNAME */);
-    addedFeatures.add( riverChannelFeature );
-    final IRiverChannel1D riverChannel = (IRiverChannel1D) riverChannelFeature.getAdapter( IRiverChannel1D.class );
+    /* add complex-element to model: Automatically create a calculation unit 1d */
+    final ICalculationUnit1D calculationUnit1D = discretisationModel.getComplexElements().addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_CALC_UNIT_1D, ICalculationUnit1D.class );
+    addedFeatures.add( calculationUnit1D.getWrappedFeature() );
+    final String calcUnitName = String.format( "WSPM-Import: %s - %s", waterBody.getName(), reach.getName() );
+    calculationUnit1D.setName( calcUnitName );
+    calculationUnit1D.setDescription( "Dieses Teilmodell wurde durch den Import automatisch angelegt." );
 
     /* add nodes to model */
     final List<IFE1D2DEdge> edgeList = new ArrayList<IFE1D2DEdge>( segments.length - 1 );
@@ -550,19 +557,17 @@ public class ImportWspmWizard extends Wizard implements IWizard
         edgeList.add( edge );
 
         /* Create corresponding element */
+        final IElement1D element1d = discretisationModel.getElements().addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT1D, IElement1D.class );
 
-        // REMARK: The next line does not work because of the substitution problem with the featurelistwrapper
-        // final IElement1D<IFE1D2DComplexElement, IFE1D2DEdge> element1d = (IElement1D<IFE1D2DComplexElement,
-        // IFE1D2DEdge>) discElements = discretisationModel.getElements().addNew( IElement1D.QNAME );
-        final Feature elementFeature = Util.createFeatureForListProp( discElementsList, discElementsMemberQName, Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT1D );
-        addedFeatures.add( elementFeature );
-        final IElement1D element1d = (IElement1D) elementFeature.getAdapter( IElement1D.class );
+        addedFeatures.add( element1d.getWrappedFeature() );
 
         element1d.setEdge( edge );
-        // adding element to 1d containers is not necessary since setting the edge to the element already does
-        // edge.addContainer( element1d.getGmlID() );
 
-        riverChannel.getElements().add( element1d );
+        /* Add complex element to list of containers of this element */
+        element1d.getContainers().addRef( calculationUnit1D );
+
+        /* Add this element to the complex element aka calculation unit */
+        calculationUnit1D.addElementAsRef( element1d );
       }
 
       lastNode = node;
