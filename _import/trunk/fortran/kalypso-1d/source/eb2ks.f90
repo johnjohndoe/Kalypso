@@ -1,4 +1,4 @@
-!     Last change:  MD    4 Jul 2007    7:35 pm
+!     Last change:  MD    7 Aug 2007    9:47 am
 !--------------------------------------------------------------------------
 ! This code, ebksn.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -1652,8 +1652,10 @@ alpha_IW(pn_alpha) = alpha_I
 !MD  Durch diese Veraenderung wird weniger haeufig die Grenztiefe angesetzt
 !MD  BERECHNUNG VERLUSTHOEHE ANLEHNUNG FORMEL 9, S.17 BWK
 !MD   => hv = (1/(phiun**2)) *q*q / (9.81*8.)
-hv = (q*q)/(phiun**2.D0) / g / 8.0D0
+!MD   hv = (q*q)/(phiun**2.D0) / g / 8.0D0
 
+hv = (vges**2.) / g / 2.0D0
+!WRITE (UNIT_OUT_TAB, '('' hv(eb2ks)  ='',f8.4)') hv
 
 iergeb = 0
 
