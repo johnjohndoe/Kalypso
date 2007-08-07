@@ -12,7 +12,6 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.i18n.Messages;
@@ -38,7 +37,7 @@ public class KalypsoOpenFilterDialogActionDelegate extends AbstractGisEditorActi
 
   IStructuredSelection m_ftSelection = null;
 
-  public void run( IAction action )
+  public void run( final IAction action )
   {
     Object sGeomOp = null;
     if( m_spatialOpSelection != null )
@@ -66,7 +65,7 @@ public class KalypsoOpenFilterDialogActionDelegate extends AbstractGisEditorActi
     if( ft != null )
       open = dialog.open();
     else
-      MessageDialog.openError( shell, Messages.getString("org.kalypso.ogc.gml.filterdialog.actions.KalypsoOpenFilterDialogActionDelegate.dialog"), Messages.getString("org.kalypso.ogc.gml.filterdialog.actions.KalypsoOpenFilterDialogActionDelegate.invalid") ); //$NON-NLS-1$ //$NON-NLS-2$
+      MessageDialog.openError( shell, Messages.getString( "org.kalypso.ogc.gml.filterdialog.actions.KalypsoOpenFilterDialogActionDelegate.dialog" ), Messages.getString( "org.kalypso.ogc.gml.filterdialog.actions.KalypsoOpenFilterDialogActionDelegate.invalid" ) ); //$NON-NLS-1$ //$NON-NLS-2$
     if( open == Window.OK )
     {
 
@@ -74,17 +73,16 @@ public class KalypsoOpenFilterDialogActionDelegate extends AbstractGisEditorActi
       final Filter filter = dialog.getFilter();
       final Feature[] features = (Feature[]) visableFeatures.toArray( new Feature[visableFeatures.size()] );
       final ArrayList<Feature> newSelectedFeatures = new ArrayList<Feature>();
-      for( int i = 0; i < features.length; i++ )
+      for( final Feature f : features )
       {
-        final Feature f = features[i];
         try
         {
           if( filter.evaluate( f ) )
             newSelectedFeatures.add( f );
         }
-        catch( FilterEvaluationException e )
+        catch( final FilterEvaluationException e )
         {
-          IStatus s = StatusUtilities.statusFromThrowable( e );
+          final IStatus s = StatusUtilities.statusFromThrowable( e );
           if( multiStatus == null )
             multiStatus = new MultiStatus( KalypsoGisPlugin.getId(), s.getSeverity(), new IStatus[] { s }, e.getMessage(), e );
           multiStatus.merge( s );
@@ -93,7 +91,7 @@ public class KalypsoOpenFilterDialogActionDelegate extends AbstractGisEditorActi
       }
       if( multiStatus != null )
       {
-        MessageDialog.openWarning( shell, Messages.getString("org.kalypso.ogc.gml.filterdialog.actions.KalypsoOpenFilterDialogActionDelegate.error") + multiStatus.getSeverity(), multiStatus.getException().getMessage() ); //$NON-NLS-1$
+        MessageDialog.openWarning( shell, Messages.getString( "org.kalypso.ogc.gml.filterdialog.actions.KalypsoOpenFilterDialogActionDelegate.error" ) + multiStatus.getSeverity(), multiStatus.getException().getMessage() ); //$NON-NLS-1$
         return;
       }
       // handle the new selection
@@ -105,7 +103,7 @@ public class KalypsoOpenFilterDialogActionDelegate extends AbstractGisEditorActi
   }
 
   @Override
-  public void selectionChanged( IAction action, ISelection selection )
+  public void selectionChanged( final IAction action, final ISelection selection )
   {
     action.setEnabled( false );
 
@@ -141,7 +139,7 @@ public class KalypsoOpenFilterDialogActionDelegate extends AbstractGisEditorActi
    * @see org.kalypso.ui.editor.AbstractGisEditorActionDelegate#refreshAction(org.eclipse.jface.action.IAction)
    */
   @Override
-  protected void refreshAction( IAction action, final ISelection selection )
+  protected void refreshAction( final IAction action, final ISelection selection )
   {
     // do nothing
   }

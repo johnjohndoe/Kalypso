@@ -6,7 +6,6 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -136,7 +135,7 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
    * @see org.kalypso.ui.GenericCommandActionDelegate#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
    *      java.lang.String, java.lang.Object)
    */
-  public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data ) throws CoreException
+  public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
   {
     if( data != null && data instanceof Map )
     {

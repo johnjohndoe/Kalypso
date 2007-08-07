@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map;
 
@@ -361,7 +361,7 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
    */
   public void componentHidden( final ComponentEvent e )
   {
-    //  
+    //
   }
 
   /**
@@ -369,7 +369,7 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
    */
   public void componentMoved( final ComponentEvent e )
   {
-    //  
+    //
   }
 
   /**
@@ -851,7 +851,7 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
         {
           final JMSelector selector = new JMSelector();
           final GM_Envelope envSelect = GeometryFactory.createGM_Envelope( minX, minY, maxX, maxY );
-          final List<Object> features = selector.select( envSelect, ((IKalypsoFeatureTheme) activeTheme).getFeatureListVisible( null ), withinStatus );
+          final List<Object> features = selector.select( envSelect, ((IKalypsoFeatureTheme) activeTheme).getFeatureListVisible( envSelect ), withinStatus );
 
           if( useOnlyFirstChoosen && !features.isEmpty() )
           {

@@ -30,8 +30,6 @@ public class ExportGml2ShapeThemeAction implements IObjectActionDelegate, IActio
 {
   private IAction m_action;
 
-  private IWorkbenchPart m_targetPart;
-
   private ISelection m_selection;
 
   private static final String SETTINGS_LAST_DIR = "lastDir";
@@ -43,7 +41,6 @@ public class ExportGml2ShapeThemeAction implements IObjectActionDelegate, IActio
   public void setActivePart( final IAction action, final IWorkbenchPart targetPart )
   {
     m_action = action;
-    m_targetPart = targetPart;
 
     updateAction();
   }

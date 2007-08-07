@@ -44,8 +44,6 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Paint;
-import java.awt.Stroke;
 
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -72,7 +70,7 @@ public class RectangleSelector
    * Constructs the RectangleSelector and sets the start point.
    * 
    * @param startPoint
-   *          The start point of the rectangle.
+   *            The start point of the rectangle.
    */
   public RectangleSelector( final Point startPoint )
   {
@@ -83,7 +81,7 @@ public class RectangleSelector
    * Set the end point.
    * 
    * @param endPoint
-   *          sets the end point of the rectangle.
+   *            sets the end point of the rectangle.
    */
   public void setEndPoint( final Point endPoint )
   {

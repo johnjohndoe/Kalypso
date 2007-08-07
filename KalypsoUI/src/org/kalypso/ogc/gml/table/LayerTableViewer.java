@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.table;
 
@@ -351,7 +351,8 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     m_selectionManager.removeSelectionListener( m_globalSelectionListener );
   }
 
-  public void applyTableTemplate( final Gistableview tableView, final URL context, final boolean dummy )
+  public void applyTableTemplate( final Gistableview tableView, final URL context, @SuppressWarnings("unused")
+  final boolean dummy )
   {
     m_isApplyTemplate = true;
     disposeTheme( getInput() );
@@ -602,7 +603,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
   }
 
   /**
-   *  
+   *
    */
   private void refreshColumnProperties( )
   {
@@ -861,17 +862,17 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     return lines.toArray( new String[features.length][] );
   }
 
-  public void addModellListener( ModellEventListener listener )
+  public void addModellListener( final ModellEventListener listener )
   {
     m_modellEventProvider.addModellListener( listener );
   }
 
-  public void fireModellEvent( ModellEvent event )
+  public void fireModellEvent( final ModellEvent event )
   {
     m_modellEventProvider.fireModellEvent( event );
   }
 
-  public void removeModellListener( ModellEventListener listener )
+  public void removeModellListener( final ModellEventListener listener )
   {
     m_modellEventProvider.removeModellListener( listener );
   }
