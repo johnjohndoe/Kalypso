@@ -8,9 +8,11 @@ import java.util.Properties;
 import java.util.logging.Logger;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
+import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -52,7 +54,7 @@ public class ActiveWorkContext<T extends Case> implements IResourceChangeListene
 
   private ICaseManager<T> m_caseManager;
 
-  private CaseHandlingProjectNature m_currentProject;
+  private CaseHandlingProjectNature m_currentProjectNature;
 
   private final List<IActiveContextChangeListener<T>> m_activeContextChangeListeners = new ArrayList<IActiveContextChangeListener<T>>();
 
@@ -67,7 +69,7 @@ public class ActiveWorkContext<T extends Case> implements IResourceChangeListene
     restoreState( properties );
 
     final IWorkspace workspace = ResourcesPlugin.getWorkspace();
-    workspace.addResourceChangeListener( this, IResourceChangeEvent.PRE_DELETE );
+    workspace.addResourceChangeListener( this );
   }
 
   private void restoreState( final Properties properties )
@@ -131,33 +133,40 @@ public class ActiveWorkContext<T extends Case> implements IResourceChangeListene
   @SuppressWarnings("unchecked")
   public void setCurrentProject( final CaseHandlingProjectNature currentProject ) throws CoreException
   {
-    if( m_currentProject == currentProject )
+    if( m_currentProjectNature == currentProject )
     {
       return;
     }
 
     if( currentProject != null )
     {
-      m_currentProject = currentProject;
+      m_currentProjectNature = currentProject;
       m_caseManager = currentProject.getCaseManager();
+
+      /* Set base case as current for the newly selected project */
+      final T caseToActivate = m_caseManager == null ? null : m_caseManager.getCases().get( 0 );
+
+      if( m_caseManager != null )
+        m_caseManager.setCurrentCase( caseToActivate );
+      PlatformUI.getWorkbench().getDisplay().asyncExec( new Runnable()
+      {
+
+        public void run( )
+        {
+          fireActiveContextChanged( m_currentProjectNature, caseToActivate );
+        }
+      } );
     }
     else
     {
-      m_currentProject = null;
+      m_currentProjectNature = null;
       m_caseManager = null;
     }
-
-    /* Set base case as current for the newly selected project */
-    final T caseToActivate = m_caseManager == null ? null : m_caseManager.getCases().get( 0 );
-
-    if( m_caseManager != null )
-      m_caseManager.setCurrentCase( caseToActivate );
-    fireActiveContextChanged( m_currentProject, caseToActivate );
   }
 
   public CaseHandlingProjectNature getCurrentProject( )
   {
-    return m_currentProject;
+    return m_currentProjectNature;
   }
 
   /**
@@ -208,7 +217,7 @@ public class ActiveWorkContext<T extends Case> implements IResourceChangeListene
       ensureProject( caze );
       if( m_caseManager != null )
         m_caseManager.setCurrentCase( caze );
-      fireActiveContextChanged( m_currentProject, caze );
+      fireActiveContextChanged( m_currentProjectNature, caze );
     }
   }
 
@@ -249,28 +258,94 @@ public class ActiveWorkContext<T extends Case> implements IResourceChangeListene
    */
   public void resourceChanged( final IResourceChangeEvent event )
   {
-    // TODO: beware of NPE of m_currentProject
-    if( event.getResource().equals( m_currentProject.getProject() ) )
+    final IResourceDelta delta = event.getDelta();
+    final Display display = PlatformUI.getWorkbench().getDisplay();
+    if( (event.getType() == IResourceChangeEvent.PRE_DELETE || event.getType() == IResourceChangeEvent.PRE_CLOSE) )
     {
-      final Display display = PlatformUI.getWorkbench().getDisplay();
-      display.asyncExec( new Runnable()
+      if( m_currentProjectNature != null && m_currentProjectNature.getProject().equals( event.getResource() ) )
       {
-
-        public void run( )
+        display.asyncExec( new Runnable()
         {
+
+          public void run( )
+          {
+            try
+            {
+              setCurrentCase( null );
+            }
+            catch( final CoreException e )
+            {
+              final Shell activeShell = display.getActiveShell();
+              final IStatus status = e.getStatus();
+              ErrorDialog.openError( activeShell, "Problem beim Löschen des Projektes", "Projekt wurde nicht deaktiviert.", status );
+              WorkflowConnectorPlugin.getDefault().getLog().log( status );
+            }
+          }
+        } );
+      }
+    }
+    else if( event.getType() == IResourceChangeEvent.POST_CHANGE )
+    {
+      final IResourceDelta[] openedChildren = delta.getAffectedChildren();
+      IResource resource = null;
+
+      if( openedChildren.length > 0 )
+      {
+        final IResourceDelta resourceDelta = openedChildren[0];
+        if( (resourceDelta.getFlags() & (IResourceDelta.OPEN | IResourceDelta.ADDED)) > 0 )
+          resource = resourceDelta.getResource();
+      }
+
+      if( resource != null && resource.getType() == IResource.PROJECT )
+      {
+        final IProject project = (IProject) resource;
+        if( project.isOpen() )
+        {
+          IProjectNature nature = null;
           try
           {
-            setCurrentCase( null );
+            nature = project.getNature( m_natureID );
           }
           catch( final CoreException e )
           {
-            final Shell activeShell = display.getActiveShell();
-            final IStatus status = e.getStatus();
-            ErrorDialog.openError( activeShell, "Problem beim Löschen des Projektes", "Projekt wurde nicht deaktiviert.", status );
-            WorkflowConnectorPlugin.getDefault().getLog().log( status );
+            // nature does not exist or such, ignore
+            e.printStackTrace();
+          }
+          if( nature != null )
+          {
+            final CaseHandlingProjectNature caseHandlingNature = (CaseHandlingProjectNature) nature;
+            try
+            {
+              setCurrentProject( caseHandlingNature );
+            }
+            catch( final CoreException e )
+            {
+              final Shell activeShell = display.getActiveShell();
+              final IStatus status = e.getStatus();
+              ErrorDialog.openError( activeShell, "Problem beim Öffnen des Projektes", "Projekt wurde nicht aktiviert.", status );
+              WorkflowConnectorPlugin.getDefault().getLog().log( status );
+            }
+          }
+          else
+          // nature is null
+          {
+            if( m_currentProjectNature != null && project.equals( m_currentProjectNature.getProject() ) )
+            {
+              try
+              {
+                setCurrentProject( null );
+              }
+              catch( CoreException e )
+              {
+                final Shell activeShell = display.getActiveShell();
+                final IStatus status = e.getStatus();
+                ErrorDialog.openError( activeShell, "Problem", "Projekt wurde nicht deaktiviert.", status );
+                WorkflowConnectorPlugin.getDefault().getLog().log( status );
+              }
+            }
           }
         }
-      } );
+      }
     }
 
   }

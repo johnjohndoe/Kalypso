@@ -101,16 +101,18 @@ public class Kalypso1D2DProjectNature implements IProjectNature
    */
   public void configure( ) throws CoreException
   {
-    final IFolder metaFolder = getProject().getFolder( ScenarioManager.METADATA_FOLDER );
-    if( !metaFolder.exists() )
+    final NullProgressMonitor monitor = new NullProgressMonitor();
+    
+    final IFolder basisFolder = getProject().getFolder( "Basis" );
+    if( !basisFolder.exists() )
     {
-      final NullProgressMonitor monitor = new NullProgressMonitor();
       final URL zipLocation = getClass().getResource( EMPTY_PROJECT_ZIP_PATH );
       unzipToContainer( zipLocation, getProject(), monitor );
-
-      ResultDB resultDB = new ResultDB( metaFolder.getLocation() );
-      metaFolder.refreshLocal( IResource.DEPTH_INFINITE, monitor );
     }
+
+    final IFolder metaFolder = getProject().getFolder( ScenarioManager.METADATA_FOLDER );
+    ResultDB resultDB = new ResultDB( metaFolder.getLocation() );
+    metaFolder.refreshLocal( IResource.DEPTH_INFINITE, monitor );
   }
 
   public static final boolean isOfThisNature( final IProject project ) throws CoreException

@@ -58,9 +58,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 
-import de.renew.workflow.base.IWorkflowSystem;
-import de.renew.workflow.base.WorkflowSystem;
-import de.renew.workflow.base.Workflow;
 import de.renew.workflow.cases.Case;
 import de.renew.workflow.cases.CaseList;
 import de.renew.workflow.connector.WorkflowConnectorPlugin;
@@ -89,7 +86,6 @@ public abstract class AbstractCaseManager<T extends Case> implements ICaseManage
 
   private final IFile m_metaDataFile;
 
-
   /**
    * Initializes the {@link ICaseManager} on the given project
    * 
@@ -104,7 +100,6 @@ public abstract class AbstractCaseManager<T extends Case> implements ICaseManage
   public AbstractCaseManager( final IProject project, final JAXBContext jc ) throws CoreException
   {
     JC = jc;
-
     m_project = project;
 
     final IFolder folder = project.getFolder( METADATA_FOLDER );
@@ -116,9 +111,7 @@ public abstract class AbstractCaseManager<T extends Case> implements ICaseManage
       }
       catch( final CoreException e )
       {
-      	//seems that the folder was created inbetween the call to #exists() and #create()
-        WorkflowConnectorPlugin.getDefault().getLog().log( e.getStatus() );
-        e.printStackTrace();
+        //ignore
       }
     }
 

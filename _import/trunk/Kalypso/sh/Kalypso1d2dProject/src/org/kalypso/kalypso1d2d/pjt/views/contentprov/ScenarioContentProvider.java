@@ -14,7 +14,6 @@ import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.kalypso.afgui.ScenarioHandlingProjectNature;
 import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.afgui.scenarios.ScenarioList;
-import org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature;
 import org.kalypso.kalypso1d2d.pjt.actions.ScenarioHelper;
 
 import de.renew.workflow.connector.cases.ICaseManager;
@@ -46,17 +45,18 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
       else
         try
         {
-          // TODO this test
-          if( Kalypso1D2DProjectNature.isOfThisNature( project ) )
+          final ScenarioHandlingProjectNature nature = ScenarioHandlingProjectNature.toThisNature( project );
+          if( nature != null )
           {
-            // TODO: does not fit to this getter
             // is of correct nature
-            final ScenarioHandlingProjectNature nature = ScenarioHandlingProjectNature.toThisNature( project );
             final List<Object> resultList = new ArrayList<Object>( children.length + 3 );
             resultList.addAll( Arrays.asList( children ) );
             final ICaseManager<Scenario> caseManager = nature.getCaseManager();
-            caseManager.addCaseManagerListener( this );
-            resultList.addAll( caseManager.getCases() );
+            if( caseManager != null )
+            {
+              caseManager.addCaseManagerListener( this );
+              resultList.addAll( caseManager.getCases() );
+            }
             return resultList.toArray();
           }
         }
@@ -86,6 +86,10 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
   public boolean hasChildren( final Object element )
   {
     final boolean hasChildren = super.hasChildren( element );
+    if( hasChildren )
+    {
+      return true;
+    }
     if( element != null && element instanceof IProject )
     {
       final IProject project = (IProject) element;
@@ -98,12 +102,15 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
       {
         try
         {
-          if( Kalypso1D2DProjectNature.isOfThisNature( project ) )
+          final ScenarioHandlingProjectNature nature = ScenarioHandlingProjectNature.toThisNature( project );
+          if( nature != null )
           {
-            final ScenarioHandlingProjectNature nature = ScenarioHandlingProjectNature.toThisNature( project );
-            final ICaseManager<Scenario> workflowData = nature.getCaseManager();
-            final List<Scenario> rootScenarios = workflowData.getCases();
-            return hasChildren || (rootScenarios != null && !rootScenarios.isEmpty());
+            final ICaseManager<Scenario> caseManager = nature.getCaseManager();
+            if( caseManager != null )
+            {
+              final List<Scenario> rootScenarios = caseManager.getCases();
+              return rootScenarios != null && !rootScenarios.isEmpty();
+            }
           }
         }
         catch( final CoreException e )
@@ -120,7 +127,7 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
       if( derivedScenarios != null )
         return !derivedScenarios.getScenarios().isEmpty();
     }
-    return hasChildren;
+    return false;
   }
 
   /**

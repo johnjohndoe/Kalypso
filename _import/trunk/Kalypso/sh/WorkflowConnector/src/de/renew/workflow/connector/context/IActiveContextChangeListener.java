@@ -7,12 +7,11 @@ import de.renew.workflow.cases.Case;
 import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
 
 /**
- * Interface to implement in order to be notified if the active context changes as been changed
+ * Interface to implement in order to be notified if the active context has changed
  * 
- * @author Patrice Congo
+ * @author Patrice Congo, Stefan Kurzbach
  */
 public interface IActiveContextChangeListener<T extends Case>
 {
-  /* TODO: why do inform about the OLD worflow db and so on? Why not also the new one? */
-  public void activeContextChanged( final CaseHandlingProjectNature newProject, final T scenario );
+  public void activeContextChanged( final CaseHandlingProjectNature newProject, final T caze );
 }

@@ -10,6 +10,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.afgui.views.WorkflowControl;
@@ -63,37 +64,49 @@ public class WorkflowView extends ViewPart
 
   protected void handleContextChanged( final CaseHandlingProjectNature newProject, final Scenario scenario )
   {
-    if( scenario != null )
+    PlatformUI.getWorkbench().getDisplay().asyncExec( new Runnable()
     {
-      String scenarioPathName;
-      try
+      public void run( )
       {
-        final URI uri = new URI( scenario.getURI() );
-        scenarioPathName = uri.getPath();
+        if( scenario != null && newProject != null )
+        {
+          String scenarioPathName;
+          try
+          {
+            final URI uri = new URI( scenario.getURI() );
+            scenarioPathName = uri.getPath();
+          }
+          catch( final URISyntaxException e )
+          {
+            scenarioPathName = "<Fehler>";
+            e.printStackTrace();
+          }
+          final String projectName = newProject.getProject().getName();
+          setContentDescription( "Aktives Szenario: " + projectName + scenarioPathName );
+          try
+          {
+            final WorkflowProjectNature workflowNature = WorkflowProjectNature.toThisNature( newProject.getProject() );
+            if( workflowNature != null )
+            {
+              m_workflowControl.setWorkflow( workflowNature.getCurrentWorklist() );
+            }
+            else {
+              m_workflowControl.setWorkflow( null );
+            }
+          }
+          catch( final CoreException e )
+          {
+            // project is not open or such
+            m_workflowControl.setWorkflow( null );
+          }
+        }
+        else
+        {
+          setContentDescription( "Kein Szenario aktiv." );
+          m_workflowControl.setWorkflow( null );
+        }
       }
-      catch( final URISyntaxException e )
-      {
-        scenarioPathName = "<Fehler>";
-        e.printStackTrace();
-      }
-      final String projectName = newProject.getProject().getName();
-      setContentDescription( "Aktives Szenario: " + projectName + scenarioPathName );
-
-      try
-      {
-        m_workflowControl.setWorkflow( WorkflowProjectNature.toThisNature( newProject.getProject() ).getCurrentWorklist() );
-      }
-      catch( final CoreException e )
-      {
-        //project does not have this nature
-        m_workflowControl.setWorkflow( null );
-      }
-    }
-    else
-    {
-      setContentDescription( "Kein Szenario aktiv." );
-      m_workflowControl.setWorkflow( null );
-    }
+    } );
   }
 
   /**

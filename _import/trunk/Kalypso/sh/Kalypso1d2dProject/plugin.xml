@@ -505,12 +505,9 @@
                label="Szenario aktivieren"
                tooltip="Das gewählte Szenario aktivieren">
             <visibleWhen>
-            	<and>
-              		<count value="1"/>
-               		<iterate>                  		                     	
-                     	<instanceof value="org.kalypso.afgui.scenarios.Scenario"/>
-               		</iterate>
-               	</and>
+               <reference
+                     definitionId="oneScenario">
+               </reference>
             </visibleWhen>
          </command>
          <command
@@ -520,22 +517,9 @@
                label="Szenario hinzufügen"
                tooltip="Ein neues Szenario hinzufügen">
             <visibleWhen>
-            	<and>
-              		<count value="1"/>
-               		<iterate>
-                  		<or>
-                     		<adapt type="org.eclipse.core.resources.IProject">
-                        	<test
-                              	property="org.eclipse.core.resources.projectNature"
-                              	value="org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature">
-                        	</test>
-                     		</adapt>
-                     		<instanceof
-                        	   value="org.kalypso.afgui.scenarios.Scenario">
-                     		</instanceof>
-                	 	</or>
-               		</iterate>
-               	</and>
+               <reference
+                     definitionId="oneScenario">
+               </reference>
             </visibleWhen>
          </command>
          <command
@@ -546,12 +530,9 @@
                label="Szenario löschen"
                tooltip="Das gewählte Szenario löschen">
             <visibleWhen>
-            	<and>
-              		<count value="1"/>
-               		<iterate>                  		                     	
-                     	<instanceof value="org.kalypso.afgui.scenarios.Scenario"/>
-               		</iterate>
-               	</and>
+               <reference
+                     definitionId="oneScenario">
+               </reference>
             </visibleWhen>
          </command>
       </menuContribution>
@@ -565,5 +546,21 @@
             properties="activeCaseUri"
             type="org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptor">
       </propertyTester>
+   </extension>
+   <extension
+         point="org.eclipse.core.expressions.definitions">
+      <definition
+            id="oneScenario">
+         <and>
+            <count
+                  value="1">
+            </count>
+            <iterate>
+               <instanceof
+                     value="org.kalypso.afgui.scenarios.Scenario">
+               </instanceof>
+            </iterate>
+         </and>
+      </definition>
    </extension>
 </plugin>

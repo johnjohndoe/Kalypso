@@ -20,7 +20,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -145,25 +147,39 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
    */
   private final Map<Class< ? extends IFeatureWrapper2>, KeyPoolListener> m_keyMap = new HashMap<Class< ? extends IFeatureWrapper2>, KeyPoolListener>();
 
-  public synchronized void setCurrent( final IContainer szenarioFolder )
+  public void setCurrent( final IContainer szenarioFolder )
   {
-    try
+    final Job job = new Job( "" )
     {
-      if( szenarioFolder != null )
-        szenarioFolder.refreshLocal( IFolder.DEPTH_INFINITE, new NullProgressMonitor() );
-    }
-    catch( final Throwable th )
-    {
-      th.printStackTrace();
-    }
+      /**
+       * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
+       */
+      @Override
+      protected IStatus run( IProgressMonitor monitor )
+      {
+        try
+        {
+          if( szenarioFolder != null )
+            szenarioFolder.refreshLocal( IFolder.DEPTH_INFINITE, new NullProgressMonitor() );
+        }
+        catch( final Throwable th )
+        {
+          th.printStackTrace();
+        }
 
-    for( final Map.Entry<Class< ? extends IFeatureWrapper2>, String> entry : LOCATION_MAP.entrySet() )
-    {
-      final Class< ? extends IFeatureWrapper2> wrapperClass = entry.getKey();
-      final String gmlLocation = entry.getValue();
+        for( final Map.Entry<Class< ? extends IFeatureWrapper2>, String> entry : LOCATION_MAP.entrySet() )
+        {
+          final Class< ? extends IFeatureWrapper2> wrapperClass = entry.getKey();
+          final String gmlLocation = entry.getValue();
 
-      resetKeyForProject( (IFolder) szenarioFolder, wrapperClass, gmlLocation );
-    }
+          resetKeyForProject( (IFolder) szenarioFolder, wrapperClass, gmlLocation );
+        }
+        return Status.OK_STATUS;
+      }
+    };
+    if( szenarioFolder != null )
+      job.setRule( szenarioFolder.getProject() );
+    job.schedule();
   }
 
   public static IFolder findModelContext( final IFolder szenarioFolder, final String modelFile )
