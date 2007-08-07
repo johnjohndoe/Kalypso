@@ -125,11 +125,6 @@
 			icon="icons/kalypso_ott.gif"
 			id="org.kalypso.ogc.gml.om.tableex.MultiTupleResultView"
 			name="%org.kalypso.ogc.gml.om.tableex.MultiTupleResultView" />
-		<view allowMultiple="true" category="org.kalypso.ui.kalypso"
-			class="org.kalypso.ogc.gml.om.chart.ObservationChartView"
-			icon="icons/kalypso_odt.gif"
-			id="org.kalypso.ogc.gml.om.chart.ObservationChartView"
-			name="%org.kalypso.ogc.gml.om.chart.ObservationChartView" />
   <view
         allowMultiple="true"
         category="org.kalypso.ui.kalypso"
@@ -717,7 +712,7 @@
 				label="%org.kalypso.ogc.gml.om.ShowObservationAction.label"
 				tooltip="%org.kalypso.ogc.gml.om.ShowObservationAction.tooltip" />
 		</objectContribution>
-		
+
       <objectContribution
             adaptable="false"
             id="org.kalypso.ui.object.contribution.org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement"
@@ -735,7 +730,7 @@
                menubarPath="featureListMenu"
                style="push"
                tooltip="Sortiert die Features der Liste anhand ausgewählter Eigenschaften"/>
-      </objectContribution>		
+      </objectContribution>
   <objectContribution
         adaptable="false"
         id="org.kalypso.objectclass.feature.listElements"
@@ -887,7 +882,7 @@
 			enabled="false"
 			tooltip="%org.kalypso.ogc.gml.outline.ZoomToSelectedLayer.tooltip"
 			icon="icons/full/elcl16/impl_co.gif"
-			class="org.kalypso.ogc.gml.outline.ZoomToSelectedLayer"/>		
+			class="org.kalypso.ogc.gml.outline.ZoomToSelectedLayer"/>
 		<MapviewAction
 			title="%org.kalypso.ogc.gml.outline.ActivateThemeAction.label"
 			enabled="false"
@@ -905,7 +900,7 @@
 			enabled="false"
 			tooltip="%org.kalypso.ogc.gml.outline.MoveThemeUpAction.tooltip"
 			icon="icons/full/elcl16/prev_nav.gif"
-			class="org.kalypso.ogc.gml.outline.MoveThemeUpAction" />		
+			class="org.kalypso.ogc.gml.outline.MoveThemeUpAction" />
 		<MapviewAction
 			title="%org.kalypso.ogc.gml.outline.RemoveThemeAction.label"
 			enabled="false"
@@ -926,7 +921,7 @@
 		name="Kalypso activity" />
 		<activityPatternBinding
 		activityId="org.kalypso.ui.activity"
-		pattern="org\.eclipse\.compare/.*"/>   
+		pattern="org\.eclipse\.compare/.*"/>
 		</extension>
 	-->
 	<extension point="org.eclipse.core.runtime.adapters">
@@ -1093,32 +1088,32 @@
             defaultHandler="org.kalypso.ogc.gml.map.handlers.ZoomInStaticHandler"
             description="Zoom in (statisch)"
             id="org.kalypso.ogc.gml.map.ZoomInStaticCommand"
-            name="Zoom In (statisch)"/> 
+            name="Zoom In (statisch)"/>
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
             defaultHandler="org.kalypso.ogc.gml.map.handlers.MoveRightHandler"
             description="Move right"
             id="org.kalypso.ogc.gml.map.MoveRightCommand"
             name="Move right">
-      </command> 
+      </command>
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
             defaultHandler="org.kalypso.ogc.gml.map.handlers.MoveDownHandler"
             description="Move down"
             id="org.kalypso.ogc.gml.map.MoveDownCommand"
-            name="Move down"/> 
+            name="Move down"/>
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
             defaultHandler="org.kalypso.ogc.gml.map.handlers.MoveUpHandler"
             description="Move up"
             id="org.kalypso.ogc.gml.map.MoveUpCommand"
-            name="Move up"/> 
+            name="Move up"/>
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
             defaultHandler="org.kalypso.ogc.gml.map.handlers.MoveLeftHandler"
             description="Move left"
             id="org.kalypso.ogc.gml.map.MoveLeftCommand"
-            name="Move left"/>                                     
+            name="Move left"/>
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
             defaultHandler="org.kalypso.ogc.gml.map.handlers.ZoomToActiveLayerHandler"
@@ -1219,27 +1214,27 @@
           commandId="org.kalypso.ogc.gml.map.ZoomInStaticCommand"
           contextId="org.kalypso.ogc.gml.map.context"
           schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-          sequence="M1++"/>   
+          sequence="M1++"/>
     <key
           commandId="org.kalypso.ogc.gml.map.MoveLeftCommand"
           contextId="org.kalypso.ogc.gml.map.context"
           schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-          sequence="M1+ARROW_LEFT"/> 
+          sequence="M1+ARROW_LEFT"/>
     <key
           commandId="org.kalypso.ogc.gml.map.MoveRightCommand"
           contextId="org.kalypso.ogc.gml.map.context"
           schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-          sequence="M1+ARROW_RIGHT"/> 
+          sequence="M1+ARROW_RIGHT"/>
     <key
           commandId="org.kalypso.ogc.gml.map.MoveUpCommand"
           contextId="org.kalypso.ogc.gml.map.context"
           schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-          sequence="M1+ARROW_UP"/> 
+          sequence="M1+ARROW_UP"/>
     <key
           commandId="org.kalypso.ogc.gml.map.MoveDownCommand"
           contextId="org.kalypso.ogc.gml.map.context"
           schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-          sequence="M1+ARROW_DOWN"/>                                                
+          sequence="M1+ARROW_DOWN"/>
     <key
           commandId="org.kalypso.ogc.gml.map.ZoomToActiveLayerCommand"
           contextId="org.kalypso.ogc.gml.map.context"
@@ -1414,8 +1409,8 @@
                 <equals
                       value="org.kalypso.ui.editor.mapeditor.GisMapEditor">
                 </equals>
-             </with> 
-		  </visibleWhen>             
+             </with>
+		  </visibleWhen>
         <command
               commandId="org.kalypso.ogc.gml.map.PanToCommand"
               label="%org.kalypso.ui.editor.mapeditor.actiondelegates.PanToWidgetDelegate.label"
@@ -1484,7 +1479,7 @@
     </menuContribution>
 
  </extension>
-   
+
  <extension
        point="org.eclipse.ui.commandImages">
     <image

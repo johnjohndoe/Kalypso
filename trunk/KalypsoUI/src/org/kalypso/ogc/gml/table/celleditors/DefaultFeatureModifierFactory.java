@@ -51,7 +51,6 @@ import org.kalypso.ogc.gml.featureview.modfier.StringModifier;
 import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
 import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
-import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree_impl.model.feature.binding.NamedFeatureHelper;
 
 /**
@@ -80,7 +79,7 @@ public class DefaultFeatureModifierFactory implements IFeatureModifierFactory
     }
     if( ftp instanceof IRelationType )
     {
-      IRelationType rpt = (IRelationType) ftp;
+      final IRelationType rpt = (IRelationType) ftp;
       if( !rpt.isInlineAble() && rpt.isLinkAble() )
       {
         return new ComboBoxModifier( rpt );

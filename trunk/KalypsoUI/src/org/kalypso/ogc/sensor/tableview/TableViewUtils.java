@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.tableview;
 
@@ -78,7 +78,6 @@ import org.kalypso.template.obstableview.TypeObservation;
 import org.kalypso.template.obstableview.TypeRenderingRule;
 import org.kalypso.template.obstableview.Obstableview.Rules;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.util.pool.ResourcePool;
 import org.xml.sax.InputSource;
 
 /**
@@ -247,7 +246,7 @@ public final class TableViewUtils
       final List<TypeColumn> xmlColumns = xmlObs.getColumn();
 
       final List columns = (List) entry.getValue();
-      for( Iterator itCol = columns.iterator(); itCol.hasNext(); )
+      for( final Iterator itCol = columns.iterator(); itCol.hasNext(); )
       {
         final TableViewColumn col = (TableViewColumn) itCol.next();
 
@@ -275,8 +274,8 @@ public final class TableViewUtils
     if( xml.getFeatures() != null )
     {
       final String[] featureNames = xml.getFeatures().split( ";" );
-      for( int i = 0; i < featureNames.length; i++ )
-        view.setFeatureEnabled( featureNames[i], true );
+      for( final String element : featureNames )
+        view.setFeatureEnabled( element, true );
     }
 
     view.setAlphaSort( xml.isAlphaSort() );
@@ -294,8 +293,8 @@ public final class TableViewUtils
       // clear the rules since we get ones from the xml
       view.getRules().removeAllRules();
 
-      for( final Iterator it = trules.getRenderingrule().iterator(); it.hasNext(); )
-        view.getRules().addRule( RulesFactory.createRenderingRule( (TypeRenderingRule) it.next() ) );
+      for( final Object element : trules.getRenderingrule() )
+        view.getRules().addRule( RulesFactory.createRenderingRule( (TypeRenderingRule) element ) );
     }
 
     final List<IStatus> stati = new ArrayList<IStatus>();

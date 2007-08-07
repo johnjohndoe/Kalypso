@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets;
 
@@ -59,7 +59,7 @@ import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
  */
 public abstract class AbstractSelectWidget extends AbstractWidget
 {
-  public AbstractSelectWidget( String name, String toolTip )
+  public AbstractSelectWidget( final String name, final String toolTip )
   {
     super( name, toolTip );
   }
@@ -79,14 +79,14 @@ public abstract class AbstractSelectWidget extends AbstractWidget
    */
   private final int m_radius = 20;
 
-  private int KEY_COMBINATION_CTRL_MOUSE_BUTTON_LEFT = KeyEvent.CTRL_DOWN_MASK | KeyEvent.BUTTON1_DOWN_MASK;
+  private final int KEY_COMBINATION_CTRL_MOUSE_BUTTON_LEFT = KeyEvent.CTRL_DOWN_MASK | KeyEvent.BUTTON1_DOWN_MASK;
 
   abstract int getSelectionMode( );
 
   abstract boolean allowOnlyOneSelectedFeature( );
 
   @Override
-  public void dragged( Point p )
+  public void dragged( final Point p )
   {
     if( m_startPoint == null )
     {
@@ -95,23 +95,23 @@ public abstract class AbstractSelectWidget extends AbstractWidget
     }
     else
       m_endPoint = p;
-    
-    //TODO: check if this repaint is really necessary
-    MapPanel panel = getMapPanel();
-    if (panel != null)
+
+    // TODO: check if this repaint is really necessary
+    final MapPanel panel = getMapPanel();
+    if( panel != null )
       panel.repaint();
 
   }
 
   @Override
-  public void leftPressed( Point p )
+  public void leftPressed( final Point p )
   {
     m_startPoint = p;
     m_endPoint = null;
   }
 
   @Override
-  public void leftReleased( Point p )
+  public void leftReleased( final Point p )
   {
     if( m_endPoint != null ) // last update of endPoint
       m_endPoint = p;
@@ -126,18 +126,21 @@ public abstract class AbstractSelectWidget extends AbstractWidget
     {
       m_startPoint = null;
       m_endPoint = null;
+
+      /* Always repaint, maybe the selection has not changed, then we dont get any repaint from the selection manager */
+      getMapPanel().repaint();
     }
   }
 
   @Override
-  public void paint( Graphics g )
+  public void paint( final Graphics g )
   {
     if( m_startPoint != null && m_endPoint != null )
     {
-      int px = (int) (m_startPoint.getX() < m_endPoint.getX() ? m_startPoint.getX() : m_endPoint.getX());
-      int py = (int) (m_startPoint.getY() < m_endPoint.getY() ? m_startPoint.getY() : m_endPoint.getY());
-      int dx = (int) Math.abs( m_endPoint.getX() - m_startPoint.getX() );
-      int dy = (int) Math.abs( m_endPoint.getY() - m_startPoint.getY() );
+      final int px = (int) (m_startPoint.getX() < m_endPoint.getX() ? m_startPoint.getX() : m_endPoint.getX());
+      final int py = (int) (m_startPoint.getY() < m_endPoint.getY() ? m_startPoint.getY() : m_endPoint.getY());
+      final int dx = (int) Math.abs( m_endPoint.getX() - m_startPoint.getX() );
+      final int dy = (int) Math.abs( m_endPoint.getY() - m_startPoint.getY() );
 
       if( dx != 0 && dy != 0 )
         g.drawRect( px, py, dx, dy );
@@ -159,7 +162,7 @@ public abstract class AbstractSelectWidget extends AbstractWidget
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#keyReleased(java.awt.event.KeyEvent)
    */
   @Override
-  public void keyReleased( KeyEvent e )
+  public void keyReleased( final KeyEvent e )
   {
     if( e.getKeyCode() == KeyEvent.VK_DELETE )
     {
@@ -179,7 +182,7 @@ public abstract class AbstractSelectWidget extends AbstractWidget
           {
             workspace.postCommand( command );
           }
-          catch( Exception e1 )
+          catch( final Exception e1 )
           {
             e1.printStackTrace();
           }
@@ -192,9 +195,9 @@ public abstract class AbstractSelectWidget extends AbstractWidget
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#keyPressed(java.awt.event.KeyEvent)
    */
   @Override
-  public void keyPressed( KeyEvent e )
+  public void keyPressed( final KeyEvent e )
   {
-    int modifiersEx = e.getModifiersEx();
+    final int modifiersEx = e.getModifiersEx();
     if( modifiersEx == KEY_COMBINATION_CTRL_MOUSE_BUTTON_LEFT )
     {
       // TODO add Feature to selection by pressing strg+LeftMouseKey

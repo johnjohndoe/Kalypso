@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
@@ -67,11 +67,6 @@ import org.eclipse.core.resources.IEncodedStorage;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jface.action.IContributionManager;
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.IStatusLineManager;
-import org.eclipse.jface.action.IToolBarManager;
-import org.eclipse.ui.IActionBars;
 import org.kalypso.commons.java.io.ReaderUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.jaxb.TemplateUtilitites;
@@ -323,31 +318,6 @@ public class GisTemplateHelper
       return bboxAsSurface;
     }
     return null;
-  }
-
-  /**
-   * Applies the settings in the map template to the given action bars.
-   * <p>
-   * Must be called in the SWT-Thread.
-   */
-  public static void applyActionFilters( final IActionBars actionBars, final Gismapview gisview )
-  {
-    final IMenuManager menuManager = actionBars.getMenuManager();
-    applyActionFilters( menuManager, gisview );
-
-    final IToolBarManager toolBarManager = actionBars.getToolBarManager();
-    applyActionFilters( toolBarManager, gisview );
-
-    final IStatusLineManager statusLineManager = actionBars.getStatusLineManager();
-    applyActionFilters( statusLineManager, gisview );
-  }
-
-  private static void applyActionFilters( final IContributionManager manager, final Gismapview gisview )
-  {
-    // TODO: read constraints from gisview
-    // final IContributionItem item = manager.find( "org.kalypso.ui.editor.mapeditor.actions.PanMapActionDelegate" );
-    // if( item != null )
-    // item.setVisible( false );
   }
 
   /**
