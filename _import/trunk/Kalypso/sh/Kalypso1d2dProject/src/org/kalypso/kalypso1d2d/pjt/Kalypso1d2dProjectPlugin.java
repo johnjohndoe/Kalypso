@@ -159,6 +159,11 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
   {
     return m_taskExecutor;
   }
+  
+  public TaskExecutionAuthority getTaskExecutionAuthority( )
+  {
+    return m_taskExecutionAuthority;
+  }
 
   /**
    * Returns the shared instance

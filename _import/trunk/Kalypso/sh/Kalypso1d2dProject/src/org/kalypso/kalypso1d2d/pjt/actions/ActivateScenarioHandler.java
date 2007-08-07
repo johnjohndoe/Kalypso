@@ -14,6 +14,8 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 
+import de.renew.workflow.base.Task;
+
 public class ActivateScenarioHandler extends AbstractHandler
 {
   @Override
@@ -27,16 +29,19 @@ public class ActivateScenarioHandler extends AbstractHandler
       if( firstElement instanceof Scenario )
       {
         final Scenario scenario = (Scenario) firstElement;
+        final Kalypso1d2dProjectPlugin plugin = Kalypso1d2dProjectPlugin.getDefault();
         try
         {
-          Kalypso1d2dProjectPlugin.getDefault().getActiveWorkContext().setCurrentCase( scenario );
+          final Task activeTask = plugin.getTaskExecutor().getActiveTask();
+          if( activeTask != null && plugin.getTaskExecutionAuthority().canStopTask( activeTask ) )
+            plugin.getActiveWorkContext().setCurrentCase( scenario );
         }
         catch( final CoreException e )
         {
           final Shell shell = HandlerUtil.getActiveShellChecked( event );
           final IStatus status = e.getStatus();
           ErrorDialog.openError( shell, "Problem", "Szenario konnte nicht aktiviert werden", status );
-          Kalypso1d2dProjectPlugin.getDefault().getLog().log( status );
+          plugin.getLog().log( status );
         }
       }
     }
