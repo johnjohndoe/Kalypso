@@ -98,7 +98,7 @@ public class Building1D2DConverter
     {
       format.format( "%3s     ", name );
 
-      for( int j = 0; j < 7; j++, i++ )
+      for( int j = 0; j < 9; j++, i++ )
       {
         if( i < values.length )
           format.format( Locale.US, "%8.3f", values[i] ); // write decimals with '.'

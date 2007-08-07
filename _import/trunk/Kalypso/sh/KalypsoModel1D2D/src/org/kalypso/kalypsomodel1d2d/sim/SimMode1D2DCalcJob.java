@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.sim;
 
@@ -138,16 +138,16 @@ public class SimMode1D2DCalcJob implements ISimulation
       {
         /* Control model */
         r10pw = new PrintWriter( new File( tmpDir, RMA10SimModelConstants.R10_File ) );
-        final BuildingIDProvider weirProvider = converter2D.getBuildingProvider();
+        final BuildingIDProvider buildingProvider = converter2D.getBuildingProvider();
         final LinkedHashMap<String, Integer> roughnessIDProvider = converter2D.getRoughnessIDProvider();
         final LinkedHashMap<String, Integer> nodesIDProvider = converter2D.getNodesIDProvider();
-        final Control1D2DConverter controlConverter = new Control1D2DConverter( nodesIDProvider, roughnessIDProvider, weirProvider );
+        final Control1D2DConverter controlConverter = new Control1D2DConverter( nodesIDProvider, roughnessIDProvider, buildingProvider );
         controlConverter.writeR10File( calculation, r10pw );
         r10pw.close();
 
         /* Weir File */
         weirPw = new PrintWriter( new File( tmpDir, RMA10SimModelConstants.BUILDING_File ) );
-        final Building1D2DConverter weirConverter = new Building1D2DConverter( weirProvider );
+        final Building1D2DConverter weirConverter = new Building1D2DConverter( buildingProvider );
         weirConverter.writeBuildingFile( new java.util.Formatter( weirPw ) );
         weirPw.close();
       }

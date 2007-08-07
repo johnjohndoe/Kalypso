@@ -290,7 +290,6 @@ public class RMA10Calculation implements INativeIDProvider
 
   public List getRoughnessClassList( )
   {
-    // return (List) m_roughnessRoot.getProperty( KalypsoModelRoughnessConsts.WBR_F_ROUGHNESS );
     return (List) m_roughnessRootWorkspace.getProperty( KalypsoModelRoughnessConsts.WBR_PROP_ROUGHNESS_CLS_MEMBER );
   }
 
