@@ -63,7 +63,9 @@ public class ImageProvider
     IMAGE_MAPVIEW_PAN("icons/map/pan.gif"),
     IMAGE_MAPVIEW_FULLEXTEND("icons/map/maximize2.gif"),
 
-    IMAGE_THEME_CASCADING("icons/full/obj16/cascadingTheme.gif");
+    IMAGE_THEME_CASCADING("icons/full/obj16/cascadingTheme.gif"),
+
+    STATUS_LINE_SHOW_MAP_COORDS("icons/map/statusbarPosition.gif");
 
     private final String m_imagePath;
 
@@ -88,7 +90,7 @@ public class ImageProvider
 
   public static final ImageDescriptor id( final String location )
   {
-    return id( "org.kalypso.ui", location );
+    return ImageProvider.id( "org.kalypso.ui", location );
   }
 
   // DEPRECATED: The image constants below are deprecated
@@ -96,7 +98,7 @@ public class ImageProvider
 
   // public static final ImageDescriptor IMAGE_MAPVIEW_OUTLINE_UP = id( "icons/full/elcl16/prev_nav.gif" );
   // public static final ImageDescriptor IMAGE_MAPVIEW_OUTLINE_DOWN = id( "icons/full/elcl16/next_nav.gif" );
-  public static final ImageDescriptor IMAGE_MAPVIEW_OUTLINE_REMOVE = id( "icons/full/elcl16/remove.gif" );
+  public static final ImageDescriptor IMAGE_MAPVIEW_OUTLINE_REMOVE = ImageProvider.id( "icons/full/elcl16/remove.gif" );
 
   // public static final ImageDescriptor IMAGE_MAPVIEW_OUTLINE_ADD = id( "icons/full/elcl16/newpack_wiz.gif" );
   // public static final ImageDescriptor IMAGE_MAPVIEW_ZOOMIN = id( "icons/full/elcl16/kde_viewmag+.gif" );
@@ -106,105 +108,105 @@ public class ImageProvider
   // public static final ImageDescriptor IMAGE_MAPVIEW_SELECT = id( "icons/full/elcl16/kde_14_rectangle.gif" );
   // public static final ImageDescriptor IMAGE_MAPVIEW_UNSELECT = id( "icons/full/elcl16/kde_abort.gif" );
 
-  public static final ImageDescriptor IMAGE_NEW_FILE = id( "icons/util/newfile_wiz.gif" );
+  public static final ImageDescriptor IMAGE_NEW_FILE = ImageProvider.id( "icons/util/newfile_wiz.gif" );
 
-  public static final ImageDescriptor IMAGE_ZML_FILE = id( "icons/observation/zml-icon.gif" );
+  public static final ImageDescriptor IMAGE_ZML_FILE = ImageProvider.id( "icons/observation/zml-icon.gif" );
 
-  public static final ImageDescriptor IMAGE_ZML_REPOSITORY = id( "icons/repository/repository_rep.gif" );
+  public static final ImageDescriptor IMAGE_ZML_REPOSITORY = ImageProvider.id( "icons/repository/repository_rep.gif" );
 
-  public static final ImageDescriptor IMAGE_ZML_REPOSITORY_ITEM = id( "icons/repository/repository_item.gif" );
+  public static final ImageDescriptor IMAGE_ZML_REPOSITORY_ITEM = ImageProvider.id( "icons/repository/repository_item.gif" );
 
-  public static final ImageDescriptor IMAGE_ZML_REPOSITORY_ADD = id( "icons/repository/repository_add.gif" );
+  public static final ImageDescriptor IMAGE_ZML_REPOSITORY_ADD = ImageProvider.id( "icons/repository/repository_add.gif" );
 
-  public static final ImageDescriptor IMAGE_ZML_REPOSITORY_REMOVE = id( "icons/repository/repository_remove.gif" );
+  public static final ImageDescriptor IMAGE_ZML_REPOSITORY_REMOVE = ImageProvider.id( "icons/repository/repository_remove.gif" );
 
-  public static final ImageDescriptor IMAGE_ZML_REPOSITORY_CONF = id( "icons/util/settings.gif" );
+  public static final ImageDescriptor IMAGE_ZML_REPOSITORY_CONF = ImageProvider.id( "icons/util/settings.gif" );
 
-  public static final ImageDescriptor IMAGE_ZML_REPOSITORY_RELOAD = id( "icons/util/update.gif" );
+  public static final ImageDescriptor IMAGE_ZML_REPOSITORY_RELOAD = ImageProvider.id( "icons/util/update.gif" );
 
-  public static final ImageDescriptor IMAGE_ZML_REPOSITORY_COLLAPSE = id( "icons/util/tree_collapse_all.gif" );
+  public static final ImageDescriptor IMAGE_ZML_REPOSITORY_COLLAPSE = ImageProvider.id( "icons/util/tree_collapse_all.gif" );
 
-  public static final ImageDescriptor IMAGE_ZML_REPOSITORY_EXPAND = id( "icons/util/tree_expand_all.gif" );
+  public static final ImageDescriptor IMAGE_ZML_REPOSITORY_EXPAND = ImageProvider.id( "icons/util/tree_expand_all.gif" );
 
-  public static final ImageDescriptor IMAGE_ZML_UPLOAD = id( "icons/repository/zml_upload.gif" );
+  public static final ImageDescriptor IMAGE_ZML_UPLOAD = ImageProvider.id( "icons/repository/zml_upload.gif" );
 
-  public static final ImageDescriptor IMAGE_ZML_DOWNLOAD = id( "icons/repository/zml_download.gif" );
+  public static final ImageDescriptor IMAGE_ZML_DOWNLOAD = ImageProvider.id( "icons/repository/zml_download.gif" );
 
-  public static final ImageDescriptor IMAGE_OBSERVATION_LINK = id( "icons/observation/observation_link.gif" );
+  public static final ImageDescriptor IMAGE_OBSERVATION_LINK = ImageProvider.id( "icons/observation/observation_link.gif" );
 
-  public static final ImageDescriptor IMAGE_ICON_GTT = id( "icons/kalypso_gtt.gif" );
+  public static final ImageDescriptor IMAGE_ICON_GTT = ImageProvider.id( "icons/kalypso_gtt.gif" );
 
-  public static final ImageDescriptor IMAGE_ICON_GMT = id( "icons/kalypso_gmt.gif" );
+  public static final ImageDescriptor IMAGE_ICON_GMT = ImageProvider.id( "icons/kalypso_gmt.gif" );
 
-  public static final ImageDescriptor IMAGE_ICON_ODT = id( "icons/kalypso_odt.gif" );
+  public static final ImageDescriptor IMAGE_ICON_ODT = ImageProvider.id( "icons/kalypso_odt.gif" );
 
-  public static final ImageDescriptor IMAGE_ICON_OTT = id( "icons/kalypso_ott.gif" );
+  public static final ImageDescriptor IMAGE_ICON_OTT = ImageProvider.id( "icons/kalypso_ott.gif" );
 
-  public static final ImageDescriptor IMAGE_KALYPSO_ICON = id( "org.kalypso.product", "etc/kalypso16.gif" );
+  public static final ImageDescriptor IMAGE_KALYPSO_ICON = ImageProvider.id( "org.kalypso.product", "etc/kalypso16.gif" );
 
-  public static final ImageDescriptor IMAGE_KALYPSO_ICON_BIG = id( "org.kalypso.product", "etc/kalypso32.gif" );
+  public static final ImageDescriptor IMAGE_KALYPSO_ICON_BIG = ImageProvider.id( "org.kalypso.product", "etc/kalypso32.gif" );
 
-  public static final ImageDescriptor IMAGE_UTIL_CHECKED = id( "icons/util/checked.gif" );
+  public static final ImageDescriptor IMAGE_UTIL_CHECKED = ImageProvider.id( "icons/util/checked.gif" );
 
-  public static final ImageDescriptor IMAGE_UTIL_UNCHECKED = id( "icons/util/unchecked.gif" );
+  public static final ImageDescriptor IMAGE_UTIL_UNCHECKED = ImageProvider.id( "icons/util/unchecked.gif" );
 
-  public static final ImageDescriptor IMAGE_UTIL_UPLOAD_WIZ = id( "icons/util/upload_wiz.gif" );
+  public static final ImageDescriptor IMAGE_UTIL_UPLOAD_WIZ = ImageProvider.id( "icons/util/upload_wiz.gif" );
 
-  public static final ImageDescriptor IMAGE_UTIL_FILTER = id( "icons/util/filter.gif" );
+  public static final ImageDescriptor IMAGE_UTIL_FILTER = ImageProvider.id( "icons/util/filter.gif" );
 
-  public static final ImageDescriptor IMAGE_UTIL_POINT_GREEN = id( "icons/util/point_green.gif" );
+  public static final ImageDescriptor IMAGE_UTIL_POINT_GREEN = ImageProvider.id( "icons/util/point_green.gif" );
 
-  public static final ImageDescriptor IMAGE_UTIL_BERICHT_WIZ = id( "icons/util/bericht_wiz.gif" );
+  public static final ImageDescriptor IMAGE_UTIL_BERICHT_WIZ = ImageProvider.id( "icons/util/bericht_wiz.gif" );
 
-  public static final ImageDescriptor IMAGE_UTIL_IMPORT_WIZARD = id( "icons/util/import_wiz.gif" );
+  public static final ImageDescriptor IMAGE_UTIL_IMPORT_WIZARD = ImageProvider.id( "icons/util/import_wiz.gif" );
 
-  public static final ImageDescriptor IMAGE_STYLEEDITOR_SAVE = id( "icons/gistable/save_edit.gif" );
+  public static final ImageDescriptor IMAGE_STYLEEDITOR_SAVE = ImageProvider.id( "icons/gistable/save_edit.gif" );
 
-  public static final ImageDescriptor IMAGE_STYLEEDITOR_ADD_RULE = id( "icons/obstable/add_row.gif" );
+  public static final ImageDescriptor IMAGE_STYLEEDITOR_ADD_RULE = ImageProvider.id( "icons/obstable/add_row.gif" );
 
-  public static final ImageDescriptor IMAGE_STYLEEDITOR_ADD_RULE_PATTERN = IMAGE_ZML_REPOSITORY_EXPAND;
+  public static final ImageDescriptor IMAGE_STYLEEDITOR_ADD_RULE_PATTERN = ImageProvider.IMAGE_ZML_REPOSITORY_EXPAND;
 
-  public static final ImageDescriptor IMAGE_STYLEEDITOR_REMOVE = IMAGE_MAPVIEW_OUTLINE_REMOVE;
+  public static final ImageDescriptor IMAGE_STYLEEDITOR_REMOVE = ImageProvider.IMAGE_MAPVIEW_OUTLINE_REMOVE;
 
-  public static final ImageDescriptor IMAGE_STYLEEDITOR_BACKWARD = id( "icons/util/backward_nav.gif" );
+  public static final ImageDescriptor IMAGE_STYLEEDITOR_BACKWARD = ImageProvider.id( "icons/util/backward_nav.gif" );
 
-  public static final ImageDescriptor IMAGE_STYLEEDITOR_FORWARD = id( "icons/util/forward_nav.gif" );
+  public static final ImageDescriptor IMAGE_STYLEEDITOR_FORWARD = ImageProvider.id( "icons/util/forward_nav.gif" );
 
-  public static final ImageDescriptor IMAGE_STYLEEDITOR_OK = id( "icons/util/ok.gif" );
+  public static final ImageDescriptor IMAGE_STYLEEDITOR_OK = ImageProvider.id( "icons/util/ok.gif" );
 
-  public static final ImageDescriptor IMAGE_STYLEEDITOR_GET_SCALE = id( "icons/map/redo_edit.gif" );
+  public static final ImageDescriptor IMAGE_STYLEEDITOR_GET_SCALE = ImageProvider.id( "icons/map/redo_edit.gif" );
 
-  public static final ImageDescriptor IMAGE_FILTERDIALOG_ADD_FILTER = id( "icons/filterdialog/filter_ps.gif" );
+  public static final ImageDescriptor IMAGE_FILTERDIALOG_ADD_FILTER = ImageProvider.id( "icons/filterdialog/filter_ps.gif" );
 
-  public static final ImageDescriptor IMAGE_FILTERDIALOG_ERROR = id( "icons/filterdialog/error_obj.gif" );
+  public static final ImageDescriptor IMAGE_FILTERDIALOG_ERROR = ImageProvider.id( "icons/filterdialog/error_obj.gif" );
 
-  public static final ImageDescriptor IMAGE_FILTERDIALOG_WARNING = id( "icons/filterdialog/warning_obj.gif" );
+  public static final ImageDescriptor IMAGE_FILTERDIALOG_WARNING = ImageProvider.id( "icons/filterdialog/warning_obj.gif" );
 
-  public static final ImageDescriptor IMAGE_FEATURE = id( "icons/feature/gis_feature.gif" );
+  public static final ImageDescriptor IMAGE_FEATURE = ImageProvider.id( "icons/feature/gis_feature.gif" );
 
-  public static final ImageDescriptor IMAGE_FEATURE_NEW = id( "icons/feature/gis_feature_neu.gif" );
+  public static final ImageDescriptor IMAGE_FEATURE_NEW = ImageProvider.id( "icons/feature/gis_feature_neu.gif" );
 
-  public static final ImageDescriptor IMAGE_FEATURE_LINKED = id( "icons/feature/gis_feature_light.gif" );
+  public static final ImageDescriptor IMAGE_FEATURE_LINKED = ImageProvider.id( "icons/feature/gis_feature_light.gif" );
 
-  public static final ImageDescriptor IMAGE_FEATURE_RELATION_COMPOSITION = id( "icons/feature/feature_link_composition.gif" );
+  public static final ImageDescriptor IMAGE_FEATURE_RELATION_COMPOSITION = ImageProvider.id( "icons/feature/feature_link_composition.gif" );
 
-  public static final ImageDescriptor IMAGE_GEOM_PROP_POINT = id( "icons/feature/geom_point.gif" );
+  public static final ImageDescriptor IMAGE_GEOM_PROP_POINT = ImageProvider.id( "icons/feature/geom_point.gif" );
 
-  public static final ImageDescriptor IMAGE_GEOM_PROP_MULTIPOINT = id( "icons/feature/geom_multipoint.gif" );
+  public static final ImageDescriptor IMAGE_GEOM_PROP_MULTIPOINT = ImageProvider.id( "icons/feature/geom_multipoint.gif" );
 
-  public static final ImageDescriptor IMAGE_GEOM_PROP_LINE = id( "icons/feature/geom_line.gif" );
+  public static final ImageDescriptor IMAGE_GEOM_PROP_LINE = ImageProvider.id( "icons/feature/geom_line.gif" );
 
-  public static final ImageDescriptor IMAGE_GEOM_PROP_MULTILINE = id( "icons/feature/geom_multiline.gif" );
+  public static final ImageDescriptor IMAGE_GEOM_PROP_MULTILINE = ImageProvider.id( "icons/feature/geom_multiline.gif" );
 
-  public static final ImageDescriptor IMAGE_GEOM_PROP_POLYGON = id( "icons/feature/geom_polygon.gif" );
+  public static final ImageDescriptor IMAGE_GEOM_PROP_POLYGON = ImageProvider.id( "icons/feature/geom_polygon.gif" );
 
-  public static final ImageDescriptor IMAGE_GEOM_PROP_MULTIPOLYGON = id( "icons/feature/geom_multipolygon.gif" );
+  public static final ImageDescriptor IMAGE_GEOM_PROP_MULTIPOLYGON = ImageProvider.id( "icons/feature/geom_multipolygon.gif" );
 
-  public static final ImageDescriptor IMAGE_FEATURE_VALIDATION_EMPTY = id( "icons/validation/validation_empty.gif" );
+  public static final ImageDescriptor IMAGE_FEATURE_VALIDATION_EMPTY = ImageProvider.id( "icons/validation/validation_empty.gif" );
 
-  public static final ImageDescriptor IMAGE_FEATURE_VALIDATION_OK = id( "icons/validation/validation_inputok.gif" );
+  public static final ImageDescriptor IMAGE_FEATURE_VALIDATION_OK = ImageProvider.id( "icons/validation/validation_inputok.gif" );
 
-  public static final ImageDescriptor IMAGE_FEATURE_VALIDATION_WARNING = id( "icons/validation/validation_warning.gif" );
+  public static final ImageDescriptor IMAGE_FEATURE_VALIDATION_WARNING = ImageProvider.id( "icons/validation/validation_warning.gif" );
 
-  public static final ImageDescriptor IMAGE_FEATURE_VALIDATION_NOTOK = id( "icons/validation/validation_error.gif" );
+  public static final ImageDescriptor IMAGE_FEATURE_VALIDATION_NOTOK = ImageProvider.id( "icons/validation/validation_error.gif" );
 }
