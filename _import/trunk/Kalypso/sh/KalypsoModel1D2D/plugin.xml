@@ -68,9 +68,9 @@
                class="org.kalypso.kalypsomodel1d2d.schema.functions.StaticModelBBoxFunc"
                id="org.kalypso.kalypsomodel1d2d.schema.functions.StaticModelBBoxFunc"
                name="StaticModelBBoxFunc"/>
-              
-     </extension>     
-     
+
+     </extension>
+
      <extension
          id="org.kalypso.core.adapters"
          name="Kalypso Model 1D 2D Adapter Factory"
@@ -119,17 +119,17 @@
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit2D"/>
-         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D"/>   
+         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptionCollection"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptor"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IModelDescriptor"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IResultModelDescriptor"/>
          <adapter
                type="org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult">
-         </adapter>      
+         </adapter>
       </factory>
    </extension>
-     
+
      <extension
            point="org.kalypso.deegree.gmlWorkspaceListener">
         <listener
@@ -141,7 +141,7 @@
            point="org.eclipse.ui.viewActions">
         <viewContribution
               id="org.kalypso.ui.views.mapView.widgets1d2d"
-              targetID="org.kalypso.ui.views.mapView">         	
+              targetID="org.kalypso.ui.views.mapView">
    <action
          disabledIcon="icons/dlcl16/select_profile_disable.gif"
          icon="icons/elcl16/16_select_profile_enable.gif"
@@ -151,11 +151,11 @@
          toolbarPath="tools"
          tooltip="Profil selektieren und in Karte anzeigen">
 	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
-	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" 
+	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
 	                     	value="org.kalypso.model.wspm.ui.view.map.SelectionOneProfileWidget"/>
-                     	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin" 
+                     	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin"
 	                     	value="org.kalypso.model.wspm.ui"/>
-	                    <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context" 
+	                    <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context"
 	                     	value="SelectOneProfile"/>
 	       			</class>
    </action>
@@ -175,7 +175,7 @@
               name="org.kalypso.kalypsomodel1d2d.schema.KalypsoModel1D2DCatalogContribution"/>
         <catalogContribution
               class="org.kalypso.kalypsomodel1d2d.ui.catalog.Model1d2dCatalogContribution"
-              name="Model1d2dCatalogContribution"/>              
+              name="Model1d2dCatalogContribution"/>
      </extension>
      <extension
            point="org.kalypso.ui.featureViewExtensionControl">
@@ -199,10 +199,10 @@
      </extension>
      <extension
            point="org.eclipse.ui.handlers">
-        <!--*** CreateElement handlers ***-->		
+        <!--*** CreateElement handlers ***-->
 		 <handler
 		       commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateElement">
-		    <activeWhen>   
+		    <activeWhen>
 		       <with variable="activeContexts">
 		          <iterate operator="or">
 		             <equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Element1D"/>
@@ -216,12 +216,12 @@
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
                     value="icons/elcl16/01_add_1D.gif"/>
 			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
-                    value="1d-Element erzeugen"/>              
+                    value="1d-Element erzeugen"/>
             </class>
 		 </handler>
 		 <handler
 		       commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateElement">
-		    <activeWhen>   
+		    <activeWhen>
 		       <with variable="activeContexts">
 		          <iterate operator="or">
 		             <equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}PolyElement"/>
@@ -235,12 +235,12 @@
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
                     value="icons/elcl16/02_add_2D.gif"/>
 			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
-                    value="2d-Elemente erzeugen"/>              
+                    value="2d-Elemente erzeugen"/>
             </class>
 		 </handler>
 		 <handler
 		       commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateElement">
-		    <activeWhen>   
+		    <activeWhen>
 		       <with variable="activeContexts">
 		          <iterate operator="or">
 		             <equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}ContinuityLine"/>
@@ -254,12 +254,12 @@
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
                     value="icons/elcl16/03_add_conti.gif"/>
 			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
-                    value="Kontinuitätslinie erzeugen"/>              
+                    value="Kontinuitätslinie erzeugen"/>
             </class>
 		 </handler>
 		 <handler
 		       commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateElement">
-		    <activeWhen>   
+		    <activeWhen>
 		       <with variable="activeContexts">
 		          <iterate operator="or">
 		             <equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/operationalmodel}BoundaryCondition"/>
@@ -273,19 +273,19 @@
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
                     value="icons/elcl16/13_flowrelation_add_NodalBC.gif"/>
 			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
-                    value="Randbedingung zuordnen"/>              
+                    value="Randbedingung zuordnen"/>
             </class>
 		 </handler>
 		 <!--*** DeleteElement handlers ***-->
 		 <handler
 		       commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement">
-		    <activeWhen>   
+		    <activeWhen>
 		       <with variable="activeContexts">
 		          <iterate operator="or">
 		             <equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}PolyElement"/>
 		          </iterate>
 		       </with>
-		     </activeWhen>		 		     
+		     </activeWhen>
       		<class
             	class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
@@ -293,18 +293,18 @@
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
                     value="icons/elcl16/04_cut_2D.gif"/>
 			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
-                    value="2d-Elemente markieren und entfernen"/>              
+                    value="2d-Elemente markieren und entfernen"/>
             </class>
 		 </handler>
 		 <handler
 		       commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement">
-		    <activeWhen>   
+		    <activeWhen>
 		       <with variable="activeContexts">
 		          <iterate operator="or">
 		             <equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Element1D"/>
 		          </iterate>
 		       </with>
-		     </activeWhen>		 		     
+		     </activeWhen>
       		<class
             	class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
@@ -312,18 +312,18 @@
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
                     value="icons/elcl16/05_cut_1D.gif"/>
 			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
-                    value="1d-Elemente markieren und entfernen"/>              
+                    value="1d-Elemente markieren und entfernen"/>
             </class>
 		 </handler>
 		 <handler
 		       commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement">
-		    <activeWhen>   
+		    <activeWhen>
 		       <with variable="activeContexts">
 		          <iterate operator="or">
 		             <equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}ContinuityLine"/>
 		          </iterate>
 		       </with>
-		     </activeWhen>		 		     
+		     </activeWhen>
       		<class
             	class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
@@ -331,12 +331,12 @@
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
                     value="icons/elcl16/06_cut_conti.gif"/>
 			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
-                    value="Kontinuitätslinien markieren und entfernen"/>              
+                    value="Kontinuitätslinien markieren und entfernen"/>
             </class>
 		 </handler>
 		 <handler
 		       commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement">
-		    <activeWhen>   
+		    <activeWhen>
 		       <with variable="activeContexts">
 		          <iterate operator="or">
 		             <equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/operationalmodel}BoundaryCondition"/>
@@ -350,20 +350,20 @@
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
                     value="icons/elcl16/14_flowrelation_cut_NodalBC.gif"/>
 			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
-                    value="Randbedingungen markieren und löschen"/>              
+                    value="Randbedingungen markieren und löschen"/>
             </class>
 		 </handler>
-		 
-		 <!-- Handler to delete junction -->		 
+
+		 <!-- Handler to delete junction -->
 		 <handler
 		       commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement">
-		    <activeWhen>   
+		    <activeWhen>
 		       <with variable="activeContexts">
 		          <iterate operator="or">
 		             <equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}JunctionContext1DToCLine"/>
 		          </iterate>
 		       </with>
-		     </activeWhen>		 		     
+		     </activeWhen>
       		<class
             	class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
@@ -371,10 +371,10 @@
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
                     value="icons/elcl16/cut.png"/>
 			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
-                    value="Kopplung markieren und entfernen"/>              
+                    value="Kopplung markieren und entfernen"/>
             </class>
 		 </handler>
-		 
+
    <!--*** EditElement handlers ***-->
    <handler
          commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement">
@@ -402,17 +402,17 @@
 
 		 <handler
 		       commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditElement">
-		    <activeWhen>   
+		    <activeWhen>
 		       <with variable="activeContexts">
-		          <iterate operator="or">		                     
+		          <iterate operator="or">
                		 <or>
                			<equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}PolyElement"/>
-                  		<equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Element1D"/>                  
-                  		<equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}ContinuityLine"/>                  
+                  		<equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Element1D"/>
+                  		<equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}ContinuityLine"/>
                		 </or>
 		          </iterate>
 		       </with>
-		     </activeWhen>		 		     
+		     </activeWhen>
       		<class
             	class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
@@ -420,18 +420,18 @@
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
                     value="icons/elcl16/07_move_FE_knot.gif"/>
 			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
-                    value="Knoten bewegen"/>              
+                    value="Knoten bewegen"/>
             </class>
 		 </handler>
 		 <handler
 		       commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditElement">
-		    <activeWhen>   
+		    <activeWhen>
 		       <with variable="activeContexts">
-		          <iterate operator="or">		                                    		 
+		          <iterate operator="or">
                		<equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/operationalmodel}BoundaryCondition"/>
 		          </iterate>
 		       </with>
-		     </activeWhen>		 		     
+		     </activeWhen>
       		<class
             	class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
@@ -439,18 +439,18 @@
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
                     value="icons/elcl16/15_flowrelation_edit_NodalBC.gif"/>
 			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
-                    value="Randbedingungen bearbeiten"/>              
+                    value="Randbedingungen bearbeiten"/>
             </class>
-		 </handler>		 
+		 </handler>
 		 <handler
 		       commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditElement">
-		    <activeWhen>   
+		    <activeWhen>
 		       <with variable="activeContexts">
-		          <iterate operator="or">		                                    		 
+		          <iterate operator="or">
                		<equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}Hydrograph"/>
 		          </iterate>
 		       </with>
-		     </activeWhen>		 		     
+		     </activeWhen>
       		<class
             	class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
@@ -458,7 +458,7 @@
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
                     value="icons/elcl16/hydrograph_show.gif"/>
 			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
-                    value="Ganglinie darstellen"/>              
+                    value="Ganglinie darstellen"/>
             </class>
 		 </handler>
    <handler
@@ -483,16 +483,16 @@
                value="Zugeordnete Parameter bearbeiten">
          </parameter>
       </class>
-   </handler>		 
+   </handler>
 		 <handler
 		       commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement">
-		    <activeWhen>   
+		    <activeWhen>
 		       <with variable="activeContexts">
-		          <iterate operator="or">		                                    		 
+		          <iterate operator="or">
                		<equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}Hydrograph"/>
 		          </iterate>
 		       </with>
-		     </activeWhen>		 		     
+		     </activeWhen>
       		<class
             	class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
@@ -500,18 +500,18 @@
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
                     value="icons/elcl16/hydrograph_delete.gif"/>
 			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
-                    value="Ganglinie entfernen"/>              
+                    value="Ganglinie entfernen"/>
             </class>
-		 </handler>		 
+		 </handler>
 		 <handler
 		       commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateElement">
-		    <activeWhen>   
+		    <activeWhen>
 		       <with variable="activeContexts">
-		          <iterate operator="or">		                                    		 
+		          <iterate operator="or">
                		<equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}Hydrograph"/>
 		          </iterate>
 		       </with>
-		     </activeWhen>		 		     
+		     </activeWhen>
       		<class
             	class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
@@ -519,7 +519,7 @@
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
                     value="icons/elcl16/hydrograph_create.gif"/>
 			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
-                    value="Ganglinie erstellen"/>              
+                    value="Ganglinie erstellen"/>
             </class>
 		 </handler>
    <handler
@@ -546,14 +546,14 @@
                   value="0+">
             </count>
          </with>      </activeWhen>
-   </handler>		 
+   </handler>
      </extension>
      <extension
            point="org.eclipse.ui.commands">
 	  <command
          categoryId="org.kalypso.ogc.gml.map.category"
          id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateElement"
-         name="Element erzeugen"/>                   
+         name="Element erzeugen"/>
 	  <command
          categoryId="org.kalypso.ogc.gml.map.category"
          id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement"
@@ -590,6 +590,7 @@
             categoryId="org.kalypso.ogc.gml.map.category"
             id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateKingFlowRelation"
             name="Kanalprofilparameter einem 1D Knoten hinzufügen">
+          <!--
          <defaultHandler
                class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
             <parameter
@@ -597,6 +598,7 @@
                   value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateKingFlowrelationWidget">
             </parameter>
          </defaultHandler>
+         -->
       </command>
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
@@ -621,7 +623,7 @@
                   value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateBridgeFlowrelationWidget">
             </parameter>
          </defaultHandler>
-      </command>           
+      </command>
      </extension>
 	 <extension
            point="org.eclipse.ui.menus">
@@ -747,5 +749,5 @@
            </iterate>
         </with>
      </definition>
-  </extension>     
+  </extension>
 </plugin>
