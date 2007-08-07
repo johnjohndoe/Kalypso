@@ -82,25 +82,25 @@ public class ActiveWorkContext<T extends Case> implements IResourceChangeListene
         final IProject project = (IProject) resource;
         try
         {
-          setCurrentProject( (CaseHandlingProjectNature) project.getNature( m_natureID ) );
+          final CaseHandlingProjectNature nature = (CaseHandlingProjectNature) project.getNature( m_natureID );
+          if( nature == null )
+          {
+            final String message = String.format( "Cannot restore workflow state of project '%s'. It is not of nature: %s", projectString, m_natureID );
+            throw new CoreException( new Status( IStatus.WARNING, WorkflowConnectorPlugin.PLUGIN_ID, message ) );
+          }
+
+          setCurrentProject( nature );
+
+          final String caseId = properties.getProperty( MEMENTO_CASE );
+          if( caseId != null )
+          {
+            final T caze = m_caseManager.getCase( caseId );
+            setCurrentCase( caze );
+          }
         }
         catch( final CoreException e )
         {
           log( e );
-        }
-
-        final String caseId = properties.getProperty( MEMENTO_CASE );
-        if( caseId != null )
-        {
-          final T caze = m_caseManager.getCase( caseId );
-          try
-          {
-            setCurrentCase( caze );
-          }
-          catch( final CoreException e )
-          {
-            log( e );
-          }
         }
       }
     }
