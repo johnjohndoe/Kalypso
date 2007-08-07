@@ -55,6 +55,7 @@ public class WorkflowSystem implements IWorkflowSystem
   {
     final IFolder metadataFolder = project.getFolder( METADATA_FOLDER );
     final IFile workflowFile = metadataFolder.getFile( WORKFLOW_FILENAME );
+    workflowFile.refreshLocal( 0, null );
     if( workflowFile.exists() )
     {
       m_currentWorkflow = loadModel( workflowFile );

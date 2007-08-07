@@ -103,6 +103,7 @@ public abstract class AbstractCaseManager<T extends Case> implements ICaseManage
     m_project = project;
 
     final IFolder folder = project.getFolder( METADATA_FOLDER );
+    
     if( !folder.exists() )
     {
       try
@@ -198,19 +199,17 @@ public abstract class AbstractCaseManager<T extends Case> implements ICaseManage
   /**
    * 
    */
-  public void persist( IProgressMonitor monitor ) throws CoreException
+  public void persist( final IProgressMonitor monitor ) throws CoreException
   {
-    if( monitor == null )
-    {
-      monitor = new NullProgressMonitor();
-    }
-    Job job = new Job( "" )
+    final Job job = new Job( "" )
     {
       /**
        * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
        */
+      @SuppressWarnings("synthetic-access")
       @Override
-      protected IStatus run( IProgressMonitor monitor )
+      protected IStatus run( @SuppressWarnings("hiding")
+      IProgressMonitor monitor )
       {
         try
         {
@@ -220,6 +219,7 @@ public abstract class AbstractCaseManager<T extends Case> implements ICaseManage
           monitor.worked( 2000 );
           final ByteArrayInputStream bis = new ByteArrayInputStream( bos.toByteArray() );
           bos.close();
+          m_metaDataFile.refreshLocal( 0, null );
           if( m_metaDataFile.exists() )
           {
             m_metaDataFile.setContents( bis, false, true, null );
