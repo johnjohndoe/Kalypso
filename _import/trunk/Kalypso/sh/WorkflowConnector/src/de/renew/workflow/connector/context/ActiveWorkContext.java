@@ -249,6 +249,7 @@ public class ActiveWorkContext<T extends Case> implements IResourceChangeListene
    */
   public void resourceChanged( final IResourceChangeEvent event )
   {
+    // TODO: beware of NPE of m_currentProject
     if( event.getResource().equals( m_currentProject.getProject() ) )
     {
       final Display display = PlatformUI.getWorkbench().getDisplay();
