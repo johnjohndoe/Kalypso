@@ -46,8 +46,10 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
       else
         try
         {
+          // TODO this test
           if( Kalypso1D2DProjectNature.isOfThisNature( project ) )
           {
+            // TODO: does not fit to this getter
             // is of correct nature
             final ScenarioHandlingProjectNature nature = ScenarioHandlingProjectNature.toThisNature( project );
             final List<Object> resultList = new ArrayList<Object>( children.length + 3 );
@@ -113,7 +115,7 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
     }
     else if( element instanceof Scenario )
     {
-      Scenario workflowData = (Scenario) element;
+      final Scenario workflowData = (Scenario) element;
       final ScenarioList derivedScenarios = workflowData.getDerivedScenarios();
       if( derivedScenarios != null )
         return !derivedScenarios.getScenarios().isEmpty();
@@ -153,12 +155,12 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
     if( m_viewer instanceof StructuredViewer )
     {
       final String projectName = ScenarioHelper.getProjectName( caze );
-      final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject( projectName );      
+      final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject( projectName );
       final StructuredViewer viewer = (StructuredViewer) m_viewer;
       final Scenario parentScenario = caze.getParentScenario();
       if( parentScenario != null )
       {
-        viewer.refresh( parentScenario );        
+        viewer.refresh( parentScenario );
       }
       else
       {
@@ -168,7 +170,7 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
         }
       }
       final IFolder folder = ScenarioHelper.getFolder( caze );
-      viewer.refresh(folder.getParent());
+      viewer.refresh( folder.getParent() );
     }
   }
 
