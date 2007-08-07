@@ -51,8 +51,9 @@
      <gml:coordinates ts="," decimal="." cs=" ">3553379.3268 5988867.2554 3.14</gml:coordinates>
     </gml:Point>
    </simBase:position>
+   <op1d2d:direction>10</op1d2d:direction>
    <op1d2d:observation>
-    <ns9:DirectedObservationWithSource gml:id="DirectedObservationWithSource11822431656448">
+    <ns9:ObservationWithSource gml:id="DirectedObservationWithSource11822431656448">
      <gml:name>Abfluss - Zeitreihe</gml:name>
      <om:observedProperty xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:phenomenons#TimeserieBorderCondition1D"/>
      <om:resultDefinition>
@@ -70,8 +71,7 @@
 2001-01-01T15%3A00%3A00.000%2B01%3A00 2.5
 ]]></om:result>
      <ns9:dataSourceURI/>
-     <ns9:direction>70</ns9:direction>
-    </ns9:DirectedObservationWithSource>
+    </ns9:ObservationWithSource>
    </op1d2d:observation>
    <op1d2d:scopeMark>
     <gml:MultiPoint xmlns:ns1="http://www.w3.org/2001/SMIL20/" xmlns:st="http://www.seegrid.csiro.au/xml/st" xmlns:ns2="http://www.isotc211.org/2005/gmd" xmlns:ns3="http://www.isotc211.org/2005/gco" xmlns:ns4="http://www.isotc211.org/2005/gss" xmlns:ns5="http://www.isotc211.org/2005/gts" xmlns:ns6="http://www.isotc211.org/2005/gsr" xmlns:ns7="http://www.w3.org/2001/SMIL20/Language" srsName="EPSG:31467">
