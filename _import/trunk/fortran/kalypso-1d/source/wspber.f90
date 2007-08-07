@@ -1,4 +1,4 @@
-!     Last change:  MD    3 Aug 2007    5:22 pm
+!     Last change:  MD    7 Aug 2007    6:54 pm
 !--------------------------------------------------------------------------
 ! This code, wspber.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -955,14 +955,14 @@ Hauptschleife: DO i = 1, maxger
         fgesp_save (nprof-1)  = fgesp (nprof-1)        ! Insgesamt durchflossene Flaeche (m**2)
         brg_save (nprof-1)    = brg (nprof-1)          ! Gesamt durchstroemte Breite
         vmp_save (nprof-1)    = vmp (nprof-1)          ! Mittleres v
-        froudp_save (nprof-1) = froudp (nprof-1)      ! Froudzahl
+        froudp_save (nprof-1) = froudp (nprof-1)       ! Froudzahl
         hvs_save (nprof-1)    = hvs (nprof-1)          ! Geschwindigkeitsverlust hv
         hrs_save (nprof-1)    = hrs (nprof-1)          ! Reibungsverlust
         hs_save (nprof-1)     = hs (nprof-1)           ! Gesamtverlust
         hen_save (nprof-1)    = hen (nprof-1)          ! Energiehoehe (m+nn)
         k_kp_save (nprof-1)   = k_kp (nprof-1)         ! mittlere Rauhigkeit: akges
-        igrenz_save (nprof-1) = igrenz (nprof-1)      ! Hinweis auf grenztiefe
-        rg_save (nprof-1)     = rg                    ! hydraulischer Radius (?)
+        igrenz_save (nprof-1) = igrenz (nprof-1)       ! Hinweis auf grenztiefe
+        rg_save (nprof-1)     = rg                     ! hydraulischer Radius (?)
         tm = fgesp_save (nprof-1) / brg_save (nprof-1)
         nprof_save = nprof
 
@@ -970,6 +970,7 @@ Hauptschleife: DO i = 1, maxger
         WRITE (UNIT_OUT_LOG, '('' stat (nprof)='',f8.4)') stat (nprof)
         WRITE (UNIT_OUT_LOG, '(/,5x,'' Brueckenberechnung an Station km'',f8.4)') stat (nprof)
         WRITE (UNIT_OUT_TAB, '(/,5x,'' Brueckenberechnung an Station km'',f8.4)') stat (nprof)
+        WRITE (UNIT_OUT_TAB, '(/,5x,'' UW Bruecke an Station km'',f8.4)') stat (nprof-1)
         WRITE (UNIT_OUT_TAB, '(/,'' Innere Q-Schleife ueber Brueckenberechnung'')')
 
         WRITE (UNIT_OUT_BRUECKE, '(/,5x,'' Brueckenberechnung an Station km'',f8.4)') stat (nprof)
@@ -1000,6 +1001,7 @@ Hauptschleife: DO i = 1, maxger
           wsp (nprof-1)    = wsp_save (nprof-1)
           fges             = fgesp_save (nprof-1)
           vmp (nprof-1)    = q / fges                                     ! Anpassung von Fliessgeschw. v
+          tm               = fgesp_save (nprof-1) / brg_save (nprof-1)
           froudp (nprof-1) = (vmp(nprof-1) * vmp(nprof-1)) / (tm * g)     ! Anpassung der Froudzahl
           hvs (nprof-1)    = (vmp(nprof-1) ** 2.D0) / (2.D0 * g)          ! Anpassung des Geschwindigkeitsverlustes
           hen (nprof-1)    = wsp (nprof-1) + hvs (nprof-1)                ! Anpassung de Energiehoehe (m+nn)
@@ -1010,6 +1012,18 @@ Hauptschleife: DO i = 1, maxger
           rg = rg_save (nprof-1)
           hvst = hv
           hrst = hrs_save (nprof-1)
+
+          !MD Kontrolle der Grenztiefe im Unterwasser
+          ! -----------------------------------------------------
+          IF ( (wsp(nprof-1)- sohlp(nprof-1)) .lt. (2./3.* (hen (nprof-1)- sohlp(nprof-1))) ) THEN
+            write (UNIT_OUT_TAB,' (''  KEINE Brueckenberechnung an Station km = '',f7.3)') statgem
+            WRITE (UNIT_OUT_TAB, '(''    fuer Auesseren Abfluss q_out ='',f8.4)') q_out
+            WRITE (UNIT_OUT_TAB, '(''    mit Innerer Abfluss qvar_in  ='',f8.4)') qvar_in
+            WRITE (UNIT_OUT_TAB, '(''    da Grenztiefe im UW erreicht!! '')')
+            qvar_in = qvar_in + DELTA_Q
+            CYCLE
+          END IF
+
 
           out_Qin_PROF(nprof,nr_q_out,nr_q)%BrueckOK 	= -999.999
           out_Qin_PROF(nprof,nr_q_out,nr_q)%BrueckUK 	= -999.999
@@ -1047,9 +1061,10 @@ Hauptschleife: DO i = 1, maxger
 
           delta1 = delta + breite  ! Abstand des moeglichen Profils 'a' vom Brueckenprofil
 
-          write (UNIT_OUT_LOG, 244) delta1, strecke
-          244 format (1X, 'Delta1: ', F10.3, '  Strecke: ', F10.3)
-
+          IF (Q_Abfrage.ne.'BR_SCHLEIFE') then
+            write (UNIT_OUT_LOG, 244) delta1, strecke
+            244 format (1X, 'Delta1: ', F10.3, '  Strecke: ', F10.3)
+          ENDIF
 
     
           ! ----------------------------------------------------------------------------------------------
@@ -1081,11 +1096,13 @@ Hauptschleife: DO i = 1, maxger
             d2 = ( (brg (nprof - 1) - br1) * delta / strecke+br1)  / br1
             x1wr = x1 (iwr)
 
-            write (UNIT_OUT_LOG, 255) dif, d1, d2, x1wr
-            255 format (/1X, 'DIF:  ', F12.4, /, &
-                      & 1X, 'D1:   ', F12.4, /, &
-                      & 1X, 'D2:   ', F12.4, /, &
-                      & 1X, 'X1WR: ', F12.4, / )
+            IF (Q_Abfrage.ne.'BR_SCHLEIFE') then
+              write (UNIT_OUT_LOG, 255) dif, d1, d2, x1wr
+              255 format (/1X, 'DIF:  ', F12.4, /, &
+                        & 1X, 'D1:   ', F12.4, /, &
+                        & 1X, 'D2:   ', F12.4, /, &
+                        & 1X, 'X1WR: ', F12.4, / )
+            ENDIF
 
             DO i1 = 1, nknot
               h1 (i1) = h1 (i1) - d1
@@ -1127,6 +1144,9 @@ Hauptschleife: DO i = 1, maxger
             CALL intdat (staso, ifehl)
 
             IF (ifehl.ne.0) then
+              WRITE (UNIT_OUT_LOG, '('' Programmabbruch wegen Konvergenzprobleme in Profil a  '')')
+              WRITE (UNIT_OUT_LOG, '('' Profil "a" (Bruecke):='',f10.4)') stat (nprof)
+              WRITE (UNIT_OUT_LOG, '('' Programmabbruch --> STOP '')')
               STOP
             ENDIF
 
@@ -1223,9 +1243,11 @@ Hauptschleife: DO i = 1, maxger
           hmax = hokmax
 
           !**    SCHREIBEN IN KONTROLLFILE
-          WRITE (UNIT_OUT_LOG, 288) iokl, iokr
-          288 format (/1X, 'IOKL (Nummer des Punktes der Oberkante links):  ', I3, /, &
+          IF (Q_Abfrage.ne.'BR_SCHLEIFE') then
+            WRITE (UNIT_OUT_LOG, 288) iokl, iokr
+            288 format (/1X, 'IOKL (Nummer des Punktes der Oberkante links):  ', I3, /, &
                     & 1X, 'IOKR (Nummer des Punktes der Oberkante rechts): ', I3)
+          ENDIF
 
           i1 = iokl
           i2 = iokl + npl
@@ -1326,20 +1348,20 @@ Hauptschleife: DO i = 1, maxger
           htrre = h1 (itrre)
 
           !   SCHREIBEN IN KONTROLLFILE UNIT_OUT_LOG
-          WRITE (UNIT_OUT_LOG, '('' itrli='',i3,'' itrre='',i3)') itrli, itrre
+          IF (Q_Abfrage.ne.'BR_SCHLEIFE') then
+            WRITE (UNIT_OUT_LOG, '('' itrli='',i3,'' itrre='',i3)') itrli, itrre
 
-          DO j = 1, nknot
-
-            if (FLIESSGESETZ == 'DW_M_FORMBW' .or. FLIESSGESETZ == 'DW_O_FORMBW') then
-              WRITE (UNIT_OUT_LOG, '(''i='',i3,''x1='',f8.3,'' h1='',f8.3,'' rau='',f8.3, &
-               & '' ax='',f8.3,'' ay='',f8.3,'' dp='',f8.3)') j, x1 (j), &
-               & h1 (j) , rau (j) , ax (j) , ay (j) , dp (j)
-            ELSE
-              WRITE (UNIT_OUT_LOG, '(''i='',i3,''x1='',f8.3,'' h1='',f8.3,''rau='',f8.3)') &
-               & j, x1 (j) , h1 (j) , rau (j)
-            ENDIF
-
-          END DO
+            DO j = 1, nknot
+              if (FLIESSGESETZ == 'DW_M_FORMBW' .or. FLIESSGESETZ == 'DW_O_FORMBW') then
+                WRITE (UNIT_OUT_LOG, '(''i='',i3,''x1='',f8.3,'' h1='',f8.3,'' rau='',f8.3, &
+                 & '' ax='',f8.3,'' ay='',f8.3,'' dp='',f8.3)') j, x1 (j), &
+                 & h1 (j) , rau (j) , ax (j) , ay (j) , dp (j)
+              ELSE
+                WRITE (UNIT_OUT_LOG, '(''i='',i3,''x1='',f8.3,'' h1='',f8.3,''rau='',f8.3)') &
+                 & j, x1 (j) , h1 (j) , rau (j)
+              ENDIF
+            END DO
+          ENDIF
 
 
           IF (out_Qin_PROF(nprof-1,nr_q_out,nr_q)%chr_kenn .eq. 'i') THEN
@@ -1552,26 +1574,38 @@ Hauptschleife: DO i = 1, maxger
         nr_q = nr_q_out
         q = q_out
 
+        !MD zuerst: Profilnummer zurück !!!!!!
+        nprof = nprof_save
+
         !MD Rueckholen der alten UW-Ergebnisse
         wsp (nprof-1)     = wsp_save (nprof-1)     ! Wasserspiegel wsp(m+nn) = hr
         fgesp (nprof-1)   = fgesp_save (nprof-1)   ! Insgesamt durchflossene Flaeche (m**2)
+        fges              = fgesp_save (nprof-1)
         brg (nprof-1)     = brg_save (nprof-1)     ! Gesamt durchstroemte Breite
         vmp (nprof-1)     = vmp_save (nprof-1)     ! Mittleres v
-        froudp (nprof-1)  = froudp_save (nprof-1)  ! Froudzahl
-        hvs (nprof-1)     = hvs_save (nprof-1)     ! Geschwindigkeitsverlust hv
-        hrs (nprof-1)     = hrs_save (nprof-1)     ! Reibungsverlust
-        hs (nprof-1)      = hs_save (nprof-1)      ! Gesamtverlust
-        hen (nprof-1)     = hen_save (nprof-1)     ! Energiehoehe (m+nn)
-        k_kp (nprof-1)    = k_kp_save (nprof-1)    ! mittlere Rauhigkeit: akges
-        igrenz (nprof-1)  = igrenz_save (nprof-1)  ! Hinweis auf grenztiefe
-        rg                = rg_save (nprof-1)      ! hydraulischer Radius (?)
-        tm = fgesp_save (nprof-1) / brg_save (nprof-1)
-        nprof = nprof_save
+        vmp (nprof-1)     = q / fges
+        tm                = fgesp_save (nprof-1) / brg_save (nprof-1)
+        froudp (nprof-1)  = (vmp(nprof-1) * vmp(nprof-1)) / (tm * g)     ! Anpassung der Froudzahl
+        hvs (nprof-1)     = (vmp(nprof-1) ** 2.D0) / (2.D0 * g)          ! Anpassung des Geschwindigkeitsverlustes
+        hen (nprof-1)     = wsp (nprof-1) + hvs (nprof-1)                ! Anpassung de Energiehoehe (m+nn)
 
-        hv = hvs (nprof-1)
-        hr = wsp (nprof-1)
+        hv   = hvs (nprof-1)
+        hr   = wsp (nprof-1)
+        rg   = rg_save (nprof-1)
         hvst = hv
-        hrst = hrs_save (nprof-1)
+        hrs (nprof-1)    = hrs_save (nprof-1)     ! Reibungsverlust
+        hrst             = hrs_save (nprof-1)
+        hs (nprof-1)     = hs_save (nprof-1)      ! Gesamtverlust
+        k_kp (nprof-1)   = k_kp_save (nprof-1)    ! mittlere Rauhigkeit: akges
+        igrenz (nprof-1) = igrenz_save (nprof-1)  ! Hinweis auf grenztiefe
+        rg               = rg_save (nprof-1)      ! hydraulischer Radius (?)
+
+       !  froudp (nprof-1)  = froudp_save (nprof-1)  ! Froudzahl
+       !  hen (nprof-1)     = hen_save (nprof-1)     ! Energiehoehe (m+nn)
+
+        stat (nprof) = statgem               !WP Station gemerkt
+        stat1 = stat (nprof - 1)
+        strecke = (statgem - stat1) * 1000.  !WP Distanz zwischen Bruecke und Unterwasser
 
         WRITE (UNIT_OUT_TAB, '(/,'' Innere Q-Schleife ueber Brueckenberechnung abgeschlossen'')')
 
@@ -1580,7 +1614,9 @@ Hauptschleife: DO i = 1, maxger
       ! Ende ::  innere Abflussschleife mit konstantem Reibungsgefaelle
       ! -------------------------------------------------------------------------------------
 
-
+      IF (BERECHNUNGSMODUS == 'REIB_KONST') then
+        VERZOEGERUNGSVERLUST = 'BWK '
+      Endif
 
 
       ! -------------------------------------------------------------------------------------
@@ -1712,6 +1748,9 @@ Hauptschleife: DO i = 1, maxger
         CALL intdat (staso, ifehl)
 
         IF (ifehl.ne.0) then
+          WRITE (UNIT_OUT_LOG, '('' Programmabbruch wegen Konvergenzprobleme in Profil a  '')')
+          WRITE (UNIT_OUT_LOG, '('' Profil "a" (Bruecke):='',f10.4)') stat (nprof)
+          WRITE (UNIT_OUT_LOG, '('' Programmabbruch --> STOP '')')
           STOP
         ENDIF
 
@@ -2059,6 +2098,17 @@ Hauptschleife: DO i = 1, maxger
           num (nprof) = prof_nr (1:10)
           CALL w_ber (henw, q, nprof, nz, idr1, nblatt, Q_Abfrage)
 
+
+          qvar_in = qvar_in + DELTA_Q
+
+          !MD Kontrolle der Grenztiefe im Unterwasser
+          ! -----------------------------------------------------
+          IF (Q_Abfrage == 'GR_SCHLEIFE') THEN
+            WRITE (UNIT_OUT_TAB, '('' Grenztiefe im UW erreicht!! '')')
+            Q_Abfrage = 'NO_SCHLEIFE'
+            CYCLE
+          END IF
+
           !MD  nz = nz + 2
           !MD  strbr = 0.        ! Strecke zwischen den Profilen
           !MD  Keine Oberwasserberechnung fuer die innere Q-Schleife
@@ -2070,9 +2120,7 @@ Hauptschleife: DO i = 1, maxger
          ! CALL wspow (henw, strbr, q, q1, hr, hv, rg, indmax, hvst,   &
          !    & hrst, psieins, psiorts, nprof, hgrenz, ikenn, nblatt,  &
          !    & nz, idr1)
-          ! --------------------- OW-Berechnung
-
-          qvar_in = qvar_in + DELTA_Q
+         ! --------------------- OW-Berechnung
 
         END DO
         WRITE (UNIT_OUT_TAB, '(/,'' Innere Q-Schleife ueber Wehrberechnung abgeschlossen'')')
@@ -2121,6 +2169,7 @@ Hauptschleife: DO i = 1, maxger
       num (nprof) = prof_nr (1:10)
       !MD  wird nie verwendet
       !MD  222 CONTINUE
+
       out_PROF(nprof,nr_q)%interpol = .FALSE.
       !**   str = abstand zwischen 2 Profilen?
       str = (stat (nprof) - stat (nprof - 1) ) * 1000.
@@ -2134,6 +2183,7 @@ Hauptschleife: DO i = 1, maxger
     ELSEIF (BERECHNUNGSMODUS == 'REIB_KONST') then
       out_PROF(nprof,nr_q)%stat = stat(nprof)
       out_PROF(nprof,nr_q)%interpol = .FALSE.
+      VERZOEGERUNGSVERLUST = 'NON '
 
       num (nprof) = prof_nr (1:10)
 
@@ -2146,8 +2196,6 @@ Hauptschleife: DO i = 1, maxger
 
       CALL wspanf (wsanf, strbr, q, q1, hr, hv, rg, indmax, hvst, &
         & hrst, psieins, psiorts, nprof, hgrenz, ikenn, nblatt, nz, idr1)
-
-
 
     !**   ENDIF ZU (nprof.eq.1)
     ENDIF
