@@ -51,7 +51,7 @@
 
      <gml:dictionaryEntry>
           <swe:ItemDefinition gml:id="LengthSectionWaterlevel">
-               <gml:name>Abfluss</gml:name>
+               <gml:name>Wasserstand</gml:name>
                <swe:property>
                     <swe:Phenomenon gml:id="phen_waterlevel">
                          <gml:description>Wasserstand</gml:description>

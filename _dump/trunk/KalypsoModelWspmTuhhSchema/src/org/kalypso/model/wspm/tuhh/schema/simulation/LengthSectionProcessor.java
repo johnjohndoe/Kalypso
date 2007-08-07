@@ -124,7 +124,7 @@ public class LengthSectionProcessor
 
     m_buffer.append( header );
 
-    m_gmlFilePattern = addRunoffToFilename ? "lengthSection_%.3f.gml" : "Längsschnitt.gml";
+    m_gmlFilePattern = addRunoffToFilename ? "lengthSection_%.3f" : "Längsschnitt";
     m_titlePattern = addRunoffToFilename ? "Längsschnitt - %.3f" : "Längsschnitt";
   }
 
@@ -134,7 +134,7 @@ public class LengthSectionProcessor
     {
       m_buffer.append( m_footer );
 
-      final String fileName = String.format( m_gmlFilePattern, runoff );
+      final String fileName = String.format( m_gmlFilePattern + ".gml", runoff );
       m_dataDir = new File( m_outDir, "Daten" );
       m_dataDir.mkdirs();
       m_gmlFile = new File( m_dataDir, fileName );
