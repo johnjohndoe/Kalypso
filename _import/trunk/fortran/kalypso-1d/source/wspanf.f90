@@ -1,4 +1,4 @@
-!     Last change:  MD   10 Jul 2007    1:14 pm
+!     Last change:  MD    7 Aug 2007   12:17 pm
 !--------------------------------------------------------------------------
 ! This code, wspanf.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -150,6 +150,18 @@ REAL 		:: hborda, heins, horts
 COMMON / vort / hborda, heins, horts
 ! -----------------------------------------------------------------------------
 
+! COMMON-Block /ERG/ ----------------------------------------------------------
+REAL 		:: wsp (maxger), hen (maxger), qs (maxger), fgesp (maxger)
+REAL 		:: froudp (maxger), hvs (maxger), hrs (maxger), hs (maxger)
+REAL 		:: fp (maxger, maxkla), up (maxger, maxkla), vp (maxger, maxkla)
+REAL 		:: qtp (maxger, maxkla), rkp (maxger, maxkla), fbwp (maxger, maxkla)
+REAL 		:: brp (maxger, maxkla)
+REAL		:: vmp (maxger), hbors (maxger), hein (maxger), hort (maxger), brg (maxger)
+INTEGER 	:: igrenz (maxger)
+COMMON / erg / wsp, hen, qs, fgesp, froudp, hvs, hrs, hs, fp, up, &
+             & vp, qtp, rkp, fbwp, brp, vmp, hbors, hein, hort, igrenz, brg
+! -----------------------------------------------------------------------------
+
 
 ! Local variables
 INTEGER :: igrnz, ifehl, itere1, ifehlg, istat
@@ -220,6 +232,13 @@ IF (wsanf.lt.0.) then
     str = 100.
   ELSEIF (nprof.ne.1) then   !MD neu fuer Reibungsgefaelle
     str = strbr
+
+   !MD  NEU NEU NEU
+    ws1 = wsp (nprof - 1)
+    hv1 = hv
+    rg1 = rg
+    vmp1 = vmp (nprof - 1)
+    fges1 = fges
   Endif
 
   CALL station (wsanf, nprof, hgrenz, q, hr, hv, rg, indmax, hvst, &
