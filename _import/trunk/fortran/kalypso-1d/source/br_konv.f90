@@ -1,4 +1,4 @@
-!     Last change:  MD    3 Aug 2007    5:22 pm
+!     Last change:  MD    7 Aug 2007    6:15 pm
 !--------------------------------------------------------------------------
 ! This code, br_konv.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -249,8 +249,10 @@ REAL :: strbr
 CHARACTER(LEN=11), INTENT(IN)  :: Q_Abfrage     !Abfrage fuer Ende der Inneren Q-Schleife
 INTEGER, INTENT(IN)            :: nr_q_out
 
-write (UNIT_OUT_LOG, 20) staso, str1, q, q1, nprof, hr, rg, hvst, hrst
-20 format (//1X, 'Subroutine BR_KONV', /, &
+
+IF (Q_Abfrage.ne.'BR_SCHLEIFE') then
+  write (UNIT_OUT_LOG, 20) staso, str1, q, q1, nprof, hr, rg, hvst, hrst
+  20 format (//1X, 'Subroutine BR_KONV', /, &
            & 1X, '------------------------------------------------', //, &
            & 5X, 'Uebergebene Parameter:', /, &
            & 5X, '----------------------', /, &
@@ -263,6 +265,7 @@ write (UNIT_OUT_LOG, 20) staso, str1, q, q1, nprof, hr, rg, hvst, hrst
            & 5X, 'RG (?)                               = ', F12.5, /, &
            & 5X, 'HVST (Verlusthoehe?)                 = ', F12.5, /, &
            & 5X, 'HRST (Reibungsverlust aus STATION)   = ', F12.5, /)
+ENDIF
   !do i = 1, nknot
   !  write (UNIT_OUT_LOG,*) i, x1(i), h1(i)
   !end do
@@ -343,9 +346,10 @@ ifroud = 0
 
 
 !JK    SCHREIBEN IN KONTROLLFILE
-
-WRITE (UNIT_OUT_LOG, 28) iokl, iokr
-28 format (/1X, 'IOKL (Nummer des Punktes der Oberkante links):  ', I3, /, &
+IF (Q_Abfrage.ne.'BR_SCHLEIFE') then
+  WRITE (UNIT_OUT_LOG, 28) iokl, iokr
+ENDIF
+  28 format (/1X, 'IOKL (Nummer des Punktes der Oberkante links):  ', I3, /, &
           & 1X, 'IOKR (Nummer des Punktes der Oberkante rechts): ', I3)
 
 i1 = iokl
@@ -426,11 +430,12 @@ DO i = 1, npl
 END DO
 
 
-
-WRITE (UNIT_OUT_LOG, 29) npl, i2, nknot
-29 format (/1X, 'NPL (Anzahl Punkte auf Brueckenlinie?):       ', I3,/,&
-          & 1X, 'I2 (Gesamte Anzahl der Punkte inkl. Bruecke): ', I3,/,&
-          & 1X, 'NKNOT (Anzahl Profilpunkte ohne Bruecke):     ', I3)
+IF (Q_Abfrage.ne.'BR_SCHLEIFE') then
+  WRITE (UNIT_OUT_LOG, 29) npl, i2, nknot
+ENDIF
+  29 format (/1X, 'NPL (Anzahl Punkte auf Brueckenlinie?):       ', I3,/,&
+            & 1X, 'I2 (Gesamte Anzahl der Punkte inkl. Bruecke): ', I3,/,&
+            & 1X, 'NKNOT (Anzahl Profilpunkte ohne Bruecke):     ', I3)
 
 nknot = i2
 
@@ -451,10 +456,12 @@ DO i = 1, nknot
 
   !JK   SCHREIBEN IN KONTROLLFILE
   !JK   WENN BERECHNUNG NACH DARCY-WEISBACH
-  if (FLIESSGESETZ == 'DW_M_FORMBW' .or. FLIESSGESETZ == 'DW_O_FORMBW') then
-    WRITE (UNIT_OUT_LOG, 30) i, x1 (i) , h1 (i) , rau (i) , ax (i) , ay (i) , dp (i)
-  ELSE
-    WRITE (UNIT_OUT_LOG, 31) i, x1 (i) , h1 (i) , rau (i)
+  IF (Q_Abfrage.ne.'BR_SCHLEIFE') then
+    if (FLIESSGESETZ == 'DW_M_FORMBW' .or. FLIESSGESETZ == 'DW_O_FORMBW') then
+      WRITE (UNIT_OUT_LOG, 30) i, x1 (i) , h1 (i) , rau (i) , ax (i) , ay (i) , dp (i)
+    ELSE
+      WRITE (UNIT_OUT_LOG, 31) i, x1 (i) , h1 (i) , rau (i)
+    ENDIF
   ENDIF
 
 END DO
@@ -493,11 +500,11 @@ htrli = h1 (itrli)
 htrre = h1 (itrre)
 
 !JK   SCHREIBEN IN KONTROLLFILE
-
-WRITE (UNIT_OUT_LOG, 32) itrli, itrre
-32 format (/1X, 'ITRLI (Trennflaeche links):  ', I3,/,&
-          & 1X, 'ITRRE (Trennflaeche rechts): ', I3)
-
+IF (Q_Abfrage.ne.'BR_SCHLEIFE') then
+  WRITE (UNIT_OUT_LOG, 32) itrli, itrre
+ENDIF
+  32 format (/1X, 'ITRLI (Trennflaeche links):  ', I3,/,&
+            & 1X, 'ITRRE (Trennflaeche rechts): ', I3)
 
 !write (UNIT_OUT_LOG,*) 'Zeile 423 in brkon, Starte NORMBER!'
 
@@ -646,10 +653,10 @@ vm = q / fges
 !**  he3=hr3+vm*vm/2./9.81
 !  schaetzung wsp in profil 1: hr1=he1
 
-
-write (UNIT_OUT_LOG,33) aue3, vm, q, fges
-33 format (1X, 'AUE3 = ', F12.5, '  VM = ', F12.5, ' q = ', F12.5, ' FGES = ', F12.5)
-
+IF (Q_Abfrage.ne.'BR_SCHLEIFE') then
+  write (UNIT_OUT_LOG,33) aue3, vm, q, fges
+  33 format (1X, 'AUE3 = ', F12.5, '  VM = ', F12.5, ' q = ', F12.5, ' FGES = ', F12.5)
+ENDIF
 
 
 ! 1.te Schaetzung: he1=he3
@@ -667,20 +674,18 @@ ELSE
   hmass = hukmax
 ENDIF
 
-!JK      SCHREIBEN IN KONTROLLFILE
-WRITE (UNIT_OUT_LOG, '(//,'' q = '',f6.2,'' hukmax = '',f6.2)') q, hukmax
-
 hea = he3 + dx
 heb = he3
 
-
-write (UNIT_OUT_LOG, 34) he1, he3, hr3, hea, heb
-34 format (1X, 'HE1 (Energiehoehe am Profil 1):     ', F12.5, /, &
-         & 1X, 'HE3 (Energiehoehe am Profil 3):     ', F12.5, /, &
-         & 1X, 'HR3 (=hr, Wasserspiegel am Profil): ', F12.5, /, &
-         & 1X, 'HEA (Energiehoehe am Profil A):     ', F12.5, /, &
-         & 1X, 'HEB (Energiehoehe am Profil B):     ', F12.5 )
-
+IF (Q_Abfrage.ne.'BR_SCHLEIFE') then
+  WRITE (UNIT_OUT_LOG, '(//,'' q = '',f6.2,'' hukmax = '',f6.2)') q, hukmax
+  write (UNIT_OUT_LOG, 34) he1, he3, hr3, hea, heb
+  34 format (1X, 'HE1 (Energiehoehe am Profil 1):     ', F12.5, /, &
+           & 1X, 'HE3 (Energiehoehe am Profil 3):     ', F12.5, /, &
+           & 1X, 'HR3 (=hr, Wasserspiegel am Profil): ', F12.5, /, &
+           & 1X, 'HEA (Energiehoehe am Profil A):     ', F12.5, /, &
+           & 1X, 'HEB (Energiehoehe am Profil B):     ', F12.5 )
+ENDIF
 
 ibiter = 0
 itbmax = 30
@@ -719,8 +724,10 @@ CALL abfluss (ad, aue, apg, wl, rhy, raub, breite, heb, he3, qd,  &
             & qw, qgesb, aue3, wl3, iartb)
 
 !JK      SCHREIBEN IN KONTROLLFILE
-WRITE (UNIT_OUT_LOG, '(/'' i   ad    aue    wl    he1     qd      qw      qges'')')
-WRITE (UNIT_OUT_LOG, '(i2,1x,7(f8.3,1x))') isch, ad, aue, wl, heb, qd, qw, qgesb
+IF (Q_Abfrage.ne.'BR_SCHLEIFE') then
+  WRITE (UNIT_OUT_LOG, '(/'' i   ad    aue    wl    he1     qd      qw      qges'')')
+  WRITE (UNIT_OUT_LOG, '(i2,1x,7(f8.3,1x))') isch, ad, aue, wl, heb, qd, qw, qgesb
+ENDIF
 
 ibiter = 0
 
@@ -758,9 +765,10 @@ CALL abfluss (ad, aue, apg, wl, rhy, raub, breite, hea, he3, qd,  &
             & qw, qgesa, aue3, wl3, iartt)
 
 !JK  SCHREIBEN IN KONTROLLFILE
-WRITE (UNIT_OUT_LOG, '(/'' i   ad    aue    wl    he1     qd      qw      qges'')')
-WRITE (UNIT_OUT_LOG, '(i2,1x,7(f8.3,1x))') isch, ad, aue, wl, hea, qd, qw, qgesa
-
+IF (Q_Abfrage.ne.'BR_SCHLEIFE') then
+  WRITE (UNIT_OUT_LOG, '(/'' i   ad    aue    wl    he1     qd      qw      qges'')')
+  WRITE (UNIT_OUT_LOG, '(i2,1x,7(f8.3,1x))') isch, ad, aue, wl, hea, qd, qw, qgesa
+ENDIF
 
 heaa = - 1000.
 
@@ -789,8 +797,10 @@ DO 100 i = 1, itmax_brkon
     hr1 = hea
 
     IF (hr1.le.hukmax) then
+      IF (Q_Abfrage.ne.'BR_SCHLEIFE') then
+        WRITE (UNIT_OUT_LOG, '(''energiehoehe tiefer hukmax --> weiter mit impuls'')')
+      ENDIF
 
-      WRITE (UNIT_OUT_LOG, '(''energiehoehe tiefer hukmax --> weiter mit impuls'')')
       !JK  ZUR IMPULSBERECHNUNG
       GOTO 200
 
@@ -799,8 +809,10 @@ DO 100 i = 1, itmax_brkon
     IF (iartt.eq.0) then
 
       !JK   SCHREIBEN IN KONTROLLFILE
-      WRITE (UNIT_OUT_LOG, '('' --> weiter mit hr1 = '',f7.3)') hr1
-      WRITE (UNIT_OUT_LOG, '('' (vollkommener ueberfall) '',/)')
+      IF (Q_Abfrage.ne.'BR_SCHLEIFE') then
+        WRITE (UNIT_OUT_LOG, '('' --> weiter mit hr1 = '',f7.3)') hr1
+        WRITE (UNIT_OUT_LOG, '('' (vollkommener ueberfall) '',/)')
+      ENDIF
 
       qdiff = q / qgesa
       qw = qw * qdiff
@@ -847,7 +859,6 @@ DO 100 i = 1, itmax_brkon
       iwehr = 1
 
       !write (*,*) 'In BR_KONV. Ende (iartt == 0)'
-
       !JK  ZU VOLLKOMMENEM UEBERFALL
       GOTO 9999
 
@@ -855,8 +866,10 @@ DO 100 i = 1, itmax_brkon
     ELSE
 
       !JK  SCHREIBEN IN KONTROLLFILE
-      WRITE (UNIT_OUT_LOG, '(''unvollkommener ueberfall'',/)')
-      WRITE (UNIT_OUT_LOG, '(''--> weiter mit impuls'',/)')
+      IF (Q_Abfrage.ne.'BR_SCHLEIFE') then
+        WRITE (UNIT_OUT_LOG, '(''unvollkommener ueberfall'',/)')
+        WRITE (UNIT_OUT_LOG, '(''--> weiter mit impuls'',/)')
+      ENDIF
 
       !JK  ZU IMPULSBERECHNUNG
       GOTO 200
@@ -874,8 +887,9 @@ DO 100 i = 1, itmax_brkon
     IF (hr1 .le. hukmax) then
 
       !JK   SCHREIBEN IN KONTROLLFILE
-      WRITE (UNIT_OUT_LOG, '(''energiehoehe tiefer hukmax --> weiter mit impuls'')')
-
+      IF (Q_Abfrage.ne.'BR_SCHLEIFE') then
+        WRITE (UNIT_OUT_LOG, '(''energiehoehe tiefer hukmax --> weiter mit impuls'')')
+      ENDIF
       !JK  ZU IMPULSBERECHNUNG
       GOTO 200
 
@@ -883,11 +897,13 @@ DO 100 i = 1, itmax_brkon
 
     IF (iartt.eq.0) then
 
-      !JK                  SCHREIBEN IN KONTROLLFILE
-      write (UNIT_OUT_LOG, 42) hr1
-      42 format (1X, 'Konvergenz im Wasserspiegel erreicht!', /, &
-               & 1X, '--> weiter mit hr1 = ',f12.5, /, &
-               & 1X, '(vollkommener Ueberfall)',/)
+      !JK    SCHREIBEN IN KONTROLLFILE
+      IF (Q_Abfrage.ne.'BR_SCHLEIFE') then
+        write (UNIT_OUT_LOG, 42) hr1
+        42 format (1X, 'Konvergenz im Wasserspiegel erreicht!', /, &
+                 & 1X, '--> weiter mit hr1 = ',f12.5, /, &
+                 & 1X, '(vollkommener Ueberfall)',/)
+      ENDIF
 
       qdiff = q / qgesa
       qw = qw * qdiff
@@ -940,8 +956,10 @@ DO 100 i = 1, itmax_brkon
     ELSE
 
       !JK   SCHREIBEN IN KONTROLLFILE
-      WRITE (UNIT_OUT_LOG, '(''unvollkommener ueberfall'',/)')
-      WRITE (UNIT_OUT_LOG, '(''--> weiter mit impuls'',/)')
+      IF (Q_Abfrage.ne.'BR_SCHLEIFE') then
+        WRITE (UNIT_OUT_LOG, '(''unvollkommener ueberfall'',/)')
+        WRITE (UNIT_OUT_LOG, '(''--> weiter mit impuls'',/)')
+      ENDIF
 
       !JK   ZU IMPULSBERECHNUNG
       GOTO 200
@@ -991,9 +1009,10 @@ DO 100 i = 1, itmax_brkon
         IF (hr1 .le. hukmax) then
 
           !JK   SCHREIBEN IN KONTROLLFILE
-          WRITE (UNIT_OUT_LOG, '(''energiehoehe tiefer hukmax -->'', &
-               & ''weiter mit impuls'')')
-
+          IF (Q_Abfrage.ne.'BR_SCHLEIFE') then
+            WRITE (UNIT_OUT_LOG, '(''energiehoehe tiefer hukmax -->'', &
+                 & ''weiter mit impuls'')')
+          ENDIF
           !JK   ZU IMPULSBERECHNUNG
           GOTO 200
 
@@ -1002,10 +1021,11 @@ DO 100 i = 1, itmax_brkon
         IF (iartt.eq.0) then
 
           !JK   SCHREIBEN IN KONTROLLFILE
-          WRITE (UNIT_OUT_LOG, '(''Konvergenz im Wasserspiegel erreicht.'')')
-          WRITE (UNIT_OUT_LOG, '('' --> weiter mit hr1 = '',f7.3)') hr1
-          WRITE (UNIT_OUT_LOG, '('' (vollkommener ueberfall) '',/)')
-
+          IF (Q_Abfrage.ne.'BR_SCHLEIFE') then
+            WRITE (UNIT_OUT_LOG, '(''Konvergenz im Wasserspiegel erreicht.'')')
+            WRITE (UNIT_OUT_LOG, '('' --> weiter mit hr1 = '',f7.3)') hr1
+            WRITE (UNIT_OUT_LOG, '('' (vollkommener ueberfall) '',/)')
+          ENDIF
 
           qdiff = q / qgesa
           qw = qw * qdiff
@@ -1055,8 +1075,10 @@ DO 100 i = 1, itmax_brkon
         ELSE
 
           !JK  SCHREIBEN IN KONTROLLFILE
-          WRITE (UNIT_OUT_LOG, '(''unvollkommener ueberfall'',/)')
-          WRITE (UNIT_OUT_LOG, '(''--> weiter mit impuls'',/)')
+          IF (Q_Abfrage.ne.'BR_SCHLEIFE') then
+            WRITE (UNIT_OUT_LOG, '(''unvollkommener ueberfall'',/)')
+            WRITE (UNIT_OUT_LOG, '(''--> weiter mit impuls'',/)')
+          ENDIF
 
           !JK   ZU IMPULSBERECHNUNG
           GOTO 200
@@ -1077,9 +1099,10 @@ DO 100 i = 1, itmax_brkon
              & qd, qw, qgesa, aue3, wl3, iartt)
 
       !JK   SCHREIBEN IN KONTROLLFILE
-      WRITE (UNIT_OUT_LOG, '(/'' i   ad    aue    wl    he1     qd      qw      qges'')')
-      WRITE (UNIT_OUT_LOG, '(i2,1x,7(f8.3,1x))') isch, ad, aue, wl, hea, qd, qw, qgesa
-
+      IF (Q_Abfrage.ne.'BR_SCHLEIFE') then
+        WRITE (UNIT_OUT_LOG, '(/'' i   ad    aue    wl    he1     qd      qw      qges'')')
+        WRITE (UNIT_OUT_LOG, '(i2,1x,7(f8.3,1x))') isch, ad, aue, wl, hea, qd, qw, qgesa
+      ENDIF
 
       !JK  ZU NULLSTELLE
       GOTO 110
@@ -1095,8 +1118,9 @@ DO 100 i = 1, itmax_brkon
       IF (abs (df) .lt.1.e-04) then
 
         !JK  SCHREIBEN IN KONTROLLFILE
-        WRITE (UNIT_OUT_LOG, '(''df--> 0! --> he1=he1+0.1'')')
-
+        IF (Q_Abfrage.ne.'BR_SCHLEIFE') then
+          WRITE (UNIT_OUT_LOG, '(''df--> 0! --> he1=he1+0.1'')')
+        ENDIF
         hea = hea + 0.1
 
       ELSE
@@ -1122,9 +1146,10 @@ DO 100 i = 1, itmax_brkon
      & qd, qw, qgesa, aue3, wl3, iartt)
 
     !JK  SCHREIBEN IN KONTROLLFILE
-    WRITE (UNIT_OUT_LOG, '(/'' i   ad    aue    wl    he1     qd      qw      qges'')')
-    WRITE (UNIT_OUT_LOG, '(i2,1x,7(f8.3,1x))') isch, ad, aue, wl, hea, qd, qw, qgesa
-
+    IF (Q_Abfrage.ne.'BR_SCHLEIFE') then
+      WRITE (UNIT_OUT_LOG, '(/'' i   ad    aue    wl    he1     qd      qw      qges'')')
+      WRITE (UNIT_OUT_LOG, '(i2,1x,7(f8.3,1x))') isch, ad, aue, wl, hea, qd, qw, qgesa
+    ENDIF
   ENDIF
 
   IF (abs (hea - hmass) .le.1.e-04.and.abs (heb - hmass) .le.1.e-04) then
@@ -1177,10 +1202,11 @@ IF ( (hr3 - hsohl) .le.0.0001) then
   hsohl = hmin
 
   !JK        SCHREIBEN IN KONTROLLFILE
-  WRITE (UNIT_OUT_LOG, '(''wasserspiegel unterhalb tiefster'')')
-  WRITE (UNIT_OUT_LOG, '(''sohlenkoordinate in bruecke (profil 3 - uw) -->'')')
-  WRITE (UNIT_OUT_LOG, '(''weiter mit grenztiefe im ow-profil 1'')')
-
+  IF (Q_Abfrage.ne.'BR_SCHLEIFE') then
+    WRITE (UNIT_OUT_LOG, '(''wasserspiegel unterhalb tiefster'')')
+    WRITE (UNIT_OUT_LOG, '(''sohlenkoordinate in bruecke (profil 3 - uw) -->'')')
+    WRITE (UNIT_OUT_LOG, '(''weiter mit grenztiefe im ow-profil 1'')')
+  ENDIF
 
 
   CALL abskst (nknot, x1, xi, h1, hi, s, maxkla)
@@ -1235,8 +1261,10 @@ ELSE
    & ad, aue, apl, apg
 
   !JK   SCHREIBEN IN KONTROLLFILE
-  WRITE (UNIT_OUT_LOG, '(/,t10,''profil "3": hr  m  a'',/,t10,3f10.3)') hr3, m3, a3
-  WRITE (UNIT_OUT_LOG, '(/,t10,''ad  aue apl  apg '',/,t10,4f10.3)') ad, aue, apl, apg
+  IF (Q_Abfrage.ne.'BR_SCHLEIFE') then
+    WRITE (UNIT_OUT_LOG, '(/,t10,''profil "3": hr  m  a'',/,t10,3f10.3)') hr3, m3, a3
+    WRITE (UNIT_OUT_LOG, '(/,t10,''ad  aue apl  apg '',/,t10,4f10.3)') ad, aue, apl, apg
+  ENDIF
 
   !JK        WENN DRUCKABFLUSS
   IF (hr3.ge.hukmax) then
@@ -1355,14 +1383,15 @@ ELSE
     CALL kopf (nblatt, nz, UNIT_OUT_TAB, UNIT_OUT_PRO, idr1)
   ENDIF
 
-  WRITE (UNIT_OUT_TAB, '(/,t10,''Profil "1": hr  m  a'',/,t10,3f10.3)') &
-   & hr1, m1, a1
-  WRITE (UNIT_OUT_TAB, '(/,t10,''ad  aue apl  apg '',/,t10,4f10.3)') &
-   & ad, aue, apl, apg
-
-  !JK   SCHREIBEN IN KONTROLLFILE
-  WRITE (UNIT_OUT_LOG, '(/,t10,''profil "1": hr  m  a'',/,t10,3f10.3)') hr1, m1, a1
-  WRITE (UNIT_OUT_LOG, '(/,t10,''ad  aue apl  apg '',/,t10,4f10.3)') ad, aue, apl, apg
+  IF (Q_Abfrage.ne.'BR_SCHLEIFE') then
+    WRITE (UNIT_OUT_TAB, '(/,t10,''Profil "1": hr  m  a'',/,t10,3f10.3)') &
+     & hr1, m1, a1
+    WRITE (UNIT_OUT_TAB, '(/,t10,''ad  aue apl  apg '',/,t10,4f10.3)') &
+     & ad, aue, apl, apg
+    !JK  SCHREIBEN IN KONTROLLFILE
+    WRITE (UNIT_OUT_LOG, '(/,t10,''profil "1": hr  m  a'',/,t10,3f10.3)') hr1, m1, a1
+    WRITE (UNIT_OUT_LOG, '(/,t10,''ad  aue apl  apg '',/,t10,4f10.3)') ad, aue, apl, apg
+  ENDIF
 
   IF (hr1.ge.hukmax.or.hr2.ge.hukmax.or.hr3.ge.hukmax) then
 
@@ -1371,8 +1400,10 @@ ELSE
     !  druckabfluss
 
     !JK   SCHREIBEN IN KONTROLLFILE
-    WRITE (UNIT_OUT_LOG, '(''druckabfluss !!'',/,''ermittelt hr1 aus impuls: '',f10.2)') hr1
-    WRITE (UNIT_OUT_LOG, 17)
+    IF (Q_Abfrage.ne.'BR_SCHLEIFE') then
+      WRITE (UNIT_OUT_LOG, '(''druckabfluss !!'',/,''ermittelt hr1 aus impuls: '',f10.2)') hr1
+      WRITE (UNIT_OUT_LOG, 17)
+    ENDIF
 
     nz = nz + 2
     IF (nz.gt.50) then
@@ -1397,8 +1428,10 @@ ELSE
     ! Kontrolle, ob schiessende stroemung in '2'
 
     !JK  SCHREIBEN IN KONTROLLFILE
-    WRITE (UNIT_OUT_LOG, '('' profil 1: '',/,''impuls m1: '',f7.3,/,   &
-       &  '' gesamt durchstroemte flaeche (aue+ad) '',f7.3)') m1, a1
+    IF (Q_Abfrage.ne.'BR_SCHLEIFE') then
+      WRITE (UNIT_OUT_LOG, '('' profil 1: '',/,''impuls m1: '',f7.3,/,   &
+         &  '' gesamt durchstroemte flaeche (aue+ad) '',f7.3)') m1, a1
+    ENDIF
 
     tm = (ad+aue) / bnetto
     vm = q / (ad+aue)
@@ -1442,17 +1475,21 @@ ELSE
       IF (hpf.gt.0.001) then
 
         !JK   SCHREIBEN IN KONTROLLFILE
-        WRITE (UNIT_OUT_LOG, '(/,''berechnung der fliesstiefe mit yarnell:'' &
-          &      /,'' => pfeilerstau aus yarnell = '',f7.3)') hpf
-        WRITE (UNIT_OUT_LOG, '('' --> wsp profil 1 = max (hr3+hpf,hr1): '',/ &
-          &        ''        = max ('',2(f7.3,1x),'')'')') hr1n, hr1
+        IF (Q_Abfrage.ne.'BR_SCHLEIFE') then
+          WRITE (UNIT_OUT_LOG, '(/,''berechnung der fliesstiefe mit yarnell:'' &
+            &      /,'' => pfeilerstau aus yarnell = '',f7.3)') hpf
+          WRITE (UNIT_OUT_LOG, '('' --> wsp profil 1 = max (hr3+hpf,hr1): '',/ &
+            &        ''        = max ('',2(f7.3,1x),'')'')') hr1n, hr1
+        ENDIF
 
         !**  if (hr1n.ge.hr1) then
         IF (hr1n.ge.hr1.AND.hr1n.le.hukmax) then
 
           !JK  SCHREIBEN IN KONTROLLFILE
-          WRITE (UNIT_OUT_LOG, '('' --> wsp profil 1 = max (hr3+hpf, hr1): '',/, &
-                        & '' = max ('',2(f7.3,1x),'')'')') hr1n, hr1
+          IF (Q_Abfrage.ne.'BR_SCHLEIFE') then
+            WRITE (UNIT_OUT_LOG, '('' --> wsp profil 1 = max (hr3+hpf, hr1): '',/, &
+                          & '' = max ('',2(f7.3,1x),'')'')') hr1n, hr1
+          ENDIF
 
           hr1 = hr1n
           write (UNIT_OUT_LOG, 14) hpf
@@ -1523,7 +1560,9 @@ IF (iartt.eq.2) then
   ! *****************************************************************
 
   !JK    SCHREIBEN IN KONTROLLFILE
-  WRITE (UNIT_OUT_LOG, '('' unvollkommener ueberfall --> it. normber.'')')
+  IF (Q_Abfrage.ne.'BR_SCHLEIFE') then
+    WRITE (UNIT_OUT_LOG, '('' unvollkommener ueberfall --> it. normber.'')')
+  ENDIF
 
   nz = nz + 1
   IF (nz.gt.50) then
