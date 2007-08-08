@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
@@ -68,6 +68,7 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.types.LayerType;
 import org.kalypso.template.types.ObjectFactory;
 import org.kalypso.template.types.StyledLayerType;
+import org.kalypso.template.types.StyledLayerType.Property;
 import org.kalypso.template.types.StyledLayerType.Style;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
@@ -140,13 +141,15 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
       setType( type.toUpperCase() );
       setName( mapLayerType.getName() );
       final List<Style> stylesList = mapLayerType.getStyle();
-      for( int i = 0; i < stylesList.size(); i++ )
+
+      for( final Style style : stylesList )
       {
-        final Style styleType = stylesList.get( i );
-        final PoolableObjectType sldPoolableObjectType = new PoolableObjectType( styleType.getLinktype(), styleType.getHref(), context );
-        final GisTemplateUserStyle gisTemplateUserStyle = new GisTemplateUserStyle( sldPoolableObjectType, styleType.getStyle() );
+        final PoolableObjectType sldPoolableObjectType = new PoolableObjectType( style.getLinktype(), style.getHref(), context );
+        final GisTemplateUserStyle gisTemplateUserStyle = new GisTemplateUserStyle( sldPoolableObjectType, style.getStyle() );
         m_gisTemplateUserStyles.add( gisTemplateUserStyle );
       }
+
+      configureProperties( this, mapLayerType );
     }
     try
     {
@@ -158,6 +161,13 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
       e.printStackTrace();
       // catch any exception
     }
+  }
+
+  public static void configureProperties( final IKalypsoTheme theme, final StyledLayerType mapLayerType )
+  {
+    final List<Property> propertyList = mapLayerType.getProperty();
+    for( final Property property : propertyList )
+      theme.setProperty( property.getName(), property.isValue() );
   }
 
   /**
@@ -254,6 +264,21 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
         final Style styleType = extentFac.createStyledLayerTypeStyle();
         style.fillStyleType( stylesList, styleType );
       }
+
+      fillProperties( this, extentFac, styledLayerType );
+    }
+  }
+
+  public static void fillProperties( final AbstractKalypsoTheme theme, final ObjectFactory extentFac, final StyledLayerType styledLayerType )
+  {
+    final List<Property> propertyList = styledLayerType.getProperty();
+    final String[] propertyNames = theme.getPropertyNames();
+    for( final String name : propertyNames )
+    {
+      final Property property = extentFac.createStyledLayerTypeProperty();
+      property.setName( name );
+      property.setValue( theme.getProperty( name ) );
+      propertyList.add( property );
     }
   }
 
@@ -308,7 +333,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
               {
                 System.out.println( "no default style found for " + featureType.getQName() ); //$NON-NLS-1$
                 userStyle = defaultStyleFactory.createUserStyle( featureType, " - " //$NON-NLS-1$
-                    + Messages.getString( "org.kalypso.ogc.gml.GisTemplateFeatureTheme.generatedstyle" ) //$NON-NLS-1$ 
+                    + Messages.getString( "org.kalypso.ogc.gml.GisTemplateFeatureTheme.generatedstyle" ) //$NON-NLS-1$
                     + " -" ); //$NON-NLS-1$
               }
               else

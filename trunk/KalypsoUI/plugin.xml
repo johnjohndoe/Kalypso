@@ -1197,6 +1197,15 @@
              style="push"
              toolbarPath="outline/tools"
              tooltip="%org.kalypso.ogc.gml.outline.MoveThemeDownAction2.tooltip"/>
+       <action
+             class="org.kalypso.ogc.gml.outline.RemoveThemeAction"
+             icon="icons/full/elcl16/remove.gif"
+             id="org.kalypso.ui.views.outline.removeTheme"
+             label="%org.kalypso.ogc.gml.outline.RemoveThemeAction.label"
+             style="push"
+             toolbarPath="outline/tools"
+             tooltip="%org.kalypso.ogc.gml.outline.RemoveThemeAction.tooltip">
+       </action>
        <menu
              id="org.kalypso.ui.views.outline.actions.tools"
              label="Tools"

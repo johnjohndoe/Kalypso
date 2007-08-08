@@ -41,7 +41,10 @@
 package org.kalypso.ogc.gml;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.ISafeRunnable;
@@ -73,9 +76,11 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
     public void visit( final IKalypsoThemeListener l );
   }
 
+  protected static final Object[] EMPTY_CHILDREN = new Object[] {};
+
   private final Collection<IKalypsoThemeListener> m_listeners = new HashSet<IKalypsoThemeListener>();
 
-  protected static final Object[] EMPTY_CHILDREN = new Object[] {};
+  private final Map<String, Boolean> m_properties = Collections.synchronizedMap( new HashMap<String, Boolean>() );
 
   private final IMapModell m_mapModel;
 
@@ -98,6 +103,9 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
     m_name = name;
     m_type = type;
     m_mapModel = mapModel;
+
+    /* Initialize properties */
+    m_properties.put( PROPERTY_DELETEABLE, true ); // deleteable defaults to 'true', because this was the old behaviour
   }
 
   public String getName( )
@@ -360,4 +368,34 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
       fireVisibilityChanged( visible );
     }
   }
+
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#getProperty(java.lang.String)
+   */
+  public boolean getProperty( final String name )
+  {
+    Assert.isLegal( m_properties.containsKey( name ), "Unknown property: " + name );
+
+    return m_properties.get( name );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#setProperty(java.lang.String, boolean)
+   */
+  public void setProperty( final String name, final boolean value )
+  {
+    m_properties.put( name, value );
+
+    // REMARK: we use status changed at the moment, maybe we should fire a special event for properties?
+    fireStatusChanged();
+  }
+
+  /**
+   * Return the names of all known properties.
+   */
+  public String[] getPropertyNames( )
+  {
+    return m_properties.keySet().toArray( new String[m_properties.keySet().size()] );
+  }
+
 }

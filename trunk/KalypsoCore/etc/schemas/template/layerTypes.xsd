@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSPY v2004 rel. 4 U (http://www.xmlspy.com) by Gernot Belger (Björnsen Beratende Ingenieure GmbH) -->
-<xs:schema targetNamespace="types.template.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified"
-	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:kalypso="types.template.kalypso.org"
-	xmlns:xlinkext="http://www.w3.org/1999/xlinkext">
+<xs:schema targetNamespace="types.template.kalypso.org" elementFormDefault="qualified"
+	attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:kalypso="types.template.kalypso.org" xmlns:xlinkext="http://www.w3.org/1999/xlinkext">
 	<xs:import namespace="http://www.w3.org/1999/xlinkext" schemaLocation="../xlink/xlinksext.xsd" />
 	<xs:complexType name="extentType">
 		<xs:attribute name="left" type="xs:double" use="required" />
@@ -61,6 +61,22 @@
 					<xs:element name="connectedTo" minOccurs="0" maxOccurs="unbounded">
 						<xs:complexType>
 							<xs:attribute name="layerid" type="xs:IDREF" />
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="property" minOccurs="0" maxOccurs="unbounded" >
+						<xs:annotation>
+							<xs:documentation><![CDATA[A list of properties of the layer.
+The list is variable in order to allow further extensions.
+The content model is of type 'boolean' but may later be extended to support ogc-like expressions.
+The following properties are recognized at the moment:
+- deleteable: determines if this layer may be deleted by the user]]></xs:documentation>
+						</xs:annotation>
+						<xs:complexType>
+							<xs:simpleContent>
+								<xs:extension base="xs:boolean">
+									<xs:attribute name="name" type="xs:string"></xs:attribute>
+								</xs:extension>
+							</xs:simpleContent>
 						</xs:complexType>
 					</xs:element>
 				</xs:sequence>

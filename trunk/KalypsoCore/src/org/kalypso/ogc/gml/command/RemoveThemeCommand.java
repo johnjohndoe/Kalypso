@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.command;
 
@@ -62,7 +62,7 @@ public class RemoveThemeCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#isUndoable()
    */
-  public boolean isUndoable()
+  public boolean isUndoable( )
   {
     return true;
   }
@@ -70,15 +70,19 @@ public class RemoveThemeCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#process()
    */
-  public void process() throws Exception
+  public void process( ) throws Exception
   {
-    m_mapModell.removeTheme( m_theme );   
+    /* Check if deleteable, should never fail, all user actions should be aware of this flag. */
+    if( !m_theme.getProperty( IKalypsoTheme.PROPERTY_DELETEABLE ) )
+      throw new IllegalStateException( "Trying to delete a non-deleteable theme: " + m_theme.getName() );
+
+    m_mapModell.removeTheme( m_theme );
   }
 
   /**
    * @see org.kalypso.commons.command.ICommand#redo()
    */
-  public void redo() throws Exception
+  public void redo( ) throws Exception
   {
     m_mapModell.removeTheme( m_theme );
   }
@@ -86,7 +90,7 @@ public class RemoveThemeCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#undo()
    */
-  public void undo() throws Exception
+  public void undo( ) throws Exception
   {
     m_mapModell.addTheme( m_theme );
   }
@@ -94,7 +98,7 @@ public class RemoveThemeCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
-  public String getDescription()
+  public String getDescription( )
   {
     return "Thema nach unten verschieben";
   }
