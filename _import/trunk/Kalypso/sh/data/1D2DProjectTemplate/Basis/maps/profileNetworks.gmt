@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="Cp1252" standalone="yes"?>
-<mapv:gismapview name="Profilnetz" xmlns:ns1="types.template.kalypso.org" xmlns:mapv="gismapview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <mapv:layers>
-    	<mapv:mapviewRef xlink:href="base.gmt"/>
-    </mapv:layers>
-</mapv:gismapview>
-
