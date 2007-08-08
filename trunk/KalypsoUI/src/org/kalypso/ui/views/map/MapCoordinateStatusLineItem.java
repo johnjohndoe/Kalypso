@@ -46,15 +46,24 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.menus.WorkbenchWindowControlContribution;
 import org.eclipse.ui.progress.UIJob;
+import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
+import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
+import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
+import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterFinder;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.listeners.IMapPanelListener;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -66,15 +75,21 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 /**
  * @author kuch
  */
-public class MapCoordinateStatusLineItem extends WorkbenchWindowControlContribution
+public class MapCoordinateStatusLineItem extends WorkbenchWindowControlContribution implements IAdapterEater<MapPanel>, IMapPanelListener
 {
-  private static final String MAP_POSITION_TEXT = "Map position: %.2f / %.2f";
+  private static final String MAP_POSITION_TEXT = "%.2f / %.2f";
 
-  private MapCoordinateWindowListener m_windowListener;
+  private final IAdapterFinder<MapPanel> m_closeFinder = new EditorFirstAdapterFinder<MapPanel>();
 
-  private IMapPanelListener m_mapPanelListener;
+  private final IAdapterFinder<MapPanel> m_initFinder = m_closeFinder;
 
-  protected ImageHyperlink m_lnk;
+  protected final AdapterPartListener<MapPanel> m_adapterListener = new AdapterPartListener<MapPanel>( MapPanel.class, this, m_initFinder, m_closeFinder );
+
+  protected Label m_label;
+
+  private Composite m_composite;
+
+  private MapPanel m_panel;
 
   /**
    * @see org.eclipse.jface.action.ContributionItem#dispose()
@@ -82,7 +97,7 @@ public class MapCoordinateStatusLineItem extends WorkbenchWindowControlContribut
   @Override
   public void dispose( )
   {
-    PlatformUI.getWorkbench().removeWindowListener( m_windowListener );
+    m_adapterListener.dispose();
 
     super.dispose();
   }
@@ -93,82 +108,107 @@ public class MapCoordinateStatusLineItem extends WorkbenchWindowControlContribut
   @Override
   protected Control createControl( final Composite parent )
   {
-    m_windowListener = new MapCoordinateWindowListener( this );
-    PlatformUI.getWorkbench().addWindowListener( m_windowListener );
-
-    final Composite composite = new Composite( parent, SWT.NONE );
-    final GridLayout gridLayout = new GridLayout();
+    /* composite */
+    m_composite = new Composite( parent, SWT.NONE );
+    final GridLayout gridLayout = new GridLayout( 2, false );
     gridLayout.marginWidth = gridLayout.horizontalSpacing = gridLayout.verticalSpacing = 0;
-    composite.setLayout( gridLayout );
+    m_composite.setLayout( gridLayout );
 
-    m_lnk = new ImageHyperlink( composite, SWT.NONE );
+    /* target image */
+    final ImageHyperlink lnk = new ImageHyperlink( m_composite, SWT.NONE );
     final Image image = KalypsoGisPlugin.getImageProvider().getImage( ImageProvider.DESCRIPTORS.STATUS_LINE_SHOW_MAP_COORDS );
-    m_lnk.setImage( image );
-    m_lnk.setText( "Map position: " );
-    m_lnk.setToolTipText( "Mouse map position" );
-    final GridData gridData = new GridData( GridData.FILL, GridData.FILL, false, false );
-    gridData.widthHint = 300;
-    m_lnk.setLayoutData( gridData );
-    m_lnk.setEnabled( false );
+    lnk.setImage( image );
+    lnk.setEnabled( false );
 
-    m_lnk.setVisible( false );
+    /* label */
+    m_label = new Label( m_composite, SWT.NONE );
+    m_label.setToolTipText( "Mouse map position" );
+    final GridData gridData = new GridData( GridData.FILL, GridData.FILL, true, false );
+    gridData.widthHint = 175;
+    m_label.setLayoutData( gridData );
 
-    return composite;
+    m_composite.addDisposeListener( new DisposeListener()
+    {
+      public void widgetDisposed( final DisposeEvent e )
+      {
+        System.out.println( "dispose event" );
+        m_adapterListener.dispose();
+      }
+    } );
+
+    final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+    if( activePage != null )
+      m_adapterListener.init( activePage );
+
+    return m_composite;
   }
 
-  public void setEnabled( final MapPanel panel, final boolean enabled )
+  /**
+   * @see org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater#setAdapter(org.eclipse.ui.IWorkbenchPart,
+   *      java.lang.Object)
+   */
+  public void setAdapter( final IWorkbenchPart part, final MapPanel adapter )
   {
-    if( !m_lnk.isDisposed() )
-      m_lnk.setVisible( enabled );
+    if( !m_composite.isDisposed() )
+      m_composite.setVisible( adapter != null );
 
-    if( enabled && (m_mapPanelListener == null) )
+    if( m_panel != null )
+      m_panel.removeMapPanelListener( this );
+
+    m_panel = adapter;
+
+    if( m_panel != null )
+      m_panel.addMapPanelListener( this );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.listeners.IMapPanelListener#onExtentChanged(org.kalypso.ogc.gml.map.MapPanel,
+   *      org.kalypsodeegree.model.geometry.GM_Envelope, org.kalypsodeegree.model.geometry.GM_Envelope)
+   */
+  public void onExtentChanged( final MapPanel source, final GM_Envelope oldExtent, final GM_Envelope newExtent )
+  {
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.listeners.IMapPanelListener#onMapModelChanged(org.kalypso.ogc.gml.map.MapPanel,
+   *      org.kalypso.ogc.gml.mapmodel.IMapModell, org.kalypso.ogc.gml.mapmodel.IMapModell)
+   */
+  public void onMapModelChanged( final MapPanel source, final IMapModell oldModel, final IMapModell newModel )
+  {
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.listeners.IMapPanelListener#onMessageChanged(org.kalypso.ogc.gml.map.MapPanel,
+   *      java.lang.String)
+   */
+  public void onMessageChanged( final MapPanel source, final String message )
+  {
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.listeners.IMapPanelListener#onMouseMoveEvent(org.kalypso.ogc.gml.map.MapPanel,
+   *      org.kalypsodeegree.model.geometry.GM_Point, java.awt.Point)
+   */
+  public void onMouseMoveEvent( final MapPanel source, final GM_Point gmPoint, final Point mousePosition )
+  {
+    if( !m_label.isDisposed() )
     {
-      m_mapPanelListener = new IMapPanelListener()
+      final UIJob job = new UIJob( "updating position label..." )
       {
-        public void onExtentChanged( final MapPanel source, final GM_Envelope oldExtent, final GM_Envelope newExtent )
+        @Override
+        public IStatus runInUIThread( final IProgressMonitor monitor )
         {
+          double x = gmPoint.getX();
+          double y = gmPoint.getY();
+
+          m_label.setText( String.format( MapCoordinateStatusLineItem.MAP_POSITION_TEXT, x, y ) );
+          m_label.getParent().layout();
+
+          return Status.OK_STATUS;
         }
-
-        public void onMapModelChanged( final MapPanel source, final IMapModell oldModel, final IMapModell newModel )
-        {
-        }
-
-        public void onMessageChanged( final MapPanel source, final String message )
-        {
-        }
-
-        public void onMouseMoveEvent( final MapPanel source, final GM_Point gmPoint, final Point mousePosition )
-        {
-          if( !m_lnk.isDisposed() )
-          {
-            final UIJob job = new UIJob( "updating position label..." )
-            {
-              @Override
-              public IStatus runInUIThread( final IProgressMonitor monitor )
-              {
-                double x = gmPoint.getX();
-                double y = gmPoint.getY();
-
-                m_lnk.setText( String.format( MapCoordinateStatusLineItem.MAP_POSITION_TEXT, x, y ) );
-                m_lnk.layout();
-
-                return Status.OK_STATUS;
-              }
-            };
-
-            job.schedule();
-          }
-        }
-
       };
 
-      panel.addMapPanelListener( m_mapPanelListener );
+      job.schedule();
     }
-    else if( m_mapPanelListener != null )
-    {
-      panel.removeMapPanelListener( m_mapPanelListener );
-      m_mapPanelListener = null;
-    }
-
   }
 }
