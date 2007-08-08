@@ -109,6 +109,7 @@ public class ElbePolteConverter
       ZmlFactory.getMarshaller().marshal( observationType, writer );
 
     }
+    // TODO Exceptions behandeln
     catch( IOException e )
     {
       e.printStackTrace();
@@ -186,15 +187,19 @@ public class ElbePolteConverter
       sEingabeZeile = lneNumRdr.readLine();
       strTok = new StringTokenizer( sEingabeZeile );
       String strDate = "";
-      int lfdNum = 0;
+
       if( strTok.hasMoreTokens() )
       {
         // Datum und Werte lesen und Listeneinträge generieren
         while( sEingabeZeile != null )
         {
-          // Format: lfd_Nummer, Jahr, Monat, Tag, Stunde, Wert
-          if( sEingabeZeile.length() > 25 )
+
+          try
           {
+            int lfdNum = 0;
+            Integer.parseInt( sEingabeZeile.trim().substring(0, 1) );
+
+            // Format: lfd_Nummer, Jahr, Monat, Tag, Stunde, Wert
             strTok = new StringTokenizer( sEingabeZeile );
             if( strTok.hasMoreTokens() )
             {
@@ -211,12 +216,12 @@ public class ElbePolteConverter
               lstEingDatum.add( calendar.getTime() );
               lstEingWerte.add( new Double( strTok.nextToken() ) );
             }
-          }
-          else
-          {
-            // sEingabeZeile ungültig
-          }
 
+          }
+          catch( NumberFormatException e )
+          {
+            // keine gültige Zeile (bzw. Kommentarzeile)
+          }
           sEingabeZeile = lneNumRdr.readLine();
         }
 
@@ -383,18 +388,22 @@ public class ElbePolteConverter
 
     {
 
-      File fleHwvsIn = new File( "c:/temp/polte_zr/Dresden_Torgau.001" );
-      File fleZml = new File( "c:/temp/polte_zr", "Dresden_Torgau.001.zml" );
+      File fleHwvsIn = new File( "c:/temp/polte_zr/Modell.009" );
+      File fleZml = new File( "c:/temp/polte_zr", "Modell.009.zml" );
       hwvs2zml( fleHwvsIn, fleZml );
 
-      
-       fleHwvsIn = new File( "c:/temp/polte_zr/Usti_Dresden.001" );
-       fleZml = new File( "c:/temp/polte_zr", "Usti_Dresden.001.zml" );
-      hwvs2zml( fleHwvsIn, fleZml );
-
-       fleHwvsIn = new File( "c:/temp/polte_zr/Loeben.001" );
-       fleZml = new File( "c:/temp/polte_zr", "Loeben.001.zml" );
-      hwvs2zml( fleHwvsIn, fleZml );
+      //      File fleHwvsIn = new File( "c:/temp/polte_zr/Dresden_Torgau.001" );
+      //      File fleZml = new File( "c:/temp/polte_zr", "Dresden_Torgau.001.zml" );
+      //      hwvs2zml( fleHwvsIn, fleZml );
+      //
+      //      
+      //       fleHwvsIn = new File( "c:/temp/polte_zr/Usti_Dresden.001" );
+      //       fleZml = new File( "c:/temp/polte_zr", "Usti_Dresden.001.zml" );
+      //      hwvs2zml( fleHwvsIn, fleZml );
+      //
+      //       fleHwvsIn = new File( "c:/temp/polte_zr/Loeben.001" );
+      //       fleZml = new File( "c:/temp/polte_zr", "Loeben.001.zml" );
+      //      hwvs2zml( fleHwvsIn, fleZml );
 
       //      for( int ii = 1; ii <= 15; ii++ )
       //      {

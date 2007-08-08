@@ -49,6 +49,5 @@ public class ElbePolteUrlCatalog extends AbstractUrlCatalog
     catalog.put( "org.kalypso.elbepolte.modell", myClass.getResource( "schemata/modell.xsd" ) );
     catalog.put( "org.kalypso.elbepolte.commons", myClass.getResource( "schemata/commons.xsd" ) );
     catalog.put( "org.kalypso.elbepolte.control", myClass.getResource( "schemata/control.xsd" ) );
-    
   }
 }
