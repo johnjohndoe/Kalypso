@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml-stylesheet type="text/xsl" href="xsl/grafik-vorlage.xsl"?>
+<obsdiagview xmlns="obsdiagview.template.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title/>
+    <legend title="" visible="true"/>
+    <features>Alarmstufen;Vorhersage</features>
+    <axis datatype="date" direction="horizontal" id="date" inverted="false" label="Datum" position="bottom" unit=""/>
+    <axis datatype="double" direction="vertical" id="Q" inverted="false" label="Abfluss" position="left" unit="m³/s"/>
+    <!--   <observation linktype="zml" xlink:href="/Zeitreihen/Zwischengebiete/UstiDresden.zml"> -->
+    <observation linktype="zml" xlink:href="platform:/resource//KalypsoElbeZwischengebiete/.prognose/Vorhersage-2007-08-02_18h19/Zeitreihen/Zwischengebiete/UstiDresden.zml">
+        <curve color="0;255;128" id="C1" name="Abfluss - Beobachtung" shown="true">
+            <mapping diagram-axis="date" observation-axis="Datum"/>
+            <mapping diagram-axis="Q" observation-axis="Abfluss"/>
+        </curve>
+    </observation>
+</obsdiagview>

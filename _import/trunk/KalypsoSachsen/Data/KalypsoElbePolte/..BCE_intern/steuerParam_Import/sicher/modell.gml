@@ -200,7 +200,7 @@
     <ElbePegel fid="Schoena">
       <lage>
         <gml:Point srsName="EPSG:31469">
-          <gml:coordinates cs="," decimal="." ts=" ">5446309.000019631,5638098.008279129</gml:coordinates>
+          <gml:coordinates cs="," decimal="." ts=" ">5446309.0,5638098.0</gml:coordinates>
         </gml:Point>
       </lage>
       <name>Schöna</name>
@@ -228,7 +228,7 @@
     <ElbePegel fid="Dresden">
       <lage>
         <gml:Point srsName="EPSG:31469">
-          <gml:coordinates cs="," decimal="." ts=" ">5411711.00012051,5658455.008342351</gml:coordinates>
+          <gml:coordinates cs="," decimal="." ts=" ">5411711.0,5658455.0</gml:coordinates>
         </gml:Point>
       </lage>
       <name>Dresden</name>
@@ -283,8 +283,8 @@
   <pegelMember>
     <ElbePegel fid="Torgau">
       <lage>
-        <gml:Point srsName="EPSG:31469">
-          <gml:coordinates cs="," decimal="." ts=" ">5362127.72794425,5715116.619987543</gml:coordinates>
+        <gml:Point srsName="EPSG:31468">
+          <gml:coordinates cs="," decimal="." ts=" ">4570166.0,5713728.0</gml:coordinates>
         </gml:Point>
       </lage>
       <name>Torgau</name>
@@ -311,8 +311,8 @@
   <pegelMember>
     <ElbePegel fid="Wittenberg">
       <lage>
-        <gml:Point srsName="EPSG:31469">
-          <gml:coordinates cs="," decimal="." ts=" ">5337950.069961973,5749548.994789849</gml:coordinates>
+        <gml:Point srsName="EPSG:31468">
+          <gml:coordinates cs="," decimal="." ts=" ">4544600.0,5747130.0</gml:coordinates>
         </gml:Point>
       </lage>
       <name>Wittenberg</name>
@@ -377,15 +377,15 @@
   <zwgZuflussMember>
     <ZwgZufluss fid="Loeben">
       <lage>
-        <gml:Point srsName="EPSG:31469">
-          <gml:coordinates cs="," decimal="." ts=" ">5367755.000213684,5738921.0082704555</gml:coordinates>
+        <gml:Point srsName="EPSG:31468">
+          <gml:coordinates cs="," decimal="." ts=" ">4574780.0,5737750.0</gml:coordinates>
         </gml:Point>
       </lage>
       <name>Löben</name>
       <name_de>Löben</name_de>
       <name_cz/>
       <description/>
-      <id/>
+      <id>553060</id>
       <nr>014</nr>
       <river>schwarze elster</river>
       <ganglinie_gesamt>

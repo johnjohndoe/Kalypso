@@ -9,15 +9,15 @@ ToDo: Help-Ids setzen!!! -->
 	<!-- 
 		Phase 1: KONTROLLE DER ZEITREIHEN
 	-->
-	<!-- Kontrolle Zwischengebietspegel -->
-	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Zwischengebietszuflüsse (Pegel) "
+	<!-- Kontrolle Zwischengebietspegel  Usti / Dresden -->
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Zwischengebietszuflüsse für Usti - Dresden "
 		imageLocation="icons/calcwizard/kalypso32.gif">
 		<arg name="pageID" value="Zwischengebietspegel"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/01_Zwischengebietspegel.html"/>
 		<arg name="helpId" value="&hid;sec_Assi_elbeZwge_02_Zwischengebietspegel"/>
 		<!--  -->
-		<arg name="mapTemplate" value=".templates/calcCase/wiz01_zwischengebietspegel.gmt"/>
-		<arg name="maximizeMap" value="true"/>
+		<arg name="mapTemplate" value=".templates/calcCase/wiz01a_zwischengebietspegelUstiDresden.gmt"/>
+		<arg name="maximizeMap" value="false"/>
 		<arg name="mapWidgetID" value="SELECT"/>
 		<!--  -->
 		<arg name="mainSash" value="40"/>
@@ -39,20 +39,53 @@ ToDo: Help-Ids setzen!!! -->
 		<arg name="helpId" value="&hid;sec_Assi_elbeZwge_03_ZwgUstiDresden"/>
 		<!--  -->
 		<arg name="mapTemplate" value=".templates/calcCase/wiz02_ZwgUstiDresden.gmt"/>
-		<arg name="maximizeMap" value="true"/>
-		<arg name="mapWidgetID" value="SELECT"/>
+		<arg name="maximizeMap" value="false"/>
+		<arg name="mapWidgetID" value=""/>
 		<!--  -->
 		<arg name="mainSash" value="40"/>
 		<arg name="rightSash" value="50"/>
+		<arg name="hideCalcButton" value="false"/>
 		<!--
 			FeatureView -->
 		<arg name="featureTemplate" value=".templates/calcCase/wiz02_ZwgUstiDresden.gft"/>
 		<arg name="selectFeatureID" value="root"/>
 		<arg name="featureControlStyle" value="SWT.NONE"/>
 		<!-- 
-			Diagramm -->
-		<arg name="timeserie1" value="nameColumn=Name#nameString=Messwerte#linkColumn=ganglinie_messwerte#color=0x0000ff"/>
-		<arg name="timeserie2" value="nameColumn=Name#nameString=Modellwerte#linkColumn=ganglinie_modellwerte#color=0xff0000"/>
+		Diagramm -->
+		<!-- oder muss ich doch noch umstrukturieren? -->
+		<arg name="diagTemplate" value=".templates/calcCase/wiz02_ZwgUstiDresden.odt"/> 
+		<!-- <arg name="timeserie1" value="nameColumn=Name#nameString=Messwerte#linkColumn=ganglinie_messwerte#color=0x0000ff"/>
+		<arg name="timeserie2" value="nameColumn=Name#nameString=Modellwerte#linkColumn=ganglinie_modellwerte#color=0xff0000"/>-->
+		
+		
+		<!--  -->
+		<arg name="ignoreType1" value="Q"/>
+		<arg name="ignoreType2" value="W"/>
+		<arg name="ignoreLabel1" value="Wasserstand"/>
+		<arg name="ignoreLabel2" value="Abfluss"/>
+		<!-- 
+			Berechnung Zwischengebietszufluss
+		-->
+		<arg name="buttonText" value="Zwischengebietszufluss berechnen"/>
+		<arg name="buttonTooltip" value="Zwischengebietszufluss Usti / Dresden berechnen"/>
+		<arg name="buttonLaunch" value="zwischengebietszuflussUstiDresden"/>
+	</page>
+	<!-- Kontrolle Zwischengebietspegel Dresden / Torgau -->
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Zwischengebietszuflüsse für Dresden - Torgau "
+		imageLocation="icons/calcwizard/kalypso32.gif">
+		<arg name="pageID" value="Zwischengebietspegela"/>
+		<arg name="htmlFilePath" value=".model/wizardhtml/01a_Zwischengebietspegel.html"/>
+		<arg name="helpId" value="&hid;sec_Assi_elbeZwge_02_Zwischengebietspegel"/>
+		<!--  -->
+		<arg name="mapTemplate" value=".templates/calcCase/wiz01b_zwischengebietspegelDresdenTorgau.gmt"/>
+		<arg name="maximizeMap" value="false"/>
+		<arg name="mapWidgetID" value="SELECT"/>
+		<!--  -->
+		<arg name="mainSash" value="40"/>
+		<arg name="rightSash" value="50"/>
+		<!--  -->
+		<arg name="zmlTableShow" value="all"/>
+		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname%#linkColumn=ganglinie_messwerte"/>
 		<!--  -->
 		<arg name="ignoreType1" value="Q"/>
 		<arg name="ignoreType2" value="W"/>
@@ -67,25 +100,35 @@ ToDo: Help-Ids setzen!!! -->
 		<arg name="helpId" value="&hid;sec_Assi_elbeZwge_04_ZwgDresdenTorgau"/>
 		<!--  -->
 		<arg name="mapTemplate" value=".templates/calcCase/wiz03_ZwgDresdenTorgau.gmt"/>
-		<arg name="maximizeMap" value="true"/>
-		<arg name="mapWidgetID" value="SELECT"/>
+		<arg name="maximizeMap" value="false"/>
+		<arg name="mapWidgetID" value=""/>
 		<!--  -->
 		<arg name="mainSash" value="40"/>
 		<arg name="rightSash" value="50"/>
+		<arg name="hideCalcButton" value="true"/>
 		<!--
 			FeatureView -->
 		<arg name="featureTemplate" value=".templates/calcCase/wiz03_ZwgDresdenTorgau.gft"/>
 		<arg name="selectFeatureID" value="root"/>
 		<arg name="featureControlStyle" value="SWT.NONE"/>
 		<!-- 
-			Diagramm -->
+		Diagramm -->
+		<arg name="diagTemplate" value=".templates/calcCase/wiz03_ZwgDresdenTorgau.odt"/> 
+		<!--
 		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname%#linkColumn=ganglinie_gesamt"/>
-		<arg name="timeserie2" value="nameColumn=Name#nameString=Modellwerte#linkColumn=ganglinie_messwerte"/>
+		<arg name="timeserie2" value="nameColumn=Name#nameString=Modellwerte#linkColumn=ganglinie_messwerte"/> 
+		-->
 		<!--  -->
 		<arg name="ignoreType1" value="Q"/>
 		<arg name="ignoreType2" value="W"/>
 		<arg name="ignoreLabel1" value="Wasserstand"/>
 		<arg name="ignoreLabel2" value="Abfluss"/>
+		<!-- 
+			Berechnung Zwischengebietszufluss
+		-->
+		<arg name="buttonText" value="Zwischengebietszufluss berechnen"/>
+		<arg name="buttonTooltip" value="Zwischengebietszufluss Dresden / Torgau berechnen"/>
+		<arg name="buttonLaunch" value="zwischengebietszuflussDresdenTorgau"/>
 	</page>
 	<!-- Kontrolle Abfluss - Zwischengebiete -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Abfluss - Zwischengebiete"
@@ -139,13 +182,7 @@ ToDo: Help-Ids setzen!!! -->
 		<arg name="ignoreType1" value="W"/>
 		<!--  -->
 		<arg name="pegelNameProperty" value="Name"/>
-		<arg name="resultProperty" value="ganglinie_modellwerte"/>
-		<!-- tschechische Vorhersage auch mit anzeigen -->
-		<arg name="timeserie1" value="nameString=%axisname%#linkColumn=Niederschlag_rechnung"/>
-		<arg name="timeserie2" value="nameString=Beobachtung#linkColumn=Wasserstand_gemessen#color=0x0000ff"/>
-		<arg name="timeserie3" value="nameString=Rechnung#linkColumn=Wasserstand_gerechnet#color=0xff0000"/>
-		<arg name="timeserie4" value="nameString=Vorhersage#linkColumn=Wasserstand_vorhersage#color=0x008040"/>
-		<arg name="timeserie5" value="nameString=untere Umhüllende#linkColumn=Wasserstand_vorhersage_unten#lineDash=4f#color=0x008040"/>
-		<arg name="timeserie6" value="nameString=obere Umhüllende#linkColumn=Wasserstand_vorhersage_oben#lineDash=4f#color=0x008040"/>
+		<arg name="resultProperty" value="ganglinie_gesamt"/>
+		<arg name="timeserie1" value="nameString=Rechnung#linkColumn=ganglinie_gesamt#color=0xff0000"/>
 	</page>
 </calcwizard>

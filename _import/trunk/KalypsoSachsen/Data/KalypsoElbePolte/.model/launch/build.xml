@@ -1,6 +1,5 @@
 <project default="fake">
 
-	<property name="modell.template.dir" value="${project.dir}/.templates/Modell" />
 	<!-- Zeitschritt der Berechnung: 3h-->
 		<property name="interval.field" value="HOUR_OF_DAY"/>
 		<property name="interval.amount" value="3"/>

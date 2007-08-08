@@ -9,7 +9,7 @@
       <name>BRANDYS+PRAG - LITOMERICE</name>
       <description/>
       <river/>
-      <zwg_zuschlag>0</zwg_zuschlag>
+      <zwg_zuschlag>0.0</zwg_zuschlag>
       <nr>1</nr>
       <db>0</db>
       <lt>0</lt>
@@ -291,7 +291,7 @@
       <name>LOUNY - LITOMERICE  </name>
       <description/>
       <river/>
-      <zwg_zuschlag>0</zwg_zuschlag>
+      <zwg_zuschlag>0.0</zwg_zuschlag>
       <nr>2</nr>
       <db>0</db>
       <lt>0</lt>
@@ -517,7 +517,7 @@
       <name>LITOMERICE - USTI  </name>
       <description/>
       <river/>
-      <zwg_zuschlag>10</zwg_zuschlag>
+      <zwg_zuschlag>0.0</zwg_zuschlag>
       <nr>3</nr>
       <db>0</db>
       <lt>0</lt>
@@ -739,7 +739,7 @@
       <name>USTI - SCHOENA    </name>
       <description/>
       <river/>
-      <zwg_zuschlag>0</zwg_zuschlag>
+      <zwg_zuschlag>0.0</zwg_zuschlag>
       <nr>4</nr>
       <db>0</db>
       <lt>0</lt>
@@ -979,7 +979,7 @@
       <name>USTI - DRESDEN</name>
       <description/>
       <river/>
-      <zwg_zuschlag>0</zwg_zuschlag>
+      <zwg_zuschlag>0.0</zwg_zuschlag>
       <nr>5</nr>
       <db>0</db>
       <lt>0</lt>
@@ -1251,7 +1251,7 @@
       <name>DRESDEN - RIESA   </name>
       <description/>
       <river/>
-      <zwg_zuschlag>0</zwg_zuschlag>
+      <zwg_zuschlag>0.0</zwg_zuschlag>
       <nr>6</nr>
       <db>0</db>
       <lt>0</lt>
@@ -1526,7 +1526,7 @@
       <name>DRESDEN - TORGAU</name>
       <description/>
       <river/>
-      <zwg_zuschlag>0</zwg_zuschlag>
+      <zwg_zuschlag>0.0</zwg_zuschlag>
       <nr>7</nr>
       <db>0</db>
       <lt>0</lt>
@@ -1861,7 +1861,7 @@
       <name>TORGAU - WITTENBERG</name>
       <description/>
       <river/>
-      <zwg_zuschlag>0</zwg_zuschlag>
+      <zwg_zuschlag>0.0</zwg_zuschlag>
       <nr>8</nr>
       <db>0</db>
       <lt>0</lt>
@@ -2268,7 +2268,7 @@
     <ElbePegel fid="Schoena">
       <lage>
         <gml:Point srsName="EPSG:31469">
-          <gml:coordinates cs="," decimal="." ts=" ">5446309.000019631,5638098.008279129</gml:coordinates>
+          <gml:coordinates cs="," decimal="." ts=" ">5446309.0,5638098.0</gml:coordinates>
         </gml:Point>
       </lage>
       <name>Schöna</name>
@@ -2296,7 +2296,7 @@
     <ElbePegel fid="Dresden">
       <lage>
         <gml:Point srsName="EPSG:31469">
-          <gml:coordinates cs="," decimal="." ts=" ">5411711.00012051,5658455.008342351</gml:coordinates>
+          <gml:coordinates cs="," decimal="." ts=" ">5411711.0,5658455.0</gml:coordinates>
         </gml:Point>
       </lage>
       <name>Dresden</name>
@@ -2352,7 +2352,7 @@
     <ElbePegel fid="Torgau">
       <lage>
         <gml:Point srsName="EPSG:31469">
-          <gml:coordinates cs="," decimal="." ts=" ">5362127.72794425,5715116.619987543</gml:coordinates>
+          <gml:coordinates cs="," decimal="." ts=" ">5362127.727834126,5715116.615849739</gml:coordinates>
         </gml:Point>
       </lage>
       <name>Torgau</name>
@@ -2380,7 +2380,7 @@
     <ElbePegel fid="Wittenberg">
       <lage>
         <gml:Point srsName="EPSG:31469">
-          <gml:coordinates cs="," decimal="." ts=" ">5337950.069961973,5749548.994789849</gml:coordinates>
+          <gml:coordinates cs="," decimal="." ts=" ">5337950.069828749,5749548.990664235</gml:coordinates>
         </gml:Point>
       </lage>
       <name>Wittenberg</name>
@@ -2446,14 +2446,14 @@
     <ZwgZufluss fid="Loeben">
       <lage>
         <gml:Point srsName="EPSG:31469">
-          <gml:coordinates cs="," decimal="." ts=" ">5367755.000213684,5738921.0082704555</gml:coordinates>
+          <gml:coordinates cs="," decimal="." ts=" ">5367725.136711138,5738932.689563125</gml:coordinates>
         </gml:Point>
       </lage>
       <name>Löben</name>
       <name_de>Löben</name_de>
       <name_cz/>
       <description/>
-      <id/>
+      <id>553060</id>
       <nr>014</nr>
       <river>schwarze elster</river>
       <ganglinie_gesamt>
