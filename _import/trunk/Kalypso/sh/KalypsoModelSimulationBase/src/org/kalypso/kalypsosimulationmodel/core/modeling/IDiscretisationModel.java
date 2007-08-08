@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsosimulationmodel.core.modeling;
 
+
 /**
  * Interface for simBase:FEDiscretisationModel
  * 
@@ -47,5 +48,4 @@ package org.kalypso.kalypsosimulationmodel.core.modeling;
  */
 public interface IDiscretisationModel extends IModel
 {
-
 }

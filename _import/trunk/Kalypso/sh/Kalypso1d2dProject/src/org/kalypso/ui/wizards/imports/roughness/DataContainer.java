@@ -38,7 +38,7 @@ public class DataContainer
 
   private String m_roughnessDatabaseLocation;
 
-  private String m_ProjectBaseFolder;
+  private String m_projectBaseFolder;
 
   private final String m_AbsolutePath = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString();
 
@@ -136,28 +136,28 @@ public class DataContainer
    */
   public final URL getRoughnessDatabaseLocationURL( ) throws MalformedURLException
   {
-    return new URL( "file:" + m_AbsolutePath + "/" + m_ProjectBaseFolder + getRoughnessDatabaseLocation() );
+    return new URL( "file:" + m_AbsolutePath + "/" + m_projectBaseFolder + getRoughnessDatabaseLocation() );
   }
 
-  public final void setRoughnessDatabaseLocation( String dbLocation ) throws Exception
+  public final void setRoughnessDatabaseLocation( String dbLocation, final IRoughnessClsCollection roughnessClsCollection ) throws Exception
   {
     m_roughnessDatabaseLocation = dbLocation;
 
 //    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( getRoughnessDatabaseLocationURL(), null );
 //    final IRoughnessClsCollection collection = new RoughnessClsCollection( workspace.getRootFeature() );
-    final IRoughnessClsCollection collection = Util.getModel( IRoughnessClsCollection.class );
-    for( int i = 0; i < collection.size(); i++ )
-      m_roughnessStaticCollectionMap.put( collection.get( i ).getName(), collection.get( i ).getGmlID() );
+//    final IRoughnessClsCollection collection = Util.getModel( IRoughnessClsCollection.class );
+    for( int i = 0; i < roughnessClsCollection.size(); i++ )
+      m_roughnessStaticCollectionMap.put( roughnessClsCollection.get( i ).getName(), roughnessClsCollection.get( i ).getGmlID() );
   }
 
   public final String getProjectBaseFolder( )
   {
-    return m_ProjectBaseFolder;
+    return m_projectBaseFolder;
   }
 
   public final void setProjectBaseFolder( String projectBaseFolder )
   {
-    m_ProjectBaseFolder = projectBaseFolder;
+    m_projectBaseFolder = projectBaseFolder;
   }
 
   public final LinkedHashMap<String, String> getUserSelectionMap( )
@@ -170,7 +170,7 @@ public class DataContainer
   {
     try
     {
-      m_userSelectionFile = m_AbsolutePath + "/" + m_ProjectBaseFolder + "/" + userSelectionFile;
+      m_userSelectionFile = m_AbsolutePath + "/" + m_projectBaseFolder + "/" + userSelectionFile;
       File file = new File( m_userSelectionFile );
       if( file.exists() && file.isFile() && file.length() > 0 )
       {

@@ -40,21 +40,23 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.kalypsomodel1d2d.ops.LinksOps;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2DCollection;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * Default implementation for {@link ICalculationUnit}
@@ -65,61 +67,12 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 public class CalculationUnit<ET extends IFE1D2DElement> extends FE1D2DComplexElement<ET> implements ICalculationUnit<ET>
 {
   private IControlModel1D2D m_controlModel1D2D = null;
+
   private IControlModelGroup m_controlModelGroup;
 
   public CalculationUnit( Feature featureToBind, QName qnameToBind, QName elementListPropQName, Class<ET> wrapperClass )
   {
     super( featureToBind, qnameToBind, elementListPropQName, wrapperClass );
-  }
-
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit#getDownStreamBoundaryLine()
-   */
-  public IBoundaryLine getDownStreamBoundaryLine( )
-  {
-    final IBoundaryLine resolvedLink = FeatureHelper.resolveLink( this, Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE_DOWNSTREAM, IBoundaryLine.class );
-    return resolvedLink;
-  }
-
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit#setDownStreamBoundaryLine(org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine)
-   */
-  public void setDownStreamBoundaryLine( IBoundaryLine line )
-  {
-    // unlink old boundary
-    final IBoundaryLine oldLine = getDownStreamBoundaryLine();
-    if( oldLine != null )
-    {
-      LinksOps.delRelationshipElementAndComplexElement( oldLine, this );
-    }
-
-    // set new boundary
-    FeatureHelper.setLocalLink( this, Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE_DOWNSTREAM, line );
-    line.getContainers().addRef( this );
-  }
-
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit#getUpStreamBoundaryLine()
-   */
-  public IBoundaryLine getUpStreamBoundaryLine( )
-  {
-    final IBoundaryLine resolvedLink = FeatureHelper.resolveLink( this, Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE_UPSTREAM, IBoundaryLine.class );
-    return resolvedLink;
-  }
-
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit#setUpStreamBoundaryLine(org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine)
-   */
-  public void setUpStreamBoundaryLine( IBoundaryLine line )
-  {
-    // unlink old boundary
-    final IBoundaryLine oldLine = getUpStreamBoundaryLine();
-    if( oldLine != null )
-    {
-      LinksOps.delRelationshipElementAndComplexElement( oldLine, this );
-    }
-    // set new boundary
-    FeatureHelper.setLocalLink( this, Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE_UPSTREAM, line );
   }
 
   /**
@@ -167,4 +120,18 @@ public class CalculationUnit<ET extends IFE1D2DElement> extends FE1D2DComplexEle
       e.printStackTrace();
     }
   }
+
+  public List<IBoundaryLine> getBoundaryLines( )
+  {
+    final IFeatureWrapperCollection<ET> elements = getElements();
+    final List<IBoundaryLine> boundaryLines = new ArrayList<IBoundaryLine>();
+    for( final IFE1D2DElement ele : elements )
+    {
+      if( ele instanceof IBoundaryLine )
+        boundaryLines.add( (IBoundaryLine) ele );
+    }
+    // TODO: consider sub-units!
+    return boundaryLines;
+  }
+
 }

@@ -43,47 +43,39 @@ package org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
+import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand;
-import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
+import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 
 /**
  * @author madanagopal
- *
+ * 
  */
-@SuppressWarnings({"hiding", "unchecked"})
-public class RemoveBoundaryConditionFromCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
+@SuppressWarnings( { "hiding", "unchecked" })
+public class RemoveBoundaryConditionFromCalcUnitCommand implements IDiscrModel1d2dChangeCommand
 {
+  private ICalculationUnit m_calculationUnit;
 
-  private ICalculationUnit calculationUnit;
-  private IBoundaryCondition boundaryCondition;
-  private IFEDiscretisationModel1d2d model1d2d;
-  private boolean done = false;
-  private double grabDistance; 
+  private IBoundaryCondition m_boundaryCondition;
 
-  public RemoveBoundaryConditionFromCalculationUnitCmd(
-      IBoundaryCondition boundaryCondition,
-      ICalculationUnit calculationUnit,
-      IFEDiscretisationModel1d2d model1d2d,
-      double grabDistance )
-  
+  private IFEDiscretisationModel1d2d m_model1d2d;
+
+  private boolean m_done = false;
+
+  public RemoveBoundaryConditionFromCalcUnitCommand( IBoundaryCondition boundaryCondition, ICalculationUnit calculationUnit, IFEDiscretisationModel1d2d model1d2d )
   {
-      Assert.throwIAEOnNullParam( calculationUnit, "calculationUnit" );
-      Assert.throwIAEOnNullParam( boundaryCondition, "boundaryCondition" );
-      Assert.throwIAEOnNullParam( model1d2d, "model1d2d" );
-      
-      this.calculationUnit = calculationUnit;
-      this.boundaryCondition = boundaryCondition;
-      this.model1d2d = model1d2d;
-      this.grabDistance = grabDistance;
+    m_calculationUnit = calculationUnit;
+    m_boundaryCondition = boundaryCondition;
+    m_model1d2d = model1d2d;
   }
+
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand#getChangedFeature()
    */
@@ -97,8 +89,8 @@ public class RemoveBoundaryConditionFromCalculationUnitCmd implements IDiscrMode
    */
   public IFEDiscretisationModel1d2d getDiscretisationModel1d2d( )
   {
-    
-    return model1d2d;
+
+    return m_model1d2d;
   }
 
   /**
@@ -106,7 +98,7 @@ public class RemoveBoundaryConditionFromCalculationUnitCmd implements IDiscrMode
    */
   public String getDescription( )
   {
-     return "remove boundary condition from calculation unit";
+    return "remove boundary condition from calculation unit";
   }
 
   /**
@@ -118,57 +110,38 @@ public class RemoveBoundaryConditionFromCalculationUnitCmd implements IDiscrMode
   }
 
   public void process( ) throws Exception
-  {  
+  {
     try
     {
-      if( !done  )
+      if( !m_done )
       {
-//        if( CalUnitOps.isBoundaryConditionOf( calculationUnit, boundaryCondition, grabDistance ) )
-//        {
-//          boundaryCondition.clearScopeMarks();
-//          fireProcessChanges();
-//          done = true;
-//        }
-        done = CalcUnitOps.removeBoundaryConditionFromUnit( calculationUnit, boundaryCondition, grabDistance );
+        final List parentCalcUnits = (List) m_boundaryCondition.getWrappedFeature().getProperty( Kalypso1D2DSchemaConstants.OP1D2D_PROP_PARENT_CALCUNIT );
+        m_done = parentCalcUnits.remove( m_calculationUnit.getGmlID() );
         fireProcessChanges();
       }
     }
     catch( Throwable th )
     {
-      th.printStackTrace( );
+      th.printStackTrace();
     }
   }
 
-  private final void fireProcessChanges()
+  private final void fireProcessChanges( )
   {
-    final Feature calUnitFeature = calculationUnit.getWrappedFeature();
-    final Feature model1d2dFeature = model1d2d.getWrappedFeature();
-    List<Feature> features = 
-      new ArrayList<Feature>( );
+    final Feature calUnitFeature = m_calculationUnit.getWrappedFeature();
+    final Feature model1d2dFeature = m_model1d2d.getWrappedFeature();
+    List<Feature> features = new ArrayList<Feature>();
     features.add( calUnitFeature );
-    features.add( boundaryCondition.getWrappedFeature() );
-    
-    GMLWorkspace calUnitWorkspace = 
-          calUnitFeature.getWorkspace();
-    FeatureStructureChangeModellEvent event = 
-        new FeatureStructureChangeModellEvent(
-            calUnitWorkspace,//final GMLWorkspace workspace, 
-            model1d2dFeature,// Feature parentFeature, 
-            features.toArray( new Feature[features.size()] ),//final Feature[] changedFeature, 
-            FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE//final int changeType
-            );
+    features.add( m_boundaryCondition.getWrappedFeature() );
+
+    GMLWorkspace calUnitWorkspace = calUnitFeature.getWorkspace();
+    FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( calUnitWorkspace, model1d2dFeature, features.toArray( new Feature[features.size()] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE );
     calUnitWorkspace.fireModellEvent( event );
-    
-    final Feature bcFeature = boundaryCondition.getWrappedFeature();
+
+    final Feature bcFeature = m_boundaryCondition.getWrappedFeature();
     GMLWorkspace bcWorkspace = bcFeature.getWorkspace();
-    FeatureStructureChangeModellEvent bcEvent = 
-      new FeatureStructureChangeModellEvent(
-          bcWorkspace, 
-          bcFeature.getParent(), 
-          new Feature[]{bcFeature}, 
-          FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE
-          );
-   bcWorkspace.fireModellEvent( bcEvent );
+    FeatureStructureChangeModellEvent bcEvent = new FeatureStructureChangeModellEvent( bcWorkspace, bcFeature.getParent(), new Feature[] { bcFeature }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE );
+    bcWorkspace.fireModellEvent( bcEvent );
   }
 
   /**
@@ -176,7 +149,7 @@ public class RemoveBoundaryConditionFromCalculationUnitCmd implements IDiscrMode
    */
   public void redo( ) throws Exception
   {
-    
+
   }
 
   /**
@@ -184,7 +157,7 @@ public class RemoveBoundaryConditionFromCalculationUnitCmd implements IDiscrMode
    */
   public void undo( ) throws Exception
   {
-    
+
   }
 
 }

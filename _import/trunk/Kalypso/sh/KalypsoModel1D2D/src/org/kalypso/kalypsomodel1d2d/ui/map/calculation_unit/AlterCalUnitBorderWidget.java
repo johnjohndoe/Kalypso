@@ -344,7 +344,7 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
             final IRelationType parentRelation = opModel.getWrappedList().getParentFeatureTypeProperty();
 
             GMLWorkspace opWorkspace = opModel.getWrappedFeature().getWorkspace();
-            NodalBCSelectionWizard wizard = new NodalBCSelectionWizard( descriptors, workspace, opModelFeature, parentRelation );
+            NodalBCSelectionWizard wizard = new NodalBCSelectionWizard( descriptors, workspace, opModelFeature, parentRelation, null );
             System.out.println( "OpWorkspace:" + opWorkspace.getContext() );
             GM_Point boundaryPosition = getBoundaryPosition();
             wizard.setBoundaryPosition( boundaryPosition );
@@ -474,29 +474,19 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
       }
     };
     KeyBasedDataModelUtil.postCommand( dataModel, delCmd, ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL );
-
   }
 
   private void actionAddBoundaryLineToUnit( final String itemText )
   {
     final ICalculationUnit calUnit = dataModel.getData( ICalculationUnit.class, ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
     final IBoundaryLine bLine = getSelectedBoundaryLine();
-    final QName relationType;
-    if( itemText.equals( TXT_ADD_BOUNDARY_LINE_TO_UNIT ) )
-    {
-      relationType = Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE_UPSTREAM;
-    }
-    // else if( itemText.equals( TXT_ADD_BOUNDARY_LINE_DOWN_STREAM ) )
-    // {
-    // relationType = Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE_DOWNSTREAM;
-    // }
-    else
+    if( !itemText.equals( TXT_ADD_BOUNDARY_LINE_TO_UNIT ) )
     {
       throw new RuntimeException( "Unknown itemText:" + itemText );
     }
 
     final IFEDiscretisationModel1d2d model1d2d = dataModel.getData( IFEDiscretisationModel1d2d.class, ICommonKeys.KEY_DISCRETISATION_MODEL );
-    final AddBoundaryLineToCalculationUnitCmd cmd = new AddBoundaryLineToCalculationUnitCmd( calUnit, bLine, model1d2d, relationType )
+    final AddBoundaryLineToCalculationUnitCmd cmd = new AddBoundaryLineToCalculationUnitCmd( calUnit, bLine, model1d2d )
     {
       /**
        * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.AddBoundaryLineToCalculationUnit#process()

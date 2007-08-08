@@ -41,39 +41,37 @@
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
 /**
- * Interface for element representing a wb1d2d:BoundaryLine1D.
- * Such a line element is actually based on a single 1d edge.
- * Nevertheless this edge may contain several edge but only the
- * first edge is considered and it is required to be a 1d edge 
+ * Interface for element representing a wb1d2d:BoundaryLine1D. Such a line element is actually based on a single 1d
+ * edge. Nevertheless this edge may contain several edge but only the first edge is considered and it is required to be
+ * a 1d edge
  * 
  * @author Patrice Congo
- *
+ * 
  */
 @SuppressWarnings("unchecked")
-public interface IBoundaryLine1D<    
-                  CT extends IFE1D2DComplexElement, 
-                  ET extends IFE1D2DEdge>  
-                  extends IBoundaryLine<CT, ET>
+
+// TODO Why IBoundaryLine1D is extending 1D2DElement, and not ContinuityLine ???
+
+public interface IBoundaryLine1D<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge> extends IBoundaryLine<CT, ET>
 {
-   /**
-    * Answers whether the line is at the ende of ist first edge 
-    * or not.
-    * @return true if the line is positioned at the end of the
-    *           first edge of false otherwise
-    */
-   public boolean isAtEdgeEnd();
-   
-   /**
-    * Customize the position of the boundary line:
-    * 
-    * <ul>
-    *   <li/>true to place the line at the end
-    *   <li/>false to place the line at the beginning 
-    * </ul> 
-    * @param isAtEdgeEnd a boolean specifying the position of 
-    *           the line
-    */
-   public void setAtEdgeEnd(boolean isAtEdgeEnd);
-   
-   public IFE1D2DNode getTargetNode();
+  /**
+   * Answers whether the line is at the ende of ist first edge or not.
+   * 
+   * @return true if the line is positioned at the end of the first edge of false otherwise
+   */
+  public boolean isAtEdgeEnd( );
+
+  /**
+   * Customize the position of the boundary line:
+   * 
+   * <ul>
+   * <li/>true to place the line at the end <li/>false to place the line at the beginning
+   * </ul>
+   * 
+   * @param isAtEdgeEnd
+   *            a boolean specifying the position of the line
+   */
+  public void setAtEdgeEnd( boolean isAtEdgeEnd );
+
+  public IFE1D2DNode getTargetNode( );
 }

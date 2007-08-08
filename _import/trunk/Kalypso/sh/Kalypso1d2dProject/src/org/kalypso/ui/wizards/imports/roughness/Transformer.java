@@ -28,8 +28,6 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
-import de.renew.workflow.connector.cases.ICaseDataProvider;
-
 /**
  * Implements the transformation algorithm from a shape file into a IRoughnessPolygonCollection
  * 
@@ -41,9 +39,9 @@ public class Transformer implements ICoreRunnableWithProgress
 
   private static final QName m_GeometryFeatureQName = KalypsoModelSimulationBaseConsts.SIM_BASE_F_ROUGHNESS_POLYGON;
 
-  private boolean isDataPrepared = false;
+  private boolean m_isDataPrepared = false;
 
-  private int noOfEntriesAdded = -1;
+  private int m_NumberOfEntriesAdded = -1;
 
   public Transformer( DataContainer data )
   {
@@ -63,7 +61,7 @@ public class Transformer implements ICoreRunnableWithProgress
       }
       try
       {
-        if( !isDataPrepared )
+        if( !m_isDataPrepared )
           prepare( true );
         setSelectedRoughnessChoice();
         serialize();
@@ -103,11 +101,11 @@ public class Transformer implements ICoreRunnableWithProgress
     List shapeFeatureList = (List) shapeRootFeature.getProperty( shpFeatureName );
     IRoughnessPolygonCollection roughnessPolygonCollection = m_data.getRoughnessPolygonCollection();
 
-    noOfEntriesAdded = 0;
+    m_NumberOfEntriesAdded = 0;
     for( int i = 0; i < shapeFeatureList.size(); i++ )
     {
       final IRoughnessPolygon roughnessPolygon = roughnessPolygonCollection.addNew( m_GeometryFeatureQName );
-      noOfEntriesAdded++;
+      m_NumberOfEntriesAdded++;
       final Feature shapeFeature = (Feature) shapeFeatureList.get( i );
       final String propertyValue = shapeFeature.getProperty( shpCustomPropertyName ).toString();
       final Object gm_Whatever = shapeFeature.getProperty( shpGeomPropertyName );
@@ -118,18 +116,18 @@ public class Transformer implements ICoreRunnableWithProgress
       m_data.getRoughnessShapeStaticRelationMap().put( roughnessPolygon.getGmlID(), propertyValue );
     }
 
-    isDataPrepared = true;
+    m_isDataPrepared = true;
   }
 
   public void unprepare( )
   {
-    if( isDataPrepared )
+    if( m_isDataPrepared )
     {
-      for( int i = 0; i < noOfEntriesAdded; i++ )
+      for( int i = 0; i < m_NumberOfEntriesAdded; i++ )
         m_data.getRoughnessPolygonCollection().remove( m_data.getRoughnessPolygonCollection().size() - 1 );
     }
-    isDataPrepared = false;
-    noOfEntriesAdded = 0;
+    m_isDataPrepared = false;
+    m_NumberOfEntriesAdded = 0;
   }
 
   private void setSelectedRoughnessChoice( ) throws Exception
@@ -142,22 +140,18 @@ public class Transformer implements ICoreRunnableWithProgress
       Feature linkedFeature = shpWorkspace.getFeature( m_data.getRoughnessShapeStaticRelationMap().get( key ) );
       if( linkedFeature != null )
       {
-        XLinkedFeature_Impl linkedFeature_Impl = new XLinkedFeature_Impl( f, linkedFeature.getParentRelation(), linkedFeature.getFeatureType(), "project:"
-            + m_data.getRoughnessDatabaseLocation() + "#" + linkedFeature.getId(), "", "", "", "", "" );
+        XLinkedFeature_Impl linkedFeature_Impl = new XLinkedFeature_Impl( f, linkedFeature.getParentRelation(), linkedFeature.getFeatureType(), "project:" + m_data.getRoughnessDatabaseLocation()
+            + "#" + linkedFeature.getId(), "", "", "", "", "" );
         f.setProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_CLASS_MEMBER, linkedFeature_Impl );
       }
     }
-    //use (dummy) command to make workspace dirty
-    SzenarioDataProvider caseDataProvider = 
-                        Util.getCaseDataProvider();
+    // use (dummy) command to make workspace dirty
+    SzenarioDataProvider caseDataProvider = Util.getCaseDataProvider();
     if( caseDataProvider != null )
     {
-      caseDataProvider.postCommand( 
-                      ITerrainModel.class, 
-                      new AddRoughnessPolygonsCmd()
-                      );
+      caseDataProvider.postCommand( ITerrainModel.class, new AddRoughnessPolygonsCmd() );
     }
-    
+
   }
 
   private void serialize( ) throws IOException, GmlSerializeException
@@ -179,15 +173,10 @@ public class Transformer implements ICoreRunnableWithProgress
     final Feature parentFeature = wrappedList.getParentFeature();
     final GMLWorkspace workspace = parentFeature.getWorkspace();
     workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, parentFeature, (Feature) null, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
-    
-    //fire event for roughness changes
-    //TODO Patrice check it
-    workspace.fireModellEvent(
-        new FeatureStructureChangeModellEvent( 
-                    workspace, 
-                    parentFeature.getParent(), 
-                    parentFeature, 
-                    FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+
+    // fire event for roughness changes
+    // TODO Patrice check it
+    workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, parentFeature.getParent(), parentFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
     // TODO: also post the adds as commands to the dataProvider
 
     //    

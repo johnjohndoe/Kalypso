@@ -42,6 +42,7 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.discr.IFEComplexElement;
+import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 
 /**
  * Interface to be implemented by classes to provide a java 
@@ -67,6 +68,7 @@ public interface IFE1D2DComplexElement <ET extends IFE1D2DElement>
    * @return true if the element has been added  otherwise false
    */
   public boolean addElementAsRef(ET element);
+//  public boolean addFlowRelationAsRef(IFlowRelationship element);
   
   /**
    * Remove all reference to this element from this complex element

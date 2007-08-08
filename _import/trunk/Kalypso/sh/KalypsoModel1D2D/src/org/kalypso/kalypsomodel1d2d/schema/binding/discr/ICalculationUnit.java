@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
+import java.util.List;
+
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
 
@@ -63,12 +65,6 @@ public interface ICalculationUnit<T extends IFE1D2DElement> extends IFE1D2DCompl
   public IControlModel1D2D getControlModel( final IControlModelGroup controlModelGroup );
   
   public void deleteControlModel();
-
-// public IBoundaryLine getUpStreamBoundaryLine();
-//  
-// public void setUpStreamBoundaryLine( IBoundaryLine line);
-//  
-// public IBoundaryLine getDownStreamBoundaryLine();
-//  
-// public void setDownStreamBoundaryLine( IBoundaryLine line);
+  
+  public List<IBoundaryLine> getBoundaryLines( );
 }

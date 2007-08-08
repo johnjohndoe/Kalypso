@@ -352,7 +352,7 @@ public class RMA10Calculation implements INativeIDProvider
     final List<ITimeStepinfo> result = new ArrayList<ITimeStepinfo>();
 
     /* Take all conti lines which are defined in the discretisation model. */
-    final Map<IBoundaryLine, BoundaryLineInfo> contiMap = new HashMap<IBoundaryLine, BoundaryLineInfo>();
+    final Map<String, BoundaryLineInfo> contiMap = new HashMap<String, BoundaryLineInfo>();
     final List<IBoundaryLine> continuityLineList = getContinuityLineList();
     int contiCount = 0;
     for( final IBoundaryLine<IFE1D2DComplexElement, IFE1D2DEdge> line : continuityLineList )
@@ -369,7 +369,7 @@ public class RMA10Calculation implements INativeIDProvider
       }
       final BoundaryLineInfo info = new BoundaryLineInfo( ++contiCount, nodeArray );
       result.add( info );
-      contiMap.put( line, info );
+      contiMap.put( line.getGmlID(), info );
       m_boundaryLineIDProvider.put( line, new Integer( contiCount ) );
     }
 
@@ -379,8 +379,6 @@ public class RMA10Calculation implements INativeIDProvider
     /* Add all boundary conditions. */
     final IFlowRelationshipModel model = (IFlowRelationshipModel) m_operationalModelWorkspace.getRootFeature().getAdapter( IFlowRelationshipModel.class );
     final ICalculationUnit unit = getCalculationUnit();
-    // TODO: this is very bad! a grab distance of 11 is much too big!!!
-    final double grabDistance = 11;
     for( final IFlowRelationship relationship : model )
     {
       if( relationship instanceof IBoundaryCondition )
@@ -392,86 +390,94 @@ public class RMA10Calculation implements INativeIDProvider
         // HACK: 0.5 as grab distance?? normally 0.0 should be enough, but then the contilines are not found, why?
         // TODO: at least find everything in this distance, if mroe than one element is found, take nearest...
         // final boolean boundaryConditionOf = CalUnitOps.isBoundaryConditionOf( unit, bc, grabDistance );
-        final IFeatureWrapper2 wrapper2 = CalcUnitOps.getAssignedBoundaryConditionLine( unit, bc, grabDistance );// DiscretisationModelUtils.findModelElementForBC(
-        // discModel,
-        // bc.getPosition(),
-        // 0.001
-        // );
 
+        final IFeatureWrapper2 wrapper2 = CalcUnitOps.getAssignedBoundaryConditionLine( unit, bc );
+// // final IFeatureWrapper2 wrapper2 = DiscretisationModelUtils.findModelElementForBC( discModel, bc.getPosition(),
+// 0.001 );
+        System.out.println();
         if( wrapper2 == null )
         {
           System.out.println( "Skiping boundary condition since it is not part of calcUnit:" + relationship.getGmlID() );
         }
         else if( wrapper2 instanceof IBoundaryLine )
-        {
-          final IBoundaryLine<IFE1D2DComplexElement, IFE1D2DEdge> contiLine = (IBoundaryLine<IFE1D2DComplexElement, IFE1D2DEdge>) wrapper2;
-          final BoundaryLineInfo info = contiMap.get( contiLine );
-
-          if( info == null )
-            continue;
-
-          final IComponent timeComponent = TupleResultUtilities.findComponentById( obsResult, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );
-          final IComponent qComponent = TupleResultUtilities.findComponentById( obsResult, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
-          final IComponent hComponent = TupleResultUtilities.findComponentById( obsResult, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL );
-          info.setSteadyValue( bc.getStationaryCondition() );
-          if( qComponent != null )
+          if( CalcUnitOps.isBoundaryConditionOf( unit, bc ) )
           {
-            info.setObservation( obs, timeComponent, qComponent, ITimeStepinfo.TYPE.CONTI_BC_Q );
-            info.setTheta( bc.getDirection() );
-          }
-          else if( hComponent != null )
-            info.setObservation( obs, timeComponent, hComponent, ITimeStepinfo.TYPE.CONTI_BC_H );
-          else
-            throw new SimulationException( "Falsche Parameter an Kontinuitätslinien-Randbedingung: " + bc.getName(), null );
 
-          // TODO: at the moment, we should comment this line out;
-          // Sadly, the calc unit concept does not apply at all to non-boundary.line connected boundary conditions.
-          // result.add( info );
-        }
+            final IBoundaryLine<IFE1D2DComplexElement, IFE1D2DEdge> contiLine = (IBoundaryLine<IFE1D2DComplexElement, IFE1D2DEdge>) wrapper2;
+            final BoundaryLineInfo info = contiMap.get( contiLine.getGmlID() );
+
+            if( info == null )
+              continue;
+
+            final IComponent timeComponent = TupleResultUtilities.findComponentById( obsResult, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );
+            final IComponent qComponent = TupleResultUtilities.findComponentById( obsResult, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
+            final IComponent hComponent = TupleResultUtilities.findComponentById( obsResult, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL );
+            info.setSteadyValue( bc.getStationaryCondition() );
+            if( qComponent != null )
+            {
+              info.setObservation( obs, timeComponent, qComponent, ITimeStepinfo.TYPE.CONTI_BC_Q );
+              info.setTheta( bc.getDirection() );
+            }
+            else if( hComponent != null )
+              info.setObservation( obs, timeComponent, hComponent, ITimeStepinfo.TYPE.CONTI_BC_H );
+            else
+              throw new SimulationException( "Falsche Parameter an Kontinuitätslinien-Randbedingung: " + bc.getName(), null );
+
+            // TODO: at the moment, we should comment this line out;
+            // Sadly, the calc unit concept does not apply at all to non-boundary.line connected boundary conditions.
+            // result.add( info );
+          }
+
         // TODO: the following elses never get called any more
-        else if( wrapper2 instanceof IFE1D2DNode && DiscretisationModelUtils.is1DNode( (IFE1D2DNode<IFE1D2DEdge>) wrapper2 ) )
-        {
-          // create new contiline
-          final IFE1D2DNode[] nodeArray = new IFE1D2DNode[] { (IFE1D2DNode) wrapper2 };
-          final BoundaryLineInfo info = new BoundaryLineInfo( ++contiCount, nodeArray );
+// else if( wrapper2 instanceof IFE1D2DNode && DiscretisationModelUtils.is1DNode( (IFE1D2DNode<IFE1D2DEdge>) wrapper2 )
+// )
+// {
+// // create new contiline
+// final IFE1D2DNode[] nodeArray = new IFE1D2DNode[] { (IFE1D2DNode) wrapper2 };
+// final BoundaryLineInfo info = new BoundaryLineInfo( ++contiCount, nodeArray );
+//
+// final IComponent timeComponent = TupleResultUtilities.findComponentById( obsResult,
+// Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );
+// final IComponent qComponent = TupleResultUtilities.findComponentById( obsResult,
+// Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
+// final IComponent hComponent = TupleResultUtilities.findComponentById( obsResult,
+// Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL );
+// info.setSteadyValue( bc.getStationaryCondition() );
+// if( qComponent != null )
+// {
+// info.setObservation( obs, timeComponent, qComponent, ITimeStepinfo.TYPE.CONTI_BC_Q );
+// info.setTheta( bc.getDirection() );
+// }
+// else if( hComponent != null )
+// info.setObservation( obs, timeComponent, hComponent, ITimeStepinfo.TYPE.CONTI_BC_H );
+// else
+// throw new SimulationException( "Falsche Parameter an Kontinuitätslinien-Randbedingung: " + bc.getName(), null );
+//
+// result.add( info );
+// }
+// else if( wrapper2 instanceof IElement2D || wrapper2 instanceof IElement1D )
+// {
+// final IElement2D<IFE1D2DComplexElement, IFE1D2DEdge> ele2d = (IElement2D<IFE1D2DComplexElement, IFE1D2DEdge>)
+// wrapper2;
+//
+// // final String gmlID = ele2d.getGmlID();
+// final int id = 0; // TODO: get ascii element id for gmlid
+//
+// final BoundaryConditionInfo info = new BoundaryConditionInfo( id, ITimeStepinfo.TYPE.ELE_BCE_2D );
+//
+// final IComponent timeComponent = TupleResultUtilities.findComponentById( obsResult, "time" );
+// final IComponent qComponent = TupleResultUtilities.findComponentById( obsResult, "q" );
+// final IComponent hComponent = TupleResultUtilities.findComponentById( obsResult, "h" );
+// final IComponent valueComponent = qComponent == null ? hComponent : qComponent;
+//
+// info.setObservation( obs, timeComponent, valueComponent );
+// info.setSteadyValue( bc.getStationaryCondition() );
+//
+// result.add( info );
+// }
 
-          final IComponent timeComponent = TupleResultUtilities.findComponentById( obsResult, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );
-          final IComponent qComponent = TupleResultUtilities.findComponentById( obsResult, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
-          final IComponent hComponent = TupleResultUtilities.findComponentById( obsResult, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL );
-          info.setSteadyValue( bc.getStationaryCondition() );
-          if( qComponent != null )
-          {
-            info.setObservation( obs, timeComponent, qComponent, ITimeStepinfo.TYPE.CONTI_BC_Q );
-            info.setTheta( bc.getDirection() );
-          }
-          else if( hComponent != null )
-            info.setObservation( obs, timeComponent, hComponent, ITimeStepinfo.TYPE.CONTI_BC_H );
-          else
-            throw new SimulationException( "Falsche Parameter an Kontinuitätslinien-Randbedingung: " + bc.getName(), null );
-
-          result.add( info );
-        }
-        else if( wrapper2 instanceof IElement2D || wrapper2 instanceof IElement1D )
-        {
-          final IElement2D<IFE1D2DComplexElement, IFE1D2DEdge> ele2d = (IElement2D<IFE1D2DComplexElement, IFE1D2DEdge>) wrapper2;
-
-          // final String gmlID = ele2d.getGmlID();
-          final int id = 0; // TODO: get ascii element id for gmlid
-
-          final BoundaryConditionInfo info = new BoundaryConditionInfo( id, ITimeStepinfo.TYPE.ELE_BCE_2D );
-
-          final IComponent timeComponent = TupleResultUtilities.findComponentById( obsResult, "time" );
-          final IComponent qComponent = TupleResultUtilities.findComponentById( obsResult, "q" );
-          final IComponent hComponent = TupleResultUtilities.findComponentById( obsResult, "h" );
-          final IComponent valueComponent = qComponent == null ? hComponent : qComponent;
-
-          info.setObservation( obs, timeComponent, valueComponent );
-          info.setSteadyValue( bc.getStationaryCondition() );
-
-          result.add( info );
-        }
-        else
-          throw new SimulationException( "Nicht zugeordnete Randbedingung: " + bc.getName(), null );
+// else
+// throw new SimulationException( "Nicht zugeordnete Randbedingung: " + bc.getName(), null );
       }
     }
 

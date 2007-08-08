@@ -38,9 +38,9 @@ public class Kalypso1D2DSchemaConstants
 
   public final static QName WB1D2D_F_ELEMENT = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "Element" );
 
-//  public final static QName WB1D2D_F_ELEMENT1D = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "Element1D" );
+// public final static QName WB1D2D_F_ELEMENT1D = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "Element1D" );
 
-//  public final static QName WB1D2D_F_BOUNDARY_LINE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "BoundaryLine" );
+// public final static QName WB1D2D_F_BOUNDARY_LINE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "BoundaryLine" );
 
   public final static QName WB1D2D_F_FE1D2D_2DElement = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "Element2D" );
 
@@ -57,15 +57,14 @@ public class Kalypso1D2DSchemaConstants
   public final static QName WB1D2D_F_JUNTCION_CONTEXT_1D_2D = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "JunctionContext1DTo2D" );
 
   public final static QName WB1D2D_F_ELEMENT1D = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "Element1D" );
-  
+
   public final static QName WB1D2D_F_BOUNDARY_LINE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "BoundaryLine" );
-  
+
   public final static QName WB1D2D_F_BOUNDARY_LINE1D = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "BoundaryLine1D" );
-  
+
   public final static QName WB1D2D_PROP_IS_AT_EDGE_END = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "isAtEdgeEnd" );
-  
-  public final static QName WB1D2D_F_LINE_ELEMENT = 
-    new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "LineElement" );
+
+  public final static QName WB1D2D_F_LINE_ELEMENT = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "LineElement" );
 
   public final static QName WB1D2D_F_JUNCTION1D2D_EDGE_EDGE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "EdgeToEdgeJunction1D2D" );
 
@@ -81,11 +80,11 @@ public class Kalypso1D2DSchemaConstants
 
   public final static QName WB1D2D_PROP_FE1D2D_MIDDLE_NODE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "middleNode" );
 
-//  public final static QName WB1D2D_F_JUNCTION1D2D_EDGE_EDGE = 
-//           new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "EdgeToEdgeJunction1D2D" );
+// public final static QName WB1D2D_F_JUNCTION1D2D_EDGE_EDGE =
+// new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "EdgeToEdgeJunction1D2D" );
 
-//  public final static QName WB1D2D_F_JUNCTION1D2D_EDGE_CLINE = 
-//          new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "EdgeToClineJunction1D2D" );
+// public final static QName WB1D2D_F_JUNCTION1D2D_EDGE_CLINE =
+// new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "EdgeToClineJunction1D2D" );
 
   public static final QName WB1D2D_F_COMPLEX_ELE_2D = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "ComplexElement2D" );
 
@@ -112,10 +111,6 @@ public class Kalypso1D2DSchemaConstants
   public static final QName WB1D2D_PROP_CONTINUITY_LINE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "continuityLine" );
 
   public static final QName WB1D2D_PROP_BOUNDARY_LINE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "boundaryLine" );
-
-  public static final QName WB1D2D_PROP_BOUNDARY_LINE_UPSTREAM = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "upstreamBoundaryLine" );
-
-  public static final QName WB1D2D_PROP_BOUNDARY_LINE_DOWNSTREAM = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "downstreamBoundaryLine" );
 
   // fe1d2d_2DElement
   // ///////////////////////////////////////////////////////////////
@@ -158,10 +153,8 @@ public class Kalypso1D2DSchemaConstants
 
   public final static QName WB1D2DCONTROL_F_MODEL = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "ControlModel" );
 
-  public final static QName WB1D2DCONTROL_F_MODEL_COLLECTION = 
-            new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "ControlModelCollection" );
+  public final static QName WB1D2DCONTROL_F_MODEL_COLLECTION = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "ControlModelCollection" );
 
-  
   public final static QName WB1D2DCONTROL_FP_MODEL_COLLECTION = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "controlModelCollection" );
 
   public final static QName WB1D2DCONTROL_XP_ACTIVE_MODEL = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "activeModelID" );
@@ -169,7 +162,7 @@ public class Kalypso1D2DSchemaConstants
   public final static QName WB1D2DCONTROL_PROP_VERSION = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "Version" );
 
   public final static QName WB1D2DCONTROL_PROP_CONTROL_MODEL_MEMBER = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "controlModelMember" );
-  
+
   public final static QName WB1D2DCONTROL_PROP_IDNOPT = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "IDNOPT" );
 
   public final static QName WB1D2DCONTROL_PROP_STARTSIM = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "startsim" );
@@ -244,14 +237,11 @@ public class Kalypso1D2DSchemaConstants
 
   public final static QName SIMMETA_F_MODELDESCRIPTOR = new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "ModelDescriptor" );
 
-  public final static QName SIMMETA_F_RESULT = 
-    new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "ResultModelDescriptor" );
+  public final static QName SIMMETA_F_RESULT = new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "ResultModelDescriptor" );
 
-  public final static QName SIMMETA_PROP_MODEL_ID = 
-      new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "modelID" );
+  public final static QName SIMMETA_PROP_MODEL_ID = new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "modelID" );
 
-  public final static QName SIMMETA_PROP_MODEL_NAME = 
-        new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "modelName" );
+  public final static QName SIMMETA_PROP_MODEL_NAME = new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "modelName" );
 
   public final static QName SIMMETA_PROP_MODEL_TYPE = new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "modelType" );
 
@@ -259,21 +249,22 @@ public class Kalypso1D2DSchemaConstants
 
   public final static QName SIMMETA_PROP_TIME = new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "time" );
 
-  public final static QName SIMMETA_PROP_CONTROL_MODEL = 
-    new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "controlModel" );
+  public final static QName SIMMETA_PROP_CONTROL_MODEL = new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "controlModel" );
 
-  public final static QName SIMMETA_PROP_SCENARIO_NAME = 
-    new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "scenarioName" );
+  public final static QName SIMMETA_PROP_SCENARIO_NAME = new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "scenarioName" );
 
   public final static QName SIMMETA_PROP_SIMULATION_TYPE = new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "simulationType" );
 
   public final static QName SIMMETA_PROP_TIN_DEPTH = new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "tinDepth" );
+
   public final static QName SIMMETA_PROP_TIN_VELOCITY = new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "tinVelocity" );
+
   public final static QName SIMMETA_PROP_TIN_WATERLEVEL = new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "tinWaterLevel" );
+
   public final static QName SIMMETA_PROP_GMT = new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "gmt" );
-  
+
   public final static QName SIMMETA_PROP_TIME_STEP_NUM = new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "timeStepNum" );
-  
+
   public final static QName SIMMETA_PROP_START_TIME = new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "startTime" );
 
   public final static QName SIMMETA_PROP_END_TIME = new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "endTime" );
@@ -288,31 +279,22 @@ public class Kalypso1D2DSchemaConstants
 
   public final static QName SIMMETA_PROP_RESULT = new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "result" );
 
-  
-  public static final QName OP1D2D_F_PSEUDO_FLOW_REL_MODEL = 
-        new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "FlowRelationshipModel" );
+  public static final QName OP1D2D_F_PSEUDO_FLOW_REL_MODEL = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "FlowRelationshipModel" );
 
-  public static final QName OP1D2D_F_OPERATIONAL_MODEL = 
-    new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "OperationalModel" );
-  
-  public static final QName OP1D2D_F_BOUNDARY_CONDITION = 
-    new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "BoundaryCondition" );
-  
-  public static final QName OP1D2D_PROP_BOUNDARY_CONDITION = 
-    new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "boundaryCondition" );
-  
-  public static final QName OP1D2D_PROP_SCOPE_MARK = 
-    new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "scopeMark" );
-  
-  public static final QName OP1D2D_PROP_STATIONARY_COND = 
-    new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "stationaryCondition" );
-  
-  
-  public static final QName RES_1D2D_F_NODE_RES_COLLECTION = 
-      new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "NodeResultCollection" );
-  
-  public static final QName RES_1D2D_F_NODE_RES_MEMBER = 
-    new QName(UrlCatalog1D2D.MODEL_1D2DResults_NS, "nodeResultMember" );
+  public static final QName OP1D2D_F_OPERATIONAL_MODEL = new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "OperationalModel" );
 
-  
+  public static final QName OP1D2D_F_BOUNDARY_CONDITION = new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "BoundaryCondition" );
+
+  public static final QName OP1D2D_PROP_BOUNDARY_CONDITION = new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "boundaryCondition" );
+
+  public static final QName OP1D2D_PROP_SCOPE_MARK = new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "parentCalculationUnit" );
+
+  public static final QName OP1D2D_PROP_PARENT_CALCUNIT = new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "parentCalculationUnit" );
+
+  public static final QName OP1D2D_PROP_STATIONARY_COND = new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "stationaryCondition" );
+
+  public static final QName RES_1D2D_F_NODE_RES_COLLECTION = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "NodeResultCollection" );
+
+  public static final QName RES_1D2D_F_NODE_RES_MEMBER = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "nodeResultMember" );
+
 }

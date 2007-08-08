@@ -60,6 +60,7 @@ import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
@@ -68,6 +69,7 @@ import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
@@ -95,15 +97,18 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
 
   private IFeatureSelectionManager m_selectionManager;
 
+  private final IFeatureWrapper2 m_parentModelElement;
+
   /**
    * Construct a new instance and initialize the dialog settings for this instance.
    */
-  public NodalBCSelectionWizard( final IBoundaryConditionDescriptor[] descriptors, final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation )
+  public NodalBCSelectionWizard( final IBoundaryConditionDescriptor[] descriptors, final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation, final IFeatureWrapper2 parentModelElement )
   {
     m_descriptors = descriptors;
     m_workspace = workspace;
     m_parentFeature = parentFeature;
     m_parentRelation = parentRelation;
+    m_parentModelElement = parentModelElement;
     setWindowTitle( "Randbedingung definieren" );
     setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModel1D2DPlugin.getDefault(), "nodeBCselectionWizard" ) );
   }
@@ -146,6 +151,7 @@ public class NodalBCSelectionWizard extends Wizard implements IWizard
         descriptor.fillObservation( obs );
         bc.setObservation( obs );
         bc.setStationaryCondition( m_selectionPage.getSteadyValue() );
+        bc.setParentElement( m_parentModelElement );
         if( m_boundaryPosition != null )
         {
           bc.setPosition( m_boundaryPosition );

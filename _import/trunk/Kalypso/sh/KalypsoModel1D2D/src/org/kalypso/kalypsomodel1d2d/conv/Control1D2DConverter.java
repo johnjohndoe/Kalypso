@@ -428,11 +428,6 @@ public class Control1D2DConverter
       /* Write only considered lines */
       final TYPE type = item.getType();
 
-      // @Dejan: I do not understand why this was commented out! This should not be done as not all boundary lines are
-      // boundary conditions pLease contact me!
-      // And of course still an exception is thrown if a boundary line is written which is not a boundary condition
-      // because in that case no values are present.
-
       if( type != contiType )
         continue;
 

@@ -41,7 +41,6 @@
 package org.kalypso.kalypsomodel1d2d.schema.binding.flowrel;
 
 import java.math.BigInteger;
-import java.util.List;
 
 import javax.xml.namespace.QName;
 
@@ -49,13 +48,23 @@ import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
-import org.kalypsodeegree.model.geometry.GM_MultiPoint;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
  * @author Gernot Belger
  */
 public interface IBoundaryCondition extends IFlowRelationship
 {
+  public static final String PARENT_TYPE_ELEMENT1D2D = "ELEMENT1D2D";
+
+  public static final String PARENT_TYPE_NODE1D2D = "NODE1D2D";
+
+  public static final String PARENT_TYPE_LINE1D2D = "LINE1D2D";
+
+  public static final QName PROP_PARENT_TYPE = new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "bcType" );
+
+  public static final QName PROP_PARENT_MODEL_ELEMENT = new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "parentModelElement" );
+
   public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "BoundaryCondition" );
 
   public static final QName QNAME_OBSERVATION_WITH_SOURCE = new QName( UrlCatalog1D2D.MODEL_1D2DObservation_NS, "ObservationWithSource" );
@@ -70,40 +79,15 @@ public interface IBoundaryCondition extends IFlowRelationship
 
   public IObservation<TupleResult> getObservation( );
 
-  /**
-   * To get the scope mark of this boundary condition. A scope mark marks a boundary line element different of the line
-   * where the boundary is applied. It thereafter allows the identification of a boundary line the target calculation
-   * unit must contains.
-   * 
-   * @param scopeMark
-   *            the scope mark of this
-   */
-  public void addScopeMark( GM_MultiPoint scopeMark );
-
-  /**
-   * Removes the scope parks within the specified circle.
-   * 
-   * @param scopeMark
-   *            the target scope and center of the search circle
-   * @param searchRadius
-   *            the mark distance within which a point is considered equal to the scopeMark
-   * 
-   */
-  public void removeScopeMark( GM_MultiPoint scopeMark, double searchRadius );
-
-  /**
-   * Removes all scope marks on of this boundary condition
-   */
-  public void clearScopeMarks( );
-
-  /**
-   * Returns all scope marks of this boundary condition
-   */
-  public List<GM_MultiPoint> getScopeMark( );
-
   public double getStationaryCondition( );
 
   public void setStationaryCondition( double statCond );
 
   public BigInteger getDirection( );
+
+  public void setParentElement( final IFeatureWrapper2 parentElement );
+
+  public String getParentElementID( );
+
+  public String getType( );
 }

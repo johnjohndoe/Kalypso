@@ -45,6 +45,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
@@ -69,7 +70,6 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_MultiPoint;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
@@ -344,28 +344,6 @@ public class CalcUnitOps
       }
     }
     return num;
-  }
-
-  // TODO: move into calcUnit class
-  public static List<IBoundaryLine> getBoundaryLines( final ICalculationUnit calUnit )
-  {
-    Assert.throwIAEOnNullParam( calUnit, "calUnit" );
-    final IFeatureWrapperCollection<IFE1D2DElement> elements = calUnit.getElements();
-    final List<IBoundaryLine> boundaryLines = new ArrayList<IBoundaryLine>();
-    for( final IFE1D2DElement ele : elements )
-    {
-      if( ele instanceof IBoundaryLine )
-        boundaryLines.add( (IBoundaryLine) ele );
-      // TODO: This will never happen, juntion-elts are no elements!
-      else if( ele instanceof IJunctionContext1DToCLine )
-      {
-        /* conti lines of transition elements get automatically added to the boundary lines of this calc-unit */
-        final ILineElement continuityLine = ((IJunctionContext1DToCLine) ele).getContinuityLine();
-        boundaryLines.add( (IBoundaryLine) continuityLine );
-      }
-    }
-    // TODO: consider sub-units!
-    return boundaryLines;
   }
 
   /**
@@ -666,53 +644,6 @@ public class CalcUnitOps
   }
 
   /**
-   * Mark the boundary condition as condition of the given calculation unit. Marking means that the boundary condition
-   * will get scope mark pointing to the boundary line other than the one targeted by the boundary condition.
-   * 
-   * @param unit
-   *            the target calculation unit
-   * @param bCondition
-   *            the boundary condition to mark
-   */
-  public static final void markAsBoundaryCondition( final ICalculationUnit<IFE1D2DElement> unit, final IBoundaryCondition bCondition, final double grabDistance )
-  {
-    Assert.throwIAEOnNullParam( unit, "unit" );
-    Assert.throwIAEOnNullParam( bCondition, "bCondition" );
-    Assert.throwIAEOnLessThan0( grabDistance, "grab distance must be greater or equals to 0" );
-
-    // get the targeted boundary line
-    final GM_Point bcPosition = bCondition.getPosition();
-    final IBoundaryLine targetLine = getLineElement( unit, bcPosition, grabDistance, IBoundaryLine.class );
-    if( targetLine == null )
-    {
-      // TODO: this message is not shown to the user! Do it
-      throw new IllegalArgumentException( "Boundary condition does not have a target line:" + "\n\tgrabDistance=" + grabDistance );
-    }
-    // compute the other lines and set their middle nodes as
-    // boundary line
-    final ArrayList<GM_Point> points = new ArrayList<GM_Point>();
-
-    for( final IFE1D2DElement ele : unit.getElements() )
-    {
-      if( ele instanceof IBoundaryLine )
-      {
-        if( !ele.equals( targetLine ) )
-        {
-
-          final IFE1D2DNode middleNode = ContinuityLineOps.getMiddleNode( (IBoundaryLine) ele );
-          points.add( middleNode.getPoint() );
-        }
-      }
-    }
-    if( points.size() > 0 )
-    {
-      final GM_MultiPoint multiPoint = GeometryFactory.createGM_MultiPoint( points.toArray( new GM_Point[points.size()] ), points.get( 0 ).getCoordinateSystem() );
-      bCondition.addScopeMark( multiPoint );
-    }
-
-  }
-
-  /**
    * Answer whether a boundary condition is assign to the given calculation unit
    * 
    * @param unit
@@ -724,69 +655,10 @@ public class CalcUnitOps
    *             if unit or bCondition is null or unit does not have a model 1d 2d as parent feature
    * 
    */
-  public static final boolean isBoundaryConditionOf( final ICalculationUnit unit, final IBoundaryCondition bCondition, final double grabDistance )
+  public static final boolean isBoundaryConditionOf( final ICalculationUnit unit, final IBoundaryCondition bCondition )
   {
-    Assert.throwIAEOnNullParam( unit, "unit" );
-    Assert.throwIAEOnNullParam( bCondition, "bCondition" );
-    Assert.throwIAEOnLessThan0( grabDistance, "grab distance must be greater or equals to 0" );
-
-    final GM_Point bPosition = bCondition.getPosition();
-    final Feature unitParent = unit.getWrappedFeature().getParent();
-    final IFEDiscretisationModel1d2d model1d2d = (IFEDiscretisationModel1d2d) unitParent.getAdapter( IFEDiscretisationModel1d2d.class );
-    if( model1d2d == null )
-    {
-      throw new IllegalArgumentException( "Unit must have a model 1d2d as parent" );
-    }
-    if( bPosition == null )
-    {
-      return false;
-    }
-    final IBoundaryLine<IFE1D2DComplexElement, IFE1D2DEdge> bcLine = getLineElement( unit, bPosition, grabDistance, IBoundaryLine.class );
-    if( bcLine == null )
-    {
-      return false;
-    }
-    List<IFE1D2DComplexElement> containers = new ArrayList<IFE1D2DComplexElement>( bcLine.getContainers() );
-
-    final List<GM_MultiPoint> muliPointScopeMarks = bCondition.getScopeMark();
-
-    multiPointScanning: for( final GM_MultiPoint multiPoint : muliPointScopeMarks )
-    {
-      // final List<GM_MultiPoint> scopeMarks;
-      // containers.remove( bcLine );
-      if( multiPoint.getSize() < 1 )
-      {
-        containers = new ArrayList<IFE1D2DComplexElement>( bcLine.getContainers() );
-        return false;
-      }
-
-      for( final GM_Point currentPoint : multiPoint.getAllPoints() )
-      {
-
-        final IBoundaryLine<IFE1D2DComplexElement, IFE1D2DEdge> otherLine = getLineElement( unit, currentPoint, grabDistance, IBoundaryLine.class );
-
-        if( otherLine == null )
-        {
-          containers = new ArrayList<IFE1D2DComplexElement>( bcLine.getContainers() );
-          continue multiPointScanning;
-        }
-
-        if( bcLine.equals( otherLine ) )
-        {
-          containers = new ArrayList<IFE1D2DComplexElement>( bcLine.getContainers() );
-          continue multiPointScanning;
-        }
-
-        containers.retainAll( otherLine.getContainers() );
-        if( containers.isEmpty() )
-        {
-          containers = new ArrayList<IFE1D2DComplexElement>( bcLine.getContainers() );
-          continue multiPointScanning;
-        }
-      }
-      return true;
-    }
-    return false;
+    final List parents = (List) bCondition.getWrappedFeature().getProperty( Kalypso1D2DSchemaConstants.OP1D2D_PROP_PARENT_CALCUNIT );
+    return parents.contains( unit.getGmlID() );
   }
 
   /**
@@ -796,152 +668,21 @@ public class CalcUnitOps
    *            the unit given the assignement contex
    * @param bCondition
    *            the boundary condition which line is to be get
-   * @param grabDistance
-   *            distance used for geo-searching
    * @return the assigned boundary condition line or null if there is none
    * @throws IllegalArgumentException
    *             if unit or bCondition is null or grabDistance is null
    */
-  public static final IBoundaryLine getAssignedBoundaryConditionLine( final ICalculationUnit unit, final IBoundaryCondition bCondition, final double grabDistance )
+  public static final IBoundaryLine getAssignedBoundaryConditionLine( final ICalculationUnit unit, final IBoundaryCondition bCondition )
   {
-    Assert.throwIAEOnNullParam( unit, "unit" );
-    Assert.throwIAEOnNullParam( bCondition, "bCondition" );
-    Assert.throwIAEOnLessThan0( grabDistance, "grab distance must be greater or equals to 0" );
-
-    final GM_Point bPosition = bCondition.getPosition();
-    final Feature unitParent = unit.getWrappedFeature().getParent();
-    final IFEDiscretisationModel1d2d model1d2d = (IFEDiscretisationModel1d2d) unitParent.getAdapter( IFEDiscretisationModel1d2d.class );
-    if( model1d2d == null )
+    final List<IBoundaryLine> boundaryLines = unit.getBoundaryLines();
+    if( bCondition.getType().equals( IBoundaryCondition.PARENT_TYPE_LINE1D2D ) )
     {
-      throw new IllegalArgumentException( "Unit must have a model 1d2d as parent" );
-    }
-    if( bPosition == null )
-    {
-      return null;
-    }
-    final IBoundaryLine<IFE1D2DComplexElement, IFE1D2DEdge> bcLine = getLineElement( unit, bPosition, grabDistance, IBoundaryLine.class );
-    if( bcLine == null )
-    {
-      return null;
-    }
-    List<IFE1D2DComplexElement> containers = new ArrayList<IFE1D2DComplexElement>( bcLine.getContainers() );
-    final List<GM_MultiPoint> muliPointScopeMarks = bCondition.getScopeMark();
-
-    multiPointScanning: for( final GM_MultiPoint multiPoint : muliPointScopeMarks )
-    {
-      // final List<GM_MultiPoint> scopeMarks;
-      // containers.remove( bcLine );
-      if( multiPoint.getSize() < 1 )
-      {
-        containers = new ArrayList<IFE1D2DComplexElement>( bcLine.getContainers() );
-        return null;
-      }
-
-      for( final GM_Point currentPoint : multiPoint.getAllPoints() )
-      {
-
-        final IBoundaryLine<IFE1D2DComplexElement, IFE1D2DEdge> otherLine = getLineElement( unit, currentPoint, grabDistance, IBoundaryLine.class );
-
-        if( otherLine == null )
-        {
-          containers = new ArrayList<IFE1D2DComplexElement>( bcLine.getContainers() );
-          continue multiPointScanning;
-        }
-
-        if( bcLine.equals( otherLine ) )
-        {
-          containers = new ArrayList<IFE1D2DComplexElement>( bcLine.getContainers() );
-          continue multiPointScanning;
-        }
-
-        containers.retainAll( otherLine.getContainers() );
-        if( containers.isEmpty() )
-        {
-          containers = new ArrayList<IFE1D2DComplexElement>( bcLine.getContainers() );
-          continue multiPointScanning;
-        }
-      }
-      return bcLine;
+      final String parentGmlID = bCondition.getParentElementID();
+      for( final IBoundaryLine boundaryLine : boundaryLines )
+        if(boundaryLine.getGmlID().equals( parentGmlID ))
+          return boundaryLine;
     }
     return null;
-  }
-
-  /**
-   * Removes a boundary condition from a calculation unit.
-   * 
-   * @param unit
-   *            the possible target calculation unit
-   * @param bCondition
-   *            the boundary condition to remove
-   * @return true if the boundary condition has been removed from a calculation unit otherwise false.
-   * @throws IllegalArgumentException
-   *             if unit or bCondition is null or unit does not have a model 1d 2d as parent feature
-   * 
-   */
-  public static final boolean removeBoundaryConditionFromUnit( final ICalculationUnit unit, final IBoundaryCondition bCondition, final double grabDistance )
-  {
-    Assert.throwIAEOnNullParam( unit, "unit" );
-    Assert.throwIAEOnNullParam( bCondition, "bCondition" );
-    Assert.throwIAEOnLessThan0( grabDistance, "grab distance must be greater or equals to 0" );
-
-    final GM_Point bPosition = bCondition.getPosition();
-    final Feature unitParent = unit.getWrappedFeature().getParent();
-    final IFEDiscretisationModel1d2d model1d2d = (IFEDiscretisationModel1d2d) unitParent.getAdapter( IFEDiscretisationModel1d2d.class );
-    if( model1d2d == null )
-    {
-      throw new IllegalArgumentException( "Unit must have a model 1d2d as parent" );
-    }
-    if( bPosition == null )
-    {
-      return false;
-    }
-    final IBoundaryLine<IFE1D2DComplexElement, IFE1D2DEdge> bcLine = getLineElement( unit, bPosition, grabDistance, IBoundaryLine.class );
-    if( bcLine == null )
-    {
-      return false;
-    }
-    List<IFE1D2DComplexElement> containers = new ArrayList<IFE1D2DComplexElement>( bcLine.getContainers() );
-    final List<GM_MultiPoint> muliPointScopeMarks = bCondition.getScopeMark();
-
-    boolean found = false;
-    multiPointScanning: for( int i = muliPointScopeMarks.size() - 1; i >= 0; i-- )
-    {
-      final GM_MultiPoint multiPoint = muliPointScopeMarks.get( i );
-      if( multiPoint.getSize() < 1 )
-      {
-        containers = new ArrayList<IFE1D2DComplexElement>( bcLine.getContainers() );
-        return false;
-      }
-
-      for( final GM_Point currentPoint : multiPoint.getAllPoints() )
-      {
-
-        final IBoundaryLine<IFE1D2DComplexElement, IFE1D2DEdge> otherLine = getLineElement( unit, currentPoint, grabDistance, IBoundaryLine.class );
-
-        if( otherLine == null )
-        {
-          containers = new ArrayList<IFE1D2DComplexElement>( bcLine.getContainers() );
-          continue multiPointScanning;
-        }
-
-        if( bcLine.equals( otherLine ) )
-        {
-          containers = new ArrayList<IFE1D2DComplexElement>( bcLine.getContainers() );
-          continue multiPointScanning;
-        }
-
-        containers.retainAll( otherLine.getContainers() );
-        if( containers.isEmpty() )
-        {
-          containers = new ArrayList<IFE1D2DComplexElement>( bcLine.getContainers() );
-          continue multiPointScanning;
-        }
-      }
-      bCondition.removeScopeMark( multiPoint, grabDistance );
-      found = true;
-    }
-
-    return found;
   }
 
   /**
@@ -1005,15 +746,11 @@ public class CalcUnitOps
    * @throws IllegalArgumentException
    *             if condition or unit is null or grabDistance is less than 0
    */
-  public static final List<IBoundaryCondition> getBoundaryConditions( final Collection<IBoundaryCondition> conditions, final ICalculationUnit<IFE1D2DElement> unit, final double grabDistance )
+  public static final List<IBoundaryCondition> getBoundaryConditions( final Collection<IBoundaryCondition> conditions, final ICalculationUnit<IFE1D2DElement> unit )
   {
-    Assert.throwIAEOnNullParam( conditions, "conditions" );
-    Assert.throwIAEOnNullParam( unit, "unit" );
-    Assert.throwIAEOnLessThan0( grabDistance, "grab distance must be greater or equals to 0" );
-
     final List<IBoundaryCondition> assignedConditions = new ArrayList<IBoundaryCondition>();
     for( final IBoundaryCondition condition : conditions )
-      if( isBoundaryConditionOf( unit, condition, grabDistance ) )
+      if( isBoundaryConditionOf( unit, condition ) )
         assignedConditions.add( condition );
     return assignedConditions;
   }
@@ -1033,14 +770,11 @@ public class CalcUnitOps
    *             if condition or unit is null or grabDistance is less than 0
    * 
    */
-  public static final int countAssignedBoundaryConditions( final Collection<IBoundaryCondition> conditions, final ICalculationUnit<IFE1D2DElement> unit, final double grabDistance )
+  public static final int countAssignedBoundaryConditions( final Collection<IBoundaryCondition> conditions, final ICalculationUnit<IFE1D2DElement> unit )
   {
-    Assert.throwIAEOnNullParam( conditions, "conditions" );
-    Assert.throwIAEOnNullParam( unit, "unit" );
-    Assert.throwIAEOnLessThan0( grabDistance, "grab distance must be greater or equal to 0" );
     int count = 0;
     for( final IBoundaryCondition condition : conditions )
-      if( isBoundaryConditionOf( unit, condition, grabDistance ) )
+      if( isBoundaryConditionOf( unit, condition ) )
         count++;
     return count;
   }

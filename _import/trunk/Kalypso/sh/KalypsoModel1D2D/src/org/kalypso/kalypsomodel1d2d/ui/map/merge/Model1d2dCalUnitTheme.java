@@ -135,7 +135,7 @@ public class Model1d2dCalUnitTheme extends AbstractKalypsoTheme
       {
         if( bc instanceof IBoundaryCondition )
         {
-          if( CalcUnitOps.isBoundaryConditionOf( m_calcUnit, (IBoundaryCondition) bc, 20 ) )
+          if( CalcUnitOps.isBoundaryConditionOf( m_calcUnit, (IBoundaryCondition) bc ) )
           {
             final GM_Point position = ((IBoundaryCondition) bc).getPosition();
             final double gPosX = p.getDestX( position.getX() ) + xTrans;

@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -20,7 +19,6 @@ import org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler;
 import org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv;
 import org.kalypso.kalypsomodel1d2d.conv.XYZOffsetPositionProvider;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
  * Provides the mechanism for transforming a 2D-Ascii model into a 1d 2d gml model

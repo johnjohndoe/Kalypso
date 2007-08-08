@@ -45,8 +45,12 @@ import javax.xml.namespace.QName;
 import org.kalypso.kalypsomodel1d2d.schema.binding.Util;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
+import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
+
+import sun.awt.image.ImageFetchable;
 
 /**
  * The default implementation of the {@link IFE1D2DComplexElement} interface.
@@ -101,6 +105,10 @@ public class FE1D2DComplexElement<ET extends IFE1D2DElement> extends AbstractFea
   {
     Assert.throwIAEOnNullParam( element, "element" );
     return elements.addRef( element );
+  }
+  
+  public boolean addFlowRelationAsRef(IFlowRelationship element){
+    return addElementAsRef( (ET)element );
   }
 
   /**

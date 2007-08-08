@@ -91,7 +91,7 @@ public class CreateNodalBCFlowrelationWidget extends AbstractCreateFlowrelationW
     final IBoundaryConditionDescriptor[] descriptors = createTimeserieDescriptors( modelElement, scenarioFolder );
 
     /* Ask user for type of new feature */
-    final NodalBCSelectionWizard wizard = new NodalBCSelectionWizard( descriptors, workspace, parentFeature, parentRelation );
+    final NodalBCSelectionWizard wizard = new NodalBCSelectionWizard( descriptors, workspace, parentFeature, parentRelation, modelElement );
 
     final Shell shell = display.getActiveShell();
     final WizardDialog dialog = new WizardDialog( shell, wizard );

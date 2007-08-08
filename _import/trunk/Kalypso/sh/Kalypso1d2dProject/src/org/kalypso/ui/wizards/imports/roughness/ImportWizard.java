@@ -17,6 +17,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.ui.wizards.imports.Messages;
@@ -91,7 +92,7 @@ public class ImportWizard extends Wizard implements INewWizard
     m_data.loadUserSelection( "/.metadata/roughnessUserSelection.dat" );
     try
     {
-      m_data.setRoughnessDatabaseLocation( "/.metadata/roughness.gml" );
+      m_data.setRoughnessDatabaseLocation( "/.metadata/roughness.gml", szenarioDataProvider.getModel( IRoughnessClsCollection.class ) );
     }
     catch( Exception e )
     {

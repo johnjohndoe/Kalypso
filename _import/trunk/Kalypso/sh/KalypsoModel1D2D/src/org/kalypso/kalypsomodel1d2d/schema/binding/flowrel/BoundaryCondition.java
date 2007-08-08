@@ -41,19 +41,20 @@
 package org.kalypso.kalypsomodel1d2d.schema.binding.flowrel;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine1D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DContinuityLine;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
-import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.FlowRelationship;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_MultiPoint;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
  * @author Gernot Belger
@@ -118,60 +119,6 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition#addScopeMark(org.kalypsodeegree.model.geometry.GM_Point)
-   */
-  public void addScopeMark( final GM_MultiPoint scopeMark )
-  {
-    Assert.throwIAEOnNullParam( scopeMark, "scopeMark" );
-    final Feature feature = getWrappedFeature();
-    final List scopeMarks = (List) feature.getProperty( Kalypso1D2DSchemaConstants.OP1D2D_PROP_SCOPE_MARK );
-    scopeMarks.add( scopeMark );
-  }
-
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition#clearScopeMarks()
-   */
-  public void clearScopeMarks( )
-  {
-    final Feature feature = getWrappedFeature();
-    final List scopeMarks = (List) feature.getProperty( Kalypso1D2DSchemaConstants.OP1D2D_PROP_SCOPE_MARK );
-    scopeMarks.clear();
-  }
-
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition#getScopeMark()
-   */
-  public List<GM_MultiPoint> getScopeMark( )
-  {
-    final Feature feature = getWrappedFeature();
-    final List scopeMarks = (List) feature.getProperty( Kalypso1D2DSchemaConstants.OP1D2D_PROP_SCOPE_MARK );
-    return new ArrayList<GM_MultiPoint>( scopeMarks );
-  }
-
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition#removeScopeMark(org.kalypsodeegree.model.geometry.GM_Point,
-   *      double)
-   */
-  public void removeScopeMark( final GM_MultiPoint scopeMark, final double searchRadius )
-  {
-    final Feature feature = getWrappedFeature();
-    final List scopeMarks = (List) feature.getProperty( Kalypso1D2DSchemaConstants.OP1D2D_PROP_SCOPE_MARK );
-    scopeMarks.remove( scopeMark );
-    // throw new UnsupportedOperationException();
-    // final Feature feature = getWrappedFeature();
-    // final List scopeMarks =
-    // (List) feature.getProperty( Kalypso1D2DSchemaConstants.OP1D2D_PROP_SCOPE_MARK );
-    // for( int i = scopeMarks.size()-1; i>=0 ; i-- )
-    // {
-    // GM_Point currentMark = (GM_Point) scopeMarks.get( i );
-    // if( scopeMark.distance( currentMark ) <= searchRadius)
-    // {
-    // scopeMarks.remove( i );
-    // }
-    // }
-  }
-
-  /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition#getStationaryCondition()
    */
   public double getStationaryCondition( )
@@ -212,6 +159,44 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
   public BigInteger getDirection( )
   {
     return (BigInteger) getFeature().getProperty( QNAME_P_DIRECTION );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition#setParentElement(org.kalypsodeegree.model.feature.binding.IFeatureWrapper2)
+   */
+  public void setParentElement( IFeatureWrapper2 parentElement )
+  {
+    if( parentElement == null )
+      return;
+    String parentType = null;
+    if( parentElement instanceof IFE1D2DContinuityLine || parentElement instanceof IBoundaryLine1D)
+      parentType = IBoundaryCondition.PARENT_TYPE_LINE1D2D;
+    else if(parentElement instanceof IFE1D2DNode)
+      parentType = IBoundaryCondition.PARENT_TYPE_NODE1D2D;
+    else if(parentElement instanceof IFE1D2DElement)
+      parentType = IBoundaryCondition.PARENT_TYPE_ELEMENT1D2D;
+    if( parentType != null )
+    {
+      getFeature().setProperty( IBoundaryCondition.PROP_PARENT_TYPE, parentType );
+      getFeature().setProperty( IBoundaryCondition.PROP_PARENT_MODEL_ELEMENT, parentElement.getGmlID() );
+    }
+    // TODO consider what to do if parentElement is something else
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition#getParentElementID()
+   */
+  public String getParentElementID( )
+  {
+    return getFeature().getProperty( IBoundaryCondition.PROP_PARENT_MODEL_ELEMENT ).toString();
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition#getType()
+   */
+  public String getType( )
+  {
+    return getFeature().getProperty( IBoundaryCondition.PROP_PARENT_TYPE ).toString();
   }
 
 }

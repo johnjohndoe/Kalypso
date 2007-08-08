@@ -42,23 +42,17 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 
-
-
 /**
- * Interface for all line elements which are basically
- * a collection of edge building a line
+ * Interface for all line elements which are basically a collection of edge building a line
  * 
  * @author Patrice Congo
  */
 @SuppressWarnings("unchecked")
-public interface ILineElement<    
-                            CT extends IFE1D2DComplexElement, 
-                            ET extends IFE1D2DEdge>  
-                            extends IFE1D2DElement<CT, ET>
+public interface ILineElement<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge> extends IFE1D2DElement<CT, ET>
 {
   public IFeatureWrapperCollection<ET> getEdges( );
 
   public void addEdge( final String edgeID );
-  
+
   public void setEdges( final ET[] edges );
 }

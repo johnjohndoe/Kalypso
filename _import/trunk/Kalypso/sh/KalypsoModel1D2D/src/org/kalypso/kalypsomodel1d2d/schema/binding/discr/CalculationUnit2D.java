@@ -49,37 +49,23 @@ import org.kalypsodeegree.model.feature.Feature;
  * Default implementation of {@link ICalculationUnit2D}
  * 
  * @author Patrice Congo
- *
+ * 
  */
 @SuppressWarnings("unchecked")
-public class CalculationUnit2D<ET extends IFE1D2DElement>
-                        extends CalculationUnit<ET>
-                        implements ICalculationUnit2D<ET>
+public class CalculationUnit2D<ET extends IFE1D2DElement> extends CalculationUnit<ET> implements ICalculationUnit2D<ET>
 {
 
-  public CalculationUnit2D( 
-                Feature featureToBind )
+  public CalculationUnit2D( Feature featureToBind )
   {
-    this(
-        featureToBind,
-        Kalypso1D2DSchemaConstants.WB1D2D_F_CALC_UNIT_2D,
-        Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS,//Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELE_2D,
-        (Class<ET>)IFE1D2DElement.class );
-    
+    this( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_CALC_UNIT_2D, Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS,// Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELE_2D,
+    (Class<ET>) IFE1D2DElement.class );
+
   }
-  
-  public CalculationUnit2D( 
-              Feature featureToBind, 
-              QName qnameToBind, 
-              QName elementListPropQName, 
-              Class<ET> wrapperClass )
+
+  public CalculationUnit2D( Feature featureToBind, QName qnameToBind, QName elementListPropQName, Class<ET> wrapperClass )
   {
-    super( 
-        featureToBind, 
-        qnameToBind, 
-        elementListPropQName, 
-        wrapperClass );
-    
+    super( featureToBind, qnameToBind, elementListPropQName, wrapperClass );
+
   }
 
   /**
@@ -88,15 +74,10 @@ public class CalculationUnit2D<ET extends IFE1D2DElement>
   @Override
   public boolean addElementAsRef( ET element )
   {
-    boolean isPolyElementOrBoundaryLine =
-      ( element instanceof IPolyElement ) ||
-      ( element instanceof IBoundaryLine );
+    boolean isPolyElementOrBoundaryLine = (element instanceof IPolyElement) || (element instanceof IBoundaryLine);
     if( !isPolyElementOrBoundaryLine )
     {
-      String message = String.format( 
-          "Argument must be an element 1d or a boundary line:"+
-            "\n\t value=%s", 
-            element );
+      String message = String.format( "Argument must be an element 1d or a boundary line:" + "\n\t value=%s", element );
       throw new IllegalArgumentException( message );
     }
     return super.addElementAsRef( element );

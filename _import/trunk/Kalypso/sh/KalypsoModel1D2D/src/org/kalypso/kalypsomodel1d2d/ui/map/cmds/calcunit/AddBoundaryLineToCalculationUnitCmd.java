@@ -43,8 +43,6 @@ package org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.namespace.QName;
-
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
@@ -60,34 +58,29 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
  * 
  * @author Patrice Congo
  */
-@SuppressWarnings({ "hiding", "unchecked" })
+@SuppressWarnings( { "hiding", "unchecked" })
 public class AddBoundaryLineToCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
 {
   private final IBoundaryLine elementsToAdd;
+
   private final ICalculationUnit calculationUnit;
+
   private final IFEDiscretisationModel1d2d model1d2d;
-  
+
   private boolean done = false;
-  
-//  /**
-//   * Denotes the boundary line which has been replaced 
-//   * by the newly added line in the relationship to the
-//   * calculation unit. E.g. the old upstream boundary line
-//   */
-//  private IBoundaryLine replacedBoundaryLine;
-  
+
+// /**
+// * Denotes the boundary line which has been replaced
+// * by the newly added line in the relationship to the
+// * calculation unit. E.g. the old upstream boundary line
+// */
+// private IBoundaryLine replacedBoundaryLine;
+
   /**
-   * Denotes the relation, which goes beyond simple elements 
-   * inclusion,  of the boundary line to added
-   * to the calculation unit
+   * Denotes the relation, which goes beyond simple elements inclusion, of the boundary line to added to the calculation
+   * unit
    */
-  private final QName relationToCalUnit;
-  
-  public AddBoundaryLineToCalculationUnitCmd(
-                      ICalculationUnit calculationUnit,
-                      IBoundaryLine elementsToAdd,
-                      IFEDiscretisationModel1d2d model1d2d,
-                      QName relationToCalUnit )
+  public AddBoundaryLineToCalculationUnitCmd( ICalculationUnit calculationUnit, IBoundaryLine elementsToAdd, IFEDiscretisationModel1d2d model1d2d )
   {
     Assert.throwIAEOnNullParam( calculationUnit, "calculationUnit" );
     Assert.throwIAEOnNullParam( elementsToAdd, "elementsToAdd" );
@@ -95,9 +88,7 @@ public class AddBoundaryLineToCalculationUnitCmd implements IDiscrModel1d2dChang
     this.calculationUnit = calculationUnit;
     this.elementsToAdd = elementsToAdd;
     this.model1d2d = model1d2d;
-    this.relationToCalUnit = relationToCalUnit;
   }
-  
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand#getChangedFeature()
@@ -106,11 +97,11 @@ public class AddBoundaryLineToCalculationUnitCmd implements IDiscrModel1d2dChang
   {
     if( done )
     {
-      return new IFeatureWrapper2[]{ calculationUnit, elementsToAdd };
+      return new IFeatureWrapper2[] { calculationUnit, elementsToAdd };
     }
     else
     {
-      return new IFeatureWrapper2[]{};
+      return new IFeatureWrapper2[] {};
     }
   }
 
@@ -142,7 +133,7 @@ public class AddBoundaryLineToCalculationUnitCmd implements IDiscrModel1d2dChang
    * @see org.kalypso.commons.command.ICommand#process()
    */
   public void process( ) throws Exception
-  {  
+  {
     try
     {
       if( !done )
@@ -150,7 +141,7 @@ public class AddBoundaryLineToCalculationUnitCmd implements IDiscrModel1d2dChang
         calculationUnit.addElementAsRef( elementsToAdd );
         elementsToAdd.getContainers().addRef( calculationUnit );
         fireProcessChanges();
-        done=true;
+        done = true;
       }
     }
     catch( Throwable th )
@@ -159,24 +150,16 @@ public class AddBoundaryLineToCalculationUnitCmd implements IDiscrModel1d2dChang
     }
   }
 
-  private final void fireProcessChanges()
+  private final void fireProcessChanges( )
   {
     final Feature calUnitFeature = calculationUnit.getWrappedFeature();
     final Feature model1d2dFeature = model1d2d.getWrappedFeature();
-    List<Feature> features = 
-      new ArrayList<Feature>( );
+    List<Feature> features = new ArrayList<Feature>();
     features.add( calUnitFeature );
     features.add( elementsToAdd.getWrappedFeature() );
-    
-    GMLWorkspace workspace = 
-          calUnitFeature.getWorkspace();
-    FeatureStructureChangeModellEvent event = 
-        new FeatureStructureChangeModellEvent(
-            workspace,//final GMLWorkspace workspace, 
-            model1d2dFeature,// Feature parentFeature, 
-            features.toArray( new Feature[features.size()] ),//final Feature[] changedFeature, 
-            FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE//final int changeType
-            );
+
+    GMLWorkspace workspace = calUnitFeature.getWorkspace();
+    FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( workspace, model1d2dFeature, features.toArray( new Feature[features.size()] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE );
     workspace.fireModellEvent( event );
   }
 
@@ -185,7 +168,7 @@ public class AddBoundaryLineToCalculationUnitCmd implements IDiscrModel1d2dChang
    */
   public void redo( ) throws Exception
   {
-    
+
   }
 
   /**
@@ -193,6 +176,6 @@ public class AddBoundaryLineToCalculationUnitCmd implements IDiscrModel1d2dChang
    */
   public void undo( ) throws Exception
   {
-    
+
   }
 }

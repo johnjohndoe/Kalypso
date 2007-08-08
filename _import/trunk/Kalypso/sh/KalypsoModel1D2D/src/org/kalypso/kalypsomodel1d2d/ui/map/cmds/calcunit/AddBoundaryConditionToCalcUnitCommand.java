@@ -43,7 +43,7 @@ package org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
+import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
@@ -59,7 +59,7 @@ import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
  * 
  */
 @SuppressWarnings( { "unchecked", "hiding" })
-public class AddBoundaryConditionToCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
+public class AddBoundaryConditionToCalcUnitCommand implements IDiscrModel1d2dChangeCommand
 {
   private final IBoundaryCondition m_boundaryConditionToAdd;
 
@@ -67,16 +67,13 @@ public class AddBoundaryConditionToCalculationUnitCmd implements IDiscrModel1d2d
 
   private boolean done = false;
 
-  private final double m_grabDistance;
-
-  public AddBoundaryConditionToCalculationUnitCmd( final ICalculationUnit calculationUnit, final IBoundaryCondition boundaryConditionToAdd, final double grabDistance )
+  public AddBoundaryConditionToCalcUnitCommand( final ICalculationUnit calculationUnit, final IBoundaryCondition boundaryConditionToAdd )
   {
     Assert.throwIAEOnNullParam( calculationUnit, "calculationUnit" );
     Assert.throwIAEOnNullParam( boundaryConditionToAdd, "boundaryConditionToAdd" );
 
     m_calculationUnit = calculationUnit;
     m_boundaryConditionToAdd = boundaryConditionToAdd;
-    m_grabDistance = grabDistance;
   }
 
   /**
@@ -127,7 +124,8 @@ public class AddBoundaryConditionToCalculationUnitCmd implements IDiscrModel1d2d
     {
       if( !done )
       {
-        CalcUnitOps.markAsBoundaryCondition( m_calculationUnit, m_boundaryConditionToAdd, m_grabDistance );
+        final List calculationUnitID = (List) m_boundaryConditionToAdd.getWrappedFeature().getProperty( Kalypso1D2DSchemaConstants.OP1D2D_PROP_PARENT_CALCUNIT );
+        calculationUnitID.add( m_calculationUnit.getGmlID() );
         fireProcessChanges();
       }
     }

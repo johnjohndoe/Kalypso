@@ -483,8 +483,9 @@ public class ModelOps
     final int INITIAL_SIZE = toSortAndAddEdges.size();// elementEdges.size();
     if( INITIAL_SIZE < 3 )
     {
-      String str = "Illegal2D element:" + element.getGmlID() + " edgeCount=" + INITIAL_SIZE;
-      throw new IllegalStateException( str );
+      return;
+//      String str = "Illegal2D element:" + element.getGmlID() + " edgeCount=" + INITIAL_SIZE;
+//      throw new IllegalStateException( str );
 // return;
     }
     List<IFE1D2DEdge> edges = new ArrayList<IFE1D2DEdge>( toSortAndAddEdges );// element.getEdges());
@@ -516,7 +517,7 @@ public class ModelOps
 
       if( edge == null )
       {
-        throw new RuntimeException( "Could not fround next edge:" + "\n\tnode:" + nodeEnd + "\n\tedges=" + edges );
+        throw new RuntimeException( "Could not found next edge:" + "\n\tnode:" + nodeEnd + "\n\tedges=" + edges );
       }
       else
       {
