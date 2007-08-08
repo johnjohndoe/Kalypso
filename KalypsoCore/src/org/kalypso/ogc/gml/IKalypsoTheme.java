@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
@@ -59,6 +59,11 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  */
 public interface IKalypsoTheme extends IAdaptable, IWorkbenchAdapter
 {
+  /**
+   * Name of the property which determines if the user is allowed to deleted this theme.
+   */
+  public final static String PROPERTY_DELETEABLE = "deleteable";
+
   /**
    * * Adds a listener to the list of listeners. Has no effect if the same listeners is already registered.
    */
@@ -101,4 +106,23 @@ public interface IKalypsoTheme extends IAdaptable, IWorkbenchAdapter
   public boolean isVisible( );
 
   public void setVisible( final boolean visible );
+
+  /**
+   * Retrieves the indicated property from this theme.
+   * <p>
+   * The name of the property should be one of the <code>PROPERTY_</code> constants of this interface.
+   * </p>
+   * 
+   * @throws IllegalArgumentException
+   *             If the given property name is unknown.
+   */
+  public boolean getProperty( final String name );
+
+  /**
+   * Sets the given property of this theme.
+   * <p>
+   * The name of the property should be one of the <code>PROPERTY_</code> constants of this interface.
+   * </p>
+   */
+  public void setProperty( final String name, final boolean value );
 }

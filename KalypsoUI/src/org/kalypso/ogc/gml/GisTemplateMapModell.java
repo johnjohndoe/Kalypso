@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
@@ -95,12 +95,18 @@ public class GisTemplateMapModell implements IMapModell
     m_selectionManager = selectionManager;
     m_modell = new MapModell( crs, project );
 
+    // TODO: this should not happen!
+    // Better: put special layers into gmt file, so the user can decide if he wants them.
+
     // layer 1 is legend
     final IKalypsoTheme legendTheme = new KalypsoLegendTheme( this );
     addTheme( legendTheme );
+    legendTheme.setProperty( IKalypsoTheme.PROPERTY_DELETEABLE, false );
     legendTheme.setVisible( false );
+
     // layer 2 is scrablayer
     final ScrabLayerFeatureTheme scrabLayer = new ScrabLayerFeatureTheme( selectionManager, this );
+    scrabLayer.setProperty( IKalypsoTheme.PROPERTY_DELETEABLE, false );
     addTheme( scrabLayer );
   }
 

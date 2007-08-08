@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline;
 
@@ -81,7 +81,21 @@ public class RemoveThemeAction extends MapModellViewActionDelegate
     super.selectionChanged( action, selection );
 
     final IKalypsoTheme[] selectedThemes = getSelectedThemes( getSelection() );
-    final boolean enabled = selectedThemes.length > 0;
+
+    final boolean allDeleteable = determineDeleteable( selectedThemes );
+
+    final boolean enabled = selectedThemes.length > 0 && allDeleteable;
     action.setEnabled( enabled );
+  }
+
+  private boolean determineDeleteable( final IKalypsoTheme[] selectedThemes )
+  {
+    for( final IKalypsoTheme kalypsoTheme : selectedThemes )
+    {
+      if( !kalypsoTheme.getProperty( IKalypsoTheme.PROPERTY_DELETEABLE ) )
+        return false;
+    }
+
+    return true;
   }
 }

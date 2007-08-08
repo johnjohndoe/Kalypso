@@ -187,7 +187,7 @@ public class MapOverView extends AbstractMapPart implements IAdapterEater<MapPan
 
   /**
    * @see org.kalypso.ogc.gml.map.listeners.IMapPanelListener#onMouseMoveEvent(org.kalypso.ogc.gml.map.MapPanel,
-   *      java.awt.Point)
+   *      org.kalypsodeegree.model.geometry.GM_Point, java.awt.Point)
    */
   public void onMouseMoveEvent( final MapPanel source, final GM_Point gmPoint, final Point mousePosition )
   {

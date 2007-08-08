@@ -163,7 +163,7 @@ public class GisTemplateHelper
   // TODO: for all calling methods: close streams!
   public static final Gismapview loadGisMapView( final InputSource is ) throws JAXBException
   {
-    final Unmarshaller unmarshaller = TemplateUtilitites.JC_GISMAPVIEW.createUnmarshaller();
+    final Unmarshaller unmarshaller = TemplateUtilitites.createGismapviewUnmarshaller();
 
     try
     {
@@ -174,6 +174,7 @@ public class GisTemplateHelper
       final XMLReader xr = spf.newSAXParser().getXMLReader();
       xr.setContentHandler( unmarshaller.getUnmarshallerHandler() );
       xr.parse( is );
+      return (Gismapview) unmarshaller.getUnmarshallerHandler().getResult();
     }
     // TODO: throw all these exceptions!
     catch( final SAXException e )
@@ -188,7 +189,8 @@ public class GisTemplateHelper
     {
       e.printStackTrace();
     }
-    return (Gismapview) unmarshaller.getUnmarshallerHandler().getResult();
+
+    return null;
   }
 
   /**
