@@ -93,6 +93,11 @@
               id="org.kalypso.wizards.import1d2d.ImportWizard"
               name="Import 1D2D"
               project="false"/>
+        <wizard
+              class="org.kalypso.wizards.export2d.ExportWizard"
+              id="org.kalypso.wizards.export2d.ExportWizard"
+              name="Export 2D"
+              project="false"/>
 	</extension>	
      <extension
            point="org.kalypso.ui.featureViewExtensionControl">

@@ -55,7 +55,6 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
-import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
@@ -242,7 +241,6 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
   private final IFE1D2DNode<IFE1D2DEdge> getNode( final String gmlID )
   {
     final Feature nodeFeature = m_workspace.getFeature( gmlID );
-
     final IFE1D2DNode<IFE1D2DEdge> node = (IFE1D2DNode<IFE1D2DEdge>) nodeFeature.getAdapter( IFE1D2DNode.class );
     return node;
   }

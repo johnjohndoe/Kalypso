@@ -239,6 +239,14 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 				<Name>Rauheitskorrektur modellieren</Name>
 			</Task>-->
 		</TaskGroup>
+		<TaskGroup URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__DataExport">
+			<Help>Daten aus dem Projekt in das Dateisystem exportieren</Help>
+			<Name>Daten exportieren</Name>
+			<Task context="Export2DNet" URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__NetExport">
+				<Help>Exportieren von FE Netzen in 2D Datei</Help>
+				<Name>Exportieren von FE Netzen</Name>
+			</Task>
+		</TaskGroup>
 	<!-- 	
 		<Task context="BoundaryConditionTheme" 
 			URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__BCDef">
@@ -430,6 +438,11 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 						<con:ExtensionContext id="Context2dElementTheme" parent="FenetMap"
 							handlerFactoryId="kalypsoContextHandlerFactory">
 							<con:WizardContext id="Import2dNet" wizardId="org.kalypso.wizards.import1d2d.ImportWizard"
+								wizardType="NEW_WIZARD" parent="Context2dElementTheme" />
+							<con:Parameter name="type" value="themeContext" />
+							<con:Parameter name="input"
+								value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}PolyElement" />
+							<con:WizardContext id="Export2DNet" wizardId="org.kalypso.wizards.export2d.ExportWizard"
 								wizardType="NEW_WIZARD" parent="Context2dElementTheme" />
 							<con:Parameter name="type" value="themeContext" />
 							<con:Parameter name="input"

@@ -132,6 +132,8 @@ public class Gml2RMA10SConv implements INativeIDProvider
   // private PrintWriter stream;
   private RMA10Calculation m_calculation;
 
+  private final boolean m_calcUnitDefined;
+
   private final boolean m_restart;
 
   public Gml2RMA10SConv( final File rma10sOutputFile, final RMA10Calculation calculation )
@@ -141,6 +143,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
     m_terrainModel = calculation.getTerrainModel();
     m_flowrelationModel = calculation.getFlowModel();
     m_calculationUnit = calculation.getCalculationUnit();
+    m_calcUnitDefined = m_calculationUnit != null;
     m_calcUnitBBox = CalcUnitOps.getBoundingBox( m_calculationUnit );
 
     // provides the ids for the boundaryline
@@ -185,6 +188,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
     m_flowrelationModel = flowrelationModel;
 
     m_restart = false;
+    m_calcUnitDefined = false;
   }
 
   public boolean containsID( final IFeatureWrapper2 i1d2dObject )
@@ -234,6 +238,8 @@ public class Gml2RMA10SConv implements INativeIDProvider
     }
     else if( i1d2dObject instanceof IBoundaryLine )
     {
+      if( !m_calcUnitDefined )
+        return -9999;
       return m_calculation.getBoundaryLineID( i1d2dObject );
     }
     else if( i1d2dObject instanceof IFE1D2DElement )
@@ -345,8 +351,9 @@ public class Gml2RMA10SConv implements INativeIDProvider
       }
       else if( TypeInfo.is2DEdge( edge ) )
       {
-        final IFE1D2DElement leftElement = EdgeOps.getLeftRightElement( m_calculationUnit, edge, EdgeOps.ORIENTATION_LEFT );
-        final IFE1D2DElement rightElement = EdgeOps.getLeftRightElement( m_calculationUnit, edge, EdgeOps.ORIENTATION_RIGHT );
+        final IFE1D2DElement leftElement = m_calcUnitDefined ? EdgeOps.getLeftRightElement( m_calculationUnit, edge, EdgeOps.ORIENTATION_LEFT ) : EdgeOps.getLeftRight( edge, EdgeOps.ORIENTATION_LEFT );
+        final IFE1D2DElement rightElement = m_calcUnitDefined ? EdgeOps.getLeftRightElement( m_calculationUnit, edge, EdgeOps.ORIENTATION_RIGHT )
+            : EdgeOps.getLeftRight( edge, EdgeOps.ORIENTATION_RIGHT );
         final int leftParent = getBoundaryLineID( leftElement );
         final int rightParent = getBoundaryLineID( rightElement );
         formatter.format( "AR%10d%10d%10d%10d%10d%10d%n", cnt++, node0ID, node1ID, leftParent, rightParent, middleNodeID );
@@ -361,8 +368,8 @@ public class Gml2RMA10SConv implements INativeIDProvider
 
   private void writeNodes( final Formatter formatter, final IFeatureWrapperCollection<IFE1D2DNode> nodes ) throws SimulationException
   {
-    final List<IFE1D2DNode> nodesInBBox = nodes.query( m_calcUnitBBox );
-    for( final IFE1D2DNode<IFE1D2DEdge> node : nodesInBBox/* nodes */)
+    final List<IFE1D2DNode> nodesInBBox = m_calcUnitDefined ? nodes.query( m_calcUnitBBox ) : nodes;
+    for( final IFE1D2DNode<IFE1D2DEdge> node : nodesInBBox )
     {
       // TODO: how is now checked if a node is inside the CalcUnit???
       // if( !CalUnitOps.isNodeOf( m_calculationUnit, node ) )
@@ -503,13 +510,16 @@ public class Gml2RMA10SConv implements INativeIDProvider
    */
   private void writeElementsNodesAndEdges( final Formatter formatter, final LinkedHashMap<String, Integer> roughnessIDProvider, final IFeatureWrapperCollection<IFE1D2DElement> elements, final IRoughnessPolygonCollection roughnessPolygonCollection ) throws GM_Exception, SimulationException
   {
-    final List<IFE1D2DElement> elementsInBBox = elements.query( m_calcUnitBBox );
+    final List<IFE1D2DElement> elementsInBBox = m_calcUnitDefined ? elements.query( m_calcUnitBBox ) : elements;
     final HashSet<IFE1D2DEdge> edgeSet = new HashSet<IFE1D2DEdge>( elementsInBBox.size() * 2 );
 
-    for( final IFE1D2DElement element : elementsInBBox/* elements */)
+    for( final IFE1D2DElement element : elementsInBBox )
     {
-      if( !CalcUnitOps.isFiniteElementOf( m_calculationUnit, element ) )
+      if( m_calcUnitDefined && !CalcUnitOps.isFiniteElementOf( m_calculationUnit, element ) )
         continue;
+
+// if( !m_calcUnitDefined && element instanceof IElement1D )
+// continue;
 
       final int id = getBoundaryLineID( element );
 

@@ -51,46 +51,24 @@ import org.kalypsodeegree.model.feature.Feature;
  * Default implementation of {@link ICalculationUnit2D}
  * 
  * @author Patrice Congo
- *
+ * 
  */
 @SuppressWarnings("unchecked")
-public class CalculationUnit1D2D<ET extends IFE1D2DElement>
-                        extends CalculationUnit<ET>
-                        implements ICalculationUnit1D2D<ET>
+public class CalculationUnit1D2D<ET extends IFE1D2DElement> extends CalculationUnit<ET> implements ICalculationUnit1D2D<ET>
 {
 
   private final IFeatureWrapperCollection<ICalculationUnit> subUnits;
 
-  public CalculationUnit1D2D( 
-                Feature featureToBind )
+  public CalculationUnit1D2D( Feature featureToBind )
   {
-    this(
-        featureToBind,
-        Kalypso1D2DSchemaConstants.WB1D2D_F_CALC_UNIT_1D2D,
-        Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS,
-        Kalypso1D2DSchemaConstants.WB1D2D_PROP_CALC_UNIT,
-        (Class<ET>)IFE1D2DElement.class );
-    
+    this( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_CALC_UNIT_1D2D, Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS, Kalypso1D2DSchemaConstants.WB1D2D_PROP_CALC_UNIT, (Class<ET>) IFE1D2DElement.class );
+
   }
-  
-  public CalculationUnit1D2D( 
-              Feature featureToBind, 
-              QName qnameToBind, 
-              QName elementListPropQName,
-              QName subUnitPropQName,
-              Class<ET> wrapperClass )
+
+  public CalculationUnit1D2D( Feature featureToBind, QName qnameToBind, QName elementListPropQName, QName subUnitPropQName, Class<ET> wrapperClass )
   {
-    super( 
-        featureToBind, 
-        qnameToBind, 
-        elementListPropQName, 
-        wrapperClass );
-    subUnits = Util.<ICalculationUnit>get( 
-        featureToBind, 
-        qnameToBind, 
-        subUnitPropQName, 
-        ICalculationUnit.class, 
-        true); 
+    super( featureToBind, qnameToBind, elementListPropQName, wrapperClass );
+    subUnits = Util.<ICalculationUnit> get( featureToBind, qnameToBind, subUnitPropQName, ICalculationUnit.class, true );
   }
 
   /**
@@ -100,6 +78,5 @@ public class CalculationUnit1D2D<ET extends IFE1D2DElement>
   {
     return subUnits;
   }
-  
 
 }
