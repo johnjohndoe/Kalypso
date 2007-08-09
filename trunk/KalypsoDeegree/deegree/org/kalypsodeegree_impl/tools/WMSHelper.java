@@ -37,41 +37,41 @@ import org.opengis.cs.CS_CoordinateSystem;
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 
 /**
@@ -103,9 +103,8 @@ public class WMSHelper
     // get crs from top layer
     final String[] topLayerSRS = topLayer.getSrs();
     final List<CS_CoordinateSystem> result = new ArrayList<CS_CoordinateSystem>();
-    for( int i = 0; i < topLayerSRS.length; i++ )
+    for( final String srsName : topLayerSRS )
     {
-      final String srsName = topLayerSRS[i];
       final CS_CoordinateSystem srsByName = ConvenienceCSFactory.getInstance().getOGCCSByName( srsName );
       if( srsByName != null )
         result.add( srsByName );
@@ -179,18 +178,17 @@ public class WMSHelper
   private static void collect( final Set<Layer> collector, final Layer layer, final String[] layerSelection )
   {
     final Layer[] layerTree = layer.getLayer();
-    for( int i = 0; i < layerTree.length; i++ )
+    for( final Layer newLayer : layerTree )
     {
-      final Layer newLayer = layerTree[i];
       if( newLayer.getLayer().length > 0 ) // it is a layer container
         WMSHelper.collect( collector, newLayer, layerSelection );
       else if( layerSelection != null )
       {
-        if( WMSHelper.contains( layerSelection, layerTree[i].getName() ) )
-          collector.add( layerTree[i] );
+        if( WMSHelper.contains( layerSelection, newLayer.getName() ) )
+          collector.add( newLayer );
       }
       else
-        collector.add( layerTree[i] );
+        collector.add( newLayer );
     }
   }
 
@@ -206,8 +204,8 @@ public class WMSHelper
 
   public static boolean contains( final String[] array, final String toMatch )
   {
-    for( int i = 0; i < array.length; i++ )
-      if( array[i].equals( toMatch ) )
+    for( final String element : array )
+      if( element.equals( toMatch ) )
         return true;
     return false;
   }
@@ -220,6 +218,8 @@ public class WMSHelper
    */
   public static GM_Envelope getMaxExtend( final String[] layers, final WMSCapabilities capabilites, final CS_CoordinateSystem srs ) throws Exception
   {
+    final GeoTransformer geoTransformer = new GeoTransformer( srs );
+
     final Layer topLayer = capabilites.getCapability().getLayer();
     final HashSet<Layer> layerCollector = new HashSet<Layer>();
     WMSHelper.collect( layerCollector, topLayer, layers );
@@ -228,19 +228,20 @@ public class WMSHelper
     for( final Layer layer : layerCollector )
     {
       final LayerBoundingBox[] bbox = layer.getBoundingBox();
-      for( int i = 0; i < bbox.length; i++ )
+      for( final LayerBoundingBox env : bbox )
       {
-        final LayerBoundingBox env = bbox[i];
-        if( env.getSRS().equals( srs.getName() ) )
+        final GM_Envelope kalypsoEnv = GeometryFactory.createGM_Envelope( env.getMin().getX(), env.getMin().getY(), env.getMax().getX(), env.getMax().getY() );
+        final boolean transformNeeded = !env.getSRS().equals( srs.getName() );
+        final GM_Envelope kalypsoEnvTransformed;
+        if( transformNeeded )
         {
-          // org.deegree.model.geometry.GM_Position min = env.getMin();
-          // convert deegree Envelope to kalypsodeegree Envelope
-          final GM_Envelope kalypsoEnv = GeometryFactory.createGM_Envelope( env.getMin().getX(), env.getMin().getY(), env.getMax().getX(), env.getMax().getY() );
-          if( resultEnvelope == null )
-            resultEnvelope = kalypsoEnv;
-          else
-            resultEnvelope = resultEnvelope.getMerged( kalypsoEnv );
+          kalypsoEnvTransformed = geoTransformer.transformEnvelope( kalypsoEnv, env.getSRS() );
         }
+        else
+          kalypsoEnvTransformed = kalypsoEnv;
+
+        /* Merge into result envelope */
+        resultEnvelope = resultEnvelope == null ? kalypsoEnv : resultEnvelope.getMerged( kalypsoEnvTransformed );
       }
     }
     if( resultEnvelope != null )
@@ -249,14 +250,12 @@ public class WMSHelper
 
     if( topLayer.getLatLonBoundingBox() == null )
       return null;
-    {
-      // convert top layer env to request srs
-      final GM_Envelope envLatLon = GeometryFactory.createGM_Envelope( topLayer.getLatLonBoundingBox().getMin().getX(), topLayer.getLatLonBoundingBox().getMin().getY(), topLayer.getLatLonBoundingBox().getMax().getX(), topLayer.getLatLonBoundingBox().getMax().getY() );
-      final GeoTransformer transformer = new GeoTransformer( srs );
-      final ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
-      final CS_CoordinateSystem latlonSRS = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export( csFac.getCSByName( "EPSG:4326" ) );
-      return transformer.transformEnvelope( envLatLon, latlonSRS );
-    }
+
+    // convert top layer env to request srs
+    final GM_Envelope envLatLon = GeometryFactory.createGM_Envelope( topLayer.getLatLonBoundingBox().getMin().getX(), topLayer.getLatLonBoundingBox().getMin().getY(), topLayer.getLatLonBoundingBox().getMax().getX(), topLayer.getLatLonBoundingBox().getMax().getY() );
+    final ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
+    final CS_CoordinateSystem latlonSRS = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export( csFac.getCSByName( "EPSG:4326" ) );
+    return geoTransformer.transformEnvelope( envLatLon, latlonSRS );
   }
 
   /**
@@ -274,7 +273,6 @@ public class WMSHelper
    */
   private static void internalTransformation( final Graphics2D g2d, final GeoTransform projection, final TiledImage rasterImage, final RectifiedGridDomain gridDomain, final CS_CoordinateSystem targetCS ) throws Exception
   {
-
     // get the Screen extent in real world coordiantes
     final GM_Envelope sourceScreenRect = projection.getSourceRect();
     // create a surface and transform it in the coordinate system of the
@@ -412,7 +410,6 @@ public class WMSHelper
     final RectifiedGridDomain gridDomain = new RectifiedGridDomain( origin, offsetX, offsetY, range );
 
     WMSHelper.internalTransformation( (Graphics2D) g, worldToScreenTransformation, remoteImage, gridDomain, localCSR );
-
   }
 
   public static String env2bboxString( final GM_Envelope env )
