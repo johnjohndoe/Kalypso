@@ -132,80 +132,86 @@ public class LzsimManager
         final int asciiID = idManager.getAsciiID( feature );
         lzCatchmentFE.setProperty( new QName( "http://www.opengis.net/gml", "name" ), Integer.toString( asciiID ) );
         final String fileName = "we" + asciiID + ".lzs";
-        final File lzsFile = new File( lzsimDir, fileName );
-        final FileReader fileReader = new FileReader( lzsFile );
-        final LineNumberReader reader = new LineNumberReader( fileReader );
-
-        int status = STATUS_SEARCH_HEADER;
-        String line = null;
-        int maxHydros = 0;
-        int counterHydros = 0;
-
-        // iterate over lines in file
-        while( (line = reader.readLine()) != null )
+        try
         {
-          line = line.trim().replaceAll( "\\s+", " " );
-          switch( status )
+          final File lzsFile = new File( lzsimDir, fileName );
+          final FileReader fileReader = new FileReader( lzsFile );
+          final LineNumberReader reader = new LineNumberReader( fileReader );
+
+          int status = STATUS_SEARCH_HEADER;
+          String line = null;
+          int maxHydros = 0;
+          int counterHydros = 0;
+
+          // iterate over lines in file
+          while( (line = reader.readLine()) != null )
           {
-            case STATUS_SEARCH_HEADER:
-              final Matcher matcherBODF = patternHeaderBODF.matcher( line );
-              if( line.endsWith( "snow" ) && line.startsWith( iniDate ) )
-                status = STATUS_READ_SNOW;
-              else if( line.endsWith( "gwsp" ) && line.startsWith( iniDate ) )
-                status = STATUS_READ_GWSP;
-              else if( matcherBODF.matches() && line.startsWith( iniDate ) )
-              {
-                // System.out.println( RegexpUtilities.toGroupInfoString( matcherBODF ) );
-                status = STATUS_READ_BODF;
-                maxHydros = Integer.parseInt( matcherBODF.group( 2 ) );
-              }
-              break;
-            case STATUS_READ_BODF:
+            line = line.trim().replaceAll( "\\s+", " " );
+            switch( status )
             {
-              final Feature lzHydFE = lzWorkspace.createFeature( lzCatchmentFE, lzinitHydMemberRT, lzinitHydMemberRT.getTargetFeatureType() );
-              lzWorkspace.addFeatureAsComposition( lzCatchmentFE, lzinitHydMemberRT, 0, lzHydFE );
-              final String[] strings = line.split( " " );
-              final int pos = Integer.parseInt( strings[0] ) - 1;
-              final String hydroID = idManager.getHydroFeatureId( feature, pos );
-              lzHydFE.setProperty( new QName( NaModelConstants.NS_INIVALUES, "featureId" ), hydroID );
-              final Double interception = Double.valueOf( strings[1] );
-              final List<Double> bofs = new ArrayList<Double>();
-              for( int i = 2; i < strings.length; i++ )
+              case STATUS_SEARCH_HEADER:
+                final Matcher matcherBODF = patternHeaderBODF.matcher( line );
+                if( line.endsWith( "snow" ) && line.startsWith( iniDate ) )
+                  status = STATUS_READ_SNOW;
+                else if( line.endsWith( "gwsp" ) && line.startsWith( iniDate ) )
+                  status = STATUS_READ_GWSP;
+                else if( matcherBODF.matches() && line.startsWith( iniDate ) )
+                {
+                  // System.out.println( RegexpUtilities.toGroupInfoString( matcherBODF ) );
+                  status = STATUS_READ_BODF;
+                  maxHydros = Integer.parseInt( matcherBODF.group( 2 ) );
+                }
+                break;
+              case STATUS_READ_BODF:
               {
-                final Double bf = Double.valueOf( strings[i] );
-                bofs.add( bf );
+                final Feature lzHydFE = lzWorkspace.createFeature( lzCatchmentFE, lzinitHydMemberRT, lzinitHydMemberRT.getTargetFeatureType() );
+                lzWorkspace.addFeatureAsComposition( lzCatchmentFE, lzinitHydMemberRT, 0, lzHydFE );
+                final String[] strings = line.split( " " );
+                final int pos = Integer.parseInt( strings[0] ) - 1;
+                final String hydroID = idManager.getHydroFeatureId( feature, pos );
+                lzHydFE.setProperty( new QName( NaModelConstants.NS_INIVALUES, "featureId" ), hydroID );
+                final Double interception = Double.valueOf( strings[1] );
+                final List<Double> bofs = new ArrayList<Double>();
+                for( int i = 2; i < strings.length; i++ )
+                {
+                  final Double bf = Double.valueOf( strings[i] );
+                  bofs.add( bf );
+                }
+                lzHydFE.setProperty( new QName( NaModelConstants.NS_INIVALUES, "bi" ), interception );
+                lzHydFE.setProperty( new QName( NaModelConstants.NS_INIVALUES, "bofs" ), bofs );
+                counterHydros++;
+                if( counterHydros >= maxHydros )
+                {
+                  status = STATUS_SEARCH_HEADER;
+                  counterHydros = 0;
+                }
               }
-              lzHydFE.setProperty( new QName( NaModelConstants.NS_INIVALUES, "bi" ), interception );
-              lzHydFE.setProperty( new QName( NaModelConstants.NS_INIVALUES, "bofs" ), bofs );
-              counterHydros++;
-              if( counterHydros >= maxHydros )
+                break;
+              case STATUS_READ_GWSP:
               {
+                final String[] strings = line.split( " " );
+                final Double hgws = Double.valueOf( strings[1] );// hoehe gw
+                final Double qb = Double.valueOf( strings[2] );// basisabfluss
+                lzCatchmentFE.setProperty( new QName( NaModelConstants.NS_INIVALUES, "hgws" ), hgws );
+                lzCatchmentFE.setProperty( new QName( NaModelConstants.NS_INIVALUES, "qb" ), qb );
                 status = STATUS_SEARCH_HEADER;
-                counterHydros = 0;
               }
+                break;
+              case STATUS_READ_SNOW:
+                final String[] strings = line.split( " " );
+                final Double h = Double.valueOf( strings[1] );// hoehe schnee
+                final Double ws = Double.valueOf( strings[2] );// wassergehalt
+                lzCatchmentFE.setProperty( new QName( NaModelConstants.NS_INIVALUES, "h" ), h );
+                lzCatchmentFE.setProperty( new QName( NaModelConstants.NS_INIVALUES, "ws" ), ws );
+                status = STATUS_SEARCH_HEADER;
+                break;
             }
-              break;
-            case STATUS_READ_GWSP:
-            {
-              final String[] strings = line.split( " " );
-              final Double hgws = Double.valueOf( strings[1] );// hoehe gw
-              final Double qb = Double.valueOf( strings[2] );// basisabfluss
-              lzCatchmentFE.setProperty( new QName( NaModelConstants.NS_INIVALUES, "hgws" ), hgws );
-              lzCatchmentFE.setProperty( new QName( NaModelConstants.NS_INIVALUES, "qb" ), qb );
-              status = STATUS_SEARCH_HEADER;
-            }
-              break;
-            case STATUS_READ_SNOW:
-              final String[] strings = line.split( " " );
-              final Double h = Double.valueOf( strings[1] );// hoehe schnee
-              final Double ws = Double.valueOf( strings[2] );// wassergehalt
-              lzCatchmentFE.setProperty( new QName( NaModelConstants.NS_INIVALUES, "h" ), h );
-              lzCatchmentFE.setProperty( new QName( NaModelConstants.NS_INIVALUES, "ws" ), ws );
-              status = STATUS_SEARCH_HEADER;
-              break;
           }
         }
-
+        catch( Exception e )
+        {
+          System.out.println( "Anfangswerte nicht vorhanden für Teilgebiet:ID " + asciiID + " Name:" + feature.getProperty( NaModelConstants.GML_FEATURE_NAME_PROP ) );
+        }
       }
 
       // iterate over channels / lzsim-files
