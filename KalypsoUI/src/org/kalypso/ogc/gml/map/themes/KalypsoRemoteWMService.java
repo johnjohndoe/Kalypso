@@ -78,7 +78,7 @@ final class KalypsoRemoteWMService extends RemoteWMService
     try
     {
       final CS_CoordinateSystem[] crs = WMSHelper.negotiateCRS( localSRS, wmsCapabilities, layers );
-      if( crs.length > 0 && !crs[0].equals( localSRS ) )
+      if( crs.length > 0 )
         return crs[0];
     }
     catch( final RemoteException e )
@@ -101,7 +101,7 @@ final class KalypsoRemoteWMService extends RemoteWMService
     }
     catch( final Exception e )
     {
-      final IStatus errorStatus = StatusUtilities.createErrorStatus( "Failed to determine extent." );
+      final IStatus errorStatus = StatusUtilities.statusFromThrowable( e, "Failed to determine extent." );
       KalypsoGisPlugin.getDefault().getLog().log( errorStatus );
       throw new CoreException( errorStatus );
     }

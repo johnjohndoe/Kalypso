@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,15 +36,13 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.themes;
 
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
-import java.awt.image.BufferedImage;
-import java.awt.image.RenderedImage;
 import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -53,9 +51,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
-
-import javax.media.jai.PlanarImage;
-import javax.media.jai.TiledImage;
 
 import org.deegree.services.OGCWebServiceClient;
 import org.deegree.services.OGCWebServiceEvent;
@@ -92,8 +87,6 @@ import org.kalypso.ogc.gml.IGetFeatureInfoResultProcessor;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree_impl.model.ct.GeoTransformer;
-import org.kalypsodeegree_impl.tools.WMSHelper;
 import org.opengis.cs.CS_CoordinateSystem;
 import org.w3c.dom.Document;
 
@@ -141,9 +134,6 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
   /** max envelope of layer on WMS (local CS) */
   private GM_Envelope m_maxEnvLocalSRS = null;
 
-  /** bbox that is requested by last paint call */
-  protected GM_Envelope m_requestedEnvLocalSRS = null;
-
   /** buffered image */
   private Image m_buffer = null;
 
@@ -152,10 +142,6 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
 
   /** temporary locked request bbox to aviod multi requests on same bbox */
   private GM_Envelope m_lockRequestEnvLocalSRS = null;
-
-  private int m_lastWidth;
-
-  private int m_lastHeight;
 
   private final URL m_serviceURL;
 
@@ -227,7 +213,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
     m_remoteWMS = wms;
     m_maxEnvLocalSRS = maxExtent;
 
-    // TODO: check
+    // Reset buffer
     if( m_buffer != null )
       m_buffer.flush();
     m_buffer = null;
@@ -243,7 +229,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
    *      org.kalypsodeegree.graphics.transformation.GeoTransform, double,
    *      org.kalypsodeegree.model.geometry.GM_Envelope, boolean, org.eclipse.core.runtime.IProgressMonitor)
    */
-  public void paint( final Graphics g, final GeoTransform geoTransform, final double scale, final GM_Envelope bbox, final boolean selected, final IProgressMonitor monitor )
+  public void paint( final Graphics g, final GeoTransform world2screen, final double scale, final GM_Envelope bbox, final boolean selected, final IProgressMonitor monitor )
   {
     if( selected ) // image can not be selected
       return;
@@ -254,19 +240,18 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
 
     /* If wms could not connect but we have a valid url, reschedule getting the capabilites. */
     if( m_remoteWMS == null && m_initJob.getState() != Job.RUNNING )
-      m_initJob.schedule();
+      m_initJob.schedule( 0 );
 
-    m_requestedEnvLocalSRS = bbox;
-    m_lastWidth = (int) g.getClip().getBounds().getWidth();
-    m_lastHeight = (int) g.getClip().getBounds().getHeight();
+    final int requestedWidth = (int) g.getClip().getBounds().getWidth();
+    final int requestedHeight = (int) g.getClip().getBounds().getHeight();
 
-    if( m_buffer != null && m_bufferEnvLocalSRS.equals( m_requestedEnvLocalSRS ) )
+    if( m_buffer != null && m_bufferEnvLocalSRS.equals( bbox ) )
       g.drawImage( m_buffer, 0, 0, null );
     else
     {
       try
       {
-        updateImage( geoTransform, m_requestedEnvLocalSRS );
+        updateImage( bbox, requestedWidth, requestedHeight );
       }
       catch( final Exception e )
       {
@@ -278,10 +263,10 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
     }
   }
 
-  private void updateImage( final GeoTransform geoTransformToLocalSRS, final GM_Envelope envRequestLocalSRS ) throws Exception
+  private void updateImage( final GM_Envelope requestedBbox, final int requestedWidth, final int requestedHeight ) throws Exception
   {
     // check if nothing to request
-    if( envRequestLocalSRS == null )
+    if( requestedBbox == null )
       return;
 
     final KalypsoRemoteWMService remoteWMS = m_remoteWMS;
@@ -290,120 +275,73 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
       return;
 
     // check if bbox is locked for request
-    if( m_lockRequestEnvLocalSRS != null && m_lockRequestEnvLocalSRS.equals( envRequestLocalSRS ) )
+    if( m_lockRequestEnvLocalSRS != null && m_lockRequestEnvLocalSRS.equals( requestedBbox ) )
       return;
 
     // lock it now
-    final GM_Envelope targetEnvLocalSRS = (GM_Envelope) envRequestLocalSRS.clone();
-    m_lockRequestEnvLocalSRS = targetEnvLocalSRS;
+    m_lockRequestEnvLocalSRS = requestedBbox;
 
     final String id = "KalypsoWMSRequest" + getName() + new Date().getTime();
 
-    final HashMap<String, String> parameterMap = remoteWMS.createGetMapRequestParameter( m_lastWidth, m_lastHeight, m_requestedEnvLocalSRS, m_localSRS );
+    final HashMap<String, String> parameterMap = remoteWMS.createGetMapRequestParameter( requestedWidth, requestedHeight, requestedBbox, m_localSRS );
     final WMSGetMapRequest request = WMSProtocolFactory.createGetMapRequest( id, parameterMap );
 
-    final int width = m_lastWidth;
-    final int height = m_lastHeight;
-    final IJobChangeListener jobListener = m_jobListener;
     final OGCWebServiceClient client = new OGCWebServiceClient()
     {
       public void write( final Object responseEvent )
       {
-        if( isObsolete( targetEnvLocalSRS ) )
-          return;
-        if( !(responseEvent instanceof OGCWebServiceEvent) )
-          return;
-        final OGCWebServiceResponse response = ((OGCWebServiceEvent) responseEvent).getResponse();
-        if( !(response instanceof WMSGetMapResponse) )
-          return;
-        if( isObsolete( targetEnvLocalSRS ) )
-          return;
-        final Job renderJob = new Job( "Loading map from WMS " + getName() )
+        try
         {
-          /**
-           * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
-           */
-          @Override
-          protected IStatus run( final IProgressMonitor monitor )
+          if( !(responseEvent instanceof OGCWebServiceEvent) )
+            return;
+          final OGCWebServiceResponse response = ((OGCWebServiceEvent) responseEvent).getResponse();
+          if( !(response instanceof WMSGetMapResponse) )
+            return;
+
+          final WMSGetMapResponse mapResponse = (WMSGetMapResponse) response;
+
+          final Image resultImage = (Image) mapResponse.getMap();
+          if( resultImage == null )
           {
-            handleJobDone( StatusUtilities.createInfoStatus( "lade Karte..." ) );
-            try
-            {
-              final WMSGetMapResponse mapResponse = (WMSGetMapResponse) response;
+            /* Handle service-exception: convert to status and set it */
+            final OGCWebServiceRequest mapRequest = mapResponse.getRequest();
+            final Document exception = mapResponse.getException();
+            final StringWriter stringWriter = new StringWriter();
+            XMLHelper.writeDOM( exception, WriterUtility.DEFAULT_ENCODING, stringWriter );
 
-              final RenderedImage resultImage = (RenderedImage) mapResponse.getMap();
-              if( resultImage == null )
-              {
-                final OGCWebServiceRequest mapRequest = mapResponse.getRequest();
-                final Document exception = mapResponse.getException();
-                final StringWriter stringWriter = new StringWriter();
-                XMLHelper.writeDOM( exception, WriterUtility.DEFAULT_ENCODING, stringWriter );
+            final MultiStatus status = new MultiStatus( KalypsoCorePlugin.getID(), 0, "Zugriffsfehler", null );
+            status.add( StatusUtilities.createErrorStatus( "Request: '" + mapRequest + "'" ) );
+            status.add( StatusUtilities.createErrorStatus( "Exception-Dokument: " ) );
+            status.add( StatusUtilities.createMultiStatusFromMessage( IStatus.ERROR, KalypsoCorePlugin.getID(), 0, stringWriter.toString(), "\n", null ) );
 
-                final MultiStatus status = new MultiStatus( KalypsoCorePlugin.getID(), 0, "Zugriffsfehler", null );
-                status.add( StatusUtilities.createErrorStatus( "Request: '" + mapRequest + "'" ) );
-                status.add( StatusUtilities.createErrorStatus( "Exception-Dokument: " ) );
-                status.add( StatusUtilities.createMultiStatusFromMessage( IStatus.ERROR, KalypsoCorePlugin.getID(), 0, stringWriter.toString(), "\n", null ) );
-
-                return status;
-              }
-
-              final PlanarImage remoteImage = PlanarImage.wrapRenderedImage( resultImage );
-              setImage( new TiledImage( remoteImage, true ), targetEnvLocalSRS, width, height, geoTransformToLocalSRS );
-              return Status.OK_STATUS;
-            }
-            catch( final Throwable e )
-            {
-              return StatusUtilities.statusFromThrowable( e, "Zugriffsfehler" );
-            }
+            setStatus( status );
           }
-        };
-
-        renderJob.setRule( m_jobMutexRule );
-        renderJob.addJobChangeListener( jobListener );
-        renderJob.schedule();
-      }
-
-      private boolean isObsolete( GM_Envelope envLocalSRS )
-      {
-        return m_requestedEnvLocalSRS == null || !(m_requestedEnvLocalSRS.equals( envLocalSRS ));
+          else
+          {
+            setImage( resultImage, requestedBbox );
+            setStatus( Status.OK_STATUS );
+          }
+        }
+        catch( final Throwable t )
+        {
+          setStatus( StatusUtilities.statusFromThrowable( t ) );
+        }
       }
     };
 
-    final OGCWebServiceEvent ogcWSEvent = new OGCWebServiceEvent_Impl( this, // source
-    request, // request
-    null, // message
-    client );
+    setStatus( StatusUtilities.createInfoStatus( "lade Karte..." ) );
 
+    final OGCWebServiceEvent ogcWSEvent = new OGCWebServiceEvent_Impl( this, request, null, client );
     remoteWMS.doService( ogcWSEvent );
   }
 
-  protected synchronized void setImage( final TiledImage image, final GM_Envelope targetEnvLocalSRS, final int width, final int height, final GeoTransform geoTransform ) throws Exception
+  protected synchronized void setImage( final Image image, final GM_Envelope targetEnvLocalSRS )
   {
-    try
-    {
-      final KalypsoRemoteWMService remoteWms = m_remoteWMS;
-      if( m_remoteWMS == null )
-        return;
-
-      final CS_CoordinateSystem remoteSRS = remoteWms.getSRS();
-
-      final Image buffer = new BufferedImage( width, height, BufferedImage.TYPE_INT_ARGB );
-      final GeoTransformer geoTransformerToRemoteSRS = new GeoTransformer( remoteSRS );
-      final GM_Envelope remoteEnv = geoTransformerToRemoteSRS.transformEnvelope( targetEnvLocalSRS, m_localSRS );
-      // paint image on buffer
-      WMSHelper.transformImage( image, remoteEnv, m_localSRS, remoteSRS, geoTransform, buffer.getGraphics() );
-      if( m_buffer != null )
-        m_buffer.flush();
-      m_buffer = buffer;
-      m_bufferEnvLocalSRS = targetEnvLocalSRS;
-    }
-    catch( final Exception e )
-    {
+    if( m_buffer != null )
       m_buffer.flush();
-      m_buffer = null;
-      m_bufferEnvLocalSRS = null;
-      throw e;
-    }
+
+    m_buffer = image;
+    m_bufferEnvLocalSRS = targetEnvLocalSRS;
 
     // inform to paint new image
     invalidate( getBoundingBox() );
@@ -485,7 +423,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
           if( featureInfo != null )
           {
             // String xsl="";
-            //              
+            //
             // XMLHelper.xslTransform(new InputSource(featureInfo), null);
             result.append( featureInfo );
           }
