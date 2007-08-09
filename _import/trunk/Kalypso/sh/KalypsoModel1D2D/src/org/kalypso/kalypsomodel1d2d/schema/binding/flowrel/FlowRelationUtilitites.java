@@ -40,8 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.flowrel;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
@@ -53,6 +56,7 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
@@ -96,7 +100,6 @@ public class FlowRelationUtilitites
     {
       /* Node: return its position */
       final GM_Object geom;
-
       if( modelElement instanceof IFE1D2DNode )
         geom = ((IFE1D2DNode) modelElement).getPoint();
       /* ContinuityLine: return middle of line */
@@ -121,6 +124,83 @@ public class FlowRelationUtilitites
     }
 
     return null;
+  }
+
+  public static GM_Position getFlowPositionFromElement( final IFeatureWrapper2 modelElement, int numberOfPositions, int currentPosition )
+  {
+    final List<GM_Point> pointList = new ArrayList<GM_Point>();
+    if( numberOfPositions < 2 )
+      return getFlowPositionFromElement( modelElement );
+    /* Node: return its position */
+    final GM_Object geom;
+    final List<IFE1D2DNode> nodes;
+    if( modelElement instanceof IBoundaryLine1D )
+    {
+      nodes = ((IBoundaryLine1D) modelElement).getNodes();
+      final GM_Point p1 = nodes.get( 0 ).getPoint();
+      final GM_Point p2 = nodes.get( 1 ).getPoint();
+      final double x1 = p1.getX() - (p2.getY() - p1.getY());
+      final double y1 = p1.getY() + (p2.getX() - p1.getX());
+      final double x2 = p1.getX() + (p2.getY() - p1.getY());
+      final double y2 = p1.getY() - (p2.getX() - p1.getX());
+      pointList.add( GeometryFactory.createGM_Point( x1, y1, p1.getCoordinateSystem() ) );
+      pointList.add( GeometryFactory.createGM_Point( x2, y2, p1.getCoordinateSystem() ) );
+    }
+    else if( modelElement instanceof IBoundaryLine )
+    {
+      nodes = ((IBoundaryLine) modelElement).getNodes();
+      for( int i = 0; i < nodes.size(); i++ )
+        pointList.add( nodes.get( i ).getPoint() );
+    }
+    else
+      return null;
+    double lineLength = 0.0;
+    GM_Point point = null;
+    GM_Point previousPoint = null;
+    for( int i = 0; i < pointList.size(); i++ )
+    {
+      point = pointList.get( i );
+      if( previousPoint == null )
+      {
+        previousPoint = point;
+        continue;
+      }
+      lineLength += getAbsoluteDistance( previousPoint, point );
+      previousPoint = point;
+    }
+    double distance = lineLength * Math.abs( currentPosition ) / Math.abs( numberOfPositions + 1 );
+    previousPoint = null;
+    for( int i = 0; i < pointList.size(); i++ )
+    {
+      point = pointList.get( i );
+      if( previousPoint == null )
+      {
+        previousPoint = point;
+        continue;
+      }
+      final double segmentLength = getAbsoluteDistance( previousPoint, point );
+      if( distance > segmentLength )
+      {
+        distance -= segmentLength;
+        previousPoint = point;
+      }
+      else if( distance == segmentLength )
+      {
+        return point.getPosition();
+      }
+      else
+      {
+        final double xPos = previousPoint.getX() + (point.getX() - previousPoint.getX()) * distance / segmentLength;
+        final double yPos = previousPoint.getY() + (point.getY() - previousPoint.getY()) * distance / segmentLength;
+        return GeometryFactory.createGM_Position( xPos, yPos );
+      }
+    }
+    return null;
+  }
+
+  private static double getAbsoluteDistance( GM_Point point1, GM_Point point2 )
+  {
+    return Math.sqrt( Math.pow( (point1.getX() - point2.getX()), 2 ) + Math.pow( (point1.getY() - point2.getY()), 2 ) );
   }
 
   /**
