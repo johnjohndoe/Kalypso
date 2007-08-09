@@ -60,11 +60,14 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.swt.graphics.RGB;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.java.net.IUrlResolver2;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
+import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
+import org.kalypso.kalypso1d2d.pjt.views.SzenarioDataProvider;
 import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogRoughness;
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.Operation;
@@ -151,6 +154,10 @@ public class RoughnessStyleUpdater implements IGmlWorkspaceListener
             {
               if( feature.getFeatureType().getQName().equals( m_roughnessCls ) )
               {
+//                final SzenarioDataProvider dataProvider = Kalypso1d2dProjectPlugin.getDefault().getDataProvider();
+//                dataProvider.
+//                final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+//                root.g
                 final URL url = new URL( "file:/"
                     + ResourcesPlugin.getWorkspace().getRoot().getLocation().append( m_workspace.getContext().getPath().replaceFirst( "/resource/", "/" ) ).removeLastSegments( 1 ).append( "/roughness.sld" ) );
                 final IUrlResolver2 resolver = new IUrlResolver2()

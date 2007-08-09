@@ -59,6 +59,9 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
@@ -66,6 +69,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ILineElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.FlowRelationUtilitites;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
@@ -78,6 +82,7 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
@@ -97,6 +102,7 @@ import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.PolygonSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.Stroke_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -270,118 +276,140 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
       // problemMessage = "Kein FE-Knoten in der Nähe. Parameter können nur an Knoten hinzugefügt werden.";
       // TODO: provider nice common error message
       return;
-    else if( m_existingFlowRelation != null )
-      // problemMessage = "Hier ist bereits Dieser Knoten besitzt bereits Parameter.";
-      // TODO do we need a nice message?
-      problemMessage = null;
-    else
-      problemMessage = null;
+// else if( m_existingFlowRelation != null )
+// // problemMessage = "Hier ist bereits Dieser Knoten besitzt bereits Parameter.";
+// // TODO do we need a nice message?
+// problemMessage = null;
+// else
+// problemMessage = null;
+//
+// if( problemMessage != null )
+// {
+// display.asyncExec( new Runnable()
+// {
+// public void run( )
+// {
+// final Shell shell = display.getActiveShell();
+// MessageDialog.openWarning( shell, getName(), problemMessage );
+// }
+// } );
+// }
 
-    if( problemMessage != null )
-    {
-      display.asyncExec( new Runnable()
-      {
-        public void run( )
-        {
-          final Shell shell = display.getActiveShell();
-          MessageDialog.openWarning( shell, getName(), problemMessage );
-        }
-      } );
-    }
-
-    /* Check preconditions */
-    if( modelElement == null )
-      return;
     if( m_flowRelCollection == null )
       return;
 
     final CommandableWorkspace workspace = m_flowTheme.getWorkspace();
 
-    if( m_existingFlowRelation == null )
+// if( m_existingFlowRelation == null )
+// {
+    final MapPanel mapPanel = getMapPanel();
+    final GM_Position flowPositionFromElement;
+    if( m_modelElement instanceof IBoundaryLine || m_modelElement instanceof IBoundaryLine1D )
     {
-      final MapPanel mapPanel = getMapPanel();
-      final GM_Position flowPositionFromElement = FlowRelationUtilitites.getFlowPositionFromElement( modelElement );
-      final IFlowRelationshipModel flowRelationshipModel = m_flowRelCollection;
-
-      /* Create flow relation at position */
-      display.asyncExec( new Runnable()
+      int countBCs = 0;
+      for( final Object bcFeature : m_flowRelCollection.getWrappedList() )
       {
-        public void run( )
+        IBoundaryCondition bc = (IBoundaryCondition) ((Feature) bcFeature).getAdapter( IBoundaryCondition.class );
+        if( bc.getParentElementID().equals( m_modelElement.getGmlID() ) )
+          countBCs++;
+      }
+      int i = 0;
+      for( final Object bcFeature : m_flowRelCollection.getWrappedList() )
+      {
+        IBoundaryCondition bc = (IBoundaryCondition) ((Feature) bcFeature).getAdapter( IBoundaryCondition.class );
+        if( bc.getParentElementID().equals( m_modelElement.getGmlID() ) )
         {
-          final Feature parentFeature = flowRelationshipModel.getWrappedFeature();
-          final IRelationType parentRelation = flowRelationshipModel.getWrappedList().getParentFeatureTypeProperty();
-          final IFlowRelationship flowRel = createNewFeature( workspace, parentFeature, parentRelation, modelElement );
-
-          if( flowRel == null )
-          {
-            mapPanel.repaint();
-            return;
-          }
-
-          final CS_CoordinateSystem crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
-          flowRel.setPosition( GeometryFactory.createGM_Point( flowPositionFromElement, crs ) );
-
-          /* Post it as an command */
-          final IFeatureSelectionManager selectionManager = mapPanel.getSelectionManager();
-          final AddFeatureCommand command = new AddFeatureCommand( workspace, parentFeature, parentRelation, -1, flowRel.getWrappedFeature(), selectionManager, true, true );
-          try
-          {
-            workspace.postCommand( command );
-          }
-          catch( final Throwable e )
-          {
-            final IStatus status = StatusUtilities.statusFromThrowable( e );
-            display.asyncExec( new Runnable()
-            {
-              public void run( )
-              {
-                final Shell shell = display.getActiveShell();
-                ErrorDialog.openError( shell, getName(), "Fehler beim Hinzufügen eines Parameters", status );
-              }
-            } );
-          }
-          try
-          {
-            PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView( "org.kalypso.featureview.views.FeatureView", null, IWorkbenchPage.VIEW_VISIBLE );
-          }
-          catch( final Throwable pie )
-          {
-            final IStatus status = StatusUtilities.statusFromThrowable( pie );
-            KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
-            pie.printStackTrace();
-          }
+          final GM_Position position = FlowRelationUtilitites.getFlowPositionFromElement( modelElement, countBCs + 1, ++i );
+          bc.setPosition( GeometryFactory.createGM_Point( position.getX(), position.getY(), bc.getPosition().getCoordinateSystem() ) );
         }
-      } );
+      }
+      flowPositionFromElement = FlowRelationUtilitites.getFlowPositionFromElement( modelElement, countBCs + 1, countBCs + 1 );
     }
     else
+      flowPositionFromElement = FlowRelationUtilitites.getFlowPositionFromElement( modelElement );
+    final IFlowRelationshipModel flowRelationshipModel = m_flowRelCollection;
+
+    /* Create flow relation at position */
+    display.asyncExec( new Runnable()
     {
-      /* Just select the existing element */
-      final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
-
-      final Feature featureToSelect = m_existingFlowRelation.getWrappedFeature();
-      final EasyFeatureWrapper easyToSelect = new EasyFeatureWrapper( m_flowTheme.getWorkspace(), featureToSelect, featureToSelect.getParent(), featureToSelect.getParentRelation() );
-
-      final Feature[] featuresToRemove = FeatureSelectionHelper.getFeatures( selectionManager );
-      selectionManager.changeSelection( featuresToRemove, new EasyFeatureWrapper[] { easyToSelect } );
-
-      /* Open the feature view in order to show the newly created parameters */
-      display.asyncExec( new Runnable()
+      public void run( )
       {
-        public void run( )
+        final Feature parentFeature = flowRelationshipModel.getWrappedFeature();
+        final IRelationType parentRelation = flowRelationshipModel.getWrappedList().getParentFeatureTypeProperty();
+        final IFlowRelationship flowRel = createNewFeature( workspace, parentFeature, parentRelation, modelElement );
+
+        if( flowRel == null )
         {
-          try
-          {
-            PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView( "org.kalypso.featureview.views.FeatureView", null, IWorkbenchPage.VIEW_VISIBLE );
-          }
-          catch( final Throwable pie )
-          {
-            final IStatus status = StatusUtilities.statusFromThrowable( pie );
-            KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
-            pie.printStackTrace();
-          }
+          mapPanel.repaint();
+          return;
         }
-      } );
-    }
+
+        final CS_CoordinateSystem crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+        flowRel.setPosition( GeometryFactory.createGM_Point( flowPositionFromElement, crs ) );
+
+        /* Post it as an command */
+        final IFeatureSelectionManager selectionManager = mapPanel.getSelectionManager();
+        final AddFeatureCommand command = new AddFeatureCommand( workspace, parentFeature, parentRelation, -1, flowRel.getWrappedFeature(), selectionManager, true, true );
+        try
+        {
+          workspace.postCommand( command );
+        }
+        catch( final Throwable e )
+        {
+          final IStatus status = StatusUtilities.statusFromThrowable( e );
+          display.asyncExec( new Runnable()
+          {
+            public void run( )
+            {
+              final Shell shell = display.getActiveShell();
+              ErrorDialog.openError( shell, getName(), "Fehler beim Hinzufügen eines Parameters", status );
+            }
+          } );
+        }
+        try
+        {
+          PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView( "org.kalypso.featureview.views.FeatureView", null, IWorkbenchPage.VIEW_VISIBLE );
+        }
+        catch( final Throwable pie )
+        {
+          final IStatus status = StatusUtilities.statusFromThrowable( pie );
+          KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
+          pie.printStackTrace();
+        }
+      }
+    } );
+// }
+// else
+// {
+// /* Just select the existing element */
+// final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
+//
+// final Feature featureToSelect = m_existingFlowRelation.getWrappedFeature();
+// final EasyFeatureWrapper easyToSelect = new EasyFeatureWrapper( m_flowTheme.getWorkspace(), featureToSelect,
+// featureToSelect.getParent(), featureToSelect.getParentRelation() );
+//
+// final Feature[] featuresToRemove = FeatureSelectionHelper.getFeatures( selectionManager );
+// selectionManager.changeSelection( featuresToRemove, new EasyFeatureWrapper[] { easyToSelect } );
+//
+// /* Open the feature view in order to show the newly created parameters */
+// display.asyncExec( new Runnable()
+// {
+// public void run( )
+// {
+// try
+// {
+// PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(
+// "org.kalypso.featureview.views.FeatureView", null, IWorkbenchPage.VIEW_VISIBLE );
+// }
+// catch( final Throwable pie )
+// {
+// final IStatus status = StatusUtilities.statusFromThrowable( pie );
+// KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
+// pie.printStackTrace();
+// }
+// }
+// } );
+// }
   }
 
   /**
