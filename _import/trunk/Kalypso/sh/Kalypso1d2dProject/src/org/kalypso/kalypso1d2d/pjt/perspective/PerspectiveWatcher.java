@@ -47,8 +47,8 @@ public class PerspectiveWatcher<T extends Case> implements IActiveContextChangeL
       final IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
       final IPerspectiveDescriptor perspective = activePage.getPerspective();
 
-      // handle case where eclipse is closed and the 1d2d-perspective is open, but not active
-      if( workbench.isClosing() && !perspective.getId().equals( Perspective.ID ))
+      // handle case where the 1d2d-perspective is open, but not active
+      if( !perspective.getId().equals( Perspective.ID ))
       {
         final IPerspectiveDescriptor[] perspectives = activeWorkbenchWindow.getWorkbench().getPerspectiveRegistry().getPerspectives();
         for( final IPerspectiveDescriptor pd : perspectives )
