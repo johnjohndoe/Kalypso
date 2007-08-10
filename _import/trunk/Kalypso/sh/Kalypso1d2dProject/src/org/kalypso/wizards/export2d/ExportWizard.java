@@ -49,8 +49,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
@@ -117,9 +117,10 @@ public class ExportWizard extends Wizard implements INewWizard
       final ITerrainModel terrainModel = dataProvider.getModel( ITerrainModel.class );
       final IFlowRelationshipModel flowRelationshipModel = dataProvider.getModel( IFlowRelationshipModel.class );
       final Gml2RMA10SConv converter = new Gml2RMA10SConv( new File( m_page1.getFilePath() ), discretisationModel, terrainModel, flowRelationshipModel );
+      converter.setExportParameters( true, m_page1.isSelectedExportMiddleNodes(), m_page1.isSelectedExportRoughessData() );
       getContainer().run( true, true, new IRunnableWithProgress()
       {
-        public void run( final IProgressMonitor monitor )
+        public void run( final IProgressMonitor monitor ) throws InterruptedException
         {
           monitor.beginTask( "FE Netz exportieren", IProgressMonitor.UNKNOWN );
           try
@@ -128,16 +129,15 @@ public class ExportWizard extends Wizard implements INewWizard
           }
           catch( final SimulationException e )
           {
-            e.printStackTrace();
-            MessageDialog.openError( getShell(), "Datei kann nicht erzeugt werden", e.getLocalizedMessage() );
+            throw new InterruptedException(e.getLocalizedMessage());
           }
         }
       } );
     }
     catch( final Exception e )
     {
+      ErrorDialog.openError( getShell(), "Datei kann nicht erzeugt werden", "", StatusUtilities.statusFromThrowable( e ) );
       e.printStackTrace();
-      MessageDialog.openError( getShell(), "Datei kann nicht erzeugt werden", e.getLocalizedMessage() );
       return false;
     }
 

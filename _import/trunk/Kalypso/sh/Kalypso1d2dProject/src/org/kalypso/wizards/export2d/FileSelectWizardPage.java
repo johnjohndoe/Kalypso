@@ -56,12 +56,17 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.wizards.imports.Messages;
 
 public class FileSelectWizardPage extends WizardPage
 {
   private Text m_destinationFileField;
 
   private String[] m_filenameFilters;
+
+  private Button m_btnExportMiddleNodes;
+
+  private Button m_btnExportRoughness;
 
   public FileSelectWizardPage( final String pageName, final String[] fileExtensions )
   {
@@ -107,6 +112,23 @@ public class FileSelectWizardPage extends WizardPage
       }
     } );
     button.setText( "Browse" );
+    final Label label_2 = new Label( container, SWT.NONE );
+    label_2.setLayoutData( new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING) );
+    label_2.setText( " " );
+    m_btnExportMiddleNodes = new Button( container, SWT.CHECK );
+    m_btnExportMiddleNodes.setText( "Export middle nodes" );
+    m_btnExportMiddleNodes.setSelection( true );
+    final Label label_3 = new Label( container, SWT.NONE );
+    label_3.setLayoutData( new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING) );
+    label_3.setText( " " );
+
+    final Label label_4 = new Label( container, SWT.NONE );
+    label_4.setLayoutData( new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING) );
+    label_4.setText( " " );
+    m_btnExportRoughness = new Button( container, SWT.CHECK );
+    m_btnExportRoughness.setText( "Export roughness data" );
+    m_btnExportRoughness.setSelection( false );
+    
     GridData gd = new GridData();
     gd.horizontalAlignment = GridData.FILL;
     gd.widthHint = 75;
@@ -122,27 +144,18 @@ public class FileSelectWizardPage extends WizardPage
   {
     setPageComplete( false );
     final File file = new File( getFilePath() );
-    if( file == null || !file.isFile() )
+    boolean regularExtension = false;
+    for( int i = 0; i < m_filenameFilters.length; i++ )
+      if( file.getName().endsWith( m_filenameFilters[i].substring( 1 ) ) )
+      {
+        regularExtension = true;
+        break;
+      }
+    if( !regularExtension )
     {
       setMessage( null );
-      setErrorMessage( "Irregular file name" );
+      setErrorMessage( "Irregular file extension" );
       return;
-    }
-    else
-    {
-      boolean regularExtension = false;
-      for( int i = 0; i < m_filenameFilters.length; i++ )
-        if( file.getName().endsWith( m_filenameFilters[i].substring( 1 ) ) )
-        {
-          regularExtension = true;
-          break;
-        }
-      if( !regularExtension )
-      {
-        setMessage( null );
-        setErrorMessage( "Irregular file extension" );
-        return;
-      }
     }
     setMessage( null );
     setErrorMessage( null );
@@ -166,5 +179,13 @@ public class FileSelectWizardPage extends WizardPage
   public String getFilePath( )
   {
     return m_destinationFileField.getText().trim();
+  }
+  
+  public boolean isSelectedExportMiddleNodes(){
+    return m_btnExportMiddleNodes.getSelection();
+  }
+  
+  public boolean isSelectedExportRoughessData(){
+    return m_btnExportRoughness.getSelection();
   }
 }

@@ -132,7 +132,11 @@ public class Gml2RMA10SConv implements INativeIDProvider
   // private PrintWriter stream;
   private RMA10Calculation m_calculation;
 
-  private final boolean m_calcUnitDefined;
+  private boolean m_exportRequest;
+
+  private boolean m_exportMiddleNode;
+
+  private boolean m_exportRoughness;
 
   private final boolean m_restart;
 
@@ -143,7 +147,9 @@ public class Gml2RMA10SConv implements INativeIDProvider
     m_terrainModel = calculation.getTerrainModel();
     m_flowrelationModel = calculation.getFlowModel();
     m_calculationUnit = calculation.getCalculationUnit();
-    m_calcUnitDefined = m_calculationUnit != null;
+    m_exportRequest = false;
+    m_exportMiddleNode = false;
+    m_exportRoughness = false;
     m_calcUnitBBox = CalcUnitOps.getBoundingBox( m_calculationUnit );
 
     // provides the ids for the boundaryline
@@ -180,6 +186,9 @@ public class Gml2RMA10SConv implements INativeIDProvider
     }
   }
 
+  /**
+   * This constructor is intended to use primarily for network exporting purpose, not for calculation (calculation unit is NOT defined)
+   */
   public Gml2RMA10SConv( final File rma10sOutputFile, final IFEDiscretisationModel1d2d discretisationModel1d2d, final ITerrainModel terrainModel, final IFlowRelationshipModel flowrelationModel )
   {
     m_outputFile = rma10sOutputFile;
@@ -188,7 +197,16 @@ public class Gml2RMA10SConv implements INativeIDProvider
     m_flowrelationModel = flowrelationModel;
 
     m_restart = false;
-    m_calcUnitDefined = false;
+    m_exportRequest = true;
+    m_exportMiddleNode = false;
+    m_exportRoughness = false;
+  }
+
+  public void setExportParameters( boolean exportRequested, boolean exportMiddleNode, boolean exportRoughness )
+  {
+    m_exportRequest = exportRequested;
+    m_exportMiddleNode = exportMiddleNode;
+    m_exportRoughness = exportRoughness;
   }
 
   public boolean containsID( final IFeatureWrapper2 i1d2dObject )
@@ -238,7 +256,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
     }
     else if( i1d2dObject instanceof IBoundaryLine )
     {
-      if( !m_calcUnitDefined )
+      if( m_exportRequest ) // TODO: check what to do here
         return -9999;
       return m_calculation.getBoundaryLineID( i1d2dObject );
     }
@@ -321,18 +339,25 @@ public class Gml2RMA10SConv implements INativeIDProvider
        * needed for the restart approach later.
        */
       final int middleNodeID;
-      if( edge.getMiddleNode() == null )
+      if( m_exportRequest && !m_exportMiddleNode )
       {
-        /* create virtual node id */
-        final String gmlID = "VirtualMiddleNode" + edge.getGmlID(); // Pseudo id, but unique within this context
-        middleNodeID = getID( getNodesIDProvider(), gmlID );
-
-        /* Write it: Station is not needed, because the element length is taken from real nodes. */
-        formatNode( formatter, middleNodeID, edge.getMiddleNodePoint(), null );
+        middleNodeID = 0;
       }
       else
       {
-        middleNodeID = getBoundaryLineID( edge.getMiddleNode() );
+        if( edge.getMiddleNode() == null )
+        {
+          /* create virtual node id */
+          final String gmlID = "VirtualMiddleNode" + edge.getGmlID(); // Pseudo id, but unique within this context
+          middleNodeID = getID( getNodesIDProvider(), gmlID );
+
+          /* Write it: Station is not needed, because the element length is taken from real nodes. */
+          formatNode( formatter, middleNodeID, edge.getMiddleNodePoint(), null );
+        }
+        else
+        {
+          middleNodeID = getBoundaryLineID( edge.getMiddleNode() );
+        }
       }
 
       /* Directly format into the string, this is quickest! */
@@ -351,9 +376,18 @@ public class Gml2RMA10SConv implements INativeIDProvider
       }
       else if( TypeInfo.is2DEdge( edge ) )
       {
-        final IFE1D2DElement leftElement = m_calcUnitDefined ? EdgeOps.getLeftRightElement( m_calculationUnit, edge, EdgeOps.ORIENTATION_LEFT ) : EdgeOps.getLeftRight( edge, EdgeOps.ORIENTATION_LEFT );
-        final IFE1D2DElement rightElement = m_calcUnitDefined ? EdgeOps.getLeftRightElement( m_calculationUnit, edge, EdgeOps.ORIENTATION_RIGHT )
-            : EdgeOps.getLeftRight( edge, EdgeOps.ORIENTATION_RIGHT );
+        final IFE1D2DElement leftElement;
+        final IFE1D2DElement rightElement;
+        if( m_exportRequest )
+        {
+          leftElement = EdgeOps.getLeftRight( edge, EdgeOps.ORIENTATION_LEFT );
+          rightElement = EdgeOps.getLeftRight( edge, EdgeOps.ORIENTATION_RIGHT );
+        }
+        else
+        {
+          leftElement = EdgeOps.getLeftRightElement( m_calculationUnit, edge, EdgeOps.ORIENTATION_LEFT );
+          rightElement = EdgeOps.getLeftRightElement( m_calculationUnit, edge, EdgeOps.ORIENTATION_RIGHT );
+        }
         final int leftParent = getBoundaryLineID( leftElement );
         final int rightParent = getBoundaryLineID( rightElement );
         formatter.format( "AR%10d%10d%10d%10d%10d%10d%n", cnt++, node0ID, node1ID, leftParent, rightParent, middleNodeID );
@@ -368,7 +402,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
 
   private void writeNodes( final Formatter formatter, final IFeatureWrapperCollection<IFE1D2DNode> nodes ) throws SimulationException
   {
-    final List<IFE1D2DNode> nodesInBBox = m_calcUnitDefined ? nodes.query( m_calcUnitBBox ) : nodes;
+    final List<IFE1D2DNode> nodesInBBox = m_exportRequest ? nodes : nodes.query( m_calcUnitBBox );
     for( final IFE1D2DNode<IFE1D2DEdge> node : nodesInBBox )
     {
       // TODO: how is now checked if a node is inside the CalcUnit???
@@ -510,12 +544,12 @@ public class Gml2RMA10SConv implements INativeIDProvider
    */
   private void writeElementsNodesAndEdges( final Formatter formatter, final LinkedHashMap<String, Integer> roughnessIDProvider, final IFeatureWrapperCollection<IFE1D2DElement> elements, final IRoughnessPolygonCollection roughnessPolygonCollection ) throws GM_Exception, SimulationException
   {
-    final List<IFE1D2DElement> elementsInBBox = m_calcUnitDefined ? elements.query( m_calcUnitBBox ) : elements;
+    final List<IFE1D2DElement> elementsInBBox = m_exportRequest ? elements : elements.query( m_calcUnitBBox );
     final HashSet<IFE1D2DEdge> edgeSet = new HashSet<IFE1D2DEdge>( elementsInBBox.size() * 2 );
 
     for( final IFE1D2DElement element : elementsInBBox )
     {
-      if( m_calcUnitDefined && !CalcUnitOps.isFiniteElementOf( m_calculationUnit, element ) )
+      if( !m_exportRequest && !CalcUnitOps.isFiniteElementOf( m_calculationUnit, element ) )
         continue;
 
 // if( !m_calcUnitDefined && element instanceof IElement1D )
@@ -552,7 +586,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
       else if( element instanceof IPolyElement )
       {
         contributeToSet( element, edgeSet );
-        final int roughnessID = calculateRoughnessID( roughnessIDProvider, roughnessPolygonCollection, element );
+        final int roughnessID = (m_exportRequest && !m_exportRoughness) ? 0 : calculateRoughnessID( roughnessIDProvider, roughnessPolygonCollection, element );
         formatter.format( "FE%10d%10d%n", id, roughnessID );
       }
     }
