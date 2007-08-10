@@ -24,7 +24,7 @@ import de.renew.workflow.connector.cases.ICaseManager;
  * 
  * @author Stefan Kurzbach
  */
-public class ScenarioManager extends AbstractCaseManager<Scenario> implements ICaseManager<Scenario>
+public class ScenarioManager extends AbstractCaseManager<Scenario> implements IScenarioManager
 {
   private static final Logger logger = Logger.getLogger( ScenarioManager.class.getName() );
 

@@ -52,12 +52,12 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.afgui.scenarios.IScenarioManager;
 import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.afgui.scenarios.ScenarioManager;
 
 import de.renew.workflow.cases.Case;
 import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
-import de.renew.workflow.connector.cases.ICaseManager;
 
 /**
  * @author Stefan Kurzbach
@@ -70,7 +70,7 @@ public class ScenarioHandlingProjectNature extends CaseHandlingProjectNature
    * @see de.renew.workflow.connector.context.CaseHandlingProjectNature#createCaseManager(org.eclipse.core.resources.IProject)
    */
   @Override
-  public ScenarioManager createCaseManager( final IProject project ) throws CoreException
+  public IScenarioManager createCaseManager( final IProject project ) throws CoreException
   {
     return new ScenarioManager( project );
   }
@@ -80,9 +80,9 @@ public class ScenarioHandlingProjectNature extends CaseHandlingProjectNature
    */
   @SuppressWarnings("unchecked")
   @Override
-  public ICaseManager<Scenario> getCaseManager( ) throws CoreException
+  public IScenarioManager getCaseManager( ) throws CoreException
   {
-    return super.getCaseManager();
+    return (IScenarioManager) super.getCaseManager();
   }
 
   /**
