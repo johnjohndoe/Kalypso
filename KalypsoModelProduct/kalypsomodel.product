@@ -161,7 +161,6 @@ kalypso.model.product.expert=true</vmArgsWin>
       <plugin id="org.kalypso.jwsdp"/>
       <plugin id="org.kalypso.kalypso1d2d.pjt"/>
       <plugin id="org.kalypso.layerprovider"/>
-      <plugin id="org.kalypso.manual.1d2d"/>
       <plugin id="org.kalypso.metadoc"/>
       <plugin id="org.kalypso.model.flood"/>
       <plugin id="org.kalypso.model.product"/>
