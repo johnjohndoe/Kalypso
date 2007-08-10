@@ -111,6 +111,7 @@ public class TaskExecutor implements ITaskExecutor
       partsToKeep.add( GisMapOutlineView.ID );
       final IWorkbench workbench = PlatformUI.getWorkbench();
       PerspectiveWatcher.cleanPerspective( workbench, partsToKeep );
+      m_activeTask = null;
       // here execute a command that stops the active task
       // m_handlerService.executeCommand( command.getId(), null );
     }
