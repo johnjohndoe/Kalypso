@@ -131,7 +131,6 @@ public class MapCoordinateStatusLineItem extends WorkbenchWindowControlContribut
     {
       public void widgetDisposed( final DisposeEvent e )
       {
-        System.out.println( "dispose event" );
         m_adapterListener.dispose();
       }
     } );
