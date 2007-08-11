@@ -76,7 +76,7 @@ public class WorkflowControl implements IWorklistChangeListener
     final Composite top = new Composite( parent, SWT.FILL );
     top.setLayout( new FillLayout() );
 
-    m_treeViewer = new TreeViewer( top, SWT.SINGLE );
+    m_treeViewer = new TreeViewer( top, SWT.BORDER | SWT.SINGLE | SWT.FULL_SELECTION );
 
     // enable tooltips per cell
     ColumnViewerToolTipSupport.enableFor( m_treeViewer );
