@@ -198,7 +198,7 @@ public class WorkflowControl implements IWorklistChangeListener
 
   public void setWorkflow( final Workflow workflow )
   {
-    if( m_treeViewer != null && !m_treeViewer.getControl().isDisposed() && m_treeViewer.getInput() != workflow )
+    if( m_treeViewer != null && !m_treeViewer.getControl().isDisposed())
     {
       m_treeViewer.setInput( workflow );
       m_treeViewer.collapseAll();
