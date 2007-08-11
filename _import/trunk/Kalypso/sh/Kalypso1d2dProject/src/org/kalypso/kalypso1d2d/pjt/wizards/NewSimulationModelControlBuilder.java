@@ -25,7 +25,9 @@ import org.kalypso.afgui.scenarios.ScenarioManager;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
+import org.kalypso.kalypso1d2d.pjt.views.TaskExecutionAuthority;
 
+import de.renew.workflow.base.Task;
 import de.renew.workflow.connector.context.ActiveWorkContext;
 
 /**
@@ -215,18 +217,24 @@ public class NewSimulationModelControlBuilder
     {
       String name = wpage.getNewSimulaionControlBuilder().getNewName();
       logger.info( "newName=" + name ); //$NON-NLS-1$
-      final ActiveWorkContext<Scenario> activeWorkContext = Kalypso1d2dProjectPlugin.getDefault().getActiveWorkContext();
+      final Kalypso1d2dProjectPlugin plugin = Kalypso1d2dProjectPlugin.getDefault();
+      final ActiveWorkContext<Scenario> activeWorkContext = plugin.getActiveWorkContext();
       try
       {
         final ScenarioHandlingProjectNature nature = ScenarioHandlingProjectNature.toThisNature( project );
         final ScenarioManager scenarioManager = (ScenarioManager) nature.getCaseManager();
-        if( scenario != null )
+        final TaskExecutionAuthority taskExecutionAuthority = plugin.getTaskExecutionAuthority();
+        final Task activeTask = plugin.getTaskExecutor().getActiveTask();
+        if( taskExecutionAuthority.canStopTask( activeTask ) )
         {
-          activeWorkContext.setCurrentCase( scenarioManager.deriveScenario( name, scenario ) );
-        }
-        else
-        {
-          activeWorkContext.setCurrentCase( scenarioManager.createCase( name ) );
+          if( scenario != null )
+          {
+            activeWorkContext.setCurrentCase( scenarioManager.deriveScenario( name, scenario ) );
+          }
+          else
+          {
+            activeWorkContext.setCurrentCase( scenarioManager.createCase( name ) );
+          }
         }
       }
       catch( final CoreException e )
