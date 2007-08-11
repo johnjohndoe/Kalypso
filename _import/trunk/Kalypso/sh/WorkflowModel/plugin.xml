@@ -3,4 +3,12 @@
 <plugin>
 <extension-point id="contextHandlerFactories" name="contextHandlerFactories" schema="schema/contextHandlerFactory.exsd"/>
 <extension-point id="workflowSystem" name="workflowSystem" schema="schema/workflowSystem.exsd"/>
+<extension
+      point="de.renew.workflow.model.workflowSystem">
+   <workflowSystem
+         definition="etc/workflow.xml"
+         id="default"
+         name="Default Workflow">
+   </workflowSystem>
+</extension>
 </plugin>
