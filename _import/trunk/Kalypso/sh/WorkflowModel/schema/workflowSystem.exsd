@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="org.kalypso.afgui">
+<schema targetNamespace="de.renew.workflow.model">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.kalypso.afgui" id="contextHandlerFactories" name="contextHandlerFactories"/>
+         <meta.schema plugin="de.renew.workflow.model" id="workflowSystem" name="workflowSystem"/>
       </appInfo>
       <documentation>
          [Enter description of this extension point.]
@@ -13,7 +13,7 @@
    <element name="extension">
       <complexType>
          <sequence>
-            <element ref="contextHandlerFactory" minOccurs="1" maxOccurs="unbounded"/>
+            <element ref="workflowSystem" minOccurs="1" maxOccurs="unbounded"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -42,27 +42,37 @@
       </complexType>
    </element>
 
-   <element name="contextHandlerFactory">
+   <element name="workflowSystem">
       <annotation>
          <appInfo>
-            <meta.element labelAttribute="id"/>
+            <meta.element labelAttribute="name"/>
          </appInfo>
       </annotation>
       <complexType>
          <attribute name="id" type="string" use="required">
             <annotation>
                <documentation>
-                  The unique id of this extension. Will be used within the &apos;extensioncontrol&apos;-element of a featureview-xml.
+                  
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="class" type="string" use="required">
+         <attribute name="name" type="string">
             <annotation>
                <documentation>
-                  The implementing class, must implement org.kalypso.template.featureview.IFeatureviewControlFactory.
+                  
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.kalypso.afgui.workflow.IContextHandlerFactory"/>
+                  <meta.attribute translatable="true"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+         <attribute name="definition" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="resource"/>
                </appInfo>
             </annotation>
          </attribute>

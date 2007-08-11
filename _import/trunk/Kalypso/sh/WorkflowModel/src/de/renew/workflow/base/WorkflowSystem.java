@@ -3,19 +3,16 @@
  */
 package de.renew.workflow.base;
 
-import java.net.URL;
 import java.util.logging.Logger;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+
+import de.renew.workflow.contexts.WorkflowSystemExtension;
 
 /**
  * This workflow system manages the workflow instance in a description file in the project .metadata folder
@@ -24,9 +21,9 @@ import org.eclipse.core.runtime.Status;
  */
 public class WorkflowSystem implements IWorkflowSystem
 {
-  public static final String METADATA_FOLDER = ".metadata";
+  public static final String WORKFLOW = "de.renew.workflow.model";
 
-  public static final String WORKFLOW_FILENAME = "workflow.xml";
+  private static final String WORKFLOW_DEFINITON_ID = "workflowDefinition";
 
   private static final Logger logger = Logger.getLogger( WorkflowSystem.class.getName() );
 
@@ -37,8 +34,6 @@ public class WorkflowSystem implements IWorkflowSystem
     if( !log )
       logger.setUseParentHandlers( false );
   }
-
-  private static final JAXBContext JC = createJAXBContext();
 
   private Workflow m_currentWorkflow;
 
@@ -53,43 +48,16 @@ public class WorkflowSystem implements IWorkflowSystem
    */
   public WorkflowSystem( final IProject project ) throws CoreException
   {
-    final IFolder metadataFolder = project.getFolder( METADATA_FOLDER );
-    final IFile workflowFile = metadataFolder.getFile( WORKFLOW_FILENAME );
-    workflowFile.refreshLocal( 0, null );
-    if( workflowFile.exists() )
+    final ProjectScope projectScope = new ProjectScope( project );
+    final String workflowId = projectScope.getNode( WORKFLOW ).get( WORKFLOW_DEFINITON_ID, "workflow1d2d" );
+    final Workflow workflow = WorkflowSystemExtension.getWorkflow( workflowId );
+    if( workflow != null )
     {
-      m_currentWorkflow = loadModel( workflowFile );
+      m_currentWorkflow = workflow;
     }
     else
     {
-      final IStatus status = new Status( Status.ERROR, "de.renew.workflow.model", "Workflow definition file could not be found.");
-      throw new CoreException( status );
-    }
-  }
-
-  private static JAXBContext createJAXBContext( )
-  {
-    try
-    {
-      return JAXBContext.newInstance( de.renew.workflow.base.ObjectFactory.class, de.renew.workflow.contexts.ObjectFactory.class, de.renew.workflow.cases.ObjectFactory.class );
-    }
-    catch( final JAXBException e )
-    {
-      e.printStackTrace();
-      return null;
-    }
-  }
-
-  private Workflow loadModel( final IFile file ) throws CoreException
-  {
-    try
-    {
-      final URL url = file.getRawLocationURI().toURL();
-      return (Workflow) JC.createUnmarshaller().unmarshal( url );
-    }
-    catch( final Throwable e )
-    {
-      final IStatus status = new Status( Status.ERROR, "de.renew.workflow.model", "", e );
+      final IStatus status = new Status( Status.ERROR, "de.renew.workflow.model", "Workflow definition could not be found." );
       throw new CoreException( status );
     }
   }
