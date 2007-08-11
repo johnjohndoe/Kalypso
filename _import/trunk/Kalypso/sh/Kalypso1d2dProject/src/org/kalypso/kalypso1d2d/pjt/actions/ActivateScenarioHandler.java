@@ -13,8 +13,10 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
+import org.kalypso.kalypso1d2d.pjt.views.TaskExecutionAuthority;
 
-import de.renew.workflow.base.Task;
+import de.renew.workflow.connector.context.ActiveWorkContext;
+import de.renew.workflow.connector.worklist.ITaskExecutor;
 
 public class ActivateScenarioHandler extends AbstractHandler
 {
@@ -30,11 +32,16 @@ public class ActivateScenarioHandler extends AbstractHandler
       {
         final Scenario scenario = (Scenario) firstElement;
         final Kalypso1d2dProjectPlugin plugin = Kalypso1d2dProjectPlugin.getDefault();
+        final ActiveWorkContext<Scenario> activeWorkContext = plugin.getActiveWorkContext();
         try
         {
-          final Task activeTask = plugin.getTaskExecutor().getActiveTask();
-          if( activeTask != null && plugin.getTaskExecutionAuthority().canStopTask( activeTask ) )
-            plugin.getActiveWorkContext().setCurrentCase( scenario );
+          final ITaskExecutor taskExecutor = plugin.getTaskExecutor();
+          final TaskExecutionAuthority taskExecutionAuthority = plugin.getTaskExecutionAuthority();
+          if( activeWorkContext.getCurrentCase() != scenario && taskExecutionAuthority.canStopTask( taskExecutor.getActiveTask() ) )
+          {
+            taskExecutor.stopActiveTask();
+            activeWorkContext.setCurrentCase( scenario );
+          }
         }
         catch( final CoreException e )
         {

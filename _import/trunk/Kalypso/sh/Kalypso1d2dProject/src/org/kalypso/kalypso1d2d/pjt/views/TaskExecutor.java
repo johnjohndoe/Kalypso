@@ -103,7 +103,7 @@ public class TaskExecutor implements ITaskExecutor
 
   public void stopActiveTask( )
   {
-    if( m_activeTask != null || !m_authority.canStopTask( m_activeTask ) )
+    if( m_activeTask != null && m_authority.canStopTask( m_activeTask ) )
     {
       final Collection<String> partsToKeep = new ArrayList<String>();
       partsToKeep.add( WorkflowView.ID );
@@ -114,7 +114,7 @@ public class TaskExecutor implements ITaskExecutor
       m_activeTask = null;
       // here execute a command that stops the active task
       // m_handlerService.executeCommand( command.getId(), null );
-    }
+    }    
   }
 
   /**
@@ -122,15 +122,10 @@ public class TaskExecutor implements ITaskExecutor
    */
   public void execute( final Task task ) throws TaskExecutionException
   {
-    // HACK: in order to make sure the SzenarioSourceProvider is initialized, call this method each time
-    // a task is executed. It would be better if this happened automatically on plug-in-start, but
-    // TODO: is this still necessary?
-    // Kalypso1d2dProjectPlugin.getDefault().getDataProvider();
-
-    if( m_activeTask != null && m_activeTask.getType() == EActivityType.ASYNCHRONOUS )
+    if( m_activeTask != null )
     {
       // if the same task is executed again, but it is asynchronous, or if the task cannot be stopped, don't do anything
-      if( m_activeTask == task || !m_authority.canStopTask( m_activeTask ) )
+      if( (m_activeTask.getType() == EActivityType.ASYNCHRONOUS && m_activeTask == task) || !m_authority.canStopTask( m_activeTask ) )
       {
         return;
       }
@@ -170,7 +165,8 @@ public class TaskExecutor implements ITaskExecutor
 
   private Collection<String> collectOpenedViews( final ContextType context )
   {
-    if(context == null) {
+    if( context == null )
+    {
       return new ArrayList<String>();
     }
     final ContextType cause = context.getParent();

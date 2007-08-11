@@ -77,7 +77,7 @@ public class RemoveScenarioHandler extends AbstractHandler
               MessageDialog.openInformation( shell, "Löschen nicht möglich.", "Das Szenario ist zur Zeit aktiv. Bitte aktivieren Sie zuerst ein anderes Szenario." );
               return Status.CANCEL_STATUS;
             }
-            else
+            else if(MessageDialog.openConfirm( shell, "Bitte bestätigen", "Wollen Sie das Szenario wirklich löschen?" ))
             {
               final UIJob runnable = new UIJob( shell.getDisplay(), "Szenario löschen" )
               {
