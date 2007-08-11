@@ -415,9 +415,15 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 						<con:Parameter name="input" value="maps/base.gmt" />
 					</con:ExtensionContext>
 					<con:ExtensionContext id="RoughnessMap" parent="MapContext"
-						handlerFactoryId="kalypsoContextHandlerFactory">
-						<con:WizardContext id="ImportRoughness"
-							wizardId="org.kalypso.ui.wizards.imports.roughness.ImportWizard" wizardType="NEW_WIZARD" parent="RoughnessMap" />
+						handlerFactoryId="kalypsoContextHandlerFactory">						
+						<con:ExtensionContext id="RoughnessPolygonTheme" parent="RoughnessMap"
+							handlerFactoryId="kalypsoContextHandlerFactory">
+							<con:WizardContext id="ImportRoughness"
+							wizardId="org.kalypso.ui.wizards.imports.roughness.ImportWizard" wizardType="NEW_WIZARD" parent="RoughnessPolygonTheme" />
+							<con:Parameter name="type" value="themeContext" />
+							<con:Parameter name="input"
+								value="{http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase}RoughnessPolygon" />
+						</con:ExtensionContext>
 						<con:Parameter name="type" value="mapViewInputContext" />
 						<con:Parameter name="input" value="maps/roughness.gmt" />
 					</con:ExtensionContext>

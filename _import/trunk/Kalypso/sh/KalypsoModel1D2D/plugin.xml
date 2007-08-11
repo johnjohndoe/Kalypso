@@ -547,6 +547,93 @@
             </count>
          </with>      </activeWhen>
    </handler>
+   <handler
+         commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateElement">
+      <activeWhen>
+         <with
+               variable="activeContexts">
+            <iterate
+                  operator="or">
+               <equals
+                     value="{http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase}RoughnessPolygon">
+               </equals>
+            </iterate>
+         </with>
+      </activeWhen>
+      <class
+            class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+         <parameter
+               name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+               value="org.kalypso.kalypsomodel1d2d.ui.map.fenetRoughness.CreatePolygonWidgetWrapper">
+         </parameter>
+         <parameter
+               name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
+               value="icons/elcl16/02_add_2D.gif">
+         </parameter>
+         <parameter
+               name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
+               value="Neues Polygon zeichnen">
+         </parameter>
+      </class>
+   </handler>
+   <handler
+         commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement">
+      <activeWhen>
+         <with
+               variable="activeContexts">
+            <iterate
+                  operator="or">
+               <equals
+                     value="{http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase}RoughnessPolygon">
+               </equals>
+            </iterate>
+         </with>
+      </activeWhen>
+      <class
+            class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+         <parameter
+               name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+               value="org.kalypso.kalypsomodel1d2d.ui.map.fenetRoughness.DeletePolygonWidgetWrapper">
+         </parameter>
+         <parameter
+               name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
+               value="icons/elcl16/04_cut_2D.gif">
+         </parameter>
+         <parameter
+               name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
+               value="Polygone löschen">
+         </parameter>
+      </class>
+   </handler>
+   <handler
+         commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditElement">
+      <activeWhen>
+         <with
+               variable="activeContexts">
+            <iterate
+                  operator="or">
+               <equals
+                     value="{http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase}RoughnessPolygon">
+               </equals>
+            </iterate>
+         </with>
+      </activeWhen>
+      <class
+            class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+         <parameter
+               name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+               value="org.kalypso.kalypsomodel1d2d.ui.map.fenetRoughness.EditPolygonWidgetWrapper">
+         </parameter>
+         <parameter
+               name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
+               value="icons/elcl16/07_move_FE_knot.gif">
+         </parameter>
+         <parameter
+               name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
+               value="Polygon bearbeiten">
+         </parameter>
+      </class>
+   </handler>
      </extension>
      <extension
            point="org.eclipse.ui.commands">
