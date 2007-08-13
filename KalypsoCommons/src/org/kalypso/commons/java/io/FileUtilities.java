@@ -276,7 +276,7 @@ public class FileUtilities
    * @param parentDir
    * @return temporary directory
    */
-  public static File createNewTempDir( final String prefix, final File parentDir )
+  public synchronized static File createNewTempDir( final String prefix, final File parentDir )
   {
     while( true )
     {
@@ -399,6 +399,7 @@ public class FileUtilities
    * 
    *     test.foo -- test
    *     robert.tt -- robert
+   * 
    * 
    * 
    * 

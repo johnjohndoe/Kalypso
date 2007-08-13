@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor;
 
@@ -106,7 +106,7 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
     }
   };
 
-  protected final JobExclusiveCommandTarget m_commandTarget = new JobExclusiveCommandTarget( new DefaultCommandManager(), m_dirtyRunnable );
+  private final JobExclusiveCommandTarget m_commandTarget = new JobExclusiveCommandTarget( new DefaultCommandManager(), m_dirtyRunnable );
 
   /**
    * This flag prevents reload on save.
@@ -425,7 +425,7 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
     m_commandTarget.postCommand( command, runnable );
   }
 
-  public JobExclusiveCommandTarget getCommandTarget( )
+  public final JobExclusiveCommandTarget getCommandTarget( )
   {
     return m_commandTarget;
   }

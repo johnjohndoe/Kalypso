@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.featureeditor;
 
@@ -190,7 +190,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
     return Status.OK_STATUS;
   }
 
-  public final Featuretemplate loadInput( final InputStream inputStream, final URL context, final IProgressMonitor monitor, Properties props ) throws CoreException
+  public final Featuretemplate loadInput( final InputStream inputStream, final URL context, final IProgressMonitor monitor, final Properties props ) throws CoreException
   {
     monitor.beginTask( "Ansicht laden", 1000 );
     Featuretemplate template = null;
@@ -251,7 +251,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
     if( m_workspace != null )
       m_workspace.addModellListener( this );
 
-    m_commandtarget.setCommandManager( workspace );
+// m_commandtarget.setCommandManager( workspace );
 
     if( m_panel == null || m_panel.isDisposed() )
       return;
