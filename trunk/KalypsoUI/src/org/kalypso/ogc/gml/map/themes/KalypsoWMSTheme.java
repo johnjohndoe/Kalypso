@@ -245,6 +245,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
     final int requestedWidth = (int) g.getClip().getBounds().getWidth();
     final int requestedHeight = (int) g.getClip().getBounds().getHeight();
 
+    // TODO: what about resize?
     if( m_buffer != null && m_bufferEnvLocalSRS.equals( bbox ) )
       g.drawImage( m_buffer, 0, 0, null );
     else
