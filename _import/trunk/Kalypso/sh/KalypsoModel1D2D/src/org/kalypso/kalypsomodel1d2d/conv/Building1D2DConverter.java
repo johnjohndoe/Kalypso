@@ -109,11 +109,11 @@ public class Building1D2DConverter
 
   private void formatDischarges( final Formatter format, final BigDecimal[] upstreamWaterlevels, final BigDecimal[] downstreamWaterlevels, final BuildingParameters buildingParameters )
   {
-    for( final BigDecimal downstreamWaterlevel : downstreamWaterlevels )
+    for( final BigDecimal upstreamWaterlevel : upstreamWaterlevels )
     {
-      final BigDecimal[] discharges = new BigDecimal[upstreamWaterlevels.length];
+      final BigDecimal[] discharges = new BigDecimal[downstreamWaterlevels.length];
       for( int i = 0; i < discharges.length; i++ )
-        discharges[i] = buildingParameters.getDischarge( upstreamWaterlevels[i], downstreamWaterlevel );
+        discharges[i] = buildingParameters.getDischarge( upstreamWaterlevel, downstreamWaterlevels[i] );
 
       formatBlock( format, "FLW", discharges );
     }
