@@ -721,7 +721,9 @@ public class PolynomeHelper
       newqresult.setStation( station );
 
       newqresult.setName( station.toString() );
-      newqresult.setDescription( "Gelesen aus: " + buildingFile.getName() );
+      final String descMessage = "Gelesen aus: " + buildingFile.getName();
+      if( !newqresult.getDescription().contains( descMessage ) )
+        newqresult.setDescription( descMessage );
 
       pointResults.put( station, newqresult );
     }

@@ -96,7 +96,7 @@
 
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="Runoff">
-			<gml:description>Q [m³/s]</gml:description>
+			<gml:description>Abfluss [m³/s]</gml:description>
 			<gml:name>Q [m³/s]</gml:name>
 			<swe:property xlink:href="#phenomenonRunoff" />
 			<swe:representation>
