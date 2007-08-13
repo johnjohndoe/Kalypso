@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.table;
 
@@ -66,25 +66,26 @@ public class LayerTableLabelProvider implements ITableLabelProvider, IColorProvi
   /**
    * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
    */
-  public void dispose()
+  public void dispose( )
   {
-  // nix zu disposen
+    // nothing to dispose
   }
 
   /**
    * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
    */
-  public Image getColumnImage( Object element, int columnIndex )
+  public Image getColumnImage( final Object element, final int columnIndex )
   {
     // Extrawurscht, wenn Tabelle leer, da trotzdem mit index 0 aufgerufen wird
     if( m_viewer.getColumnCount() == 0 )
       return null;
 
-    final Feature feature = (Feature)element;
+    final Feature feature = (Feature) element;
 
     final IFeatureModifier modifier = m_viewer.getModifier( columnIndex );
 
-    return modifier == null ? null : modifier.getImage( feature );
+    final Image image = modifier == null ? null : modifier.getImage( feature );
+    return image;
   }
 
   /**
@@ -96,7 +97,7 @@ public class LayerTableLabelProvider implements ITableLabelProvider, IColorProvi
     if( m_viewer.getColumnCount() == 0 )
       return "";
 
-    final Feature feature = (Feature)element;
+    final Feature feature = (Feature) element;
 
     final IFeatureModifier modifier = m_viewer.getModifier( columnIndex );
     if( modifier == null )
@@ -107,13 +108,12 @@ public class LayerTableLabelProvider implements ITableLabelProvider, IColorProvi
   }
 
   /**
-   * 
    * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
    */
   public void addListener( final ILabelProviderListener listener )
   {
-  // TODO Listener informieren, wenn sich der Wert eines Features geändert
-  // hat?
+    // TODO Listener informieren, wenn sich der Wert eines Features geändert
+    // hat?
   }
 
   /**
@@ -129,13 +129,13 @@ public class LayerTableLabelProvider implements ITableLabelProvider, IColorProvi
    */
   public void removeListener( final ILabelProviderListener listener )
   {
-  //  TODO
+    // TODO
   }
 
   /**
    * @see org.eclipse.jface.viewers.IColorProvider#getForeground(java.lang.Object)
    */
-  public Color getForeground( Object element )
+  public Color getForeground( final Object element )
   {
     return null;
   }
@@ -143,22 +143,22 @@ public class LayerTableLabelProvider implements ITableLabelProvider, IColorProvi
   /**
    * @see org.eclipse.jface.viewers.IColorProvider#getBackground(java.lang.Object)
    */
-  public Color getBackground( Object element )
+  public Color getBackground( final Object element )
   {
-//    if( element instanceof Feature )
-//    {
-//      final ISelection selection = m_viewer.getSelection();
-//      if( selection instanceof IStructuredSelection )
-//      {
-//        final Iterator iterator = ( (IStructuredSelection)selection ).iterator();
-//        while( iterator.hasNext() )
-//        {
-//          final Object object = iterator.next();
-//          if( element == object )
-//            return m_selectionColor;
-//        }
-//      }
-//    }
+// if( element instanceof Feature )
+// {
+// final ISelection selection = m_viewer.getSelection();
+// if( selection instanceof IStructuredSelection )
+// {
+// final Iterator iterator = ( (IStructuredSelection)selection ).iterator();
+// while( iterator.hasNext() )
+// {
+// final Object object = iterator.next();
+// if( element == object )
+// return m_selectionColor;
+// }
+// }
+// }
     return m_noSelectionColor;
   }
 }

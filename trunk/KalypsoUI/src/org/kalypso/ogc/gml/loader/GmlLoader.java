@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.loader;
 
@@ -66,13 +66,11 @@ import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.ogc.gml.serialize.GmlSerializerFeatureProviderFactory;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.pool.KeyInfo;
 import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
 import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 import org.opengis.cs.CS_CoordinateSystem;
 
@@ -91,9 +89,9 @@ public class GmlLoader extends AbstractLoader
     public void onCommandManagerChanged( final ICommandManager source )
     {
       final Object[] objects = getObjects();
-      for( int i = 0; i < objects.length; i++ )
+      for( final Object element : objects )
       {
-        final CommandableWorkspace workspace = (CommandableWorkspace) objects[i];
+        final CommandableWorkspace workspace = (CommandableWorkspace) element;
         final ICommandManager cm = workspace.getCommandManager();
         if( cm == source )
         {
@@ -121,7 +119,10 @@ public class GmlLoader extends AbstractLoader
 
       final URL gmlURL = m_urlResolver.resolveURL( context, source );
 
-      final IFeatureProviderFactory factory = new GmlSerializerFeatureProviderFactory();
+// final IFeatureProviderFactory factory = new GmlSerializerFeatureProviderFactory();
+
+      final PooledXLinkFeatureProviderFactory factory = new PooledXLinkFeatureProviderFactory();
+
       final GMLWorkspace gmlWorkspace = GmlSerializer.createGMLWorkspace( gmlURL, m_urlResolver, factory );
 
       final CommandableWorkspace workspace = new CommandableWorkspace( gmlWorkspace );
@@ -131,9 +132,9 @@ public class GmlLoader extends AbstractLoader
       TimeLogger perfLogger = null;
       if( doTrace )
         perfLogger = new TimeLogger( "Start transforming gml workspace" );
-      
+
       final CS_CoordinateSystem targetCRS = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
-      
+
       workspace.accept( new TransformVisitor( targetCRS ), workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
 
       final IResource gmlFile = ResourceUtilities.findFileFromURL( gmlURL );
@@ -145,7 +146,7 @@ public class GmlLoader extends AbstractLoader
         perfLogger.takeInterimTime();
         perfLogger.printCurrentTotal( "Finished transforming gml workspace in: " );
       }
-      
+
       return workspace;
     }
     catch( final LoaderException le )
@@ -254,7 +255,7 @@ public class GmlLoader extends AbstractLoader
     workspace.removeCommandManagerListener( m_commandManagerListener );
 
     super.release( object );
-    
+
     workspace.dispose();
   }
 }

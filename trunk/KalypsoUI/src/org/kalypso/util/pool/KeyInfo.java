@@ -83,7 +83,7 @@ public final class KeyInfo extends Job implements ILoaderListener
     m_loader.addLoaderListener( this );
 
     setPriority( Job.LONG );
-    setRule( rule );
+// setRule( rule );
   }
 
   public void dispose( )
@@ -153,8 +153,8 @@ public final class KeyInfo extends Job implements ILoaderListener
       // TRICKY: objectInvalid may add/remove PoolListener for this key,
       // so we cannot iterate over m_listeners
       final IPoolListener[] ls = m_listeners.toArray( new IPoolListener[m_listeners.size()] );
-      for( int i = 0; i < ls.length; i++ )
-        ls[i].objectInvalid( m_key, oldObject );
+      for( final IPoolListener element : ls )
+        element.objectInvalid( m_key, oldObject );
     }
   }
 
@@ -175,8 +175,8 @@ public final class KeyInfo extends Job implements ILoaderListener
     // TRICKY: objectLoaded may add a new PoolListener for this key,
     // so we cannot iterate over m_listeners
     final IPoolListener[] ls = m_listeners.toArray( new IPoolListener[m_listeners.size()] );
-    for( int i = 0; i < ls.length; i++ )
-      ls[i].objectLoaded( m_key, o, status );
+    for( final IPoolListener element : ls )
+      element.objectLoaded( m_key, o, status );
 
     return status;
   }
@@ -271,7 +271,7 @@ public final class KeyInfo extends Job implements ILoaderListener
 
     // TRICKY: objectInvalid may add/remove PoolListener for this key,
     // so we cannot iterate over m_listeners
-    for( int i = 0; i < ls.length; i++ )
-      ls[i].dirtyChanged( m_key, isDirty );
+    for( final IPoolListener element : ls )
+      element.dirtyChanged( m_key, isDirty );
   }
 }

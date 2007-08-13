@@ -15,7 +15,6 @@ import java.io.OutputStreamWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.Map.Entry;
@@ -53,13 +52,13 @@ public class FileCache<K, V>
    * Constructor
    * 
    * @param kFact
-   *          the key factory used to read and write the keys from/to a simple string representation
+   *            the key factory used to read and write the keys from/to a simple string representation
    * @param kc
-   *          key comparator
+   *            key comparator
    * @param ser
-   *          object serializer
+   *            object serializer
    * @param directory
-   *          location of the index file and of all other files used for caching
+   *            location of the index file and of all other files used for caching
    */
   public FileCache( final IKeyFactory<K> kFact, final Comparator< ? super K> kc, final ISerializer<V> ser, final File directory )
   {
@@ -77,7 +76,7 @@ public class FileCache<K, V>
   }
 
   @Override
-  protected void finalize( ) throws Throwable
+  protected synchronized void finalize( ) throws Throwable
   {
     m_index.clear();
 
@@ -133,9 +132,8 @@ public class FileCache<K, V>
     {
       writer = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( indexFile ) ) );
 
-      for( final Iterator<Entry<K, File>> it = m_index.entrySet().iterator(); it.hasNext(); )
+      for( final Entry<K, File> entry : m_index.entrySet() )
       {
-        final Map.Entry<K, File> entry = it.next();
         final String keySpec = m_keyFactory.toString( entry.getKey() );
         final String fileName = entry.getValue().getName();
 
@@ -156,7 +154,7 @@ public class FileCache<K, V>
     }
   }
 
-  public void addObject( final K key, final V value )
+  public synchronized void addObject( final K key, final V value )
   {
     final File file;
     OutputStream os = null;
@@ -190,7 +188,7 @@ public class FileCache<K, V>
    * Directly adds a file to this file cache. The must must be readable by the serializer. The file is copied into the
    * cache.
    */
-  public void addFile( final K key, final File fileToAdd ) throws IOException
+  public synchronized void addFile( final K key, final File fileToAdd ) throws IOException
   {
     OutputStream os = null;
     InputStream is = null;
@@ -219,7 +217,7 @@ public class FileCache<K, V>
     }
   }
 
-  public V getObject( final K key ) throws InvocationTargetException
+  public synchronized V getObject( final K key ) throws InvocationTargetException
   {
     final File file = m_index.get( key );
     if( file == null )
@@ -254,12 +252,12 @@ public class FileCache<K, V>
     }
   }
 
-  public int size( )
+  public synchronized int size( )
   {
     return m_index.size();
   }
 
-  public void remove( final K key )
+  public synchronized void remove( final K key )
   {
     if( m_index.containsKey( key ) )
     {
@@ -272,9 +270,9 @@ public class FileCache<K, V>
     }
   }
 
-  public void clear( )
+  public synchronized void clear( )
   {
-    for( File file : m_index.values() )
+    for( final File file : m_index.values() )
       file.delete();
 
     final File indexFile = new File( m_directory, INDEX_FILE );
@@ -293,7 +291,7 @@ public class FileCache<K, V>
    * @return null if not found
    */
   @SuppressWarnings("unchecked")
-  public K getRealKey( final K key )
+  public synchronized K getRealKey( final K key )
   {
     if( m_index.containsKey( key ) )
     {

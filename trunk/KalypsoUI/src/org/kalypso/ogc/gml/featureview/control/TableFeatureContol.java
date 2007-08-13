@@ -24,7 +24,6 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.KalypsoFeatureTheme;
-import org.kalypso.ogc.gml.command.FeatureChangeModellEvent;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.MapModell;
@@ -32,7 +31,10 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory;
 import org.kalypso.template.gistableview.Gistableview;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
+import org.kalypso.util.pool.KeyInfo;
+import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.IGMLWorkspaceModellEvent;
@@ -148,11 +150,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
       final String ftpName = getFeatureTypeProperty().getName();
       final FeaturePath featurePath = new FeaturePath( parentFeaturePath, ftpName );
 
-      final CommandableWorkspace c_workspace;
-      if( workspace instanceof CommandableWorkspace )
-        c_workspace = (CommandableWorkspace) workspace;
-      else
-        c_workspace = new CommandableWorkspace( workspace );
+      final CommandableWorkspace c_workspace = findCommandableWorkspace( workspace );
 
       final MapModell pseudoModell = new MapModell( KalypsoCorePlugin.getDefault().getCoordinatesSystem(), null );
 
@@ -176,10 +174,32 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
         for( int i = 0; i < properties.length; i++ )
         {
           final IPropertyType ftp = properties[i];
-          m_viewer.addColumn( ftp.getQName().getLocalPart(), true, 100, "SWT.CENTER", null, i == properties.length - 1 ); //$NON-NLS-1$        
+          m_viewer.addColumn( ftp.getQName().getLocalPart(), true, 100, "SWT.CENTER", null, i == properties.length - 1 ); //$NON-NLS-1$
         }
       }
     }
+  }
+
+  /**
+   * Helps to find the right commandable workspace for the given feature.
+   */
+  private CommandableWorkspace findCommandableWorkspace( final GMLWorkspace workspace )
+  {
+    final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
+    final KeyInfo[] infos = pool.getInfos();
+    for( final KeyInfo keyInfo : infos )
+    {
+      final Object object = keyInfo.getObject();
+      if( object instanceof CommandableWorkspace && ((CommandableWorkspace) object).getWorkspace() == workspace )
+        return (CommandableWorkspace) object;
+    }
+
+    final CommandableWorkspace c_workspace;
+    if( workspace instanceof CommandableWorkspace )
+      c_workspace = (CommandableWorkspace) workspace;
+    else
+      c_workspace = new CommandableWorkspace( workspace );
+    return c_workspace;
   }
 
   public void setTableTemplate( final Gistableview tableView )
@@ -242,11 +262,11 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
           }
         } );
 
-        if( modellEvent instanceof FeatureChangeModellEvent )
-        {
-          final FeatureChangeModellEvent featureEvent = (FeatureChangeModellEvent) modellEvent;
-          fireFeatureChange( featureEvent.getChanges() );
-        }
+// if( modellEvent instanceof FeatureChangeModellEvent )
+// {
+// final FeatureChangeModellEvent featureEvent = (FeatureChangeModellEvent) modellEvent;
+// fireFeatureChange( featureEvent.getChanges() );
+// }
       }
     }
   }

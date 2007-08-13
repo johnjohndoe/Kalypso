@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,18 +36,16 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.modfier;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -66,19 +64,18 @@ public class ComboBoxModifier implements IFeatureModifier
 {
   private static final String NO_LINK_STRING = "<kein Link>";
 
-  private static final Object NULL_LINK = new Object();
+  private final List<Object> m_entries = new ArrayList<Object>();
+
+  private final ComboBoxCellEditor m_comboBoxCellEditor = new ComboBoxCellEditor();
 
   private final IRelationType m_rt;
 
   private Feature m_feature;
 
-  private final Map<String, Object> m_entries = new HashMap<String, Object>();
-
-  private final ComboBoxCellEditor m_comboBoxCellEditor = new ComboBoxCellEditor();
-
   public ComboBoxModifier( final IRelationType ftp )
   {
     m_rt = ftp;
+    m_comboBoxCellEditor.setStyle( SWT.READ_ONLY | SWT.DROP_DOWN );
   }
 
   /**
@@ -88,11 +85,17 @@ public class ComboBoxModifier implements IFeatureModifier
   {
     m_feature = f;
     m_entries.clear();
+
+    final List<String> labels = new ArrayList<String>();
+
     if( !m_rt.isInlineAble() && m_rt.isLinkAble() )
     {
       /* Null entry to delete link if this is allowed */
       if( m_rt.isNillable() )
-        m_entries.put( NO_LINK_STRING, NULL_LINK );
+      {
+        m_entries.add( null );
+        labels.add( NO_LINK_STRING );
+      }
 
       /* Find all substituting features. */
       final Feature feature = getFeature();
@@ -106,17 +109,21 @@ public class ComboBoxModifier implements IFeatureModifier
       for( final Feature foundFeature : features )
       {
         if( foundFeature instanceof XLinkedFeature_Impl )
-          m_entries.put( labelProvider.getText( foundFeature ), foundFeature );
+        {
+          m_entries.add( foundFeature );
+        }
         else
-          m_entries.put( labelProvider.getText( foundFeature ), foundFeature.getId() );
+        {
+          m_entries.add( foundFeature.getId() );
+        }
+
+        labels.add( labelProvider.getText( foundFeature ) );
       }
     }
-    final Collection<String> entries = m_entries.keySet();
-    m_comboBoxCellEditor.setItems( entries.toArray( new String[entries.size()] ) );
+    m_comboBoxCellEditor.setItems( labels.toArray( new String[labels.size()] ) );
 
-    final List<Object> values = new ArrayList<Object>( m_entries.values() );
     final Object property = f.getProperty( m_rt );
-    return values.indexOf( property ) + (m_rt.isNillable() ? 1 : 0);
+    return m_entries.indexOf( property );
   }
 
   /**
@@ -125,18 +132,8 @@ public class ComboBoxModifier implements IFeatureModifier
    */
   public Object parseInput( final Feature f, final Object value )
   {
-    final Collection<Object> values = m_entries.values();
-    int counter = ((Integer) value).intValue();
-    if( m_rt.isNillable() && counter-- == 0 )
-    {
-      return null;
-    }
-    for( final Object object : values )
-    {
-      if( counter-- == 0 )
-        return object;
-    }
-    return null;
+    final int counter = ((Integer) value).intValue();
+    return m_entries.get( counter );
   }
 
   /**
@@ -175,7 +172,7 @@ public class ComboBoxModifier implements IFeatureModifier
   public String getLabel( final Feature f )
   {
     // TODO: GUITypeHandler konsequent einsetzen
-    // besser: abhängig von der IPropertyType etwas machen
+    // besser: abhängig vom IPropertyType etwas machen
     final IPropertyType ftp = getFeatureTypeProperty();
     final Object fprop = f.getProperty( ftp );
     if( fprop != null )

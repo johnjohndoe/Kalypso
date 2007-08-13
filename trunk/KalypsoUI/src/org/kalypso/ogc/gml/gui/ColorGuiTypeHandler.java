@@ -2,45 +2,47 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.gui;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -80,9 +82,11 @@ import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandler;
  */
 public class ColorGuiTypeHandler extends LabelProvider implements IGuiTypeHandler
 {
-  private final XsdBaseTypeHandler m_handler;
+  private final XsdBaseTypeHandler< ? > m_handler;
 
-  public ColorGuiTypeHandler( XsdBaseTypeHandler handler )
+  private final Map<RGB, Image> m_imageCache = new HashMap<RGB, Image>();
+
+  public ColorGuiTypeHandler( final XsdBaseTypeHandler< ? > handler )
   {
     m_handler = handler;
   }
@@ -91,7 +95,7 @@ public class ColorGuiTypeHandler extends LabelProvider implements IGuiTypeHandle
    * @see org.kalypso.ogc.gml.gui.XsdBaseGuiTypeHandler#createFeatureDialog(org.kalypsodeegree.model.feature.Feature,
    *      org.kalypso.gmlschema.property.IPropertyType)
    */
-  public IFeatureDialog createFeatureDialog( Feature feature, IPropertyType ftp )
+  public IFeatureDialog createFeatureDialog( final Feature feature, final IPropertyType ftp )
   {
     return new ColorFeatureDialog( feature, (IValuePropertyType) ftp );
   }
@@ -100,7 +104,7 @@ public class ColorGuiTypeHandler extends LabelProvider implements IGuiTypeHandle
    * @see org.kalypso.ogc.gml.gui.XsdBaseGuiTypeHandler#createFeatureviewControl(org.kalypso.gmlschema.property.IPropertyType,
    *      org.kalypso.template.featureview.ObjectFactory)
    */
-  public JAXBElement< ? extends ControlType> createFeatureviewControl( IPropertyType property, ObjectFactory factory )
+  public JAXBElement< ? extends ControlType> createFeatureviewControl( final IPropertyType property, final ObjectFactory factory )
   {
     final QName qname = property.getQName();
 
@@ -125,7 +129,7 @@ public class ColorGuiTypeHandler extends LabelProvider implements IGuiTypeHandle
     text.setLayoutData( factory.createGridData( textData ) );
 
     // Label for the color
-    ColorLabelType type = factory.createColorLabelType();
+    final ColorLabelType type = factory.createColorLabelType();
     type.setStyle( "SWT.NONE" );
     type.setProperty( qname );
 
@@ -156,21 +160,21 @@ public class ColorGuiTypeHandler extends LabelProvider implements IGuiTypeHandle
   /**
    * @see org.kalypso.ogc.gml.gui.XsdBaseGuiTypeHandler#fromText(java.lang.String)
    */
-  public Object parseText( String text, String formatHint )
+  public Object parseText( final String text, final String formatHint )
   {
-    Pattern p = Pattern.compile( "^\\((\\d{1,3}+),(\\d{1,3}+),(\\d{1,3}+)\\)$" );
-    Matcher m = p.matcher( text );
+    final Pattern p = Pattern.compile( "^\\((\\d{1,3}+),(\\d{1,3}+),(\\d{1,3}+)\\)$" );
+    final Matcher m = p.matcher( text );
 
     if( m.find() )
     {
       if( m.groupCount() != 3 )
         return null;
 
-      String red = m.group( 1 );
-      String green = m.group( 2 );
-      String blue = m.group( 3 );
+      final String red = m.group( 1 );
+      final String green = m.group( 2 );
+      final String blue = m.group( 3 );
 
-      RGB rgb = new RGB( Integer.valueOf( red ), Integer.valueOf( green ), Integer.valueOf( blue ) );
+      final RGB rgb = new RGB( Integer.valueOf( red ), Integer.valueOf( green ), Integer.valueOf( blue ) );
       return rgb;
     }
 
@@ -181,7 +185,7 @@ public class ColorGuiTypeHandler extends LabelProvider implements IGuiTypeHandle
    * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
    */
   @Override
-  public String getText( Object element )
+  public String getText( final Object element )
   {
     if( element instanceof RGB )
     {
@@ -198,21 +202,32 @@ public class ColorGuiTypeHandler extends LabelProvider implements IGuiTypeHandle
   @Override
   public Image getImage( final Object element )
   {
-    if( element instanceof RGB )
+    final RGB rgb = element instanceof RGB ? (RGB) element : null;
+
+    // REMARK: we implement a simple caching strategy here, because (at the moment) we don't know
+    // how and when to dispose the images. So at least the number of created images is reduced here.
+    if( m_imageCache.containsKey( rgb ) )
+      return m_imageCache.get( rgb );
+
+    final Image image;
+    if( rgb == null )
+    {
+      final PaletteData paletteData = new PaletteData( new RGB[] { new RGB( 255, 255, 255 ) } );
+      final ImageData imageData = new ImageData( 1, 1, 1, paletteData );
+      image = new Image( null, imageData );
+    }
+    else
     {
       final PaletteData paletteData = new PaletteData( new RGB[] { new RGB( 64, 64, 64 ), ((RGB) element) } );
       final ImageData imageData = new ImageData( 24, 13, 1, paletteData );
       for( int x = 2; x < 23; x++ )
         for( int y = 1; y < 12; y++ )
           imageData.setPixel( x, y, 1 );
-      return new Image( null, imageData );
+      image = new Image( null, imageData );
     }
-    else
-    {
-      final PaletteData paletteData = new PaletteData( new RGB[] { new RGB( 255, 255, 255 ) } );
-      final ImageData imageData = new ImageData( 1, 1, 1, paletteData );
-      return new Image( null, imageData );
-    }
+
+    m_imageCache.put( rgb, image );
+    return image;
   }
 
   /**
@@ -220,12 +235,12 @@ public class ColorGuiTypeHandler extends LabelProvider implements IGuiTypeHandle
    *      org.kalypso.ogc.gml.selection.IFeatureSelectionManager,
    *      org.kalypso.ogc.gml.featureview.IFeatureChangeListener)
    */
-  public IFeatureModifier createFeatureModifier( IPropertyType ftp, IFeatureSelectionManager selectionManager, IFeatureChangeListener fcl )
+  public IFeatureModifier createFeatureModifier( final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl )
   {
     // if we get a ClassCastExxception here, something is very wrong
     final IValuePropertyType vpt = (IValuePropertyType) ftp;
 
-    final Class valueClass = getValueClass();
+    final Class< ? > valueClass = getValueClass();
 
     if( RGB.class == valueClass )
     {
@@ -246,7 +261,7 @@ public class ColorGuiTypeHandler extends LabelProvider implements IGuiTypeHandle
   /**
    * @see org.kalypso.gmlschema.types.ITypeHandler#getValueClass()
    */
-  public Class getValueClass( )
+  public Class< ? > getValueClass( )
   {
     return m_handler.getValueClass();
   }
