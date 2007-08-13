@@ -107,6 +107,8 @@ final class KalypsoRemoteWMService extends RemoteWMService
     }
   }
 
+  // TODO directly return GetMapRequest
+  // TODO move this into static helper (protocol factory)?
   public HashMap<String, String> createGetMapRequestParameter( final int width, final int height, final GM_Envelope requestedEnvLocalSRS, final CS_CoordinateSystem localSRS ) throws CoreException
   {
     try
@@ -165,6 +167,9 @@ final class KalypsoRemoteWMService extends RemoteWMService
     return m_srs;
   }
 
+  // TODO: directly return the request object
+  // TODO: does not work at the moment
+  // TODO: Move to protocol factory
   public HashMap<String, String> createGetFeatureinfoRequest( final Point pointOfInterest, final String format ) throws CoreException
   {
     final HashMap<String, String> parameterMap = prepareRequestParameters( "GetFeatureInfo" );
