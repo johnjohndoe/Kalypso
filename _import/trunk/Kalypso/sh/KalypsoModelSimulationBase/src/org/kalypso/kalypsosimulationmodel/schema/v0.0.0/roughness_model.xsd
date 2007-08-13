@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--  
+<!--
 	Provides gml schema types and elements to model roughness.
-	Basic element is the Roughness element which can be grouped 
+	Basic element is the Roughness element which can be grouped
 	in a collection
-	
+
 	@author Patrice Congo
 	@author Dejan Antanaskovic
 -->
@@ -219,7 +219,7 @@
 			<xs:extension base="gml:AbstractFeatureType">
 				<xs:sequence>
 					<xs:element name="roughness_GroundLink"
-						type="wbr:RoughnessGroundLinkType">
+						type="wbr:RoughnessGroundLinkType" nillable="true">
 						<xs:annotation>
 							<xs:documentation xml:lang="de">
 								<xs:label>Rauheitsklasse</xs:label>
@@ -230,7 +230,7 @@
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="roughness_VegetationLink"
-						type="wbr:RoughnessVegetationLinkType">
+						type="wbr:RoughnessVegetationLinkType" nillable="true">
 						<xs:annotation>
 							<xs:documentation xml:lang="de">
 								<xs:label>Vegetationsklasse</xs:label>
@@ -241,7 +241,7 @@
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="roughness_EddyViscosityLink"
-						type="wbr:RoughnessEddyViscosityLinkType">
+						type="wbr:RoughnessEddyViscosityLinkType" nillable="true">
 						<xs:annotation>
 							<xs:documentation xml:lang="de">
 								<xs:label>Wirbelviskosität</xs:label>
@@ -289,21 +289,21 @@
 		<xs:annotation>
 			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
 				<kapp:documentReference>roughness.gml</kapp:documentReference>
-			
-			<!-- 
+
+			<!--
 			IMPORTANT!!!
-				
+
 				<kapp:documentReference>roughness.gml</kapp:documentReference>
 				should be written in one line, exactly like this!
-				
+
 				Please check if your auto-formatting breaks it into:
 					<kapp:documentReference>
 						roughness.gml
 					</kapp:documentReference>
 				than fix it manually...
-			 
+
 			-->
-			
+
 			</xs:appinfo>
 		</xs:annotation>
 		<xs:sequence>
@@ -317,21 +317,21 @@
 		<xs:annotation>
 			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
 				<kapp:documentReference>roughness.gml</kapp:documentReference>
-			
-			<!-- 
+
+			<!--
 			IMPORTANT!!!
-				
+
 				<kapp:documentReference>roughness.gml</kapp:documentReference>
 				should be written in one line, exactly like this!
-				
+
 				Please check if your auto-formatting breaks it into:
 					<kapp:documentReference>
 						roughness.gml
 					</kapp:documentReference>
 				than fix it manually...
-			 
+
 			-->
-			
+
 			</xs:appinfo>
 		</xs:annotation>
 		<xs:sequence>
@@ -345,21 +345,21 @@
 		<xs:annotation>
 			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
 				<kapp:documentReference>roughness.gml</kapp:documentReference>
-			
-			<!-- 
+
+			<!--
 			IMPORTANT!!!
-				
+
 				<kapp:documentReference>roughness.gml</kapp:documentReference>
 				should be written in one line, exactly like this!
-				
+
 				Please check if your auto-formatting breaks it into:
 					<kapp:documentReference>
 						roughness.gml
 					</kapp:documentReference>
 				than fix it manually...
-			 
+
 			-->
-			
+
 			</xs:appinfo>
 		</xs:annotation>
 		<xs:sequence>
@@ -557,7 +557,7 @@
 		</xs:complexContent>
 	</xs:complexType>
 	<!-- =================================================================
-		roughnessCorrection Property 
+		roughnessCorrection Property
 		================================================================== -->
 	<xs:element name="roughnessClsCorrection"
 		type="wbr:RoughnessClsCorrectionPropertyType" />

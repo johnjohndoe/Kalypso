@@ -1,9 +1,8 @@
 /**
- * 
+ *
  */
 package org.kalypso.kalypso1d2d.pjt.views;
 
-import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
@@ -11,11 +10,9 @@ import java.util.Map;
 
 import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -82,9 +79,6 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
     LOCATION_MAP.put( IStaticModel1D2D.class, MODELS_FOLDER + "/static_model.gml" );
     LOCATION_MAP.put( IRoughnessClsCollection.class, "project:/.metadata/roughness.gml" );
     LOCATION_MAP.put( ISimulationDescriptionCollection.class, "project:/.metadata/result_meta_data.gml" );
-    // TODO: put the roughness database here, in order to have save mechanism...
-    // LOCATION_MAP.put( ISimulationModel.class, MODELS_FOLDER + "/simulation.gml" );
-    // TODO: add other model types here
   }
 
   private static final class KeyPoolListener implements IPoolListener
@@ -228,44 +222,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
    */
   private synchronized void resetKeyForProject( final IFolder szenarioFolder, final Class< ? extends IFeatureWrapper2> wrapperClass, final String gmlLocation )
   {
-    IPoolableObjectType newKey = null;
-
-    if( szenarioFolder != null )
-    {
-      URL context;
-      try
-      {
-        final IFolder folder = findModelContext( szenarioFolder, gmlLocation );
-        if( folder != null )
-        {
-          context = ResourceUtilities.createURL( folder );
-          newKey = new PoolableObjectType( "gml", gmlLocation, context );
-        }
-        else if( gmlLocation.startsWith( "project:/" ) )
-        {
-
-          try
-          {
-            final IFile file = szenarioFolder.getProject().getFile( gmlLocation );
-            final URL url = FileLocator.resolve( file.getLocationURI().toURL() );
-            final File gmlFile = new File( url.toURI() );
-            context = gmlFile.getParentFile().toURL();
-            final String fileName = gmlFile.getName();
-            newKey = new PoolableObjectType( "gml", fileName, context );
-          }
-          catch( final Exception e )
-          {
-            e.printStackTrace();
-          }
-        }
-      }
-      catch( final MalformedURLException e )
-      {
-        // should never happen
-        e.printStackTrace();
-        newKey = null;
-      }
-    }
+    final IPoolableObjectType newKey = keyForLocation( szenarioFolder, gmlLocation );
 
     /* If nothing changed, return */
     final KeyPoolListener oldListener = m_keyMap.get( wrapperClass );
@@ -286,6 +243,26 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
       m_keyMap.put( wrapperClass, newListener );
       pool.addPoolListener( newListener, newKey );
     }
+  }
+
+  private IPoolableObjectType keyForLocation( final IFolder szenarioFolder, final String gmlLocation )
+  {
+    if( szenarioFolder == null )
+      return null;
+
+    try
+    {
+      final URL szenarioURL = ResourceUtilities.createURL( szenarioFolder );
+      // final URL context = UrlResolverSingleton.resolveUrl( szenarioURL, gmlLocation );
+      return new PoolableObjectType( "gml", gmlLocation, szenarioURL );
+    }
+    catch( final MalformedURLException e )
+    {
+      // should never happen
+      e.printStackTrace();
+    }
+
+    return null;
   }
 
   /**
@@ -417,7 +394,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.ICommandPoster#getCommandableWorkSpace(java.lang.Class)
    */
-  public CommandableWorkspace getCommandableWorkSpace( Class< ? extends IFeatureWrapper2> wrapperClass ) throws IllegalArgumentException, CoreException
+  public CommandableWorkspace getCommandableWorkSpace( final Class< ? extends IFeatureWrapper2> wrapperClass ) throws IllegalArgumentException, CoreException
   {
     return getModelWorkspace( wrapperClass );
   }
@@ -427,7 +404,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
    */
   public ResultDB getResultDB( ) throws CoreException
   {
-    ISimulationDescriptionCollection modelResultDB = getModel( ISimulationDescriptionCollection.class );
+    final ISimulationDescriptionCollection modelResultDB = getModel( ISimulationDescriptionCollection.class );
     return new ResultDB( modelResultDB );
   }
 }
