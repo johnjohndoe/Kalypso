@@ -173,7 +173,7 @@
 							</restriction>
 						</simpleType>
 					</element>
-					<element name="code" type="string"></element>
+					<element name="code" type="int"></element>
 					<element name="exception" type="string"></element>
 					<element name="childMember"
 						type="common:StatusPropertyType" minOccurs="0"
