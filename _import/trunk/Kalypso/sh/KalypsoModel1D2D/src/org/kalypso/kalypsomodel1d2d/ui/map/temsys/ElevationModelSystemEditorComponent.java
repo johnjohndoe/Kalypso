@@ -291,7 +291,7 @@ public class ElevationModelSystemEditorComponent
     image_goToTerrain = new Image( 
                         elevationComposite.getDisplay(), 
                         KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
-                        "icons/elcl16/goTo_Terrain.gif" ).getImageData() );
+                        "icons/elcl16/23_show_elevationmodel.gif" ).getImageData() );
     showTerrain.setImage( image_goToTerrain );
     showTerrain.setLayoutData( elevFormData );
     showTerrain.addSelectionListener( new SelectionAdapter()
@@ -320,7 +320,7 @@ public class ElevationModelSystemEditorComponent
      image_goToTerrain = new Image( 
                       elevationComposite.getDisplay(), 
                       KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
-                      "icons/elcl16/remove.gif" ).getImageData() );
+                      "icons/elcl16/25_cut_elevationmodel.gif" ).getImageData() );
   deleteTerrain.setImage( image_goToTerrain );
   deleteTerrain.setLayoutData( elevFormData );
   deleteTerrain.addSelectionListener( new SelectionAdapter()
