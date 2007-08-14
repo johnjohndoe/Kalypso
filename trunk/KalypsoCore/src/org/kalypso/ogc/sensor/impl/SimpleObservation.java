@@ -65,17 +65,17 @@ public class SimpleObservation implements IObservation
 {
   private String m_name;
 
-  private boolean m_editable;
+  private final boolean m_editable;
 
-  private Object m_target;
+  private final Object m_target;
 
-  private MetadataList m_metadata;
+  private final MetadataList m_metadata;
 
-  private IAxis[] m_axes;
+  private final IAxis[] m_axes;
 
   private ITuppleModel m_tupples = null;
 
-  private String m_identifier;
+  private final String m_identifier;
 
   private final ObservationEventAdapter m_evtPrv = new ObservationEventAdapter( this );
 
@@ -114,6 +114,11 @@ public class SimpleObservation implements IObservation
   public String getName( )
   {
     return m_name;
+  }
+
+  public void setName( final String name )
+  {
+    m_name = name;
   }
 
   /**
@@ -159,7 +164,7 @@ public class SimpleObservation implements IObservation
     // TODO this leads to unsaved changes when a value is set because the underlying
     // (real) model isn't changed, just the copy of it (see setFrom and the calling
     // constructors in SimpleTuppleModel).
-    if( request != null && request.getDateRange() != null )
+    if( (request != null) && (request.getDateRange() != null) )
       return new SimpleTuppleModel( m_tupples, request.getDateRange() );
 
     return m_tupples;
@@ -195,9 +200,9 @@ public class SimpleObservation implements IObservation
 
         map.put( myA, A );
       }
-      catch( NoSuchElementException e )
+      catch( final NoSuchElementException e )
       {
-        throw new SensorException( "Values Models are not compatible. Current Observation: " + this.toString(), e );
+        throw new SensorException( "Values Models are not compatible. Current Observation: " + toString(), e );
       }
     }
 
@@ -213,7 +218,7 @@ public class SimpleObservation implements IObservation
         final Object obj = values.getElement( i, map.get( keys[j] ) );
         final int ix = m_tupples.indexOf( obj, keys[j] );
 
-        if( ix >= 0 && ixPresent != -1 )
+        if( (ix >= 0) && (ixPresent != -1) )
         {
           if( ixPresent != ix )
             break;
@@ -286,7 +291,7 @@ public class SimpleObservation implements IObservation
   /**
    * @see org.kalypso.ogc.sensor.IObservationEventProvider#addListener(org.kalypso.ogc.sensor.IObservationListener)
    */
-  public void addListener( IObservationListener listener )
+  public void addListener( final IObservationListener listener )
   {
     m_evtPrv.addListener( listener );
   }
@@ -294,7 +299,7 @@ public class SimpleObservation implements IObservation
   /**
    * @see org.kalypso.ogc.sensor.IObservationEventProvider#removeListener(org.kalypso.ogc.sensor.IObservationListener)
    */
-  public void removeListener( IObservationListener listener )
+  public void removeListener( final IObservationListener listener )
   {
     m_evtPrv.removeListener( listener );
   }
@@ -327,7 +332,7 @@ public class SimpleObservation implements IObservation
    * Sets the href
    * 
    * @param href
-   *          localisation of the observation when it comes from a zml file for instance.
+   *            localisation of the observation when it comes from a zml file for instance.
    */
   public void setHref( final String href )
   {

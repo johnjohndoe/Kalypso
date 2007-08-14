@@ -49,13 +49,13 @@ import java.util.Properties;
  */
 public class MetadataList extends Properties
 {
-  public MetadataList()
+  public MetadataList( )
   {
     super();
   }
 
   /** Sets the given properties as default values. Doesn't mean 'putAll'! */
-  public MetadataList( Properties arg0 )
+  public MetadataList( final Properties arg0 )
   {
     super( arg0 );
   }

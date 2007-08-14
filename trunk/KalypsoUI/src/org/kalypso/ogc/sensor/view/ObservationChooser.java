@@ -122,8 +122,6 @@ public class ObservationChooser extends AbstractViewer implements IRepositoryCon
 
     m_repContainer = KalypsoGisPlugin.getDefault().getRepositoryContainer();
 
-    m_repContainer.addRepositoryContainerListener( this );
-
     m_repViewer = new TreeViewer( parent, SWT.H_SCROLL | SWT.V_SCROLL );
     m_repViewer.setContentProvider( new RepositoryTreeContentProvider() );
     m_repViewer.setLabelProvider( new RepositoryLabelProvider() );
@@ -134,7 +132,7 @@ public class ObservationChooser extends AbstractViewer implements IRepositoryCon
     initToolbar();
   }
 
-  public void dispose()
+  public void dispose( )
   {
     m_repContainer.removeRepositoryContainerListener( this );
 
@@ -154,7 +152,7 @@ public class ObservationChooser extends AbstractViewer implements IRepositoryCon
       m_dumpAction.dispose();
   }
 
-  private void initActions()
+  private void initActions( )
   {
     m_addRepAction = new AddRepositoryAction( this );
     m_removeAction = new RemoveRepositoryAction( this );
@@ -168,9 +166,9 @@ public class ObservationChooser extends AbstractViewer implements IRepositoryCon
     m_viewWQRelationAction = new ViewWQRelationAction( this );
   }
 
-  private void initContextMenu()
+  private void initContextMenu( )
   {
-    final MenuManager menuMgr = new MenuManager( );
+    final MenuManager menuMgr = new MenuManager();
     menuMgr.setRemoveAllWhenShown( true );
     menuMgr.addMenuListener( new IMenuListener()
     {
@@ -219,7 +217,7 @@ public class ObservationChooser extends AbstractViewer implements IRepositoryCon
     menu.add( new Separator( IWorkbenchActionConstants.MB_ADDITIONS + "-end" ) );
   }
 
-  private void initToolbar()
+  private void initToolbar( )
   {
     final IToolBarManager toolBarManager;
 
@@ -248,14 +246,14 @@ public class ObservationChooser extends AbstractViewer implements IRepositoryCon
    */
   public IObservation isObservationSelected( final ISelection selection )
   {
-    final IStructuredSelection sel = (IStructuredSelection)selection;
+    final IStructuredSelection sel = (IStructuredSelection) selection;
     if( sel.isEmpty() )
       return null;
 
     final Object element = sel.getFirstElement();
     if( element instanceof IAdaptable )
     {
-      final IObservation obs = (IObservation)( (IAdaptable)element ).getAdapter( IObservation.class );
+      final IObservation obs = (IObservation) ((IAdaptable) element).getAdapter( IObservation.class );
 
       return obs;
     }
@@ -269,18 +267,18 @@ public class ObservationChooser extends AbstractViewer implements IRepositoryCon
    */
   public IRepository isRepository( final ISelection selection )
   {
-    final IStructuredSelection sel = (IStructuredSelection)selection;
+    final IStructuredSelection sel = (IStructuredSelection) selection;
     if( sel.isEmpty() )
       return null;
 
     final Object element = sel.getFirstElement();
-    if( !( element instanceof IRepository ) )
+    if( !(element instanceof IRepository) )
       return null;
 
-    return (IRepository)element;
+    return (IRepository) element;
   }
 
-  public TreeViewer getViewer()
+  public TreeViewer getViewer( )
   {
     return m_repViewer;
   }
@@ -289,7 +287,7 @@ public class ObservationChooser extends AbstractViewer implements IRepositoryCon
    * @see org.eclipse.jface.viewers.Viewer#getControl()
    */
   @Override
-  public Control getControl()
+  public Control getControl( )
   {
     return m_repViewer.getControl();
   }
@@ -298,7 +296,7 @@ public class ObservationChooser extends AbstractViewer implements IRepositoryCon
    * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
    */
   @Override
-  public ISelection getSelection()
+  public ISelection getSelection( )
   {
     return m_repViewer.getSelection();
   }
@@ -316,7 +314,7 @@ public class ObservationChooser extends AbstractViewer implements IRepositoryCon
    * @see org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
    */
   @Override
-  public void addSelectionChangedListener( ISelectionChangedListener listener )
+  public void addSelectionChangedListener( final ISelectionChangedListener listener )
   {
     m_repViewer.addSelectionChangedListener( listener );
   }
@@ -325,35 +323,26 @@ public class ObservationChooser extends AbstractViewer implements IRepositoryCon
    * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
    */
   @Override
-  public void removeSelectionChangedListener( ISelectionChangedListener listener )
+  public void removeSelectionChangedListener( final ISelectionChangedListener listener )
   {
     m_repViewer.removeSelectionChangedListener( listener );
+  }
+
+  public IRepositoryContainer getRepositoryContainer( )
+  {
+    return m_repContainer;
+  }
+
+  public Shell getShell( )
+  {
+    return getControl().getShell();
   }
 
   /**
    * @see org.kalypso.repository.container.IRepositoryContainerListener#onRepositoryContainerChanged()
    */
-  public void onRepositoryContainerChanged()
+  public void onRepositoryContainerChanged( )
   {
-    final Runnable r = new Runnable()
-    {
-      public void run()
-      {
-        getViewer().refresh();
-      }
-    };
-
-    if( !getControl().isDisposed() )
-      getControl().getDisplay().asyncExec( r );
-  }
-
-  public IRepositoryContainer getRepositoryContainer()
-  {
-    return m_repContainer;
-  }
-
-  public Shell getShell()
-  {
-    return getControl().getShell();
+    // nothing to do here, content-provider refreshes tree
   }
 }

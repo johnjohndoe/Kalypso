@@ -42,7 +42,9 @@ package org.kalypso.repository.file;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.IOException;
 
+import org.apache.commons.io.FileUtils;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.java.io.filter.AcceptAllFileFilter;
 import org.kalypso.repository.AbstractRepository;
@@ -210,4 +212,25 @@ public class FileRepository extends AbstractRepository
 
     return super.getAdapter( anotherClass );
   }
+
+  public void makeItem( final File dir ) throws IOException
+  {
+    if( !dir.exists() )
+      FileUtils.forceMkdir( dir );
+
+    fireRepositoryStructureChanged();
+  }
+
+  public void deleteItem( final FileItem item ) throws IOException
+  {
+    final File file = item.getFile();
+
+    if( file.isDirectory() )
+      FileUtils.deleteDirectory( file );
+    else
+      FileUtils.forceDelete( file );
+
+    fireRepositoryStructureChanged();
+  }
+
 }

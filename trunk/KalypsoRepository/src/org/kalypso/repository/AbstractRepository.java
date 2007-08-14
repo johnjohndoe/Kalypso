@@ -69,7 +69,7 @@ public abstract class AbstractRepository implements IRepository
 
   private final String m_conf;
 
-  public AbstractRepository( String name, String factory, String conf, boolean readOnly )
+  public AbstractRepository( final String name, final String factory, final String conf, final boolean readOnly )
   {
     m_name = name;
     m_factory = factory;
@@ -83,23 +83,23 @@ public abstract class AbstractRepository implements IRepository
   /**
    * @see org.kalypso.repository.IRepository#dispose()
    */
-  public void dispose()
+  public void dispose( )
   {
     m_listeners.clear();
     m_properties.clear();
   }
 
-  public String getFactory()
+  public String getFactory( )
   {
     return m_factory;
   }
 
-  public String getConfiguration()
+  public String getConfiguration( )
   {
     return m_conf;
   }
 
-  public boolean isReadOnly()
+  public boolean isReadOnly( )
   {
     return m_readOnly;
   }
@@ -112,7 +112,7 @@ public abstract class AbstractRepository implements IRepository
   /**
    * @see org.kalypso.repository.IRepository#getDescription()
    */
-  public String getDescription()
+  public String getDescription( )
   {
     return "";
   }
@@ -128,11 +128,11 @@ public abstract class AbstractRepository implements IRepository
   /**
    * @see org.kalypso.repository.IRepository#fireRepositoryStructureChanged()
    */
-  public void fireRepositoryStructureChanged()
+  public void fireRepositoryStructureChanged( )
   {
-    for( Iterator iter = m_listeners.iterator(); iter.hasNext(); )
+    for( final Iterator iter = m_listeners.iterator(); iter.hasNext(); )
     {
-      IRepositoryListener element = (IRepositoryListener)iter.next();
+      final IRepositoryListener element = (IRepositoryListener) iter.next();
 
       element.onRepositoryStructureChanged();
     }
@@ -149,7 +149,7 @@ public abstract class AbstractRepository implements IRepository
   /**
    * @see org.kalypso.repository.IRepositoryItem#getName()
    */
-  public String getName()
+  public String getName( )
   {
     return m_name;
   }
@@ -157,7 +157,7 @@ public abstract class AbstractRepository implements IRepository
   /**
    * @see org.kalypso.repository.IRepositoryItem#getParent()
    */
-  public IRepositoryItem getParent()
+  public IRepositoryItem getParent( )
   {
     return null;
   }
@@ -168,8 +168,7 @@ public abstract class AbstractRepository implements IRepository
    * 
    * @return item if found, else null
    */
-  protected final IRepositoryItem findItemRecursive( final IRepositoryItem item, final String id )
-      throws RepositoryException
+  protected final IRepositoryItem findItemRecursive( final IRepositoryItem item, final String id ) throws RepositoryException
   {
     if( item.getIdentifier().equalsIgnoreCase( id ) )
       return item;
@@ -196,7 +195,7 @@ public abstract class AbstractRepository implements IRepository
   public String toString( )
   {
     final String desc = getDescription();
-    if( desc != null && desc.length() > 0 )
+    if( (desc != null) && (desc.length() > 0) )
       return getName() + " (" + desc + ")";
 
     return getName();
@@ -213,7 +212,7 @@ public abstract class AbstractRepository implements IRepository
   /**
    * @see org.kalypso.repository.IRepositoryItem#getRepository()
    */
-  public IRepository getRepository()
+  public IRepository getRepository( )
   {
     return this;
   }
@@ -229,27 +228,26 @@ public abstract class AbstractRepository implements IRepository
   /**
    * Dumps the contents of this item and all its children using recursion
    */
-  private void dumpRecursive( final Writer writer, final IRepositoryItem item, final String indent, final IProgressMonitor monitor )
-      throws RepositoryException, InterruptedException
+  private void dumpRecursive( final Writer writer, final IRepositoryItem item, final String indent, final IProgressMonitor monitor ) throws RepositoryException, InterruptedException
   {
     if( monitor.isCanceled() )
       throw new InterruptedException();
-    
+
     if( item == null )
       return;
-    
+
     monitor.subTask( item.getIdentifier() );
-    
+
     try
     {
       // let's look if the item can be adapted to properties. In the positive,
       // we dump the properties too.
-      final Properties props = (Properties)item.getAdapter( Properties.class );
+      final Properties props = (Properties) item.getAdapter( Properties.class );
       if( props != null )
         writer.write( indent + item.toString() + " Properties: " + PropertiesHelper.format( props, ';' ) );
       else
         writer.write( indent + item.toString() );
-      
+
       writer.write( "\n" );
     }
     catch( final IOException e )
@@ -265,7 +263,7 @@ public abstract class AbstractRepository implements IRepository
 
     for( int i = 0; i < items.length; i++ )
       dumpRecursive( writer, items[i], recIndent, monitor );
-    
+
     monitor.worked( 1 );
   }
 
@@ -288,7 +286,7 @@ public abstract class AbstractRepository implements IRepository
   /**
    * @see org.kalypso.repository.IRepository#getProperties()
    */
-  public Properties getProperties()
+  public Properties getProperties( )
   {
     return m_properties;
   }
