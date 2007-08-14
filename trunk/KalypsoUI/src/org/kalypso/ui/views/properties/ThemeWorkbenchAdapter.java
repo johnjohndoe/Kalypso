@@ -74,8 +74,6 @@ public class ThemeWorkbenchAdapter extends WorkbenchAdapter
   @Override
   public FontData getFont( final Object element )
   {
-    System.out.print( "Font for: " + element );
-
     final FontData defaultFont = super.getFont( element );
     final FontData standardFont = defaultFont == null ? JFaceResources.getDialogFont().getFontData()[0] : defaultFont;
 
@@ -89,10 +87,7 @@ public class ThemeWorkbenchAdapter extends WorkbenchAdapter
     if( mapModell != null && mapModell.getActiveTheme() == m_theme )
     {
       fontDesc = fontDesc.setStyle( SWT.BOLD );
-      System.out.print( ": BOLD" );
     }
-
-    System.out.println();
 
     return fontDesc.getFontData()[0];
   }
