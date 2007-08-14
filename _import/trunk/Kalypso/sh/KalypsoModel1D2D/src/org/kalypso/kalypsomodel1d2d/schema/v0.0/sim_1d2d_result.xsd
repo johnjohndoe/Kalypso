@@ -67,7 +67,7 @@ Provide schema for the result model metadata of 1d2d simulations.
 					</xs:element>
 					<xs:element name="stepNumber" type="xs:int">
 						<xs:annotation>
-							<xs:documentation><![CDATA[Number of simulated timestep, may be -1 for 'steady' or 'max' steps.]]></xs:documentation>
+							<xs:documentation><![CDATA[Number of simulated timestep, may be null for 'steady' or 'max' steps.]]></xs:documentation>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="isRestart" type="xs:boolean">
