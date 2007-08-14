@@ -55,17 +55,12 @@ import org.kalypsodeegree.model.feature.Feature;
  * @author Thomas Jung
  * 
  */
-public class CalcUnitResult extends ResultMeta
+public class CalcUnitResultMeta extends ResultMeta implements ICalcUnitResultMeta
 {
-  private static final QName QNAME_PROP_CALC_START_TIME = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "simulationStartTime" );
 
-  private static final QName QNAME_PROP_CALC_END_TIME = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "simulationEndTime" );
-
-  private static final QName QNAME_PROP_CALC_UNIT_ID = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "calcUnitID" );
-
-  public CalcUnitResult( Feature featureToBind, QName qnameToBind )
+  public CalcUnitResultMeta( Feature featureToBind )
   {
-    super( featureToBind, qnameToBind );
+    super( featureToBind, new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "CalcUnitResult" ) );
   }
 
   public void setCalcStartTime( final Date startTime ) throws DatatypeConfigurationException
@@ -76,7 +71,7 @@ public class CalcUnitResult extends ResultMeta
 
   public Date getCalcStartTime( )
   {
-    return DateUtilities.toDate( (XMLGregorianCalendar) getFeature().getProperty( CalcUnitResult.QNAME_PROP_CALC_START_TIME ) );
+    return DateUtilities.toDate( (XMLGregorianCalendar) getFeature().getProperty( QNAME_PROP_CALC_START_TIME ) );
   }
 
   public void setCalcEndTime( final Date endTime ) throws DatatypeConfigurationException
@@ -87,7 +82,7 @@ public class CalcUnitResult extends ResultMeta
 
   public Date getCalcEndTime( )
   {
-    return DateUtilities.toDate( (XMLGregorianCalendar) getFeature().getProperty( CalcUnitResult.QNAME_PROP_CALC_END_TIME ) );
+    return DateUtilities.toDate( (XMLGregorianCalendar) getFeature().getProperty( QNAME_PROP_CALC_END_TIME ) );
   }
 
   public String getCalcUnit( )
