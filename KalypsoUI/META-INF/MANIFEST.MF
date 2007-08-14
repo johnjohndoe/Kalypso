@@ -6,6 +6,7 @@ Bundle-Version: 1.0.0
 Bundle-ClassPath: lib/swtcalendar.jar,
  lib/jcommon-0.9.6.jar,
  lib/jfreechart-0.9.21.jar,
+ lib/opencsv/opencsv-1.8.jar,
  .
 Bundle-Activator: org.kalypso.ui.KalypsoGisPlugin
 Bundle-Vendor: kalypso.org
@@ -125,6 +126,7 @@ Export-Package: com.keypoint,
  org.kalypso.ogc.sensor.view.propertySource,
  org.kalypso.ogc.sensor.view.test,
  org.kalypso.ogc.sensor.view.wizard,
+ org.kalypso.ogc.sensor.view.wizard.cvssheet,
  org.kalypso.ogc.sensor.view.wq,
  org.kalypso.ogc.sensor.view.wq.diagram,
  org.kalypso.ogc.sensor.view.wq.table,

@@ -40,11 +40,17 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.repository.view;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.repository.AbstractRepository;
 import org.kalypso.repository.IRepositoryItem;
+import org.kalypso.repository.IRepositoryListener;
 import org.kalypso.repository.RepositoryException;
 import org.kalypso.repository.container.IRepositoryContainer;
 
@@ -55,12 +61,14 @@ import org.kalypso.repository.container.IRepositoryContainer;
  */
 public class RepositoryTreeContentProvider implements ITreeContentProvider
 {
+  private final Map<AbstractRepository, IRepositoryListener> m_repositoryListeners = new HashMap<AbstractRepository, IRepositoryListener>();
+
   /**
    * Helper
    * 
    * @return item or throws IllegalArgumentException if type is not an IRepositoryItem
    */
-  private IRepositoryItem testArg( Object arg )
+  private IRepositoryItem testArg( final Object arg )
   {
     if( !(arg instanceof IRepositoryItem) )
       throw new IllegalArgumentException();
@@ -79,7 +87,7 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
     {
       return item.getChildren();
     }
-    catch( RepositoryException e )
+    catch( final RepositoryException e )
     {
       e.printStackTrace();
       MessageDialog.openError( PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Operation konnte nicht durchgeführt werden", e.getLocalizedMessage() );
@@ -102,7 +110,7 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
     {
       return item.getParent();
     }
-    catch( RepositoryException e )
+    catch( final RepositoryException e )
     {
       e.printStackTrace();
       MessageDialog.openError( PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Operation konnte nicht durchgeführt werden", e.getLocalizedMessage() );
@@ -122,7 +130,7 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
     {
       return item.hasChildren();
     }
-    catch( RepositoryException e )
+    catch( final RepositoryException e )
     {
       e.printStackTrace();
       MessageDialog.openError( PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Operation konnte nicht durchgeführt werden", e.getLocalizedMessage() );
@@ -153,8 +161,54 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
    * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
    *      java.lang.Object)
    */
-  public void inputChanged( Viewer viewer, Object oldInput, Object newInput )
+  public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
-    // empty
+    /* oldInput has an IRepositoryContainerListener attached? remove old listener */
+    if( oldInput instanceof IRepositoryContainer )
+    {
+      final IRepositoryContainer con = (IRepositoryContainer) oldInput;
+
+      final List repositories = con.getRepositories();
+      for( final Object object : repositories )
+      {
+        if( !(object instanceof AbstractRepository) )
+          continue;
+
+        final AbstractRepository ar = (AbstractRepository) object;
+
+        final IRepositoryListener listener = m_repositoryListeners.get( ar );
+        if( listener == null )
+          continue;
+
+        ar.removeRepositoryListener( listener );
+      }
+    }
+
+    /* attach new IRepositoryContainerLister to new repository input! */
+    if( newInput instanceof IRepositoryContainer )
+    {
+      final IRepositoryContainer con = (IRepositoryContainer) newInput;
+
+      final List repositories = con.getRepositories();
+      for( final Object object : repositories )
+      {
+        if( !(object instanceof AbstractRepository) )
+          continue;
+
+        final AbstractRepository ar = (AbstractRepository) object;
+        final IRepositoryListener listener = new IRepositoryListener()
+        {
+          public void onRepositoryStructureChanged( )
+          {
+            viewer.refresh();
+          }
+        };
+
+        ar.addRepositoryListener( listener );
+        m_repositoryListeners.put( ar, listener );
+      }
+
+    }
+
   }
 }
