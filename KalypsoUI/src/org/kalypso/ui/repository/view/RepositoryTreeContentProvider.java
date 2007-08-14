@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,19 +36,18 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.repository.view;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.ui.PlatformUI;
-import org.kalypso.repository.AbstractRepository;
+import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.IRepositoryListener;
 import org.kalypso.repository.RepositoryException;
@@ -61,7 +60,7 @@ import org.kalypso.repository.container.IRepositoryContainer;
  */
 public class RepositoryTreeContentProvider implements ITreeContentProvider
 {
-  private final Map<AbstractRepository, IRepositoryListener> m_repositoryListeners = new HashMap<AbstractRepository, IRepositoryListener>();
+  private final Map<IRepository, IRepositoryListener> m_repositoryListeners = new HashMap<IRepository, IRepositoryListener>();
 
   /**
    * Helper
@@ -146,7 +145,7 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
   {
     final IRepositoryContainer container = (IRepositoryContainer) inputElement;
 
-    return container.getRepositories().toArray();
+    return container.getRepositories();
   }
 
   /**
@@ -168,14 +167,9 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
     {
       final IRepositoryContainer con = (IRepositoryContainer) oldInput;
 
-      final List repositories = con.getRepositories();
-      for( final Object object : repositories )
+      final IRepository[] repositories = con.getRepositories();
+      for( final IRepository ar : repositories )
       {
-        if( !(object instanceof AbstractRepository) )
-          continue;
-
-        final AbstractRepository ar = (AbstractRepository) object;
-
         final IRepositoryListener listener = m_repositoryListeners.get( ar );
         if( listener == null )
           continue;
@@ -189,13 +183,9 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
     {
       final IRepositoryContainer con = (IRepositoryContainer) newInput;
 
-      final List repositories = con.getRepositories();
-      for( final Object object : repositories )
+      final IRepository[] repositories = con.getRepositories();
+      for( final IRepository ar : repositories )
       {
-        if( !(object instanceof AbstractRepository) )
-          continue;
-
-        final AbstractRepository ar = (AbstractRepository) object;
         final IRepositoryListener listener = new IRepositoryListener()
         {
           public void onRepositoryStructureChanged( )

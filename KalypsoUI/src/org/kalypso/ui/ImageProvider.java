@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui;
 
@@ -116,15 +116,18 @@ public class ImageProvider
 
   public static final ImageDescriptor IMAGE_ZML_REPOSITORY_ITEM = ImageProvider.id( "icons/repository/repository_item.gif" );
 
-  public static final ImageDescriptor IMAGE_ZML_REPOSITORY_ADD = ImageProvider.id( "icons/repository/repository_add.gif" );
+// public static final ImageDescriptor IMAGE_ZML_REPOSITORY_ADD = ImageProvider.id(
+// "icons/repository/repository_add.gif" );
 
-  public static final ImageDescriptor IMAGE_ZML_REPOSITORY_REMOVE = ImageProvider.id( "icons/repository/repository_remove.gif" );
+// public static final ImageDescriptor IMAGE_ZML_REPOSITORY_REMOVE = ImageProvider.id(
+// "icons/repository/repository_remove.gif" );
 
-  public static final ImageDescriptor IMAGE_ZML_REPOSITORY_CONF = ImageProvider.id( "icons/util/settings.gif" );
+// public static final ImageDescriptor IMAGE_ZML_REPOSITORY_CONF = ImageProvider.id( "icons/util/settings.gif" );
 
-  public static final ImageDescriptor IMAGE_ZML_REPOSITORY_RELOAD = ImageProvider.id( "icons/util/update.gif" );
+// public static final ImageDescriptor IMAGE_ZML_REPOSITORY_RELOAD = ImageProvider.id( "icons/util/update.gif" );
 
-  public static final ImageDescriptor IMAGE_ZML_REPOSITORY_COLLAPSE = ImageProvider.id( "icons/util/tree_collapse_all.gif" );
+// public static final ImageDescriptor IMAGE_ZML_REPOSITORY_COLLAPSE = ImageProvider.id(
+// "icons/util/tree_collapse_all.gif" );
 
   public static final ImageDescriptor IMAGE_ZML_REPOSITORY_EXPAND = ImageProvider.id( "icons/util/tree_expand_all.gif" );
 

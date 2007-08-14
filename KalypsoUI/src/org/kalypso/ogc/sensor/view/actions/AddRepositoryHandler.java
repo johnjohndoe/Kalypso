@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,12 +36,19 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.view.actions;
 
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.ISources;
+import org.eclipse.ui.IWorkbenchPart;
 import org.kalypso.ogc.sensor.view.ObservationChooser;
 import org.kalypso.ui.ImageProvider;
 
@@ -50,21 +57,23 @@ import org.kalypso.ui.ImageProvider;
  * 
  * @author schlienger
  */
-public class AddRepositoryAction extends AbstractObservationChooserAction
+public class AddRepositoryHandler extends AbstractHandler
 {
-  public AddRepositoryAction( final ObservationChooser explorer )
-  {
-    super( explorer, "Repository hinzufügen", ImageProvider.IMAGE_ZML_REPOSITORY_ADD, "Fügt ein Repository hinzu..." );
-  }
-
   /**
-   * @see org.eclipse.jface.action.IAction#run()
+   * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
   @Override
-  public void run( )
+  public Object execute( final ExecutionEvent event )
   {
-    final Runnable runnable = new AddRepositoryRunnable( getRepositoryContainer(), getShell() );
+    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+    final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
+    final IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
+    final ObservationChooser chooser = (ObservationChooser) part.getAdapter( ObservationChooser.class );
+
+    final Runnable runnable = new AddRepositoryRunnable( chooser.getRepositoryContainer(), shell );
     runnable.run();
+
+    return Status.OK_STATUS;
   }
 
   /**

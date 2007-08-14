@@ -43,13 +43,6 @@ package org.kalypso.ogc.sensor.view;
 
 import org.eclipse.compare.internal.AbstractViewer;
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.IMenuListener;
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.IToolBarManager;
-import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -58,24 +51,10 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IViewSite;
-import org.eclipse.ui.IWorkbenchActionConstants;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
-import org.kalypso.ogc.sensor.view.actions.AddRepositoryAction;
-import org.kalypso.ogc.sensor.view.actions.CollapseAllAction;
-import org.kalypso.ogc.sensor.view.actions.ConfigurePreviewAction;
-import org.kalypso.ogc.sensor.view.actions.CopyLinkAction;
-import org.kalypso.ogc.sensor.view.actions.DumpStructureAction;
-import org.kalypso.ogc.sensor.view.actions.ExportAsFileAction;
-import org.kalypso.ogc.sensor.view.actions.ReloadAction;
-import org.kalypso.ogc.sensor.view.actions.RemoveRepositoryAction;
-import org.kalypso.ogc.sensor.view.actions.ViewWQRelationAction;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.container.IRepositoryContainer;
-import org.kalypso.repository.container.IRepositoryContainerListener;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.repository.view.RepositoryLabelProvider;
 import org.kalypso.ui.repository.view.RepositoryTreeContentProvider;
@@ -85,160 +64,20 @@ import org.kalypso.ui.repository.view.RepositoryTreeContentProvider;
  * 
  * @author schlienger (19.05.2005)
  */
-public class ObservationChooser extends AbstractViewer implements IRepositoryContainerListener, ISelectionProvider
+public class ObservationChooser extends AbstractViewer implements ISelectionProvider
 {
   private final IRepositoryContainer m_repContainer;
 
   private final TreeViewer m_repViewer;
 
-  private final IViewSite m_site;
-
-  private AddRepositoryAction m_addRepAction;
-
-  private RemoveRepositoryAction m_removeAction;
-
-  private ConfigurePreviewAction m_confAction;
-
-  private ReloadAction m_reloadAction;
-
-  private CollapseAllAction m_collapseAction;
-
-  private ExportAsFileAction m_exportAsFileAction;
-
-  private CopyLinkAction m_copyLinkAction;
-
-  private DumpStructureAction m_dumpAction;
-
-  private IAction m_viewWQRelationAction;
-
   public ObservationChooser( final Composite parent )
   {
-    this( parent, null );
-  }
-
-  public ObservationChooser( final Composite parent, final IViewSite site )
-  {
-    m_site = site;
-
     m_repContainer = KalypsoGisPlugin.getDefault().getRepositoryContainer();
 
     m_repViewer = new TreeViewer( parent, SWT.H_SCROLL | SWT.V_SCROLL );
     m_repViewer.setContentProvider( new RepositoryTreeContentProvider() );
     m_repViewer.setLabelProvider( new RepositoryLabelProvider() );
     m_repViewer.setInput( m_repContainer );
-
-    initActions();
-    initContextMenu();
-    initToolbar();
-  }
-
-  public void dispose( )
-  {
-    m_repContainer.removeRepositoryContainerListener( this );
-
-    if( m_removeAction != null )
-      m_removeAction.dispose();
-
-    if( m_confAction != null )
-      m_confAction.dispose();
-
-    if( m_reloadAction != null )
-      m_reloadAction.dispose();
-
-    if( m_exportAsFileAction != null )
-      m_exportAsFileAction.dispose();
-
-    if( m_dumpAction != null )
-      m_dumpAction.dispose();
-  }
-
-  private void initActions( )
-  {
-    m_addRepAction = new AddRepositoryAction( this );
-    m_removeAction = new RemoveRepositoryAction( this );
-    m_confAction = new ConfigurePreviewAction( this );
-    m_reloadAction = new ReloadAction( this );
-    m_dumpAction = new DumpStructureAction( this );
-    m_collapseAction = new CollapseAllAction( this );
-    m_exportAsFileAction = new ExportAsFileAction( this );
-    m_copyLinkAction = new CopyLinkAction( this );
-
-    m_viewWQRelationAction = new ViewWQRelationAction( this );
-  }
-
-  private void initContextMenu( )
-  {
-    final MenuManager menuMgr = new MenuManager();
-    menuMgr.setRemoveAllWhenShown( true );
-    menuMgr.addMenuListener( new IMenuListener()
-    {
-      public void menuAboutToShow( final IMenuManager manager )
-      {
-        fillContextMenu( manager );
-      }
-    } );
-
-    final Menu menu = menuMgr.createContextMenu( m_repViewer.getTree() );
-    m_repViewer.getTree().setMenu( menu );
-
-    if( m_site != null )
-      m_site.registerContextMenu( "org.kalypso.ogc.sensor.view.observationBrowser", menuMgr, m_repViewer );
-  }
-
-  /**
-   * Called when the context menu is about to open.
-   */
-  protected void fillContextMenu( final IMenuManager menu )
-  {
-    menu.add( m_addRepAction );
-    menu.add( m_removeAction );
-    menu.add( new Separator() );
-    menu.add( m_confAction );
-    menu.add( m_reloadAction );
-    menu.add( m_dumpAction );
-    menu.add( new Separator() );
-    menu.add( m_collapseAction );
-    menu.add( new Separator() );
-    menu.add( m_exportAsFileAction );
-
-    final IObservation obs = isObservationSelected( m_repViewer.getSelection() );
-    if( obs != null )
-    {
-      menu.add( m_copyLinkAction );
-
-      final String pTable = obs.getMetadataList().getProperty( TimeserieConstants.MD_WQTABLE );
-      if( pTable != null )
-        menu.add( m_viewWQRelationAction );
-
-      menu.add( new Separator() );
-    }
-
-    menu.add( new Separator( IWorkbenchActionConstants.MB_ADDITIONS ) );
-    menu.add( new Separator( IWorkbenchActionConstants.MB_ADDITIONS + "-end" ) );
-  }
-
-  private void initToolbar( )
-  {
-    final IToolBarManager toolBarManager;
-
-    if( m_site != null )
-      toolBarManager = m_site.getActionBars().getToolBarManager();
-    else
-      toolBarManager = new ToolBarManager();
-
-    toolBarManager.add( m_addRepAction );
-    toolBarManager.add( m_removeAction );
-    toolBarManager.add( new Separator() );
-    toolBarManager.add( m_confAction );
-    toolBarManager.add( m_reloadAction );
-    toolBarManager.add( m_dumpAction );
-    toolBarManager.add( new Separator() );
-    toolBarManager.add( m_collapseAction );
-    toolBarManager.add( new Separator() );
-    toolBarManager.add( m_exportAsFileAction );
-
-    if( m_site != null )
-      m_site.getActionBars().updateActionBars();
   }
 
   /**
@@ -336,13 +175,5 @@ public class ObservationChooser extends AbstractViewer implements IRepositoryCon
   public Shell getShell( )
   {
     return getControl().getShell();
-  }
-
-  /**
-   * @see org.kalypso.repository.container.IRepositoryContainerListener#onRepositoryContainerChanged()
-   */
-  public void onRepositoryContainerChanged( )
-  {
-    // nothing to do here, content-provider refreshes tree
   }
 }

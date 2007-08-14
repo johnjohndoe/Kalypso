@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,56 +36,34 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.view.actions;
 
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.wizard.WizardDialog;
-import org.kalypso.ogc.sensor.IObservation;
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.ui.ISources;
+import org.eclipse.ui.IWorkbenchPart;
 import org.kalypso.ogc.sensor.view.ObservationChooser;
-import org.kalypso.ogc.sensor.view.wizard.ExportAsFileWizard;
-import org.kalypso.ui.ImageProvider;
 
 /**
  * @author schlienger
  */
-public class ExportAsFileAction extends AbstractObservationChooserAction implements ISelectionChangedListener
+public class CollapseAllHandler extends AbstractHandler
 {
-  public ExportAsFileAction( final ObservationChooser explorer )
-  {
-    super( explorer, "Datei herunterladen", ImageProvider.IMAGE_ZML_DOWNLOAD,
-        "Lädt die selektierte Zeitreihe als lokale Datei herunter" );
-
-    explorer.addSelectionChangedListener( this );
-    setEnabled( explorer.isObservationSelected( explorer.getSelection() ) != null );
-  }
-
-  public void dispose()
-  {
-    getExplorer().removeSelectionChangedListener( this );
-  }
-
   /**
-   * @see org.eclipse.jface.action.Action#run()
+   * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
   @Override
-  public void run( )
+  public Object execute( final ExecutionEvent event )
   {
-    final IObservation obs = getExplorer().isObservationSelected( getExplorer().getSelection() );
-    if( obs == null )
-      return;
-
-    final WizardDialog dialog = new WizardDialog( getShell(), new ExportAsFileWizard( obs ) );
-    dialog.open();
+    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+    final IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
+    final ObservationChooser chooser = (ObservationChooser) part.getAdapter( ObservationChooser.class );
+    chooser.getViewer().collapseAll();
+    return Status.OK_STATUS;
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
-   */
-  public void selectionChanged( SelectionChangedEvent event )
-  {
-    setEnabled( getExplorer().isObservationSelected( event.getSelection() ) != null );
-  }
 }

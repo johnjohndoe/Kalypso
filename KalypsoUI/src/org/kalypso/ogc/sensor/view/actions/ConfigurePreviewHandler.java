@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,21 +36,25 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.view.actions;
 
 import java.text.DateFormat;
 
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.window.Window;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.ISources;
+import org.eclipse.ui.IWorkbenchPart;
 import org.kalypso.contribs.eclipse.jface.dialog.DateRangeInputDialog;
 import org.kalypso.contribs.eclipse.swt.widgets.DateRangeInputControlStuct;
 import org.kalypso.ogc.sensor.cache.ObservationCache;
 import org.kalypso.ogc.sensor.view.ObservationChooser;
 import org.kalypso.repository.IRepository;
-import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
@@ -58,28 +62,24 @@ import org.kalypso.ui.KalypsoGisPlugin;
  * 
  * @author schlienger
  */
-public class ConfigurePreviewAction extends AbstractObservationChooserAction implements ISelectionChangedListener
+public class ConfigurePreviewHandler extends AbstractHandler
 {
-  public ConfigurePreviewAction( final ObservationChooser explorer )
-  {
-    super( explorer, "Einstellungen", ImageProvider.IMAGE_ZML_REPOSITORY_CONF,
-        "Einstellungen der Zeitreihen-Vorschau setzen" );
-
-    explorer.addSelectionChangedListener( this );
-
-    setEnabled( explorer.isRepository( explorer.getSelection() ) != null );
-  }
-
+  /**
+   * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
+   */
   @Override
-  public void run( )
+  public Object execute( final ExecutionEvent event )
   {
-    final IRepository rep = getExplorer().isRepository( getExplorer().getSelection() );
-    if( rep == null )
-      return;
+    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+    final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
+    final IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
+    final ObservationChooser chooser = (ObservationChooser) part.getAdapter( ObservationChooser.class );
 
-    final DateRangeInputDialog dlg = new DateRangeInputDialog( getShell(), "Zeitraum-Eingabe",
-        "Bitte geben Sie einen Zeitraum ein.", DateRangeInputControlStuct.create( rep.getProperties(), DateFormat
-            .getDateTimeInstance() ) );
+    final IRepository rep = chooser.isRepository( chooser.getSelection() );
+    if( rep == null )
+      return Status.OK_STATUS;
+
+    final DateRangeInputDialog dlg = new DateRangeInputDialog( shell, "Zeitraum-Eingabe", "Bitte geben Sie einen Zeitraum ein.", DateRangeInputControlStuct.create( rep.getProperties(), DateFormat.getDateTimeInstance() ) );
 
     if( dlg.open() == Window.OK )
     {
@@ -94,15 +94,6 @@ public class ConfigurePreviewAction extends AbstractObservationChooserAction imp
       // changed
       ObservationCache.clearCache();
     }
-  }
-
-  public void selectionChanged( final SelectionChangedEvent event )
-  {
-    setEnabled( getExplorer().isRepository( event.getSelection() ) != null );
-  }
-
-  public void dispose()
-  {
-    getExplorer().removeSelectionChangedListener( this );
+    return Status.OK_STATUS;
   }
 }

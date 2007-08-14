@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,60 +36,46 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.view.actions;
 
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.ISources;
+import org.eclipse.ui.IWorkbenchPart;
+import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.view.ObservationChooser;
-import org.kalypso.repository.IRepository;
-import org.kalypso.repository.container.IRepositoryContainer;
-import org.kalypso.ui.ImageProvider;
+import org.kalypso.ogc.sensor.view.wizard.ExportAsFileWizard;
 
 /**
- * Ein Repository hinzufügen.
- * 
  * @author schlienger
  */
-public class RemoveRepositoryAction extends AbstractObservationChooserAction implements ISelectionChangedListener
+public class ExportAsFileHandler extends AbstractHandler
 {
-  public RemoveRepositoryAction( final ObservationChooser explorer )
-  {
-    super( explorer, "Repository entfernen", ImageProvider.IMAGE_ZML_REPOSITORY_REMOVE, "Entfernt ein Repository..." );
-
-    explorer.addSelectionChangedListener( this );
-
-    setEnabled( explorer.isRepository( explorer.getSelection() ) != null );
-  }
-
-  public void dispose( )
-  {
-    getExplorer().removeSelectionChangedListener( this );
-  }
-
   /**
-   * @see org.eclipse.jface.action.IAction#run()
+   * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
   @Override
-  public void run( )
+  public Object execute( final ExecutionEvent event )
   {
+    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+    final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
+    final IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
+    final ObservationChooser chooser = (ObservationChooser) part.getAdapter( ObservationChooser.class );
 
-    final IRepositoryContainer container = getExplorer().getRepositoryContainer();
-    final IRepository rep = getExplorer().isRepository( getExplorer().getSelection() );
-    final Shell shell = getShell();
+    final IObservation obs = chooser.isObservationSelected( chooser.getSelection() );
+    if( obs == null )
+      return Status.OK_STATUS;
 
-    final Runnable runnable = new RemoveRepositoryRunnable( container, rep, shell );
-    runnable.run();
+    final WizardDialog dialog = new WizardDialog( shell, new ExportAsFileWizard( obs ) );
+    dialog.open();
 
+    return Status.OK_STATUS;
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
-   */
-  public void selectionChanged( final SelectionChangedEvent event )
-  {
-    setEnabled( getExplorer().isRepository( event.getSelection() ) != null );
-  }
 }

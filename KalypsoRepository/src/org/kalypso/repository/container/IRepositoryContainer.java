@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,11 +36,10 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.repository.container;
 
-import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.kalypso.repository.IRepository;
@@ -53,16 +52,15 @@ import org.kalypso.repository.IRepositoryItem;
  */
 public interface IRepositoryContainer
 {
-  public List getRepositories();
+  public IRepository[] getRepositories( );
 
   /**
    * Tries to find the item within the repository list.
    * 
    * @param id
    * @return item if found
-   * 
    * @throws NoSuchElementException
-   *           when item could not be found.
+   *             when item could not be found.
    */
   public IRepositoryItem findItem( final String id ) throws NoSuchElementException;
 
@@ -74,5 +72,5 @@ public interface IRepositoryContainer
 
   public void removeRepositoryContainerListener( final IRepositoryContainerListener l );
 
-  public void dispose();
+  public void dispose( );
 }
