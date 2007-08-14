@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.wizards.imports.observation;
 
@@ -50,8 +50,8 @@ import javax.xml.bind.Marshaller;
 
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
@@ -61,6 +61,8 @@ import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.ide.IDE;
+import org.kalypso.contribs.eclipse.swt.widgets.DateRangeInputControl;
+import org.kalypso.contribs.java.io.filter.MultipleWildCardFileFilter;
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -73,6 +75,10 @@ import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.wq.WQTuppleModel;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
+import org.kalypso.ogc.sensor.zml.repository.ZmlObservationRepository;
+import org.kalypso.repository.IRepository;
+import org.kalypso.repository.container.IRepositoryContainer;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.wizards.imports.Messages;
 import org.kalypso.zml.ObjectFactory;
 import org.kalypso.zml.Observation;
@@ -89,7 +95,7 @@ public class ImportObservationWizard extends Wizard implements INewWizard
 
   private ImportObservationAxisMappingWizardPage m_page2;
 
-  private IProject m_project;
+  private IFolder m_timeseriesFolder;
 
   public ImportObservationWizard( )
   {
@@ -107,10 +113,15 @@ public class ImportObservationWizard extends Wizard implements INewWizard
   {
     // TODO: this is not good, because now this wizard really does not work from the 'new' menu. So be consequent and
     // dont let it be a INewWizard!
+
     final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
     final IEvaluationContext context = handlerService.getCurrentState();
-    m_project = ((IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME )).getProject();
+    final IFolder scenarioFolder = ((IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME ));
+
+    m_timeseriesFolder = scenarioFolder.getFolder( new Path( "imports/timeseries" ) );
     m_selection = currentSelection;
+
+    // TODO: why not use context.getVariable( ISource.ACTIVE_CURRENT_SELECTION_NAME ) ? Please comment at least
     final List selectedResources = IDE.computeSelectedResources( currentSelection );
     if( !selectedResources.isEmpty() )
     {
@@ -122,11 +133,49 @@ public class ImportObservationWizard extends Wizard implements INewWizard
 
     setWindowTitle( Messages.getString( "org.kalypso.ui.wizards.imports.observation.ImportObservationWizard.1" ) ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
+
+    // REMARK: each time this wizard is opened, the central repository is conofigured.
+    // This is probably NOT the right place to do this, but at the moment it works...
+    configureRepository();
   }
 
-  public final void setProject( final IProject project )
+  private void configureRepository( )
   {
-    m_project = project;
+    /* repository container */
+    final IRepositoryContainer repositoryContainer = KalypsoGisPlugin.getDefault().getRepositoryContainer();
+
+    /* add new project repository */
+    final String location = m_timeseriesFolder.getLocation().toOSString();
+    final String configuration = location + "#*.zml";
+
+    /* Remove all repositories which do not fit to this scenario */
+    final IRepository[] repositories = repositoryContainer.getRepositories();
+    for( final IRepository rep : repositories )
+    {
+      if( rep instanceof ZmlObservationRepository && configuration.equals( rep.getConfiguration() ) )
+        continue;
+
+      repositoryContainer.removeRepository( rep );
+    }
+
+    /* If we still have a good repository, ok */
+    if( repositoryContainer.getRepositories().length > 0 )
+      return;
+
+    /* Respository was not configured before, so create a new one */
+
+    /* First, make sure that the folder exists */
+    new File( location ).mkdirs();
+
+    final MultipleWildCardFileFilter filter = new MultipleWildCardFileFilter( new String[] { "*.zml" }, false, true, false );
+
+    final ZmlObservationRepository repository = new ZmlObservationRepository( this.getClass().getName(), configuration, location, "Time Series", false, filter );
+
+    /* set datarange to 0 -> show all observation this item inherits */
+    repository.setProperty( DateRangeInputControl.USE_RANGE, "0" );
+    repository.setProperty( DateRangeInputControl.NUMBER_OF_DAYS, "0" );
+
+    repositoryContainer.addRepository( repository );
   }
 
   /**
@@ -138,7 +187,7 @@ public class ImportObservationWizard extends Wizard implements INewWizard
     super.addPages();
     m_page2 = new ImportObservationAxisMappingWizardPage( "Analyse der Import-Datei" ); //$NON-NLS-1$
 
-    m_page1 = new ImportObservationSelectionWizardPage( "Dateien waehlen", m_project ); //$NON-NLS-1$
+    m_page1 = new ImportObservationSelectionWizardPage( "Dateien waehlen", m_timeseriesFolder ); //$NON-NLS-1$
     addPage( m_page1 );
     addPage( m_page2 );
 
@@ -269,13 +318,15 @@ public class ImportObservationWizard extends Wizard implements INewWizard
       final OutputStreamWriter writer = new OutputStreamWriter( stream, "UTF-8" ); //$NON-NLS-1$
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
       marshaller.marshal( type, writer );
+      // TODO handle exception, make sure stream is always closed!
       writer.close();
 
-      m_project.refreshLocal( IResource.DEPTH_INFINITE, null );
+      m_timeseriesFolder.refreshLocal( IResource.DEPTH_INFINITE, null );
     }
     catch( final Exception e )
     {
       // e.printStackTrace();
+      // TODO: use MessageDialog.openMessage() !
       final MessageBox messageBox = new MessageBox( getShell(), SWT.OK );
       messageBox.setText( Messages.getString( "org.kalypso.ui.wizards.imports.observation.ImportObservationWizard.4" ) );
       messageBox.setMessage( Messages.getString( "org.kalypso.ui.wizards.imports.observation.ImportObservationWizard.5" ) );

@@ -138,6 +138,13 @@
              icon="icons/tree.gif"
              id="org.kalypso.kalypso1d2d.pjt.views.ResultNavigator"
              name="Ergebnisse">
+       </view>
+       <view
+             allowMultiple="false"
+             class="org.kalypso.ui.repository.view.RepositoryExplorerPart"
+             icon="icons/obj16/repository.gif"
+             id="org.kalypso.kalypso1d2d.pjt.views.TimeseriesRepositoryView"
+             name="Zeitreihen Repositories">
        </view>               
    </extension>
    
@@ -533,6 +540,24 @@
                      definitionId="oneScenario">
                </reference>
             </visibleWhen>
+         </command>
+      </menuContribution>
+      <menuContribution
+            locationURI="toolbar:org.kalypso.kalypso1d2d.pjt.views.TimeseriesRepositoryView">
+         <command
+               commandId="org.kalypso.ui.command.repositoryReload">
+         </command>
+         <separator
+               name="Kalypso1d2dProject.separator6">
+         </separator>
+         <command
+               commandId="org.kalypso.ui.command.repositoryCollapseAll">
+         </command>
+         <separator
+               name="Kalypso1d2dProject.separator7">
+         </separator>
+         <command
+               commandId="org.kalypso.ui.command.repositoryExportAsFile">
          </command>
       </menuContribution>
    </extension>

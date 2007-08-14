@@ -8,7 +8,7 @@
 	<TaskGroup URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Preprocessing">
 		<Help>
 			<![CDATA[Im Modellaufbau werden alle notwendigen Daten für die Berechnung mit Kalypso-1D-2D zusammengestellt und aufgebaut.
-Es lässt sich zwischen den verschiedenen Arbeitsphasen für die unterschiedlichen Netzarten (1D oder 2D) unterscheiden. 
+Es lässt sich zwischen den verschiedenen Arbeitsphasen für die unterschiedlichen Netzarten (1D oder 2D) unterscheiden.
 Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodus des gewünschten Datensatzes.]]>
 		</Help>
 		<Name>Preprocessing: Modellaufbau</Name>
@@ -19,7 +19,7 @@ Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodu
 				<Help>Einladen von Hintergrundkarten</Help>
 				<Name>Import von Hintergrundkarten</Name>
 			</Task>
-			<!-- 
+			<!--
 				<Task context="ImportElevation" URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ElevLoad">
 				<Help>Einladen von Höhendaten</Help>
 				<Name>Import von Höhendaten</Name>
@@ -29,7 +29,7 @@ Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodu
 				<Help>Einladen von Höhendaten</Help>
 				<Name>Import von Höhendaten</Name>
 			</Task>
-			<!--		
+			<!--
 				<Task context="BaseMap" URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__RivNetLoad">
 				<Help>Einladen von Gewässernetzwerkdaten mit Kilometrierung (SHP)</Help>
 				<Name>Import eines Gewässernetzes</Name>
@@ -49,7 +49,7 @@ Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodu
 				<Help>Einladen von Zeitreihendaten</Help>
 				<Name>Import von Zeitreihen</Name>
 			</Task>
-			<!-- 
+			<!--
 				<Task context="ImportShape" URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ShapeImport">
 				<Help>Einladen genereller Daten (SHP)</Help>
 				<Name>Import von Shapedateien</Name>
@@ -75,7 +75,7 @@ Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodu
 						<![CDATA[Importieren von 1D-Finite-Elementen von externen Datenquellen]]>
 					</Help>
 					<Name>Fremddaten importieren</Name>
-					<!-- <Task context="ImportWSPM" URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Net1DImportWspm"> 
+					<!-- <Task context="ImportWSPM" URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Net1DImportWspm">
 						<Help>FE-1D-Netz aus stationärem Modell (WSPM) erzeugen</Help>
 						<Name>WSPM Modell</Name>
 						</Task>
@@ -122,7 +122,7 @@ Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodu
 				</Task>
 				<Task type="ASYNCHRONOUS" context="FenetMap" URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Chan2DGen">
 					<Help>
-						<![CDATA[Generiert Flussschlauchelemente aus Profilendaten. 
+						<![CDATA[Generiert Flussschlauchelemente aus Profilendaten.
 Vorraussetzung hierfür ist ein in der Karte vorhandenes Profillinienthema,
 sowie ein Thema, welches die Uferbereiche definiert.]]>
 					</Help>
@@ -171,13 +171,13 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 					<Help>Definieren von Rand- und Übergangslinien von Modellierungseinheiten (keine Ausgabedefinition)</Help>
 					<Name>Ränder und Übergänge definieren</Name>
 				</Task>
-				<Task type="ASYNCHRONOUS" context="BoundaryConditionTheme" 
+				<Task type="ASYNCHRONOUS" context="BoundaryConditionTheme"
 					URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__BCDef">
 					<Help>
 						<![CDATA[Festlegung von Knoten- und Linienrandbedingungen für die Berechnung.]]>
 					</Help>
 					<Name>Randbedingungen</Name>
-				</Task>		
+				</Task>
 				<Task type="ASYNCHRONOUS" context="FenetMap"
 					URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__CalculationUnit">
 					<Help>
@@ -207,7 +207,7 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 				<![CDATA[Rauheitszonen definieren sowie Rauheitsklassen bearbeiten.]]>
 			</Help>
 			<Name>Rauheitsmodellierung</Name>
-			<!-- 
+			<!--
 				<Task context="RoughnessTheme"
 				URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ZoneDefGroup">
 				<Help>
@@ -247,14 +247,14 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 				<Name>Exportieren von FE Netzen</Name>
 			</Task>
 		</TaskGroup>
-	<!-- 	
-		<Task context="BoundaryConditionTheme" 
+	<!--
+		<Task context="BoundaryConditionTheme"
 			URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__BCDef">
 			<Help>
 				<![CDATA[Festlegung von Knoten- und Linienrandbedingungen für die Berechnung.]]>
 			</Help>
 			<Name>Randbedingungen</Name>
-			 
+
 				<TaskGroup URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__StSolGroup">
 				<Help>Für das erstmalige Anrechnen eines Modells benötigt man eine sog. Anfangslösung, &#xa;die den Modellzustand vor Beginn der Berechnung beschreibt.</Help>
 				<Name>Anfangslösung</Name>
@@ -267,9 +267,9 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 				<Name>Restartlösung spezifizieren</Name>
 				</Task>
 				</TaskGroup>
-			
-		</Task> 
-	-->	
+
+		</Task>
+	-->
 	</TaskGroup>
 	<TaskGroup URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Processing">
 		<Help>
@@ -280,10 +280,10 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 			<Help>Einstellung genereller Berechnungsparameter</Help>
 			<Name>Berechnungseinstellungen</Name>
 		</Task>
-		
+
 		<!--
-		We don't need these activities any more, because it will be (re)calculated by fortran code 
-		
+		We don't need these activities any more, because it will be (re)calculated by fortran code
+
 		<TaskGroup URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ResDef">
 			<Help></Help>
 			<Name>spezielle Ausgaben definieren</Name>
@@ -303,9 +303,9 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 			</Task>
 		</TaskGroup>
 		 -->
-		 
+
 		<!-- TODO: there is no context with this ID -->
-		<!-- 
+		<!--
 		<Task context="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Calc"
 			URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__StartCalculation">
 			<Help>
@@ -328,7 +328,7 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 			<![CDATA[Nach der Druchführung der Strömungsberechungen können die Ergebnisse hier ausgewertet und visualisiert werden.]]>
 		</Help>
 		<Name>Postprocessing: Ergebnisauswertungen</Name>
-		
+
 		<TaskGroup URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ResultMapGroup" context="ResultMap">
 			<Help>
 				<![CDATA[Hier werden die Ergebnisauswertungen zur Darstellung in einer Karte durchgeführt.]]>
@@ -371,7 +371,7 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 					<con:Parameter name="input" value="templates/control.gft" />
 				</con:ExtensionContext>
 			</con:ViewContext>
-			<!-- 
+			<!--
 				<con:ViewContext id="CalculationUnitView"
 				partId="org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView.CalculationUnitPerformView"
 				parent="Context1d2dModelling">
@@ -394,7 +394,7 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 				</con:ViewContext>
 			</con:WorkbenchSiteContext>
 			<con:WorkbenchSiteContext id="TimeSeriesContext" parent="Context1d2dModelling">
-				<con:ViewContext id="TimeSeriesRepositoryView" partId="org.kalypso.ui.repository.view.RepositoryExplorerPart" parent="TimeSeriesContext" />
+				<con:ViewContext id="TimeSeriesRepositoryView" partId="org.kalypso.kalypso1d2d.pjt.views.TimeseriesRepositoryView" parent="TimeSeriesContext" />
 				<con:ViewContext id="TimeSeriesDiagramView" partId="org.kalypso.ogc.sensor.view.DiagramViewPart" parent="TimeSeriesContext" />
 				<con:ViewContext id="TimeSeriesTableView" partId="org.kalypso.ogc.sensor.view.TableViewPart" parent="TimeSeriesContext" />
 				<con:WizardContext id="ImportObservations"
@@ -408,14 +408,14 @@ sowie ein Thema, welches die Uferbereiche definiert.]]>
 						handlerFactoryId="kalypsoContextHandlerFactory">
 						<con:WizardContext id="ImportBaseMap"
 							wizardId="org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizard" wizardType="NEW_WIZARD" parent="BaseMap" />
-						<!-- 
+						<!--
 							<WizardContext id="ImportShape" wizardId="org.kalypso.ui.wizards.imports.lineShp.ImportLineShpWizard" wizardType="NEW_WIZARD" parent="BaseMap" />
 						-->
 						<con:Parameter name="type" value="mapViewInputContext" />
 						<con:Parameter name="input" value="maps/base.gmt" />
 					</con:ExtensionContext>
 					<con:ExtensionContext id="RoughnessMap" parent="MapContext"
-						handlerFactoryId="kalypsoContextHandlerFactory">						
+						handlerFactoryId="kalypsoContextHandlerFactory">
 						<con:ExtensionContext id="RoughnessPolygonTheme" parent="RoughnessMap"
 							handlerFactoryId="kalypsoContextHandlerFactory">
 							<con:WizardContext id="ImportRoughness"

@@ -818,14 +818,6 @@
      </objectContribution>
   </extension>
   <extension
-        point="org.eclipse.ui.views">
-     <view
-           class="org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView.CalculationUnitPerformView"
-           id="org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView.CalculationUnitPerformView"
-           name="CalculationUnitView">
-     </view>
-  </extension>
-  <extension
         point="org.eclipse.core.expressions.definitions">
      <definition
            id="org.kalypso.ui.views.mapView.expressions.param1d">

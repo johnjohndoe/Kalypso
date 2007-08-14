@@ -43,9 +43,9 @@ public class Perspective implements IPerspectiveFactory
 
     leftTop.addView( WorkflowView.ID );
     leftBottom.addView( SCENARIO_VIEW_ID );
-    
+
     leftBottom.addPlaceholder( GisMapOutlineView.ID );
-    leftBottom.addPlaceholder( RepositoryExplorerPart.ID );
+    leftBottom.addPlaceholder( "org.kalypso.kalypso1d2d.pjt.views.TimeseriesRepositoryView" );
 
     rightTop.addPlaceholder( MapView.ID );
     rightTop.addPlaceholder( FeatureTemplateView.ID );

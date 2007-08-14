@@ -330,6 +330,12 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
 
     final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
     final KeyInfo infoForKey = pool.getInfoForKey( key );
+    if( infoForKey == null )
+    {
+      // TODO throw (core/other) exception?
+      return false;
+    }
+
     return infoForKey.isDirty();
   }
 
