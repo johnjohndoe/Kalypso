@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,42 +36,48 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.view.actions;
 
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.ISources;
+import org.eclipse.ui.IWorkbenchPart;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.view.ObservationChooser;
-import org.kalypso.ui.ImageProvider;
 
 /**
  * @author schlienger
  */
-public class CopyLinkAction extends AbstractObservationChooserAction
+public class CopyLinkHandler extends AbstractHandler
 {
-  public CopyLinkAction( final ObservationChooser explorer )
-  {
-    super( explorer, "Link kopieren", ImageProvider.IMAGE_OBSERVATION_LINK,
-        "Kopiert den Link in der Zwischenablage für die ausgewählte Zeitreihe" );
-  }
-
   /**
-   * @see org.eclipse.jface.action.Action#run()
+   * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
   @Override
-  public void run( )
+  public Object execute( final ExecutionEvent event )
   {
-    final IObservation obs = getExplorer().isObservationSelected( getExplorer().getSelection() );
-    if( obs == null )
-      return;
+    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+    final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
+    final IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
+    final ObservationChooser chooser = (ObservationChooser) part.getAdapter( ObservationChooser.class );
 
-    final Clipboard clipboard = new Clipboard( getShell().getDisplay() );
-    clipboard.setContents( new Object[]
-    { obs.getIdentifier() }, new Transfer[]
-    { TextTransfer.getInstance() } );
+    final IObservation obs = chooser.isObservationSelected( chooser.getSelection() );
+    if( obs == null )
+      return Status.OK_STATUS;
+
+    final Clipboard clipboard = new Clipboard( shell.getDisplay() );
+    clipboard.setContents( new Object[] { obs.getIdentifier() }, new Transfer[] { TextTransfer.getInstance() } );
     clipboard.dispose();
+
+    return Status.OK_STATUS;
   }
+
 }

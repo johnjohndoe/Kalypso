@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,13 +36,20 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.view.actions;
 
 import java.io.StringReader;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.ISources;
+import org.eclipse.ui.IWorkbenchPart;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.wq.WQException;
@@ -50,41 +57,39 @@ import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableFactory;
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableSet;
 import org.kalypso.ogc.sensor.view.ObservationChooser;
 import org.kalypso.ogc.sensor.view.wq.WQRelationDialog;
-import org.kalypso.ui.ImageProvider;
 import org.xml.sax.InputSource;
 
 /**
  * @author schlienger
  */
-public class ViewWQRelationAction extends AbstractObservationChooserAction
+public class ViewWQRelationHandler extends AbstractHandler
 {
-  public ViewWQRelationAction( final ObservationChooser explorer )
-  {
-    super( explorer, "WQ-Beziehung visualisieren", ImageProvider.IMAGE_UTIL_FILTER,
-        "Öffnet ein Dialog zur Visualisierung der WQ-Beziehung" );
-  }
-
   /**
-   * @see org.eclipse.jface.action.Action#run()
+   * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
   @Override
-  public void run( )
+  public Object execute( final ExecutionEvent event )
   {
-    final IObservation obs = getExplorer().isObservationSelected( getExplorer().getSelection() );
+    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+    final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
+    final IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
+    final ObservationChooser chooser = (ObservationChooser) part.getAdapter( ObservationChooser.class );
+
+    final IObservation obs = chooser.isObservationSelected( chooser.getSelection() );
     if( obs == null )
-      return;
+      return Status.OK_STATUS;
 
     final String propTable = obs.getMetadataList().getProperty( TimeserieConstants.MD_WQTABLE );
     if( propTable == null )
-      return;
-    
+      return Status.OK_STATUS;
+
     final StringReader reader = new StringReader( propTable );
     try
     {
       final WQTableSet set = WQTableFactory.parse( new InputSource( reader ) );
       reader.close();
-      
-      final WQRelationDialog dlg = new WQRelationDialog( getShell(), "WQ-Beziehung für " + obs.getName(), set );
+
+      final WQRelationDialog dlg = new WQRelationDialog( shell, "WQ-Beziehung für " + obs.getName(), set );
       dlg.open();
     }
     catch( final WQException e )
@@ -95,5 +100,7 @@ public class ViewWQRelationAction extends AbstractObservationChooserAction
     {
       IOUtils.closeQuietly( reader );
     }
+
+    return Status.OK_STATUS;
   }
 }

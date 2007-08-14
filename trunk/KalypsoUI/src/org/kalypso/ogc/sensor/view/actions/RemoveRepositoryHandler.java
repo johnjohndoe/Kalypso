@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,29 +36,45 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.view.actions;
 
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.ISources;
+import org.eclipse.ui.IWorkbenchPart;
 import org.kalypso.ogc.sensor.view.ObservationChooser;
-import org.kalypso.ui.ImageProvider;
+import org.kalypso.repository.IRepository;
+import org.kalypso.repository.container.IRepositoryContainer;
 
 /**
+ * Ein Repository hinzufügen.
+ * 
  * @author schlienger
  */
-public class CollapseAllAction extends AbstractObservationChooserAction
+public class RemoveRepositoryHandler extends AbstractHandler
 {
-  public CollapseAllAction( final ObservationChooser explorer )
-  {
-    super( explorer, "Alles reduzieren", ImageProvider.IMAGE_ZML_REPOSITORY_COLLAPSE, "Reduziert alle Zweige des Baums" );
-  }
-
   /**
-   * @see org.eclipse.jface.action.Action#run()
+   * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
   @Override
-  public void run( )
+  public Object execute( final ExecutionEvent event )
   {
-    getViewer().collapseAll();
+    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+    final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
+    final IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
+    final ObservationChooser chooser = (ObservationChooser) part.getAdapter( ObservationChooser.class );
+
+    final IRepositoryContainer container = chooser.getRepositoryContainer();
+    final IRepository rep = chooser.isRepository( chooser.getSelection() );
+
+    final Runnable runnable = new RemoveRepositoryRunnable( container, rep, shell );
+    runnable.run();
+
+    return Status.OK_STATUS;
   }
 }

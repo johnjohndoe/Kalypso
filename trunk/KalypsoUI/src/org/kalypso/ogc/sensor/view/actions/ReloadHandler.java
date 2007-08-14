@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,54 +36,53 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.view.actions;
 
 import java.lang.reflect.InvocationTargetException;
 
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.ISources;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.ogc.sensor.cache.ObservationCache;
 import org.kalypso.ogc.sensor.view.ObservationChooser;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.RepositoryException;
-import org.kalypso.ui.ImageProvider;
 
 /**
  * @author schlienger
  */
-public class ReloadAction extends AbstractObservationChooserAction implements ISelectionChangedListener
+public class ReloadHandler extends AbstractHandler
 {
-  public ReloadAction( final ObservationChooser explorer )
-  {
-    super( explorer, "Aktualisieren", ImageProvider.IMAGE_ZML_REPOSITORY_RELOAD,
-        "Aktualisiert den aktuellen Repository" );
-
-    explorer.addSelectionChangedListener( this );
-
-    setEnabled( explorer.isRepository( explorer.getSelection() ) != null );
-  }
-
   /**
-   * @see org.eclipse.jface.action.Action#run()
+   * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
   @Override
-  public void run()
+  public Object execute( final ExecutionEvent event )
   {
-    final IRepository rep = getExplorer().isRepository( getExplorer().getSelection() );
+    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+    final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
+    final IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
+    final ObservationChooser chooser = (ObservationChooser) part.getAdapter( ObservationChooser.class );
+
+    final IRepository rep = chooser.isRepository( chooser.getSelection() );
     if( rep == null )
-      return;
+      return Status.OK_STATUS;
 
     final IRunnableWithProgress runnable = new IRunnableWithProgress()
     {
       public void run( final IProgressMonitor monitor ) throws InvocationTargetException
       {
-        monitor.beginTask( "Ansicht aktualisieren", 2 );
+        monitor.beginTask( "Ansicht aktualisieren", 1 );
 
         // Important: clear the cache
         ObservationCache.clearCache();
@@ -94,10 +93,7 @@ public class ReloadAction extends AbstractObservationChooserAction implements IS
 
           monitor.worked( 1 );
 
-          // trick: direct call to update view
-          getExplorer().onRepositoryContainerChanged();
-
-          monitor.worked( 1 );
+          // TODO: refresh view?
         }
         catch( final RepositoryException e )
         {
@@ -117,25 +113,14 @@ public class ReloadAction extends AbstractObservationChooserAction implements IS
     catch( final InvocationTargetException e )
     {
       e.printStackTrace();
-      
-      MessageDialog.openWarning( getShell(), "Ansicht aktualisieren", e.getLocalizedMessage() );
+
+      MessageDialog.openWarning( shell, "Ansicht aktualisieren", e.getLocalizedMessage() );
     }
     catch( final InterruptedException ignored )
     {
       // empty
     }
-  }
 
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
-   */
-  public void selectionChanged( SelectionChangedEvent event )
-  {
-    setEnabled( getExplorer().isRepository( event.getSelection() ) != null );
-  }
-
-  public void dispose()
-  {
-    getExplorer().removeSelectionChangedListener( this );
+    return Status.OK_STATUS;
   }
 }

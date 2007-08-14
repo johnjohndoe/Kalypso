@@ -1495,6 +1495,70 @@
            </control>
         </toolbar>
      </menuContribution>
+     <menuContribution
+           locationURI="toolbar:org.kalypso.ui.repository.view.RepositoryExplorerPart">
+        <separator
+              name="manageContainers"
+              visible="false">
+        </separator>
+        <command commandId="org.kalypso.ui.command.repositoryAdd"></command>
+        <command commandId="org.kalypso.ui.command.repositoryRemove"></command>
+        <separator
+              name="configureContainers"
+              visible="true">
+        </separator>
+        <command commandId="org.kalypso.ui.command.repositoryConfigure"></command>
+        <command commandId="org.kalypso.ui.command.repositoryReload"></command>
+        <command commandId="org.kalypso.ui.command.repositoryDumpStructure"></command>
+        <separator
+              name="manageTree"
+              visible="true">
+        </separator>
+        <command commandId="org.kalypso.ui.command.repositoryCollapseAll"></command>
+        <separator
+              name="repositoryTools"
+              visible="true">
+        </separator>
+        <command commandId="org.kalypso.ui.command.repositoryExportAsFile"></command>
+        <command commandId="org.kalypso.ui.command.repositoryCopyLink"></command>
+        <command commandId="org.kalypso.ui.command.repositoryShowWQ"></command>
+        <separator
+              name="additions"
+              visible="true">
+        </separator>
+     </menuContribution>
+     <menuContribution
+           locationURI="popup:org.kalypso.ui.repository.view.RepositoryExplorerPart">
+        <separator
+              name="manageContainers"
+              visible="false">
+        </separator>
+        <command commandId="org.kalypso.ui.command.repositoryAdd"></command>
+        <command commandId="org.kalypso.ui.command.repositoryRemove"></command>
+        <separator
+              name="configureContainers"
+              visible="true">
+        </separator>
+        <command commandId="org.kalypso.ui.command.repositoryConfigure"></command>
+        <command commandId="org.kalypso.ui.command.repositoryReload"></command>
+        <command commandId="org.kalypso.ui.command.repositoryDumpStructure"></command>
+        <separator
+              name="manageTree"
+              visible="true">
+        </separator>
+        <command commandId="org.kalypso.ui.command.repositoryCollapseAll"></command>
+        <separator
+              name="repositoryTools"
+              visible="true">
+        </separator>
+        <command commandId="org.kalypso.ui.command.repositoryExportAsFile"></command>
+        <command commandId="org.kalypso.ui.command.repositoryCopyLink"></command>
+        <command commandId="org.kalypso.ui.command.repositoryShowWQ"></command>
+        <separator
+              name="additions"
+              visible="true">
+        </separator>
+     </menuContribution>
 
  </extension>
 
@@ -1560,6 +1624,226 @@
              <adapt
                    type="org.kalypso.ogc.gml.map.MapPanel">
              </adapt>
+          </with>
+       </enabledWhen>
+    </handler>
+ </extension>
+ <extension
+       id="org.kalypso.ui.repositoryContainerCommands"
+       name="Repository Container Commands"
+       point="org.eclipse.ui.commands">
+    <category
+          id="org.kalypo.ui.commandCategory.repositoryContainer"
+          name="Repository Kommandos">
+    </category>
+    <command
+          categoryId="org.kalypo.ui.commandCategory.repositoryContainer"
+          defaultHandler="org.kalypso.ogc.sensor.view.actions.AddRepositoryHandler"
+          description="Fügt ein Repository hinzu..."
+          id="org.kalypso.ui.command.repositoryAdd"
+          name="Repository hinzufügen">
+    </command>
+    <command
+          categoryId="org.kalypo.ui.commandCategory.repositoryContainer"
+          description="Entfernt ein Repository..."
+          id="org.kalypso.ui.command.repositoryRemove"
+          name="Repository entfernen">
+    </command>
+    <command
+          categoryId="org.kalypo.ui.commandCategory.repositoryContainer"
+          description="Einstellungen der Zeitreihen-Vorschau setzen"
+          id="org.kalypso.ui.command.repositoryConfigure"
+          name="Einstellungen">
+    </command>
+    <command
+          categoryId="org.kalypo.ui.commandCategory.repositoryContainer"
+          description="Aktualisiert den aktuellen Repository"
+          id="org.kalypso.ui.command.repositoryReload"
+          name="Aktualisieren">
+    </command>
+    <command
+          categoryId="org.kalypo.ui.commandCategory.repositoryContainer"
+          description="Exportiert die Gesamtstruktur in der Zwischenablage"
+          id="org.kalypso.ui.command.repositoryDumpStructure"
+          name="Struktur exportieren">
+    </command>
+    <command
+          categoryId="org.kalypo.ui.commandCategory.repositoryContainer"
+          defaultHandler="org.kalypso.ogc.sensor.view.actions.CollapseAllHandler"
+          description="Reduziert alle Zweige des Baums"
+          id="org.kalypso.ui.command.repositoryCollapseAll"
+          name="Alles reduzieren">
+    </command>
+    <command
+          categoryId="org.kalypo.ui.commandCategory.repositoryContainer"
+          description="Exportiert die selektierte Zeitreihe als lokale Datei"
+          id="org.kalypso.ui.command.repositoryExportAsFile"
+          name="Datei herunterladen">
+    </command>
+
+    <command
+          categoryId="org.kalypo.ui.commandCategory.repositoryContainer"
+          description="Kopiert den Link auf die ausgewählte Zeitreihe in die Zwischenablage"
+          id="org.kalypso.ui.command.repositoryCopyLink"
+          name="Link kopieren">
+    </command>
+    <command
+          categoryId="org.kalypo.ui.commandCategory.repositoryContainer"
+          description="Öffnet einen Dialog zur Visualisierung der WQ-Beziehung"
+          id="org.kalypso.ui.command.repositoryShowWQ"
+          name="WQ-Beziehung visualisieren">
+    </command>
+ </extension>
+ <extension
+       point="org.eclipse.ui.commandImages">
+    <image
+          commandId="org.kalypso.ui.command.repositoryAdd"
+          icon="icons/repository/repository_add.gif">
+    </image>
+    <image
+          commandId="org.kalypso.ui.command.repositoryRemove"
+          icon="icons/repository/repository_remove.gif">
+    </image>
+    <image
+          commandId="org.kalypso.ui.command.repositoryConfigure"
+          icon="icons/util/settings.gif">
+    </image>
+    <image
+          commandId="org.kalypso.ui.command.repositoryReload"
+          icon="icons/util/update.gif">
+    </image>
+    <image
+          commandId="org.kalypso.ui.command.repositoryDumpStructure"
+          icon="icons/repository/repository_rep.gif">
+    </image>
+    <image
+          commandId="org.kalypso.ui.command.repositoryCollapseAll"
+          icon="icons/util/tree_collapse_all.gif">
+    </image>
+    <image
+          commandId="org.kalypso.ui.command.repositoryExportAsFile"
+          icon="icons/repository/zml_download.gif">
+    </image>
+    <image
+          commandId="org.kalypso.ui.command.repositoryCopyLink"
+          icon="icons/observation/observation_link.gif">
+    </image>
+    <image
+          commandId="org.kalypso.ui.command.repositoryShowWQ"
+          icon="icons/util/filter.gif">
+    </image>
+ </extension>
+ <extension
+       point="org.eclipse.ui.handlers">
+    <handler
+          class="org.kalypso.ogc.sensor.view.actions.ConfigurePreviewHandler"
+          commandId="org.kalypso.ui.command.repositoryConfigure">
+       <enabledWhen>
+          <with
+                variable="selection">
+             <iterate
+                   ifEmpty="false"
+                   operator="and">
+                <instanceof
+                      value="org.kalypso.repository.IRepository">
+                </instanceof>
+             </iterate>
+          </with>
+       </enabledWhen>
+    </handler>
+    <handler
+          class="org.kalypso.ogc.sensor.view.actions.RemoveRepositoryHandler"
+          commandId="org.kalypso.ui.command.repositoryRemove">
+       <enabledWhen>
+          <with
+                variable="selection">
+             <iterate
+                   ifEmpty="false"
+                   operator="and">
+                <instanceof
+                      value="org.kalypso.repository.IRepository">
+                </instanceof>
+             </iterate>
+          </with>
+       </enabledWhen>
+    </handler>
+    <handler
+          class="org.kalypso.ogc.sensor.view.actions.DumpStructureHandler"
+          commandId="org.kalypso.ui.command.repositoryDumpStructure">
+       <enabledWhen>
+          <with
+                variable="selection">
+             <iterate
+                   ifEmpty="false"
+                   operator="and">
+                <instanceof
+                      value="org.kalypso.repository.IRepository">
+                </instanceof>
+             </iterate>
+          </with>
+       </enabledWhen>
+    </handler>
+    <handler
+          class="org.kalypso.ogc.sensor.view.actions.ExportAsFileHandler"
+          commandId="org.kalypso.ui.command.repositoryExportAsFile">
+       <enabledWhen>
+          <with
+                variable="selection">
+             <iterate
+                   ifEmpty="false"
+                   operator="and">
+                <instanceof
+                      value="org.kalypso.repository.IRepositoryItem">
+                </instanceof>
+             </iterate>
+          </with>
+       </enabledWhen>
+    </handler>
+    <handler
+          class="org.kalypso.ogc.sensor.view.actions.ReloadHandler"
+          commandId="org.kalypso.ui.command.repositoryReload">
+       <enabledWhen>
+          <with
+                variable="selection">
+             <iterate
+                   ifEmpty="false"
+                   operator="and">
+                <instanceof
+                      value="org.kalypso.repository.IRepository">
+                </instanceof>
+             </iterate>
+          </with>
+       </enabledWhen>
+    </handler>
+    <handler
+          class="org.kalypso.ogc.sensor.view.actions.CopyLinkHandler"
+          commandId="org.kalypso.ui.command.repositoryCopyLink">
+       <enabledWhen>
+          <with
+                variable="selection">
+             <iterate
+                   ifEmpty="false"
+                   operator="and">
+                <instanceof
+                      value="org.kalypso.repository.IRepositoryItem">
+                </instanceof>
+             </iterate>
+          </with>
+       </enabledWhen>
+    </handler>
+    <handler
+          class="org.kalypso.ogc.sensor.view.actions.ViewWQRelationHandler"
+          commandId="org.kalypso.ui.command.repositoryShowWQ">
+       <enabledWhen>
+          <with
+                variable="selection">
+             <iterate
+                   ifEmpty="false"
+                   operator="and">
+                <instanceof
+                      value="org.kalypso.repository.IRepositoryItem">
+                </instanceof>
+             </iterate>
           </with>
        </enabledWhen>
     </handler>

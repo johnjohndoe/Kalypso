@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,21 +36,23 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.repository.view;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.List;
 import java.util.NoSuchElementException;
 
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
@@ -96,6 +98,7 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
+  @SuppressWarnings("unchecked")
   @Override
   public Object getAdapter( final Class adapter )
   {
@@ -124,6 +127,9 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
       return m_propsPage;
     }
 
+    if( adapter == ObservationChooser.class )
+      return m_chooser;
+
     return super.getAdapter( adapter );
   }
 
@@ -131,7 +137,7 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
    * @see org.eclipse.ui.IWorkbenchPart#dispose()
    */
   @Override
-  public void dispose()
+  public void dispose( )
   {
     removeSelectionChangedListener( this );
 
@@ -144,8 +150,17 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
   @Override
   public void createPartControl( final Composite parent )
   {
-    m_chooser = new ObservationChooser( parent, getViewSite() );
+    m_chooser = new ObservationChooser( parent );
+
     addSelectionChangedListener( this );
+
+    getSite().setSelectionProvider( m_chooser );
+
+    final MenuManager menuMgr = new MenuManager();
+    final Menu menu = menuMgr.createContextMenu( m_chooser.getViewer().getTree() );
+    m_chooser.getViewer().getTree().setMenu( menu );
+
+    getSite().registerContextMenu( /* "org.kalypso.ogc.sensor.view.observationBrowser", */menuMgr, m_chooser );
 
     if( m_memento != null )
       restoreState( m_memento );
@@ -167,9 +182,9 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
    * @see org.eclipse.ui.IWorkbenchPart#setFocus()
    */
   @Override
-  public void setFocus()
+  public void setFocus( )
   {
-  // noch nix
+    // noch nix
   }
 
   /**
@@ -193,7 +208,7 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
     final TreeViewer viewer = m_chooser.getViewer();
     if( viewer == null )
     {
-      if( m_memento != null ) //Keep the old state;
+      if( m_memento != null ) // Keep the old state;
         memento.putMemento( m_memento );
 
       return;
@@ -201,20 +216,19 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
 
     // save list of repositories
     final IMemento repsMem = memento.createChild( TAG_REPOSITORIES );
-    for( final Iterator it = m_chooser.getRepositoryContainer().getRepositories().iterator(); it.hasNext(); )
+    final IRepository[] repositories = m_chooser.getRepositoryContainer().getRepositories();
+    for( final IRepository repository : repositories )
     {
-      final IRepository rep = (IRepository)it.next();
-
       final IMemento child = repsMem.createChild( TAG_REPOSITORY );
-      child.putTextData( new RepositoryFactoryConfig( rep ).saveState() );
+      child.putTextData( new RepositoryFactoryConfig( repository ).saveState() );
 
       // save properties for that repository
       final IMemento propsMem = child.createChild( TAG_REPOSITORY_PROPS );
       try
       {
-        MementoUtils.saveProperties( propsMem, rep.getProperties() );
+        MementoUtils.saveProperties( propsMem, repository.getProperties() );
       }
-      catch( IOException e )
+      catch( final IOException e )
       {
         e.printStackTrace();
       }
@@ -225,12 +239,12 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
     if( expandedElements.length > 0 )
     {
       final IMemento expandedMem = memento.createChild( TAG_EXPANDED );
-      for( int i = 0; i < expandedElements.length; i++ )
+      for( final Object element : expandedElements )
       {
-        if( expandedElements[i] instanceof IRepositoryItem )
+        if( element instanceof IRepositoryItem )
         {
           final IMemento elementMem = expandedMem.createChild( TAG_ELEMENT );
-          final String id = ( (IRepositoryItem)expandedElements[i] ).getIdentifier();
+          final String id = ((IRepositoryItem) element).getIdentifier();
           elementMem.putString( TAG_IDENFITIER, id );
         }
       }
@@ -241,7 +255,7 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
    * Restores the state of the receiver to the state described in the specified memento.
    * 
    * @param memento
-   *          the memento
+   *            the memento
    */
   private void restoreState( final IMemento memento )
   {
@@ -254,26 +268,26 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
     if( repsMem != null )
     {
       final IMemento[] repMem = repsMem.getChildren( TAG_REPOSITORY );
-      for( int i = 0; i < repMem.length; i++ )
+      for( final IMemento element : repMem )
       {
-        if( repMem[i] == null )
+        if( element == null )
           continue;
 
         try
         {
-          final RepositoryFactoryConfig item = RepositoryFactoryConfig.restore( repMem[i].getTextData() );
+          final RepositoryFactoryConfig item = RepositoryFactoryConfig.restore( element.getTextData() );
           if( item != null )
           {
             final IRepository rep = item.createFactory( getClass().getClassLoader() ).createRepository();
 
-            final IMemento propsMem = repMem[i].getChild( TAG_REPOSITORY_PROPS );
+            final IMemento propsMem = element.getChild( TAG_REPOSITORY_PROPS );
             if( propsMem != null )
               MementoUtils.loadProperties( propsMem, rep.getProperties() );
 
             m_chooser.getRepositoryContainer().addRepository( rep );
           }
         }
-        catch( Exception e ) // generic exception caught for simplicity
+        catch( final Exception e ) // generic exception caught for simplicity
         {
           // ignored
           e.printStackTrace();
@@ -284,9 +298,9 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
     final IMemento childMem = memento.getChild( TAG_EXPANDED );
     if( childMem != null )
     {
-      final ArrayList elements = new ArrayList();
+      final List<IRepositoryItem> elements = new ArrayList<IRepositoryItem>();
       final IMemento[] elementMem = childMem.getChildren( TAG_ELEMENT );
-      for( int i = 0; i < elementMem.length; i++ )
+      for( final IMemento element : elementMem )
       {
         try
         {
@@ -297,16 +311,16 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
           // (in fact a ServiceRepositoryItem) using the constructor
           // but we are not able to set all arguments in findItem
           // TODO: try to find a better solution
-          //          final String id = elementMem[i].getString( TAG_IDENFITIER );
-          //          final Object element = m_repContainer.findItem( id );
-          //          
-          //          if( element != null )
-          //            elements.add( element );
-          //          else
-          //            Logger.getLogger( getClass().getName() ).warning( "Restoring GUI State for observation explorer part: could
+          // final String id = elementMem[i].getString( TAG_IDENFITIER );
+          // final Object element = m_repContainer.findItem( id );
+          //
+          // if( element != null )
+          // elements.add( element );
+          // else
+          // Logger.getLogger( getClass().getName() ).warning( "Restoring GUI State for observation explorer part: could
           // not find item " + id );
         }
-        catch( NoSuchElementException e )
+        catch( final NoSuchElementException e )
         {
           // ignored
         }
@@ -319,7 +333,7 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
    */
-  public ISelection getSelection()
+  public ISelection getSelection( )
   {
     return m_chooser.getSelection();
   }
@@ -327,7 +341,7 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
    */
-  public void setSelection( ISelection selection )
+  public void setSelection( final ISelection selection )
   {
     m_chooser.setSelection( selection );
   }
@@ -335,7 +349,7 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
    */
-  public void addSelectionChangedListener( ISelectionChangedListener listener )
+  public void addSelectionChangedListener( final ISelectionChangedListener listener )
   {
     if( m_chooser != null )
       m_chooser.addSelectionChangedListener( listener );
@@ -344,7 +358,7 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
    */
-  public void removeSelectionChangedListener( ISelectionChangedListener listener )
+  public void removeSelectionChangedListener( final ISelectionChangedListener listener )
   {
     if( m_chooser != null )
       m_chooser.removeSelectionChangedListener( listener );

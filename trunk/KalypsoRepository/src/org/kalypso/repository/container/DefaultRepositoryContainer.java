@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,12 +36,11 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.repository.container;
 
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Vector;
@@ -73,8 +72,8 @@ public class DefaultRepositoryContainer implements IRepositoryContainer
 
   public void dispose( )
   {
-    for( final Iterator it = m_reps.iterator(); it.hasNext(); )
-      ((IRepository) it.next()).dispose();
+    for( final IRepository element : m_reps )
+      element.dispose();
 
     m_reps.clear();
     m_listeners.clear();
@@ -89,15 +88,15 @@ public class DefaultRepositoryContainer implements IRepositoryContainer
 
   private void fireRepositoryChanged( )
   {
-    for( Iterator iter = m_listeners.iterator(); iter.hasNext(); )
+    for( final Object element2 : m_listeners )
     {
-      IRepositoryContainerListener element = (IRepositoryContainerListener) iter.next();
+      final IRepositoryContainerListener element = (IRepositoryContainerListener) element2;
 
       element.onRepositoryContainerChanged();
     }
   }
 
-  public void removeRepository( IRepository rep )
+  public void removeRepository( final IRepository rep )
   {
     m_reps.remove( rep );
 
@@ -122,7 +121,7 @@ public class DefaultRepositoryContainer implements IRepositoryContainer
   /**
    * @see org.kalypso.repository.container.IRepositoryContainer#removeRepositoryContainerListener(org.kalypso.repository.container.IRepositoryContainerListener)
    */
-  public void removeRepositoryContainerListener( IRepositoryContainerListener l )
+  public void removeRepositoryContainerListener( final IRepositoryContainerListener l )
   {
     m_listeners.remove( l );
   }
@@ -130,9 +129,9 @@ public class DefaultRepositoryContainer implements IRepositoryContainer
   /**
    * @see org.kalypso.repository.container.IRepositoryContainer#getRepositories()
    */
-  public List getRepositories( )
+  public IRepository[] getRepositories( )
   {
-    return m_reps;
+    return m_reps.toArray( new IRepository[m_reps.size()] );
   }
 
   /**
@@ -140,9 +139,9 @@ public class DefaultRepositoryContainer implements IRepositoryContainer
    */
   public IRepositoryItem findItem( final String id ) throws NoSuchElementException
   {
-    for( final Iterator it = m_reps.iterator(); it.hasNext(); )
+    for( final Object element : m_reps )
     {
-      final IRepository rep = (IRepository) it.next();
+      final IRepository rep = (IRepository) element;
 
       if( rep.getIdentifier().equals( id ) )
         return rep;
@@ -151,7 +150,7 @@ public class DefaultRepositoryContainer implements IRepositoryContainer
       {
         return rep.findItem( id );
       }
-      catch( RepositoryException e )
+      catch( final RepositoryException e )
       {
         // ignored, try with next repository
       }
