@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.mapmodel;
 
@@ -53,6 +53,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.kalypso.contribs.eclipse.core.runtime.SafeRunnable;
+import org.kalypso.core.KalypsoCoreDebug;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoThemeListener;
@@ -124,12 +125,53 @@ public class MapModell implements IMapModell
     m_project = null;
   }
 
+  /**
+   * Activates the given theme and deactiveates the currently activated one.
+   * <p>
+   * This also applies to any sub-modells, only one theme can be activated in the whole theme tree.
+   * 
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#activateTheme(org.kalypso.ogc.gml.IKalypsoTheme)
+   */
   public void activateTheme( final IKalypsoTheme theme )
   {
+    // we just call internal activate for me and all submodell
+
+    internalActivate( theme );
+
+    final IKalypsoThemeVisitor visitor = new IKalypsoThemeVisitor()
+    {
+      public boolean visit( final IKalypsoTheme visitedTheme )
+      {
+        if( visitedTheme instanceof IMapModell )
+        {
+          ((IMapModell) visitedTheme).internalActivate( theme );
+        }
+        return true;
+      }
+    };
+
+    accept( visitor, IKalypsoThemeVisitor.DEPTH_INFINITE );
+  }
+
+  /**
+   * Tries to activate the given theme within this modell.
+   * 
+   * @return <code>true</code>, if the given theme is contained within this modell and was activated.
+   *         <code>false</code> otherwise.
+   */
+  public void internalActivate( final IKalypsoTheme theme )
+  {
+    /* Do nothing if this theme is already the activated theme */
+    if( m_activeTheme == theme )
+      return;
+
+    final IKalypsoTheme themeToActivate = m_themes.contains( theme ) ? theme : null;
+
+    if( m_activeTheme == themeToActivate )
+      return;
+
     final IKalypsoTheme oldTheme = m_activeTheme;
-
     m_activeTheme = theme;
-
     fireThemeActivated( oldTheme, theme );
   }
 
@@ -237,12 +279,6 @@ public class MapModell implements IMapModell
 
     if( m_activeTheme == theme )
       activateTheme( theme );
-  }
-
-  public void setCoordinateSystem( final CS_CoordinateSystem crs ) throws Exception
-  {
-    if( crs.equals( m_coordinatesSystem ) )
-      throw new UnsupportedOperationException();
   }
 
   public void swapThemes( final IKalypsoTheme theme1, final IKalypsoTheme theme2 )
@@ -421,6 +457,8 @@ public class MapModell implements IMapModell
 
   protected void fireThemeActivated( final IKalypsoTheme previouslyActive, final IKalypsoTheme activeTheme )
   {
+    KalypsoCoreDebug.MAP_MODELL.printf( "Active theme changed from '%s' to '%s'%n", previouslyActive, activeTheme );
+
     acceptListenersRunnable( new IListenerRunnable()
     {
       public void visit( final IMapModellListener l )
