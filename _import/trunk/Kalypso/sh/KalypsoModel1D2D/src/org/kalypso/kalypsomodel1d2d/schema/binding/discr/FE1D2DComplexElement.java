@@ -44,10 +44,10 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.Util;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
 
 import sun.awt.image.ImageFetchable;

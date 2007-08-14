@@ -50,11 +50,11 @@ import org.apache.commons.httpclient.util.URIUtil;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IResultModel1d2d;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
-import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
 
 /**

@@ -76,7 +76,6 @@ import org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateNodalBCFlowrelationWidg
 import org.kalypso.kalypsomodel1d2d.ui.map.flowrel.IBoundaryConditionDescriptor;
 import org.kalypso.kalypsomodel1d2d.ui.map.flowrel.NodalBCSelectionWizard;
 import org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget;
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.ogc.gml.map.MapPanel;
@@ -84,6 +83,7 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Point;
 

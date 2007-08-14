@@ -12,13 +12,14 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
-import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
 
 /**
@@ -35,10 +36,10 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode<IFE
    * Creates a new node object that binds the given feature.
    * 
    * @param featureToBind
-   *          the feature to bind
+   *            the feature to bind
    * @see FE1D2DNode#FE1D2DNode(Feature, QName)
    * @throws IllegalArgumentException
-   *           if the passed feature does not substitutes to wb1d2d:Node
+   *             if the passed feature does not substitutes to wb1d2d:Node
    */
   public FE1D2DNode( final Feature featureToBind )
   {
@@ -64,11 +65,11 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode<IFE
    * parent feaure and linked to it by the property of the type specified by the argument propQName.
    * 
    * @param parentFeature
-   *          the parent feature for the new wbr:Roughness class
+   *            the parent feature for the new wbr:Roughness class
    * @param propQName
-   *          the Q-name of the linking property type
+   *            the Q-name of the linking property type
    * @throws IllegalArgumentException
-   *           if workspace is null or the roughness collection is not part of the workspace
+   *             if workspace is null or the roughness collection is not part of the workspace
    */
   public FE1D2DNode( Feature parentFeature, QName propQName ) throws IllegalArgumentException
   {
@@ -81,66 +82,8 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode<IFE
    */
   public FE1D2DNode( Feature parentFeature, QName propQName, String gmlID )
   {
-    this( Util.createFeatureWithId( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE, parentFeature, propQName, gmlID ) );
+    this( FeatureHelper.createFeatureWithId( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE, parentFeature, propQName, gmlID ) );
   }
-
-  // private static final Feature createNodeById(
-  // Feature parentFeature,
-  // QName propQName,
-  // String gmlID)
-  // throws IllegalArgumentException
-  // {
-  // Assert.throwIAEOnNull(
-  // parentFeature,
-  // "parentFeatureParameter must not be null" );
-  // Assert.throwIAEOnNull(
-  // propQName, "propQName param must notbe null" );
-  // gmlID=Assert.throwIAEOnNullOrEmpty( gmlID );
-  //    
-  // GMLWorkspace workspace=parentFeature.getWorkspace();
-  // IGMLSchema schema=workspace.getGMLSchema();
-  // IFeatureType featureType=
-  // schema.getFeatureType(
-  // Kalypso1D2DSchemaConstants.WB1D2D_F_NODE);
-  // IPropertyType parentPT=
-  // parentFeature.getFeatureType().getProperty( propQName );
-  // if(!(parentPT instanceof IRelationType))
-  // {
-  // throw new IllegalArgumentException(
-  // "Property not a IRelationType="+parentPT+
-  // " propQname="+propQName);
-  // }
-  //    
-  // Feature created=
-  // FeatureFactory.createFeature(
-  // parentFeature,
-  // (IRelationType)parentPT,
-  // gmlID,
-  // featureType,
-  // true );
-  // try
-  // {
-  // if(parentPT.isList())
-  // {
-  // workspace.addFeatureAsComposition(
-  // parentFeature,
-  // (IRelationType)parentPT,
-  // -1,
-  // created );
-  // }
-  // else
-  // {
-  // //TODO test this case
-  // parentFeature.setProperty( parentPT, created );
-  // }
-  // }
-  // catch( Exception e )
-  // {
-  // throw new RuntimeException("Could not add to the workspace",e);
-  // }
-  //    
-  // return created;
-  // }
 
   public GM_Point getPoint( )
   {
@@ -194,7 +137,7 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode<IFE
       final IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge> elt = (IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge>) f.getAdapter( IFE1D2DElement.class );
       if( elt instanceof IElement1D )
       {
-         // Special case for 1D-Elements, although they are elements. Its getEdges method is not supported.
+        // Special case for 1D-Elements, although they are elements. Its getEdges method is not supported.
         final IElement1D elt1d = (IElement1D) elt;
         final IFE1D2DEdge edge = elt1d.getEdge();
         final IFeatureWrapperCollection nodes = (edge instanceof IEdgeInv) ? ((IEdgeInv) edge).getInverted().getNodes() : edge.getNodes();
@@ -203,7 +146,7 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode<IFE
       }
       else if( elt instanceof IElement2D )
       {
-        final IFeatureWrapperCollection<IFE1D2DEdge> edges = ((IElement2D)elt).getEdges();
+        final IFeatureWrapperCollection<IFE1D2DEdge> edges = ((IElement2D) elt).getEdges();
         for( final IFE1D2DEdge edge : edges )
         {
           final IFeatureWrapperCollection nodes = (edge instanceof IEdgeInv) ? ((IEdgeInv) edge).getInverted().getNodes() : edge.getNodes();
@@ -219,50 +162,53 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode<IFE
 
     final IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge>[] result = new IFE1D2DElement[foundElements.size()];
     for( int i = 0; i < foundElements.size(); i++ )
-      result[i] = (IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge>) foundElements.get( i );
+      result[i] = foundElements.get( i );
 
     return result;
   }
 
-//  /**
-//   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode#getEdges()
-//   */
-//  public IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>[] getEdges( )
-//  {
-//    // TODO: at the moment, the elements are found via the geometric position, maybe change this later to references via
-//    // the containers.
+// /**
+// * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode#getEdges()
+// */
+// public IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>[] getEdges( )
+// {
+// // TODO: at the moment, the elements are found via the geometric position, maybe change this later to references via
+// // the containers.
 //
-//    final FE1D2DDiscretisationModel model = new FE1D2DDiscretisationModel( getFeature().getParent() );
-//    final FeatureList edgeList = (FeatureList) model.getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGES );
+// final FE1D2DDiscretisationModel model = new FE1D2DDiscretisationModel( getFeature().getParent() );
+// final FeatureList edgeList = (FeatureList) model.getFeature().getProperty(
+// Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGES );
 //
-//    // get all elements touching this node
-//    // TODO: is this really necessary, causes performance bug in bce.2d loading
-//    final List touchingEdges = edgeList.query( this.getPoint().getPosition(), null );
+// // get all elements touching this node
+// // TODO: is this really necessary, causes performance bug in bce.2d loading
+// final List touchingEdges = edgeList.query( this.getPoint().getPosition(), null );
 //
-//    final List<IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>> foundEdges = new ArrayList<IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>>();
+// final List<IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>> foundEdges = new ArrayList<IFE1D2DEdge<IFE1D2DElement,
+// IFE1D2DNode>>();
 //
-//    // filter all element which contain this node
-//    for( final Object object : touchingEdges )
-//    {
-//      final Feature f = (Feature) object;
-//      final IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge = (IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>) f.getAdapter( IFE1D2DEdge.class );
-//      final IFeatureWrapperCollection<IFE1D2DNode> nodes = edge.getNodes();
-//      for( final IFE1D2DNode node : nodes )
-//      {
-//        if( node.equals( this ) )
-//        {
-//          foundEdges.add( edge );
-//          break;
-//        }
-//      }
-//    }
+// // filter all element which contain this node
+// for( final Object object : touchingEdges )
+// {
+// final Feature f = (Feature) object;
+// final IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge = (IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>) f.getAdapter(
+// IFE1D2DEdge.class );
+// final IFeatureWrapperCollection<IFE1D2DNode> nodes = edge.getNodes();
+// for( final IFE1D2DNode node : nodes )
+// {
+// if( node.equals( this ) )
+// {
+// foundEdges.add( edge );
+// break;
+// }
+// }
+// }
 //
-//    final IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>[] result = new IFE1D2DEdge[foundEdges.size()];
-//    for( int i = 0; i < foundEdges.size(); i++ )
-//      result[i] = (IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>) foundEdges.get( i );
+// final IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>[] result = new IFE1D2DEdge[foundEdges.size()];
+// for( int i = 0; i < foundEdges.size(); i++ )
+// result[i] = (IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>) foundEdges.get( i );
 //
-//    return result;
-//  }
+// return result;
+// }
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode#getNeighbours()

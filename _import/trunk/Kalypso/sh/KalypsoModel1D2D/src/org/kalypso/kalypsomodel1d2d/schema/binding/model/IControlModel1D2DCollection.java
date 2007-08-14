@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.model;
 
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
  * Interface for classes representing the feature collection c1d2d:ControModelCollection

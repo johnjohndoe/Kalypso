@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
  * Interface corresponding to the wb1d2d:Element2DType in the sim_1d2d_discretisation.xsd

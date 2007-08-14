@@ -6,7 +6,7 @@ import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptor;
 import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ResultDB;
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 public class ResultNavigatorContentProvider extends WorkbenchContentProvider implements ITreeContentProvider
 {

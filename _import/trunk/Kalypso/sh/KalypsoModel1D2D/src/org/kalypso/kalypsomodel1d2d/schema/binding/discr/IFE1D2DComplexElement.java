@@ -40,9 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.discr.IFEComplexElement;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
  * Interface to be implemented by classes to provide a java 

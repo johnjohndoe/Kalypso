@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
  * Interface for classes representing the simBase:TerrainElevationModelSystem.

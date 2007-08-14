@@ -65,10 +65,10 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEJunction1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ILineElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
-import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 

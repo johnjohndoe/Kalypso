@@ -54,9 +54,9 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionContext1DToCLi
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ILineElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
  * Provides mechanism to get the type info for

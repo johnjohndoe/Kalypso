@@ -46,10 +46,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IStaticModel1D2D;
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.ogc.gml.AbstractKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**

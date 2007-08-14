@@ -12,10 +12,10 @@ import java.util.regex.Pattern;
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsosimulationmodel.core.Assert;
-import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelRoughnessConsts;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**

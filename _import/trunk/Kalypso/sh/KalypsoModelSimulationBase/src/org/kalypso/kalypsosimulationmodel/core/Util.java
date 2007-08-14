@@ -42,8 +42,6 @@ package org.kalypso.kalypsosimulationmodel.core;
 
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -60,7 +58,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.GMLSchemaException;
-import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -69,9 +66,10 @@ import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelRoughnessConsts;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.simulation.core.simspec.Modeldata;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
@@ -79,6 +77,8 @@ import de.renew.workflow.connector.cases.ICaseDataProvider;
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
+ * TODO: most of the methods should be moved into {@link FeatureHelper}.
+ * 
  * Holds utility methods
  * 
  * @author Patrice Congo
@@ -308,116 +308,6 @@ public class Util
     return typeQname.equals( feature.getFeatureType().getQName() );
   }
 
-  public static Feature createFeatureForListProp( final FeatureList list, final QName listProperty, final QName newFeatureName ) throws GMLSchemaException
-  {
-
-    final Feature parentFeature = list.getParentFeature();
-    final GMLWorkspace workspace = parentFeature.getWorkspace();
-
-    final IRelationType parentRelation = list.getParentFeatureTypeProperty();
-    final IFeatureType targetFeatureType = parentRelation.getTargetFeatureType();
-
-    final IFeatureType newFeatureType;
-    if( newFeatureName == null )
-    {
-      newFeatureType = targetFeatureType;
-    }
-    else
-    {
-      newFeatureType = workspace.getGMLSchema().getFeatureType( newFeatureName );
-    }
-
-    if( newFeatureName != null && !GMLSchemaUtilities.substitutes( newFeatureType, targetFeatureType.getQName() ) )
-    {
-      throw new GMLSchemaException( "Type of new feature (" + newFeatureName + ") does not substitutes target feature type of the list: " + targetFeatureType.getQName() );
-    }
-
-    final Feature newFeature = workspace.createFeature( parentFeature, parentRelation, newFeatureType );
-    try
-    {
-      workspace.addFeatureAsComposition( parentFeature,// parent,
-      parentRelation,// linkProperty,
-      list.size(),// pos,
-      newFeature );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
-    return newFeature;
-  }
-
-  public static final Feature createFeatureWithId( final QName newFeatureQName, final Feature parentFeature, final QName propQName, String gmlID ) throws IllegalArgumentException
-  {
-
-    Assert.throwIAEOnNullParam( parentFeature, "parentFeature" );
-    Assert.throwIAEOnNullParam( propQName, "propQName" );
-    Assert.throwIAEOnNullParam( newFeatureQName, "newFeatureQName" );
-    gmlID = Assert.throwIAEOnNullOrEmpty( gmlID );
-
-    final GMLWorkspace workspace = parentFeature.getWorkspace();
-    final IGMLSchema schema = workspace.getGMLSchema();
-    final IFeatureType featureType = schema.getFeatureType( newFeatureQName );
-    final IPropertyType parentPT = parentFeature.getFeatureType().getProperty( propQName );
-    if( !(parentPT instanceof IRelationType) )
-    {
-      throw new IllegalArgumentException( "Property not a IRelationType=" + parentPT + " propQname=" + propQName );
-    }
-
-    // TOASK does not include the feature into any workspace
-
-    final Feature created = FeatureFactory.createFeature( parentFeature, (IRelationType) parentPT, gmlID, featureType, true );
-
-    try
-    {
-      if( parentPT.isList() )
-      {
-        // workspace.addFeatureAsAggregation(
-        // parentFeature,//srcFE,
-        // (IRelationType)parentPT,//linkProperty,
-        // -1,//pos,
-        // gmlID//featureID
-        // );
-
-        // FeatureList propList=
-        // (FeatureList)parentFeature.getProperty( parentPT );
-        // propList.add( created );
-
-        workspace.addFeatureAsComposition( parentFeature, (IRelationType) parentPT, -1, created );
-      }
-      else
-      {
-        // TODO test this case
-        parentFeature.setProperty( parentPT, created );
-      }
-    }
-    catch( final Exception e )
-    {
-      throw new RuntimeException( "Could not add to the workspace", e );
-    }
-
-    return created;
-  }
-
-  public static final List<Feature> toFeatureList( final Collection< ? extends IFeatureWrapper2> c )
-  {
-    final List<Feature> fl = new ArrayList<Feature>();
-    if( c != null )
-    {
-      Feature f;
-      for( final IFeatureWrapper2 fw : c )
-      {
-        f = fw.getWrappedFeature();
-        if( f == null )
-        {
-          throw new IllegalArgumentException( "All feature wrapper must wrapp a non null feature:" + c );
-        }
-        fl.add( f );
-      }
-    }
-    return fl;
-  }
-
   /**
    * Create a feature of the given type and link it to the given parentFeature as a property of the specified q-name
    * 
@@ -544,6 +434,10 @@ public class Util
     // }
   }
 
+  /**
+   * @deprecated Use {@link org.kalypsodeegree_impl.model.feature.binding.NamedFeatureHelper} instead.
+   */
+  @Deprecated
   public static final String getFirstName( final Feature feature )
   {
     final Object obj = feature.getProperty( KalypsoModelRoughnessConsts.GML_PROP_NAME );

@@ -42,8 +42,8 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
 import java.util.List;
 
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.discr.IFEElement;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 

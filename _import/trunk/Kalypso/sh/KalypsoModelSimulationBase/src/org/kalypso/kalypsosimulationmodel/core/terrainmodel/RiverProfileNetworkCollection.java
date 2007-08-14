@@ -5,8 +5,8 @@ package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
 import java.util.List;
 
-import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 
 /**
  * @author Gernot Belger

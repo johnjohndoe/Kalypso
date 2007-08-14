@@ -40,9 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
-import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 
 /**
  * @author Gernot Belger

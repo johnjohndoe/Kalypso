@@ -42,9 +42,9 @@ package org.kalypso.kalypsosimulationmodel.core.flowrel;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Position;
 
 /**

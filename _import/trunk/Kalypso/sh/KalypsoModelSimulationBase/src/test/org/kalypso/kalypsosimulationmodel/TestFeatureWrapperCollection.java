@@ -2,12 +2,12 @@ package test.org.kalypso.kalypsosimulationmodel;
 
 import junit.framework.TestCase;
 
-import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCorrection;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelRoughnessConsts;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 
 /**
  * Test the {@link FeatureWrapperCollection} class using a feature 

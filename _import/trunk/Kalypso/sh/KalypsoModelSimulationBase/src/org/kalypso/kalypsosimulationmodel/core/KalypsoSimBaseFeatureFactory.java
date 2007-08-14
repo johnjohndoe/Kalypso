@@ -38,297 +38,215 @@ import org.kalypsodeegree.model.feature.Feature;
  * Adapter Factory for feature in the simBase namespace
  * 
  * @author Patrice Congo
- *
  */
 public class KalypsoSimBaseFeatureFactory implements IAdapterFactory
 {
-	interface AdapterConstructor
-	{
-		/**
-		 * Construct the Adapter of the specified class for the
-		 * given feature
-		 * 
-		 * @param <T>
-		 * @param feature
-		 * @param cls
-		 * @return
-		 * @throws IllegalArgumentException if
-		 * 	<ul>
-		 * 		<li/>feature or cls is null
-		 * 		<li/>feature cannnot be converted 
-		 *  </ul>
-		 */
-		public Object constructAdapter(
-							Feature feature,
-							Class cls) 
-							throws IllegalArgumentException;
-	}
-	
-		
-	private Map<Class, AdapterConstructor> constructors= 
-											createConstructorMap();
-	
-	
-	
-	public KalypsoSimBaseFeatureFactory()
-	{
-		//Empty
-	}
-	
-	
-	/**
-	 * @see org.eclipse.core.runtime.IAdapterFactory#getAdapter(java.lang.Object, java.lang.Class)
-	 */
-	public Object getAdapter(Object adaptableObject, Class adapterType)
-	{
-		if(!(adaptableObject instanceof Feature))
-		{
-			throw new IllegalArgumentException(
-					"Adapter Factory for feature only but"+
-					" get to adapt:"+adaptableObject);
-		}
-		
-		
-		AdapterConstructor ctor=constructors.get(adapterType);
-		if(ctor!=null)
-		{
-			return ctor.constructAdapter(
-							(Feature)adaptableObject, 
-							adapterType);
-		}
-		return null;
-	}
+  interface AdapterConstructor
+  {
+    /**
+     * Construct the Adapter of the specified class for the given feature
+     * 
+     * @param <T>
+     * @param feature
+     * @param cls
+     * @return
+     * @throws IllegalArgumentException
+     *             if
+     *             <ul>
+     *             <li/>feature or cls is null <li/>feature cannot be converted
+     *             </ul>
+     */
+    public Object constructAdapter( Feature feature, Class cls ) throws IllegalArgumentException;
+  }
 
-	/**
-	 * @see org.eclipse.core.runtime.IAdapterFactory#getAdapterList()
-	 */
-	public Class[] getAdapterList()
-	{
-      return constructors.keySet().toArray( new Class[constructors.size()] );
-	}
+  private Map<Class, AdapterConstructor> constructors = createConstructorMap();
 
-	private final Map<Class, AdapterConstructor> createConstructorMap()
-	{
-		Map<Class, AdapterConstructor> cMap= 
-				new Hashtable<Class, AdapterConstructor>();
+  public KalypsoSimBaseFeatureFactory( )
+  {
+    // Empty
+  }
 
-        //terrain model
-        AdapterConstructor cTor= new AdapterConstructor()
-        {
-            public Object constructAdapter(
-                                        Feature feature, 
-                                        Class cls) 
-                                        throws IllegalArgumentException
-            {
-                
-                return new TerrainModel(feature);
-            }
-        };
-        cMap.put(ITerrainModel.class, cTor);
-        
-		//IRoughnessCls
-		cTor= new AdapterConstructor()
-		{
-			public Object constructAdapter(
-										Feature feature, 
-										Class cls) 
-										throws IllegalArgumentException
-			{
-				
-				return new RoughnessCls(feature);
-			}
-		};
-		cMap.put(IRoughnessCls.class, cTor);
-        
-//      IRoughnessCls
-        cTor= new AdapterConstructor()
-        {
-            public Object constructAdapter(
-                                    Feature feature, 
-                                    Class cls) 
-                                    throws IllegalArgumentException
-            {
-                try
-                {
-                  return new RoughnessClsCollection(feature);
-                }
-                catch ( Throwable th) 
-                {
-                  th.printStackTrace();
-                  return null;
-                }
-            }
-        };
-        cMap.put(IRoughnessClsCollection.class, cTor);
-		
-		//IRoughnessClsCorrection
-		cTor= new AdapterConstructor()
-		{
-			public Object constructAdapter(
-										Feature feature, 
-										Class cls) 
-										throws IllegalArgumentException
-			{
-				
-				return new RoughnessClsCorrection(feature);
-			}
-		};
-		cMap.put(IRoughnessClsCorrection.class, cTor);
-		
-		
-			
-		//IRoughnessPolygon
-		cTor= new AdapterConstructor()
-		{
-			public Object constructAdapter(
-										Feature feature, 
-										Class cls) 
-										throws IllegalArgumentException
-			{
-				
-				return new RoughnessPolygon(feature);
-			}
-		};
-		cMap.put(IRoughnessPolygon.class, cTor);
-        
-//      IRoughnessLayerPolygonCollection
-        cTor= new AdapterConstructor()
-        {
-            public Object constructAdapter(
-                                        Feature feature, 
-                                        Class cls) 
-                                        throws IllegalArgumentException
-            {
-                
-                return new RoughnessPolygonCollection(feature);
-            }
-        };
-        cMap.put(IRoughnessPolygonCollection.class, cTor);
+  /**
+   * @see org.eclipse.core.runtime.IAdapterFactory#getAdapter(java.lang.Object, java.lang.Class)
+   */
+  public Object getAdapter( Object adaptableObject, Class adapterType )
+  {
+    if( !(adaptableObject instanceof Feature) )
+    {
+      throw new IllegalArgumentException( "Adapter Factory for feature only but" + " get to adapt:" + adaptableObject );
+    }
 
-        //IRiverProfileNetworkCollection
-		cTor= new AdapterConstructor()
-		{
-		  public Object constructAdapter(
-		      Feature feature, 
-		      Class cls) 
-		  throws IllegalArgumentException
-		  {
-		    return new RiverProfileNetworkCollection(feature);
-		  }
-		};
-		cMap.put(IRiverProfileNetworkCollection.class, cTor);
-		
-		//IRiverProfileNetwork
-		cTor= new AdapterConstructor()
-		{
-		  public Object constructAdapter(
-		      Feature feature, 
-		      Class cls) 
-		  throws IllegalArgumentException
-		  {
-		    return new RiverProfileNetwork(feature);
-		  }
-		};
-		cMap.put(IRiverProfileNetwork.class, cTor);
-        
-//      ITerrainElevationModelSystem
-//        cTor= new AdapterConstructor()
-//        {
-//          public Object constructAdapter(
-//              Feature feature, 
-//              Class cls) 
-//          throws IllegalArgumentException
-//          {
-//            return new TerrainElevationModelSystem(feature);
-//          }
-//        };
-//        cMap.put(ITerrainElevationModelSystem.class, cTor);
-		
-//      ITerrainElevationModel
-        cTor= new AdapterConstructor()
+    AdapterConstructor ctor = constructors.get( adapterType );
+    if( ctor != null )
+    {
+      return ctor.constructAdapter( (Feature) adaptableObject, adapterType );
+    }
+    return null;
+  }
+
+  /**
+   * @see org.eclipse.core.runtime.IAdapterFactory#getAdapterList()
+   */
+  public Class[] getAdapterList( )
+  {
+    return constructors.keySet().toArray( new Class[constructors.size()] );
+  }
+
+  private final Map<Class, AdapterConstructor> createConstructorMap( )
+  {
+    Map<Class, AdapterConstructor> cMap = new Hashtable<Class, AdapterConstructor>();
+
+    // terrain model
+    AdapterConstructor cTor = new AdapterConstructor()
+    {
+      public Object constructAdapter( Feature feature, Class cls ) throws IllegalArgumentException
+      {
+
+        return new TerrainModel( feature );
+      }
+    };
+    cMap.put( ITerrainModel.class, cTor );
+
+    // IRoughnessCls
+    cTor = new AdapterConstructor()
+    {
+      public Object constructAdapter( Feature feature, Class cls ) throws IllegalArgumentException
+      {
+
+        return new RoughnessCls( feature );
+      }
+    };
+    cMap.put( IRoughnessCls.class, cTor );
+
+// IRoughnessCls
+    cTor = new AdapterConstructor()
+    {
+      public Object constructAdapter( Feature feature, Class cls ) throws IllegalArgumentException
+      {
+        try
         {
-          public Object constructAdapter(
-              Feature feature, 
-              Class cls) 
-          throws IllegalArgumentException
+          return new RoughnessClsCollection( feature );
+        }
+        catch( Throwable th )
+        {
+          th.printStackTrace();
+          return null;
+        }
+      }
+    };
+    cMap.put( IRoughnessClsCollection.class, cTor );
+
+    // IRoughnessClsCorrection
+    cTor = new AdapterConstructor()
+    {
+      public Object constructAdapter( Feature feature, Class cls ) throws IllegalArgumentException
+      {
+        return new RoughnessClsCorrection( feature );
+      }
+    };
+    cMap.put( IRoughnessClsCorrection.class, cTor );
+
+    // IRoughnessPolygon
+    cTor = new AdapterConstructor()
+    {
+      public Object constructAdapter( Feature feature, Class cls ) throws IllegalArgumentException
+      {
+
+        return new RoughnessPolygon( feature );
+      }
+    };
+    cMap.put( IRoughnessPolygon.class, cTor );
+
+// IRoughnessLayerPolygonCollection
+    cTor = new AdapterConstructor()
+    {
+      public Object constructAdapter( Feature feature, Class cls ) throws IllegalArgumentException
+      {
+        return new RoughnessPolygonCollection( feature );
+      }
+    };
+    cMap.put( IRoughnessPolygonCollection.class, cTor );
+
+    // IRiverProfileNetworkCollection
+    cTor = new AdapterConstructor()
+    {
+      public Object constructAdapter( Feature feature, Class cls ) throws IllegalArgumentException
+      {
+        return new RiverProfileNetworkCollection( feature );
+      }
+    };
+    cMap.put( IRiverProfileNetworkCollection.class, cTor );
+
+    // IRiverProfileNetwork
+    cTor = new AdapterConstructor()
+    {
+      public Object constructAdapter( Feature feature, Class cls ) throws IllegalArgumentException
+      {
+        return new RiverProfileNetwork( feature );
+      }
+    };
+    cMap.put( IRiverProfileNetwork.class, cTor );
+
+// ITerrainElevationModel
+    cTor = new AdapterConstructor()
+    {
+      public Object constructAdapter( Feature feature, Class cls ) throws IllegalArgumentException
+      {
+        // TODO provide adapaterfac method for the elevation model
+        if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), KalypsoModelSimulationBaseConsts.SIM_BASE_F_NATIVE_TERRAIN_ELE_WRAPPER ) )
+        {
+          try
           {
-            //TODO provide adapaterfac method for the elevation model
-            if(GMLSchemaUtilities.substitutes( 
-                        feature.getFeatureType(), 
-                        KalypsoModelSimulationBaseConsts.SIM_BASE_F_NATIVE_TERRAIN_ELE_WRAPPER
-                        ))
-            {
-              try
-              {
-                return new NativeTerrainElevationModelWrapper(feature);
-              }
-              catch( Throwable th )
-              {
-                throw new IllegalArgumentException(
-                    "Could not create adapter for:"+
-                      "\n\t featue="+feature+
-                      "\n\t adapter type="+cls,
-                    th);
-              }
-              
-            }
-            else if(GMLSchemaUtilities.substitutes( 
-                feature.getFeatureType(), 
-                KalypsoModelSimulationBaseConsts.SIM_BASE_F_TERRAIN_ELE_SYS
-                ))
-            {
-              try
-              {
-                return new TerrainElevationModelSystem(feature);
-              }
-              catch( Throwable th )
-              {
-                throw new IllegalArgumentException(
-                    "Could not create adapter for:"+
-                      "\n\t featue="+feature+
-                      "\n\t adaptaer type="+cls,
-                    th);
-              }
-              
-            }
-            else
-            {
-              System.out.println("Could not adapt="+feature+" to"+cls);
-              return null;//new TerrainElevationModel(feature);
-            }
+            return new NativeTerrainElevationModelWrapper( feature );
           }
-        };
-        cMap.put(ITerrainElevationModel.class, cTor);
-        cMap.put(ITerrainElevationModelSystem.class, cTor);
-        
-        
-        
-//      ITerrainModel
-        cTor= new AdapterConstructor()
-        {
-          public Object constructAdapter(
-              Feature feature, 
-              Class cls) 
-          throws IllegalArgumentException
+          catch( Throwable th )
           {
-            return new TerrainModel(feature);
+            throw new IllegalArgumentException( "Could not create adapter for:" + "\n\t featue=" + feature + "\n\t adapter type=" + cls, th );
           }
-        };
-        cMap.put(ITerrainModel.class, cTor);
-        
-        // IFlowRelationshipModel
-        cTor= new AdapterConstructor()
-        {
-            public Object constructAdapter(
-              Feature feature, 
-              Class cls) 
-          throws IllegalArgumentException
-          {
-            return new FlowRelationshipModel(feature);
-          }
-        };
-        cMap.put(IFlowRelationshipModel.class, cTor);
 
-		return Collections.unmodifiableMap(cMap);
-	}
+        }
+        else if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), KalypsoModelSimulationBaseConsts.SIM_BASE_F_TERRAIN_ELE_SYS ) )
+        {
+          try
+          {
+            return new TerrainElevationModelSystem( feature );
+          }
+          catch( Throwable th )
+          {
+            throw new IllegalArgumentException( "Could not create adapter for:" + "\n\t featue=" + feature + "\n\t adaptaer type=" + cls, th );
+          }
+
+        }
+        else
+        {
+          System.out.println( "Could not adapt=" + feature + " to" + cls );
+          return null;// new TerrainElevationModel(feature);
+        }
+      }
+    };
+    cMap.put( ITerrainElevationModel.class, cTor );
+    cMap.put( ITerrainElevationModelSystem.class, cTor );
+
+// ITerrainModel
+    cTor = new AdapterConstructor()
+    {
+      public Object constructAdapter( Feature feature, Class cls ) throws IllegalArgumentException
+      {
+        return new TerrainModel( feature );
+      }
+    };
+    cMap.put( ITerrainModel.class, cTor );
+
+    // IFlowRelationshipModel
+    cTor = new AdapterConstructor()
+    {
+      public Object constructAdapter( Feature feature, Class cls ) throws IllegalArgumentException
+      {
+        return new FlowRelationshipModel( feature );
+      }
+    };
+    cMap.put( IFlowRelationshipModel.class, cTor );
+
+    return Collections.unmodifiableMap( cMap );
+  }
 }

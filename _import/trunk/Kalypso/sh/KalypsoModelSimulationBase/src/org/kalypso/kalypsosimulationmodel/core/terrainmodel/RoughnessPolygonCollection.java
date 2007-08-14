@@ -5,9 +5,9 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;

@@ -42,8 +42,8 @@ package org.kalypso.kalypsosimulationmodel.core.flowresistance;
 
 import java.util.List;
 
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Primitive;
 
 /**

@@ -42,11 +42,11 @@ package org.kalypso.kalypsosimulationmodel.core.modeling;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
 

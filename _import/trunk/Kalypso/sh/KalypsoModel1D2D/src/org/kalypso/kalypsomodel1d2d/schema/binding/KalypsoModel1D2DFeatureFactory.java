@@ -86,6 +86,12 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.model.OperationalModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.PseudoOPerationalModel;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.SimulationModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.StaticModel1D2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.CalcUnitResultMeta;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.DocumentResultMeta;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.StepResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.GMLNodeResult;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.Hydrograph;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.HydrographCollection;
@@ -96,6 +102,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.merge.FERoughnessDisplayElement;
 import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.ElevationModelDisplayElementFactory;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.modeling.ISimulationModel;
+import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypsodeegree.graphics.displayelements.DisplayElementDecorator;
 import org.kalypsodeegree.model.feature.Feature;
@@ -764,6 +771,95 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
       }
     };
     cMap.put( IBridgeFlowRelation.class, cTor );
+
+    // IResultMeta
+    cTor = new AdapterConstructor()
+    {
+      public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
+      {
+        // If a general result meta is to be adapted, return the concrete type instead
+        final QName featureQName = feature.getFeatureType().getQName();
+
+        if( featureQName.equals( ICalcUnitResultMeta.QNAME ) )
+        {
+          return new CalcUnitResultMeta( feature );
+        }
+        else if( featureQName.equals( IStepResultMeta.QNAME ) )
+        {
+          return new StepResultMeta( feature );
+        }
+        else if( featureQName.equals( IDocumentResultMeta.QNAME ) )
+        {
+          return new DocumentResultMeta( feature );
+        }
+        else
+        {
+          warnUnableToAdapt( feature, featureQName, IResultMeta.class );
+          return null;
+        }
+      }
+    };
+    cMap.put( IResultMeta.class, cTor );
+
+    // CalcUnitResultMeta
+    cTor = new AdapterConstructor()
+    {
+      public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
+      {
+        final QName featureQName = feature.getFeatureType().getQName();
+
+        if( featureQName.equals( ICalcUnitResultMeta.QNAME ) )
+        {
+          return new CalcUnitResultMeta( feature );
+        }
+        else
+        {
+          warnUnableToAdapt( feature, featureQName, ICalcUnitResultMeta.class );
+          return null;
+        }
+      }
+    };
+    cMap.put( ICalcUnitResultMeta.class, cTor );
+
+    // StepResultMeta
+    cTor = new AdapterConstructor()
+    {
+      public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
+      {
+        final QName featureQName = feature.getFeatureType().getQName();
+
+        if( featureQName.equals( IStepResultMeta.QNAME ) )
+        {
+          return new StepResultMeta( feature );
+        }
+        else
+        {
+          warnUnableToAdapt( feature, featureQName, IStepResultMeta.class );
+          return null;
+        }
+      }
+    };
+    cMap.put( IStepResultMeta.class, cTor );
+
+    // DocumentResultMeta
+    cTor = new AdapterConstructor()
+    {
+      public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
+      {
+        final QName featureQName = feature.getFeatureType().getQName();
+
+        if( featureQName.equals( IDocumentResultMeta.QNAME ) )
+        {
+          return new DocumentResultMeta( feature );
+        }
+        else
+        {
+          warnUnableToAdapt( feature, featureQName, IDocumentResultMeta.class );
+          return null;
+        }
+      }
+    };
+    cMap.put( IDocumentResultMeta.class, cTor );
 
     // BoundaryCondition
     cTor = new AdapterConstructor()

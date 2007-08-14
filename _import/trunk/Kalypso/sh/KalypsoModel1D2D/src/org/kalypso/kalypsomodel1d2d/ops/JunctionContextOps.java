@@ -53,7 +53,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionContext1DTo2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionContext1DToCLine;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
  * Algorithms around the junction context type:

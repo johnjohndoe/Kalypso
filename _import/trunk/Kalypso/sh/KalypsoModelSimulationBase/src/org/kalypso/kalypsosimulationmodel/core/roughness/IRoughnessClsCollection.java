@@ -2,7 +2,7 @@ package org.kalypso.kalypsosimulationmodel.core.roughness;
 
 import java.util.List;
 
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
  * Interface to be implemented by classes representing a wbr:RoughnessCollection elemenent

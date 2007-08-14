@@ -42,7 +42,7 @@ package org.kalypso.kalypsomodel1d2d.ui.viewer;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
  * Stateless {@link IStructuredContentProvider} for 

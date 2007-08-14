@@ -14,18 +14,17 @@ import org.kalypso.kalypsomodel1d2d.geom.ModelGeometryBuilder;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.Util;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
-import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * @author Gernot Belger
@@ -116,7 +115,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
 
   public FE1D2DEdge( Feature parentFeature, QName propQName, String gmlID )
   {
-    this( Util.createFeatureWithId( Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE, parentFeature, propQName, gmlID ) );
+    this( FeatureHelper.createFeatureWithId( Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE, parentFeature, propQName, gmlID ) );
   }
 
   /**
@@ -221,6 +220,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper#getWrappedFeature()
    */
+  @Override
   public Feature getWrappedFeature( )
   {
     return getFeature();
@@ -229,6 +229,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper#getGmlID()
    */
+  @Override
   public String getGmlID( )
   {
     return getFeature().getId();

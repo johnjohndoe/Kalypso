@@ -42,8 +42,8 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
 import java.util.Collection;
 
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.discr.IFENode;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**

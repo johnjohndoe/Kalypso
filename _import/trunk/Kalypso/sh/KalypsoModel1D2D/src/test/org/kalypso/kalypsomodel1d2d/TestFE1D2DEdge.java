@@ -10,10 +10,10 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DContinuityLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 import test.org.kalypso.kalypsosimulationmodel.TestUtils;
 

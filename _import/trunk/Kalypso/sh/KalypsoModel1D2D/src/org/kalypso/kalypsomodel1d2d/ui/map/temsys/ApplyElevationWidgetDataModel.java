@@ -53,7 +53,6 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 import org.kalypso.kalypsosimulationmodel.core.ICommandPoster;
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
@@ -66,6 +65,7 @@ import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionListener;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 
 import de.renew.workflow.connector.cases.ICaseDataProvider;

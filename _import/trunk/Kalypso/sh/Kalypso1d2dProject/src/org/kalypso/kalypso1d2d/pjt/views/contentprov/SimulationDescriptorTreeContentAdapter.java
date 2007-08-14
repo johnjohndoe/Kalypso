@@ -44,7 +44,7 @@ import org.eclipse.ui.model.WorkbenchAdapter;
 import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IModelDescriptor;
 import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IResultModelDescriptor;
 import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptor;
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
  * @author Stefan Kurzbach

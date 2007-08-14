@@ -45,6 +45,7 @@ import javax.xml.namespace.QName;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.Util;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 @SuppressWarnings("unchecked")
 /**
@@ -115,7 +116,7 @@ public class FE1D2DContinuityLine<CT extends IFE1D2DComplexElement, ET extends I
    */
   public FE1D2DContinuityLine( Feature parentFeature, QName propQName, String gmlID )
   {
-    this( Util.createFeatureWithId( Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DContinuityLine, parentFeature, propQName, gmlID ) );
+    this( FeatureHelper.createFeatureWithId( Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DContinuityLine, parentFeature, propQName, gmlID ) );
   }
 
 }

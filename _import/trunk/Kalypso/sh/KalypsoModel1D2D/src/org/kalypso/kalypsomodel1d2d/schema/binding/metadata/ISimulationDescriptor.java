@@ -42,8 +42,8 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.metadata;
 
 import java.util.GregorianCalendar;
 
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
  * @author Patrice Congo

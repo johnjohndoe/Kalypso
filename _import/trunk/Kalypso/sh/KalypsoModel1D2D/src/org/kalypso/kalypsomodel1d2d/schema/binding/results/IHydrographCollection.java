@@ -43,7 +43,7 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.results;
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
  * @author Gernot Belger

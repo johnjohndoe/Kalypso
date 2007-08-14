@@ -41,7 +41,7 @@
 package org.kalypso.kalypsomodel1d2d.schema.binding.model;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
  * Interface for result model of type NodeResultCollection

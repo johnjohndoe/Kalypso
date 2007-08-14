@@ -65,11 +65,11 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IModelDescriptor;
 import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IResultModelDescriptor;
 import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptor;
 import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ResultDB;
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 

@@ -45,13 +45,13 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.kalypsomodel1d2d.schema.binding.Util;
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.opengis.cs.CS_CoordinateSystem;
 
@@ -82,7 +82,7 @@ public class LineElement<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdg
    */
   public LineElement( final Feature parentFeature, final QName propQName, final String gmlID, final QName featureQName, final Class<CT> complexElementClass, final Class<ET> edgeClass )
   {
-    this( Util.createFeatureWithId( featureQName, parentFeature, propQName, gmlID ), featureQName, complexElementClass, edgeClass );
+    this( FeatureHelper.createFeatureWithId( featureQName, parentFeature, propQName, gmlID ), featureQName, complexElementClass, edgeClass );
   }
 
   /**

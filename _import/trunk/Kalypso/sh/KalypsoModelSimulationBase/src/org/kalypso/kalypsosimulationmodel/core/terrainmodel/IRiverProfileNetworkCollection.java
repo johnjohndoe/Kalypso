@@ -4,9 +4,9 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
  * Interface to be implemented by class which represents the simBase:RiverProfileNetworkCollection

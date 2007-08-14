@@ -86,8 +86,8 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.model.IStaticModel1D2D;
 import org.kalypso.kalypsomodel1d2d.ui.map.merge.Model1D2DElementRoughnessTheme;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.kalypsomodel1d2d.update.ModelMergeService;
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 import sun.management.MXBeanSupport;
 import sun.reflect.generics.tree.BottomSignature;

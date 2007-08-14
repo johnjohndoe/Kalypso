@@ -66,7 +66,6 @@ import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IResultModelDescriptor;
 import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptor;
 import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ResultDB;
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.ogc.gml.CascadingKalypsoTheme;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -78,6 +77,7 @@ import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
 import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor;
 import org.kalypso.ui.action.AddThemeCommand;
 import org.kalypso.ui.editor.mapeditor.AbstractMapPart;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 import de.renew.workflow.contexts.IDialogWithResult;
 

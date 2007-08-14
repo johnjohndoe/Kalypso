@@ -2,10 +2,10 @@ package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
  * Interface to be implemented by classes that represent a simBase:RiverProfileNetwork

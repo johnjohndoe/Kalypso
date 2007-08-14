@@ -43,8 +43,8 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.model;
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
-import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 
 /**
  * Default implementation of {@link IControlModel1D2DCollection} based 

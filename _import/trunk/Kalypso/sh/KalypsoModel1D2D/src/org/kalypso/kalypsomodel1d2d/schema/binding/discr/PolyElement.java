@@ -10,18 +10,19 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.ops.ModelOps;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.Util;
-import org.kalypso.kalypsosimulationmodel.core.FeatureWrapperCollection;
-import org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfaceInterpolation;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
 import org.kalypsodeegree_impl.model.geometry.GM_SurfaceInterpolation_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -123,7 +124,7 @@ public class PolyElement extends AbstractFeatureBinder implements IPolyElement
 
   public PolyElement( final Feature parentFeature, final QName propQName, final String gmlID )
   {
-    this( Util.createFeatureWithId( Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2D_2DElement, parentFeature, propQName, gmlID ) );
+    this( FeatureHelper.createFeatureWithId( Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2D_2DElement, parentFeature, propQName, gmlID ) );
   }
 
   /**
