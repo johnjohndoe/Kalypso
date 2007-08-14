@@ -302,6 +302,14 @@ public class GisTemplateMapModell implements IMapModell
     m_modell.activateTheme( theme );
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#internalActivate(org.kalypso.ogc.gml.IKalypsoTheme)
+   */
+  public void internalActivate( final IKalypsoTheme theme )
+  {
+    m_modell.internalActivate( theme );
+  }
+
   public void addTheme( final IKalypsoTheme theme )
   {
     m_modell.addTheme( theme );

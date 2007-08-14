@@ -1,7 +1,10 @@
-# Activates or deactivates validation of bindings while marhsalling/unmarshalling 
+# Activates or deactivates validation of bindings while marhsalling/unmarshalling
 
 org.kalypso.core/debug/validatebinding/gismapview = false
 org.kalypso.core/debug/validatebinding/featureview = false
 
 # Performance Measurment
 org.kalypso.core/perf/serialization/gml = true
+
+# MapModell output
+org.kalypso.core/debug/mapModell = false

@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.mapmodel;
 
@@ -130,4 +130,11 @@ public interface IMapModell extends IWorkbenchAdapter
 
   // HACK In order to have nice parents for outline tree even for cascading themes, we something like this...
   public Object getThemeParent( final IKalypsoTheme theme );
+
+  /**
+   * Internal method for setting the active theme.
+   * <p>
+   * This method is not intended to be called from outside of {@link IMapModell} implementations.
+   */
+  public void internalActivate( IKalypsoTheme theme );
 }

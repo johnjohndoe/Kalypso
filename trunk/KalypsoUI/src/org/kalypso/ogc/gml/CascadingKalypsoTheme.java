@@ -385,6 +385,14 @@ public class CascadingKalypsoTheme extends AbstractKalypsoTheme implements ITemp
   }
 
   /**
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#internalActivate(org.kalypso.ogc.gml.IKalypsoTheme)
+   */
+  public void internalActivate( final IKalypsoTheme theme )
+  {
+    m_innerMapModel.internalActivate( theme );
+  }
+
+  /**
    * @param theme
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#addTheme(org.kalypso.ogc.gml.IKalypsoTheme)
    */
