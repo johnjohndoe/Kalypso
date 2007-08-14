@@ -113,7 +113,7 @@ public class Building1D2DConverter
     {
       final BigDecimal[] discharges = new BigDecimal[downstreamWaterlevels.length];
       for( int i = 0; i < discharges.length; i++ )
-        discharges[i] = buildingParameters.getDischarge( upstreamWaterlevel, downstreamWaterlevels[i] );
+        discharges[i] = buildingParameters.interpolateDischarge( upstreamWaterlevel, downstreamWaterlevels[i] );
 
       formatBlock( format, "FLW", discharges );
     }
