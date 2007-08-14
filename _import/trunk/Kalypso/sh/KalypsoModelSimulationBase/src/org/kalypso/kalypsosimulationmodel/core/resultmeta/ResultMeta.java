@@ -43,38 +43,30 @@ package org.kalypso.kalypsosimulationmodel.core.resultmeta;
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.IStatus;
-import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
 
 /**
  * @author Thomas Jung
  * 
  */
-public class ResultMeta extends AbstractFeatureBinder implements IResultMeta
+public abstract class ResultMeta extends AbstractFeatureBinder implements IResultMeta
 {
+  private final IFeatureWrapperCollection<IResultMeta> m_children = new FeatureWrapperCollection<IResultMeta>( getFeature(), IResultMeta.class, QNAME_PROP_CHILDREN );
 
   public ResultMeta( Feature featureToBind, QName qnameToBind )
   {
     super( featureToBind, qnameToBind );
-    // TODO Auto-generated constructor stub
   }
-
-  private static final QName QNAME_PROP_PATH = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_RESULT_NS, "path" );
-
-  private static final QName QNAME_PROP_STATUS = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_RESULT_NS, "statusMember" );
-
-  private static final QName QNAME_PROP_CHILDREN = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_RESULT_NS, "statusMember" );
-
-  private static final QName QNAME_PROP_PARENT = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_RESULT_NS, "statusMember" );
 
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.result.IResultMeta#getChildren()
    */
-  public IResultMeta[] getChildren( )
+  public IFeatureWrapperCollection<IResultMeta> getChildren( )
   {
-    // TODO Auto-generated method stub
-    return null;
+    return m_children;
   }
 
   /**
@@ -82,8 +74,11 @@ public class ResultMeta extends AbstractFeatureBinder implements IResultMeta
    */
   public IResultMeta getParent( )
   {
-    // TODO Auto-generated method stub
-    return null;
+    final Feature parentFeature = (Feature) getFeature().getProperty( QNAME_PROP_PARENT );
+    if( parentFeature == null )
+      return null;
+
+    return (IResultMeta) parentFeature.getAdapter( IResultMeta.class );
   }
 
   /**
@@ -91,8 +86,7 @@ public class ResultMeta extends AbstractFeatureBinder implements IResultMeta
    */
   public String getPath( )
   {
-    // TODO Auto-generated method stub
-    return null;
+    return (String) getWrappedFeature().getProperty( QNAME_PROP_PATH );
   }
 
   /**
@@ -100,17 +94,11 @@ public class ResultMeta extends AbstractFeatureBinder implements IResultMeta
    */
   public IStatus getStatus( )
   {
-    // TODO Auto-generated method stub
-    return null;
-  }
+    final Feature statusFeature = (Feature) getFeature().getProperty( QNAME_PROP_STATUS );
+    if( statusFeature == null )
+      return null;
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.result.IResultMeta#setChildren(org.kalypso.kalypsosimulationmodel.core.result.IResultMeta[])
-   */
-  public void setChildren( IResultMeta[] resultMeta )
-  {
-    // TODO Auto-generated method stub
-
+    return (IStatus) statusFeature.getAdapter( IStatus.class );
   }
 
   /**
@@ -118,8 +106,7 @@ public class ResultMeta extends AbstractFeatureBinder implements IResultMeta
    */
   public void setParent( IResultMeta resultMeta )
   {
-    // TODO Auto-generated method stub
-
+    getFeature().setProperty( QNAME_PROP_PARENT, resultMeta );
   }
 
   /**
@@ -127,8 +114,7 @@ public class ResultMeta extends AbstractFeatureBinder implements IResultMeta
    */
   public void setPath( String path )
   {
-    // TODO Auto-generated method stub
-
+    getFeature().setProperty( QNAME_PROP_PATH, path );
   }
 
   /**
@@ -136,8 +122,7 @@ public class ResultMeta extends AbstractFeatureBinder implements IResultMeta
    */
   public void setStatus( IStatus status )
   {
-    // TODO Auto-generated method stub
-
+    getFeature().setProperty( QNAME_PROP_STATUS, status );
   }
 
 }

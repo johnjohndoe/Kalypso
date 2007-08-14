@@ -45,6 +45,7 @@ import javax.xml.namespace.QName;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
  * @author Thomas Jung
@@ -52,6 +53,13 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
  */
 public interface IResultMeta extends IFeatureWrapper2
 {
+  public static final QName QNAME_PROP_PATH = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_RESULT_NS, "path" );
+
+  public static final QName QNAME_PROP_STATUS = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_RESULT_NS, "statusMember" );
+
+  public static final QName QNAME_PROP_CHILDREN = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_RESULT_NS, "statusMember" );
+
+  public static final QName QNAME_PROP_PARENT = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_RESULT_NS, "statusMember" );
 
   public final static QName QNAME = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_RESULT_NS, "ResultMeta" );
 
@@ -67,7 +75,5 @@ public interface IResultMeta extends IFeatureWrapper2
 
   public void setParent( IResultMeta resultMeta );
 
-  public IResultMeta[] getChildren( );
-
-  public void setChildren( IResultMeta[] resultMeta );
+  public IFeatureWrapperCollection<IResultMeta> getChildren( );
 }
