@@ -9,6 +9,8 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.gml.binding.commons.IStatus;
+import org.kalypsodeegree_impl.gml.binding.commons.Status;
 import org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D;
 import org.kalypsodeegree_impl.gml.binding.math.IPolynomial2D;
 import org.kalypsodeegree_impl.gml.binding.math.Polynomial1D;
@@ -31,15 +33,15 @@ public class FeatureCommonsAdapterFactory implements IAdapterFactory
      * @param cls
      * @return
      * @throws IllegalArgumentException
-     *           if
-     *           <ul>
-     *           <li/>feature or cls is null <li/>feature cannnot be converted
-     *           </ul>
+     *             if
+     *             <ul>
+     *             <li/>feature or cls is null <li/>feature cannnot be converted
+     *             </ul>
      */
     public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException;
   }
 
-  private Map<Class, AdapterConstructor> m_constructors = createConstructorMap();
+  private final Map<Class, AdapterConstructor> m_constructors = createConstructorMap();
 
   /**
    * @see org.eclipse.core.runtime.IAdapterFactory#getAdapter(java.lang.Object, java.lang.Class)
@@ -84,6 +86,16 @@ public class FeatureCommonsAdapterFactory implements IAdapterFactory
       {
 
         return new Polynomial2D( feature );
+      }
+    } );
+
+    // Status
+    cMap.put( IStatus.class, new AdapterConstructor()
+    {
+      public Object constructAdapter( Feature feature, Class cls ) throws IllegalArgumentException
+      {
+
+        return new Status( feature );
       }
     } );
 
