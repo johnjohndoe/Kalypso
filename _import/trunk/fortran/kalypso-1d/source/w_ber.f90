@@ -1,4 +1,4 @@
-!     Last change:  MD    7 Aug 2007    4:56 pm
+!     Last change:  MD   10 Aug 2007    3:58 pm
 !--------------------------------------------------------------------------
 ! This code, w_ber.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -296,7 +296,7 @@ IF (BERECHNUNGSMODUS=='REIB_KONST' .and. Q_Abfrage=='NO_SCHLEIFE') then
 
   !MD Kontrolle der Grenztiefe im Unterwasser
   ! -----------------------------------------------------
-  IF ((h_uw - sohlp(np)) .lt. (2./3.* (hen1- sohlp(np))) ) THEN
+  IF ((h_uw - sohlp(np-1)) .lt. (2./3.* (hen1- sohlp(np-1))) ) THEN
     write (UNIT_OUT_TAB,' (''  KEINE Wehrberechnung an Station km = '',f7.3)') stat(np)
     WRITE (UNIT_OUT_TAB, '(''    fuer Innerer Abfluss qw  ='',f8.4)') qw
     WRITE (UNIT_OUT_TAB, '(''    da Grenztiefe im UW erreicht!! '')')
