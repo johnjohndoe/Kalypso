@@ -106,7 +106,7 @@ public class MapModellContextSwitcher
       super.run();
     }
 
-    public void dispose( )
+    public void dispose( )  
     {
       setTheme( null );
       final Display display = PlatformUI.getWorkbench().getDisplay();
