@@ -17,7 +17,7 @@ public class KalypsoModelSimulationBaseConsts
 
   public static final QName SIM_BASE_PROP_ROUGHNESS_CLASS_MEMBER = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "roughnessClassMember" );
 
-  public static final QName SIM_BASE_F_ROUGHNESS_POLYGON_COLLECTION = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "RoughnessLayerPolygonCollection" );
+  public static final QName SIM_BASE_F_ROUGHNESS_POLYGON_COLLECTION = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "RoughnessLayer" );
 
   public static final QName SIM_BASE_PROP_ROUGHNESS_LAYER_POLYGON = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "roughnessLayerMember" );
 

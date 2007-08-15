@@ -84,8 +84,8 @@
 						ref="simBase:terrainElevationModelSystem" minOccurs="1"
 						maxOccurs="1" />
 					<xs:element
-						ref="simBase:roughnessLayerPolynomCollection" minOccurs="1"
-						maxOccurs="1" />
+						ref="simBase:roughnessLayerCollection" minOccurs="1"
+						maxOccurs="unbounded" />
 					<xs:element
 						ref="simBase:riverProfileNetworkCollectionMember" minOccurs="1"
 						maxOccurs="1" />
@@ -288,13 +288,13 @@
 
 
 	<!-- =================================================================
-		roughnessLayerPolynomCollection property
+		roughnessLayerCollection property
 		================================================================== -->
-	<xs:element name="roughnessLayerPolynomCollection">
+	<xs:element name="roughnessLayerCollection">
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element
-					ref="simBase:RoughnessLayerPolygonCollection" minOccurs="0"
+					ref="simBase:RoughnessLayer" minOccurs="0"
 					maxOccurs="1" />
 			</xs:sequence>
 			<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
@@ -304,21 +304,22 @@
 	<!-- =================================================================
 		RougthnessLayerPolygomCollection
 		================================================================== -->
-	<xs:element name="RoughnessLayerPolygonCollection"
-		type="simBase:RoughnessLayerPolygonCollectionType"
+	<xs:element name="RoughnessLayer"
+		type="simBase:RoughnessLayerType"
 		substitutionGroup="gml:_Feature">
 
 	</xs:element>
-	<xs:complexType name="RoughnessLayerPolygonCollectionType">
+	<xs:complexType name="RoughnessLayerType">
 		<xs:complexContent>
-			<xs:restriction
-				base="gml:AbstractFeatureCollectionType">
+			<xs:extension
+				base="gml:AbstractFeatureType">
 				<xs:sequence>
+					<xs:element name="editable" type="xs:boolean" default="false"/>
 					<xs:element ref="simBase:roughnessLayerMember"
 						minOccurs="0" maxOccurs="unbounded" />
 					<!--xs:element ref="simBase:roughnessLayerPolygonMembers"/-->
 				</xs:sequence>
-			</xs:restriction>
+			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 
@@ -457,16 +458,6 @@
 	</xs:complexType>
 
 	<xs:element name="polygonProperty" type="gml:SurfacePropertyType" />
-
-	<xs:element name="polygonPropertys"
-		type="simBase:RoughnessPolygonPatchPropertyType" />
-	<xs:complexType name="RoughnessPolygonPatchPropertyType">
-		<xs:sequence>
-			<xs:element ref="gml:_Geometry" minOccurs="0" maxOccurs="1" />
-		</xs:sequence>
-		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
-	</xs:complexType>
-
 
 	<!-- =================================================================
 		riverProfileNetwork

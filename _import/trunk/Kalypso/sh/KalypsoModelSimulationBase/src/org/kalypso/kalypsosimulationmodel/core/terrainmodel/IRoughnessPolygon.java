@@ -1,6 +1,9 @@
 package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
+import javax.xml.namespace.QName;
+
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
+import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
@@ -13,6 +16,10 @@ import org.kalypsodeegree.model.geometry.GM_Object;
  */
 public interface IRoughnessPolygon extends IFeatureWrapper2
 {
+  public final static QName QNAME = new QName( "http://www.opengis.net/gml", "_Feature" );
+
+  public static final QName QNAME_PROP_POSITION = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "polygonProperty" );
+
   /**
    * Returns the rougthness ID for this polynom
    * 

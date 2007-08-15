@@ -3,8 +3,8 @@
  <simBase:terrainElevationModelSystem>
   <simBase:TerrainElevationModelSystem gml:id="Scenario_Terrain_Elevation_ModelSystem"/>
  </simBase:terrainElevationModelSystem>
- <simBase:roughnessLayerPolynomCollection>
-  <simBase:RoughnessLayerPolygonCollection gml:id="RoughnessLayerPolygonCollection11709431308431">
+ <simBase:roughnessLayerCollection>
+  <simBase:RoughnessLayer gml:id="RoughnessLayer11709431308431">
    <simBase:roughnessLayerMember>
     <simBase:RoughnessPolygon gml:id="RoughnessPolygon11739654118123">
      <simBase:polygonProperty>
@@ -81,8 +81,8 @@
      <simBase:roughnessStyle>Bäume, dichter junger Besatz</simBase:roughnessStyle>
     </simBase:RoughnessPolygon>
    </simBase:roughnessLayerMember>
-  </simBase:RoughnessLayerPolygonCollection>
- </simBase:roughnessLayerPolynomCollection>
+  </simBase:RoughnessLayer>
+ </simBase:roughnessLayerCollection>
  <simBase:riverProfileNetworkCollectionMember>
   <simBase:RiverProfileNetworkCollection gml:id="RiverProfileNetworkCollection11708754954840"/>
  </simBase:riverProfileNetworkCollectionMember>

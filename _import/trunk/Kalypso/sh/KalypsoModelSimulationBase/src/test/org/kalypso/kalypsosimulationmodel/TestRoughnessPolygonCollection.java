@@ -63,7 +63,7 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public class TestRoughnessPolygonCollection extends TestCase
 {
-  public final static QName QNAME_PROP_ROUGHNESSLAYERPOLYNOMCOLLECTION = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "roughnessLayerPolynomCollection" );
+  public final static QName QNAME_PROP_ROUGHNESSLAYERPOLYNOMCOLLECTION = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "roughnessLayerCollection" );
 
   public final static QName QNAME_PROP_ROUGHNESSLAYERMEMBER = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "roughnessLayerMember" );
 

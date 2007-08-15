@@ -29,6 +29,8 @@ import com.vividsolutions.jts.geom.Polygon;
 public class RoughnessPolygonCollection extends FeatureWrapperCollection<IRoughnessPolygon> implements IRoughnessPolygonCollection
 {
 
+  private IRoughnessLayer m_activeLayer = null;
+  
   public RoughnessPolygonCollection( Feature featureToBind )
   {
     this( featureToBind, IRoughnessPolygon.class, KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_LAYER_POLYGON );
@@ -245,6 +247,14 @@ public class RoughnessPolygonCollection extends FeatureWrapperCollection<IRoughn
       e.printStackTrace();
     }
     return null;
+  }
+
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection#setActiveLayer(org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessLayer)
+   */
+  public void setActiveLayer( final IRoughnessLayer layer )
+  {
+    m_activeLayer = layer;
   }
 
 }

@@ -42,36 +42,20 @@ package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
- * This is the root element of the terain-model.
- * 
- * @author Gernot Belger
+ * @author antanas
+ *
  */
-public interface ITerrainModel extends IModel
+public interface IRoughnessLayer extends IFeatureWrapper2
 {
-  public final static QName QNAME_TERRAIN_MODEL = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "TerrainModel" );
-
-  public final static QName QNAME_PROP_RIVERPROFILENETWORKCOLLECTIONMEMBER = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "riverProfileNetworkCollectionMember" );
-
-  public final static QName QNAME_PROP_ROUGHNESSLAYERPOLYGONCOLLECTION = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "roughnessLayerCollection" );
-
-  public final static QName QNAME_PROP_ROUGHNESSLAYERMEMBER = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "roughnessLayerMember" );
-
-  public IRiverProfileNetworkCollection getRiverProfileNetworkCollection( );
-
-  public IRoughnessLayerCollection getRoughnessLayerCollection( );
+  public final static QName QNAME = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "RoughnessLayer" );
   
-  public IRoughnessPolygonCollection getRoughnessPolygonCollection( );
+  public final static QName PROP_EDITABLE = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "editable" );
   
-  public IRoughnessPolygonCollection getRoughnessPolygonCollection( final IRoughnessLayer roughnessLayer );
+  public boolean isEditable();
   
-  /**
-   * Return the terrain elevation system of this terrain model
-   * @return the terrain elevation system of this model
-   */
-  public ITerrainElevationModelSystem getTerrainElevationModelSystem();
-
+  public void setEditable(boolean status);
 }

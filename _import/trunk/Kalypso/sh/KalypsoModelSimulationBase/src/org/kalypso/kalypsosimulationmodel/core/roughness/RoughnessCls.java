@@ -15,26 +15,18 @@ import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
  * 
  * @author Patrice Congo
  */
-public class RoughnessCls 
-                extends AbstractFeatureBinder 
-                implements IRoughnessCls
+public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
 {
-//  private final Feature m_Feature;
-
   /**
    * Create a Roughness object wrapping the given feature.
    * 
    * @param feature -
-   *          the wbr:Roughness feature to wrapped
+   *            the wbr:Roughness feature to wrapped
    * @throw IllegalArgumentException if feature is null or is note a wbr:Roughness feature
    */
   public RoughnessCls( Feature featureToBind ) throws IllegalArgumentException
   {
-//    Assert.throwIAEOnNotDirectInstanceOf( feature, KalypsoModelRoughnessConsts.WBR_F_ROUGHNESS );
-//    this.m_Feature = feature;
-    super(  featureToBind, 
-            KalypsoModelRoughnessConsts.WBR_F_ROUGHNESS );
-    
+    super( featureToBind, KalypsoModelRoughnessConsts.WBR_F_ROUGHNESS );
   }
 
   /**
@@ -42,40 +34,18 @@ public class RoughnessCls
    * given parent feaure and linked to it by the property of the type specified by the argument propQName.
    * 
    * @param parentFeature
-   *          the parent feature for the new wbr:Roughness class
+   *            the parent feature for the new wbr:Roughness class
    * @param propQName
-   *          the Q-name of the linking property type
+   *            the Q-name of the linking property type
    * @throws IllegalArgumentException
-   *           if workspace is null or the roughness collection is not part of the workspace
+   *             if workspace is null or the roughness collection is not part of the workspace
    */
   public RoughnessCls( Feature parentFeature, QName propQName ) throws IllegalArgumentException
   {
-//    Assert.throwIAEOnNull( propQName, "Argument propQName must not be null" );
-//    Assert.throwIAEOnNull( parentFeature, "Argument roughnessCollection must not be null" );
-//    try
-//    {
-//      this.m_Feature = FeatureHelper.addFeature( parentFeature, propQName, KalypsoModelRoughnessConsts.WBR_F_ROUGHNESS );
-//
-//    }
-//    catch( GMLSchemaException ex )
-//    {
-//
-//      throw new IllegalArgumentException( "Property " + propQName + " does not accept element of type" + KalypsoModelRoughnessConsts.WBR_F_ROUGHNESS, ex );
-//    }
-    super(
-        Util.createFeatureAsProperty( 
-                parentFeature, 
-                propQName, 
-                KalypsoModelRoughnessConsts.WBR_F_ROUGHNESS )  
-        /*FeatureHelper.addFeature( 
-              parentFeature, 
-              propQName,
-              KalypsoModelRoughnessConsts.WBR_F_ROUGHNESS)*/, 
-          KalypsoModelRoughnessConsts.WBR_F_ROUGHNESS );
-        
+    super( Util.createFeatureAsProperty( parentFeature, propQName, KalypsoModelRoughnessConsts.WBR_F_ROUGHNESS ), KalypsoModelRoughnessConsts.WBR_F_ROUGHNESS );
+
   }
 
-  
   /*
    * (non-Javadoc)
    * 
@@ -84,10 +54,7 @@ public class RoughnessCls
   public double getAxAy( )
   {
     final Feature feature = getFeature();
-    return FeatureHelper.getAsDouble( 
-                feature, 
-                KalypsoModelRoughnessConsts.WBR_PROP_AXAY, 
-                Double.NaN );
+    return FeatureHelper.getAsDouble( feature, KalypsoModelRoughnessConsts.WBR_PROP_AXAY, Double.NaN );
   }
 
   /*
@@ -98,10 +65,7 @@ public class RoughnessCls
   public double getDp( )
   {
     final Feature feature = getFeature();
-    return FeatureHelper.getAsDouble( 
-              feature, 
-              KalypsoModelRoughnessConsts.WBR_PROP_DP, 
-              Double.NaN );
+    return FeatureHelper.getAsDouble( feature, KalypsoModelRoughnessConsts.WBR_PROP_DP, Double.NaN );
   }
 
   /*
@@ -141,18 +105,13 @@ public class RoughnessCls
   public double getKs( )
   {
     final Feature feature = getFeature();
-    return FeatureHelper.getAsDouble( 
-                feature, 
-                KalypsoModelRoughnessConsts.WBR_PROP_KS, 
-                Double.NaN );
+    return FeatureHelper.getAsDouble( feature, KalypsoModelRoughnessConsts.WBR_PROP_KS, Double.NaN );
   }
 
   public double getMarsh( )
   {
     final Feature feature = getFeature();
-    return FeatureHelper.getAsDouble( 
-            feature, 
-            KalypsoModelRoughnessConsts.WBR_PROP_CHARACTV, Double.NaN );
+    return FeatureHelper.getAsDouble( feature, KalypsoModelRoughnessConsts.WBR_PROP_CHARACTV, Double.NaN );
   }
 
   /*
@@ -163,8 +122,7 @@ public class RoughnessCls
   public void setAxAy( double axay ) throws IllegalArgumentException
   {
     final Feature feature = getFeature();
-    feature.setProperty( 
-        KalypsoModelRoughnessConsts.WBR_PROP_AXAY, Double.valueOf( axay ) );
+    feature.setProperty( KalypsoModelRoughnessConsts.WBR_PROP_AXAY, Double.valueOf( axay ) );
   }
 
   /*
@@ -175,8 +133,7 @@ public class RoughnessCls
   public void setDp( double dp ) throws IllegalArgumentException
   {
     final Feature feature = getFeature();
-    feature.setProperty( 
-        KalypsoModelRoughnessConsts.WBR_PROP_DP, Double.valueOf( dp ) );
+    feature.setProperty( KalypsoModelRoughnessConsts.WBR_PROP_DP, Double.valueOf( dp ) );
   }
 
   /*
@@ -216,8 +173,7 @@ public class RoughnessCls
   public void setKs( double ks ) throws IllegalArgumentException
   {
     final Feature feature = getFeature();
-    feature.setProperty( 
-        KalypsoModelRoughnessConsts.WBR_PROP_KS, Double.valueOf( ks ) );
+    feature.setProperty( KalypsoModelRoughnessConsts.WBR_PROP_KS, Double.valueOf( ks ) );
   }
 
   /*
@@ -228,8 +184,7 @@ public class RoughnessCls
   public void setMarsh( double marsh ) throws IllegalArgumentException
   {
     final Feature feature = getFeature();
-    feature.setProperty( 
-        KalypsoModelRoughnessConsts.WBR_PROP_CHARACTV, Double.valueOf( marsh ) );
+    feature.setProperty( KalypsoModelRoughnessConsts.WBR_PROP_CHARACTV, Double.valueOf( marsh ) );
   }
 
   // /Ask nico for details
@@ -314,141 +269,6 @@ public class RoughnessCls
     return RoughnessConfigConsistency.OK;
   }
 
-//  /*
-//   * (non-Javadoc)
-//   * 
-//   * @see org.kalypso.kalypsosimulationmodel.core.roughness.IRoughness#getName()
-//   */
-//  public String getName( )
-//  {
-//    Object obj = m_Feature.getProperty( KalypsoModelRoughnessConsts.GML_PROP_NAME );
-//    if( obj instanceof String )
-//    {
-//      return (String) obj;
-//    }
-//    else if( obj instanceof List )
-//    {
-//      if( ((List) obj).size() > 0 )
-//      {
-//        return (String) ((List) obj).get( 0 );
-//      }
-//      else
-//      {
-//        return null;
-//      }
-//    }
-//    else
-//    {
-//      return null;
-//    }
-//  }
-
-//  /*
-//   * (non-Javadoc)
-//   * 
-//   * @see org.kalypso.kalypsosimulationmodel.core.roughness.IRoughness#getURI()
-//   */
-//  public String getURI( )
-//  {
-//    // return feature.getId();
-//    Object obj = m_Feature.getProperty( KalypsoModelRoughnessConsts.WBR_PROP_URI );
-//    if( obj instanceof String )
-//    {
-//      return (String) obj;
-//    }
-//    else
-//    {
-//      return null;
-//    }
-//  }
-//
-//  /*
-//   * (non-Javadoc)
-//   * 
-//   * @see org.kalypso.kalypsosimulationmodel.core.roughness.IRoughness#setName(java.lang.String)
-//   */
-//  public void setName( String name ) throws IllegalArgumentException
-//  {
-//    name = Assert.throwIAEOnNullOrEmpty( name );
-//    // FeatureHelper.addProperty(
-//    // feature,
-//    // KalypsoModelRoughnessConsts.GML_PROP_NAME,
-//    // Arrays.asList(new String[]{name}) );
-//    m_Feature.setProperty( KalypsoModelRoughnessConsts.GML_PROP_NAME, Arrays.asList( new String[] { name } ) );
-//  }
-
-//  /*
-//   * (non-Javadoc)
-//   * 
-//   * @see org.kalypso.kalypsosimulationmodel.core.roughness.IRoughness#setURI(java.lang.String)
-//   */
-//  public void setURI( String uri ) throws IllegalArgumentException
-//  {
-//    uri = Assert.throwIAEOnNullOrEmpty( uri );
-//    if( uri.equals( m_Feature.getId() ) )
-//    {
-//      return;
-//    }
-//    // TODO test the workspace for uri not already in use
-//    // GMLWorkspace workspace=feature.getWorkspace();
-//    // FeatureVisitor vi
-//    // uri ist treated as the gml:id
-//
-//    if( Util.isInFeatureWorkspace( m_Feature, KalypsoModelRoughnessConsts.WBR_PROP_URI, uri ) )
-//    {
-//      throw new IllegalArgumentException( "uri already in workspace:" + uri );
-//    }
-//
-//    m_Feature.setProperty( KalypsoModelRoughnessConsts.WBR_PROP_URI, uri );
-//
-//  }
-
-//  /*
-//   * (non-Javadoc)
-//   * 
-//   * @see org.kalypso.kalypsosimulationmodel.core.roughness.IRoughness#getDescription()
-//   */
-//  public String getDescription( )
-//  {
-//    Object obj = m_Feature.getProperty( KalypsoModelRoughnessConsts.GML_PROP_DESCRIPTION );
-//    if( obj instanceof String )
-//    {
-//      return (String) obj;
-//    }
-//    else if( obj == null )
-//    {
-//      return null;
-//    }
-//    else
-//    {
-//      throw new RuntimeException( "Unexpected property value:" + obj + "\n\tof type:" + obj.getClass() );
-//    }
-//  }
-
-//  /*
-//   * (non-Javadoc)
-//   * 
-//   * @see org.kalypso.kalypsosimulationmodel.core.roughness.IRoughness#setDescription(java.lang.String)
-//   */
-//  public void setDescription( String descriptionText )
-//  {
-//    Assert.throwIAEOnNull( descriptionText, null );
-//    m_Feature.setProperty( KalypsoModelRoughnessConsts.GML_PROP_DESCRIPTION, descriptionText );
-//  }
-
-//  public Feature getWrappedFeature( )
-//  {
-//    return m_Feature;
-//  }
-
-//  /**
-//   * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper#getGmlID()
-//   */
-//  public String getGmlID( )
-//  {
-//    return m_Feature.getId();
-//  }
-
   @Override
   public String toString( )
   {
@@ -456,42 +276,17 @@ public class RoughnessCls
     buf.append( "RoughnessCls" );
     String id = getGmlID();
     if( id != null )
-    {
-      buf.append( '{' );
-      buf.append( id );
-      buf.append( '}' );
-    }
-    buf.append( '[' );
-    buf.append( "name=" );
-    buf.append( getName() );
-
-    buf.append( "axay=" );
-    buf.append( getAxAy() );
-
-    buf.append( ", dp=" );
-    buf.append( getDp() );
-
-    buf.append( ", eddy_xx=" );
-    buf.append( getEddyXX() );
-
-    buf.append( ", eddy_yx=" );
-    buf.append( getEddyYX() );
-
-    buf.append( ", eddy_xy=" );
-    buf.append( getEddyXY() );
-
-    buf.append( ", eddy_yy=" );
-    buf.append( getEddyYY() );
-
-    buf.append( ",ks=" );
-    buf.append( getKs() );
-
-    buf.append( ",marsh=" );
-    buf.append( getMarsh() );
-
-    buf.append( ' ' );
+      buf.append( '{' ).append( id ).append( '}' );
+    buf.append( "[name=" ).append( getName() );
+    buf.append( ", axay=" ).append( getAxAy() );
+    buf.append( ", dp=" ).append( getDp() );
+    buf.append( ", eddy_xx=" ).append( getEddyXX() );
+    buf.append( ", eddy_yx=" ).append( getEddyYX() );
+    buf.append( ", eddy_xy=" ).append( getEddyXY() );
+    buf.append( ", eddy_yy=" ).append( getEddyYY() );
+    buf.append( ", ks=" ).append( getKs() );
+    buf.append( ", marsh=" ).append( getMarsh() );
     buf.append( ']' );
-
     return buf.toString();
   }
 
@@ -500,10 +295,6 @@ public class RoughnessCls
    */
   public RGB getColorStyle( )
   {
-    final Feature feature = getFeature();
-    RGB property = 
-      (RGB) feature.getProperty( 
-              KalypsoModelRoughnessConsts.WBR_PROP_COLOR_STYLE );
-    return property;
+    return (RGB) getFeature().getProperty( KalypsoModelRoughnessConsts.WBR_PROP_COLOR_STYLE );
   }
 }

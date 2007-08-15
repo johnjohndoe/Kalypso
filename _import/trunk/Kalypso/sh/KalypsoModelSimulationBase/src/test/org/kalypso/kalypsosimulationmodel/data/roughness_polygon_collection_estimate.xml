@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="WINDOWS-1252"?>
-<simBase:RoughnessLayerPolygonCollection 
+<simBase:RoughnessLayer 
 		xmlns:xlink="http://www.w3.org/1999/xlink" 
 		xmlns:gml="http://www.opengis.net/gml" 
 		xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" 
@@ -79,4 +79,4 @@
   </simBase:RoughnessPolygon>
  </simBase:roughnessLayerMember>
  
-</simBase:RoughnessLayerPolygonCollection>
+</simBase:RoughnessLayer>

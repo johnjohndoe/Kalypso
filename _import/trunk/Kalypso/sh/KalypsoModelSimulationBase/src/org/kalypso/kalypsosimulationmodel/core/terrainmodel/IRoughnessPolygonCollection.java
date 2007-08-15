@@ -11,25 +11,29 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
 /**
  * The interface implemented by classes representing simBase:RoughnessCollectionElement
  * 
- * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a> 
+ * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  * @author Patrice Congo
  */
 public interface IRoughnessPolygonCollection extends IFeatureWrapperCollection<IRoughnessPolygon>
 {
+  public void setActiveLayer( IRoughnessLayer layer );
+
   /**
-   * Selects all roughness polygons containing this point. 
-   * Since the point may be on the border, there might be several polygons as a result.
+   * Selects all roughness polygons containing this point. Since the point may be on the border, there might be several
+   * polygons as a result.
    * 
-   * @param point the location where to find the roughness polygon
+   * @param point
+   *            the location where to find the roughness polygon
    * @return a list of roughness polygons that contain the given point
    */
   public List<IRoughnessPolygon> selectRoughnessPolygons( GM_Position point );
-  
+
   /**
    * Selects all roughness polygons overlapping the provided polygon.
-   *  
    * 
-   * @param selectionZone the area where to select the roughness polygon
+   * 
+   * @param selectionZone
+   *            the area where to select the roughness polygon
    * @return a set of rougness polygons overlaping the given zone.
    */
   public List<IRoughnessPolygon> selectRoughnessPolygons( GM_Surface selectionZone );
@@ -46,7 +50,7 @@ public interface IRoughnessPolygonCollection extends IFeatureWrapperCollection<I
    * @return
    */
   public IRoughnessEstimateSpec getRoughnessEstimateSpec( GM_Polygon object );
-  
+
   /**
    * Build the roughness estimation specification of the given polygon (eg. FE element)
    * 
@@ -54,7 +58,6 @@ public interface IRoughnessPolygonCollection extends IFeatureWrapperCollection<I
    * @return
    */
   public IRoughnessEstimateSpec getRoughnessEstimateSpec( GM_Object object );
-  
 
   /**
    * Checks if there is overlapping between roughness polygons

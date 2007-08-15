@@ -42,36 +42,31 @@ package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
-import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 
 /**
- * This is the root element of the terain-model.
- * 
- * @author Gernot Belger
+ * @author antanas
+ *
  */
-public interface ITerrainModel extends IModel
+public class RoughnessLayerCollection extends FeatureWrapperCollection<IRoughnessLayer> implements IRoughnessLayerCollection
 {
-  public final static QName QNAME_TERRAIN_MODEL = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "TerrainModel" );
-
-  public final static QName QNAME_PROP_RIVERPROFILENETWORKCOLLECTIONMEMBER = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "riverProfileNetworkCollectionMember" );
-
-  public final static QName QNAME_PROP_ROUGHNESSLAYERPOLYGONCOLLECTION = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "roughnessLayerCollection" );
-
-  public final static QName QNAME_PROP_ROUGHNESSLAYERMEMBER = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "roughnessLayerMember" );
-
-  public IRiverProfileNetworkCollection getRiverProfileNetworkCollection( );
-
-  public IRoughnessLayerCollection getRoughnessLayerCollection( );
+  public RoughnessLayerCollection( Feature featureCol) {
+    super( featureCol, IRoughnessLayer.class, ITerrainModel.QNAME_PROP_ROUGHNESSLAYERPOLYGONCOLLECTION );
+  }
   
-  public IRoughnessPolygonCollection getRoughnessPolygonCollection( );
-  
-  public IRoughnessPolygonCollection getRoughnessPolygonCollection( final IRoughnessLayer roughnessLayer );
-  
+  public RoughnessLayerCollection( Feature featureCol, Class<IRoughnessLayer> fwClass, QName featureMemberProp )
+  {
+    super( featureCol, fwClass, featureMemberProp );
+  }
+
   /**
-   * Return the terrain elevation system of this terrain model
-   * @return the terrain elevation system of this model
+   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessLayerCollection#getActiveLayer()
    */
-  public ITerrainElevationModelSystem getTerrainElevationModelSystem();
-
+  public IRoughnessLayer getActiveLayer( )
+  {
+    // todo: get real active layer
+    final Feature feature = (Feature) getWrappedList().get( 0 );
+    return new RoughnessLayer(feature);
+  }
 }

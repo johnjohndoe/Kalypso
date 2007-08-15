@@ -42,36 +42,42 @@ package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
-import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
 
 /**
- * This is the root element of the terain-model.
+ * @author antanas
  * 
- * @author Gernot Belger
  */
-public interface ITerrainModel extends IModel
+public class RoughnessLayer extends AbstractFeatureBinder implements IRoughnessLayer
 {
-  public final static QName QNAME_TERRAIN_MODEL = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "TerrainModel" );
+  public RoughnessLayer( Feature featureToBind )
+  {
+    super( featureToBind, IRoughnessLayer.QNAME );
+  }
 
-  public final static QName QNAME_PROP_RIVERPROFILENETWORKCOLLECTIONMEMBER = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "riverProfileNetworkCollectionMember" );
+  public RoughnessLayer( Feature featureToBind, QName qnameToBind )
+  {
+    super( featureToBind, qnameToBind );
+  }
 
-  public final static QName QNAME_PROP_ROUGHNESSLAYERPOLYGONCOLLECTION = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "roughnessLayerCollection" );
-
-  public final static QName QNAME_PROP_ROUGHNESSLAYERMEMBER = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "roughnessLayerMember" );
-
-  public IRiverProfileNetworkCollection getRiverProfileNetworkCollection( );
-
-  public IRoughnessLayerCollection getRoughnessLayerCollection( );
-  
-  public IRoughnessPolygonCollection getRoughnessPolygonCollection( );
-  
-  public IRoughnessPolygonCollection getRoughnessPolygonCollection( final IRoughnessLayer roughnessLayer );
-  
   /**
-   * Return the terrain elevation system of this terrain model
-   * @return the terrain elevation system of this model
+   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessLayer#isEditable()
    */
-  public ITerrainElevationModelSystem getTerrainElevationModelSystem();
+  public boolean isEditable( )
+  {
+    final Boolean isEditable = (Boolean) getFeature().getProperty( IRoughnessLayer.PROP_EDITABLE );
+    if( isEditable == null )
+      return false;
+    return isEditable.booleanValue();
+  }
+
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessLayer#setEditable(boolean)
+   */
+  public void setEditable( boolean status )
+  {
+    getFeature().setProperty( IRoughnessLayer.PROP_EDITABLE, status );
+  }
 
 }

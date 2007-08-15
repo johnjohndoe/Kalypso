@@ -12,8 +12,8 @@
    </simBase:terrainElevationModel>
   </simBase:TerrainElevationModelSystem>
  </simBase:terrainElevationModelSystem>
- <simBase:roughnessLayerPolynomCollection>
-  <simBase:RoughnessLayerPolygonCollection gml:id="RoughnessLayerPolygonCollection11709431308431">
+ <simBase:roughnessLayerCollection>
+  <simBase:RoughnessLayer gml:id="RoughnessLayer11709431308431">
    <simBase:roughnessLayerMember>
     <simBase:RoughnessPolygon gml:id="RoughnessPolygon1178493961943222">
      <simBase:polygonProperty>
@@ -2570,8 +2570,8 @@
      <simBase:roughnessStyle>Vorland mit Bewuchs 25</simBase:roughnessStyle>
     </simBase:RoughnessPolygon>
    </simBase:roughnessLayerMember>
-  </simBase:RoughnessLayerPolygonCollection>
- </simBase:roughnessLayerPolynomCollection>
+  </simBase:RoughnessLayer>
+ </simBase:roughnessLayerCollection>
  <simBase:riverProfileNetworkCollectionMember>
   <simBase:RiverProfileNetworkCollection gml:id="RiverProfileNetworkCollection11708754954840">
    <simBase:riverProfileNetwork>

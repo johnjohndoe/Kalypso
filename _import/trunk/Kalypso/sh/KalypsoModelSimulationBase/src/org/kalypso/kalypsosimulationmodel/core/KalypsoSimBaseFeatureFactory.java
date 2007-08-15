@@ -19,6 +19,8 @@ import org.kalypso.kalypsosimulationmodel.core.roughness.RoughnessClsCollection;
 import org.kalypso.kalypsosimulationmodel.core.roughness.RoughnessClsCorrection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetworkCollection;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessLayer;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessLayerCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
@@ -27,6 +29,8 @@ import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.NativeTerrainElevationModelWrapper;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.RiverProfileNetwork;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.RiverProfileNetworkCollection;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.RoughnessLayer;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.RoughnessLayerCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.RoughnessPolygon;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.RoughnessPolygonCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.TerrainElevationModelSystem;
@@ -38,6 +42,7 @@ import org.kalypsodeegree.model.feature.Feature;
  * Adapter Factory for feature in the simBase namespace
  * 
  * @author Patrice Congo
+ * 
  */
 public class KalypsoSimBaseFeatureFactory implements IAdapterFactory
 {
@@ -141,6 +146,7 @@ public class KalypsoSimBaseFeatureFactory implements IAdapterFactory
     {
       public Object constructAdapter( Feature feature, Class cls ) throws IllegalArgumentException
       {
+
         return new RoughnessClsCorrection( feature );
       }
     };
@@ -157,11 +163,32 @@ public class KalypsoSimBaseFeatureFactory implements IAdapterFactory
     };
     cMap.put( IRoughnessPolygon.class, cTor );
 
-// IRoughnessLayerPolygonCollection
+// IRoughnessLayer
     cTor = new AdapterConstructor()
     {
       public Object constructAdapter( Feature feature, Class cls ) throws IllegalArgumentException
       {
+
+        return new RoughnessLayerCollection( feature );
+      }
+    };
+    cMap.put( IRoughnessLayerCollection.class, cTor );
+
+    cTor = new AdapterConstructor()
+    {
+      public Object constructAdapter( Feature feature, Class cls ) throws IllegalArgumentException
+      {
+
+        return new RoughnessLayer( feature );
+      }
+    };
+    cMap.put( IRoughnessLayer.class, cTor );
+
+    cTor = new AdapterConstructor()
+    {
+      public Object constructAdapter( Feature feature, Class cls ) throws IllegalArgumentException
+      {
+
         return new RoughnessPolygonCollection( feature );
       }
     };
@@ -186,6 +213,19 @@ public class KalypsoSimBaseFeatureFactory implements IAdapterFactory
       }
     };
     cMap.put( IRiverProfileNetwork.class, cTor );
+
+// ITerrainElevationModelSystem
+// cTor= new AdapterConstructor()
+// {
+// public Object constructAdapter(
+// Feature feature,
+// Class cls)
+// throws IllegalArgumentException
+// {
+// return new TerrainElevationModelSystem(feature);
+// }
+// };
+// cMap.put(ITerrainElevationModelSystem.class, cTor);
 
 // ITerrainElevationModel
     cTor = new AdapterConstructor()

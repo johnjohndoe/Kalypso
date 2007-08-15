@@ -42,6 +42,7 @@ package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
 
 /**
@@ -49,8 +50,6 @@ import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
  */
 public class TerrainModel extends AbstractFeatureBinder implements ITerrainModel
 {
- 
-  
   public TerrainModel( final Feature featureToBind )
   {
     super( featureToBind, QNAME_TERRAIN_MODEL );
@@ -74,13 +73,17 @@ public class TerrainModel extends AbstractFeatureBinder implements ITerrainModel
    */
   public IRoughnessPolygonCollection getRoughnessPolygonCollection( )
   {
-    final Feature feature = (Feature) getFeature().getProperty( QNAME_PROP_ROUGHNESSLAYERPOLYNOMCOLLECTION );
-    if( feature == null )
-      return null;
-    
-    return new RoughnessPolygonCollection( feature, IRoughnessPolygon.class, QNAME_PROP_ROUGHNESSLAYERMEMBER );
-//    return (IRoughnessPolygonCollection) feature.getAdapter( IRoughnessPolygonCollection.class );
-//    return (IRoughnessPolygonCollection) feature.getParent().getProperty( QNAME_PROP_ROUGHNESSLAYERPOLYNOMCOLLECTION );
+    final IRoughnessLayerCollection roughnessLayerCollection = getRoughnessLayerCollection();
+    final IRoughnessLayer activeLayer = roughnessLayerCollection.getActiveLayer();
+    return getRoughnessPolygonCollection( activeLayer );
+  }
+  
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel#getRoughnessLayerCollection(org.kalypso.kalypsosimulationmodel.core.terrainmodel.RoughnessLayer)
+   */
+  public IRoughnessPolygonCollection getRoughnessPolygonCollection( final IRoughnessLayer roughnessLayer )
+  {
+    return new RoughnessPolygonCollection( roughnessLayer.getWrappedFeature(), IRoughnessPolygon.class, QNAME_PROP_ROUGHNESSLAYERMEMBER );
   }
   
   public ITerrainElevationModelSystem getTerrainElevationModelSystem()
@@ -98,6 +101,14 @@ public class TerrainModel extends AbstractFeatureBinder implements ITerrainModel
       return (ITerrainElevationModelSystem) 
           feature.getAdapter( ITerrainElevationModelSystem.class );
     }
+  }
+
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel#getRoughnessLayerCollection()
+   */
+  public IRoughnessLayerCollection getRoughnessLayerCollection( )
+  {
+    return new RoughnessLayerCollection( ((FeatureList) getFeature().getProperty( ITerrainModel.QNAME_PROP_ROUGHNESSLAYERPOLYGONCOLLECTION )).getParentFeature(), IRoughnessLayer.class, QNAME_PROP_ROUGHNESSLAYERPOLYGONCOLLECTION );
   }
 
 }

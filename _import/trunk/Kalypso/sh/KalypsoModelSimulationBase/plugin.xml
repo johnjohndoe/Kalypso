@@ -25,6 +25,8 @@
          <adapter type="org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCorrection"/>
          <adapter type="org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon"/>
          <adapter type="org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection"/>
+         <adapter type="org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessLayer"/>
+         <adapter type="org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessLayerCollection"/>
          <adapter type="org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetworkCollection"/>
          <adapter type="org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork"/>
          <adapter type="org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel"/>

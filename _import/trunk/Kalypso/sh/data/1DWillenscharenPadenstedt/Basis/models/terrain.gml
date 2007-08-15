@@ -25,9 +25,9 @@
    </simBase:terrainElevationModel>
   </simBase:TerrainElevationModelSystem>
  </simBase:terrainElevationModelSystem>
- <simBase:roughnessLayerPolynomCollection>
-  <simBase:RoughnessLayerPolygonCollection gml:id="RoughnessLayerPolygonCollection11709431308431"/>
- </simBase:roughnessLayerPolynomCollection>
+ <simBase:roughnessLayerCollection>
+  <simBase:RoughnessLayer gml:id="RoughnessLayer11709431308431"/>
+ </simBase:roughnessLayerCollection>
  <simBase:riverProfileNetworkCollectionMember>
   <simBase:RiverProfileNetworkCollection gml:id="RiverProfileNetworkCollection11708754954840">
    <simBase:riverProfileNetwork>
