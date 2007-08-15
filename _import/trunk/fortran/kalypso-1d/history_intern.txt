@@ -1226,7 +1226,18 @@ Kalypso 2.0.4.3      07. August 2007
 4.)  Reduzierungen der Ausgaben in der LOG-Datei für die Innere Abflussschleife:
      Betroffene SUBR: w_ber, wspber, br_konv
 
-
                                                        Monika Donner, 07.08.2007 
 
+
+Kalypso 2.0.4.4      15. August 2007
+-----------------------------------
+1.)  Bugfix fuer Berechnung "konstantes Reibungsgefälle"
+     Verwendung der richtigen Sohlhöhe für die Berechnung der Grenztiefe im UW der Wehre      
+     Betroffene SUBR: w_ber
+
+2.)  Aenderung der Ausgabe fuer die Huw_QBruecke_How unter der Berechnung "konstantes Reibungsgefälle":
+     Betroffene SUBR: qbordv, wspber
+
+
+                                                       Monika Donner, 15.08.2007 
                                                          
