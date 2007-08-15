@@ -40,12 +40,13 @@ public class WorkflowLabelProvider extends ColumnLabelProvider
     IMAGE_TASK = ImageDescriptor.createFromImageData( taskImage.getImageData().scaledTo( 16, 16 ) ).createImage();
     IMAGE_GROUP = ImageDescriptor.createFromImageData( groupImage.getImageData().scaledTo( 16, 16 ) ).createImage();
     final FontData[] fontData = JFaceResources.getFontRegistry().getFontData( JFaceResources.DIALOG_FONT );
+    final String dialogFontName = fontData[0].getName();
+    final int dialogFontHeight = fontData[0].getHeight();
     FONT_TASK = new Font( display, fontData );
-    fontData[0].setStyle( SWT.BOLD );
-    FONT_ACTIVE_TASK = new Font( display, fontData );
-    fontData[0].setStyle( SWT.NORMAL );
-    fontData[0].setHeight( fontData[0].getHeight() + 1 );
-    FONT_TASKGROUP = new Font( display, fontData );
+    final FontData boldFont = new FontData( dialogFontName, dialogFontHeight, SWT.BOLD );
+    FONT_ACTIVE_TASK = new Font( display, boldFont );
+    final FontData bigFont = new FontData( dialogFontName, dialogFontHeight + 1, SWT.NORMAL );
+    FONT_TASKGROUP = new Font( display, bigFont );
   }
 
   /**
