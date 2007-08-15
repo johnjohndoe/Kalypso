@@ -441,7 +441,7 @@
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
 	                value="org.kalypso.kalypsomodel1d2d.ui.map.flowrel.EditRoughnessElementWidget"/>
               <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
-                    value="icons/elcl16/15_flowrelation_edit_NodalBC.gif"/>
+                    value="icons/elcl16/editPolygon.gif"/>
 			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
                     value="Rauheitsklasse für selektiertes Polygon bearbeiten"/>
             </class>
