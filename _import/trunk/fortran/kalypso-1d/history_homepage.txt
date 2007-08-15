@@ -378,3 +378,11 @@ Kalypso 2.0.4.3      07. August 2007
 2.)  Bugfix: Energiehöhen- bzw. Verlusthöhen-Berechnung
 
                                                        Monika Donner, 07.08.2007 
+                                                       
+Kalypso 2.0.4.4      15. August 2007
+-----------------------------------
+1.)  Bugfix bei der automatischen ausserplanmaessigen Interpolation von Profilen.
+     
+2.)  Bugfix: Ausgabe im MS-DOS Fenster.
+
+                                                       Wolf Plöger, 15.08.2007                                                          

@@ -1226,8 +1226,8 @@ Kalypso 2.0.4.3      07. August 2007
 4.)  Reduzierungen der Ausgaben in der LOG-Datei für die Innere Abflussschleife:
      Betroffene SUBR: w_ber, wspber, br_konv
 
-                                                       Monika Donner, 07.08.2007 
 
+                                                       Monika Donner, 07.08.2007 
 
 Kalypso 2.0.4.4      15. August 2007
 -----------------------------------
@@ -1238,6 +1238,11 @@ Kalypso 2.0.4.4      15. August 2007
 2.)  Aenderung der Ausgabe fuer die Huw_QBruecke_How unter der Berechnung "konstantes Reibungsgefälle":
      Betroffene SUBR: qbordv, wspber
 
+3.)  Bugfix bei der automatischen ausserplanmaessigen Interpolation von Profilen
+     (WSPBER, Zeile 2384), falsches Format bei der Ausgabe.
+     
+4.)  Bugfix: Bei der normalen Wasserspiegellagenberechnung wurde faelschlicherweise
+     im MS-DOS Fenster der Header der UNIT_OUT_QLAENGS geschrieben.
 
-                                                       Monika Donner, 15.08.2007 
+                                               Monika Donner und Wolf Plöger, 15.08.2007 
                                                          

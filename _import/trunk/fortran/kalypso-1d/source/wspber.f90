@@ -2381,7 +2381,7 @@ Hauptschleife: DO i = 1, maxger
                                                         !WP Hinweis: Je nach Abflusszustand kann sich die
                                                         !WP Anzahl der interpolierten Profile aendern
 
-              write (UNIT_OUT_LOG, '(''Folgendes Profil wird auﬂerplanmaessig interpoliert '',a)') nprof
+              write (UNIT_OUT_LOG, '(''Folgendes Profil wird auﬂerplanmaessig interpoliert '',I4)') nprof
               WRITE (UNIT_OUT_LOG, '('' stat (nprof)='',f8.4)') stat (nprof)
 
 

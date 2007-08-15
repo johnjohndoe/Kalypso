@@ -561,14 +561,16 @@ If (BERECHNUNGSMODUS == 'WATERLEVEL' .or. BERECHNUNGSMODUS == 'BF_NON_UNI' .or. 
                           & 'N/m^2',   'm^3/s',   'm^3/s',   'm^3/s', '-', '-', '-', 'm^2', 'm^2', 'm', 'm', 'm', 'm', &
                           & 'mNN',    'mNN',      'mNN',      'm',       'm',       '-',       '-',       '-'
 
-  WRITE (UNIT_OUT_QLAENGS, 81) 'Stat', 'Kenn', 'Abfluss', 'Sohle', 'h_WSP', 'hen', 'h_BV', 'Boe_li', 'Boe_re', 'v_m', &
-                          & 'tau_fl',    'Q_li',    'Q_fl',    'Q_re', 'lamb_li', 'lamb_fl', 'lamb_re', &
-                          & 'f_li', 'f_fl', 'f_re', 'br_li', 'br_fl', 'br_re', &
-                          & 'WehrOK', 'BrueckOK', 'BrueckUK', 'BrueckB', 'RohrDN' , 'AlphaIW', 'AlphaEW',  'I_Reib'
+  IF (BERECHNUNGSMODUS == 'BF_NON_UNI' .or. BERECHNUNGSMODUS == 'REIB_KONST') then
+    WRITE (UNIT_OUT_QLAENGS, 81) 'Stat', 'Kenn', 'Abfluss', 'Sohle', 'h_WSP', 'hen', 'h_BV', 'Boe_li', 'Boe_re', 'v_m', &
+                            & 'tau_fl',    'Q_li',    'Q_fl',    'Q_re', 'lamb_li', 'lamb_fl', 'lamb_re', &
+                            & 'f_li', 'f_fl', 'f_re', 'br_li', 'br_fl', 'br_re', &
+                            & 'WehrOK', 'BrueckOK', 'BrueckUK', 'BrueckB', 'RohrDN' , 'AlphaIW', 'AlphaEW',  'I_Reib'
 
-  WRITE (UNIT_OUT_QLAENGS, 81) 'km'  ,  '-', 'm^3/s', 'mNN'  , 'mNN'  , 'mNN', 'mNN' , 'mNN'   , 'mNN'   , 'm/s', &
-                          & 'N/m^2',   'm^3/s',   'm^3/s',   'm^3/s', '-', '-', '-', 'm^2', 'm^2', 'm', 'm', 'm', 'm', &
-                          & 'mNN',    'mNN',      'mNN',      'm',       'm',       '-',       '-',       '-'
+    WRITE (UNIT_OUT_QLAENGS, 81) 'km'  ,  '-', 'm^3/s', 'mNN'  , 'mNN'  , 'mNN', 'mNN' , 'mNN'   , 'mNN'   , 'm/s', &
+                            & 'N/m^2',   'm^3/s',   'm^3/s',   'm^3/s', '-', '-', '-', 'm^2', 'm^2', 'm', 'm', 'm', 'm', &
+                            & 'mNN',    'mNN',      'mNN',      'm',       'm',       '-',       '-',       '-'
+  END IF                          
 
  IF (BERECHNUNGSMODUS /= 'WATERLEVEL') then
    do j = 1, anz_q     ! Anzahl der Abfluesse
