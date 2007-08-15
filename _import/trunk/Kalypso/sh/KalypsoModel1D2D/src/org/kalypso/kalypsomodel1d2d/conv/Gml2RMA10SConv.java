@@ -197,7 +197,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
     m_exportRoughness = false;
   }
 
-  public void setExportParameters( boolean exportRequested, boolean exportMiddleNode, boolean exportRoughness )
+  public void setExportParameters( final boolean exportRequested, final boolean exportMiddleNode, final boolean exportRoughness )
   {
     m_exportRequest = exportRequested;
     m_exportMiddleNode = exportMiddleNode;
@@ -544,10 +544,11 @@ public class Gml2RMA10SConv implements INativeIDProvider
 
     for( final IFE1D2DElement element : elementsInBBox )
     {
+      // TODO: shouldnt the check for calulation unit always happens? -> So export is per calculation unit?
       if( !m_exportRequest && !CalcUnitOps.isFiniteElementOf( m_calculationUnit, element ) )
         continue;
 
-      if( !m_exportRequest && element instanceof IElement1D )
+      if( m_exportRequest && element instanceof IElement1D )
         continue;
 
       final int id = getBoundaryLineID( element );
