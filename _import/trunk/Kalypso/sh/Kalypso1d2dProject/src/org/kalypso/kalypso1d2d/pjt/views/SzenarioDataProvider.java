@@ -78,7 +78,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
     LOCATION_MAP.put( IControlModelGroup.class, MODELS_FOLDER + "/control.gml" );
     LOCATION_MAP.put( IStaticModel1D2D.class, MODELS_FOLDER + "/static_model.gml" );
     LOCATION_MAP.put( IRoughnessClsCollection.class, "project:/.metadata/roughness.gml" );
-    LOCATION_MAP.put( ISimulationDescriptionCollection.class, "project:/.metadata/result_meta_data.gml" );
+// LOCATION_MAP.put( ISimulationDescriptionCollection.class, "project:/.metadata/result_meta_data.gml" );
   }
 
   private static final class KeyPoolListener implements IPoolListener

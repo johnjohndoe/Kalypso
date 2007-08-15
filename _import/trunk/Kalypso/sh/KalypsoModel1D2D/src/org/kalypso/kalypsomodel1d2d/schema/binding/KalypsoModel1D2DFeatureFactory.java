@@ -90,7 +90,9 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.result.CalcUnitResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.DocumentResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.ScenarioResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.StepResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.GMLNodeResult;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.Hydrograph;
@@ -800,6 +802,26 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
       }
     };
     cMap.put( IResultMeta.class, cTor );
+
+    // ScenarioResultMeta
+    cTor = new AdapterConstructor()
+    {
+      public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
+      {
+        final QName featureQName = feature.getFeatureType().getQName();
+
+        if( featureQName.equals( IScenarioResultMeta.QNAME ) )
+        {
+          return new ScenarioResultMeta( feature );
+        }
+        else
+        {
+          warnUnableToAdapt( feature, featureQName, IScenarioResultMeta.class );
+          return null;
+        }
+      }
+    };
+    cMap.put( ICalcUnitResultMeta.class, cTor );
 
     // CalcUnitResultMeta
     cTor = new AdapterConstructor()

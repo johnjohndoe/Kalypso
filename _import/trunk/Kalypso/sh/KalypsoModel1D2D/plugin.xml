@@ -127,6 +127,7 @@
          <adapter
                type="org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult">
          </adapter>
+         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.result.ICScenarioResultMeta"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta"/>

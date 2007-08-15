@@ -49,36 +49,38 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Primitive;
 
 /**
- * Interface for classes representing an
- * op1d2d:OperationalModel
+ * Interface for classes representing an op1d2d:OperationalModel
  * 
- * @author Patrice Congo
- *
+ * @author Patrice Congo TODO: remove this it is not really used; use instead IPseudoOperation model and rename that
+ * @deprecated Use {@link IPseudoOPerationalModel} instead
  */
+@Deprecated
 public interface IOperationalModel1D2D extends IOperationalModel
 {
   /**
    * To get the initial condition this operational model holds
+   * 
    * @return the list of initial condition this operational model holds
    * 
    */
-  public IFeatureWrapperCollection<IFeatureWrapper2> getInitialConditions();
-  
+  public IFeatureWrapperCollection<IFeatureWrapper2> getInitialConditions( );
+
   /**
    * To get the boundary conditions this operational model holds
+   * 
    * @return the list of boundary condition this operational model holds
    * 
    */
-  public IFeatureWrapperCollection<IBoundaryCondition> getBoundaryConditions();
-  
+  public IFeatureWrapperCollection<IBoundaryCondition> getBoundaryConditions( );
+
   /**
    * To get the boundary conditions that are aplicable inside the given zone
-   * @param zone a {@link org.kalypsodeegree.model.geometry.GM_Point} or
-   *        {@link org.deegree.model.geometry.GM_Surface} defining the zone
-   *        inside which boundary condition are to be searched 
-   * @return the list of {@link IBoundaryCondition}s that are applicable 
-   *                inside the zone  
+   * 
+   * @param zone
+   *            a {@link org.kalypsodeegree.model.geometry.GM_Point} or {@link org.deegree.model.geometry.GM_Surface}
+   *            defining the zone inside which boundary condition are to be searched
+   * @return the list of {@link IBoundaryCondition}s that are applicable inside the zone
    */
-  public List<IBoundaryCondition> getApplicableBoundaryConditions(GM_Primitive zone);
-  
+  public List<IBoundaryCondition> getApplicableBoundaryConditions( GM_Primitive zone );
+
 }
