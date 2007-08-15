@@ -1,4 +1,4 @@
-!     Last change:  MD    3 Aug 2007    2:34 pm
+!     Last change:  MD   15 Aug 2007    9:43 am
 !--------------------------------------------------------------------------
 ! This code, qbordv.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -383,7 +383,7 @@ If (BERECHNUNGSMODUS == 'BF_NON_UNI' .OR. BERECHNUNGSMODUS == 'REIB_KONST') then
          & 1X, 'Programm wird beendet!')
       call stop_programm(0)
     end if
-    WRITE (UNIT_OUT_QBRUECKE, '(5x,''Profil'',6x,''Q_UW'',1x,''Q-Bruecke'',6x,''h_ow'',6x,''h_uw'',6x,''h_en'')')
+    WRITE (UNIT_OUT_QBRUECKE, '(5x,''Profil'',6x,''Q_OW'',6x,''Q-UW'',6x,''h_ow'',6x,''h_uw'',6x,''h_en'')')
 
   end if
 

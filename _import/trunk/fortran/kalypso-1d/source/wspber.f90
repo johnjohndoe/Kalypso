@@ -1,4 +1,4 @@
-!     Last change:  MD    7 Aug 2007    6:54 pm
+!     Last change:  MD   15 Aug 2007    9:42 am
 !--------------------------------------------------------------------------
 ! This code, wspber.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -1540,15 +1540,15 @@ Hauptschleife: DO i = 1, maxger
                         & out_Qin_PROF(nprof,nr_q_out,nr_q)%BrueckOK, out_Qin_PROF(nprof,nr_q_out,nr_q)%BrueckUK, &
                         & out_Qin_PROF(nprof,nr_q_out,nr_q)%BrueckB
 
-            write (UNIT_OUT_QBRUECKE, 912) out_Qin_PROF(nprof-1,nr_q_out,nr_q)%stat, q_out,                    &
-                             & out_Qin_PROF(nprof,nr_q_out,nr_q)%qges, out_Qin_PROF(nprof,nr_q_out,nr_q)%wsp,  &
+            write (UNIT_OUT_QBRUECKE, 912) out_Qin_PROF(nprof-1,nr_q_out,nr_q)%stat,                     &
+                             & out_Qin_PROF(nprof,nr_q_out,nr_q)%qges, q_out, out_Qin_PROF(nprof,nr_q_out,nr_q)%wsp,  &
                              & wsp_save (nprof_save-1), out_Qin_PROF(nprof,nr_q_out,nr_q)%hen
 
           ! wenn kein Profil "B" erzeugt wird
           ELSE
             ! Ausgabe der Daten an der Bruecke
-            write (UNIT_OUT_QBRUECKE, 912) out_Qin_PROF(nprof,nr_q_out,nr_q)%stat, q_out,                    &
-                             & out_Qin_PROF(nprof,nr_q_out,nr_q)%qges, out_Qin_PROF(nprof,nr_q_out,nr_q)%wsp,  &
+            write (UNIT_OUT_QBRUECKE, 912) out_Qin_PROF(nprof,nr_q_out,nr_q)%stat,                     &
+                             & out_Qin_PROF(nprof,nr_q_out,nr_q)%qges, q_out, out_Qin_PROF(nprof,nr_q_out,nr_q)%wsp,  &
                              & wsp_save (nprof_save-1), out_Qin_PROF(nprof,nr_q_out,nr_q)%hen
 
           ENDIF
