@@ -4,7 +4,7 @@
     <mapv:layers>
         <mapv:layer visible="true" name="Rauheiten" id="ID_2" featurePath="#fid#RoughnessLayer11709431308431/roughnessLayerMember[RoughnessPolygon]" linktype="gml" xlink:type="simple" xlink:href="../models/terrain.gml" xlink:actuate="onRequest">
             <ns9:style style="Roughness style" linktype="sld" xlink:type="simple" xlink:href="project:/.metadata/roughness.sld" xlink:actuate="onRequest"/>
-        	<ns9:property name="deleteable">false</ns9:property>
+        	<ns9:property name="deleteable">true</ns9:property>
         </mapv:layer>
     </mapv:layers>
 </mapv:gismapview>

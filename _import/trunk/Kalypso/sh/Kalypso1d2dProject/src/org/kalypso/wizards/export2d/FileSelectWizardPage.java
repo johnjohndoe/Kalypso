@@ -56,7 +56,6 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.ui.ImageProvider;
-import org.kalypso.ui.wizards.imports.Messages;
 
 public class FileSelectWizardPage extends WizardPage
 {

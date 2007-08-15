@@ -3,6 +3,7 @@
  */
 package org.kalypso.ui.wizards.imports.roughness;
 
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -13,13 +14,24 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
+import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
+import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate;
+import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor;
+import org.kalypso.ui.views.map.MapView;
 import org.kalypso.ui.wizards.imports.Messages;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
@@ -37,7 +49,7 @@ public class ImportWizard extends Wizard implements INewWizard
 
   protected PageSecond m_pageSecond;
 
-  protected final ICoreRunnableWithProgress m_operation;
+  protected ICoreRunnableWithProgress m_operation;
 
   private IProject m_project;
 
@@ -54,7 +66,6 @@ public class ImportWizard extends Wizard implements INewWizard
     super();
     m_data = new DataContainer();
     setNeedsProgressMonitor( true );
-    m_operation = new Transformer( m_data ); //$NON-NLS-1$
   }
 
   /**
@@ -68,12 +79,18 @@ public class ImportWizard extends Wizard implements INewWizard
     final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
     final IEvaluationContext context = handlerService.getCurrentState();
     final ICaseDataProvider<IFeatureWrapper2> szenarioDataProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+    final IWorkbenchWindow workbenchWindow = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
+    final MapView mapView = (MapView) workbenchWindow.getActivePage().findView( MapView.ID );
+//    if( mapView == null )
+//      throw new ExecutionException( "No map available, somethings wrong." );
+    
+    m_operation = new Transformer( m_data, mapView ); //$NON-NLS-1$
+    
     ITerrainModel model;
     try
     {
       model = szenarioDataProvider.getModel( ITerrainModel.class );
-      final IRoughnessPolygonCollection roughnessPolygonCollection = model.getRoughnessPolygonCollection();
-      m_data.setRoughnessPolygonCollection( roughnessPolygonCollection );
+      m_data.setModel(model);
     }
     catch( CoreException e )
     {
@@ -165,5 +182,21 @@ public class ImportWizard extends Wizard implements INewWizard
 
     return status.isOK();
   }
+
+  private IKalypsoTheme[] findRoughnessThemes( final IMapModell mapModell )
+  {
+    final IKalypsoThemePredicate predicate = new IKalypsoThemePredicate()
+    {
+
+      public boolean decide( final IKalypsoTheme theme )
+      {
+        return theme instanceof IKalypsoFeatureTheme && ((IKalypsoFeatureTheme) theme).getFeatureType().getQName().equals( KalypsoModelSimulationBaseConsts.SIM_BASE_F_ROUGHNESS_POLYGON );
+      }
+    };
+    final KalypsoThemeVisitor visitor = new KalypsoThemeVisitor( predicate );
+    mapModell.accept( visitor, IKalypsoThemeVisitor.DEPTH_INFINITE );
+    return visitor.getFoundThemes();
+  }
+
 
 }

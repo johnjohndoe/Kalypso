@@ -1,10 +1,10 @@
 package org.kalypso.ui.wizards.imports.roughness;
 
-import java.io.IOException;
 import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -12,20 +12,26 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypso1d2d.pjt.views.SzenarioDataProvider;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessLayer;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
-import org.kalypso.ogc.gml.serialize.GmlSerializeException;
+import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
+import org.kalypso.template.gismapview.Gismapview;
+import org.kalypso.ui.action.AddThemeCommand;
+import org.kalypso.ui.views.map.MapView;
 import org.kalypso.ui.wizards.imports.Messages;
 import org.kalypso.ui.wizards.imports.utils.Util;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
+import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
@@ -43,9 +49,12 @@ public class Transformer implements ICoreRunnableWithProgress
 
   private int m_NumberOfEntriesAdded = -1;
 
-  public Transformer( DataContainer data )
+  private final MapView m_mapView;
+
+  public Transformer( DataContainer data, MapView mapView )
   {
     m_data = data;
+    m_mapView = mapView;
   }
 
   public IStatus execute( IProgressMonitor monitor )
@@ -61,6 +70,8 @@ public class Transformer implements ICoreRunnableWithProgress
       }
       try
       {
+        final IRoughnessLayer gmlLayer = m_data.createNewGMLLayer();
+        createMapLayer( gmlLayer );
         if( !m_isDataPrepared )
           prepare( true );
         setSelectedRoughnessChoice();
@@ -86,6 +97,22 @@ public class Transformer implements ICoreRunnableWithProgress
     return Status.OK_STATUS;
   }
 
+  private void createMapLayer( final IRoughnessLayer layer ) throws ExecutionException
+  {
+    final String source = m_data.getModel().getWrappedFeature().getWorkspace().getContext().toString();
+    if( m_mapView != null )
+    {
+      final GisTemplateMapModell mapModell = (GisTemplateMapModell) m_mapView.getMapPanel().getMapModell();
+      final StringBuffer featurePath = new StringBuffer( "#fid#" );
+      featurePath.append( layer.getGmlID() ).append( "/roughnessLayerMember[RoughnessPolygon]" );
+      
+      final AddThemeCommand command = new AddThemeCommand( mapModell, layer.getName(), "gml", featurePath.toString(), source, "sld", "Roughness style", "project:/.metadata/roughness.sld","simple" );
+      m_mapView.postCommand( command, null );
+    }
+    else
+      throw new ExecutionException( "Kartenansicht nicht geöffnet. Es können keine Themen hinzugefügt werden." );
+  }
+
   public void prepare( boolean resetMap ) throws Exception
   {
     if( resetMap )
@@ -93,27 +120,44 @@ public class Transformer implements ICoreRunnableWithProgress
       m_data.getRoughnessShapeStaticRelationMap().clear();
       // m_data.getRoughnessPolygonCollection().clear();
     }
-    QName shpFeatureName = new QName( "namespace", "featureMember" ); //$NON-NLS-1$ //$NON-NLS-2$
-    QName shpGeomPropertyName = new QName( "namespace", "GEOM" ); //$NON-NLS-1$ //$NON-NLS-2$
-    QName shpCustomPropertyName = new QName( "namespace", m_data.getShapeProperty() ); //$NON-NLS-1$
+    final QName shpFeatureName = new QName( "namespace", "featureMember" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final QName shpGeomPropertyName = new QName( "namespace", "GEOM" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final QName shpCustomPropertyName = new QName( "namespace", m_data.getShapeProperty() ); //$NON-NLS-1$
     final GMLWorkspace shapeWorkSpace = ShapeSerializer.deserialize( FileUtilities.nameWithoutExtension( m_data.getInputFile() ), m_data.getCoordinateSystem( true ) );
-    Feature shapeRootFeature = shapeWorkSpace.getRootFeature();
-    List shapeFeatureList = (List) shapeRootFeature.getProperty( shpFeatureName );
-    IRoughnessPolygonCollection roughnessPolygonCollection = m_data.getRoughnessPolygonCollection();
+    final Feature shapeRootFeature = shapeWorkSpace.getRootFeature();
+    final List< ? > shapeFeatureList = (List< ? >) shapeRootFeature.getProperty( shpFeatureName );
+    final IRoughnessPolygonCollection roughnessPolygonCollection = m_data.getRoughnessPolygonCollection();
 
     m_NumberOfEntriesAdded = 0;
     for( int i = 0; i < shapeFeatureList.size(); i++ )
     {
-      final IRoughnessPolygon roughnessPolygon = roughnessPolygonCollection.addNew( m_GeometryFeatureQName );
-      m_NumberOfEntriesAdded++;
       final Feature shapeFeature = (Feature) shapeFeatureList.get( i );
       final String propertyValue = shapeFeature.getProperty( shpCustomPropertyName ).toString();
       final Object gm_Whatever = shapeFeature.getProperty( shpGeomPropertyName );
       if( gm_Whatever instanceof GM_Object )
-        roughnessPolygon.setSurface( (GM_Object) gm_Whatever );
+      {
+        if( gm_Whatever instanceof GM_MultiSurface )
+        {
+          final GM_MultiSurface multiSurface = (GM_MultiSurface) ((GM_MultiSurface) gm_Whatever).clone();
+          final GM_Surface< ? >[] surfaces = multiSurface.getAllSurfaces();
+          for( int k = 0; k < surfaces.length; k++ )
+          {
+            final IRoughnessPolygon roughnessPolygon = roughnessPolygonCollection.addNew( m_GeometryFeatureQName );
+            m_NumberOfEntriesAdded++;
+            roughnessPolygon.setSurface( surfaces[k] );
+            m_data.getRoughnessShapeStaticRelationMap().put( roughnessPolygon.getGmlID(), propertyValue );
+          }
+        }
+        else
+        {
+          final IRoughnessPolygon roughnessPolygon = roughnessPolygonCollection.addNew( m_GeometryFeatureQName );
+          m_NumberOfEntriesAdded++;
+          roughnessPolygon.setSurface( (GM_Object) gm_Whatever );
+          m_data.getRoughnessShapeStaticRelationMap().put( roughnessPolygon.getGmlID(), propertyValue );
+        }
+      }
       else
         throw new ClassCastException( "Type not supported: " + gm_Whatever.getClass().getName() );
-      m_data.getRoughnessShapeStaticRelationMap().put( roughnessPolygon.getGmlID(), propertyValue );
     }
 
     m_isDataPrepared = true;
@@ -128,6 +172,7 @@ public class Transformer implements ICoreRunnableWithProgress
     }
     m_isDataPrepared = false;
     m_NumberOfEntriesAdded = 0;
+    m_data.deleteCreatedGMLLayer();
   }
 
   private void setSelectedRoughnessChoice( ) throws Exception
@@ -154,21 +199,10 @@ public class Transformer implements ICoreRunnableWithProgress
 
   }
 
-  private void serialize( ) throws IOException, GmlSerializeException
+  private void serialize( )
   {
-    final IRoughnessPolygonCollection roughnessPolygonCollection = m_data.getRoughnessPolygonCollection();
-    // TODO comment this out, not needed
-    // GMLWorkspace myWorkspace = roughnessPolygonCollection.getWrappedFeature().getWorkspace();
-    // String relPath = File.separator + m_data.getProjectBaseFolder() + File.separator + "Basis" + File.separator +
-    // "models" + File.separator + "terrain.gml";
-    // String absPath = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString() + relPath;
-    // FileWriter writer = new FileWriter( absPath );
-    // GmlSerializer.serializeWorkspace( writer, myWorkspace );
-    // writer.close();
-    // relPath = File.separator + m_data.getProjectBaseFolder() + File.separator + "Basis" + File.separator + "maps" +
-    // File.separator + "base.gmt";
-    // absPath = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString() + relPath;
 
+    final IRoughnessPolygonCollection roughnessPolygonCollection = m_data.getRoughnessPolygonCollection();
     final FeatureList wrappedList = roughnessPolygonCollection.getWrappedList();
     final Feature parentFeature = wrappedList.getParentFeature();
     final GMLWorkspace workspace = parentFeature.getWorkspace();

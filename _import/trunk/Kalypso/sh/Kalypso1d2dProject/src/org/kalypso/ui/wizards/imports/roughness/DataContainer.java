@@ -10,9 +10,11 @@ import java.net.URL;
 import java.util.LinkedHashMap;
 
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessLayer;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessLayerCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.opengis.cs.CS_CoordinateSystem;
 
@@ -28,9 +30,9 @@ public class DataContainer
 
   private String m_shapeProperty = "";
 
-  private CS_CoordinateSystem m_coordinateSystem;
+  private boolean m_isLayerEditable;
 
-  private IRoughnessPolygonCollection m_feature;
+  private CS_CoordinateSystem m_coordinateSystem;
 
   private LinkedHashMap<String, String> m_roughnessStaticCollectionMap;
 
@@ -48,6 +50,10 @@ public class DataContainer
 
   private String m_userSelectionFile;
 
+  private ITerrainModel m_model;
+
+  private IRoughnessLayer m_roughnessLayer;
+
   public DataContainer( )
   {
     super();
@@ -58,6 +64,33 @@ public class DataContainer
   public final void setInputFile( String inputFile )
   {
     this.m_inputFile = inputFile;
+  }
+
+  public final void setLayerName( final String layerName )
+  {
+    getLayer().setName( layerName );
+  }
+
+  private IRoughnessLayer getLayer( )
+  {
+    if( m_roughnessLayer == null )
+      m_roughnessLayer = createNewGMLLayer();
+    return m_roughnessLayer;
+  }
+
+  public final void setLayerEditable( final boolean isLayerEditable )
+  {
+    m_isLayerEditable = isLayerEditable;
+  }
+
+  public String getLayerName( )
+  {
+    return getLayer().getName();
+  }
+
+  public boolean isLayerEditable( )
+  {
+    return m_isLayerEditable;
   }
 
   public final void setShapeProperty( String shapeProperty )
@@ -113,17 +146,13 @@ public class DataContainer
 
   public final IRoughnessPolygonCollection getRoughnessPolygonCollection( )
   {
-    return m_feature;
-  }
-
-  public final void setRoughnessPolygonCollection( IRoughnessPolygonCollection roughnessPolygonCollection )
-  {
-    m_feature = roughnessPolygonCollection;
+    IRoughnessPolygonCollection roughnessPolygonCollection = m_model.getRoughnessPolygonCollection( getLayer() );
+    return roughnessPolygonCollection;
   }
 
   /**
    * @param dbAxAy -
-   *          true if user wants dbAxAy database location, false if KS db location is required
+   *            true if user wants dbAxAy database location, false if KS db location is required
    */
   public final String getRoughnessDatabaseLocation( )
   {
@@ -132,7 +161,7 @@ public class DataContainer
 
   /**
    * @param dbAxAy -
-   *          true if user wants dbAxAy database location, false if KS db location is required
+   *            true if user wants dbAxAy database location, false if KS db location is required
    */
   public final URL getRoughnessDatabaseLocationURL( ) throws MalformedURLException
   {
@@ -143,9 +172,9 @@ public class DataContainer
   {
     m_roughnessDatabaseLocation = dbLocation;
 
-//    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( getRoughnessDatabaseLocationURL(), null );
-//    final IRoughnessClsCollection collection = new RoughnessClsCollection( workspace.getRootFeature() );
-//    final IRoughnessClsCollection collection = Util.getModel( IRoughnessClsCollection.class );
+// final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( getRoughnessDatabaseLocationURL(), null );
+// final IRoughnessClsCollection collection = new RoughnessClsCollection( workspace.getRootFeature() );
+// final IRoughnessClsCollection collection = Util.getModel( IRoughnessClsCollection.class );
     for( int i = 0; i < roughnessClsCollection.size(); i++ )
       m_roughnessStaticCollectionMap.put( roughnessClsCollection.get( i ).getName(), roughnessClsCollection.get( i ).getGmlID() );
   }
@@ -204,6 +233,43 @@ public class DataContainer
     catch( Exception e )
     {
       e.printStackTrace();
+    }
+  }
+
+  public void setModel( final ITerrainModel model )
+  {
+    m_model = model;
+  }
+
+  public ITerrainModel getModel( )
+  {
+    return m_model;
+  }
+
+  public IRoughnessLayerCollection getRoughnessLayerCollection( )
+  {
+    return m_model.getRoughnessLayerCollection();
+  }
+
+  public IRoughnessLayer createNewGMLLayer( )
+  {
+    if( m_roughnessLayer != null )
+      return m_roughnessLayer;
+    final IRoughnessLayerCollection roughnessLayerCollection = getRoughnessLayerCollection();
+
+    m_roughnessLayer = roughnessLayerCollection.addNew( IRoughnessLayer.QNAME, IRoughnessLayer.class );
+    m_roughnessLayer.setName( getLayerName() );
+    m_roughnessLayer.setEditable( m_isLayerEditable );
+    roughnessLayerCollection.add( m_roughnessLayer );
+    return m_roughnessLayer;
+  }
+
+  public void deleteCreatedGMLLayer( )
+  {
+    if( m_roughnessLayer != null )
+    {
+      final IRoughnessLayerCollection roughnessLayerCollection = getRoughnessLayerCollection();
+      roughnessLayerCollection.remove( m_roughnessLayer );
     }
   }
 }

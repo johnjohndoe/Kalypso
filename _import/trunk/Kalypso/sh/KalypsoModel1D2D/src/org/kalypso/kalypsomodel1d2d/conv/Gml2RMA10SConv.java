@@ -127,9 +127,6 @@ public class Gml2RMA10SConv implements INativeIDProvider
 
   private RestartEater m_restartEater;
 
-  // private Formatter formatter;
-  //
-  // private PrintWriter stream;
   private RMA10Calculation m_calculation;
 
   private boolean m_exportRequest;
@@ -152,7 +149,6 @@ public class Gml2RMA10SConv implements INativeIDProvider
     m_exportRoughness = false;
     m_calcUnitBBox = CalcUnitOps.getBoundingBox( m_calculationUnit );
 
-    // provides the ids for the boundaryline
     m_calculation = calculation;
 
     // initialize Roughness IDs
@@ -178,8 +174,6 @@ public class Gml2RMA10SConv implements INativeIDProvider
         {
           // TODO: don't eat exceptions in such critical code
           // rethrow as SimulationException
-
-          // TODO Auto-generated catch block
           e.printStackTrace();
         }
       }
@@ -187,7 +181,8 @@ public class Gml2RMA10SConv implements INativeIDProvider
   }
 
   /**
-   * This constructor is intended to use primarily for network exporting purpose, not for calculation (calculation unit is NOT defined)
+   * This constructor is intended to use primarily for net exporting purpose, not for calculation (calculation unit is
+   * NOT defined)
    */
   public Gml2RMA10SConv( final File rma10sOutputFile, final IFEDiscretisationModel1d2d discretisationModel1d2d, final ITerrainModel terrainModel, final IFlowRelationshipModel flowrelationModel )
   {
@@ -552,8 +547,8 @@ public class Gml2RMA10SConv implements INativeIDProvider
       if( !m_exportRequest && !CalcUnitOps.isFiniteElementOf( m_calculationUnit, element ) )
         continue;
 
-// if( !m_calcUnitDefined && element instanceof IElement1D )
-// continue;
+      if( !m_exportRequest && element instanceof IElement1D )
+        continue;
 
       final int id = getBoundaryLineID( element );
 

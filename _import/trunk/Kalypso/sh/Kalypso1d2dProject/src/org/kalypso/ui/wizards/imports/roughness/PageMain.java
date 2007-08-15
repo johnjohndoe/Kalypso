@@ -37,6 +37,12 @@ public class PageMain extends WizardPage implements Listener
   Text txt_InputFile;
 
   Button btn_inputFileBrowse;
+  
+  Text m_layerName;
+  
+  Button m_layerEditable;
+
+  Button m_layerNotEditable;
 
   // status variable for the possible errors on this page
   IStatus msg_StatusLine;
@@ -109,6 +115,38 @@ public class PageMain extends WizardPage implements Listener
     cmb_CoordinateSystem.setEnabled( true );
     cmb_CoordinateSystem.setLayoutData( gd );
 
+    createLine( composite, ncol );
+
+    new Label( composite, SWT.NONE ).setText( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageMain.11" ) ); //$NON-NLS-1$
+    m_layerName = new Text( composite, SWT.BORDER );
+    gd = new GridData();
+    gd.horizontalAlignment = GridData.FILL;
+    gd.grabExcessHorizontalSpace = true;
+    // gd.horizontalSpan = ncol - 1;
+    m_layerName.setLayoutData( gd );
+    new Label( composite, SWT.NONE ).setText( "" ); //$NON-NLS-1$
+    
+    new Label( composite, SWT.NONE ).setText( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageMain.12" ) ); //$NON-NLS-1$
+    m_layerEditable = new Button(composite, SWT.RADIO);
+    m_layerEditable.setText(  Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageMain.14" ) ); //$NON-NLS-1$
+    m_layerEditable.setSelection( false );
+    gd = new GridData();
+    gd.horizontalAlignment = GridData.FILL;
+    gd.grabExcessHorizontalSpace = true;
+    // gd.horizontalSpan = ncol - 1;
+    m_layerEditable.setLayoutData( gd );
+    new Label( composite, SWT.NONE ).setText( "" ); //$NON-NLS-1$
+    
+    new Label( composite, SWT.NONE ).setText( "" ); //$NON-NLS-1$
+    m_layerNotEditable = new Button(composite, SWT.RADIO);
+    m_layerNotEditable.setText(  Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageMain.13" ) ); //$NON-NLS-1$
+    m_layerNotEditable.setSelection( true );
+    gd = new GridData();
+    gd.horizontalAlignment = GridData.FILL;
+    gd.grabExcessHorizontalSpace = true;
+    // gd.horizontalSpan = ncol - 1;
+    m_layerNotEditable.setLayoutData( gd );
+    
     // set the composite as the control for this page
 
     btn_inputFileBrowse.setFocus();
@@ -122,6 +160,7 @@ public class PageMain extends WizardPage implements Listener
     btn_inputFileBrowse.addListener( SWT.KeyDown, this );
     txt_InputFile.addListener( SWT.Modify, this );
     cmb_ShapeProperty.addListener( SWT.Selection, this );
+    m_layerName.addListener( SWT.Modify, this );
   }
 
   /**
@@ -247,7 +286,7 @@ public class PageMain extends WizardPage implements Listener
   @Override
   public boolean canFlipToNextPage( )
   {
-    return cmb_ShapeProperty.isEnabled();
+    return cmb_ShapeProperty.isEnabled() && isTextNonEmpty( m_layerName );
   }
 
   @Override
@@ -264,6 +303,9 @@ public class PageMain extends WizardPage implements Listener
       m_data.setInputFile( txt_InputFile.getText() );
       m_data.setShapeProperty( cmb_ShapeProperty.getText() );
       m_data.setCoordinateSystem( cmb_CoordinateSystem.getText() );
+      m_data.setLayerName( m_layerName.getText() );
+      m_data.setLayerEditable( m_layerEditable.getSelection() );
+      
 //      m_data.getRoughnessPolygonCollection().clear();
 //      m_data.getRoughnessShapeStaticRelationMap().clear();
 //      m_data.getRoughnessStaticCollectionMap().clear();
