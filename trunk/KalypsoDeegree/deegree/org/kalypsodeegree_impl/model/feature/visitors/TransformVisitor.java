@@ -68,7 +68,7 @@ public class TransformVisitor implements FeatureVisitor
             }
           }
           else
-          {
+          {// TODO: we may get a deadlock here, because, we are loading antoher gml while accesing xlinked properties (that happens, if the property is a feature function accesing xlinked property; here it happened for ProfileChacherFeatureFunction: BUT: that function transform itself, s maybe we could mark such a property somehow and do not try to transform ) 
             final GM_Object object = (GM_Object) f.getProperty( ftp );
             final GM_Object transformedGeom = transformProperty( object );
             f.setProperty( ftp, transformedGeom );

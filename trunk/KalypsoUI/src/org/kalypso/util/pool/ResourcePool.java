@@ -150,10 +150,10 @@ public class ResourcePool
 
   public void removePoolListener( final IPoolListener l )
   {
+    final List<KeyInfo> infosToDispose = new ArrayList<KeyInfo>();
+
     synchronized( m_keyInfos )
     {
-      final List<KeyInfo> infosToDispose = new ArrayList<KeyInfo>();
-
       for( final Iterator<Entry<IPoolableObjectType, KeyInfo>> iter = m_keyInfos.entrySet().iterator(); iter.hasNext(); )
       {
         final Entry<IPoolableObjectType, KeyInfo> entry = iter.next();
@@ -170,7 +170,8 @@ public class ResourcePool
           infosToDispose.add( info );
         }
       }
-
+    }
+    
       final ISchedulingRule mutex = ResourcesPlugin.getWorkspace().getRoot();
 
       for( final KeyInfo info : infosToDispose )
@@ -193,7 +194,6 @@ public class ResourcePool
           info.dispose();
         }
       }
-    }
   }
 
   private ILoader getLoader( final String type ) throws FactoryException
@@ -243,7 +243,7 @@ public class ResourcePool
     }
   }
 
-  public KeyInfo[] getInfos( )
+  public KeyInfo[] getInfos( ) // TODO: synchronize
   {
     return m_keyInfos.values().toArray( new KeyInfo[0] );
   }
@@ -256,7 +256,7 @@ public class ResourcePool
    * <p>
    * Bear in mind that the pool-listener mechanism is bypassed here.
    */
-  public Object getObject( final IPoolableObjectType key ) throws CoreException
+  public Object getObject( final IPoolableObjectType key ) throws CoreException// TODO: synchronize
   {
     final KeyInfo info = m_keyInfos.get( key );
     if( info != null )
@@ -304,7 +304,7 @@ public class ResourcePool
     }
   }
 
-  public KeyInfo getInfoForKey( final IPoolableObjectType poolKey )
+  public KeyInfo getInfoForKey( final IPoolableObjectType poolKey )// TODO: synchronize
   {
     return m_keyInfos.get( poolKey );
   }
