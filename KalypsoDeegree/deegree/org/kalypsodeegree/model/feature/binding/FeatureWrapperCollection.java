@@ -12,6 +12,7 @@ import javax.xml.namespace.QName;
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -32,6 +33,8 @@ import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
 public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends AbstractFeatureBinder implements IFeatureWrapperCollection<FWCls>
 {
   /**
+   * TODO: remove and use getWrappedFeatur everywhere
+   * <p>
    * The feature wrapped by this object
    */
   private final Feature featureCol;
@@ -63,7 +66,6 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
    */
   public FeatureWrapperCollection( final Feature featureCol, final Class<FWCls> fwClass, final QName featureMemberProp )
   {
-
     super( featureCol, featureCol.getFeatureType().getQName() );
 
     Assert.isNotNull( fwClass, "Parameter fwClass must not be null" );
@@ -502,26 +504,20 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
 
   public Object[] toArray( )
   {
-    int i = size();
-    final Object objs[] = new Object[i];
-    Feature f;
-    Object fObj;
-    for( i--; i >= 0; i-- )
+    final Object objs[] = new Object[size()];
+    for( int i = 0; i < objs.length; i++ )
     {
-      fObj = featureList.get( i );
-      if( fObj instanceof Feature )
-      {
-        f = (Feature) fObj;
-      }
-      else if( fObj instanceof String )
-      {
-        f = featureCol.getWorkspace().getFeature( (String) fObj );
-      }
-      else
-      {
+      final Object fObj = featureList.get( i );
+
+      final Feature feature = FeatureHelper.getFeature( featureList.getParentFeature().getWorkspace(), fObj );
+      if( feature == null )
         throw new RuntimeException( "Type not known:" + fObj );
-      }
-      objs[i] = f.getAdapter( fwClass );
+
+      final Object object = feature.getAdapter( fwClass );
+      if( object == null )
+        throw new RuntimeException( String.format( "Unable to adapt object %s to %s.", feature, fwClass ) );
+
+      objs[i] = object;
     }
     return objs;
   }
@@ -766,6 +762,15 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
 
       throw new IllegalArgumentException( message );
     }
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection#cloneInto(org.kalypsodeegree.model.feature.binding.IFeatureWrapper2)
+   */
+  public void cloneInto( final FWCls toClone ) throws Exception
+  {
+    final IRelationType relationType = featureList.getParentFeatureTypeProperty();
+    FeatureHelper.cloneFeature( getWrappedFeature(), relationType, toClone.getWrappedFeature() );
   }
 
 }

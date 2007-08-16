@@ -149,4 +149,9 @@ public interface IFeatureWrapperCollection<FWCls extends IFeatureWrapper2> exten
    * @return an int representing the number of object of the sepecified class in this collection
    */
   public int countFeatureWrappers( Class< ? > wrapperClass );
+
+  /**
+   * Clones the given object as member into this list
+   */
+  public void cloneInto( final FWCls toClone ) throws Exception;
 }
