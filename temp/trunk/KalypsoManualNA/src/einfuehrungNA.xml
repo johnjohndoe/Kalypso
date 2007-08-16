@@ -591,19 +591,15 @@
       Penman-Monteith berechnet werden.</para>
 
       <figure>
-        <title>Penman-Monteith-Formel</title>
+        <title>Penman-Monteith-Formel (Quelle: DVWK 238, Gl. 6.34, S.54)</title>
 
         <mediaobject>
           <imageobject>
             <imagedata fileref="img/kalypso_na/Kapitel_2/monteith_na.png"
-                       scale="" />
+                       scale="100" />
           </imageobject>
         </mediaobject>
       </figure>
-
-      <note>
-        <para>Quelle: DVWK 238, Gl. 6.34, S.54</para>
-      </note>
 
       <para>Dies erfolgt mit Hilfe eines kleinen Tools, wobei die
       Windgeschwindigkeiten in m/s benötigt werden, was eventuell eine
