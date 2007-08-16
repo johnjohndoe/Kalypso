@@ -9,6 +9,7 @@
 		
 		<!-- Call custom templates for the contexts.xml -->
 		<xsl:call-template name="contexts.xml"/>
+		<xsl:call-template name="IKalypsoHelpContextIds.java"/>
 	</xsl:template>
 	
 	<!-- Template for creating auxiliary contexts.xml file -->
@@ -40,6 +41,7 @@
 					<context id="{@id}">
 						<description><xsl:copy-of select="$title"/>
 						</description>
+						public static final String {$id} =PREFIX + "{$id}";
 						<topic label="{$title}" href="{$href}"/>
 					</context>
 				</xsl:if>
@@ -92,8 +94,66 @@
 			mode="contexts.xml"/>
 		
 	</xsl:template>
+
+	<!-- Template for creating auxiliary IKalypsoHelpContextIds file -->
+	<xsl:template name="IKalypsoHelpContextIds.java">
+		<xsl:call-template name="write.chunk">
+			<xsl:with-param name="filename" select="'IKalypsoHelpContextIds.java'"/>
+			<!--<xsl:with-param name="method" select="'xml'"/>
+			<xsl:with-param name="encoding" select="'utf-8'"/>
+			<xsl:with-param name="indent" select="'no'"/>-->
+			<xsl:with-param name="content">
+
+				<!-- TODO this should also be in the output -->
+				<!--?NLS TYPE="org.eclipse.help.contexts"?-->
+/**
+ * @see KalypsoManual common-eclipse.xsl and KalypsoBuild/publishing/docbook-xsl-1.69.1/eclipse/eclipse-ex.xsl
+ *
+ */				
+public interface IKalypsoHelpContextIds
+{
+  public static final String PREFIX = "org.kalypso.manual.";
+					
+				<xsl:if test="(@id)">
+					public static final String <xsl:value-of select="@id"/> =PREFIX + "<xsl:value-of select="@id"/>";
+				</xsl:if>
+					
+				<!-- Get context for all children of the root element -->
+				<xsl:apply-templates select="/*/*" mode="IKalypsoHelpContextIds.java"/>
+}
+				
+			</xsl:with-param>
+		</xsl:call-template>
+	</xsl:template>
+
+	
+	<!-- Template which converts all DocBook containers into 
+	one entry in the IKalypsoHelpContextIds file -->
+	<xsl:template
+		match="part|reference|preface|chapter|
+                                 bibliography|appendix|article|
+                                 glossary|section|sect1|sect2|
+                                 sect3|sect4|sect5|refentry|
+                                 colophon|bibliodiv|index"
+		mode="IKalypsoHelpContextIds.java">
+		<xsl:if test="(@id)">
+			<!-- Create ToC entry for the current node and process its 
+			container-type children further -->
+  public static final String <xsl:value-of select="@id"/> =PREFIX + "<xsl:value-of select="@id"/>";
+		</xsl:if>
+		
+		<xsl:apply-templates
+			select="part|reference|preface|chapter|
+                                 bibliography|appendix|article|
+                                 glossary|section|sect1|sect2|
+                                 sect3|sect4|sect5|refentry|
+                                 colophon|bibliodiv|index"
+			mode="IKalypsoHelpContextIds.java"/>
+		
+	</xsl:template>
 	
 	<!-- Default processing in the contexts.xml mode is no processing -->
 	<xsl:template match="text()" mode="contexts.xml"/>
+	<xsl:template match="text()" mode="IKalypsoHelpContextIds.java"/>
 	
 </xsl:stylesheet>
