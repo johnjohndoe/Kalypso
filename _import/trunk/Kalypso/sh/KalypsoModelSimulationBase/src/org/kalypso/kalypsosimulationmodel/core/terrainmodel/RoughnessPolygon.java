@@ -23,121 +23,6 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public class RoughnessPolygon extends AbstractFeatureBinder implements IRoughnessPolygon
 {
-  // // TODO: please comment! What is the reason for that implementation here?
-  // // Why are you not just using GM_PolygonImpl?
-  // class GM_PolygonImpl implements GM_Polygon
-  // {
-  // private final GM_SurfacePatch surfacePatch;
-  //
-  // public GM_PolygonImpl( GM_SurfacePatch gmSurfacePatch )
-  // {
-  // this.surfacePatch = gmSurfacePatch;
-  // }
-  //
-  // /**
-  // * @param gmo
-  // * @return
-  // * @see org.kalypsodeegree.model.geometry.GM_SurfacePatch#contains(org.kalypsodeegree.model.geometry.GM_Object)
-  // */
-  // public boolean contains( GM_Object gmo )
-  // {
-  // return surfacePatch.contains( gmo );
-  // }
-  //
-  // /**
-  // * @return
-  // * @see org.kalypsodeegree.model.geometry.GM_SurfacePatch#getArea()
-  // */
-  // public double getArea( )
-  // {
-  // return surfacePatch.getArea();
-  // }
-  //
-  // /**
-  // * @return
-  // * @see org.kalypsodeegree.model.geometry.GM_SurfacePatch#getCentroid()
-  // */
-  // public GM_Point getCentroid( )
-  // {
-  // return surfacePatch.getCentroid();
-  // }
-  //
-  // /**
-  // * @return
-  // * @see org.kalypsodeegree.model.geometry.GM_SurfacePatch#getCoordinateSystem()
-  // */
-  // public CS_CoordinateSystem getCoordinateSystem( )
-  // {
-  // return surfacePatch.getCoordinateSystem();
-  // }
-  //
-  // /**
-  // * @return
-  // * @see org.kalypsodeegree.model.geometry.GM_GenericSurface#getEnvelope()
-  // */
-  // public GM_Envelope getEnvelope( )
-  // {
-  // return surfacePatch.getEnvelope();
-  // }
-  //
-  // /**
-  // * @return
-  // * @see org.kalypsodeegree.model.geometry.GM_SurfacePatch#getExteriorRing()
-  // */
-  // public GM_Position[] getExteriorRing( )
-  // {
-  // return surfacePatch.getExteriorRing();
-  // }
-  //
-  // /**
-  // * @return
-  // * @see org.kalypsodeegree.model.geometry.GM_SurfacePatch#getInteriorRings()
-  // */
-  // public GM_Position[][] getInteriorRings( )
-  // {
-  // return surfacePatch.getInteriorRings();
-  // }
-  //
-  // /**
-  // * @return
-  // * @see org.kalypsodeegree.model.geometry.GM_SurfacePatch#getInterpolation()
-  // */
-  // public GM_SurfaceInterpolation getInterpolation( )
-  // {
-  // return surfacePatch.getInterpolation();
-  // }
-  //
-  // /**
-  // * @return
-  // * @see org.kalypsodeegree.model.geometry.GM_GenericSurface#getPerimeter()
-  // */
-  // public double getPerimeter( )
-  // {
-  // return surfacePatch.getPerimeter();
-  // }
-  //
-  // /**
-  // * @param gmo
-  // * @return
-  // * @see org.kalypsodeegree.model.geometry.GM_SurfacePatch#intersects(org.kalypsodeegree.model.geometry.GM_Object)
-  // */
-  // public boolean intersects( GM_Object gmo )
-  // {
-  // return surfacePatch.intersects( gmo );
-  // }
-  //
-  // /**
-  // * @see org.kalypsodeegree.model.geometry.GM_GenericSurface#invalidate()
-  // */
-  // public void invalidate( )
-  // {
-  // surfacePatch.invalidate();
-  // }
-  //
-  // }
-
-  // private final Feature feature;
-
   /**
    * Create a RoughnessPolygon object base on an existing feature
    * 
@@ -147,14 +32,11 @@ public class RoughnessPolygon extends AbstractFeatureBinder implements IRoughnes
    */
   public RoughnessPolygon( final Feature featureToBind )
   {
-    // Assert.throwIAEOnNull( aFeature, "Param feature must not be null" );
-    // Assert.throwIAEOnNotDirectInstanceOf( aFeature, KalypsoModelSimulationBaseConsts.SIM_BASE_F_ROUGHNESS_POLYGON );
-    // this.feature = aFeature;
     super( featureToBind, KalypsoModelSimulationBaseConsts.SIM_BASE_F_ROUGHNESS_POLYGON );
   }
 
   /**
-   * Creates a new RoughnessPolygon for the passed work space. if the work space has root element of the type
+   * Creates a new RoughnessPolygon for the passed workspace. If the workspace has root element of the type
    * RoughnessPolynomCollection than the a new Roughness polygon should be created and added to that one otherwise an
    * illegal argument exception should be thrown
    * 
@@ -162,9 +44,6 @@ public class RoughnessPolygon extends AbstractFeatureBinder implements IRoughnes
    */
   public RoughnessPolygon( final Feature parentFeature, final QName linkPropQName )
   {
-    // Assert.throwIAEOnNull( parentFeature, "Param parentFeature must not be null" );
-    // Assert.throwIAEOnNull( linkPropQName, "Parameter linkPropQName must not be null" );
-    // this.feature = (Feature) parentFeature.getProperty( linkPropQName );
     super( FeatureHelper.resolveLink( parentFeature, linkPropQName ), KalypsoModelSimulationBaseConsts.SIM_BASE_F_ROUGHNESS_POLYGON );
   }
 

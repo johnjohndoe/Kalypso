@@ -377,8 +377,7 @@ public class PolyElement extends Element2D implements IPolyElement
    */
   public void setRoughnessCorrectionAxAy( final Double value )
   {
-    final String gmlValue = (value != null && !value.isNaN()) ? value.toString() : "";
-    getFeature().setProperty( IFE1D2DElement.PROP_ROUGHNESS_CORRECTION_AXAY, gmlValue );
+    getFeature().setProperty( IFE1D2DElement.PROP_ROUGHNESS_CORRECTION_AXAY, value );
   }
 
   /**
@@ -386,8 +385,7 @@ public class PolyElement extends Element2D implements IPolyElement
    */
   public void setRoughnessCorrectionDP( final Double value )
   {
-    final String gmlValue = (value != null && !value.isNaN()) ? value.toString() : "";
-    getFeature().setProperty( IFE1D2DElement.PROP_ROUGHNESS_CORRECTION_DP, gmlValue );
+    getFeature().setProperty( IFE1D2DElement.PROP_ROUGHNESS_CORRECTION_DP, value );
   }
 
   /**
@@ -395,8 +393,7 @@ public class PolyElement extends Element2D implements IPolyElement
    */
   public void setRoughnessCorrectionKS( final Double value )
   {
-    final String gmlValue = (value != null && !value.isNaN()) ? value.toString() : "";
-    getFeature().setProperty( IFE1D2DElement.PROP_ROUGHNESS_CORRECTION_KS, gmlValue );
+    getFeature().setProperty( IFE1D2DElement.PROP_ROUGHNESS_CORRECTION_KS, value );
   }
 
   /**

@@ -73,10 +73,10 @@ public class RoughnessAssignListener implements ModellEventListener
     if( m_job != null)
       m_job.cancel();
     
-    m_job = new RoughnessAssignService( "Hello Dejan!", m_terrainModel, m_discModel );
+    m_job = new RoughnessAssignService( "Roughness assign service", m_terrainModel, m_discModel );
     
 //    m_job.setSystem( true );
-    m_job.setUser( true );
+    m_job.setUser( false );
     m_job.setPriority( Job.LONG );
     m_job.setRule( m_mutexRule );
     m_job.schedule( 500 );
