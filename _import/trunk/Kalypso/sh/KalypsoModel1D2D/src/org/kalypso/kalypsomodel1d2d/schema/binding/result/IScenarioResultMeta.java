@@ -53,4 +53,8 @@ public interface IScenarioResultMeta extends IResultMeta
 {
   public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "ScenarioResultMeta" );
 
+  public ICalcUnitResultMeta findCalcUnitMetaResult( String calcUnitGmlID );
+
+  public void importCalculationUnit( ICalcUnitResultMeta newCalcunitResultMeta ) throws Exception;
+
 }

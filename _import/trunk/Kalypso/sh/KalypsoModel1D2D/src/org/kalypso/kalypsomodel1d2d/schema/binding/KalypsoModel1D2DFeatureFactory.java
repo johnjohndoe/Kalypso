@@ -751,7 +751,11 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
         // If a general result meta is to be adapted, return the concrete type instead
         final QName featureQName = feature.getFeatureType().getQName();
 
-        if( featureQName.equals( ICalcUnitResultMeta.QNAME ) )
+        if( featureQName.equals( IScenarioResultMeta.QNAME ) )
+        {
+          return new ScenarioResultMeta( feature );
+        }
+        else if( featureQName.equals( ICalcUnitResultMeta.QNAME ) )
         {
           return new CalcUnitResultMeta( feature );
         }
@@ -790,7 +794,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
         }
       }
     };
-    cMap.put( ICalcUnitResultMeta.class, cTor );
+    cMap.put( IScenarioResultMeta.class, cTor );
 
     // CalcUnitResultMeta
     cTor = new AdapterConstructor()

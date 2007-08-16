@@ -113,6 +113,9 @@
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit2D"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult"/>
+         <adapter
+               type="org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta">
+         </adapter>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta"/>

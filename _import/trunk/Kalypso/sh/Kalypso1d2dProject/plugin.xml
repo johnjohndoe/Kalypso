@@ -20,18 +20,8 @@
    <extension
          point="org.eclipse.core.runtime.adapters">
       <factory
-            adaptableType="org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptor"
-            class="org.kalypso.kalypso1d2d.pjt.views.contentprov.SimulationDescriptorAdapterFactory">
-         <adapter
-               type="org.eclipse.ui.model.IWorkbenchAdapter2">
-         </adapter>
-         <adapter
-               type="org.eclipse.ui.model.IWorkbenchAdapter">
-         </adapter>
-      </factory>
-      <factory
-            adaptableType="org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IResultModelDescriptor"
-            class="org.kalypso.kalypso1d2d.pjt.views.contentprov.SimulationDescriptorAdapterFactory">
+            adaptableType="org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta"
+            class="org.kalypso.kalypso1d2d.pjt.views.contentprov.ResultMetaAdapterFactory">
          <adapter
                type="org.eclipse.ui.model.IWorkbenchAdapter2">
          </adapter>
@@ -356,6 +346,10 @@
                   isRoot="true"
                   pattern="org.kalypso.kalypso1d2d.pjt.navigator.ScenarioContent"/>
             <contentExtension
+                  isRoot="false"
+                  pattern="org.kalypso.kalypso1d2d.pjt.navigator.ScenarioResultContent">
+            </contentExtension>
+            <contentExtension
                   pattern="de.renew.workflow.connector.filters.kalypso.*">
             </contentExtension>
          </includes>
@@ -372,18 +366,6 @@
 						  value="true"/>-->
 			</options>
       </viewer>
-      <viewerContentBinding
-            viewerId="org.kalypso.kalypso1d2d.pjt.views.ResultNavigator">
-         <includes>
-            <contentExtension
-                  isRoot="true"
-                  pattern="org.kalypso.kalypso1d2d.pjt.navigator.ResultContent">
-            </contentExtension>
-            <contentExtension
-                  pattern="org.kalypso.kalypso1d2d.pjt.navigator.ActiveScenarioFilter">
-            </contentExtension>
-         </includes>
-      </viewerContentBinding>
    </extension>   
    <extension
          point="org.eclipse.ui.navigator.navigatorContent">
@@ -465,6 +447,22 @@
                </not>
          </filterExpression>
       </commonFilter>
+      <navigatorContent
+            activeByDefault="true"
+            contentProvider="org.kalypso.kalypso1d2d.pjt.views.contentprov.ScenarioResultNavigatorContentProvider"
+            id="org.kalypso.kalypso1d2d.pjt.navigator.ScenarioResultContent"
+            labelProvider="org.eclipse.ui.model.WorkbenchLabelProvider"
+            name="Ergebnisse"
+            priority="normal"
+            providesSaveables="false">
+         <enablement>
+            <or>
+               <instanceof
+                     value="org.kalypso.afgui.scenarios.Scenario">
+               </instanceof>
+            </or>
+         </enablement>
+      </navigatorContent>
    </extension>
    <extension
          point="org.eclipse.ui.commands">

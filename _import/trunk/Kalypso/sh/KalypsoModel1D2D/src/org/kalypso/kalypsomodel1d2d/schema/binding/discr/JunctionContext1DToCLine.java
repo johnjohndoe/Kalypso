@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
@@ -68,21 +68,16 @@ import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
  * 
  * @author Patrice Congo
  */
-@SuppressWarnings({"unchecked", "hiding"})
-public class JunctionContext1DToCLine 
-                  extends AbstractFeatureBinder 
-                  implements IJunctionContext1DToCLine
+@SuppressWarnings( { "unchecked", "hiding" })
+public class JunctionContext1DToCLine extends AbstractFeatureBinder implements IJunctionContext1DToCLine
 {
 
   public JunctionContext1DToCLine( Feature featureToBind )
   {
-    this(
-        featureToBind, 
-        Kalypso1D2DSchemaConstants.WB1D2D_F_JUNTCION_CONTEXT_1D_CLINE);
+    this( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_JUNTCION_CONTEXT_1D_CLINE );
   }
-  public JunctionContext1DToCLine( 
-                    Feature featureToBind, 
-                    QName qnameToBind )
+
+  public JunctionContext1DToCLine( Feature featureToBind, QName qnameToBind )
   {
     super( featureToBind, qnameToBind );
   }
@@ -92,10 +87,7 @@ public class JunctionContext1DToCLine
    */
   public ILineElement getContinuityLine( )
   {
-    ILineElement resolvedLink = FeatureHelper.resolveLink( 
-                    this, 
-                    Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE, 
-                    ILineElement.class );
+    ILineElement resolvedLink = FeatureHelper.resolveLink( this, Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE, ILineElement.class );
     return resolvedLink;
   }
 
@@ -104,12 +96,10 @@ public class JunctionContext1DToCLine
    */
   public IElement1D getElement1D( )
   {
-    IElement1D resolvedLink = FeatureHelper.resolveLink( 
-        this, 
-        Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT1D,
-        IElement1D.class );
+    IElement1D resolvedLink = FeatureHelper.resolveLink( this, Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT1D, IElement1D.class );
     return resolvedLink;
   }
+
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionContext1DToCLine#getTarget1DNode()
    */
@@ -119,38 +109,29 @@ public class JunctionContext1DToCLine
     IFE1D2DNode<IFE1D2DEdge> target1dNode = EdgeOps.find1DEdgeEndNode( element1D.getEdge() );
     return target1dNode;
   }
+
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DComplexElement#addElementAsRef(org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement)
    */
   public boolean addElementAsRef( IFE1D2DElement element )
   {
     Feature wrappedFeature = element.getWrappedFeature();
-    if(TypeInfo.isBoundaryLine( wrappedFeature ))
+    if( TypeInfo.isBoundaryLine( wrappedFeature ) )
     {
-      getFeature().setProperty( 
-          Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE, 
-          wrappedFeature.getId() );
+      getFeature().setProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE, wrappedFeature.getId() );
       element.getContainers().addRef( this );
       return true;
     }
-    else if(TypeInfo.isElement1DFeature( wrappedFeature ))
+    else if( TypeInfo.isElement1DFeature( wrappedFeature ) )
     {
-      getFeature().setProperty( 
-          Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT1D, 
-          wrappedFeature.getId() );
+      getFeature().setProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT1D, wrappedFeature.getId() );
       element.getContainers().addRef( this );
       return true;
     }
     else
     {
-      String message = 
-        String.format( 
-            "This complex element accept only one 1D element and one "+
-              " boundary line; so adding this feature is not possible"+
-              "\n\tfeature to add as ref=%s \n\ttype=", 
-            wrappedFeature, 
-            wrappedFeature.getFeatureType().getQName() );
-     throw new IllegalArgumentException(message); 
+      String message = String.format( "This complex element accept only one 1D element and one " + " boundary line; so adding this feature is not possible" + "\n\tfeature to add as ref=%s \n\ttype=", wrappedFeature, wrappedFeature.getFeatureType().getQName() );
+      throw new IllegalArgumentException( message );
     }
   }
 
@@ -159,7 +140,7 @@ public class JunctionContext1DToCLine
    */
   public IFeatureWrapperCollection getElements( )
   {
-    return (IFeatureWrapperCollection) getJunctionAsList(  );
+    return (IFeatureWrapperCollection) getJunctionAsList();
   }
 
   /**
@@ -168,14 +149,12 @@ public class JunctionContext1DToCLine
   public boolean removeElementAsRef( IFE1D2DElement element )
   {
     Feature featureToDel = element.getWrappedFeature();
-    if(TypeInfo.isBoundaryLine( featureToDel ))
+    if( TypeInfo.isBoundaryLine( featureToDel ) )
     {
-      if(featureToDel.equals( getContinuityLine().getWrappedFeature() ))
+      if( featureToDel.equals( getContinuityLine().getWrappedFeature() ) )
       {
         element.getContainers().removeAllRefs( this );
-        getFeature().setProperty( 
-            Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE, 
-            null );
+        getFeature().setProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE, null );
         return true;
       }
       else
@@ -183,14 +162,12 @@ public class JunctionContext1DToCLine
         return false;
       }
     }
-    else if(TypeInfo.isElement1DFeature( featureToDel ))
+    else if( TypeInfo.isElement1DFeature( featureToDel ) )
     {
-      if(featureToDel.equals( getElement1D().getWrappedFeature() ))
+      if( featureToDel.equals( getElement1D().getWrappedFeature() ) )
       {
         element.getContainers().removeAllRefs( this );
-        getFeature().setProperty( 
-            Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT1D, 
-            null );
+        getFeature().setProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT1D, null );
         return true;
       }
       else
@@ -200,65 +177,59 @@ public class JunctionContext1DToCLine
     }
     else
     {
-      String message = 
-        String.format( 
-            "This complex element accept only one 1D element and one "+
-              " continuity line; so adding this feature is not possible"+
-              "\n\tfeature to add as ref=%s \n\ttype=", 
-            featureToDel, 
-            featureToDel.getFeatureType().getQName() );
-     throw new IllegalArgumentException(message); 
+      String message = String.format( "This complex element accept only one 1D element and one " + " continuity line; so adding this feature is not possible"
+          + "\n\tfeature to add as ref=%s \n\ttype=", featureToDel, featureToDel.getFeatureType().getQName() );
+      throw new IllegalArgumentException( message );
     }
   }
-  
-  protected List<IFE1D2DElement> collectJunctionElements()
+
+  protected List<IFE1D2DElement> collectJunctionElements( )
   {
     List<IFE1D2DElement> eleList = new ArrayList<IFE1D2DElement>();
     IElement1D element1D = getElement1D();
-    if(element1D != null)
+    if( element1D != null )
     {
       eleList.add( element1D );
     }
-    
+
     ILineElement continuityLine = getContinuityLine();
-    if(continuityLine != null)
+    if( continuityLine != null )
     {
       eleList.add( continuityLine );
     }
     return eleList;
   }
-  
+
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IJunctionContext1DToCLine#recalculateElementGeometry()
    */
   public GM_Object recalculateElementGeometry( ) throws GM_Exception
   {
     ILineElement<IFE1D2DComplexElement, IFE1D2DEdge> continuityLine = getContinuityLine();
-    if(continuityLine == null )
+    if( continuityLine == null )
     {
       return null;
     }
-    
+
     IElement1D element1D = getElement1D();
-    if(element1D == null )
+    if( element1D == null )
     {
       return null;
     }
-    
-    final IFE1D2DNode endNode1D = EdgeOps.find1DEdgeEndNode( element1D.getEdge());
-    
+
+    final IFE1D2DNode endNode1D = EdgeOps.find1DEdgeEndNode( element1D.getEdge() );
+
     List<IFE1D2DNode> nodes = continuityLine.getNodes();
-    nodes.add(0, endNode1D );
-    nodes.add( endNode1D );//close exterior ring
-    
+    nodes.add( 0, endNode1D );
+    nodes.add( endNode1D );// close exterior ring
+
     return ModelGeometryBuilder.createSurfaceFromNode( nodes );
   }
-  
-  private final List<IFE1D2DElement> getJunctionAsList()
+
+  private final List<IFE1D2DElement> getJunctionAsList( )
   {
-//    List<IFeatureWrapper2> list = Collections.unmodifiableList( eleList );
-    IFeatureWrapperCollection<IFE1D2DElement> list = 
-      new IFeatureWrapperCollection<IFE1D2DElement>()
+    // List<IFeatureWrapper2> list = Collections.unmodifiableList( eleList );
+    IFeatureWrapperCollection<IFE1D2DElement> list = new IFeatureWrapperCollection<IFE1D2DElement>()
     {
 
       public boolean add( IFE1D2DElement o )
@@ -268,12 +239,12 @@ public class JunctionContext1DToCLine
 
       public void add( int index, IFE1D2DElement element )
       {
-        throw new UnsupportedOperationException(); 
+        throw new UnsupportedOperationException();
       }
 
       public boolean addAll( Collection< ? extends IFE1D2DElement> c )
       {
-        throw new UnsupportedOperationException(); 
+        throw new UnsupportedOperationException();
       }
 
       public boolean addAll( int index, Collection< ? extends IFE1D2DElement> c )
@@ -284,12 +255,8 @@ public class JunctionContext1DToCLine
       public void clear( )
       {
         Feature contextFeature = getFeature();
-        contextFeature.setProperty( 
-            Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE, 
-            null );
-        contextFeature.setProperty( 
-            Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT1D, 
-            null );
+        contextFeature.setProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_BOUNDARY_LINE, null );
+        contextFeature.setProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT1D, null );
       }
 
       public boolean contains( Object o )
@@ -314,7 +281,7 @@ public class JunctionContext1DToCLine
 
       public boolean isEmpty( )
       {
-        return getElement1D()==null  && getContinuityLine()==null;
+        return getElement1D() == null && getContinuityLine() == null;
       }
 
       public Iterator<IFE1D2DElement> iterator( )
@@ -339,9 +306,9 @@ public class JunctionContext1DToCLine
 
       public boolean remove( Object o )
       {
-        if(o instanceof IFE1D2DElement)
+        if( o instanceof IFE1D2DElement )
         {
-         return removeElementAsRef( (IFE1D2DElement) o ); 
+          return removeElementAsRef( (IFE1D2DElement) o );
         }
         else
         {
@@ -456,12 +423,12 @@ public class JunctionContext1DToCLine
 
       public void setDescription( String desc )
       {
-        
+
       }
 
       public void setName( String name )
       {
-        
+
       }
 
       public List<IFE1D2DElement> query( GM_Surface selectionSurface, boolean containedOnly, QName checkedGeometryPropertyName )
@@ -483,11 +450,18 @@ public class JunctionContext1DToCLine
       {
         return 0;
       }
-      
+
+      /**
+       * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection#cloneInto(org.kalypsodeegree.model.feature.binding.IFeatureWrapper2)
+       */
+      public void cloneInto( IFE1D2DElement toClone ) throws Exception
+      {
+        throw new UnsupportedOperationException();
+      }
+
     };
-    
+
     return list;
   }
-  
-  
+
 }

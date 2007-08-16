@@ -66,13 +66,8 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
-import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IResultModelDescriptor;
-import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptor;
-import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ResultDB;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.model.IResultModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
-import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelRoughnessConsts;
@@ -116,8 +111,6 @@ public class RMA10Calculation implements INativeIDProvider
   private final List<ITimeStepinfo> m_timeStepInfos;
 
   private final LinkedHashMap<IBoundaryLine, Integer> m_boundaryLineIDProvider = new LinkedHashMap<IBoundaryLine, Integer>( 32 );
-
-  private ISimulationDescriptor m_simulationDesciptor;
 
   private ICalculationUnit m_calculationUnit;
 
@@ -379,8 +372,8 @@ public class RMA10Calculation implements INativeIDProvider
         // final boolean boundaryConditionOf = CalUnitOps.isBoundaryConditionOf( unit, bc, grabDistance );
 
         final IFeatureWrapper2 wrapper2 = CalcUnitOps.getAssignedBoundaryConditionLine( unit, bc );
-// // final IFeatureWrapper2 wrapper2 = DiscretisationModelUtils.findModelElementForBC( discModel, bc.getPosition(),
-// 0.001 );
+        // // final IFeatureWrapper2 wrapper2 = DiscretisationModelUtils.findModelElementForBC( discModel, bc.getPosition(),
+        // 0.001 );
         System.out.println();
         if( wrapper2 == null )
         {
@@ -416,55 +409,55 @@ public class RMA10Calculation implements INativeIDProvider
           }
 
         // TODO: the following elses never get called any more
-// else if( wrapper2 instanceof IFE1D2DNode && DiscretisationModelUtils.is1DNode( (IFE1D2DNode<IFE1D2DEdge>) wrapper2 )
-// )
-// {
-// // create new contiline
-// final IFE1D2DNode[] nodeArray = new IFE1D2DNode[] { (IFE1D2DNode) wrapper2 };
-// final BoundaryLineInfo info = new BoundaryLineInfo( ++contiCount, nodeArray );
-//
-// final IComponent timeComponent = TupleResultUtilities.findComponentById( obsResult,
-// Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );
-// final IComponent qComponent = TupleResultUtilities.findComponentById( obsResult,
-// Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
-// final IComponent hComponent = TupleResultUtilities.findComponentById( obsResult,
-// Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL );
-// info.setSteadyValue( bc.getStationaryCondition() );
-// if( qComponent != null )
-// {
-// info.setObservation( obs, timeComponent, qComponent, ITimeStepinfo.TYPE.CONTI_BC_Q );
-// info.setTheta( bc.getDirection() );
-// }
-// else if( hComponent != null )
-// info.setObservation( obs, timeComponent, hComponent, ITimeStepinfo.TYPE.CONTI_BC_H );
-// else
-// throw new SimulationException( "Falsche Parameter an Kontinuitätslinien-Randbedingung: " + bc.getName(), null );
-//
-// result.add( info );
-// }
-// else if( wrapper2 instanceof IElement2D || wrapper2 instanceof IElement1D )
-// {
-// final IElement2D<IFE1D2DComplexElement, IFE1D2DEdge> ele2d = (IElement2D<IFE1D2DComplexElement, IFE1D2DEdge>)
-// wrapper2;
-//
-// // final String gmlID = ele2d.getGmlID();
-// final int id = 0; // TODO: get ascii element id for gmlid
-//
-// final BoundaryConditionInfo info = new BoundaryConditionInfo( id, ITimeStepinfo.TYPE.ELE_BCE_2D );
-//
-// final IComponent timeComponent = TupleResultUtilities.findComponentById( obsResult, "time" );
-// final IComponent qComponent = TupleResultUtilities.findComponentById( obsResult, "q" );
-// final IComponent hComponent = TupleResultUtilities.findComponentById( obsResult, "h" );
-// final IComponent valueComponent = qComponent == null ? hComponent : qComponent;
-//
-// info.setObservation( obs, timeComponent, valueComponent );
-// info.setSteadyValue( bc.getStationaryCondition() );
-//
-// result.add( info );
-// }
+        // else if( wrapper2 instanceof IFE1D2DNode && DiscretisationModelUtils.is1DNode( (IFE1D2DNode<IFE1D2DEdge>) wrapper2 )
+        // )
+        // {
+        // // create new contiline
+        // final IFE1D2DNode[] nodeArray = new IFE1D2DNode[] { (IFE1D2DNode) wrapper2 };
+        // final BoundaryLineInfo info = new BoundaryLineInfo( ++contiCount, nodeArray );
+        //
+        // final IComponent timeComponent = TupleResultUtilities.findComponentById( obsResult,
+        // Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );
+        // final IComponent qComponent = TupleResultUtilities.findComponentById( obsResult,
+        // Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
+        // final IComponent hComponent = TupleResultUtilities.findComponentById( obsResult,
+        // Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL );
+        // info.setSteadyValue( bc.getStationaryCondition() );
+        // if( qComponent != null )
+        // {
+        // info.setObservation( obs, timeComponent, qComponent, ITimeStepinfo.TYPE.CONTI_BC_Q );
+        // info.setTheta( bc.getDirection() );
+        // }
+        // else if( hComponent != null )
+        // info.setObservation( obs, timeComponent, hComponent, ITimeStepinfo.TYPE.CONTI_BC_H );
+        // else
+        // throw new SimulationException( "Falsche Parameter an Kontinuitätslinien-Randbedingung: " + bc.getName(), null );
+        //
+        // result.add( info );
+        // }
+        // else if( wrapper2 instanceof IElement2D || wrapper2 instanceof IElement1D )
+        // {
+        // final IElement2D<IFE1D2DComplexElement, IFE1D2DEdge> ele2d = (IElement2D<IFE1D2DComplexElement, IFE1D2DEdge>)
+        // wrapper2;
+        //
+        // // final String gmlID = ele2d.getGmlID();
+        // final int id = 0; // TODO: get ascii element id for gmlid
+        //
+        // final BoundaryConditionInfo info = new BoundaryConditionInfo( id, ITimeStepinfo.TYPE.ELE_BCE_2D );
+        //
+        // final IComponent timeComponent = TupleResultUtilities.findComponentById( obsResult, "time" );
+        // final IComponent qComponent = TupleResultUtilities.findComponentById( obsResult, "q" );
+        // final IComponent hComponent = TupleResultUtilities.findComponentById( obsResult, "h" );
+        // final IComponent valueComponent = qComponent == null ? hComponent : qComponent;
+        //
+        // info.setObservation( obs, timeComponent, valueComponent );
+        // info.setSteadyValue( bc.getStationaryCondition() );
+        //
+        // result.add( info );
+        // }
 
-// else
-// throw new SimulationException( "Nicht zugeordnete Randbedingung: " + bc.getName(), null );
+        // else
+        // throw new SimulationException( "Nicht zugeordnete Randbedingung: " + bc.getName(), null );
       }
     }
 
@@ -496,35 +489,6 @@ public class RMA10Calculation implements INativeIDProvider
     final Feature controlModelFeature = FeatureHelper.getFeature( m_controlModelRoot.getWorkspace(), link );
 
     return (IControlModel1D2D) controlModelFeature.getAdapter( IControlModel1D2D.class );
-  }
-
-  /**
-   * Adds a simulation descriptor for this rma10 simulation to the result db
-   */
-  public void addToResultDB( )
-  {
-    /** Descriptor for this simulation */
-    final ResultDB resultDB = KalypsoModel1D2DPlugin.getDefault().getResultDB();
-    m_simulationDesciptor = resultDB.addRMACalculation( this );
-  }
-
-  /**
-   * Adds a descriptor for this result model to the simulation descriptor of this rma10s simulation
-   * 
-   * @param resultModel
-   *            the result model to add to the rma10 simulation
-   * @return the added result descriptor
-   */
-  public IResultModelDescriptor addToSimulationDescriptor( final IResultModel1d2d resultModel )
-  {
-    Assert.throwIAEOnNullParam( resultModel, "resultModel" );
-    final ResultDB resultDB = KalypsoModel1D2DPlugin.getDefault().getResultDB();
-
-    final IResultModelDescriptor resDescriptor = (IResultModelDescriptor) resultDB.addModelDescriptor( resultModel );
-    final IFeatureWrapperCollection<IResultModelDescriptor> resultModels = m_simulationDesciptor.getResultModel();
-    resultModels.addRef( resDescriptor );
-
-    return resDescriptor;
   }
 
   /**
