@@ -138,13 +138,13 @@ public class RoughnessAssignService extends Job
       {
         if( roughnessPolygon.getSurface().contains( position ) )
         {
-          final String gmlID = roughnessPolygon.getGmlID();
+          final String roughnessClsGmlID = roughnessPolygon.getRoughnessCls().getGmlID();
           final Double correctionParameterKS = roughnessPolygon.getCorrectionParameterKS();
           final Double correctionParameterAxAy = roughnessPolygon.getCorrectionParameterAxAy();
           final Double correctionParameterDP = roughnessPolygon.getCorrectionParameterDP();
           final String roughnessStyle = roughnessPolygon.getRoughnessStyle();
           
-          final FeatureChange[] changes = element.assignRoughness( gmlID, correctionParameterKS, correctionParameterAxAy, correctionParameterDP, roughnessStyle );
+          final FeatureChange[] changes = element.assignRoughness( roughnessClsGmlID, correctionParameterKS, correctionParameterAxAy, correctionParameterDP, roughnessStyle );
           for( FeatureChange featureChange : changes )
             m_changes.add( featureChange );
           return true;
