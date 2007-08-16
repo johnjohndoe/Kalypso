@@ -220,8 +220,8 @@ public class Util
       final IFeatureWrapper2 model = getModel( modelClass );
       final URL context = model.getWrappedFeature().getWorkspace().getContext();
 
-// String path2 = context.getPath();
-// IResource resource = new Path(path2);
+      // String path2 = context.getPath();
+      // IResource resource = new Path(path2);
 
       final URL resolvedUrl = FileLocator.resolve( context );
       return resolvedUrl.getFile();
@@ -265,22 +265,6 @@ public class Util
       };
 
       activeWorkbenchWindow.run( true, false, rwp );
-    }
-    catch( final Throwable th )
-    {
-      th.printStackTrace();
-      throw new RuntimeException( th );
-    }
-  }
-
-  public static final void saveAllModel( final IWorkbench workbench, final IWorkbenchWindow activeWorkbenchWindow )
-  {
-    try
-    {
-      final IHandlerService service = (IHandlerService) workbench.getService( IHandlerService.class );
-      final IEvaluationContext currentState = service.getCurrentState();
-      final ICaseDataProvider<IFeatureWrapper2> caseDataProvider = (ICaseDataProvider<IFeatureWrapper2>) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
-      caseDataProvider.saveModel( null );
     }
     catch( final Throwable th )
     {
