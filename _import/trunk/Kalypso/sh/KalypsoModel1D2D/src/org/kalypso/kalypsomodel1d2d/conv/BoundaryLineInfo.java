@@ -77,47 +77,8 @@ public class BoundaryLineInfo extends BoundaryConditionInfo
 
   public void setTheta( final BigInteger direction )
   {
-    final int degree = direction == null ? 0 : direction.intValue();
+    final double degree = direction == null ? 0 : direction.intValue();
 
-    // TODO: @Nico: verify if everything is now correct
-    // TODO: @Nico: RMA10 will be adapted in such a way that correction of theta here is not
-    // necessary any more
-    final double theta;
-    if( m_nodeArray.length > 1 )
-    {
-      // For 2D there is a boundary line
-      final double deltaX;
-      final double deltaY;
-      // direction perpendicular to boundary line
-      // second point should be the one, which is more west!
-      if( m_nodeArray[0].getPoint().getX() < m_nodeArray[m_nodeArray.length - 1].getPoint().getX() )
-      {
-        deltaX = m_nodeArray[0].getPoint().getX() - m_nodeArray[m_nodeArray.length - 1].getPoint().getX();
-        deltaY = m_nodeArray[0].getPoint().getY() - m_nodeArray[m_nodeArray.length - 1].getPoint().getY();
-      }
-      else
-      {
-        deltaX = m_nodeArray[m_nodeArray.length - 1].getPoint().getX() - m_nodeArray[0].getPoint().getX();
-        deltaY = m_nodeArray[m_nodeArray.length - 1].getPoint().getY() - m_nodeArray[0].getPoint().getY();
-      }
-      final double l = Math.sqrt( Math.pow( deltaX, 2 ) + Math.pow( deltaY, 2 ) );
-
-      if( deltaY > 0 )
-        theta = degree + Math.acos( deltaX / l );
-      else if( deltaY < 0 )
-        theta = degree - (Math.acos( deltaX / l ) / Math.PI * 180d);
-      else if( deltaY == 0 && deltaX > 0 )
-        theta = degree;
-      else
-        theta = degree;
-    }
-    else
-    {
-      // For 1D-Elements/Nodes: theta can be directly written to RMA10
-      theta = degree;
-    }
-
-    // Still convert degrees to radians
-    super.setTheta( theta );
+    super.setTheta( degree );
   }
 }
