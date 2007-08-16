@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypso1d2d.pjt.actions;
 
@@ -65,20 +65,13 @@ import org.eclipse.ui.ISources;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultsAcessor;
-import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IModelDescriptor;
-import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IResultModelDescriptor;
-import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptionCollection;
-import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptor;
-import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ResultDB;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrographCollection;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.pool.PoolableObjectType;
 import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 
@@ -131,23 +124,25 @@ public class ResultProcessHydrographsHandler extends AbstractHandler
           final GMLWorkspace hydrographWorkspace = (GMLWorkspace) pool.getObject( hydrographKey );
           monitor.worked( 1 );
 
-          // get files to process
-          // TODO: change to access to ResultDB
-          // TODO: change to project dependend db
-          final ResultDB resultDB = KalypsoModel1D2DPlugin.getDefault().getResultDB();
-          final ISimulationDescriptionCollection simDB = resultDB.getSimDB();
-          final IFeatureWrapperCollection<ISimulationDescriptor> simulationDescriptors = simDB.getSimulationDescriptors();
-          for( final ISimulationDescriptor simulationDescriptor : simulationDescriptors )
-          {
-            final IModelDescriptor calculationUnit = simulationDescriptor.getCalculationUnit();
-
-            final IFeatureWrapperCollection<IResultModelDescriptor> resultModel = simulationDescriptor.getResultModel();
-            for( final IResultModelDescriptor resultModelDescriptor : resultModel )
-            {
-              resultModelDescriptor.getTinDepth();
-              resultModelDescriptor.getTime();
-            }
-          }
+          // // get files to process
+          // // TODO: change to access to ResultDB
+          // // TODO: change to project dependend db
+          // final ResultDB resultDB = KalypsoModel1D2DPlugin.getDefault().getResultDB();
+          // final ISimulationDescriptionCollection simDB = resultDB.getSimDB();
+          // final IFeatureWrapperCollection<ISimulationDescriptor> simulationDescriptors =
+          // simDB.getSimulationDescriptors();
+          // for( final ISimulationDescriptor simulationDescriptor : simulationDescriptors )
+          // {
+          // final IModelDescriptor calculationUnit = simulationDescriptor.getCalculationUnit();
+          //
+          // final IFeatureWrapperCollection<IResultModelDescriptor> resultModel =
+          // simulationDescriptor.getResultModel();
+          // for( final IResultModelDescriptor resultModelDescriptor : resultModel )
+          // {
+          // resultModelDescriptor.getTinDepth();
+          // resultModelDescriptor.getTime();
+          // }
+          // }
 
           final Map<Date, IFile> wspTimestepResults = resultsAcessor.getTimestepsFiles();
 

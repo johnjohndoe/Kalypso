@@ -61,11 +61,10 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.lang.ProcessHelper;
-import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter;
-import org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv;
 import org.kalypso.kalypsomodel1d2d.conv.Building1D2DConverter;
 import org.kalypso.kalypsomodel1d2d.conv.BuildingIDProvider;
+import org.kalypso.kalypsomodel1d2d.conv.Control1D2DConverter;
+import org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
@@ -104,9 +103,12 @@ public class SimMode1D2DCalcJob implements ISimulation
       logger.fine( e1.getLocalizedMessage() );
     }
 
-    final String nowString = DateFormat.getDateTimeInstance().format( new Date() );
+    /* Start logging */
+    final Date startTime = new Date();
+    final String nowString = DateFormat.getDateTimeInstance().format( startTime );
     logger.log( Level.INFO, "Starte Berechnung: " + nowString + " (Serverzeit)\n" );
 
+    ResultManager resultRunner = null;
     try
     {
       monitor.setMessage( "Generiere Ascii Files für FE-Simulation..." );
@@ -114,6 +116,16 @@ public class SimMode1D2DCalcJob implements ISimulation
         return;
 
       final RMA10Calculation calculation = new RMA10Calculation( inputProvider );
+
+      /* Prepare for any results */
+      final File outputDir = new File( tmpDir, RMA10SimModelConstants.OUTPUT_DIR_NAME );
+      resultEater.addResult( RMA10SimModelConstants.RESULT_DIR_NAME_ID, outputDir );
+      final ICalculationUnit calculationUnit = calculation.getControlModel().getCalculationUnit();
+      final String calcUnitID = calculationUnit.getWrappedFeature().getId();
+      final File calcUnitOutputDir = new File( outputDir, calcUnitID );
+      calcUnitOutputDir.mkdirs();
+
+      resultRunner = new ResultManager( tmpDir, calcUnitOutputDir, "A", inputProvider, calculation, startTime );
 
       /** convert discretisation model stuff... */
       // write merged *.2d file for calc core / Dejan
@@ -158,14 +170,6 @@ public class SimMode1D2DCalcJob implements ISimulation
         IOUtils.closeQuietly( weirPw );
       }
 
-      /* Prepare the result directory */
-      final File outputDir = new File( tmpDir, RMA10SimModelConstants.OUTPUT_DIR_NAME );
-      resultEater.addResult( RMA10SimModelConstants.RESULT_DIR_NAME_ID, outputDir );
-      final ICalculationUnit calculationUnit = calculation.getControlModel().getCalculationUnit();
-      final String calcUnitID = calculationUnit.getWrappedFeature().getId();
-      final File calcUnitOutputDir = new File( outputDir, calcUnitID );
-      calcUnitOutputDir.mkdirs();
-
       /** start calculation... */
       monitor.setMessage( "Starte Rechenkern..." );
       if( monitor.isCanceled() )
@@ -175,14 +179,8 @@ public class SimMode1D2DCalcJob implements ISimulation
 
       copyExecutable( tmpDir, calculation.getKalypso1D2DKernelPath() );
 
-      calculation.addToResultDB();
-
-      final ResultManager resultRunner = new ResultManager( tmpDir, calcUnitOutputDir, "A", inputProvider, calculation );
+      resultRunner.calculationAboutToStart();
       startCalculation( tmpDir, monitor, resultRunner, calculation );
-      /* Run a last time so nothing is forgotten... */
-      resultRunner.finish();
-
-      /* Save result model after all results are processed */
 
       /* check succeeded and load results */
       handleError( tmpDir, calcUnitOutputDir, monitor, logger );
@@ -204,9 +202,10 @@ public class SimMode1D2DCalcJob implements ISimulation
       for( final Handler handl : handlers )
         handl.close();
 
-      // always save result-db, maybe some results have been updated
-      // TODO: save to other other result db
-      KalypsoModel1D2DPlugin.getDefault().getResultDB().save();
+      /* Run a last time so nothing is forgotten... */
+      /* Save result model after all results are processed */
+      if( resultRunner != null )
+        resultRunner.finish();
     }
   }
 

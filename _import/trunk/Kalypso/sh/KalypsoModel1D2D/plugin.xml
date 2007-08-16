@@ -82,8 +82,6 @@
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IRiverChannel1D"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d"/>
-         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEEdgeToEdgeJunction1D2D"/>
-         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEEdgeToCLineJunction1D2D"/>
          <adapter type="org.kalypsodeegree.graphics.displayelements.DisplayElementDecorator"/>
          <adapter type="org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IKingFlowRelation"/>
@@ -100,8 +98,6 @@
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.model.IStaticModel1D2D"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D"/>
-         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.model.IResultModel1d2d"/>
-         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.model.INodeResultCollection"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2DCollection"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.model.IPseudoOPerationalModel"/>
@@ -116,14 +112,8 @@
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit2D"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D"/>
-         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptionCollection"/>
-         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptor"/>
-         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IModelDescriptor"/>
-         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IResultModelDescriptor"/>
-         <adapter
-               type="org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult">
-         </adapter>
-         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.result.ICScenarioResultMeta"/>
+         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult"/>
+         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta"/>

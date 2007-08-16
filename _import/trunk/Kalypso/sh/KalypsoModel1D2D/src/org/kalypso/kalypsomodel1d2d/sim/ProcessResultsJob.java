@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.sim;
 
@@ -45,7 +45,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.math.BigInteger;
 import java.net.URL;
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -70,8 +69,9 @@ import org.kalypso.kalypsomodel1d2d.conv.results.ResultType;
 import org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceTriangleEater;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultType.TYPE;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IResultModelDescriptor;
-import org.kalypso.kalypsomodel1d2d.schema.binding.model.IResultModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.simulation.core.ISimulationDataProvider;
@@ -84,6 +84,8 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
+ * TODO: remove processing of the map
+ * 
  * This job processed one 2d-result file.
  * 
  * @author Gernot Belger
@@ -104,7 +106,9 @@ public class ProcessResultsJob extends Job
 
   private static List<TYPE> m_parameters;
 
-  public ProcessResultsJob( final File inputFile, final File outputDir, final ISimulationDataProvider dataProvider, final RMA10Calculation calculation, final List<ResultType.TYPE> parameter, final int timeStepNr )
+  private final IStepResultMeta m_stepResultMeta;
+
+  public ProcessResultsJob( final File inputFile, final File outputDir, final ISimulationDataProvider dataProvider, final RMA10Calculation calculation, final List<ResultType.TYPE> parameter, final int timeStepNr, final ICalcUnitResultMeta unitResultMeta )
   {
     super( "1D2D-Ergebnisse auswerten: " + inputFile.getName() );
 
@@ -114,6 +118,8 @@ public class ProcessResultsJob extends Job
     m_calculation = calculation;
     m_parameters = parameter;
     m_timeStepNr = timeStepNr;
+    m_stepResultMeta = unitResultMeta.addStepResult();
+
   }
 
   /**
@@ -127,17 +133,18 @@ public class ProcessResultsJob extends Job
     try
     {
       /* Zip .2d file to outputDir */
-      final File exeLog = new File( m_inputFile.getParentFile().toString() + "/exe.log" );
-      final File exeErr = new File( m_inputFile.getParentFile().toString() + "/exe.err" );
-      final File outputOut = new File( m_inputFile.getParentFile().toString() + "/result/Output.out" );
-      final File[] files = new File[] { m_inputFile, exeLog, exeErr, outputOut };
+      // final File exeLog = new File( m_inputFile.getParentFile().toString() + "/exe.log" );
+      // final File exeErr = new File( m_inputFile.getParentFile().toString() + "/exe.err" );
+      // final File outputOut = new File( m_inputFile.getParentFile().toString() + "/result/Output.out" );
+      final File[] files = new File[] { m_inputFile /* , exeLog, exeErr, outputOut */};
       final File outputZip2d = new File( m_outputDir, "original.2d.zip" );
-      // ZipUtilities.zip( outputZip2d, new File[] { m_inputFile }, m_inputFile.getParentFile() );
       ZipUtilities.zip( outputZip2d, files, m_inputFile.getParentFile() );
+      m_stepResultMeta.addDocument( "RMA-Rohdaten", "ASCII Ergebnisdatei(en) des RMA10 Rechenkerns", IDocumentResultMeta.DOCUMENTTYPE.coreDataZip, "original.2d.zip", Status.OK_STATUS );
+
       monitor.worked( 1 );
 
       /* Read into NodeResults */
-      read2DIntoGmlResults( m_inputFile, m_outputDir, m_dataProvider, m_resultMinMaxCatcher, m_timeStepNr );
+      read2DIntoGmlResults( m_inputFile, m_outputDir, m_dataProvider, m_resultMinMaxCatcher, m_timeStepNr, m_stepResultMeta );
     }
     catch( final Throwable e )
     {
@@ -147,7 +154,7 @@ public class ProcessResultsJob extends Job
     return Status.OK_STATUS;
   }
 
-  public static File read2DIntoGmlResults( final File result2dFile, final File outputDir, final ISimulationDataProvider dataProvider, final NodeResultMinMaxCatcher minMaxCatcher, final int timeStepNum ) throws IOException, InvocationTargetException, GmlSerializeException, SimulationException, GM_Exception
+  public static File read2DIntoGmlResults( final File result2dFile, final File outputDir, final ISimulationDataProvider dataProvider, final NodeResultMinMaxCatcher minMaxCatcher, final int timeStepNum, final IStepResultMeta stepResultMeta ) throws IOException, InvocationTargetException, GmlSerializeException, SimulationException, GM_Exception
   {
     final TimeLogger logger = new TimeLogger( "Start: lese .2d Ergebnisse" );
 
@@ -200,24 +207,24 @@ public class ProcessResultsJob extends Job
           case DEPTH:
             triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "m" );
             triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), "Flieﬂtiefe" );
+            stepResultMeta.addDocument( "Flieﬂtiefen", "TIN der Flieﬂtiefen", IDocumentResultMeta.DOCUMENTTYPE.tinDepth, "Tin/tin_DEPTH.gml", Status.OK_STATUS );
 
             break;
           case VELOCITY:
             triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "m/s" );
             triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), "Geschwindigkeit" );
+            stepResultMeta.addDocument( "Geschwindigkeiten", "TIN der tiefengemittelten Flieﬂgeschwindigkeiten", IDocumentResultMeta.DOCUMENTTYPE.tinVelo, "Tin/tin_VELOCITY.gml", Status.OK_STATUS );
 
             break;
           case WATERLEVEL:
             triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "m¸NN" );
             triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), "Wasserspiegel" );
+            stepResultMeta.addDocument( "Wasserspiegellagen", "TIN der Wasserspiegellagen", IDocumentResultMeta.DOCUMENTTYPE.tinWsp, "Tin/tin_WATERLEVEL.gml", Status.OK_STATUS );
 
             break;
 
           default:
-            triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "" );
-            triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), "" );
-
-            break;
+            throw new UnsupportedOperationException();
         }
 
         final TriangulatedSurfaceTriangleEater gmlTriangleEater = new TriangulatedSurfaceTriangleEater( tinResultFile, triangleWorkspace, surface, parameter );
@@ -250,9 +257,10 @@ public class ProcessResultsJob extends Job
 
       /* Node-GML in Datei schreiben */
       GmlSerializer.serializeWorkspace( gmlResultFile, resultWorkspace, "CP1252" );
+      stepResultMeta.addDocument( "Knotenwerte", "Ergebnisse an den Knoten", IDocumentResultMeta.DOCUMENTTYPE.nodes, "results.gml", Status.OK_STATUS );
 
       final Date time = handler.getTime();
-      addToResultDB( resultWorkspace, timeStepNum, outputDir, time );
+      addToResultDB( stepResultMeta, timeStepNum, outputDir, time );
 
       return gmlResultFile;
     }
@@ -265,34 +273,25 @@ public class ProcessResultsJob extends Job
     }
   }
 
-  private static void addToResultDB( final GMLWorkspace resultWorkspace, final int timeStepNum, final File outputDir, final Date time )
+  private static void addToResultDB( final IStepResultMeta stepResultMeta, final int timeStepNum, final File outputDir, final Date time )
   {
-    final IResultModel1d2d resModel1d2d = (IResultModel1d2d) resultWorkspace.getRootFeature().getAdapter( IResultModel1d2d.class );
-    final IResultModelDescriptor resultModelDescriptor = m_calculation.addToSimulationDescriptor( resModel1d2d );
-
     // TODO: retrieve timezone from central plugin preferences
     final DateFormat dateFormatter = DateFormat.getDateTimeInstance();
 
     if( outputDir.getName().equals( "steady" ) )
-//    if( time == null )
-      resultModelDescriptor.setModelName( "Station‰r" );
+    {
+      stepResultMeta.setName( "station‰r" );
+      stepResultMeta.setDescription( "station‰rer Rechenlauf" );
+    }
     else
-      resultModelDescriptor.setModelName( String.format( "Zeitschritt: " + dateFormatter.format( time ) ) );
+    {
+      final String dateString = dateFormatter.format( time );
+      stepResultMeta.setName( String.format( "Zeitschritt %s (%s)", timeStepNum, dateString ) );
+      stepResultMeta.setDescription( "instation‰rer Rechenlauf zum Zeitpunkt: " + dateString );
+    }
 
-    resultModelDescriptor.setDescription( outputDir.getName() ); // TODO
-
-    resultModelDescriptor.setTime( time );
-    resultModelDescriptor.setTimeStepNum( new BigInteger( "" + timeStepNum ) );
-
-    // HACK: TODO: at the moment this pathes get put here totally hard-coded
-    // We create a scenario-relative path here
-    final File calcUnitDir = outputDir.getParentFile();
-    final String baseDir = "results/" + calcUnitDir.getName() + "/" + outputDir.getName();
-    resultModelDescriptor.setWorkspacePath( baseDir + "/results.gml" );
-    resultModelDescriptor.setGmt( baseDir + "/Einzelergebnis.gmt" );
-    resultModelDescriptor.setTinDepth( baseDir + "/Tin/tin_DEPTH.gml" );
-    resultModelDescriptor.setTinWaterLevel( baseDir + "/Tin/tin_WATERLEVEL.gml" );
-    resultModelDescriptor.setTinVelocity( baseDir + "/Tin/tin_VELOCITY.gml" );
+    stepResultMeta.setStepTime( time );
+    stepResultMeta.setStepNumber( timeStepNum );
   }
 
   public NodeResultMinMaxCatcher getMinMaxData( )

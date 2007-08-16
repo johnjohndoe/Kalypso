@@ -24,12 +24,10 @@ import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IResultDbProvider;
-import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptionCollection;
-import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ResultDB;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IPseudoOPerationalModel;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IStaticModel1D2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.ICommandPoster;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
@@ -58,7 +56,7 @@ import de.renew.workflow.connector.cases.ICaseDataProvider;
  * 
  * @author Gernot Belger
  */
-public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>, ICommandPoster, IResultDbProvider
+public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>, ICommandPoster
 {
   /**
    * Maps the (adapted) feature-wrapper-classes onto the (szenario-relative) path of its gml-file.
@@ -71,8 +69,6 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
 
   static
   {
-    // TODO: at the moment, IFeatureWrapper.class is the placeholder for the simulation-model; needs to bee changed when
-    // simulation model gets its own wrapper.
     LOCATION_MAP.put( IFEDiscretisationModel1d2d.class, MODELS_FOLDER + "/discretisation.gml" );
     LOCATION_MAP.put( ITerrainModel.class, MODELS_FOLDER + "/terrain.gml" );
     LOCATION_MAP.put( IFlowRelationshipModel.class, MODELS_FOLDER + "/flowrelations.gml" );
@@ -80,7 +76,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
     LOCATION_MAP.put( IControlModelGroup.class, MODELS_FOLDER + "/control.gml" );
     LOCATION_MAP.put( IStaticModel1D2D.class, MODELS_FOLDER + "/static_model.gml" );
     LOCATION_MAP.put( IRoughnessClsCollection.class, "project:/.metadata/roughness.gml" );
-// LOCATION_MAP.put( ISimulationDescriptionCollection.class, "project:/.metadata/result_meta_data.gml" );
+    LOCATION_MAP.put( IScenarioResultMeta.class, MODELS_FOLDER + "/scenarioResultMeta.gml" );
   }
 
   private static final class KeyPoolListener implements IPoolListener
@@ -416,14 +412,5 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
   public CommandableWorkspace getCommandableWorkSpace( final Class< ? extends IFeatureWrapper2> wrapperClass ) throws IllegalArgumentException, CoreException
   {
     return getModelWorkspace( wrapperClass );
-  }
-
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IResultDbProvider#getResultDB()
-   */
-  public ResultDB getResultDB( ) throws CoreException
-  {
-    final ISimulationDescriptionCollection modelResultDB = getModel( ISimulationDescriptionCollection.class );
-    return new ResultDB( modelResultDB );
   }
 }

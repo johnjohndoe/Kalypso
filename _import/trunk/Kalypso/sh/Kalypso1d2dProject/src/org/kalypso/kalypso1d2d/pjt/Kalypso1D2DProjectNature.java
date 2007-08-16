@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.kalypso1d2d.pjt;
 
@@ -63,10 +63,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.kalypso.afgui.scenarios.ScenarioManager;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ResultDB;
 import org.kalypso.simulation.core.ISimulationService;
 import org.kalypso.simulation.core.KalypsoSimulationCorePlugin;
 import org.kalypso.simulation.core.simspec.Modeldata;
@@ -102,17 +100,13 @@ public class Kalypso1D2DProjectNature implements IProjectNature
   public void configure( ) throws CoreException
   {
     final NullProgressMonitor monitor = new NullProgressMonitor();
-    
+
     final IFolder basisFolder = getProject().getFolder( "Basis" );
     if( !basisFolder.exists() )
     {
       final URL zipLocation = getClass().getResource( EMPTY_PROJECT_ZIP_PATH );
       unzipToContainer( zipLocation, getProject(), monitor );
     }
-
-    final IFolder metaFolder = getProject().getFolder( ScenarioManager.METADATA_FOLDER );
-    ResultDB resultDB = new ResultDB( metaFolder.getLocation() );
-    metaFolder.refreshLocal( IResource.DEPTH_INFINITE, monitor );
   }
 
   public static final boolean isOfThisNature( final IProject project ) throws CoreException

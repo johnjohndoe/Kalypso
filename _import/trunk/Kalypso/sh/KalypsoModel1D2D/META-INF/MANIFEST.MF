@@ -4,8 +4,7 @@ Bundle-Name: KalypsoModel1D2D
 Bundle-SymbolicName: org.kalypso.model1d2d;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Localization: plugin
-Require-Bundle: 
- org.junit,
+Require-Bundle: org.junit,
  org.eclipse.ui.intro,
  org.kalypso.deegree,
  org.kalypso.jwsdp,
@@ -26,7 +25,7 @@ Require-Bundle:
  org.kalypso.simulation.core,
  org.kalypso.gml.processes,
  org.kalypso.ModelSimulationBase
-Eclipse-LazyStart: true 
+Eclipse-LazyStart: true
 Export-Package: org.kalypso.kalypsomodel1d2d,
  org.kalypso.kalypsomodel1d2d.conv,
  org.kalypso.kalypsomodel1d2d.conv.results,
@@ -37,8 +36,8 @@ Export-Package: org.kalypso.kalypsomodel1d2d,
  org.kalypso.kalypsomodel1d2d.schema.binding,
  org.kalypso.kalypsomodel1d2d.schema.binding.discr,
  org.kalypso.kalypsomodel1d2d.schema.binding.flowrel,
- org.kalypso.kalypsomodel1d2d.schema.binding.metadata,
  org.kalypso.kalypsomodel1d2d.schema.binding.model,
+ org.kalypso.kalypsomodel1d2d.schema.binding.result,
  org.kalypso.kalypsomodel1d2d.schema.binding.results,
  org.kalypso.kalypsomodel1d2d.schema.dict,
  org.kalypso.kalypsomodel1d2d.schema.functions,
