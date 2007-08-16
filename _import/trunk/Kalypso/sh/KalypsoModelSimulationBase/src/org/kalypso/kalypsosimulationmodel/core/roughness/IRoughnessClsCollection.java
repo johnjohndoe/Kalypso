@@ -2,6 +2,7 @@ package org.kalypso.kalypsosimulationmodel.core.roughness;
 
 import java.util.List;
 
+import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
@@ -9,7 +10,7 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
  * 
  * @author Patrice Congo
  */
-public interface IRoughnessClsCollection extends IFeatureWrapperCollection<IRoughnessCls>
+public interface IRoughnessClsCollection extends IFeatureWrapperCollection<IRoughnessCls>, IModel
 {
   /**
    * To get the name the roughness collection

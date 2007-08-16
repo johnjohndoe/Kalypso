@@ -79,7 +79,6 @@ import org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation;
 import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.model.wspm.tuhh.schema.schemata.IWspmTuhhQIntervallConstants;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.Feature;
@@ -91,11 +90,10 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D;
 
 /**
- * Converts discretisation model to bce2d model
+ * Converts discretisation model to RMA10s model
  * 
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  */
-@SuppressWarnings( { "unchecked" })
 public class Gml2RMA10SConv implements INativeIDProvider
 {
   private final LinkedHashMap<String, Integer> m_roughnessIDProvider = new LinkedHashMap<String, Integer>( 100 );
@@ -304,7 +302,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
     /* Made a central formatter with US locale, so no locale parameter for each format is needed any more . */
     final Formatter formatter = new Formatter( stream, Locale.US );
 
-    writeElementsNodesAndEdges( formatter, m_roughnessIDProvider, elements );
+    writeElementsNodesAndEdges( formatter, elements );
     JunctionContextConverter.write( m_discretisationModel1d2d, m_calculationUnit, this, formatter );
   }
 
@@ -529,7 +527,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
    * write elements nodes and edges in a way which avoids the filtering of edges and nodes
    * 
    */
-  private void writeElementsNodesAndEdges( final Formatter formatter, final LinkedHashMap<String, Integer> roughnessIDProvider, final IFeatureWrapperCollection<IFE1D2DElement> elements ) throws GM_Exception, SimulationException
+  private void writeElementsNodesAndEdges( final Formatter formatter, final IFeatureWrapperCollection<IFE1D2DElement> elements ) throws GM_Exception, SimulationException
   {
     final List<IFE1D2DElement> elementsInBBox = m_exportRequest ? elements : elements.query( m_calcUnitBBox );
     final HashSet<IFE1D2DEdge> edgeSet = new HashSet<IFE1D2DEdge>( elementsInBBox.size() * 2 );
@@ -574,8 +572,21 @@ public class Gml2RMA10SConv implements INativeIDProvider
       else if( element instanceof IPolyElement )
       {
         contributeToSet( element, edgeSet );
-        final int roughnessID = (m_exportRequest && !m_exportRoughness) ? 0 : calculateRoughnessID( roughnessIDProvider, element );
+        final int roughnessID = (m_exportRequest && !m_exportRoughness) ? 0 : getRoughnessID( element );
         formatter.format( "FE%10d%10d%n", id, roughnessID );
+
+        // print roughness correction parameters only if there is any correction
+        Double correctionKS = element.getRoughnessCorrectionKS();
+        Double correctionAxAy = element.getRoughnessCorrectionAxAy();
+        Double correctionDP = element.getRoughnessCorrectionDP();
+        if( correctionKS == null || correctionKS.isNaN() )
+          correctionKS = 1.0;
+        if( correctionAxAy == null || correctionAxAy.isNaN() )
+          correctionAxAy = 1.0;
+        if( correctionDP == null || correctionDP.isNaN() )
+          correctionDP = 1.0;
+        if( correctionKS != 1.0 || correctionAxAy != 1.0 || correctionDP != 1.0 )
+          formatter.format( "RC%10d%10.6f%10.6f%10.6f%n", id, correctionKS.doubleValue(), correctionAxAy.doubleValue(), correctionDP.doubleValue() );
       }
     }
 
@@ -644,11 +655,11 @@ public class Gml2RMA10SConv implements INativeIDProvider
     formatter.format( "VA%10d%20.7f%20.7f%20.7f%20.7f%n", nodeID, vx, vy, node.getDepth(), node.getWaterlevel() );
   }
 
-  private int calculateRoughnessID( final LinkedHashMap<String, Integer> roughnessIDProvider, final IFE1D2DElement element ) throws SimulationException
+  private int getRoughnessID( final IFE1D2DElement element ) throws SimulationException
   {
     final String roughnessClsID = element.getRoughnessClsID();
-    if(roughnessClsID != null)
-        return getID( roughnessIDProvider, roughnessClsID );
+    if( roughnessClsID != null && roughnessClsID.length() == 0 )
+      return getID( m_roughnessIDProvider, roughnessClsID );
     throw new SimulationException( "Keine Rauheitszone gefunden: " + element, null );
   }
 

@@ -91,8 +91,11 @@ import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 import org.kalypso.kalypsosimulationmodel.core.modeling.ISimulationModel;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
+import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
+import org.kalypso.kalypsosimulationmodel.core.roughness.RoughnessClsCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.TerrainModel;
+import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelRoughnessConsts;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -198,6 +201,10 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
         else if( ITerrainModel.QNAME_TERRAIN_MODEL.equals( featureType.getQName() ) )
         {
           return new TerrainModel( feature );
+        }
+        else if( KalypsoModelRoughnessConsts.WBR_F_ROUGHNESS_CLS_COLLECTION.equals( featureType.getQName() ) )
+        {
+          return new RoughnessClsCollection( feature );
         }
         else
         {

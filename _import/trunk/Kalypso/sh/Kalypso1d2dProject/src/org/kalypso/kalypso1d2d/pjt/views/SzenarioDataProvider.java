@@ -82,6 +82,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
   private static final class KeyPoolListener implements IPoolListener
   {
     private final IPoolableObjectType m_key;
+
     private final SzenarioController m_controller;
 
     public KeyPoolListener( final IPoolableObjectType key, final SzenarioController controller )
@@ -131,9 +132,10 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
     {
       if( newValue instanceof GMLWorkspace )
       {
-         final GMLWorkspace workspace = (GMLWorkspace) newValue;
-         final IModel model = (IModel) workspace.getRootFeature().getAdapter( IModel.class );
-         m_controller.modelLoaded( model );
+        final GMLWorkspace workspace = (GMLWorkspace) newValue;
+        final IModel model = (IModel) workspace.getRootFeature().getAdapter( IModel.class );
+        if( model != null )
+          m_controller.modelLoaded( model );
       }
     }
   }
@@ -146,11 +148,11 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
   private final Map<Class< ? extends IFeatureWrapper2>, KeyPoolListener> m_keyMap = new HashMap<Class< ? extends IFeatureWrapper2>, KeyPoolListener>();
 
   private final SzenarioController m_controller = new SzenarioController();
-  
+
   public void setCurrent( final IContainer szenarioFolder )
   {
-    m_controller.szenarioChanged(  );
-    
+    m_controller.szenarioChanged( (IFolder)szenarioFolder );
+
     final Job job = new Job( "" )
     {
       /**
@@ -229,7 +231,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
    * @param szenarioFolder
    *            If <code>null</code>, just releases the existing key.
    */
-  private synchronized void resetKeyForProject( final IFolder szenarioFolder, final Class< ? extends IFeatureWrapper2> wrapperClass, final String gmlLocation )
+  protected synchronized void resetKeyForProject( final IFolder szenarioFolder, final Class< ? extends IFeatureWrapper2> wrapperClass, final String gmlLocation )
   {
     final IPoolableObjectType newKey = keyForLocation( szenarioFolder, gmlLocation );
 

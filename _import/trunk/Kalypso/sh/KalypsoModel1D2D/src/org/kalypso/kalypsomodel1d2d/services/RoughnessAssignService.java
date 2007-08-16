@@ -53,17 +53,19 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.command.FeatureChangeModellEvent;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 
 /**
- * @author antanas
+ * @author Dejan Antanaskovic
  * 
  */
 public class RoughnessAssignService extends Job
@@ -75,6 +77,8 @@ public class RoughnessAssignService extends Job
   private final IFEDiscretisationModel1d2d m_model1d2d;
 
   private List<FeatureChange> m_changes = new ArrayList<FeatureChange>();
+
+  private GM_Envelope m_workArea;
 
   public RoughnessAssignService( final String name, final ITerrainModel terrainModel, final IFEDiscretisationModel1d2d model1d2d )
   {
@@ -91,19 +95,19 @@ public class RoughnessAssignService extends Job
   {
     try
     {
-      final SubMonitor progress = SubMonitor.convert( monitor, "Roughness asigning", 100 );
-
+      final List<IFE1D2DElement> elementsInWorkarea = (m_workArea != null) ? m_model1d2d.getElements().query( m_workArea ) : m_model1d2d.getElements();
+      final SubMonitor progress = SubMonitor.convert( monitor, "Roughness asigning", elementsInWorkarea.size() );
       ProgressUtilities.worked( progress, 0 );
-
-      for( final IFE1D2DElement element : m_model1d2d.getElements() )
+      for( final IFE1D2DElement element : elementsInWorkarea )
       {
         final boolean roughnessFound = assignRoughness( monitor, element );
         if( !roughnessFound )
         {
-          final FeatureChange[] changes = element.assignRoughness( "", Double.NaN, Double.NaN, Double.NaN, DEFAULT_ROUGHNESS_STYLE );
+          final FeatureChange[] changes = element.assignRoughness( "", null, null, null, DEFAULT_ROUGHNESS_STYLE );
           for( FeatureChange featureChange : changes )
             m_changes.add( featureChange );
         }
+        ProgressUtilities.worked( progress, 1 );
       }
     }
     catch( final Throwable t )
@@ -121,6 +125,9 @@ public class RoughnessAssignService extends Job
 
   private boolean assignRoughness( IProgressMonitor monitor, final IFE1D2DElement element ) throws CoreException
   {
+    Double correctionParameterKS = null;
+    Double correctionParameterAxAy = null;
+    Double correctionParameterDP = null;
     for( int i = m_roughnessPolygonCollections.size() - 1; i >= 0; i-- )
     {
       if( monitor.isCanceled() )
@@ -138,16 +145,24 @@ public class RoughnessAssignService extends Job
       {
         if( roughnessPolygon.getSurface().contains( position ) )
         {
-          final String roughnessClsGmlID = roughnessPolygon.getRoughnessCls().getGmlID();
-          final Double correctionParameterKS = roughnessPolygon.getCorrectionParameterKS();
-          final Double correctionParameterAxAy = roughnessPolygon.getCorrectionParameterAxAy();
-          final Double correctionParameterDP = roughnessPolygon.getCorrectionParameterDP();
-          final String roughnessStyle = roughnessPolygon.getRoughnessStyle();
-          
-          final FeatureChange[] changes = element.assignRoughness( roughnessClsGmlID, correctionParameterKS, correctionParameterAxAy, correctionParameterDP, roughnessStyle );
-          for( FeatureChange featureChange : changes )
-            m_changes.add( featureChange );
-          return true;
+          // maybe parameters are set in some upper layer
+          if( correctionParameterKS != null && !correctionParameterKS.isNaN() )
+            correctionParameterKS = roughnessPolygon.getCorrectionParameterKS();
+          if( correctionParameterAxAy != null && !correctionParameterAxAy.isNaN() )
+            correctionParameterAxAy = roughnessPolygon.getCorrectionParameterAxAy();
+          if( correctionParameterDP != null && !correctionParameterDP.isNaN() )
+            correctionParameterDP = roughnessPolygon.getCorrectionParameterDP();
+          final IRoughnessCls roughnessCls = roughnessPolygon.getRoughnessCls();
+          if( roughnessCls != null )
+          {
+            final String roughnessClsGmlID = roughnessCls.getGmlID();
+            final String roughnessStyle = roughnessPolygon.getRoughnessStyle();
+
+            final FeatureChange[] changes = element.assignRoughness( roughnessClsGmlID, correctionParameterKS, correctionParameterAxAy, correctionParameterDP, roughnessStyle );
+            for( FeatureChange featureChange : changes )
+              m_changes.add( featureChange );
+            return true;
+          }
         }
       }
     }
@@ -160,7 +175,14 @@ public class RoughnessAssignService extends Job
 
     final FeatureChange[] changes = m_changes.toArray( new FeatureChange[m_changes.size()] );
     final FeatureChangeModellEvent event = new RoughnessAssignServiceModellEvent( workspace, changes );
-
     workspace.fireModellEvent( event );
+  }
+  
+  /**
+   * Defines the area where roughness recalculation is needed; if <code>null</code>, whole model will be recalculated
+   */
+  public void setWorkarea( final GM_Envelope envelope )
+  {
+    m_workArea = envelope;
   }
 }

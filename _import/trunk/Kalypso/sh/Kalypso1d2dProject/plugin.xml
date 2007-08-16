@@ -496,13 +496,6 @@
             name="RougnessValuesPropertyFunction"/>
    </extension>
    <extension
-         point="org.kalypso.deegree.gmlWorkspaceListener">
-      <listener
-            class="org.kalypso.ui.wizards.imports.roughness.RoughnessStyleUpdater"
-            id="org.kalypso.ui.wizards.imports.roughness.RoughnessStyleUpdater"
-            name="RoughnessStyleUpdater"/>
-   </extension>
-   <extension
          point="org.eclipse.ui.menus">
       <menuContribution
             locationURI="popup:org.kalypso.kalypso1d2d.pjt.views.ScenarioView">

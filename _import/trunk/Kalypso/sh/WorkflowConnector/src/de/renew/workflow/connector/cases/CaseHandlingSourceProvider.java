@@ -101,6 +101,8 @@ public class CaseHandlingSourceProvider<T extends Case, D extends Object> extend
       return null;
     else
     {
+      // TODO: is this really up to date? We allways assume that the scenarioFolder is a IFolder
+      // TODO: comment why we need that
       final IPath projectPath = currentProject.getProjectPath( currentCase );
       if( projectPath.isEmpty() )
       {

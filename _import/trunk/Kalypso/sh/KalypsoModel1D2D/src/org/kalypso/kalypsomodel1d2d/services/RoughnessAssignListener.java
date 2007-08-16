@@ -45,37 +45,51 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
+import org.kalypso.ogc.gml.command.FeatureChangeModellEvent;
+import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
- * @author Dejan antanaskovic
+ * @author Dejan Antanaskovic
  * @author Gernot Belger
  */
 public class RoughnessAssignListener implements ModellEventListener
 {
   private final ITerrainModel m_terrainModel;
+
   private final IFEDiscretisationModel1d2d m_discModel;
+
   private RoughnessAssignService m_job;
-  
+
   private ISchedulingRule m_mutexRule = new MutexRule();
-  
+
   public RoughnessAssignListener( final IFEDiscretisationModel1d2d discModel, final ITerrainModel terrainModel )
   {
     m_discModel = discModel;
     m_terrainModel = terrainModel;
-    
-    startJob();
+
+    startJob( null );
   }
 
-  private void startJob( )
+  /**
+   * Starts the roughness (re)assignment job
+   * 
+   * @param envelope
+   *            The area where roughness recalculation is needed; if <code>null</code>, whole model will be recalculated
+   */
+  private void startJob( final GM_Envelope envelope )
   {
-    if( m_job != null)
+    if( m_job != null )
       m_job.cancel();
-    
+
     m_job = new RoughnessAssignService( "Roughness assign service", m_terrainModel, m_discModel );
-    
-//    m_job.setSystem( true );
+
+    m_job.setWorkarea( envelope );
+
+// m_job.setSystem( true );
     m_job.setUser( false );
     m_job.setPriority( Job.LONG );
     m_job.setRule( m_mutexRule );
@@ -87,22 +101,29 @@ public class RoughnessAssignListener implements ModellEventListener
    */
   public void onModellChange( final ModellEvent modellEvent )
   {
-    /* If the event comes from the RoughnessAssignSerice, just ignore it*/
+    /* If the event comes from the RoughnessAssignSerice, just ignore it */
     if( modellEvent instanceof RoughnessAssignServiceModellEvent )
-        return;
-    
+      return;
+
     /* In every other case: refresh the roughnes assignment */
-    startJob();
+    GM_Envelope envelope = null;
+    if( modellEvent instanceof FeatureStructureChangeModellEvent )
+    {
+      final FeatureStructureChangeModellEvent event = (FeatureStructureChangeModellEvent) modellEvent;
+      envelope = FeatureHelper.getEnvelope( event.getChangedFeatures() );
+    }
+    else if( modellEvent instanceof FeatureChangeModellEvent )
+    {
+      final FeatureChangeModellEvent event = (FeatureChangeModellEvent) modellEvent;
+      envelope = FeatureHelper.getEnvelope( event.getFeatures() );
+    }
+    startJob( envelope );
   }
 
   public void dispose( )
   {
     if( m_job != null )
       m_job.cancel();
-    
-    
-    // TODO Auto-generated method stub
-    
   }
 
 }
