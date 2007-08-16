@@ -5,13 +5,8 @@
 	<!ENTITY file_programm_start SYSTEM "programmstart.xml">
 	<!ENTITY file_gui SYSTEM "gui.xml">
 	<!ENTITY file_modellpflege SYSTEM "modellpflege.xml">
-	<!ENTITY file_repository SYSTEM "repository.xml">
-	<!ENTITY file_modelle SYSTEM "modelle.xml">    
-	<!ENTITY file_modelle_NA SYSTEM "kalypsoNA.xml">    
-	<!ENTITY file_modelle_WSPM SYSTEM "kalypsoWSPM.xml">    
-	<!ENTITY file_modelle_1D2D SYSTEM "kalypso1D2D.xml">    
-	<!ENTITY file_modelle_FM SYSTEM "kalypsoFloodModeller.xml">    
-	<!ENTITY file_modelle_RM SYSTEM "kalypsoRiskModeller.xml">    
+	<!ENTITY file_repository SYSTEM "repository.xml">    
+	
 
 	<!ENTITY file_wizards_allg SYSTEM "Vorhersage_Assistenten_allg.xml">
 	<!ENTITY file_wizard_Ilse SYSTEM "Vorhersage_Assistent_Ilse.xml">
@@ -34,16 +29,7 @@
 	&file_modellpflege; 
 	&file_repository;
 	
-	&file_modelle; 
-	&file_modelle_NA;
-	&file_modelle_WSPM;
-	&file_modelle_1D2D;
-	<!-- &file_modelle_FM;
-	&file_modelle_RM;
-	-->
-		
-	
-	<chapter vendor="sachsen;sachsen-anhalt" id="vorhersage_wizards">
+	<chapter vendor="sachsen,sachsen-anhalt" id="vorhersage_wizards">
 		<title>Vorhersage-Assistent</title>
 		<indexterm><primary>Vorhersage-Assistent</primary> </indexterm>
 		

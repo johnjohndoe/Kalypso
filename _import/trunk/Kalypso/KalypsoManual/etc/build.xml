@@ -153,6 +153,7 @@
 		<!-- Deploy the stuff back to the given Plugin -->
 		<copy todir="${manual.project}" file="${dist.eclipse.dir}/toc.xml" />
 		<copy todir="${manual.project}" file="${dist.eclipse.dir}/contexts.xml" />
+		<copy todir="${manual.project}" file="${dist.eclipse.dir}/IKalypsoHelpContextIds.java" />
 		<zip destfile="${manual.project}/doc.zip" basedir="${dist.eclipse.dir}" includes="**/*" excludes="*.xml" />
 	</target>
 

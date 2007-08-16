@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<chapter id="grafische_oberflaeche">
+<chapter id="GrafischeOberflaeche">
   <title>Grafische Oberfläche</title>
 
   <indexterm>
@@ -8,12 +8,17 @@
     <secondary>Expertenmodus</secondary>
   </indexterm>
 
-  <para>Im vorliegenden Kapitel wird die grafische Benutzeroberfläche (GUI)
-  für den KALYPSO Modeler (Expertenmodus) erläutert. Die KALYPSO Modeler
-  Perspektive kann über das vorhandene Symbol in der Auswahlleiste oder über
-  das Menü <guimenuitem>Fenster</guimenuitem> geöffnet werden.</para>
+  <para vendor="KalypsoModeler,hh_ingenieurbueros">Im vorliegenden Kapitel
+  werden die allgemein für alle Module anzuwendenden Ansichten und Editoren
+  der Benutzeroberfläche (GUI) erläutert.</para>
 
-  <figure>
+  <para vendor="sachsen,sachsen-anhalt">Im vorliegenden Kapitel wird die
+  grafische Benutzeroberfläche (GUI) für den KALYPSO Modeler (Expertenmodus)
+  erläutert. Die KALYPSO Modeler Perspektive kann über das vorhandene Symbol
+  in der Auswahlleiste oder über das Menü <guimenuitem>Fenster</guimenuitem>
+  geöffnet werden.</para>
+
+  <figure vendor="sachsen, sachsen-anhalt">
     <title>KALYPSO Modeler Perspektive öffnen</title>
 
     <mediaobject>
@@ -24,13 +29,7 @@
     </mediaobject>
   </figure>
 
-  <section>
-    <title>Willkommen</title>
-
-    <para>... Modellauswahl...</para>
-  </section>
-
-  <section id="allgemeines_zur_gui">
+  <section id="AllgemeinesZurGui">
     <title>Allgemeines zu Ansichten und Perspektiven</title>
 
     <indexterm>
@@ -39,8 +38,8 @@
       <secondary>Allgemeines</secondary>
     </indexterm>
 
-    <para id="dummy6">Die grafische Benutzeroberfläche im Expertenmodus
-    besteht im Wesentlichen aus folgenden Ansichten:</para>
+    <para>Die grafische Benutzeroberfläche beinhaltet besteht im
+    Wesentlichen aus folgenden Ansichten:</para>
 
     <itemizedlist>
       <listitem>
@@ -64,26 +63,25 @@
       </listitem>
 
       <listitem>
-        <para><emphasis role="bold">Gliederung</emphasis> ... </para>
+        <para><emphasis role="bold">Gliederung</emphasis> ...</para>
       </listitem>
 
       <listitem>
         <para><emphasis role="bold">Baum-Ansicht</emphasis>: Die Baum-Ansicht
-        stellt eine Gesamtübersicht der betrachteten Daten in Baumform bereit.
-        Innere Abhängigkeiten sind so editierbar.</para>
+        stellt eine Gesamtübersicht der betrachteten Daten in Baumform
+        bereit.</para>
       </listitem>
 
       <listitem>
         <para><emphasis role="bold">Feature-Ansicht</emphasis>: Die
-        Feature-Ansicht ermöglicht den Zugriff auf alle Daten des selektierten
-        Elementes.</para>
+        Feature-Ansicht ermöglicht den Zugriff auf die Daten des selektierten
+        Elements.</para>
       </listitem>
 
       <listitem>
         <para><emphasis role="bold">Tabellen-Ansicht</emphasis>: Die
         Tabellen-Ansicht erlaubt den Zugriff auf Modellparameter bzw.
-        geografische Attribute, welche gleichzeitig mit der Kartenvorlage
-        verknüpft sind. </para>
+        geografische Attribute in Tabellenform.</para>
       </listitem>
 
       <listitem>
@@ -126,7 +124,7 @@
     oder zum Zoomen innerhalb der Ansicht (siehe <xref
     linkend="ansichtssteuerung" />).</para>
 
-    <section id="gui-oeffnen_ansichten">
+    <section id="GuiOeffnenAnsichten">
       <title>Öffnen einzelner Ansichten</title>
 
       <indexterm>
@@ -149,7 +147,7 @@
       Karten-Editor (siehe <xref linkend="gis_view_editor" />) und bei
       Tabellen der KALYPSO Tabellen-Editor.</para>
 
-      <figure id="gis_view_editor">
+      <figure id="GisViewEditor">
         <title>Öffnen einer Karte anhand des Karten-Editors</title>
 
         <mediaobject>
@@ -181,7 +179,7 @@
       </note>
     </section>
 
-    <section id="arbeiten_mit_ansichten">
+    <section id="ArbeitenMitAnsichten">
       <title>Arbeiten mit mehreren Ansichten</title>
 
       <indexterm>
@@ -199,7 +197,7 @@
       umgekehrt. Somit lässt sich in der Modellbearbeitung permanent ein
       Lagebezug herstellen.</para>
 
-      <figure id="gis_view_multi">
+      <figure id="GisViewMulti">
         <title>Parallele Ansicht von Karte und Tabelle</title>
 
         <mediaobject>
@@ -242,11 +240,11 @@
       <abbrev>z. B.</abbrev> mit der Maus auf das Kreuz neben dem
       Ansichtsnamen in der oberen Ansichtsleiste geklickt wird.</para>
 
-      <para id="menu_fenster">Generell können die Ansichtsfenster auch über
+      <para id="MenuFenster">Generell können die Ansichtsfenster auch über
       das Menü <guimenu>Fenster</guimenu> im Hauptmenü von KALYPSO gesteuert
       werden (siehe <xref linkend="fenster" />).</para>
 
-      <figure id="fenster">
+      <figure id="Fenster">
         <title>Menü Fenster zur Ansichtsteuerung</title>
 
         <mediaobject>
@@ -272,14 +270,14 @@
     </section>
   </section>
 
-  <section id="ansichtssteuerung">
+  <section id="Ansichtssteuerung">
     <title>KALYPSO-Ansichten</title>
 
     <indexterm>
       <primary>KALYPSO-Ansichten</primary>
     </indexterm>
 
-    <para id="para2">Die verschiedenen Ansichten in KALYPSO beinhalten
+    <para>Die verschiedenen Ansichten in KALYPSO beinhalten
     generell Untermenüs, die u.a. die Navigation innerhalb der Ansicht
     ermöglichen. Die wichtigsten und speziell auf die Darstellung und
     Bearbeitung hydrologischer / hydraulischer Modelle zielenden Ansichten und
@@ -353,7 +351,7 @@
       Formatvorlagen ergeben.</para>
     </section>
 
-    <section id="menu_karte">
+    <section id="MenuKarte">
       <title>Karten-Ansicht</title>
 
       <indexterm>
@@ -395,7 +393,7 @@
       oder Themen gänzlich gelöscht werden. Letztere Funktionen sind im
       Submenü in der Ansichtsleiste Gliederung verfügbar.</para>
 
-      <figure id="navigation_karten_ansicht">
+      <figure id="NavigationKartenAnsicht">
         <title>Navigation in der Karten-Ansicht</title>
 
         <mediaobject vendor="sachsen">
@@ -449,7 +447,7 @@
       Damit die Veränderungen für die Kartenvorlage wirksam werden, ist der
       veränderte Style entsprechend zu speichern.</para>
 
-      <figure id="style_editor">
+      <figure id="StyleEditor">
         <title>Veränderung der Karten-Ansicht / Kartenvorlage mit dem
         Style-Editor</title>
 
@@ -493,7 +491,7 @@
       unter dem Ordner Andere auszuwählen (siehe <xref
       linkend="pic_neue_karte" />). Mit Hilfe des Assistenten kann der
       Speicherort sowie der Name der neuen Karte bestimmt werden.<figure
-          id="pic_neue_karte">
+          id="PicNeueKarte">
           <title>Neue Karte erzeugen</title>
 
           <mediaobject>
@@ -504,7 +502,7 @@
           </mediaobject>
         </figure></para>
 
-      <section id="gui-layer_hinzufuegen">
+      <section id="GuiLayerHinzufuegen">
         <title>Thema hinzufügen</title>
 
         <indexterm>
@@ -517,7 +515,7 @@
         Hilfe des Plus-Symbols hinzugefügt werden (siehe <xref
         linkend="pic_button_layer_add" />).</para>
 
-        <figure id="pic_button_layer_add">
+        <figure id="PicButtonLayerAdd">
           <title>Thema zu Karte hinzufügen</title>
 
           <mediaobject>
@@ -545,7 +543,7 @@
         Datenquellen (Web Service) sind vor der Datenauswahl gültige
         Verbindungsdaten anzugeben.</para>
 
-        <figure id="pic_datenquelle_waehlen">
+        <figure id="PicDatenquelleWaehlen">
           <title>Auswahl der Datenquelle</title>
 
           <mediaobject>
@@ -576,7 +574,7 @@
       aktiviert bzw. in diese hinein geklickt wird (Baumname wird farblich
       hervorgehoben).</para>
 
-      <figure id="pic_navigation_baum_ansicht">
+      <figure id="PicNavigationBaumAnsicht">
         <title>Navigation in der Baum-Ansicht</title>
 
         <mediaobject>
@@ -650,7 +648,7 @@
       </figure>
     </section>
 
-    <section id="menu_tabelle">
+    <section id="MenuTabelle">
       <title>Tabellen-Ansicht (Modellparameter)</title>
 
       <indexterm>
@@ -668,7 +666,7 @@
       Tabellen-Ansicht aktiviert bzw. in diese hinein geklickt wird
       (Tabellenname wird farblich hervorgehoben).</para>
 
-      <figure id="navigation_tabellen_ansicht">
+      <figure id="NavigationTabellenAnsicht">
         <title>Navigation in der Tabellen-Ansicht (Modellparameter)</title>
 
         <mediaobject vendor="sachsen">
@@ -715,7 +713,7 @@
       Schaltfläche in der Menü-Leiste benutzt werden (siehe <xref
       linkend="pic_tabelle_button" />).</para>
 
-      <figure id="pic_tabelle_button">
+      <figure id="PicTabelleButton">
         <title>Schaltflächen in der Tabellen-Ansicht</title>
 
         <mediaobject>
@@ -752,7 +750,7 @@
           zu unterscheiden.</para>
         </note></para>
 
-      <figure id="navigation_ansichtsauswahl">
+      <figure id="NavigationAnsichtsauswahl">
         <title>Ansichtsauswahl beim Öffnen einer Zeitreihe</title>
 
         <mediaobject>
@@ -763,7 +761,7 @@
         </mediaobject>
       </figure>
 
-      <figure id="navigation_tabelle_zml">
+      <figure id="NavigationTabelleZml">
         <title>Navigation in der Tabellen-Ansicht (Zeitreihen)</title>
 
         <mediaobject>
@@ -799,7 +797,7 @@
       werden deaktiviert und verschwinden aus der aktuellen
       Darstellung.</para>
 
-      <section id="tabellen_bearbeiten">
+      <section id="TabellenBearbeiten">
         <title>Bearbeiten von Tabellenwerten</title>
 
         <indexterm>
@@ -820,7 +818,7 @@
         Rechtsklick auf die Tabelle zur Verfügung (siehe <xref
         linkend="kontextmenu_tabellen" />).</para>
 
-        <figure id="kontextmenu_tabellen">
+        <figure id="KontextmenuTabellen">
           <title>Kontextmenü zur Bearbeitung von Tabellenwerten</title>
 
           <mediaobject>
@@ -899,7 +897,7 @@
         </itemizedlist>
       </section>
 
-      <section id="zeitreihen_export">
+      <section id="ZeitreihenExport">
         <title>Speichern / Exportieren von Zeitreihen</title>
 
         <indexterm>
@@ -932,7 +930,7 @@
         die dem IMS übergeben werden.</para>
       </section>
 
-      <section id="tabellen_kennzeichnung" vendor="sachsen-anhalt">
+      <section id="TabellenKennzeichnung" vendor="sachsen-anhalt">
         <title>Kennzeichnung von Tabellenwerten</title>
 
         <indexterm>
@@ -952,7 +950,7 @@
         Symbol vor dem Wert angezeigt, besitzt der Wert innerhalb von KALYPSO
         den Status <quote>OK</quote>.</para>
 
-        <table id="zeitreihensymbole">
+        <table id="Zeitreihensymbole">
           <title>Symbole in Zeitreihen-Tabellen</title>
 
           <tgroup cols="3">
@@ -1027,7 +1025,7 @@
       </section>
     </section>
 
-    <section id="gui-zml_diagramm_ansicht">
+    <section id="GuiZmlDiagrammAnsicht">
       <title>Diagramm-Ansicht (Zeitreihen)</title>
 
       <indexterm>
@@ -1070,7 +1068,7 @@
       <para>Zum Entfernen einer Zeitreihe aus der Diagramm-Ansicht dient das
       rote Kreuz oben rechts in der Gliederung-Ansicht.</para>
 
-      <figure id="navigation_diagramm_ansicht">
+      <figure id="NavigationDiagrammAnsicht">
         <title>Navigation in der Diagramm-Ansicht (QuickView)</title>
 
         <mediaobject>
@@ -1137,8 +1135,8 @@
       und Format festgelegt und dann abhängig vom Format (Datentyp &amp;
       Datenformat) in die Zielzeitreihe (ZML-Zeitreihe) konvertiert.</para>
 
-      <figure id="gui_zml-import">
-        <title id="zeitreihenimport">Zeitreihenimport</title>
+      <figure id="GuiZmlImport">
+        <title id="Zeitreihenimport">Zeitreihenimport</title>
 
         <mediaobject>
           <imageobject>
@@ -1270,7 +1268,7 @@ dd MM yyyy HH Wert2</programlisting>
       </note>
     </section>
 
-    <section id="zeitreihen_bearbeiten">
+    <section id="ZeitreihenBearbeiten">
       <title>Bearbeiten von Zeitreihen (Grafikprogramm)</title>
 
       <indexterm>
@@ -1303,7 +1301,7 @@ dd MM yyyy HH Wert2</programlisting>
       im Grafikprogramm (siehe <xref
       linkend="button_grafik_programm" />).</para>
 
-      <figure id="button_grafik_programm">
+      <figure id="ButtonGrafikProgramm">
         <title>Schaltfläche zum Öffnen des Grafikprogramms</title>
 
         <mediaobject>

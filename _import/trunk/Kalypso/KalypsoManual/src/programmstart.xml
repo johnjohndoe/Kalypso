@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<chapter id="programm_start">
-  <title id="view_prognose">Programm-Start</title>
+<chapter id="ProgrammStart">
+  <title id="ViewPrognose">Programm-Start</title>
 
   <indexterm>
     <primary>Beschreibung der Startseite</primary>
@@ -25,7 +25,7 @@
       </imageobject>
     </inlinemediaobject> Kalypso.exe gestartet.</para>
 
-  <section id="kalypso_login" vendor="sachsen-anhalt">
+  <section id="KalypsoLogin" vendor="sachsen-anhalt">
     <title>Anmeldung</title>
 
     <indexterm>
@@ -43,7 +43,7 @@
     Benutzerverwaltung (LDAP-System) verifiziert, siehe hierzu auch die
     Technische Dokumentation.</para>
 
-    <figure id="pic_kalypso_login">
+    <figure id="PicKalypsoLogin">
       <title>KALYPSO Anmeldung</title>
 
       <screenshot>
@@ -80,7 +80,7 @@
     gestartet wird und noch konfiguriert werden muss (siehe <xref
     linkend="kalypso_installation" />).</para>
 
-    <figure id="pic_SA_Assi_allg_01_Login">
+    <figure id="PicSAAssiAllg01Login">
       <title>KALYPSO Anmeldung - Administrator</title>
 
       <screenshot>
@@ -115,20 +115,20 @@
     </figure>
   </section>
 
-  <section id="kalypso_startseite" vendor="sachsen, sachsen-anhalt">
+  <section id="KalypsoStartseite" vendor="sachsen, sachsen-anhalt">
     <title>Startseite</title>
 
     <indexterm>
       <primary>KALYPSO-Konzept</primary>
     </indexterm>
 
-    <para id="dummy5">Nach dem Programm-Start von KALYPSO öffnet sich die
+    <para>Nach dem Programm-Start von KALYPSO öffnet sich die
     Startseite, die in Anlehnung an die Zugriffsrechte des Benutzers aufgebaut
     wird. Unabhängig von den ihm zugeordneten Rechten wird der Benutzer beim
     Programmstart in den Vorhersagemodus geführt (siehe <xref
     linkend="pic_kalypso_startseite" />).</para>
 
-    <para><figure id="pic_kalypso_startseite">
+    <para><figure id="PicKalypsoStartseite">
         <title>KALYPSO- Startseite Allgemein</title>
 
         <mediaobject vendor="sachsen">
@@ -319,7 +319,7 @@
     </table>
   </section>
 
-  <section id="kalypso_testbetrieb" vendor="sachsen-anhalt">
+  <section id="KalypsoTestbetrieb" vendor="sachsen-anhalt">
     <title>Simulationsbetrieb</title>
 
     <para>Wie schon unter <xref linkend="kalypso_login" /> beschrieben, kann

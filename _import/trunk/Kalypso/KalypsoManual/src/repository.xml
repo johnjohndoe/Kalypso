@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<chapter id="zeitreihen_repository">
+<chapter id="ZeitreihenRepository">
   <title>Zeitreihenbrowser</title>
 
   <indexterm>
@@ -58,7 +58,7 @@
     beschrieben.</para>
   </section>
 
-  <section id="repository_ansichten">
+  <section id="RepositoryAnsichten">
     <title>Ablagen-Ansicht</title>
 
     <indexterm>
@@ -75,7 +75,7 @@
     simultane Ansicht mehrerer Zeitreihen ist mit der Ablagen-Ansicht nicht
     möglich - die Zeitreihen können nur einzeln betrachtet werden.</para>
 
-    <figure id="repository_ansicht">
+    <figure id="RepositoryAnsicht">
       <title>Ansicht der Zeitreihen-Ablage</title>
 
       <mediaobject>
@@ -105,7 +105,7 @@
     linkend="arbeiten_mit_ansichten" />).</para>
   </section>
 
-  <section id="repository_zeitreihenverwaltung">
+  <section id="RepositoryZeitreihenverwaltung">
     <title>Zeitreihenverwaltung</title>
 
     <indexterm>
@@ -124,7 +124,7 @@
     <para>Im Einzelnen stehen die nachfolgend beschriebenen Funktionen zur
     Verfügung.</para>
 
-    <figure id="repository_buttons">
+    <figure id="RepositoryButtons">
       <title>Schaltflächen in der Ablagen-Ansicht</title>
 
       <mediaobject>
@@ -155,7 +155,7 @@
     (Standard: *.zml) angegeben werden (siehe <xref
     linkend="repository_import_lokal" /> ).</para>
 
-    <figure id="repository_import_lokal">
+    <figure id="RepositoryImportLokal">
       <title>Lokale Ablage hinzufügen</title>
 
       <mediaobject>
@@ -183,7 +183,7 @@
     dem der Benutzer den gewünschten Zeitraum der Betrachtung eingeben kann
     (siehe <xref linkend="repository_einstellungen" />).</para>
 
-    <figure id="repository_einstellungen">
+    <figure id="RepositoryEinstellungen">
       <title>Definition der Einstellungen einer Ablage</title>
 
       <mediaobject>
@@ -226,7 +226,7 @@
     linkend="repository_export" />) kann die aktuell markierte Zeitreihe als
     Datei in ein beliebiges Verzeichnis gespeichert werden.</para>
 
-    <figure id="repository_export">
+    <figure id="RepositoryExport">
       <title>Exportieren von Zeitreihen</title>
 
       <mediaobject>
@@ -244,7 +244,7 @@
     Benutzer auch ein fester Zeitraum eingegeben werden (siehe <xref
     linkend="repository_zeitraum" />).</para>
 
-    <figure id="repository_zeitraum">
+    <figure id="RepositoryZeitraum">
       <title>Definition des Zeitraums beim Export von Zeitreihen</title>
 
       <mediaobject>

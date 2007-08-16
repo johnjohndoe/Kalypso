@@ -2,7 +2,7 @@
 <chapter id="einfuehrung">
   <title>Einführung</title>
 
-  <section id="allgemeines_zu_kalypso">
+  <section  vendor="hh_ingenieurbueros,sachsen,sachsen-anhalt,ui" id="AllgemeinesZuKalypso">
     <title>Allgemeines zu KALYPSO</title>
 
     <indexterm>
@@ -81,7 +81,7 @@
     url="http://www.kalypso-simulation-platform.org/">http://www.kalypso-simulation-platform.org/</ulink>
     .</para>
 
-    <section id="nymphe_kalypso">
+    <section id="NympheKalypso"  vendor="hh_ingenieurbueros,sachsen,sachsen-anhalt,ui">
       <title>Die Nymphe Kalypso</title>
 
       <indexterm>
@@ -123,7 +123,7 @@
     </section>
   </section>
 
-  <section id="kalypso_installation" vendor="sachsen-anhalt">
+  <section id="KalypsoInstallation" vendor="sachsen-anhalt">
     <title>KALYPSO-Installation HVZ Sachsen-Anhalt</title>
 
     <titleabbrev>Installation</titleabbrev>
@@ -234,7 +234,7 @@
     Client-Installation derartig angepasst werden, dass ein lokaler
     Rechendienst unterstützt wird.</para>
 
-    <section id="server_installation">
+    <section id="ServerInstallation">
       <title>Server-Installation</title>
 
       <indexterm>
@@ -248,7 +248,7 @@
       linkend="allgemeines_zu_kalypso" />).</para>
     </section>
 
-    <section id="client-installation">
+    <section id="ClientInstallation">
       <title>Client-Installation (Windows)</title>
 
       <indexterm>
@@ -276,7 +276,7 @@
     </section>
   </section>
 
-  <section id="kalypso_installation"
+  <section id="KalypsoInstallation"
            vendor="hh_ingenieurbueros,KalypsoModeller">
     <title>KALYPSO-Installation</title>
 
@@ -336,7 +336,7 @@
       </listitem>
     </itemizedlist>
 
-    <section id="server_installation">
+    <section id="ServerInstallation">
       <title>Server-Installation</title>
 
       <indexterm>
@@ -349,7 +349,7 @@
       den Kontaktadressen.</para>
     </section>
 
-    <section id="client-installation">
+    <section id="ClientInstallation">
       <title>Client-Installation (Windows)</title>
 
       <indexterm>
@@ -486,7 +486,7 @@
     </section>
   </section>
 
-  <section id="anwendungsfaelle" vendor="sachsen,sachsen-anhalt">
+  <section id="Anwendungsfaelle" vendor="sachsen,sachsen-anhalt">
     <title>Anwendungsfälle</title>
 
     <indexterm>
@@ -533,7 +533,7 @@
     beschrieben.</para>
   </section>
 
-  <section id="benutzerrechte" vendor="sachsen">
+  <section id="Benutzerrechte" vendor="sachsen">
     <title>Benutzerrechte</title>
 
     <indexterm>
@@ -548,7 +548,7 @@
     linkend="anwendungsfaelle" /> beschriebenen Aufgaben ausführen.</para>
   </section>
 
-  <section id="benutzerrechte" vendor="sachsen-anhalt">
+  <section id="Benutzerrechte" vendor="sachsen-anhalt">
     <title>Benutzerrechte</title>
 
     <indexterm>
@@ -564,7 +564,7 @@
     ausführen.</para>
   </section>
 
-  <section id="datenmanagement" vendor="sachsen,sachsen-anhalt">
+  <section id="Datenmanagement" vendor="sachsen,sachsen-anhalt">
     <title>Datenmanagement</title>
 
     <indexterm>
@@ -598,7 +598,7 @@
     geführt, bleibt Ihm das Datenmanagement weitgehend verborgen.</para>
   </section>
 
-  <section id="dokumentationen" vendor="sachsen">
+  <section id="Dokumentationen" vendor="sachsen">
     <title>Dokumentation</title>
 
     <para>Für das Programmsystem KALYPSO liegen Dokumentationen für
@@ -620,7 +620,7 @@
     </itemizedlist>
   </section>
 
-  <section id="dokumentation" vendor="hh_ingenieurbueros,KalypsoModeller">
+  <section id="Dokumentation" vendor="hh_ingenieurbueros,KalypsoModeller">
     <title>Dokumentation</title>
 
     <para>Für das Programmsystem KALYPSO liegen Dokumentationen für
