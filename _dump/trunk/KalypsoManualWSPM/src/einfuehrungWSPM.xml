@@ -77,7 +77,7 @@
     <mediaobject>
       <imageobject>
         <imagedata align="center"
-                   fileref="img/modelle/kalypso_na/modellkonzept_na.png"
+                   fileref="img/bookinfo/KalypsoWSPM.png"
                    scale="100" />
       </imageobject>
     </mediaobject>
@@ -455,20 +455,20 @@
       </figure>
 
       <section id="kalypso_wspm_Perspektive_Spiegellinienberechnung">
-        <title>Perspektive "Spiegellinienberechnung"</title>
+        <title>Perspektive Spiegellinienberechnung</title>
 
         <indexterm>
-          <primary>Perspektive "Spiegellinienberechnung"</primary>
+          <primary>Perspektive Spiegellinienberechnung</primary>
         </indexterm>
 
         <para>Hier wird standardgemäß die vordefinierte Perspektive
-        „Spiegellinienberechnung“ beschrieben. Mit einer persönlichen
+        Spiegellinienberechnung beschrieben. Mit einer persönlichen
         Anordnung einzelner Views (=Teilfenstern) und einer Abspeicherung
         unter der Menuleiste <guimenuitem>Fenster &gt; Perspektive speichern
         unter...</guimenuitem> kann jede beliebige Anordnung an Teilfenstern
         gesichert werden.</para>
 
-        <para>In der Perspektive „Spiegellinienberechnung“ werden folgende
+        <para>In der Perspektive Spiegellinienberechnung werden folgende
         Kernaktivitäten zum allgemeinen Handling der Modell-Daten
         durchgeführt:</para>
 
@@ -524,7 +524,7 @@
         </itemizedlist>
 
         <figure>
-          <title>Perspektive "Spiegellinienberechnung"</title>
+          <title>Perspektive Spiegellinienberechnung</title>
 
           <mediaobject>
             <imageobject>
@@ -536,10 +536,10 @@
       </section>
 
       <section id="kalypso_wspm_Perspektive_Profileditor_manager">
-        <title>Perspektive "Profileditor/ Profil Manager"</title>
+        <title>Perspektive Profileditor - Profil Manager</title>
 
         <indexterm>
-          <primary>Perspektive "Profileditor/ Profil Manager"</primary>
+          <primary>Perspektive Profileditor/ Profil Manager</primary>
         </indexterm>
 
         <para>Hier wird standardgemäß die vordefinierte Perspektive
@@ -866,7 +866,7 @@
       <para>Über dem Feature View finden Sie (je nach Element) folgende
       Zusatzfunktionen für KalypsoWSPM:</para>
 
-      <table align="center" id="kalypso_na-mapping_teilgebiete">
+      <table align="center" id="kalypso_wspmsymbole_featureview">
         <title>Symbole im Feature View</title>
 
         <tgroup align="center" cols="2">
