@@ -46,7 +46,6 @@ import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.AbstractSelectRoughnessPolygonWidget;
-import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
@@ -61,7 +60,7 @@ public class EditRoughnessElementWidget extends AbstractSelectRoughnessPolygonWi
 {
   public EditRoughnessElementWidget( )
   {
-    super( "Parameter bearbeiten", "Zugeordnete Parameter eines FE-Knoten bearbeiten", false, IRoughnessPolygon.QNAME, IRoughnessPolygon.QNAME_PROP_POSITION );
+    super( "Parameter bearbeiten", "Zugeordnete Parameter eines FE-Knoten bearbeiten", false, IRoughnessPolygon.SUBSTITUTION_GROUP, IRoughnessPolygon.PROP_POSITION );
   }
 
   /**

@@ -42,38 +42,75 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
 import java.util.List;
 
+import javax.xml.namespace.QName;
+
+import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsosimulationmodel.core.discr.IFEElement;
+import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 
 /**
- * Interface for classes that represents a feature of the
- * type wb1d2d:Element
+ * Interface for classes that represents a feature of the type wb1d2d:Element
  * 
  * @author Patrice Congo
- *
+ * 
  */
-public interface IFE1D2DElement 
-          <CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge>
-                  extends IFEElement
+public interface IFE1D2DElement<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge> extends IFEElement
 {
+  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "Element" );
+
+  public static final QName PROP_ROUGHNESS_CLS_ID = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "roughnessClsID" );
+
+  public static final QName PROP_ROUGHNESS_STYLE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "roughnessStyle" );
+
+  public static final QName PROP_ROUGHNESS_CORRECTION_KS = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "correction_ks" );
+
+  public static final QName PROP_ROUGHNESS_CORRECTION_AXAY = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "correction_axay" );
+
+  public static final QName PROP_ROUGHNESS_CORRECTION_DP = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "correction_dp" );
+
+  public void setRoughnessClsID( final String value );
+
+  public void setRoughnessStyle( final String value );
+
+  public void setRoughnessCorrectionKS( final Double value );
+
+  public void setRoughnessCorrectionAxAy( final Double value );
+
+  public void setRoughnessCorrectionDP( final Double value );
+
+  public String getRoughnessClsID( );
+
+  public String getRoughnessStyle( );
+
+  public Double getRoughnessCorrectionKS( );
+
+  public Double getRoughnessCorrectionAxAy( );
+
+  public Double getRoughnessCorrectionDP( );
+
   /**
-   * To get the containers, complex elements, containing this
-   * element 
+   * To get the containers, complex elements, containing this element
+   * 
    * @return a list of complex element features containg this element
    */
-  public IFeatureWrapperCollection<CT> getContainers();
-     
+  public IFeatureWrapperCollection<CT> getContainers( );
+
   /**
    * To get the nodes of this element
+   * 
    * @return a list of the nodes of this elements
    */
-  public List<IFE1D2DNode> getNodes();
-  
+  public List<IFE1D2DNode> getNodes( );
+
   /**
    * Gets the virtual geometry of this element by recalculating it
+   * 
    * @return the recalculated geometry of this element
    */
-  public GM_Object recalculateElementGeometry( )throws GM_Exception;
+  public GM_Object recalculateElementGeometry( ) throws GM_Exception;
+
+  public FeatureChange[] assignRoughness( String roughnessID, Double correctionParameterKS, Double correctionParameterAxAy, Double correctionParameterDP, String roughnessStyle );
 }

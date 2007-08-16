@@ -213,7 +213,7 @@ public class RoughnessPolygon extends AbstractFeatureBinder implements IRoughnes
   public String getRoughnessStyle( )
   {
     final Feature feature = getFeature();
-    final Object style = feature.getProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_STYLE );
+    final Object style = feature.getProperty( IRoughnessPolygon.PROP_ROUGHNESS_STYLE );
     if( style instanceof String )
     {
       return (String) style;
@@ -348,53 +348,51 @@ public class RoughnessPolygon extends AbstractFeatureBinder implements IRoughnes
     }
   }
 
-  // public Feature getWrappedFeature( )
-  // {
-  // return getFeature();
-  // }
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon#getCorrectionParameterAxAy()
+   */
+  public Double getCorrectionParameterAxAy( )
+  {
+    return (Double) getFeature().getProperty( IRoughnessPolygon.PROP_CORRECTION_AXAY );
+  }
 
-  // /**
-  // * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapper#getGmlID()
-  // */
-  // public String getGmlID( )
-  // {
-  // return feature.getId();
-  // }
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon#getCorrectionParameterDP()
+   */
+  public Double getCorrectionParameterDP( )
+  {
+    return (Double) getFeature().getProperty( IRoughnessPolygon.PROP_CORRECTION_DP );
+  }
 
-  // /**
-  // * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getDescription()
-  // */
-  // public String getDescription( )
-  // {
-  // // TODO Auto-generated method stub
-  // return null;
-  // }
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon#getCorrectionParameterKS()
+   */
+  public Double getCorrectionParameterKS( )
+  {
+    return (Double) getFeature().getProperty( IRoughnessPolygon.PROP_CORRECTION_KS );
+  }
 
-  // /**
-  // * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getName()
-  // */
-  // public String getName( )
-  // {
-  // // TODO Auto-generated method stub
-  // return null;
-  // }
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon#setCorrectionParameterAxAy(double)
+   */
+  public void setCorrectionParameterAxAy( double value )
+  {
+    getFeature().setProperty( IRoughnessPolygon.PROP_CORRECTION_AXAY, value );
+  }
 
-  // /**
-  // * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setDescription(java.lang.String)
-  // */
-  // public void setDescription( String desc )
-  // {
-  // // TODO Auto-generated method stub
-  //    
-  // }
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon#setCorrectionParameterDP(double)
+   */
+  public void setCorrectionParameterDP( double value )
+  {
+    getFeature().setProperty( IRoughnessPolygon.PROP_CORRECTION_DP, value );
+  }
 
-  // /**
-  // * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setName(java.lang.String)
-  // */
-  // public void setName( String name )
-  // {
-  // // TODO Auto-generated method stub
-  //    
-  // }
-
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon#setCorrectionParameterKS(double)
+   */
+  public void setCorrectionParameterKS( double value )
+  {
+    getFeature().setProperty( IRoughnessPolygon.PROP_CORRECTION_KS, value );
+  }
 }

@@ -52,7 +52,7 @@ public class ExportDiscrModelaction implements IObjectActionDelegate
         return;
     }
 
-    final Gml2RMA10SConv converter2D = new Gml2RMA10SConv( modelFile, discModel, null, null );
+    final Gml2RMA10SConv converter2D = new Gml2RMA10SConv( modelFile, discModel, null );
 
     try
     {

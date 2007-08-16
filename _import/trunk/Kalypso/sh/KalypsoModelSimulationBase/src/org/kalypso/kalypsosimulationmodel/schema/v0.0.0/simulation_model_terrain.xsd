@@ -24,8 +24,8 @@
 		</xs:appinfo>
 	</xs:annotation>
 
-	<xs:include schemaLocation="simulation_model.xsd"/>
-	
+	<xs:include schemaLocation="simulation_model.xsd" />
+
 	<xs:import namespace="http://www.opengis.net/gml"
 		schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd" />
 	<xs:import
@@ -47,7 +47,8 @@
 	<xs:complexType name="TerrainModelPropertyType">
 		<xs:annotation>
 			<xs:documentation>
-				Property type to defined terrain model of a 1d 2d static model
+				Property type to defined terrain model of a 1d 2d static
+				model
 			</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
@@ -83,9 +84,8 @@
 					<xs:element
 						ref="simBase:terrainElevationModelSystem" minOccurs="1"
 						maxOccurs="1" />
-					<xs:element
-						ref="simBase:roughnessLayerCollection" minOccurs="1"
-						maxOccurs="unbounded" />
+					<xs:element ref="simBase:roughnessLayerCollection"
+						minOccurs="1" maxOccurs="unbounded" />
 					<xs:element
 						ref="simBase:riverProfileNetworkCollectionMember" minOccurs="1"
 						maxOccurs="1" />
@@ -129,9 +129,8 @@
 		<xs:complexContent>
 			<xs:extension base="gml:AbstractFeatureType">
 				<xs:sequence>
-					<xs:element 
-							ref="simBase:terrainElevationModel" 
-							minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element ref="simBase:terrainElevationModel"
+						minOccurs="0" maxOccurs="unbounded" />
 					<!--xs:element 
 						ref="simBase:digitalElevationModel"
 						minOccurs="0" maxOccurs="1"/>
@@ -158,17 +157,17 @@
 			</xs:documentation>
 			<!--xs:appinfo xmlns:kapp="org.kalypso.appinfo">
 				<kapp:functionProperty
-					kapp:functionId="org.kalypso.kalypsosimulationmodel.core.terrainmodel.geom.TerrainElevationShapeGeometry"
-					kapp:property="simBase:geometry"
-					kapp:isVirtual="true"
-					kapp:valueType="gml:LineStringPropertyType"/>
-			</xs:appinfo-->
+				kapp:functionId="org.kalypso.kalypsosimulationmodel.core.terrainmodel.geom.TerrainElevationShapeGeometry"
+				kapp:property="simBase:geometry"
+				kapp:isVirtual="true"
+				kapp:valueType="gml:LineStringPropertyType"/>
+				</xs:appinfo-->
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension base="gml:AbstractFeatureType">
-				
+
 			</xs:extension>
-			
+
 		</xs:complexContent>
 	</xs:complexType>
 
@@ -198,22 +197,18 @@
 			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
 				<kapp:functionProperty
 					kapp:functionId="org.kalypso.kalypsosimulationmodel.core.terrainmodel.geom.TerrainElevationShapeGeometry"
-					kapp:property="simBase:geometry"
-					kapp:isVirtual="true"
-					kapp:valueType="gml:LineStringPropertyType"/>
+					kapp:property="simBase:geometry" kapp:isVirtual="true"
+					kapp:valueType="gml:LineStringPropertyType" />
 			</xs:appinfo>
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension
 				base="simBase:AbstractTerrainElevationModelType">
 				<xs:sequence>
-					<xs:element 
-						name="fileName" type="xs:string" 
+					<xs:element name="fileName" type="xs:string"
 						minOccurs="0" maxOccurs="1" />
-					<xs:element 
-						name="srsName" 
-						type="xs:anyURI"
-						minOccurs="0" maxOccurs="1"/>
+					<xs:element name="srsName" type="xs:anyURI"
+						minOccurs="0" maxOccurs="1" />
 					<!--xs:element 
 						name="geometry" 
 						type="gml:LineStringPropertyType"/-->
@@ -293,8 +288,7 @@
 	<xs:element name="roughnessLayerCollection">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element
-					ref="simBase:RoughnessLayer" minOccurs="0"
+				<xs:element ref="simBase:RoughnessLayer" minOccurs="0"
 					maxOccurs="1" />
 			</xs:sequence>
 			<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
@@ -304,17 +298,16 @@
 	<!-- =================================================================
 		RougthnessLayerPolygomCollection
 		================================================================== -->
-	<xs:element name="RoughnessLayer"
-		type="simBase:RoughnessLayerType"
+	<xs:element name="RoughnessLayer" type="simBase:RoughnessLayerType"
 		substitutionGroup="gml:_Feature">
 
 	</xs:element>
 	<xs:complexType name="RoughnessLayerType">
 		<xs:complexContent>
-			<xs:extension
-				base="gml:AbstractFeatureType">
+			<xs:extension base="gml:AbstractFeatureType">
 				<xs:sequence>
-					<xs:element name="editable" type="xs:boolean" default="false"/>
+					<xs:element name="editable" type="xs:boolean"
+						default="false" />
 					<xs:element ref="simBase:roughnessLayerMember"
 						minOccurs="0" maxOccurs="unbounded" />
 					<!--xs:element ref="simBase:roughnessLayerPolygonMembers"/-->
@@ -348,23 +341,9 @@
 		Rougthness layer polynom member or property 
 		===================================================================-->
 	<xs:element name="roughnessLayerMember"
-		type="simBase:RoughnessLayerPolygonPropertyType" />
+		type="simBase:RoughnessLayerMemberPropertyType" />
 
-	<!--xs:complexType 
-		name="RoughnessLayerPolygonPropertyType">
-		<xs:complexContent>
-		<xs:restriction base="gml:FeaturePropertyType">
-		<xs:sequence>
-		<xs:element 
-		ref="simBase:RoughnessPolygon"
-		minOccurs="0" maxOccurs="1"/>
-		</xs:sequence>
-		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
-		</xs:restriction>
-		</xs:complexContent>
-		</xs:complexType-->
-
-	<xs:complexType name="RoughnessLayerPolygonPropertyType">
+	<xs:complexType name="RoughnessLayerMemberPropertyType">
 		<xs:sequence>
 			<xs:element ref="simBase:RoughnessPolygon" minOccurs="0"
 				maxOccurs="1" />
@@ -389,65 +368,39 @@
 	<xs:complexType name="RoughnessPolygonType">
 		<xs:annotation>
 			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
-				<kapp:functionProperty kapp:functionId="org.kalypso.ui.wizards.imports.roughness.LinkedFeaturePropertyFunction" kapp:property="simBase:roughnessStyle" />
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.ui.wizards.imports.roughness.LinkedFeaturePropertyFunction"
+					kapp:property="simBase:roughnessStyle" />
 			</xs:appinfo>
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension base="gml:AbstractFeatureType">
 				<xs:sequence>
-					<!--TODO Parser parse as GM_Surface if using gml:polygonProperty
-						directly
-					-->
-					<!--xs:element ref="gml:polygonProperty"/ -->
-					<!--xs:element 
-						name="polygonProperty"
-						type="gml:SurfacePropertyType"
-						minOccurs="0" maxOccurs="1"/-->
-					<!--xs:element
-						ref="simBase:roughnessPolygonPatchProperty"
-						minOccurs="1" maxOccurs="1"/ -->
-					<!--xs:element
-						ref="simBase:polygonProperty"
-						minOccurs="0" maxOccurs="1"/-->
-
-
-					<!-- <xs:element ref="simBase:polygonProperty"/> -->
-
-
-
-					<!-- xs:element
-						name="polygonProperty"
-						type="gml:SurfacePropertyType"
-						minOccurs="0" maxOccurs="1"/-->
-					<!-- By Patrice: -->
-					<!-- 
-						<xs:element
-						name="polygonPropertyQQ"
-						type="gml:MultiPolygonType"
-						minOccurs="0" maxOccurs="1"/>
-					-->
-					<!-- By Dejan: -->
 					<xs:element name="polygonProperty"
 						type="gml:MultiPolygonPropertyType" minOccurs="0" maxOccurs="1" />
-
-					<!--xs:element 
-						name="polygonProperty"
-						type="gml:SurfacePropertyType"
-						minOccurs="0" maxOccurs="1"/ -->
-					<!--xs:element
-						ref="gml:surfaceProperty"/-->
 					<xs:element name="roughnessClassMember"
 						type="simBase:RoughnessClassPropertyType" />
 					<xs:element name="roughnessStyle" type="xs:string" />
+					<xs:element name="correction_ks" type="simBase:CorrectionParameterType" />
+					<xs:element name="correction_axay" type="simBase:CorrectionParameterType" />
+					<xs:element name="correction_dp" type="simBase:CorrectionParameterType" />
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 
+	<xs:simpleType name="CorrectionParameterType">
+		<xs:restriction base="xs:double">
+			<xs:minExclusive value="0.0"/>
+		</xs:restriction>
+	</xs:simpleType>
+
 	<xs:complexType name="RoughnessClassPropertyType">
 		<xs:annotation>
 			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
-				<kapp:documentReference>project:/.metadata/roughness.gml</kapp:documentReference>
+				<kapp:documentReference>
+					project:/.metadata/roughness.gml
+				</kapp:documentReference>
 			</xs:appinfo>
 		</xs:annotation>
 		<xs:sequence>

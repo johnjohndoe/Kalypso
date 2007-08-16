@@ -53,10 +53,6 @@
               id="org.kalypso.kalypsomodel1d2d.schema.functions.ModelFiniteElements"
               name="ModelFiniteElment"/ -->
          <function
-              class="org.kalypso.kalypsomodel1d2d.schema.functions.ElementRoughnessStyleFunc"
-              id="org.kalypso.kalypsomodel1d2d.schema.functions.ElementRoughnessStyleFunc"
-              name="ElementRoughnessStyleFunc"/>
-         <function
                class="org.kalypso.kalypsomodel1d2d.schema.functions.NodeResultVelocityFunction"
                id="org.kalypso.kalypsomodel1d2d.schema.functions.NodeResultVelocityFunction"
                name="NodeResultVelocityFunction"/>
@@ -131,16 +127,12 @@
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta"/>
+         <adapter
+               type="org.kalypso.kalypsosimulationmodel.core.modeling.IModel">
+         </adapter>
       </factory>
    </extension>
 
-     <extension
-           point="org.kalypso.deegree.gmlWorkspaceListener">
-        <listener
-              class="org.kalypso.kalypsomodel1d2d.update.GeometryToStructUpdater"
-              id="xp.geom_to_struct.geometryToStructUpdater"
-              name="xp.geom_to_struct.geometryToStructUpdater"/>
-     </extension>
      <extension
            point="org.eclipse.ui.viewActions">
         <viewContribution

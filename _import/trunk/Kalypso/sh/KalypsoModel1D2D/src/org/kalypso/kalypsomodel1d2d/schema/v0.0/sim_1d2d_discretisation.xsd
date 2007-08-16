@@ -576,7 +576,11 @@
 				<xs:sequence>
 					<xs:element ref="wb1d2d:elementContainer"
 						minOccurs="0" maxOccurs="unbounded" />
-
+					<xs:element name="roughnessClsID" type="xs:string" />
+					<xs:element name="roughnessStyle" type="xs:string" />
+					<xs:element name="correction_ks" type="xs:double" />
+					<xs:element name="correction_axay" type="xs:double" />
+					<xs:element name="correction_dp" type="xs:double" />
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -704,16 +708,6 @@
 				kurve.
 			</xs:documentation>
 			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
-				<!--kapp:functionProperty
-					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.ElementRoughnessStyleFunc"
-					kapp:property="simBase:roughnessStyle"
-					kapp:isVirtual="true"
-					kapp:valueType="xs:string"/ -->
-				<!-- wbr:roughnessClsMember -->
-				<kapp:functionProperty
-					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.ElementRoughnessStyleFunc"
-					kapp:property="simBase:roughnessStyle" kapp:isVirtual="true" />
-
 				<kapp:functionProperty
 					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.FE1D2D_2DElementTypeGeometry"
 					kapp:property="simBase:polygonProperty"
@@ -723,9 +717,6 @@
 		<xs:complexContent>
 			<xs:extension base="wb1d2d:Element2DType">
 				<xs:sequence>
-					<!--xs:element 
-						name="geometry" 
-						type="gml:PolygonPropertyType"/-->
 					<xs:element ref="wb1d2d:directedEdge" minOccurs="3"
 						maxOccurs="4" />
 				</xs:sequence>

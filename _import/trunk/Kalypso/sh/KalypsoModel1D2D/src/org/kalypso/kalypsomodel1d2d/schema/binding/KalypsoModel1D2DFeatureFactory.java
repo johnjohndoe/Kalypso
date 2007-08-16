@@ -11,15 +11,6 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IModelDescriptor;
-import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IResultModelDescriptor;
-import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptionCollection;
-import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptor;
-import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ModelDescriptor;
-import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ResultModelDescriptor;
-import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.SimulationDescriptionCollection;
-import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.SimulationDescriptor;
-import org.kalypso.kalypsomodel1d2d.schema.binding.model.IPseudoOPerationalModel;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.BoundaryLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.BoundaryLine1D;
@@ -71,6 +62,14 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IWeirFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.KingFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.TeschkeFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.WeirFlowRelation;
+import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IModelDescriptor;
+import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.IResultModelDescriptor;
+import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptionCollection;
+import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ISimulationDescriptor;
+import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ModelDescriptor;
+import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.ResultModelDescriptor;
+import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.SimulationDescriptionCollection;
+import org.kalypso.kalypsomodel1d2d.schema.binding.metadata.SimulationDescriptor;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.ControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.ControlModel1D2DCollection;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.ControlModelGroup;
@@ -79,6 +78,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2DCollec
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.INodeResultCollection;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IOperationalModel1D2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.IPseudoOPerationalModel;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IResultModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IStaticModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.NodeResultCollection;
@@ -100,13 +100,13 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.results.HydrographCollection;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrograph;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrographCollection;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
-import org.kalypso.kalypsomodel1d2d.ui.map.merge.FERoughnessDisplayElement;
-import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.ElevationModelDisplayElementFactory;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
+import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 import org.kalypso.kalypsosimulationmodel.core.modeling.ISimulationModel;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.TerrainModel;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
-import org.kalypsodeegree.graphics.displayelements.DisplayElementDecorator;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -195,6 +195,30 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
     final Map<Class, AdapterConstructor> cMap = new Hashtable<Class, AdapterConstructor>();
 
     AdapterConstructor cTor;
+
+    // IModel
+    // Adapt all models to IModel
+    // TODO: adapt other models than discretisation modell and terrain modell when needed
+    cTor = new AdapterConstructor()
+    {
+      public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
+      {
+        final IFeatureType featureType = feature.getFeatureType();
+        if( Kalypso1D2DSchemaConstants.WB1D2D_F_DiscretisationModel.equals( featureType.getQName() ) )
+        {
+          return new FE1D2DDiscretisationModel( feature );
+        }
+        else if( ITerrainModel.QNAME_TERRAIN_MODEL.equals( featureType.getQName() ) )
+        {
+          return new TerrainModel( feature );
+        }
+        else
+        {
+          return null;
+        }
+      }
+    };
+    cMap.put( IModel.class, cTor );
 
     // IFE1D2DNode
     cTor = new AdapterConstructor()
@@ -300,25 +324,6 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
     cMap.put( ILineElement.class, cTor );
     cMap.put( IElement2D.class, cTor );
     cMap.put( IPolyElement.class, cTor );
-    // PolyElement
-    // cTor = new AdapterConstructor()
-    // {
-    // public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
-    // {
-    // final QName featureQName = feature.getFeatureType().getQName();
-    //
-    // if( featureQName.equals( Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT ) )
-    // {
-    // return new PolyElement( feature );
-    // }
-    // else
-    // {
-    // warnUnableToAdapt( feature, featureQName, IPolyElement.class );
-    // return null;
-    // }
-    // }
-    // };
-    // cMap.put( IPolyElement.class, cTor );
 
     // 1d2d 1d-element
     cTor = new AdapterConstructor()
@@ -608,29 +613,6 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
       }
     };
     cMap.put( ISimulationModel.class, cTor );
-
-    // IDisplayElement
-    cTor = new AdapterConstructor()
-    {
-      public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
-      {
-        final QName name = feature.getFeatureType().getQName();
-        if( KalypsoModelSimulationBaseConsts.SIM_BASE_F_NATIVE_TERRAIN_ELE_WRAPPER.equals( name ) )
-        {
-          return ElevationModelDisplayElementFactory.createDisplayElement( feature );
-        }
-        else if( Kalypso1D2DSchemaConstants.WB1D2D_F_STATIC_MODEL.equals( name ) )
-        {
-          return FERoughnessDisplayElement.createDisplayElement( feature );
-        }
-        else
-        {
-          warnUnableToAdapt( feature, name, DisplayElementDecorator.class );
-          return null;
-        }
-      }
-    };
-    cMap.put( DisplayElementDecorator.class, cTor );
 
     // IFlowRelation
     cTor = new AdapterConstructor()

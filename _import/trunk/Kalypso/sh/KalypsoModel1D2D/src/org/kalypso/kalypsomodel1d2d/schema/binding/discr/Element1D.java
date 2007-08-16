@@ -59,25 +59,16 @@ import org.opengis.cs.CS_CoordinateSystem;
 /**
  * @author Gernot Belger
  */
-public class Element1D< CT extends IFE1D2DComplexElement, 
-                        ET extends IFE1D2DEdge> 
-            extends FE1D2DElement<CT,ET> 
-            implements IElement1D<CT, ET>
+public class Element1D<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge> extends FE1D2DElement<CT, ET> implements IElement1D<CT, ET>
 {
   public Element1D( final Feature featureToBind )
   {
-    this( 
-        featureToBind, 
-        Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT1D, 
-        (Class<CT>)IFE1D2DComplexElement.class/*IRiverChannel1D.class*/ );
+    this( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT1D, (Class<CT>) IFE1D2DComplexElement.class/* IRiverChannel1D.class */);
   }
-  
-  public Element1D( 
-      final Feature featureToBind, 
-      QName featureQName,
-      Class<CT> complexElementClass)
+
+  public Element1D( final Feature featureToBind, QName featureQName, Class<CT> complexElementClass )
   {
-    super(featureToBind, featureQName, complexElementClass);   
+    super( featureToBind, featureQName, complexElementClass );
   }
 
   /**
@@ -86,9 +77,7 @@ public class Element1D< CT extends IFE1D2DComplexElement,
   public ET getEdge( )
   {
     final Feature feature = getFeature();
-    final Object property = 
-      feature.getProperty( 
-          Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE/*QNAME_PROPS_DIRECTED_EDGE*/ );
+    final Object property = feature.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE/* QNAME_PROPS_DIRECTED_EDGE */);
     final Feature edgeFeature = FeatureHelper.getFeature( feature.getWorkspace(), property );
     if( edgeFeature == null )
       return null;
@@ -103,14 +92,14 @@ public class Element1D< CT extends IFE1D2DComplexElement,
   {
     IFE1D2DEdge oldEdge = getEdge();
     final String gmlID = getGmlID();
-    if(oldEdge!=null)
+    if( oldEdge != null )
     {
-      for(;oldEdge.getContainers().remove( gmlID );)
+      for( ; oldEdge.getContainers().remove( gmlID ); )
       {
-        //removing all links
+        // removing all links
       }
     }
-    
+
     final Feature feature = getWrappedFeature();
     if( edge == null )
     {
@@ -118,20 +107,20 @@ public class Element1D< CT extends IFE1D2DComplexElement,
     }
     else
     {
-      final String linkToEdge  = edge.getGmlID();
+      final String linkToEdge = edge.getGmlID();
       feature.setProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE, linkToEdge );
-      
+
       final IFeatureWrapperCollection containers = edge.getContainers();
       FeatureList wrappedList = containers.getWrappedList();
-      // TODO: only add if not already present. 
+      // TODO: only add if not already present.
       // May the containers contain me twice?
-      
+
       // TODO: this is a potential performance problem, because this is a linear list search
-        if( !wrappedList.contains( gmlID ) )
-        {
-          wrappedList.add( gmlID );
-        }
-     }
+      if( !wrappedList.contains( gmlID ) )
+      {
+        wrappedList.add( gmlID );
+      }
+    }
     // Setting the edge causes the envelope to become invalid
     feature.invalidEnvelope();
   }
@@ -154,34 +143,112 @@ public class Element1D< CT extends IFE1D2DComplexElement,
    */
   public GM_Object recalculateElementGeometry( ) throws GM_Exception
   {
-//      return ModelGeometryBuilder.computeEgdeGeometry( getEdge() );
-      ET edge = getEdge();
-      if(edge==null)
-      {
-        return null;
-      }
-      
-      final List<IFE1D2DNode> nodes=edge.getNodes();
-      
-      final int SIZE=nodes.size();
-      if(SIZE!=2)
-      {
-        return null;
-      }
-      
-      final CS_CoordinateSystem crs = 
-                      nodes.get( 0 ).getPoint().getCoordinateSystem();
-      
-      
-      GM_Position positions[]= new GM_Position[SIZE];
-      GM_Point point;
-      
-      for( int i = 0; i < SIZE; i++ )
-      {
-        point = nodes.get( i ).getPoint();
-        positions[i] = point.getPosition();
-      }
+// return ModelGeometryBuilder.computeEgdeGeometry( getEdge() );
+    ET edge = getEdge();
+    if( edge == null )
+    {
+      return null;
+    }
 
-      return GeometryFactory.createGM_Curve( positions, crs );
+    final List<IFE1D2DNode> nodes = edge.getNodes();
+
+    final int SIZE = nodes.size();
+    if( SIZE != 2 )
+    {
+      return null;
+    }
+
+    final CS_CoordinateSystem crs = nodes.get( 0 ).getPoint().getCoordinateSystem();
+
+    GM_Position positions[] = new GM_Position[SIZE];
+    GM_Point point;
+
+    for( int i = 0; i < SIZE; i++ )
+    {
+      point = nodes.get( i ).getPoint();
+      positions[i] = point.getPosition();
+    }
+
+    return GeometryFactory.createGM_Curve( positions, crs );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#getRoughnessClsID()
+   */
+  public String getRoughnessClsID( )
+  {
+    return getFeature().getProperty( IFE1D2DElement.PROP_ROUGHNESS_CLS_ID ).toString();
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#getRoughnessCorrectionAxAy()
+   */
+  public Double getRoughnessCorrectionAxAy( )
+  {
+    return (Double) getFeature().getProperty( IFE1D2DElement.PROP_ROUGHNESS_CORRECTION_AXAY );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#getRoughnessCorrectionDP()
+   */
+  public Double getRoughnessCorrectionDP( )
+  {
+    return (Double) getFeature().getProperty( IFE1D2DElement.PROP_ROUGHNESS_CORRECTION_DP );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#getRoughnessCorrectionKS()
+   */
+  public Double getRoughnessCorrectionKS( )
+  {
+    return (Double) getFeature().getProperty( IFE1D2DElement.PROP_ROUGHNESS_CORRECTION_KS );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#getRoughnessStyle()
+   */
+  public String getRoughnessStyle( )
+  {
+    return getFeature().getProperty( IFE1D2DElement.PROP_ROUGHNESS_STYLE ).toString();
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#setRoughnessClsID(java.lang.String)
+   */
+  public void setRoughnessClsID( String value )
+  {
+    getFeature().setProperty( IFE1D2DElement.PROP_ROUGHNESS_CLS_ID, value );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#setRoughnessCorrectionAxAy(java.lang.String)
+   */
+  public void setRoughnessCorrectionAxAy( final Double value )
+  {
+    getFeature().setProperty( IFE1D2DElement.PROP_ROUGHNESS_CORRECTION_AXAY, value );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#setRoughnessCorrectionDP(java.lang.String)
+   */
+  public void setRoughnessCorrectionDP( final Double value )
+  {
+    getFeature().setProperty( IFE1D2DElement.PROP_ROUGHNESS_CORRECTION_DP, value );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#setRoughnessCorrectionKS(java.lang.String)
+   */
+  public void setRoughnessCorrectionKS( final Double value )
+  {
+    getFeature().setProperty( IFE1D2DElement.PROP_ROUGHNESS_CORRECTION_KS, value );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#setRoughnessStyle(java.lang.String)
+   */
+  public void setRoughnessStyle( String value )
+  {
+    getFeature().setProperty( IFE1D2DElement.PROP_ROUGHNESS_STYLE, value );
   }
 }

@@ -4,8 +4,10 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.Util;
+import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
@@ -92,6 +94,32 @@ public abstract class FE1D2DElement<CT extends IFE1D2DComplexElement, ET extends
   {
     return containers;
   }
+  
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#assignRoughness(java.lang.String, java.lang.Double, java.lang.Double, java.lang.Double, java.lang.String)
+   */
+  public FeatureChange[] assignRoughness( String roughnessID, Double correctionParameterKS, Double correctionParameterAxAy, Double correctionParameterDP, String roughnessStyle )
+  {
+    final Feature elementFeature = getWrappedFeature();
+    
+    setRoughnessClsID( roughnessID );
+    setRoughnessCorrectionKS( correctionParameterKS );
+    setRoughnessCorrectionAxAy( correctionParameterAxAy );
+    setRoughnessCorrectionDP( correctionParameterDP );
+    setRoughnessStyle( roughnessStyle );
+
+    final IFeatureType featureType = elementFeature.getFeatureType();
+
+    final FeatureChange[] changes = new FeatureChange[5];
+    changes[0] = new FeatureChange( elementFeature, featureType.getProperty( PROP_ROUGHNESS_CLS_ID ), roughnessID );
+    changes[1] = new FeatureChange( elementFeature, featureType.getProperty( PROP_ROUGHNESS_CORRECTION_KS ), correctionParameterKS );
+    changes[2] = new FeatureChange( elementFeature, featureType.getProperty( PROP_ROUGHNESS_CORRECTION_AXAY ), correctionParameterAxAy );
+    changes[3] = new FeatureChange( elementFeature, featureType.getProperty( PROP_ROUGHNESS_CORRECTION_DP ), correctionParameterDP );
+    changes[4] = new FeatureChange( elementFeature, featureType.getProperty( PROP_ROUGHNESS_STYLE ), roughnessStyle );
+    
+    return changes;
+  }
+  
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement#getNodes()

@@ -52,18 +52,14 @@ import java.util.Map;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypso.kalypsomodel1d2d.conv.BoundaryConditionInfo;
 import org.kalypso.kalypsomodel1d2d.conv.BoundaryLineInfo;
 import org.kalypso.kalypsomodel1d2d.conv.INativeIDProvider;
 import org.kalypso.kalypsomodel1d2d.conv.ITimeStepinfo;
 import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtils;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
@@ -79,7 +75,6 @@ import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelRoughnessConsts;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
@@ -105,8 +100,6 @@ import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
 public class RMA10Calculation implements INativeIDProvider
 {
   private GMLWorkspace m_disModelWorkspace = null;
-
-  private GMLWorkspace m_terrainModelWorkspace = null;
 
   private final GMLWorkspace m_operationalModelWorkspace;
 
@@ -171,7 +164,6 @@ public class RMA10Calculation implements INativeIDProvider
     // final GMLWorkspace simResWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID(
     // RMA10SimModelConstants.SIMULATIONRESULTMODEL_ID ), null );
     m_disModelWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( RMA10SimModelConstants.DISCRETISATIOMODEL_ID ), factory );
-    m_terrainModelWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( RMA10SimModelConstants.TERRAINMODEL_ID ), factory );
     m_operationalModelWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( RMA10SimModelConstants.OPERATIONALMODEL_ID ), factory );
     m_flowRelWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( RMA10SimModelConstants.FLOWRELATIONSHIPMODEL_ID ), factory );
     // m_flowResWS = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID(
@@ -187,11 +179,6 @@ public class RMA10Calculation implements INativeIDProvider
   public GMLWorkspace getOperationalModelWorkspace( )
   {
     return m_operationalModelWorkspace;
-  }
-
-  public ITerrainModel getTerrainModel( )
-  {
-    return (ITerrainModel) m_terrainModelWorkspace.getRootFeature().getAdapter( ITerrainModel.class );
   }
 
   public IFlowRelationshipModel getFlowModel( )

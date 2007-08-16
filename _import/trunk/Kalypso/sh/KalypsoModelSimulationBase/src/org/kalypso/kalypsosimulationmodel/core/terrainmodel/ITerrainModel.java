@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
+import java.util.List;
+
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
@@ -64,7 +66,7 @@ public interface ITerrainModel extends IModel
 
   public IRoughnessLayerCollection getRoughnessLayerCollection( );
   
-  public IRoughnessPolygonCollection getRoughnessPolygonCollection( );
+  public List<IRoughnessPolygonCollection> getRoughnessPolygonCollections( );
   
   public IRoughnessPolygonCollection getRoughnessPolygonCollection( final IRoughnessLayer roughnessLayer );
   

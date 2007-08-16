@@ -32,6 +32,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.model.IPseudoOPerationalModel
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IStaticModel1D2D;
 import org.kalypso.kalypsosimulationmodel.core.ICommandPoster;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
+import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.loader.LoaderException;
@@ -42,6 +43,7 @@ import org.kalypso.util.pool.IPoolableObjectType;
 import org.kalypso.util.pool.KeyInfo;
 import org.kalypso.util.pool.PoolableObjectType;
 import org.kalypso.util.pool.ResourcePool;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 import de.renew.workflow.connector.cases.ICaseDataProvider;
@@ -84,10 +86,12 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
   private static final class KeyPoolListener implements IPoolListener
   {
     private final IPoolableObjectType m_key;
+    private final SzenarioController m_controller;
 
-    public KeyPoolListener( final IPoolableObjectType key )
+    public KeyPoolListener( final IPoolableObjectType key, final SzenarioController controller )
     {
       m_key = key;
+      m_controller = controller;
     }
 
     public IPoolableObjectType getKey( )
@@ -129,8 +133,12 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
      */
     public void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status )
     {
-      // TODO Auto-generated method stub
-
+      if( newValue instanceof GMLWorkspace )
+      {
+         final GMLWorkspace workspace = (GMLWorkspace) newValue;
+         final IModel model = (IModel) workspace.getRootFeature().getAdapter( IModel.class );
+         m_controller.modelLoaded( model );
+      }
     }
   }
 
@@ -141,8 +149,12 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
    */
   private final Map<Class< ? extends IFeatureWrapper2>, KeyPoolListener> m_keyMap = new HashMap<Class< ? extends IFeatureWrapper2>, KeyPoolListener>();
 
+  private final SzenarioController m_controller = new SzenarioController();
+  
   public void setCurrent( final IContainer szenarioFolder )
   {
+    m_controller.szenarioChanged(  );
+    
     final Job job = new Job( "" )
     {
       /**
@@ -153,6 +165,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
       {
         try
         {
+          // TODO: do not do this! If something is out of sync, thats a bug!
           if( szenarioFolder != null )
             szenarioFolder.refreshLocal( IFolder.DEPTH_INFINITE, new NullProgressMonitor() );
         }
@@ -239,7 +252,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
       m_keyMap.put( wrapperClass, null );
     else
     {
-      final KeyPoolListener newListener = new KeyPoolListener( newKey );
+      final KeyPoolListener newListener = new KeyPoolListener( newKey, m_controller );
       m_keyMap.put( wrapperClass, newListener );
       pool.addPoolListener( newListener, newKey );
     }

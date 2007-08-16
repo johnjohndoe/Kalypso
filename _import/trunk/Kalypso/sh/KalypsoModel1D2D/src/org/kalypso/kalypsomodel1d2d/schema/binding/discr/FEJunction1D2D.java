@@ -247,4 +247,86 @@ public class FEJunction1D2D<CT extends IFE1D2DComplexElement, ET extends IFE1D2D
 
     }
   }
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#getRoughnessClsID()
+   */
+  public String getRoughnessClsID( )
+  {
+    return getFeature().getProperty( IFE1D2DElement.PROP_ROUGHNESS_CLS_ID ).toString();
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#getRoughnessCorrectionAxAy()
+   */
+  public Double getRoughnessCorrectionAxAy( )
+  {
+    return (Double) getFeature().getProperty( IFE1D2DElement.PROP_ROUGHNESS_CORRECTION_AXAY );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#getRoughnessCorrectionDP()
+   */
+  public Double getRoughnessCorrectionDP( )
+  {
+    return (Double) getFeature().getProperty( IFE1D2DElement.PROP_ROUGHNESS_CORRECTION_DP );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#getRoughnessCorrectionKS()
+   */
+  public Double getRoughnessCorrectionKS( )
+  {
+    return (Double) getFeature().getProperty( IFE1D2DElement.PROP_ROUGHNESS_CORRECTION_KS );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#getRoughnessStyle()
+   */
+  public String getRoughnessStyle( )
+  {
+    return getFeature().getProperty( IFE1D2DElement.PROP_ROUGHNESS_STYLE ).toString();
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#setRoughnessClsID(java.lang.String)
+   */
+  public void setRoughnessClsID( String value )
+  {
+    getFeature().setProperty( IFE1D2DElement.PROP_ROUGHNESS_CLS_ID, value );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#setRoughnessCorrectionAxAy(java.lang.String)
+   */
+  public void setRoughnessCorrectionAxAy( final Double value )
+  {
+    final String gmlValue = (value != null && !value.isNaN()) ? value.toString() : "";
+    getFeature().setProperty( IFE1D2DElement.PROP_ROUGHNESS_CORRECTION_AXAY, gmlValue );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#setRoughnessCorrectionDP(java.lang.String)
+   */
+  public void setRoughnessCorrectionDP( final Double value )
+  {
+    final String gmlValue = (value != null && !value.isNaN()) ? value.toString() : "";
+    getFeature().setProperty( IFE1D2DElement.PROP_ROUGHNESS_CORRECTION_DP, gmlValue );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#setRoughnessCorrectionKS(java.lang.String)
+   */
+  public void setRoughnessCorrectionKS( final Double value )
+  {
+    final String gmlValue = (value != null && !value.isNaN()) ? value.toString() : "";
+    getFeature().setProperty( IFE1D2DElement.PROP_ROUGHNESS_CORRECTION_KS, gmlValue );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#setRoughnessStyle(java.lang.String)
+   */
+  public void setRoughnessStyle( String value )
+  {
+    getFeature().setProperty( IFE1D2DElement.PROP_ROUGHNESS_STYLE, value );
+  }
 }

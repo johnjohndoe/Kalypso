@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -71,11 +74,13 @@ public class TerrainModel extends AbstractFeatureBinder implements ITerrainModel
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel#getRoughnessPolygonCollection()
    */
-  public IRoughnessPolygonCollection getRoughnessPolygonCollection( )
+  public List<IRoughnessPolygonCollection> getRoughnessPolygonCollections( )
   {
+    final List<IRoughnessPolygonCollection> list = new ArrayList<IRoughnessPolygonCollection>();
     final IRoughnessLayerCollection roughnessLayerCollection = getRoughnessLayerCollection();
-    final IRoughnessLayer activeLayer = roughnessLayerCollection.getActiveLayer();
-    return getRoughnessPolygonCollection( activeLayer );
+    for(final IRoughnessLayer layer:roughnessLayerCollection)
+      list.add( getRoughnessPolygonCollection( layer ) );
+    return list;
   }
   
   /**

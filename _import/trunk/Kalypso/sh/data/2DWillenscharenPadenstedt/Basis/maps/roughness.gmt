@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="Cp1252" standalone="yes"?>
-<mapv:gismapview name="Rauheitszonen" xmlns:ns9="types.template.kalypso.org" xmlns:mapv="gismapview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <mapv:extent top="5996741.764955869" srs="EPSG:31467" right="3555214.078498331" left="3543036.1821098356" bottom="5985506.759127444"/>
+<mapv:gismapview name="Rauheitszonen" xmlns:mapv="gismapview.template.kalypso.org" xmlns:templ="types.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <mapv:extent top="5989197.371952096" srs="EPSG:31467" right="3553615.9273359543" left="3552846.9072178463" bottom="5988498.8660843"/>
     <mapv:layers>
-        <mapv:layer visible="true" name="Rauheiten" id="ID_2" featurePath="#fid#RoughnessLayer11709431308431/roughnessLayerMember[RoughnessPolygon]" linktype="gml" xlink:type="simple" xlink:href="../models/terrain.gml" xlink:actuate="onRequest">
-            <ns9:style style="Roughness style" linktype="sld" xlink:type="simple" xlink:href="project:/.metadata/roughness.sld" xlink:actuate="onRequest"/>
-        	<ns9:property name="deleteable">true</ns9:property>
+        <mapv:layer visible="true" name="Basisrauheiten" id="ID_2" featurePath="#fid#RoughnessLayer1187185994250160/roughnessLayerMember[RoughnessPolygon]" linktype="gml" xlink:type="simple" xlink:href="platform:/resource//2DWillenscharenPadenstedt/Basis/models/terrain.gml" xlink:actuate="onRequest">
+            <templ:style style="Roughness style" linktype="sld" xlink:type="simple" xlink:href="project:/.metadata/roughness.sld" xlink:actuate="onRequest"/>
+            <templ:property name="deleteable">true</templ:property>
         </mapv:layer>
     </mapv:layers>
 </mapv:gismapview>
+

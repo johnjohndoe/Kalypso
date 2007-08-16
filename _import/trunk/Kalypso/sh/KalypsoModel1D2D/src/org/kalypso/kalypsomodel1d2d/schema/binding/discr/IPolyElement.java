@@ -40,15 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
-
 /**
  * Interface corresponding to the wb1d2d:PolyElementType in the sim_1d2d_discretisation.xsd
  * 
  * @author Gernot Belger
  */
-public interface IPolyElement<    CT extends IFE1D2DComplexElement, 
-                                  ET extends IFE1D2DEdge>  
-                  extends IElement2D<CT,ET>
+public interface IPolyElement<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge> extends IElement2D<CT, ET>
 {
 
 }

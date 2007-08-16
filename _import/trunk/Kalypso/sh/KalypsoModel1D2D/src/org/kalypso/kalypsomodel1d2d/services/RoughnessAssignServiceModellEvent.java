@@ -38,21 +38,21 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.merge;
+package org.kalypso.kalypsomodel1d2d.services;
+
+import org.kalypso.ogc.gml.command.FeatureChange;
+import org.kalypso.ogc.gml.command.FeatureChangeModellEvent;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
- * @author Patrice Congo
- *
+ * @author antanas
+ * 
  */
-public interface ITest<T>
+public class RoughnessAssignServiceModellEvent extends FeatureChangeModellEvent
 {
-  /**
-   * Check whether the candidate does pass the test
-   * @param candidate the candidate to test
-   * @param true if  the candidate passes the test
-   *            otherwise false
-   * 
-   */
-  public boolean doesPass( T candidate );
-  
+  public RoughnessAssignServiceModellEvent( GMLWorkspace eventSource, FeatureChange[] changes )
+  {
+    super( eventSource, changes );
+  }
+
 }

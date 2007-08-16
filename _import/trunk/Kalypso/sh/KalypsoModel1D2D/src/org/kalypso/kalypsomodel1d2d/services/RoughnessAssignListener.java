@@ -1,0 +1,108 @@
+/*----------------    FILE HEADER KALYPSO ------------------------------------------
+ *
+ *  This file is part of kalypso.
+ *  Copyright (C) 2004 by:
+ * 
+ *  Technical University Hamburg-Harburg (TUHH)
+ *  Institute of River and coastal engineering
+ *  Denickestraﬂe 22
+ *  21073 Hamburg, Germany
+ *  http://www.tuhh.de/wb
+ * 
+ *  and
+ *  
+ *  Bjoernsen Consulting Engineers (BCE)
+ *  Maria Trost 3
+ *  56070 Koblenz, Germany
+ *  http://www.bjoernsen.de
+ * 
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ * 
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ * 
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * 
+ *  Contact:
+ * 
+ *  E-Mail:
+ *  belger@bjoernsen.de
+ *  schlienger@bjoernsen.de
+ *  v.doemming@tuhh.de
+ *   
+ *  ---------------------------------------------------------------------------*/
+package org.kalypso.kalypsomodel1d2d.services;
+
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.core.runtime.jobs.Job;
+import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
+import org.kalypsodeegree.model.feature.event.ModellEventListener;
+
+/**
+ * @author Dejan antanaskovic
+ * @author Gernot Belger
+ */
+public class RoughnessAssignListener implements ModellEventListener
+{
+  private final ITerrainModel m_terrainModel;
+  private final IFEDiscretisationModel1d2d m_discModel;
+  private RoughnessAssignService m_job;
+  
+  private ISchedulingRule m_mutexRule = new MutexRule();
+  
+  public RoughnessAssignListener( final IFEDiscretisationModel1d2d discModel, final ITerrainModel terrainModel )
+  {
+    m_discModel = discModel;
+    m_terrainModel = terrainModel;
+    
+    startJob();
+  }
+
+  private void startJob( )
+  {
+    if( m_job != null)
+      m_job.cancel();
+    
+    m_job = new RoughnessAssignService( "Hello Dejan!", m_terrainModel, m_discModel );
+    
+//    m_job.setSystem( true );
+    m_job.setUser( true );
+    m_job.setPriority( Job.LONG );
+    m_job.setRule( m_mutexRule );
+    m_job.schedule( 500 );
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
+   */
+  public void onModellChange( final ModellEvent modellEvent )
+  {
+    /* If the event comes from the RoughnessAssignSerice, just ignore it*/
+    if( modellEvent instanceof RoughnessAssignServiceModellEvent )
+        return;
+    
+    /* In every other case: refresh the roughnes assignment */
+    startJob();
+  }
+
+  public void dispose( )
+  {
+    if( m_job != null )
+      m_job.cancel();
+    
+    
+    // TODO Auto-generated method stub
+    
+  }
+
+}

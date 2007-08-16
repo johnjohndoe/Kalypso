@@ -79,9 +79,6 @@ import org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation;
 import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
-import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessEstimateSpec;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.model.wspm.tuhh.schema.schemata.IWspmTuhhQIntervallConstants;
 import org.kalypso.simulation.core.SimulationException;
@@ -117,8 +114,6 @@ public class Gml2RMA10SConv implements INativeIDProvider
 
   private final IFEDiscretisationModel1d2d m_discretisationModel1d2d;
 
-  private final ITerrainModel m_terrainModel;
-
   private final IFlowRelationshipModel m_flowrelationModel;
 
   private ICalculationUnit m_calculationUnit;
@@ -141,7 +136,6 @@ public class Gml2RMA10SConv implements INativeIDProvider
   {
     m_outputFile = rma10sOutputFile;
     m_discretisationModel1d2d = calculation.getDiscModel();
-    m_terrainModel = calculation.getTerrainModel();
     m_flowrelationModel = calculation.getFlowModel();
     m_calculationUnit = calculation.getCalculationUnit();
     m_exportRequest = false;
@@ -184,11 +178,10 @@ public class Gml2RMA10SConv implements INativeIDProvider
    * This constructor is intended to use primarily for net exporting purpose, not for calculation (calculation unit is
    * NOT defined)
    */
-  public Gml2RMA10SConv( final File rma10sOutputFile, final IFEDiscretisationModel1d2d discretisationModel1d2d, final ITerrainModel terrainModel, final IFlowRelationshipModel flowrelationModel )
+  public Gml2RMA10SConv( final File rma10sOutputFile, final IFEDiscretisationModel1d2d discretisationModel1d2d, final IFlowRelationshipModel flowrelationModel )
   {
     m_outputFile = rma10sOutputFile;
     m_discretisationModel1d2d = discretisationModel1d2d;
-    m_terrainModel = terrainModel;
     m_flowrelationModel = flowrelationModel;
 
     m_restart = false;
@@ -311,8 +304,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
     /* Made a central formatter with US locale, so no locale parameter for each format is needed any more . */
     final Formatter formatter = new Formatter( stream, Locale.US );
 
-    final IRoughnessPolygonCollection roughnessPolygonCollection = m_terrainModel.getRoughnessPolygonCollection();
-    writeElementsNodesAndEdges( formatter, m_roughnessIDProvider, elements, roughnessPolygonCollection );
+    writeElementsNodesAndEdges( formatter, m_roughnessIDProvider, elements );
     JunctionContextConverter.write( m_discretisationModel1d2d, m_calculationUnit, this, formatter );
   }
 
@@ -537,7 +529,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
    * write elements nodes and edges in a way which avoids the filtering of edges and nodes
    * 
    */
-  private void writeElementsNodesAndEdges( final Formatter formatter, final LinkedHashMap<String, Integer> roughnessIDProvider, final IFeatureWrapperCollection<IFE1D2DElement> elements, final IRoughnessPolygonCollection roughnessPolygonCollection ) throws GM_Exception, SimulationException
+  private void writeElementsNodesAndEdges( final Formatter formatter, final LinkedHashMap<String, Integer> roughnessIDProvider, final IFeatureWrapperCollection<IFE1D2DElement> elements ) throws GM_Exception, SimulationException
   {
     final List<IFE1D2DElement> elementsInBBox = m_exportRequest ? elements : elements.query( m_calcUnitBBox );
     final HashSet<IFE1D2DEdge> edgeSet = new HashSet<IFE1D2DEdge>( elementsInBBox.size() * 2 );
@@ -582,7 +574,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
       else if( element instanceof IPolyElement )
       {
         contributeToSet( element, edgeSet );
-        final int roughnessID = (m_exportRequest && !m_exportRoughness) ? 0 : calculateRoughnessID( roughnessIDProvider, roughnessPolygonCollection, element );
+        final int roughnessID = (m_exportRequest && !m_exportRoughness) ? 0 : calculateRoughnessID( roughnessIDProvider, element );
         formatter.format( "FE%10d%10d%n", id, roughnessID );
       }
     }
@@ -652,15 +644,11 @@ public class Gml2RMA10SConv implements INativeIDProvider
     formatter.format( "VA%10d%20.7f%20.7f%20.7f%20.7f%n", nodeID, vx, vy, node.getDepth(), node.getWaterlevel() );
   }
 
-  private int calculateRoughnessID( final LinkedHashMap<String, Integer> roughnessIDProvider, final IRoughnessPolygonCollection roughnessPolygonCollection, final IFE1D2DElement element ) throws GM_Exception, SimulationException
+  private int calculateRoughnessID( final LinkedHashMap<String, Integer> roughnessIDProvider, final IFE1D2DElement element ) throws SimulationException
   {
-    final IRoughnessEstimateSpec roughnessEstimateSpec = roughnessPolygonCollection.getRoughnessEstimateSpec( element.recalculateElementGeometry() );
-    if( roughnessEstimateSpec != null )
-    {
-      final IRoughnessCls[] cls = roughnessEstimateSpec.mostSpreadRoughness();
-      if( cls.length > 0 && cls[0] != null )
-        return getID( roughnessIDProvider, cls[0].getGmlID() );
-    }
+    final String roughnessClsID = element.getRoughnessClsID();
+    if(roughnessClsID != null)
+        return getID( roughnessIDProvider, roughnessClsID );
     throw new SimulationException( "Keine Rauheitszone gefunden: " + element, null );
   }
 

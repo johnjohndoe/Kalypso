@@ -63,7 +63,6 @@ import org.kalypso.kalypso1d2d.pjt.views.SzenarioDataProvider;
 import org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.ui.KalypsoGisPlugin;
 
@@ -114,9 +113,8 @@ public class ExportWizard extends Wizard implements INewWizard
     {
       final SzenarioDataProvider dataProvider = Kalypso1d2dProjectPlugin.getDefault().getDataProvider();
       final IFEDiscretisationModel1d2d discretisationModel = dataProvider.getModel( IFEDiscretisationModel1d2d.class );
-      final ITerrainModel terrainModel = dataProvider.getModel( ITerrainModel.class );
       final IFlowRelationshipModel flowRelationshipModel = dataProvider.getModel( IFlowRelationshipModel.class );
-      final Gml2RMA10SConv converter = new Gml2RMA10SConv( new File( m_page1.getFilePath() ), discretisationModel, terrainModel, flowRelationshipModel );
+      final Gml2RMA10SConv converter = new Gml2RMA10SConv( new File( m_page1.getFilePath() ), discretisationModel, flowRelationshipModel );
       converter.setExportParameters( true, m_page1.isSelectedExportMiddleNodes(), m_page1.isSelectedExportRoughessData() );
       getContainer().run( true, true, new IRunnableWithProgress()
       {

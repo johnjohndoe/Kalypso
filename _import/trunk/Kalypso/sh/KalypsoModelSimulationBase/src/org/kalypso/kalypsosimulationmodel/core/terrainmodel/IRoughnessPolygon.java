@@ -16,14 +16,24 @@ import org.kalypsodeegree.model.geometry.GM_Object;
  */
 public interface IRoughnessPolygon extends IFeatureWrapper2
 {
-  public final static QName QNAME = new QName( "http://www.opengis.net/gml", "_Feature" );
+  public static final QName QNAME = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "RoughnessPolygon" );
 
-  public static final QName QNAME_PROP_POSITION = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "polygonProperty" );
+  public static final QName SUBSTITUTION_GROUP = new QName( "http://www.opengis.net/gml", "_Feature" );
+
+  public static final QName PROP_POSITION = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "polygonProperty" );
+
+  public static final QName PROP_ROUGHNESS_STYLE = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "roughnessStyle" );
+
+  public static final QName PROP_CORRECTION_KS = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "correction_ks" );
+
+  public static final QName PROP_CORRECTION_AXAY = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "correction_axay" );
+
+  public static final QName PROP_CORRECTION_DP = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "correction_dp" );
 
   /**
-   * Returns the rougthness ID for this polynom
+   * Returns the roughness ID for this polygon
    * 
-   * @return the id of the rougthness associated to the polygon
+   * @return the id of the roughness associated to the polygon
    */
   public String getRoughnessStyle( );
 
@@ -34,9 +44,6 @@ public interface IRoughnessPolygon extends IFeatureWrapper2
    */
   public IRoughnessCls getRoughnessCls();
   
-  /**
-   * 
-   */
   public void setRoughnessClassMember( Feature linkedFeature ) throws IllegalArgumentException;
 
   /**
@@ -62,4 +69,17 @@ public interface IRoughnessPolygon extends IFeatureWrapper2
    * @throws IllegalArgumentException if parameter cannot be converted to GM_MultiSurface 
    */
   public void setSurface( GM_Object object ) throws IllegalArgumentException;
+  
+  public void setCorrectionParameterKS(double value);
+
+  public void setCorrectionParameterAxAy(double value);
+
+  public void setCorrectionParameterDP(double value);
+
+  public Double getCorrectionParameterKS();
+
+  public Double getCorrectionParameterAxAy();
+
+  public Double getCorrectionParameterDP();
+
 }
