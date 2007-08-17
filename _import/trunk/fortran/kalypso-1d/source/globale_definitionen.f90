@@ -42,8 +42,8 @@ implicit none
 
 save
 
-CHARACTER(LEN=29), parameter :: VERSIONNR   = ' KALYPSO-1D, VERSION 2.0.4.4 '
-CHARACTER(LEN=17), parameter :: VERSIONDATE = 'Stand: 15.08.2007'
+CHARACTER(LEN=29), parameter :: VERSIONNR   = ' KALYPSO-1D, VERSION 2.0.5   '
+CHARACTER(LEN=17), parameter :: VERSIONDATE = 'Stand: 17.08.2007'
 
 end module VERSION
 
@@ -304,6 +304,20 @@ REAL, parameter :: c4 = 1.066
 end module BEWUCHS
 
 
+!-----------------------------------------------------------------------------
+module EXTREME_ROUGHNESS
+
+implicit none
+
+save
+
+REAL, parameter :: alpha_t = 6.8
+REAL, parameter :: beta_w = 0.3
+
+end module EXTREME_ROUGHNESS
+
+
+
 !----------------------------------------------------------------------------
 module ZEIT
 
@@ -415,6 +429,7 @@ CHARACTER(LEN=6) :: REIBUNGSVERLUST             ! = TRAPEZ
 
 LOGICAL :: MIT_BRUECKEN
 LOGICAL :: MIT_WEHREN
+LOGICAL :: USE_EXTREM_ROUGH
 
 CHARACTER(LEN=nch80) :: ABFLUSSEREIGNIS
 CHARACTER(LEN=nch80) :: EINZELVERLUSTE

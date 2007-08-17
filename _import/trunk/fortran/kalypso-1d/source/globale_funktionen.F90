@@ -70,6 +70,9 @@ REAL function GET_LAMBDA (v, rhy, ks, f)
 ! ------------------------------------------------------------------------
 
 USE KONSTANTEN
+USE MOD_INI
+USE IO_UNITS
+USE EXTREME_ROUGHNESS
 
 implicit none
 
@@ -78,19 +81,15 @@ REAL, INTENT(IN) 	:: v, rhy, f
 REAL, INTENT(INOUT) 	:: ks
 
 ! Local variables
-REAL    :: Re, lambda, lalt
+REAL :: Re, lalt, Dm
+REAL :: lambda_CW, lambda_AF, lambda_final
+REAL :: f_CW, f_AF
+REAL :: lower_limit, upper_limit
 INTEGER :: i
 
 ! Initialisieren --------------------------------------------------------------------
 lalt = 1000.0   ! Vorheriger Lambda-Wert (fuer Iteration)
 i = 0           ! Zaehler fuer Iterationsschleife
-
-
-! Pruefung der Gueltigkeit ----------------------------------------------------------
-!
-if (ks > (0.4 * rhy) ) then
-  ks = 0.4 * rhy
-end if
 
 
 ! Berechnung ------------------------------------------------------------------------
@@ -112,34 +111,35 @@ IF (Re < 10000.0) THEN           !WP Vorher stand hier Re < 2320
    ! Laminare Strömung
 
    ! Startwert Lambda
-   lambda = ( - 2.03 * log10 (ks / (14.84 * rhy * f) ) ) ** 2.0
-   IF (lambda .eq. 0.0) lambda = 0.0001
-   lambda = 1.0 / lambda
+   lambda_CW = ( - 2.03 * log10 (ks / (14.84 * rhy * f) ) ) ** 2.0
+   IF (lambda_CW .eq. 0.0) lambda_CW = 0.0001
+   lambda_CW = 1.0 / lambda_CW
 
    iteration_lambda: do
 
-  	IF ( ABS((lambda/lalt)-1.0) .LE. 0.001 ) EXIT iteration_lambda
+  	IF ( ABS((lambda_CW/lalt)-1.0) .LE. 0.001 ) EXIT iteration_lambda
 
   	IF ( i >= 50 ) then
           ! no convergence after 50 iterations
-          lambda = 0.10
+          lambda_CW = 0.10
 
-          write (*,1000)
-          1000 format (1X, 'Achtung: Keine Konvergenz bei der Berechnung von LAMBDA!', /, &
+          write (*,9000)
+          write (UNIT_OUT_LOG,9000)
+          9000 format (1X, 'Achtung: Keine Konvergenz bei der Berechnung von LAMBDA!', /, &
                      & 1X, 'Es wird LAMBDA = 0.10 angenommen.')
 
           EXIT iteration_lambda
   	ENDIF
 
    	i = i + 1
-	lalt = lambda
+	lalt = lambda_CW
 
    	! formular by COLEBROOK/WHITE
-   	lambda = ( - 2.03 * log10 (2.51 / (f * Re * SQRT(lalt) ) + ks / (14.84 * rhy * f) ) ) ** 2.0
+   	lambda_CW = ( - 2.03 * log10 (2.51 / (f * Re * SQRT(lalt) ) + ks / (14.84 * rhy * f) ) ) ** 2.0
 
-   	IF (lambda .eq. 0.0) lambda = 0.0001
+   	IF (lambda_CW .eq. 0.0) lambda_CW = 0.0001
 
-   	lambda = 1.0 / lambda
+   	lambda_CW = 1.0 / lambda_CW
 
    end do iteration_lambda
 
@@ -150,15 +150,43 @@ Else
   ! Turbulente Strömung
 
   ! formular by COLEBROOK/WHITE
-  lambda = ( - 2.03 * log10 (ks / (14.84 * rhy * f) ) ) ** 2.0
+  lambda_CW = ( - 2.03 * log10 (ks / (14.84 * rhy * f) ) ) ** 2.0
 
-  IF (lambda .eq. 0.0) lambda = 0.0001
+  IF (lambda_CW .eq. 0.0) lambda_CW = 0.0001
 
-  lambda = 1.0 / lambda
+  lambda_CW = 1.0 / lambda_CW
 
 END IF
 
-GET_LAMBDA = lambda
+upper_limit = 3*ks
+lower_limit = 1*ks
+Dm = ks / 3.0
+
+! Calculation of LAMBDA if using AGUIRRE/FUENTES
+lambda_AF = ( (0.88*beta_w*Dm)/rhy + 2.03 * log10 ( (11.1*rhy)/(alpha_t*Dm) ) ) ** 2.0
+
+IF (lambda_AF <= 0.0001) lambda_AF = 0.0001
+lambda_AF = 1.0 / lambda_AF
+
+! Do transition between Colebrook and Aguirre
+if (rhy > upper_limit) then
+  f_CW = 1.0
+  f_AF = 0.0
+else if (rhy < lower_limit) then
+  f_CW = 0.0
+  f_AF = 1.0
+else
+  f_CW = (rhy-lower_limit)/(upper_limit-lower_limit)  
+  f_AF = 1.0 - f_CW
+end if
+
+lambda_final = f_CW*lambda_CW + f_AF*lambda_AF
+
+!write (*,1000) rhy, lambda_CW, lambda_AF, lambda_final
+!write (UNIT_OUT_LOG,1000) rhy, lambda_CW, lambda_AF, lambda_final
+!1000 format (1X, F10.3, F10.6, F10.6, F10.6)
+
+GET_LAMBDA = lambda_final
 
 !write (*,*) 'GET_LAMBDA erfolgreich. LAMBDA = ', GET_LAMBDA
 

@@ -1712,6 +1712,7 @@ if (RUN_MODUS /= 'KALYPSO') then
 
 end if
 
+USE_EXTREM_ROUGH = .true.
 
 
   !MD  TEST TEST TEST TEST

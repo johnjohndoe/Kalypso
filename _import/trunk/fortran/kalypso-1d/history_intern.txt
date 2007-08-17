@@ -1245,4 +1245,20 @@ Kalypso 2.0.4.4      15. August 2007
      im MS-DOS Fenster der Header der UNIT_OUT_QLAENGS geschrieben.
 
                                                Monika Donner und Wolf Plöger, 15.08.2007 
-                                                         
+
+Kalypso 2.0.5       17. August 2007
+-----------------------------------
+1.)  Erweiterung der Fließwiderstandsberechnung um extrem rauhes Regime. Verwendet
+     wird die Formel nach Aguirre-Pe und Fuentes, wobei zwischen h=0,1*ks und h=0,3*ks
+     eine lineare Übergangsfunktion zwischen Colebrook/White und Aguirre-Pe/Fuentes
+     verwendet wird. (Theorie siehe BWK-Merkblatt 1, S. 25, alpha_t = 6,8, beta_w = 0,3)
+     Es besteht nun keine Begrenzung mehr bei der Wahl des ks-Wertes bei niedrigen
+     Wassertiefen! Das Verfahren nach Aguirre-Pe/Fuentes führt bei niederigen Abflüssen
+     zu größeren Fließwiderständen und damit zu höheren Wasserspiegeln!
+     In einigen Fällen wird die automatische Interpolation von Profilen durch das
+     neue Verfahren unterbunden/überflüssig!
+     Berechnung wird durch den LOGICAL USE_EXTREME_ROUGH in WSP aktiviert bzw. deaktiviert.
+     Ist jetzt standardmäßig aktiviert, könnte in Zukunft durch Oberfläche gesteuert werden?
+     Die Parameter alpha_t und beta_w liegen in einem neuen Modul.
+
+                                                           Wolf Plöger, 17.08.2007 

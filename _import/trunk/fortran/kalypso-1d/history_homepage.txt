@@ -385,4 +385,17 @@ Kalypso 2.0.4.4      15. August 2007
      
 2.)  Bugfix: Ausgabe im MS-DOS Fenster.
 
-                                                       Wolf Plöger, 15.08.2007                                                          
+                                                       Wolf Plöger, 15.08.2007
+
+Kalypso 2.0.5       17. August 2007
+-----------------------------------
+1.)  Erweiterung der Fließwiderstandsberechnung um extrem rauhes Regime. Verwendet
+     wird die Formel nach Aguirre-Pe und Fuentes, wobei zwischen h=0,1*ks und h=0,3*ks
+     eine lineare Übergangsfunktion zwischen Colebrook/White und Aguirre-Pe/Fuentes
+     verwendet wird.
+     Es besteht nun keine Begrenzung mehr bei der Wahl des ks-Wertes bei niedrigen
+     Wassertiefen! Das Verfahren nach Aguirre-Pe/Fuentes führt bei niederigen Abflüssen
+     zu größeren Fließwiderständen und damit zu höheren Wasserspiegeln!
+
+                                                           Wolf Plöger, 17.08.2007 
+                                                          
