@@ -750,7 +750,7 @@ public class AssignNodeElevationFaceComponent
         elevation = elevationProvider.getElevation( node.getPoint() );
         changePosCmd = new ChangeNodePositionCommand( model1d2d, node, elevation );
         changePosCmd.process();
-        compositeCommand.addCommand( changePosCmd );
+        compositeCommand.addCommand( changePosCmd, null );
       }
     }
 

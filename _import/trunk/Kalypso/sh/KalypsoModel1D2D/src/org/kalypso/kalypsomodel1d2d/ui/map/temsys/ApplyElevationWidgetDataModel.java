@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.temsys;
 
@@ -100,15 +100,15 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
     m_dataProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
   }
 
-  public void setMapModell( IMapModell mapModell )
+  public void setMapModell( final IMapModell mapModell )
   {
-// this.mapModell = mapModell;
+    // this.mapModell = mapModell;
     setData( IMapModell.class.toString(), mapModell );
   }
 
   public IMapModell getMapModell( )
   {
-// return mapModell;
+    // return mapModell;
     return (IMapModell) getData( IMapModell.class.toString() );
   }
 
@@ -118,111 +118,112 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
     {
       return m_dataProvider.getModel( IFEDiscretisationModel1d2d.class );
     }
-    catch( CoreException e )
+    catch( final CoreException e )
     {
       e.printStackTrace();
     }
     return null;
-// return discretisationModel;
-//    return (IFEDiscretisationModel1d2d) getData( IFEDiscretisationModel1d2d.class.toString() );
+    // return discretisationModel;
+    // return (IFEDiscretisationModel1d2d) getData( IFEDiscretisationModel1d2d.class.toString() );
   }
-  
-  public CommandableWorkspace getDiscretisationModelWorkspace() {
+
+  public CommandableWorkspace getDiscretisationModelWorkspace( )
+  {
     try
     {
-      return ((ICommandPoster)m_dataProvider).getCommandableWorkSpace( IFEDiscretisationModel1d2d.class );
+      return ((ICommandPoster) m_dataProvider).getCommandableWorkSpace( IFEDiscretisationModel1d2d.class );
     }
-    catch( IllegalArgumentException e )
+    catch( final IllegalArgumentException e )
     {
       e.printStackTrace();
     }
-    catch( CoreException e )
+    catch( final CoreException e )
     {
       e.printStackTrace();
     }
     return null;
   }
 
-//  public void setDiscretisationModel( IFEDiscretisationModel1d2d discretisationModel )
-//  {
-//// this.discretisationModel = discretisationModel;
-//    setData( IFEDiscretisationModel1d2d.class.toString(), discretisationModel );
-//  }
+  // public void setDiscretisationModel( IFEDiscretisationModel1d2d discretisationModel )
+  // {
+  // // this.discretisationModel = discretisationModel;
+  // setData( IFEDiscretisationModel1d2d.class.toString(), discretisationModel );
+  // }
 
   public ITerrainElevationModel getElevationModel( )
   {
-// return elevationModel;
+    // return elevationModel;
     return (ITerrainElevationModel) getData( ITerrainElevationModel.class.toString() );
   }
 
-  public void setElevationModel( ITerrainElevationModel elevationModel )
+  public void setElevationModel( final ITerrainElevationModel elevationModel )
   {
-// this.elevationModel = elevationModel;
+    // this.elevationModel = elevationModel;
     setData( ITerrainElevationModel.class.toString(), elevationModel );
   }
 
   public ITerrainElevationModelSystem getElevationModelSystem( )
   {
-// return elevationModelSystem;
+    // return elevationModelSystem;
     return (ITerrainElevationModelSystem) getData( ITerrainElevationModelSystem.class.toString() );
   }
 
-  public void setElevationModelSystem( ITerrainElevationModelSystem elevationModelSystem )
+  public void setElevationModelSystem( final ITerrainElevationModelSystem elevationModelSystem )
   {
-// this.elevationModelSystem = elevationModelSystem;
+    // this.elevationModelSystem = elevationModelSystem;
     setData( ITerrainElevationModelSystem.class.toString(), elevationModelSystem );
   }
 
   public List<IFE1D2DNode> getSelectedNode( )
   {
-// if (this.discretisationModel == null)
-// return new ArrayList<IFE1D2DNode>();
-// else
-// {
-// ArrayList<IFE1D2DNode> fakeSelection =
-// new ArrayList<IFE1D2DNode>( this.discretisationModel.getNodes());
-// selectedNode=fakeSelection;
-// return selectedNode;
-// }
+    // if (this.discretisationModel == null)
+    // return new ArrayList<IFE1D2DNode>();
+    // else
+    // {
+    // ArrayList<IFE1D2DNode> fakeSelection =
+    // new ArrayList<IFE1D2DNode>( this.discretisationModel.getNodes());
+    // selectedNode=fakeSelection;
+    // return selectedNode;
+    // }
     return (List<IFE1D2DNode>) getData( SELECTED_NODE_KEY );
 
   }
 
-  public void setSelectedNode( List<IFE1D2DNode> selectedNode )
+  public void setSelectedNode( final List<IFE1D2DNode> selectedNode )
   {
     setData( SELECTED_NODE_KEY, selectedNode );
-// this.selectedNode = selectedNode;
+    // this.selectedNode = selectedNode;
   }
 
   public GM_Polygon getSelectionArea( )
   {
-// return selectionArea;
+    // return selectionArea;
     return (GM_Polygon) getData( GM_Polygon.class.toString() );
   }
 
-  public void setSelectionArea( GM_Polygon selectionArea )
+  public void setSelectionArea( final GM_Polygon selectionArea )
   {
-// this.selectionArea = selectionArea;
+    // this.selectionArea = selectionArea;
     setData( GM_Polygon.class.toString(), selectionArea );
   }
 
   public ITerrainModel getTerrainModel( )
   {
-// return terrainModel;
+    // return terrainModel;
     return (ITerrainModel) getData( ITerrainModel.class.toString() );
   }
 
-  public void setTerrainModel( ITerrainModel terrainModel )
+  public void setTerrainModel( final ITerrainModel terrainModel )
   {
-// this.terrainModel = terrainModel;
-// if(terrainModel!=null)
-// {
-// this.elevationModelSystem = terrainModel.getTerrainElevationModelSystem();
-// }
-// else
-// {
-// this.elevationModelSystem = null;
-// }
+    // this.terrainModel = terrainModel;
+    // if(terrainModel!=null)
+    // {
+    // this.elevationModelSystem = terrainModel.getTerrainElevationModelSystem();
+    // }
+    // else
+    // {
+    // this.elevationModelSystem = null;
+    // }
     setData( ITerrainModel.class.toString(), terrainModel );
   }
 
@@ -232,7 +233,7 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
     return (IKalypsoFeatureTheme) getData( ELEVATION_THEME );
   }
 
-  public void setElevationTheme( IKalypsoFeatureTheme elevationTheme )
+  public void setElevationTheme( final IKalypsoFeatureTheme elevationTheme )
   {
     // this.elevationTheme = elevationTheme;
     setData( ELEVATION_THEME, elevationTheme );
@@ -240,11 +241,11 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
 
   public MapPanel getMapPanel( )
   {
-// return mapPanel;
+    // return mapPanel;
     return (MapPanel) getData( MapPanel.class.toString() );
   }
 
-  public void setMapPanel( MapPanel mapPanel )
+  public void setMapPanel( final MapPanel mapPanel )
   {
     mapPanel.getSelectionManager().addSelectionListener( this );
     setData( MapPanel.class.toString(), mapPanel );
@@ -253,17 +254,17 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
   /**
    * @see org.kalypso.ogc.gml.selection.IFeatureSelectionListener#selectionChanged(org.kalypso.ogc.gml.selection.IFeatureSelection)
    */
-  public void selectionChanged( IFeatureSelection selection )
+  public void selectionChanged( final IFeatureSelection selection )
   {
     // TODO pat maybe get th list from dataModel
     if( ignoreMapSelection )
     {
       return;
     }
-    List<IFE1D2DNode> nodes = new ArrayList<IFE1D2DNode>();
-    for( EasyFeatureWrapper wrapper : selection.getAllFeatures() )
+    final List<IFE1D2DNode> nodes = new ArrayList<IFE1D2DNode>();
+    for( final EasyFeatureWrapper wrapper : selection.getAllFeatures() )
     {
-      Feature feature = wrapper.getFeature();
+      final Feature feature = wrapper.getFeature();
       if( TypeInfo.isNode( feature ) )
       {
         nodes.add( (IFE1D2DNode) feature.getAdapter( IFE1D2DNode.class ) );
@@ -273,7 +274,7 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
     setSelectedNode( nodes );
   }
 
-  public void setIgnoreMapSelection( boolean ignoreMapSelection )
+  public void setIgnoreMapSelection( final boolean ignoreMapSelection )
   {
     this.ignoreMapSelection = ignoreMapSelection;
   }
@@ -285,21 +286,20 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
 
   public final IFeatureWrapperCollection<ITerrainElevationModel> getTerrainElevationModels( )
   {
-    ITerrainModel terrainModel = getTerrainModel();
+    final ITerrainModel terrainModel = getTerrainModel();
     if( terrainModel == null )
     {
       return null;
     }
 
-    ITerrainElevationModelSystem elevationModelSystem = terrainModel.getTerrainElevationModelSystem();
+    final ITerrainElevationModelSystem elevationModelSystem = terrainModel.getTerrainElevationModelSystem();
     if( elevationModelSystem == null )
     {
       return null;
     }
     else
     {
-
-      IFeatureWrapperCollection<ITerrainElevationModel> terrainElevationModels = elevationModelSystem.getTerrainElevationModels();
+      final IFeatureWrapperCollection<ITerrainElevationModel> terrainElevationModels = elevationModelSystem.getTerrainElevationModels();
       return terrainElevationModels;
     }
   }

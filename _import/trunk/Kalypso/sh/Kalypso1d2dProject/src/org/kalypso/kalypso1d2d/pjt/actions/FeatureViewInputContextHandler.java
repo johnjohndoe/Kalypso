@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.kalypso.kalypso1d2d.pjt.actions;
 
@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.kalypso.kalypso1d2d.pjt.views.SzenarioDataProvider;
 import org.kalypso.ui.editor.featureeditor.FeatureTemplateView;
@@ -29,7 +30,7 @@ import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
  */
 public class FeatureViewInputContextHandler extends AbstractHandler implements IExecutableExtension
 {
-  public static final String FEATUREVIEW_INPUT = "org.kalypso.kalypso1d2d.pjt.contexts.featureViewInput";  //$NON-NLS-1$
+  public static final String FEATUREVIEW_INPUT = "org.kalypso.kalypso1d2d.pjt.contexts.featureViewInput"; //$NON-NLS-1$
 
   private String m_featureViewInput;
 
@@ -57,7 +58,8 @@ public class FeatureViewInputContextHandler extends AbstractHandler implements I
       file = folder.getFile( m_featureViewInput );
 
     final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
-    final IViewPart view = window.getActivePage().findView( FeatureTemplateView.ID );
+    final IWorkbenchPage page = window == null ? null : window.getActivePage();
+    final IViewPart view = page == null ? null : page.findView( FeatureTemplateView.ID );
 
     if( file != null && file.exists() && view != null && view instanceof FeatureTemplateView )
     {

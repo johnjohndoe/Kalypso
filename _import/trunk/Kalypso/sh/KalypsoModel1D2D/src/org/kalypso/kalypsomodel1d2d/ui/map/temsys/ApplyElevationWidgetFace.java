@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.temsys;
 
@@ -46,13 +46,10 @@ import java.util.List;
 import org.eclipse.jface.preference.ColorSelector;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.IContentProvider;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
@@ -62,7 +59,6 @@ import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -73,14 +69,11 @@ import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModel;
 import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionListener;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
  * 
@@ -90,10 +83,10 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 class ApplyElevationWidgetFace
 {
   static int index = 0;
-  private Composite rootPanel;
-  private FormToolkit toolkit;
 
-  private ListViewer areaViewer;
+  private Composite rootPanel;
+
+  private FormToolkit toolkit;
 
   private Section elevationSelectStatus;
 
@@ -101,16 +94,13 @@ class ApplyElevationWidgetFace
 
   static private IPreferenceStore preferenceStore = KalypsoModel1D2DPlugin.getDefault().getPreferenceStore();
 
-  private IPropertyChangeListener storePropertyChangeListener = createPropertyChangeLis();
+  private final IPropertyChangeListener storePropertyChangeListener = createPropertyChangeLis();
 
-  private ApplyElevationWidgetDataModel dataModel;
+  private final ApplyElevationWidgetDataModel m_dataModel;
 
-  
   private Section elevationColorSection;
- // private SimpleElevationColorModel colorModel;
 
-  
-  private IFeatureSelectionListener featureSelectionListener = new IFeatureSelectionListener()
+  private final IFeatureSelectionListener featureSelectionListener = new IFeatureSelectionListener()
   {
 
     @SuppressWarnings("synthetic-access") //$NON-NLS-1$
@@ -125,109 +115,90 @@ class ApplyElevationWidgetFace
         return;
       }
 
-      if( selection instanceof IStructuredSelection )
+      final List<IFE1D2DNode> nodeList = new ArrayList<IFE1D2DNode>();
+      Feature selecFeature = null;
+      IFE1D2DNode selecNode = null;
+      for( Object selected : selection.toList() )
       {
-
-        final List<IFE1D2DNode> nodeList = new ArrayList<IFE1D2DNode>();
-        Feature selecFeature = null;
-        IFE1D2DNode selecNode = null;
-        for( Object selected : selection.toList() )
+        if( selected instanceof Feature )
         {
-          if( selected instanceof Feature )
-          {
-            selecFeature = (Feature) selected;
-          }
-          else if( selected instanceof EasyFeatureWrapper )
-          {
-            selecFeature = ((EasyFeatureWrapper) selected).getFeature();
-          }
-
-          if( selecFeature != null )
-          {
-            selecNode = (IFE1D2DNode) selecFeature.getAdapter( IFE1D2DNode.class );
-            if( selecNode != null )
-            {
-              nodeList.add( selecNode );
-            }
-          }
-
+          selecFeature = (Feature) selected;
         }
-        // IFE1D2DNode[] nodes = new IFE1D2DNode[]{};
-
-        try
+        else if( selected instanceof EasyFeatureWrapper )
         {
+          selecFeature = ((EasyFeatureWrapper) selected).getFeature();
+        }
 
-          IWorkbench workbench = PlatformUI.getWorkbench();
-
-          nodeElevationViewer.getControl().getDisplay().syncExec( new Runnable()
+        if( selecFeature != null )
+        {
+          selecNode = (IFE1D2DNode) selecFeature.getAdapter( IFE1D2DNode.class );
+          if( selecNode != null )
           {
+            nodeList.add( selecNode );
+          }
+        }
 
-            public void run( )
+      }
+
+      try
+      {
+        IWorkbench workbench = PlatformUI.getWorkbench();
+
+        nodeElevationViewer.getControl().getDisplay().syncExec( new Runnable()
+        {
+          public void run( )
+          {
+            IContentProvider cp = nodeElevationViewer.getContentProvider();
+            if( cp instanceof ArrayContentProvider )
             {
-              IContentProvider cp = nodeElevationViewer.getContentProvider();
-              if( cp instanceof ArrayContentProvider )
-              {
-                // because it is complaining about content provider not set
-                nodeElevationViewer.setContentProvider( new ArrayContentProvider() );
-              }
-              else
-              {
-                nodeElevationViewer.setContentProvider( new ArrayContentProvider() );
-              }
-              nodeElevationViewer.setInput( nodeList.toArray( new IFE1D2DNode[] {} ) );
+              // because it is complaining about content provider not set
+              nodeElevationViewer.setContentProvider( new ArrayContentProvider() );
             }
+            else
+            {
+              nodeElevationViewer.setContentProvider( new ArrayContentProvider() );
+            }
+            nodeElevationViewer.setInput( nodeList.toArray( new IFE1D2DNode[] {} ) );
+          }
 
-          } );
+        } );
 
-          IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
-          if( activeWorkbenchWindow == null )
-          {
+        IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
+        if( activeWorkbenchWindow == null )
+        {
             System.out.println( Messages.getString("ApplyElevationWidgetFace.1") ); //$NON-NLS-1$
-            return;
-          }
-
-        }
-        catch( Throwable th )
-        {
-          th.printStackTrace();
+          return;
         }
 
+      }
+      catch( Throwable th )
+      {
+        th.printStackTrace();
       }
     }
 
   };
 
-  private TableViewer elevationListTableViewer;
   private ColorModelChangeComponent colorModelChangeComponent;
+
   private ElevationModelSystemEditorComponent eleSystemEditorComponent;
 
-
-
-  private IFeatureWrapperCollection<ITerrainElevationModel> terrainElevationModels;
-
-
-  public ApplyElevationWidgetFace( )
+  public ApplyElevationWidgetFace( final ApplyElevationWidgetDataModel dataModel )
   {
-    
+    m_dataModel = dataModel;
   }
 
-  public ApplyElevationWidgetFace( ApplyElevationWidgetDataModel dataModel )
+  public Control createControl( final Composite parent )
   {
-    this.dataModel = dataModel;
-  }
-
-  public Control createControl( Composite parent )
-  {
-    this.dataModel.getMapPanel().getSelectionManager().addSelectionListener( featureSelectionListener );
+    this.m_dataModel.getMapPanel().getSelectionManager().addSelectionListener( featureSelectionListener );
     preferenceStore.addPropertyChangeListener( storePropertyChangeListener );
     initStoreDefaults();
 
-    
     parent.setLayout( new FillLayout() );
     rootPanel = new Composite( parent, SWT.FILL );
     rootPanel.setLayout( new FillLayout() );
     toolkit = new FormToolkit( parent.getDisplay() );
-    ScrolledForm scrolledForm = toolkit.createScrolledForm( rootPanel );
+    final ScrolledForm scrolledForm = toolkit.createScrolledForm( rootPanel );
 
     TableWrapData tableWrapData;
 
@@ -254,19 +225,18 @@ class ApplyElevationWidgetFace
 
     // Creates Section to Configure the Color for Different Elevations
     elevationColorSection = toolkit.createSection( scrolledForm.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
-    elevationColorSection.setText( 
-          Messages.getString("ApplyElevationWidgetFace.4") //$NON-NLS-1$
-        //"Select Colors for MAX Elevation and MIN Elevation " 
-        );
+    elevationColorSection.setText( Messages.getString("ApplyElevationWidgetFace.4") //$NON-NLS-1$
+    // "Select Colors for MAX Elevation and MIN Elevation "
+    );
     // elevationColorSection.addPaintListener( drawListener );
 
     tableWrapData = new TableWrapData();// TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
     tableWrapData.grabHorizontal = true;
     tableWrapData.grabVertical = true;
-    tableWrapData.heightHint = 282;//168
+    tableWrapData.heightHint = 282;// 168
     tableWrapData.align = TableWrapData.FILL_GRAB;
     elevationColorSection.setLayoutData( tableWrapData );
-    
+
     elevationColorSection.setExpanded( false );
     elevationColorSection.setEnabled( true );
 
@@ -276,7 +246,7 @@ class ApplyElevationWidgetFace
     return rootPanel;
   }
 
-  private void createSelectColor( Section elevationColorConfig )
+  private void createSelectColor( final Section elevationColorConfig )
   {
     elevationColorConfig.setLayout( new GridLayout() );
 
@@ -284,29 +254,26 @@ class ApplyElevationWidgetFace
     elevationColorConfig.setClient( clientComposite );
 
     colorModelChangeComponent = new ColorModelChangeComponent();
-    colorModelChangeComponent.createControl( dataModel, toolkit, clientComposite );
+    colorModelChangeComponent.createControl( m_dataModel, toolkit, clientComposite );
   }
 
-
-  private final void createSelectElevationModel( Section workStatusSection )
+  private final void createSelectElevationModel( final Section workStatusSection )
   {
     workStatusSection.setLayout( new FillLayout() );
 
-    Composite clientComposite = toolkit.createComposite( workStatusSection, SWT.FLAT );
+    final Composite clientComposite = toolkit.createComposite( workStatusSection, SWT.FLAT );
     workStatusSection.setClient( clientComposite );
     // clientComposite.setSize( 400, 300 );
-    FormLayout formLayout = new FormLayout();
+    final FormLayout formLayout = new FormLayout();
     clientComposite.setLayout( formLayout );
-    FormData formData = new FormData();
+    final FormData formData = new FormData();
     formData.left = new FormAttachment( 0, 5 );
     formData.top = new FormAttachment( 0, 5 );
     formData.bottom = new FormAttachment( 100, 5 );
     clientComposite.setLayoutData( formData );
-    eleSystemEditorComponent= new ElevationModelSystemEditorComponent();
-    eleSystemEditorComponent.createControl( dataModel, toolkit, clientComposite );
-
+    eleSystemEditorComponent = new ElevationModelSystemEditorComponent();
+    eleSystemEditorComponent.createControl( m_dataModel, clientComposite );
   }
-
 
   public void disposeControl( )
   {
@@ -321,70 +288,61 @@ class ApplyElevationWidgetFace
       rootPanel.dispose();
       toolkit.dispose();
     }
-    MapPanel mapPanel = dataModel.getMapPanel();
+    final MapPanel mapPanel = m_dataModel.getMapPanel();
     if( mapPanel != null )
     {
       mapPanel.getSelectionManager().addSelectionListener( featureSelectionListener );
     }
-    
-    if(colorModelChangeComponent!=null)
+
+    if( colorModelChangeComponent != null )
     {
       colorModelChangeComponent.dispose();
     }
   }
-  
-  private IntegerFieldEditor handleWidth;
 
-  public static final String HANDLE_WIDTH_NAME = "x.handleWidth"; //$NON-NLS-1$
+  public static final String HANDLE_WIDTH_NAME = "x.handleWidth";//$NON-NLS-1$
 
-  private List selectionNodeList;
-
-  private Table table;
-  
   private AssignNodeElevationFaceComponent assignNodeElevationFaceComponent;
+
   private TableViewer nodeElevationViewer;
+
   private void initStoreDefaults( )
   {
-
     if( !preferenceStore.contains( HANDLE_WIDTH_NAME ) )
     {
       preferenceStore.setDefault( HANDLE_WIDTH_NAME, 6 );
       preferenceStore.setValue( HANDLE_WIDTH_NAME, 6 );
     }
   }
-  
-  private void createSelectRegion( Section configSection )
+
+  private void createSelectRegion( final Section configSection )
   {
     configSection.setLayout( new FillLayout() );
 
-    Composite clientComposite = toolkit.createComposite( configSection, SWT.FLAT );
+    final Composite clientComposite = toolkit.createComposite( configSection, SWT.FLAT );
     configSection.setClient( clientComposite );
 
-    FormLayout selectRegionFormLayout = new FormLayout();
+    final FormLayout selectRegionFormLayout = new FormLayout();
     clientComposite.setLayout( selectRegionFormLayout );
 
-    FormData formData = new FormData();
+    final FormData formData = new FormData();
     formData.left = new FormAttachment( 0, 5 );
     formData.top = new FormAttachment( 0, 5 );
     formData.bottom = new FormAttachment( 100, 0 );
     clientComposite.setLayoutData( formData );
-//    guiCreateSelectRegion(clientComposite);
-    assignNodeElevationFaceComponent= new AssignNodeElevationFaceComponent();
-    assignNodeElevationFaceComponent.createControl( dataModel, toolkit, clientComposite );
+    // guiCreateSelectRegion(clientComposite);
+    assignNodeElevationFaceComponent = new AssignNodeElevationFaceComponent();
+    assignNodeElevationFaceComponent.createControl( m_dataModel, toolkit, clientComposite );
   }
-
-
 
   private IPropertyChangeListener createPropertyChangeLis( )
   {
     return new IPropertyChangeListener()
     {
 
-      public void propertyChange( PropertyChangeEvent event )
+      public void propertyChange( final PropertyChangeEvent event )
       {
-        Object source = event.getSource();
-        String property = event.getProperty();
-
+        final Object source = event.getSource();
         if( source instanceof FieldEditor )
         {
           ((FieldEditor) source).store();
@@ -399,44 +357,5 @@ class ApplyElevationWidgetFace
       }
 
     };
-  }
-
-  // TODO patrice use scheduling rule to wait for map load
-  // See OpenMapViewCommand
-  private static final void waitOnMap( IMapModell mapModell, MapPanel mapPanel )
-  {
-    // final Job job =
-    // new Job("Wait on map start")
-    // {
-    // @Override
-    // protected IStatus run( final IProgressMonitor monitor )
-    // {
-    // final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
-    // if( activeTheme != null && m_featureType.equals( NO_LAYER ) )
-    // {
-    // mapModell.activateTheme( null );
-    // }
-    // else if( !m_featureType.equals( activeTheme != null ? activeTheme.getContext() : null ) )
-    // {
-    // final IKalypsoTheme[] allThemes = mapModell.getAllThemes();
-    // for( final IKalypsoTheme theme : allThemes )
-    // {
-    // if( !theme.isLoaded() )
-    // {
-    // theme.addKalypsoThemeListener( OpenMapViewCommandHandler.this );
-    // }
-    // else
-    // {
-    // maybeActivateTheme( theme );
-    // }
-    // }
-    // }
-    // return Status.OK_STATUS;
-    // }
-    // };
-    // job.setRule( mapPanel.getSchedulingRule().getActivateLayerSchedulingRule() );
-    // job.setUser( true );
-    // job.schedule();
-
   }
 }
