@@ -77,7 +77,7 @@ public class TestMultiPoint extends TestCase
 				workspace.getRootFeature();	
 			//gml:FeatureCollection 
 			QName featureMember= 
-					new QName(NS.GML3,"featureMember");
+					new QName(NS.GML3,"featureMember"); //$NON-NLS-1$
 			MultiPoint mp=
 				new MultiPoint(
 						root,

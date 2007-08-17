@@ -94,7 +94,7 @@ public class ImportProfileHandler extends AbstractHandler
     }
     catch( final CoreException e )
     {
-      throw new ExecutionException( "Could not get terrain model", e );
+      throw new ExecutionException( Messages.getString("ImportProfileHandler.0"), e ); //$NON-NLS-1$
     }
 
     /* Import Reach into Terrain-Model */
@@ -112,7 +112,7 @@ public class ImportProfileHandler extends AbstractHandler
     try
     {
       /* post empty command(s) in order to make pool dirty. */
-      ((SzenarioDataProvider) modelProvider).postCommand( ITerrainModel.class, new EmptyCommand( "Profile importieren", false ) );
+      ((SzenarioDataProvider) modelProvider).postCommand( ITerrainModel.class, new EmptyCommand( Messages.getString("ImportProfileHandler.1"), false ) ); //$NON-NLS-1$
     }
     catch( final Exception e )
     {
@@ -135,7 +135,7 @@ public class ImportProfileHandler extends AbstractHandler
         final FeaturePath profilesPath = new FeaturePath( networkPath, IRiverProfileNetwork.QNAME_PROP_RIVER_PROFILE.getLocalPart() );
         final String source = terrainModel.getWrappedFeature().getWorkspace().getContext().toString();
         // TODO: aktivates the theme, is this ok?
-        final AddThemeCommand command = new AddThemeCommand( mapModell, network.getName(), "gml", profilesPath.toString(), source );
+        final AddThemeCommand command = new AddThemeCommand( mapModell, network.getName(), "gml", profilesPath.toString(), source );  //$NON-NLS-1$
         mapView.postCommand( command, null );
 
         /* Zoom to new profiles in fe-map? */
@@ -145,7 +145,7 @@ public class ImportProfileHandler extends AbstractHandler
       }
     }
     else
-      throw new ExecutionException( "Kartenansicht nicht geöffnet. Es können keine Themen hinzugefügt werden." );
+      throw new ExecutionException( Messages.getString("ImportProfileHandler.3") ); //$NON-NLS-1$
 
     return Status.OK_STATUS;
   }

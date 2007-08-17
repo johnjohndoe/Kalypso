@@ -42,7 +42,7 @@ public class TestFeatureWrapperCollection extends TestCase
 									IRoughnessClsCorrection.class,
 									TestWorkspaces.GML_PROP_FEATURE_MEMBER);
 		assertEquals(2, fwc.size());
-		String uris[]={"cor1","cor2"};
+		String uris[]={"cor1","cor2"}; //$NON-NLS-1$ //$NON-NLS-2$
 		assertEquals(uris[0],fwc.get(0).getURI());
 		assertEquals(uris[1],fwc.get(1).getURI());
 		

@@ -256,7 +256,7 @@ public abstract class AbstractSelectFlowrelationWidget extends AbstractWidget
             public void run( )
             {
               final Shell shell = display.getActiveShell();
-              ErrorDialog.openError( shell, getName(), "Fehler beim Hinzufügen eines Parameters", status );
+              ErrorDialog.openError( shell, getName(), Messages.getString("AbstractSelectFlowrelationWidget.0"), status ); //$NON-NLS-1$
             }
           } );
         }
@@ -277,7 +277,7 @@ public abstract class AbstractSelectFlowrelationWidget extends AbstractWidget
   {
     final String problemMessage;
     if( m_foundFeature == null )
-      problemMessage = "Kein Feature gefunden.";
+      problemMessage = Messages.getString("AbstractSelectFlowrelationWidget.1"); //$NON-NLS-1$
     else
       problemMessage = null;
 
@@ -314,7 +314,7 @@ public abstract class AbstractSelectFlowrelationWidget extends AbstractWidget
         public void run( )
         {
           final Shell shell = display.getActiveShell();
-          ErrorDialog.openError( shell, getName(), "Selektion konnte nicht durchgeführt werden", status );
+          ErrorDialog.openError( shell, getName(), Messages.getString("AbstractSelectFlowrelationWidget.2"), status ); //$NON-NLS-1$
         }
       } );
     }

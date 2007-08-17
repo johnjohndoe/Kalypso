@@ -48,8 +48,8 @@ import org.kalypso.contribs.eclipse.core.runtime.Debug;
  */
 public class KalypsoModel1D2DDebug
 {
-  public static Debug SIMULATIONRESULT = new Debug( KalypsoModel1D2DPlugin.getDefault(), "/debug/simulation1d2d/results" );
+  public static Debug SIMULATIONRESULT = new Debug( KalypsoModel1D2DPlugin.getDefault(), "/debug/simulation1d2d/results" ); //$NON-NLS-1$
 
-  public static Debug TRIANGLEEATER = new Debug( KalypsoModel1D2DPlugin.getDefault(), "/debug/simulation1d2d/triangleeater" );
+  public static Debug TRIANGLEEATER = new Debug( KalypsoModel1D2DPlugin.getDefault(), "/debug/simulation1d2d/triangleeater" ); //$NON-NLS-1$
 
 }

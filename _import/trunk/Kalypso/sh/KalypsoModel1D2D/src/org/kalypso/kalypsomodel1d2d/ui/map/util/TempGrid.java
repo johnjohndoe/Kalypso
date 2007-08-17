@@ -143,7 +143,7 @@ public class TempGrid
   public void setCoodinateSystem (final CS_CoordinateSystem targetCrs )
                                   throws IllegalArgumentException
   {
-      Assert.throwIAEOnNullParam( targetCrs, "targetCrs" );
+      Assert.throwIAEOnNullParam( targetCrs, "targetCrs" ); //$NON-NLS-1$
        this.m_crs = targetCrs;
   }
 
@@ -338,10 +338,10 @@ public class TempGrid
           LinePointCollector leftSidePoints, 
           LinePointCollector rightSidePoints) throws GM_Exception
   {
-    Assert.throwIAEOnNullParam( topSidePoints, "topSidePoints" );
-    Assert.throwIAEOnNullParam( bottomSidePoints, "bottomSidePoints" );
-    Assert.throwIAEOnNullParam( leftSidePoints, "leftSidePoints" );
-    Assert.throwIAEOnNullParam( leftSidePoints, "leftSidePoints" );
+    Assert.throwIAEOnNullParam( topSidePoints, "topSidePoints" ); //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( bottomSidePoints, "bottomSidePoints" ); //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( leftSidePoints, "leftSidePoints" ); //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( leftSidePoints, "leftSidePoints" ); //$NON-NLS-1$
     this.gridPoints=
         computeMesh( 
               topSidePoints, 
@@ -421,7 +421,7 @@ public class TempGrid
     final int DIM_X=points2D.length;
     if(DIM_X==0)
     {
-      System.out.println("DimX is null");
+      System.out.println("DimX is null"); //$NON-NLS-1$
       return compositeCommand;
     }
     

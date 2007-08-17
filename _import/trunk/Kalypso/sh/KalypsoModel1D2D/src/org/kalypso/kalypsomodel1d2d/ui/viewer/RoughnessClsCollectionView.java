@@ -62,7 +62,7 @@ import test.org.kalypso.kalypsosimulationmodel.TestWorkspaces;
 public class RoughnessClsCollectionView extends ViewPart
 {
   public static final String ID=
-        "org.kalypso.kalypsomodel1d2d.viewer.RoughnessClsCollectionView";
+        "org.kalypso.kalypsomodel1d2d.viewer.RoughnessClsCollectionView"; //$NON-NLS-1$
   private Composite root;
   private TableViewer tableViewer;
   private RoughnessClsCollectionTVProvider contenClsCollectionTVProvider;
@@ -117,19 +117,19 @@ public class RoughnessClsCollectionView extends ViewPart
     
     // "Severity","ThreadID","Date","Time","Application","Message"
     TableColumn column = new TableColumn(table, SWT.LEFT);
-    column.setText("Name");
+    column.setText("Name"); //$NON-NLS-1$
     column.setWidth(400);
 
     column = new TableColumn(table, SWT.LEFT);
-    column.setText ("ks");
+    column.setText ("ks"); //$NON-NLS-1$
     column.setWidth(100);
 
     column = new TableColumn(table, SWT.LEFT);
-    column.setText("axay");
+    column.setText("axay"); //$NON-NLS-1$
     column.setWidth(100);
     
     column = new TableColumn(table, SWT.LEFT);
-    column.setText("dp");
+    column.setText("dp"); //$NON-NLS-1$
     column.setWidth(100);
   }
   

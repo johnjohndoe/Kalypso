@@ -113,11 +113,11 @@ public class AddProfileToMapHandler extends AbstractHandler
     /* Get the map */
     final MapView mapView = (MapView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView( MapView.ID );
     if( mapView == null )
-      throw new ExecutionException( "Kartenansicht nicht geöffnet." );
+      throw new ExecutionException( Messages.getString("AddProfileToMapHandler.0") ); //$NON-NLS-1$
 
     final IMapModell orgMapModell = mapView.getMapPanel().getMapModell();
     if( !(orgMapModell instanceof GisTemplateMapModell) )
-      throw new ExecutionException( "Kartenansicht nicht initialisiert, versuchen Sie es noch einmal." );
+      throw new ExecutionException( Messages.getString("AddProfileToMapHandler.1") ); //$NON-NLS-1$
 
     final GisTemplateMapModell mapModell = (GisTemplateMapModell) orgMapModell;
 
@@ -129,7 +129,7 @@ public class AddProfileToMapHandler extends AbstractHandler
     }
     catch( final CoreException e )
     {
-      throw new ExecutionException( "Es können keine Themen hinzugefügt werden.", e );
+      throw new ExecutionException( Messages.getString("AddProfileToMapHandler.2"), e ); //$NON-NLS-1$
     }
 
     final IRiverProfileNetworkCollection riverProfileNetworkCollection = terrainModel.getRiverProfileNetworkCollection();
@@ -155,11 +155,11 @@ public class AddProfileToMapHandler extends AbstractHandler
       final IKalypsoTheme[] foundThemes = visitor.getFoundThemes();
       final ICommand command;
       if( foundThemes.length == 0 )
-        command = new AddThemeCommand( mapModell, network.getName(), "gml", profilesPath, source );
+        command = new AddThemeCommand( mapModell, network.getName(), "gml", profilesPath, source );  //$NON-NLS-1$
       else
       {
         final IKalypsoTheme themeToActivate = foundThemes[0];
-        final CompositeCommand compositeCommand = new CompositeCommand( "Activate Profile Theme" );
+        final CompositeCommand compositeCommand = new CompositeCommand( Messages.getString("AddProfileToMapHandler.9") );  //$NON-NLS-1$
         compositeCommand.addCommand( new EnableThemeCommand( themeToActivate, true ) );
         compositeCommand.addCommand( new ActivateThemeCommand( mapModell, themeToActivate ) );
         command = compositeCommand;
@@ -173,8 +173,8 @@ public class AddProfileToMapHandler extends AbstractHandler
   private Object[] showNetworksDialog( final Shell shell, final IRiverProfileNetworkCollection riverProfileNetworkCollection )
   {
     final ListDialog dialog = new ListDialog( shell );
-    dialog.setTitle( "Profile in Karte anzeigen" );
-    dialog.setMessage( "Wählen Sie das Profilthema aus, welches Sie in der Karte anzeigen möchten:" );
+    dialog.setTitle( Messages.getString("AddProfileToMapHandler.5") ); //$NON-NLS-1$
+    dialog.setMessage( Messages.getString("AddProfileToMapHandler.6") ); //$NON-NLS-1$
     dialog.setContentProvider( new ArrayContentProvider() );
     dialog.setLabelProvider( new LabelProvider()
     {
@@ -185,7 +185,7 @@ public class AddProfileToMapHandler extends AbstractHandler
       public String getText( final Object element )
       {
         final IRiverProfileNetwork network = (IRiverProfileNetwork) element;
-        return "'" + network.getName() + "' - " + network.getDescription();
+        return "'" + network.getName() + "' - " + network.getDescription();   //$NON-NLS-1$ //$NON-NLS-2$
       }
     } );
 

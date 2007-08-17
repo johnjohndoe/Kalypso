@@ -43,19 +43,19 @@ public class MSurfaceCoverageTest extends TestCase
 			GM_Point point=
 				GeometryFactory.createGM_Point(0, 0, null);
 			IPolynomial1D pol=mpcPol1d.getRangeValue(point);
-			assertEquals("pol1", pol.getWrappedFeature().getId());
+			assertEquals("pol1", pol.getWrappedFeature().getId()); //$NON-NLS-1$
 			
 			//point 01
 			point=
 				GeometryFactory.createGM_Point(0, 1, null);
 			pol=mpcPol1d.getRangeValue(point);
-			assertEquals("pol2", pol.getWrappedFeature().getId());
+			assertEquals("pol2", pol.getWrappedFeature().getId()); //$NON-NLS-1$
 			
 			//point10
 			point=
 				GeometryFactory.createGM_Point(1, 0, null);
 			pol=mpcPol1d.getRangeValue(point);
-			assertEquals("pol3", pol.getWrappedFeature().getId());
+			assertEquals("pol3", pol.getWrappedFeature().getId()); //$NON-NLS-1$
 		}
 		catch(Throwable th)
 		{

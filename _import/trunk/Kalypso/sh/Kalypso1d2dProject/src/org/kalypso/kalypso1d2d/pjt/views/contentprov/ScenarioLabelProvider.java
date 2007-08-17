@@ -13,7 +13,7 @@ public class ScenarioLabelProvider extends LabelProvider
 {
   private static final Logger logger = Logger.getLogger( ScenarioLabelProvider.class.getName() );
 
-  private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.kalypso1d2d.pjt/debug" ) );
+  private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.kalypso1d2d.pjt/debug" ) );  //$NON-NLS-1$
 
   static
   {
@@ -35,7 +35,7 @@ public class ScenarioLabelProvider extends LabelProvider
       }
       catch( Throwable th )
       {
-        logger.log( Level.SEVERE, "Error getting image", th );
+        logger.log( Level.SEVERE, Messages.getString("ScenarioLabelProvider.1"), th ); //$NON-NLS-1$
         return null;
       }
     }
@@ -52,6 +52,6 @@ public class ScenarioLabelProvider extends LabelProvider
     {
       return ((Scenario) element).getName();
     }
-    return "";
+    return "";  //$NON-NLS-1$
   }
 }

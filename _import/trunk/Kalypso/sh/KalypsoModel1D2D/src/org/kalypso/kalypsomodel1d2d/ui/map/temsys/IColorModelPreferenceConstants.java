@@ -46,12 +46,12 @@ package org.kalypso.kalypsomodel1d2d.ui.map.temsys;
  */
 public interface IColorModelPreferenceConstants
 {
-  public String LINE_MIN_COLOR = "LINE_MIN_COLOR";
-  public String LINE_MAX_COLOR = "LINE_MAX_COLOR";
-  public String LINE_NO_COLOR = "LINE_NO_COLOR";
-  public String LINE_COLOR_INDEX = "LINE_NO_CLASSES";
-  public String LINE_TRANSPARENCY = "LINE_TRANSPARENCY";
-  public String LINE_MIN_MAX = "LINE_MIN_MAX";
-  public String ELEV_MAX = "ELEV_MAX";
-  public String ELEV_MIN = "ELEV_MIN";
+  public String LINE_MIN_COLOR = "LINE_MIN_COLOR"; //$NON-NLS-1$
+  public String LINE_MAX_COLOR = "LINE_MAX_COLOR"; //$NON-NLS-1$
+  public String LINE_NO_COLOR = "LINE_NO_COLOR"; //$NON-NLS-1$
+  public String LINE_COLOR_INDEX = "LINE_NO_CLASSES"; //$NON-NLS-1$
+  public String LINE_TRANSPARENCY = "LINE_TRANSPARENCY"; //$NON-NLS-1$
+  public String LINE_MIN_MAX = "LINE_MIN_MAX"; //$NON-NLS-1$
+  public String ELEV_MAX = "ELEV_MAX"; //$NON-NLS-1$
+  public String ELEV_MIN = "ELEV_MIN"; //$NON-NLS-1$
 }

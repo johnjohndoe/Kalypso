@@ -54,7 +54,7 @@ public class WizardContextHandler extends AbstractHandler implements IExecutable
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
@@ -100,7 +100,7 @@ public class WizardContextHandler extends AbstractHandler implements IExecutable
       }
       catch( final CoreException e )
       {
-        throw new ExecutionException( "Could not start wizard " + m_wizardId + " of type " + m_wizardType, e );
+        throw new ExecutionException( Messages.getString("WizardContextHandler.1") + m_wizardId + Messages.getString("WizardContextHandler.2") + m_wizardType, e ); //$NON-NLS-1$ //$NON-NLS-2$
       }
     }
     return Status.OK_STATUS;

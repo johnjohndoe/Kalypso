@@ -88,13 +88,13 @@ public class TestRoughnessPolygon extends TestCase
 			
 			rp.setProperty(
 					KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_STYLE, 
-					"htpp://wwww.tuhh.de/wb/roughness_db/grass");
+					"htpp://wwww.tuhh.de/wb/roughness_db/grass"); //$NON-NLS-1$
 			
 //			FeatureHelper.addProperty(
 //					rp,
 //					KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_POLYGON, 
 //					pol1);
-			System.out.println("=====================================");
+			System.out.println("====================================="); //$NON-NLS-1$
 			OutputStreamWriter writer= new OutputStreamWriter(System.out);
 			GmlSerializer.serializeWorkspace(writer, workspace);
 			
@@ -128,7 +128,7 @@ public class TestRoughnessPolygon extends TestCase
 		RoughnessPolygon rp= 
 			new RoughnessPolygon((Feature)list.get(0));
 		assertEquals(
-				"Sand und Schilf", 
+				"Sand und Schilf",  //$NON-NLS-1$
 				rp.getRoughnessStyle());
 //		GM_Polygon pol=rp.getPolygon();
 //		GM_Position[] positions=pol.getExteriorRing();

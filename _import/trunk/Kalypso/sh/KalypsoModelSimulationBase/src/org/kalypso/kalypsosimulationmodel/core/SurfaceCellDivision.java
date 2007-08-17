@@ -64,8 +64,8 @@ public class SurfaceCellDivision
                                 GM_Surface surface,
                                 ICellDivisionControl cellDivisionCheck)
   {
-    Assert.throwIAEOnNullParam( surface, "surface" );
-    Assert.throwIAEOnNullParam( cellDivisionCheck, "cellDivisionCheck" );
+    Assert.throwIAEOnNullParam( surface, "surface" ); //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( cellDivisionCheck, "cellDivisionCheck" ); //$NON-NLS-1$
     
     List<GM_Position[]> resultCells = new ArrayList<GM_Position[]>();
     List<GM_Position[]> toCheckCells= new ArrayList<GM_Position[]>();

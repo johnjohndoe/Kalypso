@@ -85,19 +85,19 @@ public class UtilMap
     final IWorkbench workbench = PlatformUI.getWorkbench();
     if( workbench == null )
     {
-      System.out.println( "Could not get Workbench" );
+      System.out.println( Messages.getString("UtilMap.0") ); //$NON-NLS-1$
       return null;
     }
     final IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
     if( activeWorkbenchWindow == null )
     {
-      System.out.println( "no active workbench available" );
+      System.out.println( Messages.getString("UtilMap.1") ); //$NON-NLS-1$
       return null;
     }
     final IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
     if( activePage == null )
     {
-      System.out.println( "No active page available" );
+      System.out.println( Messages.getString("UtilMap.2") ); //$NON-NLS-1$
       return null;
     }
     final IViewPart findView = activePage.findView( MapView.ID );
@@ -109,8 +109,8 @@ public class UtilMap
    */
   static public IKalypsoFeatureTheme findEditableTheme( final IMapModell mapModel, final QName editElementQName )
   {
-    Assert.throwIAEOnNullParam( mapModel, "mapModel" );
-    Assert.throwIAEOnNullParam( editElementQName, "editElementQName" );
+    Assert.throwIAEOnNullParam( mapModel, "mapModel" ); //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( editElementQName, "editElementQName" ); //$NON-NLS-1$
     final IKalypsoTheme[] allThemes = mapModel.getAllThemes();
     for( final IKalypsoTheme theme : allThemes )
     {
@@ -130,8 +130,8 @@ public class UtilMap
    */
   static public IKalypsoFeatureTheme[] findEditableThemes( final IMapModell mapModel, final QName editElementQName )
   {
-    Assert.throwIAEOnNullParam( mapModel, "mapModel" );
-    Assert.throwIAEOnNullParam( editElementQName, "editElementQName" );
+    Assert.throwIAEOnNullParam( mapModel, "mapModel" ); //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( editElementQName, "editElementQName" ); //$NON-NLS-1$
     final IKalypsoTheme[] allThemes = mapModel.getAllThemes();
     final List<IKalypsoFeatureTheme> foundThemes = new ArrayList<IKalypsoFeatureTheme>( allThemes.length );
     for( final IKalypsoTheme theme : allThemes )
@@ -155,7 +155,7 @@ public class UtilMap
    */
   static public IFEDiscretisationModel1d2d findFEModelTheme( final IMapModell mapModel )
   {
-    Assert.throwIAEOnNullParam( mapModel, "mapModel" );
+    Assert.throwIAEOnNullParam( mapModel, "mapModel" ); //$NON-NLS-1$
     final IKalypsoTheme[] allThemes = mapModel.getAllThemes();
     for( final IKalypsoTheme theme : allThemes )
     {
@@ -183,7 +183,7 @@ public class UtilMap
 
   static public <T> T findTheme( final IMapModell mapModel, final Class<T> themeType )
   {
-    Assert.throwIAEOnNullParam( mapModel, "mapModel" );
+    Assert.throwIAEOnNullParam( mapModel, "mapModel" ); //$NON-NLS-1$
     final IKalypsoTheme[] allThemes = mapModel.getAllThemes();
     for( final IKalypsoTheme theme : allThemes )
     {
@@ -205,8 +205,8 @@ public class UtilMap
    */
   static public final boolean isShowingFeatureType( final IKalypsoFeatureTheme featureTheme, final QName featureTypeQName )
   {
-    Assert.throwIAEOnNullParam( featureTheme, "featureTheme" );
-    Assert.throwIAEOnNullParam( featureTypeQName, "featureTypeQName" );
+    Assert.throwIAEOnNullParam( featureTheme, "featureTheme" ); //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( featureTypeQName, "featureTypeQName" ); //$NON-NLS-1$
     final IFeatureType featureType = featureTheme.getFeatureType();
     if( GMLSchemaUtilities.substitutes( featureType, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE ) )
     {
@@ -223,8 +223,8 @@ public class UtilMap
    */
   public static final GM_Curve toGM_Curve( final GM_Envelope bBox, final CS_CoordinateSystem crs )
   {
-    Assert.throwIAEOnNullParam( bBox, "bBox" );
-    Assert.throwIAEOnNullParam( crs, "crs" );
+    Assert.throwIAEOnNullParam( bBox, "bBox" ); //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( crs, "crs" ); //$NON-NLS-1$
 
     // System.out.println("getting shape:"+feature);
     try
@@ -244,7 +244,7 @@ public class UtilMap
     }
     catch( final Throwable e )
     {
-      throw new RuntimeException( "Could not create curve", e );
+      throw new RuntimeException( Messages.getString("UtilMap.3"), e ); //$NON-NLS-1$
     }
   }
 }

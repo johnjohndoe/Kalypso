@@ -52,7 +52,7 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
 
   public CreateGridWidget( )
   {
-    super( "Bandgenerator", "Erstellt ein 2D Eelement Band" );
+    super( Messages.getString("CreateGridWidget.0"), Messages.getString("CreateGridWidget.1") ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -103,7 +103,7 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
       final GM_Point newSelectedPoint = gridPointCollector.getSelectedPoint();
       if( !ObjectUtils.equals( selectedPoint, newSelectedPoint ) )
       {
-        System.out.println( "selected On moved=" + gridPointCollector.getSelectedPoint() );
+        System.out.println( "selected On moved=" + gridPointCollector.getSelectedPoint() ); //$NON-NLS-1$
         // TODO: check if this repaint is necessary for the widget
         final MapPanel panel = getMapPanel();
         if( panel != null )
@@ -122,7 +122,7 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
   @Override
   public void leftClicked( final Point p )
   {
-    System.out.println( "Click=" + p );
+    System.out.println( "Click=" + p ); //$NON-NLS-1$
     try
     {
       // if( m_builder != null )
@@ -154,7 +154,7 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
     {
       // final GM_Curve curve = (GM_Curve) m_builder.finish();
       gridPointCollector.finishSide();
-      System.out.println( "DoubleClick:" + p );
+      System.out.println( "DoubleClick:" + p ); //$NON-NLS-1$
       // validate geometry: doppelte punkte
     }
     catch( final Exception e )
@@ -189,7 +189,7 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
         // remove
         // true
         {
-          System.out.println( "HasAllSides:dragged change posted" );
+          System.out.println( "HasAllSides:dragged change posted" ); //$NON-NLS-1$
           final GM_Point nextPoint = MapUtilities.transform( getMapPanel(), p );
           gridPointCollector.changeSelectedPoint( nextPoint );
           getMapPanel().repaint();
@@ -239,7 +239,7 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
 
   public static final boolean isSamePoint( final Point ref, final GM_Point toCompare, final int m_radius, final GeoTransform transform )
   {
-    Assert.throwIAEOnNull( transform, "transform must not be null" );
+    Assert.throwIAEOnNull( transform, Messages.getString("CreateGridWidget.6") ); //$NON-NLS-1$
     if( ref == null || toCompare == null )
     {
       return false;
@@ -319,7 +319,7 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
 
     if( e.isActionKey() )
     {
-      System.out.println( "e:" + e );
+      System.out.println( "e:" + e ); //$NON-NLS-1$
     }
     /* zoom in */
     if( code == KeyEvent.VK_PLUS )
@@ -469,7 +469,7 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
 
     if( e.isActionKey() )
     {
-      System.out.println( "e:" + e );
+      System.out.println( "e:" + e ); //$NON-NLS-1$
     }
     if( typed == ESC )
     {
@@ -501,7 +501,7 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
     }
     else if( typed == '\t' )
     {
-      System.out.println( "Selected" );
+      System.out.println( "Selected" ); //$NON-NLS-1$
     }
     else if( typed == 't' )
     {
@@ -535,7 +535,7 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
   @Override
   public void finish( )
   {
-    System.out.println( "FINISH" );
+    System.out.println( "FINISH" ); //$NON-NLS-1$
     super.finish();
     // isActivated=false;
   }
@@ -546,7 +546,7 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
   @Override
   public void setSelection( final ISelection selection )
   {
-    System.out.println( "Sel=" + selection );
+    System.out.println( "Sel=" + selection ); //$NON-NLS-1$
   }
 
   private final GridWidgetFace gridWidgetFace = new GridWidgetFace( this );

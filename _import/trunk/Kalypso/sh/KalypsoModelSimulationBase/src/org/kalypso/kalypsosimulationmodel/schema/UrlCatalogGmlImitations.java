@@ -58,13 +58,13 @@ public class UrlCatalogGmlImitations extends AbstractUrlCatalog
 	/**
 	 * Latest version for schema
 	 */
-	final static public String CURRENT_VERSION="v0.0.0";
+	final static public String CURRENT_VERSION="v0.0.0"; //$NON-NLS-1$
 	
 	/**
 	 * path for simulation base schema file
 	 */
 	final static public String REL_PATH_GML_IMITATIONS=
-								CURRENT_VERSION+"/gml_imitations.xsd";
+								CURRENT_VERSION+"/gml_imitations.xsd"; //$NON-NLS-1$
 	/**
 	 * Url for simulation base model schema  
 	 */
@@ -76,12 +76,12 @@ public class UrlCatalogGmlImitations extends AbstractUrlCatalog
 	 * Namespace for simulation model base 
 	 */
 	final static public String NS_GML_IMITATIONS=
-				"http://www.tu-harburg.de/wb/kalypso/schemata/wbgml";
+				"http://www.tu-harburg.de/wb/kalypso/schemata/wbgml"; //$NON-NLS-1$
 	
 	/**
 	 * Prefix for the simulation model base 
 	 */
-	final static public String NS_PREFIX_GML_IMITATION="wbgml";
+	final static public String NS_PREFIX_GML_IMITATION="wbgml"; //$NON-NLS-1$
   
 	
 	/**

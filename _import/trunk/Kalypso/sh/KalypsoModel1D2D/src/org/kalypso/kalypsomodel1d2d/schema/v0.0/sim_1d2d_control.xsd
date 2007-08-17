@@ -491,8 +491,7 @@
 									Min. Anfangswassertiefe [m]
 								</label>
 								<tooltip>
-									Minimale Wassertiefe bei
-									Simulationsstart [m]
+									Minimale Wassertiefe bei Simulationsstart [m]
 								</tooltip>
 							</documentation>
 						</annotation>
@@ -508,8 +507,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="DSETD" type="double"
-						default="0.09">
+					<element name="DSETD" type="double" default="0.09">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Wiederbenetzungstiefe [m]</label>

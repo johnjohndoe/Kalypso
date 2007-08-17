@@ -21,13 +21,13 @@ import de.renew.workflow.contexts.WorkflowSystemExtension;
  */
 public class WorkflowSystem implements IWorkflowSystem
 {
-  public static final String WORKFLOW = "de.renew.workflow.model";
+  public static final String WORKFLOW = "de.renew.workflow.model"; //$NON-NLS-1$
 
-  private static final String WORKFLOW_DEFINITON_ID = "workflowDefinition";
+  private static final String WORKFLOW_DEFINITON_ID = "workflowDefinition"; //$NON-NLS-1$
 
   private static final Logger logger = Logger.getLogger( WorkflowSystem.class.getName() );
 
-  private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.afgui/debug" ) );
+  private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.afgui/debug" ) ); //$NON-NLS-1$
 
   static
   {

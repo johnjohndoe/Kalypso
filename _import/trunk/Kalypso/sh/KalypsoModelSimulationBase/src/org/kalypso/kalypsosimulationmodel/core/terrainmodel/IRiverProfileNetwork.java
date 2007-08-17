@@ -14,9 +14,9 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
  */
 public interface IRiverProfileNetwork extends IFeatureWrapperCollection<WspmProfile>, IFeatureWrapper2
 {
-  public static QName QNAME = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "RiverProfileNetwork" );
+  public static QName QNAME = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "RiverProfileNetwork" ); //$NON-NLS-1$
 
-  public static QName QNAME_PROP_RIVER_PROFILE = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "riverProfile" );
+  public static QName QNAME_PROP_RIVER_PROFILE = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "riverProfile" ); //$NON-NLS-1$
 
   /**
    * To get the river profile which is located before the given river

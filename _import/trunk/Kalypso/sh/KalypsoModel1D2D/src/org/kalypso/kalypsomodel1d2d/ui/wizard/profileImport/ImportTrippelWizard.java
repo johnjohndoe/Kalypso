@@ -114,7 +114,7 @@ public class ImportTrippelWizard extends Wizard implements IWizard
 
     m_networkModel = networkModel;
 
-    setWindowTitle( "Kalypso Profile Import" );
+    setWindowTitle( Messages.getString("ImportTrippelWizard.0") ); //$NON-NLS-1$
 
     setNeedsProgressMonitor( true );
   }
@@ -126,8 +126,8 @@ public class ImportTrippelWizard extends Wizard implements IWizard
   public void addPages( )
   {
     /* Choose profile data */
-    m_ProfilePage = new ImportProfilePage( "chooseProfileData", "Profildaten wählen", null );
-    m_ProfilePage.setDescription( "Bitte wählen Sie eine Profil-Datei aus." );
+    m_ProfilePage = new ImportProfilePage( "chooseProfileData", Messages.getString("ImportTrippelWizard.2"), null ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_ProfilePage.setDescription( Messages.getString("ImportTrippelWizard.3") ); //$NON-NLS-1$
 
     addPage( m_ProfilePage );
   }
@@ -141,7 +141,7 @@ public class ImportTrippelWizard extends Wizard implements IWizard
     final File trippelFile = m_ProfilePage.getFile();
 
     if( trippelFile == null )
-      return StatusUtilities.createWarningStatus( "Datei konnte nicht geöffnet werden." );
+      return StatusUtilities.createWarningStatus( Messages.getString("ImportTrippelWizard.4") ); //$NON-NLS-1$
 
     /* read profiles, show warnings */
     final List<IProfil> profiles = new ArrayList<IProfil>();
@@ -154,7 +154,7 @@ public class ImportTrippelWizard extends Wizard implements IWizard
       fileReader = new BufferedReader( new InputStreamReader( new FileInputStream( trippelFile ) ) );
 
       String line = null;
-      final String separator = ";";
+      final String separator = ";"; //$NON-NLS-1$
       StringTokenizer tokenizer;
 
       /* parameter */
@@ -200,7 +200,7 @@ public class ImportTrippelWizard extends Wizard implements IWizard
         else
         {
           // inform the user that his profile has not enough values...
-          String message = "Import fehlgeschlagen: \n Profilnr. " + (numStations + 1) + " hat falsche Anzahl Werte.\n Erforderlich sind: Station, x, y, z";
+          String message = Messages.getString("ImportTrippelWizard.6") + (numStations + 1) + Messages.getString("ImportTrippelWizard.7"); //$NON-NLS-1$ //$NON-NLS-2$
           return StatusUtilities.createWarningStatus( message );
         }
       }
@@ -218,12 +218,12 @@ public class ImportTrippelWizard extends Wizard implements IWizard
     catch( FileNotFoundException e )
     {
       e.printStackTrace();
-      return StatusUtilities.createWarningStatus( "Datei wurde nicht gefunden." );
+      return StatusUtilities.createWarningStatus( Messages.getString("ImportTrippelWizard.8") ); //$NON-NLS-1$
     }
     catch( IOException e )
     {
       e.printStackTrace();
-      return StatusUtilities.createWarningStatus( "Datei konnte nicht geöffnet werden." );
+      return StatusUtilities.createWarningStatus( Messages.getString("ImportTrippelWizard.9") ); //$NON-NLS-1$
     }
 
     finally
@@ -233,7 +233,7 @@ public class ImportTrippelWizard extends Wizard implements IWizard
 
     if( profiles.size() == 0 )
     {
-      return StatusUtilities.createWarningStatus( "Es konnten keine Profile gelesen werden." );
+      return StatusUtilities.createWarningStatus( Messages.getString("ImportTrippelWizard.10") ); //$NON-NLS-1$
     }
 
     return Status.OK_STATUS;
@@ -252,7 +252,7 @@ public class ImportTrippelWizard extends Wizard implements IWizard
    */
   private void storeProfile( List<IProfilPoint> profilPointList, double station, List<IProfil> profiles )
   {
-    final String profiletype = "org.kalypso.model.wspm.tuhh.profiletype";
+    final String profiletype = "org.kalypso.model.wspm.tuhh.profiletype"; //$NON-NLS-1$
     final IProfil profile = ProfilFactory.createProfil( profiletype );
 
     profile.addPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
@@ -266,7 +266,7 @@ public class ImportTrippelWizard extends Wizard implements IWizard
     }
 
     profile.setStation( station );
-    profile.setName( "Trippel-Import" );
+    profile.setName( Messages.getString("ImportTrippelWizard.12") ); //$NON-NLS-1$
 
     profiles.add( profile );
 
@@ -377,12 +377,12 @@ public class ImportTrippelWizard extends Wizard implements IWizard
     {
       public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
       {
-        monitor.beginTask( "Profile werden importiert", 2 );
+        monitor.beginTask( Messages.getString("ImportTrippelWizard.13"), 2 ); //$NON-NLS-1$
 
         try
         {
           /* Import Trippel Data */
-          monitor.subTask( "- lade Profil-Daten..." );
+          monitor.subTask( Messages.getString("ImportTrippelWizard.14") ); //$NON-NLS-1$
           try
           {
             final IStatus status = importTrippelData();
@@ -393,13 +393,13 @@ public class ImportTrippelWizard extends Wizard implements IWizard
           }
           catch( final Exception e )
           {
-            return StatusUtilities.statusFromThrowable( e, "Failed to load profiles" );
+            return StatusUtilities.statusFromThrowable( e, Messages.getString("ImportTrippelWizard.15") ); //$NON-NLS-1$
           }
 
           monitor.worked( 1 );
 
           /* Convert Trippel Data */
-          monitor.subTask( "- konvertiere Profil-Daten in GML..." );
+          monitor.subTask( Messages.getString("ImportTrippelWizard.16") ); //$NON-NLS-1$
 
           final IStatus status = doImportNetwork( profNetworkColl, terrainModelAdds );
 
@@ -423,7 +423,7 @@ public class ImportTrippelWizard extends Wizard implements IWizard
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, op );
     if( !status.isOK() )
       KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
-    ErrorDialog.openError( getShell(), getWindowTitle(), "Probleme beim Import", status );
+    ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString("ImportTrippelWizard.17"), status ); //$NON-NLS-1$
 
     return !status.matches( IStatus.ERROR );
   }
@@ -435,7 +435,7 @@ public class ImportTrippelWizard extends Wizard implements IWizard
    *          the GML river network, in which the profiles will be stored
    * @param addedFeatures
    */
-  @SuppressWarnings("deprecation")
+  @SuppressWarnings("deprecation") //$NON-NLS-1$
   protected IStatus doImportNetwork( final IRiverProfileNetworkCollection networkCollection, final List<Feature> addedFeatures ) throws Exception
   {
     final IRiverProfileNetwork network = networkCollection.addNew( IRiverProfileNetwork.QNAME );
@@ -443,7 +443,7 @@ public class ImportTrippelWizard extends Wizard implements IWizard
     addedFeatures.add( networkFeature );
 
     /* Set user friendly name and descrption */
-    final String desc = String.format( "Importiert aus Trippel-Profil-Datei: %s\nImportiert am %s aus %s", m_ProfilePage.getFileName(), DF.format( new Date() ), m_ProfilePage.getFilePath() );
+    final String desc = String.format( Messages.getString("ImportTrippelWizard.19"), m_ProfilePage.getFileName(), DF.format( new Date() ), m_ProfilePage.getFilePath() ); //$NON-NLS-1$
     network.setName( FileUtilities.nameWithoutExtension( m_ProfilePage.getFileName() ) );
     network.setDescription( desc );
     CS_CoordinateSystem crs = m_ProfilePage.getCoordinateSystem();
@@ -462,7 +462,7 @@ public class ImportTrippelWizard extends Wizard implements IWizard
     {
       
       profile.getPointProperty( desc );
-      final Feature profileFeature = FeatureHelper.addFeature( network.getWrappedFeature(), IRiverProfileNetwork.QNAME_PROP_RIVER_PROFILE, new QName( IWspmConstants.NS_WSPMPROF, "Profile" ) );
+      final Feature profileFeature = FeatureHelper.addFeature( network.getWrappedFeature(), IRiverProfileNetwork.QNAME_PROP_RIVER_PROFILE, new QName( IWspmConstants.NS_WSPMPROF, Messages.getString("ImportTrippelWizard.20") ) ); //$NON-NLS-1$
       ProfileFeatureFactory.toFeature( profile, profileFeature );
       //profileFeature.getDefaultGeometryProperty().getCoordinateDimension();
       GM_Curve property = (GM_Curve) profileFeature.getProperty( WspmProfile.QNAME_LINE );

@@ -51,9 +51,9 @@ public interface ICaseHandlingSourceProvider extends ISourceProvider
 {
   public static final String ACTIVE_CASE_URI_NAME = "activeCaseUri";
 
-  public static final String ACTIVE_CASE_DATA_PROVIDER_NAME = "activeCaseDataProvider";
+  public static final String ACTIVE_CASE_DATA_PROVIDER_NAME = "activeCaseDataProvider"; //$NON-NLS-1$
 
-  public static final String ACTIVE_CASE_FOLDER_NAME = "activeCaseBaseFolder";
+  public static final String ACTIVE_CASE_FOLDER_NAME = "activeCaseBaseFolder"; //$NON-NLS-1$
 
-  public static final String ACTIVE_CASE_DATA_NAME = "activeCaseData";
+  public static final String ACTIVE_CASE_DATA_NAME = "activeCaseData"; //$NON-NLS-1$
 }

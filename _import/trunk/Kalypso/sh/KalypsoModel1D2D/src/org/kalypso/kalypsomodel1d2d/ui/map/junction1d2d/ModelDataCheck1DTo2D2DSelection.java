@@ -86,12 +86,12 @@ public class ModelDataCheck1DTo2D2DSelection implements IDataModelCheck
     }
     else if(selected2DEdges.size()<1)
     {
-      message = "Wählen sie eine 2D-Kante";
+      message = Messages.getString("ModelDataCheck1DTo2D2DSelection.0"); //$NON-NLS-1$
       messageType = IDataModelCheck.VALIDITY_STATE.INVALID;
     }
     else if(selected2DEdges.size()>1)
     {
-      message = "Wählen sie nur eine 2D-Kante";
+      message = Messages.getString("ModelDataCheck1DTo2D2DSelection.1"); //$NON-NLS-1$
       messageType = IDataModelCheck.VALIDITY_STATE.INVALID;
     }
 //    else if(!ModelOps.hasOnlyBorderEdges( 

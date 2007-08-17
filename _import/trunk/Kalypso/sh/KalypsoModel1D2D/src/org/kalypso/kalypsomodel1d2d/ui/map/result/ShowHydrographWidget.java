@@ -60,7 +60,7 @@ public class ShowHydrographWidget extends AbstractSelectFlowrelationWidget
 {
   public ShowHydrographWidget( )
   {
-    super( "Ganglinie selektieren", "Selektiert eine Ganglinie und stellt diese in der Feature Ansicht dar.", false, IHydrograph.QNAME, IHydrograph.QNAME_PROP_LOCATION );
+    super( Messages.getString("ShowHydrographWidget.0"), Messages.getString("ShowHydrographWidget.1"), false, IHydrograph.QNAME, IHydrograph.QNAME_PROP_LOCATION ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -89,7 +89,7 @@ public class ShowHydrographWidget extends AbstractSelectFlowrelationWidget
       {
         try
         {
-          PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView( "org.kalypso.featureview.views.FeatureView" );
+          PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView( "org.kalypso.featureview.views.FeatureView" ); //$NON-NLS-1$
         }
         catch( final Throwable pie )
         {

@@ -54,7 +54,7 @@ public class RoughnessPolygonCollection extends FeatureWrapperCollection<IRoughn
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection#checkOverlapping()
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public boolean checkOverlapping( )
   {
     List<Feature> srcPolygonsList = getWrappedList();
@@ -85,7 +85,7 @@ public class RoughnessPolygonCollection extends FeatureWrapperCollection<IRoughn
     return false;
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public List<IRoughnessPolygon> getOverlappedPolygons( )
   {
     List<Feature> srcPolygonsList = getWrappedList();
@@ -130,7 +130,7 @@ public class RoughnessPolygonCollection extends FeatureWrapperCollection<IRoughn
     return dstPolygonsList;
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public List<IRoughnessPolygon> getRoughnessPolygons( )
   {
     // List<Feature> srcPolygonsList = getWrappedList();
@@ -145,7 +145,7 @@ public class RoughnessPolygonCollection extends FeatureWrapperCollection<IRoughn
     return dstPolygonsList;
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public List<IRoughnessPolygon> selectRoughnessPolygons( GM_Position location )
   {
     return query( location );

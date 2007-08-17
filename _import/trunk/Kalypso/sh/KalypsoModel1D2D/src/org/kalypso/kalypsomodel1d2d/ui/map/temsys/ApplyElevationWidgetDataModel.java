@@ -78,11 +78,11 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
  */
 public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements IFeatureSelectionListener
 {
-  public static final String SELECTED_NODE_KEY = "_SELECTED_NODE_KEY";
+  public static final String SELECTED_NODE_KEY = "_SELECTED_NODE_KEY"; //$NON-NLS-1$
 
-  public static final String ELEVATION_THEME = "_ELEVATION_THEME_";
+  public static final String ELEVATION_THEME = "_ELEVATION_THEME_"; //$NON-NLS-1$
 
-  public static final String NODE_THEME = "_NODE_THEME_";
+  public static final String NODE_THEME = "_NODE_THEME_"; //$NON-NLS-1$
 
   private static final String[] KEYS = { ITerrainModel.class.toString(), ITerrainElevationModelSystem.class.toString(), ITerrainElevationModel.class.toString(), IMapModell.class.toString(),
       SELECTED_NODE_KEY, GM_Polygon.class.toString(), IFEDiscretisationModel1d2d.class.toString(), MapPanel.class.toString(), ELEVATION_THEME, NODE_THEME };

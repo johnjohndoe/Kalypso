@@ -29,7 +29,7 @@ import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
  */
 public class FeatureViewInputContextHandler extends AbstractHandler implements IExecutableExtension
 {
-  public static final String FEATUREVIEW_INPUT = "org.kalypso.kalypso1d2d.pjt.contexts.featureViewInput"; //$NON-NLS-1$
+  public static final String FEATUREVIEW_INPUT = "org.kalypso.kalypso1d2d.pjt.contexts.featureViewInput";  //$NON-NLS-1$
 
   private String m_featureViewInput;
 
@@ -44,7 +44,7 @@ public class FeatureViewInputContextHandler extends AbstractHandler implements I
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   @Override
   public Object execute( final ExecutionEvent event )
   {

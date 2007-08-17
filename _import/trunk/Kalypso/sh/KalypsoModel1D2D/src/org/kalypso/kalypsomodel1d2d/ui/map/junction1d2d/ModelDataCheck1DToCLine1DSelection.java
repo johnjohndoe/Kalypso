@@ -92,18 +92,18 @@ public class ModelDataCheck1DToCLine1DSelection implements IDataModelCheck//IMes
     }
     else if(selected1DEdges.size()<1)
     {
-      message = "Wählen Sie eine 1D Kante";
+      message = Messages.getString("ModelDataCheck1DToCLine1DSelection.0"); //$NON-NLS-1$
       messageType = IDataModelCheck.VALIDITY_STATE.INVALID;
     }
     else if(selected1DEdges.size()>1)
     {
-      message = "Wählen Sie nur eine 1D Kante";
+      message = Messages.getString("ModelDataCheck1DToCLine1DSelection.1"); //$NON-NLS-1$
       messageType = IDataModelCheck.VALIDITY_STATE.INVALID;
     }
     //exactely e edge if the following if statements are considered
     else if(EdgeOps.isIsolatedEdge( selected1DEdges.iterator().next() ))
     {
-      message = "Gewählte 1D Kante is isoliert";
+      message = Messages.getString("ModelDataCheck1DToCLine1DSelection.2"); //$NON-NLS-1$
       messageType = IDataModelCheck.VALIDITY_STATE.ACCEPTABLE;
     }
     else

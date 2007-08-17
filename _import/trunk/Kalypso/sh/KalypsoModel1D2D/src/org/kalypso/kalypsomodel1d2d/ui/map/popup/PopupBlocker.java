@@ -97,11 +97,11 @@ public class PopupBlocker implements Listener
    */
   public void registerPopupBlockerToControl( Control controlToBlock ) 
   {
-    Assert.throwIAEOnNullParam( controlToBlock, "controlToBlock" );
+    Assert.throwIAEOnNullParam( controlToBlock, "controlToBlock" ); //$NON-NLS-1$
     if( controlToBlock.isDisposed() )
     {
       throw new IllegalArgumentException(
-      "Control to block is disposed and cannot be blocked ");
+      Messages.getString("PopupBlocker.0")); //$NON-NLS-1$
     }
     
     if( blockedControl != null )

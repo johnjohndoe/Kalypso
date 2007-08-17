@@ -60,7 +60,7 @@ public class Delete1D2DProjectIntroAction implements IIntroAction
   public void run( final IIntroSite site, final Properties params )
   {
     /* Validate parameters */
-    final String projectName = params.getProperty( "project", null );
+    final String projectName = params.getProperty( "project", null );  //$NON-NLS-1$
 
     final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject( projectName );
     if( !project.exists() )

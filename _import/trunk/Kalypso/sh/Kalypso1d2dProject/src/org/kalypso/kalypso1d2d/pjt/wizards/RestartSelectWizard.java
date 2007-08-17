@@ -70,12 +70,12 @@ public class RestartSelectWizard extends Wizard implements INewWizard
   @Override
   public void addPages( )
   {
-    setWindowTitle( "Berechnungszeitschritte definieren" );
+    setWindowTitle( Messages.getString("RestartSelectWizard.0") );  //$NON-NLS-1$
     final Object property = m_feature.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_RESTART_PATH );
 
-    m_restartSelectWizardPage = new RestartSelectWizardPage( "restartSelectionPage", property == null ? "" : property.toString() );
-    m_restartSelectWizardPage.setTitle( "Restart Ergebnisse auswählen" );
-    m_restartSelectWizardPage.setDescription( "Hier können Sie ein oder mehrere Ergebnisse für den Restart auswählen." );
+    m_restartSelectWizardPage = new RestartSelectWizardPage( "restartSelectionPage", property == null ? "" : property.toString() );     //$NON-NLS-1$ //$NON-NLS-2$
+    m_restartSelectWizardPage.setTitle( Messages.getString("RestartSelectWizard.3") );  //$NON-NLS-1$
+    m_restartSelectWizardPage.setDescription( Messages.getString("RestartSelectWizard.4") );  //$NON-NLS-1$
 
     addPage( m_restartSelectWizardPage );
   }

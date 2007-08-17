@@ -77,7 +77,7 @@ public class RestartSelectorControl extends AbstractFeatureControl implements IF
   public Control createControl( final Composite parent, int style )
   {
     final Button button = new Button(parent, SWT.PUSH);
-    button.setText( "Select restart file(s)" );
+    button.setText( Messages.getString("RestartSelectorControl.0") );  //$NON-NLS-1$
 
     button.addSelectionListener( new SelectionAdapter()
     {

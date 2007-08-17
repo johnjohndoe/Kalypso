@@ -36,13 +36,13 @@ import de.renew.workflow.connector.context.ActiveWorkContext;
 public class NewSimulationModelControlBuilder
 {
 
-  final static String NEW_NAME_MUST_NOT_BE_EMPTY = Messages.getString( "NewSimulationModelControlBuilder.0" ); //$NON-NLS-1$
+  final static String NEW_NAME_MUST_NOT_BE_EMPTY = org.kalypso.kalypso1d2d.pjt.wizards.Messages.getString("NewSimulationModelControlBuilder.0");   //$NON-NLS-1$
 
-  final static String ALLREADY_EXISTS = Messages.getString( "NewSimulationModelControlBuilder.1" ); //$NON-NLS-1$
+  final static String ALLREADY_EXISTS = org.kalypso.kalypso1d2d.pjt.wizards.Messages.getString("NewSimulationModelControlBuilder.1");   //$NON-NLS-1$
 
   final static Logger logger = Logger.getLogger( NewSimulationModelControlBuilder.class.getName() );
 
-  private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.kalypso1d2d.pjt/debug" ) ); //$NON-NLS-1$
+  private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.kalypso1d2d.pjt/debug" ) );    //$NON-NLS-1$
 
   static
   {
@@ -101,20 +101,20 @@ public class NewSimulationModelControlBuilder
     panel.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
     Label newModelNameLabel = new Label( panel, SWT.NONE );
-    newModelNameLabel.setText( Messages.getString( "NewSimulationModelControlBuilder.4" ) ); //$NON-NLS-1$
+    newModelNameLabel.setText( org.kalypso.kalypso1d2d.pjt.wizards.Messages.getString("NewSimulationModelControlBuilder.3") );   //$NON-NLS-1$
     newModelTFE = new Text( panel, SWT.BORDER );
     newModelTFE.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     newModelTFE.addKeyListener( keyListener );
 
     Label parentLabel = new Label( panel, SWT.NONE );
-    parentLabel.setText( Messages.getString( "NewSimulationModelControlBuilder.5" ) ); //$NON-NLS-1$
+    parentLabel.setText( org.kalypso.kalypso1d2d.pjt.wizards.Messages.getString("NewSimulationModelControlBuilder.4") );   //$NON-NLS-1$
     parentTFE = new Text( panel, SWT.BORDER );
     parentTFE.setEditable( false );
     parentTFE.setText( getParentDataName() );
     parentTFE.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
 
     Label commentLabel = new Label( panel, SWT.NONE );
-    commentLabel.setText( Messages.getString( "NewSimulationModelControlBuilder.6" ) ); //$NON-NLS-1$
+    commentLabel.setText( org.kalypso.kalypso1d2d.pjt.wizards.Messages.getString("NewSimulationModelControlBuilder.5") );   //$NON-NLS-1$
     commentText = new Text( panel, SWT.BORDER | SWT.WRAP | SWT.MULTI );
     GridData gd = new GridData( GridData.FILL_BOTH );
     gd.verticalSpan = 10;
@@ -128,7 +128,7 @@ public class NewSimulationModelControlBuilder
   {
     if( m_scenario == null )
     {
-      return "<nicht vorhanden>";
+      return org.kalypso.kalypso1d2d.pjt.wizards.Messages.getString("NewSimulationModelControlBuilder.6");   //$NON-NLS-1$
     }
     return m_scenario.getName();
   }
@@ -137,7 +137,7 @@ public class NewSimulationModelControlBuilder
   {
     newName = newModelTFE.getText();
 
-    newName = (newName == null) ? "" : newName.trim(); //$NON-NLS-1$
+    newName = (newName == null) ? "" : newName.trim();    //$NON-NLS-1$
     return newName;
   }
 
@@ -158,7 +158,7 @@ public class NewSimulationModelControlBuilder
   {
     Boolean answer = true;
     StringBuffer errors = new StringBuffer( 128 );
-    if( newName.equals( "" ) ) //$NON-NLS-1$
+    if( newName.equals( "" ) )    //$NON-NLS-1$
     {
       answer = answer && false;
       errors.append( NEW_NAME_MUST_NOT_BE_EMPTY );
@@ -178,7 +178,7 @@ public class NewSimulationModelControlBuilder
     return errorMessage;
   }
 
-  public void setUpdateListerner( @SuppressWarnings("hiding")//$NON-NLS-1$
+  public void setUpdateListerner( @SuppressWarnings("hiding")   //$NON-NLS-1$
   IUpdateListener updateListener )
   {
     this.updateListener = updateListener;
@@ -186,8 +186,8 @@ public class NewSimulationModelControlBuilder
 
   public static void startWizard( final Shell shell, final Scenario scenario, final IProject project )
   {
-    logger.info( "starting wizard" ); //$NON-NLS-1$
-    final NewSimulationModelWizardPage wpage = new NewSimulationModelWizardPage( "Neues Simulation Model", scenario );
+    logger.info( org.kalypso.kalypso1d2d.pjt.wizards.Messages.getString("NewSimulationModelControlBuilder.10") );   //$NON-NLS-1$
+    final NewSimulationModelWizardPage wpage = new NewSimulationModelWizardPage( org.kalypso.kalypso1d2d.pjt.wizards.Messages.getString("NewSimulationModelControlBuilder.11"), scenario );   //$NON-NLS-1$
 
     Wizard iWizard = new Wizard()
     {
@@ -199,7 +199,7 @@ public class NewSimulationModelControlBuilder
         boolean answer = page.getNewSimulaionControlBuilder().isValid();
         if( !answer )
         {
-          page.setErrorMessage( "" );
+          page.setErrorMessage( "" );    //$NON-NLS-1$
         }
         return answer;
       }
@@ -209,7 +209,7 @@ public class NewSimulationModelControlBuilder
     iWizard.addPage( wpage );
     // wpage.setTitle("spage");
     WizardDialog wd = new WizardDialog( shell, iWizard );
-    wd.setTitle( Messages.getString( "NewSimulationModelControlBuilder.20" ) ); //$NON-NLS-1$
+    wd.setTitle( org.kalypso.kalypso1d2d.pjt.wizards.Messages.getString("NewSimulationModelControlBuilder.13") );   //$NON-NLS-1$
     // wd.setMessage("Neue Simulationsmodell");
     // wd.setBlockOnOpen(true);
     int decision = wd.open();
@@ -240,13 +240,13 @@ public class NewSimulationModelControlBuilder
       catch( final CoreException e )
       {
         final IStatus status = StatusUtilities.statusFromThrowable( e );
-        ErrorDialog.openError( shell, "Problem", "Szenario konnte nicht erstellt werden.", status );
+        ErrorDialog.openError( shell, org.kalypso.kalypso1d2d.pjt.wizards.Messages.getString("NewSimulationModelControlBuilder.15"), org.kalypso.kalypso1d2d.pjt.wizards.Messages.getString("NewSimulationModelControlBuilder.16"), status );     //$NON-NLS-1$ //$NON-NLS-2$
         Kalypso1d2dProjectPlugin.getDefault().getLog().log( status );
       }
     }
     else
     {
-      logger.info( "Wizard canceled:" + decision ); //$NON-NLS-1$
+      logger.info( org.kalypso.kalypso1d2d.pjt.wizards.Messages.getString("NewSimulationModelControlBuilder.17") + decision );   //$NON-NLS-1$
     }
   }
 }

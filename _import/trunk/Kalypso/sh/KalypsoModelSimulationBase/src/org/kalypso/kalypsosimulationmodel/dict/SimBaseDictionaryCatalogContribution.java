@@ -51,7 +51,7 @@ public class SimBaseDictionaryCatalogContribution implements ICatalogContributio
   public void contributeTo( final CatalogManager catalogManager )
   {
     final URL catalogURL = 
-    		getClass().getResource( "v0.0.0/dict/catalog.xml" );
+    		getClass().getResource( "v0.0.0/dict/catalog.xml" ); //$NON-NLS-1$
     final ICatalog baseCatalog = catalogManager.getBaseCatalog();
     baseCatalog.addNextCatalog( catalogURL );
   }

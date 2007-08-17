@@ -198,7 +198,7 @@ public class HMOTerrainElevationModel implements IElevationProvider, ISurfacePat
     }
     catch( final Throwable th )
     {
-      throw new RuntimeException( "Error while getting the elevation", th );
+      throw new RuntimeException( Messages.getString("HMOTerrainElevationModel.0"), th ); //$NON-NLS-1$
     }
   }
 
@@ -208,8 +208,8 @@ public class HMOTerrainElevationModel implements IElevationProvider, ISurfacePat
    */
   public void acceptSurfacePatches( final GM_Envelope envToVisit, final ISurfacePatchVisitor<GM_SurfacePatch> surfacePatchVisitor ) throws GM_Exception
   {
-    Assert.throwIAEOnNullParam( envToVisit, "envToVisit" );
-    Assert.throwIAEOnNullParam( surfacePatchVisitor, "surfacePatchVisitor" );
+    Assert.throwIAEOnNullParam( envToVisit, "envToVisit" ); //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( surfacePatchVisitor, "surfacePatchVisitor" ); //$NON-NLS-1$
     // TODO; export the whole env at once
     final Coordinate max = JTSAdapter.export( envToVisit.getMax() );
     final Coordinate min = JTSAdapter.export( envToVisit.getMin() );

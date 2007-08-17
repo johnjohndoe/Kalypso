@@ -78,16 +78,16 @@ public class StartCalculationHandler extends AbstractHandler implements IHandler
     final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
     final IFolder scenarioFolder = (IFolder) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
 
-    if( !MessageDialog.openConfirm( shell, "Berechnung starten", "Die Berechnung wird jetzt gestartet, dies kann sehr lange dauern." ) )
+    if( !MessageDialog.openConfirm( shell, Messages.getString("StartCalculationHandler.0"), Messages.getString("StartCalculationHandler.1") ) ) //$NON-NLS-1$ //$NON-NLS-2$
       return Status.CANCEL_STATUS;
 
     final IProject project = scenarioFolder.getProject();
     try
     {
-      final IFolder folder = scenarioFolder.getFolder( "results" );
+      final IFolder folder = scenarioFolder.getFolder( "results" );  //$NON-NLS-1$
       if( folder.exists() )
       {
-        if( !MessageDialog.openConfirm( shell, "Berechnung starten", "Es sind bereits Ergebnisdaten einer vorangegangenen Berechnung vorhanden.\nWenn Sie fortfahren werden diese unwiederruflich gelöscht." ) )
+        if( !MessageDialog.openConfirm( shell, Messages.getString("StartCalculationHandler.3"), Messages.getString("StartCalculationHandler.4") ) ) //$NON-NLS-1$ //$NON-NLS-2$
           return Status.CANCEL_STATUS;
       }
 
@@ -97,7 +97,7 @@ public class StartCalculationHandler extends AbstractHandler implements IHandler
       {
         public IStatus execute( final IProgressMonitor monitor ) throws CoreException
         {
-          monitor.beginTask( "Starte Berechnung", 11 );
+          monitor.beginTask( Messages.getString("StartCalculationHandler.5"), 11 ); //$NON-NLS-1$
 
           if( folder.exists() )
             folder.delete( false, new SubProgressMonitor( monitor, 1 ) );
@@ -109,12 +109,12 @@ public class StartCalculationHandler extends AbstractHandler implements IHandler
         }
       };
       final IStatus status = ProgressUtilities.busyCursorWhile( runnable );
-      ErrorDialog.openError( shell, "Modellrechnung", "Fehler bei der Modellrechnung", status );
+      ErrorDialog.openError( shell, Messages.getString("StartCalculationHandler.6"), Messages.getString("StartCalculationHandler.7"), status ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     catch( final CoreException e )
     {
       Kalypso1d2dProjectPlugin.getDefault().getLog().log( e.getStatus() );
-      throw new ExecutionException( "Fehler bei der Modellrechnung", e );
+      throw new ExecutionException( Messages.getString("StartCalculationHandler.8"), e ); //$NON-NLS-1$
     }
 
     return Status.OK_STATUS;

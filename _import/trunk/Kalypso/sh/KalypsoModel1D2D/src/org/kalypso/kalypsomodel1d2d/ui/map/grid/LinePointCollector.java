@@ -152,7 +152,7 @@ public class LinePointCollector
     }
     else
     {
-      System.out.println( "Bad finishing" );
+      System.out.println( Messages.getString("LinePointCollector.0") ); //$NON-NLS-1$
       return null;
     }
 
@@ -411,7 +411,7 @@ public class LinePointCollector
 
       for( int i = SIZE - 1; i >= cntPoints; i-- )
       {
-        System.out.println( "Removing extra points:" + i );
+        System.out.println( "Removing extra points:" + i ); //$NON-NLS-1$
         m_points.remove( i );
       }
     }
@@ -482,7 +482,7 @@ public class LinePointCollector
     }
     else
     {
-      System.out.println( "selection=" + selection );
+      System.out.println( "selection=" + selection ); //$NON-NLS-1$
     }
 
   }

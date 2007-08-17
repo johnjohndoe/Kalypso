@@ -90,13 +90,13 @@ public class ModelDataCheck1DToCLine2DSelection implements IDataModelCheck//IMes
     }
     else if(selected2DEdges.size()<=0)
     {
-      message = "Wählen Sie 2D Kanten";
+      message = Messages.getString("ModelDataCheck1DToCLine2DSelection.0"); //$NON-NLS-1$
       messageType = IDataModelCheck.VALIDITY_STATE.INVALID;
     }
     else if(!ModelOps.isContinuousLine( 
               new ArrayList<IFE1D2DEdge>( selected2DEdges )))
     {
-      message = "Die selektierte 2D-Kanten müssen eine Linie bilden";
+      message = Messages.getString("ModelDataCheck1DToCLine2DSelection.1"); //$NON-NLS-1$
       messageType = IDataModelCheck.VALIDITY_STATE.INVALID;
     }
 //    else if(!ModelOps.hasOnlyBorderEdges( 

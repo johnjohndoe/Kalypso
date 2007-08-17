@@ -68,9 +68,9 @@ public class PerspectiveWatcher<T extends Case> implements IActiveContextChangeL
 
   public static void cleanPerspective( final IWorkbench workbench, final Collection<String> partsToKeep )
   {
-    final UIJob job = new UIJob( "Arbeitskontext anpassen" )
+    final UIJob job = new UIJob( Messages.getString("PerspectiveWatcher.0") ) //$NON-NLS-1$
     {
-      @SuppressWarnings("unchecked")
+      @SuppressWarnings("unchecked")  //$NON-NLS-1$
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
       {
@@ -119,7 +119,7 @@ public class PerspectiveWatcher<T extends Case> implements IActiveContextChangeL
         {
           return true;
         }
-        else if( reference.getPartName().equals( "Welcome" ) )
+        else if( reference.getPartName().equals( "Welcome" ) )  //$NON-NLS-1$
         {
           return true;
         }

@@ -70,7 +70,7 @@ import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
  */
 public class ImportElevationHandler extends AbstractHandler
 {
-  private static final String WIZARD_ID = "org.kalypso.ui.wizards.imports.elevationmodel.ImportElevationWizard";
+  private static final String WIZARD_ID = "org.kalypso.ui.wizards.imports.elevationmodel.ImportElevationWizard";  //$NON-NLS-1$
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.WorkflowCommandHandler#executeInternal(org.eclipse.core.commands.ExecutionEvent)
@@ -85,7 +85,7 @@ public class ImportElevationHandler extends AbstractHandler
       final ITerrainModel terrainModel = szenarioDataProvider.getModel( ITerrainModel.class );
       final IFolder modelFolder = (IFolder) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
 
-      final IFolder temFolder = modelFolder.getFolder( "models/native_tem" );
+      final IFolder temFolder = modelFolder.getFolder( "models/native_tem" );  //$NON-NLS-1$
 
       IStructuredSelection selection = new StructuredSelection( new Object[] { terrainModel, modelFolder, temFolder } );
 
@@ -102,8 +102,8 @@ public class ImportElevationHandler extends AbstractHandler
       {
         final SelectWidgetHandler handler = new SelectWidgetHandler();
         final Map<String, String> newParameterMap = new HashMap<String, String>();
-        newParameterMap.put( SelectWidgetHandler.PARAM_WIDGET_CLASS, "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidget" );
-        newParameterMap.put( SelectWidgetHandler.PARAM_PLUGIN_ID, "org.kalypso.model1d2d" );
+        newParameterMap.put( SelectWidgetHandler.PARAM_WIDGET_CLASS, "org.kalypso.kalypsomodel1d2d.ui.map.temsys.ApplyElevationWidget" );  //$NON-NLS-1$
+        newParameterMap.put( SelectWidgetHandler.PARAM_PLUGIN_ID, "org.kalypso.model1d2d" );  //$NON-NLS-1$
         handler.setInitializationData( null, null, newParameterMap );
         final ExecutionEvent exc = new ExecutionEvent( event.getCommand(), newParameterMap, event.getTrigger(), event.getApplicationContext() );
         handler.execute( exc );
@@ -113,7 +113,7 @@ public class ImportElevationHandler extends AbstractHandler
     }
     catch( final CoreException e )
     {
-      throw new ExecutionException( "Could not import elevation model." );
+      throw new ExecutionException( Messages.getString("ImportElevationHandler.4") ); //$NON-NLS-1$
     }
 
     return Status.CANCEL_STATUS;

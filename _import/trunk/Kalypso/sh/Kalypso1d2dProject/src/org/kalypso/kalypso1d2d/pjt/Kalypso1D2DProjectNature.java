@@ -78,11 +78,11 @@ import org.kalypso.simulation.ui.calccase.ModelNature;
  */
 public class Kalypso1D2DProjectNature implements IProjectNature
 {
-  public static final String ID = "org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature";
+  public static final String ID = "org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature";  //$NON-NLS-1$
 
   private final static Logger logger = Logger.getLogger( Kalypso1D2DProjectNature.class.getName() );
 
-  private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.kalypso1d2d.pjt/debug" ) );
+  private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.kalypso1d2d.pjt/debug" ) );  //$NON-NLS-1$
 
   static
   {
@@ -90,7 +90,7 @@ public class Kalypso1D2DProjectNature implements IProjectNature
       logger.setUseParentHandlers( false );
   }
 
-  private static final String EMPTY_PROJECT_ZIP_PATH = "resources/emptyProject.zip";
+  private static final String EMPTY_PROJECT_ZIP_PATH = "resources/emptyProject.zip";  //$NON-NLS-1$
 
   private IProject m_project;
 
@@ -139,7 +139,7 @@ public class Kalypso1D2DProjectNature implements IProjectNature
    */
   private void unzipToContainer( final URL zipLocation, final IContainer targetContainer, final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( "", 2 );
+    monitor.beginTask( "", 2 );  //$NON-NLS-1$
 
     InputStream zipStream = null;
     try
@@ -177,7 +177,7 @@ public class Kalypso1D2DProjectNature implements IProjectNature
 
   public IStatus startCalculation( final IFolder scenarioFolder, final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( "Modellrechnung wird durchgeführt", 5 );
+    monitor.beginTask( Messages.getString("Kalypso1D2DProjectNature.10"), 5 ); //$NON-NLS-1$
 
     try
     {
@@ -214,7 +214,7 @@ public class Kalypso1D2DProjectNature implements IProjectNature
     {
       e.printStackTrace();
 
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Fehler beim Laden der Modell-Spezifikation" ) );
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString("Kalypso1D2DProjectNature.11") ) ); //$NON-NLS-1$
     }
   }
 

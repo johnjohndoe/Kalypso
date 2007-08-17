@@ -106,9 +106,9 @@ public class ImportWSPMHandler extends AbstractHandler
       try
       {
         /* post empty command(s) in order to make pool dirty. */
-        ((SzenarioDataProvider) modelProvider).postCommand( ITerrainModel.class, new EmptyCommand( "WSPM-Profile importieren", false ) );
-        ((SzenarioDataProvider) modelProvider).postCommand( IFEDiscretisationModel1d2d.class, new EmptyCommand( "WSPM-Profile importieren", false ) );
-        ((SzenarioDataProvider) modelProvider).postCommand( IFlowRelationshipModel.class, new EmptyCommand( "WSPM-Profile importieren", false ) );
+        ((SzenarioDataProvider) modelProvider).postCommand( ITerrainModel.class, new EmptyCommand( Messages.getString("ImportWSPMHandler.0"), false ) ); //$NON-NLS-1$
+        ((SzenarioDataProvider) modelProvider).postCommand( IFEDiscretisationModel1d2d.class, new EmptyCommand( Messages.getString("ImportWSPMHandler.1"), false ) ); //$NON-NLS-1$
+        ((SzenarioDataProvider) modelProvider).postCommand( IFlowRelationshipModel.class, new EmptyCommand( Messages.getString("ImportWSPMHandler.2"), false ) ); //$NON-NLS-1$
       }
       catch( final Exception e )
       {
@@ -131,7 +131,7 @@ public class ImportWSPMHandler extends AbstractHandler
     }
     catch( final CoreException e )
     {
-      throw new ExecutionException( "Could not import wspm model.", e );
+      throw new ExecutionException( Messages.getString("ImportWSPMHandler.3"), e ); //$NON-NLS-1$
     }
 
     return Status.OK_STATUS;

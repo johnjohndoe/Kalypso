@@ -108,8 +108,8 @@ public class NativeTerrainElevationModelWrapper
                     QName propQName,
                     String sourceName)
   {
-    Assert.throwIAEOnNullParam( parentFeature, "parentFeature" );
-    Assert.throwIAEOnNullParam( propQName, "propQName" );
+    Assert.throwIAEOnNullParam( parentFeature, "parentFeature" ); //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( propQName, "propQName" ); //$NON-NLS-1$
     sourceName=Assert.throwIAEOnNullOrEmpty( sourceName );
     
     Feature newFeature=
@@ -157,7 +157,7 @@ public class NativeTerrainElevationModelWrapper
      (String)featureToBind.getProperty(KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_FILE_NAME);
    if(sourceName==null)
    {
-     throw new IllegalArgumentException("No native file property set");
+     throw new IllegalArgumentException(Messages.getString("NativeTerrainElevationModelWrapper.2")); //$NON-NLS-1$
    }
    sourceURL=makeSourceURL( sourceName, featureToBind.getWorkspace().getContext() );
    File nativeTerrainModelFile= new File(FileLocator.resolve( sourceURL).getFile());

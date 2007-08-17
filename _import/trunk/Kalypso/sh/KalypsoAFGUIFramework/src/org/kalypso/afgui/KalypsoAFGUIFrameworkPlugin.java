@@ -11,14 +11,14 @@ import de.renew.workflow.base.IWorkflowSystem;
 public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
 {
 
-  public static final String TEMPLATE_WORKFLOW_DATA = "/workflow/template_workflow_data.xml";
+  public static final String TEMPLATE_WORKFLOW_DATA = "/workflow/template_workflow_data.xml"; //$NON-NLS-1$
 
-  public static final String WORKFLOW_SPEC = "/workflow/spec.xml";
+  public static final String WORKFLOW_SPEC = "/workflow/spec.xml"; //$NON-NLS-1$
 
-  public static final String WORKFLOW_STATUS = "/workflow/status.xml";
+  public static final String WORKFLOW_STATUS = "/workflow/status.xml"; //$NON-NLS-1$
 
   // The plug-in ID
-  public static final String PLUGIN_ID = "org.kalypso.afgui";
+  public static final String PLUGIN_ID = "org.kalypso.afgui"; //$NON-NLS-1$
 
   // The shared instance
   private static KalypsoAFGUIFrameworkPlugin plugin;

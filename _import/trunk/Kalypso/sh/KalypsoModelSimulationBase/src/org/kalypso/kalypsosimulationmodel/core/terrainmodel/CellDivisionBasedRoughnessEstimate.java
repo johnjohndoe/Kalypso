@@ -129,8 +129,8 @@ public class CellDivisionBasedRoughnessEstimate implements IRoughnessEstimateSpe
                     final GM_Surface estimateZone,
                     final double maxAreaRatio)
   {
-    Assert.throwIAEOnNullParam( roughnessPolygonCollection, "roughnessPolygonCollection" );
-    Assert.throwIAEOnNullParam( estimateZone, "estimateZone" );
+    Assert.throwIAEOnNullParam( roughnessPolygonCollection, "roughnessPolygonCollection" ); //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( estimateZone, "estimateZone" ); //$NON-NLS-1$
     this.estimateZone = estimateZone;
     contributingRP = 
       roughnessPolygonCollection.selectRoughnessPolygons( estimateZone );
@@ -175,7 +175,7 @@ public class CellDivisionBasedRoughnessEstimate implements IRoughnessEstimateSpe
         }
       }
     }
-    System.out.println("TOTAL CELL AREA="+area);
+    System.out.println("TOTAL CELL AREA="+area); //$NON-NLS-1$
     //normalize
     for( Entry<IRoughnessCls, Double> entry : histogram.entrySet())
     {
@@ -286,14 +286,14 @@ public class CellDivisionBasedRoughnessEstimate implements IRoughnessEstimateSpe
   public String toString( )
   {
     StringBuilder strBuilder = new StringBuilder( 256 );
-    strBuilder.append("IntersectionBasedRoughnessEstimate[\n");
-    strBuilder.append("\tcontributingRP:\n\t\t");
+    strBuilder.append("IntersectionBasedRoughnessEstimate[\n"); //$NON-NLS-1$
+    strBuilder.append("\tcontributingRP:\n\t\t"); //$NON-NLS-1$
     strBuilder.append(contributingRP);
-    strBuilder.append("\testimateZone:\n\t\t");
+    strBuilder.append("\testimateZone:\n\t\t"); //$NON-NLS-1$
     strBuilder.append(estimateZone);
-    strBuilder.append("\thistogram:\n\t\t");
+    strBuilder.append("\thistogram:\n\t\t"); //$NON-NLS-1$
     strBuilder.append(histogram);
-    strBuilder.append("\n]");
+    strBuilder.append("\n]"); //$NON-NLS-1$
     return strBuilder.toString();
   }
 }

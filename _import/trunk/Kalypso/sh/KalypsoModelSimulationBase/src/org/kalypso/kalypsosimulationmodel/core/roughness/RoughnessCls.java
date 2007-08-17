@@ -273,19 +273,19 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
   public String toString( )
   {
     StringBuffer buf = new StringBuffer( 64 );
-    buf.append( "RoughnessCls" );
+    buf.append( "RoughnessCls" ); //$NON-NLS-1$
     String id = getGmlID();
     if( id != null )
       buf.append( '{' ).append( id ).append( '}' );
-    buf.append( "[name=" ).append( getName() );
-    buf.append( ", axay=" ).append( getAxAy() );
-    buf.append( ", dp=" ).append( getDp() );
-    buf.append( ", eddy_xx=" ).append( getEddyXX() );
-    buf.append( ", eddy_yx=" ).append( getEddyYX() );
-    buf.append( ", eddy_xy=" ).append( getEddyXY() );
-    buf.append( ", eddy_yy=" ).append( getEddyYY() );
-    buf.append( ", ks=" ).append( getKs() );
-    buf.append( ", marsh=" ).append( getMarsh() );
+    buf.append( "[name=" ).append( getName() ); //$NON-NLS-1$
+    buf.append( ", axay=" ).append( getAxAy() ); //$NON-NLS-1$
+    buf.append( ", dp=" ).append( getDp() ); //$NON-NLS-1$
+    buf.append( ", eddy_xx=" ).append( getEddyXX() ); //$NON-NLS-1$
+    buf.append( ", eddy_yx=" ).append( getEddyYX() ); //$NON-NLS-1$
+    buf.append( ", eddy_xy=" ).append( getEddyXY() ); //$NON-NLS-1$
+    buf.append( ", eddy_yy=" ).append( getEddyYY() ); //$NON-NLS-1$
+    buf.append( ", ks=" ).append( getKs() ); //$NON-NLS-1$
+    buf.append( ", marsh=" ).append( getMarsh() ); //$NON-NLS-1$
     buf.append( ']' );
     return buf.toString();
   }

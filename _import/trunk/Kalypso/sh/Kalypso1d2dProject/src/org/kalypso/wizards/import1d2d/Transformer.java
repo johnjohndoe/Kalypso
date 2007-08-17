@@ -50,7 +50,7 @@ public class Transformer implements ICoreRunnableWithProgress
         return Status.CANCEL_STATUS;
       monitor.done();
       /* post empty command(s) in order to make pool dirty. */
-      m_data.postCommand( IFEDiscretisationModel1d2d.class, new EmptyCommand( "Datai importieren", false ) );
+      m_data.postCommand( IFEDiscretisationModel1d2d.class, new EmptyCommand( Messages.getString("Transformer.0"), false ) ); //$NON-NLS-1$
       
 
     }

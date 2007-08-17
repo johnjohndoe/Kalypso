@@ -62,15 +62,15 @@ public class SimpleOperationalModel implements ISimpleOperationalModel
    */
   public SimpleOperationalModel( Feature feature )
   {
-    Assert.throwIAEOnNull( feature, "Param feature cannot be null." );
+    Assert.throwIAEOnNull( feature, Messages.getString("SimpleOperationalModel.0") ); //$NON-NLS-1$
     Assert.throwIAEOnNotDirectInstanceOf( feature, KalypsoModelSimulationBaseConsts.SIM_BASE_F_SIMPLE_OPERATIONAL_MODEL );
     this.m_feature = feature;
   }
 
   public SimpleOperationalModel( Feature parentFeature, QName linkPropQName )
   {
-    Assert.throwIAEOnNull( parentFeature, "Param feature cannot be null." );
-    Assert.throwIAEOnNull( linkPropQName, "Parameter linkPropQName cannot be null." );
+    Assert.throwIAEOnNull( parentFeature, Messages.getString("SimpleOperationalModel.1") ); //$NON-NLS-1$
+    Assert.throwIAEOnNull( linkPropQName, Messages.getString("SimpleOperationalModel.2") ); //$NON-NLS-1$
     this.m_feature = (Feature) parentFeature.getProperty( linkPropQName );
   }
 
@@ -85,7 +85,7 @@ public class SimpleOperationalModel implements ISimpleOperationalModel
     else if(object == null)
       return null;
     else
-      throw new RuntimeException( "Feature expected but got:" + "\n\ttype=" + object.getClass() + "\n\tvalue=" + object );
+      throw new RuntimeException( Messages.getString("SimpleOperationalModel.3") + "\n\ttype=" + object.getClass() + "\n\tvalue=" + object ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 
   /**
@@ -99,7 +99,7 @@ public class SimpleOperationalModel implements ISimpleOperationalModel
     else if(object == null)
       return null;
     else
-      throw new RuntimeException( "Feature expected but got:" + "\n\ttype=" + object.getClass() + "\n\tvalue=" + object );
+      throw new RuntimeException( "Feature expected but got:" + "\n\ttype=" + object.getClass() + "\n\tvalue=" + object ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 
   /**
@@ -107,7 +107,7 @@ public class SimpleOperationalModel implements ISimpleOperationalModel
    */
   public void setOperationalConcept( Feature feature )
   {
-    Assert.throwIAEOnNull( feature, "Paramerter feature cannot be null" );
+    Assert.throwIAEOnNull( feature, Messages.getString("SimpleOperationalModel.9") ); //$NON-NLS-1$
     m_feature.setProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_P_OPERATIONAL_CONCEPT, feature );
   }
 
@@ -116,7 +116,7 @@ public class SimpleOperationalModel implements ISimpleOperationalModel
    */
   public void setPointCoverage( Feature feature )
   {
-    Assert.throwIAEOnNull( feature, "Paramerter feature cannot be null" );
+    Assert.throwIAEOnNull( feature, Messages.getString("SimpleOperationalModel.10") ); //$NON-NLS-1$
     m_feature.setProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_P_POINT_COVERAGE, feature );
   }
 

@@ -62,7 +62,7 @@ import org.kalypsodeegree_impl.graphics.displayelements.SurfacePatchVisitableDis
  */
 public class ElevationModelDisplayElementFactory
 {
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public static final SurfacePatchVisitableDisplayElement createDisplayElement( final Feature feature )
   {
     if( feature == null )
@@ -90,7 +90,7 @@ public class ElevationModelDisplayElementFactory
       }
       else
       {
-        throw new RuntimeException( "Can only handle asc ele model:" + elevationProvider );
+        throw new RuntimeException( Messages.getString("ElevationModelDisplayElementFactory.1") + elevationProvider ); //$NON-NLS-1$
       }
     }
     else

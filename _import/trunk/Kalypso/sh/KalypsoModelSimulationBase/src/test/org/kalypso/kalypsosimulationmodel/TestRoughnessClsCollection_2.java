@@ -64,7 +64,7 @@ public class TestRoughnessClsCollection_2 extends TestCase
 
     try
     {
-      workspace = GmlSerializer.createGMLWorkspace( new URL( "file:/F:/_ECLIPSE/roughness.gml" ), null );
+      workspace = GmlSerializer.createGMLWorkspace( new URL( "file:/F:/_ECLIPSE/roughness.gml" ), null ); //$NON-NLS-1$
     }
     catch( Throwable th )
     {

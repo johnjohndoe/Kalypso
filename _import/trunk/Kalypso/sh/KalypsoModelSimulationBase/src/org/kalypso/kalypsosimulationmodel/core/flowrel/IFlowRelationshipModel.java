@@ -54,7 +54,7 @@ import org.kalypsodeegree.model.geometry.GM_Position;
  */
 public interface IFlowRelationshipModel extends IFeatureWrapperCollection<IFlowRelationship>, IModel
 {
-  public static final QName QNAME_PROP_FLOW_REL_MEMBER = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "flowRelationshipMember" );
+  public static final QName QNAME_PROP_FLOW_REL_MEMBER = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "flowRelationshipMember" ); //$NON-NLS-1$
 
   public IFlowRelationship findFlowrelationship( final GM_Position position, final double searchRectWidth );
 }

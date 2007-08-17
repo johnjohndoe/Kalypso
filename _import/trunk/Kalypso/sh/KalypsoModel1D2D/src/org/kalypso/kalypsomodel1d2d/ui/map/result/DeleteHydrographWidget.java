@@ -57,7 +57,7 @@ public class DeleteHydrographWidget extends AbstractSelectFlowrelationWidget
 {
   public DeleteHydrographWidget( )
   {
-    super( "Ganglinie entfernen", "Löscht eine Ganglinie aus der Karte", true, IHydrograph.QNAME, IHydrograph.QNAME_PROP_LOCATION );
+    super( Messages.getString("DeleteHydrographWidget.0"), Messages.getString("DeleteHydrographWidget.1"), true, IHydrograph.QNAME, IHydrograph.QNAME_PROP_LOCATION ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -72,7 +72,7 @@ public class DeleteHydrographWidget extends AbstractSelectFlowrelationWidget
     /* Select the feature */
     final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
 
-    final CompositeCommand compositeCommand = new CompositeCommand( "Parameter löschen" );
+    final CompositeCommand compositeCommand = new CompositeCommand( Messages.getString("DeleteHydrographWidget.2") ); //$NON-NLS-1$
     for( final Feature featureToRemove : selectedFeatures )
     {
       selectionManager.changeSelection( new Feature[] { featureToRemove }, new EasyFeatureWrapper[] {} );

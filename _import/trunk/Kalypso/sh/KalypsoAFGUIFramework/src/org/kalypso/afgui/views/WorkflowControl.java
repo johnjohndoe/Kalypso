@@ -40,9 +40,9 @@ public class WorkflowControl implements IWorklistChangeListener
 {
   private static final Logger logger = Logger.getLogger( WorkflowControl.class.getName() );
 
-  private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.afgui/debug" ) ); //$NON-NLS-1$
+  private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.afgui/debug" ) );   //$NON-NLS-1$
 
-  private static final String MEMENTO_LAST_SELECTION = "lastSelection"; //$NON-NLS-1$  
+  private static final String MEMENTO_LAST_SELECTION = "lastSelection";     //$NON-NLS-1$
 
   static
   {
@@ -168,10 +168,10 @@ public class WorkflowControl implements IWorklistChangeListener
     catch( final TaskExecutionException e )
     {
       final IStatus status = StatusUtilities.statusFromThrowable( e );
-      ErrorDialog.openError( m_treeViewer.getControl().getShell(), Messages.getString( "org.kalypso.afgui.views.WorkflowControl2.8" ), Messages.getString( "org.kalypso.afgui.views.WorkflowControl2.9" ) //$NON-NLS-1$ //$NON-NLS-2$
+      ErrorDialog.openError( m_treeViewer.getControl().getShell(), org.kalypso.afgui.views.Messages.getString("WorkflowControl.2"), org.kalypso.afgui.views.Messages.getString("WorkflowControl.3")   //$NON-NLS-1$ //$NON-NLS-2$
           + task.getURI(), status, IStatus.WARNING | IStatus.ERROR );
       KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( status );
-      logger.log( Level.SEVERE, "Failed to execute task: " + task.getURI(), e ); //$NON-NLS-1$
+      logger.log( Level.SEVERE, org.kalypso.afgui.views.Messages.getString("WorkflowControl.4") + task.getURI(), e );  //$NON-NLS-1$
     }
     finally
     {

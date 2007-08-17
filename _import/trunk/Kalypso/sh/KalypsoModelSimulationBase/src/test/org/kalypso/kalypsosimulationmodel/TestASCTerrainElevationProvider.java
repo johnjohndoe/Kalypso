@@ -72,14 +72,14 @@ public class TestASCTerrainElevationProvider extends TestCase
           {
             final GM_Point curPoint = GeometryFactory.createGM_Point( x, y, TestWorkspaces.getGaussKrueger() );
             final double ele = ascModel.getElevation( curPoint );
-            assertEquals( "i=" + i + " j=" + j + "jFlip" + jFlip + " ele=" + ele, i * j * 1.000, ele );
+            assertEquals( "i=" + i + " j=" + j + "jFlip" + jFlip + " ele=" + ele, i * j * 1.000, ele ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
           }
           else
           {
             final GM_Point curPoint = GeometryFactory.createGM_Point( x, y, TestWorkspaces.getGaussKrueger() );
             final double ele = ascModel.getElevation( curPoint );
-            assertEquals( "i=" + i + " j=" + j + "jFlip" + (9 - j) + " ele=" + ele, Double.NaN, ele );
+            assertEquals( "i=" + i + " j=" + j + "jFlip" + (9 - j) + " ele=" + ele, Double.NaN, ele ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
           }
         }
       }

@@ -33,9 +33,9 @@ import org.kalypso.ui.views.map.MapView;
  */
 public class ThemeContextHandler extends AbstractHandler implements IExecutableExtension
 {
-  public static final String CONTEXT_THEME_FEATURE_TYPE = "org.kalypso.kalypso1d2d.pjt.contexts.theme"; //$NON-NLS-1$
+  public static final String CONTEXT_THEME_FEATURE_TYPE = "org.kalypso.kalypso1d2d.pjt.contexts.theme";   //$NON-NLS-1$
 
-  public static final String NO_THEME = "NO_THEME";
+  public static final String NO_THEME = "NO_THEME";   //$NON-NLS-1$
 
   protected final IMapModellListener m_modellListener = new MapModellAdapter()
   {
@@ -83,7 +83,7 @@ public class ThemeContextHandler extends AbstractHandler implements IExecutableE
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked")   //$NON-NLS-1$
   @Override
   public Object execute( final ExecutionEvent event )
   {
@@ -98,7 +98,7 @@ public class ThemeContextHandler extends AbstractHandler implements IExecutableE
       final MapView mapView = (MapView) view;
       final MapPanel mapPanel = (MapPanel) mapView.getAdapter( MapPanel.class );
       final String layerContext = m_featureType;
-      final Job job = new Job( Messages.getString( "org.kalypso.kalypso1d2d.pjt.actions.OpenMapViewCommandHandler.3" ) ) //$NON-NLS-1$
+      final Job job = new Job( org.kalypso.kalypso1d2d.pjt.actions.Messages.getString("ThemeContextHandler.3") )  //$NON-NLS-1$
       {
         @Override
         protected IStatus run( final IProgressMonitor monitor )

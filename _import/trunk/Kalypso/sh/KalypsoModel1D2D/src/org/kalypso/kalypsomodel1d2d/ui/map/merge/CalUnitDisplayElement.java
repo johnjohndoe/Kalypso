@@ -76,7 +76,7 @@ import org.kalypsodeegree_impl.tools.Debug;
  * @author Patrice Congo
  * 
  */
-@SuppressWarnings( { "unchecked", "hiding" })
+@SuppressWarnings( { "unchecked", "hiding" }) //$NON-NLS-1$ //$NON-NLS-2$
 public class CalUnitDisplayElement implements DisplayElementDecorator
 {
   private final ICalculationUnit<IFE1D2DElement> calUnit;
@@ -254,7 +254,7 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
         }
         else
         {
-          throw new RuntimeException( "Unexpected type of element:" + element );
+          throw new RuntimeException( "Unexpected type of element:" + element ); //$NON-NLS-1$
         }
       }
 
@@ -316,7 +316,7 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
     }
     catch( final Exception e )
     {
-      Debug.debugException( e, "" );
+      Debug.debugException( e, "" ); //$NON-NLS-1$
     }
 
     return null;
@@ -340,7 +340,7 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
 
   public static final CalUnitDisplayElement createDisplayElement( final ICalculationUnit<IFE1D2DElement> calUnit )
   {
-    Assert.throwIAEOnNullParam( calUnit, "calUnit" );
+    Assert.throwIAEOnNullParam( calUnit, "calUnit" ); //$NON-NLS-1$
     final CalUnitDisplayElement calUnitDisplayElement = new CalUnitDisplayElement( calUnit );
 
     return calUnitDisplayElement;

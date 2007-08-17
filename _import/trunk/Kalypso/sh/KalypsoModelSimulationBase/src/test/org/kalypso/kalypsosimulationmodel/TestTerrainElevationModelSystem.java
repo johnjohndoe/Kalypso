@@ -77,7 +77,7 @@ public class TestTerrainElevationModelSystem extends TestCase
           ITerrainElevationModelSystem temSystem=
             new TerrainElevationModelSystem(rcFeature);
           assertNotNull( 
-              "Could not adapt to  "+ITerrainElevationModelSystem.class,
+              Messages.getString("TestTerrainElevationModelSystem.0")+ITerrainElevationModelSystem.class, //$NON-NLS-1$
               temSystem );
           
           
@@ -95,7 +95,7 @@ public class TestTerrainElevationModelSystem extends TestCase
                     x, y, TestWorkspaces.getGaussKrueger() );
                 double ele=temSystem.getElevation( curPoint  );
                 assertEquals(
-                    "i="+i+" j="+j+" ele="+ele,i*j*1.000,ele);
+                    "i="+i+" j="+j+" ele="+ele,i*j*1.000,ele); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 
               }
               else
@@ -105,7 +105,7 @@ public class TestTerrainElevationModelSystem extends TestCase
                     x,y, TestWorkspaces.getGaussKrueger() );
                 double ele=temSystem.getElevation( curPoint  );
                 assertEquals(
-                    "i="+i+" j="+j+" ele="+ele,Double.NaN,ele);
+                    "i="+i+" j="+j+" ele="+ele,Double.NaN,ele); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
               }
             }
           }

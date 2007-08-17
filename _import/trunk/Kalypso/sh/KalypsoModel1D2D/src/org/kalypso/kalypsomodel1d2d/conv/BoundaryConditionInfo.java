@@ -100,7 +100,7 @@ public class BoundaryConditionInfo implements ITimeStepinfo
     {
       if( Double.isNaN( m_steadyValue ) )
       {
-        throw new SimulationException( "Steady value not defined.", new RuntimeException() );
+        throw new SimulationException( Messages.getString("BoundaryConditionInfo.0"), new RuntimeException() ); //$NON-NLS-1$
       }
       else
         return m_steadyValue;

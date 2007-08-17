@@ -111,7 +111,7 @@ public class ElevationModelSystemEditorComponent
       }
       else
       {
-        throw new RuntimeException( "Only terrain elevation model are supported:" + "but got \n\tclass=" + (element == null ? null : element.getClass()) + "\n\t value=" + element );
+        throw new RuntimeException( Messages.getString("ElevationModelSystemEditorComponent.0") + Messages.getString("ElevationModelSystemEditorComponent.1") + (element == null ? null : element.getClass()) + "\n\t value=" + element ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       }
     }
   }
@@ -133,7 +133,7 @@ public class ElevationModelSystemEditorComponent
     public void widgetSelected( SelectionEvent event )
     {
       
-      System.out.println("MoveUp:"+elevationListTableViewer.getSelection());
+      System.out.println("MoveUp:"+elevationListTableViewer.getSelection()); //$NON-NLS-1$
 //      moveUpSelectionUp();
       moveSelection( -1 );
       elevationListTableViewer.refresh();
@@ -161,11 +161,11 @@ public class ElevationModelSystemEditorComponent
         IStructuredSelection selection = (IStructuredSelection) event.getSelection();
         if(selection==null)
         {
-          System.out.println("Selection is null");
+          System.out.println(Messages.getString("ElevationModelSystemEditorComponent.4")); //$NON-NLS-1$
           return ;
         }
         if( selection.getFirstElement() == null )
-          throw new NullPointerException( "Null Value while selection.getFirstElement() :" + selection.getFirstElement() );
+          throw new NullPointerException( Messages.getString("ElevationModelSystemEditorComponent.5") + selection.getFirstElement() ); //$NON-NLS-1$
         else
         {
           if( selection.getFirstElement() instanceof ITerrainElevationModel )
@@ -214,7 +214,7 @@ public class ElevationModelSystemEditorComponent
     Label terrainModelLabel = new Label( elevationComposite, SWT.NONE );
     // GridData labelGridData = new GridData( GridData.FILL_BOTH );
     // labelGridData.horizontalSpan = 2;
-    terrainModelLabel.setText( "Bitte Höhenmodell auswählen" );
+    terrainModelLabel.setText( Messages.getString("ElevationModelSystemEditorComponent.6") ); //$NON-NLS-1$
     terrainModelLabel.setLayoutData( elevFormData );
 
     elevFormData = new FormData();
@@ -248,7 +248,7 @@ public class ElevationModelSystemEditorComponent
       }
       else
       {
-        System.out.println( "SIZE : " + terrainElevationModels.size() );
+        System.out.println( "SIZE : " + terrainElevationModels.size() ); //$NON-NLS-1$
         elevationListTableViewer.setInput( terrainElevationModels/*.toArray()*/ );
       }
     }
@@ -261,7 +261,7 @@ public class ElevationModelSystemEditorComponent
     image_Up = new Image( 
                         elevationComposite.getDisplay(),
                         KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
-                        "icons/elcl16/list_up.gif" ).getImageData() );
+                        "icons/elcl16/list_up.gif" ).getImageData() ); //$NON-NLS-1$
     moveUpBtn.setImage( image_Up );
     
     moveUpBtn.setLayoutData( elevFormData );
@@ -274,7 +274,7 @@ public class ElevationModelSystemEditorComponent
     image_Down = new Image(
                         elevationComposite.getDisplay(),
                         KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
-                        "icons/elcl16/list_down.gif" ).getImageData() );
+                        "icons/elcl16/list_down.gif" ).getImageData() ); //$NON-NLS-1$
     moveDownBtn.setImage( image_Down );
 
     moveDownBtn.setLayoutData( elevFormData );
@@ -287,11 +287,11 @@ public class ElevationModelSystemEditorComponent
 
     Button showTerrain = new Button( elevationComposite, SWT.PUSH );
 //    showTerrain.setText( "Goto Terrain" );
-    showTerrain.setToolTipText( "Geländemodell anzeigen und maximieren" );
+    showTerrain.setToolTipText( Messages.getString("ElevationModelSystemEditorComponent.10") ); //$NON-NLS-1$
     image_goToTerrain = new Image( 
                         elevationComposite.getDisplay(), 
                         KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
-                        "icons/elcl16/23_show_elevationmodel.gif" ).getImageData() );
+                        "icons/elcl16/23_show_elevationmodel.gif" ).getImageData() ); //$NON-NLS-1$
     showTerrain.setImage( image_goToTerrain );
     showTerrain.setLayoutData( elevFormData );
     showTerrain.addSelectionListener( new SelectionAdapter()
@@ -315,12 +315,12 @@ public class ElevationModelSystemEditorComponent
     elevFormData.bottom = new FormAttachment( 100, 0 );
     Button deleteTerrain = new Button( elevationComposite, SWT.PUSH );
 //  showTerrain.setText( "Goto Terrain" );
-    deleteTerrain.setToolTipText( "Geländemodell löschen" );
+    deleteTerrain.setToolTipText( Messages.getString("ElevationModelSystemEditorComponent.12") ); //$NON-NLS-1$
     
      image_goToTerrain = new Image( 
                       elevationComposite.getDisplay(), 
                       KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
-                      "icons/elcl16/25_cut_elevationmodel.gif" ).getImageData() );
+                      "icons/elcl16/25_cut_elevationmodel.gif" ).getImageData() ); //$NON-NLS-1$
   deleteTerrain.setImage( image_goToTerrain );
   deleteTerrain.setLayoutData( elevFormData );
   deleteTerrain.addSelectionListener( new SelectionAdapter()
@@ -340,7 +340,7 @@ public class ElevationModelSystemEditorComponent
   } ); 
 
   descriptionGroupText = new Group(elevationComposite,SWT.NONE);
-  descriptionGroupText.setText( "Beschreibung" );
+  descriptionGroupText.setText( Messages.getString("ElevationModelSystemEditorComponent.14") ); //$NON-NLS-1$
   elevFormData = new FormData();
   elevFormData.left = new FormAttachment(moveUpBtn,5);
   elevFormData.top = new FormAttachment(terrainModelLabel,10);
@@ -351,7 +351,7 @@ public class ElevationModelSystemEditorComponent
   FormLayout formDescription = new FormLayout();
   descriptionGroupText.setLayout( formDescription);
   descriptionText = new Text(descriptionGroupText,SWT.MULTI|SWT.WRAP);
-  descriptionText.setText( "Wählen Sie ein Modell aus.");
+  descriptionText.setText( Messages.getString("ElevationModelSystemEditorComponent.15")); //$NON-NLS-1$
   FormData formDescripData = new FormData();
   formDescripData.left = new FormAttachment(0,0);
   formDescripData.right = new FormAttachment(100,0);formDescripData.top = new FormAttachment(0,0);
@@ -366,7 +366,7 @@ public class ElevationModelSystemEditorComponent
     IFEDiscretisationModel1d2d model1d2d = dataModel.getDiscretisationModel();
     if(model1d2d==null)
     {
-      System.out.println("model  is null");
+      System.out.println(Messages.getString("ElevationModelSystemEditorComponent.16")); //$NON-NLS-1$
     }
     
     IKalypsoFeatureTheme elevationTheme = dataModel.getElevationTheme();

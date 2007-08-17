@@ -7,7 +7,7 @@ package org.kalypso.kalypsomodel1d2d.validate.calculation_unit.utilities;
  */
 public class MergeInvariantError {
 	private Object instance = null;
-	private String message = "";
+	private String message = ""; //$NON-NLS-1$
 
 	/** Constructor for InvariantError
 	 * 

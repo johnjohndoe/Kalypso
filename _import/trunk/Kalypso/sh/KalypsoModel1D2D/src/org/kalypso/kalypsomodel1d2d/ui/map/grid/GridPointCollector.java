@@ -62,7 +62,7 @@ import org.opengis.cs.CS_CoordinateSystem;
 
 
 
-@SuppressWarnings("unchecked")
+@SuppressWarnings("unchecked") //$NON-NLS-1$
 public class GridPointCollector /*implements IGeometryBuilder*/
 {
   private static final Logger logger=
@@ -101,7 +101,7 @@ public class GridPointCollector /*implements IGeometryBuilder*/
     for(int i=0;i<sides.length;i++)
     {
       lpcConfigs[i]= 
-        new LinePointCollectorConfig("Linie "+(i+1),colors[i],sides[i]);
+        new LinePointCollectorConfig(Messages.getString("GridPointCollector.1")+(i+1),colors[i],sides[i]); //$NON-NLS-1$
       lpcConfigs[i].setPointRectSize( pointRectSize );
     }
   }
@@ -137,7 +137,7 @@ public class GridPointCollector /*implements IGeometryBuilder*/
   {
     if(hasAllSides)
     {
-      System.out.println("Trying to add point but hasAllsides");
+      System.out.println(Messages.getString("GridPointCollector.2")); //$NON-NLS-1$
       return null;
     }
     if(actualSideKey>=SIDE_MAX_NUM)
@@ -146,7 +146,7 @@ public class GridPointCollector /*implements IGeometryBuilder*/
     }
     Assert.throwIAEOnNull( 
         sides[actualSideKey], 
-        "builder not available for adding a point" );
+        Messages.getString("GridPointCollector.3") ); //$NON-NLS-1$
     
     GM_Point lastAdded= (GM_Point)sides[actualSideKey].addPoint( p );
     GM_Point autocompleted=autoComplete();
@@ -173,7 +173,7 @@ public class GridPointCollector /*implements IGeometryBuilder*/
   {
     if(actualSideKey==3)
     {
-      System.out.println("Autocompleting:");
+      System.out.println("Autocompleting:"); //$NON-NLS-1$
       if(sides[actualSideKey].getRemainingPointCnt()==1)
       {
         GM_Point point= sides[0].getFirstPoint();
@@ -184,7 +184,7 @@ public class GridPointCollector /*implements IGeometryBuilder*/
         }
         else
         {
-          throw new RuntimeException("Mutable point expected");
+          throw new RuntimeException(Messages.getString("GridPointCollector.5")); //$NON-NLS-1$
 //          return null;
         }
       }
@@ -213,7 +213,7 @@ public class GridPointCollector /*implements IGeometryBuilder*/
     }
     Assert.throwIAEOnNull( 
         sides[actualSideKey], 
-        "builder not available for adding a point" );
+        Messages.getString("GridPointCollector.6") ); //$NON-NLS-1$
     return sides[actualSideKey].getLastPoint();
   }
   
@@ -222,7 +222,7 @@ public class GridPointCollector /*implements IGeometryBuilder*/
   {
     Assert.throwIAEOnNull( 
             sides[actualSideKey], 
-            "builder not available" );
+            Messages.getString("GridPointCollector.7") ); //$NON-NLS-1$
     if(actualSideKey>=SIDE_MAX_NUM)
     {
       return null;
@@ -254,7 +254,7 @@ public class GridPointCollector /*implements IGeometryBuilder*/
       }
       else
       {
-        logger.warning( "Last point is null" );
+        logger.warning( Messages.getString("GridPointCollector.8") ); //$NON-NLS-1$
       }
     }
     else
@@ -311,7 +311,7 @@ public class GridPointCollector /*implements IGeometryBuilder*/
      
       builder=sides[actualSideKey];
       Assert.throwIAEOnNull( 
-      builder, "builder null, therfore not available for drawing" );
+      builder, Messages.getString("GridPointCollector.9") ); //$NON-NLS-1$
     }
     
 //    logger.info( "Curves="+Arrays.asList( sides ) );
@@ -374,7 +374,7 @@ public class GridPointCollector /*implements IGeometryBuilder*/
           }
           catch( Exception e )
           {
-            logger.log(Level.INFO, "Error while setting first point from previous builder", e );
+            logger.log(Level.INFO, Messages.getString("GridPointCollector.10"), e ); //$NON-NLS-1$
           }
         }
       }
@@ -685,7 +685,7 @@ public class GridPointCollector /*implements IGeometryBuilder*/
   public void addGridPointCollectorStateChangeListener(
                               IGridPointCollectorStateListener listener)
   {
-    Assert.throwIAEOnNullParam( listener, "listener" );
+    Assert.throwIAEOnNullParam( listener, "listener" ); //$NON-NLS-1$
     if(stateListeners.contains( listener ))
     {
       return;
@@ -716,7 +716,7 @@ public class GridPointCollector /*implements IGeometryBuilder*/
   {
     if(pointRectSize<=0)
     {
-      throw new IllegalArgumentException("pointrectSize must positive:"+pointRectSize);
+      throw new IllegalArgumentException(Messages.getString("GridPointCollector.12")+pointRectSize); //$NON-NLS-1$
     }
     else
     {

@@ -29,11 +29,11 @@ import de.renew.workflow.contexts.IDialogWithResult;
  */
 public class Kalypso1D2DNewProjectWizard extends BasicNewProjectResourceWizard implements IDialogWithResult
 {
-  final static public String ID = "org.kalypso.kalypso1d2d.pjt.Kalypso1D2DNewProjectWizard";
+  final static public String ID = "org.kalypso.kalypso1d2d.pjt.Kalypso1D2DNewProjectWizard";  //$NON-NLS-1$
 
   final static private Logger logger = Logger.getLogger( Kalypso1D2DNewProjectWizard.class.getName() );
 
-  private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.kalypso1d2d.pjt/debug" ) );
+  private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.kalypso1d2d.pjt/debug" ) );  //$NON-NLS-1$
 
   static
   {
@@ -76,7 +76,7 @@ public class Kalypso1D2DNewProjectWizard extends BasicNewProjectResourceWizard i
   public boolean performFinish( )
   {
     boolean result = super.performFinish();
-    final String MSG = "Error while adding nature or metadata folder";
+    final String MSG = Messages.getString("Kalypso1D2DNewProjectWizard.2"); //$NON-NLS-1$
 
     if( !result )
     {
@@ -101,7 +101,7 @@ public class Kalypso1D2DNewProjectWizard extends BasicNewProjectResourceWizard i
       {
         logger.log( Level.INFO, MSG, e );
         final IStatus status = StatusUtilities.statusFromThrowable( e );
-        ErrorDialog.openError( getShell(), "Fehler", "Fehler beim Erzeugen des Projekts.", status );
+        ErrorDialog.openError( getShell(), Messages.getString("Kalypso1D2DNewProjectWizard.3"), Messages.getString("Kalypso1D2DNewProjectWizard.4"), status ); //$NON-NLS-1$ //$NON-NLS-2$
         return false;
       }
       catch( Throwable th )

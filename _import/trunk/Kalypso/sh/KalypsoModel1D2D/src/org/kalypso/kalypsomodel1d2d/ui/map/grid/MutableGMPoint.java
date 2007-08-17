@@ -60,7 +60,7 @@ class MutableGMPoint implements GM_Point
 
   public MutableGMPoint( final GM_Point point )
   {
-    Assert.throwIAEOnNull( point, "Param point must not be null" );
+    Assert.throwIAEOnNull( point, Messages.getString("MutableGMPoint.0") ); //$NON-NLS-1$
     this.point = point;
   }
 

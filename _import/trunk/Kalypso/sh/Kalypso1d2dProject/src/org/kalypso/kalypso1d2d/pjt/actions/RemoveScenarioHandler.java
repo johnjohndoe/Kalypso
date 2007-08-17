@@ -54,7 +54,7 @@ public class RemoveScenarioHandler extends AbstractHandler
         final ScenarioList derivedScenarios = scenario.getDerivedScenarios();
         if( derivedScenarios != null && !derivedScenarios.getScenarios().isEmpty() )
         {
-          MessageDialog.openInformation( shell, "Löschen nicht möglich.", "Das Szenario enthält abgeleitete Szenarien und kann deshalb nicht gelöscht werden." );
+          MessageDialog.openInformation( shell, Messages.getString("RemoveScenarioHandler.0"), Messages.getString("RemoveScenarioHandler.1") ); //$NON-NLS-1$ //$NON-NLS-2$
           return Status.CANCEL_STATUS;
         }
         else
@@ -69,17 +69,17 @@ public class RemoveScenarioHandler extends AbstractHandler
             final List<Scenario> rootScenarios = scenarioManager.getCases();
             if( rootScenarios.contains( scenario ) && rootScenarios.size() == 1 )
             {
-              MessageDialog.openInformation( shell, "Löschen nicht möglich.", "Das letzte Basisszenario kann nicht gelöscht werden." );
+              MessageDialog.openInformation( shell, Messages.getString("RemoveScenarioHandler.2"), Messages.getString("RemoveScenarioHandler.3") ); //$NON-NLS-1$ //$NON-NLS-2$
               return Status.CANCEL_STATUS;
             }
             else if( Kalypso1d2dProjectPlugin.getDefault().getActiveWorkContext().getCurrentCase() == scenario )
             {
-              MessageDialog.openInformation( shell, "Löschen nicht möglich.", "Das Szenario ist zur Zeit aktiv. Bitte aktivieren Sie zuerst ein anderes Szenario." );
+              MessageDialog.openInformation( shell, Messages.getString("RemoveScenarioHandler.4"), Messages.getString("RemoveScenarioHandler.5") ); //$NON-NLS-1$ //$NON-NLS-2$
               return Status.CANCEL_STATUS;
             }
             else if(MessageDialog.openConfirm( shell, "Bitte bestätigen", "Wollen Sie das Szenario wirklich löschen?" ))
             {
-              final UIJob runnable = new UIJob( shell.getDisplay(), "Szenario löschen" )
+              final UIJob runnable = new UIJob( shell.getDisplay(), Messages.getString("RemoveScenarioHandler.6") ) //$NON-NLS-1$
               {
                 /**
                  * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
@@ -103,7 +103,7 @@ public class RemoveScenarioHandler extends AbstractHandler
           }
           catch( final CoreException e )
           {
-            throw new ExecutionException( "Projekt ist kein 1d2d-Projekt oder nicht geöffnet.", e );
+            throw new ExecutionException( Messages.getString("RemoveScenarioHandler.7"), e ); //$NON-NLS-1$
           }
         }
       }

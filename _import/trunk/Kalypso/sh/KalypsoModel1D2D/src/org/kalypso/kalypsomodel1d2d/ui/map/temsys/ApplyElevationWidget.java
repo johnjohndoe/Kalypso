@@ -93,7 +93,7 @@ public class ApplyElevationWidget extends FENetConceptSelectionWidget implements
 
   public ApplyElevationWidget( )
   {
-    this( "Höhen zuweisen", "Höhenzuweisung starten" );
+    this( Messages.getString("ApplyElevationWidget.0"), Messages.getString("ApplyElevationWidget.1") ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public ApplyElevationWidget( final String name, final String toolTip )
@@ -285,13 +285,13 @@ public class ApplyElevationWidget extends FENetConceptSelectionWidget implements
         final StringBuffer nodeElevationText = new StringBuffer( 64 );
         if( nodePoint.getCoordinateDimension() <= 2 )
         {
-          nodeElevationText.append( "Keine Höhendaten an FE-Knoten" );
+          nodeElevationText.append( Messages.getString("ApplyElevationWidget.2") ); //$NON-NLS-1$
         }
         else
         {
-          nodeElevationText.append( "Knotenhöhe = " );
-          nodeElevationText.append( String.format( "%.3f", nodePoint.getZ() ) );
-          nodeElevationText.append( " m" );
+          nodeElevationText.append( Messages.getString("ApplyElevationWidget.3") ); //$NON-NLS-1$
+          nodeElevationText.append( String.format( "%.3f", nodePoint.getZ() ) ); //$NON-NLS-1$
+          nodeElevationText.append( " m" ); //$NON-NLS-1$
         }
 
         // show info
@@ -313,16 +313,16 @@ public class ApplyElevationWidget extends FENetConceptSelectionWidget implements
         final double elevation = elevationProvider.getElevation( nodePoint );
         if( !Double.isNaN( elevation ) )
         {
-          modelEleText.append( "DGM-Höhe = " );
-          modelEleText.append( String.format( "%.3f", elevation ) );
-          modelEleText.append( " m" );
+          modelEleText.append( Messages.getString("ApplyElevationWidget.6") ); //$NON-NLS-1$
+          modelEleText.append( String.format( "%.3f", elevation ) ); //$NON-NLS-1$
+          modelEleText.append( " m" ); //$NON-NLS-1$
         }
         else
-          modelEleText.append( "Keine Geländehöhen vorhanden" );
+          modelEleText.append( Messages.getString("ApplyElevationWidget.9") ); //$NON-NLS-1$
       }
       else
       {
-        modelEleText.append( "Geländemodell nicht gefunden" );
+        modelEleText.append( Messages.getString("ApplyElevationWidget.10") ); //$NON-NLS-1$
       }
 
       // g.drawString( modelEleText.toString(), (int)p.getX(), (int)(p.getY()+height) );

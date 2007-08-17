@@ -47,7 +47,7 @@ public class ActivateScenarioHandler extends AbstractHandler
         {
           final Shell shell = HandlerUtil.getActiveShellChecked( event );
           final IStatus status = e.getStatus();
-          ErrorDialog.openError( shell, "Problem", "Szenario konnte nicht aktiviert werden", status );
+          ErrorDialog.openError( shell, Messages.getString("ActivateScenarioHandler.0"), Messages.getString("ActivateScenarioHandler.1"), status ); //$NON-NLS-1$ //$NON-NLS-2$
           plugin.getLog().log( status );
         }
       }

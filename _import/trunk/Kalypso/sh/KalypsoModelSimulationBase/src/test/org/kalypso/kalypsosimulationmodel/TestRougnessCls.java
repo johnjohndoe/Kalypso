@@ -62,13 +62,13 @@ public class TestRougnessCls extends TestCase
 				roughnessCls.getMarsh());
 
 		assertEquals(
-				"grass", 
+				"grass",  //$NON-NLS-1$
 				roughnessCls.getName());
 //		assertEquals(
 //				"htpp://wwww.tuhh.de/wb/roughness_db/grass", 
 //				roughnessCls.getURI());
 		assertNull(
-				"", 
+				"",  //$NON-NLS-1$
 				roughnessCls.getDescription());
 		
 		//setter
@@ -96,7 +96,7 @@ public class TestRougnessCls extends TestCase
 		assertEquals(
 				0.55, 
 				roughnessCls.getMarsh());
-		final String NEW_NAME="__name__"; 
+		final String NEW_NAME="__name__";  //$NON-NLS-1$
 		roughnessCls.setName(NEW_NAME);
 		assertEquals(NEW_NAME, roughnessCls.getName());
 		
@@ -146,11 +146,11 @@ public class TestRougnessCls extends TestCase
 			r.setMarsh(0.55555);
 			assertEquals(0.55555, r.getMarsh());
 			
-			r.setDescription("D");
-			assertEquals("D",r.getDescription());
+			r.setDescription("D"); //$NON-NLS-1$
+			assertEquals("D",r.getDescription()); //$NON-NLS-1$
 			
-			r.setName("N");
-			assertEquals("N",r.getName());
+			r.setName("N"); //$NON-NLS-1$
+			assertEquals("N",r.getName()); //$NON-NLS-1$
 		}
 		catch(Throwable th)
 		{

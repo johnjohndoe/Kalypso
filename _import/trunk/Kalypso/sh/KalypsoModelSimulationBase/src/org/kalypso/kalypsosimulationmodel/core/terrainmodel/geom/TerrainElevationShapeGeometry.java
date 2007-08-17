@@ -112,7 +112,7 @@ public class TerrainElevationShapeGeometry extends FeaturePropertyFunction
     }
     catch( final Throwable e )
     {
-      throw new RuntimeException( "Could not create curve", e );
+      throw new RuntimeException( Messages.getString("TerrainElevationShapeGeometry.0"), e ); //$NON-NLS-1$
     }
   }
   

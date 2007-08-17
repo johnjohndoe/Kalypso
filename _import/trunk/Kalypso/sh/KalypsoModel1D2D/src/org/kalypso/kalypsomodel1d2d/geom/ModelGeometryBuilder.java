@@ -78,7 +78,7 @@ public class ModelGeometryBuilder
    */
   public static final GM_Surface createSurfaceFromNode( final List<IFE1D2DNode> nodes ) throws GM_Exception
   {
-    Assert.throwIAEOnNullParam( nodes, "nodes" );
+    Assert.throwIAEOnNullParam( nodes, "nodes" ); //$NON-NLS-1$
 
     final int SIZE = nodes.size();
     /* Positions from nodes */
@@ -86,7 +86,7 @@ public class ModelGeometryBuilder
 
     if( SIZE <= 3 )
     {
-      System.out.println( "Less than 3 node as exterior " );
+        System.out.println(Messages.ModelGeometryBuilder_1);
       return null;
     }
 

@@ -53,7 +53,7 @@ import com.vividsolutions.jts.io.ParseException;
 
 public class NativeTerrainElevationModelFactory
 {
-  private static final Cache cache = new FifoCacheFactory().newInstance( "NativeTerrainElevationModelFactory_CACHE", 60 * 60 * 1000, 8 );
+  private static final Cache cache = new FifoCacheFactory().newInstance( "NativeTerrainElevationModelFactory_CACHE", 60 * 60 * 1000, 8 ); //$NON-NLS-1$
 
   CacheMap chCacheMap;
 
@@ -64,18 +64,18 @@ public class NativeTerrainElevationModelFactory
 
   public static final IElevationProvider getTerrainElevationModel( final File nativeTerrainModelFile_ ) throws IllegalArgumentException, IOException
   {
-    Assert.throwIAEOnNullParam( nativeTerrainModelFile_, "nativeTerrainModelFile_" );
+    Assert.throwIAEOnNullParam( nativeTerrainModelFile_, "nativeTerrainModelFile_" ); //$NON-NLS-1$
     // Decoding the White Spaces present in the File Paths. Sometimes requires to decode twice.
     // One particular case is having %2520 instead of a single white space.
-    final File nativeTerrainModelFile__ = new File( URLDecoder.decode( nativeTerrainModelFile_.toString(), "UTF-8" ) );
-    final File nativeTerrainModelFile = new File( URLDecoder.decode( nativeTerrainModelFile__.toString(), "UTF-8" ) );
+    final File nativeTerrainModelFile__ = new File( URLDecoder.decode( nativeTerrainModelFile_.toString(), "UTF-8" ) ); //$NON-NLS-1$
+    final File nativeTerrainModelFile = new File( URLDecoder.decode( nativeTerrainModelFile__.toString(), "UTF-8" ) ); //$NON-NLS-1$
     if( nativeTerrainModelFile.isDirectory() )
     {
-      throw new IllegalArgumentException( "File must not be a directory:" + nativeTerrainModelFile );
+      throw new IllegalArgumentException( Messages.getString("NativeTerrainElevationModelFactory.5") + nativeTerrainModelFile ); //$NON-NLS-1$
     }
     if( !nativeTerrainModelFile.exists() )
     {
-      throw new IllegalArgumentException( "file must exist:" + nativeTerrainModelFile );
+      throw new IllegalArgumentException( Messages.getString("NativeTerrainElevationModelFactory.6") + nativeTerrainModelFile ); //$NON-NLS-1$
     }
     return resolveTerrainElevationModel( nativeTerrainModelFile );
   }
@@ -88,20 +88,20 @@ public class NativeTerrainElevationModelFactory
     {
       return (IElevationProvider) cachedEleModel;
     }
-    if( filePath.endsWith( ".asc" ) )
+    if( filePath.endsWith( ".asc" ) ) //$NON-NLS-1$
     {
       final ASCTerrainElevationModel terrainElevationModel = new ASCTerrainElevationModel( ascFile.toURL() );
       cache.addObject( filePath, terrainElevationModel );
       return terrainElevationModel;
     }
     // It is the same as asc!!!
-    else if( filePath.endsWith( ".asg" ) )
+    else if( filePath.endsWith( ".asg" ) ) //$NON-NLS-1$
     {
       final ASCTerrainElevationModel terrainElevationModel = new ASCTerrainElevationModel( ascFile.toURL() );
       cache.addObject( filePath, terrainElevationModel );
       return terrainElevationModel;
     }
-    else if( filePath.endsWith( ".hmo" ) )
+    else if( filePath.endsWith( ".hmo" ) ) //$NON-NLS-1$
     {
       try
       {
@@ -112,12 +112,12 @@ public class NativeTerrainElevationModelFactory
       catch( final ParseException e )
       {
         e.printStackTrace();
-        throw new IllegalArgumentException( "File has bad format; could not parse it", e );
+        throw new IllegalArgumentException( Messages.getString("NativeTerrainElevationModelFactory.4"), e ); //$NON-NLS-1$
       }
     }
     else
     {
-      throw new RuntimeException( "Cannot handle this type of:" + filePath );
+      throw new RuntimeException( Messages.getString("NativeTerrainElevationModelFactory.10") + filePath ); //$NON-NLS-1$
     }
   }
 

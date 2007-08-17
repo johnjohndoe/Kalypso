@@ -4,7 +4,7 @@ import org.eclipse.core.runtime.Plugin;
 
 public class WorkflowModelPlugin extends Plugin
 {
-  public static final String ID = "de.renew.workflow.model";
+  public static final String ID = "de.renew.workflow.model"; //$NON-NLS-1$
   
   private static WorkflowModelPlugin m_instance;
 

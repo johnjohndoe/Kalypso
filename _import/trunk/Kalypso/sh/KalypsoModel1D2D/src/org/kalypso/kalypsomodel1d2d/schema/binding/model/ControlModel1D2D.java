@@ -73,7 +73,7 @@ import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
  * @author Dejan Antanaskovic
  * 
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings("unchecked") //$NON-NLS-1$
 public class ControlModel1D2D extends AbstractFeatureBinder implements IControlModel1D2D
 {
   public ControlModel1D2D( final Feature featureToBind )
@@ -144,7 +144,7 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
       return list;
 
     // TODO: what about String.split?
-    final StringTokenizer tokenizer = new StringTokenizer( property.toString(), ";" );
+    final StringTokenizer tokenizer = new StringTokenizer( property.toString(), ";" ); //$NON-NLS-1$
     while( tokenizer.hasMoreTokens() )
       list.add( tokenizer.nextToken() );
     return list;
@@ -156,11 +156,11 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
     {
       final String paths = list.get( 0 );
       for( int i = 1; i < list.size(); i++ )
-        paths.concat( ";" ).concat( list.get( i ) );
+        paths.concat( ";" ).concat( list.get( i ) ); //$NON-NLS-1$
       getFeature().setProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_RESTART_PATH, paths );
     }
     else
-      getFeature().setProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_RESTART_PATH, "" );
+      getFeature().setProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_RESTART_PATH, "" ); //$NON-NLS-1$
   }
 
   public XMLGregorianCalendar getStartCalendar( )
@@ -335,13 +335,13 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
       final URL context = workspace.getContext();
       final File filee = new File( FileLocator.resolve( context ).getFile() );
       final String name = filee.getName();// new java.io.File( uri ).getName();
-      final XLinkedFeature_Impl linkedFeature = (XLinkedFeature_Impl) FeatureHelper.createLinkToID( name + "#" + calUnit.getGmlID(), parentFeature, (IRelationType) property, wrappedFeature.getFeatureType() );
+      final XLinkedFeature_Impl linkedFeature = (XLinkedFeature_Impl) FeatureHelper.createLinkToID( name + "#" + calUnit.getGmlID(), parentFeature, (IRelationType) property, wrappedFeature.getFeatureType() ); //$NON-NLS-1$
       parentFeature.setProperty( property, linkedFeature );
     }
     catch( final Exception e )
     {
       e.printStackTrace();
-      throw new RuntimeException( "Exception while setting calunit link to control", e );
+      throw new RuntimeException( Messages.ControlModel1D2D_5, e );
     }
   }
 

@@ -63,7 +63,7 @@ public class ContextHandlerFactoryExtension
 
   private static Map<String, IContextHandlerFactory> THE_FACTORY_MAP = null;
 
-  private final static String CONTEXT_HANDLER_FACTORY_EXTENSION_POINT = "de.renew.workflow.model.contextHandlerFactories";
+  private final static String CONTEXT_HANDLER_FACTORY_EXTENSION_POINT = "de.renew.workflow.model.contextHandlerFactories"; //$NON-NLS-1$
 
   public static IContextHandlerFactory getFactory( final ExtensionContext extContext )
   {
@@ -85,15 +85,15 @@ public class ContextHandlerFactoryExtension
 
       for( final IConfigurationElement element : configurationElements )
       {
-        final String id = element.getAttribute( "id" );
+        final String id = element.getAttribute( "id" ); //$NON-NLS-1$
         try
         {
-          final IContextHandlerFactory factory = (IContextHandlerFactory) element.createExecutableExtension( "class" );
+          final IContextHandlerFactory factory = (IContextHandlerFactory) element.createExecutableExtension( "class" ); //$NON-NLS-1$
           THE_FACTORY_MAP.put( id, factory );
         }
         catch( final CoreException e )
         {
-          final IStatus status = new Status( Status.ERROR, "de.renew.workflow.model", "Failed to create contextHandlerFactory extension for id: " + id, e );
+          final IStatus status = new Status( Status.ERROR, "de.renew.workflow.model", Messages.getString("ContextHandlerFactoryExtension.4") + id, e ); //$NON-NLS-1$ //$NON-NLS-2$
           WorkflowModelPlugin.getInstance().getLog().log( status );
         }
       }

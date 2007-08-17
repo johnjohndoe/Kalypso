@@ -49,27 +49,27 @@ import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
  */
 public class KalypsoModel1D2DUIImages
 {
-  public static final ImageDescriptor ID_CHANGE = id( "icons/elcl16/change.gif" );
+  public static final ImageDescriptor ID_CHANGE = id( "icons/elcl16/change.gif" ); //$NON-NLS-1$
 
-  public static final ImageDescriptor ID_PLAY = id( "icons/elcl16/nav_go.gif" );
+  public static final ImageDescriptor ID_PLAY = id( "icons/elcl16/nav_go.gif" ); //$NON-NLS-1$
 
-  public static final ImageDescriptor ID_OK = id( "icons/elcl16/ok.gif" );
+  public static final ImageDescriptor ID_OK = id( "icons/elcl16/ok.gif" ); //$NON-NLS-1$
 
-  public static final ImageDescriptor ID_GO = id( "icons/elcl16/blue_arrow_right.gif" );
+  public static final ImageDescriptor ID_GO = id( "icons/elcl16/blue_arrow_right.gif" ); //$NON-NLS-1$
 
-  public static final ImageDescriptor ID_EDIT = id( "icons/elcl16/edit.gif" );
+  public static final ImageDescriptor ID_EDIT = id( "icons/elcl16/edit.gif" ); //$NON-NLS-1$
 
-  public static final ImageDescriptor ID_SELECT = id( "icons/elcl16/boxSel.gif" );
+  public static final ImageDescriptor ID_SELECT = id( "icons/elcl16/boxSel.gif" ); //$NON-NLS-1$
 
-  public static final ImageDescriptor ID_ADD = id( "icons/elcl16/addrepo_rep.gif" );
+  public static final ImageDescriptor ID_ADD = id( "icons/elcl16/addrepo_rep.gif" ); //$NON-NLS-1$
 
-  public static final ImageDescriptor IMG_RUN_SIM = id( "icons/startCalculation.gif" );
+  public static final ImageDescriptor IMG_RUN_SIM = id( "icons/startCalculation.gif" ); //$NON-NLS-1$
 
-  public static final ImageDescriptor IMG_DESC_ZOOM_WITH_RECT = id( "icons/elcl16/zoomin.gif" );
+  public static final ImageDescriptor IMG_DESC_ZOOM_WITH_RECT = id( "icons/elcl16/zoomin.gif" ); //$NON-NLS-1$
 
-  public static final ImageDescriptor IMG_DESC_PAN = id( "icons/elcl16/pan.gif" );
+  public static final ImageDescriptor IMG_DESC_PAN = id( "icons/elcl16/pan.gif" ); //$NON-NLS-1$
 
-  public static final ImageDescriptor IMG_DESC_SAVE = id( "icons/elcl16/save.gif" );
+  public static final ImageDescriptor IMG_DESC_SAVE = id( "icons/elcl16/save.gif" ); //$NON-NLS-1$
 
   private KalypsoModel1D2DUIImages( )
   {

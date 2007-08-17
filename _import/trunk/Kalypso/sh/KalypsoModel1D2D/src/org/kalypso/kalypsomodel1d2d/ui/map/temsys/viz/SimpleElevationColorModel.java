@@ -272,7 +272,7 @@ public class SimpleElevationColorModel implements IElevationColorModel
     else
     {
       // or return a translucent color
-      throw new IllegalArgumentException( "Elevation is out of range:" + "\n\tminElevation=" + m_minElevation + "\n\tmaxElevation=" + m_maxElevation + "\n\tcurrentElevation=" + elevation );
+      throw new IllegalArgumentException( Messages.getString("SimpleElevationColorModel.0") + "\n\tminElevation=" + m_minElevation + "\n\tmaxElevation=" + m_maxElevation + "\n\tcurrentElevation=" + elevation ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
     }
   }
 

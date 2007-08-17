@@ -56,12 +56,12 @@ public class UrlCatalogRoughness extends AbstractUrlCatalog
   /**
    * Latest version for schema
    */
-  final static public String CURRENT_VERSION = "v0.0.0";
+  final static public String CURRENT_VERSION = "v0.0.0"; //$NON-NLS-1$
 
   /**
    * path for simulation base schema file
    */
-  final static public String REL_PATH_ROUGHNESS_DB = CURRENT_VERSION + "/roughness_model.xsd";
+  final static public String REL_PATH_ROUGHNESS_DB = CURRENT_VERSION + "/roughness_model.xsd"; //$NON-NLS-1$
 
   /**
    * Url for simulation base model schema
@@ -71,12 +71,12 @@ public class UrlCatalogRoughness extends AbstractUrlCatalog
   /**
    * Namespace for simulation model base
    */
-  final static public String NS_ROUGHNESS_MODEL = "http://www.tu-harburg.de/wb/kalypso/schemata/roughness";
+  final static public String NS_ROUGHNESS_MODEL = "http://www.tu-harburg.de/wb/kalypso/schemata/roughness"; //$NON-NLS-1$
 
   /**
    * Prefix for the simulation model base
    */
-  final static public String NS_PREFIX_ROUGHNESS = "wbr";
+  final static public String NS_PREFIX_ROUGHNESS = "wbr"; //$NON-NLS-1$
 
   /**
    * Fills the catalog with the roughness base schemas path namespace and location

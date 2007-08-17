@@ -18,12 +18,12 @@ import org.kalypso.ui.repository.view.RepositoryExplorerPart;
 import org.kalypso.ui.views.map.MapView;
 
 // TODO: move the perspective to the KalypsoModelProduct
-@SuppressWarnings("restriction")
+@SuppressWarnings("restriction")  //$NON-NLS-1$
 public class Perspective implements IPerspectiveFactory
 {
-  final static public String ID = "org.kalypso.kalypso1d2d.pjt.perspective.Perspective";
+  final static public String ID = "org.kalypso.kalypso1d2d.pjt.perspective.Perspective";  //$NON-NLS-1$
 
-  public static final String SCENARIO_VIEW_ID = "org.kalypso.kalypso1d2d.pjt.views.ScenarioView";
+  public static final String SCENARIO_VIEW_ID = "org.kalypso.kalypso1d2d.pjt.views.ScenarioView";  //$NON-NLS-1$
 
   public void createInitialLayout( final IPageLayout layout )
   {
@@ -35,11 +35,11 @@ public class Perspective implements IPerspectiveFactory
     final String editorArea = layout.getEditorArea();
     layout.setEditorAreaVisible( false );
 
-    final IFolderLayout leftTop = layout.createFolder( "leftTop", IPageLayout.LEFT, 0.3f, editorArea );
-    final IFolderLayout leftBottom = layout.createFolder( "leftBottom", IPageLayout.BOTTOM, 0.7f, "leftTop" );
-    final IFolderLayout rightTop = layout.createFolder( "rightTop", IPageLayout.RIGHT, 1.0f, editorArea );
-    final IPlaceholderFolderLayout rightBottom = layout.createPlaceholderFolder( "rightBottom", IPageLayout.BOTTOM, 0.7f, "rightTop" );
-    final IPlaceholderFolderLayout veryRight = layout.createPlaceholderFolder( "veryRight", IPageLayout.RIGHT, 0.7f, "rightTop" );
+    final IFolderLayout leftTop = layout.createFolder( "leftTop", IPageLayout.LEFT, 0.3f, editorArea );  //$NON-NLS-1$
+    final IFolderLayout leftBottom = layout.createFolder( "leftBottom", IPageLayout.BOTTOM, 0.7f, "leftTop" );   //$NON-NLS-1$ //$NON-NLS-2$
+    final IFolderLayout rightTop = layout.createFolder( "rightTop", IPageLayout.RIGHT, 1.0f, editorArea );  //$NON-NLS-1$
+    final IPlaceholderFolderLayout rightBottom = layout.createPlaceholderFolder( "rightBottom", IPageLayout.BOTTOM, 0.7f, "rightTop" );   //$NON-NLS-1$ //$NON-NLS-2$
+    final IPlaceholderFolderLayout veryRight = layout.createPlaceholderFolder( "veryRight", IPageLayout.RIGHT, 0.7f, "rightTop" );   //$NON-NLS-1$ //$NON-NLS-2$
 
     leftTop.addView( WorkflowView.ID );
     leftBottom.addView( SCENARIO_VIEW_ID );

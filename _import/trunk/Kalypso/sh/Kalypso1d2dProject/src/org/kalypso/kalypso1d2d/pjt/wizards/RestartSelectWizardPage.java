@@ -43,7 +43,7 @@ public class RestartSelectWizardPage extends WizardPage
 
   public RestartSelectWizardPage( final String pageName, final IResultModelDescriptor[] existingResultDescriptors )
   {
-    this( pageName, "", existingResultDescriptors );
+    this( pageName, "", existingResultDescriptors );   //$NON-NLS-1$
   }
 
   public RestartSelectWizardPage( final String pageName, final String initialSelection, final IResultModelDescriptor[] initialDescriptors )
@@ -76,11 +76,11 @@ public class RestartSelectWizardPage extends WizardPage
 
     allResultsViewer.setContentProvider( new ResultNavigatorContentProvider() );
     allResultsViewer.setLabelProvider( new WorkbenchLabelProvider() );
-    allResultsViewer.setInput( new File( "." ) );
+    allResultsViewer.setInput( new File( "." ) );   //$NON-NLS-1$
 
     m_selectedResultNames = new Text( innerComposite, SWT.MULTI | SWT.BORDER );
     m_selectedResultNames.setEditable( false );
-    m_selectedResultNames.setText( "" );
+    m_selectedResultNames.setText( "" );   //$NON-NLS-1$
 
     loadInitialSelection();
     if( m_initialDescriptors != null )
@@ -100,7 +100,7 @@ public class RestartSelectWizardPage extends WizardPage
 
   private void loadInitialSelection( )
   {
-    final String[] selections = m_initialSelection.split( ";" );
+    final String[] selections = m_initialSelection.split( ";" );   //$NON-NLS-1$
 
     final ResultDB resultDB = KalypsoModel1D2DPlugin.getDefault().getResultDB();
 
@@ -132,27 +132,27 @@ public class RestartSelectWizardPage extends WizardPage
       m_selectedResults.add( descriptor );
 
     // Update text-control
-    String text = "";
+    String text = "";   //$NON-NLS-1$
     for( final IResultModelDescriptor key : m_selectedResults )
     {
       final String modelName = key.getModelName();
       text = text.concat( modelName ).concat( m_selectedResultNames.getLineDelimiter() );
     }
     if( text.length() == 0 )
-      m_selectedResultNames.setText( "" );
+      m_selectedResultNames.setText( "" );   //$NON-NLS-1$
     else
       m_selectedResultNames.setText( text.substring( 0, text.length() - m_selectedResultNames.getLineDelimiter().length() ) );
   }
 
   public String getSelectedPath( )
   {
-    String text = "";
+    String text = "";   //$NON-NLS-1$
     for( final IResultModelDescriptor key : m_selectedResults )
     {
-      text = text.concat( key.getWorkspacePath() ).concat( ";" );
+      text = text.concat( key.getWorkspacePath() ).concat( ";" );   //$NON-NLS-1$
     }
     if( text.length() == 0 )
-      return "";
+      return "";   //$NON-NLS-1$
     else
       return text.substring( 0, text.length() - 1 );
   }

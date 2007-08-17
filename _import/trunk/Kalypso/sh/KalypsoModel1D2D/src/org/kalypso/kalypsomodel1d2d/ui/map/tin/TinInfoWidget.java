@@ -98,13 +98,13 @@ public class TinInfoWidget extends AbstractWidget
 
   private ISelectionProvider m_selectionProvider = null;
 
-  private static final QName QNAME_TRIANGULATED_SURFACE = new QName( NS.GML3, "TriangulatedSurface" );
+  private static final QName QNAME_TRIANGULATED_SURFACE = new QName( NS.GML3, "TriangulatedSurface" ); //$NON-NLS-1$
 
   private final List<TinInfoProvider> m_tins = new ArrayList<TinInfoProvider>();
 
   public TinInfoWidget( )
   {
-    super( "TIN-Info", "Zeigt TIN-Werte an" );
+    super( Messages.getString("TinInfoWidget.1"), Messages.getString("TinInfoWidget.2") ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public TinInfoWidget( final String name, final String toolTip )
@@ -127,14 +127,14 @@ public class TinInfoWidget extends AbstractWidget
     final GisMapOutlineView outlineView = (GisMapOutlineView) page.findView( GisMapOutlineView.ID );
     if( outlineView == null )
     {
-      System.out.println( "Keine Outline gefunden." );
+      System.out.println( Messages.getString("TinInfoWidget.3") ); //$NON-NLS-1$
       return;
     }
 
     final MapPanel outlineMapPanel = outlineView.getMapPanel();
     if( outlineMapPanel != mapPanel )
     {
-      System.out.println( "Outline map panel passt nicht." );
+      System.out.println( Messages.getString("TinInfoWidget.4") ); //$NON-NLS-1$
       return;
     }
 
@@ -175,7 +175,7 @@ public class TinInfoWidget extends AbstractWidget
       final Date featureDate = info.getFeatureDate();
       final String date;
       if( featureDate == null )
-        date = "";
+        date = ""; //$NON-NLS-1$
       else
         date = featureDate.toString();
 
@@ -183,15 +183,15 @@ public class TinInfoWidget extends AbstractWidget
       final double elevation = info.getValue( location );
 
       if( Double.isNaN( elevation ) )
-        formatter.format( "%17s:  -%n", parameter );
+        formatter.format( "%17s:  -%n", parameter ); //$NON-NLS-1$
       else
-        formatter.format( "%17s: %.2f %4s (%s)%n", parameter, elevation, unit, date );
+        formatter.format( "%17s: %.2f %4s (%s)%n", parameter, elevation, unit, date ); //$NON-NLS-1$
     }
 
     // repaint map if tooltip has changed
     m_info = sb.toString().trim();
     if( m_info.length() == 0 )
-      m_info = "- selektieren Sie ein TIN-Thema in der Gliederung -";
+      m_info = Messages.getString("TinInfoWidget.8"); //$NON-NLS-1$
 
     m_point = p;
 
@@ -226,9 +226,9 @@ public class TinInfoWidget extends AbstractWidget
           if( QNAME_TRIANGULATED_SURFACE.equals( valueQName ) )
           {
             // HACK: at the moment these qnames are hard-coded, where to get them from?
-            final QName unitQName = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" );
-            final QName paramQName = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" );
-            final QName dateQName = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "date" );
+            final QName unitQName = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ); //$NON-NLS-1$
+            final QName paramQName = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ); //$NON-NLS-1$
+            final QName dateQName = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "date" ); //$NON-NLS-1$
 
             final TinInfoProvider tinInfoProvider = new TinInfoProvider( theme, geomPT, unitQName, paramQName, dateQName );
             m_tins.add( tinInfoProvider );
@@ -289,7 +289,7 @@ public class TinInfoWidget extends AbstractWidget
       // find first theme which covers the position
       final FeatureList featureList = m_theme.getFeatureList();
       if( featureList == null || featureList.size() == 0 )
-        return "";
+        return ""; //$NON-NLS-1$
 
       final GMLWorkspace workspace = m_theme.getWorkspace();
       for( final Object object : featureList )
@@ -301,7 +301,7 @@ public class TinInfoWidget extends AbstractWidget
         return (String) feature.getProperty( m_unitQname );
       }
 
-      return "";
+      return ""; //$NON-NLS-1$
     }
 
     public final String getFeatureParameter( )
@@ -309,7 +309,7 @@ public class TinInfoWidget extends AbstractWidget
       // find first theme which covers the position
       final FeatureList featureList = m_theme.getFeatureList();
       if( featureList == null || featureList.size() == 0 )
-        return "";
+        return ""; //$NON-NLS-1$
 
       final GMLWorkspace workspace = m_theme.getWorkspace();
       for( final Object object : featureList )
@@ -321,7 +321,7 @@ public class TinInfoWidget extends AbstractWidget
         return (String) feature.getProperty( m_parameterQname );
       }
 
-      return "";
+      return ""; //$NON-NLS-1$
     }
 
     public final double getValue( final GM_Point location )

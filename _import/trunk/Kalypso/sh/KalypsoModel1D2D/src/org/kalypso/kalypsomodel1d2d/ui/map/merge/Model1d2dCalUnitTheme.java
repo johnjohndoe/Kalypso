@@ -66,7 +66,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  * @author Patrice Congo
  * 
  */
-@SuppressWarnings( { "unchecked", "hiding" })
+@SuppressWarnings( { "unchecked", "hiding" }) //$NON-NLS-1$ //$NON-NLS-2$
 public class Model1d2dCalUnitTheme extends AbstractKalypsoTheme
 {
   private CalUnitDisplayElement calUnitDisplayElement;
@@ -75,11 +75,11 @@ public class Model1d2dCalUnitTheme extends AbstractKalypsoTheme
 
   private IFlowRelationshipModel modelBoundaryConditions;
 
-  private final ImageIcon imgIcon = new ImageIcon( PluginUtilities.findResource( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), "icons/elcl16/apply.png" ) );
+  private final ImageIcon imgIcon = new ImageIcon( PluginUtilities.findResource( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), "icons/elcl16/apply.png" ) ); //$NON-NLS-1$
 
   public Model1d2dCalUnitTheme( final String name, final IMapModell mapModel )
   {
-    super( name, "Aktuelle Berechnungseinheit", mapModel );
+    super( name, Messages.getString("Model1d2dCalUnitTheme.3"), mapModel ); //$NON-NLS-1$
   }
 
   public void setCalculationUnit( final ICalculationUnit calcUnit )
@@ -163,7 +163,7 @@ public class Model1d2dCalUnitTheme extends AbstractKalypsoTheme
   @Override
   public String getType( )
   {
-    return "GML_MERGE";
+    return "GML_MERGE"; //$NON-NLS-1$
   }
 
   public void setModelBoundaryConditions( final IFlowRelationshipModel bcs )

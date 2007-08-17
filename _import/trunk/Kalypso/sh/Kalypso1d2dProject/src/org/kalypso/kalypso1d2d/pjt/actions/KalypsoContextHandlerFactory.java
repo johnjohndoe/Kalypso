@@ -58,9 +58,9 @@ import de.renew.workflow.contexts.ExtensionContext.Parameter;
  */
 public class KalypsoContextHandlerFactory implements IContextHandlerFactory
 {
-  private static final String PARAM_TYPE = "type";
+  private static final String PARAM_TYPE = "type";  //$NON-NLS-1$
 
-  private static final String PARAM_INPUT = "input";
+  private static final String PARAM_INPUT = "input";  //$NON-NLS-1$
 
   /**
    * @see org.kalypso.afgui.workflow.IContextHandlerFactory#getHandler(org.kalypso.afgui.workflow.ContextType)
@@ -84,7 +84,7 @@ public class KalypsoContextHandlerFactory implements IContextHandlerFactory
           input = parameter.getValue();
         }
       }
-      if( "mapViewInputContext".equals( type ) )
+      if( "mapViewInputContext".equals( type ) )  //$NON-NLS-1$
       {
         if( input != null )
         {
@@ -92,7 +92,7 @@ public class KalypsoContextHandlerFactory implements IContextHandlerFactory
           return inputContextHandler;
         }
       }
-      else if( "featureViewInputContext".equals( type ) )
+      else if( "featureViewInputContext".equals( type ) )  //$NON-NLS-1$
       {
         if( input != null )
         {
@@ -100,7 +100,7 @@ public class KalypsoContextHandlerFactory implements IContextHandlerFactory
           return inputContextHandler;
         }
       }
-      else if( "themeContext".equals( type ) )
+      else if( "themeContext".equals( type ) )  //$NON-NLS-1$
       {
         if( input != null )
         {

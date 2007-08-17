@@ -65,7 +65,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
    */
   private static final Map<Class< ? extends IFeatureWrapper2>, String> LOCATION_MAP = new HashMap<Class< ? extends IFeatureWrapper2>, String>();
 
-  private static final String MODELS_FOLDER = "models";
+  private static final String MODELS_FOLDER = "models";  //$NON-NLS-1$
 
   static
   {
@@ -283,7 +283,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
    * This method block until the gml is loaded, which may take some time
    * </p>.
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked")  //$NON-NLS-1$
   public <T extends IFeatureWrapper2> T getModel( final Class<T> modelClass ) throws CoreException
   {
     final CommandableWorkspace workspace = getModelWorkspace( modelClass );
@@ -299,7 +299,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
   private CommandableWorkspace getModelWorkspace( final Class< ? extends IFeatureWrapper2> wrapperClass ) throws IllegalArgumentException, CoreException
   {
     if( !LOCATION_MAP.containsKey( wrapperClass ) )
-      throw new IllegalArgumentException( "No gml-file defined for wrapper class: " + wrapperClass );
+      throw new IllegalArgumentException( Messages.getString("SzenarioDataProvider.13") + wrapperClass ); //$NON-NLS-1$
 
     final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
 
@@ -362,7 +362,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
     }
     try
     {
-      monitor.beginTask( "Submodell " + modelClass.getSimpleName() + " speichern", 110 );
+      monitor.beginTask( Messages.getString("SzenarioDataProvider.14") + modelClass.getSimpleName() + Messages.getString("SzenarioDataProvider.15"), 110 ); //$NON-NLS-1$ //$NON-NLS-2$
 
       final KeyPoolListener keyPoolListener = m_keyMap.get( modelClass );
       final IPoolableObjectType key = keyPoolListener.getKey();
@@ -396,7 +396,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
     }
     try
     {
-      monitor.beginTask( "Modell speichern", m_keyMap.size() * 100 );
+      monitor.beginTask( Messages.getString("SzenarioDataProvider.16"), m_keyMap.size() * 100 ); //$NON-NLS-1$
       for( final Class< ? extends IFeatureWrapper2> modelClass : m_keyMap.keySet() )
       {
         saveModel( modelClass, new SubProgressMonitor( monitor, 100 ) );

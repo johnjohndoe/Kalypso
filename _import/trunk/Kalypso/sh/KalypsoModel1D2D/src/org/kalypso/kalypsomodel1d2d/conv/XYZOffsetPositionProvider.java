@@ -78,7 +78,7 @@ public class XYZOffsetPositionProvider implements IPositionProvider
 
   public XYZOffsetPositionProvider( double xoffset, double yoffset, CS_CoordinateSystem coordinateSystem )
   {
-    Assert.throwIAEOnNullParam( coordinateSystem, "coordinateSystem" );
+    Assert.throwIAEOnNullParam( coordinateSystem, "coordinateSystem" );  //$NON-NLS-1$
     xOffset = xoffset;
     yOffset = yoffset;
     zOffset = 0.0;
@@ -99,7 +99,7 @@ public class XYZOffsetPositionProvider implements IPositionProvider
    */
   public XYZOffsetPositionProvider( CS_CoordinateSystem crs, double xOffset, double yOffset, double zOffset ) throws IllegalArgumentException
   {
-    Assert.throwIAEOnNullParam( crs, "crs" );
+    Assert.throwIAEOnNullParam( crs, "crs" );  //$NON-NLS-1$
 
     this.xOffset = xOffset;
     this.yOffset = yOffset;
@@ -130,7 +130,7 @@ public class XYZOffsetPositionProvider implements IPositionProvider
    */
   public double getNativeX( GM_Point point ) throws IllegalArgumentException
   {
-    Assert.throwIAEOnNullParam( point, "point" );
+    Assert.throwIAEOnNullParam( point, "point" );  //$NON-NLS-1$
     return point.getX() - xOffset;
   }
 
@@ -139,7 +139,7 @@ public class XYZOffsetPositionProvider implements IPositionProvider
    */
   public double getNativeY( GM_Point point ) throws IllegalArgumentException
   {
-    Assert.throwIAEOnNullParam( point, "point" );
+    Assert.throwIAEOnNullParam( point, "point" );  //$NON-NLS-1$
     return point.getY() - yOffset;
   }
 
@@ -148,7 +148,7 @@ public class XYZOffsetPositionProvider implements IPositionProvider
    */
   public double getNativeZ( GM_Point point ) throws IllegalArgumentException
   {
-    Assert.throwIAEOnNullParam( point, "point" );
+    Assert.throwIAEOnNullParam( point, "point" );  //$NON-NLS-1$
     return point.getZ() - zOffset;
   }
 

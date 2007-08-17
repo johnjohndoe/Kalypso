@@ -156,7 +156,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
     m_networkModel = networkModel;
     m_flowRelationCollection = flowRelationCollection;
 
-    setWindowTitle( "Kalypso Wspm Import" );
+    setWindowTitle( Messages.getString("ImportWspmWizard.0") ); //$NON-NLS-1$
 
     setNeedsProgressMonitor( true );
   }
@@ -168,8 +168,8 @@ public class ImportWspmWizard extends Wizard implements IWizard
   public void addPages( )
   {
     /* Choose wspm-reach */
-    m_wspmGmlPage = new GmlFileImportPage( "chooseWspmGml", "Berechnungsvariante wählen", null );
-    m_wspmGmlPage.setDescription( "Bitte wählen Sie eine Berechnungsvariante (konstantes Reibungsgefälle) aus" );
+    m_wspmGmlPage = new GmlFileImportPage( "chooseWspmGml", Messages.getString("ImportWspmWizard.2"), null ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_wspmGmlPage.setDescription( Messages.getString("ImportWspmWizard.3") ); //$NON-NLS-1$
     m_wspmGmlPage.setValidQNames( new QName[] { TuhhCalculation.QNAME_TUHH_CALC_REIB_CONST } );
     m_wspmGmlPage.setValidKind( true, false );
 
@@ -200,7 +200,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
     {
       public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
       {
-        monitor.beginTask( "1D-Modell wird importiert", 3 );
+        monitor.beginTask( Messages.getString("ImportWspmWizard.4"), 3 ); //$NON-NLS-1$
 
         try
         {
@@ -211,24 +211,24 @@ public class ImportWspmWizard extends Wizard implements IWizard
 
           /* Check if its the right calculation and if results are present */
           if( calculation.getCalcMode() != TuhhCalculation.MODE.REIB_KONST )
-            return StatusUtilities.createWarningStatus( "Gewählte Berechnungsvariante muss vom Typ 'Bordvoll ungleichförmig' sein'" );
+            return StatusUtilities.createWarningStatus( Messages.getString("ImportWspmWizard.5") ); //$NON-NLS-1$
 
           final TuhhReach reach = calculation.getReach();
 
           try
           {
             /* Import reach into profile collection */
-            monitor.subTask( " - kopiere Profile..." );
+            monitor.subTask( Messages.getString("ImportWspmWizard.6") ); //$NON-NLS-1$
             final SortedMap<BigDecimal, WspmProfile> profilesByStation = doImportNetwork( reach, profNetworkColl, terrainModelAdds );
             monitor.worked( 1 );
 
             /* Create 1D-Network */
-            monitor.subTask( "- erzeuge 1D-Finite-Elemente-Netzwerk..." );
+            monitor.subTask( Messages.getString("ImportWspmWizard.7") ); //$NON-NLS-1$
             final SortedMap<BigDecimal, IFE1D2DNode> elementsByStation = doCreate1DNet( reach, discModel, discModelAdds );
             monitor.worked( 1 );
 
             /* Create 1D-Network parameters (flow relations) */
-            monitor.subTask( "- lade stationäre Ergebnisse und erzeuge 1D-Parameter..." );
+            monitor.subTask( Messages.getString("ImportWspmWizard.8") ); //$NON-NLS-1$
             final IStatus status = doReadResults( calculation, elementsByStation, flowRelModel, profilesByStation );
             monitor.worked( 1 );
 
@@ -236,7 +236,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
           }
           catch( final Exception e )
           {
-            return StatusUtilities.statusFromThrowable( e, "Failed to copy profiles" );
+            return StatusUtilities.statusFromThrowable( e, Messages.getString("ImportWspmWizard.9") ); //$NON-NLS-1$
           }
         }
         catch( final Throwable t )
@@ -257,7 +257,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, op );
     if( !status.isOK() )
       KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
-    ErrorDialog.openError( getShell(), getWindowTitle(), "Probleme beim Import", status );
+    ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString("ImportWspmWizard.10"), status ); //$NON-NLS-1$
 
     return !status.matches( IStatus.ERROR );
   }
@@ -274,7 +274,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
     {
       final GMLWorkspace calcWorkspace = calculation.getFeature().getWorkspace();
       final URL calcContext = calcWorkspace.getContext();
-      final URL qresultsUrl = new URL( calcContext, "Ergebnisse/" + calculation.getName() + "/_aktuell/Daten/qIntervallResults.gml" );
+      final URL qresultsUrl = new URL( calcContext, "Ergebnisse/" + calculation.getName() + "/_aktuell/Daten/qIntervallResults.gml" ); //$NON-NLS-1$ //$NON-NLS-2$
       final GMLWorkspace qresultsWorkspace = GmlSerializer.createGMLWorkspace( qresultsUrl, calcWorkspace.getFeatureProviderFactory() );
       final QIntervallResultCollection qResultCollection = new QIntervallResultCollection( qresultsWorkspace.getRootFeature() );
 
@@ -338,7 +338,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
       fnfe.printStackTrace();
 
       /* Results are noit available, just inform user */
-      return StatusUtilities.createWarningStatus( "Es liegen keine Ergebnisse für diese Rechenvariante vor. Es wurde nur die 1D-Netzgeometrie erzeugt." );
+      return StatusUtilities.createWarningStatus( Messages.getString("ImportWspmWizard.15") ); //$NON-NLS-1$
     }
 
     return Status.OK_STATUS;
@@ -436,7 +436,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
 
     final IFE1D2DElement[] elements = node.getElements();
     if( elements.length != 2 )
-      throw new CoreException( StatusUtilities.createErrorStatus( "Ein Wehr am Ende oder am Anfang eines Berechnungabschnittes kann nicht importiert werden\nFügen Sie wenigstens ein Profil im Ober- bzw. Unterwasser ein." ) );
+      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("ImportWspmWizard.16") ) ); //$NON-NLS-1$
 
     /* Find upstream and downstream neighbours */
     final IFE1D2DNode neighbour0 = DiscretisationModelUtils.findOtherNode( node, elements[0] );
@@ -528,12 +528,12 @@ public class ImportWspmWizard extends Wizard implements IWizard
       final IFE1D2DNode node = discretisationModel.getNodes().addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
       addedFeatures.add( node.getWrappedFeature() );
 
-      node.setName( "" );
-      final String desc = String.format( "Importiert aus WPSM Modell\n\n" + profileMember.getDescription() );
+      node.setName( "" ); //$NON-NLS-1$
+      final String desc = String.format( Messages.getString("ImportWspmWizard.18") + profileMember.getDescription() ); //$NON-NLS-1$
       node.setDescription( desc );
 
       if( point == null )
-        throw new CoreException( StatusUtilities.createErrorStatus( "Sohltiefpunkt konnte nicht georeferenziert an Profil Station km: " + station ) );
+        throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("ImportWspmWizard.19") + station ) ); //$NON-NLS-1$
 
       node.setPoint( point );
 
@@ -592,8 +592,8 @@ public class ImportWspmWizard extends Wizard implements IWizard
 
     /* Set user friendly name and descrption */
     final URL reachContext = reach.getFeature().getWorkspace().getContext();
-    final String reachPath = reachContext == null ? "-" : reachContext.toExternalForm();
-    final String desc = String.format( "Importiert aus WSPM-Gewässerstrang: %s - %s\nImportiert am %s aus %s", reach.getWaterBody().getName(), reach.getName(), DF.format( new Date() ), reachPath );
+    final String reachPath = reachContext == null ? "-" : reachContext.toExternalForm(); //$NON-NLS-1$
+    final String desc = String.format( Messages.getString("ImportWspmWizard.21"), reach.getWaterBody().getName(), reach.getName(), DF.format( new Date() ), reachPath ); //$NON-NLS-1$
     network.setName( reach.getName() );
     network.setDescription( desc );
 

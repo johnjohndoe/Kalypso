@@ -54,7 +54,7 @@ public class Assert
     if( param == null )
     {
       StringBuffer buf = new StringBuffer( 128 );
-      buf.append( "Parameter must not be null; param name:" );
+      buf.append( Messages.getString( "Assert.0" ) ); //$NON-NLS-1$
       buf.append( paramName );
       throw new IllegalArgumentException( buf.toString() );
     }
@@ -76,7 +76,7 @@ public class Assert
     if( param == null )
     {
       StringBuffer buf = new StringBuffer( 128 );
-      buf.append( "Parameter must not be null; param name:" );
+      buf.append( Messages.getString( "Assert.1" ) ); //$NON-NLS-1$
       buf.append( paramName );
       throw new IllegalArgumentException( buf.toString() );
     }
@@ -85,7 +85,7 @@ public class Assert
     {
       if( ele == null )
       {
-        String message = String.format( "Parameter must not have a null element; " + "\n\tparam name:%s \n\tparam value=", paramName, param );
+        String message = String.format( Messages.getString( "Assert.2" ) + "\n\tparam name:%s \n\tparam value=", paramName, param ); //$NON-NLS-1$ //$NON-NLS-1$
         throw new IllegalArgumentException( message );
       }
     }
@@ -95,13 +95,13 @@ public class Assert
   {
     if( param == null )
     {
-      String message = String.format( "Parameter must not be null; \n\tparam name:%s", paramName );
+      String message = String.format( "Parameter must not be null; \n\tparam name:%s", paramName ); //$NON-NLS-1$
       throw new IllegalArgumentException( message );
     }
 
     if( param.isEmpty() )
     {
-      String message = String.format( "Parameter must not be empty; \n\tparam name:%s", paramName );
+      String message = String.format( "Parameter must not be empty; \n\tparam name:%s", paramName ); //$NON-NLS-1$
       throw new IllegalArgumentException( message );
     }
 
@@ -111,12 +111,12 @@ public class Assert
   {
     if( str == null )
     {
-      throw new IllegalArgumentException( "String must not be null" );
+      throw new IllegalArgumentException( Messages.getString( "Assert.9" ) ); //$NON-NLS-1$
     }
     str = str.trim();
     if( str.length() == 0 )
     {
-      throw new IllegalArgumentException( "String must not be empty" );
+      throw new IllegalArgumentException( Messages.getString( "Assert.10" ) ); //$NON-NLS-1$
     }
     return str;
   }
@@ -141,7 +141,7 @@ public class Assert
     {
       if( message == null )
       {
-        message = "number must be greater or equals to 0";
+        message = Messages.getString( "Assert.11" ); //$NON-NLS-1$
       }
       throw new IllegalArgumentException( message );
     }
@@ -151,7 +151,8 @@ public class Assert
   {
     if( !Util.directInstanceOf( feature, expectedType ) )
     {
-      throw new IllegalArgumentException( "Feature must be of type " + expectedType + "; the current type is:" + feature.getFeatureType().getQName() );
+      throw new IllegalArgumentException( Messages.getString( "Assert.12" ) + //$NON-NLS-1$
+          expectedType + Messages.getString( "Assert.13" ) + feature.getFeatureType().getQName() ); //$NON-NLS-1$
     }
   }
 
@@ -159,22 +160,22 @@ public class Assert
   {
     if( file == null )
     {
-      throw new IllegalArgumentException( "file must not be null" );
+      throw new IllegalArgumentException( Messages.getString( "Assert.14" ) ); //$NON-NLS-1$
     }
 
     if( file.isDirectory() )
     {
-      throw new IllegalArgumentException( "File must not be a directory:" + file );
+      throw new IllegalArgumentException( Messages.getString( "Assert.15" ) + file ); //$NON-NLS-1$
     }
 
     if( !file.exists() )
     {
-      throw new IllegalArgumentException( "file must exist:" + file );
+      throw new IllegalArgumentException( Messages.getString( "Assert.16" ) + file ); //$NON-NLS-1$
     }
 
     if( !file.canRead() )
     {
-      throw new IllegalArgumentException( "File cannot be read:" + file );
+      throw new IllegalArgumentException( Messages.getString( "Assert.17" ) + file ); //$NON-NLS-1$
     }
 
   }

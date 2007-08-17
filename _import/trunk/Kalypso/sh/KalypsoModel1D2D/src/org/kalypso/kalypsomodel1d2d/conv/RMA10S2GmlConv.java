@@ -103,7 +103,7 @@ public class RMA10S2GmlConv
     final Pattern lineDA = Pattern.compile( "DA.*" ); //$NON-NLS-1$
     final Pattern lineTL = Pattern.compile( "TL.*" ); //$NON-NLS-1$
 
-    m_monitor.beginTask( Messages.RMA10S2GmlConv_0, 100 );
+    m_monitor.beginTask( Messages.getString("RMA10S2GmlConv.0"), 100 );
     m_handler.start();
 
     int numberOfLinesProcessed = 0;
@@ -135,7 +135,7 @@ public class RMA10S2GmlConv
       else if( lineTL.matcher( line ).matches() )
         interprete1d2dJunctionElement( line );
       else if( VERBOSE_MODE )
-        System.out.println( Messages.RMA10S2GmlConv_1 + line );
+        System.out.println( Messages.getString("RMA10S2GmlConv.1") + line ); //$NON-NLS-1$
     }
 
     // signal parsing stop

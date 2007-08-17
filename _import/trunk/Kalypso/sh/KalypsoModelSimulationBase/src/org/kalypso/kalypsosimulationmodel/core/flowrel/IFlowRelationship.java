@@ -51,9 +51,9 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  */
 public interface IFlowRelationship extends IFeatureWrapper2
 {
-  public final static QName QNAME = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "_FlowRelationship" );
+  public final static QName QNAME = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "_FlowRelationship" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_POSITION = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "position" );
+  public static final QName QNAME_PROP_POSITION = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "position" ); //$NON-NLS-1$
 
   public GM_Point getPosition( );
 

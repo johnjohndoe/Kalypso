@@ -50,20 +50,20 @@ public class TestFeatureRangeSet extends TestCase
 				new FeatureRangeSet<IPolynomial1D>(rsFeature,IPolynomial1D.class);
 			
 			assertEquals(2, frs.size());
-			assertEquals("pol1", frs.get(0).getWrappedFeature().getId());
-			assertEquals("pol2", frs.get(1).getWrappedFeature().getId());
+			assertEquals("pol1", frs.get(0).getWrappedFeature().getId()); //$NON-NLS-1$
+			assertEquals("pol2", frs.get(1).getWrappedFeature().getId()); //$NON-NLS-1$
 			IPolynomial1D pol1=frs.get(0);
 			
 			//remove
 			frs.remove(0);
 			assertEquals(1, frs.size());
-			assertEquals("pol2", frs.get(0).getWrappedFeature().getId());
+			assertEquals("pol2", frs.get(0).getWrappedFeature().getId()); //$NON-NLS-1$
 			
 			//add last
 			frs.add(pol1);
 			assertEquals(2, frs.size());
-			assertEquals("pol2", frs.get(0).getWrappedFeature().getId());
-			assertEquals("pol1", frs.get(1).getWrappedFeature().getId());
+			assertEquals("pol2", frs.get(0).getWrappedFeature().getId()); //$NON-NLS-1$
+			assertEquals("pol1", frs.get(1).getWrappedFeature().getId()); //$NON-NLS-1$
 			
 			//System.out.println(frs.get(0));
 	}
@@ -81,7 +81,7 @@ public class TestFeatureRangeSet extends TestCase
 				workspace.getRootFeature();	
 			//gml:FeatureCollection 
 			QName featureMember= 
-					new QName(NS.GML3,"featureMember");
+					new QName(NS.GML3,"featureMember"); //$NON-NLS-1$
 			FeatureRangeSet<IPolynomial1D> frs=
 				new FeatureRangeSet<IPolynomial1D>(
 						root,

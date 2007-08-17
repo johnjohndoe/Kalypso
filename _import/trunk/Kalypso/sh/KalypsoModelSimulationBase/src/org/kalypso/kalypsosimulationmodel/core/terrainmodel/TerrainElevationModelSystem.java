@@ -88,7 +88,7 @@ public class TerrainElevationModelSystem extends AbstractFeatureBinder implement
    */
   private static final Feature createTEMSysForTerrainModel( ITerrainModel terrainModel )
   {
-    Assert.throwIAEOnNullParam( terrainModel, "terrainModel" );
+    Assert.throwIAEOnNullParam( terrainModel, "terrainModel" ); //$NON-NLS-1$
     ITerrainElevationModelSystem temSys = terrainModel.getTerrainElevationModelSystem();
     if( temSys != null )
     {

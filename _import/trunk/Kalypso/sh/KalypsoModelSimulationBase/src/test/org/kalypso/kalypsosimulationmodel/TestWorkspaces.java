@@ -67,7 +67,7 @@ public class TestWorkspaces
 //	private static final Logger logger= 
 //			Logger.getLogger(TestWorkspaces.class);
 	
-	public static final String CS_KEY_GAUSS_KRUEGER="EPSG:31467";
+	public static final String CS_KEY_GAUSS_KRUEGER="EPSG:31467"; //$NON-NLS-1$
     public static final double[][] NO_INTERIOR = {};
 //	public static final URL URL_POLYNOMIAL1D;
 //	public static final String REL_RES_POLYNOMIAL1D="data/polynomial1d.xml";
@@ -76,88 +76,88 @@ public class TestWorkspaces
 //	public static final String REL_RES_POLYNOMIAL2D="data/polynomial2d.xml";
 	
 	public static final URL URL_EMPTY_GML;
-	public static final String REL_RES_EMPTY_GML="data/empty_gml.xml";
+	public static final String REL_RES_EMPTY_GML="data/empty_gml.xml"; //$NON-NLS-1$
 	
 	public static final URL URL_MPCOV_ROUGHNESS_CORRECTION;
-	public static final String REL_RES_MPCOV_ROUGHNESS_CORRECTION="data/mpcov_pol1d.xml";
+	public static final String REL_RES_MPCOV_ROUGHNESS_CORRECTION="data/mpcov_pol1d.xml"; //$NON-NLS-1$
 	
 	public static final URL URL_MULTIPOINT;
-	public static final String REL_RES_MULTIPOINT="data/multipoint.xml";
+	public static final String REL_RES_MULTIPOINT="data/multipoint.xml"; //$NON-NLS-1$
 	
 	
 	public static final URL URL_FEATURERANGESET;
-	public static final String REL_RES_FEATURERANGESET="data/feature_range_set.xml";
+	public static final String REL_RES_FEATURERANGESET="data/feature_range_set.xml"; //$NON-NLS-1$
 	
 	public static final URL URL_ROUGHNESS_CLS;
 	public static final String REL_RES_ROUGHNESS_CLS=
-							"data/roughness_cls.xml";
+							"data/roughness_cls.xml"; //$NON-NLS-1$
 	
 	public static final URL URL_ROUGHNESS_CLS_COR;
 	public static final String REL_RES_ROUGHNESS_CLS_COR=
-							"data/roughness_cls_correction.xml";
+							"data/roughness_cls_correction.xml"; //$NON-NLS-1$
 	
 	public static final URL URL_ROUGHNESS_CLS_COLLECTION;
 	public static final String REL_RES_ROUGHNESS_CLS_COLLECTION=
-							"data/roughness_cls_collection.xml";
+							"data/roughness_cls_collection.xml"; //$NON-NLS-1$
     
     public static final URL URL_ROUGHNESS_CLS_COLLECTION_VIEW_TEST;
     public static final String REL_RES_ROUGHNESS_CLS_COLLECTION_VIEW_TEST=
-                                  "data/roughness_cls_collection.xml";
+                                  "data/roughness_cls_collection.xml"; //$NON-NLS-1$
     
     public static final URL URL_ROUGHNESS_DB;
     public static final String REL_RES_ROUGHNESS_DB=
-                                  "data/roughness_db.xml";
+                                  "data/roughness_db.xml"; //$NON-NLS-1$
 	
 	public static final URL URL_ROUGHNESS_POLYGON;
 	public static final String REL_RES_ROUGHNESS_POLYGON=
-							"data/roughness_polygon.xml";
+							"data/roughness_polygon.xml"; //$NON-NLS-1$
 	
     public static final URL URL_ROUGHNESS_POLYGON_COLLECTION;
     public static final String REL_RES_ROUGHNESS_POLYGON_COLLECTION =
-                            "data/terrain.gml";
+                            "data/terrain.gml"; //$NON-NLS-1$
     
     public static final URL URL_ROUGHNESS_POLYGON_COLLECTION_ESTIMATE;
     public static final String REL_RES_ROUGHNESS_POLYGON_COLLECTION_ESTIMATE =
-                            "data/roughness_polygon_collection_estimate.xml";
+                            "data/roughness_polygon_collection_estimate.xml"; //$NON-NLS-1$
     
 	public static final URL URL_COL_ROUGHNESS_CLS_COR;
 	public static final String REL_RES_COL_ROUGHNESS_CLS_COR=
-							"data/collection_of_roughness_cls_correction.xml";
+							"data/collection_of_roughness_cls_correction.xml"; //$NON-NLS-1$
 	
     public static final URL URL_SIMPLE_OPERATIONAL_MODEL;
-    public static final String REL_RES_SIMPLE_OPERATIONAL_MODEL="data/simulation_model_operational.xml";
+    public static final String REL_RES_SIMPLE_OPERATIONAL_MODEL="data/simulation_model_operational.xml"; //$NON-NLS-1$
     
 	public static final QName GML_PROP_FEATURE_MEMBER= 
-						new QName(NS.GML3,"featureMember");
+						new QName(NS.GML3,"featureMember"); //$NON-NLS-1$
 	
 	public static final Throwable EXCEPTION;
 	
 	public static final URL URL_SHAPE_2_ROUGHNESS_POLYGON;
-	public static final String REL_RES_SHAPE_2_ROUGHNESS_POLYGON="data/shapeConverter.gml";
+	public static final String REL_RES_SHAPE_2_ROUGHNESS_POLYGON="data/shapeConverter.gml"; //$NON-NLS-1$
     
     public static final URL URL_SMALL_ASC;
-    public static final String REL_RES_SMALL_ASC="data/test_file_small_asc.asc";
+    public static final String REL_RES_SMALL_ASC="data/test_file_small_asc.asc"; //$NON-NLS-1$
     
     
     public static final URL URL_GC_SMALL_ASC;
-    public static final String REL_RES_GC_SMALL_ASC="data/gc_elevation_model.xml";
+    public static final String REL_RES_GC_SMALL_ASC="data/gc_elevation_model.xml"; //$NON-NLS-1$
     
     public static final URL URL_NATIVE_TEM_WRAPPER;
     public static final String REL_RES_NATIVE_TEM_WRAPPER=
-                                "data/native_terrain_elevation_model_wrapper.xml";
+                                "data/native_terrain_elevation_model_wrapper.xml"; //$NON-NLS-1$
     
     public static final URL URL_TEM_SYSREM;
     public static final String REL_RES_TEM_SYSTEM=
-                                "data/native_terrain_elevation_model_system.xml";
+                                "data/native_terrain_elevation_model_system.xml"; //$NON-NLS-1$
    
     public static final URL URL_TEST_HMO_3_TRI;
     public static final String REL_RES_TEST_HMO_3_TRI=
-                                "data/test_hmo_3_tri.xml";
+                                "data/test_hmo_3_tri.xml"; //$NON-NLS-1$
    
     
     public static final URL URL_TEM_EMPTY_TER_MODEL;
     public static final String REL_RES_TEM_EMPTY_TER_MODEL=
-                                "data/test_terrain_model_without_tem_system.xml";
+                                "data/test_terrain_model_without_tem_system.xml"; //$NON-NLS-1$
    
 	static 
 	{

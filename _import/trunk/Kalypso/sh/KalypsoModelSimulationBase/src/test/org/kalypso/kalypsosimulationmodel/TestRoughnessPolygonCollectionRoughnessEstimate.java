@@ -67,7 +67,7 @@ public class TestRoughnessPolygonCollectionRoughnessEstimate extends TestCase
               (IRoughnessPolygonCollection)
                   rootFeature.getAdapter( IRoughnessPolygonCollection.class );
             assertNotNull( 
-                "Could not adapt to IRoughnessPolygonCollection:" + rootFeature, 
+                Messages.getString("TestRoughnessPolygonCollectionRoughnessEstimate.0") + rootFeature,  //$NON-NLS-1$
                 rpc );
             
             final double[] exteriorRP1 = { 0,0,0, 0,1,0, 1,1,0, 1,0,0, 0,0,0 };
@@ -78,18 +78,18 @@ public class TestRoughnessPolygonCollectionRoughnessEstimate extends TestCase
             final IRoughnessEstimateSpec estimate = 
                         rpc.getRoughnessEstimateSpec( surfacePatch );
             assertEquals( 
-                "Only one roughness should be in the estimate", 
+                Messages.getString("TestRoughnessPolygonCollectionRoughnessEstimate.1"),  //$NON-NLS-1$
                 1,
                 estimate.getHistogramm().size() );
             
             assertEquals(
-                "Most spread roughness must be roughness_cls1",
-                "roughness_cls1",
+                Messages.getString("TestRoughnessPolygonCollectionRoughnessEstimate.2"), //$NON-NLS-1$
+                "roughness_cls1", //$NON-NLS-1$
                 estimate.mostSpreadRoughness()[0].getGmlID());
             Double estimateFor1Roughness = 
                 estimate.getHistogramm().values().iterator().next();
             assertTrue(
-                "Estimate for roughness 1 must be nearly equals to 100%:"+estimateFor1Roughness,
+                Messages.getString("TestRoughnessPolygonCollectionRoughnessEstimate.4")+estimateFor1Roughness, //$NON-NLS-1$
                 Math.abs( 1 - estimateFor1Roughness ) < 1e-6 );
         }
         catch ( Throwable th ) 
@@ -122,7 +122,7 @@ public class TestRoughnessPolygonCollectionRoughnessEstimate extends TestCase
               (IRoughnessPolygonCollection)
                   rootFeature.getAdapter( IRoughnessPolygonCollection.class );
             assertNotNull( 
-                "Could not adapt to IRoughnessPolygonCollection:" + rootFeature, 
+                Messages.getString("TestRoughnessPolygonCollectionRoughnessEstimate.5") + rootFeature,  //$NON-NLS-1$
                 rpc );
             
             final double[] exteriorRP1_2_3 = 
@@ -135,7 +135,7 @@ public class TestRoughnessPolygonCollectionRoughnessEstimate extends TestCase
                         rpc.getRoughnessEstimateSpec( surfacePatch );
 
             assertEquals( 
-                "All 3 rougness must be should be in the estimate", 
+                Messages.getString("TestRoughnessPolygonCollectionRoughnessEstimate.6"),  //$NON-NLS-1$
                 3,
                 estimate.getHistogramm().size() );
              final double totalArea = computeTotalArea( rpc );
@@ -148,7 +148,7 @@ public class TestRoughnessPolygonCollectionRoughnessEstimate extends TestCase
                  histogramm.get( roughnessCls );
                final String message =
                    String.format( 
-                       "Testing \n\trp=%s\n\troughness=%s\n\trpArea%f \n\ttotalArea=%f \n\t percentage=%f",
+                       "Testing \n\trp=%s\n\troughness=%s\n\trpArea%f \n\ttotalArea=%f \n\t percentage=%f", //$NON-NLS-1$
                        rp.getGmlID(),
                        roughnessCls.getGmlID(),
                        rpArea,
@@ -160,7 +160,7 @@ public class TestRoughnessPolygonCollectionRoughnessEstimate extends TestCase
                   Math.abs( percentage - rpArea/totalArea)<1e-6 );
              }
              assertEquals( 
-                 "2 most spread in the estimate zone",
+                 Messages.getString("TestRoughnessPolygonCollectionRoughnessEstimate.8"), //$NON-NLS-1$
                  2,
                  estimate.mostSpreadRoughness().length);
                  
@@ -214,7 +214,7 @@ public class TestRoughnessPolygonCollectionRoughnessEstimate extends TestCase
               (IRoughnessPolygonCollection)
                   rootFeature.getAdapter( IRoughnessPolygonCollection.class );
             assertNotNull( 
-                "Could not adapt to IRoughnessPolygonCollection:" + rootFeature, 
+                Messages.getString("TestRoughnessPolygonCollectionRoughnessEstimate.9") + rootFeature,  //$NON-NLS-1$
                 rpc );
             
             final double[] norougnessZone = { 0,0,0, 0,1,0, -1,1,0, -1,0,0, 0,0,0 };
@@ -224,7 +224,7 @@ public class TestRoughnessPolygonCollectionRoughnessEstimate extends TestCase
             final IRoughnessEstimateSpec estimate = 
                         rpc.getRoughnessEstimateSpec( surfacePatch );
             assertTrue( 
-                "Given estimate zone does not overlap with the roughness, so histogram must be empty", 
+                Messages.getString("TestRoughnessPolygonCollectionRoughnessEstimate.10"),  //$NON-NLS-1$
                 estimate.getHistogramm().isEmpty() );
             
         }

@@ -91,10 +91,10 @@ public class PlaneUtils
 
   public static final double[] calculateTrianglePlaneEquation( final GM_Position[] coords )
   {
-    Assert.throwIAEOnNullParam( coords, "coords" );
+    Assert.throwIAEOnNullParam( coords, "coords" ); //$NON-NLS-1$
     if( coords.length < 3 )
     {
-      throw new IllegalArgumentException( "Param coord which represent the point of a triangle must " + "have a minimum length of 3: current length=" + coords.length );
+      throw new IllegalArgumentException( Messages.getString("PlaneUtils.1") + Messages.getString("PlaneUtils.2") + coords.length ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     GM_Position coord = coords[0];

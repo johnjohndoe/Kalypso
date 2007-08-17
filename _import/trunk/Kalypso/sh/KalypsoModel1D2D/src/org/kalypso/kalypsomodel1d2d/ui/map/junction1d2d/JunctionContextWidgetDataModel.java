@@ -56,19 +56,19 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class JunctionContextWidgetDataModel extends KeyBasedDataModel
 {
-  public static final String SELECTED_ELEMENT1D = "_SELECTED_ELE_1D";
+  public static final String SELECTED_ELEMENT1D = "_SELECTED_ELE_1D"; //$NON-NLS-1$
   
-  public static final String SELECTED_ELEMENT2D = "_SELECTED_ELE_2D";
+  public static final String SELECTED_ELEMENT2D = "_SELECTED_ELE_2D"; //$NON-NLS-1$
   
-  public static final String SELECTED_ELEMENTS = "_SELECTED_ELE_";
+  public static final String SELECTED_ELEMENTS = "_SELECTED_ELE_"; //$NON-NLS-1$
   
-  public static final String MESSAGE ="_MESSAGE_";
+  public static final String MESSAGE ="_MESSAGE_"; //$NON-NLS-1$
   
-  public static final String MESSAGE_BUILDER ="_MESSAGE_BUILDER_";
+  public static final String MESSAGE_BUILDER ="_MESSAGE_BUILDER_"; //$NON-NLS-1$
 
-  public static final String CREATE_MODEL_PART = "_create_model_part_";
+  public static final String CREATE_MODEL_PART = "_create_model_part_"; //$NON-NLS-1$
   
-  public static final String MODEL1D2D = "_model_1d2d_";
+  public static final String MODEL1D2D = "_model_1d2d_"; //$NON-NLS-1$
   
   public JunctionContextWidgetDataModel(IDataModelCheck messageBuilder )
   {

@@ -57,49 +57,49 @@ public class UrlCatalogModelSimulationBase extends AbstractUrlCatalog
   /**
    * Latest version for schema
    */
-  final static public String CURRENT_VERSION = "v0.0.0";
+  final static public String CURRENT_VERSION = "v0.0.0"; //$NON-NLS-1$
 
   /**
    * path for simulation base schema file
    */
-  final static public String SIM_MODEL_REL_PATH = CURRENT_VERSION + "/simulation_model_base.xsd";
+  final static public String SIM_MODEL_REL_PATH = CURRENT_VERSION + "/simulation_model_base.xsd"; //$NON-NLS-1$
 
   /**
    * Namespace for simulation model base
    */
-  final static public String SIM_MODEL_NS = "http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase";
+  final static public String SIM_MODEL_NS = "http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase"; //$NON-NLS-1$
 
   /**
    * Prefix for the simulation model base
    */
-  final static public String SIM_MODEL_NS_PREFIX = "simBase";
+  final static public String SIM_MODEL_NS_PREFIX = "simBase"; //$NON-NLS-1$
 
   /**
    * path for simulation base result metadata schema file
    */
-  final static public String SIM_MODEL_RESULT_REL_PATH = CURRENT_VERSION + "/simulation_model_result.xsd";
+  final static public String SIM_MODEL_RESULT_REL_PATH = CURRENT_VERSION + "/simulation_model_result.xsd"; //$NON-NLS-1$
 
   /**
    * Namespace for simulation model base result metadata
    */
-  final static public String SIM_MODEL_RESULT_NS = "http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase/result/meta";
+  final static public String SIM_MODEL_RESULT_NS = "http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase/result/meta"; //$NON-NLS-1$
 
   /**
    * Prefix for the simulation model base result metadata
    */
-  final static public String SIM_MODEL_RESULT_NS_PREFIX = "resultMeta";
+  final static public String SIM_MODEL_RESULT_NS_PREFIX = "resultMeta"; //$NON-NLS-1$
 
-  final static public String GML_IMITATIONS_REL_PATH = CURRENT_VERSION + "/gml_imitations.xsd";
+  final static public String GML_IMITATIONS_REL_PATH = CURRENT_VERSION + "/gml_imitations.xsd"; //$NON-NLS-1$
 
   /**
    * Namespace for gml_imitations
    */
-  final static public String GML_IMITATIONS_NS = "http://www.tu-harburg.de/wb/kalypso/schemata/wbgml";
+  final static public String GML_IMITATIONS_NS = "http://www.tu-harburg.de/wb/kalypso/schemata/wbgml"; //$NON-NLS-1$
 
   /**
    * Prefix for the simulation model base
    */
-  final static public String GML_IMITATIONS_NS_PREFIX = "wbGml";
+  final static public String GML_IMITATIONS_NS_PREFIX = "wbGml"; //$NON-NLS-1$
 
   /**
    * Fills the catalog with the roughness and model simulation base schemas schema elements

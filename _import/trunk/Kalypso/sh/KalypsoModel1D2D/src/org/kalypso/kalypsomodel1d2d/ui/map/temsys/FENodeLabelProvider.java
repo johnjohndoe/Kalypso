@@ -19,7 +19,7 @@ public class FENodeLabelProvider implements ITableLabelProvider {
         }
         else
         {
-          return element==null?"null."+index:element.toString();
+          return element==null?"null."+index:element.toString(); //$NON-NLS-1$
         }
       
 	}
@@ -38,7 +38,7 @@ public class FENodeLabelProvider implements ITableLabelProvider {
       }
       default:
       {
-        return "ColText for"+node+" "+index;
+        return "ColText for"+node+" "+index; //$NON-NLS-1$ //$NON-NLS-2$
       }
     }
     

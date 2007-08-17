@@ -61,7 +61,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ILineElement;
  * @author Madanagopal
  * 
  */
-@SuppressWarnings( { "unchecked", "hiding" })
+@SuppressWarnings( { "unchecked", "hiding" })   //$NON-NLS-1$ //$NON-NLS-2$
 public class JunctionContextConverter
 {
   final IFEDiscretisationModel1d2d m_discModel1d2d;
@@ -116,7 +116,7 @@ public class JunctionContextConverter
           final int boundaryLineID = m_nativeIDProvider.getBoundaryLineID( continuityLine );
           final int node1DID = m_nativeIDProvider.getBoundaryLineID( target1DNode );
 
-          m_formatter.format( "TL%10d%10d%10d%10d%n", transitionElementID, element1DID, boundaryLineID, node1DID );
+          m_formatter.format( "TL%10d%10d%10d%10d%n", transitionElementID, element1DID, boundaryLineID, node1DID );  //$NON-NLS-1$
         }
       }
     }

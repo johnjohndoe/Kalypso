@@ -46,8 +46,8 @@ public class FeatureRangeSet<RangeSetCls extends IFeatureWrapper2> implements IF
    */
   public FeatureRangeSet( Feature rsFeature, Class<RangeSetCls> rangeSetClass )
   {
-    Assert.throwIAEOnNull( rangeSetClass, "Argument rangeSetClass must not be null" );
-    Assert.throwIAEOnNull( rsFeature, "Argument rsFeature must not be null" );
+    Assert.throwIAEOnNull( rangeSetClass, Messages.getString("FeatureRangeSet.0")); //$NON-NLS-1$
+    Assert.throwIAEOnNull( rsFeature, Messages.getString("FeatureRangeSet.1")); //$NON-NLS-1$
     Assert.throwIAEOnNotDirectInstanceOf( rsFeature, GmlImitationsConsts.WBGML_F_FEATURERANGESET );
 
     this.rangeSetClass = rangeSetClass;
@@ -294,7 +294,7 @@ public class FeatureRangeSet<RangeSetCls extends IFeatureWrapper2> implements IF
     boolean ret = false;
     for( Object o : c )
     {
-      Assert.throwIAEOnNull( o, "Collection must not contain a null element" );
+      Assert.throwIAEOnNull( o, Messages.getString("FeatureRangeSet.28")); //$NON-NLS-1$
       ret = ret || remove( o );
     }
     return ret;
@@ -310,7 +310,7 @@ public class FeatureRangeSet<RangeSetCls extends IFeatureWrapper2> implements IF
   {
     RangeSetCls r = get( index );
     Feature f = element.getWrappedFeature();
-    Assert.throwIAEOnNull( f, "Wrapped feature must not be null" );
+    Assert.throwIAEOnNull( f, Messages.getString("FeatureRangeSet.30" )); //$NON-NLS-1$
 
     rsFeatureList.set( index, f );
     return r;

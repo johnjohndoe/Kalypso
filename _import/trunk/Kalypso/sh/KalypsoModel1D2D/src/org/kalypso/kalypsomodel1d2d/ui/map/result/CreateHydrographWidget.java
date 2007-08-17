@@ -50,6 +50,6 @@ public class CreateHydrographWidget extends CreateGeometeryWidget2
 {
   public CreateHydrographWidget( )
   {
-    super( "Ganglinie erstellen", "Legt die Lage einer Ganglinie fest", GM_Point.class );
+    super( Messages.getString("CreateHydrographWidget.0"), Messages.getString("CreateHydrographWidget.1"), GM_Point.class ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 }

@@ -63,11 +63,11 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public class TestRoughnessPolygonCollection extends TestCase
 {
-  public final static QName QNAME_PROP_ROUGHNESSLAYERPOLYNOMCOLLECTION = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "roughnessLayerCollection" );
+  public final static QName QNAME_PROP_ROUGHNESSLAYERPOLYNOMCOLLECTION = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "roughnessLayerCollection" ); //$NON-NLS-1$
 
-  public final static QName QNAME_PROP_ROUGHNESSLAYERMEMBER = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "roughnessLayerMember" );
+  public final static QName QNAME_PROP_ROUGHNESSLAYERMEMBER = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "roughnessLayerMember" ); //$NON-NLS-1$
 
-  public final static CS_CoordinateSystem cs = ConvenienceCSFactory.getInstance().getOGCCSByName( "EPSG:31467" );
+  public final static CS_CoordinateSystem cs = ConvenienceCSFactory.getInstance().getOGCCSByName( "EPSG:31467" ); //$NON-NLS-1$
 
   public final void testRoughnessPolygonCollection( ) throws Exception
   {
@@ -81,49 +81,49 @@ public class TestRoughnessPolygonCollection extends TestCase
     final Feature feature = (Feature) workspace.getRootFeature().getProperty( QNAME_PROP_ROUGHNESSLAYERPOLYNOMCOLLECTION );
     if( feature == null )
     {
-      fail( "aaa" );
+      fail( "aaa" ); //$NON-NLS-1$
     }
 
     m_polygonCollection = new RoughnessPolygonCollection( feature, IRoughnessPolygon.class, QNAME_PROP_ROUGHNESSLAYERMEMBER );
     List<IRoughnessPolygon> polygons = m_polygonCollection.selectRoughnessPolygons( point.getPosition() );
-    System.out.println( "" );
-    System.out.println( "******************************************************************" );
-    System.out.println( "* TESTING FILE: " + TestWorkspaces.URL_ROUGHNESS_POLYGON_COLLECTION);
-    System.out.println( "******************************************************************" );
-    System.out.println( "******************************************************************" );
-    System.out.println( "* TEST: select                                                   *" );
-    System.out.println( "******************************************************************" );
-    System.out.println( "Point (x,y): (" + point.getX() + ", " + point.getY() + ")" );
-    System.out.println( "is contained in:" );
+    System.out.println( "" ); //$NON-NLS-1$
+    System.out.println( "******************************************************************" ); //$NON-NLS-1$
+    System.out.println( "* TESTING FILE: " + TestWorkspaces.URL_ROUGHNESS_POLYGON_COLLECTION); //$NON-NLS-1$
+    System.out.println( "******************************************************************" ); //$NON-NLS-1$
+    System.out.println( "******************************************************************" ); //$NON-NLS-1$
+    System.out.println( "* TEST: select                                                   *" ); //$NON-NLS-1$
+    System.out.println( "******************************************************************" ); //$NON-NLS-1$
+    System.out.println( Messages.getString("TestRoughnessPolygonCollection.12") + point.getX() + ", " + point.getY() + ")" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    System.out.println( Messages.getString("TestRoughnessPolygonCollection.14") ); //$NON-NLS-1$
     for( int i = 0; i < polygons.size(); i++ )
     {
-      System.out.println( (i + 1) + ". - " + polygons.get( i ).getGmlID() );
+      System.out.println( (i + 1) + ". - " + polygons.get( i ).getGmlID() ); //$NON-NLS-1$
     }
     
     if(polygons.size() == 0)
     {
-      System.out.println( " - no polygons contains this point" );
+      System.out.println( Messages.getString("TestRoughnessPolygonCollection.16") ); //$NON-NLS-1$
     }
     
-    System.out.println( "******************************************************************" );
-    System.out.println( "" );
+    System.out.println( "******************************************************************" ); //$NON-NLS-1$
+    System.out.println( "" ); //$NON-NLS-1$
 
     List<IRoughnessPolygon> polygonsList = m_polygonCollection.getOverlappedPolygons();
-    System.out.println( "******************************************************************" );
-    System.out.println( "* TEST: checksOverlapping                                        *" );
-    System.out.println( "******************************************************************" );
-    System.out.println( "Overlapping polygons:" );
+    System.out.println( "******************************************************************" ); //$NON-NLS-1$
+    System.out.println( "* TEST: checksOverlapping                                        *" ); //$NON-NLS-1$
+    System.out.println( "******************************************************************" ); //$NON-NLS-1$
+    System.out.println( Messages.getString("TestRoughnessPolygonCollection.13") ); //$NON-NLS-1$
     for( int i = 0; i < polygonsList.size(); i++ )
     {
-      System.out.println( (i + 1) + ". - " + polygonsList.get( i ).getGmlID() );
+      System.out.println( (i + 1) + ". - " + polygonsList.get( i ).getGmlID() ); //$NON-NLS-1$
     }
     
     if(polygonsList.size() == 0)
     {
-      System.out.println( " - no overlapping" );
+      System.out.println( Messages.getString("TestRoughnessPolygonCollection.24") ); //$NON-NLS-1$
     }
-    System.out.println( "******************************************************************" );
-    System.out.println( "" );
+    System.out.println( "******************************************************************" ); //$NON-NLS-1$
+    System.out.println( "" ); //$NON-NLS-1$
   }
 
 }

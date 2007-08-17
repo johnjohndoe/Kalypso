@@ -91,8 +91,8 @@ public class CreateJunctionContext1DTo2DFromSelectedEdges
   {
     super(
         Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE,
-        "Elementkopplung hinzufügen",
-        "Elementkopplung hinzufügen");
+        Messages.getString("CreateJunctionContext1DTo2DFromSelectedEdges.0"), //$NON-NLS-1$
+        Messages.getString("CreateJunctionContext1DTo2DFromSelectedEdges.1")); //$NON-NLS-1$
     setSelectionFilter( 
         QNameBasedSelectionFilter.getFilterForQName( 
                       Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE) );

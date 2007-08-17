@@ -85,8 +85,8 @@ public class MapActionDisabler implements IContributionManagerOverrides
   public MapActionDisabler()
   {
     this( new  String[]
-           { "org.kalypso.ui.editor.mapeditor.action.PanAction",
-             "org.kalypso.ui.editor.mapeditor.action.ZoomInAction"} );
+           { "org.kalypso.ui.editor.mapeditor.action.PanAction", //$NON-NLS-1$
+             "org.kalypso.ui.editor.mapeditor.action.ZoomInAction"} ); //$NON-NLS-1$
   }
   
   /**
@@ -99,7 +99,7 @@ public class MapActionDisabler implements IContributionManagerOverrides
    */
   public MapActionDisabler( String[] itemsIds )
   {
-    Assert.throwIAEOnNullParam( itemsIds, "itemsIds" );
+    Assert.throwIAEOnNullParam( itemsIds, "itemsIds" ); //$NON-NLS-1$
     itemsIDToDisable = Arrays.asList( itemsIds );
   }
   
@@ -129,7 +129,7 @@ public class MapActionDisabler implements IContributionManagerOverrides
       }
       else
       {
-        logger.warning( "Could not find:"+itemId );
+        logger.warning( Messages.getString("MapActionDisabler.3")+itemId ); //$NON-NLS-1$
       }
     }
     
@@ -147,14 +147,14 @@ public class MapActionDisabler implements IContributionManagerOverrides
     IViewPart findView = UtilMap.getMapView();
     if( findView == null )
     {
-      logger.warning("Map view is null skipping items enabling");
+      logger.warning(Messages.getString("MapActionDisabler.4")); //$NON-NLS-1$
       return;
     }
     
     IViewSite viewSite = findView.getViewSite();
     if( viewSite == null )
     {
-      logger.warning("Map view site is null skipping items enabling");
+      logger.warning(Messages.getString("MapActionDisabler.5")); //$NON-NLS-1$
       return;
     }
     IActionBars actionBars = viewSite.getActionBars();
@@ -173,7 +173,7 @@ public class MapActionDisabler implements IContributionManagerOverrides
       }
       else
       {
-        logger.warning( "Could not find:"+itemId);
+        logger.warning( Messages.getString("MapActionDisabler.6")+itemId); //$NON-NLS-1$
       }
     }
     toolBarManager.update( true );

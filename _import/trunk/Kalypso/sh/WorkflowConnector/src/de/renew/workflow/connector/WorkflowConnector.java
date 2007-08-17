@@ -36,11 +36,11 @@ import de.renew.workflow.connector.context.IActiveContextChangeListener;
 
 public class WorkflowConnector implements IWorkflowConnector, IActiveContextChangeListener<Case>
 {
-  private static final String SERVICE_NAME = "de.renew.workflow.WorkflowManager";
+  private static final String SERVICE_NAME = "de.renew.workflow.WorkflowManager"; //$NON-NLS-1$
 
   private static Logger logger = Logger.getLogger( WorkflowConnector.class.getName() );
 
-  private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "de.renew.workflow.connector/debug" ) );
+  private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "de.renew.workflow.connector/debug" ) ); //$NON-NLS-1$
 
   static
   {
@@ -97,12 +97,12 @@ public class WorkflowConnector implements IWorkflowConnector, IActiveContextChan
       if( !m_disableRmi )
       {
         final RemoteServerRegistry instance = RemoteServerRegistry.instance();
-        final ServerDescriptor descriptor = instance.connectServer( "localhost", "default" );
+        final ServerDescriptor descriptor = instance.connectServer( "localhost", "default" ); //$NON-NLS-1$ //$NON-NLS-2$
         m_manager = (WorkflowManager) Naming.lookup( descriptor.getUrl( SERVICE_NAME ) );
       }
       else
         m_manager = (WorkflowManager) WorkflowManagerImpl.getInstance();
-      m_login = new LoginInfo( "Stefan", "Stefan" );
+      m_login = new LoginInfo( "Stefan", "Stefan" ); //$NON-NLS-1$ //$NON-NLS-2$
       m_manager.checkLogin( m_login );
       m_listenerProxy = new AgendaChangeListenerProxy();
       getAgenda().addChangeListener( m_listenerProxy );
@@ -116,23 +116,23 @@ public class WorkflowConnector implements IWorkflowConnector, IActiveContextChan
     }
     catch( final IOException e )
     {
-      logger.log( Level.SEVERE, "IOException occurred", e );
-      WorkflowConnectorPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, 0, "", e ) );
+      logger.log( Level.SEVERE, Messages.getString("WorkflowConnector.7"), e ); //$NON-NLS-1$
+      WorkflowConnectorPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, 0, "", e ) ); //$NON-NLS-1$
     }
     catch( final NotBoundException e )
     {
-      logger.log( Level.SEVERE, "Server not bound", e );
-      WorkflowConnectorPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, 0, "", e ) );
+      logger.log( Level.SEVERE, Messages.getString("WorkflowConnector.8"), e ); //$NON-NLS-1$
+      WorkflowConnectorPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, 0, "", e ) ); //$NON-NLS-1$
     }
 
     _connected = success;
     if( success )
     {
-      logger.info( "Connected to workflow server" );
+      logger.info( Messages.getString("WorkflowConnector.10") ); //$NON-NLS-1$
     }
     else
     {
-      logger.info( "Could not connect to workflow server" );
+      logger.info( Messages.getString("WorkflowConnector.11") ); //$NON-NLS-1$
     }
   }
 
@@ -285,7 +285,7 @@ public class WorkflowConnector implements IWorkflowConnector, IActiveContextChan
         m_login = null;
       }
     }
-    logger.info( "Disconnected from workflow server." );
+    logger.info( Messages.getString("WorkflowConnector.12") ); //$NON-NLS-1$
   }
 
   public void addWorklistChangeListener( final IWorklistChangeListener worklistChangeListener )
@@ -327,7 +327,7 @@ public class WorkflowConnector implements IWorkflowConnector, IActiveContextChan
         }
         final Activity activity = getWorkItem( id ).request( m_login, m_client );
         final WorkItem workItem = activity.getWorkItem();
-        logger.info( "requested " + workItem.getTask().getName() );
+        logger.info( Messages.getString("WorkflowConnector.13") + workItem.getTask().getName() ); //$NON-NLS-1$
         return workItem.getParameter();
       }
       catch( final RemoteException e )
@@ -335,7 +335,7 @@ public class WorkflowConnector implements IWorkflowConnector, IActiveContextChan
         handleRemoteException( e );
       }
     }
-    logger.info( "could not request " + id );
+    logger.info( Messages.getString("WorkflowConnector.14") + id ); //$NON-NLS-1$
     return null;
   }
 
@@ -352,11 +352,11 @@ public class WorkflowConnector implements IWorkflowConnector, IActiveContextChan
         final boolean confirmed = activity.confirm( m_login, m_client, result );
         if( confirmed )
         {
-          logger.info( "confirmed " + activity.getWorkItem().getTask().getName() );
+          logger.info( Messages.getString("WorkflowConnector.15") + activity.getWorkItem().getTask().getName() ); //$NON-NLS-1$
         }
         else
         {
-          logger.info( "could not confirm " + activity.getWorkItem().getTask().getName() );
+          logger.info( Messages.getString("WorkflowConnector.16") + activity.getWorkItem().getTask().getName() ); //$NON-NLS-1$
         }
       }
       catch( final RemoteException e )
@@ -368,7 +368,7 @@ public class WorkflowConnector implements IWorkflowConnector, IActiveContextChan
         handleSecurityException( e );
       }
     }
-    logger.info( "no activity " + id );
+    logger.info( Messages.getString("WorkflowConnector.17") + id ); //$NON-NLS-1$
   }
 
   /**
@@ -382,7 +382,7 @@ public class WorkflowConnector implements IWorkflowConnector, IActiveContextChan
       {
         final Activity activity = getActivity( id );
         activity.cancel( m_login, m_client );
-        logger.info( "cancelled " + activity.getWorkItem().getTask().getName() );
+        logger.info( Messages.getString("WorkflowConnector.18") + activity.getWorkItem().getTask().getName() ); //$NON-NLS-1$
       }
       catch( final RemoteException e )
       {
@@ -393,7 +393,7 @@ public class WorkflowConnector implements IWorkflowConnector, IActiveContextChan
         handleSecurityException( e );
       }
     }
-    logger.info( "no activity " + id );
+    logger.info( Messages.getString("WorkflowConnector.19") + id ); //$NON-NLS-1$
   }
 
   private Activity getActivity( final String id )
@@ -419,7 +419,7 @@ public class WorkflowConnector implements IWorkflowConnector, IActiveContextChan
     }
     catch( final IOException e )
     {
-      logger.log( Level.SEVERE, "", e );
+      logger.log( Level.SEVERE, "", e ); //$NON-NLS-1$
     }
     return null;
   }
@@ -450,14 +450,14 @@ public class WorkflowConnector implements IWorkflowConnector, IActiveContextChan
 
   private void handleRemoteException( final RemoteException e )
   {
-    logger.log( Level.SEVERE, "connection problem", e );
-    WorkflowConnectorPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, 0, "", e ) );
+    logger.log( Level.SEVERE, Messages.getString("WorkflowConnector.21"), e ); //$NON-NLS-1$
+    WorkflowConnectorPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, 0, "", e ) ); //$NON-NLS-1$
   }
 
   private void handleSecurityException( final SecurityException e )
   {
-    logger.log( Level.SEVERE, "security violation", e );
-    WorkflowConnectorPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, 0, "", e ) );
+    logger.log( Level.SEVERE, Messages.getString("WorkflowConnector.23"), e ); //$NON-NLS-1$
+    WorkflowConnectorPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, 0, "", e ) ); //$NON-NLS-1$
   }
 
   public boolean isWorkflowMode( )

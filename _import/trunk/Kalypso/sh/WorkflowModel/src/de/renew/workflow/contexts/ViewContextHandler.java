@@ -56,7 +56,7 @@ public class ViewContextHandler extends AbstractHandler implements IExecutableEx
       }
       catch( final PartInitException e )
       {
-        throw new ExecutionException( "Could not show view " + m_viewId, e );
+        throw new ExecutionException( Messages.getString("ViewContextHandler.0") + m_viewId, e ); //$NON-NLS-1$
       }
       return Status.OK_STATUS;
     }

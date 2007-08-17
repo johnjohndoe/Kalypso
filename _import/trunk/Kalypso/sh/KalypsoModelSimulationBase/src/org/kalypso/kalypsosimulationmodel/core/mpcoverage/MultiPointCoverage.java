@@ -29,18 +29,18 @@ public class MultiPointCoverage<RangSetCls extends IFeatureWrapper2>
 					throws IllegalArgumentException
 	{
 		Assert.throwIAEOnNull(
-				mpFeature, "Argument mpFeature must not be null");
+				mpFeature, Messages.getString("MultiPointCoverage.0")); //$NON-NLS-1$
 		Assert.throwIAEOnNull(
-				rangeSetClass, "Argument rangeSetClass must not be null");
+				rangeSetClass, Messages.getString("MultiPointCoverage.1")); //$NON-NLS-1$
 		
 		if(!Util.directInstanceOf(
 					mpFeature, 
 					GmlImitationsConsts.WBGML_F_MULTIPOINT_COVERAGE))
 		{
 			throw new IllegalArgumentException(
-					"Feature of type "+
+					Messages.getString("MultiPointCoverage.2")+ //$NON-NLS-1$
 						GmlImitationsConsts.WBGML_F_MULTIPOINT_COVERAGE+
-					" expected but got "+mpFeature.getFeatureType().getQName());
+					Messages.getString("MultiPointCoverage.3")+mpFeature.getFeatureType().getQName()); //$NON-NLS-1$
 		}
 		
 		//this.rangeSetClass=rangeSetClass;
@@ -60,8 +60,8 @@ public class MultiPointCoverage<RangSetCls extends IFeatureWrapper2>
 		if(mp.size()!=fl.size())
 		{
 			throw new IllegalArgumentException(
-					"Size mismacth DomainSet.size="+mp.size()+
-					" RangeSetSize.size="+fl.size());
+					"Size mismacth DomainSet.size="+mp.size()+ //$NON-NLS-1$
+					" RangeSetSize.size="+fl.size()); //$NON-NLS-1$
 		}
 		this.domainSet=mp;
 		this.rangeSet=fl;
@@ -74,8 +74,8 @@ public class MultiPointCoverage<RangSetCls extends IFeatureWrapper2>
 	{
 		Assert.throwIAEOnNull(
 				rangeValue, 
-				"Argument rangeValue must not be null");
-		Assert.throwIAEOnNull(position, "Argument position must not be null");
+				Messages.getString("MultiPointCoverage.6")); //$NON-NLS-1$
+		Assert.throwIAEOnNull(position, Messages.getString("MultiPointCoverage.7")); //$NON-NLS-1$
 		rangeSet.add(rangeValue);
 		domainSet.add(position);
 	}
@@ -87,7 +87,7 @@ public class MultiPointCoverage<RangSetCls extends IFeatureWrapper2>
 	{
 		Assert.throwIAEOnNull(
 						rangeValue, 
-						"rangeValue must not be null");
+						Messages.getString("MultiPointCoverage.8")); //$NON-NLS-1$
 		final int SIZE=rangeSet.size();
 		List<GM_Point> pointList= new ArrayList<GM_Point>(SIZE);
 		for(int i=0;i<SIZE;i++)
@@ -110,7 +110,7 @@ public class MultiPointCoverage<RangSetCls extends IFeatureWrapper2>
 							throws IllegalArgumentException
 	{
 		Assert.throwIAEOnNull(
-				location, "Argument location must not be null");
+				location, Messages.getString("MultiPointCoverage.9")); //$NON-NLS-1$
 		int index=domainSet.indexOf(location);
 		if(index>=0)
 		{
@@ -142,7 +142,7 @@ public class MultiPointCoverage<RangSetCls extends IFeatureWrapper2>
 							GM_Point position) throws IllegalArgumentException
 	{
 		Assert.throwIAEOnNull(
-				position, "Argument position must not be null");
+				position, Messages.getString("MultiPointCoverage.10")); //$NON-NLS-1$
 		for(
 				int index=domainSet.size()-1;
 				index>=0;
@@ -160,7 +160,7 @@ public class MultiPointCoverage<RangSetCls extends IFeatureWrapper2>
 						RangSetCls rangeValue) throws IllegalArgumentException
 	{
 		Assert.throwIAEOnNull(
-				rangeValue, "Argument range value must not be null");
+				rangeValue, Messages.getString("MultiPointCoverage.11")); //$NON-NLS-1$
 		for(
 			int index=rangeSet.size()-1;
 			index>=0;

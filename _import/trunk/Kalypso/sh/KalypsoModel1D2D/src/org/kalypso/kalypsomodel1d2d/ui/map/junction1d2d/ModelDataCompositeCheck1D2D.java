@@ -86,8 +86,8 @@ public class ModelDataCompositeCheck1D2D implements IDataModelCheck//IMessageBui
                           IDataModelCheck check1D,
                           IDataModelCheck check2D)
   {
-    Assert.throwIAEOnNullParam( check1D, "check1D" );
-    Assert.throwIAEOnNullParam( check2D, "check2D" );
+    Assert.throwIAEOnNullParam( check1D, Messages.getString("ModelDataCompositeCheck1D2D.0") ); //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( check2D, Messages.getString("ModelDataCompositeCheck1D2D.1") ); //$NON-NLS-1$
     this.check1D = check1D;
     this.check2D = check2D;
   }
@@ -133,7 +133,7 @@ public class ModelDataCompositeCheck1D2D implements IDataModelCheck//IMessageBui
   {
     if(selected1DEdges.size()+selected2DEdges.size()!=selectedFeatures.length)
     {
-      message = "Nur 1d und 2d Kanten wählen";
+      message = Messages.getString("ModelDataCompositeCheck1D2D.2"); //$NON-NLS-1$
       messageType = IDataModelCheck.VALIDITY_STATE.ACCEPTABLE;
     }
     else

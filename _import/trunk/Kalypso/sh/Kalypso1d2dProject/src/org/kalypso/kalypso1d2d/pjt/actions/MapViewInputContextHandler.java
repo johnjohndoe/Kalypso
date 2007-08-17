@@ -35,7 +35,7 @@ import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
  */
 public class MapViewInputContextHandler extends AbstractHandler implements IExecutableExtension
 {
-  public static final String MAPVIEW_INPUT = "org.kalypso.kalypso1d2d.pjt.contexts.mapViewInput"; //$NON-NLS-1$
+  public static final String MAPVIEW_INPUT = "org.kalypso.kalypso1d2d.pjt.contexts.mapViewInput";  //$NON-NLS-1$
 
   private String m_mapViewInput;
 
@@ -50,7 +50,7 @@ public class MapViewInputContextHandler extends AbstractHandler implements IExec
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked")  //$NON-NLS-1$
   @Override
   public Object execute( final ExecutionEvent event )
   {
@@ -76,7 +76,7 @@ public class MapViewInputContextHandler extends AbstractHandler implements IExec
       {
         mapView.startLoadJob( file );
       }
-      final Job unsetActiveThemeJob = new Job( "" )
+      final Job unsetActiveThemeJob = new Job( "" )  //$NON-NLS-1$
       {
         @Override
         protected IStatus run( final IProgressMonitor monitor )

@@ -57,8 +57,8 @@ public class DeleteJunctionContextWidget extends DeleteFEElementsWidget
     super( 
         new FENetConceptSelectionWidget( 
             Kalypso1D2DSchemaConstants.WB1D2D_F_JUNTCION_CONTEXT, 
-            "Junction Kontext entfernen", 
-            "Junction Kontext entfernen" ) );
+            Messages.getString("DeleteJunctionContextWidget.0"),  //$NON-NLS-1$
+            Messages.getString("DeleteJunctionContextWidget.1") ) ); //$NON-NLS-1$
   }
   
 }

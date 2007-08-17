@@ -35,9 +35,9 @@ public class ExportDiscrModelaction implements IObjectActionDelegate
 
     final FileDialog dialog = new FileDialog( shell, SWT.SAVE );
 
-    dialog.setText( "Model Export" );
-    dialog.setFilterExtensions( new String[] { "*.2d", "*.*" } );
-    dialog.setFilterNames( new String[] { "BCE2D-Format (*.2d)", "*.*" } );
+    dialog.setText( Messages.getString("ExportDiscrModelaction.0") ); //$NON-NLS-1$
+    dialog.setFilterExtensions( new String[] { "*.2d", "*.*" } ); //$NON-NLS-1$ //$NON-NLS-2$
+    dialog.setFilterNames( new String[] { Messages.getString("ExportDiscrModelaction.3"), "*.*" } ); //$NON-NLS-1$ //$NON-NLS-2$
     dialog.open();
 
     final String filterPath = dialog.getFilterPath();
@@ -48,7 +48,7 @@ public class ExportDiscrModelaction implements IObjectActionDelegate
 
     if( modelFile.exists() )
     {
-      if( !MessageDialog.openQuestion( shell, "Modelexport", "Datei existiert bereits. Überschreiben?" ) )
+      if( !MessageDialog.openQuestion( shell, Messages.getString("ExportDiscrModelaction.5"), Messages.getString("ExportDiscrModelaction.6") ) ) //$NON-NLS-1$ //$NON-NLS-2$
         return;
     }
 

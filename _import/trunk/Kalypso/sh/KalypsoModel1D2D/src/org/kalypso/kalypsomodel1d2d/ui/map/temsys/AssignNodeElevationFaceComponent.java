@@ -114,7 +114,7 @@ public class AssignNodeElevationFaceComponent
 
     public boolean canModify( Object element, String property )
     {
-      System.out.println( "CanmOdiy=" + property );
+      System.out.println( "CanmOdiy=" + property ); //$NON-NLS-1$
       // Find the index of the column
       if( property.equals( nodeElevationViewer.getColumnProperties()[1] ) )
       {
@@ -164,14 +164,14 @@ public class AssignNodeElevationFaceComponent
       {
         if( FENodeLabelProvider.getElevationString( node ).equals( value ) )
         {
-          System.out.println( "No change in the elevation!" );
+          System.out.println( Messages.getString("AssignNodeElevationFaceComponent.1") ); //$NON-NLS-1$
           return;
         }
 
         final IFEDiscretisationModel1d2d model1d2d = m_dataModel.getDiscretisationModel();
         if( model1d2d == null )
         {
-          System.out.println( "Could not find discretisation model" );
+          System.out.println( Messages.getString("AssignNodeElevationFaceComponent.2") ); //$NON-NLS-1$
           return;
         }
         double newElevation;
@@ -191,7 +191,7 @@ public class AssignNodeElevationFaceComponent
         final IKalypsoFeatureTheme nodeTheme = (IKalypsoFeatureTheme) m_dataModel.getData( ApplyElevationWidgetDataModel.NODE_THEME );
         if( nodeTheme == null )
         {
-          System.out.println( "could not find node theme" );
+          System.out.println( Messages.getString("AssignNodeElevationFaceComponent.3") ); //$NON-NLS-1$
         }
 
         final CommandableWorkspace workspace = Util.getCommandableWorkspace( IFEDiscretisationModel1d2d.class );// nodeTheme.getWorkspace();
@@ -247,7 +247,7 @@ public class AssignNodeElevationFaceComponent
       {
         if( FENodeLabelProvider.getNameOrID( node ).equals( value ) )
         {
-          System.out.println( "No name change!" );
+          System.out.println( Messages.getString("AssignNodeElevationFaceComponent.4") ); //$NON-NLS-1$
           return;
         }
         final CommandableWorkspace workspace = Util.getCommandableWorkspace( IFEDiscretisationModel1d2d.class );
@@ -306,7 +306,7 @@ public class AssignNodeElevationFaceComponent
       }
       else
       {
-        System.out.println( "BAD property:" + property );
+        System.out.println( "BAD property:" + property ); //$NON-NLS-1$
       }
     }
 
@@ -317,20 +317,20 @@ public class AssignNodeElevationFaceComponent
 
     public void mouseDoubleClick( MouseEvent e )
     {
-      System.out.println( "mouse klick" );
+      System.out.println( "mouse klick" ); //$NON-NLS-1$
       m_dataModel.setIgnoreMapSelection( true );
     }
 
     public void mouseDown( MouseEvent e )
     {
       m_dataModel.setIgnoreMapSelection( true );
-      System.out.println( "mouse down" );
+      System.out.println( "mouse down" ); //$NON-NLS-1$
 
     }
 
     public void mouseUp( MouseEvent e )
     {
-      System.out.println( "mouse up" );
+      System.out.println( "mouse up" ); //$NON-NLS-1$
     }
 
   };
@@ -378,12 +378,12 @@ public class AssignNodeElevationFaceComponent
 
     public void dataChanged( String key, final Object newValue )
     {
-      System.out.println( "Key=" + key );
+      System.out.println( "Key=" + key ); //$NON-NLS-1$
       if( ITerrainElevationModel.class.toString().equals( key ) )
       {
         if( newValue == null )
         {
-          inputText.setText( " " );
+          inputText.setText( " " ); //$NON-NLS-1$
         }
         else
         {
@@ -431,7 +431,7 @@ public class AssignNodeElevationFaceComponent
       }
       catch( Throwable th )
       {
-        return "Geben Sie eine Zahl ein";
+        return Messages.getString("AssignNodeElevationFaceComponent.11"); //$NON-NLS-1$
       }
 
     }
@@ -455,8 +455,8 @@ public class AssignNodeElevationFaceComponent
 
   public void createControl( final ApplyElevationWidgetDataModel dataModel, final FormToolkit toolKit, final Composite parent )
   {
-    Assert.throwIAEOnNullParam( dataModel, "dataModel" );
-    Assert.throwIAEOnNullParam( toolKit, "toolKit" );
+    Assert.throwIAEOnNullParam( dataModel, "dataModel" ); //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( toolKit, "toolKit" ); //$NON-NLS-1$
     m_dataModel = dataModel;
     guiCreateSelectRegion( parent );
     m_dataModel.addKeyBasedDataChangeListener( modelChangeListener );
@@ -469,7 +469,7 @@ public class AssignNodeElevationFaceComponent
     regionFormData.left = new FormAttachment( 0, 5 );
     regionFormData.top = new FormAttachment( 0, 5 );
     final Label infoLabel = new Label( cComposite, SWT.FLAT );
-    infoLabel.setText( "Aktives Höhenmodell"/* "Selected Terrain Model" */);
+    infoLabel.setText( Messages.getString("AssignNodeElevationFaceComponent.14")/* "Selected Terrain Model" */); //$NON-NLS-1$
     infoLabel.setLayoutData( regionFormData );
 
     regionFormData = new FormData();
@@ -477,7 +477,7 @@ public class AssignNodeElevationFaceComponent
     regionFormData.top = new FormAttachment( 0, 5 );
     this.inputText = new Text( cComposite, SWT.FLAT | SWT.BORDER );
     inputText.setEditable( false );
-    inputText.setText( "" );
+    inputText.setText( "" ); //$NON-NLS-1$
     inputText.setTextLimit( 100 );
     inputText.setLayoutData( regionFormData );
 
@@ -487,15 +487,15 @@ public class AssignNodeElevationFaceComponent
     regionFormData.top = new FormAttachment( infoLabel, 10 );
     // regionFormData.right = new FormAttachment( 100, 0 );
     noElevationGroup = new Group( cComposite, SWT.NONE );
-    noElevationGroup.setText( "Automatische selektieren von Modell-Knoten" );// Modelle Knoten Suchen
+    noElevationGroup.setText( Messages.getString("AssignNodeElevationFaceComponent.16") );// Modelle Knoten Suchen //$NON-NLS-1$
     noElevationGroup.setLayoutData( regionFormData );
     noElevationGroup.setLayout( new GridLayout( 2, false ) );
 
     selectNoElevationLabel = new Label( noElevationGroup, SWT.FLAT );
-    selectNoElevationLabel.setText( "Knoten ohne Höhenzuweisung" );
+    selectNoElevationLabel.setText( Messages.getString("AssignNodeElevationFaceComponent.17") ); //$NON-NLS-1$
 
     selectNoElevationButton = new Button( noElevationGroup, SWT.PUSH );
-    selectNoElevationButton.setText( "selektieren" );
+    selectNoElevationButton.setText( Messages.getString("AssignNodeElevationFaceComponent.18") ); //$NON-NLS-1$
     selectNoElevationButton.addSelectionListener( new SelectionAdapter()
     {
       @Override
@@ -511,7 +511,7 @@ public class AssignNodeElevationFaceComponent
     regionFormData.top = new FormAttachment( noElevationGroup, 10 );
     // regionFormData.right = new FormAttachment( 100, 0 );
     nodeViewerGroup = new Group( cComposite, SWT.NONE );
-    nodeViewerGroup.setText( "Editierbare Knoten" );
+    nodeViewerGroup.setText( Messages.getString("AssignNodeElevationFaceComponent.19") ); //$NON-NLS-1$
     nodeViewerGroup.setLayoutData( regionFormData );
     nodeViewerGroup.setLayout( new FormLayout() );
 
@@ -522,7 +522,7 @@ public class AssignNodeElevationFaceComponent
     regionFormData.height = 70;
     nodeElevationViewer = new TableViewer( nodeViewerGroup, SWT.FULL_SELECTION | SWT.BORDER | SWT.MULTI );
     nodeElevationViewer.setUseHashlookup( true );
-    nodeElevationViewer.setColumnProperties( new String[] { "Node", "Elevation" } );
+    nodeElevationViewer.setColumnProperties( new String[] { "Node", "Elevation" } ); //$NON-NLS-1$ //$NON-NLS-2$
     nodeElevationViewer.setLabelProvider( new FENodeLabelProvider() );
     nodeElevationViewer.setContentProvider( new ArrayContentProvider() );
     // nodeElevationViewer.setSorter( new FENodeViewerSorter() );
@@ -533,7 +533,7 @@ public class AssignNodeElevationFaceComponent
     table.setLinesVisible( true );
 
     final TableColumn lineColumn = new TableColumn( table, SWT.LEFT );
-    lineColumn.setText( "Knoten"/* "Node" */);
+    lineColumn.setText( Messages.getString("AssignNodeElevationFaceComponent.22")/* "Node" */); //$NON-NLS-1$
     lineColumn.setWidth( 100 / 1 );
     lineColumn.addSelectionListener( new SelectionAdapter()
     {
@@ -547,7 +547,7 @@ public class AssignNodeElevationFaceComponent
     } );
 
     final TableColumn actualPointNum = new TableColumn( table, SWT.LEFT );
-    actualPointNum.setText( "Höhe   "/* "Elevation" */);
+    actualPointNum.setText( Messages.getString("AssignNodeElevationFaceComponent.23")/* "Elevation" */); //$NON-NLS-1$
     actualPointNum.setWidth( 100 / 2 );
     actualPointNum.addSelectionListener( new SelectionAdapter()
     {
@@ -603,7 +603,7 @@ public class AssignNodeElevationFaceComponent
     regionFormData.top = new FormAttachment( 0, 10 );
     regionFormData.right = new FormAttachment( 100, -2 );
     final Button selectAll = new Button( nodeViewerGroup, SWT.PUSH );
-    selectAll.setText( "Alles selektieren"/* "Select All" */);
+    selectAll.setText( Messages.getString("AssignNodeElevationFaceComponent.24")/* "Select All" */); //$NON-NLS-1$
     selectAll.setLayoutData( regionFormData );
     selectAll.addSelectionListener( new SelectionAdapter()
     {
@@ -620,7 +620,7 @@ public class AssignNodeElevationFaceComponent
     regionFormData.right = new FormAttachment( 100, -2 );
     final Button deSelectAll = new Button( nodeViewerGroup, SWT.PUSH );
     deSelectAll.setLayoutData( regionFormData );
-    deSelectAll.setText( "Alles deselektieren"/* "DeSelect All" */);
+    deSelectAll.setText( Messages.getString("AssignNodeElevationFaceComponent.25")/* "DeSelect All" */); //$NON-NLS-1$
 
     deSelectAll.addSelectionListener( new SelectionAdapter()
     {
@@ -638,7 +638,7 @@ public class AssignNodeElevationFaceComponent
     regionFormData.right = new FormAttachment( 100, -2 );
     final Button applySelected = new Button( nodeViewerGroup, SWT.PUSH );
     applySelected.setLayoutData( regionFormData );
-    applySelected.setText( "Höhen zuweisen"/* "Apply Selected" */);
+    applySelected.setText( Messages.getString("AssignNodeElevationFaceComponent.26")/* "Apply Selected" */); //$NON-NLS-1$
     applySelected.addSelectionListener( new SelectionAdapter()
     {
       @Override
@@ -694,8 +694,8 @@ public class AssignNodeElevationFaceComponent
 
     nodeElevationViewer.setInput( noElevationNodes.toArray( new IFE1D2DNode[] {} ) );
     nodeElevationViewer.refresh();
-    System.out.println( "Number of Nodes :" + allNodes.size() );
-    System.out.println( "Nodes With No Elevation:" + noElevationNodes.size() );
+    System.out.println( Messages.getString("AssignNodeElevationFaceComponent.27") + allNodes.size() ); //$NON-NLS-1$
+    System.out.println( Messages.getString("AssignNodeElevationFaceComponent.28") + noElevationNodes.size() ); //$NON-NLS-1$
   }
 
   private final void applyElevation( ) throws Exception
@@ -704,7 +704,7 @@ public class AssignNodeElevationFaceComponent
     final IFEDiscretisationModel1d2d model1d2d = m_dataModel.getDiscretisationModel();
     if( model1d2d == null )
     {
-      System.out.println( "model  is null" );
+      System.out.println( Messages.getString("AssignNodeElevationFaceComponent.29") ); //$NON-NLS-1$
     }
 
     final IKalypsoFeatureTheme elevationTheme = m_dataModel.getElevationTheme();

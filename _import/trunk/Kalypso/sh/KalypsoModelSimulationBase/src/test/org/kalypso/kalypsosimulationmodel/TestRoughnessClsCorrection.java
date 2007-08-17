@@ -62,10 +62,10 @@ public class TestRoughnessClsCorrection extends TestCase
 				rc.getMarshCor());
 
 		assertEquals(
-				"htpp://wwww.tuhh.de/wb/roughness_db/grass", 
+				"htpp://wwww.tuhh.de/wb/roughness_db/grass",  //$NON-NLS-1$
 				rc.getURI());
 		assertNull(
-				"", 
+				"",  //$NON-NLS-1$
 				rc.getDescription());
 		
 		//setter
@@ -139,8 +139,8 @@ public class TestRoughnessClsCorrection extends TestCase
 			rc.setMarshCor(0.55555);
 			assertEquals(0.55555, rc.getMarshCor());
 			
-			rc.setDescription("D");
-			assertEquals("D",rc.getDescription());
+			rc.setDescription("D"); //$NON-NLS-1$
+			assertEquals("D",rc.getDescription()); //$NON-NLS-1$
 			
 		}
 		catch(Throwable th)

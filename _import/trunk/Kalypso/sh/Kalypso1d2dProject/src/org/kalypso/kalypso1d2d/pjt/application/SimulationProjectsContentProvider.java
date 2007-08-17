@@ -145,7 +145,7 @@ public class SimulationProjectsContentProvider implements IIntroXHTMLContentProv
     final Element a2 = createDeleteLink( dom, project );
     parent.appendChild( a2 );
 
-    final Element br = dom.createElement( "br" );
+    final Element br = dom.createElement( "br" );  //$NON-NLS-1$
     parent.appendChild( br );
   }
 
@@ -153,42 +153,42 @@ public class SimulationProjectsContentProvider implements IIntroXHTMLContentProv
   {
     final String pname = project.getName();
 
-    final Element a = dom.createElement( "a" );
-    a.setAttribute( "id", "projectLinkId_" + pname );
-    a.setAttribute( "class", "link" );
+    final Element a = dom.createElement( "a" );  //$NON-NLS-1$
+    a.setAttribute( "id", "projectLinkId_" + pname );   //$NON-NLS-1$ //$NON-NLS-2$
+    a.setAttribute( "class", "link" );   //$NON-NLS-1$ //$NON-NLS-2$
 
     final StringBuffer href = new StringBuffer();
-    href.append( "http://org.eclipse.ui.intro/runAction?pluginId=org.kalypso.kalypso1d2d.pjt&class=org.kalypso.kalypso1d2d.pjt.application.Open1D2DProjectIntroAction" );
-    href.append( "&project=" );
+    href.append( "http://org.eclipse.ui.intro/runAction?pluginId=org.kalypso.kalypso1d2d.pjt&class=org.kalypso.kalypso1d2d.pjt.application.Open1D2DProjectIntroAction" );  //$NON-NLS-1$
+    href.append( "&project=" );  //$NON-NLS-1$
     href.append( pname );
 
-    a.setAttribute( "href", href.toString() );
+    a.setAttribute( "href", href.toString() );  //$NON-NLS-1$
     
     final String baseUri = dom.getBaseURI();
-    String fileUri = "css/link_obj.gif";
+    String fileUri = "css/link_obj.gif";  //$NON-NLS-1$
     if( baseUri != null )
     {
       try
       {
         final URL baseUrl = new URL( baseUri );
-        final URL url = new URL( baseUrl, "css/link_obj.gif" );
+        final URL url = new URL( baseUrl, "css/link_obj.gif" );  //$NON-NLS-1$
         fileUri = url.toExternalForm();
       }
       catch( MalformedURLException e )
       {
         e.printStackTrace();
-        fileUri = "css/link_obj.gif";
+        fileUri = "css/link_obj.gif";  //$NON-NLS-1$
       }
     }
     
-    final Element img = dom.createElement( "img" );
-    img.setAttribute( "class", "link" );
-    img.setAttribute( "border", "0" );
-    img.setAttribute( "src", fileUri );
-    img.setAttribute( "alt", pname + " öffnen" );
+    final Element img = dom.createElement( "img" );  //$NON-NLS-1$
+    img.setAttribute( "class", "link" );   //$NON-NLS-1$ //$NON-NLS-2$
+    img.setAttribute( "border", "0" );   //$NON-NLS-1$ //$NON-NLS-2$
+    img.setAttribute( "src", fileUri );  //$NON-NLS-1$
+    img.setAttribute( Messages.getString("SimulationProjectsContentProvider.36"), pname + Messages.getString("SimulationProjectsContentProvider.37") );  //$NON-NLS-1$ //$NON-NLS-2$
 
     a.appendChild( img );
-    a.appendChild( dom.createTextNode( " " + pname ) );
+    a.appendChild( dom.createTextNode( " " + pname ) );  //$NON-NLS-1$
     return a;
   }
 
@@ -196,41 +196,41 @@ public class SimulationProjectsContentProvider implements IIntroXHTMLContentProv
   {
     final String pname = project.getName();
 
-    final Element a = dom.createElement( "a" );
-    a.setAttribute( "id", "projectLinkId_" + pname );
-    a.setAttribute( "class", "link" );
+    final Element a = dom.createElement( "a" );  //$NON-NLS-1$
+    a.setAttribute( "id", "projectLinkId_" + pname );   //$NON-NLS-1$ //$NON-NLS-2$
+    a.setAttribute( "class", "link" );   //$NON-NLS-1$ //$NON-NLS-2$
 
     final StringBuffer href = new StringBuffer();
-    href.append( "http://org.eclipse.ui.intro/runAction?pluginId=org.kalypso.kalypso1d2d.pjt&class=org.kalypso.kalypso1d2d.pjt.application.Delete1D2DProjectIntroAction" );
-    href.append( "&project=" );
+    href.append( "http://org.eclipse.ui.intro/runAction?pluginId=org.kalypso.kalypso1d2d.pjt&class=org.kalypso.kalypso1d2d.pjt.application.Delete1D2DProjectIntroAction" );  //$NON-NLS-1$
+    href.append( "&project=" );  //$NON-NLS-1$
     href.append( pname );
 
-    a.setAttribute( "href", href.toString() );
+    a.setAttribute( "href", href.toString() );  //$NON-NLS-1$
 
     final String baseUri = dom.getBaseURI();
-    String fileUri = "css/redx.gif";
+    String fileUri = "css/redx.gif";  //$NON-NLS-1$
     if( baseUri != null )
     {
       try
       {
         final URL baseUrl = new URL( baseUri );
-        final URL url = new URL( baseUrl, "css/redx.gif" );
+        final URL url = new URL( baseUrl, "css/redx.gif" );  //$NON-NLS-1$
         fileUri = url.toExternalForm();
       }
       catch( MalformedURLException e )
       {
         e.printStackTrace();
-        fileUri = "css/redx.gif";
+        fileUri = "css/redx.gif";  //$NON-NLS-1$
       }
     }
     
-    final Element img = dom.createElement( "img" );
-    img.setAttribute( "class", "link" );
-    img.setAttribute( "border", "0" );
-    img.setAttribute( "src", fileUri );
+    final Element img = dom.createElement( "img" );  //$NON-NLS-1$
+    img.setAttribute( "class", "link" );   //$NON-NLS-1$ //$NON-NLS-2$
+    img.setAttribute( "border", "0" );   //$NON-NLS-1$ //$NON-NLS-2$
+    img.setAttribute( "src", fileUri );  //$NON-NLS-1$
 
     a.appendChild( img );
-    a.appendChild( dom.createTextNode( " löschen" ) );
+    a.appendChild( dom.createTextNode( Messages.getString("SimulationProjectsContentProvider.38") ) ); //$NON-NLS-1$
     return a;
   }
 

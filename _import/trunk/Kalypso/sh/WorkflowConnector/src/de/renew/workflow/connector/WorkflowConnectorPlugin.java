@@ -15,7 +15,7 @@ public class WorkflowConnectorPlugin extends Plugin
 {
 
   // The plug-in ID
-  public static final String PLUGIN_ID = "de.renew.workflow.connector";
+  public static final String PLUGIN_ID = "de.renew.workflow.connector"; //$NON-NLS-1$
 
   private static WorkflowConnectorPlugin plugin;
 

@@ -17,7 +17,7 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public class DataContainer
 {
-  private String m_inputFile = ""; // absolute path
+  private String m_inputFile = ""; // absolute path  //$NON-NLS-1$
 
   private CS_CoordinateSystem m_coordinateSystem;
 
@@ -44,7 +44,7 @@ public class DataContainer
   {
     try
     {
-      return new URL( "file:" + m_inputFile ); //$NON-NLS-1$
+      return new URL( "file:" + m_inputFile );  //$NON-NLS-1$
     }
     catch( MalformedURLException e )
     {

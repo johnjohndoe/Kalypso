@@ -84,7 +84,7 @@ import org.opengis.cs.CS_CoordinateSystem;
  * 
  * @author Patrice Congo
  */
-@SuppressWarnings({"unchecked", "hiding"})
+@SuppressWarnings({"unchecked", "hiding"}) //$NON-NLS-1$ //$NON-NLS-2$
 public class FENetConceptSelectionWidget implements IWidget, IGrabDistanceProvider
 {
   private class QNameBasedSelectionContext
@@ -413,7 +413,7 @@ public class FENetConceptSelectionWidget implements IWidget, IGrabDistanceProvid
 
   public void setToolTip( final String newToolTip )
   {
-    Assert.throwIAEOnNullParam( newToolTip, "newToolTip" );
+    Assert.throwIAEOnNullParam( newToolTip, "newToolTip" ); //$NON-NLS-1$
   }
 
   /**

@@ -40,26 +40,32 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.conv;
 
-import org.eclipse.osgi.util.NLS;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 /**
- * @author antanas
+ * @author schrage
  *
  */
-public class Messages extends NLS
+public class Messages
 {
   private static final String BUNDLE_NAME = "org.kalypso.kalypsomodel1d2d.conv.messages"; //$NON-NLS-1$
 
-  public static String RMA10S2GmlConv_0;
-
-  public static String RMA10S2GmlConv_1;
-  static
-  {
-// initialize resource bundle
-    NLS.initializeMessages( BUNDLE_NAME, Messages.class );
-  }
+  private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle( BUNDLE_NAME );
 
   private Messages( )
   {
+  }
+
+  public static String getString( String key )
+  {
+    try
+    {
+      return RESOURCE_BUNDLE.getString( key );
+    }
+    catch( MissingResourceException e )
+    {
+      return '!' + key + '!';
+    }
   }
 }

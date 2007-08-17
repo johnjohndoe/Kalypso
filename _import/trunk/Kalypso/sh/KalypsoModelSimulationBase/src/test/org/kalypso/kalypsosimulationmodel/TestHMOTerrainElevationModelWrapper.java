@@ -80,52 +80,52 @@ public class TestHMOTerrainElevationModelWrapper extends TestCase
             //point 0 0
             double elevation = hmo.getElevation( makePoint( 0, 0 ) );
             assertEquals(
-                "Point(0,0) does have the elevation 0.0",
+                Messages.getString("TestHMOTerrainElevationModelWrapper.0"), //$NON-NLS-1$
                 0.0, elevation);            
             
             //point 0 1
             elevation = hmo.getElevation( makePoint( 0, 1 ) );
             assertEquals( 
-                "Point(0,1) does have the elevation 1.0",
+                Messages.getString("TestHMOTerrainElevationModelWrapper.1"), //$NON-NLS-1$
                 1.0, elevation);
             
             //point 1 0
             
             elevation = hmo.getElevation( makePoint( 1, 0 ) );
             assertEquals(
-                "Point(1,0) does have the elevation 1.0",
+                Messages.getString("TestHMOTerrainElevationModelWrapper.2"), //$NON-NLS-1$
                 1.0, elevation);
             
             //point 1 1
             elevation = hmo.getElevation( makePoint( 1, 1 ) );
             assertEquals( 
-                "Point(1,1) does have the elevation 0.0", 0.0, elevation);
+                Messages.getString("TestHMOTerrainElevationModelWrapper.3"), 0.0, elevation); //$NON-NLS-1$
             
             //-1 -1
             elevation = hmo.getElevation( makePoint( -1, -1 ) );
             assertEquals( 
-                "Point(-1, -1) does have the elevation 0.0",
+                Messages.getString("TestHMOTerrainElevationModelWrapper.4"), //$NON-NLS-1$
                 0.0, 
                 elevation);
             
 //          -1 -1
             elevation = hmo.getElevation( makePoint( -0.1, -0.1 ) );
             assertEquals( 
-                "Point(-0.1, -0.1) does have the elevation 0.0",
+                Messages.getString("TestHMOTerrainElevationModelWrapper.5"), //$NON-NLS-1$
                 0.0, 
                 elevation);
             
             //center of triangle ((0,0,0)(1,0,1)(0,1,1))
             elevation = hmo.getElevation( makePoint( 1.0/3, 1.0/3 ) );
             assertEquals( 
-                "center of triangle ((0,0,0)(1,0,1)(0,1,1)) does have the elevation 2/3",
+                Messages.getString("TestHMOTerrainElevationModelWrapper.6"), //$NON-NLS-1$
                 2.0/3, 
                 elevation);
             
             ///
             elevation = hmo.getElevation( makePoint( 1.0/3, 1.0/3 ) );
             assertEquals( 
-                "center of triangle ((1,1,0)(1,0,1)(0,1,1)) ",
+                Messages.getString("TestHMOTerrainElevationModelWrapper.7"), //$NON-NLS-1$
                 2.0/3, 
                 elevation);
             

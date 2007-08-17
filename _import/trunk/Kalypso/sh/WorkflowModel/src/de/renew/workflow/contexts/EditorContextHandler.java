@@ -108,7 +108,7 @@ public class EditorContextHandler extends AbstractHandler implements IHandler
       }
       catch( final PartInitException e )
       {
-        throw new ExecutionException( "Could not open editor " + m_editorId + " on input " + m_input, e );
+        throw new ExecutionException( Messages.getString("EditorContextHandler.0") + m_editorId + Messages.getString("EditorContextHandler.1") + m_input, e ); //$NON-NLS-1$ //$NON-NLS-2$
       }
       return Status.OK_STATUS;
     }

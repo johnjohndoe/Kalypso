@@ -56,7 +56,7 @@ public class ImportWizard extends Wizard implements INewWizard
     final IEvaluationContext context = handlerService.getCurrentState();
     final SzenarioDataProvider szenarioDataProvider = (SzenarioDataProvider) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
     m_data.setSzenarioDataProvider( szenarioDataProvider );
-    setWindowTitle( Messages.getString( "org.kalypso.wizards.import1d2d.ImportWizard.Title" ) ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "org.kalypso.wizards.import1d2d.ImportWizard.Title" ) );  //$NON-NLS-1$
     selection = iSelection;
   }
 
@@ -98,7 +98,7 @@ public class ImportWizard extends Wizard implements INewWizard
     try
     {
       /* post empty command(s) in order to make pool dirty. */
-      m_data.postCommand( IFEDiscretisationModel1d2d.class, new EmptyCommand( "Profile importieren", false ) );
+      m_data.postCommand( IFEDiscretisationModel1d2d.class, new EmptyCommand( org.kalypso.wizards.import1d2d.Messages.getString("ImportWizard.1"), false ) );  //$NON-NLS-1$
     }
     catch( final Exception e )
     {
@@ -106,7 +106,7 @@ public class ImportWizard extends Wizard implements INewWizard
       e.printStackTrace();
     }
 
-    ErrorDialog.openError( getShell(), getWindowTitle(), "", status );
+    ErrorDialog.openError( getShell(), getWindowTitle(), "", status );  //$NON-NLS-1$
 
     return status.isOK();
   }

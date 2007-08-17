@@ -88,7 +88,7 @@ public class SurfaceCellDivisionTest extends TestCase
       }
       
       assertEquals( 
-          "4 must be the size since stop control returns false", 
+          "4 must be the size since stop control returns false",  //$NON-NLS-1$
           4,
           cells.size() );
       final GM_Position[] lowerLeftCell = makeCell( 0.0, 0.5, 0.0, 0.5);
@@ -96,19 +96,19 @@ public class SurfaceCellDivisionTest extends TestCase
       final GM_Position[] upperLeftCell = makeCell( 0.0, 0.5, 0.5, 1);
       final GM_Position[] upperRightCell = makeCell( 0.5, 1, 0.5, 1);
       assertTrue( 
-          "lowerLeft must be in the cells list returned", 
+          "lowerLeft must be in the cells list returned",  //$NON-NLS-1$
           cellsAsLists.contains( 
                   Arrays.asList( lowerLeftCell ) ) );
       assertTrue( 
-          "lowerRight must be in the cells list returned", 
+          "lowerRight must be in the cells list returned",  //$NON-NLS-1$
           cellsAsLists.contains( 
                   Arrays.asList( lowerRightCell ) ) );
       assertTrue( 
-          "upperLeft must be in the cells list returned", 
+          "upperLeft must be in the cells list returned",  //$NON-NLS-1$
           cellsAsLists.contains( 
                   Arrays.asList( upperLeftCell ) ) );
       assertTrue( 
-          "upperRight must be in the cells list returned", 
+          "upperRight must be in the cells list returned",  //$NON-NLS-1$
           cellsAsLists.contains( 
                   Arrays.asList( upperRightCell ) ) );
     }

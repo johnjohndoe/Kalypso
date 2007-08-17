@@ -163,7 +163,7 @@ public class ASCTerrainElevationModel implements IElevationProvider, ISurfacePat
       String[] strRow;
       for( int y = N_ROWS - 1; y >= 0; y-- )
       {
-        strRow = br.readLine().trim().split( " " );
+        strRow = br.readLine().trim().split( " " ); //$NON-NLS-1$
         for( int x = 0; x < N_COLS; x++ )
         {
           currentValue = Double.parseDouble( strRow[x] );

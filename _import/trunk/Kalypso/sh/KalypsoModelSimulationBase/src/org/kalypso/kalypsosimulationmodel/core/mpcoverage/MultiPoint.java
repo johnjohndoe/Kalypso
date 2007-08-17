@@ -42,13 +42,13 @@ public class MultiPoint implements IMultiPoint
 	 * 
 	 * @param multiPointFeature -- the multipoint feature to wrapp
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") //$NON-NLS-1$
 	public MultiPoint(Feature multiPointFeature)
 	{
 		if(multiPointFeature==null)
 		{
 			throw new IllegalArgumentException(
-					"Argument multipoint feature must not be null");
+					Messages.getString("MultiPoint.1")); //$NON-NLS-1$
 		}
 		
 		if(!Util.directInstanceOf(
@@ -56,9 +56,9 @@ public class MultiPoint implements IMultiPoint
 				GmlImitationsConsts.WBGML_F_MULTIPOINT))
 		{
 			throw new IllegalArgumentException(
-					"multiPoint  feature must be of type "+
+					Messages.getString("MultiPoint.2")+ //$NON-NLS-1$
 					GmlImitationsConsts.WBGML_F_MULTIPOINT+
-					"; the current type is:"+multiPointFeature.getFeatureType().getQName());
+					Messages.getString("MultiPoint.3")+multiPointFeature.getFeatureType().getQName()); //$NON-NLS-1$
 		}
 		
 		this.multiPointFeature=multiPointFeature;
@@ -69,7 +69,7 @@ public class MultiPoint implements IMultiPoint
 	}
 	
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") //$NON-NLS-1$
 	public MultiPoint(
 			Feature parentFeature, 
 			QName propQName)
@@ -78,9 +78,9 @@ public class MultiPoint implements IMultiPoint
 		if(parentFeature==null || propQName==null)
 		{
 			throw new IllegalArgumentException(
-					"Argument parentFeature and propQName must not be null:"+
-					"\n\tparentFeature="+parentFeature+
-					"\n\tpropQName="+propQName);
+					Messages.getString("MultiPoint.5")+ //$NON-NLS-1$
+					"\n\tparentFeature="+parentFeature+ //$NON-NLS-1$
+					"\n\tpropQName="+propQName); //$NON-NLS-1$
 		}
 //		GMLWorkspace workspace= parentFeature.getWorkspace();
 //		IFeatureType featureType=
@@ -102,7 +102,7 @@ public class MultiPoint implements IMultiPoint
 		{
 			 
 			throw new IllegalArgumentException(
-					"Property "+propQName+" does not accept element of type"+
+					Messages.getString("MultiPoint.8")+propQName+Messages.getString("MultiPoint.9")+ //$NON-NLS-1$ //$NON-NLS-2$
 					GmlImitationsConsts.WBGML_F_MULTIPOINT,
 					ex);
 		}

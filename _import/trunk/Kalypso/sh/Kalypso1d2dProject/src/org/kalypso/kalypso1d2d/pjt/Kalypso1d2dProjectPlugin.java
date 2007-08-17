@@ -44,16 +44,16 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
 {
 
   // The plug-in ID
-  public static final String PLUGIN_ID = "org.eclipse.kalypso1d2d.pjt.Kalypso1d2dProject";
+  public static final String PLUGIN_ID = "org.eclipse.kalypso1d2d.pjt.Kalypso1d2dProject"; 
 
-  private static final String ACTIVE_WORKCONTEXT_MEMENTO = "activeWorkContext";
+  private static final String ACTIVE_WORKCONTEXT_MEMENTO = "activeWorkContext"; 
 
   // The shared instance
   private static Kalypso1d2dProjectPlugin plugin;
 
-  private static final String ICON_SIM_MODEL_PATH = "/icons/nuvola_select/ledblue.png";
+  private static final String ICON_SIM_MODEL_PATH = "/icons/nuvola_select/ledblue.png"; 
 
-  public static final String KEY_ICON_SIM_MODEL = "_ICON_SIM_MODEL_";
+  public static final String KEY_ICON_SIM_MODEL = "_ICON_SIM_MODEL_"; 
 
   private PerspectiveWatcher<Scenario> m_perspectiveWatcher;
 
@@ -119,7 +119,7 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
       /**
        * @see org.eclipse.ui.IWorkbenchListener#preShutdown(org.eclipse.ui.IWorkbench, boolean)
        */
-      @SuppressWarnings("synthetic-access")
+      @SuppressWarnings("synthetic-access") 
       public boolean preShutdown( final IWorkbench workbench, final boolean forced )
       {
         if( !forced && m_taskExecutionAuthority.canStopTask( m_taskExecutor.getActiveTask() ) )
@@ -252,7 +252,7 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
     }
     try
     {
-      properties.storeToXML( new FileOutputStream( file ), "" );
+      properties.storeToXML( new FileOutputStream( file ), "" ); 
     }
     catch( FileNotFoundException e1 )
     {

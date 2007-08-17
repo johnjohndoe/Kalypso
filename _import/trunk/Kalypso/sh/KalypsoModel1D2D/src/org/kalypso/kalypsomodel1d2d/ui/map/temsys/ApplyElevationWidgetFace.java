@@ -113,7 +113,7 @@ class ApplyElevationWidgetFace
   private IFeatureSelectionListener featureSelectionListener = new IFeatureSelectionListener()
   {
 
-    @SuppressWarnings("synthetic-access")
+    @SuppressWarnings("synthetic-access") //$NON-NLS-1$
     public void selectionChanged( IFeatureSelection selection )
     {
       if( nodeElevationViewer == null )
@@ -182,7 +182,7 @@ class ApplyElevationWidgetFace
           IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
           if( activeWorkbenchWindow == null )
           {
-            System.out.println( "Active workbench is null" );
+            System.out.println( Messages.getString("ApplyElevationWidgetFace.1") ); //$NON-NLS-1$
             return;
           }
 
@@ -235,7 +235,7 @@ class ApplyElevationWidgetFace
 
     // Creates Section for "Select Elevation Model"
     elevationSelectStatus = toolkit.createSection( scrolledForm.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
-    elevationSelectStatus.setText( "Höhenmodell-System" );
+    elevationSelectStatus.setText( Messages.getString("ApplyElevationWidgetFace.2") ); //$NON-NLS-1$
     tableWrapData = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
     tableWrapData.grabHorizontal = true;
     tableWrapData.grabVertical = true;
@@ -244,7 +244,7 @@ class ApplyElevationWidgetFace
 
     // Creates Section for "Select A Region - among the List of Nodes drawn on the Viewer Pane"
     areaSelectSection = toolkit.createSection( scrolledForm.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
-    areaSelectSection.setText("Knoten bearbeiten"  );
+    areaSelectSection.setText(Messages.getString("ApplyElevationWidgetFace.3")  ); //$NON-NLS-1$
     tableWrapData = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
     tableWrapData.grabHorizontal = true;
     tableWrapData.align = TableWrapData.FILL_GRAB;
@@ -255,7 +255,7 @@ class ApplyElevationWidgetFace
     // Creates Section to Configure the Color for Different Elevations
     elevationColorSection = toolkit.createSection( scrolledForm.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
     elevationColorSection.setText( 
-          "Farbeinstellungen"
+          Messages.getString("ApplyElevationWidgetFace.4") //$NON-NLS-1$
         //"Select Colors for MAX Elevation and MIN Elevation " 
         );
     // elevationColorSection.addPaintListener( drawListener );
@@ -313,7 +313,7 @@ class ApplyElevationWidgetFace
     preferenceStore.removePropertyChangeListener( storePropertyChangeListener );
     if( rootPanel == null )
     {
-      System.out.println( "Disposing null root panel" );
+      System.out.println( Messages.getString("ApplyElevationWidgetFace.5") ); //$NON-NLS-1$
       return;
     }
     if( !rootPanel.isDisposed() )
@@ -335,7 +335,7 @@ class ApplyElevationWidgetFace
   
   private IntegerFieldEditor handleWidth;
 
-  public static final String HANDLE_WIDTH_NAME = "x.handleWidth";
+  public static final String HANDLE_WIDTH_NAME = "x.handleWidth"; //$NON-NLS-1$
 
   private List selectionNodeList;
 
@@ -394,7 +394,7 @@ class ApplyElevationWidgetFace
         }
         else
         {
-          System.out.println( "Property changed=" + event.getProperty() + " " + event.getNewValue() + " " + source.getClass() );
+          System.out.println( "Property changed=" + event.getProperty() + " " + event.getNewValue() + " " + source.getClass() ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
       }
 

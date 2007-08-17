@@ -76,11 +76,11 @@ public class TestTerrainModelWithElevation extends TestCase
           ITerrainModel itrModel = (ITerrainModel) rcFeature.getAdapter(ITerrainModel.class);
           //System.out.println("ITerrainModel.class"+ITerrainModel.class);
                     
-          assertNull("Must be Null.. Not Avai in GML", itrModel.getTerrainElevationModelSystem() );
+          assertNull(Messages.getString("TestTerrainModelWithElevation.0"), itrModel.getTerrainElevationModelSystem() ); //$NON-NLS-1$
           
           ITerrainElevationModelSystem itrEleSystem = new TerrainElevationModelSystem(itrModel);
           
-          String ascFileName="test_file_small_asc.asc";
+          String ascFileName="test_file_small_asc.asc"; //$NON-NLS-1$
           ITerrainElevationModel tem= 
                 new NativeTerrainElevationModelWrapper(
                                                 itrEleSystem,
@@ -99,7 +99,7 @@ public class TestTerrainModelWithElevation extends TestCase
                     x, y, TestWorkspaces.getGaussKrueger() );
                 double ele=itrEleSystem.getElevation( curPoint  );
                 assertEquals(
-                    "i="+i+" j="+j+" ele="+ele,i*j*1.000,ele);                
+                    "i="+i+" j="+j+" ele="+ele,i*j*1.000,ele);                 //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
               }
               else
               {
@@ -108,7 +108,7 @@ public class TestTerrainModelWithElevation extends TestCase
                     x,y, TestWorkspaces.getGaussKrueger() );
                 double ele=itrEleSystem.getElevation( curPoint  );
                 assertEquals(
-                    "i="+i+" j="+j+" ele="+ele,Double.NaN,ele);
+                    "i="+i+" j="+j+" ele="+ele,Double.NaN,ele); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
               }
             }
           }

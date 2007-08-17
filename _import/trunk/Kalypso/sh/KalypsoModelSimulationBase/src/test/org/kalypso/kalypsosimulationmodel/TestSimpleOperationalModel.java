@@ -62,7 +62,7 @@ public class TestSimpleOperationalModel extends TestCase
   public void testOutput( )
   {
     GMLWorkspace workspace = null;
-    URL modelURL = TestSimpleOperationalModel.class.getResource( "data/simulation_model_operational.xml" );
+    URL modelURL = TestSimpleOperationalModel.class.getResource( "data/simulation_model_operational.xml" ); //$NON-NLS-1$
     try
     {
       workspace = GmlSerializer.createGMLWorkspace( modelURL, null );
@@ -81,9 +81,9 @@ public class TestSimpleOperationalModel extends TestCase
 
 //      rp.setProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_P_OPERATIONAL_CONCEPT, surface );
 
-      rp.setProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_P_POINT_COVERAGE, "htpp://wwww.tuhh.de/wb/roughness_db/grass" );
+      rp.setProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_P_POINT_COVERAGE, "htpp://wwww.tuhh.de/wb/roughness_db/grass" ); //$NON-NLS-1$
 
-      System.out.println( "=====================================" );
+      System.out.println( "=====================================" ); //$NON-NLS-1$
       OutputStreamWriter writer = new OutputStreamWriter( System.out );
       GmlSerializer.serializeWorkspace( writer, workspace );
 

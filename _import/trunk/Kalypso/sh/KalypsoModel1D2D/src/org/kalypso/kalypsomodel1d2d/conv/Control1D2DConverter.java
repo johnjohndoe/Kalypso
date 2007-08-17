@@ -123,50 +123,50 @@ public class Control1D2DConverter
     calendarForFirstTimeStep.setTime( firstDate );
 
     /* FILES DATA BLOCK */
-    formatter.format( "OUTFIL  result\\Output%n" );
-    formatter.format( "INKALYPSmodel.2d%n" );
+    formatter.format( "OUTFIL  result\\Output%n" );  //$NON-NLS-1$
+    formatter.format( "INKALYPSmodel.2d%n" );  //$NON-NLS-1$
     final int restartStep = controlModel.getRestart() ? controlModel.getIaccyc() : 0;
-    formatter.format( "CONTROL A %4d 2d 0%n", restartStep );
+    formatter.format( "CONTROL A %4d 2d 0%n", restartStep );  //$NON-NLS-1$
     if( controlModel.getRestart() )
-      formatter.format( "RESTART%n" );
+      formatter.format( "RESTART%n" );  //$NON-NLS-1$
 
     /* We always write a building file, even if it is empty. */
-    formatter.format( "INCSTR  %s%n", RMA10SimModelConstants.BUILDING_File );
+    formatter.format( "INCSTR  %s%n", RMA10SimModelConstants.BUILDING_File );  //$NON-NLS-1$
 
-    formatter.format( "ENDFIL%n" );
+    formatter.format( "ENDFIL%n" );  //$NON-NLS-1$
 
     /* CONTROL DATA BLOCK */
     // TODO: write given name of szenario/projekt
     final String discModelName = calculation.getDiscModel().getName();
-    final String projectName = discModelName == null ? "Unbekanntes Projekt" : discModelName;
-    formatter.format( "TI      %30s%n", projectName );
+    final String projectName = discModelName == null ? Messages.getString("Control1D2DConverter.8") : discModelName; //$NON-NLS-1$
+    formatter.format( "TI      %30s%n", projectName ); //$NON-NLS-1$
 
     // // C0
     final Object[] c0Props = new Object[] { 0, controlModel.getIDNOPT(), calendarForFirstTimeStep.get( Calendar.YEAR ), calendarForFirstTimeStep.get( Calendar.DAY_OF_YEAR ),
         getTimeInPercentage( calendarForFirstTimeStep ), controlModel.getIEDSW(), controlModel.getTBFACT(), controlModel.getTBMIN(), 0 };
-    formatter.format( "C0%14d%8d%8d%8d%8.2f%8d%8.3f%8.2f%8d%n", c0Props );
+    formatter.format( "C0%14d%8d%8d%8d%8.2f%8d%8.3f%8.2f%8d%n", c0Props );  //$NON-NLS-1$
 
     // C1
-    formatter.format( "C1%14d%8d%8d%8d%8d%8d%8d%8d%8d%n", 0, 1, 1, 0, 0, 0, 0, 0, 0 );
+    formatter.format( "C1%14d%8d%8d%8d%8d%8d%8d%8d%8d%n", 0, 1, 1, 0, 0, 0, 0, 0, 0 );  //$NON-NLS-1$
 
     // C2
     // TODO: P_BOTTOM still not implemented, ask Nico
-    formatter.format( "C2%14.2f%8.3f%8.1f%8.1f%8.1f%8d%8.3f%n", controlModel.getOMEGA(), controlModel.getELEV(), 1.0, 1.0, 1.0, 1, controlModel.get_P_BOTTOM() );
+    formatter.format( "C2%14.2f%8.3f%8.1f%8.1f%8.1f%8d%8.3f%n", controlModel.getOMEGA(), controlModel.getELEV(), 1.0, 1.0, 1.0, 1, controlModel.get_P_BOTTOM() );  //$NON-NLS-1$
     // formatter.format( "C2%14.2f%8.3f%8.1f%8.1f%8.1f%8d%n", controlModel.getOMEGA(), controlModel.getELEV(), 1.0, 1.0,
     // 1.0, 1 );
 
     // C3
-    formatter.format( "C3%14.3f%8.3f%8.3f%8.1f%8.3f%8.3f%8.3f%n", 1.0, 1.0, controlModel.getUNOM(), controlModel.getUDIR(), controlModel.getHMIN(), controlModel.getDSET(), controlModel.getDSETD() );
+    formatter.format( "C3%14.3f%8.3f%8.3f%8.1f%8.3f%8.3f%8.3f%n", 1.0, 1.0, controlModel.getUNOM(), controlModel.getUDIR(), controlModel.getHMIN(), controlModel.getDSET(), controlModel.getDSETD() );  //$NON-NLS-1$
 
     // C4
     final int artImpulsstromBeiwert = 0;
-    formatter.format( "C4%14.1f%8.1f%8.1f%56d%n", 0.0, 20.0, 0.0, artImpulsstromBeiwert );
+    formatter.format( "C4%14.1f%8.1f%8.1f%56d%n", 0.0, 20.0, 0.0, artImpulsstromBeiwert );  //$NON-NLS-1$
 
     // C5
-    formatter.format( "C5%14d%8d%16d%8d%8d%8d%8d%8d%8d%n", controlModel.getNITI(), controlModel.getNITN(), controlModel.getNCYC(), 0, 1, 1, 0, 1, 1 );
+    formatter.format( "C5%14d%8d%16d%8d%8d%8d%8d%8d%8d%n", controlModel.getNITI(), controlModel.getNITN(), controlModel.getNCYC(), 0, 1, 1, 0, 1, 1 );  //$NON-NLS-1$
 
     // CV
-    formatter.format( "CV%14.2g%8.2g%8.2g%8.2g%8.2g%16d%8.2f%n", controlModel.getCONV_1(), controlModel.getCONV_2(), controlModel.getCONV_3(), 0.05, 0.05, controlModel.getIDRPT(), controlModel.getDRFACT() );
+    formatter.format( "CV%14.2g%8.2g%8.2g%8.2g%8.2g%16d%8.2f%n", controlModel.getCONV_1(), controlModel.getCONV_2(), controlModel.getCONV_3(), 0.05, 0.05, controlModel.getIDRPT(), controlModel.getDRFACT() );  //$NON-NLS-1$
 
     // IOP line deleted because Nico said that it is an ugly, baaad line... :)
     // (IOP has something to do with reordering, and this is not working properly with 1D-2D copling)
@@ -174,9 +174,9 @@ public class Control1D2DConverter
 
     // VEGETA
     if( controlModel.getVegeta() )
-      formatter.format( "VEGETA%n" );
+      formatter.format( "VEGETA%n" );  //$NON-NLS-1$
 
-    formatter.format( "KAL_BC%n" );
+    formatter.format( "KAL_BC%n" );  //$NON-NLS-1$
   }
 
   /**
@@ -197,7 +197,7 @@ public class Control1D2DConverter
       final Double dp = calculation.getDp( roughnessCL );
 
       if( ks == null )
-        throw new SimulationException( "No ks value found for rougness class: " + NamedFeatureHelper.getName( roughnessCL ), null );
+        throw new SimulationException( Messages.getString("Control1D2DConverter.7") + NamedFeatureHelper.getName( roughnessCL ), null ); //$NON-NLS-1$
 
       final Double axayCorrected = axAy == null ? 0.0 : axAy;
       final Double dpCorrected = dp == null ? 0.0 : dp;
@@ -213,17 +213,17 @@ public class Control1D2DConverter
   private void writeEDBlock( final Formatter formatter, final int roughnessAsciiID, final Double[] eddy, final Double ks, final Double axayCorrected, final Double dpCorrected )
   {
     if( eddy.length < 4 )
-      throw new IllegalArgumentException( "Irregular eddy viscosity parameter." );
-    formatter.format( "ED1%13d%8.1f%8.1f%8.1f%8.1f%8.1f%8.3f%8.3f%n", roughnessAsciiID, eddy[0], eddy[1], eddy[2], eddy[3], -1.0, 1.0, 1.0 );
-    formatter.format( "ED2%13.1f%8.1f%8.3f%16.1f%n", 0.5, 0.5, 0.001, 20.0 );
-    formatter.format( "ED4%21.2f%8.1f%8.2f%n", ks, axayCorrected, dpCorrected );
+      throw new IllegalArgumentException( Messages.getString("Control1D2DConverter.17") );  //$NON-NLS-1$
+    formatter.format( "ED1%13d%8.1f%8.1f%8.1f%8.1f%8.1f%8.3f%8.3f%n", roughnessAsciiID, eddy[0], eddy[1], eddy[2], eddy[3], -1.0, 1.0, 1.0 );  //$NON-NLS-1$
+    formatter.format( "ED2%13.1f%8.1f%8.3f%16.1f%n", 0.5, 0.5, 0.001, 20.0 );  //$NON-NLS-1$
+    formatter.format( "ED4%21.2f%8.1f%8.2f%n", ks, axayCorrected, dpCorrected );  //$NON-NLS-1$
   }
 
   private void writeEDBlock( final Formatter formatter, final int roughnessAsciiID, final double val, final Double ks, final Double axayCorrected, final Double dpCorrected )
   {
-    formatter.format( "ED1%13d%8.1f%8.1f%8.1f%8.1f%8.1f%8.3f%8.3f%n", roughnessAsciiID, val, val, val, val, -1.0, 1.0, 1.0 );
-    formatter.format( "ED2%13.1f%8.1f%8.3f%16.1f%n", 0.5, 0.5, 0.001, 20.0 );
-    formatter.format( "ED4%21.2f%8.1f%8.2f%n", ks, axayCorrected, dpCorrected );
+    formatter.format( "ED1%13d%8.1f%8.1f%8.1f%8.1f%8.1f%8.3f%8.3f%n", roughnessAsciiID, val, val, val, val, -1.0, 1.0, 1.0 );  //$NON-NLS-1$
+    formatter.format( "ED2%13.1f%8.1f%8.3f%16.1f%n", 0.5, 0.5, 0.001, 20.0 );  //$NON-NLS-1$
+    formatter.format( "ED4%21.2f%8.1f%8.2f%n", ks, axayCorrected, dpCorrected );  //$NON-NLS-1$
   }
 
   /**
@@ -235,7 +235,7 @@ public class Control1D2DConverter
     final BoundaryLineInfo[] rawInfos = calculation.getContinuityLineInfo();
 
     if( rawInfos.length == 0 )
-      throw new SimulationException( "Keine Randbedingungen definiert, Rechnung wird abgebrochen.", null );
+      throw new SimulationException( Messages.getString("Control1D2DConverter.24"), null ); //$NON-NLS-1$
 
     // Because we might don't have info about all nodes (submodel), we have to filter SCL/CCx lines
     final List<BoundaryLineInfo> filteredInfosList = new ArrayList<BoundaryLineInfo>();
@@ -258,7 +258,7 @@ public class Control1D2DConverter
     final BoundaryLineInfo[] infos = new BoundaryLineInfo[filteredInfosList.size()];
     filteredInfosList.toArray( infos );
 
-    formatter.format( "SCL%9d%n", infos.length );
+    formatter.format( "SCL%9d%n", infos.length );  //$NON-NLS-1$
 
     int infoCnt = 1;
     for( final BoundaryLineInfo info : infos )
@@ -271,25 +271,25 @@ public class Control1D2DConverter
         final int nodeID = m_nodesIDProvider.get( node.getGmlID() );
         /* Write start stuff */
         if( i == 0 )
-          // formatter.format( "CC1 %4d", info.getID() );
-          formatter.format( "CC1 %4d", infoCnt++ );
+// formatter.format( "CC1 %4d", info.getID() );
+          formatter.format( "CC1 %4d", infoCnt++ );  //$NON-NLS-1$
         else if( i % 9 == 0 )
-          formatter.format( "%nCC2     " );
+          formatter.format( "%nCC2     " );  //$NON-NLS-1$
 
-        formatter.format( "%8d", nodeID );
+        formatter.format( "%8d", nodeID );  //$NON-NLS-1$
       }
       if( nodes.length % 9 != 0 )
-        formatter.format( "%n" );
+        formatter.format( "%n" );  //$NON-NLS-1$
     }
 
-    formatter.format( "ECL%n" );
+    formatter.format( "ECL%n" );  //$NON-NLS-1$
 
     final IControlModel1D2D controlModel = calculation.getControlModel();
     if( controlModel.getIDNOPT() != 0 && controlModel.getIDNOPT() != -1 ) // Write MP Line only under this conditions
     {
-      formatter.format( "MP%21.2f%8.2f%8.2f%n", controlModel.getAC1(), controlModel.getAC2(), controlModel.getAC3() );
+      formatter.format( "MP%21.2f%8.2f%8.2f%n", controlModel.getAC1(), controlModel.getAC2(), controlModel.getAC3() );  //$NON-NLS-1$
     }
-    formatter.format( "ENDGEO%n" );
+    formatter.format( "ENDGEO%n" );  //$NON-NLS-1$
   }
 
   /**
@@ -309,12 +309,12 @@ public class Control1D2DConverter
     /* Steady state, just one block for the Starting Date. */
     final int niti = controlModel.getNITI();
 
-    final String msg = "Steady State Input Data";
+    final String msg = Messages.getString("Control1D2DConverter.33");  //$NON-NLS-1$
 
     Double uRValSteady = controlModel.get_steadyBC();
     if( uRValSteady == null || uRValSteady.isNaN() )
       if( controlModel.isSteadySelected() )
-        throw new SimulationException( "Stationär Relaxationsfaktor leer, keine Rechnung möglich.", null );
+        throw new SimulationException( Messages.getString("Control1D2DConverter.34"), null ); //$NON-NLS-1$
       else
         // Not used anyway (1.0 should be default value)
         uRValSteady = 1.0;
@@ -326,7 +326,7 @@ public class Control1D2DConverter
       final TupleResultIndex index = new TupleResultIndex( result, compTime );
       final Iterator<IRecord> iterator = index.getIterator();
       if( !iterator.hasNext() )
-        throw new SimulationException( "Zeitschritte leer, keine Rechnung möglich.", null );
+        throw new SimulationException( Messages.getString("Control1D2DConverter.35"), null ); //$NON-NLS-1$
       final IRecord firstRecord = iterator.next();
 
       final int nitn = controlModel.getNITN();
@@ -343,7 +343,7 @@ public class Control1D2DConverter
 
           final Calendar stepCal = ((XMLGregorianCalendar) record.getValue( compTime )).toGregorianCalendar();
 
-          final String unsteadyMsg = String.format( "Unsteady State Input Data; Step: %4d", stepCount );
+          final String unsteadyMsg = String.format( Messages.getString("Control1D2DConverter.36"), stepCount );  //$NON-NLS-1$
           writeTimeStep( formatter, unsteadyMsg, stepCal, lastStepCal, uRVal, nitn, timeStepInfos );
 
           lastStepCal = stepCal;
@@ -354,10 +354,10 @@ public class Control1D2DConverter
 
   private void writeTimeStep( final Formatter formatter, final String message, final Calendar stepCal, final Calendar lastStepCal, final float uRVal, final int niti, final ITimeStepinfo[] timeStepInfos ) throws SimulationException
   {
-    final String dashes = StringUtils.repeat( "-", message.length() );
-    formatter.format( "com %s%n", dashes );
-    formatter.format( "com %s%n", message );
-    formatter.format( "com %s%n", dashes );
+    final String dashes = StringUtils.repeat( "-", message.length() );  //$NON-NLS-1$
+    formatter.format( "com %s%n", dashes );  //$NON-NLS-1$
+    formatter.format( "com %s%n", message );  //$NON-NLS-1$
+    formatter.format( "com %s%n", dashes );  //$NON-NLS-1$
 
     final long timeStepInterval;
     final double timeStepHours;
@@ -384,11 +384,11 @@ public class Control1D2DConverter
       ihre = 0;
     }
 
-    formatter.format( "DT%14.2f%8d%8d%8.2f", timeStepHours, year, dayOfYear, ihre );
+    formatter.format( "DT%14.2f%8d%8d%8.2f", timeStepHours, year, dayOfYear, ihre );  //$NON-NLS-1$
 
     // BC lines
     if( niti == 0 )
-      formatter.format( "%nBC%n" );
+      formatter.format( "%nBC%n" );  //$NON-NLS-1$
     else
       formatBC( formatter, uRVal, niti );
 
@@ -408,15 +408,15 @@ public class Control1D2DConverter
           break;
 
         default:
-          throw new SimulationException( "Fließformel nicht unterstüzt: " + kind, null );
+          throw new SimulationException( Messages.getString("Control1D2DConverter.43") + kind, null ); //$NON-NLS-1$
       }
 
       final double direction = Math.toRadians( building.getDirection() );
-      formatter.format( "FC%14d%8d%8.3f%8.3f%8.3f%8.3f%8.3f%n", buildingID, buildingKind, 0.0, 0.0, 0.0, 0.0, direction );
+      formatter.format( "FC%14d%8d%8.3f%8.3f%8.3f%8.3f%8.3f%n", buildingID, buildingKind, 0.0, 0.0, 0.0, 0.0, direction );  //$NON-NLS-1$
     }
 
     // add other conti lines types as well (buildingss)?
-    formatter.format( "ENDSTEP %s%n", message );
+    formatter.format( "ENDSTEP %s%n", message );  //$NON-NLS-1$
   }
 
   /** Formats the lines for one type of boundary condition (QC or HC or ... ). */
@@ -439,14 +439,14 @@ public class Control1D2DConverter
         {
           final double q = itemValue;
           final double theta = item.getTheta();
-          formatter.format( "QC%14d%8d%8.3f%8.3f%8.3f%8.3f%8.3f%n", item.getID(), 0, q, theta, 0.000, 20.000, 0.000 );
+          formatter.format( "QC%14d%8d%8.3f%8.3f%8.3f%8.3f%8.3f%n", item.getID(), 0, q, theta, 0.000, 20.000, 0.000 );  //$NON-NLS-1$
         }
           break;
 
         case CONTI_BC_H:
         {
           final double h = itemValue;
-          formatter.format( "HC%14d%8d%8.3f%8.3f%8.3f%8.3f%n", item.getID(), 0, h, 0.0, 20.0, 0.0 );
+          formatter.format( "HC%14d%8d%8.3f%8.3f%8.3f%8.3f%n", item.getID(), 0, h, 0.0, 20.0, 0.0 );  //$NON-NLS-1$
         }
           break;
 
@@ -459,7 +459,7 @@ public class Control1D2DConverter
   private void formatBC( final Formatter formatter, final float uRVal, final int nitn ) throws SimulationException
   {
     if( uRVal < 0.0 || uRVal > 1.0 )
-      throw new SimulationException( "Relaxationsfaktor muss zwischen 0.0 und 1.0 liegen.", null );
+      throw new SimulationException( Messages.getString("Control1D2DConverter.6"), null ); //$NON-NLS-1$
 
     final int buffVal = 10 - (int) (uRVal * 10);
     /*
@@ -468,12 +468,12 @@ public class Control1D2DConverter
     for( int j = 0; j < nitn; j++ )
     {
       if( j % 9 == 0 )
-        formatter.format( "%nBC%5s", " " );
+        formatter.format( "%nBC%5s", " " );  //$NON-NLS-1$
 
-      formatter.format( "%5d010", buffVal );
+      formatter.format( "%5d010", buffVal );  //$NON-NLS-1$
     }
 
-    formatter.format( "%n" );
+    formatter.format( "%n" );  //$NON-NLS-1$
   }
 
   private double getTimeInPercentage( final Calendar cal )
@@ -494,7 +494,7 @@ public class Control1D2DConverter
     // todo check if result is not empty
     final Iterator<IRecord> iterator = index.getIterator();
     if( !iterator.hasNext() )
-      throw new SimulationException( "Zeitschritte leer, keine Rechnung möglich.", null );
+      throw new SimulationException( Messages.getString("Control1D2DConverter.52"), null ); //$NON-NLS-1$
     final IRecord firstRecord = iterator.next();
     return DateUtilities.toDate( (XMLGregorianCalendar) firstRecord.getValue( compTime ) );
   }

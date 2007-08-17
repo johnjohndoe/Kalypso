@@ -80,7 +80,7 @@ import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
  */
 public class ResultProcessHydrographsHandler extends AbstractHandler
 {
-  private static final String DIALOG_TITEL = "Ganglinien erzeugen";
+  private static final String DIALOG_TITEL = Messages.getString("ResultProcessHydrographsHandler.0"); //$NON-NLS-1$
 
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
@@ -97,8 +97,8 @@ public class ResultProcessHydrographsHandler extends AbstractHandler
     /* Ask user if and how to proceed */
     final IPreferenceStore prefStore = null;
     final String prefKey = null;
-    final String message = "Sollen die Ganglinien jetzt erzeugt werden?\nDiese Operation kann mehrere Minuiten in Anspruch nehmen.";
-    final String toggleMessage = "Bereits vorhandene Ganglinien überschreiben.";
+    final String message = Messages.getString("ResultProcessHydrographsHandler.1"); //$NON-NLS-1$
+    final String toggleMessage = Messages.getString("ResultProcessHydrographsHandler.2"); //$NON-NLS-1$
     final MessageDialogWithToggle msgDialog = MessageDialogWithToggle.openOkCancelConfirm( shell, DIALOG_TITEL, message, toggleMessage, true, prefStore, prefKey );
     if( msgDialog.getReturnCode() == Window.CANCEL )
       return Status.CANCEL_STATUS;
@@ -119,7 +119,7 @@ public class ResultProcessHydrographsHandler extends AbstractHandler
 
           /* Load hydrograph gml via pool, maybe its already loaded. */
           final URL hydrographUrl = ResourceUtilities.createURL( hydrographFile );
-          final PoolableObjectType hydrographKey = new PoolableObjectType( "gml", hydrographUrl.toExternalForm(), hydrographUrl );
+          final PoolableObjectType hydrographKey = new PoolableObjectType( "gml", hydrographUrl.toExternalForm(), hydrographUrl );  //$NON-NLS-1$
           final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
           final GMLWorkspace hydrographWorkspace = (GMLWorkspace) pool.getObject( hydrographKey );
           monitor.worked( 1 );
@@ -150,7 +150,7 @@ public class ResultProcessHydrographsHandler extends AbstractHandler
           processHydrographs( graphs, wspTimestepResults, overwriteExistingHydrographs );
 
           // save hydrograph.gml
-          GmlSerializer.serializeWorkspace( hydrographFile.getLocation().toFile(), hydrographWorkspace, "UTF-8" );
+          GmlSerializer.serializeWorkspace( hydrographFile.getLocation().toFile(), hydrographWorkspace, "UTF-8" );  //$NON-NLS-1$
           monitor.worked( 2 );
           hydrographFile.refreshLocal( IResource.DEPTH_ONE, new SubProgressMonitor( monitor, 1 ) );
         }
@@ -166,7 +166,7 @@ public class ResultProcessHydrographsHandler extends AbstractHandler
     };
 
     final IStatus status = ProgressUtilities.busyCursorWhile( operation, null );
-    ErrorDialog.openError( shell, DIALOG_TITEL, "Ganglinien konnten nicht erzeugt werden.", status );
+    ErrorDialog.openError( shell, DIALOG_TITEL, Messages.getString("ResultProcessHydrographsHandler.5"), status ); //$NON-NLS-1$
     return status;
   }
 

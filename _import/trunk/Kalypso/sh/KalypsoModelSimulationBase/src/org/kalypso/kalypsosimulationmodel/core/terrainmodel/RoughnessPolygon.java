@@ -79,7 +79,7 @@ public class RoughnessPolygon extends AbstractFeatureBinder implements IRoughnes
     }
     else
     {
-      throw new RuntimeException( "GM_MultiSurface expected but got:" + "\n\ttype=" + object.getClass() + "\n\tvalue=" + object );
+      throw new RuntimeException( Messages.getString("RoughnessPolygon.0") + "\n\ttype=" + object.getClass() + "\n\tvalue=" + object ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
 
   }
@@ -103,20 +103,20 @@ public class RoughnessPolygon extends AbstractFeatureBinder implements IRoughnes
     }
     else
     {
-      throw new RuntimeException( "String expected but got:" + "\n\ttype=" + style.getClass() + "\n\tvalue=" + style );
+      throw new RuntimeException( Messages.getString("RoughnessPolygon.3") + "\n\ttype=" + style.getClass() + "\n\tvalue=" + style ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
   }
 
   public void setSurface( final GM_MultiSurface polygon )
   {
-    Assert.throwIAEOnNull( polygon, "Parameter cannot be null." );
+    Assert.throwIAEOnNull( polygon, Messages.getString("RoughnessPolygon.6") ); //$NON-NLS-1$
     final Feature feature = getFeature();
     feature.setProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_POLYGON, polygon );
   }
 
   public void setSurface( final GM_Object object ) throws IllegalArgumentException
   {
-    Assert.throwIAEOnNull( object, "Parameter cannot be null." );
+    Assert.throwIAEOnNull( object, Messages.getString("RoughnessPolygon.7") ); //$NON-NLS-1$
     if( object instanceof GM_MultiSurface )
     {
       setSurface( (GM_MultiSurface) object );
@@ -129,7 +129,7 @@ public class RoughnessPolygon extends AbstractFeatureBinder implements IRoughnes
     }
     else
     {
-      throw new IllegalArgumentException( "Type not supported: " + object.getClass().getName() );
+      throw new IllegalArgumentException( Messages.getString("RoughnessPolygon.8") + object.getClass().getName() ); //$NON-NLS-1$
     }
   }
 
@@ -157,7 +157,7 @@ public class RoughnessPolygon extends AbstractFeatureBinder implements IRoughnes
   {
     final Feature feature = getFeature();
     final StringBuffer buf = new StringBuffer( 128 );
-    buf.append( "RoughnessPolygon" );
+    buf.append( "RoughnessPolygon" ); //$NON-NLS-1$
     final String id = feature.getId();
     if( id != null )
     {
@@ -165,9 +165,9 @@ public class RoughnessPolygon extends AbstractFeatureBinder implements IRoughnes
       buf.append( id );
     }
 
-    buf.append( "[ roughnessID=" );
+    buf.append( "[ roughnessID=" ); //$NON-NLS-1$
     buf.append( getRoughnessStyle() );
-    buf.append( ", polygonProperty=" );
+    buf.append( ", polygonProperty=" ); //$NON-NLS-1$
     buf.append( getSurface() );
     buf.append( ']' );
     return buf.toString();

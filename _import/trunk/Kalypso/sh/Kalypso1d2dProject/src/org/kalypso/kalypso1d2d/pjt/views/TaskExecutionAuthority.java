@@ -75,8 +75,8 @@ public class TaskExecutionAuthority implements ITaskExecutionAuthority
     if( !dataProvider.isDirty() )
       return true;
     final Shell activeShell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
-    final MessageDialog confirmDialog = new MessageDialog( activeShell, "Ungespeicherte Änderungen", null, "Es gibt ungespeicherte Änderungen. Was möchten Sie tun?", MessageDialog.QUESTION, new String[] {
-        "Speichern", "Verwerfen", "Abbrechen" }, 1 );
+    final MessageDialog confirmDialog = new MessageDialog( activeShell, Messages.getString("TaskExecutionAuthority.0"), null, Messages.getString("TaskExecutionAuthority.1"), MessageDialog.QUESTION, new String[] { //$NON-NLS-1$ //$NON-NLS-2$
+        Messages.getString("TaskExecutionAuthority.2"), Messages.getString("TaskExecutionAuthority.3"), Messages.getString("TaskExecutionAuthority.4") }, 1 ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     final boolean result;
     final int decision = confirmDialog.open();
     if( decision == 0 )
@@ -102,7 +102,7 @@ public class TaskExecutionAuthority implements ITaskExecutionAuthority
       catch( final InvocationTargetException e )
       {
         final IStatus status = StatusUtilities.statusFromThrowable( e );
-        ErrorDialog.openError( activeShell, "Fehler beim Speichern der Daten", "Es ist ein Fehler beim Speichern der Daten aufgetreten.", status );
+        ErrorDialog.openError( activeShell, Messages.getString("TaskExecutionAuthority.5"), Messages.getString("TaskExecutionAuthority.6"), status ); //$NON-NLS-1$ //$NON-NLS-2$
         WorkflowConnectorPlugin.getDefault().getLog().log( status );
       }
       catch( final InterruptedException e )

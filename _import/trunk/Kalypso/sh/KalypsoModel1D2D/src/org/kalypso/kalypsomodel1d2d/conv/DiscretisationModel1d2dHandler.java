@@ -164,7 +164,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
       edge = m_model.findEdge( node1, node2 );
       if( edge != null )
       {
-        System.out.println( "found edge to draw" );
+        System.out.println( Messages.getString("DiscretisationModel1d2dHandler.1") ); //$NON-NLS-1$
       }
     }
     
@@ -313,7 +313,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
   public void handleError( final String lineString, final EReadError errorHints )
   {
     // FIXE redaw me
-    throw new RuntimeException( "bad line=" + lineString );
+    throw new RuntimeException( "bad line=" + lineString );  //$NON-NLS-1$
   }
 
   /**

@@ -86,9 +86,9 @@ public class Test
     
     //toSp[GM_Position: 1.0 0.5 2.0 , GM_Position: 1.0 1.0 3.0 , GM_Position: 1.0 0.0 1.0 , GM_Position: 1.0 0.5 2.0 ]
     
-    String aa = "ABVSS";
+    String aa = "ABVSS"; //$NON-NLS-1$
     System.out.println(aa.getBytes());
-    System.out.println("Ex: "+test.furtherDivisionNeeded(new GM_Position[] {
+    System.out.println("Ex: "+test.furtherDivisionNeeded(new GM_Position[] { //$NON-NLS-1$
         org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Position(centerCo_1),
         org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Position(centerCo_2),
         org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Position(centerCo_3),

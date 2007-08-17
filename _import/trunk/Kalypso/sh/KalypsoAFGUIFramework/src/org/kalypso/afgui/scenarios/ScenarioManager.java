@@ -28,7 +28,7 @@ public class ScenarioManager extends AbstractCaseManager<Scenario> implements IS
 {
   private static final Logger logger = Logger.getLogger( ScenarioManager.class.getName() );
 
-  private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.afgui/debug" ) );
+  private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.afgui/debug" ) );   //$NON-NLS-1$
 
   static
   {
@@ -59,7 +59,7 @@ public class ScenarioManager extends AbstractCaseManager<Scenario> implements IS
   public Scenario createCase( final String name ) throws CoreException
   {
     final Scenario newScenario = new org.kalypso.afgui.scenarios.ObjectFactory().createScenario();
-    final String uri = CASE_BASE_URI.replaceFirst( Pattern.quote( "${project}" ), m_project.getName() ).replaceFirst( Pattern.quote( "${casePath}" ), name );
+    final String uri = CASE_BASE_URI.replaceFirst( Pattern.quote( "${project}" ), m_project.getName() ).replaceFirst( Pattern.quote( "${casePath}" ), name );     //$NON-NLS-1$ //$NON-NLS-2$
     newScenario.setURI( uri );
     newScenario.setName( name );
     internalAddCase( newScenario );
@@ -77,7 +77,7 @@ public class ScenarioManager extends AbstractCaseManager<Scenario> implements IS
   {
     final org.kalypso.afgui.scenarios.ObjectFactory of = new org.kalypso.afgui.scenarios.ObjectFactory();
     final Scenario newScenario = of.createScenario();
-    newScenario.setURI( parentScenario.getURI() + "/" + name );
+    newScenario.setURI( parentScenario.getURI() + "/" + name );   //$NON-NLS-1$
     newScenario.setName( name );
     newScenario.setParentScenario( parentScenario );
 
@@ -106,12 +106,12 @@ public class ScenarioManager extends AbstractCaseManager<Scenario> implements IS
     }
     try
     {
-      monitor.beginTask( "Szenario löschen", 100 );
+      monitor.beginTask( Messages.getString("ScenarioManager.4"), 100 );  //$NON-NLS-1$
       final ScenarioList derivedScenarios = scenario.getDerivedScenarios();
       // only remove if no derived scenarios
       if( derivedScenarios != null && !derivedScenarios.getScenarios().isEmpty() )
       {
-        throw new CoreException( StatusUtilities.createErrorStatus( "Das Szenario enthält abgeleitete Szenarien und kann nicht gelöscht werden." ) );
+        throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("ScenarioManager.5") ) );  //$NON-NLS-1$
       }
       final Scenario parentScenario = scenario.getParentScenario();
       if( parentScenario == null )

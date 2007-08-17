@@ -94,9 +94,9 @@ import org.kalypso.kalypsomodel1d2d.ui.map.facedata.IDataModelCheck.VALIDITY_STA
 class JunctionContextWidgetFace implements KeyBasedDataModelChangeListener 
 {
 
-  public static final String EGDE_1D_NR_STR_PREFFIX = "Anzahl: ";
+  public static final String EGDE_1D_NR_STR_PREFFIX = Messages.getString("JunctionContextWidgetFace.0"); //$NON-NLS-1$
   
-  public static final String DISTANCE_JUNCTION_STR_PREFIX = "Abbstand 1D-2D: ";
+  public static final String DISTANCE_JUNCTION_STR_PREFIX = Messages.getString("JunctionContextWidgetFace.1"); //$NON-NLS-1$
   
   /**
    * The root panel for any control shon in this face
@@ -126,13 +126,13 @@ class JunctionContextWidgetFace implements KeyBasedDataModelChangeListener
   /**
    * Key for the critical distance of the coppling gap 
    */
-  public static final String CRITICAL_DISTANCE_NAME = "x.critical_distance";
+  public static final String CRITICAL_DISTANCE_NAME = "x.critical_distance"; //$NON-NLS-1$
   
   /**
    * Key for storing {@link org.kalypso.kalypsomodel1d2d.ui.map.facedata.IDataModelCheck.VALIDITY_STATE}
    * in separator as data
    */
-  public static final String COLOR_DATA_KEY = "_color_data_key_";
+  public static final String COLOR_DATA_KEY = "_color_data_key_"; //$NON-NLS-1$
   
   /**
    * Field editor used to edit the critical distance for the coppling gap
@@ -229,7 +229,7 @@ class JunctionContextWidgetFace implements KeyBasedDataModelChangeListener
         toolkit.createSection( 
             scrolledForm.getBody(), 
             Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
-    workStatus.setText( "aktueller Bearbeitungsstatus" );
+    workStatus.setText( Messages.getString("JunctionContextWidgetFace.4") ); //$NON-NLS-1$
     TableWrapData tableWrapData = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
     tableWrapData.grabHorizontal = true;
     workStatus.setLayoutData( tableWrapData );
@@ -239,7 +239,7 @@ class JunctionContextWidgetFace implements KeyBasedDataModelChangeListener
         toolkit.createSection( 
               scrolledForm.getBody(), 
               Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
-    configSection.setText( "Konfiguration" );
+    configSection.setText( Messages.getString("JunctionContextWidgetFace.5") ); //$NON-NLS-1$
     tableWrapData = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
     tableWrapData.grabHorizontal = true;
     tableWrapData.align = TableWrapData.FILL_GRAB;
@@ -275,8 +275,8 @@ class JunctionContextWidgetFace implements KeyBasedDataModelChangeListener
     compConversion.setLayout( new GridLayout( 2, false ) );
 
     this.buttonConvertToModel = 
-      toolkit.createButton( compConversion, "", SWT.PUSH );
-    buttonConvertToModel.setToolTipText( "Klicken Sie hier, um das Kopplungselement zu erzeugen" );
+      toolkit.createButton( compConversion, "", SWT.PUSH ); //$NON-NLS-1$
+    buttonConvertToModel.setToolTipText( Messages.getString("JunctionContextWidgetFace.7") ); //$NON-NLS-1$
     
     final Image convImage = 
             KalypsoModel1D2DUIImages.ID_OK.createImage();
@@ -291,7 +291,7 @@ class JunctionContextWidgetFace implements KeyBasedDataModelChangeListener
         if( command == null )
         {
           //todo Patrice well be creatif
-          System.out.println("command is null");
+          System.out.println(Messages.getString("JunctionContextWidgetFace.8")); //$NON-NLS-1$
         }
         else
         {
@@ -303,7 +303,7 @@ class JunctionContextWidgetFace implements KeyBasedDataModelChangeListener
 
     toolkit.createLabel( 
         compConversion, 
-        "1D-2D-Kopplung generieren", 
+        Messages.getString("JunctionContextWidgetFace.9"),  //$NON-NLS-1$
         SWT.NULL );
     dataModel.resetSelections();
     return rootPanel;
@@ -317,7 +317,7 @@ class JunctionContextWidgetFace implements KeyBasedDataModelChangeListener
   {
     if(rootPanel == null )
     {
-      System.out.println("root panel is null");
+      System.out.println(Messages.getString("JunctionContextWidgetFace.10")); //$NON-NLS-1$
       return;
     }
     
@@ -336,14 +336,14 @@ class JunctionContextWidgetFace implements KeyBasedDataModelChangeListener
             //update edgeNr1D label text
             Collection<IFE1D2DEdge> selected1D = dataModel.getSelected1D();
             final String size = 
-              selected1D!=null? String.valueOf( selected1D.size() ) : "0";
+              selected1D!=null? String.valueOf( selected1D.size() ) : "0"; //$NON-NLS-1$
             edgeNr1D.setText( EGDE_1D_NR_STR_PREFFIX + size );
           }
           
           {
 //          update edgeNr2D label text
             Collection<IFE1D2DEdge> selected2D = dataModel.getSelected2D();
-            final String size = selected2D!=null? String.valueOf( selected2D.size() ) : "0";
+            final String size = selected2D!=null? String.valueOf( selected2D.size() ) : "0"; //$NON-NLS-1$
             edgeNr2D.setText( EGDE_1D_NR_STR_PREFFIX + size );
           }
           
@@ -351,7 +351,7 @@ class JunctionContextWidgetFace implements KeyBasedDataModelChangeListener
             //update labelDistace1d2d text
             Double distance1D2D = dataModel.getDistance1D2D();
             final String distStr = 
-                distance1D2D != null? distance1D2D.toString() : " nicht definiert";
+                distance1D2D != null? distance1D2D.toString() : Messages.getString("JunctionContextWidgetFace.13"); //$NON-NLS-1$
             labelDistance1D2D.setText( DISTANCE_JUNCTION_STR_PREFIX + distStr );
           }
           {
@@ -380,7 +380,7 @@ class JunctionContextWidgetFace implements KeyBasedDataModelChangeListener
             //update workstatus description and background
             String message = dataModel.getMessage();            
             workStatus.setDescription( 
-                message!=null?message:"" 
+                message!=null?message:""  //$NON-NLS-1$
                   );
             final Color modelCheckColor; 
             if(modelCheck!=null)
@@ -397,12 +397,12 @@ class JunctionContextWidgetFace implements KeyBasedDataModelChangeListener
             }
             else
             {
-              Color tempColor = colors.getColor( "_VALID_COLOR_" );
+              Color tempColor = colors.getColor( "_VALID_COLOR_" ); //$NON-NLS-1$
               if(tempColor == null )
               {
                 tempColor =
                   colors.createColor( 
-                      "_INVALID_COLOR_", new RGB(0,255,0) );
+                      "_INVALID_COLOR_", new RGB(0,255,0) ); //$NON-NLS-1$
               }
               modelCheckColor = tempColor;
             }
@@ -431,7 +431,7 @@ class JunctionContextWidgetFace implements KeyBasedDataModelChangeListener
     }
     else
     {
-      System.out.println("Display is null");
+      System.out.println(Messages.getString("JunctionContextWidgetFace.17")); //$NON-NLS-1$
     }
     
     
@@ -458,7 +458,7 @@ class JunctionContextWidgetFace implements KeyBasedDataModelChangeListener
         colors.getSystemColor( SWT.COLOR_RED ));
     
     this.createColor = colors.createColor( 
-        "_INVALID_SELECTION", new RGB(255,0,0) );
+        "_INVALID_SELECTION", new RGB(255,0,0) ); //$NON-NLS-1$
     final Font sectionTextFont = workStatusSection.getFont();
 //    workStatusSection.setLayout( new FillLayout() );
 //    workStatusSection.setDescription( 
@@ -475,7 +475,7 @@ class JunctionContextWidgetFace implements KeyBasedDataModelChangeListener
     Label label1DKante = 
               toolkit.createLabel( 
                   clientComposite, 
-                  "Auswahl 1D-Kante" );
+                  Messages.getString("JunctionContextWidgetFace.19") ); //$NON-NLS-1$
     label1DKante.setFont( sectionTextFont );
     FormData formData = new FormData();
 //    formData.top = new FormAttachment(0);
@@ -485,7 +485,7 @@ class JunctionContextWidgetFace implements KeyBasedDataModelChangeListener
     
     //sep
     
-    System.out.println("Create Color"+createColor);
+    System.out.println(Messages.getString("JunctionContextWidgetFace.20")+createColor); //$NON-NLS-1$
     
     this.sepLabel1D = 
       createLabel( clientComposite );    
@@ -511,7 +511,7 @@ class JunctionContextWidgetFace implements KeyBasedDataModelChangeListener
     Label label2DKante = 
             toolkit.createLabel( 
                 clientComposite, 
-                "Auswahl 2D-Kanten" );
+                Messages.getString("JunctionContextWidgetFace.21") ); //$NON-NLS-1$
     label2DKante.setFont( sectionTextFont );
     formData = new FormData();
     formData.top = new FormAttachment(edgeNr1D,5);
@@ -529,7 +529,7 @@ class JunctionContextWidgetFace implements KeyBasedDataModelChangeListener
     sepLabel2D.setLayoutData( formData );
     
     //list kanten 2D    
-    this.edgeNr2D = toolkit.createLabel( clientComposite, "Kanten-Anzahl: " );
+    this.edgeNr2D = toolkit.createLabel( clientComposite, Messages.getString("JunctionContextWidgetFace.22") ); //$NON-NLS-1$
     formData = new FormData();
     formData.top = new FormAttachment(sepLabel2D);
     formData.left = new FormAttachment(0);
@@ -540,7 +540,7 @@ class JunctionContextWidgetFace implements KeyBasedDataModelChangeListener
     Label labelGap = 
             toolkit.createLabel( 
                 clientComposite, 
-                "Kopplungslücke" );
+                Messages.getString("JunctionContextWidgetFace.23") ); //$NON-NLS-1$
     labelGap.setFont( sectionTextFont );
     formData = new FormData();
     formData.top = new FormAttachment(edgeNr2D,5);
@@ -576,7 +576,7 @@ class JunctionContextWidgetFace implements KeyBasedDataModelChangeListener
     preferenceStore.removePropertyChangeListener( storePropertyChangeListener );
     if( rootPanel == null )
     {
-      System.out.println( "Disposing null root panel" );
+      System.out.println( Messages.getString("JunctionContextWidgetFace.24") ); //$NON-NLS-1$
       return;
     }
     if( !rootPanel.isDisposed() )
@@ -610,7 +610,7 @@ class JunctionContextWidgetFace implements KeyBasedDataModelChangeListener
             if( data == null )
             {
               color = createColor;
-              System.out.println("Color key is null");
+              System.out.println(Messages.getString("JunctionContextWidgetFace.25")); //$NON-NLS-1$
             }
             else
             {
@@ -673,7 +673,7 @@ class JunctionContextWidgetFace implements KeyBasedDataModelChangeListener
     configSection.setClient( clientComposite );
     clientComposite.setLayout( new GridLayout() );
 
-    criticalDistance = new IntegerFieldEditor( CRITICAL_DISTANCE_NAME, "Empfohlene, maximale Länge der\n Kopplungslücke[m]:", clientComposite );
+    criticalDistance = new IntegerFieldEditor( CRITICAL_DISTANCE_NAME, Messages.getString("JunctionContextWidgetFace.26"), clientComposite ); //$NON-NLS-1$
     criticalDistance.setPreferenceStore( preferenceStore );
     criticalDistance.load();
     criticalDistance.setPropertyChangeListener( storePropertyChangeListener );
@@ -695,7 +695,7 @@ class JunctionContextWidgetFace implements KeyBasedDataModelChangeListener
 
     try
     {
-      URL htmlURL = KalypsoModel1D2DPlugin.getDefault().getBundle().getEntry( "/help/grid_widget_small_help.html" );
+      URL htmlURL = KalypsoModel1D2DPlugin.getDefault().getBundle().getEntry( "/help/grid_widget_small_help.html" ); //$NON-NLS-1$
       // URL htmlURL =
       // GridWidgetFace.class.getResource( "grid_widget_small_help.html" );
       browser.setUrl( FileLocator.toFileURL( htmlURL ).toExternalForm() );
@@ -733,7 +733,7 @@ class JunctionContextWidgetFace implements KeyBasedDataModelChangeListener
 //        }
         else
         {
-          System.out.println( "Property changed=" + event.getProperty() + " " + event.getNewValue() + " " + source.getClass() );
+          System.out.println( "Property changed=" + event.getProperty() + " " + event.getNewValue() + " " + source.getClass() ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
       }
 

@@ -107,7 +107,7 @@ class GridWidgetFace
       }
       else
       {
-        return "" + element;
+        return "" + element; //$NON-NLS-1$
       }
     }
 
@@ -130,7 +130,7 @@ class GridWidgetFace
           }
           else
           {
-            return "0";
+            return "0"; //$NON-NLS-1$
           }
         }
         case 2:
@@ -143,12 +143,12 @@ class GridWidgetFace
           }
           else
           {
-            return "0";
+            return "0"; //$NON-NLS-1$
           }
         }
         default:
         {
-          return "" + elementConfig + "_" + columnIndex;
+          return "" + elementConfig + "_" + columnIndex; //$NON-NLS-1$ //$NON-NLS-2$
         }
       }
 
@@ -289,14 +289,14 @@ class GridWidgetFace
     // fd.top = new FormAttachment( 0, 0 );
 
     Section workStatus = toolkit.createSection( scrolledForm.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
-    workStatus.setText( "Aktueller Bearbeitungsstatus" );
+    workStatus.setText( Messages.getString("GridWidgetFace.5") ); //$NON-NLS-1$
     TableWrapData tableWrapData = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
     tableWrapData.grabHorizontal = true;
     workStatus.setLayoutData( tableWrapData );
     workStatus.setExpanded( true );
 
     Section configSection = toolkit.createSection( scrolledForm.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
-    configSection.setText( "Konfiguration" );
+    configSection.setText( Messages.getString("GridWidgetFace.6") ); //$NON-NLS-1$
     tableWrapData = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
     tableWrapData.grabHorizontal = true;
     tableWrapData.align = TableWrapData.FILL_GRAB;
@@ -305,7 +305,7 @@ class GridWidgetFace
 
     // help
     final Section helpSection = toolkit.createSection( scrolledForm.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
-    helpSection.setText( "Hilfe" );
+    helpSection.setText( Messages.getString("GridWidgetFace.7") ); //$NON-NLS-1$
     tableWrapData = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
     tableWrapData.grabHorizontal = true;
     tableWrapData.grabVertical = true;
@@ -331,7 +331,7 @@ class GridWidgetFace
     final Composite compConversion = toolkit.createComposite( scrolledForm.getBody(), SWT.FILL );
     compConversion.setLayout( new GridLayout( 2, false ) );
 
-    final Button m_buttonConvertToModel = toolkit.createButton( compConversion, "", SWT.PUSH );
+    final Button m_buttonConvertToModel = toolkit.createButton( compConversion, "", SWT.PUSH ); //$NON-NLS-1$
     m_buttonConvertToModel.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.15" ) ); //$NON-NLS-1$
     final Image convImage = KalypsoModel1D2DUIImages.ID_OK.createImage();
     m_buttonConvertToModel.setImage( convImage );
@@ -345,7 +345,7 @@ class GridWidgetFace
       }
     } );
 
-    toolkit.createLabel( compConversion, "FE-Netz generieren", SWT.NULL );
+    toolkit.createLabel( compConversion, Messages.getString("GridWidgetFace.9"), SWT.NULL ); //$NON-NLS-1$
 
     return rootPanel;
   }
@@ -364,17 +364,17 @@ class GridWidgetFace
     table.setLayoutData( gridData );
 
     TableColumn lineColumn = new TableColumn( table, SWT.LEFT );
-    lineColumn.setText( "Liniennr." );
+    lineColumn.setText( Messages.getString("GridWidgetFace.10") ); //$NON-NLS-1$
     // lineColumn.setWidth( 50 );
     lineColumn.pack();
 
     TableColumn actualPointNum = new TableColumn( table, SWT.LEFT );
-    actualPointNum.setText( "Ist" );
+    actualPointNum.setText( Messages.getString("GridWidgetFace.11") ); //$NON-NLS-1$
     // actualPointNum.setWidth( 40 );
     actualPointNum.pack();
 
     TableColumn targetPointNum = new TableColumn( table, SWT.LEFT | SWT.WRAP );
-    targetPointNum.setText( "Soll" );
+    targetPointNum.setText( Messages.getString("GridWidgetFace.12") ); //$NON-NLS-1$
     // targetPointNum.setWidth( 40 );
     targetPointNum.setResizable( false );
     targetPointNum.pack();
@@ -394,7 +394,7 @@ class GridWidgetFace
     preferenceStore.removePropertyChangeListener( storePropertyChangeListener );
     if( rootPanel == null )
     {
-      System.out.println( "Disposing null root panel" );
+      System.out.println( Messages.getString("GridWidgetFace.13") ); //$NON-NLS-1$
       return;
     }
     if( !rootPanel.isDisposed() )
@@ -432,15 +432,15 @@ class GridWidgetFace
 
   private IntegerFieldEditor handleWidth;
 
-  public static final String HANDLE_WIDTH_NAME = "x.handleWidth";
+  public static final String HANDLE_WIDTH_NAME = "x.handleWidth"; //$NON-NLS-1$
 
-  public static final String LINE_COLOR_0 = "LINE_COLOR_0";
+  public static final String LINE_COLOR_0 = "LINE_COLOR_0"; //$NON-NLS-1$
 
-  public static final String LINE_COLOR_1 = "LINE_COLOR_1";
+  public static final String LINE_COLOR_1 = "LINE_COLOR_1"; //$NON-NLS-1$
 
-  public static final String LINE_COLOR_2 = "LINE_COLOR_2";
+  public static final String LINE_COLOR_2 = "LINE_COLOR_2"; //$NON-NLS-1$
 
-  public static final String LINE_COLOR_3 = "LINE_COLOR_3";
+  public static final String LINE_COLOR_3 = "LINE_COLOR_3"; //$NON-NLS-1$
 
   private void initStoreDefaults( )
   {
@@ -510,15 +510,15 @@ class GridWidgetFace
     configSection.setClient( clientComposite );
     clientComposite.setLayout( new GridLayout() );
 
-    handleWidth = new IntegerFieldEditor( HANDLE_WIDTH_NAME, "Punktfangweite", clientComposite );
+    handleWidth = new IntegerFieldEditor( HANDLE_WIDTH_NAME, Messages.getString("GridWidgetFace.19"), clientComposite ); //$NON-NLS-1$
     handleWidth.setPreferenceStore( preferenceStore );
     handleWidth.load();
     handleWidth.setPropertyChangeListener( storePropertyChangeListener );
 
-    lineColorFieldEditor[0] = new ColorFieldEditor( LINE_COLOR_0, "Farbe für Linie 1", clientComposite );
-    lineColorFieldEditor[1] = new ColorFieldEditor( LINE_COLOR_1, "Farbe für Linie 2", clientComposite );
-    lineColorFieldEditor[2] = new ColorFieldEditor( LINE_COLOR_2, "Farbe für Linie 3", clientComposite );
-    lineColorFieldEditor[3] = new ColorFieldEditor( LINE_COLOR_3, "Farbe für Linie 4", clientComposite );
+    lineColorFieldEditor[0] = new ColorFieldEditor( LINE_COLOR_0, Messages.getString("GridWidgetFace.20"), clientComposite ); //$NON-NLS-1$
+    lineColorFieldEditor[1] = new ColorFieldEditor( LINE_COLOR_1, Messages.getString("GridWidgetFace.21"), clientComposite ); //$NON-NLS-1$
+    lineColorFieldEditor[2] = new ColorFieldEditor( LINE_COLOR_2, Messages.getString("GridWidgetFace.22"), clientComposite ); //$NON-NLS-1$
+    lineColorFieldEditor[3] = new ColorFieldEditor( LINE_COLOR_3, Messages.getString("GridWidgetFace.23"), clientComposite ); //$NON-NLS-1$
 
     for( ColorFieldEditor colorFieldEditor : lineColorFieldEditor )
     {
@@ -555,7 +555,7 @@ class GridWidgetFace
 
     try
     {
-      URL htmlURL = KalypsoModel1D2DPlugin.getDefault().getBundle().getEntry( "/help/grid_widget_small_help.html" );
+      URL htmlURL = KalypsoModel1D2DPlugin.getDefault().getBundle().getEntry( "/help/grid_widget_small_help.html" ); //$NON-NLS-1$
       // URL htmlURL =
       // GridWidgetFace.class.getResource( "grid_widget_small_help.html" );
       browser.setUrl( FileLocator.toFileURL( htmlURL ).toExternalForm() );
@@ -645,7 +645,7 @@ class GridWidgetFace
         }
         else
         {
-          System.out.println( "Property changed=" + event.getProperty() + " " + event.getNewValue() + " " + source.getClass() );
+          System.out.println( "Property changed=" + event.getProperty() + " " + event.getNewValue() + " " + source.getClass() ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
       }
 

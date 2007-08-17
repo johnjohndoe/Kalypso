@@ -283,11 +283,11 @@ public class Gml2RMA10SConv implements INativeIDProvider
     }
     catch( final IOException ioe )
     {
-      throw new SimulationException( "Fehler beim Schreiben der Modelldatei: " + ioe.getLocalizedMessage(), ioe );
+      throw new SimulationException( Messages.getString("Gml2RMA10SConv.1") + ioe.getLocalizedMessage(), ioe ); //$NON-NLS-1$
     }
     catch( final GM_Exception gme )
     {
-      throw new SimulationException( "Fehler beim Erzeugen von Geometrien: " + gme.getLocalizedMessage(), gme );
+      throw new SimulationException( Messages.getString("Gml2RMA10SConv.2") + gme.getLocalizedMessage(), gme ); //$NON-NLS-1$
     }
     finally
     {
@@ -357,7 +357,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
           if( object instanceof IElement1D )
             leftRightID = getBoundaryLineID( ((IElement1D) object) );
         }
-        formatter.format( "AR%10d%10d%10d%10d%10d%10d%n", cnt++, node0ID, node1ID, leftRightID, leftRightID, middleNodeID );
+        formatter.format( "AR%10d%10d%10d%10d%10d%10d%n", cnt++, node0ID, node1ID, leftRightID, leftRightID, middleNodeID );  //$NON-NLS-1$
       }
       else if( TypeInfo.is2DEdge( edge ) )
       {
@@ -375,12 +375,12 @@ public class Gml2RMA10SConv implements INativeIDProvider
         }
         final int leftParent = getBoundaryLineID( leftElement );
         final int rightParent = getBoundaryLineID( rightElement );
-        formatter.format( "AR%10d%10d%10d%10d%10d%10d%n", cnt++, node0ID, node1ID, leftParent, rightParent, middleNodeID );
+        formatter.format( "AR%10d%10d%10d%10d%10d%10d%n", cnt++, node0ID, node1ID, leftParent, rightParent, middleNodeID );  //$NON-NLS-1$
       }
       else
       {
         // stream.println( "************************************** non 1d/2d edge: " + edge.getGmlID() );
-        System.out.println( "non 1d/2d edge: " + edge.getGmlID() );
+        System.out.println( "non 1d/2d edge: " + edge.getGmlID() );  //$NON-NLS-1$
       }
     }
   }
@@ -415,7 +415,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
         /* Node parameters */
         final IFlowRelationship relationship = m_flowrelationModel.findFlowrelationship( point.getPosition(), 0.0 );
         if( relationship == null )
-          throw new SimulationException( "1D-Knoten ohne Flieﬂparameter gefunden: " + node.getGmlID(), null );
+          throw new SimulationException( Messages.getString("Gml2RMA10SConv.11") + node.getGmlID(), null ); //$NON-NLS-1$
 
         if( relationship instanceof IKingFlowRelation )
         {
@@ -426,7 +426,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
           final BigDecimal widthStorage = kingRelation.getWidthStorage();
           final BigDecimal heightStorage = kingRelation.getHeightStorage();
           final BigDecimal slopeStorage = kingRelation.getSlopeStorage();
-          formatter.format( "CS%10d%10.1f%10.3f%10.3f%10.2f%10.2f%10.2f%n", nodeID, width, bankSlopeLeft, bankSlopeRight, widthStorage, heightStorage, slopeStorage );
+          formatter.format( "CS%10d%10.1f%10.3f%10.3f%10.2f%10.2f%10.2f%n", nodeID, width, bankSlopeLeft, bankSlopeRight, widthStorage, heightStorage, slopeStorage );  //$NON-NLS-1$
         }
         else if( relationship instanceof ITeschkeFlowRelation )
         {
@@ -440,41 +440,41 @@ public class Gml2RMA10SConv implements INativeIDProvider
           final Double min = teschkeConv.getMin();
           final Double max = teschkeConv.getMax();
 
-          formatter.format( "MM%10d%20.7f%20.7f%n", nodeID, min, max );
+          formatter.format( "MM%10d%20.7f%20.7f%n", nodeID, min, max );  //$NON-NLS-1$
 
           final IPolynomial1D[] polyArea = teschkeConv.getPolynomialsByType( IWspmTuhhQIntervallConstants.DICT_PHENOMENON_AREA );
           if( polyArea == null )
             continue; // TODO: only for debug purpose, throw exception instead
 
-          writePolynome( formatter, "AP1", nodeID, polyArea[0], 0, 5, null );
-          writePolynome( formatter, "AP2", nodeID, polyArea[0], 5, 10, null );
-          writePolynome( formatter, "AP3", nodeID, polyArea[0], 10, 13, null );
+          writePolynome( formatter, "AP1", nodeID, polyArea[0], 0, 5, null );  //$NON-NLS-1$
+          writePolynome( formatter, "AP2", nodeID, polyArea[0], 5, 10, null );  //$NON-NLS-1$
+          writePolynome( formatter, "AP3", nodeID, polyArea[0], 10, 13, null );  //$NON-NLS-1$
 
           final IPolynomial1D[] polyRunoff = teschkeConv.getPolynomialsByType( IWspmTuhhQIntervallConstants.DICT_PHENOMENON_RUNOFF );
-          writePolynome( formatter, "QP1", nodeID, polyRunoff[0], 0, 4, slope );
-          writePolynome( formatter, "QP2", nodeID, polyRunoff[0], 4, 9, null );
-          writePolynome( formatter, "QP3", nodeID, polyRunoff[0], 9, 13, null );
+          writePolynome( formatter, "QP1", nodeID, polyRunoff[0], 0, 4, slope );  //$NON-NLS-1$
+          writePolynome( formatter, "QP2", nodeID, polyRunoff[0], 4, 9, null );  //$NON-NLS-1$
+          writePolynome( formatter, "QP3", nodeID, polyRunoff[0], 9, 13, null );  //$NON-NLS-1$
 
           final IPolynomial1D[] polyAlpha = teschkeConv.getPolynomialsByType( IWspmTuhhQIntervallConstants.DICT_PHENOMENON_ALPHA );
 
           if( polyAlpha == null )
-            throw new SimulationException( "Kein Alpha-Polynom f¸r Teschke-Netzparameter an Station km: " + station, null );
+            throw new SimulationException( Messages.getString("Gml2RMA10SConv.20") + station, null ); //$NON-NLS-1$
 
           if( polyAlpha.length > 1 )
           {
             final double hBV = polyAlpha[1].getRangeMin(); // Bordvollhˆhe ist gleich anfang des ‹bergangsbereich
-            formatter.format( "HB%10d%20.7f%n", nodeID, hBV );
-            writePolynome( formatter, "AD ", nodeID, polyAlpha[1], 0, 4, polyAlpha[1].getRangeMax() );
+            formatter.format( "HB%10d%20.7f%n", nodeID, hBV );  //$NON-NLS-1$
+            writePolynome( formatter, "AD ", nodeID, polyAlpha[1], 0, 4, polyAlpha[1].getRangeMax() );  //$NON-NLS-1$
           }
           if( polyAlpha.length > 2 )
           {
-            writePolynome( formatter, "AK1", nodeID, polyAlpha[2], 0, 5, null );
-            writePolynome( formatter, "AK2", nodeID, polyAlpha[2], 5, 10, null );
-            writePolynome( formatter, "AK3", nodeID, polyAlpha[2], 10, 13, null );
+            writePolynome( formatter, "AK1", nodeID, polyAlpha[2], 0, 5, null );  //$NON-NLS-1$
+            writePolynome( formatter, "AK2", nodeID, polyAlpha[2], 5, 10, null );  //$NON-NLS-1$
+            writePolynome( formatter, "AK3", nodeID, polyAlpha[2], 10, 13, null );  //$NON-NLS-1$
           }
         }
         else
-          throw new SimulationException( "Unbekannte Flieﬂrelation gefunden: " + relationship, null );
+          throw new SimulationException( Messages.getString("Gml2RMA10SConv.26") + relationship, null ); //$NON-NLS-1$
       }
       formatNode( formatter, nodeID, point, station );
     }
@@ -494,19 +494,19 @@ public class Gml2RMA10SConv implements INativeIDProvider
       z = -9999;
 
     if( station == null )
-      formatter.format( "FP%10d%20.7f%20.7f%20.7f%n", nodeID, x, y, z );
+      formatter.format( "FP%10d%20.7f%20.7f%20.7f%n", nodeID, x, y, z );  //$NON-NLS-1$
     else
-      formatter.format( "FP%10d%20.7f%20.7f%20.7f%20.7f%n", nodeID, x, y, z, station );
+      formatter.format( "FP%10d%20.7f%20.7f%20.7f%20.7f%n", nodeID, x, y, z, station );  //$NON-NLS-1$
     if( m_restart )
       writeRestartLines( formatter, nodeID, x, y );
   }
 
   private void writePolynome( final Formatter formatter, final String kind, final int nodeID, final IPolynomial1D poly, final int coeffStart, final int coeffStop, final Double extraValue )
   {
-    formatter.format( "%3s%9d", kind, nodeID );
+    formatter.format( "%3s%9d", kind, nodeID );  //$NON-NLS-1$
 
     if( extraValue != null )
-      formatter.format( "%20.7f", extraValue );
+      formatter.format( "%20.7f", extraValue );  //$NON-NLS-1$
 
     final double[] coefficients = poly.getCoefficients();
     for( int j = coeffStart; j < coeffStop; j++ )
@@ -517,10 +517,10 @@ public class Gml2RMA10SConv implements INativeIDProvider
       else
         coeff = 0.0;
 
-      formatter.format( "%20.7f", coeff );
+      formatter.format( "%20.7f", coeff );  //$NON-NLS-1$
     }
 
-    formatter.format( "%n" );
+    formatter.format( "%n" );  //$NON-NLS-1$
   }
 
   /**
@@ -556,17 +556,17 @@ public class Gml2RMA10SConv implements INativeIDProvider
           final int buildingID = m_buildingIDProvider.addBuilding( building );
           final IFE1D2DNode upstreamNode = FlowRelationUtilitites.findUpstreamNode( building, m_discretisationModel1d2d );
           final int upstreamNodeID = getBoundaryLineID( upstreamNode );
-          formatter.format( "FE%10d%10d%10s%10s%10d%n", id, buildingID, "", "", upstreamNodeID );
+          formatter.format( "FE%10d%10d%10s%10s%10d%n", id, buildingID, "", "", upstreamNodeID );    //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
         else if( FlowRelationUtilitites.isTeschkeElement1D( element1D, m_flowrelationModel ) )
         {
           /* Element without building: The special roughness-class '89' should be used. */
-          formatter.format( "FE%10d%10d%n", id, 89 );
+          formatter.format( "FE%10d%10d%n", id, 89 );  //$NON-NLS-1$
         }
         else
         {
           // TODO: give hint what 1D-element is was?
-          throw new SimulationException( "1D-Element ohne Bauwerk bzw. ohne Netzparameter: " + element1D.getGmlID(), null );
+          throw new SimulationException( Messages.getString("Gml2RMA10SConv.43") + element1D.getGmlID(), null ); //$NON-NLS-1$
         }
       }
       else if( element instanceof IPolyElement )
@@ -652,7 +652,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
       vx = node.getAbsoluteVelocity();
       vy = vx;
     }
-    formatter.format( "VA%10d%20.7f%20.7f%20.7f%20.7f%n", nodeID, vx, vy, node.getDepth(), node.getWaterlevel() );
+    formatter.format( "VA%10d%20.7f%20.7f%20.7f%20.7f%n", nodeID, vx, vy, node.getDepth(), node.getWaterlevel() ); //$NON-NLS-1$
   }
 
   private int getRoughnessID( final IFE1D2DElement element ) throws SimulationException

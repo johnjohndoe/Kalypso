@@ -172,7 +172,7 @@ public class RoughnessClsLabelProvider
           configState!=ROUGHNESS_WITH_CORRECTION))
     {
       throw new IllegalArgumentException(
-          "configState value is illegal:"+configState);
+          "configState value is illegal:"+configState); //$NON-NLS-1$
     }
     this.configState = configState;
   }
@@ -223,6 +223,6 @@ public class RoughnessClsLabelProvider
 //    buf.append( " colunm" );
 //    buf.append( columnIndex );
 //    return buf.toString();
-    return "unknown";
+    return "unknown"; //$NON-NLS-1$
   }
 }

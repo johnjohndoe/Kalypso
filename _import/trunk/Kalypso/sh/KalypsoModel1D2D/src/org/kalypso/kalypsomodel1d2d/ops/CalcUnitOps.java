@@ -78,7 +78,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  * @author Patrice Congo
  */
 
-@SuppressWarnings( { "unchecked", "hiding" })
+@SuppressWarnings( { "unchecked", "hiding" })   //$NON-NLS-1$ //$NON-NLS-2$
 public class CalcUnitOps
 {
 
@@ -225,8 +225,8 @@ public class CalcUnitOps
    */
   public static final Collection<ICalculationUnit1D2D> getParentUnit( final ICalculationUnit calculationUnit, final IFEDiscretisationModel1d2d model1d2d ) throws IllegalArgumentException
   {
-    Assert.throwIAEOnNullParam( calculationUnit, "calculationUnit" );
-    Assert.throwIAEOnNullParam( model1d2d, "model1d2d" );
+    Assert.throwIAEOnNullParam( calculationUnit, "calculationUnit" );  //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( model1d2d, "model1d2d" );  //$NON-NLS-1$
     final IFeatureWrapperCollection<IFE1D2DComplexElement> complexElements = model1d2d.getComplexElements();
     final Collection<ICalculationUnit1D2D> parents = new ArrayList<ICalculationUnit1D2D>();
     for( final IFE1D2DComplexElement ce : complexElements )
@@ -254,7 +254,7 @@ public class CalcUnitOps
    */
   public static final List<ICalculationUnit> getModelCalculationUnits( final IFEDiscretisationModel1d2d model1d2d ) throws IllegalArgumentException
   {
-    Assert.throwIAEOnNullParam( model1d2d, "model1d2d" );
+    Assert.throwIAEOnNullParam( model1d2d, "model1d2d" );  //$NON-NLS-1$
     final List<ICalculationUnit> calUnits = new ArrayList<ICalculationUnit>();
     final IFeatureWrapperCollection<IFE1D2DComplexElement> complexElements = model1d2d.getComplexElements();
     for( final IFE1D2DComplexElement ce : complexElements )
@@ -278,7 +278,7 @@ public class CalcUnitOps
    */
   public static int getNum2DElement( final ICalculationUnit calUnit )
   {
-    Assert.throwIAEOnNullParam( calUnit, "calUnit" );
+    Assert.throwIAEOnNullParam( calUnit, "calUnit" );  //$NON-NLS-1$
     if( calUnit instanceof ICalculationUnit1D )
     {
       return 0;
@@ -304,7 +304,7 @@ public class CalcUnitOps
     }
     else
     {
-      throw new IllegalArgumentException( "Cannot handle this calculation unit:" + calUnit );
+      throw new IllegalArgumentException( Messages.CalcUnitOps_6 + calUnit ); 
     }
   }
 
@@ -333,7 +333,7 @@ public class CalcUnitOps
    */
   public static int getNumBoundaryLine( final ICalculationUnit calUnit )
   {
-    Assert.throwIAEOnNullParam( calUnit, "calUnit" );
+    Assert.throwIAEOnNullParam( calUnit, "calUnit" );  //$NON-NLS-1$
     int num = 0;
     final IFeatureWrapperCollection<IFE1D2DElement> elements = calUnit.getElements();
     for( final IFE1D2DElement ele : elements )
@@ -357,7 +357,7 @@ public class CalcUnitOps
    */
   public static int getNum1DElement( final ICalculationUnit calUnit ) throws IllegalArgumentException
   {
-    Assert.throwIAEOnNullParam( calUnit, "calUnit" );
+    Assert.throwIAEOnNullParam( calUnit, "calUnit" );  //$NON-NLS-1$
     if( calUnit instanceof ICalculationUnit2D )
     {
       return 0;
@@ -368,7 +368,7 @@ public class CalcUnitOps
     }
     else if( calUnit instanceof ICalculationUnit1D2D )
     {
-      System.out.println( "Getting element of 1d2d calunit" );
+      System.out.println( Messages.CalcUnitOps_5 ); 
       int num = 0;
       for( final Object ele : calUnit.getElements() )
       {
@@ -381,7 +381,7 @@ public class CalcUnitOps
     }
     else
     {
-      throw new IllegalArgumentException( "Cannot handle this calculation unit:" + calUnit );
+      throw new IllegalArgumentException( Messages.CalcUnitOps_4 + calUnit ); 
     }
   }
 
@@ -551,8 +551,8 @@ public class CalcUnitOps
    */
   public static final boolean isBoundaryLineOf( final IBoundaryLine boundaryLine, final ICalculationUnit calUnit )
   {
-    Assert.throwIAEOnNullParam( calUnit, "calUnit" );
-    Assert.throwIAEOnNullParam( boundaryLine, "boundaryLine" );
+    Assert.throwIAEOnNullParam( calUnit, "calUnit" );  //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( boundaryLine, "boundaryLine" );  //$NON-NLS-1$
     final IFeatureWrapperCollection containers = boundaryLine.getContainers();
     final boolean answer = containers.contains( calUnit );
     return answer;
@@ -568,7 +568,7 @@ public class CalcUnitOps
    */
   public static final GM_Envelope getBoundingBox( final ICalculationUnit calUnit )
   {
-    Assert.throwIAEOnNullParam( calUnit, "calUnit" );
+    Assert.throwIAEOnNullParam( calUnit, "calUnit" );  //$NON-NLS-1$
     final LinkedList<GM_Envelope> contributingBBox = new LinkedList<GM_Envelope>();
 
     // collect all contributing bboxes
@@ -622,8 +622,8 @@ public class CalcUnitOps
    */
   public static final boolean isFiniteElementOf( final ICalculationUnit unit, final IFE1D2DElement element )
   {
-    Assert.throwIAEOnNullParam( unit, "unit" );
-    Assert.throwIAEOnNullParam( element, "element" );
+    Assert.throwIAEOnNullParam( unit, "unit" );  //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( element, "element" );  //$NON-NLS-1$
     final IFeatureWrapperCollection<IFE1D2DComplexElement> containers = element.getContainers();
     final List list = new ArrayList<String>();
     for( int i = 0; i < containers.size(); i++ )
@@ -699,10 +699,10 @@ public class CalcUnitOps
    */
   public static final <T extends ILineElement> T getLineElement( final ICalculationUnit<IFE1D2DElement> unit, final GM_Point bcPosition, final double grabDistance, final Class<T> lineType )
   {
-    Assert.throwIAEOnNullParam( unit, "unit" );
-    Assert.throwIAEOnNullParam( bcPosition, "bcPosition" );
-    Assert.throwIAEOnNullParam( lineType, "lineType" );
-    Assert.throwIAEOnLessThan0( grabDistance, "grab distance must be greater or equals to 0" );
+    Assert.throwIAEOnNullParam( unit, "unit" );  //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( bcPosition, "bcPosition" );  //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( lineType, "lineType" );  //$NON-NLS-1$
+    Assert.throwIAEOnLessThan0( grabDistance, Messages.CalcUnitOps_37 ); 
     final GM_Envelope env = GeometryUtilities.grabEnvelopeFromDistance( bcPosition, grabDistance );
 
     final List<IFE1D2DElement> targetLines = unit.getElements().query( env );

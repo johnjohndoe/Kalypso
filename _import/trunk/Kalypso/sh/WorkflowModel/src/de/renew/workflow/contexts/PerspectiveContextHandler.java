@@ -56,7 +56,7 @@ public class PerspectiveContextHandler extends AbstractHandler implements IExecu
       }
       catch( final WorkbenchException e )
       {
-        throw new ExecutionException( "Could not show perspective " + m_perspectiveId, e );
+        throw new ExecutionException( Messages.getString("PerspectiveContextHandler.0") + m_perspectiveId, e ); //$NON-NLS-1$
       }
       return Status.OK_STATUS;
     }

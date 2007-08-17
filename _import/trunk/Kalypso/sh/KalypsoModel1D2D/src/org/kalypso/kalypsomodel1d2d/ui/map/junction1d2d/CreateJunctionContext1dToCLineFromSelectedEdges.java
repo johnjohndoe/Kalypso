@@ -98,8 +98,8 @@ public class CreateJunctionContext1dToCLineFromSelectedEdges
   {
     super(
         Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE,
-        "Linienkopplung hinzufügen",
-        "Linienkopplung hinzufügen");
+        Messages.getString("CreateJunctionContext1dToCLineFromSelectedEdges.0"), //$NON-NLS-1$
+        Messages.getString("CreateJunctionContext1dToCLineFromSelectedEdges.1")); //$NON-NLS-1$
     setSelectionFilter( 
         QNameBasedSelectionFilter.getFilterForQName( 
                       Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE) );
@@ -139,7 +139,7 @@ public class CreateJunctionContext1dToCLineFromSelectedEdges
   public void setSelection( ISelection selection )
   {
     super.setSelection(selection);
-    System.out.println("Selection:"+selection);
+    System.out.println("Selection:"+selection); //$NON-NLS-1$
   }
   
   /**
@@ -227,7 +227,7 @@ public class CreateJunctionContext1dToCLineFromSelectedEdges
         }
         else
         {
-          System.out.println("Invalid data model");
+          System.out.println(Messages.getString("CreateJunctionContext1dToCLineFromSelectedEdges.3")); //$NON-NLS-1$
         }
       }
     };

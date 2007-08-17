@@ -26,13 +26,13 @@ import de.renew.workflow.connector.context.IActiveContextChangeListener;
  */
 public class WorkflowView extends ViewPart
 {
-  final static public String ID = "org.kalypso.kalypso1d2d.pjt.views.WorklistView";
+  final static public String ID = "org.kalypso.kalypso1d2d.pjt.views.WorklistView";  //$NON-NLS-1$
 
   static Logger LOGGER = Logger.getLogger( WorkflowView.class.getName() );
 
   static
   {
-    final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.kalypso1d2d.pjt/debug" ) );
+    final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.kalypso1d2d.pjt/debug" ) );  //$NON-NLS-1$
     if( !log )
       LOGGER.setUseParentHandlers( false );
   }

@@ -43,10 +43,10 @@ public class RoughnessClsCorrection implements IRoughnessClsCorrection
 						QName propQName)
 	{
 		Assert.throwIAEOnNull(
-				propQName, "Argument propQName must not be null");
+				propQName, Messages.getString("RoughnessClsCorrection.0")); //$NON-NLS-1$
 		Assert.throwIAEOnNull(
 				parentFeature, 
-				"Argument parentFeature must not be null");
+				Messages.getString("RoughnessClsCorrection.1")); //$NON-NLS-1$
 		try
 		{
 			this.feature=
@@ -61,8 +61,8 @@ public class RoughnessClsCorrection implements IRoughnessClsCorrection
 		{
 			 
 			throw new IllegalArgumentException(
-					"Property "+propQName+
-						" does not accept element of type"+
+					"Property "+propQName+ //$NON-NLS-1$
+						Messages.getString("RoughnessClsCorrection.3")+ //$NON-NLS-1$
 					KalypsoModelRoughnessConsts.WBR_F_ROUGHNESS,
 					ex);
 		}
@@ -168,8 +168,8 @@ public class RoughnessClsCorrection implements IRoughnessClsCorrection
 		else
 		{
 			throw new RuntimeException(
-					"Unexpected property value:"+obj+
-					"\n\tof type:"+obj.getClass());
+					Messages.getString("RoughnessClsCorrection.4")+obj+ //$NON-NLS-1$
+					"\n\tof type:"+obj.getClass()); //$NON-NLS-1$
 		}
 	}
 
@@ -219,7 +219,7 @@ public class RoughnessClsCorrection implements IRoughnessClsCorrection
 	 */
 	public void setAxAyCor(double axayCor) throws IllegalArgumentException
 	{
-		Assert.throwIAEOnLessThan0(axayCor, "axay must be positiv");
+		Assert.throwIAEOnLessThan0(axayCor, Messages.getString("RoughnessClsCorrection.6")); //$NON-NLS-1$
 		feature.setProperty(
 				KalypsoModelRoughnessConsts.WBR_PROP_AXAY_COR, 
 				Double.valueOf(axayCor));
@@ -242,7 +242,7 @@ public class RoughnessClsCorrection implements IRoughnessClsCorrection
 	 */
 	public void setDpCor(double dpCor) throws IllegalArgumentException
 	{
-		Assert.throwIAEOnLessThan0(dpCor, "dpCor must be positiv");
+		Assert.throwIAEOnLessThan0(dpCor, Messages.getString("RoughnessClsCorrection.7")); //$NON-NLS-1$
 		feature.setProperty(
 				KalypsoModelRoughnessConsts.WBR_PROP_DP_COR, 
 				Double.valueOf(dpCor));
@@ -253,7 +253,7 @@ public class RoughnessClsCorrection implements IRoughnessClsCorrection
 	 */
 	public void setEddyCor(double eddyCor) throws IllegalArgumentException
 	{
-		Assert.throwIAEOnLessThan0(eddyCor, "eddyCor must be positiv");
+		Assert.throwIAEOnLessThan0(eddyCor, Messages.getString("RoughnessClsCorrection.8")); //$NON-NLS-1$
 		feature.setProperty(
 				KalypsoModelRoughnessConsts.WBR_PROP_EDDY_COR, 
 				Double.valueOf(eddyCor));
@@ -264,7 +264,7 @@ public class RoughnessClsCorrection implements IRoughnessClsCorrection
 	 */
 	public void setKsCor(double ksCor) throws IllegalArgumentException
 	{
-		Assert.throwIAEOnLessThan0(ksCor, "ksCor must be positiv");
+		Assert.throwIAEOnLessThan0(ksCor, Messages.getString("RoughnessClsCorrection.9")); //$NON-NLS-1$
 		feature.setProperty(
 				KalypsoModelRoughnessConsts.WBR_PROP_KS_COR, 
 				Double.valueOf(ksCor));
@@ -273,7 +273,7 @@ public class RoughnessClsCorrection implements IRoughnessClsCorrection
 	public void setMarshCor(double marshCor) throws IllegalArgumentException
 	{
 		Assert.throwIAEOnLessThan0(
-				marshCor, "marshCor must be positiv");
+				marshCor, Messages.getString("RoughnessClsCorrection.10")); //$NON-NLS-1$
 		feature.setProperty(
 				KalypsoModelRoughnessConsts.WBR_PROP_MARSH_COR, 
 				Double.valueOf(marshCor));
@@ -354,7 +354,7 @@ public class RoughnessClsCorrection implements IRoughnessClsCorrection
 	public String toString()
 	{
 		StringBuffer buf= new StringBuffer(64);
-		buf.append("RoughnessClsCorrection");
+		buf.append("RoughnessClsCorrection"); //$NON-NLS-1$
 		String id=feature.getId();
 		if(id!=null)
 		{
@@ -362,22 +362,22 @@ public class RoughnessClsCorrection implements IRoughnessClsCorrection
 			buf.append(id);
 		}
 		buf.append('[');
-		buf.append("axayCor=");
+		buf.append("axayCor="); //$NON-NLS-1$
 		buf.append(getAxAyCor());
 		
 		
-		buf.append(", dpCor=");
+		buf.append(", dpCor="); //$NON-NLS-1$
 		buf.append(getDpCor());
 		
 		
-		buf.append(", eddyCor=");
+		buf.append(", eddyCor="); //$NON-NLS-1$
 		buf.append(getEddyCor());
 		
-		buf.append(",ksCor=");
+		buf.append(",ksCor="); //$NON-NLS-1$
 		buf.append(getKsCor());
 		
 		
-		buf.append(",marshCor=");
+		buf.append(",marshCor="); //$NON-NLS-1$
 		buf.append(getMarshCor());
 		
 		buf.append(' ');
