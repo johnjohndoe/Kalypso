@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.util.pool;
 
@@ -125,7 +125,6 @@ public class ResourcePool
     {
       KeyInfo info = m_keyInfos.get( key );
       if( info == null )
-      {
         try
         {
           final ILoader loader = getLoader( key.getType() );
@@ -137,10 +136,9 @@ public class ResourcePool
           e.printStackTrace();
           e.getMessage();
           final RuntimeException iae = new IllegalArgumentException( "No Loader for type: " + key.getType() );
-          LOGGER.throwing( getClass().getName(), "addPoolListener", iae );
+          ResourcePool.LOGGER.throwing( getClass().getName(), "addPoolListener", iae );
           throw iae;
         }
-      }
 
       info.addListener( l );
 
@@ -162,8 +160,8 @@ public class ResourcePool
         final KeyInfo info = entry.getValue();
         if( info.removeListener( l ) && info.isEmpty() )
         {
-          if( DO_LOG )
-            LOGGER.info( "Releasing key (no more listeners): " + key );
+          if( ResourcePool.DO_LOG )
+            ResourcePool.LOGGER.info( "Releasing key (no more listeners): " + key );
 
           iter.remove();
 
@@ -171,29 +169,29 @@ public class ResourcePool
         }
       }
     }
-    
-      final ISchedulingRule mutex = ResourcesPlugin.getWorkspace().getRoot();
 
-      for( final KeyInfo info : infosToDispose )
+    final ISchedulingRule mutex = ResourcesPlugin.getWorkspace().getRoot();
+
+    for( final KeyInfo info : infosToDispose )
+    {
+      final String askForSaveProperty = System.getProperty( IKalypsoUIConstants.CONFIG_INI_DO_ASK_FOR_POOL_SAVE, "false" );
+      final boolean askForSave = Boolean.parseBoolean( askForSaveProperty );
+
+      if( !info.isDirty() )
+        info.dispose();
+      else if( askForSave )
       {
-        final String askForSaveProperty = System.getProperty( IKalypsoUIConstants.CONFIG_INI_DO_ASK_FOR_POOL_SAVE, "false" );
-        final boolean askForSave = Boolean.parseBoolean( askForSaveProperty );
-
-        if( !info.isDirty() )
-          info.dispose();
-        else if( askForSave )
-        {
-          final UIJob job = new SaveAndDisposeInfoJob( "Ask for save", info );
-          job.setUser( true );
-          job.setRule( mutex );
-          job.schedule();
-        }
-        else
-        {
-          System.out.println( "Should save pool object: " + info.getObject() );
-          info.dispose();
-        }
+        final UIJob job = new SaveAndDisposeInfoJob( "Ask for save", info );
+        job.setUser( true );
+        job.setRule( mutex );
+        job.schedule();
       }
+      else
+      {
+        System.out.println( "Should save pool object: " + info.getObject() );
+        info.dispose();
+      }
+    }
   }
 
   private ILoader getLoader( final String type ) throws FactoryException
@@ -210,6 +208,8 @@ public class ResourcePool
 
   public void saveObject( final Object object, final IProgressMonitor monitor ) throws LoaderException
   {
+    final List<KeyInfo> infosToSave = new ArrayList<KeyInfo>();
+
     synchronized( m_keyInfos )
     {
       if( object == null )
@@ -217,11 +217,14 @@ public class ResourcePool
 
       final Collection<KeyInfo> values = m_keyInfos.values();
       for( final KeyInfo info : values )
-      {
         if( info.getObject() == object )
-          info.saveObject( monitor );
-      }
+          infosToSave.add( info );
     }
+
+    // REMARK: we do not save inside the sync-block, because saving may cause acces to
+    // the pool (Example: saving a GML might cause access to Xlinked properties)
+    for( final KeyInfo keyInfo : infosToSave )
+      keyInfo.saveObject( monitor );
   }
 
   /** Get the key info which is responsible for a given object. */
@@ -234,10 +237,8 @@ public class ResourcePool
 
       final Collection<KeyInfo> values = m_keyInfos.values();
       for( final KeyInfo info : values )
-      {
         if( info.getObject() == object )
           return info;
-      }
 
       return null;
     }
@@ -260,7 +261,6 @@ public class ResourcePool
   {
     final KeyInfo info = m_keyInfos.get( key );
     if( info != null )
-    {
       try
       {
         // wait for info
@@ -278,7 +278,6 @@ public class ResourcePool
 
         throw new CoreException( StatusUtilities.statusFromThrowable( e, "Ladevorgang unterbrochen" ) );
       }
-    }
 
     // falls object nicht bereits da,
     // einfach einen key nur fürs laden erzeugen, und gleich wieder disposen
