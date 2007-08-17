@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.util.command;
 
@@ -118,7 +118,22 @@ public class JobExclusiveCommandTarget implements ICommandTarget, ICommandManage
       System.out.println( "Posting command without command manager." );
     }
     else
-      new CommandJob( command, m_commandManager, m_mutexRule, m_dirtyRunnable, CommandJob.POST );
+    {
+      final Runnable dirtyRunnable = m_dirtyRunnable;
+      final Runnable combinedRunnable = new Runnable()
+      {
+        public void run( )
+        {
+          if( dirtyRunnable != null )
+            dirtyRunnable.run();
+
+          if( runnable != null )
+            runnable.run();
+        }
+      };
+
+      new CommandJob( command, m_commandManager, m_mutexRule, combinedRunnable, CommandJob.POST );
+    }
   }
 
   /**
