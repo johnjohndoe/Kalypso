@@ -251,7 +251,8 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
     if( m_workspace != null )
       m_workspace.addModellListener( this );
 
-// m_commandtarget.setCommandManager( workspace );
+    // TODO!
+    m_commandtarget.setCommandManager( workspace );
 
     if( m_panel == null || m_panel.isDisposed() )
       return;

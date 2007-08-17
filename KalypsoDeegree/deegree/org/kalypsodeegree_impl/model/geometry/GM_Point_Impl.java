@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,52 +36,46 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- 
+
+
  history:
- 
+
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
- interface-compatibility to deegree is wanted but not retained always. 
- 
- If you intend to use this software in other ways than in kalypso 
+ interface-compatibility to deegree is wanted but not retained always.
+
+ If you intend to use this software in other ways than in kalypso
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
 
- all modifications are licensed as deegree, 
+ all modifications are licensed as deegree,
  original copyright:
- 
+
  Copyright (C) 2001 by:
  EXSE, Department of Geography, University of Bonn
  http://www.giub.uni-bonn.de/exse/
  lat/lon GmbH
  http://www.lat-lon.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.geometry;
 
 import java.io.Serializable;
 
-import org.kalypso.jts.JTSUtilities;
 import org.kalypsodeegree.model.geometry.GM_Aggregate;
 import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.opengis.cs.CS_CoordinateSystem;
-
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * default implementation of the GM_Point interface.
  * <p>
  * ------------------------------------------------------------
  * </p>
- * 
+ *
  * @version 5.6.2001
  * @author Andreas Poth
  *         <p>
@@ -95,7 +89,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
 
   /**
    * constructor. initializes a point to the coordinate 0/0
-   * 
+   *
    * @param crs
    *            spatial reference system of the point
    */
@@ -106,7 +100,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
 
   /**
    * constructor for initializing a point within a two-dimensional coordinate system
-   * 
+   *
    * @param x
    *            x-value of the point
    * @param y
@@ -121,7 +115,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
 
   /**
    * constructor for initializing a point within a three-dimensional coordinate system
-   * 
+   *
    * @param x
    *            x-value of the point
    * @param y
@@ -138,7 +132,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
 
   /**
    * constructor
-   * 
+   *
    * @param gmo
    *            existing GM_Point
    */
@@ -149,7 +143,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
 
   /**
    * constructor
-   * 
+   *
    * @param gmo
    *            existing GM_Point
    * @param crs
