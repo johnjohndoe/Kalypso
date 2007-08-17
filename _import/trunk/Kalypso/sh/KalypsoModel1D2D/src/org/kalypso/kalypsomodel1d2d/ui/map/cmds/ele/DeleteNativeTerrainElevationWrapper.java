@@ -2,91 +2,80 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.cmds.ele;
-
-import java.io.File;
-import java.net.URL;
 
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IFeatureChangeCommand;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.INativeTerrainElevationModelWrapper;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.NativeTerrainElevationModelFactory;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
  * Command for deleting a native terrain elevation model wrapper
  * 
  * @author Patrice Congo
- *
+ * 
  */
 public class DeleteNativeTerrainElevationWrapper implements IFeatureChangeCommand
 {
-  public static final String DEFAULT_DESCRIPTION = "";
-  
-  private String description;
+  private final ITerrainElevationModelSystem m_terrainElevationModelSystem;
 
-  private ITerrainElevationModelSystem terrainElevationModelSystem;
+  private final INativeTerrainElevationModelWrapper m_elevationModel;
 
-  private INativeTerrainElevationModelWrapper elevationModel ;
+  private boolean m_deleteFile;
 
-  private boolean deleteFile;
-  
-  private boolean done=false;
+  private boolean m_done = false;
 
-  public DeleteNativeTerrainElevationWrapper(
-              ITerrainElevationModelSystem terrainElevationModelSystem,
-              INativeTerrainElevationModelWrapper elevationModel,
-              boolean deleteFile)
+  public DeleteNativeTerrainElevationWrapper( final ITerrainElevationModelSystem terrainElevationModelSystem, final INativeTerrainElevationModelWrapper elevationModel, final boolean deleteFile )
   {
-    this.terrainElevationModelSystem = terrainElevationModelSystem;
-    this.elevationModel = elevationModel;
-    this.deleteFile = deleteFile; 
+    m_terrainElevationModelSystem = terrainElevationModelSystem;
+    m_elevationModel = elevationModel;
+    m_deleteFile = deleteFile;
   }
-  
+
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.IFeatureChangeCommand#getChangedFeature()
    */
   public IFeatureWrapper2[] getChangedFeature( )
   {
-    if(done)
+    if( m_done )
     {
-      return new IFeatureWrapper2[]{elevationModel};
+      return new IFeatureWrapper2[] { m_elevationModel };
     }
     return null;
   }
@@ -96,7 +85,7 @@ public class DeleteNativeTerrainElevationWrapper implements IFeatureChangeComman
    */
   public String getDescription( )
   {
-    return description;
+    return "Höhenmodell löschen: " + m_elevationModel.getName();
   }
 
   /**
@@ -104,7 +93,7 @@ public class DeleteNativeTerrainElevationWrapper implements IFeatureChangeComman
    */
   public boolean isUndoable( )
   {
-    return !deleteFile;
+    return !m_deleteFile;
   }
 
   /**
@@ -112,37 +101,11 @@ public class DeleteNativeTerrainElevationWrapper implements IFeatureChangeComman
    */
   public void process( ) throws Exception
   {
-    if(done)
+    if( m_done )
     {
       return;
-    }    
-    boolean b = terrainElevationModelSystem.getTerrainElevationModels().remove( elevationModel.getWrappedFeature() );
-    if(b)
-    {
-      URL sourceURL = elevationModel.getSourceURL();
-      File file= new File(sourceURL.getFile());
-      if(file.exists())
-      {
-        if(file.canWrite())
-        {
-          file.delete();
-          done = true;
-          NativeTerrainElevationModelFactory.removeFromCache( file );
-        }
-        else
-        {
-          System.out.println("Cannot write or delete file");
-        }
-      }
-      else
-      {
-        System.out.println("File does not exits:"+file);
-      }
     }
-    else
-    {
-      System.out.println("could not delete elevation");
-    }
+    m_terrainElevationModelSystem.getTerrainElevationModels().remove( m_elevationModel.getWrappedFeature() );
   }
 
   /**
@@ -158,7 +121,7 @@ public class DeleteNativeTerrainElevationWrapper implements IFeatureChangeComman
    */
   public void undo( ) throws Exception
   {
-    if(!done || deleteFile)
+    if( !m_done || m_deleteFile )
     {
       return;
     }
