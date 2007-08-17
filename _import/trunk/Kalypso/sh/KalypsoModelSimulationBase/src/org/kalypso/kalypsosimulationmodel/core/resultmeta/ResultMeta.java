@@ -42,7 +42,9 @@ package org.kalypso.kalypsosimulationmodel.core.resultmeta;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
@@ -74,7 +76,7 @@ public abstract class ResultMeta extends AbstractFeatureBinder implements IResul
    */
   public IResultMeta getParent( )
   {
-    final Feature parentFeature = (Feature) getFeature().getProperty( QNAME_PROP_PARENT );
+    final Feature parentFeature = getFeature().getParent();
     if( parentFeature == null )
       return null;
 
@@ -84,9 +86,13 @@ public abstract class ResultMeta extends AbstractFeatureBinder implements IResul
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.result.IResultMeta#getPath()
    */
-  public String getPath( )
+  public IPath getPath( )
   {
-    return (String) getWrappedFeature().getProperty( QNAME_PROP_PATH );
+    final String path = (String) getWrappedFeature().getProperty( QNAME_PROP_PATH );
+    if( path == null )
+      return null;
+
+    return Path.fromPortableString( path );
   }
 
   /**
@@ -102,19 +108,11 @@ public abstract class ResultMeta extends AbstractFeatureBinder implements IResul
   }
 
   /**
-   * @see org.kalypso.kalypsosimulationmodel.core.result.IResultMeta#setParent(org.kalypso.kalypsosimulationmodel.core.result.IResultMeta)
-   */
-  public void setParent( IResultMeta resultMeta )
-  {
-    getFeature().setProperty( QNAME_PROP_PARENT, resultMeta.getWrappedFeature() );
-  }
-
-  /**
    * @see org.kalypso.kalypsosimulationmodel.core.result.IResultMeta#setPath(java.lang.String)
    */
-  public void setPath( String path )
+  public void setPath( final IPath path )
   {
-    getFeature().setProperty( QNAME_PROP_PATH, path );
+    getFeature().setProperty( QNAME_PROP_PATH, path.toPortableString() );
   }
 
   /**
@@ -128,6 +126,23 @@ public abstract class ResultMeta extends AbstractFeatureBinder implements IResul
     {
       // TODO: create new Status and copy values to it
     }
+  }
+
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta#getFullPath()
+   */
+  public IPath getFullPath( )
+  {
+    final IPath path = getPath();
+    final IResultMeta parent = getParent();
+    if( parent == null )
+      return path;
+
+    final IPath parentPath = parent.getFullPath();
+    if( parentPath == null )
+      return null;
+
+    return parentPath.append( path );
   }
 
 }

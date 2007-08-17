@@ -45,7 +45,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 
 /**
- * @author jung
+ * @author Thomas Jung
  */
 public class KalypsoModel1D2DUIImages
 {

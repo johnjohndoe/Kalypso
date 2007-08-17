@@ -38,10 +38,6 @@
 						type="common:StatusPropertyType" minOccurs="0">
 						<xs:documentation><![CDATA[Status describing the result of the process generating this result.]]></xs:documentation>
 					</xs:element>
-					<xs:element name="parentMember"
-						type="resultMeta:ResultMetaPropertyType" minOccurs="0">
-						<xs:documentation><![CDATA[Parent which contains this result.]]></xs:documentation>
-					</xs:element>
 					<xs:element name="childMember"
 						type="resultMeta:ResultMetaPropertyType" minOccurs="0"
 						maxOccurs="unbounded">
@@ -52,9 +48,10 @@
 		</xs:complexContent>
 	</xs:complexType>
 
-	<xs:complexType name="ResultMetaPropertyType">
+		<xs:complexType name="ResultMetaPropertyType">
 		<xs:sequence>
 			<xs:element ref="resultMeta:ResultMeta"></xs:element>
 		</xs:sequence>
 	</xs:complexType>
+
 </xs:schema>

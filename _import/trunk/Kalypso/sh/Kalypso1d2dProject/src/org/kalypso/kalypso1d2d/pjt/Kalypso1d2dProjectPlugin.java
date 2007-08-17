@@ -21,6 +21,7 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.afgui.ScenarioHandlingProjectNature;
 import org.kalypso.afgui.scenarios.Scenario;
+import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
 import org.kalypso.kalypso1d2d.pjt.perspective.PerspectiveWatcher;
 import org.kalypso.kalypso1d2d.pjt.views.SzenarioDataProvider;
 import org.kalypso.kalypso1d2d.pjt.views.TaskExecutionAuthority;
@@ -68,6 +69,8 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
 
   private TaskExecutionListener m_taskExecutionListener;
 
+  private PluginImageProvider m_imageProvider;
+
   /**
    * The constructor
    */
@@ -100,9 +103,12 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
     m_taskExecutionAuthority = new TaskExecutionAuthority();
     m_taskExecutor = new TaskExecutor( workflowContextHandlerFactory, m_taskExecutionAuthority, commandService, handlerService );
 
+    // delete tmp images both on startup and shutdown
+    m_imageProvider = new PluginImageProvider( this );
+    m_imageProvider.resetTmpFiles();
+
     PlatformUI.getWorkbench().addWorkbenchListener( new IWorkbenchListener()
     {
-
       /**
        * @see org.eclipse.ui.IWorkbenchListener#postShutdown(org.eclipse.ui.IWorkbench)
        */
@@ -151,6 +157,10 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
       }
     }
 
+    // delete tmp images both on startup and shutdown
+    m_imageProvider.resetTmpFiles();
+    m_imageProvider = null;
+
     plugin = null;
     super.stop( context );
   }
@@ -159,7 +169,7 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
   {
     return m_taskExecutor;
   }
-  
+
   public TaskExecutionAuthority getTaskExecutionAuthority( )
   {
     return m_taskExecutionAuthority;
@@ -291,4 +301,10 @@ public class Kalypso1d2dProjectPlugin extends AbstractUIPlugin
     }
     return properties;
   }
+
+  public static PluginImageProvider getImageProvider( )
+  {
+    return getDefault().m_imageProvider;
+  }
+
 }

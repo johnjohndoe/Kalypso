@@ -45,6 +45,7 @@ import java.util.Date;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE;
@@ -143,14 +144,13 @@ public class StepResultMeta extends ResultMeta implements IStepResultMeta
    *      java.lang.String, org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE,
    *      java.lang.String)
    */
-  public void addDocument( String name, String description, DOCUMENTTYPE type, String path, IStatus status )
+  public void addDocument( String name, String description, DOCUMENTTYPE type, IPath path, IStatus status )
   {
     final IDocumentResultMeta document = getChildren().addNew( IDocumentResultMeta.QNAME, IDocumentResultMeta.class );
     document.setName( name );
     document.setDescription( description );
     document.setDocumentType( type );
     document.setPath( path );
-    document.setParent( this );
     document.setStatus( status );
   }
 

@@ -59,6 +59,7 @@ import javax.xml.bind.JAXBException;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
@@ -187,7 +188,7 @@ public class ResultManager implements Runnable
     m_calcUnitResultMeta.setCalcUnit( calculationUnit.getGmlID() );
     m_calcUnitResultMeta.setName( calculationUnit.getName() );
     m_calcUnitResultMeta.setDescription( calculationUnit.getDescription() );
-    m_calcUnitResultMeta.setPath( "" );
+    m_calcUnitResultMeta.setPath( new Path( outputDir.getName() ) );
   }
 
   /**

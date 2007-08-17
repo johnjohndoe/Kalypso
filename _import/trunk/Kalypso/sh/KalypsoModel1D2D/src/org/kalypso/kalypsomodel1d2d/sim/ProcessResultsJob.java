@@ -56,6 +56,7 @@ import javax.xml.namespace.QName;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
@@ -139,7 +140,7 @@ public class ProcessResultsJob extends Job
       final File[] files = new File[] { m_inputFile /* , exeLog, exeErr, outputOut */};
       final File outputZip2d = new File( m_outputDir, "original.2d.zip" );
       ZipUtilities.zip( outputZip2d, files, m_inputFile.getParentFile() );
-      m_stepResultMeta.addDocument( "RMA-Rohdaten", "ASCII Ergebnisdatei(en) des RMA10 Rechenkerns", IDocumentResultMeta.DOCUMENTTYPE.coreDataZip, "original.2d.zip", Status.OK_STATUS );
+      m_stepResultMeta.addDocument( "RMA-Rohdaten", "ASCII Ergebnisdatei(en) des RMA10 Rechenkerns", IDocumentResultMeta.DOCUMENTTYPE.coreDataZip, new Path( "original.2d.zip" ), Status.OK_STATUS );
 
       monitor.worked( 1 );
 
@@ -207,19 +208,19 @@ public class ProcessResultsJob extends Job
           case DEPTH:
             triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "m" );
             triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), "Flieﬂtiefe" );
-            stepResultMeta.addDocument( "Flieﬂtiefen", "TIN der Flieﬂtiefen", IDocumentResultMeta.DOCUMENTTYPE.tinDepth, "Tin/tin_DEPTH.gml", Status.OK_STATUS );
+            stepResultMeta.addDocument( "Flieﬂtiefen", "TIN der Flieﬂtiefen", IDocumentResultMeta.DOCUMENTTYPE.tinDepth, new Path( "Tin/tin_DEPTH.gml" ), Status.OK_STATUS );
 
             break;
           case VELOCITY:
             triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "m/s" );
             triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), "Geschwindigkeit" );
-            stepResultMeta.addDocument( "Geschwindigkeiten", "TIN der tiefengemittelten Flieﬂgeschwindigkeiten", IDocumentResultMeta.DOCUMENTTYPE.tinVelo, "Tin/tin_VELOCITY.gml", Status.OK_STATUS );
+            stepResultMeta.addDocument( "Geschwindigkeiten", "TIN der tiefengemittelten Flieﬂgeschwindigkeiten", IDocumentResultMeta.DOCUMENTTYPE.tinVelo, new Path( "Tin/tin_VELOCITY.gml" ), Status.OK_STATUS );
 
             break;
           case WATERLEVEL:
             triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "m¸NN" );
             triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), "Wasserspiegel" );
-            stepResultMeta.addDocument( "Wasserspiegellagen", "TIN der Wasserspiegellagen", IDocumentResultMeta.DOCUMENTTYPE.tinWsp, "Tin/tin_WATERLEVEL.gml", Status.OK_STATUS );
+            stepResultMeta.addDocument( "Wasserspiegellagen", "TIN der Wasserspiegellagen", IDocumentResultMeta.DOCUMENTTYPE.tinWsp, new Path( "Tin/tin_WATERLEVEL.gml" ), Status.OK_STATUS );
 
             break;
 
@@ -257,7 +258,7 @@ public class ProcessResultsJob extends Job
 
       /* Node-GML in Datei schreiben */
       GmlSerializer.serializeWorkspace( gmlResultFile, resultWorkspace, "CP1252" );
-      stepResultMeta.addDocument( "Knotenwerte", "Ergebnisse an den Knoten", IDocumentResultMeta.DOCUMENTTYPE.nodes, "results.gml", Status.OK_STATUS );
+      stepResultMeta.addDocument( "Knotenwerte", "Ergebnisse an den Knoten", IDocumentResultMeta.DOCUMENTTYPE.nodes, new Path( "results.gml" ), Status.OK_STATUS );
 
       final Date time = handler.getTime();
       addToResultDB( stepResultMeta, timeStepNum, outputDir, time );
@@ -292,11 +293,11 @@ public class ProcessResultsJob extends Job
 
     stepResultMeta.setStepTime( time );
     stepResultMeta.setStepNumber( timeStepNum );
+    stepResultMeta.setPath( new Path( outputDir.getName() ) );
   }
 
   public NodeResultMinMaxCatcher getMinMaxData( )
   {
     return m_resultMinMaxCatcher;
-
   }
 }

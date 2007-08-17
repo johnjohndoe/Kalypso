@@ -42,6 +42,7 @@ package org.kalypso.kalypsosimulationmodel.core.resultmeta;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
@@ -63,9 +64,9 @@ public interface IResultMeta extends IFeatureWrapper2
 
   public final static QName QNAME = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_RESULT_NS, "ResultMeta" );
 
-  public String getPath( );
+  public IPath getPath( );
 
-  public void setPath( String path );
+  public void setPath( IPath path );
 
   public IStatus getStatus( );
 
@@ -73,7 +74,10 @@ public interface IResultMeta extends IFeatureWrapper2
 
   public IResultMeta getParent( );
 
-  public void setParent( IResultMeta resultMeta );
-
   public IFeatureWrapperCollection<IResultMeta> getChildren( );
+
+  /**
+   * Returns the complete path resolved against all the parent-pathes
+   */
+  public IPath getFullPath( );
 }
