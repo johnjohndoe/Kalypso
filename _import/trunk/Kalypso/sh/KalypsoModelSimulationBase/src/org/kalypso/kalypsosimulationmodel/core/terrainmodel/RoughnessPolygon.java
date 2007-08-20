@@ -100,10 +100,19 @@ public class RoughnessPolygon extends AbstractFeatureBinder implements IRoughnes
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon#getRoughnessCls()
    */
-  public IRoughnessCls getRoughnessCls( ) throws IllegalStateException
+  public IRoughnessCls getRoughnessCls( )
   {
-    final IRoughnessCls rCls = FeatureHelper.resolveLink( getFeature(), KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_CLASS_MEMBER, IRoughnessCls.class );
-    return rCls;
+    try
+    {
+      final IRoughnessCls rCls = FeatureHelper.resolveLink( getFeature(), IRoughnessPolygon.PROP_ROUGHNESS_CLASS_MEMBER, IRoughnessCls.class );
+      return rCls;
+    }
+    catch( IllegalStateException e )
+    {
+      // If this happens, it is because xlink is broken (possible after deleting class from roughness database)
+      getFeature().setProperty( IRoughnessPolygon.PROP_ROUGHNESS_CLASS_MEMBER, null );
+      return null;
+    }
   }
 
   /**

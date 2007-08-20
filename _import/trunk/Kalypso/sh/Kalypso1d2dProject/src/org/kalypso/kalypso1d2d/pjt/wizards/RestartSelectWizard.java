@@ -71,13 +71,13 @@ public class RestartSelectWizard extends Wizard implements INewWizard
   public void addPages( )
   {
     setWindowTitle( Messages.getString("RestartSelectWizard.0") );  //$NON-NLS-1$
-    final Object property = m_feature.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_RESTART_PATH );
+//    final Object property = m_feature.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_RESTART_PATH );
 
-    m_restartSelectWizardPage = new RestartSelectWizardPage( "restartSelectionPage", property == null ? "" : property.toString() );     //$NON-NLS-1$ //$NON-NLS-2$
-    m_restartSelectWizardPage.setTitle( Messages.getString("RestartSelectWizard.3") );  //$NON-NLS-1$
-    m_restartSelectWizardPage.setDescription( Messages.getString("RestartSelectWizard.4") );  //$NON-NLS-1$
-
-    addPage( m_restartSelectWizardPage );
+//    m_restartSelectWizardPage = new RestartSelectWizardPage( "restartSelectionPage", property == null ? "" : property.toString() );     //$NON-NLS-1$ //$NON-NLS-2$
+//    m_restartSelectWizardPage.setTitle( Messages.getString("RestartSelectWizard.3") );  //$NON-NLS-1$
+//    m_restartSelectWizardPage.setDescription( Messages.getString("RestartSelectWizard.4") );  //$NON-NLS-1$
+//
+//    addPage( m_restartSelectWizardPage );
   }
 
   /**
@@ -86,8 +86,8 @@ public class RestartSelectWizard extends Wizard implements INewWizard
   @Override
   public boolean performFinish( )
   {
-    final String selectedPath = m_restartSelectWizardPage.getSelectedPath();
-    m_feature.setProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_RESTART_PATH, selectedPath );
+//    final String selectedPath = m_restartSelectWizardPage.getSelectedPath();
+//    m_feature.setProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_RESTART_PATH, selectedPath );
     return true;
   }
 

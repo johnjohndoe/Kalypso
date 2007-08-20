@@ -46,7 +46,7 @@ public interface IRoughnessPolygon extends IFeatureWrapper2
    * 
    * @return the roughness class of this roughness polynom
    */
-  public IRoughnessCls getRoughnessCls( ) throws IllegalStateException;
+  public IRoughnessCls getRoughnessCls( );
 
   public void setRoughnessClassMember( Feature linkedFeature ) throws IllegalArgumentException;
 
