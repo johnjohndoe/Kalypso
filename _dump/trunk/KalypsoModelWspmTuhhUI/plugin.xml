@@ -20,7 +20,7 @@
       </objectContribution>
       <objectContribution
             adaptable="false"
-            id="org.kalypso.model.wspm.ui.objectContribution.showProfile"
+            id="org.kalypso.model.wspm.tuhh.ui.objectContribution.showProfile"
             objectClass="org.kalypsodeegree.model.feature.Feature">
          <filter
                name="featureType"
@@ -143,7 +143,7 @@
             id="org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectWizard"
             name="%org.kalypso.model.wspm.tuhh.ui.wizards.NewProjectWizard"
             project="true">
-         
+
          <description>
             Erzeugt ein neues Projekt zur 1D-Spiegellinienberechnung mit dem 1D stationärem Rechenkern der TU Hamburg-Harburg.
          </description>

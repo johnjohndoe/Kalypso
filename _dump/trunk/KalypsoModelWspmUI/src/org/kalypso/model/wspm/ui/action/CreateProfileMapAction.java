@@ -61,7 +61,7 @@ public class CreateProfileMapAction extends ActionDelegate
   public void runWithEvent( final IAction action, final Event event )
   {
     /* retrieve selected profile-collections, abort if none */
-    final Map<Feature, IRelationType> selectedProfiles = new HashMap<Feature, IRelationType>();
+    final Map<Feature, IRelationType> selectedFeatures = new HashMap<Feature, IRelationType>();
     for( final Object selectedObject : m_selection.toList() )
     {
       if( selectedObject instanceof FeatureAssociationTypeElement )
@@ -69,19 +69,19 @@ public class CreateProfileMapAction extends ActionDelegate
         final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) selectedObject;
         final Feature parentFeature = fate.getParentFeature();
 
-        selectedProfiles.put( parentFeature, fate.getAssociationTypeProperty() );
+        selectedFeatures.put( parentFeature, fate.getAssociationTypeProperty() );
       }
     }
 
     final Shell shell = event.display.getActiveShell();
 
-    if( selectedProfiles.size() == 0 )
+    if( selectedFeatures.size() == 0 )
     {
-      MessageDialog.openWarning( shell, "Karte erzeugen", "Es wurden keine Profile-Container in der Selektion gefunden." );
+      MessageDialog.openWarning( shell, "Karte erzeugen", "Es wurden keine Feature-Listen in der Selektion gefunden." );
       return;
     }
 
-    createAndOpenMap( action, selectedProfiles, shell );
+    createAndOpenMap( action, selectedFeatures, shell );
   }
 
   public static void createAndOpenMap( final IAction action, final Map<Feature, IRelationType> selectedProfiles, final Shell shell )
