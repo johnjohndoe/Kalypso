@@ -102,6 +102,8 @@ public class KalypsoScreenshotPreferencePage extends PreferencePage implements I
       final PreferenceStore mystore = new PreferenceStore( KalypsoScreenshotPreferencePage.KALYPSO_MAP_SCREENSHOT_SETTINGS );
       mystore.load();
 
+      KalypsoScreenshotPreferencePage.checkStore( mystore );
+
       return mystore;
     }
     catch( final IOException e )
@@ -411,7 +413,41 @@ public class KalypsoScreenshotPreferencePage extends PreferencePage implements I
       setPreferenceStore( store );
     }
 
+    KalypsoScreenshotPreferencePage.checkStore( store );
+
     return store;
+  }
+
+  static private void checkStore( final IPreferenceStore store )
+  {
+    final String width = store.getString( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_WIDTH );
+    if( (width == null) || "".equals( width ) )
+      store.setValue( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_WIDTH, KalypsoScreenshotPreferencePage.DEFAULT_SCREENSHOT_HEIGHT );
+
+    final String height = store.getString( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_HEIGHT );
+    if( (height == null) || "".equals( height ) )
+      store.setValue( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_HEIGHT, KalypsoScreenshotPreferencePage.DEFAULT_SCREENSHOT_HEIGHT );
+
+    final String format = store.getString( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_FORMAT );
+    if( (format == null) || "".equals( format ) )
+      store.setValue( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_FORMAT, KalypsoScreenshotPreferencePage.DEFAULT_SCREENSHOT_FORMAT );
+
+    final String target = store.getString( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_TARGET );
+    if( (target == null) || "".equals( target ) )
+      store.setValue( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_TARGET, KalypsoScreenshotPreferencePage.DEFAULT_SCREENSHOT_TARGET );
+
+    if( store instanceof PreferenceStore )
+    {
+      final PreferenceStore pStrore = (PreferenceStore) store;
+      try
+      {
+        pStrore.save();
+      }
+      catch( final IOException e )
+      {
+        e.printStackTrace();
+      }
+    }
   }
 
   /**

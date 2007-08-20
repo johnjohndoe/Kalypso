@@ -80,6 +80,10 @@ import org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage;
  */
 public class MapScreenShotHandler extends AbstractHandler
 {
+  public static final String CONST_SHOULD_EXECUTE_BOOLEAN = "shouldExecute"; // ICommand.executionListener can stop
+
+  // processing
+
   public static final String CONST_TARGET_DIR_URL = "targetDir"; // can be overwritten by an commandListener
 
   public static final String CONST_EXPORTED_IMAGE_URL = "exportedImage";
@@ -94,6 +98,10 @@ public class MapScreenShotHandler extends AbstractHandler
     {
       final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
       final IPreferenceStore preferences = KalypsoScreenshotPreferencePage.getPreferences();
+
+      final Object objShouldExecute = context.getVariable( MapScreenShotHandler.CONST_SHOULD_EXECUTE_BOOLEAN );
+      if( (objShouldExecute != null) && ((Boolean) objShouldExecute == false) )
+        return null;
 
       final int width = preferences.getInt( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_WIDTH );
       final int height = preferences.getInt( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_HEIGHT );
