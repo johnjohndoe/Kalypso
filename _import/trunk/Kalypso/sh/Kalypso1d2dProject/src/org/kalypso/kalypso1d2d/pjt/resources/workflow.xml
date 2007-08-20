@@ -10,7 +10,7 @@
 	<TaskGroup
 		URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Preprocessing">
 		<Help><![CDATA[Im Modellaufbau werden alle notwendigen Daten für die Berechnung mit Kalypso-1D-2D zusammengestellt und aufgebaut.
-Es lässt sich zwischen den verschiedenen Arbeitsphasen für die unterschiedlichen Netzarten (1D oder 2D) unterscheiden. 
+Es lässt sich zwischen den verschiedenen Arbeitsphasen für die unterschiedlichen Netzarten (1D oder 2D) unterscheiden.
 Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodus des gewünschten Datensatzes.]]></Help>
 		<Name>Preprocessing: Modellaufbau</Name>
 		<TaskGroup
@@ -27,7 +27,7 @@ Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodu
 				<Help>Einladen von Höhendaten</Help>
 				<Name>Import von Höhendaten</Name>
 			</Task>
-			<!--		
+			<!--
 				<Task context="BaseMap" URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__RivNetLoad">
 				<Help>Einladen von Gewässernetzwerkdaten mit Kilometrierung (SHP)</Help>
 				<Name>Import eines Gewässernetzes</Name>
@@ -65,7 +65,7 @@ Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodu
 					URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Net1DImport">
 					<Help><![CDATA[Importieren von 1D-Finite-Elementen von externen Datenquellen]]></Help>
 					<Name>Fremddaten importieren</Name>
-					<!-- <Task context="ImportWSPM" URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Net1DImportWspm"> 
+					<!-- <Task context="ImportWSPM" URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Net1DImportWspm">
 						<Help>FE-1D-Netz aus stationärem Modell (WSPM) erzeugen</Help>
 						<Name>WSPM Modell</Name>
 						</Task>
@@ -210,10 +210,15 @@ Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodu
 			context="ResultMap">
 			<Help><![CDATA[Hier werden die Ergebnisauswertungen zur Darstellung in einer Karte durchgeführt.]]></Help>
 			<Name>Kartenansicht</Name>
-			<Task context="ConfigureResultMap"
+			<Task context="ResultMap"
 				URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ConfigureResultMap">
 				<Help><![CDATA[Die Ergebniskarte konfigurieren.]]></Help>
 				<Name>Ergebniskarte konfigurieren</Name>
+			</Task>
+			<Task context="ResultMap"
+				URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ShowResultMap">
+				<Help><![CDATA[Die Ergebniskarte anzeigen.]]></Help>
+				<Name>Ergebniskarte anzeigen</Name>
 			</Task>
 			<!--
 				<Task type="ASYNCHRONOUS" context="ResultMapHydrograph" URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ResultMapAll">
@@ -253,7 +258,7 @@ Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodu
 						value="templates/control.gft" />
 				</con:ExtensionContext>
 			</con:ViewContext>
-			<!-- 
+			<!--
 				<con:ViewContext id="CalculationUnitView"
 				partId="org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView.CalculationUnitPerformView"
 				parent="Context1d2dModelling">
@@ -421,13 +426,10 @@ Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodu
 							<con:Parameter name="input"
 								value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults}Hydrograph" />
 						</con:ExtensionContext>
-						<con:WizardContext id="ConfigureResultMap"
-							wizardId="org.kalypso.ui.wizards.results.ConfigureResultsWizard"
-							wizardType="NEW_WIZARD" parent="ResultMap" />
 						<con:Parameter name="type"
 							value="mapViewInputContext" />
 						<con:Parameter name="input"
-							value="results/result.gmt" />
+							value="results/result.gmt" />						
 					</con:ExtensionContext>
 				</con:ViewContext>
 			</con:WorkbenchSiteContext>
