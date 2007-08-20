@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,12 +36,11 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.command;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
@@ -53,6 +52,7 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree.model.sort.JMSpatialIndex;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -69,19 +69,15 @@ public class JMSelector
    * gmlGeometry=GMLFactory.createGMLGeometry(bbox); //Operation operation=new
    * SpatialOperation(OperationDefines.WITHIN,myPropertyName,gmlGeometry); //Filter filter=new ComplexFilter(operation);
    */
-  public List<Object> select( final GM_Envelope env, final JMSpatialIndex<Object> list, final boolean selectWithinBoxStatus )
+  public static List<Object> select( final GM_Envelope env, final JMSpatialIndex<Object> list, final boolean selectWithinBoxStatus )
   {
     try
     {
       final List<Object> testFE = new ArrayList<Object>();
 
       final List<Object> features = list == null ? new ArrayList<Object>() : list.query( env, new ArrayList<Object>() );
-      final Iterator containerIterator = features.iterator();
-
-      while( containerIterator.hasNext() )
+      for( final Object fe : features )
       {
-        final Object fe = containerIterator.next();
-
         final Feature feature;
         if( fe instanceof Feature )
           feature = (Feature) fe;
@@ -95,7 +91,7 @@ public class JMSelector
         {
           final CS_CoordinateSystem coordinateSystem = defaultGeometryProperty.getCoordinateSystem();
 
-          final GM_Surface bbox = GeometryFactory.createGM_Surface( env, coordinateSystem );
+          final GM_Surface<GM_SurfacePatch> bbox = GeometryFactory.createGM_Surface( env, coordinateSystem );
 
           if( (selectWithinBoxStatus && bbox.contains( defaultGeometryProperty )) || (!selectWithinBoxStatus && bbox.intersects( defaultGeometryProperty )) )
             testFE.add( fe );
@@ -115,13 +111,13 @@ public class JMSelector
   /**
    * selects all features that intersects the submitted point
    */
-  public List<Object> select( final GM_Position position, final JMSpatialIndex<Object> list )
+  public static List<Object> select( final GM_Position position, final JMSpatialIndex<Object> list )
   {
     final List<Object> resultList = new ArrayList<Object>();
     final List<Object> testFe = new ArrayList<Object>();
 
     final List<Object> features = list.query( position, new ArrayList<Object>() );
-    for( Object object : features )
+    for( final Object object : features )
     {
       final Feature feature;
       if( object instanceof Feature )
@@ -131,13 +127,12 @@ public class JMSelector
       else
         continue;
 
-      
       try
       {
         if( feature.getDefaultGeometryProperty().contains( position ) )
           testFe.add( object );
       }
-      catch( Exception err )
+      catch( final Exception err )
       {
         System.out.println( err.getMessage() );
         System.out.println( "...using workaround \"box selection\"" );
@@ -155,7 +150,7 @@ public class JMSelector
    * selects all features (display elements) that are located within the circle described by the position and the
    * radius.
    */
-  public List<Object> select( final GM_Position pos, double r, final JMSpatialIndex<Object> list, boolean withinStatus )
+  public static List<Object> select( final GM_Position pos, final double r, final JMSpatialIndex<Object> list, final boolean withinStatus )
   {
     final GM_Envelope env = GeometryFactory.createGM_Envelope( pos.getX() - r, pos.getY() - r, pos.getX() + r, pos.getY() + r );
     final List<Object> resultDE = select( env, list, withinStatus );
@@ -163,15 +158,13 @@ public class JMSelector
     return resultDE;
   }
 
-  public Object selectNearest( GM_Point pos, final double r, final JMSpatialIndex<Object> list, final boolean withinStatus )
+  public static Object selectNearest( final GM_Point pos, final double r, final JMSpatialIndex<Object> list, final boolean withinStatus )
   {
     Object result = null;
     double dist = 0;
-    final List listFE = select( pos.getPosition(), r, list, withinStatus );
-    for( int i = 0; i < listFE.size(); i++ )
+    final List<Object> listFE = select( pos.getPosition(), r, list, withinStatus );
+    for( final Object fe : listFE )
     {
-      final Object fe = listFE.get( i );
-
       final Feature feature;
       if( fe instanceof Feature )
         feature = (Feature) fe;
@@ -179,7 +172,7 @@ public class JMSelector
         feature = ((EasyFeatureWrapper) fe).getFeature();
       else
         continue;
-      
+
       // TODO: ich bin der Meinung das ist bloedsinn, Gernot
       // TODO: nachtrag: es konnte auch bisher nicht richtig funktionierne,
       // weil deegree die distance nicht implementiert hat!
@@ -200,35 +193,34 @@ public class JMSelector
     return result;
   }
 
-  public GM_Position selectNearestHandel( GM_Object geom, GM_Position pos, double snapRadius )
+  public static GM_Position selectNearestHandel( final GM_Object geom, final GM_Position pos, final double snapRadius )
   {
     GM_Position[] positions = null;
     try
     {
       if( geom instanceof GM_Surface )
       {
-        GM_Surface surface = (GM_Surface) geom;
+        final GM_Surface< ? extends GM_SurfacePatch> surface = (GM_Surface< ? extends GM_SurfacePatch>) geom;
         positions = surface.getSurfaceBoundary().getExteriorRing().getPositions();
       }
       else if( geom instanceof GM_Curve )
       {
-        GM_Curve curve = (GM_Curve) geom;
+        final GM_Curve curve = (GM_Curve) geom;
         positions = curve.getAsLineString().getPositions();
       }
       else if( geom instanceof GM_Point )
       {
-        GM_Point point = (GM_Point) geom;
+        final GM_Point point = (GM_Point) geom;
         positions = new GM_Position[] { GeometryFactory.createGM_Position( point.getX(), point.getY() ) };
       }
     }
-    catch( GM_Exception e )
+    catch( final GM_Exception e )
     {
       e.printStackTrace();
       // do nothing else
     }
-    for( int i = 0; i < positions.length; i++ )
+    for( final GM_Position position : positions )
     {
-      GM_Position position = positions[i];
       if( position.getDistance( pos ) <= snapRadius )
         return position;
     }
