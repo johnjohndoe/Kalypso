@@ -69,6 +69,9 @@
 	<catalog:system
 		systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:BridgeFlowRelation:featureview:default"
 		uri="http___www.tu-harburg.de_wb_kalypso_schemata_1d2d.BridgeFlowRelation.gft" />
+	<catalog:system
+		systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_simulationbase:RoughnessPolygon:featureview:default"
+		uri="http___www.tu-harburg.de_wb_kalypso_schemata_simulationbase.RoughnessPolygon.gft" />
 
 	<!-- urn for chart configuration of King- and TeschkeParameter-FeatureView -->
 	<catalog:system
