@@ -25,9 +25,20 @@
    </simBase:terrainElevationModel>
   </simBase:TerrainElevationModelSystem>
  </simBase:terrainElevationModelSystem>
- <simBase:roughnessLayerCollection>
-  <simBase:RoughnessLayer gml:id="RoughnessLayer11709431308431"/>
- </simBase:roughnessLayerCollection>
+	<simBase:roughnessLayerCollection>
+		<simBase:RoughnessLayer gml:id="RoughnessLayer11876158294061">
+			<gml:name>Korrekturlayer</gml:name>
+			<simBase:editable>false</simBase:editable>
+			<simBase:basic>false</simBase:basic>
+		</simBase:RoughnessLayer>
+	</simBase:roughnessLayerCollection>
+	<simBase:roughnessLayerCollection>
+		<simBase:RoughnessLayer gml:id="RoughnessLayer11876158257812">
+			<gml:name>Basisdatenlayer</gml:name>
+			<simBase:editable>false</simBase:editable>
+			<simBase:basic>true</simBase:basic>
+		</simBase:RoughnessLayer>
+	</simBase:roughnessLayerCollection>
  <simBase:riverProfileNetworkCollectionMember>
   <simBase:RiverProfileNetworkCollection gml:id="RiverProfileNetworkCollection11708754954840">
    <simBase:riverProfileNetwork>

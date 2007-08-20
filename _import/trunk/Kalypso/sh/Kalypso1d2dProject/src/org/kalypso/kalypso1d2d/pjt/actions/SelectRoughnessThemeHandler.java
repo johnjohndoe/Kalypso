@@ -22,6 +22,7 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.ActivateThemeCommand;
 import org.kalypso.ogc.gml.command.CompositeCommand;
 import org.kalypso.ogc.gml.command.EnableThemeCommand;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -41,7 +42,8 @@ public class SelectRoughnessThemeHandler extends AbstractHandler implements IHan
     if( mapView == null )
       throw new ExecutionException( "Kartenansicht nicht geöffnet." );
 
-    final IMapModell orgMapModell = mapView.getMapPanel().getMapModell();
+    final MapPanel mapPanel = mapView.getMapPanel();
+    final IMapModell orgMapModell = mapPanel.getMapModell();
     if( !(orgMapModell instanceof GisTemplateMapModell) )
       throw new ExecutionException( "Kartenansicht nicht initialisiert, versuchen Sie es noch einmal." );
 
@@ -106,7 +108,6 @@ public class SelectRoughnessThemeHandler extends AbstractHandler implements IHan
   {
     final IKalypsoThemePredicate predicate = new IKalypsoThemePredicate()
     {
-
       public boolean decide( final IKalypsoTheme theme )
       {
         if( theme == null )
@@ -114,7 +115,8 @@ public class SelectRoughnessThemeHandler extends AbstractHandler implements IHan
         if( !(theme instanceof IKalypsoFeatureTheme) )
           return false;
         final IFeatureType featureType = ((IKalypsoFeatureTheme) theme).getFeatureType();
-        if (featureType == null)return false;
+        if( featureType == null )
+          return false;
         boolean equals = featureType.getQName().equals( KalypsoModelSimulationBaseConsts.SIM_BASE_F_ROUGHNESS_POLYGON );
         return equals;
       }

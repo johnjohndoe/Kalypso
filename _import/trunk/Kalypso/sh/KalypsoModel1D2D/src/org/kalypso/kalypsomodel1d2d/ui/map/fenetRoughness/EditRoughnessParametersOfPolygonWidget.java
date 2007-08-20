@@ -38,48 +38,38 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.ui.map.flowrel;
+package org.kalypso.kalypsomodel1d2d.ui.map.fenetRoughness;
+
+import java.awt.Point;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypso.kalypsomodel1d2d.ui.map.util.AbstractSelectRoughnessPolygonWidget;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
-import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
-import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypso.ogc.gml.map.widgets.SingleElementSelectWidget;
 
 /**
  * @author Gernot Belger
+ * @author Dejan Antanaskovic
  */
-public class EditRoughnessElementWidget extends AbstractSelectRoughnessPolygonWidget
+public class EditRoughnessParametersOfPolygonWidget extends SingleElementSelectWidget
 {
-  public EditRoughnessElementWidget( )
+  private IViewPart m_featureView = null;
+
+  public EditRoughnessParametersOfPolygonWidget( )
   {
-    super( "Parameter bearbeiten", "Zugeordnete Parameter eines FE-Knoten bearbeiten", false, IRoughnessPolygon.SUBSTITUTION_GROUP, IRoughnessPolygon.PROP_POSITION );
+    super( "Parameter bearbeiten", "Zugeordnete Parameter eines FE-Knoten bearbeiten" );
   }
 
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.ui.map.util.AbstractSelectFlowrelationWidget#flowRelationGrabbed(org.kalypso.ogc.gml.mapmodel.CommandableWorkspace,
-   *      org.kalypsodeegree.model.feature.Feature[])
-   */
   @Override
-  protected void elementGrabbed( final CommandableWorkspace workspace, final Feature[] selectedFeatures ) throws Exception
+  public void leftReleased( final Point p )
   {
-    /* Select the feature */
-    final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
-
-    final Feature featureToSelect = selectedFeatures[0];
-    final EasyFeatureWrapper easyToSelect = new EasyFeatureWrapper( workspace, featureToSelect, featureToSelect.getParent(), featureToSelect.getParentRelation() );
-
-    final Feature[] featuresToRemove = FeatureSelectionHelper.getFeatures( selectionManager );
-    selectionManager.changeSelection( featuresToRemove, new EasyFeatureWrapper[] { easyToSelect } );
-
-    /* Open the feature view */
+    super.leftReleased( p );
+    final ISelection selection = getMapPanel().getSelection();
+    /* Opens or closes feature view, depends if simething is selected or not */
     final Display display = PlatformUI.getWorkbench().getDisplay();
     display.asyncExec( new Runnable()
     {
@@ -87,7 +77,10 @@ public class EditRoughnessElementWidget extends AbstractSelectRoughnessPolygonWi
       {
         try
         {
-          PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView( "org.kalypso.featureview.views.FeatureView" );
+          if( selection.isEmpty() && m_featureView != null )
+            PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().hideView( m_featureView );
+          else
+            m_featureView = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView( "org.kalypso.featureview.views.FeatureView" );
         }
         catch( final Throwable pie )
         {
@@ -97,18 +90,5 @@ public class EditRoughnessElementWidget extends AbstractSelectRoughnessPolygonWi
         }
       }
     } );
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#finish()
-   */
-  @Override
-  public void finish( )
-  {
-    /* Deselect all */
-    final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
-    selectionManager.clear();
-
-    super.finish();
   }
 }

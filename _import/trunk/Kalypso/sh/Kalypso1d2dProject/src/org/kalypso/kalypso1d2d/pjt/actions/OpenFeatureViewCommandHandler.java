@@ -19,7 +19,6 @@ import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.kalypso1d2d.pjt.i18n.Messages;
 import org.kalypso.kalypso1d2d.pjt.views.SzenarioDataProvider;
 import org.kalypso.ui.editor.featureeditor.FeatureTemplateView;
 

@@ -40,8 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.fenetRoughness;
 
-import org.kalypso.ogc.gml.map.widgets.EditFeatureGeometryWidget;
-import org.kalypsodeegree_impl.tools.GeometryUtilities;
+import org.kalypso.ogc.gml.map.widgets.EditGeometryWidget;
 
 /**
  * @author Stefan Kurzbach
@@ -49,10 +48,13 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  * Wraps an {@link EditGeometryWidget} for 0-argument constructor instantiation
  * 
  */
-public class EditPolygonWidgetWrapper extends EditFeatureGeometryWidget
+public class EditPolygonWidgetWrapper extends EditGeometryWidget
 {
   public EditPolygonWidgetWrapper( )
   {
-    super( "Polygon bearbeiten", "", null, null, GeometryUtilities.getPolygonClass() );
+    super("Polygon bearbeiten", "");
+//    super( "Polygon bearbeiten", "", null, null, GeometryUtilities.getPolygonClass() );
   }
+  
+  
 }

@@ -30,7 +30,9 @@ public class DataContainer
 
   private String m_shapeProperty = "";
 
-  private boolean m_isLayerEditable;
+  // private boolean m_isLayerEditable;
+
+  private boolean m_isBasicLayer = true;
 
   private CS_CoordinateSystem m_coordinateSystem;
 
@@ -78,9 +80,14 @@ public class DataContainer
     return m_roughnessLayer;
   }
 
-  public final void setLayerEditable( final boolean isLayerEditable )
+  // public final void setLayerEditable( final boolean isLayerEditable )
+  // {
+  // m_isLayerEditable = isLayerEditable;
+  // }
+
+  public final void setLayerAsBasic( final boolean isBasicLayer )
   {
-    m_isLayerEditable = isLayerEditable;
+    m_isBasicLayer = isBasicLayer;
   }
 
   public String getLayerName( )
@@ -88,9 +95,14 @@ public class DataContainer
     return getLayer().getName();
   }
 
-  public boolean isLayerEditable( )
+  // public boolean isLayerEditable( )
+  // {
+  // return m_isLayerEditable;
+  // }
+
+  public boolean isBasicLayer( )
   {
-    return m_isLayerEditable;
+    return m_isBasicLayer;
   }
 
   public final void setShapeProperty( String shapeProperty )
@@ -172,9 +184,9 @@ public class DataContainer
   {
     m_roughnessDatabaseLocation = dbLocation;
 
-// final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( getRoughnessDatabaseLocationURL(), null );
-// final IRoughnessClsCollection collection = new RoughnessClsCollection( workspace.getRootFeature() );
-// final IRoughnessClsCollection collection = Util.getModel( IRoughnessClsCollection.class );
+    // final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( getRoughnessDatabaseLocationURL(), null );
+    // final IRoughnessClsCollection collection = new RoughnessClsCollection( workspace.getRootFeature() );
+    // final IRoughnessClsCollection collection = Util.getModel( IRoughnessClsCollection.class );
     for( int i = 0; i < roughnessClsCollection.size(); i++ )
       m_roughnessStaticCollectionMap.put( roughnessClsCollection.get( i ).getName(), roughnessClsCollection.get( i ).getGmlID() );
   }
@@ -256,12 +268,17 @@ public class DataContainer
     if( m_roughnessLayer != null )
       return m_roughnessLayer;
     final IRoughnessLayerCollection roughnessLayerCollection = getRoughnessLayerCollection();
+    if( m_isBasicLayer )
+      return roughnessLayerCollection.getBasicLayer();
+    else
+      return roughnessLayerCollection.getCorrectionLayer();
 
-    m_roughnessLayer = roughnessLayerCollection.addNew( IRoughnessLayer.QNAME, IRoughnessLayer.class );
-    m_roughnessLayer.setName( getLayerName() );
-    m_roughnessLayer.setEditable( m_isLayerEditable );
-    roughnessLayerCollection.add( m_roughnessLayer );
-    return m_roughnessLayer;
+    //    
+    // m_roughnessLayer = roughnessLayerCollection.addNew( IRoughnessLayer.QNAME, IRoughnessLayer.class );
+    // m_roughnessLayer.setName( getLayerName() );
+    // m_roughnessLayer.setEditable( m_isLayerEditable );
+    // roughnessLayerCollection.add( m_roughnessLayer );
+    // return m_roughnessLayer;
   }
 
   public void deleteCreatedGMLLayer( )

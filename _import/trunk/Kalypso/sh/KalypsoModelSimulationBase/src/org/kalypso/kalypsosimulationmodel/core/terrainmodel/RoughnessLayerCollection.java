@@ -47,26 +47,59 @@ import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 
 /**
  * @author antanas
- *
+ * 
  */
 public class RoughnessLayerCollection extends FeatureWrapperCollection<IRoughnessLayer> implements IRoughnessLayerCollection
 {
-  public RoughnessLayerCollection( Feature featureCol) {
+  public RoughnessLayerCollection( Feature featureCol )
+  {
     super( featureCol, IRoughnessLayer.class, ITerrainModel.QNAME_PROP_ROUGHNESSLAYERPOLYGONCOLLECTION );
   }
-  
+
   public RoughnessLayerCollection( Feature featureCol, Class<IRoughnessLayer> fwClass, QName featureMemberProp )
   {
     super( featureCol, fwClass, featureMemberProp );
   }
 
   /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessLayerCollection#getActiveLayer()
+   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessLayerCollection#getBasicLayer()
    */
-  public IRoughnessLayer getActiveLayer( )
+  public IRoughnessLayer getBasicLayer( )
   {
-    // todo: get real active layer
-    final Feature feature = (Feature) getWrappedList().get( 0 );
-    return new RoughnessLayer(feature);
+    for( int i = 0; i < getWrappedList().size(); i++ )
+    {
+      final Feature feature = (Feature) getWrappedList().get( i );
+      if( ((Boolean) feature.getProperty( IRoughnessLayer.PROP_LAYER_TYPE )).booleanValue() == true )
+      {
+        return new RoughnessLayer( feature );
+      }
+    }
+    return null;
   }
+
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessLayerCollection#getCorrectionLayer()
+   */
+  public IRoughnessLayer getCorrectionLayer( )
+  {
+    for( int i = 0; i < getWrappedList().size(); i++ )
+    {
+      final Feature feature = (Feature) getWrappedList().get( i );
+      if( ((Boolean) feature.getProperty( IRoughnessLayer.PROP_LAYER_TYPE )).booleanValue() == false )
+      {
+        return new RoughnessLayer( feature );
+      }
+    }
+    return null;
+  }
+
+  // /**
+  // * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessLayerCollection#getActiveLayer()
+  // */
+  // public IRoughnessLayer getActiveLayer( )
+  // {
+  // // todo: get real active layer
+  // final Feature feature = (Feature) getWrappedList().get( 0 );
+  // return new RoughnessLayer(feature);
+  // }
 }

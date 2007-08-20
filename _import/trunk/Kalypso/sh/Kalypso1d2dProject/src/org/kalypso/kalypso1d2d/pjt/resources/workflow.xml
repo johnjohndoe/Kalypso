@@ -157,21 +157,24 @@ Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodu
 			URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__RoughMod">
 			<Help><![CDATA[Rauheitszonen definieren sowie Rauheitsklassen bearbeiten.]]></Help>
 			<Name>Rauheitsmodellierung</Name>
-			<Task type="ASYNCHRONOUS" context="RoughnessDatabase"
+			<Task context="RoughnessDatabase"
 				URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ClassDefGroup">
 				<Help><![CDATA[Ermöglicht die Bearbeitung der Rauheitswerte einer Rauheitszone in einer Rauheitsdatenbank.]]></Help>
 				<Name>Rauheitswerte bearbeiten</Name>
 			</Task>
-			<Task type="ASYNCHRONOUS" context="RoughnessTheme"
+			<Task context="RoughnessTheme"
 				URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__RCDef">
 				<Help><![CDATA[Bearbeiten von Rauheitszonen sowie Anwendung von Korrekturen auf Rauheitsklassen]]></Help>
 				<Name>Rauheitszonen bearbeiten</Name>
 			</Task>
+			<!--
+			We don't need this any more as we have the layer showing assigned roughnesses (and roughness assign service :)) 
 			<Task type="ASYNCHRONOUS" context="FenetMap"
 				URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__RoughnessFENETColor">
 				<Help><![CDATA[Zeigt die den 2D-Elementen zugewiesenen Rauheitsklassen an.]]></Help>
 				<Name>Rauheitsklassen anzeigen</Name>
 			</Task>
+			 -->
 		</TaskGroup>
 		<TaskGroup
 			URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__DataExport">
@@ -364,10 +367,6 @@ Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodu
 							<con:WizardContext id="Import2dNet"
 								wizardId="org.kalypso.wizards.import1d2d.ImportWizard"
 								wizardType="NEW_WIZARD" parent="Context2dElementTheme" />
-							<con:Parameter name="type"
-								value="themeContext" />
-							<con:Parameter name="input"
-								value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}PolyElement" />
 							<con:WizardContext id="Export2DNet"
 								wizardId="org.kalypso.wizards.export2d.ExportWizard"
 								wizardType="NEW_WIZARD" parent="Context2dElementTheme" />

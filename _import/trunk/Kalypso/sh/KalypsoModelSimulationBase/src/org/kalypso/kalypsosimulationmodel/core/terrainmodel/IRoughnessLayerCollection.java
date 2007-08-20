@@ -53,6 +53,10 @@ public interface IRoughnessLayerCollection extends IFeatureWrapperCollection<IRo
 {
   public static final QName QNAME = new QName(UrlCatalogModelSimulationBase.SIM_MODEL_NS, "RoughnessLayer"); 
   
-  public IRoughnessLayer getActiveLayer( );
-
+//  public IRoughnessLayer getActiveLayer( );
+  
+  public IRoughnessLayer getBasicLayer( );
+  
+  public IRoughnessLayer getCorrectionLayer( );
+  
 }

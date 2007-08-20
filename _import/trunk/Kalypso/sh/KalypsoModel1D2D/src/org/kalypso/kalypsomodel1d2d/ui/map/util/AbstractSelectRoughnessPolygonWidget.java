@@ -48,7 +48,6 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -79,13 +78,13 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
- * This widget lets the user grab a flow relation.
+ * This widget lets the user grab a roughness polygon.
  * 
  * @author Gernot Belger
  */
 public abstract class AbstractSelectRoughnessPolygonWidget extends AbstractWidget
 {
-  private final int m_grabRadius = 20;
+  private final int m_grabRadius = 5;
 
   private IKalypsoFeatureTheme m_theme = null;
 

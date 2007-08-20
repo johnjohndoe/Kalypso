@@ -21,16 +21,6 @@ public class KalypsoModelSimulationBaseConsts
 
   public static final QName SIM_BASE_PROP_ROUGHNESS_LAYER_POLYGON = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "roughnessLayerMember" ); //$NON-NLS-1$
 
-// public static final QName
-// SIM_BASE_PROP_ROUGHNESS_POLYGON =
-// new QName(NS.GML3, "polygonProperty");
-
-// public static final QName
-// SIM_BASE_PROP_ROUGHNESS_POLYGON =
-// new QName(NS.GML3, "surfaceProperty");
-
-  public static final QName SIM_BASE_PROP_ROUGHNESS_POLYGON = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "polygonProperty" ); //$NON-NLS-1$
-
   public static final QName SIM_BASE_PROP_TERRAIN_ELE_SYS = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "terrainElevationModelSystem" ); //$NON-NLS-1$
 
   public static final QName SIM_BASE_PROP_TERRAIN_ELE_MODEL = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "terrainElevationModel" ); //$NON-NLS-1$

@@ -431,7 +431,7 @@ public class JunctionContext1DToCLine extends AbstractFeatureBinder implements I
 
       }
 
-      public List<IFE1D2DElement> query( GM_Surface selectionSurface, boolean containedOnly, QName checkedGeometryPropertyName )
+      public List<IFE1D2DElement> query( GM_Surface selectionSurface, boolean containedOnly )
       {
         return null;
       }

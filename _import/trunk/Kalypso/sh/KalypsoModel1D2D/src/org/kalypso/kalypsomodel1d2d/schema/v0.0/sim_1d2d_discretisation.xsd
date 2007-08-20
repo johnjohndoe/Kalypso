@@ -23,10 +23,9 @@
 		</xs:appinfo>
 	</xs:annotation>
 
-	<!--xs:import
-		namespace="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl"
-		schemaLocation="sim_1d2d_operational.xsd"
-		/-->
+	<xs:import
+		namespace="http://www.tu-harburg.de/wb/kalypso/schemata/operationalmodel"
+		schemaLocation="sim_1d2d_operational.xsd"/>
 
 	<!--xs:import
 		namespace="http://www.tu-harburg.de/wb/kalypso/schemata/operationalmodel"
@@ -710,7 +709,7 @@
 			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
 				<kapp:functionProperty
 					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.FE1D2D_2DElementTypeGeometry"
-					kapp:property="simBase:polygonProperty"
+					kapp:property="simBase:polygonGeometry"
 					kapp:valueType="gml:PolygonPropertyType" kapp:isVirtual="true" />
 			</xs:appinfo>
 		</xs:annotation>

@@ -40,20 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.fenetRoughness;
 
-import org.kalypso.ogc.gml.map.widgets.CreateGeometeryWidget2;
-import org.kalypsodeegree_impl.tools.GeometryUtilities;
+import org.kalypso.ogc.gml.map.widgets.SelectWidget;
 
 /**
  * @author Stefan Kurzbach
+ * @author Dejan Antanaskovic
  * 
  * Wraps a {@link CreateGeometeryWidget2} for 0-argument constructor instantiation
  * 
  */
-public class DeletePolygonWidgetWrapper extends CreateGeometeryWidget2
+public class DeletePolygonWidgetWrapper extends SelectWidget
 {
   public DeletePolygonWidgetWrapper( )
   {
-    //TODO instead of draw, delete! :)
-    super( "Polygon zeichnen", "", GeometryUtilities.getPolygonClass() );
+    super( "Polygone zeichnen", "" );
   }
 }

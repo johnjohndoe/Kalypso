@@ -5,16 +5,17 @@ package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
+import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * {@link AbstractFeatureBinder} based, default implementation of {@link IRoughnessPolygon}
@@ -52,36 +53,12 @@ public class RoughnessPolygon extends AbstractFeatureBinder implements IRoughnes
    * 
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon#getLinestring()
    */
-  public GM_MultiSurface getSurface( )
+  public GM_Surface getSurface( )
   {
-    final Feature feature = getFeature();
-    final Object object = feature.getProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_POLYGON );
-    if( object instanceof GM_MultiSurface )
-    {
-      return (GM_MultiSurface) object;
-    }
-    else if( object instanceof GM_Surface )
-    {
-      if( ((GM_Surface) object).size() <= 0 )
-      {
-        return null;
-      }
-      else
-      {
-        final GM_Surface surface = (GM_Surface) object;
-        final GM_Surface[] surfaces = new GM_Surface[] { surface };
-        return GeometryFactory.createGM_MultiSurface( surfaces, surface.getCoordinateSystem() );
-      }
-    }
-    else if( object == null )
-    {
-      return null;
-    }
-    else
-    {
-      throw new RuntimeException( Messages.getString("RoughnessPolygon.0") + "\n\ttype=" + object.getClass() + "\n\tvalue=" + object ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    }
-
+    final GM_Object defaultGeometryProperty = getFeature().getDefaultGeometryProperty();
+    if( defaultGeometryProperty instanceof GM_Surface )
+      return (GM_Surface) defaultGeometryProperty;
+    return null;
   }
 
   /*
@@ -103,43 +80,29 @@ public class RoughnessPolygon extends AbstractFeatureBinder implements IRoughnes
     }
     else
     {
-      throw new RuntimeException( Messages.getString("RoughnessPolygon.3") + "\n\ttype=" + style.getClass() + "\n\tvalue=" + style ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      throw new RuntimeException( Messages.getString( "RoughnessPolygon.3" ) + "\n\ttype=" + style.getClass() + "\n\tvalue=" + style ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
-  }
-
-  public void setSurface( final GM_MultiSurface polygon )
-  {
-    Assert.throwIAEOnNull( polygon, Messages.getString("RoughnessPolygon.6") ); //$NON-NLS-1$
-    final Feature feature = getFeature();
-    feature.setProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_POLYGON, polygon );
   }
 
   public void setSurface( final GM_Object object ) throws IllegalArgumentException
   {
-    Assert.throwIAEOnNull( object, Messages.getString("RoughnessPolygon.7") ); //$NON-NLS-1$
-    if( object instanceof GM_MultiSurface )
+    Assert.throwIAEOnNull( object, Messages.getString( "RoughnessPolygon.7" ) ); //$NON-NLS-1$
+    if( object instanceof GM_Surface )
     {
-      setSurface( (GM_MultiSurface) object );
-    }
-    else if( object instanceof GM_Surface )
-    {
-      final GM_Surface surface = (GM_Surface) object;
-      final GM_Surface[] surfaces = new GM_Surface[] { surface };
-      setSurface( GeometryFactory.createGM_MultiSurface( surfaces, surface.getCoordinateSystem() ) );
+      final Feature feature = getFeature();
+      final IPropertyType geometryProperty = feature.getFeatureType().getProperty( IRoughnessPolygon.PROP_GEOMETRY );
+      feature.setProperty( geometryProperty, object );
     }
     else
-    {
-      throw new IllegalArgumentException( Messages.getString("RoughnessPolygon.8") + object.getClass().getName() ); //$NON-NLS-1$
-    }
+      throw new IllegalArgumentException( Messages.getString( "RoughnessPolygon.8" ) + object.getClass().getName() ); //$NON-NLS-1$
   }
 
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon#getRoughnessCls()
    */
-  public IRoughnessCls getRoughnessCls( )
+  public IRoughnessCls getRoughnessCls( ) throws IllegalStateException
   {
     final IRoughnessCls rCls = FeatureHelper.resolveLink( getFeature(), KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_CLASS_MEMBER, IRoughnessCls.class );
-
     return rCls;
   }
 
@@ -167,7 +130,7 @@ public class RoughnessPolygon extends AbstractFeatureBinder implements IRoughnes
 
     buf.append( "[ roughnessID=" ); //$NON-NLS-1$
     buf.append( getRoughnessStyle() );
-    buf.append( ", polygonProperty=" ); //$NON-NLS-1$
+    buf.append( ", location=" ); //$NON-NLS-1$
     buf.append( getSurface() );
     buf.append( ']' );
     return buf.toString();
@@ -202,8 +165,8 @@ public class RoughnessPolygon extends AbstractFeatureBinder implements IRoughnes
         return false;
       }
 
-      final GM_MultiSurface pol1 = getSurface();
-      final GM_MultiSurface pol2 = ((IRoughnessPolygon) obj).getSurface();
+      final GM_Surface pol1 = getSurface();
+      final GM_Surface pol2 = ((IRoughnessPolygon) obj).getSurface();
       if( pol1 == pol2 )
       {
         return true;
@@ -273,5 +236,24 @@ public class RoughnessPolygon extends AbstractFeatureBinder implements IRoughnes
   public void setCorrectionParameterKS( double value )
   {
     getFeature().setProperty( IRoughnessPolygon.PROP_CORRECTION_KS, value );
+  }
+
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon#resetRoughnessClassMemberXLink()
+   */
+  public FeatureChange[] resetRoughnessClassMemberXLink( )
+  {
+    final Feature feature = getWrappedFeature();
+
+    setRoughnessClassMember( null );
+    feature.setProperty( PROP_ROUGHNESS_STYLE, null );
+
+    final IFeatureType featureType = feature.getFeatureType();
+
+    final FeatureChange[] changes = new FeatureChange[2];
+    changes[0] = new FeatureChange( feature, featureType.getProperty( PROP_ROUGHNESS_CLASS_MEMBER ), null );
+    changes[1] = new FeatureChange( feature, featureType.getProperty( PROP_ROUGHNESS_STYLE ), null );
+
+    return changes;
   }
 }

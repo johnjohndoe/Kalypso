@@ -38,11 +38,11 @@ public class PageMain extends WizardPage implements Listener
 
   Button btn_inputFileBrowse;
   
-  Text m_layerName;
+//  Text m_layerName;
   
-  Button m_layerEditable;
+  Button m_layerTypeCorrection;
 
-  Button m_layerNotEditable;
+  Button m_layerTypeBasic;
 
   // status variable for the possible errors on this page
   IStatus msg_StatusLine;
@@ -117,35 +117,35 @@ public class PageMain extends WizardPage implements Listener
 
     createLine( composite, ncol );
 
-    new Label( composite, SWT.NONE ).setText( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageMain.11" ) ); //$NON-NLS-1$
-    m_layerName = new Text( composite, SWT.BORDER );
-    gd = new GridData();
-    gd.horizontalAlignment = GridData.FILL;
-    gd.grabExcessHorizontalSpace = true;
-    // gd.horizontalSpan = ncol - 1;
-    m_layerName.setLayoutData( gd );
-    new Label( composite, SWT.NONE ).setText( "" ); //$NON-NLS-1$
+//    new Label( composite, SWT.NONE ).setText( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageMain.11" ) ); //$NON-NLS-1$
+//    m_layerName = new Text( composite, SWT.BORDER );
+//    gd = new GridData();
+//    gd.horizontalAlignment = GridData.FILL;
+//    gd.grabExcessHorizontalSpace = true;
+//    // gd.horizontalSpan = ncol - 1;
+//    m_layerName.setLayoutData( gd );
+//    new Label( composite, SWT.NONE ).setText( "" ); //$NON-NLS-1$
     
     new Label( composite, SWT.NONE ).setText( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageMain.12" ) ); //$NON-NLS-1$
-    m_layerEditable = new Button(composite, SWT.RADIO);
-    m_layerEditable.setText(  Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageMain.14" ) ); //$NON-NLS-1$
-    m_layerEditable.setSelection( false );
+    m_layerTypeCorrection = new Button(composite, SWT.RADIO);
+    m_layerTypeCorrection.setText(  Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageMain.14" ) ); //$NON-NLS-1$
+    m_layerTypeCorrection.setSelection( false );
     gd = new GridData();
     gd.horizontalAlignment = GridData.FILL;
     gd.grabExcessHorizontalSpace = true;
     // gd.horizontalSpan = ncol - 1;
-    m_layerEditable.setLayoutData( gd );
+    m_layerTypeCorrection.setLayoutData( gd );
     new Label( composite, SWT.NONE ).setText( "" ); //$NON-NLS-1$
     
     new Label( composite, SWT.NONE ).setText( "" ); //$NON-NLS-1$
-    m_layerNotEditable = new Button(composite, SWT.RADIO);
-    m_layerNotEditable.setText(  Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageMain.13" ) ); //$NON-NLS-1$
-    m_layerNotEditable.setSelection( true );
+    m_layerTypeBasic = new Button(composite, SWT.RADIO);
+    m_layerTypeBasic.setText(  Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageMain.13" ) ); //$NON-NLS-1$
+    m_layerTypeBasic.setSelection( true );
     gd = new GridData();
     gd.horizontalAlignment = GridData.FILL;
     gd.grabExcessHorizontalSpace = true;
     // gd.horizontalSpan = ncol - 1;
-    m_layerNotEditable.setLayoutData( gd );
+    m_layerTypeBasic.setLayoutData( gd );
     
     // set the composite as the control for this page
 
@@ -160,7 +160,7 @@ public class PageMain extends WizardPage implements Listener
     btn_inputFileBrowse.addListener( SWT.KeyDown, this );
     txt_InputFile.addListener( SWT.Modify, this );
     cmb_ShapeProperty.addListener( SWT.Selection, this );
-    m_layerName.addListener( SWT.Modify, this );
+//    m_layerName.addListener( SWT.Modify, this );
   }
 
   /**
@@ -286,7 +286,7 @@ public class PageMain extends WizardPage implements Listener
   @Override
   public boolean canFlipToNextPage( )
   {
-    return cmb_ShapeProperty.isEnabled() && isTextNonEmpty( m_layerName );
+    return cmb_ShapeProperty.isEnabled();// && isTextNonEmpty( m_layerName );
   }
 
   @Override
@@ -303,8 +303,9 @@ public class PageMain extends WizardPage implements Listener
       m_data.setInputFile( txt_InputFile.getText() );
       m_data.setShapeProperty( cmb_ShapeProperty.getText() );
       m_data.setCoordinateSystem( cmb_CoordinateSystem.getText() );
-      m_data.setLayerName( m_layerName.getText() );
-      m_data.setLayerEditable( m_layerEditable.getSelection() );
+//      m_data.setLayerName( m_layerName.getText() );
+//      m_data.setLayerEditable( m_layerType.getSelection() );
+      m_data.setLayerAsBasic( m_layerTypeBasic.getSelection() );
       
 //      m_data.getRoughnessPolygonCollection().clear();
 //      m_data.getRoughnessShapeStaticRelationMap().clear();

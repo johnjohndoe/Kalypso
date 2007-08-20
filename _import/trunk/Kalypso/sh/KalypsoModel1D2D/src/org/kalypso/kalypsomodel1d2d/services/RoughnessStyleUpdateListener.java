@@ -58,7 +58,7 @@ public class RoughnessStyleUpdateListener implements IResourceChangeListener
 {
   public static final IPath ROUGHNESS_DATABASE_PATH = new Path( ".metadata/roughness.gml" );
 
-  private RoughnessStyleUpdateService m_job;
+  private RoughnessStyleUpdateService m_jobStyleUpdate;
 
   /**
    * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
@@ -83,18 +83,18 @@ public class RoughnessStyleUpdateListener implements IResourceChangeListener
 
   }
 
-  public void startStyleUpdateJob( IFile file )
+  public void startStyleUpdateJob( final IFile roughnessDBfile )
   {
-    if( m_job != null )
-      m_job.cancel();
+    if( m_jobStyleUpdate != null )
+      m_jobStyleUpdate.cancel();
 
-    m_job = new RoughnessStyleUpdateService( file );
+    m_jobStyleUpdate = new RoughnessStyleUpdateService( roughnessDBfile );
 
 // m_job.setSystem( true );
-    m_job.setUser( false );
-    m_job.setPriority( Job.LONG );
-    m_job.setRule( m_job.getSldFile().getProject() );
-    m_job.schedule( 500 );
+    m_jobStyleUpdate.setUser( false );
+    m_jobStyleUpdate.setPriority( Job.LONG );
+    m_jobStyleUpdate.setRule( m_jobStyleUpdate.getSldFile().getProject() );
+    m_jobStyleUpdate.schedule( 500 );
   }
 
 }

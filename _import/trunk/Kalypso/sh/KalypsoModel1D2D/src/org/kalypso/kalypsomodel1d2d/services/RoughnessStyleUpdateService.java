@@ -46,6 +46,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.URL;
 
+import javax.xml.namespace.QName;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -68,6 +69,7 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.pool.PoolableObjectType;
 import org.kalypso.util.pool.ResourcePool;
@@ -103,7 +105,8 @@ public class RoughnessStyleUpdateService extends Job
 
   private static final String LAYER_NAME = "deegree style definition";
 
-  private static final String STYLE_NAME = "Roughness style"; // if this STYLE_NAME is changed, it should be changed in all SLD layers in gmt files also
+  private static final String STYLE_NAME = "Roughness style"; // if this STYLE_NAME is changed, it should be changed in
+                                                              // all SLD layers in gmt files also
 
   private static final String STYLE_TITLE = "Roughness style";
 
@@ -111,7 +114,7 @@ public class RoughnessStyleUpdateService extends Job
 
   private static final String DEFAULT_RULE_TITLE = "undefinierter Stil";
 
-  private static final String DEFAULT_RULE_LITERAL = "_DEFAULT_STYLE_"; //$NON-NLS-1$
+  // private static final String DEFAULT_RULE_LITERAL = "_DEFAULT_STYLE_"; //$NON-NLS-1$
 
   private static final Color DEFAULT_RULE_FILLCOLOR = new Color( Integer.parseInt( "aaaaaa", 16 ) ); //$NON-NLS-1$
 
@@ -144,15 +147,45 @@ public class RoughnessStyleUpdateService extends Job
 
       final IRoughnessClsCollection collection = (IRoughnessClsCollection) roughnessWorkspace.getRootFeature().getAdapter( IRoughnessClsCollection.class );
       exportSLD( collection, monitor );
-
-      System.out.println("SLD changed");
-      
+      checkTerrainModel( monitor );
       return Status.OK_STATUS;
     }
     catch( final Throwable t )
     {
       return StatusUtilities.statusFromThrowable( t );
     }
+  }
+
+  private void checkTerrainModel( final IProgressMonitor monitor )
+  {
+    // TODO check all terrain models in project (or at least current szenario) to clean all broken xlinks from roughness
+    // polygons to (deleted) roughness db classes
+    
+//          try
+//          {
+//            final IRoughnessCls roughnessCls = roughnessPolygon.getRoughnessCls();
+//          }
+//          catch( IllegalStateException e )
+//          {
+//            /**
+//             * if this happens, than our roughness polygon has broken xlink to roughness class (i.e. it links to
+//             * non-existing roughness database class); might happen when user deletes the class from roughness database
+//             */
+//            final FeatureChange[] changes = roughnessPolygon.resetRoughnessClassMemberXLink();
+//            for( FeatureChange featureChange : changes )
+//              m_changesTerrainModel.add( featureChange );
+//          }
+
+    // maybe to apply changes directly on the file? fireModellEvent sometimes doesn't work properly
+    
+//    if( m_changesTerrainModel.size() > 0 )
+//    {
+//      final GMLWorkspace workspace = m_terrainModel.getWrappedFeature().getWorkspace();
+//      final FeatureChange[] changes = m_changesTerrainModel.toArray( new FeatureChange[m_changesTerrainModel.size()] );
+//      final FeatureChangeModellEvent event = new RoughnessAssignServiceModellEvent( workspace, changes );
+//      workspace.fireModellEvent( event );
+//    }
+          
   }
 
   public void exportSLD( final IRoughnessClsCollection collection, final IProgressMonitor monitor ) throws IOException, SAXException, CoreException
@@ -209,8 +242,24 @@ public class RoughnessStyleUpdateService extends Job
 
   private StyledLayerDescriptor createSLD( final IRoughnessClsCollection collection, final IProgressMonitor monitor ) throws CoreException
   {
+//    final QName geometryPropertyQname = collection.getWrappedFeature().getFeatureType().getDefaultGeometryProperty().getQName();
+    final QName geometryPropertyQname = IRoughnessPolygon.PROP_GEOMETRY;
     final FeatureTypeStyle style = new FeatureTypeStyle_Impl();
-
+    
+    // adding default rule
+    final Stroke defaultRuleStroke = StyleFactory.createStroke( DEFAULT_RULE_STROKECOLOR, 1.0, 0.5 );
+    final Fill defaultRuleFill = StyleFactory.createFill( DEFAULT_RULE_FILLCOLOR, 0.5 );
+    final PolygonSymbolizer defaultRuleSymbolizer = StyleFactory.createPolygonSymbolizer( defaultRuleStroke, defaultRuleFill, new PropertyName( geometryPropertyQname ) );
+    final Rule defaultRule = StyleFactory.createRule( defaultRuleSymbolizer, 0.0, 1.0E15 );
+    // final Operation operation = new PropertyIsLikeOperation( new PropertyName( "roughnessStyle", null ), new Literal(
+    // DEFAULT_RULE_LITERAL ), '*', '$', '/' );
+    // final Filter filter = new ComplexFilter( operation );
+    defaultRule.setName( DEFAULT_RULE_NAME );
+    defaultRule.setTitle( DEFAULT_RULE_TITLE );
+    defaultRule.setAbstract( DEFAULT_RULE_TITLE );
+    // rule.setFilter( filter );
+    style.addRule( defaultRule );
+    
     // adding rules for every roughness class
     for( final IRoughnessCls roughnessCls : collection )
     {
@@ -224,8 +273,8 @@ public class RoughnessStyleUpdateService extends Job
       else
         color = new Color( rgb.red, rgb.green, rgb.blue );
       final Stroke stroke = StyleFactory.createStroke( Color.BLACK, 1.0, 0.5 );
-      final Fill fill = StyleFactory.createFill( color, 1.0 );
-      final PolygonSymbolizer newSymbolizer = StyleFactory.createPolygonSymbolizer( stroke, fill, new PropertyName( "polygonProperty", null ) );
+      final Fill fill = StyleFactory.createFill( color, 0.75 );
+      final PolygonSymbolizer newSymbolizer = StyleFactory.createPolygonSymbolizer( stroke, fill, new PropertyName( geometryPropertyQname ) );
       final Rule rule = StyleFactory.createRule( newSymbolizer, 0.0, 1.0E15 );
       final String ruleName = roughnessCls.getName();
       final Operation operation = new PropertyIsLikeOperation( new PropertyName( "roughnessStyle", null ), new Literal( ruleName ), '*', '$', '/' );
@@ -236,18 +285,6 @@ public class RoughnessStyleUpdateService extends Job
       rule.setFilter( filter );
       style.addRule( rule );
     }
-    // adding default rule
-    final Stroke stroke = StyleFactory.createStroke( DEFAULT_RULE_STROKECOLOR, 1.0, 0.5 );
-    final Fill fill = StyleFactory.createFill( DEFAULT_RULE_FILLCOLOR, 0.5 );
-    final PolygonSymbolizer newSymbolizer = StyleFactory.createPolygonSymbolizer( stroke, fill, new PropertyName( "polygonProperty", null ) );
-    final Rule rule = StyleFactory.createRule( newSymbolizer, 0.0, 1.0E15 );
-    final Operation operation = new PropertyIsLikeOperation( new PropertyName( "roughnessStyle", null ), new Literal( DEFAULT_RULE_LITERAL ), '*', '$', '/' );
-    final Filter filter = new ComplexFilter( operation );
-    rule.setName( DEFAULT_RULE_NAME );
-    rule.setTitle( DEFAULT_RULE_TITLE );
-    rule.setAbstract( DEFAULT_RULE_TITLE );
-    rule.setFilter( filter );
-    style.addRule( rule );
 
     final FeatureTypeStyle[] featureTypeStyles = new FeatureTypeStyle[] { style };
     final Style[] styles = new Style[] { new UserStyle_Impl( STYLE_NAME, STYLE_TITLE, null, false, featureTypeStyles ) };

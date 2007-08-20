@@ -2,12 +2,14 @@ package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.commons.xml.NS;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
 import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
+import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
-import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Surface;
 
 /**
  * The interface to be implemented by classes representing a simBase:RoughnessPolygon element
@@ -18,11 +20,13 @@ public interface IRoughnessPolygon extends IFeatureWrapper2
 {
   public static final QName QNAME = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "RoughnessPolygon" );
 
-  public static final QName SUBSTITUTION_GROUP = new QName( "http://www.opengis.net/gml", "_Feature" );
+  public static final QName SUBSTITUTION_GROUP = new QName( NS.GML3, "_Feature" );
 
-  public static final QName PROP_POSITION = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "polygonProperty" );
+  public static final QName PROP_ROUGHNESS_CLASS_MEMBER = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "roughnessClassMember" );
 
   public static final QName PROP_ROUGHNESS_STYLE = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "roughnessStyle" );
+
+  public static final QName PROP_GEOMETRY = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "polygonGeometry" );
 
   public static final QName PROP_CORRECTION_KS = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "correction_ks" );
 
@@ -42,44 +46,26 @@ public interface IRoughnessPolygon extends IFeatureWrapper2
    * 
    * @return the roughness class of this roughness polynom
    */
-  public IRoughnessCls getRoughnessCls();
-  
+  public IRoughnessCls getRoughnessCls( ) throws IllegalStateException;
+
   public void setRoughnessClassMember( Feature linkedFeature ) throws IllegalArgumentException;
 
-  /**
-   * Returns the roughness MultiPolygon
-   * 
-   * @return the surface
-   */
-  public GM_MultiSurface getSurface( );
+  public FeatureChange[] resetRoughnessClassMemberXLink( );
 
-  /**
-   * Sets the geometry of the roughness polygon
-   * 
-   * @param polygon
-   *          the polygon to set
-   */
-  public void setSurface( GM_MultiSurface polygon );
+  public GM_Surface getSurface( );
 
-  /**
-   * Sets the geometry of the roughness polygon
-   * 
-   * @param polygon
-   *          the polygon to set
-   * @throws IllegalArgumentException if parameter cannot be converted to GM_MultiSurface 
-   */
-  public void setSurface( GM_Object object ) throws IllegalArgumentException;
-  
-  public void setCorrectionParameterKS(double value);
+  public void setSurface( GM_Object object );
 
-  public void setCorrectionParameterAxAy(double value);
+  public void setCorrectionParameterKS( double value );
 
-  public void setCorrectionParameterDP(double value);
+  public void setCorrectionParameterAxAy( double value );
 
-  public Double getCorrectionParameterKS();
+  public void setCorrectionParameterDP( double value );
 
-  public Double getCorrectionParameterAxAy();
+  public Double getCorrectionParameterKS( );
 
-  public Double getCorrectionParameterDP();
+  public Double getCorrectionParameterAxAy( );
+
+  public Double getCorrectionParameterDP( );
 
 }

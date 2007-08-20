@@ -3,9 +3,11 @@ package org.kalypso.kalypsosimulationmodel.core.roughness;
 import javax.xml.namespace.QName;
 
 import org.eclipse.swt.graphics.RGB;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelRoughnessConsts;
+import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
@@ -297,4 +299,5 @@ public class RoughnessCls extends AbstractFeatureBinder implements IRoughnessCls
   {
     return (RGB) getFeature().getProperty( KalypsoModelRoughnessConsts.WBR_PROP_COLOR_STYLE );
   }
+
 }

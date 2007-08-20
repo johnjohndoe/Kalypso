@@ -3,8 +3,6 @@ package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 import java.util.List;
 
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
-import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 
@@ -16,8 +14,6 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
  */
 public interface IRoughnessPolygonCollection extends IFeatureWrapperCollection<IRoughnessPolygon>
 {
-  public void setActiveLayer( IRoughnessLayer layer );
-
   /**
    * Selects all roughness polygons containing this point. Since the point may be on the border, there might be several
    * polygons as a result.
@@ -42,22 +38,6 @@ public interface IRoughnessPolygonCollection extends IFeatureWrapperCollection<I
    * Gets all roughness polygons in this collection
    */
   public List<IRoughnessPolygon> getRoughnessPolygons( );
-
-  /**
-   * Build the roughness estimation specification of the given polygon (eg. FE element)
-   * 
-   * @param polygon
-   * @return
-   */
-  public IRoughnessEstimateSpec getRoughnessEstimateSpec( GM_Polygon object );
-
-  /**
-   * Build the roughness estimation specification of the given polygon (eg. FE element)
-   * 
-   * @param polygon
-   * @return
-   */
-  public IRoughnessEstimateSpec getRoughnessEstimateSpec( GM_Object object );
 
   /**
    * Checks if there is overlapping between roughness polygons

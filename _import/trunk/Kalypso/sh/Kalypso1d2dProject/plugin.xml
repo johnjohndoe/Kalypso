@@ -225,19 +225,6 @@
            </class>
 	     </handler>
 	     
-	     <!-- Roughness correction -->
-	     <handler
-	           commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__roughness_correction_modelling">
-           <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
-	           <parameter
-	                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
-	                 value="org.kalypso.kalypsomodel1d2d.ui.map.roughness_cor.RoughnessCorrectionWidget"/>
-	           <parameter
-	                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin"
-	                 value="org.kalypso.model1d2d"/>
-           </class>
-	     </handler>
-	     
 	     <handler
 	     	   commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__AssignElevs">
            <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
@@ -309,16 +296,6 @@
 		                 value="org.kalypso.model1d2d"/>
 	        </class>
 	     </handler>
-      <handler commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__RoughnessFENETColor">
-         <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
-            <parameter
-                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
-                  value="org.kalypso.kalypsomodel1d2d.ui.map.fenetRoughness.ApplyColorOnFENETWidget"/>
-            <parameter
-                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin"
-                  value="org.kalypso.model1d2d"/>
-         </class>
-      </handler>
        <handler
             class="org.kalypso.kalypso1d2d.pjt.actions.StartCalculationHandler"
             commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__StartCalculation"/> 

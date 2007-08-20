@@ -3,7 +3,6 @@
  */
 package org.kalypso.ui.wizards.imports.roughness;
 
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -17,12 +16,10 @@ import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -56,7 +53,7 @@ public class ImportWizard extends Wizard implements INewWizard
   private IFolder m_szenarioFolder;
 
   // workbench selection when the wizard was started
-  protected IStructuredSelection selection;
+  protected IStructuredSelection m_selection;
 
   // flag indicated whether the wizard can be completed or not
   protected boolean wizardCompleted = false;
@@ -72,10 +69,10 @@ public class ImportWizard extends Wizard implements INewWizard
    * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
    *      org.eclipse.jface.viewers.IStructuredSelection)
    */
-  public void init( IWorkbench workbench, IStructuredSelection iSelection )
+  public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
     setWindowTitle( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageMain.Title" ) );//$NON-NLS-1$
-    selection = iSelection;
+    m_selection = selection;
     final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
     final IEvaluationContext context = handlerService.getCurrentState();
     final ICaseDataProvider<IFeatureWrapper2> szenarioDataProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );

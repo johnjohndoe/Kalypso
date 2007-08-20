@@ -70,13 +70,11 @@ import org.kalypsodeegree.model.geometry.GM_Position;
  */
 public class RoughnessAssignService extends Job
 {
-  private static final String DEFAULT_ROUGHNESS_STYLE = "_DEFAULT_STYLE_";
-
   private List<IRoughnessPolygonCollection> m_roughnessPolygonCollections;
 
   private final IFEDiscretisationModel1d2d m_model1d2d;
 
-  private List<FeatureChange> m_changes = new ArrayList<FeatureChange>();
+  private List<FeatureChange> m_changesDiscretisationModel = new ArrayList<FeatureChange>();
 
   private GM_Envelope m_workArea;
 
@@ -100,13 +98,7 @@ public class RoughnessAssignService extends Job
       ProgressUtilities.worked( progress, 0 );
       for( final IFE1D2DElement element : elementsInWorkarea )
       {
-        final boolean roughnessFound = assignRoughness( monitor, element );
-        if( !roughnessFound )
-        {
-          final FeatureChange[] changes = element.assignRoughness( "", null, null, null, DEFAULT_ROUGHNESS_STYLE );
-          for( FeatureChange featureChange : changes )
-            m_changes.add( featureChange );
-        }
+        assignRoughness( monitor, element );
         ProgressUtilities.worked( progress, 1 );
       }
     }
@@ -123,12 +115,18 @@ public class RoughnessAssignService extends Job
     return Status.OK_STATUS;
   }
 
-  private boolean assignRoughness( IProgressMonitor monitor, final IFE1D2DElement element ) throws CoreException
+  private void assignRoughness( final IProgressMonitor monitor, final IFE1D2DElement element ) throws CoreException
   {
+    boolean missingRoughnessClsID = true;
+    boolean missingRoughnessCorrectionKS = true;
+    boolean missingRoughnessCorrectionAxAy = true;
+    boolean missingRoughnessCorrectionDP = true;
+    String roughnessClsID = null;
+    String roughnessStyle = "_DEFAULT_STYLE_";
     Double correctionParameterKS = null;
     Double correctionParameterAxAy = null;
     Double correctionParameterDP = null;
-    for( int i = m_roughnessPolygonCollections.size() - 1; i >= 0; i-- )
+    for( int i = 0; i < m_roughnessPolygonCollections.size(); i++ )
     {
       if( monitor.isCanceled() )
         throw new CoreException( Status.CANCEL_STATUS );
@@ -140,44 +138,76 @@ public class RoughnessAssignService extends Job
 
       if( matchedRoughness == null || matchedRoughness.size() == 0 )
         continue;
-
-      for( IRoughnessPolygon roughnessPolygon : matchedRoughness )
+      
+      
+      
+      // (explanation: for loop) because if we have overlapped polygons in the same layer,
+      // we want to assign roughness exacly like (overlapped) polygons are drawn on the map
+      
+      // later: get rid of overlapping!!! :)
+      
+//        for( final IRoughnessPolygon roughnessPolygon : matchedRoughness )
+      for( int j = matchedRoughness.size()-1; j >=0; j-- )
       {
+        final IRoughnessPolygon roughnessPolygon = matchedRoughness.get( j );
         if( roughnessPolygon.getSurface().contains( position ) )
         {
-          // maybe parameters are set in some upper layer
-          if( correctionParameterKS != null && !correctionParameterKS.isNaN() )
-            correctionParameterKS = roughnessPolygon.getCorrectionParameterKS();
-          if( correctionParameterAxAy != null && !correctionParameterAxAy.isNaN() )
-            correctionParameterAxAy = roughnessPolygon.getCorrectionParameterAxAy();
-          if( correctionParameterDP != null && !correctionParameterDP.isNaN() )
-            correctionParameterDP = roughnessPolygon.getCorrectionParameterDP();
-          final IRoughnessCls roughnessCls = roughnessPolygon.getRoughnessCls();
-          if( roughnessCls != null )
+          if( missingRoughnessCorrectionKS )
           {
-            final String roughnessClsGmlID = roughnessCls.getGmlID();
-            final String roughnessStyle = roughnessPolygon.getRoughnessStyle();
-
-            final FeatureChange[] changes = element.assignRoughness( roughnessClsGmlID, correctionParameterKS, correctionParameterAxAy, correctionParameterDP, roughnessStyle );
-            for( FeatureChange featureChange : changes )
-              m_changes.add( featureChange );
-            return true;
+            final Double check = roughnessPolygon.getCorrectionParameterKS();
+            if( check != null && !check.isNaN() )
+            {
+              correctionParameterKS = check;
+              missingRoughnessCorrectionKS = false;
+            }
+          }
+          if( missingRoughnessCorrectionAxAy )
+          {
+            final Double check = roughnessPolygon.getCorrectionParameterAxAy();
+            if( check != null && !check.isNaN() )
+            {
+              correctionParameterAxAy = check;
+              missingRoughnessCorrectionAxAy = false;
+            }
+          }
+          if( missingRoughnessCorrectionDP )
+          {
+            final Double check = roughnessPolygon.getCorrectionParameterDP();
+            if( check != null && !check.isNaN() )
+            {
+              correctionParameterDP = check;
+              missingRoughnessCorrectionDP = false;
+            }
+          }
+          if( missingRoughnessClsID )
+          {
+            final IRoughnessCls roughnessCls = roughnessPolygon.getRoughnessCls();
+            if( roughnessCls != null )
+            {
+              roughnessClsID = roughnessCls.getGmlID();
+              roughnessStyle = roughnessPolygon.getRoughnessStyle();
+              missingRoughnessClsID = false;
+            }
           }
         }
       }
     }
-    return false;
+    final FeatureChange[] changes = element.assignRoughness( roughnessClsID, correctionParameterKS, correctionParameterAxAy, correctionParameterDP, roughnessStyle );
+    for( FeatureChange featureChange : changes )
+      m_changesDiscretisationModel.add( featureChange );
   }
 
   private void fireEvents( )
   {
-    final GMLWorkspace workspace = m_model1d2d.getWrappedFeature().getWorkspace();
-
-    final FeatureChange[] changes = m_changes.toArray( new FeatureChange[m_changes.size()] );
-    final FeatureChangeModellEvent event = new RoughnessAssignServiceModellEvent( workspace, changes );
-    workspace.fireModellEvent( event );
+    if( m_changesDiscretisationModel.size() > 0 )
+    {
+      final GMLWorkspace workspace = m_model1d2d.getWrappedFeature().getWorkspace();
+      final FeatureChange[] changes = m_changesDiscretisationModel.toArray( new FeatureChange[m_changesDiscretisationModel.size()] );
+      final FeatureChangeModellEvent event = new RoughnessAssignServiceModellEvent( workspace, changes );
+      workspace.fireModellEvent( event );
+    }
   }
-  
+
   /**
    * Defines the area where roughness recalculation is needed; if <code>null</code>, whole model will be recalculated
    */

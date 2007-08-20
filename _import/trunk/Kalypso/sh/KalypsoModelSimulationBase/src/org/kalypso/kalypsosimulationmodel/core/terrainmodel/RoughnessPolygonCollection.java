@@ -8,10 +8,7 @@ import javax.xml.namespace.QName;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
-import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
@@ -29,8 +26,6 @@ import com.vividsolutions.jts.geom.Polygon;
 public class RoughnessPolygonCollection extends FeatureWrapperCollection<IRoughnessPolygon> implements IRoughnessPolygonCollection
 {
 
-  private IRoughnessLayer m_activeLayer = null;
-  
   public RoughnessPolygonCollection( Feature featureToBind )
   {
     this( featureToBind, IRoughnessPolygon.class, KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_LAYER_POLYGON );
@@ -44,11 +39,6 @@ public class RoughnessPolygonCollection extends FeatureWrapperCollection<IRoughn
   public RoughnessPolygonCollection( Feature parentFeature, QName childQName, QName featureMemberProp, Class<IRoughnessPolygon> fwClass ) throws IllegalArgumentException
   {
     super( parentFeature, childQName, featureMemberProp, fwClass );
-  }
-
-  public IRoughnessEstimateSpec getRoughnessEstimateSpec( GM_Polygon polygon )
-  {
-    return null;
   }
 
   /**
@@ -189,9 +179,9 @@ public class RoughnessPolygonCollection extends FeatureWrapperCollection<IRoughn
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection#selectRoughnessPolygons(org.kalypsodeegree.model.geometry.GM_Polygon)
    */
-  public List<IRoughnessPolygon> selectRoughnessPolygons( GM_Surface selectionZone )
+  public List<IRoughnessPolygon> selectRoughnessPolygons( final GM_Surface selectionZone )
   {
-    return query( selectionZone, false, KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_POLYGON );
+    return query( selectionZone, false );
   }
 
   private int[] getEmptyList( int size )
@@ -216,45 +206,6 @@ public class RoughnessPolygonCollection extends FeatureWrapperCollection<IRoughn
       if( list[i] == -1 )
         list[i] = member;
     return list;
-  }
-
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection#getRoughnessEstimateSpec(org.kalypsodeegree.model.geometry.GM_Object)
-   */
-  public IRoughnessEstimateSpec getRoughnessEstimateSpec( final GM_Object object )
-  {
-    // return new CellDivisionBasedRoughnessEstimate(this, (GM_Surface)object, 100 );
-    try
-    {
-      if( object instanceof GM_Surface )
-      {
-        final GM_Surface surface = (GM_Surface) object;
-        return new IntersectionBasedRoughnessEstimate( this, surface );
-      }
-      else if( object instanceof GM_Curve )
-      {
-        // TODO: implement it!
-        // According to Nico, 1d-king element also need the rougness
-        return new IntersectionBasedRoughnessEstimate(this, (GM_Curve)object);
-      }
-      else
-      {
-        // TODO: what to do?
-      }
-    }
-    catch( Exception e )
-    {
-      e.printStackTrace();
-    }
-    return null;
-  }
-
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection#setActiveLayer(org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessLayer)
-   */
-  public void setActiveLayer( final IRoughnessLayer layer )
-  {
-    m_activeLayer = layer;
   }
 
 }

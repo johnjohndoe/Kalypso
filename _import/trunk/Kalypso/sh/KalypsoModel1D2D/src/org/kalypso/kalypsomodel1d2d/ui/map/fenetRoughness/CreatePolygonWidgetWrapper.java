@@ -45,14 +45,32 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * @author Stefan Kurzbach
+ * @author Dejan Antanaskovic
  * 
  * Wraps a {@link CreateGeometeryWidget2} for 0-argument constructor instantiation
  * 
  */
 public class CreatePolygonWidgetWrapper extends CreateGeometeryWidget2
 {
-  public CreatePolygonWidgetWrapper( )
+
+  public CreatePolygonWidgetWrapper(  )
   {
     super( "Polygon zeichnen", "", GeometryUtilities.getPolygonClass() );
+//    super( "Polygon zeichnen", "", GeometryUtilities.getMultiPolygonClass() );
   }
+//  private IMapModell m_mapModell;
+//  private IKalypsoTheme m_activeTheme;
+//  
+//  public CreatePolygonWidgetWrapper( )
+//  {
+//    super( "Polygon zeichnen", "" );
+//    reinit();
+//  }
+//  
+//  private final void reinit( )
+//  {
+//    m_mapModell = getMapPanel().getMapModell();
+//    m_activeTheme = m_mapModell.getActiveTheme();
+//  }
+
 }

@@ -55,6 +55,9 @@ public interface IRoughnessLayer extends IFeatureWrapper2
   
   public final static QName PROP_EDITABLE = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "editable" );
   
+  // PROP_LAYER_TYPE: true = it is a basic layer, false = it is a correction layer
+  public final static QName PROP_LAYER_TYPE = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "basic" );
+  
   public boolean isEditable();
   
   public void setEditable(boolean status);

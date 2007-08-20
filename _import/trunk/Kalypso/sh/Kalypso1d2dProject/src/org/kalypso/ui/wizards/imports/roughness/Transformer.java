@@ -20,7 +20,6 @@ import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConst
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
-import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.ui.action.AddThemeCommand;
 import org.kalypso.ui.views.map.MapView;
 import org.kalypso.ui.wizards.imports.Messages;
@@ -42,8 +41,6 @@ import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 public class Transformer implements ICoreRunnableWithProgress
 {
   private DataContainer m_data;
-
-  private static final QName m_GeometryFeatureQName = KalypsoModelSimulationBaseConsts.SIM_BASE_F_ROUGHNESS_POLYGON;
 
   private boolean m_isDataPrepared = false;
 
@@ -99,18 +96,22 @@ public class Transformer implements ICoreRunnableWithProgress
 
   private void createMapLayer( final IRoughnessLayer layer ) throws ExecutionException
   {
-    final String source = m_data.getModel().getWrappedFeature().getWorkspace().getContext().toString();
-    if( m_mapView != null )
-    {
-      final GisTemplateMapModell mapModell = (GisTemplateMapModell) m_mapView.getMapPanel().getMapModell();
-      final StringBuffer featurePath = new StringBuffer( "#fid#" );
-      featurePath.append( layer.getGmlID() ).append( "/roughnessLayerMember[RoughnessPolygon]" );
-      
-      final AddThemeCommand command = new AddThemeCommand( mapModell, layer.getName(), "gml", featurePath.toString(), source, "sld", "Roughness style", "project:/.metadata/roughness.sld","simple" );
-      m_mapView.postCommand( command, null );
-    }
-    else
-      throw new ExecutionException( "Kartenansicht nicht geöffnet. Es können keine Themen hinzugefügt werden." );
+    
+    // for the moment, we are working with two fixed layers...
+    
+    return;
+//    final String source = m_data.getModel().getWrappedFeature().getWorkspace().getContext().toString();
+//    if( m_mapView != null )
+//    {
+//      final GisTemplateMapModell mapModell = (GisTemplateMapModell) m_mapView.getMapPanel().getMapModell();
+//      final StringBuffer featurePath = new StringBuffer( "#fid#" );
+//      featurePath.append( layer.getGmlID() ).append( "/roughnessLayerMember[RoughnessPolygon]" );
+//      
+//      final AddThemeCommand command = new AddThemeCommand( mapModell, layer.getName(), "gml", featurePath.toString(), source, "sld", "Roughness style", "project:/.metadata/roughness.sld","simple" );
+//      m_mapView.postCommand( command, null );
+//    }
+//    else
+//      throw new ExecutionException( "Kartenansicht nicht geöffnet. Es können keine Themen hinzugefügt werden." );
   }
 
   public void prepare( boolean resetMap ) throws Exception
@@ -142,19 +143,21 @@ public class Transformer implements ICoreRunnableWithProgress
           final GM_Surface< ? >[] surfaces = multiSurface.getAllSurfaces();
           for( int k = 0; k < surfaces.length; k++ )
           {
-            final IRoughnessPolygon roughnessPolygon = roughnessPolygonCollection.addNew( m_GeometryFeatureQName );
+            final IRoughnessPolygon roughnessPolygon = roughnessPolygonCollection.addNew( IRoughnessPolygon.QNAME );
             m_NumberOfEntriesAdded++;
             roughnessPolygon.setSurface( surfaces[k] );
             m_data.getRoughnessShapeStaticRelationMap().put( roughnessPolygon.getGmlID(), propertyValue );
           }
         }
-        else
+        else if( gm_Whatever instanceof GM_Surface )
         {
-          final IRoughnessPolygon roughnessPolygon = roughnessPolygonCollection.addNew( m_GeometryFeatureQName );
+          final IRoughnessPolygon roughnessPolygon = roughnessPolygonCollection.addNew( IRoughnessPolygon.QNAME );
           m_NumberOfEntriesAdded++;
           roughnessPolygon.setSurface( (GM_Object) gm_Whatever );
           m_data.getRoughnessShapeStaticRelationMap().put( roughnessPolygon.getGmlID(), propertyValue );
         }
+        else
+          throw new ClassCastException( "Type not supported: " + gm_Whatever.getClass().getName() );
       }
       else
         throw new ClassCastException( "Type not supported: " + gm_Whatever.getClass().getName() );
@@ -177,17 +180,18 @@ public class Transformer implements ICoreRunnableWithProgress
 
   private void setSelectedRoughnessChoice( ) throws Exception
   {
-    GMLWorkspace shpWorkspace = GmlSerializer.createGMLWorkspace( m_data.getRoughnessDatabaseLocationURL(), null );
-    GMLWorkspace myWorkspace = m_data.getRoughnessPolygonCollection().getWrappedFeature().getWorkspace();
+    final GMLWorkspace shpWorkspace = GmlSerializer.createGMLWorkspace( m_data.getRoughnessDatabaseLocationURL(), null );
+    final GMLWorkspace myWorkspace = m_data.getRoughnessPolygonCollection().getWrappedFeature().getWorkspace();
     for( String key : m_data.getRoughnessShapeStaticRelationMap().keySet() )
     {
-      Feature f = myWorkspace.getFeature( key );
-      Feature linkedFeature = shpWorkspace.getFeature( m_data.getRoughnessShapeStaticRelationMap().get( key ) );
+      final Feature feature = myWorkspace.getFeature( key );
+      final Feature linkedFeature = shpWorkspace.getFeature( m_data.getRoughnessShapeStaticRelationMap().get( key ) );
       if( linkedFeature != null )
       {
-        XLinkedFeature_Impl linkedFeature_Impl = new XLinkedFeature_Impl( f, linkedFeature.getParentRelation(), linkedFeature.getFeatureType(), "project:" + m_data.getRoughnessDatabaseLocation()
-            + "#" + linkedFeature.getId(), "", "", "", "", "" );
-        f.setProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_CLASS_MEMBER, linkedFeature_Impl );
+        final StringBuffer xlinkBuffer = new StringBuffer(50);
+        xlinkBuffer.append( "project:" ).append( m_data.getRoughnessDatabaseLocation() ).append( "#" ).append( linkedFeature.getId() ).trimToSize();
+        final XLinkedFeature_Impl linkedFeature_Impl = new XLinkedFeature_Impl( feature, linkedFeature.getParentRelation(), linkedFeature.getFeatureType(), xlinkBuffer.toString(), "", "", "", "", "" );
+        feature.setProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_ROUGHNESS_CLASS_MEMBER, linkedFeature_Impl );
       }
     }
     // use (dummy) command to make workspace dirty
