@@ -639,7 +639,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
    * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection#query(org.kalypsodeegree.model.geometry.GM_Surface,
    *      boolean, javax.xml.namespace.QName)
    */
-  public List<FWCls> query( final GM_Surface selectionSurface, final boolean containedOnly, final QName checkedGeometryPropertyName )
+  public List<FWCls> query( final GM_Surface selectionSurface, final boolean containedOnly )
   {
     final List selectedFeature = featureList.query( selectionSurface.getEnvelope(), null );
     final List<FWCls> selFW = new ArrayList<FWCls>( selectedFeature.size() );
@@ -650,24 +650,16 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
       final FWCls feature = FeatureHelper.getFeature( workspace, linkOrFeature, fwClass );
       if( feature != null )
       {
-        final Object prop = feature.getWrappedFeature().getProperty( checkedGeometryPropertyName );
-        if( prop instanceof GM_Object )
+        final GM_Object prop = feature.getWrappedFeature().getDefaultGeometryProperty();
+        if( containedOnly )
         {
-          if( containedOnly )
-          {
-            if( selectionSurface.contains( (GM_Object) prop ) )
-            {
-              selFW.add( feature );
-            }
-
-          }
-          else
-          {
-            if( selectionSurface.intersects( (GM_Object) prop ) )
-            {
-              selFW.add( feature );
-            }
-          }
+          if( selectionSurface.contains( prop ) )
+            selFW.add( feature );
+        }
+        else
+        {
+          if( selectionSurface.intersects( prop ) )
+            selFW.add( feature );
         }
       }
     }
