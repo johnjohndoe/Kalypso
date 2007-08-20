@@ -829,7 +829,9 @@ public class FeatureHelper
    * @param adapterTargetClass
    *            the class the link feature is to be adapted to
    * @throws IllegalArgumentException
-   *             if any of the parameter is null, or if xlink is broken (i.e. xlinked feature points to non existing real feature)
+   *             if any of the parameter is null
+   * @throws IllegalStateException
+   *             if xlink is broken (i.e. xlinked feature points to non existing real feature)
    * @return an adapter if the link feature or null if no linked feature is found or if the linked feature is not
    *         adaptable to the specified class
    */
