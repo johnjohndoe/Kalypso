@@ -13,10 +13,18 @@
 	</extension>
 	<extension id="preferencePages" name="preferencePages"
 		point="org.eclipse.ui.preferencePages">
-		<page name="%org.kalypso.ui.preferences.KalypsoPreferencePage"
-			class="org.kalypso.ui.preferences.KalypsoPreferencePage"
-			id="org.kalypso.ui.preferences.KalypsoPreferencePage">
+		<page
+        category="Kalypso"
+        class="org.kalypso.ui.preferences.KalypsoPreferencePage"
+        id="org.kalypso.ui.preferences.KalypsoPreferencePage"
+        name="%org.kalypso.ui.preferences.KalypsoPreferencePage">
 		</page>
+  <page
+        category="org.kalypso.ui.preferences.KalypsoPreferencePage"
+        class="org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage"
+        id="org.kalypso.ui.preferncePages.Screenshot"
+        name="Map screenshot">
+  </page>
 	</extension>
 	<extension id="editors" name="editors"
 		point="org.eclipse.ui.editors">
@@ -1166,6 +1174,12 @@
             </parameter>
          </defaultHandler>
       </command>
+      <command
+            categoryId="org.kalypso.ogc.gml.map.category"
+            defaultHandler="org.kalypso.ogc.gml.map.handlers.MapScreenShotHandler"
+            id="org.kalypso.ogc.gml.map.Screenshot"
+            name="Map screenshot">
+      </command>
       </extension>
  <extension
        point="org.eclipse.ui.viewActions">
@@ -1389,6 +1403,12 @@
              style="push"
              tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomToActiveLayerDelegate.tooltip">
        </command>
+       <command
+             commandId="org.kalypso.ogc.gml.map.Screenshot"
+             label="Map screenshot"
+             style="push"
+             tooltip="Map screenshot">
+       </command>
     </menuContribution>
     <menuContribution
           locationURI="toolbar:org.kalypso.ui.views.mapView?before=actions">
@@ -1603,6 +1623,10 @@
     <image
           commandId="org.kalypso.ogc.gml.map.PanToCommand"
           icon="icons/map/pan.gif">
+    </image>
+    <image
+          commandId="org.kalypso.ogc.gml.map.Screenshot"
+          icon="icons/map/screenshot.gif">
     </image>
  </extension>
  <extension
