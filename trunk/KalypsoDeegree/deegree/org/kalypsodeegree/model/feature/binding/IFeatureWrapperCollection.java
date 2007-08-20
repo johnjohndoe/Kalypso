@@ -120,7 +120,7 @@ public interface IFeatureWrapperCollection<FWCls extends IFeatureWrapper2> exten
    * @return a list of feature overlaping the given surface
    * @thorws {@link IllegalArgumentException} if selectionSurface is null
    */
-  public List<FWCls> query( final GM_Surface< ? extends GM_SurfacePatch> selectionSurface, final boolean containedOnly, final QName checkedGeometryPropertyName );
+  public List<FWCls> query( final GM_Surface< ? extends GM_SurfacePatch> selectionSurface, final boolean containedOnly );
 
   /**
    * Answer all feature wrappers overlaping the given envelope

@@ -686,6 +686,7 @@ public class GeometryUtilities
    */
   public static IValuePropertyType findGeometryProperty( final IFeatureType featureType, final Class< ? > aPreferedGeometryClass )
   {
+    final QName defaultGeometryPropertyQName = new QName( NS.GML3, "location" );
     final IValuePropertyType[] allGeomteryProperties = featureType.getAllGeomteryProperties();
 
     IValuePropertyType geometryProperty = null;
@@ -694,7 +695,8 @@ public class GeometryUtilities
       if( aPreferedGeometryClass == null || property.getValueClass().isAssignableFrom( aPreferedGeometryClass ) )
       {
         geometryProperty = property;
-        break;
+        if( !geometryProperty.getQName().equals( defaultGeometryPropertyQName ) )
+          break;
       }
     }
     return geometryProperty;
