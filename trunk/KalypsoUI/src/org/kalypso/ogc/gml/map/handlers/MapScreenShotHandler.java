@@ -44,12 +44,14 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.ISources;
@@ -59,10 +61,28 @@ import org.kalypso.ui.editor.mapeditor.ExportableMap;
 import org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage;
 
 /**
+ * TWEAKING of MapScreenShotHandler:<br>
+ * <br>
+ * final ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService( ICommandService.class );<br>
+ * final Command command = service.getCommand( "org.kalypso.ogc.gml.map.Screenshot" );<br>
+ * <br>
+ * command.addExecutionListener( new IExecutionListener() {<br>
+ * <br>
+ * public void postExecuteSuccess( final String commandId, final Object returnValue )<br> {<br>
+ * if( !(returnValue instanceof URL) )<br>
+ * return;<br>
+ * ... <br>
+ * public void preExecute( final String commandId, final ExecutionEvent event ) {<br>
+ * final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();<br>
+ * context.addVariable( MapScreenShotHandler.CONST_TARGET_DIR_URL, folder.getLocationURI().toURL() );<br> ..<br>
+ * 
  * @author kuch
  */
 public class MapScreenShotHandler extends AbstractHandler
 {
+  public static final String CONST_TARGET_DIR_URL = "targetDir"; // can be overwritten by an commandListener
+
+  public static final String CONST_EXPORTED_IMAGE_URL = "exportedImage";
 
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
@@ -70,46 +90,61 @@ public class MapScreenShotHandler extends AbstractHandler
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final IPreferenceStore preferences = KalypsoScreenshotPreferencePage.getPreferences();
-
-    final int width = preferences.getInt( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_WIDTH );
-    final int height = preferences.getInt( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_HEIGHT );
-    final String format = preferences.getString( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_FORMAT );
-    final String targetDir = preferences.getString( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_TARGET );
-
-    final File imgTarget = getTargetImageFile( targetDir, format );
-
     try
     {
+      final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+      final IPreferenceStore preferences = KalypsoScreenshotPreferencePage.getPreferences();
+
+      final int width = preferences.getInt( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_WIDTH );
+      final int height = preferences.getInt( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_HEIGHT );
+      final String format = preferences.getString( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_FORMAT );
+
+      final URL targetURL = (URL) context.getVariable( MapScreenShotHandler.CONST_TARGET_DIR_URL );
+
+      File targetDir;
+      if( targetURL != null )
+        targetDir = new File( targetURL.toURI() );
+      else
+        targetDir = new File( preferences.getString( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_TARGET ) );
+
+      final File imgTarget = getTargetImageFile( targetDir, format );
+
       final BufferedOutputStream os = new BufferedOutputStream( new FileOutputStream( imgTarget ) );
 
       final IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
       final MapPanel mapPanel = (MapPanel) part.getAdapter( MapPanel.class );
 
       final ExportableMap export = new ExportableMap( mapPanel, width, height, format );
-      final IStatus status = export.exportObject( os, new NullProgressMonitor(), null );
+      export.exportObject( os, new NullProgressMonitor(), null );
 
-      return status;
-
+      return imgTarget.toURL();
     }
     catch( final FileNotFoundException e )
     {
       e.printStackTrace();
       throw (new ExecutionException( e.getMessage() ));
     }
+    catch( final MalformedURLException e )
+    {
+      e.printStackTrace();
+      throw (new ExecutionException( e.getMessage() ));
+    }
+    catch( final URISyntaxException e )
+    {
+      e.printStackTrace();
+      throw (new ExecutionException( e.getMessage() ));
+    }
   }
 
-  private File getTargetImageFile( final String targetDir, final String format )
+  private File getTargetImageFile( final File targetDir, final String format )
   {
-    final File dir = new File( targetDir );
-    if( !dir.exists() || !dir.isDirectory() )
+    if( !targetDir.exists() || !targetDir.isDirectory() || (format == null) )
       throw (new IllegalStateException());
 
     int count = 0;
     while( true )
     {
-      final File file = new File( dir, "kalypso_map_" + count + "." + format );
+      final File file = new File( targetDir, "kalypso_map_" + count + "." + format );
       if( !file.exists() )
         return file;
 
