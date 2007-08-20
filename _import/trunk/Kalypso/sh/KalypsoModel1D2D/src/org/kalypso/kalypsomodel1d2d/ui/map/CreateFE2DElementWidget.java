@@ -160,7 +160,7 @@ public class CreateFE2DElementWidget extends AbstractWidget
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#keyTyped(java.awt.event.KeyEvent)
    */
   @Override
-  public void keyTyped( KeyEvent e )
+  public void keyTyped( final KeyEvent e )
   {
     if( KeyEvent.VK_ESCAPE == e.getKeyChar()/* Code() */)
     {
@@ -170,22 +170,4 @@ public class CreateFE2DElementWidget extends AbstractWidget
     // super.keyTyped(e);
 
   }
-
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#keyPressed(java.awt.event.KeyEvent)
-   */
-  @Override
-  public void keyPressed( KeyEvent e )
-  {
-    super.keyPressed( e );
-    try
-    {
-      MapKeyNavigator.navigateOnKeyEvent( getMapPanel(), e, true );
-    }
-    catch( Throwable th )
-    {
-      th.printStackTrace();
-    }
-  }
-
 }

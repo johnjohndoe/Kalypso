@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.select;
 
@@ -84,7 +84,7 @@ import org.opengis.cs.CS_CoordinateSystem;
  * 
  * @author Patrice Congo
  */
-@SuppressWarnings({"unchecked", "hiding"}) //$NON-NLS-1$ //$NON-NLS-2$
+@SuppressWarnings( { "unchecked", "hiding" })
 public class FENetConceptSelectionWidget implements IWidget, IGrabDistanceProvider
 {
   private class QNameBasedSelectionContext
@@ -92,9 +92,6 @@ public class FENetConceptSelectionWidget implements IWidget, IGrabDistanceProvid
     final private QName m_themeElementsQName;
 
     private IKalypsoFeatureTheme m_featureTheme;
-
-//    private IFEDiscretisationModel1d2d m_model1d2d;
-    
 
     private CommandableWorkspace m_cmdWorkspace;
 
@@ -105,49 +102,36 @@ public class FENetConceptSelectionWidget implements IWidget, IGrabDistanceProvid
 
     public void init( final IMapModell mapModell ) throws IllegalArgumentException
     {
-//      m_model1d2d = UtilMap.findFEModelTheme( mapModell );
-//      Assert.throwIAEOnNull( this.m_model1d2d, "Could not found model" );
       try
       {
         m_featureTheme = UtilMap.findEditableTheme( mapModell, m_themeElementsQName );
         m_cmdWorkspace = this.m_featureTheme.getWorkspace();
       }
-      catch ( Exception e ) 
+      catch( final Exception e )
       {
         e.printStackTrace();
-        throw new RuntimeException(e);
+        throw new RuntimeException( e );
       }
     }
 
     public List getSelectedByPolygon( final GM_Object polygon, final ISelectionFilter selectionFilter )
     {
-// GM_Object object =
-// polygonGeometryBuilder.finish();
       final GM_Envelope env = polygon.getEnvelope();
-      final List selected = m_selector.select( env, m_featureTheme.getFeatureList(),// model1d2d.getElements().getWrappedList(),
-      true );
-      for( int i = selected.size() - 1; i >= 0; i-- )
-      {
-        // TODO WHAT is this doing???
-        ((Feature) selected.get( i )).getDefaultGeometryProperty();
-      }
+      final List selected = JMSelector.select( env, m_featureTheme.getFeatureList(), false );
       return filterSelected( selected, selectionFilter );
     }
 
     public List<EasyFeatureWrapper> getSelectedByEnvelope( final GM_Envelope env, final ISelectionFilter selectionFilter, final boolean selectWithinBox )
     {
-
-      final List selected = m_selector.select( env, m_featureTheme.getFeatureList(), selectWithinBox );
+      final List selected = JMSelector.select( env, m_featureTheme.getFeatureList(), selectWithinBox );
       return filterSelected( selected, selectionFilter );
-
     }
 
     private List<EasyFeatureWrapper> filterSelected( final List selected, final ISelectionFilter selectionFilter )
     {
-
       final int SIZE = selected.size();
       final List<EasyFeatureWrapper> featuresToAdd = new ArrayList<EasyFeatureWrapper>( SIZE );
-      final Feature parentFeature = m_featureTheme.getFeatureList().getParentFeature();//m_model1d2d.getWrappedFeature();
+      final Feature parentFeature = m_featureTheme.getFeatureList().getParentFeature();// m_model1d2d.getWrappedFeature();
       final IFeatureType featureType = parentFeature.getFeatureType();
       final IRelationType parentFeatureProperty = (IRelationType) featureType.getProperty( m_themeElementsQName );
 
@@ -166,18 +150,28 @@ public class FENetConceptSelectionWidget implements IWidget, IGrabDistanceProvid
           final Feature curFeature = (Feature) selected.get( i );
           if( selectionFilter.accept( curFeature ) )
           {
-
             final EasyFeatureWrapper easyFeatureWrapper = new EasyFeatureWrapper( m_cmdWorkspace, curFeature, parentFeature, parentFeatureProperty );
             featuresToAdd.add( easyFeatureWrapper );
-
           }
         }
       }
       return featuresToAdd;
-
     }
 
+    public IKalypsoFeatureTheme getFeatureTheme( )
+    {
+      return m_featureTheme;
+    }
+
+    public QName getThemeElementsQName( )
+    {
+      return m_themeElementsQName;
+    }
   }
+
+  private final QNameBasedSelectionContext m_selectionContexts[];
+
+  private final String toolTip;
 
   private ICommandTarget commandPoster;
 
@@ -187,11 +181,7 @@ public class FENetConceptSelectionWidget implements IWidget, IGrabDistanceProvid
 
   private PolygonGeometryBuilder m_polygonGeometryBuilder;
 
-  private final JMSelector m_selector = new JMSelector();
-
   private IMapModell m_mapModell;
-
-  private final QNameBasedSelectionContext m_selectionContexts[];
 
   private ISelectionFilter m_selectionFilter;
 
@@ -204,8 +194,6 @@ public class FENetConceptSelectionWidget implements IWidget, IGrabDistanceProvid
   private CS_CoordinateSystem crs;
 
   private Point currentPoint;
-
-  private final String toolTip;
 
   private String name;
 
@@ -319,25 +307,11 @@ public class FENetConceptSelectionWidget implements IWidget, IGrabDistanceProvid
         try
         {
           final GM_Object object = m_polygonGeometryBuilder.finish();
-// GM_Envelope env = object.getEnvelope();
-// List selected =
-// selector.select(
-// env,
-// featureTheme.getFeatureList(),//model1d2d.getElements().getWrappedList(),
-// false );
-// for(int i=selected.size()-1;i>=0;i--)
-// {
-// ((Feature)selected.get( i )).getDefaultGeometryProperty();
-// }
-// addSelection( selected );
           for( final QNameBasedSelectionContext selectionContext : m_selectionContexts )
           {
             final List selectedByPolygon = selectionContext.getSelectedByPolygon( object, m_selectionFilter );
             addSelection( selectedByPolygon );
           }
-
-// selector.selectNearestHandel( geom, pos, snapRadius )
-
         }
         catch( final Exception e )
         {
@@ -372,12 +346,10 @@ public class FENetConceptSelectionWidget implements IWidget, IGrabDistanceProvid
     else
     {
       draggedPoint1 = p;
-      mapPanel.repaint();
     }
-    // TODO: check if this repaint is really necessary
+
     if( mapPanel != null )
       mapPanel.repaint();
-
   }
 
   /**
@@ -385,9 +357,8 @@ public class FENetConceptSelectionWidget implements IWidget, IGrabDistanceProvid
    */
   public void finish( )
   {
-    
-    IFeatureSelectionManager selectionManager = mapPanel.getSelectionManager();
-    selectionManager.clear();//changeSelection( featuresToRemove, featuresToAdd );
+    final IFeatureSelectionManager selectionManager = mapPanel.getSelectionManager();
+    selectionManager.clear();
   }
 
   /**
@@ -432,7 +403,6 @@ public class FENetConceptSelectionWidget implements IWidget, IGrabDistanceProvid
       if( m_polygonGeometryBuilder == null )
       {
         m_polygonGeometryBuilder = new PolygonGeometryBuilder( 0, crs );
-// System.out.println("DDCDCD="+crs);
       }
     }
   }
@@ -443,16 +413,15 @@ public class FENetConceptSelectionWidget implements IWidget, IGrabDistanceProvid
   public void keyReleased( final KeyEvent e )
   {
     final int keyCode = e.getKeyCode();
-    if( e.VK_CONTROL == keyCode )
+    if( KeyEvent.VK_CONTROL == keyCode )
     {
       this.addToSelection = false;
     }
-    else if( e.VK_SHIFT == keyCode )
+    else if( KeyEvent.VK_SHIFT == keyCode )
     {
       this.polygonSelectModus = false;
       m_polygonGeometryBuilder = null;
     }
-
   }
 
   /**
@@ -468,7 +437,6 @@ public class FENetConceptSelectionWidget implements IWidget, IGrabDistanceProvid
    */
   public void leftClicked( final Point p )
   {
-
     final GM_Point point = MapUtilities.transform( mapPanel, p );
     if( polygonSelectModus )
     {
@@ -486,11 +454,7 @@ public class FENetConceptSelectionWidget implements IWidget, IGrabDistanceProvid
     }
     else
     {
-      // klick point select modus
-      // model1d2d.getElements().getWrappedList().query( env, result )
-
-      // TODO get the delta from preferences
-      final double delta = MapUtilities.calculateWorldDistance( mapPanel, point, 6 );
+      final double delta = MapUtilities.calculateWorldDistance( mapPanel, point, 1 );
       final GM_Position min = GeometryFactory.createGM_Position( point.getX() - delta, point.getY() - delta );
 
       final GM_Position max = GeometryFactory.createGM_Position( point.getX() + delta, point.getY() + delta );
@@ -515,7 +479,7 @@ public class FENetConceptSelectionWidget implements IWidget, IGrabDistanceProvid
       final List<EasyFeatureWrapper> toRemoveSelection = new ArrayList<EasyFeatureWrapper>( Arrays.asList( selectionManager.getAllFeatures() ) );
       toRemoveSelection.retainAll( selected );
       selected.removeAll( toRemoveSelection );
-// System.out.println("Selected size="+selected.size());
+      // System.out.println("Selected size="+selected.size());
       final int size = toRemoveSelection.size();
       featuresToRemove = new Feature[size];
       for( int i = size - 1; i >= 0; i-- )
@@ -549,7 +513,7 @@ public class FENetConceptSelectionWidget implements IWidget, IGrabDistanceProvid
    */
   public void leftPressed( final Point p )
   {
-// System.out.println("Left pressed");
+    // System.out.println("Left pressed");
   }
 
   /**
@@ -559,19 +523,18 @@ public class FENetConceptSelectionWidget implements IWidget, IGrabDistanceProvid
   {
     if( draggedPoint0 != null && draggedPoint1 != null )
     {
-
       final GM_Point point0 = MapUtilities.transform( mapPanel, draggedPoint0 );
       final GM_Point point1 = MapUtilities.transform( mapPanel, draggedPoint1 );
       final GM_Envelope env = GeometryFactory.createGM_Envelope( point0.getPosition(), point1.getPosition() );
       for( final QNameBasedSelectionContext selectionContext : m_selectionContexts )
       {
-        final List selectedByEnvelope = selectionContext.getSelectedByEnvelope( env, m_selectionFilter, true );
+        final List selectedByEnvelope = selectionContext.getSelectedByEnvelope( env, m_selectionFilter, false );
         addSelection( selectedByEnvelope );
       }
     }
+
     draggedPoint0 = null;
     draggedPoint1 = null;
-
   }
 
   /**
@@ -603,10 +566,9 @@ public class FENetConceptSelectionWidget implements IWidget, IGrabDistanceProvid
    */
   public void moved( final Point p )
   {
-// currentPoint = MapUtilities.transform( mapPanel, p );
     currentPoint = p;
 
-// TODO: check if this repaint is necessary for the widget
+    // TODO: check if this repaint is necessary for the widget
     if( mapPanel != null )
       mapPanel.repaint();
   }
@@ -621,7 +583,7 @@ public class FENetConceptSelectionWidget implements IWidget, IGrabDistanceProvid
     {
       final double x = Math.min( draggedPoint0.getX(), draggedPoint1.getX() );
       final double y = Math.min( draggedPoint0.getY(), draggedPoint1.getY() );
-      
+
       final double width = Math.abs( draggedPoint0.getX() - draggedPoint1.getX() );
       final double height = Math.abs( draggedPoint0.getY() - draggedPoint1.getY() );
 
@@ -680,26 +642,24 @@ public class FENetConceptSelectionWidget implements IWidget, IGrabDistanceProvid
   /**
    * To get the wrapped selected feature
    * 
-   * @param targetWrapClass the class the selection feature
-   *            should be wrapped
-   * @return return an array containing the wrappers of the selected
-   *           features  
+   * @param targetWrapClass
+   *            the class the selection feature should be wrapped
+   * @return return an array containing the wrappers of the selected features
    */
-  public <T>T[] getWrappedSelectedFeature( Class<T> targetWrapClass )
+  public <T> T[] getWrappedSelectedFeature( final Class<T> targetWrapClass )
   {
-    Feature[] selectedFeature = getSelectedFeature();
-    T[] wrappers = (T[])Array.newInstance( targetWrapClass, selectedFeature.length);
-    for(int i= selectedFeature.length-1;i>=0;i--)
+    final Feature[] selectedFeature = getSelectedFeature();
+    final T[] wrappers = (T[]) Array.newInstance( targetWrapClass, selectedFeature.length );
+    for( int i = selectedFeature.length - 1; i >= 0; i-- )
     {
-      wrappers[i] = 
-        (T) selectedFeature[i].getAdapter( targetWrapClass );
+      wrappers[i] = (T) selectedFeature[i].getAdapter( targetWrapClass );
     }
     return wrappers;
   }
-  
-  
+
   /**
    * To get all selected feature
+   * 
    * @return a {@link Feature} array containing the selected feature
    */
   public Feature[] getSelectedFeature( )
@@ -722,10 +682,10 @@ public class FENetConceptSelectionWidget implements IWidget, IGrabDistanceProvid
 
     for( final QNameBasedSelectionContext selectionContext : m_selectionContexts )
     {
-      if( themeQName.equals( selectionContext.m_themeElementsQName ) )
+      if( themeQName.equals( selectionContext.getThemeElementsQName() ) )
       {
-//        return selectionContext.m_model1d2d;
-        final FeatureList featureList = selectionContext.m_featureTheme.getFeatureList();
+        // return selectionContext.m_model1d2d;
+        final FeatureList featureList = selectionContext.getFeatureTheme().getFeatureList();
         final Feature parentFeature = featureList.getParentFeature();
         return (IFEDiscretisationModel1d2d) parentFeature.getAdapter( IFEDiscretisationModel1d2d.class );
       }
@@ -746,9 +706,9 @@ public class FENetConceptSelectionWidget implements IWidget, IGrabDistanceProvid
     }
     for( final QNameBasedSelectionContext selectionContext : m_selectionContexts )
     {
-      if( themeQName.equals( selectionContext.m_themeElementsQName ) )
+      if( themeQName.equals( selectionContext.getThemeElementsQName() ) )
       {
-        return selectionContext.m_featureTheme;
+        return selectionContext.getFeatureTheme();
       }
     }
 
@@ -764,14 +724,14 @@ public class FENetConceptSelectionWidget implements IWidget, IGrabDistanceProvid
   {
     return mapPanel;
   }
-  
+
   /**
    * To get the last clicked point.
    * 
    * @return a {@link GM_Point} representing the last clicked point
    * 
    */
-  public GM_Point getCurrentPoint()
+  public GM_Point getCurrentPoint( )
   {
     if( currentPoint == null )
     {
@@ -779,13 +739,12 @@ public class FENetConceptSelectionWidget implements IWidget, IGrabDistanceProvid
     }
     else
     {
-      final GM_Point point = 
-        MapUtilities.transform( mapPanel, currentPoint );
+      final GM_Point point = MapUtilities.transform( mapPanel, currentPoint );
       return point;
     }
   }
-  
-  public double getGrabDistance()
+
+  public double getGrabDistance( )
   {
     final double delta = MapUtilities.calculateWorldDistance( mapPanel, getCurrentPoint(), 6 );
     return delta;

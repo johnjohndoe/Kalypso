@@ -2,45 +2,44 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map;
 
-import java.awt.event.KeyEvent;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -59,78 +58,54 @@ import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 
 /**
- * {@link IWidget} that provide the mechnism for edition
- * the geometrie of finite element concepts 
- * (Node, Edge, elements, and Complex elements)
- * This class decorate the {@link EditGeometryWidget} with the
- * capability to :
+ * {@link IWidget} that provide the mechnism for edition the geometrie of finite element concepts (Node, Edge, elements,
+ * and Complex elements) This class decorate the {@link EditGeometryWidget} with the capability to :
  * <ul>
- *  <li/>find all feature affected by a geometric change
- * in the edited fe concepts;
- *  <li/>invalidate the envelops of the found feature 
- *  <li/> and fire feature change event holding the affected feature
+ * <li/>find all feature affected by a geometric change in the edited fe concepts; <li/>invalidate the envelops of the
+ * found feature <li/> and fire feature change event holding the affected feature
  * </ul>
  * 
- * This widget rely on the assumtion that the map to edit has layer holding
- * feture with the QName {@link Kalypso1D2DSchemaConstants#WB1D2D_F_NODE}
+ * This widget rely on the assumtion that the map to edit has layer holding feture with the QName
+ * {@link Kalypso1D2DSchemaConstants#WB1D2D_F_NODE}
  * 
  * @author Patrice Congo
- *
+ * 
  */
-public class EditFEConceptGeometryWidget extends EditGeometryWidget //implements IWidget
+public class EditFEConceptGeometryWidget extends EditGeometryWidget // implements IWidget
 {
   /** workspace, initialised during activation using the node layer */
   private CommandableWorkspace workspace;
+
   private IKalypsoFeatureTheme nodeTheme;
+
   private IKalypsoFeatureTheme polyElementTheme;
+
   private IKalypsoFeatureTheme edgeTheme;
-  
-  
+
   public EditFEConceptGeometryWidget( )
   {
-    super("FE Model Geometrie Editieren","FE Model Geometrie Editieren");
+    super( "FE Model Geometrie Editieren", "FE Model Geometrie Editieren" );
   }
-  
+
   /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#activate(org.kalypso.commons.command.ICommandTarget, org.kalypso.ogc.gml.map.MapPanel)
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#activate(org.kalypso.commons.command.ICommandTarget,
+   *      org.kalypso.ogc.gml.map.MapPanel)
    */
   @Override
-  public void activate( ICommandTarget commandPoster, MapPanel mapPanel )
+  public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel )
   {
-    super.activate(commandPoster, mapPanel);
-    
-    //find the node layer and get the working workspace from it
-    nodeTheme = UtilMap.findEditableTheme( 
-        mapPanel.getMapModell(), 
-        Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
-    
-    polyElementTheme = UtilMap.findEditableTheme( 
-        mapPanel.getMapModell(), 
-        Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT );
-    
-    edgeTheme = UtilMap.findEditableTheme( 
-        mapPanel.getMapModell(), 
-        Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE );
-    
+    super.activate( commandPoster, mapPanel );
+
+    // find the node layer and get the working workspace from it
+    nodeTheme = UtilMap.findEditableTheme( mapPanel.getMapModell(), Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
+
+    polyElementTheme = UtilMap.findEditableTheme( mapPanel.getMapModell(), Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT );
+
+    edgeTheme = UtilMap.findEditableTheme( mapPanel.getMapModell(), Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE );
+
     workspace = nodeTheme.getWorkspace();
   }
-  
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#keyPressed(java.awt.event.KeyEvent)
-   */
-  @Override
-  public void keyPressed( KeyEvent e )
-  {
-    super.keyPressed(e);
-    try
-    {
-      MapKeyNavigator.navigateOnKeyEvent( getMapPanel(), e, true );
-    }
-    catch (Throwable th) 
-    {
-      th.printStackTrace();
-    }
-  }
+
   /**
    * @see org.kalypso.ogc.gml.map.widgets.EditGeometryWidget#perform()
    */
@@ -138,33 +113,28 @@ public class EditFEConceptGeometryWidget extends EditGeometryWidget //implements
   protected Collection<Feature> perform( )
   {
     invalidateLists();
-    
-    Collection<Feature> list = super.perform();
-    Set<Feature> affectedFeatures= new HashSet<Feature>();//ArrayList<Feature>();    
-    
-    for(Feature changedFeature:list)
+
+    final Collection<Feature> list = super.perform();
+    final Set<Feature> affectedFeatures = new HashSet<Feature>();// ArrayList<Feature>();
+
+    for( final Feature changedFeature : list )
     {
-      OpsGeoEditAffected.addAffectedsByFEFeatureGeomChange( 
-                                  changedFeature, affectedFeatures );
+      OpsGeoEditAffected.addAffectedsByFEFeatureGeomChange( changedFeature, affectedFeatures );
     }
-    
-    
-    
+
     fireModelChangedEvent( workspace, affectedFeatures );
-    
+
     return list;
   }
-  
-  
-  private final void invalidateLists()
+
+  private final void invalidateLists( )
   {
-    IKalypsoFeatureTheme[] themes = 
-                  { nodeTheme, edgeTheme, polyElementTheme };
-    for(IKalypsoFeatureTheme theme : themes)
+    final IKalypsoFeatureTheme[] themes = { nodeTheme, edgeTheme, polyElementTheme };
+    for( final IKalypsoFeatureTheme theme : themes )
     {
       if( theme != null )
       {
-       FeatureList featureList = theme.getFeatureList();
+        final FeatureList featureList = theme.getFeatureList();
         if( featureList != null )
         {
           featureList.invalidate();
@@ -172,23 +142,17 @@ public class EditFEConceptGeometryWidget extends EditGeometryWidget //implements
       }
     }
   }
-  
-  private static final void fireModelChangedEvent(
-                                    CommandableWorkspace workspace,
-                                    Collection<Feature> modifiedFeature)
+
+  private static final void fireModelChangedEvent( final CommandableWorkspace workspace, final Collection<Feature> modifiedFeature )
   {
     Assert.throwIAEOnNullParam( workspace, "workspace" );
     Assert.throwIAEOnNullParam( modifiedFeature, "modifiedFeature" );
-    if(modifiedFeature.isEmpty())
+    if( modifiedFeature.isEmpty() )
     {
       return;
     }
-    
-    Feature[] toArray = 
-      modifiedFeature.toArray( new Feature[modifiedFeature.size()] );
-    workspace.fireModellEvent( 
-        new FeaturesChangedModellEvent( 
-              workspace, 
-              toArray ) );
+
+    final Feature[] toArray = modifiedFeature.toArray( new Feature[modifiedFeature.size()] );
+    workspace.fireModellEvent( new FeaturesChangedModellEvent( workspace, toArray ) );
   }
 }

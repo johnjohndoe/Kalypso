@@ -4,10 +4,14 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.ISources;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.ui.map.MapKeyNavigator;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeDiscretiationModelCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteCmdFactory;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
@@ -187,15 +191,6 @@ public abstract class DeleteFEElementsWidget extends AbstractWidget implements W
     {
       e.printStackTrace();
     }
-
-    // final Point currentPoint = m_currentPoint;
-    //
-    // if( currentPoint != null )
-    // {
-    // if( m_builder != null )
-    // m_builder.paint( g, getMapPanel().getProjection(), currentPoint );
-    // g.drawRect( (int) currentPoint.getX() - 10, (int) currentPoint.getY() - 10, 20, 20 );
-    // }
   }
 
   private final void deleteCurrentSelection( )
@@ -203,11 +198,29 @@ public abstract class DeleteFEElementsWidget extends AbstractWidget implements W
     final MapPanel mapPanel = getMapPanel();
     final IFeatureSelectionManager selectionManager = mapPanel.getSelectionManager();
     final EasyFeatureWrapper[] selected = selectionManager.getAllFeatures();
-    selectionManager.clear();
     if( selected.length == 0 )
     {
       return;
     }
+
+    final IHandlerService service = (IHandlerService) PlatformUI.getWorkbench().getService( IHandlerService.class );
+    final Shell shell = (Shell) service.getCurrentState().getVariable( ISources.ACTIVE_SHELL_NAME );
+    // We are in the awt thread, so force it into swt
+    final boolean[] stop = new boolean[1];
+    shell.getDisplay().syncExec( new Runnable()
+    {
+      public void run( )
+      {
+        // TODO Auto-generated method stub
+        if( !MessageDialog.openConfirm( shell, "Elemente löschen", "Sind Sie sicher?" ) )
+          stop[0] = true;
+      }
+    } );
+
+    if( stop[0] )
+      return;
+
+    selectionManager.clear();
 
     // feature are supposed to be in the same model
     final Feature sampleFeature = selected[0].getFeature();
@@ -232,7 +245,6 @@ public abstract class DeleteFEElementsWidget extends AbstractWidget implements W
       e.printStackTrace();
       throw new RuntimeException( e.getMessage(), e );
     }
-
   }
 
   /**
@@ -258,15 +270,6 @@ public abstract class DeleteFEElementsWidget extends AbstractWidget implements W
     catch( final Exception ex )
     {
       ex.printStackTrace();
-    }
-
-    try
-    {
-      MapKeyNavigator.navigateOnKeyEvent( getMapPanel(), e, true );
-    }
-    catch( final Throwable th )
-    {
-      th.printStackTrace();
     }
   }
 

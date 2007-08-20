@@ -52,7 +52,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.kalypsomodel1d2d.ui.map.MapKeyNavigator;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
@@ -206,9 +205,9 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
       final GM_Curve line = multiline.getCurveAt( 0 );
 
       final LineSymbolizer symb = new LineSymbolizer_Impl();
-      final Stroke stroke = new Stroke_Impl( new HashMap(), null, null );
+      final Stroke stroke = new Stroke_Impl( new HashMap<Object, Object>(), null, null );
 
-      Stroke defaultstroke = new Stroke_Impl( new HashMap(), null, null );
+      Stroke defaultstroke = new Stroke_Impl( new HashMap<Object, Object>(), null, null );
 
       defaultstroke = symb.getStroke();
 
@@ -226,7 +225,7 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
   private LineSymbolizer getProfilLineSymbolizer( final Color color )
   {
     final LineSymbolizer symb = new LineSymbolizer_Impl();
-    final Stroke stroke = new Stroke_Impl( new HashMap(), null, null );
+    final Stroke stroke = new Stroke_Impl( new HashMap<Object, Object>(), null, null );
     stroke.setWidth( 3 );
     stroke.setStroke( color );
     symb.setStroke( stroke );
@@ -329,11 +328,6 @@ public class CreateMainChannelWidget extends AbstractWidget implements IWidgetWi
   @Override
   public void keyPressed( final KeyEvent e )
   {
-    // int code = e.getKeyCode();
-    final MapPanel mapPanel = getMapPanel();
-
-    MapKeyNavigator.navigateOnKeyEvent( mapPanel, e, true );
-
     if( m_delegateWidget != null )
       m_delegateWidget.keyPressed( e );
   }

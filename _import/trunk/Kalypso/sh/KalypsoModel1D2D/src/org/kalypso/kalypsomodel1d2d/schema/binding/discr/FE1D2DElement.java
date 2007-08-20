@@ -24,7 +24,6 @@ import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
  * @see IFE1D2DContinuityLine
  * @see FE1D2DContinuityLine
  */
-@SuppressWarnings("hiding")
 public abstract class FE1D2DElement<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge> extends AbstractFeatureBinder implements IFE1D2DElement<CT, ET>
 {
   private final IFeatureWrapperCollection<CT> containers;
@@ -34,7 +33,7 @@ public abstract class FE1D2DElement<CT extends IFE1D2DComplexElement, ET extends
     this( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT, (Class<CT>) IFE1D2DComplexElement.class );
   }
 
-  public FE1D2DElement( final Feature featureToBind, QName featureQName, Class<CT> complexElementClass )
+  public FE1D2DElement( final Feature featureToBind, final QName featureQName, final Class<CT> complexElementClass )
   {
     super( featureToBind, featureQName );
     //
@@ -43,7 +42,7 @@ public abstract class FE1D2DElement<CT extends IFE1D2DComplexElement, ET extends
     {
       prop = featureToBind.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT_CONTAINERS );
     }
-    catch( Throwable th )
+    catch( final Throwable th )
     {
       th.printStackTrace();
     }
@@ -77,12 +76,12 @@ public abstract class FE1D2DElement<CT extends IFE1D2DComplexElement, ET extends
    * @throws IllegalArgumentException
    *             if workspace is null or the roughness collection is not part of the workspace
    */
-  public FE1D2DElement( Feature parentFeature, QName propQName, QName newFeatureQName ) throws IllegalArgumentException
+  public FE1D2DElement( final Feature parentFeature, final QName propQName, final QName newFeatureQName ) throws IllegalArgumentException
   {
     this( Util.createFeatureAsProperty( parentFeature, propQName, newFeatureQName ) );
   }
 
-  public FE1D2DElement( Feature parentFeature, QName propQName, String gmlID )
+  public FE1D2DElement( final Feature parentFeature, final QName propQName, final String gmlID )
   {
     this( FeatureHelper.createFeatureWithId( Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT, parentFeature, propQName, gmlID ) );
   }
@@ -94,14 +93,15 @@ public abstract class FE1D2DElement<CT extends IFE1D2DComplexElement, ET extends
   {
     return containers;
   }
-  
+
   /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#assignRoughness(java.lang.String, java.lang.Double, java.lang.Double, java.lang.Double, java.lang.String)
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement#assignRoughness(java.lang.String,
+   *      java.lang.Double, java.lang.Double, java.lang.Double, java.lang.String)
    */
-  public FeatureChange[] assignRoughness( String roughnessID, Double correctionParameterKS, Double correctionParameterAxAy, Double correctionParameterDP, String roughnessStyle )
+  public FeatureChange[] assignRoughness( final String roughnessID, final Double correctionParameterKS, final Double correctionParameterAxAy, final Double correctionParameterDP, final String roughnessStyle )
   {
     final Feature elementFeature = getWrappedFeature();
-    
+
     setRoughnessClsID( roughnessID );
     setRoughnessCorrectionKS( correctionParameterKS );
     setRoughnessCorrectionAxAy( correctionParameterAxAy );
@@ -116,10 +116,9 @@ public abstract class FE1D2DElement<CT extends IFE1D2DComplexElement, ET extends
     changes[2] = new FeatureChange( elementFeature, featureType.getProperty( PROP_ROUGHNESS_CORRECTION_AXAY ), correctionParameterAxAy );
     changes[3] = new FeatureChange( elementFeature, featureType.getProperty( PROP_ROUGHNESS_CORRECTION_DP ), correctionParameterDP );
     changes[4] = new FeatureChange( elementFeature, featureType.getProperty( PROP_ROUGHNESS_STYLE ), roughnessStyle );
-    
+
     return changes;
   }
-  
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement#getNodes()
