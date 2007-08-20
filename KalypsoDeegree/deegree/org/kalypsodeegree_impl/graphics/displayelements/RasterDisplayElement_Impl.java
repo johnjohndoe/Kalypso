@@ -42,13 +42,13 @@
 
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
- interface-compatibility to deegree is wanted but not retained always. 
+ interface-compatibility to deegree is wanted but not retained always.
 
- If you intend to use this software in other ways than in kalypso 
+ If you intend to use this software in other ways than in kalypso
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
 
- all modifications are licensed as deegree, 
+ all modifications are licensed as deegree,
  original copyright:
 
  Copyright (C) 2001 by:
@@ -155,16 +155,15 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     final RectifiedGridDomain rgDomain = (RectifiedGridDomain) feature.getProperty( new QName( NS.GML3, "rectifiedGridDomain" ) );
     // create the target Coordinate system
 
-    // TODO: ugly! Instead, adwe apt something to GM_Curve[] and let the normal LineStirngSymbolizer mechanisms aply
-    // TODO: probably we can just remove the line stuff and just add lineSymbolizer to our maps.
-    final VirtualFeatureTypeProperty vpt = VirtualPropertyUtilities.getVirtualProperties( feature.getFeatureType() )[0];
-    final GM_Object geom = (GM_Object) vpt.getVirtuelValue( feature, null );
-    final CS_CoordinateSystem cs = geom.getCoordinateSystem();
-
-    final TiledImage rasterImage = getImage();
-
     try
     {
+      // TODO: ugly! Instead, adwe apt something to GM_Curve[] and let the normal LineStirngSymbolizer mechanisms aply
+      // TODO: probably we can just remove the line stuff and just add lineSymbolizer to our maps.
+
+      final VirtualFeatureTypeProperty vpt = VirtualPropertyUtilities.getVirtualProperties( feature.getFeatureType() )[0];
+      final GM_Object geom = (GM_Object) vpt.getVirtuelValue( feature, null );
+      final CS_CoordinateSystem cs = geom.getCoordinateSystem();
+
       final GM_Surface surface = (GM_Surface) geom;
       final GM_SurfaceBoundary surfaceBoundary = surface.getSurfaceBoundary();
       final GM_Ring exteriorRing = surfaceBoundary.getExteriorRing();
@@ -173,15 +172,17 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
 
       lineDE.paint( g2, projection );
 
+      final TiledImage rasterImage = getImage();
       drawRasterImage( g2, projection, rasterImage, rgDomain, cs );
     }
     catch( final Exception e )
     {
+      // TODO: allow the display element to throw exceptions
       System.out.println( e );
     }
   }
 
-  public void drawRasterImage( final Graphics2D g2, final GeoTransform projection, final TiledImage rasterImage, final RectifiedGridDomain gridDomain, final CS_CoordinateSystem targetCS ) throws Exception
+  private void drawRasterImage( final Graphics2D g2, final GeoTransform projection, final TiledImage rasterImage, final RectifiedGridDomain gridDomain, final CS_CoordinateSystem targetCS ) throws Exception
   {
     final GM_Envelope envelope = gridDomain.getGM_Envelope( targetCS );
     final CS_CoordinateSystem crs = gridDomain.getCoordinateSystem();
