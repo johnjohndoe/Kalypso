@@ -13,7 +13,7 @@ import org.kalypso.ogc.gml.outline.GisMapOutlineView;
 import org.kalypso.ogc.sensor.view.DiagramViewPart;
 import org.kalypso.ogc.sensor.view.TableViewPart;
 import org.kalypso.ui.editor.featureeditor.FeatureTemplateView;
-import org.kalypso.ui.editor.mapeditor.views.ActionOptionsView;
+import org.kalypso.ui.editor.mapeditor.views.MapWidgetView;
 import org.kalypso.ui.repository.view.RepositoryExplorerPart;
 import org.kalypso.ui.views.map.MapView;
 
@@ -55,14 +55,14 @@ public class Perspective implements IPerspectiveFactory
     rightBottom.addPlaceholder( ChartView.ID );
     rightBottom.addPlaceholder( TableViewPart.ID );
 
-    veryRight.addPlaceholder( ActionOptionsView.ID );
+    veryRight.addPlaceholder( MapWidgetView.ID );
 
     /* Moveability and closeability of the views. */
     layout.getViewLayout( FeatureView.ID ).setMoveable( true );
     layout.getViewLayout( FeatureTemplateView.ID ).setCloseable( false );
     layout.getViewLayout( FeatureTemplateView.ID ).setMoveable( false );
-    layout.getViewLayout( ActionOptionsView.ID ).setCloseable( false );
-    layout.getViewLayout( ActionOptionsView.ID ).setMoveable( false );
+    layout.getViewLayout( MapWidgetView.ID ).setCloseable( false );
+    layout.getViewLayout( MapWidgetView.ID ).setMoveable( false );
     layout.getViewLayout( WorkflowView.ID ).setCloseable( false );
     layout.getViewLayout( WorkflowView.ID ).setMoveable( false );
     layout.getViewLayout( SCENARIO_VIEW_ID ).setCloseable( false );

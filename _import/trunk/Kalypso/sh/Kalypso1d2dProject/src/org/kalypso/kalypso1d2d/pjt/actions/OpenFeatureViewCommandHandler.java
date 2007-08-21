@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.kalypso.kalypso1d2d.pjt.actions;
 
@@ -31,14 +31,14 @@ import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
  */
 public class OpenFeatureViewCommandHandler extends AbstractHandler implements IExecutableExtension
 {
-  private static final String PARAM_RESOURCE = "org.kalypso.kalypso1d2d.pjt.OpenFeatureViewCommand.resource";     //$NON-NLS-1$
+  private static final String PARAM_RESOURCE = "org.kalypso.kalypso1d2d.pjt.OpenFeatureViewCommand.resource"; //$NON-NLS-1$
 
   private String m_resource;
 
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
-  @SuppressWarnings("unchecked")  //$NON-NLS-1$
+  @SuppressWarnings("unchecked")
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
@@ -48,7 +48,7 @@ public class OpenFeatureViewCommandHandler extends AbstractHandler implements IE
     {
       if( m_resource == null )
       {
-        throw new CoreException( StatusUtilities.createErrorStatus( org.kalypso.kalypso1d2d.pjt.actions.Messages.getString("OpenFeatureViewCommandHandler.2") ) ); //$NON-NLS-1$
+        throw new CoreException( StatusUtilities.createErrorStatus( org.kalypso.kalypso1d2d.pjt.actions.Messages.getString( "OpenFeatureViewCommandHandler.2" ) ) ); //$NON-NLS-1$
       }
 
       final IWorkbenchWindow activeWorkbenchWindow = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
@@ -68,7 +68,7 @@ public class OpenFeatureViewCommandHandler extends AbstractHandler implements IE
     }
     catch( final CoreException e )
     {
-      throw new ExecutionException( org.kalypso.kalypso1d2d.pjt.actions.Messages.getString("OpenFeatureViewCommandHandler.3") + m_resource, e );  //$NON-NLS-1$
+      throw new ExecutionException( org.kalypso.kalypso1d2d.pjt.actions.Messages.getString( "OpenFeatureViewCommandHandler.3" ) + m_resource, e ); //$NON-NLS-1$
     }
 
     return Status.OK_STATUS;
