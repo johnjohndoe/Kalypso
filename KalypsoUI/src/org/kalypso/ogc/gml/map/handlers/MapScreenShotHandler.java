@@ -42,9 +42,9 @@ package org.kalypso.ogc.gml.map.handlers;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -90,6 +90,8 @@ public class MapScreenShotHandler extends AbstractHandler
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
+    BufferedOutputStream os = null;
+
     try
     {
       final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
@@ -118,7 +120,7 @@ public class MapScreenShotHandler extends AbstractHandler
         throw (new NotImplementedException( "targetFile must be an file or directory and have to exists" ));
 
       /* generate and store img */
-      final BufferedOutputStream os = new BufferedOutputStream( new FileOutputStream( img ) );
+      os = new BufferedOutputStream( new FileOutputStream( img ) );
 
       final IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
       final MapPanel mapPanel = (MapPanel) part.getAdapter( MapPanel.class );
@@ -128,10 +130,14 @@ public class MapScreenShotHandler extends AbstractHandler
 
       return img;
     }
-    catch( final FileNotFoundException e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       throw (new ExecutionException( e.getMessage() ));
+    }
+    finally
+    {
+      IOUtils.closeQuietly( os );
     }
   }
 
