@@ -524,13 +524,15 @@
                commandId="org.kalypso.ui.command.repositoryReload">
          </command>
          <separator
-               name="Kalypso1d2dProject.separator6">
+               name="org.kalypso.kalypso1d2d.pjt.views.timeseriesRepository.separator.treeNavigation"
+               visible="true">
          </separator>
          <command
                commandId="org.kalypso.ui.command.repositoryCollapseAll">
          </command>
          <separator
-               name="Kalypso1d2dProject.separator7">
+               name="org.kalypso.kalypso1d2d.pjt.views.timeseriesRepository.separator.export"
+               visible="true">
          </separator>
          <command
                commandId="org.kalypso.ui.command.repositoryExportAsFile">

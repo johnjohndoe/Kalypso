@@ -168,7 +168,7 @@ Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodu
 				<Name>Rauheitszonen bearbeiten</Name>
 			</Task>
 			<!--
-			We don't need this any more as we have the layer showing assigned roughnesses (and roughness assign service :)) 
+			We don't need this any more as we have the layer showing assigned roughnesses (and roughness assign service :))
 			<Task type="ASYNCHRONOUS" context="FenetMap"
 				URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__RoughnessFENETColor">
 				<Help><![CDATA[Zeigt die den 2D-Elementen zugewiesenen Rauheitsklassen an.]]></Help>
@@ -294,7 +294,7 @@ Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodu
 			<con:WorkbenchSiteContext id="TimeSeriesContext"
 				parent="Context1d2dModelling">
 				<con:ViewContext id="TimeSeriesRepositoryView"
-					partId="org.kalypso.ui.repository.view.RepositoryExplorerPart"
+					partId="org.kalypso.kalypso1d2d.pjt.views.TimeseriesRepositoryView"
 					parent="TimeSeriesContext" />
 				<con:ViewContext id="TimeSeriesDiagramView"
 					partId="org.kalypso.ogc.sensor.view.DiagramViewPart"
@@ -428,7 +428,7 @@ Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodu
 						<con:Parameter name="type"
 							value="mapViewInputContext" />
 						<con:Parameter name="input"
-							value="results/result.gmt" />						
+							value="results/result.gmt" />
 					</con:ExtensionContext>
 				</con:ViewContext>
 			</con:WorkbenchSiteContext>

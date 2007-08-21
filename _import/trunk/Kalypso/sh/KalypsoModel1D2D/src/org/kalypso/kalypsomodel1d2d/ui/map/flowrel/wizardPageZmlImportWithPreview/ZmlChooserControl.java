@@ -117,8 +117,7 @@ public abstract class ZmlChooserControl
     final TreeViewer treeViewer = new TreeViewer( innerComposite, SWT.BORDER );
 
     // TODO: do NOT use this file stuff! do NOT work against eclipse!
-    // TODO: either use WorkbenchLabelProvider and so on on IFiles/IFolders
-    // TODO: or even use ProjectExlorer techniques
+    // TODO: use the Repository Framework instead!
     treeViewer.setContentProvider( new FileTreeContentProvider() );
     treeViewer.setLabelProvider( new FileTreeLabelProvider() );
     treeViewer.setInput( new File( m_importFolder.getLocation().toOSString() ) );

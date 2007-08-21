@@ -38,60 +38,32 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypso1d2d.pjt.actions;
-
-import java.net.URI;
-import java.net.URISyntaxException;
+package org.kalypso.kalypsomodel1d2d;
 
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.kalypso.afgui.scenarios.Scenario;
 
 /**
- * @author Stefan Kurzbach
+ * Collection of central helper functions converning 1d2d stuff.
+ * 
+ * @author Gernot Belger
+ * 
  */
-public class ScenarioHelper
+public class KalypsoModel1D2DHelper
 {
-  public static String getProjectName( final Scenario scenario )
+  private KalypsoModel1D2DHelper( )
   {
-    final String name = scenario.getURI();
-    try
-    {
-      final URI uri = new URI( name );
-      return uri.getAuthority();
-    }
-    catch( final URISyntaxException e )
-    {
-      return null;
-    }
+    throw new UnsupportedOperationException( "Helper class, do not instantiate." );
   }
 
-  public static IProject getProject( final Scenario scenario )
+  /**
+   * Central place to retrive the location where to store/retrieve timeseries for a given scenario.
+   * <p>
+   * REMARK: this is probably not the very best place to do this, but at least it is central.
+   * </p>
+   */
+  public static IFolder getTimeeseriesFolder( final IFolder scenarioFolder )
   {
-    final String name = scenario.getURI();
-    try
-    {
-      final URI uri = new URI( name );
-      return ResourcesPlugin.getWorkspace().getRoot().getProject( uri.getAuthority() );
-    }
-    catch( final URISyntaxException e )
-    {
-      return null;
-    }
+    return scenarioFolder.getProject().getFolder( "imports" ).getFolder( "timeseries" );
   }
 
-  public static IFolder getFolder( final Scenario scenario )
-  {
-    final String name = scenario.getURI();
-    try
-    {
-      final URI uri = new URI( name );
-      return getProject( scenario ).getFolder( uri.getPath() );
-    }
-    catch( final URISyntaxException e )
-    {
-      return null;
-    }
-  }
 }

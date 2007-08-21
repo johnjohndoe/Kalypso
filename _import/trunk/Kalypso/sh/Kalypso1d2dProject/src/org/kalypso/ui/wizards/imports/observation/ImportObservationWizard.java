@@ -51,19 +51,27 @@ import javax.xml.bind.Marshaller;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.ui.INewWizard;
+import org.eclipse.ui.ISources;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.ide.IDE;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.swt.widgets.DateRangeInputControl;
 import org.kalypso.contribs.java.io.filter.MultipleWildCardFileFilter;
 import org.kalypso.jwsdp.JaxbUtilities;
+import org.kalypso.kalypso1d2d.pjt.perspective.Perspective;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DHelper;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -78,6 +86,7 @@ import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.repository.ZmlObservationRepository;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.container.IRepositoryContainer;
+import org.kalypso.repository.file.FileItem;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.wizards.imports.Messages;
 import org.kalypso.zml.ObjectFactory;
@@ -96,6 +105,10 @@ public class ImportObservationWizard extends Wizard implements INewWizard
   private ImportObservationAxisMappingWizardPage m_page2;
 
   private IFolder m_timeseriesFolder;
+
+  private ZmlObservationRepository m_configuredRepository;
+
+  private IViewPart m_timeseriesView;
 
   public ImportObservationWizard( )
   {
@@ -118,7 +131,11 @@ public class ImportObservationWizard extends Wizard implements INewWizard
     final IEvaluationContext context = handlerService.getCurrentState();
     final IFolder scenarioFolder = ((IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME ));
 
-    m_timeseriesFolder = scenarioFolder.getFolder( new Path( "imports/timeseries" ) );
+    final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
+    final IWorkbenchPage page = window == null ? null : window.getActivePage();
+    m_timeseriesView = page == null ? null : page.findView( Perspective.TIMESERIES_REPOSITORY_VIEW_ID );
+
+    m_timeseriesFolder = KalypsoModel1D2DHelper.getTimeeseriesFolder( scenarioFolder );
     m_selection = currentSelection;
 
     // TODO: why not use context.getVariable( ISource.ACTIVE_CURRENT_SELECTION_NAME ) ? Please comment at least
@@ -134,12 +151,13 @@ public class ImportObservationWizard extends Wizard implements INewWizard
     setWindowTitle( Messages.getString( "org.kalypso.ui.wizards.imports.observation.ImportObservationWizard.1" ) ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
 
-    // REMARK: each time this wizard is opened, the central repository is conofigured.
+    // REMARK: each time this wizard is opened, the central repository is configured.
     // This is probably NOT the right place to do this, but at the moment it works...
-    configureRepository();
+    /* We remember the repository in order to import into this one */
+    m_configuredRepository = configureRepository();
   }
 
-  private void configureRepository( )
+  private ZmlObservationRepository configureRepository( )
   {
     /* repository container */
     final IRepositoryContainer repositoryContainer = KalypsoGisPlugin.getDefault().getRepositoryContainer();
@@ -160,7 +178,7 @@ public class ImportObservationWizard extends Wizard implements INewWizard
 
     /* If we still have a good repository, ok */
     if( repositoryContainer.getRepositories().length > 0 )
-      return;
+      return (ZmlObservationRepository) repositoryContainer.getRepositories()[0];
 
     /* Respository was not configured before, so create a new one */
 
@@ -176,6 +194,8 @@ public class ImportObservationWizard extends Wizard implements INewWizard
     repository.setProperty( DateRangeInputControl.NUMBER_OF_DAYS, "0" );
 
     repositoryContainer.addRepository( repository );
+
+    return repository;
   }
 
   /**
@@ -314,7 +334,7 @@ public class ImportObservationWizard extends Wizard implements INewWizard
 
       final Marshaller marshaller = JaxbUtilities.createMarshaller( zmlJC );
       // use IResource
-      final FileOutputStream stream = new FileOutputStream( new File( fileTarget.getPath() ) );
+      final FileOutputStream stream = new FileOutputStream( fileTarget.getPath() );
       final OutputStreamWriter writer = new OutputStreamWriter( stream, "UTF-8" ); //$NON-NLS-1$
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
       marshaller.marshal( type, writer );
@@ -322,18 +342,28 @@ public class ImportObservationWizard extends Wizard implements INewWizard
       writer.close();
 
       m_timeseriesFolder.refreshLocal( IResource.DEPTH_INFINITE, null );
+
+      /* Reload repositories in order show new timeserie */
+      m_configuredRepository.reload();
+
+      /* Select this item inside the timeseries observation */
+      // TODO: does not work at the moment
+      // Probably a problem of the tree viewer in combinisation with missing parent elements
+      // or something similar
+      if( m_timeseriesView != null )
+      {
+        final FileItem item = m_configuredRepository.createItem( fileTarget );
+        m_timeseriesView.getViewSite().getSelectionProvider().setSelection( new StructuredSelection( item ) );
+      }
     }
     catch( final Exception e )
     {
-      // e.printStackTrace();
-      // TODO: use MessageDialog.openMessage() !
-      final MessageBox messageBox = new MessageBox( getShell(), SWT.OK );
-      messageBox.setText( Messages.getString( "org.kalypso.ui.wizards.imports.observation.ImportObservationWizard.4" ) );
-      messageBox.setMessage( Messages.getString( "org.kalypso.ui.wizards.imports.observation.ImportObservationWizard.5" ) );
-      messageBox.open();
-      return true;
+      final IStatus status = StatusUtilities.statusFromThrowable( e );
+      final String title = Messages.getString( "org.kalypso.ui.wizards.imports.observation.ImportObservationWizard.4" );
+      final String message = Messages.getString( "org.kalypso.ui.wizards.imports.observation.ImportObservationWizard.5" );
+      ErrorDialog.openError( getShell(), title, message, status );
+      return false;
     }
     return true;
   }
-
 }

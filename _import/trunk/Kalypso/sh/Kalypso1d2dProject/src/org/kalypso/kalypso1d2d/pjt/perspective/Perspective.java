@@ -25,6 +25,8 @@ public class Perspective implements IPerspectiveFactory
 
   public static final String SCENARIO_VIEW_ID = "org.kalypso.kalypso1d2d.pjt.views.ScenarioView";  //$NON-NLS-1$
 
+  public static final String TIMESERIES_REPOSITORY_VIEW_ID = "org.kalypso.kalypso1d2d.pjt.views.TimeseriesRepositoryView";
+
   public void createInitialLayout( final IPageLayout layout )
   {
     // HACK: make sure that all action sets are initially disabled for this perspective
@@ -45,7 +47,7 @@ public class Perspective implements IPerspectiveFactory
     leftBottom.addView( SCENARIO_VIEW_ID );
 
     leftBottom.addPlaceholder( GisMapOutlineView.ID );
-    leftBottom.addPlaceholder( "org.kalypso.kalypso1d2d.pjt.views.TimeseriesRepositoryView" );
+    leftBottom.addPlaceholder( TIMESERIES_REPOSITORY_VIEW_ID );
 
     rightTop.addPlaceholder( MapView.ID );
     rightTop.addPlaceholder( FeatureTemplateView.ID );
