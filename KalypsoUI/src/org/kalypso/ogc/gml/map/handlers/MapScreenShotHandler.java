@@ -44,9 +44,6 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-import java.net.URL;
 
 import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.commands.AbstractHandler;
@@ -85,9 +82,7 @@ public class MapScreenShotHandler extends AbstractHandler
 
   // processing
 
-  public static final String CONST_TARGET_DIR_URL = "targetDir"; // can be overwritten by an commandListener
-
-  public static final String CONST_EXPORTED_IMAGE_URL = "exportedImage";
+  public static final String CONST_TARGET_DIR_FILE = "targetDir"; // can be overwritten by an commandListener
 
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
@@ -108,12 +103,12 @@ public class MapScreenShotHandler extends AbstractHandler
       final int height = preferences.getInt( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_HEIGHT );
       final String format = preferences.getString( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_FORMAT );
 
-      final URL targetURL = (URL) context.getVariable( MapScreenShotHandler.CONST_TARGET_DIR_URL );
+      final File targetFile = (File) context.getVariable( MapScreenShotHandler.CONST_TARGET_DIR_FILE );
 
-      /* if targetURL is overwritten by ICommand.Executionlistener - take listener targetDir */
+      /* if targetDir is overwritten by ICommand.Executionlistener - take listener targetDir */
       File targetDir;
-      if( targetURL != null )
-        targetDir = new File( targetURL.toURI() );
+      if( targetFile != null )
+        targetDir = new File( targetFile.toURI() );
       else
         targetDir = new File( preferences.getString( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_TARGET ) );
 
@@ -134,19 +129,9 @@ public class MapScreenShotHandler extends AbstractHandler
       final ExportableMap export = new ExportableMap( mapPanel, width, height, format );
       export.exportObject( os, new NullProgressMonitor(), null );
 
-      return imgTarget.toURL();
+      return imgTarget;
     }
     catch( final FileNotFoundException e )
-    {
-      e.printStackTrace();
-      throw (new ExecutionException( e.getMessage() ));
-    }
-    catch( final MalformedURLException e )
-    {
-      e.printStackTrace();
-      throw (new ExecutionException( e.getMessage() ));
-    }
-    catch( final URISyntaxException e )
     {
       e.printStackTrace();
       throw (new ExecutionException( e.getMessage() ));
