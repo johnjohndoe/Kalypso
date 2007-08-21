@@ -27,7 +27,7 @@ cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
 cipk  last update Jan 21 1998
 cipk  last update Dec 16 1997
-C     Last change:  K    22 Jun 2007    8:09 am
+C     Last change:  EF   15 Aug 2007   10:33 am
 CIPK  LAST UPDATED NOVEMBER 13 1997
 cipk  New routine for Smagorinsky closure Jan 1997
       SUBROUTINE COEF2DNT(NN,NTX)
@@ -1776,6 +1776,21 @@ C-
         ESTIFM(IRW,IRW)=AREA(NN)*VEL(3,M)
         ESTIFM(IRW,IRH)=AREA(NN)*VX
         F(IRW)=AREA(NN)*(SPEC(M,1)-VX*VEL(3,M))
+        !EFa aug07, stage-flow boundaries (table)
+        if (istab(m).gt.0.) then
+          af = vel(3,m) / asc
+          if (spec(m,1).lt.0.) then
+            adir = -1.
+          else
+            adir = 1.
+          end if
+          srfel = hel(m) + ao(m)
+          call stfltab(m,srfel,dfdh,ff,1)
+          f(irw) = area(nn) * (af * adir * ff - vx * vel(3,m))
+          estifm(irw,irw) = area(nn) * vel(3,m)
+          estifm(irw,irh) = area(nn) * (vx - af * adir * dfdh)
+        end if
+        !-
       ELSE
         AF=VEL(3,M)/ASC
 CIPK NOV97        F(IRW)=AREA(NN)*(AF*(AC1+AC2*(VEL(3,M)+AO(M)-E0)**CP)-VX
@@ -1809,6 +1824,22 @@ CIPK NOV97
         ESTIFM(IRW,IRH-NDF)=AREA(NN)*VX/2.
         ESTIFM(IRW,IRI)=AREA(NN)*VX/2.
         F(IRW)=AREA(NN)*(SPEC(M,1)-VX*HM)
+        !EFa aug07, stage-flow boundaries (table)
+        if (istab(m).gt.0.) then
+          af = vel(3,m) / asc
+          if (spec(m,1).lt.0.) then
+            adir = -1.
+          else
+            adir = 1.
+          end if
+          srfel = hel(m) + ao(m)
+          call stfltab(m,srfel,dfdh,ff,1)
+          f(irw) = area(nn) * (af * adir * ff - vx * hm)
+          estifm(irw,irw) = area(nn) * hm
+          estifm(irw,irh-ndf) = area(nn) / 2. * (vx - af * adir * dfdh)
+          estifm(irw,iri) = estifm(irw,irh-ndf)
+        end if
+        !-
       ELSE
         AF=HM/ASC
 CIPK NOV97        F(IRW)=AREA(NN)*(AF*(AC1+AC2*(HM+AO(M)-E0)**CP)-VX*HM)

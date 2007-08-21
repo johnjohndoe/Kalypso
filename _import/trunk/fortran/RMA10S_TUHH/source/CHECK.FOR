@@ -1,4 +1,4 @@
-C     Last change:  WP    6 Jul 2007    7:36 am
+C     Last change:  EF   31 Jul 2007   12:41 pm
 CIPK  LAST UPDATE sEP 10 2001 FIX BUG FOR MULTIPLE TRIANGLES
 cipk  last update apr 17 2001 fix case for laterally averaged flows
 cipk  last update apr 12 2001 fix averages for zero flow case
@@ -204,6 +204,10 @@ CIPK JUL02
      +   'EXECUTION TERMINATED - FULL LIST OF ERRORS IN ERROR.OUT'
         STOP
       ENDIF
+
+      !EFa jul07, initialization for stage-flow boundaries
+      CALL STFLTAB(M,SRFEL,DFDH,FF,0)
+      !-
 
 CIPK JUL01
       IF(IOCON .GT. 0) THEN

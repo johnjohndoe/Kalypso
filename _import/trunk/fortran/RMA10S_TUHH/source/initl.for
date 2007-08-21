@@ -1,4 +1,4 @@
-C     Last change:  EF   20 Jul 2007   12:00 pm
+C     Last change:  EF   27 Jul 2007    5:16 pm
 CIPK  LAST UPDATE SEP 05 2006 ADD DEPRATO AND TO TMD
 CIPK  LAST UPDATE APR 05 2006 ADD IPASST ALLOCATION
 CIPK  LAST UPDATE MAR 22 2006 FIX NCQOBS BUG
@@ -921,6 +921,13 @@ CIPK MAR01
           temp_vdot(k,i) = 0
           temp_vdoto(k,i) = 0
         end do
+      end do
+      !-
+
+      !EFa jul07, added istab for stage-flow boundaries (table)
+      ALLOCATE(istab(maxp))
+      do i = 1,maxp
+        istab(i) = 0.
       end do
       !-
 

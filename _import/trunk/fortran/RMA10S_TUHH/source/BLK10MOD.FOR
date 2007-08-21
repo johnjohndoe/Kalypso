@@ -1,4 +1,4 @@
-C     Last change:  EF   19 Jun 2007    1:35 pm
+C     Last change:  EF   30 Jul 2007    1:41 pm
       MODULE BLK10MOD
 
 CIPK AUG05      INCLUDE 'PARAM.COM'
@@ -150,6 +150,8 @@ cipk may02
      +            ,UDST(:),VDST(:),UUDST(:),UVDST(:)
      +            ,VVDST(:),SDST(:),TDST(:),SEDST(:),IMID(:,:),IPASST(:)
      +            ,IOVLDN(:)
+!EFa jul07, added istab for stage-flow boundaries (table)
+     +            ,istab(:)
 cipk sep06 add IOVLDN
 cipk apr06 add IPASST
 C-
@@ -212,6 +214,10 @@ C     LAYER VARIABLE
       REAL (KIND = 8), allocatable   :: matrix(:,:), vector(:)
       !-
 
+      !EFa jul07, insfl for stage-flow boundaries
+      INTEGER                        :: insfl!,iswtb
+      !REAL (KIND = 8)                :: srfel,dfdh,ff
+      !-
 
 
       END MODULE

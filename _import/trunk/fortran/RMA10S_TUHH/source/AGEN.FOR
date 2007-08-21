@@ -1,3 +1,4 @@
+C     Last change:  EF   27 Jul 2007    4:37 pm
 cipk  last update feb 09 2001 allow for zero length cc lines
       SUBROUTINE AGEN
       USE BLK10MOD
@@ -15,9 +16,14 @@ C-
 *...... Skip if 1-d or line is not stage flow
 *
 cipk feb01
-        IF(MAX .lt. 3) GO TO 300
-        IF(STQA(J) .EQ. 0.) GO TO 300
+        !EFa jul07, moved for stage-flow boundaries
         ALN(J)=0.
+        !-
+        IF(MAX .lt. 3) GO TO 300
+        !EFa jul07, deactivated/moved for stage-flow boundaries
+        !IF(STQA(J) .EQ. 0.) GO TO 300
+        !ALN(J)=0.
+        !-
         THET=STQT(J)
         MAX = LMT(J)-2
         DO 150 K = 1, MAX, 2

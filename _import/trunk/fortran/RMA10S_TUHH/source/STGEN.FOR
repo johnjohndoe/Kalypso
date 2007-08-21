@@ -1,4 +1,4 @@
-C     Last change:  K    27 Jun 2007    5:45 pm
+C     Last change:  EF   31 Jul 2007   11:54 am
 cipk  last update feb 09 2001 allow for zero length cc lines
 
       SUBROUTINE STGEN(J,A1,A2,A3,A4,A5,QQAL)
@@ -35,8 +35,12 @@ C-
 C-
 C...... Define a nominal Q and generate B-C's
 C-
-      QREQ=A1+A2*(VEL(3,NA)+AO(NA)-A3)**A4
-      IF(MAX .EQ. 1) QREQ=A1
+      !EFa jul07, changes with respect to RMA2
+      !QREQ=A1+A2*(VEL(3,NA)+AO(NA)-A3)**A4
+      QREQ=A1
+      IF(A1 .EQ. 0.) QREQ=1.
+      !IF(MAX .EQ. 1) QREQ=A1
+      !-
       CALL QGEN(J,QREQ,A5,QQAL)
       RETURN
       END

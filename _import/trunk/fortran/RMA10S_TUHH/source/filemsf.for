@@ -1,4 +1,4 @@
-C     Last change:  K    20 Jun 2007    4:08 pm
+C     Last change:  EF   30 Jul 2007   11:32 am
 cipk  last update SEP 05 2006 FIX AMASSOUT BUG
 cipk  last update MAY 30 2006 add MASS OUTPUT OPTION
 cipk  last update june 28 2005 add time series option
@@ -49,7 +49,10 @@ CIPK SEP04 REMOVE FNAM ADDD FNAMMES
      +            ,FNAM14,FNAM15,FNAM16,FNAM17,FNAMIN,fnam18,FNAM19
      +            ,FNAM20,FNAM24,FNAM25,FNAM23,FNAM26,FNAM27,FNAM28
      +            ,FNAM29,FNAM30,FNAM31,FNAM32,FNAM21,FNAM22,FNAM33
-     +            ,FNAM34,FNAM35,FNAM36,FNAM37, FNAM38
+     +            ,FNAM34,FNAM35,FNAM36,FNAM37, FNAM38,
+      !EFa jul07, added FNAM39 for input data file for stage-flow boundaries
+     + FNAM39
+      !-
 
 !NiS,may06:
       INTEGER :: rst_error !iostat-variable
@@ -768,6 +771,12 @@ CIPK AUG02 ADD SMS FORMAT OUTPUT
           ENDIF
           FNAM28=FNAME
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!EFa jul07, ADD STAGE FLOW TABLE INPUT
+        ELSEIF(ID .eq. 'STFLFIL ') THEN
+          INSFL=39
+          OPEN(INSFL,FILE=FNAME,STATUS='OLD',FORM='FORMATTED')
+          FNAM39=FNAME
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 CIPK JUN03 ADD WEIGHTING ASCII  FILE
         ELSEIF(ID .eq. 'INWGT   ') THEN
           INWGT=10
@@ -1011,6 +1020,10 @@ CIPK JUN03
       IF(IWAVOT .EQ. 82) WRITE(LOUT,6048) FNAM28
 CIPK JUN05
  6048 FORMAT(' OUTPUT RMA WAVE DATA FILE NAME     ',A96)
+!EFa jul07
+      IF(insfl .EQ. 39) WRITE(LOUT,6056) FNAM39
+ 6056 FORMAT(' INPUT STAGE-FLOW BOUNDARIES DATA FILE NAME     ',A96)
+!-
       IF(INCSTR .EQ. 20) WRITE(LOUT,6052) FNAM33
  6052 FORMAT(' INPUT CONTROL STRUCTURE DATA FILE NAME     ',A96)
       IF(INTIMS .EQ. 22) WRITE(LOUT,6053) FNAM34

@@ -1,4 +1,4 @@
-!Last change:  WP    9 Jul 2007   11:23 am
+!Last change:  EF    8 Sep 2007   12:39 pm
 
 !****************************************************************
 !1D subroutine for calculation of elements, whose corner nodes are described with
@@ -1571,6 +1571,18 @@ ENDDO HBCAssign
 QBCAssign: DO N=1, NCN, 2
   M=NCON(N)
 
+  !EFa aug07, stage-flow boundaries
+  IF(ISTLIN(M) .NE. 0) THEN
+    J=ISTLIN(M)
+    AC1=STQ(J)
+    AC2=STQA(J)
+    E0=STQE(J)
+    CP=STQC(J)
+  ELSE
+    AC2=0.
+  ENDIF
+  !-
+
   !if no BC for Q then cycle
   IF(NFIX(M)/1000.LT.13) CYCLE QBCAssign
 
@@ -1596,6 +1608,29 @@ QBCAssign: DO N=1, NCN, 2
   ESTIFM(IRW,IRW) = ah(m) * area(nn)
   ESTIFM(IRW,IRH) = dahdh(m) * vt * area(nn)
   F(IRW)          = (SPEC(M,1) - VT * ah(m)) * area(nn)
+  !EFa aug07, stage-flow boundaries
+  IF(AC2.ne.0.) THEN
+    IF (IDNOPT.LT .0) THEN
+      HD=VEL(3,M)
+      CALL AMF(HS,HD,AKP(M),ADT(M),ADB(M),AML,DUM2,0)
+      WSEL = ADO(M)+HS
+    ELSE
+      WSEL = VEL(3,M)+AO(M)
+    ENDIF
+      ESTIFM(IRW,IRH)=ESTIFM(IRW,IRH)-AREA(NN)*(AC2*CP*(WSEL-E0)**(CP-1.0))
+      F(IRW)=F(IRW)+AREA(NN)*(AC2*(WSEL-E0)**CP)
+    ELSEIF (istab(m).gt.0.) then
+      if (spec(m,1).lt.0.) then
+        adir = -1.
+      else
+        adir = 1.
+      end if
+      srfel = hel(m) + ao(m)
+      call stfltab(m,srfel,dfdh,ff,1)
+      estifm(irw,irh) = estifm(irw,irh) - area(nn)*dfdh*adir
+      f(irw) = f(irw) + area(nn) * (ff * adir - spec(m,1))
+  ENDIF
+  !-
 ENDDO QBCAssign
 
 
