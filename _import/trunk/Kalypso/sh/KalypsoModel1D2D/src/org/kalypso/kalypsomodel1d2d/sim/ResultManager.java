@@ -54,8 +54,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.xml.bind.JAXBException;
-
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -75,14 +73,10 @@ import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultType;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
-import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.SimulationException;
-import org.kalypso.template.gismapview.Gismapview;
-import org.kalypso.template.gismapview.Gismapview.Layers;
-import org.kalypso.template.types.StyledLayerType;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.Fill;
@@ -170,6 +164,8 @@ public class ResultManager implements Runnable
     }
   };
 
+  private boolean m_init = false;
+
   public ResultManager( final File inputDir, final File outputDir, final String resultFilePattern, final ISimulationDataProvider dataProvider, final RMA10Calculation calculation, final Date startTime ) throws InvocationTargetException
   {
     m_inputDir = inputDir;
@@ -196,6 +192,8 @@ public class ResultManager implements Runnable
    */
   public void calculationAboutToStart( )
   {
+    m_init = true;
+
     /* Filter existing .2d files at that point (filters out model.2d) */
     final File[] existing2dFiles = m_inputDir.listFiles( FILTER_2D );
     m_found2dFiles.addAll( Arrays.asList( existing2dFiles ) );
@@ -211,6 +209,9 @@ public class ResultManager implements Runnable
    */
   public void run( )
   {
+    if( !m_init )
+      return;
+
     final File[] existing2dFiles = m_inputDir.listFiles( FILTER_2D );
     for( final File file : existing2dFiles )
     {
@@ -315,6 +316,9 @@ public class ResultManager implements Runnable
 
   public void finish( ) throws SimulationException
   {
+    if( m_init )
+      return;
+
     /* Process all remaining .2d files. */
     run();
 
@@ -327,17 +331,16 @@ public class ResultManager implements Runnable
     /* other, general post-processing stuff. */
     try
     {
-      processTemplates();
+      /* Write template sld into result folder */
+      final URL resultStyleURL = (URL) m_dataProvider.getInputForID( "ResultTemplate" );
+      ZipUtilities.unzip( resultStyleURL, m_outputDir );
+
       processVectorStyles();
       processTinStyles();
 
       // TODO: error handling! handle stati everywhere....
 
       writeResultMeta( resultProcessingStatus );
-    }
-    catch( final SimulationException se )
-    {
-      throw se;
     }
     catch( final Throwable e )
     {
@@ -354,46 +357,6 @@ public class ResultManager implements Runnable
     final GMLWorkspace workspace = m_calcUnitResultMeta.getWrappedFeature().getWorkspace();
     final File metaFile = new File( m_outputDir, "resultMeta.gml" );
     GmlSerializer.serializeWorkspace( metaFile, workspace, "UTF-8" );
-  }
-
-  private void processTemplates( ) throws SimulationException, IOException, JAXBException
-  {
-    /* Write template sld into result folder */
-    final URL resultStyleURL = (URL) m_dataProvider.getInputForID( "ResultTemplate" );
-    ZipUtilities.unzip( resultStyleURL, m_outputDir );
-
-    final File gmtTotalFile = new File( m_outputDir, "Gesamtergebnis.gmt" );
-
-    final Gismapview totalTemplate = GisTemplateHelper.loadGisMapView( gmtTotalFile );
-
-    /* Add sub-map for each step-subdirectory */
-    final File[] childFiles = m_outputDir.listFiles();
-    for( final File childFile : childFiles )
-    {
-      if( childFile.isDirectory() )
-        addChildMaps( totalTemplate, childFile );
-    }
-
-    GisTemplateHelper.saveGisMapView( totalTemplate, gmtTotalFile, "UTF-8" );
-  }
-
-  private void addChildMaps( final Gismapview totalTemplate, final File childFile )
-  {
-    final Layers layers = totalTemplate.getLayers();
-    final List<StyledLayerType> layerList = layers.getLayer();
-
-    final File[] gmtFiles = childFile.listFiles( FILTER_GMT );
-    for( final File file : gmtFiles )
-    {
-      final StyledLayerType layer = GisTemplateHelper.OF_TEMPLATE_TYPES.createStyledLayerType();
-      layer.setId( "SUB_" + childFile.getName() + "_" + file.getName() );
-      layer.setName( childFile.getName() + " - " + file.getName() );
-      layer.setHref( childFile.getName() + "/" + file.getName() );
-      layer.setVisible( false );
-      layer.setLinktype( "gmt" );
-
-      layerList.add( layer );
-    }
   }
 
   private void processVectorStyles( )

@@ -129,6 +129,7 @@ public class PolyElement extends Element2D implements IPolyElement
   /**
    * Returns the (dereferenced) nodes of this egde. Elements of the array may be null.
    */
+  @Override
   public FE1D2DEdge[] getEdgesAsArray( )
   {
     final Feature feature = getFeature();
@@ -151,6 +152,7 @@ public class PolyElement extends Element2D implements IPolyElement
     return edges;
   }
 
+  @Override
   @SuppressWarnings("unchecked")
   public void setEdges( final IFE1D2DEdge[] edges )
   {
@@ -213,6 +215,7 @@ public class PolyElement extends Element2D implements IPolyElement
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFEElement#getContainers()
    */
+  @Override
   public IFeatureWrapperCollection<IFE1D2DComplexElement> getContainers( )
   {
     return containers;
@@ -221,6 +224,7 @@ public class PolyElement extends Element2D implements IPolyElement
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFEElement#getEdges()
    */
+  @Override
   public IFeatureWrapperCollection<IFE1D2DEdge> getEdges( )
   {
     return edges;
@@ -229,6 +233,7 @@ public class PolyElement extends Element2D implements IPolyElement
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement#getNodes()
    */
+  @Override
   public List<IFE1D2DNode> getNodes( )
   {
 
@@ -286,6 +291,7 @@ public class PolyElement extends Element2D implements IPolyElement
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement#addEdge(java.lang.String)
    */
+  @Override
   public void addEdge( final String edgeID )
   {
     if( edgeID == null )
@@ -329,7 +335,7 @@ public class PolyElement extends Element2D implements IPolyElement
    */
   public String getRoughnessClsID( )
   {
-    return getFeature().getProperty( IFE1D2DElement.PROP_ROUGHNESS_CLS_ID ).toString();
+    return (String) getFeature().getProperty( IFE1D2DElement.PROP_ROUGHNESS_CLS_ID );
   }
 
   /**
