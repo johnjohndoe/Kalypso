@@ -40,11 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit;
 
-import java.lang.reflect.Constructor;
-
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.ToolBarManager;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -52,7 +47,6 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -60,12 +54,9 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DUIImages;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine1D;
@@ -79,9 +70,6 @@ import org.kalypso.kalypsomodel1d2d.ui.map.cline.RouteLineElementWidget;
 import org.kalypso.kalypsomodel1d2d.ui.map.element1d.CreateFEElement1DWidget;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListener;
-import org.kalypso.kalypsosimulationmodel.core.Util;
-import org.kalypso.ogc.gml.map.widgets.PanToWidget;
-import org.kalypso.ogc.gml.map.widgets.ZoomInByRectWidget;
 import org.kalypso.ogc.gml.widgets.IWidget;
 
 /**
@@ -90,91 +78,9 @@ import org.kalypso.ogc.gml.widgets.IWidget;
  */
 public class CalculationUnitAdministerComponent
 {
-  class ActivateStrategyWidgetAction<T extends IWidget> extends Action
-  {
+  private Composite m_parent;
 
-    private final IWidgetWithStrategy widgetWithStrategy;
-
-    private final Class<T> strategyClass;
-
-    private final ImageDescriptor imageDescriptor;
-
-    private final String name;
-
-    private final String tooltip;
-
-    public ActivateStrategyWidgetAction( final IWidgetWithStrategy widgetWithStrategy, final Class<T> strategyClass, final String name, final String tooltip, final ImageDescriptor imageDescriptor )
-    {
-      this.widgetWithStrategy = widgetWithStrategy;
-      this.strategyClass = strategyClass;
-      this.name = name;
-      this.tooltip = tooltip;
-      this.imageDescriptor = imageDescriptor;
-    }
-
-    /**
-     * @see org.eclipse.jface.action.Action#run()
-     */
-    @Override
-    public void run( )
-    {
-
-      try
-      {
-        Constructor<T> constructor = strategyClass.getConstructor( new Class[] { String.class, String.class } );
-        IWidget widget = constructor.newInstance( new Object[] { name, tooltip } );
-        widgetWithStrategy.setStrategy( widget );
-        System.out.println( "Strategy set" );
-      }
-      catch( Throwable e )
-      {
-        e.printStackTrace();
-      }
-    }
-
-    /**
-     * @see org.eclipse.jface.action.Action#getImageDescriptor()
-     */
-    @Override
-    public ImageDescriptor getImageDescriptor( )
-    {
-      return imageDescriptor;
-    }
-
-    /**
-     * @see org.eclipse.jface.action.Action#getText()
-     */
-    @Override
-    public String getText( )
-    {
-      return name;
-    }
-
-    /**
-     * @see org.eclipse.jface.action.Action#getToolTipText()
-     */
-    @Override
-    public String getToolTipText( )
-    {
-      return tooltip;
-    }
-
-    /**
-     * @see org.eclipse.jface.action.Action#getId()
-     */
-    @Override
-    public String getId( )
-    {
-      return "ID_" + name;
-    }
-
-  }
-
-  private FormToolkit toolkit;
-
-  private Composite parent;
-
-  private CalculationUnitDataModel dataModel;
+  private CalculationUnitDataModel m_dataModel;
 
   private Composite rootComposite;
 
@@ -185,10 +91,6 @@ public class CalculationUnitAdministerComponent
   private Button goButton;
 
   private Image goImage;
-
-  /** holds button that activate wiget strategies */
-// private CoolBar coolbar;
-  private ToolBarManager toolbarManager;
 
   private static final String ACTION_KEY_ADMINISTER = "Verwalten";
 
@@ -202,13 +104,13 @@ public class CalculationUnitAdministerComponent
 
   private static final String ELEMENTS_KEY_BOUNDARY_CONDITIONS = "Rand-Bedingung";
 
-  private KeyBasedDataModelChangeListener settingsKeyListener = new KeyBasedDataModelChangeListener()
+  private final KeyBasedDataModelChangeListener settingsKeyListener = new KeyBasedDataModelChangeListener()
   {
 
     public void dataChanged( final String key, final Object newValue )
     {
 
-      Display display = parent.getDisplay();
+      Display display = m_parent.getDisplay();
       final Runnable runnable = new Runnable()
       {
         public void run( )
@@ -228,7 +130,7 @@ public class CalculationUnitAdministerComponent
 
   };
 
-  private void updateThisSection( Object newValue )
+  private void updateThisSection( final Object newValue )
   {
     if( newValue instanceof ICalculationUnit2D )
     {
@@ -257,7 +159,7 @@ public class CalculationUnitAdministerComponent
       actionsCombo.add( ACTION_KEY_DRAW );
       actionsCombo.add( ACTION_KEY_ADMINISTER );
       elementsCombo.add( ELEMENTS_KEY_BOUNDARY_CONDITIONS );
-// elementsCombo.add(ELEMENTS_KEY_BOUNDARY_CONDITIONS);
+      // elementsCombo.add(ELEMENTS_KEY_BOUNDARY_CONDITIONS);
     }
     else
     {
@@ -273,39 +175,19 @@ public class CalculationUnitAdministerComponent
 
   }
 
-  public void createControl( CalculationUnitDataModel dataModel, FormToolkit toolkit, Composite parent )
+  public void createControl( final CalculationUnitDataModel dataModel, final Composite parent )
   {
-    this.toolkit = toolkit;
-    this.parent = parent;
-    this.dataModel = dataModel;
+    m_parent = parent;
+    m_dataModel = dataModel;
+
     guiComboSelections( parent );
     dataModel.addKeyBasedDataChangeListener( settingsKeyListener );
   }
 
-  private void guiComboSelections( Composite parentComposite )
+  private void guiComboSelections( final Composite parentComposite )
   {
     rootComposite = new Composite( parentComposite, SWT.FLAT );
     rootComposite.setLayout( new GridLayout( 3, false ) );
-// CoolBarManager cbMng = new CoolBarManager();
-// CoolBar coolBar = cbMng.createControl( rootComposite );
-// coolBar.setLayout( new FillLayout() );
-//
-// GridData data1 = new GridData(GridData.FILL_HORIZONTAL|GridData.FILL_VERTICAL);
-// data1.horizontalSpan = 3;
-// coolBar.setLayoutData( data1 );
-// cbMng.add( createSetZoomWidgetAction() );
-//
-// IToolBarManager item;
-// System.out.println("ItemSize="+cbMng.getControl().getItemSizes().length);
-
-    toolbarManager = new ToolBarManager();
-    ToolBar toolbar = toolbarManager.createControl( rootComposite );
-    toolbar.setLayout( new FillLayout() );
-    GridData data1 = new GridData( GridData.FILL_HORIZONTAL | GridData.FILL_VERTICAL );
-    data1.horizontalSpan = 3;
-    toolbar.setLayoutData( data1 );
-    populateToolbar( toolbarManager );
-    toolbarManager.update( true );
 
     actionsCombo = new Combo( rootComposite, SWT.RIGHT | SWT.READ_ONLY | SWT.BORDER );
     // actionsCombo.add( ACTION_KEY_ADMINISTER );
@@ -315,7 +197,7 @@ public class CalculationUnitAdministerComponent
     actionsCombo.addModifyListener( new ModifyListener()
     {
 
-      public void modifyText( ModifyEvent e )
+      public void modifyText( final ModifyEvent e )
       {
         if( getSelectedCalcUnit() instanceof ICalculationUnit1D2D )
         {
@@ -362,51 +244,13 @@ public class CalculationUnitAdministerComponent
 
   }
 
-  private void populateToolbar( ToolBarManager mng )
-  {
-
-    IWidgetWithStrategy widgetWithStrategy = (IWidgetWithStrategy) dataModel.getData( ICommonKeys.WIDGET_WITH_STRATEGY );
-
-    mng.add( new ActivateStrategyWidgetAction<ZoomInByRectWidget>( widgetWithStrategy, ZoomInByRectWidget.class, "Zoom in", "Zoom in descr", KalypsoModel1D2DUIImages.IMG_DESC_ZOOM_WITH_RECT ) );
-
-    mng.add( new ActivateStrategyWidgetAction<PanToWidget>( widgetWithStrategy, PanToWidget.class, "Pan to", "Pan to", KalypsoModel1D2DUIImages.IMG_DESC_PAN ) );
-    // save action
-    Action saveAction = new Action()
-    {
-      /**
-       * @see org.eclipse.jface.action.Action#run()
-       */
-      @Override
-      public void run( )
-      {
-        Util.saveAllModel();
-      }
-
-      /**
-       * @see org.eclipse.jface.action.Action#getImageDescriptor()
-       */
-      @Override
-      public ImageDescriptor getImageDescriptor( )
-      {
-        return KalypsoModel1D2DUIImages.IMG_DESC_SAVE;
-      }
-    };
-
-    saveAction.setText( "Save all models" );
-    saveAction.setToolTipText( "Save All models" );
-    mng.add( saveAction );
-  }
-
-  /**
-   * 
-   */
   public void changeStategy( )
   {
     final String selectedType = elementsCombo.getText();
     final String selectedAction = actionsCombo.getText();
-    IWidgetWithStrategy widgetWithStrategy = (IWidgetWithStrategy) dataModel.getData( ICommonKeys.WIDGET_WITH_STRATEGY );
+    final IWidgetWithStrategy widgetWithStrategy = (IWidgetWithStrategy) m_dataModel.getData( ICommonKeys.WIDGET_WITH_STRATEGY );
 
-    final Object selectedWrapper = dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
+    final Object selectedWrapper = m_dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
 
     IWidget strategy = null;
 
@@ -414,22 +258,22 @@ public class CalculationUnitAdministerComponent
     {
       if( ELEMENTS_KEY_BOUNDARY_UP.equals( selectedType ) )
       {
-        strategy = new AlterCalUnitBorderWidget( dataModel );
+        strategy = new AlterCalUnitBorderWidget( m_dataModel );
       }
       else if( ELEMENTS_KEY_ELEMENTS.equals( selectedType ) )
       {
-        strategy = new AddRemoveElementToCalUnitWidget( dataModel );
+        strategy = new AddRemoveElementToCalUnitWidget( m_dataModel );
       }
       else if( ELEMENTS_KEY_SUBUNITS.equals( selectedType ) )
       {
         final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-        final CreateSubCalculationUnitCopyWizard calculationSubWizard = new CreateSubCalculationUnitCopyWizard( dataModel );
+        final CreateSubCalculationUnitCopyWizard calculationSubWizard = new CreateSubCalculationUnitCopyWizard( m_dataModel );
         final WizardDialog wizardDialog = new WizardDialog( shell, calculationSubWizard );
         wizardDialog.open();
       }
       else if( ELEMENTS_KEY_BOUNDARY_CONDITIONS.equals( selectedType ) )
       {
-        strategy = new AddRemoveBoundaryConditionToCalUnitWidget( dataModel );
+        strategy = new AddRemoveBoundaryConditionToCalUnitWidget( m_dataModel );
       }
     }
     else if( ACTION_KEY_DRAW.equals( selectedAction ) )
@@ -463,6 +307,6 @@ public class CalculationUnitAdministerComponent
 
   public Object getSelectedCalcUnit( )
   {
-    return dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
+    return m_dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
   }
 }

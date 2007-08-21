@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.merge;
 
@@ -76,7 +76,6 @@ import org.kalypsodeegree_impl.tools.Debug;
  * @author Patrice Congo
  * 
  */
-@SuppressWarnings( { "unchecked", "hiding" }) //$NON-NLS-1$ //$NON-NLS-2$
 public class CalUnitDisplayElement implements DisplayElementDecorator
 {
   private final ICalculationUnit<IFE1D2DElement> calUnit;
@@ -86,20 +85,10 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
   private boolean highlighted;
 
   private boolean selected;
-  
-  private Color elementColor = 
-      new Color( 
-            Color.lightGray.getRed(), 
-            Color.lightGray.getGreen(),            
-            Color.lightGray.getBlue(),
-            256/2);
-  
-  private Color lineElementColor = 
-    new Color( 
-          Color.MAGENTA.getRed(), 
-          Color.MAGENTA.getGreen(),            
-          Color.MAGENTA.getBlue(),
-          256/2 );
+
+  private final Color elementColor = new Color( Color.lightGray.getRed(), Color.lightGray.getGreen(), Color.lightGray.getBlue(), 256 / 2 );
+
+  private final Color lineElementColor = new Color( Color.MAGENTA.getRed(), Color.MAGENTA.getGreen(), Color.MAGENTA.getBlue(), 256 / 2 );
 
   public CalUnitDisplayElement( final ICalculationUnit<IFE1D2DElement> calUnit )
   {
@@ -190,7 +179,6 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
    */
   public void paint( final Graphics g, final GeoTransform projection )
   {
-
     if( calUnit == null )
     {
       return;
@@ -199,14 +187,14 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
     final GM_Envelope sourceRect = projection.getSourceRect();
     final LinkedList<ICalculationUnit> calUnitTreeToDraw = new LinkedList<ICalculationUnit>();
     calUnitTreeToDraw.add( calUnit );
-     
+
     while( !calUnitTreeToDraw.isEmpty() )
     {
       final ICalculationUnit<IFE1D2DElement> currentUnit = calUnitTreeToDraw.removeFirst();
-//      final Color color = new Color( Color.lightGray );
+      // final Color color = new Color( Color.lightGray );
       final IFeatureWrapperCollection<IFE1D2DElement> elements = currentUnit.getElements();
       final List<IFE1D2DElement> visibleElements = elements.query( sourceRect );
-      boolean includeChildLines = currentUnit.equals( calUnit );
+      final boolean includeChildLines = currentUnit.equals( calUnit );
 
       for( final IFE1D2DElement element : visibleElements )
       {
@@ -235,8 +223,7 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
             throw new RuntimeException( e );
           }
         }
-        else if( element instanceof ILineElement || 
-                      element instanceof IElement1D  )
+        else if( element instanceof ILineElement || element instanceof IElement1D )
         {
           if( includeChildLines )
           {
@@ -290,7 +277,6 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
 
   public static final void paintLineString( final GM_Curve curve, final Color color, final Graphics2D g2d, final GeoTransform projection ) throws Exception
   {
-
     final int[][] linePointCoords = calcTargetCoordinates( projection, curve );
 
     final Stroke stroke = new BasicStroke( 5 );
@@ -310,7 +296,7 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
       final GM_SurfacePatch patch = surface.get( 0 );
       final GM_Position[] ex = patch.getExteriorRing();
 
-      final Area areaouter = new Area(SurfacePatchVisitableDisplayElement.areaFromRing( projection, width, ex ));
+      final Area areaouter = new Area( SurfacePatchVisitableDisplayElement.areaFromRing( projection, width, ex ) );
 
       return areaouter;
     }
