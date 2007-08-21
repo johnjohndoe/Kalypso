@@ -48,7 +48,7 @@ import org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme;
 import org.kalypso.ogc.gml.map.widgets.editrelation.WMSGetFeatureInfoWidget;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 
-public class WMSGetfeatureInfoWidgetDelegate extends AbstractGisMapEditorActionDelegate
+public class WMSGetfeatureInfoWidgetDelegate extends AbstractWidgetWithOptionActionDelegate
 {
   public WMSGetfeatureInfoWidgetDelegate( )
   {

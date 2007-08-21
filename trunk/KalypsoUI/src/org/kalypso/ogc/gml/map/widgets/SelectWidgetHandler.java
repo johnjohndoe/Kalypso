@@ -15,7 +15,9 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.commands.IElementUpdater;
 import org.eclipse.ui.menus.UIElement;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -24,11 +26,11 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ui.editor.mapeditor.AbstractMapPart;
+import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
+import org.kalypso.ui.editor.mapeditor.views.MapWidgetView;
 import org.osgi.framework.Bundle;
 
 /**
- * This abstract {@link IHandler} implementation
- * 
  * @author Stefan Kurzbach
  */
 public class SelectWidgetHandler extends AbstractHandler implements IHandler, IElementUpdater, IExecutableExtension
@@ -96,9 +98,23 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
       final UIJob job = new UIJob( shell.getDisplay(), "Widget auswählen" )
       {
         @Override
-        public IStatus runInUIThread( IProgressMonitor monitor )
+        public IStatus runInUIThread( final IProgressMonitor monitor )
         {
-          mapPanel.getWidgetManager().setActualWidget( widget );
+          try
+          {
+            if( widget instanceof IWidgetWithOptions )
+            {
+              final MapWidgetView widgetView = (MapWidgetView) activePart.getSite().getPage().showView( MapWidgetView.ID, null, IWorkbenchPage.VIEW_VISIBLE );
+              widgetView.setWidgetForPanel( mapPanel, (IWidgetWithOptions) widget );
+            }
+            else
+              mapPanel.getWidgetManager().setActualWidget( widget );
+          }
+          catch( PartInitException e )
+          {
+            return e.getStatus();
+          }
+
           return Status.OK_STATUS;
         }
       };
@@ -121,8 +137,8 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
     try
     {
       final Bundle bundle = Platform.getBundle( pluginId );
-      final Class widgetClass = bundle.loadClass( widgetName );
-      return (IWidget) widgetClass.newInstance();
+      final Class<IWidget> widgetClass = bundle.loadClass( widgetName );
+      return widgetClass.newInstance();
     }
     catch( final Exception e )
     {
@@ -149,7 +165,6 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
     {
       m_pluginIdFromExtension = config.getContributor().getName();
     }
-
   }
 
   /**

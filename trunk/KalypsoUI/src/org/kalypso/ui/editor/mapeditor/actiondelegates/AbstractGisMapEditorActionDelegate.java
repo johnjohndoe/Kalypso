@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,14 +36,13 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.mapeditor.actiondelegates;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchPartSite;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ui.editor.AbstractGisEditorActionDelegate;
@@ -74,23 +73,16 @@ public abstract class AbstractGisMapEditorActionDelegate extends AbstractGisEdit
       final WidgetActionPart widgetPart = getPart();
       if( widgetPart != null && action != null )
       {
-        if( action.isChecked() )
+        final MapPanel mapPanel = widgetPart.getMapPanel();
+        if( mapPanel != null )
         {
-          // da der event evt vom AWT-Thread kommt
-          final IWorkbenchPartSite site = widgetPart.getSite();
-          if( site != null )
-          {
-            site.getShell().getDisplay().asyncExec( new Runnable()
-            {
-              public void run( )
-              {
-                final IWidget widget = getWidget();
-                final MapPanel mapPanel = widgetPart.getMapPanel();
-                if( mapPanel != null )
-                  mapPanel.getWidgetManager().setActualWidget( widget );
-              }
-            } );
-          }
+          final IWidget actualWidget = mapPanel.getWidgetManager().getActualWidget();
+          action.setChecked( actualWidget == m_widget );
+
+          // HACK: even reactivate the widget, as there is often only one widget per map
+          // so we set the current mapPanel to the current widget
+          if( actualWidget == m_widget )
+            mapPanel.getWidgetManager().setActualWidget( actualWidget );
         }
       }
     }
@@ -104,7 +96,7 @@ public abstract class AbstractGisMapEditorActionDelegate extends AbstractGisEdit
   /**
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
-  public final void run( final IAction action )
+  public void run( final IAction action )
   {
     // activate my widget
     final WidgetActionPart part = getPart();
@@ -114,8 +106,7 @@ public abstract class AbstractGisMapEditorActionDelegate extends AbstractGisEdit
     final MapPanel mapPanel = part.getMapPanel();
     if( mapPanel == null )
       return;
-// TODO: this is also called when another widget is activated, maybe we have to check here if the 
-    // action is checked at the moment
+
     if( action.isChecked() )
       mapPanel.getWidgetManager().setActualWidget( getWidget() );
   }
@@ -129,7 +120,7 @@ public abstract class AbstractGisMapEditorActionDelegate extends AbstractGisEdit
   protected void refreshAction( final IAction action, final ISelection selection )
   {
     final WidgetActionPart part = getPart();
-    final MapPanel mapPanel = part == null ? null :part.getMapPanel();
+    final MapPanel mapPanel = part == null ? null : part.getMapPanel();
 
     final boolean isEnabled = getWidget().canBeActivated( selection, mapPanel );
     if( action != null )
