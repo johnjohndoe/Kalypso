@@ -151,7 +151,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
 
   public void setCurrent( final IContainer szenarioFolder )
   {
-    m_controller.szenarioChanged( (IFolder)szenarioFolder );
+    m_controller.szenarioChanged( (IFolder) szenarioFolder );
 
     final Job job = new Job( "" )
     {
@@ -296,7 +296,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
     modelWorkspace.postCommand( command );
   }
 
-  private CommandableWorkspace getModelWorkspace( final Class< ? extends IFeatureWrapper2> wrapperClass ) throws IllegalArgumentException, CoreException
+  private synchronized CommandableWorkspace getModelWorkspace( final Class< ? extends IFeatureWrapper2> wrapperClass ) throws IllegalArgumentException, CoreException
   {
     if( !LOCATION_MAP.containsKey( wrapperClass ) )
       throw new IllegalArgumentException( Messages.getString("SzenarioDataProvider.13") + wrapperClass ); //$NON-NLS-1$
@@ -304,6 +304,9 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
     final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
 
     final KeyPoolListener keyPoolListener = m_keyMap.get( wrapperClass );
+    if( keyPoolListener == null )
+      return null;
+
     final IPoolableObjectType key = keyPoolListener.getKey();
     if( key == null )
       return null;
