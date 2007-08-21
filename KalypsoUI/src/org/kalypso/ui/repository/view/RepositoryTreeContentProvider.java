@@ -40,18 +40,17 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.repository.view;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.IRepositoryListener;
 import org.kalypso.repository.RepositoryException;
 import org.kalypso.repository.container.IRepositoryContainer;
+import org.kalypso.repository.container.IRepositoryContainerListener;
 
 /**
  * Tree Content provider for contents of the RepositoryExplorer.
@@ -60,7 +59,9 @@ import org.kalypso.repository.container.IRepositoryContainer;
  */
 public class RepositoryTreeContentProvider implements ITreeContentProvider
 {
-  private final Map<IRepository, IRepositoryListener> m_repositoryListeners = new HashMap<IRepository, IRepositoryListener>();
+  private IRepositoryContainerListener m_containerListener;
+
+  private IRepositoryListener m_repositoryListener;
 
   /**
    * Helper
@@ -167,14 +168,12 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
     {
       final IRepositoryContainer con = (IRepositoryContainer) oldInput;
 
+      con.removeRepositoryContainerListener( m_containerListener );
+
       final IRepository[] repositories = con.getRepositories();
       for( final IRepository ar : repositories )
       {
-        final IRepositoryListener listener = m_repositoryListeners.get( ar );
-        if( listener == null )
-          continue;
-
-        ar.removeRepositoryListener( listener );
+        ar.removeRepositoryListener( m_repositoryListener );
       }
     }
 
@@ -183,21 +182,35 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
     {
       final IRepositoryContainer con = (IRepositoryContainer) newInput;
 
-      final IRepository[] repositories = con.getRepositories();
-      for( final IRepository ar : repositories )
+      /* Re-create both listeners in order to have a fresh reference to the new viewer */
+      m_repositoryListener = new IRepositoryListener()
       {
-        final IRepositoryListener listener = new IRepositoryListener()
+        public void onRepositoryStructureChanged( )
         {
-          public void onRepositoryStructureChanged( )
+          ViewerUtilities.refresh( viewer, true );
+        }
+      };
+
+      m_containerListener = new IRepositoryContainerListener()
+      {
+        public void onRepositoryContainerChanged( )
+        {
+          ViewerUtilities.refresh( viewer, true );
+
+          /* Re-Register all listeners for the repositories */
+
+          final IRepository[] repositories = con.getRepositories();
+          for( final IRepository repository : repositories )
           {
-            viewer.refresh();
+            repository.removeRepositoryListener( m_repositoryListener );
+            repository.addRepositoryListener( m_repositoryListener );
           }
-        };
+        }
+      };
 
-        ar.addRepositoryListener( listener );
-        m_repositoryListeners.put( ar, listener );
-      }
+      con.addRepositoryContainerListener( m_containerListener );
 
+      m_containerListener.onRepositoryContainerChanged();
     }
 
   }

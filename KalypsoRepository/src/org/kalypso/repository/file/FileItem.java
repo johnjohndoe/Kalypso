@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,12 +36,14 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.repository.file;
 
 import java.io.File;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
@@ -66,7 +68,7 @@ public class FileItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getName()
    */
-  public String getName()
+  public String getName( )
   {
     return m_file.getName();
   }
@@ -74,7 +76,7 @@ public class FileItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getParent()
    */
-  public IRepositoryItem getParent()
+  public IRepositoryItem getParent( )
   {
     return m_rep.createItem( m_file.getParentFile() );
   }
@@ -82,7 +84,7 @@ public class FileItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getChildren()
    */
-  public IRepositoryItem[] getChildren()
+  public IRepositoryItem[] getChildren( )
   {
     final File[] files = m_file.listFiles( m_rep.getFilter() );
 
@@ -97,12 +99,12 @@ public class FileItem implements IRepositoryItem
     return items;
   }
 
-  public File getFile()
+  public File getFile( )
   {
     return m_file;
   }
 
-  public FileRepository getRep()
+  public FileRepository getRep( )
   {
     return m_rep;
   }
@@ -110,7 +112,7 @@ public class FileItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#hasChildren()
    */
-  public boolean hasChildren()
+  public boolean hasChildren( )
   {
     return m_file.isDirectory();
   }
@@ -124,7 +126,8 @@ public class FileItem implements IRepositoryItem
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
-  public Object getAdapter( Class anotherClass )
+  @SuppressWarnings("unchecked")
+  public Object getAdapter( final Class anotherClass )
   {
     if( anotherClass == File.class )
       return m_file;
@@ -135,7 +138,7 @@ public class FileItem implements IRepositoryItem
   /**
    * @see org.kalypso.repository.IRepositoryItem#getRepository()
    */
-  public IRepository getRepository()
+  public IRepository getRepository( )
   {
     return m_rep;
   }
@@ -145,8 +148,26 @@ public class FileItem implements IRepositoryItem
    * 
    * @see org.kalypso.repository.IRepositoryItem#getIdentifier()
    */
-  public String getIdentifier()
+  public String getIdentifier( )
   {
     return m_rep.getIdentifier() + ":/" + FileUtilities.getRelativePathTo( m_rep.m_root, m_file ).replace( '\\', '/' );
+  }
+
+  /**
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  @Override
+  public boolean equals( final Object obj )
+  {
+    return EqualsBuilder.reflectionEquals( this, obj );
+  }
+
+  /**
+   * @see java.lang.Object#hashCode()
+   */
+  @Override
+  public int hashCode( )
+  {
+    return HashCodeBuilder.reflectionHashCode( this );
   }
 }

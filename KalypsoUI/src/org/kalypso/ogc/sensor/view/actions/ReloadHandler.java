@@ -92,8 +92,6 @@ public class ReloadHandler extends AbstractHandler
           rep.reload();
 
           monitor.worked( 1 );
-
-          // TODO: refresh view?
         }
         catch( final RepositoryException e )
         {

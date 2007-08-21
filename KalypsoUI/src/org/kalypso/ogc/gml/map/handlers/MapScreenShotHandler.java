@@ -144,6 +144,7 @@ public class MapScreenShotHandler extends AbstractHandler
   private File getTargetImageFile( final File targetDir, final String format )
   {
     if( !targetDir.exists() || !targetDir.isDirectory() || (format == null) )
+      // TODO: @Dirk: this always happens in Lanu1d2d maps
       throw (new IllegalStateException());
 
     int count = 0;
