@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,16 +36,16 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.mapeditor.actiondelegates;
 
 import org.kalypso.ogc.gml.map.widgets.editrelation.CoordinateInfoWidget;
 
-public class CoordinateInfoWidgetDelegate extends AbstractGisMapEditorActionDelegate
+public class CoordinateInfoWidgetDelegate extends AbstractWidgetWithOptionActionDelegate
 {
-  public CoordinateInfoWidgetDelegate()
+  public CoordinateInfoWidgetDelegate( )
   {
-    super( new CoordinateInfoWidget( "Edit Relation", "Editieren von Relationen" ) );
+    super( new CoordinateInfoWidget( "Koordinaten Info", "Koordinaten Informationen" ) );
   }
 }

@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets.editrelation;
 
@@ -65,6 +65,7 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.dialogs.ListSelectionDialog;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.jface.viewers.tree.TreeViewerUtilities;
 import org.kalypso.contribs.eclipse.jface.viewers.tree.TreeVisiterAbortException;
 import org.kalypso.gmlschema.annotation.AnnotationUtilities;
@@ -296,7 +297,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     final List<FeatureList> result = new ArrayList<FeatureList>();
     final IKalypsoTheme activeTheme = getActiveTheme();
     final MapPanel mapPanel = getMapPanel();
-    final IMapModell mapModell = mapPanel.getMapModell();
+    final IMapModell mapModell = mapPanel == null ? null : mapPanel.getMapModell();
     if( mapModell == null || activeTheme == null || !(activeTheme instanceof IKalypsoFeatureTheme) )
       return new CascadingFeatureList( result.toArray( new FeatureList[result.size()] ) );
 
@@ -644,5 +645,17 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     refreshSettings();
 
     return m_topLevel;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#activate(org.kalypso.commons.command.ICommandTarget,
+   *      org.kalypso.ogc.gml.map.MapPanel)
+   */
+  @Override
+  public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel )
+  {
+    super.activate( commandPoster, mapPanel );
+
+    refreshSettings();
   }
 }

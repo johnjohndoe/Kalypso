@@ -67,14 +67,10 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.IStorageEditorInput;
-import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.IWorkbenchPartSite;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.contexts.IContextActivation;
 import org.eclipse.ui.contexts.IContextService;
@@ -99,13 +95,9 @@ import org.kalypso.ogc.gml.map.listeners.MapPanelAdapter;
 import org.kalypso.ogc.gml.mapmodel.IMapPanelProvider;
 import org.kalypso.ogc.gml.mapmodel.MapModellContextSwitcher;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
-import org.kalypso.ogc.gml.widgets.IWidget;
-import org.kalypso.ogc.gml.widgets.IWidgetChangeListener;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.AbstractEditorPart;
-import org.kalypso.ui.editor.mapeditor.views.ActionOptionsView;
-import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
@@ -137,35 +129,6 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   private String m_partName;
 
   private IFile m_file;
-
-  private final IWidgetChangeListener m_wcl = new IWidgetChangeListener()
-  {
-    public void widgetChanged( final IWidget newWidget )
-    {
-      if( PlatformUI.getWorkbench().isClosing() )
-        return;
-
-      // the widget changed and there is something to show, so bring this
-      // view to top
-      try
-      {
-        final IWorkbenchPartSite site = getSite();
-        if( site != null )
-        {
-          final IWorkbenchPage page = site.getPage();
-          final IViewPart view = page.findView( ActionOptionsView.class.getName() );
-          if( newWidget instanceof IWidgetWithOptions )
-            page.showView( ActionOptionsView.class.getName(), null, IWorkbenchPage.VIEW_VISIBLE );
-          else if( view != null )
-            page.hideView( view );
-        }
-      }
-      catch( final PartInitException e )
-      {
-        e.printStackTrace();
-      }
-    }
-  };
 
   private IResourceChangeListener m_resourceChangeListener;
 
@@ -280,7 +243,6 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
 
     /* Register this view at the mapPanel. */
     m_mapPanel = new MapPanel( this, m_selectionManager );
-    m_mapPanel.getWidgetManager().addWidgetChangeListener( m_wcl );
     m_mapPanel.addMapPanelListener( m_mapPanelListener );
 
     m_resourceChangeListener = new IResourceChangeListener()
@@ -652,7 +614,6 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
 
     setMapModell( null );
 
-    m_mapPanel.getWidgetManager().removeWidgetChangeListener( m_wcl );
     m_mapPanel.dispose();
 
     if( m_file != null )
