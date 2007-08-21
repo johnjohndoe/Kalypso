@@ -82,7 +82,7 @@ public class MapScreenShotHandler extends AbstractHandler
 
   // processing
 
-  public static final String CONST_TARGET_DIR_FILE = "targetDir"; // can be overwritten by an commandListener
+  public static final String CONST_TARGET_FILE = "targetFile"; // can be overwritten by an commandListener
 
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
@@ -103,25 +103,22 @@ public class MapScreenShotHandler extends AbstractHandler
       final int height = preferences.getInt( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_HEIGHT );
       final String format = preferences.getString( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_FORMAT );
 
-      final File targetFile = (File) context.getVariable( MapScreenShotHandler.CONST_TARGET_DIR_FILE );
+      /* targetDir can be overwritten by new handler target image file or target dir (preevent in execution listener) */
+      File targetFile = (File) context.getVariable( MapScreenShotHandler.CONST_TARGET_FILE );
+      if( targetFile == null )
+        targetFile = new File( preferences.getString( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_TARGET ) );
 
-      /* if targetDir is overwritten by ICommand.Executionlistener - take listener targetDir */
-      File targetDir;
-      if( targetFile != null )
-        targetDir = new File( targetFile.toURI() );
+      File img;
+      /* targetFile can be an img file or an target directory */
+      if( targetFile.isDirectory() )
+        img = getTargetImageFile( targetFile, format );
+      else if( targetFile.isFile() )
+        img = targetFile;
       else
-        targetDir = new File( preferences.getString( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_TARGET ) );
+        throw (new NotImplementedException( "targetFile must be an file or directory and have to exists" ));
 
-      /* if targetDir is instance of file (!dir) -> set targetImage = targetDir */
-      final File imgTarget;
-      if( targetDir.isFile() )
-        imgTarget = targetDir;
-      else if( targetDir.isDirectory() )
-        imgTarget = getTargetImageFile( targetDir, format );
-      else
-        throw (new NotImplementedException( "targetDir must be file or directory" ));
-
-      final BufferedOutputStream os = new BufferedOutputStream( new FileOutputStream( imgTarget ) );
+      /* generate and store img */
+      final BufferedOutputStream os = new BufferedOutputStream( new FileOutputStream( img ) );
 
       final IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
       final MapPanel mapPanel = (MapPanel) part.getAdapter( MapPanel.class );
@@ -129,7 +126,7 @@ public class MapScreenShotHandler extends AbstractHandler
       final ExportableMap export = new ExportableMap( mapPanel, width, height, format );
       export.exportObject( os, new NullProgressMonitor(), null );
 
-      return imgTarget;
+      return img;
     }
     catch( final FileNotFoundException e )
     {
