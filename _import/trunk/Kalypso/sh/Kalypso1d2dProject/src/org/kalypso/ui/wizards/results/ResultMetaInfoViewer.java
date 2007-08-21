@@ -42,9 +42,13 @@ package org.kalypso.ui.wizards.results;
 
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Text;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 
 /**
@@ -57,9 +61,16 @@ public class ResultMetaInfoViewer extends Viewer
 
   private Object m_input;
 
-  public ResultMetaInfoViewer( final Composite parent, final int style )
+  private Text m_textPanel;
+
+  private final IThemeConstructionFactory m_factory;
+
+  public ResultMetaInfoViewer( final Composite parent, final int style, IThemeConstructionFactory factory )
   {
     m_panel = new Group( parent, style );
+    m_panel.setLayout( new GridLayout() );
+
+    m_factory = factory;
   }
 
   /**
@@ -100,13 +111,28 @@ public class ResultMetaInfoViewer extends Viewer
     for( Control control : children )
       control.dispose();
 
+    /* fill in new stuff */
+
+    // name & description
+    m_textPanel = new Text( m_panel, SWT.WRAP | SWT.READ_ONLY );
+    m_textPanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+
     if( m_input instanceof IResultMeta )
     {
       // TODO: fill with infos
       final IResultMeta result = (IResultMeta) m_input;
 
+      // special result data
+      IResultThemeConstructor createThemeCreator = m_factory.createThemeConstructor( result );
+      final Composite buttonControl = createThemeCreator.createControl( m_panel );
+      if( buttonControl != null )
+        buttonControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+
       m_panel.setText( result.getName() );
+      m_textPanel.setText( result.getDescription() );
+
     }
+    m_panel.layout();
   }
 
   /**

@@ -43,10 +43,19 @@ package org.kalypso.kalypso1d2d.pjt.views.contentprov;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.model.WorkbenchAdapter;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta.STEPTYPE;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
+import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectImages.DESCRIPTORS;
 
 /**
- * @author jung
+ * @author Thomas Jung
+ * 
+ * Adapter class that defines the label and images for the result view.
  * 
  */
 public class ResultMetaWorkbenchAdapter extends WorkbenchAdapter
@@ -61,6 +70,18 @@ public class ResultMetaWorkbenchAdapter extends WorkbenchAdapter
       return ((IResultMeta) object).getChildren().toArray();
 
     return super.getChildren( object );
+  }
+
+  /**
+   * @see org.eclipse.ui.model.WorkbenchAdapter#getParent(java.lang.Object)
+   */
+  @Override
+  public Object getParent( final Object object )
+  {
+    if( object instanceof IResultMeta )
+      return ((IResultMeta) object).getParent();
+
+    return super.getParent( object );
   }
 
   /**
@@ -81,8 +102,74 @@ public class ResultMetaWorkbenchAdapter extends WorkbenchAdapter
   @Override
   public ImageDescriptor getImageDescriptor( Object object )
   {
-    return Kalypso1d2dProjectPlugin.getDefault().getImageRegistry().getDescriptor( "icons/full/object16/blubberdiba.gif" );
+    if( object instanceof IScenarioResultMeta )
+      return Kalypso1d2dProjectPlugin.getImageProvider().getImageDescriptor( DESCRIPTORS.RESULT_META_SCENARIO );
+    else if( object instanceof ICalcUnitResultMeta )
+      return Kalypso1d2dProjectPlugin.getImageProvider().getImageDescriptor( DESCRIPTORS.RESULT_META_CALC_UNIT );
+    else if( object instanceof IStepResultMeta )
+    {
+      /* separate icons for separate types */
+      return getStepResultImage( object );
+    }
+    else if( object instanceof IDocumentResultMeta )
+    {
+      /* separate icons for separate types */
+      return getDocumentResultImage( object );
+    }
+    else
+      return Kalypso1d2dProjectPlugin.getImageProvider().getImageDescriptor( DESCRIPTORS.RESULT_META_ERROR );
 
-    // return super.getImageDescriptor( object );
+  }
+
+  private ImageDescriptor getDocumentResultImage( Object object )
+  {
+    final DOCUMENTTYPE documentType = ((IDocumentResultMeta) object).getDocumentType();
+    switch( documentType )
+    {
+      case nodes:
+        return Kalypso1d2dProjectPlugin.getImageProvider().getImageDescriptor( DESCRIPTORS.RESULT_META_DOCUMENT_NODES );
+
+      case tinDepth:
+        return Kalypso1d2dProjectPlugin.getImageProvider().getImageDescriptor( DESCRIPTORS.RESULT_META_DOCUMENT_TIN );
+
+      case tinVelo:
+        return Kalypso1d2dProjectPlugin.getImageProvider().getImageDescriptor( DESCRIPTORS.RESULT_META_DOCUMENT_TIN );
+
+      case tinWsp:
+        return Kalypso1d2dProjectPlugin.getImageProvider().getImageDescriptor( DESCRIPTORS.RESULT_META_DOCUMENT_TIN );
+
+      case tinShearStress:
+        return Kalypso1d2dProjectPlugin.getImageProvider().getImageDescriptor( DESCRIPTORS.RESULT_META_DOCUMENT_TIN );
+
+      case hydrograph:
+        return Kalypso1d2dProjectPlugin.getImageProvider().getImageDescriptor( DESCRIPTORS.RESULT_META_DOCUMENT_HYDRO );
+
+      case log:
+        return Kalypso1d2dProjectPlugin.getImageProvider().getImageDescriptor( DESCRIPTORS.RESULT_META_DOCUMENT_LOG );
+
+      case coreDataZip:
+        return Kalypso1d2dProjectPlugin.getImageProvider().getImageDescriptor( DESCRIPTORS.RESULT_META_DOCUMENT_ZIP );
+
+      default:
+        return Kalypso1d2dProjectPlugin.getImageProvider().getImageDescriptor( DESCRIPTORS.RESULT_META_ERROR );
+    }
+  }
+
+  private ImageDescriptor getStepResultImage( Object object )
+  {
+    final STEPTYPE stepType = ((IStepResultMeta) object).getStepType();
+    switch( stepType )
+    {
+      case steady:
+        return Kalypso1d2dProjectPlugin.getImageProvider().getImageDescriptor( DESCRIPTORS.RESULT_META_STEP_STEADY );
+      case unsteady:
+        return Kalypso1d2dProjectPlugin.getImageProvider().getImageDescriptor( DESCRIPTORS.RESULT_META_STEP_UNSTEADY );
+      case maximum:
+        return Kalypso1d2dProjectPlugin.getImageProvider().getImageDescriptor( DESCRIPTORS.RESULT_META_STEP_MAX );
+      case qSteady:
+        return Kalypso1d2dProjectPlugin.getImageProvider().getImageDescriptor( DESCRIPTORS.RESULT_META_STEP_QSTEADY );
+      default:
+        return Kalypso1d2dProjectPlugin.getImageProvider().getImageDescriptor( DESCRIPTORS.RESULT_META_ERROR );
+    }
   }
 }

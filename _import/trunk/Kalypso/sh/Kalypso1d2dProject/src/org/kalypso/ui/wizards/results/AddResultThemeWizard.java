@@ -56,10 +56,7 @@ import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
-import org.kalypso.kalypsomodel1d2d.schema.binding.result.DocumentResultMeta;
-import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
-import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -71,6 +68,8 @@ import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 import de.renew.workflow.connector.cases.ICaseDataProvider;
 
 /**
+ * Wizard to add result themes to the map.
+ * 
  * @author Thomas Jung
  */
 public class AddResultThemeWizard extends Wizard implements IKalypsoDataImportWizard
@@ -94,7 +93,8 @@ public class AddResultThemeWizard extends Wizard implements IKalypsoDataImportWi
   @Override
   public void addPages( )
   {
-    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, "Ergebniss(e) zur Karte hinzufügen", null );
+    ResultViewerFilter resultFilter = new ResultViewerFilter();
+    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, "Ergebniss(e) zur Karte hinzufügen", null, resultFilter, new ThemeConstructionFactory() );
     selectResultWizardPage.setResultMeta( m_resultModel );
 
     addPage( selectResultWizardPage );
@@ -122,6 +122,7 @@ public class AddResultThemeWizard extends Wizard implements IKalypsoDataImportWi
    * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
    *      org.eclipse.jface.viewers.IStructuredSelection)
    */
+  @SuppressWarnings("unchecked")
   public void init( IWorkbench workbench, IStructuredSelection selection )
   {
     final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
@@ -131,6 +132,7 @@ public class AddResultThemeWizard extends Wizard implements IKalypsoDataImportWi
 
     try
     {
+      // Sometimes there is a NPE here... maybe wait until the models are loaded?
       m_resultModel = modelProvider.getModel( IScenarioResultMeta.class );
     }
     catch( CoreException e )
@@ -148,13 +150,14 @@ public class AddResultThemeWizard extends Wizard implements IKalypsoDataImportWi
   {
     final SelectResultWizardPage page = (SelectResultWizardPage) getPage( PAGE_SELECT_RESULTS_NAME );
     final IResultMeta[] results = page.getSelectedResults();
+    final IThemeConstructionFactory factory = page.getThemeFactory();
     final GisTemplateMapModell modell = (GisTemplateMapModell) m_modell;
 
     final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
     {
-      public IStatus execute( IProgressMonitor monitor ) throws CoreException
+      public IStatus execute( IProgressMonitor monitor )
       {
-        return addThemes( modell, results, monitor );
+        return addThemes( modell, results, factory, monitor );
       }
     };
 
@@ -168,68 +171,27 @@ public class AddResultThemeWizard extends Wizard implements IKalypsoDataImportWi
   /**
    * TODO: maybe move into helper class
    */
-  protected IStatus addThemes( GisTemplateMapModell modell, IResultMeta[] results, IProgressMonitor monitor ) throws CoreException
+  @SuppressWarnings("deprecation")
+  protected IStatus addThemes( GisTemplateMapModell modell, IResultMeta[] results, IThemeConstructionFactory factory, IProgressMonitor monitor )
   {
     monitor.beginTask( "Themen hinzufügen", results.length );
 
     for( final IResultMeta resultMeta : results )
     {
-      String featurePath = null;
-      String source = null;
-      String style = null;
-      String styleLocation = null;
-
-      /* create a theme for each documentResultMeta */
-      if( resultMeta instanceof IDocumentResultMeta )
+      final IResultThemeConstructor themeCreator = factory.createThemeConstructor( resultMeta );
+      final ResultAddLayerCommandData[] datas = themeCreator.getThemeCommandData();
+      if( datas != null )
       {
-        DOCUMENTTYPE documentType = ((DocumentResultMeta) resultMeta).getDocumentType();
-
-        switch( documentType )
+        for( ResultAddLayerCommandData data : datas )
         {
-          case nodes:
-            featurePath = "nodeResultMember";
-            source = "../" + resultMeta.getFullPath().toPortableString();
-            style = "Vector Style";
-            IResultMeta calcUnitMeta = resultMeta.getParent().getParent();
-            styleLocation = "../" + calcUnitMeta.getFullPath().append( "Styles" ).append( "vector.sld" ).toPortableString();
-
-            break;
-
-          case tinDepth:
-
-            break;
-
-          case tinVelo:
-
-            break;
-          case tinWsp:
-
-            break;
-
-          case tinShearStress:
-
-            break;
-
-          case hydrograph:
-
-            break;
-
-          default:
-
-            break;
+          final AddThemeCommand addThemeCommand = new AddThemeCommand( modell, data.getThemeName(), data.getResultType(), data.getFeaturePath(), data.getSource(), data.getStyleLinkType(), data.getStyle(), data.getStyleLocation(), data.getStyleType() );
+          m_commandTarget.postCommand( addThemeCommand, null );
         }
       }
 
-      final String themeName = resultMeta.getName();
-      final String type = "gml";
-
-      String styleLinkType = "sld";
-      String styleType = "simple";
-      final AddThemeCommand addThemeCommand = new AddThemeCommand( modell, themeName, type, featurePath, source, styleLinkType, style, styleLocation, styleType );
-      m_commandTarget.postCommand( addThemeCommand, null );
-
+      // TODO:
       // be intelligent:
-      // - create subthemes for continer reults (also use filter for children)
+      // - create sub-themes for container results (also use filter for children)
       // - create every theme only once
       // - ...
 
@@ -237,8 +199,6 @@ public class AddResultThemeWizard extends Wizard implements IKalypsoDataImportWi
       if( monitor.isCanceled() )
         return Status.CANCEL_STATUS;
     }
-
-    // TODO Auto-generated method stub
     return Status.OK_STATUS;
 
   }

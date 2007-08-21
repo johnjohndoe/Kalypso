@@ -40,13 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.wizards.results;
 
-import java.util.List;
-
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.CheckStateChangedEvent;
+import org.eclipse.jface.viewers.CheckboxTreeViewer;
+import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -55,6 +55,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
  * @author Thomas Jung
@@ -65,13 +66,18 @@ public class SelectResultWizardPage extends WizardPage implements IWizardPage
 
   private IResultMeta m_resultRoot;
 
-  private TreeViewer m_treeViewer;
+  private CheckboxTreeViewer m_treeViewer;
 
-  public SelectResultWizardPage( String pageName, String title, ImageDescriptor titleImage )
+  private final IThemeConstructionFactory m_factory;
+
+  private final ResultViewerFilter m_filter;
+
+  public SelectResultWizardPage( String pageName, String title, ImageDescriptor titleImage, ResultViewerFilter filter, IThemeConstructionFactory factory )
   {
     super( pageName, title, titleImage );
-
-    setDescription( "Wählen Sie auf dieser Seite die Ergebnisse aus, welche Sie als Themen zur Karte hinzufügen möchten." );
+    m_factory = factory;
+    m_filter = filter;
+    setDescription( "Wählen Sie auf dieser Seite die Ergebnisse aus." );
   }
 
   public void setResultMeta( final IResultMeta resultRoot )
@@ -90,21 +96,36 @@ public class SelectResultWizardPage extends WizardPage implements IWizardPage
     final Composite panel = new Composite( parent, SWT.NONE );
     panel.setLayout( new FillLayout( SWT.HORIZONTAL ) );
 
-    m_treeViewer = new TreeViewer( panel, SWT.BORDER );
+    m_treeViewer = new CheckboxTreeViewer( panel, SWT.BORDER );
     m_treeViewer.setContentProvider( new WorkbenchContentProvider() );
     m_treeViewer.setLabelProvider( new WorkbenchLabelProvider() );
-    // treeViewer.setFilters( filters ); TODO get filters via construcotr of page
-    // treeViewer.setSorter( sorter ); TODO get sorter via construcotr of page
+    m_treeViewer.addFilter( m_filter ); // easy-peasy :-)
+    // m_treeViewer.setSorter( sorter ); TODO get sorter via constructor of page
     m_treeViewer.setInput( m_resultRoot );
 
+    /* The next two lines are needed so that checking children of checked elements always works. */
+    m_treeViewer.expandAll();
+    m_treeViewer.collapseAll();
+
     /* Info View for one result */
-    final ResultMetaInfoViewer resultViewer = new ResultMetaInfoViewer( panel, SWT.NONE );
+    final ResultMetaInfoViewer resultViewer = new ResultMetaInfoViewer( panel, SWT.NONE, m_factory );
 
     m_treeViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
       public void selectionChanged( final SelectionChangedEvent event )
       {
         handleSelectionChanged( (IStructuredSelection) event.getSelection(), resultViewer );
+      }
+    } );
+
+    m_treeViewer.addCheckStateListener( new ICheckStateListener()
+    {
+      @SuppressWarnings("synthetic-access")
+      public void checkStateChanged( CheckStateChangedEvent event )
+      {
+        final IResultMeta resultMeta = (IResultMeta) event.getElement();
+        final boolean isChecked = event.getChecked();
+        handleCheckStateChanged( resultMeta, isChecked, resultViewer );
       }
     } );
 
@@ -115,14 +136,36 @@ public class SelectResultWizardPage extends WizardPage implements IWizardPage
   protected void handleSelectionChanged( final IStructuredSelection selection, ResultMetaInfoViewer resultViewer )
   {
     resultViewer.setInput( selection.getFirstElement() );
-
-    final List list = selection.toList();
-    m_selectedResults = (IResultMeta[]) list.toArray( new IResultMeta[list.size()] );
   }
 
   public IResultMeta[] getSelectedResults( )
   {
     return m_selectedResults;
+  }
+
+  protected void handleCheckStateChanged( final IResultMeta resultMeta, final boolean isChecked, ResultMetaInfoViewer resultViewer )
+  {
+
+    final IFeatureWrapperCollection<IResultMeta> children = resultMeta.getChildren();
+    for( IResultMeta child : children )
+    {
+      m_treeViewer.setChecked( child, isChecked );
+      /* Call me again, as setchecked does not throw any events */
+      handleCheckStateChanged( child, isChecked, resultViewer );
+    }
+
+    Object[] checkedElements = m_treeViewer.getCheckedElements();
+    IResultMeta[] resultArray = new IResultMeta[checkedElements.length];
+    for( int i = 0; i < checkedElements.length; i++ )
+    {
+      resultArray[i] = (IResultMeta) checkedElements[i];
+    }
+    m_selectedResults = resultArray;
+  }
+
+  public IThemeConstructionFactory getThemeFactory( )
+  {
+    return m_factory;
   }
 
 }
