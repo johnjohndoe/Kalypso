@@ -48,6 +48,7 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -109,13 +110,21 @@ public class MapScreenShotHandler extends AbstractHandler
 
       final URL targetURL = (URL) context.getVariable( MapScreenShotHandler.CONST_TARGET_DIR_URL );
 
+      /* if targetURL is overwritten by ICommand.Executionlistener - take listener targetDir */
       File targetDir;
       if( targetURL != null )
         targetDir = new File( targetURL.toURI() );
       else
         targetDir = new File( preferences.getString( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_TARGET ) );
 
-      final File imgTarget = getTargetImageFile( targetDir, format );
+      /* if targetDir is instance of file (!dir) -> set targetImage = targetDir */
+      final File imgTarget;
+      if( targetDir.isFile() )
+        imgTarget = targetDir;
+      else if( targetDir.isDirectory() )
+        imgTarget = getTargetImageFile( targetDir, format );
+      else
+        throw (new NotImplementedException( "targetDir must be file or directory" ));
 
       final BufferedOutputStream os = new BufferedOutputStream( new FileOutputStream( imgTarget ) );
 
