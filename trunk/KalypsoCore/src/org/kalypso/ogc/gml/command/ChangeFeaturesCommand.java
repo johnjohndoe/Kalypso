@@ -56,7 +56,7 @@ public class ChangeFeaturesCommand implements ICommand
 
   private final FeatureChange[] m_oldChanges;
 
-  private final GMLWorkspace m_workspace;
+  protected final GMLWorkspace m_workspace;
 
   public ChangeFeaturesCommand( final GMLWorkspace workspace, final FeatureChange[] changes )
   {
@@ -117,7 +117,7 @@ public class ChangeFeaturesCommand implements ICommand
     return "Feature verändern";
   }
 
-  private void applyChanges( final FeatureChange[] changes )
+  protected void applyChanges( final FeatureChange[] changes )
   {
     final Set<Feature> changedFeaturesList = new HashSet<Feature>();
     for( int i = 0; i < changes.length; i++ )

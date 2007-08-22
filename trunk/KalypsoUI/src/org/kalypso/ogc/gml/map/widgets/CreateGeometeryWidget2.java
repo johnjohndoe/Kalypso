@@ -96,14 +96,10 @@ public class CreateGeometeryWidget2 extends AbstractFeatureGeometeryWidget
     workspace.postCommand( command );
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   protected Class< ? extends GM_Object> getGeometryClass( )
   {
-// final FeatureToEdit featureToEdit = (FeatureToEdit) getFeatureToEdit();
     return m_apreferedGeometryClass;
-// return (Class< ? extends GM_Object>) (featureToEdit == null ? null :
-// featureToEdit.getGeometryProperty().getValueClass());
   }
 
   private static final class FeatureToEdit
