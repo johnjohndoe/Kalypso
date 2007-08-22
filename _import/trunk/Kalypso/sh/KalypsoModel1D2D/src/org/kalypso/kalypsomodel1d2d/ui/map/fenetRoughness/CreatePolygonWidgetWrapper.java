@@ -56,21 +56,5 @@ public class CreatePolygonWidgetWrapper extends CreateGeometeryWidget2
   public CreatePolygonWidgetWrapper(  )
   {
     super( "Polygon zeichnen", "", GeometryUtilities.getPolygonClass() );
-//    super( "Polygon zeichnen", "", GeometryUtilities.getMultiPolygonClass() );
   }
-//  private IMapModell m_mapModell;
-//  private IKalypsoTheme m_activeTheme;
-//  
-//  public CreatePolygonWidgetWrapper( )
-//  {
-//    super( "Polygon zeichnen", "" );
-//    reinit();
-//  }
-//  
-//  private final void reinit( )
-//  {
-//    m_mapModell = getMapPanel().getMapModell();
-//    m_activeTheme = m_mapModell.getActiveTheme();
-//  }
-
 }

@@ -53,8 +53,5 @@ public class EditPolygonWidgetWrapper extends EditGeometryWidget
   public EditPolygonWidgetWrapper( )
   {
     super("Polygon bearbeiten", "");
-//    super( "Polygon bearbeiten", "", null, null, GeometryUtilities.getPolygonClass() );
   }
-  
-  
 }

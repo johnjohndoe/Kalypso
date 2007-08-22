@@ -111,18 +111,35 @@ public class UtilMap
   {
     Assert.throwIAEOnNullParam( mapModel, "mapModel" ); //$NON-NLS-1$
     Assert.throwIAEOnNullParam( editElementQName, "editElementQName" ); //$NON-NLS-1$
-    final IKalypsoTheme[] allThemes = mapModel.getAllThemes();
-    for( final IKalypsoTheme theme : allThemes )
+    IKalypsoTheme[] allThemes;
+    IKalypsoFeatureTheme ftheme;
+    
+    allThemes = mapModel.getAllThemes();
+    
+    
+    synchronized( UtilMap.class )
     {
-      if( theme instanceof IKalypsoFeatureTheme )
-      {
-        final IKalypsoFeatureTheme ftheme = (IKalypsoFeatureTheme) theme;
-        final IFeatureType featureType = ftheme.getFeatureType();
-        if( featureType != null && GMLSchemaUtilities.substitutes( featureType, editElementQName/* Kalypso1D2DSchemaConstants.WB1D2D_F_NODE */) )
-          return ftheme;
-      }
+      while( true )
+        try
+        {
+          UtilMap.class.wait( 500 );
+          allThemes = mapModel.getAllThemes();
+          for( final IKalypsoTheme theme : allThemes )
+          {
+            if( theme instanceof IKalypsoFeatureTheme )
+            {
+              ftheme = (IKalypsoFeatureTheme) theme;
+              final IFeatureType featureType = ftheme.getFeatureType();
+              if( featureType != null && GMLSchemaUtilities.substitutes( featureType, editElementQName) )
+                return ftheme;
+            }
+          }
+        }
+        catch( InterruptedException e )
+        {
+          e.printStackTrace();
+        }
     }
-    return null;
   }
 
   /**

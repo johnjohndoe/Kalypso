@@ -658,7 +658,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
   private int getRoughnessID( final IFE1D2DElement element ) throws SimulationException
   {
     final String roughnessClsID = element.getRoughnessClsID();
-    if( roughnessClsID != null && roughnessClsID.length() == 0 )
+    if( roughnessClsID != null && roughnessClsID.length() > 0 )
       return getID( m_roughnessIDProvider, roughnessClsID );
     throw new SimulationException( "Keine Rauheitszone gefunden: " + element, null );
   }

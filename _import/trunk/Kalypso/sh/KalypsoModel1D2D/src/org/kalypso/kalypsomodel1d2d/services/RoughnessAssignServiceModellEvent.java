@@ -45,7 +45,7 @@ import org.kalypso.ogc.gml.command.FeatureChangeModellEvent;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
- * @author antanas
+ * @author Dejan Antanaskovic
  * 
  */
 public class RoughnessAssignServiceModellEvent extends FeatureChangeModellEvent

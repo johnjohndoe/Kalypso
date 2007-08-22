@@ -75,16 +75,23 @@ public class LinkedFeaturePropertyFunction extends FeaturePropertyFunction
   @SuppressWarnings("unchecked")
   public Object getValue( Feature feature, IPropertyType pt, Object currentValue )
   {
-    Feature member = (Feature) feature.getProperty( m_clsMember );
-    if( member == null )
-      return "_DEFAULT_STYLE_";
-    else
+    try
     {
-      Object object = member.getProperty( m_name );
-      if( object instanceof List )
-        return ((List<Object>) object).get( 0 );
+      final Feature member = (Feature) feature.getProperty( m_clsMember );
+      if( member == null )
+        return "_DEFAULT_STYLE_";
       else
-        return object;
+      {
+        final Object object = member.getProperty( m_name );
+        if( object instanceof List )
+          return ((List<Object>) object).get( 0 );
+        else
+          return object;
+      }
+    }
+    catch( IllegalStateException e )
+    {
+      return null;
     }
   }
 

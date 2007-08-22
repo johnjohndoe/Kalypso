@@ -46,14 +46,12 @@ import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
- * @author antanas
+ * @author Dejan Antanaskovic
  *
  */
 public interface IRoughnessLayerCollection extends IFeatureWrapperCollection<IRoughnessLayer>
 {
   public static final QName QNAME = new QName(UrlCatalogModelSimulationBase.SIM_MODEL_NS, "RoughnessLayer"); 
-  
-//  public IRoughnessLayer getActiveLayer( );
   
   public IRoughnessLayer getBasicLayer( );
   

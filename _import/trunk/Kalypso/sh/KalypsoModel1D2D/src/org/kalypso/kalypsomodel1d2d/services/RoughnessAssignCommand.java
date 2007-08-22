@@ -38,27 +38,45 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
+package org.kalypso.kalypsomodel1d2d.services;
 
-import javax.xml.namespace.QName;
+import java.util.HashSet;
+import java.util.Set;
 
-import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
+import org.kalypso.ogc.gml.command.FeatureChange;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
+ * Command used for assigning roughnesses to elements.
+ * <p>
+ * Overrides "applyChanges" method of its superclass (ChangeFeaturesCommand) to send 
+ * RoughnessAssignServiceModellEvent instead of FeatureChangeModellEvent. 
+ * This is needed for RoughnessAssignListener to diferentiate between external and own changes.
+ * 
  * @author Dejan Antanaskovic
  *
  */
-public interface IRoughnessLayer extends IFeatureWrapper2
+public class RoughnessAssignCommand extends ChangeFeaturesCommand
 {
-  public final static QName QNAME = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "RoughnessLayer" );
+  public RoughnessAssignCommand( final GMLWorkspace workspace, final FeatureChange[] changes )
+  {
+    super( workspace, changes );
+  }
   
-  public final static QName PROP_EDITABLE = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "editable" );
-  
-  // PROP_LAYER_TYPE: true = it is a basic layer, false = it is a correction layer
-  public final static QName PROP_LAYER_TYPE = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "basic" );
-  
-  public boolean isEditable();
-  
-  public void setEditable(boolean status);
+  @Override
+  protected void applyChanges( final FeatureChange[] changes )
+  {
+    final Set<Feature> changedFeaturesList = new HashSet<Feature>();
+    for( int i = 0; i < changes.length; i++ )
+    {
+      final FeatureChange change = changes[i];
+      change.getFeature().setProperty( change.getProperty(), change.getNewValue() );
+      changedFeaturesList.add( change.getFeature() );
+    }
+
+    if( m_workspace != null )
+      m_workspace.fireModellEvent( new RoughnessAssignServiceModellEvent( m_workspace, changes ) );
+  }
 }

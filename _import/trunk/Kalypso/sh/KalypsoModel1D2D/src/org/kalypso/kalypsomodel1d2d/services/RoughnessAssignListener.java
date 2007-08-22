@@ -45,8 +45,8 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
-import org.kalypso.ogc.gml.command.FeatureChangeModellEvent;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
+import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -112,9 +112,9 @@ public class RoughnessAssignListener implements ModellEventListener
       final FeatureStructureChangeModellEvent event = (FeatureStructureChangeModellEvent) modellEvent;
       envelope = FeatureHelper.getEnvelope( event.getChangedFeatures() );
     }
-    else if( modellEvent instanceof FeatureChangeModellEvent )
+    else if( modellEvent instanceof FeaturesChangedModellEvent )
     {
-      final FeatureChangeModellEvent event = (FeatureChangeModellEvent) modellEvent;
+      final FeaturesChangedModellEvent event = (FeaturesChangedModellEvent) modellEvent;
       envelope = FeatureHelper.getEnvelope( event.getFeatures() );
     }
     startJob( envelope );

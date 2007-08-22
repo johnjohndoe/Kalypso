@@ -58,7 +58,6 @@ import org.eclipse.core.runtime.Status;
 import org.osgi.framework.Bundle;
 
 import de.renew.workflow.base.Workflow;
-import de.renew.workflow.base.WorkflowModelPlugin;
 
 /**
  * Helper class to read and cache workflow systems from extension point.
@@ -112,8 +111,10 @@ public class WorkflowSystemExtension
         }
         catch( final CoreException e )
         {
-          final IStatus status = new Status( Status.ERROR, "de.renew.workflow.model", "Failed to create workflowSystem extension for id: " + id, e );
-          WorkflowModelPlugin.getInstance().getLog().log( status );
+          // in this moment logger is not available...
+          e.printStackTrace();
+//          final IStatus status = new Status( Status.ERROR, "de.renew.workflow.model", "Failed to create workflowSystem extension for id: " + id, e );
+//          WorkflowModelPlugin.getInstance().getLog().log( status );
         }
       }
     }

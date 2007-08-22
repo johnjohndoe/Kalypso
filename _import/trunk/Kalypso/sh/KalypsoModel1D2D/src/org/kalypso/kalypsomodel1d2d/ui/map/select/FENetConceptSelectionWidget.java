@@ -105,7 +105,7 @@ public class FENetConceptSelectionWidget implements IWidget, IGrabDistanceProvid
       try
       {
         m_featureTheme = UtilMap.findEditableTheme( mapModell, m_themeElementsQName );
-        m_cmdWorkspace = this.m_featureTheme.getWorkspace();
+        m_cmdWorkspace = m_featureTheme.getWorkspace();
       }
       catch( final Exception e )
       {
@@ -357,8 +357,8 @@ public class FENetConceptSelectionWidget implements IWidget, IGrabDistanceProvid
    */
   public void finish( )
   {
-    final IFeatureSelectionManager selectionManager = mapPanel.getSelectionManager();
-    selectionManager.clear();
+//    final IFeatureSelectionManager selectionManager = mapPanel.getSelectionManager();
+//    selectionManager.clear();
   }
 
   /**

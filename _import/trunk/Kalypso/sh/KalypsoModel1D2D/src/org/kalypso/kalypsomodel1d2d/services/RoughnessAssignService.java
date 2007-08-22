@@ -43,26 +43,36 @@ package org.kalypso.kalypsomodel1d2d.services;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
+import org.kalypso.kalypsosimulationmodel.core.ICommandPoster;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.ogc.gml.command.FeatureChange;
-import org.kalypso.ogc.gml.command.FeatureChangeModellEvent;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
+
+import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
+import de.renew.workflow.connector.cases.ICaseDataProvider;
 
 /**
  * @author Dejan Antanaskovic
@@ -117,6 +127,8 @@ public class RoughnessAssignService extends Job
 
   private void assignRoughness( final IProgressMonitor monitor, final IFE1D2DElement element ) throws CoreException
   {
+    if( !(element instanceof IPolyElement) )
+      return;
     boolean missingRoughnessClsID = true;
     boolean missingRoughnessCorrectionKS = true;
     boolean missingRoughnessCorrectionAxAy = true;
@@ -132,22 +144,21 @@ public class RoughnessAssignService extends Job
         throw new CoreException( Status.CANCEL_STATUS );
 
       final IRoughnessPolygonCollection roughnessPolygonCollection = m_roughnessPolygonCollections.get( i );
-      final GM_Point centroid = element.getWrappedFeature().getDefaultGeometryProperty().getCentroid();
+      GM_Object geometryProperty = (GM_Object) element.getWrappedFeature().getProperty( IRoughnessPolygon.PROP_GEOMETRY );
+      final GM_Point centroid = geometryProperty.getCentroid();
       final GM_Position position = centroid.getPosition();
       final List<IRoughnessPolygon> matchedRoughness = roughnessPolygonCollection.query( position );
 
       if( matchedRoughness == null || matchedRoughness.size() == 0 )
         continue;
-      
-      
-      
+
       // (explanation: for loop) because if we have overlapped polygons in the same layer,
       // we want to assign roughness exacly like (overlapped) polygons are drawn on the map
-      
+
       // later: get rid of overlapping!!! :)
-      
-//        for( final IRoughnessPolygon roughnessPolygon : matchedRoughness )
-      for( int j = matchedRoughness.size()-1; j >=0; j-- )
+
+      // for( final IRoughnessPolygon roughnessPolygon : matchedRoughness )
+      for( int j = matchedRoughness.size() - 1; j >= 0; j-- )
       {
         final IRoughnessPolygon roughnessPolygon = matchedRoughness.get( j );
         if( roughnessPolygon.getSurface().contains( position ) )
@@ -202,11 +213,22 @@ public class RoughnessAssignService extends Job
     if( m_changesDiscretisationModel.size() > 0 )
     {
       final GMLWorkspace workspace = m_model1d2d.getWrappedFeature().getWorkspace();
-      final FeatureChange[] changes = m_changesDiscretisationModel.toArray( new FeatureChange[m_changesDiscretisationModel.size()] );
-      final FeatureChangeModellEvent event = new RoughnessAssignServiceModellEvent( workspace, changes );
-      workspace.fireModellEvent( event );
+      final IWorkbench workbench = PlatformUI.getWorkbench();
+      final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
+      final IEvaluationContext context = handlerService.getCurrentState();
+      final ICaseDataProvider<IFeatureWrapper2> modelProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+      final RoughnessAssignCommand command = new RoughnessAssignCommand(workspace, m_changesDiscretisationModel.toArray( new FeatureChange[m_changesDiscretisationModel.size()] ));
+      try
+      {
+        ((ICommandPoster)modelProvider).postCommand( IFEDiscretisationModel1d2d.class, command );
+      }
+      catch( Exception e1 )
+      {
+        // TODO Auto-generated catch block
+        e1.printStackTrace();
+      }
     }
-  }
+    }
 
   /**
    * Defines the area where roughness recalculation is needed; if <code>null</code>, whole model will be recalculated

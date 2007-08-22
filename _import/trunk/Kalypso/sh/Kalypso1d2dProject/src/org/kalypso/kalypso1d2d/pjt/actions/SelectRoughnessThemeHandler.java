@@ -43,13 +43,29 @@ public class SelectRoughnessThemeHandler extends AbstractHandler implements IHan
       throw new ExecutionException( "Kartenansicht nicht geöffnet." );
 
     final MapPanel mapPanel = mapView.getMapPanel();
-    final IMapModell orgMapModell = mapPanel.getMapModell();
+    IMapModell orgMapModell = mapPanel.getMapModell();
+
+    synchronized( this )
+    {
+      while( orgMapModell == null )
+        try
+        {
+          this.wait( 500 );
+          orgMapModell = mapPanel.getMapModell();
+          orgMapModell.getAllThemes();
+        }
+        catch( InterruptedException e )
+        {
+          e.printStackTrace();
+        }
+    }
+
     if( !(orgMapModell instanceof GisTemplateMapModell) )
       throw new ExecutionException( "Kartenansicht nicht initialisiert, versuchen Sie es noch einmal." );
 
     final GisTemplateMapModell mapModell = (GisTemplateMapModell) orgMapModell;
 
-    /* Finde rougness layers to choose from */
+    /* Find rougness layers to choose from */
     final IKalypsoTheme[] roughnessThemes = findRoughnessThemes( mapModell );
 
     /* ask user which rougness layer to activate */
