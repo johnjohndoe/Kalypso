@@ -4,15 +4,14 @@ import java.awt.Point;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.HashMap;
+import java.util.List;
 
-import org.deegree.services.WebServiceException;
-import org.deegree.services.capabilities.DCPType;
-import org.deegree.services.capabilities.HTTP;
-import org.deegree.services.capabilities.Protocol;
-import org.deegree.services.wms.capabilities.Operation;
-import org.deegree.services.wms.capabilities.Request;
-import org.deegree.services.wms.capabilities.WMSCapabilities;
-import org.deegree_impl.services.wms.RemoteWMService;
+import org.deegree.datatypes.QualifiedName;
+import org.deegree.ogcwebservices.wms.RemoteWMService;
+import org.deegree.ogcwebservices.wms.capabilities.WMSCapabilities;
+import org.deegree.owscommon_new.DCP;
+import org.deegree.owscommon_new.HTTP;
+import org.deegree.owscommon_new.Operation;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -27,7 +26,7 @@ import org.opengis.cs.CS_CoordinateSystem;
 /**
  * Overwritten in order to better encapsulate the service.
  */
-final class KalypsoRemoteWMService extends RemoteWMService
+final public class KalypsoRemoteWMService extends RemoteWMService
 {
   private final CS_CoordinateSystem m_srs;
 
@@ -35,7 +34,7 @@ final class KalypsoRemoteWMService extends RemoteWMService
 
   private final String m_styles;
 
-  public KalypsoRemoteWMService( final WMSCapabilities capas, final CS_CoordinateSystem srs, final String layers, final String styles ) throws WebServiceException
+  public KalypsoRemoteWMService( final WMSCapabilities capas, final CS_CoordinateSystem srs, final String layers, final String styles )
   {
     super( capas );
 
@@ -57,16 +56,7 @@ final class KalypsoRemoteWMService extends RemoteWMService
     final WMSCapabilities wmsCaps = WMSCapabilitiesHelper.loadCapabilities( serviceUrl, monitor );
     final CS_CoordinateSystem srs = negotiateCRS( preferedSRS, wmsCaps, layers.split( "," ) );
 
-    try
-    {
-      return new KalypsoRemoteWMService( wmsCaps, srs, layers, styles );
-    }
-    catch( final WebServiceException e )
-    {
-      final IStatus status = StatusUtilities.statusFromThrowable( e, "WebMapService konnte nicht initialisiert werden: " + e.getLocalizedMessage() );
-      KalypsoGisPlugin.getDefault().getLog().log( status );
-      throw new CoreException( status );
-    }
+    return new KalypsoRemoteWMService( wmsCaps, srs, layers, styles );
   }
 
   /**
@@ -153,9 +143,7 @@ final class KalypsoRemoteWMService extends RemoteWMService
    */
   private Operation checkOperation( final String name ) throws CoreException
   {
-    final Request request = capabilities.getCapability().getRequest();
-    final Operation operation = request.getOperation( name );
-
+    Operation operation = capabilities.getOperationMetadata().getOperation( new QualifiedName( name ) );
     if( operation == null )
       throw new CoreException( StatusUtilities.createErrorStatus( "Operation nicht unterstützt: " + name ) );
 
@@ -205,15 +193,15 @@ final class KalypsoRemoteWMService extends RemoteWMService
     final HashMap<String, String> wmsParameter = new HashMap<String, String>();
 
     // HACK: in order to keep any existing query parts, add existing query parts from base url
-    final Operation operation = checkOperation( operationName );
-    final DCPType[] types = operation.getDCPTypes();
-    for( final DCPType type : types )
+    Operation operation = checkOperation( operationName );
+    List<DCP> types = operation.getDCP();
+
+    for( final DCP type : types )
     {
-      final Protocol protocol = type.getProtocol();
-      if( protocol instanceof HTTP )
+      if( type instanceof HTTP )
       {
-        final HTTP httpProtocol = (HTTP) protocol;
-        final URL[] getOnlineResources = httpProtocol.getGetOnlineResources();
+        final HTTP httpProtocol = (HTTP) type;
+        List<URL> getOnlineResources = httpProtocol.getGetOnlineResources();
         for( final URL url : getOnlineResources )
         {
           if( url != null )
@@ -251,5 +239,4 @@ final class KalypsoRemoteWMService extends RemoteWMService
 
     return wmsParameter;
   }
-
 }

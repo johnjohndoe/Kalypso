@@ -58,6 +58,8 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme;
+import org.kalypso.ogc.gml.map.themes.provider.IKalypsoImageProvider;
+import org.kalypso.ogc.gml.map.themes.provider.KalypsoWMSImageProvider;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
@@ -242,8 +244,25 @@ public class GisTemplateMapModell implements IMapModell
         else if( kalypsoTheme instanceof KalypsoWMSTheme )
         {
           final String name = kalypsoTheme.getName();
-          GisTemplateHelper.fillLayerType( layer, "ID_" + i, name, kalypsoTheme.isVisible(), //$NON-NLS-1$
-          (KalypsoWMSTheme) kalypsoTheme );
+          // GisTemplateHelper.fillLayerType( layer, "ID_" + i, name, kalypsoTheme.isVisible(), (KalypsoWMSTheme)
+          // kalypsoTheme );
+
+          layer.setName( name );
+          layer.setFeaturePath( "" ); //$NON-NLS-1$
+          layer.setVisible( kalypsoTheme.isVisible() );
+          layer.setId( "ID_" + i );
+
+          KalypsoWMSTheme theme = (KalypsoWMSTheme) kalypsoTheme;
+          IKalypsoImageProvider imageProvider = theme.getImageProvider();
+          if( imageProvider instanceof KalypsoWMSImageProvider )
+            layer.setHref( ((KalypsoWMSImageProvider) imageProvider).getSource() );
+          else
+            layer.setHref( "" );
+
+          layer.setLinktype( KalypsoWMSImageProvider.TYPE_NAME );
+          layer.setActuate( "onRequest" ); //$NON-NLS-1$
+          layer.setType( "simple" ); //$NON-NLS-1$
+
           layerList.add( layer );
           monitor.worked( 1000 );
         }

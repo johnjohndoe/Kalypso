@@ -17,7 +17,6 @@ import java.util.Vector;
 
 import javax.naming.OperationNotSupportedException;
 
-import org.deegree_impl.services.NotSupportedFormatException;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -777,11 +776,7 @@ public class Grid implements IGrid
       if( type.matches( ".+\\.(a|A)(s|S)(c|C)$" ) )
         exportESRIasc( file );
       else
-        throw new NotSupportedFormatException( "The choosen raster data type is not supported" );
-    }
-    catch( NotSupportedFormatException e )
-    {
-      e.printStackTrace();
+        throw new UnsupportedOperationException( "The choosen raster data type is not supported" );
     }
     catch( Exception e )
     {

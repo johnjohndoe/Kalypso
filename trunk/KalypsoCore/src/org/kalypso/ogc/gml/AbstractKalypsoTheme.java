@@ -40,6 +40,8 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
+import java.awt.Font;
+import java.awt.Image;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -47,6 +49,7 @@ import java.util.HashSet;
 import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.PlatformObject;
@@ -398,4 +401,21 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
     return m_properties.keySet().toArray( new String[m_properties.keySet().size()] );
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#setExtent(org.kalypsodeegree.model.geometry.GM_Envelope)
+   */
+  public void setExtent( int width, int height, GM_Envelope extent )
+  {
+    /* Nothing to do here ... */
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#getLegendGraphic(java.awt.Font)
+   */
+  @SuppressWarnings("unused")
+  public Image getLegendGraphic( Font font ) throws CoreException
+  {
+    /* Nothing to do here, childs should implement. */
+    return null;
+  }
 }

@@ -61,7 +61,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Control;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.ogc.wfs.WFSUtilities;
+import org.kalypso.ogc.wfs.WFService;
 import org.kalypso.view.gazetter.GazetterLocationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -153,7 +153,9 @@ public class GazetteerControl implements ISelectionChangedListener, IStructuredC
       {
         try
         {
-          setContent( WFSUtilities.createGMLWorkspaceFromGetFeature( m_baseURL, featureTypeToLoad, targetCRS, filter, maxFeatureAsString ) );
+          WFService service = new WFService(m_baseURL.toExternalForm());
+          GMLWorkspace workspace = service.createGMLWorkspaceFromGetFeature( featureTypeToLoad, targetCRS, filter, maxFeatureAsString );
+          setContent( workspace );
           setEnable( true );
         }
         catch( Exception e )

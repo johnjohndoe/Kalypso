@@ -21,14 +21,14 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.kalypso.commons.java.util.PropertiesHelper;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.ogc.wfs.WFSUtilities;
+import org.kalypso.ogc.wfs.WFService;
 import org.kalypso.ui.ImageProvider;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.opengis.cs.CS_CoordinateSystem;
 
@@ -55,10 +55,10 @@ public class WfsLoader extends AbstractLoader
    * Loads a WFS DataSource from the given URL
    * 
    * @param source
-   *          the href-tag from the gmt-file 'ex: http://localhost:8080/deegreewfs#river' where river denotes the
-   *          feature to be loaded
+   *            the href-tag from the gmt-file 'ex: http://localhost:8080/deegreewfs#river' where river denotes the
+   *            feature to be loaded
    * @param context
-   *          the URL form the map context (here the path to the associated gmt file)
+   *            the URL form the map context (here the path to the associated gmt file)
    */
   @Override
   protected Object loadIntern( String source, URL context, IProgressMonitor monitor ) throws LoaderException
@@ -75,13 +75,17 @@ public class WfsLoader extends AbstractLoader
       final String filter = sourceProps.getProperty( KEY_FILTER );
       final String maxFeature = sourceProps.getProperty( KEY_MAXFEATURE );
 
-      final CS_CoordinateSystem targetCRS = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
+      final CS_CoordinateSystem targetCRS = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
       final QName qNameFT;
       if( featureTypeNS != null && featureTypeNS.length() > 0 )
         qNameFT = new QName( featureTypeNS, featureType );
       else
         qNameFT = new QName( featureType );
-      final GMLWorkspace workspace = WFSUtilities.createGMLWorkspaceFromGetFeature( new URL( baseURLAsString ), qNameFT, targetCRS, filter, maxFeature );
+
+      WFService wfs = new WFService( baseURLAsString );
+      GMLWorkspace workspace = wfs.createGMLWorkspaceFromGetFeature( qNameFT, targetCRS, filter, maxFeature );
+      // final GMLWorkspace workspace = WFSUtilities.createGMLWorkspaceFromGetFeature( new URL( baseURLAsString ),
+      // qNameFT, targetCRS, filter, maxFeature );
 
       return new CommandableWorkspace( workspace );
     }

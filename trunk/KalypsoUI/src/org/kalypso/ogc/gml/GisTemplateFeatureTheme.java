@@ -235,10 +235,10 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#getBoundingBox()
    */
-  public GM_Envelope getBoundingBox( )
+  public GM_Envelope getFullExtent( )
   {
     if( m_theme != null )
-      return m_theme.getBoundingBox();
+      return m_theme.getFullExtent();
     return null;
   }
 
@@ -308,7 +308,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
           m_commandTarget = new JobExclusiveCommandTarget( m_theme.getWorkspace(), null );
 
           // TODO is this really necessary?
-          invalidate( getBoundingBox() );
+          invalidate( getFullExtent() );
           for( final GisTemplateUserStyle style : m_gisTemplateUserStyles )
             addStyle( style );
 
@@ -363,7 +363,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
       // TODO: change status
     }
 
-    invalidate( getBoundingBox() );
+    invalidate( getFullExtent() );
     fireContextChanged();
     setStatus( status );
   }
@@ -384,7 +384,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
 
     // schon mal mitteilen, dass sich das Thema geändert hat
     fireContextChanged();
-    invalidate( getBoundingBox() );
+    invalidate( getFullExtent() );
   }
 
   /**

@@ -71,6 +71,7 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
@@ -105,11 +106,11 @@ class GM_LineString_Impl extends GM_CurveSegment_Impl implements GM_LineString, 
   {
     // kuch
     final CS_CoordinateSystem system = getCoordinateSystem();
-    final GM_Position[] positions = GeometryFactory.cloneGM_Position( getPositions() );
+    final GM_Position[] clonedPositions = GeometryFactory.cloneGM_Position( getPositions() );
 
     try
     {
-      return new GM_LineString_Impl( positions, system );
+      return new GM_LineString_Impl( clonedPositions, system );
     }
     catch( final GM_Exception e )
     {
@@ -161,7 +162,7 @@ class GM_LineString_Impl extends GM_CurveSegment_Impl implements GM_LineString, 
       else if( gmo instanceof GM_Surface )
       {
         final GM_CurveSegment[] cs = new GM_CurveSegment[] { this };
-        inter = LinearIntersects.intersects( new GM_Curve_Impl( cs ), (GM_Surface) gmo );
+        inter = LinearIntersects.intersects( new GM_Curve_Impl( cs ), (GM_Surface<GM_SurfacePatch>) gmo );
       }
       else if( gmo instanceof GM_MultiPrimitive )
       {

@@ -91,9 +91,8 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.filterdialog.dialog.FilterDialog;
-import org.kalypso.ogc.wfs.IWFSCapabilities;
 import org.kalypso.ogc.wfs.IWFSLayer;
-import org.kalypso.ogc.wfs.WFSUtilities;
+import org.kalypso.ogc.wfs.WFService;
 import org.kalypso.ui.ImageProvider;
 import org.kalypsodeegree.filterencoding.Filter;
 
@@ -138,7 +137,7 @@ public class ImportWfsWizardPage extends WizardPage
 
   private Label m_labelUrl;
 
-  private IWFSCapabilities m_wfsCapabilites = null;
+  private WFService m_wfsService = null;
 
   private Button m_addFilterButton;
 
@@ -146,7 +145,6 @@ public class ImportWfsWizardPage extends WizardPage
 
   private final SelectionListener m_urlSelectionListener = new SelectionListener()
   {
-
     public void widgetSelected( final SelectionEvent e )
     {
       reloadServer();
@@ -296,14 +294,14 @@ public class ImportWfsWizardPage extends WizardPage
     public Object[] getElements( Object input )
     {
       if( input instanceof List )
-        return ((List) input).toArray();
+        return ((List< ? >) input).toArray();
       return null;
     }
   };
 
   private Composite m_leftsideButtonC;
 
-  protected HashMap<URL, IWFSCapabilities> m_capabilites = new HashMap<URL, IWFSCapabilities>();
+  protected HashMap<URL, WFService> m_capabilites = new HashMap<URL, WFService>();
 
   final IDoubleClickListener m_doubleClickListener = new IDoubleClickListener()
   {
@@ -376,19 +374,19 @@ public class ImportWfsWizardPage extends WizardPage
     m_url.setLayoutData( gridData );
     m_url.addSelectionListener( m_urlSelectionListener );
     m_url.addModifyListener( m_urlModifyListener );
-//    m_url.addFocusListener( new FocusAdapter()
-//    {
+// m_url.addFocusListener( new FocusAdapter()
+// {
 //
-//      /**
-//       * @see org.eclipse.swt.events.FocusAdapter#focusLost(org.eclipse.swt.events.FocusEvent)
-//       */
-//      @Override
-//      public void focusLost( FocusEvent e )
-//      {
-//        reloadServer();
-//      }
+// /**
+// * @see org.eclipse.swt.events.FocusAdapter#focusLost(org.eclipse.swt.events.FocusEvent)
+// */
+// @Override
+// public void focusLost( FocusEvent e )
+// {
+// reloadServer();
+// }
 //
-//    } );
+// } );
 
     // add spacer
     final Label label = new Label( fieldGroup, SWT.SEPARATOR | SWT.HORIZONTAL );
@@ -615,7 +613,7 @@ public class ImportWfsWizardPage extends WizardPage
 
   /**
    * @throws Exception,
-   *           OperationNotSupportedException
+   *             OperationNotSupportedException
    * @throws MalformedURLException
    */
   public String guessFeaturePath( String layer ) throws MalformedURLException, Exception, OperationNotSupportedException
@@ -659,10 +657,9 @@ public class ImportWfsWizardPage extends WizardPage
 
   protected void reloadServer( )
   {
-
     try
     {
-      m_wfsCapabilites = getCapabilites();
+      m_wfsService = getCapabilites();
     }
     catch( MalformedURLException e )
     {
@@ -682,7 +679,7 @@ public class ImportWfsWizardPage extends WizardPage
       setErrorMessage( "Fehler beim Lesen der Capabilites des WFS-Dienstes:\n" + e.getMessage() );
       setPageComplete( false );
     }
-    final IWFSLayer[] featureTypes = m_wfsCapabilites.getFeatureTypes();
+    final IWFSLayer[] featureTypes = m_wfsService.getLayer();
     final List<IWFSLayer> list = Arrays.asList( featureTypes );
     m_listLeftSide.setInput( list );
     m_listRightSide.setInput( new ArrayList<IWFSLayer>() );
@@ -741,7 +738,8 @@ public class ImportWfsWizardPage extends WizardPage
     final IWFSLayer wfsFT = (IWFSLayer) selection.getFirstElement();
     final Filter oldFilter = m_filter.get( wfsFT );
     final IFeatureType ft = wfsFT.getFeatureType();
-    final String[] supportedOperations = WFSUtilities.getAllFilterCapabilitesOperations( m_wfsCapabilites );
+    final String[] supportedOperations = m_wfsService.getAllFilterCapabilitesOperations();
+    // final String[] supportedOperations = WFSUtilities.getAllFilterCapabilitesOperations( m_wfsCapabilites );
     final FilterDialog dialog = new FilterDialog( getShell(), ft, null, oldFilter, null, supportedOperations, false );
     int open = dialog.open();
     if( open == Window.OK )
@@ -784,7 +782,7 @@ public class ImportWfsWizardPage extends WizardPage
   {
     private final URL m_service;
 
-    private IWFSCapabilities m_capas = null;
+    private WFService m_wfs = null;
 
     protected CapabilitiesGetter( URL service )
     {
@@ -794,12 +792,14 @@ public class ImportWfsWizardPage extends WizardPage
 
     public IStatus execute( final IProgressMonitor monitor ) throws CoreException
     {
-      final IWFSCapabilities capabilities;
+      // final WFService capabilities;
       try
       {
-        capabilities = WFSUtilities.getCapabilites( m_service );
-        m_capabilites.put( m_service, capabilities );
-        m_capas = capabilities;
+        WFService wfs = new WFService( m_service.toExternalForm() );
+
+        // capabilities = WFSUtilities.getCapabilites( m_service );
+        m_capabilites.put( m_service, wfs );
+        m_wfs = wfs;
       }
       catch( CoreException e )
       {
@@ -815,13 +815,13 @@ public class ImportWfsWizardPage extends WizardPage
       return Status.OK_STATUS;
     }
 
-    public IWFSCapabilities getCapabilities( )
+    public WFService getCapabilities( )
     {
-      return m_capas;
+      return m_wfs;
     }
   }
 
-  private synchronized IWFSCapabilities getCapabilites( ) throws Throwable
+  private synchronized WFService getCapabilites( ) throws Throwable
   {
     final URL service = new URL( getUrl().toString().trim() );
     if( m_capabilites.containsKey( service ) )

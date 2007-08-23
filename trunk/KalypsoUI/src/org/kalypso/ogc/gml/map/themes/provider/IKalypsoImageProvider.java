@@ -38,41 +38,44 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.wfs;
+package org.kalypso.ogc.gml.map.themes.provider;
 
-import java.net.URL;
+import java.awt.Image;
+
+import org.eclipse.core.runtime.CoreException;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
- * @author doemming
+ * This interface provides functions for image provider.
+ * 
+ * @author Holger Albert
  */
-public interface IWFSCapabilities
+public interface IKalypsoImageProvider
 {
-  public final static int METHODE_HTTP_GET = 1;
+  /**
+   * This function will create the image and return it.
+   * 
+   * @param width
+   *            The requested width.
+   * @param height
+   *            The requested height.
+   * @param bbox
+   *            The requested bounding box.
+   * @return The created image.
+   */
+  public Image getImage( int width, int height, GM_Envelope bbox ) throws CoreException;
 
-  public final static int METHODE_HTTP_POST = 2;
+  /**
+   * This function returns a label.
+   * 
+   * @return The label.
+   */
+  public String getLabel( );
 
-  public String getVersion( );
-
-  public URL[] getBaseURLDescribeFeatureTypeRequest( int methodeType );
-
-  public URL[] getBaseURLGetFeatureRequest( int methodeType );
-
-  public URL[] getBaseURLGetCapabilitiesRequest( int methodeType );
-
-  public IWFSLayer[] getFeatureTypes( );
-
-  public String[] getGetFeatureOutputFormats( );
-
-  public String[] getSpatialOperators( );
-
-  public String[] getLogicalOperators( );
-
-  public String[] getComparisonOperators( );
-
-  public boolean canDoSimpleArithmetics( );
-
-  public String[] getFunctionArithmetics( );
-
-  public String[] getGeometryOperands( );
-
+  /**
+   * This function returns the full extent, if available.
+   * 
+   * @return The full extent.
+   */
+  public GM_Envelope getFullExtent( );
 }

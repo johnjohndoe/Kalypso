@@ -29,8 +29,8 @@
  */
 package org.kalypso.ui.wizard.wms;
 
-import org.deegree.services.wms.capabilities.Layer;
-import org.deegree.services.wms.capabilities.WMSCapabilities;
+import org.deegree.ogcwebservices.wms.capabilities.Layer;
+import org.deegree.ogcwebservices.wms.capabilities.WMSCapabilities;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
@@ -63,7 +63,7 @@ public class WMSCapabilitiesLabelProvider extends LabelProvider
       result.append( "WMS " );
       final WMSCapabilities caps = (WMSCapabilities) element;
       result.append( "(" + caps.getVersion() + ") " );
-      result.append( caps.getService().getTitle() );
+      result.append( caps.getServiceIdentification().getTitle() );
     }
     if( element instanceof Layer )
     {

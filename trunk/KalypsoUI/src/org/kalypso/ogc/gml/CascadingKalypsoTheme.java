@@ -125,7 +125,7 @@ public class CascadingKalypsoTheme extends AbstractKalypsoTheme implements ITemp
     @Override
     public void themeAdded( final IMapModell source, final IKalypsoTheme theme )
     {
-      CascadingKalypsoTheme.this.invalidate( theme.getBoundingBox() );
+      CascadingKalypsoTheme.this.invalidate( theme.getFullExtent() );
 
       handleThemeStatusChanged();
     }
@@ -136,7 +136,7 @@ public class CascadingKalypsoTheme extends AbstractKalypsoTheme implements ITemp
     @Override
     public void themeOrderChanged( final IMapModell source )
     {
-      CascadingKalypsoTheme.this.invalidate( getBoundingBox() );
+      CascadingKalypsoTheme.this.invalidate( getFullExtent() );
 
       // TODO: HACK, still looking for a better way to forward theme events to all modell listeners
       handleThemeStatusChanged();
@@ -150,7 +150,7 @@ public class CascadingKalypsoTheme extends AbstractKalypsoTheme implements ITemp
     public void themeRemoved( final IMapModell source, final IKalypsoTheme theme, final boolean lastVisibility )
     {
       if( lastVisibility )
-        CascadingKalypsoTheme.this.invalidate( theme.getBoundingBox() );
+        CascadingKalypsoTheme.this.invalidate( theme.getFullExtent() );
 
       handleThemeStatusChanged();
     }
@@ -162,7 +162,7 @@ public class CascadingKalypsoTheme extends AbstractKalypsoTheme implements ITemp
     @Override
     public void themeVisibilityChanged( final IMapModell source, final IKalypsoTheme theme, final boolean visibility )
     {
-      CascadingKalypsoTheme.this.invalidate( theme.getBoundingBox() );
+      CascadingKalypsoTheme.this.invalidate( theme.getFullExtent() );
     }
 
     /**
@@ -312,7 +312,7 @@ public class CascadingKalypsoTheme extends AbstractKalypsoTheme implements ITemp
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#getBoundingBox()
    */
-  public GM_Envelope getBoundingBox( )
+  public GM_Envelope getFullExtent( )
   {
     if( m_innerMapModel != null )
     {
@@ -633,5 +633,4 @@ public class CascadingKalypsoTheme extends AbstractKalypsoTheme implements ITemp
   {
     return m_mapViewRefUrl;
   }
-
 }

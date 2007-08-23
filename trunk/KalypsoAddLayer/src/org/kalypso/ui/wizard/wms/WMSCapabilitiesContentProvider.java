@@ -29,9 +29,8 @@
  */
 package org.kalypso.ui.wizard.wms;
 
-import org.deegree.services.wms.capabilities.Capability;
-import org.deegree.services.wms.capabilities.Layer;
-import org.deegree.services.wms.capabilities.WMSCapabilities;
+import org.deegree.ogcwebservices.wms.capabilities.Layer;
+import org.deegree.ogcwebservices.wms.capabilities.WMSCapabilities;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
@@ -74,14 +73,11 @@ public class WMSCapabilitiesContentProvider implements ITreeContentProvider
   public Object[] getChildren( final Object parentElement )
   {
     if( parentElement instanceof WMSCapabilities )
-    {
-      final Capability capability = ((WMSCapabilities) parentElement).getCapability();
-      return new Layer[] { capability.getLayer() };
-    }
+      return new Layer[] { ((WMSCapabilities) parentElement).getLayer() };
+
     if( parentElement instanceof Layer )
-    {
       return ((Layer) parentElement).getLayer();
-    }
+
     return null;
   }
 
@@ -99,12 +95,11 @@ public class WMSCapabilitiesContentProvider implements ITreeContentProvider
   public boolean hasChildren( Object element )
   {
     if( element instanceof WMSCapabilities )
-    {
-      final Capability capability = ((WMSCapabilities) element).getCapability();
-      return capability.getLayer() != null;
-    }
+      return ((WMSCapabilities) element).getLayer() != null;
+
     if( element instanceof Layer )
       return ((Layer) element).getLayer().length > 0;
+
     return false;
   }
 }
