@@ -19,8 +19,8 @@ Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodu
 			<Name>Daten laden</Name>
 			<Task context="ImportBaseMap"
 				URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__MapLoad">
-				<Help>Einladen von Hintergrundkarten</Help>
-				<Name>Import von Hintergrundkarten</Name>
+				<Help>Einladen von Hintergrunddaten (Bilddateien, shape-Dateien, MapServer)</Help>
+				<Name>Import von Hintergrunddaten</Name>
 			</Task>
 			<Task context="FenetMap"
 				URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ElevLoad">

@@ -279,10 +279,10 @@
 								<enumeration value="10">
 									<annotation>
 										<documentation xml:lang="de">
-											<label><![CDATA[10 konst. Wirbelviskosität (BCE)]]></label>
+											<label><![CDATA[10 konst. Wirbelviskosität]]></label>
 										</documentation>
 										<documentation xml:lang="en">
-											<label><![CDATA[10 const. eddy viscosity (BCE)]]></label>
+											<label><![CDATA[10 const. eddy viscosity]]></label>
 										</documentation>
 									</annotation>
 								</enumeration>
@@ -309,10 +309,10 @@
 								<enumeration value="13">
 									<annotation>
 										<documentation xml:lang="de">
-											<label><![CDATA[13 Smagorinsky Ansatz (BCE)]]></label>
+											<label><![CDATA[13 Smagorinsky Ansatz]]></label>
 										</documentation>
 										<documentation xml:lang="en">
-											<label><![CDATA[13 Smagorinsky approach (BCE)]]></label>
+											<label><![CDATA[13 Smagorinsky approach]]></label>
 										</documentation>
 									</annotation>
 								</enumeration>
@@ -340,10 +340,10 @@
 								<enumeration value="16">
 									<annotation>
 										<documentation xml:lang="de">
-											<label><![CDATA[16 Smagorinsky (BCE) mit sohlinduzierter Turbulenz]]></label>
+											<label><![CDATA[16 Smagorinsky mit sohlinduzierter Turbulenz]]></label>
 										</documentation>
 										<documentation xml:lang="en">
-											<label><![CDATA[16 Smagorinsky (BCE) with bottom induced turbulence]]></label>
+											<label><![CDATA[16 Smagorinsky with bottom induced turbulence]]></label>
 										</documentation>
 									</annotation>
 								</enumeration>
