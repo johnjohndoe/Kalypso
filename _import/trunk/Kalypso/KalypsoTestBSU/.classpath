@@ -4,6 +4,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path="/KalypsoCore"/>
 	<classpathentry kind="src" path="/KalypsoDeegree"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/KalypsoDeegree2"/>
 	<classpathentry kind="src" path="/JWSDPInstallation"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/KalypsoTest"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/KalypsoGMLSchema"/>

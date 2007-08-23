@@ -94,7 +94,7 @@ public class Model1d2dCalUnitTheme extends AbstractKalypsoTheme
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#getBoundingBox()
    */
-  public GM_Envelope getBoundingBox( )
+  public GM_Envelope getFullExtent( )
   {
     if( m_calcUnit == null )
       return null;

@@ -52,8 +52,8 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 import org.apache.commons.io.IOUtils;
-import org.deegree.services.wms.capabilities.Layer;
-import org.deegree.services.wms.capabilities.Style;
+import org.deegree.ogcwebservices.wms.capabilities.Layer;
+import org.deegree.ogcwebservices.wms.capabilities.Style;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -69,7 +69,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
-import org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme;
+import org.kalypso.ogc.gml.map.themes.provider.KalypsoWMSImageProvider;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoServiceConstants;
 import org.kalypso.ui.action.AddThemeCommand;
@@ -416,9 +416,9 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
   {
     try
     {
-      final StringBuffer source = new StringBuffer( KalypsoWMSTheme.KEY_URL + "=" + m_PageImportWMS.getBaseURL().toString() );
-      final StringBuffer layers = new StringBuffer( KalypsoWMSTheme.KEY_LAYERS + "=" );
-      final StringBuffer styles = new StringBuffer( KalypsoWMSTheme.KEY_STYLES + "=" );
+      final StringBuffer source = new StringBuffer( KalypsoWMSImageProvider.KEY_URL + "=" + m_PageImportWMS.getBaseURL().toString() );
+      final StringBuffer layers = new StringBuffer( KalypsoWMSImageProvider.KEY_LAYERS + "=" );
+      final StringBuffer styles = new StringBuffer( KalypsoWMSImageProvider.KEY_STYLES + "=" );
       final Layer[] layerArray = m_PageImportWMS.getLayersList();
 
       if( m_PageImportWMS.isMultiLayer() )
@@ -461,8 +461,8 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
             styleName = "default";
 
           final String layerTitle = layer.getTitle();
-          source.append( "#" ).append( KalypsoWMSTheme.KEY_LAYERS ).append( "=" ).append( layerName );
-          source.append( "#" ).append( KalypsoWMSTheme.KEY_STYLES ).append( "=" ).append( styleName );
+          source.append( "#" ).append( KalypsoWMSImageProvider.KEY_LAYERS ).append( "=" ).append( layerName );
+          source.append( "#" ).append( KalypsoWMSImageProvider.KEY_STYLES ).append( "=" ).append( styleName );
           final AddThemeCommand command = new AddThemeCommand( mapModell, layerTitle, "wms", null, source.toString() );
           mapView.postCommand( command, null );
         }

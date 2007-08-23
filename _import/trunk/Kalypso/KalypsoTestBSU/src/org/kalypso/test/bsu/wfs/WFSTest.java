@@ -38,10 +38,10 @@ import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
 
+import org.deegree.ogcwebservices.wfs.capabilities.WFSCapabilities;
 import org.kalypso.gmlschema.GMLSchemaTest;
-import org.kalypso.ogc.wfs.IWFSCapabilities;
 import org.kalypso.ogc.wfs.IWFSLayer;
-import org.kalypso.ogc.wfs.WFSUtilities;
+import org.kalypso.ogc.wfs.WFService;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -131,8 +131,8 @@ public class WFSTest extends TestCase
     {
       final URL baseURL = new URL( baseURLAsString );
       final String maxFeaturesAsString = "3";
-      final IWFSCapabilities capabilites = WFSUtilities.getCapabilites( baseURL );
-      final IWFSLayer[] featureTypes = capabilites.getFeatureTypes();
+      WFService wfs = new WFService(baseURL.toExternalForm());
+      final IWFSLayer[] featureTypes = wfs.getLayer();
       for( final IWFSLayer ft : featureTypes )
       {
         final QName featureTypeQName = ft.getQName();
@@ -144,7 +144,8 @@ public class WFSTest extends TestCase
         }
         try
         {
-          final URL schemaURL = WFSUtilities.createDescribeFeatureTypeRequestURL( capabilites, featureTypeQName );
+          final URL schemaURL = wfs.buildDescribeURLForFeatureType( featureTypeQName );
+          // final URL schemaURL = WFSUtilities.createDescribeFeatureTypeRequestURL( capabilites, featureTypeQName );
           System.out.println( "teste parsen des Schemas von " + schemaURL.toString() );
           // final GMLSchema schema = new GMLSchema( schemaURL );
           final String testFileName = schemaURL.toString().replaceAll( "(\\(|\\)|\\\\|/|\\.|,|=|&|:|\\?)", "" ) + ".txt";
@@ -161,7 +162,7 @@ public class WFSTest extends TestCase
           System.out.println( "schema erfolgreich geladen" );
 
           System.out.println( "teste laden eines GMLWorkspaces..." );
-          final GMLWorkspace workspace = WFSUtilities.createGMLWorkspaceFromGetFeature( baseURL, featureTypeQName, null, null, maxFeaturesAsString );
+          final GMLWorkspace workspace = wfs.createGMLWorkspaceFromGetFeature( featureTypeQName, null, null, maxFeaturesAsString );
           // System.out.println( ".. workspace erfolgreich geladen" );
           final Feature rootFeature = workspace.getRootFeature();
           final FeatureList property = (FeatureList) rootFeature.getProperty( "featureMember" );
