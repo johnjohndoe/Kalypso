@@ -43,6 +43,7 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.flowrel;
 import java.math.BigInteger;
 
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DContinuityLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
@@ -169,7 +170,9 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
     if( parentElement == null )
       return;
     String parentType = null;
-    if( parentElement instanceof IFE1D2DContinuityLine || parentElement instanceof IBoundaryLine1D)
+    
+    // check like this (and exact order) is nesessary because BoundaryLine is also Element2D (?!) 
+    if( parentElement instanceof IFE1D2DContinuityLine || parentElement instanceof IBoundaryLine || parentElement instanceof IBoundaryLine1D)
       parentType = IBoundaryCondition.PARENT_TYPE_LINE1D2D;
     else if(parentElement instanceof IFE1D2DNode)
       parentType = IBoundaryCondition.PARENT_TYPE_NODE1D2D;

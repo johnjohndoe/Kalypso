@@ -44,10 +44,15 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 
+import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
@@ -70,6 +75,10 @@ import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+
+import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
+import de.renew.workflow.connector.cases.ICaseDataProvider;
 
 /**
  * @author Madanagopal
@@ -81,13 +90,13 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
 
   private final CalculationUnitPerformWidgetFace calcWidgetFace = new CalculationUnitPerformWidgetFace( dataModel );
 
-  private final String toolTip;
+  private final String m_name;
+
+  private final String m_toolTip;
 
   private IWidget strategy;
 
-  private final String name;
-
-  private Model1d2dCalUnitTheme calUnitTheme;
+  private Model1d2dCalUnitTheme m_calcUnitTheme;
 
   /**
    * The constructor.
@@ -100,8 +109,8 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
 
   public CalculationUnitPerformWidget( final String name, final String toolTip )
   {
-    this.name = name;
-    this.toolTip = toolTip;
+    m_name = name;
+    m_toolTip = toolTip;
   }
 
   private final KeyBasedDataModelChangeListener calThemeUpdater = new KeyBasedDataModelChangeListener()
@@ -110,7 +119,7 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
     {
       if( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER.equals( key ) )
       {
-        calUnitTheme.setCalculationUnit( (ICalculationUnit) newValue );
+        m_calcUnitTheme.setCalculationUnit( (ICalculationUnit) newValue );
         KeyBasedDataModelUtil.repaintMapPanel( dataModel, ICommonKeys.KEY_MAP_PANEL );
       }
     }
@@ -156,30 +165,44 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
     dataModel.setData( ICommonKeys.KEY_MAP_PANEL, mapPanel );
     final IMapModell mapModell = mapPanel.getMapModell();
 
-    final IFEDiscretisationModel1d2d m_model = UtilMap.findFEModelTheme( mapModell );
-    dataModel.setData( ICommonKeys.KEY_DISCRETISATION_MODEL, m_model );
-    dataModel.setData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST, CalcUnitOps.getModelCalculationUnits( m_model ) );
-    dataModel.setData( ICommonKeys.WIDGET_WITH_STRATEGY, this );
+    final IWorkbench workbench = PlatformUI.getWorkbench();
+    final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
+    final IEvaluationContext context = handlerService.getCurrentState();
+    final ICaseDataProvider<IFeatureWrapper2> modelProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+    IFEDiscretisationModel1d2d m_model;
+    try
+    {
+      m_model = modelProvider.getModel( IFEDiscretisationModel1d2d.class );
+      // final IFEDiscretisationModel1d2d m_model = UtilMap.findFEModelTheme( mapModell );
+      dataModel.setData( ICommonKeys.KEY_DISCRETISATION_MODEL, m_model );
+      dataModel.setData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST, CalcUnitOps.getModelCalculationUnits( m_model ) );
+      dataModel.setData( ICommonKeys.WIDGET_WITH_STRATEGY, this );
 
-    // TODO: what is the purpose of this extra theme??! This is completely senseless!
-    calUnitTheme = new Model1d2dCalUnitTheme( "Aktuelles Teilmodell", mapModell );
-    mapModell.insertTheme( calUnitTheme, 0 );
-    dataModel.addKeyBasedDataChangeListener( calThemeUpdater );
+      // TODO: what is the purpose of this extra theme??! This is completely senseless!
+      m_calcUnitTheme = new Model1d2dCalUnitTheme( "Aktuelles Teilmodell", mapModell );
+      mapModell.insertTheme( m_calcUnitTheme, 0 );
+      dataModel.addKeyBasedDataChangeListener( calThemeUpdater );
 
-    // command manager since it is use in the dirty pool object framework
-    // the commandable workspace of the target theme is taken
-    // TODO: that cannot work, as the models workspace is not a commandable workspace
-    dataModel.setData( ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL, m_model.getWrappedFeature().getWorkspace() );
+      // command manager since it is use in the dirty pool object framework
+      // the commandable workspace of the target theme is taken
+      // TODO: that cannot work, as the models workspace is not a commandable workspace
+      dataModel.setData( ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL, m_model.getWrappedFeature().getWorkspace() );
 
-    dataModel.setData( ICommonKeys.KEY_GRAB_DISTANCE_PROVIDER, this );
-    dataModel.setData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST, CalcUnitOps.getModelCalculationUnits( m_model ) );
+      dataModel.setData( ICommonKeys.KEY_GRAB_DISTANCE_PROVIDER, this );
+      dataModel.setData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST, CalcUnitOps.getModelCalculationUnits( m_model ) );
 
-    final IKalypsoFeatureTheme operationalTheme = UtilMap.findEditableTheme( mapModell, IBoundaryCondition.QNAME );
-    dataModel.setData( ICommonKeys.KEY_BOUNDARY_CONDITION_CMD_WORKSPACE, operationalTheme.getWorkspace() );
+      final IKalypsoFeatureTheme operationalTheme = UtilMap.findEditableTheme( mapModell, IBoundaryCondition.QNAME );
+      dataModel.setData( ICommonKeys.KEY_BOUNDARY_CONDITION_CMD_WORKSPACE, operationalTheme.getWorkspace() );
 
-    final IFlowRelationshipModel bcModel = Util.getModel( IPseudoOPerationalModel.class );// (IFlowRelationshipModel)
+      final IFlowRelationshipModel bcModel = Util.getModel( IPseudoOPerationalModel.class );// (IFlowRelationshipModel)
 
-    calUnitTheme.setModelBoundaryConditions( bcModel );
+      m_calcUnitTheme.setModelBoundaryConditions( bcModel );
+    }
+    catch( CoreException e )
+    {
+      e.printStackTrace();
+    }
+
   }
 
   /**
@@ -246,7 +269,7 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
       final IMapModell mapModell = mapPanel.getMapModell();
       if( mapModell != null )
       {
-        mapModell.removeTheme( calUnitTheme );
+        mapModell.removeTheme( m_calcUnitTheme );
       }
     }
     catch( final Exception e )
@@ -272,7 +295,7 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
    */
   public String getName( )
   {
-    return name;
+    return m_name;
   }
 
   /**
@@ -280,7 +303,7 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
    */
   public String getToolTip( )
   {
-    return toolTip;
+    return m_toolTip;
   }
 
   /**

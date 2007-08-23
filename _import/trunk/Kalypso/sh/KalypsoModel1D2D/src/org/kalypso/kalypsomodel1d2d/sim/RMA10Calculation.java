@@ -51,7 +51,6 @@ import java.util.Map;
 
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.net.UrlResolver;
-import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.BoundaryLineInfo;
 import org.kalypso.kalypsomodel1d2d.conv.INativeIDProvider;
 import org.kalypso.kalypsomodel1d2d.conv.ITimeStepinfo;
@@ -113,6 +112,8 @@ public class RMA10Calculation implements INativeIDProvider
   private final LinkedHashMap<IBoundaryLine, Integer> m_boundaryLineIDProvider = new LinkedHashMap<IBoundaryLine, Integer>( 32 );
 
   private ICalculationUnit m_calculationUnit;
+
+  private IControlModel1D2D m_controlModel1D2D = null;
 
   public RMA10Calculation( final ISimulationDataProvider inputProvider ) throws SimulationException, Exception
   {
@@ -372,7 +373,8 @@ public class RMA10Calculation implements INativeIDProvider
         // final boolean boundaryConditionOf = CalUnitOps.isBoundaryConditionOf( unit, bc, grabDistance );
 
         final IFeatureWrapper2 wrapper2 = CalcUnitOps.getAssignedBoundaryConditionLine( unit, bc );
-        // // final IFeatureWrapper2 wrapper2 = DiscretisationModelUtils.findModelElementForBC( discModel, bc.getPosition(),
+        // // final IFeatureWrapper2 wrapper2 = DiscretisationModelUtils.findModelElementForBC( discModel,
+        // bc.getPosition(),
         // 0.001 );
         System.out.println();
         if( wrapper2 == null )
@@ -409,7 +411,8 @@ public class RMA10Calculation implements INativeIDProvider
           }
 
         // TODO: the following elses never get called any more
-        // else if( wrapper2 instanceof IFE1D2DNode && DiscretisationModelUtils.is1DNode( (IFE1D2DNode<IFE1D2DEdge>) wrapper2 )
+        // else if( wrapper2 instanceof IFE1D2DNode && DiscretisationModelUtils.is1DNode( (IFE1D2DNode<IFE1D2DEdge>)
+        // wrapper2 )
         // )
         // {
         // // create new contiline
@@ -431,7 +434,8 @@ public class RMA10Calculation implements INativeIDProvider
         // else if( hComponent != null )
         // info.setObservation( obs, timeComponent, hComponent, ITimeStepinfo.TYPE.CONTI_BC_H );
         // else
-        // throw new SimulationException( "Falsche Parameter an Kontinuitätslinien-Randbedingung: " + bc.getName(), null );
+        // throw new SimulationException( "Falsche Parameter an Kontinuitätslinien-Randbedingung: " + bc.getName(), null
+        // );
         //
         // result.add( info );
         // }
@@ -467,28 +471,20 @@ public class RMA10Calculation implements INativeIDProvider
   public ICalculationUnit getCalculationUnit( )
   {
     if( m_calculationUnit == null )
-    {
-      final IControlModel1D2D controlModel = getControlModel();
-
-      m_calculationUnit = controlModel.getCalculationUnit();
-      /*
-       * final ICalculationUnit linkedCalculationUnit = controlModel.getCalculationUnit(); final
-       * IFEDiscretisationModel1d2d discModel = getDiscModel(); final Feature feature =
-       * discModel.getWrappedFeature().getWorkspace().getFeature( linkedCalculationUnit.getGmlID() ); m_calculationUnit =
-       * (ICalculationUnit) feature.getAdapter( ICalculationUnit.class );
-       */
-    }
+      m_calculationUnit = getControlModel().getCalculationUnit();
     return m_calculationUnit;
   }
 
   public IControlModel1D2D getControlModel( )
   {
-    final Feature controlModelCollection = (Feature) m_controlModelRoot.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_FP_MODEL_COLLECTION );
-
-    final Object link = controlModelCollection.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_XP_ACTIVE_MODEL );
-    final Feature controlModelFeature = FeatureHelper.getFeature( m_controlModelRoot.getWorkspace(), link );
-
-    return (IControlModel1D2D) controlModelFeature.getAdapter( IControlModel1D2D.class );
+    if( m_controlModel1D2D == null )
+    {
+      final Feature controlModelCollection = (Feature) m_controlModelRoot.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_FP_MODEL_COLLECTION );
+      final Object link = controlModelCollection.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_XP_ACTIVE_MODEL );
+      final Feature controlModelFeature = FeatureHelper.getFeature( m_controlModelRoot.getWorkspace(), link );
+      m_controlModel1D2D = (IControlModel1D2D) controlModelFeature.getAdapter( IControlModel1D2D.class );
+    }
+    return m_controlModel1D2D;
   }
 
   /**

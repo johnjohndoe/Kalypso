@@ -40,9 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.util;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.xml.namespace.QName;
 
 import org.eclipse.ui.IViewPart;
@@ -52,7 +49,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -85,19 +81,19 @@ public class UtilMap
     final IWorkbench workbench = PlatformUI.getWorkbench();
     if( workbench == null )
     {
-      System.out.println( Messages.getString("UtilMap.0") ); //$NON-NLS-1$
+      System.out.println( Messages.getString( "UtilMap.0" ) ); //$NON-NLS-1$
       return null;
     }
     final IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
     if( activeWorkbenchWindow == null )
     {
-      System.out.println( Messages.getString("UtilMap.1") ); //$NON-NLS-1$
+      System.out.println( Messages.getString( "UtilMap.1" ) ); //$NON-NLS-1$
       return null;
     }
     final IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
     if( activePage == null )
     {
-      System.out.println( Messages.getString("UtilMap.2") ); //$NON-NLS-1$
+      System.out.println( Messages.getString( "UtilMap.2" ) ); //$NON-NLS-1$
       return null;
     }
     final IViewPart findView = activePage.findView( MapView.ID );
@@ -113,16 +109,14 @@ public class UtilMap
     Assert.throwIAEOnNullParam( editElementQName, "editElementQName" ); //$NON-NLS-1$
     IKalypsoTheme[] allThemes;
     IKalypsoFeatureTheme ftheme;
-    
     allThemes = mapModel.getAllThemes();
-    
-    
+
     synchronized( UtilMap.class )
     {
       while( true )
         try
         {
-          UtilMap.class.wait( 500 );
+          UtilMap.class.wait( 50 );
           allThemes = mapModel.getAllThemes();
           for( final IKalypsoTheme theme : allThemes )
           {
@@ -130,39 +124,15 @@ public class UtilMap
             {
               ftheme = (IKalypsoFeatureTheme) theme;
               final IFeatureType featureType = ftheme.getFeatureType();
-              if( featureType != null && GMLSchemaUtilities.substitutes( featureType, editElementQName) )
+              if( featureType != null && GMLSchemaUtilities.substitutes( featureType, editElementQName ) )
                 return ftheme;
             }
           }
         }
         catch( InterruptedException e )
         {
-          e.printStackTrace();
         }
     }
-  }
-
-  /**
-   * Get all Themes which are showing elements substituable to the specified QName (i.e. substituting it).
-   */
-  static public IKalypsoFeatureTheme[] findEditableThemes( final IMapModell mapModel, final QName editElementQName )
-  {
-    Assert.throwIAEOnNullParam( mapModel, "mapModel" ); //$NON-NLS-1$
-    Assert.throwIAEOnNullParam( editElementQName, "editElementQName" ); //$NON-NLS-1$
-    final IKalypsoTheme[] allThemes = mapModel.getAllThemes();
-    final List<IKalypsoFeatureTheme> foundThemes = new ArrayList<IKalypsoFeatureTheme>( allThemes.length );
-    for( final IKalypsoTheme theme : allThemes )
-    {
-      if( theme instanceof IKalypsoFeatureTheme )
-      {
-        final IKalypsoFeatureTheme ftheme = (IKalypsoFeatureTheme) theme;
-        final IFeatureType featureType = ftheme.getFeatureType();
-        if( featureType != null && GMLSchemaUtilities.substitutes( featureType, editElementQName/* Kalypso1D2DSchemaConstants.WB1D2D_F_NODE */) )
-          foundThemes.add( ftheme );
-      }
-    }
-
-    return foundThemes.toArray( new IKalypsoFeatureTheme[foundThemes.size()] );
   }
 
   /**
@@ -198,43 +168,6 @@ public class UtilMap
     return null;
   }
 
-  static public <T> T findTheme( final IMapModell mapModel, final Class<T> themeType )
-  {
-    Assert.throwIAEOnNullParam( mapModel, "mapModel" ); //$NON-NLS-1$
-    final IKalypsoTheme[] allThemes = mapModel.getAllThemes();
-    for( final IKalypsoTheme theme : allThemes )
-    {
-      if( themeType.isInstance( theme ) )
-      {
-        return (T) theme;
-      }
-    }
-    return null;
-  }
-
-  /**
-   * Answer whether the theme is showing feature of the given type. This check is made based on substitution
-   * 
-   * @param featureTheme
-   *            the theme to check, must not be null
-   * @param featureTypeQName
-   *            the type of feature to check whether they can be part of the theme
-   */
-  static public final boolean isShowingFeatureType( final IKalypsoFeatureTheme featureTheme, final QName featureTypeQName )
-  {
-    Assert.throwIAEOnNullParam( featureTheme, "featureTheme" ); //$NON-NLS-1$
-    Assert.throwIAEOnNullParam( featureTypeQName, "featureTypeQName" ); //$NON-NLS-1$
-    final IFeatureType featureType = featureTheme.getFeatureType();
-    if( GMLSchemaUtilities.substitutes( featureType, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE ) )
-    {
-      return true;
-    }
-    else
-    {
-      return false;
-    }
-  }
-
   /**
    * Convert the given bounding box into a {@link GM_Curve}
    */
@@ -261,7 +194,7 @@ public class UtilMap
     }
     catch( final Throwable e )
     {
-      throw new RuntimeException( Messages.getString("UtilMap.3"), e ); //$NON-NLS-1$
+      throw new RuntimeException( Messages.getString( "UtilMap.3" ), e ); //$NON-NLS-1$
     }
   }
 }

@@ -675,13 +675,10 @@ public class CalcUnitOps
   public static final IBoundaryLine getAssignedBoundaryConditionLine( final ICalculationUnit unit, final IBoundaryCondition bCondition )
   {
     final List<IBoundaryLine> boundaryLines = unit.getBoundaryLines();
-    if( bCondition.getType().equals( IBoundaryCondition.PARENT_TYPE_LINE1D2D ) )
-    {
-      final String parentGmlID = bCondition.getParentElementID();
-      for( final IBoundaryLine boundaryLine : boundaryLines )
-        if(boundaryLine.getGmlID().equals( parentGmlID ))
-          return boundaryLine;
-    }
+    final String parentGmlID = bCondition.getParentElementID();
+    for( final IBoundaryLine boundaryLine : boundaryLines )
+      if(boundaryLine.getGmlID().equals( parentGmlID ))
+        return boundaryLine;
     return null;
   }
 
