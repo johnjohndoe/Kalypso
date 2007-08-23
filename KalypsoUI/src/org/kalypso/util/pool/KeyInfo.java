@@ -49,7 +49,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.loader.ILoader;
@@ -73,7 +72,7 @@ public final class KeyInfo extends Job implements ILoaderListener
   /** Flag, indicating if the associated object needs saving. */
   private boolean m_isDirty = false;
 
-  public KeyInfo( final IPoolableObjectType key, final ILoader loader, final ISchedulingRule rule )
+  public KeyInfo( final IPoolableObjectType key, final ILoader loader )
   {
     super( "Lade Resource: " + key.toString() );
 
@@ -83,7 +82,6 @@ public final class KeyInfo extends Job implements ILoaderListener
     m_loader.addLoaderListener( this );
 
     setPriority( Job.LONG );
-// setRule( rule );
   }
 
   public void dispose( )

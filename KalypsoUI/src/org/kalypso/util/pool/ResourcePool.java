@@ -60,7 +60,6 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.factory.FactoryException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.loader.ILoader;
 import org.kalypso.loader.ILoaderFactory;
 import org.kalypso.loader.LoaderException;
@@ -83,17 +82,6 @@ public class ResourcePool
 
   /** key -> KeyInfo */
   private final Map<IPoolableObjectType, KeyInfo> m_keyInfos = new TreeMap<IPoolableObjectType, KeyInfo>( KeyComparator.getInstance() );
-
-  /**
-   * TODO: shafft fürs Lanu1d2d projekt Probleme, weil dort durch gml laden das 1d2dPRojekt samt Workflow stuff
-   * initialisiert wird.
-   * <p>
-   * Es folgt ein rule-konflikt, weil die workflow initialisierung auf eine resource zugreift. Rule für die KeyInfos.
-   * Das Laden der eigentlichen Objekte soll nacheinander stattfinden.
-   * <p>
-   * Könnte man nicht einfach die Datei als Rule nehmen?
-   */
-  private final ISchedulingRule m_mutex = new MutexRule();
 
   public ResourcePool( final ILoaderFactory factory )
   {
@@ -128,7 +116,7 @@ public class ResourcePool
         try
         {
           final ILoader loader = getLoader( key.getType() );
-          info = new KeyInfo( key, loader, m_mutex );
+          info = new KeyInfo( key, loader );
           m_keyInfos.put( key, info );
         }
         catch( final Exception e )
@@ -285,7 +273,7 @@ public class ResourcePool
     try
     {
       final ILoader loader = getLoader( key.getType() );
-      info2 = new KeyInfo( key, loader, m_mutex );
+      info2 = new KeyInfo( key, loader );
       final IStatus result = info2.loadObject( new NullProgressMonitor() );
       if( result.isOK() )
         return info2.getObject();

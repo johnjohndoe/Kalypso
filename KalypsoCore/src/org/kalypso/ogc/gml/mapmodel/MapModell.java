@@ -77,6 +77,9 @@ public class MapModell implements IMapModell
 
   private final CS_CoordinateSystem m_coordinatesSystem;
 
+  // TODO: this is problematik now, as we are using cascaded themes
+  // Probably it would be much better to put the active theme int the MapPanel! this would probably solve all problems
+  // at once...
   private IKalypsoTheme m_activeTheme = null;
 
   private IProject m_project;
@@ -134,8 +137,9 @@ public class MapModell implements IMapModell
    */
   public void activateTheme( final IKalypsoTheme theme )
   {
-    // we just call internal activate for me and all submodell
+    final IKalypsoTheme oldActiveTheme = getActiveTheme();
 
+    // we just call internal activate for me and all submodell
     internalActivate( theme );
 
     final IKalypsoThemeVisitor visitor = new IKalypsoThemeVisitor()
@@ -144,13 +148,20 @@ public class MapModell implements IMapModell
       {
         if( visitedTheme instanceof IMapModell )
         {
-          ((IMapModell) visitedTheme).internalActivate( theme );
+          final IMapModell innerModell = ((IMapModell) visitedTheme);
+          innerModell.internalActivate( theme );
         }
         return true;
       }
     };
 
     accept( visitor, IKalypsoThemeVisitor.DEPTH_INFINITE );
+
+    // HACK: we also fire theme activate, so listeners on the topmost modell
+    // gets informed...
+    // TODO: we should refaktor so, that all modell of one modell-tree will use
+    // the same list of listeners (some kind of common event-manager)
+    fireThemeActivated( oldActiveTheme, theme );
   }
 
   /**
@@ -177,7 +188,24 @@ public class MapModell implements IMapModell
 
   public IKalypsoTheme getActiveTheme( )
   {
-    return m_activeTheme;
+    // find active theme
+    final IKalypsoTheme[] oldActiveTheme = new IKalypsoTheme[1]; // return holder for inner class, initially null
+    final IKalypsoThemeVisitor findActiveVisitor = new IKalypsoThemeVisitor()
+    {
+      public boolean visit( final IKalypsoTheme theme )
+      {
+        if( theme.getMapModell().isThemeActivated( theme ) )
+        {
+          oldActiveTheme[0] = theme;
+          return false;
+        }
+
+        return true;
+      }
+    };
+    accept( findActiveVisitor, IKalypsoThemeVisitor.DEPTH_INFINITE );
+
+    return oldActiveTheme[0];
   }
 
   public void addTheme( final IKalypsoTheme theme )
@@ -278,6 +306,7 @@ public class MapModell implements IMapModell
     fireThemeRemoved( theme, theme.isVisible() );
 
     if( m_activeTheme == theme )
+      // TODO: is this right? The theme has gone... probably activateTheme( null ) was meant?
       activateTheme( theme );
   }
 
