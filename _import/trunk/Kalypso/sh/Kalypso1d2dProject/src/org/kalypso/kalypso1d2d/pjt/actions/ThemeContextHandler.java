@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.kalypso.kalypso1d2d.pjt.actions;
 
@@ -20,6 +20,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
 import org.kalypso.ogc.gml.mapmodel.MapModellAdapter;
@@ -32,9 +33,20 @@ import org.kalypso.ui.views.map.MapView;
  */
 public class ThemeContextHandler extends AbstractHandler implements IExecutableExtension
 {
-  public static final String CONTEXT_THEME_FEATURE_TYPE = "org.kalypso.kalypso1d2d.pjt.contexts.theme";   //$NON-NLS-1$
+  public static final String CONTEXT_THEME_FEATURE_TYPE = "org.kalypso.kalypso1d2d.pjt.contexts.theme"; //$NON-NLS-1$
 
-  public static final String NO_THEME = "NO_THEME";   //$NON-NLS-1$
+  public static final String NO_THEME = "NO_THEME"; //$NON-NLS-1$
+
+  protected final IKalypsoThemeVisitor m_themeVisitor = new IKalypsoThemeVisitor()
+  {
+    public boolean visit( final IKalypsoTheme theme )
+    {
+      if( theme.isLoaded() )
+        maybeActivateTheme( theme );
+
+      return true;
+    }
+  };
 
   protected final IMapModellListener m_modellListener = new MapModellAdapter()
   {
@@ -82,7 +94,7 @@ public class ThemeContextHandler extends AbstractHandler implements IExecutableE
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
-  @SuppressWarnings("unchecked")   //$NON-NLS-1$
+  @SuppressWarnings("unchecked")
   @Override
   public Object execute( final ExecutionEvent event )
   {
@@ -90,36 +102,37 @@ public class ThemeContextHandler extends AbstractHandler implements IExecutableE
 
     final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
     final IWorkbenchPage activePage = window == null ? null : window.getActivePage();
+
+    // TODO: do not program against a fixed view id; better try to adapt part to MapPanel instead: this works for every
+    // part containing a map-panel
     final IViewPart view = activePage == null ? null : activePage.findView( MapView.ID );
 
     if( m_featureType != null && view != null && view instanceof MapView )
     {
       final MapView mapView = (MapView) view;
+      // see above
       final MapPanel mapPanel = (MapPanel) mapView.getAdapter( MapPanel.class );
-      final String layerContext = m_featureType;
-      final Job job = new Job( org.kalypso.kalypso1d2d.pjt.actions.Messages.getString("ThemeContextHandler.3") )  //$NON-NLS-1$
+      final String featureType = m_featureType;
+      final Job job = new Job( org.kalypso.kalypso1d2d.pjt.actions.Messages.getString( "ThemeContextHandler.3" ) ) //$NON-NLS-1$
       {
         @Override
         protected IStatus run( final IProgressMonitor monitor )
         {
           m_mapModell = mapPanel.getMapModell();
+
           if( m_mapModell != null )
             m_mapModell.addMapModelListener( m_modellListener );
-          if( layerContext != null )
+
+          if( featureType != null )
           {
             final IKalypsoTheme activeTheme = m_mapModell == null ? null : m_mapModell.getActiveTheme();
-            if( activeTheme != null && layerContext.equals( NO_THEME ) )
+            if( activeTheme != null && featureType.equals( NO_THEME ) )
             {
               m_mapModell.activateTheme( null );
             }
-            else if( !layerContext.equals( activeTheme != null ? activeTheme.getContext() : null ) )
+            else if( !featureType.equals( activeTheme != null ? activeTheme.getContext() : null ) )
             {
-              final IKalypsoTheme[] allThemes = m_mapModell.getAllThemes();
-              for( final IKalypsoTheme theme : allThemes )
-              {
-                if( theme.isLoaded() )
-                  maybeActivateTheme( theme );
-              }
+              m_mapModell.accept( m_themeVisitor, IKalypsoThemeVisitor.DEPTH_INFINITE );
             }
           }
 
@@ -147,7 +160,7 @@ public class ThemeContextHandler extends AbstractHandler implements IExecutableE
     }
   }
 
-  void maybeActivateTheme( final IKalypsoTheme themeToActivate )
+  protected void maybeActivateTheme( final IKalypsoTheme themeToActivate )
   {
     try
     {

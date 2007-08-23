@@ -52,9 +52,10 @@ public class SelectRoughnessThemeHandler extends AbstractHandler implements IHan
         {
           this.wait( 500 );
           orgMapModell = mapPanel.getMapModell();
-          orgMapModell.getAllThemes();
+          // TODO: could not be right, throws NPE and leaves the while loop
+          // orgMapModell.getAllThemes();
         }
-        catch( InterruptedException e )
+        catch( final InterruptedException e )
         {
           e.printStackTrace();
         }
@@ -86,7 +87,7 @@ public class SelectRoughnessThemeHandler extends AbstractHandler implements IHan
     return Status.OK_STATUS;
   }
 
-  private IKalypsoTheme showNetworksDialog( Shell shell, IKalypsoTheme[] roughnessThemes )
+  private IKalypsoTheme showNetworksDialog( final Shell shell, final IKalypsoTheme[] roughnessThemes )
   {
     final ListDialog dialog = new ListDialog( shell );
     dialog.setTitle( "Rauheiten bearbeiten" );
