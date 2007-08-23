@@ -161,7 +161,7 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
   protected final void invalidateLegend( )
   {
     m_image = null;
-    invalidate( getBoundingBox() );
+    invalidate( getFullExtent() );
   }
 
   private void updateLegend( int widthPerLegend, final int hMax )
@@ -284,7 +284,7 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#getBoundingBox()
    */
-  public GM_Envelope getBoundingBox( )
+  public GM_Envelope getFullExtent( )
   {
     return null;
   }

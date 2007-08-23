@@ -299,7 +299,7 @@ public class MapModellHelper
     for( final IKalypsoTheme kalypsoTheme : themes )
       if( (predicate == null) || predicate.decide( kalypsoTheme ) )
       {
-        final GM_Envelope boundingBox = kalypsoTheme.getBoundingBox();
+        final GM_Envelope boundingBox = kalypsoTheme.getFullExtent();
         if( result == null )
           result = boundingBox;
         else

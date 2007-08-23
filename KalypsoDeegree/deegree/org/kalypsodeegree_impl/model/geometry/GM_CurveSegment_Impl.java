@@ -244,7 +244,7 @@ class GM_CurveSegment_Impl implements GM_CurveSegment, Serializable
    * @see java.lang.Object#clone()
    */
   @Override
-  public Object clone( ) throws CloneNotSupportedException
+  public Object clone( )
   {
     // kuch
     final CS_CoordinateSystem system = getCoordinateSystem();
@@ -273,7 +273,7 @@ class GM_CurveSegment_Impl implements GM_CurveSegment, Serializable
   /**
    * @see org.kalypsodeegree.model.geometry.GM_GenericCurve#getAsLineString()
    */
-  public GM_LineString getAsLineString( ) throws GM_Exception
+  public GM_LineString getAsLineString( )
   {
     throw (new NotImplementedException());
   }

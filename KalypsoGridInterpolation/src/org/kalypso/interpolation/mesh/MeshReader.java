@@ -45,7 +45,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.xpath.XPathAPI;
-import org.deegree_impl.services.NotSupportedFormatException;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
@@ -681,7 +680,7 @@ public class MeshReader
           }
         }
         else
-          throw new NotSupportedFormatException( "Concave Polygons are not supported." );
+          throw new UnsupportedOperationException( "Concave Polygons are not supported." );
       }
       catch( Exception e )
       {

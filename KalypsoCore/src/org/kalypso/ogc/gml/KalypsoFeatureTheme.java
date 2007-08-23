@@ -145,7 +145,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
 
   private void setDirty( )
   {
-    invalidate( getBoundingBox() );
+    invalidate( getFullExtent() );
   }
 
   public CommandableWorkspace getWorkspace( )
@@ -285,7 +285,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#getBoundingBox()
    */
-  public GM_Envelope getBoundingBox( )
+  public GM_Envelope getFullExtent( )
   {
     return m_featureList == null ? null : m_featureList.getBoundingBox();
   }
@@ -304,7 +304,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
       return null;
 
     /* Use complete bounding box if search envelope is not set. */
-    final GM_Envelope env = searchEnvelope == null ? getBoundingBox() : searchEnvelope;
+    final GM_Envelope env = searchEnvelope == null ? getFullExtent() : searchEnvelope;
 
     final FeatureList resultList = FeatureFactory.createFeatureList( m_featureList.getParentFeature(), m_featureList.getParentFeatureTypeProperty() );
     final GMLWorkspace workspace = getWorkspace();

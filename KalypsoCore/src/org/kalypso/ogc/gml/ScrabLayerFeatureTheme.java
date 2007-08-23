@@ -245,10 +245,10 @@ public class ScrabLayerFeatureTheme extends AbstractKalypsoTheme implements IKal
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#getBoundingBox()
    */
-  public GM_Envelope getBoundingBox( )
+  public GM_Envelope getFullExtent( )
   {
     if( m_scrabLayerTheme != null )
-      return m_scrabLayerTheme.getBoundingBox();
+      return m_scrabLayerTheme.getFullExtent();
     return null;
   }
 

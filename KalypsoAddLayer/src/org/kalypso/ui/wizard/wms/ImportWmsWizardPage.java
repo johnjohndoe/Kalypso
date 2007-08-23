@@ -46,8 +46,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import org.deegree.services.wms.capabilities.Layer;
-import org.deegree.services.wms.capabilities.WMSCapabilities;
+import org.deegree.ogcwebservices.wms.capabilities.Layer;
+import org.deegree.ogcwebservices.wms.capabilities.WMSCapabilities;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;

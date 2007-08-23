@@ -47,9 +47,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.apache.commons.io.IOUtils;
-import org.deegree.services.wms.capabilities.WMSCapabilities;
-import org.deegree.xml.XMLParsingException;
-import org.deegree_impl.services.wms.capabilities.OGCWMSCapabilitiesFactory;
+import org.deegree.framework.xml.XMLFragment;
+import org.deegree.ogcwebservices.wms.capabilities.WMSCapabilities;
+import org.deegree.ogcwebservices.wms.capabilities.WMSCapabilitiesDocument;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -59,9 +59,9 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.util.net.URLGetter;
 
 /**
- * Helper class for WMSCapabilities
+ * Helper class for WMSCapabilities.
  * 
- * @author belger
+ * @author Gernot Belger
  */
 public class WMSCapabilitiesHelper
 {
@@ -102,27 +102,28 @@ public class WMSCapabilitiesHelper
       inputStream = getter.getResult();
       final Reader urlReader = new InputStreamReader( inputStream );
 
-// // Uncomment following lines to dump capabilities
-// final String capabilitiesAsString = IOUtils.toString( urlReader );
-// System.out.println( capabilitiesAsString );
-// final StringReader reader = new StringReader( capabilitiesAsString );
+      // // Uncomment following lines to dump capabilities
+      // final String capabilitiesAsString = IOUtils.toString( urlReader );
+      // System.out.println( capabilitiesAsString );
+      // final StringReader reader = new StringReader( capabilitiesAsString );
 
       final Reader reader = urlReader;
 
-      final OGCWMSCapabilitiesFactory wmsCapFac = new OGCWMSCapabilitiesFactory();
+      /* Added at change to degree2. */
+      WMSCapabilitiesDocument doc = new WMSCapabilitiesDocument();
+      doc.load( reader, XMLFragment.DEFAULT_URL );
+      WMSCapabilities createCapabilities = (WMSCapabilities) doc.parseCapabilities();
 
-      final WMSCapabilities createCapabilities = wmsCapFac.createCapabilities( reader );
-
+      /* Removed at change to degree2. */
+      // final OGCWMSCapabilitiesFactory wmsCapFac = new OGCWMSCapabilitiesFactory();
+      // final WMSCapabilities createCapabilities = wmsCapFac.createCapabilities( reader );
+      
       /* This should nver happen */
       Assert.isNotNull( createCapabilities );
 
       return createCapabilities;
     }
-    catch( final XMLParsingException e )
-    {
-      throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
-    }
-    catch( final MalformedURLException e )
+    catch( final Exception e )
     {
       throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
     }
@@ -131,5 +132,4 @@ public class WMSCapabilitiesHelper
       IOUtils.closeQuietly( inputStream );
     }
   }
-
 }

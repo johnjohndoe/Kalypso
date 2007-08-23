@@ -14,9 +14,9 @@ import java.util.Set;
 import javax.media.jai.PlanarImage;
 import javax.media.jai.TiledImage;
 
-import org.deegree.services.wms.capabilities.Layer;
-import org.deegree.services.wms.capabilities.LayerBoundingBox;
-import org.deegree.services.wms.capabilities.WMSCapabilities;
+import org.deegree.ogcwebservices.wms.capabilities.Layer;
+import org.deegree.ogcwebservices.wms.capabilities.LayerBoundingBox;
+import org.deegree.ogcwebservices.wms.capabilities.WMSCapabilities;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.coverage.GridRange;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -96,7 +96,7 @@ public class WMSHelper
    */
   public static CS_CoordinateSystem[] negotiateCRS( final CS_CoordinateSystem localCRS, final WMSCapabilities capabilities, final String[] layerNames ) throws RemoteException
   {
-    final Layer topLayer = capabilities.getCapability().getLayer();
+    final Layer topLayer = capabilities.getLayer();
     final CS_CoordinateSystem crs = WMSHelper.matchCrs( topLayer, layerNames, localCRS );
     if( crs != null )
       return new CS_CoordinateSystem[] { localCRS };
@@ -154,7 +154,7 @@ public class WMSHelper
   {
     try
     {
-      final Layer topLayer = capabilites.getCapability().getLayer();
+      final Layer topLayer = capabilites.getLayer();
       WMSHelper.collect( set, topLayer, null );
     }
     catch( final Exception e )
@@ -220,14 +220,14 @@ public class WMSHelper
   {
     final GeoTransformer geoTransformer = new GeoTransformer( srs );
 
-    final Layer topLayer = capabilites.getCapability().getLayer();
+    final Layer topLayer = capabilites.getLayer();
     final HashSet<Layer> layerCollector = new HashSet<Layer>();
     WMSHelper.collect( layerCollector, topLayer, layers );
 
     GM_Envelope resultEnvelope = null;
     for( final Layer layer : layerCollector )
     {
-      final LayerBoundingBox[] bbox = layer.getBoundingBox();
+      final LayerBoundingBox[] bbox = layer.getBoundingBoxes();
       for( final LayerBoundingBox env : bbox )
       {
         final GM_Envelope kalypsoEnv = GeometryFactory.createGM_Envelope( env.getMin().getX(), env.getMin().getY(), env.getMax().getX(), env.getMax().getY() );

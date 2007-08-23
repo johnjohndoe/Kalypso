@@ -54,7 +54,7 @@ public class KalypsoOpenFilterDialogActionDelegate extends AbstractGisEditorActi
     if( sFtOutline instanceof IKalypsoFeatureTheme )
     {
       selectedTheme = ((IKalypsoFeatureTheme) sFtOutline);
-      visableFeatures = selectedTheme.getFeatureListVisible( selectedTheme.getBoundingBox() );
+      visableFeatures = selectedTheme.getFeatureListVisible( selectedTheme.getFullExtent() );
       ft = selectedTheme.getFeatureType();
     }
 

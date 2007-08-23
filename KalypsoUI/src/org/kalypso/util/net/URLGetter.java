@@ -42,6 +42,7 @@ package org.kalypso.util.net;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.apache.commons.httpclient.HttpClient;
@@ -59,9 +60,17 @@ public class URLGetter implements ICoreRunnableWithProgress
 {
   public static URLGetter createURLGetter( final URL url, final int timeOut )
   {
-    final HttpClient client = ProxyUtilities.getConfiguredHttpClient( timeOut );
+    try
+    {
+      HttpClient client = ProxyUtilities.getConfiguredHttpClient( timeOut, new URL( url.getProtocol()+"://"+url.getHost() ) );
+      return new URLGetter( client, url );
+    }
+    catch( MalformedURLException e )
+    {
+      e.printStackTrace();
+    }
 
-    return new URLGetter( client, url );
+    return null;
   }
 
   private InputStream m_result = null;

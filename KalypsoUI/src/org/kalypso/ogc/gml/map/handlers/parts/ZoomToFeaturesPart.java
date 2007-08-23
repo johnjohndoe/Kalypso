@@ -54,7 +54,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * This part zoomes to a bounding box, containing all given features, so that all features could be seen on the map.
- * Furthermore a percent value can be specified, which will be used to increase the extend by exact this value. This is,
+ * Furthermore a percent value can be specified, which will be used to increase the extent by exact this value. This is,
  * that a border can be created between the features and the border of the map.
  * 
  * @author Holger Albert
@@ -62,7 +62,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 public class ZoomToFeaturesPart
 {
   /**
-   * The part.
+   * A view part containing a map panel.
    */
   private IWorkbenchPart m_part;
 
@@ -72,20 +72,20 @@ public class ZoomToFeaturesPart
   private List<Feature> m_features;
 
   /**
-   * This value specifies the amount of the new extend used to increase it for creating a border around the new extend.
+   * This value specifies the amount of the new extent used to increase it for creating a border around the new extent.
    */
   private int m_percent;
 
   /**
    * The constructor.
    * 
-   * @param mapPanel
-   *          The map panel.
+   * @param part
+   *            A view part containing a map panel.
    * @param features
-   *          The list of features, to zoom to.
+   *            The list of features, to zoom to.
    * @param percent
-   *          This value specifies the amount of the new extend used to increase it for creating a border around the new
-   *          extend.
+   *            This value specifies the amount of the new extent used to increase it for creating a border around the
+   *            new extent.
    */
   public ZoomToFeaturesPart( IWorkbenchPart part, List<Feature> features, int percent )
   {
@@ -122,7 +122,7 @@ public class ZoomToFeaturesPart
       double border_x = m_percent * width / 100;
       double border_y = m_percent * height / 100;
 
-      /* Add/Substract it to the positions of the extend. */
+      /* Add/Substract it to the positions of the extent. */
       min_x = min_x - border_x;
       min_y = min_y - border_y;
       max_x = max_x + border_x;

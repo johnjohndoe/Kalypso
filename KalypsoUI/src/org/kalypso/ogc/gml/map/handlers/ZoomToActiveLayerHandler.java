@@ -89,7 +89,7 @@ public class ZoomToActiveLayerHandler extends AbstractHandler implements IHandle
 //        ((Feature)object).invalidEnvelope();
 //    }
     
-    final GM_Envelope zoomBox = activeTheme.getBoundingBox();
+    final GM_Envelope zoomBox = activeTheme.getFullExtent();
     if( zoomBox == null )
       throw new ExecutionException( "Aktives Thema hat keinen Extent." );
 

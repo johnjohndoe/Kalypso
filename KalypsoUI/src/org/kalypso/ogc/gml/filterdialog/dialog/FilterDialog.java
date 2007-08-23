@@ -34,7 +34,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 import org.apache.tools.ant.filters.StringInputStream;
-import org.deegree.services.wfs.filterencoding.FilterConstructionException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -96,6 +95,7 @@ import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 import org.kalypso.ui.editor.styleeditor.MessageBundle;
 import org.kalypsodeegree.filterencoding.Filter;
+import org.kalypsodeegree.filterencoding.FilterConstructionException;
 import org.kalypsodeegree.filterencoding.Operation;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.filterencoding.AbstractFilter;

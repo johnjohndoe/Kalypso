@@ -58,7 +58,6 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public class WFSLayer implements IWFSLayer
 {
-
   private final QName m_qName;
 
   private final String m_title;

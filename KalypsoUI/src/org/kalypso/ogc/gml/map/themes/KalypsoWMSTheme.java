@@ -40,188 +40,159 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.themes;
 
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
-import java.io.StringWriter;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Properties;
 
-import org.deegree.services.OGCWebServiceClient;
-import org.deegree.services.OGCWebServiceEvent;
-import org.deegree.services.OGCWebServiceRequest;
-import org.deegree.services.OGCWebServiceResponse;
-import org.deegree.services.wms.capabilities.Format;
-import org.deegree.services.wms.capabilities.Operation;
-import org.deegree.services.wms.capabilities.WMSCapabilities;
-import org.deegree.services.wms.protocol.WMSFeatureInfoRequest;
-import org.deegree.services.wms.protocol.WMSFeatureInfoResponse;
-import org.deegree.services.wms.protocol.WMSGetMapRequest;
-import org.deegree.services.wms.protocol.WMSGetMapResponse;
-import org.deegree_impl.services.OGCWebServiceEvent_Impl;
-import org.deegree_impl.services.wms.protocol.WMSProtocolFactory;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.MultiStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
-import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
-import org.kalypso.commons.java.util.PropertiesHelper;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.contribs.eclipse.jface.viewers.ITooltipProvider;
-import org.kalypso.contribs.java.xml.XMLHelper;
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.gml.AbstractKalypsoTheme;
 import org.kalypso.ogc.gml.IGetFeatureInfoResultProcessor;
+import org.kalypso.ogc.gml.map.themes.loader.KalypsoImageLoader;
+import org.kalypso.ogc.gml.map.themes.provider.IKalypsoImageProvider;
+import org.kalypso.ogc.gml.map.themes.provider.IKalypsoLegendProvider;
+import org.kalypso.ogc.gml.map.themes.provider.KalypsoWMSImageProvider;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.opengis.cs.CS_CoordinateSystem;
-import org.w3c.dom.Document;
-
-import com.sun.xml.stream.writers.WriterUtility;
 
 /**
+ * This class implements the a theme, which loads images from a given provider.
+ * 
  * @author Doemming, Kuepferle
+ * @author Holger Albert
  */
 public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipProvider
 {
-  public final static String KEY_LAYERS = "LAYERS";
+  /**
+   * This rule lets only one job run at a time.
+   */
+  private final static ISchedulingRule m_jobMutexRule = new MutexRule();
 
-  public final static String KEY_URL = "URL";
+  /**
+   * This variable stores the buffered image.
+   */
+  private Image m_buffer;
 
-  public final static String KEY_STYLES = "STYLES";
+  /**
+   * This variable stroes the legend, if any.
+   */
+  private Image m_legend;
 
-  /** type name */
-  public final static String TYPE_NAME = "wms";
+  /**
+   * This variable stores the max envelope of layer on WMS (local SRS).
+   */
+  protected GM_Envelope m_maxEnvLocalSRS;
 
-  protected final static ISchedulingRule m_jobMutexRule = new MutexRule();
+  /**
+   * This variable stores the image provider.
+   */
+  private IKalypsoImageProvider m_provider;
 
-  /** source key */
-  private final String m_source;
+  /**
+   * This variable stores the loader for loading the images.
+   */
+  protected KalypsoImageLoader m_loader;
 
-  private final Job m_initJob;
-
-  private final IJobChangeListener m_jobListener = new JobChangeAdapter()
+  /**
+   * This variable stores a listener, which will be notified about job events.
+   */
+  private JobChangeAdapter m_adapter = new JobChangeAdapter()
   {
+    /**
+     * @see org.eclipse.core.runtime.jobs.JobChangeAdapter#aboutToRun(org.eclipse.core.runtime.jobs.IJobChangeEvent)
+     */
+    @Override
+    public void aboutToRun( IJobChangeEvent event )
+    {
+      /* Set a status for the user. */
+      setStatus( StatusUtilities.createInfoStatus( "Lade ..." ) );
+    }
+
     /**
      * @see org.eclipse.core.runtime.jobs.JobChangeAdapter#done(org.eclipse.core.runtime.jobs.IJobChangeEvent)
      */
     @Override
-    public void done( final IJobChangeEvent event )
+    public void done( IJobChangeEvent event )
     {
-      handleJobDone( event.getResult() );
+      /* Get the result. */
+      IStatus result = event.getResult();
+
+      /* Set a status for the user. */
+      setStatus( result );
+
+      /* If ok, set the image. On error, set the image to null. */
+      if( !result.matches( IStatus.WARNING | IStatus.ERROR | IStatus.CANCEL ) )
+      {
+        /* Set the newly loaded image. */
+        setImage( m_loader.getBuffer() );
+
+        /* Need the fulle extent of the image. */
+        m_maxEnvLocalSRS = m_loader.getFullExtent();
+      }
+      else
+      {
+        /* Reset the image. */
+        setImage( null );
+
+        /* Reset the max extent. */
+        m_maxEnvLocalSRS = null;
+
+        /* Deactivate the theme. */
+        setVisible( false );
+      }
     }
   };
 
-  /** remote WMS */
-  private KalypsoRemoteWMService m_remoteWMS;
+  /**
+   * This is the stored extent from the last time, a loader was started (call to
+   * {@link #setExtent(int, int, GM_Envelope)}).
+   */
+  private GM_Envelope m_extent;
 
-  /** the local CS */
-  private final CS_CoordinateSystem m_localSRS;
-
-  /** max envelope of layer on WMS (local CS) */
-  private GM_Envelope m_maxEnvLocalSRS = null;
-
-  /** buffered image */
-  private Image m_buffer = null;
-
-  /** envelope of buffered image (local SRS) */
-  private GM_Envelope m_bufferEnvLocalSRS = null;
-
-  /** temporary locked request bbox to aviod multi requests on same bbox */
-  private GM_Envelope m_lockRequestEnvLocalSRS = null;
-
-  private final URL m_serviceURL;
-
+  /**
+   * The constructor.
+   * 
+   * @param linktype
+   *            The link type.
+   * @param themeName
+   *            The name of the theme.
+   * @param source
+   *            TODO Remove this parameter, if the provider is created outside.
+   * @param localSRS
+   *            TODO Remove this parameter, if the provider is created outside.
+   * @param mapModel
+   *            The map modell.
+   */
   public KalypsoWMSTheme( final String linktype, final String themeName, final String source, final CS_CoordinateSystem localSRS, final IMapModell mapModel )
   {
     super( themeName, linktype.toUpperCase(), mapModel );
-    final Properties sourceProps = PropertiesHelper.parseFromString( source, '#' );
-    m_localSRS = localSRS;
-    m_source = source;
 
-    final String layers = sourceProps.getProperty( KEY_LAYERS, null );
-    final String styles = sourceProps.getProperty( KEY_STYLES, null );
-    final String service = sourceProps.getProperty( KEY_URL, null );
+    /* Create the image provider. TODO Move this outside. */
+    m_provider = new KalypsoWMSImageProvider( themeName, source, localSRS );
 
-    final URL serviceURL = parseServiceUrl( service );
-
-    m_serviceURL = serviceURL;
-
-    m_initJob = new Job( "Capabilities laden" )
-    {
-      @Override
-      protected IStatus run( final IProgressMonitor monitor )
-      {
-        handleJobDone( StatusUtilities.createInfoStatus( "lade Capabilities..." ) );
-        setWms( null, null );
-
-        try
-        {
-          final KalypsoRemoteWMService wms = KalypsoRemoteWMService.initializeService( serviceURL, localSRS, layers, styles, monitor );
-          final GM_Envelope maxExtent = wms.getMaxExtend( localSRS );
-          setWms( wms, maxExtent );
-
-          return Status.OK_STATUS;
-        }
-        catch( final CoreException e )
-        {
-          return e.getStatus();
-        }
-      }
-    };
-
-    /* Try to load capabilities immediately */
-    if( m_serviceURL != null )
-    {
-      m_initJob.addJobChangeListener( m_jobListener );
-      m_initJob.setRule( m_jobMutexRule );
-      m_initJob.schedule();
-    }
-  }
-
-  private URL parseServiceUrl( final String service )
-  {
-    try
-    {
-      return new URL( service );
-    }
-    catch( final MalformedURLException e )
-    {
-      final String message = String.format( "Service URL fehlerhaft: %s (%s)", service, e.getLocalizedMessage() );
-      setStatus( StatusUtilities.statusFromThrowable( e, message ) );
-    }
-
-    return null;
-  }
-
-  protected void setWms( final KalypsoRemoteWMService wms, final GM_Envelope maxExtent )
-  {
-    /* Prepare for exceptions */
-    m_remoteWMS = wms;
-    m_maxEnvLocalSRS = maxExtent;
-
-    // Reset buffer
-    if( m_buffer != null )
-      m_buffer.flush();
     m_buffer = null;
-    m_bufferEnvLocalSRS = null;
-    m_lockRequestEnvLocalSRS = null;
+    m_legend = null;
+    m_maxEnvLocalSRS = null;
+    m_loader = null;
+  }
 
-    /* Force repaint */
-    invalidate( getBoundingBox() );
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#getFullExtent()
+   */
+  public GM_Envelope getFullExtent( )
+  {
+    return m_maxEnvLocalSRS;
   }
 
   /**
@@ -229,123 +200,37 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
    *      org.kalypsodeegree.graphics.transformation.GeoTransform, double,
    *      org.kalypsodeegree.model.geometry.GM_Envelope, boolean, org.eclipse.core.runtime.IProgressMonitor)
    */
-  public void paint( final Graphics g, final GeoTransform world2screen, final double scale, final GM_Envelope bbox, final boolean selected, final IProgressMonitor monitor )
+  public void paint( Graphics g, GeoTransform world2screen, double scale, GM_Envelope bbox, boolean selected, IProgressMonitor monitor )
   {
-    if( selected ) // image can not be selected
+    /* The image can not be selected. */
+    if( selected )
       return;
 
-    /* If the service url was bad, we can do nothing at all */
-    if( m_serviceURL == null )
-      return;
-
-    /* If wms could not connect but we have a valid url, reschedule getting the capabilites. */
-    if( m_remoteWMS == null && m_initJob.getState() != Job.RUNNING )
-      m_initJob.schedule( 0 );
-
-    final int requestedWidth = (int) g.getClip().getBounds().getWidth();
-    final int requestedHeight = (int) g.getClip().getBounds().getHeight();
-
-    // TODO: what about resize?
-    if( m_buffer != null && m_bufferEnvLocalSRS.equals( bbox ) )
-      g.drawImage( m_buffer, 0, 0, null );
-    else
-    {
-      try
-      {
-        updateImage( bbox, requestedWidth, requestedHeight );
-      }
-      catch( final Exception e )
-      {
-        e.printStackTrace();
-        final IStatus status = StatusUtilities.statusFromThrowable( e, "Fehler beim Zeichnen" );
-        handleJobDone( status );
-        // simply do not paint it
-      }
-    }
-  }
-
-  private void updateImage( final GM_Envelope requestedBbox, final int requestedWidth, final int requestedHeight ) throws Exception
-  {
-    // check if nothing to request
-    if( requestedBbox == null )
-      return;
-
-    final KalypsoRemoteWMService remoteWMS = m_remoteWMS;
-    /* Work locally against a copy of the reference, because it may change any time... */
-    if( remoteWMS == null )
-      return;
-
-    // check if bbox is locked for request
-    if( m_lockRequestEnvLocalSRS != null && m_lockRequestEnvLocalSRS.equals( requestedBbox ) )
-      return;
-
-    // lock it now
-    m_lockRequestEnvLocalSRS = requestedBbox;
-
-    final String id = "KalypsoWMSRequest" + getName() + new Date().getTime();
-
-    final HashMap<String, String> parameterMap = remoteWMS.createGetMapRequestParameter( requestedWidth, requestedHeight, requestedBbox, m_localSRS );
-    final WMSGetMapRequest request = WMSProtocolFactory.createGetMapRequest( id, parameterMap );
-
-    final OGCWebServiceClient client = new OGCWebServiceClient()
-    {
-      public void write( final Object responseEvent )
-      {
-        try
-        {
-          if( !(responseEvent instanceof OGCWebServiceEvent) )
-            return;
-          final OGCWebServiceResponse response = ((OGCWebServiceEvent) responseEvent).getResponse();
-          if( !(response instanceof WMSGetMapResponse) )
-            return;
-
-          final WMSGetMapResponse mapResponse = (WMSGetMapResponse) response;
-
-          final Image resultImage = (Image) mapResponse.getMap();
-          if( resultImage == null )
-          {
-            /* Handle service-exception: convert to status and set it */
-            final OGCWebServiceRequest mapRequest = mapResponse.getRequest();
-            final Document exception = mapResponse.getException();
-            final StringWriter stringWriter = new StringWriter();
-            XMLHelper.writeDOM( exception, WriterUtility.DEFAULT_ENCODING, stringWriter );
-
-            final MultiStatus status = new MultiStatus( KalypsoCorePlugin.getID(), 0, "Zugriffsfehler", null );
-            status.add( StatusUtilities.createErrorStatus( "Request: '" + mapRequest + "'" ) );
-            status.add( StatusUtilities.createErrorStatus( "Exception-Dokument: " ) );
-            status.add( StatusUtilities.createMultiStatusFromMessage( IStatus.ERROR, KalypsoCorePlugin.getID(), 0, stringWriter.toString(), "\n", null ) );
-
-            setStatus( status );
-          }
-          else
-          {
-            setImage( resultImage, requestedBbox );
-            setStatus( Status.OK_STATUS );
-          }
-        }
-        catch( final Throwable t )
-        {
-          setStatus( StatusUtilities.statusFromThrowable( t ) );
-        }
-      }
-    };
-
-    setStatus( StatusUtilities.createInfoStatus( "lade Karte..." ) );
-
-    final OGCWebServiceEvent ogcWSEvent = new OGCWebServiceEvent_Impl( this, request, null, client );
-    remoteWMS.doService( ogcWSEvent );
-  }
-
-  protected synchronized void setImage( final Image image, final GM_Envelope targetEnvLocalSRS )
-  {
     if( m_buffer != null )
+      g.drawImage( m_buffer, 0, 0, null );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#dispose()
+   */
+  @Override
+  public void dispose( )
+  {
+    /* Dispose the buffered image. */
+    if( m_buffer != null )
+    {
       m_buffer.flush();
+      m_buffer = null;
+    }
 
-    m_buffer = image;
-    m_bufferEnvLocalSRS = targetEnvLocalSRS;
+    /* Dispose the legend. */
+    if( m_legend != null )
+    {
+      m_legend.flush();
+      m_legend = null;
+    }
 
-    // inform to paint new image
-    invalidate( getBoundingBox() );
+    super.dispose();
   }
 
   /**
@@ -354,160 +239,194 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
   @Override
   public boolean isLoaded( )
   {
-    return m_remoteWMS != null;
+    return m_buffer != null;
   }
 
   /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#dispose()
+   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#setExtent(int, int, org.kalypsodeegree.model.geometry.GM_Envelope)
    */
   @Override
-  public void dispose( )
+  public void setExtent( int width, int height, GM_Envelope extent )
   {
-    if( m_buffer != null )
-      m_buffer.flush();
-    m_buffer = null;
-
-    super.dispose();
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#getBoundingBox()
-   */
-  public GM_Envelope getBoundingBox( )
-  {
-    return m_maxEnvLocalSRS;
-  }
-
-  /**
-   * @return source key
-   */
-  public String getSource( )
-  {
-    return m_source;
-  }
-
-  /**
-   * @param pointOfInterest
-   * @param format
-   * @throws Exception
-   */
-  public void performGetFeatureinfoRequest( final Point pointOfInterest, final String format, final IGetFeatureInfoResultProcessor getFeatureInfoResultProcessor ) throws Exception
-  {
-    final KalypsoRemoteWMService remoteWMS = m_remoteWMS;
-    if( remoteWMS == null )
+    /* If the theme is not visible, do not restart the loading. */
+    if( isVisible() == false )
       return;
 
-    // check if nothing to request
-    if( m_maxEnvLocalSRS == null )
+    /* If it is the same extent than the last time, do not load again. */
+    if( m_extent != null && m_extent.equals( extent ) )
       return;
 
-    final String id = "KalypsoWMSGetFeatureInfoRequest" + getName() + new Date().getTime();
-
-    final HashMap<String, String> parameterMap = remoteWMS.createGetFeatureinfoRequest( pointOfInterest, format );
-
-    // TODO: the WMSFeatureInfoRequest does not support Base URLs with query part. Fix this.
-    final WMSFeatureInfoRequest getFeatureInfoRequest = WMSProtocolFactory.createGetFeatureInfoRequest( id, parameterMap );
-    final OGCWebServiceClient client = new OGCWebServiceClient()
+    /* If there was a loader working, cancel it. */
+    if( m_loader != null )
     {
-      public void write( Object responseEvent )
-      {
-        if( !(responseEvent instanceof OGCWebServiceEvent) )
-          return;
-        final OGCWebServiceResponse response = ((OGCWebServiceEvent) responseEvent).getResponse();
-        if( !(response instanceof WMSFeatureInfoResponse) )
-          return;
-        try
-        {
-          final WMSFeatureInfoResponse featureInfoResponse = (WMSFeatureInfoResponse) response;
-          final StringBuffer result = new StringBuffer();
-          final String featureInfo = featureInfoResponse.getFeatureInfo();
-          if( featureInfo != null )
-          {
-            // String xsl="";
-            //
-            // XMLHelper.xslTransform(new InputSource(featureInfo), null);
-            result.append( featureInfo );
-          }
-          else
-            result.append( " keine oder fehlerhafte Antwort vom Server" );
-          final Document exception = featureInfoResponse.getException();
-          result.append( "\n\nFehlerMeldung: " );
-          if( exception != null )
-            result.append( "\n" + XMLHelper.toString( exception ) );
-          else
-            result.append( "keine" );
-          getFeatureInfoResultProcessor.write( result.toString() );
-          System.out.println( featureInfo );
-        }
-        catch( Exception e )
-        {
-          final Document wmsException = ((WMSFeatureInfoResponse) response).getException();
-          if( wmsException != null )
-            System.out.println( "OGC_WMS_Exception:\n" + XMLHelper.toString( wmsException ) );
-        }
-      }
-    };
-
-    final OGCWebServiceEvent ogcWSEvent = new OGCWebServiceEvent_Impl( this, // source
-    getFeatureInfoRequest, // request
-    null, // message
-    client );
-
-    m_remoteWMS.doService( ogcWSEvent );
-  }
-
-  public boolean isSupportingGetFeatureInfoRequest( )
-  {
-    final WMSCapabilities wmsCaps = m_remoteWMS.getWMSCapabilities();
-    final Operation operation = wmsCaps.getCapability().getRequest().getOperation( Operation.GETFEATUREINFO_NAME );
-    return operation != null;
-  }
-
-  /**
-   * @return supported formats
-   */
-  public synchronized String[] getFeatureInfoRequestFormats( )
-  {
-    final WMSCapabilities wmsCaps = m_remoteWMS.getWMSCapabilities();
-    final List<String> result = new ArrayList<String>();
-    final Operation operation = wmsCaps.getCapability().getRequest().getOperation( Operation.GETFEATUREINFO_NAME );
-    final Format[] formats = operation.getFormats();
-    for( final Format format : formats )
-    {
-      if( format.getName() != null )
-        result.add( format.getName() );
+      m_loader.removeJobChangeListener( m_adapter );
+      m_loader.dispose();
     }
-    return result.toArray( new String[result.size()] );
+
+    /* Reset the buffer. */
+    if( m_buffer != null )
+    {
+      m_buffer.flush();
+      m_buffer = null;
+    }
+
+    /* Reset the full extent. */
+    if( m_maxEnvLocalSRS != null )
+      m_maxEnvLocalSRS = null;
+
+    /* Create a new loader. */
+    if( width > 0 && height > 0 && extent.getWidth() > 0 && extent.getHeight() > 0 )
+    {
+      m_loader = new KalypsoImageLoader( getName(), m_provider, width, height, extent );
+
+      /* Make sure, only one job is running at a time. */
+      m_loader.setRule( m_jobMutexRule );
+
+      /* The adapter makes sure, the loaded image is set. */
+      m_loader.addJobChangeListener( m_adapter );
+
+      /* Schedule it. */
+      m_loader.schedule( 250 );
+
+      /* Repaint. */
+      invalidate( getFullExtent() );
+
+      /* Memorize the extend, so it can be compared the next time, this method is called. */
+      m_extent = extent;
+    }
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getLegendGraphic(java.awt.Font)
+   */
+  @Override
+  public Image getLegendGraphic( Font font ) throws CoreException
+  {
+    if( m_provider == null )
+      return null;
+
+    if( !(m_provider instanceof IKalypsoLegendProvider) )
+      return null;
+
+    if( m_legend == null )
+    {
+      IKalypsoLegendProvider legendProvider = (IKalypsoLegendProvider) m_provider;
+      Image legend = legendProvider.getLegendGraphic( font );
+
+      m_legend = legend;
+    }
+
+    return m_legend;
   }
 
   /**
    * @see org.kalypso.contribs.eclipse.jface.viewers.ITooltipProvider#getTooltip(java.lang.Object)
    */
-  public String getTooltip( final Object element )
+  public String getTooltip( Object element )
   {
     Assert.isTrue( element == this, "'Element' must be this" );
 
     if( getStatus().isOK() )
-      return "WMS Thema: " + m_serviceURL;
+      return m_provider.getLabel();
 
     return getStatus().getMessage();
   }
 
   /**
-   * If any of the jobs finishes, set my status to its result value.
+   * This function sets the newly loaded image.
+   * 
+   * @param image
+   *            The newly loaded image.
    */
-  protected void handleJobDone( final IStatus status )
+  protected synchronized void setImage( Image image )
   {
-    setStatus( status );
+    /* Reset buffer. */
+    if( m_buffer != null )
+      m_buffer.flush();
 
-    if( status.matches( IStatus.WARNING | IStatus.ERROR | IStatus.CANCEL ) )
-    {
-      /* Reset wms access on error in order to try reload */
-      setWms( null, null );
+    /* Set the new values. */
+    m_buffer = image;
 
-      /* Deaktivate on error. */
-      // TODO: make this optional?
-      setVisible( false );
-    }
+    /* Inform to paint new image. */
+    invalidate( getFullExtent() );
+  }
+
+  /**
+   * This function returns the image provider of this theme.
+   * 
+   * @return The image provider of this theme.
+   */
+  public IKalypsoImageProvider getImageProvider( )
+  {
+    return m_provider;
+  }
+
+  /**
+   * This function currently does nothing, because the info functionality of themes has to be refactored completely.
+   * 
+   * @param pointOfInterest
+   * @param format
+   * @param getFeatureInfoResultProcessor
+   * @throws Exception
+   */
+  @SuppressWarnings("unused")
+  public void performGetFeatureinfoRequest( Point pointOfInterest, String format, IGetFeatureInfoResultProcessor getFeatureInfoResultProcessor ) throws Exception
+  {
+// final KalypsoRemoteWMService remoteWMS = m_remoteWMS;
+// if( remoteWMS == null )
+// return;
+//
+// // check if nothing to request
+// if( m_maxEnvLocalSRS == null )
+// return;
+//
+// final String id = "KalypsoWMSGetFeatureInfoRequest" + getName() + new Date().getTime();
+//
+// final HashMap<String, String> parameterMap = remoteWMS.createGetFeatureinfoRequest( pointOfInterest, format );
+// parameterMap.put( "ID", id );
+//
+// // TODO: the WMSFeatureInfoRequest does not support Base URLs with query part. Fix this.
+// GetFeatureInfo getInfo = GetFeatureInfo.create( parameterMap );
+//
+// Object responseEvent = m_remoteWMS.doService( getInfo );
+// if( responseEvent == null )
+// return;
+//
+// if( !(responseEvent instanceof GetFeatureInfoResult) )
+// return;
+//
+// try
+// {
+// final GetFeatureInfoResult featureInfoResponse = (GetFeatureInfoResult) responseEvent;
+// final StringBuffer result = new StringBuffer();
+// final String featureInfo = featureInfoResponse.getFeatureInfo();
+// if( featureInfo != null )
+// {
+// // String xsl="";
+// //
+// // XMLHelper.xslTransform(new InputSource(featureInfo), null);
+// result.append( featureInfo );
+// }
+// else
+// result.append( " keine oder fehlerhafte Antwort vom Server" );
+// OGCWebServiceException exception = featureInfoResponse.getException();
+// result.append( "\n\nFehlerMeldung: " );
+// if( exception != null )
+// result.append( "\n" + exception.toString() );
+// else
+// result.append( "keine" );
+// getFeatureInfoResultProcessor.write( result.toString() );
+// System.out.println( featureInfo );
+// }
+// catch( Exception e )
+// {
+// final GetFeatureInfoResult featureInfoResponse = (GetFeatureInfoResult) responseEvent;
+// OGCWebServiceException exception = featureInfoResponse.getException();
+// if( exception != null )
+// System.out.println( "OGC_WMS_Exception:\n" + exception.toString() );
+// }
+
+    // This thing is disabled !!!
+    getFeatureInfoResultProcessor.write( "FIX ME" );
   }
 }

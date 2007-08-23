@@ -205,7 +205,10 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
   {
     final CS_CoordinateSystem system = getCoordinateSystem();
 
-    return new GM_Point_Impl( getX(), getY(), getZ(), system );
+    if( getDimension() == 3 )
+      return new GM_Point_Impl( getX(), getY(), getZ(), system );
+
+    return new GM_Point_Impl( getX(), getY(), system );
   }
 
   /**

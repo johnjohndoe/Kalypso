@@ -74,6 +74,7 @@ import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme;
+import org.kalypso.ogc.gml.map.themes.provider.KalypsoWMSImageProvider;
 import org.kalypso.template.featureview.Featuretemplate;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gismapview.ObjectFactory;
@@ -264,18 +265,6 @@ public class GisTemplateHelper
       }
     }
     return env;
-  }
-
-  public static void fillLayerType( final StyledLayerType layer, final String id, final String name, final boolean visible, final KalypsoWMSTheme wmsTheme )
-  {
-    layer.setName( name );
-    layer.setFeaturePath( "" ); //$NON-NLS-1$
-    layer.setVisible( visible );
-    layer.setId( id );
-    layer.setHref( wmsTheme.getSource() );
-    layer.setLinktype( KalypsoWMSTheme.TYPE_NAME );
-    layer.setActuate( "onRequest" ); //$NON-NLS-1$
-    layer.setType( "simple" ); //$NON-NLS-1$
   }
 
   /**

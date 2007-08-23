@@ -1099,13 +1099,6 @@
             name="Zoom In (statisch)"/>
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
-            defaultHandler="org.kalypso.ogc.gml.map.handlers.MoveRightHandler"
-            description="Move right"
-            id="org.kalypso.ogc.gml.map.MoveRightCommand"
-            name="Move right">
-      </command>
-      <command
-            categoryId="org.kalypso.ogc.gml.map.category"
             defaultHandler="org.kalypso.ogc.gml.map.handlers.MoveDownHandler"
             description="Move down"
             id="org.kalypso.ogc.gml.map.MoveDownCommand"
@@ -1116,6 +1109,13 @@
             description="Move up"
             id="org.kalypso.ogc.gml.map.MoveUpCommand"
             name="Move up"/>
+      <command
+            categoryId="org.kalypso.ogc.gml.map.category"
+            defaultHandler="org.kalypso.ogc.gml.map.handlers.MoveRightHandler"
+            description="Move right"
+            id="org.kalypso.ogc.gml.map.MoveRightCommand"
+            name="Move right">
+      </command>
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
             defaultHandler="org.kalypso.ogc.gml.map.handlers.MoveLeftHandler"
@@ -1145,6 +1145,13 @@
             description="Zoom to selected features of a layer"
             id="org.kalypso.ogc.gml.map.ZoomToSelectedFeaturesByLayerCommand"
             name="Zoom to selected features of a layer"/>
+      <command
+            categoryId="org.kalypso.ogc.gml.map.category"
+            defaultHandler="org.kalypso.ogc.gml.map.handlers.PanToSelectedFeature"
+            description="Pan to selected feature"
+            id="org.kalypso.ogc.gml.map.PanToSelectedFeatureCommand"
+            name="Pan to selected feature">
+      </command>
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
             defaultHandler="org.kalypso.ogc.gml.map.handlers.FullExtentHandler"
@@ -1273,6 +1280,12 @@
           contextId="org.kalypso.ogc.gml.map.context"
           schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
           sequence="M1+E"/>
+    <key
+          commandId="org.kalypso.ogc.gml.map.PanToSelectedFeatureCommand"
+          contextId="org.kalypso.ogc.gml.map.context"
+          schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+          sequence="M1+F">
+    </key>
  </extension>
  <extension
        point="org.eclipse.ui.views.properties.tabbed.propertyContributor">
@@ -1343,6 +1356,16 @@
           </instanceof>
        </enabledWhen>
     </page>
+    <page
+          class="org.kalypso.ui.views.properties.LegendPropertyPage"
+          id="org.kalypso.ui.views.properties.LegendPropertyPage"
+          name="Legende">
+       <enabledWhen>
+          <instanceof
+                value="org.kalypso.ogc.gml.IKalypsoTheme">
+          </instanceof>
+       </enabledWhen>
+    </page>
  </extension>
  <extension
        point="org.eclipse.ui.menus">
@@ -1352,63 +1375,10 @@
              name="actions"
              visible="true">
        </separator>
-    </menuContribution>
-    <menuContribution
-          locationURI="toolbar:org.kalypso.ui.views.mapView?after=actions">
-       <command
-             commandId="org.kalypso.ogc.gml.map.ZoomOutCommand"
-             label="%org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomOutDelegate.label"
-             style="push"
-             tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomOutDelegate.tooltip">
-       </command>
-       <command
-             commandId="org.kalypso.ogc.gml.map.ZoomInStaticCommand"
-             label="%org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomInStaticDelegate.label"
-             style="push"
-             tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomInStaticDelegate.tooltip">
-       </command>
-       <command
-             commandId="org.kalypso.ogc.gml.map.MoveRightCommand"
-             label="%org.kalypso.ui.editor.mapeditor.actiondelegates.MoveRightDelegate.label"
-             style="push"
-             tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.MoveRightDelegate.tooltip">
-       </command>
-       <command
-             commandId="org.kalypso.ogc.gml.map.MoveDownCommand"
-             label="%org.kalypso.ui.editor.mapeditor.actiondelegates.MoveDownDelegate.label"
-             style="push"
-             tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.MoveDownDelegate.tooltip">
-       </command>
-       <command
-             commandId="org.kalypso.ogc.gml.map.MoveUpCommand"
-             label="%org.kalypso.ui.editor.mapeditor.actiondelegates.MoveUpDelegate.label"
-             style="push"
-             tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.MoveUpDelegate.tooltip">
-       </command>
-       <command
-             commandId="org.kalypso.ogc.gml.map.MoveLeftCommand"
-             label="%org.kalypso.ui.editor.mapeditor.actiondelegates.MoveLeftDelegate.label"
-             style="push"
-             tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.MoveLeftDelegate.tooltip">
-       </command>
-       <command
-             commandId="org.kalypso.ogc.gml.map.FullExtentCommand"
-             label="%org.kalypso.ui.editor.mapeditor.actiondelegates.FullExtentDelegate.label"
-             style="push"
-             tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.FullExtentDelegate.tooltip">
-       </command>
-       <command
-             commandId="org.kalypso.ogc.gml.map.ZoomToActiveLayerCommand"
-             label="%org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomToActiveLayerDelegate.label"
-             style="push"
-             tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomToActiveLayerDelegate.tooltip">
-       </command>
-       <command
-             commandId="org.kalypso.ogc.gml.map.Screenshot"
-             label="Map screenshot"
-             style="push"
-             tooltip="Map screenshot">
-       </command>
+       <separator
+             name="mapExport"
+             visible="true">
+       </separator>
     </menuContribution>
     <menuContribution
           locationURI="toolbar:org.kalypso.ui.views.mapView?before=actions">
@@ -1425,7 +1395,57 @@
              tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.PanToWidgetDelegate.tooltip">
        </command>
     </menuContribution>
-
+    <menuContribution
+          locationURI="toolbar:org.kalypso.ui.views.mapView?after=actions">
+       <command
+             commandId="org.kalypso.ogc.gml.map.ZoomOutCommand"
+             label="%org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomOutDelegate.label"
+             style="push"
+             tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomOutDelegate.tooltip">
+       </command>
+       <command
+             commandId="org.kalypso.ogc.gml.map.ZoomInStaticCommand"
+             label="%org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomInStaticDelegate.label"
+             style="push"
+             tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomInStaticDelegate.tooltip">
+       </command>
+       <command
+             commandId="org.kalypso.ogc.gml.map.MoveLeftCommand"
+             label="%org.kalypso.ui.editor.mapeditor.actiondelegates.MoveLeftDelegate.label"
+             style="push"
+             tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.MoveLeftDelegate.tooltip">
+       </command>
+       <command
+             commandId="org.kalypso.ogc.gml.map.MoveDownCommand"
+             label="%org.kalypso.ui.editor.mapeditor.actiondelegates.MoveDownDelegate.label"
+             style="push"
+             tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.MoveDownDelegate.tooltip">
+       </command>
+       <command
+             commandId="org.kalypso.ogc.gml.map.MoveUpCommand"
+             label="%org.kalypso.ui.editor.mapeditor.actiondelegates.MoveUpDelegate.label"
+             style="push"
+             tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.MoveUpDelegate.tooltip">
+       </command>
+       <command
+             commandId="org.kalypso.ogc.gml.map.MoveRightCommand"
+             label="%org.kalypso.ui.editor.mapeditor.actiondelegates.MoveRightDelegate.label"
+             style="push"
+             tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.MoveRightDelegate.tooltip">
+       </command>
+       <command
+             commandId="org.kalypso.ogc.gml.map.FullExtentCommand"
+             label="%org.kalypso.ui.editor.mapeditor.actiondelegates.FullExtentDelegate.label"
+             style="push"
+             tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.FullExtentDelegate.tooltip">
+       </command>
+       <command
+             commandId="org.kalypso.ogc.gml.map.ZoomToActiveLayerCommand"
+             label="%org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomToActiveLayerDelegate.label"
+             style="push"
+             tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomToActiveLayerDelegate.tooltip">
+       </command>
+    </menuContribution>
      <menuContribution
           locationURI="menu:org.eclipse.ui.main.menu?after=additions">
        <menu
@@ -1469,10 +1489,10 @@
 	             tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomInStaticDelegate.tooltip">
 	       </command>
 	       <command
-	             commandId="org.kalypso.ogc.gml.map.MoveRightCommand"
-	             label="%org.kalypso.ui.editor.mapeditor.actiondelegates.MoveRightDelegate.label"
+	             commandId="org.kalypso.ogc.gml.map.MoveLeftCommand"
+	             label="%org.kalypso.ui.editor.mapeditor.actiondelegates.MoveLeftDelegate.label"
 	             style="push"
-	             tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.MoveRightDelegate.tooltip">
+	             tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.MoveLeftDelegate.tooltip">
 	       </command>
 	       <command
 	             commandId="org.kalypso.ogc.gml.map.MoveDownCommand"
@@ -1487,10 +1507,10 @@
 	             tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.MoveUpDelegate.tooltip">
 	       </command>
 	       <command
-	             commandId="org.kalypso.ogc.gml.map.MoveLeftCommand"
-	             label="%org.kalypso.ui.editor.mapeditor.actiondelegates.MoveLeftDelegate.label"
+	             commandId="org.kalypso.ogc.gml.map.MoveRightCommand"
+	             label="%org.kalypso.ui.editor.mapeditor.actiondelegates.MoveRightDelegate.label"
 	             style="push"
-	             tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.MoveLeftDelegate.tooltip">
+	             tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.MoveRightDelegate.tooltip">
 	       </command>
 	       <command
 	             commandId="org.kalypso.ogc.gml.map.FullExtentCommand"
@@ -1579,6 +1599,15 @@
               visible="true">
         </separator>
      </menuContribution>
+     <menuContribution
+           locationURI="toolbar:org.kalypso.ui.views.mapView?after=mapExport">
+        <command
+              commandId="org.kalypso.ogc.gml.map.Screenshot"
+              label="Map screenshot"
+              style="push"
+              tooltip="Map screenshot">
+        </command>
+     </menuContribution>
 
  </extension>
 
@@ -1593,8 +1622,8 @@
           icon="icons/map/zoominstatic.gif">
     </image>
     <image
-          commandId="org.kalypso.ogc.gml.map.MoveRightCommand"
-          icon="icons/map/moveright.gif">
+          commandId="org.kalypso.ogc.gml.map.MoveLeftCommand"
+          icon="icons/map/moveleft.gif">
     </image>
     <image
           commandId="org.kalypso.ogc.gml.map.MoveDownCommand"
@@ -1605,8 +1634,8 @@
           icon="icons/map/moveup.gif">
     </image>
     <image
-          commandId="org.kalypso.ogc.gml.map.MoveLeftCommand"
-          icon="icons/map/moveleft.gif">
+          commandId="org.kalypso.ogc.gml.map.MoveRightCommand"
+          icon="icons/map/moveright.gif">
     </image>
     <image
           commandId="org.kalypso.ogc.gml.map.FullExtentCommand"

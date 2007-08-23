@@ -71,10 +71,12 @@ import org.kalypso.ogc.gml.KalypsoFeatureThemeSelection;
 import org.kalypso.ogc.gml.command.JMSelector;
 import org.kalypso.ogc.gml.map.listeners.IMapPanelListener;
 import org.kalypso.ogc.gml.map.listeners.IMapPanelPaintListener;
+import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
 import org.kalypso.ogc.gml.mapmodel.MapModellAdapter;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
+import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeChangeExtentVisitor;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionListener;
@@ -155,9 +157,9 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
     }
   };
 
-  private int m_width = 0;
+  protected int m_width = 0;
 
-  private int m_height = 0;
+  protected int m_height = 0;
 
   private int xOffset = 0;
 
@@ -169,7 +171,7 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
 
   private final GeoTransform m_projection = new WorldToScreenTransform();
 
-  private GM_Envelope m_boundingBox = new GM_Envelope_Impl();
+  protected GM_Envelope m_boundingBox = new GM_Envelope_Impl();
 
   private GM_Envelope m_wishBBox;
 
@@ -201,7 +203,12 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
     public void themeAdded( final IMapModell source, final IKalypsoTheme theme )
     {
       if( theme.isVisible() )
+      {
+        /* The theme can do something with it (e.g. the WMS theme will start reloading the map). */
+        theme.setExtent( m_width, m_height, m_boundingBox );
+
         forceRepaint();
+      }
     }
 
     /**
@@ -897,6 +904,10 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
       yOffset = 0;
       invalidateMap();
     }
+
+    /* Tell the themes , that the extent has changed. */
+    if( m_model != null )
+      m_model.accept( new KalypsoThemeChangeExtentVisitor( m_width, m_height, m_boundingBox ), IKalypsoThemeVisitor.DEPTH_INFINITE );
 
     fireExtentChanged( oldExtent, m_boundingBox );
   }

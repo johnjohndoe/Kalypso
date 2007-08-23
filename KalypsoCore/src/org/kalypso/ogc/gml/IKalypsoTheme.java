@@ -40,7 +40,9 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
+import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Image;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
@@ -87,7 +89,10 @@ public interface IKalypsoTheme extends IAdaptable, IWorkbenchAdapter
 
   public void setName( final String name );
 
-  public GM_Envelope getBoundingBox( );
+  /**
+   * Returns the full extent bounding box for the theme.
+   */
+  public GM_Envelope getFullExtent( );
 
   public IMapModell getMapModell( );
 
@@ -125,4 +130,22 @@ public interface IKalypsoTheme extends IAdaptable, IWorkbenchAdapter
    * </p>
    */
   public void setProperty( final String name, final boolean value );
+
+  /**
+   * This function sets the boundingbox for the new extent.
+   * 
+   * @param extent
+   *            The new extent.
+   */
+  public void setExtent( int width, int height, GM_Envelope extent );
+
+  /**
+   * This function returns an image, containing the legend of the theme, íf one is available. Otherwise it will return
+   * null.
+   * 
+   * @param font
+   *            This font will be used for the self created text of the legend.
+   * @return An legend graphic or null.
+   */
+  public Image getLegendGraphic( Font font ) throws CoreException;
 }
