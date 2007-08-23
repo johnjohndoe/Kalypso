@@ -118,16 +118,19 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
     org.eclipse.swt.graphics.Image swtLegend = new org.eclipse.swt.graphics.Image( getShell().getDisplay(), swtLegendData );
 
     /* Create a scrolled composite. */
-    ScrolledComposite sComposite = new ScrolledComposite( composite, SWT.NONE );
+    ScrolledComposite sComposite = new ScrolledComposite( composite, SWT.H_SCROLL | SWT.V_SCROLL );
     sComposite.setLayout( new FillLayout() );
     GridData sCompData = new GridData( SWT.FILL, SWT.FILL, true, true );
     sCompData.widthHint = 300;
+    sCompData.heightHint = 300;
     sComposite.setLayoutData( sCompData );
 
     /* And finally display it. TODO: Why are there no Scrollbars? */
     Canvas canvas = new Canvas( sComposite, SWT.NONE );
     canvas.setSize( swtLegend.getBounds().width, swtLegend.getBounds().height );
     canvas.setBackgroundImage( swtLegend );
+
+    sComposite.setContent( canvas );
 
     return composite;
   }
