@@ -114,6 +114,10 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
 {
   private final IFeatureSelectionManager m_selectionManager = KalypsoCorePlugin.getDefault().getSelectionManager();
 
+  private final StatusLineContributionItem m_statusBar = new StatusLineContributionItem( "MapViewStatusBar", 100 );
+
+  private final MapModellContextSwitcher m_mapModellContextSwitcher = new MapModellContextSwitcher();
+
   private IWorkbenchPartSite m_site;
 
   private MapPanel m_mapPanel;
@@ -121,8 +125,6 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   private GisTemplateMapModell m_mapModell;
 
   private Control m_control;
-
-  private final StatusLineContributionItem m_statusBar = new StatusLineContributionItem( "MapViewStatusBar", 100 );
 
   private boolean m_disposed = false;
 
@@ -133,8 +135,6 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   private IResourceChangeListener m_resourceChangeListener;
 
   private boolean m_saving;
-
-  private final MapModellContextSwitcher m_mapModellContextSwitcher = new MapModellContextSwitcher();
 
   private final IMapPanelListener m_mapPanelListener = new MapPanelAdapter()
   {

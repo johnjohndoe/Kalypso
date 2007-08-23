@@ -247,16 +247,20 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
         for( final Feature parent : parents )
         {
           if( m_featureList.getParentFeature() == parent )
+          {
             switch( fscme.getChangeType() )
             {
               case FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD:
+                // fall through
               case FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE:
+                // fall through
               case FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_MOVE:
                 setDirty();
                 break;
               default:
                 setDirty();
             }
+          }
         }
       }
     }

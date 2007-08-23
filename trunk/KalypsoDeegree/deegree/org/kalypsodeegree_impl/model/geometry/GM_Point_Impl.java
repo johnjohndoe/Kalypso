@@ -75,7 +75,7 @@ import org.opengis.cs.CS_CoordinateSystem;
  * <p>
  * ------------------------------------------------------------
  * </p>
- *
+ * 
  * @version 5.6.2001
  * @author Andreas Poth
  *         <p>
@@ -89,7 +89,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
 
   /**
    * constructor. initializes a point to the coordinate 0/0
-   *
+   * 
    * @param crs
    *            spatial reference system of the point
    */
@@ -100,7 +100,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
 
   /**
    * constructor for initializing a point within a two-dimensional coordinate system
-   *
+   * 
    * @param x
    *            x-value of the point
    * @param y
@@ -115,7 +115,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
 
   /**
    * constructor for initializing a point within a three-dimensional coordinate system
-   *
+   * 
    * @param x
    *            x-value of the point
    * @param y
@@ -132,7 +132,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
 
   /**
    * constructor
-   *
+   * 
    * @param gmo
    *            existing GM_Point
    */
@@ -143,7 +143,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
 
   /**
    * constructor
-   *
+   * 
    * @param gmo
    *            existing GM_Point
    * @param crs
@@ -203,7 +203,6 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
   @Override
   public Object clone( )
   {
-    // kuch
     final CS_CoordinateSystem system = getCoordinateSystem();
 
     return new GM_Point_Impl( getX(), getY(), getZ(), system );
