@@ -41,6 +41,7 @@
 package org.kalypso.kalypsomodel1d2d.schema.binding.flowrel;
 
 import java.math.BigInteger;
+import java.util.List;
 
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
@@ -170,13 +171,13 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
     if( parentElement == null )
       return;
     String parentType = null;
-    
-    // check like this (and exact order) is nesessary because BoundaryLine is also Element2D (?!) 
-    if( parentElement instanceof IFE1D2DContinuityLine || parentElement instanceof IBoundaryLine || parentElement instanceof IBoundaryLine1D)
+
+    // check like this (and exact order) is nesessary because BoundaryLine is also Element2D (?!)
+    if( parentElement instanceof IFE1D2DContinuityLine || parentElement instanceof IBoundaryLine || parentElement instanceof IBoundaryLine1D )
       parentType = IBoundaryCondition.PARENT_TYPE_LINE1D2D;
-    else if(parentElement instanceof IFE1D2DNode)
+    else if( parentElement instanceof IFE1D2DNode )
       parentType = IBoundaryCondition.PARENT_TYPE_NODE1D2D;
-    else if(parentElement instanceof IFE1D2DElement)
+    else if( parentElement instanceof IFE1D2DElement )
       parentType = IBoundaryCondition.PARENT_TYPE_ELEMENT1D2D;
     if( parentType != null )
     {
@@ -197,9 +198,17 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition#getType()
    */
-  public String getType( )
+  public String getTypeByLocation( )
   {
     return getFeature().getProperty( IBoundaryCondition.PROP_PARENT_TYPE ).toString();
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition#getParentCalculationUnits()
+   */
+  public List<String> getParentCalculationUnitIDs( )
+  {
+    return (List<String>) getFeature().getProperty( IBoundaryCondition.PROP_PARENT_CALCULATION_UNIT );
   }
 
 }

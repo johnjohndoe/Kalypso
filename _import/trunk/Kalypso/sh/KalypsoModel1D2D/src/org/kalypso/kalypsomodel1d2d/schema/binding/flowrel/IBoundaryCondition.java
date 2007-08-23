@@ -41,6 +41,7 @@
 package org.kalypso.kalypsomodel1d2d.schema.binding.flowrel;
 
 import java.math.BigInteger;
+import java.util.List;
 
 import javax.xml.namespace.QName;
 
@@ -62,6 +63,8 @@ public interface IBoundaryCondition extends IFlowRelationship
   public static final String PARENT_TYPE_LINE1D2D = "LINE1D2D";
 
   public static final QName PROP_PARENT_TYPE = new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "bcType" );
+
+  public static final QName PROP_PARENT_CALCULATION_UNIT = new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "parentCalculationUnit" );
 
   public static final QName PROP_PARENT_MODEL_ELEMENT = new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "parentModelElement" );
 
@@ -89,5 +92,7 @@ public interface IBoundaryCondition extends IFlowRelationship
 
   public String getParentElementID( );
 
-  public String getType( );
+  public String getTypeByLocation( );
+  
+  public List<String> getParentCalculationUnitIDs();
 }

@@ -42,7 +42,6 @@ package org.kalypso.kalypsomodel1d2d.conv;
 
 import java.io.PrintWriter;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Formatter;
@@ -56,17 +55,20 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.commons.lang.StringUtils;
 import org.kalypso.contribs.java.util.DateUtilities;
-import org.kalypso.kalypsomodel1d2d.conv.ITimeStepinfo.TYPE;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation.KIND;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
+import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
 import org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation;
 import org.kalypso.kalypsomodel1d2d.sim.RMA10SimModelConstants;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
+import org.kalypso.observation.result.TupleResultUtilities;
 import org.kalypso.observation.util.TupleResultIndex;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.Feature;
@@ -113,8 +115,9 @@ public class Control1D2DConverter
   {
     final IControlModel1D2D controlModel = m_calculation.getControlModel();
 
-    // This value is not used at all during the steady calculation, 
-    // so if user did not selected unsteady, instead of first time step we will take current date/time (see method getFirstTimeStep())
+    // This value is not used at all during the steady calculation,
+    // so if user did not selected unsteady, instead of first time step we will take current date/time (see method
+    // getFirstTimeStep())
     final Date firstDate = getFirstTimeStep();
     final Calendar calendarForFirstTimeStep = Calendar.getInstance();
     calendarForFirstTimeStep.setTime( firstDate );
@@ -212,14 +215,14 @@ public class Control1D2DConverter
     if( eddy.length < 4 )
       throw new IllegalArgumentException( Messages.getString( "Control1D2DConverter.17" ) ); //$NON-NLS-1$
     formatter.format( "ED1%13d%8.1f%8.1f%8.1f%8.1f%8.1f%8.3f%8.3f%n", roughnessAsciiID, eddy[0], eddy[1], eddy[2], eddy[3], -1.0, 1.0, 1.0 ); //$NON-NLS-1$
-    formatter.format( "ED2%13.1f%8.1f%8.3f%16.1f%n", 0.5, 0.5, 0.001, 20.0 ); //$NON-NLS-1$
+    formatter.format( "ED2%21.1f%8.1f%8.3f%16.1f%n", 0.5, 0.5, 0.001, 20.0 ); //$NON-NLS-1$
     formatter.format( "ED4%21.2f%8.1f%8.2f%n", ks, axayCorrected, dpCorrected ); //$NON-NLS-1$
   }
 
   private void writeEDBlock( final Formatter formatter, final int roughnessAsciiID, final double val, final Double ks, final Double axayCorrected, final Double dpCorrected )
   {
     formatter.format( "ED1%13d%8.1f%8.1f%8.1f%8.1f%8.1f%8.3f%8.3f%n", roughnessAsciiID, val, val, val, val, -1.0, 1.0, 1.0 ); //$NON-NLS-1$
-    formatter.format( "ED2%13.1f%8.1f%8.3f%16.1f%n", 0.5, 0.5, 0.001, 20.0 ); //$NON-NLS-1$
+    formatter.format( "ED2%21.1f%8.1f%8.3f%16.1f%n", 0.5, 0.5, 0.001, 20.0 ); //$NON-NLS-1$
     formatter.format( "ED4%21.2f%8.1f%8.2f%n", ks, axayCorrected, dpCorrected ); //$NON-NLS-1$
   }
 
@@ -229,50 +232,23 @@ public class Control1D2DConverter
 
   private void writeR10ContinuityLineDataBlock( ) throws SimulationException
   {
-    final BoundaryLineInfo[] rawInfos = m_calculation.getContinuityLineInfo();
-
-    if( rawInfos.length == 0 )
-      throw new SimulationException( Messages.getString( "Control1D2DConverter.24" ), null ); //$NON-NLS-1$
-
-    // Because we might don't have info about all nodes (submodel), we have to filter SCL/CCx lines
-    final List<BoundaryLineInfo> filteredInfosList = new ArrayList<BoundaryLineInfo>();
-    for( final BoundaryLineInfo info : rawInfos )
-    {
-      final IFE1D2DNode[] nodes = info.getNodes();
-      boolean allNodesPresent = true;
-      for( final IFE1D2DNode element : nodes )
-      {
-        final Integer nodeID = m_nodesIDProvider.get( element.getGmlID() );
-        if( nodeID == null )
-        {
-          allNodesPresent = false;
-          break;
-        }
-      }
-      if( allNodesPresent )
-        filteredInfosList.add( info );
-    }
-    final BoundaryLineInfo[] infos = new BoundaryLineInfo[filteredInfosList.size()];
-    filteredInfosList.toArray( infos );
-
-    m_formatter.format( "SCL%9d%n", infos.length ); //$NON-NLS-1$
+    final List<IBoundaryLine> boundaryLines = m_calculation.getBoundaryLines();
+    m_formatter.format( "SCL%9d%n", boundaryLines.size() ); //$NON-NLS-1$
 
     int infoCnt = 1;
-    for( final BoundaryLineInfo info : infos )
+    for( final IBoundaryLine line : boundaryLines )
     {
-      final IFE1D2DNode[] nodes = info.getNodes();
+      final IFE1D2DNode[] nodes = new IFE1D2DNode[line.getNodes().size()];
+      line.getNodes().toArray( nodes );
 
       for( int i = 0; i < nodes.length; i++ )
       {
         final IFE1D2DNode node = nodes[i];
         final int nodeID = m_nodesIDProvider.get( node.getGmlID() );
-        /* Write start stuff */
         if( i == 0 )
-          // formatter.format( "CC1 %4d", info.getID() );
           m_formatter.format( "CC1 %4d", infoCnt++ ); //$NON-NLS-1$
         else if( i % 9 == 0 )
           m_formatter.format( "%nCC2     " ); //$NON-NLS-1$
-
         m_formatter.format( "%8d", nodeID ); //$NON-NLS-1$
       }
       if( nodes.length % 9 != 0 )
@@ -295,8 +271,6 @@ public class Control1D2DConverter
   private void writeR10TimeStepDataBlock( ) throws SimulationException
   {
     final IControlModel1D2D controlModel = m_calculation.getControlModel();
-    final ITimeStepinfo[] timeStepInfos = m_calculation.getTimeStepInfos();
-
     final IObservation<TupleResult> observation = controlModel.getTimeSteps();
     final TupleResult result = observation.getResult();
     // TODO: search components by type!
@@ -315,7 +289,7 @@ public class Control1D2DConverter
       else
         // Not used anyway (1.0 should be default value)
         uRValSteady = 1.0;
-    writeTimeStep( m_formatter, msg, null, null, uRValSteady.floatValue(), niti, timeStepInfos );
+    writeTimeStep( m_formatter, msg, null, null, uRValSteady.floatValue(), niti );
 
     if( controlModel.isUnsteadySelected() )
     {
@@ -341,7 +315,7 @@ public class Control1D2DConverter
           final Calendar stepCal = ((XMLGregorianCalendar) record.getValue( compTime )).toGregorianCalendar();
 
           final String unsteadyMsg = String.format( Messages.getString( "Control1D2DConverter.36" ), stepCount ); //$NON-NLS-1$
-          writeTimeStep( m_formatter, unsteadyMsg, stepCal, lastStepCal, uRVal, nitn, timeStepInfos );
+          writeTimeStep( m_formatter, unsteadyMsg, stepCal, lastStepCal, uRVal, nitn );
 
           lastStepCal = stepCal;
         }
@@ -349,7 +323,7 @@ public class Control1D2DConverter
     }
   }
 
-  private void writeTimeStep( final Formatter formatter, final String message, final Calendar stepCal, final Calendar lastStepCal, final float uRVal, final int niti, final ITimeStepinfo[] timeStepInfos ) throws SimulationException
+  private void writeTimeStep( final Formatter formatter, final String message, final Calendar calculationStep, final Calendar lastStepCal, final float uRVal, final int niti ) throws SimulationException
   {
     final String dashes = StringUtils.repeat( "-", message.length() ); //$NON-NLS-1$
     formatter.format( "com %s%n", dashes ); //$NON-NLS-1$
@@ -363,14 +337,14 @@ public class Control1D2DConverter
     final double ihre;
 
     // unsteady
-    if( stepCal != null )
+    if( calculationStep != null )
     {
-      dayOfYear = stepCal.get( Calendar.DAY_OF_YEAR );
-      year = stepCal.get( Calendar.YEAR );
+      dayOfYear = calculationStep.get( Calendar.DAY_OF_YEAR );
+      year = calculationStep.get( Calendar.YEAR );
 
-      timeStepInterval = stepCal.getTimeInMillis() - lastStepCal.getTimeInMillis();
+      timeStepInterval = calculationStep.getTimeInMillis() - lastStepCal.getTimeInMillis();
       timeStepHours = (double) timeStepInterval / (60 * 60 * 1000);
-      ihre = getTimeInPercentage( stepCal );
+      ihre = getTimeInPercentage( calculationStep );
     }
     // steady don´t need startdate
     else
@@ -389,8 +363,9 @@ public class Control1D2DConverter
     else
       formatBC( formatter, uRVal, niti );
 
-    formatBoundCondLines( formatter, stepCal, timeStepInfos, TYPE.CONTI_BC_Q );
-    formatBoundCondLines( formatter, stepCal, timeStepInfos, TYPE.CONTI_BC_H );
+    // order is important, first QC than HC
+    formatBoundCondLines( formatter, calculationStep, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
+    formatBoundCondLines( formatter, calculationStep, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL );
 
     for( final Map.Entry<Integer, IBuildingFlowRelation> buildingData : m_buildingProvider.getBuildingData().entrySet() )
     {
@@ -417,38 +392,39 @@ public class Control1D2DConverter
   }
 
   /** Formats the lines for one type of boundary condition (QC or HC or ... ). */
-  private void formatBoundCondLines( final Formatter formatter, final Calendar stepCal, final ITimeStepinfo[] timeStepInfos, final TYPE contiType ) throws SimulationException
+  private void formatBoundCondLines( final Formatter formatter, final Calendar stepCal, final String bcType )
   {
-    // Boundary Conditions
-    for( final ITimeStepinfo item : timeStepInfos )
+    final List<IBoundaryCondition> boundaryConditions = m_calculation.getBoundaryConditions();
+    for( final IBoundaryCondition boundaryCondition : boundaryConditions )
     {
-      /* Write only considered lines */
-      final TYPE type = item.getType();
-
-      if( type != contiType )
-        continue;
-
-      final double itemValue = item.getValue( stepCal == null ? null : stepCal.getTime() );
-
-      switch( type )
+      if( boundaryCondition.getTypeByLocation().equals( IBoundaryCondition.PARENT_TYPE_LINE1D2D ) )
       {
-        case CONTI_BC_Q:
+        final double stepValue;
+        final IObservation<TupleResult> obs = boundaryCondition.getObservation();
+        final TupleResult obsResult = obs.getResult();
+        if( stepCal != null )
         {
-          final double q = itemValue;
-          final double theta = item.getTheta();
-          formatter.format( "QC%14d%8d%8.3f%8.3f%8.3f%8.3f%8.3f%n", item.getID(), 0, q, theta, 0.000, 20.000, 0.000 ); //$NON-NLS-1$
+          final IComponent timeComponent = TupleResultUtilities.findComponentById( obsResult, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );
+          final TupleResultIndex tupleResultIndex = new TupleResultIndex( obs.getResult(), timeComponent );
+          final Number result = (Number) tupleResultIndex.getValue( timeComponent, stepCal.getTime() );
+          stepValue = (result == null || Double.isNaN( result.doubleValue() )) ? 0.0 : result.doubleValue();
         }
-          break;
+        else
+          stepValue = boundaryCondition.getStationaryCondition();
 
-        case CONTI_BC_H:
+        int ordinal = m_calculation.getBoundaryConditionParentOrdinalNumber( boundaryCondition.getParentElementID() );
+        if( TupleResultUtilities.findComponentById( obsResult, bcType ) != null )
         {
-          final double h = itemValue;
-          formatter.format( "HC%14d%8d%8.3f%8.3f%8.3f%8.3f%n", item.getID(), 0, h, 0.0, 20.0, 0.0 ); //$NON-NLS-1$
+          if( bcType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE ) )
+          {
+            double theta = Math.toRadians( boundaryCondition.getDirection().doubleValue() );
+            formatter.format( "QC%14d%8d%8.3f%8.3f%8.3f%8.3f%8.3f%n", ordinal, 0, stepValue, theta, 0.000, 20.000, 0.000 ); //$NON-NLS-1$
+          }
+          else if( bcType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL ) )
+          {
+            formatter.format( "HC%14d%8d%8.3f%8.3f%8.3f%8.3f%n", ordinal, 0, stepValue, 0.0, 0.000, 20.000 ); //$NON-NLS-1$
+          }
         }
-          break;
-
-        default:
-          break;
       }
     }
   }
@@ -457,19 +433,14 @@ public class Control1D2DConverter
   {
     if( uRVal < 0.0 || uRVal > 1.0 )
       throw new SimulationException( Messages.getString( "Control1D2DConverter.6" ), null ); //$NON-NLS-1$
-
     final int buffVal = 10 - (int) (uRVal * 10);
-    /*
-     * if( uRVal == (float) 1.0 ) buffVal = 0; else buffVal = 10 - (int) (((uRVal * 10)));
-     */
     for( int j = 0; j < nitn; j++ )
     {
       if( j % 9 == 0 )
-        formatter.format( "%nBC%5s", " " ); //$NON-NLS-1$
+        formatter.format( "%nBC%6s", " " ); //$NON-NLS-1$
 
       formatter.format( "%5d010", buffVal ); //$NON-NLS-1$
     }
-
     formatter.format( "%n" ); //$NON-NLS-1$
   }
 
@@ -483,8 +454,9 @@ public class Control1D2DConverter
 
   /**
    * @return If unsteady calculation is selected, returns date/time of the first timestep from the control model.
-   * <p> If unsteady calculation is not selected, returns current date/time 
-   * (in the case of steady calculation, this value is not considered by RMA10s)
+   *         <p>
+   *         If unsteady calculation is not selected, returns current date/time (in the case of steady calculation, this
+   *         value is not considered by RMA10s)
    */
   private Date getFirstTimeStep( ) throws SimulationException
   {

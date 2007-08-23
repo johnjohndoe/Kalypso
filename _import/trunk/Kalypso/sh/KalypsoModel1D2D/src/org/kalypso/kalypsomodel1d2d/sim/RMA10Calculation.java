@@ -51,29 +51,16 @@ import java.util.Map;
 
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.net.UrlResolver;
-import org.kalypso.kalypsomodel1d2d.conv.BoundaryLineInfo;
 import org.kalypso.kalypsomodel1d2d.conv.INativeIDProvider;
-import org.kalypso.kalypsomodel1d2d.conv.ITimeStepinfo;
-import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
-import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelRoughnessConsts;
-import org.kalypso.observation.IObservation;
-import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.TupleResult;
-import org.kalypso.observation.result.TupleResultUtilities;
 import org.kalypso.ogc.gml.serialize.AbstractFeatureProviderFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.GmlSerializerXlinkFeatureProvider;
@@ -83,7 +70,6 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureProvider;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
 
@@ -93,13 +79,11 @@ import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
 @SuppressWarnings( { "unchecked", "hiding" })
 public class RMA10Calculation implements INativeIDProvider
 {
-  private GMLWorkspace m_disModelWorkspace = null;
+  private GMLWorkspace m_discretisationModelWorkspace = null;
 
   private final GMLWorkspace m_operationalModelWorkspace;
 
-  private GMLWorkspace m_flowRelWorkspace = null;
-
-  private final GMLWorkspace m_flowResistanceWorkspace = null;
+  private GMLWorkspace m_flowRelationshipsWorkspace = null;
 
   private Feature m_controlModelRoot = null;
 
@@ -107,13 +91,15 @@ public class RMA10Calculation implements INativeIDProvider
 
   private String m_kalypso1D2DKernelPath;
 
-  private final List<ITimeStepinfo> m_timeStepInfos;
-
   private final LinkedHashMap<IBoundaryLine, Integer> m_boundaryLineIDProvider = new LinkedHashMap<IBoundaryLine, Integer>( 32 );
 
   private ICalculationUnit m_calculationUnit;
 
   private IControlModel1D2D m_controlModel1D2D = null;
+
+  private List<IBoundaryLine> m_unitBoundaryLines;
+
+  private List<IBoundaryCondition> m_unitBoundaryConditions;
 
   public RMA10Calculation( final ISimulationDataProvider inputProvider ) throws SimulationException, Exception
   {
@@ -155,39 +141,30 @@ public class RMA10Calculation implements INativeIDProvider
       }
     };
 
-    // final GMLWorkspace simResWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID(
-    // RMA10SimModelConstants.SIMULATIONRESULTMODEL_ID ), null );
-    m_disModelWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( RMA10SimModelConstants.DISCRETISATIOMODEL_ID ), factory );
+    m_discretisationModelWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( RMA10SimModelConstants.DISCRETISATIOMODEL_ID ), factory );
     m_operationalModelWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( RMA10SimModelConstants.OPERATIONALMODEL_ID ), factory );
-    m_flowRelWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( RMA10SimModelConstants.FLOWRELATIONSHIPMODEL_ID ), factory );
-    // m_flowResWS = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID(
-    // RMA10SimModelConstants.FLOWRESISTANCEMODEL_ID ),
-    // factory );
-
+    m_flowRelationshipsWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( RMA10SimModelConstants.FLOWRELATIONSHIPMODEL_ID ), factory );
     m_controlModelRoot = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( RMA10SimModelConstants.CONTROL_ID ), factory ).getRootFeature();
     m_roughnessRootWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( RMA10SimModelConstants.ROUGHNESS_ID ), factory ).getRootFeature();
 
-    m_timeStepInfos = calculateBoundaryConditionInfos();
+    init();
   }
 
-  public GMLWorkspace getOperationalModelWorkspace( )
+  private void init( ) throws SimulationException
   {
-    return m_operationalModelWorkspace;
+    getControlModel();
+    getCalculationUnit();
+    initializeInfos();
   }
 
   public IFlowRelationshipModel getFlowModel( )
   {
-    return (IFlowRelationshipModel) m_flowRelWorkspace.getRootFeature().getAdapter( IFlowRelationshipModel.class );
+    return (IFlowRelationshipModel) m_flowRelationshipsWorkspace.getRootFeature().getAdapter( IFlowRelationshipModel.class );
   }
 
   public IFEDiscretisationModel1d2d getDiscModel( )
   {
-    return (IFEDiscretisationModel1d2d) m_disModelWorkspace.getRootFeature().getAdapter( IFEDiscretisationModel1d2d.class );
-  }
-
-  public GMLWorkspace getFlowResistanceWorkspace( )
-  {
-    return m_flowResistanceWorkspace;
+    return (IFEDiscretisationModel1d2d) m_discretisationModelWorkspace.getRootFeature().getAdapter( IFEDiscretisationModel1d2d.class );
   }
 
   public String getKalypso1D2DKernelPath( )
@@ -289,183 +266,53 @@ public class RMA10Calculation implements INativeIDProvider
     return (Double) roughnessFE.getProperty( KalypsoModelRoughnessConsts.WBR_PROP_DP );
   }
 
-  public List<IBoundaryLine> getContinuityLineList( )
+  private void initializeInfos( )
   {
-    // TODO: at the moment, we write ALL boundary lines again...
+    final IFlowRelationshipModel flowRelationshipsModel = (IFlowRelationshipModel) m_operationalModelWorkspace.getRootFeature().getAdapter( IFlowRelationshipModel.class );
+    final List<IBoundaryLine> boundaryLines = m_calculationUnit.getBoundaryLines();
 
-    // implemented like this, or search for BoundaryConditions (operational model) which fits to ContinuityLines
-    // (discretisation model)
-    final IFEDiscretisationModel1d2d discModel = getDiscModel();
-    final List<IBoundaryLine> list = new ArrayList<IBoundaryLine>();
-    final IFeatureWrapperCollection<IFE1D2DElement> elements = discModel.getElements();
-    for( final IFE1D2DElement element : elements )
-    {
-      if( element instanceof IBoundaryLine )
-        list.add( (IBoundaryLine) element );
-    }
-    return list;
-
-  }
-
-  public BoundaryLineInfo[] getContinuityLineInfo( )
-  {
-    final List<BoundaryLineInfo> continuityLineInfos = new ArrayList<BoundaryLineInfo>();
-
-    for( final ITimeStepinfo info : m_timeStepInfos )
-    {
-      if( info instanceof BoundaryLineInfo )
-        // TODO: This is a discrace, what else should be there??
-        // Also: for every BC we need a conti line!
-        continuityLineInfos.add( (BoundaryLineInfo) info );
-    }
-
-    return continuityLineInfos.toArray( new BoundaryLineInfo[continuityLineInfos.size()] );
-  }
-
-  public ITimeStepinfo[] getTimeStepInfos( )
-  {
-    return m_timeStepInfos.toArray( new ITimeStepinfo[m_timeStepInfos.size()] );
-  }
-
-  private List<ITimeStepinfo> calculateBoundaryConditionInfos( ) throws SimulationException
-  {
-    // TOFILTER
-    final List<ITimeStepinfo> result = new ArrayList<ITimeStepinfo>();
-
-    /* Take all conti lines which are defined in the discretisation model. */
-    final Map<String, BoundaryLineInfo> contiMap = new HashMap<String, BoundaryLineInfo>();
-    final List<IBoundaryLine> continuityLineList = getContinuityLineList();
-    int contiCount = 0;
-    for( final IBoundaryLine<IFE1D2DComplexElement, IFE1D2DEdge> line : continuityLineList )
-    {
-      final IFE1D2DNode[] nodeArray;
-      if( line instanceof IBoundaryLine1D )
-      {
-        nodeArray = new IFE1D2DNode[] { ((IBoundaryLine1D) line).getTargetNode() };
-      }
-      else
-      {
-        final List<IFE1D2DNode> nodes = line.getNodes();
-        nodeArray = nodes.toArray( new IFE1D2DNode[nodes.size()] );
-      }
-      final BoundaryLineInfo info = new BoundaryLineInfo( ++contiCount, nodeArray );
-      result.add( info );
-      contiMap.put( line.getGmlID(), info );
-      m_boundaryLineIDProvider.put( line, new Integer( contiCount ) );
-    }
-
-    // TODO: instead of this stupit code above, we should iterate through all boundary conditions below as before
-    // and check for each of them if it is contained in a calc-unit
-
-    /* Add all boundary conditions. */
-    final IFlowRelationshipModel model = (IFlowRelationshipModel) m_operationalModelWorkspace.getRootFeature().getAdapter( IFlowRelationshipModel.class );
-    final ICalculationUnit unit = getCalculationUnit();
-    for( final IFlowRelationship relationship : model )
+    m_unitBoundaryLines = new ArrayList<IBoundaryLine>();
+    m_unitBoundaryConditions = new ArrayList<IBoundaryCondition>();
+    for( final IFlowRelationship relationship : flowRelationshipsModel )
     {
       if( relationship instanceof IBoundaryCondition )
       {
-        final IBoundaryCondition bc = (IBoundaryCondition) relationship;
-        final IObservation<TupleResult> obs = bc.getObservation();
-        final TupleResult obsResult = obs.getResult();
-        // CalUnitOps.getAssignedBoundaryConditionLine( unit, bCondition, grabDistance );
-        // HACK: 0.5 as grab distance?? normally 0.0 should be enough, but then the contilines are not found, why?
-        // TODO: at least find everything in this distance, if mroe than one element is found, take nearest...
-        // final boolean boundaryConditionOf = CalUnitOps.isBoundaryConditionOf( unit, bc, grabDistance );
-
-        final IFeatureWrapper2 wrapper2 = CalcUnitOps.getAssignedBoundaryConditionLine( unit, bc );
-        // // final IFeatureWrapper2 wrapper2 = DiscretisationModelUtils.findModelElementForBC( discModel,
-        // bc.getPosition(),
-        // 0.001 );
-        System.out.println();
-        if( wrapper2 == null )
+        final IBoundaryCondition boundaryCondition = (IBoundaryCondition) relationship;
+        if( isBoundaryConditionMemberOfCalculationUnit( boundaryCondition ) )
         {
-          System.out.println( "Skiping boundary condition since it is not part of calcUnit:" + relationship.getGmlID() );
-        }
-        else if( wrapper2 instanceof IBoundaryLine )
-          if( CalcUnitOps.isBoundaryConditionOf( unit, bc ) )
+          m_unitBoundaryConditions.add( boundaryCondition );
+
+          // find parent element of this boundary condition (in the moment only boundary lines are supported)
+          final String parentElementID = boundaryCondition.getParentElementID();
+          for( final IBoundaryLine line : boundaryLines )
           {
-
-            final IBoundaryLine<IFE1D2DComplexElement, IFE1D2DEdge> contiLine = (IBoundaryLine<IFE1D2DComplexElement, IFE1D2DEdge>) wrapper2;
-            final BoundaryLineInfo info = contiMap.get( contiLine.getGmlID() );
-
-            if( info == null )
-              continue;
-
-            final IComponent timeComponent = TupleResultUtilities.findComponentById( obsResult, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );
-            final IComponent qComponent = TupleResultUtilities.findComponentById( obsResult, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
-            final IComponent hComponent = TupleResultUtilities.findComponentById( obsResult, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL );
-            info.setSteadyValue( bc.getStationaryCondition() );
-            if( qComponent != null )
+            if( line.getGmlID().equals( parentElementID ) )
             {
-              info.setObservation( obs, timeComponent, qComponent, ITimeStepinfo.TYPE.CONTI_BC_Q );
-              info.setTheta( bc.getDirection() );
+              m_unitBoundaryLines.add( line );
             }
-            else if( hComponent != null )
-              info.setObservation( obs, timeComponent, hComponent, ITimeStepinfo.TYPE.CONTI_BC_H );
-            else
-              throw new SimulationException( "Falsche Parameter an Kontinuitätslinien-Randbedingung: " + bc.getName(), null );
-
-            // TODO: at the moment, we should comment this line out;
-            // Sadly, the calc unit concept does not apply at all to non-boundary.line connected boundary conditions.
-            // result.add( info );
           }
-
-        // TODO: the following elses never get called any more
-        // else if( wrapper2 instanceof IFE1D2DNode && DiscretisationModelUtils.is1DNode( (IFE1D2DNode<IFE1D2DEdge>)
-        // wrapper2 )
-        // )
-        // {
-        // // create new contiline
-        // final IFE1D2DNode[] nodeArray = new IFE1D2DNode[] { (IFE1D2DNode) wrapper2 };
-        // final BoundaryLineInfo info = new BoundaryLineInfo( ++contiCount, nodeArray );
-        //
-        // final IComponent timeComponent = TupleResultUtilities.findComponentById( obsResult,
-        // Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );
-        // final IComponent qComponent = TupleResultUtilities.findComponentById( obsResult,
-        // Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
-        // final IComponent hComponent = TupleResultUtilities.findComponentById( obsResult,
-        // Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL );
-        // info.setSteadyValue( bc.getStationaryCondition() );
-        // if( qComponent != null )
-        // {
-        // info.setObservation( obs, timeComponent, qComponent, ITimeStepinfo.TYPE.CONTI_BC_Q );
-        // info.setTheta( bc.getDirection() );
-        // }
-        // else if( hComponent != null )
-        // info.setObservation( obs, timeComponent, hComponent, ITimeStepinfo.TYPE.CONTI_BC_H );
-        // else
-        // throw new SimulationException( "Falsche Parameter an Kontinuitätslinien-Randbedingung: " + bc.getName(), null
-        // );
-        //
-        // result.add( info );
-        // }
-        // else if( wrapper2 instanceof IElement2D || wrapper2 instanceof IElement1D )
-        // {
-        // final IElement2D<IFE1D2DComplexElement, IFE1D2DEdge> ele2d = (IElement2D<IFE1D2DComplexElement, IFE1D2DEdge>)
-        // wrapper2;
-        //
-        // // final String gmlID = ele2d.getGmlID();
-        // final int id = 0; // TODO: get ascii element id for gmlid
-        //
-        // final BoundaryConditionInfo info = new BoundaryConditionInfo( id, ITimeStepinfo.TYPE.ELE_BCE_2D );
-        //
-        // final IComponent timeComponent = TupleResultUtilities.findComponentById( obsResult, "time" );
-        // final IComponent qComponent = TupleResultUtilities.findComponentById( obsResult, "q" );
-        // final IComponent hComponent = TupleResultUtilities.findComponentById( obsResult, "h" );
-        // final IComponent valueComponent = qComponent == null ? hComponent : qComponent;
-        //
-        // info.setObservation( obs, timeComponent, valueComponent );
-        // info.setSteadyValue( bc.getStationaryCondition() );
-        //
-        // result.add( info );
-        // }
-
-        // else
-        // throw new SimulationException( "Nicht zugeordnete Randbedingung: " + bc.getName(), null );
+        }
       }
     }
+  }
 
-    return result;
+  private boolean isBoundaryConditionMemberOfCalculationUnit( final IBoundaryCondition boundaryCondition )
+  {
+    final List<String> parentCalculationUnits = boundaryCondition.getParentCalculationUnitIDs();
+    for( final String parentCalculationUnit : parentCalculationUnits )
+      if( m_calculationUnit.getGmlID().equals( parentCalculationUnit ) )
+        return true;
+    return false;
+  }
+
+  public List<IBoundaryCondition> getBoundaryConditions( )
+  {
+    return m_unitBoundaryConditions;
+  }
+
+  public List<IBoundaryLine> getBoundaryLines( )
+  {
+    return m_unitBoundaryLines;
   }
 
   public ICalculationUnit getCalculationUnit( )
@@ -516,5 +363,15 @@ public class RMA10Calculation implements INativeIDProvider
     {
       throw new RuntimeException( "Type not supported" );
     }
+  }
+
+  public int getBoundaryConditionParentOrdinalNumber( final String bcParentID )
+  {
+    for( final IBoundaryLine line : m_unitBoundaryLines )
+    {
+      if( line.getGmlID().equals( bcParentID ) )
+        return m_unitBoundaryLines.indexOf( line ) + 1;
+    }
+    return -1;
   }
 }

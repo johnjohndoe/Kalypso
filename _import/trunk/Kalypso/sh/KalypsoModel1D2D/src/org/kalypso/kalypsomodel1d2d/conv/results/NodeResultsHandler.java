@@ -67,12 +67,12 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DDebug;
-import org.kalypso.kalypsomodel1d2d.conv.BoundaryLineInfo;
 import org.kalypso.kalypsomodel1d2d.conv.ConversionIDProvider;
 import org.kalypso.kalypsomodel1d2d.conv.EReadError;
 import org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler;
 import org.kalypso.kalypsomodel1d2d.conv.IRoughnessIDProvider;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.ArcResult;
@@ -1568,10 +1568,17 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     {
       final GM_Curve nodeCurve1d = getProfileCurveFor1dNode( nodeResult1d );
 
-      /* get the 2d nodes */
-      // get nodes of the boundary line
-      final BoundaryLineInfo[] continuityLineInfo = m_calculation.getContinuityLineInfo();
-      final GM_Point[] linePoints = getLinePoints( boundaryLine2dID, continuityLineInfo );
+      final List<IBoundaryLine> boundaryLines = m_calculation.getBoundaryLines();
+      IBoundaryLine selectedBoundaryLine = null;
+      for( final IBoundaryLine boundaryLine : boundaryLines )
+      {
+        if( boundaryLine.getGmlID().equals( Integer.toString( boundaryLine2dID ) ) )
+        {
+          selectedBoundaryLine = boundaryLine;
+          break;
+        }
+      }
+      final GM_Point[] linePoints = getLinePoints( selectedBoundaryLine );
 
       // here, we just use the corner nodes of the mesh. mid-side nodes are not used.
       // get the node results of that points and add it to the Featurelist
@@ -1648,22 +1655,15 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     return (INodeResult) feature.getAdapter( INodeResult.class );
   }
 
-  @SuppressWarnings("unchecked")
-  private GM_Point[] getLinePoints( final int boundaryLine2dID, final BoundaryLineInfo[] continuityLineInfo )
+  private GM_Point[] getLinePoints( final IBoundaryLine boundaryLine )
   {
-    for( final BoundaryLineInfo line : continuityLineInfo )
+    final List<IFE1D2DNode> nodes = boundaryLine.getNodes();
+    final GM_Point[] points = new GM_Point[nodes.size()];
+    int i = 0;
+    for( final IFE1D2DNode node : nodes )
     {
-      if( line.getID() == boundaryLine2dID )
-      {
-        final IFE1D2DNode[] nodes2D = line.getNodes();
-        final GM_Point[] points = new GM_Point[nodes2D.length];
-        for( int i = 0; i < nodes2D.length; i++ )
-        {
-          points[i] = nodes2D[i].getPoint();
-        }
-        return points;
-      }
+      points[i++] = node.getPoint();
     }
-    return null;
+    return points;
   }
 }
