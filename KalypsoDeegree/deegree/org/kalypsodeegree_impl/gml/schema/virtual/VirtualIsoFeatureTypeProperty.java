@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.gml.schema.virtual;
 
@@ -46,7 +46,6 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -66,17 +65,15 @@ public class VirtualIsoFeatureTypeProperty extends AbstractVirtualPropertyType
 
   private final static String PROP_GEOM = DECORATED_NS + ":polygonProperty";
 
-
   public VirtualIsoFeatureTypeProperty( )
   {
-    super(new QName( "virtual", "iso_lines" ),0,1,GeometryUtilities.getLineStringClass());
+    super( new QName( "virtual", "iso_lines" ), 0, 1, GeometryUtilities.getLineStringClass() );
   }
 
   /**
-   * @see org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeProperty#getVirtuelValue(org.kalypsodeegree.model.feature.Feature,
-   *      org.kalypsodeegree.model.feature.GMLWorkspace)
+   * @see org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeProperty#getVirtuelValue(org.kalypsodeegree.model.feature.Feature)
    */
-  public Object getVirtuelValue( Feature feature, GMLWorkspace workspace )
+  public Object getVirtuelValue( final Feature feature )
   {
     m_iso = 0.1d;
     final List result = new ArrayList();
@@ -85,10 +82,10 @@ public class VirtualIsoFeatureTypeProperty extends AbstractVirtualPropertyType
       final GM_Surface surface = (GM_Surface) feature.getProperty( PROP_GEOM );
       if( surface == null )
         return null;
-      GM_Position[] positions = surface.getSurfaceBoundary().getExteriorRing().getPositions();
+      final GM_Position[] positions = surface.getSurfaceBoundary().getExteriorRing().getPositions();
       if( positions[0].getAsArray().length < 2 )
         return null;
-      CS_CoordinateSystem cs = surface.getCoordinateSystem();
+      final CS_CoordinateSystem cs = surface.getCoordinateSystem();
       switch( positions.length )
       {
         case 4: // 3 edges
@@ -101,14 +98,14 @@ public class VirtualIsoFeatureTypeProperty extends AbstractVirtualPropertyType
       if( result.isEmpty() )
         return null;
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       // do nothing
     }
     return GeometryFactory.createGM_MultiCurve( (GM_Curve[]) result.toArray( new GM_Curve[result.size()] ) );
   }
 
-  private void createIsoFrom4( GM_Position pos0, GM_Position pos1, GM_Position pos2, GM_Position pos3, CS_CoordinateSystem cs, List result, int level )
+  private void createIsoFrom4( final GM_Position pos0, final GM_Position pos1, final GM_Position pos2, final GM_Position pos3, final CS_CoordinateSystem cs, final List result, int level )
   {
     level--;
     // points
@@ -127,8 +124,8 @@ public class VirtualIsoFeatureTypeProperty extends AbstractVirtualPropertyType
     // }
     if( level > 0 )
     {
-      GM_Position posB = GeometryUtilities.createGM_PositionAtCenter( pos1, pos2 );
-      GM_Position posD = GeometryUtilities.createGM_PositionAtCenter( pos3, pos0 );
+      final GM_Position posB = GeometryUtilities.createGM_PositionAtCenter( pos1, pos2 );
+      final GM_Position posD = GeometryUtilities.createGM_PositionAtCenter( pos3, pos0 );
       createIsoFrom4( pos0, posA, posE, posD, cs, result, level );
       createIsoFrom4( posA, pos1, posB, posE, cs, result, level );
       createIsoFrom4( posE, posB, pos2, posC, cs, result, level );
@@ -143,28 +140,28 @@ public class VirtualIsoFeatureTypeProperty extends AbstractVirtualPropertyType
     }
   }
 
-  private List createISOFrom3( GM_Position p1, GM_Position p2, GM_Position p3, List result, CS_CoordinateSystem cs )
+  private List createISOFrom3( final GM_Position p1, final GM_Position p2, final GM_Position p3, final List result, final CS_CoordinateSystem cs )
   {
 
     // check isos ?
-    double z1 = p1.getZ();
-    double z2 = p2.getZ();
-    double z3 = p3.getZ();
-    double zmin = Math.min( z1, Math.min( z2, z3 ) );
-    double isoMin = zmin - (zmin % m_iso);
-    double zmax = Math.max( z1, Math.max( z2, z3 ) );
-    double isoMax = zmax;
+    final double z1 = p1.getZ();
+    final double z2 = p2.getZ();
+    final double z3 = p3.getZ();
+    final double zmin = Math.min( z1, Math.min( z2, z3 ) );
+    final double isoMin = zmin - (zmin % m_iso);
+    final double zmax = Math.max( z1, Math.max( z2, z3 ) );
+    final double isoMax = zmax;
     if( isoMin <= isoMax )
     {
       for( double iso = isoMin; iso <= isoMax; iso += m_iso )
       {
-        GM_Position[] isoPos = createISO( p1, p2, p3, iso );
+        final GM_Position[] isoPos = createISO( p1, p2, p3, iso );
         if( isoPos != null )
           try
           {
             result.add( GeometryFactory.createGM_Curve( isoPos, cs ) );
           }
-          catch( GM_Exception e )
+          catch( final GM_Exception e )
           {
             e.printStackTrace();
           }
@@ -173,11 +170,11 @@ public class VirtualIsoFeatureTypeProperty extends AbstractVirtualPropertyType
     return result;
   }
 
-  private GM_Position[] createISO( GM_Position p1, GM_Position p2, GM_Position p3, double iso )
+  private GM_Position[] createISO( final GM_Position p1, final GM_Position p2, final GM_Position p3, final double iso )
   {
-    GM_Position i1 = GeometryUtilities.getGM_PositionBetweenAtLevel( p1, p2, iso );
-    GM_Position i2 = GeometryUtilities.getGM_PositionBetweenAtLevel( p2, p3, iso );
-    GM_Position i3 = GeometryUtilities.getGM_PositionBetweenAtLevel( p1, p3, iso );
+    final GM_Position i1 = GeometryUtilities.getGM_PositionBetweenAtLevel( p1, p2, iso );
+    final GM_Position i2 = GeometryUtilities.getGM_PositionBetweenAtLevel( p2, p3, iso );
+    final GM_Position i3 = GeometryUtilities.getGM_PositionBetweenAtLevel( p1, p3, iso );
     if( i1 != null && i2 != null && i3 != null )
     {
       if( i1.getDistance( i2 ) > i2.getDistance( i3 ) )
