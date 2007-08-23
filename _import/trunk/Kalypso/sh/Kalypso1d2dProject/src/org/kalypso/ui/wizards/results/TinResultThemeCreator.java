@@ -43,6 +43,7 @@ package org.kalypso.ui.wizards.results;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -50,6 +51,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
+import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DHelper;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.StepResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE;
@@ -69,47 +72,61 @@ public class TinResultThemeCreator extends AbstractThemeCreator
 
   private boolean m_polyButtonChecked = true;
 
-  public TinResultThemeCreator( IDocumentResultMeta documentResult )
+  private final IFolder m_scenarioFolder;
+
+  private ResultStyleComposite m_polyStyleComp;
+
+  private ResultStyleComposite m_lineStyleComp;
+
+  public TinResultThemeCreator( final IDocumentResultMeta documentResult, final IFolder scenarioFolder )
   {
     m_documentResult = documentResult;
+    m_scenarioFolder = scenarioFolder;
   }
 
   @Override
   public Composite createControl( Group parent )
   {
-
     // check if it is a TIN
 
-    /* create control with buttons */
-    final Composite buttonComp = new Composite( parent, SWT.BORDER );
-    buttonComp.setLayout( new GridLayout() );
+    /* create control with selection buttons, style combo-boxes, edit button and delete button */
+    final Composite buttonComp = new Composite( parent, SWT.NONE );
+    buttonComp.setLayout( new GridLayout( 4, false ) );
 
+    // selection button
     final Button lineButton = new Button( buttonComp, SWT.CHECK );
     lineButton.setText( "Darstellung als Isolinien" );
     lineButton.setToolTipText( "Bei Auswahl wird das Ergebnis mittels Isolinien in der Karte dargestellt." );
     lineButton.setSelection( m_lineButtonChecked );
 
+    m_lineStyleComp = new ResultStyleComposite( buttonComp, m_scenarioFolder, "line" );
+    m_lineStyleComp.setEnabled( m_lineButtonChecked );
+
+    // selection button
     final Button polyButton = new Button( buttonComp, SWT.CHECK );
     polyButton.setText( "Darstellung als Isoflächen" );
     polyButton.setToolTipText( "Bei Auswahl wird das Ergebnis mittels Isoflächen in der Karte dargestellt." );
     polyButton.setSelection( m_polyButtonChecked );
 
+    m_polyStyleComp = new ResultStyleComposite( buttonComp, m_scenarioFolder, "poly" );
+    m_polyStyleComp.setEnabled( m_polyButtonChecked );
+
+    // call necessary in order to initialize the commands
     createThemeCommandData();
 
+    /* add listeners */
+
+    // selection buttons
     lineButton.addSelectionListener( new SelectionAdapter()
     {
       @SuppressWarnings("synthetic-access")
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
-        // update HashMap / Button Selection
-        if( lineButton.getSelection() == true )
-        {
-          m_lineButtonChecked = true;
-          createThemeCommandData();
-        }
-        else
-          m_lineButtonChecked = false;
+        // update button selection and commands
+        m_lineButtonChecked = lineButton.getSelection();
+        m_lineStyleComp.setEnabled( lineButton.getSelection() );
+        createThemeCommandData();
       }
     } );
 
@@ -119,17 +136,13 @@ public class TinResultThemeCreator extends AbstractThemeCreator
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
-        // update HashMap / Button Selection
-        if( polyButton.getSelection() == true )
-        {
-          m_polyButtonChecked = true;
-          createThemeCommandData();
-        }
-        else
-          m_polyButtonChecked = false;
+        // update button selection and commands
+        m_polyButtonChecked = polyButton.getSelection();
+        m_polyStyleComp.setEnabled( polyButton.getSelection() );
+        createThemeCommandData();
       }
-
     } );
+
     return buttonComp;
 
   }
@@ -147,34 +160,62 @@ public class TinResultThemeCreator extends AbstractThemeCreator
     /* get infos about calc unit */
     IResultMeta calcUnitMeta = m_documentResult.getParent().getParent();
 
+    final IFolder resultsFolder = KalypsoModel1D2DHelper.getResultsFolder( m_scenarioFolder );
+    String resFolder = resultsFolder.getFullPath().toPortableString();
+
     String style = null;
     String themeName = null;
+    String styleLocation = null;
     String resultType = "gml";
-
     String styleLinkType = "sld";
     String styleType = "simple";
     String featurePath = "";
     String source = "../" + m_documentResult.getFullPath().toPortableString();
 
-    /* tin style path */
-    String styleLocation = "../" + calcUnitMeta.getFullPath().append( "Styles" ).append( "tinStyles.sld" ).toPortableString();
-
+    /* Iso-Areas */
     if( m_polyButtonChecked == true )
     {
-      /* Iso-Areas */
+      if( m_polyStyleComp != null )
+      {
+        final String absStyleLocation = m_polyStyleComp.getSelectedStyle().getFullPath().toPortableString();
+        final String relativePathTo = FileUtilities.getRelativePathTo( resFolder, absStyleLocation );
+        styleLocation = ".." + relativePathTo;
+      }
+      else
+      {
+        // take the default style from the scenario style folder instead.
+        final String defaultPath = KalypsoModel1D2DHelper.getStylesFolder( m_scenarioFolder ).getFullPath().toPortableString();
+        final String relativePathTo = FileUtilities.getRelativePathTo( resFolder, defaultPath );
+        styleLocation = ".." + relativePathTo + "/poly/tinPolyStyles.sld";
+      }
+
       style = "tin" + getTypeName() + "PolygonStyle";
       themeName = m_documentResult.getName() + " (Isoflächen), " + calcUnitMeta.getName();
 
-      m_resultLayerCommandData.add( new ResultAddLayerCommandData( themeName, resultType, featurePath, source, style, styleLocation, styleLinkType, styleType, calcUnitMeta, stepResultMeta ) );
+      m_resultLayerCommandData.add( new ResultAddLayerCommandData( themeName, resultType, featurePath, source, style, styleLocation, styleLinkType, styleType ) );
     }
 
+    /* Iso-Lines */
     if( m_lineButtonChecked == true )
     {
-      /* Iso-Lines */
+      if( m_lineStyleComp != null )
+      {
+        final String absStyleLocation = m_polyStyleComp.getSelectedStyle().getFullPath().toPortableString();
+        final String relativePathTo = FileUtilities.getRelativePathTo( resFolder, absStyleLocation );
+        styleLocation = ".." + relativePathTo;
+      }
+      else
+      {
+        // take the default style from the scenario style folder instead.
+        final String defaultPath = KalypsoModel1D2DHelper.getStylesFolder( m_scenarioFolder ).getFullPath().toPortableString();
+        final String relativePathTo = FileUtilities.getRelativePathTo( resFolder, defaultPath );
+        styleLocation = ".." + relativePathTo + "/line/tinLineStyles.sld";
+      }
+
       style = "tin" + getTypeName() + "LineStyle";
       themeName = m_documentResult.getName() + " (Isolinien), " + calcUnitMeta.getName();
 
-      m_resultLayerCommandData.add( new ResultAddLayerCommandData( themeName, resultType, featurePath, source, style, styleLocation, styleLinkType, styleType, calcUnitMeta, stepResultMeta ) );
+      m_resultLayerCommandData.add( new ResultAddLayerCommandData( themeName, resultType, featurePath, source, style, styleLocation, styleLinkType, styleType ) );
     }
   }
 
@@ -213,4 +254,5 @@ public class TinResultThemeCreator extends AbstractThemeCreator
     else
       return null;
   }
+
 }

@@ -66,4 +66,19 @@ public class KalypsoModel1D2DHelper
     return scenarioFolder.getProject().getFolder( "imports" ).getFolder( "timeseries" );
   }
 
+  public static IFolder getStylesFolder( final IFolder scenarioFolder )
+  {
+    return scenarioFolder.getFolder( "styles" );
+  }
+
+  public static IFolder getMapsFolder( final IFolder scenarioFolder )
+  {
+    return scenarioFolder.getFolder( "maps" );
+  }
+
+  public static IFolder getResultsFolder( final IFolder scenarioFolder )
+  {
+    return scenarioFolder.getFolder( "results" );
+  }
+
 }

@@ -48,6 +48,7 @@ import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
  */
 public interface IThemeConstructionFactory
 {
+
   public IResultThemeConstructor createThemeConstructor( IResultMeta resultMeta );
 
 }

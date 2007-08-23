@@ -29,7 +29,10 @@ public class Kalypso1d2dProjectImages
     RESULT_META_STEP_MAX("icons/cview16/resViewStepMax.gif"),
     RESULT_META_STEP_QSTEADY("icons/cview16/resViewStepQsteady.gif"),
 
-    RESULT_META_ERROR("icons/cview16/resViewError.gif");
+    RESULT_META_ERROR("icons/cview16/resViewError.gif"),
+
+    RESULT_VIEWER_EDIT("icons/cview16/resViewEdit.gif"),
+    RESULT_VIEWER_REMOVE("icons/cview16/resViewRemove.gif");
 
     private final String m_imagePath;
 

@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.wizards.results;
 
-import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 
 /**
  * 
@@ -64,15 +63,11 @@ public class ResultAddLayerCommandData
 
   private final String m_styleLocation;
 
-  private final IResultMeta m_calcUnitMeta;
-
-  private final IResultMeta m_stepResultMeta;
-
   private final String m_styleLinkType;
 
   private final String m_styleType;
 
-  public ResultAddLayerCommandData( String themeName, String resultType, String featurePath, String source, String style, String styleLocation, String styleLinkType, String styleType, IResultMeta calcUnitMeta, IResultMeta stepResultMeta )
+  public ResultAddLayerCommandData( String themeName, String resultType, String featurePath, String source, String style, String styleLocation, String styleLinkType, String styleType )
   {
     m_themeName = themeName;
     m_resultType = resultType;
@@ -82,9 +77,6 @@ public class ResultAddLayerCommandData
     m_styleLocation = styleLocation;
     m_styleLinkType = styleLinkType;
     m_styleType = styleType;
-    m_calcUnitMeta = calcUnitMeta;
-    m_stepResultMeta = stepResultMeta;
-
   }
 
   public String getThemeName( )
@@ -115,16 +107,6 @@ public class ResultAddLayerCommandData
   public String getStyleLocation( )
   {
     return m_styleLocation;
-  }
-
-  public IResultMeta getCalcUnitMeta( )
-  {
-    return m_calcUnitMeta;
-  }
-
-  public IResultMeta getStepResultMeta( )
-  {
-    return m_stepResultMeta;
   }
 
   public String getStyleLinkType( )

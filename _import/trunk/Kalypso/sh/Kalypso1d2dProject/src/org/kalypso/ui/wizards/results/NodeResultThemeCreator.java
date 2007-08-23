@@ -43,6 +43,14 @@ package org.kalypso.ui.wizards.results;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
+import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DHelper;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.StepResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
@@ -56,11 +64,31 @@ public class NodeResultThemeCreator extends AbstractThemeCreator
 
   private final IDocumentResultMeta m_documentResult;
 
+  private final IFolder m_scenarioFolder;
+
   List<ResultAddLayerCommandData> m_resultLayerCommandData = new LinkedList<ResultAddLayerCommandData>();
 
-  public NodeResultThemeCreator( IDocumentResultMeta documentResult )
+  private ResultStyleComposite m_nodeStyleComp;
+
+  public NodeResultThemeCreator( IDocumentResultMeta documentResult, final IFolder scenarioFolder )
   {
     m_documentResult = documentResult;
+    m_scenarioFolder = scenarioFolder;
+  }
+
+  @Override
+  public Composite createControl( Group parent )
+  {
+    final Composite buttonComp = new Composite( parent, SWT.NONE );
+    buttonComp.setLayout( new GridLayout( 4, false ) );
+
+    final Label nodeLabel = new Label( buttonComp, SWT.FLAT );
+    nodeLabel.setText( "Darstellung der Vektoren" );
+
+    /* create control with selection buttons, style combo-boxes, edit button and delete button */
+    m_nodeStyleComp = new ResultStyleComposite( buttonComp, m_scenarioFolder, "node" );
+
+    return buttonComp;
   }
 
   public void createThemeCommandData( )
@@ -76,16 +104,34 @@ public class NodeResultThemeCreator extends AbstractThemeCreator
     /* get infos about calc unit */
     IResultMeta calcUnitMeta = m_documentResult.getParent().getParent();
 
+    final IFolder resultsFolder = KalypsoModel1D2DHelper.getResultsFolder( m_scenarioFolder );
+    String resFolder = resultsFolder.getFullPath().toPortableString();
+
     String featurePath = "nodeResultMember";
     String source = "../" + m_documentResult.getFullPath().toPortableString();
     String style = "Vector Style";
     String themeName = m_documentResult.getName() + ", " + calcUnitMeta.getName();
-    String styleLocation = "../" + calcUnitMeta.getFullPath().append( "Styles" ).append( "vector.sld" ).toPortableString();
+    String styleLocation = null;
+
+    if( m_nodeStyleComp != null )
+    {
+      final String absStyleLocation = m_nodeStyleComp.getSelectedStyle().getFullPath().toPortableString();
+      final String relativePathTo = FileUtilities.getRelativePathTo( resFolder, absStyleLocation );
+      styleLocation = ".." + relativePathTo;
+    }
+    else
+    {
+      // take the default style from the scenario style folder instead.
+      final String defaultPath = KalypsoModel1D2DHelper.getStylesFolder( m_scenarioFolder ).getFullPath().toPortableString();
+      final String relativePathTo = FileUtilities.getRelativePathTo( resFolder, defaultPath );
+      styleLocation = ".." + relativePathTo + "/node/vector.sld";
+    }
+
     String styleLinkType = "sld";
     String styleType = "simple";
     String resultType = "gml";
 
-    m_resultLayerCommandData.add( new ResultAddLayerCommandData( themeName, resultType, featurePath, source, style, styleLocation, styleLinkType, styleType, calcUnitMeta, stepResultMeta ) );
+    m_resultLayerCommandData.add( new ResultAddLayerCommandData( themeName, resultType, featurePath, source, style, styleLocation, styleLinkType, styleType ) );
 
   }
 

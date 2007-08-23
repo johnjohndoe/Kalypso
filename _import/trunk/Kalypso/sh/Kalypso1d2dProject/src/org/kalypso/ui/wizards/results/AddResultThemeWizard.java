@@ -41,6 +41,7 @@
 package org.kalypso.ui.wizards.results;
 
 import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -66,6 +67,7 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 import de.renew.workflow.connector.cases.ICaseDataProvider;
+import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
  * Wizard to add result themes to the map.
@@ -82,6 +84,8 @@ public class AddResultThemeWizard extends Wizard implements IKalypsoDataImportWi
 
   private ICommandTarget m_commandTarget;
 
+  private IFolder m_scenarioFolder;
+
   public AddResultThemeWizard( )
   {
     setWindowTitle( "1D2D-Ergebnisse" );
@@ -93,8 +97,11 @@ public class AddResultThemeWizard extends Wizard implements IKalypsoDataImportWi
   @Override
   public void addPages( )
   {
-    ResultViewerFilter resultFilter = new ResultViewerFilter();
-    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, "Ergebniss(e) zur Karte hinzufügen", null, resultFilter, new ThemeConstructionFactory() );
+    final ResultViewerFilter resultFilter = new ResultViewerFilter();
+    final ThemeConstructionFactory themeConstructionFactory = new ThemeConstructionFactory( m_scenarioFolder );
+
+    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, "Ergebniss(e) zur Karte hinzufügen", null, resultFilter, themeConstructionFactory );
+
     selectResultWizardPage.setResultMeta( m_resultModel );
 
     addPage( selectResultWizardPage );
@@ -129,6 +136,7 @@ public class AddResultThemeWizard extends Wizard implements IKalypsoDataImportWi
     final IEvaluationContext context = handlerService.getCurrentState();
     final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
     final ICaseDataProvider<IFeatureWrapper2> modelProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+    m_scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
 
     try
     {

@@ -43,6 +43,7 @@ package org.kalypso.ui.wizards.results;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.core.resources.IFolder;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
@@ -61,6 +62,14 @@ public class ThemeConstructionFactory implements IThemeConstructionFactory
 {
 
   private final Map<IResultMeta, IResultThemeConstructor> m_creatorMap = new HashMap<IResultMeta, IResultThemeConstructor>();
+
+  private final IFolder m_scenarioFolder;
+
+  public ThemeConstructionFactory( IFolder scenarioFolder )
+  {
+    m_scenarioFolder = scenarioFolder;
+
+  }
 
   /**
    * @see org.kalypso.ui.wizards.results.IThemeCreatorFactory#createThemeCreator(org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta)
@@ -93,7 +102,7 @@ public class ThemeConstructionFactory implements IThemeConstructionFactory
       IFeatureWrapperCollection<IResultMeta> children = calcUnitResult.getChildren();
       for( IResultMeta child : children )
       {
-        ThemeConstructionFactory factory = new ThemeConstructionFactory();
+        ThemeConstructionFactory factory = new ThemeConstructionFactory( m_scenarioFolder );
         factory.createThemeConstructor( child );
       }
 
@@ -114,7 +123,7 @@ public class ThemeConstructionFactory implements IThemeConstructionFactory
       IFeatureWrapperCollection<IResultMeta> children = stepResult.getChildren();
       for( IResultMeta child : children )
       {
-        ThemeConstructionFactory factory = new ThemeConstructionFactory();
+        ThemeConstructionFactory factory = new ThemeConstructionFactory( m_scenarioFolder );
         factory.createThemeConstructor( child );
       }
 
@@ -134,14 +143,14 @@ public class ThemeConstructionFactory implements IThemeConstructionFactory
 
       if( documentType == DOCUMENTTYPE.tinDepth || documentType == DOCUMENTTYPE.tinVelo || documentType == DOCUMENTTYPE.tinWsp || documentType == DOCUMENTTYPE.tinShearStress )
       {
-        final TinResultThemeCreator tinResultThemeCreator = new TinResultThemeCreator( documentResult );
+        final TinResultThemeCreator tinResultThemeCreator = new TinResultThemeCreator( documentResult, m_scenarioFolder );
         tinResultThemeCreator.createThemeCommandData();
         m_creatorMap.put( documentResult, tinResultThemeCreator );
         return tinResultThemeCreator;
       }
       else if( documentType == DOCUMENTTYPE.nodes )
       {
-        final NodeResultThemeCreator nodeResultThemeCreator = new NodeResultThemeCreator( documentResult );
+        final NodeResultThemeCreator nodeResultThemeCreator = new NodeResultThemeCreator( documentResult, m_scenarioFolder );
         nodeResultThemeCreator.createThemeCommandData();
         m_creatorMap.put( documentResult, nodeResultThemeCreator );
         return nodeResultThemeCreator;
