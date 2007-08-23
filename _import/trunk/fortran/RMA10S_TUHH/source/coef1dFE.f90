@@ -1,4 +1,4 @@
-!Last change:  EF    8 Sep 2007   12:39 pm
+!Last change:  WP   30 Jul 2007    9:36 am
 
 !****************************************************************
 !1D subroutine for calculation of elements, whose corner nodes are described with
@@ -1635,8 +1635,8 @@ ENDDO QBCAssign
 
 
 !Correction for Coupling
-CouplingCorrection: do l = 1, ncn, 2
-  if (byparts == 2 .or. byparts == 3) EXIT couplingcorrection
+TransitionCorrection: do l = 1, ncn, 2
+  if (byparts == 2 .or. byparts == 3) EXIT  TransitionCorrection
   !if (byparts == 1) EXIT couplingcorrection
 
   !get node number
@@ -1661,22 +1661,39 @@ CouplingCorrection: do l = 1, ncn, 2
     !get flow direction
     CX = COS(alfa(m))
     SA = SIN(alfa(m))
+
     !get velocity
     VT = vel(1,m) * CX + vel(2,m) * sa
+
+    !get cross product with continuity line, because of mathematical discharge-direction
+    !components of line
+    DXtot = (cord(line(LiNo,lmt(LiNo)),1) - cord(line(LiNo,1),1))
+    DYtot = (cord(line(LiNo,lmt(LiNo)),2) - cord(line(LiNo,1),2))
+
+    !crossproduct
+    Qcrossproduct = vel(1,m) * DYtot - vel(2,m) * DXtot
+    !find correct sign of discharge
+    areacorrection = Qcrossproduct * VT / ABS( Qcrossproduct * VT)
 
     !reset the Jacobian
     do j = 1, nef
       ESTIFM (irw, j) = 0.0
     end do
 
+    !testing
+!    WRITE(*,*)  '1d: ', q2d(trid), areacorrection * ah(m) * vt, '(', vt, ')', areacorrection
+    !WRITE(*,*)  'va: ', vel(1, m), vel(2, m), alfa(m)
+
     !set residual entry for 1D-node - 2D-line identity
-    f (irw)           = ah(m) * VT - q2D(TrID)
+    f (irw)           = areacorrection * ah(m) * VT - q2D (TrID)
     !set derivative over velocity
-    estifm (irw, irw) = - ah(m) ! / dahdh(m)
+    estifm (irw, irw) = - ah(m) * areacorrection
     !set derivative over depth
-    estifm (irw, irh) = - VT * dahdh(m)
+    estifm (irw, irh) = - VT * dahdh(m) * areacorrection
+!    WRITE(*,*) f(irw), estifm(irw, irw), estifm(irw, irh)
+!    pause
   end if
-end do CouplingCorrection
+end do TransitionCorrection
 !-
 
  1305 CONTINUE

@@ -19,7 +19,6 @@ CIPK  LAST UPDATE APRIL 27 1999 Fix to use mat instead of nr for material type t
 cipk  last update Jan 6 1999 initialize AKE correctly
 cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
-C     Last change:  EF    8 Sep 2007   12:39 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 CIPK  LAST UPDATED MAY 1 1996
 CIPK LAST UPDATED SEP 7 1995
@@ -1134,6 +1133,52 @@ c lcr eq por
  1300 CONTINUE
  1305 CONTINUE
  1320 CONTINUE
+
+      !Correction for Coupling
+      CouplingCorrection: do l = 1, ncn, 2
+
+        !get node number
+        M = NCON(l)
+
+        !check for Transition membership
+        if (TransitionMember (M)) then
+
+          !Find line number and exit, if found
+          throughLines: do i = 1, MaxLT
+            if (TransLines(i, 3) == M) then
+              LiNo = TransLines(i, 2)
+              TrID = i
+              EXIT throughLines
+            end if
+          enddo throughLines
+
+          !this is the former momentum equation of the coupling node
+          IRW = (l-1) * NDF + 1
+          IRH = IRW + 2
+
+          !get flow direction
+          CX = COS(alfa(m))
+          SA = SIN(alfa(m))
+          !get velocity
+          VT = vel(1,m) * CX + vel(2,m) * sa
+
+          !reset the Jacobian
+          do j = 1, nef
+            ESTIFM (irw, j) = 0.0
+          end do
+
+          !set residual entry for 1D-node - 2D-line identity
+          f (irw) =  vel(3,m) * (width(m)
+     +             + 0.5 * (ss1(m) + ss2(m)) * vel(3,m)) * VT
+     +             - q2D(TrID)
+          !set derivative over velocity
+          estifm (irw, irw) = - vel(3,m) * (width(m)
+     +             + 0.5 * (ss1(m) + ss2(m)) * vel(3,m))
+          !set derivative over depth
+          estifm (irw, irh) = - VT * (width(m)+(ss1(m)+ss2(m))*vel(3,m))
+        end if
+      end do CouplingCorrection
+      !-
 
       !nis,Oct,com: Install element residual values into global vector. NCN.eq.3 for 1D-elements and 1D-2D-elements.
       DO 1050 I=1,NCN
