@@ -161,7 +161,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
       // TODO: probably we can just remove the line stuff and just add lineSymbolizer to our maps.
 
       final VirtualFeatureTypeProperty vpt = VirtualPropertyUtilities.getVirtualProperties( feature.getFeatureType() )[0];
-      final GM_Object geom = (GM_Object) vpt.getVirtuelValue( feature, null );
+      final GM_Object geom = (GM_Object) vpt.getVirtuelValue( feature );
       final CS_CoordinateSystem cs = geom.getCoordinateSystem();
 
       final GM_Surface surface = (GM_Surface) geom;

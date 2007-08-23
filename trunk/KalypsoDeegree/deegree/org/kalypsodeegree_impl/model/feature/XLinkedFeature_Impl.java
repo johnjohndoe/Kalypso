@@ -27,7 +27,7 @@ import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeProperty;
  * 
  * @author Gernot Belger
  */
-public class XLinkedFeature_Impl extends AbstractFeature implements Feature
+public class XLinkedFeature_Impl extends AbstractFeature
 {
   private final Feature m_parentFeature;
 
@@ -212,15 +212,14 @@ public class XLinkedFeature_Impl extends AbstractFeature implements Feature
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.Feature#getVirtuelProperty(java.lang.String,
-   *      org.kalypsodeegree.model.feature.GMLWorkspace)
+   * @see org.kalypsodeegree.model.feature.Feature#getVirtuelProperty(org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeProperty)
    */
-  public Object getVirtuelProperty( final VirtualFeatureTypeProperty vpt, final GMLWorkspace workspace )
+  public Object getVirtuelProperty( final VirtualFeatureTypeProperty vpt )
   {
     final Feature feature = getFeature();
     if( feature == null )
       return null;
-    return feature.getVirtuelProperty( vpt, workspace );
+    return feature.getVirtuelProperty( vpt );
   }
 
   /**

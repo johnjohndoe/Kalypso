@@ -26,7 +26,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  * @author doemming implementation of ogc feature that supports different cardinalities of properties, but not "unbound"
  *         cardinalities (use FeatureCollections for unbound cardinalities)
  */
-public class Feature_Impl extends AbstractFeature implements Feature
+public class Feature_Impl extends AbstractFeature
 {
   private final static GM_Envelope INVALID_ENV = new GM_Envelope_Impl();
 
@@ -101,6 +101,12 @@ public class Feature_Impl extends AbstractFeature implements Feature
       throw new IllegalArgumentException( "pt may not null" );
     }
 
+    /* Special case for this kind of virtual property types */
+    // TODO: get rid of all theses different virtual property thingis
+    // Use IFeaturePropertyHandler in a consistent way instead!
+    if( pt instanceof VirtualFeatureTypeProperty )
+      return getVirtuelProperty( (VirtualFeatureTypeProperty) pt );
+
     final int pos = m_featureType.getPropertyPosition( pt );
     if( pos == -1 )
     {
@@ -110,6 +116,7 @@ public class Feature_Impl extends AbstractFeature implements Feature
         return fsh.getValue( this, pt, null );
       }
       final String msg = String.format( "Unknown property (%s) for type: %s", pt, m_featureType );
+
       throw new IllegalArgumentException( msg );
     }
 
@@ -172,7 +179,7 @@ public class Feature_Impl extends AbstractFeature implements Feature
     {
       if( GeometryUtilities.isGeometry( element ) )
       {
-        final Object o = getVirtuelProperty( element, null );
+        final Object o = getVirtuelProperty( element );
         if( o == null )
         {
           continue;
@@ -286,12 +293,11 @@ public class Feature_Impl extends AbstractFeature implements Feature
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.Feature#getVirtuelProperty(java.lang.String,
-   *      org.kalypsodeegree.model.feature.GMLWorkspace)
+   * @see org.kalypsodeegree.model.feature.Feature#getVirtuelProperty(org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeProperty)
    */
-  public Object getVirtuelProperty( final VirtualFeatureTypeProperty vpt, final GMLWorkspace workspace )
+  public Object getVirtuelProperty( final VirtualFeatureTypeProperty vpt )
   {
-    return vpt.getVirtuelValue( this, workspace );
+    return vpt.getVirtuelValue( this );
   }
 
   /**
@@ -357,15 +363,11 @@ public class Feature_Impl extends AbstractFeature implements Feature
    */
   public Object getProperty( final QName propQName )
   {
-    /* final */final IPropertyType pt = m_featureType.getProperty( propQName );
+    final IPropertyType pt = m_featureType.getProperty( propQName );
     if( pt == null )
     {
-// pt = m_featureType.getVirtualProperty(propQName);
-// if(pt==null)
-// {
       final String message = String.format( "Unknow property:\n\tfeatureType=%s\n\tprop QName=%s", getFeatureType().getQName(), propQName );
       throw new IllegalArgumentException( message );
-// }
     }
     return getProperty( pt );
   }

@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,27 +36,27 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- 
+
+
  history:
- 
+
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
- interface-compatibility to deegree is wanted but not retained always. 
- 
- If you intend to use this software in other ways than in kalypso 
+ interface-compatibility to deegree is wanted but not retained always.
+
+ If you intend to use this software in other ways than in kalypso
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
 
- all modifications are licensed as deegree, 
+ all modifications are licensed as deegree,
  original copyright:
- 
+
  Copyright (C) 2001 by:
  EXSE, Department of Geography, University of Bonn
  http://www.giub.uni-bonn.de/exse/
  lat/lon GmbH
  http://www.lat-lon.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.geometry;
 
@@ -221,12 +221,16 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
    */
   protected void calculateEnvelope( )
   {
+    final int size = getSize();
+    if( size == 0 )
+      return;
+
     final GM_Envelope bb = getCurveAt( 0 ).getEnvelope();
 
     final double[] min = bb.getMin().getAsArray().clone();
     final double[] max = bb.getMax().getAsArray().clone();
 
-    for( int i = 1; i < getSize(); i++ )
+    for( int i = 1; i < size; i++ )
     {
       final double[] pos1 = getCurveAt( i ).getEnvelope().getMin().getAsArray();
       final double[] pos2 = getCurveAt( i ).getEnvelope().getMax().getAsArray();

@@ -34,7 +34,8 @@ public interface Feature extends DeegreeFeature, IAdaptable
    */
   public IRelationType getParentRelation( );
 
-  public Object getVirtuelProperty( final VirtualFeatureTypeProperty virtualPropertyType, final GMLWorkspace workspace );
+  // TODO: remove this from the interface VirtualProperty should behave exactly like normal properties
+  public Object getVirtuelProperty( final VirtualFeatureTypeProperty virtualPropertyType );
 
   public void setProperty( final IPropertyType propertyType, final Object value );
 
