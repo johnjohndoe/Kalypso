@@ -70,37 +70,38 @@ public interface IFEDiscretisationModel1d2d extends IModel
    * 
    * @return the complex elements this discretisation model contains as {@link IFeatureWrapperCollection}
    */
-  public IFeatureWrapperCollection<IFE1D2DComplexElement> getComplexElements();
+  public IFeatureWrapperCollection<IFE1D2DComplexElement> getComplexElements( );
 
   /**
    * Gets the element this discretisation model contains
    * 
    * @return the elements of this discretisation model as {@link IFeatureWrapperCollection}
    */
-  public IFeatureWrapperCollection<IFE1D2DElement> getElements();
+  public IFeatureWrapperCollection<IFE1D2DElement> getElements( );
 
   /**
    * To get the edges this feature wrapper contains s
    * 
    * @return the edges that this discetisation model contains as {@link IFeatureWrapperCollection}
    */
-  public IFeatureWrapperCollection<IFE1D2DEdge> getEdges();
+  public IFeatureWrapperCollection<IFE1D2DEdge> getEdges( );
 
   /**
    * gets the nodes this discretisation model contains.
    * 
    * @return the nodes that this discretisation model contains as {@link IFeatureWrapperCollection}
    */
-  public IFeatureWrapperCollection<IFE1D2DNode> getNodes();
+  public IFeatureWrapperCollection<IFE1D2DNode> getNodes( );
 
   /**
-   * Finds the node within nearest not at the given position within a search rectangle wich center is given by
-   * nodeLocation and which width by searchRectWidth
+   * Finds the node nearest to the given position, within the search rectangle
    * 
-   * @param nodeLoaction
-   *            the reference location (the center od the search rect)
+   * @param nodeLocation
+   *            the reference location (center of the search rectangle)
    * @param searchRectWidth
-   *            the width of the search rectangle
+   *            the width/height of the search rectangle
+   * 
+   * @return node nearest to the nodeLocation, or <code>null</code> if no node is found within the search rectangle
    */
   public IFE1D2DNode findNode( GM_Point nodeLocation, double searchRectWidth );
 
@@ -126,15 +127,16 @@ public interface IFEDiscretisationModel1d2d extends IModel
   public IPolyElement find2DElement( final GM_Point position, final double grabDistance );
 
   public IElement1D find1DElement( final GM_Point position, final double grabDistance );
-  
+
   /**
    * Finds the nearest element to the given position
-   * @param position the search position
-   * @param grabDistance the maximal grab distance
-   * @param elementType the element type
+   * 
+   * @param position
+   *            the search position
+   * @param grabDistance
+   *            the maximal grab distance
+   * @param elementType
+   *            the element type
    */
-  public <T extends IFE1D2DElement> T findElement( 
-                        final GM_Point position, 
-                        final double grabDistance,
-                        Class<T> elementType );
+  public <T extends IFE1D2DElement> T findElement( final GM_Point position, final double grabDistance, Class<T> elementType );
 }

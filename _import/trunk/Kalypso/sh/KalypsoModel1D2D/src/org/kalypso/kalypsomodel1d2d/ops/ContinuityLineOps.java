@@ -84,36 +84,18 @@ public class ContinuityLineOps
     // do not instantiate
   }
 
-// public static IFE1D2DContinuityLine contilineFromCurve( final GM_Curve curve, final IFEDiscretisationModel1d2d model
-// ) throws CoreException
-// {
-// IFE1D2DContinuityLine cLine =
-// lineElementFromCurve(
-// Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DContinuityLine,
-// IFE1D2DContinuityLine.class,
-// curve,
-// model );
-// return cLine;
-//    
-// }
-
-  public static <T extends ILineElement> T boundaryLine1DFromCurve( final QName lineElementQName, final Class<T> adapterTargetClass, final GM_Curve curve, final IFEDiscretisationModel1d2d model ) throws CoreException
+  public static <T extends ILineElement> T boundaryLine1DFromPoint( final QName lineElementQName, final Class<T> adapterTargetClass, final GM_Point point, final IFEDiscretisationModel1d2d model ) throws CoreException
   {
     try
     {
-      final double grabDistance = curve.getLength() / 2;
-      final GM_Point endPoint = curve.getEndPoint();
-      final IElement1D find1DElement = model.find1DElement( endPoint, grabDistance );
+      final IElement1D find1DElement = model.find1DElement( point, 0.1 );
       if( find1DElement == null )
       {
         throw new RuntimeException( "Could not found an 1d element" );
       }
-      IFE1D2DEdge edge1D = find1DElement.getEdge();
-      // find target position
-      final IFE1D2DNode node0 = edge1D.getNode( 0 );
-      final IFE1D2DNode node1 = edge1D.getNode( 1 );
+      final IFE1D2DEdge edge1D = find1DElement.getEdge();
 
-      boolean targetAtEdgeEnd = endPoint.distance( node0.getPoint() ) > endPoint.distance( node1.getPoint() );
+      boolean targetAtEdgeEnd = true;
 
       IFeatureWrapperCollection<IFE1D2DElement> elements = model.getElements();
       IBoundaryLine1D bline1D = elements.addNew( lineElementQName, IBoundaryLine1D.class );
@@ -135,7 +117,8 @@ public class ContinuityLineOps
   {
     if( Kalypso1D2DSchemaConstants.WB1D2D_F_BOUNDARY_LINE1D.equals( lineElementQName ) )
     {
-      return boundaryLine1DFromCurve( lineElementQName, adapterTargetClass, curve, model );
+      final IStatus status = StatusUtilities.createWarningStatus( "2D Continuity line could not be created, 1D line passed as parameter [1]." );
+      throw new CoreException( status );
     }
     final boolean doTrace = Boolean.parseBoolean( Platform.getDebugOption( "KalypsoModel1D2D/debug/ops/continuity/routing" ) );
     // foreach segment of curve:
@@ -194,11 +177,12 @@ public class ContinuityLineOps
           firstEdge = ((IEdgeInv) firstEdge).getInverted();
         if( TypeInfo.is1DEdge( firstEdge ) )
         {
-          return boundaryLine1DFromCurve( Kalypso1D2DSchemaConstants.WB1D2D_F_BOUNDARY_LINE1D, adapterTargetClass, curve, model );
+          final IStatus status = StatusUtilities.createWarningStatus( "2D Continuity line could not be created, 1D line passed as parameter [2]." );
+          throw new CoreException( status );
         }
         else
         {
-// final IFE1D2DContinuityLine contiLine = model.createContinuityLine();
+          // final IFE1D2DContinuityLine contiLine = model.createContinuityLine();
           final IFeatureWrapperCollection<IFE1D2DElement> elements = model.getElements();
           T lineElement = elements.addNew( lineElementQName, adapterTargetClass );
           final IFeatureWrapperCollection edgesList = lineElement.getEdges();// WrappedFeature().getProperty(
@@ -213,7 +197,7 @@ public class ContinuityLineOps
           }
           return lineElement;
         }
-        
+
       }
 
     }

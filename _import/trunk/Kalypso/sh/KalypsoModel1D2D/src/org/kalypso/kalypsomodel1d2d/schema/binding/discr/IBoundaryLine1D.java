@@ -40,6 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
+import javax.xml.namespace.QName;
+
+import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
+
 /**
  * Interface for element representing a wb1d2d:BoundaryLine1D. Such a line element is actually based on a single 1d
  * edge. Nevertheless this edge may contain several edge but only the first edge is considered and it is required to be
@@ -54,6 +58,8 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
 public interface IBoundaryLine1D<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge> extends IBoundaryLine<CT, ET>
 {
+  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "BoundaryLine1D" );
+
   /**
    * Answers whether the line is at the ende of ist first edge or not.
    * 

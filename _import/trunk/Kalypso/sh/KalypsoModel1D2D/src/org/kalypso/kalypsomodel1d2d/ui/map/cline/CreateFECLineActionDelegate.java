@@ -48,13 +48,11 @@ import org.kalypso.ui.editor.mapeditor.actiondelegates.AbstractGisMapEditorActio
  * 
  * @author Patrice Congo
  */
-public class CreateFECLineActionDelegate 
-                extends AbstractGisMapEditorActionDelegate 
-                implements IEditorActionDelegate
+public class CreateFECLineActionDelegate extends AbstractGisMapEditorActionDelegate implements IEditorActionDelegate
 {
   public CreateFECLineActionDelegate( )
   {
-    super( new CreateFEContlineWidget() );
+    super( new CreateFEContinuityLineWidget() );
   }
 
 }

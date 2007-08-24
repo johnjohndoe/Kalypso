@@ -43,14 +43,16 @@ package org.kalypso.kalypsomodel1d2d.ui.map.cmds;
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.ops.ContinuityLineOps;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ILineElement;
-import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * Undoable route Line element command
@@ -59,15 +61,15 @@ import org.kalypsodeegree.model.geometry.GM_Curve;
  */
 public class RouteLineElementCommand implements IDiscrModel1d2dChangeCommand
 {
-  private ILineElement addedElement;
+  private ILineElement m_addedElement;
 
-  final private IFEDiscretisationModel1d2d model;
+  final private IFEDiscretisationModel1d2d m_model;
 
-  final private GM_Curve routeGeometry;
+  final private GM_Object m_routeGeometry;
 
-  final private Class< ? extends ILineElement> adapterTargetClass;
+  final private Class< ? extends ILineElement> m_adapterTargetClass;
 
-  final private QName lineElementQName;
+  final private QName m_lineElementQName;
 
   /**
    * @param model
@@ -75,16 +77,12 @@ public class RouteLineElementCommand implements IDiscrModel1d2dChangeCommand
    *            an array the command used to create the edges of the element to be created by this command. the array
    *            must contains only {@link AddEdgeCommand} and {@link AddEdgeInvCommand} commands
    */
-  public RouteLineElementCommand( IFEDiscretisationModel1d2d model, GM_Curve routeGeometry, Class< ? extends ILineElement> adapterTargetClass, QName lineElementQName )
+  public RouteLineElementCommand( final IFEDiscretisationModel1d2d model, final GM_Object routeGeometry, final Class< ? extends ILineElement> adapterTargetClass, final QName lineElementQName )
   {
-    Assert.throwIAEOnNullParam( model, "model" );
-
-    this.model = model;
-
-    this.routeGeometry = routeGeometry;
-    this.adapterTargetClass = adapterTargetClass;
-    this.lineElementQName = lineElementQName;
-
+    m_model = model;
+    m_routeGeometry = routeGeometry;
+    m_adapterTargetClass = adapterTargetClass;
+    m_lineElementQName = lineElementQName;
   }
 
   /**
@@ -108,14 +106,17 @@ public class RouteLineElementCommand implements IDiscrModel1d2dChangeCommand
    */
   public void process( ) throws Exception
   {
-    if( addedElement == null )
+    if( m_addedElement == null )
     {
-      addedElement = ContinuityLineOps.lineElementFromCurve( lineElementQName, adapterTargetClass, routeGeometry, model );
-      addedElement.getWrappedFeature().invalidEnvelope();
+      if( m_lineElementQName.equals( IBoundaryLine.QNAME ) )
+        m_addedElement = ContinuityLineOps.lineElementFromCurve( m_lineElementQName, m_adapterTargetClass, (GM_Curve) m_routeGeometry, m_model );
+      else
+        m_addedElement = ContinuityLineOps.boundaryLine1DFromPoint( m_lineElementQName, m_adapterTargetClass, (GM_Point) m_routeGeometry, m_model );
+      m_addedElement.getWrappedFeature().invalidEnvelope();
 
-      final Feature parentFeature = model.getWrappedFeature();
+      final Feature parentFeature = m_model.getWrappedFeature();
       GMLWorkspace workspace = parentFeature.getWorkspace();
-      workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, parentFeature, addedElement.getWrappedFeature(), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+      workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, parentFeature, m_addedElement.getWrappedFeature(), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
     }
   }
 
@@ -124,7 +125,7 @@ public class RouteLineElementCommand implements IDiscrModel1d2dChangeCommand
    */
   public void redo( ) throws Exception
   {
-    if( addedElement == null )
+    if( m_addedElement == null )
     {
       process();
     }
@@ -135,7 +136,7 @@ public class RouteLineElementCommand implements IDiscrModel1d2dChangeCommand
    */
   public void undo( ) throws Exception
   {
-    if( addedElement != null )
+    if( m_addedElement != null )
     {
       // TODO remove element and links to it edges and delete element
     }
@@ -146,7 +147,7 @@ public class RouteLineElementCommand implements IDiscrModel1d2dChangeCommand
    */
   public IFeatureWrapper2[] getChangedFeature( )
   {
-    return new IFeatureWrapper2[] { addedElement };
+    return new IFeatureWrapper2[] { m_addedElement };
   }
 
   /**
@@ -154,6 +155,6 @@ public class RouteLineElementCommand implements IDiscrModel1d2dChangeCommand
    */
   public IFEDiscretisationModel1d2d getDiscretisationModel1d2d( )
   {
-    return model;
+    return m_model;
   }
 }
