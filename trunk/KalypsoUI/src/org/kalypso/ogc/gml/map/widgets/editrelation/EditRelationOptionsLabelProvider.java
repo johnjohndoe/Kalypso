@@ -97,7 +97,7 @@ public class EditRelationOptionsLabelProvider extends LabelProvider
     if( element instanceof IFeatureType )
     {
       final IAnnotation annotation = AnnotationUtilities.getAnnotation( element );
-      return annotation.getLabel();
+      return annotation.getTooltip();
     }
     if( element instanceof IPropertyType )
     {

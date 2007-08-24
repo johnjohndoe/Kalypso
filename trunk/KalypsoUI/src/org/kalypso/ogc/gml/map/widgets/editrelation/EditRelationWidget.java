@@ -45,6 +45,8 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.namespace.QName;
+
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
@@ -66,6 +68,7 @@ import org.eclipse.ui.dialogs.ListSelectionDialog;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.jface.viewers.tree.TreeViewerUtilities;
 import org.kalypso.contribs.eclipse.jface.viewers.tree.TreeVisiterAbortException;
 import org.kalypso.gmlschema.annotation.AnnotationUtilities;
@@ -493,7 +496,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     {
       final IFeatureType ft = m_srcFE.getFeatureType();
       final IAnnotation annotation = AnnotationUtilities.getAnnotation( ft );
-      labelBuffer.append( annotation.getLabel() + "#" + m_srcFE.getId() );
+      labelBuffer.append( annotation.getTooltip() + "#" + m_srcFE.getProperty(new QName( NS.GML2, "name" )));
       tipBuffer.append( ft.getQName() + "#" + m_srcFE.getId() );
     }
     labelBuffer.append( "\n nach: " );
@@ -507,7 +510,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     {
       final IFeatureType ft = m_targetFE.getFeatureType();
       final IAnnotation annotation = AnnotationUtilities.getAnnotation( ft );
-      labelBuffer.append( annotation.getLabel() + "#" + m_targetFE.getId() );
+      labelBuffer.append( annotation.getTooltip() + "#" + m_targetFE.getProperty(new QName( NS.GML2, "name" )));
       tipBuffer.append( ft.getQName() + "#" + m_targetFE.getId() );
     }
     if( m_textInfo != null && !m_textInfo.isDisposed() )
@@ -571,28 +574,6 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
 
     m_topLevel.setLayout( gridLayout );
 
-    // combo, "add relation" or "remove relation"
-    final GridData data3 = new GridData();
-    data3.horizontalAlignment = GridData.FILL;
-    data3.verticalAlignment = GridData.FILL;
-    data3.grabExcessHorizontalSpace = true;
-    data3.grabExcessVerticalSpace = false;
-
-    m_modeCombo = new Combo( parent, SWT.READ_ONLY );
-    toolkit.adapt( m_modeCombo );
-    m_modeCombo.setItems( m_modeItems );
-    m_modeCombo.setText( m_modeItems[m_modificationMode] );
-    m_modeCombo.setLayoutData( data3 );
-    m_modeCombo.addModifyListener( new ModifyListener()
-    {
-      public void modifyText( final ModifyEvent e )
-      {
-        m_modificationMode = ((Combo) e.getSource()).getSelectionIndex();
-        m_srcFE = null;
-        m_targetFE = null;
-        updateInfoText();
-      }
-    } );
     // tree
     final GridData data2 = new GridData();
     data2.horizontalAlignment = GridData.FILL;
@@ -610,6 +591,28 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     m_labelProvider = new EditRelationOptionsLabelProvider( m_contentProvider );
     viewer.setLabelProvider( m_labelProvider );
 
+    // combo, "add relation" or "remove relation"
+    final GridData data3 = new GridData();
+    data3.horizontalAlignment = GridData.FILL;
+    data3.verticalAlignment = GridData.FILL;
+    data3.grabExcessHorizontalSpace = true;
+    data3.grabExcessVerticalSpace = false;
+    
+    m_modeCombo = new Combo( m_topLevel, SWT.READ_ONLY );
+    toolkit.adapt( m_modeCombo );
+    m_modeCombo.setItems( m_modeItems );
+    m_modeCombo.setText( m_modeItems[m_modificationMode] );
+    m_modeCombo.setLayoutData( data3 );
+    m_modeCombo.addModifyListener( new ModifyListener()
+    {
+      public void modifyText( final ModifyEvent e )
+      {
+        m_modificationMode = ((Combo) e.getSource()).getSelectionIndex();
+        m_srcFE = null;
+        m_targetFE = null;
+        updateInfoText();
+      }
+    } );
     m_textInfo = toolkit.createText( m_topLevel, "Info", SWT.READ_ONLY | SWT.MULTI | SWT.BORDER | SWT.WRAP );
     m_textProblem = toolkit.createText( m_topLevel, "Problem", SWT.READ_ONLY | SWT.MULTI | SWT.WRAP );
 
