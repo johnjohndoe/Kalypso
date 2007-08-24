@@ -27,7 +27,7 @@ cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
 cipk  last update Jan 21 1998
 cipk  last update Dec 16 1997
-C     Last change:  EF   15 Aug 2007    1:48 pm
+C     Last change:  NIS  15 Aug 2007    5:56 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 cipk  last update Jan 22 1997
 cipk  last update Oct 1 1996 add new formulations for EXX and EYY
@@ -1005,35 +1005,26 @@ cipk mar05
         ELSE
           DFFDH=0.
         ENDIF
-!NiS,apr06: adding RESISTANCE LAW form COLEBROOK-WHITE for DARCY-WEISBACH-equation:
-      !nis,jan07: This statement can not work
-      !ELSEIF (ORT(NR,5) == -1) THEN
-      ELSEIF (ORT(NR,5) .lt. 0) THEN
-      !-
-        !nis,jan07,testing
-        !WRITE(*,*) 'in coef25nt: ', ort(imat(nn),15), imat(nn)
-        !WRITE(*,*) 'in coef25nt: ', ort(nr,15), imat(nn)
-        !pause
-        !-
-        !nis,jan07: Some problems with cniku, so that origin ort(nn,15) is used
-        !nis,may07: Add switch for approximation decision
-        !call darcy(lambda, vecq, h, ort(imat(nn),15),
-        call darcy(lambda, vecq, h, cniku(nn),
-     +             abst(nn), durchbaum(nn),
-        !-
+
+      !NiS,apr06: adding RESISTANCE LAW form COLEBROOK-WHITE for DARCY-WEISBACH-equation:
+      ELSEIF (ORT(NR,5) < 0.0) THEN
+
+        !calculate lambda
+        !nis,aug07: Introducing correction factor for roughness parameters, if Darcy-Weisbach is used
+        call darcy(lambda, vecq, h,
+     +             cniku(nn)     * correctionKS(nn),
+     +             abst(nn)      * correctionAxAy(nn),
+     +             durchbaum(nn) * correctionDp(nn),
      +             nn, morph, gl_bedform, mel, c_wr(nn), 2)
-        !-
+
+
+        !calculation of friction factor for roughness term in differential equation
         FFACT = lambda/8.0
 
-      !NiS,apr06: As parallel to the other parts from above, without knowledge about meaning, might be derivative, not clear
+        !NiS,apr06: As parallel to the other parts from above, without knowledge about meaning, might be derivative, not clear
         DFFDH = 0.
-        !nis,feb07,testing
-        !WRITE(*,*) lambda, vecq, durchbaum(nn), abst(nn), cniku(nn)
-        !pause
-        !-
-
       !-
-!-
+
       ENDIF
 
 

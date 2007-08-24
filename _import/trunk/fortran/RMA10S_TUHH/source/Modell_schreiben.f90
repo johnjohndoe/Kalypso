@@ -1,4 +1,4 @@
-!     Last change:  K     4 Jun 2007    4:19 pm
+!     Last change:  NIS  15 Aug 2007    7:38 pm
 !-----------------------------------------------------------------------------
 ! This code, data_out.f90, performs writing and validation of model
 ! output data in the library 'Kalypso-2D'.
@@ -58,6 +58,7 @@ USE PARAKalyps
 USE BlkDRmod
 !EFa Dec06, neues Modul für 1d-Teschke-Elemente
 USE PARAFlow1dFE
+USE ParaKalyps
 !-
 
 !NiS,mar06: Find undeclared variables
@@ -470,6 +471,9 @@ write_elements: DO i = 1, ne
       BACKSPACE(IKALYPSOFM)
       WRITE (IKALYPSOFM, 7016) i, imat (i), imato (i), nfixh (i), nop(i,1)
     end if
+  if (CorrectionKS(i) /= 1.0 .or. CorrectionAxAy(i) /= 1.0 .or. CorrectionDp(i) /= 1.0) then
+    WRITE (IKALYPSOFM, 7017) i, CorrectionKS(i), CorrectionAxAy(i), CorrectionDp(i)
+  end if
 END do write_elements
 
 !NiS,may06: Write informations of
@@ -573,6 +577,9 @@ END do write_roughness
 
  !LF nov06: adding starting node for weir structure
  7016 FORMAT ('FE', 5i10)
+
+ !nis,aug07: writing roughness correction layer data
+ 7017 FORMAT ('RC', i10, 3(1x,f20.4))
 
 
 !NiS,may06: new identification line for cross sectional informations:

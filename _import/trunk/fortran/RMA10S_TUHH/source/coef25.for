@@ -27,7 +27,7 @@ cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
 cipk  last update Jan 21 1998
 cipk  last update Dec 16 1997
-C     Last change:  WP   30 Jul 2007    9:36 am
+C     Last change:  NIS  15 Aug 2007    7:25 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 cipk  last update Jan 22 1997
 cipk  last update Oct 1 1996 add new formulations for EXX and EYY
@@ -552,6 +552,7 @@ CIPK NOV97  135 CONTINUE
       AMW = WAITX(I) * DETJ
       AREA(NN)=AREA(NN)+AMW
       IF(AMW.LE. 0.) WRITE(LOUT,9802) NN,I
+
  9802 FORMAT(' AMW IS ZERO OR NEGATIVE FOR ELEMENT',I5,'GAUSS NO',I5)
 cipk nov97      IF(NTX .EQ. 0) GO TO 500
 C-
@@ -1015,33 +1016,35 @@ CIPK SEP04  ADD MAH AND MAT OPTION
 !**************************************************************
 	    endif
         ENDIF
-!NiS,apr06: adding RESISTANCE LAW form COLEBROOK-WHITE for DARCY-WEISBACH-equation:
-      !nis,jan07: This statement can not work
-      ELSEIF (ORT(NR,5) == -1.0) THEN
-      !ELSEIF (ORT(NR,5) .lt. 0) THEN
-      !-
-        !nis,jan07,testing
-        !WRITE(*,*) 'in coef25: ', ort(imat(nn),15)
-        !WRITE(*,*) 'in coef25: ', imat(nn), nr
-        !WRITE(*,*) 'in coef25: ', ort(imat(nn),15),ort(nr,15),cniku(nn)
-        !pause
-        !-
-        !nis,jan07: Some problems with cniku, so that origin ort(nn,15) is used
-        !nis,may07: Add switch for approximation decision
-        call darcy(lambda, vecq, h, cniku(nn), abst(nn), durchbaum(nn),
-      !  call darcy(lambda, vecq, h, ort(imat(nn),15),
-      !+             abst(nn), durchbaum(nn),
-        !-
-     +             nn, morph, gl_bedform, mel, c_wr(nn), 2)
-        !-
-        FFACT = lambda/8.0
-        !nis,feb07,testing
-        !WRITE(*,*) lambda, vecq, durchbaum(nn), abst(nn), cniku(nn)
-        !pause
-        !-
+
+      !NiS,apr06: adding RESISTANCE LAW form COLEBROOK-WHITE for DARCY-WEISBACH-equation:
+      ELSEIF (ORT(NR,5) < 0.0) THEN
+
+!nis,testing
+!        WRITE(*,'(a7,i5)') '  elt: ', nn
+!        WRITE(*,'(a7,2(1x,f7.4))')
+!     +        'cniku: ', cniku(nn), correctionKS(nn)
+!        WRITE(*,'(a7,2(1x,f7.4))')
+!     +        'durch: ', durchbaum(nn), correctionDp(nn)
+!        WRITE(*,'(a7,2(1x,f7.4))')
+!     +        ' abst: ', abst(nn), correctionAxAy(nn)
+!        pause
 !-
 
 
+
+
+        !calculate lambda
+        !nis,aug07: Introducing correction factor for roughness parameters, if Darcy-Weisbach is used
+        call darcy(lambda, vecq, h,
+     +             cniku(nn)      * correctionKS(nn),
+     +             abst(nn)       * correctionAxAy(nn),
+     +             durchbaum(nn)  * correctionDp(nn),
+     +             nn, morph, gl_bedform, mel, c_wr(nn), 2)
+
+        !calculation of friction factor for roughness term in differential equation
+        FFACT = lambda/8.0
+      !-
 
       ENDIF
 
@@ -1897,7 +1900,7 @@ C-
         IRH = NDF * (N - 1) + 3
         !calculate resulting velocity
         VX  = VEL (1,M) * COS (ALFA (M)) + VEL (2,M) * SIN (ALFA (M))
-        !reset Jacobian
+        !reset Jacobian line
         do j = 1, nef
           estifm(irw, j) = 0.0
         enddo

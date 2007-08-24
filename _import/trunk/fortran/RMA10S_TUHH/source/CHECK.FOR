@@ -1,4 +1,4 @@
-C     Last change:  EF   31 Jul 2007   12:41 pm
+C     Last change:  NIS  15 Aug 2007    6:42 pm
 CIPK  LAST UPDATE sEP 10 2001 FIX BUG FOR MULTIPLE TRIANGLES
 cipk  last update apr 17 2001 fix case for laterally averaged flows
 cipk  last update apr 12 2001 fix averages for zero flow case
@@ -12,6 +12,7 @@ cipk  last update Jan 21 1998
       USE BLK11MOD
       !nis,feb07: Using module for polynomial approach
       USE paraFlow1DFE
+      USE ParaKalyps
       !-
       SAVE
 C-
@@ -34,7 +35,7 @@ cipk jul01 add line above
       REAL*8 WAITX,WAITT,WAITR,WAITTH,WAITRH
 !-
 !nis,nov06: For line connections
-      INTEGER :: linecheck
+      INTEGER :: linecheck, LineLength
 !-
 
       COMMON /WATP/ WAITT(7),WAITR(9),WAITTH(16),WAITRH(16)
@@ -44,6 +45,9 @@ C-
 
       DATA NCALL/0/
       IF( NCL .LE. 0 ) RETURN
+
+      !initializations
+      LineLength = 0
 
       !nis,sep06,com: Jump over, if not called the first time
       IF( NCALL .GT. 0 ) GO TO 140
@@ -65,7 +69,7 @@ cipk feb01  skip out for zero lines
         !nis,sep06,com: Calculate the real number of nodes of CCL J
         LMT(J) = 2*LMT(J)-1
         !nis,sep06,com: Copy of real number of nodes of CCL J
-        NN = LMT(J)
+        LineLength = LMT(J)
         !nis,sep06,com: Counter for corner nodes
         N = 0
         !nis,sep06,com: Jump over, if the CCL consist only of one node
@@ -76,7 +80,7 @@ cipk feb01  skip out for zero lines
         !           temporaryly stored in ITEMP(L), so nothing can happen.
         !           lineimat(J,L) is a new field for the storage of the material
         !           type to improve the calculation of boundary conditions at inflows/outflows
-        do l=1,nn
+        do l=1,LineLength
           line(j,l) = 0
           lineimat(j,l) = 0
         end do
@@ -89,8 +93,8 @@ cipk feb01  skip out for zero lines
         !nis,sep06: the CCL has only to be runned through all segments. The segments always begin
         !           with one of the nodes. The last node starts no segment, so it can be taken out
         !           of the loop.
-        !DO 124 L = 1, NN, 2
-        DO 124 L = 1, NN-2, 2
+        !DO 124 L = 1, LineLength, 2
+        DO 124 L = 1, LineLength-2, 2
         !-
 
           !nis,sep06,com: Count the number of segments
@@ -132,6 +136,9 @@ CIPK OCT98 CONVERT TO F90
 
               !nis,sep06: Note the roughness class of the of the adjacent element, if it is a boundary node
               lineimat(j,l+1) = ABS(imat(jj))
+              LineCorrectionKS(j, l+1)   = CorrectionKS(jj)
+              LineCorrectionAxAy(j, l+1) = CorrectionAxAy(jj)
+              LineCorrectionDp(j, l+1)   = CorrectionDp(jj)
 
               !nis,sep06,com: end loop, if the correct midside node is found and go back
               !               to cycle loop over CCL segments

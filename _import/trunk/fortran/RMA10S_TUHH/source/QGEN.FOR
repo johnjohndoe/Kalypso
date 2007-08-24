@@ -1,4 +1,4 @@
-C     Last change:  WP   24 Jul 2007    6:17 pm
+C     Last change:  NIS  15 Aug 2007    7:26 pm
 cipk  last update feb 09 2001 allow for zero length cc lines
 
       SUBROUTINE QGEN(J,QREQ,THET,QQAL)
@@ -662,11 +662,12 @@ C-
               !CALL darcy (lambda, vecq, d1, cniku (lineimat(j, k + 1)),
 
                 !nis,jan07,testing
-                !WRITE(*,*) 'IN qgen', ort(lineimat(j,k+1),15)
+                WRITE(*,*) 'IN qgen', ort(lineimat(j,k+1),15),
+     +            LineCorrectionKS(j,k+1)
                 !-
-              CALL darcy (lambda, vecq, d1, ort(lineimat(j, k + 1), 15),
-              !-
-     +                    0., 0., 0,  0, gl_bedform, mel, cwr_line, 2)
+              CALL darcy (lambda, vecq, d1,
+     +          ort(lineimat(j, k + 1), 15) * LineCorrectionKS(j, k+1),
+     +          0., 0., 0,  0, gl_bedform, mel, cwr_line, 2)
 
               !Correct roughness, if there is a material factor
               if (idnopt /= 0 .and. d1 < akp(na) * adb(na)) then
@@ -712,11 +713,12 @@ C-
               !nis,jan07: Some problems with cniku, so origin ort(nn,15) is used
               !CALL darcy(lambda, vecq, d2_kind8, cniku(lineimat(j,k+1)),
                 !nis,jan07,testing
-                !WRITE(*,*) 'IN qgen', ort(lineimat(j,k+1),15)
+                WRITE(*,*) 'IN qgen', ort(lineimat(j,k+1),15),
+     +            LineCorrectionKS(j,k+1)
                 !-
-              CALL darcy(lambda, vecq,d2_kind8, ort(lineimat(j,k+1),15),
-              !-
-     +                    0., 0., 0,  0, gl_bedform, mel, cwr_line, 2)
+              CALL darcy(lambda, vecq,d2_kind8,
+     +          ort(lineimat(j,k+1),15) * LineCorrectionKS(j, k+1),
+     +          0., 0., 0,  0, gl_bedform, mel, cwr_line, 2)
               d2 = d2_kind8
               !-
               !nis,sep06,com: Calculate the Conveyance factor of the midside node of the actual CCL-segment
@@ -753,11 +755,12 @@ C-
               !nis,jan07: Some Problems with cniku, so origin ort(nn,15) is used
               !CALL darcy (lambda, vecq, d3, cniku(lineimat (j, k+1)),
                 !nis,jan07,testing
-                !WRITE(*,*) 'IN qgen', ort(lineimat(j,k+1),15)
+                WRITE(*,*) 'IN qgen', ort(lineimat(j,k+1),15),
+     +            LineCorrectionKS(j,k+1)
                 !-
-              CALL darcy (lambda, vecq, d3, ort(lineimat (j, k+1),15),
-              !-
-     +                    0., 0., 0,  0, gl_bedform, mel, cwr_line, 2)
+              CALL darcy (lambda, vecq, d3,
+     +          ort(lineimat (j, k+1),15) * LineCorrectionKS(j, k+1),
+     +          0., 0., 0,  0, gl_bedform, mel, cwr_line, 2)
 !-
               !nis,sep06,com: Calculate the Connyance factor of the ending cornder node of the actual CCL-segment
               teilline (k + 2) = teilline (k + 2) + xl * (d3**(3./2.)) *

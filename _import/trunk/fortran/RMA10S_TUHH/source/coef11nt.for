@@ -20,6 +20,7 @@ CIPK  LAST UPDATE APRIL 27 1999 Fix to use mat instead of nr for material type t
 cipk  last update Jan 6 1999 initialize AKE correctly
 cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
+C     Last change:  NIS  15 Aug 2007    5:56 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 CIPK  LAST UPDATED MAY 1 1996
 CIPK LAST UPDATED SEP 7 1995
@@ -732,25 +733,26 @@ cipk jul06 use perim
           ENDIF
         ENDIF
 
-!NiS,apr06: adding RESISTANCE LAW form COLEBROOK-WHITE for DARCY-WEISBACH-equation:
-      !nis,jan07: This statement can not work
-      ELSEIF (ORT(MAT,5) == -1.0) THEN
-      !ELSEIF (ORT(MAT,5) .lt. 0) THEN
-      !-
+
+      !NiS,apr06: adding RESISTANCE LAW form COLEBROOK-WHITE for DARCY-WEISBACH-equation:
+      ELSEIF (ORT(MAT,5) < 0.0) THEN
+
         !getting the hydraulic radius
         PERIM = WID + H* (SQRT (1. + SSLOP1**2) + SQRT (1. + SSLOP2**2))
         rhy = ACR/ PERIM
-        !-
-        !nis,jan07: Some problems with cniku, so that origin ort(nn,15) is used
-        !call darcy(lambda, vecq, h, cniku(nn), abst(nn), durchbaum(nn),
-        !nis,may07: Add switch for approximation decision
-        call darcy(lambda, vecq, rhy, ort(imat(nn),15),
-     +             abst(nn), durchbaum(nn),
-        !-
+
+        !calculate lambda
+        !nis,aug07: Introducing correction factor for roughness parameters, if Darcy-Weisbach is used
+        call darcy(lambda, vecq, rhy,
+     +             ort(imat(nn),15) * correctionKS(nn),
+     +             abst(nn)         * correctionAxAy(nn),
+     +             durchbaum(nn)    * correctionDp(nn),
      +             nn, morph, gl_bedform, mel, c_wr(nn), 1)
-        !-
+
+        !calculation of friction factor for roughness term in differential equation
         FFACT = lambda/8.0
-!-
+      !-
+
       ENDIF
 
 cipk dec00 modify friction for high flow gates

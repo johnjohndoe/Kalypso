@@ -1,5 +1,6 @@
-C     Last change:  EF   18 Jul 2007    4:32 pm
-      MODULE ParaKALYPS
+!     Last change:  NIS  15 Aug 2007    6:23 pm
+!     Last change:  NIS  15 Aug 2007    4:22 pm
+MODULE ParaKALYPS
 !NiS,mar06:     Parameter for Kalypso-program-structure and for CVFEM-control as far as necessary to implement parts of
 !               Kalypso-2D into RMA10S.
 
@@ -26,10 +27,8 @@ C     Last change:  EF   18 Jul 2007    4:32 pm
 !               the Blk10mod.for module. They could also be declared there. In the first step all variables necessary for the implementation of
 !               the DW-roughness method are put together to see possible errors directly:
 !      REAL(KIND=8), ALLOCATABLE, DIMENSION (:)
-      REAL, ALLOCATABLE, DIMENSION (:)
-!     +                  	:: abst, c_wr, cniku, durchbaum,
-     +                  	:: abst, c_wr, durchbaum,
-     +                             mvx, mvy, mvxvy
+      REAL, ALLOCATABLE :: abst(:), c_wr(:), durchbaum(:), mvx(:), mvy(:), mvxvy(:)
+!     +                  :: abst, c_wr, cniku, durchbaum,
       ALLOCATABLE cniku (:)
       REAL(KIND=8), ALLOCATABLE, DIMENSION (:) :: mh
 
@@ -61,15 +60,21 @@ C     Last change:  EF   18 Jul 2007    4:32 pm
       !-
 
       !EFa jun07, autoconverge
-      REAL,       ALLOCATABLE 	:: rss(:), specccold(:,:),speccc(:,:),
-     +                             specccfut(:,:),temp_vel(:,:),
-     +                             temp_vdot(:,:),temp_vdoto(:,:)
-      REAL                      :: rrr,hhh,hhh2,qqq,qqqdir
-      INTEGER                   :: nitnzero,nitazero,nitizero,extranita,
-     +                             beiauto,nnnunst,nnnst,linlog,exterr
-      !+                             ,temp_nan
-      ALLOCATABLE               :: temp_nbc(:,:)
+      REAL,       ALLOCATABLE 	:: rss(:), specccold(:,:), speccc(:,:), specccfut(:,:)
+      REAL                      :: rrr, hhh, hhh2, qqq, qqqdir
+      INTEGER                   :: nitnzero, nitazero, nitizero, extranita, beiauto, nnnunst, nnnst, linlog, exterr
       !-
+
+      !nis,aug07: for correction purposes in Kalypso-GUI, there must be a correction based on the elements
+      !           correction applies for ks-value, diameter of ... and distance between vegetation elements
+      REAL (KIND = 8), allocatable :: correctionKS(:), correctionAxAy(:), correctionDp(:)
+      REAL (KIND = 8), DIMENSION (1:50, 1:350) :: LineCorrectionKS, LineCorrectionAxAy, LineCorrectionDp
+
+
+      !TODO: delete those fields! or define em where they should be!
+      REAL (KIND = 8), ALLOCATABLE :: temp_vel(:,:), temp_vdot(:,:), temp_vdoto(:,:)
+
+
 
 
 

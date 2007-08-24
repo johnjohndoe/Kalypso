@@ -1,3 +1,5 @@
+C     Last change:  NIS  15 Aug 2007    6:25 pm
+CLast change:  WP   27 Jul 2007    5:46 pm
 CIPK  LAST UPDATE SEP 05 2006 ADD DEPRATO AND TO TMD
 CIPK  LAST UPDATE APR 05 2006 ADD IPASST ALLOCATION
 CIPK  LAST UPDATE MAR 22 2006 FIX NCQOBS BUG
@@ -887,6 +889,39 @@ CIPK MAR01
       ihtmet = 0
       !-
 
+      !nis,aug07: introducing some values, that are used for autoconverge!
+      !TODO
+      ALLOCATE (temp_vel(7, maxp), temp_vdot(7, maxp),
+     +          temp_vdoto(7, maxp))
+      do i = 1, maxp
+        do j = 1, 7
+          temp_vel   (j, i) = 0.0
+          temp_vdot  (j, i) = 0.0
+          temp_vdoto (j, i) = 0.0
+        end do
+      end do
+      !-
+
+      !nis,aug07: Introducing correction factors for elements roughness, only used for Darcy-approach
+      ALLOCATE (correctionKS(1: maxe), correctionAxAy(1: maxe),
+     +          correctionDp(1: maxe))
+      do i = 1, maxe
+        correctionAxAy(i) = 1.0
+        correctionDp(i)   = 1.0
+        correctionKS(i)   = 1.0
+      end do
+      !-
+
+      !initializations for lines
+      do i = 1, 50
+        do j = 1, 350
+          lineimat(i, j) = 0
+          LineCorrectionKS (i, j)   = 1.0
+          LineCorrectionAxAy (i, j) = 1.0
+          LineCorrectionDp (i, j)   = 1.0
+        end do
+      end do
+      !-
 
       !EFa jun07, necessary for autoconverge
       beiauto = 0.0
@@ -898,18 +933,7 @@ CIPK MAR01
       qqq = 0.0
       qqqdir = 0.0
       exterr = 0.0
-      !temp_nan = 0.0
-      ALLOCATE(temp_vel(7,maxp))
-      ALLOCATE(temp_vdot(7,maxp))
-      ALLOCATE(temp_vdoto(7,maxp))
-      do i = 1,maxp
-        do k = 1,7
-          temp_vel(k,i) = 0
-          temp_vdot(k,i) = 0
-          temp_vdoto(k,i) = 0
-        end do
-      end do
-      !-
+
 
       !EFa jul07, added istab for stage-flow boundaries (table)
       ALLOCATE(istab(maxp))

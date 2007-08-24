@@ -27,7 +27,7 @@ cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
 cipk  last update Jan 21 1998
 cipk  last update Dec 16 1997
-C     Last change:  EF   15 Aug 2007   10:33 am
+C     Last change:  NIS  15 Aug 2007    5:56 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 cipk  New routine for Smagorinsky closure Jan 1997
       SUBROUTINE COEF2DNT(NN,NTX)
@@ -893,27 +893,24 @@ cipk mar05
         ELSE
           DFFDH=0.
         ENDIF
-!NiS,apr06: adding RESISTANCE LAW form COLEBROOK-WHITE for DARCY-WEISBACH-equation
-      !nis,jan07: This statement can not work
-      !ELSEIF (ORT(NR,5) == -1) THEN
-      ELSEIF (ORT(NR,5) .lt. 0) THEN
-      !-
-        !nis,jan07,testing
-        !WRITE(*,*) 'in coef2dnt: ', ort(imat(nn),15)
-        !-
-        !nis,jan07: Some problems with cniku, so that origin ort(nn,15) is used
-        !call darcy(lambda, vecq, h, cniku(nn), abst(nn), durchbaum(nn),
-        !nis,may07: Add switch for approximation decision
-        call darcy(lambda, vecq, h, ort(imat(nn),15),
-     +             abst(nn), durchbaum(nn),
-        !-
-     +             nn, morph, gl_bedform, mel, c_wr(nn), 1)
-        !-
+
+      !NiS,apr06: adding RESISTANCE LAW form COLEBROOK-WHITE for DARCY-WEISBACH-equation
+      ELSEIF (ORT(NR,5) < 0.0) THEN
+
+        !calculate lambda
+        !nis,aug07: Introducing correction factor for roughness parameters, if Darcy-Weisbach is used
+        call darcy(lambda, vecq, h,
+     +             ort(imat(nn),15) * correctionKS(nn),
+     +             abst(nn)         * correctionAxAy(nn),
+     +             durchbaum(nn)    * correctionDp(nn),
+     +             nn, morph, gl_bedform, mel, c_wr(nn), 2)
+        !calculation of friction factor for roughness term in differential equation
         FFACT = lambda/8.0
-      !NiS,apr06: As parallel to the other parts from above, without knowledge about meaning, might be derivative.
+
+        !NiS,apr06: As parallel to the other parts from above, without knowledge about meaning, might be derivative.
         DFFDH = 0.
       !-
-!-
+
       ENDIF
 
 cIPK MAR03 ADD MINIMUM TEST

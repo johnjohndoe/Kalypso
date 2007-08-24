@@ -1,4 +1,4 @@
-!     Last change:  WP   27 Jul 2007    5:45 pm
+!     Last change:  NIS  15 Aug 2007    5:17 pm
 !-----------------------------------------------------------------------
 ! This code, data_in.f90, performs reading and validation of model
 ! inputa data in the library 'Kalypso-2D'.
@@ -1466,6 +1466,12 @@ reading: do
       ENDIF
     ENDIF
 
+    !ROUGHNESS CORRECTION LAYER ---
+    if (linie (1:2) == 'RC') then
+      if (KSWIT == 1) CYCLE reading
+      read (linie, '(a2, i10, 3(f20.7))') id_local, i, correctionKS(i), correctionAxAy(i), correctionDp(i)
+    end if
+
     !ROUGHNESS CLASS INFORMATIONS ---
     IF (linie (1:2) .eq.'RK') THEN
       !not interesting for dimension reading
@@ -2236,6 +2242,7 @@ DO i = 1, arccnt
         alphapk (nop (arc(i,3), 2), j) = 0.5 * (alphapk (arc(i,1), j) + alphapk (arc(i,2), j))
         betapk  (nop (arc(i,3), 2), j) = 0.5 * (betapk  (arc(i,1), j) + betapk  (arc(i,2), j))
 !      WRITE(*,*) 'Polynomdaten'
+!      WRITE(*,*) nop (arc(i,3), 2)
 !      WRITE(*,*) (apoly (nop (arc(i,3), k), j), k=1, 3)
 !      WRITE(*,*) (qpoly (nop (arc(i,3), k), j), k=1, 3)
 !      WRITE(*,*) (alphapk (nop (arc(i,3), k), j), k=1, 3)
@@ -2476,6 +2483,7 @@ neighbours: do i=1,elcnt
 
     !nis,jun07: Initializing ConnNumber
     ConnNumber = 0
+
     !nis,jan07: Get the transition number and the transitioning CCL
     findconnection: do j= 1, MaxLT
       if (TransLines(j,1) == i) then
@@ -2511,6 +2519,7 @@ neighbours: do i=1,elcnt
 
       !Adding shows the point, from which on the nodes of the connected line have to be stored in the nop_temp array
       adding = 3
+
       !overgiving the nodes into the temporary array nop_temp
       nodeassigning: do j = 1, lmt (ConnLine)
         nop_temp (j + adding) = line (ConnLine, j)
