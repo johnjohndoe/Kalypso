@@ -1,4 +1,4 @@
-C     Last change:  WP    8 Jul 2007    6:25 pm
+C     Last change:  WP   24 Jul 2007    6:17 pm
 cipk  last update feb 09 2001 allow for zero length cc lines
 
       SUBROUTINE QGEN(J,QREQ,THET,QQAL)
@@ -498,6 +498,9 @@ C-
         if (ABS(thet) > 1.0e-4 .and. maxn == 1) then
           thet = thet + alp
         end if
+        !WRITE(*,*) 'theta:', thet
+        !pause
+
         ! thet is the angel between x-axis and the perpendicular of the CCL's chord
 
         !Calculation of the average water level:
@@ -971,6 +974,7 @@ C-
           !nis,jan07: machineaccuracy is less than a value 1e-4; value can not be equal zero
           !IF (thet.eq.0.0) then
           IF (ABS(thet).lt.1.0e-4) then
+
           !-
 !             Stroemungsrichtung senkrecht zum jeweiligen Liniensegment
 
@@ -1038,12 +1042,10 @@ C-
                                                                         
               !nis,sep06,com: Calculate the Cosinus of the inflow angle relative to the inflow line
               !               and then evaluate the specific inflow at the node, vest seems to be the averaged slope
-              cos_in_grad = cos (thet)
-              spec (na,1) = vest * (teilline(k) / dxl(k)) * cos_in_grad
+              spec (na,1) = vest * (teilline(k) / dxl(k)) * cos (thet)
               !nis,sep06,com: Calculate the Sinus of the inflow angle relative to the inflow line
               !               and then evaluate the specific inflow at the node, vest seems to be the averaged slope
-              sin_in_grad = sin (thet)
-              spec (na,2) = vest * (teilline(k) / dxl(k)) * sin_in_grad
+              spec (na,2) = vest * (teilline(k) / dxl(k)) * sin (thet)
 
                                                                         
             ENDIF
@@ -1326,9 +1328,15 @@ C-
   901     END DO
 
         !nis,jul07: replacing npr with niti, question is just steady or not?
-        !ELSEIF (npr.gt.0) then
-        ELSEIF (niti.gt.0) then
+        !nis,jul07: TODO - npr is not defined here properly, but it should be a test for steady state or not. If steady state then in this case
+        !           bform should be called, but that leads because of some direction problems to errors. Therefore npr is set directly to zero,
+        !           as ERROR WORK AROUND!!!
+        npr = 0
+        !
+        ELSEIF (npr.gt.0) then
+        !ELSEIF (niti.gt.0) then
         !-
+
 
           DO 555 k = 1, lmt (j)
            na = line (j, k)

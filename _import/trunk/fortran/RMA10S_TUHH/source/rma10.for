@@ -1,4 +1,4 @@
-C     Last change:  EF   19 Jul 2007    9:48 am
+C     Last change:  WP   27 Jul 2007    3:27 pm
 cipk  last update sep 05 2006 add depostion/erosion rates to wave file
 CNis  LAST UPDATE NOV XX 2006 Changes for usage of TUHH capabilities
 CIPK  LAST UPDATE MAR 22 2006 ADD OUTPUT FILE REWIND and KINVIS initialization
@@ -45,7 +45,7 @@ cipk aug98 add character statement
       DIMENSION CURRENT(5),TARGT(5),IREC(40),FREC(40)
       CHARACTER*4 IPACKB(1200),IPACKT(77)
       !nis,feb07,testing: Writing matrix
-      CHARACTER (LEN = 25) :: matrixname
+      CHARACTER (LEN = 25) :: matrixname, aendname
       CHARACTER (LEN = 30) :: matrixformat
       !-
 !NiS,jul06: Consistent data types for passing parameters
@@ -511,7 +511,11 @@ CIPK JAN97
 CIPK JAN97 END CHANGES
 
       IDRYC=IDRYC-1
+
+      WRITE(aendname,'(a4,i3.3,a4)') 'aend', maxn, '.txt'
+      open (12345, aendname)
       CALL UPDATE
+      close (12345, status = 'keep')
 
       !EFa jul07, necessary for autoconverge
       if (exterr.eq.1.0) then

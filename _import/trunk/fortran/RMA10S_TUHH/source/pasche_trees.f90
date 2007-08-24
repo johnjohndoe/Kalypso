@@ -1,4 +1,4 @@
-!     Last change:  K    10 Jan 2007    8:55 am
+!     Last change:  WP   10 Jul 2007   10:24 pm
 !--------------------------------------------------------------------------------------------
 ! This code, pasche_trees.f90,determines the impact of tree vegetation
 ! for hydrodynamic simulations in the library 'Kalypso-2D'.
@@ -192,7 +192,7 @@ else
     IF (icyc.eq.0.and.MOD(maxn,itefreq).eq.0) then
       WRITE (name_cwr,'(A,I3.3,A)')'steady_Ite_',maxn,'.cwr'
     ELSEIF (icyc.ne.0.and.MOD(maxn,itefreq).eq.0) then
-      WRITE (name_cwr,'(A,I3.3,A)')ct,cycle_number,'_Ite',maxn,'.cwr'
+      WRITE (name_cwr,'(A1,I4.4,A4,I3.3,A4)') ct, cycle_number, '_Ite', maxn, '.cwr'
     ENDIF
   !nis,sep06: See change definition above
   endif

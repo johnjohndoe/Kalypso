@@ -1,4 +1,4 @@
-C     Last change:  EF   20 Jul 2007   12:00 pm
+C     Last change:  WP   27 Jul 2007    3:29 pm
 CIPK  LAST UPDATE SEP 6 2004  add error file
 CIPK  LAST UPDATE AUG 22 2001 REORGANIZE CONVERGENCE TESTING
 CIPK  LAST UYPDATE APRIL 03  2001 ADD UPDATE OF WATER SURFACE ELEVATION 
@@ -185,6 +185,8 @@ c
       !  WRITE(*,*) 'node:     ', j, 'DOF: ', k
       !  WRITE(*,*) 'r1:       ', r1 (nbc (j, k)), 'nbc: ', nbc (j, k)
       !  WRITE(*,*) 'H bzw. v: ', vel (k, j), WSLL (j)
+      WRITE(12345,'(a8,i4.4,1x,a5,i3,1x,a11,1x,f15.8)')
+     +     'Knoten: ', j,'DOF: ', KK, 'Aenderung: ', ex
       !  pause
       !end if
       !if (k == 1 .or. k == 2) then
@@ -501,9 +503,9 @@ C-
      1E =',F8.2 , ' HOURS....ITERATION CYCLE IS' , I5 )
  6005 FORMAT( // 10X,   'CONVERGENCE PARAMETERS'  // 8X, 'DF        AVG
      1CHG        MAX CHG     LOCATION')
- 6010 FORMAT(I10,2F15.4,I10,4X,2A4)
+ 6010 FORMAT(I10,2F15.9,I10,4X,2A4)
 C AUG93IPK 6011 FORMAT(I10,2F15.4,I10,4X,2A4,'  CYCLE NO ',I5)
- 6011 FORMAT(I10,2F15.4,I10,4X,2A4,'STEP',I4,' ITER',I3)
+ 6011 FORMAT(I10,2F15.9,I10,4X,2A4,'STEP',I4,' ITER',I3)
       !EFa jun07, testing
  6111 FORMAT(i4,' rss :',F10.5)
       !-

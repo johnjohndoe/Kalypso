@@ -1,4 +1,3 @@
-C     Last change:  EF   30 Jul 2007    1:41 pm
       MODULE BLK10MOD
 
 CIPK AUG05      INCLUDE 'PARAM.COM'
@@ -85,7 +84,9 @@ CIPK MAR06 ADD IOUTRWD
 
       REAL      CINT(100),CPOW(100),AJ(100),BJ(100),CJ(100)
      +         ,GAMJ(100),QD(100),DJ(100)
-      INTEGER   LINE(50,350),LMT(50),JLIN(50),NCNV(7)
+      INTEGER   LINE(50,350),LMT(50),JLIN(50), !ITLVL(90),ITEQV(90)
+!     +         ,ITEQS(90),IURVL(90),NCNV(7)
+     +          NCNV(7)
 !Nis,sep06: adding lineimat(50,350) for storage of material of line segments
      +         ,lineimat(50,350)
 !-
@@ -190,13 +191,6 @@ C     LAYER VARIABLE
 !nis,nov06: Adding arrays
       !for the storage of line-couplings
       INTEGER, ALLOCATABLE                 :: TransLines (:,:)
-      !Stores information, whether node is member of Line-transition or not. Values: 0 means no member of any transition, 1 means member of a transition,
-      !means member of a transition and member of the belonging line. This differentiation is necessary because there are two line options:
-      !
-      !  1. the node of the 1D-element is member of the line (the 1D-element's node gets the entry TransMember=2),
-      !  2. the node of the 1D-element is member of the connection but not in the defining list of the line
-      !     (the 1D-element's node gets the entry Transmember=1)
-      INTEGER, allocatable                 :: TransMember (:)
       !The scaling factors for vx, vy and h, that comes into the global matrix
       REAL, ALLOCATABLE, DIMENSION (:,:)   :: EqScale
 !-
@@ -207,7 +201,7 @@ C     LAYER VARIABLE
       !nis,jan07: The velocities at the transition have to be stored temporarily; allocation takes place at the calling of the qgen-subroutine with
       !           BSWIT == 3; the size is then exactly of the transition size; it is deallocated directly after everery usage
       REAL, ALLOCATABLE, DIMENSION (:)   :: TransitionVels
-      REAL, ALLOCATABLE, DIMENSION (:,:) :: TransSpec
+      REAL, ALLOCATABLE, DIMENSION (:)   :: TransSpec
       !-
 
       !testing variables

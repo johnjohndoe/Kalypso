@@ -7,7 +7,7 @@ CIPK  LAST UPDATE DEC 21 2000 ALLOW FOR GATE STRUCTURE
 cipk  last update Nov 12 1999 add dropout of nodes for 3-d to 2-d
 CIPK  LAST UPDATE JAN 12 1999 FIX 2DV JUNCTION LOGIC
 cipk  last update Dec 5 1998 fix error at transitions
-C     Last change:  WP    6 Jul 2007    1:57 pm
+C     Last change:  WP   27 Jul 2007    5:36 pm
 cipk  last update Feb 4 1998 correct zero subscript test and for HCN
 CIPK  LAST UPDATE JAN 22 1998
 cipk  last update Dec 16 1997
@@ -944,11 +944,8 @@ cipk oct98 update to f90
             IF(NLN > Line(LiNo,K)) NLN = Line(LiNo,K)
           ENDDO
 
-          !testing, whether connecting node is part of line; transmember(i).eq.2 means seperate node
-          if (transmember(i) .eq. 2) then
-            !check, whether the number is less than referenced node number for coupling of DOFs
-            if (NLN > CoNode) NLN = CoNode
-          end if
+          !check for 1d-node
+          if (NLN > CoNode) NLN = CoNode
 
           !assign references to all nodes of the connection line
           equationassigning: DO K=1, LiLe

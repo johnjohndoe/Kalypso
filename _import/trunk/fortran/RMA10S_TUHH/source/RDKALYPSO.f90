@@ -1,4 +1,4 @@
-!     Last change:  K     3 Jul 2007    3:41 pm
+!     Last change:  WP   27 Jul 2007    5:45 pm
 !-----------------------------------------------------------------------
 ! This code, data_in.f90, performs reading and validation of model
 ! inputa data in the library 'Kalypso-2D'.
@@ -325,6 +325,7 @@ WRITE(*,*) 'Start of Reordering sequence with ', Maxlt, ' couplings'
       !nis,jun07: Initializing the allocated variables
       do i = 1, maxp
         list(i) = 0
+        msn(i) = 0
       end do
       do i = 1, 5000
         ihold(i) = 0
@@ -538,7 +539,7 @@ ENDDO allnodes
       IF (mpp.le.mpq) stop 6 
 
       DO n = 1, nepem
-        iel (n) = msn (n) 
+        iel (n) = msn (n)
       END DO
 !-                                                                      
 !......zero arrarys                                                     
@@ -826,8 +827,8 @@ ENDDO allnodes
 !      write(Lout,6050) mpq,isum
 ! 6050 format(//10x,'reordering sum =',i10,'  band sum =',i8// )        
 ! 6050 format(//10x,'reordering Summe =',i10,'  Band Summe =',i8// )    
-      IF (mpq.ge.mpo) mpq = mpo 
-      IF (mpq.eq.mpo) return 
+      IF (mpq.ge.mpo) mpq = mpo
+      IF (mpq.eq.mpo) return
       DO n = 1, nepem
         msn (n) = iel (n)
       END DO
@@ -2090,6 +2091,10 @@ all_arcs: DO i=1,arccnt
   !IF ( (arc (i, 5) .gt.0) .and. (arc (i, 5) .le.nodecnt) ) goto 1402
   IF ((arc(i,5).gt.0) .and. (arc(i,5).le.nodecnt)) THEN
     IF ((cord(arc(i,5),1)/=0.0) .and. (cord(arc(i,5),2)/=0.0)) THEN
+      if (ao(arc(i,5)) + 9999.0 < 1.0e-3) then
+        WRITE(lout,*) 'recalculating elevation        '
+        ao(arc(i,5)) = 0.5 * (ao(arc(i,1)) + ao(arc(i,2)))
+      end if
       CYCLE all_arcs
     ELSE
       !Test for distances
@@ -2473,7 +2478,7 @@ neighbours: do i=1,elcnt
     ConnNumber = 0
     !nis,jan07: Get the transition number and the transitioning CCL
     findconnection: do j= 1, MaxLT
-      if (TransLines(j,1).eq.i) then
+      if (TransLines(j,1) == i) then
         ConnNumber = j
         ConnLine = TransLines(j,2)
         EXIT findconnection
@@ -2487,13 +2492,13 @@ neighbours: do i=1,elcnt
     !           For those line-transitions, the following two loops are inserted
     !
 
-    if (Transmember(ConnNumber).gt.0 .and. ConnNumber.ne.0) then
+    if (ConnNumber /= 0) then
       !the slope is just connected to the CORNER nodes of the transition line, the midside nodes are not effecting!
       !number of nodes at that 1D-2D-transtion without the midsidenodes of the line
-      ncorn_temp = lmt(ConnLine)+Transmember(ConnNumber)+1
+      ncorn_temp = lmt (ConnLine) + 3
 
       !this is the temporary nop-array for the '1D-2D-transitionline-element'
-      ALLOCATE (nop_temp(1:ncorn_temp))
+      ALLOCATE (nop_temp (1 : ncorn_temp))
 
       !overgive the three nodes of the 1D-part; they are already sorted:
       !1: connection to next 1D-element
@@ -2507,28 +2512,18 @@ neighbours: do i=1,elcnt
       !Adding shows the point, from which on the nodes of the connected line have to be stored in the nop_temp array
       adding = 3
       !overgiving the nodes into the temporary array nop_temp
-      nodeassigning: do j=1,lmt(ConnLine)
-        !if the connecting node is also part of the line-defintion, this placeholder has to skipped. For next run through loop because j is increased,
-        !  adding has to be decreased
-        if (line(ConnLine,j) .eq. TransLines(ConnNumber,3)) then
-          adding = 2
-          CYCLE nodeassigning
-        endif
-        !overgive the connected node to the temporary array
-        nop_temp(j+adding)=line(ConnLine,j)
-        !nis,dec06: testing
-        !WRITE(*,*) j+adding, nop_temp(j+adding)
-        !-
+      nodeassigning: do j = 1, lmt (ConnLine)
+        nop_temp (j + adding) = line (ConnLine, j)
       end do nodeassigning
 
       !store neighbourhood relations, it's nearly the same loop as in the original loop, shown below
       outerLT: do j = 1, ncorn_temp
-        node1 = nop_temp(j)
+        node1 = nop_temp (j)
         innerLT: do l = 1, ncorn_temp
-          node2 = nop_temp(l)
-          if (node1.ne.node2) then
-            nconnect(node1) = nconnect(node1) + 1
-            neighb(node1,nconnect(node1)) = node2
+          node2 = nop_temp (l)
+          if (node1 /= node2) then
+            nconnect (node1) = nconnect (node1) + 1
+            neighb (node1, nconnect(node1)) = node2
           end if
         end do innerLT
       end do outerLT

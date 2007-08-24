@@ -1,4 +1,4 @@
-C     Last change:  EF    6 Jul 2007    1:38 pm
+C     Last change:  WP   27 Jul 2007    5:33 pm
 CIPK  LAST UPDATE AUGUST 30 2006 ADD CONSV AND AVEL OPTIONS
 CIPK  LAST UPDATE APRIL 05 2006 MODIFY CALL TO GETINIT
 CIPK  LAST UPDATE MARCH 25 2006 ADD TESTMODE
@@ -596,7 +596,7 @@ cipk apr97
 !EFa jun07, autoconverge option
 
       IF(ID(1:2) .EQ. 'AC') THEN
-        READ(dlin,'(4i8)')beiauto,linlog,nnnst,nnnunst
+        READ(dlin,'(4i8)') beiauto, linlog, nnnst, nnnunst
         CALL GINPT(LIN,ID,DLIN)
       ENDIF
 

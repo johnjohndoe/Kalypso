@@ -1,12 +1,12 @@
 QUITONERROR
 
 FILES=*.FOR
-COMPILE=@lf95 -c -nap -nchk -nchkglobal -ncover -dbl -ng -o1 -npca -trace -nsav -nstchk -w -o %OD%SF%OE %fi
+COMPILE=@lf95 -c -nap -chk -chkglobal -ncover -dbl -ng -o1 -npca -trace -nsav -nstchk -w -o %OD%SF%OE %fi
 OBJDIR=../objs/
 
 AND
 FILES=*.f90
-COMPILE=@lf95 -c -nap -nchk -nchkglobal -ncover -dbl -ng -o1 -npca -trace -nsav -nstchk -w -o %OD%SF%OE %fi
+COMPILE=@lf95 -c -nap -chk -chkglobal -ncover -dbl -ng -o1 -npca -trace -nsav -nstchk -w -o %OD%SF%OE %fi
 OBJDIR=../objs/
 
 LINK=@lf95 @%rf -warn -exe %ex

@@ -1,4 +1,3 @@
-C     Last change:  EF   27 Jul 2007    5:16 pm
 CIPK  LAST UPDATE SEP 05 2006 ADD DEPRATO AND TO TMD
 CIPK  LAST UPDATE APR 05 2006 ADD IPASST ALLOCATION
 CIPK  LAST UPDATE MAR 22 2006 FIX NCQOBS BUG
@@ -758,19 +757,6 @@ CIPK MAR01
       enddo
 !-
 
-!NiS,nov06: Allocating and initializing Transmember
-!           Transmember shows, how the geometry is given; there are two possibilities
-!           Transmember = 1 means the coupling node of the 1D element is part of the continuity line defintion
-!           Transmember = 2 means the coupling node of the 1D element is not part of the continuity line defintion
-!                         This leads to a geometry check, so that the coupling node is in range of 5 percent of the
-!                         transition line's chord length (tolerance).
-!           The zero-placeholder stands for a default value, every time the connection node becomes the number 0, directly
-!           the Transmember(0) = 0
-      ALLOCATE (TransMember(0:MaxLT))
-      do i=0,MaxLT
-        TransMember(i) = 0
-      end do
-!-
 !nis,jun07: Add initializaton of membership of nodes in a transition
       ALLOCATE (TransitionMember(1:MaxP))
       ALLOCATE (dspecdh(1:MaxP), dspecdv(1:MaxP))
@@ -892,6 +878,7 @@ CIPK MAR01
       end do
       !nis,jun07: maxfil is not zero, if there was a scratch file, otherwise it should be zero, ALWAYS
       MAXFIL = 0
+      npr = 0
       !-
       !nis,jul07: following values are causing problems somewhere, therefore initialize them
       TETH = 0.0
