@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets;
 
+import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.util.ArrayList;
@@ -48,6 +49,7 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.eclipse.jface.viewers.ISelection;
+import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.command.Handle;
@@ -107,15 +109,15 @@ public class DragPointsWidget extends AbstractWidget
    * The constructor.
    * 
    * @param name
-   *          The name of this widget.
+   *            The name of this widget.
    * @param toolTip
-   *          The tooltip of this widget.
+   *            The tooltip of this widget.
    * @param handlesProvider
-   *          The class which provides the handles the geometries of a feature.
+   *            The class which provides the handles the geometries of a feature.
    * @param radius
-   *          The radius in which the handles should be selectable.
+   *            The radius in which the handles should be selectable.
    * @param qnames
-   *          The QNames the editable features should substitute from.
+   *            The QNames the editable features should substitute from.
    */
   public DragPointsWidget( final String name, final String toolTip, final IHandlesProvider handlesProvider, final int radius, final QName[] qnames )
   {
@@ -130,6 +132,20 @@ public class DragPointsWidget extends AbstractWidget
     m_currentPoint = null;
 
     m_qnames = qnames;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#activate(org.kalypso.commons.command.ICommandTarget,
+   *      org.kalypso.ogc.gml.map.MapPanel)
+   */
+  @Override
+  public void activate( ICommandTarget commandPoster, MapPanel mapPanel )
+  {
+    super.activate( commandPoster, mapPanel );
+
+    /* Init the cursor. */
+    Cursor cursor = Cursor.getPredefinedCursor( Cursor.HAND_CURSOR );
+    getMapPanel().setCursor( cursor );
   }
 
   /**
@@ -278,6 +294,10 @@ public class DragPointsWidget extends AbstractWidget
 
     /* Resets the workspace. */
     m_workspace = null;
+
+    /* Reset the cursor to default. */
+    Cursor cursor = Cursor.getPredefinedCursor( Cursor.DEFAULT_CURSOR );
+    getMapPanel().setCursor( cursor );
   }
 
   /**

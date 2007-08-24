@@ -76,8 +76,15 @@ public class MapfunctionHelper
    */
   public static EasyFeatureWrapper[] findFeatureToSelect( final MapPanel mapPanel, final Rectangle rectangle, final EasyFeatureWrapper[] featureToSelectFrom, final int radius )
   {
+    if( mapPanel == null )
+      return new EasyFeatureWrapper[] {};
+
+    final IMapModell mapModell = mapPanel.getMapModell();
+    if( mapModell == null )
+      return new EasyFeatureWrapper[] {};
+
     final GeoTransform transform = mapPanel.getProjection();
-    final CS_CoordinateSystem coordinatesSystem = mapPanel.getMapModell().getCoordinatesSystem();
+    final CS_CoordinateSystem coordinatesSystem = mapModell.getCoordinatesSystem();
 
     final SplitSort geoIndex = new SplitSort( null, null, null, new EasyFeatureWrapperEnvelopeProvider() );
     for( final EasyFeatureWrapper wrapper : featureToSelectFrom )
@@ -117,14 +124,14 @@ public class MapfunctionHelper
    */
   public static Feature[] findFeatureToSelect( final MapPanel mapPanel, final Rectangle rectangle, final Feature[] features, final int radius )
   {
-    final GeoTransform transform = mapPanel.getProjection();
-
-    // FIXME mappanel != null mapmodel != null
+    if( mapPanel == null )
+      return new Feature[] {};
 
     final IMapModell mapModell = mapPanel.getMapModell();
     if( mapModell == null )
       return new Feature[] {};
 
+    final GeoTransform transform = mapPanel.getProjection();
     final CS_CoordinateSystem coordinatesSystem = mapModell.getCoordinatesSystem();
 
     if( features.length <= 0 )
