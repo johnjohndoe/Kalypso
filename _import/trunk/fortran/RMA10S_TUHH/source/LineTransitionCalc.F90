@@ -1,4 +1,4 @@
-!     Last change:  WP   30 Jul 2007    9:36 am
+!     Last change:  NIS  16 Aug 2007    7:42 pm
 subroutine TransVelDistribution
 
 !description
@@ -19,7 +19,8 @@ USE paraFlow1dFE
 
 !nis,jan07: Variables for the 1D-2D transition line
 integer            :: TransLi, TransNo
-real               :: TransVel, CSArea, TransDep, Discharge, localVel
+real               :: TransVel, CSArea, Discharge, localVel
+REAL (KIND = 8)    :: TransDep
 CHARACTER (LEN=26) :: filename_out
 !TransLi   :: number of Transition Line
 !TransNo   :: number of Transition itself
@@ -88,6 +89,8 @@ transitionloop: do i = 1, MaxLT
   !hole richtungswinkel der strömungsrichtung
   gamma = Delta + 3.14159 / 2.0
 
+  !vnomx and vnomy are the components of the flow direction, Q crosses transition.
+  !It's always perpendicular to border
   vnomx = COS(gamma)
   vnomy = SIN(gamma)
 

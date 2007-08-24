@@ -1,4 +1,4 @@
-C     Last change:  WP   27 Jul 2007    3:27 pm
+C     Last change:  NIS  16 Aug 2007    8:00 pm
 cipk  last update sep 05 2006 add depostion/erosion rates to wave file
 CNis  LAST UPDATE NOV XX 2006 Changes for usage of TUHH capabilities
 CIPK  LAST UPDATE MAR 22 2006 ADD OUTPUT FILE REWIND and KINVIS initialization
@@ -60,7 +60,7 @@ cipk aug98 add character statement
       Integer :: temp_maxnn,temp_iteqs,temp_iteqv,temp_iurvl,temp_itlvl,
      +           temp_iurvl1
 
-      REAL(KIND = 8) :: deltsum
+      REAL :: deltsum
       DIMENSION temp_speccc(3)
 !-
 

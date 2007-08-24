@@ -1,4 +1,4 @@
-!     Last change:  NIS  15 Aug 2007    6:23 pm
+!     Last change:  NIS  16 Aug 2007    6:02 pm
 !     Last change:  NIS  15 Aug 2007    4:22 pm
 MODULE ParaKALYPS
 !NiS,mar06:     Parameter for Kalypso-program-structure and for CVFEM-control as far as necessary to implement parts of
@@ -73,6 +73,9 @@ MODULE ParaKALYPS
 
       !TODO: delete those fields! or define em where they should be!
       REAL (KIND = 8), ALLOCATABLE :: temp_vel(:,:), temp_vdot(:,:), temp_vdoto(:,:)
+      INTEGER, allocatable:: IsNodeOfElement(:,:)
+
+      REAL (KIND = 8), ALLOCATABLE, dimension (:):: lambdaKS, lambdaP, lambdaDunes, lambdaTot
 
 
 

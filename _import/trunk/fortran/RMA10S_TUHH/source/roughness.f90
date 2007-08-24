@@ -1,4 +1,4 @@
-!     Last change:  NIS  15 Aug 2007    5:04 pm
+!     Last change:  NIS  16 Aug 2007    7:15 pm
 !-----------------------------------------------------------------------
 ! This code, roughness.f90, computes the resistance factor lambda according
 ! the Darcy-Weissbahc-resistance law in the library 'Kalypso-2D'.
@@ -36,9 +36,8 @@
 
 !nis,may07: Add switch for sort of calculation 1D or 2D
 !SUBROUTINE darcy (lambda, vecq, h, ks, a, dp, nn, morph, bedform, mel, c_wr)
-SUBROUTINE darcy (lambda, vecq, h, ks, a, dp, nn, morph, bedform, mel, c_wr, approxdim)
+SUBROUTINE darcy (lambda, vecq, h, ks, a, dp, nn, morph, bedform, mel, c_wr, approxdim, lambdaArray)
 !-
-
 !
 !
 !-----------------------------------------------------------------------
@@ -52,8 +51,10 @@ SUBROUTINE darcy (lambda, vecq, h, ks, a, dp, nn, morph, bedform, mel, c_wr, app
 !-----------------------------------------------------------------------
 IMPLICIT none
 
+
 ! Calling variables
 REAL, INTENT(OUT)         			:: lambda
+REAL (KIND = 8), INTENT(OUT), DIMENSION(1:3)    :: lambdaArray
 INTEGER, INTENT(IN) 				:: morph, nn, mel
 REAL, INTENT(IN) 				:: vecq, ks, a, dp
 REAL(KIND=8)                                    :: h
@@ -103,6 +104,11 @@ if (approxdim == 2) then
 endif
 
 lambda = lambdasand + lambdawald + lambdabedform
+
+lambdaArray(1) = lambdasand
+lambdaArray(2) = lambdawald
+lambdaArray(3) = lambdabedform
+
 
 END SUBROUTINE darcy
 
@@ -312,6 +318,7 @@ END if
 ! Gesamtrauhigkeit
 
 lambdasohle = lambda_s_d + lambda_s_r
+
 
 end subroutine formrauhheit
 

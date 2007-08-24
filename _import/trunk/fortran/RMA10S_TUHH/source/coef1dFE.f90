@@ -1,4 +1,4 @@
-!Last change:  WP   30 Jul 2007    9:36 am
+!Last change:  NIS  16 Aug 2007    7:34 pm
 
 !****************************************************************
 !1D subroutine for calculation of elements, whose corner nodes are described with
@@ -25,6 +25,9 @@ USE BLKSANMOD
 USE PARAKalyps
 USE PARAFlow1dFE
 SAVE
+
+!nis,aug07: for refactoring purposes
+REAL (KIND=8) :: hs1, hd1, hsx, hdx
 
 !nis,feb07: Some definitions for internal use concerning the equation upsetting
 REAL (KIND=8) :: aint1(1:4),     aint2(1:4)

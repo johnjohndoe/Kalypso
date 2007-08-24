@@ -1,4 +1,4 @@
-!     Last change:  NIS  15 Aug 2007    5:17 pm
+!     Last change:  NIS  16 Aug 2007    2:16 pm
 !-----------------------------------------------------------------------
 ! This code, data_in.f90, performs reading and validation of model
 ! inputa data in the library 'Kalypso-2D'.
@@ -1469,7 +1469,7 @@ reading: do
     !ROUGHNESS CORRECTION LAYER ---
     if (linie (1:2) == 'RC') then
       if (KSWIT == 1) CYCLE reading
-      read (linie, '(a2, i10, 3(f20.7))') id_local, i, correctionKS(i), correctionAxAy(i), correctionDp(i)
+      read (linie, '(a2, i10, 3(f10.6))') id_local, i, correctionKS(i), correctionAxAy(i), correctionDp(i)
     end if
 
     !ROUGHNESS CLASS INFORMATIONS ---
@@ -2630,6 +2630,35 @@ do i=1,nodecnt
   end do
 
 end do
+
+!nis,aug07: generate upward knowledge, store elements connected to nodes
+BelongingElement: do i = 1, MaxE
+
+  if (ncorn(i) == 0) CYCLE belongingElement
+
+  throughNodes: do j = 1, ncorn(i)
+
+    throughPossibleEntries: do k = 1, 12
+
+      if (IsNodeOfElement(nop(i, j), k) == i) EXIT throughPossibleEntries
+
+      if (IsNodeOfElement(nop(i, j), k) == 0) then
+        IsNodeOfElement(nop(i, j), k) = i
+        !first column is counter
+        IsNodeOfElement(nop(i, j), 0) = isNodeOfElement(nop(i, j), 0) + 1
+        CYCLE throughNodes
+      end if
+
+    enddo throughPossibleEntries
+
+    !Error-message because node has too many elements connected
+    WRITE(*,*) 'ERROR - too many elements appending node ', nop(i, j)
+    WRITE(*,*) 'change model! - Program stopped'
+    stop
+
+  end do throughNodes
+
+ENDDO BelongingElement
 
 
 !NiS,mar06: unit name changed; changed iout to Lout

@@ -7,7 +7,7 @@ CIPK  LAST UPDATE DEC 21 2000 ALLOW FOR GATE STRUCTURE
 cipk  last update Nov 12 1999 add dropout of nodes for 3-d to 2-d
 CIPK  LAST UPDATE JAN 12 1999 FIX 2DV JUNCTION LOGIC
 cipk  last update Dec 5 1998 fix error at transitions
-C     Last change:  WP   27 Jul 2007    5:36 pm
+C     Last change:  NIS  16 Aug 2007    7:25 pm
 cipk  last update Feb 4 1998 correct zero subscript test and for HCN
 CIPK  LAST UPDATE JAN 22 1998
 cipk  last update Dec 16 1997
@@ -49,6 +49,9 @@ C-
 
 !nis,nov06: Defintion of local variables for 1D-2D-line-transition handling
       INTEGER :: LiNo, LiLe, CoNode
+!-
+!NiS,jul06: Declaring waterlevel H for proper call of amf-subroutine
+      REAL(KIND=8) :: HL1, HL2
 !-
 
 C-

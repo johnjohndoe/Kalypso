@@ -1,6 +1,8 @@
 .cvsignore
 *.WP
 *.wp
+*.nis
+*.NIS
 *.xxx
 *.yyy
 *.EF

@@ -1,4 +1,4 @@
-C     Last change:  WP    6 Jul 2007    6:26 pm
+C     Last change:  NIS  16 Aug 2007    7:33 pm
 CIPK  LAST UPDATE APRIL 05 2006 ADD MULTUPILE ENTRIES SO THAT SS INITIAL CONDITIONS CAN BE READ
 cipk  last update FEB 11 2004  add IOV option
 cipk  last update sEP 30 2002 ADD READ OF ICETHICKNESS FROM RESTART FILE
@@ -39,7 +39,8 @@ CIPK APR06
       INTEGER              :: dummy(4), j
 !-
 !NiS,jul06: Declaring variable types for proper call of amf
-      REAL(KIND=8)         :: VAAA, HTP, H, HS
+      REAL (KIND = 8)      :: VAAA, HTP, H, HS
+      REAL (KIND = 8)      :: tmpdepth
 !-
 
 !nis,jul07:

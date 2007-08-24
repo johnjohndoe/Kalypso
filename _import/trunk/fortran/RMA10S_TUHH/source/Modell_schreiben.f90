@@ -1,4 +1,4 @@
-!     Last change:  NIS  15 Aug 2007    7:38 pm
+!     Last change:  NIS  16 Aug 2007    6:26 pm
 !-----------------------------------------------------------------------------
 ! This code, data_out.f90, performs writing and validation of model
 ! output data in the library 'Kalypso-2D'.
@@ -474,6 +474,7 @@ write_elements: DO i = 1, ne
   if (CorrectionKS(i) /= 1.0 .or. CorrectionAxAy(i) /= 1.0 .or. CorrectionDp(i) /= 1.0) then
     WRITE (IKALYPSOFM, 7017) i, CorrectionKS(i), CorrectionAxAy(i), CorrectionDp(i)
   end if
+  WRITE (IKALYPSOFM, 7018) i, lambdaTot(i), lambdaKS(i), lambdaP(i), lambdaDunes(i)
 END do write_elements
 
 !NiS,may06: Write informations of
@@ -559,7 +560,6 @@ END do write_roughness
 !                                                                       
  7007 FORMAT ('ZU',i10,i6,4f15.7)
 
-
 !                              Kanten; Nummer,Knoten-unten Knoten-oben  
 !                                     ,Element-links,Element-rechts     
 !                                     ,Mittseitenknoten:                
@@ -579,7 +579,10 @@ END do write_roughness
  7016 FORMAT ('FE', 5i10)
 
  !nis,aug07: writing roughness correction layer data
- 7017 FORMAT ('RC', i10, 3(1x,f20.4))
+ 7017 FORMAT ('RC', i10, 3(f10.6))
+
+ !nis,aug07: writing out flow resistance results for elements#
+ 7018 FORMAT ('FR', i10, 4f15.7)
 
 
 !NiS,may06: new identification line for cross sectional informations:

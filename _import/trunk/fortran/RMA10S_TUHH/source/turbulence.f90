@@ -1,4 +1,4 @@
-!     Last change:  EF    1 Jun 2007    5:55 pm
+!     Last change:  NIS  16 Aug 2007    7:56 pm
 !----------------------------------------------------------------------------
 ! This code, turbulence.f90, computes the turbulence parameter nu_T for all
 ! finite elements depending on chosen turbulence model as specified by
@@ -64,8 +64,10 @@ implicit none
 INTEGER, INTENT(IN) ::          	nn, iturb
 REAL, INTENT(IN) ::                     mineddy
 REAL, INTENT(IN) ::   			eexxyy1,eexxyy2,eexxyy3,eexxyy4
-REAL, INTENT(IN) ::                     roavg, p_bottom, p_prandtl, ffact, vecq, h
-REAL, INTENT(IN) ::                     drdx, drdz, dsdx, dsdz, gscal
+REAL, INTENT(IN) ::                     roavg, p_bottom, p_prandtl, ffact, vecq
+REAL (KIND = 8), INTENT(IN) ::          h
+REAL, INTENT(IN) ::                     drdx, drdz, dsdx, dsdz
+REAL (kind = 8), INTENT(IN) ::          gscal
 REAL, INTENT(OUT) ::                    epsxx, epsxz, epszx, epszz
 
 ! Local variables
@@ -218,7 +220,8 @@ real function bottom_generated(c, ffact, vecq, h)
 
 implicit none
 
-REAL, INTENT(IN) ::	ffact, vecq, h, c
+REAL, INTENT(IN) ::	ffact, vecq, c
+REAL (KIND = 8), INTENT(IN) :: h
 
 BOTTOM_GENERATED = c * sqrt(ffact) * vecq * h
 

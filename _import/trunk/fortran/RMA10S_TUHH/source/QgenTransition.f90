@@ -1,4 +1,4 @@
-!     Last change:  WP   30 Jul 2007    9:36 am
+!     Last change:  NIS  16 Aug 2007    7:30 pm
       SUBROUTINE QGENtrans (TLine,TNode,QREQ,THET, TDep)
 
       !nis,jan07: Overgiven variables
@@ -25,13 +25,15 @@
       REAL (KIND=8) :: tmpvx,tmpvy,tmpdepth,tmpwl
       REAL (KIND=8) :: fliesstiefe, waspi
       REAL (KIND=8) :: d1,d3,d1v,d3v,d2_kind8
+      !nis,aug07: dummy parameters for passing
+      REAL (KIND=8), DIMENSION(1:3) :: dummy
       REAL          :: d2
       REAL          :: vecq, vest
       REAL          :: cos_in_grad, sin_in_grad
       REAL          :: thet, qreq, total
       REAL          :: dx, dy, xl, dx1, dy1, dx2, dy2
-      real          :: alp, suma, wurz, sumx, sumy
-      REAL          :: TDep, TDepv
+      real          :: suma, wurz, sumx, sumy
+      REAL (KIND=8) :: TDep, TDepv
       REAL          :: DUM1, DUM2
 
       !integer variables
@@ -62,10 +64,11 @@ DO k = 1, lmt (TLine)
   !segment length
   dxl (k) = 0.0
 END DO
-  !weights for simpson rule
-  weight(0) = 1.0
-  weight(1) = 4.0
-  weight(2) = 1.0
+
+!weights for simpson rule
+weight(0) = 1.0
+weight(1) = 4.0
+weight(2) = 1.0
 
 !iostaterror = 0
 
@@ -122,7 +125,7 @@ ThroughNodesOfLine: DO k = 1, maxL, 2
   dx = cord (nc, 1) - cord (na, 1)
   dy = cord (nc, 2) - cord (na, 2)
 
-  !counting sixth length of segment produced on the chord of the transition length (it's vector product for angle calculation)
+  !counting sixth length of segment projected on the chord of the transition length (it's vector product for angle calculation)
   xl = ABS((dx * dxline + dy * dyline) / (6 * SQRT (dxline**2 + dyline**2)))
 
   !nis,jun07: switched off Marsh-Algorithm:
@@ -138,8 +141,8 @@ ThroughNodesOfLine: DO k = 1, maxL, 2
     d3v = waspi - ado (nc)
 
     !Transform to Marsh-depth
-    CALL amf (d1v, di(0), akp (na), adt (na), adb (na), amec (k), di(1), 1)
-    CALL amf (d3v, di(2), akp (nc), adt (nc), adb (nc), amec (k), di(1), 1)
+    CALL amf (d1v, di(0), akp (na), adt (na), adb (na), amec (k), dum1, 1)
+    CALL amf (d3v, di(2), akp (nc), adt (nc), adb (nc), amec (k), dum1, 1)
   ENDIF
   !-
 
@@ -167,7 +170,7 @@ ThroughNodesOfLine: DO k = 1, maxL, 2
       cwr_line = 1.0
 
       !get lambda
-      CALL darcy (lambda, vecq, di(0), ort(lineimat(TLine, k+1), 15), 0., 0., 0,  0, gl_bedform, mel, cwr_line, 2)
+      CALL darcy (lambda, vecq, di(0), ort(lineimat(TLine, k+1), 15), 0., 0., 0,  0, gl_bedform, mel, cwr_line, 2, dummy)
 
       !Correct roughness, if there is a material (imat) factor (when marsh-option is active)
       if (idnopt /= 0 .and. d1 < akp(na) * adb(na)) then
@@ -197,13 +200,6 @@ maxL = lmt (TLine)
 DO k = 1, maxL
   suma = suma + Conveyance (k)
 END DO
-
-!testfile ouput
-!do i = 1, maxL
-! WRITE(*,*) 'Conveyance Factor of node ', i,':',Conveyance(i)
-!end do
-!WRITE(*,*) 'Conveyance Factor sum test:', suma
-!WRITE(*,*) '                 overall Q:', qreq
 
 !Testing of the Conveyance factors
 suma = abs (suma)

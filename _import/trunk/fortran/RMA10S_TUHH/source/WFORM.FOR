@@ -1,3 +1,4 @@
+C     Last change:  NIS  16 Aug 2007    7:23 pm
 cipk last update Oct 2 2003 revise frIction equivalence
 CIPK LAST UPDATE JUL30 2000 REVISE VERSION
 cipk  new routine Mar 1 2000

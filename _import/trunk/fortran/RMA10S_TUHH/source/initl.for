@@ -1,4 +1,4 @@
-C     Last change:  NIS  15 Aug 2007    6:25 pm
+C     Last change:  NIS  16 Aug 2007    6:02 pm
 CLast change:  WP   27 Jul 2007    5:46 pm
 CIPK  LAST UPDATE SEP 05 2006 ADD DEPRATO AND TO TMD
 CIPK  LAST UPDATE APR 05 2006 ADD IPASST ALLOCATION
@@ -911,6 +911,27 @@ CIPK MAR01
         correctionKS(i)   = 1.0
       end do
       !-
+
+      !nis,aug07: Introducing flow resistance storage for every element
+      ALLOCATE (lambdaKS(1:maxe), lambdaP(1:maxe), lambdaDunes(1:maxe),
+     +          lambdaTot(1:maxe))
+      do i = 1, maxe
+        lambdaKS(i) = 0.0
+        lambdaP(i) = 0.0
+        lambdaDunes(i)  = 0.0
+        lambdaTot(i) = 0.0
+      end do
+      !-
+
+      !nis,aug07: number of 12 elements maximum at a node is because of reducing the inside element angle to
+      !           20 degrees in average (360°/12)
+      !TODO: make second entry dynamical
+      ALLOCATE (IsNodeOfElement(1:maxp, 1:12))
+      do i = 0, maxp
+        do j = 0, 12
+          IsNodeOfElement(i, j) = 0
+        end do
+      end do
 
       !initializations for lines
       do i = 1, 50

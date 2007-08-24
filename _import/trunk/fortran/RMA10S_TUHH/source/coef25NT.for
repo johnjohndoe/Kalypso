@@ -27,7 +27,7 @@ cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
 cipk  last update Jan 21 1998
 cipk  last update Dec 16 1997
-C     Last change:  NIS  15 Aug 2007    5:56 pm
+C     Last change:  NIS  16 Aug 2007    6:10 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 cipk  last update Jan 22 1997
 cipk  last update Oct 1 1996 add new formulations for EXX and EYY
@@ -55,9 +55,6 @@ CIPK  LAST UPDATED SEP 7 1995
 !-
 
 C
-!NiS,apr06: adding variables for friction calculation with DARCY-WEISBACH
-      REAL :: lambda
-!-
 
 !nis,jun07: Changes for matrix output
       INTEGER :: dca
@@ -1011,15 +1008,19 @@ cipk mar05
 
         !calculate lambda
         !nis,aug07: Introducing correction factor for roughness parameters, if Darcy-Weisbach is used
-        call darcy(lambda, vecq, h,
+        call darcy(lambdaTot(nn), vecq, h,
      +             cniku(nn)     * correctionKS(nn),
      +             abst(nn)      * correctionAxAy(nn),
      +             durchbaum(nn) * correctionDp(nn),
-     +             nn, morph, gl_bedform, mel, c_wr(nn), 2)
+     +             nn, morph, gl_bedform, mel, c_wr(nn), 2,
+                   !store values for output
+     +             lambdaKS(nn),
+     +             lambdaP(nn),
+     +             lambdaDunes(nn))
 
 
         !calculation of friction factor for roughness term in differential equation
-        FFACT = lambda/8.0
+        FFACT = lambdaTot(nn)/8.0
 
         !NiS,apr06: As parallel to the other parts from above, without knowledge about meaning, might be derivative, not clear
         DFFDH = 0.
