@@ -122,5 +122,4 @@ public class SelectFeaturesMapFunction implements IRectangleMapFunction
   {
     return m_featuresProvider;
   }
-
 }

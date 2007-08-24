@@ -40,11 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets;
 
+import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Point;
 
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.graphics.Rectangle;
+import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.mapfunctions.IRectangleMapFunction;
 import org.kalypso.ogc.gml.map.widgets.mapfunctions.RectangleSelector;
@@ -77,6 +79,9 @@ public class SelectionWidget extends AbstractWidget
    */
   private String m_tooltip = "";
 
+  /**
+   * The current point.
+   */
   private Point m_current_point;
 
   /**
@@ -112,6 +117,20 @@ public class SelectionWidget extends AbstractWidget
 
     m_clickFunction = clickFunction;
     m_tooltipProvider = tooltipProvider;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#activate(org.kalypso.commons.command.ICommandTarget,
+   *      org.kalypso.ogc.gml.map.MapPanel)
+   */
+  @Override
+  public void activate( ICommandTarget commandPoster, MapPanel mapPanel )
+  {
+    super.activate( commandPoster, mapPanel );
+
+    /* Init the cursor. */
+    Cursor cursor = Cursor.getPredefinedCursor( Cursor.CROSSHAIR_CURSOR );
+    getMapPanel().setCursor( cursor );
   }
 
   /**
@@ -210,6 +229,10 @@ public class SelectionWidget extends AbstractWidget
   {
     getMapPanel().setMessage( "" );
     m_selector = null;
+
+    /* Reset the cursor to default. */
+    Cursor cursor = Cursor.getPredefinedCursor( Cursor.DEFAULT_CURSOR );
+    getMapPanel().setCursor( cursor );
 
     super.finish();
   }
