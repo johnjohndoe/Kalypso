@@ -125,7 +125,7 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
     sCompData.heightHint = 300;
     sComposite.setLayoutData( sCompData );
 
-    /* And finally display it. TODO: Why are there no Scrollbars? */
+    /* And finally display it. */
     Canvas canvas = new Canvas( sComposite, SWT.NONE );
     canvas.setSize( swtLegend.getBounds().width, swtLegend.getBounds().height );
     canvas.setBackgroundImage( swtLegend );
