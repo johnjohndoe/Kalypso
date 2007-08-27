@@ -27,7 +27,6 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IPseudoOPerationalModel;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IStaticModel1D2D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.ICommandPoster;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
@@ -65,7 +64,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
    */
   private static final Map<Class< ? extends IFeatureWrapper2>, String> LOCATION_MAP = new HashMap<Class< ? extends IFeatureWrapper2>, String>();
 
-  private static final String MODELS_FOLDER = "models";  //$NON-NLS-1$
+  private static final String MODELS_FOLDER = "models"; //$NON-NLS-1$
 
   static
   {
@@ -76,7 +75,6 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
     LOCATION_MAP.put( IControlModelGroup.class, MODELS_FOLDER + "/control.gml" );
     LOCATION_MAP.put( IStaticModel1D2D.class, MODELS_FOLDER + "/static_model.gml" );
     LOCATION_MAP.put( IRoughnessClsCollection.class, "project:/.metadata/roughness.gml" );
-    LOCATION_MAP.put( IScenarioResultMeta.class, MODELS_FOLDER + "/scenarioResultMeta.gml" );
   }
 
   private static final class KeyPoolListener implements IPoolListener
@@ -283,7 +281,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
    * This method block until the gml is loaded, which may take some time
    * </p>.
    */
-  @SuppressWarnings("unchecked")  //$NON-NLS-1$
+  @SuppressWarnings("unchecked")//$NON-NLS-1$
   public <T extends IFeatureWrapper2> T getModel( final Class<T> modelClass ) throws CoreException
   {
     final CommandableWorkspace workspace = getModelWorkspace( modelClass );
@@ -299,7 +297,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
   private synchronized CommandableWorkspace getModelWorkspace( final Class< ? extends IFeatureWrapper2> wrapperClass ) throws IllegalArgumentException, CoreException
   {
     if( !LOCATION_MAP.containsKey( wrapperClass ) )
-      throw new IllegalArgumentException( Messages.getString("SzenarioDataProvider.13") + wrapperClass ); //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.getString( "SzenarioDataProvider.13" ) + wrapperClass ); //$NON-NLS-1$
 
     final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
 
@@ -365,7 +363,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
     }
     try
     {
-      monitor.beginTask( Messages.getString("SzenarioDataProvider.14") + modelClass.getSimpleName() + Messages.getString("SzenarioDataProvider.15"), 110 ); //$NON-NLS-1$ //$NON-NLS-2$
+      monitor.beginTask( Messages.getString( "SzenarioDataProvider.14" ) + modelClass.getSimpleName() + Messages.getString( "SzenarioDataProvider.15" ), 110 ); //$NON-NLS-1$ //$NON-NLS-2$
 
       final KeyPoolListener keyPoolListener = m_keyMap.get( modelClass );
       final IPoolableObjectType key = keyPoolListener.getKey();
@@ -399,7 +397,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
     }
     try
     {
-      monitor.beginTask( Messages.getString("SzenarioDataProvider.16"), m_keyMap.size() * 100 ); //$NON-NLS-1$
+      monitor.beginTask( Messages.getString( "SzenarioDataProvider.16" ), m_keyMap.size() * 100 ); //$NON-NLS-1$
       for( final Class< ? extends IFeatureWrapper2> modelClass : m_keyMap.keySet() )
       {
         saveModel( modelClass, new SubProgressMonitor( monitor, 100 ) );
