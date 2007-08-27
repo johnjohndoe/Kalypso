@@ -102,10 +102,10 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
   @Override
   public Object getAdapter( final Class adapter )
   {
-    if( adapter == IPropertySheetPage.class )
+    if( adapter.equals( IPropertySheetPage.class ) )
     {
       // lazy loading
-      if( m_propsPage == null || m_propsPage.getControl().isDisposed() )
+      if( (m_propsPage == null) || m_propsPage.getControl().isDisposed() )
       {
         // dispose it when not null (not sure if this is ok)
         if( m_propsPage != null )
@@ -127,7 +127,7 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
       return m_propsPage;
     }
 
-    if( adapter == ObservationChooser.class )
+    if( adapter.equals( ObservationChooser.class ) )
       return m_chooser;
 
     return super.getAdapter( adapter );
@@ -192,7 +192,7 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
    */
   public void selectionChanged( final SelectionChangedEvent event )
   {
-    if( m_propsPage != null && !m_propsPage.getControl().isDisposed() )
+    if( (m_propsPage != null) && !m_propsPage.getControl().isDisposed() )
       m_propsPage.selectionChanged( this, event.getSelection() );
   }
 
@@ -215,15 +215,15 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
     }
 
     // save list of repositories
-    final IMemento repsMem = memento.createChild( TAG_REPOSITORIES );
+    final IMemento repsMem = memento.createChild( RepositoryExplorerPart.TAG_REPOSITORIES );
     final IRepository[] repositories = m_chooser.getRepositoryContainer().getRepositories();
     for( final IRepository repository : repositories )
     {
-      final IMemento child = repsMem.createChild( TAG_REPOSITORY );
+      final IMemento child = repsMem.createChild( RepositoryExplorerPart.TAG_REPOSITORY );
       child.putTextData( new RepositoryFactoryConfig( repository ).saveState() );
 
       // save properties for that repository
-      final IMemento propsMem = child.createChild( TAG_REPOSITORY_PROPS );
+      final IMemento propsMem = child.createChild( RepositoryExplorerPart.TAG_REPOSITORY_PROPS );
       try
       {
         MementoUtils.saveProperties( propsMem, repository.getProperties() );
@@ -238,16 +238,14 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
     final Object expandedElements[] = viewer.getVisibleExpandedElements();
     if( expandedElements.length > 0 )
     {
-      final IMemento expandedMem = memento.createChild( TAG_EXPANDED );
+      final IMemento expandedMem = memento.createChild( RepositoryExplorerPart.TAG_EXPANDED );
       for( final Object element : expandedElements )
-      {
         if( element instanceof IRepositoryItem )
         {
-          final IMemento elementMem = expandedMem.createChild( TAG_ELEMENT );
+          final IMemento elementMem = expandedMem.createChild( RepositoryExplorerPart.TAG_ELEMENT );
           final String id = ((IRepositoryItem) element).getIdentifier();
-          elementMem.putString( TAG_IDENFITIER, id );
+          elementMem.putString( RepositoryExplorerPart.TAG_IDENFITIER, id );
         }
-      }
     }
   }
 
@@ -264,10 +262,10 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
 
     final TreeViewer viewer = m_chooser.getViewer();
 
-    final IMemento repsMem = memento.getChild( TAG_REPOSITORIES );
+    final IMemento repsMem = memento.getChild( RepositoryExplorerPart.TAG_REPOSITORIES );
     if( repsMem != null )
     {
-      final IMemento[] repMem = repsMem.getChildren( TAG_REPOSITORY );
+      final IMemento[] repMem = repsMem.getChildren( RepositoryExplorerPart.TAG_REPOSITORY );
       for( final IMemento element : repMem )
       {
         if( element == null )
@@ -280,7 +278,7 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
           {
             final IRepository rep = item.createFactory( getClass().getClassLoader() ).createRepository();
 
-            final IMemento propsMem = element.getChild( TAG_REPOSITORY_PROPS );
+            final IMemento propsMem = element.getChild( RepositoryExplorerPart.TAG_REPOSITORY_PROPS );
             if( propsMem != null )
               MementoUtils.loadProperties( propsMem, rep.getProperties() );
 
@@ -295,13 +293,12 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
       }
     }
 
-    final IMemento childMem = memento.getChild( TAG_EXPANDED );
+    final IMemento childMem = memento.getChild( RepositoryExplorerPart.TAG_EXPANDED );
     if( childMem != null )
     {
       final List<IRepositoryItem> elements = new ArrayList<IRepositoryItem>();
-      final IMemento[] elementMem = childMem.getChildren( TAG_ELEMENT );
+      final IMemento[] elementMem = childMem.getChildren( RepositoryExplorerPart.TAG_ELEMENT );
       for( final IMemento element : elementMem )
-      {
         try
         {
           // Marc's Note: commented this out because it is too slow...
@@ -324,7 +321,6 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
         {
           // ignored
         }
-      }
 
       viewer.setExpandedElements( elements.toArray() );
     }
