@@ -54,6 +54,8 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.MouseAdapter;
@@ -93,11 +95,7 @@ public class StrokeEditorComposite extends Composite
 
   private Color m_color;
 
-  private int m_strokeWidth;
-
   private Label m_colorLabel;
-
-  private Group m_previewGroup;
 
   private Image m_preview;
 
@@ -112,6 +110,8 @@ public class StrokeEditorComposite extends Composite
     try
     {
       createControl();
+      updatePreview();
+
     }
     catch( FilterEvaluationException e )
     {
@@ -159,7 +159,6 @@ public class StrokeEditorComposite extends Composite
         }
         m_colorLabel.setBackground( m_color );
         updatePreview();
-        m_previewComp.setBackgroundImage( m_preview );
       }
     } );
 
@@ -205,7 +204,6 @@ public class StrokeEditorComposite extends Composite
       {
         m_stroke.setWidth( widthSpinner.getSelection() );
         updatePreview();
-        m_previewComp.setBackgroundImage( m_preview );
       }
     } );
 
@@ -214,7 +212,7 @@ public class StrokeEditorComposite extends Composite
     final Label comboTextLabel = new Label( this, SWT.NONE );
     comboTextLabel.setText( "Strichart" );
 
-    final ComboViewer lineTypeCombo = new ComboViewer( this, SWT.NONE );
+    final ComboViewer lineTypeCombo = new ComboViewer( this, SWT.READ_ONLY );
     GridData comboGridData = new GridData( SWT.END, SWT.CENTER, false, false );
 
     lineTypeCombo.getControl().setLayoutData( comboGridData );
@@ -284,7 +282,6 @@ public class StrokeEditorComposite extends Composite
           m_stroke.setDashArray( dashArray );
         }
         updatePreview();
-        m_previewComp.setBackgroundImage( m_preview );
       }
     } );
 
@@ -301,8 +298,6 @@ public class StrokeEditorComposite extends Composite
     GridData previewCompData = new GridData( SWT.FILL, SWT.CENTER, true, false );
     previewCompData.heightHint = 22;
     m_previewComp.setLayoutData( previewCompData );
-    updatePreview();
-    m_previewComp.setBackgroundImage( m_preview );
 
     this.addDisposeListener( new DisposeListener()
     {
@@ -312,6 +307,16 @@ public class StrokeEditorComposite extends Composite
       }
 
     } );
+
+    m_previewComp.addControlListener( new ControlAdapter()
+    {
+      @Override
+      public void controlResized( ControlEvent e )
+      {
+        updatePreview();
+      }
+    } );
+
   }
 
   private void updatePreview( )
@@ -359,7 +364,7 @@ public class StrokeEditorComposite extends Composite
     {
       m_preview = preview;
     }
-
+    m_previewComp.setBackgroundImage( m_preview );
   }
 
   protected void disposeControl( )
