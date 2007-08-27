@@ -197,6 +197,7 @@ public class ComboFeatureControl extends AbstractFeatureControl
       }
     } );
 
+    // TODO: maybe get the sorter from....?
     m_comboViewer.setSorter( new ViewerSorter() );
 
     m_comboViewer.setInput( m_entries.keySet() );
