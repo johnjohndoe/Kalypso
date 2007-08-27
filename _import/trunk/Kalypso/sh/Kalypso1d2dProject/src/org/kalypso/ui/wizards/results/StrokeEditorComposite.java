@@ -253,32 +253,38 @@ public class StrokeEditorComposite extends Composite
 
         String string = (String) element;
 
-        float[] dashArray = new float[2];
         if( string == "durchgezogen" )
         {
-          dashArray[0] = 1f;
-          dashArray[1] = 1f;
+          float[] dashArray = new float[2];
+          dashArray[0] = 1;
+          dashArray[1] = 0;
           m_stroke.setDashArray( dashArray );
-          // m_stroke.setDashOffset( 0 );
         }
         else if( string == "gestrichelt" )
         {
+          float[] dashArray = new float[2];
           dashArray[0] = 10f;
           dashArray[1] = 5f;
           m_stroke.setDashArray( dashArray );
-          m_stroke.setDashOffset( 5f );
         }
         else if( string == "gepunktet" )
         {
-          dashArray[0] = 10f;
-          dashArray[1] = 2f;
+          float[] dashArray = new float[2];
+          dashArray[0] = 2f;
+          dashArray[1] = 1.9f;
           m_stroke.setDashArray( dashArray );
-          m_stroke.setDashOffset( 5f );
         }
         else if( string == "Strich-Punkt" )
         {
-
+          float[] dashArray = new float[4];
+          dashArray[0] = 10f;
+          dashArray[1] = 5f;
+          dashArray[2] = 2f;
+          dashArray[3] = 1.9f;
+          m_stroke.setDashArray( dashArray );
         }
+        updatePreview();
+        m_previewComp.setBackgroundImage( m_preview );
       }
     } );
 
