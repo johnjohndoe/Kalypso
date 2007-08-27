@@ -78,16 +78,19 @@ public class ResultStyleComposite
 
   private IFile m_style;
 
+  private final String m_stylePath;
+
   public ResultStyleComposite( final Composite parent, IFolder scenarioFolder, String stylePath )
   {
+    m_stylePath = stylePath;
     /* style combo */
     m_combStyleTemplates = new ComboViewer( parent, SWT.DROP_DOWN | SWT.READ_ONLY );
     m_combStyleTemplates.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    m_combStyleTemplates.getControl().setToolTipText( "Wählen Sie den geünschten Style aus" );
+    m_combStyleTemplates.getControl().setToolTipText( "Wählen Sie den gewünschten Style aus" );
     m_combStyleTemplates.setContentProvider( new ArrayContentProvider() );
 
     // look for existing scenario style templates and fill them into the combo
-    final IFile[] styleTemplates = getStyleTemplates( stylePath, scenarioFolder );
+    final IFile[] styleTemplates = getStyleTemplates( m_stylePath, scenarioFolder );
     m_combStyleTemplates.setInput( styleTemplates );
     if( m_combStyleTemplates.getElementAt( 0 ) != null )
     {

@@ -40,17 +40,36 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.wizards.results;
 
-import java.util.HashMap;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.contribs.java.net.IUrlResolver2;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypsodeegree.graphics.sld.Stroke;
-import org.kalypsodeegree_impl.graphics.sld.Stroke_Impl;
+import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
+import org.kalypsodeegree.graphics.sld.NamedLayer;
+import org.kalypsodeegree.graphics.sld.PointSymbolizer;
+import org.kalypsodeegree.graphics.sld.Rule;
+import org.kalypsodeegree.graphics.sld.Style;
+import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
+import org.kalypsodeegree.graphics.sld.SurfaceLineSymbolizer;
+import org.kalypsodeegree.graphics.sld.SurfacePolygonSymbolizer;
+import org.kalypsodeegree.graphics.sld.Symbolizer;
+import org.kalypsodeegree.graphics.sld.UserStyle;
+import org.kalypsodeegree.xml.XMLParsingException;
+import org.kalypsodeegree_impl.graphics.sld.LineColorMap;
+import org.kalypsodeegree_impl.graphics.sld.PolygonColorMap;
+import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
 
 /**
  * @author Thomas Jung
@@ -64,14 +83,18 @@ public class EditStyleDialog extends TitleAreaDialog
 
   private static final String SETTINGS_Y = "posy";
 
-  private final IFile m_style;
+  private final IFile m_sldFile;
 
   private IDialogSettings m_dialogSettings;
 
-  public EditStyleDialog( Shell parentShell, IFile style )
+  private double m_minValue;
+
+  private double m_maxValue;
+
+  public EditStyleDialog( Shell parentShell, IFile sldFile )
   {
     super( parentShell );
-    m_style = style;
+    m_sldFile = sldFile;
 
     final IDialogSettings dialogSettings = KalypsoModel1D2DPlugin.getDefault().getDialogSettings();
     m_dialogSettings = dialogSettings.getSection( SETTINGS_SECTION );
@@ -84,13 +107,114 @@ public class EditStyleDialog extends TitleAreaDialog
     if( m_dialogSettings.get( SETTINGS_Y ) == null )
       m_dialogSettings.put( SETTINGS_Y, -1 );
 
-    // TODO: get the stroke from sld
-    final Stroke stroke = new Stroke_Impl( new HashMap<Object, Object>(), null, null );
-
-    final StrokeEditorComposite composite = new StrokeEditorComposite( getShell(), SWT.NONE, stroke );
-
     setShellStyle( getShellStyle() | SWT.RESIZE );
+  }
 
+  @Override
+  protected Control createDialogArea( final Composite parent )
+  {
+    /* identify style */
+    Symbolizer symbolizer = processStyle();
+
+    /* choose the composite, depending on the style */
+    if( symbolizer instanceof SurfaceLineSymbolizer )
+    {
+      SurfaceLineSymbolizer symb = (SurfaceLineSymbolizer) symbolizer;
+      final LineColorMap colorMap = symb.getColorMap();
+      LineColorMapEditorComposite comp = new LineColorMapEditorComposite( parent, SWT.NONE, colorMap );
+    }
+    else if( symbolizer instanceof SurfacePolygonSymbolizer )
+    {
+      SurfacePolygonSymbolizer symb = (SurfacePolygonSymbolizer) symbolizer;
+      final PolygonColorMap colorMap = symb.getColorMap();
+
+      PolygonColorMapEditorComposite comp = new PolygonColorMapEditorComposite( parent, SWT.NONE, colorMap );
+    }
+    else if( symbolizer instanceof PointSymbolizer )
+    {
+      PointSymbolizer symb = (PointSymbolizer) symbolizer;
+      symb.getGraphic();
+
+    }
+    return null;
+  }
+
+  /**
+   * @see org.eclipse.jface.dialogs.Dialog#okPressed()
+   */
+  @Override
+  protected void okPressed( )
+  {
+    // write the style back to file
+
+    super.okPressed();
+  }
+
+  private Symbolizer processStyle( )
+  {
+
+    InputStream inputStream = null;
+    try
+    {
+      inputStream = m_sldFile.getContents();
+      final IUrlResolver2 resolver = new IUrlResolver2()
+      {
+        @SuppressWarnings("synthetic-access")
+        public URL resolveURL( String relativeOrAbsolute ) throws MalformedURLException
+        {
+          URL url = m_sldFile.getLocationURI().toURL();
+
+          return url;
+        }
+
+      };
+      final StyledLayerDescriptor sld = SLDFactory.createSLD( resolver, inputStream );
+
+      final NamedLayer[] namedLayers = sld.getNamedLayers();
+      // get always just the first layer
+      final NamedLayer namedLayer = namedLayers[0];
+      final String layerName = namedLayer.getName();
+
+      // get always the first style (we assume there is only one)
+      final Style[] styles = namedLayer.getStyles();
+
+      final Style style = styles[0];
+      if( style instanceof UserStyle )
+      {
+        final String styleName = style.getName();
+        final UserStyle userStyle = (UserStyle) style;
+        final FeatureTypeStyle[] featureTypeStyles = userStyle.getFeatureTypeStyles();
+        // we assume, that there is only one feature type style and take the first we can get.
+        final FeatureTypeStyle featureTypeStyle = featureTypeStyles[0];
+        final String featureTypeStyleName = featureTypeStyle.getName();
+
+        // we assume, that there is only one rule and take the first we can get.
+        final Rule[] rules = featureTypeStyle.getRules();
+        final Rule rule = rules[0];
+
+        // and the first and only symbolizer is taken
+        final Symbolizer[] symbolizers = rule.getSymbolizers();
+        final Symbolizer symb = symbolizers[0];
+
+        return symb;
+      }
+    }
+    catch( CoreException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    catch( XMLParsingException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+
+    finally
+    {
+      IOUtils.closeQuietly( inputStream );
+    }
+    return null;
   }
 
   /**
@@ -103,7 +227,6 @@ public class EditStyleDialog extends TitleAreaDialog
 
     getShell().setText( "Style Manager" );
     setTitle( "Bearbeitung der Style-Vorlagen." );
-
   }
 
   /**
