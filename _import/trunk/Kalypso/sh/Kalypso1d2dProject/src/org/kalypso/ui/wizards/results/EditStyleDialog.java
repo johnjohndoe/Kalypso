@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.wizards.results;
 
+import java.util.HashMap;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -47,6 +49,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypsodeegree.graphics.sld.Stroke;
+import org.kalypsodeegree_impl.graphics.sld.Stroke_Impl;
 
 /**
  * @author Thomas Jung
@@ -55,10 +59,6 @@ import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 public class EditStyleDialog extends TitleAreaDialog
 {
   private static final String SETTINGS_SECTION = "ResultStyleEditorDialogSettings";
-
-  private static final String SETTINGS_WIDTH = "width";
-
-  private static final String SETTINGS_HEIGHT = "height";
 
   private static final String SETTINGS_X = "posx";
 
@@ -78,35 +78,19 @@ public class EditStyleDialog extends TitleAreaDialog
     if( m_dialogSettings == null )
       m_dialogSettings = dialogSettings.addNewSection( SETTINGS_SECTION );
 
-    if( m_dialogSettings.get( SETTINGS_WIDTH ) == null )
-      m_dialogSettings.put( SETTINGS_WIDTH, 0 );
-
-    if( m_dialogSettings.get( SETTINGS_HEIGHT ) == null )
-      m_dialogSettings.put( SETTINGS_HEIGHT, 0 );
-
     if( m_dialogSettings.get( SETTINGS_X ) == null )
       m_dialogSettings.put( SETTINGS_X, -1 );
 
     if( m_dialogSettings.get( SETTINGS_Y ) == null )
       m_dialogSettings.put( SETTINGS_Y, -1 );
 
+    // TODO: get the stroke from sld
+    final Stroke stroke = new Stroke_Impl( new HashMap<Object, Object>(), null, null );
+
+    final StrokeEditorComposite composite = new StrokeEditorComposite( getShell(), SWT.NONE, stroke );
+
     setShellStyle( getShellStyle() | SWT.RESIZE );
 
-  }
-
-  /**
-   * @see org.eclipse.jface.dialogs.TitleAreaDialog#getInitialSize()
-   */
-  @Override
-  protected Point getInitialSize( )
-  {
-    final Point defaultSize = super.getInitialSize();
-
-    final int lastWidth = m_dialogSettings.getInt( SETTINGS_WIDTH );
-    final int lastHeight = m_dialogSettings.getInt( SETTINGS_HEIGHT );
-
-    // HACK: the calculated width is always too big, so we reduce it a bit
-    return new Point( Math.max( defaultSize.x, lastWidth ), Math.max( defaultSize.y - 130, lastHeight ) );
   }
 
   /**
@@ -133,10 +117,7 @@ public class EditStyleDialog extends TitleAreaDialog
       return true;
 
     // save dialog settings
-    final Point size = shell.getSize();
     final Point location = shell.getLocation();
-    m_dialogSettings.put( SETTINGS_WIDTH, size.x );
-    m_dialogSettings.put( SETTINGS_HEIGHT, size.y );
     m_dialogSettings.put( SETTINGS_X, location.x );
     m_dialogSettings.put( SETTINGS_Y, location.y );
 
