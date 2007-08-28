@@ -1,4 +1,4 @@
-C     Last change:  EF   31 Jul 2007   10:43 am
+C     Last change:  EF   28 Aug 2007    3:04 pm
 CIPK  LAST UPDATE SEP 06 2004 ADD ERROR FILE
 CIPK  LAST UPDATE AUG 8 2004   ADD ERROR TEST FOR STAGE FLOW TABLE
 CIPK  NEW ROUTINE AUG 26 2002
@@ -119,13 +119,6 @@ CIPK AUG04
      +         +FACT*(FLOWTBL(ILINTB,I)-FLOWTBL(ILINTB,I-1))  
            DFDH=(FLOWTBL(ILINTB,I)-FLOWTBL(ILINTB,I-1))/
      +          (ELEVTBL(ILINTB,I)-ELEVTBL(ILINTB,I-1))
-          !EFa jul07, testing
-          WRITE(*,*)'FLOWTBL(ILINTB,I)     :',FLOWTBL(ILINTB,I)
-          WRITE(*,*)'FLOWTBL(ILINTB,I-1)   :',FLOWTBL(ILINTB,I-1)
-          WRITE(*,*)'ELEVTBL(ILINTB,I)     :',ELEVTBL(ILINTB,I)
-          WRITE(*,*)'ELEVTBL(ILINTB,I-1)   :',ELEVTBL(ILINTB,I-1)
-          !-
-
 	     RETURN
 	    ENDIF
      	  ENDIF
