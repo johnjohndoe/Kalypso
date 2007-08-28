@@ -1,4 +1,4 @@
-C     Last change:  NIS  16 Aug 2007    8:00 pm
+C     Last change:  EF   23 Aug 2007    4:18 pm
 cipk  last update sep 05 2006 add depostion/erosion rates to wave file
 CNis  LAST UPDATE NOV XX 2006 Changes for usage of TUHH capabilities
 CIPK  LAST UPDATE MAR 22 2006 ADD OUTPUT FILE REWIND and KINVIS initialization
@@ -57,11 +57,7 @@ cipk aug98 add character statement
 !-
 
 !EFa jun07, autoconverge
-      Integer :: temp_maxnn,temp_iteqs,temp_iteqv,temp_iurvl,temp_itlvl,
-     +           temp_iurvl1
-
-      REAL :: deltsum
-      DIMENSION temp_speccc(3)
+!      DIMENSION temp_speccc(3)
 !-
 
       DATA (IREC(I),I=1,40) / 40*0 /
@@ -127,12 +123,9 @@ C-
 
       !EFa jun07, output for autoconverge
       if (beiauto.ne.0.) then
-        OPEN(789,FILE='autoconverge.txt')
- 1111     format (7x,i3,14x,i5,4x,f8.2,4x,i5)
- 1112     format (60x,i3,2x,2(f7.2,2x))
- 1113     format (60x,i3,2x,2(f7.2,2x))
-        WRITE(789,*)'time step    iteration cycle        time    iurvl
-     +        NCL    HC/QC HC2/QDIR'
+
+      call autoconverge(-1.0)
+  
       end if
       !-
 
@@ -277,94 +270,13 @@ C......TEST FOR STEADY STATE
 C-
       IF(NITI .EQ. 0) GO TO 350
       NITA=NITI
-
-      !EFa jun07, autoconverge
-      if (beiauto.ne.0.) then
-
-        call feldgroesse(3,nita)
-
-      end if
-      !-
 C-
 C......PROCESS STEADY VALUES
 C-
       !EFa jul07, necessary for autoconverge
       if (beiauto.ne.0.) then
 
-        deltindex = 0.
-        temp_delt = 1000.
-        deltsum = temp_delt
-        deltn = 1000.
-
-        do i = 1,ncl
-
-          if (speccc(i,1).eq.1.5) then
-
-            specccold(i,1) = specccfut(i,1)
-            specccold(i,2) = elev
-
-            if (specccfut(i,3).ne.0.) then
-
-              specccold(i,3) = specccold(i,2)
-
-            end if
-
-            if (lmt(i).eq.1.0) then
-
-              if (width(line(i,1)).eq.0.0) then
-
-                specccold(i,2) = (hhmax(line(i,1))-hhmin(line(i,1)))/2.+
-     +                            hhmin(line(i,1))
-
-                if (specccfut(i,3).ne.0.0) then
-
-                  specccold(i,3) = specccold(i,2)
-
-                end if
-
-              end if
-
-            end if
-
-            do k = 4,8
-
-              specccold(i,k) = specccfut(i,k)
-
-            end do
-
-          elseif ((speccc(i,1)).eq. 2.5) then
-
-            specccold(i,1) = specccfut(i,1)
-            specccold(i,2) = 0.0
-
-            do k = 3,8
-
-              specccold(i,k) = specccfut(i,k)
-
-            end do
-
-          end if
-
-        end do
-
-        temp_iteqs = iteqs(1)
-        temp_iteqv = iteqv(1)
-        temp_iurvl = iurvl(1)
-        temp_itlvl = itlvl(1)
-
-        temp_iurvl1 = iurvl(1)
-
-        do k = 1,np
-
-          do i = 1,ndf
-
-            temp_vel(i,k) = vel(i,k)
-            temp_vdot(i,k) = vdot(i,k)
-            temp_vdoto(i,k) = vdoto(i,k)
-
-          end do
-
-        end do
+        call autoconverge(1.)
 
       end if
       !-
@@ -375,38 +287,7 @@ C-
       !EFa jun07, autoconverge
       if (beiauto.ne.0.) then
       
-        iteqs(maxn) = temp_iteqs
-        iteqv(maxn) = temp_iteqv
-        iurvl(maxn) = temp_iurvl
-        itlvl(maxn) = temp_itlvl
-
-        if (exterr.eq.1.0) then
-
-          do k = 1,np
-
-            do i = 1,ndf
-
-              if (deltindex.eq.0.) then
-
-                vel(i,k) = temp_vel(i,k)
-                vdot(i,k) = temp_vdot(i,k)
-                vdoto(i,k) = temp_vdoto(i,k)
-
-              else
-
-                vel(i,k) = vold(i,k)
-                vdot(i,k) = vdoto(i,k)
-                vdoto(i,k) = v2ol(i,k)
-
-              end if
-
-            end do
-
-          end do
-
-        end if
-
-        exterr = 0.0
+        call autoconverge(2.)
 
       end if
       !-
@@ -520,94 +401,7 @@ CIPK JAN97 END CHANGES
       !EFa jul07, necessary for autoconverge
       if (exterr.eq.1.0) then
 
-        if (temp_iurvl.le.8.0) then
-
-          temp_iurvl = temp_iurvl + 1.
-
-          WRITE(*,*)'Daempfung erhoeht :',temp_iurvl
-
-        else
-
-          deltn = delt / nnnst
-          deltsum = deltsum - delt + deltn
-          delt  = deltn
-
-          if (deltindex.eq.0.) then
-
-            deltsum = delt
-
-          end if
-
-          WRITE(*,*)'Zwischenzeitschritt : ',deltsum
-
-          WRITE(789,1111)   icyc,maxn,deltsum,temp_iurvl
-
-          do i = 1,ncl
-
-            if ((speccc(i,1)).eq. 1.5) then
-
-              call autoboundaryh(specccfut(i,2),specccold(i,2),
-     +             specccfut(i,3),specccold(i,3),temp_delt,deltsum,
-     +             linlog,hhh,hhh2)
-
-              speccc(i,2) = hhh
-              speccc(i,3) = hhh2
-
-              temp_speccc(1) = speccc(i,6)
-              temp_speccc(2) = speccc(i,7)
-              temp_speccc(3) = speccc(i,8)
-
-              call hgen(specccfut(i,4),i,hhh,hhh2,specccfut(i,5),
-     +             temp_speccc(1),temp_speccc(2),temp_speccc(3))
-
-              WRITE(*,*)'neue Wasserstandrandbedingung ',hhh,
-     +                  ' an Kontinuitaetslinie ',i
-
-              WRITE(789,1112)i,hhh,hhh2
-
-            ELSEIF ((speccc(i,1)).eq.2.5) then
-
-              call autoboundaryQ(specccfut(i,2),specccold(i,2),
-     +             specccfut(i,3),specccold(i,3),temp_delt,deltsum,
-     +             linlog,qqq,qqqdir)
-
-              speccc(i,2) = qqq
-              speccc(i,3) = qqqdir
-
-              temp_speccc(1) = speccc(i,6)
-              temp_speccc(2) = speccc(i,7)
-              temp_speccc(3) = speccc(i,8)
-
-              call qgen(i, qqq,qqqdir,temp_speccc(1),temp_speccc(2),
-     +             temp_speccc(3))
-
-              WRITE(*,*)'neue Durchflussrandbedingung  ',qqq,
-     +                  ' an Kontinuitaetslinie ',i
-
-              WRITE(789,1113)i,qqq,qqqdir
-
-            end if
-
-          end do
-
-          call bform(0)
-
-        end if
-
-        maxn = 0.
-
-        call feldgroesse(6,nita)
-
-        niti = nitizero
-        nita = nitazero
-
-        call feldgroesse(5,nita)
-
-        do j = 1,nitazero
-
-          iteqv(j) = temp_iteqv
-
-        end do
+        call autoconverge(3.)
 
         GOTO 200
 
@@ -786,272 +580,13 @@ cipk mar95 add a line to save dhdt
         !EFa jun07, autoconverge
         if (beiauto.ne.0.) then
 
-          if (nconv.eq.0.)then
+          call autoconverge(4.)
 
-            call statistic(maxn,rss,rrr,nitazero,extranita)
+          if (autoindex.eq.1.) then
 
-            IF(rrr.lt.0.)then
+            autoindex = 0.
 
-              WRITE(*,*)'rrr lower than zero'
-
-              call feldgroesse(6,nita)
-
-              nitn=nitn+extranita
-              nita=nita+extranita
-
-              call feldgroesse(5,nita)
-
-              do j = 1,nita
-
-                iteqv(j) = temp_iteqv
-                
-              end do
-
-              GOTO 200
-
-            else
-
-              WRITE(*,*)'rrr higher than zero'
-
-              if (temp_iurvl.le.8.) then
-
-                call feldgroesse(6,nita)
-
-                nitn=nitn+extranita
-                nita=nita+extranita
-                temp_iurvl=temp_iurvl+1
-
-                call feldgroesse(5,nita)
-
-                do j = 1,nita
-
-                  iteqv(j) = temp_iteqv
-
-                end do
-
-                WRITE(*,*)'Daempfung erhoeht :',temp_iurvl
-
-                GOTO 200
-
-              else
-
-                deltn = delt / nnnst
-                deltsum = deltsum - delt + deltn
-                delt = deltn
-
-                if (deltindex.eq.0.) then
-
-                  deltsum = delt
-
-                end if
-
-                WRITE(*,*)'Zwischenzeitschritt :',deltsum
-                WRITE(*,*)'Zeitschrittweite    :',delt
-
-                WRITE(789,1111)   icyc,maxn,deltsum,temp_iurvl
-
-                do i = 1,ncl
-
-                  if (speccc(i,1)==1.5) then
-
-                    call autoboundaryh(specccfut(i,2),specccold(i,2),
-     +                   specccfut(i,3),specccold(i,3),temp_delt,
-     +                   deltsum,linlog,hhh,hhh2)
-
-                    speccc(i,2) = hhh
-                    speccc(i,3) = hhh2
-
-                    temp_speccc(1) = speccc(i,6)
-                    temp_speccc(2) = speccc(i,7)
-                    temp_speccc(3) = speccc(i,8)
-
-                    call hgen(specccfut(i,4),i,hhh,hhh2,specccfut(i,5),
-     +                   temp_speccc(1),temp_speccc(2),temp_speccc(3))
-
-                    WRITE(*,*)'neue Wasserstandrandbedingung ',hhh,
-     +                        ' an Kontinuitaetslinie ',i
-
-                    WRITE(789,1112)i,hhh,hhh2
-
-                  ELSEIF ((speccc(i,1)).eq.2.5) then
-
-                    call autoboundaryQ(specccfut(i,2),specccold(i,2),
-     +                   specccfut(i,3),specccold(i,3),temp_delt,deltsum
-     +                   ,linlog,qqq,qqqdir)
-
-                    speccc(i,2) = qqq
-                    speccc(i,3) = qqqdir
-
-                    temp_speccc(1) = speccc(i,6)
-                    temp_speccc(2) = speccc(i,7)
-                    temp_speccc(3) = speccc(i,8)
-
-                    call qgen(i, qqq,qqqdir,temp_speccc(1),
-     +                   temp_speccc(2),temp_speccc(3))
-
-                    WRITE(*,*)'neue Durchflussrandbedingung  ',qqq,
-     +                        ' an Kontinuitaetslinie ',i
-
-                    WRITE(789,1113)i,qqq,qqqdir
-
-                  end if
-
-                end do
-
-                call bform(0)
-
-                maxn = 0.
-
-                do j = 1,np
-
-                  do k = 1, ndf
-
-                    vel(k,j) = vold(k,j)
-                    vdot(k,j) = vdoto(k,j)
-                    vdoto(k,j) = v2ol(k,j)
-
-                  end do
-
-                end do
-
-                call feldgroesse(6,nita)
-
-                niti = nitizero
-                nita = nitazero
-
-                call feldgroesse(5,nita)
-
-                do j = 1,nita
-
-                  iteqv(j) = temp_iteqv
-
-                end do
-
-                GOTO 200
-
-              end if
-
-            endif
-
-         else
-
-         WRITE(lout,*)'vor zeitschrittberechnung'
-
-           if (deltsum.lt.temp_delt) then
-
-             if (deltindex.eq.0.) then
-
-               deltsum = delt
-
-             end if
-
-             deltindex = deltindex + 1
-             delt = temp_delt - deltsum
-             deltsum = temp_delt
-             temp_iurvl = temp_iurvl1
-
-             WRITE(789,1111)   icyc,maxn,deltsum,temp_iurvl
-
-             WRITE(*,*)'Zwischenzeitschritt :',deltsum
-             WRITE(*,*)'Zeitschrittweite    :',delt
-
-             do i = 1,ncl
-
-               if (speccc(i,1)==1.5) then
-
-                 call autoboundaryh(specccfut(i,2),specccold(i,2),
-     +                specccfut(i,3),specccold(i,3),temp_delt,
-     +                deltsum,linlog,hhh,hhh2)
-
-                      speccc(i,2) = hhh
-                      speccc(i,3) = hhh2
-
-                      temp_speccc(1) = speccc(i,6)
-                      temp_speccc(2) = speccc(i,7)
-                      temp_speccc(3) = speccc(i,8)
-
-                      call hgen(specccfut(i,4),i,hhh,hhh2,specccfut(i,5)
-     +                    ,temp_speccc(1),temp_speccc(2),temp_speccc(3))
-
-                 WRITE(*,*)'neue Wasserstandrandbedingung ',hhh,
-     +                     ' an Kontinuitaetslinie ',i
-
-                 WRITE(789,1112)i,hhh,hhh2
-
-               ELSEIF ((speccc(i,1)).eq.2.5) then
-
-                 call autoboundaryQ(specccfut(i,2),specccold(i,2),
-     +                specccfut(i,3),specccold(i,3),temp_delt,deltsum
-     +               ,linlog,qqq,qqqdir)
-
-                 speccc(i,2) = qqq
-                 speccc(i,3) = qqqdir
-
-                 temp_speccc(1) = speccc(i,6)
-                 temp_speccc(2) = speccc(i,7)
-                 temp_speccc(3) = speccc(i,8)
-
-                 call qgen(i, qqq,qqqdir,temp_speccc(1),temp_speccc(2),
-     +                temp_speccc(3))
-
-                 WRITE(*,*)'neue Durchflussrandbedingung  ',qqq,
-     +                     ' an Kontinuitaetslinie ',i
-
-                 WRITE(789,1113)i,qqq,qqqdir
-
-               end if
-
-             end do
-
-             call bform(0)
-
-             maxn = 0.
-
-             do j = 1,np
-
-               do k = 1, ndf
-
-                 vold(k,j) = vel(k,j)
-                 v2ol(k,j) = vdoto(k,j)
-                 vdoto(k,j) = vdot(k,j)
-
-               end do
-
-             end do
-
-             call feldgroesse(6,nita)
-
-             niti = nitizero
-             nita = nitazero
-
-             call feldgroesse(5,nita)
-
-             do j = 1,nita
-
-               iteqv(j) = temp_iteqv
-
-             end do
-
-             GOTO 200
-
-           endif
-
-           do i = 1,ncl
-
-             do k = 1,3
-
-               specccold(i,k) = specccfut(i,k)
-
-             end do
-
-           end do
-
-           call feldgroesse(6,nita)
-
-           nitn=nitnzero
-           nita=nitazero
-
-           call feldgroesse(5,65)
+            GOTO 200
 
           end if
 
@@ -1147,64 +682,7 @@ C 400 NCYC=TMAX*3600./DELT+0.5
       !EFa jun07, autoconverge
       if (beiauto.ne.0.) then
 
-        nitazero = nitn
-
-        if (niti.eq.0.) then
-
-          do i = 1,ncl
-
-            if (speccc(i,1).eq.1.5) then
-
-              specccold(i,1) = specccfut(i,1)
-              specccold(i,2) = elev
-
-              if (specccfut(i,3).ne.0.0) then
-
-                 specccold(i,3) = specccold(i,2)
-
-              end if
-
-              if (lmt(i).eq.1.0) then
-
-                if (width(line(i,1)).eq.0.0) then
-
-                  specccold(i,2) = (hhmax(line(i,1))-hhmin(line(i,1)))/
-     +                              2.+hhmin(line(i,1))
-
-                  if (specccfut(i,3).ne.0.0) then
-
-                    specccold(i,3) = specccold(i,2)
-
-                  end if
-
-                end if
-
-              end if
-
-              do k = 4,8
-
-                specccold(i,k) = specccfut(i,k)
-
-              end do
-
-            ELSEIF (speccc(i,1).eq.2.5)then
-
-              specccold(i,1) = specccfut(i,1)
-              specccold(i,2) = 0.0
-
-              do k = 3,8
-
-                specccold(i,k) = specccfut(i,k)
-             
-              end do
-
-            end if
-
-          end do
-
-          call feldgroesse(3,65)
-
-        end if
+        call autoconverge(5.)
 
       end if
       !-
@@ -1515,70 +993,17 @@ C-                        !		initialization:
         !EFa jun07, necessary for autoconverge
         if (beiauto.ne.0.0) then
 
-          deltindex = 0
-          temp_delt = delt
-          deltsum = temp_delt
-          deltn = delt
-
-          temp_iteqs=iteqs(1)
-          temp_iteqv=iteqv(1)
-          temp_iurvl=iurvl(1)
-          temp_itlvl=itlvl(1)
-
-          temp_iurvl1 = iurvl(1)
-
-        do k = 1,np
-
-          do i = 1,ndf
-
-            temp_vel(i,k) = vel(i,k)
-            temp_vdot(i,k) = vdot(i,k)
-            temp_vdoto(i,k) = vdoto(i,k)
-
-          end do
-
-        end do
+          call autoconverge(6.)
 
         end if
+        !-
 
   465   MAXN=MAXN+1       !               MAXN = actual iteration number; first initialized, then incremented
-                          !-
 
        !EFa jun07, autoconverge
        if (beiauto.ne.0.) then
 
-         iteqs(maxn) = temp_iteqs
-         iteqv(maxn) = temp_iteqv
-         iurvl(maxn) = temp_iurvl
-         itlvl(maxn) = temp_itlvl
-
-         if (exterr.eq.1.0) then
-
-           do k = 1,np
-
-             do i = 1,ndf
-
-               if (deltindex.eq.0.and.niti.eq.0.) then
-
-                 vel(i,k) = temp_vel(i,k)
-                 vdot(i,k) = temp_vdot(i,k)
-                 vdoto(i,k) = temp_vdoto(i,k)
-
-               else
-
-                 vel(i,k) = vold(i,k)
-                 vdot(i,k) = vdoto(i,k)
-                 vdoto(i,k) = v2ol(i,k)
-
-                end if
-
-             end do
-
-           end do
-
-         end if
-
-         exterr = 0.0
+         call autoconverge(7.)
 
        end if
        !-
@@ -1682,95 +1107,7 @@ CIPK JAN97 END CHANGES
       !EFa jul07, necessary for autoconverge
       if (exterr.eq.1.0) then
 
-        if (temp_iurvl.le.8.0) then
-
-          temp_iurvl = iurvl(1) + 1.
-
-          WRITE(*,*)'Daempfung erhoeht :',temp_iurvl
-
-        else
-
-          deltn = delt / nnnunst
-          deltsum = deltsum - delt + deltn
-          delt  = deltn
-
-          if (deltindex.eq.0.) then
-
-            deltsum = delt
-
-          end if
-
-          WRITE(*,*)'Zwischenzeitschritt :',deltsum
-          WRITE(*,*)'Zeitschrittweite    :',delt
-
-          WRITE(789,1111)   icyc,maxn,deltsum,temp_iurvl
-
-          do i = 1,ncl
-
-            if ((speccc(i,1)).eq. 1.5) then
-
-              call autoboundaryh(specccfut(i,2),specccold(i,2),
-     +             specccfut(i,3),specccold(i,3),temp_delt,deltsum,
-     +             linlog,hhh,hhh2)
-
-              speccc(i,2) = hhh
-              speccc(i,3) = hhh2
-
-              temp_speccc(1) = speccc(i,6)
-              temp_speccc(2) = speccc(i,7)
-              temp_speccc(3) = speccc(i,8)
-
-              WRITE(*,*)'neue Wasserstandrandbedingung ',hhh,
-     +                  ' an Kontinuitaetslinie ',i
-
-              call hgen(speccc(i,4),i,hhh,hhh2,speccc(i,5),
-     +             temp_speccc(1),temp_speccc(2),temp_speccc(3))
-
-              WRITE(789,1112)i,hhh,hhh2
-
-            elseif ((speccc(i,1)).eq. 2.5) then
-
-              call autoboundaryQ(specccfut(i,2),specccold(i,2),
-     +             specccfut(i,3),specccold(i,3),temp_delt,deltsum,
-     +             linlog,qqq,qqqdir)
-
-              speccc(i,2) = qqq
-              speccc(i,3) = qqqdir
-
-              temp_speccc(1) = speccc(i,6)
-              temp_speccc(2) = speccc(i,7)
-              temp_speccc(3) = speccc(i,8)
-
-              call qgen(i, qqq,qqqdir,temp_speccc(1),temp_speccc(2),
-     +             temp_speccc(3))
-
-              WRITE(*,*)'neue Durchflussrandbedingung  ',qqq,
-     +                  ' an Kontinuitaetslinie ',i
-
-              WRITE(789,1113)i,qqq,qqqdir
-
-            end if
-
-          end do
-
-          call bform(0)
-
-        end if
-
-        maxn = 0.
-
-        call feldgroesse(6,nita)
-
-        nitn = nitnzero
-        nita = nitazero
-
-        call feldgroesse(5,nita)
-
-        do j = 1,nita
-
-          iteqv(j) = temp_iteqv
-          
-        end do
+        call autoconverge(8.)
 
         GOTO 465
 
@@ -1960,270 +1297,13 @@ cipk aug98 add line above for consistent restart
         !EFa jun07, autoconverge
         if (beiauto.ne.0.) then
 
-          if (nconv.eq.0.)then
+          call autoconverge(9.)
 
-            call statistic(maxn,rss,rrr,nitazero,extranita)
+          if (autoindex.eq.2.) then
 
-            IF(rrr.lt.0.)then
+            autoindex = 0.
 
-              WRITE(*,*)'rrr lower than zero'
-
-              call feldgroesse(6,nita)
-
-              nitn=nitn+extranita
-              nita=nita+extranita
-
-              call feldgroesse(5,nita)
-
-              do j = 1,nita
-
-                iteqv(j) = temp_iteqv
-               
-              end do
-
-              GOTO 465
-
-            else
-
-              WRITE(*,*)'rrr higher than zero'
-
-              if (temp_iurvl.le.8.) then
-
-                call feldgroesse(6,nita)
-
-                nitn=nitn+extranita
-                nita=nita+extranita
-                temp_iurvl=temp_iurvl+1
-
-                call feldgroesse(5,nita)
-
-                WRITE(*,*)'Daempfung erhoeht :',temp_iurvl
-
-                do j = 1,nita
-
-                  iteqv(j) = temp_iteqv
-
-                end do
-
-                GOTO 465
-
-              else
-
-                deltn = delt / nnnunst
-                deltsum = deltsum - delt + deltn
-                delt = deltn
-
-                if (deltindex.eq.0.) then
-
-                  deltsum = delt
-
-                end if
-
-                WRITE(*,*)'Zwischenzeitschritt: ',deltsum
-
-                WRITE(789,1111)   icyc,maxn,deltsum,temp_iurvl
-
-                do i = 1,ncl
-
-                  if (speccc(i,1)==1.5) then
-
-                    call autoboundaryh(specccfut(i,2),specccold(i,2),
-     +                   specccfut(i,3),specccold(i,3),temp_delt,
-     +                   deltsum,linlog,hhh,hhh2)
-
-                    speccc(i,2) = hhh
-                    speccc(i,3) = hhh2
-
-                    temp_speccc(1) = speccc(i,6)
-                    temp_speccc(2) = speccc(i,7)
-                    temp_speccc(3) = speccc(i,8)
-
-                    call hgen(speccc(i,4),i,hhh,hhh2,speccc(i,5),
-     +                   temp_speccc(1),temp_speccc(2),temp_speccc(3))
-
-                    WRITE(*,*)'neue Wasserstandrandbedingung ',hhh,
-     +                        ' an Kontinuitaetslinie ',i
-
-                    WRITE(789,1112)i,hhh,hhh2
-
-                  ELSEIF (speccc(i,1)==2.5) then
-
-                    call autoboundaryQ(specccfut(i,2),specccold(i,2),
-     +                   specccfut(i,3),specccold(i,3),temp_delt,
-     +                   deltsum,linlog,qqq,qqqdir)
-
-                    speccc(i,2) = qqq
-                    speccc(i,3) = qqqdir
-
-                    temp_speccc(1) = speccc(i,6)
-                    temp_speccc(2) = speccc(i,7)
-                    temp_speccc(3) = speccc(i,8)
-
-                    call qgen(i,qqq,qqqdir,temp_speccc(1),temp_speccc(2)
-     +                   ,temp_speccc(3))
-
-                    WRITE(*,*)'neue Durchflussrandbedingung ',qqq,
-     +                        ' an Kontinuitaetslinie ',i
-
-                    WRITE(789,1113)i,qqq,qqqdir
-
-                  end if
-
-                end do
-
-                call bform(0)
-
-                maxn = 0.
-
-                do i = 1, np
-
-                  do k = 1, ndf
-
-                    vel(k,j) = vold(k,j)
-                    vdoto(k,j) = v2ol(k,j)
-                    vdot(k,j) = vdoto(k,j)
-
-                  end do
-
-                end do
-
-                call feldgroesse(6,nita)
-
-                nitn = nitnzero
-                nita = nitazero
-
-                call feldgroesse(5,nita)
-
-                do j = 1,nita
-
-                  iteqv(j) = temp_iteqv
-
-                end do
-
-                GOTO 465
-
-              endif
-
-            end if
-
-          else
-
-            if (deltsum.lt.temp_delt) then
-
-              if (deltindex.eq.0.) then
-
-                deltsum = delt
-
-              end if
-
-              deltindex = deltindex + 1
-              delt = temp_delt - deltsum
-              deltsum = temp_delt
-              temp_iurvl = temp_iurvl1
-
-              WRITE(789,1111)   icyc,maxn,deltsum,temp_iurvl
-
-              WRITE(*,*)'Zwischenzeitschritt :',deltsum
-
-              WRITE(*,*)'Zeitschrittweite    :',delt
-
-              do i = 1,ncl
-
-                if (speccc(i,1)==1.5) then
-
-                  call autoboundaryh(specccfut(i,2),specccold(i,2),
-     +                 specccfut(i,3),specccold(i,3),temp_delt,
-     +                 deltsum,linlog,hhh,hhh2)
-
-                  speccc(i,2) = hhh
-                  speccc(i,3) = hhh2
-
-                  temp_speccc(1) = speccc(i,6)
-                  temp_speccc(2) = speccc(i,7)
-                  temp_speccc(3) = speccc(i,8)
-
-                  call hgen(speccc(i,4),i,hhh,hhh2,speccc(i,5),
-     +                 temp_speccc(1),temp_speccc(2),temp_speccc(3))
-
-                  WRITE(*,*)'neue Wasserstandrandbedingung ',hhh,
-     +                      ' an Kontinuitaetslinie ',i
-
-                  WRITE(789,1112)i,hhh,hhh2
-
-                ELSEIF (speccc(i,1)==2.5) then
-
-                  call autoboundaryQ(specccfut(i,2),specccold(i,2),
-     +                 specccfut(i,3),specccold(i,3),temp_delt,
-     +                 deltsum,linlog,qqq,qqqdir)
-
-                  speccc(i,2) = qqq
-                  speccc(i,3) = qqqdir
-
-                  temp_speccc(1) = speccc(i,6)
-                  temp_speccc(2) = speccc(i,7)
-                  temp_speccc(3) = speccc(i,8)
-
-                  call qgen(i,qqq,qqqdir,temp_speccc(1),temp_speccc(2),
-     +                 temp_speccc(3))
-
-                  WRITE(*,*)'neue Durchflussrandbedingung  ',qqq,
-     +                     ' an Kontinuitaetslinie ',i
-
-                  WRITE(789,1113)i,qqq,qqqdir
-
-                end if
-
-              end do
-
-              maxn = 0.
-
-              call bform(0)
-
-              do i = 1, np
-
-                do k = 1, ndf
-
-                  vold(k,j) = vel(k,j)
-                  v2ol(k,j) = vdoto(k,j)
-                  vdoto(k,j) = vdot(k,j)
-
-                end do
-
-              end do
-
-              call feldgroesse(6,nita)
-
-              nitn = nitnzero
-              nita = nitazero
-
-              call feldgroesse(5,nita)
-
-              do j = 1,nita
-
-                iteqv(j) = temp_iteqv
-
-              end do
-
-              GOTO 465
-
-            endif
-
-            do i = 1,ncl
-
-              do k = 1,3
-
-                specccold(i,k) = specccfut(i,k)
-
-              end do
-
-            end do
-
-            call feldgroesse(6,nita)
-
-            nitn=nitnzero
-            nita=nitazero
-
-            call feldgroesse(5,65)
+            GOTO 465
 
           end if
 
