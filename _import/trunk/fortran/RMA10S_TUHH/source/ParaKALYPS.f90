@@ -60,9 +60,21 @@ MODULE ParaKALYPS
       !-
 
       !EFa jun07, autoconverge
-      REAL,       ALLOCATABLE 	:: rss(:), specccold(:,:), speccc(:,:), specccfut(:,:)
-      REAL                      :: rrr, hhh, hhh2, qqq, qqqdir
-      INTEGER                   :: nitnzero, nitazero, nitizero, extranita, beiauto, nnnunst, nnnst, linlog, exterr
+      REAL,       ALLOCATABLE 	:: rss(:), specccold(:,:),speccc(:,:)
+      REAL,       ALLOCATABLE 	:: specccfut(:,:),temp_vel(:,:)
+      REAL,       ALLOCATABLE 	:: temp_vdot(:,:),temp_vdoto(:,:)
+      REAL                      :: rrr,hhh,hhh2,qqq,qqqdir
+      INTEGER                   :: nitnzero,nitazero,nitizero,extranita
+      INTEGER                   :: beiauto,nnnunst,nnnst,linlog,exterr
+      INTEGER                   :: emp_nan
+      ALLOCATABLE               :: temp_nbc(:,:)
+      INTEGER                   :: temp_maxnn,temp_iteqs,temp_iteqv
+      INTEGER                   :: temp_iurvl,temp_itlvl,temp_iurvl1
+      !EFa aug07
+      REAL                      :: autoindex
+      REAL(KIND = 8)            :: deltsum
+      REAL,allocatable          :: temp_speccc(:)
+      !-
       !-
 
       !nis,aug07: for correction purposes in Kalypso-GUI, there must be a correction based on the elements
