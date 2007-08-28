@@ -27,7 +27,7 @@ cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
 cipk  last update Jan 21 1998
 cipk  last update Dec 16 1997
-C     Last change:  NIS  16 Aug 2007    6:31 pm
+C     Last change:  EF   28 Aug 2007    3:06 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 cipk  last update Jan 22 1997
 cipk  last update Oct 1 1996 add new formulations for EXX and EYY
@@ -53,6 +53,10 @@ CIPK  LAST UPDATED SEP 7 1995
 !           stored in a local copy that is implicitly real, kind=4. All the temporary values are now declared
 !           also as real, kind=8.
       REAL(KIND=8) :: HS, HM, DUM1
+!-
+
+!EFa aug07, stage-flow-boundaries
+      REAL(KIND=8) :: hm1
 !-
 
 C
@@ -1983,7 +1987,8 @@ CIPK NOV97
           else
             adir = 1.
           end if
-          srfel = hel(m) + ao(m)
+          hm1 = (hel(n1) + hel(n3)) / 2.
+          srfel = hm1 + ao(m)
           call stfltab(m,srfel,dfdh,ff,1)
           f(irw) = area(nn) * (af * adir * ff - vx * hm)
           estifm(irw,irw) = area(nn) * hm

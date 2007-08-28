@@ -29,7 +29,7 @@ cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
 cipk  last update Jan 21 1998
 cipk  last update Dec 16 1997
-C     Last change:  NIS  16 Aug 2007    6:11 pm
+C     Last change:  EF   28 Aug 2007   10:42 am
 CIPK  LAST UPDATED NOVEMBER 13 1997
 cipk  New routine for Smagorinsky closure Jan 1997
       SUBROUTINE COEF2D(NN,NTX)
@@ -51,6 +51,10 @@ cipk  New routine for Smagorinsky closure Jan 1997
 !           stored in a local copy that is implicitly real, kind=4. All the temporary values are now declared
 !           also as real, kind=8.
       REAL(KIND=8) :: HS, HM, DUM1
+!-
+
+!EFa aug07, stage-flow-boundaries
+      REAL(KIND=8) :: hm1
 !-
 
 C
@@ -1811,7 +1815,8 @@ CIPK NOV97
           else
             adir = 1.
           end if
-          srfel = hel(m) + ao(m)
+          hm1 = (hel(n1) + hel(n3)) / 2.
+          srfel = hm1 + ao(m)
           call stfltab(m,srfel,dfdh,ff,1)
           f(irw) = area(nn) * (af * adir * ff - vx * hm)
           estifm(irw,irw) = area(nn) * hm
