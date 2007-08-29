@@ -1,4 +1,4 @@
-!Last change:  NIS  16 Aug 2007    7:34 pm
+!Last change:  WP   27 Aug 2007    7:25 pm
 
 !****************************************************************
 !1D subroutine for calculation of elements, whose corner nodes are described with
@@ -1814,47 +1814,5 @@ IF(IMAT(NN) .GT. 903) THEN
   CALL CSTRC(NN)
   GO TO 1320
 ENDIF
-
-!*-
-!*...... Special case for junction element
-!*-
-
-NCN=NCORN(NN)
-!c     WRITE(*,*) NN,NCN
-F(1)=0.
-N1=NCON(1)
-XHT=1.0
-DO 2010 KK=1,NCN,2
-  N1=NCON(KK)
-  IF(N1 .EQ. 0) GO TO 2010
-  NA=(KK-1)*NDF+1
-  ESTIFM(1,NA)=DIR(N1)*ah(n1)*xht
-  CX=COS(ALFA(N1))
-  SA=SIN(ALFA(N1))
-  R=VEL(1,N1)*CX+VEL(2,N1)*SA
-  ESTIFM(1,NA+2)=DIR(N1)*ah(n1)/vel(3,n1)*r*xht
-  F(1)=F(1)-ESTIFM(1,NA)*R
- 2010 CONTINUE
-  NRX=NCON(1)
-  DO 2020 KK=3,NCN
-    N1=NCON(KK)
-    IF(N1 .EQ. 0) GO TO 2020
-    NA=(KK-1)*NDF+1
-    ESTIFM(NA,3)=XHT
-    ESTIFM(NA,NA+2)=-XHT
-    IF (IDNOPT .LT. 0) THEN           
-      HD1 = VEL(3,N1)
-      CALL AMF(HS1,HD1,AKP(N1),ADT(N1),ADB(N1),AML,DUM2,0)
-      WSEL1 = ADO(N1)+HS1
-      HDX = VEL(3,NRX)
-      CALL AMF(HSX,HDX,AKP(NRX),ADT(NRX),ADB(NRX),AML,DUM2,0)
-      WSELX = ADO(NRX)+HSX
-      ELSE
-        WSEL1=AO(N1)+VEL(3,N1)
-        WSELX=AO(NRX)+VEL(3,NRX)
-    ENDIF
-    F(NA)=XHT*(WSEL1-WSELX)
- 2020 CONTINUE
-GO TO 1320
 
 END subroutine

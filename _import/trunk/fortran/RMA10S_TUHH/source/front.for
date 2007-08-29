@@ -1,4 +1,4 @@
-C     Last change:  WP    9 Jul 2007   11:10 am
+C     Last change:  WP   27 Aug 2007    7:07 pm
 CIPK  LAST UPDATE JUNE 27 2005 ALLOW FOR CONTROL STRUCTURES 
 CIPK  LAST UPDATE MAR 25 2005
 CIPK  LAST UPDATE SEP 06 2004 CREATE ERROR FILE
@@ -249,32 +249,15 @@ CIPK NOV99     Either process surface integrals or collapse to 2-d
             IF(NETYP(N)/10 .LT. 1) THEN
 CIPK MAR05
 !nis,may07
-!Add midside node for polynom approach
-!              !EFa Nov06, Fallunterscheidung für 1D-Teschke-Elemente (notwendig?)
-!              !nis,feb07: Allow for numbered FFF midsides
-!              !IF(nop(n,2).NE.-9999)then
-!              IF(nop(n,2) > -1000)then
-!              !-
-!              !-
-!Add midside node for polynom approach
-!-
 
+              !material type 89 is used for polynom approach
               if ( imat(n) /= 89 ) then
                 IF(INOTR .EQ. 0) THEN
                   CALL COEF1(N,NRX)
                 ELSE
                   CALL COEF1NT(N,NRX)
 	        endif
-
-!nis,may07
-!Add midside node for polynom approach
-!              !nis,feb07: Allow for numbered FFF midside nodes
-!              !ELSEif(nop(n,2).EQ.-9999)then
-!              !ELSEif(nop(n,2) < -1000)then
-!              !-
-!Add midside node for polynom approach
-!-
-
+              !use polynom approach
               ELSEif( imat(n) == 89 ) then
                 call coef1dFE(n,nrx)
               endif
@@ -392,26 +375,19 @@ C      Process one-d elements
 	      IF(NRX .EQ. 2) GO TO 18
 CIPK MAR05
 !nis,may07
-!Add midside node for polynom approach
-!              IF (nop(n,2) > -1000) THEN
+              !material type 89 is used for polynom approach
               IF (imat(n) /= 89) THEN
                 IF(INOTR .EQ. 0) THEN
                   CALL COEF1(N,NRX)
                 ELSE
                   CALL COEF1NT(N,NRX)
                 ENDIF
-!              !EFa Nov06, Fallunterscheidung für 1D-Teschke-Elemente
-!                !nis,feb07: Allow for numbered FFF midsides
-!                !if (nop(n,2).eq.-9999) then
-!              ELSEIF (nop(n,2) < -1000) THEN
+              !use polynom approach
               ELSEIF (imat(n) == 89) THEN
                 CALL COEF1dFE(N,NRX)
               ENDIF
-!Add midside node for polynom approach
-!-
-              !NiS,may06: testing
-              !WRITE(*,*)'element: ', N, ', NCN: ', NCN, ' nach'
-              !-
+
+
 	      CALL SECOND(SOUC)
 	      TCOEF1=SOUC-SINC+TCOEF1
 	    ENDIF

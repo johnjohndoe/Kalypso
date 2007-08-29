@@ -1,4 +1,4 @@
-!     Last change:  NIS  16 Aug 2007    6:26 pm
+!     Last change:  WP   28 Aug 2007    8:37 am
 !-----------------------------------------------------------------------------
 ! This code, data_out.f90, performs writing and validation of model
 ! output data in the library 'Kalypso-2D'.
@@ -405,7 +405,7 @@ write_nodes: DO i = 1, np
   IF (cord(i,1) .lt. -1.e19) CYCLE write_nodes
   !-
   if (kmx(i).NE.-1) then
-    write (IKALYPSOFM, 7036) i, cord (i, 1), cord (i, 2), aour(i), kmx (i)  !EFa Dec06, Ausgabe der Kilometrierung, wenn vorhanden
+    write (IKALYPSOFM, 6999) i, cord (i, 1), cord (i, 2), aour(i), kmx (i)  !EFa Dec06, Ausgabe der Kilometrierung, wenn vorhanden
   else
     WRITE (IKALYPSOFM, 7000) i, cord (i, 1), cord (i, 2), aour (i)
   endif
@@ -466,15 +466,19 @@ end do write_arcs
 
 ! Elements:
 write_elements: DO i = 1, ne
-  WRITE (IKALYPSOFM, 7002) i, imat (i), imato (i), nfixh (i) !, fehler (2, i)
+  if (imat(i) >= 901 .and. imat(i) <= 903) then
+    WRITE (IKALYPSOFM, 7019) i, (nop(i, j), j= 1, ncorn(i))
+  else
+    WRITE (IKALYPSOFM, 7002) i, imat (i), imato (i), nfixh (i) !, fehler (2, i)
     if (imat(i) .gt. 903 .and. imat(i) .lt. 990) then
       BACKSPACE(IKALYPSOFM)
       WRITE (IKALYPSOFM, 7016) i, imat (i), imato (i), nfixh (i), nop(i,1)
     end if
-  if (CorrectionKS(i) /= 1.0 .or. CorrectionAxAy(i) /= 1.0 .or. CorrectionDp(i) /= 1.0) then
-    WRITE (IKALYPSOFM, 7017) i, CorrectionKS(i), CorrectionAxAy(i), CorrectionDp(i)
+    if (CorrectionKS(i) /= 1.0 .or. CorrectionAxAy(i) /= 1.0 .or. CorrectionDp(i) /= 1.0) then
+      WRITE (IKALYPSOFM, 7017) i, CorrectionKS(i), CorrectionAxAy(i), CorrectionDp(i)
+    end if
+    WRITE (IKALYPSOFM, 7018) i, lambdaTot(i), lambdaKS(i), lambdaP(i), lambdaDunes(i)
   end if
-  WRITE (IKALYPSOFM, 7018) i, lambdaTot(i), lambdaKS(i), lambdaP(i), lambdaDunes(i)
 END do write_elements
 
 !NiS,may06: Write informations of
@@ -521,59 +525,43 @@ END do write_roughness
  2000 format (1X, 'Opening output file failed. (IOSTAT =',I2,')',/ &
      &        1X, 'Stopping Program...')
 
-!                              Name des Restartfiles,
-!                              von dem dieser Lauf gestartet wurde:     
- 7009 FORMAT ('RS',A)
-                                                                        
-
-!NiS,apr06: Adding new option for saving the date in RMA10S form (Hour in year and year)
-!                              actual time starting the restart:
-!                              IYRR: calculation year
-!                              TETT: time in year
- 7012 FORMAT ('DA',i10, f20.7)
-!-
-
-!                              aktueller Zeitpunkt und Schrittzaehler:  
- 7008 FORMAT ('TI',f20.7,i10)
-                                                                        
-!                              Knoten; Nummer und raeumliche Lage (x,y,z
- 7000 FORMAT ('FP', i10,3f20.7)
 
  !EFa Dec06, neues Format für Ausgabe der Knotendaten, wenn Kilometrierung vorhanden
- 7036 FORMAT ('FP', i10,4f20.7)
+ 6999 FORMAT ('FP', i10,4f20.7)
+ !Knoten; Nummer und raeumliche Lage (x,y,z
+ 7000 FORMAT ('FP', i10,3f20.7)
 
-!                              aktuelle Freiheitsgrade; Knotennummer,   
-!                              x-, y-Geschwindigkeit, Wasserspiegel):   
- 7003 FORMAT ('VA', i10,4f20.7)
-
-!                              aktuelle Zeitgradienten:                 
- 7004 FORMAT ('GA', i10,3f20.7)
-                                                                        
-!                              Freiheitsgrade des vergangenen Zeitschrit
-!                              (Geschwindigkeiten und Wasserspiegel):   
- 7005 FORMAT ('VO', i10,3f20.7) 
-                                                                        
-!                              Zeitgradienten des vergangenen Zeitschrit
- 7006 FORMAT ('GO', i10,3f20.7) 
-                                                                        
-!                              Zusatzinformationen am Knoten:           
-!                                                                       
- 7007 FORMAT ('ZU',i10,i6,4f15.7)
-
-!                              Kanten; Nummer,Knoten-unten Knoten-oben  
-!                                     ,Element-links,Element-rechts     
-!                                     ,Mittseitenknoten:                
+ !Kanten; Nummer,Knoten-unten Knoten-oben, Element-links,Element-rechts, Mittseitenknoten:
  7001 FORMAT ('AR', 6i10) 
                                                                         
-!                              Elemente; Nummer, Rauhigkeitsklase_urspru
-!                                        Rauhigkeitsklase_im Zeitschritt
-!                                        Bearbeitungsreihenfolge (nfixh)
-!                                        Fehlermass2                    
-
-!NiS,apr06:     Because of excluding the array-value of fehler(2,i) the
-!               fomat descriptor must change (see above)
-! 7002 FORMAT ('FE', 4i10,f15.7) 
+ !Elemente; Nummer, Rauhigkeitsklase_ursprung; Rauhigkeitsklase_im Zeitschritt; Bearbeitungsreihenfolge (nfixh); Fehlermass2
+ !NiS,apr06: Because of excluding the array-value of fehler(2,i) the fomat descriptor must change (see above)
+ !7002 FORMAT ('FE', 4i10,f15.7)
  7002 FORMAT ('FE', 4i10)
+
+ !aktuelle Freiheitsgrade; Knotennummer, x-, y-Geschwindigkeit, Wasserspiegel):
+ 7003 FORMAT ('VA', i10,4f20.7)
+
+ !aktuelle Zeitgradienten:
+ 7004 FORMAT ('GA', i10,3f20.7)
+                                                                        
+ !Freiheitsgrade des vergangenen Zeitschritt (Geschwindigkeiten und Wasserspiegel):
+ 7005 FORMAT ('VO', i10,3f20.7) 
+                                                                        
+ !Zeitgradienten des vergangenen Zeitschrit
+ 7006 FORMAT ('GO', i10,3f20.7) 
+                                                                        
+ !Zusatzinformationen am Knoten:
+ 7007 FORMAT ('ZU',i10,i6,4f15.7)
+
+ !aktueller Zeitpunkt und Schrittzaehler:
+ 7008 FORMAT ('TI',f20.7,i10)
+
+ !Name des Restartfiles, von dem dieser Lauf gestartet wurde:
+ 7009 FORMAT ('RS',A)
+
+ !NiS,apr06: date in RMA10S form; actual time starting the restart: IYRR - calculation year; TETT - time in year
+ 7012 FORMAT ('DA',i10, f20.7)
 
  !LF nov06: adding starting node for weir structure
  7016 FORMAT ('FE', 5i10)
@@ -581,38 +569,43 @@ END do write_roughness
  !nis,aug07: writing roughness correction layer data
  7017 FORMAT ('RC', i10, 3(f10.6))
 
- !nis,aug07: writing out flow resistance results for elements#
+ !nis,aug07: writing out flow resistance results for elements
  7018 FORMAT ('FR', i10, 4f15.7)
 
+ !nis,aug07: writing out 1D junction elements
+ 7019 FORMAT ('JE', i10, 8i10)
 
-!NiS,may06: new identification line for cross sectional informations:
-!                              node, width, ss1, ss2, wids, widbs, wss
+ !NiS,may06: new identification line for cross sectional informations: node, width, ss1, ss2, wids, widbs, wss
  7013 FORMAT ('CS',i10,f10.1,2f10.3,3f10.2)
-!-
 
-!NiS,may06: Calculation does only properly work with all degrees of freedom, read in
-!                              Freiheitsgrade 4 bis 7; Knotennummer,
-!                              salinity, temperature etc.):
+ !NiS,may06: rest of degrees of freedom for 3D and constituents, read in Freiheitsgrade 4 bis 7; Knotennummer, salinity, temperature etc.):
  7015 FORMAT ('DF', i10,4f20.7)
-!-
 
-!EFa Dec06, neue Formate für 1d-Teschke-Elemente
+ !min-max-range of waterstages for 1D-polynom
  7020 FORMAT ('MM', i10,2f20.7)
 
+ !area polynom coeficients for 1D polynom approach
  7021 FORMAT ('AP1', i9,5f20.7)
 
+ !area polynom coeficients for 1D polynom approach
  7022 FORMAT ('AP2', i9,5f20.7)
 
+ !area polynom coeficients for 1D polynom approach
  7023 FORMAT ('AP3', i9,3f20.7)
 
+ !discharge polynom coeficients for 1D polynom approach
  7024 FORMAT ('QP1', i9,5f20.7)
 
+ !discharge polynom coeficients for 1D polynom approach
  7025 FORMAT ('QP2', i9,5f20.7)
 
+ !discharge polynom coeficients for 1D polynom approach
  7026 FORMAT ('QP3', i9,4f20.7)
 
+ !bord full elevation for polynom approach to divide flow coeficient polynoms
  7027 FORMAT ('HB', i10,f20.7)
 
+ !discharge polynom coeficients for 1D polynom approach
  7028 FORMAT ('AD', i10,5f20.7)
 
  7029 FORMAT ('AK1' ,i9,5f20.7)
@@ -629,16 +622,14 @@ END do write_roughness
 
  7035 FORMAT ('BK3' ,i9,3f20.7)
 
-!NiS,may06: Add 1D-2D-TRANSITION ELEMENTS INFORMATIONS
-!                              Elementnumber, 1st node, midside node, 2nd node
-!                              (at same time midside of 2D-element arc), right
-!                              corner node of 2D-element arc, left corner node
-!                              of 2D-element arc
+ !NiS,may06: 1D-2D-Transition Element: Elementnumber, 1st node, midside node, 2nd node
+ !(at same time midside of 2D-element arc), right corner node of 2D-element arc, left corner node of 2D-element arc
  7040 FORMAT ('TE', 6i10)
-!-
-!nis,apr07: Add 1D-2D-TRANSITION LINE INFORMATIONS
+
+ !nis,apr07: 1D-2D-Transition line: 1D-element, Continuity line, coupling 1D node
  7041 FORMAT ('TL', 4i10)
-!nis,apr07: Add CONTINUITY LINE DEFINTION for 1D-2D-TRANSITION LINE DEFINITION
+
+ !nis,apr07: continuity line definition
  7042 FORMAT ('CC', i1, 9i8)
 
 

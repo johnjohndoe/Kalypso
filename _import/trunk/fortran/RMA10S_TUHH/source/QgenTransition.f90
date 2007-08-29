@@ -1,4 +1,4 @@
-!     Last change:  NIS  16 Aug 2007    7:30 pm
+!     Last change:  JAJ  26 Aug 2007   10:54 pm
       SUBROUTINE QGENtrans (TLine,TNode,QREQ,THET, TDep)
 
       !nis,jan07: Overgiven variables
@@ -170,7 +170,8 @@ ThroughNodesOfLine: DO k = 1, maxL, 2
       cwr_line = 1.0
 
       !get lambda
-      CALL darcy (lambda, vecq, di(0), ort(lineimat(TLine, k+1), 15), 0., 0., 0,  0, gl_bedform, mel, cwr_line, 2, dummy)
+      CALL darcy (lambda, vecq, di(0), ort(lineimat(TLine, k+1), 15), 0., 0., 0,  0, gl_bedform, mel, cwr_line, 2, &
+     &            dummy(1), dummy(2), dummy(3))
 
       !Correct roughness, if there is a material (imat) factor (when marsh-option is active)
       if (idnopt /= 0 .and. d1 < akp(na) * adb(na)) then

@@ -8,7 +8,7 @@ CIPK  LAST UPDATE SEP 4 2000 REVISED OUTPUT OF ERROR MESSAGES
 cipk  last update Feb 4 1998
 CIPK  LAST UPDATE DEC 16 1997
 CIPK  LAST UPDATE NOV 26 1997
-C     Last change:  EF    6 Jul 2007    5:02 pm
+C     Last change:  WP   27 Aug 2007    5:19 pm
 CIPK  LAST UPDATED AUGUST 28 1995
       SUBROUTINE SBGEN(IBIN)
       USE BLK10MOD
@@ -53,11 +53,11 @@ CIPK DEC06
           IQID(N)=0          
         ENDDO
 CIPK DEC97 CHANGE INITIAL DEF LOOP LIMIT
-	  DO N=1,NHDS
+        DO N=1,NHDS
           NHYDG(N)=0
           NHYDH(N)=0
           NLAYH(N)=0
-	  ENDDO
+        ENDDO
         ISTDY=1
       ENDIF
 CIPKFEB94 V4.5  END CHANGE
@@ -186,11 +186,6 @@ cipk APR96 save data to a scratch file
           NDATLN=NDATLN+1
           !nis,sep06,com: Control output
           WRITE(LOUT,6034) J,LN,QF,QDIR,QQAL,LABL
-          qrandb=qf!EFa Dec06
-          !nis,feb07,testing
-          WRITE(*,*) 'Randbedingung ist: ', qrandb
-          !pause
-          !-
 
           !nis,sep06,com: Power Station control, not for standard inflow
 CIPK AUG01   ADD FOR POWER STATION RECYCLING
@@ -521,19 +516,19 @@ C...... Test and read if required  wind velocity data
 C-
 CIPK AUG98  CHECK AND READ FILE FIRST
       IF(IWINDIN .GT. 0) THEN
-	    IF(IWINDIN .EQ. 69) THEN
-		  READ(IWINDIN) NXX,IYFL,DYOFY,TFL,(WNDSP(J),WNDDR(J),J=1,NXX)
-	    ELSE
- 		  READ(IWINDIN,5400) NXX,IYFL,DYOFY,TFL
-		  READ(IWINDIN,5401) (WNDSP(J),WNDDR(J),J=1,NXX)
+        IF(IWINDIN .EQ. 69) THEN
+          READ(IWINDIN) NXX,IYFL,DYOFY,TFL,(WNDSP(J),WNDDR(J),J=1,NXX)
+        ELSE
+          READ(IWINDIN,5400) NXX,IYFL,DYOFY,TFL
+          READ(IWINDIN,5401) (WNDSP(J),WNDDR(J),J=1,NXX)
  5400     FORMAT(2I7,F7.0,F14.3)
  5401     FORMAT(5(2F7.2))
-	    ENDIF
-	    DO J=1,NXX
-            SIGMA(J,1)=CHI*COS(WNDDR(J)/57.3)*WNDSP(J)**2
-            SIGMA(J,2)=CHI*SIN(WNDDR(J)/57.3)*WNDSP(J)**2
-	    ENDDO
-            WRITE(75,*) 'WIND',SIGMA(1,1),SIGMA(1,2),WNDSP(1)
+        ENDIF
+        DO J=1,NXX
+          SIGMA(J,1)=CHI*COS(WNDDR(J)/57.3)*WNDSP(J)**2
+          SIGMA(J,2)=CHI*SIN(WNDDR(J)/57.3)*WNDSP(J)**2
+        ENDDO
+        WRITE(75,*) 'WIND',SIGMA(1,1),SIGMA(1,2),WNDSP(1)
 
       ELSEIF(ID(1:3) .EQ. 'WVA') THEN
         READ(DLIN,'(I8,2F8.0)') N,TW,TA
@@ -613,7 +608,7 @@ CIPK FEB01 STORE NEW BVALUE
         NDFLJ(NJN-900)=NDFL
         AJ(NJN-900)=AJ1
         BJ(NJN-900)=BJ1
-	  NJT(NJN-900)=20
+        NJT(NJN-900)=20
         GO TO 240
 
       ENDIF

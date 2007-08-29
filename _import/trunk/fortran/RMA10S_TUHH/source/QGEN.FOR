@@ -1,4 +1,4 @@
-C     Last change:  NIS  16 Aug 2007    7:54 pm
+C     Last change:  JAJ  26 Aug 2007    8:57 pm
 cipk  last update feb 09 2001 allow for zero length cc lines
 
       SUBROUTINE QGEN(J,QREQ,THET,QQAL)
@@ -26,8 +26,8 @@ C-
 !nis,sep06: new variables
       REAL     :: amec (350), Conveyance (350), dxl (350)
       !nis,aug07: dummy parameters for passing
-      REAL (KIND=8), DIMENSION(1:3) :: dummy
-      real     :: dum1
+      REAL (KIND=8) :: dummy (1:3)
+      real          :: dum1
 
 !nis,sep06: changes for good variable passing
 !      REAL     :: lambda, betspeck, betd, fliesstiefe
@@ -220,24 +220,8 @@ cipk oct98 update to f90
           DO 104 M=1,NCN
 cipk oct98 update to f90
 
-!nis,may07
-!Add midside node for polynom approach
-!            !EFa Nov06, Sonderfall für Teschke-1D-Elemente
-!            !nis,feb07: Allow for numbered FFF midsides
-!            !if (nop(n,2).NE.-9999) then
-!            if (nop(n,2) > -1000) then
             K=ABS(NOP(N,M))
             IBN(K)=IBN(K)+1
-!            else
-!              !if (nop(n,m).NE.-9999) then
-!              if (nop(n,m) > -1000) then
-!                K=ABS(NOP(N,M))
-!                IBN(K)=IBN(K)+1
-!              end if
-!            end if
-!            !-
-!Add midside node for polynom approach
-!-
 
   104     CONTINUE
   105   CONTINUE
@@ -488,7 +472,8 @@ CIPK OCT01
                 !get lambda
                 CALL darcy (lambda, vecq, di(0),
      +            LineCniku,
-     +            0., 0., 0,  0, gl_bedform, mel, cwr_line, 2, dummy)
+     +            0., 0., 0,  0, gl_bedform, mel, cwr_line, 2,
+     +            dummy(1), dummy(2), dummy(3))
                 !Correct roughness, if there is a material (imat) factor (when marsh-option is active)
                 if (idnopt /= 0 .and. d1 < akp(na) * adb(na)) then
                   lambda = lambda

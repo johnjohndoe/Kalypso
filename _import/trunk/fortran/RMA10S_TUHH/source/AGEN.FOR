@@ -1,4 +1,4 @@
-C     Last change:  EF   27 Jul 2007    4:37 pm
+C     Last change:  JAJ  26 Aug 2007    8:33 pm
 cipk  last update feb 09 2001 allow for zero length cc lines
       SUBROUTINE AGEN
       USE BLK10MOD
@@ -10,24 +10,22 @@ CIPK AUG05      INCLUDE 'BLK10.COM'
 C-
 C...... Calculate total projected area for all stage flow lines
 C-
-      DO 300 J=1,NCL
-        MAX=LMT(J)
+      AllLines: DO J = 1, NCL
+        MAXL = LMT(J)
 *
 *...... Skip if 1-d or line is not stage flow
 *
 cipk feb01
-        !EFa jul07, moved for stage-flow boundaries
-        ALN(J)=0.
-        !-
-        IF(MAX .lt. 3) GO TO 300
+        IF(MAXL < 3) CYCLE AllLines
+
         !EFa jul07, deactivated/moved for stage-flow boundaries
-        !IF(STQA(J) .EQ. 0.) GO TO 300
-        !ALN(J)=0.
-        !-
+        IF (STQA(J) == 0. .or. istab(Line(j, 1)) == 0) CYCLE AllLines
+
+        ALN(J)=0.
         THET=STQT(J)
-        MAX = LMT(J)-2
-        DO 150 K = 1, MAX, 2
-        NA = LINE(J,K)
+        MAXL = LMT(J)-2
+        ThroughCornerNodes: DO K = 1, MAXL, 2
+          NA = LINE(J,K)
           NC = LINE(J,K+2)
           DX=CORD(NC,1)-CORD(NA,1)
           DY=-(CORD(NC,2)-CORD(NA,2))
@@ -37,9 +35,10 @@ cipk feb01
           D3=VEL(3,NC)
           D2=(D1+D3)/2.
           ALN(J) = ALN(J)+XL*COS(ALP-THET)*D2
-  150   CONTINUE
-        ALN(J)=ABS(ALN(J))
-  300 CONTINUE
+        ENDDO ThroughCornerNodes
+
+        ALN(J) = ABS(ALN(J))
+      ENDDO AllLines
 C-
       RETURN
       END

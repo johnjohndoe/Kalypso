@@ -17,7 +17,7 @@ CIPK  LAST UPDATE JAN 25 1999 REFINE TESTING WHEN LARGE NUMBER OF LAYERS INPUT
 CIPK  LAST UPDATE JAN 19 1999 ADD MARSH PARAMETERS FOR 2DV TRANSITIONS REVISE
 C                   JUNCTION PROPERTIES
 cipk  last update Jan 3 1999 add for 2dv junctions
-C     Last change:  K     6 May 2007   11:56 am
+C     Last change:  WP   28 Aug 2007   10:36 am
 cipk  last update Aug 27 1998 fix marsh option
 cipk  last update Aug 22 1997 fix problem with alfak
 CIPK  LAST UPDATE OCT 1 1996
@@ -329,11 +329,9 @@ CIPK JUN03
 
 !NiS,mar06: new option in if-block to enable the program to read 2D-geometry in Kalypso-2D-Format
        ELSEIF (IGEO ==2) then
-         !nis,feb07: Allow for numbered FFF midsides
          call rdkalyps(n,m,a,lt,0)
-         !call rdkalyps(n,m,a,lt,dummy1,dummy2,0)
-         !-
-  !NiS,apr06: adding this transoformation like it is called after RDRM1 (see above)
+
+  !NiS,apr06: adding this transformation like it is called after RDRM1 (see above)
          NCLL = NCL
   !-
 
@@ -519,7 +517,7 @@ C-
    72     CONTINUE
 !NiS,may06: for Kalypso output increase MaxT by one for every 1D-2D-TRANSITION ELEMENT (NCORN = 5); MaxT was initialized in getgeo1.subroutine
           IF (ncorn(j) .eq. 5) MaxT = MaxT + 1
-!-
+
           IF(IFIT .EQ. 0) NCRN(J)=NCORN(J)
 C-
 C....... Establish preliminary element types
@@ -537,6 +535,8 @@ cipk jan99
 C
 C        Insert pointers to inform about junction elements
 C
+
+        WRITE(*,*) j, (nop(i,j), i = 1, 8)
 
 cWP Jan 2006, writing informations
         write (*, 1000)

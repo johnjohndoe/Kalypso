@@ -1,4 +1,4 @@
-C     Last change:  EF   30 Jul 2007   11:32 am
+C     Last change:  JAJ  24 Aug 2007   11:59 pm
 cipk  last update SEP 05 2006 FIX AMASSOUT BUG
 cipk  last update MAY 30 2006 add MASS OUTPUT OPTION
 cipk  last update june 28 2005 add time series option
@@ -27,9 +27,9 @@ CIPK  AUG 95  SIGNIFICANT CHANGES TO FILE
       USE BLK11MOD
       USE BLKDRMOD
       USE parakalyps
-	!*******************  DJW 20/07/04
+      !*******************  DJW 20/07/04
       USE WBMMODS
-	!*******************
+      !*******************
       SAVE
 C-
 *...... Open files as requested by input
@@ -125,6 +125,7 @@ cipk mar00
         IRMAFM=0
 cipk jan97
         iutub=0
+        insfl=0
 cipk sep99
         IERMSG=0
         IOERR=0
@@ -139,11 +140,11 @@ cipk AUG02
         ISWANR=0
         IMESHOUT=0
         DO N=1,96
-	    SWANEX(N:N)=' '
-	    SWANFL(N:N)=' '
-	  ENDDO
-	ISMSFM2=0
-	IWAVOT=0
+          SWANEX(N:N)=' '
+          SWANFL(N:N)=' '
+        ENDDO
+        ISMSFM2=0
+        IWAVOT=0
 CIPK OCT02
         IBEDOT=0
 

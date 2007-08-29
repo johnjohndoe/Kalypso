@@ -913,7 +913,7 @@ CIPK MAR01
       !nis,aug07: number of 12 elements maximum at a node is because of reducing the inside element angle to
       !           20 degrees in average (360°/12)
       !TODO: make second entry dynamical
-      ALLOCATE (IsNodeOfElement(1:maxp, 1:12))
+      ALLOCATE (IsNodeOfElement(0:maxp, 0:12))
       do i = 0, maxp
         do j = 0, 12
           IsNodeOfElement(i, j) = 0
@@ -970,17 +970,5 @@ CIPK MAR01
       end do
       !-
 
-!nis,may07
-!Add midside node for polynom approach
-!      !nis,feb07: Adding midside nodes storage of Flow1DFE elements
-!      MaxFFFMS = FFFMS + AddMS
-!      ALLOCATE (FFFmidsidenodes(1:MaxFFFMS))
-!      do i = 1, MaxFFFMS
-!        FFFmidsidenodes(i) = 0
-!      end do
-!      !-
-!!-
-!Add midside node for polynom approach
-!-
       RETURN
 	END

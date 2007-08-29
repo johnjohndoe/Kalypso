@@ -1,4 +1,4 @@
-!     Last change:  NIS  16 Aug 2007    2:16 pm
+!     Last change:  WP   28 Aug 2007    7:36 pm
 !-----------------------------------------------------------------------
 ! This code, data_in.f90, performs reading and validation of model
 ! inputa data in the library 'Kalypso-2D'.
@@ -91,12 +91,9 @@ first_call: IF (ncall.le.0) THEN
 
     IF (m .eq. 1) CYCLE lines
 
-    ! Feld mit den Liniennummern initialisiern:
+    !Initialize line array (nodes of continuity lines; first just corner nodes, later midsides are filled in!)
     DO l = 1, nn
       line (j, l) = 0
-      !NiS,mar06: material assignment deactivated
-      !lineimat (j, l) = 0
-      !-
     END DO
 
     !  Nun werden alle Eckknoten der Linie bis zum Vorletzten durgegangen:
@@ -145,15 +142,11 @@ first_call: IF (ncall.le.0) THEN
 
     END DO nodes
 
+    !checking continuity line assignments
     DO l = 1, nn
-      IF (line (j, l) .eq. 0) then
-        write (*,6000) j
-        6000 format (/1X, '----------------------------------------', /, &
-                    & 1X, 'Error in line of continuity no.  ', I3, ' !', /, &
-                    & 1X, 'Fehler in Kontinuitaetslinie Nr. ', I3, ' !', /, &
-                    & 1X, '----------------------------------------')
-        STOP
-      ENDIF
+      !ERROR
+      IF (line (j, l) .eq. 0) call ErrorMessageAndStop(1401)
+
     END DO
                                                                         
   END DO lines
@@ -276,28 +269,28 @@ END SUBROUTINE check_Kalypso
 !nis,dec06: Allocating the kntimel-array for storage of connected nodes to one element. The background is the new number nodes, that might be
 !           connected to a Transition line
       !test for all possible line transitions
-      if (MaxLT /= 0) then
-        !get the maximum element size. The maximum size is obtained by the longest 1D 2D transitioning number + 2 for the number of nodes of the
-        !transitioning 1D part
-        maxsize = 0
-        !the longest continuity line is taken into account
-        do i = 1, 50
-          if (lmt(i) + 2 > maxsize) maxsize = lmt(i) + 2
-        end do
-      else
-        !if there is no transitioning, the allocation runs in normal way; the number should be decreasable from 8 to 4.
-        maxsize = 8
-      endif
+if (MaxLT /= 0) then
+  !get the maximum element size. The maximum size is obtained by the longest 1D 2D transitioning number + 2 for the number of nodes of the
+  !transitioning 1D part
+  maxsize = 0
+  !the longest continuity line is taken into account
+  do i = 1, 50
+    if (lmt(i) + 2 > maxsize) maxsize = lmt(i) + 2
+  end do
+else
+  !if there is no transitioning, the allocation runs in normal way; the number should be decreasable from 8 to 4.
+  maxsize = 8
+endif
 
-      !allocate it, the size must be two slots bigger, because the two cornder nodes of the connecting 1D-element must be included
-      ALLOCATE (kntimel (MaxE, MaxSize))
-      !nis,jun07: Initializing the kntimel-array
-      do i = 1, MaxE
-        do j = 1, maxsize
-          kntimel (i, j) = 0
-        end do
-      enddo
-      !-
+!allocate it, the size must be two slots bigger, because the two cornder nodes of the connecting 1D-element must be included
+ALLOCATE (kntimel (MaxE, MaxSize))
+!nis,jun07: Initializing the kntimel-array
+do i = 1, MaxE
+  do j = 1, maxsize
+    kntimel (i, j) = 0
+  end do
+enddo
+!-
 
 
 !nis,may07: Information output
@@ -305,38 +298,32 @@ WRITE(*,*) 'Start of Reordering sequence with ', Maxlt, ' couplings'
 !-
 
 !NiS,mar06: Allocating the arrays of module blkasteph
-      ALLOCATE (mlist(500))
-      ALLOCATE (msn(MaxP))
-      ALLOCATE (icol(100,5000))
-      ALLOCATE (nadm(5000))
-      ALLOCATE (inum(MaxP))
+ALLOCATE (mlist(500))
+ALLOCATE (msn(MaxP))
+ALLOCATE (icol(100,5000))
+ALLOCATE (nadm(5000))
+ALLOCATE (inum(MaxP))
 !-
 !NiS,mar06:     Allocating the arrays of module blk2
-      ALLOCATE (wd(MaxP))
-      ALLOCATE (iel(MaxP))
-      ALLOCATE (list(MaxP))
-      ALLOCATE (ihold(5000))
-      ALLOCATE (paxis(MaxE))
+ALLOCATE (wd(MaxP))
+ALLOCATE (iel(MaxP))
+ALLOCATE (list(MaxP))
+ALLOCATE (ihold(5000))
+ALLOCATE (paxis(MaxE))
 !-
 
-      ne = elem 
-      np = knot
+ne = elem
+np = knot
 
-      !nis,jun07: Initializing the allocated variables
-      do i = 1, maxp
-        list(i) = 0
-        msn(i) = 0
-      end do
-      do i = 1, 5000
-        ihold(i) = 0
-      end do
-      !-
-
-!nis,feb07,testing
-!WRITE(*,*) 'Reordering started'
-!pause
+!nis,jun07: Initializing the allocated variables
+do i = 1, maxp
+  list(i) = 0
+  msn(i) = 0
+end do
+do i = 1, 5000
+  ihold(i) = 0
+end do
 !-
-
 
 !get the node numbers into temporary memory
 DO i = 1, ne
@@ -352,11 +339,6 @@ DO i = 1, ne
     kntimel (i, j) = nop (i, l)
   enddo
 
-  !nis,feb07,testing
-  !WRITE(*,*) maxlt
-  !WRITE(*,*) 'Element: ',(kntimel(i,j), j=1, k)
-  !-
-
   !if there is a 1D 2D transition line, then save the nodes of the line in the element array kntimel
   if (maxlt > 0 .and. k == 2) then
     !first the correct line has to be found, by running through all possible lines
@@ -371,15 +353,11 @@ DO i = 1, ne
         EXIT FindLine
       end if
     end do FindLine
-    !WRITE(*,*) i, (kntimel(i,l),l=1,lmt(TransLines(j,2)))
-    !pause
 
   end if
 enddo
-!nis,feb07,testing
-!pause
-!-
 
+!maximum number of nodal connections is reduced to 60 (see definition of maxcn=60 above)
 maxc = maxcn
 
 !The size is in general 4, but if there was a line transition in the network, this number increases to maxsize
@@ -389,15 +367,7 @@ else
   ncn  = 4
 end if
 
-!nis,feb07,testing
-!WRITE(*,*) ncn, 'maximale Elementgroesse'
-!pause
-!-
-
-
-ierr = 0
-
-!tm Thomas Maurer, 15.05,1998                                           
+!tm Thomas Maurer, 15.05,1998
 !tm in folgender Zeile befindet sich eine Variable idx,                 
 !tm die nie initialisiert wurde und sonst im gesamten Programm          
 !tm nicht auftaucht.                                                    
@@ -418,7 +388,6 @@ enddo
 !This loop fills in all nodes, that have direct connection to others into icon array.
 ConnectsOuter: DO n = 1, ne
 
-
   DO m = 1, ncn
     !Get the reference node
     i = kntimel (n, m)
@@ -430,8 +399,6 @@ ConnectsOuter: DO n = 1, ne
 
       !get a node of the element's definition list
       l = kntimel (n, k)
-!      WRITE(*,*) m, i, l
-!      pause
 
       !cycle process if the the second node choice is the same as the first one. They don't need to be connected
       IF (l == i) CYCLE ConnectsInner
@@ -441,23 +408,16 @@ ConnectsOuter: DO n = 1, ne
       GetConnection: DO j = 1, maxc
         IF (icon (i, j) == 0) exit GetConnection
         IF (icon (i, j) == l) CYCLE ConnectsInner
-        if (j == maxc) then
-          ierr = 1
-          !NiS,mar06: unit name changed; changed iout to Lout
-          WRITE (Lout, 6090) maxc, i
-        ENDIF
+
+        !ERROR
+        if (j == maxc) call ErrorMessageAndStop(1501, i)
+
       END DO GetConnection
       icon (i, j) = l
-      !write(*,*) 'Weise Knoten ', i, 'Knoten ', l, 'zu'
     END DO ConnectsInner
   END DO
 
 END DO ConnectsOuter
-!pause
-
- 6090 FORMAT( // 10x, '***error-more than',i5,  ' nodes connected to node', i5 )
-
-IF (ierr.eq.1) stop 5
 
 nepem = 0
 DO n = 1, np
@@ -507,40 +467,35 @@ ENDDO allnodes
 !NiS,mar06: unit name changed; changed iout to Lout
 !      write(Lout,99) mpq
 !   99 FORMAT(1h1//10x,'for initial order, reordering sum =',i10)
-      mpp = mpq 
+mpp = mpq
                                                                         
 ! korrektur von mpp                                                     
                                                                         
-      orderloop: DO
+orderloop: DO
 
-        DO i = 1, np
-          DO j = 1, maxc
-            icon (i, j) = iabs (icon (i, j) )
-          ENDDO
-        ENDDO
+  DO i = 1, np
+    DO j = 1, maxc
+      icon (i, j) = iabs (icon (i, j) )
+    ENDDO
+  ENDDO
 
 !        CALL order (idxx, kntimel, qlist, icon)
-        CALL order (idxx, kntimel, maxsize, qlist, icon)
+  CALL order (idxx, kntimel, maxsize, qlist, icon)
 
-        DO k = 1, 160
-          qlist (1, k) = qlist (2, k)
-        END DO
+  DO k = 1, 160
+    qlist (1, k) = qlist (2, k)
+  END DO
 
-        IF (idxx >= 99999) EXIT orderloop
+  IF (idxx >= 99999) EXIT orderloop
 
-      ENDDO orderloop
+ENDDO orderloop
 
-      !nis,feb07,testing
-      !WRITE(*,*) mpp, mpq
-      !WRITE(*,*) 'vor Fehler'
-      !pause
-      !-
+!ERROR
+IF (mpp.le.mpq) stop 6
 
-      IF (mpp.le.mpq) stop 6 
-
-      DO n = 1, nepem
-        iel (n) = msn (n)
-      END DO
+DO n = 1, nepem
+  iel (n) = msn (n)
+END DO
 !-                                                                      
 !......zero arrarys                                                     
 !-                                                                      
@@ -624,71 +579,70 @@ ENDDO allnodes
                                                                         
 !XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 !XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-      SUBROUTINE order (n, kntimel, maxsize, qlist, icon)
+SUBROUTINE order (n, kntimel, maxsize, qlist, icon)
 !-
-      !NiS,mar06: change the module-access for global variables to the RMA10S-construction
-      !INCLUDE "common.cfg"
-      USE BLK10MOD
-      !NiS,mar06: the following two modules replace the two common blocks used orinally in
-      !this subroutine
-      USE BLK2
-      USE BLKASTEPH
+!NiS,mar06: change the module-access for global variables to the RMA10S-construction
+!INCLUDE "common.cfg"
+USE BLK10MOD
+!NiS,mar06: the following two modules replace the two common blocks used orinally in
+!this subroutine
+USE BLK2
+USE BLKASTEPH
 
-      !nis,jun07: Adding some definitions
-      INTEGER :: counter
-      INTEGER :: ia
-      INTEGER :: maxsize
-      !-
+!nis,jun07: Adding some definitions
+INTEGER :: counter
+INTEGER :: ia
+INTEGER :: maxsize
 !-
+!-
+
 !NiS,mar06: name of variable has changed in RMA10S
-!      INTEGER kntimel (mel, 8), qlist (2, 160)
-      INTEGER kntimel (MaxE, maxsize), qlist (2, 160)
+!INTEGER kntimel (mel, 8), qlist (2, 160)
+INTEGER kntimel (MaxE, maxsize), qlist (2, 160)
                                                                         
-      PARAMETER (maxcn = 60, adjmax = 20, adjdepth = 2000) 
+PARAMETER (maxcn = 60, adjmax = 20, adjdepth = 2000)
                                                                         
 !NiS,mar06: name of variable has changed in RMA10S
-!      INTEGER icon (mnd, maxcn)
-      INTEGER icon (MaxP, maxcn)
+!INTEGER icon (mnd, maxcn)
+INTEGER icon (MaxP, maxcn)
 !-
 
 
 !NiS,mar06: 	the common blocks are replaced with modules dealing with allocatable
 !               arrays. These modules are inserted above and allocated in subroutine reorder
-!      COMMON / blkasteph / mpq, nepem, nr, nc, nprt, mist, mlist (500),
+!COMMON / blkasteph / mpq, nepem, nr, nc, nprt, mist, mlist (500),
 !                           msn (mnd), icol (100, 5000), nadm (5000), inum (mnd), alpha (mnd)
 !NiS,mar06: name of variable has changed in RMA10S
-!      COMMON / blk2 / wd (mnd), iel (mnd), list (mnd), ihold (5000),    &
+!COMMON / blk2 / wd (mnd), iel (mnd), list (mnd), ihold (5000),    &
 !                      paxis (mel)
 !-
-      DIMENSION nlist (160)
+DIMENSION nlist (160)
 
-      !nis,jun07: initializing coutner
-      counter = 0
-      ia = 0
-      !-
+!nis,jun07: initializing coutner
+counter = 0
+ia = 0
 
-      maxc = maxcn 
-      mpo = mpq 
-      mpq = 0 
-      isum = 0
-!-                                                                      
-      DO j = 1, 160
-        nlist (j) = qlist (1, j)
-      END DO
+maxc = maxcn
+mpo = mpq
+mpq = 0
+isum = 0
+
+DO j = 1, 160
+  nlist (j) = qlist (1, j)
+END DO
                                                                         
-      nelt = 2
-      n = nlist (1) 
+nelt = 2
+n = nlist (1)
 
-!NiS,mar06: name of variable changed; changed mnd to MaxP
-      IF (n > MaxP) return
+!If starting node number higher then maximum node number, stop ordering and go back to reordering
+IF (n > MaxP) return
 
-!NiS,mar06: unit name changed; changed iout to Lout
-!      write(*,*) 'Lout in reord =',Lout
-      WRITE (Lout, 6002) n
-      WRITE (*,    6002) n
-      6002 FORMAT (/1x,'Starting Node:      ', I6)
+!INFORMATION: unit name changed; changed iout to Lout
+WRITE (Lout, 6002) n
+WRITE (*,    6002) n
+6002 FORMAT (/1x,'Starting Node:      ', I6)
 
-      nprt = 1 
+nprt = 1
 !NiS,mar06: unit name changed; changed iout to Lout
 !      if(nprt.gt.0) write(Lout,6040)
 ! 6040 format(//10x,'intermediate steps printed below'/                 
@@ -696,99 +650,103 @@ ENDDO allnodes
  6040 FORMAT(//10x,'Zwischenschritt siehe unten:'/  &
             &  10x,'Knoten, Bandbreite, Frontbreite, und Verknuepfungen')
 
-      nel = 1 
-      iel (1) = n 
-      mp = 0 
-      nod = 1 
+nel = 1
+iel (1) = n
+mp = 0
+nod = 1
 
-      allConnects: DO i = 1, maxc
-        jj = icon (n, i) 
-        IF (jj.eq.0) CYCLE allConnects
-        DO m = 1, maxc
-          IF (icon (jj, m) == n) then
-            icon (jj, m) = - icon (jj, m)
-            CYCLE allConnects
-          end if
-        END DO
-      END DO allConnects
+allConnects: DO i = 1, maxc
+  jj = icon (n, i)
+  IF (jj == 0) CYCLE allConnects
+  DO m = 1, maxc
+    IF (icon (jj, m) == n) then
+      icon (jj, m) = - icon (jj, m)
+      CYCLE allConnects
+    end if
+  END DO
+END DO allConnects
 
 !     set values for each new point eliminated
 !                                                                       
-    counter = 0
-    MainLoop: do
-     counter = counter + 1
-     IF (nel /= 1 .or. counter /= 1) then
-       !initialization of icol
-       DO i = 1, 41
-         DO j = 1, 40
-           icol (i, j) = 0
-         enddo
-       enddo
+counter = 0
+MainLoop: do
+  counter = counter + 1
 
-       nod = nod+1
-       mist = 0
-       nr = 1
-       nadm (nr) = 100
+  !testing
+  WRITE(*,*) nel, counter
 
-       DO m = 1, mp
-         ii = list (m)
-         CALL adjpt (ii, m, kntimel, maxsize, icon)
-       END DO
+  IF (nel /= 1 .or. counter /= 1) then
+    !initialization of icol
+    DO i = 1, 41
+      DO j = 1, 40
+        icol (i, j) = 0
+      ENDDO
+    ENDDO
 
-       m = icol (1, 1)
-       !print *,'m=',m, 'mp: ', mp
-       n = list (m)
+    nod = nod+1
+    mist = 0
+    nr = 1
+    nadm (nr) = 100
 
-       IF (ihold (1) >= 249) THEN
-         m = 1
-         n = list (1)
-       ENDIF
+    DO m = 1, mp
+      ii = list (m)
+      CALL adjpt (ii, m, kntimel, maxsize, icon)
+    END DO
 
-       ia = ihold (m)
-       nel = nel + 1
+    m = icol (1, 1)
+    print *,'m=',m, 'mp: ', mp
+    n = list (m)
 
-       IF (nlist (nelt) /= 0) THEN
-         nelt = nelt + 1
-         n = nlist (nel)
-         allMPs: DO mm = 1, mp
-           m = mm
-           IF (list (m) == n) EXIT allMPs
+    IF (ihold (1) >= 249) THEN
+      m = 1
+      n = list (1)
+    ENDIF
 
-           IF (mm == mp) THEN
-             mp = mp + 1
-             list (mp) = n
-             m = mp
-           ENDIF
+    ia = ihold (m)
+    nel = nel + 1
 
-         END DO allMPs
-       endif
+    IF (nlist (nelt) /= 0) THEN
+      nelt = nelt + 1
+      n = nlist (nel)
+      allMPs: DO mm = 1, mp
+        m = mm
+        IF (list (m) == n) EXIT allMPs
 
-       iel (nel) = n
+        IF (mm == mp) THEN
+          mp = mp + 1
+          list (mp) = n
+          m = mp
+        ENDIF
 
-       DO i = 1, m
-         ihold (i) = ihold (i) + 1
-       ENDDO
+      END DO allMPs
+    endif
 
-       mp = mp - 1
+    iel (nel) = n
 
-       IF (m <= mp) THEN
+    DO i = 1, m
+      ihold (i) = ihold (i) + 1
+    ENDDO
 
-         DO i = m, mp
-           ihold (i) = ihold (i + 1) + 1
-           list (i) = list (i + 1)
-         ENDDO
-       ENDIF
-     ENDIF
+    mp = mp - 1
+
+    IF (m <= mp) THEN
+
+      DO i = m, mp
+        ihold (i) = ihold (i + 1) + 1
+        list (i) = list (i + 1)
+      ENDDO
+    ENDIF
+  ENDIF
 
 !     add to column adjacent point of eliminated point
 !                                                                       
-      addColumn: DO j = 1, maxc
-        ii = icon (n, j)
-        IF (ii <= 0) CYCLE addColumn
-        mp = mp + 1
-        ihold (mp) = 1
-        list (mp) = ii
-      END DO addColumn
+  addColumn: DO j = 1, maxc
+    ii = icon (n, j)
+    IF (ii <= 0) CYCLE addColumn
+    mp = mp + 1
+    ihold (mp) = 1
+    list (mp) = ii
+  END DO addColumn
 
 !     mpq=mp*mp+mpq
 
@@ -1164,12 +1122,9 @@ reading: do
 !  IF(kswit.eq.2)  WRITE(*,*) linie
   !end of file condition
   if (istat == -1) EXIT reading
-  !error handling for read errors
-  if (istat /= 0) then                          !error handling for reading errors
-    !NiS,mar06: unit name changed; changed modellein to unit_nr; should be the file name, not the unit number
-    write (*,*) ' Error while reading file ', unit_nr                             !give error-message and stop the program instantly
-    stop
-  end if
+
+  !ERROR - reading error
+  if (istat /= 0) call ErrorMessageAndStop(1001, unit_nr)
 
 !NiS,apr06: first half of reading-DO-LOOP enables to read geometry informations (KSWIT.eq.{0,1}), later the RESTART informations are enabled
 !           to be read (KSWIT.eq.2); some ID-lines are disabled, that are necessary for Kalypso-2D; against that some new ID-lines are added for
@@ -1197,30 +1152,19 @@ reading: do
         if (i.gt.nodecnt) nodecnt = i
       !NiS,mar06: Read NODE geometry informations
       ELSE
-        !NiS,mar06: changed id to id_local; global conflict
-        !READ (linie, '(a2,i10,3f20.7)') id_local, i, cord (i, 1) , cord (i, 2), ao (i)
-        !EFa Nov06, einlesen der Kilometrierung
-        !read (linie, '(a2,i10,4f20.7)') id_local, i, cord (i, 1) , cord (i, 2), ao (i), kmx(i)
         istat=0
 
         READ (linie, *,IOSTAT=istat) id_local, i, cord (i, 1) , cord (i, 2), ao (i),kmx(i)
-        !WRITE(*,*)'FP ',id_local,i,cord(i,1),cord(i,2),ao(i),kmx(i)
 
         if (istat.eq.0) then
           WRITE(lout,*)'Die Kilometrierung von Knoten',i,'wurde eingelesen:',kmx(i)
         end if
 
         IF (i.gt.nodecnt) nodecnt = i
-        !NiS,mar06: Net dimension was checked before; there's no Restriction concerning maximum array size; ERROR test deactivated
-        !  IF (nodecnt.gt.mnd) THEN
-        !    write (*,7000) mnd
-        !    7000 format (/1X, 'ERROR: Number of nodes in mesh is larger than allowed maximum!', /, &
-        !               &  1X, '       Please increase MND in common.cfg (actual value MND = ',I7, ')')
-        !    stop
-        !  END if
-        !-
-        !Stop program execution on negative NODE number
-        IF (i.le.0) stop 'Knotennummer.le.0'                                  
+
+        !ERROR
+        IF (i <= 0) call ErrorMessageAndStop (1002, i)
+
       ENDIF
     ENDIF
 
@@ -1233,14 +1177,6 @@ reading: do
         READ (linie, '(a2,6i10)') id_local,i, (temparc(j),j=1,5)
         IF (i  > arccnt) arccnt = i
 
-        !NiS,mar06: Net dimension was checked before; there's no Restriction concerning maximum array size; ERROR test deactivated
-        !  IF (arccnt.gt.mnd) THEN
-        !    write (*,7001) mnd
-        !    7001 format (/1X, 'ERROR: Number of arcs in mesh is larger than allowed maximum!', /, &
-        !               &  1X, '       Please increase MND in common.cfg (actual value MND = ',I7, ')')
-        !    STOP
-        !  ENDIF
-        !-
         !Remember, whether ARC has no midside node
         IF (temparc(5) == 0) then
           arcs_without_midside = arcs_without_midside + 1
@@ -1251,30 +1187,20 @@ reading: do
         !-
           midsidenode_max = MAX (midsidenode_max,temparc(5))
 
-!nis,may07
-!Add midside nodes for Polynom approach
-!        !nis,feb07: Add for numbered midside nodes of FFF-elements
-!        ELSEIF (temparc(5) < -1000) then
-!          if (temparc(5) /= -9999) then
-!            FFFcnt = MAX(FFFcnt, abs(temparc(5)+1000))
-!          else
-!            Addcnt = Addcnt + 1
-!          endif
-!        !-
-!Add midside nodes for Polynom approach
-!-
-        !nis,feb07: Error if no of previous cases
+
         else
-          WRITE(*,*) 'ERROR - illegal midside node number'
-          stop
-        !-
+          !ERROR
+          call ErrorMessageAndStop(1101, temparc(5))
+
         ENDIF
       !NiS,mar06: Read ARC geometry informations
       ELSE
         READ (linie,'(a2,6i10)') id_local, i, (arc(i,j), j=1, 5)
         IF (i > arccnt) arccnt = i
-        !Stop program execution on negative ARC number
-        IF (i.le.0) stop 'Kantennummer.le.0'                                  
+
+        !ERROR - negative arc number
+        IF (i <= 0) call ErrorMessageAndStop(1301, i)
+
       ENDIF
     ENDIF
 
@@ -1454,15 +1380,24 @@ reading: do
         end if
 !-
         IF (i.gt.elcnt) elcnt = i
-        !NiS,mar06: Net dimension was checked before; there's no Restriction concerning maximum array size; ERROR test deactivated
-        !  IF (elcnt.gt.mel) then
-        !    write (*,7002) mel
-        !    7002 format (/1X, 'ERROR: Number of elements in mesh is larger than allowed maximum!', /, &
-        !               &  1X, '       Please increase MEL in common.cfg (actual value MEL = ',I7, ')')
-        !    stop
-        !  END if
-        !Stop program execution on negative ELEMENT number
         IF (i.le.0) stop 'Elementnummer.le.0'
+      ENDIF
+    ENDIF
+
+    !1D JUNCTION ELEMENT DEFINITIONS ---
+    IF (linie (1:2) .eq.'JE') then
+      !NiS,mar06: Find out maximum ELEMENT number
+      IF (KSWIT == 1) THEN
+        READ (linie, '(a2,i10)') id_local,i
+        IF (i.gt.elcnt) elcnt = i
+      ELSE
+        cvfe = 1
+
+        !NiS,mar06: changed id to id_local; global conflict
+        READ (linie, '(a2,9i10)') id_local, i, (nop(i, j), j=1, 8)
+
+        IF (i > elcnt) elcnt = i
+        IF (i <= 0) stop 'Junction Elementnummer <= 0'
       ENDIF
     ENDIF
 
@@ -1777,20 +1712,7 @@ DO i = 1, arccnt
       ELSE
         !No 4th NODE at normal 1D-ELEMENTS
         IF (nop(arc(i,3),4).eq.0) THEN
-!nis,may07
-!adding midside for Polynom approach
-!          !nis,feb07: Change from general number to numberation starting from -1000
-!          !if (arc(i,5).EQ.-9999) then
-!          if (arc(i,5) < -1000) then
-!          !-
-!            !EFa Nov06, Teschke (nur Eckknoten)
-!            elem(j,1) = -3
-!          else
-            !EFa Nov06, mit Mittseitenknoten
-            elem(j,1) = -1
-!          end if
-!adding midside for Polynom approach
-!-
+          elem(j,1) = -1
         !4th NODE at 1D-2D-transition ELEMENTS; nodes for 1D-2D-TRANSITION ELEMENTS were already assigned in the reading section
         ELSE
           elem(j,1) = -2

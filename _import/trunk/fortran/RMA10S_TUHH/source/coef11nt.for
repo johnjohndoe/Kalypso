@@ -20,7 +20,7 @@ CIPK  LAST UPDATE APRIL 27 1999 Fix to use mat instead of nr for material type t
 cipk  last update Jan 6 1999 initialize AKE correctly
 cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
-C     Last change:  NIS  16 Aug 2007    6:13 pm
+C     Last change:  WP   28 Aug 2007   11:15 am
 CIPK  LAST UPDATED NOVEMBER 13 1997
 CIPK  LAST UPDATED MAY 1 1996
 CIPK LAST UPDATED SEP 7 1995
@@ -96,18 +96,19 @@ C-
 C  Test for width > 0
       N1 = NOP(NN,1)
       N3 = NOP(NN,3)
-      !if it is a weir element, it must not be checked whether all informations are there
-      if (imat(nn) < 900) then
-      IF (WIDTH(N1) .LE. 0.0  .OR.  WIDTH(N3) .LE. 0.0)  THEN
+
+      !check, whether informations are present
+      IF ((WIDTH(N1) .LE. 0.0  .OR.  WIDTH(N3) .LE. 0.0) .and.
+     +     (imat(nn) < 901 .OR. imat(nn) > 903))  THEN
          WRITE(*,*) ' WIDTH MISSING FOR NODES ', N1,N3
 CIPK SEP04 CREATE ERROR FILE
          CLOSE(75)
          OPEN(75,FILE='ERROR.OUT')
          WRITE(75,*) ' WIDTH MISSING FOR NODES ', N1,N3
          STOP  '  WIDTH MISSING FOR NODES '
+      else
+        WRITE(*,*) 'Processing junction element: ', nn
       ENDIF
-      end if
-      !-
 C
       IF(ITEQV(MAXN) .EQ. 5) CALL ARAA(NN)
       TEL=AREA(NN)
@@ -1358,16 +1359,38 @@ c     WRITE(*,*) NN,NCN
         N1=NCON(KK)
         IF(N1 .EQ. 0) GO TO 2010
         NA=(KK-1)*NDF+1
-        ESTIFM(1,NA)=DIR(N1)*(WIDTH(N1)+(SS1(N1)+SS2(N1))/2.*VEL(3,N1))
-     +    *VEL(3,N1)*XHT
-        CX=COS(ALFA(N1))
-        SA=SIN(ALFA(N1))
-        R=VEL(1,N1)*CX+VEL(2,N1)*SA
-        ESTIFM(1,NA+2)=DIR(N1)*(WIDTH(N1)+(SS1(N1)+SS2(N1))*VEL(3,N1))*R
-     +  *XHT
-        F(1)=F(1)-ESTIFM(1,NA)*R
+
+        CX = COS (ALFA(N1))
+        SA = SIN (ALFA(N1))
+        R  = VEL(1, N1) * CX + VEL(2, N1) * SA
+
+        !using geometry-approach (means trapezoidal channel)
+        IF (width(n1) /= 0.0) THEN
+          !derivative over velocity
+          ESTIFM(1, NA) = DIR(N1)
+     +      * (WIDTH(N1) + (SS1(N1) + SS2(N1)) / 2. * VEL(3, N1))
+     +      * VEL(3,N1) * XHT
+          !derivative over depth
+          ESTIFM(1, NA+2) = DIR(N1)
+     +      * (WIDTH(N1) + (SS1(N1) + SS2(N1)) * VEL(3,N1))
+     +      * R * XHT
+        !using polynom approach
+        ELSE
+          ah(n1) = 0.0
+          DO power = 0, 12
+            ah(n1) = ah(n1) + apoly(n1, power) * vel(3, n1)**power
+          ENDDO
+          !derivative over velocity
+          ESTIFM(1, NA) = DIR(N1) * ah(n1) * xht
+          !derivative over depth
+          ESTIFM(1, NA+2) = DIR(N1) * ah(n1) / vel(3, n1) * r * xht
+        ENDIF
+        !residual error
+        F(1) = F(1) - ESTIFM(1, NA) * R
+
 c     write(*,*) 'KK,N1,NA,R,ESTIFM(1,NA+2),F(1)',
 c    +  KK,N1,NA,R,ESTIFM(1,NA+2),F(1)
+
  2010 CONTINUE
       NRX=NCON(1)
       DO 2020 KK=2,NCN

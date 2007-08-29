@@ -1842,7 +1842,7 @@ C
       ENDIF
 
 C
-cipk dec97 apply sclae factors for elevtaion bc's if necessary
+cipk dec97 apply scale factors for elevtaion bc's if necessary
 C-
 C...... Apply scale factors to velocities for special boundaries
 C-
@@ -2041,7 +2041,7 @@ C            rkeepeq(ja)=rkeepeq(ja)+f(ia)
  1400   CONTINUE
  1450 CONTINUE
 
-      !matrix in datei
+      !write matrix into file
       if (nn == 92 .or. nn == 93 .or. nn == 95) then
         !active degreecount
         dca = 0
@@ -2081,7 +2081,6 @@ C            rkeepeq(ja)=rkeepeq(ja)+f(ia)
           WRITE(9919, FMT2)
      +     sort(i), nbct(i,1), ': ',
      +     nbc( nop(nn, nbct(i,1)), nbct(i,2)),
-!     +     f(nbc( nop(nn, nbct(i,1)), nbct(i,2))),
      +     f(k),
      +     (estifm(k, (nbct(j,1) - 1) * 4 + nbct(j,2)), j=1, dca),
      +     nbc( nop(nn, nbct(i,1)), nbct(i,2))

@@ -1,4 +1,4 @@
-C     Last change:  K    15 Nov 2006    4:34 pm
+C     Last change:  WP   28 Aug 2007    9:20 am
 CIPK  LAST UPDATE JUN 20 2006  FIX ERROR NO INITIALIZATION OF nptemp ETC
 CIPK  LAST UPDATE MAY 23 2006  FIX ERROR READING CCLINES
 CIPK  LAST UPDATE SEP 6 2004  add error file
@@ -6,9 +6,9 @@ CIPK  LAST UPDATE SEP 6 2004  add error file
       USE BLK10MOD
 
 cipk aug05	INCLUDE 'BLK10.COM'
-	REAL*8 CX,CY
+      REAL*8 CX,CY
       CHARACTER DLINE*140,ID1*3,DLIN2*77,BLANK*20
-	DIMENSION ILN(8)
+      DIMENSION ILN(8)
 
       data blank/'                    '/ 
 
@@ -20,11 +20,11 @@ cipk aug05	INCLUDE 'BLK10.COM'
       READ(IFILE,'(A80)') TITLE
 
       NP=0
-	NE=0
+      NE=0
 cipk jun06
       NPTEMP=0
       NETEMP=0	
-  100	CALL GINPT1(IFILE,DLINE)
+  100 CALL GINPT1(IFILE,DLINE)
 
 !NiS,may06,com: ELEMENT READING BLOCK
 !     reading block one of RM1-geometry file. In that block the element informations are written down:
@@ -36,24 +36,24 @@ cipk jun06
 !                 reordering sequence
 !-
       READ(DLINE,'(10I5,F10.3,I5)') J,ILN,IMT,EDIR,INU
-	IF(ILN(1) .EQ. 0  .AND.  (J .EQ. 9999  .OR.  J .EQ. 99999)) THEN
+      IF(ILN(1) .EQ. 0  .AND.  (J .EQ. 9999  .OR.  J .EQ. 99999)) THEN
         GO TO 120
       ELSE
-	  IF(KSWIT .EQ. 1) THEN
+        IF(KSWIT .EQ. 1) THEN
           DO K=1,8
-	      NPTEMP=MAX(NPTEMP,ILN(K))
-	      NETEMP=MAX(NETEMP,J)
-	    ENDDO
-	  ELSE
+            NPTEMP=MAX(NPTEMP,ILN(K))
+            NETEMP=MAX(NETEMP,J)
+          ENDDO
+        ELSE
           DO K=1,8
-    	      NOP(J,K)=ILN(K)
-	    ENDDO
-	    IMAT(J)=IMT
-	    TH(J)=EDIR
-	    NFIXH(J)=INU
+            NOP(J,K)=ILN(K)
+          ENDDO
+          IMAT(J)=IMT
+          TH(J)=EDIR
+          NFIXH(J)=INU
           NE=MAX(NE,J)
         ENDIF
-	  GO TO 100
+        GO TO 100
       ENDIF	  
   
   120 continue  
@@ -66,9 +66,9 @@ cipk jun06
       IF(KSWIT .EQ. 0) THEN
 
       DO N=1,NE
-	  IF(NFIXH(N) .EQ. 0) THEN
-	    NFIXH(N)=N
-	  ENDIF
+        IF(NFIXH(N) .EQ. 0) THEN
+          NFIXH(N)=N
+        ENDIF
       ENDDO
 !NiS,may06,com: NODE READING BLOCK
 !     reading of node informations, that can for 2D-nodes and 3D-basis-nodes be the ID-number, x- and y- coordinates as well as the bottom elevation.
@@ -88,13 +88,13 @@ cipk jun06
       ENDIF
 
       !NiS,apr06,com: test for end condition of block
-	IF(DLINE(11:30) .eq. blank
+      IF(DLINE(11:30) .eq. blank
      +  .AND.  (J .EQ. 9999  .OR.  J .EQ. 99999)) THEN
-	  GO TO 140
-	ELSE
-	  IF(KSWIT .EQ. 1) THEN
-	    NPTEMP=MAX(NPTEMP,J)
-	  ELSE
+        GO TO 140
+      ELSE
+        IF(KSWIT .EQ. 1) THEN
+          NPTEMP=MAX(NPTEMP,J)
+        ELSE
           CORD(J,1) = CX 
           CORD(J,2) = CY 
           AO(J) = BELEV 
@@ -102,14 +102,14 @@ cipk jun06
           SS1(J)=SS1X 
           SS2(J)=SS2X 
           WIDS(J)=WDSX
-    	    WIDBS(J)=WEL 
+          WIDBS(J)=WEL
           WSS(J)=SSSO
 CIPK NOT IN RMA10        BS1(J)=BS11
-	    NP=MAX(NP,J)
-	  ENDIF
-	GO TO 120 
-	ENDIF
-	NCL=0
+          NP=MAX(NP,J)
+        ENDIF
+      GO TO 120
+      ENDIF
+      NCL=0
   140 CONTINUE
 
 !NiS,may06,com: End of dimension reading; informations necessary for dimensioning arrays are read; return from RDRM1 in this case:
@@ -147,7 +147,7 @@ cipk may05  REPLACE IFILE WITH DLINE2
             DO K=1,350
               IF(LINE(I,K) .EQ. 0) THEN
                 LMT(I)=K-1
-	          IF(ID1 .EQ. 'END') GO TO 375
+                IF(ID1 .EQ. 'END') GO TO 375
                 GO TO 330
               ENDIF
             ENDDO
@@ -166,12 +166,12 @@ cipk may05  REPLACE IFILE WITH DLINE2
 
   375 CONTINUE
 
-	close(ifile)
+      close(ifile)
 
 !NiS,mar06: insert output testblock
-!	  OPEN(UNIT=555,FILE='test-s.txt')
+!        OPEN(UNIT=555,FILE='test-s.txt')
 !          do zzz=1,np
-!	    WRITE(555,*)cord(zzz,1),cord(zzz,2),AO(zzz),wss(zzz)
+!          WRITE(555,*)cord(zzz,1),cord(zzz,2),AO(zzz),wss(zzz)
 !          ENDdo
 !          CLOSE(555,STATUS='keep')
 !          OPEN(UNIT=555,FILE='test2-s.txt')
@@ -191,8 +191,8 @@ cipk may05  REPLACE IFILE WITH DLINE2
 !          CLOSE(555,STATUS='keep')
 !-
 
-	RETURN
-	END
+      RETURN
+      END
 
       SUBROUTINE GINPT1(IIN,DLIN)
       CHARACTER DLIN*140
@@ -200,16 +200,16 @@ cipk may05  REPLACE IFILE WITH DLINE2
       READ(IIN,7000) DLIN
       write(75,7000) dlin
  7000 FORMAT(A140)
-	do i=1,140
-	  if(dlin(i:i) .eq. char(9)) go to 200
-	enddo
+      do i=1,140
+        if(dlin(i:i) .eq. char(9)) go to 200
+      enddo
       RETURN
   200 continue
 cipk sep04
       CLOSE(75)
       OPEN(75,FILE='ERROR.OUT')
-	write(*,*) 'Error Tab character found in the following line'
-	write(75,*) 'Error Tab character found in the following line'
+      write(*,*) 'Error Tab character found in the following line'
+      write(75,*) 'Error Tab character found in the following line'
       write(75,7000) dlin
       write(*,7000) dlin
       stop
