@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gistableview xmlns="gistableview.template.kalypso.org">
+    <layer featurePath="mappingMember" id="id" linktype="gml" ns1:actuate="onRequest" ns1:href="PegelMapping.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
+        <column alignment="16384" editable="true" format="" name="name" width="100"/>
+        <column alignment="16384" editable="true" name="local1" width="100"/>
+        <column alignment="16384" editable="true" name="local2" width="100"/>
+        <column alignment="16384" editable="true" name="local3" width="100"/>
+        <column alignment="16384" editable="true" name="local4" width="100"/>
+        <column alignment="16384" editable="true" name="local5" width="100"/>
+        <column alignment="16384" editable="true" name="remote1" width="100"/>
+        <column alignment="16384" editable="true" name="remote2" width="100"/>
+        <column alignment="16384" editable="true" name="remote3" width="100"/>
+        <column alignment="16384" editable="true" name="remote4" width="100"/>
+        <column alignment="16384" editable="true" name="remote6" width="100"/>
+        <column alignment="16384" editable="true" name="remote7" width="100"/>
+        <column alignment="16384" editable="true" name="remote8" width="100"/>
+        <column alignment="16384" editable="true" name="remote9" width="100"/>
+    </layer>
+</gistableview>
+
