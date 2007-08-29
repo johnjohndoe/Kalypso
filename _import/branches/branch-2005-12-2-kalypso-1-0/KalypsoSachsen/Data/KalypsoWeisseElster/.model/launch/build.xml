@@ -278,7 +278,7 @@
             <source property="${pegelRemoteMessungLink}"
                     from="${startsim}"
                     to="${startforecast}"
-                    filter="${filterW}" />
+                    filter="${filterQ}" />
             <metadata name="Szenario" value="${scenarioId}" />
         </kalypso.copyObservation>
         <!--        <kalypso.copyObservation gml="${project.url}/.model/observationConf/PegelMessungMapping.gml"
