@@ -204,7 +204,7 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView
     String newName = Messages.GisMapOutlineView_1;
     if( m_mapPart != null )
     {
-      newName += "(" + mapPart.getPartName() + ")";
+      newName += " (" + mapPart.getPartName() + ")";
       final JobExclusiveCommandTarget commandTarget = m_mapPart.getCommandTarget();
       if( commandTarget != m_commandTarget )
       {
