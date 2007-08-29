@@ -1,4 +1,4 @@
-C     Last change:  WP   27 Aug 2007    7:07 pm
+C     Last change:  JAJ  29 Aug 2007    0:11 am
 CIPK  LAST UPDATE JUNE 27 2005 ALLOW FOR CONTROL STRUCTURES 
 CIPK  LAST UPDATE MAR 25 2005
 CIPK  LAST UPDATE SEP 06 2004 CREATE ERROR FILE
@@ -375,8 +375,13 @@ C      Process one-d elements
 	      IF(NRX .EQ. 2) GO TO 18
 CIPK MAR05
 !nis,may07
+
+              IF ((imat(n) >= 901 .and. imat(n) <= 903)
+     +             .and. IGTP(n) == 0) then
+                CALL Coef1DJunction (N, NRX)
+
               !material type 89 is used for polynom approach
-              IF (imat(n) /= 89) THEN
+              ELSEIF (imat(n) /= 89) THEN
                 IF(INOTR .EQ. 0) THEN
                   CALL COEF1(N,NRX)
                 ELSE
