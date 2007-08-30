@@ -78,8 +78,7 @@ public interface IProfilPointProperty
   public String getId( );
 
   /**
-   * @return a friendly name for this ProfilepointProperty should be the same used in the dictonary
-   *         {@link IWspmConstants}
+   * @return a friendly name for this ProfilepointProperty 
    */
   public String getLabel( );
 }
