@@ -20,6 +20,8 @@
 	<!ENTITY file_sst_robotron_ims SYSTEM "sst_robotron_ims.xml">
 	
 	<!ENTITY file_integr_allg SYSTEM "modellintegration_allg.xml">
+	<!ENTITY file_integr_elbezwg SYSTEM "modellintegration_elbezwg.xml">
+	<!ENTITY file_integr_elbepolte SYSTEM "modellintegration_elbepolte.xml">
 	<!ENTITY file_integr_spree SYSTEM "modellintegration_spree.xml">
 	<!ENTITY file_integr_we SYSTEM "modellintegration_weisseelster.xml">
 	<!ENTITY file_integr_tubig SYSTEM "modellintegration_tubig.xml">
@@ -48,6 +50,8 @@
 		
 		&file_integr_allg;
 		
+		&file_integr_elbezwg;
+		&file_integr_elbepolte;
 		&file_integr_spree;
 		&file_integr_we;
 		

@@ -4,6 +4,7 @@
 	<logoImage imageUrl="bceLogo.png" linkUrl="http://www.bjoernsen.de"/>
 	<model name="ElbeZWGe" icon="elbe_icon.gif" image="EZG_Elbe.png" label="Elbe (Zwischengebiete)"/>
 	<model name="ElbePolte" icon="elbe_icon.gif" image="EZG_Elbe.png" label="Elbe"/>
+	<model name="SchwarzeElster" icon="se_icon.gif" image="EZG_S_E.png" label="Schwarze Elster"/>
 	<model name="Spree" icon="spree_icon.gif" image="EZG_Spree.png" label="Spree"/>
 	<model name="WeisseElster" icon="we_icon.gif" image="EZG_W_E.png" label="Weisse Elster"/>
 </modellist>

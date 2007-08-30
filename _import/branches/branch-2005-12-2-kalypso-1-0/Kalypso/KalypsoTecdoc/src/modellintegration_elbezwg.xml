@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section id="modell-spree" vendor="sachsen">
-  <title>Modellintegration Spree und Schwarze Elster</title>
+  <title>Elbe (Zwischengebiete)</title>
 
   <indexterm>
     <primary>Modellintegration</primary>
@@ -197,10 +197,10 @@
           <row>
             <entry>Vorhersagegenauigkeit</entry>
 
-            <entry>[%/60h]</entry>
+            <entry>[cm/Tag]</entry>
 
             <entry>Parameter zur Ermittlung der umhüllenden
-            Vorhersageganglinien (bezogen auf Abfluss)</entry>
+            Vorhersageganglinien</entry>
           </row>
 
           <row>
@@ -340,10 +340,10 @@
           <row>
             <entry>Vorhersagegenauigkeit</entry>
 
-            <entry>[%/60h]</entry>
+            <entry>[cm/Tag]</entry>
 
             <entry>Parameter zur Ermittlung der umhüllenden
-            Vorhersageganglinien (bezogen auf Abfluss)</entry>
+            Vorhersageganglinien</entry>
           </row>
 
           <row>

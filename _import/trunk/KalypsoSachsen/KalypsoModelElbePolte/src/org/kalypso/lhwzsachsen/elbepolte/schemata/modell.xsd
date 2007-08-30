@@ -305,9 +305,9 @@
                         <annotation>
                             <documentation xml:lang="de">
                                 <name>interne Pegel-Nr.</name>
-                                <label>interne Pegel-Nr</label>
-                                <tooltip>interne Pegel-Nr</tooltip>
-                                <description>interne Pegel-Nr</description>
+                                <label>interne Pegel-Nr.</label>
+                                <tooltip>interne Pegel-Nr.</tooltip>
+                                <description>interne Pegel-Nr.</description>
                             </documentation>
                         </annotation>
                     </element>
@@ -448,10 +448,10 @@
                     <element name="ganglinie_gesamt" type="obslink:TimeseriesLinkFeatureProperty">
                         <annotation>
                             <documentation xml:lang="de">
-                                <name>Mess- und Vorgabewerte</name>
-                                <label>Mess- und Vorgabewerte</label>
-                                <tooltip>Mess- und Vorgabewerte</tooltip>
-                                <description>Mess- und Vorgabewerte</description>
+                                <name>Abfluss-Ganglinie</name>
+                                <label>Abfluss-Ganglinie</label>
+                                <tooltip>Abfluss-Ganglinie</tooltip>
+                                <description>Abfluss-Ganglinie</description>
                             </documentation>
                         </annotation>
                     </element>
@@ -737,10 +737,10 @@
                     <element name="nr_feko" type="int" default="2">
                         <annotation>
                             <documentation xml:lang="de">
-                                <name>Nachführung FEKO</name>
-                                <label>Nachführung FEKO</label>
-                                <tooltip>Nachführung FEKO</tooltip>
-                                <description>Nachführung FEKO</description>
+                                <name>Nachführung FEKO [Anzahl Zeitschritte]</name>
+                                <label>Nachführung FEKO [Anzahl Zeitschritte]</label>
+                                <tooltip>Nachführung FEKO [Anzahl Zeitschritte]</tooltip>
+                                <description>Nachführung FEKO [Anzahl Zeitschritte]</description>
                             </documentation>
                         </annotation>
                         <!--  <simpleType>
@@ -750,6 +750,7 @@
                             </restriction>
                         </simpleType> -->
                     </element>
+                    <!-- maxOccurs ist allgemein 4, für die Elbe gibt es aber nur drei Hochwassertypen... -->
                     <element ref="modell:paramSetMember" minOccurs="1" maxOccurs="4">
                         <annotation>
                             <documentation xml:lang="de">
