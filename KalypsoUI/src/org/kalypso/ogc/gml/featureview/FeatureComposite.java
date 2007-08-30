@@ -87,6 +87,8 @@ import org.kalypso.template.featureview.RadiobuttonType;
 import org.kalypso.template.featureview.SubcompositeType;
 import org.kalypso.template.featureview.TableType;
 import org.kalypso.template.featureview.TextType;
+import org.kalypso.template.gistableview.Gistableview;
+import org.kalypso.template.gistableview.GistableviewType;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.preferences.IKalypsoPreferences;
 import org.kalypso.util.swt.SWTUtilities;
@@ -351,7 +353,12 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       final FeatureTypeProperty ftp = feature.getFeatureType().getProperty( propertyName );
 
       final KalypsoGisPlugin plugin = KalypsoGisPlugin.getDefault();
-      final IFeatureControl fc = new TableFeatureContol( workspace, ftp, plugin.createFeatureTypeCellEditorFactory(), m_selectionManager, this );
+      final TableFeatureContol fc = new TableFeatureContol( workspace, ftp, plugin.createFeatureTypeCellEditorFactory(), m_selectionManager, this );
+
+      final GistableviewType gistableview = tableType.getGistableview();
+      if( gistableview != null )
+        fc.setTableTemplate( gistableview );
+      
       fc.setFeature( workspace, feature );
 
       addFeatureControl( fc );

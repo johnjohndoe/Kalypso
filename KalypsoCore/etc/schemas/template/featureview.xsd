@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSpy v2005 sp2 U (http://www.altova.com) by Gernot Belger (BCE GmbH) -->
 <!-- edited with XMLSPY v2004 rel. 4 U (http://www.xmlspy.com) by Gernot Belger (Björnsen Beratende Ingenieure GmbH) -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="featureview.template.kalypso.org" xmlns:kalypso="types.template.kalypso.org" targetNamespace="featureview.template.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tv="gistableview.template.kalypso.org" xmlns:ns1="featureview.template.kalypso.org" xmlns:kalypso="types.template.kalypso.org" targetNamespace="featureview.template.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified">
 
 	<xs:import namespace="types.template.kalypso.org" schemaLocation="./layerTypes.xsd"/>
+	<xs:import namespace="gistableview.template.kalypso.org" schemaLocation="./gistableview.xsd" />
 
 	<xs:element name="featuretemplate">
 		<xs:complexType>
@@ -118,6 +119,9 @@
 		<xs:complexType>
 			<xs:complexContent>
 				<xs:extension base="ns1:controlType">
+					<xs:sequence>
+						<xs:element ref="tv:gistableview" minOccurs="0"/>
+					</xs:sequence>
 					<xs:attribute name="property" type="xs:string" use="required"/>
 				</xs:extension>
 			</xs:complexContent>
