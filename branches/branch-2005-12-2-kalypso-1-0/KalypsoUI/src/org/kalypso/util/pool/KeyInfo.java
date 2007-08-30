@@ -191,7 +191,7 @@ public final class KeyInfo extends Job implements ILoaderListener
       {
         m_object = null;
 
-        e.printStackTrace();
+//        e.printStackTrace();
 
         if( m_key.isIgnoreExceptions() )
           return Status.CANCEL_STATUS;

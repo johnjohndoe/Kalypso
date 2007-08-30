@@ -97,6 +97,7 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory;
 import org.kalypso.ogc.gml.table.command.ChangeSortingCommand;
 import org.kalypso.template.gistableview.Gistableview;
+import org.kalypso.template.gistableview.GistableviewType;
 import org.kalypso.template.gistableview.ObjectFactory;
 import org.kalypso.template.gistableview.GistableviewType.LayerType;
 import org.kalypso.template.gistableview.GistableviewType.LayerType.ColumnType;
@@ -313,42 +314,50 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     // unhook the mouseDownEvent because we do not want to start editing
     // if we click anywhere in the table
     // only clicking on the table cursor starts editing
-//    Table tableControl = (Table)control;
-//    tableControl.addMouseListener( new MouseAdapter()
-//    {
-//      public void mouseDown( MouseEvent e )
-//      {
-//        tableViewerImpl.handleMouseDown( e );
-//      }
-//    } );
+    //    Table tableControl = (Table)control;
+    //    tableControl.addMouseListener( new MouseAdapter()
+    //    {
+    //      public void mouseDown( MouseEvent e )
+    //      {
+    //        tableViewerImpl.handleMouseDown( e );
+    //      }
+    //    } );
 
     // copy hooking from super-classes
-    control.addDisposeListener(new DisposeListener() {
-      public void widgetDisposed(DisposeEvent event) {
-        handleDispose(event);
+    control.addDisposeListener( new DisposeListener()
+    {
+      public void widgetDisposed( DisposeEvent event )
+      {
+        handleDispose( event );
       }
-    });
+    } );
 
-    OpenStrategy handler = new OpenStrategy(control);
-    handler.addSelectionListener(new SelectionListener() {
-      public void widgetSelected(SelectionEvent e) {
-        handleSelect(e);
+    OpenStrategy handler = new OpenStrategy( control );
+    handler.addSelectionListener( new SelectionListener()
+    {
+      public void widgetSelected( SelectionEvent e )
+      {
+        handleSelect( e );
       }
-      public void widgetDefaultSelected(SelectionEvent e) {
-        handleDoubleSelect(e);
+
+      public void widgetDefaultSelected( SelectionEvent e )
+      {
+        handleDoubleSelect( e );
       }
-    });
-    handler.addPostSelectionListener(new SelectionAdapter() {
-      public void widgetSelected(SelectionEvent e) {
-        handlePostSelect(e);
+    } );
+    handler.addPostSelectionListener( new SelectionAdapter()
+    {
+      public void widgetSelected( SelectionEvent e )
+      {
+        handlePostSelect( e );
       }
-    });
+    } );
     // leider privat
-//    handler.addOpenListener(new IOpenEventListener() {
-//      public void handleOpen(SelectionEvent e) {
-//        StructuredViewer.this.handleOpen(e);
-//      }
-//    });
+    //    handler.addOpenListener(new IOpenEventListener() {
+    //      public void handleOpen(SelectionEvent e) {
+    //        StructuredViewer.this.handleOpen(e);
+    //      }
+    //    });
   }
 
   protected void handleTableCursorPostSelected()
@@ -386,6 +395,28 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     m_selectionManager.removeSelectionListener( m_globalSelectionListener );
   }
 
+  public void applyTableTemplate( final GistableviewType tableView, final URL context, final boolean dummy )
+  {
+    m_isApplyTemplate = true;
+    disposeTheme( getInput() );
+
+    if( tableView != null )
+    {
+      final LayerType layer = tableView.getLayer();
+      if( layer.getHref() != null )
+      {
+        final GisTemplateFeatureTheme theme = new GisTemplateFeatureTheme( layer, context, m_selectionManager );
+        setInput( theme );
+      }
+      final SortType sort = layer.getSort();
+      final List columnList = layer.getColumn();
+      setSortAndColumns( sort, columnList );
+    }
+
+    refreshAll();
+    m_isApplyTemplate = false;
+  }
+
   public void applyTableTemplate( final Gistableview tableView, final URL context )
   {
     m_isApplyTemplate = true;
@@ -403,26 +434,30 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
       setInput( theme );
 
       final SortType sort = layer.getSort();
-      if( sort != null )
-      {
-        m_sorter.setPropertyName( sort.getPropertyName() );
-        m_sorter.setInverse( sort.isInverse() );
-      }
-
       final List columnList = layer.getColumn();
-      for( final Iterator iter = columnList.iterator(); iter.hasNext(); )
-      {
-        final ColumnType ct = (ColumnType)iter.next();
-        addColumn( ct.getName(), ct.isEditable(), ct.getWidth(), ct.getAlignment(), ct.getFormat(), false );
-      }
+      setSortAndColumns( sort, columnList );
     }
 
-    refreshCellEditors();
-    refreshColumnProperties();
-    refresh();
+    refreshAll();
     checkColumns();
     m_isApplyTemplate = false;
   }
+  
+  private void setSortAndColumns( final SortType sort, final List columnList )
+  {
+    if( sort != null )
+    {
+      m_sorter.setPropertyName( sort.getPropertyName() );
+      m_sorter.setInverse( sort.isInverse() );
+    }
+
+    for( final Iterator iter = columnList.iterator(); iter.hasNext(); )
+    {
+      final ColumnType ct = (ColumnType)iter.next();
+      addColumn( ct.getName(), ct.isEditable(), ct.getWidth(), ct.getAlignment(), ct.getFormat(), false );
+    }
+  }
+
 
   public IKalypsoFeatureTheme getTheme()
   {
@@ -535,6 +570,13 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     }
   }
 
+  public void refreshAll( )
+  {
+    refreshCellEditors();
+    refreshColumnProperties();
+    refresh();
+  }
+  
   public void removeColumn( final String name )
   {
     final TableColumn column = getColumn( name );

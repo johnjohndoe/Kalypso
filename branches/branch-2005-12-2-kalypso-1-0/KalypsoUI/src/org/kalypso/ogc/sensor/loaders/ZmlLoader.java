@@ -93,7 +93,7 @@ public class ZmlLoader extends AbstractLoader
     }
     catch( final Exception e ) // generic exception caught for simplicity
     {
-      e.printStackTrace();
+//      e.printStackTrace();
       // TODO wenn resource geloescht wurde, wird hier ein fehler geworfen
       throw new LoaderException( e );
     }

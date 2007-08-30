@@ -1,4 +1,4 @@
-#Fri Mar 03 15:26:04 CET 2006
+#Thu Aug 30 15:18:20 CEST 2007
 encoding//schema/nativeObsAdapter.exsd=UTF-8
 encoding//etc/schemas/zml/beispiel-metadata.zml=UTF-8
 encoding//src/org/kalypso/ogc/gml/convert/resources=UTF-8
@@ -14,4 +14,5 @@ eclipse.preferences.version=1
 encoding//etc/schemas/zml/inline.zml=UTF-8
 encoding//etc/schemas/template/gismapview.xsd=UTF-8
 encoding//etc/schemas/template/obsdiagview_example.odt=UTF-8
+encoding//etc/schemas/template/featureview.xsd=UTF-8
 encoding//etc/schemas/zml/inline_ex.zml=UTF-8

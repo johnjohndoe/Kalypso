@@ -69,6 +69,7 @@ public class CommitObservationsTask extends AbstractFeatureVisitorTask
 {
   private String m_localObs;
   private String m_remoteObs;
+  private String m_sourceFilter;
 
   public void setLocalObs( String localObs )
   {
@@ -78,6 +79,11 @@ public class CommitObservationsTask extends AbstractFeatureVisitorTask
   public void setRemoteObs( String remoteObs )
   {
     m_remoteObs = remoteObs;
+  }
+  
+  public void setSourceFilter( String sourceFilter )
+  {
+    m_sourceFilter = sourceFilter;
   }
 
   public CommitObservationsTask()
@@ -99,7 +105,7 @@ public class CommitObservationsTask extends AbstractFeatureVisitorTask
     {
       final IObservationService srv = KalypsoGisPlugin.getDefault().getObservationServiceProxy();
 
-      return new CommitPrognoseFeatureVisitor( srv, resolver, context, m_localObs, m_remoteObs, monitor );
+      return new CommitPrognoseFeatureVisitor( srv, resolver, context, m_localObs, m_remoteObs, m_sourceFilter, monitor );
     }
     catch( final ServiceException e )
     {

@@ -28,6 +28,7 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory;
+import org.kalypso.template.gistableview.GistableviewType;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureType;
@@ -57,8 +58,11 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
 
   private final IFeatureChangeListener m_fcl;
 
+  private GistableviewType m_tableView;
+
   public TableFeatureContol( final GMLWorkspace workspace, final FeatureTypeProperty ftp,
-      final IFeatureModifierFactory factory, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl )
+      final IFeatureModifierFactory factory, final IFeatureSelectionManager selectionManager,
+      final IFeatureChangeListener fcl )
   {
     super( workspace, ftp );
 
@@ -152,15 +156,28 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
       m_viewer.setInput( m_kft );
 
       // create columns
-      // add all columns: TODO: use template?
-      final FeatureType featureType = m_kft.getFeatureType();
-      final FeatureTypeProperty[] properties = featureType == null ? new FeatureTypeProperty[0] : featureType.getProperties();
-      for( int i = 0; i < properties.length; i++ )
+      // add all columns
+      if( m_tableView != null )
       {
-        final FeatureTypeProperty ftp = properties[i];
-        m_viewer.addColumn( ftp.getName(), true, 100, "SWT.CENTER", null, i == properties.length - 1 );
+        m_viewer.applyTableTemplate( m_tableView, workspace.getContext(), false );
+      }
+      else
+      {
+        final FeatureType featureType = m_kft.getFeatureType();
+        final FeatureTypeProperty[] properties = featureType == null ? new FeatureTypeProperty[0] : featureType
+            .getProperties();
+        for( int i = 0; i < properties.length; i++ )
+        {
+          final FeatureTypeProperty ftp = properties[i];
+          m_viewer.addColumn( ftp.getName(), true, 100, "SWT.CENTER", null, i == properties.length - 1 );
+        }
       }
     }
+  }
+
+  public void setTableTemplate( final GistableviewType tableView )
+  {
+    m_tableView = tableView;
   }
 
   /**
