@@ -41,7 +41,6 @@
 package org.kalypso.ogc.gml.mapmodel;
 
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
@@ -114,80 +113,6 @@ public class MapModellHelper
     }
 
     return 0.0;
-  }
-
-  /**
-   * Creates an image of the map modell. Does wait, until all themes are loaded. That means it can take some time, until
-   * this method returns. If a timeout is reached, the function will return also only a half finished image.<br>
-   * ATTENTION: For GUI purposes I recommend using the other function.
-   * 
-   * @author Holger Albert
-   */
-  public static BufferedImage createCompleteImageFromModell( final GeoTransform p, final GM_Envelope bbox, final Rectangle bounds, final int width, final int height, final IMapModell model )
-  {
-    final BufferedImage image = new BufferedImage( width, height, BufferedImage.TYPE_INT_ARGB );
-    final Graphics gr = image.getGraphics();
-    try
-    {
-      gr.setColor( Color.white );
-      gr.fillRect( 0, 0, width, height );
-      gr.setColor( Color.black );
-      gr.setClip( 0, 0, width, height );
-      final int x = bounds.x;
-      final int y = bounds.y;
-      final int w = bounds.width;
-      final int h = bounds.height;
-
-      p.setDestRect( x - 2, y - 2, w + x, h + y );
-
-      final double scale = MapModellHelper.calcScale( model, bbox, bounds.width, bounds.height );
-      try
-      {
-        // necessary for WMS themes: they only start loading the image frmo WMS in the paint call
-        model.paint( gr, p, bbox, scale, false );
-
-        final IKalypsoTheme[] allThemes = model.getAllThemes();
-        int timeout = 0;
-        boolean isLoading = true;
-        while( isLoading )
-        {
-          isLoading = false;
-          for( final IKalypsoTheme theme : allThemes )
-            if( theme.isLoaded() == false )
-              isLoading = true;
-
-          /* If the timeout was reached the last run, stop waiting. */
-          if( timeout >= 60000 )
-            break;
-
-          /* Wait for one second, if it is still loading. */
-          if( isLoading )
-          {
-            Thread.sleep( 1000 );
-            timeout = timeout + 1000;
-          }
-        }
-
-        model.paint( gr, p, bbox, scale, false );
-
-        // maybe use ThemePainter instaed?
-// new ThemePainter();
-      }
-      catch( final Exception e )
-      {
-        e.printStackTrace();
-        System.out.println( e.getMessage() );
-      }
-
-      final HighlightGraphics highlightGraphics = new HighlightGraphics( (Graphics2D) gr );
-      model.paint( highlightGraphics, p, bbox, scale, true );
-    }
-    finally
-    {
-      gr.dispose();
-    }
-
-    return image;
   }
 
   /**
