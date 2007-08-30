@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ElbePolteModell fid="root" xmlns:commons="org.kalypso.elbepolte.commons" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:obslink="obslink.zml.kalypso.org" xmlns:gml="http://www.opengis.net/gml" xmlns="org.kalypso.elbepolte.modell" xsi:schemaLocation="org.kalypso.elbepolte.modell modell.xsd">
+<ElbePolteModell fid="root" xmlns:commons="org.kalypso.elbepolte.commons" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink"
+  xmlns:obslink="obslink.zml.kalypso.org" xmlns:gml="http://www.opengis.net/gml" xmlns="org.kalypso.elbepolte.modell" xsi:schemaLocation="org.kalypso.elbepolte.modell modell.xsd">
   <name>Elbe-Modell</name>
   <description>Modell der Oberen Elbe</description>
+  <pegel_oberwasser xlink:href="#KMChannel1002"/>
   <hw_type>1</hw_type>
   <rido>true</rido>
   <streckeMember>
     <Strecke fid="Strecke1">
       <name>BRANDYS+PRAG - LITOMERICE</name>
       <description/>
+      <pegel_oberwasser xlink:href="#Brandys"/>
+      <pegel_oberwasser2 xlink:href="#Praha"/>
+      <pegel_unterwasser xlink:href="#Litomerice_(Labe)"/>
       <river/>
       <zwg_zuschlag>0.0</zwg_zuschlag>
       <nr>1</nr>
@@ -288,8 +293,10 @@
   </streckeMember>
   <streckeMember>
     <Strecke fid="Strecke2">
-      <name>LOUNY - LITOMERICE  </name>
+      <name>LOUNY - LITOMERICE </name>
       <description/>
+      <pegel_oberwasser xlink:href="#Louny"/>
+      <pegel_unterwasser xlink:href="#Litomerice_(Ohre)"/>
       <river/>
       <zwg_zuschlag>0.0</zwg_zuschlag>
       <nr>2</nr>
@@ -514,8 +521,10 @@
   </streckeMember>
   <streckeMember>
     <Strecke fid="Strecke3">
-      <name>LITOMERICE - USTI  </name>
+      <name>LITOMERICE - USTI </name>
       <description/>
+      <pegel_oberwasser xlink:href="#Litomerice_(nach_Zusammenfluss)"/>
+      <pegel_unterwasser xlink:href="#Usti"/>
       <river/>
       <zwg_zuschlag>0.0</zwg_zuschlag>
       <nr>3</nr>
@@ -736,8 +745,10 @@
   </streckeMember>
   <streckeMember>
     <Strecke fid="Strecke4">
-      <name>USTI - SCHOENA    </name>
+      <name>USTI - SCHOENA </name>
       <description/>
+      <pegel_oberwasser xlink:href="#Usti"/>
+      <pegel_unterwasser xlink:href="#Schoena"/>
       <river/>
       <zwg_zuschlag>0.0</zwg_zuschlag>
       <nr>4</nr>
@@ -978,6 +989,8 @@
     <Strecke fid="Strecke5">
       <name>USTI - DRESDEN</name>
       <description/>
+      <pegel_oberwasser xlink:href="#Usti"/>
+      <pegel_unterwasser xlink:href="#Dresden"/>
       <river/>
       <zwg_zuschlag>0.0</zwg_zuschlag>
       <nr>5</nr>
@@ -1248,8 +1261,10 @@
   </streckeMember>
   <streckeMember>
     <Strecke fid="Strecke6">
-      <name>DRESDEN - RIESA   </name>
+      <name>DRESDEN - RIESA </name>
       <description/>
+      <pegel_oberwasser xlink:href="#Dresden"/>
+      <pegel_unterwasser xlink:href="#Riesa"/>
       <river/>
       <zwg_zuschlag>0.0</zwg_zuschlag>
       <nr>6</nr>
@@ -1524,6 +1539,8 @@
   <streckeMember>
     <Strecke fid="Strecke7">
       <name>DRESDEN - TORGAU</name>
+      <pegel_oberwasser xlink:href="#Dresden"/>
+      <pegel_unterwasser xlink:href="#Torgau"/>
       <description/>
       <river/>
       <zwg_zuschlag>0.0</zwg_zuschlag>
@@ -1860,6 +1877,8 @@
     <Strecke fid="Strecke8">
       <name>TORGAU - WITTENBERG</name>
       <description/>
+      <pegel_oberwasser xlink:href="#Torgau"/>
+      <pegel_unterwasser xlink:href="#Wittenberg"/>
       <river/>
       <zwg_zuschlag>0.0</zwg_zuschlag>
       <nr>8</nr>
@@ -2244,7 +2263,7 @@
       <name_de>Aussig</name_de>
       <name_cz>Usti</name_cz>
       <description/>
-      <id>5</id>
+      <id>6</id>
       <nr>007</nr>
       <river>labe</river>
       <ganglinie_messwerte>
