@@ -88,10 +88,12 @@ ToDo: Help-Ids setzen!!! -->
 		<arg name="mapTemplate" value=".templates/calcCase/wiz04_modellparameter.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="true"/>
+		
 		<!--
 			FeatureView -->
 		<arg name="featureTemplate" value=".templates/calcCase/wiz04_modellparameter.gft"/>
-		<!--<arg name="selectFeatureID" value="root"/>-->
+		<arg name="reselectFeatureview" value="false"/>
+		<arg name="selectionFromFeatureview" value="false"/>
 		<arg name="featureControlStyle" value="SWT.NONE"/>
 		<arg name="featureViewListensToMap" value="false"/>
 		<!-- 
