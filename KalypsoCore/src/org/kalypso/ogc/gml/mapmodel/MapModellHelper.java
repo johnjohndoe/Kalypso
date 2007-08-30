@@ -157,7 +157,7 @@ public class MapModellHelper
               isLoading = true;
 
           /* If the timeout was reached the last run, stop waiting. */
-          if( timeout >= 30000 )
+          if( timeout >= 60000 )
             break;
 
           /* Wait for one second, if it is still loading. */

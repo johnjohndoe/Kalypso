@@ -105,6 +105,11 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
   protected KalypsoImageLoader m_loader;
 
   /**
+   * True, if the imageloader has finished.
+   */
+  protected boolean m_isFinished;
+
+  /**
    * This variable stores a listener, which will be notified about job events.
    */
   private JobChangeAdapter m_adapter = new JobChangeAdapter()
@@ -139,6 +144,9 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
 
         /* Need the fulle extent of the image. */
         m_maxEnvLocalSRS = m_loader.getFullExtent();
+
+        /* Finished loading. */
+        m_isFinished = true;
       }
       else
       {
@@ -150,6 +158,9 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
 
         /* Deactivate the theme. */
         setVisible( false );
+
+        /* Finished loading. */
+        m_isFinished = true;
       }
     }
   };
@@ -185,6 +196,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
     m_legend = null;
     m_maxEnvLocalSRS = null;
     m_loader = null;
+    m_isFinished = false;
   }
 
   /**
@@ -239,7 +251,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
   @Override
   public boolean isLoaded( )
   {
-    return m_buffer != null;
+    return m_isFinished;
   }
 
   /**

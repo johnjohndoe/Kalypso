@@ -102,7 +102,11 @@ public interface IKalypsoTheme extends IAdaptable, IWorkbenchAdapter
   public String getContext( );
 
   /**
-   * Returns true if this theme is fully loaded
+   * This function should return true, if the theme has tried to load the image, data, etc. once. Regardless if it was
+   * successfull or not. In case of a WMS it would return true, if the theme connected to the WMS and the connection was
+   * finished. It does not matter if it could successfully retrieve the image or not.
+   * 
+   * @return True, if the first loading try has finished.
    */
   public boolean isLoaded( );
 
