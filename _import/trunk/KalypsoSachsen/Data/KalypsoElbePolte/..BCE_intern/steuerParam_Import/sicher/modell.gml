@@ -176,7 +176,7 @@
       <name_de>Aussig</name_de>
       <name_cz>Usti</name_cz>
       <description/>
-      <id>5</id>
+      <id>6</id>
       <nr>007</nr>
       <river>labe</river>
       <ganglinie_messwerte>
@@ -283,8 +283,8 @@
   <pegelMember>
     <ElbePegel fid="Torgau">
       <lage>
-        <gml:Point srsName="EPSG:31468">
-          <gml:coordinates cs="," decimal="." ts=" ">4570166.0,5713728.0</gml:coordinates>
+        <gml:Point srsName="EPSG:31469">
+          <gml:coordinates cs="," decimal="." ts=" ">5362127.727834126,5715116.615849739</gml:coordinates>
         </gml:Point>
       </lage>
       <name>Torgau</name>
@@ -311,8 +311,8 @@
   <pegelMember>
     <ElbePegel fid="Wittenberg">
       <lage>
-        <gml:Point srsName="EPSG:31468">
-          <gml:coordinates cs="," decimal="." ts=" ">4544600.0,5747130.0</gml:coordinates>
+        <gml:Point srsName="EPSG:31469">
+          <gml:coordinates cs="," decimal="." ts=" ">5337950.069828749,5749548.990664235</gml:coordinates>
         </gml:Point>
       </lage>
       <name>Wittenberg</name>
@@ -377,8 +377,8 @@
   <zwgZuflussMember>
     <ZwgZufluss fid="Loeben">
       <lage>
-        <gml:Point srsName="EPSG:31468">
-          <gml:coordinates cs="," decimal="." ts=" ">4574780.0,5737750.0</gml:coordinates>
+        <gml:Point srsName="EPSG:31469">
+          <gml:coordinates cs="," decimal="." ts=" ">5367725.136711138,5738932.689563125</gml:coordinates>
         </gml:Point>
       </lage>
       <name>Löben</name>

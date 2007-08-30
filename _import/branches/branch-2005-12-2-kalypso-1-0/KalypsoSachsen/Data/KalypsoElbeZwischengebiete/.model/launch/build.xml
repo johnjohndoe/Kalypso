@@ -29,6 +29,7 @@
 		<copy todir="${calc.dir}">
 			<fileset dir="${project.dir}/.templates">
 				<include name="*.gtt"/>
+				<include name="*.gmt"/>
 				<include name="*.gft"/>
 				<include name="*.ott"/>
 				<include name="*.odt"/>
@@ -86,14 +87,14 @@
 	 			Pegel 
 	 	-->
 	 	<!-- Zwischengebietspegel: nur Messung -->
-	 			<kalypso.copyObservation gml="${project.url}/.model/observationConf/Zwischengebietspegel.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}">
+	 			<kalypso.copyObservation gml="${project.url}/.model/observationConf/ZwischengebietspegelMapping.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}">
 	 				<source property="${pegelMessungLink}" from="${startsim}" to="${stopsim}" filter="${filterQ}"/>
 	 				<metadata name="Szenario" value="${scenarioId}"/>
 	 			</kalypso.copyObservation>
 	 	
 		<!-- leere Zeitreihen holen, damit was reingeschrieben werden kann...-->
 		<!-- Zwischengebiete: Messung kombiniert mit tschechischen Vorhersagen -->
-		<kalypso.copyObservation gml="${project.url}/.model/observationConf/Zwischengebiete.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}">
+		<kalypso.copyObservation gml="${project.url}/.model/observationConf/ZwischengebieteMapping.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}">
 			<source property="${pegelMessungLink}" from="${startsim}" to="${startforecast}" filter="${filterQ}"/>
 			<source property="${pegelCzVorhersageLink}" from="${startforecast}" to="${stopsim}" filter="${filterQ}"/>
 			<metadata name="Szenario" value="${scenarioId}"/>

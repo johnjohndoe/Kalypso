@@ -117,7 +117,7 @@
 		<!-- 
 			Zwischengebiete 
 		-->
-		<kalypso.copyObservation gml="${project.url}/.model/observationConf/ZwischengebieteMapping.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}">
+		<kalypso.copyObservation gml="${project.url}/.model/observationConf/Zwischengebiete.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}">
 			<source property="${zwischengebieteLink}" from="${startsim}" to="${stopsim}" filter="${filterQ}"/>
 			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>

@@ -14,7 +14,7 @@ ToDo: Help-Ids setzen!!! -->
 		imageLocation="icons/calcwizard/kalypso32.gif">
 		<arg name="pageID" value="Startpegel"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/01_Startpegel.html"/>
-		<arg name="helpId" value="&hid;sec_Assi_elbePolte_02_Startpegel"/>
+		<arg name="helpId" value="&hid;sec_Assi_elbePolte_02_Eingangsdaten"/>
 		<!--  -->
 		<arg name="mapTemplate" value=".templates/calcCase/wiz01_startpegel.gmt"/>
 		<arg name="maximizeMap" value="true"/>
@@ -36,7 +36,7 @@ ToDo: Help-Ids setzen!!! -->
 		imageLocation="icons/calcwizard/kalypso32.gif">
 		<arg name="pageID" value="Elbepegel"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/02_Elbepegel.html"/>
-		<arg name="helpId" value="&hid;sec_Assi_elbePolte_03_Elbepegel"/>
+		<arg name="helpId" value="&hid;sec_Assi_elbePolte_02_Eingangsdaten"/>
 		<!--  -->
 		<arg name="mapTemplate" value=".templates/calcCase/wiz02_elbepegel.gmt"/>
 		<arg name="maximizeMap" value="true"/>
@@ -57,7 +57,7 @@ ToDo: Help-Ids setzen!!! -->
 		imageLocation="icons/calcwizard/kalypso32.gif">
 		<arg name="pageID" value="Zwischengebiete"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/03_Zwischengebiete.html"/>
-		<arg name="helpId" value="&hid;sec_Assi_elbePolte_04_Zwischengebiete"/>
+		<arg name="helpId" value="&hid;sec_Assi_elbePolte_02_Eingangsdaten"/>
 		<!--  -->
 		<arg name="mapTemplate" value=".templates/calcCase/wiz03_zwischengebiete.gmt"/>
 		<arg name="maximizeMap" value="true"/>
@@ -77,7 +77,7 @@ ToDo: Help-Ids setzen!!! -->
 			HTML-Navigation und pageID-->
 		<arg name="pageID" value="Modellparameter"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/04_Modellparameter.html"/>
-		<arg name="helpId" value="&hid;sec_Assi_elbePolte_05_Modellparameter"/>
+		<arg name="helpId" value="&hid;sec_Assi_elbePolte_03_ModellParameter"/>
 		<!-- 
 			Page-Layout -->
 		<arg name="mainSash" value="40"/>
@@ -111,7 +111,7 @@ ToDo: Help-Ids setzen!!! -->
 			HTML-Navigation und pageID-->
 		<arg name="pageID" value="Streckenparameter"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/05_Streckenparameter_Berechnung.html"/>
-		<arg name="helpId" value="&hid;sec_Assi_elbePolte_06_Streckenparameter_Berechnung"/>
+		<arg name="helpId" value="&hid;sec_Assi_elbePolte_04_Vorhersage_Berechnung"/>
 		<!-- 
 			Page-Layout -->
 		<arg name="mainSash" value="40"/>
@@ -150,7 +150,7 @@ ToDo: Help-Ids setzen!!! -->
 			HTML-Navigation und pageID-->
 		<arg name="pageID" value="Berichtsablage"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/06_Berichtsablage.html"/>
-		<arg name="helpId" value="&hid;sec_Assi_elbePolte_07_Berichtsablage"/>
+		<arg name="helpId" value="&hid;sec_Assi_elbePolte_05_Berichtsablage"/>
 		<!-- 
 			Page-Layout -->
 		<arg name="mainSash" value="40"/>
