@@ -125,19 +125,19 @@ public class DWDTaskDelegate
       else
       {
         final long distance = startForecast.getTime() - firstRasterDate.getTime();
-        final Double distanceInDays = new Double( (double)distance / ( 1000 * 60 * 60 * 24 ) );
+        final Double distanceInHours = new Double( (double)distance / ( 1000 * 60 * 60 ) );
 
         final String msg = Format.sprintf( "DWD-Lokalmodell vom %s: die Daten sind %d Stunden alt.", new Object[]
         {
             DF.format( firstRasterDate ),
-            distanceInDays } );
+            distanceInHours } );
 
-        if( distanceInDays.doubleValue() > 7 )
+        if( distanceInHours.doubleValue() > 12 )
         {
           logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_MSGBOX, "DWD Daten veraltet, bitte prüfen Sie den Dateneingang." );
           logger.log( Level.INFO, LoggerUtilities.CODE_SHOW_DETAILS, msg );
         }
-        else if( distanceInDays.doubleValue() < -7 )
+        else if( distanceInHours.doubleValue() < -12 )
         {
           logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_MSGBOX, "Vorhersagezeitraum liegt deutlich vor dem Datum der DWD Daten." );
           logger.log( Level.INFO, LoggerUtilities.CODE_SHOW_DETAILS, msg );
