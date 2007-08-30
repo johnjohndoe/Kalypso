@@ -83,6 +83,7 @@ public class PSICompactTuppleModel extends AbstractTuppleModel
     final IAxis[] axes = model.getAxisList();
 
     final IAxis dateAxis = ObservationUtilities.findAxisByClass( axes, Date.class );
+    // TODO: gefährlich: was passiert, wenn Q UND W da sind? Zufalll...
     final IAxis valueAxis = KalypsoStatusUtils.findAxisByClass( axes, Number.class, true );
     final IAxis statusAxis = KalypsoStatusUtils.findStatusAxisFor( axes, valueAxis );
 

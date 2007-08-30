@@ -45,6 +45,7 @@ import java.io.LineNumberReader;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Writer;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -125,26 +126,55 @@ public class HWVOR00Converter
       for( int i = 0; i < tplValues.getCount(); i++ )
       {
         final Number value = (Number)tplValues.getElement( i, axData );
+
+        /* Here rounding occurs */
+        final BigDecimal adjustedValue = adjustValue( value, dataAxis );
+
         final Date date = (Date)tplValues.getElement( i, axTime );
 
         if( !m_obsMap.containsKey( date ) )
           m_obsMap.put( date, new HashMap() );
 
-        ( (Map)m_obsMap.get( date ) ).put( obsName, value );
+        ( (Map)m_obsMap.get( date ) ).put( obsName, adjustedValue );
       }
     }
     catch( final NoSuchElementException nse )
     {
       System.out.println( "Keine W/Q Beziehung für: " + obsName );
-//      nse.printStackTrace();
+      //      nse.printStackTrace();
     }
     catch( final SensorException exp )
     {
       // TODO Exception handling verbessern
       //exp;
     }
-    
+
     m_obsNames.add( obsName );
+  }
+
+  /**
+   * Adjusts the value that will later be written out.
+   * <p>
+   * Mainly, rounding occurs here, depending on the unit of the value.
+   * 
+   */
+  private static BigDecimal adjustValue( final Number number, final String type )
+  {
+    if( number == null )
+      return null;
+
+    final BigDecimal value = new BigDecimal( number.doubleValue() );
+
+    if( type == TimeserieConstants.TYPE_RUNOFF )
+      return value.setScale( 3, BigDecimal.ROUND_HALF_UP );
+
+    if( type == TimeserieConstants.TYPE_VOLUME )
+      return value.setScale( 2, BigDecimal.ROUND_HALF_UP );
+
+    if( type == TimeserieConstants.TYPE_WATERLEVEL )
+      return value.setScale( 0, BigDecimal.ROUND_HALF_UP );
+
+    return value.setScale( 1, BigDecimal.ROUND_HALF_UP );
   }
 
   public void toHWVOR00( final Writer file )

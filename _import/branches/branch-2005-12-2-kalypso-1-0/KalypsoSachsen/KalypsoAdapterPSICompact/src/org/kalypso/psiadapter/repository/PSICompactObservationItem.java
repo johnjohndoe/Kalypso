@@ -189,6 +189,8 @@ public class PSICompactObservationItem implements IObservation
   }
 
   /**
+   * TODO: this is called too often, probably once in the constructor would be enough!
+   * 
    * @return Messwerttyp dieser Zeitreihe (Siehe TimeserieConstants.TYPE_*)
    */
   private String measureTypeToString()
