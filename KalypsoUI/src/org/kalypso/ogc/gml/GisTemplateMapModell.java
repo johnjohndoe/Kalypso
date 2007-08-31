@@ -252,8 +252,8 @@ public class GisTemplateMapModell implements IMapModell
           layer.setVisible( kalypsoTheme.isVisible() );
           layer.setId( "ID_" + i );
 
-          KalypsoWMSTheme theme = (KalypsoWMSTheme) kalypsoTheme;
-          IKalypsoImageProvider imageProvider = theme.getImageProvider();
+          final KalypsoWMSTheme theme = (KalypsoWMSTheme) kalypsoTheme;
+          final IKalypsoImageProvider imageProvider = theme.getImageProvider();
           if( imageProvider instanceof KalypsoWMSImageProvider )
             layer.setHref( ((KalypsoWMSImageProvider) imageProvider).getSource() );
           else
@@ -398,22 +398,6 @@ public class GisTemplateMapModell implements IMapModell
   public void swapThemes( final IKalypsoTheme theme1, final IKalypsoTheme theme2 )
   {
     m_modell.swapThemes( theme1, theme2 );
-  }
-
-  // TODO: remove this from the interface, better: support theme specific actions
-  public void saveTheme( final ITemplateTheme theme, final IProgressMonitor monitor ) throws CoreException
-  {
-    theme.saveFeatures( monitor );
-    // if( theme instanceof GisTemplateFeatureTheme )
-    // ((GisTemplateFeatureTheme) theme).saveFeatures( monitor );
-    // TODO save WMS and Picture Theme
-    // else if( theme instanceof KalypsoWMSTheme )
-    // ( (KalypsoWMSTheme)theme ).saveTheme( monitor );
-    // else if (theme instanceof KalypsoPictureTheme )
-    // ((KalypsoPictureTheme)theme).saveTheme(monitor);
-    // else
-    // throw new UnsupportedOperationException( "theme must be of type " + GisTemplateFeatureTheme.class.getName() );
-    // //$NON-NLS-1$
   }
 
   public URL getContext( )

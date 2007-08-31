@@ -87,7 +87,6 @@ import org.kalypso.metadoc.configuration.IPublishingConfiguration;
 import org.kalypso.metadoc.ui.ImageExportPage;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
-import org.kalypso.ogc.gml.ITemplateTheme;
 import org.kalypso.ogc.gml.map.BaseMapSchedulingRule;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.listeners.IMapPanelListener;
@@ -478,11 +477,6 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     }
     m_saving = false;
 
-  }
-
-  public void saveTheme( final ITemplateTheme theme, final IProgressMonitor monitor ) throws CoreException
-  {
-    m_mapModell.saveTheme( theme, monitor );
   }
 
   protected void setMapModell( final GisTemplateMapModell mapModell )

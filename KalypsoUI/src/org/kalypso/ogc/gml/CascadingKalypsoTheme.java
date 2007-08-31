@@ -77,9 +77,9 @@ import org.xml.sax.InputSource;
  * @author Stefan Kurzbach
  */
 // TODO: implementing IMapModell here is an ugly hack to show the layers in the outline view
-// do not do such a thing. Instead let each theme return a content-provider, so the strucutre is delegated to the
+// do not do such a thing. Instead let each theme return a content-provider, so the structure is delegated to the
 // themes.
-public class CascadingKalypsoTheme extends AbstractKalypsoTheme implements ITemplateTheme, IMapModell
+public class CascadingKalypsoTheme extends AbstractKalypsoTheme implements IKalypsoSaveableTheme, IMapModell
 {
   /**
    * @author Stefan Kurzbach
@@ -92,17 +92,12 @@ public class CascadingKalypsoTheme extends AbstractKalypsoTheme implements ITemp
     public void resourceChanged( final IResourceChangeEvent event )
     {
       if( m_file == null )
-      {
         return;
-      }
       final IResourceDelta rootDelta = event.getDelta();
       final IResourceDelta fileDelta = rootDelta.findMember( m_file.getFullPath() );
       if( fileDelta == null )
-      {
         return;
-      }
       if( (fileDelta.getFlags() & IResourceDelta.CONTENT) != 0 )
-      {
         try
         {
           startLoadJob();
@@ -112,7 +107,6 @@ public class CascadingKalypsoTheme extends AbstractKalypsoTheme implements ITemp
           // TODO something useful; set status to theme
           e.printStackTrace();
         }
-      }
     }
   }
 
@@ -223,7 +217,7 @@ public class CascadingKalypsoTheme extends AbstractKalypsoTheme implements ITemp
 
     GisTemplateFeatureTheme.configureProperties( this, layerType );
 
-    final URL url = resolveUrl( context, m_mapViewRefUrl );
+    final URL url = CascadingKalypsoTheme.resolveUrl( context, m_mapViewRefUrl );
     m_innerMapModel = new GisTemplateMapModell( url, mapModel.getCoordinatesSystem(), mapModel.getProject(), selectionManager )
     {
       /**
@@ -246,9 +240,7 @@ public class CascadingKalypsoTheme extends AbstractKalypsoTheme implements ITemp
       startLoadJob();
     }
     else
-    {
       throw new CoreException( StatusUtilities.createErrorStatus( "Kann " + url.toExternalForm() + " nicht finden." ) );
-    }
   }
 
   private static URL resolveUrl( final URL context, final String viewRefUrl ) throws CoreException
@@ -303,9 +295,7 @@ public class CascadingKalypsoTheme extends AbstractKalypsoTheme implements ITemp
     if( m_innerMapModel != null )
       m_innerMapModel.dispose();
     if( m_resourceChangeListener != null )
-    {
       m_file.getWorkspace().removeResourceChangeListener( m_resourceChangeListener );
-    }
     super.dispose();
   }
 
@@ -315,13 +305,9 @@ public class CascadingKalypsoTheme extends AbstractKalypsoTheme implements ITemp
   public GM_Envelope getFullExtent( )
   {
     if( m_innerMapModel != null )
-    {
       return m_innerMapModel.getFullExtentBoundingBox();
-    }
     else
-    {
       return null;
-    }
   }
 
   /**
@@ -332,9 +318,7 @@ public class CascadingKalypsoTheme extends AbstractKalypsoTheme implements ITemp
   public void paint( final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox, final boolean selected, final IProgressMonitor monitor )
   {
     if( m_innerMapModel != null )
-    {
       m_innerMapModel.paint( g, p, bbox, scale, selected );
-    }
   }
 
   /**
@@ -343,15 +327,10 @@ public class CascadingKalypsoTheme extends AbstractKalypsoTheme implements ITemp
   public void saveFeatures( final IProgressMonitor monitor ) throws CoreException
   {
     if( m_innerMapModel != null )
-    {
       for( final IKalypsoTheme theme : m_innerMapModel.getAllThemes() )
-      {
         if( theme instanceof GisTemplateFeatureTheme )
-        {
-          m_innerMapModel.saveTheme( (ITemplateTheme) theme, monitor );
-        }
-      }
-    }
+          ((IKalypsoSaveableTheme) theme).saveFeatures( monitor );
+
   }
 
   public void fillLayerType( final LayerType layer, final String id, final boolean isVisible )
