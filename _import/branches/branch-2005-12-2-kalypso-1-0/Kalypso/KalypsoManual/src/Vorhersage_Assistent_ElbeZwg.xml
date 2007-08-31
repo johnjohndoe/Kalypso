@@ -7,11 +7,12 @@
   </indexterm>
 
   <para>Im Hinblick auf eine spätere gemeinsame Verwendung der
-  Zwischengebietszuflüsse durch WAVOS und das Vorhersagemodell der Elbe (siehe
-  <xref lang="" linkend="elbePolte_view_prognose" />) und aufgrund
-  derTatsache, dass die Ermittlung der Zwischengebietszuflüsse durch den
-  Meldedienst erfolgen wird, ist die Berechnung der Zwischengebietszuflüsse
-  als eigenständiges Berechnungsmodell ausgeführt.</para>
+  Zwischengebietszuflüsse (Usti / Dresden, Dresden / Torgau) durch WAVOS und
+  das Vorhersagemodell der Elbe (siehe <xref lang=""
+  linkend="elbeP_view_prognose" />) und aufgrund derTatsache, dass die
+  Ermittlung der Zwischengebietszuflüsse durch den Meldedienst erfolgen wird,
+  ist die Berechnung der Zwischengebietszuflüsse als eigenständiges
+  Berechnungsmodell in KALYPSO ausgeführt.</para>
 
   <section id="sec_Assi_ElbeZwg_01_Steuerparams">
     <title>Eingabe der Steuerparameter</title>
@@ -23,10 +24,11 @@
     </indexterm>
 
     <para>Auf der zweiten Seite des Assistenten (siehe <xref
-    linkend="elbeZwg_steuerparameter" />) werden verschiedene Informationen
-    angezeigt. Die Einträge werden bei neu angelegten Rechenvarianten
-    generiert. Bei fortgeführten oder kopierten Rechenvarianten entsprechen
-    die Einträge denen der ursprünglichen Rechenvariante.</para>
+    linkend="sec_Assi_ElbeZwg_01_Steuerparams" />) werden verschiedene
+    Informationen angezeigt. Die Einträge werden bei neu angelegten
+    Rechenvarianten generiert. Bei fortgeführten oder kopierten
+    Rechenvarianten entsprechen die Einträge denen der ursprünglichen
+    Rechenvariante.</para>
 
     <figure id="elbeZwg_steuerparameter">
       <title>Eingabe der Steuerparameter</title>
@@ -51,7 +53,7 @@
     Vorhersage wird ebenfalls durch das Modell bestimmt und liegt drei Tage
     nach dem <guilabel>Start der Vorhersage</guilabel>. Diese Zeiträume
     richten sich nach den Notwendigkeiten des Vorhersagemodells der Elbe <xref
-    lang="" linkend="elbePolte_view_prognose" />.</para>
+    lang="" linkend="elbeP_view_prognose" />.</para>
 
     <para>Im Abschnitt <guilabel>Metadaten eingeben</guilabel> werden der
     <guilabel>Ersteller</guilabel>, eine <guilabel>Beschreibung</guilabel>,
@@ -82,7 +84,7 @@
     exportieren.</para>
   </section>
 
-  <section id="sec_Assi_schwElster_02_Eingangsdaten">
+  <section id="sec_Assi_elbeZwge_02_Zwischengebietspegel">
     <title>Kontrolle der Eingangsdaten</title>
 
     <indexterm>
@@ -120,7 +122,7 @@
     <guibutton>Weiter</guibutton> für die Berechnungen übernommen.</para>
   </section>
 
-  <section id="sec_Assi_schwElster_04_Vorhersage_Berechnung">
+  <section id="sec_Assi_elbeZwge_03_ZwgBerechnung">
     <title>Berechnung eines Zwischengebietszuflusses</title>
 
     <indexterm>
@@ -129,30 +131,17 @@
       <secondary>Elbe (Zwischengebiete)</secondary>
     </indexterm>
 
-    <para>Die Vorhersageberechnungen erfolgen nach Prüfung der
-    Eingangszeitreihen. Die Reihenfolge der Abarbeitung der Berechnungen für
-    die einzelnen Pegel im Einzugsgebiet der Schwarzen Elster ist in folgender
-    Reihenfolge im Programm implementiert: Zunächst erfolgen Berechnungen für
-    Pegel mit vorgeschaltetem N-A-Modell, anschließend für den
-    Talsperren-Abgabepegel und daraufhin für den Pegel mit vorgeschaltetem
-    Flusslaufmodell (d.h. von Ober- Richtung Unterlauf).</para>
+    <para>Der Gesamtzufluss eines Zwischengebietes berechnet sich aus den
+    Abflüssen an den Zwischengebietspegeln nach folgender Formel:</para>
 
-    <para>Dabei ist vom Benutzer auf die Reihenfolge der Pegel zu achten. An
-    einem Pegel sollten erst dann Vorhersageberechnungen vorgenommen werden,
-    wenn für alle oberhalb gelegenen Pegel bereits eine Anpassung der
-    Parameter vorgenommen worden ist.</para>
-
-    <para>Die Wizard-Masken sind jeweils so gestaltet, dass auf der linken
-    Hälfte eine Übersicht der Pegel im Lageplan erscheint (<xref
-    linkend="schwElster_berechnung_NaModelle" />). In der rechten Hälfte wird
-    oben eine Tabelle angezeigt, über die die entsprechenden Parameter zur
-    Kalibrierung der Nachführung des HW-Ereignisses eingegeben werden können.
-    Im unteren Teil ist eine Diagrammansicht gegeben, in der die Zeitreihen
-    der Berechnung angezeigt werden. Beim Start des Wizards ist die
-    Diagramm-Anzeige zunächst noch ohne Inhalt. Zeitreihen werden durch einen
-    Klick auf den entsprechenden Eintrag in der Tabelle grafisch dargestellt.
-    Die Achsen des Diagramms werden dabei automatisch an die jeweilige
-    Zeitreihe angepasst.</para>
+    <figure>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="img/wizard/sachsen/Assi_ElbeZwg_03_Berechnung_Formel.png"
+                     scale="60" />
+        </imageobject>
+      </mediaobject>
+    </figure>
 
     <figure id="elbeZwg_berechnung">
       <title>Berechnung eines Zwischengebietszuflusses</title>
@@ -167,49 +156,24 @@
       </screenshot>
     </figure>
 
-    <para>Die Reihenfolge der Berechnungen und die jeweils vom Benutzer
-    vorzugebenden Modellparameter gliedert sich wie folgt:</para>
+    <para>Oben rechts werden die Parameter der Berechnungsformel angezeigt und
+    können editiert werden. In der darunterstehenden Liste können per Häkchen
+    diejeneigen Pegel ausgewählt werden, die zur Berechnung des
+    Zwischengebietszuflusses herangezogen werden sollen. Durch Drücken des
+    Knopfes <guibutton>Zwischengebietszufluss berechnen</guibutton>, der sich
+    unten rechts befindet wird der Zwischengebietszufluss entsprechend
+    obengenannter Formel, den gesetzten Parametern und ausgewählten Pegeln
+    berechnet. Für den Vorhersagezeitraum (drei Tage) werden die Zeitreihen
+    automatisch mit dem letzten berechneten Wert konstant fortgesetzt. Beim
+    Aktualisieren der Zeitreihen wird die Berechnung automatisch
+    ausgeführt.</para>
 
-    <orderedlist>
-      <listitem>
-        <para>Berechnung der Pegeleinzugsgebiete mit N-A-Modell (<xref
-        linkend="schwElster_berechnung_NaModelle" />)</para>
-
-        <para>In der Tabelle einzugeben ist die Anfangsbodenfeuchte (in den
-        vom Programm vorgegebenen festen Grenzen). Wird für die Bodenfeuchte
-        ein Wert von 0.0 vorgegeben (Standard), wird vom Programm eine
-        optimale Bodenfeuchte berechnet und nach erfolgter Berechnung in die
-        Tabelle eingetragen.</para>
-      </listitem>
-
-      <listitem>
-        <para>Berechnung des Talsperreninhalts der Talsperre
-        Knappenrode</para>
-
-        <para>Vorzugeben ist der Stauinhalt der Talsperre zu Beginn der
-        Vorhersage</para>
-      </listitem>
-
-      <listitem>
-        <para>Berechnung des Pegels Neuwiese mit Flusslaufmodell</para>
-
-        <para>In der Tabelle anzugeben sind die Parameter zur Korrektur der
-        Abflussganglinie (multiplikative und additive Niveau-Korrektur und
-        Laufzeitkorrektur). Eine Empfehlung zur Korrektur wird vom Programm
-        vorgegeben und kann nicht verändert werden.</para>
-      </listitem>
-    </orderedlist>
-
-    <para>Die Berechnung wird über die Schaltfläche <guibutton>Berechnung
-    durchführen</guibutton> gestartet. Nach erfolgreich durchgeführter
-    Berechnung werden die Ergebnisse zusammen mit den Messwerten (soweit
-    vorhanden) grafisch dargestellt. Berechnungen können beliebig oft
-    durchgeführt werden. Die ermittelte Ergebniszeitreihe an einem Pegel dient
-    als Zuflusszeitreihe für den nächsten unterhalb gelegenen Pegel bzw.
-    Talsperre.</para>
+    <para>Im Diagramm werden alle Zeitreihen der Zwischengebietspegel und
+    <abbrev>ggf.</abbrev> der berechnete Zwischengebietszufluss
+    dargestellt.</para>
   </section>
 
-  <section id="sec_Assi_schwElster_02_Eingangsdaten">
+  <section id="sec_Assi_elbeZwge_05_AbflussZwge">
     <title>Kontrolle der berechneten Zwischengebietszuflüsse</title>
 
     <indexterm>
@@ -218,15 +182,15 @@
       <secondary>Elbe (Zwischengebiete)</secondary>
     </indexterm>
 
-    <para>Nach der Eingabe der Steuerdaten erfolgt die Überprüfung der
-    Eingangsdaten eines Zwischengebietes durch den Benutzer. Die Messwerte in
-    den Tabellen sind abhängig vom Daten-Status durch Symbole gekennzeichnet
-    (vgl. <xref linkend="tabellen_kennzeichnung" />). Die
-    Zeitreihen-Darstellung kann über die Optionsknöpfe unterhalb des Diagramms
-    zwischen Wasserstand und Abfluss umgeschaltet werden.</para>
+    <para>Die berechneten Zwischengebietszuflüsse werden auf dieser Seite
+    dargestellt und können editiert werden. Dies gilt insbesondere für die
+    Werte des Vorhersagezeitraums, die durch konstante Fortsetzung der
+    Zeitreihen enstanden sind. Die Änderungen werden durch Bestätigung mit
+    <guibutton>Weiter</guibutton> übernommen. Naturgemäß kann auf dieser Seite
+    nicht zwischen Wasserstand und Abfluss umgeschaltet werden.</para>
 
     <figure id="elbeZwg_Kontrolle_Ergebenis">
-      <title>Kontrolle der Eingangsdaten (Abflüsse)</title>
+      <title>Kontrolle der berechneten Zwischengebietszuflüsse</title>
 
       <screenshot>
         <mediaobject>
@@ -237,17 +201,9 @@
         </mediaobject>
       </screenshot>
     </figure>
-
-    <para>Die Anzeige der Zeitreihen erfolgt grafisch und tabellarisch. In
-    jeder Eingabemaske wird ein Lageplan mit den Erfassungsstandorten
-    angezeigt. In der Tabelle werden immer alle Pegelzeitreihen gleichzeitig
-    aufgeführt. Durch Markieren eines Pegels wird die dazugehörige Zeitreihe
-    auch grafisch dargestellt. Bei Bedarf können die Tabellenwerte vom
-    Benutzer geändert werden. Die Änderungen werden durch Bestätigung mit
-    <guibutton>Weiter</guibutton> für die Berechnungen übernommen.</para>
   </section>
 
-  <section id="sec_Assi_schwElster_05_Berichtsablage">
+  <section id="sec_Assi_elbeZwge_06_Berichtsablage">
     <title>Ergebnisbearbeitung und Veröffentlichung</title>
 
     <indexterm>
@@ -256,15 +212,15 @@
       <secondary>Elbe (Zwischengebiete)</secondary>
     </indexterm>
 
-    <para>Nach Abarbeitung der Kalibrierungs- und Berechnungsschritte (siehe
-    <xref linkend="sec_Assi_schwElster_04_Vorhersage_Berechnung" />) können
-    die ermittelten Ergebnisse an das Berichtswesen übergeben werden. Zudem
-    ist der Export der berechneten Prognose-Zeitreihen nach PSI-Compact
-    möglich. Die dazugehörige Eingabemaske (<xref
-    linkend="schwElster_berichtsablage" />) zeigt einen Lageplan mit allen im
-    Modell vorhandenen Vorhersage-Pegeln.</para>
+    <para>Die so ermittelten Zwischengebietszuflüsse können nach PSI-Compact
+    exportiert werden. Dort stehen sie zur weiteren Verwendung
+    <abbrev>z.B.</abbrev> durch WAVOS oder das Elbe-Modell (<xref lang=""
+    linkend="elbeP_view_prognose" />) zur Verfügung. Die dazugehörige
+    Eingabemaske (<xref linkend="elbeZwg_berichtsablage" />) zeigt einen
+    Lageplan mit den berechneten (und ergänzten)
+    Zwischengebietszuflüssen.</para>
 
-    <figure id="elbeZwg_berichtsablage">
+    <figure id="elbeZwg_berichtsablage" lang="">
       <title>Bearbeitung und Veröffentlichung der Ergebnisse</title>
 
       <screenshot>
@@ -283,9 +239,6 @@
     Diagramm</guibutton> oben rechts können die gemeinsam im Diagramm
     darzustellenden Rechenvarianten ausgewählt werden.</para>
 
-    <para>Die Zeitreihendarstellung kann über die Optionsknöpfe unterhalb des
-    Diagramms zwischen Wasserstand und Abfluss umgeschaltet werden.</para>
-
     <para>Zur Bearbeitung einer Ergebniszeitreihe ist die Schaltfläche
     <guibutton>Zeitreihe(n) bearbeiten</guibutton> vorgesehen. Durch Klick auf
     die Schaltfläche wird das im Programm-Umfang enthaltene Grafikprogramm
@@ -299,42 +252,7 @@
     gewählt werden können, für die Zeitreihen herausgeschrieben werden. Die
     Ablage der Zeitreihen erfolgt nur für den Vorhersage-Zeitraum.</para>
 
-    <para>Zusätzlich können Ergebnisse als Berichtsdokumente in das
-    Berichtswesen exportiert werden (<guibutton>Bericht(e)
-    ablegen</guibutton>). Beim Ablegen der Berichte wird der Nutzer durch
-    einen mehrstufigen Dialog geführt. Durch Aktivierung des Häkchens vor dem
-    jeweiligen Ausgabe-Format kann eine Kombination der Ergebnisdaten für das
-    Berichtswesen zusammengestellt werden.</para>
-
-    <para>Die Ablage der Ergebnisse auf dem Server (Berichtswesen und
-    PSI-Compact) kann in folgenden Formaten erfolgen:</para>
-
-    <itemizedlist>
-      <listitem>
-        <para>Berechnete Zeitreihen der Abflüsse (Grafik für das
-        Berichtswesen)</para>
-      </listitem>
-
-      <listitem>
-        <para>Berechnete Zeitreihen der Wasserstände (Grafik für das
-        Berichtswesen)</para>
-      </listitem>
-
-      <listitem>
-        <para>Berechnete Zeitreihen in Tabellen-Form (CSV-Format für das
-        Berichtswesen)</para>
-      </listitem>
-
-      <listitem>
-        <para>Scheitelwerttabelle der berechneten Abflüsse (CSV-Format für das
-        Berichtswesen)</para>
-      </listitem>
-
-      <listitem>
-        <para>Scheitelwerttabelle der berechneten Wasserstände (CSV-Format für
-        das Berichtswesen)</para>
-      </listitem>
-    </itemizedlist>
+    <para>Es sind keine Bereichte vorgesehen.</para>
 
     <para>Damit andere Nutzer Zugang zur aktuellen Rechenvariante bekommen
     (siehe <xref linkend="SA_Assi_allg_04_HWV_starten" />), kann sie mit Hilfe

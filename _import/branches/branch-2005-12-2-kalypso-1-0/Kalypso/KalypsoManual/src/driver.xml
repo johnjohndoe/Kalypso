@@ -43,8 +43,8 @@
 		&file_wizard_ElbeZwg;
 		&file_wizard_ElbePolte;
 		&file_wizard_SchwarzeElster;
-		&file_wizard_Spree;
-		&file_wizard_WeisseElster;
+		&file_wizard_Spree; 
+		&file_wizard_WeisseElster; 
 		
 		<!-- Sachsen-Anhalt -->
 		&file_wizard_Ilse;

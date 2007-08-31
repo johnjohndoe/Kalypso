@@ -29,7 +29,7 @@
   benötigte ausführbare Datei <filename>HWObereElbe.exe</filename>.</para>
 
   <para>Alle Daten zur clientseitigen Modellierung, also Modellspezifikation,
-  Modelldaten usw., befindet sich im Datenprojekt
+  Modelldaten usw., befinden sich im Datenprojekt
   <filename>KalypsoElbePolte</filename> der Programmquellen. Das gleiche
   Projekt dient als Modellprojekt unter dem Namen <quote>ElbePolte</quote> als
   Vorhersagemodell der eigentlichen Installation.</para>
@@ -74,15 +74,11 @@
       </mediaobject>
     </figure>
 
-    <para>Wie aus der Baumansicht hervorgeht, besteht das Elbe-Modell aus vier
-    Listen (Collections), welche unterhalb des Wurzelelements (root)
-    angeordnet sind:</para>
+    <para>Zusätzlich zu den allgemeinen Modellparameter besteht das
+    Elbe-Modell aus vier Listen (Collections), welche unterhalb des
+    Wurzelelements (root) angeordnet sind:</para>
 
     <itemizedlist>
-      <listitem>
-        <para>Allgemeine Modellparameter</para>
-      </listitem>
-
       <listitem>
         <para>Die Liste der Strecken (streckeMember) enthält alle Strecken und
         deren Parameter.</para>
@@ -109,7 +105,7 @@
     Modelltabellen erläutert. Die Eingabe der Parameter erfolgt entweder über
     die entsprechenden Ansichten im KALYPSO-Modeler (Expertenmodus) oder im
     Vorhersage-Assistenten. Die Bedeutung der rechenkernbezogenen Parameter
-    ist der der Modell-Dokumentation zu entnehmen.</para>
+    ist der Modell-Dokumentation zu entnehmen.</para>
 
     <table>
       <title>Allgemeine Modellparameter</title>
