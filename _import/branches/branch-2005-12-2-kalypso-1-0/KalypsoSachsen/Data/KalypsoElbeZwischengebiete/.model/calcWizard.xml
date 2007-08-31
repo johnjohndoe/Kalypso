@@ -36,7 +36,7 @@ ToDo: Help-Ids setzen!!! -->
 		imageLocation="icons/calcwizard/kalypso32.gif">
 		<arg name="pageID" value="UstiDresden"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/02_ZWG_UstiDresden.html"/>
-		<arg name="helpId" value="&hid;sec_Assi_ebleZwge_03_ZwgBerechnung"/>
+		<arg name="helpId" value="&hid;sec_Assi_elbeZwge_03_ZwgBerechnung"/>
 		<!--  -->
 		<arg name="mapTemplate" value=".templates/calcCase/wiz02_ZwgUstiDresden.gmt"/>
 		<arg name="maximizeMap" value="false"/>
@@ -97,7 +97,7 @@ ToDo: Help-Ids setzen!!! -->
 		imageLocation="icons/calcwizard/kalypso32.gif">
 		<arg name="pageID" value="DresdenTorgau"/>
 		<arg name="htmlFilePath" value=".model/wizardhtml/03_ZWG_DresdenTorgau.html"/>
-		<arg name="helpId" value="&hid;sec_Assi_ebleZwge_03_ZwgBerechnung"/>
+		<arg name="helpId" value="&hid;sec_Assi_elbeZwge_03_ZwgBerechnung"/>
 		<!--  -->
 		<arg name="mapTemplate" value=".templates/calcCase/wiz03_ZwgDresdenTorgau.gmt"/>
 		<arg name="maximizeMap" value="false"/>
