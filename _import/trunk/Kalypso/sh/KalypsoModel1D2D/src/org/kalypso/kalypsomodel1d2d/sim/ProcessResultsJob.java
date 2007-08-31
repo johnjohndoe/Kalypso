@@ -47,7 +47,6 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -140,7 +139,7 @@ public class ProcessResultsJob extends Job
       final File[] files = new File[] { m_inputFile /* , exeLog, exeErr, outputOut */};
       final File outputZip2d = new File( m_outputDir, "original.2d.zip" );
       ZipUtilities.zip( outputZip2d, files, m_inputFile.getParentFile() );
-      m_stepResultMeta.addDocument( "RMA-Rohdaten", "ASCII Ergebnisdatei(en) des RMA10 Rechenkerns", IDocumentResultMeta.DOCUMENTTYPE.coreDataZip, new Path( "original.2d.zip" ), Status.OK_STATUS );
+      m_stepResultMeta.addDocument( "RMA-Rohdaten", "ASCII Ergebnisdatei(en) des RMA10 Rechenkerns", IDocumentResultMeta.DOCUMENTTYPE.coreDataZip, new Path( "original.2d.zip" ), Status.OK_STATUS, null, null );
 
       monitor.worked( 1 );
 
@@ -179,18 +178,12 @@ public class ProcessResultsJob extends Job
       /* .2d Datei lesen und GML f¸llen */
       final RMA10S2GmlConv conv = new RMA10S2GmlConv();
 
-      /* just for test purposes */
-      final List<ResultType.TYPE> parameters = new ArrayList<ResultType.TYPE>();
-
-      parameters.add( ResultType.TYPE.DEPTH );
-      parameters.add( ResultType.TYPE.WATERLEVEL );
-      parameters.add( ResultType.TYPE.VELOCITY );
-
       final CS_CoordinateSystem crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
       final MultiTriangleEater multiEater = new MultiTriangleEater();
 
       for( final ResultType.TYPE parameter : m_parameters )
       {
+
         /* GML(s) */
 
         /* create TIN-Dir */
@@ -208,19 +201,27 @@ public class ProcessResultsJob extends Job
           case DEPTH:
             triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "m" );
             triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), "Flieﬂtiefe" );
-            stepResultMeta.addDocument( "Flieﬂtiefen", "TIN der Flieﬂtiefen", IDocumentResultMeta.DOCUMENTTYPE.tinDepth, new Path( "Tin/tin_DEPTH.gml" ), Status.OK_STATUS );
+
+            stepResultMeta.addDocument( "Flieﬂtiefen", "TIN der Flieﬂtiefen", IDocumentResultMeta.DOCUMENTTYPE.tinDepth, new Path( "Tin/tin_DEPTH.gml" ), Status.OK_STATUS, minMaxCatcher.getMinDepth(), minMaxCatcher.getMaxDepth() );
 
             break;
           case VELOCITY:
             triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "m/s" );
             triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), "Geschwindigkeit" );
-            stepResultMeta.addDocument( "Geschwindigkeiten", "TIN der tiefengemittelten Flieﬂgeschwindigkeiten", IDocumentResultMeta.DOCUMENTTYPE.tinVelo, new Path( "Tin/tin_VELOCITY.gml" ), Status.OK_STATUS );
+            stepResultMeta.addDocument( "Geschwindigkeiten", "TIN der tiefengemittelten Flieﬂgeschwindigkeiten", IDocumentResultMeta.DOCUMENTTYPE.tinVelo, new Path( "Tin/tin_VELOCITY.gml" ), Status.OK_STATUS, minMaxCatcher.getMinVelocityAbs(), minMaxCatcher.getMaxVelocityAbs() );
 
             break;
           case WATERLEVEL:
             triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "m¸NN" );
             triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), "Wasserspiegel" );
-            stepResultMeta.addDocument( "Wasserspiegellagen", "TIN der Wasserspiegellagen", IDocumentResultMeta.DOCUMENTTYPE.tinWsp, new Path( "Tin/tin_WATERLEVEL.gml" ), Status.OK_STATUS );
+            stepResultMeta.addDocument( "Wasserspiegellagen", "TIN der Wasserspiegellagen", IDocumentResultMeta.DOCUMENTTYPE.tinWsp, new Path( "Tin/tin_WATERLEVEL.gml" ), Status.OK_STATUS, minMaxCatcher.getMinWaterlevel(), minMaxCatcher.getMaxWaterlevel() );
+
+            break;
+
+          case SHEARSTRESS:
+            triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "N/m≤" );
+            triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), "Sohlschubspannung" );
+            stepResultMeta.addDocument( "Sohlschubspannung", "TIN der Sohlschubspannungen", IDocumentResultMeta.DOCUMENTTYPE.tinShearStress, new Path( "Tin/tin_SHEARSTRESS.gml" ), Status.OK_STATUS, minMaxCatcher.getMinShearStress(), minMaxCatcher.getMaxShearStress() );
 
             break;
 
@@ -258,7 +259,7 @@ public class ProcessResultsJob extends Job
 
       /* Node-GML in Datei schreiben */
       GmlSerializer.serializeWorkspace( gmlResultFile, resultWorkspace, "CP1252" );
-      stepResultMeta.addDocument( "Knotenwerte", "Ergebnisse an den Knoten", IDocumentResultMeta.DOCUMENTTYPE.nodes, new Path( "results.gml" ), Status.OK_STATUS );
+      stepResultMeta.addDocument( "Knotenwerte", "Ergebnisse an den Knoten", IDocumentResultMeta.DOCUMENTTYPE.nodes, new Path( "results.gml" ), Status.OK_STATUS, null, null );
 
       final Date time = handler.getTime();
       addToResultDB( stepResultMeta, timeStepNum, outputDir, time );

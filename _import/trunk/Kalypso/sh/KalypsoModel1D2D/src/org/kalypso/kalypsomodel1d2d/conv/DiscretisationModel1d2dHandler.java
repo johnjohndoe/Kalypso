@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.conv;
 
@@ -95,7 +95,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
 
   public DiscretisationModel1d2dHandler( final IFEDiscretisationModel1d2d model, final IPositionProvider positionProvider, final ConversionIDProvider modelElementIDProvider )
   {
-//    Util.getCommandableWorkspace( modelClass )
+    // Util.getCommandableWorkspace( modelClass )
     m_model = model;
     m_workspace = model.getWrappedFeature().getWorkspace();
     m_modelNodes = model.getNodes();
@@ -164,10 +164,10 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
       edge = m_model.findEdge( node1, node2 );
       if( edge != null )
       {
-        System.out.println( Messages.getString("DiscretisationModel1d2dHandler.1") ); //$NON-NLS-1$
+        System.out.println( Messages.getString( "DiscretisationModel1d2dHandler.1" ) ); //$NON-NLS-1$
       }
     }
-    
+
     // boolean isNew=false;
     if( edge == null )
     {
@@ -313,7 +313,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
   public void handleError( final String lineString, final EReadError errorHints )
   {
     // FIXE redaw me
-    throw new RuntimeException( "bad line=" + lineString );  //$NON-NLS-1$
+    throw new RuntimeException( "bad line=" + lineString ); //$NON-NLS-1$
   }
 
   /**
@@ -370,6 +370,16 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
    *      int)
    */
   public void handleJunction( final String line, final int junctionID, final int element1dID, final int boundaryLine2dID, final int node1dID )
+  {
+    // TODO Auto-generated method stub
+
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleFlowResitance(java.lang.String, int,
+   *      double, double, double)
+   */
+  public void handleFlowResitance( String line, int id, double combinedLambda, double soilLambda, double vegetationLambda )
   {
     // TODO Auto-generated method stub
 

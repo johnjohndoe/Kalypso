@@ -40,13 +40,20 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.wizards.results;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.ui.editor.sldEditor.FillEditorComposite;
+import org.kalypso.ui.editor.sldEditor.IFillModifyListener;
+import org.kalypso.ui.editor.sldEditor.IStrokeModifyListener;
 import org.kalypso.ui.editor.sldEditor.StrokeEditorComposite;
+import org.kalypsodeegree.graphics.sld.Fill;
 import org.kalypsodeegree.graphics.sld.PolygonColorMapEntry;
+import org.kalypsodeegree.graphics.sld.Stroke;
 
 /**
  * @author Thomas Jung
@@ -57,6 +64,8 @@ import org.kalypsodeegree.graphics.sld.PolygonColorMapEntry;
  */
 public class PolygonColorMapEntryEditorComposite extends Composite
 {
+  private final Set<IPolygonColorMapEntryModifyListener> m_listeners = new HashSet<IPolygonColorMapEntryModifyListener>();
+
   private final PolygonColorMapEntry m_entry;
 
   public PolygonColorMapEntryEditorComposite( final Composite parent, final int style, final PolygonColorMapEntry entry )
@@ -64,7 +73,6 @@ public class PolygonColorMapEntryEditorComposite extends Composite
     super( parent, style );
     m_entry = entry;
 
-    // TODO: create control
     createControl();
 
   }
@@ -73,11 +81,56 @@ public class PolygonColorMapEntryEditorComposite extends Composite
   {
     setLayout( new GridLayout( 1, false ) );
 
-    final StrokeEditorComposite strokeEditor = new StrokeEditorComposite( this, SWT.NONE, m_entry.getStroke() );
+    final StrokeEditorComposite strokeEditor = new StrokeEditorComposite( this, SWT.NONE, m_entry.getStroke(), false );
     strokeEditor.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    strokeEditor.addModifyListener( new IStrokeModifyListener()
+    {
+      public void onStrokeChanged( Object source, Stroke stroke )
+      {
+        contentChanged();
+      }
+    } );
 
-    final FillEditorComposite fillEditor = new FillEditorComposite( this, SWT.NONE, m_entry.getFill() );
+    final FillEditorComposite fillEditor = new FillEditorComposite( this, SWT.NONE, m_entry.getFill(), true );
     fillEditor.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    fillEditor.addModifyListener( new IFillModifyListener()
+    {
+      public void onFillChanged( Object source, Fill fill )
+      {
+        contentChanged();
+      }
+    } );
+  }
+
+  protected void disposeControl( )
+  {
+    m_listeners.clear();
+  }
+
+  /**
+   * Add the listener to the list of listeners. If an identical listeners has already been registered, this has no
+   * effect.
+   */
+  public void addModifyListener( final IPolygonColorMapEntryModifyListener l )
+  {
+    m_listeners.add( l );
+  }
+
+  public void removeModifyListener( final IPolygonColorMapEntryModifyListener l )
+  {
+    m_listeners.remove( l );
+  }
+
+  protected void fireModified( )
+  {
+    final IPolygonColorMapEntryModifyListener[] ls = m_listeners.toArray( new IPolygonColorMapEntryModifyListener[m_listeners.size()] );
+    for( final IPolygonColorMapEntryModifyListener entryModifyListener : ls )
+      entryModifyListener.onEntryChanged( this, m_entry );
+  }
+
+  protected void contentChanged( )
+  {
+    fireModified();
   }
 
 }

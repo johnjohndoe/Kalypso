@@ -144,7 +144,7 @@ public class StepResultMeta extends ResultMeta implements IStepResultMeta
    *      java.lang.String, org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE,
    *      java.lang.String)
    */
-  public void addDocument( String name, String description, DOCUMENTTYPE type, IPath path, IStatus status )
+  public void addDocument( String name, String description, DOCUMENTTYPE type, IPath path, IStatus status, Double minValue, Double maxValue )
   {
     final IDocumentResultMeta document = getChildren().addNew( IDocumentResultMeta.QNAME, IDocumentResultMeta.class );
     document.setName( name );
@@ -152,6 +152,10 @@ public class StepResultMeta extends ResultMeta implements IStepResultMeta
     document.setDocumentType( type );
     document.setPath( path );
     document.setStatus( status );
+    if( minValue != null )
+      document.setMinValue( minValue );
+    if( maxValue != null )
+      document.setMaxValue( maxValue );
   }
 
 }

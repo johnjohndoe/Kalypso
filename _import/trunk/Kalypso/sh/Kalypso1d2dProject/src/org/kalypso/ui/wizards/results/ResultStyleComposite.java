@@ -40,9 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.wizards.results;
 
+import java.util.Arrays;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -70,38 +74,112 @@ import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DHelper;
 public class ResultStyleComposite
 {
 
-  private final ComboViewer m_combStyleTemplates;
+  private ComboViewer m_combStyleTemplates;
 
-  private final Button m_editStyleButton;
-
-  private final Button m_removeLineStyleButton;
-
-  private IFile m_style;
+  // private IFile m_style;
 
   private final String m_stylePath;
 
-  public ResultStyleComposite( final Composite parent, IFolder scenarioFolder, String stylePath )
+  private final double m_minValue;
+
+  private final double m_maxValue;
+
+  private final IFolder m_scenarioFolder;
+
+  private Button m_editStyleButton;
+
+  private Button m_removeStyleButton;
+
+  private final ResultAddLayerCommandData m_resultAddLayerCommandData;
+
+  public ResultStyleComposite( final Composite parent, IFolder scenarioFolder, String stylePath, double minValue, double maxValue, ResultAddLayerCommandData resultAddLayerCommandData )
   {
+    m_scenarioFolder = scenarioFolder;
     m_stylePath = stylePath;
-    /* style combo */
+
+    /* min / max values of the document */
+    m_minValue = minValue;
+    m_maxValue = maxValue;
+    m_resultAddLayerCommandData = resultAddLayerCommandData;
+
+    createComboControl( parent );
+
+    createEditButtonControl( parent );
+
+    createRemoveButtonControl( parent );
+  }
+
+  private void createRemoveButtonControl( final Composite parent )
+  {
+    m_removeStyleButton = new Button( parent, SWT.FLAT );
+    final String tooltipRemove = "Klicken Sie hier, um den selektierten Style zu löschen.";
+    m_removeStyleButton.setToolTipText( tooltipRemove );
+    final Image removeImage = Kalypso1d2dProjectPlugin.getImageProvider().getImageDescriptor( DESCRIPTORS.RESULT_VIEWER_REMOVE ).createImage();
+    m_removeStyleButton.setImage( removeImage );
+
+    m_removeStyleButton.addSelectionListener( new SelectionAdapter()
+    {
+      @SuppressWarnings("synthetic-access")
+      @Override
+      public void widgetSelected( final SelectionEvent e )
+      {
+        try
+        {
+          // get selection
+          Object element = m_combStyleTemplates.getElementAt( m_combStyleTemplates.getCombo().getSelectionIndex() );
+          IFile fileElement = (IFile) element;
+          // delete file
+          fileElement.delete( true, true, new NullProgressMonitor() );
+          refreshCombo();
+        }
+        catch( CoreException e1 )
+        {
+          e1.printStackTrace();
+        }
+      }
+    } );
+  }
+
+  private void createEditButtonControl( final Composite parent )
+  {
+    m_editStyleButton = new Button( parent, SWT.FLAT );
+    final String tooltipEdit = "Klicken Sie hier, um den selektierten Style zu ändern oder einen neuen Style zu erstellen.";
+    m_editStyleButton.setToolTipText( tooltipEdit );
+
+    final Image editImage = Kalypso1d2dProjectPlugin.getImageProvider().getImageDescriptor( DESCRIPTORS.RESULT_VIEWER_EDIT ).createImage();
+    m_editStyleButton.setImage( editImage );
+
+    m_editStyleButton.addSelectionListener( new SelectionAdapter()
+    {
+      @SuppressWarnings("synthetic-access")
+      @Override
+      public void widgetSelected( final SelectionEvent e )
+      {
+        if( m_resultAddLayerCommandData.getSldFile() != null )
+        {
+          EditStyleDialog styleEditor = new EditStyleDialog( m_editStyleButton.getShell(), m_resultAddLayerCommandData.getSldFile(), m_minValue, m_maxValue );
+          styleEditor.addModifyListener( new IEditStyleDialogModifyListener()
+          {
+            public void onStyleChanged( Object source, IFile sldFile )
+            {
+              m_resultAddLayerCommandData.setSldFile( sldFile );
+              refreshCombo();
+            }
+          } );
+          styleEditor.open();
+        }
+      }
+    } );
+  }
+
+  private void createComboControl( final Composite parent )
+  {
     m_combStyleTemplates = new ComboViewer( parent, SWT.DROP_DOWN | SWT.READ_ONLY );
     m_combStyleTemplates.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     m_combStyleTemplates.getControl().setToolTipText( "Wählen Sie den gewünschten Style aus" );
     m_combStyleTemplates.setContentProvider( new ArrayContentProvider() );
 
-    // look for existing scenario style templates and fill them into the combo
-    final IFile[] styleTemplates = getStyleTemplates( m_stylePath, scenarioFolder );
-    m_combStyleTemplates.setInput( styleTemplates );
-    if( m_combStyleTemplates.getElementAt( 0 ) != null )
-    {
-      m_combStyleTemplates.setSelection( new StructuredSelection( m_combStyleTemplates.getElementAt( 0 ) ) );
-
-      IStructuredSelection selection = (IStructuredSelection) m_combStyleTemplates.getSelection();
-      Object firstElement = selection.getFirstElement();
-
-      if( firstElement instanceof IFile )
-        m_style = (IFile) firstElement;
-    }
+    refreshCombo();
 
     m_combStyleTemplates.setLabelProvider( new LabelProvider()
     {
@@ -131,42 +209,45 @@ public class ResultStyleComposite
         final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
         final Object element = selection.getFirstElement();
         if( element instanceof IFile )
-          m_style = (IFile) element;
-      }
-    } );
-
-    /* edit button */
-    m_editStyleButton = new Button( parent, SWT.FLAT );
-    final String tooltipEdit = "Klicken Sie hier, um den selektierten Style zu ändern oder einen neuen Style zu erstellen.";
-    m_editStyleButton.setToolTipText( tooltipEdit );
-
-    m_editStyleButton.addSelectionListener( new SelectionAdapter()
-    {
-      @SuppressWarnings("synthetic-access")
-      @Override
-      public void widgetSelected( final SelectionEvent e )
-      {
-        if( m_style != null )
         {
-          EditStyleDialog styleEditor = new EditStyleDialog( m_editStyleButton.getShell(), m_style );
-          styleEditor.open();
+          m_resultAddLayerCommandData.setSldFile( (IFile) element );
         }
       }
     } );
+  }
 
-    /* remove button */
-    m_removeLineStyleButton = new Button( parent, SWT.FLAT );
-    final String tooltipRemove = "Klicken Sie hier, um den selektierten Style zu löschen.";
-    m_removeLineStyleButton.setToolTipText( tooltipRemove );
+  protected void refreshCombo( )
+  {
+    // looking for existing scenario style templates and fill them into the combo
+    final IFile[] styleTemplates = getStyleTemplates( m_stylePath, m_scenarioFolder );
+    m_combStyleTemplates.setInput( styleTemplates );
 
-    /* Images for buttons */
-    // final Image editImage = KalypsoModel1D2DUIImages.ID_EDIT.createImage();
-    final Image editImage = Kalypso1d2dProjectPlugin.getImageProvider().getImageDescriptor( DESCRIPTORS.RESULT_VIEWER_EDIT ).createImage();
-    m_editStyleButton.setImage( editImage );
+    final Object elementAt = m_combStyleTemplates.getElementAt( 0 );
 
-    final Image removeImage = Kalypso1d2dProjectPlugin.getImageProvider().getImageDescriptor( DESCRIPTORS.RESULT_VIEWER_REMOVE ).createImage();
-    m_removeLineStyleButton.setImage( removeImage );
+    if( m_resultAddLayerCommandData.getSldFile() == null )
+    {
+      if( elementAt != null )
+      {
+        m_combStyleTemplates.setSelection( new StructuredSelection( elementAt ) );
 
+        IStructuredSelection selection = (IStructuredSelection) m_combStyleTemplates.getSelection();
+        Object firstElement = selection.getFirstElement();
+
+        if( firstElement instanceof IFile )
+          m_resultAddLayerCommandData.setSldFile( (IFile) firstElement );
+      }
+    }
+    else
+    {
+      if( Arrays.asList( styleTemplates ).contains( m_resultAddLayerCommandData.getSldFile() ) )
+      {
+        m_combStyleTemplates.setSelection( new StructuredSelection( m_resultAddLayerCommandData.getSldFile() ) );
+      }
+      else if( elementAt != null )
+      {
+        m_combStyleTemplates.setSelection( new StructuredSelection( elementAt ) );
+      }
+    }
   }
 
   private IFile[] getStyleTemplates( final String path, IFolder scenarioFolder )
@@ -180,12 +261,7 @@ public class ResultStyleComposite
   {
     m_combStyleTemplates.getControl().setEnabled( status );
     m_editStyleButton.setEnabled( status );
-    m_removeLineStyleButton.setEnabled( status );
-  }
-
-  public IFile getSelectedStyle( )
-  {
-    return m_style;
+    m_removeStyleButton.setEnabled( status );
   }
 
 }

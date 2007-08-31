@@ -90,5 +90,5 @@ public interface IStepResultMeta extends IResultMeta
 
   public void setStepType( STEPTYPE stepType );
 
-  public void addDocument( final String name, final String description, final DOCUMENTTYPE type, final IPath path, final IStatus status );
+  public void addDocument( final String name, final String description, final DOCUMENTTYPE type, final IPath path, final IStatus status, final Double minValue, final Double maxValue );
 }

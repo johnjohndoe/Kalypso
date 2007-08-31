@@ -67,8 +67,20 @@ public interface IDocumentResultMeta extends IResultMeta
 
   public static final QName QNAME_PROP_DOCUMENT_TYPE = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "type" );
 
+  public static final QName QNAME_PROP_DOCUMENT_MIN_VALUE = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "minValue" );
+
+  public static final QName QNAME_PROP_DOCUMENT_MAX_VALUE = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "maxValue" );
+
   public DOCUMENTTYPE getDocumentType( );
 
   public void setDocumentType( DOCUMENTTYPE documentType );
+
+  public double getMinValue( );
+
+  public double getMaxValue( );
+
+  public void setMinValue( double minValue );
+
+  public void setMaxValue( double maxValue );
 
 }

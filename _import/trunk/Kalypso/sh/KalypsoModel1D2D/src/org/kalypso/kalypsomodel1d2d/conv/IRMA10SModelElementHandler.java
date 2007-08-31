@@ -16,7 +16,7 @@ public interface IRMA10SModelElementHandler
   /**
    * Invoqued to signal the start the reading process
    */
-  public void start();
+  public void start( );
 
   /**
    * Invoke to signal the end of the reading process
@@ -94,4 +94,6 @@ public interface IRMA10SModelElementHandler
   public void handleTime( final String line, final Date time );
 
   public void handleJunction( String line, int junctionID, int element1dID, int boundaryLine2dID, int node1dID );
+
+  public void handleFlowResitance( final String line, final int id, final double combinedLambda, final double soilLambda, final double vegetationLambda );
 }

@@ -51,6 +51,7 @@ import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
@@ -93,6 +94,16 @@ public class SelectResultWizardPage extends WizardPage implements IWizardPage
    */
   public void createControl( final Composite parent )
   {
+    /* set a fixed size to the Wizard */
+    final Object layoutData = parent.getLayoutData();
+    if( layoutData instanceof GridData )
+    {
+      final GridData pLayout = (GridData) layoutData;
+      pLayout.widthHint = 700;
+      pLayout.heightHint = 300;
+      parent.layout();
+    }
+
     final Composite panel = new Composite( parent, SWT.NONE );
     panel.setLayout( new FillLayout( SWT.HORIZONTAL ) );
 

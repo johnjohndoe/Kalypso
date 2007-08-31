@@ -43,17 +43,36 @@ package org.kalypso.ui.wizards.results;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.tools.ant.filters.StringInputStream;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
+import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver2;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
@@ -77,13 +96,17 @@ import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
  */
 public class EditStyleDialog extends TitleAreaDialog
 {
+  private final Set<IEditStyleDialogModifyListener> m_listeners = new HashSet<IEditStyleDialogModifyListener>();
+
   private static final String SETTINGS_SECTION = "ResultStyleEditorDialogSettings";
 
   private static final String SETTINGS_X = "posx";
 
   private static final String SETTINGS_Y = "posy";
 
-  private final IFile m_sldFile;
+  private IFile m_sldFile;
+
+  private String m_newSldFileName;
 
   private IDialogSettings m_dialogSettings;
 
@@ -91,10 +114,24 @@ public class EditStyleDialog extends TitleAreaDialog
 
   private double m_maxValue;
 
-  public EditStyleDialog( Shell parentShell, IFile sldFile )
+  private final Pattern m_patternFileName = Pattern.compile( "[a-zA-Z0-9_]+" );
+
+  private StyledLayerDescriptor m_sld;
+
+  private final String m_fileName;
+
+  private Composite m_styleComponent;
+
+  private Symbolizer m_symbolizer;
+
+  public EditStyleDialog( Shell parentShell, IFile sldFile, double maxValue, double minValue )
   {
     super( parentShell );
+
     m_sldFile = sldFile;
+    m_maxValue = maxValue;
+    m_maxValue = minValue;
+    m_fileName = FileUtilities.nameWithoutExtension( m_sldFile.getName() );
 
     final IDialogSettings dialogSettings = KalypsoModel1D2DPlugin.getDefault().getDialogSettings();
     m_dialogSettings = dialogSettings.getSection( SETTINGS_SECTION );
@@ -113,28 +150,126 @@ public class EditStyleDialog extends TitleAreaDialog
   @Override
   protected Control createDialogArea( final Composite parent )
   {
-    /* identify style */
-    Symbolizer symbolizer = processStyle();
+    final Composite commonComposite = new Composite( parent, SWT.NONE );
+    GridData gridDataCommon = new GridData( SWT.FILL, SWT.FILL, true, true );
+    commonComposite.setLayoutData( gridDataCommon );
+    commonComposite.setLayout( new GridLayout( 2, false ) );
 
+    createFileManagerComponent( commonComposite );
+
+    m_styleComponent = createStyleComponent( commonComposite );
+
+    return commonComposite;
+  }
+
+  private void createFileManagerComponent( final Composite commonComposite )
+  {
+    /* file manager */
+
+    // file name
+    final Label fileNameLabel = new Label( commonComposite, SWT.NONE );
+    fileNameLabel.setText( "Style-Name: " );
+    fileNameLabel.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, false, false ) );
+
+    final Text fileNameText = new Text( commonComposite, SWT.BORDER | SWT.TRAIL );
+    fileNameText.setText( m_fileName );
+    GridData gridDataFileNameText = new GridData( SWT.BEGINNING, SWT.CENTER, true, false );
+    gridDataFileNameText.widthHint = 100;
+    fileNameText.setLayoutData( gridDataFileNameText );
+
+    fileNameText.addKeyListener( new KeyAdapter()
+    {
+
+      @SuppressWarnings("synthetic-access")
+      @Override
+      public void keyPressed( final KeyEvent event )
+      {
+        switch( event.keyCode )
+        {
+          case SWT.CR:
+            checkFileNameText( commonComposite, fileNameText );
+        }
+      }
+    } );
+
+    fileNameText.addFocusListener( new FocusListener()
+    {
+      @SuppressWarnings("synthetic-access")
+      public void focusGained( final FocusEvent e )
+      {
+        checkFileNameText( commonComposite, fileNameText );
+      }
+
+      @SuppressWarnings("synthetic-access")
+      public void focusLost( final FocusEvent e )
+      {
+        checkFileNameText( commonComposite, fileNameText );
+      }
+    } );
+
+    fileNameText.addModifyListener( new ModifyListener()
+    {
+
+      @SuppressWarnings("synthetic-access")
+      public void modifyText( final ModifyEvent e )
+      {
+        checkFileNameText( commonComposite, fileNameText );
+      }
+    } );
+  }
+
+  private Composite createStyleComponent( final Composite commonComposite )
+  {
+    m_symbolizer = parseStyle();
     /* choose the composite, depending on the style */
-    if( symbolizer instanceof SurfaceLineSymbolizer )
+    if( m_symbolizer instanceof SurfaceLineSymbolizer )
     {
-      SurfaceLineSymbolizer symb = (SurfaceLineSymbolizer) symbolizer;
+      SurfaceLineSymbolizer symb = (SurfaceLineSymbolizer) m_symbolizer;
       final LineColorMap colorMap = symb.getColorMap();
-      LineColorMapEditorComposite comp = new LineColorMapEditorComposite( parent, SWT.NONE, colorMap );
+      if( colorMap.getColorMap().length > 0 )
+      {
+        LineColorMapEditorComposite comp = new LineColorMapEditorComposite( commonComposite, SWT.NONE, colorMap, m_minValue, m_maxValue );
+        GridData gridDataComp = new GridData( SWT.FILL, SWT.FILL, true, true );
+        gridDataComp.horizontalSpan = 2;
+        comp.setLayoutData( gridDataComp );
+        return comp;
+      }
+      else
+      {
+        final Text errorText = new Text( commonComposite, SWT.NONE );
+        errorText.setText( "Styledatei fehlerhaft. Bitte anderen Style auswählen" );
+        errorText.setBackground( commonComposite.getBackground() );
+      }
     }
-    else if( symbolizer instanceof SurfacePolygonSymbolizer )
+    else if( m_symbolizer instanceof SurfacePolygonSymbolizer )
     {
-      SurfacePolygonSymbolizer symb = (SurfacePolygonSymbolizer) symbolizer;
+      SurfacePolygonSymbolizer symb = (SurfacePolygonSymbolizer) m_symbolizer;
       final PolygonColorMap colorMap = symb.getColorMap();
-
-      PolygonColorMapEditorComposite comp = new PolygonColorMapEditorComposite( parent, SWT.NONE, colorMap );
+      if( colorMap.getColorMap().length > 0 )
+      {
+        PolygonColorMapEditorComposite comp = new PolygonColorMapEditorComposite( commonComposite, SWT.NONE, colorMap, m_minValue, m_maxValue );
+        GridData gridDataComp = new GridData( SWT.FILL, SWT.FILL, true, true );
+        gridDataComp.horizontalSpan = 2;
+        comp.setLayoutData( gridDataComp );
+        return comp;
+      }
+      else
+      {
+        final Text errorText = new Text( commonComposite, SWT.NONE );
+        errorText.setText( "Styledatei fehlerhaft. Bitte anderen Style auswählen" );
+        errorText.setBackground( commonComposite.getBackground() );
+      }
     }
-    else if( symbolizer instanceof PointSymbolizer )
+    else if( m_symbolizer instanceof PointSymbolizer )
     {
-      PointSymbolizer symb = (PointSymbolizer) symbolizer;
+      PointSymbolizer symb = (PointSymbolizer) m_symbolizer;
       symb.getGraphic();
-
+    }
+    else
+    {
+      final Text errorText = new Text( commonComposite, SWT.NONE );
+      errorText.setText( "Styledatei fehlerhaft. Bitte anderen Style auswählen" );
+      errorText.setBackground( commonComposite.getBackground() );
     }
     return null;
   }
@@ -145,14 +280,33 @@ public class EditStyleDialog extends TitleAreaDialog
   @Override
   protected void okPressed( )
   {
+    if( m_newSldFileName != null && m_newSldFileName != m_fileName )
+      updateSldFile();
+
     // write the style back to file
+    final String sldXML = m_sld.exportAsXML();
+    final String sldXMLwithHeader = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + sldXML;
+
+    try
+    {
+      if( m_sldFile.exists() )
+        m_sldFile.setContents( new StringInputStream( sldXMLwithHeader, "UTF-8" ), false, true, new NullProgressMonitor() );
+      else
+      {
+        m_sldFile.create( new StringInputStream( sldXMLwithHeader, "UTF-8" ), false, new NullProgressMonitor() );
+      }
+
+    }
+    catch( CoreException e )
+    {
+      // TODO Auto-generated catch block e.printStackTrace();
+    }
 
     super.okPressed();
   }
 
-  private Symbolizer processStyle( )
+  private Symbolizer parseStyle( )
   {
-
     InputStream inputStream = null;
     try
     {
@@ -162,15 +316,13 @@ public class EditStyleDialog extends TitleAreaDialog
         @SuppressWarnings("synthetic-access")
         public URL resolveURL( String relativeOrAbsolute ) throws MalformedURLException
         {
-          URL url = m_sldFile.getLocationURI().toURL();
-
-          return url;
+          final URL sldURL = ResourceUtilities.createURL( m_sldFile );
+          return new URL( sldURL, relativeOrAbsolute );
         }
 
       };
-      final StyledLayerDescriptor sld = SLDFactory.createSLD( resolver, inputStream );
-
-      final NamedLayer[] namedLayers = sld.getNamedLayers();
+      m_sld = SLDFactory.createSLD( resolver, inputStream );
+      final NamedLayer[] namedLayers = m_sld.getNamedLayers();
       // get always just the first layer
       final NamedLayer namedLayer = namedLayers[0];
       final String layerName = namedLayer.getName();
@@ -245,6 +397,65 @@ public class EditStyleDialog extends TitleAreaDialog
     m_dialogSettings.put( SETTINGS_Y, location.y );
 
     return super.close();
+  }
+
+  /**
+   * checks the user typed string for the step width value
+   * 
+   * @param comp
+   *            composite of the text field
+   * @param text
+   *            the text
+   */
+  private Text checkFileNameText( final Composite comp, final Text text )
+  {
+    String tempText = text.getText();
+
+    final Matcher m = m_patternFileName.matcher( tempText );
+
+    if( !m.matches() )
+    {
+      text.setBackground( comp.getDisplay().getSystemColor( SWT.COLOR_RED ) );
+      m_newSldFileName = null;
+    }
+    else
+    {
+      text.setBackground( comp.getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
+      m_newSldFileName = tempText;
+    }
+    return text;
+  }
+
+  private void updateSldFile( )
+  {
+    IFolder sldFolder = (IFolder) m_sldFile.getParent();
+
+    // create a new sld file with the new name
+    m_sldFile = sldFolder.getFile( m_newSldFileName + ".sld" );
+
+    // update styledLocation and combo viewer
+    fireModified();
+  }
+
+  /**
+   * Add the listener to the list of listeners. If an identical listeners has already been registered, this has no
+   * effect.
+   */
+  public void addModifyListener( final IEditStyleDialogModifyListener l )
+  {
+    m_listeners.add( l );
+  }
+
+  public void removeModifyListener( final IEditStyleDialogModifyListener l )
+  {
+    m_listeners.remove( l );
+  }
+
+  protected void fireModified( )
+  {
+    final IEditStyleDialogModifyListener[] ls = m_listeners.toArray( new IEditStyleDialogModifyListener[m_listeners.size()] );
+    for( final IEditStyleDialogModifyListener styleModifyListener : ls )
+      styleModifyListener.onStyleChanged( this, m_sldFile );
   }
 
 }

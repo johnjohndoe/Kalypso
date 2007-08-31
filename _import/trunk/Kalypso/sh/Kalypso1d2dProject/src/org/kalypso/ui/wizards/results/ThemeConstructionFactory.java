@@ -144,14 +144,12 @@ public class ThemeConstructionFactory implements IThemeConstructionFactory
       if( documentType == DOCUMENTTYPE.tinDepth || documentType == DOCUMENTTYPE.tinVelo || documentType == DOCUMENTTYPE.tinWsp || documentType == DOCUMENTTYPE.tinShearStress )
       {
         final TinResultThemeCreator tinResultThemeCreator = new TinResultThemeCreator( documentResult, m_scenarioFolder );
-        tinResultThemeCreator.createThemeCommandData();
         m_creatorMap.put( documentResult, tinResultThemeCreator );
         return tinResultThemeCreator;
       }
       else if( documentType == DOCUMENTTYPE.nodes )
       {
         final NodeResultThemeCreator nodeResultThemeCreator = new NodeResultThemeCreator( documentResult, m_scenarioFolder );
-        nodeResultThemeCreator.createThemeCommandData();
         m_creatorMap.put( documentResult, nodeResultThemeCreator );
         return nodeResultThemeCreator;
       }

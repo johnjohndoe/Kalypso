@@ -130,9 +130,8 @@ public class ResultMetaInfoViewer extends Viewer
 
       m_panel.setText( result.getName() );
       m_textPanel.setText( result.getDescription() );
-
     }
-    m_panel.layout();
+    m_panel.layout( true );
   }
 
   /**

@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.result;
 
+import java.math.BigDecimal;
+
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.ResultMeta;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -70,6 +72,48 @@ public class DocumentResultMeta extends ResultMeta implements IDocumentResultMet
   public void setDocumentType( DOCUMENTTYPE documentType )
   {
     getFeature().setProperty( QNAME_PROP_DOCUMENT_TYPE, documentType.name() );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta#getMaxValue()
+   */
+  public double getMaxValue( )
+  {
+    final Double maxValue = (Double) getFeature().getProperty( QNAME_PROP_DOCUMENT_MAX_VALUE );
+    if( maxValue != null )
+      return maxValue.doubleValue();
+    else
+      return 0;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta#getMinValue()
+   */
+  public double getMinValue( )
+  {
+    final Double minValue = (Double) getFeature().getProperty( QNAME_PROP_DOCUMENT_MIN_VALUE );
+    if( minValue != null )
+      return minValue.doubleValue();
+    else
+      return 0;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta#setMaxValue(double)
+   */
+  public void setMaxValue( double maxValue )
+  {
+    final BigDecimal maxValueDec = new BigDecimal( maxValue ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+    getFeature().setProperty( QNAME_PROP_DOCUMENT_MAX_VALUE, maxValueDec );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta#setMinValue(double)
+   */
+  public void setMinValue( double minValue )
+  {
+    final BigDecimal minValueDec = new BigDecimal( minValue ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+    getFeature().setProperty( QNAME_PROP_DOCUMENT_MIN_VALUE, minValueDec );
   }
 
 }

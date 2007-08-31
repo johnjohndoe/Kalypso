@@ -40,9 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.wizards.results;
 
-import java.util.LinkedList;
-import java.util.List;
-
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
@@ -66,14 +64,22 @@ public class NodeResultThemeCreator extends AbstractThemeCreator
 
   private final IFolder m_scenarioFolder;
 
-  List<ResultAddLayerCommandData> m_resultLayerCommandData = new LinkedList<ResultAddLayerCommandData>();
+  private final ResultAddLayerCommandData[] m_resultLayerCommandData = new ResultAddLayerCommandData[1];
 
   private ResultStyleComposite m_nodeStyleComp;
+
+  private final double m_minValue;
+
+  private final double m_maxValue;
 
   public NodeResultThemeCreator( IDocumentResultMeta documentResult, final IFolder scenarioFolder )
   {
     m_documentResult = documentResult;
+    m_minValue = m_documentResult.getMinValue();
+    m_maxValue = m_documentResult.getMaxValue();
     m_scenarioFolder = scenarioFolder;
+
+    updateThemeCommandData();
   }
 
   @Override
@@ -86,15 +92,14 @@ public class NodeResultThemeCreator extends AbstractThemeCreator
     nodeLabel.setText( "Darstellung der Vektoren" );
 
     /* create control with selection buttons, style combo-boxes, edit button and delete button */
-    m_nodeStyleComp = new ResultStyleComposite( buttonComp, m_scenarioFolder, "node" );
+    m_nodeStyleComp = new ResultStyleComposite( buttonComp, m_scenarioFolder, "Node", m_minValue, m_maxValue, m_resultLayerCommandData[0] );
 
     return buttonComp;
   }
 
-  public void createThemeCommandData( )
+  public void updateThemeCommandData( )
   {
     /* init */
-    m_resultLayerCommandData.clear();
 
     /* fill */
 
@@ -112,27 +117,40 @@ public class NodeResultThemeCreator extends AbstractThemeCreator
     String style = "Vector Style";
     String themeName = m_documentResult.getName() + ", " + calcUnitMeta.getName();
     String styleLocation = null;
-
-    if( m_nodeStyleComp != null )
+    String type = "Node";
+    // check, if there is a style already chosen, if not create one from default template
+    if( m_nodeStyleComp == null )
     {
-      final String absStyleLocation = m_nodeStyleComp.getSelectedStyle().getFullPath().toPortableString();
-      final String relativePathTo = FileUtilities.getRelativePathTo( resFolder, absStyleLocation );
-      styleLocation = ".." + relativePathTo;
-    }
-    else
-    {
-      // take the default style from the scenario style folder instead.
-      final String defaultPath = KalypsoModel1D2DHelper.getStylesFolder( m_scenarioFolder ).getFullPath().toPortableString();
-      final String relativePathTo = FileUtilities.getRelativePathTo( resFolder, defaultPath );
-      styleLocation = ".." + relativePathTo + "/node/vector.sld";
+      styleLocation = getStyle( resFolder, type );
     }
 
     String styleLinkType = "sld";
     String styleType = "simple";
     String resultType = "gml";
+    if( m_resultLayerCommandData[0] != null )
+      m_resultLayerCommandData[0].setValues( themeName, resultType, featurePath, source, style, styleLocation, styleLinkType, styleType, type );
+    else
+      m_resultLayerCommandData[0] = new ResultAddLayerCommandData( themeName, resultType, featurePath, source, style, styleLocation, styleLinkType, styleType, m_scenarioFolder, type );
 
-    m_resultLayerCommandData.add( new ResultAddLayerCommandData( themeName, resultType, featurePath, source, style, styleLocation, styleLinkType, styleType ) );
+  }
 
+  private String getStyle( String resFolder, String type )
+  {
+
+    final String defaultPath = KalypsoModel1D2DHelper.getStylesFolder( m_scenarioFolder ).getFullPath().toPortableString();
+    final String relativePathTo = FileUtilities.getRelativePathTo( resFolder, defaultPath );
+
+    /* default location depending on type */
+    final IFolder stylesFolder = KalypsoModel1D2DHelper.getStylesFolder( m_scenarioFolder );
+    IFolder sldFolder = stylesFolder.getFolder( type );
+
+    final String sldFileName = "default" + type + m_documentResult.getDocumentType().name() + "Style.sld";
+    final IFile styleFile = sldFolder.getFile( sldFileName );
+
+    ResultSldHelper.processStyle( styleFile, type, m_minValue, m_maxValue );
+    final String styleLocation = ".." + relativePathTo + "/" + type + "/" + sldFileName;
+
+    return styleLocation;
   }
 
   /**
@@ -141,8 +159,8 @@ public class NodeResultThemeCreator extends AbstractThemeCreator
   @Override
   public ResultAddLayerCommandData[] getThemeCommandData( )
   {
-    if( m_resultLayerCommandData != null )
-      return m_resultLayerCommandData.toArray( new ResultAddLayerCommandData[m_resultLayerCommandData.size()] );
+    if( m_resultLayerCommandData != null && m_resultLayerCommandData[0].isSelected() == true )
+      return m_resultLayerCommandData;
     else
       return null;
   }

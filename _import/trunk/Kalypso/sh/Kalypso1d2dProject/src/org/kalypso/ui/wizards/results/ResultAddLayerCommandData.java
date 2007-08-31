@@ -40,6 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.wizards.results;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DHelper;
 
 /**
  * 
@@ -51,23 +55,35 @@ package org.kalypso.ui.wizards.results;
 public class ResultAddLayerCommandData
 {
 
-  private final String m_themeName;
+  private String m_themeName;
 
-  private final String m_resultType;
+  private String m_resultType;
 
-  private final String m_featurePath;
+  private String m_featurePath;
 
-  private final String m_source;
+  private String m_source;
 
-  private final String m_style;
+  private String m_style;
 
-  private final String m_styleLocation;
+  private String m_styleLocation;
 
-  private final String m_styleLinkType;
+  private String m_styleLinkType;
 
-  private final String m_styleType;
+  private String m_styleType;
 
-  public ResultAddLayerCommandData( String themeName, String resultType, String featurePath, String source, String style, String styleLocation, String styleLinkType, String styleType )
+  private IFile m_sldFile = null;
+
+  private double m_minValue;
+
+  private double m_maxValue;
+
+  private boolean m_selected;
+
+  private final IFolder m_scenarioFolder;
+
+  private String m_type;
+
+  public ResultAddLayerCommandData( String themeName, String resultType, String featurePath, String source, String style, String styleLocation, String styleLinkType, String styleType, IFolder scenarioFolder, String type )
   {
     m_themeName = themeName;
     m_resultType = resultType;
@@ -77,6 +93,32 @@ public class ResultAddLayerCommandData
     m_styleLocation = styleLocation;
     m_styleLinkType = styleLinkType;
     m_styleType = styleType;
+    m_scenarioFolder = scenarioFolder;
+    m_type = type;
+
+    if( m_sldFile != null )
+      updateStyleLocation();
+  }
+
+  public void setSldFile( IFile sldFile )
+  {
+    m_sldFile = sldFile;
+
+    updateStyleLocation();
+  }
+
+  private void updateStyleLocation( )
+  {
+    final IFolder resultsFolder = KalypsoModel1D2DHelper.getResultsFolder( m_scenarioFolder );
+    final String resFolder = resultsFolder.getFullPath().toPortableString();
+
+    final String defaultPath = KalypsoModel1D2DHelper.getStylesFolder( m_scenarioFolder ).getFullPath().toPortableString();
+    final String relativePathTo = FileUtilities.getRelativePathTo( resFolder, defaultPath );
+
+    if( m_type == "Line" || m_type == "Polygon" )
+      m_styleLocation = ".." + relativePathTo + "/" + m_type + "/" + m_sldFile.getName();
+    else if( m_type == "Node" )
+      m_styleLocation = ".." + relativePathTo;
   }
 
   public String getThemeName( )
@@ -117,6 +159,56 @@ public class ResultAddLayerCommandData
   public String getStyleType( )
   {
     return m_styleType;
+  }
+
+  public IFile getSldFile( )
+  {
+    return m_sldFile;
+  }
+
+  public void setValues( String themeName, String resultType, String featurePath, String source, String style, String styleLocation, String styleLinkType, String styleType, String type )
+  {
+    m_themeName = themeName;
+    m_resultType = resultType;
+    m_featurePath = featurePath;
+    m_source = source;
+    m_style = style;
+    m_styleLocation = styleLocation;
+    m_styleLinkType = styleLinkType;
+    m_styleType = styleType;
+    m_type = type;
+
+    updateStyleLocation();
+  }
+
+  public double getMinValue( )
+  {
+    return m_minValue;
+  }
+
+  public void setMinValue( double minValue )
+  {
+    m_minValue = minValue;
+  }
+
+  public double getMaxValue( )
+  {
+    return m_maxValue;
+  }
+
+  public void setMaxValue( double maxValue )
+  {
+    m_maxValue = maxValue;
+  }
+
+  public boolean isSelected( )
+  {
+    return m_selected;
+  }
+
+  public void setSelected( boolean selected )
+  {
+    m_selected = selected;
   }
 
 }

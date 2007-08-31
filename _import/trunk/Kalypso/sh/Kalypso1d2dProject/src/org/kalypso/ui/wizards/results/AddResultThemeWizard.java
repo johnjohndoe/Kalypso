@@ -99,7 +99,6 @@ public class AddResultThemeWizard extends Wizard implements IKalypsoDataImportWi
   {
     final ResultViewerFilter resultFilter = new ResultViewerFilter();
     final ThemeConstructionFactory themeConstructionFactory = new ThemeConstructionFactory( m_scenarioFolder );
-
     final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, "Ergebniss(e) zur Karte hinzufügen", null, resultFilter, themeConstructionFactory );
 
     selectResultWizardPage.setResultMeta( m_resultModel );
@@ -198,15 +197,14 @@ public class AddResultThemeWizard extends Wizard implements IKalypsoDataImportWi
       }
 
       // TODO:
-      // be intelligent:
       // - create sub-themes for container results (also use filter for children)
-      // - create every theme only once
       // - ...
 
       monitor.worked( 1 );
       if( monitor.isCanceled() )
         return Status.CANCEL_STATUS;
     }
+
     return Status.OK_STATUS;
 
   }

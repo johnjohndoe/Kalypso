@@ -40,12 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.wizards.results;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.kalypso.ui.editor.sldEditor.IStrokeModifyListener;
 import org.kalypso.ui.editor.sldEditor.StrokeEditorComposite;
 import org.kalypsodeegree.graphics.sld.LineColorMapEntry;
+import org.kalypsodeegree.graphics.sld.Stroke;
 
 /**
  * @author Thomas Jung
@@ -56,25 +61,63 @@ import org.kalypsodeegree.graphics.sld.LineColorMapEntry;
  */
 public class LineColorMapEntryEditorComposite extends Composite
 {
-  private final LineColorMapEntry m_symb;
+  private final Set<ILineColorMapEntryModifyListener> m_listeners = new HashSet<ILineColorMapEntryModifyListener>();
 
-  public LineColorMapEntryEditorComposite( final Composite parent, final int style, final LineColorMapEntry symb )
+  private final LineColorMapEntry m_entry;
+
+  public LineColorMapEntryEditorComposite( final Composite parent, final int style, final LineColorMapEntry entry )
   {
     super( parent, style );
-    m_symb = symb;
+    m_entry = entry;
 
-    // TODO: create control
     createControl();
-
   }
 
   private void createControl( )
   {
     setLayout( new GridLayout( 1, false ) );
 
-    final StrokeEditorComposite strokeEditor = new StrokeEditorComposite( this, SWT.NONE, m_symb.getStroke() );
+    final StrokeEditorComposite strokeEditor = new StrokeEditorComposite( this, SWT.NONE, m_entry.getStroke(), false );
     strokeEditor.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
+    strokeEditor.addModifyListener( new IStrokeModifyListener()
+    {
+      public void onStrokeChanged( Object source, Stroke stroke )
+      {
+        contentChanged();
+      }
+    } );
+  }
+
+  protected void disposeControl( )
+  {
+    m_listeners.clear();
+  }
+
+  /**
+   * Add the listener to the list of listeners. If an identical listeners has already been registered, this has no
+   * effect.
+   */
+  public void addModifyListener( final ILineColorMapEntryModifyListener l )
+  {
+    m_listeners.add( l );
+  }
+
+  public void removeModifyListener( final ILineColorMapEntryModifyListener l )
+  {
+    m_listeners.remove( l );
+  }
+
+  protected void fireModified( )
+  {
+    final ILineColorMapEntryModifyListener[] ls = m_listeners.toArray( new ILineColorMapEntryModifyListener[m_listeners.size()] );
+    for( final ILineColorMapEntryModifyListener entryModifyListener : ls )
+      entryModifyListener.onEntryChanged( this, m_entry );
+  }
+
+  protected void contentChanged( )
+  {
+    fireModified();
   }
 
 }

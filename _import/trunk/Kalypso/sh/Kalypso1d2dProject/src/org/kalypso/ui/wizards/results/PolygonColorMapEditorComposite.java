@@ -44,12 +44,25 @@ import java.awt.Color;
 import java.math.BigDecimal;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.Fill;
 import org.kalypsodeegree.graphics.sld.ParameterValueType;
@@ -68,20 +81,40 @@ public class PolygonColorMapEditorComposite extends Composite
 {
   private final PolygonColorMap m_colorMap;
 
-  private PolygonColorMapEntry m_toEntry;
+  private final PolygonColorMapEntry m_toEntry;
 
-  private PolygonColorMapEntry m_fromEntry;
+  private final PolygonColorMapEntry m_fromEntry;
 
-  private char[] m_stepWidth;
+  private final Pattern m_patternDouble = Pattern.compile( "[0-9]+[\\.\\,]?[0-9]*?" );
 
-  private char[] m_minValue;
+  private boolean m_strokeChecked;
 
-  private char[] m_maxValue;
+  private double m_stepWidth;
 
-  public PolygonColorMapEditorComposite( final Composite parent, final int style, final PolygonColorMap colorMap )
+  private double m_minValue;
+
+  private double m_maxValue;
+
+  private final String m_globalMin;
+
+  private final String m_globalMax;
+
+  public PolygonColorMapEditorComposite( final Composite parent, final int style, final PolygonColorMap colorMap, final double minGlobalValue, final double maxGlobalValue )
   {
     super( parent, style );
     m_colorMap = colorMap;
+    m_fromEntry = m_colorMap.getColorMap()[0];
+    m_toEntry = m_colorMap.getColorMap()[m_colorMap.getColorMap().length - 1];
+
+    // TODO: handle empty color map
+
+    m_minValue = m_colorMap.getColorMap()[0].getFrom( null );
+    m_maxValue = m_colorMap.getColorMap()[m_colorMap.getColorMap().length - 1].getTo( null );
+
+    m_globalMin = new Double( minGlobalValue ).toString();
+    m_globalMax = new Double( maxGlobalValue ).toString();
+
+    m_stepWidth = m_colorMap.getColorMap()[0].getTo( null ) - m_colorMap.getColorMap()[0].getFrom( null );
 
     createControl();
 
@@ -90,6 +123,8 @@ public class PolygonColorMapEditorComposite extends Composite
   private void createControl( )
   {
     setLayout( new GridLayout( 2, true ) );
+
+    createMinMaxGroup( this );
 
     Group fromColorMapGroup = new Group( this, SWT.NONE );
     fromColorMapGroup.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
@@ -101,72 +136,442 @@ public class PolygonColorMapEditorComposite extends Composite
     toColorMapGroup.setLayout( new GridLayout( 1, true ) );
     toColorMapGroup.setText( "Endfarbe" );
 
-    m_fromEntry = m_colorMap.getColorMap()[0];
     final PolygonColorMapEntryEditorComposite fromEntryComposite = new PolygonColorMapEntryEditorComposite( fromColorMapGroup, SWT.NONE, m_fromEntry );
     fromEntryComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    fromEntryComposite.addModifyListener( new IPolygonColorMapEntryModifyListener()
+    {
+      public void onEntryChanged( Object source, PolygonColorMapEntry entry )
+      {
+        updateColorMap();
+      }
+    } );
 
-    m_toEntry = m_colorMap.getColorMap()[m_colorMap.getColorMap().length - 1];
     final PolygonColorMapEntryEditorComposite toEntryComposite = new PolygonColorMapEntryEditorComposite( toColorMapGroup, SWT.NONE, m_toEntry );
     toEntryComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    toEntryComposite.addModifyListener( new IPolygonColorMapEntryModifyListener()
+    {
+      public void onEntryChanged( Object source, PolygonColorMapEntry entry )
+      {
+        updateColorMap();
+      }
+    } );
 
   }
 
-  protected void updateColorMap( ) throws FilterEvaluationException
+  private void createMinMaxGroup( final Composite commonComposite )
   {
+    /* properties (global min / max, displayed min / max */
+    final Group propertyGroup = new Group( commonComposite, SWT.NONE );
+    GridData gridDataProperty = new GridData( SWT.FILL, SWT.FILL, true, true );
+    gridDataProperty.horizontalSpan = 2;
+    propertyGroup.setLayoutData( gridDataProperty );
+    propertyGroup.setLayout( new GridLayout( 2, true ) );
+    propertyGroup.setText( "Wertebereich" );
 
-    // Fill
-    final Color fromPolygonColor = m_fromEntry.getFill().getFill( null );
-    final Color toPolygonColor = m_toEntry.getFill().getFill( null );
-    final double polygonOpacity = m_fromEntry.getFill().getOpacity( null );
+    final Composite globalComposite = new Composite( propertyGroup, SWT.NONE );
+    GridData gridDataGlobalComp = new GridData( SWT.FILL, SWT.FILL, true, false );
+    globalComposite.setLayoutData( gridDataGlobalComp );
+    globalComposite.setLayout( new GridLayout( 2, false ) );
 
-    // Stroke
-    final Color fromLineColor = m_fromEntry.getStroke().getStroke( null );
-    final Color toLineColor = m_toEntry.getStroke().getStroke( null );
-    final double lineOpacity = m_fromEntry.getStroke().getOpacity( null );
+    final Composite displayComposite = new Composite( propertyGroup, SWT.NONE );
+    GridData gridDataDisplayComp = new GridData( SWT.FILL, SWT.FILL, true, false );
+    displayComposite.setLayoutData( gridDataDisplayComp );
+    displayComposite.setLayout( new GridLayout( 2, false ) );
 
-    int stepWidthScale = 2;
+    final Label globalMaxLabel = new Label( globalComposite, SWT.NONE );
+    final GridData gridDataGlobalMax = new GridData( SWT.BEGINNING, SWT.UP, false, false );
+    gridDataGlobalMax.heightHint = 15;
+    globalMaxLabel.setLayoutData( gridDataGlobalMax );
+    globalMaxLabel.setText( "maximaler Wert: " );
 
-    // get rounded values below min and above max (rounded by first decimal)
-    // as a first try we will generate isareas by using class steps of 0.1
-    // later, the classes will be created by using user defined class steps.
-    // for that we fill an array of calculated (later user defined values) from max to min
-    final BigDecimal minDecimal = new BigDecimal( m_minValue ).setScale( 1, BigDecimal.ROUND_FLOOR );
-    final BigDecimal maxDecimal = new BigDecimal( m_maxValue ).setScale( 1, BigDecimal.ROUND_CEILING );
+    final Label globalMaxValueLabel = new Label( globalComposite, SWT.NONE );
+    GridData gridDataMaxValueLabel = new GridData( SWT.END, SWT.UP, false, false );
+    gridDataMaxValueLabel.widthHint = 40;
+    gridDataMaxValueLabel.heightHint = 15;
 
-    final BigDecimal polygonStepWidth = new BigDecimal( m_stepWidth ).setScale( stepWidthScale, BigDecimal.ROUND_FLOOR );
-    final int numOfClasses = (maxDecimal.subtract( minDecimal ).divide( polygonStepWidth )).intValue();
+    globalMaxValueLabel.setLayoutData( gridDataMaxValueLabel );
+    globalMaxValueLabel.setText( m_globalMax );
+    globalMaxValueLabel.setAlignment( SWT.RIGHT );
 
-    final List<PolygonColorMapEntry> colorMapList = new LinkedList<PolygonColorMapEntry>();
+    final Label globalMinLabel = new Label( globalComposite, SWT.NONE );
+    globalMinLabel.setLayoutData( new GridData( SWT.BEGINNING, SWT.UP, false, false ) );
+    globalMinLabel.setText( "minimaler Wert: " );
 
-    for( int currentClass = 0; currentClass < numOfClasses; currentClass++ )
+    final Label globalMinValueLabel = new Label( globalComposite, SWT.NONE );
+    GridData gridDataMinValueLabel = new GridData( SWT.END, SWT.UP, false, false );
+    gridDataMinValueLabel.widthHint = 40;
+
+    globalMinValueLabel.setLayoutData( gridDataMinValueLabel );
+    globalMinValueLabel.setText( m_globalMin );
+    globalMinValueLabel.setAlignment( SWT.RIGHT );
+
+    final Label checkStroke = new Label( globalComposite, SWT.NONE );
+    checkStroke.setLayoutData( new GridData( SWT.BEGINNING, SWT.UP, false, false ) );
+    checkStroke.setText( "Linien darstellen: " );
+
+    final Button checkStrokeFrom = new Button( globalComposite, SWT.CHECK );
+    checkStrokeFrom.setLayoutData( new GridData( SWT.BEGINNING, SWT.UP, true, false ) );
+
+    if( m_colorMap.getColorMap()[0].getStroke() != null )
     {
-      final double fromValue = minDecimal.doubleValue() + currentClass * polygonStepWidth.doubleValue();
-      final double toValue = minDecimal.doubleValue() + (currentClass + 1) * polygonStepWidth.doubleValue();
+      checkStrokeFrom.setSelection( true );
+    }
+    else
+    {
+      checkStrokeFrom.setSelection( false );
+    }
+    m_strokeChecked = checkStrokeFrom.getSelection();
+
+    checkStrokeFrom.addSelectionListener( new SelectionAdapter()
+    {
+
+      @SuppressWarnings("synthetic-access")
+      @Override
+      public void widgetSelected( final SelectionEvent e )
+      {
+        m_strokeChecked = checkStrokeFrom.getSelection();
+        updateColorMap();
+      }
+    } );
+
+    /* max value to display */
+    final Label displayMaxLabel = new Label( displayComposite, SWT.NONE );
+    displayMaxLabel.setLayoutData( new GridData( SWT.BEGINNING, SWT.UP, true, false ) );
+    displayMaxLabel.setText( "maximaler angezeigter Wert: " );
+
+    final Text maxValueText = new Text( displayComposite, SWT.BORDER | SWT.TRAIL );
+    GridData gridDataMaxText = new GridData( SWT.END, SWT.UP, true, false );
+    gridDataMaxText.widthHint = 30;
+    gridDataMaxText.heightHint = 10;
+    maxValueText.setLayoutData( gridDataMaxText );
+
+    final String stringMax = String.valueOf( m_maxValue );
+    maxValueText.setText( stringMax );
+
+    /* min value to display */
+    final Label displayMinLabel = new Label( displayComposite, SWT.NONE );
+    displayMinLabel.setLayoutData( new GridData( SWT.BEGINNING, SWT.UP, true, false ) );
+    displayMinLabel.setText( "minimaler angezeigter Wert: " );
+
+    final Text minValueText = new Text( displayComposite, SWT.BORDER | SWT.TRAIL );
+    GridData gridDataMinText = new GridData( SWT.END, SWT.UP, true, false );
+    gridDataMinText.widthHint = 30;
+    gridDataMinText.heightHint = 10;
+    minValueText.setLayoutData( gridDataMinText );
+
+    final String stringMin = String.valueOf( m_minValue );
+    minValueText.setText( stringMin );
+
+    minValueText.addKeyListener( new KeyAdapter()
+    {
+      @SuppressWarnings("synthetic-access")
+      @Override
+      public void keyPressed( final KeyEvent event )
+      {
+        switch( event.keyCode )
+        {
+          case SWT.CR:
+            final Double value = checkDoubleTextValue( propertyGroup, minValueText );
+            if( value != null )
+              m_minValue = value;
+        }
+      }
+    } );
+
+    minValueText.addFocusListener( new FocusListener()
+    {
+      @SuppressWarnings("synthetic-access")
+      public void focusGained( final FocusEvent e )
+      {
+        final Double value = checkDoubleTextValue( propertyGroup, minValueText );
+        if( value != null )
+          m_minValue = value;
+      }
+
+      @SuppressWarnings("synthetic-access")
+      public void focusLost( final FocusEvent e )
+      {
+        final Double value = checkDoubleTextValue( propertyGroup, minValueText );
+        if( value != null )
+        {
+          m_minValue = value;
+          updateColorMap();
+        }
+      }
+    } );
+
+    minValueText.addModifyListener( new ModifyListener()
+    {
+      @SuppressWarnings("synthetic-access")
+      public void modifyText( final ModifyEvent e )
+      {
+        final String tempText = minValueText.getText();
+
+        final Matcher m = m_patternDouble.matcher( tempText );
+
+        if( !m.matches() )
+        {
+          minValueText.setBackground( propertyGroup.getDisplay().getSystemColor( SWT.COLOR_RED ) );
+        }
+        else
+        {
+          minValueText.setBackground( propertyGroup.getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
+          tempText.replaceAll( ",", "." );
+        }
+      }
+    } );
+
+    maxValueText.addKeyListener( new KeyAdapter()
+    {
+      @SuppressWarnings("synthetic-access")
+      @Override
+      public void keyPressed( final KeyEvent event )
+      {
+        switch( event.keyCode )
+        {
+          case SWT.CR:
+            final Double value = checkDoubleTextValue( propertyGroup, maxValueText );
+            if( value != null )
+              m_maxValue = value;
+        }
+      }
+    } );
+
+    maxValueText.addFocusListener( new FocusListener()
+    {
+      @SuppressWarnings("synthetic-access")
+      public void focusGained( final FocusEvent e )
+      {
+        final Double value = checkDoubleTextValue( propertyGroup, maxValueText );
+        if( value != null )
+          m_maxValue = value;
+      }
+
+      @SuppressWarnings("synthetic-access")
+      public void focusLost( final FocusEvent e )
+      {
+        final Double value = checkDoubleTextValue( propertyGroup, maxValueText );
+        if( value != null )
+        {
+          m_maxValue = value;
+          updateColorMap();
+        }
+      }
+    } );
+
+    maxValueText.addModifyListener( new ModifyListener()
+    {
+      @SuppressWarnings("synthetic-access")
+      public void modifyText( final ModifyEvent e )
+      {
+        final String tempText = maxValueText.getText();
+
+        final Matcher m = m_patternDouble.matcher( tempText );
+
+        if( !m.matches() )
+        {
+          maxValueText.setBackground( propertyGroup.getDisplay().getSystemColor( SWT.COLOR_RED ) );
+        }
+        else
+        {
+          maxValueText.setBackground( propertyGroup.getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
+          tempText.replaceAll( ",", "." );
+        }
+      }
+    } );
+
+    // step width spinner
+    final Label labelWithSpinner = new Label( displayComposite, SWT.NONE );
+    labelWithSpinner.setLayoutData( new GridData( SWT.BEGINNING, SWT.UP, true, false ) );
+    labelWithSpinner.setText( "Klassenbreite" );
+
+    final Text stepWidthText = new Text( displayComposite, SWT.BORDER | SWT.TRAIL );
+    GridData gridDataStepWidthText = new GridData( SWT.END, SWT.UP, true, false );
+    gridDataStepWidthText.widthHint = 30;
+    gridDataStepWidthText.heightHint = 10;
+    stepWidthText.setLayoutData( gridDataStepWidthText );
+
+    final String stringStepWidth = String.valueOf( m_stepWidth );
+    stepWidthText.setText( stringStepWidth );
+
+    stepWidthText.addKeyListener( new KeyAdapter()
+    {
+      @SuppressWarnings("synthetic-access")
+      @Override
+      public void keyPressed( final KeyEvent event )
+      {
+        switch( event.keyCode )
+        {
+          case SWT.CR:
+            checkDoubleTextValue( propertyGroup, stepWidthText );
+        }
+      }
+    } );
+
+    stepWidthText.addFocusListener( new FocusListener()
+    {
+      @SuppressWarnings("synthetic-access")
+      public void focusGained( final FocusEvent e )
+      {
+        final Double value = checkDoubleTextValue( propertyGroup, stepWidthText );
+        if( value != null )
+          m_stepWidth = value;
+      }
+
+      @SuppressWarnings("synthetic-access")
+      public void focusLost( final FocusEvent e )
+      {
+        final Double value = checkDoubleTextValue( propertyGroup, stepWidthText );
+        if( value != null )
+        {
+          m_stepWidth = value;
+          updateColorMap();
+        }
+      }
+    } );
+
+    stepWidthText.addModifyListener( new ModifyListener()
+    {
+      @SuppressWarnings("synthetic-access")
+      public void modifyText( final ModifyEvent e )
+      {
+        final String tempText = stepWidthText.getText();
+
+        final Matcher m = m_patternDouble.matcher( tempText );
+
+        if( !m.matches() )
+        {
+          stepWidthText.setBackground( propertyGroup.getDisplay().getSystemColor( SWT.COLOR_RED ) );
+        }
+        else
+        {
+          stepWidthText.setBackground( propertyGroup.getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
+          tempText.replaceAll( ",", "." );
+        }
+      }
+    } );
+
+  }
+
+  /**
+   * checks the user typed string for the double value
+   * 
+   * @param comp
+   *            composite of the text field
+   * @param text
+   *            the text field
+   */
+  private Double checkDoubleTextValue( final Composite comp, final Text text )
+  {
+    String tempText = text.getText();
+
+    final Matcher m = m_patternDouble.matcher( tempText );
+
+    if( !m.matches() )
+    {
+      text.setBackground( comp.getDisplay().getSystemColor( SWT.COLOR_RED ) );
+    }
+    else
+    {
+      text.setBackground( comp.getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
+      tempText = tempText.replaceAll( ",", "." );
+
+      Double db = new Double( tempText );
+      if( db > 0 )
+      {
+        text.setText( db.toString() );
+      }
+      else
+      {
+        db = 0.0;
+        text.setText( db.toString() );
+      }
+
+      return db;
+    }
+    return null;
+  }
+
+  protected void updateColorMap( )
+  {
+    try
+    {
+      final Color fromPolygonColor = m_fromEntry.getFill().getFill( null );
+      final Color toPolygonColor = m_toEntry.getFill().getFill( null );
+      final double polygonOpacityFrom = m_fromEntry.getFill().getOpacity( null );
+      final double polygonOpacityTo = m_toEntry.getFill().getOpacity( null );
 
       // Stroke
+      final Color fromLineColor = m_fromEntry.getStroke().getStroke( null );
+      final Color toLineColor = m_toEntry.getStroke().getStroke( null );
+      final double lineOpacityFrom = m_fromEntry.getStroke().getOpacity( null );
+      final double lineOpacityTo = m_toEntry.getStroke().getOpacity( null );
+      final double lineWidthFrom = m_fromEntry.getStroke().getWidth( null );
+      final double lineWidthTo = m_toEntry.getStroke().getWidth( null );
 
-      Color lineColor;
-      if( fromLineColor == toLineColor )
-        lineColor = fromLineColor;
-      else
-        lineColor = ColorMapHelper.interpolateColor( fromLineColor, toLineColor, currentClass, numOfClasses );
+      int stepWidthScale = 2;
 
-      // Fill
-      final Color polygonColor = ColorMapHelper.interpolateColor( fromPolygonColor, toPolygonColor, currentClass, numOfClasses );
-      lineColor = polygonColor;
+      // get rounded values below min and above max (rounded by first decimal)
+      final BigDecimal minDecimal = new BigDecimal( m_minValue ).setScale( 1, BigDecimal.ROUND_FLOOR );
+      final BigDecimal maxDecimal = new BigDecimal( m_maxValue ).setScale( 1, BigDecimal.ROUND_CEILING );
 
-      final Stroke stroke = StyleFactory.createStroke( lineColor, lineOpacity );
-      final Fill fill = StyleFactory.createFill( polygonColor, polygonOpacity );
+      final BigDecimal polygonStepWidth = new BigDecimal( m_stepWidth ).setScale( stepWidthScale, BigDecimal.ROUND_FLOOR );
+      final int numOfClasses = (maxDecimal.subtract( minDecimal ).divide( polygonStepWidth )).intValue();
 
-      final ParameterValueType label = StyleFactory.createParameterValueType( "Isofläche " + currentClass );
-      final ParameterValueType from = StyleFactory.createParameterValueType( fromValue );
-      final ParameterValueType to = StyleFactory.createParameterValueType( toValue );
+      final List<PolygonColorMapEntry> colorMapList = new LinkedList<PolygonColorMapEntry>();
 
-      final PolygonColorMapEntry colorMapEntry = new PolygonColorMapEntry_Impl( fill, stroke, label, from, to );
-      colorMapList.add( colorMapEntry );
+      for( int currentClass = 0; currentClass < numOfClasses; currentClass++ )
+      {
+        final double fromValue = minDecimal.doubleValue() + currentClass * polygonStepWidth.doubleValue();
+        final double toValue = minDecimal.doubleValue() + (currentClass + 1) * polygonStepWidth.doubleValue();
+
+        // Stroke
+        Color lineColor;
+        if( fromLineColor == toLineColor )
+          lineColor = fromLineColor;
+        else
+          lineColor = ResultSldHelper.interpolateColor( fromLineColor, toLineColor, currentClass, numOfClasses );
+
+        // Fill
+        final Color polygonColor = ResultSldHelper.interpolateColor( fromPolygonColor, toPolygonColor, currentClass, numOfClasses );
+        double polygonOpacity = ResultSldHelper.interpolate( polygonOpacityFrom, polygonOpacityTo, currentClass, numOfClasses );
+        final Fill fill = StyleFactory.createFill( polygonColor, polygonOpacity );
+
+        // Stroke
+        lineColor = polygonColor;
+        double lineOpacity;
+        double lineWidth;
+
+        if( m_strokeChecked == false )
+        {
+          lineOpacity = 0;
+          lineWidth = 0.01;
+        }
+        else
+        {
+          lineOpacity = ResultSldHelper.interpolate( lineOpacityFrom, lineOpacityTo, currentClass, numOfClasses );
+          lineWidth = ResultSldHelper.interpolate( lineWidthFrom, lineWidthTo, currentClass, numOfClasses );
+          if( lineWidth == 0 )
+            lineWidth = 0.01;
+        }
+
+        final Stroke stroke = StyleFactory.createStroke( lineColor, lineWidth, lineOpacity );
+
+        final ParameterValueType label = StyleFactory.createParameterValueType( "Isofläche " + currentClass );
+        final ParameterValueType from = StyleFactory.createParameterValueType( fromValue );
+        final ParameterValueType to = StyleFactory.createParameterValueType( toValue );
+
+        final PolygonColorMapEntry colorMapEntry = new PolygonColorMapEntry_Impl( fill, stroke, label, from, to );
+
+        colorMapList.add( colorMapEntry );
+      }
+      if( colorMapList.size() > 0 )
+        m_colorMap.replaceColorMap( colorMapList );
     }
-    if( colorMapList.size() > 0 )
-      m_colorMap.setColorMap( colorMapList );
+    catch( FilterEvaluationException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
   }
-
 }
