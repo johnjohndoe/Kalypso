@@ -41,31 +41,23 @@
 package org.kalypso.model.wspm.tuhh.schema.simulation;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
+import org.apache.xmlbeans.XmlException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Platform;
+import org.kalypso.chart.factory.configuration.ChartConfigurationLoader;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhReach;
@@ -76,12 +68,12 @@ import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.swtchart.configuration.ConfigLoader;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.ksp.chart.configuration.AxisType;
-import org.ksp.chart.configuration.ChartType;
-import org.ksp.chart.configuration.ConfigurationType;
+import org.ksp.chart.factory.AxisType;
+import org.ksp.chart.factory.ChartConfigurationDocument;
+import org.ksp.chart.factory.ChartType;
+import org.ksp.chart.factory.AxisType.Direction;
 
 public class LengthSectionProcessor
 {
@@ -318,6 +310,54 @@ public class LengthSectionProcessor
   }
 
   @SuppressWarnings("unchecked")
+  public static void createDiagram( final File diagFile, final IObservation<TupleResult> lsObs, final boolean isDirectionUpstreams ) throws IOException
+  {
+    // Check if optional bundle is installed
+    if( Platform.getBundle( "org.kalypso.chart.factory" ) == null 
+        ||
+        Platform.getBundle( "org.kalypso.chart.framework") == null
+      )
+      return;
+
+    /* We just load the template and tweak the direction of the station-axis */
+    ChartConfigurationLoader ccl=null;
+    try
+    {
+      ccl = new ChartConfigurationLoader(diagFile.getAbsolutePath());
+    }
+    catch( XmlException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    ChartConfigurationDocument ccd=ccl.getChartConfigurationDocument();
+    
+    if (ccd!=null)
+    {
+      ChartType[] charts = ccl.getCharts();
+      
+      //only use first chart - there should only be one
+      ChartType chart = charts[0];
+      chart.setTitle( lsObs.getName() );
+      chart.setDescription( lsObs.getDescription() );
+      
+      AxisType[] axes = ccl.getAxes();
+      for( AxisType axis : axes )
+      {
+        if( axis.getLabel().equals( "Station_Axis" ) )
+        {
+          if( isDirectionUpstreams )
+            axis.setDirection( Direction.NEGATIVE );
+          else
+            axis.setDirection( Direction.POSITIVE );
+        }
+      }
+      
+      ccd.save( diagFile );
+    }
+  }
+  /*
+  @SuppressWarnings("unchecked")
   public static void createDiagram( final File diagFile, final IObservation<TupleResult> lsObs, final boolean isDirectionUpstreams ) throws JAXBException, IOException
   {
     // Check if optional bundle is installed
@@ -325,7 +365,8 @@ public class LengthSectionProcessor
       return;
 
     /* We just load the template and tweak the direction of the station-axis */
-    final Unmarshaller unmarshaller = ConfigLoader.JC.createUnmarshaller();
+  /*
+  final Unmarshaller unmarshaller = ConfigLoader.JC.createUnmarshaller();
     final JAXBElement<ConfigurationType> config = (JAXBElement<ConfigurationType>) unmarshaller.unmarshal( LengthSectionProcessor.class.getResource( "resources/lengthSection.kod" ) );
 
     final List<Object> chartOrLayerOrAxis = config.getValue().getChartOrLayerOrAxis();
@@ -365,5 +406,6 @@ public class LengthSectionProcessor
       IOUtils.closeQuietly( os );
     }
   }
+*/
 
 }

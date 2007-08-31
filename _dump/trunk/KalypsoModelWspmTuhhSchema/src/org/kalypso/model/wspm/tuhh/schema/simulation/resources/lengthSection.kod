@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="Cp1252" standalone="yes"?>
-<Configuration xmlns="http://www.ksp.org/chart/configuration">
+<Configuration xmlns="http://www.ksp.org/chart/factory/configuration">
     <Chart name="ls">
         <title>%TITLE%</title>
         <description>Längsschnitt</description>
