@@ -38,26 +38,14 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.graphics.sld;
+package org.kalypso.ui.editor.sldEditor;
 
-import java.util.List;
-
-import org.kalypsodeegree.graphics.sld.LineColorMapEntry;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.xml.Marshallable;
+import org.kalypsodeegree.graphics.sld.Fill;
 
 /**
  * @author Thomas Jung
  */
-public interface LineColorMap extends Marshallable
+public interface IFillModifyListener
 {
-  public LineColorMapEntry[] getColorMap( );
-
-  public void setColorMap( final List<LineColorMapEntry> colorMap );
-
-  public void addColorMapClass( final LineColorMapEntry colorMapEntry );
-
-  public LineColorMapEntry findEntry( final String string, final Feature feature );
-
-  public void replaceColorMap( List<LineColorMapEntry> colorMapList );
+  public void onFillChanged( final Object source, final Fill fill );
 }
