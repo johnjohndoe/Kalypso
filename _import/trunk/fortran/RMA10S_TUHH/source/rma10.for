@@ -1,4 +1,4 @@
-C     Last change:  EF   23 Aug 2007    4:18 pm
+C     Last change:  WP   29 Aug 2007   11:22 am
 cipk  last update sep 05 2006 add depostion/erosion rates to wave file
 CNis  LAST UPDATE NOV XX 2006 Changes for usage of TUHH capabilities
 CIPK  LAST UPDATE MAR 22 2006 ADD OUTPUT FILE REWIND and KINVIS initialization
@@ -22,7 +22,7 @@ CIPK  NEW ROUTINE jULY 9 2001
       USE BLKSEDMOD
       USE BLKSANMOD
       USE BLKSSTMOD
-	USE WBMMODS ! djw 02/11/04
+      USE WBMMODS ! djw 02/11/04
 !NiS,apr06: add module for new Kalypso-2D-specific calculations
       USE PARAKalyps
 !-
@@ -54,10 +54,6 @@ cipk aug98 add character statement
 
 !nis,jan07: iostat variable for test writing purposes
       INTEGER :: teststat
-!-
-
-!EFa jun07, autoconverge
-!      DIMENSION temp_speccc(3)
 !-
 
       DATA (IREC(I),I=1,40) / 40*0 /

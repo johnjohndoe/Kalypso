@@ -1,4 +1,4 @@
-!Last change:  JAJ  29 Aug 2007    0:17 am
+!Last change:  WP   29 Aug 2007    3:09 pm
 SUBROUTINE COEF1DJunction (NN,NTX)
 
 
@@ -21,8 +21,10 @@ INTEGER :: N1, MR, KK, NA, IMMT, NRX, NCON
 INTEGER :: i, j, k, n, m
 INTEGER :: IA, JA
 
-REAL (KIND = 8) :: SA, CX, R, XHT, dum2, aml
+REAL (KIND = 8) :: SA, CX, R, XHT
+REAL            :: dum2, aml
 REAL (KIND = 8) :: WSEL1, WSELX
+REAL (KIND = 8) :: F
 
 REAL(KIND=8) :: HS, HD, HD1, HDX, DUM1, HS1, HSX
 
@@ -127,7 +129,7 @@ checkNodes2: DO KK=2,NCN
   !CIPK NOV97        F(NA)=XHT*((VEL(3,N1)-VEL(3,NRX))+(AO(N1)-AO(NRX)))
   IF (IDNOPT .LT. 0) THEN
     HD1 = VEL(3,N1)
-    CALL AMF(HS1,HD1,AKP(N1),ADT(N1),ADB(N1),AML,DUM2,0)
+    CALL AMF(HS1, HD1, AKP(N1), ADT(N1), ADB(N1), AML, DUM2, 0)
     WSEL1 = ADO(N1)+HS1
     HDX = VEL(3,NRX)
     CALL AMF(HSX,HDX,AKP(NRX),ADT(NRX),ADB(NRX),AML,DUM2,0)

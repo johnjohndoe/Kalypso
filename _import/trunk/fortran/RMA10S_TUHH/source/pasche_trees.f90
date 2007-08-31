@@ -1,4 +1,4 @@
-!     Last change:  WP   10 Jul 2007   10:24 pm
+!     Last change:  WP   29 Aug 2007   12:17 pm
 !--------------------------------------------------------------------------------------------
 ! This code, pasche_trees.f90,determines the impact of tree vegetation
 ! for hydrodynamic simulations in the library 'Kalypso-2D'.
@@ -54,21 +54,16 @@ USE Blk10mod
 !-
 
 ! Local variables
-!NiS,apr06: changing mnd to MaxP
-!REAL(KIND=4), DIMENSION(1:mnd)	 :: slope        ! Slope of watersurface at node
-!REAL(KIND=4), DIMENSION(1:mnd)  :: eslope       ! Slope of energy level at node
 REAL(KIND=4), DIMENSION(1:MaxP)	:: slope        ! Slope of watersurface at node
 REAL(KIND=4), DIMENSION(1:MaxP) :: eslope       ! Slope of energy level at node
-REAL(KIND=4)			:: lambda_s     ! Mean roughness coefficient at element
+REAL(KIND=8)			                 :: lambda_s     ! Mean roughness coefficient at element
 
 REAL(KIND=8) :: sumvx = 0.0
 REAL(KIND=8) :: sumvy = 0.0
 REAL(KIND=8) :: sumh = 0.0
 REAL(KIND=4) :: sumslope = 0.0
 REAL(KIND=4) :: sumeslope = 0.0
-!NiS,apr06: changing mel to MaxE
-!REAL(KIND=4), DIMENSION(1:mel) :: mslope        ! Mean slope of water surface at element
-!REAL(KIND=4), DIMENSION(1:mel) :: meslope       ! Mean slope of energy level at element
+REAL (KIND = 8) :: NikuradseRoughness
 REAL(KIND=4), DIMENSION(1:MaxE) :: mslope        ! Mean slope of water surface at element
 REAL(KIND=4), DIMENSION(1:MaxE) :: meslope       ! Mean slope of energy level at element
 INTEGER :: i, cycle_number
@@ -140,7 +135,8 @@ all_elements: do i = 1, ne
       cycle all_elements
     end if
 
-    CALL cole (lambda_s, mvxvy(i), mh(i), cniku(i), i)
+    NikuradseRoughness = cniku(i)
+    CALL cole (lambda_s, mvxvy(i), mh(i), NikuradseRoughness , i)
 
     if (mslope(i) < 0.000001) mslope(i) = 0.000001
 
@@ -1011,15 +1007,13 @@ subroutine GET_CWR(I_R,	h_m, a_x, d_p, lambda_s, c_wr)
 implicit none
 
 ! calling variables
-REAL, INTENT(IN) :: I_R        ! Slope
-!NiS,jul06: Consistent data type for passing parameters
-!REAL, INTENT(IN) :: h_m        ! Mean flow depth
-REAL(KIND=8), INTENT(IN) :: h_m ! Mean flow depth
+REAL, INTENT(IN) :: I_R          ! Slope
+REAL (KIND = 8), INTENT(IN) :: h_m ! Mean flow depth
 !-
-REAL, INTENT(IN) :: a_x      	! distance of trees/branches
-REAL, INTENT(IN) :: d_p      	! diameter of trees/branches
-REAL, INTENT(IN) :: lambda_s  	! friction factor by COLBROOK/WHITE
-REAL, INTENT(OUT):: c_wr  	! Drag coefficient for the vegetation
+REAL, INTENT(IN)            :: a_x      ! distance of trees/branches
+REAL, INTENT(IN)            :: d_p      ! diameter of trees/branches
+REAL (KIND = 8), INTENT(IN) :: lambda_s ! friction factor by COLBROOK/WHITE
+REAL, INTENT(OUT)           :: c_wr  	  ! Drag coefficient for the vegetation
 
 ! Local variables
 REAL :: a_y

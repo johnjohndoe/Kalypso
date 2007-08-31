@@ -1,4 +1,4 @@
-C     Last change:  IPK   3 Oct 98    4:15 pm
+C     Last change:  WP   29 Aug 2007    3:16 pm
 
       SUBROUTINE BSLOP(NN)
       USE BLK10MOD
@@ -8,7 +8,8 @@ CIPK AUG05      INCLUDE 'BLK10.COM'
       INCLUDE 'BLKH.COM'
       INCLUDE 'BLKE.COM'
       INCLUDE 'BLKS.COM'
-      REAL*8 WAITX,WAITT,WAITR,WAITTH,WAITRH
+      REAL (KIND = 8) :: WAITX,WAITT,WAITR,WAITTH,WAITRH
+      REAL (KIND = 8) :: F
       COMMON/WATP/ WAITT(7),WAITR(9),WAITTH(16),WAITRH(16)
 C-
       COMMON F(60),
@@ -17,7 +18,7 @@ C-
 C-
       DIMENSION ASWT(8,2)
 C-
-      REAL J11,J12,J21,J22
+      REAL :: J11,J12,J21,J22
 C-
       DATA ASWT/1.,3.,1.,3.,1.,3.,0.,0.,
      +          1.,2.,1.,2.,1.,2.,1.,2./

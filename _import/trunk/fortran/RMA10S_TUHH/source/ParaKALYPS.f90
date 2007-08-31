@@ -1,4 +1,4 @@
-!     Last change:  NIS  16 Aug 2007    6:02 pm
+!     Last change:  WP   29 Aug 2007   11:26 am
 !     Last change:  NIS  15 Aug 2007    4:22 pm
 MODULE ParaKALYPS
 !NiS,mar06:     Parameter for Kalypso-program-structure and for CVFEM-control as far as necessary to implement parts of
@@ -74,17 +74,12 @@ MODULE ParaKALYPS
       REAL                      :: autoindex
       REAL(KIND = 8)            :: deltsum
       REAL,allocatable          :: temp_speccc(:)
-      !-
-      !-
 
       !nis,aug07: for correction purposes in Kalypso-GUI, there must be a correction based on the elements
       !           correction applies for ks-value, diameter of ... and distance between vegetation elements
       REAL (KIND = 8), allocatable :: correctionKS(:), correctionAxAy(:), correctionDp(:)
       REAL (KIND = 8), DIMENSION (1:50, 1:350) :: LineCorrectionKS, LineCorrectionAxAy, LineCorrectionDp
 
-
-      !TODO: delete those fields! or define em where they should be!
-      REAL (KIND = 8), ALLOCATABLE :: temp_vel(:,:), temp_vdot(:,:), temp_vdoto(:,:)
       INTEGER, allocatable:: IsNodeOfElement(:,:)
 
       REAL (KIND = 8), ALLOCATABLE, dimension (:):: lambdaKS, lambdaP, lambdaDunes, lambdaTot

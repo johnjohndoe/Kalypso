@@ -1,4 +1,4 @@
-C     Last change:  JAJ  24 Aug 2007   11:59 pm
+C     Last change:  WP   31 Aug 2007    6:08 pm
 cipk  last update SEP 05 2006 FIX AMASSOUT BUG
 cipk  last update MAY 30 2006 add MASS OUTPUT OPTION
 cipk  last update june 28 2005 add time series option
@@ -153,29 +153,31 @@ CIPK JUN03
         INBNWGT=0
         INSTR=0
         INBNSTR=0
-	  IOWGT=0
-	  IOBNWGT=0
+        IOWGT=0
+        IOBNWGT=0
         ICORDIN=0
 CIPK SEP04
-	  IMESOUT=0
+        IMESOUT=0
 CIPK JUN05
-	  INCSTR=0
-	  INTIMS=0
+        INCSTR=0
+      INTIMS=0
 CIPK MAY06
-	  IMASSOUT=0
+        IMASSOUT=0
 C-
 *...... Open input and output files
 C-
 CIPK JUL01  INPUT FILE NAME NOW IN MAIN PROGRAM
 
-cipk oct99 add iostat test
-        OPEN(LIN,FILE=FNAM0,STATUS='OLD',IOSTAT=IOERR)
+cipk oct99 add iostat test ,STATUS='OLD'
+        WRITE(*,*) ioerr
+        OPEN(LIN,FILE=FNAM0,IOSTAT=IOERR)
+        WRITE(*,*) ioerr
         IF(IOERR .NE. 0) THEN
           CALL IOSMSG(IOERR)
 CIPK SEP04 CREATE ERROR FILE
           CLOSE(75)
           OPEN(75,FILE='ERROR.OUT')
-	    WRITE(75,*) 'ERROR FOR FILE',FNAM0
+          WRITE(75,*) 'ERROR FOR FILE',FNAM0
           STOP
         ENDIF
 
@@ -243,7 +245,7 @@ cipk sep99 add test for blank initial characters
 CIPK SEP04
           FNAMMES=FNAM(1:LNNAM)// 'MESS.OUT'
           IMESOUT=75
-		  OPEN(IMESOUT,FILE=FNAMMES,STATUS='UNKNOWN')
+          OPEN(IMESOUT,FILE=FNAMMES,STATUS='UNKNOWN')
           CALL ZVRS(0)
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -1060,16 +1062,16 @@ c
       do 10  i=1,n
          idx = i
          if(iswt .eq. 0) then
-	     if (str(idx:idx) .eq.  '.')  then
+           if (str(idx:idx) .eq.  '.')  then
               lenstr = idx-1
               return
-	     endif
-	   endif
-	   if(str(idx:idx) .eq. ' ') then
+           endif
+         endif
+         if(str(idx:idx) .eq. ' ') then
             lenstr = idx-1
             return
          endif
-10    continue
+  10  continue
       return
       end
 

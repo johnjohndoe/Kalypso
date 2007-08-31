@@ -8,6 +8,8 @@ del *.obj
 del *.map
 del *.k
 del *.wp
+del *.ydg
+del *.exe
 cd..
 cd objs
 del *.obj

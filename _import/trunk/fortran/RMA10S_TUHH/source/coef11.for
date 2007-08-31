@@ -19,7 +19,7 @@ CIPK  LAST UPDATE APRIL 27 1999 Fix to use mat instead of nr for material type t
 cipk  last update Jan 6 1999 initialize AKE correctly
 cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
-C     Last change:  WP   28 Aug 2007   11:15 am
+C     Last change:  WP   29 Aug 2007    3:00 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 CIPK  LAST UPDATED MAY 1 1996
 CIPK LAST UPDATED SEP 7 1995
@@ -40,17 +40,16 @@ CIPK LAST UPDATED SEP 7 1995
 !           passing the value directly as vel(3,n) (real kind=8). In this subroutine the vel(3,n) value is
 !           stored in a local copy that is implicitly real, kind=4. All the temporary values are now declared
 !           also as real, kind=8.
-      REAL(KIND=8) :: HS, HD, HD1, HDX, DUM1, HS1, HSX
+      REAL (KIND = 8) :: HS, HD, HD1, HDX, DUM1, HS1, HSX
 !-
 
 !nis,may07: Adding variables for use of resistance calculation with wetted perimeter
-      REAL(KIND=8) :: Perim, sslop1, sslop2
+      REAL (KIND = 8) :: Perim, sslop1, sslop2
 !-
 
 C
-!NiS,jul06: declaring waterdepth for proper parameter-passing
-      REAL (KIND=8) :: h
-!-
+      REAL (KIND = 8) :: h, rhy
+      REAL (KIND = 8) :: F
 CIPK AUG05      INCLUDE 'BLK10.COM'
 CIPK AUG05      INCLUDE 'BLK11.COM'
       INCLUDE 'BLKE.COM'

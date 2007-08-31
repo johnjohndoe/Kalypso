@@ -1,4 +1,4 @@
-C     Last change:  NIS  16 Aug 2007    7:24 pm
+C     Last change:  WP   29 Aug 2007    3:08 pm
 cipk  last update nov 28 2006 allow for all 1-d control structure options
       SUBROUTINE CSTRC(NN)
       USE BLK10MOD
@@ -11,6 +11,7 @@ CIPK AUG05      INCLUDE 'BLK10.COM'
 C-
       INCLUDE 'BLKE.COM'
 
+      REAL (KIND = 8) :: F
       COMMON F(80)
 
       DIMENSION U(8)

@@ -1,4 +1,4 @@
-!     Last change:  WP   29 Aug 2007   10:17 am
+!     Last change:  WP   29 Aug 2007   12:13 pm
 !-----------------------------------------------------------------------
 ! This code, roughness.f90, computes the resistance factor lambda according
 ! the Darcy-Weissbahc-resistance law in the library 'Kalypso-2D'.
@@ -53,10 +53,11 @@ IMPLICIT none
 
 
 ! Calling variables
-REAL, INTENT(OUT)                              :: lambda
-REAL (KIND = 8), INTENT(OUT)                   :: lambdasand, lambdawald, lambdabedform
+REAL (kind = 8), INTENT(OUT)                   :: lambda
+REAL (kind = 8), INTENT(OUT)                   :: lambdasand, lambdawald, lambdabedform
 INTEGER, INTENT(IN)                            :: morph, nn, mel
-REAL, INTENT(IN)                               :: vecq, ks, a, dp
+REAL, INTENT(IN)                               :: vecq
+real (kind = 8), INTENT(IN)                    :: ks, a, dp
 REAL(KIND=8)                                   :: h
 REAL(KIND=4), DIMENSION(1:mel,1:4), INTENT(IN) :: bedform
 REAL(KIND=4), INTENT(INOUT)                    :: c_wr
@@ -121,14 +122,15 @@ SUBROUTINE cole (lambda, vecq, h, ks, nn)
 implicit none
 
 ! Calling variables
-REAL, INTENT(OUT)        :: lambda   ! calculated roughness coefficient
-REAL, INTENT(IN)         :: vecq, ks ! velocity, ks-value
-REAL(KIND=8), INTENT(IN) :: h        ! flow depth, hydraulic radius
+REAL (kind = 8), INTENT(OUT) :: lambda ! calculated roughness coefficient
+REAL (kind = 8), INTENT(IN)  :: ks     ! ks-value
+REAL, INTENT(IN)             :: vecq   ! velocity
+REAL(KIND=8), INTENT(IN)     :: h      ! flow depth, hydraulic radius
 !-
-INTEGER, INTENT(IN) 	:: nn           ! active element
+INTEGER, INTENT(IN) 	        :: nn     ! active element
 
 ! Local variables
-REAL 			:: re, lalt, dhy
+REAL 			                     :: re, lalt, dhy
 
 ! kinematic viskosity at 10 C
 REAL, PARAMETER :: nue = 1.3e-06
@@ -229,10 +231,11 @@ implicit none
 ! Calling variables
 !NiS,jul06: Consistent variable types!
 !REAL, INTENT(IN) 	:: h, a, dp, cwr
-REAL, INTENT(IN) 	:: a, dp, cwr
-REAL(KIND=8), INTENT(IN):: h
+REAL (kind = 8), INTENT(IN) 	 :: a, dp
+REAL, INTENT(IN) 	            :: cwr
+REAL(KIND=8), INTENT(IN)      :: h
 !-
-REAL, INTENT(OUT) 	:: lambda
+REAL (kind = 8), INTENT(OUT) 	:: lambda
 
 ! Local variables
 REAL :: ax, ay, dur
@@ -282,10 +285,9 @@ implicit none
 ! Calling variables
 INTEGER, INTENT(IN) 				:: nn, mel
 !NiS,jul06: Consistent variable types!
-!REAL, INTENT(IN)                                :: h
 REAL (KIND=8), INTENT(IN)                       :: h
 !-
-REAL, INTENT(OUT)   				:: lambdasohle
+REAL (kind = 8), INTENT(OUT)   				             :: lambdasohle
 REAL(KIND=4), DIMENSION(1:mel,1:4), INTENT(IN) 	:: bedform
 
 ! Local variables

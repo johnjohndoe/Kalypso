@@ -1,4 +1,4 @@
-!     Last change:  JAJ  28 Aug 2007   11:26 pm
+!     Last change:  WP   29 Aug 2007   12:08 pm
 !-----------------------------------------------------------------------
 ! This code, data_in.f90, performs reading and validation of model
 ! inputa data in the library 'Kalypso-2D'.
@@ -145,7 +145,7 @@ first_call: IF (ncall.le.0) THEN
     !checking continuity line assignments
     DO l = 1, nn
       !ERROR
-      IF (line (j, l) .eq. 0) call ErrorMessageAndStop(1401)
+      IF (line (j, l) .eq. 0) call ErrorMessageAndStop(1401, j)
 
     END DO
                                                                         
@@ -803,9 +803,6 @@ countloop: DO i = 1, maxc
   !jump over negative node references (they are deactivated!)
   IF (jj <= 0) cycle countloop
 
-  !nis,testing
-  WRITE(*,*) 'mist = ', mist
-
   !?What is mist?
   IF (jj == mist) cycle countloop
 
@@ -813,9 +810,6 @@ countloop: DO i = 1, maxc
   nad = nad+1
 END DO countloop
                                                                         
-!nis, testing
-WRITE(*,*) 'nr = ', nr
-
 IF (nad - nadm (nr) < 0) then
   nadm (nr) = nad
   icol (nr, 1) = m

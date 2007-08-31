@@ -1,4 +1,4 @@
-!     Last change:  JAJ  26 Aug 2007   10:54 pm
+!     Last change:  WP   29 Aug 2007   12:21 pm
       SUBROUTINE QGENtrans (TLine,TNode,QREQ,THET, TDep)
 
       !nis,jan07: Overgiven variables
@@ -21,12 +21,14 @@
       REAL          :: amec (350), Conveyance (350), dxl (350), specdischarge(350)
 
       !real variables 
-      REAL          :: lambda, cwr_line
+      REAL          :: cwr_line
+      REAL (KIND=8) :: lambda, NikuradseRoughness
       REAL (KIND=8) :: tmpvx,tmpvy,tmpdepth,tmpwl
       REAL (KIND=8) :: fliesstiefe, waspi
       REAL (KIND=8) :: d1,d3,d1v,d3v,d2_kind8
       !nis,aug07: dummy parameters for passing
       REAL (KIND=8), DIMENSION(1:3) :: dummy
+      REAL (KIND = 8) :: NullVal
       REAL          :: d2
       REAL          :: vecq, vest
       REAL          :: cos_in_grad, sin_in_grad
@@ -52,6 +54,8 @@
 !nis,jan07,test output file handling
 !filename = 'Kopplungsoutput.txt'
 !-
+
+NullVal = 0.0
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!
 !initialization block
@@ -170,7 +174,8 @@ ThroughNodesOfLine: DO k = 1, maxL, 2
       cwr_line = 1.0
 
       !get lambda
-      CALL darcy (lambda, vecq, di(0), ort(lineimat(TLine, k+1), 15), 0., 0., 0,  0, gl_bedform, mel, cwr_line, 2, &
+      NikuradseRoughness = ort(lineimat(TLine, k+1), 15)
+      CALL darcy (lambda, vecq, di(0), NikuradseRoughness, NullVal, NullVal, 0,  0, gl_bedform, mel, cwr_line, 2, &
      &            dummy(1), dummy(2), dummy(3))
 
       !Correct roughness, if there is a material (imat) factor (when marsh-option is active)

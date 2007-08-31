@@ -27,7 +27,7 @@ cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
 cipk  last update Jan 21 1998
 cipk  last update Dec 16 1997
-C     Last change:  EF   28 Aug 2007    3:06 pm
+C     Last change:  WP   29 Aug 2007    3:06 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 cipk  last update Jan 22 1997
 cipk  last update Oct 1 1996 add new formulations for EXX and EYY
@@ -83,9 +83,12 @@ cipk jun05
 CIPK AUG05      INCLUDE 'BLKSUB.COM'
 c      INCLUDE 'RKEP.COM'
 
-      REAL*8 WAITX,WAITT,WAITR,WAITTH,WAITRH
-      REAL*8 DHDX,DHDZ,DAODX,DAODZ,H,AZER,XHT,F,GHC,FRN,FRNX,FRNZ
-      REAL*8 TEMP,HP,HP1,DERR
+      REAL (kind = 8) :: WAITX,WAITT,WAITR,WAITTH,WAITRH
+
+      REAL (kind = 8) :: DHDX,DHDZ,DAODX,DAODZ,H,AZER,XHT
+      REAL (kind = 8) :: GHC,F,FRN,FRNX,FRNZ
+
+      REAL (kind = 8) :: TEMP,HP,HP1,DERR
 
       COMMON /WATP/ WAITT(7),WAITR(9),WAITTH(16),WAITRH(16)
 C-

@@ -1,4 +1,4 @@
-!     Last change:  EF   24 Aug 2007    9:32 am
+ !     Last change:  WP   29 Aug 2007   11:47 am
  SUBROUTINE autoconverge(noc)
 
  USE blk10
@@ -174,8 +174,7 @@
               temp_speccc(2) = speccc(i,7)
               temp_speccc(3) = speccc(i,8)
 
-              call hgen(specccfut(i,4),i,hhh,hhh2,specccfut(i,5),&
-     &             temp_speccc(1),temp_speccc(2),temp_speccc(3))
+              call hgen (0, i, hhh, hhh2, 0, temp_speccc)
 
               WRITE(*,*)'neue Wasserstandrandbedingung ',hhh,&
      &                  ' an Kontinuitaetslinie ',i
@@ -195,8 +194,7 @@
               temp_speccc(2) = speccc(i,7)
               temp_speccc(3) = speccc(i,8)
 
-              call qgen(i, qqq,qqqdir,temp_speccc(1),temp_speccc(2),&
-     &             temp_speccc(3))
+              call qgen(i, qqq, qqqdir, temp_speccc)
 
               WRITE(*,*)'neue Durchflussrandbedingung  ',qqq,&
      &                  ' an Kontinuitaetslinie ',i
@@ -315,8 +313,7 @@
                     temp_speccc(2) = speccc(i,7)
                     temp_speccc(3) = speccc(i,8)
 
-                    call hgen(specccfut(i,4),i,hhh,hhh2,specccfut(i,5),&
-     &                   temp_speccc(1),temp_speccc(2),temp_speccc(3))
+                    call hgen (0, i, hhh, hhh2, 0, temp_speccc)
 
                     WRITE(*,*)'neue Wasserstandrandbedingung ',hhh,&
      &                        ' an Kontinuitaetslinie ',i
@@ -336,8 +333,7 @@
                     temp_speccc(2) = speccc(i,7)
                     temp_speccc(3) = speccc(i,8)
 
-                    call qgen(i, qqq,qqqdir,temp_speccc(1),&
-     &                   temp_speccc(2),temp_speccc(3))
+                    call qgen(i, qqq, qqqdir, temp_speccc)
 
                     WRITE(*,*)'neue Durchflussrandbedingung  ',qqq,&
      &                        ' an Kontinuitaetslinie ',i
@@ -422,8 +418,7 @@
                       temp_speccc(2) = speccc(i,7)
                       temp_speccc(3) = speccc(i,8)
 
-                      call hgen(specccfut(i,4),i,hhh,hhh2,specccfut(i,5)&
-     &                    ,temp_speccc(1),temp_speccc(2),temp_speccc(3))
+                      call hgen (0, i, hhh, hhh2, 0, temp_speccc)
 
                  WRITE(*,*)'neue Wasserstandrandbedingung ',hhh,&
      &                     ' an Kontinuitaetslinie ',i
@@ -443,8 +438,7 @@
                  temp_speccc(2) = speccc(i,7)
                  temp_speccc(3) = speccc(i,8)
 
-                 call qgen(i, qqq,qqqdir,temp_speccc(1),temp_speccc(2),&
-     &                temp_speccc(3))
+                 call qgen(i, qqq, qqqdir, temp_speccc)
 
                  WRITE(*,*)'neue Durchflussrandbedingung  ',qqq,&
      &                     ' an Kontinuitaetslinie ',i
@@ -676,8 +670,7 @@
               WRITE(*,*)'neue Wasserstandrandbedingung ',hhh,&
      &                  ' an Kontinuitaetslinie ',i
 
-              call hgen(speccc(i,4),i,hhh,hhh2,speccc(i,5),&
-     &             temp_speccc(1),temp_speccc(2),temp_speccc(3))
+              call hgen (0, i, hhh, hhh2, 0, temp_speccc)
 
               WRITE(789,'(60x,i3,2x,2(f7.2,2x))')i,hhh,hhh2
 
@@ -694,8 +687,7 @@
               temp_speccc(2) = speccc(i,7)
               temp_speccc(3) = speccc(i,8)
 
-              call qgen(i, qqq,qqqdir,temp_speccc(1),temp_speccc(2),&
-     &             temp_speccc(3))
+              call qgen(i, qqq, qqqdir, temp_speccc)
 
               WRITE(*,*)'neue Durchflussrandbedingung  ',qqq,&
      &                  ' an Kontinuitaetslinie ',i
@@ -809,8 +801,7 @@
                     temp_speccc(2) = speccc(i,7)
                     temp_speccc(3) = speccc(i,8)
 
-                    call hgen(speccc(i,4),i,hhh,hhh2,speccc(i,5),      &
-     &                   temp_speccc(1),temp_speccc(2),temp_speccc(3))
+                    call hgen (0, i, hhh, hhh2, 0, temp_speccc)
 
                     WRITE(*,*)'neue Wasserstandrandbedingung ',hhh,&
      &                        ' an Kontinuitaetslinie ',i
@@ -830,8 +821,7 @@
                     temp_speccc(2) = speccc(i,7)
                     temp_speccc(3) = speccc(i,8)
 
-                    call qgen(i,qqq,qqqdir,temp_speccc(1),temp_speccc(2)&
-     &                   ,temp_speccc(3))
+                    call qgen(i, qqq, qqqdir, temp_speccc)
 
                     WRITE(*,*)'neue Durchflussrandbedingung ',qqq,&
      &                        ' an Kontinuitaetslinie ',i
@@ -915,8 +905,7 @@
                   temp_speccc(2) = speccc(i,7)
                   temp_speccc(3) = speccc(i,8)
 
-                  call hgen(speccc(i,4),i,hhh,hhh2,speccc(i,5),     &
-     &                 temp_speccc(1),temp_speccc(2),temp_speccc(3))
+                  call hgen (0, i, hhh, hhh2, 0, temp_speccc)
 
                   WRITE(*,*)'neue Wasserstandrandbedingung ',hhh,&
      &                      ' an Kontinuitaetslinie ',i
@@ -936,8 +925,7 @@
                   temp_speccc(2) = speccc(i,7)
                   temp_speccc(3) = speccc(i,8)
 
-                  call qgen(i,qqq,qqqdir,temp_speccc(1),temp_speccc(2),&
-     &                 temp_speccc(3))
+                  call qgen(i, qqq, qqqdir, temp_speccc)
 
                   WRITE(*,*)'neue Durchflussrandbedingung  ',qqq,&
      &                     ' an Kontinuitaetslinie ',i

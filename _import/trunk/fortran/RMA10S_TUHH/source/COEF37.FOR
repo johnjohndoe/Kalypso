@@ -2,7 +2,7 @@ CIPK  LAST UPDATE APR 20 2001 MOVE INITIALIZATION OF VOLS TO LATER ON
 CIPK  LAST UPDATE MAR 5 2001 ADD DRAG
 cipk  last change Aug 2 2000 initialize epsxz etc.
 cipk  last update Nov 18 1999 clean up test for DFCT
-C     Last change:  IPK   5 Oct 98    3:22 pm
+C     Last change:  WP   29 Aug 2007    3:07 pm
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
 cipk  last update Feb 4 1998 allow for vscale from HCN input
 CIPK  LAST UPDATE NOV 21 1997
@@ -19,6 +19,7 @@ C-
 cycw aug94 add double precision salt
       REAL*8 S
       REAL J11,J12,J13,J21,J22,J23,J31,J32,J33
+      REAL (KIND = 8) :: F
 C-
 !NiS,jul06: Consistent data types for passing parameters
       REAL(KIND=8) :: h

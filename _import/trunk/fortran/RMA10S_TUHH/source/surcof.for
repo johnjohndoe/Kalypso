@@ -12,7 +12,7 @@ CIPK  LAST UPDATE MAR 02 2001 ADD VARIABLE MANNING N
 cipk  last update Dec 8 1999 add computation of element areas for 2-d surface elts
 CIPK  LAST UPDATE JAN12 1999 ADD LOGIC FOR 2DV JUNCTIONS
 CIPK  LAST UPDATE NOVEMBER 11 1998
-C     Last change:  IPK   5 Oct 98    2:15 pm
+C     Last change:  WP   29 Aug 2007    3:45 pm
 cipk last update Aug 5 1998 fix heat budget term
 CIPK LAST UPDATED SPE 8 1995
       SUBROUTINE SURCOF(NN,NTX)
@@ -34,7 +34,9 @@ C-
 !-
 
       REAL*8 WAITX,WAITT,WAITR,WAITTH,WAITRH
-      REAL*8 SALT,xl,yl
+      REAL*8 SALT
+      real :: xl, yl
+      REAL (KIND = 8) :: F
       COMMON/WATP/ WAITT(7),WAITR(9),WAITTH(16),WAITRH(16)
 C-
       COMMON/BLKC/ ATEMP(7,3),WAIT(7),AFACT(4),HFACT(4),SLOAD(2)

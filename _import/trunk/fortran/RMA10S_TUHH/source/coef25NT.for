@@ -27,7 +27,7 @@ cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
 cipk  last update Jan 21 1998
 cipk  last update Dec 16 1997
-C     Last change:  EF   28 Aug 2007   10:35 am
+C     Last change:  WP   29 Aug 2007    3:02 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 cipk  last update Jan 22 1997
 cipk  last update Oct 1 1996 add new formulations for EXX and EYY
@@ -42,21 +42,10 @@ CIPK  LAST UPDATED SEP 7 1995
       USE BLKSSTMOD
       USE BLKSEDMOD
       USE BLKSANMOD
-!NiS,apr06: adding module for DARCY-WEISBACH friction
       USE PARAKalyps
-!-
       SAVE
 
-!NiS,jul06: There's a problem with the data types while calling amf. In other subroutines amf is called by
-!           passing the value directly as vel(3,n) (real kind=8). In this subroutine the vel(3,n) value is
-!           stored in a local copy that is implicitly real, kind=4. All the temporary values are now declared
-!           also as real, kind=8.
-      REAL(KIND=8) :: HS, HM, DUM1
-!-
-
-!EFa aug07, stage-flow-boundaries
-      REAL(KIND=8) :: hm1
-!-
+      REAL (KIND = 8) :: HS, HM, DUM1, hm1
 
 C
 
@@ -85,7 +74,7 @@ CIPK AUG05      INCLUDE 'BLKSUB.COM'
 c      INCLUDE 'RKEP.COM'
 
       REAL*8 WAITX,WAITT,WAITR,WAITTH,WAITRH
-      REAL*8 DHDX,DHDZ,DAODX,DAODZ,H,AZER,XHT,F,GHC,FRN,FRNX,FRNZ
+      REAL*8 DHDX,DHDZ,DAODX,DAODZ,H,AZER,XHT,GHC,F,FRN,FRNX,FRNZ
       REAL*8 TEMP,HP,HP1,DERR
 
       COMMON /WATP/ WAITT(7),WAITR(9),WAITTH(16),WAITRH(16)

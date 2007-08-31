@@ -1,4 +1,4 @@
-C     Last change:  JAJ  26 Aug 2007    8:57 pm
+C     Last change:  WP   29 Aug 2007   12:19 pm
 cipk  last update feb 09 2001 allow for zero length cc lines
 
       SUBROUTINE QGEN(J,QREQ,THET,QQAL)
@@ -26,20 +26,20 @@ C-
 !nis,sep06: new variables
       REAL     :: amec (350), Conveyance (350), dxl (350)
       !nis,aug07: dummy parameters for passing
-      REAL (KIND=8) :: dummy (1:3)
-      real          :: dum1
+      REAL (KIND = 8) :: dummy (1:3), NullVal
+      real            :: dum1
 
 !nis,sep06: changes for good variable passing
-!      REAL     :: lambda, betspeck, betd, fliesstiefe
-      REAL         :: lambda, betspeck, betd
+      REAL (KIND = 8) :: lambda
+      real            :: betspeck, betd
       !nis,nov06: cwr_line for intentinout-property of Darcy-subroutine
-      REAL         :: cwr_line
+      REAL            :: cwr_line
       !-
-      REAL(KIND=8) :: fliesstiefe, waspi
+      REAL (KIND = 8) :: fliesstiefe, waspi
       !nis,nov06: For proper passing d2 must be KIND=4
       !REAL(KIND=8) :: d1,d2,d3,d1v,d3v
-      REAL(KIND=8) :: d1,d3,d1v,d3v,d2_kind8
-      REAL         :: d2
+      REAL (KIND = 8) :: d1,d3,d1v,d3v,d2_kind8
+      REAL            :: d2
       !-
 !-
 
@@ -48,7 +48,7 @@ C-
       INTEGER  :: maxL
       REAL (KIND = 8) :: xl, xlstrike
       REAL (KIND = 8), DIMENSION(0:2) :: weight, di
-      real     :: LineCniku
+      real (KIND = 8) :: LineCniku
 !-
 
 !nis,sep06: controloutputfile iostat, controloutput declarations
@@ -72,6 +72,8 @@ C-
       open (999,filename,iostat = iostaterror)
       if (iostaterror.ne.0) STOP 'file does not work'
       !------------------------------------------------------------
+
+      NullVal = 0.0
 
 C-
 C...... Calculate total projected area
@@ -472,7 +474,7 @@ CIPK OCT01
                 !get lambda
                 CALL darcy (lambda, vecq, di(0),
      +            LineCniku,
-     +            0., 0., 0,  0, gl_bedform, mel, cwr_line, 2,
+     +            NullVal, NullVal, 0,  0, gl_bedform, mel, cwr_line, 2,
      +            dummy(1), dummy(2), dummy(3))
                 !Correct roughness, if there is a material (imat) factor (when marsh-option is active)
                 if (idnopt /= 0 .and. d1 < akp(na) * adb(na)) then

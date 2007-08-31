@@ -1,4 +1,4 @@
-!     Last change:  EF   17 Jul 2007   12:02 pm
+!     Last change:  WP   29 Aug 2007   11:27 am
 ! __________________________________________________________________________________________________________
 
 
@@ -34,8 +34,9 @@ subroutine autoboundaryh(hfin,hini,h2fin,h2ini,tfin,ttt,curve,hhh,hhh2)
 ! Data block
 
 INTEGER,INTENT(IN) :: curve
-REAL,INTENT(IN) :: hfin,hini,h2fin,h2ini,tfin,ttt
-REAL,INTENT (out):: hhh,hhh2
+REAL,INTENT(IN)    :: hfin,hini,h2fin,h2ini,tfin
+REAL (KIND = 8)    :: ttt
+REAL,INTENT (out)  :: hhh,hhh2
 
 REAL :: a,b,hinii,hfini,h2fini,h2inii,tini,tttn
 
@@ -108,8 +109,9 @@ subroutine autoboundaryQ(qfin,qini,qdirfin,qdirini,tfin,ttt,curve,qqq,qqqdir)
 ! Data block
 
 INTEGER,INTENT(IN) :: curve
-REAL,INTENT(IN) :: qfin,qini,qdirfin,qdirini,tfin,ttt
-REAL,INTENT (out):: qqq,qqqdir
+REAL,INTENT(IN)    :: qfin,qini,qdirfin,qdirini,tfin
+REAL (KIND = 8)    :: ttt
+REAL,INTENT (out)  :: qqq,qqqdir
 
 REAL :: a,b,tini,tttn
 

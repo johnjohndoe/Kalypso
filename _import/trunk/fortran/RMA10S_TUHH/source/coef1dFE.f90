@@ -1,4 +1,4 @@
-!Last change:  WP   27 Aug 2007    7:25 pm
+!Last change:  WP   29 Aug 2007    3:05 pm
 
 !****************************************************************
 !1D subroutine for calculation of elements, whose corner nodes are described with
@@ -27,114 +27,115 @@ USE PARAFlow1dFE
 SAVE
 
 !nis,aug07: for refactoring purposes
-REAL (KIND=8) :: hs1, hd1, hsx, hdx
+REAL (KIND = 8) :: hs1, hd1, hsx, hdx, hs, hd
+REAL (KIND = 8) :: F
 
 !nis,feb07: Some definitions for internal use concerning the equation upsetting
-REAL (KIND=8) :: aint1(1:4),     aint2(1:4)
-REAL (KIND=8) :: inta1(1:4),     inta2(1:4)
-real (KIND=8) :: daintdh1(1:4),  daintdh2(1:4)
-REAL (KIND=8) :: d2aintdh1(1:4), d2aintdh2(1:4)
-REAL (KIND=8) :: qschint1(1:4),  qschint2(1:4)
-REAL (KIND=8) :: dqsintdh1(1:4), dqsintdh2(1:4)
-real (KIND=8) :: d2qsidh1(1:4),  d2qsidh2(1:4)
-REAL (KIND=8) :: IntahRand
-REAL (KIND=8) :: sbot
+REAL (KIND = 8) :: aint1(1:4),     aint2(1:4)
+REAL (KIND = 8) :: inta1(1:4),     inta2(1:4)
+real (KIND = 8) :: daintdh1(1:4),  daintdh2(1:4)
+REAL (KIND = 8) :: d2aintdh1(1:4), d2aintdh2(1:4)
+REAL (KIND = 8) :: qschint1(1:4),  qschint2(1:4)
+REAL (KIND = 8) :: dqsintdh1(1:4), dqsintdh2(1:4)
+real (KIND = 8) :: d2qsidh1(1:4),  d2qsidh2(1:4)
+REAL (KIND = 8) :: IntahRand
+REAL (KIND = 8) :: sbot
 
 INTEGER :: i, j, k
 !new variables
 !BC-values
-REAL (KIND=8) :: zsBC, dzsdhBC, fzsBC, dfzsdhBC
+REAL (KIND = 8) :: zsBC, dzsdhBC, fzsBC, dfzsdhBC
 
-REAL (KIND=8) :: Fint1(1:4), Fint2(1:4)
-REAL (KIND=8) :: dFintdh1(1:4), dFintdh2(1:4)
-REAL (KIND=8) :: d2Fintdh1(1:4), d2Fintdh2(1:4)
-REAL (KIND=8) :: dFintdx1(1:4), dFintdx2(1:4)
-REAL (KIND=8) :: d2Fintdxdh1(1:4), d2Fintdxdh2(1:4)
+REAL (KIND = 8) :: Fint1(1:4), Fint2(1:4)
+REAL (KIND = 8) :: dFintdh1(1:4), dFintdh2(1:4)
+REAL (KIND = 8) :: d2Fintdh1(1:4), d2Fintdh2(1:4)
+REAL (KIND = 8) :: dFintdx1(1:4), dFintdx2(1:4)
+REAL (KIND = 8) :: d2Fintdxdh1(1:4), d2Fintdxdh2(1:4)
 
-REAL (KIND=8) :: daintdx1(1:4), daintdx2(1:4)
-REAL (KIND=8) :: d2aintdxdh1(1:4), d2aintdxdh2(1:4)
+REAL (KIND = 8) :: daintdx1(1:4), daintdx2(1:4)
+REAL (KIND = 8) :: d2aintdxdh1(1:4), d2aintdxdh2(1:4)
 
-REAL (KIND=8) :: yps(1:4)
-REAL (KIND=8) :: dypsdh(1:4)
-REAL (KIND=8) :: d2ypsdh(1:4)
-REAL (KIND=8) :: dypsdx(1:4)
-REAL (KIND=8) :: d2ypsdhdx(1:4)
+REAL (KIND = 8) :: yps(1:4)
+REAL (KIND = 8) :: dypsdh(1:4)
+REAL (KIND = 8) :: d2ypsdh(1:4)
+REAL (KIND = 8) :: dypsdx(1:4)
+REAL (KIND = 8) :: d2ypsdhdx(1:4)
 
-REAL (KIND=8) :: zsint(1:4)
-REAL (KIND=8) :: dzsintdh(1:4)
-REAL (KIND=8) :: d2zsintdh(1:4)
-REAL (KIND=8) :: d2sintdx(1:4)
-REAL (KIND=8) :: d2zsintdhdx(1:4)
+REAL (KIND = 8) :: zsint(1:4)
+REAL (KIND = 8) :: dzsintdh(1:4)
+REAL (KIND = 8) :: d2zsintdh(1:4)
+REAL (KIND = 8) :: d2sintdx(1:4)
+REAL (KIND = 8) :: d2zsintdhdx(1:4)
 !end of new variables
 
-REAL(KIND=8) :: froudeint(1:4)
-REAL(KIND=8) :: vflowint(1:4)                
-REAL(KIND=8) :: dvintdx(1:4)                 
-REAL(KIND=8) :: dvintdt(1:4)                 
-REAL(KIND=8) :: hhint(1:4)                   
-REAL(KIND=8) :: dhhintdx(1:4)                
-REAL(KIND=8) :: dhintdt(1:4)                 
-REAL(KIND=8) :: dqintdt(1:4)
-REAL(KIND=8) :: areaint(1:4)                 
-REAL(KIND=8) :: dareaintdh(1:4)              
-REAL(KIND=8) :: d2areaintdh(1:4)             
-REAL(KIND=8) :: Intareaint(1:4)
-REAL(KIND=8) :: daintdx(1:4)
-REAL(KIND=8) :: d2aintdx(1:4)                
-REAL(KIND=8) :: d2aidhdx(1:4)                
-REAL(KIND=8) :: daintdt(1:4)                 
-REAL(KIND=8) :: qschint(1:4)                 
-REAL(KIND=8) :: dqsintdh(1:4)                
-REAL(KIND=8) :: d2qsidh(1:4)                 
-REAL(KIND=8) :: dqsintdx(1:4)
-REAL(KIND=8) :: d2qsidhdx(1:4)               
-REAL(KIND=8) :: s0schint(1:4)
-REAL(KIND=8) :: sfwicint(1:4)
-REAL(KIND=8) :: sfint(1:4)                   
-REAL(KIND=8) :: dsfintdh1(1:4)               
-REAL(KIND=8) :: beiint(1:4)                  
-REAL(KIND=8) :: dbeiintdh(1:4)               
-REAL(KIND=8) :: d2beiintdh(1:4)              
-REAL(KIND=8) :: dbeiintdx(1:4)               
-REAL(KIND=8) :: d2beiintdhdx(1:4)            
+REAL (KIND = 8) :: froudeint(1:4)
+REAL (KIND = 8) :: vflowint(1:4)
+REAL (KIND = 8) :: dvintdx(1:4)
+REAL (KIND = 8) :: dvintdt(1:4)
+REAL (KIND = 8) :: hhint(1:4)
+REAL (KIND = 8) :: dhhintdx(1:4)
+REAL (KIND = 8) :: dhintdt(1:4)
+REAL (KIND = 8) :: dqintdt(1:4)
+REAL (KIND = 8) :: areaint(1:4)
+REAL (KIND = 8) :: dareaintdh(1:4)
+REAL (KIND = 8) :: d2areaintdh(1:4)
+REAL (KIND = 8) :: Intareaint(1:4)
+REAL (KIND = 8) :: daintdx(1:4)
+REAL (KIND = 8) :: d2aintdx(1:4)
+REAL (KIND = 8) :: d2aidhdx(1:4)
+REAL (KIND = 8) :: daintdt(1:4)
+REAL (KIND = 8) :: qschint(1:4)
+REAL (KIND = 8) :: dqsintdh(1:4)
+REAL (KIND = 8) :: d2qsidh(1:4)
+REAL (KIND = 8) :: dqsintdx(1:4)
+REAL (KIND = 8) :: d2qsidhdx(1:4)
+REAL (KIND = 8) :: s0schint(1:4)
+REAL (KIND = 8) :: sfwicint(1:4)
+REAL (KIND = 8) :: sfint(1:4)
+REAL (KIND = 8) :: dsfintdh1(1:4)
+REAL (KIND = 8) :: beiint(1:4)
+REAL (KIND = 8) :: dbeiintdh(1:4)
+REAL (KIND = 8) :: d2beiintdh(1:4)
+REAL (KIND = 8) :: dbeiintdx(1:4)
+REAL (KIND = 8) :: d2beiintdhdx(1:4)
 
-REAL(KIND=8) :: dhdtaltzs(1:2)
-REAL(KIND=8) :: hhalt(1:2)
-REAL(KIND=8) :: dqdtaltzs(1:2)
-REAL(KIND=8) :: dvdtaltzs(1:2)
+REAL (KIND = 8) :: dhdtaltzs(1:2)
+REAL (KIND = 8) :: hhalt(1:2)
+REAL (KIND = 8) :: dqdtaltzs(1:2)
+REAL (KIND = 8) :: dvdtaltzs(1:2)
 
-REAL(KIND=8) :: pdif(1:2,0:3)
-REAL(KIND=8) :: pbei(1:2,0:12)
-REAL(KIND=8) :: Intah(1:2)
-REAL(KIND=8) :: d2ahdh(1:2)
-REAL(KIND=8) :: dqhdh(1:2)
-REAL(KIND=8) :: d2qhdh(1:2)
-REAL(KIND=8) :: sfnod(1:2)
-REAL(KIND=8) :: sfwicht(1:2)
-REAL(KIND=8) :: hdif(1:2)
-REAL(KIND=8) :: bei(1:2)
-REAL(KIND=8) :: froude(1:2)
-REAL(KIND=8) :: dbeidh(1:2)
-REAL(KIND=8) :: d2beidh(1:2)
-REAL(KIND=8) :: dbeizdh(1:2)
-REAL(KIND=8) :: d2beizdh(1:2)
-REAL(KIND=8) :: dbeiodh(1:2)
-REAL(KIND=8) :: d2beiodh(1:2)
+REAL (KIND = 8) :: pdif(1:2,0:3)
+REAL (KIND = 8) :: pbei(1:2,0:12)
+REAL (KIND = 8) :: Intah(1:2)
+REAL (KIND = 8) :: d2ahdh(1:2)
+REAL (KIND = 8) :: dqhdh(1:2)
+REAL (KIND = 8) :: d2qhdh(1:2)
+REAL (KIND = 8) :: sfnod(1:2)
+REAL (KIND = 8) :: sfwicht(1:2)
+REAL (KIND = 8) :: hdif(1:2)
+REAL (KIND = 8) :: bei(1:2)
+REAL (KIND = 8) :: froude(1:2)
+REAL (KIND = 8) :: dbeidh(1:2)
+REAL (KIND = 8) :: d2beidh(1:2)
+REAL (KIND = 8) :: dbeizdh(1:2)
+REAL (KIND = 8) :: d2beizdh(1:2)
+REAL (KIND = 8) :: dbeiodh(1:2)
+REAL (KIND = 8) :: d2beiodh(1:2)
 
-REAL(KIND=8) :: FRN, FRNX
-REAL(KIND=8) :: FEEAN, FEEBN, FEECN
-REAL(KIND=8) :: FRNC
+REAL (KIND = 8) :: FRN, FRNX
+REAL (KIND = 8) :: FEEAN, FEEBN, FEECN
+REAL (KIND = 8) :: FRNC
 
-REAL(KIND=8) :: rho
+REAL (KIND = 8) :: rho
 
 !nis,feb07: testingvariables
-REAL (KIND=8) :: deltax, deltvx, deltay, deltvy, deltaalpha
+REAL (KIND = 8) :: deltax, deltvx, deltay, deltvy, deltaalpha
 
 !nis,may07: Sidflowterm
-REAL (KIND=8) :: sidft
+REAL (KIND = 8) :: sidft
 
 !local resulting velocities
-REAL(KIND=8) :: vel_res(3)
+REAL (KIND = 8) :: vel_res(3)
 
 INTEGER :: PolyTest
 
@@ -1615,7 +1616,7 @@ QBCAssign: DO N=1, NCN, 2
   IF(AC2.ne.0.) THEN
     IF (IDNOPT.LT .0) THEN
       HD=VEL(3,M)
-      CALL AMF(HS,HD,AKP(M),ADT(M),ADB(M),AML,DUM2,0)
+      CALL AMF(HS, HD, AKP(M), ADT(M), ADB(M), AML, DUM2, 0)
       WSEL = ADO(M)+HS
     ELSE
       WSEL = VEL(3,M)+AO(M)
