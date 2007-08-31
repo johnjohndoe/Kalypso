@@ -43,9 +43,8 @@ package org.kalypso.workflow.ui.browser.urlaction;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.ui.IEditorPart;
-import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.IKalypsoSaveableTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.ITemplateTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ui.editor.mapeditor.GisMapEditor;
@@ -72,12 +71,12 @@ public class URLActionSaveActiveTheme extends AbstractURLAction
       final MapPanel mapPanel = gisMapEditor.getMapPanel();
       final IMapModell modell = mapPanel.getMapModell();
       final IKalypsoTheme activeTheme = modell.getActiveTheme();
-      if( activeTheme instanceof ITemplateTheme )
+      if( activeTheme instanceof IKalypsoSaveableTheme )
       {
-        final ITemplateTheme kTheme = (ITemplateTheme) activeTheme;
+        final IKalypsoSaveableTheme kTheme = (IKalypsoSaveableTheme) activeTheme;
         try
         {
-          gisMapEditor.saveTheme( kTheme, new NullProgressMonitor() );
+          kTheme.saveFeatures( new NullProgressMonitor() );
         }
         catch( CoreException e )
         {

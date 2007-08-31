@@ -38,15 +38,27 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml;
+package org.kalypso.ogc.gml.featureview.control.comparators;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
+import java.util.HashMap;
+
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * @author Stefan Kurzbach
+ * If an comparator additionally implements this interface, he will get an init method, were he can get some parameters
+ * from the creator.
+ * 
+ * @author Holger Albert
  */
-public interface IKalypsoSaveableTheme
+public interface IViewerComparator
 {
-  public void saveFeatures( final IProgressMonitor monitor ) throws CoreException;
+  /**
+   * This function can be used to init this comparator with some parameter.
+   * 
+   * @param parent
+   *            The parent feature.
+   * @param params
+   *            The map containing the parameter names (keys) and parameter values (value).
+   */
+  public void init( Feature parent, HashMap<String, String> params );
 }

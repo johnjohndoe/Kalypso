@@ -43,6 +43,8 @@ package org.kalypso.ui.editor.actions;
 import java.util.Comparator;
 import java.util.List;
 
+import javax.xml.namespace.QName;
+
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -59,10 +61,31 @@ public class FeatureComparator implements Comparator<Object>
 
   private final GMLWorkspace m_workspace;
 
-  public FeatureComparator( final Feature parentFeature, final IPropertyType pt )
+  /**
+   * The qname of the property, which will be used for comparison.
+   */
+  private final QName m_qname;
+
+  public FeatureComparator( Feature parentFeature, IPropertyType pt )
   {
     m_workspace = parentFeature.getWorkspace();
     m_pt = pt;
+    m_qname = null;
+  }
+
+  /**
+   * The constructor.
+   * 
+   * @param parentFeature
+   *            The parent of the list.
+   * @param qname
+   *            The qname of the property, which should be sorted.
+   */
+  public FeatureComparator( Feature parentFeature, QName qname )
+  {
+    m_workspace = parentFeature.getWorkspace();
+    m_pt = null;
+    m_qname = qname;
   }
 
   /**
@@ -74,10 +97,20 @@ public class FeatureComparator implements Comparator<Object>
     final Feature f1 = FeatureHelper.getFeature( m_workspace, o1 );
     final Feature f2 = FeatureHelper.getFeature( m_workspace, o2 );
 
-    final Object property1 = f1.getProperty( m_pt );
-    final Object property2 = f2.getProperty( m_pt );
+    Object property1 = null;
+    Object property2 = null;
+    if( m_pt != null )
+    {
+      property1 = f1.getProperty( m_pt );
+      property2 = f2.getProperty( m_pt );
+    }
+    else if( m_qname != null )
+    {
+      property1 = f1.getProperty( m_qname );
+      property2 = f2.getProperty( m_qname );
+    }
 
-    if( m_pt.isList() )
+    if( m_pt != null && m_pt.isList() )
       return compareLists( (List<Comparable<Object>>) property1, (List<Comparable<Object>>) property2 );
 
     return compareComparable( (Comparable<Object>) property1, (Comparable<Object>) property2 );
@@ -125,5 +158,4 @@ public class FeatureComparator implements Comparator<Object>
 
     return 0;
   }
-
 }
