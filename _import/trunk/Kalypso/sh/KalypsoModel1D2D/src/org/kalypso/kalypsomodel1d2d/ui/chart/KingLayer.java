@@ -42,32 +42,27 @@ package org.kalypso.kalypsomodel1d2d.ui.chart;
 
 import java.math.BigDecimal;
 
-import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Path;
+import org.kalypso.chart.framework.exception.ZeroSizeDataRangeException;
+import org.kalypso.chart.framework.model.data.IDataRange;
+import org.kalypso.chart.framework.model.data.impl.DataRange;
+import org.kalypso.chart.framework.model.layer.AbstractChartLayer;
+import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
-import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IKingFlowRelation;
-import org.kalypso.swtchart.chart.axis.IAxis;
-import org.kalypso.swtchart.chart.layer.AbstractChartLayer;
-import org.kalypso.swtchart.chart.layer.IDataRange;
-import org.kalypso.swtchart.chart.layer.impl.DataRange;
-import org.kalypso.swtchart.chart.legend.ILegendItem;
-import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * A layer which renders a King-Profile.
  * 
  * @author Gernot Belger
  */
-public class KingLayer extends AbstractChartLayer
+public class KingLayer extends AbstractChartLayer<Number, Number>
 {
-  private IKingFlowRelation m_kingRelation;
 
-  public KingLayer( final Feature kingFeature, final String name, final String description, final IAxis<Number> domAxis, final IAxis<Number> valAxis )
+  public KingLayer( final KingDataContainer data, final IAxis<Number> domAxis, final IAxis<Number> valAxis )
   {
-    super( name, description, domAxis, valAxis );
-
-    m_kingRelation = (IKingFlowRelation) kingFeature.getAdapter( IKingFlowRelation.class );
+    super( domAxis, valAxis );
+    setDataContainer( data );
   }
 
   /**
@@ -82,10 +77,10 @@ public class KingLayer extends AbstractChartLayer
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper,
    *      org.eclipse.swt.graphics.Device)
    */
-  public void paint( final GCWrapper gc, final Device dev )
+  public void paint( final GCWrapper gc )
   {
     final IAxis<Number> domainAxis = getDomainAxis();
-    final IAxis<Number> valueAxis = getValueAxis();
+    final IAxis<Number> valueAxis = getTargetAxis();
 
     final Path path = new Path( gc.getDevice() );
 
@@ -94,7 +89,7 @@ public class KingLayer extends AbstractChartLayer
       /* Draw the bottom */
 
       /* Minimum requirement is the width */
-      final BigDecimal width = m_kingRelation.getWidth();
+      final BigDecimal width = getDataContainer().getKingRelation().getWidth();
       if( width == null )
         return;
 
@@ -121,8 +116,8 @@ public class KingLayer extends AbstractChartLayer
    */
   public IDataRange<Double> getDomainRange( )
   {
-    final BigDecimal width = m_kingRelation.getWidth();
-    final BigDecimal widthStorage = m_kingRelation.getWidthStorage();
+    final BigDecimal width = getDataContainer().getKingRelation().getWidth();
+    final BigDecimal widthStorage = getDataContainer().getKingRelation().getWidthStorage();
 
     double widthProfile = 0.0;
     if( width != null )
@@ -133,25 +128,23 @@ public class KingLayer extends AbstractChartLayer
     /* 10% insets */
     widthProfile *= 1.10;
     
-    return new DataRange<Double>( -widthProfile / 2, widthProfile / 2 );
-  }
-
-  /**
-   * @see org.kalypso.swtchart.chart.layer.IChartLayer#getLegendItem()
-   */
-  @SuppressWarnings("deprecation")
-  public ILegendItem getLegendItem( )
-  {
-    return null;
-  }
-
-  /**
-   * @see org.kalypso.swtchart.chart.layer.IChartLayer#getValueRange()
-   */
-  public IDataRange<Double> getValueRange( )
-  {
-    final double height = 10 * 1.10;
+    IDataRange<Double> dr=null;
+    try
+    {
+      dr = new DataRange<Double>( -widthProfile / 2, widthProfile / 2 );
+    }
+    catch( ZeroSizeDataRangeException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    return dr; 
     
-    return new DataRange<Double>( -1.0, height );
+  }
+
+  @Override
+  public KingDataContainer getDataContainer()
+  {
+    return (KingDataContainer) super.getDataContainer();
   }
 }

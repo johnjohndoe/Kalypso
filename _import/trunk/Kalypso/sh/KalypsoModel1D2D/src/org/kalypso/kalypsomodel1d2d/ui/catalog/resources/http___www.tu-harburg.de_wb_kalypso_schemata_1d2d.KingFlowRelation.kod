@@ -1,51 +1,69 @@
-<?xml version="1.0" encoding="Cp1252" standalone="yes"?>
-<Configuration xmlns="http://www.ksp.org/chart/configuration">
-	<Axis name="breite_Axis">
-		<label>Breite [m]</label>
-		<provider id="org.kalypso.axisprovider.Number" />
-		<direction>POSITIVE</direction>
-		<position>BOTTOM</position>
-		<minVal>0.0</minVal>
-		<maxVal>100.0</maxVal>
-	</Axis>
-	<Axis name="hoehe_Axis">
-		<label>Höhe [m]</label>
-		<provider id="org.kalypso.axisprovider.Number" />
-		<direction>POSITIVE</direction>
-		<position>LEFT</position>
-		<minVal>5.0</minVal>
-		<maxVal>10.0</maxVal>
-	</Axis>
-	<Chart name="profilChart">
-		<title>King-Profil</title>
-		<description>King-Profil</description>
-		<layers>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ChartConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.ksp.org/chart/factory ../../../../../../../../ChartFactory/etc/binding/schema/ChartConfiguration.xsd"
+ xmlns="http://www.ksp.org/chart/factory">
+	<Chart id="profilChart">
+		<Title>King-Profil</Title>
+		<Description>King-Profil</Description>
+		<Layers>
 			<LayerRef ref="kingLayer" />
-		</layers>
+		</Layers>
 	</Chart>
-	<Layer visible="true" name="kingLayer">
-		<title>Profil</title>
-		<description>Profil</description>
-		<provider id="org.kalypso.kalypsomodel1d2d.ui.chart.KingLayerProvider" />
-		<axes>
+	<Layer visible="true" id="kingLayer">
+		<Provider epid="org.kalypso.kalypsomodel1d2d.ui.chart.KingLayerProvider" >
+			<Parameters>
+				<Parameter name="featureKey" value="kingFeatureKey" />
+			</Parameters>	
+		</Provider>
+		<Title>Profil</Title>
+		<Description>Profil</Description>
+		<Mapper>
 			<DomainAxisRef ref="breite_Axis" />
-			<ValueAxisRef ref="hoehe_Axis" />
-		</axes>
-		<style>
+			<TargetAxisRef ref="hoehe_Axis" />
+		</Mapper>
+		<Style>
 			<StyleRef ref="lineStyle" />
-		</style>
-		<parameters>
-			<Parameter name="featureKey" value="kingFeatureKey" />
-		</parameters>
+		</Style>
+		
 	</Layer>
-	<Style name="lineStyle">
-        <styleID></styleID>
-        <type>LINE</type>
-        <parameters>
-            <Parameter name="lineWidth" value="2" />
-            <Parameter name="lineStyle" value="SOLID" />
-            <Parameter name="lineColor" value="#0000ff" />
-        </parameters>
+	
+	<Axis id="breite_Axis">
+		<Provider epid="org.kalypso.chart.ext.axis.provider.Number"></Provider>
+		<Label>Breite [m]</Label>
+		<Direction>POSITIVE</Direction>
+		<Position>BOTTOM</Position>
+		<MinVal>0.0</MinVal>
+		<MaxVal>100.0</MaxVal>
+		<RendererRef ref="NumberAxisRenderer"/>
+	</Axis>
+	<Axis id="hoehe_Axis">
+		<Provider epid="org.kalypso.chart.ext.axis.provider.Number" />
+		<Label>HÃ¶he [m]</Label>
+		
+		<Direction>POSITIVE</Direction>
+		<Position>LEFT</Position>
+		<MinVal>5.0</MinVal>
+		<MaxVal>10.0</MaxVal>
+		<RendererRef ref="NumberAxisRenderer"/>
+	</Axis>
+	<AxisRenderer id="NumberAxisRenderer">
+		<Provider epid="org.kalypso.chart.ext.axisrenderer.provider.Number">
+			<Parameters>
+				<Parameter name="color" value="#000000"/>
+				<Parameter name="inset_tick " value="10"/>
+			</Parameters>
+		</Provider>
+	</AxisRenderer>
+	
+	<Style id="lineStyle">
+		<Provider epid="">
+			<Parameters>
+				<Parameter name="lineWidth" value="2" />
+				<Parameter name="lineStyle" value="SOLID" />
+				<Parameter name="lineColor" value="#0000ff" />
+			</Parameters>	
+		</Provider>
+		<StyleID></StyleID>
+		<Type>LINE</Type>
 	</Style>
-</Configuration>
-
+</ChartConfiguration>

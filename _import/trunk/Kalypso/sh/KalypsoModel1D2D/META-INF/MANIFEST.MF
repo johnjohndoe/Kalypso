@@ -21,10 +21,10 @@ Require-Bundle: org.junit,
  de.renew.workflow.model,
  de.renew.workflow.connector,
  org.kalypso.simulation.ui,
- org.kalypso.chart,
  org.kalypso.simulation.core,
  org.kalypso.gml.processes,
- org.kalypso.ModelSimulationBase
+ org.kalypso.ModelSimulationBase,
+ org.kalypso.chart.ext.base
 Eclipse-LazyStart: true
 Export-Package: org.kalypso.kalypsomodel1d2d,
  org.kalypso.kalypsomodel1d2d.conv,

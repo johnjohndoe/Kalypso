@@ -42,33 +42,23 @@ package org.kalypso.kalypsomodel1d2d.ui.chart;
 
 import java.net.URL;
 
-import org.kalypso.swtchart.chart.Chart;
-import org.kalypso.swtchart.chart.axis.IAxis;
-import org.kalypso.swtchart.chart.layer.ChartDataProvider;
-import org.kalypso.swtchart.chart.layer.IChartLayer;
-import org.kalypso.swtchart.chart.layer.ILayerProvider;
-import org.kalypso.swtchart.configuration.parameters.impl.ParameterHelper;
-import org.kalypso.swtchart.exception.LayerProviderException;
+
+import org.kalypso.chart.factory.configuration.exception.LayerProviderException;
+import org.kalypso.chart.factory.configuration.parameters.IParameterContainer;
+import org.kalypso.chart.factory.provider.AbstractLayerProvider;
+import org.kalypso.chart.framework.model.IChartModel;
+import org.kalypso.chart.framework.model.layer.IChartLayer;
+import org.kalypso.chart.framework.model.mapper.IAxis;
+import org.kalypso.model.wspm.ui.featureview.ChartDataProvider;
 import org.kalypsodeegree.model.feature.Feature;
-import org.ksp.chart.configuration.AxisType;
-import org.ksp.chart.configuration.LayerType;
+import org.ksp.chart.factory.LayerType;
+
 
 /**
  * @author Gernot Belger
  */
-public class KingLayerProvider implements ILayerProvider
+public class KingLayerProvider extends AbstractLayerProvider
 {
-  private Chart m_chart;
-  private LayerType m_lt;
-
-  /**
-   * @see org.kalypso.swtchart.chart.layer.ILayerProvider#init(org.kalypso.swtchart.chart.Chart, org.ksp.chart.configuration.LayerType)
-   */
-  public void init( final Chart chart, final LayerType lt )
-  {
-    m_chart = chart;
-    m_lt = lt;
-  }
   
   /**
    * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayer(java.net.URL)
@@ -76,12 +66,12 @@ public class KingLayerProvider implements ILayerProvider
   @SuppressWarnings("unchecked")
   public IChartLayer getLayer( final URL context ) throws LayerProviderException
   {
-    final String configLayerId = m_lt.getName();
-
-    final ParameterHelper ph = new ParameterHelper();
-    ph.addParameters( m_lt.getParameters(), configLayerId );
-
-    final String featureKey = ph.getParameterValue( "featureKey", null );
+    
+    IParameterContainer pc = getParameterContainer();
+    LayerType lt = getLayerType();
+    IChartModel chartModel = getChartModel();
+    
+    final String featureKey = pc.getParameterValue( "featureKey", null );
     if( featureKey == null )
       throw new LayerProviderException( "Missing parameter: featureKey" );
 
@@ -89,16 +79,16 @@ public class KingLayerProvider implements ILayerProvider
     if( kingFeature == null )
       throw new LayerProviderException( "No feature found for key: " + featureKey );
 
-    final String domainAxisId = ((AxisType) m_lt.getAxes().getDomainAxisRef().getRef()).getName();
-    final String valueAxisId = ((AxisType) m_lt.getAxes().getValueAxisRef().getRef()).getName();
+    final String domainAxisId = lt.getMapper().getDomainAxisRef().getRef();
+    final String targetAxisId = lt.getMapper().getTargetAxisRef().getRef();
 
-    final IAxis<Number> domAxis = m_chart.getAxisRegistry().getAxis( domainAxisId );
-    final IAxis<Number> valAxis = m_chart.getAxisRegistry().getAxis( valueAxisId );
+    final IAxis<Number> domAxis = chartModel.getMapperRegistry().getAxis( domainAxisId );
+    final IAxis<Number> targetAxis = chartModel.getMapperRegistry().getAxis( targetAxisId );
 
-    final String title = m_lt.getTitle();
-    final String description = m_lt.getDescription();
-    final KingLayer kingLayer = new KingLayer( kingFeature, title, description, domAxis, valAxis );
-    kingLayer.setVisibility( m_lt.isVisible() );
+    KingDataContainer data=new KingDataContainer(kingFeature);
+    
+    final KingLayer kingLayer = new KingLayer( data, domAxis, targetAxis );
+    kingLayer.setVisible(  lt.getVisible() );
     
     return kingLayer;
   }
