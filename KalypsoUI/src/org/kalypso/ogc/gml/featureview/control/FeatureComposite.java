@@ -53,8 +53,13 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.util.SafeRunnable;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -79,6 +84,7 @@ import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
+import org.kalypso.ogc.gml.featureview.control.comparators.IViewerComparator;
 import org.kalypso.ogc.gml.featureview.maker.IFeatureviewFactory;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.featureview.Button;
@@ -105,6 +111,7 @@ import org.kalypso.template.featureview.Text;
 import org.kalypso.template.featureview.TupleResult;
 import org.kalypso.template.featureview.ValidatorLabelType;
 import org.kalypso.template.featureview.Combo.Entry;
+import org.kalypso.template.featureview.Combo.Sorter;
 import org.kalypso.template.featureview.Extensioncontrol.Param;
 import org.kalypso.template.gistableview.Gistableview;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -547,6 +554,62 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     {
       final Combo comboType = (Combo) controlType;
 
+      /* Look, if the user wants something sorted. */
+      Sorter sorter = comboType.getSorter();
+
+      /* The comparator. */
+      ViewerComparator comparator = null;
+
+      /* If there is an sorter, look deeper. */
+      if( sorter != null )
+      {
+        /* The id of the sorter. */
+        String id = sorter.getId();
+        if( id == null || id.length() == 0 )
+          id = "org.kalypso.ui.featureview.comparators.defaultComparator";
+
+        /* Get the sorter of the id. */
+        IExtensionRegistry registry = Platform.getExtensionRegistry();
+        IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.kalypso.core.featureviewComparator" );
+        for( IConfigurationElement element : elements )
+        {
+          String elementId = element.getAttribute( "id" );
+          if( id.equals( elementId ) )
+          {
+            try
+            {
+              comparator = (ViewerComparator) element.createExecutableExtension( "class" );
+            }
+            catch( CoreException e )
+            {
+              e.printStackTrace();
+            }
+          }
+        }
+
+        /* If a valid id was given ... */
+        if( comparator != null )
+        {
+          /* The default-comparator doesn't use any parameter, so they are ignored, even, if they are supplied. */
+          if( comparator instanceof IViewerComparator )
+          {
+            /* The parameter map. */
+            HashMap<String, String> params = new HashMap<String, String>();
+
+            /* Get all parameter. */
+            List<org.kalypso.template.featureview.Combo.Sorter.Param> parameter = sorter.getParam();
+            if( parameter != null )
+            {
+              /* Collect all parameter. */
+              for( org.kalypso.template.featureview.Combo.Sorter.Param param : parameter )
+                params.put( param.getName(), param.getValue() );
+            }
+
+            ((IViewerComparator) comparator).init( feature, params );
+          }
+        }
+      }
+
       final List<Entry> entryList = comboType.getEntry();
       final Map<Object, String> comboEntries = new HashMap<Object, String>( entryList.size() );
 
@@ -574,7 +637,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
       final int comboStyle = SWTUtilities.createStyleFromString( comboType.getStyle() );
 
-      final ComboFeatureControl cfc = new ComboFeatureControl( feature, ftp, comboEntries );
+      final ComboFeatureControl cfc = new ComboFeatureControl( feature, ftp, comboEntries, comparator );
 
       final Control control = cfc.createControl( parent, comboStyle );
 
@@ -633,9 +696,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       final List<Param> param = extControl.getParam();
       final Properties parameters = new Properties();
       for( final Param controlParam : param )
-      {
         parameters.setProperty( controlParam.getName(), controlParam.getValue() );
-      }
 
       final IFeatureviewControlFactory controlFactory = KalypsoUIExtensions.getFeatureviewControlFactory( extensionId );
       final IFeatureControl fc = controlFactory == null ? null : controlFactory.createFeatureControl( feature, ftp, parameters );

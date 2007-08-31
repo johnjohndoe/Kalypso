@@ -1901,4 +1901,15 @@
        </enabledWhen>
     </handler>
  </extension>
+ <extension
+       point="org.kalypso.core.featureviewComparator">
+    <comparator
+          class="org.eclipse.jface.viewers.ViewerComparator"
+          id="org.kalypso.ui.featureview.comparators.defaultComparator">
+    </comparator>
+    <comparator
+          class="org.kalypso.ogc.gml.featureview.control.comparators.FeatureViewerComparator"
+          id="org.kalypso.ui.featureview.comparators.featureComparator">
+    </comparator>
+ </extension>
 </plugin>

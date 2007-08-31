@@ -42,7 +42,7 @@
 package org.kalypso.ogc.gml.featureview.control;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -53,7 +53,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -98,23 +98,30 @@ public class ComboFeatureControl extends AbstractFeatureControl
 
   private ComboViewer m_comboViewer = null;
 
-  private final Map<Object, String> m_fixedEntries = new HashMap<Object, String>();
+  private final Map<Object, String> m_fixedEntries = new LinkedHashMap<Object, String>();
 
-  private final Map<Object, String> m_entries = new HashMap<Object, String>();
+  private final LinkedHashMap<Object, String> m_entries = new LinkedHashMap<Object, String>();
 
   private boolean m_ignoreNextUpdate = false;
 
-  public ComboFeatureControl( final IPropertyType ftp, final Map<Object, String> entries )
+  /**
+   * Used for sorting the elements in the combobox.
+   */
+  private final ViewerComparator m_comparator;
+
+  public ComboFeatureControl( final IPropertyType ftp, final Map<Object, String> entries, final ViewerComparator comparator )
   {
-    this( null, ftp, entries );
+    this( null, ftp, entries, comparator );
   }
 
-  public ComboFeatureControl( final Feature feature, final IPropertyType ftp, final Map<Object, String> entries )
+  public ComboFeatureControl( final Feature feature, final IPropertyType ftp, final Map<Object, String> entries, final ViewerComparator comparator )
   {
     super( feature, ftp );
 
     if( entries != null )
       m_fixedEntries.putAll( entries );
+
+    m_comparator = comparator;
   }
 
   private void updateEntries( final IPropertyType ftp )
@@ -197,8 +204,9 @@ public class ComboFeatureControl extends AbstractFeatureControl
       }
     } );
 
-    // TODO: maybe get the sorter from....?
-    m_comboViewer.setSorter( new ViewerSorter() );
+    /* Set the comparator, if any was given. */
+    if( m_comparator != null )
+      m_comboViewer.setComparator( m_comparator );
 
     m_comboViewer.setInput( m_entries.keySet() );
 
