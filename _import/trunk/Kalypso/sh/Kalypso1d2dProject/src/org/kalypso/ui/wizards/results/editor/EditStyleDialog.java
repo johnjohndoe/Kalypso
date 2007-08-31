@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.wizards.results;
+package org.kalypso.ui.wizards.results.editor;
 
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -120,9 +120,9 @@ public class EditStyleDialog extends TitleAreaDialog
 
   private final String m_fileName;
 
-  private Composite m_styleComponent;
-
   private Symbolizer m_symbolizer;
+
+  private final IFolder m_sldFolder;
 
   public EditStyleDialog( Shell parentShell, IFile sldFile, double maxValue, double minValue )
   {
@@ -132,6 +132,8 @@ public class EditStyleDialog extends TitleAreaDialog
     m_maxValue = maxValue;
     m_maxValue = minValue;
     m_fileName = FileUtilities.nameWithoutExtension( m_sldFile.getName() );
+
+    m_sldFolder = (IFolder) m_sldFile.getParent();
 
     final IDialogSettings dialogSettings = KalypsoModel1D2DPlugin.getDefault().getDialogSettings();
     m_dialogSettings = dialogSettings.getSection( SETTINGS_SECTION );
@@ -157,7 +159,7 @@ public class EditStyleDialog extends TitleAreaDialog
 
     createFileManagerComponent( commonComposite );
 
-    m_styleComponent = createStyleComponent( commonComposite );
+    createStyleComponent( commonComposite );
 
     return commonComposite;
   }
@@ -174,7 +176,7 @@ public class EditStyleDialog extends TitleAreaDialog
     final Text fileNameText = new Text( commonComposite, SWT.BORDER | SWT.TRAIL );
     fileNameText.setText( m_fileName );
     GridData gridDataFileNameText = new GridData( SWT.BEGINNING, SWT.CENTER, true, false );
-    gridDataFileNameText.widthHint = 100;
+    gridDataFileNameText.widthHint = 140;
     fileNameText.setLayoutData( gridDataFileNameText );
 
     fileNameText.addKeyListener( new KeyAdapter()
@@ -218,7 +220,7 @@ public class EditStyleDialog extends TitleAreaDialog
     } );
   }
 
-  private Composite createStyleComponent( final Composite commonComposite )
+  private void createStyleComponent( final Composite commonComposite )
   {
     m_symbolizer = parseStyle();
     /* choose the composite, depending on the style */
@@ -232,7 +234,6 @@ public class EditStyleDialog extends TitleAreaDialog
         GridData gridDataComp = new GridData( SWT.FILL, SWT.FILL, true, true );
         gridDataComp.horizontalSpan = 2;
         comp.setLayoutData( gridDataComp );
-        return comp;
       }
       else
       {
@@ -251,7 +252,6 @@ public class EditStyleDialog extends TitleAreaDialog
         GridData gridDataComp = new GridData( SWT.FILL, SWT.FILL, true, true );
         gridDataComp.horizontalSpan = 2;
         comp.setLayoutData( gridDataComp );
-        return comp;
       }
       else
       {
@@ -263,7 +263,11 @@ public class EditStyleDialog extends TitleAreaDialog
     else if( m_symbolizer instanceof PointSymbolizer )
     {
       PointSymbolizer symb = (PointSymbolizer) m_symbolizer;
-      symb.getGraphic();
+      VectorEditorComposite comp = new VectorEditorComposite( commonComposite, SWT.NONE, symb, m_minValue, m_maxValue );
+      GridData gridDataComp = new GridData( SWT.FILL, SWT.FILL, true, true );
+      gridDataComp.horizontalSpan = 2;
+      comp.setLayoutData( gridDataComp );
+
     }
     else
     {
@@ -271,7 +275,6 @@ public class EditStyleDialog extends TitleAreaDialog
       errorText.setText( "Styledatei fehlerhaft. Bitte anderen Style auswählen" );
       errorText.setBackground( commonComposite.getBackground() );
     }
-    return null;
   }
 
   /**
@@ -280,9 +283,6 @@ public class EditStyleDialog extends TitleAreaDialog
   @Override
   protected void okPressed( )
   {
-    if( m_newSldFileName != null && m_newSldFileName != m_fileName )
-      updateSldFile();
-
     // write the style back to file
     final String sldXML = m_sld.exportAsXML();
     final String sldXMLwithHeader = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + sldXML;
@@ -295,6 +295,9 @@ public class EditStyleDialog extends TitleAreaDialog
       {
         m_sldFile.create( new StringInputStream( sldXMLwithHeader, "UTF-8" ), false, new NullProgressMonitor() );
       }
+
+      if( m_newSldFileName != null && m_newSldFileName != m_fileName )
+        updateSldFile();
 
     }
     catch( CoreException e )
@@ -325,7 +328,6 @@ public class EditStyleDialog extends TitleAreaDialog
       final NamedLayer[] namedLayers = m_sld.getNamedLayers();
       // get always just the first layer
       final NamedLayer namedLayer = namedLayers[0];
-      final String layerName = namedLayer.getName();
 
       // get always the first style (we assume there is only one)
       final Style[] styles = namedLayer.getStyles();
@@ -333,12 +335,10 @@ public class EditStyleDialog extends TitleAreaDialog
       final Style style = styles[0];
       if( style instanceof UserStyle )
       {
-        final String styleName = style.getName();
         final UserStyle userStyle = (UserStyle) style;
         final FeatureTypeStyle[] featureTypeStyles = userStyle.getFeatureTypeStyles();
         // we assume, that there is only one feature type style and take the first we can get.
         final FeatureTypeStyle featureTypeStyle = featureTypeStyles[0];
-        final String featureTypeStyleName = featureTypeStyle.getName();
 
         // we assume, that there is only one rule and take the first we can get.
         final Rule[] rules = featureTypeStyle.getRules();
@@ -417,22 +417,27 @@ public class EditStyleDialog extends TitleAreaDialog
     {
       text.setBackground( comp.getDisplay().getSystemColor( SWT.COLOR_RED ) );
       m_newSldFileName = null;
+      m_sldFile = null;
+
+      setErrorMessage( "Falscher Dateiname" );
+      getButton( OK ).setEnabled( false );
     }
     else
     {
       text.setBackground( comp.getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
       m_newSldFileName = tempText;
+
+      // create a new sld file with the new name
+      m_sldFile = m_sldFolder.getFile( m_newSldFileName + ".sld" );
+
+      getButton( OK ).setEnabled( true );
+      setErrorMessage( null );
     }
     return text;
   }
 
   private void updateSldFile( )
   {
-    IFolder sldFolder = (IFolder) m_sldFile.getParent();
-
-    // create a new sld file with the new name
-    m_sldFile = sldFolder.getFile( m_newSldFileName + ".sld" );
-
     // update styledLocation and combo viewer
     fireModified();
   }

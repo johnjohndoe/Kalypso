@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.wizards.results;
+package org.kalypso.ui.wizards.results.editor;
 
 import java.awt.Color;
 import java.math.BigDecimal;
@@ -63,6 +63,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.ui.wizards.results.ResultSldHelper;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.Fill;
 import org.kalypsodeegree.graphics.sld.ParameterValueType;
@@ -89,11 +90,11 @@ public class PolygonColorMapEditorComposite extends Composite
 
   private boolean m_strokeChecked;
 
-  private double m_stepWidth;
+  private BigDecimal m_stepWidth;
 
-  private double m_minValue;
+  private BigDecimal m_minValue;
 
-  private double m_maxValue;
+  private BigDecimal m_maxValue;
 
   private final String m_globalMin;
 
@@ -108,13 +109,13 @@ public class PolygonColorMapEditorComposite extends Composite
 
     // TODO: handle empty color map
 
-    m_minValue = m_colorMap.getColorMap()[0].getFrom( null );
-    m_maxValue = m_colorMap.getColorMap()[m_colorMap.getColorMap().length - 1].getTo( null );
+    m_minValue = new BigDecimal( m_colorMap.getColorMap()[0].getFrom( null ) ).setScale( 2, BigDecimal.ROUND_HALF_UP );
+    m_maxValue = new BigDecimal( m_colorMap.getColorMap()[m_colorMap.getColorMap().length - 1].getTo( null ) ).setScale( 2, BigDecimal.ROUND_HALF_UP );
 
     m_globalMin = new Double( minGlobalValue ).toString();
     m_globalMax = new Double( maxGlobalValue ).toString();
 
-    m_stepWidth = m_colorMap.getColorMap()[0].getTo( null ) - m_colorMap.getColorMap()[0].getFrom( null );
+    m_stepWidth = new BigDecimal( m_colorMap.getColorMap()[0].getTo( null ) - m_colorMap.getColorMap()[0].getFrom( null ) ).setScale( 2, BigDecimal.ROUND_HALF_UP );
 
     createControl();
 
@@ -271,7 +272,7 @@ public class PolygonColorMapEditorComposite extends Composite
         switch( event.keyCode )
         {
           case SWT.CR:
-            final Double value = checkDoubleTextValue( propertyGroup, minValueText );
+            final BigDecimal value = ResultSldHelper.checkDoubleTextValue( propertyGroup, minValueText, m_patternDouble );
             if( value != null )
               m_minValue = value;
         }
@@ -283,7 +284,7 @@ public class PolygonColorMapEditorComposite extends Composite
       @SuppressWarnings("synthetic-access")
       public void focusGained( final FocusEvent e )
       {
-        final Double value = checkDoubleTextValue( propertyGroup, minValueText );
+        final BigDecimal value = ResultSldHelper.checkDoubleTextValue( propertyGroup, minValueText, m_patternDouble );
         if( value != null )
           m_minValue = value;
       }
@@ -291,7 +292,7 @@ public class PolygonColorMapEditorComposite extends Composite
       @SuppressWarnings("synthetic-access")
       public void focusLost( final FocusEvent e )
       {
-        final Double value = checkDoubleTextValue( propertyGroup, minValueText );
+        final BigDecimal value = ResultSldHelper.checkDoubleTextValue( propertyGroup, minValueText, m_patternDouble );
         if( value != null )
         {
           m_minValue = value;
@@ -330,7 +331,7 @@ public class PolygonColorMapEditorComposite extends Composite
         switch( event.keyCode )
         {
           case SWT.CR:
-            final Double value = checkDoubleTextValue( propertyGroup, maxValueText );
+            final BigDecimal value = ResultSldHelper.checkDoubleTextValue( propertyGroup, maxValueText, m_patternDouble );
             if( value != null )
               m_maxValue = value;
         }
@@ -342,7 +343,7 @@ public class PolygonColorMapEditorComposite extends Composite
       @SuppressWarnings("synthetic-access")
       public void focusGained( final FocusEvent e )
       {
-        final Double value = checkDoubleTextValue( propertyGroup, maxValueText );
+        final BigDecimal value = ResultSldHelper.checkDoubleTextValue( propertyGroup, maxValueText, m_patternDouble );
         if( value != null )
           m_maxValue = value;
       }
@@ -350,7 +351,7 @@ public class PolygonColorMapEditorComposite extends Composite
       @SuppressWarnings("synthetic-access")
       public void focusLost( final FocusEvent e )
       {
-        final Double value = checkDoubleTextValue( propertyGroup, maxValueText );
+        final BigDecimal value = ResultSldHelper.checkDoubleTextValue( propertyGroup, maxValueText, m_patternDouble );
         if( value != null )
         {
           m_maxValue = value;
@@ -403,7 +404,9 @@ public class PolygonColorMapEditorComposite extends Composite
         switch( event.keyCode )
         {
           case SWT.CR:
-            checkDoubleTextValue( propertyGroup, stepWidthText );
+            final BigDecimal value = ResultSldHelper.checkDoubleTextValue( propertyGroup, stepWidthText, m_patternDouble );
+            if( value != null )
+              m_stepWidth = value;
         }
       }
     } );
@@ -413,7 +416,7 @@ public class PolygonColorMapEditorComposite extends Composite
       @SuppressWarnings("synthetic-access")
       public void focusGained( final FocusEvent e )
       {
-        final Double value = checkDoubleTextValue( propertyGroup, stepWidthText );
+        final BigDecimal value = ResultSldHelper.checkDoubleTextValue( propertyGroup, stepWidthText, m_patternDouble );
         if( value != null )
           m_stepWidth = value;
       }
@@ -421,7 +424,7 @@ public class PolygonColorMapEditorComposite extends Composite
       @SuppressWarnings("synthetic-access")
       public void focusLost( final FocusEvent e )
       {
-        final Double value = checkDoubleTextValue( propertyGroup, stepWidthText );
+        final BigDecimal value = ResultSldHelper.checkDoubleTextValue( propertyGroup, stepWidthText, m_patternDouble );
         if( value != null )
         {
           m_stepWidth = value;
@@ -453,45 +456,6 @@ public class PolygonColorMapEditorComposite extends Composite
 
   }
 
-  /**
-   * checks the user typed string for the double value
-   * 
-   * @param comp
-   *            composite of the text field
-   * @param text
-   *            the text field
-   */
-  private Double checkDoubleTextValue( final Composite comp, final Text text )
-  {
-    String tempText = text.getText();
-
-    final Matcher m = m_patternDouble.matcher( tempText );
-
-    if( !m.matches() )
-    {
-      text.setBackground( comp.getDisplay().getSystemColor( SWT.COLOR_RED ) );
-    }
-    else
-    {
-      text.setBackground( comp.getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
-      tempText = tempText.replaceAll( ",", "." );
-
-      Double db = new Double( tempText );
-      if( db > 0 )
-      {
-        text.setText( db.toString() );
-      }
-      else
-      {
-        db = 0.0;
-        text.setText( db.toString() );
-      }
-
-      return db;
-    }
-    return null;
-  }
-
   protected void updateColorMap( )
   {
     try
@@ -509,13 +473,11 @@ public class PolygonColorMapEditorComposite extends Composite
       final double lineWidthFrom = m_fromEntry.getStroke().getWidth( null );
       final double lineWidthTo = m_toEntry.getStroke().getWidth( null );
 
-      int stepWidthScale = 2;
-
       // get rounded values below min and above max (rounded by first decimal)
-      final BigDecimal minDecimal = new BigDecimal( m_minValue ).setScale( 1, BigDecimal.ROUND_FLOOR );
-      final BigDecimal maxDecimal = new BigDecimal( m_maxValue ).setScale( 1, BigDecimal.ROUND_CEILING );
+      final BigDecimal minDecimal = m_minValue.setScale( 2, BigDecimal.ROUND_FLOOR );
+      final BigDecimal maxDecimal = m_maxValue.setScale( 2, BigDecimal.ROUND_CEILING );
 
-      final BigDecimal polygonStepWidth = new BigDecimal( m_stepWidth ).setScale( stepWidthScale, BigDecimal.ROUND_FLOOR );
+      final BigDecimal polygonStepWidth = m_stepWidth.setScale( 2, BigDecimal.ROUND_FLOOR );
       final int numOfClasses = (maxDecimal.subtract( minDecimal ).divide( polygonStepWidth )).intValue();
 
       final List<PolygonColorMapEntry> colorMapList = new LinkedList<PolygonColorMapEntry>();

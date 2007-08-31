@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.wizards.results;
+package org.kalypso.ui.wizards.results.editor;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -47,12 +47,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.kalypso.ui.editor.sldEditor.FillEditorComposite;
-import org.kalypso.ui.editor.sldEditor.IFillModifyListener;
 import org.kalypso.ui.editor.sldEditor.IStrokeModifyListener;
 import org.kalypso.ui.editor.sldEditor.StrokeEditorComposite;
-import org.kalypsodeegree.graphics.sld.Fill;
-import org.kalypsodeegree.graphics.sld.PolygonColorMapEntry;
+import org.kalypsodeegree.graphics.sld.LineColorMapEntry;
 import org.kalypsodeegree.graphics.sld.Stroke;
 
 /**
@@ -62,19 +59,18 @@ import org.kalypsodeegree.graphics.sld.Stroke;
  * composites of a stroke and a fill.
  * 
  */
-public class PolygonColorMapEntryEditorComposite extends Composite
+public class LineColorMapEntryEditorComposite extends Composite
 {
-  private final Set<IPolygonColorMapEntryModifyListener> m_listeners = new HashSet<IPolygonColorMapEntryModifyListener>();
+  private final Set<ILineColorMapEntryModifyListener> m_listeners = new HashSet<ILineColorMapEntryModifyListener>();
 
-  private final PolygonColorMapEntry m_entry;
+  private final LineColorMapEntry m_entry;
 
-  public PolygonColorMapEntryEditorComposite( final Composite parent, final int style, final PolygonColorMapEntry entry )
+  public LineColorMapEntryEditorComposite( final Composite parent, final int style, final LineColorMapEntry entry )
   {
     super( parent, style );
     m_entry = entry;
 
     createControl();
-
   }
 
   private void createControl( )
@@ -83,19 +79,10 @@ public class PolygonColorMapEntryEditorComposite extends Composite
 
     final StrokeEditorComposite strokeEditor = new StrokeEditorComposite( this, SWT.NONE, m_entry.getStroke(), false );
     strokeEditor.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+
     strokeEditor.addModifyListener( new IStrokeModifyListener()
     {
       public void onStrokeChanged( Object source, Stroke stroke )
-      {
-        contentChanged();
-      }
-    } );
-
-    final FillEditorComposite fillEditor = new FillEditorComposite( this, SWT.NONE, m_entry.getFill(), true );
-    fillEditor.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    fillEditor.addModifyListener( new IFillModifyListener()
-    {
-      public void onFillChanged( Object source, Fill fill )
       {
         contentChanged();
       }
@@ -111,20 +98,20 @@ public class PolygonColorMapEntryEditorComposite extends Composite
    * Add the listener to the list of listeners. If an identical listeners has already been registered, this has no
    * effect.
    */
-  public void addModifyListener( final IPolygonColorMapEntryModifyListener l )
+  public void addModifyListener( final ILineColorMapEntryModifyListener l )
   {
     m_listeners.add( l );
   }
 
-  public void removeModifyListener( final IPolygonColorMapEntryModifyListener l )
+  public void removeModifyListener( final ILineColorMapEntryModifyListener l )
   {
     m_listeners.remove( l );
   }
 
   protected void fireModified( )
   {
-    final IPolygonColorMapEntryModifyListener[] ls = m_listeners.toArray( new IPolygonColorMapEntryModifyListener[m_listeners.size()] );
-    for( final IPolygonColorMapEntryModifyListener entryModifyListener : ls )
+    final ILineColorMapEntryModifyListener[] ls = m_listeners.toArray( new ILineColorMapEntryModifyListener[m_listeners.size()] );
+    for( final ILineColorMapEntryModifyListener entryModifyListener : ls )
       entryModifyListener.onEntryChanged( this, m_entry );
   }
 

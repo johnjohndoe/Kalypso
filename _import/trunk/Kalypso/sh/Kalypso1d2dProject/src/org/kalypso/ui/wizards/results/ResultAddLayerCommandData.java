@@ -115,10 +115,8 @@ public class ResultAddLayerCommandData
     final String defaultPath = KalypsoModel1D2DHelper.getStylesFolder( m_scenarioFolder ).getFullPath().toPortableString();
     final String relativePathTo = FileUtilities.getRelativePathTo( resFolder, defaultPath );
 
-    if( m_type == "Line" || m_type == "Polygon" )
-      m_styleLocation = ".." + relativePathTo + "/" + m_type + "/" + m_sldFile.getName();
-    else if( m_type == "Node" )
-      m_styleLocation = ".." + relativePathTo;
+    m_styleLocation = ".." + relativePathTo + "/" + m_type + "/" + m_sldFile.getName();
+
   }
 
   public String getThemeName( )

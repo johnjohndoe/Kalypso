@@ -38,15 +38,15 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.wizards.results;
+package org.kalypso.ui.wizards.results.editor;
 
-import org.kalypsodeegree.graphics.sld.PolygonColorMapEntry;
+import org.eclipse.core.resources.IFile;
 
 /**
- * @author jung
+ * @author Thomas Jung
  * 
  */
-public interface IPolygonColorMapEntryModifyListener
+public interface IEditStyleDialogModifyListener
 {
-  public void onEntryChanged( final Object source, final PolygonColorMapEntry entry );
+  public void onStyleChanged( final Object source, final IFile sldFile );
 }

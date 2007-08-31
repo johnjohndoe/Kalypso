@@ -50,7 +50,6 @@ import org.eclipse.swt.widgets.Label;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DHelper;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
-import org.kalypso.kalypsomodel1d2d.schema.binding.result.StepResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 
 /**
@@ -99,13 +98,6 @@ public class NodeResultThemeCreator extends AbstractThemeCreator
 
   public void updateThemeCommandData( )
   {
-    /* init */
-
-    /* fill */
-
-    /* get infos about time step */
-    StepResultMeta stepResultMeta = (StepResultMeta) m_documentResult.getParent();
-
     /* get infos about calc unit */
     IResultMeta calcUnitMeta = m_documentResult.getParent().getParent();
 
@@ -118,15 +110,16 @@ public class NodeResultThemeCreator extends AbstractThemeCreator
     String themeName = m_documentResult.getName() + ", " + calcUnitMeta.getName();
     String styleLocation = null;
     String type = "Node";
+    String styleLinkType = "sld";
+    String styleType = "simple";
+    String resultType = "gml";
+
     // check, if there is a style already chosen, if not create one from default template
     if( m_nodeStyleComp == null )
     {
       styleLocation = getStyle( resFolder, type );
     }
 
-    String styleLinkType = "sld";
-    String styleType = "simple";
-    String resultType = "gml";
     if( m_resultLayerCommandData[0] != null )
       m_resultLayerCommandData[0].setValues( themeName, resultType, featurePath, source, style, styleLocation, styleLinkType, styleType, type );
     else
@@ -145,10 +138,14 @@ public class NodeResultThemeCreator extends AbstractThemeCreator
     IFolder sldFolder = stylesFolder.getFolder( type );
 
     final String sldFileName = "default" + type + m_documentResult.getDocumentType().name() + "Style.sld";
+    final String styleLocation = ".." + relativePathTo + "/" + type + "/" + sldFileName;
+
     final IFile styleFile = sldFolder.getFile( sldFileName );
 
-    ResultSldHelper.processStyle( styleFile, type, m_minValue, m_maxValue );
-    final String styleLocation = ".." + relativePathTo + "/" + type + "/" + sldFileName;
+    if( styleFile.exists() == false )
+    {
+      ResultSldHelper.processStyle( styleFile, type, m_minValue, m_maxValue );
+    }
 
     return styleLocation;
   }
@@ -159,7 +156,7 @@ public class NodeResultThemeCreator extends AbstractThemeCreator
   @Override
   public ResultAddLayerCommandData[] getThemeCommandData( )
   {
-    if( m_resultLayerCommandData != null && m_resultLayerCommandData[0].isSelected() == true )
+    if( m_resultLayerCommandData != null )
       return m_resultLayerCommandData;
     else
       return null;

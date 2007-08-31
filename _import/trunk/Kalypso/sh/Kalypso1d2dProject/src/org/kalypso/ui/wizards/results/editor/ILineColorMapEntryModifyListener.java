@@ -38,15 +38,15 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.wizards.results;
+package org.kalypso.ui.wizards.results.editor;
 
-import org.eclipse.core.resources.IFile;
+import org.kalypsodeegree.graphics.sld.LineColorMapEntry;
 
 /**
  * @author Thomas Jung
  * 
  */
-public interface IEditStyleDialogModifyListener
+public interface ILineColorMapEntryModifyListener
 {
-  public void onStyleChanged( final Object source, final IFile sldFile );
+  public void onEntryChanged( final Object source, final LineColorMapEntry entry );
 }

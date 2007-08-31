@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.wizards.results;
+package org.kalypso.ui.wizards.results.editor;
 
 import java.awt.Color;
 import java.math.BigDecimal;
@@ -61,6 +61,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.ui.wizards.results.ResultSldHelper;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.LineColorMapEntry;
 import org.kalypsodeegree.graphics.sld.ParameterValueType;
@@ -82,15 +83,15 @@ public class LineColorMapEditorComposite extends Composite
 
   private final Pattern m_patternDouble = Pattern.compile( "[0-9]+[\\.\\,]?[0-9]*?" );
 
-  private double m_stepWidth;
+  private BigDecimal m_stepWidth;
 
   private final int m_fatValue;
 
   private final int m_fatWidth;
 
-  private double m_minValue;
+  private BigDecimal m_minValue;
 
-  private double m_maxValue;
+  private BigDecimal m_maxValue;
 
   private final String m_globalMin;
 
@@ -102,14 +103,14 @@ public class LineColorMapEditorComposite extends Composite
     super( parent, style );
     m_colorMap = colorMap;
 
-    m_minValue = m_colorMap.getColorMap()[0].getQuantity( null );
-    m_maxValue = m_colorMap.getColorMap()[m_colorMap.getColorMap().length - 1].getQuantity( null );
+    m_minValue = new BigDecimal( m_colorMap.getColorMap()[0].getQuantity( null ) ).setScale( 2, BigDecimal.ROUND_HALF_UP );
+    m_maxValue = new BigDecimal( m_colorMap.getColorMap()[m_colorMap.getColorMap().length - 1].getQuantity( null ) ).setScale( 2, BigDecimal.ROUND_HALF_UP );
 
     m_globalMin = new Double( minGlobalValue ).toString();
     m_globalMax = new Double( maxGlobalValue ).toString();
 
     /* default parameter */
-    m_stepWidth = 0.1;
+    m_stepWidth = new BigDecimal( 0.1 ).setScale( 2, BigDecimal.ROUND_HALF_UP );
     m_fatValue = 5;
     m_fatWidth = 5;
 
@@ -157,7 +158,9 @@ public class LineColorMapEditorComposite extends Composite
         switch( event.keyCode )
         {
           case SWT.CR:
-            checkDoubleTextValue( propertyGroup, stepWidthText );
+            final BigDecimal value = ResultSldHelper.checkDoubleTextValue( propertyGroup, stepWidthText, m_patternDouble );
+            if( value != null )
+              m_stepWidth = value;
         }
       }
     } );
@@ -167,7 +170,7 @@ public class LineColorMapEditorComposite extends Composite
       @SuppressWarnings("synthetic-access")
       public void focusGained( final FocusEvent e )
       {
-        final Double value = checkDoubleTextValue( propertyGroup, stepWidthText );
+        final BigDecimal value = ResultSldHelper.checkDoubleTextValue( propertyGroup, stepWidthText, m_patternDouble );
         if( value != null )
           m_stepWidth = value;
       }
@@ -175,7 +178,7 @@ public class LineColorMapEditorComposite extends Composite
       @SuppressWarnings("synthetic-access")
       public void focusLost( final FocusEvent e )
       {
-        final Double value = checkDoubleTextValue( propertyGroup, stepWidthText );
+        final BigDecimal value = ResultSldHelper.checkDoubleTextValue( propertyGroup, stepWidthText, m_patternDouble );
         if( value != null )
         {
           m_stepWidth = value;
@@ -330,7 +333,7 @@ public class LineColorMapEditorComposite extends Composite
         switch( event.keyCode )
         {
           case SWT.CR:
-            final Double value = checkDoubleTextValue( propertyGroup, minValueText );
+            final BigDecimal value = ResultSldHelper.checkDoubleTextValue( propertyGroup, minValueText, m_patternDouble );
             if( value != null )
               m_minValue = value;
         }
@@ -342,7 +345,7 @@ public class LineColorMapEditorComposite extends Composite
       @SuppressWarnings("synthetic-access")
       public void focusGained( final FocusEvent e )
       {
-        final Double value = checkDoubleTextValue( propertyGroup, minValueText );
+        final BigDecimal value = ResultSldHelper.checkDoubleTextValue( displayComposite, minValueText, m_patternDouble );
         if( value != null )
           m_minValue = value;
       }
@@ -350,7 +353,7 @@ public class LineColorMapEditorComposite extends Composite
       @SuppressWarnings("synthetic-access")
       public void focusLost( final FocusEvent e )
       {
-        final Double value = checkDoubleTextValue( propertyGroup, minValueText );
+        final BigDecimal value = ResultSldHelper.checkDoubleTextValue( displayComposite, minValueText, m_patternDouble );
         if( value != null )
         {
           m_minValue = value;
@@ -389,7 +392,7 @@ public class LineColorMapEditorComposite extends Composite
         switch( event.keyCode )
         {
           case SWT.CR:
-            final Double value = checkDoubleTextValue( propertyGroup, maxValueText );
+            final BigDecimal value = ResultSldHelper.checkDoubleTextValue( displayComposite, maxValueText, m_patternDouble );
             if( value != null )
               m_maxValue = value;
         }
@@ -401,7 +404,7 @@ public class LineColorMapEditorComposite extends Composite
       @SuppressWarnings("synthetic-access")
       public void focusGained( final FocusEvent e )
       {
-        final Double value = checkDoubleTextValue( propertyGroup, maxValueText );
+        final BigDecimal value = ResultSldHelper.checkDoubleTextValue( displayComposite, maxValueText, m_patternDouble );
         if( value != null )
           m_maxValue = value;
       }
@@ -409,7 +412,7 @@ public class LineColorMapEditorComposite extends Composite
       @SuppressWarnings("synthetic-access")
       public void focusLost( final FocusEvent e )
       {
-        final Double value = checkDoubleTextValue( propertyGroup, maxValueText );
+        final BigDecimal value = ResultSldHelper.checkDoubleTextValue( displayComposite, maxValueText, m_patternDouble );
         if( value != null )
         {
           m_maxValue = value;
@@ -441,45 +444,6 @@ public class LineColorMapEditorComposite extends Composite
   }
 
   /**
-   * checks the user typed string for the double value
-   * 
-   * @param comp
-   *            composite of the text field
-   * @param text
-   *            the text field
-   */
-  private Double checkDoubleTextValue( final Composite comp, final Text text )
-  {
-    String tempText = text.getText();
-
-    final Matcher m = m_patternDouble.matcher( tempText );
-
-    if( !m.matches() )
-    {
-      text.setBackground( comp.getDisplay().getSystemColor( SWT.COLOR_RED ) );
-    }
-    else
-    {
-      text.setBackground( comp.getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
-      tempText = tempText.replaceAll( ",", "." );
-
-      Double db = new Double( tempText );
-      if( db > 0 )
-      {
-        text.setText( db.toString() );
-      }
-      else
-      {
-        db = 0.0;
-        text.setText( db.toString() );
-      }
-
-      return db;
-    }
-    return null;
-  }
-
-  /**
    * sets the parameters for the colormap of an isoline
    */
   protected void updateColorMap( )
@@ -495,10 +459,10 @@ public class LineColorMapEditorComposite extends Composite
       final double normalWidth = stroke.getWidth( null );
       final float[] dashArray = stroke.getDashArray( null );
 
-      final BigDecimal minDecimal = new BigDecimal( m_minValue ).setScale( 1, BigDecimal.ROUND_FLOOR );
-      final BigDecimal maxDecimal = new BigDecimal( m_maxValue ).setScale( 1, BigDecimal.ROUND_CEILING );
+      final BigDecimal minDecimal = m_minValue.setScale( 2, BigDecimal.ROUND_FLOOR );
+      final BigDecimal maxDecimal = m_maxValue.setScale( 2, BigDecimal.ROUND_CEILING );
 
-      final BigDecimal stepWidth = new BigDecimal( m_stepWidth ).setScale( 1, BigDecimal.ROUND_HALF_UP );
+      final BigDecimal stepWidth = m_stepWidth.setScale( 2, BigDecimal.ROUND_HALF_UP );
       final int numOfClasses = (maxDecimal.subtract( minDecimal ).divide( stepWidth )).intValue() + 1;
 
       final List<LineColorMapEntry> colorMapList = new LinkedList<LineColorMapEntry>();

@@ -160,19 +160,25 @@ public class AddResultThemeWizard extends Wizard implements IKalypsoDataImportWi
     final IThemeConstructionFactory factory = page.getThemeFactory();
     final GisTemplateMapModell modell = (GisTemplateMapModell) m_modell;
 
-    final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
+    if( modell != null )
     {
-      public IStatus execute( IProgressMonitor monitor )
+
+      final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
       {
-        return addThemes( modell, results, factory, monitor );
-      }
-    };
+        public IStatus execute( IProgressMonitor monitor )
+        {
+          return addThemes( modell, results, factory, monitor );
+        }
+      };
 
-    final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, operation );
-    Kalypso1d2dProjectPlugin.getDefault().getLog().log( status );
-    ErrorDialog.openError( getShell(), "1D2D-Ergebnisse", "Fehler beim Hinzufügen der Ergebnisthemen", status );
+      final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, operation );
+      Kalypso1d2dProjectPlugin.getDefault().getLog().log( status );
+      ErrorDialog.openError( getShell(), "1D2D-Ergebnisse", "Fehler beim Hinzufügen der Ergebnisthemen", status );
 
-    return status.isOK();
+      return status.isOK();
+    }
+    return false;
+
   }
 
   /**
@@ -191,8 +197,11 @@ public class AddResultThemeWizard extends Wizard implements IKalypsoDataImportWi
       {
         for( ResultAddLayerCommandData data : datas )
         {
-          final AddThemeCommand addThemeCommand = new AddThemeCommand( modell, data.getThemeName(), data.getResultType(), data.getFeaturePath(), data.getSource(), data.getStyleLinkType(), data.getStyle(), data.getStyleLocation(), data.getStyleType() );
-          m_commandTarget.postCommand( addThemeCommand, null );
+          if( modell != null )
+          {
+            final AddThemeCommand addThemeCommand = new AddThemeCommand( modell, data.getThemeName(), data.getResultType(), data.getFeaturePath(), data.getSource(), data.getStyleLinkType(), data.getStyle(), data.getStyleLocation(), data.getStyleType() );
+            m_commandTarget.postCommand( addThemeCommand, null );
+          }
         }
       }
 

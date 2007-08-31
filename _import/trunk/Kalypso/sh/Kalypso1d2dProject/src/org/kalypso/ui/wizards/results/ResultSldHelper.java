@@ -46,12 +46,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.net.URL;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.tools.ant.filters.StringInputStream;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Text;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.Fill;
@@ -135,17 +140,18 @@ public class ResultSldHelper
       if( type == "Line" || type == "Polygon" )
       {
         processTinStyle( type, minValue, maxValue, sld );
+        /* Write SLD back to file */
+        if( sld != null )
+        {
+          final String sldXML = sld.exportAsXML();
+          final String sldXMLwithHeader = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + sldXML;
+          styleFile.create( new StringInputStream( sldXMLwithHeader, "UTF-8" ), false, new NullProgressMonitor() );
+        }
       }
       else if( type == "Node" )
       {
-        processVectorStyle( maxValue, resource, styleFile );
-      }
-      /* Write SLD back to file */
-      if( sld != null )
-      {
-        final String sldXML = sld.exportAsXML();
-        final String sldXMLwithHeader = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + sldXML;
-        styleFile.create( new StringInputStream( sldXMLwithHeader, "UTF-8" ), false, new NullProgressMonitor() );
+        String sldXMLwithHeader = processVectorStyle( maxValue, resource );
+        styleFile.create( new StringInputStream( sldXMLwithHeader ), false, new NullProgressMonitor() );
       }
     }
     catch( IOException e )
@@ -339,13 +345,13 @@ public class ResultSldHelper
     symbolizer.setColorMap( newColorMap );
   }
 
-  private static void processVectorStyle( final double maxValue, final URL url, final IFile styleFile ) throws CoreException
+  private static String processVectorStyle( final double maxValue, final URL url )
   {
     InputStream is = null;
     try
     {
       is = new BufferedInputStream( url.openStream() );
-      final String fileString = is.toString();
+      String fileString = IOUtils.toString( is, "UTF-8" );
       is.close();
 
       // we assume, that the mean distance of mesh nodes is about 30 m, so that the vectors are expanded by an factor
@@ -358,8 +364,8 @@ public class ResultSldHelper
 
       final String factor = factorValue.toString();
 
-      final String replacedString = fileString.replaceAll( "VECTORFACTOR", factor );
-      styleFile.setContents( new StringInputStream( replacedString ), false, true, new NullProgressMonitor() );
+      return fileString.replaceAll( "VECTORFACTOR", factor );
+
     }
     catch( IOException e )
     {
@@ -371,6 +377,47 @@ public class ResultSldHelper
     {
       IOUtils.closeQuietly( is );
     }
+    return null;
 
   }
+
+  /**
+   * checks the user typed string for the double value
+   * 
+   * @param comp
+   *            composite of the text field
+   * @param text
+   *            the text field
+   */
+  public static BigDecimal checkDoubleTextValue( final Composite comp, final Text text, Pattern pattern )
+  {
+    String tempText = text.getText();
+
+    final Matcher m = pattern.matcher( tempText );
+
+    if( !m.matches() )
+    {
+      text.setBackground( comp.getDisplay().getSystemColor( SWT.COLOR_RED ) );
+    }
+    else
+    {
+      text.setBackground( comp.getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
+      tempText = tempText.replaceAll( ",", "." );
+
+      BigDecimal db = new BigDecimal( tempText );
+      if( db.doubleValue() > 0 )
+      {
+        text.setText( db.toString() );
+      }
+      else
+      {
+        db = new BigDecimal( "0.0" );
+        text.setText( db.toString() );
+      }
+
+      return db;
+    }
+    return null;
+  }
+
 }

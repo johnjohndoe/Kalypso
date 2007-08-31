@@ -66,6 +66,8 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectImages.DESCRIPTORS;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DHelper;
+import org.kalypso.ui.wizards.results.editor.EditStyleDialog;
+import org.kalypso.ui.wizards.results.editor.IEditStyleDialogModifyListener;
 
 /**
  * @author Thomas Jung
