@@ -40,26 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.featureview;
 
-import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
 
-import javax.xml.bind.JAXBException;
-
 import org.eclipse.core.runtime.IStatus;
+import org.kalypso.chart.factory.configuration.ChartConfigurationLoader;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.IFeatureviewControlFactory;
-import org.kalypso.swtchart.chart.layer.ChartDataProvider;
-import org.kalypso.swtchart.configuration.ConfigLoader;
 import org.kalypsodeegree.model.feature.Feature;
-import org.ksp.chart.configuration.ChartType;
-import org.ksp.chart.configuration.ConfigurationType;
+import org.ksp.chart.factory.ChartType;
 
 /**
  * A feature control which shows a chart. The chart configuration comes from the parameters of the extension, its
@@ -90,19 +83,11 @@ public class ChartFeatureControlFactory implements IFeatureviewControlFactory
     try
     {
       final URL configUrl = new URL( configurationUrl );
-      final ConfigurationType config = loadConfig( configUrl );
-
-      final List<Object> chartOrLayerOrAxis = config.getChartOrLayerOrAxis();
-      final List<ChartType> charts = new ArrayList<ChartType>();
-      for( final Object object : chartOrLayerOrAxis )
-      {
-        if( object instanceof ChartType )
-          charts.add( (ChartType) object );
-      }
+      
+      ChartConfigurationLoader ccl=new ChartConfigurationLoader(configUrl);
+      ChartType[] chartTypes = ccl.getCharts();
 
       ChartDataProvider.FEATURE_MAP.put( featureKeyName, feature );
-
-      final ChartType[] chartTypes = charts.toArray( new ChartType[charts.size()] );
       return new ChartFeatureControl( feature, pt, chartTypes, configUrl );
     }
     catch( final Throwable e )
@@ -114,10 +99,5 @@ public class ChartFeatureControlFactory implements IFeatureviewControlFactory
     return null;
   }
 
-  private ConfigurationType loadConfig( final URL configUrl ) throws IOException, JAXBException
-  {
-    final ConfigurationType config = ConfigLoader.loadConfig( configUrl );
-    return config;
-  }
 
 }

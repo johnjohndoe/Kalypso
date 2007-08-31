@@ -42,19 +42,14 @@ package org.kalypso.model.wspm.ui.featureview;
 
 import java.util.ArrayList;
 
-import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
+import org.kalypso.chart.framework.model.data.IDataRange;
+import org.kalypso.chart.framework.model.layer.AbstractChartLayer;
+import org.kalypso.chart.framework.model.mapper.IAxis;
+import org.kalypso.chart.framework.model.styles.IStyledElement;
+import org.kalypso.chart.framework.model.styles.IStyleConstants.SE_TYPE;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
-import org.kalypso.swtchart.chart.axis.IAxis;
-import org.kalypso.swtchart.chart.layer.AbstractChartLayer;
-import org.kalypso.swtchart.chart.layer.IChartLayer;
-import org.kalypso.swtchart.chart.layer.IDataRange;
-import org.kalypso.swtchart.chart.layer.impl.DataRange;
-import org.kalypso.swtchart.chart.legend.ILegendItem;
-import org.kalypso.swtchart.chart.styles.StyledLine;
-import org.kalypso.swtchart.chart.styles.StyledPoint;
-import org.kalypso.swtchart.chart.styles.IStyleConstants.SE_TYPE;
 import org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D;
 
 /**
@@ -65,24 +60,22 @@ import org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D;
  * 
  * @author Gernot Belger
  */
-public class PolynomeChartLayer extends AbstractChartLayer implements IChartLayer
+public class PolynomeChartLayer extends AbstractChartLayer<Number, Number>
 {
-  private final IPolynomial1D[] m_polyArray;
-
   private final int m_pixelsPerTick;
 
   private final boolean m_showPoints;
+
 
   /**
    * @param pixelsPerTick:
    *          Determines the resolution how the polynomes are rendered. 1 means: for every pixel in x-diretion, a
    *          polynome value is calculated and rendered.
    */
-  public PolynomeChartLayer( final IPolynomial1D[] polyArray, final IAxis domainAxis, final IAxis valueAxis, final int pixelsPerTick, final boolean showPoints )
+  public PolynomeChartLayer( final PolynomDataContainer data, final IAxis<Number> domainAxis, final IAxis<Number> valueAxis, final int pixelsPerTick, final boolean showPoints )
   {
-    super( null, null, domainAxis, valueAxis );
-
-    m_polyArray = polyArray;
+    super( domainAxis, valueAxis );
+    setDataContainer( data );
     m_pixelsPerTick = pixelsPerTick;
     m_showPoints = showPoints;
   }
@@ -95,89 +88,27 @@ public class PolynomeChartLayer extends AbstractChartLayer implements IChartLaye
     // TODO Auto-generated method stub
   }
 
-  /**
-   * Calculates the domain range from the domain-ranges of the polynomes. May range from
-   * {@link Double#NEGATIVE_INFINITY} to {@link Double#POSITIVE_INFINITY}.
-   * 
-   * @see org.kalypso.swtchart.chart.layer.IChartLayer#getDomainRange()
-   */
-  public IDataRange getDomainRange( )
-  {
-    double min = Double.POSITIVE_INFINITY;
-    double max = Double.NEGATIVE_INFINITY;
-
-    for( final IPolynomial1D poly : m_polyArray )
-    {
-      final double rangeMin = poly.getRangeMin();
-      final double rangeMax = poly.getRangeMax();
-
-      /* Real paranoic: make sure min always less than max */
-      final double rangeNormMin = Math.min( rangeMin, rangeMax );
-      final double rangeNormMax = Math.max( rangeMin, rangeMax );
-
-      if( rangeNormMin < min )
-        min = rangeNormMin;
-
-      if( rangeNormMax > max )
-        max = rangeNormMax;
-    }
-
-    return new DataRange<Double>( min, max );
-  }
-
-  /**
-   * @see org.kalypso.swtchart.chart.layer.IChartLayer#getValueRange()
-   */
-  public IDataRange getValueRange( )
-  {
-    double min = Double.POSITIVE_INFINITY;
-    double max = Double.NEGATIVE_INFINITY;
-
-    final IDataRange domainRange = getDomainRange();
-    final double domainMin = (Double) domainRange.getMin();
-    final double domainMax = (Double) domainRange.getMax();
-
-    // TODO: handle case where domainMin == domainMax
-
-    final int tickCount = m_polyArray.length * 10;
-    final double tick = (domainMax - domainMin) / tickCount;
-
-    for( double pos = domainMin; pos < domainMax; pos += tick )
-    {
-      final IPolynomial1D poly = getPoly( pos );
-      if( poly == null )
-        continue;
-
-      final double value = poly.computeResult( pos );
-
-      if( value < min )
-        min = value;
-
-      if( value > max )
-        max = value;
-    }
-
-    return new DataRange<Double>( min, max );
-  }
-
+  
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper,
    *      org.eclipse.swt.graphics.Device)
    */
   @SuppressWarnings("unchecked")
-  public void paint( final GCWrapper gc, final Device dev )
+  public void paint( final GCWrapper gc)
   {
-    final IDataRange domainRange = getDomainRange();
+    final IDataRange domainRange = getDataContainer().getDomainRange();
     final double min = (Double) domainRange.getMin();
     final double max = (Double) domainRange.getMax();
 
-    final StyledLine sl = (StyledLine) getStyle().getElement( SE_TYPE.LINE, 0 );
-    final StyledPoint sp = m_showPoints ? (StyledPoint) getStyle().getElement( SE_TYPE.POINT, 0 ) : null;
+    final IStyledElement styledLine = getStyle().getElement( SE_TYPE.LINE, 0 );
+    final IStyledElement styledPoint = m_showPoints ? getStyle().getElement( SE_TYPE.POINT, 0 ) : null;
 
+    
+    
     final ArrayList<Point> path = new ArrayList<Point>();
 
     final IAxis<Number> domainAxis = getDomainAxis();
-    final IAxis<Number> valueAxis = getValueAxis();
+    final IAxis<Number> targetAxis = getTargetAxis();
 
     final double logical0 = domainAxis.screenToLogical( 0 ).doubleValue();
     final double logical1 = domainAxis.screenToLogical( 1 ).doubleValue();
@@ -187,48 +118,31 @@ public class PolynomeChartLayer extends AbstractChartLayer implements IChartLaye
 
     for( double pos = min; pos < max; pos += tick )
     {
-      final IPolynomial1D poly = getPoly( pos );
+      final IPolynomial1D poly = getDataContainer().getPoly( pos );
       if( poly == null )
         continue;
 
       final double value = poly.computeResult( pos );
 
       final int x = domainAxis.logicalToScreen( pos );
-      final int y = valueAxis.logicalToScreen( value );
+      final int y = targetAxis.logicalToScreen( value );
       path.add( new Point( x, y ) );
     }
 
-    sl.setPath( path );
-    sl.paint( gc, dev );
+    styledLine.setPath( path );
+    styledLine.paint( gc );
 
-    if( sp != null )
+    if( styledPoint != null )
     {
-      sp.setPath( path );
-      sp.paint( gc, dev );
+      styledPoint.setPath( path );
+      styledPoint.paint( gc );
     }
-
   }
 
-  private IPolynomial1D getPoly( final double pos )
+  @Override
+  public PolynomDataContainer getDataContainer()
   {
-    // TODO: potential performance bug. Use binary search to find poly instead
-    for( final IPolynomial1D poly : m_polyArray )
-    {
-      if( poly.getRangeMin() < pos && pos < poly.getRangeMax() )
-        return poly;
-    }
-
-    return null;
+    return (PolynomDataContainer) super.getDataContainer();
   }
-
-  /**
-   * @see org.kalypso.swtchart.chart.layer.IChartLayer#getLegendItem()
-   */
-  @SuppressWarnings("deprecation")
-  public ILegendItem getLegendItem( )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
+  
 }

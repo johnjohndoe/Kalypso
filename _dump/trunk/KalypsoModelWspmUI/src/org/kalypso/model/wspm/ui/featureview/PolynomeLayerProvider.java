@@ -46,17 +46,14 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.swtchart.chart.Chart;
-import org.kalypso.swtchart.chart.axis.IAxis;
-import org.kalypso.swtchart.chart.layer.ChartDataProvider;
-import org.kalypso.swtchart.chart.layer.IChartLayer;
-import org.kalypso.swtchart.chart.layer.ILayerProvider;
-import org.kalypso.swtchart.configuration.parameters.impl.ParameterHelper;
+import org.kalypso.chart.factory.configuration.parameters.IParameterContainer;
+import org.kalypso.chart.factory.provider.AbstractLayerProvider;
+import org.kalypso.chart.framework.model.IChartModel;
+import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D;
-import org.ksp.chart.configuration.AxisType;
-import org.ksp.chart.configuration.LayerType;
+import org.ksp.chart.factory.LayerType;
 
 /**
  * Layer provider for the {@link PolynomeChartLayer}.
@@ -72,43 +69,36 @@ import org.ksp.chart.configuration.LayerType;
  * 
  * @author Gernot Belger
  */
-public class PolynomeLayerProvider implements ILayerProvider
+public class PolynomeLayerProvider extends AbstractLayerProvider
 {
-  private LayerType m_lt;
-
-  private Chart m_chart;
-
-  public void init( final Chart chart, final LayerType lt )
-  {
-    m_chart = chart;
-    m_lt = lt;
-  }
 
   /**
    * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayers()
    */
-  public IChartLayer getLayer( final URL context )
+  @SuppressWarnings("unchecked")
+  public PolynomeChartLayer getLayer( final URL context )
   {
-    final String configLayerId = m_lt.getName();
+    LayerType lt=getLayerType();
 
-    final ParameterHelper ph = new ParameterHelper();
-    ph.addParameters( m_lt.getParameters(), configLayerId );
+    final IParameterContainer parameterContainer = getParameterContainer();
 
-    final String domainId = ph.getParameterValue( "domainId", null );
-    final boolean showPoints = Boolean.parseBoolean( ph.getParameterValue( "showPoints", "false" ) );
-    final int pixelsPerTick = Integer.parseInt( ph.getParameterValue( "pixelsPerTick", "5" ) );
+    final String domainId = parameterContainer.getParameterValue( "domainId", null );
+    final boolean showPoints = Boolean.parseBoolean( parameterContainer.getParameterValue( "showPoints", "false" ) );
+    final int pixelsPerTick = Integer.parseInt( parameterContainer.getParameterValue( "pixelsPerTick", "5" ) );
 
-    final String featureKey = ph.getParameterValue( "featureKey", null );
-    final String propertyNameStr = ph.getParameterValue( "propertyName", null );
+    final String featureKey = parameterContainer.getParameterValue( "featureKey", null );
+    final String propertyNameStr = parameterContainer.getParameterValue( "propertyName", null );
     final QName propertyName = propertyNameStr == null ? null : QName.valueOf( propertyNameStr );
     
     final Feature feature = ChartDataProvider.FEATURE_MAP.get( featureKey );
 
-    final String domainAxisId = ((AxisType) m_lt.getAxes().getDomainAxisRef().getRef()).getName();
-    final String valueAxisId = ((AxisType) m_lt.getAxes().getValueAxisRef().getRef()).getName();
+    final String domainAxisId = lt.getMapper().getDomainAxisRef().getRef();
+    final String targetAxisId = lt.getMapper().getTargetAxisRef().getRef();
 
-    final IAxis domAxis = m_chart.getAxisRegistry().getAxis( domainAxisId );
-    final IAxis valAxis = m_chart.getAxisRegistry().getAxis( valueAxisId );
+    IChartModel chartModel=getChartModel(); 
+    
+    final IAxis<Number> domAxis = chartModel.getMapperRegistry().getAxis( domainAxisId );
+    final IAxis<Number> valAxis = chartModel.getMapperRegistry().getAxis( targetAxisId );
 
     final FeatureList polygones = (FeatureList) feature.getProperty( propertyName );
 
@@ -123,10 +113,12 @@ public class PolynomeLayerProvider implements ILayerProvider
     }
 
     final IPolynomial1D[] polyArray = polys.toArray( new IPolynomial1D[polys.size()] );
-    final PolynomeChartLayer layer = new PolynomeChartLayer( polyArray, domAxis, valAxis, pixelsPerTick, showPoints );
-    layer.setName( m_lt.getTitle() );
-    layer.setVisibility( m_lt.isVisible() );
+    PolynomDataContainer data=new PolynomDataContainer(polyArray);
+    final PolynomeChartLayer layer = new PolynomeChartLayer( data, domAxis, valAxis, pixelsPerTick, showPoints );
+    layer.setTitle( lt.getTitle() );
+    layer.setVisible(  lt.getVisible() );
 
     return layer;
   }
+
 }

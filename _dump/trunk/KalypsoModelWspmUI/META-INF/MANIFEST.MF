@@ -14,13 +14,16 @@ Require-Bundle: org.kalypso.ui,
  org.kalypso.chart.ui,
  org.eclipse.core.expressions,
  org.eclipse.core.commands,
- org.eclipse.ui
+ org.eclipse.ui,
+ org.kalypso.chart.ext.base,
+ org.kalypso.chart.ext.observation
 Eclipse-LazyStart: true
 Export-Package: org.kalypso.model.wspm.ui,
  org.kalypso.model.wspm.ui.action,
  org.kalypso.model.wspm.ui.adapter,
  org.kalypso.model.wspm.ui.editor,
  org.kalypso.model.wspm.ui.editor.actions,
+ org.kalypso.model.wspm.ui.featureview,
  org.kalypso.model.wspm.ui.preferences,
  org.kalypso.model.wspm.ui.product,
  org.kalypso.model.wspm.ui.profil,

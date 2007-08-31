@@ -402,10 +402,13 @@
    </extension>
 
       <extension
-         point="org.kalypso.chart.LayerProvider">
+         point="org.kalypso.chart.factory.LayerProvider">
       <provider
             class="org.kalypso.model.wspm.ui.featureview.PolynomeLayerProvider"
             id="org.kalypso.model.wspm.ui.featureview.PolynomeLayerProvider"/>
+      <provider
+            class="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider"
+            id="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider"/>
    </extension>
 
 

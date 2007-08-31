@@ -40,8 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.featureview;
 
+import java.io.IOException;
 import java.net.URL;
 
+import org.apache.xmlbeans.XmlException;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.DialogSettings;
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -49,21 +51,28 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
+import org.kalypso.chart.factory.configuration.ChartConfigurationLoader;
+import org.kalypso.chart.factory.configuration.ChartFactory;
+import org.kalypso.chart.factory.configuration.exception.ConfigurationException;
+import org.kalypso.chart.framework.model.IChartModel;
+import org.kalypso.chart.framework.model.impl.ChartModel;
+import org.kalypso.chart.framework.util.ChartUtilities;
+import org.kalypso.chart.framework.view.ChartComposite;
+import org.kalypso.chart.framework.view.IChartMouseHandler;
 import org.kalypso.chart.ui.editor.actions.ChartActionContributor;
+import org.kalypso.chart.ui.editor.mouse.DragMouseHandler;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
-import org.kalypso.swtchart.chart.Chart;
-import org.kalypso.swtchart.chart.ChartUtilities;
-import org.kalypso.swtchart.configuration.ChartLoader;
 import org.kalypsodeegree.model.feature.Feature;
-import org.ksp.chart.configuration.ChartType;
+import org.ksp.chart.factory.ChartType;
 
 /**
  * @author Gernot Belger
@@ -75,7 +84,7 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
 
   private final static String STR_SETTINGS_TAB = "tabIndex";
 
-  private Chart[] m_charts;
+  private ChartComposite[] m_charts;
 
   private final ChartType[] m_chartTypes;
 
@@ -98,7 +107,7 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
     
     final TabFolder folder = new TabFolder( parent, SWT.TOP );
 
-    m_charts = new Chart[m_chartTypes.length];
+    m_charts = new ChartComposite[m_chartTypes.length];
     for( int i = 0; i < m_chartTypes.length; i++ )
     {
       final TabItem item = new TabItem( folder, SWT.NONE );
@@ -116,11 +125,18 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
       item.setText( chartType.getTitle() );
       item.setToolTipText( chartType.getDescription() );
 
-      final Chart chart = new Chart( composite, SWT.BORDER );
+      
+      IChartModel chartModel=new ChartModel();
+      final ChartComposite chart = new ChartComposite( composite, SWT.BORDER, chartModel, new RGB(255,255,255) );
       final GridData gridData = new GridData( SWT.FILL, SWT.FILL, true, true );
       
       chart.setLayoutData( gridData );
       contributor.contributeActions( chart, manager );
+      IChartMouseHandler handler=new DragMouseHandler(chart);
+      chart.addMouseListener( handler );
+      chart.addMouseMoveListener( handler);
+      
+      
       m_charts[i] = chart;
 
       item.setControl( composite );
@@ -185,11 +201,34 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
   {
     for( int i = 0; i < m_charts.length; i++ )
     {
-      final Chart chart = m_charts[i];
-      final ChartType chartType = m_chartTypes[i];
+      final ChartComposite chart = m_charts[i];
 
-      ChartLoader.configureChart( chart, chartType, m_context );
-      ChartUtilities.maximize( chart );
+      ChartConfigurationLoader ccl;
+      try
+      {
+        /**
+         * TODO: @alex: check if this ist working; if this is the wrong context, we're having a problem
+         */
+        ccl = new ChartConfigurationLoader(m_context);
+        ChartFactory.configureChartModel( chart.getModel(), ccl, m_chartTypes[i].getId(), m_context );
+      }
+      catch( XmlException e )
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+      catch( IOException e )
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+      catch( ConfigurationException e )
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+      
+      ChartUtilities.maximize( chart.getModel() );
     }
   }
 

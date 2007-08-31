@@ -11,5 +11,5 @@ Require-Bundle: org.kalypso.contribs.java,
  org.kalypso.simulation.core,
  org.kalypso.deegree,
  org.kalypso.core,
- org.kalypso.chart,
- org.kalypso.model.wspm.sobek.core
+ org.kalypso.model.wspm.sobek.core,
+ org.kalypso.chart.ext.base
