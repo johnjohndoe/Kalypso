@@ -1,4 +1,4 @@
-C     Last change:  JAJ  28 Aug 2007    9:50 pm
+C     Last change:  WP   31 Aug 2007    6:31 pm
       MODULE BLKASTEPH
 !NiS,mar06: This module replaces common block definitions in the program code of Kalypso2D.
 !           The reason is to make the allocatable option for the arrays possible, because the
