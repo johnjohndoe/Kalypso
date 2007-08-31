@@ -45,7 +45,8 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.math.BigDecimal;
-import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
@@ -70,22 +71,18 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.ColorDialog;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Spinner;
 import org.kalypso.contribs.eclipse.swt.awt.ImageConverter;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.Fill;
 import org.kalypsodeegree.graphics.sld.GraphicFill;
-import org.kalypsodeegree_impl.graphics.sld.Fill_Impl;
 import org.kalypsodeegree_impl.graphics.sld.awt.FillPainter;
 
 /**
@@ -93,6 +90,8 @@ import org.kalypsodeegree_impl.graphics.sld.awt.FillPainter;
  */
 public class FillEditorComposite extends Composite
 {
+  private final Set<IFillModifyListener> m_listeners = new HashSet<IFillModifyListener>();
+
   private final Fill m_fill;
 
   private Color m_color;
@@ -103,15 +102,19 @@ public class FillEditorComposite extends Composite
 
   private Composite m_previewComp;
 
-  public FillEditorComposite( final Composite parent, final int style, final Fill fill )
+  private final Boolean m_previewVisible;
+
+  public FillEditorComposite( final Composite parent, final int style, final Fill fill, final Boolean previewVisible )
   {
     super( parent, style );
     m_fill = fill;
+    m_previewVisible = previewVisible;
 
     try
     {
       createControl();
-      updatePreview();
+      if( m_previewVisible == true )
+        updatePreview();
 
     }
     catch( FilterEvaluationException e )
@@ -124,6 +127,19 @@ public class FillEditorComposite extends Composite
   {
     setLayout( new GridLayout( 2, false ) );
 
+    createColorControl();
+
+    createOpacityControl();
+
+    createTypeControl();
+
+    if( m_previewVisible == true )
+      createPreviewControl();
+
+  }
+
+  private void createColorControl( ) throws FilterEvaluationException
+  {
     /* Color */
     final Label colorTextLabel = new Label( this, SWT.NONE );
     colorTextLabel.setText( "Füllfarbe" );
@@ -136,13 +152,8 @@ public class FillEditorComposite extends Composite
 
     m_colorLabel.setLayoutData( gridData );
 
-    java.awt.Color fillColor;
-
-    fillColor = m_fill.getFill( null );
-
-    // TODO: get color from m_fill
+    java.awt.Color fillColor = m_fill.getFill( null );
     m_color = new Color( m_colorLabel.getDisplay(), fillColor.getRed(), fillColor.getGreen(), fillColor.getBlue() );
-
     m_colorLabel.setBackground( m_color );
 
     /* mouse listeners */
@@ -161,7 +172,7 @@ public class FillEditorComposite extends Composite
           m_fill.setFill( new java.awt.Color( chosenColor.red, chosenColor.green, chosenColor.blue ) );
         }
         m_colorLabel.setBackground( m_color );
-        updatePreview();
+        contentChanged();
       }
     } );
 
@@ -185,32 +196,10 @@ public class FillEditorComposite extends Composite
         setCursor( new Cursor( null, SWT.CURSOR_ARROW ) );
       }
     } );
+  }
 
-    /* color opacity */
-    // spinner text
-    final Label opacityTextLabel = new Label( this, SWT.NONE );
-    opacityTextLabel.setText( "Deckkraft [%]" );
-
-    final Spinner opacitySpinner = new Spinner( this, SWT.NONE );
-    opacitySpinner.setLayoutData( new GridData( SWT.END, SWT.CENTER, true, false ) );
-    opacitySpinner.setBackground( this.getBackground() );
-    final double opacity = m_fill.getOpacity( null );
-    final BigDecimal selectionValue = new BigDecimal( opacity * 100 ).setScale( 0, BigDecimal.ROUND_CEILING );
-    opacitySpinner.setValues( selectionValue.intValue(), 1, 100, 0, 1, 10 );
-
-    opacitySpinner.addSelectionListener( new SelectionAdapter()
-    {
-
-      @SuppressWarnings("synthetic-access")
-      @Override
-      public void widgetSelected( SelectionEvent e )
-      {
-        double opac = new BigDecimal( opacitySpinner.getSelection() ).setScale( 2, BigDecimal.ROUND_CEILING ).divide( new BigDecimal( 100 ), BigDecimal.ROUND_CEILING ).doubleValue();
-        m_fill.setOpacity( opac );
-        updatePreview();
-      }
-    } );
-
+  private void createTypeControl( )
+  {
     /* fill type combo */
     // combo text
     final Label comboTextLabel = new Label( this, SWT.NONE );
@@ -276,7 +265,7 @@ public class FillEditorComposite extends Composite
         }
         m_fill.setGraphicFill( graphicFill );
 
-        updatePreview();
+        contentChanged();
       }
     } );
 
@@ -293,7 +282,38 @@ public class FillEditorComposite extends Composite
 // final Image editImage = Kalypso1d2dProjectPlugin.getImageProvider().getImageDescriptor(
 // DESCRIPTORS.RESULT_VIEWER_EDIT ).createImage();
 // addGraphicButton.setImage( editImage );
+  }
 
+  private void createOpacityControl( ) throws FilterEvaluationException
+  {
+    /* color opacity */
+    // spinner text
+    final Label opacityTextLabel = new Label( this, SWT.NONE );
+    opacityTextLabel.setText( "Deckkraft [%]" );
+
+    final Spinner opacitySpinner = new Spinner( this, SWT.NONE );
+    opacitySpinner.setLayoutData( new GridData( SWT.END, SWT.CENTER, true, false ) );
+    opacitySpinner.setBackground( this.getBackground() );
+    final double opacity = m_fill.getOpacity( null );
+    final BigDecimal selectionValue = new BigDecimal( opacity * 100 ).setScale( 0, BigDecimal.ROUND_HALF_UP );
+    opacitySpinner.setValues( selectionValue.intValue(), 1, 100, 0, 1, 10 );
+
+    opacitySpinner.addSelectionListener( new SelectionAdapter()
+    {
+
+      @SuppressWarnings("synthetic-access")
+      @Override
+      public void widgetSelected( SelectionEvent e )
+      {
+        double opac = new BigDecimal( opacitySpinner.getSelection() ).setScale( 2, BigDecimal.ROUND_HALF_UP ).divide( new BigDecimal( 100 ), BigDecimal.ROUND_HALF_UP ).doubleValue();
+        m_fill.setOpacity( opac );
+        contentChanged();
+      }
+    } );
+  }
+
+  private void createPreviewControl( )
+  {
     final Group previewGroup = new Group( this, SWT.NONE );
     previewGroup.setLayout( new GridLayout() );
     GridData previewGridData = new GridData( SWT.FILL, SWT.CENTER, true, false );
@@ -323,10 +343,10 @@ public class FillEditorComposite extends Composite
       @Override
       public void controlResized( ControlEvent e )
       {
-        updatePreview();
+        if( m_previewVisible == true )
+          updatePreview();
       }
     } );
-
   }
 
   @SuppressWarnings("static-access")
@@ -355,7 +375,7 @@ public class FillEditorComposite extends Composite
 
     /* demo text */
     final String title = "demo";
-    g2D.drawString( title, width.divide( new BigDecimal( 2 ), 0, BigDecimal.ROUND_CEILING ).intValue() - 30, height.divide( new BigDecimal( 1.2 ), 0, BigDecimal.ROUND_CEILING ).intValue() );
+    g2D.drawString( title, width.divide( new BigDecimal( 2 ), 0, BigDecimal.ROUND_HALF_UP ).intValue() - 30, height.divide( new BigDecimal( 1.2 ), 0, BigDecimal.ROUND_HALF_UP ).intValue() );
 
     FillPainter painter;
 
@@ -386,32 +406,35 @@ public class FillEditorComposite extends Composite
   {
     m_color.dispose();
     m_preview.dispose();
+
+    m_listeners.clear();
   }
 
-  public static void main( String[] args )
+  /**
+   * Add the listener to the list of listeners. If an identical listeners has already been registered, this has no
+   * effect.
+   */
+  public void addModifyListener( final IFillModifyListener l )
   {
-    Display display = new Display();
-    Shell shell = new Shell( display );
+    m_listeners.add( l );
+  }
 
-    final Fill fill = new Fill_Impl( new HashMap<Object, Object>(), null );
-    fill.setOpacity( 1 );
-    fill.setFill( new java.awt.Color( shell.getBackground().getRed(), shell.getBackground().getRed(), shell.getBackground().getBlue() ) );
+  public void removeModifyListener( final IFillModifyListener l )
+  {
+    m_listeners.remove( l );
+  }
 
-    shell.setLayout( new GridLayout() );
+  protected void fireModified( )
+  {
+    final IFillModifyListener[] ls = m_listeners.toArray( new IFillModifyListener[m_listeners.size()] );
+    for( final IFillModifyListener fillModifyListener : ls )
+      fillModifyListener.onFillChanged( this, m_fill );
+  }
 
-    final Group group = new Group( shell, SWT.BORDER );
-    group.setLayout( new FillLayout() );
-    group.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    group.setText( "Fill" );
-    FillEditorComposite fillEditorComposite = new FillEditorComposite( group, SWT.NONE, fill );
-
-    shell.pack();
-    shell.open();
-    while( !shell.isDisposed() )
-    {
-      if( !display.readAndDispatch() )
-        display.sleep();
-    }
-    display.dispose();
+  protected void contentChanged( )
+  {
+    if( m_previewVisible == true )
+      updatePreview();
+    fireModified();
   }
 }

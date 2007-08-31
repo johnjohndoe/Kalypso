@@ -40,11 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.sldEditor;
 
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.math.BigDecimal;
-import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
@@ -69,27 +71,27 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.ColorDialog;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Spinner;
 import org.kalypso.contribs.eclipse.swt.awt.ImageConverter;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.Stroke;
-import org.kalypsodeegree_impl.graphics.sld.Stroke_Impl;
 import org.kalypsodeegree_impl.graphics.sld.awt.StrokePainter;
 
 /**
+ * Composite, which gives the most important editing tools for a given stroke.
+ * 
  * @author Thomas Jung
  */
 public class StrokeEditorComposite extends Composite
 {
+  private final Set<IStrokeModifyListener> m_listeners = new HashSet<IStrokeModifyListener>();
+
   private final Stroke m_stroke;
 
   private Color m_color;
@@ -100,17 +102,20 @@ public class StrokeEditorComposite extends Composite
 
   private Composite m_previewComp;
 
-  public StrokeEditorComposite( final Composite parent, final int style, final Stroke stroke )
+  private final boolean m_previewVisible;
+
+  public StrokeEditorComposite( final Composite parent, final int style, final Stroke stroke, final boolean previewVisible )
   {
     super( parent, style );
 
     m_stroke = stroke;
+    m_previewVisible = previewVisible;
 
     try
     {
       createControl();
-      updatePreview();
-
+      if( m_previewVisible == true )
+        updatePreview();
     }
     catch( FilterEvaluationException e )
     {
@@ -122,90 +127,58 @@ public class StrokeEditorComposite extends Composite
   {
     setLayout( new GridLayout( 2, false ) );
 
-    /* Color */
-    final Label colorTextLabel = new Label( this, SWT.NONE );
-    colorTextLabel.setText( "Linienfarbe" );
+    createColorControl();
 
-    m_colorLabel = new Label( this, SWT.BORDER );
-    m_colorLabel.setText( "     " );
-    GridData gridData = new GridData( SWT.END, SWT.CENTER, true, false );
-    gridData.widthHint = 16;
-    gridData.heightHint = 16;
+    createOpacityControl();
 
-    m_colorLabel.setLayoutData( gridData );
+    createWidthControl();
 
-    java.awt.Color strokeColor;
+    createTypeControl();
 
-    strokeColor = m_stroke.getStroke( null );
-    m_color = new Color( m_colorLabel.getDisplay(), strokeColor.getRed(), strokeColor.getGreen(), strokeColor.getBlue() );
+    if( m_previewVisible == true )
+      createPreviewControl();
 
-    m_colorLabel.setBackground( m_color );
+  }
 
-    /* mouse listeners */
-    m_colorLabel.addMouseListener( new MouseAdapter()
+  private void createPreviewControl( )
+  {
+    final Group previewGroup = new Group( this, SWT.NONE );
+    previewGroup.setLayout( new GridLayout() );
+    GridData previewGridData = new GridData( SWT.FILL, SWT.CENTER, true, false );
+    previewGridData.horizontalSpan = 2;
+    previewGridData.heightHint = 30;
+    previewGroup.setLayoutData( previewGridData );
+    previewGroup.setText( "Vorschau" );
+
+    /* preview */
+    m_previewComp = new Composite( previewGroup, SWT.NONE );
+    GridData previewCompData = new GridData( SWT.FILL, SWT.CENTER, true, false );
+    previewCompData.heightHint = 22;
+    m_previewComp.setLayoutData( previewCompData );
+
+    this.addDisposeListener( new DisposeListener()
+    {
+      public void widgetDisposed( DisposeEvent e )
+      {
+        disposeControl();
+      }
+
+    } );
+
+    m_previewComp.addControlListener( new ControlAdapter()
     {
       @SuppressWarnings("synthetic-access")
       @Override
-      public void mouseDown( MouseEvent e )
+      public void controlResized( ControlEvent e )
       {
-        final ColorDialog colorDialog = new ColorDialog( StrokeEditorComposite.this.getShell() );
-        final RGB chosenColor = colorDialog.open();
-        if( chosenColor != null )
-        {
-          m_color.dispose();
-          m_color = new Color( m_colorLabel.getDisplay(), chosenColor.red, chosenColor.green, chosenColor.blue );
-          m_stroke.setStroke( new java.awt.Color( chosenColor.red, chosenColor.green, chosenColor.blue ) );
-        }
-        m_colorLabel.setBackground( m_color );
-        updatePreview();
+        if( m_previewVisible == true )
+          updatePreview();
       }
     } );
+  }
 
-    m_colorLabel.addMouseTrackListener( new MouseTrackAdapter()
-    {
-      /**
-       * @see org.eclipse.swt.events.MouseTrackAdapter#mouseEnter(org.eclipse.swt.events.MouseEvent)
-       */
-      @Override
-      public void mouseEnter( MouseEvent e )
-      {
-        setCursor( new Cursor( null, SWT.CURSOR_HAND ) );
-      }
-
-      /**
-       * @see org.eclipse.swt.events.MouseTrackAdapter#mouseExit(org.eclipse.swt.events.MouseEvent)
-       */
-      @Override
-      public void mouseExit( MouseEvent e )
-      {
-        setCursor( new Cursor( null, SWT.CURSOR_ARROW ) );
-      }
-    } );
-
-    /* color width */
-    // spinner text
-    final Label widthTextLabel = new Label( this, SWT.NONE );
-    widthTextLabel.setText( "Linienstärke" );
-
-    final Spinner widthSpinner = new Spinner( this, SWT.NONE );
-    widthSpinner.setLayoutData( new GridData( SWT.END, SWT.CENTER, true, false ) );
-    widthSpinner.setBackground( this.getBackground() );
-    double width = m_stroke.getWidth( null );
-    BigDecimal selectionValue = new BigDecimal( width ).setScale( 0, BigDecimal.ROUND_CEILING );
-    widthSpinner.setValues( selectionValue.intValue(), 1, 99, 0, 1, 10 );
-
-    widthSpinner.addSelectionListener( new SelectionAdapter()
-    {
-
-      @SuppressWarnings("synthetic-access")
-      @Override
-      public void widgetSelected( SelectionEvent e )
-      {
-        m_stroke.setWidth( widthSpinner.getSelection() );
-        updatePreview();
-      }
-    } );
-
+  private void createTypeControl( )
+  {
     /* line type combo */
     // combo text
     final Label comboTextLabel = new Label( this, SWT.NONE );
@@ -233,7 +206,6 @@ public class StrokeEditorComposite extends Composite
       @Override
       public String getText( Object element )
       {
-
         return super.getText( element );
       }
     } );
@@ -241,7 +213,6 @@ public class StrokeEditorComposite extends Composite
     // selection listener
     lineTypeCombo.addSelectionChangedListener( new ISelectionChangedListener()
     {
-
       @SuppressWarnings("synthetic-access")
       public void selectionChanged( final SelectionChangedEvent event )
       {
@@ -280,44 +251,124 @@ public class StrokeEditorComposite extends Composite
           dashArray[3] = 1.9f;
           m_stroke.setDashArray( dashArray );
         }
-        updatePreview();
+        contentChanged();
       }
     } );
-
-    final Group previewGroup = new Group( this, SWT.NONE );
-    previewGroup.setLayout( new GridLayout() );
-    GridData previewGridData = new GridData( SWT.FILL, SWT.CENTER, true, false );
-    previewGridData.horizontalSpan = 2;
-    previewGridData.heightHint = 30;
-    previewGroup.setLayoutData( previewGridData );
-    previewGroup.setText( "Vorschau" );
-
-    /* preview */
-    m_previewComp = new Composite( previewGroup, SWT.NONE );
-    GridData previewCompData = new GridData( SWT.FILL, SWT.CENTER, true, false );
-    previewCompData.heightHint = 22;
-    m_previewComp.setLayoutData( previewCompData );
-
-    this.addDisposeListener( new DisposeListener()
-    {
-      public void widgetDisposed( DisposeEvent e )
-      {
-        disposeControl();
-      }
-
-    } );
-
-    m_previewComp.addControlListener( new ControlAdapter()
-    {
-      @Override
-      public void controlResized( ControlEvent e )
-      {
-        updatePreview();
-      }
-    } );
-
   }
 
+  private void createWidthControl( ) throws FilterEvaluationException
+  {
+    /* color width */
+    // spinner text
+    final Label widthTextLabel = new Label( this, SWT.NONE );
+    widthTextLabel.setText( "Linienstärke" );
+
+    final Spinner widthSpinner = new Spinner( this, SWT.NONE );
+    widthSpinner.setLayoutData( new GridData( SWT.END, SWT.CENTER, true, false ) );
+    widthSpinner.setBackground( this.getBackground() );
+    double width = m_stroke.getWidth( null );
+    BigDecimal selectionValue = new BigDecimal( width ).setScale( 0, BigDecimal.ROUND_HALF_UP );
+    widthSpinner.setValues( selectionValue.intValue(), 1, 99, 0, 1, 10 );
+
+    widthSpinner.addSelectionListener( new SelectionAdapter()
+    {
+      @SuppressWarnings("synthetic-access")
+      @Override
+      public void widgetSelected( SelectionEvent e )
+      {
+        m_stroke.setWidth( widthSpinner.getSelection() );
+        contentChanged();
+      }
+    } );
+  }
+
+  private void createOpacityControl( ) throws FilterEvaluationException
+  {
+    /* color opacity */
+    // spinner text
+    final Label opacityTextLabel = new Label( this, SWT.NONE );
+    opacityTextLabel.setText( "Deckkraft [%]" );
+
+    final Spinner opacitySpinner = new Spinner( this, SWT.NONE );
+    opacitySpinner.setLayoutData( new GridData( SWT.END, SWT.CENTER, true, false ) );
+    opacitySpinner.setBackground( this.getBackground() );
+    final double opacity = m_stroke.getOpacity( null );
+    final BigDecimal opacitySelectionValue = new BigDecimal( opacity * 100 ).setScale( 0, BigDecimal.ROUND_HALF_UP );
+    opacitySpinner.setValues( opacitySelectionValue.intValue(), 1, 100, 0, 1, 10 );
+
+    opacitySpinner.addSelectionListener( new SelectionAdapter()
+    {
+      @SuppressWarnings("synthetic-access")
+      @Override
+      public void widgetSelected( SelectionEvent e )
+      {
+        double opac = new BigDecimal( opacitySpinner.getSelection() ).setScale( 2, BigDecimal.ROUND_HALF_UP ).divide( new BigDecimal( 100 ), BigDecimal.ROUND_HALF_UP ).doubleValue();
+        m_stroke.setOpacity( opac );
+        contentChanged();
+      }
+    } );
+  }
+
+  private void createColorControl( ) throws FilterEvaluationException
+  {
+    /* Color */
+    final Label colorTextLabel = new Label( this, SWT.NONE );
+    colorTextLabel.setText( "Linienfarbe" );
+
+    m_colorLabel = new Label( this, SWT.BORDER );
+    m_colorLabel.setText( "     " );
+    GridData gridData = new GridData( SWT.END, SWT.CENTER, true, false );
+    gridData.widthHint = 16;
+    gridData.heightHint = 16;
+    m_colorLabel.setLayoutData( gridData );
+
+    java.awt.Color strokeColor = m_stroke.getStroke( null );
+    m_color = new Color( m_colorLabel.getDisplay(), strokeColor.getRed(), strokeColor.getGreen(), strokeColor.getBlue() );
+    m_colorLabel.setBackground( m_color );
+
+    /* mouse listeners */
+    m_colorLabel.addMouseListener( new MouseAdapter()
+    {
+      @SuppressWarnings("synthetic-access")
+      @Override
+      public void mouseDown( MouseEvent e )
+      {
+        final ColorDialog colorDialog = new ColorDialog( StrokeEditorComposite.this.getShell() );
+        final RGB chosenColor = colorDialog.open();
+        if( chosenColor != null )
+        {
+          m_color.dispose();
+          m_color = new Color( m_colorLabel.getDisplay(), chosenColor.red, chosenColor.green, chosenColor.blue );
+          m_stroke.setStroke( new java.awt.Color( chosenColor.red, chosenColor.green, chosenColor.blue ) );
+        }
+        m_colorLabel.setBackground( m_color );
+        contentChanged();
+      }
+    } );
+
+    m_colorLabel.addMouseTrackListener( new MouseTrackAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.MouseTrackAdapter#mouseEnter(org.eclipse.swt.events.MouseEvent)
+       */
+      @Override
+      public void mouseEnter( MouseEvent e )
+      {
+        setCursor( new Cursor( null, SWT.CURSOR_HAND ) );
+      }
+
+      /**
+       * @see org.eclipse.swt.events.MouseTrackAdapter#mouseExit(org.eclipse.swt.events.MouseEvent)
+       */
+      @Override
+      public void mouseExit( MouseEvent e )
+      {
+        setCursor( new Cursor( null, SWT.CURSOR_ARROW ) );
+      }
+    } );
+  }
+
+  @SuppressWarnings("static-access")
   private void updatePreview( )
   {
     Point point = m_previewComp.getSize();
@@ -329,9 +380,21 @@ public class StrokeEditorComposite extends Composite
 
     BufferedImage bufferedImage = new BufferedImage( width.intValue(), height.intValue(), BufferedImage.TYPE_INT_RGB );
 
-    Graphics2D graphics2D = bufferedImage.createGraphics();
-    graphics2D.setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
-    graphics2D.fillRect( 0, 0, width.intValue(), height.intValue() );
+    Graphics2D g2D = bufferedImage.createGraphics();
+    g2D.setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
+    g2D.setPaintMode();
+
+    g2D.setColor( java.awt.Color.WHITE );
+    g2D.fillRect( 0, 0, width.intValue(), height.intValue() );
+
+    g2D.setColor( java.awt.Color.BLACK );
+    Font font = new Font( "SansSerif", Font.BOLD, height.intValue() );
+    g2D.setFont( font );
+
+    /* demo text */
+    final String title = "demo";
+    g2D.drawString( title, width.divide( new BigDecimal( 2 ), 0, BigDecimal.ROUND_CEILING ).intValue() - 30, height.divide( new BigDecimal( 1.2 ), 0, BigDecimal.ROUND_CEILING ).intValue() );
+
     StrokePainter painter;
     try
     {
@@ -340,15 +403,15 @@ public class StrokeEditorComposite extends Composite
       int[][] pos = new int[3][4];
       pos[0][0] = 4;
       pos[1][0] = 4;
-      pos[0][1] = width.divide( new BigDecimal( 3 ), 0, BigDecimal.ROUND_CEILING ).intValue();
-      pos[1][1] = height.divide( new BigDecimal( 1 ), 0, BigDecimal.ROUND_CEILING ).intValue() - 4;
-      pos[0][2] = width.divide( new BigDecimal( 1.5 ), 0, BigDecimal.ROUND_CEILING ).intValue();
+      pos[0][1] = width.divide( new BigDecimal( 3 ), 0, BigDecimal.ROUND_HALF_UP ).intValue();
+      pos[1][1] = height.divide( new BigDecimal( 1 ), 0, BigDecimal.ROUND_HALF_UP ).intValue() - 4;
+      pos[0][2] = width.divide( new BigDecimal( 1.5 ), 0, BigDecimal.ROUND_HALF_UP ).intValue();
       pos[1][2] = 4;
-      pos[0][3] = width.divide( new BigDecimal( 1 ), 0, BigDecimal.ROUND_CEILING ).intValue() - 4;
-      pos[1][3] = height.divide( new BigDecimal( 1 ), 0, BigDecimal.ROUND_CEILING ).intValue() - 4;
+      pos[0][3] = width.divide( new BigDecimal( 1 ), 0, BigDecimal.ROUND_HALF_UP ).intValue() - 4;
+      pos[1][3] = height.divide( new BigDecimal( 1 ), 0, BigDecimal.ROUND_HALF_UP ).intValue() - 4;
       pos[2][0] = 4;
 
-      painter.paintPoses( graphics2D, pos );
+      painter.paintPoses( g2D, pos );
     }
     catch( FilterEvaluationException e )
     {
@@ -370,32 +433,36 @@ public class StrokeEditorComposite extends Composite
   {
     m_color.dispose();
     m_preview.dispose();
+
+    m_listeners.clear();
   }
 
-  public static void main( String[] args )
+  /**
+   * Add the listener to the list of listeners. If an identical listeners has already been registered, this has no
+   * effect.
+   */
+  public void addModifyListener( final IStrokeModifyListener l )
   {
-    Display display = new Display();
-    Shell shell = new Shell( display );
-
-    final Stroke stroke = new Stroke_Impl( new HashMap<Object, Object>(), null, null );
-    stroke.setWidth( 3.45 );
-    stroke.setStroke( new java.awt.Color( shell.getBackground().getRed(), shell.getBackground().getRed(), shell.getBackground().getBlue() ) );
-
-    shell.setLayout( new GridLayout() );
-
-    final Group group = new Group( shell, SWT.BORDER );
-    group.setLayout( new FillLayout() );
-    group.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    group.setText( "Stroke" );
-    StrokeEditorComposite strokeEditorComposite = new StrokeEditorComposite( group, SWT.NONE, stroke );
-
-    shell.pack();
-    shell.open();
-    while( !shell.isDisposed() )
-    {
-      if( !display.readAndDispatch() )
-        display.sleep();
-    }
-    display.dispose();
+    m_listeners.add( l );
   }
+
+  public void removeModifyListener( final IStrokeModifyListener l )
+  {
+    m_listeners.remove( l );
+  }
+
+  protected void fireModified( )
+  {
+    final IStrokeModifyListener[] ls = m_listeners.toArray( new IStrokeModifyListener[m_listeners.size()] );
+    for( final IStrokeModifyListener strokeModifyListener : ls )
+      strokeModifyListener.onStrokeChanged( this, m_stroke );
+  }
+
+  protected void contentChanged( )
+  {
+    if( m_previewVisible == true )
+      updatePreview();
+    fireModified();
+  }
+
 }

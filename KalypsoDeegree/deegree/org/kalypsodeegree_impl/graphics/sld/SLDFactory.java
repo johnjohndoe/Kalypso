@@ -269,6 +269,30 @@ public class SLDFactory
     }
   }
 
+  public static StyledLayerDescriptor createSLD( final URL url ) throws IOException, XMLParsingException
+  {
+    final IUrlResolver2 urlResolver = new IUrlResolver2()
+    {
+      public URL resolveURL( final String relativeOrAbsolute ) throws MalformedURLException
+      {
+        return new URL( url, relativeOrAbsolute );
+      }
+    };
+
+    InputStream is = null;
+    try
+    {
+      is = new BufferedInputStream( url.openStream() );
+      final StyledLayerDescriptor sld = createSLD( urlResolver, is );
+      is.close();
+      return sld;
+    }
+    finally
+    {
+      IOUtils.closeQuietly( is );
+    }
+  }
+
   public static StyledLayerDescriptor createStyledLayerDescriptor( final String name, final String title, final String version, final String abstract_, final Layer[] layers )
   {
     return new StyledLayerDescriptor_Impl( name, title, version, abstract_, layers );
