@@ -1,53 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<section id="schwElster_view_prognose" vendor="sachsen">
+<section id="elbeP_view_prognose" vendor="sachsen">
   <title>Vorhersagemodell Elbe</title>
 
   <indexterm>
-    <primary>Vorhersagemodell Schwarze Elster</primary>
+    <primary>Vorhersagemodell Elbe</primary>
   </indexterm>
 
-  <section id="sec_Assi_schwElster_01_Steuerparams">
+  <section id="sec_Assi_elbePolte_01_Steuerparams">
     <title>Eingabe der Steuerparameter</title>
 
     <indexterm>
       <primary>Steuerparameter</primary>
 
-      <secondary>Schwarze Elster</secondary>
+      <secondary>Elbe</secondary>
     </indexterm>
 
     <para>Auf der zweiten Seite des Assistenten (siehe <xref
-    linkend="schwElster_steuerparameter" />) werden verschiedene Informationen
+    linkend="elbe_steuerparameter" />) werden verschiedene Informationen
     angezeigt. Die Einträge werden bei neu angelegten Rechenvarianten
     generiert. Bei fortgeführten oder kopierten Rechenvarianten entsprechen
     die Einträge denen der ursprünglichen Rechenvariante.</para>
 
-    <figure id="schwElster_steuerparameter">
+    <figure id="elbe_steuerparameter">
       <title>Eingabe der Steuerparameter</title>
 
       <screenshot>
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/wizard/sachsen/Assi_SchwElster_01_Steuerparams.png"
+            <imagedata fileref="img/wizard/sachsen/Assi_ElbeP_01_Steuerparams.png"
                        scale="33" />
           </imageobject>
         </mediaobject>
       </screenshot>
     </figure>
 
-    <para>Der <guilabel>Start der Simulation</guilabel> gibt den Beginn der
-    Simulationsrechnung an. Ab diesem Zeitpunkt werden ggf. die Messwerte aus
-    der Zeitreihenablage geholt. <guibutton>Start der Simulation</guibutton>
-    wird beim Erzeugen einer neuen Rechenvariante standardmäßig auf zwei Tage
-    (48h) vor <guilabel>Start der Vorhersage</guilabel> gesetzt. Dieser
-    Eintrag kann vom Benutzer angepasst werden.</para>
-
     <para>Der <guilabel>Start der Vorhersage</guilabel> wird beim Erzeugen
     einer neuen Rechenvariante automatisch auf den letzten gültigen
-    Startzeitpunkt für die Modellrechnung der Schwarzen Elster gesetzt (1h,
-    4h, ..., 22h). Bis zu diesem Zeitpunkt werden ggf. die Messwerte aus der
-    Zeitreihenablage geholt. Der Eintrag kann vom Benutzer angepasst werden.
-    Der Endzeitpunkt der Vorhersage wird durch das Modell bestimmt und liegt
-    48 Stunden nach dem <guilabel>Start der Vorhersage</guilabel>.</para>
+    Startzeitpunkt für die Modellrechnung der Elbe gesetzt (1h, 4h, ..., 22h).
+    Bis zu diesem Zeitpunkt werden ggf. die Messwerte aus der Zeitreihenablage
+    geholt. Der Eintrag kann vom Benutzer angepasst werden. Der Startzeitpunkt
+    der Simulationsrechnung wird durch das Modell bestimmt und liegt 15 Tage
+    vor dem <guilabel>Start der Vorhersage</guilabel>. Der Endzeitpunkt der
+    Vorhersage wird ebenfalls durch das Modell bestimmt und liegt drei Tage
+    nach dem <guilabel>Start der Vorhersage</guilabel>.</para>
 
     <para>Im Abschnitt <guilabel>Metadaten eingeben</guilabel> werden der
     <guilabel>Ersteller</guilabel>, eine <guilabel>Beschreibung</guilabel>,
@@ -64,28 +59,24 @@
 
     <para>Ein aktiviertes Kontrollkästchen <guilabel>Zeitreihen
     aktualisieren</guilabel> bewirkt, dass beim Übergang auf die nächste Seite
-    des Assistenten die vom Modell benötigten Messwerte für die Zeit vom
-    <guilabel>Start der Simulation</guilabel> bis zum <guilabel>Start der
-    Vorhersage</guilabel> aus der Zeitreihenablage geholt werden (Niederschlag
-    an den Niederschlagsstationen, Wasserstand und W/Q-Beziehung an den
-    Pegeln). Außerdem werden leere Zeitreihen für den Gebietsniederschlag
-    generiert. Gleichzeitig wird der Gebietsniederschlag entsprechend des
-    Gebietsniederschlagsmodells berechnet. Ist das Kontrollkästchen nicht
-    aktiviert, werden die Zeitreihen nicht geholt bzw. nicht aktualisiert. Nur
-    beim Anlegen einer neuen Rechenvariante ist dieses Kästchen standardmäßig
-    aktiviert.</para>
+    des Assistenten die vom Modell benötigten Messwerte für die Zeit vom Start
+    der Simulation bis zum <guilabel>Start der Vorhersage</guilabel> aus der
+    Zeitreihenablage geholt werden (Abfluss und W/Q-Beziehung an den Pegeln).
+    Ist das Kontrollkästchen nicht aktiviert, werden die Zeitreihen nicht
+    geholt bzw. nicht aktualisiert. Nur beim Anlegen einer neuen
+    Rechenvariante ist dieses Kästchen standardmäßig aktiviert.</para>
 
     <para>Es folgen nun Seiten für die Kontrolle und Eingabe der
     Eingangsdaten.</para>
   </section>
 
-  <section id="sec_Assi_schwElster_02_Eingangsdaten">
+  <section id="sec_Assi_elbePolte_02_Eingangsdaten" lang="">
     <title>Kontrolle der Eingangsdaten</title>
 
     <indexterm>
       <primary>Kontrolle Eingangsdaten</primary>
 
-      <secondary>Schwarze Elster</secondary>
+      <secondary>Elbe</secondary>
     </indexterm>
 
     <para>Nach der Eingabe der Steuerdaten erfolgt die Überprüfung der
@@ -94,15 +85,15 @@
     abhängig vom Daten-Status durch Symbole gekennzeichnet (vgl. <xref
     linkend="tabellen_kennzeichnung" />). Der Vorhersage-Assistent ist so
     aufgebaut, dass die Kontrolle der Zeitreihen einem festen Ablauf folgt
-    (<xref linkend="schwElster_eingangsdaten" />):</para>
+    (<xref linkend="elbePolte_eingangsdaten" />):</para>
 
-    <figure id="schwElster_eingangsdaten">
-      <title>Kontrolle der Eingangsdaten (Niederschläge)</title>
+    <figure id="elbePolte_eingangsdaten">
+      <title>Kontrolle der Eingangsdaten (hier Abfluss an Elbepegeln)</title>
 
       <screenshot>
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/wizard/sachsen/Assi_SchwElster_02_Kontrolle_Niederschlag.png"
+            <imagedata fileref="img/wizard/sachsen/Assi_ElbeP_02_KontrolleAbflussElbePegel.png"
                        scale="33" />
           </imageobject>
         </mediaobject>
@@ -111,70 +102,55 @@
 
     <orderedlist>
       <listitem>
-        <para>Gemessene Niederschläge an Ombrometerstationen im Einzugsgebiet
-        der Schwarzen Elster (Kamenz-Lückersdorf, KA Bischofswerda, TS
-        Wallroda, Strauch, Kubschütz)</para>
+        <para>Abflüsse an den Startpegeln (Messwerte kombiniert mit
+        tschechischen Vorhersagen)</para>
       </listitem>
 
       <listitem>
-        <para>Niederschlagszeitreihen für die N-A-Modelle innerhalb des
-        Einzugsgebietes (Trado 1, Schönau, Zescha)</para>
+        <para>Abflüsse an den Elbepegeln (Messwerte)</para>
       </listitem>
 
       <listitem>
-        <para>Talsperrenabgaben für TS Knappenrode</para>
-      </listitem>
-
-      <listitem>
-        <para>Gemessene Wasserstandsganglinien an allen Vorhersagepegeln für
-        die Nachführung des Hochwasserereignisses</para>
-      </listitem>
-
-      <listitem>
-        <para>Abflusswerte für den Zuleiter Knappenrode</para>
+        <para>Abflüsse der Zwischengebiete (Gesamtzeitraum), die Berechnung
+        der Zwischengebietszuflüsse für Usti / Dresden und Dresden / Torgau
+        erfolgt durch den Meldedienst mit Hilfe des Berechnungsmodells <xref
+        linkend="elbeZwg_view_prognose" />.</para>
       </listitem>
     </orderedlist>
 
     <para>Die Anzeige der Zeitreihen erfolgt grafisch und tabellarisch. In
     jeder Eingabemaske wird ein Lageplan mit den Erfassungsstandorten
-    angezeigt. In der Tabelle werden immer alle Pegelzeitreihen gleichzeitig
-    aufgeführt. Durch Markieren eines Pegels wird die dazugehörige Zeitreihe
-    auch grafisch dargestellt. Bei Bedarf können die Tabellenwerte vom
-    Benutzer geändert werden. Die Änderungen werden durch Bestätigung mit
+    angezeigt. In der Tabelle werden für die Startpegel und die
+    Zwischengebiete alle Pegelzeitreihen gleichzeitig aufgeführt. Bei den
+    Elbepegeln werden pro Pegel Beobachtung und falls vorhanden Rechnung
+    gleichzeitig angezeigt. Durch Markieren eines Pegels wird die dazugehörige
+    Zeitreihe auch grafisch dargestellt. Bei Bedarf können die Tabellenwerte
+    vom Benutzer geändert werden. Die Änderungen werden durch Bestätigung mit
     <guibutton>Weiter</guibutton> für die Berechnungen übernommen.</para>
   </section>
 
-  <section id="sec_Assi_schwElster_03_Berechnung_Gebietsniederschlag">
-    <title>Berechnung des Gebietsniederschlags</title>
+  <section id="sec_Assi_elbePolte_03_ModellParameter">
+    <title>Eingabe von Modellparametern</title>
 
     <indexterm>
-      <primary>Berechnung des Gebietsniederschlags</primary>
+      <primary>Eingabe von Modellparametern</primary>
 
-      <secondary>Schwarze Elster</secondary>
+      <secondary>Elbe</secondary>
     </indexterm>
 
-    <para>Ein Spezialfall ist die Anzeige der Niederschlagszeitreihen für die
-    N-A-Modelle innerhalb des Einzugsgebietes (Seite <quote>Kontrolle
-    Niederschlag - Eingabepegel (NA Modelle)</quote> ). Diese Ganglinien
-    wurden beim Erstellen der Rechenvariante automatisch anhand eines
-    Gebietsniederschlagmodells aus den Niederschlagmessungen sowie den
-    DWD-Rastervorhersagen zusammengesetzt (DWD-Lokalmodell).</para>
+    <para>Diese Seite dient der Eingabe der allgemeinen Modellparameter
+    (<guilabel>HW-Typ</guilabel> und <guilabel>Nachführung RIDO</guilabel>).
+    Die Zeitreihen an den Start- und Elbepegeln stehen informativ zur
+    Verfügung (siehe <xref linkend="elbePolte_eingabe_modellparameter"
+    remap="" />).</para>
 
-    <para>Falls die gemesssenen Niederschlagswerte nachträglich vom Benutzer
-    angepasst wurden (auf der vorhergehenden Seite des Assistenten), müssen
-    diese erneut in die Gebietsniederschläge übernommen werden. Zu diesem
-    Zweck dient der Knopf <guilabel>Neuberechnung
-    Gebietsniederschlag</guilabel> auf dieser Seite des Assistenten (siehe
-    <xref linkend="schwElster_eingangsdaten_namodell" />).</para>
-
-    <figure id="schwElster_eingangsdaten_namodell">
-      <title>Kontrolle und Neuberechnung Niederschlag - Eingabepegel
-      (NA-Modelle)</title>
+    <figure id="elbePolte_eingabe_modellparameter">
+      <title>Eingabe der Modellparameter</title>
 
       <screenshot>
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/wizard/sachsen/Assi_SchwElster_03_Kontrolle_Niederschlag_NaModelle.png"
+            <imagedata fileref="img/wizard/sachsen/Assi_ElbeP_03_Kontrolle_Modellparameter.png"
                        scale="33" />
           </imageobject>
         </mediaobject>
@@ -182,119 +158,67 @@
     </figure>
   </section>
 
-  <section id="sec_Assi_schwElster_04_Vorhersage_Berechnung">
+  <section id="sec_Assi_elbePolte_04_Vorhersage_Berechnung">
     <title>Berechnung einer Vorhersage</title>
 
     <indexterm>
       <primary>Vorhersageberechnung</primary>
 
-      <secondary>Schwarze Elster</secondary>
+      <secondary>Elbe</secondary>
     </indexterm>
 
-    <para>Die Vorhersageberechnungen erfolgen nach Prüfung der
-    Eingangszeitreihen. Die Reihenfolge der Abarbeitung der Berechnungen für
-    die einzelnen Pegel im Einzugsgebiet der Schwarzen Elster ist in folgender
-    Reihenfolge im Programm implementiert: Zunächst erfolgen Berechnungen für
-    Pegel mit vorgeschaltetem N-A-Modell, anschließend für den
-    Talsperren-Abgabepegel und daraufhin für den Pegel mit vorgeschaltetem
-    Flusslaufmodell (d.h. von Ober- Richtung Unterlauf).</para>
+    <para>Auf dieser Seite (<xref linkend="elbeP_berechnung" />) des
+    Assistenten werden oben rechts die streckenbezogenen Parameter
+    tabellarisch angezeigt und können vor der Durchführung einer
+    Vorhersageberechnung durch den Benutzer verändert werden. Die Zeitreihen
+    an den Start- und Elbepegeln stehen informativ zur Verfügung. Für den
+    Pegel Usti wird zusätzlich noch die tschechische Vorhersage mit
+    eingeblendet.</para>
 
-    <para>Dabei ist vom Benutzer auf die Reihenfolge der Pegel zu achten. An
-    einem Pegel sollten erst dann Vorhersageberechnungen vorgenommen werden,
-    wenn für alle oberhalb gelegenen Pegel bereits eine Anpassung der
-    Parameter vorgenommen worden ist.</para>
-
-    <para>Die Wizard-Masken sind jeweils so gestaltet, dass auf der linken
-    Hälfte eine Übersicht der Pegel im Lageplan erscheint (<xref
-    linkend="schwElster_berechnung_NaModelle" />). In der rechten Hälfte wird
-    oben eine Tabelle angezeigt, über die die entsprechenden Parameter zur
-    Kalibrierung der Nachführung des HW-Ereignisses eingegeben werden können.
-    Im unteren Teil ist eine Diagrammansicht gegeben, in der die Zeitreihen
-    der Berechnung angezeigt werden. Beim Start des Wizards ist die
-    Diagramm-Anzeige zunächst noch ohne Inhalt. Zeitreihen werden durch einen
-    Klick auf den entsprechenden Eintrag in der Tabelle grafisch dargestellt.
-    Die Achsen des Diagramms werden dabei automatisch an die jeweilige
-    Zeitreihe angepasst.</para>
-
-    <figure id="schwElster_berechnung_NaModelle">
-      <title>Berechnung N-A-Modelle</title>
+    <figure id="elbeP_berechnung">
+      <title>Vorhersagerechnung</title>
 
       <screenshot>
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/wizard/sachsen/Assi_SchwElster_04_Berechnung_NaModelle.png"
+            <imagedata fileref="img/wizard/sachsen/Assi_elbeP_04_Berechnung.png"
                        scale="33" />
           </imageobject>
         </mediaobject>
       </screenshot>
     </figure>
 
-    <para>Die Reihenfolge der Berechnungen und die jeweils vom Benutzer
-    vorzugebenden Modellparameter gliedert sich wie folgt:</para>
-
-    <orderedlist>
-      <listitem>
-        <para>Berechnung der Pegeleinzugsgebiete mit N-A-Modell (<xref
-        linkend="schwElster_berechnung_NaModelle" />)</para>
-
-        <para>In der Tabelle einzugeben ist die Anfangsbodenfeuchte (in den
-        vom Programm vorgegebenen festen Grenzen). Wird für die Bodenfeuchte
-        ein Wert von 0.0 vorgegeben (Standard), wird vom Programm eine
-        optimale Bodenfeuchte berechnet und nach erfolgter Berechnung in die
-        Tabelle eingetragen.</para>
-      </listitem>
-
-      <listitem>
-        <para>Berechnung des Talsperreninhalts der Talsperre
-        Knappenrode</para>
-
-        <para>Vorzugeben ist der Stauinhalt der Talsperre zu Beginn der
-        Vorhersage</para>
-      </listitem>
-
-      <listitem>
-        <para>Berechnung des Pegels Neuwiese mit Flusslaufmodell</para>
-
-        <para>In der Tabelle anzugeben sind die Parameter zur Korrektur der
-        Abflussganglinie (multiplikative und additive Niveau-Korrektur und
-        Laufzeitkorrektur). Eine Empfehlung zur Korrektur wird vom Programm
-        vorgegeben und kann nicht verändert werden.</para>
-      </listitem>
-    </orderedlist>
-
     <para>Die Berechnung wird über die Schaltfläche <guibutton>Berechnung
     durchführen</guibutton> gestartet. Nach erfolgreich durchgeführter
     Berechnung werden die Ergebnisse zusammen mit den Messwerten (soweit
     vorhanden) grafisch dargestellt. Berechnungen können beliebig oft
-    durchgeführt werden. Die ermittelte Ergebniszeitreihe an einem Pegel dient
-    als Zuflusszeitreihe für den nächsten unterhalb gelegenen Pegel bzw.
-    Talsperre.</para>
+    durchgeführt werden.</para>
   </section>
 
-  <section id="sec_Assi_schwElster_05_Berichtsablage">
+  <section id="sec_Assi_elbePolte_05_Berichtsablage">
     <title>Ergebnisbearbeitung und Veröffentlichung</title>
 
     <indexterm>
       <primary>Ergebnisbearbeitung und Veröffentlichung</primary>
 
-      <secondary>Schwarze Elster</secondary>
+      <secondary>Elbe</secondary>
     </indexterm>
 
-    <para>Nach Abarbeitung der Kalibrierungs- und Berechnungsschritte (siehe
-    <xref linkend="sec_Assi_schwElster_04_Vorhersage_Berechnung" />) können
-    die ermittelten Ergebnisse an das Berichtswesen übergeben werden. Zudem
-    ist der Export der berechneten Prognose-Zeitreihen nach PSI-Compact
-    möglich. Die dazugehörige Eingabemaske (<xref
-    linkend="schwElster_berichtsablage" />) zeigt einen Lageplan mit allen im
-    Modell vorhandenen Vorhersage-Pegeln.</para>
+    <para>Nach Durchführung der Berechnung (siehe <xref
+    linkend="sec_Assi_elbePolte_04_Vorhersage_Berechnung" />) können die
+    ermittelten Ergebnisse an das Berichtswesen übergeben werden. Zudem ist
+    der Export der berechneten Prognose-Zeitreihen nach PSI-Compact möglich.
+    Die dazugehörige Eingabemaske (<xref linkend="elbeP_berichtsablage" />)
+    zeigt einen Lageplan mit allen im Modell vorhandenen
+    Vorhersage-Pegeln.</para>
 
-    <figure id="schwElster_berichtsablage">
+    <figure id="elbeP_berichtsablage" label="">
       <title>Bearbeitung und Veröffentlichung der Ergebnisse</title>
 
       <screenshot>
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/wizard/sachsen/Assi_SchwElster_05_Berichtsablage.png"
+            <imagedata fileref="img/wizard/sachsen/Assi_ElbeP_05_Berichtsablage.png"
                        scale="33" />
           </imageobject>
         </mediaobject>
@@ -357,6 +281,16 @@
       <listitem>
         <para>Scheitelwerttabelle der berechneten Wasserstände (CSV-Format für
         das Berichtswesen)</para>
+      </listitem>
+
+      <listitem>
+        <para>Diagramm aller berechneten Abflüsse an den Elbepegeln
+        (Längsschnitt)</para>
+      </listitem>
+
+      <listitem>
+        <para>Diagramm aller berechneten Wasserstände an den Elbepegeln
+        (Längsschnitt)</para>
       </listitem>
     </itemizedlist>
 
