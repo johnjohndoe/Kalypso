@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.mapeditor.actiondelegates;
 
@@ -55,7 +55,7 @@ import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.progress.IProgressService;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.ITemplateTheme;
+import org.kalypso.ogc.gml.IKalypsoSaveableTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -88,9 +88,9 @@ public class SaveThemeDelegate extends AbstractGisEditorActionDelegate implement
       if( mapModell != null )
       {
         final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
-        if( activeTheme instanceof ITemplateTheme )
+        if( activeTheme instanceof IKalypsoSaveableTheme )
         {
-          final ITemplateTheme theme = (ITemplateTheme) activeTheme;
+          final IKalypsoSaveableTheme theme = (IKalypsoSaveableTheme) activeTheme;
 
           final IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
 
@@ -101,14 +101,9 @@ public class SaveThemeDelegate extends AbstractGisEditorActionDelegate implement
             {
               final IWorkbenchPart workbenchPart = part.getPart();
               if( workbenchPart == null )
-              {
                 return;
-              }
               else if( workbenchPart instanceof AbstractMapPart )
-              {
-                final AbstractMapPart editor = (AbstractMapPart) workbenchPart;
-                editor.saveTheme( theme, monitor );
-              }
+                theme.saveFeatures( monitor );
             }
           };
 
@@ -136,7 +131,7 @@ public class SaveThemeDelegate extends AbstractGisEditorActionDelegate implement
   }
 
   @Override
-  protected void refreshAction( IAction action, final ISelection selection )
+  protected void refreshAction( final IAction action, final ISelection selection )
   {
     boolean bEnabled = false;
 
@@ -150,7 +145,7 @@ public class SaveThemeDelegate extends AbstractGisEditorActionDelegate implement
         if( mapModell != null )
         {
           final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
-          if( activeTheme != null && activeTheme instanceof IKalypsoFeatureTheme )
+          if( (activeTheme != null) && (activeTheme instanceof IKalypsoFeatureTheme) )
           {
             final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) activeTheme;
             final CommandableWorkspace workspace = theme.getWorkspace();
