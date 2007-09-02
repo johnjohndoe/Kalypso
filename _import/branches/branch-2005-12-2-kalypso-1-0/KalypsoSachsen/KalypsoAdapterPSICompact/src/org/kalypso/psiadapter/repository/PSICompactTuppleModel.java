@@ -83,7 +83,9 @@ public class PSICompactTuppleModel extends AbstractTuppleModel
     final IAxis[] axes = model.getAxisList();
 
     final IAxis dateAxis = ObservationUtilities.findAxisByClass( axes, Date.class );
-    // TODO: gefährlich: was passiert, wenn Q UND W da sind? Zufalll...
+    // REMARK: when Observation sget written to the server, it is ensured that exactly the known axes are written out.
+    // this is done by comparing the target observation with the source observation and only copying what is needed.
+    // In case of PSICompact, this means we will have exactly one axis, so no problem here... 
     final IAxis valueAxis = KalypsoStatusUtils.findAxisByClass( axes, Number.class, true );
     final IAxis statusAxis = KalypsoStatusUtils.findStatusAxisFor( axes, valueAxis );
 
