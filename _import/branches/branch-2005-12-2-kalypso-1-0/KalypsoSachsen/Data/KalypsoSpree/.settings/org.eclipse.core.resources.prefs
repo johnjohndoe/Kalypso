@@ -1,4 +1,4 @@
-#Sun Sep 02 14:16:43 CEST 2007
+#Sun Sep 02 14:42:00 CEST 2007
 encoding//.prognose/Vorhersage-03-11-2004_21h12/Flusslaufparameter.gtt=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_19h38/calcCase.gml=UTF-8
 encoding//.prognose/Vorhersage-2005-01-04_16h41/Zeitreihen/W_SAERI.zml=UTF-8
@@ -247,7 +247,6 @@ encoding//.prognose/Vorhersage-2005-01-04_09h58/calcCase.gml=UTF-8
 encoding//.prognose/Vorhersage-2005-01-04_09h11/Bodenfeuchten.gtt=UTF-8
 encoding//Rechenl\u00E4ufe/040427/Gesamtansicht.gmt=UTF-8
 encoding//Rechenf\u00E4lle/test/steuerparameter.gft=UTF-8
-encoding//Rechenvarianten/OmbroTest/gnm.log=Cp1252
 encoding//.prognose/Vorhersage-03-11-2004_20h50/Anfangsvolumen.gtt=UTF-8
 encoding//.prognose/Vorhersage-2006-11-17_19h26/Zeitreihen/QV_TSQUITZ.zml=UTF-8
 encoding//.prognose/Vorhersage-2005-01-04_11h05/Zeitreihen/QV_SPWIESE.zml=UTF-8
@@ -274,7 +273,6 @@ encoding//.prognose/Vorhersage-2005-01-04_09h11/Zeitreihen/PA_JAENKD.zml=UTF-8
 encoding//Rechenf\u00E4lle/test/zeitreihen/PA_BAUTZWB.zml=UTF-8
 encoding//Rechenl\u00E4ufe/test/zeitreihen/W_SPWITZ.zml=UTF-8
 encoding//.prognose/Vorhersage-2005-01-04_16h41/Zeitreihen/PA_SCHIRG.zml=UTF-8
-encoding//Rechenvarianten/OmbroTest_alt/.calculation=UTF-8
 encoding//Rechenvarianten/april/Zeitreihen/QV_RLKETTE.zml=UTF-8
 encoding//.model/observationConf/OmbrometerMapping.gml=UTF-8
 encoding//.prognose/Vorhersage-2005-01-04_11h05/Zeitreihen/PA_SCHIRG.zml=UTF-8
