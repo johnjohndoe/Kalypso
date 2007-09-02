@@ -143,16 +143,9 @@ public class RoundFilter extends AbstractObservationFilter
       bufferedRequest = null;
     }
 
-    
     final IObservation proxiedObservation = AutoProxyFactory.getInstance().proxyObservation(m_baseobservation);
     
     final ITuppleModel values = proxiedObservation.getValues( bufferedRequest );
-//    final ITuppleModel values = m_baseobservation.getValues( bufferedRequest );
-
-//    final SimpleTuppleModel simpleTuppleModel = new SimpleTuppleModel( values );
-    
-//    AutoProxyFactory.getInstance().proxyObservation(m_baseobservation)
-    
 
     // get all non-virtual Double-Axises
     final IAxis axis = ObservationUtilities.findAxisByTypeNoEx( values.getAxisList(), m_type );
@@ -181,6 +174,6 @@ public class RoundFilter extends AbstractObservationFilter
 
   public void setValues( ITuppleModel values )
   {
-    throw new UnsupportedOperationException( getClass().getName() + " setValues() wird zur Zeit nicht unterstuetzt ." );
+    throw new UnsupportedOperationException( getClass().getName() + " setValues() wird zur Zeit nicht unterstützt ." );
   }
 }
