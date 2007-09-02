@@ -7,7 +7,7 @@
     <axis datatype="date" direction="horizontal" id="date" inverted="false" label="Datum" position="bottom" unit=""/>
     <axis datatype="double" direction="vertical" id="Q" inverted="false" label="Abfluss" position="left" unit="m³/s"/>
     <!--   <observation linktype="zml" xlink:href="/Zeitreihen/Zwischengebiete/UstiDresden.zml"> -->
-    <observation linktype="zml" xlink:href="platform:/resource//KalypsoElbeZwischengebiete/.prognose/Vorhersage-2007-08-02_18h19/Zeitreihen/Zwischengebiete/UstiDresden.zml">
+    <observation linktype="zml" xlink:href="Zeitreihen/Zwischengebiete/UstiDresden.zml">
         <curve color="0;255;128" id="C1" name="Abfluss - Beobachtung" shown="true">
             <mapping diagram-axis="date" observation-axis="Datum"/>
             <mapping diagram-axis="Q" observation-axis="Abfluss"/>

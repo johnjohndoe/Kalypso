@@ -39,9 +39,9 @@
             <gridData grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" heightHint="200" horizontalAlignment="GridData.FILL" horizontalSpan="3" verticalAlignment="GridData.FILL"/>
             <gistableview xmlns="gistableview.template.kalypso.org">
 		    	<layer featurePath="#fid#DresdenTorgau/zuflussPegelMember" id="4309340957" linktype="gml" ns1:actuate="" ns1:href="calcCase.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
+			        <column alignment="SWT.BEGINNING" editable="true" format="" name="istSummand" width="20"/>
 			        <column alignment="SWT.BEGINNING" editable="false" format="" name="name" width="100"/>
 			        <column alignment="SWT.BEGINNING" editable="false" format="" name="river" width="100"/>
-			        <column alignment="SWT.BEGINNING" editable="true" format="" name="istSummand" width="100"/>
 			    </layer>
 			</gistableview>
         </table>

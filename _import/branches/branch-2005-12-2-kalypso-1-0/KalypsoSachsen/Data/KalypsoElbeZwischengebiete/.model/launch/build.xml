@@ -12,6 +12,8 @@
     <!-- Q: interpolation-filter -->
     <property name="filterQ"
 		value="${requestQ}&lt;filter&gt;&lt;interpolationFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; defaultStatus=&quot;2&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot; fillLastWithValid=&quot;true&quot; /&gt;&lt;/filter&gt;" />
+    <property name="filterWeight"
+		value="&lt;filter&gt;&lt;interpolationFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; defaultStatus=&quot;0&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot; fillLastWithValid=&quot;true&quot; /&gt;&lt;/filter&gt;" />
 
 	<!-- - - - - - - - - - - - - - - - - - 
           target: fake                      nur damit das Projekt nicht schreit
@@ -88,15 +90,15 @@
 	 	-->
 	 	<!-- Zwischengebietspegel: nur Messung -->
 	 			<kalypso.copyObservation gml="${project.url}/.model/observationConf/ZwischengebietspegelMapping.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}">
-	 				<source property="${pegelMessungLink}" from="${startsim}" to="${stopsim}" filter="${filterQ}"/>
+	 				<source property="${pegelMessungLink}" from="${startsim}" to="${startforecast}" filter="${filterQ}"/>
 	 				<metadata name="Szenario" value="${scenarioId}"/>
 	 			</kalypso.copyObservation>
 	 	
+	 	<!-- TODO: Kann vermutlich weg -->
 		<!-- leere Zeitreihen holen, damit was reingeschrieben werden kann...-->
 		<!-- Zwischengebiete: Messung kombiniert mit tschechischen Vorhersagen -->
 		<kalypso.copyObservation gml="${project.url}/.model/observationConf/ZwischengebieteMapping.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}">
-			<source property="${pegelMessungLink}" from="${startsim}" to="${startforecast}" filter="${filterQ}"/>
-			<source property="${pegelCzVorhersageLink}" from="${startforecast}" to="${stopsim}" filter="${filterQ}"/>
+			<source property="${pegelMessungLink}" from="${startsim}" to="${stopsim}" filter="${filterQ}"/>
 			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
 	 	
@@ -129,37 +131,47 @@
 	 <!-- ================================= 
 		          target: zwischengebietszuflussUstiDresden              
           ================================= -->
-		
-		
-		<!-- macht dies neue, lange ZMLs? Dann müssten keine leeren generiert werden-->
-		<!-- es wird noch ein propkonst benötigt: addiert einen kontanten Wert auf das Ergebnis -->
-		<!-- proprelationweightmember: nicht so tief "absteigen" -->
-		<!-- featurepathtarget: und außerdem gebe ich eine ID rein -->
-	 <target name="zwischengebietszuflussUstiDresden" depends="calculationProperties" description="Berechnet den Zwischengebietszufluss für Usti - Dresden"> 
+
+	<target name="zwischengebietszuflussUstiDresden" depends="calculationProperties" description="Berechnet den Zwischengebietszufluss für Usti - Dresden"> 
 		<kalypso.gmlWeight modelurl="${calc.url}/calcCase.gml" 
 			               	featurepathtarget="#fid#UstiDresden" 
 							propzmltarget="ganglinie_gesamt" 
 							proprelationweightmember="" 
+							propoffset="a"  
 							propweight="b"
 							proprelationsourcefeature="zuflussPegelMember" 
 							propzmlsource="ganglinie_messwerte" 
+							propsourceused="istSummand"
+							sourcefilter="${filterWeight}"
 							targetcontext="${calc.url}" 
-							from="${startsim}" 
-							forecastfrom="${startforecast}" 
-							to="${stopsim}" />
-		<!--
-		Das Argument targetmapping="C:\\TMP\\testMapping.gml" in der 
-		gmlweight-Task bewirkt, dass der Filter als GML an die angegebene Stelle
-		geschrieben wird.
-		-->
-	 
-	 
+							sourceFrom="${startsim}"
+							sourceTo="${stopsim}"
+							targetFrom="${startforecast}"
+							targetTo="${stopsim}"
+							forecastFrom="${startforecast}"
+							forecastTo="${stopsim}"/>
 	 </target>
 	 <!-- ================================= 
 		          target: zwischengebietszuflussDresdenTorgau              
           ================================= -->
 	 <target name="zwischengebietszuflussDresdenTorgau" depends="calculationProperties" description="Berechnet den Zwischengebietszufluss für Dresden - Torgau">
-	 
+		<kalypso.gmlWeight modelurl="${calc.url}/calcCase.gml" 
+			               	featurepathtarget="#fid#DresdenTorgau" 
+							propzmltarget="ganglinie_gesamt" 
+							proprelationweightmember="" 
+							propoffset="a"  
+							propweight="b"
+							proprelationsourcefeature="zuflussPegelMember" 
+							propzmlsource="ganglinie_messwerte" 
+							propsourceused="istSummand"
+							sourcefilter="${filterWeight}"
+							targetcontext="${calc.url}" 
+							sourceFrom="${startsim}"
+							sourceTo="${stopsim}"
+							targetFrom="${startforecast}"
+							targetTo="${stopsim}"
+							forecastFrom="${startforecast}"
+							forecastTo="${stopsim}"/>
 	 </target>
 	 <!-- ================================= 
 		          target: zwischengebietszufluss              
