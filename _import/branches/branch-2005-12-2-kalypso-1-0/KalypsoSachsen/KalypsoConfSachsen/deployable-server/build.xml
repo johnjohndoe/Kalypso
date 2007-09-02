@@ -71,6 +71,12 @@
         <ant antfile="${workspace}/KalypsoModelSpree/etc/ant/build.xml"
              target="clean"
              inheritAll="false" />
+        <ant antfile="${workspace}/KalypsoModelElbePolte/etc/ant/build.xml"
+             target="clean"
+             inheritAll="false" />
+             
+<!--TODO: clean other models -->             
+             
         <ant antfile="${workspace}/KalypsoModelNA/etc/ant/build.xml"
              target="clean"
              inheritAll="false" />
@@ -103,6 +109,24 @@
         </copy>
     </target>
 
+    <target name="co-sachsen-model-elbe-polte" depends="prepare">
+        <echo message="Checkout the elbe-polte-model for Sachsen" />
+
+        <antcall target="co-model">
+            <param name="pPackage" value="KalypsoSachsen/Data/KalypsoElbePolte" />
+            <param name="pName" value="ElbePolte" />
+        </antcall>
+    </target>
+
+    <target name="co-sachsen-model-elbe-zwg" depends="prepare">
+        <echo message="Checkout the elbe-zwg-model for Sachsen" />
+
+        <antcall target="co-model">
+            <param name="pPackage" value="KalypsoSachsen/Data/KalypsoElbeZwischengebiete" />
+            <param name="pName" value="ElbeZWGe" />
+        </antcall>
+    </target>
+
     <target name="co-sachsen-model-schwarzeelster" depends="prepare">
         <echo message="Checkout the schwarze-elster-model for Sachsen" />
 
@@ -130,7 +154,7 @@
         </antcall>
     </target>
 
-    <target name="co-sachsen-models" depends="co-sachsen-model-schwarzeelster,co-sachsen-model-spree,co-sachsen-model-weisseelster">
+    <target name="co-sachsen-models" depends="co-sachsen-model-schwarzeelster,co-sachsen-model-spree,co-sachsen-model-weisseelster,co-sachsen-model-elbe-polte,co-sachsen-model-elbe-zwg">
     </target>
 
     <!-- Callable CVS checkout target 
@@ -237,8 +261,14 @@
         <ant antfile="${workspace}/KalypsoModelNA/etc/ant/build.xml"
              target="deploy"
              inheritAll="false" />
+        <ant antfile="${workspace}/KalypsoModelElbePolte/etc/ant/build.xml"
+             target="deploy"
+             inheritAll="false" />
 
         <!-- Copy plugins in CalcService -->
+        <copy todir="${workspace}/KalypsoServiceCalc/build/build-war/WEB-INF/lib">
+            <fileset dir="${workspace}/KalypsoModelElbePolte/build/deploy" includes="**/*.jar" />
+        </copy>
         <copy todir="${workspace}/KalypsoServiceCalc/build/build-war/WEB-INF/lib">
             <fileset dir="${workspace}/KalypsoModelSpree/build/deploy" includes="**/*.jar" />
         </copy>
@@ -301,6 +331,26 @@
         </copy>
     </target>
 
+    <target name="deploy-model-elbe-polte"
+            depends="co-sachsen-model-elbe-polte"
+            description="Deploy the elbe-polte-model">
+        <echo message="Deploy the elbe-polte-model on ${tomcat.server}" />
+
+        <copy todir="${deploy.webdav}\\prognose" overwrite="true">
+            <fileset dir="${dist.webdav}/prognose" includes="**/*" excludes="**/CVS/**" />
+        </copy>
+    </target>
+
+    <target name="deploy-model-elbe-zwg"
+            depends="co-sachsen-model-elbe-zwg"
+            description="Deploy the elbe-zwge-model">
+        <echo message="Deploy the elbe-zwge-model on ${tomcat.server}" />
+
+        <copy todir="${deploy.webdav}\\prognose" overwrite="true">
+            <fileset dir="${dist.webdav}/prognose" includes="**/*" excludes="**/CVS/**" />
+        </copy>
+    </target>
+
     <target name="deploy-model-spree"
             depends="co-sachsen-model-spree"
             description="Deploy the spree-model">
@@ -320,7 +370,7 @@
     </target>
 
 
-    <target name="deploy-models" depends="clean,deploy-model-spree,deploy-model-weisseelster" description="Deploy the models">
+    <target name="deploy-models" depends="clean,deploy-model-spree,deploy-model-weisseelster,deploy-model-elbe-zwg,deploy-model-elbe-polte" description="Deploy the models">
         <echo message="Deploy the models on ${tomcat.server}" />
     </target>
 
