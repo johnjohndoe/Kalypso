@@ -1,4 +1,4 @@
-#Mon Nov 20 18:35:42 CET 2006
+#Sun Sep 02 14:16:43 CEST 2007
 encoding//.prognose/Vorhersage-03-11-2004_21h12/Flusslaufparameter.gtt=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_19h38/calcCase.gml=UTF-8
 encoding//.prognose/Vorhersage-2005-01-04_16h41/Zeitreihen/W_SAERI.zml=UTF-8
@@ -58,6 +58,7 @@ encoding//.prognose/Vorhersage-2005-01-04_09h58/Zeitreihen/W_BAUTZWB.zml=UTF-8
 encoding//.prognose/OmbroTest/.calculation=UTF-8
 encoding//Rechenl\u00E4ufe/test/zeitreihen/QV_TSQUITZ.zml=UTF-8
 encoding//Rechenf\u00E4lle/test/zeitreihen/QV_RLKETTE.zml=UTF-8
+encoding//.prognose/TestGebietsniederschlag/Zeitreihen/Ombrometer/P_Kubsch\u00FCtz.zml=UTF-8
 encoding//.prognose/Vorhersage-04-11-2004_17h26/calcCase.gml=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_21h12/steuerparameter.gft=UTF-8
 encoding//Rechenf\u00E4lle/test/Gesamtansicht.gmt=UTF-8
@@ -506,6 +507,7 @@ encoding//Rechenvarianten/april/Gesamtansicht.gmt=UTF-8
 encoding//Rechenf\u00E4lle/test/zeitreihen/W_SAERI.zml=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_19h04/Flusslaufparameter.gtt=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_19h23/calcCase.gml=UTF-8
+encoding//.prognose/TestGebietsniederschlag/.calculation=UTF-8
 encoding//.prognose/Vorhersage-2005-01-04_11h12/Zeitreihen/W_LIESKE.zml=UTF-8
 encoding//.prognose/Vorhersage-2005-01-04_09h11/Zeitreihen/QV_RLKETTE.zml=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_20h50/Bodenfeuchten.gtt=UTF-8
