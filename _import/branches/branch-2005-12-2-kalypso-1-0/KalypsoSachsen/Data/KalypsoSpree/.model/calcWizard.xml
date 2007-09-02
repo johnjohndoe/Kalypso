@@ -119,8 +119,6 @@
 
         <arg name="tableTemplate" value=".templates/calcCase/ezg.gtt"/>
 
-        <arg name="diagTemplate" value=".templates/calcCase/ezg.odt"/>
-
         <arg name="mainSash" value="40"/>
         <arg name="rightSash" value="30"/>
         
@@ -150,8 +148,6 @@
        	<arg name="maximizeMap" value="true"/>
        	<arg name="selectFeatureID" value="TS_BAUTZEN"/>
 
-        <arg name="diagTemplate" value=".templates/calcCase/talsperren.odt"/>
-
         <arg name="mainSash" value="40"/>
         <arg name="rightSash" value="30"/>
 
@@ -180,8 +176,6 @@
         
         <arg name="tableTemplate" value=".templates/calcCase/flusslauf.gtt"/>
         
-        <arg name="diagTemplate" value=".templates/calcCase/flusslauf.odt"/>
-
         <arg name="ignoreType1" value="Q"/>
         <arg name="ignoreType2" value="W"/>
         <arg name="ignoreLabel1" value="Wasserstand"/>
