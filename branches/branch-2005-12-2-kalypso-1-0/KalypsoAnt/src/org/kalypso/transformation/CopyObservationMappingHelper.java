@@ -35,6 +35,7 @@ import java.util.Properties;
 
 import org.kalypso.commons.java.net.UrlResolver;
 import org.kalypso.contribs.java.util.logging.ILogger;
+import org.kalypso.ogc.sensor.zml.ZmlURLConstants;
 import org.kalypso.ogc.util.CopyObservationFeatureVisitor;
 import org.kalypso.zml.obslink.TimeseriesLink;
 import org.kalypsodeegree.model.feature.Feature;
@@ -87,13 +88,14 @@ public class CopyObservationMappingHelper
    * 
    * @param workspace
    *          the mapping will be added to the given workspace, usually a workspace created by this class
-   * @param inHref
-   *          reference to the ZML-input (also a filter),usually used as source by a CopyObservationTask
+   * @param filterInline
+   *          an inline Filter reference to the ZML-input (also a filter),usually used as source by a
+   *          CopyObservationTask
    * @param outHref
    *          reference to the ZML-output, usually used as target by a CopyObservationTask
    * @throws Exception
    */
-  public static void addMapping( GMLWorkspace workspace, String inHref, String outHref ) throws Exception
+  public static void addMapping( GMLWorkspace workspace, String filterInline, String outHref ) throws Exception
   {
     final org.kalypso.zml.obslink.ObjectFactory obsLinkFac = new org.kalypso.zml.obslink.ObjectFactory();
 
@@ -101,7 +103,10 @@ public class CopyObservationMappingHelper
     final Feature mapFE = workspace.createFeature( mapFT );
     // in
     final TimeseriesLink inLink = obsLinkFac.createTimeseriesLink();
-    inLink.setHref( inHref );
+
+    final String finalHref = "#" + ZmlURLConstants.FRAGMENT_USEASCONTEXT + "?" + filterInline;
+
+    inLink.setHref( finalHref );
     final FeatureProperty inProp = FeatureFactory.createFeatureProperty(
         CopyObservationMappingHelper.RESULT_TS_IN_PROP, inLink );
     mapFE.setProperty( inProp );
@@ -117,24 +122,10 @@ public class CopyObservationMappingHelper
   /**
    * this mapping updates only the measured time periode, the forecast periode will be taken from the target before
    * overwriting it. So only measured periode will update.
-   * 
-   * @param workspace
-   *          the workspace to process, usually a workspace created by this class
-   * @param resolver
-   *          resolver
-   * @param srcContext
-   *          context
-   * @param logger
-   *          logger
-   * @param from
-   *          begin of measure periode
-   * @param forecastStart
-   *          begin of forecast periode (end of measure periode)
-   * @param end
-   *          end of forecast periode
    */
   public static void runMapping( final GMLWorkspace workspace, final UrlResolver resolver, final URL srcContext,
-      final ILogger logger, Date from, Date forecastStart, Date end, boolean keepForecast )
+      final ILogger logger, boolean keepForecast, final Date sourceFrom, final Date sourceTo,
+      final Date targetFrom, final Date targetTo, final Date forecastFrom, final Date forecastTo )
   {
     final CopyObservationFeatureVisitor.Source[] sources;
     if( keepForecast )
@@ -144,20 +135,20 @@ public class CopyObservationMappingHelper
       // the first element that will be backed by the forecast-filter
       sources = new CopyObservationFeatureVisitor.Source[]
       {
-          new CopyObservationFeatureVisitor.Source( RESULT_TS_OUT_PROP, forecastStart, end, null ), // forecast
-          new CopyObservationFeatureVisitor.Source( RESULT_TS_IN_PROP, from, forecastStart, null ) // measured
+          new CopyObservationFeatureVisitor.Source( RESULT_TS_OUT_PROP, targetFrom, targetTo, null ), // forecast
+          new CopyObservationFeatureVisitor.Source( RESULT_TS_IN_PROP, sourceFrom, sourceTo, null ) // measured
       };
     }
     else
       sources = new CopyObservationFeatureVisitor.Source[]
-      { new CopyObservationFeatureVisitor.Source( RESULT_TS_IN_PROP, from, forecastStart, null ), // measured
+      { new CopyObservationFeatureVisitor.Source( RESULT_TS_IN_PROP, sourceFrom, sourceTo, null ), // measured
       };
-    // REMARK: forecastForm and forecastTo where formerly not set which resultet in
+    // REMARK: forecastFrom and forecastTo where formerly not set which resultet in
     // strange behaviour: run from the runtime workspace, the forecast range
     // was set, from the deployed application it was not, however both used
     // exactly the same plugins. Setting it here succeeded however.
     final CopyObservationFeatureVisitor visitor = new CopyObservationFeatureVisitor( srcContext, resolver,
-        RESULT_TS_OUT_PROP, sources, new Properties(), forecastStart, end, logger, null );
+        RESULT_TS_OUT_PROP, sources, new Properties(), forecastFrom, forecastTo, logger, null );
     workspace.accept( visitor, RESULT_LIST_PROP, 1 );
   }
 }
