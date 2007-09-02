@@ -16,6 +16,13 @@
     <property name="filterQOhneFortsetzung"
 		value="${requestQ}&lt;filter&gt;&lt;interpolationFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; defaultStatus=&quot;2&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;false&quot; xmlns=&quot;filters.zml.kalypso.org&quot; fillLastWithValid=&quot;false&quot; /&gt;&lt;/filter&gt;" />
 
+	<!-- Ablage: mit Rundung auf +/- 5cm -->
+	<property name="filterCommitPrognoseWDown" 
+		value="&lt;filter&gt;&lt;roundFilter factor=&quot;5&quot; mode=&quot;ROUND_DOWN&quot; axisType=&quot;W&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;"/>
+	<property name="filterCommitPrognoseWUp" 
+		value="&lt;filter&gt;&lt;roundFilter factor=&quot;5&quot; mode=&quot;ROUND_UP&quot; axisType=&quot;W&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;"/>
+
+	
 	<!-- - - - - - - - - - - - - - - - - - 
           target: fake                      nur damit das Projekt nicht schreit
          - - - - - - - - - - - - - - - - - -->
@@ -163,8 +170,8 @@
        	-->
        	
        	<echo message="Ablage der oberen Umhüllenden"/>
-       	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.model/observationConf/VorhersageMapping.gml" localobs="local3" remoteobs="${vorhersageLinkOben}" runasync="false"/>
+       	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.model/observationConf/VorhersageMapping.gml" sourcefilter="${filterCommitPrognoseWUp}" localobs="local3" remoteobs="${vorhersageLinkOben}" runasync="false"/>
        	<echo message="Ablage der unteren Umhüllenden"/>
-       	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.model/observationConf/VorhersageMapping.gml" localobs="local2" remoteobs="${vorhersageLinkUnten}" runasync="false"/>
+       	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.model/observationConf/VorhersageMapping.gml" sourcefilter="${filterCommitPrognoseWDown}" localobs="local2" remoteobs="${vorhersageLinkUnten}" runasync="false"/>
     </target>
 </project>

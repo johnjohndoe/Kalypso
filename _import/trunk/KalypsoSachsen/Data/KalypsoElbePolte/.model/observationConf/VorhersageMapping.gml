@@ -5,10 +5,10 @@
       <gml:name>Usti</gml:name>
       <inObservationLink/>
       <outObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="PSI (Normalbetrieb), untere Umhüllende"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.1_ES.02PG...501010.P2_MW"/>
       </outObservationLink>
       <out1ObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="PSI (Normalbetrieb), obere Umhüllende"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.1_ES.02PG...501010.P3_MW"/>
       </out1ObservationLink>
       <out3ObservationLink>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="PSI (Testbetrieb), untere Umhüllende"/>

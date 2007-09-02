@@ -181,7 +181,7 @@ ToDo: Help-Ids setzen!!! -->
 		<!--  -->
 		<arg name="ignoreType1" value="W"/>
 		<!--  -->
-		<arg name="pegelNameProperty" value="Name"/>
+		<arg name="pegelNameProperty" value="name"/>
 		<arg name="resultProperty" value="ganglinie_gesamt"/>
 		<arg name="timeserie1" value="nameString=Rechnung#linkColumn=ganglinie_gesamt#color=0xff0000"/>
 	</page>
