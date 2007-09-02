@@ -284,7 +284,7 @@ public class KrigingTask extends Task
         final Writer writer = new StringWriter();
         marshaller.marshal( inFilter, writer );
         final String string = XMLUtilities.removeXMLHeader( writer.toString() );
-        final String filterInline = XMLUtilities.prepareInLine( string ) + "#useascontext";
+        final String filterInline = XMLUtilities.prepareInLine( string );
 
         final TimeseriesLink copyLink = (TimeseriesLink)feature.getProperty( m_modellGMLTargetObservationlinkPropname );
         CopyObservationMappingHelper.addMapping( resultWorkspace, filterInline, copyLink.getHref() );

@@ -31,6 +31,7 @@ package org.kalypso.ant;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.net.URL;
@@ -49,7 +50,10 @@ import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.contribs.java.util.logging.LoggerUtilities;
 import org.kalypso.contribs.java.xml.XMLUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.ogc.sensor.filter.FilterFactory;
 import org.kalypso.transformation.CopyObservationMappingHelper;
+import org.kalypso.zml.filters.AbstractFilterType;
+import org.kalypso.zml.filters.InterpolationFilter;
 import org.kalypso.zml.filters.NOperationFilter;
 import org.kalypso.zml.filters.ObjectFactory;
 import org.kalypso.zml.filters.OperationFilter;
@@ -60,6 +64,7 @@ import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeaturePath;
 import org.w3._1999.xlinkext.SimpleLinkType;
+import org.xml.sax.InputSource;
 
 /**
  * This Task generates from a number of input zml files new zml output files. <br>
@@ -87,15 +92,31 @@ public class GMLWeightingTask extends Task
 
   private String m_propWeight; // e.g. "faktor"
 
+  private String m_propOffset; // e.g. "faktor"
+
   private String m_propRelationSourceFeature; //e.g. "ombrometerMember"
 
   private String m_propZMLSource;//e.g. Niederschlag_gemessen
 
+  private String m_propSourceUsed;
+
+  private String m_sourceFilter;
+
   private long m_from;
 
-  private long m_forecastFrom;
-
   private long m_to;
+
+  private Long m_forecastFrom;
+
+  private Long m_forecastTo;
+
+  private Long m_sourceFrom;
+
+  private Long m_sourceTo;
+
+  private Long m_targetFrom;
+
+  private Long m_targetTo;
 
   /**
    * @see org.apache.tools.ant.Task#execute()
@@ -123,7 +144,9 @@ public class GMLWeightingTask extends Task
         }
       };
 
-      logger.log( Level.INFO, LoggerUtilities.CODE_NEW_MSGBOX, "Berechnung Gebietsniederschlag" );
+      final String message = getDescription();
+      if( message != null && message.length() > 0 )
+        logger.log( Level.INFO, LoggerUtilities.CODE_NEW_MSGBOX, message );
 
       final UrlResolver urlResolver = new UrlResolver();
       // create needed factories
@@ -140,15 +163,18 @@ public class GMLWeightingTask extends Task
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( m_modelURL );
 
       // 2. locate features to process
-      final FeaturePath path = new FeaturePath( m_featurePathTarget );
-      final FeatureList feList = (FeatureList)path.getFeature( workspace );
+      final Feature[] targetFeatures = getTargetFeatures( workspace );
+      if( targetFeatures == null )
+        throw new BuildException( "Kein(e) Ziel-Feature(s) gefunden für FeaturePath: " + m_featurePathTarget );
+
       // loop all features
-      for( int i = 0; i < feList.size(); i++ )
+      for( int i = 0; i < targetFeatures.length; i++ )
       {
-        final Feature targetFE = (Feature)feList.get( i );
+        final Feature targetFE = targetFeatures[i];
         // 3. find target
         final TimeseriesLink targetLink = (TimeseriesLink)targetFE.getProperty( m_propZMLTarget );
-        final URL targetURL = urlResolver.resolveURL( m_targetContext, targetLink.getHref() );
+        final String targetHref = targetLink.getHref();
+        final URL targetURL = urlResolver.resolveURL( m_targetContext, targetHref );
 
         // 4. build n-operation filter
         final NOperationFilter nOperationFilter = filterFac.createNOperationFilter();
@@ -156,59 +182,135 @@ public class GMLWeightingTask extends Task
         final List filterList = nOperationFilter.getFilter();
 
         // 5. resolve weights
-        final Feature[] weightFEs = workspace.resolveLinks( targetFE, m_propRelationWeightMember );
+        final Feature[] weightFEs = getWeightFeatures( workspace, targetFE );
+        if( weightFEs == null )
+          throw new BuildException( "Kein(e) Gewichts-Feature(s) gefunden für FeaturePath: "
+              + m_propRelationWeightMember );
 
         // 6. loop weights
         for( int j = 0; j < weightFEs.length; j++ )
         {
-          // 7. resolve feature that has source zml reference
-          final Feature sourceFE = workspace.resolveLink( weightFEs[j], m_propRelationSourceFeature );
-          if( sourceFE == null )
-          {
-            logger.log( Level.WARNING, -1, "Linked source feature missing in Feature: " + weightFEs[j].getId() );
+          final Feature weightFE = weightFEs[j];
 
-            // IMPORTANT: just skips this weight; leads probably to wrong results
-            continue;
+          final double factor = getFactor( weightFE );
+          final double offset = getOffset( weightFE );
+
+          // 7. resolve sources
+          final Feature[] sourceFeatures = getSourceFeatures( workspace, weightFE );
+          if( sourceFeatures == null )
+            throw new BuildException( "Kein(e) Quell-Feature(s) gefunden für FeaturePath: "
+                + m_propRelationSourceFeature );
+
+          final OperationFilter offsetFilter = filterFac.createOperationFilter();
+          filterList.add( offsetFilter );
+          offsetFilter.setOperator( "+" );
+          offsetFilter.setOperand( Double.toString( offset ) );
+
+          final NOperationFilter weightSumFilter = filterFac.createNOperationFilter();
+          weightSumFilter.setOperator( "+" );
+
+          offsetFilter.setFilter( weightSumFilter );
+
+          final List offsetSummands = weightSumFilter.getFilter();
+
+          // 8. loop source features
+          for( int k = 0; k < sourceFeatures.length; k++ )
+          {
+            // 7. resolve feature that has source zml reference
+            final Feature sourceFE = sourceFeatures[k];
+
+            if( sourceFE == null )
+            {
+              logger.log( Level.WARNING, -1, "Linked source feature missing in Feature: " + weightFE.getId() );
+
+              // IMPORTANT: just skips this weight; leads probably to wrong results
+              continue;
+            }
+
+            // 9. resolve property that is source zml reference
+            final TimeseriesLink zmlLink = (TimeseriesLink)sourceFE.getProperty( m_propZMLSource );
+            final Boolean useThisSource;
+            if( m_propSourceUsed != null && m_propSourceUsed.length() > 0 )
+              useThisSource = (Boolean)sourceFE.getProperty( m_propSourceUsed );
+            else
+              useThisSource = Boolean.TRUE;
+
+            if( !useThisSource.booleanValue() )
+            {
+              logger.log( Level.INFO, LoggerUtilities.CODE_NONE, "Ignoriere: " + sourceFE.getId() );
+              continue;
+            }
+
+            if( zmlLink == null )
+            {
+              logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_DETAILS,
+                  "Linked timeserie link missing in Feature: " + weightFE.getId() );
+
+              // IMPORTANT: just skips this weight; leads probably to wrong results
+              continue;
+            }
+
+            // 10. build operation filter with parameters from gml
+            final OperationFilter filter = filterFac.createOperationFilter();
+            offsetSummands.add( filter );
+            filter.setOperator( "*" );
+            filter.setOperand( Double.toString( factor ) );
+
+            /* Innermost filter part */
+            final ZmlFilter zmlFilter = filterFac.createZmlFilter();
+            final SimpleLinkType simpleLink = linkFac.createSimpleLinkType();
+            final String sourceHref = zmlLink.getHref();
+            simpleLink.setHref( sourceHref );
+            zmlFilter.setZml( simpleLink );
+
+            if( m_sourceFilter != null )
+            {
+              final String strFilterXml = FilterFactory.getFilterPart( m_sourceFilter );
+
+              final StringReader sr = new StringReader( strFilterXml );
+              final AbstractFilterType af = (AbstractFilterType)FilterFactory.OF_FILTER.createUnmarshaller().unmarshal(
+                  new InputSource( sr ) );
+              filter.setFilter( af );
+
+              // HACK
+              if( af instanceof InterpolationFilter )
+                ( (InterpolationFilter)af ).setFilter( zmlFilter );
+              else
+                throw new UnsupportedOperationException(
+                    "Only InterpolationFilter as source-filter supported at the moment." );
+
+              sr.close();
+            }
+            else
+              filter.setFilter( zmlFilter );
           }
 
-          // 8. resolve property that is source zml reference
-          final TimeseriesLink zmlLink = (TimeseriesLink)sourceFE.getProperty( m_propZMLSource );
-          if( zmlLink == null )
-          {
-            logger.log( Level.WARNING, -1, "Linked timeserie link missing in Feature: " + weightFEs[j].getId() );
-
-            // IMPORTANT: just skips this weight; leads probably to wrong results
-            continue;
-          }
-
-          // 9. build operation filter with parameters from gml
-          final OperationFilter filter = filterFac.createOperationFilter();
-          filterList.add( filter );
-          filter.setOperator( "*" );
-          double factor = ( (Double)weightFEs[j].getProperty( m_propWeight ) ).doubleValue();
-          filter.setOperand( Double.toString( factor ) );
-          final ZmlFilter zmlFilter = filterFac.createZmlFilter();
-          filter.setFilter( zmlFilter );
-          final SimpleLinkType simpleLink = linkFac.createSimpleLinkType();
-          simpleLink.setHref( zmlLink.getHref() );
-          zmlFilter.setZml( simpleLink );
         }
-        // 10. serialize filter to string
+        // 11. serialize filter to string
         final Writer writer = new StringWriter();
         marshaller.marshal( nOperationFilter, writer );
         writer.close();
         final String string = XMLUtilities.removeXMLHeader( writer.toString() );
-        final String filterInline = XMLUtilities.prepareInLine( string ) + "#useascontext";
+        final String filterInline = XMLUtilities.prepareInLine( string );
 
-        // 11. add mapping to result workspace
+        // 12. add mapping to result workspace
         CopyObservationMappingHelper.addMapping( resultWorkspace, filterInline, targetURL.toExternalForm() );
         logger.log( Level.INFO, -1, "Ziel-ZML " + targetURL );
       }
-      // 13. do the mapping
-      CopyObservationMappingHelper.runMapping( resultWorkspace, urlResolver, m_modelURL, logger, new Date( m_from ),
-          new Date( m_forecastFrom ), new Date( m_to ), true );
 
-      // 14. serialize result workspace to file
+      // 14. do the mapping
+      final Date sourceFrom = m_sourceFrom == null ? new Date( m_from ) : new Date( m_sourceFrom.longValue() );
+      final Date sourceTo = m_sourceTo == null ? new Date( m_forecastFrom.longValue() ) : new Date( m_sourceTo
+          .longValue() );
+      final Date targetFrom = m_targetFrom == null ? new Date( m_forecastFrom.longValue() ) : new Date( m_targetFrom
+          .longValue() );
+      final Date targetTo = m_targetTo == null ? new Date( m_to ) : new Date( m_targetTo.longValue() );
+      final Date forecastFrom = new Date( m_forecastFrom.longValue() );
+      final Date forecastTo = m_forecastTo == null ? new Date( m_to ) : new Date( m_forecastTo.longValue() );
+
+      CopyObservationMappingHelper.runMapping( resultWorkspace, urlResolver, m_modelURL, logger, true, sourceFrom, sourceTo, targetFrom, targetTo, forecastFrom, forecastTo );
+
+      // 15. serialize result workspace to file
       if( m_targetMapping != null )
       {
         FileWriter writer = null;
@@ -216,6 +318,7 @@ public class GMLWeightingTask extends Task
         {
           writer = new FileWriter( m_targetMapping );
           GmlSerializer.serializeWorkspace( writer, resultWorkspace );
+          writer.close();
         }
         finally
         {
@@ -228,6 +331,66 @@ public class GMLWeightingTask extends Task
       e.printStackTrace();
       throw new BuildException( e );
     }
+  }
+
+  private double getOffset( final Feature weightFE )
+  {
+    if( m_propOffset == null || m_propOffset.length() == 0 )
+      return 0.0;
+
+    return ( (Double)weightFE.getProperty( m_propOffset ) ).doubleValue();
+  }
+
+  private double getFactor( final Feature weightFE )
+  {
+    if( m_propWeight == null || m_propWeight.length() == 0 )
+      return 1.0;
+
+    return ( (Double)weightFE.getProperty( m_propWeight ) ).doubleValue();
+  }
+
+  private Feature[] getTargetFeatures( final GMLWorkspace workspace )
+  {
+    final FeaturePath path = new FeaturePath( m_featurePathTarget );
+    final Object property = path.getFeature( workspace );
+    if( property instanceof FeatureList )
+      return ( (FeatureList)property ).toFeatures();
+
+    if( property instanceof Feature )
+      return new Feature[]
+      { (Feature)property };
+
+    return null;
+  }
+
+  private Feature[] getWeightFeatures( final GMLWorkspace workspace, final Feature targetFE )
+  {
+    if( m_propRelationWeightMember == null || m_propRelationWeightMember.length() == 0 )
+      return new Feature[]
+      { targetFE };
+
+    return workspace.resolveLinks( targetFE, m_propRelationWeightMember );
+  }
+
+  private Feature[] getSourceFeatures( final GMLWorkspace workspace, final Feature weightFE )
+  {
+    if( m_propRelationSourceFeature == null || m_propRelationSourceFeature.length() == 0 )
+      return new Feature[]
+      { weightFE };
+
+    final Object property = weightFE.getProperty( m_propRelationSourceFeature );
+    if( property instanceof FeatureList )
+      return ( (FeatureList)property ).toFeatures();
+
+    if( property instanceof Feature )
+      return new Feature[]
+      { (Feature)property };
+
+    if( property instanceof String )
+      return new Feature[]
+      { workspace.resolveLink( weightFE, m_propRelationSourceFeature ) };
+
+    return null;
   }
 
   /**
@@ -294,12 +457,40 @@ public class GMLWeightingTask extends Task
   }
 
   /**
+   * @param propOffset
+   *          property name of the offset property, feature property type must be double
+   */
+  public void setPropOffset( String propOffset )
+  {
+    m_propOffset = propOffset;
+  }
+
+  /**
    * @param propZMLSource
    *          property name of the zml source property, feature property type must be TimeSeriesLink
    */
   public final void setPropZMLSource( String propZMLSource )
   {
     m_propZMLSource = propZMLSource;
+  }
+
+  /**
+   * @param propSourceUsed
+   *          property name of the zml sourceUsed property, feature property type must be Boolean. If set, the property
+   *          is used to determined if this particular source is used or not.
+   */
+  public void setPropSourceUsed( final String propSourceUsed )
+  {
+    m_propSourceUsed = propSourceUsed;
+  }
+
+  /**
+   * @param sourceFilter
+   *          If non- <code>null</code>, this filter will be applied to every source-zml
+   */
+  public void setSourceFilter( String sourceFilter )
+  {
+    m_sourceFilter = sourceFilter;
   }
 
   /**
@@ -314,6 +505,7 @@ public class GMLWeightingTask extends Task
   /**
    * @param from
    *          beginning of measure periode
+   * @deprecated Use sourceFrom, targetFrom or forecastFrom instead
    */
   public final void setFrom( long from )
   {
@@ -324,17 +516,64 @@ public class GMLWeightingTask extends Task
    * @param forecastFrom
    *          beginning of forecast periode (end of measure periode)
    */
-  public final void setForecastFrom( long forecastFrom )
+  public final void setForecastFrom( final Long forecastFrom )
   {
     m_forecastFrom = forecastFrom;
   }
 
   /**
+   * @param forecastTo
+   *          end of forecast periode (end of measure periode)
+   */
+  public final void setForecastTo( final Long forecastTo )
+  {
+    m_forecastTo = forecastTo;
+  }
+
+  /**
    * @param to
    *          end of forecast periode
+   * @deprecated Use sourceTo, targetTo or forecastTo instead
    */
   public final void setTo( long to )
   {
     m_to = to;
   }
+
+  /**
+   * @param sourceFrom
+   *          start of request for source - observations
+   */
+  public final void setSourceFrom( final Long sourceFrom )
+  {
+    m_sourceFrom = sourceFrom;
+  }
+
+  /**
+   * @param sourceTo
+   *          end of request for source - observations
+   */
+  public final void setSourceTo( final Long sourceTo )
+  {
+    m_sourceTo = sourceTo;
+  }
+
+  /**
+   * @param targetFrom
+   *          start of request for source - observations
+   */
+  public final void setTargetFrom( final Long targetFrom )
+  {
+    m_targetFrom = targetFrom;
+  }
+
+  /**
+   * @param targetTo
+   *          end of request for source - observations
+   */
+  public final void setTargetTo( final Long targetTo )
+  {
+    m_targetTo = targetTo;
+  }
+
 }
