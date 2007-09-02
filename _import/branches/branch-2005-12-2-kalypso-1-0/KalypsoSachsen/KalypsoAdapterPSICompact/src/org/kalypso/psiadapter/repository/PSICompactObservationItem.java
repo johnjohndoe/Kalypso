@@ -2,27 +2,27 @@ package org.kalypso.psiadapter.repository;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.logging.Logger;
 
 import org.kalypso.commons.conversion.units.IValueConverter;
-import org.kalypso.commons.conversion.units.NoConverter;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.IAxisRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.IObservationListener;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.ObservationConstants;
+import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.event.ObservationEventAdapter;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
-import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.request.IRequest;
-import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
-import org.kalypso.ogc.sensor.timeseries.interpolation.InterpolationFilter;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannFactory;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannGroup;
 import org.kalypso.psiadapter.PSICompactFactory;
@@ -287,15 +287,13 @@ public class PSICompactObservationItem implements IObservation
   /**
    * @see org.kalypso.ogc.sensor.IObservation#setValues(org.kalypso.ogc.sensor.ITuppleModel)
    */
-  public void setValues( final ITuppleModel values ) throws SensorException
+  public void setValues( final ITuppleModel model ) throws SensorException
   {
-    // always make a copy of the tupple model, takes care of the correct timezone for PSICompact
-    final PSICompactTuppleModel model = PSICompactTuppleModel.copyModel( values, NoConverter.getInstance() );
-
     if( model.getCount() > 0 )
     {
       final ArchiveData[] data = extendForOverwrite( model );
 
+      // TODO: only write if debug mode is on
       dumpArchiveData( data );
 
       try
@@ -318,14 +316,12 @@ public class PSICompactObservationItem implements IObservation
    */
   private void dumpArchiveData( final ArchiveData[] data )
   {
-    // und mehr Daten generieren mit negativem Wert, damit die alte Daten in PSI
-    // überschrieben werden --> sonst Internet Darstellung kann misst sein
     final StringBuffer msg = new StringBuffer();
 
     msg.append( "Werte nach PSICompact geschrieben in Zeitreihe mit ID: " );
     msg.append( m_objectInfo.getId() );
     msg.append( '\n' );
-    
+
     for( int i = 0; i < data.length; i++ )
     {
       final PSICompact.ArchiveData dataItem = data[i];
@@ -336,7 +332,7 @@ public class PSICompactObservationItem implements IObservation
       msg.append( dataItem.getStatus() );
       msg.append( '\n' );
     }
-    
+
     msg.append( '\n' );
     msg.append( '\n' );
 
@@ -345,36 +341,121 @@ public class PSICompactObservationItem implements IObservation
 
   /**
    * Interpolates and extends the model data according to configuration.
+   * <p>
+   * Extending the data is needed to really overwrite the contents of psi compact, else only the new values get written
+   * into the container.
    * 
    * @throws SensorException
    */
-  private ArchiveData[] extendForOverwrite( final PSICompactTuppleModel model ) throws SensorException
+  private ArchiveData[] extendForOverwrite( final ITuppleModel model ) throws SensorException
   {
-    final ArchiveData[] data = model.getData();
+    final IAxis[] axes = model.getAxisList();
 
+    final IAxis dateAxis = ObservationUtilities.findAxisByClass( axes, Date.class );
+    // REMARK: when Observation sget written to the server, it is ensured that exactly the known axes are written out.
+    // this is done by comparing the target observation with the source observation and only copying what is needed.
+    // In case of PSICompact, this means we will have exactly one axis, so no problem here...
+    final IAxis valueAxis = KalypsoStatusUtils.findAxisByClass( axes, Number.class, true );
+    //    final IAxis statusAxis = KalypsoStatusUtils.findStatusAxisFor( axes, valueAxis );
+
+    final IAxisRange dateRange = model.getRangeFor( dateAxis );
+
+    /* Get defined properties */
     final int overwriteCalendarField = PSICompactFactory.getOverwriteCalendarField();
-    final int overwriteStep = PSICompactFactory.getOverwriteStep();
 
+    // TODO: remove obsolete properties from config.ini
+    /*
+     * final int overwriteStep = PSICompactFactory.getOverwriteStep(); final double overwriteValue = m_vc.convert(
+     * PSICompactFactory.getOverwriteValue() );
+     */
+
+    final int overwriteAmountBefore = PSICompactFactory.getOverwriteAmountBefore();
+    final int overwriteAmountAfter = PSICompactFactory.getOverwriteAmountAfter();
+
+    /* Determine start and end */
     final Calendar cal = PSICompactFactory.getCalendarForPSICompact();
-    cal.setTime( data[0].getTimestamp() );
-    cal.add( overwriteCalendarField, -PSICompactFactory.getOverwriteAmountBefore() );
+    cal.setTime( (Date)dateRange.getLower() );
+    cal.add( overwriteCalendarField, -overwriteAmountBefore );
     final Date begin = cal.getTime();
 
-    cal.setTime( data[data.length - 1].getTimestamp() );
-    cal.add( overwriteCalendarField, PSICompactFactory.getOverwriteAmountAfter() );
+    cal.setTime( (Date)dateRange.getUpper() );
+    cal.add( overwriteCalendarField, overwriteAmountAfter );
     final Date end = cal.getTime();
 
-    double overwriteValue = m_vc.convert( PSICompactFactory.getOverwriteValue() );
-    final InterpolationFilter filter = new InterpolationFilter( overwriteCalendarField, overwriteStep, true,
-        overwriteValue, PSICompact.STATUS_OK );
-    final SimpleObservation observation = new SimpleObservation( null, "", "", false, null, new MetadataList(), model
-        .getAxisList(), model );
+    /* Beware of endles loop */
+    if( !begin.before( end ) )
+      throw new SensorException( "Failed to determine date-interval for timeserie" );
 
-    filter.initFilter( null, observation, null );
+    /* Create data with overwrite-values for the full time intervall */
+    final double fillValue = m_vc.reverse( -1.0 ); // TODO: check if always correct
+    final SortedMap fullIntervalMap = createExtendedArchiveDataMap( begin, end, PSICompact.STATUS_AUTO, fillValue );
 
-    final ITuppleModel newValues = filter.getValues( new ObservationRequest( begin, end ) );
-    final PSICompactTuppleModel newModel = PSICompactTuppleModel.copyModel( newValues, m_vc );
-    return newModel.getData();
+    /* Overwrite the full interval with values from timeserie to write out */
+    final int modelCount = model.getCount();
+    for( int i = 0; i < modelCount; i++ )
+    {
+      final Date date = (Date)model.getElement( i, dateAxis );
+      final int status = PSICompact.STATUS_AUTO; // TODO: why do we always use 'AUTO' instead of the given status?
+      final double value = m_vc.reverse( ( (Number)model.getElement( i, valueAxis ) ).doubleValue() );
+
+      final ArchiveData archiveData = new ArchiveData( date, status, value );
+      fullIntervalMap.put( date, archiveData );
+    }
+
+    //    final InterpolationFilter filter = new InterpolationFilter( overwriteCalendarField, overwriteStep, true,
+    //        overwriteValue, PSICompact.STATUS_OK );
+    //    final SimpleObservation observation = new SimpleObservation( null, "", "", false, null, new MetadataList(), model
+    //        .getAxisList(), model );
+    //
+    //    filter.initFilter( null, observation, null );
+    //
+    //    final ITuppleModel newValues = filter.getValues( new ObservationRequest( begin, end ) );
+    //    final PSICompactTuppleModel newModel = PSICompactTuppleModel.copyModel( newValues, m_vc );
+    //    return newModel.getData();
+
+    return (ArchiveData[])fullIntervalMap.values().toArray( new ArchiveData[fullIntervalMap.size()] );
+  }
+
+  /**
+   * Creates a SorteMap: Date -> ArchiveData for all dates in a given interval.
+   * <p>
+   * All achive datas get the same status and value.
+   * 
+   * @param begin
+   *          Start of the date interval
+   * @param end
+   *          End of the date interval
+   * @param status
+   *          The constant status for all achive datas.
+   * @param value
+   *          The constant value for all archive datas.
+   */
+  private SortedMap createExtendedArchiveDataMap( final Date begin, final Date end, final int status, final double value )
+  {
+    /* Hard coded: we now the PSICompact is condifured to always be 15min times-series */
+    final int stepAmount = 15;
+    final int stepField = Calendar.MINUTE;
+
+    final Calendar stepper = Calendar.getInstance();
+    stepper.setTime( begin );
+
+    final SortedMap archiveDataMap = new TreeMap();
+
+    while( true )
+    {
+      final Date stepTime = stepper.getTime();
+
+      if( stepTime.after( end ) )
+        break;
+
+      final ArchiveData archiveData = new ArchiveData( stepTime, status, value );
+
+      archiveDataMap.put( stepTime, archiveData );
+
+      stepper.add( stepField, stepAmount );
+    }
+
+    return archiveDataMap;
   }
 
   /**
