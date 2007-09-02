@@ -95,7 +95,6 @@ ToDo: Help-Ids setzen!!! -->
 		<arg name="reselectFeatureview" value="false"/>
 		<arg name="selectionFromFeatureview" value="false"/>
 		<arg name="featureControlStyle" value="SWT.NONE"/>
-		<arg name="featureViewListensToMap" value="false"/>
 		<!-- 
 			Diagramm -->
 		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% [%axisunit%]#linkColumn=ganglinie_gesamt"/>
