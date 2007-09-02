@@ -71,7 +71,7 @@ public class FilterFactory
   private static FilterFactory m_instance = null;
 
   /** jaxb object factory for filter stuff */
-  private static final ObjectFactory OF_FILTER = new ObjectFactory();
+  public static final ObjectFactory OF_FILTER = new ObjectFactory();
 
   /**
    * Constructor. Reads the properties and creates the factory.

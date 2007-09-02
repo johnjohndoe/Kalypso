@@ -291,7 +291,6 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
   private IObservation[] getObservations( final Feature f ) throws SensorException
   {
     List result = new ArrayList();
-    //    final IObservation[] obses = new IObservation[m_sources.length];
     for( int i = 0; i < m_sources.length; i++ )
     {
       final Source source = m_sources[i];
@@ -325,7 +324,7 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
     if( sourcelink == null )
       return null;
     // keine Zeitreihe verlink, z.B. kein Pegel am
-    // Knoten in KalypsoNA
+    // Knoten in KalypsoNA 
     final String href;
     if( filter == null )
       href = sourcelink.getHref();
