@@ -67,6 +67,7 @@
 		<copy todir="${calc.dir}">
 			<fileset dir="${project.dir}/.templates">
 				<include name="*.gtt"/>
+				<include name="*.gmt"/>
 				<include name="*.gft"/>
 				<include name="*.ott"/>
 				<include name="*.odt"/>
