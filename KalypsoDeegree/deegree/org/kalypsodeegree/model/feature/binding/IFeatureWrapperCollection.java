@@ -37,16 +37,10 @@ public interface IFeatureWrapperCollection<FWCls extends IFeatureWrapper2> exten
    */
   public FWCls addNew( final QName newChildType );
 
-  /**
-   * Same as {@link #addNew(QName)}, but additionally the class to adapt to may be specified.
-   */
   public <T extends FWCls> T addNew( final QName newChildType, final Class<T> classToAdapt );
-
+  
   public FWCls addNew( final QName newChildType, final String newFeatureId );
 
-  /**
-   * Same as {@link #addNew(QName, String)}, but additionally the class to adapt to may be specified.
-   */
   public <T extends FWCls> T addNew( final QName newChildType, final String newFeatureId, final Class<T> classToAdapt );
 
   /**
@@ -66,11 +60,6 @@ public interface IFeatureWrapperCollection<FWCls extends IFeatureWrapper2> exten
    *             </ul>
    * @throws IndexOutOfBoundsException
    *             if the index is out of range (index &lt; 0 || index &gt; size()).
-   */
-  public FWCls addNew( final int index, final QName newChildType );
-
-  /**
-   * Same as {@link #addNew(int, QName)}, but additionally the class to adapt to may be specified.
    */
   public <T extends FWCls> T addNew( final int index, final QName newChildType, final Class<T> classToAdapt );
 
