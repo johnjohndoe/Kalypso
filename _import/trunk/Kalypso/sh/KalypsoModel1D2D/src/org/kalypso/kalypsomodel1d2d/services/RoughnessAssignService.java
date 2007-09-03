@@ -204,11 +204,11 @@ public class RoughnessAssignService extends Job
       }
     }
     boolean anyChanges = false;
-    anyChanges |= !element.getRoughnessClsID().equals( roughnessClsID );
-    anyChanges |= !element.getRoughnessStyle().equals( roughnessStyle );
-    anyChanges |= element.getRoughnessCorrectionKS() != correctionParameterKS;
-    anyChanges |= element.getRoughnessCorrectionAxAy() != correctionParameterAxAy;
-    anyChanges |= element.getRoughnessCorrectionDP() != correctionParameterDP;
+    anyChanges |= element.getRoughnessClsID() != null && !element.getRoughnessClsID().equals( roughnessClsID );
+    anyChanges |= element.getRoughnessStyle() != null && !element.getRoughnessStyle().equals( roughnessStyle );
+    anyChanges |= element.getRoughnessCorrectionKS() != null && element.getRoughnessCorrectionKS() != correctionParameterKS;
+    anyChanges |= element.getRoughnessCorrectionAxAy() != null && element.getRoughnessCorrectionAxAy() != correctionParameterAxAy;
+    anyChanges |= element.getRoughnessCorrectionDP() != null && element.getRoughnessCorrectionDP() != correctionParameterDP;
     if( anyChanges )
     {
       final FeatureChange[] changes = element.assignRoughness( roughnessClsID, correctionParameterKS, correctionParameterAxAy, correctionParameterDP, roughnessStyle );
