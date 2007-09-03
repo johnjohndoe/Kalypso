@@ -119,7 +119,7 @@
       <name_de>Brandeis</name_de>
       <name_cz>Brandys</name_cz>
       <description/>
-      <id>1</id>
+      <id>1040</id>
       <nr>001</nr>
       <river>labe</river>
       <ganglinie_gesamt>
@@ -138,7 +138,7 @@
       <name_de>Prag</name_de>
       <name_cz>Praha</name_cz>
       <description/>
-      <id>2</id>
+      <id>2001</id>
       <nr>002</nr>
       <river>viatava</river>
       <ganglinie_gesamt>
@@ -157,7 +157,7 @@
       <name_de>Laun</name_de>
       <name_cz>Louny</name_cz>
       <description/>
-      <id>5</id>
+      <id>2190</id>
       <nr>004</nr>
       <river>ohre</river>
       <ganglinie_gesamt>
@@ -176,7 +176,7 @@
       <name_de>Aussig</name_de>
       <name_cz>Usti</name_cz>
       <description/>
-      <id>6</id>
+      <id>2210</id>
       <nr>007</nr>
       <river>labe</river>
       <ganglinie_messwerte>

@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ElbePolteModell fid="root" xmlns:commons="org.kalypso.elbepolte.commons" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink"
-  xmlns:obslink="obslink.zml.kalypso.org" xmlns:gml="http://www.opengis.net/gml" xmlns="org.kalypso.elbepolte.modell" xsi:schemaLocation="org.kalypso.elbepolte.modell modell.xsd">
+<ElbePolteModell fid="root" xmlns:commons="org.kalypso.elbepolte.commons" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:obslink="obslink.zml.kalypso.org" xmlns:gml="http://www.opengis.net/gml" xmlns="org.kalypso.elbepolte.modell" xsi:schemaLocation="org.kalypso.elbepolte.modell modell.xsd">
   <name>Elbe-Modell</name>
   <description>Modell der Oberen Elbe</description>
-  <pegel_oberwasser xlink:href="#KMChannel1002"/>
   <hw_type>1</hw_type>
   <rido>true</rido>
   <streckeMember>
@@ -1539,9 +1537,9 @@
   <streckeMember>
     <Strecke fid="Strecke7">
       <name>DRESDEN - TORGAU</name>
+      <description/>
       <pegel_oberwasser xlink:href="#Dresden"/>
       <pegel_unterwasser xlink:href="#Torgau"/>
-      <description/>
       <river/>
       <zwg_zuschlag>0.0</zwg_zuschlag>
       <nr>7</nr>
@@ -2206,7 +2204,7 @@
       <name_de>Brandeis</name_de>
       <name_cz>Brandys</name_cz>
       <description/>
-      <id>1</id>
+      <id>1040</id>
       <nr>001</nr>
       <river>labe</river>
       <ganglinie_gesamt>
@@ -2225,7 +2223,7 @@
       <name_de>Prag</name_de>
       <name_cz>Praha</name_cz>
       <description/>
-      <id>2</id>
+      <id>2001</id>
       <nr>002</nr>
       <river>viatava</river>
       <ganglinie_gesamt>
@@ -2244,7 +2242,7 @@
       <name_de>Laun</name_de>
       <name_cz>Louny</name_cz>
       <description/>
-      <id>5</id>
+      <id>2190</id>
       <nr>004</nr>
       <river>ohre</river>
       <ganglinie_gesamt>
@@ -2263,7 +2261,7 @@
       <name_de>Aussig</name_de>
       <name_cz>Usti</name_cz>
       <description/>
-      <id>6</id>
+      <id>2210</id>
       <nr>007</nr>
       <river>labe</river>
       <ganglinie_messwerte>
