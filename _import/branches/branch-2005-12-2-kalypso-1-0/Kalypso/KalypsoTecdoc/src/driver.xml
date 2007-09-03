@@ -50,7 +50,9 @@
 		
 		&file_integr_allg;
 		
+		<!-- 
 		&file_integr_elbezwg;
+		-->
 		&file_integr_elbepolte;
 		&file_integr_spree;
 		&file_integr_we;
