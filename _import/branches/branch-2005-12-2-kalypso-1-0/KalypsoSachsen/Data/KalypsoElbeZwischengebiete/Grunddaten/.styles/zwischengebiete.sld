@@ -56,7 +56,7 @@
 							<Mark>
 								<WellKnownName>triangle</WellKnownName>
 								<Fill>
-									<CssParameter name="fill">#00abab</CssParameter>
+									<CssParameter name="fill">#ff8000</CssParameter>
 								</Fill>
 								<Stroke>
 									<CssParameter name="stroke">#111111</CssParameter>
