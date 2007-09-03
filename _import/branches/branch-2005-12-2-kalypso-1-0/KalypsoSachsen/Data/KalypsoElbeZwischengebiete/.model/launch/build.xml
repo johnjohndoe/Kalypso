@@ -1,8 +1,8 @@
 <project default="fake">
 
 	<!-- Zeitschritt der Berechnung: 3h-->
-		<property name="interval.field" value="HOUR_OF_DAY"/>
-		<property name="interval.amount" value="3"/>
+	<property name="interval.field" value="HOUR_OF_DAY"/>
+	<property name="interval.amount" value="3"/>
 	
     <!-- define the requests -->
     <property name="requestQ"
@@ -12,9 +12,14 @@
     <!-- Q: interpolation-filter -->
     <property name="filterQ"
 		value="${requestQ}&lt;filter&gt;&lt;interpolationFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; defaultStatus=&quot;2&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot; fillLastWithValid=&quot;true&quot; /&gt;&lt;/filter&gt;" />
+	
+	<!-- Filter für GmlWeightTask: wird auf jede Quelle angewendet. Wird eigentlich nur benötigt, um das Ergebnis auf den Vorhersagezeitraum auszuweiten (und fortzusetzen). -->
     <property name="filterWeight"
 		value="&lt;filter&gt;&lt;interpolationFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; defaultStatus=&quot;0&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot; fillLastWithValid=&quot;true&quot; /&gt;&lt;/filter&gt;" />
 
+    <property name="filterAblageQ"
+              value="&lt;filter&gt;&lt;interpolationFilter amount=&quot;15&quot; calendarField=&quot;MINUTE&quot; defaultStatus=&quot;4&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;" />
+	
 	<!-- - - - - - - - - - - - - - - - - - 
           target: fake                      nur damit das Projekt nicht schreit
          - - - - - - - - - - - - - - - - - -->
@@ -114,16 +119,9 @@
 	   		<echo message="Szenario-ID der Rechenvariante ist: ${scenarioId}" />
 	   		<echo message="" />
 	
-	       <!-- es müssen die gesamten zeitreihen abgelegt werden!!!-->
+	       <!-- Es müssen die gesamten Zeitreihen abgelegt werden! -->
 	       	<echo message="Ablage der Rechenergebnisse"/>
-	       	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.model/observationConf/VorhersageMapping.gml" localobs="local1" remoteobs="${vorhersageLinkNormal}" runasync="false"/>
-	 
-	    	<!-- Es werden keine Umhüllenden abgelegt
-	       	<echo message="Ablage der oberen Umhüllenden"/>
-	       	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.model/observationConf/VorhersageMapping.gml" localobs="local3" remoteobs="${vorhersageLinkOben}" runasync="false"/>
-	       	<echo message="Ablage der unteren Umhüllenden"/>
-	       	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.model/observationConf/VorhersageMapping.gml" localobs="local2" remoteobs="${vorhersageLinkUnten}" runasync="false"/>
-	       	-->
+	       	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.model/observationConf/VorhersageMapping.gml" sourcefilter="${filterAblageQ}" localobs="local1" remoteobs="${vorhersageLinkNormal}" runasync="false"/>
 	    </target>
 
 	 <!-- ================================= 
