@@ -161,29 +161,34 @@ public class ContinuityLine1D extends FELine implements IContinuityLine1D
 
   private GM_Object getGeometry( final IFE1D2DNode node, final IFE1D2DNode neighbour1, final IFE1D2DNode neighbour2 ) throws GM_Exception
   {
-    GM_Point pointtocreatefrom = null;
-    final GM_Point p1 = node.getPoint();
-    final GM_Point p2 = neighbour1.getPoint();
-    final GM_Point p3 = neighbour2.getPoint();
-    double xcenter = 0.5 * (p3.getX() + p2.getX());
-    double ycenter = 0.5 * (p3.getY() + p2.getY());
-    final GM_Point centerpoint = GeometryFactory.createGM_Point( GeometryFactory.createGM_Position( xcenter, ycenter ), node.getPoint().getCoordinateSystem() );
-    double xoffset = p1.getX() - centerpoint.getX();
-    double yoffset = p1.getY() - centerpoint.getY();
+    final GM_Point pointToCreateLineAt = node.getPoint();
+    double xcenter = pointToCreateLineAt.getX();
+    double ycenter = pointToCreateLineAt.getY();
+    GM_Point p1 = neighbour1.getPoint();
+    GM_Point p2 = neighbour2.getPoint();
 
-    final double length2 = Math.sqrt(Math.pow( xcenter-p2.getX(), 2.0 ) + Math.pow( ycenter-p2.getY(), 2.0 )  );
-    final double length3 = Math.sqrt(Math.pow( xcenter-p3.getX(), 2.0 ) + Math.pow( ycenter-p3.getY(), 2.0 )  );
-    
-    if (length3 >= length2)
-      pointtocreatefrom = p2;
+    final double length1 = Math.sqrt( Math.pow( p1.getX() - xcenter, 2.0 ) + Math.pow( p1.getY() - ycenter, 2.0 ) );
+    final double length2 = Math.sqrt( Math.pow( p2.getX() - xcenter, 2.0 ) + Math.pow( p2.getY() - ycenter, 2.0 ) );
+    if( length1 >= length2 )
+      p1 = GeometryFactory.createGM_Point( xcenter + (p1.getX() - xcenter) / length1 * length2, ycenter + (p1.getY() - ycenter) / length1 * length2, pointToCreateLineAt.getCoordinateSystem() );
     else
-      pointtocreatefrom = p3;
-      
+      p2 = GeometryFactory.createGM_Point( xcenter + (p2.getX() - xcenter) / length2 * length1, ycenter + (p2.getY() - ycenter) / length2 * length1, pointToCreateLineAt.getCoordinateSystem() );
+
+    final GM_Point centerpoint = GeometryFactory.createGM_Point( (p1.getX() + p2.getX()) / 2.0, (p1.getY() + p2.getY()) / 2.0, node.getPoint().getCoordinateSystem() );
+    double xoffset = pointToCreateLineAt.getX() - centerpoint.getX();
+    double yoffset = pointToCreateLineAt.getY() - centerpoint.getY();
+
+    GM_Point pointtocreatefrom = null;
+    if( length1 >= length2 )
+      pointtocreatefrom = p1;
+    else
+      pointtocreatefrom = p2;
+
     double x1 = centerpoint.getX() - (pointtocreatefrom.getY() - centerpoint.getY()) + xoffset;
     double y1 = centerpoint.getY() + (pointtocreatefrom.getX() - centerpoint.getX()) + yoffset;
     double x2 = centerpoint.getX() + (pointtocreatefrom.getY() - centerpoint.getY()) + xoffset;
     double y2 = centerpoint.getY() - (pointtocreatefrom.getX() - centerpoint.getX()) + yoffset;
-    
+
     final GM_Position[] positions = new GM_Position[] { GeometryFactory.createGM_Position( x1, y1 ), GeometryFactory.createGM_Position( x2, y2 ) };
     return GeometryFactory.createGM_Curve( positions, p1.getCoordinateSystem() );
   }
