@@ -55,11 +55,10 @@ import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.ops.TypeInfo;
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
-import org.kalypso.kalypsomodel1d2d.schema.binding.model.IPseudoOPerationalModel;
 import org.kalypso.kalypsomodel1d2d.ui.featureinput.AddMetaDataToFeatureDialog;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.AddBoundaryConditionToCalcUnitCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.RemoveBoundaryConditionFromCalcUnitCommand;
@@ -83,7 +82,7 @@ public class AddRemoveBoundaryConditionToCalUnitWidget extends FENetConceptSelec
 
   public AddRemoveBoundaryConditionToCalUnitWidget( final KeyBasedDataModel dataModel )
   {
-    this( new QName[] { Kalypso1D2DSchemaConstants.WB1D2D_F_BOUNDARY_LINE, IBoundaryCondition.QNAME }, " Removes Boundary Condition ", " Removes Boundary Condition", dataModel );
+    this( new QName[] { IFELine.QNAME, IBoundaryCondition.QNAME }, " Removes Boundary Condition ", " Removes Boundary Condition", dataModel );
     m_dataModel = dataModel;
   }
 
@@ -186,7 +185,7 @@ public class AddRemoveBoundaryConditionToCalUnitWidget extends FENetConceptSelec
       @SuppressWarnings("unchecked")
       public void actionPerformed( ActionEvent e )
       {
-        final CommandableWorkspace cmdWorkspace = Util.getCommandableWorkspace( IPseudoOPerationalModel.class );// KeyBasedDataModelUtil.getBCWorkSpace(
+        final CommandableWorkspace cmdWorkspace = Util.getCommandableWorkspace( IFlowRelationshipModel.class );
         // dataModel
         // );
         final Feature parentFeature = cmdWorkspace.getRootFeature();

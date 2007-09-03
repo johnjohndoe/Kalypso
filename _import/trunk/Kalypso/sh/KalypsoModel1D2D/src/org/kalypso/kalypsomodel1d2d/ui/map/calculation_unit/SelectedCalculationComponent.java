@@ -76,6 +76,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListener;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
@@ -275,9 +276,14 @@ public class SelectedCalculationComponent
   {
     final CommandableWorkspace workspace = KeyBasedDataModelUtil.getBCWorkSpace( dataModel );
     final Feature bcHolderFeature = workspace.getRootFeature();
-    // TODO Patrice replace with operational model
-    IFlowRelationshipModel flowRelationship = (IFlowRelationshipModel) bcHolderFeature.getAdapter( IFlowRelationshipModel.class );
-    List<IBoundaryCondition> conditions = new ArrayList<IBoundaryCondition>( (List) flowRelationship );
+    final IFlowRelationshipModel flowRelationshipsModel = (IFlowRelationshipModel) bcHolderFeature.getAdapter( IFlowRelationshipModel.class );
+    final List<IFlowRelationship> allFlowRelationshipsList = new ArrayList<IFlowRelationship>( (List) flowRelationshipsModel );
+    final List<IBoundaryCondition> conditions = new ArrayList<IBoundaryCondition>();
+    for( final IFlowRelationship relationship : allFlowRelationshipsList )
+    {
+      if( relationship instanceof IBoundaryCondition )
+        conditions.add( (IBoundaryCondition) relationship );
+    }
     return conditions;
   }
 

@@ -51,19 +51,14 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.xml.namespace.QName;
 
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.ui.featureinput.AddMetaDataToFeatureDialog;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteBoundaryLineCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand;
@@ -72,20 +67,10 @@ import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.RemoveBoundaryLineFromC
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
-import org.kalypso.kalypsomodel1d2d.ui.map.flowrel.CreateNodalBCFlowrelationWidget;
-import org.kalypso.kalypsomodel1d2d.ui.map.flowrel.IBoundaryConditionDescriptor;
-import org.kalypso.kalypsomodel1d2d.ui.map.flowrel.NodalBCSelectionWizard;
 import org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget;
-import org.kalypso.kalypsosimulationmodel.core.Util;
-import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
-import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * @author Patrice Congo
@@ -112,13 +97,10 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
   private static final String TXT_ADD_BOUNDARY_LINE_TO_UNIT = "Add boundary line to calculation unit";// "Add Up Stream
                                                                                                       // Boundary Line";
 
-  private static final String TXT_SET_BOUNDARY_CONDITION = "Set Boundary Condition";
-
   private static final String TXT_REMOVE_BOUNDARY_LINE_FROM_MODEL = "Remove Boundary Line From Model";
 
   private static final String[][] MENU_ITEM_SPECS = { { TXT_ADD_META_DATA, ICONS_ELCL16_ADD_GIF }, { TXT_ADD_BOUNDARY_LINE_TO_UNIT, ICONS_ELCL16_ADD_GIF },
-      { TXT_REMOVE_BOUNDARY_LINE_FROM_UNIT, ICONS_ELCL16_REMOVE_GIF }, { TXT_SET_BOUNDARY_CONDITION, ICONS_ELCL16_SET_BOUNDARY_GIF },
-      { TXT_REMOVE_BOUNDARY_LINE_FROM_MODEL, ICONS_ELCL16_SET_BOUNDARY_GIF } };
+      { TXT_REMOVE_BOUNDARY_LINE_FROM_UNIT, ICONS_ELCL16_REMOVE_GIF }, { TXT_REMOVE_BOUNDARY_LINE_FROM_MODEL, ICONS_ELCL16_SET_BOUNDARY_GIF } };
 
   private final KeyBasedDataModel dataModel;
 
@@ -128,7 +110,7 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
 
   public AlterCalUnitBorderWidget( final KeyBasedDataModel dataModel )
   {
-    this( new QName[] { Kalypso1D2DSchemaConstants.WB1D2D_F_BOUNDARY_LINE }, "Select Elements and add to the current calculation unit", "Select Elements and add to the current calculation unit", dataModel );
+    this( new QName[] { IFELine.QNAME }, "Select Elements and add to the current calculation unit", "Select Elements and add to the current calculation unit", dataModel );
   }
 
   protected AlterCalUnitBorderWidget( final QName themeElementsQName, final String name, final String toolTip, final KeyBasedDataModel dataModel )
@@ -195,10 +177,6 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
       {
         updateRemoveUpStreamMenu( item );
       }
-      else if( TXT_SET_BOUNDARY_CONDITION.equals( text ) )
-      {
-        updateSetBoundaryMenu( item );
-      }
       else if( TXT_REMOVE_BOUNDARY_LINE_FROM_MODEL.equals( text ) )
       {
         updateRemoveBoundaryLineMenu( item );
@@ -213,7 +191,7 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
   private void updateRemoveBoundaryLineMenu( final JMenuItem item )
   {
     item.setEnabled( true );
-    final IBoundaryLine selectedBoundaryLine = getSelectedBoundaryLine();
+    final IFELine selectedBoundaryLine = getSelectedBoundaryLine();
     if( selectedBoundaryLine == null )
     {
       item.setEnabled( false );
@@ -226,7 +204,7 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
     if( item.isEnabled() )
     {
       final ICalculationUnit calUnit = dataModel.getData( ICalculationUnit.class, ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
-      final IBoundaryLine selectedBoundaryLine = getSelectedBoundaryLine();
+      final IFELine selectedBoundaryLine = getSelectedBoundaryLine();
       if( selectedBoundaryLine != null && calUnit != null )
       {
         if( CalcUnitOps.isBoundaryLineOf( selectedBoundaryLine, calUnit ) )// || CalUnitOps.isUpStreamBoundaryLine(
@@ -245,7 +223,7 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
     {
       final ICalculationUnit calUnit = dataModel.getData( ICalculationUnit.class, ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
 
-      final IBoundaryLine selectedBoundaryLine = getSelectedBoundaryLine();
+      final IFELine selectedBoundaryLine = getSelectedBoundaryLine();
       if( selectedBoundaryLine == null || calUnit == null )
       {
         item.setEnabled( false );
@@ -261,11 +239,6 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
         }
       }
     }
-  }
-
-  private void updateSetBoundaryMenu( final JMenuItem item )
-  {
-    updateGeneralBadSelection( item );
   }
 
   private void updateGeneralBadSelection( final JMenuItem item )
@@ -297,7 +270,7 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
     }
     else if( TXT_ADD_META_DATA.equals( text ) )
     {
-      final IBoundaryLine bLine = getSelectedBoundaryLine();
+      final IFELine bLine = getSelectedBoundaryLine();
 
       final Display display = (Display) dataModel.getData( ICommonKeys.KEY_SELECTED_DISPLAY );
       final Runnable runnable = new Runnable()
@@ -327,43 +300,6 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
     {
       actionRemoveBoundaryLineFromUnit( text );
     }
-    else if( TXT_SET_BOUNDARY_CONDITION.equals( text ) )
-    {
-      final Display display = (Display) dataModel.getData( ICommonKeys.KEY_SELECTED_DISPLAY );
-      final Runnable runnable = new Runnable()
-      {
-        public void run( )
-        {
-          try
-          {
-            final IBoundaryConditionDescriptor[] descriptors = CreateNodalBCFlowrelationWidget.createTimeserieDescriptors( getSelectedBoundaryLine(), Util.getScenarioFolder() );
-            CommandableWorkspace workspace = KeyBasedDataModelUtil.getBCWorkSpace( dataModel );// bcTheme.getWorkspace();
-            // /model is to be get from the calculation unit
-            final Feature opModelFeature = workspace.getRootFeature();
-            IFlowRelationshipModel opModel = (IFlowRelationshipModel) opModelFeature.getAdapter( IFlowRelationshipModel.class );
-            final IRelationType parentRelation = opModel.getWrappedList().getParentFeatureTypeProperty();
-
-            GMLWorkspace opWorkspace = opModel.getWrappedFeature().getWorkspace();
-            NodalBCSelectionWizard wizard = new NodalBCSelectionWizard( descriptors, workspace, opModelFeature, parentRelation, null );
-            System.out.println( "OpWorkspace:" + opWorkspace.getContext() );
-            GM_Point boundaryPosition = getBoundaryPosition();
-            wizard.setBoundaryPosition( boundaryPosition );
-            final MapPanel mapPanel = dataModel.getData( MapPanel.class, ICommonKeys.KEY_MAP_PANEL );
-            wizard.setSelectionManager( mapPanel.getSelectionManager() );
-            final WizardDialog wizardDialog = new WizardDialog( display.getActiveShell(), wizard );
-            wizardDialog.open();
-          }
-          catch( Exception e )
-          {
-            e.printStackTrace();
-            throw new RuntimeException( e );
-          }
-        }
-
-      };
-      display.syncExec( runnable );
-    }
-
     else if( TXT_REMOVE_BOUNDARY_LINE_FROM_MODEL.equals( text ) )
     {
       actionRemoveBoundaryLineFromModel( text );
@@ -374,89 +310,9 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
     }
   }
 
-  /**
-   * To get the boundary position. This is defined as the middle of the nearest edge to the klicked point in the
-   * selected boundary line
-   * 
-   * @return a {@link GM_Point} representing the boundary condition position
-   */
-  private GM_Point getBoundaryPosition( )
-  {
-    final IBoundaryLine selectedBoundaryLine = getSelectedBoundaryLine();
-
-    if( selectedBoundaryLine instanceof IBoundaryLine1D )
-    {
-      final IBoundaryLine1D boundaryLine1D = ((IBoundaryLine1D) selectedBoundaryLine);
-      final IFeatureWrapperCollection edges = boundaryLine1D.getEdges();
-      final IFE1D2DEdge edge1D = (IFE1D2DEdge) edges.get( 0 );
-      if( boundaryLine1D.isAtEdgeEnd() )
-      {
-        return edge1D.getNode( 1 ).getPoint();
-      }
-      else
-      {
-        return edge1D.getNode( 0 ).getPoint();
-      }
-
-    }
-    else
-    {
-      final GM_Point klickedPoint = getCurrentPoint();
-
-      // find the nearest edge
-      final IFeatureWrapperCollection<IFE1D2DEdge> edges = selectedBoundaryLine.getEdges();
-      double minDist = Double.MAX_VALUE;
-      GM_Point selectedEdgeCentroid = null;
-      for( final IFE1D2DEdge edge : edges )
-      {
-        final GM_Curve curve = edge.getCurve();
-        final double curDist = klickedPoint.distance( curve );
-        System.out.println( "curDist" + curDist );
-        if( curDist < minDist )
-        {
-          selectedEdgeCentroid = curve.getCentroid();
-          minDist = curDist;
-        }
-      }
-      return selectedEdgeCentroid;
-    }
-  }
-
-  // private IBoundaryConditionDescriptor[] createTimeserieDescriptors( final IFeatureWrapper2 modelElement, final
-  // IFolder scenarioFolder )
-  // {
-  // final TimeserieStepDescriptor wstTimeDescriptor = new TimeserieStepDescriptor( "Wasserstand - Zeitreihe",
-  // Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL );
-  // final TimeserieStepDescriptor qTimeDescriptor = new TimeserieStepDescriptor( "Abfluss - Zeitreihe",
-  // Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
-  // final TimeserieStepDescriptor specQ1TimeDescriptor = new TimeserieStepDescriptor( "Spezifische Abfluss -
-  // Zeitreihe", Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE_1D );
-  // final TimeserieStepDescriptor specQ2TimeDescriptor = new TimeserieStepDescriptor( "Spezifische Abfluss -
-  // Zeitreihe", Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE_2D );
-  // final WQStepDescriptor wqDescriptor = new WQStepDescriptor( "W/Q - Beziehung" );
-  //
-  // final IFolder importFolder = scenarioFolder.getProject().getFolder( "imports" ).getFolder( "timeseries" );
-  // final ZmlChooserStepDescriptor zmlChooser = new ZmlChooserStepDescriptor( "Importierte Zeitreihe", importFolder );
-  //
-  // // TODO: ask ingenieurs what is right here:
-  // if( modelElement instanceof IElement1D )
-  // return new IBoundaryConditionDescriptor[] { specQ1TimeDescriptor, wqDescriptor, zmlChooser };
-  //
-  // if( modelElement instanceof IPolyElement )
-  // return new IBoundaryConditionDescriptor[] { specQ2TimeDescriptor, zmlChooser };
-  //
-  // if( modelElement instanceof IFE1D2DNode )
-  // return new IBoundaryConditionDescriptor[] { wstTimeDescriptor, qTimeDescriptor, zmlChooser };
-  //
-  // if( modelElement instanceof ILineElement)
-  // return new IBoundaryConditionDescriptor[] { wstTimeDescriptor, qTimeDescriptor, zmlChooser };
-  //      
-  // return new IBoundaryConditionDescriptor[] {};
-  // }
-
   private void actionRemoveBoundaryLineFromModel( final String itemText )
   {
-    final IBoundaryLine bLine = getSelectedBoundaryLine();
+    final IFELine bLine = getSelectedBoundaryLine();
     final IFEDiscretisationModel1d2d model1d2d = dataModel.getData( IFEDiscretisationModel1d2d.class, ICommonKeys.KEY_DISCRETISATION_MODEL );
     final MapPanel mapPanel = dataModel.getData( MapPanel.class, ICommonKeys.KEY_MAP_PANEL );
     final IDiscrModel1d2dChangeCommand delCmd = new DeleteBoundaryLineCmd( model1d2d, bLine )
@@ -479,7 +335,7 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
   private void actionAddBoundaryLineToUnit( final String itemText )
   {
     final ICalculationUnit calUnit = dataModel.getData( ICalculationUnit.class, ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
-    final IBoundaryLine bLine = getSelectedBoundaryLine();
+    final IFELine bLine = getSelectedBoundaryLine();
     if( !itemText.equals( TXT_ADD_BOUNDARY_LINE_TO_UNIT ) )
     {
       throw new RuntimeException( "Unknown itemText:" + itemText );
@@ -512,7 +368,7 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
   private void actionRemoveBoundaryLineFromUnit( final String itemText )
   {
     final ICalculationUnit calUnit = dataModel.getData( ICalculationUnit.class, ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
-    final IBoundaryLine bLine = getSelectedBoundaryLine();
+    final IFELine bLine = getSelectedBoundaryLine();
 
     final IFEDiscretisationModel1d2d model1d2d = dataModel.getData( IFEDiscretisationModel1d2d.class, ICommonKeys.KEY_DISCRETISATION_MODEL );
     final RemoveBoundaryLineFromCalculationUnitCmd cmd = new RemoveBoundaryLineFromCalculationUnitCmd( calUnit, bLine, model1d2d )
@@ -564,9 +420,9 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
     return menu;
   }
 
-  private final IBoundaryLine getSelectedBoundaryLine( )
+  private final IFELine getSelectedBoundaryLine( )
   {
-    final IBoundaryLine[] bLines = getWrappedSelectedFeature( IBoundaryLine.class );
+    final IFELine[] bLines = getWrappedSelectedFeature( IFELine.class );
     if( bLines == null )
     {
       return null;
