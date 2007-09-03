@@ -92,11 +92,11 @@ public class CreateCalculationUnitWizard extends Wizard implements INewWizard
 
   private final KeyBasedDataModel dataModel;
 
-  private static final String QNAME_KEY_1D2D = "1D/2D";
+  private static final String QNAME_KEY_1D2D = Messages.getString("CreateCalculationUnitWizard.0"); //$NON-NLS-1$
 
-  private static final String QNAME_KEY_2D = "2D";
+  private static final String QNAME_KEY_2D = Messages.getString("CreateCalculationUnitWizard.1"); //$NON-NLS-1$
 
-  private static final String QNAME_KEY_1D = "1D";
+  private static final String QNAME_KEY_1D = Messages.getString("CreateCalculationUnitWizard.2"); //$NON-NLS-1$
 
   private ICalculationUnit createdCalculationUnit;
 
@@ -109,7 +109,7 @@ public class CreateCalculationUnitWizard extends Wizard implements INewWizard
   public void addPages( )
   {
 
-    firstPage = new CreateCalculationUnitWizardPage( "windowTitle", dataModel );
+    firstPage = new CreateCalculationUnitWizardPage( "windowTitle", dataModel ); //$NON-NLS-1$
     addPage( firstPage );
     firstPage.init( initialSelection );
   }
@@ -120,18 +120,18 @@ public class CreateCalculationUnitWizard extends Wizard implements INewWizard
     final String name = firstPage.getNameField();
     final String qNameKey = firstPage.getTypeCombo();
     final String desc = firstPage.getDescriptionText();
-    if( name.trim().equals( "" ) )
+    if( name.trim().equals( "" ) ) //$NON-NLS-1$
     {
       firstPage.setMessage( null );
-      firstPage.setErrorMessage( "Provide a Name" );
+      firstPage.setErrorMessage( Messages.getString("CreateCalculationUnitWizard.5") ); //$NON-NLS-1$
       firstPage.setPageComplete( false );
       return false;
     }
 
-    if( qNameKey.trim().equals( "" ) )
+    if( qNameKey.trim().equals( "" ) ) //$NON-NLS-1$
     {
       firstPage.setMessage( null );
-      firstPage.setErrorMessage( "Select the Calculation Unit Type" );
+      firstPage.setErrorMessage( Messages.getString("CreateCalculationUnitWizard.7") ); //$NON-NLS-1$
       firstPage.setPageComplete( false );
       return false;
     }
@@ -141,7 +141,7 @@ public class CreateCalculationUnitWizard extends Wizard implements INewWizard
       /**
        * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.CreateCalculationUnitCmd#process()
        */
-      @SuppressWarnings( { "unchecked", "synthetic-access" })
+      @SuppressWarnings( { "unchecked", "synthetic-access" }) //$NON-NLS-1$ //$NON-NLS-2$
       @Override
       public void process( ) throws Exception
       {
@@ -183,7 +183,7 @@ public class CreateCalculationUnitWizard extends Wizard implements INewWizard
     }
     catch( final CoreException e )
     {
-      throw new RuntimeException( "Error while creating control model for calculation unit. ", e );
+      throw new RuntimeException( Messages.getString("CreateCalculationUnitWizard.10"), e ); //$NON-NLS-1$
     }
     // IControlModelGroup modelGroup = Util.getModel( IControlModelGroup.class );
     // if(modelGroup == null) {
@@ -222,7 +222,7 @@ public class CreateCalculationUnitWizard extends Wizard implements INewWizard
           calUnitName = createdCalculationUnit2.getGmlID();
         }
 
-        newControlModel.setName( "Control modell für " + calUnitName );
+        newControlModel.setName( Messages.getString("CreateCalculationUnitWizard.11") + calUnitName ); //$NON-NLS-1$
         newControlModel.setCalculationUnit( createdCalculationUnit2 );
         model1D2DCollection.setActiveControlModel( newControlModel );
 
@@ -241,7 +241,7 @@ public class CreateCalculationUnitWizard extends Wizard implements INewWizard
         /* If not yet initialized, create components and write obs back to feature. */
         if( result.getComponents().length == 0 )
         {
-          obs.setName( "Zeitschritt Definition" );
+          obs.setName( Messages.getString("CreateCalculationUnitWizard.12") ); //$NON-NLS-1$
 
           // TODO put this inside c1d2d:TimestepsObservation
           /**
@@ -278,7 +278,7 @@ public class CreateCalculationUnitWizard extends Wizard implements INewWizard
     catch( final Exception e1 )
     {
       e1.printStackTrace();
-      throw new RuntimeException( "Error while creating control for cal unit", e1 );
+      throw new RuntimeException( Messages.getString("CreateCalculationUnitWizard.13"), e1 ); //$NON-NLS-1$
     }
     // }
 
@@ -310,7 +310,7 @@ public class CreateCalculationUnitWizard extends Wizard implements INewWizard
     }
     else
     {
-      throw new RuntimeException( "Unknown qNameKey:" + qNameKey );
+      throw new RuntimeException( "Unknown qNameKey:" + qNameKey ); //$NON-NLS-1$
     }
   }
 }

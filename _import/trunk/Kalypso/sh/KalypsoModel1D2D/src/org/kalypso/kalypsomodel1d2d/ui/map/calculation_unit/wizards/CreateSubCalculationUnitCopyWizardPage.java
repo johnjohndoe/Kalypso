@@ -114,7 +114,7 @@ public class CreateSubCalculationUnitCopyWizardPage extends WizardPage
 
   protected CreateSubCalculationUnitCopyWizardPage( CalculationUnitDataModel dataModel )
   {
-    super( "Sub - Berechnungseinheiten Verwalten" );    
+    super( Messages.getString("CreateSubCalculationUnitCopyWizardPage.0") );     //$NON-NLS-1$
     this.dataModel = dataModel;     
   }
 
@@ -135,7 +135,7 @@ public class CreateSubCalculationUnitCopyWizardPage extends WizardPage
     formData.top = new FormAttachment(0,5);
     
     Label name1D2D = new Label(comp,SWT.NONE);
-    name1D2D.setText("1D/2D Berechnungseinheit :");
+    name1D2D.setText(Messages.getString("CreateSubCalculationUnitCopyWizardPage.1")); //$NON-NLS-1$
     name1D2D.setLayoutData( formData );
     
     formData = new FormData();
@@ -155,7 +155,7 @@ public class CreateSubCalculationUnitCopyWizardPage extends WizardPage
     formData.right = new FormAttachment(45,0);
     
     Group fromCalculationUnitGroup = new Group( comp, SWT.NONE );
-    fromCalculationUnitGroup.setText( "Vorhandene Einheiten" );//Modelle Knoten Suchen    
+    fromCalculationUnitGroup.setText( Messages.getString("CreateSubCalculationUnitCopyWizardPage.2") );//Modelle Knoten Suchen     //$NON-NLS-1$
     fromCalculationUnitGroup.setLayoutData( formData );
     fromCalculationUnitGroup.setLayout( new GridLayout(1,false) );
        
@@ -193,7 +193,7 @@ public class CreateSubCalculationUnitCopyWizardPage extends WizardPage
     Image addImage = new Image( comp.getDisplay(), 
         KalypsoModel1D2DPlugin.imageDescriptorFromPlugin(
             PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
-        "icons/elcl16/forward.gif" ).getImageData() );  
+        "icons/elcl16/forward.gif" ).getImageData() );   //$NON-NLS-1$
     addButton.setImage( addImage );
     formData = new FormData();
     formData.left = new FormAttachment(fromCalculationUnitGroup,5);
@@ -218,7 +218,7 @@ public class CreateSubCalculationUnitCopyWizardPage extends WizardPage
     Image removeImage = new Image( comp.getDisplay(), 
         KalypsoModel1D2DPlugin.imageDescriptorFromPlugin(
             PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
-        "icons/elcl16/backward.gif" ).getImageData() );  
+        "icons/elcl16/backward.gif" ).getImageData() );   //$NON-NLS-1$
     removeButton.setImage( removeImage );
     formData = new FormData();
     formData.left = new FormAttachment(fromCalculationUnitGroup,5);
@@ -241,7 +241,7 @@ public class CreateSubCalculationUnitCopyWizardPage extends WizardPage
     formData.right = new FormAttachment(100,-5);
     
     Group fromCalculationSubUnitGroup = new Group( comp, SWT.NONE );
-    fromCalculationSubUnitGroup.setText( "Aktuale Sub-Einheiten" );//Modelle Knoten Suchen    
+    fromCalculationSubUnitGroup.setText( Messages.getString("CreateSubCalculationUnitCopyWizardPage.5") );//Modelle Knoten Suchen     //$NON-NLS-1$
     fromCalculationSubUnitGroup.setLayoutData( formData );
     fromCalculationSubUnitGroup.setLayout( new GridLayout(1,false) );
 

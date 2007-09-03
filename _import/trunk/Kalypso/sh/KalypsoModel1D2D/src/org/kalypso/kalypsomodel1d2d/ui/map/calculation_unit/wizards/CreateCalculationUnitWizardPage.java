@@ -66,21 +66,21 @@ public class CreateCalculationUnitWizardPage extends WizardPage
 
   private Text descriptionText;
 
-  private static final String QNAME_KEY_1D2D = "1D/2D";
+  private static final String QNAME_KEY_1D2D = Messages.getString("CreateCalculationUnitWizardPage.0"); //$NON-NLS-1$
 
-  private static final String QNAME_KEY_2D = "2D";
+  private static final String QNAME_KEY_2D = Messages.getString("CreateCalculationUnitWizardPage.1"); //$NON-NLS-1$
 
-  private static final String QNAME_KEY_1D = "1D";
+  private static final String QNAME_KEY_1D = Messages.getString("CreateCalculationUnitWizardPage.2"); //$NON-NLS-1$
 
-  private String defaultDescriptionText = "Geben Sie eine Deskription fur das Complex Element";
+  private String defaultDescriptionText = Messages.getString("CreateCalculationUnitWizardPage.3"); //$NON-NLS-1$
 
   private KeyBasedDataModel dataModel;
 
   protected CreateCalculationUnitWizardPage( String pageName, KeyBasedDataModel dataModel )
   {
     super( pageName );
-    setTitle( "Berechnungseinheit Hinzufügen" );
-    setDescription( "Berechnungseinheit Hinzufügen" );
+    setTitle( Messages.getString("CreateCalculationUnitWizardPage.4") ); //$NON-NLS-1$
+    setDescription( Messages.getString("CreateCalculationUnitWizardPage.5") ); //$NON-NLS-1$
     this.dataModel = dataModel;
   }
 
@@ -97,7 +97,7 @@ public class CreateCalculationUnitWizardPage extends WizardPage
     setControl( comp );
 
     Label nameLabel = new Label( comp, SWT.RIGHT );
-    nameLabel.setText( "Name: " );
+    nameLabel.setText( Messages.getString("CreateCalculationUnitWizardPage.6") ); //$NON-NLS-1$
 
     nameField = new Text( comp, SWT.SINGLE | SWT.BORDER );
     GridData data = new GridData( GridData.FILL_HORIZONTAL );
@@ -106,7 +106,7 @@ public class CreateCalculationUnitWizardPage extends WizardPage
     {
       public void modifyText( ModifyEvent e )
       {
-        if( !nameField.getText().trim().equals( "" ) && !typeCombo.getText().trim().equals( "" ) )
+        if( !nameField.getText().trim().equals( "" ) && !typeCombo.getText().trim().equals( "" ) ) //$NON-NLS-1$ //$NON-NLS-2$
         {
           setMessage( null );
           setErrorMessage( null );
@@ -128,7 +128,7 @@ public class CreateCalculationUnitWizardPage extends WizardPage
 // } );
 
     Label typeLabel = new Label( comp, SWT.RIGHT );
-    typeLabel.setText( "Type: " );
+    typeLabel.setText( Messages.getString("CreateCalculationUnitWizardPage.9") ); //$NON-NLS-1$
 
     // @TODO A Combo Field
 
@@ -142,7 +142,7 @@ public class CreateCalculationUnitWizardPage extends WizardPage
     {
       public void modifyText( ModifyEvent e )
       {
-        if( !nameField.getText().trim().equals( "" ) && !typeCombo.getText().trim().equals( "" ) )
+        if( !nameField.getText().trim().equals( "" ) && !typeCombo.getText().trim().equals( "" ) ) //$NON-NLS-1$ //$NON-NLS-2$
         {
           setMessage( null );
           setErrorMessage( null );
@@ -153,7 +153,7 @@ public class CreateCalculationUnitWizardPage extends WizardPage
     } );
 
     Label DescriptionLabel = new Label( comp, SWT.RIGHT );
-    DescriptionLabel.setText( "Description: " );
+    DescriptionLabel.setText( Messages.getString("CreateCalculationUnitWizardPage.12") ); //$NON-NLS-1$
 
     descriptionText = new Text( comp, SWT.BORDER | SWT.MULTI );
     descriptionText.setText( defaultDescriptionText );
