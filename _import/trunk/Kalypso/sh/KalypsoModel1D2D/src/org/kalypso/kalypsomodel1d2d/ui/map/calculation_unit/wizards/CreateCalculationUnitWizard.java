@@ -44,273 +44,75 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.handlers.IHandlerService;
-import org.kalypso.gmlschema.IGMLSchema;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2DCollection;
-import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
-import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.CreateCalculationUnitCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
 import org.kalypso.kalypsosimulationmodel.core.Util;
-import org.kalypso.observation.IObservation;
-import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.TupleResult;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
-import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
-import de.renew.workflow.connector.cases.ICaseDataProvider;
-import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
-
-/**
- * @author Madanagopal
- * 
- */
 public class CreateCalculationUnitWizard extends Wizard implements INewWizard
 {
-  private CreateCalculationUnitWizardPage firstPage;
+  private CreateCalculationUnitWizardPage m_page;
 
-  private IStructuredSelection initialSelection;
-
-  private final KeyBasedDataModel dataModel;
-
-  private static final String QNAME_KEY_1D2D = Messages.getString("CreateCalculationUnitWizard.0"); //$NON-NLS-1$
-
-  private static final String QNAME_KEY_2D = Messages.getString("CreateCalculationUnitWizard.1"); //$NON-NLS-1$
-
-  private static final String QNAME_KEY_1D = Messages.getString("CreateCalculationUnitWizard.2"); //$NON-NLS-1$
-
-  private ICalculationUnit createdCalculationUnit;
+  private final KeyBasedDataModel m_dataModel;
 
   public CreateCalculationUnitWizard( final KeyBasedDataModel dataModel )
   {
-    this.dataModel = dataModel;
+    m_dataModel = dataModel;
+    super.setWindowTitle( "Berechnungseinheit Hinzufügen" );
   }
 
   @Override
   public void addPages( )
   {
-
-    firstPage = new CreateCalculationUnitWizardPage( "windowTitle", dataModel ); //$NON-NLS-1$
-    addPage( firstPage );
-    firstPage.init( initialSelection );
+    m_page = new CreateCalculationUnitWizardPage( "Berechnungseinheit Hinzufügen", "Berechnungseinheit Hinzufügen" );
+    addPage( m_page );
   }
 
   @Override
   public boolean performFinish( )
   {
-    final String name = firstPage.getNameField();
-    final String qNameKey = firstPage.getTypeCombo();
-    final String desc = firstPage.getDescriptionText();
-    if( name.trim().equals( "" ) ) //$NON-NLS-1$
-    {
-      firstPage.setMessage( null );
-      firstPage.setErrorMessage( Messages.getString("CreateCalculationUnitWizard.5") ); //$NON-NLS-1$
-      firstPage.setPageComplete( false );
-      return false;
-    }
+    final String calcUnitName = m_page.getCalculationUnitName();
+    final QName calcUnitType = m_page.getCalculationUnitType();
+    final String calcUnitDescription = m_page.getCalculationUnitDescription();
 
-    if( qNameKey.trim().equals( "" ) ) //$NON-NLS-1$
-    {
-      firstPage.setMessage( null );
-      firstPage.setErrorMessage( Messages.getString("CreateCalculationUnitWizard.7") ); //$NON-NLS-1$
-      firstPage.setPageComplete( false );
-      return false;
-    }
-
-    final CreateCalculationUnitCmd cmd = new CreateCalculationUnitCmd( getCUnitQName( qNameKey ), Util.getModel( IFEDiscretisationModel1d2d.class ), name, desc )
+    final CreateCalculationUnitCmd cmd = new CreateCalculationUnitCmd( calcUnitType, Util.getModel( IFEDiscretisationModel1d2d.class ), calcUnitName, calcUnitDescription )
     {
       /**
        * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.CreateCalculationUnitCmd#process()
        */
-      @SuppressWarnings( { "unchecked", "synthetic-access" }) //$NON-NLS-1$ //$NON-NLS-2$
       @Override
       public void process( ) throws Exception
       {
         super.process();
-        // create control model for this unit
-        try
-        {
-          createControlModel( getCreatedCalculationUnit() );
-        }
-        catch( Exception e )
-        {
-          e.printStackTrace();
-        }
         // reset list of calculation units
-        IFEDiscretisationModel1d2d model1d2d = (IFEDiscretisationModel1d2d) dataModel.getData( ICommonKeys.KEY_DISCRETISATION_MODEL );
-        List<ICalculationUnit> calUnits = CalcUnitOps.getModelCalculationUnits( model1d2d );
-        dataModel.setData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST, calUnits );
+        final IFEDiscretisationModel1d2d model1d2d = (IFEDiscretisationModel1d2d) m_dataModel.getData( ICommonKeys.KEY_DISCRETISATION_MODEL );
+        final List<ICalculationUnit> calcUnits = CalcUnitOps.getModelCalculationUnits( model1d2d );
+        m_dataModel.setData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST, calcUnits );
 
         // set the create unit as selected
-        dataModel.setData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, getCreatedCalculationUnit() );
+        m_dataModel.setData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, getCreatedCalculationUnit() );
       }
     };
-    KeyBasedDataModelUtil.postCommand( dataModel, cmd, ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL );
-
-    this.createdCalculationUnit = cmd.getCreatedCalculationUnit();
+    KeyBasedDataModelUtil.postCommand( m_dataModel, cmd, ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL );
     return true;
-  }
-
-  void createControlModel( final ICalculationUnit createdCalculationUnit2 )
-  {
-    final IWorkbench workbench = PlatformUI.getWorkbench();
-    final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
-    final IEvaluationContext context = handlerService.getCurrentState();
-    final ICaseDataProvider<IFeatureWrapper2> szenarioDataProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
-    IControlModelGroup modelGroup = null;
-    try
-    {
-      modelGroup = szenarioDataProvider.getModel( IControlModelGroup.class );
-    }
-    catch( final CoreException e )
-    {
-      throw new RuntimeException( Messages.getString("CreateCalculationUnitWizard.10"), e ); //$NON-NLS-1$
-    }
-    // IControlModelGroup modelGroup = Util.getModel( IControlModelGroup.class );
-    // if(modelGroup == null) {
-    // final CommandableWorkspace workspace = getModelWorkspace( IControlModelGroup.class );
-    // return (T) workspace.getRootFeature().getAdapter( modelClass );
-    // }
-    final IControlModel1D2DCollection model1D2DCollection = modelGroup.getModel1D2DCollection();
-    final Feature parentFeature = model1D2DCollection.getWrappedFeature();// getFeature();
-    // final Object property = parentFeature.getProperty(
-    // Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_CONTROL_MODEL_MEMBER );
-    // if( property instanceof XLinkedFeature_Impl )
-    // {
-    // final Feature f = ((XLinkedFeature_Impl) property).getFeature();
-    final IRelationType relationType = (IRelationType) parentFeature.getFeatureType().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_CONTROL_MODEL_MEMBER );// ParentRelation();
-    final CommandableWorkspace commandableWorkspace = Util.getCommandableWorkspace( IControlModelGroup.class );// new
-                                                                                                                // CommandableWorkspace(
-                                                                                                                // parentFeature.getWorkspace()
-                                                                                                                // );
-    final int pos = 0;
-    final IGMLSchema schema = parentFeature.getFeatureType().getGMLSchema();
-    final IFeatureType controlModelFeatureType = schema.getFeatureType( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_F_MODEL );
-    final AddFeatureCommand command = new AddFeatureCommand( commandableWorkspace, controlModelFeatureType, parentFeature, relationType, pos, null, null, -1 )
-    {
-      /**
-       * @see org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand#process()
-       */
-      @Override
-      public void process( ) throws Exception
-      {
-        super.process();
-        final Feature newControlFeature = getNewFeature();
-        IControlModel1D2D newControlModel = (IControlModel1D2D) newControlFeature.getAdapter( IControlModel1D2D.class );
-        String calUnitName = createdCalculationUnit2.getName();
-        if( calUnitName == null )
-        {
-          calUnitName = createdCalculationUnit2.getGmlID();
-        }
-
-        newControlModel.setName( Messages.getString("CreateCalculationUnitWizard.11") + calUnitName ); //$NON-NLS-1$
-        newControlModel.setCalculationUnit( createdCalculationUnit2 );
-        model1D2DCollection.setActiveControlModel( newControlModel );
-
-        final Feature obsFeature = (Feature) newControlFeature.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_TIMESTEPS_MEMBER );
-
-        /*
-         * If observation does not exist, create it. final Feature obsFeature; if( obsFeatureIfPresent == null ) { final
-         * Feature feature = getFeature(); final GMLWorkspace workspace = feature.getWorkspace(); final IRelationType
-         * parentRelation = (IRelationType) feature.getFeatureType().getProperty( QNAME_P_OBSERVATION ); obsFeature =
-         * workspace.createFeature( feature, parentRelation, parentRelation.getTargetFeatureType(), -1 );
-         * feature.setProperty( QNAME_P_OBSERVATION, obsFeature ); } else obsFeature = getObservationFeature();
-         */
-        /* Create an observation from it. */
-        final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( obsFeature );
-        final TupleResult result = obs.getResult();
-        /* If not yet initialized, create components and write obs back to feature. */
-        if( result.getComponents().length == 0 )
-        {
-          obs.setName( Messages.getString("CreateCalculationUnitWizard.12") ); //$NON-NLS-1$
-
-          // TODO put this inside c1d2d:TimestepsObservation
-          /**
-           * <om:observedProperty xmlns:om="http://www.opengis.net/om"
-           * xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:phenomenons#TimeserieBorderCondition1D"/>
-           * 
-           * 
-           * 
-           * IPhenomenon phenomenon = new
-           * DictionaryPhenomenon("urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:phenomenons#TimeserieBorderCondition1D",
-           * "", ""); obs.setPhenomenon( phenomenon );
-           */
-
-          final String[] componentUrns = new String[] { Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_UNDER_RELAXATION_FACTOR };
-          final IComponent[] components = new IComponent[componentUrns.length];
-
-          for( int i = 0; i < components.length; i++ )
-            components[i] = ObservationFeatureFactory.createDictionaryComponent( obsFeature, componentUrns[i] );
-
-          for( final IComponent component : components )
-            result.addComponent( component );
-
-          result.setSortComponents( new IComponent[] { components[0] } );
-
-          ObservationFeatureFactory.toFeature( obs, obsFeature );
-        }
-      }
-    };
-    try
-    {
-
-      commandableWorkspace.postCommand( command );
-    }
-    catch( final Exception e1 )
-    {
-      e1.printStackTrace();
-      throw new RuntimeException( Messages.getString("CreateCalculationUnitWizard.13"), e1 ); //$NON-NLS-1$
-    }
-    // }
-
   }
 
   /**
    * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
    *      org.eclipse.jface.viewers.IStructuredSelection)
    */
-  public void init( final IWorkbench workbench, final IStructuredSelection selection )
+  public void init( IWorkbench workbench, IStructuredSelection selection )
   {
-    initialSelection = selection;
+    // TODO Auto-generated method stub
+
   }
 
-  private static final QName getCUnitQName( final String qNameKey ) throws RuntimeException
-  {
-    if( QNAME_KEY_1D.equals( qNameKey ) )
-    {
-      return Kalypso1D2DSchemaConstants.WB1D2D_F_CALC_UNIT_1D;
-    }
-    else if( QNAME_KEY_2D.equals( qNameKey ) )
-    {
-
-      return Kalypso1D2DSchemaConstants.WB1D2D_F_CALC_UNIT_2D;
-    }
-    else if( QNAME_KEY_1D2D.equals( qNameKey ) )
-    {
-      return Kalypso1D2DSchemaConstants.WB1D2D_F_CALC_UNIT_1D2D;
-    }
-    else
-    {
-      throw new RuntimeException( "Unknown qNameKey:" + qNameKey ); //$NON-NLS-1$
-    }
-  }
 }

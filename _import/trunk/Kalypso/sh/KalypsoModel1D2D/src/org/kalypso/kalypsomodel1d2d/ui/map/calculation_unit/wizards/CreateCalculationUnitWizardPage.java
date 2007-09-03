@@ -40,147 +40,107 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards;
 
-import org.eclipse.jface.viewers.IStructuredSelection;
+import javax.xml.namespace.QName;
+
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
+import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 
-/**
- * @author Madanagopal
- * 
- */
 public class CreateCalculationUnitWizardPage extends WizardPage
 {
+  private Text m_calcUnitName;
 
-  private Text nameField;
+  private Combo m_calcUnitType;
 
-  private Combo typeCombo;
+  private Text m_calcUnitDescription;
 
-  private Text descriptionText;
+  private static final String QNAME_KEY_1D2D = "Complex calculation unit (coupled 1D/2D)";
 
-  private static final String QNAME_KEY_1D2D = Messages.getString("CreateCalculationUnitWizardPage.0"); //$NON-NLS-1$
+  private static final String QNAME_KEY_2D = "Calculation unit 2D";
 
-  private static final String QNAME_KEY_2D = Messages.getString("CreateCalculationUnitWizardPage.1"); //$NON-NLS-1$
+  private static final String QNAME_KEY_1D = "Calculation unit 1D";
 
-  private static final String QNAME_KEY_1D = Messages.getString("CreateCalculationUnitWizardPage.2"); //$NON-NLS-1$
-
-  private String defaultDescriptionText = Messages.getString("CreateCalculationUnitWizardPage.3"); //$NON-NLS-1$
-
-  private KeyBasedDataModel dataModel;
-
-  protected CreateCalculationUnitWizardPage( String pageName, KeyBasedDataModel dataModel )
+  public CreateCalculationUnitWizardPage( final String name, final String description )
   {
-    super( pageName );
-    setTitle( Messages.getString("CreateCalculationUnitWizardPage.4") ); //$NON-NLS-1$
-    setDescription( Messages.getString("CreateCalculationUnitWizardPage.5") ); //$NON-NLS-1$
-    this.dataModel = dataModel;
+    super( name );
+    setTitle( name );
+    setDescription( description );
   }
 
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
-  public void createControl( Composite parent )
+  public void createControl( final Composite parent )
   {
-
-    Composite comp = new Composite( parent, SWT.NULL );
-    GridLayout gridLayout = new GridLayout();
+    final Composite composite = new Composite( parent, SWT.NULL );
+    final GridLayout gridLayout = new GridLayout();
     gridLayout.numColumns = 2;
-    comp.setLayout( gridLayout );
-    setControl( comp );
+    composite.setLayout( gridLayout );
+    setControl( composite );
 
-    Label nameLabel = new Label( comp, SWT.RIGHT );
-    nameLabel.setText( Messages.getString("CreateCalculationUnitWizardPage.6") ); //$NON-NLS-1$
-
-    nameField = new Text( comp, SWT.SINGLE | SWT.BORDER );
-    GridData data = new GridData( GridData.FILL_HORIZONTAL );
-    nameField.setLayoutData( data );
-    nameField.addModifyListener( new ModifyListener()
+    final Label nameLabel = new Label( composite, SWT.RIGHT );
+    nameLabel.setText( "Name: " );
+    m_calcUnitName = new Text( composite, SWT.SINGLE | SWT.BORDER );
+    m_calcUnitName.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+    m_calcUnitName.addModifyListener( new ModifyListener()
     {
       public void modifyText( ModifyEvent e )
       {
-        if( !nameField.getText().trim().equals( "" ) && !typeCombo.getText().trim().equals( "" ) ) //$NON-NLS-1$ //$NON-NLS-2$
-        {
-          setMessage( null );
-          setErrorMessage( null );
-          setPageComplete( true );
-        }
+        setPageComplete( !m_calcUnitName.getText().trim().equals( "" ) );
+        getContainer().updateButtons();
       }
     } );
 
-// nameField.addSelectionListener( new SelectionAdapter(){
-// @Override
-// public void widgetSelected( SelectionEvent e )
-// {
-// if (nameField.getText() == null){
-// setMessage( null );
-// setErrorMessage( "Enter a Name" );
-// setPageComplete(false);
-// }
-// }
-// } );
+    Label typeLabel = new Label( composite, SWT.RIGHT );
+    typeLabel.setText( "Type: " );
 
-    Label typeLabel = new Label( comp, SWT.RIGHT );
-    typeLabel.setText( Messages.getString("CreateCalculationUnitWizardPage.9") ); //$NON-NLS-1$
+    m_calcUnitType = new Combo( composite, SWT.RIGHT | SWT.READ_ONLY | SWT.BORDER );
+    m_calcUnitType.add( QNAME_KEY_1D2D );
+    m_calcUnitType.add( QNAME_KEY_1D );
+    m_calcUnitType.add( QNAME_KEY_2D );
+    m_calcUnitType.select( 0 );
+    m_calcUnitType.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
 
-    // @TODO A Combo Field
-
-    typeCombo = new Combo( comp, SWT.RIGHT | SWT.READ_ONLY | SWT.BORDER );
-    typeCombo.add( QNAME_KEY_1D );
-    typeCombo.add( QNAME_KEY_2D );
-    typeCombo.add( QNAME_KEY_1D2D );
-    data = new GridData( GridData.FILL_HORIZONTAL );
-    typeCombo.setLayoutData( data );
-    typeCombo.addModifyListener( new ModifyListener()
-    {
-      public void modifyText( ModifyEvent e )
-      {
-        if( !nameField.getText().trim().equals( "" ) && !typeCombo.getText().trim().equals( "" ) ) //$NON-NLS-1$ //$NON-NLS-2$
-        {
-          setMessage( null );
-          setErrorMessage( null );
-          setPageComplete( true );
-        }
-      }
-
-    } );
-
-    Label DescriptionLabel = new Label( comp, SWT.RIGHT );
-    DescriptionLabel.setText( Messages.getString("CreateCalculationUnitWizardPage.12") ); //$NON-NLS-1$
-
-    descriptionText = new Text( comp, SWT.BORDER | SWT.MULTI );
-    descriptionText.setText( defaultDescriptionText );
-    data = new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING );
-    data.heightHint = 100;
-    descriptionText.setLayoutData( data );
-    comp.layout();
+    final Label descriptionLabel = new Label( composite, SWT.RIGHT );
+    descriptionLabel.setText( "Description: " );
+    m_calcUnitDescription = new Text( composite, SWT.BORDER | SWT.MULTI );
+    m_calcUnitDescription.setText( "" );
+    m_calcUnitDescription.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+    
+    setPageComplete( false );
   }
 
-  public void init( IStructuredSelection initialSelection )
+  public String getCalculationUnitName( )
   {
-
+    return m_calcUnitName.getText();
   }
 
-  public String getNameField( )
+  public QName getCalculationUnitType( )
   {
-    return nameField.getText();
+    final String qNameKey = m_calcUnitType.getText();
+    if( QNAME_KEY_1D.equals( qNameKey ) )
+      return Kalypso1D2DSchemaConstants.WB1D2D_F_CALC_UNIT_1D;
+    else if( QNAME_KEY_2D.equals( qNameKey ) )
+      return Kalypso1D2DSchemaConstants.WB1D2D_F_CALC_UNIT_2D;
+    else if( QNAME_KEY_1D2D.equals( qNameKey ) )
+      return Kalypso1D2DSchemaConstants.WB1D2D_F_CALC_UNIT_1D2D;
+    else
+      throw new RuntimeException( "Unknown qNameKey:" + qNameKey );
   }
 
-  public String getTypeCombo( )
+  public String getCalculationUnitDescription( )
   {
-    return typeCombo.getText();
-  }
-
-  public String getDescriptionText( )
-  {
-    return descriptionText.getText();
+    return m_calcUnitDescription.getText();
   }
 
 }

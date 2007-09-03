@@ -42,15 +42,38 @@ package org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.handlers.IHandlerService;
+import org.kalypso.gmlschema.IGMLSchema;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2DCollection;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
+import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand;
+import org.kalypso.kalypsosimulationmodel.core.Util;
+import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.TupleResult;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
+import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
+
+import de.renew.workflow.connector.cases.ICaseDataProvider;
+import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
  * Command to create new calculation unit
@@ -63,27 +86,27 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
   /**
    * QName of the calculation unit to create
    */
-  private QName cuFeatureQName = null;
+  private QName m_calcUnitFeatureQName = null;
 
   /**
    * the created calculation unit
    */
-  private ICalculationUnit createdCU;
+  private ICalculationUnit m_calculationUnit;
 
   /**
    * the discretisation model holding the calculation unit
    */
-  private IFEDiscretisationModel1d2d model1d2d;
+  private IFEDiscretisationModel1d2d m_model1d2d;
 
   /**
    * the name the calculation unit will be assigned to
    */
-  private String name;
+  private String m_calcUnitName;
 
   /**
    * the description for the calculation unit
    */
-  private String description;
+  private String m_calcUnitDescription;
 
   /**
    * Creates a Calculation unit of the given q-name
@@ -99,12 +122,12 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
    * @throws IllegalArgumentException
    *             if cuFeatureQName or model1d2d is null
    */
-  public CreateCalculationUnitCmd( QName cuFeatureQName, IFEDiscretisationModel1d2d model1d2d, String name, String decription )
+  public CreateCalculationUnitCmd( final QName calcUnitFeatureQName, final IFEDiscretisationModel1d2d model1d2d, final String name, final String decription )
   {
-    this.cuFeatureQName = cuFeatureQName;
-    this.model1d2d = model1d2d;
-    this.name = name;
-    this.description = decription;
+    m_calcUnitFeatureQName = calcUnitFeatureQName;
+    m_model1d2d = model1d2d;
+    m_calcUnitName = name;
+    m_calcUnitDescription = decription;
   }
 
   /**
@@ -112,14 +135,10 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
    */
   public IFeatureWrapper2[] getChangedFeature( )
   {
-    if( createdCU != null )
-    {
-      return new IFeatureWrapper2[] { model1d2d, createdCU };
-    }
+    if( m_calculationUnit != null )
+      return new IFeatureWrapper2[] { m_model1d2d, m_calculationUnit };
     else
-    {
       return new IFeatureWrapper2[] {};
-    }
   }
 
   /**
@@ -127,7 +146,7 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
    */
   public IFEDiscretisationModel1d2d getDiscretisationModel1d2d( )
   {
-    return model1d2d;
+    return m_model1d2d;
   }
 
   /**
@@ -153,18 +172,14 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
   {
     try
     {
-      IFeatureWrapperCollection<IFE1D2DComplexElement> ce = model1d2d.getComplexElements();
-      createdCU = ce.addNew( cuFeatureQName, ICalculationUnit.class );
-      if( name != null )
-      {
-        createdCU.setName( name );
-      }
-
-      if( description != null )
-      {
-        createdCU.setDescription( description );
-      }
-      fireProcessChanges( createdCU, true );
+      final IFeatureWrapperCollection<IFE1D2DComplexElement> ce = m_model1d2d.getComplexElements();
+      m_calculationUnit = ce.addNew( m_calcUnitFeatureQName, ICalculationUnit.class );
+      if( m_calcUnitName != null )
+        m_calculationUnit.setName( m_calcUnitName );
+      if( m_calcUnitDescription != null )
+        m_calculationUnit.setDescription( m_calcUnitDescription );
+      createControlModel();
+      fireProcessChanges( m_calculationUnit, true );
     }
     catch( Exception e )
     {
@@ -181,19 +196,15 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
    * @param added
    *            true if the calculation unit was added false otherwise
    */
-  private final void fireProcessChanges( ICalculationUnit calculationUnit, boolean added )
+  private final void fireProcessChanges( final ICalculationUnit calculationUnit, boolean added )
   {
     final int changedType;
     if( added )
-    {
       changedType = FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD;
-    }
     else
-    {
       changedType = FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE;
-    }
-    GMLWorkspace workspace = calculationUnit.getWrappedFeature().getWorkspace();
-    FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( workspace, model1d2d.getWrappedFeature(), new Feature[] { calculationUnit.getWrappedFeature() }, changedType );
+    final GMLWorkspace workspace = calculationUnit.getWrappedFeature().getWorkspace();
+    final FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( workspace, m_model1d2d.getWrappedFeature(), new Feature[] { calculationUnit.getWrappedFeature() }, changedType );
     workspace.fireModellEvent( event );
   }
 
@@ -202,7 +213,7 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
    */
   public void redo( ) throws Exception
   {
-    if( createdCU != null )
+    if( m_calculationUnit != null )
     {
       process();
     }
@@ -213,16 +224,109 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
    */
   public void undo( ) throws Exception
   {
-    IFeatureWrapperCollection<IFE1D2DComplexElement> ce = model1d2d.getComplexElements();
-    ce.remove( createdCU );
-    final ICalculationUnit deletedCreatedCU = createdCU;
-    createdCU = null;
+    IFeatureWrapperCollection<IFE1D2DComplexElement> ce = m_model1d2d.getComplexElements();
+    ce.remove( m_calculationUnit );
+    final ICalculationUnit deletedCreatedCU = m_calculationUnit;
+    m_calculationUnit = null;
     fireProcessChanges( deletedCreatedCU, true );
 
   }
 
   public ICalculationUnit getCreatedCalculationUnit( )
   {
-    return createdCU;
+    return m_calculationUnit;
+  }
+
+  private void createControlModel( )
+  {
+    final IWorkbench workbench = PlatformUI.getWorkbench();
+    final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
+    final IEvaluationContext context = handlerService.getCurrentState();
+    final ICaseDataProvider<IFeatureWrapper2> szenarioDataProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+    IControlModelGroup modelGroup = null;
+    try
+    {
+      modelGroup = szenarioDataProvider.getModel( IControlModelGroup.class );
+    }
+    catch( final CoreException e )
+    {
+      throw new RuntimeException( "Error while creating control model for calculation unit. ", e );
+    }
+    final IControlModel1D2DCollection model1D2DCollection = modelGroup.getModel1D2DCollection();
+    final Feature parentFeature = model1D2DCollection.getWrappedFeature();
+    final IRelationType relationType = (IRelationType) parentFeature.getFeatureType().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_CONTROL_MODEL_MEMBER );
+    final CommandableWorkspace commandableWorkspace = Util.getCommandableWorkspace( IControlModelGroup.class );
+    final int pos = 0;
+    final IGMLSchema schema = parentFeature.getFeatureType().getGMLSchema();
+    final IFeatureType controlModelFeatureType = schema.getFeatureType( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_F_MODEL );
+    final AddFeatureCommand command = new AddFeatureCommand( commandableWorkspace, controlModelFeatureType, parentFeature, relationType, pos, null, null, -1 )
+    {
+      /**
+       * @see org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand#process()
+       */
+      @Override
+      public void process( ) throws Exception
+      {
+        super.process();
+        final Feature newControlFeature = getNewFeature();
+        final IControlModel1D2D newControlModel = (IControlModel1D2D) newControlFeature.getAdapter( IControlModel1D2D.class );
+
+        newControlModel.setName( "Control modell für " + m_calcUnitName );
+        newControlModel.setCalculationUnit( m_calculationUnit );
+        model1D2DCollection.setActiveControlModel( newControlModel );
+
+        final Feature obsFeature = (Feature) newControlFeature.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_TIMESTEPS_MEMBER );
+
+        /*
+         * If observation does not exist, create it. final Feature obsFeature; if( obsFeatureIfPresent == null ) { final
+         * Feature feature = getFeature(); final GMLWorkspace workspace = feature.getWorkspace(); final IRelationType
+         * parentRelation = (IRelationType) feature.getFeatureType().getProperty( QNAME_P_OBSERVATION ); obsFeature =
+         * workspace.createFeature( feature, parentRelation, parentRelation.getTargetFeatureType(), -1 );
+         * feature.setProperty( QNAME_P_OBSERVATION, obsFeature ); } else obsFeature = getObservationFeature();
+         */
+        /* Create an observation from it. */
+        final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( obsFeature );
+        final TupleResult result = obs.getResult();
+        /* If not yet initialized, create components and write obs back to feature. */
+        if( result.getComponents().length == 0 )
+        {
+          obs.setName( "Zeitschritt Definition" );
+
+          // TODO put this inside c1d2d:TimestepsObservation
+          /**
+           * <om:observedProperty xmlns:om="http://www.opengis.net/om"
+           * xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:phenomenons#TimeserieBorderCondition1D"/>
+           * 
+           * 
+           * 
+           * IPhenomenon phenomenon = new
+           * DictionaryPhenomenon("urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:phenomenons#TimeserieBorderCondition1D",
+           * "", ""); obs.setPhenomenon( phenomenon );
+           */
+
+          final String[] componentUrns = new String[] { Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_UNDER_RELAXATION_FACTOR };
+          final IComponent[] components = new IComponent[componentUrns.length];
+
+          for( int i = 0; i < components.length; i++ )
+            components[i] = ObservationFeatureFactory.createDictionaryComponent( obsFeature, componentUrns[i] );
+
+          for( final IComponent component : components )
+            result.addComponent( component );
+
+          result.setSortComponents( new IComponent[] { components[0] } );
+
+          ObservationFeatureFactory.toFeature( obs, obsFeature );
+        }
+      }
+    };
+    try
+    {
+      commandableWorkspace.postCommand( command );
+    }
+    catch( final Exception e1 )
+    {
+      e1.printStackTrace();
+      throw new RuntimeException( "Error while creating control model for calculation unit", e1 );
+    }
   }
 }
