@@ -53,6 +53,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Properties;
 import java.util.Vector;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.activation.DataHandler;
@@ -218,6 +219,20 @@ public class KalypsoObservationService implements IObservationService
         IOUtils.closeQuietly( ins );
       }
 
+      /* Configure logging according to configuration */
+      try
+      {
+        final String logLevelString = props.getProperty( "LOG_LEVEL", Level.INFO.getName() );
+        final Level logLevel = Level.parse( logLevelString );
+        Logger.getLogger( "" ).setLevel( logLevel );
+      }
+      catch( final Throwable t )
+      {
+        // Catch everything, changeing the log level should not prohibit this service to run
+        t.printStackTrace();
+      }
+
+      /* Load Repositories */
       for( final Iterator it = facConfs.iterator(); it.hasNext(); )
       {
         final RepositoryFactoryConfig item = (RepositoryFactoryConfig)it.next();
@@ -330,6 +345,7 @@ public class KalypsoObservationService implements IObservationService
       final String tempFileName = org.kalypso.contribs.java.io.FileUtilities.validateName( "___" + obs.getName(), "-" );
 
       // create temp file
+      m_tmpDir.mkdirs(); // additionally create the parent dir if not already exists
       final File f = File.createTempFile( tempFileName, ".zml", m_tmpDir );
 
       // we say delete on exit even if we allow the client to delete the file
