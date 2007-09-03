@@ -243,15 +243,19 @@ public class PSICompactImpl implements PSICompact
 
     final String fname = (String)m_id2zml.get( id );
 
-    final InputStream stream = getClass().getResourceAsStream( "fake/" + fname );
-    InputSource ins = new InputSource( stream );
-
+    final URL url = getClass().getResource( "fake/" + fname );
+    if( url == null )
+      throw new ECommException( "Unknown Fake Resource: " + fname );
+    
+    InputStream is = null;
     try
     {
-      final URL url = getClass().getResource( "fake/" + fname );
+      is = url.openStream();
+      
+      obs = ZmlFactory.parseXML( new InputSource( is ), fname, url );
 
-      obs = ZmlFactory.parseXML( ins, fname, url );
-
+      is.close();
+      
       m_id2zmlObs.put( id, obs );
 
       return obs;
@@ -262,7 +266,7 @@ public class PSICompactImpl implements PSICompact
     }
     finally
     {
-      IOUtils.closeQuietly( stream );
+      IOUtils.closeQuietly( is );
     }
   }
 
@@ -273,8 +277,8 @@ public class PSICompactImpl implements PSICompact
   {
     try
     {
-      final RequestObservationProxy obs = new RequestObservationProxy( new ObservationRequest( new DateRange( from, to ) ),
-          getZmlObs( id ) );
+      final RequestObservationProxy obs = new RequestObservationProxy(
+          new ObservationRequest( new DateRange( from, to ) ), getZmlObs( id ) );
 
       final ITuppleModel values = obs.getValues( null );
       final IAxis dateAxis = ObservationUtilities.findAxisByClass( obs.getAxisList(), Date.class );
