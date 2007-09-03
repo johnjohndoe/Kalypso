@@ -52,17 +52,11 @@ ToDo: Help-Ids setzen!!! -->
 		<arg name="featureControlStyle" value="SWT.NONE"/>
 		<!-- 
 		Diagramm -->
-		<!-- oder muss ich doch noch umstrukturieren? -->
 		<arg name="diagTemplate" value=".templates/calcCase/wiz02_ZwgUstiDresden.odt"/> 
-		<!-- <arg name="timeserie1" value="nameColumn=Name#nameString=Messwerte#linkColumn=ganglinie_messwerte#color=0x0000ff"/>
-		<arg name="timeserie2" value="nameColumn=Name#nameString=Modellwerte#linkColumn=ganglinie_modellwerte#color=0xff0000"/>-->
-		
 		
 		<!--  -->
-		<arg name="ignoreType1" value="Q"/>
-		<arg name="ignoreType2" value="W"/>
-		<arg name="ignoreLabel1" value="Wasserstand"/>
-		<arg name="ignoreLabel2" value="Abfluss"/>
+		<arg name="ignoreType1" value="W"/>
+	
 		<!-- 
 			Berechnung Zwischengebietszufluss
 		-->
@@ -111,18 +105,13 @@ ToDo: Help-Ids setzen!!! -->
 		<arg name="featureTemplate" value=".templates/calcCase/wiz03_ZwgDresdenTorgau.gft"/>
 		<arg name="selectFeatureID" value="root"/>
 		<arg name="featureControlStyle" value="SWT.NONE"/>
+		
 		<!-- 
 		Diagramm -->
-		<arg name="diagTemplate" value=".templates/calcCase/wiz03_ZwgDresdenTorgau.odt"/> 
-		<!--
-		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname%#linkColumn=ganglinie_gesamt"/>
-		<arg name="timeserie2" value="nameColumn=Name#nameString=Modellwerte#linkColumn=ganglinie_messwerte"/> 
-		-->
+		<arg name="diagTemplate" value=".templates/calcCase/wiz02_ZwgDresdenTorgau.odt"/> 
+		
 		<!--  -->
-		<arg name="ignoreType1" value="Q"/>
-		<arg name="ignoreType2" value="W"/>
-		<arg name="ignoreLabel1" value="Wasserstand"/>
-		<arg name="ignoreLabel2" value="Abfluss"/>
+		<arg name="ignoreType1" value="W"/>
 		<!-- 
 			Berechnung Zwischengebietszufluss
 		-->
