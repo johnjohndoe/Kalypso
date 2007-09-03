@@ -27,3 +27,4 @@ potentielle Dinge, die im Rahmen der Pflege getrieben werden könnten (gilt ggf.
 - neue Berichtstypen (insb. Scheitelwerte)
 - HTML-Navigation
 - zusätzliche Vorlagen?
+- Option "fillLastWithValid" beim Abholen der Zeitreihen benutzen

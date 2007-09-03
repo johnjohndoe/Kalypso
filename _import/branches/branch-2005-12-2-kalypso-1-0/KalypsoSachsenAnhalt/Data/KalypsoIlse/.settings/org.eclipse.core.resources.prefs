@@ -1,4 +1,4 @@
-#Wed Apr 11 21:23:33 CEST 2007
+#Mon Apr 16 13:44:39 CEST 2007
 encoding//Rechenl\u00E4ufe/040427/zeitreihen/QP_BURGNEU.zml=UTF-8
 encoding//.prognose/prognose7/results.gml=UTF-8
 encoding//Rechenf\u00E4lle/test/zeitreihen/W_SAERI.zml=UTF-8
@@ -22,6 +22,7 @@ encoding//.prognose/Vorhersage-03-11-2004_19h38/Anfangsvolumen.gtt=UTF-8
 encoding//Rechenl\u00E4ufe/040427/zeitreihen/QV_LOHSA.zml=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_20h50/Gesamtansicht.gmt=UTF-8
 encoding//Rechenl\u00E4ufe/test/zeitreihen/QV_TSBAUTZ.zml=UTF-8
+encoding//.prognose/Kopie\ von\ Vorhersage-2006-06-09_10h49/Zeitreihen/Pegel/Messung/Ilsenburg.zml=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_20h54/Flusslaufparameter.gtt=UTF-8
 encoding//Rechenl\u00E4ufe/test/zeitreihen/PA_SCHIRG.zml=UTF-8
 encoding//Rechenvarianten/040427/Bodenfeuchten.gtt=UTF-8
@@ -37,6 +38,7 @@ encoding/<project>=UTF-8
 encoding//Rechenl\u00E4ufe/040427/zeitreihen/W_BOXBRG.zml=UTF-8
 encoding//.prognose/prognose1/results.gml=UTF-8
 encoding//.prognose/Vorhersage-2006-07-12_20h25/.calculation=UTF-8
+encoding//.prognose/Kopie\ von\ Vorhersage-2006-06-09_10h49/.calculation=UTF-8
 encoding//.prognose/Vorhersage-25-11-2004_15h28/Bodenfeuchten.gtt=UTF-8
 encoding//Rechenf\u00E4lle/test/zeitreihen/QV_SPWIESE.zml=UTF-8
 encoding//Rechenf\u00E4lle/test/zeitreihen/QV_BWALDE.zml=UTF-8
@@ -152,6 +154,7 @@ encoding//.prognose/Vorhersage-2005-06-03_11h17/Zeitreihen/Gebietsniederschlag/M
 encoding//Rechenf\u00E4lle/test/zeitreihen/PA_BAUTZWB.zml=UTF-8
 encoding//.prognose/Vorhersage-19-11-2004_14h45/Anfangsvolumen.gtt=UTF-8
 encoding//Rechenvarianten/Tesbetrieb/.calculation=UTF-8
+encoding//.prognose/Kopie\ von\ Vorhersage-2006-06-09_10h49/Zeitreihen/Gebietsniederschlag/Messung_Stationen/Ditfurt.zml=UTF-8
 encoding//..BCE_intern/interne_Tests/interner_Test_20060330a/Zeitreihen/Gebietsniederschlag/B\u00FChne_Hoppenstedt.zml=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_19h04/Gesamtansicht.gmt=UTF-8
 encoding//Rechenl\u00E4ufe/test/Flusslaufparameter.gtt=UTF-8
@@ -231,8 +234,8 @@ encoding//.prognose/Vorhersage-2005-06-03_11h17/Zeitreihen/Pegel/Messung/B\u00FC
 encoding//..BCE_intern/interne_Tests/interner_Test_20060330a/Zeitreihen/Gebietsniederschlag/Ilsenburg.zml=UTF-8
 encoding//Rechenf\u00E4lle/test/zeitreihen/PA_SCHIRG.zml=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_20h59/Flusslaufparameter.gtt=UTF-8
-encoding//.prognose/Vorhersage-03-11-2004_21h12/steuerparameter.gft=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_19h38/steuerparameter.gft=UTF-8
+encoding//.prognose/Vorhersage-03-11-2004_21h12/steuerparameter.gft=UTF-8
 encoding//.prognose/Vorhersage-04-11-2004_17h26/calcCase.gml=UTF-8
 encoding//Rechenl\u00E4ufe/040427/zeitreihen/W_SCHIRG.zml=UTF-8
 encoding//Rechenvarianten/test1/bodemodell.gmv=Cp1252
@@ -241,11 +244,12 @@ encoding//.prognose/prognose4/calcCase.gml=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_21h12/calcCase.gml=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_20h54/calcCase.gml=UTF-8
 encoding//.prognose/Vorhersage-04-11-2004_17h25/Bodenfeuchten.gtt=UTF-8
+encoding//.prognose/Vorhersage-25-10-2004_15h15/calcCase.gml=UTF-8
 encoding//..BCE_intern/interne_Tests/interner_Test_20060330a/Zeitreihen/Gebietsniederschlag/Messung_Stationen/Mahndorf.zml=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_20h50/Bodenfeuchten.gtt=UTF-8
-encoding//.prognose/Vorhersage-25-10-2004_15h15/calcCase.gml=UTF-8
 encoding//Rechenf\u00E4lle/test/zeitreihen/W_SCHIRG.zml=UTF-8
 encoding//.prognose/Vorhersage-19-11-2004_17h24/Gesamtansicht.gmt=UTF-8
+encoding//.prognose/Kopie\ von\ Vorhersage-2006-06-09_10h49/Zeitreihen/Gebietsniederschlag/Messung_Stationen/Elend.zml=UTF-8
 encoding//Rechenvarianten/test1/bodemodell.gml=Cp1252
 encoding//Rechenl\u00E4ufe/test/zeitreihen/W_BAUTZWB.zml=UTF-8
 encoding//.prognose/Vorhersage-19-11-2004_14h45/Bodenfeuchten.gtt=UTF-8

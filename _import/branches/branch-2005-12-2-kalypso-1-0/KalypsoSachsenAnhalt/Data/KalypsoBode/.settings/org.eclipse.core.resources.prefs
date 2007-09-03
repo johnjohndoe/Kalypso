@@ -1,4 +1,4 @@
-#Fri Mar 23 11:57:56 CET 2007
+#Tue Jul 24 11:41:09 CEST 2007
 encoding//Rechenl\u00E4ufe/040427/zeitreihen/QP_BURGNEU.zml=UTF-8
 encoding//.prognose/prognose7/results.gml=UTF-8
 encoding//.prognose/Vorhersage-2006-08-02_17h12/Zeitreihen/Pegel/Messung/Hausneindorf.zml=UTF-8
@@ -61,6 +61,7 @@ encoding//.prognose/prognose7/calcCase.gml=UTF-8
 encoding//Rechenf\u00E4lle/test/Anfangsvolumen.gtt=UTF-8
 encoding//..BCE_intern/interne_Tests/interner_Test_20060331/Zeitreihen/Gebietsniederschlag/Messung_Stationen/Hasselfelde.zml=UTF-8
 encoding//Rechenl\u00E4ufe/test/zeitreihen/QV_TSQUITZ.zml=UTF-8
+encoding//.prognose/Vorhersage-2006-10-10_15h37-strumpf/grafik/Thale-1.dat=UTF-8
 encoding//.prognose/Vorhersage-2006-07-12_20h23/.calculation=UTF-8
 encoding//Rechenvarianten/20041125_15_07/calcCase.gml=UTF-8
 encoding//Rechenl\u00E4ufe/040427/zeitreihen/PA_GROEDI.zml=UTF-8
@@ -243,9 +244,10 @@ encoding//.prognose/Vorhersage-03-11-2004_20h59/Gesamtansicht.gmt=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_21h12/Bodenfeuchten.gtt=UTF-8
 encoding//Rechenf\u00E4lle/test/zeitreihen/PA_SCHIRG.zml=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_20h59/Flusslaufparameter.gtt=UTF-8
-encoding//.prognose/Vorhersage-03-11-2004_21h12/steuerparameter.gft=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_19h38/steuerparameter.gft=UTF-8
+encoding//.prognose/Vorhersage-03-11-2004_21h12/steuerparameter.gft=UTF-8
 encoding//.prognose/Vorhersage-04-11-2004_17h26/calcCase.gml=UTF-8
+encoding//.prognose/Vorhersage-2006-10-10_15h37-strumpf/grafik/grafik.tpl=Cp1252
 encoding//.prognose/Vorhersage-2006-08-04_15h41/.calculation=UTF-8
 encoding//Rechenl\u00E4ufe/040427/zeitreihen/W_SCHIRG.zml=UTF-8
 encoding//Rechenvarianten/test1/bodemodell.gmv=Cp1252
@@ -269,5 +271,7 @@ encoding//Rechenf\u00E4lle/test/.calculation=UTF-8
 encoding//Rechenl\u00E4ufe/test/zeitreihen/W_GROEDI.zml=UTF-8
 encoding//Rechenvarianten/20041125_15_07/zeitreihen/Diagramm.odt=UTF-8
 encoding//.prognose/Vorhersage-2006-06-30_08h39/Zeitreihen/Speicherabgabe/Rappbode.zml=UTF-8
+encoding//.prognose/Vorhersage-2006-10-10_15h37-strumpf/grafik/Thale-2.dat=UTF-8
 encoding//.prognose/prognose11/calcCase.gml=UTF-8
 encoding//.prognose/Vorhersage-2006-08-02_17h12/Zeitreihen/Gebietsniederschlag/Messung_Stationen/Ditfurt.zml=UTF-8
+encoding//.prognose/Kopie\ von\ Vorhersage-2006-10-10_15h37-strumpf/.calculation=UTF-8

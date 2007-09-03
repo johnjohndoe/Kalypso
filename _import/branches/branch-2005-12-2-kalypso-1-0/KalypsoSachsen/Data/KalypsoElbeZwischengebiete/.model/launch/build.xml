@@ -173,9 +173,15 @@
 	 </target>
 	 <!-- ================================= 
 		          target: zwischengebietszufluss              
-          ================================= -->
+         ================================= -->
 	 <target name="zwischengebietszufluesse" depends="calculationProperties" description="Berechnet die Zwischengebietszuflüsse">
 	  <antcall target="zwischengebietszuflussUstiDresden"/>
 	  <antcall target="zwischengebietszuflussDresdenTorgau"/>
+	 </target>
+	
+	 <!-- ================================= 
+		          target: runCalculation. Target der Vollständigkeit halber eingeführt, damit im Expertenmodus Modell -> Berechnen ausgeführt werden kann              
+         ================================= -->
+	 <target name="runCalculation" depends="zwischengebietszufluesse" description="Berechnet die Zwischengebietszuflüsse">
 	 </target>
 </project>

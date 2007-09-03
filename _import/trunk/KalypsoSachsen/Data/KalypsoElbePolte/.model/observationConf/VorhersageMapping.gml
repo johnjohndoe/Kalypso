@@ -5,10 +5,10 @@
       <gml:name>Usti</gml:name>
       <inObservationLink/>
       <outObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.1_ES.02PG...501010.P2_MW"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.1_ES.02PG...501010.P1_MW"/>
       </outObservationLink>
       <out1ObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.1_ES.02PG...501010.P3_MW"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.1_ES.02PG...501010.P2_MW"/>
       </out1ObservationLink>
       <out3ObservationLink>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="PSI (Testbetrieb), untere Umhüllende"/>
@@ -26,19 +26,20 @@
   </mappingMember>
   <mappingMember>
     <MappingObservation fid="Schoena">
+      <gml:description>501010</gml:description>
       <gml:name>Schöna</gml:name>
       <inObservationLink/>
       <outObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="PSI (Normalbetrieb), untere Umhüllende"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.1_ES.02PG...501010.P1_MW"/>
       </outObservationLink>
       <out1ObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="PSI (Normalbetrieb), obere Umhüllende"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.1_ES.02PG...501010.P2_MW"/>
       </out1ObservationLink>
       <out3ObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="PSI (Testbetrieb), untere Umhüllende"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.1_ES.02PG...9501010.P1_MW"/>
       </out3ObservationLink>
       <out4ObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="PSI (Testbetrieb), obere Umhüllende"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.1_ES.02PG...9501010.P2_MW"/>
       </out4ObservationLink>
       <local2>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/Pegel/Schöna_unten.zml"/>
@@ -50,19 +51,20 @@
   </mappingMember>
   <mappingMember>
     <MappingObservation fid="Dresden">
+      <gml:description>501060</gml:description>
       <gml:name>Dresden</gml:name>
       <inObservationLink/>
       <outObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="PSI (Normalbetrieb), untere Umhüllende"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.1_ES.02PG...501060.P1_MW"/>
       </outObservationLink>
       <out1ObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="PSI (Normalbetrieb), obere Umhüllende"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.1_ES.02PG...501060.P2_MW"/>
       </out1ObservationLink>
       <out3ObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="PSI (Testbetrieb), untere Umhüllende"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.1_ES.02PG...9501060.P1_MW"/>
       </out3ObservationLink>
       <out4ObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="PSI (Testbetrieb), obere Umhüllende"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.1_ES.02PG...9501060.P2_MW"/>
       </out4ObservationLink>
       <local2>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/Pegel/Dresden_unten.zml"/>
@@ -74,19 +76,20 @@
   </mappingMember>
   <mappingMember>
     <MappingObservation fid="Riesa">
+      <gml:description>501110</gml:description>
       <gml:name>Riesa</gml:name>
       <inObservationLink/>
       <outObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="PSI (Normalbetrieb), untere Umhüllende"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.1_ES.02PG...501110.P1_MW"/>
       </outObservationLink>
       <out1ObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="PSI (Normalbetrieb), obere Umhüllende"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.1_ES.02PG...501110.P2_MW"/>
       </out1ObservationLink>
       <out3ObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="PSI (Testbetrieb), untere Umhüllende"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.1_ES.02PG...9501110.P1_MW"/>
       </out3ObservationLink>
       <out4ObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="PSI (Testbetrieb), obere Umhüllende"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.1_ES.02PG...9501110.P2_MW"/>
       </out4ObservationLink>
       <local2>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/Pegel/Riesa_unten.zml"/>
@@ -98,19 +101,20 @@
   </mappingMember>
   <mappingMember>
     <MappingObservation fid="Torgau">
+      <gml:description>501261</gml:description>
       <gml:name>Torgau</gml:name>
       <inObservationLink/>
       <outObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="PSI (Normalbetrieb), untere Umhüllende"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.1_ES.02PG...501261.P1_MW"/>
       </outObservationLink>
       <out1ObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="PSI (Normalbetrieb), obere Umhüllende"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.1_ES.02PG...501261.P2_MW"/>
       </out1ObservationLink>
       <out3ObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="PSI (Testbetrieb), untere Umhüllende"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.1_ES.02PG...9501261.P1_MW"/>
       </out3ObservationLink>
       <out4ObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="PSI (Testbetrieb), obere Umhüllende"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.1_ES.02PG...9501261.P2_MW"/>
       </out4ObservationLink>
       <local2>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/Pegel/Torgau_unten.zml"/>
@@ -122,19 +126,20 @@
   </mappingMember>
   <mappingMember>
     <MappingObservation fid="Wittenberg">
+      <gml:description>501420</gml:description>
       <gml:name>Wittenberg</gml:name>
       <inObservationLink/>
       <outObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="PSI (Normalbetrieb), untere Umhüllende"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.1_ES.02PG...501420.P1_MW"/>
       </outObservationLink>
       <out1ObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="PSI (Normalbetrieb), obere Umhüllende"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.1_ES.02PG...501420.P2_MW"/>
       </out1ObservationLink>
       <out3ObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="PSI (Testbetrieb), untere Umhüllende"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.1_ES.02PG...9501420.P1_MW"/>
       </out3ObservationLink>
       <out4ObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="PSI (Testbetrieb), obere Umhüllende"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.1_ES.02PG...9501420.P2_MW"/>
       </out4ObservationLink>
       <local2>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/Pegel/Wittenberg_unten.zml"/>
