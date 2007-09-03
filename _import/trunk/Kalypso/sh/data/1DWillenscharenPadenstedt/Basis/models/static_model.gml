@@ -13,9 +13,6 @@
 	<simBase:feDiscretisationModel 
 		xlink:href="discretisation.gml#root_discretisation_model"/>
 	
-	<simBase:flowResistanceModel 
-		xlink:href="terrain.gml#root_flow_resistance_model"/>
-	
 	<simBase:flowRelationshipModel 
 		xlink:href="terrain.gml#root_flow_relationship_model"/>
 		
