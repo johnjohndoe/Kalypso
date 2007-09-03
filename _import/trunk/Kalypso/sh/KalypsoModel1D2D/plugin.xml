@@ -40,13 +40,9 @@
               id="org.kalypso.kalypsomodel1d2d.schema.functions.Element1DTypeGeometry"
               name="Element1DTypeGeometry"/>
          <function
-              class="org.kalypso.kalypsomodel1d2d.schema.functions.Element1DJunctionNatureTest"
-              id="org.kalypso.kalypsomodel1d2d.schema.functions.Element1DJunctionNatureTest"
-              name="Element1DJunctionNatureTest"/>
-         <function
-              class="org.kalypso.kalypsomodel1d2d.schema.functions.JunctionContextGeometry"
-              id="org.kalypso.kalypsomodel1d2d.schema.functions.JunctionContextGeometry"
-              name="JunctionContextGeometry"/>
+              class="org.kalypso.kalypsomodel1d2d.schema.functions.TransitionElementGeometryPropertyFunction"
+              id="org.kalypso.kalypsomodel1d2d.schema.functions.TransitionElementGeometryPropertyFunction"
+              name="TransitionElementGeometryPropertyFunction"/>
 
          <!--function
               class="org.kalypso.kalypsomodel1d2d.schema.functions.ModelFiniteElements"
@@ -78,7 +74,9 @@
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IEdgeInv"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D"/>
-         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DContinuityLine"/>
+         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine"/>
+         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine1D"/>
+         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine2D"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IRiverChannel1D"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d"/>
@@ -87,12 +85,8 @@
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IKingFlowRelation"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IWeirFlowRelation"/>
-         <adapter
-               type="org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBridgeFlowRelation">
-         </adapter>
-         <adapter
-               type="org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation">
-         </adapter>
+         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBridgeFlowRelation"/>
+         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D"/>
@@ -100,29 +94,19 @@
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2DCollection"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup"/>
-         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.model.IPseudoOPerationalModel"/>
-         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.model.IOperationalModel1D2D"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement"/>
-         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionContext1DTo2D"/>
-         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionContext1DToCLine"/>
-         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine"/>
-         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine1D"/>
-         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.ILineElement"/>
+         <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.ITransitionElement"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit2D"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult"/>
-         <adapter
-               type="org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta">
-         </adapter>
+         <adapter type="org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta"/>
-         <adapter
-               type="org.kalypso.kalypsosimulationmodel.core.modeling.IModel">
-         </adapter>
+         <adapter type="org.kalypso.kalypsosimulationmodel.core.modeling.IModel"/>
       </factory>
    </extension>
 
@@ -232,7 +216,7 @@
 		    <activeWhen>
 		       <with variable="activeContexts">
 		          <iterate operator="or">
-		             <equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}ContinuityLine"/>
+		             <equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Line"/>
 		          </iterate>
 		       </with>
 		     </activeWhen>
@@ -263,6 +247,25 @@
                     value="icons/elcl16/13_flowrelation_add_NodalBC.gif"/>
 			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
                     value="Randbedingung zuordnen"/>
+            </class>
+		 </handler>
+		 <handler
+		       commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateElement">
+		    <activeWhen>
+		       <with variable="activeContexts">
+		          <iterate operator="or">
+		             <equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}TransitionElement"/>
+		          </iterate>
+		       </with>
+		     </activeWhen>
+      		<class
+            	class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+              <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+	                value="org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.CreateTransitionElementWidget"/>
+              <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
+                    value="icons/elcl16/01_add_1D.gif"/>
+			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
+                    value="Create transition element"/>
             </class>
 		 </handler>
 		 <!--*** DeleteElement handlers ***-->
@@ -309,7 +312,7 @@
 		    <activeWhen>
 		       <with variable="activeContexts">
 		          <iterate operator="or">
-		             <equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}ContinuityLine"/>
+		             <equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Line"/>
 		          </iterate>
 		       </with>
 		     </activeWhen>
@@ -344,12 +347,13 @@
 		 </handler>
 
 		 <!-- Handler to delete junction -->
+		 <!--
 		 <handler
 		       commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.DeleteElement">
 		    <activeWhen>
 		       <with variable="activeContexts">
 		          <iterate operator="or">
-		             <equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}JunctionContext1DToCLine"/>
+		             <equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}TransitionElement"/>
 		          </iterate>
 		       </with>
 		     </activeWhen>
@@ -363,6 +367,7 @@
                     value="Kopplung markieren und entfernen"/>
             </class>
 		 </handler>
+		 -->
 
    <!--*** EditElement handlers ***-->
    <handler
@@ -397,7 +402,9 @@
                		 <or>
                			<equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}PolyElement"/>
                   		<equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Element1D"/>
-                  		<equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}ContinuityLine"/>
+                  		<!--
+                  		<equals value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Line"/>
+                  		-->
                		 </or>
 		          </iterate>
 		       </with>

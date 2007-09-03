@@ -53,9 +53,11 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2DCollection;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
@@ -64,7 +66,7 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
  * @author Patrice Congo
  * 
  */
-public class CalculationUnit<ET extends IFE1D2DElement> extends FE1D2DComplexElement<ET> implements ICalculationUnit<ET>
+public class CalculationUnit<ET extends IFENetItem> extends FE1D2DComplexElement<ET> implements ICalculationUnit<ET>
 {
   private IControlModel1D2D m_controlModel1D2D = null;
 
@@ -121,17 +123,18 @@ public class CalculationUnit<ET extends IFE1D2DElement> extends FE1D2DComplexEle
     }
   }
 
-  public List<IBoundaryLine> getBoundaryLines( )
+  public List<IFELine> getContinuityLines( )
   {
     final IFeatureWrapperCollection<ET> elements = getElements();
-    final List<IBoundaryLine> boundaryLines = new ArrayList<IBoundaryLine>();
-    for( final IFE1D2DElement ele : elements )
+    ((FeatureWrapperCollection)elements).addSecondaryWrapper(IFELine.class);
+    final List<IFELine> continuityLines = new ArrayList<IFELine>();
+    for( final Object ele : elements )
     {
-      if( ele instanceof IBoundaryLine )
-        boundaryLines.add( (IBoundaryLine) ele );
+      if( ele instanceof IFELine )
+        continuityLines.add( (IFELine) ele );
     }
     // TODO: consider sub-units!
-    return boundaryLines;
+    return continuityLines;
   }
 
 }

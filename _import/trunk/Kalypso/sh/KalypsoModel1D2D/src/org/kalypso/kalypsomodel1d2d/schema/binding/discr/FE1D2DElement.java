@@ -50,9 +50,7 @@ public abstract class FE1D2DElement<CT extends IFE1D2DComplexElement, ET extends
     if( prop == null )
     {
       // create the property that is still missing
-      containers = new FeatureWrapperCollection<CT>( featureToBind,
-      // TODO: problem here?
-      Kalypso1D2DSchemaConstants.WB1D2D_F_COMPLEX_ELE_2D, Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT_CONTAINERS, complexElementClass );
+      containers = new FeatureWrapperCollection<CT>( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_COMPLEX_ELE_2D, Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT_CONTAINERS, complexElementClass );
     }
     else
     {

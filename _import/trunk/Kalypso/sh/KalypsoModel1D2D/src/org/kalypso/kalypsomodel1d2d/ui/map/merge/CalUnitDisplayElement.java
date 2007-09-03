@@ -53,7 +53,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ILineElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
@@ -223,7 +223,7 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
             throw new RuntimeException( e );
           }
         }
-        else if( element instanceof ILineElement || element instanceof IElement1D )
+        else if( element instanceof IFELine || element instanceof IElement1D )
         {
           if( includeChildLines )
           {

@@ -72,8 +72,9 @@ import org.kalypso.kalypsomodel1d2d.conv.EReadError;
 import org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler;
 import org.kalypso.kalypsomodel1d2d.conv.IRoughnessIDProvider;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.ArcResult;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.ElementResult;
@@ -1587,13 +1588,13 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     {
       final GM_Curve nodeCurve1d = getProfileCurveFor1dNode( nodeResult1d );
 
-      final List<IBoundaryLine> boundaryLines = m_calculation.getBoundaryLines();
-      IBoundaryLine selectedBoundaryLine = null;
-      for( final IBoundaryLine boundaryLine : boundaryLines )
+      final List<IFELine> continuityLine2Ds = m_calculation.getBoundaryLines();
+      IContinuityLine2D selectedBoundaryLine = null;
+      for( final IFELine continuityLine2D : continuityLine2Ds )
       {
-        if( boundaryLine.getGmlID().equals( Integer.toString( boundaryLine2dID ) ) )
+        if( continuityLine2D.getGmlID().equals( Integer.toString( boundaryLine2dID ) ) )
         {
-          selectedBoundaryLine = boundaryLine;
+          selectedBoundaryLine = (IContinuityLine2D) continuityLine2D;
           break;
         }
       }
@@ -1674,9 +1675,9 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     return (INodeResult) feature.getAdapter( INodeResult.class );
   }
 
-  private GM_Point[] getLinePoints( final IBoundaryLine boundaryLine )
+  private GM_Point[] getLinePoints( final IContinuityLine2D continuityLine2D )
   {
-    final List<IFE1D2DNode> nodes = boundaryLine.getNodes();
+    final List<IFE1D2DNode> nodes = continuityLine2D.getNodes();
     final GM_Point[] points = new GM_Point[nodes.size()];
     int i = 0;
     for( final IFE1D2DNode node : nodes )

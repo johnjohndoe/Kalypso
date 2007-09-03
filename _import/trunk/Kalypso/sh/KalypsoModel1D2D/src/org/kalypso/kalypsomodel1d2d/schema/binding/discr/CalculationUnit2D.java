@@ -43,6 +43,7 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -52,13 +53,12 @@ import org.kalypsodeegree.model.feature.Feature;
  * 
  */
 @SuppressWarnings("unchecked")
-public class CalculationUnit2D<ET extends IFE1D2DElement> extends CalculationUnit<ET> implements ICalculationUnit2D<ET>
+public class CalculationUnit2D<ET extends IFENetItem> extends CalculationUnit<ET> implements ICalculationUnit2D<ET>
 {
 
   public CalculationUnit2D( Feature featureToBind )
   {
-    this( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_CALC_UNIT_2D, Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS,// Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELE_2D,
-    (Class<ET>) IFE1D2DElement.class );
+    this( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_CALC_UNIT_2D, Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS, (Class<ET>) IFE1D2DElement.class );
 
   }
 
@@ -74,7 +74,7 @@ public class CalculationUnit2D<ET extends IFE1D2DElement> extends CalculationUni
   @Override
   public boolean addElementAsRef( ET element )
   {
-    boolean isPolyElementOrBoundaryLine = (element instanceof IPolyElement) || (element instanceof IBoundaryLine);
+    boolean isPolyElementOrBoundaryLine = (element instanceof IPolyElement) || (element instanceof IContinuityLine2D);
     if( !isPolyElementOrBoundaryLine )
     {
       String message = String.format( "Argument must be an element 1d or a boundary line:" + "\n\t value=%s", element );

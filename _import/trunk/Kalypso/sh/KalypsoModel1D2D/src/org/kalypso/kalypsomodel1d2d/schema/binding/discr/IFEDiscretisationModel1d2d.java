@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
+import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -93,6 +94,7 @@ public interface IFEDiscretisationModel1d2d extends IModel
    */
   public IFeatureWrapperCollection<IFE1D2DNode> getNodes( );
 
+  public IFeatureWrapperCollection<IFELine> getContinuityLines( );
   /**
    * Finds the node nearest to the given position, within the search rectangle
    * 
@@ -122,7 +124,7 @@ public interface IFEDiscretisationModel1d2d extends IModel
    */
   public IFE1D2DNode createNode( GM_Point nodeLocation, double searchSquareWidth, boolean[] alreadyExists );
 
-  public ILineElement findContinuityLine( final GM_Point position, double grabDistance );
+  public IFELine findContinuityLine( final GM_Point position, double grabDistance );
 
   public IPolyElement find2DElement( final GM_Point position, final double grabDistance );
 
@@ -138,5 +140,5 @@ public interface IFEDiscretisationModel1d2d extends IModel
    * @param elementType
    *            the element type
    */
-  public <T extends IFE1D2DElement> T findElement( final GM_Point position, final double grabDistance, Class<T> elementType );
+  public <T extends IFENetItem> T findElement( final GM_Point position, final double grabDistance, Class<T> elementType );
 }

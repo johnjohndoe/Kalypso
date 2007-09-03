@@ -44,13 +44,11 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.Util;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
-
-import sun.awt.image.ImageFetchable;
 
 /**
  * The default implementation of the {@link IFE1D2DComplexElement} interface.
@@ -58,7 +56,7 @@ import sun.awt.image.ImageFetchable;
  * @author Patrice Congo
  * 
  */
-public class FE1D2DComplexElement<ET extends IFE1D2DElement> extends AbstractFeatureBinder implements IFE1D2DComplexElement<ET>
+public class FE1D2DComplexElement<ET extends IFENetItem> extends AbstractFeatureBinder implements IFE1D2DComplexElement<ET>
 {
 
   private final IFeatureWrapperCollection<ET> elements;
@@ -78,8 +76,7 @@ public class FE1D2DComplexElement<ET extends IFE1D2DElement> extends AbstractFea
   public FE1D2DComplexElement( Feature featureToBind, QName qnameToBind, QName elementListPropQName, Class<ET> wrapperClass )
   {
     super( featureToBind, qnameToBind );
-    elements = Util.<ET> get( featureToBind, qnameToBind, elementListPropQName, wrapperClass,// IFE1D2DElement.class,
-    true );
+    elements = Util.<ET> get( featureToBind, qnameToBind, elementListPropQName, wrapperClass, true );
   }
 
   /**

@@ -63,7 +63,7 @@ public class DiscretisationModelUtils
    * <p>
    * A 1d-node is a node which as at least on 1D-element connected to it. TODO move this into the TypeInfo class
    */
-  public static boolean is1DNode( final IFE1D2DNode<IFE1D2DEdge> node )
+  public static boolean is1DNode( final IFE1D2DNode node )
   {
     final IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge>[] elements = node.getElements();
     for( final IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge> element : elements )
@@ -79,11 +79,21 @@ public class DiscretisationModelUtils
    */
   public static IFeatureWrapper2 findModelElementForBC( final IFEDiscretisationModel1d2d discModel, final GM_Point currentPos, final double grabDistance )
   {
-    final IFE1D2DNode node = discModel.findNode( currentPos, grabDistance );
-    if( node != null )
-      return node;
 
-    final ILineElement contiLine = discModel.findContinuityLine( currentPos, grabDistance / 2 );
+    // We want to select nodes, but if the node is the first to be selected, tha line will never be selected
+    // if mouse is near any node (i.e. line can be selected only if mouse is outside the model)
+
+    // solution: we will select the nodes with small grab distance, so node is selected only if mouse is
+    // really near to the node; otherwise, line will be selected
+
+    // nice :)
+
+    // but in the moment we don't want to support nodal BCs...
+    // final IFE1D2DNode node = discModel.findNode( currentPos, grabDistance / 32 );
+    // if( node != null )
+    // return node;
+
+    final IFELine contiLine = discModel.findContinuityLine( currentPos, grabDistance / 2 );
     if( contiLine != null )
       return contiLine;
 

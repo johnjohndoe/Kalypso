@@ -19,12 +19,9 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 /**
  * Provide the default implementation for {@link org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFEElement}.
  * Those classes can be used as java abstract for the substituable of wb1d2d:FE1D2D_2DElement:
- * wb1d2d:FE1D2DQuadriElement, wb1d2d:FE1D2DTriElement and wb1d2d:FE1D2DContinuityLine
  * 
  * 
  * @author Gernot Belger, Patrice Congo
- * @see IFE1D2DContinuityLine
- * @see FE1D2DContinuityLine
  */
 @SuppressWarnings("hiding")
 public abstract class Element2D<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge> extends FE1D2DElement<CT, ET> implements IElement2D<CT, ET>
@@ -103,9 +100,7 @@ public abstract class Element2D<CT extends IFE1D2DComplexElement, ET extends IFE
     else
     {
       // just wrapped the existing one
-      edges = new FeatureWrapperCollection<ET>( featureToBind, edgeClass,// IFE1D2DEdge.class,//
-      // <IFE1D2DElement,IFE1D2DNode<IFE1D2DEdge>>.class,
-      Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE );
+      edges = new FeatureWrapperCollection<ET>( featureToBind, edgeClass, Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE );
     }
   }
 
@@ -122,8 +117,7 @@ public abstract class Element2D<CT extends IFE1D2DComplexElement, ET extends IFE
   /**
    * This constructor creates {@link FE1D2D_2DElement} based on a feature which is created as child of the given parent
    * feaure and linked to it by the property of the type specified by the argument propQName. The Type of the feature is
-   * also specified by the given element. This constructor is typicaly used to construct feature like
-   * wb1d2d:FE1D2DQuadriElement, wb1d2d:FE1D2DTriElement and wb1d2d:FE1D2DContinuityLine
+   * also specified by the given element.
    * 
    * @param parentFeature
    *            the parent feature for the new wbr:Roughness class
@@ -222,7 +216,7 @@ public abstract class Element2D<CT extends IFE1D2DComplexElement, ET extends IFE
       {
         IFE1D2DEdge invertedEdge = ((IEdgeInv) edge).getInverted();
         List<IFE1D2DNode> edgeNodes = invertedEdge.getNodes();
-        IFE1D2DNode<IFE1D2DEdge> node;
+        IFE1D2DNode node;
         for( int i = edgeNodes.size() - 1; i >= 0; i-- )
         {
           node = edgeNodes.get( i );
@@ -239,7 +233,7 @@ public abstract class Element2D<CT extends IFE1D2DComplexElement, ET extends IFE
       }
       else
       {
-        for( IFE1D2DNode<IFE1D2DEdge> node : edge.getNodes() )
+        for( IFE1D2DNode node : edge.getNodes() )
         {
           if( node != null )
           {

@@ -43,6 +43,7 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -51,22 +52,17 @@ import org.kalypsodeegree.model.feature.Feature;
  * @author Patrice Congo
  * 
  */
-@SuppressWarnings("unchecked")
-public class CalculationUnit1D<ET extends IFE1D2DElement> // IElement1D>
-    extends CalculationUnit<ET> implements ICalculationUnit1D<ET>
+public class CalculationUnit1D<ET extends IFENetItem> extends CalculationUnit<ET> implements ICalculationUnit1D<ET>
 {
 
   public CalculationUnit1D( final Feature featureToBind )
   {
-    this( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_CALC_UNIT_1D, Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS,// Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT1D,
-    (Class<ET>) IFE1D2DElement.class );// IElement1D.class );
-
+    this( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_CALC_UNIT_1D, Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS, (Class<ET>) IFE1D2DElement.class );
   }
 
   public CalculationUnit1D( final Feature featureToBind, final QName qnameToBind, final QName elementListPropQName, final Class<ET> wrapperClass )
   {
     super( featureToBind, qnameToBind, elementListPropQName, wrapperClass );
-
   }
 
   /**
@@ -75,7 +71,7 @@ public class CalculationUnit1D<ET extends IFE1D2DElement> // IElement1D>
   @Override
   public boolean addElementAsRef( final ET element )
   {
-    final boolean isElement1dOrBoundaryLine = (element instanceof IElement1D) || (element instanceof IBoundaryLine);
+    final boolean isElement1dOrBoundaryLine = (element instanceof IElement1D) || (element instanceof IContinuityLine1D);
     if( !isElement1dOrBoundaryLine )
     {
       final String message = String.format( "Argument must be an element 1d or a boundary line:" + "\n\t value=%s", element );

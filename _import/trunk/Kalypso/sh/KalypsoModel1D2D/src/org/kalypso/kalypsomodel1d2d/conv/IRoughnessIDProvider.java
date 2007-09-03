@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.conv;
 
-import org.kalypso.kalypsosimulationmodel.core.discr.IFEElement;
+import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 
 /**
  * Provides a resversible id mapping between a native id system
@@ -84,7 +84,7 @@ public interface IRoughnessIDProvider
    * @throws IllegalArgumentException if element is null
    */
   public int getElementNativeRoughness(
-                          IFEElement element)
+                          IFENetItem element)
                           throws IllegalArgumentException;
   
 }

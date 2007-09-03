@@ -13,16 +13,12 @@
 			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
 		</appinfo>
 	</annotation>
-	<import namespace="http://www.opengis.net/gml"
-		schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd" />
-	<import namespace="http://www.opengis.net/om"
-		schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/om/1.0.30/om.xsd" />
+	<import namespace="http://www.opengis.net/gml" />
+	<import namespace="http://www.opengis.net/om" />
 	<import
-		namespace="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase"
-		schemaLocation="platform:/resource/KalypsoModelSimulationBase/src/org/kalypso/kalypsosimulationmodel/schema/v0.0.0/simulation_model.xsd" />
+		namespace="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" />
 	<import
-		namespace="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d"
-		schemaLocation="sim_1d2d_discretisation.xsd" />
+		namespace="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d" />
 	<!-- =================================================================
 		ControlModelGroup
 		================================================================== -->
@@ -114,9 +110,7 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Version</label>
-								<tooltip>
-									Version des Rechenkerns RMA 10S
-								</tooltip>
+								<tooltip>Version des Rechenkerns RMA 10S</tooltip>
 							</documentation>
 						</annotation>
 						<simpleType>
@@ -149,47 +143,6 @@
 							</documentation>
 						</annotation>
 					</element>
-					<!--C0-->
-					<!-- Jessica: Erst einmal fest auf 0 setzen (laut Nico)
-						<element name="IOPTZD" default="0">
-						<annotation>
-						<documentation xml:lang="de">
-						<label>Turbulenzmodell</label>
-						</documentation>
-						</annotation>
-						<simpleType>
-						<restriction base="string">
-						<enumeration value="0">
-						<annotation>
-						<documentation xml:lang="de">
-						<label>original RMA-10 Methode</label>
-						</documentation>
-						</annotation>
-						</enumeration>
-						<enumeration value="1">
-						<annotation>
-						<documentation xml:lang="de">
-						<label>Henderson-Sellers</label>
-						</documentation>
-						</annotation>
-						</enumeration>
-						<enumeration value="2">
-						<annotation>
-						<documentation xml:lang="de">
-						<label>Lineare Verteilung</label>
-						</documentation>
-						</annotation>
-						</enumeration>
-						<enumeration value="3">
-						<annotation>
-						<documentation xml:lang="de">
-						<label>Gaussian Mellor-Yamada</label>
-						</documentation>
-						</annotation>
-						</enumeration>
-						</restriction>
-						</simpleType>
-						</element>-->
 					<element name="IDNOPT" default="-1">
 						<annotation>
 							<documentation xml:lang="de">
@@ -250,8 +203,7 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label><![CDATA[Wirbelviskositätsansatz]]></label>
-								<tooltip>
-									cd<![CDATA[Wirbelviskositätsansatz]]></tooltip>
+								<tooltip><![CDATA[Wirbelviskositätsansatz]]></tooltip>
 							</documentation>
 						</annotation>
 						<simpleType>
@@ -334,7 +286,6 @@
 										<documentation xml:lang="en">
 											<label><![CDATA[15 Prandtl's mixing length w. bottom induced turb.]]></label>
 										</documentation>
-										c
 									</annotation>
 								</enumeration>
 								<enumeration value="16">
@@ -364,8 +315,7 @@
 									Faktor Smagorinsky-Ansatz [-]
 								</label>
 								<tooltip>
-									Alfa Wert des Smagorinsky Ansatzes
-									[-]
+									Alfa Wert des Smagorinsky Ansatzes [-]
 								</tooltip>
 							</documentation>
 						</annotation>
@@ -396,42 +346,6 @@
 							</documentation>
 						</annotation>
 					</element>
-					<!--
-						<element name="IPROJ">
-						<annotation>
-						<documentation xml:lang="de">
-						<label>Projektion</label>
-						<tooltip>Pojektionsoptionen</tooltip>
-						</documentation>
-						</annotation>
-						<simpleType>
-						<restriction base="string">
-						<enumeration value="0">
-						<annotation>
-						<documentation xml:lang="de">
-						<label>Zeitabweichung</label>
-						</documentation>
-						</annotation>
-						</enumeration>
-						<enumeration value="1">
-						<annotation>
-						<documentation xml:lang="de">
-						<label>keine Projektion</label>
-						</documentation>
-						</annotation>
-						</enumeration>
-						<enumeration value="2">
-						<annotation>
-						<documentation xml:lang="de">
-						<label>Projektion auf aktuellem und vorherigem Wert</label>
-						</documentation>
-						</annotation>
-						</enumeration>
-						</restriction>
-						</simpleType>
-						</element>
-					-->
-					<!--C2-->
 					<element name="OMEGA" type="double">
 						<annotation>
 							<documentation xml:lang="de">
@@ -586,7 +500,6 @@
 							</restriction>
 						</simpleType>
 					</element>
-					<!--CV-->
 					<element name="CONV_1" type="double"
 						default="0.01">
 						<annotation>

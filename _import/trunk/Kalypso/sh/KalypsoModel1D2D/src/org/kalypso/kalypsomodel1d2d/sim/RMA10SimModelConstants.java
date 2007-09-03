@@ -67,10 +67,6 @@ public interface RMA10SimModelConstants
 
   public static final String TERRAINMODEL_ID = "TerrainModel";
 
-  public static final String OPERATIONALMODEL_ID = "OperationalModel";
-
-  public static final String FLOWRESISTANCEMODEL_ID = "FlowResistanceModel";
-
   public static final String FLOWRELATIONSHIPMODEL_ID = "FlowRelationshipModel";
 
   public static final String CONTROL_ID = "SimulationControlModel";

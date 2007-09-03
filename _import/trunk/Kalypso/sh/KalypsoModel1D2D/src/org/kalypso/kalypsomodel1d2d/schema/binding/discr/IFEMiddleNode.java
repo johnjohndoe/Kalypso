@@ -48,7 +48,7 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
  * @author Patrice Congo
  *
  */
-public interface IFEMiddleNode<CT extends IFE1D2DEdge> extends IFE1D2DNode<CT>
+public interface IFEMiddleNode<CT extends IFE1D2DEdge> extends IFE1D2DNode
 {
   
 }

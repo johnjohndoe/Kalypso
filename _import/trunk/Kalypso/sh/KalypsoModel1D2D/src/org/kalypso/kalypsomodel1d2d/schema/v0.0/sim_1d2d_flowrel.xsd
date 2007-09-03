@@ -6,9 +6,12 @@
 
 <xs:schema targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d"
 	xmlns:wb1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d"
-	xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" xmlns:math="org.kalypso.gml.common.math"
-	xmlns:wspmprof="org.kalypso.model.wspmprofile" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om"
+	xmlns:simBase="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" 
+	xmlns:math="org.kalypso.gml.common.math"
+	xmlns:wspmprof="org.kalypso.model.wspmprofile" 
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:xlink="http://www.w3.org/1999/xlink" 
+	xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om"
 	xmlns:obs1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/observation" elementFormDefault="qualified"
 	attributeFormDefault="unqualified">
 

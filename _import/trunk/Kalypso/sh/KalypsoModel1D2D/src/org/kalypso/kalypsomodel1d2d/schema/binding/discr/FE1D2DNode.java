@@ -1,10 +1,7 @@
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.xml.namespace.QName;
 
@@ -16,7 +13,6 @@ import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
@@ -27,10 +23,10 @@ import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
  * 
  * @author Gernot Belger, Patrice Congo
  */
-public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode<IFE1D2DEdge>
+public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode
 {
   /** Edges that contains this node */
-  private final FeatureWrapperCollection<IFE1D2DEdge> containers;
+  private final FeatureWrapperCollection containers;
 
   /**
    * Creates a new node object that binds the given feature.
@@ -50,14 +46,15 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode<IFE
     if( prop == null )
     {
       // create the property tha is still missing
-      containers = new FeatureWrapperCollection<IFE1D2DEdge>( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE, Kalypso1D2DSchemaConstants.WB1D2D_PROP_NODE_CONTAINERS/* QNAME_PROP_NODE_CONTAINERS */, IFE1D2DEdge.class );
+      containers = new FeatureWrapperCollection( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE, Kalypso1D2DSchemaConstants.WB1D2D_PROP_NODE_CONTAINERS, IFE1D2DEdge.class );
     }
     else
     {
       // just wrapped the existing one
-      containers = new FeatureWrapperCollection<IFE1D2DEdge>( featureToBind, IFE1D2DEdge.class,// <IFE1D2DElement,IFE1D2DNode<IFE1D2DEdge>>.class,
-      Kalypso1D2DSchemaConstants.WB1D2D_PROP_NODE_CONTAINERS/* QNAME_PROP_NODE_CONTAINERS */);
+      containers = new FeatureWrapperCollection( featureToBind, IFE1D2DEdge.class, Kalypso1D2DSchemaConstants.WB1D2D_PROP_NODE_CONTAINERS );
     }
+    containers.addSecondaryWrapper( IFELine.class );
+    containers.addSecondaryWrapper( IElement1D.class );
   }
 
   /**
@@ -109,7 +106,7 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode<IFE
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IFENode#getContainers()
    */
-  public IFeatureWrapperCollection<IFE1D2DEdge> getContainers( )
+  public IFeatureWrapperCollection getContainers( )
   {
     return containers;
   }
@@ -122,7 +119,7 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode<IFE
     // TODO: at the moment, the elements are found via the geometric position, maybe change this later to references via
     // the containers.
 
-    final FE1D2DDiscretisationModel model = new FE1D2DDiscretisationModel( getFeature().getParent() );
+    final FE1D2DDiscretisationModel model = new FE1D2DDiscretisationModel( getFeature().getWorkspace().getRootFeature() );
     final FeatureList elementList = (FeatureList) model.getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS );
 
     // get all elements touching this node
@@ -167,78 +164,24 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode<IFE
     return result;
   }
 
-// /**
-// * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode#getEdges()
-// */
-// public IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>[] getEdges( )
-// {
-// // TODO: at the moment, the elements are found via the geometric position, maybe change this later to references via
-// // the containers.
-//
-// final FE1D2DDiscretisationModel model = new FE1D2DDiscretisationModel( getFeature().getParent() );
-// final FeatureList edgeList = (FeatureList) model.getFeature().getProperty(
-// Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGES );
-//
-// // get all elements touching this node
-// // TODO: is this really necessary, causes performance bug in bce.2d loading
-// final List touchingEdges = edgeList.query( this.getPoint().getPosition(), null );
-//
-// final List<IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>> foundEdges = new ArrayList<IFE1D2DEdge<IFE1D2DElement,
-// IFE1D2DNode>>();
-//
-// // filter all element which contain this node
-// for( final Object object : touchingEdges )
-// {
-// final Feature f = (Feature) object;
-// final IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge = (IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>) f.getAdapter(
-// IFE1D2DEdge.class );
-// final IFeatureWrapperCollection<IFE1D2DNode> nodes = edge.getNodes();
-// for( final IFE1D2DNode node : nodes )
-// {
-// if( node.equals( this ) )
-// {
-// foundEdges.add( edge );
-// break;
-// }
-// }
-// }
-//
-// final IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>[] result = new IFE1D2DEdge[foundEdges.size()];
-// for( int i = 0; i < foundEdges.size(); i++ )
-// result[i] = (IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>) foundEdges.get( i );
-//
-// return result;
-// }
-
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DNode#getNeighbours()
    */
-  public Collection<IFE1D2DNode> getNeighbours( )
+  public List<IFE1D2DNode> getNeighbours( )
   {
-    final IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge>[] elements = getElements();
-
-    final Set<IFE1D2DNode<IFE1D2DEdge>> neighbourNodes = new HashSet<IFE1D2DNode<IFE1D2DEdge>>();
-
-    // alle Nachbarknoten
-    for( final IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge> element : elements )
+    final List<IFE1D2DNode> list = new ArrayList<IFE1D2DNode>();
+    final IFeatureWrapperCollection nodeContainers = getContainers();
+    for( final Object container : nodeContainers )
     {
-      neighbourNodes.addAll( (Collection< ? extends IFE1D2DNode<IFE1D2DEdge>>) element.getNodes() );
-      neighbourNodes.remove( this );
-
-      // final IFeatureWrapperCollection<IFE1D2DEdge> edges = element.getEdges();
-      // for( final IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge : edges )
-      // {
-      // IFeatureWrapperCollection<IFE1D2DNode> nodes =
-      // (edge instanceof IEdgeInv)? ((EdgeInv)edge).getInverted().getNodes():edge.getNodes();
-      // for( final IFE1D2DNode<IFE1D2DEdge> node : nodes )
-      // {
-      // if( !equals( node ) )
-      // neighbourNodes.add( node );
-      // }
-      // }
+      if( container instanceof IFE1D2DEdge && !(container instanceof IEdgeInv) )
+      {
+        final IFeatureWrapperCollection<IFE1D2DNode> nodes = ((IFE1D2DEdge) container).getNodes();
+        for( IFE1D2DNode node : nodes )
+          if( !getGmlID().equals( node.getGmlID() ) )
+            list.add( node );
+      }
     }
-
-    return (Collection<IFE1D2DNode>) neighbourNodes;// neighbourNodes.toArray( new IFE1D2DNode[neighbourNodes.size()] );
+    return list;
   }
 
   /**
@@ -262,12 +205,11 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode<IFE
     buf.append( '[' );
     buf.append( getPoint() );
     // edges
-    IFeatureWrapperCollection<IFE1D2DEdge> edges = getContainers();
+    IFeatureWrapperCollection containers = getContainers();
     buf.append( "{Edges=" );
-    for( IFeatureWrapper2 edge : edges )
-    {
-      buf.append( edge.getGmlID() );
-    }
+    for( int i = 0; i < containers.size(); i++ )
+      if( containers.get( i ) instanceof IFE1D2DEdge )
+        buf.append( ((IFE1D2DEdge) containers.get( i )).getGmlID() );
     buf.append( '}' );
     buf.append( ']' );
     return buf.toString();

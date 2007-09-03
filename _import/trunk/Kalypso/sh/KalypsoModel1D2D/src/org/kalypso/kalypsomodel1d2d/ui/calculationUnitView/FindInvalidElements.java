@@ -42,7 +42,7 @@ package org.kalypso.kalypsomodel1d2d.ui.calculationUnitView;
 
 import java.util.List;
 
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
@@ -92,7 +92,7 @@ public class FindInvalidElements
            List<Feature> collectElements = edge.getContainers().getWrappedList();
            for (Feature thisElement : collectElements)
            {
-             if (thisElement instanceof IBoundaryLine)
+             if (thisElement instanceof IContinuityLine2D)
              {
                foundBLine = true;
              }

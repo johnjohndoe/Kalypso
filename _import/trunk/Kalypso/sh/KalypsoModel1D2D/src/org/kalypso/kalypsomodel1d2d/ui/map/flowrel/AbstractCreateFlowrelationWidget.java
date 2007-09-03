@@ -58,13 +58,10 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ILineElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.FlowRelationUtilitites;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
@@ -134,7 +131,6 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
   public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel )
   {
     super.activate( commandPoster, mapPanel );
-
     reinit();
   }
 
@@ -221,9 +217,9 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
           g.fillRect( (int) nodePoint.getX() - smallRect, (int) nodePoint.getY() - smallRect, smallRect * 2, smallRect * 2 );
       }
       /* ContinuityLine: return middle of line */
-      else if( m_modelElement instanceof ILineElement || m_modelElement instanceof IElement1D )
+      else if( m_modelElement instanceof IElement1D )
       {
-        final IFE1D2DElement element = (IFE1D2DElement) m_modelElement;
+        final IElement1D element = (IElement1D) m_modelElement;
         final GM_Curve line = (GM_Curve) element.recalculateElementGeometry();
 
         final LineSymbolizer symb = new LineSymbolizer_Impl();
@@ -231,7 +227,19 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
         stroke.setWidth( 3 );
         stroke.setStroke( new Color( 255, 0, 0 ) );
         symb.setStroke( stroke );
+        final DisplayElement de = DisplayElementFactory.buildLineStringDisplayElement( m_modelElement.getWrappedFeature(), line, symb );
+        de.paint( g, getMapPanel().getProjection() );
+      }
+      else if( m_modelElement instanceof IFELine )
+      {
+        final IFELine element = (IFELine) m_modelElement;
+        final GM_Curve line = element.getGeometry();
 
+        final LineSymbolizer symb = new LineSymbolizer_Impl();
+        final Stroke stroke = new Stroke_Impl( new HashMap<Object, Object>(), null, null );
+        stroke.setWidth( 3 );
+        stroke.setStroke( new Color( 255, 0, 0 ) );
+        symb.setStroke( stroke );
         final DisplayElement de = DisplayElementFactory.buildLineStringDisplayElement( m_modelElement.getWrappedFeature(), line, symb );
         de.paint( g, getMapPanel().getProjection() );
       }
@@ -264,46 +272,21 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
   {
     final Display display = PlatformUI.getWorkbench().getDisplay();
 
-    final String problemMessage;
-    final IFeatureWrapper2 modelElement = m_modelElement;
-    if( modelElement == null )
-      // problemMessage = "Kein FE-Knoten in der Nähe. Parameter können nur an Knoten hinzugefügt werden.";
-      // TODO: provider nice common error message
-      return;
-// else if( m_existingFlowRelation != null )
-// // problemMessage = "Hier ist bereits Dieser Knoten besitzt bereits Parameter.";
-// // TODO do we need a nice message?
-// problemMessage = null;
-// else
-// problemMessage = null;
-//
-// if( problemMessage != null )
-// {
-// display.asyncExec( new Runnable()
-// {
-// public void run( )
-// {
-// final Shell shell = display.getActiveShell();
-// MessageDialog.openWarning( shell, getName(), problemMessage );
-// }
-// } );
-// }
-
-    if( m_flowRelCollection == null )
+    if( m_modelElement == null || m_flowRelCollection == null )
       return;
 
     final CommandableWorkspace workspace = m_flowTheme.getWorkspace();
 
-// if( m_existingFlowRelation == null )
-// {
     final MapPanel mapPanel = getMapPanel();
     final GM_Position flowPositionFromElement;
-    if( m_modelElement instanceof IBoundaryLine || m_modelElement instanceof IBoundaryLine1D )
+    if( m_modelElement instanceof IFELine )
     {
       int countBCs = 0;
       for( final Object bcFeature : m_flowRelCollection.getWrappedList() )
       {
         IBoundaryCondition bc = (IBoundaryCondition) ((Feature) bcFeature).getAdapter( IBoundaryCondition.class );
+        if( bc == null )
+          continue;
         if( bc.getParentElementID().equals( m_modelElement.getGmlID() ) )
           countBCs++;
       }
@@ -311,26 +294,27 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
       for( final Object bcFeature : m_flowRelCollection.getWrappedList() )
       {
         IBoundaryCondition bc = (IBoundaryCondition) ((Feature) bcFeature).getAdapter( IBoundaryCondition.class );
+        if( bc == null )
+          continue;
         if( bc.getParentElementID().equals( m_modelElement.getGmlID() ) )
         {
-          final GM_Position position = FlowRelationUtilitites.getFlowPositionFromElement( modelElement, countBCs + 1, ++i );
+          final GM_Position position = FlowRelationUtilitites.getFlowPositionFromElement( m_modelElement, countBCs + 1, ++i );
           bc.setPosition( GeometryFactory.createGM_Point( position.getX(), position.getY(), bc.getPosition().getCoordinateSystem() ) );
         }
       }
-      flowPositionFromElement = FlowRelationUtilitites.getFlowPositionFromElement( modelElement, countBCs + 1, countBCs + 1 );
+      flowPositionFromElement = FlowRelationUtilitites.getFlowPositionFromElement( m_modelElement, countBCs + 1, countBCs + 1 );
     }
     else
-      flowPositionFromElement = FlowRelationUtilitites.getFlowPositionFromElement( modelElement );
-    final IFlowRelationshipModel flowRelationshipModel = m_flowRelCollection;
+      flowPositionFromElement = FlowRelationUtilitites.getFlowPositionFromElement( m_modelElement );
 
     /* Create flow relation at position */
     display.asyncExec( new Runnable()
     {
       public void run( )
       {
-        final Feature parentFeature = flowRelationshipModel.getWrappedFeature();
-        final IRelationType parentRelation = flowRelationshipModel.getWrappedList().getParentFeatureTypeProperty();
-        final IFlowRelationship flowRel = createNewFeature( workspace, parentFeature, parentRelation, modelElement );
+        final Feature parentFeature = m_flowRelCollection.getWrappedFeature();
+        final IRelationType parentRelation = m_flowRelCollection.getWrappedList().getParentFeatureTypeProperty();
+        final IFlowRelationship flowRel = createNewFeature( workspace, parentFeature, parentRelation, m_modelElement );
 
         if( flowRel == null )
         {
@@ -372,38 +356,6 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
         }
       }
     } );
-// }
-// else
-// {
-// /* Just select the existing element */
-// final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
-//
-// final Feature featureToSelect = m_existingFlowRelation.getWrappedFeature();
-// final EasyFeatureWrapper easyToSelect = new EasyFeatureWrapper( m_flowTheme.getWorkspace(), featureToSelect,
-// featureToSelect.getParent(), featureToSelect.getParentRelation() );
-//
-// final Feature[] featuresToRemove = FeatureSelectionHelper.getFeatures( selectionManager );
-// selectionManager.changeSelection( featuresToRemove, new EasyFeatureWrapper[] { easyToSelect } );
-//
-// /* Open the feature view in order to show the newly created parameters */
-// display.asyncExec( new Runnable()
-// {
-// public void run( )
-// {
-// try
-// {
-// PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(
-// "org.kalypso.featureview.views.FeatureView", null, IWorkbenchPage.VIEW_VISIBLE );
-// }
-// catch( final Throwable pie )
-// {
-// final IStatus status = StatusUtilities.statusFromThrowable( pie );
-// KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
-// pie.printStackTrace();
-// }
-// }
-// } );
-// }
   }
 
   /**

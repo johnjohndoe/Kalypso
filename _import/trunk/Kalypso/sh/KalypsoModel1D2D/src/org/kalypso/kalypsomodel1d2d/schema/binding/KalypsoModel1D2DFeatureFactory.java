@@ -9,49 +9,41 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.ElevationModelDisplayElementFactory;
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.BoundaryLine;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.BoundaryLine1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.CalculationUnit1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.CalculationUnit1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.CalculationUnit2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ContinuityLine1D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ContinuityLine2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.EdgeInv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.Element1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DComplexElement;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DContinuityLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DDiscretisationModel;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DNode;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FEJunction1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FEMiddleNode;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine1D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IEdgeInv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DContinuityLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEJunction1D2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEMiddleNode;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionContext1DTo2D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionContext1DToCLine;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ILineElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IRiverChannel1D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.JunctionContext1DTo2D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.JunctionContext1DToCLine;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ITransitionElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.PolyElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.RiverChannel1D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.TransitionElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.BoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.BridgeFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
@@ -69,12 +61,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.model.ControlModelGroup;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2DCollection;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
-import org.kalypso.kalypsomodel1d2d.schema.binding.model.IOperationalModel1D2D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.model.IPseudoOPerationalModel;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IStaticModel1D2D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.model.OperationalModel1D2D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.model.PseudoOPerationalModel;
-import org.kalypso.kalypsomodel1d2d.schema.binding.model.SimulationModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.StaticModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.CalcUnitResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.DocumentResultMeta;
@@ -88,9 +75,11 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.results.Hydrograph;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.HydrographCollection;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrograph;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrographCollection;
+import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.ElevationModelDisplayElementFactory;
+import org.kalypso.kalypsosimulationmodel.core.flowrel.FlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
+import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
-import org.kalypso.kalypsosimulationmodel.core.modeling.ISimulationModel;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.roughness.RoughnessClsCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
@@ -114,20 +103,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
 
   public static final void warnUnableToAdapt( final Feature featureToAdapt, final QName featureQName, final Class targetClass )
   {
-    // TODO: Please don't pollute the console with stuff which happens verrrry often.
-    // Comment this in if (and only if) a tracig option is introduced to switch it on/off.
-    //
-    // final String id = (featureToAdapt==null)?null:featureToAdapt.getId();
-    // String msg =
-    // String.format(
-    // "Unable to provide log for:"+
-    // "\n\tfeatureType=%S"+
-    // "\n\tfeatureID=%s"+
-    // "\n\ttargetClass=%s",
-    // featureQName,
-    // id,
-    // targetClass );
-    // logger.warning( msg );
+    // System.out.println("Unable to adapt "+featureToAdapt.getFeatureType().getQName()+" to "+targetClass.getName());
   }
 
   interface AdapterConstructor
@@ -277,31 +253,8 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
 
         if( featureQName.equals( Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT ) && cls.isAssignableFrom( IPolyElement.class ) )
           return new PolyElement( feature );
-
-        if( featureQName.equals( Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT1D ) && cls.isAssignableFrom( IElement1D.class ) )
-        {
+        else if( featureQName.equals( Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT1D ) && cls.isAssignableFrom( IElement1D.class ) )
           return new Element1D( feature );
-        }
-        else if( featureQName.equals( Kalypso1D2DSchemaConstants.WB1D2D_F_JUNCTION1D2D ) && cls.isAssignableFrom( IFEJunction1D2D.class ) )
-        {
-          return new FEJunction1D2D( feature );
-        }
-        // else if( featureQName.equals( Kalypso1D2DSchemaConstants.WB1D2D_F_JUNCTION1D2D_EDGE_EDGE ) )
-        // {
-        // return new FEEdgeToEdgeJunction1D2D( feature );
-        // }
-        else if( featureQName.equals( Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DContinuityLine ) && cls.isAssignableFrom( IFE1D2DContinuityLine.class ) )
-        {
-          return new FE1D2DContinuityLine( feature );
-        }
-        else if( featureQName.equals( Kalypso1D2DSchemaConstants.WB1D2D_F_BOUNDARY_LINE ) && cls.isAssignableFrom( IBoundaryLine.class ) )
-        {
-          return new BoundaryLine( feature );
-        }
-        else if( featureQName.equals( Kalypso1D2DSchemaConstants.WB1D2D_F_BOUNDARY_LINE1D ) && cls.isAssignableFrom( IBoundaryLine1D.class ) )
-        {
-          return new BoundaryLine1D( feature );
-        }
         else
         {
           warnUnableToAdapt( feature, featureQName, IFE1D2DElement.class );
@@ -314,71 +267,32 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
     // that only the specific types are generated and null is returned if the types
     // does not fit (this is according to the adapter-contract)
     cMap.put( IFE1D2DElement.class, cTor );
-    cMap.put( IBoundaryLine.class, cTor );
-    cMap.put( IBoundaryLine1D.class, cTor );
-    cMap.put( ILineElement.class, cTor );
-    cMap.put( IElement2D.class, cTor );
     cMap.put( IPolyElement.class, cTor );
-
-    // 1d2d 1d-element
-    cTor = new AdapterConstructor()
-    {
-      public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
-      {
-        final QName featureQName = feature.getFeatureType().getQName();
-
-        if( featureQName.equals( Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT1D ) )
-        {
-          return new Element1D( feature );
-        }
-        else
-        {
-          warnUnableToAdapt( feature, featureQName, IElement1D.class );
-          return null;
-        }
-      }
-    };
     cMap.put( IElement1D.class, cTor );
 
-    // 1d2d conti-line-element
     cTor = new AdapterConstructor()
     {
       public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
       {
         final QName featureQName = feature.getFeatureType().getQName();
-
-        if( featureQName.equals( Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DContinuityLine ) )
+        if( featureQName.equals( IContinuityLine1D.QNAME ) && cls.isAssignableFrom( IContinuityLine1D.class ) )
         {
-          return new FE1D2DContinuityLine( feature );
+          return new ContinuityLine1D( feature );
+        }
+        else if( featureQName.equals( IContinuityLine2D.QNAME ) && cls.isAssignableFrom( IContinuityLine2D.class ) )
+        {
+          return new ContinuityLine2D( feature );
         }
         else
         {
-          warnUnableToAdapt( feature, featureQName, IFE1D2DContinuityLine.class );
+          warnUnableToAdapt( feature, featureQName, IContinuityLine1D.class );
           return null;
         }
       }
     };
-    cMap.put( IFE1D2DContinuityLine.class, cTor );
-
-    // 1d2d IFEJunction1D2D-element
-    cTor = new AdapterConstructor()
-    {
-      public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
-      {
-        final QName featureQName = feature.getFeatureType().getQName();
-
-        if( featureQName.equals( Kalypso1D2DSchemaConstants.WB1D2D_F_JUNCTION1D2D ) )
-        {
-          return new FEJunction1D2D( feature );
-        }
-        else
-        {
-          warnUnableToAdapt( feature, featureQName, IFEJunction1D2D.class );
-          return null;
-        }
-      }
-    };
-    cMap.put( IFEJunction1D2D.class, cTor );
+    cMap.put( IFELine.class, cTor );
+    cMap.put( IContinuityLine1D.class, cTor );
+    cMap.put( IContinuityLine2D.class, cTor );
 
     // 1d2d complex element
     cTor = new AdapterConstructor()
@@ -397,13 +311,9 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
           return new FE1D2DComplexElement<Element1D>( feature, Kalypso1D2DSchemaConstants.WB1D2D_F_RIVER_CHANNEL1D, Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT1D,// elements
           Element1D.class );
         }
-        else if( featureQName.equals( Kalypso1D2DSchemaConstants.WB1D2D_F_JUNTCION_CONTEXT_1D_2D ) )
+        else if( featureQName.equals( ITransitionElement.QNAME ) )
         {
-          return new JunctionContext1DTo2D( feature );
-        }
-        else if( featureQName.equals( Kalypso1D2DSchemaConstants.WB1D2D_F_JUNTCION_CONTEXT_1D_CLINE ) )
-        {
-          return new JunctionContext1DToCLine( feature );
+          return new TransitionElement( feature );
         }
         else if( featureQName.equals( Kalypso1D2DSchemaConstants.WB1D2D_F_CALC_UNIT_1D ) )
         {
@@ -425,8 +335,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
       }
     };
     cMap.put( IFE1D2DComplexElement.class, cTor );
-    cMap.put( IJunctionContext1DTo2D.class, cTor );
-    cMap.put( IJunctionContext1DToCLine.class, cTor );
+    cMap.put( ITransitionElement.class, cTor );
     cMap.put( ICalculationUnit.class, cTor );
     cMap.put( ICalculationUnit1D.class, cTor );
     cMap.put( ICalculationUnit2D.class, cTor );
@@ -520,16 +429,16 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
     };
     cMap.put( IStaticModel1D2D.class, cTor );
 
-    // Operational model
+    // Flow relationship model
     cTor = new AdapterConstructor()
     {
       public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
       {
         final QName featureQName = feature.getFeatureType().getQName();
 
-        if( featureQName.equals( Kalypso1D2DSchemaConstants.OP1D2D_F_OPERATIONAL_MODEL ) )
+        if( featureQName.equals( Kalypso1D2DSchemaConstants.OP1D2D_F_FLOWRELATIONSHIPS_MODEL ) )
         {
-          return new OperationalModel1D2D( feature );
+          return new FlowRelationshipModel( feature );
         }
         else
         {
@@ -538,27 +447,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
         }
       }
     };
-    cMap.put( IOperationalModel1D2D.class, cTor );
-
-    // Pseudo
-    cTor = new AdapterConstructor()
-    {
-      public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
-      {
-        final QName featureQName = feature.getFeatureType().getQName();
-
-        if( featureQName.equals( Kalypso1D2DSchemaConstants.OP1D2D_F_PSEUDO_FLOW_REL_MODEL ) )
-        {
-          return new PseudoOPerationalModel( feature );
-        }
-        else
-        {
-          warnUnableToAdapt( feature, featureQName, IStaticModel1D2D.class );
-          return null;
-        }
-      }
-    };
-    cMap.put( IPseudoOPerationalModel.class, cTor );
+    cMap.put( IFlowRelationshipModel.class, cTor );
 
     // ControlModel
     cTor = new AdapterConstructor()
@@ -566,18 +455,6 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
       public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
       {
         final QName featureQName = feature.getFeatureType().getQName();
-
-        // NO!
-        // !!! THIS IS ABSOLUTELY NOT THE RIGHT PLACE TO CHOOSE THE MODEL !!!
-        // Please delete after reading
-        // if( featureQName.equals( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_F_MODEL_GROUP ) )
-        // {
-        // final Feature collection = (Feature) feature.getProperty(
-        // Kalypso1D2DSchemaConstants.WB1D2DCONTROL_FP_MODEL_COLLECTION );
-        // final Feature f = ((XLinkedFeature_Impl) collection.getProperty(
-        // Kalypso1D2DSchemaConstants.WB1D2DCONTROL_XP_ACTIVE_MODEL )).getFeature();
-        // return new ControlModel1D2D( f );
-        // }
         if( featureQName.equals( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_F_MODEL ) )
           return new ControlModel1D2D( feature );
         else
@@ -589,32 +466,14 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
     };
     cMap.put( IControlModel1D2D.class, cTor );
 
-    // SimulationModel
-    cTor = new AdapterConstructor()
-    {
-      public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
-      {
-        final QName featureQName = feature.getFeatureType().getQName();
-
-        if( featureQName.equals( KalypsoModelSimulationBaseConsts.SIM_BASE_F_SIMULATION_MODEL ) )
-        {
-          return new SimulationModel1D2D( feature );
-        }
-        else
-        {
-          warnUnableToAdapt( feature, featureQName, ISimulationModel.class );
-          return null;
-        }
-      }
-    };
-    cMap.put( ISimulationModel.class, cTor );
-
     // IDisplayElement
     cTor = new AdapterConstructor()
     {
       public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
       {
         final QName name = feature.getFeatureType().getQName();
+        // if(GMLSchemaUtilities.substitutes( feature.getFeatureType(),
+        // KalypsoModelSimulationBaseConsts.SIM_BASE_F_NATIVE_TERRAIN_ELE_WRAPPER ))
         if( KalypsoModelSimulationBaseConsts.SIM_BASE_F_NATIVE_TERRAIN_ELE_WRAPPER.equals( name ) )
         {
           return ElevationModelDisplayElementFactory.createDisplayElement( feature );

@@ -40,44 +40,29 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
+import java.util.List;
+
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.runtime.CoreException;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
+import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.geometry.GM_Curve;
 
-/**
- * Interface for element representing a wb1d2d:BoundaryLine1D. Such a line element is actually based on a single 1d
- * edge. Nevertheless this edge may contain several edge but only the first edge is considered and it is required to be
- * a 1d edge
- * 
- * @author Patrice Congo
- * 
- */
-@SuppressWarnings("unchecked")
-
-// TODO Why IBoundaryLine1D is extending 1D2DElement, and not ContinuityLine ???
-
-public interface IBoundaryLine1D<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge> extends IBoundaryLine<CT, ET>
+public interface IFELine extends IFENetItem
 {
-  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "BoundaryLine1D" );
+  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "Line" );
 
-  /**
-   * Answers whether the line is at the ende of ist first edge or not.
-   * 
-   * @return true if the line is positioned at the end of the first edge of false otherwise
-   */
-  public boolean isAtEdgeEnd( );
+  public static final QName PROP_NODES = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "node" );
 
-  /**
-   * Customize the position of the boundary line:
-   * 
-   * <ul>
-   * <li/>true to place the line at the end <li/>false to place the line at the beginning
-   * </ul>
-   * 
-   * @param isAtEdgeEnd
-   *            a boolean specifying the position of the line
-   */
-  public void setAtEdgeEnd( boolean isAtEdgeEnd );
+  public static final QName PROP_GEOMETRY = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "geometry" );
 
-  public IFE1D2DNode getTargetNode( );
+  public IFeatureWrapperCollection getContainers( );
+
+  public List<IFE1D2DNode> createFullNodesList( final List<IFE1D2DNode> nodes ) throws CoreException;
+
+  public List<IFE1D2DNode> getNodes( );
+
+  public GM_Curve getGeometry( );
 }

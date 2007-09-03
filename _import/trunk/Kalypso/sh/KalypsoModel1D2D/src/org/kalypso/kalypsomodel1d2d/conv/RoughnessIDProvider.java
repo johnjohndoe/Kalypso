@@ -42,7 +42,7 @@ package org.kalypso.kalypsomodel1d2d.conv;
 
 import java.util.ArrayList;
 
-import org.kalypso.kalypsosimulationmodel.core.discr.IFEElement;
+import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 
 /**
  * @author Madanagopal
@@ -71,7 +71,7 @@ public class RoughnessIDProvider implements IRoughnessIDProvider
     return objectRoughness;    
   }
   
-  public int getElementNativeRoughness( IFEElement element ) throws IllegalArgumentException
+  public int getElementNativeRoughness( IFENetItem element ) throws IllegalArgumentException
   {
     // TODO Auto-generated method stub
     return 0;

@@ -53,6 +53,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -81,6 +82,8 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
 
   private final IFeatureWrapperCollection<IFE1D2DElement> m_modelElements;
 
+  private final IFeatureWrapperCollection<IFELine> m_modelContiLines;
+
   private final List<IFeatureWrapper2> m_createdFeatures = new ArrayList<IFeatureWrapper2>();
 
   // private CS_CoordinateSystem coordinateSystem;
@@ -101,6 +104,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     m_modelNodes = model.getNodes();
     m_modelEdges = model.getEdges();
     m_modelElements = model.getElements();
+    m_modelContiLines = model.getContinuityLines();
     m_positionProvider = positionProvider;
     m_modelElementIDProvider = modelElementIDProvider;
   }
@@ -147,8 +151,8 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     final String gmlNode1ID = m_modelElementIDProvider.rma10sToGmlID( ERma10sModelElementKey.PE, node1ID );
     final String gmlNode2ID = m_modelElementIDProvider.rma10sToGmlID( ERma10sModelElementKey.PE, node2ID );
 
-    final IFE1D2DNode<IFE1D2DEdge> node1 = getNode( gmlNode1ID );
-    final IFE1D2DNode<IFE1D2DEdge> node2 = getNode( gmlNode2ID );
+    final IFE1D2DNode node1 = getNode( gmlNode1ID );
+    final IFE1D2DNode node2 = getNode( gmlNode2ID );
     final Feature edgeFeature = m_workspace.getFeature( edgeID );
     IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge = null;
     if( edgeFeature != null )
@@ -238,10 +242,10 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
 
   }
 
-  private final IFE1D2DNode<IFE1D2DEdge> getNode( final String gmlID )
+  private final IFE1D2DNode getNode( final String gmlID )
   {
     final Feature nodeFeature = m_workspace.getFeature( gmlID );
-    final IFE1D2DNode<IFE1D2DEdge> node = (IFE1D2DNode<IFE1D2DEdge>) nodeFeature.getAdapter( IFE1D2DNode.class );
+    final IFE1D2DNode node = (IFE1D2DNode) nodeFeature.getAdapter( IFE1D2DNode.class );
     return node;
   }
 
@@ -297,7 +301,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
       return;
     }
 
-    final IFE1D2DNode<IFE1D2DEdge> node = m_modelNodes.addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE, gmlID );
+    final IFE1D2DNode node = m_modelNodes.addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE, gmlID );
     m_createdFeatures.add( node );
     final GM_Point newLocation = m_positionProvider.getGMPoint( easting,// nativeX,
     northing/* nativeY */, elevation// nativeZ

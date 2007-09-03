@@ -41,17 +41,15 @@
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
 import org.kalypso.kalypsosimulationmodel.core.discr.IFEComplexElement;
-import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
+import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
  * Interface to be implemented by classes to provide a java 
  * representation compatible with the wb1d2d:ComplexElement
  * 
- * @author Patrice Congo
  */
-public interface IFE1D2DComplexElement <ET extends IFE1D2DElement>
-                  extends IFEComplexElement
+public interface IFE1D2DComplexElement <ET extends IFENetItem> extends IFEComplexElement
 {
   
   /**

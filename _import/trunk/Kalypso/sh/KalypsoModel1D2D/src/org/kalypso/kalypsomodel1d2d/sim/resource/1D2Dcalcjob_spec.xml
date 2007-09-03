@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <modelspec xmlns="simspec.core.simulation.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="Calc1D2D">
 	<input id="DiscretisationModel" description="Steuerdaten - Allgemein"/>
-	<input id="OperationalModel" description="Modelldaten"/>
-	<input id="FlowRelationshipModel" description="1D-Modellparameter" optional="true"/>
+	<input id="FlowRelationshipModel" description="1D-Modellparameter" optional="false"/>
 	<input id="TerrainModel" description="Geländemodelle - z.Zt. auch Rauheiten usw. TODO: nur die Rauheiten übergeben" optional="true"/>
 	<input id="SimulationControlModel" description="Steuerungsdaten"/>
     <input id="Roughness" description="Rauheitsdatenbank"/>

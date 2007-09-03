@@ -47,115 +47,90 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand;
-import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
-
-
 /**
- * Command to create a new Calculation unit
+ * Command to delete calculation unit
  * 
  * @author Patrice Congo
- *
+ * 
  */
-@SuppressWarnings("unchecked")
 public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
 {
+  private final IFEDiscretisationModel1d2d m_model1d2d;
+
+  private ICalculationUnit m_calcUnitToDelete;
+
   /**
-   * the discretisation model holding the calculation unit
-   */
-  private IFEDiscretisationModel1d2d model1d2d;
-  
-  /**
-   * the calculation unit to delete
-   */
-  private ICalculationUnit cuToDel;
-  
-  /** 
    * the QName of the deleted calculation unit
    */
-  private QName oldQName;
-  
-//  /**
-//   * the upstream boundary line of the deleted calculation unit
-//   */
-//  private IBoundaryLine oldBLineUpStream;
-//  
-//  /**
-//   * the downstream boundary line of the deleted calculation unit
-//   */
-//  private IBoundaryLine oldBLineDownStream;
-  
+  private QName m_undoQName;
+
   /**
    * the parent/container units of the deleted calculation unit
    */
-  private ICalculationUnit1D2D[] oldParentUnits;
-  
+  private ICalculationUnit1D2D[] m_undoParentUnits;
+
   /**
    * the child units of the deleted calculation unit
    */
-  private ICalculationUnit[] oldChildUnits;
-  
+  private ICalculationUnit[] m_undoChildUnits;
+
   /**
    * the elements of the deleted calculation unit
    */
-  private IFE1D2DElement[] oldElements;
-  
+  private IFE1D2DElement[] m_undoElements;
+
   /**
    * the name the deleted calculation unit
    */
-  private String oldName;
-  
+  private String m_undoName;
+
   /**
    * the description of the deleted calculation unit
    */
-  private String oldDesc;
+  private String m_undoDesc;
 
-  private boolean deleted = false;
-  
+  private boolean m_calcUnitDeleted = false;
+
   /**
-   * Creates a Calculation unit of the given q-name
-   * @param cuFeatureQName the q-name of the calculation unit to create
-   * @param model1d2d the model that should hold the new calculation unit
-   * @param name a name for the calculation unit if one has to be set or null
-   * @param description text describing the calculation unit or null
-   * @throws IllegalArgumentException if cuFeatureQName or model1d2d is null
+   * Deletes the calculation unit
+   * 
+   * @param cuFeatureQName
+   *            the q-name of the calculation unit to create
+   * @param model1d2d
+   *            the model that should hold the new calculation unit
+   * @param name
+   *            a name for the calculation unit if one has to be set or null
+   * @param description
+   *            text describing the calculation unit or null
+   * @throws IllegalArgumentException
+   *             if cuFeatureQName or model1d2d is null
    */
-  @SuppressWarnings("hiding")
-  public DeleteCalculationUnitCmd(
-              IFEDiscretisationModel1d2d model1d2d,
-              ICalculationUnit cuToDel )
+  public DeleteCalculationUnitCmd( final IFEDiscretisationModel1d2d model1d2d, final ICalculationUnit calcUnit )
   {
-    Assert.throwIAEOnNullParam( cuToDel, "cuToDel" );
-    Assert.throwIAEOnNullParam( model1d2d, "model1d2d" );
-    this.model1d2d = model1d2d;
-    this.cuToDel = cuToDel;
+    m_model1d2d = model1d2d;
+    m_calcUnitToDelete = calcUnit;
   }
-  
+
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand#getChangedFeature()
    */
   public IFeatureWrapper2[] getChangedFeature( )
   {
-    if( deleted )
-    {
-      
-      return new IFeatureWrapper2[]{model1d2d };
-    }
+    if( m_calcUnitDeleted )
+      return new IFeatureWrapper2[] { m_model1d2d };
     else
-    {
-      return new IFeatureWrapper2[]{};
-    }
+      return new IFeatureWrapper2[] {};
   }
 
   /**
@@ -163,7 +138,7 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
    */
   public IFEDiscretisationModel1d2d getDiscretisationModel1d2d( )
   {
-    return model1d2d;
+    return m_model1d2d;
   }
 
   /**
@@ -171,7 +146,7 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
    */
   public String getDescription( )
   {
-    return "Neues Berechnungseinheit kreieren";
+    return "Command for deleting calculation unit";
   }
 
   /**
@@ -181,29 +156,21 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
   {
     return true;
   }
-  
-  
-  private final void cacheStateOfCuToDel()
+
+  private final void cacheState( )
   {
-    oldName = cuToDel.getName();
-    oldDesc = cuToDel.getDescription();
-//    oldBLineDownStream = cuToDel.getDownStreamBoundaryLine();
-//    oldBLineUpStream = cuToDel.getUpStreamBoundaryLine();
-    if( cuToDel instanceof ICalculationUnit1D2D )
+    m_undoName = m_calcUnitToDelete.getName();
+    m_undoDesc = m_calcUnitToDelete.getDescription();
+    if( m_calcUnitToDelete instanceof ICalculationUnit1D2D )
     {
-      IFeatureWrapperCollection subUnits = 
-        ((ICalculationUnit1D2D )cuToDel).getSubUnits();
-      oldChildUnits =
-        (ICalculationUnit[]) subUnits.toArray( new ICalculationUnit[0] );
+      final IFeatureWrapperCollection subUnits = ((ICalculationUnit1D2D) m_calcUnitToDelete).getSubUnits();
+      m_undoChildUnits = (ICalculationUnit[]) subUnits.toArray( new ICalculationUnit[0] );
     }
-    
-    final Collection<ICalculationUnit1D2D> parentUnits = 
-                                CalcUnitOps.getParentUnit( cuToDel, model1d2d );
-    oldParentUnits = parentUnits.toArray( new ICalculationUnit1D2D[0] );
-    oldQName = cuToDel.getWrappedFeature().getFeatureType().getQName();
-    final IFeatureWrapperCollection elements = cuToDel.getElements();
-    oldElements = (IFE1D2DElement[]) elements.toArray( new IFE1D2DElement[]{} );
-    
+    final Collection<ICalculationUnit1D2D> parentUnits = CalcUnitOps.getParentUnit( m_calcUnitToDelete, m_model1d2d );
+    m_undoParentUnits = parentUnits.toArray( new ICalculationUnit1D2D[0] );
+    m_undoQName = m_calcUnitToDelete.getWrappedFeature().getFeatureType().getQName();
+    final IFeatureWrapperCollection elements = m_calcUnitToDelete.getElements();
+    m_undoElements = (IFE1D2DElement[]) elements.toArray( new IFE1D2DElement[] {} );
   }
 
   /**
@@ -213,35 +180,33 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
   {
     try
     {
-      //cache state for undo
-      cacheStateOfCuToDel();
-      
-      //delete links to parent units
-      for( ICalculationUnit1D2D parentUnit: oldParentUnits )
+      // cache state for undo
+      cacheState();
+
+      // delete links to parent units
+      for( final ICalculationUnit1D2D parentUnit : m_undoParentUnits )
       {
-        parentUnit.getSubUnits().removeAllRefs( cuToDel );
+        parentUnit.getSubUnits().removeAllRefs( m_calcUnitToDelete );
       }
-      //delete links to child units
-      if( cuToDel instanceof ICalculationUnit1D2D )
+      // delete links to child units
+      if( m_calcUnitToDelete instanceof ICalculationUnit1D2D )
       {
-        IFeatureWrapperCollection subUnits = 
-          ((ICalculationUnit1D2D )cuToDel).getSubUnits();
+        IFeatureWrapperCollection subUnits = ((ICalculationUnit1D2D) m_calcUnitToDelete).getSubUnits();
         subUnits.clear();
       }
-      //delete links to elements 
-      for( IFE1D2DElement ele : oldElements )
+      // delete links to elements
+      for( final IFE1D2DElement element : m_undoElements )
       {
-        ele.getContainers().remove( cuToDel );
+        if( element == null )
+          continue;
+        element.getContainers().remove( m_calcUnitToDelete );
       }
-      cuToDel.getElements().clear();
-      
-      //delete unit from model
-      model1d2d.getComplexElements().remove( cuToDel );
-      ICalculationUnit cuToDeleted = cuToDel;
-      cuToDel = null;
-      final Feature[] changedFeatureArray = 
-                        getChangedFeatureArray( cuToDeleted );
-      
+      m_calcUnitToDelete.getElements().clear();
+
+      // delete unit from the model
+      m_model1d2d.getComplexElements().remove( m_calcUnitToDelete );
+      m_calcUnitToDelete = null;
+      final Feature[] changedFeatureArray = getChangedFeatureArray();
       fireProcessChanges( changedFeatureArray, false );
     }
     catch( Exception e )
@@ -251,61 +216,46 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
     }
 
   }
-  
-  private final Feature[] getChangedFeatureArray( ICalculationUnit deleted )
+
+  private final Feature[] getChangedFeatureArray( )
   {
-    final List<Feature> changedFeatures = new ArrayList<Feature>( );
-    
-    final Feature[] changedFeaturesArray = 
-        changedFeatures.toArray( new Feature[ changedFeatures.size( ) ] );
-    //deleted
-    if( deleted != null )
+    final List<Feature> changedFeatures = new ArrayList<Feature>();
+
+    if( m_calcUnitToDelete != null )
+      changedFeatures.add( m_calcUnitToDelete.getWrappedFeature() );
+
+    for( final IFE1D2DElement element : m_undoElements )
     {
-      changedFeatures.add( deleted.getWrappedFeature() );
+      if( element == null )
+        continue;
+      changedFeatures.add( element.getWrappedFeature() );
     }
-    //cu elements
-    for(IFE1D2DElement ele : oldElements )
-    {
-      changedFeatures.add( ele.getWrappedFeature() );
-    }
-    
-    //parent units
-    for( ICalculationUnit1D2D parent: oldParentUnits )
-    {
+
+    // parent units
+    for( final ICalculationUnit1D2D parent : m_undoParentUnits )
       changedFeatures.add( parent.getWrappedFeature() );
-    }
-    
+
     // child unit not needed since there is no back reference
-    
+
     return changedFeatures.toArray( new Feature[changedFeatures.size()] );
   }
-  
+
   /**
    * 
-   * @param calculationUnit the added or removed calculation unit
-   * @param added true if the calculation unit was added false otherwise
+   * @param calculationUnit
+   *            the added or removed calculation unit
+   * @param added
+   *            true if the calculation unit was added false otherwise
    */
-  private final void fireProcessChanges( 
-                            final Feature[] changedFeatures, 
-                            final boolean added )
+  private final void fireProcessChanges( final Feature[] changedFeatures, final boolean added )
   {
     final int changedType;
-    if( added ) 
-    {
-      changedType = FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD; 
-    }
+    if( added )
+      changedType = FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD;
     else
-    {
       changedType = FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE;
-    }
-    GMLWorkspace workspace = model1d2d.getWrappedFeature().getWorkspace();
-    FeatureStructureChangeModellEvent event = 
-        new FeatureStructureChangeModellEvent(
-            workspace,//final GMLWorkspace workspace, 
-            model1d2d.getWrappedFeature(),// Feature parentFeature, 
-            changedFeatures,//final Feature[] changedFeature, 
-            changedType//final int changeType
-            );
+    final GMLWorkspace workspace = m_model1d2d.getWrappedFeature().getWorkspace();
+    final FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( workspace, m_model1d2d.getWrappedFeature(), changedFeatures, changedType );
     workspace.fireModellEvent( event );
   }
 
@@ -314,10 +264,8 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
    */
   public void redo( ) throws Exception
   {
-    if( !deleted )
-    {
+    if( !m_calcUnitDeleted )
       process();
-    }
   }
 
   /**
@@ -325,46 +273,35 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
    */
   public void undo( ) throws Exception
   {
-    //create row c-unit
-    cuToDel = 
-      model1d2d.getComplexElements().addNew( oldQName, ICalculationUnit.class );
-    
-    //set name
-    if( oldName != null )
+    // create row c-unit
+    m_calcUnitToDelete = m_model1d2d.getComplexElements().addNew( m_undoQName, ICalculationUnit.class );
+
+    if( m_undoName != null )
+      m_calcUnitToDelete.setName( m_undoName );
+
+    if( m_undoDesc != null )
+      m_calcUnitToDelete.setDescription( m_undoDesc );
+
+    // set elements
+    for( final IFE1D2DElement element : m_undoElements )
     {
-      cuToDel.setName( oldName );
+      m_calcUnitToDelete.addElementAsRef( element );
+      element.getContainers().addRef( m_calcUnitToDelete );
     }
-    
-    //set description
-    if( oldDesc != null )
+
+    // set subunits
+    if( m_calcUnitToDelete instanceof ICalculationUnit1D2D )
     {
-      cuToDel.setDescription( oldDesc );
-    }
-    
-    //set elements
-    for(IFE1D2DElement ele :oldElements )
-    {
-      cuToDel.addElementAsRef( ele );
-      ele.getContainers().addRef( cuToDel );
-    }
-    
-    //set subunits
-    if( cuToDel instanceof ICalculationUnit1D2D )
-    {
-      IFeatureWrapperCollection subUnits = ((ICalculationUnit1D2D)cuToDel).getSubUnits();
-      for( ICalculationUnit subUnit :oldChildUnits )
-      {
+      IFeatureWrapperCollection subUnits = ((ICalculationUnit1D2D) m_calcUnitToDelete).getSubUnits();
+      for( ICalculationUnit subUnit : m_undoChildUnits )
         subUnits.addRef( subUnit );
-      }
     }
-    
-    //set parent units
-    for( ICalculationUnit1D2D parentUnit : oldParentUnits )
-    {
-      parentUnit.getSubUnits().addRef( cuToDel );
-    }
-    
-    final Feature[] changedFeatureArray = getChangedFeatureArray( cuToDel );
+
+    // set parent units
+    for( ICalculationUnit1D2D parentUnit : m_undoParentUnits )
+      parentUnit.getSubUnits().addRef( m_calcUnitToDelete );
+
+    final Feature[] changedFeatureArray = getChangedFeatureArray();
     fireProcessChanges( changedFeatureArray, true );
   }
 

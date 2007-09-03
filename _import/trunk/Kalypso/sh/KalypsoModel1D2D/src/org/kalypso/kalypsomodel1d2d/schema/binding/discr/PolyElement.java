@@ -73,8 +73,7 @@ public class PolyElement extends Element2D implements IPolyElement
     else
     {
       // just wrapped the existing one
-      containers = new FeatureWrapperCollection<IFE1D2DComplexElement>( featureToBind, IFE1D2DComplexElement.class,// <IFE1D2DElement,IFE1D2DNode<IFE1D2DEdge>>.class,
-      Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT_CONTAINERS );
+      containers = new FeatureWrapperCollection<IFE1D2DComplexElement>( featureToBind, IFE1D2DComplexElement.class, Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT_CONTAINERS );
     }
 
     // edges
@@ -96,8 +95,7 @@ public class PolyElement extends Element2D implements IPolyElement
     else
     {
       // just wrapped the existing one
-      edges = new FeatureWrapperCollection<IFE1D2DEdge>( featureToBind, IFE1D2DEdge.class,// <IFE1D2DElement,IFE1D2DNode<IFE1D2DEdge>>.class,
-      Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE );
+      edges = new FeatureWrapperCollection<IFE1D2DEdge>( featureToBind, IFE1D2DEdge.class, Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE );
     }
   }
 
@@ -248,7 +246,7 @@ public class PolyElement extends Element2D implements IPolyElement
       {
         final IFE1D2DEdge invertedEdge = ((IEdgeInv) edge).getInverted();
         final List<IFE1D2DNode> edgeNodes = invertedEdge.getNodes();
-        IFE1D2DNode<IFE1D2DEdge> node;
+        IFE1D2DNode node;
         for( int i = edgeNodes.size() - 1; i >= 0; i-- )
         {
           node = edgeNodes.get( i );
@@ -265,7 +263,7 @@ public class PolyElement extends Element2D implements IPolyElement
       }
       else
       {
-        for( final IFE1D2DNode<IFE1D2DEdge> node : edge.getNodes() )
+        for( final IFE1D2DNode node : edge.getNodes() )
         {
           if( node != null )
           {

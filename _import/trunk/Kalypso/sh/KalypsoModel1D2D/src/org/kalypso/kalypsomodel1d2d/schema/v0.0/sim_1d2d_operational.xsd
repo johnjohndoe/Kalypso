@@ -23,10 +23,8 @@
 	</xs:annotation>
 
 
-	<xs:import namespace="http://www.opengis.net/gml"
-		schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd" />
-	<xs:import namespace="http://www.opengis.net/om"
-		schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/om/1.0.30/om.xsd" />
+	<xs:import namespace="http://www.opengis.net/gml" />
+	<xs:import namespace="http://www.opengis.net/om" />
 	<xs:import
 		namespace="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" />
 	<xs:import
@@ -177,31 +175,31 @@
 					<!--
 						bcType: type of boundary condition, ie. is it nodal, element-based or line-based
 						acceptable types are defined in IBoundaryCondition interface 
-					 -->
+					-->
 					<xs:element name="bcType" type="xs:string"
 						minOccurs="0" maxOccurs="1" />
-					<xs:element name="parentModelElement" type="xs:string"
-						minOccurs="0" maxOccurs="1" />
-					<xs:element name="parentCalculationUnit" type="xs:string"
-						minOccurs="0" maxOccurs="unbounded" />
-						<!-- 
-					<xs:element name="scopeMark"
+					<xs:element name="parentModelElement"
+						type="xs:string" minOccurs="0" maxOccurs="1" />
+					<xs:element name="parentCalculationUnit"
+						type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+					<!-- 
+						<xs:element name="scopeMark"
 						type="gml:MultiPointPropertyType" minOccurs="0"
 						maxOccurs="unbounded">
 						<xs:annotation>
-							<xs:documentation xml:lang="de">
-								<xs:label>scopeMark</xs:label>
-								<xs:tooltip>scopeMark</xs:tooltip>
-							</xs:documentation>
-							<xs:documentation xml:lang="en">
-								This points make it possible to assign
-								the boundary condition to the
-								calculation unit by scoping the boundary
-								lines of the calculation unit.
-							</xs:documentation>
+						<xs:documentation xml:lang="de">
+						<xs:label>scopeMark</xs:label>
+						<xs:tooltip>scopeMark</xs:tooltip>
+						</xs:documentation>
+						<xs:documentation xml:lang="en">
+						This points make it possible to assign
+						the boundary condition to the
+						calculation unit by scoping the boundary
+						lines of the calculation unit.
+						</xs:documentation>
 						</xs:annotation>
-					</xs:element>
-					 -->
+						</xs:element>
+					-->
 					<xs:element name="stationaryCondition"
 						type="xs:double">
 						<xs:annotation>

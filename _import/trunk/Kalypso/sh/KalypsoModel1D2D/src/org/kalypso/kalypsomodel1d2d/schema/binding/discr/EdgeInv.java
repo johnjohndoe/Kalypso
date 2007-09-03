@@ -95,8 +95,8 @@ public class EdgeInv implements IEdgeInv
     Feature feature = edge.getWrappedFeature();
     Assert.throwIAEOnNotDirectInstanceOf( feature, Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE );
 
-// IRelationType parentRelation=feature.getParentRelation();
-// parentRelation.
+    // IRelationType parentRelation=feature.getParentRelation();
+    // parentRelation.
     this.edge = edge;
     IEdgeInv edgeInv = edge.getEdgeInv();
     if( edgeInv == null )
@@ -109,7 +109,7 @@ public class EdgeInv implements IEdgeInv
       wrappedFeature.setProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_IN_INV, edge.getGmlID() );
       String edgeInvID = getGmlID();
       edge.setInvEdge( edgeInvID );
-      for( IFE1D2DNode<IFE1D2DEdge> node : (List<IFE1D2DNode<IFE1D2DEdge>>) edge.getNodes() )
+      for( IFE1D2DNode node : (List<IFE1D2DNode>) edge.getNodes() )
       {
         node.addContainer( edgeInvID );
       }
@@ -120,9 +120,7 @@ public class EdgeInv implements IEdgeInv
 
     }
 
-    containers = new FeatureWrapperCollection<IFE1D2DElement>( wrappedFeature,// featureToBind,
-    IFE1D2DElement.class,// <IFE1D2DElement,IFE1D2DNode<IFE1D2DEdge>>.class,
-    Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_CONTAINERS );
+    containers = new FeatureWrapperCollection<IFE1D2DElement>( wrappedFeature, IFE1D2DElement.class, Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_CONTAINERS );
   }
 
   /**
@@ -130,22 +128,22 @@ public class EdgeInv implements IEdgeInv
    */
   public void addInvEdgeToElement( IFE1D2DElement targetElement )
   {
-// Feature modelFeature=targetModel.getWrappedFeature();
-// Assert.throwIAEOnNull( modelFeature, "Model feature must not be null" );
-// wrappedFeature=
-// Util.createFeatureAsProperty(
-// modelFeature,
-// Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGES,
-// Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE_INV );
-// // set link to inverted
-// wrappedFeature.setProperty(
-// Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_IN_INV,
-// edge.getWrappedFeature().getId() );
-//    
-// //add to element
-// Feature elementFeature=targetElement.getWrappedFeature();
-// Assert.throwIAEOnNull( elementFeature, "Element feature must not be null" );
-//    
+    // Feature modelFeature=targetModel.getWrappedFeature();
+    // Assert.throwIAEOnNull( modelFeature, "Model feature must not be null" );
+    // wrappedFeature=
+    // Util.createFeatureAsProperty(
+    // modelFeature,
+    // Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGES,
+    // Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE_INV );
+    // // set link to inverted
+    // wrappedFeature.setProperty(
+    // Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_IN_INV,
+    // edge.getWrappedFeature().getId() );
+    //    
+    // //add to element
+    // Feature elementFeature=targetElement.getWrappedFeature();
+    // Assert.throwIAEOnNull( elementFeature, "Element feature must not be null" );
+    //    
     throw new RuntimeException( "add inverted edge to element not in use " );
 
   }
@@ -195,7 +193,7 @@ public class EdgeInv implements IEdgeInv
    */
   public Feature getWrappedFeature( )
   {
-// throw new RuntimeException("do not use; instead use getInverted()");
+    // throw new RuntimeException("do not use; instead use getInverted()");
     return wrappedFeature;
   }
 

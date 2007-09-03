@@ -40,13 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
+import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
+
 /**
  * Interface for classes representing a wb1d2d:CalculationUnit1D
  * @author Patrice Congo
  *
  */
-public interface ICalculationUnit1D<T extends IFE1D2DElement>//IElement1D>
-                                  extends ICalculationUnit<T>
+public interface ICalculationUnit1D<T extends IFENetItem> extends ICalculationUnit<T>
 {
   
 }

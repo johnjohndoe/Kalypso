@@ -44,6 +44,7 @@ import java.util.List;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
+import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 
 /**
  * Tagging interface for classes representing a wb1d2d:CalculationUnit
@@ -51,7 +52,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
  * @author Patrice Congo
  * 
  */
-public interface ICalculationUnit<T extends IFE1D2DElement> extends IFE1D2DComplexElement<T>
+public interface ICalculationUnit<T extends IFENetItem> extends IFE1D2DComplexElement<T>
 {
   /**
    * Finds the control model for the given calculation unit from the control model group.
@@ -66,5 +67,5 @@ public interface ICalculationUnit<T extends IFE1D2DElement> extends IFE1D2DCompl
   
   public void deleteControlModel();
   
-  public List<IBoundaryLine> getBoundaryLines( );
+  public List<IFELine> getContinuityLines( );
 }

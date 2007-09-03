@@ -40,11 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.services;
 
+import javax.xml.namespace.QName;
+
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
@@ -78,7 +84,8 @@ public class RoughnessAssignListener implements ModellEventListener
    * Starts the roughness (re)assignment job
    * 
    * @param envelope
-   *            The area where roughness recalculation is needed; if <code>null</code>, whole model will be recalculated
+   *            The area where roughness recalculation is needed; if <code>null</code>, whole model will be
+   *            recalculated
    */
   private void startJob( final GM_Envelope envelope )
   {
@@ -89,7 +96,7 @@ public class RoughnessAssignListener implements ModellEventListener
 
     m_job.setWorkarea( envelope );
 
-// m_job.setSystem( true );
+    // m_job.setSystem( true );
     m_job.setUser( false );
     m_job.setPriority( Job.LONG );
     m_job.setRule( m_mutexRule );
@@ -106,18 +113,22 @@ public class RoughnessAssignListener implements ModellEventListener
       return;
 
     /* In every other case: refresh the roughnes assignment */
-    GM_Envelope envelope = null;
     if( modellEvent instanceof FeatureStructureChangeModellEvent )
     {
       final FeatureStructureChangeModellEvent event = (FeatureStructureChangeModellEvent) modellEvent;
-      envelope = FeatureHelper.getEnvelope( event.getChangedFeatures() );
+      final Feature[] changedFeatures = event.getChangedFeatures();
+      if( isRoughnessAssignNeeded( changedFeatures ) )
+        startJob( FeatureHelper.getEnvelope( changedFeatures ) );
     }
     else if( modellEvent instanceof FeaturesChangedModellEvent )
     {
       final FeaturesChangedModellEvent event = (FeaturesChangedModellEvent) modellEvent;
-      envelope = FeatureHelper.getEnvelope( event.getFeatures() );
+      final Feature[] changedFeatures = event.getFeatures();
+      if( isRoughnessAssignNeeded( changedFeatures ) )
+        startJob( FeatureHelper.getEnvelope( changedFeatures ) );
     }
-    startJob( envelope );
+    else
+      startJob( null );
   }
 
   public void dispose( )
@@ -126,4 +137,16 @@ public class RoughnessAssignListener implements ModellEventListener
       m_job.cancel();
   }
 
+  private boolean isRoughnessAssignNeeded( final Feature[] features )
+  {
+    for( int i = 0; i < features.length; i++ )
+    {
+      if( features[i] == null )
+        continue;
+      final QName qname = features[i].getFeatureType().getQName();
+      if( qname.equals( IPolyElement.QNAME ) || qname.equals( IRoughnessPolygon.QNAME ) )
+        return true;
+    }
+    return false;
+  }
 }

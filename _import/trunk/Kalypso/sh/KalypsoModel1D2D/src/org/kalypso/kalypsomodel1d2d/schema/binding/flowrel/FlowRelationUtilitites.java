@@ -43,21 +43,22 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.flowrel;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
+import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * Helper class for {@link org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship}s.
@@ -100,9 +101,13 @@ public class FlowRelationUtilitites
     {
       /* Node: return its position */
       final GM_Object geom;
-      if( modelElement instanceof IFE1D2DNode )
+      if( modelElement instanceof IFELine )
+      {
+        final IFELine element = (IFELine) modelElement;
+        geom = element.getGeometry();
+      }
+      else if( modelElement instanceof IFE1D2DNode )
         geom = ((IFE1D2DNode) modelElement).getPoint();
-      /* ContinuityLine: return middle of line */
       else if( modelElement instanceof IFE1D2DElement )
       {
         final IFE1D2DElement element = (IFE1D2DElement) modelElement;
@@ -131,26 +136,22 @@ public class FlowRelationUtilitites
     final List<GM_Point> pointList = new ArrayList<GM_Point>();
     if( numberOfPositions < 2 )
       return getFlowPositionFromElement( modelElement );
-    /* Node: return its position */
-    final GM_Object geom;
-    final List<IFE1D2DNode> nodes;
-    if( modelElement instanceof IBoundaryLine1D )
+    if( modelElement instanceof IFELine )
     {
-      nodes = ((IBoundaryLine1D) modelElement).getNodes();
-      final GM_Point p1 = nodes.get( 0 ).getPoint();
-      final GM_Point p2 = nodes.get( 1 ).getPoint();
-      final double x1 = p1.getX() - (p2.getY() - p1.getY());
-      final double y1 = p1.getY() + (p2.getX() - p1.getX());
-      final double x2 = p1.getX() + (p2.getY() - p1.getY());
-      final double y2 = p1.getY() - (p2.getX() - p1.getX());
-      pointList.add( GeometryFactory.createGM_Point( x1, y1, p1.getCoordinateSystem() ) );
-      pointList.add( GeometryFactory.createGM_Point( x2, y2, p1.getCoordinateSystem() ) );
-    }
-    else if( modelElement instanceof IBoundaryLine )
-    {
-      nodes = ((IBoundaryLine) modelElement).getNodes();
-      for( int i = 0; i < nodes.size(); i++ )
-        pointList.add( nodes.get( i ).getPoint() );
+      try
+      {
+        final GM_Curve geometry = ((IFELine)modelElement).getGeometry();
+        final CS_CoordinateSystem coordinateSystem = geometry.getCoordinateSystem();
+        final GM_Position[] positions = geometry.getAsLineString().getPositions();
+        for( int i = 0; i < positions.length; i++ )
+          pointList.add( GeometryFactory.createGM_Point( positions[i], coordinateSystem ) );
+      }
+      catch( GM_Exception e )
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+        return null;
+      }
     }
     else
       return null;

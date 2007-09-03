@@ -55,8 +55,8 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.commons.lang.StringUtils;
 import org.kalypso.contribs.java.util.DateUtilities;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation.KIND;
@@ -81,20 +81,20 @@ import org.kalypsodeegree_impl.model.feature.binding.NamedFeatureHelper;
  */
 public class Control1D2DConverter
 {
-  private final LinkedHashMap<String, Integer> m_nodesIDProvider;
-
-  private final LinkedHashMap<String, Integer> m_roughnessIDProvider;
-
-  private final BuildingIDProvider m_buildingProvider;
+  private final INativeIDProvider m_nativeIDProvider;
 
   private final RMA10Calculation m_calculation;
 
   private Formatter m_formatter;
 
-  public Control1D2DConverter( final RMA10Calculation calculation, final LinkedHashMap<String, Integer> nodesIDProvider, final LinkedHashMap<String, Integer> roughnessIDProvider, final BuildingIDProvider buildingProvider )
+  private final LinkedHashMap<String, Integer> m_roughnessIDProvider;
+
+  private final BuildingIDProvider m_buildingProvider;
+
+  public Control1D2DConverter( final RMA10Calculation calculation, final INativeIDProvider idProvider, final LinkedHashMap<String, Integer> roughnessIDProvider, final BuildingIDProvider buildingProvider )
   {
     m_calculation = calculation;
-    m_nodesIDProvider = nodesIDProvider;
+    m_nativeIDProvider = idProvider;
     m_roughnessIDProvider = roughnessIDProvider;
     m_buildingProvider = buildingProvider;
   }
@@ -232,11 +232,11 @@ public class Control1D2DConverter
 
   private void writeR10ContinuityLineDataBlock( ) throws SimulationException
   {
-    final List<IBoundaryLine> boundaryLines = m_calculation.getBoundaryLines();
-    m_formatter.format( "SCL%9d%n", boundaryLines.size() ); //$NON-NLS-1$
+    final List<IFELine> continuityLines = m_calculation.getBoundaryLines();
+    m_formatter.format( "SCL%9d%n", continuityLines.size() ); //$NON-NLS-1$
 
     int infoCnt = 1;
-    for( final IBoundaryLine line : boundaryLines )
+    for( final IFELine line : continuityLines )
     {
       final IFE1D2DNode[] nodes = new IFE1D2DNode[line.getNodes().size()];
       line.getNodes().toArray( nodes );
@@ -244,9 +244,11 @@ public class Control1D2DConverter
       for( int i = 0; i < nodes.length; i++ )
       {
         final IFE1D2DNode node = nodes[i];
-        final int nodeID = m_nodesIDProvider.get( node.getGmlID() );
+        final int nodeID = m_nativeIDProvider.getConversionID( node );
+        if( nodeID == 0 )
+          throw new SimulationException( "At least one node contained by boundary line is not included in this calculation unit.", null );
         if( i == 0 )
-          m_formatter.format( "CC1 %4d", infoCnt++ ); //$NON-NLS-1$
+          m_formatter.format( "CC1 %4d", m_nativeIDProvider.getConversionID( line ) ); //$NON-NLS-1$
         else if( i % 9 == 0 )
           m_formatter.format( "%nCC2     " ); //$NON-NLS-1$
         m_formatter.format( "%8d", nodeID ); //$NON-NLS-1$
@@ -412,7 +414,7 @@ public class Control1D2DConverter
         else
           stepValue = boundaryCondition.getStationaryCondition();
 
-        int ordinal = m_calculation.getBoundaryConditionParentOrdinalNumber( boundaryCondition.getParentElementID() );
+        int ordinal = m_nativeIDProvider.getConversionID( boundaryCondition.getParentElementID() );
         if( TupleResultUtilities.findComponentById( obsResult, bcType ) != null )
         {
           if( bcType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE ) )

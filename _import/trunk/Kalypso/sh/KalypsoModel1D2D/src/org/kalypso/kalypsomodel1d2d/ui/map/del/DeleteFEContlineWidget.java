@@ -40,27 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.del;
 
-import javax.xml.namespace.QName;
+import org.kalypso.ogc.gml.map.widgets.SingleElementSelectWidget;
 
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
-import org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget;
-
-/**
- * @author Gernot Belger
- */
-public class DeleteFEContlineWidget extends DeleteFEElementsWidget
+public class DeleteFEContlineWidget extends SingleElementSelectWidget
 {
   public DeleteFEContlineWidget( )
   {
-    super( 
-        new FENetConceptSelectionWidget( 
-            new QName[]{
-                Kalypso1D2DSchemaConstants.WB1D2D_F_BOUNDARY_LINE,
-                Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2DContinuityLine                
-            },
-            "Kontinuitätslinie löschen", 
-            "Kontinuitätslinie löschen" ) 
-        );
+    super( "Kontinuitätslinie löschen", "Kontinuitätslinie löschen" );
   }
-
 }

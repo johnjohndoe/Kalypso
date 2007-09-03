@@ -6,7 +6,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<Name>BoundaryLine</Name>
 	<Title>BoundaryLine</Title>
-	<FeatureTypeName>{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}BoundaryLine</FeatureTypeName>
+	<FeatureTypeName>{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}ContinuityLine2D</FeatureTypeName>
 	<Rule>
 		<Name>BoundaryLine</Name>
 		<Title>BoundaryLine</Title>
@@ -15,7 +15,7 @@
 		<MaxScaleDenominator>1.7976931348623157E308</MaxScaleDenominator>
 		<LineSymbolizer>
 			<Geometry>
-				<ogc:PropertyName>geometry</ogc:PropertyName>
+				<ogc:PropertyName>location</ogc:PropertyName>
 			</Geometry>
 			<Stroke>
 				<CssParameter name="stroke">#ffff50</CssParameter>

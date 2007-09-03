@@ -203,11 +203,18 @@ public class RoughnessAssignService extends Job
         }
       }
     }
-    final FeatureChange[] changes = element.assignRoughness( roughnessClsID, correctionParameterKS, correctionParameterAxAy, correctionParameterDP, roughnessStyle );
-    // TODO: @Dejan: we should check, if really something has changed, and only produce changes for that case
-    // else we get a dirty discretisation model even if nothing has happened at all
-    for( final FeatureChange featureChange : changes )
-      m_changesDiscretisationModel.add( featureChange );
+    boolean anyChanges = false;
+    anyChanges |= !element.getRoughnessClsID().equals( roughnessClsID );
+    anyChanges |= !element.getRoughnessStyle().equals( roughnessStyle );
+    anyChanges |= element.getRoughnessCorrectionKS() != correctionParameterKS;
+    anyChanges |= element.getRoughnessCorrectionAxAy() != correctionParameterAxAy;
+    anyChanges |= element.getRoughnessCorrectionDP() != correctionParameterDP;
+    if( anyChanges )
+    {
+      final FeatureChange[] changes = element.assignRoughness( roughnessClsID, correctionParameterKS, correctionParameterAxAy, correctionParameterDP, roughnessStyle );
+      for( final FeatureChange featureChange : changes )
+        m_changesDiscretisationModel.add( featureChange );
+    }
   }
 
   private void fireEvents( )

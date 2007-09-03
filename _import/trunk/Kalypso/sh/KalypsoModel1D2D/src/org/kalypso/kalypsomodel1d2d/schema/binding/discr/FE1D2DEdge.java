@@ -61,8 +61,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
     {
 
       // just wrapped the existing one
-      m_containers = new FeatureWrapperCollection<IFE1D2DElement>( featureToBind, IFE1D2DElement.class,// <IFE1D2DElement,IFE1D2DNode<IFE1D2DEdge>>.class,
-      Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_CONTAINERS );
+      m_containers = new FeatureWrapperCollection<IFE1D2DElement>( featureToBind, IFE1D2DElement.class, Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_CONTAINERS );
     }
 
     // nodes
@@ -80,10 +79,10 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
     }
   }
 
-  public static final IFE1D2DEdge createFromModel( IFEDiscretisationModel1d2d model, IFE1D2DNode<IFE1D2DEdge> node0, IFE1D2DNode<IFE1D2DEdge> node1 )
+  public static final IFE1D2DEdge createFromModel( IFEDiscretisationModel1d2d model, IFE1D2DNode node0, IFE1D2DNode node1 )
   {
     IFeatureWrapperCollection<IFE1D2DEdge> edges = model.getEdges();
-    IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> curEdge = edges.addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE );
+    IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> curEdge = edges.addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE, IFE1D2DEdge.class );
     String edgeGmlID = curEdge.getGmlID();
     curEdge.addNode( node0.getGmlID() );
     node0.addContainer( edgeGmlID );

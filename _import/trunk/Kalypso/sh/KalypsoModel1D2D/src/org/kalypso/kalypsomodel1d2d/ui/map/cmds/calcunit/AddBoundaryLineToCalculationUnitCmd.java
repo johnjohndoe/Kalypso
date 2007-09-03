@@ -43,51 +43,40 @@ package org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand;
-import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
- * Add a boundary line to a calculation unit.
+ * Command for adding continuity line to the calculation unit
  * 
  * @author Patrice Congo
+ * @author Dejan Antanaskovic
  */
-@SuppressWarnings( { "hiding", "unchecked" })
 public class AddBoundaryLineToCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
 {
-  private final IBoundaryLine elementsToAdd;
+  private final IFELine m_feLine;
 
-  private final ICalculationUnit calculationUnit;
+  private final ICalculationUnit m_calculationUnit;
 
-  private final IFEDiscretisationModel1d2d model1d2d;
+  private final IFEDiscretisationModel1d2d m_model1d2d;
 
-  private boolean done = false;
-
-// /**
-// * Denotes the boundary line which has been replaced
-// * by the newly added line in the relationship to the
-// * calculation unit. E.g. the old upstream boundary line
-// */
-// private IBoundaryLine replacedBoundaryLine;
+  private boolean m_commandProcessed = false;
 
   /**
    * Denotes the relation, which goes beyond simple elements inclusion, of the boundary line to added to the calculation
    * unit
    */
-  public AddBoundaryLineToCalculationUnitCmd( ICalculationUnit calculationUnit, IBoundaryLine elementsToAdd, IFEDiscretisationModel1d2d model1d2d )
+  public AddBoundaryLineToCalculationUnitCmd( final ICalculationUnit calculationUnit, final IFELine continuityLine, final IFEDiscretisationModel1d2d model1d2d )
   {
-    Assert.throwIAEOnNullParam( calculationUnit, "calculationUnit" );
-    Assert.throwIAEOnNullParam( elementsToAdd, "elementsToAdd" );
-    Assert.throwIAEOnNullParam( model1d2d, "model1d2d" );
-    this.calculationUnit = calculationUnit;
-    this.elementsToAdd = elementsToAdd;
-    this.model1d2d = model1d2d;
+    m_calculationUnit = calculationUnit;
+    m_feLine = continuityLine;
+    m_model1d2d = model1d2d;
   }
 
   /**
@@ -95,14 +84,10 @@ public class AddBoundaryLineToCalculationUnitCmd implements IDiscrModel1d2dChang
    */
   public IFeatureWrapper2[] getChangedFeature( )
   {
-    if( done )
-    {
-      return new IFeatureWrapper2[] { calculationUnit, elementsToAdd };
-    }
+    if( m_commandProcessed )
+      return new IFeatureWrapper2[] { m_calculationUnit, m_feLine };
     else
-    {
       return new IFeatureWrapper2[] {};
-    }
   }
 
   /**
@@ -110,7 +95,7 @@ public class AddBoundaryLineToCalculationUnitCmd implements IDiscrModel1d2dChang
    */
   public IFEDiscretisationModel1d2d getDiscretisationModel1d2d( )
   {
-    return model1d2d;
+    return m_model1d2d;
   }
 
   /**
@@ -118,7 +103,7 @@ public class AddBoundaryLineToCalculationUnitCmd implements IDiscrModel1d2dChang
    */
   public String getDescription( )
   {
-    return null;
+    return "Command for adding continuity line to the calculation unit";
   }
 
   /**
@@ -136,12 +121,11 @@ public class AddBoundaryLineToCalculationUnitCmd implements IDiscrModel1d2dChang
   {
     try
     {
-      if( !done )
+      if( !m_commandProcessed )
       {
-        calculationUnit.addElementAsRef( elementsToAdd );
-        elementsToAdd.getContainers().addRef( calculationUnit );
+        m_calculationUnit.addElementAsRef( m_feLine );
+        m_feLine.getContainers().addRef( m_calculationUnit );
         fireProcessChanges();
-        done = true;
       }
     }
     catch( Throwable th )
@@ -152,15 +136,13 @@ public class AddBoundaryLineToCalculationUnitCmd implements IDiscrModel1d2dChang
 
   private final void fireProcessChanges( )
   {
-    final Feature calUnitFeature = calculationUnit.getWrappedFeature();
-    final Feature model1d2dFeature = model1d2d.getWrappedFeature();
-    List<Feature> features = new ArrayList<Feature>();
-    features.add( calUnitFeature );
-    features.add( elementsToAdd.getWrappedFeature() );
-
-    GMLWorkspace workspace = calUnitFeature.getWorkspace();
-    FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( workspace, model1d2dFeature, features.toArray( new Feature[features.size()] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE );
+    final List<Feature> features = new ArrayList<Feature>();
+    features.add( m_calculationUnit.getWrappedFeature() );
+    features.add( m_feLine.getWrappedFeature() );
+    final GMLWorkspace workspace = m_calculationUnit.getWrappedFeature().getWorkspace();
+    final FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( workspace, m_model1d2d.getWrappedFeature(), features.toArray( new Feature[features.size()] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE );
     workspace.fireModellEvent( event );
+    m_commandProcessed = true;
   }
 
   /**
@@ -168,7 +150,6 @@ public class AddBoundaryLineToCalculationUnitCmd implements IDiscrModel1d2dChang
    */
   public void redo( ) throws Exception
   {
-
   }
 
   /**
@@ -176,6 +157,5 @@ public class AddBoundaryLineToCalculationUnitCmd implements IDiscrModel1d2dChang
    */
   public void undo( ) throws Exception
   {
-
   }
 }

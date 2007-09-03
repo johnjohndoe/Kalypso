@@ -173,5 +173,5 @@ public interface IFE1D2DEdge<CT extends IFE1D2DElement, ET extends IFE1D2DNode> 
    *            get the node of this edge as {@link IFeatureWrapperCollection}
    * @see #getNode(int)
    */
-  public IFeatureWrapperCollection<ET> getNodes( );
+  public IFeatureWrapperCollection<IFE1D2DNode> getNodes( );
 }

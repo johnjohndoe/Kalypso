@@ -41,21 +41,19 @@
 package org.kalypso.kalypsomodel1d2d.ui.map;
 
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.kalypsomodel1d2d.ops.OpsGeoEditAffected;
+import org.kalypso.kalypsomodel1d2d.ops.GeometryRecalculator;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
+import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
-import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.EditGeometryWidget;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 
 /**
  * {@link IWidget} that provide the mechnism for edition the geometrie of finite element concepts (Node, Edge, elements,
@@ -69,18 +67,22 @@ import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
  * {@link Kalypso1D2DSchemaConstants#WB1D2D_F_NODE}
  * 
  * @author Patrice Congo
+ * @author Dejan Antanaskovic
  * 
  */
-public class EditFEConceptGeometryWidget extends EditGeometryWidget // implements IWidget
+public class EditFEConceptGeometryWidget extends EditGeometryWidget
 {
-  /** workspace, initialised during activation using the node layer */
-  private CommandableWorkspace workspace;
+  private IKalypsoFeatureTheme m_nodeTheme;
 
-  private IKalypsoFeatureTheme nodeTheme;
+  private IKalypsoFeatureTheme m_polyElementTheme;
 
-  private IKalypsoFeatureTheme polyElementTheme;
+  private IKalypsoFeatureTheme m_edgeTheme;
 
-  private IKalypsoFeatureTheme edgeTheme;
+  private IKalypsoFeatureTheme m_continuityLineTheme;
+
+  private IKalypsoFeatureTheme m_flowRelationsTheme;
+
+  private IMapModell m_mapModell;
 
   public EditFEConceptGeometryWidget( )
   {
@@ -95,15 +97,12 @@ public class EditFEConceptGeometryWidget extends EditGeometryWidget // implement
   public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel )
   {
     super.activate( commandPoster, mapPanel );
-
-    // find the node layer and get the working workspace from it
-    nodeTheme = UtilMap.findEditableTheme( mapPanel.getMapModell(), Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
-
-    polyElementTheme = UtilMap.findEditableTheme( mapPanel.getMapModell(), Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT );
-
-    edgeTheme = UtilMap.findEditableTheme( mapPanel.getMapModell(), Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE );
-
-    workspace = nodeTheme.getWorkspace();
+    m_mapModell = mapPanel.getMapModell();
+    m_nodeTheme = UtilMap.findEditableTheme( m_mapModell, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
+    m_polyElementTheme = UtilMap.findEditableTheme( m_mapModell, Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT );
+    m_edgeTheme = UtilMap.findEditableTheme( m_mapModell, Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE );
+    m_continuityLineTheme = UtilMap.findEditableTheme( m_mapModell, IFELine.QNAME );
+    m_flowRelationsTheme = UtilMap.findEditableTheme( m_mapModell, IBoundaryCondition.QNAME );
   }
 
   /**
@@ -113,23 +112,15 @@ public class EditFEConceptGeometryWidget extends EditGeometryWidget // implement
   protected Collection<Feature> perform( )
   {
     invalidateLists();
-
     final Collection<Feature> list = super.perform();
-    final Set<Feature> affectedFeatures = new HashSet<Feature>();// ArrayList<Feature>();
-
-    for( final Feature changedFeature : list )
-    {
-      OpsGeoEditAffected.addAffectedsByFEFeatureGeomChange( changedFeature, affectedFeatures );
-    }
-
-    fireModelChangedEvent( workspace, affectedFeatures );
-
+    final GeometryRecalculator recalculator = new GeometryRecalculator( list, m_flowRelationsTheme );
+    recalculator.fireChanges();
     return list;
   }
 
   private final void invalidateLists( )
   {
-    final IKalypsoFeatureTheme[] themes = { nodeTheme, edgeTheme, polyElementTheme };
+    final IKalypsoFeatureTheme[] themes = { m_nodeTheme, m_edgeTheme, m_polyElementTheme, m_continuityLineTheme, m_flowRelationsTheme };
     for( final IKalypsoFeatureTheme theme : themes )
     {
       if( theme != null )
@@ -141,18 +132,5 @@ public class EditFEConceptGeometryWidget extends EditGeometryWidget // implement
         }
       }
     }
-  }
-
-  private static final void fireModelChangedEvent( final CommandableWorkspace workspace, final Collection<Feature> modifiedFeature )
-  {
-    Assert.throwIAEOnNullParam( workspace, "workspace" );
-    Assert.throwIAEOnNullParam( modifiedFeature, "modifiedFeature" );
-    if( modifiedFeature.isEmpty() )
-    {
-      return;
-    }
-
-    final Feature[] toArray = modifiedFeature.toArray( new Feature[modifiedFeature.size()] );
-    workspace.fireModellEvent( new FeaturesChangedModellEvent( workspace, toArray ) );
   }
 }

@@ -53,7 +53,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtil
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ILineElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
@@ -124,7 +124,7 @@ public class CreateNodalBCFlowrelationWidget extends AbstractCreateFlowrelationW
     if( modelElement instanceof IFE1D2DNode )
       return new IBoundaryConditionDescriptor[] { wstTimeDescriptor, qTimeDescriptor, zmlChooser };
 
-    if( modelElement instanceof ILineElement )
+    if( modelElement instanceof IFELine )
       return new IBoundaryConditionDescriptor[] { wstTimeDescriptor, qTimeDescriptor, zmlChooser };
 
     return new IBoundaryConditionDescriptor[] {};

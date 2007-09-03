@@ -80,8 +80,6 @@ public class CreateFEElement1DWidget extends AbstractWidget
   @Override
   public void moved( final Point p )
   {
-//    System.out.println( "Moved called on widget: " + getName() );
-    
     m_currentPos = MapUtilities.transform( getMapPanel(), p );
 
     /* find node */

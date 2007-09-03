@@ -93,7 +93,7 @@ public class InvariantCheckBoundaryConditions implements ICalculationValidateInt
    */
   public void checkAllInvariants( )
   {
-    int size = calculationUnit.getBoundaryLines().size();
+    int size = calculationUnit.getContinuityLines().size();
     System.out.println( size );
     if( ((size < 2) && (size > 0)) || (size > 2) )
     {

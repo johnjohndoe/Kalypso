@@ -152,8 +152,7 @@ public class SimMode1D2DCalcJob implements ISimulation
         r10pw = new PrintWriter( new File( tmpDir, RMA10SimModelConstants.R10_File ) );
         final BuildingIDProvider buildingProvider = converter2D.getBuildingProvider();
         final LinkedHashMap<String, Integer> roughnessIDProvider = converter2D.getRoughnessIDProvider();
-        final LinkedHashMap<String, Integer> nodesIDProvider = converter2D.getNodesIDProvider();
-        final Control1D2DConverter controlConverter = new Control1D2DConverter( calculation, nodesIDProvider, roughnessIDProvider, buildingProvider );
+        final Control1D2DConverter controlConverter = new Control1D2DConverter( calculation, converter2D, roughnessIDProvider, buildingProvider );
         controlConverter.writeR10File( r10pw );
         r10pw.close();
 

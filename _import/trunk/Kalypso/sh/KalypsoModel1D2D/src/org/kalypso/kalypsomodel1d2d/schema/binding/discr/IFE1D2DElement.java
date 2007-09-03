@@ -45,11 +45,9 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
-import org.kalypso.kalypsosimulationmodel.core.discr.IFEElement;
+import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
-import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_Object;
 
 /**
  * Interface for classes that represents a feature of the type wb1d2d:Element
@@ -57,7 +55,7 @@ import org.kalypsodeegree.model.geometry.GM_Object;
  * @author Patrice Congo
  * 
  */
-public interface IFE1D2DElement<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge> extends IFEElement
+public interface IFE1D2DElement<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge> extends IFENetItem
 {
   public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "Element" );
 
@@ -110,7 +108,5 @@ public interface IFE1D2DElement<CT extends IFE1D2DComplexElement, ET extends IFE
    * 
    * @return the recalculated geometry of this element
    */
-  public GM_Object recalculateElementGeometry( ) throws GM_Exception;
-
   public FeatureChange[] assignRoughness( String roughnessID, Double correctionParameterKS, Double correctionParameterAxAy, Double correctionParameterDP, String roughnessStyle );
 }

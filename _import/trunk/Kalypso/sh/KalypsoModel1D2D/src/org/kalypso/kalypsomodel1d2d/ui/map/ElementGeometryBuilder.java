@@ -94,10 +94,10 @@ public class ElementGeometryBuilder
    * The constructor.
    * 
    * @param cnt_points
-   *          If >0 the the geometry will be finished, if the count of points is reached. If 0 no rule regarding the
-   *          count of the points will apply.
+   *            If >0 the the geometry will be finished, if the count of points is reached. If 0 no rule regarding the
+   *            count of the points will apply.
    * @param targetCrs
-   *          The target coordinate system.
+   *            The target coordinate system.
    */
   public ElementGeometryBuilder( final int cnt_points, final IKalypsoFeatureTheme nodeTheme )
   {
@@ -110,6 +110,8 @@ public class ElementGeometryBuilder
 
   public ICommand addNode( final Object node ) throws Exception
   {
+    if( m_nodes.contains( node ) )
+      return null;
     if( node instanceof GM_Point || node instanceof FE1D2DNode )
     {
       m_nodes.add( node );
@@ -127,43 +129,30 @@ public class ElementGeometryBuilder
    */
   public ICommand finish( ) throws Exception
   {
-    final CompositeCommand command = new CompositeCommand( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.1") ); //$NON-NLS-1$
+    if( m_nodes.size() == 0 )
+      return null;
+    final CompositeCommand command = new CompositeCommand( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.1" ) ); //$NON-NLS-1$
 
     final CommandableWorkspace workspace = m_nodeTheme.getWorkspace();
     final FeatureList featureList = m_nodeTheme.getFeatureList();
     final Feature parentFeature = featureList.getParentFeature();
     final IFeatureType parentType = parentFeature.getFeatureType();
     final IRelationType parentNodeProperty = featureList.getParentFeatureTypeProperty();
-    final IRelationType parentEdgeProperty = 
-          (IRelationType) parentType.getProperty( 
-              Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGES
-              /*FE1D2DDiscretisationModel.QNAME_PROP_EDGES*/ );
-    final IRelationType parentElementProperty = 
-        (IRelationType) parentType.getProperty( 
-            Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS
-            /*FE1D2DDiscretisationModel.QNAME_PROP_ELEMENTS*/ );
-    final IGMLSchema schema= workspace.getGMLSchema();
-    
-    
-    final IFeatureType nodeFeatureType=
-        schema.getFeatureType( 
-            Kalypso1D2DSchemaConstants.WB1D2D_F_NODE);
-    final IPropertyType nodeContainerPT=
-            nodeFeatureType.getProperty( 
-                  Kalypso1D2DSchemaConstants.WB1D2D_PROP_NODE_CONTAINERS );
-    
-    final IFeatureType edgeFeatureType=
-      schema.getFeatureType( 
-          Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE);
-    final IPropertyType edgeContainerPT=
-          edgeFeatureType.getProperty( 
-                Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_CONTAINERS );
-  
-    
+    final IRelationType parentEdgeProperty = (IRelationType) parentType.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGES
+    /* FE1D2DDiscretisationModel.QNAME_PROP_EDGES */);
+    final IRelationType parentElementProperty = (IRelationType) parentType.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS
+    /* FE1D2DDiscretisationModel.QNAME_PROP_ELEMENTS */);
+    final IGMLSchema schema = workspace.getGMLSchema();
+
+    final IFeatureType nodeFeatureType = schema.getFeatureType( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
+    final IPropertyType nodeContainerPT = nodeFeatureType.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_NODE_CONTAINERS );
+
+    final IFeatureType edgeFeatureType = schema.getFeatureType( Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE );
+    final IPropertyType edgeContainerPT = edgeFeatureType.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_CONTAINERS );
+
     /* Initialize elements needed for edges and elements */
-    final FE1D2DDiscretisationModel discModel = 
-                new FE1D2DDiscretisationModel( parentFeature );
-    List<FeatureChange> changes= new ArrayList<FeatureChange>();
+    final FE1D2DDiscretisationModel discModel = new FE1D2DDiscretisationModel( parentFeature );
+    List<FeatureChange> changes = new ArrayList<FeatureChange>();
     /* Build new nodes */
     final FE1D2DNode[] nodes = new FE1D2DNode[m_nodes.size()];
     for( int i = 0; i < m_nodes.size(); i++ )
@@ -177,7 +166,7 @@ public class ElementGeometryBuilder
         final FE1D2DNode newNode = FE1D2DNode.createNode( discModel );
         newNode.setPoint( (GM_Point) node );
         newNode.setName( "" ); //$NON-NLS-1$
-        newNode.setDescription( Messages.getString("org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.3") ); //$NON-NLS-1$
+        newNode.setDescription( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.3" ) ); //$NON-NLS-1$
         final AddFeatureCommand addNodeCommand = new AddFeatureCommand( workspace, parentFeature, parentNodeProperty, -1, newNode.getFeature(), null, false );
         command.addCommand( addNodeCommand );
         nodes[i] = newNode;
@@ -200,23 +189,11 @@ public class ElementGeometryBuilder
         newEdge.setNodes( node0, node1 );
         edges[i] = newEdge;
         edgesGen[i] = true;
-        final AddFeatureCommand addEdgeCommand = 
-                  new AddFeatureCommand( 
-                              workspace, 
-                              parentFeature, 
-                              parentEdgeProperty, 
-                              -1, 
-                              newEdge.getFeature(), null, false );
-        
+        final AddFeatureCommand addEdgeCommand = new AddFeatureCommand( workspace, parentFeature, parentEdgeProperty, -1, newEdge.getFeature(), null, false );
+
         command.addCommand( addEdgeCommand );
-        
-        addNodeContainerCommand( 
-                          workspace, 
-                          node0, 
-                          node1, 
-                          nodeContainerPT, 
-                          newEdge,
-                          changes);
+
+        addNodeContainerCommand( workspace, node0, node1, nodeContainerPT, newEdge, changes );
       }
       else
       {
@@ -224,94 +201,57 @@ public class ElementGeometryBuilder
         edgesGen[i] = false;
       }
     }
-   
+
     /* Build new element */
-    final IPolyElement element = 
-          PolyElement.createPolyElement( discModel );
+    final IPolyElement element = PolyElement.createPolyElement( discModel );
 
     element.setEdges( edges );
 
-    final AddFeatureCommand addElementCommand = 
-              new AddFeatureCommand( 
-                    workspace, 
-                    parentFeature, 
-                    parentElementProperty, 
-                    -1, 
-                    element.getWrappedFeature(), 
-                    null, 
-                    true );
+    final AddFeatureCommand addElementCommand = new AddFeatureCommand( workspace, parentFeature, parentElementProperty, -1, element.getWrappedFeature(), null, true );
     command.addCommand( addElementCommand );
-     
-    addEdgeContainerCommand( 
-                  workspace, 
-                  edges, 
-                  edgeContainerPT, 
-                  element,
-                  changes);
-    command.addCommand( 
-        new ListPropertyChangeCommand(
-            workspace,changes.toArray( new FeatureChange[changes.size()] )) );
+
+    addEdgeContainerCommand( workspace, edges, edgeContainerPT, element, changes );
+    command.addCommand( new ListPropertyChangeCommand( workspace, changes.toArray( new FeatureChange[changes.size()] ) ) );
     return command;
   }
 
-  static final void addEdgeContainerCommand(
-      GMLWorkspace workspace,
-      IFE1D2DEdge[] edges,
-      IPropertyType propertyType,
-      IFE1D2DElement element,
-      List<FeatureChange> changes)
+  static final void addEdgeContainerCommand( GMLWorkspace workspace, IFE1D2DEdge[] edges, IPropertyType propertyType, IFE1D2DElement element, List<FeatureChange> changes )
   {
-    Feature elementFeature=element.getWrappedFeature();
-    String elementID=elementFeature.getId();
-    
-//    FeatureChange changes[]= new FeatureChange[edges.length];
-    
-    for(int i=0;i<edges.length;i++)
+    Feature elementFeature = element.getWrappedFeature();
+    String elementID = elementFeature.getId();
+
+    // FeatureChange changes[]= new FeatureChange[edges.length];
+
+    for( int i = 0; i < edges.length; i++ )
     {
-      
-      changes.add( 
-          new FeatureChange(
-              edges[i].getWrappedFeature(),
-              propertyType,
-              elementID));
+
+      changes.add( new FeatureChange( edges[i].getWrappedFeature(), propertyType, elementID ) );
     }
-    
-//    ChangeFeaturesCommand changeCommand=
-//      new ChangeFeaturesCommand(
-//                workspace,
-//                changes);
-//    return changeCommand;
+
+    // ChangeFeaturesCommand changeCommand=
+    // new ChangeFeaturesCommand(
+    // workspace,
+    // changes);
+    // return changeCommand;
   }
-  static final void addNodeContainerCommand(
-                                                  GMLWorkspace workspace,
-                                                  IFE1D2DNode node0,
-                                                  IFE1D2DNode node1,
-                                                  IPropertyType propertyType,
-                                                  IFE1D2DEdge edge,
-                                                  List<FeatureChange> changes)
+
+  static final void addNodeContainerCommand( GMLWorkspace workspace, IFE1D2DNode node0, IFE1D2DNode node1, IPropertyType propertyType, IFE1D2DEdge edge, List<FeatureChange> changes )
   {
-    Feature edgeFeature=edge.getWrappedFeature();
-    Feature node0Feature=node0.getWrappedFeature();
-    Feature node1Feature=node1.getWrappedFeature();
-    String edgeID=edgeFeature.getId();
-    FeatureChange change0= 
-            new FeatureChange(
-                node0Feature,
-                propertyType,
-                edgeID);
+    Feature edgeFeature = edge.getWrappedFeature();
+    Feature node0Feature = node0.getWrappedFeature();
+    Feature node1Feature = node1.getWrappedFeature();
+    String edgeID = edgeFeature.getId();
+    FeatureChange change0 = new FeatureChange( node0Feature, propertyType, edgeID );
     changes.add( change0 );
-    FeatureChange change1= 
-      new FeatureChange(
-          node1Feature,
-          propertyType,
-          edgeID);
+    FeatureChange change1 = new FeatureChange( node1Feature, propertyType, edgeID );
     changes.add( change1 );
-//    ChangeFeaturesCommand changeCommand=
-//        new ChangeFeaturesCommand(
-//                  workspace,
-//                  new FeatureChange[]{change0,change1});
-//    return changeCommand;
+    // ChangeFeaturesCommand changeCommand=
+    // new ChangeFeaturesCommand(
+    // workspace,
+    // new FeatureChange[]{change0,change1});
+    // return changeCommand;
   }
+
   /**
    * @see org.kalypso.informdss.manager.util.widgets.IGeometryBuilder#paint(java.awt.Graphics,
    *      org.kalypsodeegree.graphics.transformation.GeoTransform)

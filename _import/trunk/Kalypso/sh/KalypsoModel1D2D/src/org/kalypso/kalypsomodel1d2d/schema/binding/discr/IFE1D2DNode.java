@@ -40,8 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
-import java.util.Collection;
+import java.util.List;
 
+import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypso.kalypsosimulationmodel.core.discr.IFENode;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -53,7 +54,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  * @author Patrice Congo
  *
  */
-public interface IFE1D2DNode<CT extends IFE1D2DEdge> extends IFENode/*<CT>*/
+public interface IFE1D2DNode<CT extends IFENetItem> extends IFENode/*<CT>*/
 {
   /**
    * To get the position of this fe-node
@@ -83,10 +84,9 @@ public interface IFE1D2DNode<CT extends IFE1D2DEdge> extends IFENode/*<CT>*/
 //  public IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>[] getEdges( );
 
   /**
-   * Gets all neighbours of this node. Neighbours nodes are nodes
-   * that belongs to an element containing this node
+   * Gets all neighbours of this node. Neighbours nodes are nodes on the other side of all edges ending with this node.
    */
-  public Collection<IFE1D2DNode> getNeighbours( );
+  public List<IFE1D2DNode> getNeighbours( );
   
   /**
    * Add a container (typically an Edge) to the node

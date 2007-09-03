@@ -44,9 +44,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.kalypso.kalypsomodel1d2d.ops.LinksOps;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.feature.Feature;
@@ -59,38 +59,34 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
  * 
  * @author Patrice Congo
  */
-@SuppressWarnings({ "hiding", "unchecked" })
+@SuppressWarnings( { "hiding", "unchecked" })
 public class RemoveBoundaryLineFromCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
 {
-  
-  private final IBoundaryLine bLineToRemove;
-  
+
+  private final IFELine bLineToRemove;
+
   private final ICalculationUnit calculationUnit;
-  
+
   private final IFEDiscretisationModel1d2d model1d2d;
-  
+
   private boolean done = false;
-  
-//  /**
-//   * Denotes the relation, which goes beyond simple elements 
-//   * inclusion,  of the boundary line to the calculation unit
-//   */
-//  private QName relationToCalUnit;
-  
-  public RemoveBoundaryLineFromCalculationUnitCmd(
-                      ICalculationUnit calculationUnit,
-                      IBoundaryLine elementsToRemove,
-                      IFEDiscretisationModel1d2d model1d2d )
+
+  // /**
+  // * Denotes the relation, which goes beyond simple elements
+  // * inclusion, of the boundary line to the calculation unit
+  // */
+  // private QName relationToCalUnit;
+
+  public RemoveBoundaryLineFromCalculationUnitCmd( ICalculationUnit calculationUnit, IFELine elementsToRemove, IFEDiscretisationModel1d2d model1d2d )
   {
     Assert.throwIAEOnNullParam( calculationUnit, "calculationUnit" );
     Assert.throwIAEOnNullParam( elementsToRemove, "elementsToRemove" );
     Assert.throwIAEOnNullParam( model1d2d, "model1d2d" );
-    
+
     this.calculationUnit = calculationUnit;
     this.bLineToRemove = elementsToRemove;
     this.model1d2d = model1d2d;
   }
-  
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand#getChangedFeature()
@@ -99,11 +95,11 @@ public class RemoveBoundaryLineFromCalculationUnitCmd implements IDiscrModel1d2d
   {
     if( done )
     {
-      return new IFeatureWrapper2[]{ calculationUnit, bLineToRemove };
+      return new IFeatureWrapper2[] { calculationUnit, bLineToRemove };
     }
     else
     {
-      return new IFeatureWrapper2[]{};
+      return new IFeatureWrapper2[] {};
     }
   }
 
@@ -135,20 +131,14 @@ public class RemoveBoundaryLineFromCalculationUnitCmd implements IDiscrModel1d2d
    * @see org.kalypso.commons.command.ICommand#process()
    */
   public void process( ) throws Exception
-  {  
+  {
     try
     {
       if( !done )
       {
-//        relationToCalUnit = 
-//            CalUnitOps.getRelationType( calculationUnit, bLineToRemove );
-//        if( relationToCalUnit!=null )
-//        {
-          LinksOps.delRelationshipElementAndComplexElement( 
-                            bLineToRemove, calculationUnit  );
-          fireProcessChanges();
-          done=true;
-//        }
+        LinksOps.delRelationshipElementAndComplexElement( bLineToRemove, calculationUnit );
+        fireProcessChanges();
+        done = true;
       }
     }
     catch( Throwable th )
@@ -157,24 +147,21 @@ public class RemoveBoundaryLineFromCalculationUnitCmd implements IDiscrModel1d2d
     }
   }
 
-  private final void fireProcessChanges()
+  private final void fireProcessChanges( )
   {
     final Feature calUnitFeature = calculationUnit.getWrappedFeature();
     final Feature model1d2dFeature = model1d2d.getWrappedFeature();
-    List<Feature> features = 
-      new ArrayList<Feature>( );
+    List<Feature> features = new ArrayList<Feature>();
     features.add( calUnitFeature );
     features.add( bLineToRemove.getWrappedFeature() );
-    
-    GMLWorkspace workspace = 
-          calUnitFeature.getWorkspace();
-    FeatureStructureChangeModellEvent event = 
-        new FeatureStructureChangeModellEvent(
-            workspace,//final GMLWorkspace workspace, 
-            model1d2dFeature,// Feature parentFeature, 
-            features.toArray( new Feature[features.size()] ),//final Feature[] changedFeature, 
-            FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE//final int changeType
-            );
+
+    GMLWorkspace workspace = calUnitFeature.getWorkspace();
+    FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( workspace,// final GMLWorkspace
+                                                                                                // workspace,
+    model1d2dFeature,// Feature parentFeature,
+    features.toArray( new Feature[features.size()] ),// final Feature[] changedFeature,
+    FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE// final int changeType
+    );
     workspace.fireModellEvent( event );
   }
 
@@ -183,7 +170,7 @@ public class RemoveBoundaryLineFromCalculationUnitCmd implements IDiscrModel1d2d
    */
   public void redo( ) throws Exception
   {
-    
+
   }
 
   /**
@@ -191,6 +178,6 @@ public class RemoveBoundaryLineFromCalculationUnitCmd implements IDiscrModel1d2d
    */
   public void undo( ) throws Exception
   {
-    
+
   }
 }

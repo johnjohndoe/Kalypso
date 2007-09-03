@@ -58,7 +58,6 @@ import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
-import org.kalypso.kalypsomodel1d2d.schema.binding.model.IPseudoOPerationalModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.IGrabDistanceProvider;
 import org.kalypso.kalypsomodel1d2d.ui.map.IWidgetWithStrategy;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
@@ -194,7 +193,7 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
       final IKalypsoFeatureTheme operationalTheme = UtilMap.findEditableTheme( mapModell, IBoundaryCondition.QNAME );
       dataModel.setData( ICommonKeys.KEY_BOUNDARY_CONDITION_CMD_WORKSPACE, operationalTheme.getWorkspace() );
 
-      final IFlowRelationshipModel bcModel = Util.getModel( IPseudoOPerationalModel.class );// (IFlowRelationshipModel)
+      final IFlowRelationshipModel bcModel = Util.getModel( IFlowRelationshipModel.class );// (IFlowRelationshipModel)
 
       m_calcUnitTheme.setModelBoundaryConditions( bcModel );
     }

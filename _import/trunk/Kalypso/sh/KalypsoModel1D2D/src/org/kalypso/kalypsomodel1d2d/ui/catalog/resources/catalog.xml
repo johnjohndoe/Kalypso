@@ -9,11 +9,13 @@
 		systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:Edge:sld:default"
 		uri="FE1D2DEdge.sld" />
 	<catalog:system
-		systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:ContinuityLine:sld:default"
+		systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:Line:sld:default"
 		uri="FE1D2DContinuityLine.sld" />
+		<!-- 
 	<catalog:system
 		systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:BoundaryLine:sld:default"
 		uri="BoundaryLine.sld" />
+		 -->
 	<catalog:system
 		systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:PolyElement:sld:default"
 		uri="FE1D2DPolyElement.sld" />
@@ -21,8 +23,8 @@
 		systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:Element1D:sld:default"
 		uri="Element1D.sld" />
 	<catalog:system
-		systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:Junction1D2D:sld:default"
-		uri="Junction1D2D.sld" />
+		systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:TransitionElement:sld:default"
+		uri="TransitionElement.sld" />
 	<catalog:system
 		systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:MiddleNode:sld:default"
 		uri="MiddleNode.sld" />
@@ -34,11 +36,6 @@
 	<catalog:system
 		systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:StaticModel1D2D:sld:default"
 		uri="static_model_1d2d.sld" />
-
-	<catalog:system
-		systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:JunctionContext1DToCLine:sld:default"
-		uri="JunctionContext.sld" />
-
 	<catalog:system
 		systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_simulationbase:_FlowRelationship:sld:default"
 		uri="http___www.tu-harburg.de_wb_kalypso_schemata_simulationbase_FlowRelationship.sld" />

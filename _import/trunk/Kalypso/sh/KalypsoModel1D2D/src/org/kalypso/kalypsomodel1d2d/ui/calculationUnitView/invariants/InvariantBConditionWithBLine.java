@@ -45,7 +45,7 @@ import java.util.List;
 
 import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.ops.EdgeOps;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
@@ -121,7 +121,7 @@ public class InvariantBConditionWithBLine implements ICalculationValidateInterfa
   private void invariant_CheckBC_On_EndNode( ICalculationUnit1D calc )
   {
 
-    final List<IBoundaryLine> bLines = calc.getBoundaryLines();
+    final List<IContinuityLine2D> bLines = calc.getContinuityLines();
 
     List<IFE1D2DElement> elements = calc.getElements();
     List<IFE1D2DNode> endNodes = new ArrayList<IFE1D2DNode>();
@@ -161,8 +161,8 @@ public class InvariantBConditionWithBLine implements ICalculationValidateInterfa
   @SuppressWarnings("unchecked")
   private void invariant_CheckForBLExist( ICalculationUnit1D calc )
   {
-    final List<IBoundaryLine> boundaryLines = calc.getBoundaryLines();
-    if( boundaryLines.size() == 0 )
+    final List<IContinuityLine2D> continuityLine2Ds = calc.getContinuityLines();
+    if( continuityLine2Ds.size() == 0 )
     {
       invariantErrorMessages.add( new ProblemDescriptor( null, "Boundary Line must be present or yet to be assigned " + calc.getName(), calc, calc ) );
     }
@@ -171,10 +171,10 @@ public class InvariantBConditionWithBLine implements ICalculationValidateInterfa
   @SuppressWarnings("unchecked")
   private void invariant_CheckEachBLhasBC( )
   {
-    final List<IBoundaryLine> boundaryLines = calculationUnit.getBoundaryLines();
+    final List<IContinuityLine2D> continuityLine2Ds = calculationUnit.getContinuityLines();
     final List<IBoundaryCondition> boundaryConditions = CalcUnitOps.getBoundaryConditions( getBoundaryConditions(), calculationUnit );
 
-    for( IBoundaryLine line : boundaryLines )
+    for( IContinuityLine2D line : continuityLine2Ds )
     {
       boolean hasBc = false;
       try

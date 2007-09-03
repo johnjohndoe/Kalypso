@@ -3,7 +3,7 @@ package org.kalypso.kalypsomodel1d2d.schema.functions;
 import java.util.Map;
 
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionContext1DToCLine;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ITransitionElement;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
@@ -13,7 +13,7 @@ import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
  * 
  * @author Patrice Congo
  */
-public class JunctionContextGeometry extends FeaturePropertyFunction
+public class TransitionElementGeometryPropertyFunction extends FeaturePropertyFunction
 {
   /**
    * @see org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction#init(java.util.Map)
@@ -30,8 +30,8 @@ public class JunctionContextGeometry extends FeaturePropertyFunction
    */
   public Object getValue( final Feature feature, final IPropertyType pt, final Object currentValue )
   {
-    final IJunctionContext1DToCLine element = 
-            (IJunctionContext1DToCLine) feature.getAdapter( IJunctionContext1DToCLine.class );
+    final ITransitionElement element = 
+            (ITransitionElement) feature.getAdapter( ITransitionElement.class );
     if( element != null )
     {
       try

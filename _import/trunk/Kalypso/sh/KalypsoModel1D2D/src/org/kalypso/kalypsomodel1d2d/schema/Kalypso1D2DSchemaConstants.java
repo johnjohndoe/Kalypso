@@ -38,9 +38,9 @@ public class Kalypso1D2DSchemaConstants
 
   public final static QName WB1D2D_F_ELEMENT = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "Element" );
 
-// public final static QName WB1D2D_F_ELEMENT1D = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "Element1D" );
+  // public final static QName WB1D2D_F_ELEMENT1D = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "Element1D" );
 
-// public final static QName WB1D2D_F_BOUNDARY_LINE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "BoundaryLine" );
+  // public final static QName WB1D2D_F_BOUNDARY_LINE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "BoundaryLine" );
 
   public final static QName WB1D2D_F_FE1D2D_2DElement = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "Element2D" );
 
@@ -57,8 +57,6 @@ public class Kalypso1D2DSchemaConstants
   public final static QName WB1D2D_F_JUNTCION_CONTEXT_1D_2D = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "JunctionContext1DTo2D" );
 
   public final static QName WB1D2D_F_ELEMENT1D = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "Element1D" );
-
-  public final static QName WB1D2D_F_BOUNDARY_LINE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "BoundaryLine" );
 
   public final static QName WB1D2D_F_BOUNDARY_LINE1D = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "BoundaryLine1D" );
 
@@ -80,11 +78,11 @@ public class Kalypso1D2DSchemaConstants
 
   public final static QName WB1D2D_PROP_FE1D2D_MIDDLE_NODE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "middleNode" );
 
-// public final static QName WB1D2D_F_JUNCTION1D2D_EDGE_EDGE =
-// new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "EdgeToEdgeJunction1D2D" );
+  // public final static QName WB1D2D_F_JUNCTION1D2D_EDGE_EDGE =
+  // new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "EdgeToEdgeJunction1D2D" );
 
-// public final static QName WB1D2D_F_JUNCTION1D2D_EDGE_CLINE =
-// new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "EdgeToClineJunction1D2D" );
+  // public final static QName WB1D2D_F_JUNCTION1D2D_EDGE_CLINE =
+  // new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "EdgeToClineJunction1D2D" );
 
   public static final QName WB1D2D_F_COMPLEX_ELE_2D = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "ComplexElement2D" );
 
@@ -131,6 +129,8 @@ public class Kalypso1D2DSchemaConstants
    * QName for a property linking a feature to an element. Use for example in DiscretisationModel feature
    */
   public final static QName WB1D2D_PROP_ELEMENTS = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "element" );
+
+  public final static QName WB1D2D_PROP_CONTINUITY_LINES = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "continuityLine" );
 
   /**
    * QName for a property linking a feature to a node. Use for example in DiscretisationModel feature
@@ -279,9 +279,7 @@ public class Kalypso1D2DSchemaConstants
 
   public final static QName SIMMETA_PROP_RESULT = new QName( UrlCatalog1D2D.MODEL_1D2DSIMMETA_NS, "result" );
 
-  public static final QName OP1D2D_F_PSEUDO_FLOW_REL_MODEL = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "FlowRelationshipModel" );
-
-  public static final QName OP1D2D_F_OPERATIONAL_MODEL = new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "OperationalModel" );
+  public static final QName OP1D2D_F_FLOWRELATIONSHIPS_MODEL = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "FlowRelationshipModel" );
 
   public static final QName OP1D2D_F_BOUNDARY_CONDITION = new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "BoundaryCondition" );
 

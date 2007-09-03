@@ -15,26 +15,16 @@
 	</xs:annotation>
 	
 	<!-- ***************************IMPORTS********************************* -->
-	<xs:import 
-		namespace="http://www.opengis.net/gml" 
-		schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd"
-		/>
+	<xs:import namespace="http://www.opengis.net/gml" />
+	
 	
 	<!-- **************************INCLUDES********************************** -->
 	<xs:include schemaLocation="simulation_model.xsd"/>
-	<xs:include 
-		schemaLocation="simulation_model_finite_elements_discretisation.xsd"/>
-	
-	<!--xs:include 
-		schemaLocation="simulation_model_math.xsd"/-->
-	
-	<xs:include 
-		schemaLocation="simulation_model_flow_relationship.xsd"/>
-	
-	<xs:include 
-		schemaLocation="simulation_model_flow_resistance.xsd"/>
-	<xs:include
-		schemaLocation="simulation_model_terrain.xsd"/>
-	<!--xs:include
-		schemaLocation="simulation_model_operational.xsd"/-->
+	<xs:include schemaLocation="simulation_model_finite_elements_discretisation.xsd"/>
+	<xs:include schemaLocation="simulation_model_flow_relationship.xsd"/>
+	<!-- 
+	<xs:include schemaLocation="simulation_model_flow_resistance.xsd"/>
+	 -->
+	<xs:include schemaLocation="simulation_model_terrain.xsd"/>
+
 </xs:schema>

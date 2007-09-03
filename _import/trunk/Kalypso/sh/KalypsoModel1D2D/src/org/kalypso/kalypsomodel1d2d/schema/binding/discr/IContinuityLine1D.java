@@ -40,41 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
-import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_Object;
+import javax.xml.namespace.QName;
 
-/**
- * Interface for classes representing
- * 
- * @author Patrice Congo
- *
- */
-public interface IJunctionContext1DToCLine 
-                        extends IFE1D2DComplexElement
+import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
+
+public interface IContinuityLine1D extends IFELine
 {
-  /**
-   * To get the 1D elmement of this junction context
-   * @return the 1D element of this juntion context or null
-   *            if this junction context does not have a 1D element
-   */
-  public IElement1D getElement1D();
+  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "ContinuityLine1D" );
   
-  
-  public IFE1D2DNode getTarget1DNode();
-  
-  /**
-   * To get the continuity line of this junction context
-   * @return the continuity line of this juntion context or null
-   *            if this junction context does not have a continuity line
-   */
-  public ILineElement getContinuityLine();
-  
-  /**
-   * Gets the virtual geometry of this junction context 
-   * by recalculating it
-   * 
-   * @return the recalculated geometry of this junction context
-   */
-  public GM_Object recalculateElementGeometry( )throws GM_Exception;
-  
+  public static final QName PROP_ACTIVE_NODE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "directedNode" );
 }

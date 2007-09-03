@@ -45,17 +45,15 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.net.UrlResolver;
-import org.kalypso.kalypsomodel1d2d.conv.INativeIDProvider;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
@@ -69,19 +67,15 @@ import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureProvider;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
 
 /**
  * @author huebsch <a href="mailto:j.huebsch@tuhh.de">Jessica Huebsch</a>
  */
-@SuppressWarnings( { "unchecked", "hiding" })
-public class RMA10Calculation implements INativeIDProvider
+public class RMA10Calculation
 {
   private GMLWorkspace m_discretisationModelWorkspace = null;
-
-  private final GMLWorkspace m_operationalModelWorkspace;
 
   private GMLWorkspace m_flowRelationshipsWorkspace = null;
 
@@ -91,13 +85,11 @@ public class RMA10Calculation implements INativeIDProvider
 
   private String m_kalypso1D2DKernelPath;
 
-  private final LinkedHashMap<IBoundaryLine, Integer> m_boundaryLineIDProvider = new LinkedHashMap<IBoundaryLine, Integer>( 32 );
-
   private ICalculationUnit m_calculationUnit;
 
   private IControlModel1D2D m_controlModel1D2D = null;
 
-  private List<IBoundaryLine> m_unitBoundaryLines;
+  private List<IFELine> m_unitBoundaryLines;
 
   private List<IBoundaryCondition> m_unitBoundaryConditions;
 
@@ -142,7 +134,6 @@ public class RMA10Calculation implements INativeIDProvider
     };
 
     m_discretisationModelWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( RMA10SimModelConstants.DISCRETISATIOMODEL_ID ), factory );
-    m_operationalModelWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( RMA10SimModelConstants.OPERATIONALMODEL_ID ), factory );
     m_flowRelationshipsWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( RMA10SimModelConstants.FLOWRELATIONSHIPMODEL_ID ), factory );
     m_controlModelRoot = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( RMA10SimModelConstants.CONTROL_ID ), factory ).getRootFeature();
     m_roughnessRootWorkspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( RMA10SimModelConstants.ROUGHNESS_ID ), factory ).getRootFeature();
@@ -268,10 +259,10 @@ public class RMA10Calculation implements INativeIDProvider
 
   private void initializeInfos( )
   {
-    final IFlowRelationshipModel flowRelationshipsModel = (IFlowRelationshipModel) m_operationalModelWorkspace.getRootFeature().getAdapter( IFlowRelationshipModel.class );
-    final List<IBoundaryLine> boundaryLines = m_calculationUnit.getBoundaryLines();
+    final IFlowRelationshipModel flowRelationshipsModel = (IFlowRelationshipModel) m_flowRelationshipsWorkspace.getRootFeature().getAdapter( IFlowRelationshipModel.class );
+    final List<IFELine> continuityLines = m_calculationUnit.getContinuityLines();
 
-    m_unitBoundaryLines = new ArrayList<IBoundaryLine>();
+    m_unitBoundaryLines = new ArrayList<IFELine>();
     m_unitBoundaryConditions = new ArrayList<IBoundaryCondition>();
     for( final IFlowRelationship relationship : flowRelationshipsModel )
     {
@@ -284,7 +275,7 @@ public class RMA10Calculation implements INativeIDProvider
 
           // find parent element of this boundary condition (in the moment only boundary lines are supported)
           final String parentElementID = boundaryCondition.getParentElementID();
-          for( final IBoundaryLine line : boundaryLines )
+          for( final IFELine line : continuityLines )
           {
             if( line.getGmlID().equals( parentElementID ) )
             {
@@ -310,7 +301,7 @@ public class RMA10Calculation implements INativeIDProvider
     return m_unitBoundaryConditions;
   }
 
-  public List<IBoundaryLine> getBoundaryLines( )
+  public List<IFELine> getBoundaryLines( )
   {
     return m_unitBoundaryLines;
   }
@@ -332,46 +323,5 @@ public class RMA10Calculation implements INativeIDProvider
       m_controlModel1D2D = (IControlModel1D2D) controlModelFeature.getAdapter( IControlModel1D2D.class );
     }
     return m_controlModel1D2D;
-  }
-
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.INativeIDProvider#getID(org.kalypsodeegree.model.feature.binding.IFeatureWrapper2)
-   */
-  public int getBoundaryLineID( final IFeatureWrapper2 object )
-  {
-    if( object instanceof IBoundaryLine )
-    {
-      final Integer id = m_boundaryLineIDProvider.get( object );
-      if( id == null )
-        return -1;
-
-      return id;
-    }
-    else
-    {
-      throw new RuntimeException( "Type not supported" );
-    }
-  }
-
-  public boolean containsID( final IFeatureWrapper2 i1d2dObject )
-  {
-    if( i1d2dObject instanceof IBoundaryLine )
-    {
-      return m_boundaryLineIDProvider.containsKey( i1d2dObject );
-    }
-    else
-    {
-      throw new RuntimeException( "Type not supported" );
-    }
-  }
-
-  public int getBoundaryConditionParentOrdinalNumber( final String bcParentID )
-  {
-    for( final IBoundaryLine line : m_unitBoundaryLines )
-    {
-      if( line.getGmlID().equals( bcParentID ) )
-        return m_unitBoundaryLines.indexOf( line ) + 1;
-    }
-    return -1;
   }
 }

@@ -40,16 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import javax.xml.namespace.QName;
 
-/**
- * @author Patrice Congo
- */
-public interface IFE1D2DContinuityLine<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge> extends ILineElement<CT, ET>
+import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
+
+public interface IContinuityLine2D extends IFELine
 {
-  public IFeatureWrapperCollection<ET> getEdges( );
-
-  public void addEdge( final String edgeID );
-
-  public void setEdges( final ET[] edges );
+  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "ContinuityLine2D" );
 }

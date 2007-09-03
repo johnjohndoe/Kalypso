@@ -59,8 +59,8 @@ import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.ops.EdgeOps;
 import org.kalypso.kalypsomodel1d2d.ops.TypeInfo;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtils;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IEdgeInv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
@@ -68,6 +68,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.FlowRelationUtilitites;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation;
@@ -105,6 +106,8 @@ public class Gml2RMA10SConv implements INativeIDProvider
   private final LinkedHashMap<String, Integer> m_complexElementsIDProvider = new LinkedHashMap<String, Integer>();
 
   private final LinkedHashMap<String, Integer> m_edgesIDProvider = new LinkedHashMap<String, Integer>( 100000 );
+
+  private final LinkedHashMap<String, Integer> m_linesIDProvider = new LinkedHashMap<String, Integer>();
 
   private final BuildingIDProvider m_buildingIDProvider = new BuildingIDProvider();
 
@@ -195,28 +198,28 @@ public class Gml2RMA10SConv implements INativeIDProvider
     m_exportRoughness = exportRoughness;
   }
 
-  public boolean containsID( final IFeatureWrapper2 i1d2dObject )
+  public boolean containsID( final IFeatureWrapper2 feature )
   {
-    if( i1d2dObject == null )
+    if( feature == null )
       return false;
-    final String id = i1d2dObject.getGmlID();
-    if( i1d2dObject instanceof IFE1D2DNode )
+    final String id = feature.getGmlID();
+    if( feature instanceof IFE1D2DNode )
     {
       return m_nodesIDProvider.containsKey( id );
     }
-    else if( i1d2dObject instanceof IFE1D2DEdge )
+    else if( feature instanceof IFE1D2DEdge )
     {
       return m_edgesIDProvider.containsKey( id );
     }
-    else if( i1d2dObject instanceof IBoundaryLine )
+    else if( feature instanceof IFELine )
     {
-      return m_calculation.containsID( i1d2dObject );
+      return m_linesIDProvider.containsKey( feature );
     }
-    else if( i1d2dObject instanceof IFE1D2DElement )
+    else if( feature instanceof IFE1D2DElement )
     {
       return m_elementsIDProvider.containsKey( id );
     }
-    else if( i1d2dObject instanceof IFE1D2DComplexElement )
+    else if( feature instanceof IFE1D2DComplexElement )
     {
       return m_complexElementsIDProvider.containsKey( id );
     }
@@ -226,31 +229,32 @@ public class Gml2RMA10SConv implements INativeIDProvider
     }
   }
 
-  public int getBoundaryLineID( final IFeatureWrapper2 i1d2dObject )
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.conv.INativeIDProvider#getConversionID(java.lang.String)
+   */
+  public int getConversionID( final IFeatureWrapper2 feature )
   {
-    if( i1d2dObject == null ) // TODO: this is probably an error in the data, throw an exception instead?
+    if( feature == null ) // TODO: this is probably an error in the data, throw an exception instead?
       return 0;
 
-    final String id = i1d2dObject.getGmlID();
-    if( i1d2dObject instanceof IFE1D2DNode )
+    final String id = feature.getGmlID();
+    if( feature instanceof IFE1D2DNode )
     {
       return getID( m_nodesIDProvider, id );
     }
-    else if( i1d2dObject instanceof IFE1D2DEdge )
+    else if( feature instanceof IFE1D2DEdge )
     {
       return getID( m_edgesIDProvider, id );
     }
-    else if( i1d2dObject instanceof IBoundaryLine )
-    {
-      if( m_exportRequest ) // TODO: check what to do here
-        return -9999;
-      return m_calculation.getBoundaryLineID( i1d2dObject );
-    }
-    else if( i1d2dObject instanceof IFE1D2DElement )
+    else if( feature instanceof IFE1D2DElement )
     {
       return getID( m_elementsIDProvider, id );
     }
-    else if( i1d2dObject instanceof IFE1D2DComplexElement )
+    else if( feature instanceof IFELine )
+    {
+      return getID( m_linesIDProvider, id );
+    }
+    else if( feature instanceof IFE1D2DComplexElement )
     {
       return getID( m_complexElementsIDProvider, id );
     }
@@ -258,6 +262,24 @@ public class Gml2RMA10SConv implements INativeIDProvider
     {
       return 0;
     }
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.conv.INativeIDProvider#getConversionID(java.lang.String)
+   */
+  public int getConversionID( final String featureGmlID )
+  {
+    if( m_nodesIDProvider.containsKey( featureGmlID ) )
+      return m_nodesIDProvider.get( featureGmlID );
+    if( m_edgesIDProvider.containsKey( featureGmlID ) )
+      return m_edgesIDProvider.get( featureGmlID );
+    if( m_elementsIDProvider.containsKey( featureGmlID ) )
+      return m_elementsIDProvider.get( featureGmlID );
+    if( m_linesIDProvider.containsKey( featureGmlID ) )
+      return m_linesIDProvider.get( featureGmlID );
+    if( m_complexElementsIDProvider.containsKey( featureGmlID ) )
+      return m_complexElementsIDProvider.get( featureGmlID );
+    return 0;
   }
 
   private int getID( final LinkedHashMap<String, Integer> map, final String gmlID )
@@ -283,11 +305,11 @@ public class Gml2RMA10SConv implements INativeIDProvider
     }
     catch( final IOException ioe )
     {
-      throw new SimulationException( Messages.getString("Gml2RMA10SConv.1") + ioe.getLocalizedMessage(), ioe ); //$NON-NLS-1$
+      throw new SimulationException( Messages.getString( "Gml2RMA10SConv.1" ) + ioe.getLocalizedMessage(), ioe ); //$NON-NLS-1$
     }
     catch( final GM_Exception gme )
     {
-      throw new SimulationException( Messages.getString("Gml2RMA10SConv.2") + gme.getLocalizedMessage(), gme ); //$NON-NLS-1$
+      throw new SimulationException( Messages.getString( "Gml2RMA10SConv.2" ) + gme.getLocalizedMessage(), gme ); //$NON-NLS-1$
     }
     finally
     {
@@ -303,7 +325,12 @@ public class Gml2RMA10SConv implements INativeIDProvider
     final Formatter formatter = new Formatter( stream, Locale.US );
 
     writeElementsNodesAndEdges( formatter, elements );
-    JunctionContextConverter.write( m_discretisationModel1d2d, m_calculationUnit, this, formatter );
+
+    if( m_calculationUnit instanceof ICalculationUnit1D2D )
+    {
+      final TransitionElementConverter transitionElementConverter = new TransitionElementConverter( m_discretisationModel1d2d, (ICalculationUnit1D2D) m_calculationUnit, this, formatter );
+      transitionElementConverter.write();
+    }
   }
 
   private void writeEdgeSet( final Formatter formatter, final Collection<IFE1D2DEdge> edges )
@@ -316,8 +343,8 @@ public class Gml2RMA10SConv implements INativeIDProvider
         continue;
       }
 
-      final int node0ID = getBoundaryLineID( edge.getNode( 0 ) );
-      final int node1ID = getBoundaryLineID( edge.getNode( 1 ) );
+      final int node0ID = getConversionID( edge.getNode( 0 ) );
+      final int node1ID = getConversionID( edge.getNode( 1 ) );
 
       /*
        * If we have no middle node (which is always the case), create it on the fly (just takes middle of edge). This is
@@ -341,7 +368,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
         }
         else
         {
-          middleNodeID = getBoundaryLineID( edge.getMiddleNode() );
+          middleNodeID = getConversionID( edge.getMiddleNode() );
         }
       }
 
@@ -355,9 +382,9 @@ public class Gml2RMA10SConv implements INativeIDProvider
           final Object object = edge.getContainers().get( 0 );
 
           if( object instanceof IElement1D )
-            leftRightID = getBoundaryLineID( ((IElement1D) object) );
+            leftRightID = getConversionID( ((IElement1D) object) );
         }
-        formatter.format( "AR%10d%10d%10d%10d%10d%10d%n", cnt++, node0ID, node1ID, leftRightID, leftRightID, middleNodeID );  //$NON-NLS-1$
+        formatter.format( "AR%10d%10d%10d%10d%10d%10d%n", cnt++, node0ID, node1ID, leftRightID, leftRightID, middleNodeID ); //$NON-NLS-1$
       }
       else if( TypeInfo.is2DEdge( edge ) )
       {
@@ -373,14 +400,14 @@ public class Gml2RMA10SConv implements INativeIDProvider
           leftElement = EdgeOps.getLeftRightElement( m_calculationUnit, edge, EdgeOps.ORIENTATION_LEFT );
           rightElement = EdgeOps.getLeftRightElement( m_calculationUnit, edge, EdgeOps.ORIENTATION_RIGHT );
         }
-        final int leftParent = getBoundaryLineID( leftElement );
-        final int rightParent = getBoundaryLineID( rightElement );
-        formatter.format( "AR%10d%10d%10d%10d%10d%10d%n", cnt++, node0ID, node1ID, leftParent, rightParent, middleNodeID );  //$NON-NLS-1$
+        final int leftParent = getConversionID( leftElement );
+        final int rightParent = getConversionID( rightElement );
+        formatter.format( "AR%10d%10d%10d%10d%10d%10d%n", cnt++, node0ID, node1ID, leftParent, rightParent, middleNodeID ); //$NON-NLS-1$
       }
       else
       {
         // stream.println( "************************************** non 1d/2d edge: " + edge.getGmlID() );
-        System.out.println( "non 1d/2d edge: " + edge.getGmlID() );  //$NON-NLS-1$
+        System.out.println( "non 1d/2d edge: " + edge.getGmlID() ); //$NON-NLS-1$
       }
     }
   }
@@ -388,7 +415,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
   private void writeNodes( final Formatter formatter, final IFeatureWrapperCollection<IFE1D2DNode> nodes ) throws SimulationException
   {
     final List<IFE1D2DNode> nodesInBBox = m_exportRequest ? nodes : nodes.query( m_calcUnitBBox );
-    for( final IFE1D2DNode<IFE1D2DEdge> node : nodesInBBox )
+    for( final IFE1D2DNode node : nodesInBBox )
     {
       // TODO: how is now checked if a node is inside the CalcUnit???
       // if( !CalUnitOps.isNodeOf( m_calculationUnit, node ) )
@@ -406,7 +433,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
       // }
 
       /* The node itself */
-      final int nodeID = getBoundaryLineID( node );
+      final int nodeID = getConversionID( node );
       final GM_Point point = node.getPoint();
       BigDecimal station = null;
 
@@ -415,7 +442,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
         /* Node parameters */
         final IFlowRelationship relationship = m_flowrelationModel.findFlowrelationship( point.getPosition(), 0.0 );
         if( relationship == null )
-          throw new SimulationException( Messages.getString("Gml2RMA10SConv.11") + node.getGmlID(), null ); //$NON-NLS-1$
+          throw new SimulationException( Messages.getString( "Gml2RMA10SConv.11" ) + node.getGmlID(), null ); //$NON-NLS-1$
 
         if( relationship instanceof IKingFlowRelation )
         {
@@ -426,7 +453,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
           final BigDecimal widthStorage = kingRelation.getWidthStorage();
           final BigDecimal heightStorage = kingRelation.getHeightStorage();
           final BigDecimal slopeStorage = kingRelation.getSlopeStorage();
-          formatter.format( "CS%10d%10.1f%10.3f%10.3f%10.2f%10.2f%10.2f%n", nodeID, width, bankSlopeLeft, bankSlopeRight, widthStorage, heightStorage, slopeStorage );  //$NON-NLS-1$
+          formatter.format( "CS%10d%10.1f%10.3f%10.3f%10.2f%10.2f%10.2f%n", nodeID, width, bankSlopeLeft, bankSlopeRight, widthStorage, heightStorage, slopeStorage ); //$NON-NLS-1$
         }
         else if( relationship instanceof ITeschkeFlowRelation )
         {
@@ -440,41 +467,41 @@ public class Gml2RMA10SConv implements INativeIDProvider
           final Double min = teschkeConv.getMin();
           final Double max = teschkeConv.getMax();
 
-          formatter.format( "MM%10d%20.7f%20.7f%n", nodeID, min, max );  //$NON-NLS-1$
+          formatter.format( "MM%10d%20.7f%20.7f%n", nodeID, min, max ); //$NON-NLS-1$
 
           final IPolynomial1D[] polyArea = teschkeConv.getPolynomialsByType( IWspmTuhhQIntervallConstants.DICT_PHENOMENON_AREA );
           if( polyArea == null )
             continue; // TODO: only for debug purpose, throw exception instead
 
-          writePolynome( formatter, "AP1", nodeID, polyArea[0], 0, 5, null );  //$NON-NLS-1$
-          writePolynome( formatter, "AP2", nodeID, polyArea[0], 5, 10, null );  //$NON-NLS-1$
-          writePolynome( formatter, "AP3", nodeID, polyArea[0], 10, 13, null );  //$NON-NLS-1$
+          writePolynome( formatter, "AP1", nodeID, polyArea[0], 0, 5, null ); //$NON-NLS-1$
+          writePolynome( formatter, "AP2", nodeID, polyArea[0], 5, 10, null ); //$NON-NLS-1$
+          writePolynome( formatter, "AP3", nodeID, polyArea[0], 10, 13, null ); //$NON-NLS-1$
 
           final IPolynomial1D[] polyRunoff = teschkeConv.getPolynomialsByType( IWspmTuhhQIntervallConstants.DICT_PHENOMENON_RUNOFF );
-          writePolynome( formatter, "QP1", nodeID, polyRunoff[0], 0, 4, slope );  //$NON-NLS-1$
-          writePolynome( formatter, "QP2", nodeID, polyRunoff[0], 4, 9, null );  //$NON-NLS-1$
-          writePolynome( formatter, "QP3", nodeID, polyRunoff[0], 9, 13, null );  //$NON-NLS-1$
+          writePolynome( formatter, "QP1", nodeID, polyRunoff[0], 0, 4, slope ); //$NON-NLS-1$
+          writePolynome( formatter, "QP2", nodeID, polyRunoff[0], 4, 9, null ); //$NON-NLS-1$
+          writePolynome( formatter, "QP3", nodeID, polyRunoff[0], 9, 13, null ); //$NON-NLS-1$
 
           final IPolynomial1D[] polyAlpha = teschkeConv.getPolynomialsByType( IWspmTuhhQIntervallConstants.DICT_PHENOMENON_ALPHA );
 
           if( polyAlpha == null )
-            throw new SimulationException( Messages.getString("Gml2RMA10SConv.20") + station, null ); //$NON-NLS-1$
+            throw new SimulationException( Messages.getString( "Gml2RMA10SConv.20" ) + station, null ); //$NON-NLS-1$
 
           if( polyAlpha.length > 1 )
           {
             final double hBV = polyAlpha[1].getRangeMin(); // Bordvollhöhe ist gleich anfang des Übergangsbereich
-            formatter.format( "HB%10d%20.7f%n", nodeID, hBV );  //$NON-NLS-1$
-            writePolynome( formatter, "AD ", nodeID, polyAlpha[1], 0, 4, polyAlpha[1].getRangeMax() );  //$NON-NLS-1$
+            formatter.format( "HB%10d%20.7f%n", nodeID, hBV ); //$NON-NLS-1$
+            writePolynome( formatter, "AD ", nodeID, polyAlpha[1], 0, 4, polyAlpha[1].getRangeMax() ); //$NON-NLS-1$
           }
           if( polyAlpha.length > 2 )
           {
-            writePolynome( formatter, "AK1", nodeID, polyAlpha[2], 0, 5, null );  //$NON-NLS-1$
-            writePolynome( formatter, "AK2", nodeID, polyAlpha[2], 5, 10, null );  //$NON-NLS-1$
-            writePolynome( formatter, "AK3", nodeID, polyAlpha[2], 10, 13, null );  //$NON-NLS-1$
+            writePolynome( formatter, "AK1", nodeID, polyAlpha[2], 0, 5, null ); //$NON-NLS-1$
+            writePolynome( formatter, "AK2", nodeID, polyAlpha[2], 5, 10, null ); //$NON-NLS-1$
+            writePolynome( formatter, "AK3", nodeID, polyAlpha[2], 10, 13, null ); //$NON-NLS-1$
           }
         }
         else
-          throw new SimulationException( Messages.getString("Gml2RMA10SConv.26") + relationship, null ); //$NON-NLS-1$
+          throw new SimulationException( Messages.getString( "Gml2RMA10SConv.26" ) + relationship, null ); //$NON-NLS-1$
       }
       formatNode( formatter, nodeID, point, station );
     }
@@ -494,19 +521,19 @@ public class Gml2RMA10SConv implements INativeIDProvider
       z = -9999;
 
     if( station == null )
-      formatter.format( "FP%10d%20.7f%20.7f%20.7f%n", nodeID, x, y, z );  //$NON-NLS-1$
+      formatter.format( "FP%10d%20.7f%20.7f%20.7f%n", nodeID, x, y, z ); //$NON-NLS-1$
     else
-      formatter.format( "FP%10d%20.7f%20.7f%20.7f%20.7f%n", nodeID, x, y, z, station );  //$NON-NLS-1$
+      formatter.format( "FP%10d%20.7f%20.7f%20.7f%20.7f%n", nodeID, x, y, z, station ); //$NON-NLS-1$
     if( m_restart )
       writeRestartLines( formatter, nodeID, x, y );
   }
 
   private void writePolynome( final Formatter formatter, final String kind, final int nodeID, final IPolynomial1D poly, final int coeffStart, final int coeffStop, final Double extraValue )
   {
-    formatter.format( "%3s%9d", kind, nodeID );  //$NON-NLS-1$
+    formatter.format( "%3s%9d", kind, nodeID ); //$NON-NLS-1$
 
     if( extraValue != null )
-      formatter.format( "%20.7f", extraValue );  //$NON-NLS-1$
+      formatter.format( "%20.7f", extraValue ); //$NON-NLS-1$
 
     final double[] coefficients = poly.getCoefficients();
     for( int j = coeffStart; j < coeffStop; j++ )
@@ -517,10 +544,10 @@ public class Gml2RMA10SConv implements INativeIDProvider
       else
         coeff = 0.0;
 
-      formatter.format( "%20.7f", coeff );  //$NON-NLS-1$
+      formatter.format( "%20.7f", coeff ); //$NON-NLS-1$
     }
 
-    formatter.format( "%n" );  //$NON-NLS-1$
+    formatter.format( "%n" ); //$NON-NLS-1$
   }
 
   /**
@@ -541,11 +568,15 @@ public class Gml2RMA10SConv implements INativeIDProvider
       if( m_exportRequest && element instanceof IElement1D )
         continue;
 
-      final int id = getBoundaryLineID( element );
+      final int id = getConversionID( element );
 
       if( element instanceof IElement1D )
       {
-        contributeToSet( element, edgeSet );
+        IFE1D2DEdge edge = ((IElement1D) element).getEdge();
+        if( edge instanceof IEdgeInv )
+          edge = ((IEdgeInv) edge).getInverted();
+        edgeSet.add( edge );
+
         /* 1D-Elements get special handling. */
         final IElement1D element1D = (IElement1D) element;
 
@@ -555,23 +586,29 @@ public class Gml2RMA10SConv implements INativeIDProvider
           /* A Building? Create dynamic building number and use it as building ID. */
           final int buildingID = m_buildingIDProvider.addBuilding( building );
           final IFE1D2DNode upstreamNode = FlowRelationUtilitites.findUpstreamNode( building, m_discretisationModel1d2d );
-          final int upstreamNodeID = getBoundaryLineID( upstreamNode );
-          formatter.format( "FE%10d%10d%10s%10s%10d%n", id, buildingID, "", "", upstreamNodeID );    //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+          final int upstreamNodeID = getConversionID( upstreamNode );
+          formatter.format( "FE%10d%10d%10s%10s%10d%n", id, buildingID, "", "", upstreamNodeID ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
         else if( FlowRelationUtilitites.isTeschkeElement1D( element1D, m_flowrelationModel ) )
         {
           /* Element without building: The special roughness-class '89' should be used. */
-          formatter.format( "FE%10d%10d%n", id, 89 );  //$NON-NLS-1$
+          formatter.format( "FE%10d%10d%n", id, 89 ); //$NON-NLS-1$
         }
         else
         {
           // TODO: give hint what 1D-element is was?
-          throw new SimulationException( Messages.getString("Gml2RMA10SConv.43") + element1D.getGmlID(), null ); //$NON-NLS-1$
+          throw new SimulationException( Messages.getString( "Gml2RMA10SConv.43" ) + element1D.getGmlID(), null ); //$NON-NLS-1$
         }
       }
       else if( element instanceof IPolyElement )
       {
-        contributeToSet( element, edgeSet );
+        for( IFE1D2DEdge edge : ((IPolyElement<IFE1D2DComplexElement, IFE1D2DEdge>) element).getEdges() )
+        {
+          if( edge instanceof IEdgeInv )
+            edge = ((IEdgeInv) edge).getInverted();
+          edgeSet.add( edge );
+        }
+
         final int roughnessID = (m_exportRequest && !m_exportRoughness) ? 0 : getRoughnessID( element );
         formatter.format( "FE%10d%10d%n", id, roughnessID );
 
@@ -598,34 +635,6 @@ public class Gml2RMA10SConv implements INativeIDProvider
 
     // write edges
     writeEdgeSet( formatter, edgeSet );
-  }
-
-  /**
-   * Collects the element edges and put them into the provides set
-   * 
-   */
-  private static final void contributeToSet( final IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge> ele, final HashSet<IFE1D2DEdge> edgeSet )
-  {
-    if( ele instanceof IElement1D )
-    {
-      IFE1D2DEdge edge = ((IElement1D) ele).getEdge();
-      if( edge instanceof IEdgeInv )
-      {
-        edge = ((IEdgeInv) edge).getInverted();
-      }
-      edgeSet.add( edge );
-    }
-    else if( ele instanceof IPolyElement )
-    {
-      for( IFE1D2DEdge edge : ((IPolyElement<IFE1D2DComplexElement, IFE1D2DEdge>) ele).getEdges() )
-      {
-        if( edge instanceof IEdgeInv )
-        {
-          edge = ((IEdgeInv) edge).getInverted();
-        }
-        edgeSet.add( edge );
-      }
-    }
   }
 
   private void writeRestartLines( final Formatter formatter, final int nodeID, final double x, final double y )
@@ -671,6 +680,11 @@ public class Gml2RMA10SConv implements INativeIDProvider
   public final LinkedHashMap<String, Integer> getNodesIDProvider( )
   {
     return m_nodesIDProvider;
+  }
+
+  public final LinkedHashMap<String, Integer> getLinesIDProvider( )
+  {
+    return m_linesIDProvider;
   }
 
   public BuildingIDProvider getBuildingProvider( )
