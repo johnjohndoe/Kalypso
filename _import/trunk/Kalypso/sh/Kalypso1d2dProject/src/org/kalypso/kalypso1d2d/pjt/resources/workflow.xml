@@ -146,7 +146,7 @@ Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodu
 					<Help><![CDATA[Berechnungseinheiten modellieren]]></Help>
 					<Name>Berechnungseinheiten modellieren</Name>
 				</Task>
-				<Task context="JunctionContextTheme"
+				<Task type="ASYNCHRONOUS" context="TransitionElementContextTheme"
 					URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__SetEltLineTrans">
 					<Help><![CDATA[Ermöglicht die Erstellung einer Kopplung von 1D zu 2D zwischen einem 1D-Element und einer 2D-Randlinie.]]></Help>
 					<Name>1D-2D-Linienkopplung</Name>
@@ -376,13 +376,13 @@ Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodu
 								value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}PolyElement" />
 						</con:ExtensionContext>
 
-						<con:ExtensionContext id="JunctionContextTheme"
+						<con:ExtensionContext id="TransitionElementContextTheme"
 							parent="FenetMap"
 							handlerFactoryId="kalypsoContextHandlerFactory">
 							<con:Parameter name="type"
 								value="themeContext" />
 							<con:Parameter name="input"
-								value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}JunctionContext1DToCLine" />
+								value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}TransitionElement" />
 						</con:ExtensionContext>
 
 						<con:ExtensionContext id="ContLineTheme"
@@ -391,7 +391,7 @@ Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodu
 							<con:Parameter name="type"
 								value="themeContext" />
 							<con:Parameter name="input"
-								value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}ContinuityLine" />
+								value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Line" />
 						</con:ExtensionContext>
 						<con:ExtensionContext id="RoughnessTheme"
 							parent="FenetMap"

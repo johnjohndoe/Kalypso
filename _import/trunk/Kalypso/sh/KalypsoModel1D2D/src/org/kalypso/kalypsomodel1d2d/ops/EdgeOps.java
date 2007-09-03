@@ -43,14 +43,12 @@ package org.kalypso.kalypsomodel1d2d.ops;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.EdgeInv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IEdgeInv;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DContinuityLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEMiddleNode;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ILineElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -142,7 +140,7 @@ public class EdgeOps
    *          the edge which border node is to be retrieved
    * @return the border node of the given 1d node
    */
-  public static final IFE1D2DNode<IFE1D2DEdge> find1DEdgeEndNode( IFE1D2DEdge elementEdge )
+  public static final IFE1D2DNode find1DEdgeEndNode( IFE1D2DEdge elementEdge )
   {
     if( !TypeInfo.is1DEdge( elementEdge ) )
     {
@@ -316,7 +314,7 @@ public class EdgeOps
     {
       for( IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge> ele : containers )
       {
-        if( ele instanceof ILineElement )
+        if( ele instanceof IFELine )
         {
           continue;
         }
@@ -347,7 +345,7 @@ public class EdgeOps
       {
         for( IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge> ele : edgeInvContainers )
         {
-          if( ele instanceof ILineElement )
+          if( ele instanceof IFELine )
           {
             continue;
           }

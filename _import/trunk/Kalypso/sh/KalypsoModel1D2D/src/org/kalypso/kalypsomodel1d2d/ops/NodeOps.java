@@ -69,84 +69,41 @@ public class NodeOps
     // do not instantiate
   }
 
-  /**
-   * Finds the nearest node to the given position.
-   */
-  public static IFE1D2DNode findNode( 
-                      final GM_Point point, 
-                      final IFEDiscretisationModel1d2d model )
+  public static final IFE1D2DNode findeNodeImpl( final GM_Point point, final FE1D2DDiscretisationModel model )
   {
-    return model.findNode( point, 10.0 );
-    /*
-    Assert.throwIAEOnNullParam( point, "point" );
-    Assert.throwIAEOnNullParam( model, "model" );
-    
-    final FeatureList elementList = 
-          model.getElements().getWrappedList();//(FeatureList) model.getFeature().getProperty( 
-//              Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS );
-    final FeatureList element2DList = 
-          new FilteredFeatureList( elementList, Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT.getLocalPart(), true );
+    final FeatureList elementList = (FeatureList) model.getElements().getWrappedList();
+    final FeatureList element2DList = new FilteredFeatureList( elementList, Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT.getLocalPart(), true );
 
     // 1. Try: look, if the position is within an element
-    // TODO: comment: why is this better than just searching within the node list?
-    final List foundElements = 
-    	      element2DList.query( point.getPosition(), null );
-    final IFE1D2DNode nearestNode = 
-    	      nearestNodeOfElements( point, foundElements );
+    final List foundElements = element2DList.query( point.getPosition(), null );
+    final IFE1D2DNode nearestNode = nearestNodeOfElements( point, foundElements );
     if( nearestNode != null )
     {
       return nearestNode;
     }
-    
+
     // 2. try: nearest node, brute force
     return nearestNodeOfElements( point, element2DList );
-    */
   }
-  
-  public static final IFE1D2DNode findeNodeImpl(
-		                            final GM_Point point,
-		                            final FE1D2DDiscretisationModel model)
-  {
-       final FeatureList elementList = 
-          (FeatureList) model.getElements().getWrappedList();
-	    final FeatureList element2DList = 
-	    	        new FilteredFeatureList( 
-	    	        		elementList, 
-	    	        		Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT.getLocalPart(), true );
-	
-	    // 1. Try: look, if the position is within an element
-	    final List foundElements = 
-	    	      element2DList.query( point.getPosition(), null );
-	    final IFE1D2DNode nearestNode = 
-	    	      nearestNodeOfElements( point, foundElements );
-	    if( nearestNode != null )
-	    {
-	      return nearestNode;
-	    }
-	    
-	    // 2. try: nearest node, brute force
-	    return nearestNodeOfElements( point, element2DList );
-  }
-  
+
   private static IFE1D2DNode nearestNodeOfElements( final GM_Point point, final List foundElements )
   {
     double currentDistance = Double.MAX_VALUE;
     IFE1D2DNode nearestNode = null;
     for( final Object object : foundElements )
     {
-      final IPolyElement ele = (IPolyElement) ((Feature)object).getAdapter( IPolyElement.class );
+      final IPolyElement ele = (IPolyElement) ((Feature) object).getAdapter( IPolyElement.class );
       if( ele == null )
         continue;
       final List<IFE1D2DEdge> edges = ele.getEdges();
       for( final IFE1D2DEdge edge : edges )
       {
-    	final List<IFE1D2DNode<IFE1D2DEdge>> nodes = 
-            (edge instanceof IEdgeInv)? ((IEdgeInv)edge).getInverted().getNodes():edge.getNodes();
+        final List<IFE1D2DNode> nodes = (edge instanceof IEdgeInv) ? ((IEdgeInv) edge).getInverted().getNodes() : edge.getNodes();
         for( final IFE1D2DNode node : nodes )
         {
           final GM_Point nodePoint = node.getPoint();
           final double distance = point.distance( nodePoint );
-          
+
           if( distance < currentDistance )
           {
             currentDistance = distance;
@@ -158,102 +115,91 @@ public class NodeOps
     return nearestNode;
   }
 
-  public static boolean startOf( IFE1D2DNode<IFE1D2DEdge> startNode, IFE1D2DEdge edgeToTest)
+  public static boolean startOf( IFE1D2DNode startNode, IFE1D2DEdge edgeToTest )
   {
     Assert.throwIAEOnNullParam( startNode, "startNode" );
     IFE1D2DNode edgeStart = edgeToTest.getNode( 0 );
     boolean equals = startNode.equals( edgeStart );
-    return equals;    
+    return equals;
   }
-  
-  public static boolean endOf( IFE1D2DNode<IFE1D2DEdge> endNode, IFE1D2DEdge edgeToTest)
+
+  public static boolean endOf( IFE1D2DNode endNode, IFE1D2DEdge edgeToTest )
   {
-    if(endNode==null || edgeToTest==null)
+    if( endNode == null || edgeToTest == null )
     {
       return false;
     }
-    
+
     IFE1D2DNode edgeEnd = edgeToTest.getNode( 1 );
     boolean equals = endNode.equals( edgeEnd );
-    return equals;    
+    return equals;
   }
-  
-  public static boolean hasElevation(IFE1D2DNode<IFE1D2DEdge> node)
+
+  public static boolean hasElevation( IFE1D2DNode node )
   {
-      GM_Point point = node.getPoint();
-      boolean status = false;
-      if(point.getCoordinateDimension()<=2)
-      {
-        status = false;
-      }
-      else
-      {
-        return status = true;
-      }    
-   return status; 
+    GM_Point point = node.getPoint();
+    boolean status = false;
+    if( point.getCoordinateDimension() <= 2 )
+    {
+      status = false;
+    }
+    else
+    {
+      return status = true;
+    }
+    return status;
   }
+
   /**
    * Gets the opposite of the given node within the specified edge
-   * @param edge the edge given the opposition context
-   * @param node the node to found the opposite for
-   * @throws IllegalArgumentException if 
-   *    <ul>
-   *        <li/> node or edge is null
-   *        <li/> if node is neither a starting nor an ending node of edge
-   *        <li/> if edge does not have 2 nodes
-   *    </ul>
-   * @throws RuntimeException on any other exception encontered while 
-   *            searching for the opposite node
+   * 
+   * @param edge
+   *            the edge given the opposition context
+   * @param node
+   *            the node to found the opposite for
+   * @throws IllegalArgumentException
+   *             if
+   *             <ul>
+   *             <li/> node or edge is null <li/> if node is neither a starting nor an ending node of edge <li/> if edge
+   *             does not have 2 nodes
+   *             </ul>
+   * @throws RuntimeException
+   *             on any other exception encontered while searching for the opposite node
    */
-  public static final IFE1D2DNode<IFE1D2DEdge> getOpositeNode(
-                                        IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge,
-                                        IFE1D2DNode<IFE1D2DEdge> node)
-                                        throws IllegalArgumentException
+  public static final IFE1D2DNode getOpositeNode( IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge, IFE1D2DNode node ) throws IllegalArgumentException
   {
     Assert.throwIAEOnNullParam( node, "node" );
     Assert.throwIAEOnNullParam( edge, "edge" );
-    
+
     try
     {
-      if( NodeOps.startOf( node, edge ))
+      if( NodeOps.startOf( node, edge ) )
       {
-        return edge.getNode( 1 );//nodes.get( 1 );
+        return edge.getNode( 1 );// nodes.get( 1 );
       }
-      else if( NodeOps.endOf( node, edge ))
+      else if( NodeOps.endOf( node, edge ) )
       {
-        return edge.getNode( 0 );//nodes.get( 0 );
+        return edge.getNode( 0 );// nodes.get( 0 );
       }
       else
       {
-        String message = 
-          String.format( 
-              "Node[%s] does not bellong to egde[%s]", 
-              node.getGmlID(), 
-              edge.getGmlID() );
+        String message = String.format( "Node[%s] does not bellong to egde[%s]", node.getGmlID(), edge.getGmlID() );
         throw new IllegalArgumentException( message );
       }
     }
-    catch(IllegalArgumentException iae)
+    catch( IllegalArgumentException iae )
     {
       throw iae;
     }
-    catch (ArrayIndexOutOfBoundsException aobe) 
+    catch( ArrayIndexOutOfBoundsException aobe )
     {
-      String message = 
-          String.format( 
-              "Edge does not have 2 nodes: \n\tedge=%s \n\texception message:%s", 
-              edge.getGmlID(), 
-              aobe.getLocalizedMessage() );
-      throw new IllegalArgumentException(message,aobe);
+      String message = String.format( "Edge does not have 2 nodes: \n\tedge=%s \n\texception message:%s", edge.getGmlID(), aobe.getLocalizedMessage() );
+      throw new IllegalArgumentException( message, aobe );
     }
-    catch(Throwable th)//else
+    catch( Throwable th )// else
     {
-      String message = 
-        String.format( 
-            "Error while getting opposite of node[%s] in edge[%s]", 
-            node.getGmlID(),
-            edge.getGmlID());
+      String message = String.format( "Error while getting opposite of node[%s] in edge[%s]", node.getGmlID(), edge.getGmlID() );
       throw new RuntimeException( message, th );
     }
-  } 
+  }
 }

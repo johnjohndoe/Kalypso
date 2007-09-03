@@ -40,83 +40,45 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ops;
 
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
- * Provides utility method to remove relationships between 
- * finite element concepts
+ * Provides utility method to remove relationships between finite element concepts
  * 
  * @author Madanagopal
  * @author Patrice Congo
- *
+ * 
  */
 @SuppressWarnings("unchecked")
 public class LinksOps
 {
-  
+
   /**
-   * Delete the geo/structural relationship between the given element 
-   * and complex element
+   * Delete the geo/structural relationship between the given element and complex element
    * 
-   * @param element the element to unlink
-   * @param complexElement the complex element to unlink
-   *  
+   * @param element
+   *            the element to unlink
+   * @param complexElement
+   *            the complex element to unlink
+   * 
    */
-  public static final void delRelationshipElementAndComplexElement( 
-                                          IFE1D2DElement element, 
-                                          IFE1D2DComplexElement complexElement )
+  public static final void delRelationshipElementAndComplexElement( IFENetItem element, IFE1D2DComplexElement complexElement )
   {
-     Assert.throwIAEOnNullParam( element, "element" );
-     Assert.throwIAEOnNullParam( complexElement, "complexElement" );
-     
-     IFeatureWrapperCollection containers = element.getContainers();
-     containers.removeAllRefs( complexElement );
-     complexElement.removeElementAsRef( element );
-     
-     //special remove BoundaryLine from CalUnit
-//     if( element instanceof IBoundaryLine && 
-//         complexElement instanceof ICalculationUnit )
-//     {
-//       removeSpecificBoundaryLink( 
-//           (IBoundaryLine)element, 
-//           (ICalculationUnit)complexElement );
-//     }
+    Assert.throwIAEOnNullParam( element, "element" );
+    Assert.throwIAEOnNullParam( complexElement, "complexElement" );
+
+    IFeatureWrapperCollection containers = null;
+    if( element instanceof IFE1D2DElement )
+      ((IFE1D2DElement) element).getContainers();
+    else if( element instanceof IFELine )
+      ((IFELine) element).getContainers();
+    if( containers != null )
+      containers.removeAllRefs( complexElement );
+    complexElement.removeElementAsRef( element );
   }
-  
-//  /**
-//   * Unset the given boundary line as up- or downdream boundary
-//   * line if it is the current set up or down stream boundary line
-//   * @param boundaryLine the boundary line to reset
-//   * @param calculationUnit the target calculation unit
-//   */
-//  private static void removeSpecificBoundaryLink(
-//                          IBoundaryLine boundaryLine,
-//                          ICalculationUnit calculationUnit )
-//  {
-//    Assert.throwIAEOnNullParam( boundaryLine, "boundaryLine" );
-//    Assert.throwIAEOnNullParam( calculationUnit, "calculationUnit" );
-//    IBoundaryLine downStreamBL = calculationUnit.getDownStreamBoundaryLine();
-//    if( downStreamBL!=null )
-//    {
-//      if( downStreamBL.equals( boundaryLine ))
-//      {
-//        calculationUnit.setDownStreamBoundaryLine( null );
-//      }
-//    }
-//    
-//    IBoundaryLine upStreamBL = calculationUnit.getUpStreamBoundaryLine();
-//    if(upStreamBL!=null)
-//    {
-//      if(upStreamBL.equals( boundaryLine ))
-//      {    
-//        calculationUnit.setUpStreamBoundaryLine( null );
-//      }
-//    }
-//  }
-  
 }
