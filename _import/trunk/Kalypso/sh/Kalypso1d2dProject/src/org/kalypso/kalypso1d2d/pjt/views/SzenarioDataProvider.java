@@ -25,7 +25,6 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
-import org.kalypso.kalypsomodel1d2d.schema.binding.model.IPseudoOPerationalModel;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IStaticModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.ICommandPoster;
@@ -72,7 +71,6 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
     LOCATION_MAP.put( IFEDiscretisationModel1d2d.class, MODELS_FOLDER + "/discretisation.gml" );
     LOCATION_MAP.put( ITerrainModel.class, MODELS_FOLDER + "/terrain.gml" );
     LOCATION_MAP.put( IFlowRelationshipModel.class, MODELS_FOLDER + "/flowrelations.gml" );
-    LOCATION_MAP.put( IPseudoOPerationalModel.class, MODELS_FOLDER + "/operational.gml" );
     LOCATION_MAP.put( IControlModelGroup.class, MODELS_FOLDER + "/control.gml" );
     LOCATION_MAP.put( IStaticModel1D2D.class, MODELS_FOLDER + "/static_model.gml" );
     LOCATION_MAP.put( IRoughnessClsCollection.class, "project:/.metadata/roughness.gml" );
