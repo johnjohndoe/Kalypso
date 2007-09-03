@@ -1272,10 +1272,7 @@ public class FeatureHelper
     final Feature newFeature = workspace.createFeature( parentFeature, parentRelation, newFeatureType );
     try
     {
-      workspace.addFeatureAsComposition( parentFeature,// parent,
-      parentRelation,// linkProperty,
-      list.size(),// pos,
-      newFeature );
+      workspace.addFeatureAsComposition( parentFeature, parentRelation, list.size(), newFeature );
     }
     catch( final Exception e )
     {

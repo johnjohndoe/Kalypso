@@ -48,7 +48,7 @@ import org.kalypsodeegree.model.feature.Feature;
  * @author Gernot Belger
  *
  */
-public interface IFeatureWrapper2 extends IFeatureWrapper
+public interface IFeatureWrapper2
 {
   public String getName( );
   

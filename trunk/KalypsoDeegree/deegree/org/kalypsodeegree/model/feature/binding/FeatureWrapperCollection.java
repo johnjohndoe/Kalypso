@@ -50,9 +50,11 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
   private final QName featureMemberProp;
 
   /**
-   * The class of the feature wrapper in this collection
+   * The class of the DEFAULT feature wrapper in this collection
    */
-  private final Class<FWCls> fwClass;
+  private final Class<FWCls> m_defaultWrapperClass;
+
+  private final List<Class<FWCls>> m_secondaryWrapperClasses = new ArrayList<Class<FWCls>>();
 
   /**
    * Creates a new {@link FeatureWrapperCollection} wrapping the provided feature
@@ -74,7 +76,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
 
     Assert.isNotNull( featureMemberProp, "Parameter featureMemberProp must not be null" );
 
-    this.fwClass = fwClass;
+    m_defaultWrapperClass = fwClass;
     this.featureCol = featureCol;
     this.featureMemberProp = featureMemberProp;
     this.featureList = (FeatureList) this.featureCol.getProperty( featureMemberProp );
@@ -107,7 +109,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
     this.featureList = (FeatureList) this.featureCol.getProperty( featureMemberProp );
     this.featureMemberProp = featureMemberProp;
 
-    this.fwClass = fwClass;
+    this.m_defaultWrapperClass = fwClass;
   }
 
   private static Feature createSubfeature( final Feature parentFeature, final QName childQName, final QName featureMemberProp )
@@ -146,7 +148,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
 
   public FWCls addNew( final QName newChildType )
   {
-    return addNew( newChildType, fwClass );
+    return addNew( newChildType, m_defaultWrapperClass );
   }
 
   @SuppressWarnings("unchecked")
@@ -161,7 +163,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
       final T wrapper = (T) feature.getAdapter( classToAdapt );
       if( wrapper == null )
       {
-        throw new IllegalArgumentException( "Feature not adaptable:" + "\n\tfeatureType=" + newChildType + "\n\tadapatble type=" + fwClass + "\n\tfeature=" + feature + "\n" );
+        throw new IllegalArgumentException( "Feature not adaptable:" + "\n\tfeatureType=" + newChildType + "\n\tadapatble type=" + m_defaultWrapperClass + "\n\tfeature=" + feature + "\n" );
       }
       // Feature was already added by Util.create..., so dont add it again
       // featureList.add(feature);
@@ -169,13 +171,13 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
     }
     catch( final GMLSchemaException e )
     {
-      throw new IllegalArgumentException( "feature:" + feature + " class=" + fwClass + " featureQName=" + newChildType, e );
+      throw new IllegalArgumentException( "feature:" + feature + " class=" + m_defaultWrapperClass + " featureQName=" + newChildType, e );
     }
   }
 
   public FWCls addNew( final QName newChildType, final String newFeatureId )
   {
-    return addNew( newChildType, newFeatureId, fwClass );
+    return addNew( newChildType, newFeatureId, m_defaultWrapperClass );
   }
 
   @SuppressWarnings("unchecked")
@@ -187,28 +189,24 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
     try
     {
 
-      feature = FeatureHelper.createFeatureWithId( newChildType,// newFeatureQName,
-      featureCol,// parentFeature,
-      featureMemberProp,// propQName,
-      newFeatureId// gmlID
-      );
+      feature = FeatureHelper.createFeatureWithId( newChildType, featureCol, featureMemberProp, newFeatureId );
 
       final T wrapper = (T) feature.getAdapter( classToAdapt );
       if( wrapper == null )
       {
-        throw new IllegalArgumentException( "Feature not adaptable:" + "\n\tfeatureType=" + newChildType + "\n\tadapatble type=" + fwClass );
+        throw new IllegalArgumentException( "Feature not adaptable:" + "\n\tfeatureType=" + newChildType + "\n\tadapatble type=" + m_defaultWrapperClass );
       }
       return wrapper;
     }
     catch( final Exception e )
     {
-      throw new IllegalArgumentException( "Feature=" + feature + " class=" + fwClass, e );
+      throw new IllegalArgumentException( "Feature=" + feature + " class=" + m_defaultWrapperClass, e );
     }
   }
 
   public FWCls addNew( final int index, final QName newChildType )
   {
-    return addNew( index, newChildType, fwClass );
+    return addNew( index, newChildType, m_defaultWrapperClass );
   }
 
   @SuppressWarnings("unchecked")
@@ -221,7 +219,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
       final T wrapper = (T) feature.getAdapter( classToAdapt );
       if( wrapper == null )
       {
-        throw new IllegalArgumentException( "Feature not adaptable:" + "\n\tfeatureType=" + newChildType + "\n\tadapatble type=" + fwClass );
+        throw new IllegalArgumentException( "Feature not adaptable:" + "\n\tfeatureType=" + newChildType + "\n\tadapatble type=" + m_defaultWrapperClass );
       }
 
       featureList.add( index, feature );
@@ -282,7 +280,16 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
       System.out.println( "Bad Link=" + property );
       return null;
     }
-    final FWCls adapted = (FWCls) f.getAdapter( fwClass );
+    FWCls adapted = (FWCls) f.getAdapter( m_defaultWrapperClass );
+    if( adapted == null )
+    {
+      for( int i = 0; i < m_secondaryWrapperClasses.size(); i++ )
+      {
+        adapted = (FWCls) f.getAdapter( m_secondaryWrapperClasses.get( i ) );
+        if( adapted != null )
+          break;
+      }
+    }
     return adapted;
   }
 
@@ -346,10 +353,16 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
         final Object next = it.next();
         final Feature f = FeatureHelper.getFeature( workspace, next );
 
-        final FWCls wrapper = (FWCls) f.getAdapter( fwClass );
+        FWCls wrapper = (FWCls) f.getAdapter( m_defaultWrapperClass );
         if( wrapper == null )
         {
-          throw new RuntimeException( "Feature " + f + " could not be adapted to " + fwClass );
+          for( final Class<FWCls> clazz : m_secondaryWrapperClasses )
+          {
+            wrapper = (FWCls) f.getAdapter( clazz );
+            if( wrapper != null )
+              return wrapper;
+          }
+          throw new RuntimeException( "Feature " + f + " could not be adapted to " + m_defaultWrapperClass );
         }
         return wrapper;
       }
@@ -405,7 +418,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
       public FWCls next( )
       {
         final Feature f = FeatureHelper.getFeature( featureCol.getWorkspace(), lit.next() );
-        final Object wrapper = f.getAdapter( fwClass );
+        final Object wrapper = f.getAdapter( m_defaultWrapperClass );
         return (FWCls) wrapper;
       }
 
@@ -418,7 +431,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
       public FWCls previous( )
       {
         final Feature f = (Feature) lit.previous();
-        final Object wrapper = f.getAdapter( fwClass );
+        final Object wrapper = f.getAdapter( m_defaultWrapperClass );
         return (FWCls) wrapper;
       }
 
@@ -446,7 +459,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
   {
     // Feature f = (Feature) featureList.remove(index);
     // IFeatureWrapper2 wrapper = (IFeatureWrapper2) f.getAdapter(fwClass);
-    final FWCls wrapper = FeatureHelper.getFeature( featureCol.getWorkspace(), featureList.remove( index ), fwClass );
+    final FWCls wrapper = FeatureHelper.getFeature( featureCol.getWorkspace(), featureList.remove( index ), m_defaultWrapperClass );
     return wrapper;
   }
 
@@ -513,10 +526,18 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
       if( feature == null )
         throw new RuntimeException( "Type not known:" + fObj );
 
-      final Object object = feature.getAdapter( fwClass );
+      Object object = feature.getAdapter( m_defaultWrapperClass );
       if( object == null )
-        throw new RuntimeException( String.format( "Unable to adapt object %s to %s.", feature, fwClass ) );
-
+      {
+        for( final Class<FWCls> clazz : m_secondaryWrapperClasses )
+        {
+          object = (FWCls) feature.getAdapter( clazz );
+          if( object != null )
+            break;
+        }
+        if( object == null )
+          throw new RuntimeException( String.format( "Unable to adapt object %s to %s.", feature, m_defaultWrapperClass ) );
+      }
       objs[i] = object;
     }
     return objs;
@@ -527,7 +548,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
   {
     final int SIZE = size();
     final Class compType = a.getClass().getComponentType();
-    if( !compType.isAssignableFrom( fwClass ) )
+    if( !compType.isAssignableFrom( m_defaultWrapperClass ) )
     {
       throw new ArrayStoreException();
     }
@@ -647,7 +668,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
 
     for( final Object linkOrFeature : selectedFeature )
     {
-      final FWCls feature = FeatureHelper.getFeature( workspace, linkOrFeature, fwClass );
+      final FWCls feature = FeatureHelper.getFeature( workspace, linkOrFeature, m_defaultWrapperClass );
       if( feature != null )
       {
         final GM_Object prop = feature.getWrappedFeature().getDefaultGeometryProperty();
@@ -679,7 +700,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
 
     for( final Object linkOrFeature : selectedFeature )
     {
-      final FWCls feature = FeatureHelper.getFeature( workspace, linkOrFeature, fwClass );
+      final FWCls feature = FeatureHelper.getFeature( workspace, linkOrFeature, m_defaultWrapperClass );
       if( feature != null )
       {
         selFW.add( feature );
@@ -699,7 +720,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
 
     for( final Object linkOrFeature : selectedFeature )
     {
-      final FWCls feature = FeatureHelper.getFeature( workspace, linkOrFeature, fwClass );
+      final FWCls feature = FeatureHelper.getFeature( workspace, linkOrFeature, m_defaultWrapperClass );
       if( feature != null )
       {
         selFW.add( feature );
@@ -763,6 +784,12 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
   {
     final IRelationType relationType = featureList.getParentFeatureTypeProperty();
     FeatureHelper.cloneFeature( getWrappedFeature(), relationType, toClone.getWrappedFeature() );
+  }
+
+  public void addSecondaryWrapper( final Class<FWCls> secondaryWrapper )
+  {
+    if( !m_secondaryWrapperClasses.contains( secondaryWrapper ) )
+      m_secondaryWrapperClasses.add( secondaryWrapper );
   }
 
 }
