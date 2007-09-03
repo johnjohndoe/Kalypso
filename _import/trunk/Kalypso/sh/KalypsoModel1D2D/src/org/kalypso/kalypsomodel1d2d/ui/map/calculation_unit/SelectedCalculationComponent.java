@@ -332,10 +332,12 @@ public class SelectedCalculationComponent
     Label boundaryUpLabel = new Label( optionsComposite, SWT.RIGHT );
     boundaryUpLabel.setText( Messages.getString("SelectedCalculationComponent.16") ); //$NON-NLS-1$
     bLineText = toolkit.createText( optionsComposite, "", SWT.SINGLE | SWT.BORDER ); //$NON-NLS-1$
+    bLineText.setEditable( false );
 
     boundaryConditionsLabel = new Label( optionsComposite, SWT.RIGHT );
     boundaryConditionsLabel.setText( Messages.getString("SelectedCalculationComponent.18") ); //$NON-NLS-1$
     textCountBC = toolkit.createText( optionsComposite, "", SWT.SINGLE | SWT.BORDER ); //$NON-NLS-1$
+    textCountBC.setEditable( false );
 
     subCalculationComposite = new Composite( rootComposite, SWT.FLAT );
     subCalculationComposite.setLayout( new FormLayout() );

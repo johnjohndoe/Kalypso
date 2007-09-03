@@ -178,7 +178,6 @@ class CalculationUnitWidgetFace
 
   private void createCalculationElements( final Section elementStatusSection )
   {
-
     elementStatusSection.setLayout( new FillLayout() );
     sectionThirdComposite = m_toolkit.createComposite( elementStatusSection, SWT.FLAT );
     elementStatusSection.setClient( sectionThirdComposite );
