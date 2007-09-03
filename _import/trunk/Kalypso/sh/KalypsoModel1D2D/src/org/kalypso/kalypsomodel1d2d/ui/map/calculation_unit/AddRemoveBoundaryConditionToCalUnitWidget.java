@@ -82,7 +82,7 @@ public class AddRemoveBoundaryConditionToCalUnitWidget extends FENetConceptSelec
 
   public AddRemoveBoundaryConditionToCalUnitWidget( final KeyBasedDataModel dataModel )
   {
-    this( new QName[] { IFELine.QNAME, IBoundaryCondition.QNAME }, " Removes Boundary Condition ", " Removes Boundary Condition", dataModel );
+    this( new QName[] { IFELine.QNAME, IBoundaryCondition.QNAME }, " Removes Boundary Condition ", " Removes Boundary Condition", dataModel ); //$NON-NLS-1$ //$NON-NLS-2$
     m_dataModel = dataModel;
   }
 
@@ -98,28 +98,28 @@ public class AddRemoveBoundaryConditionToCalUnitWidget extends FENetConceptSelec
     final JPopupMenu popupMenu = new JPopupMenu();
 
     final JMenuItem addNameDescription = new JMenuItem();
-    addNameDescription.setText( "Add Metadata" );
-    addNameDescription.setIcon( new ImageIcon( PluginUtilities.findResource( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), "icons/elcl16/add.gif" ) ) );
+    addNameDescription.setText( Messages.getString("AddRemoveBoundaryConditionToCalUnitWidget.2") ); //$NON-NLS-1$
+    addNameDescription.setIcon( new ImageIcon( PluginUtilities.findResource( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), "icons/elcl16/add.gif" ) ) ); //$NON-NLS-1$
     addNameDescription.addActionListener( addNameDescriptionActionListener() );
 
     final JMenuItem addBoundaryCondition = new JMenuItem();
-    addBoundaryCondition.setText( "Add Boundary Condition" );
-    addBoundaryCondition.setIcon( new ImageIcon( PluginUtilities.findResource( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), "icons/elcl16/add.gif" ) ) );
+    addBoundaryCondition.setText( Messages.getString("AddRemoveBoundaryConditionToCalUnitWidget.4") ); //$NON-NLS-1$
+    addBoundaryCondition.setIcon( new ImageIcon( PluginUtilities.findResource( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), "icons/elcl16/add.gif" ) ) ); //$NON-NLS-1$
     addBoundaryCondition.addActionListener( makeAddBoundaryConditionListener() );
 
     final JMenuItem editBoundaryCondition = new JMenuItem();
-    editBoundaryCondition.setText( "Edit Boundary Condition" );
-    editBoundaryCondition.setIcon( new ImageIcon( PluginUtilities.findResource( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), "icons/elcl16/edit.gif" ) ) );
+    editBoundaryCondition.setText( Messages.getString("AddRemoveBoundaryConditionToCalUnitWidget.6") ); //$NON-NLS-1$
+    editBoundaryCondition.setIcon( new ImageIcon( PluginUtilities.findResource( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), "icons/elcl16/edit.gif" ) ) ); //$NON-NLS-1$
     editBoundaryCondition.addActionListener( makeEditBoundaryConditionListener() );
 
     final JMenuItem removeBoundaryCondition = new JMenuItem();
-    removeBoundaryCondition.setText( "Remove Boundary Condition from calculation unit" );
-    removeBoundaryCondition.setIcon( new ImageIcon( PluginUtilities.findResource( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), "icons/elcl16/remove.gif" ) ) );
+    removeBoundaryCondition.setText( Messages.getString("AddRemoveBoundaryConditionToCalUnitWidget.8") ); //$NON-NLS-1$
+    removeBoundaryCondition.setIcon( new ImageIcon( PluginUtilities.findResource( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), "icons/elcl16/remove.gif" ) ) ); //$NON-NLS-1$
     removeBoundaryCondition.addActionListener( makeRemoveBoundaryConditionListener() );
 
     final JMenuItem deleteBoundaryCondition = new JMenuItem();
-    deleteBoundaryCondition.setText( "Delete Boundary Condition from model" );
-    deleteBoundaryCondition.setIcon( new ImageIcon( PluginUtilities.findResource( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), "icons/elcl16/remove.gif" ) ) );
+    deleteBoundaryCondition.setText( Messages.getString("AddRemoveBoundaryConditionToCalUnitWidget.10") ); //$NON-NLS-1$
+    deleteBoundaryCondition.setIcon( new ImageIcon( PluginUtilities.findResource( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), "icons/elcl16/remove.gif" ) ) ); //$NON-NLS-1$
     deleteBoundaryCondition.addActionListener( makeDeleteBoundaryConditionFromModelListener() );
 
     popupMenu.add( addNameDescription );
@@ -143,7 +143,7 @@ public class AddRemoveBoundaryConditionToCalUnitWidget extends FENetConceptSelec
           final IBoundaryCondition bc = (IBoundaryCondition) feature.getAdapter( IBoundaryCondition.class );
           if( bc == null )
           {
-            System.out.println( "could not adapt to boundary " );
+            System.out.println( Messages.getString("AddRemoveBoundaryConditionToCalUnitWidget.12") ); //$NON-NLS-1$
             return;
           }
 
@@ -182,7 +182,7 @@ public class AddRemoveBoundaryConditionToCalUnitWidget extends FENetConceptSelec
   {
     final ActionListener al = new ActionListener()
     {
-      @SuppressWarnings("unchecked")
+      @SuppressWarnings("unchecked") //$NON-NLS-1$
       public void actionPerformed( ActionEvent e )
       {
         final CommandableWorkspace cmdWorkspace = Util.getCommandableWorkspace( IFlowRelationshipModel.class );
@@ -229,7 +229,7 @@ public class AddRemoveBoundaryConditionToCalUnitWidget extends FENetConceptSelec
   {
     final ActionListener al = new ActionListener()
     {
-      @SuppressWarnings("unchecked")
+      @SuppressWarnings("unchecked") //$NON-NLS-1$
       public void actionPerformed( ActionEvent e )
       {
         final Feature[] selectedFeatures = getSelectedFeature();
@@ -237,7 +237,7 @@ public class AddRemoveBoundaryConditionToCalUnitWidget extends FENetConceptSelec
         IFEDiscretisationModel1d2d model1d2d = (IFEDiscretisationModel1d2d) m_dataModel.getData( ICommonKeys.KEY_DISCRETISATION_MODEL );
         if( selectedFeatures.length == 0 )
         {
-          System.out.println( "Please select at least one boundary condition" );
+          System.out.println( Messages.getString("AddRemoveBoundaryConditionToCalUnitWidget.15") ); //$NON-NLS-1$
           return;
         }
         for( Feature feature : selectedFeatures )
@@ -245,7 +245,7 @@ public class AddRemoveBoundaryConditionToCalUnitWidget extends FENetConceptSelec
           final IBoundaryCondition bc = (IBoundaryCondition) feature.getAdapter( IBoundaryCondition.class );
           if( bc == null )
           {
-            System.out.println( "could not adapt to boundary " );
+            System.out.println( Messages.getString("AddRemoveBoundaryConditionToCalUnitWidget.1") ); //$NON-NLS-1$
             return;
           }
 
@@ -276,7 +276,7 @@ public class AddRemoveBoundaryConditionToCalUnitWidget extends FENetConceptSelec
   {
     final ActionListener al = new ActionListener()
     {
-      @SuppressWarnings("unchecked")
+      @SuppressWarnings("unchecked") //$NON-NLS-1$
       public void actionPerformed( ActionEvent e )
       {
         final Feature[] selectedFeatures = getSelectedFeature();
@@ -285,7 +285,7 @@ public class AddRemoveBoundaryConditionToCalUnitWidget extends FENetConceptSelec
 
         if( selectedFeatures.length == 0 )
         {
-          System.out.println( "Please select at least one boundary condition" );
+          System.out.println( Messages.getString("AddRemoveBoundaryConditionToCalUnitWidget.18") ); //$NON-NLS-1$
           return;
         }
 
@@ -294,7 +294,7 @@ public class AddRemoveBoundaryConditionToCalUnitWidget extends FENetConceptSelec
           final IBoundaryCondition bc = (IBoundaryCondition) feature.getAdapter( IBoundaryCondition.class );
           if( bc == null )
           {
-            System.out.println( "could not adapt to boundary " );
+            System.out.println( Messages.getString("AddRemoveBoundaryConditionToCalUnitWidget.19") ); //$NON-NLS-1$
             return;
           }
 

@@ -78,26 +78,26 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
  */
 
 // @TODO Start implementing the addition of this to the calculationUnit.
-@SuppressWarnings( { "unchecked", "hiding", "synthetic-access" })
+@SuppressWarnings( { "unchecked", "hiding", "synthetic-access" }) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
 {
-  private static final String SEPARATOR_PSEUDO_TEXT = "_separator_pseudo_text_";
+  private static final String SEPARATOR_PSEUDO_TEXT = "_separator_pseudo_text_"; //$NON-NLS-1$
 
-  private static final String ICONS_ELCL16_REMOVE_GIF = "icons/elcl16/remove.gif";
+  private static final String ICONS_ELCL16_REMOVE_GIF = "icons/elcl16/remove.gif"; //$NON-NLS-1$
 
-  private static final String ICONS_ELCL16_ADD_GIF = "icons/elcl16/add.gif";
+  private static final String ICONS_ELCL16_ADD_GIF = "icons/elcl16/add.gif"; //$NON-NLS-1$
 
-  private static final String ICONS_ELCL16_SET_BOUNDARY_GIF = "icons/elcl16/addBoundary.gif";
+  private static final String ICONS_ELCL16_SET_BOUNDARY_GIF = "icons/elcl16/addBoundary.gif"; //$NON-NLS-1$
 
-  private static final String TXT_REMOVE_BOUNDARY_LINE_FROM_UNIT = "Remove boundary line from unit";// "Remove Up Stream
+  private static final String TXT_REMOVE_BOUNDARY_LINE_FROM_UNIT = Messages.getString("AlterCalUnitBorderWidget.7");// "Remove Up Stream //$NON-NLS-1$
                                                                                                     // boundary line";
 
-  private static final String TXT_ADD_META_DATA = "Add Meta Data";// "Add Metadata for Boundary Line";
+  private static final String TXT_ADD_META_DATA = Messages.getString("AlterCalUnitBorderWidget.8");// "Add Metadata for Boundary Line"; //$NON-NLS-1$
 
-  private static final String TXT_ADD_BOUNDARY_LINE_TO_UNIT = "Add boundary line to calculation unit";// "Add Up Stream
+  private static final String TXT_ADD_BOUNDARY_LINE_TO_UNIT = Messages.getString("AlterCalUnitBorderWidget.9");// "Add Up Stream //$NON-NLS-1$
                                                                                                       // Boundary Line";
 
-  private static final String TXT_REMOVE_BOUNDARY_LINE_FROM_MODEL = "Remove Boundary Line From Model";
+  private static final String TXT_REMOVE_BOUNDARY_LINE_FROM_MODEL = Messages.getString("AlterCalUnitBorderWidget.10"); //$NON-NLS-1$
 
   private static final String[][] MENU_ITEM_SPECS = { { TXT_ADD_META_DATA, ICONS_ELCL16_ADD_GIF }, { TXT_ADD_BOUNDARY_LINE_TO_UNIT, ICONS_ELCL16_ADD_GIF },
       { TXT_REMOVE_BOUNDARY_LINE_FROM_UNIT, ICONS_ELCL16_REMOVE_GIF }, { TXT_REMOVE_BOUNDARY_LINE_FROM_MODEL, ICONS_ELCL16_SET_BOUNDARY_GIF } };
@@ -110,7 +110,7 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
 
   public AlterCalUnitBorderWidget( final KeyBasedDataModel dataModel )
   {
-    this( new QName[] { IFELine.QNAME }, "Select Elements and add to the current calculation unit", "Select Elements and add to the current calculation unit", dataModel );
+    this( new QName[] { IFELine.QNAME }, Messages.getString("AlterCalUnitBorderWidget.11"), Messages.getString("AlterCalUnitBorderWidget.12"), dataModel ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   protected AlterCalUnitBorderWidget( final QName themeElementsQName, final String name, final String toolTip, final KeyBasedDataModel dataModel )
@@ -306,7 +306,7 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
     }
     else
     {
-      System.out.println( "Not supported menu action:" + text );
+      System.out.println( "Not supported menu action:" + text ); //$NON-NLS-1$
     }
   }
 
@@ -338,7 +338,7 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
     final IFELine bLine = getSelectedBoundaryLine();
     if( !itemText.equals( TXT_ADD_BOUNDARY_LINE_TO_UNIT ) )
     {
-      throw new RuntimeException( "Unknown itemText:" + itemText );
+      throw new RuntimeException( "Unknown itemText:" + itemText ); //$NON-NLS-1$
     }
 
     final IFEDiscretisationModel1d2d model1d2d = dataModel.getData( IFEDiscretisationModel1d2d.class, ICommonKeys.KEY_DISCRETISATION_MODEL );
@@ -399,7 +399,7 @@ public class AlterCalUnitBorderWidget extends FENetConceptSelectionWidget
     {
       if( spec.length != 2 )
       {
-        throw new RuntimeException( "Spec must have length 2, but has:" + spec.length );
+        throw new RuntimeException( "Spec must have length 2, but has:" + spec.length ); //$NON-NLS-1$
       }
       final String text = spec[0];
 

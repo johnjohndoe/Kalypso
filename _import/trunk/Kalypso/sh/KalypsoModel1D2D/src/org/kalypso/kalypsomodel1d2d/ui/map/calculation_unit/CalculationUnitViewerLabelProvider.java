@@ -68,19 +68,19 @@ public class CalculationUnitViewerLabelProvider extends ListLabelProvider
            display,
           KalypsoModel1D2DPlugin.imageDescriptorFromPlugin(
             PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
-            "icons/elcl16/1d_Element.GIF" ).getImageData() );
+            "icons/elcl16/1d_Element.GIF" ).getImageData() ); //$NON-NLS-1$
 
   Image calc2DImage = new Image(
       display,
       KalypsoModel1D2DPlugin.imageDescriptorFromPlugin(
         PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
-        "icons/elcl16/2d_Element.GIF" ).getImageData() );
+        "icons/elcl16/2d_Element.GIF" ).getImageData() ); //$NON-NLS-1$
   
   Image calc1D2DImage = new Image(
       display,
       KalypsoModel1D2DPlugin.imageDescriptorFromPlugin(
         PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
-        "icons/elcl16/1d_2d_Element.GIF" ).getImageData() );
+        "icons/elcl16/1d_2d_Element.GIF" ).getImageData() ); //$NON-NLS-1$
  
   @Override
   public Image getImage( Object element )
@@ -93,7 +93,7 @@ public class CalculationUnitViewerLabelProvider extends ListLabelProvider
       return calc1D2DImage;
     else
     {
-      throw new RuntimeException( "Only IFeatureWrapper2 is supported:" + "but got \n\tclass=" + (element == null ? null : element.getClass()) + "\n\t value=" + element );
+      throw new RuntimeException( "Only IFeatureWrapper2 is supported:" + "but got \n\tclass=" + (element == null ? null : element.getClass()) + "\n\t value=" + element ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
   }
   
@@ -115,7 +115,7 @@ public class CalculationUnitViewerLabelProvider extends ListLabelProvider
   }
   else
   {
-    throw new RuntimeException( "Only IFeatureWrapper2 is supported:" + "but got \n\tclass=" + (element == null ? null : element.getClass()) + "\n\t value=" + element );
+    throw new RuntimeException( "Only IFeatureWrapper2 is supported:" + "but got \n\tclass=" + (element == null ? null : element.getClass()) + "\n\t value=" + element ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
   }
   

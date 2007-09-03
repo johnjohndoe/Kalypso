@@ -114,7 +114,7 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
 
   public CalculationUnitWidget( )
   {
-    this( "Berechnungseinheiten Modellieren", "Berechnungseinheiten Modellieren" );
+    this( Messages.getString("CalculationUnitWidget.0"), Messages.getString("CalculationUnitWidget.1") ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public CalculationUnitWidget( final String name, final String toolTip )
@@ -144,7 +144,7 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
     final IKalypsoFeatureTheme targetTheme = UtilMap.findEditableTheme( mapModell, Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT );
     m_dataModel.setData( ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL, targetTheme.getWorkspace() );
 
-    m_calcUnitTheme = new Model1d2dCalUnitTheme( "Aktuelle CalUnit", mapModell );
+    m_calcUnitTheme = new Model1d2dCalUnitTheme( Messages.getString("CalculationUnitWidget.2"), mapModell ); //$NON-NLS-1$
     // mapModell.addTheme( calUnitTheme );
     mapModell.insertTheme( m_calcUnitTheme, 0 );
     m_dataModel.addKeyBasedDataChangeListener( calThemeUpdater );
@@ -152,7 +152,7 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
     final IKalypsoFeatureTheme bcTheme = UtilMap.findEditableTheme( mapModell, IBoundaryCondition.QNAME );
     if( bcTheme == null )
     {
-      throw new RuntimeException( "Could not find boundary condition theme" );
+      throw new RuntimeException( Messages.getString("CalculationUnitWidget.3") ); //$NON-NLS-1$
     }
 
     // dataModel.setData(
@@ -518,7 +518,7 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
       return ((IGrabDistanceProvider) m_strategy).getGrabDistance();
     }
 
-    System.out.println( "getting fix grab distance" );
+    System.out.println( "getting fix grab distance" ); //$NON-NLS-1$
 
     final MapPanel mapPanel = m_dataModel.getData( MapPanel.class, ICommonKeys.KEY_MAP_PANEL );
     return MapUtilities.calculateWorldDistance( mapPanel, 6 );

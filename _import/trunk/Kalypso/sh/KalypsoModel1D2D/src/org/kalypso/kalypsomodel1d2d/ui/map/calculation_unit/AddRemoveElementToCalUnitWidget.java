@@ -127,7 +127,7 @@ public class AddRemoveElementToCalUnitWidget extends FENetConceptSelectionWidget
 
   public AddRemoveElementToCalUnitWidget( final KeyBasedDataModel dataModel )
   {
-    this( new QName[] { Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT, Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT1D, }, "Select Elements and add to the current calculation unit", "Select Elements and add to the current calculation unit", dataModel );
+    this( new QName[] { Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT, Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT1D, }, Messages.getString("AddRemoveElementToCalUnitWidget.0"), Messages.getString("AddRemoveElementToCalUnitWidget.1"), dataModel ); //$NON-NLS-1$ //$NON-NLS-2$
 
   }
 
@@ -152,13 +152,13 @@ public class AddRemoveElementToCalUnitWidget extends FENetConceptSelectionWidget
     final JPopupMenu popupMenu = new JPopupMenu();
 
     final JMenuItem addElement = new JMenuItem();
-    addElement.setText( "Add Element" );
-    addElement.setIcon( new ImageIcon( PluginUtilities.findResource( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), "icons/elcl16/add.gif" ) ) );
+    addElement.setText( Messages.getString("AddRemoveElementToCalUnitWidget.2") ); //$NON-NLS-1$
+    addElement.setIcon( new ImageIcon( PluginUtilities.findResource( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), "icons/elcl16/add.gif" ) ) ); //$NON-NLS-1$
     addElement.addActionListener( makeAddElementActionListener() );
 
     final JMenuItem removeElement = new JMenuItem();
-    removeElement.setText( "Remove Element" );
-    removeElement.setIcon( new ImageIcon( PluginUtilities.findResource( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), "icons/elcl16/remove.gif" ) ) );
+    removeElement.setText( Messages.getString("AddRemoveElementToCalUnitWidget.4") ); //$NON-NLS-1$
+    removeElement.setIcon( new ImageIcon( PluginUtilities.findResource( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), "icons/elcl16/remove.gif" ) ) ); //$NON-NLS-1$
     removeElement.addActionListener( makeRemoveElementActionListener() );
     // popupMenu.add( addNameDescription );
     popupMenu.add( addElement );

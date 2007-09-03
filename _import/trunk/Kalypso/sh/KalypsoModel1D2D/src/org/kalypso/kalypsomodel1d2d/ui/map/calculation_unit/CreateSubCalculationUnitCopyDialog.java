@@ -135,7 +135,7 @@ public class CreateSubCalculationUnitCopyDialog extends Dialog
   protected CreateSubCalculationUnitCopyDialog( final Shell parentShell, final CalculationUnitDataModel dataModel )
   {
     super( parentShell );
-    parentShell.setText( "Sub - Berechnungseinheiten Verwalten" );
+    parentShell.setText( Messages.getString("CreateSubCalculationUnitCopyDialog.0") ); //$NON-NLS-1$
     this.parent = parentShell.getParent();
     this.dataModel = dataModel;
   }
@@ -155,7 +155,7 @@ public class CreateSubCalculationUnitCopyDialog extends Dialog
     formData.top = new FormAttachment( 0, 5 );
 
     final Label name1D2D = new Label( comp, SWT.NONE );
-    name1D2D.setText( "1D/2D Berechnungseinheit :" );
+    name1D2D.setText( Messages.getString("CreateSubCalculationUnitCopyDialog.1") ); //$NON-NLS-1$
     name1D2D.setLayoutData( formData );
 
     formData = new FormData();
@@ -173,7 +173,7 @@ public class CreateSubCalculationUnitCopyDialog extends Dialog
     formData.height = 150;
 
     final Group fromCalculationUnitGroup = new Group( comp, SWT.NONE );
-    fromCalculationUnitGroup.setText( "Vorhandene Einheiten" );// Modelle Knoten Suchen
+    fromCalculationUnitGroup.setText( Messages.getString("CreateSubCalculationUnitCopyDialog.2") );// Modelle Knoten Suchen //$NON-NLS-1$
     fromCalculationUnitGroup.setLayoutData( formData );
     fromCalculationUnitGroup.setLayout( new GridLayout( 1, false ) );
 
@@ -207,7 +207,7 @@ public class CreateSubCalculationUnitCopyDialog extends Dialog
 
     final Button addButton = new Button( comp, SWT.PUSH );
     // addButton.setText( "ADD");
-    final Image addImage = new Image( comp.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/forward.gif" ).getImageData() );
+    final Image addImage = new Image( comp.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/forward.gif" ).getImageData() ); //$NON-NLS-1$
     addButton.setImage( addImage );
     formData = new FormData();
     formData.left = new FormAttachment( fromCalculationUnitGroup, 5 );
@@ -229,7 +229,7 @@ public class CreateSubCalculationUnitCopyDialog extends Dialog
 
     final Button removeButton = new Button( comp, SWT.PUSH );
     // removeButton.setText( "MOVE");
-    final Image removeImage = new Image( comp.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/backward.gif" ).getImageData() );
+    final Image removeImage = new Image( comp.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/backward.gif" ).getImageData() ); //$NON-NLS-1$
     removeButton.setImage( removeImage );
     formData = new FormData();
     formData.left = new FormAttachment( fromCalculationUnitGroup, 5 );
@@ -254,7 +254,7 @@ public class CreateSubCalculationUnitCopyDialog extends Dialog
     formData.right = new FormAttachment( 100, -5 );
 
     final Group fromCalculationSubUnitGroup = new Group( comp, SWT.NONE );
-    fromCalculationSubUnitGroup.setText( "Aktuale Sub-Einheiten" );// Modelle Knoten Suchen
+    fromCalculationSubUnitGroup.setText( Messages.getString("CreateSubCalculationUnitCopyDialog.5") );// Modelle Knoten Suchen //$NON-NLS-1$
     fromCalculationSubUnitGroup.setLayoutData( formData );
     fromCalculationSubUnitGroup.setLayout( new GridLayout( 1, false ) );
 
@@ -302,7 +302,7 @@ public class CreateSubCalculationUnitCopyDialog extends Dialog
   protected void createButtonsForButtonBar( final Composite parent )
   {
     super.createButtonsForButtonBar( parent );
-    createButton( parent, RESET_ID, "Reset All", false );
+    createButton( parent, RESET_ID, "Reset All", false ); //$NON-NLS-1$
   }
 
   @Override

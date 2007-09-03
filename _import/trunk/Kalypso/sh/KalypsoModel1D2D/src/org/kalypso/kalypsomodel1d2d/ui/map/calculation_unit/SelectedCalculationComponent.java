@@ -88,14 +88,14 @@ import org.kalypsodeegree.model.feature.Feature;
 public class SelectedCalculationComponent
 {
 
-  private static final String SUB_CALCULATION_UNIT_Title = "Sub Calculation Unit";
+  private static final String SUB_CALCULATION_UNIT_Title = "Sub Calculation Unit"; //$NON-NLS-1$
 
   /* ======================================================================== */
   private TableViewer tableViewer;
 
-  private final String defaultTestDecription = "Wählen Sie ein Modell aus.";
+  private final String defaultTestDecription = Messages.getString("SelectedCalculationComponent.1"); //$NON-NLS-1$
 
-  private final String titleDescriptionGroup = "Beschreibung";
+  private final String titleDescriptionGroup = Messages.getString("SelectedCalculationComponent.2"); //$NON-NLS-1$
 
   private Group descriptionGroupText;
 
@@ -181,10 +181,10 @@ public class SelectedCalculationComponent
     dataModel.addKeyBasedDataChangeListener( newKeyListener );
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   protected void updateThisSection( Object newValue )
   {
-    Assert.throwIAEOnNullParam( newValue, "newValue" );
+    Assert.throwIAEOnNullParam( newValue, "newValue" ); //$NON-NLS-1$
     if( newValue instanceof ICalculationUnit )
     {
       if( newValue instanceof ICalculationUnit )
@@ -195,19 +195,19 @@ public class SelectedCalculationComponent
 
       if( newValue instanceof ICalculationUnit1D )
       {
-        typeField.setText( "1D" );
+        typeField.setText( Messages.getString("SelectedCalculationComponent.5") ); //$NON-NLS-1$
       }
       else if( newValue instanceof ICalculationUnit2D )
       {
-        typeField.setText( "2D" );
+        typeField.setText( Messages.getString("SelectedCalculationComponent.6") ); //$NON-NLS-1$
       }
       else if( newValue instanceof ICalculationUnit1D2D )
       {
-        typeField.setText( "1D/2D" );
+        typeField.setText( Messages.getString("SelectedCalculationComponent.7") ); //$NON-NLS-1$
       }
       else
       {
-        typeField.setText( "Type unbekannt" );
+        typeField.setText( Messages.getString("SelectedCalculationComponent.8") ); //$NON-NLS-1$
       }
 
       if( newValue instanceof ICalculationUnit1D )
@@ -220,7 +220,7 @@ public class SelectedCalculationComponent
       }
       else
       {
-        element1D.setText( "" );
+        element1D.setText( "" ); //$NON-NLS-1$
         element1D.setEnabled( false );
         element1DLabel.setEnabled( false );
       }
@@ -236,7 +236,7 @@ public class SelectedCalculationComponent
       else
       {
         element2D.setEnabled( false );
-        element2D.setText( "" );
+        element2D.setText( "" ); //$NON-NLS-1$
         element2DLabel.setEnabled( false );
       }
 
@@ -296,7 +296,7 @@ public class SelectedCalculationComponent
     optionsComposite.setLayout( new GridLayout( 2, false ) );
 
     selectedProjectName = new Label( optionsComposite, SWT.RIGHT );
-    selectedProjectName.setText( "Berechnungseinheit: " );
+    selectedProjectName.setText( Messages.getString("SelectedCalculationComponent.11") ); //$NON-NLS-1$
 
     selectedProjField = new Text( optionsComposite, SWT.SINGLE | SWT.BORDER );
     selectedProjField.setEditable( false );
@@ -304,7 +304,7 @@ public class SelectedCalculationComponent
     selectedProjField.setLayoutData( data );
 
     labelName = new Label( optionsComposite, SWT.RIGHT );
-    labelName.setText( "Type: " );
+    labelName.setText( Messages.getString("SelectedCalculationComponent.12") ); //$NON-NLS-1$
 
     typeField = new Text( optionsComposite, SWT.SINGLE | SWT.BORDER );
     typeField.setEditable( false );
@@ -312,7 +312,7 @@ public class SelectedCalculationComponent
     typeField.setLayoutData( data );
 
     element1DLabel = new Label( optionsComposite, SWT.RIGHT );
-    element1DLabel.setText( "1D Elemente: " );
+    element1DLabel.setText( Messages.getString("SelectedCalculationComponent.13") ); //$NON-NLS-1$
 
     element1D = new Text( optionsComposite, SWT.SINGLE | SWT.BORDER );
     element1D.setEditable( false );
@@ -320,22 +320,22 @@ public class SelectedCalculationComponent
     element1D.setLayoutData( data );
 
     element2DLabel = new Label( optionsComposite, SWT.RIGHT );
-    element2DLabel.setText( "2D Elemente: " );
+    element2DLabel.setText( Messages.getString("SelectedCalculationComponent.14") ); //$NON-NLS-1$
 
     element2D = new Text( optionsComposite, SWT.SINGLE | SWT.BORDER );
     element2D.setEditable( false );
     data = new GridData( GridData.FILL_HORIZONTAL );
     element2D.setLayoutData( data );
 
-    image_alert = new Image( optionsComposite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/alert.gif" ).getImageData() );
+    image_alert = new Image( optionsComposite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/alert.gif" ).getImageData() ); //$NON-NLS-1$
 
     Label boundaryUpLabel = new Label( optionsComposite, SWT.RIGHT );
-    boundaryUpLabel.setText( "Randlinien: " );
-    bLineText = toolkit.createText( optionsComposite, "", SWT.SINGLE | SWT.BORDER );
+    boundaryUpLabel.setText( Messages.getString("SelectedCalculationComponent.16") ); //$NON-NLS-1$
+    bLineText = toolkit.createText( optionsComposite, "", SWT.SINGLE | SWT.BORDER ); //$NON-NLS-1$
 
     boundaryConditionsLabel = new Label( optionsComposite, SWT.RIGHT );
-    boundaryConditionsLabel.setText( "Randbedingungen: " );
-    textCountBC = toolkit.createText( optionsComposite, "", SWT.SINGLE | SWT.BORDER );
+    boundaryConditionsLabel.setText( Messages.getString("SelectedCalculationComponent.18") ); //$NON-NLS-1$
+    textCountBC = toolkit.createText( optionsComposite, "", SWT.SINGLE | SWT.BORDER ); //$NON-NLS-1$
 
     subCalculationComposite = new Composite( rootComposite, SWT.FLAT );
     subCalculationComposite.setLayout( new FormLayout() );

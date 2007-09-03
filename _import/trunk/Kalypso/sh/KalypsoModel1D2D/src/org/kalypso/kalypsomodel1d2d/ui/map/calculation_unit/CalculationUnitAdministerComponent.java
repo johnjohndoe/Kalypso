@@ -88,17 +88,17 @@ public class CalculationUnitAdministerComponent
 
   private Image goImage;
 
-  private static final String ACTION_KEY_ADMINISTER = "Verwalten";
+  private static final String ACTION_KEY_ADMINISTER = Messages.getString("CalculationUnitAdministerComponent.0"); //$NON-NLS-1$
 
-  private static final String ACTION_KEY_DRAW = "New Zeichnen";
+  private static final String ACTION_KEY_DRAW = Messages.getString("CalculationUnitAdministerComponent.1"); //$NON-NLS-1$
 
-  private static final String ELEMENTS_KEY_ELEMENTS = "Elemente";
+  private static final String ELEMENTS_KEY_ELEMENTS = Messages.getString("CalculationUnitAdministerComponent.2"); //$NON-NLS-1$
 
-  private static final String ELEMENTS_KEY_SUBUNITS = "Sub-Einheiten";
+  private static final String ELEMENTS_KEY_SUBUNITS = Messages.getString("CalculationUnitAdministerComponent.3"); //$NON-NLS-1$
 
-  private static final String ELEMENTS_KEY_BOUNDARY_UP = "Rand-Linien";
+  private static final String ELEMENTS_KEY_BOUNDARY_UP = Messages.getString("CalculationUnitAdministerComponent.4"); //$NON-NLS-1$
 
-  private static final String ELEMENTS_KEY_BOUNDARY_CONDITIONS = "Rand-Bedingung";
+  private static final String ELEMENTS_KEY_BOUNDARY_CONDITIONS = Messages.getString("CalculationUnitAdministerComponent.5"); //$NON-NLS-1$
 
   private final KeyBasedDataModelChangeListener settingsKeyListener = new KeyBasedDataModelChangeListener()
   {
@@ -219,9 +219,9 @@ public class CalculationUnitAdministerComponent
     elementsCombo.setLayoutData( data );
 
     goButton = new Button( rootComposite, SWT.PUSH );
-    goButton.setToolTipText( "Funktion aktivieren" );
+    goButton.setToolTipText( Messages.getString("CalculationUnitAdministerComponent.6") ); //$NON-NLS-1$
 
-    goImage = new Image( rootComposite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/nav_go.gif" ).getImageData() );
+    goImage = new Image( rootComposite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/nav_go.gif" ).getImageData() ); //$NON-NLS-1$
     goButton.setImage( goImage );
     final SelectionListener goButtonListener = new SelectionListener()
     {
@@ -296,7 +296,7 @@ public class CalculationUnitAdministerComponent
       }
       else
       {
-        System.out.println( "Drawing not supported for:" + selectedType );
+        System.out.println( Messages.getString("CalculationUnitAdministerComponent.8") + selectedType ); //$NON-NLS-1$
       }
 
     }

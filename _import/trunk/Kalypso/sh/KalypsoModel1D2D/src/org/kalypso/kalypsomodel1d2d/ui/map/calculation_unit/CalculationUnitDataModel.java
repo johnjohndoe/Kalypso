@@ -54,7 +54,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
  * @author Patrice Congo
  * 
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings("unchecked") //$NON-NLS-1$
 public class CalculationUnitDataModel extends KeyBasedDataModel
 {
   private final Map<ICalculationUnit, List<IProblem>> validateMessages = new HashMap<ICalculationUnit, List<IProblem>>();

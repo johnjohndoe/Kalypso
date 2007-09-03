@@ -40,41 +40,32 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit;
 
-
-import org.eclipse.jface.viewers.LabelProvider;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit2D;
-
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 /**
- * @author Madanagopal
+ * @author schrage
  *
  */
-public class CalculationUnit1D2DLabelProvider extends LabelProvider
+public class Messages
 {
-  public CalculationUnit1D2DLabelProvider()
-  {   
+  private static final String BUNDLE_NAME = "org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.messages"; //$NON-NLS-1$
+
+  private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle( BUNDLE_NAME );
+
+  private Messages( )
+  {
   }
 
-  public String getText( Object element )
+  public static String getString( String key )
   {
-    if( element instanceof ICalculationUnit1D || element instanceof ICalculationUnit2D)
+    try
     {
-
-      String name = ((ICalculationUnit) element).getName();
-      if( name != null )
-      {
-        return name;
-      }
-      else
-      {
-        return ((ICalculationUnit) element).getGmlID();
-      }
+      return RESOURCE_BUNDLE.getString( key );
     }
-    else
+    catch( MissingResourceException e )
     {
-      throw new RuntimeException( "Only ICalculation1D / ICalculation2D are supported:" + "but got \n\tclass=" + (element == null ? null : element.getClass()) + "\n\t value=" + element ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      return '!' + key + '!';
     }
   }
 }

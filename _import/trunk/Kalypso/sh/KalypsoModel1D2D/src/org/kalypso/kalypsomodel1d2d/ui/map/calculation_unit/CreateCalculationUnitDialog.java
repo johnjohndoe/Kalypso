@@ -69,15 +69,15 @@ import org.kalypso.kalypsosimulationmodel.core.Util;
  * @author Madanagopal
  * 
  */
-@SuppressWarnings( { "unchecked", "hiding", "synthetic-access" })
+@SuppressWarnings( { "unchecked", "hiding", "synthetic-access" }) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 class CreateCalculationUnitDialog extends Dialog
 {
 
-  private static final String QNAME_KEY_1D2D = "1D/2D";
+  private static final String QNAME_KEY_1D2D = Messages.getString("CreateCalculationUnitDialog.3"); //$NON-NLS-1$
 
-  private static final String QNAME_KEY_2D = "2D";
+  private static final String QNAME_KEY_2D = Messages.getString("CreateCalculationUnitDialog.4"); //$NON-NLS-1$
 
-  private static final String QNAME_KEY_1D = "1D";
+  private static final String QNAME_KEY_1D = Messages.getString("CreateCalculationUnitDialog.5"); //$NON-NLS-1$
 
   private static final int RESET_ID = IDialogConstants.NO_TO_ALL_ID + 1;
 
@@ -87,7 +87,7 @@ class CreateCalculationUnitDialog extends Dialog
 
   private Text typeField;
 
-  private final String defaultDescriptionText = "Geben Sie eine Deskription fur das Complex Element";
+  private final String defaultDescriptionText = Messages.getString("CreateCalculationUnitDialog.6"); //$NON-NLS-1$
 
   private Combo typeCombo;
 
@@ -100,7 +100,7 @@ class CreateCalculationUnitDialog extends Dialog
   protected CreateCalculationUnitDialog( final Shell parentShell, final KeyBasedDataModel dataModel )
   {
     super( parentShell );
-    parentShell.setText( "Berechnungseinheit Hinzufügen" );
+    parentShell.setText( Messages.getString("CreateCalculationUnitDialog.7") ); //$NON-NLS-1$
     this.dataModel = dataModel;
   }
 
@@ -113,7 +113,7 @@ class CreateCalculationUnitDialog extends Dialog
     layout.numColumns = 2;
 
     final Label nameLabel = new Label( comp, SWT.RIGHT );
-    nameLabel.setText( "Name: " );
+    nameLabel.setText( Messages.getString("CreateCalculationUnitDialog.8") ); //$NON-NLS-1$
 
     nameField = new Text( comp, SWT.SINGLE | SWT.BORDER );
     GridData data = new GridData( GridData.FILL_HORIZONTAL );
@@ -153,7 +153,7 @@ class CreateCalculationUnitDialog extends Dialog
     // } );
 
     final Label typeLabel = new Label( comp, SWT.RIGHT );
-    typeLabel.setText( "Type: " );
+    typeLabel.setText( Messages.getString("CreateCalculationUnitDialog.9") ); //$NON-NLS-1$
 
     // @TODO A Combo Field
 
@@ -165,7 +165,7 @@ class CreateCalculationUnitDialog extends Dialog
     typeCombo.setLayoutData( data );
 
     final Label DescriptionLabel = new Label( comp, SWT.RIGHT );
-    DescriptionLabel.setText( "Description: " );
+    DescriptionLabel.setText( Messages.getString("CreateCalculationUnitDialog.10") ); //$NON-NLS-1$
 
     descriptionText = new Text( comp, SWT.BORDER | SWT.MULTI );
     descriptionText.setText( defaultDescriptionText );
@@ -179,7 +179,7 @@ class CreateCalculationUnitDialog extends Dialog
   protected void createButtonsForButtonBar( final Composite parent )
   {
     super.createButtonsForButtonBar( parent );
-    createButton( parent, RESET_ID, "Reset All", false );
+    createButton( parent, RESET_ID, "Reset All", false ); //$NON-NLS-1$
   }
 
   @Override
@@ -187,7 +187,7 @@ class CreateCalculationUnitDialog extends Dialog
   {
     if( buttonId == RESET_ID )
     {
-      nameField.setText( "" );
+      nameField.setText( "" ); //$NON-NLS-1$
       typeCombo.select( 0 );
       descriptionText.setText( defaultDescriptionText );
     }
@@ -197,7 +197,7 @@ class CreateCalculationUnitDialog extends Dialog
       {
 
       }
-      System.out.println( nameField.getText() + "," + typeCombo.getText() + "," + descriptionText.getText() );
+      System.out.println( nameField.getText() + "," + typeCombo.getText() + "," + descriptionText.getText() ); //$NON-NLS-1$ //$NON-NLS-2$
       final String name = nameField.getText();
       final String qNameKey = typeCombo.getText();
       final String desc = descriptionText.getText();
@@ -208,7 +208,7 @@ class CreateCalculationUnitDialog extends Dialog
         /**
          * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.CreateCalculationUnitCmd#process()
          */
-        @SuppressWarnings( { "unchecked", "synthetic-access" })
+        @SuppressWarnings( { "unchecked", "synthetic-access" }) //$NON-NLS-1$ //$NON-NLS-2$
         @Override
         public void process( ) throws Exception
         {
@@ -260,7 +260,7 @@ class CreateCalculationUnitDialog extends Dialog
     }
     else
     {
-      throw new RuntimeException( "Unknown qNameKey:" + qNameKey );
+      throw new RuntimeException( "Unknown qNameKey:" + qNameKey ); //$NON-NLS-1$
     }
   }
 }
