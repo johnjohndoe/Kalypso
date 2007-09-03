@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.cmds;
 
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
@@ -54,7 +53,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public class AddNodeCommand implements IDiscrModel1d2dChangeCommand
 {
-  private IFE1D2DNode<IFE1D2DEdge> addedNode;
+  private IFE1D2DNode addedNode;
 
   private GM_Point m_nodePoint;
 
@@ -64,58 +63,52 @@ public class AddNodeCommand implements IDiscrModel1d2dChangeCommand
 
   private final double m_searchRectWidth;
 
-  private final boolean ignoreZCoordinate; 
-  
+  private final boolean ignoreZCoordinate;
+
   /**
-   * Adds a node at the given point if there is no node
-   * within the specified rectangle
+   * Adds a node at the given point if there is no node within the specified rectangle
    * 
-   * @param model the model to add the new node to
-   * @param searchRectWidth the width of the search rectangle 
-   *            , its center if given by nodePoint 
-   * @param nodePoint the position of the node
-   *       <ul>
-   *        <li/>true to have the set coordinate 
-   *    of the point ignored (meaning a 2D point is created)
-   *        <li/>false to use the position without change
-   *       </ul>
-   *    
+   * @param model
+   *            the model to add the new node to
+   * @param searchRectWidth
+   *            the width of the search rectangle , its center if given by nodePoint
+   * @param nodePoint
+   *            the position of the node
+   *            <ul>
+   *            <li/>true to have the set coordinate of the point ignored (meaning a 2D point is created) <li/>false to
+   *            use the position without change
+   *            </ul>
+   * 
    * 
    */
-  public AddNodeCommand( 
-      IFEDiscretisationModel1d2d model, 
-      GM_Point nodePoint, 
-      double searchRectWidth)
+  public AddNodeCommand( IFEDiscretisationModel1d2d model, GM_Point nodePoint, double searchRectWidth )
   {
-    this(model,nodePoint,searchRectWidth,false);
+    this( model, nodePoint, searchRectWidth, false );
   }
+
   /**
-   * Adds a node at the given point if there is no node
-   * within the specified rectangle
-   * @param model the model to add the new node to
-   * @param nodePoint the position of the node
-   * @param searchRectWidth the width of the search rectangle 
-   *            , its center if given by nodePoint
-   * @param ignoreZCoordinate 
-   *       <ul>
-   *        <li/>true to have the set coordinate 
-   *    of the point ignored (meaning a 2D point is created)
-   *        <li/>false to use the position without change
-   *       </ul>   
+   * Adds a node at the given point if there is no node within the specified rectangle
+   * 
+   * @param model
+   *            the model to add the new node to
+   * @param nodePoint
+   *            the position of the node
+   * @param searchRectWidth
+   *            the width of the search rectangle , its center if given by nodePoint
+   * @param ignoreZCoordinate
+   *            <ul>
+   *            <li/>true to have the set coordinate of the point ignored (meaning a 2D point is created) <li/>false to
+   *            use the position without change
+   *            </ul>
    */
-  public AddNodeCommand( 
-            IFEDiscretisationModel1d2d model, 
-            GM_Point nodePoint, 
-            double searchRectWidth, 
-            boolean ignoreZCoordinate)
+  public AddNodeCommand( IFEDiscretisationModel1d2d model, GM_Point nodePoint, double searchRectWidth, boolean ignoreZCoordinate )
   {
     this.ignoreZCoordinate = ignoreZCoordinate;
     discretisationModel = model;
     m_searchRectWidth = searchRectWidth;
-    if(ignoreZCoordinate)
+    if( ignoreZCoordinate )
     {
-      m_nodePoint = 
-        GeometryFactory.createGM_Point( nodePoint.getX(), nodePoint.getY(), nodePoint.getCoordinateSystem() ); 
+      m_nodePoint = GeometryFactory.createGM_Point( nodePoint.getX(), nodePoint.getY(), nodePoint.getCoordinateSystem() );
     }
     else
     {
@@ -125,8 +118,7 @@ public class AddNodeCommand implements IDiscrModel1d2dChangeCommand
       }
       else
       {
-        m_nodePoint = 
-          GeometryFactory.createGM_Point( nodePoint.getX(), nodePoint.getY(), nodePoint.getCoordinateSystem() );
+        m_nodePoint = GeometryFactory.createGM_Point( nodePoint.getX(), nodePoint.getY(), nodePoint.getCoordinateSystem() );
       }
     }
     // PERFORMANCE-BUGFIX: first search for all nodes, then add it
@@ -153,7 +145,7 @@ public class AddNodeCommand implements IDiscrModel1d2dChangeCommand
     return true;
   }
 
-//  public static boolean[] dummyNotCreated = new boolean[1];
+  // public static boolean[] dummyNotCreated = new boolean[1];
 
   /**
    * @see org.kalypso.commons.command.ICommand#process()
@@ -162,8 +154,7 @@ public class AddNodeCommand implements IDiscrModel1d2dChangeCommand
   {
     if( addedNode == null )
     {
-      addedNode = discretisationModel.createNode( 
-                      m_nodePoint, -1, notCreated/*dummyNotCreated*/ );
+      addedNode = discretisationModel.createNode( m_nodePoint, -1, notCreated );
       System.out.println( "Adding node from command:" + addedNode + " " + notCreated[0] );
     }
   }
@@ -197,16 +188,16 @@ public class AddNodeCommand implements IDiscrModel1d2dChangeCommand
 
   }
 
-  public IFE1D2DNode<IFE1D2DEdge> getAddedNode( )
+  public IFE1D2DNode getAddedNode( )
   {
     return addedNode;
   }
-  
+
   public GM_Point getNodePoint( )
   {
     return m_nodePoint;
   }
-  
+
   public double getSearchRectWidth( )
   {
     return m_searchRectWidth;

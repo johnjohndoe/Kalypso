@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.cmds;
 
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
@@ -56,7 +55,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 public class ChangeNodePositionCommand implements IDiscrModel1d2dChangeCommand
 {
 
-  private IFE1D2DNode<IFE1D2DEdge> movedNode;
+  private IFE1D2DNode movedNode;
 
   private GM_Point newNodePoint;
 
@@ -123,11 +122,6 @@ public class ChangeNodePositionCommand implements IDiscrModel1d2dChangeCommand
     }
   }
 
-// public IFE1D2DNode<IFE1D2DEdge> getAddedNode( )
-// {
-// return movedNode;
-// }
-
   /**
    * @see xp.IDiscrMode1d2dlChangeCommand#getChangedFeature()
    */
@@ -157,7 +151,7 @@ public class ChangeNodePositionCommand implements IDiscrModel1d2dChangeCommand
     return buf.toString();
   }
 
-  public IFE1D2DNode<IFE1D2DEdge> getMovedNode( )
+  public IFE1D2DNode getMovedNode( )
   {
     return movedNode;
   }

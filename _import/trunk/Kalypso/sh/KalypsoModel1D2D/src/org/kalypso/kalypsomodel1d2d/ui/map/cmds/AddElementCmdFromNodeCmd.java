@@ -123,8 +123,8 @@ public class AddElementCmdFromNodeCmd implements IDiscrModel1d2dChangeCommand
       final int MAX_INDEX=elementNodeCmds.length-2;
       for(int i=0;i<=MAX_INDEX;i++)
       {
-          IFE1D2DNode<IFE1D2DEdge> node0=elementNodeCmds[i].getAddedNode();
-          IFE1D2DNode<IFE1D2DEdge> node1=elementNodeCmds[i+1].getAddedNode();
+          IFE1D2DNode node0=elementNodeCmds[i].getAddedNode();
+          IFE1D2DNode node1=elementNodeCmds[i+1].getAddedNode();
            
           curEdge=model.findEdge( node0, node1  );
           if(curEdge==null)

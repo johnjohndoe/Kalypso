@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.cmds;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,42 +57,37 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
  */
 public class AddElementCommand implements IDiscrModel1d2dChangeCommand
 {
-  //TODO donot forget firering update events
+  // TODO donot forget firering update events
   private IFE1D2DElement addedElement;
-  
+
   private IDiscrModel1d2dChangeCommand elementEdgeCmds[];
-  
+
   private IFEDiscretisationModel1d2d model;
-  
+
   /**
    * @param model
-   * @param elementEdgeCmds an array the command used to create the edges of the element to be created
-   *  by this command. the array must contains only {@link AddEdgeCommand} and 
-   *    {@link AddEdgeInvCommand} commands
+   * @param elementEdgeCmds
+   *            an array the command used to create the edges of the element to be created by this command. the array
+   *            must contains only {@link AddEdgeCommand} and {@link AddEdgeInvCommand} commands
    */
-  public AddElementCommand(
-              IFEDiscretisationModel1d2d model,
-              IDiscrModel1d2dChangeCommand[] elementEdgeCmds)
+  public AddElementCommand( IFEDiscretisationModel1d2d model, IDiscrModel1d2dChangeCommand[] elementEdgeCmds )
   {
     Assert.throwIAEOnNullParam( model, "model" );
     Assert.throwIAEOnNullParam( elementEdgeCmds, "elementEdgeCmds" );
-    for(IDiscrModel1d2dChangeCommand cmd:elementEdgeCmds)
+    for( IDiscrModel1d2dChangeCommand cmd : elementEdgeCmds )
     {
-      if(   !(
-              (cmd instanceof AddEdgeCommand) || 
-              (cmd instanceof AddEdgeInvCommand)) )
+      if( !((cmd instanceof AddEdgeCommand) || (cmd instanceof AddEdgeInvCommand)) )
       {
-        throw new IllegalArgumentException(
-            "elementEdgeCmds must only contains edge or edgeinv  command: "+cmd); 
+        throw new IllegalArgumentException( "elementEdgeCmds must only contains edge or edgeinv  command: " + cmd );
       }
     }
-    
-    this.model=model;
-    
-    this.elementEdgeCmds= elementEdgeCmds;
-    
+
+    this.model = model;
+
+    this.elementEdgeCmds = elementEdgeCmds;
+
   }
-  
+
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
@@ -115,21 +109,21 @@ public class AddElementCommand implements IDiscrModel1d2dChangeCommand
    */
   public void process( ) throws Exception
   {
-    if(addedElement==null)
+    if( addedElement == null )
     {
       List<IFE1D2DEdge> edges = new ArrayList<IFE1D2DEdge>();
       IFE1D2DEdge curEdge;
-      for(IDiscrModel1d2dChangeCommand edgeCmd:elementEdgeCmds)
+      for( IDiscrModel1d2dChangeCommand edgeCmd : elementEdgeCmds )
       {
-          curEdge=(IFE1D2DEdge)edgeCmd.getChangedFeature()[0];
-          if(curEdge!=null)
-          {
-            edges.add( curEdge );
-          }
-        
+        curEdge = (IFE1D2DEdge) edgeCmd.getChangedFeature()[0];
+        if( curEdge != null )
+        {
+          edges.add( curEdge );
+        }
+
       }
-      addedElement=ModelOps.createElement2d( model, edges );
-      System.out.println("Adding elment:"+addedElement);
+      addedElement = ModelOps.createElement2d( model, edges );
+      System.out.println( "Adding elment:" + addedElement );
     }
   }
 
@@ -138,7 +132,7 @@ public class AddElementCommand implements IDiscrModel1d2dChangeCommand
    */
   public void redo( ) throws Exception
   {
-    if(addedElement==null)
+    if( addedElement == null )
     {
       process();
     }
@@ -149,9 +143,9 @@ public class AddElementCommand implements IDiscrModel1d2dChangeCommand
    */
   public void undo( ) throws Exception
   {
-    if(addedElement!=null)
+    if( addedElement != null )
     {
-      //TODO remove element and links to it edges
+      // TODO remove element and links to it edges
     }
   }
 
@@ -160,9 +154,9 @@ public class AddElementCommand implements IDiscrModel1d2dChangeCommand
    */
   public IFeatureWrapper2[] getChangedFeature( )
   {
-    return new IFeatureWrapper2[]{addedElement};
+    return new IFeatureWrapper2[] { addedElement };
   }
-  
+
   /**
    * @see xp.IDiscrMode1d2dlChangeCommand#getDiscretisationModel1d2d()
    */

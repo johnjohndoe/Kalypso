@@ -50,5 +50,4 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
  */
 public interface IModel extends IFeatureWrapper2
 {
-  //i love to be empty
 }

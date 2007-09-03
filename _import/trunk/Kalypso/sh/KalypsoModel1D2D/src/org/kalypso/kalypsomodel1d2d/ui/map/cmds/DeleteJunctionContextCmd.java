@@ -43,17 +43,14 @@ package org.kalypso.kalypsomodel1d2d.ui.map.cmds;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.kalypso.kalypsomodel1d2d.ops.LinksOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DContinuityLine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionContext1DToCLine;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ILineElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ITransitionElement;
+import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionContext1DTo2D;
-import org.kalypso.kalypsosimulationmodel.core.Assert;
 /**
  * Command to delete a junction context.
  * This command is not undoable
@@ -64,7 +61,7 @@ import org.kalypso.kalypsosimulationmodel.core.Assert;
 public class DeleteJunctionContextCmd implements IDiscrModel1d2dChangeCommand
 {
 
-  private final IJunctionContext1DToCLine junctionContext;
+  private final ITransitionElement junctionContext;
   
   private final IFEDiscretisationModel1d2d model1d2d;
   
@@ -72,7 +69,7 @@ public class DeleteJunctionContextCmd implements IDiscrModel1d2dChangeCommand
   
   private IElement1D deletedElement1D;
   
-  private ILineElement contiLine;
+  private IFELine contiLine;
   
   /**
    * If the deleted context is a {@link IJunctionContext1DTo2D}
@@ -90,7 +87,7 @@ public class DeleteJunctionContextCmd implements IDiscrModel1d2dChangeCommand
    *            {@link IFEDiscretisationModel1d2d}
    */
   public DeleteJunctionContextCmd(
-              IJunctionContext1DToCLine junctionContext )
+              ITransitionElement junctionContext )
   {
     Assert.throwIAEOnNullParam( junctionContext, "junctionContext" );
     this.junctionContext = junctionContext;
@@ -135,8 +132,8 @@ public class DeleteJunctionContextCmd implements IDiscrModel1d2dChangeCommand
       
       this.model1d2d = model1d2d;
       
-      this.junctionContext = (IJunctionContext1DToCLine)
-              feature.getAdapter( IJunctionContext1DToCLine.class );
+      this.junctionContext = (ITransitionElement)
+              feature.getAdapter( ITransitionElement.class );
       if( junctionContext == null )
       {
         throw new IllegalArgumentException(
@@ -199,48 +196,48 @@ public class DeleteJunctionContextCmd implements IDiscrModel1d2dChangeCommand
    */
   public void process( ) throws Exception
   {
-    if(!done)
-    {
-      //delete link to 1d element
-      deletedElement1D = junctionContext.getElement1D();
-      if(deletedElement1D!=null)
-      {
-        LinksOps.delRelationshipElementAndComplexElement(
-                          deletedElement1D, junctionContext );
-      }
-      
-      //delete link to context and contiline
-      contiLine = junctionContext.getContinuityLine();
-      if( contiLine!= null )
-      {
-        LinksOps.delRelationshipElementAndComplexElement( 
-            contiLine, junctionContext );
-        try
-        {
-          IDiscrModel1d2dChangeCommand deleContiLine = DeleteCmdFactory.createDeleteCmd( 
-              contiLine.getWrappedFeature(), 
-              model1d2d );
-          deleContiLine.process();
-        }
-        catch( Throwable th )
-        {
-          th.printStackTrace();
-        }
-      }
-      
-      //delete link to 2d element if a
-      if( junctionContext instanceof IJunctionContext1DTo2D )
-      {
-        delElement2D = 
-          ((IJunctionContext1DTo2D)junctionContext).getElement2D();
-        if( delElement2D != null )
-        {
-          LinksOps.delRelationshipElementAndComplexElement( 
-              delElement2D, junctionContext );
-        }
-      }
-      
-    }
+//    if(!done)
+//    {
+//      //delete link to 1d element
+//      deletedElement1D = junctionContext.getElement1D();
+//      if(deletedElement1D!=null)
+//      {
+//        LinksOps.delRelationshipElementAndComplexElement(
+//                          deletedElement1D, junctionContext );
+//      }
+//      
+//      //delete link to context and contiline
+//      contiLine = junctionContext.getContinuityLine();
+//      if( contiLine!= null )
+//      {
+//        LinksOps.delRelationshipElementAndComplexElement( 
+//            contiLine, junctionContext );
+//        try
+//        {
+//          IDiscrModel1d2dChangeCommand deleContiLine = DeleteCmdFactory.createDeleteCmd( 
+//              contiLine.getWrappedFeature(), 
+//              model1d2d );
+//          deleContiLine.process();
+//        }
+//        catch( Throwable th )
+//        {
+//          th.printStackTrace();
+//        }
+//      }
+//      
+//      //delete link to 2d element if a
+//      if( junctionContext instanceof IJunctionContext1DTo2D )
+//      {
+//        delElement2D = 
+//          ((IJunctionContext1DTo2D)junctionContext).getElement2D();
+//        if( delElement2D != null )
+//        {
+//          LinksOps.delRelationshipElementAndComplexElement( 
+//              delElement2D, junctionContext );
+//        }
+//      }
+//      
+//    }
   }
 
   /**

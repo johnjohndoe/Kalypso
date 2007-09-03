@@ -11,5 +11,4 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
  */
 public interface IFEComplexElement extends IFeatureWrapper2
 {
-  //yes empty
 }

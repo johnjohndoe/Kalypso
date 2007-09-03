@@ -262,40 +262,6 @@
 	                 value="org.kalypso.model1d2d"/>
            </class>
 	     </handler>
-	     
- 	 <!--*** 1D/2D transition handlers CreateJunctionContext1dToCLineFromSelectedEdges ***-->	     	     	     	     	     	     	     
-	     <!--handler commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__SetEltLineTrans">
-	           <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
-		           <parameter
-		                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
-		                 value="org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.CreateJunctionFromClAnd1DEleWidget"/>
-		           <parameter
-		                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin"
-		                 value="org.kalypso.model1d2d"/>
-	        </class>
-	     </handler-->	
-	     
-	    <handler commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__SetEltLineTrans">
-	           <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
-		           <parameter
-		                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
-		                 value="org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.CreateJunctionContext1dToCLineFromSelectedEdges"/>
-		           <parameter
-		                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin"
-		                 value="org.kalypso.model1d2d"/>
-	        </class>
-	     </handler>	
-	          
-	     <handler commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__SetEltEltTrans">
-	           <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
-		           <parameter
-		                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
-		                 value="org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d.CreateJunctionContext1DTo2DFromSelectedEdges"/>
-		           <parameter
-		                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin"
-		                 value="org.kalypso.model1d2d"/>
-	        </class>
-	     </handler>
        <handler
             class="org.kalypso.kalypso1d2d.pjt.actions.StartCalculationHandler"
             commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__StartCalculation"/> 

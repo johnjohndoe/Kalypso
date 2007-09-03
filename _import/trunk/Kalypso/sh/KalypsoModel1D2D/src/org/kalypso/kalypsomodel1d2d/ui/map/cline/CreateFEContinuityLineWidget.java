@@ -3,6 +3,8 @@ package org.kalypso.kalypsomodel1d2d.ui.map.cline;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.namespace.QName;
 
@@ -16,23 +18,19 @@ import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtils;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IBoundaryLine1D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine1D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ILineElement;
-import org.kalypso.kalypsomodel1d2d.ui.map.cmds.RouteLineElementCommand;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.CreateContinuityLineCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
-import org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder;
 import org.kalypso.ogc.gml.map.widgets.builders.LineGeometryBuilder;
-import org.kalypso.ogc.gml.map.widgets.builders.PointGeometryBuilder;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
@@ -51,11 +49,14 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
 
   private Point m_currentPoint = new Point();
 
-  private IGeometryBuilder m_geometryBuilder = null;
+  private List<IFE1D2DNode> m_nodeList = null;
+
+  private QName m_lineType = null;
 
   public CreateFEContinuityLineWidget( )
   {
     super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.CreateFEContlineWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.CreateFEContlineWidget.1" ) ); //$NON-NLS-1$ $NON-NLS-2$
+    m_nodeList = new ArrayList<IFE1D2DNode>();
   }
 
   /**
@@ -74,7 +75,8 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
   private void reinit( )
   {
     m_currentNode = null;
-    m_geometryBuilder = null;
+    m_lineType = null;
+    m_nodeList.clear();
   }
 
   private IFEDiscretisationModel1d2d getDiscretisationModel( )
@@ -115,11 +117,11 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
       m_currentNode = null;
     else
     {
-      if( m_geometryBuilder == null )
+      if( m_lineType == null )
         m_currentNode = candidateNode;
       else
       {
-        if( m_geometryBuilder instanceof PointGeometryBuilder )
+        if( m_lineType.equals( IContinuityLine1D.QNAME ) )
         {
           if( DiscretisationModelUtils.is1DNode( candidateNode ) )
             m_currentNode = candidateNode;
@@ -155,29 +157,16 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
   {
     if( m_currentNode == null )
       return;
-    try
+    if( DiscretisationModelUtils.is1DNode( m_currentNode ) )
     {
-      if( DiscretisationModelUtils.is1DNode( m_currentNode ) )
-      {
-        if( m_geometryBuilder == null )
-          m_geometryBuilder = new PointGeometryBuilder( getMapPanel().getMapModell().getCoordinatesSystem() );
-        ((PointGeometryBuilder) m_geometryBuilder).addPoint( m_currentNode.getPoint() );
-      }
-      else
-      {
-        if( m_geometryBuilder == null )
-          m_geometryBuilder = new LineGeometryBuilder( 0, getMapPanel().getMapModell().getCoordinatesSystem() );
-        ((LineGeometryBuilder) m_geometryBuilder).addPoint( m_currentNode.getPoint() );
-      }
+      m_lineType = IContinuityLine1D.QNAME;
+      m_nodeList.clear();
     }
-    catch( final Exception e )
-    {
-      KalypsoModel1D2DPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-    }
-    finally
-    {
-      getMapPanel().repaint();
-    }
+    else
+      m_lineType = IContinuityLine2D.QNAME;
+
+    m_nodeList.add( m_currentNode );
+    getMapPanel().repaint();
   }
 
   /**
@@ -193,25 +182,12 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
     }
     try
     {
-      final QName lineElementQname;
-      final Class< ? extends ILineElement> adapterTargetClass;
-      if( m_geometryBuilder == null )
+      if( m_nodeList.isEmpty() )
         return;
-      if( m_geometryBuilder instanceof PointGeometryBuilder )
-      {
-        lineElementQname = IBoundaryLine1D.QNAME;
-        adapterTargetClass = IBoundaryLine1D.class;
-      }
-      else
-      {
-        lineElementQname = IBoundaryLine.QNAME;
-        adapterTargetClass = IBoundaryLine.class;
-      }
-      final GM_Object gmObject = m_geometryBuilder.finish();
       final IKalypsoTheme theme = UtilMap.findEditableTheme( getMapPanel().getMapModell(), Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
       final CommandableWorkspace workspace = ((IKalypsoFeatureTheme) theme).getWorkspace();
 
-      final RouteLineElementCommand command = new RouteLineElementCommand( getDiscretisationModel(), gmObject, adapterTargetClass, lineElementQname );
+      final CreateContinuityLineCommand command = new CreateContinuityLineCommand( getDiscretisationModel(), m_nodeList, m_lineType );
       workspace.postCommand( command );
     }
     catch( final Exception e )
@@ -244,7 +220,19 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
   {
     if( m_currentNode != null )
       graphics.drawRect( (int) m_currentPoint.getX() - m_grabRadius, (int) m_currentPoint.getY() - m_grabRadius, m_grabRadius * 2, m_grabRadius * 2 );
-    if( m_geometryBuilder != null )
-      m_geometryBuilder.paint( graphics, getMapPanel().getProjection(), m_currentPoint );
+    if( !m_nodeList.isEmpty() )
+    {
+      final LineGeometryBuilder geometryBuilder = new LineGeometryBuilder( 0, getMapPanel().getMapModell().getCoordinatesSystem() );
+      try
+      {
+        for( int i = 0; i < m_nodeList.size(); i++ )
+          geometryBuilder.addPoint( m_nodeList.get( i ).getPoint() );
+        geometryBuilder.paint( graphics, getMapPanel().getProjection(), m_currentPoint );
+      }
+      catch( Exception e )
+      {
+        e.printStackTrace();
+      }
+    }
   }
 }

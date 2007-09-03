@@ -99,8 +99,8 @@ public class AddEdgeInvCommand implements IDiscrModel1d2dChangeCommand
     }
     
     
-    IFE1D2DNode<IFE1D2DEdge> addedNode1 = edgeToInv.getNode( 0 );
-    IFE1D2DNode<IFE1D2DEdge> addedNode2 = edgeToInv.getNode( 1 );
+    IFE1D2DNode addedNode1 = edgeToInv.getNode( 0 );
+    IFE1D2DNode addedNode2 = edgeToInv.getNode( 1 );
     addedEdgeInv = (IEdgeInv)model.findEdge( addedNode2, addedNode1 );//got the node inverted
     if(addedEdgeInv==null)
     {
