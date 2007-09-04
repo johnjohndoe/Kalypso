@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSPY v2004 rel. 4 U (http://www.xmlspy.com) by Gernot Belger (Björnsen Beratende Ingenieure GmbH) -->
-<xs:schema targetNamespace="gismapview.template.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified"
-	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:kalypso="types.template.kalypso.org"
-	xmlns:xlink="http://www.w3.org/1999/xlink">
+<xs:schema targetNamespace="gismapview.template.kalypso.org" xmlns="gismapview.template.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:kalypso="types.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink">
 
 	<xs:import namespace="types.template.kalypso.org" schemaLocation="./layerTypes.xsd" />
 	<xs:import namespace="http://www.w3.org/1999/xlink" schemaLocation="../xlink/xlinks.xsd" />
@@ -14,13 +12,28 @@
 				<xs:element name="layers">
 					<xs:complexType>
 						<xs:sequence minOccurs="0" maxOccurs="unbounded">
-							<xs:element name="layer" type="kalypso:styledLayerType" />
+							<xs:element ref="layer" />
 						</xs:sequence>
+
 						<xs:attribute name="active" type="xs:IDREF" use="optional" />
 					</xs:complexType>
-				</xs:element>				
+				</xs:element>
 			</xs:sequence>
-			<xs:attribute name="name" type="xs:string" use="optional"/>
+			<xs:attribute name="name" type="xs:string" use="optional" />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="layer" type="kalypso:styledLayerType" />
+
+	<xs:element name="cascadingLayer" substitutionGroup="layer">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="kalypso:styledLayerType">
+					<xs:sequence minOccurs="0" maxOccurs="unbounded">
+						<xs:element ref="layer" />
+					</xs:sequence>
+				</xs:extension>
+			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
 </xs:schema>

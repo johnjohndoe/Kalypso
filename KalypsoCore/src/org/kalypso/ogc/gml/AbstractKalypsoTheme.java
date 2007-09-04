@@ -108,74 +108,8 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
     m_mapModel = mapModel;
 
     /* Initialize properties */
-    m_properties.put( PROPERTY_DELETEABLE, true ); // deleteable defaults to 'true', because this was the old behaviour
-  }
-
-  public String getName( )
-  {
-    return m_name;
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#setName(java.lang.String)
-   */
-  public void setName( final String name )
-  {
-    m_name = name;
-
-    fireStatusChanged();
-  }
-
-  @Override
-  public String toString( )
-  {
-    return m_name;
-  }
-
-  public String getType( )
-  {
-    return m_type;
-  }
-
-  public void setType( final String type )
-  {
-    m_type = type;
-
-    fireStatusChanged();
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#getMapModell()
-   */
-  public IMapModell getMapModell( )
-  {
-    return m_mapModel;
-  }
-
-  /**
-   * Returns the type of the theme by default. Override if needed.
-   * 
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#getContext()
-   */
-  public String getContext( )
-  {
-    return getType();
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#addKalypsoThemeListener(org.kalypso.ogc.gml.IKalypsoThemeListener)
-   */
-  public void addKalypsoThemeListener( final IKalypsoThemeListener listener )
-  {
-    m_listeners.add( listener );
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#removeKalypsoThemeListener(org.kalypso.ogc.gml.IKalypsoThemeListener)
-   */
-  public void removeKalypsoThemeListener( final IKalypsoThemeListener listener )
-  {
-    m_listeners.remove( listener );
+    m_properties.put( IKalypsoTheme.PROPERTY_DELETEABLE, true ); // deleteable defaults to 'true', because this was the
+    // old behaviour
   }
 
   /**
@@ -196,6 +130,22 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
 
       SafeRunner.run( code );
     }
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#addKalypsoThemeListener(org.kalypso.ogc.gml.IKalypsoThemeListener)
+   */
+  public void addKalypsoThemeListener( final IKalypsoThemeListener listener )
+  {
+    m_listeners.add( listener );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#dispose()
+   */
+  public void dispose( )
+  {
+    m_listeners.clear();
   }
 
   /**
@@ -241,19 +191,45 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   }
 
   /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#dispose()
+   * @see org.eclipse.ui.model.IWorkbenchAdapter#getChildren(java.lang.Object)
    */
-  public void dispose( )
+  public Object[] getChildren( final Object o )
   {
-    m_listeners.clear();
+    return AbstractKalypsoTheme.EMPTY_CHILDREN;
   }
 
   /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#isLoaded()
+   * Returns the type of the theme by default. Override if needed.
+   * 
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#getContext()
    */
-  public boolean isLoaded( )
+  public String getContext( )
   {
-    return true;
+    return getType();
+  }
+
+  /**
+   * @see org.eclipse.ui.model.IWorkbenchAdapter#getImageDescriptor(java.lang.Object)
+   */
+  public ImageDescriptor getImageDescriptor( final Object object )
+  {
+    final IStatus status = getStatus();
+    if( !status.isOK() )
+    {
+      final ISharedImages sharedImages = PlatformUI.getWorkbench().getSharedImages();
+
+      switch( status.getSeverity() )
+      {
+        case IStatus.ERROR:
+          return sharedImages.getImageDescriptor( "IMG_OBJS_ERROR_PATH" );
+        case IStatus.WARNING:
+          return sharedImages.getImageDescriptor( "IMG_OBJS_WARNING_PATH" );
+        case IStatus.INFO:
+          return sharedImages.getImageDescriptor( "IMG_OBJS_INFO_PATH" );
+      }
+    }
+
+    return null;
   }
 
   /**
@@ -290,35 +266,26 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   }
 
   /**
-   * @see org.eclipse.ui.model.IWorkbenchAdapter#getImageDescriptor(java.lang.Object)
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#getLegendGraphic(java.awt.Font)
    */
-  public ImageDescriptor getImageDescriptor( final Object object )
+  @SuppressWarnings("unused")
+  public Image getLegendGraphic( final Font font ) throws CoreException
   {
-    final IStatus status = getStatus();
-    if( !status.isOK() )
-    {
-      final ISharedImages sharedImages = PlatformUI.getWorkbench().getSharedImages();
-
-      switch( status.getSeverity() )
-      {
-        case IStatus.ERROR:
-          return sharedImages.getImageDescriptor( "IMG_OBJS_ERROR_PATH" );
-        case IStatus.WARNING:
-          return sharedImages.getImageDescriptor( "IMG_OBJS_WARNING_PATH" );
-        case IStatus.INFO:
-          return sharedImages.getImageDescriptor( "IMG_OBJS_INFO_PATH" );
-      }
-    }
-
+    /* Nothing to do here, childs should implement. */
     return null;
   }
 
   /**
-   * @see org.eclipse.ui.model.IWorkbenchAdapter#getChildren(java.lang.Object)
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#getMapModell()
    */
-  public Object[] getChildren( final Object o )
+  public IMapModell getMapModell( )
   {
-    return EMPTY_CHILDREN;
+    return m_mapModel;
+  }
+
+  public String getName( )
+  {
+    return m_name;
   }
 
   /**
@@ -332,6 +299,24 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   }
 
   /**
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#getProperty(java.lang.String)
+   */
+  public boolean getProperty( final String name )
+  {
+    Assert.isLegal( m_properties.containsKey( name ), "Unknown property: " + name );
+
+    return m_properties.get( name );
+  }
+
+  /**
+   * Return the names of all known properties.
+   */
+  public String[] getPropertyNames( )
+  {
+    return m_properties.keySet().toArray( new String[m_properties.keySet().size()] );
+  }
+
+  /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#getStatus()
    */
   public IStatus getStatus( )
@@ -339,11 +324,9 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
     return m_status;
   }
 
-  public void setStatus( final IStatus status )
+  public String getType( )
   {
-    m_status = status;
-
-    fireStatusChanged();
+    return m_type;
   }
 
   public void invalidate( final GM_Envelope bbox )
@@ -353,11 +336,70 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   }
 
   /**
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#isLoaded()
+   */
+  public boolean isLoaded( )
+  {
+    return true;
+  }
+
+  /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#isVisible()
    */
   public boolean isVisible( )
   {
     return m_isVisible;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#removeKalypsoThemeListener(org.kalypso.ogc.gml.IKalypsoThemeListener)
+   */
+  public void removeKalypsoThemeListener( final IKalypsoThemeListener listener )
+  {
+    m_listeners.remove( listener );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#setExtent(org.kalypsodeegree.model.geometry.GM_Envelope)
+   */
+  public void setExtent( final int width, final int height, final GM_Envelope extent )
+  {
+    /* Nothing to do here ... */
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#setName(java.lang.String)
+   */
+  public void setName( final String name )
+  {
+    m_name = name;
+
+    fireStatusChanged();
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#setProperty(java.lang.String, boolean)
+   */
+  public void setProperty( final String name, final boolean value )
+  {
+    m_properties.put( name, value );
+
+    // REMARK: we use status changed at the moment, maybe we should fire a special event for properties?
+    fireStatusChanged();
+  }
+
+  public void setStatus( final IStatus status )
+  {
+    m_status = status;
+
+    fireStatusChanged();
+  }
+
+  public void setType( final String type )
+  {
+    m_type = type;
+
+    fireStatusChanged();
   }
 
   /**
@@ -372,50 +414,9 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
     }
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#getProperty(java.lang.String)
-   */
-  public boolean getProperty( final String name )
+  @Override
+  public String toString( )
   {
-    Assert.isLegal( m_properties.containsKey( name ), "Unknown property: " + name );
-
-    return m_properties.get( name );
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#setProperty(java.lang.String, boolean)
-   */
-  public void setProperty( final String name, final boolean value )
-  {
-    m_properties.put( name, value );
-
-    // REMARK: we use status changed at the moment, maybe we should fire a special event for properties?
-    fireStatusChanged();
-  }
-
-  /**
-   * Return the names of all known properties.
-   */
-  public String[] getPropertyNames( )
-  {
-    return m_properties.keySet().toArray( new String[m_properties.keySet().size()] );
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#setExtent(org.kalypsodeegree.model.geometry.GM_Envelope)
-   */
-  public void setExtent( int width, int height, GM_Envelope extent )
-  {
-    /* Nothing to do here ... */
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#getLegendGraphic(java.awt.Font)
-   */
-  @SuppressWarnings("unused")
-  public Image getLegendGraphic( Font font ) throws CoreException
-  {
-    /* Nothing to do here, childs should implement. */
-    return null;
+    return m_name;
   }
 }

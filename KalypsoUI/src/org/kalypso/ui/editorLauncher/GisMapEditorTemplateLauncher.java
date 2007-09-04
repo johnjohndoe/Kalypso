@@ -44,6 +44,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
@@ -57,6 +58,7 @@ import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.core.resources.StringStorage;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.editorinput.StorageEditorInput;
+import org.kalypso.core.jaxb.TemplateUtilitites;
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gismapview.Gismapview.Layers;
@@ -110,7 +112,9 @@ public class GisMapEditorTemplateLauncher implements IDefaultTemplateLauncher
       layer.setFeaturePath( "featureMember" );
 
       final Layers layers = gisMapFactory.createGismapviewLayers();
-      layers.getLayer().add( layer );
+      final JAXBElement<StyledLayerType> layerType = TemplateUtilitites.OF_GISMAPVIEW.createLayer( layer );
+
+      layers.getLayer().add( layerType );
       layers.setActive( layer );
 
       final ExtentType extent = new ObjectFactory().createExtentType();

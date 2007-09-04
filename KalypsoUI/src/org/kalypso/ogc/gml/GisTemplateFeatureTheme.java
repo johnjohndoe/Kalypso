@@ -149,7 +149,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
         m_gisTemplateUserStyles.add( gisTemplateUserStyle );
       }
 
-      configureProperties( this, mapLayerType );
+      GisTemplateFeatureTheme.configureProperties( this, mapLayerType );
     }
     try
     {
@@ -265,7 +265,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
         style.fillStyleType( stylesList, styleType );
       }
 
-      fillProperties( this, extentFac, styledLayerType );
+      GisTemplateFeatureTheme.fillProperties( this, extentFac, styledLayerType );
     }
   }
 
@@ -471,10 +471,8 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   public boolean isLoaded( )
   {
     for( final GisTemplateUserStyle style : m_gisTemplateUserStyles )
-    {
       if( !style.isLoaded() )
         return false;
-    }
     return m_loaded;
   }
 

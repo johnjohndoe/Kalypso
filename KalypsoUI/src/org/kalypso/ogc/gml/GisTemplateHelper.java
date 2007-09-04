@@ -56,6 +56,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
@@ -67,6 +68,8 @@ import org.eclipse.core.resources.IEncodedStorage;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.commons.java.io.ReaderUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.jaxb.TemplateUtilitites;
@@ -74,8 +77,10 @@ import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme;
+import org.kalypso.ogc.gml.map.themes.provider.IKalypsoImageProvider;
 import org.kalypso.ogc.gml.map.themes.provider.KalypsoWMSImageProvider;
 import org.kalypso.template.featureview.Featuretemplate;
+import org.kalypso.template.gismapview.CascadingLayer;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gismapview.ObjectFactory;
 import org.kalypso.template.gismapview.Gismapview.Layers;
@@ -118,7 +123,7 @@ public class GisTemplateHelper
     // TODO: replace with 'ReplaceToken'
     final InputStreamReader inputStreamReader = new InputStreamReader( file.getContents(), file.getCharset() );
     final String contents = ReaderUtilities.readAndReplace( inputStreamReader, replaceProps );
-    return loadGisFeatureTemplate( new InputSource( new StringReader( contents ) ) );
+    return GisTemplateHelper.loadGisFeatureTemplate( new InputSource( new StringReader( contents ) ) );
   }
 
   public static final Featuretemplate loadGisFeatureTemplate( final InputSource is ) throws JAXBException
@@ -133,7 +138,7 @@ public class GisTemplateHelper
     // TODO: replace with 'ReplaceToken'
     final InputStreamReader inputStreamReader = new InputStreamReader( file.getContents(), file.getCharset() );
     final String contents = ReaderUtilities.readAndReplace( inputStreamReader, replaceProps );
-    return loadGisMapView( new InputSource( new StringReader( contents ) ) );
+    return GisTemplateHelper.loadGisMapView( new InputSource( new StringReader( contents ) ) );
   }
 
   public static final Gismapview loadGisMapView( final IStorage file ) throws JAXBException, CoreException
@@ -141,7 +146,7 @@ public class GisTemplateHelper
     final InputSource is = new InputSource( file.getContents() );
     if( file instanceof IEncodedStorage )
       is.setEncoding( ((IEncodedStorage) file).getCharset() );
-    return loadGisMapView( is );
+    return GisTemplateHelper.loadGisMapView( is );
   }
 
   public static final Gismapview loadGisMapView( final File file ) throws IOException, JAXBException
@@ -150,7 +155,7 @@ public class GisTemplateHelper
     try
     {
       inputStream = new BufferedInputStream( new FileInputStream( file ) );
-      final Gismapview gisMapView = loadGisMapView( new InputSource( inputStream ) );
+      final Gismapview gisMapView = GisTemplateHelper.loadGisMapView( new InputSource( inputStream ) );
       inputStream.close();
       return gisMapView;
     }
@@ -210,14 +215,14 @@ public class GisTemplateHelper
   {
     final InputStreamReader inputStreamReader = new InputStreamReader( file.getContents(), file.getCharset() );
     final String contents = ReaderUtilities.readAndReplace( inputStreamReader, replaceProps );
-    return loadGisTableview( new InputSource( new StringReader( contents ) ) );
+    return GisTemplateHelper.loadGisTableview( new InputSource( new StringReader( contents ) ) );
   }
 
   public static Gistableview loadGisTableview( final IFile file ) throws CoreException, JAXBException
   {
     final InputSource is = new InputSource( file.getContents() );
     is.setEncoding( file.getCharset() );
-    return loadGisTableview( is );
+    return GisTemplateHelper.loadGisTableview( is );
   }
 
   public static Gistableview loadGisTableview( final InputSource is ) throws JAXBException
@@ -247,11 +252,10 @@ public class GisTemplateHelper
     final GM_Envelope env = GeometryFactory.createGM_Envelope( extent.getLeft(), extent.getBottom(), extent.getRight(), extent.getTop() );
     final String orgSRSName = extent.getSrs();
     if( orgSRSName != null )
-    {
       try
       {
         final CS_CoordinateSystem targetSRS = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
-        if( orgSRSName != null && !orgSRSName.equals( targetSRS.getName() ) )
+        if( (orgSRSName != null) && !orgSRSName.equals( targetSRS.getName() ) )
         {
           // if srs attribute exists and it is not the target srs we have to convert it
           final GeoTransformer transformer = new GeoTransformer( targetSRS );
@@ -263,7 +267,6 @@ public class GisTemplateHelper
         // we just print the error, but asume that we can return an envelope that is not converted
         e.printStackTrace();
       }
-    }
     return env;
   }
 
@@ -275,12 +278,12 @@ public class GisTemplateHelper
   public static Gismapview emptyGisView( )
   {
     final GM_Envelope dummyBBox = GeometryFactory.createGM_Envelope( 0, 0, 100, 100 );
-    final Gismapview gismapview = OF_GISMAPVIEW.createGismapview();
-    final Layers layersType = OF_GISMAPVIEW.createGismapviewLayers();
+    final Gismapview gismapview = GisTemplateHelper.OF_GISMAPVIEW.createGismapview();
+    final Layers layersType = GisTemplateHelper.OF_GISMAPVIEW.createGismapviewLayers();
     layersType.setActive( null );
     if( dummyBBox != null )
     {
-      final ExtentType extentType = OF_TEMPLATE_TYPES.createExtentType();
+      final ExtentType extentType = GisTemplateHelper.OF_TEMPLATE_TYPES.createExtentType();
       extentType.setTop( dummyBBox.getMax().getY() );
       extentType.setBottom( dummyBBox.getMin().getY() );
       extentType.setLeft( dummyBBox.getMin().getX() );
@@ -322,7 +325,7 @@ public class GisTemplateHelper
     final Layers layers = TemplateUtilitites.OF_GISMAPVIEW.createGismapviewLayers();
     gismapview.setLayers( layers );
 
-    final List<StyledLayerType> layer = layers.getLayer();
+    final List<JAXBElement< ? extends StyledLayerType>> layer = layers.getLayer();
 
     int count = 0;
     for( final Map.Entry<Feature, IRelationType> entry : layersToCreate.entrySet() )
@@ -340,7 +343,7 @@ public class GisTemplateHelper
 
       final Object property = feature.getProperty( rt );
       String typeName = "";
-      if( strictType && property instanceof List )
+      if( strictType && (property instanceof List) )
       {
         final List list = (List) property;
         if( !list.isEmpty() )
@@ -362,7 +365,9 @@ public class GisTemplateHelper
       layerType.setVisible( true );
       layerType.setId( "ID_" + count++ );
 
-      layer.add( layerType );
+      final JAXBElement<StyledLayerType> layerElement = TemplateUtilitites.OF_GISMAPVIEW.createLayer( layerType );
+
+      layer.add( layerElement );
     }
 
     if( layer.size() > 0 )
@@ -376,7 +381,7 @@ public class GisTemplateHelper
     final InputSource is = new InputSource( file.getContents() );
     if( file instanceof IEncodedStorage )
       is.setEncoding( ((IEncodedStorage) file).getCharset() );
-    return loadGisTreeView( is );
+    return GisTemplateHelper.loadGisTreeView( is );
   }
 
   public static final Gistreeview loadGisTreeView( final InputSource is ) throws JAXBException
@@ -391,13 +396,95 @@ public class GisTemplateHelper
     try
     {
       os = new BufferedOutputStream( new FileOutputStream( outFile ) );
-      saveGisMapView( gisMapView, os, encoding );
+      GisTemplateHelper.saveGisMapView( gisMapView, os, encoding );
       os.close();
     }
     finally
     {
       IOUtils.closeQuietly( os );
     }
-
   }
+
+  public static StyledLayerType addLayer( final List<JAXBElement< ? extends StyledLayerType>> layerList, final IKalypsoTheme theme, final int count, final GM_Envelope bbox, final String srsName, final IProgressMonitor monitor ) throws CoreException
+  {
+    final org.kalypso.template.gismapview.ObjectFactory maptemplateFactory = new org.kalypso.template.gismapview.ObjectFactory();
+    final org.kalypso.template.types.ObjectFactory templateFactory = new org.kalypso.template.types.ObjectFactory();
+
+    final StyledLayerType layer = templateFactory.createStyledLayerType();
+
+    if( theme instanceof GisTemplateFeatureTheme )
+    {
+      ((GisTemplateFeatureTheme) theme).fillLayerType( layer, "ID_" + count, theme.isVisible() );//$NON-NLS-1$
+      final JAXBElement<StyledLayerType> layerElement = TemplateUtilitites.OF_GISMAPVIEW.createLayer( layer );
+      layerList.add( layerElement );
+      monitor.worked( 1000 );
+
+      return layer;
+    }
+    else if( theme instanceof KalypsoWMSTheme )
+    {
+      final String name = theme.getName();
+      // GisTemplateHelper.fillLayerType( layer, "ID_" + i, name, kalypsoTheme.isVisible(), (KalypsoWMSTheme)
+      // kalypsoTheme );
+
+      layer.setName( name );
+      layer.setFeaturePath( "" ); //$NON-NLS-1$
+      layer.setVisible( theme.isVisible() );
+      layer.setId( "ID_" + count );
+
+      final IKalypsoImageProvider imageProvider = ((KalypsoWMSTheme) theme).getImageProvider();
+      if( imageProvider instanceof KalypsoWMSImageProvider )
+        layer.setHref( ((KalypsoWMSImageProvider) imageProvider).getSource() );
+      else
+        layer.setHref( "" );
+
+      layer.setLinktype( KalypsoWMSImageProvider.TYPE_NAME );
+      layer.setActuate( "onRequest" ); //$NON-NLS-1$
+      layer.setType( "simple" ); //$NON-NLS-1$
+
+      final JAXBElement<StyledLayerType> layerElement = TemplateUtilitites.OF_GISMAPVIEW.createLayer( layer );
+
+      layerList.add( layerElement );
+      monitor.worked( 1000 );
+
+      return layer;
+    }
+    else if( theme instanceof KalypsoPictureTheme )
+    {
+      ((KalypsoPictureTheme) theme).fillLayerType( layer, "ID_" + count, theme.isVisible() ); //$NON-NLS-1$
+
+      final JAXBElement<StyledLayerType> layerElement = TemplateUtilitites.OF_GISMAPVIEW.createLayer( layer );
+
+      layerList.add( layerElement );
+      monitor.worked( 1000 );
+    }
+    else if( theme instanceof CascadingKalypsoTheme )
+    {
+      final CascadingKalypsoTheme cascadingKalypsoTheme = ((CascadingKalypsoTheme) theme);
+      cascadingKalypsoTheme.fillLayerType( layer, "ID_" + count, theme.isVisible() ); //$NON-NLS-1$
+
+      final JAXBElement<StyledLayerType> layerElement = TemplateUtilitites.OF_GISMAPVIEW.createLayer( layer );
+
+      layerList.add( layerElement );
+
+      cascadingKalypsoTheme.createGismapTemplate( bbox, srsName, new SubProgressMonitor( monitor, 1000 ) );
+
+      return layer;
+    }
+    else if( theme instanceof CascadingLayerKalypsoTheme )
+    {
+      final CascadingLayer cascadingLayer = maptemplateFactory.createCascadingLayer();
+
+      final CascadingLayerKalypsoTheme cascadingKalypsoTheme = ((CascadingLayerKalypsoTheme) theme);
+      cascadingKalypsoTheme.fillLayerType( cascadingLayer, "ID_" + count, theme.isVisible(), srsName, monitor ); //$NON-NLS-1$
+
+      final JAXBElement<CascadingLayer> layerElement = TemplateUtilitites.OF_GISMAPVIEW.createCascadingLayer( cascadingLayer );
+      layerList.add( layerElement );
+
+      return cascadingLayer;
+    }
+
+    return null;
+  }
+
 }
