@@ -467,7 +467,10 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
   {
     if( o instanceof IFeatureWrapper2 )
     {
-      return featureList.remove( ((IFeatureWrapper2) o).getWrappedFeature() );
+      boolean removed = featureList.remove( ((IFeatureWrapper2) o).getWrappedFeature() );
+      if(!removed)
+        removed = featureList.remove( ((IFeatureWrapper2) o).getWrappedFeature().getId() );
+      return removed;
     }
     else if( o instanceof String )
     {
