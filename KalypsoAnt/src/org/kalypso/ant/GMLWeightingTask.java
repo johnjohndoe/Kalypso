@@ -285,7 +285,21 @@ public class GMLWeightingTask extends Task
               filter.setFilter( zmlFilter );
           }
 
+          /* Empty NOperation filter is forbidden */
+          if( offsetSummands.isEmpty() )
+          {
+            logger.log( Level.SEVERE, LoggerUtilities.CODE_SHOW_MSGBOX, "Leere Summe für Feature: " + targetFE.getId() );
+            return;
+          }
         }
+
+        /* Empty NOperation filter is forbidden */
+        if( filterList.isEmpty() )
+        {
+          logger.log( Level.SEVERE, LoggerUtilities.CODE_SHOW_MSGBOX, "Leere Summe für Feature: " + targetFE.getId() );
+          return;
+        }
+
         // 11. serialize filter to string
         final Writer writer = new StringWriter();
         marshaller.marshal( nOperationFilter, writer );
@@ -308,7 +322,8 @@ public class GMLWeightingTask extends Task
       final Date forecastFrom = new Date( m_forecastFrom.longValue() );
       final Date forecastTo = m_forecastTo == null ? new Date( m_to ) : new Date( m_forecastTo.longValue() );
 
-      CopyObservationMappingHelper.runMapping( resultWorkspace, urlResolver, m_modelURL, logger, true, sourceFrom, sourceTo, targetFrom, targetTo, forecastFrom, forecastTo );
+      CopyObservationMappingHelper.runMapping( resultWorkspace, urlResolver, m_modelURL, logger, true, sourceFrom,
+          sourceTo, targetFrom, targetTo, forecastFrom, forecastTo );
 
       // 15. serialize result workspace to file
       if( m_targetMapping != null )
