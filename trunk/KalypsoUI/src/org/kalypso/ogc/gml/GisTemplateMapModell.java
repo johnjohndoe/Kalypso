@@ -47,6 +47,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
+import javax.xml.bind.JAXBElement;
+
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -58,13 +60,12 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme;
-import org.kalypso.ogc.gml.map.themes.provider.IKalypsoImageProvider;
-import org.kalypso.ogc.gml.map.themes.provider.KalypsoWMSImageProvider;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
 import org.kalypso.ogc.gml.mapmodel.MapModell;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
+import org.kalypso.template.gismapview.CascadingLayer;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gismapview.Gismapview.Layers;
 import org.kalypso.template.types.ExtentType;
@@ -93,23 +94,33 @@ public class GisTemplateMapModell implements IMapModell
    */
   public GisTemplateMapModell( final URL context, final CS_CoordinateSystem crs, final IProject project, final IFeatureSelectionManager selectionManager )
   {
+    this( context, crs, project, selectionManager, true, true );
+  }
+
+  public GisTemplateMapModell( final URL context, final CS_CoordinateSystem crs, final IProject project, final IFeatureSelectionManager selectionManager, final boolean showScrabLayer, final boolean showLegend )
+  {
     m_context = context;
     m_selectionManager = selectionManager;
     m_modell = new MapModell( crs, project );
 
-    // TODO: this should not happen!
+    // FIXME: this should not happen!
     // Better: put special layers into gmt file, so the user can decide if he wants them.
+    if( showLegend )
+    {
+      // layer 1 is legend
+      final IKalypsoTheme legendTheme = new KalypsoLegendTheme( this );
+      addTheme( legendTheme );
+      legendTheme.setProperty( IKalypsoTheme.PROPERTY_DELETEABLE, false );
+      legendTheme.setVisible( false );
+    }
 
-    // layer 1 is legend
-    final IKalypsoTheme legendTheme = new KalypsoLegendTheme( this );
-    addTheme( legendTheme );
-    legendTheme.setProperty( IKalypsoTheme.PROPERTY_DELETEABLE, false );
-    legendTheme.setVisible( false );
-
-    // layer 2 is scrablayer
-    final ScrabLayerFeatureTheme scrabLayer = new ScrabLayerFeatureTheme( selectionManager, this );
-    scrabLayer.setProperty( IKalypsoTheme.PROPERTY_DELETEABLE, false );
-    addTheme( scrabLayer );
+    if( showScrabLayer )
+    {
+      // layer 2 is scrablayer
+      final ScrabLayerFeatureTheme scrabLayer = new ScrabLayerFeatureTheme( selectionManager, this );
+      scrabLayer.setProperty( IKalypsoTheme.PROPERTY_DELETEABLE, false );
+      addTheme( scrabLayer );
+    }
   }
 
   /**
@@ -126,12 +137,18 @@ public class GisTemplateMapModell implements IMapModell
       if( !((theme instanceof KalypsoLegendTheme) || (theme instanceof ScrabLayerFeatureTheme)) )
         removeTheme( theme );
     final Layers layerListType = gisview.getLayers();
-    final Object activeLayer = layerListType.getActive();
 
-    final List<StyledLayerType> layerList = layerListType.getLayer();
-    for( final StyledLayerType layerType : layerList )
+    final Object activeLayer = layerListType.getActive();
+    final List<JAXBElement< ? extends StyledLayerType>> layerList = layerListType.getLayer();
+
+    createFromTemplate( layerList, activeLayer );
+  }
+
+  public void createFromTemplate( final List<JAXBElement< ? extends StyledLayerType>> layerList, final Object activeLayer ) throws Exception
+  {
+    for( final JAXBElement< ? extends StyledLayerType> layerType : layerList )
     {
-      final IKalypsoTheme theme = addTheme( layerType );
+      final IKalypsoTheme theme = addTheme( layerType.getValue() );
       if( layerType == activeLayer )
         activateTheme( theme );
     }
@@ -172,8 +189,11 @@ public class GisTemplateMapModell implements IMapModell
   private IKalypsoTheme loadTheme( final StyledLayerType layerType, final URL context ) throws Exception
   {
     final String[] arrImgTypes = new String[] { "tif", "jpg", "png", "gif", "gmlpic" };
-
     final CS_CoordinateSystem defaultCS = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+
+    if( layerType instanceof CascadingLayer )
+      return new CascadingLayerKalypsoTheme( (CascadingLayer) layerType, context, m_selectionManager, this );
+
     final String linktype = layerType.getLinktype();
     if( "wms".equals( linktype ) ) //$NON-NLS-1$
     {
@@ -202,7 +222,6 @@ public class GisTemplateMapModell implements IMapModell
       monitor.beginTask( "Kartenvorlage speichern", themes.length * 1000 + 1000 );
 
       final org.kalypso.template.gismapview.ObjectFactory maptemplateFactory = new org.kalypso.template.gismapview.ObjectFactory();
-      final org.kalypso.template.types.ObjectFactory templateFactory = new org.kalypso.template.types.ObjectFactory();
 
       final org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
       final Gismapview gismapview = maptemplateFactory.createGismapview();
@@ -221,68 +240,20 @@ public class GisTemplateMapModell implements IMapModell
         gismapview.setExtent( extentType );
       }
 
-      final List<StyledLayerType> layerList = layersType.getLayer();
+      final List<JAXBElement< ? extends StyledLayerType>> layerList = layersType.getLayer();
 
       gismapview.setLayers( layersType );
 
       monitor.worked( 100 );
       // Gismapview gismapview = GisTemplateHelper.emptyGisView(bbox); //CK
       // final List layerList = (List)gismapview.getLayers(); //CK
-      for( int i = 0; i < themes.length; i++ )
+      int count = 0;
+
+      for( final IKalypsoTheme theme : themes )
       {
-        final StyledLayerType layer = templateFactory.createStyledLayerType();
-        if( layer == null )
-          continue;
+        final StyledLayerType layer = GisTemplateHelper.addLayer( layerList, theme, count++, bbox, srsName, monitor );
 
-        final IKalypsoTheme kalypsoTheme = themes[i];
-        if( kalypsoTheme instanceof GisTemplateFeatureTheme )
-        {
-          ((GisTemplateFeatureTheme) kalypsoTheme).fillLayerType( layer, "ID_" + i, kalypsoTheme.isVisible() );//$NON-NLS-1$
-          layerList.add( layer );
-          monitor.worked( 1000 );
-        }
-        else if( kalypsoTheme instanceof KalypsoWMSTheme )
-        {
-          final String name = kalypsoTheme.getName();
-          // GisTemplateHelper.fillLayerType( layer, "ID_" + i, name, kalypsoTheme.isVisible(), (KalypsoWMSTheme)
-          // kalypsoTheme );
-
-          layer.setName( name );
-          layer.setFeaturePath( "" ); //$NON-NLS-1$
-          layer.setVisible( kalypsoTheme.isVisible() );
-          layer.setId( "ID_" + i );
-
-          final KalypsoWMSTheme theme = (KalypsoWMSTheme) kalypsoTheme;
-          final IKalypsoImageProvider imageProvider = theme.getImageProvider();
-          if( imageProvider instanceof KalypsoWMSImageProvider )
-            layer.setHref( ((KalypsoWMSImageProvider) imageProvider).getSource() );
-          else
-            layer.setHref( "" );
-
-          layer.setLinktype( KalypsoWMSImageProvider.TYPE_NAME );
-          layer.setActuate( "onRequest" ); //$NON-NLS-1$
-          layer.setType( "simple" ); //$NON-NLS-1$
-
-          layerList.add( layer );
-          monitor.worked( 1000 );
-        }
-        else if( kalypsoTheme instanceof KalypsoPictureTheme )
-        {
-          ((KalypsoPictureTheme) kalypsoTheme).fillLayerType( layer, "ID_" + i, kalypsoTheme.isVisible() ); //$NON-NLS-1$
-          layerList.add( layer );
-          monitor.worked( 1000 );
-        }
-        else if( kalypsoTheme instanceof CascadingKalypsoTheme )
-        {
-          final CascadingKalypsoTheme cascadingKalypsoTheme = ((CascadingKalypsoTheme) kalypsoTheme);
-          cascadingKalypsoTheme.fillLayerType( layer, "ID_" + i, kalypsoTheme.isVisible() ); //$NON-NLS-1$
-
-          layerList.add( layer );
-
-          cascadingKalypsoTheme.createGismapTemplate( bbox, srsName, new SubProgressMonitor( monitor, 1000 ) );
-        }
-
-        if( m_modell.isThemeActivated( kalypsoTheme ) && !(kalypsoTheme instanceof KalypsoLegendTheme) && !(kalypsoTheme instanceof ScrabLayerFeatureTheme) )
+        if( (layer != null) && m_modell.isThemeActivated( theme ) && !(theme instanceof KalypsoLegendTheme) && !(theme instanceof ScrabLayerFeatureTheme) )
           layersType.setActive( layer );
       }
 

@@ -51,11 +51,28 @@ import org.kalypso.template.types.StyledLayerType.Style;
 
 public class AddThemeCommand implements ICommand
 {
-  private final StyledLayerType m_layer;
 
-  private final GisTemplateMapModell m_mapModell;
+  private GisTemplateMapModell m_mapModell;
 
   private IKalypsoTheme m_theme;
+
+  private final String m_name;
+
+  private final String m_type;
+
+  private final String m_featurePath;
+
+  private final String m_source;
+
+  private final String m_stylelinktype;
+
+  private final String m_style;
+
+  private final String m_styleLocation;
+
+  private final String m_styleType;
+
+  private StyledLayerType m_layer;
 
   public AddThemeCommand( final GisTemplateMapModell model, final String name, final String type, final String featurePath, final String source )
   {
@@ -90,29 +107,51 @@ public class AddThemeCommand implements ICommand
   public AddThemeCommand( final GisTemplateMapModell model, final String name, final String type, final String featurePath, final String source, final String stylelinktype, final String style, final String styleLocation, final String styleType )
   {
     m_mapModell = model;
-    int id = m_mapModell.getThemeSize() + 1;
+    m_name = name;
+    m_type = type;
+    m_featurePath = featurePath;
+    m_source = source;
+    m_stylelinktype = stylelinktype;
+    m_style = style;
+    m_styleLocation = styleLocation;
+    m_styleType = styleType;
+  }
 
+  /**
+   * @see org.kalypso.commons.command.ICommand#getDescription()
+   */
+  public String getDescription( )
+  {
+    return "Einfügen eines neuen Themas in die Karte";
+  }
+
+  private StyledLayerType init( )
+  {
+
+    final int id = m_mapModell.getThemeSize() + 1;
     final ObjectFactory factory = new ObjectFactory();
 
-    m_layer = factory.createStyledLayerType();
-    m_layer.setHref( source );
-    m_layer.setFeaturePath( featurePath );
-    m_layer.setName( name );
-    m_layer.setLinktype( type );
-    m_layer.setId( "ID_" + id );
-    m_layer.setVisible( true );
-    if( stylelinktype != null && style != null && styleLocation != null && styleType != null )
+    final StyledLayerType layer = factory.createStyledLayerType();
+    layer.setHref( m_source );
+    layer.setFeaturePath( m_featurePath );
+    layer.setName( m_name );
+    layer.setLinktype( m_type );
+    layer.setId( "ID_" + id );
+    layer.setVisible( true );
+    if( m_stylelinktype != null && m_style != null && m_styleLocation != null && m_styleType != null )
     {
-      final List<Style> styleList = m_layer.getStyle();
+      final List<Style> styleList = layer.getStyle();
       // Style Type
       final StyledLayerType.Style layertype = factory.createStyledLayerTypeStyle();
-      layertype.setLinktype( stylelinktype );
-      layertype.setStyle( style );
-      layertype.setHref( styleLocation );
+      layertype.setLinktype( m_stylelinktype );
+      layertype.setStyle( m_style );
+      layertype.setHref( m_styleLocation );
       layertype.setActuate( "onRequest" );
-      layertype.setType( styleType );
+      layertype.setType( m_styleType );
       styleList.add( layertype );
     }
+
+    return layer;
   }
 
   /**
@@ -128,6 +167,7 @@ public class AddThemeCommand implements ICommand
    */
   public void process( ) throws Exception
   {
+    m_layer = init();
     m_theme = m_mapModell.insertTheme( m_layer, 0 );
     m_mapModell.activateTheme( m_theme );
   }
@@ -148,12 +188,10 @@ public class AddThemeCommand implements ICommand
     m_mapModell.removeTheme( m_theme );
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#getDescription()
-   */
-  public String getDescription( )
+  public StyledLayerType updateMapModel( final GisTemplateMapModell model )
   {
-    return "Einfügen eines neuen Themas in die Karte";
+    m_mapModell = model;
+    return init();
   }
 
 }

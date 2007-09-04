@@ -83,7 +83,8 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
   {
     public void selectionChanged( final IFeatureSelection selection )
     {
-      handleGlobalSelectionChanged( selection );
+      if( m_bHandleGlobalEvents )
+        handleGlobalSelectionChanged( selection );
     }
   };
 
@@ -150,6 +151,8 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
 
   private ISelection m_lastSelection;
 
+  protected boolean m_bHandleGlobalEvents = true;
+
   public GmlTreeView( final Composite composite, final IFeatureSelectionManager selectionManager )
   {
     this( composite, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER, selectionManager, null );
@@ -197,6 +200,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
         {
           final Feature[] globalFeatures = FeatureSelectionHelper.getFeatures( selection, getWorkspace() );
           final Feature[] selectedFeatures = filterSelectedFeatures( treeViewer.getSelection() );
+
           final boolean isEqual = Arrays.equalsUnordered( globalFeatures, selectedFeatures );
           if( !isEqual )
           {
@@ -235,7 +239,19 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
         toAdd[i] = new EasyFeatureWrapper( workspace, feature, parent, parentProperty );
       }
 
+      /**
+       * REMARK / HACK: <br>
+       * set condition value for handling global selections - tree resets its own selection!<br>
+       * <br>
+       * Tree listens on global connection handleGlobalSelectionChanged() -> isEqual() return false when selection
+       * manager contains other (globally selected) features, which are not part / displayed in GMLTree. GMLTree
+       * shouldn't/can't reset global selection state, other sw components listening to global selection manager, too.<br>
+       * <br>
+       * Not threadsafe!
+       */
+      m_bHandleGlobalEvents = false;
       m_selectionManager.changeSelection( toRemove, toAdd );
+      m_bHandleGlobalEvents = true;
 
       fireSelectionChanged();
     }
@@ -312,7 +328,8 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
               for( int i = 0; i < parentFeature.length; i++ )
               {
                 final Feature feature = parentFeature[i];
-                treeViewer.refresh( feature );
+// treeViewer.refresh( feature ); childs are not updated!
+                treeViewer.refresh();
               }
 
             treeViewer.setExpandedElements( expandedElements );
