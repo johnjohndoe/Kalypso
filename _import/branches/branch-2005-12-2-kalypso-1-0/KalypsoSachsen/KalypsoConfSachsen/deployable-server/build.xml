@@ -234,6 +234,10 @@
         <ant antfile="${workspace}/KalypsoServiceUser/etc/ant/build.xml"
              target="build-war"
              inheritAll="false" />
+      
+      <copy tofile="${dist}/Kalypso_UserService.war"
+            file="${workspace}/KalypsoServiceUser/build/deploy/jaxrpc-kalypsoservice_user.zip"
+            overwrite="true" />
     </target>
 
     <target name="buildwar-ObsService">
@@ -243,6 +247,10 @@
         <ant antfile="${workspace}/KalypsoServiceObs/etc/ant/build.xml"
              target="build-war"
              inheritAll="false" />
+      
+      <copy tofile="${dist}/Kalypso_ObservationService.war"
+            file="${workspace}/KalypsoServiceObs/build/deploy/jaxrpc-kalypsoservice_observation.zip"
+            overwrite="true" />
     </target>
 
     <target name="buildwar-CalcService" depends="build-basic">
@@ -283,6 +291,10 @@
         <ant antfile="${workspace}/KalypsoServiceCalc/etc/ant/build.xml"
              target="build-war"
              inheritAll="false" />
+      
+      <copy tofile="${dist}/Kalypso_CalculationService.war"
+	        file="${workspace}/KalypsoServiceCalc/build/deploy/jaxrpc-kalypsoservice_calculation.zip"
+    	    overwrite="true" />
     </target>
 
     <target name="buildwar-MetaDocService">
@@ -292,6 +304,10 @@
         <ant antfile="${workspace}/KalypsoServiceMetaDoc/etc/ant/build.xml"
              target="build-war"
              inheritAll="false" />
+      
+      <copy tofile="${dist}/Kalypso_MetaDocService.war"
+            file="${workspace}/KalypsoServiceMetaDoc/build/deploy/jaxrpc-kalypsoservice_metadoc.zip"
+            overwrite="true" />
     </target>
 
     <target name="buildwar-DWDFileCopyServlet" depends="build-basic">
@@ -300,6 +316,10 @@
              inheritAll="true">
             <property name="web.xml" value="${project.path}/deployable-server/dwdfilecopy/web.xml" />
         </ant>
+      
+      <copy tofile="${dist}/KalypsoDWDFileCopyServlet.war"
+            file="${workspace}/KalypsoDWD/build/deploy/KalypsoDWDFileCopyServlet.war"
+      	  overwrite="true" />
     </target>
     
     <target name="build-services-dev"
@@ -469,26 +489,15 @@
         <echo message="Build for LFUG (using real PSICompact)" />
     </target>
 
+  	<target name="copy-webdav" depends="clean,copy-allconf,copy-data,co-sachsen-models" description="Copies everything which goes into the webdav directory">
+  	</target>
+  
     <target name="deploy-lfug"
-            depends="clean,prepare,build-services-lfug,copy-allconf,copy-data,co-sachsen-models"
+            depends="build-services-lfug,copy-webdav"
             description="Deploy as File in the ${dist} dir for LFUG">
         <echo message="Copying the wars and all other stuff to ${dist} - Ready for sending to LFUG" />
-
-        <copy tofile="${dist}/Kalypso_CalculationService.war"
-              file="${workspace}/KalypsoServiceCalc/build/deploy/jaxrpc-kalypsoservice_calculation.zip"
-              overwrite="true" />
-        <copy tofile="${dist}/Kalypso_MetaDocService.war"
-              file="${workspace}/KalypsoServiceMetaDoc/build/deploy/jaxrpc-kalypsoservice_metadoc.zip"
-              overwrite="true" />
-        <copy tofile="${dist}/Kalypso_ObservationService.war"
-              file="${workspace}/KalypsoServiceObs/build/deploy/jaxrpc-kalypsoservice_observation.zip"
-              overwrite="true" />
-        <copy tofile="${dist}/Kalypso_UserService.war"
-              file="${workspace}/KalypsoServiceUser/build/deploy/jaxrpc-kalypsoservice_user.zip"
-              overwrite="true" />
-        <copy tofile="${dist}/KalypsoDWDFileCopyServlet.war"
-              file="${workspace}/KalypsoDWD/build/deploy/KalypsoDWDFileCopyServlet.war"
-        	  overwrite="true" />
     </target>
 
+  
+  
 </project>
