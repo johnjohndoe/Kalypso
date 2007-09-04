@@ -59,12 +59,12 @@ public class RemoveThemeAction extends MapModellViewActionDelegate
   @Override
   public void runWithEvent( final IAction action, final Event event )
   {
-    final IKalypsoTheme[] selectedThemes = getSelectedThemes( getSelection() );
+    final IKalypsoTheme[] selectedThemes = MapModellViewActionDelegate.getSelectedThemes( getSelection() );
     for( final IKalypsoTheme theme : selectedThemes )
       removeElement( theme );
   }
 
-  private void removeElement( final IKalypsoTheme theme )
+  protected void removeElement( final IKalypsoTheme theme )
   {
     final IMapModellView view = getView();
     if( view != null )
@@ -80,21 +80,19 @@ public class RemoveThemeAction extends MapModellViewActionDelegate
   {
     super.selectionChanged( action, selection );
 
-    final IKalypsoTheme[] selectedThemes = getSelectedThemes( getSelection() );
+    final IKalypsoTheme[] selectedThemes = MapModellViewActionDelegate.getSelectedThemes( getSelection() );
 
     final boolean allDeleteable = determineDeleteable( selectedThemes );
 
-    final boolean enabled = selectedThemes.length > 0 && allDeleteable;
+    final boolean enabled = (selectedThemes.length > 0) && allDeleteable;
     action.setEnabled( enabled );
   }
 
   private boolean determineDeleteable( final IKalypsoTheme[] selectedThemes )
   {
     for( final IKalypsoTheme kalypsoTheme : selectedThemes )
-    {
       if( !kalypsoTheme.getProperty( IKalypsoTheme.PROPERTY_DELETEABLE ) )
         return false;
-    }
 
     return true;
   }
