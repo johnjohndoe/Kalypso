@@ -50,7 +50,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  * @author Madanagopal
  *
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings("unchecked") //$NON-NLS-1$
 public class ProblemDescriptor implements IProblem
 {
 
@@ -95,7 +95,7 @@ public class ProblemDescriptor implements IProblem
     GM_Envelope boundingBox = CalcUnitOps.getBoundingBox( getParentCalculationUnit() );
     if( boundingBox == null )
     {
-      System.out.println("BBox is null");
+      System.out.println("BBox is null"); //$NON-NLS-1$
       return;
     }
     panel.setBoundingBox( boundingBox );

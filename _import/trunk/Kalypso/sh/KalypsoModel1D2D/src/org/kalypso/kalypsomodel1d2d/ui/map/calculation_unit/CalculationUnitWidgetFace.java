@@ -111,7 +111,7 @@ class CalculationUnitWidgetFace
 
     // Calculation Unit Section
     calculationUnitSection = m_toolkit.createSection( scrolledForm.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
-    calculationUnitSection.setText( "Berechnungseinheiten" );
+    calculationUnitSection.setText( Messages.getString("CalculationUnitWidgetFace.0") ); //$NON-NLS-1$
     tableWrapData = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
     tableWrapData.grabHorizontal = true;
     tableWrapData.grabVertical = true;
@@ -120,7 +120,7 @@ class CalculationUnitWidgetFace
 
     // Creates Section for "Calculation Settings Unit"
     calculationSettingsSection = m_toolkit.createSection( scrolledForm.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
-    calculationSettingsSection.setText( "Berechnungseinheit Verwalten" );
+    calculationSettingsSection.setText( Messages.getString("CalculationUnitWidgetFace.1") ); //$NON-NLS-1$
     tableWrapData = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
     tableWrapData.grabHorizontal = true;
     tableWrapData.grabVertical = true;
@@ -129,7 +129,7 @@ class CalculationUnitWidgetFace
 
     // Creates Section for "Calculation Elements Unit"
     calculationElementUnitSection = m_toolkit.createSection( scrolledForm.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
-    calculationElementUnitSection.setText( "Status der selektierten Berechnungseinheit" );
+    calculationElementUnitSection.setText( Messages.getString("CalculationUnitWidgetFace.2") ); //$NON-NLS-1$
     tableWrapData = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
     tableWrapData.grabHorizontal = true;
     tableWrapData.grabVertical = true;

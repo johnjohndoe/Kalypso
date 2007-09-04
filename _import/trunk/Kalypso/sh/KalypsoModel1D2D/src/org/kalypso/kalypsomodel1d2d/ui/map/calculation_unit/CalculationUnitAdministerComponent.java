@@ -83,15 +83,15 @@ public class CalculationUnitAdministerComponent
 
   private Button m_btnAddRemoveSubUnits;
 
-  private static final ImageData IMAGEDATA_ADDREMOVE_ELEMENTS_1D = KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/01_add_1D.gif" ).getImageData();
+  private static final ImageData IMAGEDATA_ADDREMOVE_ELEMENTS_1D = KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/01_add_1D.gif" ).getImageData(); //$NON-NLS-1$
 
-  private static final ImageData IMAGEDATA_ADDREMOVE_ELEMENTS_2D = KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/02_add_2D.gif" ).getImageData();
+  private static final ImageData IMAGEDATA_ADDREMOVE_ELEMENTS_2D = KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/02_add_2D.gif" ).getImageData(); //$NON-NLS-1$
 
-  private static final ImageData IMAGEDATA_ADDREMOVE_CONTILINES = KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/03_add_conti.gif" ).getImageData();
+  private static final ImageData IMAGEDATA_ADDREMOVE_CONTILINES = KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/03_add_conti.gif" ).getImageData(); //$NON-NLS-1$
 
-  private static final ImageData IMAGEDATA_ADDREMOVE_BOUNDARYCONDITIONS = KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/13_flowrelation_add_NodalBC.gif" ).getImageData();
+  private static final ImageData IMAGEDATA_ADDREMOVE_BOUNDARYCONDITIONS = KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/13_flowrelation_add_NodalBC.gif" ).getImageData(); //$NON-NLS-1$
 
-  private static final ImageData IMAGEDATA_ADDREMOVE_SUBUNITS = KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/18_add_calculationunit.gif" ).getImageData();
+  private static final ImageData IMAGEDATA_ADDREMOVE_SUBUNITS = KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/18_add_calculationunit.gif" ).getImageData(); //$NON-NLS-1$
 
   public CalculationUnitAdministerComponent( final CalculationUnitDataModel model )
   {
@@ -110,7 +110,7 @@ public class CalculationUnitAdministerComponent
     m_btnAddRemoveElements = new Button( m_rootComposite, SWT.PUSH );
     m_btnAddRemoveElements.setLayoutData( new GridData( GridData.BEGINNING ) );
     m_btnAddRemoveElements.setImage( new Image( m_rootComposite.getDisplay(), IMAGEDATA_ADDREMOVE_ELEMENTS_1D ) );
-    m_btnAddRemoveElements.setToolTipText( "Add/remove elements to calculation unit" );
+    m_btnAddRemoveElements.setToolTipText( Messages.getString("CalculationUnitAdministerComponent.5") ); //$NON-NLS-1$
     m_btnAddRemoveElements.addSelectionListener( new SelectionListener()
     {
       public void widgetSelected( SelectionEvent e )
@@ -128,7 +128,7 @@ public class CalculationUnitAdministerComponent
     m_btnAddRemoveContinuityLines = new Button( m_rootComposite, SWT.PUSH );
     m_btnAddRemoveContinuityLines.setLayoutData( new GridData( GridData.BEGINNING ) );
     m_btnAddRemoveContinuityLines.setImage( new Image( m_rootComposite.getDisplay(), IMAGEDATA_ADDREMOVE_CONTILINES ) );
-    m_btnAddRemoveContinuityLines.setToolTipText( "Add/remove continuity line to calculation unit" );
+    m_btnAddRemoveContinuityLines.setToolTipText( Messages.getString("CalculationUnitAdministerComponent.6") ); //$NON-NLS-1$
     m_btnAddRemoveContinuityLines.addSelectionListener( new SelectionListener()
     {
       public void widgetSelected( SelectionEvent e )
@@ -146,7 +146,7 @@ public class CalculationUnitAdministerComponent
     m_btnAddRemoveBoundaryConditions = new Button( m_rootComposite, SWT.PUSH );
     m_btnAddRemoveBoundaryConditions.setLayoutData( new GridData( GridData.BEGINNING ) );
     m_btnAddRemoveBoundaryConditions.setImage( new Image( m_rootComposite.getDisplay(), IMAGEDATA_ADDREMOVE_BOUNDARYCONDITIONS ) );
-    m_btnAddRemoveBoundaryConditions.setToolTipText( "Add/remove boundary condition to calculation unit" );
+    m_btnAddRemoveBoundaryConditions.setToolTipText( Messages.getString("CalculationUnitAdministerComponent.7") ); //$NON-NLS-1$
     m_btnAddRemoveBoundaryConditions.addSelectionListener( new SelectionListener()
     {
       public void widgetSelected( SelectionEvent e )
@@ -164,7 +164,7 @@ public class CalculationUnitAdministerComponent
     m_btnAddRemoveSubUnits = new Button( m_rootComposite, SWT.PUSH );
     m_btnAddRemoveSubUnits.setLayoutData( new GridData( GridData.BEGINNING ) );
     m_btnAddRemoveSubUnits.setImage( new Image( m_rootComposite.getDisplay(), IMAGEDATA_ADDREMOVE_SUBUNITS ) );
-    m_btnAddRemoveSubUnits.setToolTipText( "Add/remove boundary sub units to calculation unit" );
+    m_btnAddRemoveSubUnits.setToolTipText( Messages.getString("CalculationUnitAdministerComponent.8") ); //$NON-NLS-1$
     m_btnAddRemoveSubUnits.addSelectionListener( new SelectionListener()
     {
       public void widgetSelected( SelectionEvent e )
@@ -188,7 +188,7 @@ public class CalculationUnitAdministerComponent
 
     m_dataModel.addKeyBasedDataChangeListener( new KeyBasedDataModelChangeListener()
     {
-      @SuppressWarnings("synthetic-access")
+      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
       public void dataChanged( final String key, final Object newValue )
       {
         final Display display = m_parent.getDisplay();

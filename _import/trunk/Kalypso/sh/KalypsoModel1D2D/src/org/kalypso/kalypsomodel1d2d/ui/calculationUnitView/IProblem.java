@@ -48,7 +48,7 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
  * Every Validating Condition for Calculation Units implements this Interface
  * @author Madanagopal 
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings("unchecked") //$NON-NLS-1$
 public interface IProblem
 {
   public void setName(String name);

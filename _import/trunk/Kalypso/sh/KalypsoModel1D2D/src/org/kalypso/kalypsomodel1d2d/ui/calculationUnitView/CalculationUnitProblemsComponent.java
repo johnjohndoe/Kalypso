@@ -87,7 +87,7 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
  * @author Madanagopal
  *
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings("unchecked") //$NON-NLS-1$
 public class CalculationUnitProblemsComponent
 {
   private FormToolkit toolkit;
@@ -126,7 +126,7 @@ public class CalculationUnitProblemsComponent
         IStructuredSelection selection = (IStructuredSelection) event.getSelection();
         if( selection == null )
         {
-          System.out.println( "Selection is null" );
+          System.out.println( "Selection is null" ); //$NON-NLS-1$
           return;
         }
         Object firstElement = selection.getFirstElement();
@@ -177,7 +177,7 @@ public class CalculationUnitProblemsComponent
 	    rootComposite.setLayoutData( formData );
 	    
 	    Label nameText = new Label(rootComposite, SWT.NONE);
-	    nameText.setText( "Problems :" );
+	    nameText.setText( "Problems :" ); //$NON-NLS-1$
 	    
 	    formData = new FormData();
 	    formData.left = new FormAttachment(0,5);
@@ -188,7 +188,7 @@ public class CalculationUnitProblemsComponent
 	    Image refreshImage = new Image( rootComposite.getDisplay(),
 	            KalypsoModel1D2DPlugin.imageDescriptorFromPlugin(
 	                    PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ),
-	                    "icons/elcl16/refresh.gif" ).getImageData() );;
+	                    "icons/elcl16/refresh.gif" ).getImageData() );; //$NON-NLS-1$
         refreshButton.setImage( refreshImage );
         
         refreshButton.addSelectionListener( new SelectionAdapter(){
@@ -236,7 +236,7 @@ public class CalculationUnitProblemsComponent
 
       public void run( IProgressMonitor monitor ) throws InvocationTargetException, InterruptedException
       {
-        monitor.beginTask( "Starts Validating", 5 );
+        monitor.beginTask( "Starts Validating", 5 ); //$NON-NLS-1$
         IFeatureWrapper2 currentSelection = getCalculationUnit();
         
         try
@@ -289,7 +289,7 @@ public class CalculationUnitProblemsComponent
 
   private void updateThisSection( Object newValue )
   {
-    Assert.throwIAEOnNullParam( newValue, "newValue" );    
+    Assert.throwIAEOnNullParam( newValue, "newValue" );     //$NON-NLS-1$
     if (newValue instanceof ICalculationUnit) 
     {       
       selCalcUnit = (ICalculationUnit) dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );

@@ -73,15 +73,15 @@ import org.kalypsodeegree.model.feature.Feature;
 
 public class AddRemoveContinuityLineToCalcUnitWidget extends FENetConceptSelectionWidget
 {
-  private static final String SEPARATOR_PSEUDO_TEXT = "_separator_pseudo_text_";
+  private static final String SEPARATOR_PSEUDO_TEXT = "_separator_pseudo_text_"; //$NON-NLS-1$
 
-  private static final String ICONS_ELCL16_REMOVE_GIF = "icons/elcl16/remove.gif";
+  private static final String ICONS_ELCL16_REMOVE_GIF = "icons/elcl16/remove.gif"; //$NON-NLS-1$
 
-  private static final String ICONS_ELCL16_ADD_GIF = "icons/elcl16/add.gif";
+  private static final String ICONS_ELCL16_ADD_GIF = "icons/elcl16/add.gif"; //$NON-NLS-1$
 
-  private static final String TXT_REMOVE_BOUNDARY_LINE_FROM_UNIT = "Remove continuity line";
+  private static final String TXT_REMOVE_BOUNDARY_LINE_FROM_UNIT = Messages.getString("AddRemoveContinuityLineToCalcUnitWidget.3"); //$NON-NLS-1$
 
-  private static final String TXT_ADD_BOUNDARY_LINE_TO_UNIT = "Add continuity line";
+  private static final String TXT_ADD_BOUNDARY_LINE_TO_UNIT = Messages.getString("AddRemoveContinuityLineToCalcUnitWidget.4"); //$NON-NLS-1$
 
   private static final String[][] MENU_ITEM_SPECS = { { TXT_ADD_BOUNDARY_LINE_TO_UNIT, ICONS_ELCL16_ADD_GIF }, { TXT_REMOVE_BOUNDARY_LINE_FROM_UNIT, ICONS_ELCL16_REMOVE_GIF } };
 
@@ -93,7 +93,7 @@ public class AddRemoveContinuityLineToCalcUnitWidget extends FENetConceptSelecti
 
   public AddRemoveContinuityLineToCalcUnitWidget( final KeyBasedDataModel dataModel )
   {
-    this( new QName[] { IFELine.QNAME }, "Select Elements and add to the current calculation unit", "Select Elements and add to the current calculation unit", dataModel );
+    this( new QName[] { IFELine.QNAME }, Messages.getString("AddRemoveContinuityLineToCalcUnitWidget.5"), Messages.getString("AddRemoveContinuityLineToCalcUnitWidget.6"), dataModel ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   protected AddRemoveContinuityLineToCalcUnitWidget( final QName themeElementsQName, final String name, final String toolTip, final KeyBasedDataModel dataModel )
@@ -211,7 +211,7 @@ public class AddRemoveContinuityLineToCalcUnitWidget extends FENetConceptSelecti
     final IFELine bLine = getSelectedBoundaryLine();
     if( !itemText.equals( TXT_ADD_BOUNDARY_LINE_TO_UNIT ) )
     {
-      throw new RuntimeException( "Unknown itemText:" + itemText );
+      throw new RuntimeException( "Unknown itemText:" + itemText ); //$NON-NLS-1$
     }
 
     final IFEDiscretisationModel1d2d model1d2d = m_dataModel.getData( IFEDiscretisationModel1d2d.class, ICommonKeys.KEY_DISCRETISATION_MODEL );
@@ -270,7 +270,7 @@ public class AddRemoveContinuityLineToCalcUnitWidget extends FENetConceptSelecti
     for( final String[] spec : MENU_ITEM_SPECS )
     {
       if( spec.length != 2 )
-        throw new RuntimeException( "Spec must have length 2, but has:" + spec.length );
+        throw new RuntimeException( "Spec must have length 2, but has:" + spec.length ); //$NON-NLS-1$
       final String text = spec[0];
       if( SEPARATOR_PSEUDO_TEXT.equals( text ) )
         menu.addSeparator();

@@ -40,45 +40,32 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.calculationUnitView;
 
-import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.swt.graphics.Image;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 /**
- * @author Madanagopal
+ * @author schrage
  *
  */
-public class ProblemsListLabelProvider extends LabelProvider
+public class Messages
 {
-  
-  public ProblemsListLabelProvider( )
+  private static final String BUNDLE_NAME = "org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.messages"; //$NON-NLS-1$
+
+  private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle( BUNDLE_NAME );
+
+  private Messages( )
   {
-  }
-  
-  public Image getImage( Object element )
-  {
-    return null;
   }
 
-  public String getText( Object element )
+  public static String getString( String key )
   {
-    if( element instanceof IProblem )
+    try
     {
-
-      String name = ((IProblem)element).getMessageDescription();
-      if( name != null )
-      {
-        return name;
-      }
-      else
-      {
-        return ""; //$NON-NLS-1$
-      }
+      return RESOURCE_BUNDLE.getString( key );
     }
-    else
+    catch( MissingResourceException e )
     {
-      throw new RuntimeException( "Only Valid Messages Supported:" + (element == null ? null : element.getClass()) + "\n\t value=" + element ); //$NON-NLS-1$ //$NON-NLS-2$
+      return '!' + key + '!';
     }
   }
-
 }

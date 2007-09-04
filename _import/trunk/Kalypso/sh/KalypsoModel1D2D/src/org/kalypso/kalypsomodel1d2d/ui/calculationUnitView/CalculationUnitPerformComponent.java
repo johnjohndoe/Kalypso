@@ -70,14 +70,14 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
  * @author Madanagopal
  * 
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings("unchecked") //$NON-NLS-1$
 public class CalculationUnitPerformComponent extends FeatureWrapperListEditor implements IButtonConstants
 {
   private final CalculationUnitDataModel dataModel;
 
   private final Map<String, String> btnDescription = new HashMap<String, String>();
 
-  private final Action performCalButton = new Action( "Perform", KalypsoModel1D2DUIImages.IMG_RUN_SIM )
+  private final Action performCalButton = new Action( "Perform", KalypsoModel1D2DUIImages.IMG_RUN_SIM ) //$NON-NLS-1$
   {
     /**
      * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
@@ -92,7 +92,7 @@ public class CalculationUnitPerformComponent extends FeatureWrapperListEditor im
       {
         final IWorkbench workbench = PlatformUI.getWorkbench();
         final IStatus result = CalculationUnitSimMode1D2DCalcJob.startCalculation( unit, workbench );
-        ErrorDialog.openError( shell, "Berechnung durchführen", "Berechnung konnte nicht durchgeführt werden.", result );
+        ErrorDialog.openError( shell, Messages.getString("CalculationUnitPerformComponent.2"), Messages.getString("CalculationUnitPerformComponent.3"), result ); //$NON-NLS-1$ //$NON-NLS-2$
       }
 
       // TODO: message if else
@@ -108,7 +108,7 @@ public class CalculationUnitPerformComponent extends FeatureWrapperListEditor im
       String toolTipText2 = super.getToolTipText();
       if( toolTipText2 == null )
       {
-        toolTipText2 = "Berechnung Starten";
+        toolTipText2 = Messages.getString("CalculationUnitPerformComponent.4"); //$NON-NLS-1$
       }
       return toolTipText2;
     }
@@ -120,7 +120,7 @@ public class CalculationUnitPerformComponent extends FeatureWrapperListEditor im
     setRequiredButtons( BTN_SHOW_AND_MAXIMIZE
     /* BTN_CLICK_TO_CALCULATE */);
 
-    btnDescription.put( "SHOW_AND_MAXIMIZE", "Berechnungseinheit anzeigen und maximieren" );
+    btnDescription.put( "SHOW_AND_MAXIMIZE", Messages.getString("CalculationUnitPerformComponent.6") ); //$NON-NLS-1$ //$NON-NLS-2$
     setNonGenericActions( new IAction[] { performCalButton } );
     this.dataModel = dataModel;
   }

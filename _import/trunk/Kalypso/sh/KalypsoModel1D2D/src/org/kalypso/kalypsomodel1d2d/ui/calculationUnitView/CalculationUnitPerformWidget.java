@@ -103,7 +103,7 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
 
   public CalculationUnitPerformWidget( )
   {
-    this( "Calculation Unit Perform", "Berechnungseinheiten Modellieren" );
+    this( Messages.getString("CalculationUnitPerformWidget.0"), Messages.getString("CalculationUnitPerformWidget.1") ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public CalculationUnitPerformWidget( final String name, final String toolTip )
@@ -178,7 +178,7 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
       dataModel.setData( ICommonKeys.WIDGET_WITH_STRATEGY, this );
 
       // TODO: what is the purpose of this extra theme??! This is completely senseless!
-      m_calcUnitTheme = new Model1d2dCalUnitTheme( "Aktuelles Teilmodell", mapModell );
+      m_calcUnitTheme = new Model1d2dCalUnitTheme( Messages.getString("CalculationUnitPerformWidget.2"), mapModell ); //$NON-NLS-1$
       mapModell.insertTheme( m_calcUnitTheme, 0 );
       dataModel.addKeyBasedDataChangeListener( calThemeUpdater );
 
@@ -506,7 +506,7 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
       return ((IGrabDistanceProvider) strategy).getGrabDistance();
     }
 
-    System.out.println( "getting fix grab distance" );
+    System.out.println( "getting fix grab distance" ); //$NON-NLS-1$
 
     final MapPanel mapPanel = dataModel.getData( MapPanel.class, ICommonKeys.KEY_MAP_PANEL );
     return MapUtilities.calculateWorldDistance( mapPanel, 6 );

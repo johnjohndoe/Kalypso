@@ -73,7 +73,7 @@ public class AddRemoveBoundaryConditionToCalcUnitWidget extends FENetConceptSele
 
   public AddRemoveBoundaryConditionToCalcUnitWidget( final KeyBasedDataModel dataModel )
   {
-    this( new QName[] { IFELine.QNAME, IBoundaryCondition.QNAME }, " Removes Boundary Condition ", " Removes Boundary Condition", dataModel );
+    this( new QName[] { IFELine.QNAME, IBoundaryCondition.QNAME }, Messages.getString("AddRemoveBoundaryConditionToCalcUnitWidget.0"), Messages.getString("AddRemoveBoundaryConditionToCalcUnitWidget.1"), dataModel ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public AddRemoveBoundaryConditionToCalcUnitWidget( final QName[] names, final String name, final String toolTip, final KeyBasedDataModel dataModel )
@@ -89,13 +89,13 @@ public class AddRemoveBoundaryConditionToCalcUnitWidget extends FENetConceptSele
     final JPopupMenu popupMenu = new JPopupMenu();
 
     final JMenuItem addBoundaryCondition = new JMenuItem();
-    addBoundaryCondition.setText( "Add boundary condition" );
-    addBoundaryCondition.setIcon( new ImageIcon( PluginUtilities.findResource( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), "icons/elcl16/add.gif" ) ) );
+    addBoundaryCondition.setText( Messages.getString("AddRemoveBoundaryConditionToCalcUnitWidget.2") ); //$NON-NLS-1$
+    addBoundaryCondition.setIcon( new ImageIcon( PluginUtilities.findResource( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), "icons/elcl16/add.gif" ) ) ); //$NON-NLS-1$
     addBoundaryCondition.addActionListener( makeAddBoundaryConditionListener() );
 
     final JMenuItem removeBoundaryCondition = new JMenuItem();
-    removeBoundaryCondition.setText( "Remove boundary condition" );
-    removeBoundaryCondition.setIcon( new ImageIcon( PluginUtilities.findResource( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), "icons/elcl16/remove.gif" ) ) );
+    removeBoundaryCondition.setText( Messages.getString("AddRemoveBoundaryConditionToCalcUnitWidget.4") ); //$NON-NLS-1$
+    removeBoundaryCondition.setIcon( new ImageIcon( PluginUtilities.findResource( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), "icons/elcl16/remove.gif" ) ) ); //$NON-NLS-1$
     removeBoundaryCondition.addActionListener( makeRemoveBoundaryConditionListener() );
 
     popupMenu.add( addBoundaryCondition );
@@ -119,7 +119,7 @@ public class AddRemoveBoundaryConditionToCalcUnitWidget extends FENetConceptSele
           final IBoundaryCondition bc = (IBoundaryCondition) feature.getAdapter( IBoundaryCondition.class );
           if( bc == null )
           {
-            System.out.println( "could not adapt to boundary " );
+            System.out.println( "could not adapt to boundary " ); //$NON-NLS-1$
             return;
           }
 
@@ -150,7 +150,7 @@ public class AddRemoveBoundaryConditionToCalcUnitWidget extends FENetConceptSele
   {
     final ActionListener al = new ActionListener()
     {
-      @SuppressWarnings("unchecked")
+      @SuppressWarnings("unchecked") //$NON-NLS-1$
       public void actionPerformed( ActionEvent e )
       {
         final Feature[] selectedFeatures = getSelectedFeature();
@@ -163,7 +163,7 @@ public class AddRemoveBoundaryConditionToCalcUnitWidget extends FENetConceptSele
           final IBoundaryCondition bc = (IBoundaryCondition) feature.getAdapter( IBoundaryCondition.class );
           if( bc == null )
           {
-            System.out.println( "could not adapt to boundary " );
+            System.out.println( "could not adapt to boundary " ); //$NON-NLS-1$
             return;
           }
 

@@ -91,13 +91,13 @@ public class CalculationUnitPerformWidgetFace
     form = toolkit.createScrolledForm(parent);
     form.setExpandHorizontal(true);
     form.setExpandVertical(true);
-    form.setText("Calculation Unit Perform"); 
+    form.setText(Messages.getString("CalculationUnitPerformWidgetFace.0"));  //$NON-NLS-1$
     form.getBody().setLayout(new TableWrapLayout());
     
 
     // Calculation Unit Section     
     selectCalcUnitSection = toolkit.createSection( form.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
-    selectCalcUnitSection.setText( "Berechnungseinheiten" );
+    selectCalcUnitSection.setText( Messages.getString("CalculationUnitPerformWidgetFace.1") ); //$NON-NLS-1$
     final TableWrapData tableWrapDataCU = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
 //    tableWrapDataCU.grabHorizontal = true;
 //    tableWrapDataCU.grabVertical = true;
@@ -106,7 +106,7 @@ public class CalculationUnitPerformWidgetFace
 
     // Creates Section for "Calculation Elements Unit"
     calculationElementUnitSection = toolkit.createSection( form.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
-    calculationElementUnitSection.setText( "Status der selektierten Berechnungseinheit" );
+    calculationElementUnitSection.setText( Messages.getString("CalculationUnitPerformWidgetFace.2") ); //$NON-NLS-1$
     TableWrapData tableWrapDataCE = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
 //    tableWrapDataCE.grabHorizontal = true;
 //    tableWrapDataCE.grabVertical = true;
@@ -115,7 +115,7 @@ public class CalculationUnitPerformWidgetFace
     
     // Creates Section for "Calculation Settings Unit"
     problemsSection = toolkit.createSection( form.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
-    problemsSection.setText( "Berechnungseinheit Verwalten" );
+    problemsSection.setText( Messages.getString("CalculationUnitPerformWidgetFace.3") ); //$NON-NLS-1$
     final TableWrapData tableWrapDataPU = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
 //    tableWrapDataPU.grabHorizontal = true;
 //    tableWrapDataPU.grabVertical = true;
@@ -187,7 +187,7 @@ public class CalculationUnitPerformWidgetFace
   
     if( m_parent == null )
     {
-      System.out.println( "Disposing null root panel" );
+      System.out.println( "Disposing null root panel" ); //$NON-NLS-1$
       return;
     }
     if( !m_parent.isDisposed() )
