@@ -66,7 +66,6 @@ public interface IFE1D2DComplexElement <ET extends IFENetItem> extends IFEComple
    * @return true if the element has been added  otherwise false
    */
   public boolean addElementAsRef(ET element);
-//  public boolean addFlowRelationAsRef(IFlowRelationship element);
   
   /**
    * Remove all reference to this element from this complex element

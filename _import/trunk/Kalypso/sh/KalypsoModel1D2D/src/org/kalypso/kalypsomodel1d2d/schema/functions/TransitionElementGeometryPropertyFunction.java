@@ -30,8 +30,7 @@ public class TransitionElementGeometryPropertyFunction extends FeaturePropertyFu
    */
   public Object getValue( final Feature feature, final IPropertyType pt, final Object currentValue )
   {
-    final ITransitionElement element = 
-            (ITransitionElement) feature.getAdapter( ITransitionElement.class );
+    final ITransitionElement element = (ITransitionElement) feature.getAdapter( ITransitionElement.class );
     if( element != null )
     {
       try
@@ -43,15 +42,6 @@ public class TransitionElementGeometryPropertyFunction extends FeaturePropertyFu
         e.printStackTrace();
       }
     }
-    else
-    {
-      System.out.println(
-          "Cannot get feature prop:"+
-          "\n\tfeature="+feature+
-          "\n\tproperty="+pt.getQName()+
-          "currentValue="+currentValue);
-    }
-
     return null;
   }
 

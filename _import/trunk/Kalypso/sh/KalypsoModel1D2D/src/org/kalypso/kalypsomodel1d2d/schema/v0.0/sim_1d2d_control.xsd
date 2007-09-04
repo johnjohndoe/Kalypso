@@ -679,8 +679,17 @@
 						</annotation>
 						<simpleType>
 							<restriction base="double">
-								<minInclusive value="0.0" />
-								<maxInclusive value="1.0"/>
+								<enumeration value="0.0"/>
+								<enumeration value="0.1"/>
+								<enumeration value="0.2"/>
+								<enumeration value="0.3"/>
+								<enumeration value="0.4"/>
+								<enumeration value="0.5"/>
+								<enumeration value="0.6"/>
+								<enumeration value="0.7"/>
+								<enumeration value="0.8"/>
+								<enumeration value="0.9"/>
+								<enumeration value="1.0"/>
 							</restriction>
 						</simpleType>
 					</element>

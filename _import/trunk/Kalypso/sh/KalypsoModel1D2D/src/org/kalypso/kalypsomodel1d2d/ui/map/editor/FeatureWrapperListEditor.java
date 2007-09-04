@@ -91,10 +91,9 @@ import org.kalypsodeegree_impl.model.sort.IEnvelopeProvider;
  */
 public class FeatureWrapperListEditor implements IButtonConstants
 {
-  /* ======================================================================== */
   private TableViewer tableViewer;
 
-  private KeyBasedDataModel dataModel;
+  private KeyBasedDataModel m_dataModel;
 
   private Image image;
 
@@ -102,9 +101,7 @@ public class FeatureWrapperListEditor implements IButtonConstants
 
   private Image imageUp;
 
-  private FormToolkit toolkit;
-
-  private Composite parent;
+  private Composite m_parent;
 
   class ActionBaseButton
   {
@@ -158,53 +155,31 @@ public class FeatureWrapperListEditor implements IButtonConstants
 
   private final ICellModifier modifier = new ICellModifier()
   {
-
     public boolean canModify( Object element, String property )
     {
-      System.out.println( "CanmOdiy=" + property );
-      // Find the index of the column
-      if( property.equals( tableViewer.getColumnProperties()[0] ) )
-      {
-        return true;
-      }
-      else
-      {
-        return false;
-      }
+      return property.equals( tableViewer.getColumnProperties()[0] );
     }
 
     public Object getValue( Object element, String property )
     {
-      System.out.println( "getting prop=" + property );
       if( property.equals( tableViewer.getColumnProperties()[0] ) )
       {
         if( element instanceof IFeatureWrapper2 )
-        {
-
           return ((IFeatureWrapper2) element).getName();
-        }
         else
-        {
-          throw new RuntimeException( "Only IFeatureWrapper2 are accepted:" + element );
-        }
+          throw new RuntimeException( "Only IFeatureWrapper2 are accepted: " + element );
       }
-      else
-      {
-        return null;
-      }
+      return null;
     }
 
-    public void modify( Object element, String property, Object value )
+    public void modify(final Object element, final String property, final Object value )
     {
       IFeatureWrapper2 featureWrapper = null;
       if( element instanceof TableItem )
       {
-        Object data = ((TableItem) element).getData();
+        final Object data = ((TableItem) element).getData();
         if( data instanceof IFeatureWrapper2 )
-        {
           featureWrapper = (IFeatureWrapper2) data;
-        }
-
       }
 
       if( property.equals( tableViewer.getColumnProperties()[0] ) )
@@ -235,7 +210,7 @@ public class FeatureWrapperListEditor implements IButtonConstants
         };
 
         // TODO: this is probably not always the right key!
-        KeyBasedDataModelUtil.postCommand( dataModel, renameCommand, ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL );
+        KeyBasedDataModelUtil.postCommand( m_dataModel, renameCommand, ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL );
       }
       else
       {
@@ -385,9 +360,8 @@ public class FeatureWrapperListEditor implements IButtonConstants
 
   public void createControl( final KeyBasedDataModel dataModel, final FormToolkit toolkit, final Composite parent )
   {
-    this.toolkit = toolkit;
-    this.parent = parent;
-    this.dataModel = dataModel;
+    m_parent = parent;
+    m_dataModel = dataModel;
     guiSelectFromList( parent );
     dataModel.addKeyBasedDataChangeListener( this.dataModelListener );
   }
@@ -652,12 +626,12 @@ public class FeatureWrapperListEditor implements IButtonConstants
 
   private void setCurrentSelection( final IFeatureWrapper2 firstElement )
   {
-    dataModel.setData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, firstElement );
+    m_dataModel.setData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, firstElement );
   }
 
   protected IFeatureWrapper2 getCurrentSelection( )
   {
-    return (IFeatureWrapper2) dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
+    return (IFeatureWrapper2) m_dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
   }
 
   public void createFeatureWrapper( )
@@ -667,7 +641,7 @@ public class FeatureWrapperListEditor implements IButtonConstants
 
   public KeyBasedDataModel getDataModel( )
   {
-    return dataModel;
+    return m_dataModel;
   }
 
   /**
@@ -694,7 +668,7 @@ public class FeatureWrapperListEditor implements IButtonConstants
         updateOnNewSelection( currentSelection );
       }
     };
-    final Display display = parent.getDisplay();
+    final Display display = m_parent.getDisplay();
     display.syncExec( changeInputRunnable );
   }
 
@@ -725,7 +699,7 @@ public class FeatureWrapperListEditor implements IButtonConstants
         }
       }
     };
-    final Display display = parent.getDisplay();
+    final Display display = m_parent.getDisplay();
     display.syncExec( runnable );
   }
 
@@ -738,7 +712,7 @@ public class FeatureWrapperListEditor implements IButtonConstants
         tableViewer.refresh();
       }
     };
-    final Display display = parent.getDisplay();
+    final Display display = m_parent.getDisplay();
     display.syncExec( runnable );
   }
 

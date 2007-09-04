@@ -339,8 +339,12 @@ Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodu
 						</con:ExtensionContext>
 						<con:Parameter name="type"
 							value="mapViewInputContext" />
+						<!-- 
 						<con:Parameter name="input"
 							value="maps/roughness.gmt" />
+						 -->
+						<con:Parameter name="input"
+							value="maps/fenet.gmt" />
 					</con:ExtensionContext>
 					<con:ExtensionContext id="FenetMap"
 						parent="MapContext"

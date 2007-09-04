@@ -52,9 +52,10 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 public interface ITransitionElement extends IFE1D2DComplexElement<IFENetItem>
 {
   public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "TransitionElement" );
+
   public static final QName PROP_CONTI_LINES = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "continuityLine" );
-  
-  public List<IFELine> getContinuityLines();
-  
-  public GM_Object recalculateElementGeometry( )throws GM_Exception;
+
+  public List<IFELine> getContinuityLines( );
+
+  public GM_Object recalculateElementGeometry( ) throws GM_Exception;
 }

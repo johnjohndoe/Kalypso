@@ -42,10 +42,14 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
 import java.util.List;
 
+import javax.crypto.spec.PSource;
 import javax.xml.namespace.QName;
 
+import org.deegree.framework.xml.GeometryUtils;
+import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -53,10 +57,11 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 public class TransitionElement extends AbstractFeatureBinder implements ITransitionElement
 {
-  private List<IFELine> m_continuityLines;
+  private FeatureWrapperCollection<IFELine> m_continuityLines;
 
   public TransitionElement( Feature featureToBind )
   {
@@ -66,12 +71,12 @@ public class TransitionElement extends AbstractFeatureBinder implements ITransit
   public TransitionElement( Feature featureToBind, QName qnameToBind )
   {
     super( featureToBind, qnameToBind );
-//    m_continuityLines = (List<IFELine>) featureToBind.getProperty( ITransitionElement.PROP_CONTI_LINES );
+    // m_continuityLines = (List<IFELine>) featureToBind.getProperty( ITransitionElement.PROP_CONTI_LINES );
     final Object prop = featureToBind.getProperty( ITransitionElement.PROP_CONTI_LINES );
     if( prop == null )
-      m_continuityLines = new FeatureWrapperCollection<IFELine>( featureToBind, ITransitionElement.QNAME, ITransitionElement.PROP_CONTI_LINES , IFELine.class );
+      m_continuityLines = new FeatureWrapperCollection<IFELine>( featureToBind, ITransitionElement.QNAME, ITransitionElement.PROP_CONTI_LINES, IFELine.class );
     else
-      m_continuityLines = new FeatureWrapperCollection<IFELine>( featureToBind, IFELine.class, ITransitionElement.PROP_CONTI_LINES  );
+      m_continuityLines = new FeatureWrapperCollection<IFELine>( featureToBind, IFELine.class, ITransitionElement.PROP_CONTI_LINES );
   }
 
   /**
@@ -87,24 +92,37 @@ public class TransitionElement extends AbstractFeatureBinder implements ITransit
    */
   public GM_Object recalculateElementGeometry( ) throws GM_Exception
   {
+    if( m_continuityLines.size() < 2 )
+      return null;
     final GM_Position[] positions0 = m_continuityLines.get( 0 ).getGeometry().getAsLineString().getPositions();
     final GM_Position[] positions1 = m_continuityLines.get( 1 ).getGeometry().getAsLineString().getPositions();
-    final GM_Position[] positions = new GM_Position[positions0.length + positions1.length +1];
-    for(int i=0;i<positions0.length;i++)
+
+    final GM_Position[] positions = new GM_Position[positions0.length + positions1.length + 1];
+    for( int i = 0; i < positions0.length; i++ )
       positions[i] = positions0[i];
-    final int k = positions0.length;
-    for(int i=0;i<positions1.length;i++)
-      positions[k+i] = positions1[i];
-    positions[positions.length-1]= positions0[0];
-    return GeometryFactory.createGM_Surface( positions, new GM_Position[][]{}, null, m_continuityLines.get( 0 ).getGeometry().getCoordinateSystem() );
+
+    // check if polygon created from these lines is self-overlapped; if it is, get second line points in opposite order
+    final double distanceToFirst = positions0[positions0.length - 1].getDistance( positions1[0] );
+    final double distanceToLast = positions0[positions0.length - 1].getDistance( positions1[positions1.length - 1] );
+    int k = positions0.length;
+    if( distanceToFirst < distanceToLast )
+      for( int i = 0; i < positions1.length; i++ )
+        positions[k++] = positions1[i];
+    else
+      for( int i = positions1.length - 1; i >= 0; i-- )
+        positions[k++] = positions1[i];
+
+    // close the ring
+    positions[positions.length - 1] = positions0[0];
+    return GeometryFactory.createGM_Surface( positions, new GM_Position[][] {}, null, m_continuityLines.get( 0 ).getGeometry().getCoordinateSystem() );
   }
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement#addElementAsRef(org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem)
    */
-  public boolean addElementAsRef( IFENetItem element )
+  public boolean addElementAsRef( final IFENetItem element )
   {
-    return ((List)m_continuityLines).add( element.getGmlID() );
+    return m_continuityLines.addRef( (IFELine) element );
   }
 
   /**
