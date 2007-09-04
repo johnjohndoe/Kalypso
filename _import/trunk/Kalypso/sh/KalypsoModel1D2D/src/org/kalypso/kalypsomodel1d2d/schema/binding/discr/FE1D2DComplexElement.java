@@ -44,9 +44,10 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.Util;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
-import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
 
@@ -56,7 +57,7 @@ import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
  * @author Patrice Congo
  * 
  */
-public class FE1D2DComplexElement<ET extends IFENetItem> extends AbstractFeatureBinder implements IFE1D2DComplexElement<ET>
+public class FE1D2DComplexElement<ET extends IFeatureWrapper2> extends AbstractFeatureBinder implements IFE1D2DComplexElement<ET>
 {
 
   private final IFeatureWrapperCollection<ET> elements;
@@ -77,6 +78,9 @@ public class FE1D2DComplexElement<ET extends IFENetItem> extends AbstractFeature
   {
     super( featureToBind, qnameToBind );
     elements = Util.<ET> get( featureToBind, qnameToBind, elementListPropQName, wrapperClass, true );
+    ((FeatureWrapperCollection)elements).addSecondaryWrapper(IFE1D2DElement.class);
+    ((FeatureWrapperCollection)elements).addSecondaryWrapper(IFELine.class);
+//    ((FeatureWrapperCollection)elements).addSecondaryWrapper(ITransitionElement.class);
   }
 
   /**
@@ -103,9 +107,10 @@ public class FE1D2DComplexElement<ET extends IFENetItem> extends AbstractFeature
     Assert.throwIAEOnNullParam( element, "element" );
     return elements.addRef( element );
   }
-  
-  public boolean addFlowRelationAsRef(IFlowRelationship element){
-    return addElementAsRef( (ET)element );
+
+  public boolean addFlowRelationAsRef( IFlowRelationship element )
+  {
+    return addElementAsRef( (ET) element );
   }
 
   /**
