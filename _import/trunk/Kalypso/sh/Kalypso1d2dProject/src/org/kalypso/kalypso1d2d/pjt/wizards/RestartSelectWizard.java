@@ -47,6 +47,9 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.ui.wizards.results.ResultViewerFilter;
+import org.kalypso.ui.wizards.results.SelectResultWizardPage;
+import org.kalypso.ui.wizards.results.ThemeConstructionFactory;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -55,7 +58,7 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class RestartSelectWizard extends Wizard implements INewWizard
 {
-  private RestartSelectWizardPage m_restartSelectWizardPage;
+  private SelectResultWizardPage m_restartSelectWizardPage;
 
   private final Feature m_feature;
 
@@ -71,13 +74,15 @@ public class RestartSelectWizard extends Wizard implements INewWizard
   public void addPages( )
   {
     setWindowTitle( Messages.getString("RestartSelectWizard.0") );  //$NON-NLS-1$
-//    final Object property = m_feature.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_RESTART_PATH );
+    final Object property = m_feature.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_RESTART_PATH );
 
 //    m_restartSelectWizardPage = new RestartSelectWizardPage( "restartSelectionPage", property == null ? "" : property.toString() );     //$NON-NLS-1$ //$NON-NLS-2$
-//    m_restartSelectWizardPage.setTitle( Messages.getString("RestartSelectWizard.3") );  //$NON-NLS-1$
-//    m_restartSelectWizardPage.setDescription( Messages.getString("RestartSelectWizard.4") );  //$NON-NLS-1$
-//
-//    addPage( m_restartSelectWizardPage );
+    final ResultViewerFilter resultFilter = new ResultViewerFilter();
+    m_restartSelectWizardPage = new SelectResultWizardPage( "restartSelectionPage", "Ergebniss(e) zur Karte hinzufügen", null, resultFilter, null );
+    m_restartSelectWizardPage.setTitle( Messages.getString("RestartSelectWizard.3") );  //$NON-NLS-1$
+    m_restartSelectWizardPage.setDescription( Messages.getString("RestartSelectWizard.4") );  //$NON-NLS-1$
+
+    addPage( m_restartSelectWizardPage );
   }
 
   /**
