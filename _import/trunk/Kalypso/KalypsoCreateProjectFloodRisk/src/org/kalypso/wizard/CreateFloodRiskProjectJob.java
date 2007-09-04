@@ -268,7 +268,7 @@ public class CreateFloodRiskProjectJob extends Job
       final Gismapview gismapview = mapTemplateOF.createGismapview();
       final Layers layers = mapTemplateOF.createGismapviewLayers();
       final ExtentType extent = typeOF.createExtentType();
-      m_layerList = layers.getLayer();
+//      m_layerList = layers.getLayer();
 
       // copy landuseData as shape
       copyLanduseShape();
