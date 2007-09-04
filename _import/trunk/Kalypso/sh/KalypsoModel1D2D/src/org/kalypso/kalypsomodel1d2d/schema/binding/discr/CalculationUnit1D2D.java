@@ -44,6 +44,7 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.Util;
+import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
@@ -61,7 +62,7 @@ public class CalculationUnit1D2D<ET extends IFE1D2DElement> extends CalculationU
 
   public CalculationUnit1D2D( Feature featureToBind )
   {
-    this( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_CALC_UNIT_1D2D, Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS, Kalypso1D2DSchemaConstants.WB1D2D_PROP_CALC_UNIT, (Class<ET>) IFE1D2DElement.class );
+    this( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_CALC_UNIT_1D2D, Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS, Kalypso1D2DSchemaConstants.WB1D2D_PROP_CALC_UNIT, (Class<ET>) IFENetItem.class );
 
   }
 

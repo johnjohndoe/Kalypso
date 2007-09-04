@@ -57,7 +57,7 @@ public class CalculationUnit1D<ET extends IFENetItem> extends CalculationUnit<ET
 
   public CalculationUnit1D( final Feature featureToBind )
   {
-    this( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_CALC_UNIT_1D, Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS, (Class<ET>) IFE1D2DElement.class );
+    this( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_CALC_UNIT_1D, Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS, (Class<ET>) IFENetItem.class );
   }
 
   public CalculationUnit1D( final Feature featureToBind, final QName qnameToBind, final QName elementListPropQName, final Class<ET> wrapperClass )
