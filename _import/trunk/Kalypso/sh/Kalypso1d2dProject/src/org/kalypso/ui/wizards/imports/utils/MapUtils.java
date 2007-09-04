@@ -6,9 +6,11 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.core.jaxb.TemplateUtilitites;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gismapview.Gismapview.Layers;
@@ -64,7 +66,7 @@ public class MapUtils
    * @param filterPropertyName
    * @param customValueColorMap
    */
-  public MapUtils( String gmtFileName, String gmlFileName, String sldFileName, String gmlFileRelativePath, String featurePath, ExtentType extentType, String layerName, String styleLayerName, String geometryPropertyName, String filterPropertyName, HashMap<String, Color> customValueColorMap )
+  public MapUtils( final String gmtFileName, final String gmlFileName, final String sldFileName, final String gmlFileRelativePath, final String featurePath, final ExtentType extentType, final String layerName, final String styleLayerName, final String geometryPropertyName, final String filterPropertyName, final HashMap<String, Color> customValueColorMap )
   {
     super();
     m_GmtFileName = gmtFileName;
@@ -84,13 +86,13 @@ public class MapUtils
    * @throws IOException
    * @throws JAXBException
    */
-  public void createMap( boolean createStyle ) throws IOException, JAXBException
+  public void createMap( final boolean createStyle ) throws IOException, JAXBException
   {
-    FileWriter writer = new FileWriter( m_GmtFileName );
+    final FileWriter writer = new FileWriter( m_GmtFileName );
     final Gismapview gismapview = GisTemplateHelper.emptyGisView();
     gismapview.setExtent( m_ExtentType );
-    Layers layers = gismapview.getLayers();
-    StyledLayerType element = new StyledLayerType();
+    final Layers layers = gismapview.getLayers();
+    final StyledLayerType element = new StyledLayerType();
     element.setId( "layer_1" );
     element.setLinktype( "gml" );
     element.setType( "simple" );
@@ -105,28 +107,28 @@ public class MapUtils
 
     // set attributes for the style
     style.setLinktype( "sld" ); //$NON-NLS-1$
-    style.setStyle( m_StyleLayerName ); //$NON-NLS-1$
+    style.setStyle( m_StyleLayerName );
     style.setActuate( "onRequest" ); //$NON-NLS-1$
-    style.setHref( FileUtilities.nameFromPath( m_SldFileName ) ); //$NON-NLS-1$
-    style.setType( "simple" ); //$NON-NLS-1$    
+    style.setHref( FileUtilities.nameFromPath( m_SldFileName ) );
+    style.setType( "simple" ); //$NON-NLS-1$
     styleList.add( style );
 
-    layers.getLayer().add( 0, element );
+    final JAXBElement<StyledLayerType> layerType = TemplateUtilitites.OF_GISMAPVIEW.createLayer( element );
+
+    layers.getLayer().add( 0, layerType );
     GisTemplateHelper.saveGisMapView( gismapview, writer, "UTF8" );
     writer.close();
     if( createStyle )
-    {
       try
       {
-        StyleUtils styleUtils = new StyleUtils( m_GmlFileName, m_SldFileName, m_GeometryPropertyName, m_FilterPropertyName, m_CustomValueColorMap, m_StyleLayerName );
+        final StyleUtils styleUtils = new StyleUtils( m_GmlFileName, m_SldFileName, m_GeometryPropertyName, m_FilterPropertyName, m_CustomValueColorMap, m_StyleLayerName );
         styleUtils.createStyle();
         // StyleUtils.createCustomStyle( m_GmlFileName, m_SldFileName, m_StyleLayerName, m_GeometryPropertyName,
         // m_FilterPropertyName, m_CustomValueColorMap );
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         e.printStackTrace();
       }
-    }
   }
 }
