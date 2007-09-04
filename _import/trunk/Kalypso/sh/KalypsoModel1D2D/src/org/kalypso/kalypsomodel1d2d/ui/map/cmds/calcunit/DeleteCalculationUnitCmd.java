@@ -88,7 +88,7 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
   /**
    * the elements of the deleted calculation unit
    */
-  private IFE1D2DElement[] m_undoElements;
+  private IFeatureWrapper2[] m_undoElements;
 
   /**
    * the name the deleted calculation unit
@@ -170,7 +170,7 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
     m_undoParentUnits = parentUnits.toArray( new ICalculationUnit1D2D[0] );
     m_undoQName = m_calcUnitToDelete.getWrappedFeature().getFeatureType().getQName();
     final IFeatureWrapperCollection elements = m_calcUnitToDelete.getElements();
-    m_undoElements = (IFE1D2DElement[]) elements.toArray( new IFE1D2DElement[] {} );
+    m_undoElements = (IFeatureWrapper2[]) elements.toArray( new IFeatureWrapper2[] {} );
   }
 
   /**
@@ -195,11 +195,12 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
         subUnits.clear();
       }
       // delete links to elements
-      for( final IFE1D2DElement element : m_undoElements )
+      for( final IFeatureWrapper2 element : m_undoElements )
       {
         if( element == null )
           continue;
-        element.getContainers().remove( m_calcUnitToDelete );
+        if( element instanceof IFE1D2DElement )
+          ((IFE1D2DElement) element).getContainers().remove( m_calcUnitToDelete );
       }
       m_calcUnitToDelete.getElements().clear();
 
@@ -224,7 +225,7 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
     if( m_calcUnitToDelete != null )
       changedFeatures.add( m_calcUnitToDelete.getWrappedFeature() );
 
-    for( final IFE1D2DElement element : m_undoElements )
+    for( final IFeatureWrapper2 element : m_undoElements )
     {
       if( element == null )
         continue;
@@ -283,10 +284,11 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
       m_calcUnitToDelete.setDescription( m_undoDesc );
 
     // set elements
-    for( final IFE1D2DElement element : m_undoElements )
+    for( final IFeatureWrapper2 element : m_undoElements )
     {
       m_calcUnitToDelete.addElementAsRef( element );
-      element.getContainers().addRef( m_calcUnitToDelete );
+      if( element instanceof IFE1D2DElement )
+        ((IFE1D2DElement) element).getContainers().addRef( m_calcUnitToDelete );
     }
 
     // set subunits
