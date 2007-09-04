@@ -77,42 +77,35 @@ public class DocumentResultMeta extends ResultMeta implements IDocumentResultMet
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta#getMaxValue()
    */
-  public double getMaxValue( )
+  public BigDecimal getMaxValue( )
   {
-    final Double maxValue = (Double) getFeature().getProperty( QNAME_PROP_DOCUMENT_MAX_VALUE );
-    if( maxValue != null )
-      return maxValue.doubleValue();
-    else
-      return 0;
+    return (BigDecimal) getFeature().getProperty( QNAME_PROP_DOCUMENT_MAX_VALUE );
   }
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta#getMinValue()
    */
-  public double getMinValue( )
+  public BigDecimal getMinValue( )
   {
-    final Double minValue = (Double) getFeature().getProperty( QNAME_PROP_DOCUMENT_MIN_VALUE );
-    if( minValue != null )
-      return minValue.doubleValue();
-    else
-      return 0;
+    return (BigDecimal) getFeature().getProperty( QNAME_PROP_DOCUMENT_MIN_VALUE );
+
   }
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta#setMaxValue(double)
    */
-  public void setMaxValue( double maxValue )
+  public void setMaxValue( BigDecimal maxValue )
   {
-    final BigDecimal maxValueDec = new BigDecimal( maxValue ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+    final BigDecimal maxValueDec = maxValue.setScale( 3, BigDecimal.ROUND_HALF_UP );
     getFeature().setProperty( QNAME_PROP_DOCUMENT_MAX_VALUE, maxValueDec );
   }
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta#setMinValue(double)
    */
-  public void setMinValue( double minValue )
+  public void setMinValue( BigDecimal minValue )
   {
-    final BigDecimal minValueDec = new BigDecimal( minValue ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+    final BigDecimal minValueDec = minValue.setScale( 3, BigDecimal.ROUND_HALF_UP );
     getFeature().setProperty( QNAME_PROP_DOCUMENT_MIN_VALUE, minValueDec );
   }
 

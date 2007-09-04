@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.result;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.xml.datatype.DatatypeConfigurationException;
@@ -144,7 +145,7 @@ public class StepResultMeta extends ResultMeta implements IStepResultMeta
    *      java.lang.String, org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE,
    *      java.lang.String)
    */
-  public void addDocument( String name, String description, DOCUMENTTYPE type, IPath path, IStatus status, Double minValue, Double maxValue )
+  public void addDocument( String name, String description, DOCUMENTTYPE type, IPath path, IStatus status, BigDecimal minValue, BigDecimal maxValue )
   {
     final IDocumentResultMeta document = getChildren().addNew( IDocumentResultMeta.QNAME, IDocumentResultMeta.class );
     document.setName( name );

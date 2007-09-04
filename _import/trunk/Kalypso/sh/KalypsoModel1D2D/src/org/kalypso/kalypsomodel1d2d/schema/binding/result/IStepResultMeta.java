@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.result;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.xml.namespace.QName;
@@ -90,5 +91,5 @@ public interface IStepResultMeta extends IResultMeta
 
   public void setStepType( STEPTYPE stepType );
 
-  public void addDocument( final String name, final String description, final DOCUMENTTYPE type, final IPath path, final IStatus status, final Double minValue, final Double maxValue );
+  public void addDocument( final String name, final String description, final DOCUMENTTYPE type, final IPath path, final IStatus status, final BigDecimal minValue, final BigDecimal maxValue );
 }

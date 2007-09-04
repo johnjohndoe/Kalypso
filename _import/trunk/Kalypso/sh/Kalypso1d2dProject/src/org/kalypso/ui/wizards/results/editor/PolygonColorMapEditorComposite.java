@@ -100,7 +100,7 @@ public class PolygonColorMapEditorComposite extends Composite
 
   private final String m_globalMax;
 
-  public PolygonColorMapEditorComposite( final Composite parent, final int style, final PolygonColorMap colorMap, final double minGlobalValue, final double maxGlobalValue )
+  public PolygonColorMapEditorComposite( final Composite parent, final int style, final PolygonColorMap colorMap, final BigDecimal minGlobalValue, final BigDecimal maxGlobalValue )
   {
     super( parent, style );
     m_colorMap = colorMap;
@@ -112,8 +112,8 @@ public class PolygonColorMapEditorComposite extends Composite
     m_minValue = new BigDecimal( m_colorMap.getColorMap()[0].getFrom( null ) ).setScale( 2, BigDecimal.ROUND_HALF_UP );
     m_maxValue = new BigDecimal( m_colorMap.getColorMap()[m_colorMap.getColorMap().length - 1].getTo( null ) ).setScale( 2, BigDecimal.ROUND_HALF_UP );
 
-    m_globalMin = new Double( minGlobalValue ).toString();
-    m_globalMax = new Double( maxGlobalValue ).toString();
+    m_globalMin = minGlobalValue.toString();
+    m_globalMax = maxGlobalValue.toString();
 
     m_stepWidth = new BigDecimal( m_colorMap.getColorMap()[0].getTo( null ) - m_colorMap.getColorMap()[0].getFrom( null ) ).setScale( 2, BigDecimal.ROUND_HALF_UP );
 

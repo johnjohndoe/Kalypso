@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.result;
 
+import org.eclipse.core.runtime.Path;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.ResultMeta;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -49,9 +50,20 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class ScenarioResultMeta extends ResultMeta implements IScenarioResultMeta
 {
+  private static final String ERGEBNISSE = "Ergebnisse";
+
+  private static final String RESULTS = "results";
+
   public ScenarioResultMeta( Feature featureToBind )
   {
     super( featureToBind, IScenarioResultMeta.QNAME );
+
+    // set the path and the name of the scenarioResultMeta
+    // TODO: better place for this: while creation of a new scenario!!
+    // right now, it is set to the following values:
+
+    setPath( new Path( RESULTS ) );
+    setName( ERGEBNISSE );
   }
 
   /**

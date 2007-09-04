@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.wizards.results;
 
+import java.math.BigDecimal;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.swt.SWT;
@@ -67,9 +69,9 @@ public class NodeResultThemeCreator extends AbstractThemeCreator
 
   private ResultStyleComposite m_nodeStyleComp;
 
-  private final double m_minValue;
+  private final BigDecimal m_minValue;
 
-  private final double m_maxValue;
+  private final BigDecimal m_maxValue;
 
   public NodeResultThemeCreator( IDocumentResultMeta documentResult, final IFolder scenarioFolder )
   {

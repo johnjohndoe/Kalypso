@@ -112,7 +112,7 @@ public class VectorEditorComposite extends Composite
 
   private final PointSymbolizer m_symb;
 
-  public VectorEditorComposite( final Composite parent, final int style, PointSymbolizer symb, final double minGlobalValue, final double maxGlobalValue )
+  public VectorEditorComposite( final Composite parent, final int style, PointSymbolizer symb, final BigDecimal minGlobalValue, final BigDecimal maxGlobalValue )
   {
     super( parent, style );
     m_symb = symb;
@@ -120,16 +120,30 @@ public class VectorEditorComposite extends Composite
     m_graphic = m_symb.getGraphic();
     m_uom = m_symb.getUom();
 
-    m_globalMin = new Double( minGlobalValue ).toString();
-    m_globalMax = new Double( maxGlobalValue ).toString();
+    m_globalMin = minGlobalValue.toString();
+    m_globalMax = maxGlobalValue.toString();
 
     try
     {
       final ParameterValueType sizeParameter = m_graphic.getSizeParameter();
       final Object[] components = sizeParameter.getComponents();
-      final ArithmeticExpression mult = (ArithmeticExpression) components[0];
-      m_firstExpression = (Literal) mult.getFirstExpression();
-      m_scale = new BigDecimal( m_firstExpression.getValue() );
+
+      ArithmeticExpression mult = null;
+      for( Object object : components )
+      {
+        if( object instanceof ArithmeticExpression )
+        {
+          mult = (ArithmeticExpression) object;
+          break;
+        }
+      }
+      if( mult == null )
+        m_scale = new BigDecimal( 10 );
+      else
+      {
+        m_firstExpression = (Literal) mult.getFirstExpression();
+        m_scale = new BigDecimal( m_firstExpression.getValue() );
+      }
 
       m_graphic.getOpacity( null );
       Object[] mag = m_graphic.getMarksAndExtGraphics();

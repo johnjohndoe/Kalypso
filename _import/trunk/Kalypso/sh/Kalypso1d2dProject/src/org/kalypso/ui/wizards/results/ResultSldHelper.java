@@ -127,7 +127,7 @@ public class ResultSldHelper
     return min + (currentClass * (max - min) / (numOfClasses - 1));
   }
 
-  public static void processStyle( final IFile styleFile, final String type, final double minValue, final double maxValue )
+  public static void processStyle( final IFile styleFile, final String type, final BigDecimal minValue, final BigDecimal maxValue )
   {
     /* Read sld from template */
 
@@ -172,7 +172,7 @@ public class ResultSldHelper
 
   }
 
-  private static void processTinStyle( final String type, final double minValue, final double maxValue, final StyledLayerDescriptor sld )
+  private static void processTinStyle( final String type, final BigDecimal minValue, final BigDecimal maxValue, final StyledLayerDescriptor sld )
   {
     final String layerName = "tin" + type + "Style";
     final String featureTypeStyleName = "tinFeatureTypeStyle";
@@ -217,7 +217,7 @@ public class ResultSldHelper
     }
   }
 
-  private static void configurePolygonSymbolizer( final SurfacePolygonSymbolizer symbolizer, final double minValue, final double maxValue ) throws FilterEvaluationException
+  private static void configurePolygonSymbolizer( final SurfacePolygonSymbolizer symbolizer, final BigDecimal minValue, final BigDecimal maxValue ) throws FilterEvaluationException
   {
     final PolygonColorMap templateColorMap = symbolizer.getColorMap();
     final PolygonColorMap newColorMap = new PolygonColorMap_Impl();
@@ -247,8 +247,8 @@ public class ResultSldHelper
     // as a first try we will generate isareas by using class steps of 0.1
     // later, the classes will be created by using user defined class steps.
     // for that we fill an array of calculated (later user defined values) from max to min
-    final BigDecimal minDecimal = new BigDecimal( minValue ).setScale( 1, BigDecimal.ROUND_FLOOR );
-    final BigDecimal maxDecimal = new BigDecimal( maxValue ).setScale( 1, BigDecimal.ROUND_CEILING );
+    final BigDecimal minDecimal = minValue.setScale( 1, BigDecimal.ROUND_FLOOR );
+    final BigDecimal maxDecimal = maxValue.setScale( 1, BigDecimal.ROUND_CEILING );
 
     final BigDecimal polygonStepWidth = new BigDecimal( stepWidth ).setScale( stepWidthScale, BigDecimal.ROUND_FLOOR );
     final int numOfClasses = (maxDecimal.subtract( minDecimal ).divide( polygonStepWidth )).intValue();
@@ -287,7 +287,7 @@ public class ResultSldHelper
   /**
    * sets the parameters for the colormap of an isoline
    */
-  private static void configureLineSymbolizer( final SurfaceLineSymbolizer symbolizer, final double minValue, final double maxValue ) throws FilterEvaluationException
+  private static void configureLineSymbolizer( final SurfaceLineSymbolizer symbolizer, final BigDecimal minValue, final BigDecimal maxValue ) throws FilterEvaluationException
   {
     final LineColorMap templateColorMap = symbolizer.getColorMap();
     final LineColorMap newColorMap = new LineColorMap_Impl();
@@ -311,8 +311,8 @@ public class ResultSldHelper
     // as a first try we will generate isolines using class steps of 0.1
     // later, the classes will be done by using user defined class steps.
     // for that we fill an array of calculated (later user defined values) from max to min
-    final BigDecimal minDecimal = new BigDecimal( minValue ).setScale( 1, BigDecimal.ROUND_FLOOR );
-    final BigDecimal maxDecimal = new BigDecimal( maxValue ).setScale( 1, BigDecimal.ROUND_CEILING );
+    final BigDecimal minDecimal = minValue.setScale( 1, BigDecimal.ROUND_FLOOR );
+    final BigDecimal maxDecimal = maxValue.setScale( 1, BigDecimal.ROUND_CEILING );
 
     final BigDecimal stepWidth = new BigDecimal( 0.1 ).setScale( 1, BigDecimal.ROUND_HALF_UP );
     final int numOfClasses = (maxDecimal.subtract( minDecimal ).divide( stepWidth )).intValue() + 1;
@@ -345,7 +345,7 @@ public class ResultSldHelper
     symbolizer.setColorMap( newColorMap );
   }
 
-  private static String processVectorStyle( final double maxValue, final URL url )
+  private static String processVectorStyle( final BigDecimal maxValue, final URL url )
   {
     InputStream is = null;
     try
@@ -357,8 +357,8 @@ public class ResultSldHelper
       // we assume, that the mean distance of mesh nodes is about 30 m, so that the vectors are expanded by an factor
       // which delivers vector lengths of 30 m as maximum.
       final BigDecimal factorValue;
-      if( maxValue > 0 )
-        factorValue = new BigDecimal( 30 / maxValue ).setScale( 0, BigDecimal.ROUND_CEILING );
+      if( maxValue.doubleValue() > 0 )
+        factorValue = new BigDecimal( 30 / maxValue.doubleValue() ).setScale( 0, BigDecimal.ROUND_CEILING );
       else
         factorValue = new BigDecimal( 100 ).setScale( 0, BigDecimal.ROUND_CEILING );
 

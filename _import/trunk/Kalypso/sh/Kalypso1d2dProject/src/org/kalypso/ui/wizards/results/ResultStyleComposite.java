@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.wizards.results;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 
 import org.eclipse.core.resources.IFile;
@@ -82,9 +83,9 @@ public class ResultStyleComposite
 
   private final String m_stylePath;
 
-  private final double m_minValue;
+  private final BigDecimal m_minValue;
 
-  private final double m_maxValue;
+  private final BigDecimal m_maxValue;
 
   private final IFolder m_scenarioFolder;
 
@@ -94,7 +95,7 @@ public class ResultStyleComposite
 
   private final ResultAddLayerCommandData m_resultAddLayerCommandData;
 
-  public ResultStyleComposite( final Composite parent, IFolder scenarioFolder, String stylePath, double minValue, double maxValue, ResultAddLayerCommandData resultAddLayerCommandData )
+  public ResultStyleComposite( final Composite parent, IFolder scenarioFolder, String stylePath, BigDecimal minValue, BigDecimal maxValue, ResultAddLayerCommandData resultAddLayerCommandData )
   {
     m_scenarioFolder = scenarioFolder;
     m_stylePath = stylePath;

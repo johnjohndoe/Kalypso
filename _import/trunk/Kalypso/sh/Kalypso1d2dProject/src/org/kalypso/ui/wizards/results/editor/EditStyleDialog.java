@@ -41,6 +41,7 @@
 package org.kalypso.ui.wizards.results.editor;
 
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashSet;
@@ -110,9 +111,9 @@ public class EditStyleDialog extends TitleAreaDialog
 
   private IDialogSettings m_dialogSettings;
 
-  private double m_minValue;
+  private final BigDecimal m_minValue;
 
-  private double m_maxValue;
+  private final BigDecimal m_maxValue;
 
   private final Pattern m_patternFileName = Pattern.compile( "[a-zA-Z0-9_]+" );
 
@@ -124,13 +125,13 @@ public class EditStyleDialog extends TitleAreaDialog
 
   private final IFolder m_sldFolder;
 
-  public EditStyleDialog( Shell parentShell, IFile sldFile, double maxValue, double minValue )
+  public EditStyleDialog( Shell parentShell, IFile sldFile, BigDecimal minValue, BigDecimal maxValue )
   {
     super( parentShell );
 
     m_sldFile = sldFile;
     m_maxValue = maxValue;
-    m_maxValue = minValue;
+    m_minValue = minValue;
     m_fileName = FileUtilities.nameWithoutExtension( m_sldFile.getName() );
 
     m_sldFolder = (IFolder) m_sldFile.getParent();
@@ -238,7 +239,7 @@ public class EditStyleDialog extends TitleAreaDialog
       else
       {
         final Text errorText = new Text( commonComposite, SWT.NONE );
-        errorText.setText( "Styledatei fehlerhaft. Bitte anderen Style auswählen" );
+        errorText.setText( "Styledatei(en) fehlerhaft oder nicht synchron mit Oberfläche. Bitte anderen Style auswählen" );
         errorText.setBackground( commonComposite.getBackground() );
       }
     }
@@ -256,7 +257,7 @@ public class EditStyleDialog extends TitleAreaDialog
       else
       {
         final Text errorText = new Text( commonComposite, SWT.NONE );
-        errorText.setText( "Styledatei fehlerhaft. Bitte anderen Style auswählen" );
+        errorText.setText( "Styledatei(en) fehlerhaft oder nicht synchron mit Oberfläche. Bitte anderen Style auswählen" );
         errorText.setBackground( commonComposite.getBackground() );
       }
     }
@@ -271,9 +272,19 @@ public class EditStyleDialog extends TitleAreaDialog
     }
     else
     {
-      final Text errorText = new Text( commonComposite, SWT.NONE );
-      errorText.setText( "Styledatei fehlerhaft. Bitte anderen Style auswählen" );
-      errorText.setBackground( commonComposite.getBackground() );
+      final Text errorText1 = new Text( commonComposite, SWT.NONE );
+      GridData gridDataText1 = new GridData( SWT.BEGINNING, SWT.CENTER, true, true );
+      gridDataText1.horizontalSpan = 2;
+      gridDataText1.widthHint = 400;
+
+      errorText1.setLayoutData( gridDataText1 );
+      errorText1.setText( "Styledatei(en) fehlerhaft oder nicht synchron mit Oberfläche." );
+      errorText1.setBackground( commonComposite.getBackground() );
+
+      final Text errorText2 = new Text( commonComposite, SWT.NONE );
+      errorText2.setLayoutData( gridDataText1 );
+      errorText2.setText( "Bitte anderen Style auswählen." );
+      errorText2.setBackground( commonComposite.getBackground() );
     }
   }
 

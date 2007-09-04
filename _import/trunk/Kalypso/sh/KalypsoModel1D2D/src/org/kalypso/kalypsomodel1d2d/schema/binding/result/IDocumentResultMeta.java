@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.result;
 
+import java.math.BigDecimal;
+
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
@@ -75,12 +77,12 @@ public interface IDocumentResultMeta extends IResultMeta
 
   public void setDocumentType( DOCUMENTTYPE documentType );
 
-  public double getMinValue( );
+  public BigDecimal getMinValue( );
 
-  public double getMaxValue( );
+  public BigDecimal getMaxValue( );
 
-  public void setMinValue( double minValue );
+  public void setMinValue( BigDecimal minValue );
 
-  public void setMaxValue( double maxValue );
+  public void setMaxValue( BigDecimal maxValue );
 
 }

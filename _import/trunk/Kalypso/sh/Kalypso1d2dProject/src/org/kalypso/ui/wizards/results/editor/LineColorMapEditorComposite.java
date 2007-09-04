@@ -97,7 +97,7 @@ public class LineColorMapEditorComposite extends Composite
 
   private final String m_globalMax;
 
-  public LineColorMapEditorComposite( final Composite parent, final int style, final LineColorMap colorMap, final double minGlobalValue, final double maxGlobalValue )
+  public LineColorMapEditorComposite( final Composite parent, final int style, final LineColorMap colorMap, final BigDecimal minGlobalValue, final BigDecimal maxGlobalValue )
   {
 
     super( parent, style );
@@ -106,8 +106,8 @@ public class LineColorMapEditorComposite extends Composite
     m_minValue = new BigDecimal( m_colorMap.getColorMap()[0].getQuantity( null ) ).setScale( 2, BigDecimal.ROUND_HALF_UP );
     m_maxValue = new BigDecimal( m_colorMap.getColorMap()[m_colorMap.getColorMap().length - 1].getQuantity( null ) ).setScale( 2, BigDecimal.ROUND_HALF_UP );
 
-    m_globalMin = new Double( minGlobalValue ).toString();
-    m_globalMax = new Double( maxGlobalValue ).toString();
+    m_globalMin = minGlobalValue.toString();
+    m_globalMax = maxGlobalValue.toString();
 
     /* default parameter */
     m_stepWidth = new BigDecimal( 0.1 ).setScale( 2, BigDecimal.ROUND_HALF_UP );
