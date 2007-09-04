@@ -401,22 +401,23 @@ public class Control1D2DConverter
     {
       if( boundaryCondition.getTypeByLocation().equals( IBoundaryCondition.PARENT_TYPE_LINE1D2D ) )
       {
+        int ordinal = m_nativeIDProvider.getConversionID( boundaryCondition.getParentElementID() );
         final double stepValue;
         final IObservation<TupleResult> obs = boundaryCondition.getObservation();
         final TupleResult obsResult = obs.getResult();
-        if( stepCal != null )
+        final IComponent valueComponent = TupleResultUtilities.findComponentById( obsResult, bcType );
+        if( valueComponent != null )
         {
-          final IComponent timeComponent = TupleResultUtilities.findComponentById( obsResult, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );
-          final TupleResultIndex tupleResultIndex = new TupleResultIndex( obs.getResult(), timeComponent );
-          final Number result = (Number) tupleResultIndex.getValue( timeComponent, stepCal.getTime() );
-          stepValue = (result == null || Double.isNaN( result.doubleValue() )) ? 0.0 : result.doubleValue();
-        }
-        else
-          stepValue = boundaryCondition.getStationaryCondition();
+          if( stepCal != null )
+          {
+            final IComponent timeComponent = TupleResultUtilities.findComponentById( obsResult, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );
+            final TupleResultIndex tupleResultIndex = new TupleResultIndex( obsResult, timeComponent );
+            final Number result = (Number) tupleResultIndex.getValue( valueComponent, stepCal.getTime() );
+            stepValue = (result == null || Double.isNaN( result.doubleValue() )) ? 0.0 : result.doubleValue();
+          }
+          else
+            stepValue = boundaryCondition.getStationaryCondition();
 
-        int ordinal = m_nativeIDProvider.getConversionID( boundaryCondition.getParentElementID() );
-        if( TupleResultUtilities.findComponentById( obsResult, bcType ) != null )
-        {
           if( bcType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE ) )
           {
             double theta = Math.toRadians( boundaryCondition.getDirection().doubleValue() );
