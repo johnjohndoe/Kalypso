@@ -54,6 +54,8 @@ public interface ITransitionElement extends IFE1D2DComplexElement<IFENetItem>
   public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "TransitionElement" );
 
   public static final QName PROP_CONTI_LINES = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "continuityLine" );
+  
+  public static final QName PROP_GEOMETRY = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "geometry" );
 
   public List<IFELine> getContinuityLines( );
 

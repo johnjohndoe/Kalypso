@@ -71,8 +71,10 @@ import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtils;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
@@ -90,6 +92,10 @@ import org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddNodeCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeDiscretiationModelCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteCmdFactory;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.AddElementToCalculationUnitCmd;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.CreateCalculationUnitCmd;
+import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
+import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
+import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork;
@@ -500,12 +506,21 @@ public class ImportWspmWizard extends Wizard implements IWizard
     final IFeatureWrapperCollection<IFE1D2DEdge> discEdges = discretisationModel.getEdges();
 
     /* add complex-element to model: Automatically create a calculation unit 1d */
-    final ICalculationUnit1D calculationUnit1D = discretisationModel.getComplexElements().addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_CALC_UNIT_1D, ICalculationUnit1D.class );
-    addedFeatures.add( calculationUnit1D.getWrappedFeature() );
-    final String calcUnitName = String.format( "WSPM-Import: %s - %s", waterBody.getName(), reach.getName() );
-    calculationUnit1D.setName( calcUnitName );
-    calculationUnit1D.setDescription( "Dieses Teilmodell wurde durch den Import automatisch angelegt." );
-
+    
+    /*
+     * NO, this is not the right way to do it! 
+     * 
+     * During creation of calculation unit, control model for that unit should be created as well.
+     * 
+     * Use CreateCalculationUnitCmd
+     */
+    
+//    final ICalculationUnit1D calculationUnit1D = discretisationModel.getComplexElements().addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_CALC_UNIT_1D, ICalculationUnit1D.class );
+//    addedFeatures.add( calculationUnit1D.getWrappedFeature() );
+//    final String calcUnitName = String.format( "WSPM-Import: %s - %s", waterBody.getName(), reach.getName() );
+//    calculationUnit1D.setName( calcUnitName );
+//    calculationUnit1D.setDescription( "Dieses Teilmodell wurde durch den Import automatisch angelegt." );
+    
     /* add nodes to model */
     final List<IFE1D2DEdge> edgeList = new ArrayList<IFE1D2DEdge>( segments.length - 1 );
 
@@ -564,10 +579,10 @@ public class ImportWspmWizard extends Wizard implements IWizard
         element1d.setEdge( edge );
 
         /* Add complex element to list of containers of this element */
-        element1d.getContainers().addRef( calculationUnit1D );
+//        element1d.getContainers().addRef( calculationUnit1D );
 
         /* Add this element to the complex element aka calculation unit */
-        calculationUnit1D.addElementAsRef( element1d );
+//        calculationUnit1D.addElementAsRef( element1d );
       }
 
       lastNode = node;

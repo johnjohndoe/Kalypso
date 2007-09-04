@@ -40,14 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.cmds;
 
-import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ITransitionElement;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
-import org.kalypsodeegree.model.geometry.GM_Exception;
 
 public class CreateTransitionElementCommand implements IDiscrModel1d2dChangeCommand
 {
@@ -87,8 +85,7 @@ public class CreateTransitionElementCommand implements IDiscrModel1d2dChangeComm
         m_transitionElement.addElementAsRef( m_line1D );
         m_transitionElement.addElementAsRef( m_line2D );
         final Feature feature = m_transitionElement.getWrappedFeature();
-        final IValuePropertyType defaultGeometryProperty = feature.getFeatureType().getDefaultGeometryProperty();
-        feature.setProperty( defaultGeometryProperty, m_transitionElement.recalculateElementGeometry() );
+        feature.setProperty( ITransitionElement.PROP_GEOMETRY, m_transitionElement.recalculateElementGeometry() );
         feature.invalidEnvelope();
       }
       catch( Exception e )

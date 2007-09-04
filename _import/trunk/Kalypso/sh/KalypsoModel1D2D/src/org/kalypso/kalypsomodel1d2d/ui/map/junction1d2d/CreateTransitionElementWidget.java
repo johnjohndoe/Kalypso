@@ -150,6 +150,7 @@ public class CreateTransitionElementWidget extends AbstractWidget
       }
     }
     super.keyPressed( e );
+    getMapPanel().repaint();
   }
 
   @Override

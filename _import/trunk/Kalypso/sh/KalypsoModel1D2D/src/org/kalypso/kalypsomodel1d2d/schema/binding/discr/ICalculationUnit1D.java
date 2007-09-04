@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
+import javax.xml.namespace.QName;
+
+import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 
 /**
@@ -49,5 +52,5 @@ import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
  */
 public interface ICalculationUnit1D<T extends IFENetItem> extends ICalculationUnit<T>
 {
-  
+  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "CalculationUnit1D" );
 }
