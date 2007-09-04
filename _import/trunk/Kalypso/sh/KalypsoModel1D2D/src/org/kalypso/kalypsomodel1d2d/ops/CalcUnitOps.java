@@ -401,11 +401,12 @@ public class CalcUnitOps
    */
   public static final boolean isBoundaryLineOf( final IFELine continuityLine, final ICalculationUnit calUnit )
   {
-    Assert.throwIAEOnNullParam( calUnit, "calUnit" ); //$NON-NLS-1$
-    Assert.throwIAEOnNullParam( continuityLine, "boundaryLine" ); //$NON-NLS-1$
-    final IFeatureWrapperCollection containers = continuityLine.getContainers();
-    final boolean answer = containers.contains( calUnit );
-    return answer;
+    return calUnit.getContinuityLines().contains( continuityLine );
+//    Assert.throwIAEOnNullParam( calUnit, "calUnit" ); //$NON-NLS-1$
+//    Assert.throwIAEOnNullParam( continuityLine, "boundaryLine" ); //$NON-NLS-1$
+//    final IFeatureWrapperCollection containers = continuityLine.getContainers();
+//    final boolean answer = containers.contains( calUnit );
+//    return answer;
   }
 
   /**

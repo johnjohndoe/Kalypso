@@ -158,15 +158,14 @@ public class AddRemoveContinuityLineToCalcUnitWidget extends FENetConceptSelecti
   private void updateAddUpStreamMenu( final JMenuItem item )
   {
     updateGeneralBadSelection( item );
-    if( item.isEnabled() )
+    final ICalculationUnit calUnit = m_dataModel.getData( ICalculationUnit.class, ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
+    final IFELine selectedBoundaryLine = getSelectedBoundaryLine();
+    if( selectedBoundaryLine != null && calUnit != null )
     {
-      final ICalculationUnit calUnit = m_dataModel.getData( ICalculationUnit.class, ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
-      final IFELine selectedBoundaryLine = getSelectedBoundaryLine();
-      if( selectedBoundaryLine != null && calUnit != null )
-      {
-        if( CalcUnitOps.isBoundaryLineOf( selectedBoundaryLine, calUnit ) )
-          item.setEnabled( false );
-      }
+      if( CalcUnitOps.isBoundaryLineOf( selectedBoundaryLine, calUnit ) )
+        item.setEnabled( false );
+      else
+        item.setEnabled( true );
     }
   }
 
