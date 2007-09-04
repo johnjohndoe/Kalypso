@@ -298,7 +298,7 @@ die seiten unterscheidet folgendes:
 		<arg name="timeserie4" value="nameColumn=name#nameString=%featureprop% - Spur unten#linkColumn=qAblageSpurUnterer#color=0x00ff00#lineDash=3.3"/>
 		<arg name="timeserie5" value="nameColumn=name#nameString=%featureprop% - Spur oben#linkColumn=qAblageSpurOberer#color=0x00ff00#lineDash=3.3"/>
 
-		<arg name="ignoreType1" value="Q"/>
+		<arg name="ignoreType1" value="W"/>
 	</page>
 	<!-- 9/17 -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Prognose Pegel Weida 9/17" 
@@ -321,7 +321,7 @@ die seiten unterscheidet folgendes:
 		<arg name="timeserie4" value="nameColumn=name#nameString=%featureprop% - Spur unten#linkColumn=qAblageSpurUnterer#color=0x00ff00#lineDash=3.3"/>
 		<arg name="timeserie5" value="nameColumn=name#nameString=%featureprop% - Spur oben#linkColumn=qAblageSpurOberer#color=0x00ff00#lineDash=3.3"/>
 
-		<arg name="ignoreType1" value="Q"/>
+		<arg name="ignoreType1" value="W"/>
 	</page>
 	<!-- 10/17 -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Prognose Pegel Gera 10/17" 
@@ -344,7 +344,7 @@ die seiten unterscheidet folgendes:
 		<arg name="timeserie4" value="nameColumn=name#nameString=%featureprop% - Spur unten#linkColumn=qAblageSpurUnterer#color=0x00ff00#lineDash=3.3"/>
 		<arg name="timeserie5" value="nameColumn=name#nameString=%featureprop% - Spur oben#linkColumn=qAblageSpurOberer#color=0x00ff00#lineDash=3.3"/>
 
-		<arg name="ignoreType1" value="Q"/>
+		<arg name="ignoreType1" value="W"/>
 	</page>
 	<!-- 11/17 -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Prognose Pegel Zeitz 11/17" 
@@ -367,7 +367,7 @@ die seiten unterscheidet folgendes:
 		<arg name="timeserie4" value="nameColumn=name#nameString=%featureprop% - Spur unten#linkColumn=qAblageSpurUnterer#color=0x00ff00#lineDash=3.3"/>
 		<arg name="timeserie5" value="nameColumn=name#nameString=%featureprop% - Spur oben#linkColumn=qAblageSpurOberer#color=0x00ff00#lineDash=3.3"/>
 
-		<arg name="ignoreType1" value="Q"/>
+		<arg name="ignoreType1" value="W"/>
 	</page>
 	<!-- 12/17 -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Prognose Pegel Kleindalzig 12/17" 
@@ -468,7 +468,7 @@ die seiten unterscheidet folgendes:
 		<arg name="timeserie4" value="nameColumn=name#nameString=%featureprop% - Spur unten#linkColumn=qAblageSpurUnterer#color=0x00ff00#lineDash=3.3"/>
 		<arg name="timeserie5" value="nameColumn=name#nameString=%featureprop% - Spur oben#linkColumn=qAblageSpurOberer#color=0x00ff00#lineDash=3.3"/>
 
-		<arg name="ignoreType1" value="Q"/>
+		<arg name="ignoreType1" value="W"/>
 	</page>
 	<!-- 16/17 -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Prognose Pegel Neukirchen 16/17" 
@@ -518,7 +518,7 @@ die seiten unterscheidet folgendes:
 		<arg name="timeserie4" value="nameColumn=name#nameString=%featureprop% - Spur unten#linkColumn=qAblageSpurUnterer#color=0x00ff00#lineDash=3.3"/>
 		<arg name="timeserie5" value="nameColumn=name#nameString=%featureprop% - Spur oben#linkColumn=qAblageSpurOberer#color=0x00ff00#lineDash=3.3"/>
 
-		<arg name="ignoreType1" value="Q"/>
+		<arg name="ignoreType1" value="W"/>
 	</page>
 
 	<!-- Ergebniskontrolle NA-Modelle-->

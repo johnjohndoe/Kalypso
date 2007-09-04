@@ -1,5 +1,5 @@
 telefonische Info von Frau Barchmann:
-für folgende 10 Pegel gibt es keine W/Q-Beziehung, 
+für folgende 10 Pegel gibt es keine W/Q-Beziehung, sind aber Q-Pegel
 Ablage soll (nur) für Q erfolgen
 
 - Gössnitz (Prognose Pegel 17/17), W gemessen
@@ -10,6 +10,6 @@ Ablage soll (nur) für Q erfolgen
 - Weida (Prognose Pegel 9/17), W gemessen
 
 - Magwitz (Eingabe Zuflüsse) - 11/06 W/Q vorhanden
-- Droeda (Eingabe Zuflüsse) - 11/06 W/Q vorhanden
+- Dröda (Eingabe Zuflüsse) - 11/06 W/Q vorhanden
 - Pöhl (Eingabe Zuflüsse) - 11/06 W/Q vorhanden
 - Koberbach (Eingabe Zuflüsse) - 11/06 kein W/Q vorhanden
