@@ -468,7 +468,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
     if( o instanceof IFeatureWrapper2 )
     {
       boolean removed = featureList.remove( ((IFeatureWrapper2) o).getWrappedFeature() );
-      if(!removed)
+      if( !removed )
         removed = featureList.remove( ((IFeatureWrapper2) o).getWrappedFeature().getId() );
       return removed;
     }
@@ -498,7 +498,6 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
     throw new UnsupportedOperationException();
   }
 
-  @SuppressWarnings("unchecked")
   public FWCls set( final int index, final FWCls element )
   {
     final FWCls r = get( index );
