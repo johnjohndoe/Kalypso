@@ -9,9 +9,7 @@ import java.util.ListIterator;
 
 import javax.xml.namespace.QName;
 
-import org.eclipse.core.runtime.Assert;
 import org.kalypso.gmlschema.GMLSchemaException;
-import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -37,17 +35,17 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
    * <p>
    * The feature wrapped by this object
    */
-  private final Feature featureCol;
+  private final Feature m_featureCollection;
 
   /**
    * the list of the feature properties
    */
-  private final FeatureList featureList;
+  private final FeatureList m_featureList;
 
   /**
    * The {@link QName} of the list property of the feature(-collection)
    */
-  private final QName featureMemberProp;
+  private final QName m_featureMemberProp;
 
   /**
    * The class of the DEFAULT feature wrapper in this collection
@@ -69,47 +67,26 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
   public FeatureWrapperCollection( final Feature featureCol, final Class<FWCls> fwClass, final QName featureMemberProp )
   {
     super( featureCol, featureCol.getFeatureType().getQName() );
-
-    Assert.isNotNull( fwClass, "Parameter fwClass must not be null" );
-
-    Assert.isNotNull( featureCol, "Parameter featureCol must not be null" );
-
-    Assert.isNotNull( featureMemberProp, "Parameter featureMemberProp must not be null" );
-
     m_defaultWrapperClass = fwClass;
-    this.featureCol = featureCol;
-    this.featureMemberProp = featureMemberProp;
-    this.featureList = (FeatureList) this.featureCol.getProperty( featureMemberProp );
-    // TODO: the string creation here seems to be a performance problem
-    Assert.isNotNull( this.featureList, "could not create feature list: propQName = " + featureMemberProp );
-    throwIAEOnFeaturePropNotList( featureCol, featureMemberProp, null );
+    m_featureCollection = featureCol;
+    m_featureMemberProp = featureMemberProp;
+    m_featureList = (FeatureList) m_featureCollection.getProperty( featureMemberProp );
   }
 
-  @SuppressWarnings("unchecked")
   public FeatureWrapperCollection( final Feature parentFeature, final QName childQName, final QName featureMemberProp, final Class<FWCls> fwClass ) throws IllegalArgumentException
   {
     super( createSubfeature( parentFeature, childQName, featureMemberProp ), childQName );
-
-    Assert.isNotNull( parentFeature, "Parameter parentFeature must not be null" );
-    Assert.isNotNull( childQName, "Parameter childQName must not be null" );
-
-    Assert.isNotNull( featureMemberProp, "Parameter featureMemberProp must not be null" );
-
     try
     {
-      this.featureCol = FeatureHelper.addFeature( parentFeature, featureMemberProp, childQName );
+      this.m_featureCollection = FeatureHelper.addFeature( parentFeature, featureMemberProp, childQName );
     }
     catch( final GMLSchemaException ex )
     {
-
-      throw new IllegalArgumentException( "Parent does not accept property of the specified type" + "\n\tparent=" + parentFeature + "\n\tpropertyType=" + featureMemberProp + "\n\tchildType="
-          + childQName, ex );
+      throw new IllegalArgumentException( "Parent does not accept property of the specified type. Parent: " + parentFeature + ", PropertyType: " + featureMemberProp + ", ChildType: " + childQName, ex );
     }
-
-    this.featureList = (FeatureList) this.featureCol.getProperty( featureMemberProp );
-    this.featureMemberProp = featureMemberProp;
-
-    this.m_defaultWrapperClass = fwClass;
+    m_featureList = (FeatureList) m_featureCollection.getProperty( featureMemberProp );
+    m_featureMemberProp = featureMemberProp;
+    m_defaultWrapperClass = fwClass;
   }
 
   private static Feature createSubfeature( final Feature parentFeature, final QName childQName, final QName featureMemberProp )
@@ -120,30 +97,20 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
     }
     catch( final GMLSchemaException ex )
     {
-
-      throw new IllegalArgumentException( "Parent does not accept property of the specified type" + "\n\tparent=" + parentFeature + "\n\tpropertyType=" + featureMemberProp + "\n\tchildType="
-          + childQName, ex );
+      throw new IllegalArgumentException( "Parent does not accept property of the specified type. Parent: " + parentFeature + ", PropertyType: " + featureMemberProp + ", ChildType: " + childQName, ex );
     }
-
   }
 
-  @SuppressWarnings("unchecked")
   public void add( final int index, final FWCls element )
   {
-    Assert.isNotNull( element, "argument element must not be null" );
     final Feature f = element.getWrappedFeature();
-    Assert.isNotNull( f, "wrapped feature must not be null" );
-    featureList.add( index, f );
+    m_featureList.add( index, f );
   }
 
-  @SuppressWarnings("unchecked")
   public boolean add( final FWCls o )
   {
-    Assert.isNotNull( o, "Argument o must not be null" );
     final Feature f = o.getWrappedFeature();
-    Assert.isNotNull( f, "wrapped feature must not be null" );
-
-    return featureList.add( f );
+    return m_featureList.add( f );
   }
 
   public FWCls addNew( final QName newChildType )
@@ -151,19 +118,16 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
     return addNew( newChildType, m_defaultWrapperClass );
   }
 
-  @SuppressWarnings("unchecked")
   public <T extends FWCls> T addNew( final QName newChildType, final Class<T> classToAdapt )
   {
-    Assert.isNotNull( newChildType, "newChildType must not null" );
     Feature feature = null;
     try
     {
-      feature = FeatureHelper.createFeatureForListProp( featureList, featureMemberProp, newChildType );
-
+      feature = FeatureHelper.createFeatureForListProp( m_featureList, m_featureMemberProp, newChildType );
       final T wrapper = (T) feature.getAdapter( classToAdapt );
       if( wrapper == null )
       {
-        throw new IllegalArgumentException( "Feature not adaptable:" + "\n\tfeatureType=" + newChildType + "\n\tadapatble type=" + m_defaultWrapperClass + "\n\tfeature=" + feature + "\n" );
+        throw new IllegalArgumentException( "Feature not adaptable. FeatureType: " + newChildType + ", TypeToAdapt: " + m_defaultWrapperClass + ", Feature: " + feature );
       }
       // Feature was already added by Util.create..., so dont add it again
       // featureList.add(feature);
@@ -180,21 +144,16 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
     return addNew( newChildType, newFeatureId, m_defaultWrapperClass );
   }
 
-  @SuppressWarnings("unchecked")
   public <T extends FWCls> T addNew( final QName newChildType, final String newFeatureId, final Class<T> classToAdapt )
   {
-    Assert.isNotNull( newChildType, "newChildType must not null" );
-
     Feature feature = null;
     try
     {
-
-      feature = FeatureHelper.createFeatureWithId( newChildType, featureCol, featureMemberProp, newFeatureId );
-
+      feature = FeatureHelper.createFeatureWithId( newChildType, m_featureCollection, m_featureMemberProp, newFeatureId );
       final T wrapper = (T) feature.getAdapter( classToAdapt );
       if( wrapper == null )
       {
-        throw new IllegalArgumentException( "Feature not adaptable:" + "\n\tfeatureType=" + newChildType + "\n\tadapatble type=" + m_defaultWrapperClass );
+        throw new IllegalArgumentException( "Feature not adaptable. FeatureType: " + newChildType + ", TypeToAdapt: " + m_defaultWrapperClass + ", Feature: " + feature );
       }
       return wrapper;
     }
@@ -209,21 +168,17 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
     return addNew( index, newChildType, m_defaultWrapperClass );
   }
 
-  @SuppressWarnings("unchecked")
   public <T extends FWCls> T addNew( final int index, final QName newChildType, final Class<T> classToAdapt )
   {
-    Assert.isNotNull( newChildType, "newChildType must not null" );
     try
     {
-      final Feature feature = FeatureHelper.createFeatureForListProp( featureList, featureMemberProp, newChildType );
+      final Feature feature = FeatureHelper.createFeatureForListProp( m_featureList, m_featureMemberProp, newChildType );
       final T wrapper = (T) feature.getAdapter( classToAdapt );
       if( wrapper == null )
       {
-        throw new IllegalArgumentException( "Feature not adaptable:" + "\n\tfeatureType=" + newChildType + "\n\tadapatble type=" + m_defaultWrapperClass );
+        throw new IllegalArgumentException( "Feature not adaptable. FeatureType: " + newChildType + ", TypeToAdapt: " + m_defaultWrapperClass + ", Feature: " + feature );
       }
-
-      featureList.add( index, feature );
-
+      m_featureList.add( index, feature );
       return wrapper;
     }
     catch( final GMLSchemaException e )
@@ -232,24 +187,19 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
     }
   }
 
-  @SuppressWarnings("unchecked")
   public boolean addAll( final Collection< ? extends FWCls> c )
   {
-    Assert.isNotNull( c, "Argument c must not be null" );
-    return featureList.addAll( FeatureHelper.toFeatureList( c ) );
-
+    return m_featureList.addAll( FeatureHelper.toFeatureList( c ) );
   }
 
-  @SuppressWarnings("unchecked")
   public boolean addAll( final int index, final Collection< ? extends FWCls> c )
   {
-    Assert.isNotNull( c, "Argument c must not be null" );
-    return featureList.addAll( index, FeatureHelper.toFeatureList( c ) );
+    return m_featureList.addAll( index, FeatureHelper.toFeatureList( c ) );
   }
 
   public void clear( )
   {
-    featureList.clear();
+    m_featureList.clear();
   }
 
   public boolean contains( final Object o )
@@ -257,7 +207,6 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
     return indexOf( o ) != -1;
   }
 
-  @SuppressWarnings("unchecked")
   public boolean containsAll( final Collection< ? > c )
   {
     throw new UnsupportedOperationException();
@@ -270,16 +219,12 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
      */
   }
 
-  @SuppressWarnings("unchecked")
   public FWCls get( final int index )
   {
-    final Object property = featureList.get( index );
-    final Feature f = FeatureHelper.getFeature( featureCol.getWorkspace(), property );
+    final Object property = m_featureList.get( index );
+    final Feature f = FeatureHelper.getFeature( m_featureCollection.getWorkspace(), property );
     if( f == null )
-    {
-      System.out.println( "Bad Link=" + property );
       return null;
-    }
     FWCls adapted = (FWCls) f.getAdapter( m_defaultWrapperClass );
     if( adapted == null )
     {
@@ -316,7 +261,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
         if( cls == null )
         {
           // bad link removing it
-          System.out.println( "removing bad link:" + featureList.get( i ) );
+          System.out.println( "removing bad link:" + m_featureList.get( i ) );
           remove( i );
           continue;
         }
@@ -331,23 +276,22 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
 
   public boolean isEmpty( )
   {
-    return featureList.isEmpty();
+    return m_featureList.isEmpty();
   }
 
   public Iterator<FWCls> iterator( )
   {
     return new Iterator<FWCls>()
     {
-      private final Iterator it = featureList.iterator();
+      private final Iterator it = m_featureList.iterator();
 
-      private final GMLWorkspace workspace = featureCol.getWorkspace();
+      private final GMLWorkspace workspace = m_featureCollection.getWorkspace();
 
       synchronized public boolean hasNext( )
       {
         return it.hasNext();
       }
 
-      @SuppressWarnings( { "unchecked", "synthetic-access" })
       synchronized public FWCls next( )
       {
         final Object next = it.next();
@@ -379,7 +323,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
   {
     if( o instanceof IFeatureWrapper2 )
     {
-      return featureList.lastIndexOf( ((IFeatureWrapper2) o).getWrappedFeature() );
+      return m_featureList.lastIndexOf( ((IFeatureWrapper2) o).getWrappedFeature() );
     }
     else
     {
@@ -396,7 +340,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
   {
     return new ListIterator<FWCls>()
     {
-      private final ListIterator lit = featureList.listIterator( index );
+      private final ListIterator lit = m_featureList.listIterator( index );
 
       @SuppressWarnings("unchecked")
       public void add( final FWCls o )
@@ -414,10 +358,9 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
         return lit.hasPrevious();
       }
 
-      @SuppressWarnings("unchecked")
       public FWCls next( )
       {
-        final Feature f = FeatureHelper.getFeature( featureCol.getWorkspace(), lit.next() );
+        final Feature f = FeatureHelper.getFeature( m_featureCollection.getWorkspace(), lit.next() );
         final Object wrapper = f.getAdapter( m_defaultWrapperClass );
         return (FWCls) wrapper;
       }
@@ -427,7 +370,6 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
         return lit.nextIndex();
       }
 
-      @SuppressWarnings("unchecked")
       public FWCls previous( )
       {
         final Feature f = (Feature) lit.previous();
@@ -445,7 +387,6 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
         lit.remove();
       }
 
-      @SuppressWarnings("unchecked")
       public void set( final FWCls o )
       {
         lit.set( o.getWrappedFeature() );
@@ -454,12 +395,9 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
     };
   }
 
-  @SuppressWarnings("unchecked")
   public FWCls remove( final int index )
   {
-    // Feature f = (Feature) featureList.remove(index);
-    // IFeatureWrapper2 wrapper = (IFeatureWrapper2) f.getAdapter(fwClass);
-    final FWCls wrapper = FeatureHelper.getFeature( featureCol.getWorkspace(), featureList.remove( index ), m_defaultWrapperClass );
+    final FWCls wrapper = FeatureHelper.getFeature( m_featureCollection.getWorkspace(), m_featureList.remove( index ), m_defaultWrapperClass );
     return wrapper;
   }
 
@@ -467,18 +405,18 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
   {
     if( o instanceof IFeatureWrapper2 )
     {
-      boolean removed = featureList.remove( ((IFeatureWrapper2) o).getWrappedFeature() );
+      boolean removed = m_featureList.remove( ((IFeatureWrapper2) o).getWrappedFeature() );
       if( !removed )
-        removed = featureList.remove( ((IFeatureWrapper2) o).getWrappedFeature().getId() );
+        removed = m_featureList.remove( ((IFeatureWrapper2) o).getWrappedFeature().getId() );
       return removed;
     }
     else if( o instanceof String )
     {
-      return featureList.remove( o );
+      return m_featureList.remove( o );
     }
     else
     {
-      return featureList.remove( o );
+      return m_featureList.remove( o );
     }
   }
 
@@ -486,10 +424,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
   {
     boolean ret = false;
     for( final Object o : c )
-    {
-      Assert.isNotNull( o, "Collection must not contain a null element" );
       ret = ret || remove( o );
-    }
     return ret;
   }
 
@@ -503,13 +438,13 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
     final FWCls r = get( index );
     final Feature f = element.getWrappedFeature();
 
-    featureList.set( index, f );
+    m_featureList.set( index, f );
     return r;
   }
 
   public int size( )
   {
-    return featureList.size();
+    return m_featureList.size();
   }
 
   public List<FWCls> subList( final int fromIndex, final int toIndex )
@@ -522,9 +457,9 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
     final Object objs[] = new Object[size()];
     for( int i = 0; i < objs.length; i++ )
     {
-      final Object fObj = featureList.get( i );
+      final Object fObj = m_featureList.get( i );
 
-      final Feature feature = FeatureHelper.getFeature( featureList.getParentFeature().getWorkspace(), fObj );
+      final Feature feature = FeatureHelper.getFeature( m_featureList.getParentFeature().getWorkspace(), fObj );
       if( feature == null )
         throw new RuntimeException( "Type not known:" + fObj );
 
@@ -545,7 +480,6 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
     return objs;
   }
 
-  @SuppressWarnings("unchecked")
   public <T> T[] toArray( T[] a )
   {
     final int SIZE = size();
@@ -576,7 +510,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
   {
     if( obj instanceof FeatureWrapperCollection )
     {
-      return featureList.equals( ((FeatureWrapperCollection) obj).featureList );
+      return m_featureList.equals( ((FeatureWrapperCollection) obj).m_featureList );
     }
     else if( obj instanceof IFeatureWrapperCollection )
     {
@@ -604,7 +538,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
   @Override
   public Feature getWrappedFeature( )
   {
-    return featureCol;
+    return m_featureCollection;
   }
 
   /**
@@ -613,35 +547,23 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
   @Override
   public String getGmlID( )
   {
-    return featureCol.getId();
+    return m_featureCollection.getId();
   }
 
   public FeatureList getWrappedList( )
   {
-    return featureList;
+    return m_featureList;
   }
 
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection#removeAllRefs(org.kalypsodeegree.model.feature.binding.IFeatureWrapper)
    */
-  public boolean removeAllRefs( final FWCls toRemove ) throws IllegalArgumentException
+  public void removeAllRefs( final FWCls toRemove ) throws IllegalArgumentException
   {
     if( toRemove == null )
-    {
-      throw new IllegalArgumentException( "Parameter toRemove must not be null" );
-    }
-
+      return;
     final String gmlID = toRemove.getGmlID();
-    boolean removed = false;
-    boolean currentRemove = false;
-    do
-    {
-      currentRemove = featureList.remove( gmlID );
-      removed = removed || currentRemove;
-    }
-    while( currentRemove );
-    return removed;
-
+    m_featureList.remove( gmlID );
   }
 
   /**
@@ -651,11 +573,11 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
   {
     final String gmlID = toAdd.getGmlID();
     // TODO: this can cause major performance leaks
-    if( featureList.contains( gmlID ) )
+    if( m_featureList.contains( gmlID ) )
     {
       return false;
     }
-    return featureList.add( gmlID );
+    return m_featureList.add( gmlID );
   }
 
   /**
@@ -664,9 +586,9 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
    */
   public List<FWCls> query( final GM_Surface selectionSurface, final boolean containedOnly )
   {
-    final List selectedFeature = featureList.query( selectionSurface.getEnvelope(), null );
+    final List selectedFeature = m_featureList.query( selectionSurface.getEnvelope(), null );
     final List<FWCls> selFW = new ArrayList<FWCls>( selectedFeature.size() );
-    final GMLWorkspace workspace = featureCol.getWorkspace();
+    final GMLWorkspace workspace = m_featureCollection.getWorkspace();
 
     for( final Object linkOrFeature : selectedFeature )
     {
@@ -696,9 +618,9 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
 
   public List<FWCls> query( final GM_Envelope envelope )
   {
-    final List selectedFeature = featureList.query( envelope, null );
+    final List selectedFeature = m_featureList.query( envelope, null );
     final List<FWCls> selFW = new ArrayList<FWCls>( selectedFeature.size() );
-    final GMLWorkspace workspace = featureCol.getWorkspace();
+    final GMLWorkspace workspace = m_featureCollection.getWorkspace();
 
     for( final Object linkOrFeature : selectedFeature )
     {
@@ -716,9 +638,9 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
    */
   public List<FWCls> query( final GM_Position position )
   {
-    final List selectedFeature = featureList.query( position, null );
+    final List selectedFeature = m_featureList.query( position, null );
     final List<FWCls> selFW = new ArrayList<FWCls>( selectedFeature.size() );
-    final GMLWorkspace workspace = featureCol.getWorkspace();
+    final GMLWorkspace workspace = m_featureCollection.getWorkspace();
 
     for( final Object linkOrFeature : selectedFeature )
     {
@@ -728,7 +650,6 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
         selFW.add( feature );
       }
     }
-
     return selFW;
   }
 
@@ -739,44 +660,9 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
   {
     int num = 0;
     for( final FWCls ele : this )
-    {
       if( wrapperClass.isInstance( ele ) )
-      {
         num++;
-      }
-    }
     return num;
-  }
-
-  /**
-   * Assert the given object for null value. This method throws concequently an illegal argument exception if the passed
-   * object is null
-   * 
-   * @param obj
-   *            the object to be asserted
-   * @param message
-   *            the exception message
-   * @throws IllegalArgumentException
-   *             if the passed object is null
-   */
-  public static final void throwIAEOnFeaturePropNotList( Feature feature, QName propToTest, String message ) throws IllegalArgumentException
-  {
-    IPropertyType type = feature.getFeatureType().getProperty( propToTest );
-    if( !type.isList() )
-    {
-      if( message == null )
-      {
-        StringBuffer buf = new StringBuffer();
-        buf.append( "Feature does not have list property of the given name" );
-        buf.append( "\n\tFeature=" );
-        buf.append( feature );
-        buf.append( "\n\tProperty  QNAme=" );
-        buf.append( propToTest );
-        message = buf.toString();
-      }
-
-      throw new IllegalArgumentException( message );
-    }
   }
 
   /**
@@ -784,7 +670,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
    */
   public void cloneInto( final FWCls toClone ) throws Exception
   {
-    final IRelationType relationType = featureList.getParentFeatureTypeProperty();
+    final IRelationType relationType = m_featureList.getParentFeatureTypeProperty();
     FeatureHelper.cloneFeature( getWrappedFeature(), relationType, toClone.getWrappedFeature() );
   }
 
