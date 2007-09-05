@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline;
 
@@ -71,7 +71,7 @@ public class MoveThemeUpAction extends MapModellViewActionDelegate
       moveElementUp( theme, event.display );
   }
 
-  private void moveElementUp( final IKalypsoTheme theme, final Display display )
+  protected void moveElementUp( final IKalypsoTheme theme, final Display display )
   {
     final IMapModellView view = getView();
     if( view == null )
@@ -92,7 +92,7 @@ public class MoveThemeUpAction extends MapModellViewActionDelegate
   {
     super.selectionChanged( action, selection );
 
-    final IKalypsoTheme[] selectedThemes = getSelectedThemes( getSelection() );
+    final IKalypsoTheme[] selectedThemes = MapModellViewActionDelegate.getSelectedThemes( getSelection() );
     final IMapModell[] selectedModels = MoveThemeDownAction.getSelectedModels( selectedThemes );
 
     final boolean bEnable;
