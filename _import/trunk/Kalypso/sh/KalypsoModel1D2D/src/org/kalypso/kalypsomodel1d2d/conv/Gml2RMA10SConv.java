@@ -61,6 +61,7 @@ import org.kalypso.kalypsomodel1d2d.ops.TypeInfo;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtils;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IEdgeInv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
@@ -70,6 +71,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ITransitionElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.FlowRelationUtilitites;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IKingFlowRelation;
@@ -328,9 +330,50 @@ public class Gml2RMA10SConv implements INativeIDProvider
 
     if( m_calculationUnit instanceof ICalculationUnit1D2D )
     {
-      final TransitionElementConverter transitionElementConverter = new TransitionElementConverter( m_discretisationModel1d2d, (ICalculationUnit1D2D) m_calculationUnit, this, formatter );
-      transitionElementConverter.write();
+      final List continuityLines = m_calculationUnit.getContinuityLines();
+      final IFeatureWrapperCollection<IFE1D2DComplexElement> complexElements = m_discretisationModel1d2d.getComplexElements();
+      for( final IFE1D2DComplexElement complexElement : complexElements )
+      {
+        if( complexElement instanceof ITransitionElement )
+        {
+          final ITransitionElement transitionElement = (ITransitionElement) complexElement;
+          if( continuityLines.containsAll( transitionElement.getContinuityLines() ) )
+            writeTransitionLine( formatter, transitionElement );
+        }
+      }
     }
+  }
+
+  private void writeTransitionLine( final Formatter formatter, final ITransitionElement transitionElement ) throws SimulationException
+  {
+    final int transitionElementID = getConversionID( transitionElement );
+    final IContinuityLine1D line1D;
+    final int node1D_ID;
+    int element1D_ID = -1;
+    final int line2D_ID;
+    final List<IFELine> transitionElementContinuityLines = transitionElement.getContinuityLines();
+    if( transitionElementContinuityLines.get( 0 ) instanceof IContinuityLine1D )
+    {
+      line1D = (IContinuityLine1D) transitionElementContinuityLines.get( 0 );
+      line2D_ID = getConversionID( transitionElementContinuityLines.get( 1 ) );
+    }
+    else
+    {
+      line2D_ID = getConversionID( transitionElementContinuityLines.get( 0 ) );
+      line1D = (IContinuityLine1D) transitionElementContinuityLines.get( 1 );
+    }
+    final IFE1D2DNode node1D = line1D.getNodes().get( 0 );
+    node1D_ID = getConversionID( node1D );
+    final IFeatureWrapperCollection<IFeatureWrapper2> containers = node1D.getContainers();
+    for( final IFeatureWrapper2 container : containers )
+    {
+      if( container instanceof IFE1D2DEdge )
+        if( m_calculationUnit.getElements().contains( container ) )
+          element1D_ID = getConversionID( container );
+    }
+    if( element1D_ID == -1 )
+      throw new SimulationException( "Transition line cannot be exported: cannot find 1D element.", null );
+    formatter.format( "TL%10d%10d%10d%10d%n", transitionElementID, element1D_ID, line2D_ID, node1D_ID ); //$NON-NLS-1$
   }
 
   private void writeEdgeSet( final Formatter formatter, final Collection<IFE1D2DEdge> edges )

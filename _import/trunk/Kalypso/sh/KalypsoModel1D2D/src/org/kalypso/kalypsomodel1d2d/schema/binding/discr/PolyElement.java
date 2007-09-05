@@ -333,7 +333,10 @@ public class PolyElement extends Element2D implements IPolyElement
    */
   public String getRoughnessClsID( )
   {
-    return (String) getFeature().getProperty( IFE1D2DElement.PROP_ROUGHNESS_CLS_ID );
+    final Object property = getFeature().getProperty( IFE1D2DElement.PROP_ROUGHNESS_CLS_ID );
+    if( property == null )
+      return "";
+    return property.toString();
   }
 
   /**

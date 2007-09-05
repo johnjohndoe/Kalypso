@@ -177,7 +177,10 @@ public class Element1D<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge>
    */
   public String getRoughnessClsID( )
   {
-    return getFeature().getProperty( IFE1D2DElement.PROP_ROUGHNESS_CLS_ID ).toString();
+    final Object property = getFeature().getProperty( IFE1D2DElement.PROP_ROUGHNESS_CLS_ID );
+    if( property == null )
+      return "";
+    return property.toString();
   }
 
   /**

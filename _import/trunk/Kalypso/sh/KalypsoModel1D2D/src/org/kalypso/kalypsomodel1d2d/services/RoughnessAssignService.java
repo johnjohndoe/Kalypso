@@ -204,8 +204,8 @@ public class RoughnessAssignService extends Job
       }
     }
     boolean anyChanges = false;
-    anyChanges |= element.getRoughnessClsID() != null && !element.getRoughnessClsID().equals( roughnessClsID );
-    anyChanges |= element.getRoughnessStyle() != null && !element.getRoughnessStyle().equals( roughnessStyle );
+    anyChanges |= !element.getRoughnessClsID().equals( roughnessClsID );
+    anyChanges |= !element.getRoughnessStyle().equals( roughnessStyle );
     anyChanges |= element.getRoughnessCorrectionKS() != null && element.getRoughnessCorrectionKS() != correctionParameterKS;
     anyChanges |= element.getRoughnessCorrectionAxAy() != null && element.getRoughnessCorrectionAxAy() != correctionParameterAxAy;
     anyChanges |= element.getRoughnessCorrectionDP() != null && element.getRoughnessCorrectionDP() != correctionParameterDP;

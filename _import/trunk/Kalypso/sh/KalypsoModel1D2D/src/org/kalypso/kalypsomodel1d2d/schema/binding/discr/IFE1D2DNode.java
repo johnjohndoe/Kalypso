@@ -40,12 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypso.kalypsosimulationmodel.core.discr.IFENode;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
+import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * Interface for classes representing an finite element node
@@ -56,6 +60,10 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  */
 public interface IFE1D2DNode<CT extends IFENetItem> extends IFENode/*<CT>*/
 {
+  public final static String GAUS_KRUEGER = "EPSG:31467";
+
+  public static final CS_CoordinateSystem DEFAULT_COORDINATE_SYSTEM = ConvenienceCSFactory.getInstance().getOGCCSByName( GAUS_KRUEGER );
+
   /**
    * To get the position of this fe-node
    * @return the position of this node as {@link GM_Point}

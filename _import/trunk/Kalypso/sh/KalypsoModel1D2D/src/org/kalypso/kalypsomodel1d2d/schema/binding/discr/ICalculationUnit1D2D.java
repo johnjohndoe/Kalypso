@@ -50,5 +50,5 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
  */
 public interface ICalculationUnit1D2D<T extends IFE1D2DElement> extends ICalculationUnit<T>
 {
-  IFeatureWrapperCollection<ICalculationUnit> getSubUnits( );
+  public IFeatureWrapperCollection<ICalculationUnit> getSubUnits( );
 }

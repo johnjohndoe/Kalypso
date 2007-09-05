@@ -89,15 +89,16 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode
 
   public void setPoint( final GM_Point point )
   {
-    getWrappedFeature().setProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_POINT/* QNAME_PROP_POINT */, point );
+    if( point.getCoordinateSystem() == null )
+      point.setCoordinateSystem( IFE1D2DNode.DEFAULT_COORDINATE_SYSTEM );
+    getWrappedFeature().setProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_POINT, point );
   }
 
   public static FE1D2DNode createNode( final FE1D2DDiscretisationModel discModel )
   {
     final Feature parentFeature = discModel.getFeature();
     final IFeatureType parentFT = parentFeature.getFeatureType();
-    final IRelationType parentNodeProperty = (IRelationType) parentFT.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_NODES
-    /* FE1D2DDiscretisationModel.QNAME_PROP_NODES */);
+    final IRelationType parentNodeProperty = (IRelationType) parentFT.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_NODES );
     final IFeatureType nodeType = parentFT.getGMLSchema().getFeatureType( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
     final Feature nodeFeature = parentFeature.getWorkspace().createFeature( parentFeature, parentNodeProperty, nodeType );
     return new FE1D2DNode( nodeFeature );
