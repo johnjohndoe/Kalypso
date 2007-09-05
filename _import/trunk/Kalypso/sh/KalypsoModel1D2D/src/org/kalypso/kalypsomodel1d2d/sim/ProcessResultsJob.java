@@ -87,7 +87,7 @@ import org.opengis.cs.CS_CoordinateSystem;
 /**
  * TODO: remove processing of the map
  * 
- * This job processed one 2d-result file.
+ * This job processed one 2d-result file. *
  * 
  * @author Gernot Belger
  */
@@ -183,32 +183,6 @@ public class ProcessResultsJob extends Job
       final CS_CoordinateSystem crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
       final MultiTriangleEater multiEater = new MultiTriangleEater();
 
-      final NodeResultsHandler handler = new NodeResultsHandler( resultWorkspace, multiEater, m_calculation, minMaxCatcher );
-      conv.setRMA10SModelElementHandler( handler );
-
-      logger.takeInterimTime();
-      logger.printCurrentInterim( "Beginn Parsen in : " );
-
-      conv.parse( is );
-
-      is.close();
-
-      logger.takeInterimTime();
-      logger.printCurrentInterim( "Fertig mit Lesen in : " );
-
-      // finish MultiEater and engage serializer
-      multiEater.finished();
-
-      BigDecimal min;
-      BigDecimal max;
-
-      /* Node-GML in Datei schreiben */
-      GmlSerializer.serializeWorkspace( gmlResultFile, resultWorkspace, "CP1252" );
-
-      min = new BigDecimal( minMaxCatcher.getMinVelocityAbs() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-      max = new BigDecimal( minMaxCatcher.getMaxVelocityAbs() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-      stepResultMeta.addDocument( "Vektoren", "Ergebnisse an den Knoten", IDocumentResultMeta.DOCUMENTTYPE.nodes, new Path( "results.gml" ), Status.OK_STATUS, min, max );
-
       for( final ResultType.TYPE parameter : m_parameters )
       {
         /* GML(s) */
@@ -231,37 +205,21 @@ public class ProcessResultsJob extends Job
             triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "m" );
             triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), "Flieﬂtiefe" );
 
-            min = new BigDecimal( minMaxCatcher.getMinDepth() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-            max = new BigDecimal( minMaxCatcher.getMaxDepth() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-            stepResultMeta.addDocument( "Flieﬂtiefen", "TIN der Flieﬂtiefen", IDocumentResultMeta.DOCUMENTTYPE.tinDepth, new Path( "Tin/tin_DEPTH.gml" ), Status.OK_STATUS, min, max );
-
             break;
           case VELOCITY:
             triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "m/s" );
             triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), "Geschwindigkeit" );
-
-            min = new BigDecimal( minMaxCatcher.getMinVelocityAbs() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-            max = new BigDecimal( minMaxCatcher.getMaxVelocityAbs() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-            stepResultMeta.addDocument( "Geschwindigkeiten", "TIN der tiefengemittelten Flieﬂgeschwindigkeiten", IDocumentResultMeta.DOCUMENTTYPE.tinVelo, new Path( "Tin/tin_VELOCITY.gml" ), Status.OK_STATUS, min, max );
 
             break;
           case WATERLEVEL:
             triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "m¸NN" );
             triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), "Wasserspiegel" );
 
-            min = new BigDecimal( minMaxCatcher.getMinWaterlevel() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-            max = new BigDecimal( minMaxCatcher.getMaxWaterlevel() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-            stepResultMeta.addDocument( "Wasserspiegellagen", "TIN der Wasserspiegellagen", IDocumentResultMeta.DOCUMENTTYPE.tinWsp, new Path( "Tin/tin_WATERLEVEL.gml" ), Status.OK_STATUS, min, max );
-
             break;
 
           case SHEARSTRESS:
             triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "N/m≤" );
             triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), "Sohlschubspannung" );
-
-            min = new BigDecimal( minMaxCatcher.getMinShearStress() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-            max = new BigDecimal( minMaxCatcher.getMaxShearStress() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-            stepResultMeta.addDocument( "Sohlschubspannung", "TIN der Sohlschubspannungen", IDocumentResultMeta.DOCUMENTTYPE.tinShearStress, new Path( "Tin/tin_SHEARSTRESS.gml" ), Status.OK_STATUS, min, max );
 
             break;
 
@@ -272,14 +230,83 @@ public class ProcessResultsJob extends Job
         final TriangulatedSurfaceTriangleEater gmlTriangleEater = new TriangulatedSurfaceTriangleEater( tinResultFile, triangleWorkspace, surface, parameter );
 
         multiEater.addEater( gmlTriangleEater );
-
-        /* HMO(s) */
-        /*
-         * try { final File resultHMOFile = new File( "D:/Projekte/kalypso_dev/post-processing/output.hmo" ); final
-         * HMOTriangleEater hmoTriangleEater = new HMOTriangleEater( resultHMOFile, parameter ); multiEater.addEater(
-         * hmoTriangleEater ); } catch (Exception e) { e.printStackTrace(); }
-         */
       }
+
+      final NodeResultsHandler handler = new NodeResultsHandler( resultWorkspace, multiEater, m_calculation, minMaxCatcher );
+      conv.setRMA10SModelElementHandler( handler );
+
+      logger.takeInterimTime();
+      logger.printCurrentInterim( "Beginn Parsen in : " );
+
+      conv.parse( is );
+
+      is.close();
+
+      logger.takeInterimTime();
+      logger.printCurrentInterim( "Fertig mit Lesen in : " );
+
+      // finish MultiEater and engage serializer
+      multiEater.finished();
+
+      /* Node-GML in Datei schreiben */
+      GmlSerializer.serializeWorkspace( gmlResultFile, resultWorkspace, "CP1252" );
+
+      BigDecimal min;
+      BigDecimal max;
+
+      for( final ResultType.TYPE parameter : m_parameters )
+      {
+        /* GML(s) */
+
+        /* result db */
+
+        switch( parameter )
+        {
+          case DEPTH:
+
+            min = new BigDecimal( minMaxCatcher.getMinDepth() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+            max = new BigDecimal( minMaxCatcher.getMaxDepth() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+            stepResultMeta.addDocument( "Flieﬂtiefen", "TIN der Flieﬂtiefen", IDocumentResultMeta.DOCUMENTTYPE.tinDepth, new Path( "Tin/tin_DEPTH.gml" ), Status.OK_STATUS, min, max );
+
+            break;
+          case VELOCITY:
+
+            min = new BigDecimal( minMaxCatcher.getMinVelocityAbs() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+            max = new BigDecimal( minMaxCatcher.getMaxVelocityAbs() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+            stepResultMeta.addDocument( "Geschwindigkeiten", "TIN der tiefengemittelten Flieﬂgeschwindigkeiten", IDocumentResultMeta.DOCUMENTTYPE.tinVelo, new Path( "Tin/tin_VELOCITY.gml" ), Status.OK_STATUS, min, max );
+
+            break;
+          case WATERLEVEL:
+
+            min = new BigDecimal( minMaxCatcher.getMinWaterlevel() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+            max = new BigDecimal( minMaxCatcher.getMaxWaterlevel() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+            stepResultMeta.addDocument( "Wasserspiegellagen", "TIN der Wasserspiegellagen", IDocumentResultMeta.DOCUMENTTYPE.tinWsp, new Path( "Tin/tin_WATERLEVEL.gml" ), Status.OK_STATUS, min, max );
+
+            break;
+
+          case SHEARSTRESS:
+
+            min = new BigDecimal( minMaxCatcher.getMinShearStress() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+            max = new BigDecimal( minMaxCatcher.getMaxShearStress() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+            stepResultMeta.addDocument( "Sohlschubspannung", "TIN der Sohlschubspannungen", IDocumentResultMeta.DOCUMENTTYPE.tinShearStress, new Path( "Tin/tin_SHEARSTRESS.gml" ), Status.OK_STATUS, min, max );
+
+            break;
+
+          default:
+            throw new UnsupportedOperationException();
+        }
+      }
+
+      min = new BigDecimal( minMaxCatcher.getMinVelocityAbs() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+      max = new BigDecimal( minMaxCatcher.getMaxVelocityAbs() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+      stepResultMeta.addDocument( "Vektoren", "Ergebnisse an den Knoten", IDocumentResultMeta.DOCUMENTTYPE.nodes, new Path( "results.gml" ), Status.OK_STATUS, min, max );
+
+      /* HMO(s) */
+      /*
+       * try { final File resultHMOFile = new File( "D:/Projekte/kalypso_dev/post-processing/output.hmo" ); final
+       * HMOTriangleEater hmoTriangleEater = new HMOTriangleEater( resultHMOFile, parameter ); multiEater.addEater(
+       * hmoTriangleEater ); } catch (Exception e) { e.printStackTrace(); }
+       */
 
       final Date time = handler.getTime();
       addToResultDB( stepResultMeta, timeStepNum, outputDir, time );

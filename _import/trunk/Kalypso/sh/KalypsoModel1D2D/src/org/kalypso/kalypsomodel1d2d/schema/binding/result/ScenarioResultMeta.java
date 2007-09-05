@@ -41,8 +41,10 @@
 package org.kalypso.kalypsomodel1d2d.schema.binding.result;
 
 import org.eclipse.core.runtime.Path;
+import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.ResultMeta;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
  * @author Thomas Jung
@@ -71,7 +73,16 @@ public class ScenarioResultMeta extends ResultMeta implements IScenarioResultMet
    */
   public ICalcUnitResultMeta findCalcUnitMetaResult( String calcUnitGmlID )
   {
-    // TODO Auto-generated method stub
+    IFeatureWrapperCollection<IResultMeta> children = getChildren();
+    for( IResultMeta resultMeta : children )
+    {
+      if( resultMeta instanceof ICalcUnitResultMeta )
+      {
+        ICalcUnitResultMeta calcUnitMeta = (ICalcUnitResultMeta) resultMeta;
+        if( calcUnitMeta.getCalcUnit().equals( calcUnitGmlID ) )
+          return calcUnitMeta;
+      }
+    }
     return null;
   }
 
@@ -80,17 +91,18 @@ public class ScenarioResultMeta extends ResultMeta implements IScenarioResultMet
    */
   public void importCalculationUnit( ICalcUnitResultMeta calculationUnit ) throws Exception
   {
+    /* the managing of the result db data (documents) should happen somewhere outside the db */
     // look for existing results of this calc unit
-    final ICalcUnitResultMeta existingCalcUnitMeta = findCalcUnitMetaResult( calculationUnit.getGmlID() );
+    final ICalcUnitResultMeta existingCalcUnitMeta = findCalcUnitMetaResult( calculationUnit.getCalcUnit() );
     if( existingCalcUnitMeta == null )
     {
-
+      // calcUnit does not exist, so there is nothing to do as to add the new one.
     }
     else
     {
+      // TODO: delete file content
       // TODO delete all or consider restart
       getChildren().remove( existingCalcUnitMeta );
-
     }
 
     getChildren().cloneInto( calculationUnit );

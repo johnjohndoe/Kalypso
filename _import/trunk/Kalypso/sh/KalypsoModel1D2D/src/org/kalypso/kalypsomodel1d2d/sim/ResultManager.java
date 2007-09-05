@@ -44,7 +44,6 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -60,7 +59,6 @@ import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
@@ -304,11 +302,9 @@ public class ResultManager implements Runnable
     try
     {
       /* Write template sld into result folder */
-      final URL resultStyleURL = (URL) m_dataProvider.getInputForID( "ResultTemplate" );
-      ZipUtilities.unzip( resultStyleURL, m_outputDir );
-
+      // final URL resultStyleURL = (URL) m_dataProvider.getInputForID( "ResultTemplate" );
+      // ZipUtilities.unzip( resultStyleURL, m_outputDir );
       // TODO: error handling! handle stati everywhere....
-
       writeResultMeta( resultProcessingStatus );
     }
     catch( final Throwable e )
