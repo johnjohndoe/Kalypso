@@ -164,7 +164,7 @@
         </extensionControl>
      </extension>
      <extension
-           point="org.kalypso.chart.LayerProvider">
+           point="org.kalypso.chart.factory.LayerProvider">
         <provider
               class="org.kalypso.kalypsomodel1d2d.ui.chart.KingLayerProvider"
               id="org.kalypso.kalypsomodel1d2d.ui.chart.KingLayerProvider">
