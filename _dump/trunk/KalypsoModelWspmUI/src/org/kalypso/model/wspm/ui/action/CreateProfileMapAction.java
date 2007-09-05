@@ -29,6 +29,7 @@ import org.kalypso.contribs.eclipse.core.resources.StringStorage;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.editorinput.StorageEditorInput;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.template.gismapview.Gismapview;
@@ -134,6 +135,7 @@ public class CreateProfileMapAction extends ActionDelegate
     catch( final JAXBException e )
     {
       final IStatus status = StatusUtilities.statusFromThrowable( e );
+      KalypsoModelWspmUIPlugin.getDefault().getLog().log( status );
       ErrorDialog.openError( shell, action.getText(), "Kartenvorlage konnte nicht erzeugt werden", status );
       return null;
     }
