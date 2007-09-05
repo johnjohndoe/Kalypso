@@ -149,8 +149,13 @@ public class GeometryRecalculator
     for( final Object object : m_flowRelCollection.getWrappedList() )
     {
       final IBoundaryCondition boundaryCondition = (IBoundaryCondition) ((Feature) object).getAdapter( IBoundaryCondition.class );
-      if( boundaryCondition.getParentElementID().equals( featureID ) )
-        addToFlowRelationshipsModelChanges( boundaryCondition, element );
+      if( boundaryCondition != null )
+      {
+        if( boundaryCondition.getParentElementID().equals( featureID ) )
+          addToFlowRelationshipsModelChanges( boundaryCondition, element );
+        continue;
+      }
+      
     }
   }
 
@@ -250,14 +255,18 @@ public class GeometryRecalculator
     final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
     final IEvaluationContext context = handlerService.getCurrentState();
     final ICaseDataProvider<IFeatureWrapper2> modelProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
-    try{
-    ((ICommandPoster) modelProvider).postCommand( IFlowRelationshipModel.class, new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
-//    ((ICommandPoster) modelProvider).postCommand( IOperationalModel.class, new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
-//    ((ICommandPoster) modelProvider).postCommand( IOperationalModel1D2D.class, new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
+    try
+    {
+      ((ICommandPoster) modelProvider).postCommand( IFlowRelationshipModel.class, new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
+      // ((ICommandPoster) modelProvider).postCommand( IOperationalModel.class, new EmptyCommand( "Get dirty!", false )
+      // ); //$NON-NLS-1$
+      // ((ICommandPoster) modelProvider).postCommand( IOperationalModel1D2D.class, new EmptyCommand( "Get dirty!",
+      // false ) ); //$NON-NLS-1$
     }
-    catch (Exception e) {
+    catch( Exception e )
+    {
       // TODO: handle exception
       e.printStackTrace();
     }
-    }
+  }
 }
