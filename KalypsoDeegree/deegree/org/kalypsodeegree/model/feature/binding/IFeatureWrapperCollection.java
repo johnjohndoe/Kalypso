@@ -75,11 +75,10 @@ public interface IFeatureWrapperCollection<FWCls extends IFeatureWrapper2> exten
    * 
    * @param toRemove
    *            a wrapper wrapping the feature which reference is to be remove from this list
-   * @return true if an occurence of the feature has been removed
    * @throws IllegalArgumentException
    *             if the argument toRemove is null
    */
-  public boolean removeAllRefs( FWCls toRemove ) throws IllegalArgumentException;
+  public void removeAllRefs( FWCls toRemove ) throws IllegalArgumentException;
 
   /**
    * Add this feature as reference to this list
