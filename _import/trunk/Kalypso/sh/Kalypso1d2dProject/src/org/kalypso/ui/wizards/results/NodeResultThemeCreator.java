@@ -102,6 +102,7 @@ public class NodeResultThemeCreator extends AbstractThemeCreator
   {
     /* get infos about calc unit */
     IResultMeta calcUnitMeta = m_documentResult.getParent().getParent();
+    IResultMeta timeStepMeta = m_documentResult.getParent();
 
     final IFolder resultsFolder = KalypsoModel1D2DHelper.getResultsFolder( m_scenarioFolder );
     String resFolder = resultsFolder.getFullPath().toPortableString();
@@ -109,7 +110,7 @@ public class NodeResultThemeCreator extends AbstractThemeCreator
     String featurePath = "nodeResultMember";
     String source = "../" + m_documentResult.getFullPath().toPortableString();
     String style = "Vector Style";
-    String themeName = m_documentResult.getName() + ", " + calcUnitMeta.getName();
+    String themeName = m_documentResult.getName() + ", " + timeStepMeta.getName() + ", " + calcUnitMeta.getName();
     String styleLocation = null;
     String type = "Node";
     String styleLinkType = "sld";

@@ -161,6 +161,7 @@ public class TinResultThemeCreator extends AbstractThemeCreator
   {
     /* get infos about calc unit */
     IResultMeta calcUnitMeta = m_documentResult.getParent().getParent();
+    IResultMeta timeStepMeta = m_documentResult.getParent();
 
     final IFolder resultsFolder = KalypsoModel1D2DHelper.getResultsFolder( m_scenarioFolder );
     String resFolder = resultsFolder.getFullPath().toPortableString();
@@ -182,7 +183,7 @@ public class TinResultThemeCreator extends AbstractThemeCreator
     {
       type = "Polygon";
       style = "tin" + type + "Style";
-      themeName = m_documentResult.getName() + " (Isoflächen), " + calcUnitMeta.getName();
+      themeName = m_documentResult.getName() + " (Isoflächen), " + timeStepMeta.getName() + ", " + calcUnitMeta.getName();
 
       // check, if there is a style already chosen, if not create one from default tamplate
       if( m_polyStyleComp == null )
