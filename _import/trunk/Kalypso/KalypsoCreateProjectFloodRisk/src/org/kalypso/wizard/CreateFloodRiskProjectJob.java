@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.wizard;
 
@@ -59,6 +59,7 @@ import java.util.TreeMap;
 import java.util.Vector;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Marshaller;
 import javax.xml.namespace.QName;
 import javax.xml.transform.OutputKeys;
@@ -82,6 +83,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.core.jaxb.TemplateUtilitites;
 import org.kalypso.floodrisk.schema.UrlCatalogFloodRisk;
 import org.kalypso.floodrisk.tools.GridUtils;
 import org.kalypso.floodrisk.tools.Number;
@@ -163,7 +165,7 @@ public class CreateFloodRiskProjectJob extends Job
 
   private final String m_resourceBase = "resources/projecttemplate.zip"; //$NON-NLS-1$
 
-  private List<StyledLayerType> m_layerList;
+  private List<JAXBElement< ? extends StyledLayerType>> m_layerList;
 
   private GMLWorkspace m_landuseShapeWS;
 
@@ -299,7 +301,7 @@ public class CreateFloodRiskProjectJob extends Job
       {
         monitor.subTask( WizardMessages.getString( "CreateFloodRiskProjectJob.monitor.4" ) + "..." ); //$NON-NLS-1$ //$NON-NLS-2$
         autogenerateLanduseCollection();
-        createLanduseStyle( m_workspacePath.toOSString() + m_projectHandle.getFullPath() + "/.styles/landuse.sld" ); //$NON-NLS-1$ 
+        createLanduseStyle( m_workspacePath.toOSString() + m_projectHandle.getFullPath() + "/.styles/landuse.sld" ); //$NON-NLS-1$
       }
       // create waterlevelGrids and defaultStyles
       monitor.subTask( WizardMessages.getString( "CreateFloodRiskProjectJob.monitor.6" ) + "..." ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -312,7 +314,8 @@ public class CreateFloodRiskProjectJob extends Job
       }
 
       final StyledLayerType landuseLayer = createLanduseLayer( m_landuseDataFile );
-      m_layerList.add( landuseLayer );
+      JAXBElement<StyledLayerType> layerElement = TemplateUtilitites.OF_GISMAPVIEW.createLayer( landuseLayer );
+      m_layerList.add( layerElement );
       layers.setActive( landuseLayer );
 
       monitor.subTask( WizardMessages.getString( "CreateFloodRiskProjectJob.monitor.8" ) + "..." ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -573,7 +576,11 @@ public class CreateFloodRiskProjectJob extends Job
       final int numOfCategories = 5;
 
       createRasterStyle( sldFileName, sourceFileNameWithoutExtension, grid, lightBlue, numOfCategories );
-      m_layerList.add( createWaterlevelLayer( targetFile, sourceFileNameWithoutExtension ) );
+
+      StyledLayerType styledLayerType = createWaterlevelLayer( targetFile, sourceFileNameWithoutExtension );
+      JAXBElement<StyledLayerType> layerElement = TemplateUtilitites.OF_GISMAPVIEW.createLayer( styledLayerType );
+      m_layerList.add( layerElement );
+
       grid = null;
       monitor.worked( workedPart );
       if( monitor.isCanceled() )
@@ -686,7 +693,7 @@ public class CreateFloodRiskProjectJob extends Job
       final Symbolizer[] symbolizers = new Symbolizer[] { polygonSymbolizer };
       final Operation operation = new PropertyIsLikeOperation( new PropertyName( m_landusePropertyName ), new Literal( landusePropertyName ), '*', '$', '/' );
       final Filter filter = new ComplexFilter( operation );
-      final Rule rule = StyleFactory.createRule( symbolizers, "default", landusePropertyName, "default", minScaleDenominator, maxScaleDenominator ); //$NON-NLS-1$ //$NON-NLS-2$ 
+      final Rule rule = StyleFactory.createRule( symbolizers, "default", landusePropertyName, "default", minScaleDenominator, maxScaleDenominator ); //$NON-NLS-1$ //$NON-NLS-2$
       rule.setFilter( filter );
       featureTypeStyle.addRule( rule );
     }

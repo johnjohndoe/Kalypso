@@ -59,6 +59,13 @@ import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
+ * Wizard page for displaying the result database in a checkbox-treeview Components are a {@link CheckboxTreeViewer} and
+ * an {@link ResultMetaInfoViewer}. <br>
+ * 
+ * optional: The result info viewer can be given a {@link IThemeConstructionFactory} for displaying special button /
+ * combo components for sld handling displayed inside the info viewer.
+ * 
+ * 
  * @author Thomas Jung
  */
 public class SelectResultWizardPage extends WizardPage implements IWizardPage
@@ -76,7 +83,9 @@ public class SelectResultWizardPage extends WizardPage implements IWizardPage
   public SelectResultWizardPage( String pageName, String title, ImageDescriptor titleImage, ResultViewerFilter filter, IThemeConstructionFactory factory )
   {
     super( pageName, title, titleImage );
+
     m_factory = factory;
+
     m_filter = filter;
     setDescription( "Wählen Sie auf dieser Seite die Ergebnisse aus." );
   }

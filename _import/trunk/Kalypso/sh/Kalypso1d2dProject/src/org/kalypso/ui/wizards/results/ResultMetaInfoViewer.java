@@ -71,6 +71,7 @@ public class ResultMetaInfoViewer extends Viewer
     m_panel.setLayout( new GridLayout() );
 
     m_factory = factory;
+
   }
 
   /**
@@ -123,10 +124,13 @@ public class ResultMetaInfoViewer extends Viewer
       final IResultMeta result = (IResultMeta) m_input;
 
       // special result data
-      IResultThemeConstructor createThemeCreator = m_factory.createThemeConstructor( result );
-      final Composite buttonControl = createThemeCreator.createControl( m_panel );
-      if( buttonControl != null )
-        buttonControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+      if( m_factory != null )
+      {
+        IResultThemeConstructor createThemeCreator = m_factory.createThemeConstructor( result );
+        final Composite buttonControl = createThemeCreator.createControl( m_panel );
+        if( buttonControl != null )
+          buttonControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+      }
 
       m_panel.setText( result.getName() );
       m_textPanel.setText( result.getDescription() );

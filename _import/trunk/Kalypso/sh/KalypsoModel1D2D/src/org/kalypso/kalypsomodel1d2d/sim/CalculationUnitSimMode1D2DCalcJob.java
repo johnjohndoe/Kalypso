@@ -61,6 +61,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
@@ -71,6 +72,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
+import org.kalypso.kalypsosimulationmodel.core.ICommandPoster;
 import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
@@ -176,10 +178,20 @@ public class CalculationUnitSimMode1D2DCalcJob
           final IStatus simulationResult = cjHandler.runJob( scenarioFolder, new SubProgressMonitor( monitor, 4 ) );
 
           final IScenarioResultMeta scenarioResultMeta = caseDataProvider.getModel( IScenarioResultMeta.class );
-          fillResultModel( unitFolder, calculationUnit, scenarioResultMeta );
+          fillResultModel( unitFolder, scenarioResultMeta );
+
+          if( caseDataProvider instanceof ICommandPoster )
+            ((ICommandPoster) caseDataProvider).postCommand( IScenarioResultMeta.class, new EmptyCommand( "Empty command", false ) );
+
           caseDataProvider.saveModel( IScenarioResultMeta.class, null );
 
           return simulationResult;
+        }
+        catch( final Exception e )
+        {
+          e.printStackTrace();
+
+          return StatusUtilities.statusFromThrowable( e );
         }
         finally
         {
@@ -191,7 +203,7 @@ public class CalculationUnitSimMode1D2DCalcJob
     return RunnableContextHelper.execute( workbench.getProgressService(), true, false, runnable );
   }
 
-  protected static void fillResultModel( final IFolder unitFolder, ICalculationUnit calculationUnit, IScenarioResultMeta scenarioResultMeta )
+  protected static void fillResultModel( final IFolder unitFolder, final IScenarioResultMeta scenarioResultMeta )
   {
     try
     {
