@@ -371,7 +371,7 @@ public class GisTemplateHelper
     }
 
     if( layer.size() > 0 )
-      layers.setActive( layer.get( 0 ) );
+      layers.setActive( layer.get( 0 ).getValue() );
 
     return gismapview;
   }
