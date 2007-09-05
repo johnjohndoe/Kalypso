@@ -56,12 +56,13 @@ import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
 public abstract class FELine extends AbstractFeatureBinder implements IFELine
 {
   protected final FeatureWrapperCollection<IFE1D2DNode> m_nodes;
+
   private final FeatureWrapperCollection m_containers;
 
   public FELine( final Feature featureToBind, final QName featureQName )
   {
     super( featureToBind, featureQName );
-    
+
     Object prop = featureToBind.getProperty( IFELine.PROP_NODES );
     if( prop == null )
       m_nodes = new FeatureWrapperCollection<IFE1D2DNode>( featureToBind, IFELine.QNAME, IFELine.PROP_NODES, IFE1D2DNode.class );
@@ -72,22 +73,26 @@ public abstract class FELine extends AbstractFeatureBinder implements IFELine
       m_containers = new FeatureWrapperCollection( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_COMPLEX_ELE_2D, Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT_CONTAINERS, IFE1D2DComplexElement.class );
     else
       m_containers = new FeatureWrapperCollection( featureToBind, IFE1D2DComplexElement.class, Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT_CONTAINERS );
+    m_containers.addSecondaryWrapper( ICalculationUnit1D2D.class );
+    m_containers.addSecondaryWrapper( ICalculationUnit1D.class );
+    m_containers.addSecondaryWrapper( ICalculationUnit2D.class );
   }
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine#setNodes(java.util.List)
    */
   public abstract List<IFE1D2DNode> createFullNodesList( final List<IFE1D2DNode> nodes ) throws CoreException;
-  
+
   protected void setGeometry( GM_Object value )
   {
     getFeature().setProperty( IFELine.PROP_GEOMETRY, value );
   }
-  
-  public List<IFE1D2DNode> getNodes() {
+
+  public List<IFE1D2DNode> getNodes( )
+  {
     return m_nodes;
   }
-  
+
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine#getContainers()
    */
@@ -95,7 +100,7 @@ public abstract class FELine extends AbstractFeatureBinder implements IFELine
   {
     return m_containers;
   }
-  
+
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine#getGeometry()
    */

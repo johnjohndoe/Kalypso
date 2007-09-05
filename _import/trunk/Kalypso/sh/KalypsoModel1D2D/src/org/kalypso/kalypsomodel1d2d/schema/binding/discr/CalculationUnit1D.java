@@ -71,12 +71,9 @@ public class CalculationUnit1D<ET extends IFENetItem> extends CalculationUnit<ET
   @Override
   public boolean addElementAsRef( final ET element )
   {
-    final boolean isElement1dOrBoundaryLine = (element instanceof IElement1D) || (element instanceof IContinuityLine1D);
-    if( !isElement1dOrBoundaryLine )
-    {
-      final String message = String.format( "Argument must be an element 1d or a boundary line:" + "\n\t value=%s", element );
-      throw new IllegalArgumentException( message );
-    }
-    return super.addElementAsRef( element );
+    final boolean isElement1dOrLine = (element instanceof IElement1D) || (element instanceof IContinuityLine1D);
+    if( isElement1dOrLine )
+      return super.addElementAsRef( element );
+    return false;
   }
 }

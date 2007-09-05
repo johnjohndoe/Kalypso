@@ -232,15 +232,12 @@ public class Control1D2DConverter
 
   private void writeR10ContinuityLineDataBlock( ) throws SimulationException
   {
-    final List<IFELine> continuityLines = m_calculation.getBoundaryLines();
+    final List<IFELine> continuityLines = m_calculation.getContinuityLines();
     m_formatter.format( "SCL%9d%n", continuityLines.size() ); //$NON-NLS-1$
-
-    int infoCnt = 1;
     for( final IFELine line : continuityLines )
     {
       final IFE1D2DNode[] nodes = new IFE1D2DNode[line.getNodes().size()];
       line.getNodes().toArray( nodes );
-
       for( int i = 0; i < nodes.length; i++ )
       {
         final IFE1D2DNode node = nodes[i];
@@ -256,7 +253,6 @@ public class Control1D2DConverter
       if( nodes.length % 9 != 0 )
         m_formatter.format( "%n" ); //$NON-NLS-1$
     }
-
     m_formatter.format( "ECL%n" ); //$NON-NLS-1$
 
     final IControlModel1D2D controlModel = m_calculation.getControlModel();

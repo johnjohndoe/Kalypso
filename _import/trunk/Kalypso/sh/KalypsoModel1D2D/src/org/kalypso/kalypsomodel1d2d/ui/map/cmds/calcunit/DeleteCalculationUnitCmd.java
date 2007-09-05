@@ -46,11 +46,15 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -180,20 +184,27 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
   {
     try
     {
+
       // cache state for undo
       cacheState();
 
-      // delete links to parent units
-      for( final ICalculationUnit1D2D parentUnit : m_undoParentUnits )
+      if( m_undoParentUnits != null && m_undoParentUnits.length > 0 )
       {
-        parentUnit.getSubUnits().removeAllRefs( m_calcUnitToDelete );
+        final Shell activeShell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+        final String message = "Selected calculation unit cannot be deleted.\nIt is a part of the complex calculation unit(s).\n\nTo delete this unit, please delete parent complex calculation unit(s) first.";
+        final MessageDialog dialog = new MessageDialog( activeShell, "Info", null, message, MessageDialog.INFORMATION, new String[] { "Ok" }, 0 );
+        dialog.open();
+        return;
       }
+
+      // // delete links to parent units
+      // for( final ICalculationUnit1D2D parentUnit : m_undoParentUnits )
+      // parentUnit.getSubUnits().removeAllRefs( m_calcUnitToDelete );
+
       // delete links to child units
       if( m_calcUnitToDelete instanceof ICalculationUnit1D2D )
-      {
-        IFeatureWrapperCollection subUnits = ((ICalculationUnit1D2D) m_calcUnitToDelete).getSubUnits();
-        subUnits.clear();
-      }
+        ((ICalculationUnit1D2D) m_calcUnitToDelete).getSubUnits().clear();
+
       // delete links to elements
       for( final IFeatureWrapper2 element : m_undoElements )
       {
@@ -201,6 +212,8 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
           continue;
         if( element instanceof IFE1D2DElement )
           ((IFE1D2DElement) element).getContainers().remove( m_calcUnitToDelete );
+        else if( element instanceof IFELine )
+          ((IFELine) element).getContainers().remove( m_calcUnitToDelete );
       }
       m_calcUnitToDelete.getElements().clear();
 

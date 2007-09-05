@@ -60,4 +60,6 @@ public interface ITransitionElement extends IFE1D2DComplexElement<IFENetItem>
   public List<IFELine> getContinuityLines( );
 
   public GM_Object recalculateElementGeometry( ) throws GM_Exception;
+
+  public boolean isMemberOfCalculationUnit( ICalculationUnit calculationUnit );
 }

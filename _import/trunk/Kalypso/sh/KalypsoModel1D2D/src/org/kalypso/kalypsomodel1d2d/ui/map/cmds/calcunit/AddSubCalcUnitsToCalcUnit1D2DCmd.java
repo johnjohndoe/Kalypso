@@ -41,14 +41,10 @@
 package org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand;
 import org.kalypsodeegree.model.feature.Feature;
@@ -58,27 +54,25 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
  * @author Madanagopal
- *
+ * 
  */
 public class AddSubCalcUnitsToCalcUnit1D2DCmd implements IDiscrModel1d2dChangeCommand
 {
-  
-  private List<ICalculationUnit> listCalculationUnits;
-  //private IFE1D2DElement[] elementsToAdd;
-  private IFEDiscretisationModel1d2d model1d2d;
-    private boolean added = false;
-    private ICalculationUnit1D2D parentCalculationUnit;
 
-  public AddSubCalcUnitsToCalcUnit1D2DCmd(
-      List<ICalculationUnit> listCalculationUnits,
-      ICalculationUnit1D2D parentCalculationUnit,
-      IFEDiscretisationModel1d2d model1d2d )
+  private List<ICalculationUnit> m_subCalcUnits;
 
-  {    
-      this.listCalculationUnits = listCalculationUnits;
-      this.parentCalculationUnit = parentCalculationUnit;
-      this.model1d2d = model1d2d;
-    
+  private IFEDiscretisationModel1d2d m_model1d2d;
+
+  private boolean m_commandProcessed = false;
+
+  private ICalculationUnit1D2D m_parentCalcUnit;
+
+  public AddSubCalcUnitsToCalcUnit1D2DCmd( final List<ICalculationUnit> calcUnitsToInclude, final ICalculationUnit1D2D parentCalculationUnit, final IFEDiscretisationModel1d2d model1d2d )
+
+  {
+    m_subCalcUnits = calcUnitsToInclude;
+    m_parentCalcUnit = parentCalculationUnit;
+    m_model1d2d = model1d2d;
   }
 
   /**
@@ -86,17 +80,15 @@ public class AddSubCalcUnitsToCalcUnit1D2DCmd implements IDiscrModel1d2dChangeCo
    */
   public IFeatureWrapper2[] getChangedFeature( )
   {
-    if( added )
+    if( m_commandProcessed )
     {
-      List<IFeatureWrapper2> changed = new ArrayList<IFeatureWrapper2>();
-      changed.addAll(listCalculationUnits);
-      changed.add( parentCalculationUnit);
-      return changed.toArray( new IFeatureWrapper2[changed.size()] );
+      final List<IFeatureWrapper2> changedFeature = new ArrayList<IFeatureWrapper2>();
+      changedFeature.addAll( m_subCalcUnits );
+      changedFeature.add( m_parentCalcUnit );
+      return changedFeature.toArray( new IFeatureWrapper2[changedFeature.size()] );
     }
     else
-    {
-      return new IFeatureWrapper2[]{};
-    }
+      return new IFeatureWrapper2[] {};
   }
 
   /**
@@ -104,7 +96,7 @@ public class AddSubCalcUnitsToCalcUnit1D2DCmd implements IDiscrModel1d2dChangeCo
    */
   public IFEDiscretisationModel1d2d getDiscretisationModel1d2d( )
   {
-    return model1d2d;
+    return m_model1d2d;
   }
 
   /**
@@ -112,8 +104,7 @@ public class AddSubCalcUnitsToCalcUnit1D2DCmd implements IDiscrModel1d2dChangeCo
    */
   public String getDescription( )
   {
-    
-    return null;
+    return "";
   }
 
   /**
@@ -121,7 +112,6 @@ public class AddSubCalcUnitsToCalcUnit1D2DCmd implements IDiscrModel1d2dChangeCo
    */
   public boolean isUndoable( )
   {
-    
     return false;
   }
 
@@ -130,47 +120,35 @@ public class AddSubCalcUnitsToCalcUnit1D2DCmd implements IDiscrModel1d2dChangeCo
    */
   public void process( ) throws Exception
   {
-       if(!added )
+    if( !m_commandProcessed )
     {
       try
       {
-        for( ICalculationUnit ele : listCalculationUnits )
+        for( final ICalculationUnit subCalcUnit : m_subCalcUnits )
         {
-          parentCalculationUnit.getSubUnits().addRef( ele );          
+          m_parentCalcUnit.getSubUnits().addRef( subCalcUnit );
+          m_parentCalcUnit.getElements().clear();
         }
-        
-        added = true;
-        //fire change
         fireProcessChanges();
       }
       catch( Exception th )
-      {        
+      {
         th.printStackTrace();
         throw th;
       }
-      
     }
-
   }
 
   private void fireProcessChanges( )
-  {    
-    IFeatureWrapper2[] elementsToAdd = getChangedFeature();    
-    List<Feature> features = new ArrayList<Feature>();   
-    for( IFeatureWrapper2 ele: elementsToAdd )
-    {
-      features.add( ele.getWrappedFeature() );
-    }
-    
-    GMLWorkspace workspace = parentCalculationUnit.getWrappedFeature().getWorkspace();
-    FeatureStructureChangeModellEvent event = 
-        new FeatureStructureChangeModellEvent(
-            workspace,//final GMLWorkspace workspace, 
-            model1d2d.getWrappedFeature(),// Feature parentFeature, 
-            features.toArray( new Feature[features.size()] ),//final Feature[] changedFeature, 
-            FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD//final int changeType
-            );
-    workspace.fireModellEvent( event );    
+  {
+    final IFeatureWrapper2[] elementsToAdd = getChangedFeature();
+    final List<Feature> features = new ArrayList<Feature>();
+    for( final IFeatureWrapper2 element : elementsToAdd )
+      features.add( element.getWrappedFeature() );
+    final GMLWorkspace workspace = m_parentCalcUnit.getWrappedFeature().getWorkspace();
+    final FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( workspace, m_model1d2d.getWrappedFeature(), features.toArray( new Feature[features.size()] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD );
+    workspace.fireModellEvent( event );
+    m_commandProcessed = true;
   }
 
   /**
@@ -179,7 +157,6 @@ public class AddSubCalcUnitsToCalcUnit1D2DCmd implements IDiscrModel1d2dChangeCo
   public void redo( ) throws Exception
   {
     // TODO Auto-generated method stub
-
   }
 
   /**
@@ -188,7 +165,6 @@ public class AddSubCalcUnitsToCalcUnit1D2DCmd implements IDiscrModel1d2dChangeCo
   public void undo( ) throws Exception
   {
     // TODO Auto-generated method stub
-
   }
 
 }

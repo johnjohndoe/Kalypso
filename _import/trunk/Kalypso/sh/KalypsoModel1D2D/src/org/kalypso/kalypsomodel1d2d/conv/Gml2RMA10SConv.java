@@ -337,7 +337,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
         if( complexElement instanceof ITransitionElement )
         {
           final ITransitionElement transitionElement = (ITransitionElement) complexElement;
-          if( continuityLines.containsAll( transitionElement.getContinuityLines() ) )
+          if( transitionElement.isMemberOfCalculationUnit( m_calculationUnit ) )
             writeTransitionLine( formatter, transitionElement );
         }
       }
@@ -367,9 +367,21 @@ public class Gml2RMA10SConv implements INativeIDProvider
     final IFeatureWrapperCollection<IFeatureWrapper2> containers = node1D.getContainers();
     for( final IFeatureWrapper2 container : containers )
     {
+      if( element1D_ID != -1 )
+        break;
       if( container instanceof IFE1D2DEdge )
-        if( m_calculationUnit.getElements().contains( container ) )
-          element1D_ID = getConversionID( container );
+      {
+        final IFeatureWrapperCollection edgeContainers = ((IFE1D2DEdge) container).getContainers();
+        for( final Object edgeContainer : edgeContainers )
+        {
+          if( edgeContainer instanceof IElement1D )
+            if( m_calculationUnit.contains( (IElement1D) edgeContainer ) )
+            {
+              element1D_ID = getConversionID( (IElement1D) edgeContainer );
+              break;
+            }
+        }
+      }
     }
     if( element1D_ID == -1 )
       throw new SimulationException( "Transition line cannot be exported: cannot find 1D element.", null );

@@ -65,6 +65,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListe
 
 /**
  * @author Madanagopal
+ * @author Dejan Antanaskovic
  * 
  */
 public class CalculationUnitAdministerComponent
@@ -110,7 +111,7 @@ public class CalculationUnitAdministerComponent
     m_btnAddRemoveElements = new Button( m_rootComposite, SWT.PUSH );
     m_btnAddRemoveElements.setLayoutData( new GridData( GridData.BEGINNING ) );
     m_btnAddRemoveElements.setImage( new Image( m_rootComposite.getDisplay(), IMAGEDATA_ADDREMOVE_ELEMENTS_1D ) );
-    m_btnAddRemoveElements.setToolTipText( Messages.getString("CalculationUnitAdministerComponent.5") ); //$NON-NLS-1$
+    m_btnAddRemoveElements.setToolTipText( Messages.getString( "CalculationUnitAdministerComponent.5" ) ); //$NON-NLS-1$
     m_btnAddRemoveElements.addSelectionListener( new SelectionListener()
     {
       public void widgetSelected( SelectionEvent e )
@@ -128,7 +129,7 @@ public class CalculationUnitAdministerComponent
     m_btnAddRemoveContinuityLines = new Button( m_rootComposite, SWT.PUSH );
     m_btnAddRemoveContinuityLines.setLayoutData( new GridData( GridData.BEGINNING ) );
     m_btnAddRemoveContinuityLines.setImage( new Image( m_rootComposite.getDisplay(), IMAGEDATA_ADDREMOVE_CONTILINES ) );
-    m_btnAddRemoveContinuityLines.setToolTipText( Messages.getString("CalculationUnitAdministerComponent.6") ); //$NON-NLS-1$
+    m_btnAddRemoveContinuityLines.setToolTipText( Messages.getString( "CalculationUnitAdministerComponent.6" ) ); //$NON-NLS-1$
     m_btnAddRemoveContinuityLines.addSelectionListener( new SelectionListener()
     {
       public void widgetSelected( SelectionEvent e )
@@ -143,28 +144,10 @@ public class CalculationUnitAdministerComponent
       }
     } );
 
-    m_btnAddRemoveBoundaryConditions = new Button( m_rootComposite, SWT.PUSH );
-    m_btnAddRemoveBoundaryConditions.setLayoutData( new GridData( GridData.BEGINNING ) );
-    m_btnAddRemoveBoundaryConditions.setImage( new Image( m_rootComposite.getDisplay(), IMAGEDATA_ADDREMOVE_BOUNDARYCONDITIONS ) );
-    m_btnAddRemoveBoundaryConditions.setToolTipText( Messages.getString("CalculationUnitAdministerComponent.7") ); //$NON-NLS-1$
-    m_btnAddRemoveBoundaryConditions.addSelectionListener( new SelectionListener()
-    {
-      public void widgetSelected( SelectionEvent e )
-      {
-        final IWidgetWithStrategy widgetWithStrategy = (IWidgetWithStrategy) m_dataModel.getData( ICommonKeys.WIDGET_WITH_STRATEGY );
-        widgetWithStrategy.setStrategy( new AddRemoveBoundaryConditionToCalcUnitWidget( m_dataModel ) );
-      }
-
-      public void widgetDefaultSelected( SelectionEvent e )
-      {
-        // TODO Auto-generated method stub
-      }
-    } );
-
     m_btnAddRemoveSubUnits = new Button( m_rootComposite, SWT.PUSH );
     m_btnAddRemoveSubUnits.setLayoutData( new GridData( GridData.BEGINNING ) );
     m_btnAddRemoveSubUnits.setImage( new Image( m_rootComposite.getDisplay(), IMAGEDATA_ADDREMOVE_SUBUNITS ) );
-    m_btnAddRemoveSubUnits.setToolTipText( Messages.getString("CalculationUnitAdministerComponent.8") ); //$NON-NLS-1$
+    m_btnAddRemoveSubUnits.setToolTipText( Messages.getString( "CalculationUnitAdministerComponent.8" ) ); //$NON-NLS-1$
     m_btnAddRemoveSubUnits.addSelectionListener( new SelectionListener()
     {
       public void widgetSelected( SelectionEvent e )
@@ -181,6 +164,24 @@ public class CalculationUnitAdministerComponent
       }
     } );
 
+    m_btnAddRemoveBoundaryConditions = new Button( m_rootComposite, SWT.PUSH );
+    m_btnAddRemoveBoundaryConditions.setLayoutData( new GridData( GridData.BEGINNING ) );
+    m_btnAddRemoveBoundaryConditions.setImage( new Image( m_rootComposite.getDisplay(), IMAGEDATA_ADDREMOVE_BOUNDARYCONDITIONS ) );
+    m_btnAddRemoveBoundaryConditions.setToolTipText( Messages.getString( "CalculationUnitAdministerComponent.7" ) ); //$NON-NLS-1$
+    m_btnAddRemoveBoundaryConditions.addSelectionListener( new SelectionListener()
+    {
+      public void widgetSelected( SelectionEvent e )
+      {
+        final IWidgetWithStrategy widgetWithStrategy = (IWidgetWithStrategy) m_dataModel.getData( ICommonKeys.WIDGET_WITH_STRATEGY );
+        widgetWithStrategy.setStrategy( new AddRemoveBoundaryConditionToCalcUnitWidget( m_dataModel ) );
+      }
+
+      public void widgetDefaultSelected( SelectionEvent e )
+      {
+        // TODO Auto-generated method stub
+      }
+    } );
+
     m_btnAddRemoveElements.setEnabled( false );
     m_btnAddRemoveContinuityLines.setEnabled( false );
     m_btnAddRemoveBoundaryConditions.setEnabled( false );
@@ -188,7 +189,7 @@ public class CalculationUnitAdministerComponent
 
     m_dataModel.addKeyBasedDataChangeListener( new KeyBasedDataModelChangeListener()
     {
-      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
+      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
       public void dataChanged( final String key, final Object newValue )
       {
         final Display display = m_parent.getDisplay();
@@ -219,7 +220,7 @@ public class CalculationUnitAdministerComponent
                 else if( newValue instanceof ICalculationUnit1D2D )
                 {
                   m_btnAddRemoveElements.setEnabled( false );
-                  m_btnAddRemoveContinuityLines.setEnabled( true );
+                  m_btnAddRemoveContinuityLines.setEnabled( false );
                   m_btnAddRemoveBoundaryConditions.setEnabled( true );
                   m_btnAddRemoveSubUnits.setEnabled( true );
                 }

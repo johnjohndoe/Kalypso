@@ -26,6 +26,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FEMiddleNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine2D;
@@ -339,6 +340,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
     cMap.put( ICalculationUnit.class, cTor );
     cMap.put( ICalculationUnit1D.class, cTor );
     cMap.put( ICalculationUnit2D.class, cTor );
+    cMap.put( ICalculationUnit1D2D.class, cTor );
 
     // RiverChannel1D
     cTor = new AdapterConstructor()

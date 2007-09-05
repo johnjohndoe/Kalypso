@@ -57,7 +57,6 @@ import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
@@ -127,15 +126,24 @@ public class CalculationUnit<ET extends IFENetItem> extends FE1D2DComplexElement
   public List<IFELine> getContinuityLines( )
   {
     final IFeatureWrapperCollection<ET> elements = getElements();
-//    ((FeatureWrapperCollection) elements).addSecondaryWrapper( IFELine.class );
     final List<IFELine> continuityLines = new ArrayList<IFELine>();
     for( final IFeatureWrapper2 element : elements )
-    {
       if( element instanceof IFELine )
         continuityLines.add( (IFELine) element );
-    }
-    // TODO: consider sub-units!
     return continuityLines;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit#contains(org.kalypsodeegree.model.feature.binding.IFeatureWrapper2)
+   */
+  public boolean contains( final IFeatureWrapper2 member )
+  {
+    final String memberID = member.getGmlID();
+    final IFeatureWrapperCollection<ET> elements = getElements();
+    for( final IFeatureWrapper2 element : elements )
+      if( element.getGmlID().equals( memberID ) )
+        return true;
+    return false;
   }
 
 }

@@ -42,14 +42,10 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
 import java.util.List;
 
-import javax.crypto.spec.PSource;
 import javax.xml.namespace.QName;
 
-import org.deegree.framework.xml.GeometryUtils;
-import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -57,7 +53,6 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 public class TransitionElement extends AbstractFeatureBinder implements ITransitionElement
 {
@@ -137,9 +132,41 @@ public class TransitionElement extends AbstractFeatureBinder implements ITransit
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement#removeElementAsRef(org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem)
    */
-  public boolean removeElementAsRef( IFENetItem elment )
+  public void removeElementAsRef( IFENetItem elment )
   {
     // TODO Auto-generated method stub
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.ITransitionElement#isMemberOfCalculationUnit(org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit)
+   */
+  public boolean isMemberOfCalculationUnit( final ICalculationUnit calculationUnit )
+  {
+    if( calculationUnit instanceof ICalculationUnit1D2D )
+    {
+      final List calcUnitContinuityLines = calculationUnit.getContinuityLines();
+      boolean allLinesFound = true;
+      boolean lineFound = false;
+      final List<IFELine> myContinuityLines = getContinuityLines();
+      for( final IFELine myLine : myContinuityLines )
+      {
+        final String myLineGmlID = myLine.getGmlID();
+        for( final Object object : calcUnitContinuityLines )
+        {
+          if( object instanceof IFELine )
+          {
+            final String calcUnitLineGmlID = ((IFELine) object).getGmlID();
+            if( calcUnitLineGmlID.equals( myLineGmlID ) )
+            {
+              lineFound = true;
+              break;
+            }
+          }
+        }
+        allLinesFound &= lineFound;
+      }
+      return allLinesFound;
+    }
     return false;
   }
 

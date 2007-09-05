@@ -89,8 +89,6 @@ public class RMA10Calculation
 
   private IControlModel1D2D m_controlModel1D2D = null;
 
-  private List<IFELine> m_unitBoundaryLines;
-
   private List<IBoundaryCondition> m_unitBoundaryConditions;
 
   public RMA10Calculation( final ISimulationDataProvider inputProvider ) throws SimulationException, Exception
@@ -260,31 +258,14 @@ public class RMA10Calculation
   private void initializeInfos( )
   {
     final IFlowRelationshipModel flowRelationshipsModel = (IFlowRelationshipModel) m_flowRelationshipsWorkspace.getRootFeature().getAdapter( IFlowRelationshipModel.class );
-    final List<IFELine> continuityLines = m_calculationUnit.getContinuityLines();
-
-    m_unitBoundaryLines = new ArrayList<IFELine>();
     m_unitBoundaryConditions = new ArrayList<IBoundaryCondition>();
     for( final IFlowRelationship relationship : flowRelationshipsModel )
-    {
       if( relationship instanceof IBoundaryCondition )
       {
         final IBoundaryCondition boundaryCondition = (IBoundaryCondition) relationship;
         if( isBoundaryConditionMemberOfCalculationUnit( boundaryCondition ) )
-        {
           m_unitBoundaryConditions.add( boundaryCondition );
-
-          // find parent element of this boundary condition (in the moment only boundary lines are supported)
-          final String parentElementID = boundaryCondition.getParentElementID();
-          for( final IFELine line : continuityLines )
-          {
-            if( line.getGmlID().equals( parentElementID ) )
-            {
-              m_unitBoundaryLines.add( line );
-            }
-          }
-        }
       }
-    }
   }
 
   private boolean isBoundaryConditionMemberOfCalculationUnit( final IBoundaryCondition boundaryCondition )
@@ -301,9 +282,9 @@ public class RMA10Calculation
     return m_unitBoundaryConditions;
   }
 
-  public List<IFELine> getBoundaryLines( )
+  public List<IFELine> getContinuityLines( )
   {
-    return m_unitBoundaryLines;
+    return m_calculationUnit.getContinuityLines();
   }
 
   public ICalculationUnit getCalculationUnit( )

@@ -78,9 +78,9 @@ public class FE1D2DComplexElement<ET extends IFeatureWrapper2> extends AbstractF
   {
     super( featureToBind, qnameToBind );
     elements = Util.<ET> get( featureToBind, qnameToBind, elementListPropQName, wrapperClass, true );
-    ((FeatureWrapperCollection)elements).addSecondaryWrapper(IFE1D2DElement.class);
-    ((FeatureWrapperCollection)elements).addSecondaryWrapper(IFELine.class);
-//    ((FeatureWrapperCollection)elements).addSecondaryWrapper(ITransitionElement.class);
+    ((FeatureWrapperCollection) elements).addSecondaryWrapper( IFE1D2DElement.class );
+    ((FeatureWrapperCollection) elements).addSecondaryWrapper( IFELine.class );
+    // ((FeatureWrapperCollection)elements).addSecondaryWrapper(ITransitionElement.class);
   }
 
   /**
@@ -116,10 +116,9 @@ public class FE1D2DComplexElement<ET extends IFeatureWrapper2> extends AbstractF
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DComplexElement#removeElementAsRef(org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement)
    */
-  public boolean removeElementAsRef( ET element )
+  public void removeElementAsRef( final ET element )
   {
-    Assert.throwIAEOnNullParam( element, "element" );
-    return elements.removeAllRefs( element );
+    elements.removeAllRefs( element );
   }
 
 }

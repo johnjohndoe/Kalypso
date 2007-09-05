@@ -45,7 +45,6 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.deegree.framework.xml.GeometryUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypsodeegree.model.feature.Feature;
@@ -57,7 +56,6 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 public class ContinuityLine1D extends FELine implements IContinuityLine1D
 {

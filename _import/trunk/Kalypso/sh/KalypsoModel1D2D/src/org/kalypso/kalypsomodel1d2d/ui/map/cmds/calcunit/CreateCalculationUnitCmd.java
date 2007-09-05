@@ -178,6 +178,7 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
         m_calculationUnit.setName( m_calcUnitName );
       if( m_calcUnitDescription != null )
         m_calculationUnit.setDescription( m_calcUnitDescription );
+      m_calculationUnit.getElements().clear();
       createControlModel();
       fireProcessChanges( m_calculationUnit, true );
     }

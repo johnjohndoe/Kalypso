@@ -1588,7 +1588,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     {
       final GM_Curve nodeCurve1d = getProfileCurveFor1dNode( nodeResult1d );
 
-      final List<IFELine> continuityLine2Ds = m_calculation.getBoundaryLines();
+      final List<IFELine> continuityLine2Ds = m_calculation.getContinuityLines();
       IContinuityLine2D selectedBoundaryLine = null;
       for( final IFELine continuityLine2D : continuityLine2Ds )
       {

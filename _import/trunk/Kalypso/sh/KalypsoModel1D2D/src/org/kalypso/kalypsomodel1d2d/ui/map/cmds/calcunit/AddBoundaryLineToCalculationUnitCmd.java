@@ -123,8 +123,8 @@ public class AddBoundaryLineToCalculationUnitCmd implements IDiscrModel1d2dChang
     {
       if( !m_commandProcessed )
       {
-        m_calculationUnit.addElementAsRef( m_feLine );
-        m_feLine.getContainers().addRef( m_calculationUnit );
+        if( m_calculationUnit.addElementAsRef( m_feLine ) )
+          m_feLine.getContainers().addRef( m_calculationUnit );
         fireProcessChanges();
       }
     }

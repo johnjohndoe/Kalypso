@@ -72,6 +72,6 @@ public interface IFE1D2DComplexElement <ET extends IFeatureWrapper2> extends IFE
    * @return true if a referen to the given element as been added
    *    otherwis false
    */
-  public boolean removeElementAsRef(ET elment);
+  public void removeElementAsRef(ET elment);
 
 }

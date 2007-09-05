@@ -246,7 +246,7 @@ public class SelectedCalculationComponent
         table.setEnabled( true );
         descriptionGroupText.setEnabled( true );
         descriptionText.setEnabled( true );
-        bLineText.setText( String.valueOf( CalcUnitOps.getNumBoundaryLine( (ICalculationUnit) newValue ) ) );
+        bLineText.setText( String.valueOf( ((ICalculationUnit1D2D) newValue).getContinuityLines().size() ) );
         tableViewer.setInput( ((ICalculationUnit1D2D) newValue).getSubUnits().toArray() );
       }
       else

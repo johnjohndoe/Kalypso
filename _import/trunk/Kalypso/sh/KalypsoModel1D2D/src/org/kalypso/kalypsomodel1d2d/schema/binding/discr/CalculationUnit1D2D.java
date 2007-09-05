@@ -46,6 +46,7 @@ import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.Util;
 import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
@@ -58,7 +59,9 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 public class CalculationUnit1D2D<ET extends IFE1D2DElement> extends CalculationUnit<ET> implements ICalculationUnit1D2D<ET>
 {
 
-  private final IFeatureWrapperCollection<ICalculationUnit> subUnits;
+  private final IFeatureWrapperCollection<ICalculationUnit> m_subCalculationUnits;
+
+  private final IFeatureWrapperCollection<ET> m_elements;
 
   public CalculationUnit1D2D( Feature featureToBind )
   {
@@ -69,7 +72,21 @@ public class CalculationUnit1D2D<ET extends IFE1D2DElement> extends CalculationU
   public CalculationUnit1D2D( Feature featureToBind, QName qnameToBind, QName elementListPropQName, QName subUnitPropQName, Class<ET> wrapperClass )
   {
     super( featureToBind, qnameToBind, elementListPropQName, wrapperClass );
-    subUnits = Util.<ICalculationUnit> get( featureToBind, qnameToBind, subUnitPropQName, ICalculationUnit.class, true );
+    m_subCalculationUnits = Util.<ICalculationUnit> get( featureToBind, qnameToBind, subUnitPropQName, ICalculationUnit.class, true );
+    m_elements = new FeatureWrapperCollection( featureToBind, IFE1D2DElement.class, Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS );
+    ((FeatureWrapperCollection) m_elements).addSecondaryWrapper( IFELine.class );
+    m_elements.clear();
+    for( final ICalculationUnit calculationUnit : m_subCalculationUnits )
+      m_elements.addAll( calculationUnit.getElements() );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DComplexElement#getElements()
+   */
+  @Override
+  public IFeatureWrapperCollection<ET> getElements( )
+  {
+    return m_elements;
   }
 
   /**
@@ -77,7 +94,7 @@ public class CalculationUnit1D2D<ET extends IFE1D2DElement> extends CalculationU
    */
   public IFeatureWrapperCollection<ICalculationUnit> getSubUnits( )
   {
-    return subUnits;
+    return m_subCalculationUnits;
   }
 
 }

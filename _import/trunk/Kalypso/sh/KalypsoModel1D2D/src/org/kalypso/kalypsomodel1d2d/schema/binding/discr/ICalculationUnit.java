@@ -45,6 +45,7 @@ import java.util.List;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
 import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
  * Tagging interface for classes representing a wb1d2d:CalculationUnit
@@ -68,4 +69,6 @@ public interface ICalculationUnit<T extends IFENetItem> extends IFE1D2DComplexEl
   public void deleteControlModel();
   
   public List<IFELine> getContinuityLines( );
+  
+  public boolean contains(final IFeatureWrapper2 member);
 }
