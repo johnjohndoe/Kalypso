@@ -83,7 +83,7 @@ public class LengthSectionProcessor
 
   private final String m_footer;
 
-  private final String m_gmlFilePattern;
+  private final String m_runoffPattern;
 
   private final String m_epsThinning;
 
@@ -103,9 +103,11 @@ public class LengthSectionProcessor
 
   private IStatus m_result;
 
-  private File m_dataDir;
+  private final File m_dataDir;
 
   private final String m_titlePattern;
+
+  private final String m_gmlFilePattern;
 
   public LengthSectionProcessor( final File outDir, final TuhhReach reach, final String header, final String footer, final String epsThinning, final boolean addRunoffToFilename )
   {
@@ -116,8 +118,11 @@ public class LengthSectionProcessor
 
     m_buffer.append( header );
 
-    m_gmlFilePattern = addRunoffToFilename ? "lengthSection_%.3f" : "Längsschnitt";
+    m_runoffPattern = addRunoffToFilename ? "_%.3f" : "";
     m_titlePattern = addRunoffToFilename ? "Längsschnitt - %.3f" : "Längsschnitt";
+    m_gmlFilePattern = addRunoffToFilename ? "lengthSection_%.3f" : "Längsschnitt";
+
+    m_dataDir = new File( m_outDir, "Daten" );
   }
 
   public void close( final BigDecimal runoff )
@@ -126,9 +131,9 @@ public class LengthSectionProcessor
     {
       m_buffer.append( m_footer );
 
-      final String fileName = String.format( m_gmlFilePattern + ".gml", runoff );
-      m_dataDir = new File( m_outDir, "Daten" );
       m_dataDir.mkdirs();
+
+      final String fileName = String.format( m_gmlFilePattern + ".gml", runoff );
       m_gmlFile = new File( m_dataDir, fileName );
 
       /* Configure replace tokens for diagram/table template */
@@ -166,11 +171,11 @@ public class LengthSectionProcessor
     if( !gmlFile.exists() )
       return StatusUtilities.createWarningStatus( "Längsschnitt GML wurde nicht erzeugt." );
 
-    final String diagFilename = String.format( "Längsschnitt" + m_gmlFilePattern + ".kod", runoff );
-    final String tableFilename = String.format( "table" + m_gmlFilePattern + ".gft", runoff );
-    final String breaklineFilename = String.format( "Bruchkanten" + m_gmlFilePattern + ".gml", runoff );
-    final String boundaryFilename = String.format( "Modellgrenzen" + m_gmlFilePattern + ".gml", runoff );
-    final String waterlevelFilename = String.format( "Überschwemmungslinie" + m_gmlFilePattern + ".gml", runoff );
+    final String diagFilename = String.format( "Längsschnitt" + m_runoffPattern + ".kod", runoff );
+    final String tableFilename = String.format( "Tabelle" + m_runoffPattern + ".gft", runoff );
+    final String breaklineFilename = String.format( "Bruchkanten" + m_runoffPattern + ".gml", runoff );
+    final String boundaryFilename = String.format( "Modellgrenzen" + m_runoffPattern + ".gml", runoff );
+    final String waterlevelFilename = String.format( "Überschwemmungslinie" + m_runoffPattern + ".gml", runoff );
 
     m_diagFile = new File( m_outDir, diagFilename );
     m_tableFile = new File( m_outDir, tableFilename );
@@ -310,39 +315,28 @@ public class LengthSectionProcessor
   }
 
   @SuppressWarnings("unchecked")
-  public static void createDiagram( final File diagFile, final IObservation<TupleResult> lsObs, final boolean isDirectionUpstreams ) throws IOException
+  public static void createDiagram( final File diagFile, final IObservation<TupleResult> lsObs, final boolean isDirectionUpstreams ) throws IOException, XmlException
   {
     // Check if optional bundle is installed
-    if( Platform.getBundle( "org.kalypso.chart.factory" ) == null 
-        ||
-        Platform.getBundle( "org.kalypso.chart.framework") == null
-      )
+    if( Platform.getBundle( "org.kalypso.chart.factory" ) == null || Platform.getBundle( "org.kalypso.chart.framework" ) == null )
       return;
 
     /* We just load the template and tweak the direction of the station-axis */
-    ChartConfigurationLoader ccl=null;
-    try
+    final URL kodResource = LengthSectionProcessor.class.getResource( "resources/lengthSection.kod" );
+    final ChartConfigurationLoader ccl = new ChartConfigurationLoader( kodResource );
+    final ChartConfigurationDocument ccd = ChartConfigurationDocument.Factory.parse( kodResource );
+
+    if( ccd != null )
     {
-      ccl = new ChartConfigurationLoader(diagFile.getAbsolutePath());
-    }
-    catch( XmlException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-    ChartConfigurationDocument ccd=ccl.getChartConfigurationDocument();
-    
-    if (ccd!=null)
-    {
-      ChartType[] charts = ccl.getCharts();
-      
-      //only use first chart - there should only be one
-      ChartType chart = charts[0];
+      final ChartType[] charts = ccl.getCharts();
+
+      // only use first chart - there should only be one
+      final ChartType chart = charts[0];
       chart.setTitle( lsObs.getName() );
       chart.setDescription( lsObs.getDescription() );
-      
-      AxisType[] axes = ccl.getAxes();
-      for( AxisType axis : axes )
+
+      final AxisType[] axes = ccl.getAxes();
+      for( final AxisType axis : axes )
       {
         if( axis.getLabel().equals( "Station_Axis" ) )
         {
@@ -352,60 +346,8 @@ public class LengthSectionProcessor
             axis.setDirection( Direction.POSITIVE );
         }
       }
-      
+
       ccd.save( diagFile );
     }
   }
-  /*
-  @SuppressWarnings("unchecked")
-  public static void createDiagram( final File diagFile, final IObservation<TupleResult> lsObs, final boolean isDirectionUpstreams ) throws JAXBException, IOException
-  {
-    // Check if optional bundle is installed
-    if( Platform.getBundle( "org.kalypso.chart" ) == null )
-      return;
-
-    /* We just load the template and tweak the direction of the station-axis */
-  /*
-  final Unmarshaller unmarshaller = ConfigLoader.JC.createUnmarshaller();
-    final JAXBElement<ConfigurationType> config = (JAXBElement<ConfigurationType>) unmarshaller.unmarshal( LengthSectionProcessor.class.getResource( "resources/lengthSection.kod" ) );
-
-    final List<Object> chartOrLayerOrAxis = config.getValue().getChartOrLayerOrAxis();
-    for( final Object object : chartOrLayerOrAxis )
-    {
-      if( object instanceof ChartType )
-      {
-        final ChartType ct = (ChartType) object;
-        ct.setTitle( lsObs.getName() );
-        ct.setDescription( lsObs.getDescription() );
-      }
-      else if( object instanceof AxisType )
-      {
-        final AxisType axis = (AxisType) object;
-        if( axis.getName().equals( "Station_Axis" ) )
-        {
-          if( isDirectionUpstreams )
-            axis.setDirection( "NEGATIVE" );
-          else
-            axis.setDirection( "POSITIVE" );
-        }
-      }
-    }
-
-    final Marshaller marshaller = JaxbUtilities.createMarshaller( ConfigLoader.JC, true );
-
-    OutputStream os = null;
-
-    try
-    {
-      os = new FileOutputStream( diagFile );
-      marshaller.marshal( config, os );
-      os.close();
-    }
-    finally
-    {
-      IOUtils.closeQuietly( os );
-    }
-  }
-*/
-
 }
