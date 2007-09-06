@@ -56,7 +56,7 @@ public class TerrainModel extends AbstractFeatureBinder implements ITerrainModel
   public TerrainModel( final Feature featureToBind )
   {
     super( featureToBind, QNAME_TERRAIN_MODEL );
-    
+
   }
 
   /**
@@ -78,11 +78,11 @@ public class TerrainModel extends AbstractFeatureBinder implements ITerrainModel
   {
     final List<IRoughnessPolygonCollection> list = new ArrayList<IRoughnessPolygonCollection>();
     final IRoughnessLayerCollection roughnessLayerCollection = getRoughnessLayerCollection();
-    for(final IRoughnessLayer layer:roughnessLayerCollection)
+    for( final IRoughnessLayer layer : roughnessLayerCollection )
       list.add( getRoughnessPolygonCollection( layer ) );
     return list;
   }
-  
+
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel#getRoughnessLayerCollection(org.kalypso.kalypsosimulationmodel.core.terrainmodel.RoughnessLayer)
    */
@@ -90,21 +90,18 @@ public class TerrainModel extends AbstractFeatureBinder implements ITerrainModel
   {
     return new RoughnessPolygonCollection( roughnessLayer.getWrappedFeature(), IRoughnessPolygon.class, QNAME_PROP_ROUGHNESSLAYERMEMBER );
   }
-  
-  public ITerrainElevationModelSystem getTerrainElevationModelSystem()
+
+  public ITerrainElevationModelSystem getTerrainElevationModelSystem( )
   {
-    final Feature feature = 
-          (Feature) getFeature().getProperty( 
-              KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_TERRAIN_ELE_SYS);
-    
+    final Feature feature = (Feature) getFeature().getProperty( KalypsoModelSimulationBaseConsts.SIM_BASE_PROP_TERRAIN_ELE_SYS );
+
     if( feature == null )
     {
       return null;
     }
     else
     {
-      return (ITerrainElevationModelSystem) 
-          feature.getAdapter( ITerrainElevationModelSystem.class );
+      return (ITerrainElevationModelSystem) feature.getAdapter( ITerrainElevationModelSystem.class );
     }
   }
 

@@ -73,26 +73,6 @@ public class NativeTerrainElevationModelWrapper extends TerrainElevationModel im
   private final IFile m_file;
 
   /**
-   * Create a new {@link NativeTerrainElevationModelWrapper} as child of the given parent Feature and link to it by a
-   * property of the guven QName. the name of the source (file) containing the native terrain model is given must be
-   * also specified
-   * 
-   * @param parentFeature
-   *            the parent feature
-   * @param propQName
-   *            the {@link QName} of the property linking the parent feature to the new
-   *            {@link NativeTerrainElevationModelWrapper}
-   * @param sourceName
-   *            the name of the source. It can be a relative path in the parent feature workspace context or an absoute
-   *            path
-   * 
-   */
-  public NativeTerrainElevationModelWrapper( final Feature parentFeature, final QName propQName, final String sourceName ) throws IllegalArgumentException, IOException, URISyntaxException
-  {
-    this( createFeature( parentFeature, propQName, sourceName ) );
-  }
-
-  /**
    * Creates a new {@link NativeTerrainElevationModelWrapper} as child of the given parent and link to it by the prop of
    * the given name. The native source path is also set
    */

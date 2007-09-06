@@ -88,9 +88,11 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
 
   private boolean selected;
 
-  private final Color elementColor = new Color( Color.lightGray.getRed(), Color.lightGray.getGreen(), Color.lightGray.getBlue(), 256 / 2 );
+  private static final Color m_elementFillColor = new Color( 255, 255, 255, 255 );
 
-  private final Color lineElementColor = new Color( Color.MAGENTA.getRed(), Color.MAGENTA.getGreen(), Color.MAGENTA.getBlue(), 256 / 2 );
+  private static final Color m_elementBorderColor = Color.RED;
+
+  private static final Color m_continuityLineColor = Color.ORANGE;
 
   public CalUnitDisplayElement( final ICalculationUnit<IFE1D2DElement> calUnit )
   {
@@ -205,7 +207,7 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
           try
           {
             final GM_Surface surface = (GM_Surface) ((IFENetItem) element).recalculateElementGeometry();
-            paintSurface( surface, elementColor, (Graphics2D) g, projection );
+            paintSurface( surface, m_elementFillColor, (Graphics2D) g, projection );
           }
           catch( final Exception e )
           {
@@ -217,7 +219,7 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
           try
           {
             final GM_Curve curve = (GM_Curve) ((IFENetItem) element).recalculateElementGeometry();
-            paintLineString( curve, elementColor, (Graphics2D) g, projection );
+            paintLineString( curve, m_elementFillColor, (Graphics2D) g, projection );
           }
           catch( final Exception e )
           {
@@ -232,7 +234,7 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
             try
             {
               final GM_Curve curve = ((IFELine) element).getGeometry();
-              paintLineString( curve, lineElementColor, (Graphics2D) g, projection );
+              paintLineString( curve, m_continuityLineColor, (Graphics2D) g, projection );
             }
             catch( final Exception e )
             {
@@ -265,7 +267,7 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
       g2d.fill( area );
 
       // shape drawing
-      g2d.setColor( Color.BLACK );
+      g2d.setColor( m_elementBorderColor );
       final java.awt.Stroke bs2 = new BasicStroke( 1 );
 
       g2d.setStroke( bs2 );

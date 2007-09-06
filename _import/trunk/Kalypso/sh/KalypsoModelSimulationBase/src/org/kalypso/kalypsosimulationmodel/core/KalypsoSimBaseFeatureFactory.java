@@ -214,19 +214,6 @@ public class KalypsoSimBaseFeatureFactory implements IAdapterFactory
     };
     cMap.put( IRiverProfileNetwork.class, cTor );
 
-// ITerrainElevationModelSystem
-// cTor= new AdapterConstructor()
-// {
-// public Object constructAdapter(
-// Feature feature,
-// Class cls)
-// throws IllegalArgumentException
-// {
-// return new TerrainElevationModelSystem(feature);
-// }
-// };
-// cMap.put(ITerrainElevationModelSystem.class, cTor);
-
 // ITerrainElevationModel
     cTor = new AdapterConstructor()
     {
