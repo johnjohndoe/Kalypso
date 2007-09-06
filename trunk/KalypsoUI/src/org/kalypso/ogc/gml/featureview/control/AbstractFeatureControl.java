@@ -117,7 +117,7 @@ public abstract class AbstractFeatureControl implements IFeatureControl
   protected final void fireFeatureChange( final FeatureChange[] changes )
   {
     // do nothing if there are no changes
-    if( changes.length == 0 )
+    if( changes != null && changes.length == 0 )
       return;
 
     final IFeatureChangeListener[] listeners = m_changelisteners.toArray( new IFeatureChangeListener[m_changelisteners.size()] );
