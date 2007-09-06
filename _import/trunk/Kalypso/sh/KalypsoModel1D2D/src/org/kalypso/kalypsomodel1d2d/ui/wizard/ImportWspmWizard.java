@@ -71,10 +71,8 @@ import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtils;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
@@ -92,10 +90,6 @@ import org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddNodeCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeDiscretiationModelCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteCmdFactory;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.AddElementToCalculationUnitCmd;
-import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.CreateCalculationUnitCmd;
-import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
-import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
-import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork;
@@ -162,7 +156,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
     m_networkModel = networkModel;
     m_flowRelationCollection = flowRelationCollection;
 
-    setWindowTitle( Messages.getString("ImportWspmWizard.0") ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "ImportWspmWizard.0" ) ); //$NON-NLS-1$
 
     setNeedsProgressMonitor( true );
   }
@@ -174,8 +168,8 @@ public class ImportWspmWizard extends Wizard implements IWizard
   public void addPages( )
   {
     /* Choose wspm-reach */
-    m_wspmGmlPage = new GmlFileImportPage( "chooseWspmGml", Messages.getString("ImportWspmWizard.2"), null ); //$NON-NLS-1$ //$NON-NLS-2$
-    m_wspmGmlPage.setDescription( Messages.getString("ImportWspmWizard.3") ); //$NON-NLS-1$
+    m_wspmGmlPage = new GmlFileImportPage( "chooseWspmGml", Messages.getString( "ImportWspmWizard.2" ), null ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_wspmGmlPage.setDescription( Messages.getString( "ImportWspmWizard.3" ) ); //$NON-NLS-1$
     m_wspmGmlPage.setValidQNames( new QName[] { TuhhCalculation.QNAME_TUHH_CALC_REIB_CONST } );
     m_wspmGmlPage.setValidKind( true, false );
 
@@ -206,7 +200,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
     {
       public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
       {
-        monitor.beginTask( Messages.getString("ImportWspmWizard.4"), 3 ); //$NON-NLS-1$
+        monitor.beginTask( Messages.getString( "ImportWspmWizard.4" ), 3 ); //$NON-NLS-1$
 
         try
         {
@@ -217,24 +211,24 @@ public class ImportWspmWizard extends Wizard implements IWizard
 
           /* Check if its the right calculation and if results are present */
           if( calculation.getCalcMode() != TuhhCalculation.MODE.REIB_KONST )
-            return StatusUtilities.createWarningStatus( Messages.getString("ImportWspmWizard.5") ); //$NON-NLS-1$
+            return StatusUtilities.createWarningStatus( Messages.getString( "ImportWspmWizard.5" ) ); //$NON-NLS-1$
 
           final TuhhReach reach = calculation.getReach();
 
           try
           {
             /* Import reach into profile collection */
-            monitor.subTask( Messages.getString("ImportWspmWizard.6") ); //$NON-NLS-1$
+            monitor.subTask( Messages.getString( "ImportWspmWizard.6" ) ); //$NON-NLS-1$
             final SortedMap<BigDecimal, WspmProfile> profilesByStation = doImportNetwork( reach, profNetworkColl, terrainModelAdds );
             monitor.worked( 1 );
 
             /* Create 1D-Network */
-            monitor.subTask( Messages.getString("ImportWspmWizard.7") ); //$NON-NLS-1$
+            monitor.subTask( Messages.getString( "ImportWspmWizard.7" ) ); //$NON-NLS-1$
             final SortedMap<BigDecimal, IFE1D2DNode> elementsByStation = doCreate1DNet( reach, discModel, discModelAdds );
             monitor.worked( 1 );
 
             /* Create 1D-Network parameters (flow relations) */
-            monitor.subTask( Messages.getString("ImportWspmWizard.8") ); //$NON-NLS-1$
+            monitor.subTask( Messages.getString( "ImportWspmWizard.8" ) ); //$NON-NLS-1$
             final IStatus status = doReadResults( calculation, elementsByStation, flowRelModel, profilesByStation );
             monitor.worked( 1 );
 
@@ -242,7 +236,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
           }
           catch( final Exception e )
           {
-            return StatusUtilities.statusFromThrowable( e, Messages.getString("ImportWspmWizard.9") ); //$NON-NLS-1$
+            return StatusUtilities.statusFromThrowable( e, Messages.getString( "ImportWspmWizard.9" ) ); //$NON-NLS-1$
           }
         }
         catch( final Throwable t )
@@ -263,7 +257,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, op );
     if( !status.isOK() )
       KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
-    ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString("ImportWspmWizard.10"), status ); //$NON-NLS-1$
+    ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString( "ImportWspmWizard.10" ), status ); //$NON-NLS-1$
 
     return !status.matches( IStatus.ERROR );
   }
@@ -344,7 +338,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
       fnfe.printStackTrace();
 
       /* Results are noit available, just inform user */
-      return StatusUtilities.createWarningStatus( Messages.getString("ImportWspmWizard.15") ); //$NON-NLS-1$
+      return StatusUtilities.createWarningStatus( Messages.getString( "ImportWspmWizard.15" ) ); //$NON-NLS-1$
     }
 
     return Status.OK_STATUS;
@@ -442,7 +436,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
 
     final IFE1D2DElement[] elements = node.getElements();
     if( elements.length != 2 )
-      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("ImportWspmWizard.16") ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "ImportWspmWizard.16" ) ) ); //$NON-NLS-1$
 
     /* Find upstream and downstream neighbours */
     final IFE1D2DNode neighbour0 = DiscretisationModelUtils.findOtherNode( node, elements[0] );
@@ -463,7 +457,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
       // REMARK: get calculation unit of element to delete
       // We know that we have exactly one 1D-Calculation unit
       final IFeatureWrapperCollection<ICalculationUnit1D> containersOfElement0 = elements[0].getContainers();
-      final ICalculationUnit1D calcUnit = containersOfElement0.get( 0 );
+      final ICalculationUnit1D calcUnit = containersOfElement0.size() > 0 ? containersOfElement0.get( 0 ) : null;
 
       /* create new edge beetween neighbour nodes */
       final ChangeDiscretiationModelCommand elementAddCmd = new ChangeDiscretiationModelCommand( workspace, model1d2d );
@@ -477,8 +471,14 @@ public class ImportWspmWizard extends Wizard implements IWizard
       elementAddCmd.process();
 
       // REMARK: also copy the containers of the old elements to the new element
-      final AddElementToCalculationUnitCmd calcUnitCmd = new AddElementToCalculationUnitCmd( calcUnit, new IFE1D2DElement[] { eleCmd.getAddedElement() }, model1d2d );
-      calcUnitCmd.process();
+      if( calcUnit != null )
+      {
+        final AddElementToCalculationUnitCmd calcUnitCmd = new AddElementToCalculationUnitCmd( calcUnit, new IFE1D2DElement[] { eleCmd.getAddedElement() }, model1d2d );
+        calcUnitCmd.process();
+      }
+      else
+        // TODO: this should not happen, fix this...
+        System.out.println( "No calcunit for element: " + elements[0].getGmlID() );
 
       /* Return position of weir */
       final GM_Position position = FlowRelationUtilitites.getFlowPositionFromElement( eleCmd.getAddedElement() );
@@ -506,21 +506,21 @@ public class ImportWspmWizard extends Wizard implements IWizard
     final IFeatureWrapperCollection<IFE1D2DEdge> discEdges = discretisationModel.getEdges();
 
     /* add complex-element to model: Automatically create a calculation unit 1d */
-    
+
     /*
-     * NO, this is not the right way to do it! 
+     * NO, this is not the right way to do it!
      * 
      * During creation of calculation unit, control model for that unit should be created as well.
      * 
      * Use CreateCalculationUnitCmd
      */
-    
-//    final ICalculationUnit1D calculationUnit1D = discretisationModel.getComplexElements().addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_CALC_UNIT_1D, ICalculationUnit1D.class );
-//    addedFeatures.add( calculationUnit1D.getWrappedFeature() );
-//    final String calcUnitName = String.format( "WSPM-Import: %s - %s", waterBody.getName(), reach.getName() );
-//    calculationUnit1D.setName( calcUnitName );
-//    calculationUnit1D.setDescription( "Dieses Teilmodell wurde durch den Import automatisch angelegt." );
-    
+
+    // final ICalculationUnit1D calculationUnit1D = discretisationModel.getComplexElements().addNew(
+    // Kalypso1D2DSchemaConstants.WB1D2D_F_CALC_UNIT_1D, ICalculationUnit1D.class );
+    // addedFeatures.add( calculationUnit1D.getWrappedFeature() );
+    // final String calcUnitName = String.format( "WSPM-Import: %s - %s", waterBody.getName(), reach.getName() );
+    // calculationUnit1D.setName( calcUnitName );
+    // calculationUnit1D.setDescription( "Dieses Teilmodell wurde durch den Import automatisch angelegt." );
     /* add nodes to model */
     final List<IFE1D2DEdge> edgeList = new ArrayList<IFE1D2DEdge>( segments.length - 1 );
 
@@ -544,11 +544,11 @@ public class ImportWspmWizard extends Wizard implements IWizard
       addedFeatures.add( node.getWrappedFeature() );
 
       node.setName( "" ); //$NON-NLS-1$
-      final String desc = String.format( Messages.getString("ImportWspmWizard.18") + profileMember.getDescription() ); //$NON-NLS-1$
+      final String desc = String.format( Messages.getString( "ImportWspmWizard.18" ) + profileMember.getDescription() ); //$NON-NLS-1$
       node.setDescription( desc );
 
       if( point == null )
-        throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("ImportWspmWizard.19") + station ) ); //$NON-NLS-1$
+        throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "ImportWspmWizard.19" ) + station ) ); //$NON-NLS-1$
 
       node.setPoint( point );
 
@@ -579,10 +579,9 @@ public class ImportWspmWizard extends Wizard implements IWizard
         element1d.setEdge( edge );
 
         /* Add complex element to list of containers of this element */
-//        element1d.getContainers().addRef( calculationUnit1D );
-
+        // element1d.getContainers().addRef( calculationUnit1D );
         /* Add this element to the complex element aka calculation unit */
-//        calculationUnit1D.addElementAsRef( element1d );
+        // calculationUnit1D.addElementAsRef( element1d );
       }
 
       lastNode = node;
@@ -608,7 +607,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
     /* Set user friendly name and descrption */
     final URL reachContext = reach.getFeature().getWorkspace().getContext();
     final String reachPath = reachContext == null ? "-" : reachContext.toExternalForm(); //$NON-NLS-1$
-    final String desc = String.format( Messages.getString("ImportWspmWizard.21"), reach.getWaterBody().getName(), reach.getName(), DF.format( new Date() ), reachPath ); //$NON-NLS-1$
+    final String desc = String.format( Messages.getString( "ImportWspmWizard.21" ), reach.getWaterBody().getName(), reach.getName(), DF.format( new Date() ), reachPath ); //$NON-NLS-1$
     network.setName( reach.getName() );
     network.setDescription( desc );
 

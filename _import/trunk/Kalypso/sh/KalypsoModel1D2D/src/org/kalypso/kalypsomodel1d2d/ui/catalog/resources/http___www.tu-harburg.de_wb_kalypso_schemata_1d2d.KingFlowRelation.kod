@@ -1,7 +1,9 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<ChartConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- xsi:schemaLocation="http://www.ksp.org/chart/factory ../../../../../../../../ChartFactory/etc/binding/schema/ChartConfiguration.xsd"
- xmlns="http://www.ksp.org/chart/factory">
+<?xml version="1.0" encoding="Cp1252" standalone="yes"?>
+
+<ChartConfiguration xmlns="http://www.ksp.org/chart/factory"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.ksp.org/chart/factory ../../kalypso_workspace_dev_3.3/ChartFactory/etc/binding/schema/ChartConfiguration.xsd">
+	
 	<Chart id="profilChart">
 		<Title>King-Profil</Title>
 		<Description>King-Profil</Description>
@@ -28,7 +30,7 @@
 	</Layer>
 	
 	<Axis id="breite_Axis">
-		<Provider epid="org.kalypso.chart.ext.axis.provider.Number"></Provider>
+		<Provider epid="org.kalypso.axisprovider.Number"></Provider>
 		<Label>Breite [m]</Label>
 		<Direction>POSITIVE</Direction>
 		<Position>BOTTOM</Position>
@@ -37,8 +39,8 @@
 		<RendererRef ref="NumberAxisRenderer"/>
 	</Axis>
 	<Axis id="hoehe_Axis">
-		<Provider epid="org.kalypso.chart.ext.axis.provider.Number" />
-		<Label>HÃ¶he [m]</Label>
+		<Provider epid="org.kalypso.axisprovider.Number" />
+		<Label>Höhe [m]</Label>
 		
 		<Direction>POSITIVE</Direction>
 		<Position>LEFT</Position>
@@ -49,8 +51,8 @@
 	<AxisRenderer id="NumberAxisRenderer">
 		<Provider epid="org.kalypso.chart.ext.axisrenderer.provider.Number">
 			<Parameters>
-				<Parameter name="color" value="#000000"/>
-				<Parameter name="inset_tick " value="10"/>
+				<Parameter name="color" value="#ff0000"/>
+				<Parameter name="inset_tick " value="1"/>
 			</Parameters>
 		</Provider>
 	</AxisRenderer>
@@ -67,3 +69,4 @@
 		<Type>LINE</Type>
 	</Style>
 </ChartConfiguration>
+

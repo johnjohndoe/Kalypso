@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<ChartConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.ksp.org/chart/factory ../../../../../../../../ChartFactory/etc/binding/schema/ChartConfiguration.xsd"
-	xmlns="http://www.ksp.org/chart/factory">
-	
+<?xml version="1.0" encoding="Cp1252" standalone="yes"?>
+<ChartConfiguration xmlns="http://www.ksp.org/chart/factory"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.ksp.org/chart/factory ../../kalypso_workspace_dev_3.3/ChartFactory/etc/binding/schema/ChartConfiguration.xsd">
+
 	<Axis id="wsp_Axis">
 		<Provider epid="org.kalypso.chart.ext.axis.provider.Number" />
 		<Label>Wassertiefe [m]</Label>
@@ -12,16 +12,15 @@
 		<MaxVal>100.0</MaxVal>
 		<RendererRef ref="NumberAxisRenderer"/>
 	</Axis>
-	
 	<AxisRenderer id="NumberAxisRenderer">
 		<Provider epid="org.kalypso.chart.ext.axisrenderer.provider.Number">
 			<Parameters>
 				<Parameter name="color" value="#000000"/>
-				<Parameter name="inset_tick " value="10"/>
+				<Parameter name="inset_tick" value="1"/>
 			</Parameters>
 		</Provider>
 	</AxisRenderer>
-	
+
 	<Chart id="runoffChart">
 		<Title>Abfluss</Title>
 		<Description>Abflusswerte der Berechnung</Description>
@@ -41,7 +40,7 @@
 			</Parameters>
 		</Provider>
 		<Title>Abflusspolynome</Title>
-		<Description>Abflusspolynome abh√§ngig vom Wasserspiegel</Description>
+		<Description>Abflusspolynome abh‰ngig vom Wasserspiegel</Description>
 		<Mapper>
 			<DomainAxisRef ref="wsp_Axis" />
 			<TargetAxisRef ref="runoff_Axis" />
@@ -49,7 +48,7 @@
 		<Style>
 			<StyleRef ref="polynomeStyle" />
 		</Style>
-		
+
 	</Layer>
 	<Layer visible="true" id="runoffLayer">
 		<Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider" >
@@ -65,8 +64,8 @@
 			</Parameters>
 		</Provider>
 		<Title>Abfluss</Title>
-		<Description>Abfluss abh√§ngig vom Wasserspiegel</Description>
-		
+		<Description>Abfluss abh‰ngig vom Wasserspiegel</Description>
+
 		<Mapper>
 			<DomainAxisRef ref="wsp_Axis" />
 			<TargetAxisRef ref="runoff_Axis" />
@@ -74,7 +73,7 @@
 		<Style>
 			<StyleRef ref="runoffStyle" />
 		</Style>
-		
+
 	</Layer>
 	<Layer visible="true" id="runoffDeltaLayer">
 		<!-- TODO: show Histogramm instead -->
@@ -99,11 +98,11 @@
 		<Style>
 			<StyleRef ref="runoffDeltaStyle" />
 		</Style>
-		
+
 	</Layer>
 	<Axis id="runoff_Axis">
 		<Provider epid="org.kalypso.chart.ext.axis.provider.Number" />
-		<Label>Abfluss [m¬≥/s]</Label>
+		<Label>Abfluss [m≥/s]</Label>
 		<Direction>POSITIVE</Direction>
 		<Position>LEFT</Position>
 		<MinVal>5.0</MinVal>
@@ -112,7 +111,7 @@
 	</Axis>
 	<Axis id="runoffDelta_Axis">
 		<Provider epid="org.kalypso.chart.ext.axis.provider.Number" />
-		<Label>Abfluss-Delta [m¬≥/s]</Label>
+		<Label>Abfluss-Delta [m≥/s]</Label>
 		<Direction>POSITIVE</Direction>
 		<Position>LEFT</Position>
 		<MinVal>5.0</MinVal>
@@ -146,12 +145,12 @@
 		</Provider>
 		<StyleID></StyleID>
 		<Type>POINT</Type>
-		
+
 	</Style>
-	
+
 	<Chart id="areaChart">
-		<Title>Fl√§che</Title>
-		<Description>Fl√§chenwerte der Berechnung</Description>
+		<Title>Fl‰che</Title>
+		<Description>Fl‰chenwerte der Berechnung</Description>
 		<Layers>
 			<LayerRef ref="areaPolynomeLayer" />
 			<LayerRef ref="areaLayer" />
@@ -167,8 +166,8 @@
 					value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#phenomenonArea" />
 			</Parameters>
 		</Provider>
-		<Title>Fl√§chenpolynome</Title>
-		<Description>Fl√§chenpolynome abh√§ngig vom Wasserspiegel</Description>
+		<Title>Fl‰chenpolynome</Title>
+		<Description>Fl‰chenpolynome abh‰ngig vom Wasserspiegel</Description>
 		<Mapper>
 			<DomainAxisRef ref="wsp_Axis" />
 			<TargetAxisRef ref="area_Axis" />
@@ -176,7 +175,7 @@
 		<Style>
 			<StyleRef ref="polynomeStyle" />
 		</Style>
-		
+
 	</Layer>
 	<Layer visible="true" id="areaLayer">
 		<Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider" >
@@ -191,8 +190,8 @@
 					value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#Area" />
 			</Parameters>
 		</Provider>
-		<Title>Fl√§che</Title>
-		<Description>Fl√§che abh√§ngig vom Wasserspiegel</Description>
+		<Title>Fl‰che</Title>
+		<Description>Fl‰che abh‰ngig vom Wasserspiegel</Description>
 		<Mapper>
 			<DomainAxisRef ref="wsp_Axis" />
 			<TargetAxisRef ref="area_Axis" />
@@ -200,7 +199,7 @@
 		<Style>
 			<StyleRef ref="areaStyle" />
 		</Style>
-		
+
 	</Layer>
 	<Layer visible="true" id="areaDeltaLayer">
 		<Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider" >
@@ -215,10 +214,10 @@
 					value="urn:ogc:gml:dict:kalypso:model:wspmtuhh:qIntervallPointsComponents#DeltaArea" />
 			</Parameters>
 		</Provider>
-		<Title>Fl√§chen-Delta</Title>
-		<Description>Fl√§chen Differenzen bei der Polynomerstellung</Description>
+		<Title>Fl‰chen-Delta</Title>
+		<Description>Fl‰chen Differenzen bei der Polynomerstellung</Description>
 		<!-- TODO: show Histogramm instead -->
-		
+
 		<Mapper>
 			<DomainAxisRef ref="wsp_Axis" />
 			<TargetAxisRef ref="areaDelta_Axis" />
@@ -226,12 +225,12 @@
 		<Style>
 			<StyleRef ref="areaDeltaStyle" />
 		</Style>
-		
+
 	</Layer>
 	<Axis id="area_Axis">
 		<Provider epid="org.kalypso.chart.ext.axis.provider.Number" />
-		<Label>Fl√§che [m¬≤]</Label>
-		
+		<Label>Fl‰che [m≤]</Label>
+
 		<Direction>POSITIVE</Direction>
 		<Position>LEFT</Position>
 		<MinVal>5.0</MinVal>
@@ -240,8 +239,8 @@
 	</Axis>
 	<Axis id="areaDelta_Axis">
 		<Provider epid="org.kalypso.chart.ext.axis.provider.Number" />
-		<Label>Fl√§che-Delta [m¬≥/s]</Label>
-		
+		<Label>Fl‰che-Delta [m≥/s]</Label>
+
 		<Direction>POSITIVE</Direction>
 		<Position>LEFT</Position>
 		<MinVal>5.0</MinVal>
@@ -261,7 +260,7 @@
 		</Provider>
 		<StyleID></StyleID>
 		<Type>POINT</Type>
-		
+
 	</Style>
 	<Style id="areaDeltaStyle">
 		<Provider epid="org.kalypso.chart.ext.style.provider.DefaultStyledPoint">
@@ -276,9 +275,9 @@
 		</Provider>
 		<StyleID></StyleID>
 		<Type>POINT</Type>
-		
+
 	</Style>
-	
+
 	<!-- ALPHA -->
 	<Chart id="alphaChart">
 		<Title>Alpha</Title>
@@ -299,7 +298,7 @@
 			</Parameters>
 		</Provider>
 		<Title>Alpha-Polynome</Title>
-		<Description>Alpha-Polynome abh√§ngig vom Wasserspiegel</Description>
+		<Description>Alpha-Polynome abh‰ngig vom Wasserspiegel</Description>
 		<Mapper>
 			<DomainAxisRef ref="wsp_Axis" />
 			<TargetAxisRef ref="alpha_Axis" />
@@ -307,7 +306,7 @@
 		<Style>
 			<StyleRef ref="polynomeStyle" />
 		</Style>
-		
+
 	</Layer>
 	<Layer visible="true" id="alphaLayer">
 		<Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider" >
@@ -323,8 +322,8 @@
 			</Parameters>
 		</Provider>
 		<Title>Alpha</Title>
-		<Description>Alpha abh√§ngig vom Wasserspiegel</Description>
-		
+		<Description>Alpha abh‰ngig vom Wasserspiegel</Description>
+
 		<Mapper>
 			<DomainAxisRef ref="wsp_Axis" />
 			<TargetAxisRef ref="alpha_Axis" />
@@ -332,7 +331,7 @@
 		<Style>
 			<StyleRef ref="alphaStyle" />
 		</Style>
-	</Layer>
+		</Layer>
 	<Layer visible="true" id="alphaDeltaLayer">
 		<!-- TODO: show Histogramm instead -->
 		<Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider" >
@@ -356,7 +355,7 @@
 		<Style>
 			<StyleRef ref="alphaDeltaStyle" />
 		</Style>
-		
+
 	</Layer>
 	<Axis id="alpha_Axis">
 		<Provider epid="org.kalypso.chart.ext.axis.provider.Number" />
@@ -389,7 +388,7 @@
 		</Provider>
 		<StyleID></StyleID>
 		<Type>POINT</Type>
-		
+
 	</Style>
 	<Style id="alphaDeltaStyle">
 		<Provider epid="org.kalypso.chart.ext.style.provider.DefaultStyledPoint">
@@ -405,15 +404,20 @@
 		<StyleID></StyleID>
 		<Type>POINT</Type>
 	</Style>
+
 	<Style id="polynomeStyle">
 		<Provider epid="org.kalypso.chart.ext.style.provider.DefaultStyledLine">
-			<Parameters>
-				<Parameter value="2" name="lineWidth"/>
-				<Parameter value="SOLID" name="lineStyle"/>
-				<Parameter value="#000000" name="lineColor"/>
-			</Parameters>
-		</Provider>
-		<StyleID></StyleID>
-		<Type>LINE</Type>
+		<Parameters>
+			<Parameter value="2" name="lineWidth"/>
+			<Parameter value="SOLID" name="lineStyle"/>
+			<Parameter value="#000000" name="lineColor"/>
+		</Parameters>
+	</Provider>
+        <StyleID></StyleID>
+        <Type>LINE</Type>
+
 	</Style>
+
+
 </ChartConfiguration>
+
