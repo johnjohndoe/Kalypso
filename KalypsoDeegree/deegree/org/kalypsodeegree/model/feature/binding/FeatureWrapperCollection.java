@@ -223,19 +223,7 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
   {
     final Object property = m_featureList.get( index );
     final Feature f = FeatureHelper.getFeature( m_featureCollection.getWorkspace(), property );
-    if( f == null )
-      return null;
-    FWCls adapted = (FWCls) f.getAdapter( m_defaultWrapperClass );
-    if( adapted == null )
-    {
-      for( int i = 0; i < m_secondaryWrapperClasses.size(); i++ )
-      {
-        adapted = (FWCls) f.getAdapter( m_secondaryWrapperClasses.get( i ) );
-        if( adapted != null )
-          break;
-      }
-    }
-    return adapted;
+    return getAdaptedFeature( f );
   }
 
   public int indexOf( final Object o )
@@ -296,18 +284,9 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
       {
         final Object next = it.next();
         final Feature f = FeatureHelper.getFeature( workspace, next );
-
-        FWCls wrapper = (FWCls) f.getAdapter( m_defaultWrapperClass );
+        final FWCls wrapper = getAdaptedFeature( f );
         if( wrapper == null )
-        {
-          for( final Class<FWCls> clazz : m_secondaryWrapperClasses )
-          {
-            wrapper = (FWCls) f.getAdapter( clazz );
-            if( wrapper != null )
-              return wrapper;
-          }
-          throw new RuntimeException( "Feature " + f + " could not be adapted to " + m_defaultWrapperClass );
-        }
+          throw new RuntimeException( "Feature " + f + " could not be adapted!" );
         return wrapper;
       }
 
@@ -458,24 +437,12 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
     for( int i = 0; i < objs.length; i++ )
     {
       final Object fObj = m_featureList.get( i );
-
       final Feature feature = FeatureHelper.getFeature( m_featureList.getParentFeature().getWorkspace(), fObj );
       if( feature == null )
         throw new RuntimeException( "Type not known:" + fObj );
-
-      Object object = feature.getAdapter( m_defaultWrapperClass );
-      if( object == null )
-      {
-        for( final Class<FWCls> clazz : m_secondaryWrapperClasses )
-        {
-          object = (FWCls) feature.getAdapter( clazz );
-          if( object != null )
-            break;
-        }
-        if( object == null )
-          throw new RuntimeException( String.format( "Unable to adapt object %s to %s.", feature, m_defaultWrapperClass ) );
-      }
-      objs[i] = object;
+      Object object = getAdaptedFeature( feature );
+      if( object != null )
+        objs[i] = object;
     }
     return objs;
   }
@@ -620,15 +587,12 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
   {
     final List selectedFeature = m_featureList.query( envelope, null );
     final List<FWCls> selFW = new ArrayList<FWCls>( selectedFeature.size() );
-    final GMLWorkspace workspace = m_featureCollection.getWorkspace();
-
     for( final Object linkOrFeature : selectedFeature )
     {
-      final FWCls feature = FeatureHelper.getFeature( workspace, linkOrFeature, m_defaultWrapperClass );
-      if( feature != null )
-      {
-        selFW.add( feature );
-      }
+      final Feature feature = FeatureHelper.getFeature( m_featureCollection.getWorkspace(), linkOrFeature );
+      final FWCls adaptedFeature = getAdaptedFeature( feature );
+      if( adaptedFeature != null )
+        selFW.add( adaptedFeature );
     }
     return selFW;
   }
@@ -680,4 +644,21 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
       m_secondaryWrapperClasses.add( secondaryWrapper );
   }
 
+  private FWCls getAdaptedFeature( final Feature feature )
+  {
+    if( feature == null )
+      return null;
+    FWCls adapted = (FWCls) feature.getAdapter( m_defaultWrapperClass );
+    if( adapted == null )
+    {
+      for( final Class<FWCls> clazz : m_secondaryWrapperClasses )
+      {
+        adapted = (FWCls) feature.getAdapter( clazz );
+        if( adapted != null )
+          return adapted;
+      }
+    }
+    return adapted;
+
+  }
 }
