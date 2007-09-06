@@ -146,6 +146,7 @@ public class LengthSectionParser
         if( sectionEnd )
         {
           closeProcessor( lsProc, previousRunoff );
+          log.log( false, "\tBearbeitet Längsschnittdaten für Abfluss: %.3f", runoff );
           lsProc = new LengthSectionProcessor( m_outputDir, m_reach, header, footer, m_epsThinning, m_addRunoffToFilename );
         }
 

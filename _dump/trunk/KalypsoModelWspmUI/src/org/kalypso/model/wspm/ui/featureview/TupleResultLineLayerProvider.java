@@ -48,7 +48,6 @@ import org.kalypso.chart.ext.observation.data.TupleResultDomainValueData;
 import org.kalypso.chart.ext.observation.layer.TupleResultLineLayer;
 import org.kalypso.chart.factory.configuration.parameters.IParameterContainer;
 import org.kalypso.chart.factory.provider.AbstractLayerProvider;
-import org.kalypso.chart.factory.provider.ILayerProvider;
 import org.kalypso.chart.framework.model.IChartModel;
 import org.kalypso.chart.framework.model.layer.IChartLayer;
 import org.kalypso.chart.framework.model.mapper.IAxis;
@@ -57,7 +56,6 @@ import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
-import org.ksp.chart.factory.AxisType;
 import org.ksp.chart.factory.LayerType;
 
 /**
@@ -76,19 +74,17 @@ import org.ksp.chart.factory.LayerType;
  */
 public class TupleResultLineLayerProvider extends AbstractLayerProvider
 {
-
-
   /**
    * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayers()
    */
   public IChartLayer getLayer( final URL context )
   {
-    LayerType lt = getLayerType();
+    final LayerType lt = getLayerType();
     final String configLayerId = lt.getId();
-    IChartModel chartModel = getChartModel();
+    final IChartModel chartModel = getChartModel();
 
-    IParameterContainer pc = getParameterContainer();
-    
+    final IParameterContainer pc = getParameterContainer();
+
     final boolean showPoints = Boolean.valueOf( pc.getParameterValue( "showPoints", "true" ) );
     final Boolean showLines = Boolean.valueOf( pc.getParameterValue( "showLines", "true" ) );
 
@@ -119,11 +115,11 @@ public class TupleResultLineLayerProvider extends AbstractLayerProvider
 
     final IAxis valAxis = chartModel.getMapperRegistry().getAxis( valueAxisId );
 
-    final TupleResultDomainValueData data=new TupleResultDomainValueData(result, domainComponentId, valueComponentId);
-    
+    final TupleResultDomainValueData data = new TupleResultDomainValueData( result, domainComponentId, valueComponentId );
+
     final TupleResultLineLayer icl = new TupleResultLineLayer( data, domAxis, valAxis );
-    
-    icl.setVisible(  lt.getVisible() );
+
+    icl.setVisible( lt.getVisible() );
     return icl;
   }
 }

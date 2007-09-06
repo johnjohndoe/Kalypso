@@ -2,48 +2,46 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.featureview;
 
-import java.io.IOException;
 import java.net.URL;
 
-import org.apache.xmlbeans.XmlException;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.DialogSettings;
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -60,7 +58,6 @@ import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.kalypso.chart.factory.configuration.ChartConfigurationLoader;
 import org.kalypso.chart.factory.configuration.ChartFactory;
-import org.kalypso.chart.factory.configuration.exception.ConfigurationException;
 import org.kalypso.chart.framework.model.IChartModel;
 import org.kalypso.chart.framework.model.impl.ChartModel;
 import org.kalypso.chart.framework.util.ChartUtilities;
@@ -90,11 +87,14 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
 
   private final URL m_context;
 
-  public ChartFeatureControl( final Feature feature, final IPropertyType ftp, final ChartType[] charts, final URL context )
+  private final ChartConfigurationLoader m_ccl;
+
+  public ChartFeatureControl( final Feature feature, final IPropertyType ftp, final ChartConfigurationLoader ccl, final URL context )
   {
     super( feature, ftp );
+    m_ccl = ccl;
 
-    m_chartTypes = charts;
+    m_chartTypes = m_ccl.getCharts();
     m_context = context;
   }
 
@@ -104,7 +104,7 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
   public Control createControl( final Composite parent, final int style )
   {
     final ChartActionContributor contributor = new ChartActionContributor();
-    
+
     final TabFolder folder = new TabFolder( parent, SWT.TOP );
 
     m_charts = new ChartComposite[m_chartTypes.length];
@@ -113,11 +113,11 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
       final TabItem item = new TabItem( folder, SWT.NONE );
 
       final Composite composite = new Composite( folder, style );
-      final GridLayout gridLayout = new GridLayout(  );
+      final GridLayout gridLayout = new GridLayout();
       gridLayout.horizontalSpacing = 0;
       gridLayout.verticalSpacing = 0;
       composite.setLayout( gridLayout );
-      
+
       final ToolBarManager manager = new ToolBarManager( SWT.HORIZONTAL | SWT.FLAT );
       manager.createControl( composite );
 
@@ -125,18 +125,16 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
       item.setText( chartType.getTitle() );
       item.setToolTipText( chartType.getDescription() );
 
-      
-      IChartModel chartModel=new ChartModel();
-      final ChartComposite chart = new ChartComposite( composite, SWT.BORDER, chartModel, new RGB(255,255,255) );
+      final IChartModel chartModel = new ChartModel();
+      final ChartComposite chart = new ChartComposite( composite, SWT.BORDER, chartModel, new RGB( 255, 255, 255 ) );
       final GridData gridData = new GridData( SWT.FILL, SWT.FILL, true, true );
-      
+
       chart.setLayoutData( gridData );
       contributor.contributeActions( chart, manager );
-      IChartMouseHandler handler=new DragMouseHandler(chart);
+      final IChartMouseHandler handler = new DragMouseHandler( chart );
       chart.addMouseListener( handler );
-      chart.addMouseMoveListener( handler);
-      
-      
+      chart.addMouseMoveListener( handler );
+
       m_charts[i] = chart;
 
       item.setControl( composite );
@@ -191,7 +189,6 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
   public void removeModifyListener( final ModifyListener l )
   {
     // TODO Auto-generated method stub
-
   }
 
   /**
@@ -203,31 +200,8 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
     {
       final ChartComposite chart = m_charts[i];
 
-      ChartConfigurationLoader ccl;
-      try
-      {
-        /**
-         * TODO: @alex: check if this ist working; if this is the wrong context, we're having a problem
-         */
-        ccl = new ChartConfigurationLoader(m_context);
-        ChartFactory.configureChartModel( chart.getModel(), ccl, m_chartTypes[i].getId(), m_context );
-      }
-      catch( XmlException e )
-      {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
-      catch( IOException e )
-      {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
-      catch( ConfigurationException e )
-      {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
-      
+      ChartFactory.doConfiguration( chart.getModel(), m_ccl, m_chartTypes[i], m_context );
+
       ChartUtilities.maximize( chart.getModel() );
     }
   }
