@@ -265,35 +265,35 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
    */
   protected void calculateCentroid( )
   {
-    try
+    double cnt = 0;
+
+    final int size = getSize();
+    // If we are empty we dont have a centroid
+    if( size == 0 )
+      return;
+
+    final GM_Point gmp = getCurveAt( 0 ).getCentroid();
+
+    final double[] cen = new double[gmp.getAsArray().length];
+
+    for( int i = 0; i < size; i++ )
     {
-      double cnt = 0;
-      final GM_Point gmp = getCurveAt( 0 ).getCentroid();
+      cnt += getCurveAt( i ).getNumberOfCurveSegments();
 
-      final double[] cen = new double[gmp.getAsArray().length];
-
-      for( int i = 0; i < getSize(); i++ )
-      {
-        cnt += getCurveAt( i ).getNumberOfCurveSegments();
-
-        final double[] pos = getCurveAt( i ).getCentroid().getAsArray();
-
-        for( int j = 0; j < getCoordinateDimension(); j++ )
-        {
-          cen[j] += pos[j];
-        }
-      }
+      final double[] pos = getCurveAt( i ).getCentroid().getAsArray();
 
       for( int j = 0; j < getCoordinateDimension(); j++ )
       {
-        cen[j] = cen[j] / cnt / getSize();
+        cen[j] += pos[j];
       }
+    }
 
-      setCentroid( new GM_Point_Impl( new GM_Position_Impl( cen ), null ) );
-    }
-    catch( final Exception ex )
+    for( int j = 0; j < getCoordinateDimension(); j++ )
     {
+      cen[j] = cen[j] / cnt / size;
     }
+
+    setCentroid( new GM_Point_Impl( new GM_Position_Impl( cen ), null ) );
   }
 
   /**

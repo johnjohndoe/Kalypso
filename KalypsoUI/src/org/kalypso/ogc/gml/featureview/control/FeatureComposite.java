@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.control;
 
@@ -555,7 +555,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       final Combo comboType = (Combo) controlType;
 
       /* Look, if the user wants something sorted. */
-      Sorter sorter = comboType.getSorter();
+      final Sorter sorter = comboType.getSorter();
 
       /* The comparator. */
       ViewerComparator comparator = null;
@@ -569,18 +569,18 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
           id = "org.kalypso.ui.featureview.comparators.defaultComparator";
 
         /* Get the sorter of the id. */
-        IExtensionRegistry registry = Platform.getExtensionRegistry();
-        IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.kalypso.core.featureviewComparator" );
-        for( IConfigurationElement element : elements )
+        final IExtensionRegistry registry = Platform.getExtensionRegistry();
+        final IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.kalypso.core.featureviewComparator" );
+        for( final IConfigurationElement element : elements )
         {
-          String elementId = element.getAttribute( "id" );
+          final String elementId = element.getAttribute( "id" );
           if( id.equals( elementId ) )
           {
             try
             {
               comparator = (ViewerComparator) element.createExecutableExtension( "class" );
             }
-            catch( CoreException e )
+            catch( final CoreException e )
             {
               e.printStackTrace();
             }
@@ -594,14 +594,14 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
           if( comparator instanceof IViewerComparator )
           {
             /* The parameter map. */
-            HashMap<String, String> params = new HashMap<String, String>();
+            final HashMap<String, String> params = new HashMap<String, String>();
 
             /* Get all parameter. */
-            List<org.kalypso.template.featureview.Combo.Sorter.Param> parameter = sorter.getParam();
+            final List<org.kalypso.template.featureview.Combo.Sorter.Param> parameter = sorter.getParam();
             if( parameter != null )
             {
               /* Collect all parameter. */
-              for( org.kalypso.template.featureview.Combo.Sorter.Param param : parameter )
+              for( final org.kalypso.template.featureview.Combo.Sorter.Param param : parameter )
                 params.put( param.getName(), param.getValue() );
             }
 
@@ -698,19 +698,19 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       for( final Param controlParam : param )
         parameters.setProperty( controlParam.getName(), controlParam.getValue() );
 
-      final IFeatureviewControlFactory controlFactory = KalypsoUIExtensions.getFeatureviewControlFactory( extensionId );
-      final IFeatureControl fc = controlFactory == null ? null : controlFactory.createFeatureControl( feature, ftp, parameters );
-      if( fc == null )
+      try
       {
-        final Label label = new Label( parent, SWT.NONE );
-        label.setText( "Error: failed to create extension-control for id: " + extensionId );
-        return label;
-      }
-      else
-      {
+        final IFeatureviewControlFactory controlFactory = KalypsoUIExtensions.getFeatureviewControlFactory( extensionId );
+        final IFeatureControl fc = controlFactory.createFeatureControl( feature, ftp, parameters );
         final Control control = fc.createControl( parent, controlStyle );
         addFeatureControl( fc );
         return control;
+      }
+      catch( final CoreException ce )
+      {
+        final Label label = new Label( parent, SWT.NONE );
+        label.setText( ce.getStatus().getMessage() );
+        return label;
       }
     }
     else if( controlType instanceof SubcompositeType )

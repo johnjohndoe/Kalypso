@@ -119,8 +119,6 @@ public class GmlLoader extends AbstractLoader
 
       final URL gmlURL = m_urlResolver.resolveURL( context, source );
 
-// final IFeatureProviderFactory factory = new GmlSerializerFeatureProviderFactory();
-
       final PooledXLinkFeatureProviderFactory factory = new PooledXLinkFeatureProviderFactory();
 
       final GMLWorkspace gmlWorkspace = GmlSerializer.createGMLWorkspace( gmlURL, m_urlResolver, factory );
