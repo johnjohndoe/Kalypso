@@ -42,9 +42,7 @@ package org.kalypso.kalypsomodel1d2d.sim;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.text.DateFormat;
@@ -73,13 +71,13 @@ import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
-import org.kalypso.ogc.gml.serialize.GmlSerializeException;
+import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.TupleResult;
+import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.simulation.core.ISimulationDataProvider;
-import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -156,7 +154,7 @@ public class ProcessResultsJob extends Job
     return Status.OK_STATUS;
   }
 
-  public static File read2DIntoGmlResults( final File result2dFile, final File outputDir, final ISimulationDataProvider dataProvider, final NodeResultMinMaxCatcher minMaxCatcher, final int timeStepNum, final IStepResultMeta stepResultMeta ) throws IOException, InvocationTargetException, GmlSerializeException, SimulationException, GM_Exception
+  public static File read2DIntoGmlResults( final File result2dFile, final File outputDir, final ISimulationDataProvider dataProvider, final NodeResultMinMaxCatcher minMaxCatcher, final int timeStepNum, final IStepResultMeta stepResultMeta ) throws Exception
   {
     final TimeLogger logger = new TimeLogger( "Start: lese .2d Ergebnisse" );
 
@@ -168,6 +166,7 @@ public class ProcessResultsJob extends Job
     }
 
     final File gmlResultFile = new File( outputDir, "results.gml" );
+    final File lsObsFile = new File( outputDir, "lengthSection.gml" );
 
     InputStream is = null;
     try
@@ -176,6 +175,9 @@ public class ProcessResultsJob extends Job
 
       /* GMLWorkspace für Ergebnisse anlegen */
       final GMLWorkspace resultWorkspace = FeatureFactory.createGMLWorkspace( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "NodeResultCollection" ), gmlResultFile.toURL(), null );
+      final URL lsObsUrl = ProcessResultsJob.class.getResource( "resource/template/lengthSectionTemplate.gml" );
+      final GMLWorkspace lsObsWorkspace = GmlSerializer.createGMLWorkspace( lsObsUrl, null );
+      final IObservation<TupleResult> lsObs = ObservationFeatureFactory.toObservation( lsObsWorkspace.getRootFeature() );
 
       /* .2d Datei lesen und GML füllen */
       final RMA10S2GmlConv conv = new RMA10S2GmlConv();
@@ -232,7 +234,7 @@ public class ProcessResultsJob extends Job
         multiEater.addEater( gmlTriangleEater );
       }
 
-      final NodeResultsHandler handler = new NodeResultsHandler( resultWorkspace, multiEater, m_calculation, minMaxCatcher );
+      final NodeResultsHandler handler = new NodeResultsHandler( resultWorkspace, multiEater, m_calculation, minMaxCatcher, lsObs );
       conv.setRMA10SModelElementHandler( handler );
 
       logger.takeInterimTime();
@@ -250,6 +252,9 @@ public class ProcessResultsJob extends Job
 
       /* Node-GML in Datei schreiben */
       GmlSerializer.serializeWorkspace( gmlResultFile, resultWorkspace, "CP1252" );
+      /* LengthSection in Datei schreiben */
+      ObservationFeatureFactory.toFeature( lsObs, lsObsWorkspace.getRootFeature() );
+      GmlSerializer.serializeWorkspace( lsObsFile, lsObsWorkspace, "CP1252" );
 
       BigDecimal min;
       BigDecimal max;
