@@ -54,9 +54,11 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.CreateTransitionElementCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
@@ -75,7 +77,7 @@ public class CreateTransitionElementWidget extends AbstractWidget
 {
   private final int m_grabRadius = 10;
 
-  private IKalypsoFeatureTheme m_mapTheme;
+  private IKalypsoFeatureTheme m_mapActiveTheme;
 
   private IFEDiscretisationModel1d2d m_discretisationModel;
 
@@ -84,12 +86,12 @@ public class CreateTransitionElementWidget extends AbstractWidget
   private IContinuityLine2D m_line2D;
 
   private IFELine m_currentSelectedLine;
-  
+
   public CreateTransitionElementWidget( )
   {
     this( "name", "tooltip" );
   }
-  
+
   public CreateTransitionElementWidget( String name, String toolTip )
   {
     super( name, toolTip );
@@ -109,15 +111,15 @@ public class CreateTransitionElementWidget extends AbstractWidget
 
     final MapPanel mapPanel = getMapPanel();
     final IMapModell mapModell = mapPanel.getMapModell();
-
-    mapPanel.setMessage( "Klicken Sie in die Karte :)" );
-
-    m_mapTheme = UtilMap.findEditableTheme( mapModell, IFELine.QNAME );
-    m_discretisationModel = UtilMap.findFEModelTheme( mapModell );
-    if( m_mapTheme == null || m_discretisationModel == null )
+    final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
+    if( activeTheme instanceof IKalypsoFeatureTheme )
+      m_mapActiveTheme = (IKalypsoFeatureTheme) activeTheme;
+    else
       return;
-
-    final FeatureList featureList = m_mapTheme.getFeatureList();
+    m_discretisationModel = UtilMap.findFEModelTheme( mapModell );
+    if( m_discretisationModel == null )
+      return;
+    final FeatureList featureList = m_mapActiveTheme.getFeatureList();
     final Feature parentFeature = featureList.getParentFeature();
     m_discretisationModel = (IFEDiscretisationModel1d2d) parentFeature.getAdapter( IFEDiscretisationModel1d2d.class );
     final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
@@ -129,7 +131,7 @@ public class CreateTransitionElementWidget extends AbstractWidget
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#keyPressed(java.awt.event.KeyEvent)
    */
   @Override
-  public void keyPressed( KeyEvent e )
+  public void keyReleased( final KeyEvent e )
   {
     if( e.getKeyChar() == KeyEvent.VK_ESCAPE )
       reinit();
@@ -138,19 +140,19 @@ public class CreateTransitionElementWidget extends AbstractWidget
       if( m_line1D != null && m_line2D != null )
       {
         final CreateTransitionElementCommand command = new CreateTransitionElementCommand( m_discretisationModel, m_line1D, m_line2D );
+        final CommandableWorkspace workspace = m_mapActiveTheme.getWorkspace();
         try
         {
-          m_mapTheme.getWorkspace().postCommand( command );
+          workspace.postCommand( command );
+          getMapPanel().getSelectionManager().clear();
         }
-        catch( Exception e1 )
+        catch( final Exception e1 )
         {
-          // TODO Auto-generated catch block
           e1.printStackTrace();
         }
       }
     }
     super.keyPressed( e );
-    getMapPanel().repaint();
   }
 
   @Override
@@ -198,7 +200,7 @@ public class CreateTransitionElementWidget extends AbstractWidget
       m_line2D = (IContinuityLine2D) m_currentSelectedLine;
     final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
     final Feature featureToSelect = m_currentSelectedLine.getWrappedFeature();
-    final EasyFeatureWrapper easyToSelect = new EasyFeatureWrapper( m_mapTheme.getWorkspace(), featureToSelect, featureToSelect.getParent(), featureToSelect.getParentRelation() );
+    final EasyFeatureWrapper easyToSelect = new EasyFeatureWrapper( m_mapActiveTheme.getWorkspace(), featureToSelect, featureToSelect.getParent(), featureToSelect.getParentRelation() );
     selectionManager.changeSelection( new Feature[] {}, new EasyFeatureWrapper[] { easyToSelect } );
   }
 

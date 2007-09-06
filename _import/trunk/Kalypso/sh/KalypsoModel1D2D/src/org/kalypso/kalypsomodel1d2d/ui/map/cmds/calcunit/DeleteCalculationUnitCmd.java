@@ -187,7 +187,7 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
 
       // cache state for undo
       cacheState();
-
+      
       if( m_undoParentUnits != null && m_undoParentUnits.length > 0 )
       {
         final Shell activeShell = PlatformUI.getWorkbench().getDisplay().getActiveShell();

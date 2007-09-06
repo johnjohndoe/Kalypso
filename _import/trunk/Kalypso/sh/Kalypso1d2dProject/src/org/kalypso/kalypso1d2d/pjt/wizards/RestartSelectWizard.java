@@ -42,15 +42,31 @@ package org.kalypso.kalypso1d2d.pjt.wizards;
 
 import java.io.File;
 
+import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.INewWizard;
+import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.handlers.IHandlerService;
+import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
+import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.ui.wizards.results.ResultViewerFilter;
 import org.kalypso.ui.wizards.results.SelectResultWizardPage;
 import org.kalypso.ui.wizards.results.ThemeConstructionFactory;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+
+import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
+import de.renew.workflow.connector.cases.ICaseDataProvider;
+import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
  * @author Dejan Antanaskovic
@@ -62,9 +78,28 @@ public class RestartSelectWizard extends Wizard implements INewWizard
 
   private final Feature m_feature;
 
+  private IFolder m_scenarioFolder;
+
+  private IScenarioResultMeta m_resultModel;
+
   public RestartSelectWizard( final Feature feature )
   {
     m_feature = feature;
+    final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService( IHandlerService.class );
+    final IEvaluationContext context = handlerService.getCurrentState();
+    final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
+    final ICaseDataProvider<IFeatureWrapper2> modelProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+    m_scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
+    try
+    {
+      // Sometimes there is a NPE here... maybe wait until the models are loaded?
+      m_resultModel = modelProvider.getModel( IScenarioResultMeta.class );
+    }
+    catch( CoreException e )
+    {
+      Kalypso1d2dProjectPlugin.getDefault().getLog().log( e.getStatus() );
+      ErrorDialog.openError( shell, "1D2D-Ergebnisse", "Ergebnis-Metadaten nicht vorhanden.", e.getStatus() );
+    }
   }
 
   /**
@@ -73,15 +108,13 @@ public class RestartSelectWizard extends Wizard implements INewWizard
   @Override
   public void addPages( )
   {
-    setWindowTitle( Messages.getString("RestartSelectWizard.0") );  //$NON-NLS-1$
-    final Object property = m_feature.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_RESTART_PATH );
-
-//    m_restartSelectWizardPage = new RestartSelectWizardPage( "restartSelectionPage", property == null ? "" : property.toString() );     //$NON-NLS-1$ //$NON-NLS-2$
+    setWindowTitle( Messages.getString( "RestartSelectWizard.0" ) ); //$NON-NLS-1$
     final ResultViewerFilter resultFilter = new ResultViewerFilter();
-    m_restartSelectWizardPage = new SelectResultWizardPage( "restartSelectionPage", "Ergebniss(e) zur Karte hinzufügen", null, resultFilter, null );
-    m_restartSelectWizardPage.setTitle( Messages.getString("RestartSelectWizard.3") );  //$NON-NLS-1$
-    m_restartSelectWizardPage.setDescription( Messages.getString("RestartSelectWizard.4") );  //$NON-NLS-1$
-
+    final ThemeConstructionFactory themeConstructionFactory = new ThemeConstructionFactory( m_scenarioFolder );
+    m_restartSelectWizardPage = new SelectResultWizardPage( "restartSelectionPage", "Ergebniss(e) zur Karte hinzufügen", null, resultFilter, themeConstructionFactory );
+    m_restartSelectWizardPage.setResultMeta( m_resultModel );
+    m_restartSelectWizardPage.setTitle( Messages.getString( "RestartSelectWizard.3" ) ); //$NON-NLS-1$
+    m_restartSelectWizardPage.setDescription( Messages.getString( "RestartSelectWizard.4" ) ); //$NON-NLS-1$
     addPage( m_restartSelectWizardPage );
   }
 
@@ -91,8 +124,11 @@ public class RestartSelectWizard extends Wizard implements INewWizard
   @Override
   public boolean performFinish( )
   {
-//    final String selectedPath = m_restartSelectWizardPage.getSelectedPath();
-//    m_feature.setProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_RESTART_PATH, selectedPath );
+    // final String selectedPath = m_restartSelectWizardPage.getSelectedPath();
+    final IResultMeta[] selectedResults = m_restartSelectWizardPage.getSelectedResults();
+    for( int i = 0; i < selectedResults.length; i++ )
+      m_feature.setProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_RESTART_PATH, selectedResults[i].getFullPath() );
+    m_feature.setProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_RESTART, selectedResults.length > 0 );
     return true;
   }
 
@@ -100,10 +136,9 @@ public class RestartSelectWizard extends Wizard implements INewWizard
    * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
    *      org.eclipse.jface.viewers.IStructuredSelection)
    */
+  @SuppressWarnings("unchecked")
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
-    // TODO Auto-generated method stub
-
   }
 
   public File[] getSelectedFiles( )

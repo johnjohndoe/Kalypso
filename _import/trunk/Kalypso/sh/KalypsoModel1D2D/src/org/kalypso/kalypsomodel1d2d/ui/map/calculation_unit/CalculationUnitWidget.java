@@ -154,10 +154,6 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
     {
       throw new RuntimeException( Messages.getString( "CalculationUnitWidget.3" ) ); //$NON-NLS-1$
     }
-
-    // dataModel.setData(
-    // ICommonKeys.KEY_BOUNDARY_CONDITION_THEME,
-    // bcTheme );
     final CommandableWorkspace bcWorkspace = bcTheme.getWorkspace();
     m_dataModel.setData( ICommonKeys.KEY_BOUNDARY_CONDITION_CMD_WORKSPACE, bcWorkspace );
     m_dataModel.setData( ICommonKeys.KEY_GRAB_DISTANCE_PROVIDER, this );

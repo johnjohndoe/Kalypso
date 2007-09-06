@@ -56,10 +56,12 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.displayelements.DisplayElementDecorator;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -190,19 +192,19 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
 
     while( !calUnitTreeToDraw.isEmpty() )
     {
-      final ICalculationUnit<IFE1D2DElement> currentUnit = calUnitTreeToDraw.removeFirst();
+      final ICalculationUnit<IFENetItem> currentUnit = calUnitTreeToDraw.removeFirst();
       // final Color color = new Color( Color.lightGray );
-      final IFeatureWrapperCollection<IFE1D2DElement> elements = currentUnit.getElements();
-      final List<IFE1D2DElement> visibleElements = elements.query( sourceRect );
+      final IFeatureWrapperCollection<IFENetItem> elements = currentUnit.getElements();
+      final List<IFENetItem> visibleElements = elements.query( sourceRect );
       final boolean includeChildLines = currentUnit.equals( calUnit );
 
-      for( final IFE1D2DElement element : visibleElements )
+      for( final IFeatureWrapper2 element : visibleElements )
       {
         if( element instanceof IPolyElement )
         {
           try
           {
-            final GM_Surface surface = (GM_Surface) element.recalculateElementGeometry();
+            final GM_Surface surface = (GM_Surface) ((IFENetItem) element).recalculateElementGeometry();
             paintSurface( surface, elementColor, (Graphics2D) g, projection );
           }
           catch( final Exception e )
@@ -214,7 +216,7 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
         {
           try
           {
-            final GM_Curve curve = (GM_Curve) element.recalculateElementGeometry();
+            final GM_Curve curve = (GM_Curve) ((IFENetItem) element).recalculateElementGeometry();
             paintLineString( curve, elementColor, (Graphics2D) g, projection );
           }
           catch( final Exception e )
@@ -223,13 +225,13 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
             throw new RuntimeException( e );
           }
         }
-        else if( element instanceof IFELine || element instanceof IElement1D )
+        else if( element instanceof IFELine )
         {
           if( includeChildLines )
           {
             try
             {
-              final GM_Curve curve = (GM_Curve) element.recalculateElementGeometry();
+              final GM_Curve curve = ((IFELine) element).getGeometry();
               paintLineString( curve, lineElementColor, (Graphics2D) g, projection );
             }
             catch( final Exception e )

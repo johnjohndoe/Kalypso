@@ -40,25 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d;
 
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
-import org.kalypso.kalypsomodel1d2d.ui.map.del.DeleteFEElementsWidget;
-import org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget;
+import org.kalypso.ogc.gml.map.widgets.SingleElementSelectWidget;
 
-/**
- * Widget based on {@link DeleteFEElementsWidget} which provide the mechanism to
- * delete juncton contexts
- * 
- * @author Patrice Congo
- */
-public class DeleteJunctionContextWidget extends DeleteFEElementsWidget
+public class DeleteTransitionElementWidget extends SingleElementSelectWidget
 {
-  public DeleteJunctionContextWidget( )
+  public DeleteTransitionElementWidget( )
   {
-    super( 
-        new FENetConceptSelectionWidget( 
-            Kalypso1D2DSchemaConstants.WB1D2D_F_JUNTCION_CONTEXT, 
-            Messages.getString("DeleteJunctionContextWidget.0"),  //$NON-NLS-1$
-            Messages.getString("DeleteJunctionContextWidget.1") ) ); //$NON-NLS-1$
+    super( "name", "tooltip");
   }
   
 }

@@ -45,7 +45,9 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ITransitionElement;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 public class CreateTransitionElementCommand implements IDiscrModel1d2dChangeCommand
 {
@@ -85,8 +87,9 @@ public class CreateTransitionElementCommand implements IDiscrModel1d2dChangeComm
         m_transitionElement.addElementAsRef( m_line1D );
         m_transitionElement.addElementAsRef( m_line2D );
         final Feature feature = m_transitionElement.getWrappedFeature();
-        feature.setProperty( ITransitionElement.PROP_GEOMETRY, m_transitionElement.recalculateElementGeometry() );
         feature.invalidEnvelope();
+        final GMLWorkspace workspace = feature.getWorkspace();
+        workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, feature.getParent(), feature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
       }
       catch( Exception e )
       {
