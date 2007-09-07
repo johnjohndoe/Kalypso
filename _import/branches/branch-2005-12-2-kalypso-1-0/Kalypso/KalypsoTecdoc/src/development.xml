@@ -462,6 +462,18 @@
             </row>
 
             <row vendor="sachsen">
+              <entry>KalypsoModelElbePolte</entry>
+
+              <entry>Plugin/Library</entry>
+
+              <entry>Integration des Vorhersagemodells für die Elbe und das 
+              Berechnungsmodells für die Zwischengebietszuflüsse der Elbe
+              in Form eines Plugins für die lokale Benutzung,
+              und in Form einer Library für die serverseitige
+              Benutzung.</entry>
+            </row>
+
+            <row vendor="sachsen">
               <entry>KalypsoModelSpree</entry>
 
               <entry>Plugin/Library</entry>
@@ -516,9 +528,14 @@
         <secondary>Konfigurationsmanagement</secondary>
       </indexterm>
 
-      <para>Neben allgemeinen Code Konfigurationen werden spezielle
+      <para vendor="sachsen-anhalt">Neben allgemeinen Code Konfigurationen werden spezielle
       Konfigurationseinheiten für die Integration von KALYPSO in die Umgebung
       der Hochwasservorhersagezentrale Sachsen-Anhalt benötigt. <xref
+      linkend="tbl_develop_Konfig_Plugins" /> listet diese Module auf.</para>
+      
+      <para vendor="sachsen">Neben allgemeinen Code Konfigurationen werden spezielle
+      Konfigurationseinheiten für die Integration von KALYPSO in die Umgebung
+      des Landeshochwasserzentrums Sachsen benötigt. <xref
       linkend="tbl_develop_Konfig_Plugins" /> listet diese Module auf.</para>
 
       <para><table id="tbl_develop_Konfig_Plugins">
