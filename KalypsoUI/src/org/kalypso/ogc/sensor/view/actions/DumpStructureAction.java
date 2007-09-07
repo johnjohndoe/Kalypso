@@ -58,7 +58,7 @@ public class DumpStructureAction extends AbstractObservationChooserAction implem
   public DumpStructureAction( final ObservationChooser explorer )
   {
     super( explorer, "Struktur exportieren", ImageProvider.IMAGE_ZML_REPOSITORY,
-        "Exportiert die Gesamtstruktur in der Zwischenablage" );
+        "Exportiert die Gesamtstruktur in die Zwischenablage" );
 
     explorer.addSelectionChangedListener( this );
 

@@ -68,6 +68,7 @@ import org.kalypso.ogc.sensor.view.actions.AddRepositoryAction;
 import org.kalypso.ogc.sensor.view.actions.CollapseAllAction;
 import org.kalypso.ogc.sensor.view.actions.ConfigurePreviewAction;
 import org.kalypso.ogc.sensor.view.actions.CopyLinkAction;
+import org.kalypso.ogc.sensor.view.actions.DumpExtendedAction;
 import org.kalypso.ogc.sensor.view.actions.DumpStructureAction;
 import org.kalypso.ogc.sensor.view.actions.ExportAsFileAction;
 import org.kalypso.ogc.sensor.view.actions.ReloadAction;
@@ -108,6 +109,8 @@ public class ObservationChooser extends AbstractViewer implements IRepositoryCon
   private CopyLinkAction m_copyLinkAction;
 
   private DumpStructureAction m_dumpAction;
+
+  private DumpExtendedAction m_dumpExtendedAction;
 
   private IAction m_viewWQRelationAction;
 
@@ -152,6 +155,9 @@ public class ObservationChooser extends AbstractViewer implements IRepositoryCon
 
     if( m_dumpAction != null )
       m_dumpAction.dispose();
+
+    if( m_dumpExtendedAction != null )
+      m_dumpExtendedAction.dispose();
   }
 
   private void initActions()
@@ -161,6 +167,7 @@ public class ObservationChooser extends AbstractViewer implements IRepositoryCon
     m_confAction = new ConfigurePreviewAction( this );
     m_reloadAction = new ReloadAction( this );
     m_dumpAction = new DumpStructureAction( this );
+    m_dumpExtendedAction = new DumpExtendedAction( this );
     m_collapseAction = new CollapseAllAction( this );
     m_exportAsFileAction = new ExportAsFileAction( this );
     m_copyLinkAction = new CopyLinkAction( this );
@@ -170,7 +177,7 @@ public class ObservationChooser extends AbstractViewer implements IRepositoryCon
 
   private void initContextMenu()
   {
-    final MenuManager menuMgr = new MenuManager( );
+    final MenuManager menuMgr = new MenuManager();
     menuMgr.setRemoveAllWhenShown( true );
     menuMgr.addMenuListener( new IMenuListener()
     {
@@ -198,6 +205,7 @@ public class ObservationChooser extends AbstractViewer implements IRepositoryCon
     menu.add( m_confAction );
     menu.add( m_reloadAction );
     menu.add( m_dumpAction );
+    menu.add( m_dumpExtendedAction );
     menu.add( new Separator() );
     menu.add( m_collapseAction );
     menu.add( new Separator() );
@@ -234,6 +242,7 @@ public class ObservationChooser extends AbstractViewer implements IRepositoryCon
     toolBarManager.add( m_confAction );
     toolBarManager.add( m_reloadAction );
     toolBarManager.add( m_dumpAction );
+    toolBarManager.add( m_dumpExtendedAction );
     toolBarManager.add( new Separator() );
     toolBarManager.add( m_collapseAction );
     toolBarManager.add( new Separator() );

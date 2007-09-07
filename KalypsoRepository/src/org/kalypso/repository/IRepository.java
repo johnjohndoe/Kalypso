@@ -136,7 +136,8 @@ public interface IRepository extends IRepositoryItem
   /**
    * Dumps the contents (structure and summary of items)
    */
-  public void dumpStructure( final Writer writer, final IProgressMonitor monitor ) throws InterruptedException, RepositoryException;
+  public void dumpStructure( final Writer writer, final IProgressMonitor monitor ) throws InterruptedException,
+      RepositoryException;
 
   /**
    * Clears potential resources
