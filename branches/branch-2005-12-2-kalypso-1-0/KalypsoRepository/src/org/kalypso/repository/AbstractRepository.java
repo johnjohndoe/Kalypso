@@ -220,7 +220,8 @@ public abstract class AbstractRepository implements IRepository
   /**
    * @see org.kalypso.repository.IRepository#dumpStructure(java.io.Writer, org.eclipse.core.runtime.IProgressMonitor)
    */
-  public void dumpStructure( final Writer writer, final IProgressMonitor monitor ) throws RepositoryException, InterruptedException
+  public void dumpStructure( final Writer writer, final IProgressMonitor monitor ) throws RepositoryException,
+      InterruptedException
   {
     dumpRecursive( writer, this, "", monitor );
   }
@@ -228,17 +229,17 @@ public abstract class AbstractRepository implements IRepository
   /**
    * Dumps the contents of this item and all its children using recursion
    */
-  private void dumpRecursive( final Writer writer, final IRepositoryItem item, final String indent, final IProgressMonitor monitor )
-      throws RepositoryException, InterruptedException
+  private void dumpRecursive( final Writer writer, final IRepositoryItem item, final String indent,
+      final IProgressMonitor monitor ) throws RepositoryException, InterruptedException
   {
     if( monitor.isCanceled() )
       throw new InterruptedException();
-    
+
     if( item == null )
       return;
-    
+
     monitor.subTask( item.getIdentifier() );
-    
+
     try
     {
       // let's look if the item can be adapted to properties. In the positive,
@@ -248,7 +249,7 @@ public abstract class AbstractRepository implements IRepository
         writer.write( indent + item.toString() + " Properties: " + PropertiesHelper.format( props, ';' ) );
       else
         writer.write( indent + item.toString() );
-      
+
       writer.write( "\n" );
     }
     catch( final IOException e )
@@ -264,7 +265,7 @@ public abstract class AbstractRepository implements IRepository
 
     for( int i = 0; i < items.length; i++ )
       dumpRecursive( writer, items[i], recIndent, monitor );
-    
+
     monitor.worked( 1 );
   }
 
