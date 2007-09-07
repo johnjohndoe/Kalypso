@@ -121,7 +121,7 @@
 	
 	       <!-- Es müssen die gesamten Zeitreihen abgelegt werden! -->
 	       	<echo message="Ablage der Rechenergebnisse"/>
-	       	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.model/observationConf/VorhersageMapping.gml" sourcefilter="${filterAblageQ}" localobs="local1" remoteobs="${vorhersageLinkNormal}" runasync="false"/>
+	       	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.model/observationConf/VorhersageMapping.gml" sourcefilter="${filterAblageQ}" localobs="local1" remoteobs="${vorhersageLinkNormal}" runasync="false" IgnoreIllegalFeaturePath="true"/>
 	    </target>
 
 	 <!-- ================================= 

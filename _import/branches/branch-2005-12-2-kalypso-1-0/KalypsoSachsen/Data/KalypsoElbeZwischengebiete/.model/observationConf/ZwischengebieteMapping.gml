@@ -4,10 +4,10 @@
     <MappingObservation fid="MappingObservation2">
       <gml:name>Usti - Dresden</gml:name>
       <inObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="PSI (Normalbetrieb)"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs://LEER"/>
       </inObservationLink>
       <in1ObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="PSI (Testbetrieb)"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs://LEER"/>
       </in1ObservationLink>
       <outObservationLink>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Zwischengebiete/UstiDresden.zml"/>
@@ -18,10 +18,10 @@
     <MappingObservation fid="MappingObservation3">
       <gml:name>Dresden - Torgau</gml:name>
       <inObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="PSI (Normalbetrieb)"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs://LEER"/>
       </inObservationLink>
       <in1ObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="PSI (Testbetrieb)"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs://LEER"/>
       </in1ObservationLink>
       <outObservationLink>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Zwischengebiete/DresdenTorgau.zml"/>

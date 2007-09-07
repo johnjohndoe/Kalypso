@@ -403,10 +403,11 @@
      	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${pegelMappingURL}" localobs="${pegelLocalSpurMLink}" remoteobs="${pegelRemoteSpurMLink}" runasync="false"/>
      	-->
 
-     	<kalypso.commitPrognoses context="${calc.url}" sourcefilter="${filterCommitPrognoseQ}" featurepath="${exportPrognosenFeaturePath}" gml="${pegelMappingPrognoseQURL}" localobs="${pegelLocalSpurULink}" remoteobs="${pegelRemoteSpurULink}" runasync="false"/>
+     	<kalypso.commitPrognoses context="${calc.url}" sourcefilter="${filterCommitPrognoseQ}" featurepath="${exportPrognosenFeaturePath}" gml="${pegelMappingPrognoseQURL}" localobs="${pegelLocalSpurULink}" remoteobs="${pegelRemoteSpurULink}" runasync="false" IgnoreIllegalFeaturePath="true"/>
+     	<kalypso.commitPrognoses context="${calc.url}" sourcefilter="${filterCommitPrognoseQ}" featurepath="${exportPrognosenFeaturePath}" gml="${pegelMappingPrognoseQURL}" localobs="${pegelLocalSpurOLink}" remoteobs="${pegelRemoteSpurOLink}" runasync="false" IgnoreIllegalFeaturePath="true"/>
     	
-     	<kalypso.commitPrognoses context="${calc.url}" sourcefilter="${filterCommitPrognoseWDown}" featurepath="${exportPrognosenFeaturePath}" gml="${pegelMappingPrognoseWURL}" localobs="${pegelLocalSpurULink}" remoteobs="${pegelRemoteSpurULink}" runasync="false"/>
-     	<kalypso.commitPrognoses context="${calc.url}" sourcefilter="${filterCommitPrognoseWUp}" featurepath="${exportPrognosenFeaturePath}" gml="${pegelMappingPrognoseWURL}" localobs="${pegelLocalSpurOLink}" remoteobs="${pegelRemoteSpurOLink}" runasync="false"/>
+     	<kalypso.commitPrognoses context="${calc.url}" sourcefilter="${filterCommitPrognoseWDown}" featurepath="${exportPrognosenFeaturePath}" gml="${pegelMappingPrognoseWURL}" localobs="${pegelLocalSpurULink}" remoteobs="${pegelRemoteSpurULink}" runasync="false" IgnoreIllegalFeaturePath="true"/>
+     	<kalypso.commitPrognoses context="${calc.url}" sourcefilter="${filterCommitPrognoseWUp}" featurepath="${exportPrognosenFeaturePath}" gml="${pegelMappingPrognoseWURL}" localobs="${pegelLocalSpurOLink}" remoteobs="${pegelRemoteSpurOLink}" runasync="false" IgnoreIllegalFeaturePath="true"/>
     	
      </target>
 </project>

@@ -1,30 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <MappingCollection fid="ID1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://org.kalypso.updateObservationMapping" xmlns:obslink="obslink.zml.kalypso.org" xmlns:gml="http://www.opengis.net/gml" xsi:schemaLocation="http://org.kalypso.updateObservationMapping ">
   <mappingMember>
-    <MappingObservation fid="Usti">
-      <gml:name>Usti</gml:name>
-      <inObservationLink/>
-      <outObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.1_ES.02PG...501010.P3_MW"/>
-      </outObservationLink>
-      <out1ObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.1_ES.02PG...501010.P4_MW"/>
-      </out1ObservationLink>
-      <out3ObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="PSI (Testbetrieb), untere Umhüllende"/>
-      </out3ObservationLink>
-      <out4ObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="PSI (Testbetrieb), obere Umhüllende"/>
-      </out4ObservationLink>
-      <local2>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/Pegel/Usti_unten.zml"/>
-      </local2>
-      <local3>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/Pegel/Usti_oben.zml"/>
-      </local3>
-    </MappingObservation>
-  </mappingMember>
-  <mappingMember>
     <MappingObservation fid="Schoena">
       <gml:description>501010</gml:description>
       <gml:name>Schöna</gml:name>

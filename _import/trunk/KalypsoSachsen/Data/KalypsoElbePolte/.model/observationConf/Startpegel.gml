@@ -5,16 +5,16 @@
       <gml:description>1040</gml:description>
       <gml:name>Brandys</gml:name>
       <inObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.9_CR.02PG...1040"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.9_CR.02PG...1040.Q_MW"/>
       </inObservationLink>
       <in1ObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.9_CR.02PG...91040"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.9_CR.02PG...91040.Q_MW"/>
       </in1ObservationLink>
       <in2ObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="link auf PSI-Zeitreihe für CZ-Vorhersage (Normalbetrieb)"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.9CR.02P...1040.Q_F.Q_MW"/>
       </in2ObservationLink>
       <in3ObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="link auf PSI-Zeitreihe für CZ-Vorhersage (Testbetrieb)"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs://LEER"/>
       </in3ObservationLink>
       <outObservationLink>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Pegel/Brandys.zml"/>
@@ -26,16 +26,16 @@
       <gml:description>2190</gml:description>
       <gml:name>Louny</gml:name>
       <inObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.9_CR.02PG...2190"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.9_CR.02PG...2190.Q_MW"/>
       </inObservationLink>
       <in1ObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.9_CR.02PG...92190"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.9_CR.02PG...92190.Q_MW"/>
       </in1ObservationLink>
       <in2ObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="link auf PSI-Zeitreihe für CZ-Vorhersage (Normalbetrieb)"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.9CR.02P...2190.Q_F.Q_MW"/>
       </in2ObservationLink>
       <in3ObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="link auf PSI-Zeitreihe für CZ-Vorhersage (Testbetrieb)"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs://LEER"/>
       </in3ObservationLink>
       <outObservationLink>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Pegel/Louny.zml"/>
@@ -47,16 +47,16 @@
       <gml:description>2001</gml:description>
       <gml:name>Praha</gml:name>
       <inObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.9_CR.02PG...2001"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.9_CR.02PG...2001.Q_MW"/>
       </inObservationLink>
       <in1ObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.9_CR.02PG...92001"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://TN.9_CR.02PG...92001.Q_MW"/>
       </in1ObservationLink>
       <in2ObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="link auf PSI-Zeitreihe für CZ-Vorhersage (Normalbetrieb)"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.9CR.02P...2001.Q_F.Q_MW"/>
       </in2ObservationLink>
       <in3ObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="link auf PSI-Zeitreihe für CZ-Vorhersage (Testbetrieb)"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs://LEER"/>
       </in3ObservationLink>
       <outObservationLink>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Pegel/Praha.zml"/>
