@@ -108,7 +108,7 @@ ToDo: Help-Ids setzen!!! -->
 		
 		<!-- 
 		Diagramm -->
-		<arg name="diagTemplate" value=".templates/calcCase/wiz02_ZwgDresdenTorgau.odt"/> 
+		<arg name="diagTemplate" value=".templates/calcCase/wiz03_ZwgDresdenTorgau.odt"/> 
 		
 		<!--  -->
 		<arg name="ignoreType1" value="W"/>
