@@ -208,18 +208,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
     for( final KeyPoolListener listener : m_keyMap.values() )
     {
       final KeyInfo keyInfo = pool.getInfoForKey( listener.getKey() );
-      if( keyInfo.isDirty() )
-      {
-        try
-        {
-          keyInfo.onLoaderObjectInvalid( keyInfo.getObject(), false );
-          keyInfo.setDirty( false );
-        }
-        catch( final Exception e )
-        {
-          e.printStackTrace();
-        }
-      }
+      keyInfo.reload();
     }
   }
 
@@ -281,7 +270,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
    * This method block until the gml is loaded, which may take some time
    * </p>.
    */
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
+  @SuppressWarnings("unchecked")
   public <T extends IFeatureWrapper2> T getModel( final Class<T> modelClass ) throws CoreException
   {
     final CommandableWorkspace workspace = getModelWorkspace( modelClass );
