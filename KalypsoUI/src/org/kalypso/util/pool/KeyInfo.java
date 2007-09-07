@@ -272,4 +272,20 @@ public final class KeyInfo extends Job implements ILoaderListener
     for( final IPoolListener element : ls )
       element.dirtyChanged( m_key, isDirty );
   }
+
+  public void reload( )
+  {
+    if( !isDirty() )
+      return;
+
+    try
+    {
+      onLoaderObjectInvalid( getObject(), false );
+      setDirty( false );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+    }
+  }
 }

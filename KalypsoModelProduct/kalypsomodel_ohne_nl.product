@@ -85,8 +85,6 @@
       <plugin id="org.eclipse.help"/>
       <plugin id="org.eclipse.help.base"/>
       <plugin id="org.eclipse.help.ui"/>
-      <plugin id="org.eclipse.jdt.compiler.apt" fragment="true"/>
-      <plugin id="org.eclipse.jdt.compiler.tool" fragment="true"/>
       <plugin id="org.eclipse.jdt.core"/>
       <plugin id="org.eclipse.jdt.core.manipulation"/>
       <plugin id="org.eclipse.jdt.debug"/>
@@ -135,7 +133,10 @@
       <plugin id="org.kalypso.NACalcJob"/>
       <plugin id="org.kalypso.afgui"/>
       <plugin id="org.kalypso.auth"/>
-      <plugin id="org.kalypso.chart"/>
+      <plugin id="org.kalypso.chart.ext.base"/>
+      <plugin id="org.kalypso.chart.ext.observation"/>
+      <plugin id="org.kalypso.chart.factory"/>
+      <plugin id="org.kalypso.chart.framework"/>
       <plugin id="org.kalypso.chart.ui"/>
       <plugin id="org.kalypso.commons"/>
       <plugin id="org.kalypso.contribs.eclipseplatform"/>
@@ -145,12 +146,12 @@
       <plugin id="org.kalypso.contribs.ogc31"/>
       <plugin id="org.kalypso.core"/>
       <plugin id="org.kalypso.deegree"/>
+      <plugin id="org.kalypso.deegree2"/>
       <plugin id="org.kalypso.featureview"/>
       <plugin id="org.kalypso.gml.processes"/>
       <plugin id="org.kalypso.gmlschema"/>
       <plugin id="org.kalypso.jwsdp"/>
       <plugin id="org.kalypso.kalypso1d2d.pjt"/>
-      <plugin id="org.kalypso.layerprovider"/>
       <plugin id="org.kalypso.metadoc"/>
       <plugin id="org.kalypso.model.product"/>
       <plugin id="org.kalypso.model.wspm.core"/>
