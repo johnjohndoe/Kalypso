@@ -40,23 +40,22 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ant;
 
-import java.awt.Frame;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
-
-import javax.swing.JFileChooser;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
-import org.kalypso.contribs.java.swing.filechooser.RegexFileFilter;
+import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.contribs.java.util.logging.LoggerUtilities;
 
@@ -170,111 +169,88 @@ public class GetFileTask extends Task
 
     final String taskDesk = getDescription();
     final String msgTitle = taskDesk == null ? "Datei öffnen" : taskDesk;
-    if( taskDesk != null )
-      logger.log( Level.INFO, LoggerUtilities.CODE_NEW_MSGBOX, msgTitle );
 
     // validieren
     if( m_targetFile == null )
     {
+      logger.log( Level.INFO, LoggerUtilities.CODE_NEW_MSGBOX, msgTitle );
       logger.log( Level.SEVERE, LoggerUtilities.CODE_SHOW_MSGBOX, "Property 'targetFile' must be set." );
       return;
     }
 
-    //  REMARK: it seems that is impossible to retrieve a shell within the ant-thread
-    //  So we are using swing instead...
-    //  HACK: we need a parent-frame, so we use the very first available... is this always ok?
-    final JFileChooser fileChooser = new JFileChooser();
-    if( m_sourceDir != null )
-      fileChooser.setCurrentDirectory( m_sourceDir );
-    fileChooser.setDialogTitle( msgTitle );
-    fileChooser.setDialogType( JFileChooser.OPEN_DIALOG );
-
-    for( final Iterator iter = m_filters.iterator(); iter.hasNext(); )
-    {
-      final FileFilter ff = (FileFilter)iter.next();
-      fileChooser.addChoosableFileFilter( new RegexFileFilter( ff.getDescription(), ff.getPattern() ) );
-    }
-
-//    Display display = PlatformUI.getWorkbench().getDisplay();
-//    Shell shell = display.getActiveShell();
-//      System.out.println( "Shell: " + shell );
+    // Ask user for file
     
-    if( m_filters.size() > 0 )
-      fileChooser.setFileFilter( fileChooser.getChoosableFileFilters()[1] );
-
-    // HACK: normally we could use null, as parent component, but in that case the dialog appears as a spearate
-    // application
-    // in windows task menu and it is also possible that the dialog is behind kalypso.
-    // When using the first of all available frames, the dialog gets part of the kalypso-application, it is only
-    // possible to hide it behind the progress-bar window.
-    // REMARK: this only works, if a map is present, as the map resides inside a embedded frame (see SWT-AWT), so we
-    // really are using one
-    // of the currently open maps as the parent for this dialog...
-    // QUESTION: is it somehow possible to a) get the handle to the progress dialog window, and b) to use this somehow
-    // as the parnt component?
-    final Frame[] frames = Frame.getFrames();
-    final Frame frame = frames[0];
-//    frame.toFront();
-
-    frame.addMouseListener( new MouseAdapter()
+    /* Use array in order to be able to return value from runnable */
+    final File[] resultFile = new File[1];
+    final Display display = PlatformUI.getWorkbench().getDisplay();
+    display.syncExec( new Runnable()
     {
-      /**
-       * @see java.awt.event.MouseAdapter#mouseEntered(java.awt.event.MouseEvent)
-       */
-      public void mouseEntered( MouseEvent e )
+      public void run()
       {
-        System.out.println( "Hallo" );
-        frame.toFront();
+        resultFile[0] = askForFile( display );
       }
     } );
 
-    if( fileChooser.showOpenDialog( frame ) != JFileChooser.APPROVE_OPTION )
+    if( resultFile[0] == null )
     {
+      logger.log( Level.INFO, LoggerUtilities.CODE_NEW_MSGBOX, msgTitle );
       logger.log( Level.INFO, LoggerUtilities.CODE_SHOW_MSGBOX,
-          "Abbruch durch den Benutzer, der Gebietsniederschlag wurde nicht erneut berechnet." );
+          "Abbruch durch den Benutzer" );
       return;
     }
-
-    final File externalFile = fileChooser.getSelectedFile();
-    //    final String resultDir = fileDialog.getDirectory();
-    //    final String resultFile = fileDialog.getFile();
-
-    // 'Datei öffnen'-Dialog anzeigen
-    //    final Display display = PlatformUI.getWorkbench().getDisplay();
-    //    final Shell shell = new GetShellFromDisplay( display ).getShell();
-    //
-    //    final FileDialog dialog = new FileDialog( shell, SWT.OPEN );
-    //    if( m_sourceDir != null )
-    //      dialog.setFilterPath( m_sourceDir.getAbsolutePath() );
-    //    final String resultPath = dialog.open();
-
-    //    if( resultFile == null )
-    //    {
-    //      logger.log( Level.INFO, LoggerUtilities.CODE_SHOW_MSGBOX,
-    //          "Abbruch durch den Benutzer, der Gebietsniederschlag wurde nicht erneut berechnet." );
-    //
-    //      return;
-    //    }
-
-    //    final File externalFile = new File( resultDir, resultFile );
-
-    logger.log( Level.INFO, LoggerUtilities.CODE_SHOW_DETAILS, "Gewählte Datei: " + externalFile.getAbsolutePath() );
-    logger.log( Level.INFO, LoggerUtilities.CODE_SHOW_DETAILS, "Datei wird kopiert nach: " + m_targetFile );
 
     // Datei kopieren
     try
     {
-      FileUtils.copyFile( externalFile, m_targetFile );
+      FileUtils.copyFile( resultFile[0], m_targetFile );
     }
     catch( final IOException e )
     {
+      logger.log( Level.INFO, LoggerUtilities.CODE_NEW_MSGBOX, msgTitle );
+      logger.log( Level.INFO, LoggerUtilities.CODE_SHOW_DETAILS, "Quelle: " + resultFile[0].getAbsolutePath() );
+      logger.log( Level.INFO, LoggerUtilities.CODE_SHOW_DETAILS, "Ziel: " + m_targetFile );
       logger.log( Level.SEVERE, LoggerUtilities.CODE_SHOW_MSGBOX, "Fehler beim Kopieren der Datei: "
           + e.getLocalizedMessage() );
       return;
     }
 
+    logger.log( Level.INFO, LoggerUtilities.CODE_NONE, "Quelle: " + resultFile[0].getAbsolutePath() );
+    logger.log( Level.INFO, LoggerUtilities.CODE_NONE, "Ziel: " + m_targetFile );
+    
     // evtl. ergebnis property setzen
     if( m_resultProperty != null )
       m_propertyAdder.addProperty( m_resultProperty, "true", null );
+  }
+
+  protected File askForFile( Display display )
+  {
+    final Shell shell = findShell( display );
+
+    final FileDialog dialog = new FileDialog( shell, SWT.OPEN );
+    if( m_sourceDir != null )
+      dialog.setFilterPath( m_sourceDir.getAbsolutePath() );
+    
+    final String resultPath = dialog.open();
+    if( resultPath == null )
+      return null;
+
+    return new File( resultPath );
+  }
+
+  private Shell findShell( final Display display )
+  {
+    final String shellTitle = JFaceResources.getString("ProgressMonitorDialog.title");
+    
+    final Shell[] shells = display.getShells();
+    // HACK: we are looking for a progress monitor here...
+    // Hopefully thing work also for the next eclipse versions...
+    for( int i = 0; i < shells.length; i++ )
+    {
+      final Shell shell = shells[i];
+      if( shell.getText().equals(shellTitle))
+        return shell;
+    }
+
+    return shells[0];
   }
 }
