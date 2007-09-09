@@ -11,7 +11,9 @@
 	<property name="szenario_TestDwdUrl" value="${kalypso.sa.dwddav.url}/lm_test.txt" />
 
 	<property name="dwdRasterLocalPath" value="${calc.dir}/dwd/lm_aktuell.txt" />
+	<property name="dwdRasterPath" value="${calc.path}/dwd/lm_aktuell.txt" />
 	<property name="dwdRasterLocalURL" value="${calc.url}/dwd/lm_aktuell.txt" />
+	<property name="downloadDWDDir" value="X:\DWD" />
 
 	<!-- - - - - - - - - - - - - - - - - - 
           target: fake                      nur damit das Projekt nicht schreit
@@ -262,4 +264,22 @@
 		</kalypso.dwdTask>
 	</target>
 
+	<target name="chooseDWD_LM" depends="calculationProperties">
+		<echo message="Die vorhandene LM-Datei durch eine frei gewählte ersetzen." />
+		
+		<!-- Open file dialog and replace existing lm-file with new one. -->
+		<kalypso.getFileTask description="DWD LM-Datei auswählen" sourceDir="${downloadDWDDir}" targetFile="${dwdRasterLocalPath}" resultProperty="getExternalDWDFileResult">
+			<filefilter description="DWD Lokalmodel-Datei" pattern="lm.*txt" />
+		</kalypso.getFileTask>	
+		<!-- Call special target in order to make execution dependent on result of file dialog  -->
+		<antcall target="recalcGebietsniederschlag"/>
+	</target>
+	
+	<target name="recalcGebietsniederschlag" if="getExternalDWDFileResult">
+		<echo message="Gebietsniederschlagsmodell wird erneut berechnet." />
+
+		<eclipse.refreshLocal resource="${dwdRasterPath}" />
+		<antcall target="gebietsniederschlag"/>
+	</target>
+	
 </project>

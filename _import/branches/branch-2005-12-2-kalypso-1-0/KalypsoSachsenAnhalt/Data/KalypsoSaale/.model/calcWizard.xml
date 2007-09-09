@@ -61,6 +61,11 @@
 		<!-- 
         Tabelle -->
 		<arg name="zmlTableShow" value="selected"/>
+		<!-- 
+        Ant-Knopf -->
+		<arg name="buttonText" value="DWD-Vorhersage auswählen"/>
+		<arg name="buttonTooltip" value="Die vorhandene DWD-Vorhersage durch eine externe Datei ersetzen."/>
+		<arg name="buttonLaunch" value="chooseDWD_LM"/>
 	</page>
 	<!-- Niederschlagsgebiete Saale / Ilm-->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle und Eingabe Niederschläge - Niederschlagsgebiete - Saale / Ilm" imageLocation="icons/calcwizard/kalypso32.gif">
