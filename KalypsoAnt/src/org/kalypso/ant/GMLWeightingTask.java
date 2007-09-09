@@ -202,7 +202,6 @@ public class GMLWeightingTask extends Task
                 + m_propRelationSourceFeature );
 
           final OperationFilter offsetFilter = filterFac.createOperationFilter();
-          filterList.add( offsetFilter );
           offsetFilter.setOperator( "+" );
           offsetFilter.setOperand( Double.toString( offset ) );
 
@@ -288,9 +287,10 @@ public class GMLWeightingTask extends Task
           /* Empty NOperation filter is forbidden */
           if( offsetSummands.isEmpty() )
           {
-            logger.log( Level.SEVERE, LoggerUtilities.CODE_SHOW_MSGBOX, "Leere Summe für Feature: " + targetFE.getId() );
-            return;
+            logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_DETAILS, "Leere Summe für Feature: " + weightFE.getId() );
           }
+          else
+            filterList.add( offsetFilter );
         }
 
         /* Empty NOperation filter is forbidden */
