@@ -34,6 +34,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.text.DateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -47,6 +48,7 @@ import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.java.net.UrlResolver;
 import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.contribs.java.util.logging.LoggerUtilities;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.dwd.dwdzml.DwdzmlConf;
 import org.kalypso.dwd.dwdzml.ObjectFactory;
 import org.kalypso.dwd.dwdzml.DwdzmlConfType.TargetType;
@@ -73,11 +75,16 @@ import com.braju.format.Format;
 /**
  * @see org.kalypso.dwd.DWDTask
  * 
- * @author doemming
+ * @author Andreas von Dömming
  */
 public class DWDTaskDelegate
 {
-  private final DateFormat DF = DateFormat.getDateTimeInstance( DateFormat.MEDIUM, DateFormat.SHORT );
+  private static final DateFormat DWD_DATEFORMAT = DateFormat.getDateTimeInstance( DateFormat.MEDIUM, DateFormat.SHORT );
+
+  static
+  {
+    DWD_DATEFORMAT.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
+  }
 
   private Properties m_metadata = null;
 
@@ -86,7 +93,7 @@ public class DWDTaskDelegate
       final Properties metadata ) throws Exception
   {
     m_metadata = metadata;
-    
+
     logger.log( Level.FINE, LoggerUtilities.CODE_NONE, " inputRaster: " + obsRasterURL );
     logger.log( Level.FINE, LoggerUtilities.CODE_NONE, " raster to zml mapping: " + dwd2zmlConfUrl );
     logger.log( Level.FINE, LoggerUtilities.CODE_NONE, " context for targets (zml-files): " + targetContext );
@@ -106,14 +113,21 @@ public class DWDTaskDelegate
     }
     catch( final Exception e )
     {
-      logger.log( Level.SEVERE, LoggerUtilities.CODE_SHOW_MSGBOX, "Konnte Raster nicht laden, DWD-Vorhersage kann nicht verwendet werden: "
-          + e.getLocalizedMessage() );
+      logger.log( Level.SEVERE, LoggerUtilities.CODE_SHOW_MSGBOX,
+          "Konnte Raster nicht laden, DWD-Vorhersage kann nicht verwendet werden: " + e.getLocalizedMessage() );
     }
 
     if( obsRaster != null )
     {
-      final Date[] dates = obsRaster.getDates();
-      final Date firstRasterDate = dates == null || dates.length == 0 ? null : dates[0];
+      final Calendar baseDateCal = Calendar.getInstance();
+      baseDateCal.setTime( obsRaster.getBaseDate() );
+      
+      // REMARK: as the DWD Date wa previously read with UTC-1 (probably wrongly), because of the Saale-Model (HWVOR00),
+      // we now delete that hour from the date in order to have a nice message with even dates 0/12 hours.
+      // This has to be corrected as sson as we know what timeszone the DWD-LM-Data is truly in.
+      baseDateCal.add( Calendar.HOUR, -1 );
+
+      final Date firstRasterDate = baseDateCal.getTime();
 
       /* Produce warning, if rasterDate is much before startForecast */
       if( firstRasterDate == null || startForecast == null )
@@ -127,19 +141,20 @@ public class DWDTaskDelegate
         final long distance = startForecast.getTime() - firstRasterDate.getTime();
         final Double distanceInHours = new Double( (double)distance / ( 1000 * 60 * 60 ) );
 
-        final String msg = Format.sprintf( "DWD-Lokalmodell vom %s: die Daten sind %d Stunden alt.", new Object[]
-        {
-            DF.format( firstRasterDate ),
-            distanceInHours } );
+        final String msg = Format.sprintf( "DWD-Lokalmodell vom %s", new Object[]
+        { DWD_DATEFORMAT.format( firstRasterDate ) } );
 
         if( distanceInHours.doubleValue() > 12 )
         {
-          logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_MSGBOX, "DWD Daten veraltet, bitte prüfen Sie den Dateneingang." );
+          logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_MSGBOX,
+              "DWD Daten veraltet, bitte prüfen Sie den Dateneingang." );
           logger.log( Level.INFO, LoggerUtilities.CODE_SHOW_DETAILS, msg );
         }
         else if( distanceInHours.doubleValue() < -12 )
         {
-          logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_MSGBOX, "Vorhersagezeitraum liegt deutlich vor dem Datum der DWD Daten." );
+          logger
+              .log( Level.WARNING, LoggerUtilities.CODE_SHOW_MSGBOX,
+                  "Vorhersagezeitraum liegt deutlich (>12h) vor dem Datum der DWD Daten. Bitte prüfen Sie den Dateneingang." );
           logger.log( Level.INFO, LoggerUtilities.CODE_SHOW_DETAILS, msg );
         }
         else
@@ -269,10 +284,6 @@ public class DWDTaskDelegate
         try
         {
           marshaller.marshal( observationType, streamWriter );
-        }
-        catch( Exception e )
-        {
-          // nothing
         }
         finally
         {

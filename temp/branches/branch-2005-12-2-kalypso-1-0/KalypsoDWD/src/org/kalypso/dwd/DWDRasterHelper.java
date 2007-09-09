@@ -52,6 +52,7 @@ import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -78,6 +79,15 @@ public class DWDRasterHelper
   private final static Pattern HEADER_DYNAMIC = Pattern.compile( " " + DATUM + " +" + KEY + " +" + STUNDE );
 
   private final static SimpleDateFormat DATEFORMAT_RASTER = new SimpleDateFormat( "yyMMddHHmm" );
+
+  static
+  {
+    // REMARK: Wir setzen hier explizit die Zeitzone für die Datümer der LM Datei
+    // Die Zeitzone ist Momentan uf 'GMT-1:0' gesetzt, da so die Daten identisch zum HWVOR00 (Saale) Modell interpretiert werden.
+    // Dies ist vermutlich nicht richtig (TODO: verifizieren)
+    // TODO: noch besser wäre es, die Zeitzone 'von aussen' konfigurierbar zu machen
+    DATEFORMAT_RASTER.setTimeZone( TimeZone.getTimeZone( "GMT-1:00" ) );
+  }
 
   /**
    * Return the date of the dwd forecast file. The date is coded in the file name.
@@ -218,7 +228,6 @@ public class DWDRasterHelper
         final Matcher dynamicHeaderMatcher = HEADER_DYNAMIC.matcher( line );
         if( dynamicHeaderMatcher.matches() ) // lm1
         {
-          System.out.println( line );
           final Date startDate = DATEFORMAT_RASTER.parse( dynamicHeaderMatcher.group( 1 ) );
           final int key = Integer.parseInt( dynamicHeaderMatcher.group( 2 ) );
           final long hour = Long.parseLong( dynamicHeaderMatcher.group( 3 ) );
@@ -238,7 +247,6 @@ public class DWDRasterHelper
         final Matcher staticHeaderMatcher = HEADER_STATIC.matcher( line );
         if( staticHeaderMatcher.matches() ) // lm2 ??
         {
-          System.out.println( line );
           date = DATEFORMAT_RASTER.parse( staticHeaderMatcher.group( 1 ) );
           final int key = Integer.parseInt( staticHeaderMatcher.group( 2 ) );
           if( key == dwdKey )
@@ -251,6 +259,7 @@ public class DWDRasterHelper
         }
         if( raster == null )
           continue;
+
         switch( lmVersion )
         {
         case 1:
@@ -281,10 +290,6 @@ public class DWDRasterHelper
         }
       }
       return raster;
-    }
-    catch( final Exception e )
-    {
-      throw e;
     }
     finally
     {

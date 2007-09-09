@@ -7,7 +7,7 @@
  * Germany http://www.tuhh.de/wb
  * 
  * and
- *  
+ * 
  * Bjoernsen Consulting Engineers (BCE) Maria Trost 3 56070 Koblenz, Germany http://www.bjoernsen.de
  * 
  * This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General
@@ -29,11 +29,10 @@
  */
 package org.kalypso.dwd;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.SortedMap;
-import java.util.SortedSet;
 import java.util.TreeMap;
-import java.util.TreeSet;
 
 /**
  * 
@@ -43,10 +42,9 @@ import java.util.TreeSet;
  */
 public class DWDObservationRaster
 {
+  private final SortedMap m_valueHash = new TreeMap(); // (date,double[])
 
   private final int m_dwdKey;
-
-  private final SortedMap m_valueHash = new TreeMap(); // (date,double[])
 
   private final int m_maxCells;
 
@@ -73,14 +71,13 @@ public class DWDObservationRaster
   public void setValueFor( final Date date, final int cellPos, final double value )
   {
     if( !m_valueHash.containsKey( date ) )
-    {
       m_valueHash.put( date, new double[m_maxCells] );
-    }
+
     final double[] values = (double[])m_valueHash.get( date );
     values[cellPos] = value;
   }
 
-  public double getValueFor( Date date, int cellPos )
+  public double getValueFor( final Date date, final int cellPos )
   {
     final double[] values = (double[])m_valueHash.get( date );
     return values[cellPos];
@@ -89,18 +86,31 @@ public class DWDObservationRaster
   /** Returns all known dates by this raster. The dates are sorted in ascending order. */
   public Date[] getDates()
   {
-    final SortedSet sort = new TreeSet( m_valueHash.keySet() );
-    return (Date[])sort.toArray( new Date[sort.size()] );
+    return (Date[])m_valueHash.keySet().toArray( new Date[m_valueHash.size()] );
   }
 
   public Date[] getDates( Date min, Date max )
   {
-    final SortedSet sort = new TreeSet( m_valueHash.keySet() );
     if( min == null )
-      min = (Date)sort.first();
+      min = (Date)m_valueHash.firstKey();
     if( max == null )
-      max = (Date)sort.last();
-    final SortedSet result = sort.subSet( min, max );
-    return (Date[])result.toArray( new Date[result.size()] );
+      max = (Date)m_valueHash.lastKey();
+    final SortedMap result = m_valueHash.subMap( min, max );
+    return (Date[])result.keySet().toArray( new Date[result.size()] );
+  }
+
+  public Date getBaseDate()
+  {
+    final Date[] dates = getDates();
+    final Date firstRasterDate = dates == null || dates.length == 0 ? null : dates[0];
+    if( firstRasterDate == null )
+      return null;
+
+    // REMARK: we assume that the first date is always BaseDate + 1
+    final Calendar instance = Calendar.getInstance();
+    instance.setTime( firstRasterDate );
+    instance.add( Calendar.HOUR, -1 );
+
+    return instance.getTime();
   }
 }
