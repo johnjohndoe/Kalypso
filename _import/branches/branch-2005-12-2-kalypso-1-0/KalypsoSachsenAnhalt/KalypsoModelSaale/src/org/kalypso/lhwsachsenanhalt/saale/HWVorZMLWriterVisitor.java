@@ -160,6 +160,7 @@ public class HWVorZMLWriterVisitor implements FeatureVisitor
     {
       writer = new BufferedWriter( new FileWriter( file ) );
       m_converter.toHWVOR00( writer );
+      writer.close();
     }
     finally
     {

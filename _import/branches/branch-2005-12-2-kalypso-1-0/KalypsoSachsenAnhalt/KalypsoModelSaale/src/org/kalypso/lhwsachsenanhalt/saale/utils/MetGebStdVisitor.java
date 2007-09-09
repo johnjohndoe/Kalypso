@@ -151,10 +151,9 @@ public class MetGebStdVisitor implements IPropertiesFeatureVisitor
     try
     {
       m_dwdConf = m_dwdFactory.createDwdzmlConf();
-      // TODO: check these values
       m_dwdConf.setDefaultStatusValue( 1 );
       m_dwdConf.setDwdKey( 424 );
-      m_dwdConf.setNumberOfCells( 3886 );
+      m_dwdConf.setNumberOfCells( 676 );
 
       final URL contextUrl = new URL( context );
       final URL metGebUrl = new URL( contextUrl, metGebPath );
@@ -176,10 +175,9 @@ public class MetGebStdVisitor implements IPropertiesFeatureVisitor
         // DWD Rasterzellen sammeln
         final TargetType target = m_dwdFactory.createDwdzmlConfTypeTargetType();
         final List mapList = target.getMap();
-        createMapType( mapList, csv.getItem( i, 17 ) );
-        createMapType( mapList, csv.getItem( i, 18 ) );
-        createMapType( mapList, csv.getItem( i, 19 ) );
-        createMapType( mapList, csv.getItem( i, 20 ) );
+
+        createMapTypes( mapList, csv, i );
+
         m_dwdTargetMap.put( id, target );
       }
     }
@@ -195,18 +193,28 @@ public class MetGebStdVisitor implements IPropertiesFeatureVisitor
     }
   }
 
-  private void createMapType( final List mapList, final String cellPostStr ) throws JAXBException
+  private void createMapTypes( final List mapList, final CSV csv, final int index ) throws JAXBException
   {
-    final int cellPos = Integer.parseInt( cellPostStr );
-    if( cellPos == 0 )
-      return;
+    final List cellPoses = new ArrayList();
+    for( int i = 0; i < 4; i++ )
+    {
+      final String cellPosStr = csv.getItem( index, i + 17 );
+      final Integer cellPos = Integer.valueOf( cellPosStr );
+      if( cellPos.intValue() != 0 )
+        cellPoses.add( cellPos );
+    }
 
-    final MapType mapType = m_dwdFactory.createDwdzmlConfTypeTargetTypeMapType();
-    // immer Faktor 1.0 im Saale-Modell
-    mapType.setFactor( 1 );
-    mapType.setCellPos( cellPos );
+    final double factor = 1.0 / cellPoses.size();
+    for( final Iterator iter = cellPoses.iterator(); iter.hasNext(); )
+    {
+      final Integer cellPos = (Integer)iter.next();
 
-    mapList.add( mapType );
+      final MapType mapType = m_dwdFactory.createDwdzmlConfTypeTargetTypeMapType();
+      mapType.setFactor( factor );
+      mapType.setCellPos( cellPos.intValue() - 1 );
+
+      mapList.add( mapType );
+    }
   }
 
   /**
@@ -227,14 +235,22 @@ public class MetGebStdVisitor implements IPropertiesFeatureVisitor
   {
     final TimeseriesLinkType targetLink = (TimeseriesLinkType)f.getProperty( m_dwd2ZmlTargetLink );
     if( targetLink == null )
+    {
       System.out.println( "Kein DWD-Target-Link (" + m_dwd2ZmlTargetLink + ") für Feature mit ID: " + f.getId() );
+      return;
+    }
 
     // target types are already created, just set the target link and add it into the dwdConf
     final TargetType target = (TargetType)m_dwdTargetMap.get( pnr );
-    target.setTargetZR( targetLink.getHref() );
+    if( target == null )
+      System.out.println( "Kein DWD-Target für Feature mit ID: " + f.getId() );
+    else
+    {
+      target.setTargetZR( targetLink.getHref() );
 
-    final List targetList = m_dwdConf.getTarget();
-    targetList.add( target );
+      final List targetList = m_dwdConf.getTarget();
+      targetList.add( target );
+    }
   }
 
   private void addGewichtung( final Feature f, final String pnr )

@@ -33,6 +33,7 @@ import org.kalypso.ogc.gml.convert.GmlConvertFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.MetadataList;
+import org.kalypso.ogc.sensor.ObservationConstants;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.wq.WQException;
@@ -357,7 +358,13 @@ public class SaaleCalcJob implements ICalcJob
       final String identifier = observation.getName();
       final MetadataList oldMeta = (MetadataList)m_metadataMap.get( type + "#" + identifier );
       if( oldMeta != null )
+      {
         obsMeta.putAll( oldMeta );
+        final Object obsName = obsMeta.get( ObservationConstants.MD_NAME );
+        // Also set the name explicitely, else it just gets the number...
+        if( obsName != null )
+          obsMeta.put( ObservationConstants.MD_NAME, obsName );
+      }
 
       obsMeta.put( "Datei", vorFile.getAbsolutePath() );
     }
