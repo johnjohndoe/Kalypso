@@ -502,12 +502,6 @@
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="Pegel-570000-gewicht-0">
-              <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#Ombrometer-100816"/>
-            </pegel:GewichtungsElement>
-          </pegel:gewichtung>
-          <pegel:gewichtung>
             <pegel:GewichtungsElement fid="Pegel-570000-gewicht-1">
               <pegel:faktor>1.0</pegel:faktor>
               <pegel:ombrometerMember xlink:href="#Ombrometer-43032"/>
@@ -1393,12 +1387,6 @@
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="Pegel-572920-gewicht-1">
-              <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#Ombrometer-100655"/>
-            </pegel:GewichtungsElement>
-          </pegel:gewichtung>
-          <pegel:gewichtung>
             <pegel:GewichtungsElement fid="Pegel-572920-gewicht-2">
               <pegel:faktor>1.0</pegel:faktor>
               <pegel:ombrometerMember xlink:href="#Ombrometer-43184"/>
@@ -1579,18 +1567,6 @@
             <pegel:GewichtungsElement fid="Pegel-574210-gewicht-2">
               <pegel:faktor>0.3</pegel:faktor>
               <pegel:ombrometerMember xlink:href="#Ombrometer-110814"/>
-            </pegel:GewichtungsElement>
-          </pegel:gewichtung>
-          <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="Pegel-574210-gewicht-3">
-              <pegel:faktor>0.3</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#Ombrometer-43739"/>
-            </pegel:GewichtungsElement>
-          </pegel:gewichtung>
-          <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="Pegel-574210-gewicht-4">
-              <pegel:faktor>0.3</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#Ombrometer-43753"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:Niederschlag>
@@ -2446,12 +2422,6 @@
             <pegel:GewichtungsElement fid="Pegel-573110-gewicht-0">
               <pegel:faktor>1.0</pegel:faktor>
               <pegel:ombrometerMember xlink:href="#Ombrometer-43811"/>
-            </pegel:GewichtungsElement>
-          </pegel:gewichtung>
-          <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="Pegel-573110-gewicht-1">
-              <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#Ombrometer-43872"/>
             </pegel:GewichtungsElement>
           </pegel:gewichtung>
           <pegel:gewichtung>
@@ -3486,12 +3456,6 @@
           <pegel:H_34>0.0</pegel:H_34>
           <pegel:H_35>0.0</pegel:H_35>
           <pegel:H_36>0.0</pegel:H_36>
-          <pegel:gewichtung>
-            <pegel:GewichtungsElement fid="Pegel-573360-gewicht-0">
-              <pegel:faktor>1.0</pegel:faktor>
-              <pegel:ombrometerMember xlink:href="#Ombrometer-43872"/>
-            </pegel:GewichtungsElement>
-          </pegel:gewichtung>
           <pegel:gewichtung>
             <pegel:GewichtungsElement fid="Pegel-573360-gewicht-1">
               <pegel:faktor>0.5</pegel:faktor>
