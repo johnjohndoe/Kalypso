@@ -155,6 +155,20 @@
     </Wiski>
   </WiskiMember>
   <WiskiMember>
+    <Wiski fid="Pegel-579013">
+      <name>Rappbode-TS, TWA</name>
+      <lokal>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Durchfluss/579013.zml"/>
+      </lokal>
+      <wiski_vergangenheit>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs://LEER"/>
+      </wiski_vergangenheit>
+      <wiski_simulation_vergangenheit>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs://LEER"/>
+      </wiski_simulation_vergangenheit>
+    </Wiski>
+  </WiskiMember>
+  <WiskiMember>
     <Wiski fid="Pegel-575406">
       <name>Kelbra-Abgabe</name>
       <lokal>
