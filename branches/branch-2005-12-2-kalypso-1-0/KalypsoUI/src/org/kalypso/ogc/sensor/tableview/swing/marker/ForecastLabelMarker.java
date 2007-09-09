@@ -61,9 +61,6 @@ public class ForecastLabelMarker implements ILabelMarker
 
   private final static String FORECAST_TT = TimeserieConstants.MD_VORHERSAGE;
 
-  //  private final static Icon FORECAST_ICON = new ImageIcon(
-  //      ObservationTable.class.getResource( "resource/warning_small.gif" ) );
-
   private final DateRange m_dra;
 
   private final Color m_defaultBackground;
@@ -82,7 +79,9 @@ public class ForecastLabelMarker implements ILabelMarker
     if( !( value instanceof Date ) )
       return false;
 
-    return m_dra.contains( (Date)value );
+    final Date date = (Date)value;
+    // Check if date lies within ]from, to]
+    return m_dra.getFrom().compareTo( date ) < 0 && m_dra.getTo().compareTo( date ) >= 0;
   }
 
   /**
