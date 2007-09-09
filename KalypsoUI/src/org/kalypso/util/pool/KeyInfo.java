@@ -223,7 +223,8 @@ public final class KeyInfo extends Job implements ILoaderListener
     if( m_object != null )
       b.append( "  pooled object (type): " + m_object.getClass().getName() + "\n" );
     else
-      b.append( " !!!!!!!!!!!!!!!!!!!! WARNING !!!!!!!!!!!!!!!!!!!!\n pooled object (type): NULL \n" );
+      b.append( "  pooled object (type): NULL \n" );
+    
     b.append( "  loader (type): " + m_loader.getClass().getName() + "\n" );
     b.append( "  key: " + m_key + "\n" );
     b.append( "  number of listeners: " + m_listeners.size() + "\n" );

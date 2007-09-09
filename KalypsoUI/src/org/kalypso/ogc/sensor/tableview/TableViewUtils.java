@@ -265,6 +265,8 @@ public final class TableViewUtils
     // features-list is optional
     if( xml.getFeatures() != null )
     {
+      view.clearFeatures();
+      
       final String[] featureNames = xml.getFeatures().split( ";" );
       for( int i = 0; i < featureNames.length; i++ )
         view.setFeatureEnabled( featureNames[i], true );
@@ -361,7 +363,7 @@ public final class TableViewUtils
           catch( final LoaderException e )
           {
             e.printStackTrace();
-            status.addMessage( "Fehler beim speichern von " + obs, e );
+            status.addMessage( "Fehler beim Speichern von " + obs, e );
           }
         }
 

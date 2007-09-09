@@ -110,9 +110,24 @@ public class DateRange implements Comparable
    * <p>
    * 
    * @param date
+   * @return true if date is in ]from, to[
+   */
+  public boolean containsExclusive( final Date date )
+  {
+    if( date == null )
+      return false;
+
+    return m_from.compareTo( date ) < 0 && m_to.compareTo( date ) > 0;
+  }
+
+  /**
+   * Returns true when this range contains the given date.
+   * <p>
+   * 
+   * @param date
    * @return true if date is in [from, to]
    */
-  public boolean contains( final Date date )
+  public boolean containsInclusive( final Date date )
   {
     if( date == null )
       return false;

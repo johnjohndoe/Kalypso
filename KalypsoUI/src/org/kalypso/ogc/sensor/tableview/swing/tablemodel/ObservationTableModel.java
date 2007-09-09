@@ -57,6 +57,7 @@ import java.util.logging.Logger;
 
 import javax.swing.table.AbstractTableModel;
 
+import org.apache.commons.lang.ObjectUtils;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -344,7 +345,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
   /**
    * @see javax.swing.table.AbstractTableModel#setValueAt(java.lang.Object, int, int)
    */
-  public void setValueAt( Object aValue, int rowIndex, int columnIndex )
+  public void setValueAt( final Object aValue, final int rowIndex, final int columnIndex )
   {
     synchronized( m_columns )
     {
@@ -367,15 +368,23 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
         final int ix = values.indexOf( key, col.getKeyAxis() );
         if( ix != -1 )
         {
-          // first set status (may be overriden)
-          final IAxis statusAxis = getStatusAxis( col.getObservation(), col.getAxis() );
-          if( statusAxis != null )
-            values.setElement( ix, KalypsoStati.STATUS_USERMOD, statusAxis );
+          final IAxis valueAxis = col.getAxis();
+          final IAxis statusAxis = getStatusAxis( col.getObservation(), valueAxis );
 
-          // then set value
-          values.setElement( ix, aValue, col.getAxis() );
+          final Object oldValue = values.getElement( ix, valueAxis );
+          if( !checkValuesEqual( aValue, oldValue ) )
+          {
+            /* Only change value if really something has happened */
 
-          col.setDirty( true, this );
+            // first set status (may be overriden)
+            if( statusAxis != null )
+              values.setElement( ix, KalypsoStati.STATUS_USERMOD, statusAxis );
+
+            // then set value
+            values.setElement( ix, aValue, valueAxis );
+
+            col.setDirty( true, this );
+          }
         }
         else
           m_logger.info( "Cannot setValue because key not found" );
@@ -386,6 +395,23 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
         throw new IllegalStateException( e.getLocalizedMessage() );
       }
     }
+  }
+
+  /**
+   * Checks if two value are equal in the sense of the table model.
+   */
+  private boolean checkValuesEqual( final Object oldValue, final Object newValue )
+  {
+    /* Special case: if they are numbers, compare by a (very small) margin */
+    if( newValue instanceof Number && oldValue instanceof Number )
+    {
+      final double oldDouble = ((Number)oldValue).doubleValue();
+      final double newDouble = ((Number)newValue).doubleValue();
+      // REAMRK: we are using a fixed epsilon here, but this should be small enough for all cases...
+      return Math.abs( oldDouble - newDouble ) < 0.0000001 ; 
+    }
+    
+    return ObjectUtils.equals( oldValue, newValue );
   }
 
   /**
@@ -423,7 +449,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
       // So range check and return default value
       if( column > m_columns.size() - 1 )
         return EMPTY_RENDERING_RULES;
-      
+
       final TableViewColumn col = (TableViewColumn)m_columns.get( column );
       try
       {
