@@ -83,7 +83,7 @@ public class PolynomeChartLayer extends AbstractChartLayer<Number, Number>
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#drawIcon(org.eclipse.swt.graphics.Image, int, int)
    */
-  public void drawIcon( final Image img, final int width, final int height )
+  public void drawIcon( final Image img )
   {
     // TODO Auto-generated method stub
   }
