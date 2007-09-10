@@ -111,30 +111,6 @@
    </extension>
 
      <extension
-           point="org.eclipse.ui.viewActions">
-        <viewContribution
-              id="org.kalypso.ui.views.mapView.widgets1d2d"
-              targetID="org.kalypso.ui.views.mapView">
-   <action
-         disabledIcon="icons/dlcl16/select_profile_disable.gif"
-         icon="icons/elcl16/16_select_profile_enable.gif"
-         id="org.kalypso.kalypsomodel1d2d.ui.map.SelectProfileWidgetAction"
-         label="Profil selektieren"
-         style="radio"
-         toolbarPath="tools"
-         tooltip="Profil selektieren und in Karte anzeigen">
-	           		<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate">
-	          			<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
-	                     	value="org.kalypso.model.wspm.ui.view.map.SelectionOneProfileWidget"/>
-                     	<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin"
-	                     	value="org.kalypso.model.wspm.ui"/>
-	                    <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context"
-	                     	value="SelectOneProfile"/>
-	       			</class>
-   </action>
-        </viewContribution>
-     </extension>
-     <extension
            point="org.eclipse.ui.newWizards">
         <wizard
               class="org.kalypso.kalypsomodel1d2d.ui.featurecontrols.TimeStepFillerWizard"
@@ -514,6 +490,25 @@
                     value="Ganglinie erstellen"/>
             </class>
 		 </handler>
+		 <handler
+		 commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.SelectProfile">
+		    <activeWhen>
+		       <with variable="activeContexts">
+		          <iterate operator="or">
+		             <equals value="{org.kalypso.model.wspmprofile}Profile"/>
+		          </iterate>
+		       </with>
+		     </activeWhen>
+	       	<class
+	       		class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+	          <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+	               	value="org.kalypso.model.wspm.ui.view.map.SelectionOneProfileWidget"/>
+              <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
+                    value="icons/elcl16/16_select_profile_enable.gif"/>
+			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
+                    value="Profile selektieren"/>
+	       	</class>
+		 </handler>
    <handler
          commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.TinInfo">
       <class
@@ -647,7 +642,11 @@
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
             id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditElementProperties"
-            name="Element datai editieren"/>
+            name="Elementgeometrie editieren"/>
+      <command
+            categoryId="org.kalypso.ogc.gml.map.category"
+            id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.SelectProfile"
+            name="Profil selektieren"/>
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
             id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.TinInfo"
@@ -739,9 +738,16 @@
            <command
                  commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditElementProperties"
                  icon="icons/elcl16/editPolygon.gif"
-                 label="Element datai editieren"
+                 label="Elementgeometrie editieren"
                  style="radio"
-                 tooltip="Ein Element datai editieren">
+                 tooltip="Die Geometrie des Elements editieren">
+           </command>
+           <command
+                 commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.SelectProfile"
+                 icon="icons/elcl16/16_select_profile_enable.gif"
+                 label="Profil selektieren"
+                 style="radio"
+                 tooltip="Profil selektieren und in Karte anzeigen">
            </command>
         </menuContribution>
         <menuContribution
