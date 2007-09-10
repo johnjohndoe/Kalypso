@@ -184,7 +184,6 @@ public class CalculationUnitComponent extends FeatureWrapperListEditor implement
         public void process( ) throws Exception
         {
           super.process();
-          calcUnitToDel.deleteControlModel();
           // reset with list from model
           IFEDiscretisationModel1d2d model1d2d = (IFEDiscretisationModel1d2d) dataModel.getData( ICommonKeys.KEY_DISCRETISATION_MODEL );
           List<ICalculationUnit> calUnits = CalcUnitOps.getModelCalculationUnits( model1d2d );

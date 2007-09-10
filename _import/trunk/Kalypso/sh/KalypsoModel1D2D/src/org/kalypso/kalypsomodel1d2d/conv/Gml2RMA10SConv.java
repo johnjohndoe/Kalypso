@@ -495,7 +495,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
       if( DiscretisationModelUtils.is1DNode( node ) )
       {
         /* Node parameters */
-        final IFlowRelationship relationship = m_flowrelationModel.findFlowrelationship( point.getPosition(), 0.0 );
+        final IFlowRelationship relationship = m_flowrelationModel.findFlowrelationship( point.getPosition(), 0.1 );
         if( relationship == null )
           throw new SimulationException( Messages.getString( "Gml2RMA10SConv.11" ) + node.getGmlID(), null ); //$NON-NLS-1$
 

@@ -359,28 +359,18 @@ public class CalcUnitOps
   {
     Assert.throwIAEOnNullParam( calUnit, "calUnit" ); //$NON-NLS-1$
     if( calUnit instanceof ICalculationUnit2D )
-    {
       return 0;
-    }
     else
     {
       final IFeatureWrapperCollection elements = calUnit.getElements();
-      ((FeatureWrapperCollection) elements).addSecondaryWrapper( IFELine.class );
       if( calUnit instanceof ICalculationUnit1D )
-      {
-        return elements.countFeatureWrappers( IFeatureWrapper2.class );
-      }
+        return elements.countFeatureWrappers( IElement1D.class );
       else if( calUnit instanceof ICalculationUnit1D2D )
       {
-        System.out.println( Messages.CalcUnitOps_5 );
         int num = 0;
         for( final Object ele : elements )
-        {
           if( ele instanceof IElement1D )
-          {
             num++;
-          }
-        }
         return num;
       }
       else

@@ -87,7 +87,7 @@ public class FlowRelationUtilitites
     for( final IFE1D2DNode node : nodes )
     {
       final GM_Position nodePos = node.getPoint().getPosition();
-      final IFlowRelationship flowRel = model.findFlowrelationship( nodePos, 0.0 );
+      final IFlowRelationship flowRel = model.findFlowrelationship( nodePos, 0.01 );
       if( flowRel instanceof ITeschkeFlowRelation )
         return true;
     }

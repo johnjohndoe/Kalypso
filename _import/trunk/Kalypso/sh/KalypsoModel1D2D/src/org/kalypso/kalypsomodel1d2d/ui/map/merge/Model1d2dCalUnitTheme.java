@@ -66,7 +66,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  * @author Patrice Congo
  * 
  */
-@SuppressWarnings( { "unchecked", "hiding" }) //$NON-NLS-1$ //$NON-NLS-2$
+@SuppressWarnings( { "unchecked", "hiding" })//$NON-NLS-1$ //$NON-NLS-2$
 public class Model1d2dCalUnitTheme extends AbstractKalypsoTheme
 {
   private CalUnitDisplayElement calUnitDisplayElement;
@@ -79,7 +79,7 @@ public class Model1d2dCalUnitTheme extends AbstractKalypsoTheme
 
   public Model1d2dCalUnitTheme( final String name, final IMapModell mapModel )
   {
-    super( name, Messages.getString("Model1d2dCalUnitTheme.3"), mapModel ); //$NON-NLS-1$
+    super( name, Messages.getString( "Model1d2dCalUnitTheme.3" ), mapModel ); //$NON-NLS-1$
   }
 
   public void setCalculationUnit( final ICalculationUnit calcUnit )
@@ -123,11 +123,6 @@ public class Model1d2dCalUnitTheme extends AbstractKalypsoTheme
   {
     if( modelBoundaryConditions != null && m_calcUnit != null )
     {
-      // List<IBoundaryCondition> appliedBCs = CalUnitOps.getBoundaryConditions(
-      // modelBoundaryConditions,
-      // calUnit,
-      // 20 );
-
       final Image img = imgIcon.getImage();
       final int yTrans = (int) (imgIcon.getIconHeight() / -2.0);
       final int xTrans = (int) (imgIcon.getIconWidth() / -2.0);

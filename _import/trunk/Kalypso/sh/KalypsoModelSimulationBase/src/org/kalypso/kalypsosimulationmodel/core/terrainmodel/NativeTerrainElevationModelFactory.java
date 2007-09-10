@@ -71,11 +71,13 @@ public class NativeTerrainElevationModelFactory
     final File nativeTerrainModelFile = new File( URLDecoder.decode( nativeTerrainModelFile__.toString(), "UTF-8" ) ); //$NON-NLS-1$
     if( nativeTerrainModelFile.isDirectory() )
     {
-      throw new IllegalArgumentException( Messages.getString("NativeTerrainElevationModelFactory.5") + nativeTerrainModelFile ); //$NON-NLS-1$
+      return null;
+//      throw new IllegalArgumentException( Messages.getString("NativeTerrainElevationModelFactory.5") + nativeTerrainModelFile ); //$NON-NLS-1$
     }
     if( !nativeTerrainModelFile.exists() )
     {
-      throw new IllegalArgumentException( Messages.getString("NativeTerrainElevationModelFactory.6") + nativeTerrainModelFile ); //$NON-NLS-1$
+      return null;
+//      throw new IllegalArgumentException( Messages.getString("NativeTerrainElevationModelFactory.6") + nativeTerrainModelFile ); //$NON-NLS-1$
     }
     return resolveTerrainElevationModel( nativeTerrainModelFile );
   }

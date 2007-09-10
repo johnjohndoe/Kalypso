@@ -47,6 +47,7 @@ import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -78,9 +79,9 @@ public class SelectResultWizardPage extends WizardPage implements IWizardPage
 
   private final IThemeConstructionFactory m_factory;
 
-  private final ResultViewerFilter m_filter;
+  private final ViewerFilter m_filter;
 
-  public SelectResultWizardPage( String pageName, String title, ImageDescriptor titleImage, ResultViewerFilter filter, IThemeConstructionFactory factory )
+  public SelectResultWizardPage( final String pageName, final String title, final ImageDescriptor titleImage, final ViewerFilter filter, final IThemeConstructionFactory factory )
   {
     super( pageName, title, titleImage );
 

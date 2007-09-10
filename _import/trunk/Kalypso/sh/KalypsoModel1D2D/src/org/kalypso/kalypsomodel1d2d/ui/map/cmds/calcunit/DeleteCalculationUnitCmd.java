@@ -46,21 +46,37 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.handlers.IHandlerService;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
+import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2DCollection;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand;
+import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
+
+import de.renew.workflow.connector.cases.ICaseDataProvider;
+import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
  * Command to delete calculation unit
@@ -219,6 +235,7 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
 
       // delete unit from the model
       m_model1d2d.getComplexElements().remove( m_calcUnitToDelete );
+      deleteControlModel(m_calcUnitToDelete.getGmlID());
       m_calcUnitToDelete = null;
       final Feature[] changedFeatureArray = getChangedFeatureArray();
       fireProcessChanges( changedFeatureArray, false );
@@ -229,6 +246,53 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
       throw e;
     }
 
+  }
+
+  private void deleteControlModel(final String calcUnitGmlID )
+  {
+    final IWorkbench workbench = PlatformUI.getWorkbench();
+    final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
+    final IEvaluationContext context = handlerService.getCurrentState();
+    final ICaseDataProvider<IFeatureWrapper2> szenarioDataProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+    IControlModelGroup modelGroup = null;
+    try
+    {
+      modelGroup = szenarioDataProvider.getModel( IControlModelGroup.class );
+    }
+    catch( final CoreException e )
+    {
+      throw new RuntimeException( "Error while deleting control model for calculation unit. ", e );
+    }
+    final IControlModel1D2DCollection controlModel1D2DCollection = modelGroup.getModel1D2DCollection();
+    IControlModel1D2D controlModel1D2D = null;
+    
+    for( final IControlModel1D2D cm : controlModel1D2DCollection )
+    {
+      final ICalculationUnit cmCalcUnit = cm.getCalculationUnit();
+      if( cmCalcUnit != null && calcUnitGmlID.equals( cmCalcUnit.getGmlID() ) )
+        controlModel1D2D = cm;
+    }
+    if(controlModel1D2D == null)
+      // control model doesn't exists, so nothing will happen 
+      // TODO maybe throw an exception here?  
+      return;
+    
+    final Feature parentFeature = controlModel1D2DCollection.getWrappedFeature();
+    final IFeatureType parentFT = parentFeature.getFeatureType();
+
+    final IPropertyType propType = parentFT.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_CONTROL_MODEL_MEMBER );
+    if( !(propType instanceof IRelationType) )
+      return;
+    final CommandableWorkspace cmdWorkspace = new CommandableWorkspace( controlModel1D2D.getWrappedFeature().getWorkspace() );
+    final DeleteFeatureCommand delControlCmd = new DeleteFeatureCommand( cmdWorkspace, parentFeature, (IRelationType) parentFT, controlModel1D2D.getWrappedFeature() );
+    try
+    {
+      cmdWorkspace.postCommand( delControlCmd );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+    }
   }
 
   private final Feature[] getChangedFeatureArray( )
