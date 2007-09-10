@@ -40,12 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.result;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.java.util.DateUtilities;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.ResultMeta;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -112,5 +116,24 @@ public class CalcUnitResultMeta extends ResultMeta implements ICalcUnitResultMet
   public IStepResultMeta addStepResult( )
   {
     return getChildren().addNew( IStepResultMeta.QNAME, IStepResultMeta.class );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta#addDocument(java.lang.String,
+   *      java.lang.String, org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE,
+   *      org.eclipse.core.runtime.IPath, org.eclipse.core.runtime.IStatus, java.math.BigDecimal, java.math.BigDecimal)
+   */
+  public void addDocument( String name, String description, DOCUMENTTYPE type, IPath path, IStatus status, BigDecimal minValue, BigDecimal maxValue )
+  {
+    final IDocumentResultMeta document = getChildren().addNew( IDocumentResultMeta.QNAME, IDocumentResultMeta.class );
+    document.setName( name );
+    document.setDescription( description );
+    document.setDocumentType( type );
+    document.setPath( path );
+    document.setStatus( status );
+    if( minValue != null )
+      document.setMinValue( minValue );
+    if( maxValue != null )
+      document.setMaxValue( maxValue );
   }
 }

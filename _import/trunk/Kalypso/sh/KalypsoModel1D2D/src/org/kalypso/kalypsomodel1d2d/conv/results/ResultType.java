@@ -53,6 +53,7 @@ public class ResultType
     DEPTH,
     WATERLEVEL,
     SHEARSTRESS,
-    VELOCITY;
+    VELOCITY,
+    TERRAIN;
   }
 }

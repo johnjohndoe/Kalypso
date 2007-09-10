@@ -64,11 +64,17 @@ public class NodeResultMinMaxCatcher
 
   private double m_maxShearStress;
 
+  private double m_minTerrain;
+
+  private double m_maxTerrain;
+
   public void addNodeResult( final INodeResult nodeResult )
   {
     final double velocity = nodeResult.getAbsoluteVelocity();
     final double depth = nodeResult.getDepth();
     final double waterlevel = nodeResult.getWaterlevel();
+    final double Terrain = nodeResult.getPoint().getZ();
+
     // TODO: implement the shear stress
     final double shearstress = 0;
 
@@ -92,6 +98,11 @@ public class NodeResultMinMaxCatcher
     if( shearstress > m_maxShearStress )
       m_maxShearStress = shearstress;
 
+    if( Terrain < m_minTerrain )
+      m_minTerrain = Terrain;
+    if( Terrain > m_maxTerrain )
+      m_maxTerrain = Terrain;
+
   }
 
   public void addNodeResultMinMaxCatcher( NodeResultMinMaxCatcher minMaxCatcher )
@@ -111,6 +122,31 @@ public class NodeResultMinMaxCatcher
     if( minMaxCatcher.getMinVelocityAbs() < m_minVelocityAbs )
       m_minVelocityAbs = minMaxCatcher.getMinVelocityAbs();
 
+    if( minMaxCatcher.getMaxVelocityAbs() > m_maxVelocityAbs )
+      m_maxVelocityAbs = minMaxCatcher.getMaxVelocityAbs();
+    if( minMaxCatcher.getMinVelocityAbs() < m_minVelocityAbs )
+      m_minVelocityAbs = minMaxCatcher.getMinVelocityAbs();
+
+    if( minMaxCatcher.getMaxShearStress() > m_maxShearStress )
+      m_maxShearStress = minMaxCatcher.getMaxShearStress();
+    if( minMaxCatcher.getMinShearStress() < m_minShearStress )
+      m_minShearStress = minMaxCatcher.getMinShearStress();
+
+    if( minMaxCatcher.getMaxTerrain() > m_maxTerrain )
+      m_maxTerrain = minMaxCatcher.getMaxTerrain();
+    if( minMaxCatcher.getMinTerrain() > m_minTerrain )
+      m_minTerrain = minMaxCatcher.getMinTerrain();
+
+  }
+
+  public double getMinTerrain( )
+  {
+    return m_minTerrain;
+  }
+
+  public double getMaxTerrain( )
+  {
+    return m_maxTerrain;
   }
 
   public double getMinDepth( )

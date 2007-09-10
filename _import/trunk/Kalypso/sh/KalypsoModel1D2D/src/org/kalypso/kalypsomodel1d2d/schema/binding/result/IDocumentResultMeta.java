@@ -56,11 +56,13 @@ public interface IDocumentResultMeta extends IResultMeta
   enum DOCUMENTTYPE
   {
     nodes,
+    tinTerrain,
     tinWsp,
     tinVelo,
     tinDepth,
     tinShearStress,
     hydrograph,
+    lengthSection,
     log,
     coreDataZip
   }
