@@ -74,9 +74,9 @@ public class LinksOps
 
     IFeatureWrapperCollection containers = null;
     if( element instanceof IFE1D2DElement )
-      ((IFE1D2DElement) element).getContainers();
+      containers = ((IFE1D2DElement) element).getContainers();
     else if( element instanceof IFELine )
-      ((IFELine) element).getContainers();
+      containers = ((IFELine) element).getContainers();
     if( containers != null )
       containers.removeAllRefs( complexElement );
     complexElement.removeElementAsRef( element );
