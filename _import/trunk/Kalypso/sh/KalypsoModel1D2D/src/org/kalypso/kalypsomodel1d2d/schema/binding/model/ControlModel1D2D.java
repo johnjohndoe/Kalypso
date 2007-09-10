@@ -43,11 +43,8 @@ package org.kalypso.kalypsomodel1d2d.schema.binding.model;
 import java.io.File;
 import java.math.BigInteger;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.StringTokenizer;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
@@ -136,31 +133,12 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
     return ((Boolean) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_RESTART )).booleanValue();
   }
 
-  public List<String> getRestartPaths( )
+  public String[] getRestartPaths( )
   {
-    final List<String> list = new ArrayList<String>();
     final Object property = getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_RESTART_PATH );
-    if( property == null )
-      return list;
-
-    // TODO: what about String.split?
-    final StringTokenizer tokenizer = new StringTokenizer( property.toString(), ";" ); //$NON-NLS-1$
-    while( tokenizer.hasMoreTokens() )
-      list.add( tokenizer.nextToken() );
-    return list;
-  }
-
-  public void setRestartPaths( final List<String> list )
-  {
-    if( list != null && list.size() > 0 )
-    {
-      final String paths = list.get( 0 );
-      for( int i = 1; i < list.size(); i++ )
-        paths.concat( ";" ).concat( list.get( i ) ); //$NON-NLS-1$
-      getFeature().setProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_RESTART_PATH, paths );
-    }
-    else
-      getFeature().setProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_RESTART_PATH, "" ); //$NON-NLS-1$
+    if( property == null || property.toString().length() == 0)
+      return new String[0];
+    return property.toString().split( ";" );
   }
 
   public XMLGregorianCalendar getStartCalendar( )

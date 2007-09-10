@@ -51,7 +51,7 @@ public class RestartViewerFilter extends ViewerFilter
    *      java.lang.Object)
    */
   @Override
-  public boolean select( Viewer viewer, Object parent, Object element )
+  public boolean select( final Viewer viewer, final Object parent, final Object element )
   {
     if( element instanceof IDocumentResultMeta )
       return false;

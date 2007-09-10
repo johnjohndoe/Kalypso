@@ -159,8 +159,11 @@ public class Gml2RMA10SConv implements INativeIDProvider
     {
       m_restartEater = new RestartEater();
       final IFolder scenarioFolder = Util.getScenarioFolder();
-      for( final String path : m_calculation.getControlModel().getRestartPaths() )
+      final String[] restartPaths = m_calculation.getControlModel().getRestartPaths();
+      for( final String path : restartPaths )
       {
+        if( path.length() == 0 )
+          continue;
         final IFile ifile = scenarioFolder.getFile( path );
         final File file = ifile.getRawLocation().toFile();
         try

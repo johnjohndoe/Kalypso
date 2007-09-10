@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypso1d2d.pjt.wizards;
 
-import java.io.File;
-
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -53,10 +51,13 @@ import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.StepResultMeta;
+import org.kalypso.kalypsosimulationmodel.core.ICommandPoster;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
@@ -76,17 +77,19 @@ public class RestartSelectWizard extends Wizard implements INewWizard
 
   private IScenarioResultMeta m_resultModel;
 
+  private ICaseDataProvider<IFeatureWrapper2> m_modelProvider;
+
   public RestartSelectWizard( final Feature feature )
   {
     m_feature = feature;
     final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService( IHandlerService.class );
     final IEvaluationContext context = handlerService.getCurrentState();
     final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
-    final ICaseDataProvider<IFeatureWrapper2> modelProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+    m_modelProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
     try
     {
       // Sometimes there is a NPE here... maybe wait until the models are loaded?
-      m_resultModel = modelProvider.getModel( IScenarioResultMeta.class );
+      m_resultModel = m_modelProvider.getModel( IScenarioResultMeta.class );
     }
     catch( CoreException e )
     {
@@ -133,7 +136,16 @@ public class RestartSelectWizard extends Wizard implements INewWizard
       m_feature.setProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_RESTART, false );
       m_feature.setProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_RESTART_PATH, "" );
     }
-
+    try
+    {
+      /* post empty command in order to make pool dirty. */
+      ((ICommandPoster) m_modelProvider).postCommand( IControlModelGroup.class, new EmptyCommand( "You are dirty now, pool!", false ) ); //$NON-NLS-1$
+    }
+    catch( final Exception e )
+    {
+      // will never happen?
+      e.printStackTrace();
+    }
     return true;
   }
 
@@ -145,11 +157,4 @@ public class RestartSelectWizard extends Wizard implements INewWizard
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
   }
-
-  public File[] getSelectedFiles( )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
 }

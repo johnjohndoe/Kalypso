@@ -6,7 +6,7 @@ import org.kalypso.ui.wizards.results.SelectResultWizardPage;
 
 public class RestartSelectWizardPage extends SelectResultWizardPage
 {
-  private final String m_initialSelection;
+  private final String m_initialSelection; // TODO: implement initial selection (previous restarts)
 
   public RestartSelectWizardPage( final String pageName, final String title, final ImageDescriptor titleImage, final String initialSelection, final ViewerFilter filter )
   {
