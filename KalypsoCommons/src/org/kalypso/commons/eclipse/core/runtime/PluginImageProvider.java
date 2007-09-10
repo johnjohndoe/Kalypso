@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.commons.eclipse.core.runtime;
 
@@ -142,7 +142,7 @@ public class PluginImageProvider
    * Returns an image descriptor for the image file at the given plug-in relative path.
    * 
    * @param path
-   *          the path
+   *            the path
    * @return the image descriptor
    */
   public ImageDescriptor getImageDescriptor( final String path )
@@ -157,14 +157,14 @@ public class PluginImageProvider
 
     final ImageDescriptor imageDescriptor = getImageDescriptor( path );
     if( imageDescriptor == null )
-      throw new NullPointerException( "Image-Path invalid for key: " + key );
+      throw new NullPointerException( "Image-Path invalid for key: " + key + ", " + path );
 
     return imageDescriptor;
   }
 
   /**
    * @param decorators
-   *          Must be an array of size 5: top-left, top-right, bottom-left, bottom-right, underlay
+   *            Must be an array of size 5: top-left, top-right, bottom-left, bottom-right, underlay
    */
   public Image getDecoratedImage( final ImageKey baseImageKey, final ImageKey[] decorators )
   {
@@ -195,7 +195,7 @@ public class PluginImageProvider
 
   /**
    * @param decorators
-   *          Must be an array of size 5: top-left, top-right, bottom-left, bottom-right, underlay
+   *            Must be an array of size 5: top-left, top-right, bottom-left, bottom-right, underlay
    */
   public ImageDescriptor getDecoratedImageDescriptor( final ImageKey baseImageKey, final ImageKey[] decorators )
   {
@@ -224,9 +224,9 @@ public class PluginImageProvider
    * Copies a resource-file into the tmp-directory and returns a (file-)url to it.
    * 
    * @param clazz
-   *          The class to which the resource path will be resolved
+   *            The class to which the resource path will be resolved
    * @param path
-   *          Path into the java-resources
+   *            Path into the java-resources
    * @see Class#getResource(java.lang.String)
    */
   public URL getTmpUrl( final Class< ? > clazz, final String path )
