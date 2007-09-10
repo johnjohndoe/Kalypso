@@ -120,6 +120,7 @@ public class ResultManager implements Runnable
     m_parameters.add( ResultType.TYPE.DEPTH );
     m_parameters.add( ResultType.TYPE.WATERLEVEL );
     m_parameters.add( ResultType.TYPE.VELOCITY );
+    m_parameters.add( ResultType.TYPE.TERRAIN );
   }
 
   private final IJobChangeListener m_finishListener = new JobChangeAdapter()
@@ -136,6 +137,7 @@ public class ResultManager implements Runnable
 
   private boolean m_init = false;
 
+  @SuppressWarnings("unchecked")
   public ResultManager( final File inputDir, final File outputDir, final String resultFilePattern, final ISimulationDataProvider dataProvider, final RMA10Calculation calculation, final Date startTime ) throws InvocationTargetException
   {
     m_inputDir = inputDir;

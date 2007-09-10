@@ -111,6 +111,7 @@ Provide schema for the result model metadata of 1d2d simulations.
 						<xs:simpleType>
 							<xs:restriction base="xs:string">
 								<xs:enumeration value="nodes"></xs:enumeration>
+								<xs:enumeration value="tinTerrain"></xs:enumeration>
 								<xs:enumeration value="tinWsp"></xs:enumeration>
 								<xs:enumeration value="tinVelo"></xs:enumeration>
 								<xs:enumeration value="tinDepth"></xs:enumeration>
@@ -118,6 +119,7 @@ Provide schema for the result model metadata of 1d2d simulations.
 									value="tinShearStress">
 								</xs:enumeration>
 								<xs:enumeration value="hydrograph"></xs:enumeration>
+								<xs:enumeration value="lengthSection"></xs:enumeration>
 								<xs:enumeration value="log"></xs:enumeration>
 								<xs:enumeration value="coreDataZip"></xs:enumeration>
 							</xs:restriction>
