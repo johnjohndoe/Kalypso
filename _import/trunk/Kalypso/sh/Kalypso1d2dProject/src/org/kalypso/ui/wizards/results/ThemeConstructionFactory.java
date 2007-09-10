@@ -141,7 +141,8 @@ public class ThemeConstructionFactory implements IThemeConstructionFactory
       final IDocumentResultMeta documentResult = (IDocumentResultMeta) resultMeta;
       final DOCUMENTTYPE documentType = documentResult.getDocumentType();
 
-      if( documentType == DOCUMENTTYPE.tinDepth || documentType == DOCUMENTTYPE.tinVelo || documentType == DOCUMENTTYPE.tinWsp || documentType == DOCUMENTTYPE.tinShearStress )
+      if( documentType == DOCUMENTTYPE.tinTerrain || documentType == DOCUMENTTYPE.tinDepth || documentType == DOCUMENTTYPE.tinVelo || documentType == DOCUMENTTYPE.tinWsp
+          || documentType == DOCUMENTTYPE.tinShearStress )
       {
         final TinResultThemeCreator tinResultThemeCreator = new TinResultThemeCreator( documentResult, m_scenarioFolder );
         m_creatorMap.put( documentResult, tinResultThemeCreator );

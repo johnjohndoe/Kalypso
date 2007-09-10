@@ -88,68 +88,105 @@ public class TriangulatedSurfaceTriangleEater implements ITriangleEater
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.results.ITriangleEater#add(java.util.List)
    */
-  public void add( final List<INodeResult> nodes )
+  public void add( final List<INodeResult> nodes, final Boolean isWet )
   {
     final GM_Position pos[] = new GM_Position[3];
 
-    for( int i = 0; i < nodes.size(); i++ )
+    if( isWet == true )
     {
-      final double x = nodes.get( i ).getPoint().getX();
-      final double y = nodes.get( i ).getPoint().getY();
-      double z;
-
-      switch( m_parameter )
+      for( int i = 0; i < nodes.size(); i++ )
       {
-        case VELOCITY:
-          z = nodes.get( i ).getAbsoluteVelocity();
+        final double x = nodes.get( i ).getPoint().getX();
+        final double y = nodes.get( i ).getPoint().getY();
+        double z;
 
-          break;
-        case WATERLEVEL:
-          z = nodes.get( i ).getWaterlevel();
+        switch( m_parameter )
+        {
+          case VELOCITY:
+            z = nodes.get( i ).getAbsoluteVelocity();
 
-          break;
-        case DEPTH:
-          z = nodes.get( i ).getDepth();
+            break;
+          case WATERLEVEL:
+            z = nodes.get( i ).getWaterlevel();
 
-          break;
-        case SHEARSTRESS:
+            break;
+          case DEPTH:
+            z = nodes.get( i ).getDepth();
 
-          // get the node shear stress depending on nodes velocity and
-          // the averaged lambda value (derived by the neighboring elements).
-          final double lambda = nodes.get( i ).getAveragedLambda();
+          case TERRAIN:
+            z = nodes.get( i ).getPoint().getZ();
 
-          // get velocity
-          final double vAbs = nodes.get( i ).getAbsoluteVelocity();
-          // calculate shearstress
-          z = lambda * 0.125 * 1000 * vAbs * vAbs;
+            break;
 
-          break;
+          case SHEARSTRESS:
 
-        default:
-          z = nodes.get( i ).getPoint().getZ();
-          break;
+            // get the node shear stress depending on nodes velocity and
+            // the averaged lambda value (derived by the neighboring elements).
+            final double lambda = nodes.get( i ).getAveragedLambda();
 
+            // get velocity
+            final double vAbs = nodes.get( i ).getAbsoluteVelocity();
+            // calculate shearstress
+            z = lambda * 0.125 * 1000 * vAbs * vAbs;
+
+            break;
+
+          default:
+            z = nodes.get( i ).getPoint().getZ();
+            break;
+
+        }
+
+        pos[i] = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Position( x, y, z );
+      }
+      final CS_CoordinateSystem crs = nodes.get( 0 ).getPoint().getCoordinateSystem();
+
+      GM_Triangle_Impl gmTriangle = null;
+
+      try
+      {
+        gmTriangle = new GM_Triangle_Impl( pos[0], pos[1], pos[2], crs );
+      }
+      catch( final GM_Exception e )
+      {
+        KalypsoModel1D2DDebug.TRIANGLEEATER.printf( "%s", "TriangulatedSurfaceTriangleEater: error while adding nodes to eater (GM_Exception)." );
+        e.printStackTrace();
       }
 
-      pos[i] = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Position( x, y, z );
+      if( gmTriangle != null )
+        m_surface.add( gmTriangle );
     }
-
-    final CS_CoordinateSystem crs = nodes.get( 0 ).getPoint().getCoordinateSystem();
-
-    GM_Triangle_Impl gmTriangle = null;
-
-    try
+    else
     {
-      gmTriangle = new GM_Triangle_Impl( pos[0], pos[1], pos[2], crs );
-    }
-    catch( final GM_Exception e )
-    {
-      KalypsoModel1D2DDebug.TRIANGLEEATER.printf( "%s", "TriangulatedSurfaceTriangleEater: error while adding nodes to eater (GM_Exception)." );
-      e.printStackTrace();
+      if( m_parameter == ResultType.TYPE.TERRAIN )
+      {
+        for( int i = 0; i < nodes.size(); i++ )
+        {
+          final double x = nodes.get( i ).getPoint().getX();
+          final double y = nodes.get( i ).getPoint().getY();
+          final double z = nodes.get( i ).getPoint().getZ();
+
+          pos[i] = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Position( x, y, z );
+        }
+        final CS_CoordinateSystem crs = nodes.get( 0 ).getPoint().getCoordinateSystem();
+
+        GM_Triangle_Impl gmTriangle = null;
+
+        try
+        {
+          gmTriangle = new GM_Triangle_Impl( pos[0], pos[1], pos[2], crs );
+        }
+        catch( final GM_Exception e )
+        {
+          KalypsoModel1D2DDebug.TRIANGLEEATER.printf( "%s", "TriangulatedSurfaceTriangleEater: error while adding nodes to eater (GM_Exception)." );
+          e.printStackTrace();
+        }
+
+        if( gmTriangle != null )
+          m_surface.add( gmTriangle );
+      }
     }
 
-    if( gmTriangle != null )
-      m_surface.add( gmTriangle );
   }
 
   /**

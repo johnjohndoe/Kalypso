@@ -257,7 +257,8 @@ public class ResultStyleComposite
   {
     final IFolder stylesFolder = KalypsoModel1D2DHelper.getStylesFolder( scenarioFolder );
     IFolder folder = stylesFolder.getFolder( path );
-    return ResourceUtilities.getChildrenQuiet( folder, IResource.DEPTH_ONE );
+
+    return ResourceUtilities.getChildrenWithExtensionQuiet( folder, IResource.DEPTH_ONE, "sld" );
   }
 
   public void setEnabled( boolean status )

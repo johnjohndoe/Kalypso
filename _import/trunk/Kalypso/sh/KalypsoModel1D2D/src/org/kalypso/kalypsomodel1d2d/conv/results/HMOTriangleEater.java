@@ -76,7 +76,7 @@ public class HMOTriangleEater implements ITriangleEater
     m_parameter = parameter;
   }
 
-  public void add( final List<INodeResult> nodes )
+  public void add( final List<INodeResult> nodes, final Boolean isWet )
   {
     final Integer[] triangle = new Integer[3];
 

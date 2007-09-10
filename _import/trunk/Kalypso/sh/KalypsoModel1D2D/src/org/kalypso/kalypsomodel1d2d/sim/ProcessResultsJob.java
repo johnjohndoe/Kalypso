@@ -71,6 +71,7 @@ import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
+import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
@@ -78,6 +79,7 @@ import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -189,63 +191,89 @@ public class ProcessResultsJob extends Job
       {
         /* GML(s) */
 
-        /* create TIN-Dir */
-        final File tinPath = new File( outputDir, "Tin" );
-        tinPath.mkdirs();
-
-        final File tinResultFile = new File( tinPath, "tin.gml" );
-        final GMLWorkspace triangleWorkspace = FeatureFactory.createGMLWorkspace( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "TinResult" ), tinResultFile.toURL(), null );
-        final GM_TriangulatedSurface surface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_TriangulatedSurface( crs );
-        final Feature triangleFeature = triangleWorkspace.getRootFeature();
-        triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "triangulatedSurfaceMember" ), surface );
-
-        /* result db */
-
-        switch( parameter )
+        if( parameter == ResultType.TYPE.TERRAIN )
         {
-          case DEPTH:
-            triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "m" );
-            triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), "Fließtiefe" );
+          /* create TIN-Dir for FEM terrain model */
+          final String calcUnitPath = outputDir.getParent();
 
-            break;
-          case VELOCITY:
-            triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "m/s" );
-            triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), "Geschwindigkeit" );
+          final File modelPath = new File( calcUnitPath, "model" );
+          if( !modelPath.exists() )
+          {
+            modelPath.mkdirs();
 
-            break;
-          case WATERLEVEL:
-            triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "müNN" );
-            triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), "Wasserspiegel" );
+            final File modelTinPath = new File( modelPath, "Tin" );
+            modelTinPath.mkdirs();
 
-            break;
+            final File tinResultFile = new File( modelTinPath, "tin.gml" );
+            final GMLWorkspace triangleWorkspace = FeatureFactory.createGMLWorkspace( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "TinResult" ), tinResultFile.toURL(), null );
+            final GM_TriangulatedSurface surface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_TriangulatedSurface( crs );
+            final Feature triangleFeature = triangleWorkspace.getRootFeature();
+            triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "triangulatedSurfaceMember" ), surface );
 
-          case SHEARSTRESS:
-            triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "N/m²" );
-            triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), "Sohlschubspannung" );
+            final TriangulatedSurfaceTriangleEater gmlTriangleEater = new TriangulatedSurfaceTriangleEater( tinResultFile, triangleWorkspace, surface, parameter );
 
-            break;
-
-          default:
-            throw new UnsupportedOperationException();
+            multiEater.addEater( gmlTriangleEater );
+          }
         }
+        else
+        {
+          /* create TIN-Dir for results */
+          final File tinPath = new File( outputDir, "Tin" );
+          tinPath.mkdirs();
 
-        final TriangulatedSurfaceTriangleEater gmlTriangleEater = new TriangulatedSurfaceTriangleEater( tinResultFile, triangleWorkspace, surface, parameter );
+          final File tinResultFile = new File( tinPath, "tin.gml" );
 
-        multiEater.addEater( gmlTriangleEater );
+          final GMLWorkspace triangleWorkspace = FeatureFactory.createGMLWorkspace( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "TinResult" ), tinResultFile.toURL(), null );
+          final GM_TriangulatedSurface surface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_TriangulatedSurface( crs );
+          final Feature triangleFeature = triangleWorkspace.getRootFeature();
+          triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "triangulatedSurfaceMember" ), surface );
+
+          switch( parameter )
+          {
+            case DEPTH:
+              triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "m" );
+              triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), "Fließtiefe" );
+
+              break;
+            case VELOCITY:
+              triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "m/s" );
+              triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), "Geschwindigkeit" );
+
+              break;
+            case WATERLEVEL:
+              triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "müNN" );
+              triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), "Wasserspiegel" );
+
+              break;
+
+            case SHEARSTRESS:
+              triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "N/m²" );
+              triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), "Sohlschubspannung" );
+
+              break;
+
+            default:
+              throw new UnsupportedOperationException();
+          }
+
+          final TriangulatedSurfaceTriangleEater gmlTriangleEater = new TriangulatedSurfaceTriangleEater( tinResultFile, triangleWorkspace, surface, parameter );
+
+          multiEater.addEater( gmlTriangleEater );
+        }
       }
 
       final NodeResultsHandler handler = new NodeResultsHandler( resultWorkspace, multiEater, m_calculation, minMaxCatcher, lsObs );
       conv.setRMA10SModelElementHandler( handler );
 
       logger.takeInterimTime();
-      logger.printCurrentInterim( "Beginn Parsen in : " );
+      logger.printCurrentInterim( "Beginn Einlesen in : " );
 
       conv.parse( is );
 
       is.close();
 
       logger.takeInterimTime();
-      logger.printCurrentInterim( "Fertig mit Lesen in : " );
+      logger.printCurrentInterim( "Fertig mit Einlesen in : " );
 
       // finish MultiEater and engage serializer
       multiEater.finished();
@@ -255,6 +283,9 @@ public class ProcessResultsJob extends Job
       /* LengthSection in Datei schreiben */
       ObservationFeatureFactory.toFeature( lsObs, lsObsWorkspace.getRootFeature() );
       GmlSerializer.serializeWorkspace( lsObsFile, lsObsWorkspace, "CP1252" );
+
+      logger.takeInterimTime();
+      logger.printCurrentInterim( "Fertig mit Ergebnisse schreiben in : " );
 
       BigDecimal min;
       BigDecimal max;
@@ -267,6 +298,35 @@ public class ProcessResultsJob extends Job
 
         switch( parameter )
         {
+          case TERRAIN:
+
+            ICalcUnitResultMeta calcUnitResult = (ICalcUnitResultMeta) stepResultMeta.getParent();
+
+            IFeatureWrapperCollection<IResultMeta> children = calcUnitResult.getChildren();
+
+            /* check if there exists already an entry for terrainTin */
+            boolean terrainExists = false;
+
+            for( IResultMeta resultMeta : children )
+            {
+              if( resultMeta instanceof IDocumentResultMeta )
+              {
+                IDocumentResultMeta document = (IDocumentResultMeta) resultMeta;
+                if( document.getDocumentType() == IDocumentResultMeta.DOCUMENTTYPE.tinTerrain )
+                  terrainExists = true;
+              }
+            }
+
+            /* if not, add it */
+            if( terrainExists == false )
+            {
+              min = new BigDecimal( minMaxCatcher.getMinTerrain() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+              max = new BigDecimal( minMaxCatcher.getMaxTerrain() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+              calcUnitResult.addDocument( "Modellhöhen", "TIN der Modellhöhen", IDocumentResultMeta.DOCUMENTTYPE.tinTerrain, new Path( "model/Tin/tin_TERRAIN.gml" ), Status.OK_STATUS, min, max );
+            }
+
+            break;
+
           case DEPTH:
 
             min = new BigDecimal( minMaxCatcher.getMinDepth() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
@@ -274,6 +334,7 @@ public class ProcessResultsJob extends Job
             stepResultMeta.addDocument( "Fließtiefen", "TIN der Fließtiefen", IDocumentResultMeta.DOCUMENTTYPE.tinDepth, new Path( "Tin/tin_DEPTH.gml" ), Status.OK_STATUS, min, max );
 
             break;
+
           case VELOCITY:
 
             min = new BigDecimal( minMaxCatcher.getMinVelocityAbs() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
@@ -281,6 +342,7 @@ public class ProcessResultsJob extends Job
             stepResultMeta.addDocument( "Geschwindigkeiten", "TIN der tiefengemittelten Fließgeschwindigkeiten", IDocumentResultMeta.DOCUMENTTYPE.tinVelo, new Path( "Tin/tin_VELOCITY.gml" ), Status.OK_STATUS, min, max );
 
             break;
+
           case WATERLEVEL:
 
             min = new BigDecimal( minMaxCatcher.getMinWaterlevel() ).setScale( 3, BigDecimal.ROUND_HALF_UP );

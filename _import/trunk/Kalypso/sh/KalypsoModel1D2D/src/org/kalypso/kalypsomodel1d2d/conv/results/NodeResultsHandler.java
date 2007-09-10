@@ -311,6 +311,8 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
           elementResult.setCornerNodes( nodeDown );
         }
 
+        /* handle result information */
+
         /* midside node of the current arc */
         GMLNodeResult midsideNode = m_nodeIndex.get( currentArc.middleNodeID );
         checkMidsideNodeData( nodeDown, nodeUp, midsideNode );
@@ -363,6 +365,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
               elementResult.setMidsideNodes( midsideNode );
               break;
             }
+
             /* element on the right side of the arc */
             else if( elementRightID == id && nodeUp.equals( connectionNode ) )
             {
@@ -541,7 +544,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     for( int i = 0; i < nodes.length; i++ )
     {
       final ITeschkeFlowRelation teschkeRelation = getFlowRelation( nodes[i] );
-      handleLengthSectionData( nodes[i], teschkeRelation );
+      // handleLengthSectionData( nodes[i], teschkeRelation );
 
       final WspmProfile profile = teschkeRelation.getProfile();
 
@@ -777,7 +780,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       nodes.add( node );
     }
 
-    m_triangleEater.add( nodes );
+    m_triangleEater.add( nodes, true );
 
   }
 
@@ -826,7 +829,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       nodes.add( node );
     }
 
-    m_triangleEater.add( nodes );
+    m_triangleEater.add( nodes, true );
   }
 
   private void execTriangle( final PrintWriter pwSimuLog, final File tempDir, final StringBuffer cmd ) throws IOException, CoreException, InterruptedException
@@ -959,9 +962,18 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         }
         else
         {
-          m_triangleEater.add( nodeList );
+          m_triangleEater.add( nodeList, true );
           nodeList.clear();
         }
+      }
+      else
+      {
+        nodeList.add( nodes[0] );
+        nodeList.add( nodes[1] );
+        nodeList.add( nodes[2] );
+
+        m_triangleEater.add( nodeList, false );
+        nodeList.clear();
       }
 
       // second triangle
@@ -1007,9 +1019,18 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         }
         else
         {
-          m_triangleEater.add( nodeList );
+          m_triangleEater.add( nodeList, true );
           nodeList.clear();
         }
+      }
+      else
+      {
+        nodeList.add( nodes[0] );
+        nodeList.add( nodes[1] );
+        nodeList.add( nodes[2] );
+
+        m_triangleEater.add( nodeList, false );
+        nodeList.clear();
       }
     }
   }
@@ -1119,7 +1140,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       /* check, if the corner node of the split arc is dry in order to save just the wet triangle */
       if( nodes.get( 1 ).isWet() == true )
       {
-        final List<INodeResult> triNodes = new LinkedList<INodeResult>();
+        List<INodeResult> triNodes = new LinkedList<INodeResult>();
 
         /* triangle: inserted node0, inserted node1, node1 */
         triNodes.add( nodes.get( 3 ) );
@@ -1127,7 +1148,30 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         triNodes.add( nodes.get( 4 ) );
 
         if( checkPartiallyFlooded( triNodes ) == true )
-          m_triangleEater.add( triNodes );
+          m_triangleEater.add( triNodes, true );
+
+        triNodes.clear();
+
+        /* triangle: inserted node1, node2, inserted node0 */
+        triNodes.add( nodes.get( 0 ) );
+        triNodes.add( nodes.get( 3 ) );
+        triNodes.add( nodes.get( 2 ) );
+
+        m_triangleEater.add( triNodes, false );
+
+        triNodes.clear();
+
+        triNodes = new LinkedList<INodeResult>();
+
+        /* triangle: node0, inserted node0, node2 */
+        triNodes.add( nodes.get( 3 ) );
+        triNodes.add( nodes.get( 4 ) );
+        triNodes.add( nodes.get( 2 ) );
+
+        m_triangleEater.add( triNodes, false );
+
+        triNodes.clear();
+
       }
       else if( nodes.get( 0 ).isWet() == true && nodes.get( 2 ).isWet() == true )
       {
@@ -1138,8 +1182,9 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         triNodes.add( nodes.get( 3 ) );
         triNodes.add( nodes.get( 2 ) );
 
-        m_triangleEater.add( triNodes );
+        m_triangleEater.add( triNodes, true );
 
+        triNodes.clear();
         triNodes = new LinkedList<INodeResult>();
 
         /* triangle: node0, inserted node0, node2 */
@@ -1147,7 +1192,18 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         triNodes.add( nodes.get( 4 ) );
         triNodes.add( nodes.get( 2 ) );
 
-        m_triangleEater.add( triNodes );
+        m_triangleEater.add( triNodes, true );
+
+        triNodes.clear();
+        triNodes = new LinkedList<INodeResult>();
+
+        /* triangle: inserted node0, inserted node1, node1 */
+        triNodes.add( nodes.get( 3 ) );
+        triNodes.add( nodes.get( 1 ) );
+        triNodes.add( nodes.get( 4 ) );
+
+        m_triangleEater.add( triNodes, false );
+        triNodes.clear();
       }
     }
     else if( arc1 == 0 && arc2 == 2 )
@@ -1159,14 +1215,35 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       /* check, if the corner node of the split arc is dry in order to save just the wet triangle */
       if( nodes.get( 0 ).isWet() == true )
       {
-        final List<INodeResult> triNodes = new LinkedList<INodeResult>();
+        List<INodeResult> triNodes = new LinkedList<INodeResult>();
 
         /* triangle: inserted node0, inserted node1, node0 */
         triNodes.add( nodes.get( 3 ) );
         triNodes.add( nodes.get( 4 ) );
         triNodes.add( nodes.get( 0 ) );
 
-        m_triangleEater.add( triNodes );
+        m_triangleEater.add( triNodes, true );
+        triNodes.clear();
+
+        triNodes = new LinkedList<INodeResult>();
+
+        /* triangle: inserted node0, node1, inserted node1 */
+        triNodes.add( nodes.get( 3 ) );
+        triNodes.add( nodes.get( 1 ) );
+        triNodes.add( nodes.get( 4 ) );
+
+        m_triangleEater.add( triNodes, false );
+        triNodes.clear();
+
+        triNodes = new LinkedList<INodeResult>();
+
+        /* triangle: node2, inserted node1, node1 */
+        triNodes.add( nodes.get( 2 ) );
+        triNodes.add( nodes.get( 4 ) );
+        triNodes.add( nodes.get( 1 ) );
+
+        m_triangleEater.add( triNodes, false );
+        triNodes.clear();
       }
       else if( nodes.get( 1 ).isWet() == true && nodes.get( 2 ).isWet() == true )
       {
@@ -1177,8 +1254,8 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         triNodes.add( nodes.get( 1 ) );
         triNodes.add( nodes.get( 4 ) );
 
-        m_triangleEater.add( triNodes );
-
+        m_triangleEater.add( triNodes, true );
+        triNodes.clear();
         triNodes = new LinkedList<INodeResult>();
 
         /* triangle: node2, inserted node1, node1 */
@@ -1186,7 +1263,17 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         triNodes.add( nodes.get( 4 ) );
         triNodes.add( nodes.get( 1 ) );
 
-        m_triangleEater.add( triNodes );
+        m_triangleEater.add( triNodes, true );
+        triNodes.clear();
+        triNodes = new LinkedList<INodeResult>();
+
+        /* triangle: inserted node0, inserted node1, node0 */
+        triNodes.add( nodes.get( 3 ) );
+        triNodes.add( nodes.get( 4 ) );
+        triNodes.add( nodes.get( 0 ) );
+
+        m_triangleEater.add( triNodes, false );
+        triNodes.clear();
       }
     }
     else if( arc1 == 1 && arc2 == 2 )
@@ -1198,14 +1285,35 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       /* check, if the corner node of the split arc is dry in order to save just the wet triangle */
       if( nodes.get( 2 ).isWet() == true )
       {
-        final List<INodeResult> triNodes = new LinkedList<INodeResult>();
+        List<INodeResult> triNodes = new LinkedList<INodeResult>();
 
         /* triangle0: inserted node0, node2, inserted node1 */
         triNodes.add( nodes.get( 3 ) );
         triNodes.add( nodes.get( 2 ) );
         triNodes.add( nodes.get( 4 ) );
 
-        m_triangleEater.add( triNodes );
+        m_triangleEater.add( triNodes, true );
+        triNodes.clear();
+
+        triNodes = new LinkedList<INodeResult>();
+
+        /* triangle: inserted node1, node1, inserted node0 */
+        triNodes.add( nodes.get( 4 ) );
+        triNodes.add( nodes.get( 1 ) );
+        triNodes.add( nodes.get( 3 ) );
+
+        m_triangleEater.add( triNodes, false );
+        triNodes.clear();
+
+        triNodes = new LinkedList<INodeResult>();
+
+        /* triangle: node0, node1, inserted node2 */
+        triNodes.add( nodes.get( 0 ) );
+        triNodes.add( nodes.get( 1 ) );
+        triNodes.add( nodes.get( 4 ) );
+
+        m_triangleEater.add( triNodes, false );
+        triNodes.clear();
       }
       else if( nodes.get( 0 ).isWet() == true && nodes.get( 1 ).isWet() == true )
       {
@@ -1216,7 +1324,8 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         triNodes.add( nodes.get( 1 ) );
         triNodes.add( nodes.get( 3 ) );
 
-        m_triangleEater.add( triNodes );
+        m_triangleEater.add( triNodes, true );
+        triNodes.clear();
 
         triNodes = new LinkedList<INodeResult>();
 
@@ -1225,7 +1334,17 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         triNodes.add( nodes.get( 1 ) );
         triNodes.add( nodes.get( 4 ) );
 
-        m_triangleEater.add( triNodes );
+        m_triangleEater.add( triNodes, true );
+        triNodes.clear();
+
+        triNodes = new LinkedList<INodeResult>();
+        /* triangle0: inserted node0, node2, inserted node1 */
+        triNodes.add( nodes.get( 3 ) );
+        triNodes.add( nodes.get( 2 ) );
+        triNodes.add( nodes.get( 4 ) );
+
+        m_triangleEater.add( triNodes, false );
+        triNodes.clear();
       }
       else
       {
@@ -1265,7 +1384,16 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         triNodes.add( nodes.get( 1 ) );
         triNodes.add( nodes.get( 2 ) );
 
-        m_triangleEater.add( triNodes );
+        m_triangleEater.add( triNodes, true );
+
+        triNodes.clear();
+
+        triNodes.add( nodes.get( 3 ) );
+        triNodes.add( nodes.get( 2 ) );
+        triNodes.add( nodes.get( 0 ) );
+
+        m_triangleEater.add( triNodes, false );
+
       }
 
       /* triangle2: inserted node0, node2, node0 */
@@ -1279,7 +1407,16 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         triNodes.add( nodes.get( 2 ) );
         triNodes.add( nodes.get( 0 ) );
 
-        m_triangleEater.add( triNodes );
+        triNodes.clear();
+
+        m_triangleEater.add( triNodes, true );
+
+        triNodes.add( nodes.get( 3 ) );
+        triNodes.add( nodes.get( 1 ) );
+        triNodes.add( nodes.get( 2 ) );
+
+        m_triangleEater.add( triNodes, false );
+
       }
 
     }
@@ -1300,7 +1437,16 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         triNodes.add( nodes.get( 1 ) );
         triNodes.add( nodes.get( 3 ) );
 
-        m_triangleEater.add( triNodes );
+        m_triangleEater.add( triNodes, true );
+
+        triNodes.clear();
+
+        triNodes.add( nodes.get( 0 ) );
+        triNodes.add( nodes.get( 3 ) );
+        triNodes.add( nodes.get( 2 ) );
+
+        m_triangleEater.add( triNodes, false );
+
       }
 
       /* triangle2: node0, inserted node0, node2 */
@@ -1314,7 +1460,16 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         triNodes.add( nodes.get( 3 ) );
         triNodes.add( nodes.get( 2 ) );
 
-        m_triangleEater.add( triNodes );
+        m_triangleEater.add( triNodes, true );
+
+        triNodes.clear();
+
+        triNodes.add( nodes.get( 0 ) );
+        triNodes.add( nodes.get( 1 ) );
+        triNodes.add( nodes.get( 3 ) );
+
+        m_triangleEater.add( triNodes, false );
+
       }
     }
     else if( splitArc == 2 )
@@ -1334,7 +1489,16 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         triNodes.add( nodes.get( 0 ) );
         triNodes.add( nodes.get( 1 ) );
 
-        m_triangleEater.add( triNodes );
+        m_triangleEater.add( triNodes, true );
+
+        triNodes.clear();
+
+        triNodes.add( nodes.get( 3 ) );
+        triNodes.add( nodes.get( 1 ) );
+        triNodes.add( nodes.get( 2 ) );
+
+        m_triangleEater.add( triNodes, false );
+
       }
 
       /* triangle2: inserted node0, node1, node2 */
@@ -1348,7 +1512,16 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         triNodes.add( nodes.get( 1 ) );
         triNodes.add( nodes.get( 2 ) );
 
-        m_triangleEater.add( triNodes );
+        m_triangleEater.add( triNodes, true );
+
+        triNodes.clear();
+
+        triNodes.add( nodes.get( 3 ) );
+        triNodes.add( nodes.get( 0 ) );
+        triNodes.add( nodes.get( 1 ) );
+
+        m_triangleEater.add( triNodes, false );
+
       }
     }
     else
