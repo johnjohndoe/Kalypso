@@ -1,8 +1,9 @@
-#Fri Sep 07 11:23:21 CEST 2007
+#Tue Sep 11 17:42:34 CEST 2007
 activeContentFilterList=*.makefile,makefile,*.Makefile,Makefile,Makefile.*,*.mk
 convertActionOnSaave=AnyEdit.CnvrtTabToSpaces
 eclipse.preferences.version=1
 inActiveContentFilterList=
+instance/org.eclipse.core.net/org.eclipse.core.net.hasMigrated=true
 javaTabWidthForJava=true
 org.eclipse.jdt.ui.editor.tab.width=2
 projectPropsEnabled=false
