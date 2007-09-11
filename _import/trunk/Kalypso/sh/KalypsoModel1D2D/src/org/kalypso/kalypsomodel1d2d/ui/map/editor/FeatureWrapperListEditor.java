@@ -172,7 +172,7 @@ public class FeatureWrapperListEditor implements IButtonConstants
       return null;
     }
 
-    public void modify(final Object element, final String property, final Object value )
+    public void modify( final Object element, final String property, final Object value )
     {
       IFeatureWrapper2 featureWrapper = null;
       if( element instanceof TableItem )
@@ -185,15 +185,8 @@ public class FeatureWrapperListEditor implements IButtonConstants
       if( property.equals( tableViewer.getColumnProperties()[0] ) )
       {
         final String oldName = featureWrapper.getName();
-        if( value == null )
-        {
-          System.out.println( "new Name is null" );
-        }
-        else if( value.equals( oldName ) )
-        {
-          System.out.println( "No name change!" );
+        if( value != null && value.equals( oldName ) )
           return;
-        }
 
         featureWrapper.setName( (String) value );
         ChangeIFeatureWrapper2NameCmd renameCommand = new ChangeIFeatureWrapper2NameCmd( featureWrapper, (String) value )

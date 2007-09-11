@@ -210,8 +210,11 @@ public class FlowRelationUtilitites
   public static IBuildingFlowRelation findBuildingElement1D( final IElement1D element, final IFlowRelationshipModel model )
   {
     final GM_Position flowPosition = getFlowPositionFromElement( element );
-
-    final IFlowRelationship flowRel = model.findFlowrelationship( flowPosition, 0.0 );
+    
+    // TODO consider better search procedure here
+    // for example, for Bille model with search rect of 0.0 (strict location) only one weir was found, 
+    // with 0.001 four of them, and all seven only with 0.01
+    final IFlowRelationship flowRel = model.findFlowrelationship( flowPosition, 0.01 );
     if( flowRel instanceof IBuildingFlowRelation )
       return (IBuildingFlowRelation) flowRel;
 

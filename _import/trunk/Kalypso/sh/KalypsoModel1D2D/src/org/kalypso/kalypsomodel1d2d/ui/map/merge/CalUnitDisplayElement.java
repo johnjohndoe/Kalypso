@@ -88,11 +88,11 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
 
   private boolean selected;
 
-  private static final Color m_elementFillColor = new Color( 255, 255, 255, 255 );
+  private static final Color m_elementFillColor = new Color( 0, 0, 255, 85 );
 
-  private static final Color m_elementBorderColor = Color.RED;
+  private static final Color m_elementBorderColor = Color.BLUE;
 
-  private static final Color m_continuityLineColor = Color.ORANGE;
+  private static final Color m_continuityLineColor = Color.BLUE;
 
   public CalUnitDisplayElement( final ICalculationUnit<IFE1D2DElement> calUnit )
   {
@@ -219,7 +219,7 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
           try
           {
             final GM_Curve curve = (GM_Curve) ((IFENetItem) element).recalculateElementGeometry();
-            paintLineString( curve, m_elementFillColor, (Graphics2D) g, projection );
+            paintLineString( curve, m_elementBorderColor, (Graphics2D) g, projection );
           }
           catch( final Exception e )
           {

@@ -283,22 +283,24 @@ public class FE1D2DDiscretisationModel extends AbstractFeatureBinder implements 
   public IFELine findContinuityLine( final GM_Point position, final double grabDistance )
   {
     // if we just search for the first line within the line envelope, and line is z.B. under 45 deg angle,
-    // then envelope is wery big and nothing else within that envelope cannot be selected.
-    // maybe user wanted to select 2d element near the line, but he cannot do so
+    // then envelope is very big and nothing else within that envelope cannot be selected (2D element or node(s)).
+    // maybe user wanted to select 2D element near the line, but he cannot do so
 
-    // solution: get nodes from all lines within the envelope; if mouse is near to any node, line is selected
+    // solution: get nodes from all the lines within the envelope; if mouse is near to any node, line is selected
 
-    final IFE1D2DNode nodeUnderMouse = findNode( position, grabDistance );
-    if( nodeUnderMouse == null )
-      return null;
+    // final IFE1D2DNode nodeUnderMouse = findNode( position, grabDistance );
+    // if( nodeUnderMouse == null )
+    // return null;
     final GM_Envelope reqEnvelope = GeometryUtilities.grabEnvelopeFromDistance( position, grabDistance );
     final List<IFELine> query = m_continuityLines.query( reqEnvelope );
     for( final IFELine line : query )
     {
-      final List<IFE1D2DNode> nodes = line.getNodes();
-      for( final IFE1D2DNode node : nodes )
-        if( node != null && nodeUnderMouse.equals( node ) )
-          return line;
+      if( line.getGeometry().distance( position ) < grabDistance )
+        return line;
+      // final List<IFE1D2DNode> nodes = line.getNodes();
+      // for( final IFE1D2DNode node : nodes )
+      // if( node != null && nodeUnderMouse.equals( node ) )
+      // return line;
     }
     // if( query != null && query.size() > 0 )
     // return query.get( 0 );

@@ -66,9 +66,11 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public class RestartEater
 {
+  private final double DEFAULT_SEARCH_DISTANCE = 0.5;
+
   private FeatureList m_nodes;
 
-  private double m_distance = 0.5;
+  private double m_distance = DEFAULT_SEARCH_DISTANCE;
 
   private boolean m_any_results = false;
 
@@ -95,7 +97,16 @@ public class RestartEater
    */
   public void setSearchDistance( final double distance )
   {
-    m_distance = distance;
+    if( distance >= 0.0 )
+      m_distance = distance;
+  }
+  
+  /**
+   * Set search distance to default value (0.5) 
+   */
+  public void resetSearchDistance( )
+  {
+    m_distance = DEFAULT_SEARCH_DISTANCE;
   }
 
   /**
@@ -109,6 +120,8 @@ public class RestartEater
 
   private void addNodes( final List<INodeResult> nodes )
   {
+    // TODO better handling of (existing) nodes
+
     if( m_any_results )
       m_nodes.addAll( nodes );
     else
