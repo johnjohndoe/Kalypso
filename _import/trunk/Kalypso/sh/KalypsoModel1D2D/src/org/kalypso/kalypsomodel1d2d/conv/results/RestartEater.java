@@ -119,7 +119,10 @@ public class RestartEater
   private INodeResult getNodeResult( final GM_Point point )
   {
     final Feature feature = GeometryUtilities.findNearestFeature( point, m_distance, m_nodes, GMLNodeResult.QNAME_PROP_LOCATION );
-    return new GMLNodeResult( feature );
+    if( feature == null )
+      return null;
+    else
+      return new GMLNodeResult( feature );
   }
 
 }

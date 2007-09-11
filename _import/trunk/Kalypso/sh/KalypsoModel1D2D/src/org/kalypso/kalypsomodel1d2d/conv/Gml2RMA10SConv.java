@@ -698,6 +698,8 @@ public class Gml2RMA10SConv implements INativeIDProvider
   private void writeRestartLines( final Formatter formatter, final int nodeID, final double x, final double y )
   {
     final INodeResult node = m_restartEater.getNodeResultAtPosition( x, y );
+    if( node == null )
+      return;
     double vx = 0.0;
     double vy = 0.0;
     if( node instanceof GMLNodeResult )
