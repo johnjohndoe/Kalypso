@@ -154,7 +154,7 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
    */
   public String getDescription( )
   {
-    return "Neues Berechnungseinheit kreieren";
+    return Messages.getString("CreateCalculationUnitCmd.0"); //$NON-NLS-1$
   }
 
   /**
@@ -251,7 +251,7 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
     }
     catch( final CoreException e )
     {
-      throw new RuntimeException( "Error while creating control model for calculation unit. ", e );
+      throw new RuntimeException( Messages.getString("CreateCalculationUnitCmd.1"), e ); //$NON-NLS-1$
     }
     final IControlModel1D2DCollection model1D2DCollection = modelGroup.getModel1D2DCollection();
     final Feature parentFeature = model1D2DCollection.getWrappedFeature();
@@ -272,7 +272,7 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
         final Feature newControlFeature = getNewFeature();
         final IControlModel1D2D newControlModel = (IControlModel1D2D) newControlFeature.getAdapter( IControlModel1D2D.class );
 
-        newControlModel.setName( "Control modell für " + m_calcUnitName );
+        newControlModel.setName( Messages.getString("CreateCalculationUnitCmd.2") + m_calcUnitName ); //$NON-NLS-1$
         newControlModel.setCalculationUnit( m_calculationUnit );
         model1D2DCollection.setActiveControlModel( newControlModel );
 
@@ -291,7 +291,7 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
         /* If not yet initialized, create components and write obs back to feature. */
         if( result.getComponents().length == 0 )
         {
-          obs.setName( "Zeitschritt Definition" );
+          obs.setName( Messages.getString("CreateCalculationUnitCmd.3") ); //$NON-NLS-1$
 
           // TODO put this inside c1d2d:TimestepsObservation
           /**
@@ -327,7 +327,7 @@ public class CreateCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
     catch( final Exception e1 )
     {
       e1.printStackTrace();
-      throw new RuntimeException( "Error while creating control model for calculation unit", e1 );
+      throw new RuntimeException( Messages.getString("CreateCalculationUnitCmd.4"), e1 ); //$NON-NLS-1$
     }
   }
 }

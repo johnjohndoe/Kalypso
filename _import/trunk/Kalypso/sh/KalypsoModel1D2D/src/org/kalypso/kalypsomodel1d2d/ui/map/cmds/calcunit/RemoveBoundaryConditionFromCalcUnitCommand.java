@@ -58,7 +58,7 @@ import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
  * @author madanagopal
  * 
  */
-@SuppressWarnings( { "hiding", "unchecked" })
+@SuppressWarnings( { "hiding", "unchecked" }) //$NON-NLS-1$ //$NON-NLS-2$
 public class RemoveBoundaryConditionFromCalcUnitCommand implements IDiscrModel1d2dChangeCommand
 {
   private ICalculationUnit m_calculationUnit;
@@ -98,7 +98,7 @@ public class RemoveBoundaryConditionFromCalcUnitCommand implements IDiscrModel1d
    */
   public String getDescription( )
   {
-    return "remove boundary condition from calculation unit";
+    return "remove boundary condition from calculation unit"; //$NON-NLS-1$
   }
 
   /**

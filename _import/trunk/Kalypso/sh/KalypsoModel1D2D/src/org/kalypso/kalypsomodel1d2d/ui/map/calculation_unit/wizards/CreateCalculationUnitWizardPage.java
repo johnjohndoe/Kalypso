@@ -62,11 +62,11 @@ public class CreateCalculationUnitWizardPage extends WizardPage
 
   private Text m_calcUnitDescription;
 
-  private static final String QNAME_KEY_1D2D = "Complex calculation unit (coupled 1D/2D)";
+  private static final String QNAME_KEY_1D2D = Messages.getString("CreateCalculationUnitWizardPage.0"); //$NON-NLS-1$
 
-  private static final String QNAME_KEY_2D = "Calculation unit 2D";
+  private static final String QNAME_KEY_2D = Messages.getString("CreateCalculationUnitWizardPage.1"); //$NON-NLS-1$
 
-  private static final String QNAME_KEY_1D = "Calculation unit 1D";
+  private static final String QNAME_KEY_1D = Messages.getString("CreateCalculationUnitWizardPage.2"); //$NON-NLS-1$
 
   public CreateCalculationUnitWizardPage( final String name, final String description )
   {
@@ -87,20 +87,20 @@ public class CreateCalculationUnitWizardPage extends WizardPage
     setControl( composite );
 
     final Label nameLabel = new Label( composite, SWT.RIGHT );
-    nameLabel.setText( "Name: " );
+    nameLabel.setText( Messages.getString("CreateCalculationUnitWizardPage.3") ); //$NON-NLS-1$
     m_calcUnitName = new Text( composite, SWT.SINGLE | SWT.BORDER );
     m_calcUnitName.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     m_calcUnitName.addModifyListener( new ModifyListener()
     {
       public void modifyText( ModifyEvent e )
       {
-        setPageComplete( !m_calcUnitName.getText().trim().equals( "" ) );
+        setPageComplete( !m_calcUnitName.getText().trim().equals( "" ) ); //$NON-NLS-1$
         getContainer().updateButtons();
       }
     } );
 
     Label typeLabel = new Label( composite, SWT.RIGHT );
-    typeLabel.setText( "Type: " );
+    typeLabel.setText( Messages.getString("CreateCalculationUnitWizardPage.10") ); //$NON-NLS-1$
 
     m_calcUnitType = new Combo( composite, SWT.RIGHT | SWT.READ_ONLY | SWT.BORDER );
     m_calcUnitType.add( QNAME_KEY_1D2D );
@@ -110,9 +110,9 @@ public class CreateCalculationUnitWizardPage extends WizardPage
     m_calcUnitType.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
 
     final Label descriptionLabel = new Label( composite, SWT.RIGHT );
-    descriptionLabel.setText( "Description: " );
+    descriptionLabel.setText( Messages.getString("CreateCalculationUnitWizardPage.9") ); //$NON-NLS-1$
     m_calcUnitDescription = new Text( composite, SWT.BORDER | SWT.MULTI );
-    m_calcUnitDescription.setText( "" );
+    m_calcUnitDescription.setText( "" ); //$NON-NLS-1$
     m_calcUnitDescription.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     
     setPageComplete( false );
@@ -133,7 +133,7 @@ public class CreateCalculationUnitWizardPage extends WizardPage
     else if( QNAME_KEY_1D2D.equals( qNameKey ) )
       return Kalypso1D2DSchemaConstants.WB1D2D_F_CALC_UNIT_1D2D;
     else
-      throw new RuntimeException( "Unknown qNameKey:" + qNameKey );
+      throw new RuntimeException( "Unknown qNameKey:" + qNameKey ); //$NON-NLS-1$
   }
 
   public String getCalculationUnitDescription( )

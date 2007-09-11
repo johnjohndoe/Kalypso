@@ -67,7 +67,7 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
  * @author Patrice Congo
  *
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings("unchecked") //$NON-NLS-1$
 public class AddElementToCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
 {
 
@@ -166,7 +166,7 @@ public class AddElementToCalculationUnitCmd implements IDiscrModel1d2dChangeComm
    */
   public String getDescription( )
   {
-    return "Elemente einer Berechnungseinheit hinzufügen";
+    return "Elemente einer Berechnungseinheit hinzufügen"; //$NON-NLS-1$
   }
 
   /**

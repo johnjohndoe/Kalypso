@@ -66,13 +66,13 @@ public class CreateCalculationUnitWizard extends Wizard implements INewWizard
   public CreateCalculationUnitWizard( final KeyBasedDataModel dataModel )
   {
     m_dataModel = dataModel;
-    super.setWindowTitle( "Berechnungseinheit Hinzufügen" );
+    super.setWindowTitle( Messages.getString("CreateCalculationUnitWizard.0") ); //$NON-NLS-1$
   }
 
   @Override
   public void addPages( )
   {
-    m_page = new CreateCalculationUnitWizardPage( "Berechnungseinheit Hinzufügen", "Berechnungseinheit Hinzufügen" );
+    m_page = new CreateCalculationUnitWizardPage( Messages.getString("CreateCalculationUnitWizard.1"), Messages.getString("CreateCalculationUnitWizard.2") ); //$NON-NLS-1$ //$NON-NLS-2$
     addPage( m_page );
   }
 

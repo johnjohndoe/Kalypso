@@ -166,7 +166,7 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
    */
   public String getDescription( )
   {
-    return "Command for deleting calculation unit";
+    return "Command for deleting calculation unit"; //$NON-NLS-1$
   }
 
   /**
@@ -207,8 +207,8 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
       if( m_undoParentUnits != null && m_undoParentUnits.length > 0 )
       {
         final Shell activeShell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
-        final String message = "Selected calculation unit cannot be deleted.\nIt is a part of the complex calculation unit(s).\n\nTo delete this unit, please delete parent complex calculation unit(s) first.";
-        final MessageDialog dialog = new MessageDialog( activeShell, "Info", null, message, MessageDialog.INFORMATION, new String[] { "Ok" }, 0 );
+        final String message = Messages.getString("DeleteCalculationUnitCmd.1"); //$NON-NLS-1$
+        final MessageDialog dialog = new MessageDialog( activeShell, "Info", null, message, MessageDialog.INFORMATION, new String[] { "Ok" }, 0 ); //$NON-NLS-1$ //$NON-NLS-2$
         dialog.open();
         return;
       }
@@ -261,7 +261,7 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
     }
     catch( final CoreException e )
     {
-      throw new RuntimeException( "Error while deleting control model for calculation unit. ", e );
+      throw new RuntimeException( Messages.getString("DeleteCalculationUnitCmd.4"), e ); //$NON-NLS-1$
     }
     final IControlModel1D2DCollection controlModel1D2DCollection = modelGroup.getModel1D2DCollection();
     IControlModel1D2D controlModel1D2D = null;

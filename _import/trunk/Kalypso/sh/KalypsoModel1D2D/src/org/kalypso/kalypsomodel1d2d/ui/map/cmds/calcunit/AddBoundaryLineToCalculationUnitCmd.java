@@ -103,7 +103,7 @@ public class AddBoundaryLineToCalculationUnitCmd implements IDiscrModel1d2dChang
    */
   public String getDescription( )
   {
-    return "Command for adding continuity line to the calculation unit";
+    return "Command for adding continuity line to the calculation unit"; //$NON-NLS-1$
   }
 
   /**

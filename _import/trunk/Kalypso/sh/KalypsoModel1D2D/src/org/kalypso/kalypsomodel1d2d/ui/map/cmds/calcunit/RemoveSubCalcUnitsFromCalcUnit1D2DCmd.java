@@ -125,7 +125,7 @@ public class RemoveSubCalcUnitsFromCalcUnit1D2DCmd implements IDiscrModel1d2dCha
   /**
    * @see org.kalypso.commons.command.ICommand#process()
    */
-  @SuppressWarnings({ "unchecked", "unchecked" })
+  @SuppressWarnings({ "unchecked", "unchecked" }) //$NON-NLS-1$ //$NON-NLS-2$
   public void process( ) throws Exception
   {
     IFeatureWrapperCollection subUnits = parentCalculationUnit.getSubUnits();

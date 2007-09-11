@@ -104,7 +104,7 @@ public class AddSubCalcUnitsToCalcUnit1D2DCmd implements IDiscrModel1d2dChangeCo
    */
   public String getDescription( )
   {
-    return "";
+    return ""; //$NON-NLS-1$
   }
 
   /**

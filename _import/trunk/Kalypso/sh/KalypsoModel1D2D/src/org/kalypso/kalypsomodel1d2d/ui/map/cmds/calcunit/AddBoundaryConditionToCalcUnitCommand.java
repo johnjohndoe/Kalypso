@@ -58,7 +58,7 @@ import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
  * @author madanago
  * 
  */
-@SuppressWarnings( { "unchecked", "hiding" })
+@SuppressWarnings( { "unchecked", "hiding" }) //$NON-NLS-1$ //$NON-NLS-2$
 public class AddBoundaryConditionToCalcUnitCommand implements IDiscrModel1d2dChangeCommand
 {
   private final IBoundaryCondition m_boundaryConditionToAdd;
@@ -69,8 +69,8 @@ public class AddBoundaryConditionToCalcUnitCommand implements IDiscrModel1d2dCha
 
   public AddBoundaryConditionToCalcUnitCommand( final ICalculationUnit calculationUnit, final IBoundaryCondition boundaryConditionToAdd )
   {
-    Assert.throwIAEOnNullParam( calculationUnit, "calculationUnit" );
-    Assert.throwIAEOnNullParam( boundaryConditionToAdd, "boundaryConditionToAdd" );
+    Assert.throwIAEOnNullParam( calculationUnit, "calculationUnit" ); //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( boundaryConditionToAdd, "boundaryConditionToAdd" ); //$NON-NLS-1$
 
     m_calculationUnit = calculationUnit;
     m_boundaryConditionToAdd = boundaryConditionToAdd;

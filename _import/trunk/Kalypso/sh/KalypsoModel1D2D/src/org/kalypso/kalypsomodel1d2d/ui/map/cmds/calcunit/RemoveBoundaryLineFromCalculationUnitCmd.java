@@ -59,7 +59,7 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
  * 
  * @author Patrice Congo
  */
-@SuppressWarnings( { "hiding", "unchecked" })
+@SuppressWarnings( { "hiding", "unchecked" }) //$NON-NLS-1$ //$NON-NLS-2$
 public class RemoveBoundaryLineFromCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
 {
 
@@ -79,9 +79,9 @@ public class RemoveBoundaryLineFromCalculationUnitCmd implements IDiscrModel1d2d
 
   public RemoveBoundaryLineFromCalculationUnitCmd( ICalculationUnit calculationUnit, IFELine elementsToRemove, IFEDiscretisationModel1d2d model1d2d )
   {
-    Assert.throwIAEOnNullParam( calculationUnit, "calculationUnit" );
-    Assert.throwIAEOnNullParam( elementsToRemove, "elementsToRemove" );
-    Assert.throwIAEOnNullParam( model1d2d, "model1d2d" );
+    Assert.throwIAEOnNullParam( calculationUnit, "calculationUnit" ); //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( elementsToRemove, "elementsToRemove" ); //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( model1d2d, "model1d2d" ); //$NON-NLS-1$
 
     this.calculationUnit = calculationUnit;
     this.bLineToRemove = elementsToRemove;
