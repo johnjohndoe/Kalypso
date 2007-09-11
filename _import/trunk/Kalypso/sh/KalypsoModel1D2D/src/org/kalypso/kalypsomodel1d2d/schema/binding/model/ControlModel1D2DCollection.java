@@ -40,27 +40,37 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.model;
 
+import java.util.List;
+
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.handlers.IHandlerService;
+import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsosimulationmodel.core.ICommandPoster;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+
+import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
+import de.renew.workflow.connector.cases.ICaseDataProvider;
 
 /**
- * Default implementation of {@link IControlModel1D2DCollection} based 
- * on {@link FeatureWrapperCollection}
+ * Default implementation of {@link IControlModel1D2DCollection} based on {@link FeatureWrapperCollection}
  * 
  * @author Patrice Congo
  * @author Dejan Antanaskovic
- *
+ * 
  */
 public class ControlModel1D2DCollection extends FeatureWrapperCollection<IControlModel1D2D> implements IControlModel1D2DCollection
 {
-  public ControlModel1D2DCollection( Feature featureCol)
+  public ControlModel1D2DCollection( Feature featureCol )
   {
-   this(featureCol, IControlModel1D2D.class, Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_CONTROL_MODEL_MEMBER); 
+    this( featureCol, IControlModel1D2D.class, Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_CONTROL_MODEL_MEMBER );
   }
-  
+
   public ControlModel1D2DCollection( Feature featureCol, Class<IControlModel1D2D> fwClass, QName featureMemberProp )
   {
     super( featureCol, fwClass, featureMemberProp );
@@ -69,11 +79,41 @@ public class ControlModel1D2DCollection extends FeatureWrapperCollection<IContro
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2DCollection#setActiveControlModel(org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D)
    */
-  public void setActiveControlModel( IControlModel1D2D newControlModel )
+  public void setActiveControlModel( final IControlModel1D2D newControlModel )
   {
-    // TODO: model doesn't get dirty after this!!!
-    
-    Feature feature = getFeature();
-    feature.setProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_XP_ACTIVE_MODEL, newControlModel.getGmlID() );
+    getFeature().setProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_XP_ACTIVE_MODEL, newControlModel.getGmlID() );
+    final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService( IHandlerService.class );
+    final IEvaluationContext context = handlerService.getCurrentState();
+    final ICaseDataProvider<IFeatureWrapper2> modelProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+    try
+    {
+      /* post empty command in order to make pool dirty. */
+      ((ICommandPoster) modelProvider).postCommand( IControlModelGroup.class, new EmptyCommand( "You are dirty now, pool!", false ) ); //$NON-NLS-1$
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+    }
   }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2DCollection#getActiveControlModelID()
+   */
+  public IControlModel1D2D getActiveControlModel( )
+  {
+    final Feature feature = getFeature();
+    final Object activeModelID = feature.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_XP_ACTIVE_MODEL );
+    if( activeModelID == null )
+      return null;
+    final String activeModelGmlID = activeModelID.toString();
+    final List<Feature> controlModels = (List<Feature>) feature.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_CONTROL_MODEL_MEMBER );
+    for( final Feature modelFeature : controlModels )
+    {
+      final IControlModel1D2D model = (IControlModel1D2D) modelFeature.getAdapter( IControlModel1D2D.class );
+      if( model != null && model.getCalculationUnit() != null && model.getCalculationUnit().getGmlID().equals( activeModelGmlID ) )
+        return model;
+    }
+    return null;
+  }
+
 }

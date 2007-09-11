@@ -203,7 +203,7 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
 
       // cache state for undo
       cacheState();
-      
+
       if( m_undoParentUnits != null && m_undoParentUnits.length > 0 )
       {
         final Shell activeShell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
@@ -235,7 +235,7 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
 
       // delete unit from the model
       m_model1d2d.getComplexElements().remove( m_calcUnitToDelete );
-      deleteControlModel(m_calcUnitToDelete.getGmlID());
+      deleteControlModel( m_calcUnitToDelete.getGmlID() );
       m_calcUnitToDelete = null;
       final Feature[] changedFeatureArray = getChangedFeatureArray();
       fireProcessChanges( changedFeatureArray, false );
@@ -248,7 +248,7 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
 
   }
 
-  private void deleteControlModel(final String calcUnitGmlID )
+  private void deleteControlModel( final String calcUnitToDeleteGmlID )
   {
     final IWorkbench workbench = PlatformUI.getWorkbench();
     final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
@@ -265,18 +265,30 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
     }
     final IControlModel1D2DCollection controlModel1D2DCollection = modelGroup.getModel1D2DCollection();
     IControlModel1D2D controlModel1D2D = null;
-    
-    for( final IControlModel1D2D cm : controlModel1D2DCollection )
+
+    final IControlModel1D2D activeControlModel = controlModel1D2DCollection.getActiveControlModel();
+    IControlModel1D2D controlModelToActivate = null;
+    final boolean invalidActiveModel = activeControlModel == null || activeControlModel.getCalculationUnit() == null
+        || activeControlModel.getCalculationUnit().getGmlID().equals( calcUnitToDeleteGmlID );
+    for( final IControlModel1D2D controlModel : controlModel1D2DCollection )
     {
-      final ICalculationUnit cmCalcUnit = cm.getCalculationUnit();
-      if( cmCalcUnit != null && calcUnitGmlID.equals( cmCalcUnit.getGmlID() ) )
-        controlModel1D2D = cm;
+      final ICalculationUnit cmCalcUnit = controlModel.getCalculationUnit();
+      if( cmCalcUnit != null )
+      {
+        if( calcUnitToDeleteGmlID.equals( cmCalcUnit.getGmlID() ) )
+          controlModel1D2D = controlModel;
+        else if( invalidActiveModel )
+          controlModelToActivate = controlModel;
+      }
     }
-    if(controlModel1D2D == null)
-      // control model doesn't exists, so nothing will happen 
-      // TODO maybe throw an exception here?  
+    if( invalidActiveModel )
+      controlModel1D2DCollection.setActiveControlModel( controlModelToActivate );
+
+    if( controlModel1D2D == null )
+      // throw new RuntimeException( "Cannot find control model for the calculation unit." );
+      // control model doesn't exists, so nothing will happen
       return;
-    
+
     final Feature parentFeature = controlModel1D2DCollection.getWrappedFeature();
     final IFeatureType parentFT = parentFeature.getFeatureType();
 
@@ -284,7 +296,7 @@ public class DeleteCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
     if( !(propType instanceof IRelationType) )
       return;
     final CommandableWorkspace cmdWorkspace = new CommandableWorkspace( controlModel1D2D.getWrappedFeature().getWorkspace() );
-    final DeleteFeatureCommand delControlCmd = new DeleteFeatureCommand( cmdWorkspace, parentFeature, (IRelationType) parentFT, controlModel1D2D.getWrappedFeature() );
+    final DeleteFeatureCommand delControlCmd = new DeleteFeatureCommand( cmdWorkspace, parentFeature, (IRelationType) propType, controlModel1D2D.getWrappedFeature() );
     try
     {
       cmdWorkspace.postCommand( delControlCmd );
