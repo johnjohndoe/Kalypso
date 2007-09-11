@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://earth.google.com/kml/2.2">
+<Folder>
+	<name>My Places</name>
+	<open>1</open>
+	<Style>
+		<ListStyle>
+			<listItemType>check</listItemType>
+			<ItemIcon>
+				<state>open</state>
+				<href>files/mysavedplaces_open.png</href>
+			</ItemIcon>
+			<ItemIcon>
+				<state>closed</state>
+				<href>files/mysavedplaces_closed.png</href>
+			</ItemIcon>
+			<bgColor>00ffffff</bgColor>
+		</ListStyle>
+	</Style>
+	<Document xmlns="http://earth.google.com/kml/2.1">
+		<name>nofdp IDSS</name>
+		<description>nofdp IDSS Google Earth Export</description>
+		<LookAt>
+			<longitude>8.999389284334699</longitude>
+			<latitude>49.63779692910339</latitude>
+			<altitude>0</altitude>
+			<range>9504.562590969665</range>
+			<tilt>0</tilt>
+			<heading>0</heading>
+		</LookAt>
+		<Region>
+			<LatLonAltBox>
+				<north>49.66441598201102</north>
+				<south>49.61117787619575</south>
+				<east>9.027444934588983</east>
+				<west>8.971333634080414</west>
+				<minAltitude>0</minAltitude>
+				<maxAltitude>0</maxAltitude>
+			</LatLonAltBox>
+		</Region>
+		<Folder>
+			<Folder>
+				<name>Measure: Buffer Strip</name>
+			</Folder>
+			<Folder>
+				<name>Measure: Cultivation on Floodplain</name>
+			</Folder>
+			<Folder>
+				<name>Measure: Ecological Flooding</name>
+			</Folder>
+			<Folder>
+				<name>Measure: Forest Management</name>
+			</Folder>
+			<Folder>
+				<name>Measure: Forest on Floodplain</name>
+			</Folder>
+			<Folder>
+				<name>Measure: Zoning Plan Modification</name>
+			</Folder>
+			<Folder>
+				<name>River Mümling</name>
+				<Folder>
+					<name>River Mümling</name>
+				</Folder>
+			</Folder>
+			<Folder>
+				<name>Arial views</name>
+				<Folder>
+					<name>Topography</name>
+					<Folder>
+						<name>Aerial Photographs</name>
+					</Folder>
+				</Folder>
+			</Folder>
+		</Folder>
+	</Document>
+</Folder>
+</kml>

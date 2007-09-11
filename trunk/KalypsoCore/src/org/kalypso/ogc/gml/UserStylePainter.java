@@ -47,7 +47,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.ogc.gml.KalypsoFeatureTheme.IPaintDelegate;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
@@ -76,17 +75,9 @@ public class UserStylePainter
     m_selectionManager = selectionManager;
   }
 
-  public void paintSelected( final GMLWorkspace workspace, final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox, final FeatureList features, final boolean selected, final IProgressMonitor monitor ) throws CoreException
+  public void paintSelected( final GMLWorkspace workspace, final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox, final FeatureList features, final boolean selected, final IProgressMonitor monitor, final IPaintDelegate delegate ) throws CoreException
   {
-    final IPaintDelegate paintDelegate = new IPaintDelegate()
-    {
-      public void paint( DisplayElement displayElement )
-      {
-        displayElement.paint( g, p );
-      }
-    };
-
-    paintFeatureTypeStyles( workspace, scale, bbox, features, selected, monitor, paintDelegate );
+    paintFeatureTypeStyles( workspace, scale, bbox, features, selected, monitor, delegate );
   }
 
   public void paintFeatureTypeStyles( final GMLWorkspace workspace, final Double scale, final GM_Envelope bbox, final FeatureList features, final Boolean selected, final IProgressMonitor monitor, final IPaintDelegate paintDelegate ) throws CoreException
@@ -157,11 +148,9 @@ public class UserStylePainter
         {
           final DisplayElement displayElement = DisplayElementFactory.buildDisplayElement( feature, symbolizer );
           if( displayElement != null )
-          {
             /* does scale apply? */
-            if( scale == null || displayElement.doesScaleConstraintApply( scale ) )
+            if( (scale == null) || displayElement.doesScaleConstraintApply( scale ) )
               delegate.paint( displayElement );
-          }
         }
       }
     }

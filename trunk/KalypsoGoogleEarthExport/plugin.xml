@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.commandImages">
+      <image
+            commandId="org.kalypso.google.earth.export.command"
+            icon="icons/googleEarth.gif">
+      </image>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            id="org.kalypso.google.earth.export"
+            name="Google Earth Export">
+      </category>
+      <command
+            categoryId="org.kalypso.google.earth.export"
+            defaultHandler="org.kalypso.google.earth.export.GoogleEarthExportCommandHandler"
+            id="org.kalypso.google.earth.export.command"
+            name="Google Earth Export">
+      </command>
+   </extension>
+
+</plugin>
