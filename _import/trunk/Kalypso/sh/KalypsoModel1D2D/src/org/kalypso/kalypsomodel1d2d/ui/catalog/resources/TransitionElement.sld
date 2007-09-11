@@ -19,11 +19,11 @@
 				<ogc:PropertyName>geometry</ogc:PropertyName>
 			</Geometry>
 			<Fill>
-				<CssParameter name="fill-opacity">0.5</CssParameter>
-				<CssParameter name="fill">#888888</CssParameter>
+				<CssParameter name="fill-opacity">0.25</CssParameter>
+				<CssParameter name="fill">#008626</CssParameter>
 			</Fill>
 			<Stroke>
-				<CssParameter name="stroke">#000000</CssParameter>
+				<CssParameter name="stroke">#008626</CssParameter>
 				<CssParameter name="stroke-width">1.0</CssParameter>
 				<CssParameter name="stroke-linejoin">mitre</CssParameter>
 				<CssParameter name="stroke-opacity">1.0</CssParameter>

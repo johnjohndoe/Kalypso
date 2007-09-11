@@ -10,12 +10,7 @@
 		uri="FE1D2DEdge.sld" />
 	<catalog:system
 		systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:Line:sld:default"
-		uri="FE1D2DContinuityLine.sld" />
-		<!-- 
-	<catalog:system
-		systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:BoundaryLine:sld:default"
-		uri="BoundaryLine.sld" />
-		 -->
+		uri="FELine.sld" />
 	<catalog:system
 		systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:PolyElement:sld:default"
 		uri="FE1D2DPolyElement.sld" />
