@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,10 +36,11 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -54,21 +55,23 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  */
 public interface IKalypsoFeatureTheme extends IKalypsoTheme, ICommandTarget
 {
-  public CommandableWorkspace getWorkspace();
+  public CommandableWorkspace getWorkspace( );
 
-  public ISchedulingRule getSchedulingRule();
+  public ISchedulingRule getSchedulingRule( );
 
-  public IFeatureType getFeatureType();
+  public IFeatureType getFeatureType( );
 
   public void addStyle( final KalypsoUserStyle style );
 
   public void removeStyle( final KalypsoUserStyle style );
 
-  public UserStyle[] getStyles();
+  public UserStyle[] getStyles( );
 
-  public FeatureList getFeatureList();
+  public FeatureList getFeatureList( );
 
   public FeatureList getFeatureListVisible( final GM_Envelope env );
-  
-  public IFeatureSelectionManager getSelectionManager();  
+
+  public IFeatureSelectionManager getSelectionManager( );
+
+  public void paintInternal( IPaintInternalDelegate delegate ) throws CoreException;
 }

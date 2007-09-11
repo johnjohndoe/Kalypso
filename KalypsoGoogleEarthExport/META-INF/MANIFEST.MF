@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: KalypsoNofdpIDSSShape2Kml Plug-in
+Bundle-SymbolicName: KalypsoGoogleEarthExport;singleton:=true
+Bundle-Version: 1.0.0
+Require-Bundle: org.kalypso.core,
+ org.eclipse.core.resources,
+ org.junit4,
+ org.kalypso.ui

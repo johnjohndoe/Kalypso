@@ -93,11 +93,6 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
 
   private final String m_featurePath;
 
-  static interface IPaintDelegate
-  {
-    public void paint( final DisplayElement displayElement );
-  }
-
   public KalypsoFeatureTheme( final CommandableWorkspace workspace, final String featurePath, final String name, final IFeatureSelectionManager selectionManager, final IMapModell mapModel )
   {
     super( name, "FeatureTheme", mapModel );
@@ -169,6 +164,19 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
    */
   public void paint( final Graphics graphics, final GeoTransform projection, final double scale, final GM_Envelope bbox, final boolean selected, final IProgressMonitor monitor ) throws CoreException
   {
+    final IPaintDelegate paintDelegate = new IPaintDelegate()
+    {
+      public void paint( final DisplayElement displayElement )
+      {
+        displayElement.paint( graphics, projection );
+      }
+    };
+
+    paint( graphics, projection, scale, bbox, selected, monitor, paintDelegate );
+  }
+
+  public void paint( final Graphics graphics, final GeoTransform projection, final double scale, final GM_Envelope bbox, final boolean selected, final IProgressMonitor monitor, final IPaintDelegate delegate ) throws CoreException
+  {
     final Collection<UserStylePainter> styles = m_styleDisplayMap.values();
     final UserStylePainter[] styleArray = styles.toArray( new UserStylePainter[styles.size()] );
 
@@ -182,7 +190,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     for( final UserStylePainter map : styleArray )
     {
       final SubMonitor childProgress = progress.newChild( 1 );
-      map.paintSelected( workspace, graphics, projection, scale, bbox, m_featureList, selected, childProgress );
+      map.paintSelected( workspace, graphics, projection, scale, bbox, m_featureList, selected, childProgress, delegate );
       ProgressUtilities.done( childProgress );
     }
   }
@@ -218,7 +226,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     {
       // my workspace ?
       final GMLWorkspace changedWorkspace = ((IGMLWorkspaceModellEvent) modellEvent).getGMLWorkspace();
-      if( (changedWorkspace != m_workspace && changedWorkspace != m_workspace.getWorkspace()) )
+      if( ((changedWorkspace != m_workspace) && (changedWorkspace != m_workspace.getWorkspace())) )
         return; // not my workspace
 
       if( modellEvent instanceof FeaturesChangedModellEvent )
@@ -235,19 +243,15 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
         if( features.length > m_featureList.size() / 5 )
           setDirty();
         else
-        {
           for( final Feature feature : features )
             restyleFeature( feature );
-        }
       }
       else if( modellEvent instanceof FeatureStructureChangeModellEvent )
       {
         final FeatureStructureChangeModellEvent fscme = (FeatureStructureChangeModellEvent) modellEvent;
         final Feature[] parents = fscme.getParentFeatures();
         for( final Feature parent : parents )
-        {
           if( m_featureList.getParentFeature() == parent )
-          {
             switch( fscme.getChangeType() )
             {
               case FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD:
@@ -260,8 +264,6 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
               default:
                 setDirty();
             }
-          }
-        }
       }
     }
     else
@@ -315,7 +317,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
       {
         final Feature feature = displayElement.getFeature();
         GM_Envelope envelope = feature.getEnvelope();
-        if( envelope != null && env.intersects( envelope ) )
+        if( (envelope != null) && env.intersects( envelope ) )
           resultList.add( feature );
       }
     };
@@ -430,5 +432,10 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   public void styleChanged( final KalypsoUserStyle source )
   {
     setDirty();
+  }
+
+  public void paintInternal( final IPaintInternalDelegate delegate ) throws CoreException
+  {
+    paint( null, delegate.getProjection(), delegate.getScale(), delegate.getBoundingBox(), delegate.getSelected(), new NullProgressMonitor(), delegate );
   }
 }

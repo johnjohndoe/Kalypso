@@ -50,6 +50,7 @@ import java.util.logging.Logger;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.kalypso.commons.command.ICommand;
@@ -77,6 +78,7 @@ import org.kalypso.util.pool.IPoolableObjectType;
 import org.kalypso.util.pool.KeyComparator;
 import org.kalypso.util.pool.PoolableObjectType;
 import org.kalypso.util.pool.ResourcePool;
+import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -202,8 +204,21 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
    */
   public void paint( final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox, final boolean selected, final IProgressMonitor monitor ) throws CoreException
   {
+    final IPaintDelegate paintDelegate = new IPaintDelegate()
+    {
+      public void paint( DisplayElement displayElement )
+      {
+        displayElement.paint( g, p );
+      }
+    };
+
+    paint( g, p, scale, bbox, selected, monitor, paintDelegate );
+  }
+
+  public void paint( final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox, final boolean selected, final IProgressMonitor monitor, final IPaintDelegate delegate ) throws CoreException
+  {
     if( m_theme != null )
-      m_theme.paint( g, p, scale, bbox, selected, monitor );
+      m_theme.paint( g, p, scale, bbox, selected, monitor, delegate );
   }
 
   /**
@@ -621,5 +636,10 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
       ((AbstractKalypsoTheme) m_theme).setStatus( status );
 
     super.setStatus( status );
+  }
+
+  public void paintInternal( final IPaintInternalDelegate delegate ) throws CoreException
+  {
+    paint( null, delegate.getProjection(), delegate.getScale(), delegate.getBoundingBox(), delegate.getSelected(), new NullProgressMonitor(), delegate );
   }
 }
