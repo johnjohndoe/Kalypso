@@ -171,7 +171,7 @@ public class SelectResultWizardPage extends WizardPage implements IWizardPage
     for( IResultMeta child : children )
     {
       m_treeViewer.setChecked( child, isChecked );
-      /* Call me again, as setchecked does not throw any events */
+      /* Call me again, as set checked does not throw any events */
       handleCheckStateChanged( child, isChecked, resultViewer );
     }
 

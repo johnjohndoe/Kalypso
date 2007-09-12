@@ -237,6 +237,22 @@ Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodu
 				<Name>Ganglinien erzeugen</Name>
 				</Task>-->
 		</TaskGroup>
+		<TaskGroup
+			URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ResultLengthSectionViewGroup"
+			context="LengthSectionView">
+			<Help><![CDATA[Hier werden die Längsschnittauswertungen zur Darstellung in einem Diagramm durchgeführt.]]></Help>
+			<Name>Längsschnittansicht</Name>
+			<Task context="LengthSectionView"
+				URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ConfigureResultLengthSectionView">
+				<Help><![CDATA[Das Längsschnittdiagramm konfigurieren.]]></Help>
+				<Name>Längsschnitt konfigurieren</Name>
+			</Task>
+			<Task context="LengthSectionView"
+				URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ShowResultLengthSectionView">
+				<Help><![CDATA[Einen Längsschnitt anzeigen.]]></Help>
+				<Name>Längsschnitt anzeigen</Name>
+			</Task>
+		</TaskGroup>
 	</TaskGroup>
 	<Perspectives>
 		<con:PerspectiveContext id="Context1d2dModelling"
@@ -261,6 +277,12 @@ Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodu
 						value="templates/control.gft" />
 				</con:ExtensionContext>
 			</con:ViewContext>
+
+			<con:ViewContext id="LengthSectionView"
+				partId="org.kalypso.chart.ui.view.ChartView"
+				parent = "Context1d2dModelling">
+			</con:ViewContext>
+
 			<!--
 				<con:ViewContext id="CalculationUnitView"
 				partId="org.kalypso.kalypsomodel1d2d.ui.CalculationUnitView.CalculationUnitPerformView"
@@ -339,7 +361,7 @@ Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodu
 						</con:ExtensionContext>
 						<con:Parameter name="type"
 							value="mapViewInputContext" />
-						<!-- 
+						<!--
 						<con:Parameter name="input"
 							value="maps/roughness.gmt" />
 						 -->
@@ -434,6 +456,9 @@ Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodu
 						<con:Parameter name="input"
 							value="results/result.gmt" />
 					</con:ExtensionContext>
+
+
+
 				</con:ViewContext>
 			</con:WorkbenchSiteContext>
 			<con:ViewContext id="FeatureSelectionView"

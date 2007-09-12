@@ -472,7 +472,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     final IProfil profil = profile.getProfil();
 
     // station
-    double station = profil.getStation();
+    final BigDecimal station = WspmProfile.stationToBigDecimal( profil.getStation() );
 
     // thalweg
     BigDecimal thalweg = new BigDecimal( nodeResult.getPoint().getZ() ).setScale( 4, BigDecimal.ROUND_HALF_UP );
@@ -510,7 +510,8 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     final IComponent waterlevelComp = ComponentUtilities.findComponentByID( components, IWspmDictionaryConstants.LS_COMPONENT_WATERLEVEL );
     // final IComponent depthComp = ComponentUtilities.findComponentByID( components,
     // IWspmDictionaryConstants.LS_COMPONENT_DEPTH );
-    final IComponent velocityComp = ComponentUtilities.findComponentByID( components, IWspmDictionaryConstants.LS_COMPONENT_VELOCITY );
+    // final IComponent velocityComp = ComponentUtilities.findComponentByID( components,
+    // IWspmDictionaryConstants.LS_COMPONENT_VELOCITY );
     // final IComponent slopeComp = ComponentUtilities.findComponentByID( components,
     // IWspmDictionaryConstants.LS_COMPONENT_SLOPE );
     final IComponent dischargeComp = ComponentUtilities.findComponentByID( components, IWspmDictionaryConstants.LS_COMPONENT_RUNOFF );
@@ -522,7 +523,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     newRecord.setValue( waterlevelComp, waterlevel );
     // newRecord.setValue( depthComp, depth );
     // newRecord.setValue( slopeComp, slope );
-    newRecord.setValue( velocityComp, velocity );
+    // newRecord.setValue( velocityComp, velocity );
     newRecord.setValue( dischargeComp, discharge );
 
     tuples.add( newRecord );
@@ -553,7 +554,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     for( int i = 0; i < nodes.length; i++ )
     {
       final ITeschkeFlowRelation teschkeRelation = getFlowRelation( nodes[i] );
-      // handleLengthSectionData( nodes[i], teschkeRelation );
+      handleLengthSectionData( nodes[i], teschkeRelation );
 
       if( teschkeRelation == null )
         break;

@@ -280,9 +280,14 @@ public class ProcessResultsJob extends Job
 
       /* Node-GML in Datei schreiben */
       GmlSerializer.serializeWorkspace( gmlResultFile, resultWorkspace, "CP1252" );
+
       /* LengthSection in Datei schreiben */
-      ObservationFeatureFactory.toFeature( lsObs, lsObsWorkspace.getRootFeature() );
-      GmlSerializer.serializeWorkspace( lsObsFile, lsObsWorkspace, "CP1252" );
+
+      if( lsObs.getResult().size() > 0 )
+      {
+        ObservationFeatureFactory.toFeature( lsObs, lsObsWorkspace.getRootFeature() );
+        GmlSerializer.serializeWorkspace( lsObsFile, lsObsWorkspace, "CP1252" );
+      }
 
       logger.takeInterimTime();
       logger.printCurrentInterim( "Fertig mit Ergebnisse schreiben in : " );
@@ -367,6 +372,14 @@ public class ProcessResultsJob extends Job
       min = new BigDecimal( minMaxCatcher.getMinVelocityAbs() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
       max = new BigDecimal( minMaxCatcher.getMaxVelocityAbs() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
       stepResultMeta.addDocument( "Vektoren", "Ergebnisse an den Knoten", IDocumentResultMeta.DOCUMENTTYPE.nodes, new Path( "results.gml" ), Status.OK_STATUS, min, max );
+
+      /* length section entry in result db */
+      if( lsObs.getResult().size() > 0 )
+      {
+        min = new BigDecimal( 0 );
+        max = new BigDecimal( 0 );
+        stepResultMeta.addDocument( "Längsschnitt", "1d-Längsschnitt", IDocumentResultMeta.DOCUMENTTYPE.lengthSection, new Path( "lengthSection.gml" ), Status.OK_STATUS, min, max );
+      }
 
       /* HMO(s) */
       /*
