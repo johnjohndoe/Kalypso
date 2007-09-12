@@ -11,13 +11,13 @@
   <title>KALYPSO - Anwenderhandbuch</title>
 
   <subtitle>
-			<mediaobject>
+			<inlinemediaobject>
 				<imageobject>
 					<imagedata align="center"
 						fileref="img/bookinfo/kalypso.png"
 						format="PNG" scale="85"/>
 				</imageobject>
-			</mediaobject>
+			</inlinemediaobject>
 			
   	&bookinfo.subtitle;
   </subtitle>

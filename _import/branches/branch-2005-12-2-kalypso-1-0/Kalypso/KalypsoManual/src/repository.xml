@@ -90,7 +90,7 @@
         </imageobject>
       </mediaobject>
 
-      <mediaobject vendor="sachsen-anhalt,hh_ingenieurbueros">
+      <mediaobject vendor="sachsen-anhalt;hh_ingenieurbueros">
         <imageobject>
           <imagedata align="center"
                      fileref="img/repository/repository_gesamt.png" scale="45" />
