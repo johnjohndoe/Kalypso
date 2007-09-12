@@ -2,6 +2,7 @@
 <obsdiagview xmlns="obsdiagview.template.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink">
 	<title>Selke-Längsschnitt (Wasserstand)</title>
 	<legend title="" visible="true"/>
+	<features>Vorhersage</features>
 
 	<axis id="D" datatype="date" label="Datum" unit="" direction="horizontal" position="bottom" />
 	<axis id="W" datatype="double" label="Wasserstand" unit="cm" direction="vertical" position="left" />
