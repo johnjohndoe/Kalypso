@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.google.earth.export.wizard;
 
+import java.io.File;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -47,6 +49,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.google.earth.export.constants.IGoogleEarthExportSettings;
 import org.kalypso.ui.views.map.MapView;
 
 /**
@@ -59,9 +62,12 @@ public class WizardGoogleExport extends Wizard implements INewWizard
 
   private final MapView m_mapView;
 
-  public WizardGoogleExport( final MapView mapView )
+  private final File m_targetFile;
+
+  public WizardGoogleExport( final MapView mapView, final File targetFile )
   {
     m_mapView = mapView;
+    m_targetFile = targetFile;
   }
 
   /**
@@ -72,7 +78,7 @@ public class WizardGoogleExport extends Wizard implements INewWizard
   {
     setWindowTitle( "Edit criterion" );
 
-    m_page = new PageGoogleExport();
+    m_page = new PageGoogleExport( m_targetFile );
     addPage( m_page );
   }
 
@@ -100,5 +106,10 @@ public class WizardGoogleExport extends Wizard implements INewWizard
       return true;
 
     return false;
+  }
+
+  public IGoogleEarthExportSettings getExportedSettings( )
+  {
+    return m_page;
   }
 }

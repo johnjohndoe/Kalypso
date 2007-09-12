@@ -1,15 +1,19 @@
 package org.kalypso.google.earth.export;
 
+import java.io.File;
+
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.commands.IHandlerListener;
+import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.google.earth.export.constants.IGoogleEarthExportSettings;
 import org.kalypso.google.earth.export.wizard.WizardGoogleExport;
 import org.kalypso.ui.views.map.MapView;
 
@@ -26,6 +30,10 @@ public class GoogleEarthExportCommandHandler implements IHandler
 
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
+    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+
+    final File targetFile = (File) context.getVariable( IGoogleEarthExportSettings.CONST_TARGET_FILE );
+
     /* get mapView instance */
     MapView mapView = null;
 
@@ -50,13 +58,14 @@ public class GoogleEarthExportCommandHandler implements IHandler
       throw new IllegalStateException();
 
     /* call google earth export wizard */
-    final WizardGoogleExport wizard = new WizardGoogleExport( mapView );
+    final WizardGoogleExport wizard = new WizardGoogleExport( mapView, targetFile );
     wizard.init( workbench, null );
 
     final WizardDialog dialog = new WizardDialog( workbench.getDisplay().getActiveShell(), wizard );
     dialog.open();
 
-    return false;
+    /* return settings */
+    return wizard.getExportedSettings();
   }
 
   public boolean isEnabled( )

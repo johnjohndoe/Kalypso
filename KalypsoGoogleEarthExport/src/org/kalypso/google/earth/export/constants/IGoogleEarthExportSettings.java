@@ -1,7 +1,7 @@
 /**
  *
  */
-package org.kalypso.google.earth.export.wizard;
+package org.kalypso.google.earth.export.constants;
 
 import java.io.File;
 
@@ -10,6 +10,8 @@ import java.io.File;
  */
 public interface IGoogleEarthExportSettings
 {
+  public static final String CONST_TARGET_FILE = "googleEarthExportTargetFile";
+
   public String getExportDescription( );
 
   public File getExportFile( );
