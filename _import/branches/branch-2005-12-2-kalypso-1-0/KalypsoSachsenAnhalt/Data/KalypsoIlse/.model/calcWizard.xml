@@ -4,6 +4,10 @@
 	<!ENTITY hid "org.kalypso.manual.">
 ]>
 <calcwizard xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" browserInitialSize="15" helpId="&hid;SA_Assi_allg_00_Start">
+
+	<!-- Allgemeine Argumente -->
+	<arg name="askForSaveOnFinish" value="false"/>
+
 	<!-- KONTROLLE DER ZEITREIHEN -->
 	<!-- Niederschlag an Stationen (Messung) -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Niederschläge - Niederschlagsstationen" imageLocation="icons/calcwizard/kalypso32.gif">
