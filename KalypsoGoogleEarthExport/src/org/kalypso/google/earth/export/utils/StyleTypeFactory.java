@@ -4,12 +4,14 @@
 package org.kalypso.google.earth.export.utils;
 
 import java.awt.Color;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
 
 import javax.xml.bind.JAXBElement;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
 import org.kalypsodeegree.graphics.sld.PointSymbolizer;
@@ -34,9 +36,9 @@ public class StyleTypeFactory
 
   private StyleType m_labelStyleType = null;
 
-  private final List<StyleType> m_polyStyles = new ArrayList<StyleType>();
+  private final Map<String, StyleType> m_polyStyles = new HashMap<String, StyleType>();
 
-  private final List<StyleType> m_lineStyles = new ArrayList<StyleType>();
+  private final Map<String, StyleType> m_lineStyles = new HashMap<String, StyleType>();
 
   /**
    * @param factory
@@ -57,7 +59,8 @@ public class StyleTypeFactory
     {
       m_labelStyleType = kmlFactory.createStyleType();
       m_labelStyleType.setLabelStyle( kmlFactory.createLabelStyleType() );
-      m_labelStyleType.setId( Integer.toString( m_labelStyleType.hashCode() ) );
+      m_labelStyleType.setId( "id" + Integer.toString( m_labelStyleType.hashCode() ) );
+
     }
 
     return m_labelStyleType;
@@ -85,28 +88,54 @@ public class StyleTypeFactory
    */
   private StyleType getPolygonSymbolizer( final Color color, final double opacity )
   {
-    final byte[] myColor = getKmlColor( color, opacity );
+    final int[] intColor = getColor( color, opacity );
+    final byte[] kmlColor = getKmlColor( intColor );
+    final String idColor = getColorId( intColor );
 
-    for( final StyleType style : m_polyStyles )
+    StyleType styleType = m_polyStyles.get( idColor );
+    if( styleType == null )
     {
-      final PolyStyleType poly = style.getPolyStyle();
+      styleType = kmlFactory.createStyleType();
 
-      final byte[] polyColor = poly.getColor();
-      if( ArrayUtils.isEquals( myColor, polyColor ) )
-        return style;
+      final PolyStyleType poly = kmlFactory.createPolyStyleType();
+      poly.setColor( kmlColor );
+      styleType.setPolyStyle( poly );
+      styleType.setId( "poly" + idColor );
+
+      m_polyStyles.put( idColor, styleType );
     }
 
-    final StyleType style = kmlFactory.createStyleType();
+    return styleType;
+  }
 
-    final PolyStyleType poly = kmlFactory.createPolyStyleType();
-    poly.setColor( myColor );
-    style.setPolyStyle( poly );
+  /**
+   * @param myColor
+   * @return
+   */
+  private String getColorId( final int[] color )
+  {
+    final StringBuffer buffer = new StringBuffer();
+    for( final int i : color )
+      buffer.append( String.format( "%02x", i ) );
 
-    style.setId( Integer.toString( style.hashCode() ) );
+    return buffer.toString();
+  }
 
-    m_polyStyles.add( style );
+  private int[] getColor( final Color color, final double opacity )
+  {
+    if( opacity > 1.0 )
+      throw (new IllegalStateException( "opacity must be a value in range of 0.0 - 1.0!" ));
 
-    return style;
+    final int kmlOpacity = (int) opacity * 255;
+    // alpha=0x7f, blue=0xff, green=0x00, and red=0x00.
+
+    final int[] bs = new int[4];
+    bs[0] = kmlOpacity;
+    bs[1] = color.getBlue();
+    bs[2] = color.getGreen();
+    bs[3] = color.getRed();
+
+    return bs;
   }
 
   /**
@@ -114,20 +143,13 @@ public class StyleTypeFactory
    * @param opacity
    * @return
    */
-  private byte[] getKmlColor( final Color color, final double opacity )
+  private byte[] getKmlColor( final int[] color )
   {
-    if( opacity > 1.0 )
-      throw (new IllegalStateException( "opacity must be a value in range of 0.0 - 1.0!" ));
+    final byte[] bs = new byte[color.length];
+    for( int i = 0; i < color.length; i++ )
+      bs[i] = (byte) color[i];
 
-    final int kmlOpacity = (int) opacity * 255;
-    final String kmlColor = String.format( "%02x%02x%02x%02x", kmlOpacity, color.getRed(), color.getGreen(), color.getBlue() );
-    final byte[] myColor = new byte[kmlColor.length()];
-
-    int pos = 0;
-    for( final char c : kmlColor.toCharArray() )
-      myColor[pos++] = (byte) c;
-
-    return myColor;
+    return bs;
   }
 
   /**
@@ -162,28 +184,25 @@ public class StyleTypeFactory
    */
   private StyleType getLineSymbolizer( final Color color, final double opacity )
   {
-    final byte[] myColor = getKmlColor( color, opacity );
+    final int[] intColor = getColor( color, opacity );
+    final byte[] kmlColor = getKmlColor( intColor );
+    final String idColor = getColorId( intColor );
 
-    for( final StyleType style : m_lineStyles )
+    StyleType styleType = m_lineStyles.get( idColor );
+    if( styleType == null )
     {
-      final LineStyleType lineStyle = style.getLineStyle();
+      styleType = kmlFactory.createStyleType();
 
-      final byte[] polyColor = lineStyle.getColor();
-      if( ArrayUtils.isEquals( myColor, polyColor ) )
-        return style;
+      final LineStyleType lineStyle = kmlFactory.createLineStyleType();
+      lineStyle.setColor( kmlColor );
+
+      styleType.setLineStyle( lineStyle );
+      styleType.setId( "line" + idColor );
+
+      m_lineStyles.put( idColor, styleType );
     }
 
-    final StyleType style = kmlFactory.createStyleType();
-
-    final LineStyleType lineStyle = kmlFactory.createLineStyleType();
-    lineStyle.setColor( myColor );
-
-    style.setLineStyle( lineStyle );
-    style.setId( Integer.toString( style.hashCode() ) );
-
-    m_lineStyles.add( style );
-
-    return style;
+    return styleType;
   }
 
   /**
@@ -195,12 +214,14 @@ public class StyleTypeFactory
   {
     final List<JAXBElement< ? extends StyleSelectorType>> styles = documentType.getStyleSelector();
 
-    for( final StyleType style : m_polyStyles )
-      styles.add( kmlFactory.createStyle( style ) );
+    styles.add( kmlFactory.createStyle( m_labelStyleType ) );
 
-    for( final StyleType style : m_lineStyles )
-      styles.add( kmlFactory.createStyle( style ) );
+    Set<Entry<String, StyleType>> set = m_polyStyles.entrySet();
+    for( final Entry<String, StyleType> entry : set )
+      styles.add( kmlFactory.createStyle( entry.getValue() ) );
 
+    set = m_lineStyles.entrySet();
+    for( final Entry<String, StyleType> entry : set )
+      styles.add( kmlFactory.createStyle( entry.getValue() ) );
   }
-
 }
