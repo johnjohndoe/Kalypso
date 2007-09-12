@@ -15,10 +15,10 @@ import org.kalypsodeegree_impl.model.ct.GeoTransformer;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 import com.google.earth.kml._2.BoundaryType;
+import com.google.earth.kml._2.ColorStyleType;
 import com.google.earth.kml._2.LinearRingType;
 import com.google.earth.kml._2.ObjectFactory;
 import com.google.earth.kml._2.PolygonType;
-import com.google.earth.kml._2.StyleType;
 
 /**
  * @author kuch
@@ -32,11 +32,11 @@ public class ConverterSurface
    * @param style
    * @throws Exception
    */
-  public static PolygonType convert( final ObjectFactory factory, final GM_Surface< ? > gmo, final StyleType style ) throws Exception
+  public static PolygonType convert( final ObjectFactory factory, final GM_Surface< ? > gmo, final ColorStyleType style ) throws Exception
   {
     /* handling of multigeometries not implemented at the moment */
     if( gmo.size() > 1 )
-      throw (new NotImplementedException());
+      throw new NotImplementedException();
 
     final GeoTransformer transformer = new GeoTransformer( GoogleEarthUtils.GOOGLE_EARTH_CS );
 
@@ -94,6 +94,6 @@ public class ConverterSurface
       return polygoneType;
     }
 
-    throw (new NotImplementedException());
+    throw new NotImplementedException();
   }
 }

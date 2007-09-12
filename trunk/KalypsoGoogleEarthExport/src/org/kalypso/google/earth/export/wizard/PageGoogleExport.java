@@ -42,19 +42,34 @@ public class PageGoogleExport extends WizardPage implements IGoogleEarthExportSe
     setDescription( "Define a name and description for google earth and choose a export kmz-destination file." );
   }
 
-  public String getExportName( )
+  /**
+   *
+   */
+  private void checkPageCompleted( )
   {
-    return m_name;
-  }
 
-  public String getExportDescription( )
-  {
-    return m_description;
-  }
+    if( m_name == null )
+    {
+      setMessage( null );
+      setErrorMessage( "Name is missing." );
 
-  public File getExportFile( )
-  {
-    return m_file;
+      setPageComplete( false );
+      return;
+    }
+
+    if( m_file == null )
+    {
+      setMessage( null );
+      setErrorMessage( "File is missing." );
+
+      setPageComplete( false );
+      return;
+    }
+
+    setMessage( null );
+    setErrorMessage( null );
+
+    setPageComplete( true );
   }
 
   /*
@@ -107,16 +122,16 @@ public class PageGoogleExport extends WizardPage implements IGoogleEarthExportSe
     final FileChooserDelegate delegate = new FileChooserGroup.FileChooserDelegate( FILE_CHOOSER_GROUP_TYPE.eSave )
     {
       @Override
+      public String[] getFilterExtensions( )
+      {
+        return new String[] { "kmz" };
+      }
+
+      @Override
       public String[] getFilterNames( )
       {
 
         return new String[] { "Google Earth kmz file" };
-      }
-
-      @Override
-      public String[] getFilterExtensions( )
-      {
-        return new String[] { "kmz" };
       }
     };
 
@@ -137,34 +152,19 @@ public class PageGoogleExport extends WizardPage implements IGoogleEarthExportSe
     checkPageCompleted();
   }
 
-  /**
-   *
-   */
-  private void checkPageCompleted( )
+  public String getExportDescription( )
   {
+    return m_description;
+  }
 
-    if( m_name == null )
-    {
-      setMessage( null );
-      setErrorMessage( "Name is missing." );
+  public File getExportFile( )
+  {
+    return m_file;
+  }
 
-      setPageComplete( false );
-      return;
-    }
-
-    if( m_file == null )
-    {
-      setMessage( null );
-      setErrorMessage( "File is missing." );
-
-      setPageComplete( false );
-      return;
-    }
-
-    setMessage( null );
-    setErrorMessage( null );
-
-    setPageComplete( true );
+  public String getExportName( )
+  {
+    return m_name;
   }
 
 }

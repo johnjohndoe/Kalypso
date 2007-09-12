@@ -55,6 +55,27 @@ public class GoogleEarthExporter implements ICoreRunnableWithProgress
     m_settings = settings;
   }
 
+  /**
+   * @return
+   * @throws IOException
+   */
+  private File createTmpDir( ) throws IOException
+  {
+    final URL urlTmpDir = new File( System.getProperty( "java.io.tmpdir" ) ).toURL();
+    Assert.assertNotNull( urlTmpDir );
+
+    /* delete old test dir */
+    final URL urlBaseDir = new URL( urlTmpDir + "kalypsoGoogleEarthExport/" );
+
+    final File fBaseDir = new File( urlBaseDir.getFile() );
+    if( !fBaseDir.exists() )
+      FileUtils.forceMkdir( fBaseDir );
+
+    FileUtils.cleanDirectory( fBaseDir );
+
+    return fBaseDir;
+  }
+
   /*
    * (non-Javadoc)
    * 
@@ -117,26 +138,5 @@ public class GoogleEarthExporter implements ICoreRunnableWithProgress
     }
 
     return Status.OK_STATUS;
-  }
-
-  /**
-   * @return
-   * @throws IOException
-   */
-  private File createTmpDir( ) throws IOException
-  {
-    final URL urlTmpDir = new File( System.getProperty( "java.io.tmpdir" ) ).toURL();
-    Assert.assertNotNull( urlTmpDir );
-
-    /* delete old test dir */
-    final URL urlBaseDir = new URL( urlTmpDir + "kalypsoGoogleEarthExport/" );
-
-    final File fBaseDir = new File( urlBaseDir.getFile() );
-    if( !fBaseDir.exists() )
-      FileUtils.forceMkdir( fBaseDir );
-
-    FileUtils.cleanDirectory( fBaseDir );
-
-    return fBaseDir;
   }
 }
