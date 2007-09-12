@@ -46,7 +46,7 @@ public class GoogleEarthUtils
     final GM_Point middle = (GM_Point) transformer.transform( GeometryFactory.createGM_Point( pos, coordinatesSystem ) );
 
     final LookAtType lookAtType = factory.createLookAtType();
-    lookAtType.setAltitude( 1000.0 );
+    lookAtType.setAltitude( 3000.0 );
     lookAtType.setLatitude( middle.getY() );
     lookAtType.setLongitude( middle.getX() );
 
