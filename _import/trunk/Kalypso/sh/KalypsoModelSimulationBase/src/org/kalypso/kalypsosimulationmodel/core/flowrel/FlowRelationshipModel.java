@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsosimulationmodel.core.flowrel;
 
@@ -64,6 +64,52 @@ public class FlowRelationshipModel extends FeatureWrapperCollection<IFlowRelatio
    */
   public IFlowRelationship findFlowrelationship( final GM_Position position, final double searchRectWidth )
   {
+    final List<Feature> foundFeatures = findFeatures( position, searchRectWidth );
+    if( foundFeatures.isEmpty() )
+      return null;
+
+    double min = Double.MAX_VALUE;
+    IFlowRelationship nearest = null;
+    for( final Feature feature : foundFeatures )
+    {
+      final IFlowRelationship curNode = (IFlowRelationship) feature.getAdapter( IFlowRelationship.class );
+
+      final double curDist = position.getDistance( curNode.getPosition().getPosition() );
+      if( min > curDist )
+      {
+        nearest = curNode;
+        min = curDist;
+      }
+    }
+    return nearest;
+  }
+
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel#findFlowrelationships(org.kalypsodeegree.model.geometry.GM_Position,
+   *      double)
+   */
+  public IFlowRelationship[] findFlowrelationships( GM_Position position, double searchRectWidth )
+  {
+    final List<Feature> foundFeatures = findFeatures( position, searchRectWidth );
+    if( foundFeatures.isEmpty() )
+      return null;
+
+    IFlowRelationship[] flowRelations = new IFlowRelationship[foundFeatures.size()];
+    for( int i = 0; i < foundFeatures.size(); i++ )
+    {
+      final IFlowRelationship curNode = (IFlowRelationship) foundFeatures.get( i ).getAdapter( IFlowRelationship.class );
+
+      flowRelations[i] = curNode;
+    }
+    return flowRelations;
+  }
+
+  private List<Feature> findFeatures( GM_Position position, double searchRectWidth )
+  {
+    // TODO: the problem is, that the flow relations get found via the specification of a search radius, because they
+    // are connected to the node by location.
+    // better: connect the flow relations via id to the nodes.
+
     final FeatureList nodeList = getWrappedList();
     final double posX = position.getX();
     final double posY = position.getY();
@@ -74,22 +120,7 @@ public class FlowRelationshipModel extends FeatureWrapperCollection<IFlowRelatio
     final GM_Envelope reqEnvelope = GeometryFactory.createGM_Envelope( minPos, maxPos );
 
     final List<Feature> foundFeatures = nodeList.query( reqEnvelope, null );
-    if( foundFeatures.isEmpty() )
-      return null;
-
-    double min = Double.MAX_VALUE;
-    IFlowRelationship nearest = null;
-    for( final Feature feature : foundFeatures )
-    {
-      final IFlowRelationship curNode = (IFlowRelationship) feature.getAdapter( IFlowRelationship.class );
-      
-      final double curDist = position.getDistance( curNode.getPosition().getPosition() );
-      if( min > curDist )
-      {
-        nearest = curNode;
-        min = curDist;
-      }
-    }
-    return nearest;
+    return foundFeatures;
   }
+
 }

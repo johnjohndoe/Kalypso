@@ -412,10 +412,19 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   {
     final GM_Position nodePos = nodeResult.getPoint().getPosition();
 
-    final IFlowRelationship flowRelationship = m_calculation.getFlowModel().findFlowrelationship( nodePos, 0.0 );
-    if( flowRelationship instanceof ITeschkeFlowRelation )
+    final IFlowRelationship[] flowRelationships = m_calculation.getFlowModel().findFlowrelationships( nodePos, 0.2 );
+
+    if( flowRelationships == null )
+      return null;
+
+    // TODO: for some reason there are flow relations that are from type BoundaryCondition
+    // go through the found array and get the first found teschke flow relation
+    for( int i = 0; i < flowRelationships.length; i++ )
     {
-      return (ITeschkeFlowRelation) flowRelationship;
+      if( flowRelationships[i] instanceof ITeschkeFlowRelation )
+      {
+        return (ITeschkeFlowRelation) flowRelationships[i];
+      }
     }
     return null;
   }
@@ -545,6 +554,9 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     {
       final ITeschkeFlowRelation teschkeRelation = getFlowRelation( nodes[i] );
       // handleLengthSectionData( nodes[i], teschkeRelation );
+
+      if( teschkeRelation == null )
+        break;
 
       final WspmProfile profile = teschkeRelation.getProfile();
 
