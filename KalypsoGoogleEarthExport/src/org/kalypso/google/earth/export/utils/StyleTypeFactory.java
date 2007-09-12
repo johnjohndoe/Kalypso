@@ -7,6 +7,8 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.JAXBElement;
+
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
@@ -14,11 +16,12 @@ import org.kalypsodeegree.graphics.sld.PointSymbolizer;
 import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
 
-import com.google.earth.kml._2.ColorStyleType;
-import com.google.earth.kml._2.LabelStyleType;
+import com.google.earth.kml._2.DocumentType;
 import com.google.earth.kml._2.LineStyleType;
 import com.google.earth.kml._2.ObjectFactory;
 import com.google.earth.kml._2.PolyStyleType;
+import com.google.earth.kml._2.StyleSelectorType;
+import com.google.earth.kml._2.StyleType;
 
 /**
  * @author kuch
@@ -29,11 +32,11 @@ public class StyleTypeFactory
 
   private final ObjectFactory kmlFactory;
 
-  private LabelStyleType m_labelStyleType = null;
+  private StyleType m_labelStyleType = null;
 
-  private final List<PolyStyleType> m_polyStyles = new ArrayList<PolyStyleType>();
+  private final List<StyleType> m_polyStyles = new ArrayList<StyleType>();
 
-  private final List<LineStyleType> m_lineStyles = new ArrayList<LineStyleType>();
+  private final List<StyleType> m_lineStyles = new ArrayList<StyleType>();
 
   /**
    * @param factory
@@ -47,11 +50,15 @@ public class StyleTypeFactory
    * @param feature
    * @param symbolizer
    */
-  public LabelStyleType getPointSymbolizer( final PointSymbolizer symbolizer )
+  public StyleType getPointSymbolizer( final PointSymbolizer symbolizer )
   {
     // TODO implement some point styletype which will render an image and generates an IconStyleType
     if( m_labelStyleType == null )
-      m_labelStyleType = kmlFactory.createLabelStyleType();
+    {
+      m_labelStyleType = kmlFactory.createStyleType();
+      m_labelStyleType.setLabelStyle( kmlFactory.createLabelStyleType() );
+      m_labelStyleType.setId( Integer.toString( m_labelStyleType.hashCode() ) );
+    }
 
     return m_labelStyleType;
   }
@@ -62,7 +69,7 @@ public class StyleTypeFactory
    * @return
    * @throws FilterEvaluationException
    */
-  public PolyStyleType getPolygonSymbolizer( final PolygonSymbolizer symbolizer ) throws FilterEvaluationException
+  public StyleType getPolygonSymbolizer( final PolygonSymbolizer symbolizer ) throws FilterEvaluationException
   {
     final Stroke stroke = symbolizer.getStroke();
     final Color color = stroke.getStroke( null );
@@ -76,23 +83,30 @@ public class StyleTypeFactory
    * @param opacity
    * @return
    */
-  private PolyStyleType getPolygonSymbolizer( final Color color, final double opacity )
+  private StyleType getPolygonSymbolizer( final Color color, final double opacity )
   {
     final byte[] myColor = getKmlColor( color, opacity );
 
-    for( final PolyStyleType poly : m_polyStyles )
+    for( final StyleType style : m_polyStyles )
     {
+      final PolyStyleType poly = style.getPolyStyle();
+
       final byte[] polyColor = poly.getColor();
       if( ArrayUtils.isEquals( myColor, polyColor ) )
-        return poly;
+        return style;
     }
 
-    final PolyStyleType styleType = kmlFactory.createPolyStyleType();
-    styleType.setColor( myColor );
+    final StyleType style = kmlFactory.createStyleType();
 
-    m_polyStyles.add( styleType );
+    final PolyStyleType poly = kmlFactory.createPolyStyleType();
+    poly.setColor( myColor );
+    style.setPolyStyle( poly );
 
-    return styleType;
+    style.setId( Integer.toString( style.hashCode() ) );
+
+    m_polyStyles.add( style );
+
+    return style;
   }
 
   /**
@@ -132,7 +146,7 @@ public class StyleTypeFactory
    * @return
    * @throws FilterEvaluationException
    */
-  public ColorStyleType getLineSymbolizer( final LineSymbolizer symbolizer ) throws FilterEvaluationException
+  public StyleType getLineSymbolizer( final LineSymbolizer symbolizer ) throws FilterEvaluationException
   {
     final Stroke stroke = symbolizer.getStroke();
     final Color color = stroke.getStroke( null );
@@ -146,23 +160,47 @@ public class StyleTypeFactory
    * @param opacity
    * @return
    */
-  private ColorStyleType getLineSymbolizer( final Color color, final double opacity )
+  private StyleType getLineSymbolizer( final Color color, final double opacity )
   {
     final byte[] myColor = getKmlColor( color, opacity );
 
-    for( final LineStyleType line : m_lineStyles )
+    for( final StyleType style : m_lineStyles )
     {
-      final byte[] polyColor = line.getColor();
+      final LineStyleType lineStyle = style.getLineStyle();
+
+      final byte[] polyColor = lineStyle.getColor();
       if( ArrayUtils.isEquals( myColor, polyColor ) )
-        return line;
+        return style;
     }
 
-    final LineStyleType styleType = kmlFactory.createLineStyleType();
-    styleType.setColor( myColor );
+    final StyleType style = kmlFactory.createStyleType();
 
-    m_lineStyles.add( styleType );
+    final LineStyleType lineStyle = kmlFactory.createLineStyleType();
+    lineStyle.setColor( myColor );
 
-    return styleType;
+    style.setLineStyle( lineStyle );
+    style.setId( Integer.toString( style.hashCode() ) );
+
+    m_lineStyles.add( style );
+
+    return style;
+  }
+
+  /**
+   * adding all styles to kml root document!
+   * 
+   * @param documentType
+   */
+  public void addStylesToDocument( final DocumentType documentType )
+  {
+    final List<JAXBElement< ? extends StyleSelectorType>> styles = documentType.getStyleSelector();
+
+    for( final StyleType style : m_polyStyles )
+      styles.add( kmlFactory.createStyle( style ) );
+
+    for( final StyleType style : m_lineStyles )
+      styles.add( kmlFactory.createStyle( style ) );
+
   }
 
 }

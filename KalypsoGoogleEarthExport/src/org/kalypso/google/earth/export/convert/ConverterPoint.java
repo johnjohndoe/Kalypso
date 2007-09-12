@@ -9,7 +9,6 @@ import org.kalypso.google.earth.export.utils.GoogleEarthUtils;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.ct.GeoTransformer;
 
-import com.google.earth.kml._2.ColorStyleType;
 import com.google.earth.kml._2.ObjectFactory;
 import com.google.earth.kml._2.PointType;
 
@@ -26,7 +25,7 @@ public class ConverterPoint
    * @return
    * @throws Exception
    */
-  public static PointType convert( final ObjectFactory factory, final GM_Point gmo, final ColorStyleType style ) throws Exception
+  public static PointType convert( final ObjectFactory factory, final GM_Point gmo ) throws Exception
   {
     final PointType pointType = factory.createPointType();
 

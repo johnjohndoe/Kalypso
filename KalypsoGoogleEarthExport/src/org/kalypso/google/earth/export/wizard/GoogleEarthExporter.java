@@ -23,6 +23,7 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.google.earth.export.GoogleEarthThemeVisitor;
 import org.kalypso.google.earth.export.utils.GoogleEarthExportUtils;
 import org.kalypso.google.earth.export.utils.GoogleEarthUtils;
+import org.kalypso.google.earth.export.utils.StyleTypeFactory;
 import org.kalypso.google.earth.export.utils.ThemeGoogleEarthExportable;
 import org.kalypso.google.earth.export.utils.ZipUtils;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -113,6 +114,9 @@ public class GoogleEarthExporter implements ICoreRunnableWithProgress
       final IKalypsoTheme[] themes = mapModell.getAllThemes();
       for( final IKalypsoTheme theme : themes )
         visitor.visit( theme );
+
+      final StyleTypeFactory styleFactory = StyleTypeFactory.getStyleFactory( factory );
+      styleFactory.addStylesToDocument( documentType );
 
       GoogleEarthExportUtils.removeEmtpyFolders( folderType );
 

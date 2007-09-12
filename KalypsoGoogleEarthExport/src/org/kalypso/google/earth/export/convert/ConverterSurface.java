@@ -15,7 +15,6 @@ import org.kalypsodeegree_impl.model.ct.GeoTransformer;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 import com.google.earth.kml._2.BoundaryType;
-import com.google.earth.kml._2.ColorStyleType;
 import com.google.earth.kml._2.LinearRingType;
 import com.google.earth.kml._2.ObjectFactory;
 import com.google.earth.kml._2.PolygonType;
@@ -32,7 +31,7 @@ public class ConverterSurface
    * @param style
    * @throws Exception
    */
-  public static PolygonType convert( final ObjectFactory factory, final GM_Surface< ? > gmo, final ColorStyleType style ) throws Exception
+  public static PolygonType convert( final ObjectFactory factory, final GM_Surface< ? > gmo ) throws Exception
   {
     /* handling of multigeometries not implemented at the moment */
     if( gmo.size() > 1 )
