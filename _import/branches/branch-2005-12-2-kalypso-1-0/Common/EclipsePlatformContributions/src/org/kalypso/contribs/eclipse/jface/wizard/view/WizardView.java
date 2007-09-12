@@ -49,11 +49,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.help.HelpSystem;
 import org.eclipse.help.IContext;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -98,6 +102,8 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.IProgressService;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.java.lang.CatchRunnable;
 import org.kalypso.contribs.java.lang.DisposeHelper;
 
@@ -114,6 +120,8 @@ import org.kalypso.contribs.java.lang.DisposeHelper;
  */
 public class WizardView extends ViewPart implements IWizardContainer3
 {
+  public static final int SAVE_ID = IDialogConstants.CLIENT_ID + 1;
+
   private RGB m_defaultTitleBackground;
 
   private RGB m_defaultTitleForeground;
@@ -398,6 +406,9 @@ public class WizardView extends ViewPart implements IWizardContainer3
 
   protected void createButtonsForButtonBar( final Composite parent )
   {
+    if( m_wizard instanceof IWizard2 && ((IWizard2)m_wizard).isSaveAvailable() )
+      createButton( parent, SAVE_ID, "Speichern", "doSave", false );
+
     if( m_wizard.isHelpAvailable() )
       createButton( parent, IDialogConstants.HELP_ID, IDialogConstants.HELP_LABEL, "doHelp", false );
 
@@ -985,26 +996,49 @@ public class WizardView extends ViewPart implements IWizardContainer3
     final IWizard wizard = getWizard();
     final String helpId;
     if( wizard instanceof IWizard2 )
-      helpId = ((IWizard2)wizard).getHelpId();
+      helpId = ( (IWizard2)wizard ).getHelpId();
     else
       helpId = null;
-    
+
     BusyIndicator.showWhile( null, new Runnable()
     {
       public void run()
       {
-        final IContext context = HelpSystem.getContext(helpId);
-        
+        final IContext context = HelpSystem.getContext( helpId );
+
         // take the first topic found and directly display it
-		if (context != null && context.getRelatedTopics().length > 0 )
-		  WorkbenchHelp.displayHelpResource( context.getRelatedTopics()[0].getHref() );
-		else
-		  Logger.getLogger( WizardView.class.getName() ).warning( "Keine gültige Kontext-Id: " + helpId );
+        if( context != null && context.getRelatedTopics().length > 0 )
+          WorkbenchHelp.displayHelpResource( context.getRelatedTopics()[0].getHref() );
+        else
+          Logger.getLogger( WizardView.class.getName() ).warning( "Keine gültige Kontext-Id: " + helpId );
       }
     } );
 
     // the help button never changes the page, so always return false
     return false;
+  }
+
+  public boolean doSave()
+  {
+    final IWizard wizard = getWizard();
+
+    if( wizard instanceof IWizard2 )
+    {
+      final IWizard2 wizard2 = (IWizard2)wizard;
+
+      final ICoreRunnableWithProgress saveOperation = new ICoreRunnableWithProgress()
+      {
+        public IStatus execute( IProgressMonitor monitor ) throws CoreException, InvocationTargetException,
+            InterruptedException
+        {
+          return wizard2.saveAllPages( monitor );
+        }
+      };
+      final IStatus status = RunnableContextHelper.execute( this, true, false, saveOperation );
+      ErrorDialog.openError( getShell(), "Speichern", "Fehler beim Speichern", status );
+    }
+
+    return true;
   }
 
   ///////////////////////

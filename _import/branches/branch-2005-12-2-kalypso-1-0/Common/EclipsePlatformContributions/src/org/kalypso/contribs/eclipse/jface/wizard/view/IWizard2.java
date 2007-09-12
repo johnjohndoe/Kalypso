@@ -40,6 +40,9 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.jface.wizard.view;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardPage;
 
@@ -64,4 +67,15 @@ public interface IWizard2 extends IWizard
   
   /** The context-id which to show if help is invoked */
   public String getHelpId();
+
+  /**
+   * Saves the contents/state of all pages.
+   * @throws CoreException
+   */
+  public IStatus saveAllPages( final IProgressMonitor monitor ) throws CoreException;
+
+  /**
+   * @return Return <code>true</code>, if a 'save' button should be visible for this wizard.
+   */
+  public boolean isSaveAvailable();
 }
