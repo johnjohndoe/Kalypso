@@ -19,6 +19,7 @@
 	<!ENTITY file_wizard_Saale SYSTEM "Vorhersage_Assistent_Saale.xml">
 ]>
 <!--book id="book" lang="de" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xinclude="http://www.w3.org/2001/XInclude" xsi:schemaLocation="http://www.w3.org/2001/XInclude xincluder.xsd"-->
+<!--<!DOCTYPE book SYSTEM "../../../../Programme/Oxygen%20XML%20Editor%208.2/frameworks/docbook/dtd/docbookx.dtd">-->
 <book id="book" lang="de">
 	<!--xinclude:include href="test_xinclude.xml"/-->
  
