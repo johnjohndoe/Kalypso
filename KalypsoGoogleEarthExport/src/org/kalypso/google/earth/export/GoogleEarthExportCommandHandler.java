@@ -47,7 +47,7 @@ public class GoogleEarthExportCommandHandler implements IHandler
     }
 
     if( mapView == null )
-      throw (new IllegalStateException());
+      throw new IllegalStateException();
 
     /* call google earth export wizard */
     final WizardGoogleExport wizard = new WizardGoogleExport( mapView );

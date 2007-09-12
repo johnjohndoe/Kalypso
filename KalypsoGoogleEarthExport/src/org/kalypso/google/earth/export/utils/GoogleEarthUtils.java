@@ -29,6 +29,32 @@ public class GoogleEarthUtils
 
   /**
    * @param boundingBox
+   * @param coordinatesSystem
+   * @param factory
+   * @param documentType
+   * @throws Exception
+   */
+  public static void setLookAt( final GM_Envelope boundingBox, final CS_CoordinateSystem coordinatesSystem, final ObjectFactory factory, final DocumentType documentType ) throws Exception
+  {
+    // set look at to the middle of bounding box
+    final GeoTransformer transformer = new GeoTransformer( GoogleEarthUtils.GOOGLE_EARTH_CS );
+
+    final GM_Position min = boundingBox.getMin();
+
+    // point
+    final GM_Position pos = GeometryFactory.createGM_Position( min.getX() + boundingBox.getWidth() / 2, min.getY() + boundingBox.getHeight() / 2 );
+    final GM_Point middle = (GM_Point) transformer.transform( GeometryFactory.createGM_Point( pos, coordinatesSystem ) );
+
+    final LookAtType lookAtType = factory.createLookAtType();
+    lookAtType.setAltitude( 1000.0 );
+    lookAtType.setLatitude( middle.getY() );
+    lookAtType.setLongitude( middle.getX() );
+
+    documentType.setLookAt( lookAtType );
+  }
+
+  /**
+   * @param boundingBox
    * @param srcCRS
    * @param factory
    * @param documentType
@@ -60,31 +86,5 @@ public class GoogleEarthUtils
     final RegionType region = factory.createRegionType();
     region.setLatLonAltBox( latLonBox );
     documentType.setRegion( region );
-  }
-
-  /**
-   * @param boundingBox
-   * @param coordinatesSystem
-   * @param factory
-   * @param documentType
-   * @throws Exception
-   */
-  public static void setLookAt( final GM_Envelope boundingBox, final CS_CoordinateSystem coordinatesSystem, final ObjectFactory factory, final DocumentType documentType ) throws Exception
-  {
-    // set look at to the middle of bounding box
-    final GeoTransformer transformer = new GeoTransformer( GoogleEarthUtils.GOOGLE_EARTH_CS );
-
-    final GM_Position min = boundingBox.getMin();
-
-    // point
-    final GM_Position pos = GeometryFactory.createGM_Position( min.getX() + boundingBox.getWidth() / 2, min.getY() + boundingBox.getHeight() / 2 );
-    final GM_Point middle = (GM_Point) transformer.transform( GeometryFactory.createGM_Point( pos, coordinatesSystem ) );
-
-    final LookAtType lookAtType = factory.createLookAtType();
-    lookAtType.setAltitude( 1000.0 );
-    lookAtType.setLatitude( middle.getY() );
-    lookAtType.setLongitude( middle.getX() );
-
-    documentType.setLookAt( lookAtType );
   }
 }

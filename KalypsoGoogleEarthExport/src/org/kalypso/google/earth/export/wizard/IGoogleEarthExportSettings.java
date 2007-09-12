@@ -10,9 +10,9 @@ import java.io.File;
  */
 public interface IGoogleEarthExportSettings
 {
-  public String getExportName( );
-
   public String getExportDescription( );
 
   public File getExportFile( );
+
+  public String getExportName( );
 }

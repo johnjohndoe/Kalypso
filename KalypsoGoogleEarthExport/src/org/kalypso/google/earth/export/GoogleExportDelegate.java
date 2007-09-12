@@ -9,19 +9,24 @@ import javax.xml.bind.JAXBElement;
 
 import org.kalypso.google.earth.export.convert.ConvertFacade;
 import org.kalypso.google.earth.export.convert.IFeatureGeometryFilter;
+import org.kalypso.google.earth.export.utils.GoogleEarthExportUtils;
 import org.kalypso.ogc.gml.IPaintInternalDelegate;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
+import org.kalypsodeegree.graphics.displayelements.GeometryDisplayElement;
+import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
+import com.google.earth.kml._2.ColorStyleType;
 import com.google.earth.kml._2.FeatureType;
 import com.google.earth.kml._2.FolderType;
 import com.google.earth.kml._2.ObjectFactory;
 import com.google.earth.kml._2.PlacemarkType;
-import com.google.earth.kml._2.StyleType;
 
 /**
  * @author kuch
@@ -94,7 +99,20 @@ public class GoogleExportDelegate implements IPaintInternalDelegate
   {
     try
     {
-      final StyleType styleType = m_factory.createStyleType();
+      final ColorStyleType styleType;
+
+      if( displayElement instanceof GeometryDisplayElement )
+      {
+        final GeometryDisplayElement element = (GeometryDisplayElement) displayElement;
+        final Symbolizer symbolizer = element.getSymbolizer();
+
+        styleType = GoogleEarthExportUtils.getStyleType( m_factory, displayElement.getFeature(), symbolizer );
+
+        final int asdfasdf = 0;
+      }
+      else
+        throw (new NotImplementedException());
+
       final IFeatureGeometryFilter filter = new IFeatureGeometryFilter()
       {
         public GM_Object[] getGeometries( Feature f )

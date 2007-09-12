@@ -16,9 +16,9 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 
+import com.google.earth.kml._2.ColorStyleType;
 import com.google.earth.kml._2.ObjectFactory;
 import com.google.earth.kml._2.PlacemarkType;
-import com.google.earth.kml._2.StyleType;
 
 /**
  * @author kuch
@@ -28,30 +28,11 @@ public class ConvertFacade
   private static ObjectFactory m_factory = new ObjectFactory();
 
   /**
-   * @param factory
-   * @param features
-   * @throws Exception
-   */
-  public static PlacemarkType[] convert( final ObjectFactory factory, final Feature[] features, final IFeatureGeometryFilter filter, final StyleType style ) throws Exception
-  {
-    final List<PlacemarkType> placemarks = new ArrayList<PlacemarkType>();
-
-    for( final Feature feature : features )
-    {
-      final PlacemarkType[] converted = ConvertFacade.convert( factory, feature, filter, style );
-      for( final PlacemarkType placemark : converted )
-        placemarks.add( placemark );
-    }
-
-    return placemarks.toArray( new PlacemarkType[] {} );
-  }
-
-  /**
    * @param feature
    * @return
    * @throws Exception
    */
-  public static PlacemarkType[] convert( final ObjectFactory factory, final Feature feature, final IFeatureGeometryFilter filter, final StyleType style ) throws Exception
+  public static PlacemarkType[] convert( final ObjectFactory factory, final Feature feature, final IFeatureGeometryFilter filter, final ColorStyleType style ) throws Exception
   {
     final List<PlacemarkType> placemarks = new ArrayList<PlacemarkType>();
 
@@ -87,6 +68,25 @@ public class ConvertFacade
       }
 
       placemarks.add( placemark );
+    }
+
+    return placemarks.toArray( new PlacemarkType[] {} );
+  }
+
+  /**
+   * @param factory
+   * @param features
+   * @throws Exception
+   */
+  public static PlacemarkType[] convert( final ObjectFactory factory, final Feature[] features, final IFeatureGeometryFilter filter, final ColorStyleType style ) throws Exception
+  {
+    final List<PlacemarkType> placemarks = new ArrayList<PlacemarkType>();
+
+    for( final Feature feature : features )
+    {
+      final PlacemarkType[] converted = ConvertFacade.convert( factory, feature, filter, style );
+      for( final PlacemarkType placemark : converted )
+        placemarks.add( placemark );
     }
 
     return placemarks.toArray( new PlacemarkType[] {} );

@@ -38,7 +38,7 @@ public class GeoUtils
     else if( gmo instanceof GM_Point )
       return GEOMETRY_TYPE.ePoint;
 
-    throw (new NotImplementedException());
+    throw new NotImplementedException();
   }
 
 }
