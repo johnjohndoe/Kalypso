@@ -136,11 +136,11 @@
 
     <itemizedlist>
       <listitem>
-        <para><filename>PSICompact.jar</filename> in der Version 041119</para>
+        <para><filename>PSICompact.jar</filename></para>
       </listitem>
 
       <listitem>
-        <para><filename>OB.jar</filename> in der Version 040928</para>
+        <para><filename>OB.jar</filename> </para>
       </listitem>
     </itemizedlist>
 
@@ -166,12 +166,21 @@
 
     <para>Zur Zeit werden alle Werte aus dem Archivtyp
     <emphasis>PSICompact.ARC_MIN15</emphasis> (15 Minuten-Archiv) geholt und
-    zurück geschrieben. Beim Zurückschreiben wird eine Zeitreihe so ergänzt,
-    dass vor ihrem Beginn und nach ihrem Ende, vordefinierte Werte angehängt
-    werden (Zeiträume: <emphasis>[t(0) - X Tage, t(0)[ und ]t(n), t(n) + X
-    Tage]</emphasis> ). Dies erlaubt das Überschreiben älterer Ergebnisse in
-    PSICompact, so dass die Internet-Darstellung (IMS) richtig erfolgt (siehe
-    <xref linkend="fig_overwrite_psicompact" />)). <figure
+    zurück geschrieben. </para>
+
+    <para>Beim Zurückschreiben wird zuerst der Zeitreihencontainer mit dem
+    Wert -1 beschrieben, um eventuell vorhandene Werte zu löschen. Dies
+    geschieht in der vollen 15min Auflösung für den zu schreibenden Zeitraum,
+    erweitert um die in den Variablen OVERWRITE_AMOUNT_BEFORE und
+    OVERWRITE_AMOUNT_AFTER angegebenen Werte.</para>
+
+    <para>Danach wird der eigentlich zu schreibende Zeitraum in der
+    vorliegenden Auflösung geschrieben. Eine eventuelle Anpassunge der zu
+    schreibenden Werte (z.B. Rundung oder Änderung der Schrittweite) erfolgt
+    durch Angabe von Filterausdrücken in den Ablageskripten.</para>
+
+    <para>Dieses Vorgehen stellt die richtige Darstellung im Internet sicher
+    (siehe <xref linkend="fig_overwrite_psicompact" />)). <figure
         id="fig_overwrite_psicompact">
         <title>Überschreibung der Werte</title>
 
@@ -202,8 +211,8 @@
 
           <glossdef>
             <para>Anzahl der Zeit-Einheiten, die vor dem Beginn einer
-            Zeitreihe mit OVERWRITE_VALUE überschrieben werden, bevor die
-            Zeitreihe nach PSICompact zurückgeschrieben wird</para>
+            Zeitreihe überschrieben werden, bevor die Zeitreihe nach
+            PSICompact zurückgeschrieben wird</para>
           </glossdef>
         </glossentry>
 
@@ -212,37 +221,14 @@
 
           <glossdef>
             <para>Anzahl der Zeit-Einheiten, die nach dem Ende einer Zeitreihe
-            mit OVERWRITE_VALUE überschrieben werden, bevor die Zeitreihe nach
-            PSICompact zurückgeschrieben wird</para>
+            überschrieben werden, bevor die Zeitreihe nach PSICompact
+            zurückgeschrieben wird</para>
           </glossdef>
         </glossentry>
-
-        <glossentry>
-          <glossterm>OVERWRITE_STEP</glossterm>
-
-          <glossdef>
-            <para>Der Step (Schrittweite), mit dem die Vorhersage
-            herausgeschrieben wird. Die Einheit ist
-            OVERWRITE_CALENDAR_FIELD.</para>
-          </glossdef>
-        </glossentry>
-
-        <glossentry>
-          <glossterm>OVERWRITE_VALUE</glossterm>
-
-          <glossdef>
-            <para>Überschreibungswert zur Markierung von Zeitreihenwerten, so
-            dass keine Darstellung der entsprechenden Werte bei der
-            Betrachtung im Web (Informationsmanagementsystem) erfolgt (Eingabe
-            in SI Einheiten)</para>
-          </glossdef>
-        </glossentry>
-      </glosslist></para>
-
-    <para>PSICompact liefert definierte Statuswerte zu den Werten einer
-    Zeitreihe. Diese müssen auf die innerhalb von KALYPSO benutzten Stati
-    abgebildet werden. Die Umwandlung der Status-Information erfolgt beim
-    Abruf der Daten aus PSICompact in folgender Weise (siehe <xref
+      </glosslist>PSICompact liefert definierte Statuswerte zu den Werten
+    einer Zeitreihe. Diese müssen auf die innerhalb von KALYPSO benutzten
+    Stati abgebildet werden. Die Umwandlung der Status-Information erfolgt
+    beim Abruf der Daten aus PSICompact in folgender Weise (siehe <xref
     linkend="tbl_psiStati" />):</para>
 
     <table id="tbl_psiStati">

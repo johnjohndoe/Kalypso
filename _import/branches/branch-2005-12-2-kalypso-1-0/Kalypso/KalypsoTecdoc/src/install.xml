@@ -273,7 +273,7 @@
       Installation findet sich in <xref
       linkend="tab_install_client_kalypsoclientini" />.</para>
 
-      <!--PROFILING ANFAG - ROW-basiert-->
+      <!--PROFILING ANFANG - ROW-basiert-->
 
       <table id="tab_install_client_kalypsoclientini" vendor="">
         <title>Ablage der Konfigurationsdatei</title>
@@ -292,7 +292,7 @@
           </thead>
 
           <tbody>
-            <row>
+            <row vendor="sachsen-anhalt">
               <entry>Magdeburg</entry>
 
               <entry><filename><filename>http://smdhvzwapp:8088/webdav/kalypso-client.ini</filename></filename></entry>
@@ -631,12 +631,15 @@
             </listitem>
 
             <listitem>
-              <para>Tomcat als Service einrichten und starten: Die Datei
-              <filename>service.bat</filename> aus dem Verzeichnis
+              <para>Tomcat als Service einrichten und starten: Den Befehl
+              <filename>service.bat install</filename> aus dem Verzeichnis
               <filename>CATALINA_HOME/bin</filename> ausführen. Die
               notwendigen Parameter mittels Registry-Editor oder tomcat5w.exe
-              setzen. Um Zugriffe auf die UNC-Pfade zu erhalten, muss der
-              Dienst unter einem Domainenbenutzer gestartet werden.</para>
+              setzen. Die aktuelel Konfiguration findet sich in der Datei
+              <filename>TomcatService.reg</filename>. Diese kann zur einfachen
+              Installation in die Windows-Regitry reimportiert werden. Um
+              Zugriffe auf die UNC-Pfade zu erhalten, muss der Dienst unter
+              einem Domainenbenutzer gestartet werden.</para>
             </listitem>
           </itemizedlist></para>
       </formalpara>
