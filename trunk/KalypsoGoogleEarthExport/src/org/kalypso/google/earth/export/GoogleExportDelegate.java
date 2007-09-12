@@ -22,11 +22,11 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import com.google.earth.kml._2.ColorStyleType;
 import com.google.earth.kml._2.FeatureType;
 import com.google.earth.kml._2.FolderType;
 import com.google.earth.kml._2.ObjectFactory;
 import com.google.earth.kml._2.PlacemarkType;
+import com.google.earth.kml._2.StyleType;
 
 /**
  * @author kuch
@@ -99,7 +99,7 @@ public class GoogleExportDelegate implements IPaintInternalDelegate
   {
     try
     {
-      final ColorStyleType styleType;
+      final StyleType styleType;
 
       if( displayElement instanceof GeometryDisplayElement )
       {
@@ -107,8 +107,6 @@ public class GoogleExportDelegate implements IPaintInternalDelegate
         final Symbolizer symbolizer = element.getSymbolizer();
 
         styleType = GoogleEarthExportUtils.getStyleType( m_factory, displayElement.getFeature(), symbolizer );
-
-        final int asdfasdf = 0;
       }
       else
         throw (new NotImplementedException());

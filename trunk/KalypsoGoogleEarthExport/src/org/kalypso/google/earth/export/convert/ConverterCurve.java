@@ -13,7 +13,6 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.ct.GeoTransformer;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
-import com.google.earth.kml._2.ColorStyleType;
 import com.google.earth.kml._2.LineStringType;
 import com.google.earth.kml._2.ObjectFactory;
 
@@ -30,7 +29,7 @@ public class ConverterCurve
    * @param style
    * @throws Exception
    */
-  public static LineStringType convert( final ObjectFactory factory, final GM_Curve curve, final ColorStyleType style ) throws Exception
+  public static LineStringType convert( final ObjectFactory factory, final GM_Curve curve ) throws Exception
   {
     final LineStringType lineStringType = factory.createLineStringType();
     final List<String> coordinates = lineStringType.getCoordinates();

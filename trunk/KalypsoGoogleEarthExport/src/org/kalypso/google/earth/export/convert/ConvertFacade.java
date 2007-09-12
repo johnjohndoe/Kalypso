@@ -16,9 +16,9 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 
-import com.google.earth.kml._2.ColorStyleType;
 import com.google.earth.kml._2.ObjectFactory;
 import com.google.earth.kml._2.PlacemarkType;
+import com.google.earth.kml._2.StyleType;
 
 /**
  * @author kuch
@@ -32,7 +32,7 @@ public class ConvertFacade
    * @return
    * @throws Exception
    */
-  public static PlacemarkType[] convert( final ObjectFactory factory, final Feature feature, final IFeatureGeometryFilter filter, final ColorStyleType style ) throws Exception
+  public static PlacemarkType[] convert( final ObjectFactory factory, final Feature feature, final IFeatureGeometryFilter filter, final StyleType style ) throws Exception
   {
     final List<PlacemarkType> placemarks = new ArrayList<PlacemarkType>();
 
@@ -48,24 +48,26 @@ public class ConvertFacade
       switch( gt )
       {
         case eMultiCurve:
-          placemark.setGeometry( factory.createMultiGeometry( ConverterMultiCurve.convert( factory, (GM_MultiCurve) gmo, style ) ) );
+          placemark.setGeometry( factory.createMultiGeometry( ConverterMultiCurve.convert( factory, (GM_MultiCurve) gmo ) ) );
           break;
 
         case eCurve:
-          placemark.setGeometry( factory.createLineString( ConverterCurve.convert( factory, (GM_Curve) gmo, style ) ) );
+          placemark.setGeometry( factory.createLineString( ConverterCurve.convert( factory, (GM_Curve) gmo ) ) );
           break;
 
         case eSurface:
-          placemark.setGeometry( factory.createPolygon( ConverterSurface.convert( factory, (GM_Surface< ? >) gmo, style ) ) );
+          placemark.setGeometry( factory.createPolygon( ConverterSurface.convert( factory, (GM_Surface< ? >) gmo ) ) );
           break;
 
         case ePoint:
-          placemark.setGeometry( factory.createPoint( ConverterPoint.convert( factory, (GM_Point) gmo, style ) ) );
+          placemark.setGeometry( factory.createPoint( ConverterPoint.convert( factory, (GM_Point) gmo ) ) );
           break;
 
         default:
           throw new NotImplementedException();
       }
+
+      placemark.setStyleUrl( "#" + style.getId() );
 
       placemarks.add( placemark );
     }
@@ -78,7 +80,7 @@ public class ConvertFacade
    * @param features
    * @throws Exception
    */
-  public static PlacemarkType[] convert( final ObjectFactory factory, final Feature[] features, final IFeatureGeometryFilter filter, final ColorStyleType style ) throws Exception
+  public static PlacemarkType[] convert( final ObjectFactory factory, final Feature[] features, final IFeatureGeometryFilter filter, final StyleType style ) throws Exception
   {
     final List<PlacemarkType> placemarks = new ArrayList<PlacemarkType>();
 

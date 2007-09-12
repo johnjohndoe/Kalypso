@@ -12,9 +12,9 @@ import org.kalypsodeegree.model.feature.Feature;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import com.google.earth.kml._2.ColorStyleType;
 import com.google.earth.kml._2.FolderType;
 import com.google.earth.kml._2.ObjectFactory;
+import com.google.earth.kml._2.StyleType;
 
 /**
  * @author kuch
@@ -37,7 +37,7 @@ public class GoogleEarthExportUtils
    * @return
    * @throws FilterEvaluationException
    */
-  public static ColorStyleType getStyleType( final ObjectFactory factory, final Feature feature, final Symbolizer symbolizer ) throws FilterEvaluationException
+  public static StyleType getStyleType( final ObjectFactory factory, final Feature feature, final Symbolizer symbolizer ) throws FilterEvaluationException
   {
     final StyleTypeFactory styleFactory = StyleTypeFactory.getStyleFactory( factory );
 
