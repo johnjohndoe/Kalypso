@@ -18,6 +18,7 @@ import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.FileChooserDelegate;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.FileChooserDelegate.FILE_CHOOSER_GROUP_TYPE;
+import org.kalypso.google.earth.export.constants.IGoogleEarthExportSettings;
 
 /**
  * @author kuch
@@ -32,11 +33,14 @@ public class PageGoogleExport extends WizardPage implements IGoogleEarthExportSe
   protected String m_description;
 
   /**
+   * @param file
    * @param pageName
    */
-  protected PageGoogleExport( )
+  protected PageGoogleExport( final File targetFile )
   {
     super( "googleEarthExportPage" );
+
+    m_file = targetFile;
 
     setTitle( "Google Export" );
     setDescription( "Define a name and description for google earth and choose a export kmz-destination file." );
@@ -135,19 +139,22 @@ public class PageGoogleExport extends WizardPage implements IGoogleEarthExportSe
       }
     };
 
-    final FileChooserGroup fc = new FileChooserGroup( delegate );
-    final Group fcGroup = fc.createControl( container, SWT.NONE );
-    fcGroup.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false, 2, 0 ) );
-
-    fc.addFileChangedListener( new FileChooserGroup.FileChangedListener()
+    if( m_file == null )
     {
-      public void fileChanged( final File file )
-      {
-        m_file = file;
+      final FileChooserGroup fc = new FileChooserGroup( delegate );
+      final Group fcGroup = fc.createControl( container, SWT.NONE );
+      fcGroup.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false, 2, 0 ) );
 
-        checkPageCompleted();
-      }
-    } );
+      fc.addFileChangedListener( new FileChooserGroup.FileChangedListener()
+      {
+        public void fileChanged( final File file )
+        {
+          m_file = file;
+
+          checkPageCompleted();
+        }
+      } );
+    }
 
     checkPageCompleted();
   }

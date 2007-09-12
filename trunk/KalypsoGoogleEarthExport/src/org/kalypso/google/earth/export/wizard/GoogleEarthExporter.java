@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.Status;
 import org.junit.Assert;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.google.earth.export.GoogleEarthThemeVisitor;
+import org.kalypso.google.earth.export.constants.IGoogleEarthExportSettings;
 import org.kalypso.google.earth.export.utils.GoogleEarthExportUtils;
 import org.kalypso.google.earth.export.utils.GoogleEarthUtils;
 import org.kalypso.google.earth.export.utils.StyleTypeFactory;
