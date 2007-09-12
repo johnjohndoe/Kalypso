@@ -83,6 +83,7 @@
 		
 		<copy todir="${calc.dir}/Zeitreihen">
 			<fileset dir="${project.dir}/.templates/Zeitreihen">
+				<include name="*.gmt"/>
 				<include name="*.gtt"/>
 				<include name="*.gft"/>
 				<include name="*.ott"/>
@@ -94,15 +95,14 @@
 	 			Pegel 
 	 	-->
 	 	<!-- Zwischengebietspegel: nur Messung -->
-	 			<kalypso.copyObservation gml="${project.url}/.model/observationConf/ZwischengebietspegelMapping.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}">
-	 				<source property="${pegelMessungLink}" from="${startsim}" to="${startforecast}" filter="${filterQ}"/>
-	 				<metadata name="Szenario" value="${scenarioId}"/>
-	 			</kalypso.copyObservation>
+	 	<kalypso.copyObservation gml="${project.url}/.model/observationConf/ZwischengebietspegelMapping.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}" description="Abholen der Messwerte der Zwischengebietspegel">
+ 			<source property="${pegelMessungLink}" from="${startsim}" to="${startforecast}" filter="${filterQ}"/>
+ 			<metadata name="Szenario" value="${scenarioId}"/>
+ 		</kalypso.copyObservation>
 	 	
 		<!-- leere Zeitreihen holen, damit was reingeschrieben werden kann...-->
 	 	<!-- Das ist notwendig damit nach dem zusammendaddieren auch der Vorhersagezeitraum drin ist -->
-		<!-- Zwischengebiete: Messung kombiniert mit tschechischen Vorhersagen -->
-		<kalypso.copyObservation gml="${project.url}/.model/observationConf/ZwischengebieteMapping.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}">
+		<kalypso.copyObservation gml="${project.url}/.model/observationConf/ZwischengebieteMapping.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}" description="Vorlage Zwischengebietsabflüsse (kein Fehler)">
 			<source property="${pegelMessungLink}" from="${startsim}" to="${stopsim}" filter="${filterQ}"/>
 			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
@@ -145,7 +145,8 @@
 							targetFrom="${startforecast}"
 							targetTo="${stopsim}"
 							forecastFrom="${startforecast}"
-							forecastTo="${stopsim}"/>
+							forecastTo="${stopsim}"
+			description="Berechnung des Zwischengebietszuflusses für Usti - Dresden"/>
 	 </target>
 	 <!-- ================================= 
 		          target: zwischengebietszuflussDresdenTorgau              
@@ -167,7 +168,8 @@
 							targetFrom="${startforecast}"
 							targetTo="${stopsim}"
 							forecastFrom="${startforecast}"
-							forecastTo="${stopsim}"/>
+							forecastTo="${stopsim}"
+			description="Berechnung des Zwischengebietszuflusses für Dresden - Torgau"/>
 	 </target>
 	 <!-- ================================= 
 		          target: zwischengebietszufluss              

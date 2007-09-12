@@ -22,7 +22,7 @@
       <inObservationLink/>
       <outObservationLink/>
       <out2ObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.1_ES.02PG...999991.Q_MW"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.1_ES.02PG...999992.Q_MW"/>
       </out2ObservationLink>
       <out5ObservationLink>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs://LEER"/>

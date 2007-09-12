@@ -107,20 +107,20 @@
 			Pegel 
 		-->
 		<!-- Startpegel: Messung kombiniert mit tschechischen Vorhersagen -->
-		<kalypso.copyObservation gml="${project.url}/.model/observationConf/Startpegel.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}">
+		<kalypso.copyObservation gml="${project.url}/.model/observationConf/Startpegel.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}" description="Abholen der Messwerte und Kombination mit tschechischen Vorhersagen (Startpegel)">
 			<source property="${pegelMessungLink}" from="${startsim}" to="${startforecast}" filter="${filterQ}"/>
 			<source property="${pegelCzVorhersageLink}" from="${startforecast}" to="${stopsim}" filter="${filterQ}"/>
 			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
 		
 		<!-- Elbepegel: nur Messung -->
-		<kalypso.copyObservation gml="${project.url}/.model/observationConf/Elbepegel.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}">
+		<kalypso.copyObservation gml="${project.url}/.model/observationConf/Elbepegel.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}" description="Abholen der Messwerte der Elbepegel">
 			<source property="${pegelMessungLink}" from="${startsim}" to="${startforecast}" filter="${filterQ}"/>
 			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
 
 		<!-- Usti: zusätzlich tschechische Vorhersage (ohne Fortsetzung/Auffüllung der Werte) -->
-		<kalypso.copyObservation gml="${project.url}/.model/observationConf/Usti_Cz_Vorhersage.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}">
+		<kalypso.copyObservation gml="${project.url}/.model/observationConf/Usti_Cz_Vorhersage.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}" description="Abholen der tschechischen Vorhersage für Usti (zum Vergleich)">
 			<source property="${pegelCzVorhersageLink}" from="${startforecast}" to="${stopsim}" filter="${filterQOhneFortsetzung}"/>
 			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
@@ -128,7 +128,7 @@
 		<!-- 
 			Zwischengebiete 
 		-->
-		<kalypso.copyObservation gml="${project.url}/.model/observationConf/Zwischengebiete.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}">
+		<kalypso.copyObservation gml="${project.url}/.model/observationConf/Zwischengebiete.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}" description="Abholen der Zwischengebietszuflüsse">
 			<source property="${zwischengebieteLink}" from="${startsim}" to="${stopsim}" filter="${filterQ}"/>
 			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>

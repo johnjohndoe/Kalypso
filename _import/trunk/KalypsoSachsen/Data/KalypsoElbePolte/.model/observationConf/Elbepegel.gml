@@ -65,7 +65,7 @@
       <gml:description>2210</gml:description>
       <gml:name>Usti</gml:name>
       <inObservationLink>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.9_CR.02PG...2210"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs:psicompact://HN.9_CR.02PG...2210.Q_MW"/>
       </inObservationLink>
       <in1ObservationLink>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="kalypso-ocs://LEER"/>
