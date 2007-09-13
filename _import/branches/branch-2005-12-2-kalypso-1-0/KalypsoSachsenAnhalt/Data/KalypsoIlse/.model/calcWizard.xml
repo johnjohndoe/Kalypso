@@ -6,6 +6,7 @@
 <calcwizard xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" browserInitialSize="15" helpId="&hid;SA_Assi_allg_00_Start">
 
 	<!-- Allgemeine Argumente -->
+	<arg name="showSaveButton" value="false"/>
 	<arg name="askForSaveOnFinish" value="false"/>
 
 	<!-- KONTROLLE DER ZEITREIHEN -->
