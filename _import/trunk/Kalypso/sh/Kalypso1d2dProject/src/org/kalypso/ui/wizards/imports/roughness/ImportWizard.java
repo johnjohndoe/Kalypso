@@ -21,13 +21,6 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
-import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
-import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate;
-import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor;
 import org.kalypso.ui.views.map.MapView;
 import org.kalypso.ui.wizards.imports.Messages;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
@@ -78,30 +71,23 @@ public class ImportWizard extends Wizard implements INewWizard
     final ICaseDataProvider<IFeatureWrapper2> szenarioDataProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
     final IWorkbenchWindow workbenchWindow = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
     final MapView mapView = (MapView) workbenchWindow.getActivePage().findView( MapView.ID );
-//    if( mapView == null )
-//      throw new ExecutionException( "No map available, somethings wrong." );
-    
+    // if( mapView == null )
+    // throw new ExecutionException( "No map available, somethings wrong." );
+
     m_operation = new Transformer( m_data, mapView ); //$NON-NLS-1$
-    
+
     ITerrainModel model;
     try
     {
       model = szenarioDataProvider.getModel( ITerrainModel.class );
-      m_data.setModel(model);
+      m_data.setModel( model );
     }
     catch( CoreException e )
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
-    // RoughnessPolygonCollection feature = (RoughnessPolygonCollection) context.get( "IRoughnessPolygonCollection" );
-    // if( feature.getRoughnessPolygons().size() > 0 )
-    // throw new ExceptionInInitializerError("Roughness data allready loaded!");
-    // else
     m_szenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
     m_project = m_szenarioFolder.getProject();
-    // m_project = (IProject) context.get( "Project" );
-    // m_szenarioFolder = (IFolder) context.get( "SzenarioPath" );
     m_data.setProjectBaseFolder( m_szenarioFolder.getFullPath().segment( 0 ) );
     m_data.loadUserSelection( "/.metadata/roughnessUserSelection.dat" );
     try
@@ -110,7 +96,6 @@ public class ImportWizard extends Wizard implements INewWizard
     }
     catch( Exception e )
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
   }
@@ -141,14 +126,11 @@ public class ImportWizard extends Wizard implements INewWizard
   public boolean performCancel( )
   {
     ((Transformer) m_operation).unprepare();
-
-    // m_data.getRoughnessPolygonCollection().clear(); THIS MAKES PROBLEM IN GUI!
     m_data.getRoughnessShapeStaticRelationMap().clear();
     m_data.getRoughnessStaticCollectionMap().clear();
     try
     {
       m_project.refreshLocal( IResource.DEPTH_INFINITE, null );
-      // ResourcesPlugin.getWorkspace().getRoot().getProject().refreshLocal( IResource.DEPTH_INFINITE, null );
     }
     catch( Exception e )
     {
@@ -179,21 +161,5 @@ public class ImportWizard extends Wizard implements INewWizard
 
     return status.isOK();
   }
-
-  private IKalypsoTheme[] findRoughnessThemes( final IMapModell mapModell )
-  {
-    final IKalypsoThemePredicate predicate = new IKalypsoThemePredicate()
-    {
-
-      public boolean decide( final IKalypsoTheme theme )
-      {
-        return theme instanceof IKalypsoFeatureTheme && ((IKalypsoFeatureTheme) theme).getFeatureType().getQName().equals( KalypsoModelSimulationBaseConsts.SIM_BASE_F_ROUGHNESS_POLYGON );
-      }
-    };
-    final KalypsoThemeVisitor visitor = new KalypsoThemeVisitor( predicate );
-    mapModell.accept( visitor, IKalypsoThemeVisitor.DEPTH_INFINITE );
-    return visitor.getFoundThemes();
-  }
-
 
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema"
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:gml="http://www.opengis.net/gml"
 	xmlns:om="http://www.opengis.net/om" xmlns:kapp="org.kalypso.appinfo"
@@ -8,722 +8,809 @@
 	xmlns:wb1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d"
 	targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/1d2dControl"
 	elementFormDefault="qualified" attributeFormDefault="unqualified">
-	<annotation>
-		<appinfo xmlns:kapp="org.kalypso.appinfo">
+	<xs:annotation>
+		<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
 			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
-		</appinfo>
-	</annotation>
-	<import namespace="http://www.opengis.net/gml" />
-	<import namespace="http://www.opengis.net/om" />
-	<import
+		</xs:appinfo>
+	</xs:annotation>
+	<xs:import namespace="http://www.opengis.net/gml" />
+	<xs:import namespace="http://www.opengis.net/om" />
+	<xs:import
 		namespace="http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase" />
-	<import
+	<xs:import
 		namespace="http://www.tu-harburg.de/wb/kalypso/schemata/1d2d" />
 	<!-- =================================================================
 		ControlModelGroup
 		================================================================== -->
-	<element name="ControlModelGroup" type="c1d2d:ControlModelGroupType"
-		substitutionGroup="simBase:_Model" />
-	<complexType name="ControlModelGroupType">
-		<annotation>
-			<documentation>Defined a ...</documentation>
-		</annotation>
-		<complexContent>
-			<extension base="simBase:AbstractModelType">
-				<sequence>
-					<element ref="c1d2d:controlModelCollection" />
-				</sequence>
-			</extension>
-		</complexContent>
-	</complexType>
+	<xs:element name="ControlModelGroup"
+		type="c1d2d:ControlModelGroupType" substitutionGroup="simBase:_Model" />
+	<xs:complexType name="ControlModelGroupType">
+		<xs:complexContent>
+			<xs:extension base="simBase:AbstractModelType">
+				<xs:sequence>
+					<xs:element ref="c1d2d:controlModelCollection" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
 	<!-- =================================================================
 		controlModelCollection property
 		================================================================== -->
-	<element name="controlModelCollection">
-		<complexType>
-			<sequence>
-				<element ref="c1d2d:ControlModelCollection"
+	<xs:element name="controlModelCollection">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="c1d2d:ControlModelCollection"
 					minOccurs="0" />
-			</sequence>
-			<attributeGroup ref="gml:AssociationAttributeGroup" />
-		</complexType>
-	</element>
+			</xs:sequence>
+			<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+		</xs:complexType>
+	</xs:element>
 	<!-- =================================================================
 		ControlModelCollectionType
 		================================================================== -->
-	<element name="ControlModelCollection"
+	<xs:element name="ControlModelCollection"
 		type="c1d2d:ControlModelCollectionType"
 		substitutionGroup="gml:_Feature" />
-	<complexType name="ControlModelCollectionType">
-		<complexContent>
-			<restriction base="gml:AbstractFeatureCollectionType">
-				<sequence>
-					<element name="activeModelID"
+	<xs:complexType name="ControlModelCollectionType">
+		<xs:complexContent>
+			<xs:restriction base="gml:AbstractFeatureCollectionType">
+				<xs:sequence>
+					<xs:element name="activeModelID"
 						type="c1d2d:ActiveModelIDType" />
-					<element ref="c1d2d:controlModelMember"
+					<xs:element ref="c1d2d:controlModelMember"
 						minOccurs="0" maxOccurs="unbounded" />
-				</sequence>
-			</restriction>
-		</complexContent>
-	</complexType>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
 	<!-- =================================================================
 		ActiveModelIDType
 		================================================================== -->
-	<complexType name="ActiveModelIDType">
-		<sequence>
-			<element ref="c1d2d:ControlModel" minOccurs="0"
+	<xs:complexType name="ActiveModelIDType">
+		<xs:sequence>
+			<xs:element ref="c1d2d:ControlModel" minOccurs="0"
 				maxOccurs="0" />
-		</sequence>
-		<attributeGroup ref="gml:AssociationAttributeGroup" />
-	</complexType>
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+	</xs:complexType>
 	<!-- =================================================================
 		ControlModelMemberPropertyType member or property 
 		===================================================================-->
-	<element name="controlModelMember"
+	<xs:element name="controlModelMember"
 		type="c1d2d:ControlModelMemberPropertyType" />
-	<complexType name="ControlModelMemberPropertyType">
-		<sequence>
-			<element ref="c1d2d:ControlModel" minOccurs="0" />
-		</sequence>
-		<attributeGroup ref="gml:AssociationAttributeGroup" />
-	</complexType>
+	<xs:complexType name="ControlModelMemberPropertyType">
+		<xs:sequence>
+			<xs:element ref="c1d2d:ControlModel" minOccurs="0" />
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+	</xs:complexType>
 	<!-- =================================================================
 		
 		================================================================== -->
-	<element name="ControlModel" type="c1d2d:ControlModelType"
+	<xs:element name="ControlModel" type="c1d2d:ControlModelType"
 		substitutionGroup="gml:_Feature">
-		<annotation>
-			<documentation xml:lang="de">
-				<label><![CDATA[${listProperty:http://www.opengis.net/gml#name;0;-no name-}]]></label>
-			</documentation>
-			<documentation xml:lang="en">
-				<label><![CDATA[${listProperty:http://www.opengis.net/gml#name;0;-no name-}]]></label>
-			</documentation>
-		</annotation>
-	</element>
-	<complexType name="ControlModelType">
-		<complexContent>
-			<extension base="simBase:AbstractControlModelType">
-				<sequence>
-					<element ref="wb1d2d:calculationUnit" />
-					<element name="Version" default="NEW">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Version</label>
-								<tooltip>Version des Rechenkerns RMA 10S</tooltip>
-							</documentation>
-						</annotation>
-						<simpleType>
-							<restriction base="string">
-								<enumeration value="NEW">
-									<annotation>
-										<documentation xml:lang="de">
-											<label>Neueste</label>
-										</documentation>
-										<documentation xml:lang="en">
-											<label>latest</label>
-										</documentation>
-									</annotation>
-								</enumeration>
-								<enumeration value="Version3.5" />
-								<enumeration value="Test" />
-							</restriction>
-						</simpleType>
-					</element>
+		<xs:annotation>
+			<xs:documentation xml:lang="de">
+				<xs:label><![CDATA[${listProperty:http://www.opengis.net/gml#name;0;-no name-}]]></xs:label>
+			</xs:documentation>
+			<xs:documentation xml:lang="en">
+				<xs:label><![CDATA[${listProperty:http://www.opengis.net/gml#name;0;-no name-}]]></xs:label>
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="ControlModelType">
+		<xs:complexContent>
+			<xs:extension base="simBase:AbstractControlModelType">
+				<xs:sequence>
+					<xs:element ref="wb1d2d:calculationUnit" />
+					<xs:element name="Version" default="NEW">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Version</xs:label>
+								<xs:tooltip>
+									Version des Rechenkerns RMA 10S
+								</xs:tooltip>
+							</xs:documentation>
+						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="NEW">
+									<xs:annotation>
+										<xs:documentation
+											xml:lang="de">
+											<xs:label>Neueste</xs:label>
+										</xs:documentation>
+										<xs:documentation
+											xml:lang="en">
+											<xs:label>latest</xs:label>
+										</xs:documentation>
+									</xs:annotation>
+								</xs:enumeration>
+								<xs:enumeration value="Version3.5" />
+								<xs:enumeration value="Test" />
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
 					<!-- ControlDataBlock-->
-					<element name="VEGETA" type="boolean"
+					<xs:element name="VEGETA" type="xs:boolean"
 						default="true">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Berücksichtigung Bewuchs</label>
-								<tooltip>
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>
+									Berücksichtigung Bewuchs
+								</xs:label>
+								<xs:tooltip>
 									Berücksichtigung der
 									Bewuchsparameter bei der Berechnung
-								</tooltip>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="IDNOPT" default="-1">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Marsh Algorithmus</label>
-								<tooltip>
+								</xs:tooltip>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="IDNOPT" default="-1">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Marsh Algorithmus</xs:label>
+								<xs:tooltip>
 									Art der gesonderten Behandlung von
 									nur teilweise Durchströmten
 									Elementen (Randelemente).
-								</tooltip>
-							</documentation>
-						</annotation>
-						<simpleType>
-							<restriction base="int">
-								<enumeration value="0">
-									<annotation>
-										<documentation xml:lang="de">
-											<label>ohne Marsh</label>
-										</documentation>
-									</annotation>
-								</enumeration>
-								<enumeration value="-1">
-									<annotation>
-										<documentation xml:lang="de">
-											<label><![CDATA[Default Werte nutzen]]></label>
-											<tooltip><![CDATA[Default Werte sind: Deaktivierungstiefe=1.5m; Übergangstiefe=0.67m; Porosität=0.04)]]></tooltip>
-										</documentation>
-									</annotation>
-								</enumeration>
-								<enumeration value="-2">
-									<annotation>
-										<documentation xml:lang="de">
-											<label>
+								</xs:tooltip>
+							</xs:documentation>
+						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:int">
+								<xs:enumeration value="0">
+									<xs:annotation>
+										<xs:documentation
+											xml:lang="de">
+											<xs:label>
+												ohne Marsh
+											</xs:label>
+										</xs:documentation>
+									</xs:annotation>
+								</xs:enumeration>
+								<xs:enumeration value="-1">
+									<xs:annotation>
+										<xs:documentation
+											xml:lang="de">
+											<xs:label><![CDATA[Default Werte nutzen]]></xs:label>
+											<xs:tooltip><![CDATA[Default Werte sind: Deaktivierungstiefe=1.5m; Übergangstiefe=0.67m; Porosität=0.04)]]></xs:tooltip>
+										</xs:documentation>
+									</xs:annotation>
+								</xs:enumeration>
+								<xs:enumeration value="-2">
+									<xs:annotation>
+										<xs:documentation
+											xml:lang="de">
+											<xs:label>
 												Eingabewerte nutzen
-											</label>
-										</documentation>
-									</annotation>
-								</enumeration>
-							</restriction>
-						</simpleType>
-					</element>
-					<element name="startsim" type="dateTime">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>
+											</xs:label>
+										</xs:documentation>
+									</xs:annotation>
+								</xs:enumeration>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="startsim" type="xs:dateTime">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>
 									Start der instationären Berechnung
-								</label>
-								<tooltip>
+								</xs:label>
+								<xs:tooltip>
 									Startdatum und Zeit der
 									instationären Berechnung, lediglich
 									zur Information bei stationärer
 									Berechnung.
-								</tooltip>
-							</documentation>
-						</annotation>
-					</element>
+								</xs:tooltip>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<!--TODO: Nico will implement the options 5 and 6 later-->
-					<element name="IEDSW" default="10">
-						<annotation>
-							<documentation xml:lang="de">
-								<label><![CDATA[Wirbelviskositätsansatz]]></label>
-								<tooltip><![CDATA[Wirbelviskositätsansatz]]></tooltip>
-							</documentation>
-						</annotation>
-						<simpleType>
-							<restriction base="int">
-								<enumeration value="0">
-									<annotation>
-										<documentation xml:lang="de">
-											<label><![CDATA[00 konst. Wirbelviskosität (RMA)]]></label>
-										</documentation>
-										<documentation xml:lang="en">
-											<label><![CDATA[00 const. eddy viscosity (RMA)]]></label>
-										</documentation>
-									</annotation>
-								</enumeration>
-								<enumeration value="2">
-									<annotation>
-										<documentation xml:lang="de">
-											<label><![CDATA[02 Smagorinsky Ansatz (RMA)]]></label>
-										</documentation>
-										<documentation xml:lang="en">
-											<label><![CDATA[02 Smagorinsky approach (RMA)]]></label>
-										</documentation>
-									</annotation>
-								</enumeration>
-								<enumeration value="10">
-									<annotation>
-										<documentation xml:lang="de">
-											<label><![CDATA[10 konst. Wirbelviskosität]]></label>
-										</documentation>
-										<documentation xml:lang="en">
-											<label><![CDATA[10 const. eddy viscosity]]></label>
-										</documentation>
-									</annotation>
-								</enumeration>
-								<enumeration value="11">
-									<annotation>
-										<documentation xml:lang="de">
-											<label><![CDATA[11 sohlinduzierte Turbulenz]]></label>
-										</documentation>
-										<documentation xml:lang="en">
-											<label><![CDATA[11 bottom generated turbulence]]></label>
-										</documentation>
-									</annotation>
-								</enumeration>
-								<enumeration value="12">
-									<annotation>
-										<documentation xml:lang="de">
-											<label><![CDATA[12 Prandtl'scher Mischungswegansatz (konst.)]]></label>
-										</documentation>
-										<documentation xml:lang="en">
-											<label><![CDATA[12 Prandtl's mixing length (const.)]]></label>
-										</documentation>
-									</annotation>
-								</enumeration>
-								<enumeration value="13">
-									<annotation>
-										<documentation xml:lang="de">
-											<label><![CDATA[13 Smagorinsky Ansatz]]></label>
-										</documentation>
-										<documentation xml:lang="en">
-											<label><![CDATA[13 Smagorinsky approach]]></label>
-										</documentation>
-									</annotation>
-								</enumeration>
-								<enumeration value="14">
-									<annotation>
-										<documentation xml:lang="de">
-											<label><![CDATA[14 konst. Wirbelviskosität m. sohlind. Turb.]]></label>
-										</documentation>
-										<documentation xml:lang="en">
-											<label><![CDATA[14 const. eddy viscosity w. bottom induced turb.]]></label>
-										</documentation>
-									</annotation>
-								</enumeration>
-								<enumeration value="15">
-									<annotation>
-										<documentation xml:lang="de">
-											<label><![CDATA[15 Prandtl'scher Mischungsweg u. sohlind. Turb.]]></label>
-										</documentation>
-										<documentation xml:lang="en">
-											<label><![CDATA[15 Prandtl's mixing length w. bottom induced turb.]]></label>
-										</documentation>
-									</annotation>
-								</enumeration>
-								<enumeration value="16">
-									<annotation>
-										<documentation xml:lang="de">
-											<label><![CDATA[16 Smagorinsky mit sohlinduzierter Turbulenz]]></label>
-										</documentation>
-										<documentation xml:lang="en">
-											<label><![CDATA[16 Smagorinsky with bottom induced turbulence]]></label>
-										</documentation>
-									</annotation>
-								</enumeration>
-								<!--<enumeration value="-1">
-									<annotation>
-									<documentation xml:lang="de">
-									<label>Eingabedaten verwenden Elementtypenabhängig?</label>
-									</documentation>
-									</annotation>
-									</enumeration>-->
-							</restriction>
-						</simpleType>
-					</element>
-					<element name="TBFACT" default="0.2">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>
+					<xs:element name="IEDSW" default="10">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label><![CDATA[Wirbelviskositätsansatz]]></xs:label>
+								<xs:tooltip><![CDATA[Wirbelviskositätsansatz]]></xs:tooltip>
+							</xs:documentation>
+						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:int">
+								<xs:enumeration value="0">
+									<xs:annotation>
+										<xs:documentation
+											xml:lang="de">
+											<xs:label><![CDATA[00 konst. Wirbelviskosität (RMA)]]></xs:label>
+										</xs:documentation>
+										<xs:documentation
+											xml:lang="en">
+											<xs:label><![CDATA[00 const. eddy viscosity (RMA)]]></xs:label>
+										</xs:documentation>
+									</xs:annotation>
+								</xs:enumeration>
+								<xs:enumeration value="2">
+									<xs:annotation>
+										<xs:documentation
+											xml:lang="de">
+											<xs:label><![CDATA[02 Smagorinsky Ansatz (RMA)]]></xs:label>
+										</xs:documentation>
+										<xs:documentation
+											xml:lang="en">
+											<xs:label><![CDATA[02 Smagorinsky approach (RMA)]]></xs:label>
+										</xs:documentation>
+									</xs:annotation>
+								</xs:enumeration>
+								<xs:enumeration value="10">
+									<xs:annotation>
+										<xs:documentation
+											xml:lang="de">
+											<xs:label><![CDATA[10 konst. Wirbelviskosität]]></xs:label>
+										</xs:documentation>
+										<xs:documentation
+											xml:lang="en">
+											<xs:label><![CDATA[10 const. eddy viscosity]]></xs:label>
+										</xs:documentation>
+									</xs:annotation>
+								</xs:enumeration>
+								<xs:enumeration value="11">
+									<xs:annotation>
+										<xs:documentation
+											xml:lang="de">
+											<xs:label><![CDATA[11 sohlinduzierte Turbulenz]]></xs:label>
+										</xs:documentation>
+										<xs:documentation
+											xml:lang="en">
+											<xs:label><![CDATA[11 bottom generated turbulence]]></xs:label>
+										</xs:documentation>
+									</xs:annotation>
+								</xs:enumeration>
+								<xs:enumeration value="12">
+									<xs:annotation>
+										<xs:documentation
+											xml:lang="de">
+											<xs:label><![CDATA[12 Prandtl'scher Mischungswegansatz (konst.)]]></xs:label>
+										</xs:documentation>
+										<xs:documentation
+											xml:lang="en">
+											<xs:label><![CDATA[12 Prandtl's mixing length (const.)]]></xs:label>
+										</xs:documentation>
+									</xs:annotation>
+								</xs:enumeration>
+								<xs:enumeration value="13">
+									<xs:annotation>
+										<xs:documentation
+											xml:lang="de">
+											<xs:label><![CDATA[13 Smagorinsky Ansatz]]></xs:label>
+										</xs:documentation>
+										<xs:documentation
+											xml:lang="en">
+											<xs:label><![CDATA[13 Smagorinsky approach]]></xs:label>
+										</xs:documentation>
+									</xs:annotation>
+								</xs:enumeration>
+								<xs:enumeration value="14">
+									<xs:annotation>
+										<xs:documentation
+											xml:lang="de">
+											<xs:label><![CDATA[14 konst. Wirbelviskosität m. sohlind. Turb.]]></xs:label>
+										</xs:documentation>
+										<xs:documentation
+											xml:lang="en">
+											<xs:label><![CDATA[14 const. eddy viscosity w. bottom induced turb.]]></xs:label>
+										</xs:documentation>
+									</xs:annotation>
+								</xs:enumeration>
+								<xs:enumeration value="15">
+									<xs:annotation>
+										<xs:documentation
+											xml:lang="de">
+											<xs:label><![CDATA[15 Prandtl'scher Mischungsweg u. sohlind. Turb.]]></xs:label>
+										</xs:documentation>
+										<xs:documentation
+											xml:lang="en">
+											<xs:label><![CDATA[15 Prandtl's mixing length w. bottom induced turb.]]></xs:label>
+										</xs:documentation>
+									</xs:annotation>
+								</xs:enumeration>
+								<xs:enumeration value="16">
+									<xs:annotation>
+										<xs:documentation
+											xml:lang="de">
+											<xs:label><![CDATA[16 Smagorinsky mit sohlinduzierter Turbulenz]]></xs:label>
+										</xs:documentation>
+										<xs:documentation
+											xml:lang="en">
+											<xs:label><![CDATA[16 Smagorinsky with bottom induced turbulence]]></xs:label>
+										</xs:documentation>
+									</xs:annotation>
+								</xs:enumeration>
+								<!--<xs:enumeration value="-1">
+									<xs:annotation>
+									<xs:documentation xml:lang="de">
+									<xs:label>Eingabedaten verwenden Elementtypenabhängig?</xs:label>
+									</xs:documentation>
+									</xs:annotation>
+									</xs:enumeration>-->
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="TBFACT" default="0.2">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>
 									Faktor Smagorinsky-Ansatz [-]
-								</label>
-								<tooltip>
-									Alfa Wert des Smagorinsky Ansatzes [-]
-								</tooltip>
-							</documentation>
-						</annotation>
-						<simpleType>
-							<restriction base="double">
-								<minInclusive value="0.02" />
-								<maxExclusive value="0.5" />
-							</restriction>
-						</simpleType>
-					</element>
-					<element name="TBMIN" type="double" default="2">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>
+								</xs:label>
+								<xs:tooltip>
+									Alfa Wert des Smagorinsky Ansatzes
+									[-]
+								</xs:tooltip>
+							</xs:documentation>
+						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:double">
+								<xs:minInclusive value="0.02" />
+								<xs:maxExclusive value="0.5" />
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="TBMIN" type="xs:double"
+						default="2">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>
 									Min. Wirbelviskosität [m²/s]
-								</label>
-								<tooltip>
+								</xs:label>
+								<xs:tooltip>
 									Minimale Wirbelviskosität beim
 									Smagorinsky-Ansatz [m²/s]
-								</tooltip>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="_p_bottom" type="double">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Modellparameter</label>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="OMEGA" type="double">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Breitengrad [°]</label>
-								<tooltip>
+								</xs:tooltip>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="_p_bottom" type="xs:double">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Modellparameter</xs:label>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="OMEGA" type="xs:double">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Breitengrad [°]</xs:label>
+								<xs:tooltip>
 									Breitengrad zur Ermittlung der
 									Corioliskraft [°]
-								</tooltip>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="ELEV" type="double">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Anfangswasserspiegel [m]</label>
-								<tooltip>
+								</xs:tooltip>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="ELEV" type="xs:double">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>
+									Anfangswasserspiegel [m]
+								</xs:label>
+								<xs:tooltip>
 									Anfangswert des Wasserstandes über
 									jeden Knoten [m]
-								</tooltip>
-							</documentation>
-						</annotation>
-					</element>
+								</xs:tooltip>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<!--C3-->
-					<element name="UNOM" type="double" default="0.5">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>
+					<xs:element name="UNOM" type="xs:double"
+						default="0.5">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>
 									1D-Anfangsgeschwindigkeit [m/s]
-								</label>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="UDIR">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>
+								</xs:label>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="UDIR">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>
 									Geschwindigkeitsrichtung [°]
-								</label>
-								<tooltip>
+								</xs:label>
+								<xs:tooltip>
 									Ungefähre Fließrichtung im
 									Gegenuhrzeigersinn auf die globale
 									x-Achse bezogen [°]
-								</tooltip>
-							</documentation>
-						</annotation>
-						<simpleType>
-							<restriction base="double">
-								<minInclusive value="0.0" />
-								<maxInclusive value="360.0" />
-							</restriction>
-						</simpleType>
-					</element>
-					<element name="HMIN" type="double">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>
+								</xs:tooltip>
+							</xs:documentation>
+						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:double">
+								<xs:minInclusive value="0.0" />
+								<xs:maxInclusive value="360.0" />
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="HMIN" type="xs:double">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>
 									Min. Anfangswassertiefe [m]
-								</label>
-								<tooltip>
-									Minimale Wassertiefe bei Simulationsstart [m]
-								</tooltip>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="DSET" type="double" default="0.1">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Trockenfalltiefe [m]</label>
-								<tooltip>
+								</xs:label>
+								<xs:tooltip>
+									Minimale Wassertiefe bei
+									Simulationsstart [m]
+								</xs:tooltip>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="DSET" type="xs:double"
+						default="0.1">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>
+									Trockenfalltiefe [m]
+								</xs:label>
+								<xs:tooltip>
 									Wassertiefe ab welcher Knoten
 									trocken fällt [m].
-								</tooltip>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="DSETD" type="double" default="0.09">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Wiederbenetzungstiefe [m]</label>
-								<tooltip>
+								</xs:tooltip>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="DSETD" type="xs:double"
+						default="0.09">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>
+									Wiederbenetzungstiefe [m]
+								</xs:label>
+								<xs:tooltip>
 									Wassertiefe bei welcher trockener
 									Knoten wiederbenetzt wird [m].
-								</tooltip>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="_steady" type="boolean"
+								</xs:tooltip>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="_steady" type="xs:boolean"
 						default="true">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Stätionar Berechnung</label>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="_unsteady" type="boolean"
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>
+									Stätionar Berechnung
+								</xs:label>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="_unsteady" type="xs:boolean"
 						default="false">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Instätionar Berechnung</label>
-							</documentation>
-						</annotation>
-					</element>
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>
+									Instätionar Berechnung
+								</xs:label>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<!--C5-->
-					<element name="NITI" default="1">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>
+					<xs:element name="NITI" default="1">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>
 									Max. Anzahl Interationsschritte
 									(stationär)
-								</label>
-								<tooltip>
+								</xs:label>
+								<xs:tooltip>
 									Maximale Anzahl der Interationen für
 									stationäre Berechnung
-								</tooltip>
-							</documentation>
-						</annotation>
-						<simpleType>
-							<restriction base="int">
-								<minInclusive value="1" />
-								<maxInclusive value="100" />
-							</restriction>
-						</simpleType>
-					</element>
+								</xs:tooltip>
+							</xs:documentation>
+						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:int">
+								<xs:minInclusive value="1" />
+								<xs:maxInclusive value="100" />
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
 					<!-- not needed - get it from timeseries count -1 -->
-					<!--					<element name="NCYC" type="int">
-						<annotation>
-						<documentation xml:lang="de">
-						<label>
+					<!--					<xs:element name="NCYC" type="int">
+						<xs:annotation>
+						<xs:documentation xml:lang="de">
+						<xs:label>
 						Anzahl der Zeitschritte
 						(instationär)
-						</label>
-						</documentation>
-						</annotation>
-						</element>-->
-					<element name="NITN" default="1">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>
+						</xs:label>
+						</xs:documentation>
+						</xs:annotation>
+						</xs:element>-->
+					<xs:element name="NITN" default="1">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>
 									Max. Anzahl Interationsschritte
 									(instationär)
-								</label>
-								<tooltip>
+								</xs:label>
+								<xs:tooltip>
 									Maximale Anzahl der Interationen für
 									instationäre Berechnung.
-								</tooltip>
-							</documentation>
-						</annotation>
-						<simpleType>
-							<restriction base="int">
-								<minInclusive value="1" />
-								<maxInclusive value="50" />
-							</restriction>
-						</simpleType>
-					</element>
-					<element name="CONV_1" type="double"
+								</xs:tooltip>
+							</xs:documentation>
+						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:int">
+								<xs:minInclusive value="1" />
+								<xs:maxInclusive value="50" />
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="CONV_1" type="xs:double"
 						default="0.01">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Konvergenzschranke vx [-]</label>
-								<tooltip>
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>
+									Konvergenzschranke vx [-]
+								</xs:label>
+								<xs:tooltip>
 									Maximale Änderung der
 									Geschwindigkeit in x-Richtung [-]
-								</tooltip>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="CONV_2" type="double"
+								</xs:tooltip>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="CONV_2" type="xs:double"
 						default="0.01">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Konvergenzschranke vy [-]</label>
-								<tooltip>
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>
+									Konvergenzschranke vy [-]
+								</xs:label>
+								<xs:tooltip>
 									Maximale Änderung der
 									Geschwindigkeit in y-Richtung [-]
-								</tooltip>
-								<tooltip />
-							</documentation>
-						</annotation>
-					</element>
-					<element name="CONV_3" type="double"
+								</xs:tooltip>
+								<xs:tooltip />
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="CONV_3" type="xs:double"
 						default="0.001">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Konvergenzschranke h [-]</label>
-								<tooltip>
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>
+									Konvergenzschranke h [-]
+								</xs:label>
+								<xs:tooltip>
 									Maximale Änderung der Wassertiefe
 									[-]
-								</tooltip>
-								<tooltip />
-							</documentation>
-						</annotation>
-					</element>
-					<element name="IDRPT" default="1">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Gleichungsdeaktivierung</label>
-								<tooltip>
+								</xs:tooltip>
+								<xs:tooltip />
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="IDRPT" default="1">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>
+									Gleichungsdeaktivierung
+								</xs:label>
+								<xs:tooltip>
 									Deaktivierung von nicht benötigten
 									Gleichungen (konvergente
 									Freiheitsgrade)
-								</tooltip>
-							</documentation>
-						</annotation>
-						<simpleType>
-							<restriction base="int">
-								<enumeration value="0">
-									<annotation>
-										<documentation xml:lang="de">
-											<label>
+								</xs:tooltip>
+							</xs:documentation>
+						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:int">
+								<xs:enumeration value="0">
+									<xs:annotation>
+										<xs:documentation
+											xml:lang="de">
+											<xs:label>
 												Keine Deaktivierung
-											</label>
-											<tooltip>
+											</xs:label>
+											<xs:tooltip>
 												Alle Gleichungen aktiv
-											</tooltip>
-										</documentation>
-									</annotation>
-								</enumeration>
-								<enumeration value="1">
-									<annotation>
-										<documentation xml:lang="de">
-											<label>
+											</xs:tooltip>
+										</xs:documentation>
+									</xs:annotation>
+								</xs:enumeration>
+								<xs:enumeration value="1">
+									<xs:annotation>
+										<xs:documentation
+											xml:lang="de">
+											<xs:label>
 												Mögliche deaktivieren
-											</label>
-											<tooltip>
+											</xs:label>
+											<xs:tooltip>
 												Gleichungsdeaktivierung
 												nach
 												Deaktivierungskriterium
 												(konvergente
 												Freiheitsgrade)
-											</tooltip>
-										</documentation>
-									</annotation>
-								</enumeration>
-							</restriction>
-						</simpleType>
-					</element>
-					<element name="DRFACT" type="double"
+											</xs:tooltip>
+										</xs:documentation>
+									</xs:annotation>
+								</xs:enumeration>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="DRFACT" type="xs:double"
 						default="0.05">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>
 									Deaktivierungskriterium [-]
-								</label>
-								<tooltip>
+								</xs:label>
+								<xs:tooltip>
 									Deaktivierungskriterium für
 									Gleichungen [-]
-								</tooltip>
-							</documentation>
-						</annotation>
-					</element>
+								</xs:tooltip>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<!--MP-->
-					<element name="AC1" type="double" default="1.5">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Deaktivierungstiefe [m]</label>
-								<label>
+					<xs:element name="AC1" type="xs:double"
+						default="1.5">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>
+									Deaktivierungstiefe [m]
+								</xs:label>
+								<xs:label>
 									Tiefe unter der Oberfläche zur
 									deaktivierung von Knoten [m]
-								</label>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="AC2" type="double" default="0.67">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Übergangstiefe [m]</label>
-								<tooltip>
+								</xs:label>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="AC2" type="xs:double"
+						default="0.67">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Übergangstiefe [m]</xs:label>
+								<xs:tooltip>
 									Wassertiefe ab der Marsh-Algorithmus
 									aktiviert wird [m].
-								</tooltip>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="AC3" type="double" default="0.04">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Porosität [-]</label>
-								<tooltip>
+								</xs:tooltip>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="AC3" type="xs:double"
+						default="0.04">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Porosität [-]</xs:label>
+								<xs:tooltip>
 									Porosität des Marsh-Bodens [-].
-								</tooltip>
-							</documentation>
-						</annotation>
-					</element>
+								</xs:tooltip>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<!--CV-->
 					<!--TODO: aus vorhandenen Lösungen auswählen...-->
-					<element name="_restart" type="boolean"
+					<xs:element name="_restart" type="xs:boolean"
 						default="false">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Restart</label>
-								<tooltip>
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Restart</xs:label>
+								<xs:tooltip>
 									Angabe des Restart Zeitschrittes
 									(bei 0 wird eine neue Berechnung
 									gestartet).
-								</tooltip>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="_restart_path" type="string"
-						minOccurs="0" maxOccurs="1">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Restart file paths</label>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="IACCYC" type="integer" default="1">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Restart step</label>
-								<tooltip>
+								</xs:tooltip>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="restartInfoMember" type="c1d2d:RestartInfoPropertyType"
+						minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Restart file paths</xs:label>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="IACCYC" type="xs:integer"
+						default="1">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Restart step</xs:label>
+								<xs:tooltip>
 									Angabe des Restart Zeitschrittes
 									(bei 0 wird eine neue Berechnung
 									gestartet).
-								</tooltip>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="FNAM3" type="string">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Restart file</label>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="_steadyBC">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Relaxationsfaktor</label>
-							</documentation>
-						</annotation>
-						<simpleType>
-							<restriction base="double">
-								<enumeration value="0.0"/>
-								<enumeration value="0.1"/>
-								<enumeration value="0.2"/>
-								<enumeration value="0.3"/>
-								<enumeration value="0.4"/>
-								<enumeration value="0.5"/>
-								<enumeration value="0.6"/>
-								<enumeration value="0.7"/>
-								<enumeration value="0.8"/>
-								<enumeration value="0.9"/>
-								<enumeration value="1.0"/>
-							</restriction>
-						</simpleType>
-					</element>
-					<element name="timestepsMember"
+								</xs:tooltip>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="FNAM3" type="xs:string">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Restart file</xs:label>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="_steadyBC">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Relaxationsfaktor</xs:label>
+							</xs:documentation>
+						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:double">
+								<xs:enumeration value="0.0" />
+								<xs:enumeration value="0.1" />
+								<xs:enumeration value="0.2" />
+								<xs:enumeration value="0.3" />
+								<xs:enumeration value="0.4" />
+								<xs:enumeration value="0.5" />
+								<xs:enumeration value="0.6" />
+								<xs:enumeration value="0.7" />
+								<xs:enumeration value="0.8" />
+								<xs:enumeration value="0.9" />
+								<xs:enumeration value="1.0" />
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="timestepsMember"
 						type="c1d2d:TimestepsObservationPropertyType">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Zeitschritte</label>
-								<tooltip>Time Steps Entries</tooltip>
-							</documentation>
-						</annotation>
-					</element>
-				</sequence>
-			</extension>
-		</complexContent>
-	</complexType>
-	<complexType name="TimestepsObservationPropertyType">
-		<sequence>
-			<element ref="c1d2d:TimestepsObservation" minOccurs="0" />
-		</sequence>
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Zeitschritte</xs:label>
+								<xs:tooltip>
+									Time Steps Entries
+								</xs:tooltip>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TimestepsObservationPropertyType">
+		<xs:sequence>
+			<xs:element ref="c1d2d:TimestepsObservation" minOccurs="0" />
+		</xs:sequence>
 		<!-- 
-			<attributeGroup ref="gml:AssociationAttributeGroup" />
+			<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
 		-->
-	</complexType>
+	</xs:complexType>
 	<!--quasi Stationär Zeitschrittvorgabe -->
-	<element name="TimestepsObservation" type="om:ObservationType"
+	<xs:element name="TimestepsObservation" type="om:ObservationType"
 		substitutionGroup="om:Observation">
-		<annotation>
-			<documentation xml:lang="de">
-				<label>Zeitschrittvorgabe</label>
-				<tooltip>
+		<xs:annotation>
+			<xs:documentation xml:lang="de">
+				<xs:label>Zeitschrittvorgabe</xs:label>
+				<xs:tooltip>
 					Zeitschrittvorgabe der quasi stationären Berechnung
-				</tooltip>
-			</documentation>
-		</annotation>
-	</element>
-</schema>
+				</xs:tooltip>
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+
+	<xs:complexType name="RestartInfoPropertyType">
+		<xs:sequence>
+			<xs:element ref="c1d2d:RestartInfo" minOccurs="0" />
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+	</xs:complexType>
+
+	<xs:element name="RestartInfo" type="c1d2d:RestartInfoType"
+		substitutionGroup="gml:_Feature">
+	</xs:element>
+
+	<xs:complexType name="RestartInfoType">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element name="calculationUnitID"
+						type="xs:string" minOccurs="1" maxOccurs="1" />
+					<xs:element name="stepResultMetaID" type="xs:string"
+						minOccurs="1" maxOccurs="1" />
+					<xs:element name="filePath"
+						type="xs:string" minOccurs="1" maxOccurs="1" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+</xs:schema>

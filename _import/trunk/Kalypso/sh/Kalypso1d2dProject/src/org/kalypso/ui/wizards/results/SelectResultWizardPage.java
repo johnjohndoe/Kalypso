@@ -57,7 +57,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
  * Wizard page for displaying the result database in a checkbox-treeview Components are a {@link CheckboxTreeViewer} and
@@ -71,11 +70,9 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
  */
 public class SelectResultWizardPage extends WizardPage implements IWizardPage
 {
-  private IResultMeta[] m_selectedResults = new IResultMeta[] {};
-
   private IResultMeta m_resultRoot;
 
-  private CheckboxTreeViewer m_treeViewer;
+  protected CheckboxTreeViewer m_treeViewer;
 
   private final IThemeConstructionFactory m_factory;
 
@@ -146,10 +143,9 @@ public class SelectResultWizardPage extends WizardPage implements IWizardPage
       {
         final IResultMeta resultMeta = (IResultMeta) event.getElement();
         final boolean isChecked = event.getChecked();
-        handleCheckStateChanged( resultMeta, isChecked, resultViewer );
+        handleCheckStateChanged( resultMeta, isChecked );
       }
     } );
-
     setControl( panel );
   }
 
@@ -161,27 +157,17 @@ public class SelectResultWizardPage extends WizardPage implements IWizardPage
 
   public IResultMeta[] getSelectedResults( )
   {
-    return m_selectedResults;
+    final Object[] checkedElements = m_treeViewer.getCheckedElements();
+    final IResultMeta[] resultArray = new IResultMeta[checkedElements.length];
+    for( int i = 0; i < checkedElements.length; i++ )
+      resultArray[i] = (IResultMeta) checkedElements[i];
+    return resultArray;
   }
 
-  protected void handleCheckStateChanged( final IResultMeta resultMeta, final boolean isChecked, ResultMetaInfoViewer resultViewer )
+  protected void handleCheckStateChanged( final IResultMeta resultMeta, final boolean isChecked )
   {
-
-    final IFeatureWrapperCollection<IResultMeta> children = resultMeta.getChildren();
-    for( IResultMeta child : children )
-    {
-      m_treeViewer.setChecked( child, isChecked );
-      /* Call me again, as set checked does not throw any events */
-      handleCheckStateChanged( child, isChecked, resultViewer );
-    }
-
-    Object[] checkedElements = m_treeViewer.getCheckedElements();
-    IResultMeta[] resultArray = new IResultMeta[checkedElements.length];
-    for( int i = 0; i < checkedElements.length; i++ )
-    {
-      resultArray[i] = (IResultMeta) checkedElements[i];
-    }
-    m_selectedResults = resultArray;
+    m_treeViewer.setSubtreeChecked( resultMeta, isChecked );
+    getContainer().updateButtons();
   }
 
   public IThemeConstructionFactory getThemeFactory( )

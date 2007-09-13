@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypso1d2d.pjt.wizards;
 
+import java.util.List;
+
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -53,13 +55,15 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
+import org.kalypso.kalypsomodel1d2d.conv.results.IRestartInfo;
+import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.StepResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.ICommandPoster;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
@@ -71,17 +75,19 @@ import de.renew.workflow.connector.cases.ICaseDataProvider;
  */
 public class RestartSelectWizard extends Wizard implements INewWizard
 {
-  private RestartSelectWizardPage m_restartSelectWizardPage;
+  private RestartSelectWizardPage1 m_restartSelectWizardPage1;
 
-  private final Feature m_feature;
+  private RestartSelectWizardPage2 m_restartSelectWizardPage2;
 
   private IScenarioResultMeta m_resultModel;
 
   private ICaseDataProvider<IFeatureWrapper2> m_modelProvider;
 
-  public RestartSelectWizard( final Feature feature )
+  private final IControlModel1D2D m_controlModel;
+
+  public RestartSelectWizard( final IControlModel1D2D controlModel )
   {
-    m_feature = feature;
+    m_controlModel = controlModel;
     final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService( IHandlerService.class );
     final IEvaluationContext context = handlerService.getCurrentState();
     final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
@@ -90,6 +96,7 @@ public class RestartSelectWizard extends Wizard implements INewWizard
     {
       // Sometimes there is a NPE here... maybe wait until the models are loaded?
       m_resultModel = m_modelProvider.getModel( IScenarioResultMeta.class );
+      // m_resultModel.findCalcUnitMetaResult( "aaa" ).getChildren();
     }
     catch( CoreException e )
     {
@@ -106,12 +113,13 @@ public class RestartSelectWizard extends Wizard implements INewWizard
   {
     setWindowTitle( Messages.getString( "RestartSelectWizard.0" ) ); //$NON-NLS-1$
     final RestartViewerFilter resultFilter = new RestartViewerFilter();
-    final Object pathProperty = m_feature.getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_RESTART_PATH );
-    m_restartSelectWizardPage = new RestartSelectWizardPage( "restartSelectionPage", "Ergebniss(e) zur Karte hinzufügen", null, pathProperty != null ? pathProperty.toString() : "", resultFilter );
-    m_restartSelectWizardPage.setResultMeta( m_resultModel );
-    m_restartSelectWizardPage.setTitle( Messages.getString( "RestartSelectWizard.3" ) ); //$NON-NLS-1$
-    m_restartSelectWizardPage.setDescription( Messages.getString( "RestartSelectWizard.4" ) ); //$NON-NLS-1$
-    addPage( m_restartSelectWizardPage );
+    m_restartSelectWizardPage1 = new RestartSelectWizardPage1( "restartSelectionPage", "Ergebniss(e) zur Karte hinzufügen", null, m_resultModel, m_controlModel.getRestartInfos(), resultFilter );
+    m_restartSelectWizardPage1.setResultMeta( m_resultModel );
+    m_restartSelectWizardPage1.setTitle( Messages.getString( "RestartSelectWizard.3" ) ); //$NON-NLS-1$
+    m_restartSelectWizardPage1.setDescription( Messages.getString( "RestartSelectWizard.4" ) ); //$NON-NLS-1$
+    addPage( m_restartSelectWizardPage1 );
+    m_restartSelectWizardPage2 = new RestartSelectWizardPage2( "restartSelectionPage", "Ergebniss(e) zur Karte hinzufügen", null );
+    addPage( m_restartSelectWizardPage2 );
   }
 
   /**
@@ -120,21 +128,20 @@ public class RestartSelectWizard extends Wizard implements INewWizard
   @Override
   public boolean performFinish( )
   {
-    // final String selectedPath = m_restartSelectWizardPage.getSelectedPath();
-    final IResultMeta[] selectedResults = m_restartSelectWizardPage.getSelectedResults();
-    String paths = "";
+    final List<IRestartInfo> restartInfos = m_controlModel.getRestartInfos();
+    restartInfos.clear();
+    final IResultMeta[] selectedResults = m_restartSelectWizardPage2.getSortedResults();
     for( int i = 0; i < selectedResults.length; i++ )
+    {
       if( selectedResults[i] instanceof StepResultMeta )
-        paths += ";" + selectedResults[i].getFullPath() + "/results.gml";
-    if( paths.length() > 0 )
-    {
-      m_feature.setProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_RESTART, true );
-      m_feature.setProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_RESTART_PATH, paths.substring( 1 ) );
-    }
-    else
-    {
-      m_feature.setProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_RESTART, false );
-      m_feature.setProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_RESTART_PATH, "" );
+      {
+        final IStepResultMeta result = (IStepResultMeta) selectedResults[i];
+        result.setRestart( true );
+        final IRestartInfo restartInfo = m_controlModel.addRestartInfo();
+        restartInfo.setCalculationUnitID( ((ICalcUnitResultMeta) result.getParent()).getCalcUnit() );
+        restartInfo.setStepResultMetaID( result.getGmlID() );
+        restartInfo.setRestartFilePath( result.getFullPath() + "/results.gml" );
+      }
     }
     try
     {

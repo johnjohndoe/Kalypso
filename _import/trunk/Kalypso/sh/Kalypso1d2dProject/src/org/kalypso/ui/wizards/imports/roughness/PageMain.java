@@ -293,7 +293,7 @@ public class PageMain extends WizardPage implements Listener
   public IWizardPage getNextPage( )
   {
     saveDataToModel();
-    return ((ImportWizard)getWizard()).m_pageSecond;
+    return super.getNextPage();
   }
 
   protected void saveDataToModel( )
