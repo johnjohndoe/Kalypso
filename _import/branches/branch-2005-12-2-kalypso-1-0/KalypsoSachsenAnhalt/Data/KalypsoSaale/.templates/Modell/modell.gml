@@ -20477,8 +20477,8 @@
           <ombrometer:NR>44430</ombrometer:NR>
           <ombrometer:NR-Ersatz>72094</ombrometer:NR-Ersatz>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5325332.481344436,5552704.983109328</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">4416067.0,5741910.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <ombrometer:Niederschlag>
