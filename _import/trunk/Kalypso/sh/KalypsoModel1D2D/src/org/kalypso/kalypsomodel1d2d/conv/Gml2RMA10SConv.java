@@ -54,6 +54,8 @@ import java.util.Locale;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.IPath;
+import org.kalypso.kalypsomodel1d2d.conv.results.IRestartInfo;
 import org.kalypso.kalypsomodel1d2d.conv.results.RestartEater;
 import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.ops.EdgeOps;
@@ -135,7 +137,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
 
   private final boolean m_restart;
 
-  public Gml2RMA10SConv( final File rma10sOutputFile, final RMA10Calculation calculation )
+  public Gml2RMA10SConv( final File rma10sOutputFile, final RMA10Calculation calculation ) throws SimulationException
   {
     m_outputFile = rma10sOutputFile;
     m_discretisationModel1d2d = calculation.getDiscModel();
@@ -159,12 +161,13 @@ public class Gml2RMA10SConv implements INativeIDProvider
     {
       m_restartEater = new RestartEater();
       final IFolder scenarioFolder = Util.getScenarioFolder();
-      final String[] restartPaths = m_calculation.getControlModel().getRestartPaths();
-      for( final String path : restartPaths )
+      final List<IRestartInfo> restartInfos = m_calculation.getControlModel().getRestartInfos();
+      for( final IRestartInfo restartInfo : restartInfos )
       {
-        if( path.length() == 0 )
+        final IPath restartFilePath = restartInfo.getRestartFilePath();
+        if( restartFilePath == null )
           continue;
-        final IFile ifile = scenarioFolder.getFile( path );
+        final IFile ifile = scenarioFolder.getFile( restartFilePath );
         final File file = ifile.getRawLocation().toFile();
         try
         {
@@ -172,9 +175,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
         }
         catch( final Exception e )
         {
-          // TODO: don't eat exceptions in such critical code
-          // rethrow as SimulationException
-          e.printStackTrace();
+          throw new SimulationException( e.getLocalizedMessage(), null );
         }
       }
     }

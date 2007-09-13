@@ -42,6 +42,7 @@ package org.kalypso.kalypsomodel1d2d.conv.results;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -68,11 +69,9 @@ public class RestartEater
 {
   private final double DEFAULT_SEARCH_DISTANCE = 0.5;
 
-  private FeatureList m_nodes;
+  private List<INodeResult> m_nodes = new ArrayList<INodeResult>();
 
   private double m_distance = DEFAULT_SEARCH_DISTANCE;
-
-  private boolean m_any_results = false;
 
   public final static String GAUS_KRUEGER = "EPSG:31467";
 
@@ -88,7 +87,7 @@ public class RestartEater
     // final GMLWorkspace resultWorkspace = FeatureFactory.createGMLWorkspace( new QName(
     // UrlCatalog1D2D.MODEL_1D2DResults_NS, "NodeResultCollection" ), file.toURL(), GmlSerializer.DEFAULT_FACTORY );
     final Feature rootFeature = resultWorkspace.getRootFeature();
-    final FeatureList nodeList = (FeatureList) rootFeature.getProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "nodeResultMember" ) );
+    final List<INodeResult> nodeList = (FeatureList) rootFeature.getProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "nodeResultMember" ) );
     addNodes( nodeList );
   }
 
@@ -100,9 +99,9 @@ public class RestartEater
     if( distance >= 0.0 )
       m_distance = distance;
   }
-  
+
   /**
-   * Set search distance to default value (0.5) 
+   * Set search distance to default value (0.5)
    */
   public void resetSearchDistance( )
   {
@@ -120,18 +119,16 @@ public class RestartEater
 
   private void addNodes( final List<INodeResult> nodes )
   {
-    // TODO better handling of (existing) nodes
-
-    if( m_any_results )
-      m_nodes.addAll( nodes );
-    else
-      m_nodes = (FeatureList) nodes;
-    m_any_results = true;
+    for( final INodeResult node : nodes )
+      if( m_nodes.contains( node ) )
+        continue;
+      else
+        m_nodes.add( node );
   }
 
   private INodeResult getNodeResult( final GM_Point point )
   {
-    final Feature feature = GeometryUtilities.findNearestFeature( point, m_distance, m_nodes, GMLNodeResult.QNAME_PROP_LOCATION );
+    final Feature feature = GeometryUtilities.findNearestFeature( point, m_distance, (FeatureList) m_nodes, GMLNodeResult.QNAME_PROP_LOCATION );
     if( feature == null )
       return null;
     else

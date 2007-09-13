@@ -45,6 +45,7 @@ import java.math.BigInteger;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
@@ -52,6 +53,7 @@ import javax.xml.namespace.QName;
 import org.eclipse.core.runtime.FileLocator;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.kalypsomodel1d2d.conv.results.IRestartInfo;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
@@ -60,6 +62,8 @@ import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
@@ -70,9 +74,10 @@ import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
  * @author Dejan Antanaskovic
  * 
  */
-@SuppressWarnings("unchecked") //$NON-NLS-1$
 public class ControlModel1D2D extends AbstractFeatureBinder implements IControlModel1D2D
 {
+  private final IFeatureWrapperCollection<IRestartInfo> m_restartInfos = new FeatureWrapperCollection<IRestartInfo>( getFeature(), IRestartInfo.class, QNAME_PROPERTY_RESTART_INFO );
+
   public ControlModel1D2D( final Feature featureToBind )
   {
     this( featureToBind, Kalypso1D2DSchemaConstants.WB1D2DCONTROL_F_MODEL );
@@ -133,12 +138,9 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
     return ((Boolean) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_RESTART )).booleanValue();
   }
 
-  public String[] getRestartPaths( )
+  public List<IRestartInfo> getRestartInfos( )
   {
-    final Object property = getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_RESTART_PATH );
-    if( property == null || property.toString().length() == 0)
-      return new String[0];
-    return property.toString().split( ";" );
+    return m_restartInfos;
   }
 
   public XMLGregorianCalendar getStartCalendar( )
@@ -371,11 +373,11 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
   }
 
   /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#get_steadyBC()
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#get_RelaxationsFactor()
    */
-  public Double get_steadyBC( )
+  public Double get_RelaxationsFactor( )
   {
-    return (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_STEADY_BC );
+    return (Double) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_RELAXATION_FACTOR );
   }
 
   public boolean isSteadySelected( )
@@ -388,5 +390,13 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
   {
     final Boolean property = (Boolean) getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_UNSTEADY_CHECKBOX );
     return property != null ? property.booleanValue() : false;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D#addRestartInfo()
+   */
+  public IRestartInfo addRestartInfo( )
+  {
+    return m_restartInfos.addNew( IRestartInfo.QNAME, IRestartInfo.class );
   }
 }

@@ -107,6 +107,8 @@
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta"/>
          <adapter type="org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta"/>
          <adapter type="org.kalypso.kalypsosimulationmodel.core.modeling.IModel"/>
+         <adapter type="org.kalypso.kalypsomodel1d2d.conv.results.IRestartInfo">
+         </adapter>
       </factory>
    </extension>
 

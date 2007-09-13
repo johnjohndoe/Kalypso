@@ -280,7 +280,7 @@ public class Control1D2DConverter
 
     final String msg = Messages.getString( "Control1D2DConverter.33" ); //$NON-NLS-1$
 
-    Double uRValSteady = controlModel.get_steadyBC();
+    Double uRValSteady = controlModel.get_RelaxationsFactor();
     if( uRValSteady == null || uRValSteady.isNaN() )
       if( controlModel.isSteadySelected() )
         throw new SimulationException( Messages.getString( "Control1D2DConverter.34" ), null ); //$NON-NLS-1$

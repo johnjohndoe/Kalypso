@@ -11,6 +11,8 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.kalypsomodel1d2d.conv.results.IRestartInfo;
+import org.kalypso.kalypsomodel1d2d.conv.results.RestartInfo;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.CalculationUnit1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.CalculationUnit1D2D;
@@ -743,6 +745,26 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
       }
     };
     cMap.put( IDocumentResultMeta.class, cTor );
+
+    // RestartInfo
+    cTor = new AdapterConstructor()
+    {
+      public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
+      {
+        final QName featureQName = feature.getFeatureType().getQName();
+
+        if( featureQName.equals( IRestartInfo.QNAME ) )
+        {
+          return new RestartInfo( feature );
+        }
+        else
+        {
+          warnUnableToAdapt( feature, featureQName, IRestartInfo.class );
+          return null;
+        }
+      }
+    };
+    cMap.put( IRestartInfo.class, cTor );
 
     // BoundaryCondition
     cTor = new AdapterConstructor()

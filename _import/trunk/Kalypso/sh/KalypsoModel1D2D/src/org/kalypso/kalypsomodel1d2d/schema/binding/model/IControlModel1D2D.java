@@ -40,8 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.model;
 
-import javax.xml.datatype.XMLGregorianCalendar;
+import java.util.List;
 
+import javax.xml.datatype.XMLGregorianCalendar;
+import javax.xml.namespace.QName;
+
+import org.kalypso.kalypsomodel1d2d.conv.results.IRestartInfo;
+import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IControlModel;
 import org.kalypso.observation.IObservation;
@@ -57,6 +62,8 @@ import org.kalypso.observation.result.TupleResult;
 @SuppressWarnings("unchecked")
 public interface IControlModel1D2D extends IControlModel
 {
+  public static final QName QNAME_PROPERTY_RESTART_INFO = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "restartInfoMember" );
+
   public IObservation<TupleResult> getTimeSteps( );
 
   public Integer getIDNOPT( );
@@ -68,9 +75,9 @@ public interface IControlModel1D2D extends IControlModel
   public Integer getIaccyc( );
 
   public boolean getRestart( );
-  
-  public String[] getRestartPaths( );
-  
+
+  public List<IRestartInfo> getRestartInfos( );
+
   public XMLGregorianCalendar getStartCalendar( );
 
   public Integer getStartJulianDay( );
@@ -123,20 +130,22 @@ public interface IControlModel1D2D extends IControlModel
 
   public Double get_P_BOTTOM( );
 
-  public Double get_steadyBC( );
+  public Double get_RelaxationsFactor( );
 
   public void setCalculationUnit( ICalculationUnit calUnit );
 
   public ICalculationUnit getCalculationUnit( );
-  
+
   /**
-   * true if checkbox "Steady calculation" in control model view is selected, false otherwise 
+   * true if checkbox "Steady calculation" in control model view is selected, false otherwise
    */
   public boolean isSteadySelected( );
-  
+
   /**
-   * true if checkbox "Unsteady calculation" in control model view is selected, false otherwise 
+   * true if checkbox "Unsteady calculation" in control model view is selected, false otherwise
    */
   public boolean isUnsteadySelected( );
+
+  public IRestartInfo addRestartInfo( );
 
 }

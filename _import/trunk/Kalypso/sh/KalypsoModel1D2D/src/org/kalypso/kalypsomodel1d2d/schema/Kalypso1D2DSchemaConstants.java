@@ -205,8 +205,6 @@ public class Kalypso1D2DSchemaConstants
 
   public final static QName WB1D2DCONTROL_PROP_RESTART = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "_restart" );
 
-  public final static QName WB1D2DCONTROL_PROP_RESTART_PATH = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "_restart_path" );
-
   public final static QName WB1D2DCONTROL_PROP_VEGETA = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "VEGETA" );
 
   public final static QName WB1D2DCONTROL_PROP_AC1 = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "AC1" );
@@ -217,7 +215,7 @@ public class Kalypso1D2DSchemaConstants
 
   public final static QName WB1D2DCONTROL_PROP_P_BOTTOM = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "_p_bottom" );
 
-  public final static QName WB1D2DCONTROL_PROP_STEADY_BC = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "_steadyBC" );
+  public final static QName WB1D2DCONTROL_PROP_RELAXATION_FACTOR = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "_steadyBC" );
 
   public final static QName WB1D2DCONTROL_PROP_STEADY_CHECKBOX = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "_steady" );
 
