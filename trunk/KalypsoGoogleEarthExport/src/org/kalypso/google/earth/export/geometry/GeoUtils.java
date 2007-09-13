@@ -6,6 +6,7 @@ package org.kalypso.google.earth.export.geometry;
 import org.apache.commons.lang.NotImplementedException;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
+import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Surface;
@@ -20,7 +21,8 @@ public class GeoUtils
     eMultiCurve,
     eCurve,
     eSurface,
-    ePoint
+    ePoint,
+    eMultiSurface
   }
 
   /**
@@ -33,6 +35,8 @@ public class GeoUtils
       return GEOMETRY_TYPE.eMultiCurve;
     else if( gmo instanceof GM_Curve )
       return GEOMETRY_TYPE.eCurve;
+    else if( gmo instanceof GM_MultiSurface )
+      return GEOMETRY_TYPE.eMultiSurface;
     else if( gmo instanceof GM_Surface )
       return GEOMETRY_TYPE.eSurface;
     else if( gmo instanceof GM_Point )

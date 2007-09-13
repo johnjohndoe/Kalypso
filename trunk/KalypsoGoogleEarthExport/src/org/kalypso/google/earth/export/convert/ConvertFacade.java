@@ -12,6 +12,7 @@ import org.kalypso.google.earth.export.geometry.GeoUtils.GEOMETRY_TYPE;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
+import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Surface;
@@ -53,6 +54,10 @@ public class ConvertFacade
 
         case eCurve:
           placemark.setGeometry( factory.createLineString( ConverterCurve.convert( factory, (GM_Curve) gmo ) ) );
+          break;
+
+        case eMultiSurface:
+          placemark.setGeometry( factory.createMultiGeometry( ConverterMultiSurface.convert( factory, (GM_MultiSurface) gmo ) ) );
           break;
 
         case eSurface:
