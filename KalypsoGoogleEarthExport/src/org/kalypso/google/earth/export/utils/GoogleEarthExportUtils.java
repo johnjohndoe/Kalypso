@@ -8,6 +8,7 @@ import org.kalypsodeegree.graphics.sld.LineSymbolizer;
 import org.kalypsodeegree.graphics.sld.PointSymbolizer;
 import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
+import org.kalypsodeegree.graphics.sld.TextSymbolizer;
 import org.kalypsodeegree.model.feature.Feature;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
@@ -45,9 +46,11 @@ public class GoogleEarthExportUtils
       return styleFactory.getPointSymbolizer( (PointSymbolizer) symbolizer );
     else if( symbolizer instanceof LineSymbolizer )
       return styleFactory.getLineSymbolizer( (LineSymbolizer) symbolizer );
-
     else if( symbolizer instanceof PolygonSymbolizer )
       return styleFactory.getPolygonSymbolizer( (PolygonSymbolizer) symbolizer );
+    else if( symbolizer instanceof TextSymbolizer )
+      throw (new NotImplementedException());
+
     throw (new NotImplementedException());
   }
 
