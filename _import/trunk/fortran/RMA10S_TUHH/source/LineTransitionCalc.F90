@@ -1,4 +1,4 @@
-!     Last change:  NIS  16 Aug 2007    7:42 pm
+!     Last change:  WP    3 Sep 2007    3:57 pm
 subroutine TransVelDistribution
 
 !description
@@ -22,6 +22,7 @@ integer            :: TransLi, TransNo
 real               :: TransVel, CSArea, Discharge, localVel
 REAL (KIND = 8)    :: TransDep
 CHARACTER (LEN=26) :: filename_out
+
 !TransLi   :: number of Transition Line
 !TransNo   :: number of Transition itself
 !TransVel  :: average (1D) velocity at transition
@@ -100,13 +101,8 @@ transitionloop: do i = 1, MaxLT
     QI = vnomx * dyi - vnomy * dxi
     if (k == 1) Q1 = QI
 
-    if (QI * Q1 < 0) then
-      WRITE(*,*) 'ERROR - Transition line is too curved'
-      WRITE(*,*) 'flow direction through line is not unique defined'
-      WRITE(*,*) 'change model!'
-      WRITE(*,*) 'execution of program terminated - STOP'
-      stop
-    end if
+    !ERROR because of line shape
+    if (QI * Q1 < 0) call ErrorMessageAndStop(3601, TransLi)
 
   end do
 

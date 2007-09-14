@@ -20,7 +20,7 @@ CIPK  LAST UPDATE APRIL 27 1999 Fix to use mat instead of nr for material type t
 cipk  last update Jan 6 1999 initialize AKE correctly
 cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
-C     Last change:  WP   29 Aug 2007    3:00 pm
+C     Last change:  WP   11 Sep 2007    5:03 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 CIPK  LAST UPDATED MAY 1 1996
 CIPK LAST UPDATED SEP 7 1995
@@ -97,15 +97,18 @@ C  Test for width > 0
       N1 = NOP(NN,1)
       N3 = NOP(NN,3)
 
-      !check, whether informations are present
+      !check, whether necessary informations are present
       IF ((WIDTH(N1) .LE. 0.0  .OR.  WIDTH(N3) .LE. 0.0) .and.
-     +     (imat(nn) < 901 .OR. imat(nn) > 903))  THEN
-         WRITE(*,*) ' WIDTH MISSING FOR NODES ', N1,N3
+     +     imat(nn) < 901)  THEN
+        WRITE(*,*) ' WIDTH MISSING FOR NODES ', N1,N3
 CIPK SEP04 CREATE ERROR FILE
-         CLOSE(75)
-         OPEN(75,FILE='ERROR.OUT')
-         WRITE(75,*) ' WIDTH MISSING FOR NODES ', N1,N3
-         STOP  '  WIDTH MISSING FOR NODES '
+        CLOSE(75)
+        OPEN(75,FILE='ERROR.OUT')
+        WRITE(75,*) ' WIDTH MISSING FOR NODES ', N1,N3
+        STOP  '  WIDTH MISSING FOR NODES '
+      ELSEIF (imat(nn) > 903) then
+        WRITE(*,*) 'Processing control structure'
+        WRITE(*,*) 'Element: ', nn, '; Material: ', imat(nn)
       else
         WRITE(*,*) 'Processing junction element: ', nn
       ENDIF

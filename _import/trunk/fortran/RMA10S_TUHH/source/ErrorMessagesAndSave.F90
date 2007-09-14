@@ -1,4 +1,4 @@
-!     Last change:  WP   28 Aug 2007    3:02 pm
+!     Last change:  WP    3 Sep 2007    3:59 pm
 subroutine ErrorMessageAndStop (ErrorID, Object)
 
 INTEGER, INTENT(IN) :: ErrorID, Object
@@ -18,15 +18,15 @@ WRITE (        *, ErrorID) Object
 
 !1000   Input Errors in general
 !****
- 1001 FORMAT (1x, 'ERROR - while reading file ', i5)
- 1002 FORMAT (1x, 'ERROR - node ', i5, 'shall not be zero or negative')
+ 1001 FORMAT (1x, 'ERROR - while reading file ', I5)
+ 1002 FORMAT (1x, 'ERROR - node ', I5, 'shall not be zero or negative')
 !1100  Errors with nodes
 !****
- 1101 FORMAT (1x, 'ERROR - illegal midside node number. Node ', i5, ' is negative.')
+ 1101 FORMAT (1x, 'ERROR - illegal midside node number. Node ', I5, ' is negative.')
 
 !       1200  Errors with elements
 !       1300  Errors with arcs
- 1301 FORMAT (1x, 'ERROR - illegal arc number. Arc ', i5, ' is negative')
+ 1301 FORMAT (1x, 'ERROR - illegal arc number. Arc ', I5, ' is negative')
 
 
 !1400  Errors with continuity line
@@ -35,10 +35,14 @@ WRITE (        *, ErrorID) Object
 
 !1500  Errors with connectivity
 !****
- 1501 FORMAT (1x, 'ERROR - More than 60 nodes connected to node', i5 )
+ 1501 FORMAT (1x, 'ERROR - More than 60 nodes connected to node', I5 )
 
 !2000   Output Errors
 !3000   Mesh Errors
+ 3601 FORMAT (1x, 'ERROR - Transition line, ', I4 ,' is too curved' // &
+            & 1x, 'flow direction through line is not unique defined' // &
+            & 1x, 'change model!' // &
+            & 1x, 'execution of program terminated - STOP')
 !4000   Calculation Errors
 
 

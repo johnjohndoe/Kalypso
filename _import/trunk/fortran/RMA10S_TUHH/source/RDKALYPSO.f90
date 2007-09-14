@@ -1,4 +1,4 @@
-!     Last change:  JAJ  28 Aug 2007   11:26 pm
+!     Last change:  WP   13 Sep 2007    5:54 pm
 !-----------------------------------------------------------------------
 ! This code, data_in.f90, performs reading and validation of model
 ! inputa data in the library 'Kalypso-2D'.
@@ -803,9 +803,6 @@ countloop: DO i = 1, maxc
   !jump over negative node references (they are deactivated!)
   IF (jj <= 0) cycle countloop
 
-  !nis,testing
-  WRITE(*,*) 'mist = ', mist
-
   !?What is mist?
   IF (jj == mist) cycle countloop
 
@@ -813,9 +810,6 @@ countloop: DO i = 1, maxc
   nad = nad+1
 END DO countloop
                                                                         
-!nis, testing
-WRITE(*,*) 'nr = ', nr
-
 IF (nad - nadm (nr) < 0) then
   nadm (nr) = nad
   icol (nr, 1) = m
@@ -1129,6 +1123,7 @@ reading: do
       ELSE
         istat=0
 
+        !TODO: Format differentiation
         READ (linie, *,IOSTAT=istat) id_local, i, cord (i, 1) , cord (i, 2), ao (i),kmx(i)
 
         if (istat.eq.0) then
@@ -1198,7 +1193,7 @@ reading: do
 
     if (linie (1:3) .eq. 'AP2') then
       IF (KSWIT == 1) then
-        read (linie, '(a3,i9)') id_local,i
+        read (linie, '(a3,i9)') id_local, i
       else
         read (linie, '(a3,i9,5f20.7)') id_local, i,(apoly(i,j), j = 5, 9)
         !write (*,*) 'AP2',i,(apoly(i,j), j=6,10)
@@ -1209,7 +1204,7 @@ reading: do
       IF (KSWIT == 1) then
         read (linie, '(a3,i9)') id_local, i
       else
-        read (linie, '(a3,i9,3f20.7)') id_local, i,(apoly(i,j), j = 10, 12)
+        read (linie, '(a3,i9,3f20.7)') id_local, i, (apoly(i,j), j = 10, 12)
         !write (*,*) 'AP3',i,(apoly(i,j), j=11,13)
       endif
     end if
@@ -1638,8 +1633,8 @@ ENDIF
 !
 !     Baue das Feld ELEM(j,i) auf (Kantennummern am Element):
 !     - ELEM(j,1) Kantenanzahl; this is not correct!!! it is as follows because
-!				of direct access to the array elements 2...5
-!				NiS,mar06
+!     of direct access to the array elements 2...5
+!     NiS,mar06
 !     - ELEM(j,1) Kantenanzahl + 1
 !     - ELEM(j,2-4/5) Kantennummern
 !     mit j=Elementnummer

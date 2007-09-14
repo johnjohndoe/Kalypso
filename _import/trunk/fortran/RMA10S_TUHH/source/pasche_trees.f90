@@ -1,4 +1,4 @@
-!     Last change:  WP   29 Aug 2007   12:17 pm
+!     Last change:  WP   10 Sep 2007    4:49 pm
 !--------------------------------------------------------------------------------------------
 ! This code, pasche_trees.f90,determines the impact of tree vegetation
 ! for hydrodynamic simulations in the library 'Kalypso-2D'.
@@ -54,9 +54,9 @@ USE Blk10mod
 !-
 
 ! Local variables
-REAL(KIND=4), DIMENSION(1:MaxP)	:: slope        ! Slope of watersurface at node
+REAL(KIND=4), DIMENSION(1:MaxP) :: slope        ! Slope of watersurface at node
 REAL(KIND=4), DIMENSION(1:MaxP) :: eslope       ! Slope of energy level at node
-REAL(KIND=8)			                 :: lambda_s     ! Mean roughness coefficient at element
+REAL(KIND=8)                    :: lambda_s     ! Mean roughness coefficient at element
 
 REAL(KIND=8) :: sumvx = 0.0
 REAL(KIND=8) :: sumvy = 0.0
@@ -86,24 +86,24 @@ end do
 
 do i=1,ne
 
-  sumvx 	= 0.0
-  sumvy 	= 0.0
-  sumh  	= 0.0
-  sumslope 	= 0.0
-  sumeslope 	= 0.0
+  sumvx      = 0.0
+  sumvy      = 0.0
+  sumh       = 0.0
+  sumslope   = 0.0
+  sumeslope  = 0.0
 
   ! Loop over all nodes of the element (also including the mid-side nodes).
   ! The mean velocity in x- and y-direction and the mean waterdepth in
   ! each element is calculated.
-  ! (nop: 	Node numbers of element)
-  ! (ncorn: 	Number of nodes of the element)
-  ! (cord:	coordinates of node)
+  ! (nop:   Node numbers of element)
+  ! (ncorn: Number of nodes of the element)
+  ! (cord:  coordinates of node)
   ! vel(3,...): degrees of freedom at node)
 
   do j = 1,ncorn(i)
     sumvx       = sumvx + vel(1,nop(i,j))
     sumvy       = sumvy + vel(2,nop(i,j))
-    sumh	= sumh  + vel(3,nop(i,j))
+    sumh        = sumh  + vel(3,nop(i,j))
     sumslope    = sumslope + slope(nop(i,j))
     sumeslope   = sumeslope + eslope(nop(i,j))
   end do
@@ -146,11 +146,11 @@ all_elements: do i = 1, ne
     !WP Now changing slope from water surface slope to
     !WP energy slope.  ( mslope(i) -> meslope(i) )
 
-    call get_cwr(meslope(i), 	&
-               & mh(i),		&
-               & abst(i), 	&
-               & durchbaum(i), 	&
-               & lambda_s, 	&
+    call get_cwr(meslope(i),   &
+               & mh(i),        &
+               & abst(i),      &
+               & durchbaum(i), &
+               & lambda_s,     &
                & c_wr(i))
   end if
 
@@ -231,9 +231,9 @@ USE Blk10mod
 
 ! Calling variables
 !NiS,apr06: changing mnd to MaxP
-!REAL(KIND=4), DIMENSION(1:mnd), INTENT(OUT) :: slope 	! Calculated slope of water surface
+!REAL(KIND=4), DIMENSION(1:mnd), INTENT(OUT) :: slope    ! Calculated slope of water surface
 !REAL(KIND=4), DIMENSION(1:mnd), INTENT(OUT) :: eslope   ! Calculated slope of energy curve/surface
-REAL(KIND=4), DIMENSION(1:MaxP), INTENT(OUT) :: slope 	! Calculated slope of water surface
+REAL(KIND=4), DIMENSION(1:MaxP), INTENT(OUT) :: slope    ! Calculated slope of water surface
 REAL(KIND=4), DIMENSION(1:MaxP), INTENT(OUT) :: eslope   ! Calculated slope of energy curve/surface
 !-
 
@@ -246,7 +246,7 @@ INTEGER                         :: nodecnt
 INTEGER                         :: elcnt
 !-
 
-REAL(KIND=4), DIMENSION(1:2) 	:: angle_v              ! direction of the actual flow vector
+REAL(KIND=4), DIMENSION(1:2)    :: angle_v              ! direction of the actual flow vector
 REAL(KIND=4), DIMENSION(1:2)    :: vector_to_point      ! direction from actual point to the neighbour points
 REAL(KIND=4), DIMENSION(1:100)  :: angle_delt = 0.0     ! angle between the flow vector and the vector to the
                                                         ! neighbour points
@@ -274,6 +274,8 @@ end do
 !-
 
 outer: do i = 1, nodecnt
+
+  if (nconnect(i) == 0) CYCLE outer
 
   slope(i) = 0.0
 
@@ -346,17 +348,7 @@ outer1D: do i = 1, elcnt
       !node, whose slopes shall be calculated
       node2=nop(i,j)
 
-      !nis,jan07,testing
-      !WRITE(*,*) nconnect(node2)
-      !pause
-      !-
-
       if (nconnect(node2).gt.5) CYCLE outer1D
-
-      !nis,dec06,testing
-      !WRITE(*,*) 'verbundene Knoten:',nconnect(node2)
-      !WRITE(*,*) 'Element', i
-      !-
 
       if (j.eq.2) then
         !if midside node get the two corner nodes
@@ -368,33 +360,13 @@ outer1D: do i = 1, elcnt
         node3=0
       endif
 
-      !nis,jan07,testing
-      !WRITE(*,*) 'vorher',slope(nop(i,j)), eslope(nop(i,j))
-      !-
-
       CALL Get_1D_slope(node1,node2,node3, slope(nop(i,j)), eslope(nop(i,j)))
       marker_slope(node2) = .true.
-
-      !nis,jan07,testing
-      !WRITE(*,*) 'nachher',slope(nop(i,j)), eslope(nop(i,j))
-      !-
-
-      !nis,dec06,testing
-      !WRITE(*,*) node2, marker_slope (node2)
-      !WRITE(*,*) nconnect(node2)
-      !-
 
     end do
   end if
 end do outer1D
 !-
-
-!nis,dec06,testing
-!do i=1,nodecnt
-!  WRITE(*,*) marker_slope(i)
-!end do
-!-
-
 
 ! All point that have been marked as not detected (MARKER_SLOPE = .false.)
 ! the slope will be interpolated from the neighbouring points.
@@ -481,7 +453,7 @@ subroutine GET_MIN_ANGLE_POINTS(angle_delt, anz, nr, first, second)
 implicit none
 
 ! Calling variables
-REAL(KIND=4), DIMENSION(1:100), INTENT(IN)  	:: angle_delt
+REAL(KIND=4), DIMENSION(1:100), INTENT(IN)      :: angle_delt
 INTEGER, INTENT(IN)                             :: anz          ! no. of neighbours (nconnect(i)
 INTEGER, INTENT(IN)                             :: nr           ! no. of actual element
 INTEGER, INTENT(OUT)                            :: first        ! node no. of nearest neighbour
@@ -559,24 +531,19 @@ USE blk10mod
 implicit none
 
 ! Calling variables
-INTEGER, INTENT(IN)                             :: nodecnt
-REAL(KIND=4), DIMENSION(1:mnd), INTENT(INOUT)	:: slope
-REAL(KIND=4), DIMENSION(1:mnd), INTENT(INOUT)	:: eslope
-INTEGER, DIMENSION(1:mnd), INTENT(IN)		:: nconnect
-INTEGER, DIMENSION(1:mnd,0:100),INTENT(IN)	:: neighb
-LOGICAL, DIMENSION(1:mnd), INTENT(INOUT)	:: marker_slope
-INTEGER, INTENT(IN)                             :: mnd
+INTEGER, INTENT(IN)                           :: nodecnt
+REAL(KIND=4), DIMENSION(1:mnd), INTENT(INOUT) :: slope
+REAL(KIND=4), DIMENSION(1:mnd), INTENT(INOUT) :: eslope
+INTEGER, DIMENSION(1:mnd), INTENT(IN)         :: nconnect
+INTEGER, DIMENSION(1:mnd,0:100),INTENT(IN)    :: neighb
+LOGICAL, DIMENSION(1:mnd), INTENT(INOUT)      :: marker_slope
+INTEGER, INTENT(IN)                           :: mnd
 
 ! Local variables
-INTEGER 	:: i, j, anz, temp_anz
-REAL(KIND=4) 	:: temp_slope, temp_eslope
+INTEGER      :: i, j, anz, temp_anz
+REAL(KIND=4) :: temp_slope, temp_eslope
 
 anz = 0
-
-!nis,dec06,testing
-!WRITE(*,*) mnd, '1'
-!WRITE(*,*) 'test for marker_slope', marker_slope
-!-
 
 ! 1.) Number of missing nodes is counted.
 ! ---------------------------------------
@@ -592,20 +559,12 @@ numbertest: do i = 1, nodecnt
   END if
   !-
 
-  if (.not. marker_slope(i)) then
+  if (.not. marker_slope(i) .and. nconnect(i) /= 0) then
 	    anz = anz + 1
-    !nis,dec06,testing
-    !WRITE(*,*) 'fehlendes Gefaelle: ', i
-    !-
   end if
 !end do
 end do numbertest
 !-
-
-!nis,dec06,testing
-!WRITE(*,*) mnd, '2', anz
-!-
-
 
 ! 2.) Filling
 ! -----------
@@ -1467,9 +1426,9 @@ SUBROUTINE cwr_read(name_cwr, c_wr, mel)
 implicit none
 
 ! Calling variables
-CHARACTER(LEN=32), INTENT(IN) 			:: name_cwr  !name of cwr initial input data file
-INTEGER, INTENT(IN)                             :: mel       !local copy of variable for maximum number of elements
-REAL(KIND=4), DIMENSION(1:mel), INTENT(OUT)	:: c_wr      !array for saving all the initial c_wr-values for every element
+CHARACTER(LEN=32), INTENT(IN)               :: name_cwr  !name of cwr initial input data file
+INTEGER, INTENT(IN)                         :: mel       !local copy of variable for maximum number of elements
+REAL(KIND=4), DIMENSION(1:mel), INTENT(OUT) :: c_wr      !array for saving all the initial c_wr-values for every element
 
 ! Local variables
 INTEGER :: istat

@@ -1,4 +1,4 @@
-!     Last change:  WP   28 Aug 2007    8:37 am
+!     Last change:  WP    3 Sep 2007   12:47 pm
 !-----------------------------------------------------------------------------
 ! This code, data_out.f90, performs writing and validation of model
 ! output data in the library 'Kalypso-2D'.
@@ -491,22 +491,6 @@ ENDDO write_trans_els
 !nis,apr07: write informations of transition lines
 write_trans_lines: do i = 1, MaxLT
   WRITE(IKALYPSOFM, 7041) i, (translines(i,j), j = 1, 3)
-!  LiLe = (lmt(Translines(i,2)) + 1) / 2
-!  Rest = LiLe
-!  NoLines = 1
-!  GetDefLineNo: do
-!    if (Rest <= 9) EXIT GetDefLineNo
-!    Rest = LiLe - 9
-!    NoLines = NoLines + 1
-!  ENDDO getDefLineNo
-!  Startnode = 1
-!  do j = 1, NoLines - 1
-!    WRITE(ikalypsofm, 7042) NoLines-1, translines(i,2), (line(translines(i,2),k), k = Startnode, Startnode + 8 * 2, 2)
-!    Startnode = Startnode + 8 * 2 + 1
-!  end do
-!  !WRITE(*,*) lile, rest, startnode, lmt(translines(i,2))
-!  !pause
-!  WRITE(ikalypsofm, 7042) NoLines, translines(i,2), (line(translines(i,2),k), k = Startnode, Startnode + Rest * 2 - 1, 2)
 end do write_trans_lines
 
 
@@ -516,8 +500,7 @@ write_roughness: DO i = 1, irk
 END do write_roughness
 
 !NiS,apr06: unit name changed; replaced 12 by IKALYPSOFM:
-!      CLOSE (12)
-      CLOSE (IKALYPSOFM, STATUS='keep')
+CLOSE (IKALYPSOFM, STATUS='keep')
 !-
 
 
@@ -563,6 +546,12 @@ END do write_roughness
  !NiS,apr06: date in RMA10S form; actual time starting the restart: IYRR - calculation year; TETT - time in year
  7012 FORMAT ('DA',i10, f20.7)
 
+ !NiS,may06: new identification line for cross sectional informations: node, width, ss1, ss2, wids, widbs, wss
+ 7013 FORMAT ('CS',i10,f10.1,2f10.3,3f10.2)
+
+ !NiS,may06: rest of degrees of freedom for 3D and constituents, read in Freiheitsgrade 4 bis 7; Knotennummer, salinity, temperature etc.):
+ 7015 FORMAT ('DF', i10,4f20.7)
+
  !LF nov06: adding starting node for weir structure
  7016 FORMAT ('FE', 5i10)
 
@@ -574,12 +563,6 @@ END do write_roughness
 
  !nis,aug07: writing out 1D junction elements
  7019 FORMAT ('JE', i10, 8i10)
-
- !NiS,may06: new identification line for cross sectional informations: node, width, ss1, ss2, wids, widbs, wss
- 7013 FORMAT ('CS',i10,f10.1,2f10.3,3f10.2)
-
- !NiS,may06: rest of degrees of freedom for 3D and constituents, read in Freiheitsgrade 4 bis 7; Knotennummer, salinity, temperature etc.):
- 7015 FORMAT ('DF', i10,4f20.7)
 
  !min-max-range of waterstages for 1D-polynom
  7020 FORMAT ('MM', i10,2f20.7)
@@ -636,11 +619,11 @@ END do write_roughness
 !--------------- deallocation section -----------------------------
 !NiS,apr06      to clean the memory, the arrays, allocated and only used
 !               in this subroutine, are deallocated again.
-      DEALLOCATE  (arc_tmp, arcmid)
+DEALLOCATE  (arc_tmp, arcmid)
 !-
 
-      RETURN
+RETURN
 
-      END SUBROUTINE write_KALYPSO
+END SUBROUTINE write_KALYPSO
 
 
