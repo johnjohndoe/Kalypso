@@ -242,7 +242,7 @@ Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodu
 			context="LengthSectionView">
 			<Help><![CDATA[Hier werden die Längsschnittauswertungen zur Darstellung in einem Diagramm durchgeführt.]]></Help>
 			<Name>Längsschnittansicht</Name>
-			<Task context="LengthSectionView"
+			<Task context="ResultMap"
 				URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ConfigureResultLengthSectionView">
 				<Help><![CDATA[Das Längsschnittdiagramm konfigurieren.]]></Help>
 				<Name>Längsschnitt konfigurieren</Name>

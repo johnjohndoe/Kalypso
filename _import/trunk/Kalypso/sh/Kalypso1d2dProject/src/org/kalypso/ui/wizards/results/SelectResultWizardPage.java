@@ -102,6 +102,7 @@ public class SelectResultWizardPage extends WizardPage implements IWizardPage
   public void createControl( final Composite parent )
   {
     /* set a fixed size to the Wizard */
+    // HACK!!
     final Object layoutData = parent.getLayoutData();
     if( layoutData instanceof GridData )
     {
@@ -110,7 +111,6 @@ public class SelectResultWizardPage extends WizardPage implements IWizardPage
       pLayout.heightHint = 300;
       parent.layout();
     }
-
     final Composite panel = new Composite( parent, SWT.NONE );
     panel.setLayout( new FillLayout( SWT.HORIZONTAL ) );
 

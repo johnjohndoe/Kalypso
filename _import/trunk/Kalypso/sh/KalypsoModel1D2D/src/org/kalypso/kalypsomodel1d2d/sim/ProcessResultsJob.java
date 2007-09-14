@@ -160,6 +160,9 @@ public class ProcessResultsJob extends Job
   {
     final TimeLogger logger = new TimeLogger( "Start: lese .2d Ergebnisse" );
 
+    // remember, if there is a tin_Depth or not (1d=false/2d=true)
+    boolean depthTinIsEmpty = false;
+
     if( dataProvider != null )
     {
       /* Write template sld into result folder */
@@ -231,9 +234,13 @@ public class ProcessResultsJob extends Job
           switch( parameter )
           {
             case DEPTH:
-              triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "m" );
-              triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), "Flieﬂtiefe" );
 
+              if( surface.size() > 0 )
+              {
+                triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "m" );
+                triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), "Flieﬂtiefe" );
+                depthTinIsEmpty = true;
+              }
               break;
             case VELOCITY:
               triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "m/s" );
@@ -334,10 +341,12 @@ public class ProcessResultsJob extends Job
 
           case DEPTH:
 
-            min = new BigDecimal( minMaxCatcher.getMinDepth() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-            max = new BigDecimal( minMaxCatcher.getMaxDepth() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
-            stepResultMeta.addDocument( "Flieﬂtiefen", "TIN der Flieﬂtiefen", IDocumentResultMeta.DOCUMENTTYPE.tinDepth, new Path( "Tin/tin_DEPTH.gml" ), Status.OK_STATUS, min, max );
-
+            if( depthTinIsEmpty == true )
+            {
+              min = new BigDecimal( minMaxCatcher.getMinDepth() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+              max = new BigDecimal( minMaxCatcher.getMaxDepth() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+              stepResultMeta.addDocument( "Flieﬂtiefen", "TIN der Flieﬂtiefen", IDocumentResultMeta.DOCUMENTTYPE.tinDepth, new Path( "Tin/tin_DEPTH.gml" ), Status.OK_STATUS, min, max );
+            }
             break;
 
           case VELOCITY:

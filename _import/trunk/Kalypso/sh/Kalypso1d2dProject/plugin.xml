@@ -278,7 +278,11 @@
              commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ConfigureResultMap">
        </handler>
        <handler
-             class="org.kalypso.kalypso1d2d.pjt.actions.ConfigureLengthSectionViewHandler"
+             class="org.kalypso.kalypso1d2d.pjt.actions.ShowResultLengthSectionViewHandler"
+             commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ShowResultLengthSectionView">
+       </handler>
+       <handler
+             class="org.kalypso.kalypso1d2d.pjt.actions.ConfigureResultLengthSectionViewHandler"
              commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ConfigureResultLengthSectionView">
        </handler>  	     	     	     	     	     	     
 	</extension>

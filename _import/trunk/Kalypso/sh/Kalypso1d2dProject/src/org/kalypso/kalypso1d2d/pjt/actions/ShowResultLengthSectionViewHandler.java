@@ -42,7 +42,6 @@ package org.kalypso.kalypso1d2d.pjt.actions;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -63,15 +62,15 @@ import de.renew.workflow.connector.cases.ICaseDataProvider;
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
- * @author Gernot Belger
+ * @author Thomas Jung
  */
-public class ConfigureLengthSectionViewHandler extends AbstractHandler
+public class ShowResultLengthSectionViewHandler extends AbstractHandler
 {
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
   @Override
-  public Object execute( final ExecutionEvent event ) throws ExecutionException
+  public Object execute( final ExecutionEvent event )
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
     final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
@@ -101,7 +100,6 @@ public class ConfigureLengthSectionViewHandler extends AbstractHandler
     }
     catch( CoreException e )
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
 

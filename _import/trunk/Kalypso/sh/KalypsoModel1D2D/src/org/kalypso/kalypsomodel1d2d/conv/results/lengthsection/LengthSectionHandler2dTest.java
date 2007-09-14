@@ -52,8 +52,12 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.loader.LoaderException;
+import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.loader.ShapeLoader;
+import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
@@ -78,21 +82,6 @@ public class LengthSectionHandler2dTest extends TestCase
     List<GM_TriangulatedSurface> surfaceList = new ArrayList<GM_TriangulatedSurface>();
     try
     {
-      // Triangulated surfaces
-      URL resource = getClass().getResource( "resources/tin_Depth.gml" );
-      GMLWorkspace w = GmlSerializer.createGMLWorkspace( resource, null );
-
-      final CS_CoordinateSystem targetCRS = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
-
-      w.accept( new TransformVisitor( targetCRS ), w.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
-
-      GM_Object geometryProperty = w.getRootFeature().getDefaultGeometryProperty();
-
-      if( geometryProperty instanceof GM_TriangulatedSurface )
-      {
-        GM_TriangulatedSurface surface = (GM_TriangulatedSurface) geometryProperty;
-        surfaceList.add( surface );
-      }
 
       // Demo river line file (Stör)
       URL resourceShape = getClass().getResource( "resources/stoer_kompl2.shp" );
@@ -105,8 +94,8 @@ public class LengthSectionHandler2dTest extends TestCase
       final Feature fRoot = shapeWorkspace.getRootFeature();
       final FeatureList lstMembers = (FeatureList) fRoot.getProperty( new QName( "namespace", "featureMember" ) );
 
-      BigDecimal max = new BigDecimal( 20000 );
-      BigDecimal min = new BigDecimal( 0 );
+      BigDecimal max = new BigDecimal( 62000 );
+      BigDecimal min = new BigDecimal( 58000 );
       final BigDecimal stepWidth = new BigDecimal( 100 );
 
       final BigDecimal minDecimal = min.setScale( 1, BigDecimal.ROUND_FLOOR );
@@ -125,7 +114,50 @@ public class LengthSectionHandler2dTest extends TestCase
         stationList[currentClass] = station;
       }
 
-      LengthSectionHandler2d handler = new LengthSectionHandler2d( surfaceList, lstMembers, stationList );
+      // Demo Observations
+      final URL lsObsUrl = LengthSectionHandler2dTest.class.getResource( "resources/lengthSectionTemplate.gml" );
+      final GMLWorkspace lsObsWorkspace = GmlSerializer.createGMLWorkspace( lsObsUrl, null );
+      final IObservation<TupleResult> lsObs = ObservationFeatureFactory.toObservation( lsObsWorkspace.getRootFeature() );
+
+      // Triangulated surfaces
+
+      GM_TriangulatedSurface surface = null;
+      URL resource = getClass().getResource( "resources/tin_Terrain.gml" );
+      GMLWorkspace w = GmlSerializer.createGMLWorkspace( resource, null );
+
+      final CS_CoordinateSystem targetCRS = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+
+      w.accept( new TransformVisitor( targetCRS ), w.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
+
+      GM_Object geometryProperty = w.getRootFeature().getDefaultGeometryProperty();
+
+      if( geometryProperty instanceof GM_TriangulatedSurface )
+      {
+        surface = (GM_TriangulatedSurface) geometryProperty;
+      }
+      LengthSectionHandler2d handler = new LengthSectionHandler2d( lsObs, surface, lstMembers, stationList, IDocumentResultMeta.DOCUMENTTYPE.tinTerrain );
+
+      URL resource2 = getClass().getResource( "resources/tin_WATERLEVEL.gml" );
+      w = GmlSerializer.createGMLWorkspace( resource2, null );
+
+      w.accept( new TransformVisitor( targetCRS ), w.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
+
+      geometryProperty = w.getRootFeature().getDefaultGeometryProperty();
+
+      if( geometryProperty instanceof GM_TriangulatedSurface )
+      {
+        surface = (GM_TriangulatedSurface) geometryProperty;
+
+      }
+
+      LengthSectionHandler2d handler2 = new LengthSectionHandler2d( lsObs, surface, lstMembers, stationList, IDocumentResultMeta.DOCUMENTTYPE.tinWsp );
+
+      if( lsObs.getResult().size() > 0 )
+      {
+        ObservationFeatureFactory.toFeature( lsObs, lsObsWorkspace.getRootFeature() );
+        File lsObsFile = new File( "d:/temp/lengthSection.gml" );
+        GmlSerializer.serializeWorkspace( lsObsFile, lsObsWorkspace, "CP1252" );
+      }
 
       // test obs geklappt hat...
       boolean result = true;

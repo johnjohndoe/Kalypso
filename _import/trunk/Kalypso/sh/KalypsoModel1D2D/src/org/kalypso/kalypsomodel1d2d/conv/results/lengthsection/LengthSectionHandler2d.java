@@ -41,17 +41,32 @@
 package org.kalypso.kalypsomodel1d2d.conv.results.lengthsection;
 
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.jts.JTSUtilities;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE;
+import org.kalypso.model.wspm.schema.IWspmDictionaryConstants;
+import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.ComponentUtilities;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
+import org.kalypso.observation.result.TupleResult;
+import org.kalypso.observation.util.TupleResultIndex;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
 import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+
+import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.Point;
 
 /**
  * 
@@ -63,33 +78,23 @@ import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 public class LengthSectionHandler2d
 {
 
-  private final FeatureList m_riverFeatures;
-
-  private final BigDecimal[] m_stationList;
-
-  private final List<GM_TriangulatedSurface> m_surfaces;
-
-  public LengthSectionHandler2d( final List<GM_TriangulatedSurface> surfaces, final FeatureList riverFeatures, final BigDecimal[] stationList )
+  public LengthSectionHandler2d( IObservation<TupleResult> lsObs, final GM_TriangulatedSurface surface, final FeatureList riverFeatures, final BigDecimal[] stationList, DOCUMENTTYPE documenttype )
   {
-    m_surfaces = surfaces;
-    m_riverFeatures = riverFeatures;
-    m_stationList = stationList;
+    final Map<BigDecimal, GM_Point> pointList = getPointList( riverFeatures, stationList );
 
-    generateLengthSection();
+    generateLengthSection( pointList, surface, lsObs, documenttype );
+
   }
 
-  private void generateLengthSection( )
+  private Map<BigDecimal, GM_Point> getPointList( FeatureList riverFeatures, final BigDecimal[] stationList )
   {
-    /* generate length section point list */
+    Map<BigDecimal, GM_Point> pointList = new HashMap<BigDecimal, GM_Point>();
 
-    // get "from" and "to" values for each segment
-    for( Object object : m_riverFeatures )
+    for( Object object : riverFeatures )
     {
       Feature feature = (Feature) object;
 
-      IPropertyType[] properties = feature.getFeatureType().getProperties();
-      String localPart = properties[0].getQName().getLocalPart();
-
+      // get "from" and "to" values for each segment
       final BigDecimal from;
       final BigDecimal to;
       Object propertyFrom = feature.getProperty( new QName( "namespace", "RIVER_A" ) );
@@ -105,7 +110,7 @@ public class LengthSectionHandler2d
       Object propertyTo = feature.getProperty( new QName( "namespace", "RIVER_B" ) );
       if( propertyTo instanceof Long )
       {
-        to = new BigDecimal( (Long) propertyFrom );
+        to = new BigDecimal( (Long) propertyTo );
       }
       else
       {
@@ -120,21 +125,133 @@ public class LengthSectionHandler2d
 
       // jetzt hamma d Kurv :-)
       // Anhand Stationswerten Punkte auf Liniensegmenten abgreifen / erzeugen.
-      for( int i = 0; i < m_stationList.length; i++ )
+      for( int i = 0; i < stationList.length; i++ )
       {
+        // calculate correction factor
+        final BigDecimal stationLength = to.subtract( from );
+
+        int stat2 = stationList[i].intValue();
+        int toint = to.intValue();
+        int fromint = from.intValue();
+
         // check, if the station value lies between min max of the current curve
-        if( m_stationList[i].compareTo( from ) == 1 && m_stationList[i].compareTo( to ) == -1 )
+        // if( m_stationList[i].compareTo( from ) == 1 && m_stationList[i].compareTo( to ) == -1 )
+        if( fromint <= stat2 && stat2 <= toint )
+        {
+          BigDecimal stationLengthPosition = to.subtract( stationList[i] );
+          double stat = stationLengthPosition.doubleValue() / stationLength.doubleValue() * 100;
+          BigDecimal percentage = new BigDecimal( stat ).setScale( 4, BigDecimal.ROUND_HALF_UP );
+
+          LineString linestring;
+          try
+          {
+            linestring = (LineString) JTSAdapter.export( curve );
+            Point point = JTSUtilities.pointOnLinePercent( linestring, percentage.intValue() );
+            if( point == null )
+              continue;
+            GM_Point gmPoint = (GM_Point) JTSAdapter.wrap( point );
+            if( gmPoint != null )
+              pointList.put( stationList[i], gmPoint );
+
+          }
+          catch( GM_Exception e )
+          {
+            e.printStackTrace();
+          }
+        }
+      }
+    }
+    return pointList;
+  }
+
+  private void generateLengthSection( Map<BigDecimal, GM_Point> pointList, GM_TriangulatedSurface surface, IObservation<TupleResult> lsObs, DOCUMENTTYPE documenttype )
+  {
+    /* generate length section point list */
+
+    // go through all line segments and collect the points corresponding to that list
+    /* value collection for point list */
+
+    final TupleResult tuples = lsObs.getResult();
+
+    final IComponent[] components = tuples.getComponents();
+
+    final IComponent stationComp = ComponentUtilities.findComponentByID( components, IWspmDictionaryConstants.LS_COMPONENT_STATION );
+
+    final IComponent thalComp = ComponentUtilities.findComponentByID( components, IWspmDictionaryConstants.LS_COMPONENT_GROUND );
+    final IComponent waterlevelComp = ComponentUtilities.findComponentByID( components, IWspmDictionaryConstants.LS_COMPONENT_WATERLEVEL );
+    final IComponent velocityComp = ComponentUtilities.findComponentByID( components, IWspmDictionaryConstants.LS_COMPONENT_VELOCITY );
+
+    TupleResultIndex m_tupleIndex = new TupleResultIndex( tuples, stationComp );
+
+    // for each point get the values of the surfaces in the list of TrinagulatedSurface
+    for( Map.Entry<BigDecimal, GM_Point> entry : pointList.entrySet() )
+    {
+      final BigDecimal station = entry.getKey();
+      final Double v = surface.getValue( entry.getValue() );
+      if( v.isNaN() )
+        continue;
+      final BigDecimal value = new BigDecimal( v ).setScale( 4, BigDecimal.ROUND_HALF_UP );
+
+      // look for the record
+      IRecord record = m_tupleIndex.getRecord( station );
+
+      // if result is null, create a new one
+      if( record == null )
+      {
+        record = tuples.createRecord();
+        record.setValue( stationComp, station );
+        // add it to the Indexer
+
+        m_tupleIndex.addRecord( station, record );
+        switch( documenttype )
         {
 
+          case tinTerrain:
+            record.setValue( thalComp, value );
+
+            break;
+
+          case tinWsp:
+
+            record.setValue( waterlevelComp, value );
+            break;
+
+          case tinVelo:
+            record.setValue( velocityComp, value );
+
+            break;
+
+          default:
+            break;
+        }
+
+        tuples.add( record );
+      }
+      else
+      {
+        switch( documenttype )
+        {
+
+          case tinTerrain:
+            record.setValue( thalComp, value );
+
+            break;
+
+          case tinWsp:
+
+            record.setValue( waterlevelComp, value );
+            break;
+
+          case tinVelo:
+            record.setValue( velocityComp, value );
+
+            break;
+
+          default:
+            break;
         }
 
       }
-
     }
-    // go through all line segments and collect the points corresponding to that list
-    // get start and end station
-    /* value collection for point list */
-
-    // for each point get the values from the wsp and terrain surface
   }
 }
