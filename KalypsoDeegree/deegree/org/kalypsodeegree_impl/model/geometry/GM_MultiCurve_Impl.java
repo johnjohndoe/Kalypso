@@ -276,19 +276,21 @@ final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
 
     final double[] cen = new double[gmp.getAsArray().length];
 
+    final int dimSize = Math.min( cen.length, getCoordinateDimension() );
+
     for( int i = 0; i < size; i++ )
     {
       cnt += getCurveAt( i ).getNumberOfCurveSegments();
 
       final double[] pos = getCurveAt( i ).getCentroid().getAsArray();
 
-      for( int j = 0; j < getCoordinateDimension(); j++ )
+      for( int j = 0; j < dimSize; j++ )
       {
         cen[j] += pos[j];
       }
     }
 
-    for( int j = 0; j < getCoordinateDimension(); j++ )
+    for( int j = 0; j < dimSize; j++ )
     {
       cen[j] = cen[j] / cnt / size;
     }

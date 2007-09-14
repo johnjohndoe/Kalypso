@@ -40,42 +40,40 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.mapmodel.visitor;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.xml.namespace.QName;
 
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IValuePropertyType;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate;
-import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
- * TODO: give this visitor a better name; 'KalypsoThemeVisitor' indicates that this is some kind of standard
- * implementation (which it is not)
- * <p>
- * This visitor collects all IKalypsoThemes with the property specified with a predicate
- * 
  * @author Thomas Jung
  */
-public class KalypsoThemeVisitor implements IKalypsoThemeVisitor
+public class LineThemePredicater implements IKalypsoThemePredicate
 {
-  private final List<IKalypsoTheme> m_results = new ArrayList<IKalypsoTheme>();
+  private final QName[] m_QNames = new QName[] { GeometryUtilities.QN_MULTI_LINE_STRING_PROPERTY, GeometryUtilities.QN_LINE_STRING_PROPERTY };
 
-  private final IKalypsoThemePredicate m_predicate;
-
-  public KalypsoThemeVisitor( final IKalypsoThemePredicate predicate )
+  /**
+   * @see org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate#decide(org.kalypso.ogc.gml.IKalypsoTheme)
+   */
+  public boolean decide( IKalypsoTheme theme )
   {
-    m_predicate = predicate;
+    if( theme instanceof IKalypsoFeatureTheme )
+    {
+      final IKalypsoFeatureTheme fTheme = (IKalypsoFeatureTheme) theme;
+      final IFeatureType featureType = fTheme.getFeatureType();
+      if( featureType == null )
+        return false;
+      final IValuePropertyType[] allGeomteryProperties = featureType.getAllGeomteryProperties();
+
+      if( allGeomteryProperties.length > 0 && allGeomteryProperties[0].getValueQName().equals( m_QNames[0] ) || allGeomteryProperties[0].getValueQName().equals( m_QNames[1] ) )
+        return true;
+    }
+    return false;
+
   }
 
-  public boolean visit( IKalypsoTheme theme )
-  {
-    if( m_predicate.decide( theme ) )
-      m_results.add( theme );
-
-    return true;
-  }
-
-  public IKalypsoTheme[] getFoundThemes( )
-  {
-    return m_results.toArray( new IKalypsoTheme[m_results.size()] );
-  }
 }
