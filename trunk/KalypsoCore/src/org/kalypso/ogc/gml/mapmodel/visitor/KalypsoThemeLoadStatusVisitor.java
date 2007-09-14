@@ -40,42 +40,26 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.mapmodel.visitor;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
 
 /**
- * TODO: give this visitor a better name; 'KalypsoThemeVisitor' indicates that this is some kind of standard
- * implementation (which it is not)
- * <p>
- * This visitor collects all IKalypsoThemes with the property specified with a predicate
- * 
  * @author Thomas Jung
  */
-public class KalypsoThemeVisitor implements IKalypsoThemeVisitor
+public class KalypsoThemeLoadStatusVisitor implements IKalypsoThemeVisitor
 {
-  private final List<IKalypsoTheme> m_results = new ArrayList<IKalypsoTheme>();
-
-  private final IKalypsoThemePredicate m_predicate;
-
-  public KalypsoThemeVisitor( final IKalypsoThemePredicate predicate )
-  {
-    m_predicate = predicate;
-  }
+  boolean m_isLoaded = true;
 
   public boolean visit( IKalypsoTheme theme )
   {
-    if( m_predicate.decide( theme ) )
-      m_results.add( theme );
+    if( theme.isLoaded() == false )
+      m_isLoaded = false;
 
     return true;
   }
 
-  public IKalypsoTheme[] getFoundThemes( )
+  public boolean isLoaded( )
   {
-    return m_results.toArray( new IKalypsoTheme[m_results.size()] );
+    return m_isLoaded;
   }
 }

@@ -38,44 +38,38 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.mapmodel.visitor;
+package org.kalypso.ogc.gml.mapmodel;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate;
-import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
+import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor;
+import org.kalypso.ogc.gml.mapmodel.visitor.LineThemePredicater;
+import org.kalypsodeegree.model.feature.FeatureVisitor;
 
 /**
- * TODO: give this visitor a better name; 'KalypsoThemeVisitor' indicates that this is some kind of standard
- * implementation (which it is not)
- * <p>
- * This visitor collects all IKalypsoThemes with the property specified with a predicate
- * 
  * @author Thomas Jung
  */
-public class KalypsoThemeVisitor implements IKalypsoThemeVisitor
+public class KalypsoFeatureThemeHelper
 {
-  private final List<IKalypsoTheme> m_results = new ArrayList<IKalypsoTheme>();
-
-  private final IKalypsoThemePredicate m_predicate;
-
-  public KalypsoThemeVisitor( final IKalypsoThemePredicate predicate )
+  /**
+   * Gets the linestring themes in the Kalypso theme list
+   */
+  public static IKalypsoFeatureTheme[] getLineThemes( final MapPanel panel )
   {
-    m_predicate = predicate;
+    /* implement visitor for cascading themes in mapPanel */
+    final IMapModell mapModell = panel.getMapModell();
+    if( mapModell == null )
+      return null;
+    final LineThemePredicater predicate = new LineThemePredicater();
+    final KalypsoThemeVisitor visitor = new KalypsoThemeVisitor( predicate );
+    mapModell.accept( visitor, FeatureVisitor.DEPTH_INFINITE );
+
+    final IKalypsoTheme[] result = visitor.getFoundThemes();
+    final IKalypsoFeatureTheme[] resultThemes = new IKalypsoFeatureTheme[result.length];
+    System.arraycopy( result, 0, resultThemes, 0, result.length );
+
+    return resultThemes;
   }
 
-  public boolean visit( IKalypsoTheme theme )
-  {
-    if( m_predicate.decide( theme ) )
-      m_results.add( theme );
-
-    return true;
-  }
-
-  public IKalypsoTheme[] getFoundThemes( )
-  {
-    return m_results.toArray( new IKalypsoTheme[m_results.size()] );
-  }
 }
