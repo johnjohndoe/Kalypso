@@ -45,7 +45,10 @@
       <glossterm>Bordvollpunkte</glossterm>
 
       <glossdef>
-        <para></para>
+        <para>Bordvollpunkte beschreiben die Lage der Schnittpunkte vom
+        Wasserspiegel mit der Geländeoberkante für einen bordvollen Abfluss.
+        In der Regel sind dies die Knickpunkte zwischen Gewässer und
+        Vorland.</para>
       </glossdef>
     </glossentry>
   </glossdiv>
@@ -69,7 +72,15 @@
       <glossterm>Durchlass</glossterm>
 
       <glossdef>
-        <para></para>
+        <para>In einem Gewässerprofil kann anstelle eines durchströmten
+        Bereiches auch ein Durchlass angegeben werden. Ein Durchlass wird über
+        ein bestimmtes Profil definiert. Ein Durchlass kann ein Trapezprofil,
+        Eiprofil, Maulprofil oder Kreisprofil haben. Für den Ansatz der
+        Durchlässe ist zu beachten, dass in der hydraulischen Berechnung davon
+        ausgegangen wird, dass der gesamte Abfluss Q des Gewässers durch den
+        definierten Durchlass strömt. Das heißt, ein Einstau oder Abfluss auf
+        der Geländeoberkante wird nicht berücksichtigt. Je Gewässerprofil kann
+        immer nur ein Durchlass definiert werden.</para>
       </glossdef>
     </glossentry>
 
@@ -77,7 +88,9 @@
       <glossterm>Durchströmter Bereich</glossterm>
 
       <glossdef>
-        <para></para>
+        <para>Der durchströmte Bereich kennzeichnet den Bereich in dem der
+        Impulssatz angewandt wird. Alle Bereiche außerhalb des durchströmten
+        Bereiches gehen nicht in die hydraulische Berechnung mit ein.</para>
       </glossdef>
     </glossentry>
   </glossdiv>
@@ -105,7 +118,9 @@
       <glossterm>Fließzonen</glossterm>
 
       <glossdef>
-        <para></para>
+        <para>Ein Gewässerprofil lässt sich in verschiedene Fließzonen
+        unterteilen. Dazu gehören die Trennflächen, der durchströmte Bereich
+        und die Bordvollpunkte eines Gewässers.</para>
       </glossdef>
     </glossentry>
   </glossdiv>
@@ -117,7 +132,9 @@
       <glossterm>Geokoordinaten</glossterm>
 
       <glossdef>
-        <para></para>
+        <para>Die Geokoordinaten eines Profils sind erforderlich, um die
+        Triangulation und die Anzeige der Profillinien in der Karte zu
+        ermöglichen.</para>
       </glossdef>
     </glossentry>
 
@@ -247,7 +264,10 @@
       <glossterm>Postprozessing</glossterm>
 
       <glossdef>
-        <para></para>
+        <para>Als Postprozessing bezeichnet man den dritten der drei
+        Teilschritte beim Aufbau eines 1D-Modells in WSPM. In diesem Schritt
+        werden die Ergebnisse ausgewertet und auf Plausibilität
+        kontrolliert.</para>
       </glossdef>
     </glossentry>
 
@@ -255,7 +275,10 @@
       <glossterm>Preprozessing</glossterm>
 
       <glossdef>
-        <para></para>
+        <para>Als Preprozessing bezeichnet man den ersten der drei
+        Teilschritte beim Aufbau eines 1D-Modells in WSPM. In diesem Schritt
+        werden die Eingangsdaten zusammen getragen und das 1D-Modell wird
+        konfiguriert und kalibriert.</para>
       </glossdef>
     </glossentry>
 
@@ -277,7 +300,10 @@
       <glossterm>Prozessing</glossterm>
 
       <glossdef>
-        <para></para>
+        <para>Als Prozessing bezeichnet man den zweiten der drei Teilschritte
+        beim Aufbau eines 1D-Modells in WSPM. In diesem Schritt wird die
+        Berechnung bzw. Simulation für Bemessungshochwasser oder Szenarien
+        durchgeführt.</para>
       </glossdef>
     </glossentry>
   </glossdiv>
@@ -301,7 +327,16 @@
       <glossterm>Rauheiten</glossterm>
 
       <glossdef>
-        <para></para>
+        <para>In der Rauheitstabelle kann entweder der
+        k<subscript>s</subscript>- oder der k<subscript>st</subscript>-Wert
+        angegeben werden. Der k<subscript>s</subscript>-Wert nach COLEBROOK
+        -WHITE fordert eine Berechnung nach dem Fließgesetz von DARCY
+        -WEISSBACH, während bei der Angabe des
+        k<subscript>st</subscript>-Werts nach MANNING -STRICKLER dem
+        Fließgesetz von GAUCKLER- MANNING -STRICKLER gerechnet werden muss
+        (außerdem darf kein Bewuchs angegeben werden!). Für die Wahl des
+        richtigen Parameters liefern diverse Literaturquellen
+        Anhaltswerte.</para>
       </glossdef>
     </glossentry>
   </glossdiv>
@@ -325,7 +360,20 @@
       <glossterm>Trennflächen</glossterm>
 
       <glossdef>
-        <para></para>
+        <para>Mit der Festlegung der zwei Trennflächen wird eine sogenannte
+        Trennflächenrauheit zwischen Vorland und Flussschlauch nach PASCHE
+        berücksichtigt. Die Trennflächen beschreiben den Impulsaustausch
+        zwischen Vorland und Flussschlauch und definieren die Grenze zwischen
+        Strömung im Gewässer und deutlich reduzierter Strömung auf dem
+        Vorland. Dabei wird die Trennfläche auch in der hydraulischen
+        Berechnung als Wandwiderstand zwischen Flussschlauch und Vorland
+        angesetzt. Die Lage der Trennflächen ist an den Übergängen zwischen
+        extremen Rauheitssprüngen und/ oder Zunahme der Geländehöhe
+        anzusetzen. Grundsätzlich sind die zwei Trennflächen am Übergang zu
+        den maßgebenden Rauheitsverlusten anzuordnen. Dies sind an
+        Brückenbauwerken die Innenkanten des Brückenwiderlagers und an
+        Wehrbauwerken die Schnittpunkte der Geländeoberkante mit
+        Wehroberkante.</para>
       </glossdef>
     </glossentry>
   </glossdiv>
