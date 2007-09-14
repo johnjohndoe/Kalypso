@@ -61,6 +61,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 import org.apache.commons.io.IOUtils;
@@ -94,7 +95,7 @@ public class ElbePolteConverter
   public final static String hwvsTypeQ = TimeserieConstants.TYPE_RUNOFF;
   public final static int cntValuesPast = 120;
 
-  public static void hwvs2zml( final File fleHwvs, final File fleZml )
+  public static void hwvs2zml( final File fleHwvs, final File fleZml, Map metaMap )
   {
     OutputStream writer = null;
     try
@@ -102,6 +103,26 @@ public class ElbePolteConverter
       final InputStreamReader isr = new InputStreamReader( new FileInputStream( fleHwvs ) );
       final BufferedReader reader = new BufferedReader( isr );
       final IObservation obsZml = hwvs2zml( reader );
+      ZmlInfo info = null;
+
+      // add metaData
+
+      // key erzeugen
+      final String mapKey = getExtension(fleHwvs);
+      info = (ZmlInfo)metaMap.get( mapKey );
+
+      // Metadaten in obs übertragen
+      // ein bisserl tricky, damit die neuen Werte garantiert die alten
+      // überschreiben
+      final MetadataList metadataList = obsZml.getMetadataList();
+      final MetadataList newmeta = new MetadataList();
+      if( info != null )
+      {
+        final MetadataList oldmeta = info.getMetadata();
+        newmeta.putAll( oldmeta );
+      }
+      newmeta.putAll( metadataList );
+      metadataList.putAll( newmeta );
 
       // convert it
       writer = new FileOutputStream( fleZml );
@@ -197,7 +218,7 @@ public class ElbePolteConverter
           try
           {
             int lfdNum = 0;
-            Integer.parseInt( sEingabeZeile.trim().substring(0, 1) );
+            Integer.parseInt( sEingabeZeile.trim().substring( 0, 1 ) );
 
             // Format: lfd_Nummer, Jahr, Monat, Tag, Stunde, Wert
             strTok = new StringTokenizer( sEingabeZeile );
@@ -256,12 +277,12 @@ public class ElbePolteConverter
     return obsOut;
   }
 
-  public static void zml2Hwvs( final File fleZml, final File fleHwvs ) throws Exception
+  public static void zml2Hwvs( final File fleZml, final File fleHwvs, final Map metaMap ) throws Exception
   {
 
     final URL url = fleZml.toURL();
 
-    if( !zml2Hwvs( url, fleHwvs, url.toString() ) )
+    if( !zml2Hwvs( url, fleHwvs, url.toString(), metaMap ) )
     {
       throw new Exception( "Zeitreihe " + url.toString()
           + " kann nicht geöffnet werden (da vielleicht nicht vorhanden)." );
@@ -271,20 +292,23 @@ public class ElbePolteConverter
   /**
    * @param zmlUrl
    * @param fleHwvs
+   * @param metaMap
    * @return has zml (URL) successfully been written to fleHwvs
    * @throws Exception
    */
-  public static boolean zml2Hwvs( final URL zmlUrl, final File fleHwvs, final String zmlId ) throws Exception
+  public static boolean zml2Hwvs( final URL zmlUrl, final File fleHwvs, final String zmlId, Map metaMap )
+      throws Exception
   {
     final IObservation obsZml = ZmlFactory.parseXML( zmlUrl, zmlId );
-
+    
     final URLConnection urlConTest = UrlUtilities.connectQuietly( zmlUrl );
 
     if( urlConTest != null )
     {
       // TODO Zeitraum in Kommentarzeile wäre noch schön :-)
-      final String sComment = fleHwvs.getName() + ": " + obsZml.getIdentifier();
-      zml2Hwvs( obsZml, fleHwvs, sComment );
+       final String sComment = fleHwvs.getName() + ": " + obsZml.getIdentifier() + " (" + zmlId + ")";
+
+      zml2Hwvs( obsZml, fleHwvs, sComment, metaMap );
       return true;
     }
     return false;
@@ -296,17 +320,19 @@ public class ElbePolteConverter
    * @param sComment
    * @throws Exception
    */
-  public static void zml2Hwvs( final IObservation obsZml, final File fleHwvs, final String sComment ) throws Exception
+  public static void zml2Hwvs( final IObservation obsZml, final File fleHwvs, final String sComment, final Map metaMap )
+      throws Exception
 
   {
 
     final Writer wrtrHwvs = new OutputStreamWriter( new FileOutputStream( fleHwvs ), ElbePolteConst.ELBEPOLTE_CODEPAGE );
+    final String mapKey = getExtension(fleHwvs);
 
-    zml2Hwvs( obsZml, wrtrHwvs, sComment );
+    zml2Hwvs( obsZml, wrtrHwvs, sComment, metaMap, mapKey );
     IOUtils.closeQuietly( wrtrHwvs );
   }
 
-  public static void zml2Hwvs( final IObservation obsZml, final Writer wrtr, String sComment )
+  public static void zml2Hwvs( final IObservation obsZml, final Writer wrtr, String sComment, final Map metaMap, final String mapKey )
   {
     final PrintWriter pWrtr;
     final InterpolationFilter intpolFlt;
@@ -319,6 +345,13 @@ public class ElbePolteConverter
     Date dtDatum;
 
     pWrtr = new PrintWriter( wrtr );
+
+    if( metaMap != null )
+    {
+      final ZmlInfo info = new ZmlInfo( obsZml.getName(), obsZml.getMetadataList() );
+
+      metaMap.put( mapKey, info );
+    }
 
     try
     {
@@ -390,7 +423,7 @@ public class ElbePolteConverter
 
       File fleHwvsIn = new File( "c:/temp/polte_zr/Modell.009" );
       File fleZml = new File( "c:/temp/polte_zr", "Modell.009.zml" );
-      hwvs2zml( fleHwvsIn, fleZml );
+      hwvs2zml( fleHwvsIn, fleZml, null );
 
       //      File fleHwvsIn = new File( "c:/temp/polte_zr/Dresden_Torgau.001" );
       //      File fleZml = new File( "c:/temp/polte_zr", "Dresden_Torgau.001.zml" );
@@ -465,5 +498,41 @@ public class ElbePolteConverter
     {
       e.printStackTrace();
     }
+  }
+
+  /**
+   * gibt nur den Dateinamen zurück (ohne Dateiendung) <br>
+   */
+  public static String getFileNameWOExt( final File file )
+  {
+    String sFleName;
+    final String sExt;
+    int pos;
+
+    sFleName = file.getName();
+    sExt = getExtension( file );
+    pos = sFleName.lastIndexOf( "." + sExt );
+    sFleName = sFleName.substring( 0, pos );
+    return sFleName;
+  }
+
+  /**
+   * Gibt Datei-Extension zurück (z.B. png)
+   */
+  public static String getExtension( final File file )
+  {
+    String ext;
+    String s;
+    int pos;
+
+    ext = null;
+    s = file.getName();
+    pos = s.lastIndexOf( '.' );
+
+    if( pos > 0 && pos < s.length() - 1 )
+    {
+      ext = s.substring( pos + 1 );
+    }
+    return ext;
   }
 }

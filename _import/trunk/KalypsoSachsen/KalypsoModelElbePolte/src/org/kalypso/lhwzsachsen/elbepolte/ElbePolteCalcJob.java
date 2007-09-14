@@ -38,6 +38,8 @@ import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.io.PrintWriter;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import org.kalypso.commons.java.io.FileCopyVisitor;
@@ -77,7 +79,7 @@ public class ElbePolteCalcJob implements ICalcJob
     final File logfile = new File( outputDir, "elbePolte.log" );
 
     PrintWriter pw = null;
-
+    final Map metaMap = new HashMap();
     try
     {
       pw = new PrintWriter( new FileWriter( logfile ) );
@@ -97,7 +99,8 @@ public class ElbePolteCalcJob implements ICalcJob
       nativeInDir.mkdirs();
       nativeOutDir.mkdirs();
 
-      final File exeDir = ElbePolteInputWorker.createNativeInput( tmpdir, inputProvider, pw, props, nativeInDir );
+      final File exeDir = ElbePolteInputWorker.createNativeInput( tmpdir, inputProvider, pw, props, nativeInDir,
+          metaMap );
 
       resultEater.addResult( "NATIVE_IN_DIR", nativeInDir );
 
@@ -119,7 +122,7 @@ public class ElbePolteCalcJob implements ICalcJob
       pw.println( "Ergebnisse werden zurückgelesen" );
       try
       {
-        writeResultsToFolder( nativeOutDir, outputDir, props );
+        writeResultsToFolder( nativeOutDir, outputDir, props, metaMap );
       }
       catch( final Exception e )
       {
@@ -156,18 +159,25 @@ public class ElbePolteCalcJob implements ICalcJob
    * @throws IOException
    */
 
-  private void writeResultsToFolder( File nativeOutDir, File outputDir, Properties props ) throws Exception
+  private void writeResultsToFolder( File nativeOutDir, File outputDir, Properties props, Map metaMap )
+      throws Exception
   {
 
     final FileVisitorHwvs2Zml fleVisitorPegel = new FileVisitorHwvs2Zml( outputDir, props,
-        ElbePolteConst.GML_ELBE_PEGEL_COLL, "ganglinie_modellwerte", true );
+        ElbePolteConst.GML_ELBE_PEGEL_COLL, "ganglinie_modellwerte", true, metaMap );
     FileUtilities.accept( nativeOutDir, fleVisitorPegel, true );
 
-    
+
     final FileVisitorHwvs2Zml fleVisitorZwge = new FileVisitorHwvs2Zml( outputDir, props,
-        ElbePolteConst.GML_H_PEGEL_COLL, "ganglinie_modellwerte", true );
+        ElbePolteConst.GML_H_PEGEL_COLL, "ganglinie_modellwerte", true, metaMap );
     FileUtilities.accept( nativeOutDir, fleVisitorZwge, true );
 
+    if( fleVisitorPegel.hasException() )
+      throw new Exception( "Fehler beim Schreiben der Pegel-Zeitreihen ins ZML-Format: "
+          + fleVisitorPegel.getExceptions()[0].getLocalizedMessage(), fleVisitorPegel.getExceptions()[0] );
+    if( fleVisitorZwge.hasException() )
+      throw new Exception( "Fehler beim Schreiben der Zwischengebiets-Zeitreihen ins ZML-Format: "
+          + fleVisitorZwge.getExceptions()[0].getLocalizedMessage(), fleVisitorZwge.getExceptions()[0] );
   }
 
   /**

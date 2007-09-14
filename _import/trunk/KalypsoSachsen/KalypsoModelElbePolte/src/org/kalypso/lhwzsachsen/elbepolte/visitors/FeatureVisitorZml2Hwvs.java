@@ -44,6 +44,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 
 import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.lhwzsachsen.elbepolte.ElbePolteConverter;
@@ -73,16 +74,17 @@ public class FeatureVisitorZml2Hwvs implements FeatureVisitor
    *          prefix of filenames
    * @param fileDir
    *          dir to write files to
+   * @param metaMap
    * @throws Exception
    */
   public static void writeTimeseries( GMLWorkspace wks, String propFeatList, String propZmlLink, String propId,
-      String prefixFile, File fileDir, URL context ) throws Exception
+      String prefixFile, File fileDir, URL context, Map metaMap ) throws Exception
   {
 
     final FeatureList features = (FeatureList)wks.getFeatureFromPath( propFeatList );
 
     final FeatureVisitorZml2Hwvs featVisitor = new FeatureVisitorZml2Hwvs( propZmlLink, propId, prefixFile, fileDir,
-        context );
+        context, metaMap );
 
     features.accept( featVisitor );
 
@@ -99,6 +101,7 @@ public class FeatureVisitorZml2Hwvs implements FeatureVisitor
   private final URL m_context;
   private final UrlUtilities m_urlresolver = new UrlUtilities();
   private Collection m_exceptions = new ArrayList();
+  private final Map m_metaMap;
 
   /**
    * @param propZmlLink
@@ -106,16 +109,18 @@ public class FeatureVisitorZml2Hwvs implements FeatureVisitor
    * @param prefixFile
    * @param fileDir
    * @param context
+   * @param metaMap
    *  
    */
 
-  public FeatureVisitorZml2Hwvs( String propZmlLink, String propId, String prefixFile, File fileDir, final URL context )
+  public FeatureVisitorZml2Hwvs( String propZmlLink, String propId, String prefixFile, File fileDir, final URL context, Map metaMap )
   {
     m_propZmlLink = propZmlLink;
     m_propId = propId;
     m_prefixFile = prefixFile;
     m_fileDir = fileDir;
     m_context = context;
+    m_metaMap = metaMap;
   }
 
   /**
@@ -137,7 +142,7 @@ public class FeatureVisitorZml2Hwvs implements FeatureVisitor
       {
         url = m_urlresolver.resolveURL( m_context, href );
 
-        ElbePolteConverter.zml2Hwvs( url, fleHwvs, f.getId() );
+        ElbePolteConverter.zml2Hwvs( url, fleHwvs, f.getId(), m_metaMap );
       }
       catch( final Exception e )
       {

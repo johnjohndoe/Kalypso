@@ -45,6 +45,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Map;
 import java.util.Properties;
 
 import org.kalypso.commons.lhwz.LhwzHelper;
@@ -84,6 +85,7 @@ public class FileVisitorHwvs2Zml implements FileVisitor
   private Collection m_exceptions = new ArrayList();
 
   private final String m_propZmlLink;
+  private final Map m_metaMap;
 
   /**
    * @param outputDir
@@ -91,11 +93,12 @@ public class FileVisitorHwvs2Zml implements FileVisitor
    * @param propFeatList
    * @param propZmlLink
    * @param writeUmhuellende
+   * @param metaMap
    *  
    */
 
   public FileVisitorHwvs2Zml( File outputDir, Properties props, String propFeatList, String propZmlLink,
-      boolean writeUmhuellende )
+      boolean writeUmhuellende, Map metaMap )
   {
     m_outputDir = outputDir;
     m_props = props;
@@ -104,6 +107,7 @@ public class FileVisitorHwvs2Zml implements FileVisitor
     m_fList = (FeatureList)m_wkspce.getFeatureFromPath( propFeatList );
     m_writeUmhuellende = writeUmhuellende;
     m_propZmlLink = propZmlLink;
+    m_metaMap = metaMap;
 
   }
 
@@ -130,12 +134,12 @@ public class FileVisitorHwvs2Zml implements FileVisitor
             final TimeseriesLinkType tlt = (TimeseriesLinkType)objTSLink;
             final String sFlePath = tlt.getHref();
 
-            final File fleZml = new File( m_outputDir, sFlePath ) ;
+            final File fleZml = new File( m_outputDir, sFlePath );
             fleZml.getParentFile().mkdirs();
-            
-            final String sZmlFileBaseName =  fleZml.getName().replaceAll(".zml", "");
 
-            ElbePolteConverter.hwvs2zml( fleHwvs, fleZml );
+            final String sZmlFileBaseName = fleZml.getName().replaceAll( ".zml", "" );
+
+            ElbePolteConverter.hwvs2zml( fleHwvs, fleZml,m_metaMap );
             final Object objAccuracy = f.getProperty( "accuracyPrediction" );
             double accuracy = LhwzHelper.getDefaultUmhuellendeAccuracy();
             if( objAccuracy instanceof Double )
@@ -196,6 +200,7 @@ public class FileVisitorHwvs2Zml implements FileVisitor
             }
             catch( Exception e )
             {
+              e.printStackTrace();
               m_exceptions.add( e );
             }
           }

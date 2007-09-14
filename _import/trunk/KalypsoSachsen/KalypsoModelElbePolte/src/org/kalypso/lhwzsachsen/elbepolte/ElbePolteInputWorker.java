@@ -83,11 +83,12 @@ public class ElbePolteInputWorker
    * @param props
    * @param nativeInDir
    * @param logWriter
+   * @param metaMap
    * @return directory (File)
    * @throws Exception
    */
   public static File createNativeInput( File tmpDir, ICalcDataProvider inputProvider, PrintWriter logWriter,
-      Properties props, File nativeInDir ) throws Exception
+      Properties props, File nativeInDir, Map metaMap ) throws Exception
   {
     try
     {
@@ -111,7 +112,7 @@ public class ElbePolteInputWorker
       writeParFile( workspace, paramDir, logWriter );
 
       logWriter.println( "Erzeuge Zeitreihen" );
-      writeTimeseries( props, exeDir, inputProvider.getURLForID( "GML" ) );
+      writeTimeseries( props, exeDir, inputProvider.getURLForID( "GML" ), metaMap );
 
       if( exeDir.exists() && nativeInDir.exists() )
       {
@@ -134,9 +135,10 @@ public class ElbePolteInputWorker
   /**
    * @param props
    * @param nativeDir
+   * @param metaMap
    * @throws Exception
    */
-  private static void writeTimeseries( Properties props, File nativeDir, URL context ) throws Exception
+  private static void writeTimeseries( Properties props, File nativeDir, URL context, Map metaMap ) throws Exception
   {
     // workspace holen
     final GMLWorkspace wks = (GMLWorkspace)props.get( ElbePolteConst.DATA_GML );
@@ -148,15 +150,15 @@ public class ElbePolteInputWorker
 
     // Zeitreihen an Startpegeln (Data UND Modell)
     FeatureVisitorZml2Hwvs.writeTimeseries( wks, ElbePolteConst.GML_START_PEGEL_COLL, "ganglinie_gesamt", "nr",
-        "Modell", modellDir, context );
+        "Modell", modellDir, context, metaMap );
 
     // Zeitreihen der Zwischengebietszuflüsse (Data UND Modell)
     FeatureVisitorZml2Hwvs.writeTimeseries( wks, ElbePolteConst.GML_ZWG_ZUFLUSS_COLL, "ganglinie_gesamt", "nr",
-        "Modell", modellDir, context );
+        "Modell", modellDir, context, metaMap );
 
     // Zeitreihen an Elbepegeln
     FeatureVisitorZml2Hwvs.writeTimeseries( wks, ElbePolteConst.GML_ELBE_PEGEL_COLL, "ganglinie_messwerte", "nr",
-        "Daten", datenDir, context );
+        "Daten", datenDir, context, metaMap );
 
   }
 
