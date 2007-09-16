@@ -75,6 +75,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeIFeatureWrapper2NameCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
@@ -82,7 +83,9 @@ import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListener;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.model.sort.IEnvelopeProvider;
 
 /**
@@ -586,12 +589,17 @@ public class FeatureWrapperListEditor implements IButtonConstants
 
   }
 
-  /**
-   * Template Method -- Override by inheriting Class
-   */
-  protected void maximizeSelected( )
+  private void maximizeSelected( )
   {
-
+    final KeyBasedDataModel dataModel = getDataModel();
+    final ICalculationUnit calUnitToMax = dataModel.getData( ICalculationUnit.class, ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
+    if( calUnitToMax == null )
+      return;
+    final GM_Envelope boundingBox = CalcUnitOps.getBoundingBox( calUnitToMax );
+    if( boundingBox == null )
+      return;
+    final MapPanel mapPanel = dataModel.getData( MapPanel.class, ICommonKeys.KEY_MAP_PANEL );
+    mapPanel.setBoundingBox( boundingBox );
   }
 
   public void setRequiredButtons( final String... buttonsList )

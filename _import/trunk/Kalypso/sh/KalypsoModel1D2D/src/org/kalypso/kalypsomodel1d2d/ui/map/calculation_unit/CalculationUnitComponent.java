@@ -60,9 +60,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.editor.IButtonConstants;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
-import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * 
@@ -70,7 +68,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  * @author Patrice Congo
  * 
  */
-@SuppressWarnings( { "unchecked", "hiding" }) //$NON-NLS-1$ //$NON-NLS-2$
+@SuppressWarnings( { "unchecked", "hiding" })//$NON-NLS-1$ //$NON-NLS-2$
 public class CalculationUnitComponent extends FeatureWrapperListEditor implements IButtonConstants
 {
   private final Map<String, String> btnDescription = new HashMap<String, String>();
@@ -79,9 +77,9 @@ public class CalculationUnitComponent extends FeatureWrapperListEditor implement
   {
     super( null, null, null );
     setRequiredButtons( BTN_SHOW_AND_MAXIMIZE, BTN_REMOVE, BTN_ADD );
-    btnDescription.put( "SHOW_AND_MAXIMIZE", Messages.getString("CalculationUnitComponent.3") ); //$NON-NLS-1$ //$NON-NLS-2$
-    btnDescription.put( "REMOVE", Messages.getString("CalculationUnitComponent.5") ); //$NON-NLS-1$ //$NON-NLS-2$
-    btnDescription.put( "ADD", Messages.getString("CalculationUnitComponent.7") ); //$NON-NLS-1$ //$NON-NLS-2$
+    btnDescription.put( "SHOW_AND_MAXIMIZE", Messages.getString( "CalculationUnitComponent.3" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    btnDescription.put( "REMOVE", Messages.getString( "CalculationUnitComponent.5" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    btnDescription.put( "ADD", Messages.getString( "CalculationUnitComponent.7" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -103,7 +101,7 @@ public class CalculationUnitComponent extends FeatureWrapperListEditor implement
     return true;
   }
 
-  @SuppressWarnings("unused") //$NON-NLS-1$
+  @SuppressWarnings("unused")//$NON-NLS-1$
   private void getDescriptionList( )
   {
 
@@ -122,49 +120,6 @@ public class CalculationUnitComponent extends FeatureWrapperListEditor implement
   public void refreshOtherSections( )
   {
 
-  }
-
-  @Override
-  protected void maximizeSelected( )
-  {
-    maximizeSelected( getDataModel() );
-    // final KeyBasedDataModel dataModel = getDataModel();
-    // ICalculationUnit calUnitToMax = dataModel.getData(
-    // ICalculationUnit.class,
-    // ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
-    // if( calUnitToMax == null )
-    // {
-    // System.out.println("current selection is null");
-    // return;
-    // }
-    // GM_Envelope boundingBox = CalUnitOps.getBoundingBox( calUnitToMax );
-    // if( boundingBox == null )
-    // {
-    // System.out.println("BBox is null");
-    // return;
-    // }
-    // MapPanel mapPanel =
-    // dataModel.getData( MapPanel.class, ICommonKeys.KEY_MAP_PANEL );
-    // mapPanel.setBoundingBox( boundingBox );
-  }
-
-  public static final void maximizeSelected( final KeyBasedDataModel dataModel )
-  {
-    // final KeyBasedDataModel dataModel = getDataModel();
-    final ICalculationUnit calUnitToMax = dataModel.getData( ICalculationUnit.class, ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
-    if( calUnitToMax == null )
-    {
-      System.out.println( "current selection is null" ); //$NON-NLS-1$
-      return;
-    }
-    final GM_Envelope boundingBox = CalcUnitOps.getBoundingBox( calUnitToMax );
-    if( boundingBox == null )
-    {
-      System.out.println( "BBox is null" ); //$NON-NLS-1$
-      return;
-    }
-    final MapPanel mapPanel = dataModel.getData( MapPanel.class, ICommonKeys.KEY_MAP_PANEL );
-    mapPanel.setBoundingBox( boundingBox );
   }
 
   @Override
