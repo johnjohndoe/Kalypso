@@ -65,6 +65,7 @@ import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
 import org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation;
 import org.kalypso.kalypsomodel1d2d.sim.RMA10SimModelConstants;
 import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -271,9 +272,10 @@ public class Control1D2DConverter
     final IControlModel1D2D controlModel = m_calculation.getControlModel();
     final IObservation<TupleResult> observation = controlModel.getTimeSteps();
     final TupleResult result = observation.getResult();
-    // TODO: search components by type!
-    final IComponent compTime = result.getComponents()[0];
-    final IComponent compUnderRelax = result.getComponents()[1];
+    final IComponent[] components = result.getComponents();
+    // final IComponent componentOrdinalNumber = ComponentUtilities.findComponentByID( components, Kalypso1D2DDictConstants.DICT_COMPONENT_ORDINAL_NUMBER );
+    final IComponent componentTime = ComponentUtilities.findComponentByID( components, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );
+    final IComponent componentRelaxationsFaktor = ComponentUtilities.findComponentByID( components, Kalypso1D2DDictConstants.DICT_COMPONENT_UNDER_RELAXATION_FACTOR );
 
     /* Steady state, just one block for the Starting Date. */
     final int niti = controlModel.getNITI();
@@ -292,7 +294,7 @@ public class Control1D2DConverter
     if( controlModel.isUnsteadySelected() )
     {
       /* Sort records by time */
-      final TupleResultIndex index = new TupleResultIndex( result, compTime );
+      final TupleResultIndex index = new TupleResultIndex( result, componentTime );
       final Iterator<IRecord> iterator = index.getIterator();
       if( !iterator.hasNext() )
         throw new SimulationException( Messages.getString( "Control1D2DConverter.35" ), null ); //$NON-NLS-1$
@@ -303,14 +305,14 @@ public class Control1D2DConverter
       if( nitn > 0 )
       {
         /* Unsteady state: a block for each time step */
-        Calendar lastStepCal = ((XMLGregorianCalendar) firstRecord.getValue( compTime )).toGregorianCalendar();
+        Calendar lastStepCal = ((XMLGregorianCalendar) firstRecord.getValue( componentTime )).toGregorianCalendar();
 
         for( int stepCount = 1; iterator.hasNext(); stepCount++ )
         {
           final IRecord record = iterator.next();
-          final float uRVal = ((BigDecimal) record.getValue( compUnderRelax )).floatValue();
+          final float uRVal = ((BigDecimal) record.getValue( componentRelaxationsFaktor )).floatValue();
 
-          final Calendar stepCal = ((XMLGregorianCalendar) record.getValue( compTime )).toGregorianCalendar();
+          final Calendar stepCal = ((XMLGregorianCalendar) record.getValue( componentTime )).toGregorianCalendar();
 
           final String unsteadyMsg = String.format( Messages.getString( "Control1D2DConverter.36" ), stepCount ); //$NON-NLS-1$
           writeTimeStep( m_formatter, unsteadyMsg, stepCal, lastStepCal, uRVal, nitn );

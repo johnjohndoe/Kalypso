@@ -16,6 +16,21 @@
 	<!--  Item Definitions -->
 
 	<gml:dictionaryEntry>
+		<swe:ItemDefinition gml:id="OrdinalNumber">
+			<gml:name>lfd. Nr.</gml:name>
+			<swe:property xlink:href="#phenomenonOrdinalNumber" />
+			<swe:representation>
+				<swe:SimpleType>
+					<st:restriction base="integer">
+						<st:minInclusive value="1" />
+					</st:restriction>
+					<gml:unitOfMeasure uom=" " />
+				</swe:SimpleType>
+			</swe:representation>
+		</swe:ItemDefinition>
+	</gml:dictionaryEntry>
+	
+	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="Time">
 			<gml:description>Zeit</gml:description>
 			<gml:name>Zeit</gml:name>
@@ -34,7 +49,7 @@
 		================================================================== -->
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="UnderRelaxationFactor">
-			<gml:name>Wichtungsfaktor [-]</gml:name>
+			<gml:name>Relaxationsfaktor [-]</gml:name>
 			<swe:property xlink:href="#phenomenonUnderRelaxationFactor" />
 			<swe:representation>
 				<swe:SimpleType>

@@ -41,8 +41,7 @@
 package org.kalypso.kalypsomodel1d2d.ui.featurecontrols;
 
 import java.math.BigDecimal;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -52,6 +51,9 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
+import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
+import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.ITupleResultChangedListener;
@@ -67,21 +69,19 @@ import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl
  */
 public class TimeStepFillerWizard extends Wizard implements INewWizard
 {
-  protected static final DateFormat DF = new SimpleDateFormat( "'Manuell erzeugt am: 'dd.MM.yyyy H:mm" );
+  private IStructuredSelection m_initialSelection;
 
-  private IStructuredSelection initialSelection;
+  private TimeStepFillerWizardPage m_timeStepFillerWizardPage;
 
-  private TimeStepFillerWizardPage timePage;
+  private Feature m_feature;
 
-  private Feature t_feature;
-
-  private org.kalypso.observation.IObservation<TupleResult> obs;
+  private IObservation<TupleResult> m_observation;
 
   private FeatureChange[] m_changes;
 
-  public TimeStepFillerWizard( Feature feature )
+  public TimeStepFillerWizard( final Feature feature )
   {
-    this.t_feature = feature;
+    m_feature = feature;
   }
 
   /**
@@ -90,30 +90,31 @@ public class TimeStepFillerWizard extends Wizard implements INewWizard
   @Override
   public boolean performFinish( )
   {
-    obs = ObservationFeatureFactory.toObservation( t_feature );
-    final TupleResult result = obs.getResult();
+    m_observation = ObservationFeatureFactory.toObservation( m_feature );
+    final TupleResult result = m_observation.getResult();
     result.clear();
     final IComponent[] components = result.getComponents();
-    final IComponent timeComponent = components[0];
-    final IComponent _underRelaxFactorComponent = components[1];
-    GregorianCalendar calendarFrom = new GregorianCalendar();
-    GregorianCalendar calendarTo = new GregorianCalendar();
-    calendarFrom.setTime( timePage.getStartDate() );
-    calendarTo.setTime( timePage.getFinishDate() );
-    List<IRecord> records = new ArrayList<IRecord>();
+    final IComponent ordinalNumberComponent = ComponentUtilities.findComponentByID( components, Kalypso1D2DDictConstants.DICT_COMPONENT_ORDINAL_NUMBER );
+    final IComponent timeComponent = ComponentUtilities.findComponentByID( components, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );
+    final IComponent relaxFactorComponent = ComponentUtilities.findComponentByID( components, Kalypso1D2DDictConstants.DICT_COMPONENT_UNDER_RELAXATION_FACTOR );
+    final List<IRecord> records = new ArrayList<IRecord>();
+    final GregorianCalendar calendarFrom = new GregorianCalendar();
+    final GregorianCalendar calendarTo = new GregorianCalendar();
+    calendarFrom.setTime( m_timeStepFillerWizardPage.getStartDate() );
+    calendarTo.setTime( m_timeStepFillerWizardPage.getFinishDate() );
+    int ordinalNumber = 1;
     while( !calendarFrom.after( calendarTo ) )
     {
       final IRecord record = result.createRecord();
+      record.setValue( ordinalNumberComponent, new BigInteger( Integer.toString( ordinalNumber++ ) ) );
       record.setValue( timeComponent, new XMLGregorianCalendarImpl( calendarFrom ) );
-      record.setValue( _underRelaxFactorComponent, new BigDecimal( timePage.getUnderRelaxationFactorValue()).setScale( 3, BigDecimal.ROUND_HALF_UP ) );
+      record.setValue( relaxFactorComponent, new BigDecimal( m_timeStepFillerWizardPage.getUnderRelaxationFactorValue() ).setScale( 3, BigDecimal.ROUND_HALF_UP ) );
       result.add( record );
-      calendarFrom.add( Calendar.MINUTE, timePage.getTimeSteps() );
+      calendarFrom.add( Calendar.MINUTE, m_timeStepFillerWizardPage.getTimeSteps() );
       records.add( record );
-
     }
-
     result.fireRecordsChanged( records.toArray( new IRecord[] {} ), ITupleResultChangedListener.TYPE.ADDED );
-    m_changes = ObservationFeatureFactory.toFeatureAsChanges( obs, t_feature );
+    m_changes = ObservationFeatureFactory.toFeatureAsChanges( m_observation, m_feature );
     return true;
   }
 
@@ -123,17 +124,16 @@ public class TimeStepFillerWizard extends Wizard implements INewWizard
    */
   public void init( IWorkbench workbench, IStructuredSelection selection )
   {
-    initialSelection = selection;
-
+    m_initialSelection = selection;
   }
 
   @Override
   public void addPages( )
   {
     setWindowTitle( "Berechnungszeitschritte definieren" );
-    timePage = new TimeStepFillerWizardPage();
-    addPage( timePage );
-    timePage.init( initialSelection );
+    m_timeStepFillerWizardPage = new TimeStepFillerWizardPage();
+    addPage( m_timeStepFillerWizardPage );
+    m_timeStepFillerWizardPage.init( m_initialSelection );
   }
 
   public FeatureChange[] getFeatureChange( )
