@@ -23,7 +23,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  * 
  * @author Gernot Belger, Patrice Congo
  */
-@SuppressWarnings("hiding")
+@SuppressWarnings("hiding") //$NON-NLS-1$
 public abstract class Element2D<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge> extends FE1D2DElement<CT, ET> implements IElement2D<CT, ET>
 {
   private final IFeatureWrapperCollection<ET> edges;
@@ -166,7 +166,7 @@ public abstract class Element2D<CT extends IFE1D2DComplexElement, ET extends IFE
 
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public void setEdges( final ET[] edges )
   {
     final Feature feature = getFeature();
@@ -263,7 +263,7 @@ public abstract class Element2D<CT extends IFE1D2DComplexElement, ET extends IFE
   {
     if( edgeID == null )
     {
-      throw new IllegalArgumentException( "edge ID must not be null" );
+      throw new IllegalArgumentException( Messages.getString("Element2D.2") ); //$NON-NLS-1$
     }
     FeatureList edgeFeatureList = edges.getWrappedList();
     if( edgeFeatureList.contains( edgeID ) )
@@ -282,7 +282,7 @@ public abstract class Element2D<CT extends IFE1D2DComplexElement, ET extends IFE
   public String toString( )
   {
     StringBuffer buf = new StringBuffer( 128 );
-    buf.append( "Element2D[" );
+    buf.append( "Element2D[" ); //$NON-NLS-1$
     for( IFeatureWrapper2 featureWrapper : edges )
     {
       buf.append( featureWrapper );

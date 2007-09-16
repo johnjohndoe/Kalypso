@@ -39,7 +39,7 @@ import org.opengis.cs.CS_CoordinateSystem;
  * @see IFE1D2DContinuityLine
  * @see FE1D2DContinuityLine
  */
-@SuppressWarnings("hiding")
+@SuppressWarnings("hiding") //$NON-NLS-1$
 public class PolyElement extends Element2D implements IPolyElement
 {
   private final IFeatureWrapperCollection<IFE1D2DComplexElement> containers;
@@ -151,7 +151,7 @@ public class PolyElement extends Element2D implements IPolyElement
   }
 
   @Override
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public void setEdges( final IFE1D2DEdge[] edges )
   {
     final Feature feature = getFeature();
@@ -294,7 +294,7 @@ public class PolyElement extends Element2D implements IPolyElement
   {
     if( edgeID == null )
     {
-      throw new IllegalArgumentException( "edge ID must not be null" );
+      throw new IllegalArgumentException( Messages.getString("PolyElement.2") ); //$NON-NLS-1$
     }
     final FeatureList edgeFeatureList = edges.getWrappedList();
     if( edgeFeatureList.contains( edgeID ) )
@@ -313,7 +313,7 @@ public class PolyElement extends Element2D implements IPolyElement
   public String toString( )
   {
     final StringBuffer buf = new StringBuffer( 128 );
-    buf.append( "Poly_ELEMENT[" );
+    buf.append( "Poly_ELEMENT[" ); //$NON-NLS-1$
     for( final IFeatureWrapper2 featureWrapper : edges )
     {
       buf.append( featureWrapper );
@@ -335,7 +335,7 @@ public class PolyElement extends Element2D implements IPolyElement
   {
     final Object property = getFeature().getProperty( IFE1D2DElement.PROP_ROUGHNESS_CLS_ID );
     if( property == null )
-      return "";
+      return ""; //$NON-NLS-1$
     return property.toString();
   }
 
@@ -370,7 +370,7 @@ public class PolyElement extends Element2D implements IPolyElement
   {
     final Object property = getFeature().getProperty( IFE1D2DElement.PROP_ROUGHNESS_STYLE );
     if( property == null || property.toString().length() == 0 )
-      return "_DEFAULT_STYLE_";
+      return "_DEFAULT_STYLE_"; //$NON-NLS-1$
     return property.toString();
   }
 

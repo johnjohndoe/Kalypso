@@ -47,7 +47,7 @@ public class RestartSelectWizardPage2 extends WizardPage implements IWizardPage
   public RestartSelectWizardPage2( final String pageName, final String title, final ImageDescriptor titleImage )
   {
     super( pageName, title, titleImage );
-    setDescription( "Please reorder selected restarts by relevance, so the first one is the most relevant." );
+    setDescription( Messages.getString("RestartSelectWizardPage2.0") ); //$NON-NLS-1$
   }
 
   /**
@@ -88,7 +88,7 @@ public class RestartSelectWizardPage2 extends WizardPage implements IWizardPage
       {
       }
 
-      @SuppressWarnings("synthetic-access")
+      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
       public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
       {
         m_btnUp.setEnabled( m_selectedInput != null );
@@ -107,12 +107,12 @@ public class RestartSelectWizardPage2 extends WizardPage implements IWizardPage
       public String getText( final Object object )
       {
         final IResultMeta resultMeta = (IResultMeta) object;
-        return resultMeta.getParent().getName() + ", " + resultMeta.getName();
+        return resultMeta.getParent().getName() + ", " + resultMeta.getName(); //$NON-NLS-1$
       }
     } );
     m_listViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
-      @SuppressWarnings("synthetic-access")
+      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
       public void selectionChanged( final SelectionChangedEvent event )
       {
         final ISelection selection = event.getSelection();
@@ -142,7 +142,7 @@ public class RestartSelectWizardPage2 extends WizardPage implements IWizardPage
       {
       }
 
-      @SuppressWarnings("synthetic-access")
+      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
       public void widgetSelected( final SelectionEvent e )
       {
         final int position = m_sortedResults.indexOf( m_selectedInput );
@@ -164,7 +164,7 @@ public class RestartSelectWizardPage2 extends WizardPage implements IWizardPage
       {
       }
 
-      @SuppressWarnings("synthetic-access")
+      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
       public void widgetSelected( final SelectionEvent e )
       {
         final int position = m_sortedResults.indexOf( m_selectedInput );

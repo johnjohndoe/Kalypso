@@ -40,26 +40,32 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
-import java.util.List;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
-import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
-import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_Object;
-
-public interface ITransitionElement extends IFE1D2DComplexElement<IFENetItem>
+/**
+ * @author schrage
+ *
+ */
+public class Messages
 {
-  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "TransitionElement" ); //$NON-NLS-1$
+  private static final String BUNDLE_NAME = "org.kalypso.kalypsomodel1d2d.schema.binding.discr.messages"; //$NON-NLS-1$
 
-  public static final QName PROP_CONTI_LINES = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "continuityLine" ); //$NON-NLS-1$
-  
-  public static final QName PROP_GEOMETRY = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "geometry" ); //$NON-NLS-1$
+  private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle( BUNDLE_NAME );
 
-  public List<IFELine> getContinuityLines( );
+  private Messages( )
+  {
+  }
 
-  public GM_Object recalculateElementGeometry( ) throws GM_Exception;
-
-  public boolean isMemberOfCalculationUnit( ICalculationUnit calculationUnit );
+  public static String getString( String key )
+  {
+    try
+    {
+      return RESOURCE_BUNDLE.getString( key );
+    }
+    catch( MissingResourceException e )
+    {
+      return '!' + key + '!';
+    }
+  }
 }

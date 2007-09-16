@@ -63,7 +63,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  * @author Gernot Belger
  * @author Patrice Congo
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings("unchecked") //$NON-NLS-1$
 public class FE1D2DDiscretisationModel extends AbstractFeatureBinder implements IFEDiscretisationModel1d2d
 {
   private final IFeatureWrapperCollection<IFE1D2DElement> m_elements = new FeatureWrapperCollection<IFE1D2DElement>( getFeature(), IFE1D2DElement.class, Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENTS );
@@ -137,7 +137,7 @@ public class FE1D2DDiscretisationModel extends AbstractFeatureBinder implements 
    */
   public IFE1D2DNode createNode( final GM_Point nodeLocation, final double searchRectWidth, final boolean[] alreadyExists )
   {
-    Assert.throwIAEOnNullParam( nodeLocation, "nodeLocation" );
+    Assert.throwIAEOnNullParam( nodeLocation, "nodeLocation" ); //$NON-NLS-1$
 
     // TODO: major performance bug for adding large numbers of points:
     // searching and adding each single node/location will cause

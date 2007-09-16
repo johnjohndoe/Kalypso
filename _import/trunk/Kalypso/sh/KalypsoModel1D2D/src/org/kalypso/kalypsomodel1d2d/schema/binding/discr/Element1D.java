@@ -128,7 +128,7 @@ public class Element1D<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge>
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement#getNodes()
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public List<IFE1D2DNode> getNodes( )
   {
     final IFE1D2DEdge edge = getEdge();
@@ -179,7 +179,7 @@ public class Element1D<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge>
   {
     final Object property = getFeature().getProperty( IFE1D2DElement.PROP_ROUGHNESS_CLS_ID );
     if( property == null )
-      return "";
+      return ""; //$NON-NLS-1$
     return property.toString();
   }
 

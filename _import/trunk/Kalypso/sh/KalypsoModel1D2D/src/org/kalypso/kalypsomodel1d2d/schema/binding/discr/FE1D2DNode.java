@@ -201,13 +201,13 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode
   public String toString( )
   {
     StringBuffer buf = new StringBuffer( 128 );
-    buf.append( "FE1D2DNode" );
+    buf.append( "FE1D2DNode" ); //$NON-NLS-1$
     buf.append( getGmlID() );
     buf.append( '[' );
     buf.append( getPoint() );
     // edges
     IFeatureWrapperCollection containers = getContainers();
-    buf.append( "{Edges=" );
+    buf.append( "{Edges=" ); //$NON-NLS-1$
     for( int i = 0; i < containers.size(); i++ )
       if( containers.get( i ) instanceof IFE1D2DEdge )
         buf.append( ((IFE1D2DEdge) containers.get( i )).getGmlID() );

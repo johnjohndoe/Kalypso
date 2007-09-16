@@ -55,7 +55,7 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
  * @author Patrice Congo
  * 
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings("unchecked") //$NON-NLS-1$
 public class CalculationUnit1D2D<ET extends IFE1D2DElement> extends CalculationUnit<ET> implements ICalculationUnit1D2D<ET>
 {
 

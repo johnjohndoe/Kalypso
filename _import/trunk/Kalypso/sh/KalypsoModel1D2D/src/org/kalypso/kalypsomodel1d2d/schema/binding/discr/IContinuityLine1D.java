@@ -46,7 +46,7 @@ import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 
 public interface IContinuityLine1D extends IFELine
 {
-  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "ContinuityLine1D" );
+  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "ContinuityLine1D" ); //$NON-NLS-1$
   
-  public static final QName PROP_ACTIVE_NODE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "directedNode" );
+  public static final QName PROP_ACTIVE_NODE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "directedNode" ); //$NON-NLS-1$
 }

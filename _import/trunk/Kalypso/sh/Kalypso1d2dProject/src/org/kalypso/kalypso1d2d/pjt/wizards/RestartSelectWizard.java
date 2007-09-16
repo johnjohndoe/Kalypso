@@ -101,7 +101,7 @@ public class RestartSelectWizard extends Wizard implements INewWizard
     catch( CoreException e )
     {
       Kalypso1d2dProjectPlugin.getDefault().getLog().log( e.getStatus() );
-      ErrorDialog.openError( shell, "1D2D-Ergebnisse", "Ergebnis-Metadaten nicht vorhanden.", e.getStatus() );
+      ErrorDialog.openError( shell, Messages.getString("RestartSelectWizard.5"), Messages.getString("RestartSelectWizard.6"), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 
@@ -113,12 +113,12 @@ public class RestartSelectWizard extends Wizard implements INewWizard
   {
     setWindowTitle( Messages.getString( "RestartSelectWizard.0" ) ); //$NON-NLS-1$
     final RestartViewerFilter resultFilter = new RestartViewerFilter();
-    m_restartSelectWizardPage1 = new RestartSelectWizardPage1( "restartSelectionPage", "Ergebniss(e) zur Karte hinzufügen", null, m_resultModel, m_controlModel.getRestartInfos(), resultFilter );
+    m_restartSelectWizardPage1 = new RestartSelectWizardPage1( "restartSelectionPage", Messages.getString("RestartSelectWizard.8"), null, m_resultModel, m_controlModel.getRestartInfos(), resultFilter ); //$NON-NLS-1$ //$NON-NLS-2$
     m_restartSelectWizardPage1.setResultMeta( m_resultModel );
     m_restartSelectWizardPage1.setTitle( Messages.getString( "RestartSelectWizard.3" ) ); //$NON-NLS-1$
     m_restartSelectWizardPage1.setDescription( Messages.getString( "RestartSelectWizard.4" ) ); //$NON-NLS-1$
     addPage( m_restartSelectWizardPage1 );
-    m_restartSelectWizardPage2 = new RestartSelectWizardPage2( "restartSelectionPage", "Ergebniss(e) zur Karte hinzufügen", null );
+    m_restartSelectWizardPage2 = new RestartSelectWizardPage2( "restartSelectionPage", Messages.getString("RestartSelectWizard.10"), null ); //$NON-NLS-1$ //$NON-NLS-2$
     addPage( m_restartSelectWizardPage2 );
   }
 
@@ -140,7 +140,7 @@ public class RestartSelectWizard extends Wizard implements INewWizard
         final IRestartInfo restartInfo = m_controlModel.addRestartInfo();
         restartInfo.setCalculationUnitID( ((ICalcUnitResultMeta) result.getParent()).getCalcUnit() );
         restartInfo.setStepResultMetaID( result.getGmlID() );
-        restartInfo.setRestartFilePath( result.getFullPath() + "/results.gml" );
+        restartInfo.setRestartFilePath( result.getFullPath() + "/results.gml" ); //$NON-NLS-1$
       }
     }
     try
@@ -160,7 +160,7 @@ public class RestartSelectWizard extends Wizard implements INewWizard
    * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
    *      org.eclipse.jface.viewers.IStructuredSelection)
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
   }

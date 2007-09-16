@@ -52,5 +52,5 @@ import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
  */
 public interface ICalculationUnit1D<T extends IFENetItem> extends ICalculationUnit<T>
 {
-  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "CalculationUnit1D" );
+  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "CalculationUnit1D" ); //$NON-NLS-1$
 }

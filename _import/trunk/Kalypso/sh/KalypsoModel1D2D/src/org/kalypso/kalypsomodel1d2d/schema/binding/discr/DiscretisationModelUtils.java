@@ -55,7 +55,7 @@ public class DiscretisationModelUtils
 {
   private DiscretisationModelUtils( )
   {
-    throw new UnsupportedOperationException( "Helper class, do not instantiate." );
+    throw new UnsupportedOperationException( Messages.getString("DiscretisationModelUtils.0") ); //$NON-NLS-1$
   }
 
   /**

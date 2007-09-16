@@ -74,7 +74,7 @@ public class EdgeInv implements IEdgeInv
    */
   public EdgeInv( Feature invEdgeFeature )
   {
-    Assert.throwIAEOnNull( invEdgeFeature, "invedgeFeature to wrapped must not be null" );
+    Assert.throwIAEOnNull( invEdgeFeature, "invedgeFeature to wrapped must not be null" ); //$NON-NLS-1$
     Object toInv = invEdgeFeature.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_IN_INV );
     if( toInv instanceof String )
     {
@@ -91,7 +91,7 @@ public class EdgeInv implements IEdgeInv
    */
   public EdgeInv( IFE1D2DEdge edge, IFEDiscretisationModel1d2d targetModel )
   {
-    Assert.throwIAEOnNull( edge, "edge to wrapped must not be null" );
+    Assert.throwIAEOnNull( edge, "edge to wrapped must not be null" ); //$NON-NLS-1$
     Feature feature = edge.getWrappedFeature();
     Assert.throwIAEOnNotDirectInstanceOf( feature, Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE );
 
@@ -103,7 +103,7 @@ public class EdgeInv implements IEdgeInv
     {
       // this.wrappedFeature=null;
       Feature modelFeature = targetModel.getWrappedFeature();
-      Assert.throwIAEOnNull( modelFeature, "Model feature must not be null" );
+      Assert.throwIAEOnNull( modelFeature, "Model feature must not be null" ); //$NON-NLS-1$
       wrappedFeature = Util.createFeatureAsProperty( modelFeature, Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGES, Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE_INV );
       // set link to inverted
       wrappedFeature.setProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_IN_INV, edge.getGmlID() );
@@ -144,7 +144,7 @@ public class EdgeInv implements IEdgeInv
     // Feature elementFeature=targetElement.getWrappedFeature();
     // Assert.throwIAEOnNull( elementFeature, "Element feature must not be null" );
     //    
-    throw new RuntimeException( "add inverted edge to element not in use " );
+    throw new RuntimeException( "add inverted edge to element not in use " ); //$NON-NLS-1$
 
   }
 
@@ -161,7 +161,7 @@ public class EdgeInv implements IEdgeInv
    */
   public void resetInvEdge( )
   {
-    throw new UnsupportedOperationException( "Reset inv edge for an inv edge does nnot make sens" );
+    throw new UnsupportedOperationException( "Reset inv edge for an inv edge does nnot make sense" ); //$NON-NLS-1$
   }
 
   /**
@@ -185,7 +185,7 @@ public class EdgeInv implements IEdgeInv
    */
   public IFeatureWrapperCollection getNodes( )
   {
-    throw new UnsupportedOperationException( "getting not in an inverted edge not allow" );
+    throw new UnsupportedOperationException( "getting not in an inverted edge not allow" ); //$NON-NLS-1$
   }
 
   /**
@@ -220,7 +220,7 @@ public class EdgeInv implements IEdgeInv
    */
   public boolean removeContainerAsRef( IFE1D2DElement containerToRemove )
   {
-    Assert.throwIAEOnNullParam( containerToRemove, "containerToRemove" );
+    Assert.throwIAEOnNullParam( containerToRemove, "containerToRemove" ); //$NON-NLS-1$
     final String id = containerToRemove.getGmlID();
     FeatureList wrappedList = containers.getWrappedList();
     boolean hasBeenRemoved = false;
@@ -239,7 +239,7 @@ public class EdgeInv implements IEdgeInv
   {
     if( index > 1 )
     {
-      throw new IndexOutOfBoundsException( "index=" + index );
+      throw new IndexOutOfBoundsException( "index=" + index ); //$NON-NLS-1$
     }
     return edge.getNode( 1 - index );
   }
@@ -249,7 +249,7 @@ public class EdgeInv implements IEdgeInv
    */
   public void addNode( String nodeID )
   {
-    throw new UnsupportedOperationException( "adding node to inv not supported" );
+    throw new UnsupportedOperationException( "adding node to inv not supported" ); //$NON-NLS-1$
   }
 
   /**
@@ -289,7 +289,7 @@ public class EdgeInv implements IEdgeInv
    */
   public void setInvEdge( String invEdgeID )
   {
-    throw new UnsupportedOperationException( "Cannot set inv to to a EdgeInv " );
+    throw new UnsupportedOperationException( "Cannot set inv to to a EdgeInv " ); //$NON-NLS-1$
   }
 
   /**
@@ -297,7 +297,7 @@ public class EdgeInv implements IEdgeInv
    */
   public IEdgeInv getEdgeInv( )
   {
-    throw new UnsupportedOperationException( "EdgeInv does not have an edgeinv " );
+    throw new UnsupportedOperationException( "EdgeInv does not have an edgeinv " ); //$NON-NLS-1$
   }
 
   /**
@@ -307,7 +307,7 @@ public class EdgeInv implements IEdgeInv
   public String toString( )
   {
     StringBuffer buf = new StringBuffer( 256 );
-    buf.append( "EdgeInv" );
+    buf.append( "EdgeInv" ); //$NON-NLS-1$
     buf.append( getGmlID() );
     buf.append( '[' );
     buf.append( edge );

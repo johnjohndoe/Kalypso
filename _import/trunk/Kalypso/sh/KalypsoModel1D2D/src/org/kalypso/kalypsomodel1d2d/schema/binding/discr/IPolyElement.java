@@ -51,5 +51,5 @@ import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
  */
 public interface IPolyElement<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge> extends IElement2D<CT, ET>
 {
-  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "PolyElement" );
+  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "PolyElement" ); //$NON-NLS-1$
 }

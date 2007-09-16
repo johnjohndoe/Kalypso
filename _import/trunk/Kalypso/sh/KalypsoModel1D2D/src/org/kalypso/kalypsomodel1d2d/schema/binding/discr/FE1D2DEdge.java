@@ -49,7 +49,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
     catch( Exception e )
     {
       e.printStackTrace();
-      logger.info( "feature:" + featureToBind );
+      logger.info( "feature:" + featureToBind ); //$NON-NLS-1$
     }
     if( prop == null )
     {
@@ -195,7 +195,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
     return new FE1D2DEdge( edgeFeature );
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public void setNodes( final FE1D2DNode node0, final FE1D2DNode node1 )
   {
     final Feature feature = getFeature();
@@ -267,11 +267,11 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
    */
   public void addContainer( String containerID )
   {
-    Assert.throwIAEOnNullParam( containerID, "containerID" );
+    Assert.throwIAEOnNullParam( containerID, "containerID" ); //$NON-NLS-1$
     FeatureList wrappedList = m_containers.getWrappedList();
     if( wrappedList.contains( containerID ) )
     {
-      logger.info( "Edge container already registered as container:" + containerID );
+      logger.info( "Edge container already registered as container:" + containerID ); //$NON-NLS-1$
     }
     else
     {
@@ -284,7 +284,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
    */
   public boolean removeContainerAsRef( IFE1D2DElement containerToRemove )
   {
-    Assert.throwIAEOnNullParam( containerToRemove, "containerToRemove" );
+    Assert.throwIAEOnNullParam( containerToRemove, "containerToRemove" ); //$NON-NLS-1$
     final String id = containerToRemove.getGmlID();
     FeatureList wrappedList = m_containers.getWrappedList();
     boolean hasBeenRemoved = false;

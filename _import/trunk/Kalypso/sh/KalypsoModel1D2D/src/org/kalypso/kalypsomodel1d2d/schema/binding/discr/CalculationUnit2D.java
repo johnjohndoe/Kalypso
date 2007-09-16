@@ -52,7 +52,7 @@ import org.kalypsodeegree.model.feature.Feature;
  * @author Patrice Congo
  * 
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings("unchecked") //$NON-NLS-1$
 public class CalculationUnit2D<ET extends IFENetItem> extends CalculationUnit<ET> implements ICalculationUnit2D<ET>
 {
 
@@ -75,7 +75,7 @@ public class CalculationUnit2D<ET extends IFENetItem> extends CalculationUnit<ET
     boolean isPolyElementOrBoundaryLine = (element instanceof IPolyElement) || (element instanceof IContinuityLine2D);
     if( !isPolyElementOrBoundaryLine )
     {
-      String message = String.format( "Argument must be an element 1d or a boundary line:" + "\n\t value=%s", element );
+      String message = String.format( "Argument must be an element 1d or a boundary line:" + "\n\t value=%s", element ); //$NON-NLS-1$ //$NON-NLS-2$
       throw new IllegalArgumentException( message );
     }
     return super.addElementAsRef( element );

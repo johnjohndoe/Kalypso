@@ -57,17 +57,17 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
  */
 public interface IFE1D2DElement<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge> extends IFENetItem
 {
-  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "Element" );
+  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "Element" ); //$NON-NLS-1$
 
-  public static final QName PROP_ROUGHNESS_CLS_ID = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "roughnessClsID" );
+  public static final QName PROP_ROUGHNESS_CLS_ID = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "roughnessClsID" ); //$NON-NLS-1$
 
-  public static final QName PROP_ROUGHNESS_STYLE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "roughnessStyle" );
+  public static final QName PROP_ROUGHNESS_STYLE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "roughnessStyle" ); //$NON-NLS-1$
 
-  public static final QName PROP_ROUGHNESS_CORRECTION_KS = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "correction_ks" );
+  public static final QName PROP_ROUGHNESS_CORRECTION_KS = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "correction_ks" ); //$NON-NLS-1$
 
-  public static final QName PROP_ROUGHNESS_CORRECTION_AXAY = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "correction_axay" );
+  public static final QName PROP_ROUGHNESS_CORRECTION_AXAY = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "correction_axay" ); //$NON-NLS-1$
 
-  public static final QName PROP_ROUGHNESS_CORRECTION_DP = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "correction_dp" );
+  public static final QName PROP_ROUGHNESS_CORRECTION_DP = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "correction_dp" ); //$NON-NLS-1$
 
   public void setRoughnessClsID( final String value );
 

@@ -52,11 +52,11 @@ import org.kalypsodeegree.model.geometry.GM_Curve;
 
 public interface IFELine extends IFENetItem
 {
-  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "Line" );
+  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "Line" ); //$NON-NLS-1$
 
-  public static final QName PROP_NODES = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "node" );
+  public static final QName PROP_NODES = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "node" ); //$NON-NLS-1$
 
-  public static final QName PROP_GEOMETRY = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "geometry" );
+  public static final QName PROP_GEOMETRY = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "geometry" ); //$NON-NLS-1$
 
   public IFeatureWrapperCollection getContainers( );
 

@@ -104,7 +104,7 @@ public class FE1D2DComplexElement<ET extends IFeatureWrapper2> extends AbstractF
    */
   public boolean addElementAsRef( ET element )
   {
-    Assert.throwIAEOnNullParam( element, "element" );
+    Assert.throwIAEOnNullParam( element, "element" ); //$NON-NLS-1$
     return elements.addRef( element );
   }
 

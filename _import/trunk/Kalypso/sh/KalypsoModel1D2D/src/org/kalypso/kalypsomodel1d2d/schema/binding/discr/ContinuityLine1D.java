@@ -76,7 +76,7 @@ public class ContinuityLine1D extends FELine implements IContinuityLine1D
   public List<IFE1D2DNode> createFullNodesList( final List<IFE1D2DNode> nodes ) throws CoreException
   {
     if( nodes.size() != 1 )
-      throw new CoreException( StatusUtilities.createErrorStatus( "Exactly one node is required." ) );
+      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("ContinuityLine1D.0") ) ); //$NON-NLS-1$
     final IFE1D2DNode continulityLineNode = nodes.get( 0 );
     final FeatureList nodeList = (FeatureList) getFeature().getProperty( IFELine.PROP_NODES );
     nodeList.clear();
@@ -106,7 +106,7 @@ public class ContinuityLine1D extends FELine implements IContinuityLine1D
     }
     catch( GM_Exception e )
     {
-      throw new CoreException( StatusUtilities.createErrorStatus( "Cannot create geometry. Reason: " + e.getLocalizedMessage() ) );
+      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("ContinuityLine1D.1") + e.getLocalizedMessage() ) ); //$NON-NLS-1$
     }
     nodeList.invalidate();
     getWrappedFeature().invalidEnvelope();
@@ -134,7 +134,7 @@ public class ContinuityLine1D extends FELine implements IContinuityLine1D
   private void recalculateGeometry( final IFE1D2DNode node, final IFE1D2DNode neighbour1, final IFE1D2DNode neighbour2 ) throws CoreException, GM_Exception
   {
     if( neighbour1 == null && neighbour2 == null )
-      throw new CoreException( StatusUtilities.createErrorStatus( "Continuity line 1D cannot be created; there are no edges containing selected node." ) );
+      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("ContinuityLine1D.2") ) ); //$NON-NLS-1$
     final GM_Object geometry;
     if( neighbour1 == null )
       geometry = getGeometry( node, neighbour2 );
