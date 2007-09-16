@@ -359,7 +359,7 @@
          </parameter>
          <parameter
                name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
-               value="icons/elcl16/12_flowRelation_delete.gif">
+               value="icons/elcl16/12_flowrelation_delete.gif">
          </parameter>
          <parameter
                name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
@@ -446,7 +446,7 @@
          </parameter>
          <parameter
                name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
-               value="icons/elcl16/11_flowRelation_edit.gif">
+               value="icons/elcl16/11_flowrelation_edit.gif">
          </parameter>
          <parameter
                name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
