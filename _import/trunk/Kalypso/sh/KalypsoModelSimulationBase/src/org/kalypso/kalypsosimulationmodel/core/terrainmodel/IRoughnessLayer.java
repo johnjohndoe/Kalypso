@@ -61,4 +61,8 @@ public interface IRoughnessLayer extends IFeatureWrapper2
   public boolean isEditable();
   
   public void setEditable(boolean status);
+  
+  public boolean isBasicLayer();
+  
+  public boolean isCorrectionLayer();
 }

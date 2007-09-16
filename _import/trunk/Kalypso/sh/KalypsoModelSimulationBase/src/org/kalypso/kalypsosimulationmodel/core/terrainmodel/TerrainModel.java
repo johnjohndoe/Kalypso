@@ -45,7 +45,8 @@ import java.util.List;
 
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
 
 /**
@@ -53,6 +54,8 @@ import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
  */
 public class TerrainModel extends AbstractFeatureBinder implements ITerrainModel
 {
+  private final IFeatureWrapperCollection<IRoughnessLayer> m_roughnessLayers = new FeatureWrapperCollection<IRoughnessLayer>( getFeature(), IRoughnessLayer.class, QNAME_PROP_ROUGHNESSLAYERPOLYGONCOLLECTION );
+
   public TerrainModel( final Feature featureToBind )
   {
     super( featureToBind, QNAME_TERRAIN_MODEL );
@@ -77,8 +80,7 @@ public class TerrainModel extends AbstractFeatureBinder implements ITerrainModel
   public List<IRoughnessPolygonCollection> getRoughnessPolygonCollections( )
   {
     final List<IRoughnessPolygonCollection> list = new ArrayList<IRoughnessPolygonCollection>();
-    final IRoughnessLayerCollection roughnessLayerCollection = getRoughnessLayerCollection();
-    for( final IRoughnessLayer layer : roughnessLayerCollection )
+    for( final IRoughnessLayer layer : m_roughnessLayers )
       list.add( getRoughnessPolygonCollection( layer ) );
     return list;
   }
@@ -108,9 +110,12 @@ public class TerrainModel extends AbstractFeatureBinder implements ITerrainModel
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel#getRoughnessLayerCollection()
    */
-  public IRoughnessLayerCollection getRoughnessLayerCollection( )
+  public IFeatureWrapperCollection<IRoughnessLayer> getRoughnessLayerCollection( )
   {
-    return new RoughnessLayerCollection( ((FeatureList) getFeature().getProperty( ITerrainModel.QNAME_PROP_ROUGHNESSLAYERPOLYGONCOLLECTION )).getParentFeature(), IRoughnessLayer.class, QNAME_PROP_ROUGHNESSLAYERPOLYGONCOLLECTION );
+    return m_roughnessLayers;
+    // return new RoughnessLayerCollection( ((FeatureList) getFeature().getProperty(
+    // ITerrainModel.QNAME_PROP_ROUGHNESSLAYERPOLYGONCOLLECTION )).getParentFeature(), IRoughnessLayer.class,
+    // QNAME_PROP_ROUGHNESSLAYERPOLYGONCOLLECTION );
   }
 
 }

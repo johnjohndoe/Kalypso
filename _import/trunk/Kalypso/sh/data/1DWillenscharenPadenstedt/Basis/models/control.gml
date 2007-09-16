@@ -44,9 +44,10 @@
        <gml:name>Zeitschritt Definition</gml:name>
        <om:resultDefinition xmlns:om="http://www.opengis.net/om">
         <sweExt:SortedRecordDefinition gml:id="SortedRecordDefinition11841654546561">
+         <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#OrdinalNumber"/>
          <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time"/>
          <swe:component xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#UnderRelaxationFactor"/>
-         <sweExt:sortedComponent xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#Time"/>
+         <sweExt:sortedComponent xlink:href="urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#OrdinalNumber"/>
         </sweExt:SortedRecordDefinition>
        </om:resultDefinition>
        <om:result xmlns:om="http://www.opengis.net/om"><![CDATA[2001-01-01T10%3A00%3A00.000%2B01%3A00 0.700

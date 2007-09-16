@@ -46,6 +46,7 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
  * This is the root element of the terain-model.
@@ -64,7 +65,7 @@ public interface ITerrainModel extends IModel
 
   public IRiverProfileNetworkCollection getRiverProfileNetworkCollection( );
 
-  public IRoughnessLayerCollection getRoughnessLayerCollection( );
+  public IFeatureWrapperCollection<IRoughnessLayer> getRoughnessLayerCollection( );
   
   public List<IRoughnessPolygonCollection> getRoughnessPolygonCollections( );
   

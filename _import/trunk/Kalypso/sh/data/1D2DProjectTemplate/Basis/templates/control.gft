@@ -666,7 +666,7 @@
 				</gft:validatorlabel>
 			-->
 
-			<gft:label text="Restart step" visible="true"
+			<gft:label text="Beginn Restart" visible="true"
 				tooltip="Restart step" style="SWT.NONE">
 				<gft:gridData verticalAlignment="GridData.CENTER"
 					horizontalAlignment="GridData.BEGINNING"

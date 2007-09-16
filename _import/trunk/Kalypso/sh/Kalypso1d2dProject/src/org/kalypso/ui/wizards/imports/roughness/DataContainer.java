@@ -12,9 +12,9 @@ import java.util.LinkedHashMap;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessLayer;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessLayerCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.opengis.cs.CS_CoordinateSystem;
 
@@ -258,7 +258,7 @@ public class DataContainer
     return m_model;
   }
 
-  public IRoughnessLayerCollection getRoughnessLayerCollection( )
+  public IFeatureWrapperCollection<IRoughnessLayer> getRoughnessLayerCollection( )
   {
     return m_model.getRoughnessLayerCollection();
   }
@@ -267,11 +267,11 @@ public class DataContainer
   {
     if( m_roughnessLayer != null )
       return m_roughnessLayer;
-    final IRoughnessLayerCollection roughnessLayerCollection = getRoughnessLayerCollection();
-    if( m_isBasicLayer )
-      return roughnessLayerCollection.getBasicLayer();
-    else
-      return roughnessLayerCollection.getCorrectionLayer();
+    final IFeatureWrapperCollection<IRoughnessLayer> roughnessLayerCollection = getRoughnessLayerCollection();
+    for( final IRoughnessLayer roughnessLayer : roughnessLayerCollection )
+      if( roughnessLayer.isBasicLayer() == m_isBasicLayer )
+        return m_roughnessLayer = roughnessLayer;
+    return m_roughnessLayer;
 
     //    
     // m_roughnessLayer = roughnessLayerCollection.addNew( IRoughnessLayer.QNAME, IRoughnessLayer.class );
@@ -283,10 +283,11 @@ public class DataContainer
 
   public void deleteCreatedGMLLayer( )
   {
-    if( m_roughnessLayer != null )
-    {
-      final IRoughnessLayerCollection roughnessLayerCollection = getRoughnessLayerCollection();
-      roughnessLayerCollection.remove( m_roughnessLayer );
-    }
+    return;
+    // if( m_roughnessLayer != null )
+    // {
+    // final IRoughnessLayerCollection roughnessLayerCollection = getRoughnessLayerCollection();
+    // roughnessLayerCollection.remove( m_roughnessLayer );
+    // }
   }
 }

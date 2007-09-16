@@ -48,6 +48,7 @@ import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessLayer;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypsodeegree.model.feature.Feature;
@@ -144,7 +145,7 @@ public class RoughnessAssignListener implements ModellEventListener
       if( features[i] == null )
         continue;
       final QName qname = features[i].getFeatureType().getQName();
-      if( qname.equals( IPolyElement.QNAME ) || qname.equals( IRoughnessPolygon.QNAME ) )
+      if( qname.equals( IPolyElement.QNAME ) || qname.equals( IRoughnessPolygon.QNAME ) || qname.equals( IRoughnessLayer.QNAME ) )
         return true;
     }
     return false;

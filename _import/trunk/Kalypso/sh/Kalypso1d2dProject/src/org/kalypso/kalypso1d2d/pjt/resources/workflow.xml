@@ -167,14 +167,6 @@ Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodu
 				<Help><![CDATA[Bearbeiten von Rauheitszonen sowie Anwendung von Korrekturen auf Rauheitsklassen]]></Help>
 				<Name>Rauheitszonen bearbeiten</Name>
 			</Task>
-			<!--
-			We don't need this any more as we have the layer showing assigned roughnesses (and roughness assign service :))
-			<Task type="ASYNCHRONOUS" context="FenetMap"
-				URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__RoughnessFENETColor">
-				<Help><![CDATA[Zeigt die den 2D-Elementen zugewiesenen Rauheitsklassen an.]]></Help>
-				<Name>Rauheitsklassen anzeigen</Name>
-			</Task>
-			 -->
 		</TaskGroup>
 		<TaskGroup
 			URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__DataExport">

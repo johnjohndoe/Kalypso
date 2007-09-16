@@ -46,7 +46,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
 
 /**
- * @author antanas
+ * @author Dejan Antanaskovic
  * 
  */
 public class RoughnessLayer extends AbstractFeatureBinder implements IRoughnessLayer
@@ -78,6 +78,25 @@ public class RoughnessLayer extends AbstractFeatureBinder implements IRoughnessL
   public void setEditable( boolean status )
   {
     getFeature().setProperty( IRoughnessLayer.PROP_EDITABLE, status );
+  }
+
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessLayer#isBasicLayer()
+   */
+  public boolean isBasicLayer( )
+  {
+    final Boolean isBasicLayer = (Boolean) getFeature().getProperty( IRoughnessLayer.PROP_LAYER_TYPE );
+    if( isBasicLayer == null )
+      return false;
+    return isBasicLayer.booleanValue();
+  }
+
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessLayer#isCorrectionLayer()
+   */
+  public boolean isCorrectionLayer( )
+  {
+    return !isBasicLayer();
   }
 
 }
