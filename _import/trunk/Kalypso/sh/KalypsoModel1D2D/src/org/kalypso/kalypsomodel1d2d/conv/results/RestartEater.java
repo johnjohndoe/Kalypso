@@ -42,7 +42,6 @@ package org.kalypso.kalypsomodel1d2d.conv.results;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -69,7 +68,7 @@ public class RestartEater
 {
   private final double DEFAULT_SEARCH_DISTANCE = 0.5;
 
-  private List<INodeResult> m_nodes = new ArrayList<INodeResult>();
+  private List<INodeResult> m_nodes = null;
 
   private double m_distance = DEFAULT_SEARCH_DISTANCE;
 
@@ -119,11 +118,14 @@ public class RestartEater
 
   private void addNodes( final List<INodeResult> nodes )
   {
-    for( final INodeResult node : nodes )
-      if( m_nodes.contains( node ) )
-        continue;
-      else
-        m_nodes.add( node );
+    if( m_nodes == null )
+      m_nodes = nodes;
+    else
+      for( final INodeResult node : nodes )
+        if( m_nodes.contains( node ) )
+          continue;
+        else
+          m_nodes.add( node );
   }
 
   private INodeResult getNodeResult( final GM_Point point )
