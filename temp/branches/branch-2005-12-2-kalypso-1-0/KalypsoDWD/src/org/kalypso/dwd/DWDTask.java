@@ -162,7 +162,7 @@ public class DWDTask extends Task
       final String taskDesk = getDescription();
       if( taskDesk != null )
         logger.log( Level.INFO, LoggerUtilities.CODE_NEW_MSGBOX, taskDesk );
-      
+
       final DWDTaskDelegate delegate = new DWDTaskDelegate();
       delegate.execute( logger, m_obsRasterURL, m_dwd2zmlConfUrl, m_targetContext, new Date( m_from ), new Date(
           m_forecastFrom ), new Date( m_to ), m_filter, m_metadata );
