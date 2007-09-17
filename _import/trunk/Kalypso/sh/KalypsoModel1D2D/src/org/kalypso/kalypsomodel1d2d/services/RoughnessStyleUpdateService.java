@@ -77,11 +77,16 @@ import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.Operation;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.Fill;
+import org.kalypsodeegree.graphics.sld.Font;
+import org.kalypsodeegree.graphics.sld.LabelPlacement;
+import org.kalypsodeegree.graphics.sld.ParameterValueType;
+import org.kalypsodeegree.graphics.sld.PointPlacement;
 import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
 import org.kalypsodeegree.graphics.sld.Rule;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.graphics.sld.Style;
 import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
+import org.kalypsodeegree.graphics.sld.TextSymbolizer;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.xml.XMLTools;
 import org.kalypsodeegree_impl.filterencoding.ComplexFilter;
@@ -89,6 +94,8 @@ import org.kalypsodeegree_impl.filterencoding.Literal;
 import org.kalypsodeegree_impl.filterencoding.PropertyIsLikeOperation;
 import org.kalypsodeegree_impl.filterencoding.PropertyName;
 import org.kalypsodeegree_impl.graphics.sld.FeatureTypeStyle_Impl;
+import org.kalypsodeegree_impl.graphics.sld.LabelPlacement_Impl;
+import org.kalypsodeegree_impl.graphics.sld.PointPlacement_Impl;
 import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
 import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 import org.kalypsodeegree_impl.graphics.sld.UserStyle_Impl;
@@ -110,6 +117,8 @@ public class RoughnessStyleUpdateService extends Job
   // all SLD layers in gmt files also
 
   private static final String STYLE_TITLE = "Roughness style";
+
+  private static final String LABEL_RULE_NAME = "Labelle";
 
   private static final String DEFAULT_RULE_NAME = "undefinierterStilID";
 
@@ -240,7 +249,7 @@ public class RoughnessStyleUpdateService extends Job
       final Stroke stroke = StyleFactory.createStroke( Color.BLACK, 1.0, 0.5 );
       final Fill fill = StyleFactory.createFill( color, 0.75 );
       final PolygonSymbolizer newSymbolizer = StyleFactory.createPolygonSymbolizer( stroke, fill, new PropertyName( geometryPropertyQname ) );
-      final Rule rule = StyleFactory.createRule( newSymbolizer, 0.0, 1.0E15 );
+      final Rule rule = StyleFactory.createRule( newSymbolizer );
       final String ruleName = roughnessCls.getName();
       final Operation operation = new PropertyIsLikeOperation( new PropertyName( "roughnessStyle", null ), new Literal( ruleName ), '*', '$', '/' );
       final Filter filter = new ComplexFilter( operation );
@@ -251,20 +260,35 @@ public class RoughnessStyleUpdateService extends Job
       style.addRule( rule );
     }
 
+    final ParameterValueType[] anchorPoint = new ParameterValueType[2];
+    anchorPoint[0] = StyleFactory.createParameterValueType( 0.5 );
+    anchorPoint[1] = StyleFactory.createParameterValueType( 0.5 );
+    final ParameterValueType rotation = StyleFactory.createParameterValueType( 0.0 );
+
+    // adding labels rule
+    final Font font = StyleFactory.createFont( "Arial", 11.0 );
+    font.setColor( Color.BLACK );
+    final PointPlacement pointPlacement = new PointPlacement_Impl( anchorPoint, new ParameterValueType[0], rotation, true );
+    final LabelPlacement labelPlacement = new LabelPlacement_Impl( pointPlacement );
+    final TextSymbolizer labelSymbolizer = StyleFactory.createTextSymbolizer( new PropertyName( geometryPropertyQname ), "<ogc:PropertyName>roughnessStyle</ogc:PropertyName>", labelPlacement );
+    labelSymbolizer.setHalo( null );
+    labelSymbolizer.setFont( font );
+    final Rule labelRule = StyleFactory.createRule( labelSymbolizer, 0.0, 10.0 );
+    labelRule.setName( LABEL_RULE_NAME );
+    labelRule.setTitle( LABEL_RULE_NAME );
+    labelRule.setAbstract( LABEL_RULE_NAME );
+    style.addRule( labelRule );
+
     // adding default rule
     final Stroke defaultRuleStroke = StyleFactory.createStroke( DEFAULT_RULE_STROKECOLOR, DEFAULT_RULE_STROKEWIDTH, DEFAULT_RULE_STROKEOPACITY );
     defaultRuleStroke.setDashArray( DEFAULT_RULE_DASHARRAY );
     final Fill defaultRuleFill = StyleFactory.createFill( DEFAULT_RULE_FILLCOLOR, DEFAULT_RULE_FILLOPACITY );
     final PolygonSymbolizer defaultRuleSymbolizer = StyleFactory.createPolygonSymbolizer( defaultRuleStroke, defaultRuleFill, new PropertyName( geometryPropertyQname ) );
-    final Rule defaultRule = StyleFactory.createRule( defaultRuleSymbolizer, 0.0, 1.0E15 );
+    final Rule defaultRule = StyleFactory.createRule( defaultRuleSymbolizer );
     defaultRule.setElseFilter( true );
-    // final Operation operation = new PropertyIsLikeOperation( new PropertyName( "roughnessStyle", null ), new Literal(
-    // DEFAULT_RULE_LITERAL ), '*', '$', '/' );
-    // final Filter filter = new ComplexFilter( operation );
     defaultRule.setName( DEFAULT_RULE_NAME );
     defaultRule.setTitle( DEFAULT_RULE_TITLE );
     defaultRule.setAbstract( DEFAULT_RULE_TITLE );
-    // rule.setFilter( filter );
     style.addRule( defaultRule );
 
     final FeatureTypeStyle[] featureTypeStyles = new FeatureTypeStyle[] { style };
