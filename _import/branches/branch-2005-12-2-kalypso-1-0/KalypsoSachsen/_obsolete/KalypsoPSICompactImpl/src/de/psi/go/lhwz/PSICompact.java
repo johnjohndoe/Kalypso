@@ -223,7 +223,6 @@ public interface PSICompact
    */
   public class ObjectMetaData implements Serializable
   {
-
     /** Dass Kennzeichen des Objekts */
     private String id = null;
 
