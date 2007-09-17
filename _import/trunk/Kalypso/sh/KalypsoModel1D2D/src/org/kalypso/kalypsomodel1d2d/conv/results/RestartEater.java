@@ -42,10 +42,10 @@ package org.kalypso.kalypsomodel1d2d.conv.results;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.GMLNodeResult;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
@@ -55,7 +55,6 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -68,13 +67,11 @@ public class RestartEater
 {
   private final double DEFAULT_SEARCH_DISTANCE = 0.5;
 
-  private List<INodeResult> m_nodes = null;
+  private FeatureList m_nodes = null;
 
   private double m_distance = DEFAULT_SEARCH_DISTANCE;
 
-  public final static String GAUS_KRUEGER = "EPSG:31467";
-
-  private static final CS_CoordinateSystem CS = ConvenienceCSFactory.getInstance().getOGCCSByName( GAUS_KRUEGER );
+  private static final CS_CoordinateSystem COORDINATE_SYSTEM = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
 
   public void addResultFile( final File file ) throws Exception
   {
@@ -86,7 +83,7 @@ public class RestartEater
     // final GMLWorkspace resultWorkspace = FeatureFactory.createGMLWorkspace( new QName(
     // UrlCatalog1D2D.MODEL_1D2DResults_NS, "NodeResultCollection" ), file.toURL(), GmlSerializer.DEFAULT_FACTORY );
     final Feature rootFeature = resultWorkspace.getRootFeature();
-    final List<INodeResult> nodeList = (FeatureList) rootFeature.getProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "nodeResultMember" ) );
+    final FeatureList nodeList = (FeatureList) rootFeature.getProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "nodeResultMember" ) );
     addNodes( nodeList );
   }
 
@@ -112,16 +109,16 @@ public class RestartEater
    */
   public INodeResult getNodeResultAtPosition( final double x, final double y )
   {
-    final GM_Point point = GeometryFactory.createGM_Point( x, y, CS );
+    final GM_Point point = GeometryFactory.createGM_Point( x, y, COORDINATE_SYSTEM );
     return getNodeResult( point );
   }
 
-  private void addNodes( final List<INodeResult> nodes )
+  private void addNodes( final FeatureList nodes )
   {
     if( m_nodes == null )
       m_nodes = nodes;
     else
-      for( final INodeResult node : nodes )
+      for( final Object node : nodes )
         if( m_nodes.contains( node ) )
           continue;
         else

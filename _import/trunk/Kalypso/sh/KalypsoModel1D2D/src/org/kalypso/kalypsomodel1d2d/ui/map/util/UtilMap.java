@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.xml.namespace.QName;
 
 import org.eclipse.ui.IViewPart;
@@ -105,27 +108,75 @@ public class UtilMap
    */
   static public IKalypsoFeatureTheme findEditableTheme( final IMapModell mapModel, final QName editElementQName )
   {
+    final List<IKalypsoFeatureTheme> loadedKalypsoFeatureThemes = loadKalypsoFeatureThemes( mapModel );
+    for( final IKalypsoFeatureTheme theme : loadedKalypsoFeatureThemes )
+    {
+      final IFeatureType featureType = theme.getFeatureType();
+      if( GMLSchemaUtilities.substitutes( featureType, editElementQName ) )
+        return theme;
+    }
+    return null;
+  }
+
+  /**
+   * Find a discretisation model within the mapModel themes.
+   * 
+   * @return The first discretisation model encountered in the list of themes.
+   * 
+   * @throws RuntimeException
+   *             if model cannot be found
+   */
+  static public IFEDiscretisationModel1d2d findFEModelTheme( final IMapModell mapModel ) throws RuntimeException
+  {
+    final List<IKalypsoFeatureTheme> loadedKalypsoFeatureThemes = loadKalypsoFeatureThemes( mapModel );
+    for( final IKalypsoFeatureTheme theme : loadedKalypsoFeatureThemes )
+    {
+      final FeatureList featureList = theme.getFeatureList();
+      final Feature modelFeature = featureList == null ? null : featureList.getParentFeature();
+      if( modelFeature != null )
+      {
+        final IFEDiscretisationModel1d2d model = (IFEDiscretisationModel1d2d) modelFeature.getAdapter( IFEDiscretisationModel1d2d.class );
+        if( model != null )
+          return model;
+      }
+    }
+    throw new RuntimeException( Messages.getString( "UtilMap.4" ) );
+  }
+
+  /**
+   * Method waits for all <code>IKalypsoFeatureTheme</code> objects from <code>mapModel</code> to be fully loaded
+   * (not only themes to be assigned to the map, but also features to be loaded)
+   * 
+   * @param mapModel
+   *            map model from which the themes should be loaded
+   * @return the list of loaded themes
+   */
+  private static List<IKalypsoFeatureTheme> loadKalypsoFeatureThemes( final IMapModell mapModel )
+  {
     Assert.throwIAEOnNullParam( mapModel, "mapModel" ); //$NON-NLS-1$
-    Assert.throwIAEOnNullParam( editElementQName, "editElementQName" ); //$NON-NLS-1$
     IKalypsoTheme[] allThemes;
     IKalypsoFeatureTheme ftheme;
     allThemes = mapModel.getAllThemes();
-
+    final List<IKalypsoFeatureTheme> result = new ArrayList<IKalypsoFeatureTheme>();
     synchronized( UtilMap.class )
     {
-      while( true )
+      boolean loadingNotFinished = true;
+      while( loadingNotFinished )
         try
         {
-          UtilMap.class.wait( 50 );
+          loadingNotFinished = false;
+          UtilMap.class.wait( 100 );
           allThemes = mapModel.getAllThemes();
           for( final IKalypsoTheme theme : allThemes )
           {
             if( theme instanceof IKalypsoFeatureTheme )
             {
               ftheme = (IKalypsoFeatureTheme) theme;
+              if( !result.contains( ftheme ) )
+                loadingNotFinished = true;
               final IFeatureType featureType = ftheme.getFeatureType();
-              if( featureType != null && GMLSchemaUtilities.substitutes( featureType, editElementQName ) )
-                return ftheme;
+              if( featureType != null )
+                result.add( ftheme );
             }
           }
         }
@@ -133,39 +184,7 @@ public class UtilMap
         {
         }
     }
-  }
-
-  /**
-   * Find a discretisation model within the mapModel themes.
-   * 
-   * @return The first discretisation model encountered in the list of themes.
-   */
-  static public IFEDiscretisationModel1d2d findFEModelTheme( final IMapModell mapModel )
-  {
-    Assert.throwIAEOnNullParam( mapModel, "mapModel" ); //$NON-NLS-1$
-    final IKalypsoTheme[] allThemes = mapModel.getAllThemes();
-    for( final IKalypsoTheme theme : allThemes )
-    {
-      if( theme instanceof IKalypsoFeatureTheme )
-      {
-        final IKalypsoFeatureTheme ftheme = (IKalypsoFeatureTheme) theme;
-        final IFeatureType featureType = ftheme.getFeatureType();
-        if( featureType == null )
-        {
-          continue;
-        }
-
-        final FeatureList featureList = ftheme.getFeatureList();
-        final Feature modelFeature = featureList == null ? null : featureList.getParentFeature();
-        if( modelFeature != null )
-        {
-          final IFEDiscretisationModel1d2d model = (IFEDiscretisationModel1d2d) modelFeature.getAdapter( IFEDiscretisationModel1d2d.class );
-          if( model != null )
-            return model;
-        }
-      }
-    }
-    return null;
+    return result;
   }
 
   /**

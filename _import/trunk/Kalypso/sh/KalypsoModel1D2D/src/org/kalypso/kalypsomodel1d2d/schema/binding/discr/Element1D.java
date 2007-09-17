@@ -44,6 +44,7 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -158,7 +159,9 @@ public class Element1D<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge>
       return null;
     }
 
-    final CS_CoordinateSystem crs = nodes.get( 0 ).getPoint().getCoordinateSystem();
+    CS_CoordinateSystem crs = nodes.get( 0 ).getPoint().getCoordinateSystem();
+    if( crs == null )
+      crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
 
     GM_Position positions[] = new GM_Position[SIZE];
     GM_Point point;

@@ -12,6 +12,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
@@ -76,7 +77,10 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
   {
     // m_builder = null;
 
-    final CS_CoordinateSystem targetCrs = getMapPanel().getMapModell().getCoordinatesSystem();
+    CS_CoordinateSystem targetCrs = getMapPanel().getMapModell().getCoordinatesSystem();
+    if( targetCrs == null )
+      targetCrs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+    
     // m_builder = new LineGeometryBuilder( 0, targetCrs );
     gridPointCollector.reset( targetCrs );// SideToBuild( targetCrs );
 
@@ -94,7 +98,6 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
 
       final int halfWidth = m_radius / 2;
       final Point lower = new Point( centerX - halfWidth, centerY - halfWidth );
-      final Point upper = new Point( centerX + halfWidth, centerY + halfWidth );
 
       final MapPanel mapPanel = getMapPanel();
       final GM_Point gmLower = MapUtilities.transform( mapPanel, lower );

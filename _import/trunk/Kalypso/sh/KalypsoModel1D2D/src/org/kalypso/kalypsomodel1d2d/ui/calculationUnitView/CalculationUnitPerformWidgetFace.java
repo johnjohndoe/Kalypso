@@ -65,11 +65,11 @@ public class CalculationUnitPerformWidgetFace
   private FormToolkit toolkit;
   private ScrolledForm form;
   private Section selectCalcUnitSection;
-  private Section problemsSection;
+//  private Section problemsSection;
   private Composite sectionFirstComposite;
   private CalculationUnitPerformComponent calcSelect;
   private Composite sectionSecondComposite;
-  private CalculationUnitProblemsComponent calcProblemsGUI;
+//  private CalculationUnitProblemsComponent calcProblemsGUI;
   private CalculationUnitDataModel dataModel;
   private Section calculationElementUnitSection;
   private Composite sectionThirdComposite;
@@ -91,7 +91,7 @@ public class CalculationUnitPerformWidgetFace
     form = toolkit.createScrolledForm(parent);
     form.setExpandHorizontal(true);
     form.setExpandVertical(true);
-    form.setText(Messages.getString("CalculationUnitPerformWidgetFace.0"));  //$NON-NLS-1$
+//    form.setText(Messages.getString("CalculationUnitPerformWidgetFace.0"));  //$NON-NLS-1$
     form.getBody().setLayout(new TableWrapLayout());
     
 
@@ -114,17 +114,17 @@ public class CalculationUnitPerformWidgetFace
     calculationElementUnitSection.setExpanded( true );
     
     // Creates Section for "Calculation Settings Unit"
-    problemsSection = toolkit.createSection( form.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
-    problemsSection.setText( Messages.getString("CalculationUnitPerformWidgetFace.3") ); //$NON-NLS-1$
-    final TableWrapData tableWrapDataPU = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
-//    tableWrapDataPU.grabHorizontal = true;
-//    tableWrapDataPU.grabVertical = true;
-    problemsSection.setLayoutData( tableWrapDataPU );
-    problemsSection.setExpanded(true);
+//    problemsSection = toolkit.createSection( form.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
+//    problemsSection.setText( Messages.getString("CalculationUnitPerformWidgetFace.3") ); //$NON-NLS-1$
+//    final TableWrapData tableWrapDataPU = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
+////    tableWrapDataPU.grabHorizontal = true;
+////    tableWrapDataPU.grabVertical = true;
+//    problemsSection.setLayoutData( tableWrapDataPU );
+//    problemsSection.setExpanded(true);
     
     createCalculationUnitSection( selectCalcUnitSection );
     createCalculationElementsSection(calculationElementUnitSection);
-    createProblemsInCalculationSection(problemsSection);
+//    createProblemsInCalculationSection(problemsSection);
     return parent;
   }
   
@@ -178,8 +178,8 @@ public class CalculationUnitPerformWidgetFace
     formData.top = new FormAttachment( sectionFirstComposite, 5 );
     sectionSecondComposite.setLayoutData( formData );
     
-    calcProblemsGUI = new CalculationUnitProblemsComponent();
-    calcProblemsGUI.createControl( dataModel, toolkit, sectionSecondComposite );    
+//    calcProblemsGUI = new CalculationUnitProblemsComponent();
+//    calcProblemsGUI.createControl( dataModel, toolkit, sectionSecondComposite );    
   }
 
   public void disposeControl( )

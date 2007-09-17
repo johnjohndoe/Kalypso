@@ -134,7 +134,6 @@ public class CalculationUnitWidget implements IWidgetWithOptions, IWidget, IWidg
     m_dataModel.setData( ICommonKeys.KEY_COMMAND_TARGET_DISC_MODEL, commandPoster );
     final IMapModell mapModell = mapPanel.getMapModell();
     final IFEDiscretisationModel1d2d model1d2d = UtilMap.findFEModelTheme( mapModell );
-    // TODO check model1d2d for null and do something
     m_dataModel.setData( ICommonKeys.KEY_DISCRETISATION_MODEL, model1d2d );
     m_dataModel.setData( ICommonKeys.KEY_FEATURE_WRAPPER_LIST, CalcUnitOps.getModelCalculationUnits( model1d2d ) );
     m_dataModel.setData( ICommonKeys.WIDGET_WITH_STRATEGY, this );

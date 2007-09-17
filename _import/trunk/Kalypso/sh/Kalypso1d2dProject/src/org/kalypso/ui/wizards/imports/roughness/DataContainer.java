@@ -10,6 +10,7 @@ import java.net.URL;
 import java.util.LinkedHashMap;
 
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.kalypso.core.preferences.IKalypsoCorePreferences;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessLayer;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection;
@@ -23,9 +24,6 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public class DataContainer
 {
-
-  public final static String GAUS_KRUEGER = "EPSG:31467";
-
   private String m_inputFile = ""; // absolute path
 
   private String m_shapeProperty = "";
@@ -46,7 +44,7 @@ public class DataContainer
 
   private final String m_AbsolutePath = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString();
 
-  private static final CS_CoordinateSystem m_defaultCoordinateSystem = ConvenienceCSFactory.getInstance().getOGCCSByName( GAUS_KRUEGER );
+  private static final CS_CoordinateSystem m_defaultCoordinateSystem = ConvenienceCSFactory.getInstance().getOGCCSByName( IKalypsoCorePreferences.DEFAULT_CRS );
 
   private LinkedHashMap<String, String> m_userSelectionMap;
 

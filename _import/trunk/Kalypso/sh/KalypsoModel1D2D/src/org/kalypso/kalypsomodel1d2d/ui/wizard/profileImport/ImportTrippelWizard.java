@@ -66,6 +66,7 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetworkCollection;
@@ -450,7 +451,7 @@ public class ImportTrippelWizard extends Wizard implements IWizard
 
     GMLWorkspace workspace = networkFeature.getWorkspace();
 
-    CS_CoordinateSystem coordinatesSystem = KalypsoGisPlugin.getDefault().getCoordinatesSystem();
+    CS_CoordinateSystem coordinatesSystem = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
     CS_CoordinateSystem targetCRS = coordinatesSystem;
     if( crs != coordinatesSystem )
     {

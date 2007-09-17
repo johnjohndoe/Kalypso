@@ -42,6 +42,7 @@ package org.kalypso.kalypsomodel1d2d.geom;
 
 import java.util.List;
 
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
@@ -86,11 +87,13 @@ public class ModelGeometryBuilder
 
     if( SIZE <= 3 )
     {
-        System.out.println(Messages.ModelGeometryBuilder_1);
+      System.out.println( Messages.ModelGeometryBuilder_1 );
       return null;
     }
 
-    final CS_CoordinateSystem crs = nodes.get( 0 ).getPoint().getCoordinateSystem();
+    CS_CoordinateSystem crs = nodes.get( 0 ).getPoint().getCoordinateSystem();
+    if( crs == null )
+      crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
 
     for( int i = 0; i < poses.length; i++ )
     {

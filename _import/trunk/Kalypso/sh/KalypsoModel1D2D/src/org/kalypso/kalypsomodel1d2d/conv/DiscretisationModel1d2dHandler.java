@@ -86,7 +86,6 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
 
   private final List<IFeatureWrapper2> m_createdFeatures = new ArrayList<IFeatureWrapper2>();
 
-  // private CS_CoordinateSystem coordinateSystem;
   private final GMLWorkspace m_workspace;
 
   /**

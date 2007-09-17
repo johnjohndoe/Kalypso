@@ -24,8 +24,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.core.preferences.IKalypsoCorePreferences;
 import org.kalypso.ui.wizards.imports.Messages;
-import org.kalypso.ui.wizards.imports.roughness.DataContainer;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 
 /**
@@ -46,10 +46,11 @@ public class ElevationMainPage extends WizardPage
   public Text descriptionForFileArea;
 
   private Label statusText;
-//  static private IPreferenceStore preferenceStore =  
-    //KalypsoModelSimulationBase.getDefault().getPreferenceStore();
 
-  //private IPropertyChangeListener storePropertyChangeListener = createPropertyChangeLis();
+  // static private IPreferenceStore preferenceStore =
+  // KalypsoModelSimulationBase.getDefault().getPreferenceStore();
+
+  // private IPropertyChangeListener storePropertyChangeListener = createPropertyChangeLis();
 
   public ElevationMainPage( )
   {
@@ -57,14 +58,13 @@ public class ElevationMainPage extends WizardPage
     setTitle( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.4" ) );
     setDescription( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.1" ) );
   }
- 
 
   /**
    * Creates the top level control for this dialog page under the given parent composite, then calls
    * <code>setControl</code> so that the created control can be accessed via <code>getControl</code>
    * 
    * @param parent
-   *          the parent composite
+   *            the parent composite
    */
   @SuppressWarnings("synthetic-access")
   public void createControl( Composite parent )
@@ -114,8 +114,8 @@ public class ElevationMainPage extends WizardPage
 
     coordinateSystem_Combo = new Combo( container, SWT.BORDER | SWT.READ_ONLY );
     coordinateSystem_Combo.setItems( (new ConvenienceCSFactoryFull()).getKnownCS() );
-    final int index_GausKrueger = coordinateSystem_Combo.indexOf( DataContainer.GAUS_KRUEGER );
-    coordinateSystem_Combo.select( index_GausKrueger > -1 ? index_GausKrueger : 0 );
+    final int indexOfDefaultCRS = coordinateSystem_Combo.indexOf( IKalypsoCorePreferences.DEFAULT_CRS );
+    coordinateSystem_Combo.select( indexOfDefaultCRS > -1 ? indexOfDefaultCRS : 0 );
 
     GridData gd = new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING );
     gd.horizontalSpan = 2;
@@ -125,34 +125,32 @@ public class ElevationMainPage extends WizardPage
     final Label nameForFile = new Label( container, SWT.NONE );
     nameForFile.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING ) );
     nameForFile.setText( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.7" ) );
-    nameForFileText = new Text( container, SWT.BORDER );  
+    nameForFileText = new Text( container, SWT.BORDER );
 
-   
-    GridData gridData = new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING);
+    GridData gridData = new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING );
     gridData.horizontalSpan = 2;
     nameForFileText.setLayoutData( gridData );
-    
 
     final Label descriptionForFile = new Label( container, SWT.NONE );
     descriptionForFile.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING ) );
     descriptionForFile.setText( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.8" ) ); //$NON-NLS-1$
-    
+
     descriptionForFileArea = new Text( container, SWT.BORDER | SWT.MULTI );
     GridData gridData2 = new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING );
     gridData2.horizontalSpan = 2;
     gridData2.heightHint = 100;
     descriptionForFileArea.setLayoutData( gridData2 );
     descriptionForFileArea.setText( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.9" ) );
-    initContents();    
+    initContents();
   }
 
   /**
    * Called by the wizard to initialize the receiver's cached selection.
    * 
    * @param selection
-   *          the selection or <code>null</code> if none
+   *            the selection or <code>null</code> if none
    */
-  @SuppressWarnings({ "unchecked", "cast" })
+  @SuppressWarnings( { "unchecked", "cast" })
   public void init( ISelection selection )
   {
     if( !(selection instanceof IStructuredSelection) )
@@ -192,12 +190,12 @@ public class ElevationMainPage extends WizardPage
     if( rootLoc.isPrefixOf( path ) )
       path = path.setDevice( null ).removeFirstSegments( rootLoc.segmentCount() );
     sourceFileField.setText( path.toString() );
-    updatePageComplete();    
+    updatePageComplete();
     setMessage( null );
     setErrorMessage( null );
   }
 
-   /**
+  /**
    * Update the current page complete state based on the field content.
    */
   private void updatePageComplete( )
@@ -215,7 +213,6 @@ public class ElevationMainPage extends WizardPage
     setMessage( null );
     setErrorMessage( null );
   }
-  
 
   /**
    * Open a file browser dialog to locate a source file
@@ -244,9 +241,9 @@ public class ElevationMainPage extends WizardPage
    * Multiple Elevation Model Select.. Still under development Open a file dialog for selecting a file
    * 
    * @param path
-   *          the initially selected file
+   *            the initially selected file
    * @param mustExist
-   *          <code>true</code> if the selected file must already exist, else <code>false</code>
+   *            <code>true</code> if the selected file must already exist, else <code>false</code>
    * @return the newly selected file or <code>null</code>
    */
 
@@ -318,8 +315,9 @@ public class ElevationMainPage extends WizardPage
   {
     return nameForFileText.getText();
   }
-  
-  public String getCoordinateSystem(){
+
+  public String getCoordinateSystem( )
+  {
     return coordinateSystem_Combo.getSelection().toString();
   }
 }

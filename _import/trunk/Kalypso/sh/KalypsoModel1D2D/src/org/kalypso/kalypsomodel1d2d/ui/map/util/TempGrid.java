@@ -77,154 +77,144 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 
 /**
- * This class provide the mechanism to calculate the grid finit element model
- * node and to display them.
- * The point are supposed to be in the same coordinate reference system so that no
- * no reference system convertion is done
+ * This class provide the mechanism to calculate the grid finit element model node and to display them. The point are
+ * supposed to be in the same coordinate reference system so that no no reference system convertion is done
  * 
  * @author Patrice Congo
  */
-public class TempGrid 
+public class TempGrid
 {
   /**
-   * The target coodinate reference system for the created grid point 
+   * The target coodinate reference system for the created grid point
    */
   private CS_CoordinateSystem m_crs;
-  
+
   /**
    * Cache for screen point coordinate
    */
   private int[][] drawPoints;
-  
+
   /**
    * Cache for grid computed grid points
    */
   private GM_Point[][] gridPoints;
 
   private final boolean ignoreZCoordinate;
-  
-  
+
   /**
-   * Create a temp grid, with a transformation into a model accepting 
-   * the all coordinate of the grid points.
+   * Create a temp grid, with a transformation into a model accepting the all coordinate of the grid points.
    * 
    */
-    public TempGrid()
-    {
-         this(false);
-    }
-
+  public TempGrid( )
+  {
+    this( false );
+  }
 
   /**
-   * Create a temp grid with flag to control the usage of the
-   * the z-coordinate of the grid point when transforming it into a
-   * model
-   * @param ignoreZCoordinate 
-   *    <ul>
-   *        <li/>true to get the transformation into a 2d model ignores
-   *            the z-coordinate of the models (2D point will be created for 3D).
-   *        <li/>false to have the transformation accept the point
-   *            without change 
-   *    </ul>
+   * Create a temp grid with flag to control the usage of the the z-coordinate of the grid point when transforming it
+   * into a model
+   * 
+   * @param ignoreZCoordinate
+   *            <ul>
+   *            <li/>true to get the transformation into a 2d model ignores the z-coordinate of the models (2D point
+   *            will be created for 3D). <li/>false to have the transformation accept the point without change
+   *            </ul>
    * @see AddNodeCommand
    */
-  public TempGrid(boolean ignoreZCoordinate)
+  public TempGrid( boolean ignoreZCoordinate )
   {
-       this.ignoreZCoordinate = ignoreZCoordinate;
+    this.ignoreZCoordinate = ignoreZCoordinate;
   }
-  
+
   /**
-   * Set the target {@link CS_CoordinateSystem}. All points this grid is coping
-   * with are required to reside in that system and no reference system conversion 
-   * made in by the {@link TempGrid}
-   * @param targetCrs the target {@link CS_CoordinateSystem}
-   * @throws IllegalArgumentException is targetCrs is null
+   * Set the target {@link CS_CoordinateSystem}. All points this grid is coping with are required to reside in that
+   * system and no reference system conversion made in by the {@link TempGrid}
+   * 
+   * @param targetCrs
+   *            the target {@link CS_CoordinateSystem}
+   * @throws IllegalArgumentException
+   *             is targetCrs is null
    */
-  public void setCoodinateSystem (final CS_CoordinateSystem targetCrs )
-                                  throws IllegalArgumentException
+  public void setCoodinateSystem( final CS_CoordinateSystem targetCrs ) throws IllegalArgumentException
   {
-      Assert.throwIAEOnNullParam( targetCrs, "targetCrs" ); //$NON-NLS-1$
-       this.m_crs = targetCrs;
+    Assert.throwIAEOnNullParam( targetCrs, "targetCrs" ); //$NON-NLS-1$
+    this.m_crs = targetCrs;
   }
 
   /**
    * Class this to display the {@link TempGrid} on the screen.
-   * @param g the display graphic context
-   * @param projection the geoprojection for projecting {@link GM_Point} to
-   *    screen points
-   * @param pointRectSize the side lengtth for square representing the points
+   * 
+   * @param g
+   *            the display graphic context
+   * @param projection
+   *            the geoprojection for projecting {@link GM_Point} to screen points
+   * @param pointRectSize
+   *            the side lengtth for square representing the points
    */
-  public void paint( 
-                  final Graphics g, 
-                  final GeoTransform projection,
-                  final int pointRectSize)
+  public void paint( final Graphics g, final GeoTransform projection, final int pointRectSize )
   {
-    
+
     // IMPORTANT: we remember GM_Points (not Point's) and retransform them for painting
     // because the projection depends on the current map-extent, so this builder
     // is stable in regard to zoom in/out
-    if(gridPoints.length!=0)
+    if( gridPoints.length != 0 )
     {
-      
-        //draw a line
-        final int[][] points = getPointArrays( projection);
-        final int[] arrayX = points[0];
-        final int[] arrayY = points[1];
-  
-        /* Paint a linestring. */
-//        g.drawPolyline( arrayX, arrayY, arrayX.length );
-        //drawHandles( g, arrayX, arrayY, pointRectSize);        
-        
-        //cache draw points
-        //drawPoints=points; 
-        try
-        {
-          paintEdges( g, projection );
-        }
-        catch( GM_Exception e )
-        {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-        }
-        catch( IncompatibleGeometryTypeException e )
-        {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-        }
+
+      // draw a line
+      final int[][] points = getPointArrays( projection );
+      final int[] arrayX = points[0];
+      final int[] arrayY = points[1];
+
+      /* Paint a linestring. */
+      // g.drawPolyline( arrayX, arrayY, arrayX.length );
+      // drawHandles( g, arrayX, arrayY, pointRectSize);
+      // cache draw points
+      // drawPoints=points;
+      try
+      {
+        paintEdges( g, projection );
+      }
+      catch( GM_Exception e )
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+      catch( IncompatibleGeometryTypeException e )
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
     }
-      
+
   }
 
   /**
    * compute screen points from gm points
    */
-  private int[][] getPointArrays( 
-                      final GeoTransform projection )
+  private int[][] getPointArrays( final GeoTransform projection )
   {
-    if(drawPoints!=null)
+    if( drawPoints != null )
     {
       return drawPoints;
     }
-    
+
     final List<Integer> xArray = new ArrayList<Integer>();
     final List<Integer> yArray = new ArrayList<Integer>();
 
-    for( GM_Point points[]:gridPoints)
+    for( GM_Point points[] : gridPoints )
     {
-      for(GM_Point point:points)
+      for( GM_Point point : points )
       {
-        if(point!=null)
+        if( point != null )
         {
           final int x = (int) projection.getDestX( point.getX() );
           final int y = (int) projection.getDestY( point.getY() );
-    
+
           xArray.add( new Integer( x ) );
           yArray.add( new Integer( y ) );
         }
       }
     }
-
-    
 
     final int[] xs = ArrayUtils.toPrimitive( xArray.toArray( new Integer[xArray.size()] ) );
     final int[] ys = ArrayUtils.toPrimitive( yArray.toArray( new Integer[yArray.size()] ) );
@@ -235,38 +225,27 @@ public class TempGrid
   /**
    * draws the temp grid point on the screen
    */
-  private static final void drawHandles( 
-                            final Graphics g, 
-                            final int[] x, 
-                            final int[] y ,
-                            final int pointRectWidth)
+  private static final void drawHandles( final Graphics g, final int[] x, final int[] y, final int pointRectWidth )
   {
-    final Color oldColor=g.getColor();
+    final Color oldColor = g.getColor();
     g.setColor( oldColor.darker() );
-    //int sizeOuter = 4;
-    int halfRectWidth=pointRectWidth/2;
-    
+    // int sizeOuter = 4;
+    int halfRectWidth = pointRectWidth / 2;
+
     for( int i = 0; i < y.length; i++ )
     {
-//      g.drawRect( 
-//            x[i] - halfRectWidth, 
-//            y[i] - halfRectWidth, 
-//            pointRectWidth, 
-//            pointRectWidth );
-      g.fill3DRect( 
-            x[i]-halfRectWidth, 
-            y[i]-halfRectWidth, 
-            pointRectWidth, 
-            pointRectWidth, 
-            true//raised
-            );
-    }    
-    g.setColor( oldColor );  
-    
-    
-    
+      // g.drawRect(
+      // x[i] - halfRectWidth,
+      // y[i] - halfRectWidth,
+      // pointRectWidth,
+      // pointRectWidth );
+      g.fill3DRect( x[i] - halfRectWidth, y[i] - halfRectWidth, pointRectWidth, pointRectWidth, true// raised
+      );
+    }
+    g.setColor( oldColor );
+
   }
-  
+
   private void paintEdges( final Graphics g, GeoTransform projection ) throws GM_Exception, IncompatibleGeometryTypeException
   {
     final LineSymbolizer symb = new LineSymbolizer_Impl();
@@ -279,9 +258,7 @@ public class TempGrid
     stroke.setStroke( grey );
     symb.setStroke( stroke );
     DisplayElement de;
-    
-    
-    
+
     GM_Position[] pos = new GM_Position[2];
 
     for( int i = 0; i < gridPoints.length; i++ )
@@ -290,7 +267,7 @@ public class TempGrid
       for( int j = 0; j < gridPoints[i].length - 1; j++ )
       {
         pos[0] = gridPoints[i][j].getPosition();
-        pos [1] = gridPoints[i][j+1].getPosition();
+        pos[1] = gridPoints[i][j + 1].getPosition();
         final GM_Curve curve = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Curve( pos, m_crs );
         de = DisplayElementFactory.buildLineStringDisplayElement( null, curve, symb );
         de.paint( g, projection );
@@ -302,222 +279,176 @@ public class TempGrid
       for( int i = 0; i < gridPoints.length - 1; i++ )
       {
         pos[0] = gridPoints[i][j].getPosition();
-        pos [1] = gridPoints[i+1][j].getPosition();
+        pos[1] = gridPoints[i + 1][j].getPosition();
         final GM_Curve curve = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Curve( pos, m_crs );
         de = DisplayElementFactory.buildLineStringDisplayElement( null, curve, symb );
-        de.paint( g,projection );
+        de.paint( g, projection );
       }
     }
   }
 
   /**
-   * Reset this {@link TempGrid}.
-   * It is empty, i.e. contains no points after reset
-   * @param crs the target coordinate reference system for the grid
+   * Reset this {@link TempGrid}. It is empty, i.e. contains no points after reset
+   * 
+   * @param crs
+   *            the target coordinate reference system for the grid
    * @see #setCoodinateSystem(CS_CoordinateSystem)
-   * @throws IllegalArgumentException if crs is null
-   */ 
-  public void resetTempGrid(CS_CoordinateSystem crs)
-                    throws IllegalArgumentException
+   * @throws IllegalArgumentException
+   *             if crs is null
+   */
+  public void resetTempGrid( CS_CoordinateSystem crs ) throws IllegalArgumentException
   {
-    gridPoints= new GM_Point[0][0];
-    m_crs=crs;
+    gridPoints = new GM_Point[0][0];
+    m_crs = crs;
   }
-  
+
   /**
    * config the with its side points.
-   * @param topSidePoints the collector containing the top side points
-   * @param bottomSidePoints the collector containing the bottom side points
-   * @param leftSidePoints the collector containing the to left side points
-   * @param rightSidePoints the collector containing the to right side points
-   * @throws IllegalArgumentException if one the the side point collector is null
+   * 
+   * @param topSidePoints
+   *            the collector containing the top side points
+   * @param bottomSidePoints
+   *            the collector containing the bottom side points
+   * @param leftSidePoints
+   *            the collector containing the to left side points
+   * @param rightSidePoints
+   *            the collector containing the to right side points
+   * @throws IllegalArgumentException
+   *             if one the the side point collector is null
    */
-  public void setTempGrid(
-          LinePointCollector topSidePoints, 
-          LinePointCollector bottomSidePoints, 
-          LinePointCollector leftSidePoints, 
-          LinePointCollector rightSidePoints) throws GM_Exception
+  public void setTempGrid( LinePointCollector topSidePoints, LinePointCollector bottomSidePoints, LinePointCollector leftSidePoints, LinePointCollector rightSidePoints ) throws GM_Exception
   {
     Assert.throwIAEOnNullParam( topSidePoints, "topSidePoints" ); //$NON-NLS-1$
     Assert.throwIAEOnNullParam( bottomSidePoints, "bottomSidePoints" ); //$NON-NLS-1$
     Assert.throwIAEOnNullParam( leftSidePoints, "leftSidePoints" ); //$NON-NLS-1$
     Assert.throwIAEOnNullParam( leftSidePoints, "leftSidePoints" ); //$NON-NLS-1$
-    this.gridPoints=
-        computeMesh( 
-              topSidePoints, 
-              bottomSidePoints, 
-              leftSidePoints, rightSidePoints );
-    drawPoints=null;
+    this.gridPoints = computeMesh( topSidePoints, bottomSidePoints, leftSidePoints, rightSidePoints );
+    drawPoints = null;
   }
-  
+
   /**
-   * in case that the data comes allready as mesh  
+   * in case that the data comes allready as mesh
    */
-  public void importMesh( GM_Point[][] importedGridPoints)
+  public void importMesh( GM_Point[][] importedGridPoints )
   {
-    this.gridPoints  = importedGridPoints;
+    this.gridPoints = importedGridPoints;
   }
-  
+
   /**
    * Computes the grid points from its side points
    */
-  private final GM_Point[][] computeMesh(
-                          LinePointCollector topSidePoints, 
-                          LinePointCollector bottomSidePoints, 
-                          LinePointCollector leftSidePoints, 
-                          LinePointCollector rightSidePoints) 
-                          throws GM_Exception
+  private final GM_Point[][] computeMesh( LinePointCollector topSidePoints, LinePointCollector bottomSidePoints, LinePointCollector leftSidePoints, LinePointCollector rightSidePoints ) throws GM_Exception
   {
-    //GeometryFactory geometryFactory= new GeometryFactory();
+    // GeometryFactory geometryFactory= new GeometryFactory();
     final LineString topLine = pointToLineString( topSidePoints );
     final LineString bottomLine = pointToLineString( bottomSidePoints );
     final LineString leftLine = pointToLineString( leftSidePoints );
     final LineString rightLine = pointToLineString( rightSidePoints );
-    
-    //compute mesh points
-    JTSQuadMesher mesher= 
-    new JTSQuadMesher(
-            topLine,
-            bottomLine,
-            leftLine,
-            rightLine);
-    Coordinate[][] coordinates=mesher.calculateMesh();
-    GeometryFactory geometryFactory= new GeometryFactory();
-    GM_Point points2D[][] = new GM_Point[coordinates.length][]; 
-    for(int i=0;i<coordinates.length;i++)
+
+    // compute mesh points
+    JTSQuadMesher mesher = new JTSQuadMesher( topLine, bottomLine, leftLine, rightLine );
+    Coordinate[][] coordinates = mesher.calculateMesh();
+    GeometryFactory geometryFactory = new GeometryFactory();
+    GM_Point points2D[][] = new GM_Point[coordinates.length][];
+    for( int i = 0; i < coordinates.length; i++ )
     {
-      Coordinate[] line=coordinates[i];
-      GM_Point[] points1D= 
-              new GM_Point[line.length];
-      points2D[i]=points1D;
-      for(int j=0;j<line.length;j++)
+      Coordinate[] line = coordinates[i];
+      GM_Point[] points1D = new GM_Point[line.length];
+      points2D[i] = points1D;
+      for( int j = 0; j < line.length; j++ )
       {
-        Coordinate coord=line[j];
-        points1D[j]=    
-          (GM_Point)JTSAdapter.wrap( 
-                  geometryFactory.createPoint(coord));
+        Coordinate coord = line[j];
+        points1D[j] = (GM_Point) JTSAdapter.wrap( geometryFactory.createPoint( coord ) );
       }
     }
     return points2D;
   }
-  
+
   /**
-   * To get an {@link ICommand} that can be use to hat the temp
-   * grid to the model
+   * To get an {@link ICommand} that can be use to hat the temp grid to the model
    */
-  public ICommand getAddToModelCommand(
-      MapPanel mapPanel,
-      IFEDiscretisationModel1d2d model,
-      CommandableWorkspace commandableWorkspace,
-      double searchRectWidth) 
-      throws GM_Exception
+  public ICommand getAddToModelCommand( MapPanel mapPanel, IFEDiscretisationModel1d2d model, CommandableWorkspace commandableWorkspace, double searchRectWidth ) throws GM_Exception
   {
-    ChangeDiscretiationModelCommand compositeCommand = 
-          new ChangeDiscretiationModelCommand(
-              commandableWorkspace,
-              model);// new CompositeCommand("Grid Command");
-    //compute Points
-    GM_Point[][] points2D=gridPoints;//computeMesh();
-    final int DIM_X=points2D.length;
-    if(DIM_X==0)
+    ChangeDiscretiationModelCommand compositeCommand = new ChangeDiscretiationModelCommand( commandableWorkspace, model );// new
+                                                                                                                          // CompositeCommand("Grid
+                                                                                                                          // Command");
+    // compute Points
+    GM_Point[][] points2D = gridPoints;// computeMesh();
+    final int DIM_X = points2D.length;
+    if( DIM_X == 0 )
     {
-      System.out.println("DimX is null"); //$NON-NLS-1$
+      System.out.println( "DimX is null" ); //$NON-NLS-1$
       return compositeCommand;
     }
-    
-    final int DIM_Y=points2D[0].length;
-    //add nodes
-    AddNodeCommand[][] newNodesArray2D= 
-       new AddNodeCommand[DIM_X][DIM_Y];
-    addNodesFromPoints( 
-        model, 
-        newNodesArray2D, 
-        compositeCommand, 
-        points2D,
-        searchRectWidth);    
-    
+
+    final int DIM_Y = points2D[0].length;
+    // add nodes
+    AddNodeCommand[][] newNodesArray2D = new AddNodeCommand[DIM_X][DIM_Y];
+    addNodesFromPoints( model, newNodesArray2D, compositeCommand, points2D, searchRectWidth );
+
     addElementsFromNodes( model, newNodesArray2D, compositeCommand );
     return compositeCommand;
   }
+
   /**
    * Make the add node command
    */
-  private final void  addNodesFromPoints(
-      IFEDiscretisationModel1d2d model,
-      AddNodeCommand[][] newNodesArray2D,
-      ChangeDiscretiationModelCommand compositeCommand,
-      GM_Point[][] points2D,
-      double searchRectWidth)
+  private final void addNodesFromPoints( IFEDiscretisationModel1d2d model, AddNodeCommand[][] newNodesArray2D, ChangeDiscretiationModelCommand compositeCommand, GM_Point[][] points2D, double searchRectWidth )
   {
-    for(int i=0;i<points2D.length;i++)
+    for( int i = 0; i < points2D.length; i++ )
     {
-      GM_Point[] points1D=points2D[i];
-//      AddNodeCommand[] newNodesArray1D= 
-//              new AddNodeCommand[points1D.length];
-//      newNodesArray2D[i]=newNodesArray1D;
-      for(int j=0;j<points1D.length;j++)
+      GM_Point[] points1D = points2D[i];
+      // AddNodeCommand[] newNodesArray1D=
+      // new AddNodeCommand[points1D.length];
+      // newNodesArray2D[i]=newNodesArray1D;
+      for( int j = 0; j < points1D.length; j++ )
       {
-        //TODO check node for existance
-        AddNodeCommand nodeCommand=
-          new AddNodeCommand(
-                model,
-                points1D[j], 
-                searchRectWidth,
-                this.ignoreZCoordinate);
-        newNodesArray2D[i][j]=nodeCommand;//newNodesArray1D[j]=nodeCommand;
+        // TODO check node for existance
+        AddNodeCommand nodeCommand = new AddNodeCommand( model, points1D[j], searchRectWidth, this.ignoreZCoordinate );
+        newNodesArray2D[i][j] = nodeCommand;// newNodesArray1D[j]=nodeCommand;
         compositeCommand.addCommand( nodeCommand );
       }
     }
   }
-  
+
   /**
    * make the add element command. element are added based on their nodes
    */
-  private final void  addElementsFromNodes(
-      IFEDiscretisationModel1d2d model,
-      AddNodeCommand[][] newNodesArray2D,
-      ChangeDiscretiationModelCommand compositeCommand)
+  private final void addElementsFromNodes( IFEDiscretisationModel1d2d model, AddNodeCommand[][] newNodesArray2D, ChangeDiscretiationModelCommand compositeCommand )
   {
-      final int LAST_INDEX_I = newNodesArray2D.length-2;
-      for(int i=0; i<=LAST_INDEX_I/*i<addEdgeH2D.length-1*/;i++)
+    final int LAST_INDEX_I = newNodesArray2D.length - 2;
+    for( int i = 0; i <= LAST_INDEX_I/* i<addEdgeH2D.length-1 */; i++ )
+    {
+      final int LAST_INDEX_J = newNodesArray2D[0].length - 2;
+      for( int j = 0; j <= LAST_INDEX_J; j++ )
       {
-        final int LAST_INDEX_J=newNodesArray2D[0].length-2;
-        for(int j=0;j<=LAST_INDEX_J;j++)
-        {
-          AddNodeCommand node0 = newNodesArray2D[i][j];
-          AddNodeCommand node1 = newNodesArray2D[i][j+1];
-          AddNodeCommand node2 = newNodesArray2D[i+1][j+1];
-          AddNodeCommand node3 = newNodesArray2D[i+1][j];
-          AddNodeCommand node4 = newNodesArray2D[i][j];
-          
-          AddElementCmdFromNodeCmd addElementCommand=
-            new AddElementCmdFromNodeCmd(
-                model,
-                new AddNodeCommand[]{node0,node1,node2,node3, node4});
-          compositeCommand.addCommand( addElementCommand );
-        }
+        AddNodeCommand node0 = newNodesArray2D[i][j];
+        AddNodeCommand node1 = newNodesArray2D[i][j + 1];
+        AddNodeCommand node2 = newNodesArray2D[i + 1][j + 1];
+        AddNodeCommand node3 = newNodesArray2D[i + 1][j];
+        AddNodeCommand node4 = newNodesArray2D[i][j];
+
+        AddElementCmdFromNodeCmd addElementCommand = new AddElementCmdFromNodeCmd( model, new AddNodeCommand[] { node0, node1, node2, node3, node4 } );
+        compositeCommand.addCommand( addElementCommand );
       }
+    }
   }
-  
+
   /**
    * get the {@link LinePointCollector} points as {@link LineString}
    */
-  private LineString pointToLineString(
-      LinePointCollector lineGeometryBuilder)
+  private LineString pointToLineString( LinePointCollector lineGeometryBuilder )
   {
-    final int SIZE=lineGeometryBuilder.getCurrentPointCnt();
+    final int SIZE = lineGeometryBuilder.getCurrentPointCnt();
     Coordinate coordinates[] = new Coordinate[SIZE];
-    for(int i=0;i<SIZE;i++)
+    for( int i = 0; i < SIZE; i++ )
     {
-      coordinates[i]=
-      JTSAdapter.export(  
-            lineGeometryBuilder.getPointAt( i ).getPosition());
+      coordinates[i] = JTSAdapter.export( lineGeometryBuilder.getPointAt( i ).getPosition() );
     }
-    //CoordinateSequence 
-    //JTSAdapter
-    GeometryFactory geometryFactory=new GeometryFactory();
-    LineString lineString=
-    geometryFactory.createLineString( coordinates );
+    // CoordinateSequence
+    // JTSAdapter
+    GeometryFactory geometryFactory = new GeometryFactory();
+    LineString lineString = geometryFactory.createLineString( coordinates );
     return lineString;
   }
 }

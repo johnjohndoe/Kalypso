@@ -18,6 +18,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.core.preferences.IKalypsoCorePreferences;
 import org.kalypso.ui.wizards.imports.Messages;
 import org.kalypsodeegree_impl.io.shpapi.ShapeFile;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
@@ -107,8 +108,8 @@ public class PageMain extends WizardPage implements Listener
     new Label( composite, SWT.NONE ).setText( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageMain.8" ) ); //$NON-NLS-1$
     cmb_CoordinateSystem = new Combo( composite, SWT.BORDER | SWT.READ_ONLY );
     cmb_CoordinateSystem.setItems( (new ConvenienceCSFactoryFull()).getKnownCS() );
-    final int index_GausKrueger = cmb_CoordinateSystem.indexOf( DataContainer.GAUS_KRUEGER );
-    cmb_CoordinateSystem.select( index_GausKrueger > -1 ? index_GausKrueger : 0 );
+    final int indexOfDefaultCRS = cmb_CoordinateSystem.indexOf( IKalypsoCorePreferences.DEFAULT_CRS );
+    cmb_CoordinateSystem.select( indexOfDefaultCRS > -1 ? indexOfDefaultCRS : 0 );
     gd = new GridData();
     gd.horizontalAlignment = GridData.FILL;
     gd.widthHint = 75;

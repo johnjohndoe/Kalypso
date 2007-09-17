@@ -57,7 +57,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -87,19 +86,15 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
  */
 public class SelectedCalculationComponent
 {
-
-  private static final String SUB_CALCULATION_UNIT_Title = "Sub Calculation Unit"; //$NON-NLS-1$
-
-  /* ======================================================================== */
   private TableViewer tableViewer;
 
-  private final String defaultTestDecription = Messages.getString( "SelectedCalculationComponent.1" ); //$NON-NLS-1$
+  // private final String defaultTestDecription = Messages.getString( "SelectedCalculationComponent.1" ); //$NON-NLS-1$
 
-  private final String titleDescriptionGroup = Messages.getString( "SelectedCalculationComponent.2" ); //$NON-NLS-1$
+  // private final String titleDescriptionGroup = Messages.getString( "SelectedCalculationComponent.2" ); //$NON-NLS-1$
 
-  private Group descriptionGroupText;
-
-  private Text descriptionText;
+  // private Group descriptionGroupText;
+  //
+  // private Text descriptionText;
 
   private Text element2D;
 
@@ -244,8 +239,8 @@ public class SelectedCalculationComponent
       {
         titleSubCalculation.setEnabled( true );
         table.setEnabled( true );
-        descriptionGroupText.setEnabled( true );
-        descriptionText.setEnabled( true );
+        // descriptionGroupText.setEnabled( true );
+        // descriptionText.setEnabled( true );
         bLineText.setText( String.valueOf( ((ICalculationUnit1D2D) newValue).getContinuityLines().size() ) );
         tableViewer.setInput( ((ICalculationUnit1D2D) newValue).getSubUnits().toArray() );
       }
@@ -254,8 +249,8 @@ public class SelectedCalculationComponent
         titleSubCalculation.setEnabled( false );
         table.clearAll();
         table.setEnabled( false );
-        descriptionGroupText.setEnabled( false );
-        descriptionText.setEnabled( false );
+        // descriptionGroupText.setEnabled( false );
+        // descriptionText.setEnabled( false );
       }
       int bcCount = CalcUnitOps.countAssignedBoundaryConditions( getBoundaryConditions(), (ICalculationUnit) newValue );
       textCountBC.setText( String.valueOf( bcCount ) );
@@ -343,7 +338,7 @@ public class SelectedCalculationComponent
     subCalculationComposite.setLayout( new FormLayout() );
 
     titleSubCalculation = new Label( subCalculationComposite, SWT.NONE );
-    titleSubCalculation.setText( SUB_CALCULATION_UNIT_Title );
+    titleSubCalculation.setText( Messages.getString( "SelectedCalculationComponent.0" ) );
     FormData formData = new FormData();
     formData.top = new FormAttachment( optionsComposite, 5 );
     titleSubCalculation.setLayoutData( formData );
@@ -365,7 +360,7 @@ public class SelectedCalculationComponent
             {
               sel = (IStructuredSelection) (tableViewer.getSelection());
               String description = ((ICalculationUnit) sel.getFirstElement()).getDescription();
-              descriptionText.setText( description );
+              // descriptionText.setText( description );
             }
           }
           catch( RuntimeException e1 )
@@ -375,7 +370,7 @@ public class SelectedCalculationComponent
         }
         else
         {
-          descriptionText.setText( defaultTestDecription );
+          // descriptionText.setText( defaultTestDecription );
         }
       }
     } );
@@ -385,36 +380,36 @@ public class SelectedCalculationComponent
     table.setLinesVisible( true );
 
     final TableColumn lineColumn = new TableColumn( table, SWT.LEFT );
-    lineColumn.setWidth( 100 );
+    lineColumn.setWidth( 200 );
 
     formData = new FormData();
     formData.top = new FormAttachment( titleSubCalculation, 5 );
     formData.left = new FormAttachment( 0, 5 );
     formData.bottom = new FormAttachment( 100, 0 );
-    formData.width = 100;
+    formData.width = 200;
     table.setLayoutData( formData );
 
-    descriptionGroupText = new Group( subCalculationComposite, SWT.NONE );
-    descriptionGroupText.setText( titleDescriptionGroup );
-    formData = new FormData();
-    formData.left = new FormAttachment( table, 5 );
-    formData.top = new FormAttachment( titleSubCalculation, 10 );
-    formData.right = new FormAttachment( 100, -5 );
-    formData.bottom = new FormAttachment( 100, 0 );
-    descriptionGroupText.setLayoutData( formData );
-
-    FormLayout formDescription = new FormLayout();
-    descriptionGroupText.setLayout( formDescription );
-
-    descriptionText = new Text( descriptionGroupText, SWT.MULTI | SWT.WRAP );
-
-    descriptionText.setEditable( false );
-    descriptionText.setText( defaultTestDecription );
-
-    FormData formDescripData = new FormData();
-    formDescripData.left = new FormAttachment( 0, 0 );
-    formDescripData.right = new FormAttachment( 100, 0 );
-    descriptionText.setLayoutData( formDescripData );
+    // descriptionGroupText = new Group( subCalculationComposite, SWT.NONE );
+    // descriptionGroupText.setText( titleDescriptionGroup );
+    // formData = new FormData();
+    // formData.left = new FormAttachment( table, 5 );
+    // formData.top = new FormAttachment( titleSubCalculation, 10 );
+    // formData.right = new FormAttachment( 100, -5 );
+    // formData.bottom = new FormAttachment( 100, 0 );
+    // descriptionGroupText.setLayoutData( formData );
+    //
+    // FormLayout formDescription = new FormLayout();
+    // descriptionGroupText.setLayout( formDescription );
+    //
+    // descriptionText = new Text( descriptionGroupText, SWT.MULTI | SWT.WRAP );
+    //
+    // descriptionText.setEditable( false );
+    // descriptionText.setText( defaultTestDecription );
+    //
+    // FormData formDescripData = new FormData();
+    // formDescripData.left = new FormAttachment( 0, 0 );
+    // formDescripData.right = new FormAttachment( 100, 0 );
+    // descriptionText.setLayoutData( formDescripData );
   }
 
 }

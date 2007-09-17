@@ -5,7 +5,7 @@ import java.net.URL;
 
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.commons.command.ICommand;
-import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.preferences.IKalypsoCorePreferences;
 import org.kalypso.kalypso1d2d.pjt.views.SzenarioDataProvider;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
@@ -21,7 +21,9 @@ public class DataContainer
 
   private CS_CoordinateSystem m_coordinateSystem;
 
-  private static final CS_CoordinateSystem m_defaultCoordinateSystem = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+  private static final CS_CoordinateSystem m_defaultCoordinateSystem = ConvenienceCSFactory.getInstance().getOGCCSByName( IKalypsoCorePreferences.DEFAULT_CRS );
+
+//  private static final CS_CoordinateSystem m_defaultCoordinateSystem = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
 
   private SzenarioDataProvider m_szenarioDataProvider;
 

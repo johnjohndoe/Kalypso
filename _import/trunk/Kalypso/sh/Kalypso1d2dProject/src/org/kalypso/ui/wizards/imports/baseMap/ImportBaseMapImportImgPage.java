@@ -25,9 +25,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.core.preferences.IKalypsoCorePreferences;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.wizards.imports.Messages;
-import org.kalypso.ui.wizards.imports.roughness.DataContainer;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 
 /**
@@ -103,8 +103,8 @@ public class ImportBaseMapImportImgPage extends WizardPage
     new Label( container, SWT.NONE ).setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.1" ) ); //$NON-NLS-1$
     cmb_CoordinateSystem = new Combo( container, SWT.BORDER | SWT.READ_ONLY );
     cmb_CoordinateSystem.setItems( (new ConvenienceCSFactoryFull()).getKnownCS() );
-    final int index_GausKrueger = cmb_CoordinateSystem.indexOf( DataContainer.GAUS_KRUEGER );
-    cmb_CoordinateSystem.select( index_GausKrueger > -1 ? index_GausKrueger : 0 );
+    final int indexOfDefaultCRS = cmb_CoordinateSystem.indexOf( IKalypsoCorePreferences.DEFAULT_CRS );
+    cmb_CoordinateSystem.select( indexOfDefaultCRS > -1 ? indexOfDefaultCRS : 0 );
     GridData gd = new GridData();
     gd.horizontalAlignment = GridData.FILL;
     gd.widthHint = 75;

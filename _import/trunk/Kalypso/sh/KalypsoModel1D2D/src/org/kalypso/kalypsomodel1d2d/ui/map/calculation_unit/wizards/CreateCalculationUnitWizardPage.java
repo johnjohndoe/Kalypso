@@ -60,7 +60,7 @@ public class CreateCalculationUnitWizardPage extends WizardPage
 
   private Combo m_calcUnitType;
 
-  private Text m_calcUnitDescription;
+//  private Text m_calcUnitDescription;
 
   private static final String QNAME_KEY_1D2D = Messages.getString("CreateCalculationUnitWizardPage.0"); //$NON-NLS-1$
 
@@ -109,11 +109,11 @@ public class CreateCalculationUnitWizardPage extends WizardPage
     m_calcUnitType.select( 0 );
     m_calcUnitType.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
 
-    final Label descriptionLabel = new Label( composite, SWT.RIGHT );
-    descriptionLabel.setText( Messages.getString("CreateCalculationUnitWizardPage.9") ); //$NON-NLS-1$
-    m_calcUnitDescription = new Text( composite, SWT.BORDER | SWT.MULTI );
-    m_calcUnitDescription.setText( "" ); //$NON-NLS-1$
-    m_calcUnitDescription.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+//    final Label descriptionLabel = new Label( composite, SWT.RIGHT );
+//    descriptionLabel.setText( Messages.getString("CreateCalculationUnitWizardPage.9") ); //$NON-NLS-1$
+//    m_calcUnitDescription = new Text( composite, SWT.BORDER | SWT.MULTI );
+//    m_calcUnitDescription.setText( "" ); //$NON-NLS-1$
+//    m_calcUnitDescription.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     
     setPageComplete( false );
   }
@@ -138,7 +138,8 @@ public class CreateCalculationUnitWizardPage extends WizardPage
 
   public String getCalculationUnitDescription( )
   {
-    return m_calcUnitDescription.getText();
+    return "";
+//    return m_calcUnitDescription.getText();
   }
 
 }

@@ -50,6 +50,7 @@ import javax.xml.namespace.QName;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -77,7 +78,7 @@ public class ContinuityLine2D extends FELine implements IContinuityLine2D
   public List<IFE1D2DNode> createFullNodesList( final List<IFE1D2DNode> nodes ) throws CoreException
   {
     if( nodes.size() < 2 )
-      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("ContinuityLine2D.0") ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "ContinuityLine2D.0" ) ) ); //$NON-NLS-1$
     final List<IFE1D2DNode> fullNodeList;
     try
     {
@@ -85,7 +86,7 @@ public class ContinuityLine2D extends FELine implements IContinuityLine2D
     }
     catch( GM_Exception e )
     {
-      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("ContinuityLine2D.1") + e.getLocalizedMessage() ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "ContinuityLine2D.1" ) + e.getLocalizedMessage() ) ); //$NON-NLS-1$
     }
     final FeatureList nodeList = (FeatureList) getFeature().getProperty( IFELine.PROP_NODES );
     nodeList.clear();
@@ -120,7 +121,9 @@ public class ContinuityLine2D extends FELine implements IContinuityLine2D
     final GM_Position[] nodePositions = new GM_Position[recalculatedNodes.size()];
     for( int i = 0; i < nodePositions.length; i++ )
       nodePositions[i] = recalculatedNodes.get( i ).getPoint().getPosition();
-    final CS_CoordinateSystem crs = nodes.get( 0 ).getPoint().getCoordinateSystem();
+    CS_CoordinateSystem crs = nodes.get( 0 ).getPoint().getCoordinateSystem();
+    if( crs == null )
+      crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
     setGeometry( GeometryFactory.createGM_Curve( nodePositions, crs ) );
     return recalculatedNodes;
   }
@@ -136,12 +139,12 @@ public class ContinuityLine2D extends FELine implements IContinuityLine2D
     for( ; iterator.hasNext(); )
     {
       final IFE1D2DNode nextMilestoneNode = iterator.next();
-      while( !nextMilestoneNode.getGmlID().equals( currentNode.getGmlID()) )
+      while( !nextMilestoneNode.getGmlID().equals( currentNode.getGmlID() ) )
       {
         final Collection<IFE1D2DNode> neighbourNodes = currentNode.getNeighbours();
         if( neighbourNodes.size() == 0 )
         {
-          final IStatus status = StatusUtilities.createErrorStatus( Messages.getString("ContinuityLine2D.2") + currentNode.getWrappedFeature().getId() ); //$NON-NLS-1$
+          final IStatus status = StatusUtilities.createErrorStatus( Messages.getString( "ContinuityLine2D.2" ) + currentNode.getWrappedFeature().getId() ); //$NON-NLS-1$
           throw new CoreException( status );
         }
         IFE1D2DNode bestCandidateNode = null;

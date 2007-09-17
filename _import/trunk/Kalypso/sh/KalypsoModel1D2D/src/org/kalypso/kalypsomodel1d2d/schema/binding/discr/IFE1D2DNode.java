@@ -40,10 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
-import java.util.LinkedHashMap;
 import java.util.List;
 
-import org.eclipse.core.resources.ResourcesPlugin;
+import org.kalypso.core.preferences.IKalypsoCorePreferences;
 import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypso.kalypsosimulationmodel.core.discr.IFENode;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
@@ -60,9 +59,7 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public interface IFE1D2DNode<CT extends IFENetItem> extends IFENode/*<CT>*/
 {
-  public final static String GAUS_KRUEGER = "EPSG:31467"; //$NON-NLS-1$
-
-  public static final CS_CoordinateSystem DEFAULT_COORDINATE_SYSTEM = ConvenienceCSFactory.getInstance().getOGCCSByName( GAUS_KRUEGER );
+  public static final CS_CoordinateSystem DEFAULT_COORDINATE_SYSTEM = ConvenienceCSFactory.getInstance().getOGCCSByName( IKalypsoCorePreferences.DEFAULT_CRS );
 
   /**
    * To get the position of this fe-node

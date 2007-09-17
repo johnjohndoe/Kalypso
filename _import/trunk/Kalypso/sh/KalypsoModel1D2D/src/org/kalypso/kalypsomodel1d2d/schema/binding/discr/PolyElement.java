@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.ops.ModelOps;
@@ -39,7 +40,7 @@ import org.opengis.cs.CS_CoordinateSystem;
  * @see IFE1D2DContinuityLine
  * @see FE1D2DContinuityLine
  */
-@SuppressWarnings("hiding") //$NON-NLS-1$
+@SuppressWarnings("hiding")//$NON-NLS-1$
 public class PolyElement extends Element2D implements IPolyElement
 {
   private final IFeatureWrapperCollection<IFE1D2DComplexElement> containers;
@@ -151,7 +152,7 @@ public class PolyElement extends Element2D implements IPolyElement
   }
 
   @Override
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
+  @SuppressWarnings("unchecked")//$NON-NLS-1$
   public void setEdges( final IFE1D2DEdge[] edges )
   {
     final Feature feature = getFeature();
@@ -186,7 +187,9 @@ public class PolyElement extends Element2D implements IPolyElement
       return null;
     }
 
-    final CS_CoordinateSystem crs = nodes.get( 0 ).getPoint().getCoordinateSystem();
+    CS_CoordinateSystem crs = nodes.get( 0 ).getPoint().getCoordinateSystem();
+    if( crs == null )
+      crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
 
     for( int i = 0; i < poses.length; i++ )
     {
@@ -294,7 +297,7 @@ public class PolyElement extends Element2D implements IPolyElement
   {
     if( edgeID == null )
     {
-      throw new IllegalArgumentException( Messages.getString("PolyElement.2") ); //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.getString( "PolyElement.2" ) ); //$NON-NLS-1$
     }
     final FeatureList edgeFeatureList = edges.getWrappedList();
     if( edgeFeatureList.contains( edgeID ) )

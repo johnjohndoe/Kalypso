@@ -68,9 +68,7 @@ import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilChartLayer;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 import org.kalypso.model.wspm.ui.view.chart.AbstractPolyLineLayer.EditData;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.opengis.cs.CS_CoordinateSystem;
 
 import de.belger.swtchart.EditInfo;
 import de.belger.swtchart.axis.AxisRange;
