@@ -49,7 +49,6 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
@@ -62,8 +61,6 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
-import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
@@ -151,8 +148,6 @@ public class SelectedCalculationComponent
 
   private Composite subCalculationComposite;
 
-  private Feature wrappedFeature;
-
   private Label labelName;
 
   private Text typeField;
@@ -160,8 +155,6 @@ public class SelectedCalculationComponent
   private Label titleSubCalculation;
 
   Table table;
-
-  private Image image_alert;
 
   private Label selectedProjectName;
 
@@ -321,8 +314,6 @@ public class SelectedCalculationComponent
     element2D.setEditable( false );
     data = new GridData( GridData.FILL_HORIZONTAL );
     element2D.setLayoutData( data );
-
-    image_alert = new Image( optionsComposite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/alert.gif" ).getImageData() ); //$NON-NLS-1$
 
     Label boundaryUpLabel = new Label( optionsComposite, SWT.RIGHT );
     boundaryUpLabel.setText( Messages.getString( "SelectedCalculationComponent.16" ) ); //$NON-NLS-1$

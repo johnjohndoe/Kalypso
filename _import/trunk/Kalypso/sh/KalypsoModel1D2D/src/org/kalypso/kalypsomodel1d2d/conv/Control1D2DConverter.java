@@ -467,7 +467,8 @@ public class Control1D2DConverter
     controlModel.isUnsteadySelected();
     final IObservation<TupleResult> tupleSet = controlModel.getTimeSteps();
     final TupleResult result = tupleSet.getResult();
-    final IComponent compTime = result.getComponents()[0];
+    final IComponent[] components = result.getComponents();
+    final IComponent compTime = ComponentUtilities.findComponentByID( components, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );
     final TupleResultIndex index = new TupleResultIndex( result, compTime );
     // todo check if result is not empty
     final Iterator<IRecord> iterator = index.getIterator();
