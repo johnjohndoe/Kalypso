@@ -41,6 +41,7 @@
 package org.kalypso.lhwzsachsen.elbepolte.visitors;
 
 import java.io.File;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -65,7 +66,6 @@ import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.xml.sax.InputSource;
 
 /**
  * 
@@ -139,17 +139,18 @@ public class FileVisitorHwvs2Zml implements FileVisitor
 
             final String sZmlFileBaseName = fleZml.getName().replaceAll( ".zml", "" );
 
-            ElbePolteConverter.hwvs2zml( fleHwvs, fleZml,m_metaMap );
+            ElbePolteConverter.hwvs2zml( fleHwvs, fleZml, m_metaMap );
             final Object objAccuracy = f.getProperty( "accuracyPrediction" );
             double accuracy = LhwzHelper.getDefaultUmhuellendeAccuracy();
             if( objAccuracy instanceof Double )
               accuracy = ( (Double)objAccuracy ).doubleValue();
 
             // und Umhüllende "_unten", "_oben"
-            final InputSource is = new InputSource( fleZml.getAbsolutePath() );
+            //final InputSource is = new InputSource( fleZml.getAbsolutePath() );
             try
             {
-              final IObservation obsZml = ZmlFactory.parseXML( is, "", null );
+              final URL is = fleZml.toURL();
+              final IObservation obsZml = ZmlFactory.parseXML( is, "" );
 
               if( m_writeUmhuellende )
               {
