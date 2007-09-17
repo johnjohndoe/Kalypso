@@ -247,10 +247,8 @@ public class MapWidgetView extends ViewPart
       }
       else
       {
-        final String name = widget.getName();
-        final String tooltip = widget.getToolTip();
-        m_group.setText( name );
-        m_group.setToolTipText( tooltip );
+        m_group.setText( widget.getName() );
+        m_group.setToolTipText( widget.getToolTip() );
 
         final Composite widgetParent = m_toolkit.createComposite( m_group, SWT.NONE );
         widgetParent.setLayout( new FillLayout() );
