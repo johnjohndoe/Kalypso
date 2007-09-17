@@ -443,7 +443,7 @@
     </target>
 
     <target name="redeploy-ObsService"
-            depends="psicompact-fake,buildwar-ObsService,deploy-allconf"
+            depends="clean,psicompact-fake,buildwar-ObsService,deploy-allconf"
             description="Redeploy service and configuration">
         <echo message="Redeploying Observation Service" />
         <ant antfile="${workspace}/KalypsoServiceObs/etc/ant/build.xml"
