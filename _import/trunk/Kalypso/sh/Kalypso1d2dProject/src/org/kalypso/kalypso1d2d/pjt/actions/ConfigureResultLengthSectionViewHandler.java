@@ -67,6 +67,7 @@ import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeLoadStatusVisitor;
+import org.kalypso.ogc.gml.mapmodel.visitor.LoadStatusPredicater;
 import org.kalypso.ui.views.map.MapView;
 import org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
@@ -117,8 +118,16 @@ public class ConfigureResultLengthSectionViewHandler extends AbstractHandler
             final IMapModell modell = mapPanel.getMapModell();
             if( modell != null )
             {
-              // TODO: check if all themes are loaded (visitor)
-              final KalypsoThemeLoadStatusVisitor visitor = new KalypsoThemeLoadStatusVisitor();
+              // Here, we are just interested in line themes
+              // TODO: implement to wait for cascading theme (FE-Net) loading, because right now just the legend and the
+              // scrab-layer gets loaded.
+              //
+              // HACK: check if there are more than these two layers in the map.
+              int length = modell.getAllThemes().length;
+              if( length < 3 )
+                continue;
+              LoadStatusPredicater predicate = new LoadStatusPredicater();
+              final KalypsoThemeLoadStatusVisitor visitor = new KalypsoThemeLoadStatusVisitor( predicate );
               modell.accept( visitor, FeatureVisitor.DEPTH_INFINITE );
 
               if( visitor.isLoaded() == true )

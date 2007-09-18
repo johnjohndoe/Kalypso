@@ -86,7 +86,7 @@ public class LengthSectionHandler2d
 
   }
 
-  private Map<BigDecimal, GM_Point> getPointList( FeatureList riverFeatures, final BigDecimal[] stationList )
+  private static Map<BigDecimal, GM_Point> getPointList( FeatureList riverFeatures, final BigDecimal[] stationList )
   {
     Map<BigDecimal, GM_Point> pointList = new HashMap<BigDecimal, GM_Point>();
 
@@ -164,7 +164,7 @@ public class LengthSectionHandler2d
     return pointList;
   }
 
-  private void generateLengthSection( Map<BigDecimal, GM_Point> pointList, GM_TriangulatedSurface surface, IObservation<TupleResult> lsObs, DOCUMENTTYPE documenttype )
+  private static void generateLengthSection( Map<BigDecimal, GM_Point> pointList, GM_TriangulatedSurface surface, IObservation<TupleResult> lsObs, DOCUMENTTYPE documenttype )
   {
     /* generate length section point list */
 

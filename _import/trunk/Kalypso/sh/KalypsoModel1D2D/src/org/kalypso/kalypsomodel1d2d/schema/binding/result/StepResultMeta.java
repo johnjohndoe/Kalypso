@@ -158,5 +158,4 @@ public class StepResultMeta extends ResultMeta implements IStepResultMeta
     if( maxValue != null )
       document.setMaxValue( maxValue );
   }
-
 }

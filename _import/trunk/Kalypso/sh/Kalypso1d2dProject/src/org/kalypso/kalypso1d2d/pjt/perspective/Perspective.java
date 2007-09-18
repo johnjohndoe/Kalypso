@@ -50,10 +50,10 @@ public class Perspective implements IPerspectiveFactory
     leftBottom.addPlaceholder( TIMESERIES_REPOSITORY_VIEW_ID );
 
     rightTop.addPlaceholder( MapView.ID );
-    rightTop.addPlaceholder( org.kalypso.chart.ui.view.ChartView.ID );
     rightTop.addPlaceholder( FeatureTemplateView.ID );
     rightTop.addPlaceholder( DiagramViewPart.ID );
 
+    rightBottom.addPlaceholder( org.kalypso.chart.ui.view.ChartView.ID );
     rightBottom.addPlaceholder( FeatureView.ID );
     rightBottom.addPlaceholder( ChartView.ID );
     rightBottom.addPlaceholder( TableViewPart.ID );

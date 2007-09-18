@@ -41,17 +41,27 @@
 package org.kalypso.ui.wizards.lengthsection;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.net.URL;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.results.lengthsection.LengthSectionHandler2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
@@ -98,6 +108,8 @@ public class ConfigureLengthSectionWizard extends Wizard
     m_resultModel = resultModel;
     m_mapPanel = mapPanel;
     setWindowTitle( "1D2D-Ergebnisse" );
+
+    setNeedsProgressMonitor( true );
   }
 
   /**
@@ -127,106 +139,171 @@ public class ConfigureLengthSectionWizard extends Wizard
   public boolean performFinish( )
   {
     final ConfigureLengthSectionWizardPage parameterPage = (ConfigureLengthSectionWizardPage) getPage( PAGE_GENERATE_LENGTH_SECTION_NAME );
-    LengthSectionParameters lengthSectionParameters = parameterPage.getLengthSectionParameters();
+    final LengthSectionParameters lengthSectionParameters = parameterPage.getLengthSectionParameters();
+    final SelectResultWizardPage resultPage = (SelectResultWizardPage) getPage( PAGE_SELECT_RESULTS_NAME );
+    final IResultMeta[] results = resultPage.getSelectedResults();
 
-    try
+    if( results.length == 0 )
     {
-      // get the Observation Template from the resources
-      final URL lsObsUrl = ConfigureLengthSectionWizard.class.getResource( "resources/lengthSectionTemplate.gml" );
-      final GMLWorkspace lsObsWorkspace = GmlSerializer.createGMLWorkspace( lsObsUrl, null );
-      final IObservation<TupleResult> lsObs = ObservationFeatureFactory.toObservation( lsObsWorkspace.getRootFeature() );
-
-      final SelectResultWizardPage resultPage = (SelectResultWizardPage) getPage( PAGE_SELECT_RESULTS_NAME );
-      final IResultMeta[] results = resultPage.getSelectedResults();
-
-      // just get the first selected item
-      IResultMeta resultMeta = results[0];
-
-      if( resultMeta instanceof IStepResultMeta )
-      {
-        IStepResultMeta stepResult = (IStepResultMeta) resultMeta;
-
-        IFeatureWrapperCollection<IResultMeta> children = stepResult.getChildren();
-        for( IResultMeta child : children )
-        {
-          // get all documents
-          if( child instanceof IDocumentResultMeta )
-          {
-            IDocumentResultMeta docResult = (IDocumentResultMeta) child;
-            DOCUMENTTYPE documentType = docResult.getDocumentType();
-
-            GM_TriangulatedSurface surface = null;
-
-            if( documentType == DOCUMENTTYPE.tinWsp )
-            {
-              surface = getSurface( docResult );
-              if( surface != null )
-              {
-                LengthSectionHandler2d handler1 = new LengthSectionHandler2d( lsObs, surface, lengthSectionParameters.getRiverFeatures(), lengthSectionParameters.getStationList(), documentType );
-              }
-            }
-          }
-        }
-
-        IResultMeta parent = stepResult.getParent();
-        if( parent instanceof ICalcUnitResultMeta )
-        {
-          ICalcUnitResultMeta calcUnitResult = (ICalcUnitResultMeta) parent;
-          IFeatureWrapperCollection<IResultMeta> calcUniChildren = calcUnitResult.getChildren();
-          for( IResultMeta child : calcUniChildren )
-          {
-            if( child instanceof IDocumentResultMeta )
-            {
-              IDocumentResultMeta docResult = (IDocumentResultMeta) child;
-              DOCUMENTTYPE documentType = docResult.getDocumentType();
-
-              GM_TriangulatedSurface surface = null;
-
-              if( documentType == DOCUMENTTYPE.tinTerrain )
-              {
-                surface = getSurface( docResult );
-                if( surface != null )
-                {
-                  LengthSectionHandler2d handler1 = new LengthSectionHandler2d( lsObs, surface, lengthSectionParameters.getRiverFeatures(), lengthSectionParameters.getStationList(), documentType );
-                }
-              }
-            }
-          }
-        }
-
-        /* write the observation gml */
-        if( lsObs.getResult().size() > 0 )
-        {
-          ObservationFeatureFactory.toFeature( lsObs, lsObsWorkspace.getRootFeature() );
-
-          IPath docPath = resultMeta.getFullPath();
-          IFolder folder = m_scenarioFolder.getFolder( docPath );
-
-          IFile lsFile = folder.getFile( "lengthSection.gml" );
-
-          File lsObsFile = lsFile.getLocation().toFile();
-
-          GmlSerializer.serializeWorkspace( lsObsFile, lsObsWorkspace, "CP1252" );
-
-          // TODO: if there is already a length section document, delete it
-
-          BigDecimal min = new BigDecimal( 0 );
-          BigDecimal max = new BigDecimal( 0 );
-          stepResult.addDocument( "Längsschnitt", "2d-Längsschnitt", IDocumentResultMeta.DOCUMENTTYPE.lengthSection, new Path( "lengthSection.gml" ), Status.OK_STATUS, min, max );
-
-        }
-      }
-
-    }
-    catch( Exception e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-      // TODO: file handling
+      MessageDialog.openInformation( getShell(), "Kein Ergebnis ausgewählt", "Bitte wählen Sie einen Zeitschritt aus, für den der Längsschnitt generiert werden soll." );
       return false;
     }
 
-    return true;
+    /* Start */
+    final ICoreRunnableWithProgress op = new ICoreRunnableWithProgress()
+    {
+      @SuppressWarnings("synthetic-access")
+      public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
+      {
+        monitor.beginTask( "Erzeuge Längsschnitt: ", 12 );
+
+        try
+        {
+          monitor.subTask( "...erzeuge Stationseinträge..." );
+          BigDecimal[] stationList = lengthSectionParameters.getStationList();
+
+          if( stationList == null )
+            return StatusUtilities.createErrorStatus( "Längsschnitt konnte nicht erzeugt werden:  Keine Stationseinträge vorhanden (falsche Gewässerlinie?)" );
+
+          monitor.worked( 3 );
+
+          // get the Observation Template from the resources
+          final URL lsObsUrl = ConfigureLengthSectionWizard.class.getResource( "resources/lengthSectionTemplate.gml" );
+          final GMLWorkspace lsObsWorkspace = GmlSerializer.createGMLWorkspace( lsObsUrl, null );
+          final IObservation<TupleResult> lsObs = ObservationFeatureFactory.toObservation( lsObsWorkspace.getRootFeature() );
+
+          // just get the first selected item
+          IResultMeta resultMeta = results[0];
+
+          /* get the result data */
+
+          if( resultMeta instanceof IStepResultMeta )
+          {
+            IStepResultMeta stepResult = (IStepResultMeta) resultMeta;
+
+            IFeatureWrapperCollection<IResultMeta> children = stepResult.getChildren();
+            for( IResultMeta child : children )
+            {
+              // get all documents
+              if( child instanceof IDocumentResultMeta )
+              {
+                IDocumentResultMeta docResult = (IDocumentResultMeta) child;
+                DOCUMENTTYPE documentType = docResult.getDocumentType();
+
+                GM_TriangulatedSurface surface = null;
+
+                if( documentType == DOCUMENTTYPE.tinWsp )
+                {
+                  monitor.subTask( "...lese Wasserspiegel aus..." );
+                  surface = getSurface( docResult );
+                  if( surface != null )
+                  {
+                    LengthSectionHandler2d handler1 = new LengthSectionHandler2d( lsObs, surface, lengthSectionParameters.getRiverFeatures(), stationList, documentType );
+                  }
+                  else
+                    return StatusUtilities.createErrorStatus( "Längsschnitt konnte nicht erzeugt werden:  Wasserspiegellagen konnten nicht geladen werden." );
+                }
+              }
+            }
+
+            monitor.worked( 4 );
+
+            IResultMeta parent = stepResult.getParent();
+            if( parent instanceof ICalcUnitResultMeta )
+            {
+              ICalcUnitResultMeta calcUnitResult = (ICalcUnitResultMeta) parent;
+              IFeatureWrapperCollection<IResultMeta> calcUniChildren = calcUnitResult.getChildren();
+              for( IResultMeta child : calcUniChildren )
+              {
+                if( child instanceof IDocumentResultMeta )
+                {
+                  IDocumentResultMeta docResult = (IDocumentResultMeta) child;
+                  DOCUMENTTYPE documentType = docResult.getDocumentType();
+
+                  GM_TriangulatedSurface surface = null;
+
+                  if( documentType == DOCUMENTTYPE.tinTerrain )
+                  {
+                    monitor.subTask( "...lese Sohllagen aus..." );
+                    surface = getSurface( docResult );
+                    if( surface != null )
+                    {
+                      LengthSectionHandler2d handler1 = new LengthSectionHandler2d( lsObs, surface, lengthSectionParameters.getRiverFeatures(), stationList, documentType );
+                    }
+                    else
+                      return StatusUtilities.createErrorStatus( "Längsschnitt konnte nicht erzeugt werden:  Modelldaten konnten nicht geladen werden." );
+                  }
+                }
+              }
+            }
+
+            monitor.worked( 4 );
+
+            /* write the observation gml */
+            if( lsObs.getResult().size() > 0 )
+            {
+              monitor.subTask( "...exportiere Längsschnittdaten..." );
+              ObservationFeatureFactory.toFeature( lsObs, lsObsWorkspace.getRootFeature() );
+
+              IPath docPath = resultMeta.getFullPath();
+              IFolder folder = m_scenarioFolder.getFolder( docPath );
+
+              IFile lsFile = folder.getFile( "lengthSection.gml" );
+
+              /* delete the existing lengthsection file */
+              if( lsFile.exists() )
+              {
+                lsFile.delete( true, true, new NullProgressMonitor() );
+              }
+
+              File lsObsFile = lsFile.getLocation().toFile();
+
+              GmlSerializer.serializeWorkspace( lsObsFile, lsObsWorkspace, "CP1252" );
+
+              // TODO: if there is already a length section document, delete it
+              for( IResultMeta child : children )
+              {
+                if( child instanceof IDocumentResultMeta )
+                {
+                  IDocumentResultMeta docResult = (IDocumentResultMeta) child;
+                  if( docResult.getDocumentType() == DOCUMENTTYPE.lengthSection )
+                  {
+                    stepResult.removeChild( docResult );
+                    break;
+                  }
+                }
+              }
+              BigDecimal min = new BigDecimal( 0 );
+              BigDecimal max = new BigDecimal( 0 );
+              stepResult.addDocument( "Längsschnitt", "2d-Längsschnitt", IDocumentResultMeta.DOCUMENTTYPE.lengthSection, new Path( "lengthSection.gml" ), Status.OK_STATUS, min, max );
+            }
+            monitor.worked( 1 );
+          }
+        }
+        catch( Exception e )
+        {
+          e.printStackTrace();
+          return StatusUtilities.statusFromThrowable( e, "Konnte Längsschnitt nicht erzeugen." );
+        }
+        catch( final Throwable t )
+        {
+          throw new InvocationTargetException( t );
+        }
+        finally
+        {
+          monitor.done();
+        }
+        return StatusUtilities.createOkStatus( "Längsschnitt erzeugt." );
+
+      }
+    };
+
+    final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, op );
+    if( !status.isOK() )
+      KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
+    ErrorDialog.openError( getShell(), getWindowTitle(), "Fehler bei Längsschnitterzeugung", status );
+
+    return !status.matches( IStatus.ERROR );
 
   }
 

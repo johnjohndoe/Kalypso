@@ -48,9 +48,18 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.ui.wizards.results.SelectResultWizardPage;
@@ -99,34 +108,69 @@ public class SelectLengthSectionWizard extends Wizard
   {
     final SelectResultWizardPage page = (SelectResultWizardPage) getPage( PAGE_SELECT_RESULTS_NAME );
     final IResultMeta[] results = page.getSelectedResults();
-
-    // get the first element
-    IResultMeta result = results[0];
-
-    // make an IFile
-    IPath fullPath = result.getFullPath();
-
-    final String kodPath = fullPath.toPortableString().replace( ".gml", ".kod" );
-
-    m_selectedResultFile = m_scenarioFolder.getFile( Path.fromPortableString( kodPath ) );
-
-    try
+    if( results.length == 0 )
     {
-      FileUtils.copyURLToFile( getClass().getResource( "resources/lengthSection.kod" ), m_selectedResultFile.getLocation().toFile() );
-      m_selectedResultFile.refreshLocal( IResource.DEPTH_ONE, new NullProgressMonitor() );
-    }
-    catch( IOException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-    catch( CoreException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      MessageDialog.openInformation( getShell(), "Längsschnitt anzeigen", "Bitte wählen Sie einen Längsschnitt aus." );
+      return false;
     }
 
-    return true;
+    /* Start */
+    final ICoreRunnableWithProgress op = new ICoreRunnableWithProgress()
+    {
+      @SuppressWarnings("synthetic-access")
+      public IStatus execute( final IProgressMonitor monitor )
+      {
+        IResultMeta result = null;
+        monitor.beginTask( "Längsschnittanzeige...", 1 );
+
+        // get the first length section element
+        for( IResultMeta resultMeta : results )
+        {
+          if( resultMeta instanceof IDocumentResultMeta )
+          {
+            IDocumentResultMeta docResult = (IDocumentResultMeta) resultMeta;
+            if( docResult.getDocumentType() == IDocumentResultMeta.DOCUMENTTYPE.lengthSection )
+              result = docResult;
+          }
+        }
+        monitor.worked( 1 );
+        if( result == null )
+        {
+          MessageDialog.openError( getShell(), "Längsschnitt anzeigen fehlgeschlagen", "Bitte wählen Sie einen Längsschnitt aus." );
+          return StatusUtilities.createErrorStatus( "Längsschnitt konnte nicht angezeigt werden. " );
+        }
+
+        // make an IFile
+        IPath fullPath = result.getFullPath();
+
+        final String kodPath = fullPath.toPortableString().replace( ".gml", ".kod" );
+
+        m_selectedResultFile = m_scenarioFolder.getFile( Path.fromPortableString( kodPath ) );
+
+        try
+        {
+          FileUtils.copyURLToFile( getClass().getResource( "resources/lengthSection.kod" ), m_selectedResultFile.getLocation().toFile() );
+          m_selectedResultFile.refreshLocal( IResource.DEPTH_ONE, new NullProgressMonitor() );
+          monitor.worked( 1 );
+        }
+        catch( IOException e )
+        {
+          e.printStackTrace();
+        }
+        catch( CoreException e )
+        {
+          e.printStackTrace();
+        }
+        return StatusUtilities.createOkStatus( "Längsschnitt dargestellt." );
+      }
+    };
+
+    final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, op );
+    if( !status.isOK() )
+      KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
+    ErrorDialog.openError( getShell(), getWindowTitle(), "Fehler bei Längsschnittanzeige", status );
+
+    return !status.matches( IStatus.ERROR );
 
   }
 
