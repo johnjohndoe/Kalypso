@@ -40,12 +40,11 @@ import org.opengis.cs.CS_CoordinateSystem;
  * @see IFE1D2DContinuityLine
  * @see FE1D2DContinuityLine
  */
-@SuppressWarnings("hiding")//$NON-NLS-1$
 public class PolyElement extends Element2D implements IPolyElement
 {
-  private final IFeatureWrapperCollection<IFE1D2DComplexElement> containers;
+  private final IFeatureWrapperCollection<IFE1D2DComplexElement> m_containers;
 
-  private final IFeatureWrapperCollection<IFE1D2DEdge> edges;
+  private final IFeatureWrapperCollection<IFE1D2DEdge> m_edges;
 
   public PolyElement( final Feature featureToBind )
   {
@@ -69,12 +68,12 @@ public class PolyElement extends Element2D implements IPolyElement
     if( prop == null )
     {
       // create the property tha is still missing
-      containers = new FeatureWrapperCollection<IFE1D2DComplexElement>( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_COMPLEX_ELE_2D, Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT_CONTAINERS, IFE1D2DComplexElement.class );
+      m_containers = new FeatureWrapperCollection<IFE1D2DComplexElement>( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_COMPLEX_ELE_2D, Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT_CONTAINERS, IFE1D2DComplexElement.class );
     }
     else
     {
       // just wrapped the existing one
-      containers = new FeatureWrapperCollection<IFE1D2DComplexElement>( featureToBind, IFE1D2DComplexElement.class, Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT_CONTAINERS );
+      m_containers = new FeatureWrapperCollection<IFE1D2DComplexElement>( featureToBind, IFE1D2DComplexElement.class, Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT_CONTAINERS );
     }
 
     // edges
@@ -91,12 +90,12 @@ public class PolyElement extends Element2D implements IPolyElement
     if( prop == null )
     {
       // create the property that is still missing
-      edges = new FeatureWrapperCollection<IFE1D2DEdge>( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2D_2DElement, Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE, IFE1D2DEdge.class );
+      m_edges = new FeatureWrapperCollection<IFE1D2DEdge>( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_FE1D2D_2DElement, Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE, IFE1D2DEdge.class );
     }
     else
     {
       // just wrapped the existing one
-      edges = new FeatureWrapperCollection<IFE1D2DEdge>( featureToBind, IFE1D2DEdge.class, Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE );
+      m_edges = new FeatureWrapperCollection<IFE1D2DEdge>( featureToBind, IFE1D2DEdge.class, Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDEDGE );
     }
   }
 
@@ -219,7 +218,7 @@ public class PolyElement extends Element2D implements IPolyElement
   @Override
   public IFeatureWrapperCollection<IFE1D2DComplexElement> getContainers( )
   {
-    return containers;
+    return m_containers;
   }
 
   /**
@@ -228,7 +227,7 @@ public class PolyElement extends Element2D implements IPolyElement
   @Override
   public IFeatureWrapperCollection<IFE1D2DEdge> getEdges( )
   {
-    return edges;
+    return m_edges;
   }
 
   /**
@@ -237,13 +236,9 @@ public class PolyElement extends Element2D implements IPolyElement
   @Override
   public List<IFE1D2DNode> getNodes( )
   {
-
-    final List<IFE1D2DNode> nodes = new ArrayList<IFE1D2DNode>( edges.size() + 1 );
-    IFE1D2DNode lasAddedNode = null;
-    // IFE1D2DNode actualNode;
-    // IFE1D2DNode nextNode;
-
-    for( final IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge : edges )
+    final List<IFE1D2DNode> nodes = new ArrayList<IFE1D2DNode>( m_edges.size() + 1 );
+    IFE1D2DNode lastAddedNode = null;
+    for( final IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge : m_edges )
     {
       if( edge instanceof IEdgeInv )
       {
@@ -255,58 +250,26 @@ public class PolyElement extends Element2D implements IPolyElement
           node = edgeNodes.get( i );
           if( node != null )
           {
-            if( !node.equals( lasAddedNode ) )
+            if( !node.equals( lastAddedNode ) )
             {
               nodes.add( node );
-              lasAddedNode = node;
+              lastAddedNode = node;
             }
           }
         }
-
       }
       else
-      {
         for( final IFE1D2DNode node : edge.getNodes() )
-        {
-          if( node != null )
+          if( node != null && !node.equals( lastAddedNode ) )
           {
-            if( !node.equals( lasAddedNode ) )
-            {
-              nodes.add( node );
-              lasAddedNode = node;
-            }
+            nodes.add( node );
+            lastAddedNode = node;
           }
-        }
-      }
     }
-    if( lasAddedNode != null && nodes.size() > 0 )
-    {
-      if( !lasAddedNode.equals( nodes.get( 0 ) ) )
-      {
+    if( lastAddedNode != null && nodes.size() > 0 )
+      if( !lastAddedNode.equals( nodes.get( 0 ) ) )
         nodes.add( nodes.get( 0 ) );
-      }
-    }
     return nodes;
-  }
-
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.schema.binding.IFE1D2DElement#addEdge(java.lang.String)
-   */
-  @Override
-  public void addEdge( final String edgeID )
-  {
-    if( edgeID == null )
-    {
-      throw new IllegalArgumentException( Messages.getString( "PolyElement.2" ) ); //$NON-NLS-1$
-    }
-    final FeatureList edgeFeatureList = edges.getWrappedList();
-    if( edgeFeatureList.contains( edgeID ) )
-    {
-      return;
-    }
-    edgeFeatureList.add( edgeID );
-    edgeFeatureList.invalidate();
-    getWrappedFeature().invalidEnvelope();
   }
 
   /**
@@ -317,7 +280,7 @@ public class PolyElement extends Element2D implements IPolyElement
   {
     final StringBuffer buf = new StringBuffer( 128 );
     buf.append( "Poly_ELEMENT[" ); //$NON-NLS-1$
-    for( final IFeatureWrapper2 featureWrapper : edges )
+    for( final IFeatureWrapper2 featureWrapper : m_edges )
     {
       buf.append( featureWrapper );
     }

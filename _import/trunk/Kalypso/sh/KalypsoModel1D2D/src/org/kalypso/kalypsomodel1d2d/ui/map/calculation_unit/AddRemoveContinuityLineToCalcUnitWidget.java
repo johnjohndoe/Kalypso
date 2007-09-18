@@ -79,9 +79,9 @@ public class AddRemoveContinuityLineToCalcUnitWidget extends FENetConceptSelecti
 
   private static final String ICONS_ELCL16_ADD_GIF = "icons/elcl16/add.gif"; //$NON-NLS-1$
 
-  private static final String TXT_REMOVE_BOUNDARY_LINE_FROM_UNIT = Messages.getString("AddRemoveContinuityLineToCalcUnitWidget.3"); //$NON-NLS-1$
+  private static final String TXT_REMOVE_BOUNDARY_LINE_FROM_UNIT = Messages.getString( "AddRemoveContinuityLineToCalcUnitWidget.3" ); //$NON-NLS-1$
 
-  private static final String TXT_ADD_BOUNDARY_LINE_TO_UNIT = Messages.getString("AddRemoveContinuityLineToCalcUnitWidget.4"); //$NON-NLS-1$
+  private static final String TXT_ADD_BOUNDARY_LINE_TO_UNIT = Messages.getString( "AddRemoveContinuityLineToCalcUnitWidget.4" ); //$NON-NLS-1$
 
   private static final String[][] MENU_ITEM_SPECS = { { TXT_ADD_BOUNDARY_LINE_TO_UNIT, ICONS_ELCL16_ADD_GIF }, { TXT_REMOVE_BOUNDARY_LINE_FROM_UNIT, ICONS_ELCL16_REMOVE_GIF } };
 
@@ -93,7 +93,7 @@ public class AddRemoveContinuityLineToCalcUnitWidget extends FENetConceptSelecti
 
   public AddRemoveContinuityLineToCalcUnitWidget( final KeyBasedDataModel dataModel )
   {
-    this( new QName[] { IFELine.QNAME }, Messages.getString("AddRemoveContinuityLineToCalcUnitWidget.5"), Messages.getString("AddRemoveContinuityLineToCalcUnitWidget.6"), dataModel ); //$NON-NLS-1$ //$NON-NLS-2$
+    this( new QName[] { IFELine.QNAME }, Messages.getString( "AddRemoveContinuityLineToCalcUnitWidget.5" ), Messages.getString( "AddRemoveContinuityLineToCalcUnitWidget.6" ), dataModel ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   protected AddRemoveContinuityLineToCalcUnitWidget( final QName themeElementsQName, final String name, final String toolTip, final KeyBasedDataModel dataModel )
@@ -224,15 +224,9 @@ public class AddRemoveContinuityLineToCalcUnitWidget extends FENetConceptSelecti
       public void process( ) throws Exception
       {
         super.process();
-        try
-        {
-          KeyBasedDataModelUtil.resetCurrentEntry( m_dataModel, ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
-          KeyBasedDataModelUtil.repaintMapPanel( m_dataModel, ICommonKeys.KEY_MAP_PANEL );
-        }
-        catch( Exception e )
-        {
-          e.printStackTrace();
-        }
+        getMapPanel().getSelectionManager().clear();
+        KeyBasedDataModelUtil.resetCurrentEntry( m_dataModel, ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
+        KeyBasedDataModelUtil.repaintMapPanel( m_dataModel, ICommonKeys.KEY_MAP_PANEL );
       }
     };
     KeyBasedDataModelUtil.postCommand( m_dataModel, cmd, ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL );
@@ -253,6 +247,7 @@ public class AddRemoveContinuityLineToCalcUnitWidget extends FENetConceptSelecti
       public void process( ) throws Exception
       {
         super.process();
+        getMapPanel().getSelectionManager().clear();
         KeyBasedDataModelUtil.resetCurrentEntry( m_dataModel, ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
         KeyBasedDataModelUtil.repaintMapPanel( m_dataModel, ICommonKeys.KEY_MAP_PANEL );
       }

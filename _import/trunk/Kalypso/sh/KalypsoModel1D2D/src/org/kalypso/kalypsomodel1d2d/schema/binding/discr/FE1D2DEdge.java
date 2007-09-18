@@ -21,7 +21,11 @@ import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Ring;
+import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.binding.AbstractFeatureBinder;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -31,6 +35,12 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>
 {
+  private enum Orientation
+  {
+    ORIENTATION_LEFT,
+    ORIENTATION_RIGHT
+  };
+
   private static final Logger logger = Logger.getLogger( FE1D2DEdge.class.toString() );
 
   private final IFeatureWrapperCollection<IFE1D2DElement> m_containers;
@@ -39,7 +49,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
 
   public FE1D2DEdge( final Feature featureToBind )
   {
-    super( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE );
+    super( featureToBind, IFE1D2DEdge.QNAME );
     // containers
     Object prop = null;
     try
@@ -55,7 +65,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
     {
       // create the property that is still missing
       // TODO check this since edge are not edge container this is not okay
-      m_containers = new FeatureWrapperCollection<IFE1D2DElement>( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE, Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_CONTAINERS, IFE1D2DElement.class );
+      m_containers = new FeatureWrapperCollection<IFE1D2DElement>( featureToBind, IFE1D2DEdge.QNAME, Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_CONTAINERS, IFE1D2DElement.class );
     }
     else
     {
@@ -69,7 +79,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
     if( prop == null )
     {
       // create the property that is still missing
-      m_nodes = new FeatureWrapperCollection<IFE1D2DNode>( featureToBind, Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE, Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDNODE, IFE1D2DNode.class );
+      m_nodes = new FeatureWrapperCollection<IFE1D2DNode>( featureToBind, IFE1D2DEdge.QNAME, Kalypso1D2DSchemaConstants.WB1D2D_PROP_DIRECTEDNODE, IFE1D2DNode.class );
     }
     else
     {
@@ -82,7 +92,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
   public static final IFE1D2DEdge createFromModel( IFEDiscretisationModel1d2d model, IFE1D2DNode node0, IFE1D2DNode node1 )
   {
     IFeatureWrapperCollection<IFE1D2DEdge> edges = model.getEdges();
-    IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> curEdge = edges.addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE, IFE1D2DEdge.class );
+    IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> curEdge = edges.addNew( IFE1D2DEdge.QNAME, IFE1D2DEdge.class );
     String edgeGmlID = curEdge.getGmlID();
     curEdge.addNode( node0.getGmlID() );
     node0.addContainer( edgeGmlID );
@@ -109,12 +119,12 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
    */
   public FE1D2DEdge( Feature parentFeature, QName propQName ) throws IllegalArgumentException
   {
-    this( Util.createFeatureAsProperty( parentFeature, propQName, Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE ) );
+    this( Util.createFeatureAsProperty( parentFeature, propQName, IFE1D2DEdge.QNAME ) );
   }
 
   public FE1D2DEdge( Feature parentFeature, QName propQName, String gmlID )
   {
-    this( FeatureHelper.createFeatureWithId( Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE, parentFeature, propQName, gmlID ) );
+    this( FeatureHelper.createFeatureWithId( IFE1D2DEdge.QNAME, parentFeature, propQName, gmlID ) );
   }
 
   /**
@@ -190,12 +200,12 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
     final Feature parentFeature = discModel.getFeature();
     final IFeatureType parentFT = parentFeature.getFeatureType();
     final IRelationType parentEdgeProperty = (IRelationType) parentFT.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGES );
-    final IFeatureType edgeType = parentFT.getGMLSchema().getFeatureType( Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE /* QNAME_FE1D2DEdge */);
+    final IFeatureType edgeType = parentFT.getGMLSchema().getFeatureType( IFE1D2DEdge.QNAME );
     final Feature edgeFeature = parentFeature.getWorkspace().createFeature( parentFeature, parentEdgeProperty, edgeType );
     return new FE1D2DEdge( edgeFeature );
   }
 
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
+  @SuppressWarnings("unchecked")//$NON-NLS-1$
   public void setNodes( final FE1D2DNode node0, final FE1D2DNode node1 )
   {
     final Feature feature = getFeature();
@@ -390,4 +400,85 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
     else
       return GeometryFactory.createGM_Point( x, y, point1.getCoordinateSystem() );
   }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge#getLeftElement()
+   */
+  public IFE1D2DElement getLeftElement( )
+  {
+    return getElementWithOrientation( Orientation.ORIENTATION_LEFT );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge#getRightElement()
+   */
+  public IFE1D2DElement getRightElement( )
+  {
+    return getElementWithOrientation( Orientation.ORIENTATION_RIGHT );
+  }
+
+  private IFE1D2DElement getElementWithOrientation( final Orientation orientation )
+  {
+    final IEdgeInv edgeInv = getEdgeInv();
+    IFeatureWrapperCollection<IFE1D2DElement> edgeInvContainers = null;
+    if( edgeInv != null )
+      edgeInvContainers = edgeInv.getContainers();
+    try
+    {
+      for( IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge> ele : getContainers() )
+      {
+        if( ele instanceof IFELine )
+          continue;
+        final GM_Object object = ele.recalculateElementGeometry();
+        if( object instanceof GM_Surface )
+        {
+          final Orientation surfaceOrientation = getSurfaceOrientation( (GM_Surface) object );
+          if( surfaceOrientation == orientation )
+            return ele;
+          else if( edgeInv != null && edgeInvContainers.contains( ele ) )
+            return ele;
+        }
+        else
+          throw new RuntimeException( "Surface expected as geometrie but found:" + object );
+      }
+      if( edgeInv != null )
+      {
+        for( IFE1D2DElement<IFE1D2DComplexElement, IFE1D2DEdge> ele : edgeInvContainers )
+        {
+          if( ele instanceof IFELine )
+            continue;
+          final GM_Object object = ele.recalculateElementGeometry();
+          if( object instanceof GM_Surface )
+          {
+            final Orientation surfaceOrientation = getSurfaceOrientation( (GM_Surface) object );
+            if( surfaceOrientation == orientation )
+              return ele;
+          }
+          else
+            throw new RuntimeException( "Surface expected as geometrie but found:" + object );
+        }
+      }
+    }
+    catch( GM_Exception e )
+    {
+      e.printStackTrace();
+      throw new RuntimeException( "unable to recompute the edge container geometrie" );
+    }
+    return null;
+  }
+
+  private final Orientation getSurfaceOrientation( final GM_Surface surface )
+  {
+    final GM_Ring exteriorRing = surface.getSurfaceBoundary().getExteriorRing();
+    final GM_Position[] positions = exteriorRing.getPositions();
+    final double x0 = positions[0].getX();
+    final double y0 = positions[0].getY();
+    final double x1 = positions[1].getX();
+    final double y1 = positions[1].getY();
+    final double x2 = positions[2].getX();
+    final double y2 = positions[2].getY();
+    final double vectorProduct = (x1 - x0) * (y2 - y1) - (y1 - y0) * (x2 - x1);
+    return vectorProduct > 0.0 ? Orientation.ORIENTATION_LEFT : Orientation.ORIENTATION_RIGHT;
+  }
+
 }

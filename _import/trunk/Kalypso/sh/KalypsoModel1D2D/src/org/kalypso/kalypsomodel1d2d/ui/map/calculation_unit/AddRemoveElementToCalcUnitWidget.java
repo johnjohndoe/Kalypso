@@ -127,7 +127,7 @@ public class AddRemoveElementToCalcUnitWidget extends FENetConceptSelectionWidge
 
   public AddRemoveElementToCalcUnitWidget( final KeyBasedDataModel dataModel )
   {
-    this( new QName[] { Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT, Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT1D, }, Messages.getString("AddRemoveElementToCalcUnitWidget.0"), Messages.getString("AddRemoveElementToCalcUnitWidget.1"), dataModel ); //$NON-NLS-1$ //$NON-NLS-2$
+    this( new QName[] { Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT, Kalypso1D2DSchemaConstants.WB1D2D_F_ELEMENT1D, }, Messages.getString( "AddRemoveElementToCalcUnitWidget.0" ), Messages.getString( "AddRemoveElementToCalcUnitWidget.1" ), dataModel ); //$NON-NLS-1$ //$NON-NLS-2$
 
   }
 
@@ -152,12 +152,12 @@ public class AddRemoveElementToCalcUnitWidget extends FENetConceptSelectionWidge
     final JPopupMenu popupMenu = new JPopupMenu();
 
     final JMenuItem addElement = new JMenuItem();
-    addElement.setText( Messages.getString("AddRemoveElementToCalcUnitWidget.2") ); //$NON-NLS-1$
+    addElement.setText( Messages.getString( "AddRemoveElementToCalcUnitWidget.2" ) ); //$NON-NLS-1$
     addElement.setIcon( new ImageIcon( PluginUtilities.findResource( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), "icons/elcl16/add.gif" ) ) ); //$NON-NLS-1$
     addElement.addActionListener( makeAddElementActionListener() );
 
     final JMenuItem removeElement = new JMenuItem();
-    removeElement.setText( Messages.getString("AddRemoveElementToCalcUnitWidget.6") ); //$NON-NLS-1$
+    removeElement.setText( Messages.getString( "AddRemoveElementToCalcUnitWidget.6" ) ); //$NON-NLS-1$
     removeElement.setIcon( new ImageIcon( PluginUtilities.findResource( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), "icons/elcl16/remove.gif" ) ) ); //$NON-NLS-1$
     removeElement.addActionListener( makeRemoveElementActionListener() );
     // popupMenu.add( addNameDescription );
@@ -182,6 +182,7 @@ public class AddRemoveElementToCalcUnitWidget extends FENetConceptSelectionWidge
           AddElementToCalculationUnitWithPostCall command = new AddElementToCalculationUnitWithPostCall( calUnit, selectedFeatures, model1d2d );
           KeyBasedDataModelUtil.postCommand( m_dataModel, command, ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL );
         }
+        getMapPanel().getSelectionManager().clear();
       }
     };
     return al;
@@ -201,8 +202,8 @@ public class AddRemoveElementToCalcUnitWidget extends FENetConceptSelectionWidge
           ICalculationUnit calUnit = (ICalculationUnit) selectedWrapper;
           RemoveElementFromCalculationUnitWithPostCall command = new RemoveElementFromCalculationUnitWithPostCall( calUnit, selectedFeatures, model1d2d );
           KeyBasedDataModelUtil.postCommand( m_dataModel, command, ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL );
-
         }
+        getMapPanel().getSelectionManager().clear();
       }
     };
     return al;

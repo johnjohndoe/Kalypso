@@ -228,7 +228,7 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
         {
           return new EdgeInv( feature );
         }
-        else if( featureQName.equals( Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE ) )
+        else if( featureQName.equals( IFE1D2DEdge.QNAME ) )
         {
           return new FE1D2DEdge( feature );
         }

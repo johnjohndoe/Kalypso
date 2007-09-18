@@ -342,7 +342,7 @@ public class ModelOps
     Set<IFE1D2DEdge> selected2DEdges = new HashSet<IFE1D2DEdge>();
     for( Feature feature : selectedFeatures )
     {
-      if( Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE.equals( feature.getFeatureType().getQName() ) )
+      if( IFE1D2DEdge.QNAME.equals( feature.getFeatureType().getQName() ) )
       {
         IFE1D2DEdge edge = (IFE1D2DEdge) feature.getAdapter( IFE1D2DEdge.class );
         if( TypeInfo.is2DEdge( edge ) )
@@ -360,7 +360,7 @@ public class ModelOps
 
     for( Feature feature : selectedFeatures )
     {
-      if( Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE.equals( feature.getFeatureType().getQName() ) )
+      if( IFE1D2DEdge.QNAME.equals( feature.getFeatureType().getQName() ) )
       {
         IFE1D2DEdge edge = (IFE1D2DEdge) feature.getAdapter( IFE1D2DEdge.class );
         if( TypeInfo.is1DEdge( edge ) )

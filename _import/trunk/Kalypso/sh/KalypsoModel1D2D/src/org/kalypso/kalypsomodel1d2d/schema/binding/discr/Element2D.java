@@ -23,7 +23,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  * 
  * @author Gernot Belger, Patrice Congo
  */
-@SuppressWarnings("hiding") //$NON-NLS-1$
+@SuppressWarnings("hiding")//$NON-NLS-1$
 public abstract class Element2D<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge> extends FE1D2DElement<CT, ET> implements IElement2D<CT, ET>
 {
   private final IFeatureWrapperCollection<ET> edges;
@@ -162,11 +162,11 @@ public abstract class Element2D<CT extends IFE1D2DComplexElement, ET extends IFE
 
     return edges;
 
-// return edges.toArray( new FE1D2DEdge[edges.size()] );
+    // return edges.toArray( new FE1D2DEdge[edges.size()] );
 
   }
 
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
+  @SuppressWarnings("unchecked")//$NON-NLS-1$
   public void setEdges( final ET[] edges )
   {
     final Feature feature = getFeature();
@@ -181,7 +181,7 @@ public abstract class Element2D<CT extends IFE1D2DComplexElement, ET extends IFE
     }
     edgeList.clear();
 
-// Feature edgeInvFeature;
+    // Feature edgeInvFeature;
 
     for( final IFE1D2DEdge edge : edges )
     {
@@ -262,16 +262,12 @@ public abstract class Element2D<CT extends IFE1D2DComplexElement, ET extends IFE
   public void addEdge( final String edgeID )
   {
     if( edgeID == null )
-    {
-      throw new IllegalArgumentException( Messages.getString("Element2D.2") ); //$NON-NLS-1$
-    }
-    FeatureList edgeFeatureList = edges.getWrappedList();
+      throw new IllegalArgumentException( Messages.getString( "Element2D.2" ) ); //$NON-NLS-1$
+    final FeatureList edgeFeatureList = edges.getWrappedList();
     if( edgeFeatureList.contains( edgeID ) )
-    {
       return;
-    }
     edgeFeatureList.add( edgeID );
-
+    edgeFeatureList.invalidate();
     getWrappedFeature().invalidEnvelope();
   }
 

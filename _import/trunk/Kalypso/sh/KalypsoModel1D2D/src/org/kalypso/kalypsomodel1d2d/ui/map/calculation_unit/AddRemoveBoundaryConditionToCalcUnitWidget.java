@@ -73,7 +73,7 @@ public class AddRemoveBoundaryConditionToCalcUnitWidget extends FENetConceptSele
 
   public AddRemoveBoundaryConditionToCalcUnitWidget( final KeyBasedDataModel dataModel )
   {
-    this( new QName[] { IFELine.QNAME, IBoundaryCondition.QNAME }, Messages.getString("AddRemoveBoundaryConditionToCalcUnitWidget.0"), Messages.getString("AddRemoveBoundaryConditionToCalcUnitWidget.1"), dataModel ); //$NON-NLS-1$ //$NON-NLS-2$
+    this( new QName[] { IFELine.QNAME, IBoundaryCondition.QNAME }, Messages.getString( "AddRemoveBoundaryConditionToCalcUnitWidget.0" ), Messages.getString( "AddRemoveBoundaryConditionToCalcUnitWidget.1" ), dataModel ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public AddRemoveBoundaryConditionToCalcUnitWidget( final QName[] names, final String name, final String toolTip, final KeyBasedDataModel dataModel )
@@ -89,12 +89,12 @@ public class AddRemoveBoundaryConditionToCalcUnitWidget extends FENetConceptSele
     final JPopupMenu popupMenu = new JPopupMenu();
 
     final JMenuItem addBoundaryCondition = new JMenuItem();
-    addBoundaryCondition.setText( Messages.getString("AddRemoveBoundaryConditionToCalcUnitWidget.2") ); //$NON-NLS-1$
+    addBoundaryCondition.setText( Messages.getString( "AddRemoveBoundaryConditionToCalcUnitWidget.2" ) ); //$NON-NLS-1$
     addBoundaryCondition.setIcon( new ImageIcon( PluginUtilities.findResource( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), "icons/elcl16/add.gif" ) ) ); //$NON-NLS-1$
     addBoundaryCondition.addActionListener( makeAddBoundaryConditionListener() );
 
     final JMenuItem removeBoundaryCondition = new JMenuItem();
-    removeBoundaryCondition.setText( Messages.getString("AddRemoveBoundaryConditionToCalcUnitWidget.4") ); //$NON-NLS-1$
+    removeBoundaryCondition.setText( Messages.getString( "AddRemoveBoundaryConditionToCalcUnitWidget.4" ) ); //$NON-NLS-1$
     removeBoundaryCondition.setIcon( new ImageIcon( PluginUtilities.findResource( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), "icons/elcl16/remove.gif" ) ) ); //$NON-NLS-1$
     removeBoundaryCondition.addActionListener( makeRemoveBoundaryConditionListener() );
 
@@ -118,11 +118,7 @@ public class AddRemoveBoundaryConditionToCalcUnitWidget extends FENetConceptSele
         {
           final IBoundaryCondition bc = (IBoundaryCondition) feature.getAdapter( IBoundaryCondition.class );
           if( bc == null )
-          {
-            System.out.println( "could not adapt to boundary " ); //$NON-NLS-1$
             return;
-          }
-
           final RemoveBoundaryConditionFromCalcUnitCommand command = new RemoveBoundaryConditionFromCalcUnitCommand( bc, calUnit, model1d2d )
           {
             /**
@@ -137,10 +133,9 @@ public class AddRemoveBoundaryConditionToCalcUnitWidget extends FENetConceptSele
           };
 
           if( command != null )
-          {
             KeyBasedDataModelUtil.postCommand( m_dataModel, command, ICommonKeys.KEY_BOUNDARY_CONDITION_CMD_WORKSPACE );
-          }
         }
+        getMapPanel().getSelectionManager().clear();
       }
     };
     return al;
@@ -150,7 +145,7 @@ public class AddRemoveBoundaryConditionToCalcUnitWidget extends FENetConceptSele
   {
     final ActionListener al = new ActionListener()
     {
-      @SuppressWarnings("unchecked") //$NON-NLS-1$
+      @SuppressWarnings("unchecked")//$NON-NLS-1$
       public void actionPerformed( ActionEvent e )
       {
         final Feature[] selectedFeatures = getSelectedFeature();
@@ -162,11 +157,7 @@ public class AddRemoveBoundaryConditionToCalcUnitWidget extends FENetConceptSele
         {
           final IBoundaryCondition bc = (IBoundaryCondition) feature.getAdapter( IBoundaryCondition.class );
           if( bc == null )
-          {
-            System.out.println( "could not adapt to boundary " ); //$NON-NLS-1$
             return;
-          }
-
           final AddBoundaryConditionToCalcUnitCommand command = new AddBoundaryConditionToCalcUnitCommand( calcUnit, bc )
           {
             /**
@@ -181,10 +172,9 @@ public class AddRemoveBoundaryConditionToCalcUnitWidget extends FENetConceptSele
           };
 
           if( command != null )
-          {
             KeyBasedDataModelUtil.postCommand( m_dataModel, command, ICommonKeys.KEY_BOUNDARY_CONDITION_CMD_WORKSPACE );
-          }
         }
+        getMapPanel().getSelectionManager().clear();
       }
 
     };

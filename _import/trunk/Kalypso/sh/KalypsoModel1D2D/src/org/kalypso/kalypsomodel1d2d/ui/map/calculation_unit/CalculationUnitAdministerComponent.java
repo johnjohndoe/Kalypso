@@ -232,6 +232,13 @@ public class CalculationUnitAdministerComponent
                   m_btnAddRemoveSubUnits.setEnabled( false );
                 }
               }
+              else
+              {
+                m_btnAddRemoveElements.setEnabled( false );
+                m_btnAddRemoveContinuityLines.setEnabled( false );
+                m_btnAddRemoveBoundaryConditions.setEnabled( false );
+                m_btnAddRemoveSubUnits.setEnabled( false );
+              }
             }
           }
         };

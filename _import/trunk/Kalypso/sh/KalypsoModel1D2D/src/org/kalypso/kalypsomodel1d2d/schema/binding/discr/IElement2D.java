@@ -48,13 +48,11 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
  * @author Gernot Belger
  */
 // TODO: is templatisation needed?
-public interface IElement2D<    CT extends IFE1D2DComplexElement, 
-                                ET extends IFE1D2DEdge> 
-                  extends IFE1D2DElement<CT, ET>
+public interface IElement2D<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge> extends IFE1D2DElement<CT, ET>
 {
-  public IFeatureWrapperCollection<ET> getEdges();
+  public IFeatureWrapperCollection<ET> getEdges( );
 
   public void addEdge( final String edgeID );
-  
+
   public void setEdges( final ET[] edges );
 }

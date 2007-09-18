@@ -402,7 +402,7 @@ public class ApplyElevationWidget extends FENetConceptSelectionWidget implements
     }
 
     final IFeatureSelectionManager selectionManager = mapPanel.getSelectionManager();
-    final IKalypsoFeatureTheme theme = getTheme( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
+    final IKalypsoFeatureTheme theme = UtilMap.findEditableTheme( dataModel.getMapModell(), Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
     final IFEDiscretisationModel1d2d model1d2d = dataModel.getDiscretisationModel();
     if( theme == null )
     {

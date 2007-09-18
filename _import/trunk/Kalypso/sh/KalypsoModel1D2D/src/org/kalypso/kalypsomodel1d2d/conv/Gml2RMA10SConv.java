@@ -58,7 +58,6 @@ import org.eclipse.core.runtime.IPath;
 import org.kalypso.kalypsomodel1d2d.conv.results.IRestartInfo;
 import org.kalypso.kalypsomodel1d2d.conv.results.RestartEater;
 import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
-import org.kalypso.kalypsomodel1d2d.ops.EdgeOps;
 import org.kalypso.kalypsomodel1d2d.ops.TypeInfo;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtils;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
@@ -411,9 +410,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
        */
       final int middleNodeID;
       if( m_exportRequest && !m_exportMiddleNode )
-      {
         middleNodeID = 0;
-      }
       else
       {
         if( edge.getMiddleNode() == null )
@@ -426,9 +423,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
           formatNode( formatter, middleNodeID, edge.getMiddleNodePoint(), null );
         }
         else
-        {
           middleNodeID = getConversionID( edge.getMiddleNode() );
-        }
       }
 
       /* Directly format into the string, this is quickest! */
@@ -447,20 +442,20 @@ public class Gml2RMA10SConv implements INativeIDProvider
       }
       else if( TypeInfo.is2DEdge( edge ) )
       {
-        final IFE1D2DElement leftElement;
-        final IFE1D2DElement rightElement;
+        final IFE1D2DElement leftElement = edge.getLeftElement();
+        final IFE1D2DElement rightElement = edge.getRightElement();
+        final int leftParent;
+        final int rightParent;
         if( m_exportRequest )
         {
-          leftElement = EdgeOps.getLeftRight( edge, EdgeOps.ORIENTATION_LEFT );
-          rightElement = EdgeOps.getLeftRight( edge, EdgeOps.ORIENTATION_RIGHT );
+          leftParent = getConversionID( leftElement );
+          rightParent = getConversionID( rightElement );
         }
         else
         {
-          leftElement = EdgeOps.getLeftRightElement( m_calculationUnit, edge, EdgeOps.ORIENTATION_LEFT );
-          rightElement = EdgeOps.getLeftRightElement( m_calculationUnit, edge, EdgeOps.ORIENTATION_RIGHT );
+          leftParent = CalcUnitOps.isFiniteElementOf( m_calculationUnit, leftElement ) ? getConversionID( leftElement ) : 0;
+          rightParent = CalcUnitOps.isFiniteElementOf( m_calculationUnit, rightElement ) ? getConversionID( rightElement ) : 0;
         }
-        final int leftParent = getConversionID( leftElement );
-        final int rightParent = getConversionID( rightElement );
         formatter.format( "AR%10d%10d%10d%10d%10d%10d%n", cnt++, node0ID, node1ID, leftParent, rightParent, middleNodeID ); //$NON-NLS-1$
       }
       else

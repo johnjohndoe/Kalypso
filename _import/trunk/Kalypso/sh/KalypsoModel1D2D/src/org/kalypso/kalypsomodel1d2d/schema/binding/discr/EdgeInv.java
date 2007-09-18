@@ -93,7 +93,7 @@ public class EdgeInv implements IEdgeInv
   {
     Assert.throwIAEOnNull( edge, "edge to wrapped must not be null" ); //$NON-NLS-1$
     Feature feature = edge.getWrappedFeature();
-    Assert.throwIAEOnNotDirectInstanceOf( feature, Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE );
+    Assert.throwIAEOnNotDirectInstanceOf( feature, IFE1D2DEdge.QNAME );
 
     // IRelationType parentRelation=feature.getParentRelation();
     // parentRelation.
@@ -128,24 +128,7 @@ public class EdgeInv implements IEdgeInv
    */
   public void addInvEdgeToElement( IFE1D2DElement targetElement )
   {
-    // Feature modelFeature=targetModel.getWrappedFeature();
-    // Assert.throwIAEOnNull( modelFeature, "Model feature must not be null" );
-    // wrappedFeature=
-    // Util.createFeatureAsProperty(
-    // modelFeature,
-    // Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGES,
-    // Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE_INV );
-    // // set link to inverted
-    // wrappedFeature.setProperty(
-    // Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_IN_INV,
-    // edge.getWrappedFeature().getId() );
-    //    
-    // //add to element
-    // Feature elementFeature=targetElement.getWrappedFeature();
-    // Assert.throwIAEOnNull( elementFeature, "Element feature must not be null" );
-    //    
     throw new RuntimeException( "add inverted edge to element not in use " ); //$NON-NLS-1$
-
   }
 
   /**
@@ -338,5 +321,21 @@ public class EdgeInv implements IEdgeInv
   public GM_Point getMiddleNodePoint( )
   {
     return edge.getMiddleNodePoint();
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge#getLeftElement()
+   */
+  public IFE1D2DElement getLeftElement( )
+  {
+    throw new UnsupportedOperationException( "Function not supported" ); //$NON-NLS-1$
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge#getRightElement()
+   */
+  public IFE1D2DElement getRightElement( )
+  {
+    throw new UnsupportedOperationException( "Function not supported" ); //$NON-NLS-1$
   }
 }

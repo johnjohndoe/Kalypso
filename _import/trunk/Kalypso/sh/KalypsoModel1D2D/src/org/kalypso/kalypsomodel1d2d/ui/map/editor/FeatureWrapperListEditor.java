@@ -43,6 +43,7 @@ package org.kalypso.kalypsomodel1d2d.ui.map.editor;
 import java.util.List;
 
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
@@ -60,7 +61,6 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
-import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -251,7 +251,6 @@ public class FeatureWrapperListEditor implements IButtonConstants
     @Override
     public void widgetSelected( SelectionEvent event )
     {
-      System.out.println( "MoveUp:" + tableViewer.getSelection() );
       moveSelection( -1 );
       tableViewer.refresh();
     }
@@ -335,6 +334,10 @@ public class FeatureWrapperListEditor implements IButtonConstants
 
   private IAction nonGenericActions[];
 
+  private Button m_btnDeleteCalcUnit;
+
+  private Button m_btnMaximizeCalcUnit;
+
   public FeatureWrapperListEditor( final String selectionID, final String inputID, final String mapPanelID )
   {
     this( selectionID, inputID, mapPanelID, new IAction[] {} );
@@ -413,11 +416,11 @@ public class FeatureWrapperListEditor implements IButtonConstants
 
     if( searchForThisString( IButtonConstants.BTN_SHOW_AND_MAXIMIZE ) )
     {
-      final Button clickToRunBtn = new Button( btnComposite, SWT.PUSH );
+      m_btnMaximizeCalcUnit = new Button( btnComposite, SWT.PUSH );
       // clickToRunBtn.setToolTipText( bTextMaximizeSelected );
       image = new Image( btnComposite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/17_show_calculationunit.gif" ).getImageData() );
-      clickToRunBtn.setImage( image );
-      clickToRunBtn.addSelectionListener( new SelectionAdapter()
+      m_btnMaximizeCalcUnit.setImage( image );
+      m_btnMaximizeCalcUnit.addSelectionListener( new SelectionAdapter()
       {
         @Override
         public void widgetSelected( final SelectionEvent event )
@@ -425,24 +428,27 @@ public class FeatureWrapperListEditor implements IButtonConstants
           maximizeSelected();
         }
       } );
-      clickToRunBtn.setToolTipText( getBtnDescription( IButtonConstants.BTN_SHOW_AND_MAXIMIZE ) != null ? getBtnDescription( IButtonConstants.BTN_SHOW_AND_MAXIMIZE ) : "Run #" );
+      m_btnMaximizeCalcUnit.setToolTipText( getBtnDescription( IButtonConstants.BTN_SHOW_AND_MAXIMIZE ) != null ? getBtnDescription( IButtonConstants.BTN_SHOW_AND_MAXIMIZE ) : "Run #" );
+      m_btnMaximizeCalcUnit.setEnabled( false );
     }
 
     if( searchForThisString( IButtonConstants.BTN_REMOVE ) )
     {
-      final Button deleteButton = new Button( btnComposite, SWT.PUSH );
-      // deleteButton.setToolTipText( deleteSelected );
+      m_btnDeleteCalcUnit = new Button( btnComposite, SWT.PUSH );
       image = new Image( btnComposite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/19_cut_calculationunit.gif" ).getImageData() );
-      deleteButton.setImage( image );
-      deleteButton.addSelectionListener( new SelectionAdapter()
+      m_btnDeleteCalcUnit.setImage( image );
+      m_btnDeleteCalcUnit.addSelectionListener( new SelectionAdapter()
       {
         @Override
         public void widgetSelected( final SelectionEvent event )
         {
           try
           {
-            deleteSelected();
-            tableViewer.refresh();
+            if( MessageDialog.openConfirm( parent.getShell(), "Bitte bestätigen", "Wollen Sie die Berechnungseinheit wirklich löschen?" ) )
+            {
+              deleteSelected();
+              tableViewer.refresh();
+            }
           }
           catch( final Throwable th )
           {
@@ -450,16 +456,17 @@ public class FeatureWrapperListEditor implements IButtonConstants
           }
         }
       } );
-      deleteButton.setToolTipText( getBtnDescription( IButtonConstants.BTN_REMOVE ) != null ? getBtnDescription( IButtonConstants.BTN_REMOVE ) : "Remove #" );
+      m_btnDeleteCalcUnit.setToolTipText( getBtnDescription( IButtonConstants.BTN_REMOVE ) != null ? getBtnDescription( IButtonConstants.BTN_REMOVE ) : "Remove #" );
+      m_btnDeleteCalcUnit.setEnabled( false );
     }
 
     if( searchForThisString( IButtonConstants.BTN_ADD ) )
     {
-      final Button addButton = new Button( btnComposite, SWT.PUSH );
+      final Button btnCreateCalcUnit = new Button( btnComposite, SWT.PUSH );
       // addButton.setToolTipText( deleteSelected );
       image = new Image( btnComposite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/18_add_calculationunit.gif" ).getImageData() );
-      addButton.setImage( image );
-      addButton.addSelectionListener( new SelectionAdapter()
+      btnCreateCalcUnit.setImage( image );
+      btnCreateCalcUnit.addSelectionListener( new SelectionAdapter()
       {
         @Override
         public void widgetSelected( final SelectionEvent event )
@@ -467,6 +474,8 @@ public class FeatureWrapperListEditor implements IButtonConstants
           try
           {
             createFeatureWrapper();
+            int newEntryPosition = tableViewer.getTable().getItemCount() - 1;
+            tableViewer.getTable().select( newEntryPosition );
           }
           catch( final Throwable th )
           {
@@ -474,88 +483,13 @@ public class FeatureWrapperListEditor implements IButtonConstants
           }
         }
       } );
-      addButton.setToolTipText( getBtnDescription( IButtonConstants.BTN_ADD ) != null ? getBtnDescription( IButtonConstants.BTN_ADD ) : "Add #" );
-    }
-
-    if( searchForThisString( IButtonConstants.BTN_CLICK_TO_CALCULATE ) )
-    {
-      final Button calculateButton = new Button( btnComposite, SWT.PUSH );
-      // calculateButton.setToolTipText( calculateSelected );
-      image = new Image( btnComposite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/add.gif" ).getImageData() );
-      calculateButton.setImage( image );
-      calculateButton.addSelectionListener( new SelectionAdapter()
-      {
-        @Override
-        public void widgetSelected( final SelectionEvent event )
-        {
-          try
-          {
-
-          }
-          catch( final Throwable th )
-          {
-            th.printStackTrace();
-          }
-        }
-      } );
-      calculateButton.setToolTipText( getBtnDescription( IButtonConstants.BTN_CLICK_TO_CALCULATE ) != null ? getBtnDescription( IButtonConstants.BTN_CLICK_TO_CALCULATE ) : "Calculate #" );
+      btnCreateCalcUnit.setToolTipText( getBtnDescription( IButtonConstants.BTN_ADD ) != null ? getBtnDescription( IButtonConstants.BTN_ADD ) : "Add #" );
     }
 
     for( final IAction action : nonGenericActions )
     {
       final ActionBaseButton button = new ActionBaseButton( action, btnComposite, SWT.PUSH );
-      // button.addSelectionListener( new SelectionAdapter()
-      // {
-      // public void widgetSelected( SelectionEvent event )
-      // {
-      // action.run();
-      // }
-      // } );
     }
-
-//    if( showDescription() )
-//    {
-//      descriptionGroupText = new Group( parent, SWT.NONE );
-//      descriptionGroupText.setText( titleDescriptionGroup );
-//      formData = new FormData();
-//      formData.left = new FormAttachment( btnComposite, 5 );
-//      formData.top = new FormAttachment( 0, 10 );
-//      formData.bottom = new FormAttachment( 100, 0 );
-//      descriptionGroupText.setLayoutData( formData );
-//
-//      final FormLayout formDescription = new FormLayout();
-//      descriptionGroupText.setLayout( formDescription );
-//
-//      descriptionText = new Text( descriptionGroupText, SWT.MULTI | SWT.WRAP );
-//      descriptionText.setText( defaultTestDecription );
-//
-//      final FormData formDescripData = new FormData();
-//      formDescripData.left = new FormAttachment( 0, 0 );
-//      formDescripData.right = new FormAttachment( 100, 0 );
-//      formDescripData.top = new FormAttachment( 0, 0 );
-//      descriptionText.setLayoutData( formDescripData );
-//
-//      saveButton = new Button( descriptionGroupText, SWT.PUSH );
-//      saveButton.setText( "Sichern" );
-//      saveButton.setToolTipText( saveToolTip );
-//      image = new Image( descriptionGroupText.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/save.gif" ).getImageData() );
-//      saveButton.setImage( image );
-//      formData = new FormData();
-//      formData.right = new FormAttachment( 100, 0 );
-//      formData.bottom = new FormAttachment( 100, 0 );
-//      saveButton.setLayoutData( formData );
-//      saveButton.addSelectionListener( new SelectionAdapter()
-//      {
-//        @Override
-//        public void widgetSelected( final SelectionEvent event )
-//        {
-//          if( getCurrentSelection() != null )
-//          {
-//            getCurrentSelection().setDescription( descriptionText.getText() );
-//          }
-//        }
-//      } );
-//    }
 
     // setup cell editing
     final TextCellEditor textCellEditor = new TextCellEditor( table );
@@ -679,25 +613,12 @@ public class FeatureWrapperListEditor implements IButtonConstants
     {
       public void run( )
       {
-        final Object cachedCurrentSelect = currentSelection;
-        final String desc;
-        if( cachedCurrentSelect instanceof IFeatureWrapper2 )
-        {
-          desc = ((IFeatureWrapper2) cachedCurrentSelect).getDescription();
-        }
-        else if( cachedCurrentSelect == null )
-        {
-          desc = "";
-        }
-        else
-        {
-          throw new IllegalArgumentException( "IfeatureWrapper2 expected but got:" + currentSelection );
-        }
-//        if( showDescription() )
-//        {
-//          descriptionText.setText( desc );
-//          descriptionText.redraw();
-//        }
+        refreshTableView();
+        boolean isEnabled = currentSelection instanceof IFeatureWrapper2;
+        if( m_btnDeleteCalcUnit != null )
+          m_btnDeleteCalcUnit.setEnabled( isEnabled );
+        if( m_btnMaximizeCalcUnit != null )
+          m_btnMaximizeCalcUnit.setEnabled( isEnabled );
       }
     };
     final Display display = m_parent.getDisplay();

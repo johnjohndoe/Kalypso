@@ -129,6 +129,16 @@ public class RoughnessAssignService extends Job
   {
     if( !(element instanceof IPolyElement) )
       return;
+
+    final GM_Object geometryProperty = (GM_Object) element.getWrappedFeature().getProperty( IRoughnessPolygon.PROP_GEOMETRY );
+
+    // this might happen if 2d network is just imported, and new elements are created
+    // (by the widget) before saving anything
+    if( geometryProperty == null )
+      return;
+
+    final GM_Point centroid = geometryProperty.getCentroid();
+    final GM_Position position = centroid.getPosition();
     boolean missingRoughnessClsID = true;
     boolean missingRoughnessCorrectionKS = true;
     boolean missingRoughnessCorrectionAxAy = true;
@@ -144,15 +154,11 @@ public class RoughnessAssignService extends Job
         throw new CoreException( Status.CANCEL_STATUS );
 
       final IRoughnessPolygonCollection roughnessPolygonCollection = m_roughnessPolygonCollections.get( i );
-      final GM_Object geometryProperty = (GM_Object) element.getWrappedFeature().getProperty( IRoughnessPolygon.PROP_GEOMETRY );
-      final GM_Point centroid = geometryProperty.getCentroid();
-      final GM_Position position = centroid.getPosition();
       final List<IRoughnessPolygon> matchedRoughness = roughnessPolygonCollection.query( position );
-
       if( matchedRoughness == null || matchedRoughness.size() == 0 )
         continue;
 
-      // (explanation: for loop) because if we have overlapped polygons in the same layer,
+      // (explanation: for the loop) because if we have overlapped polygons in the same layer,
       // we want to assign roughness exacly like (overlapped) polygons are drawn on the map
 
       // later: get rid of overlapping!!! :)

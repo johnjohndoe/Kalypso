@@ -15,14 +15,11 @@ public class Kalypso1D2DSchemaConstants
 
   public static final QName SIMULATION_MODEL1D2D = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "SimulationModelType1D2D" );
 
-  // //fem
   public final static QName WB1D2D_F_NODE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "Node" );
 
   public final static QName WB1D2D_F_MIDDLE_NODE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "MiddleNode" );
 
   public final static QName WB1D2D_PROP_POINT = new QName( NS.GML3, "pointProperty" );
-
-  public final static QName WB1D2D_F_EDGE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "Edge" );
 
   public final static QName WB1D2D_F_EDGE_INV = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "EdgeInv" );
 

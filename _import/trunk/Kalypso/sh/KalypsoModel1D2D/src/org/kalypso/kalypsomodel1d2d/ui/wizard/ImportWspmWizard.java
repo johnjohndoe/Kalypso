@@ -558,7 +558,7 @@ public class ImportWspmWizard extends Wizard implements IWizard
       if( lastNode != null )
       {
         /* Create edge between lastNode and node */
-        final IFE1D2DEdge edge = discEdges.addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE );
+        final IFE1D2DEdge edge = discEdges.addNew( IFE1D2DEdge.QNAME );
         addedFeatures.add( edge.getWrappedFeature() );
 
         edge.addNode( lastNode.getGmlID() );

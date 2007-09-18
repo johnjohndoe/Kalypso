@@ -45,9 +45,9 @@ import java.util.List;
 
 import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.ops.EdgeOps;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
@@ -86,9 +86,9 @@ public class InvariantBConditionWithBLine implements ICalculationValidateInterfa
   public List<IBoundaryCondition> getBoundaryConditions( )
   {
     final CommandableWorkspace workspace = KeyBasedDataModelUtil.getBCWorkSpace( dataModel );// dataModel.getData(
-                                                                                              // CommandableWorkspace.class,
-                                                                                              // ICommonKeys.KEY_BOUNDARY_CONDITION_CMD_WORKSPACE
-                                                                                              // );
+    // CommandableWorkspace.class,
+    // ICommonKeys.KEY_BOUNDARY_CONDITION_CMD_WORKSPACE
+    // );
     final Feature bcHolderFeature = workspace.getRootFeature();
     IFlowRelationshipModel flowRelationship = (IFlowRelationshipModel) bcHolderFeature.getAdapter( IFlowRelationshipModel.class );
     List<IBoundaryCondition> conditions = new ArrayList<IBoundaryCondition>( (List) flowRelationship );
@@ -134,7 +134,6 @@ public class InvariantBConditionWithBLine implements ICalculationValidateInterfa
         {
           endNodes.add( EdgeOps.find1DEdgeEndNode( thisElement.getEdge() ) );
         }
-        System.out.println( "Node :" + EdgeOps.find1DEdgeEndNode( thisElement.getEdge() ) );
       }
     }
 

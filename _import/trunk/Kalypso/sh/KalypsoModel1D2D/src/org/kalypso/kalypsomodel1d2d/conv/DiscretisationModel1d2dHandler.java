@@ -174,7 +174,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     // boolean isNew=false;
     if( edge == null )
     {
-      edge = m_modelEdges.addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE, edgeID );
+      edge = m_modelEdges.addNew( IFE1D2DEdge.QNAME, edgeID );
       m_createdFeatures.add( edge );
       edge.addNode( gmlNode1ID );
       edge.addNode( gmlNode2ID );
@@ -191,11 +191,8 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
     if( elementLeftID == elementRightID )
     {
       final String gmlID = m_modelElementIDProvider.rma10sToGmlID( ERma10sModelElementKey.FE, elementLeftID );
-      final IElement1D ele1D = getElement1D( gmlID );
-      ele1D.setEdge( edge );
-      // one d element
-      // System.out.println("1D elements not supported!");
-      // throw new RuntimeException("2d ONLY for now");
+      final IElement1D element1D = getElement1D( gmlID );
+      element1D.setEdge( edge );
     }
     else
     {
@@ -204,8 +201,8 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
         try
         {
           final String gmlID = m_modelElementIDProvider.rma10sToGmlID( ERma10sModelElementKey.FE, elementLeftID );
-          final IPolyElement eleLeft = getElement2D( gmlID );
-          eleLeft.addEdge( edgeID );
+          final IPolyElement elementLeft = getElement2D( gmlID );
+          elementLeft.addEdge( edgeID );
           edge.addContainer( gmlID );
         }
         catch( final Throwable th )
@@ -219,7 +216,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
         try
         {
           final String gmlID = m_modelElementIDProvider.rma10sToGmlID( ERma10sModelElementKey.FE, elementRightID );
-          final IPolyElement eleRight = getElement2D( gmlID );
+          final IPolyElement elementRight = getElement2D( gmlID );
           // TODO remove dependencies to the inv edge use find node instead
           // change the api to get the whether is was newly created or not
           IEdgeInv inv = edge.getEdgeInv();
@@ -228,7 +225,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
             inv = new EdgeInv( edge, m_model );
             m_createdFeatures.add( inv );
           }
-          eleRight.addEdge( inv.getGmlID() );
+          elementRight.addEdge( inv.getGmlID() );
           inv.addContainer( gmlID );
         }
         catch( final Throwable th )

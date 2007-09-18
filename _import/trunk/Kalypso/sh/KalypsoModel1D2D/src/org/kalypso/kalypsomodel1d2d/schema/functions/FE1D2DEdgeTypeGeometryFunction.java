@@ -55,7 +55,7 @@ public class FE1D2DEdgeTypeGeometryFunction extends FeaturePropertyFunction {
       
 	   QName featureQName=feature.getFeatureType().getQName(); 
        
-       if(Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE.equals( featureQName ))
+       if(IFE1D2DEdge.QNAME.equals( featureQName ))
        {
   		final FE1D2DEdge edge = new FE1D2DEdge(feature);
   		try {

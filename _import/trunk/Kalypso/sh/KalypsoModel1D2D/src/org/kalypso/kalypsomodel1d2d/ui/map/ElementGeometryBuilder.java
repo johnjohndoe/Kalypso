@@ -147,7 +147,7 @@ public class ElementGeometryBuilder
     final IFeatureType nodeFeatureType = schema.getFeatureType( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
     final IPropertyType nodeContainerPT = nodeFeatureType.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_NODE_CONTAINERS );
 
-    final IFeatureType edgeFeatureType = schema.getFeatureType( Kalypso1D2DSchemaConstants.WB1D2D_F_EDGE );
+    final IFeatureType edgeFeatureType = schema.getFeatureType( IFE1D2DEdge.QNAME );
     final IPropertyType edgeContainerPT = edgeFeatureType.getProperty( Kalypso1D2DSchemaConstants.WB1D2D_PROP_EDGE_CONTAINERS );
 
     /* Initialize elements needed for edges and elements */
