@@ -40,25 +40,40 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.mapmodel.visitor;
 
+import javax.xml.namespace.QName;
+
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IValuePropertyType;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * @author Thomas Jung
  */
 public class LoadStatusPredicater implements IKalypsoThemePredicate
 {
+  private final QName[] m_QNames = new QName[] { GeometryUtilities.QN_MULTI_LINE_STRING_PROPERTY, GeometryUtilities.QN_LINE_STRING_PROPERTY };
 
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate#decide(org.kalypso.ogc.gml.IKalypsoTheme)
    */
   public boolean decide( IKalypsoTheme theme )
   {
-    if( theme.isLoaded() )
+    if( theme instanceof IKalypsoFeatureTheme )
     {
-      return true;
+      final IKalypsoFeatureTheme fTheme = (IKalypsoFeatureTheme) theme;
+      final IFeatureType featureType = fTheme.getFeatureType();
+      if( featureType == null )
+        return true;
+      final IValuePropertyType[] allGeomteryProperties = featureType.getAllGeomteryProperties();
+
+      if( allGeomteryProperties.length > 0 && allGeomteryProperties[0].getValueQName().equals( m_QNames[0] ) || allGeomteryProperties[0].getValueQName().equals( m_QNames[1] ) )
+        if( fTheme.isLoaded() == false )
+          return false;
     }
-    return false;
+    return true;
 
   }
 
