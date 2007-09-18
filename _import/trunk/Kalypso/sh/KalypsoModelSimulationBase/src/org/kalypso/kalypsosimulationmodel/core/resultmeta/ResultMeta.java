@@ -145,4 +145,14 @@ public abstract class ResultMeta extends AbstractFeatureBinder implements IResul
     return parentPath.append( path );
   }
 
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta#deleteChild(org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta)
+   */
+  public void removeChild( IResultMeta result )
+  {
+    IFeatureWrapperCollection<IResultMeta> children = getChildren();
+    if( children != null )
+      children.remove( result );
+  }
+
 }

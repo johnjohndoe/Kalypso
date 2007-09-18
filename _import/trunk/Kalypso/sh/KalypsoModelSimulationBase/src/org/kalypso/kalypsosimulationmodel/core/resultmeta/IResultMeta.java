@@ -76,6 +76,8 @@ public interface IResultMeta extends IFeatureWrapper2
 
   public IFeatureWrapperCollection<IResultMeta> getChildren( );
 
+  public void removeChild( final IResultMeta result );
+
   /**
    * Returns the complete path resolved against all the parent-pathes
    */
