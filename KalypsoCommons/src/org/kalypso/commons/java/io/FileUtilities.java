@@ -287,6 +287,45 @@ public class FileUtilities
   }
 
   /**
+   * Creates a temp file inside the given folder. It uses <code>System.currentTimeMillis</code> for naming the new
+   * temp file. This method can hang a little while in the case the file it tries to create already exist.
+   * 
+   * @param prefix
+   * @param parentDir
+   * @return unique file
+   */
+  public synchronized static File createNewUniqueFile( final String prefix, final File parentDir )
+  {
+    File newFile = new File( parentDir, prefix + System.currentTimeMillis() );
+    while( newFile.exists() )
+    {
+      newFile = new File( parentDir, prefix + System.currentTimeMillis() );
+    }
+    return newFile;
+  }
+
+  /**
+   * Creates a unique file name inside the given folder. It uses <code>System.currentTimeMillis</code> for creating
+   * the new file name. This method can hang a little while in the case the file it tries to create already exist.
+   * 
+   * @param prefix
+   * @param parentDir
+   * @return unique file
+   */
+  public synchronized static String createNewUniqueFileName( final String prefix, final String extension, final File parentDir )
+  {
+    String newFileName = new String( prefix + "_" + System.currentTimeMillis() + extension );
+    File newFile = new File( parentDir, newFileName );
+    while( newFile.exists() )
+    {
+      newFileName = new String( prefix + "_" + System.currentTimeMillis() + extension );
+      newFile = new File( parentDir, newFileName );
+    }
+    return newFileName;
+
+  }
+
+  /**
    * Macht aus einer absoluten Dateiangabe eine relative
    * 
    * @param basedir
@@ -399,6 +438,13 @@ public class FileUtilities
    * 
    *     test.foo -- test
    *     robert.tt -- robert
+   * 
+   * 
+   * 
+   * 
+   * 
+   * 
+   * 
    * 
    * 
    * 
