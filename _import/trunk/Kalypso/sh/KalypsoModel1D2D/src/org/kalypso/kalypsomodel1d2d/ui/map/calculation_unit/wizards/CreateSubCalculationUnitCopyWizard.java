@@ -41,47 +41,54 @@
 package org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ITransitionElement;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.AddSubCalcUnitsToCalcUnit1D2DCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.RemoveSubCalcUnitsFromCalcUnit1D2DCmd;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
 import org.kalypso.kalypsosimulationmodel.core.Util;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
  * @author Madanagopal
+ * @author Dejan Antanaskovic
  * 
  */
 public class CreateSubCalculationUnitCopyWizard extends Wizard implements INewWizard
 {
+  private final CalculationUnitDataModel m_dataModel;
 
-  private final CalculationUnitDataModel dataModel;
+  private IStructuredSelection m_selection;
 
-  private IStructuredSelection selection;
+  private CreateSubCalculationUnitCopyWizardPage m_wizardPage;
 
-  private CreateSubCalculationUnitCopyWizardPage firstPage;
-
-  private ICalculationUnit1D2D calculation1D2D;
+  private ICalculationUnit1D2D m_calcUnit1D2D;
 
   public CreateSubCalculationUnitCopyWizard( final CalculationUnitDataModel dataModel )
   {
-    this.dataModel = dataModel;
+    m_dataModel = dataModel;
   }
 
   @Override
   public void addPages( )
   {
-    firstPage = new CreateSubCalculationUnitCopyWizardPage( dataModel );
-    addPage( firstPage );
-    firstPage.init( selection );
+    setWindowTitle( Messages.getString( "CreateSubCalculationUnitCopyWizardPage.0" ) );
+    m_wizardPage = new CreateSubCalculationUnitCopyWizardPage( m_dataModel );
+    addPage( m_wizardPage );
+    m_wizardPage.init( m_selection );
   }
 
   /**
@@ -90,44 +97,129 @@ public class CreateSubCalculationUnitCopyWizard extends Wizard implements INewWi
   @Override
   public boolean performFinish( )
   {
-    calculation1D2D = (ICalculationUnit1D2D) dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
-    final RemoveSubCalcUnitsFromCalcUnit1D2DCmd cmdToRemove = new RemoveSubCalcUnitsFromCalcUnit1D2DCmd( new ArrayList<ICalculationUnit>( calculation1D2D.getSubUnits() ), calculation1D2D, Util.getModel( IFEDiscretisationModel1d2d.class ) )
+    if( checkSubUnitsInterconnection( m_wizardPage.getInputListCalSubUnits() ) )
     {
-      @Override
-      public void process( )
+      m_calcUnit1D2D = (ICalculationUnit1D2D) m_dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
+      final RemoveSubCalcUnitsFromCalcUnit1D2DCmd cmdToRemove = new RemoveSubCalcUnitsFromCalcUnit1D2DCmd( new ArrayList<ICalculationUnit>( m_calcUnit1D2D.getSubUnits() ), m_calcUnit1D2D, Util.getModel( IFEDiscretisationModel1d2d.class ) )
       {
-        try
+        @Override
+        public void process( )
         {
-          super.process();
+          try
+          {
+            super.process();
+          }
+          catch( Exception e )
+          {
+            e.printStackTrace();
+          }
+          m_dataModel.setData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, m_dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER ) );
         }
-        catch( Exception e )
-        {
-          e.printStackTrace();
-        }
-        dataModel.setData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER ) );
-      }
 
-    };
-    KeyBasedDataModelUtil.postCommand( dataModel, cmdToRemove, ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL );
-    final AddSubCalcUnitsToCalcUnit1D2DCmd cmdToAdd = new AddSubCalcUnitsToCalcUnit1D2DCmd( firstPage.getInputListCalSubUnits(), calculation1D2D, Util.getModel( IFEDiscretisationModel1d2d.class ) )
+      };
+      final AddSubCalcUnitsToCalcUnit1D2DCmd cmdToAdd = new AddSubCalcUnitsToCalcUnit1D2DCmd( m_wizardPage.getInputListCalSubUnits(), m_calcUnit1D2D, Util.getModel( IFEDiscretisationModel1d2d.class ) )
+      {
+
+        @Override
+        public void process( )
+        {
+          try
+          {
+            super.process();
+          }
+          catch( Exception e )
+          {
+            e.printStackTrace();
+          }
+          m_dataModel.setData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, m_dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER ) );
+        }
+      };
+      KeyBasedDataModelUtil.postCommand( m_dataModel, cmdToRemove, ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL );
+      KeyBasedDataModelUtil.postCommand( m_dataModel, cmdToAdd, ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL );
+      return true;
+    }
+    else
     {
+      MessageDialog.openWarning( getShell(), "Warnung", "At least one of selected subcalculation units is not connected to other units (not connected via common continuity line, common transition element or common junction element).\nOnly connected units can create complex calculation unit." );
+      return false;
+    }
+  }
 
-      @Override
-      public void process( )
-      {
-        try
-        {
-          super.process();
-        }
-        catch( Exception e )
-        {
-          e.printStackTrace();
-        }
-        dataModel.setData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER, dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER ) );
-      }
-    };
-    KeyBasedDataModelUtil.postCommand( dataModel, cmdToAdd, ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL );
+  private boolean checkSubUnitsInterconnection( final ArrayList<ICalculationUnit> inputListCalSubUnits )
+  {
+    final List<ICalculationUnit> connectedUnits = new ArrayList<ICalculationUnit>();
+    for( final ICalculationUnit currentUnit : inputListCalSubUnits )
+      if( internalCheckInterconnection( connectedUnits, currentUnit ) )
+        connectedUnits.add( currentUnit );
+      else
+        return false;
     return true;
+  }
+
+  private boolean internalCheckInterconnection( final List<ICalculationUnit> connectedUnits, final ICalculationUnit currentUnit )
+  {
+    if( connectedUnits.size() == 0 )
+      return true;
+
+    // -----------------------------------------------------------------------------
+    // check if current unit have common continuity line with any unit from the list
+    // -----------------------------------------------------------------------------
+    final List<IFELine> currentUnitLines = currentUnit.getContinuityLines();
+    for( final ICalculationUnit connectedUnit : connectedUnits )
+    {
+      // if calculation units are of different type, common continuity line cannot exists
+      if( !connectedUnit.getType().equals( currentUnit.getType() ) )
+        continue;
+      
+      final List<IFELine> connectedUnitLines = connectedUnit.getContinuityLines();
+      for( final IFELine line : connectedUnitLines )
+        if( currentUnitLines.contains( line ) )
+          return true;
+    }
+
+    // --------------------------------------------------------------------------------
+    // check if current unit have common transition element with any unit from the list
+    // --------------------------------------------------------------------------------
+    final IFEDiscretisationModel1d2d model = (IFEDiscretisationModel1d2d) m_dataModel.getData( ICommonKeys.KEY_DISCRETISATION_MODEL );
+    final IFeatureWrapperCollection<IFE1D2DComplexElement> complexElements = model.getComplexElements();
+
+    // get all transition elements from the discretisation model
+    final List<ITransitionElement> allTransitionElements = new ArrayList<ITransitionElement>();
+    for( final IFE1D2DComplexElement complexElement : complexElements )
+      if( complexElement instanceof ITransitionElement )
+        allTransitionElements.add( (ITransitionElement) complexElement );
+
+    // get all transition elements between already connected units
+    final List<ITransitionElement> connectedTransitionElements = new ArrayList<ITransitionElement>();
+    for( final ITransitionElement transitionElement : allTransitionElements )
+    {
+      for( final ICalculationUnit connectedUnit : connectedUnits )
+      {
+        final List<IFELine> connectedUnitLines = connectedUnit.getContinuityLines();
+        for( final IFELine line : connectedUnitLines )
+          if( transitionElement.getContinuityLines().contains( line ) )
+            if( !connectedTransitionElements.contains( transitionElement ) )
+              connectedTransitionElements.add( transitionElement );
+      }
+    }
+
+    // check if current unit is connected to any of the connected transition elements
+    final List<IFELine> currentUnutContinuityLines = currentUnit.getContinuityLines();
+    for( final IFELine line : currentUnutContinuityLines )
+    {
+      for( final ITransitionElement transitionElement : connectedTransitionElements )
+      {
+        if(transitionElement.getContinuityLines().contains( line ))
+          return true;
+      }
+    }
+    
+    // ------------------------------------------------------------------------------
+    // check if current unit have common junction element with any unit from the list
+    // TODO implement it!
+    // ------------------------------------------------------------------------------
+
+    return false;
   }
 
   /**
@@ -136,7 +228,7 @@ public class CreateSubCalculationUnitCopyWizard extends Wizard implements INewWi
    */
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
-    this.selection = selection;
+    this.m_selection = selection;
   }
 
 }

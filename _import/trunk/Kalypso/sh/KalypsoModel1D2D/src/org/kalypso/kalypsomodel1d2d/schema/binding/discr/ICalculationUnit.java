@@ -49,11 +49,29 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
  * Tagging interface for classes representing a wb1d2d:CalculationUnit
  * 
  * @author Patrice Congo
+ * @author Dejan Antanaskovic
  * 
  */
 public interface ICalculationUnit<T extends IFENetItem> extends IFE1D2DComplexElement<T>
 {
+  public static enum TYPE
+  {
+    TYPE1D,
+    TYPE2D,
+    TYPE1D2D,
+    TYPE_NON_DEFINED
+  }
+
+  /**
+   * Type of calculation unit (1D, 2D or 1D2D)
+   */
+  public TYPE getType( );
+
   public List<IFELine> getContinuityLines( );
-  
-  public boolean contains(final IFeatureWrapper2 member);
+
+  public List<IElement1D> getElements1D( );
+
+  public List<IElement2D> getElements2D( );
+
+  public boolean contains( final IFeatureWrapper2 member );
 }

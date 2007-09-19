@@ -143,10 +143,11 @@ public class KeyBasedDataModelUtil
       public void run( )
       {
         // TODO: probably wrong to call it from here; instead let the theme fire the corresponding event
+        
         ((MapPanel) mapPanelEntry).invalidateMap();
       }
     };
-
+//    dataModel.getData( key )
     ((Display) displayEntry).asyncExec( repaintRunnable );
   }
 

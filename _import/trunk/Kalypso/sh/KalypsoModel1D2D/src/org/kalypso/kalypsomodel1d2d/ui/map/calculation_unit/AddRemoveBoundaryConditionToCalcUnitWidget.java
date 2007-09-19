@@ -157,7 +157,7 @@ public class AddRemoveBoundaryConditionToCalcUnitWidget extends FENetConceptSele
         {
           final IBoundaryCondition bc = (IBoundaryCondition) feature.getAdapter( IBoundaryCondition.class );
           if( bc == null )
-            return;
+            continue;
           final AddBoundaryConditionToCalcUnitCommand command = new AddBoundaryConditionToCalcUnitCommand( calcUnit, bc )
           {
             /**

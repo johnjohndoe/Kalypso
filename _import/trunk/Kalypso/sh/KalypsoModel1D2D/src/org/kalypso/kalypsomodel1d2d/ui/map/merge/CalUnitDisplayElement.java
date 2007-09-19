@@ -46,7 +46,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Stroke;
 import java.awt.geom.Area;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
@@ -62,7 +61,6 @@ import org.kalypsodeegree.graphics.displayelements.DisplayElementDecorator;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_LineString;
@@ -80,25 +78,29 @@ import org.kalypsodeegree_impl.tools.Debug;
  */
 public class CalUnitDisplayElement implements DisplayElementDecorator
 {
-  private final ICalculationUnit<IFE1D2DElement> calUnit;
+  private final ICalculationUnit m_calculationUnit;
 
-  private DisplayElement decorated;
+  private DisplayElement m_decoratedElement;
 
-  private boolean highlighted;
+  private boolean m_isHighlighted;
 
-  private boolean selected;
+  private boolean m_isSelected;
 
-  private static final Color m_elementFillColor = new Color( 0, 0, 255, 85 );
+  private static final Color ELEMENT_FILL_COLOR = new Color( 0, 0, 255, 85 );
 
-  private static final Color m_elementBorderColor = Color.BLUE;
+  private static final Color ELEMENT_BORDER_COLOR = Color.BLUE;
 
-  private static final Color m_continuityLineColor = Color.BLUE;
+  private static final float ELEMENT_BORDER_WIDTH = 1;
 
-  public CalUnitDisplayElement( final ICalculationUnit<IFE1D2DElement> calUnit )
+  private static final Color CONTINUITY_LINE_COLOR = Color.BLUE;
+
+  private static final float CONTINUITY_LINE_WIDTH = 5;
+
+  public CalUnitDisplayElement( final ICalculationUnit calUnit )
   {
-    this.selected = false;
-    this.highlighted = false;
-    this.calUnit = calUnit;
+    m_isSelected = false;
+    m_isHighlighted = false;
+    m_calculationUnit = calUnit;
   }
 
   /**
@@ -106,7 +108,7 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
    */
   public DisplayElement getDecorated( )
   {
-    return decorated;
+    return m_decoratedElement;
   }
 
   /**
@@ -114,7 +116,7 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
    */
   public void setDecorated( final DisplayElement decorated )
   {
-    this.decorated = decorated;
+    this.m_decoratedElement = decorated;
   }
 
   /**
@@ -122,9 +124,9 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
    */
   public boolean doesScaleConstraintApply( final double scale )
   {
-    if( decorated != null )
+    if( m_decoratedElement != null )
     {
-      return decorated.doesScaleConstraintApply( scale );
+      return m_decoratedElement.doesScaleConstraintApply( scale );
     }
     else
     {
@@ -137,9 +139,9 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
    */
   public Feature getFeature( )
   {
-    if( calUnit != null )
+    if( m_calculationUnit != null )
     {
-      return calUnit.getWrappedFeature();
+      return m_calculationUnit.getWrappedFeature();
     }
     else
     {
@@ -152,13 +154,13 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
    */
   public boolean isHighlighted( )
   {
-    if( decorated != null )
+    if( m_decoratedElement != null )
     {
-      return decorated.isHighlighted();
+      return m_decoratedElement.isHighlighted();
     }
     else
     {
-      return highlighted;
+      return m_isHighlighted;
     }
   }
 
@@ -167,13 +169,13 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
    */
   public boolean isSelected( )
   {
-    if( decorated != null )
+    if( m_decoratedElement != null )
     {
-      return decorated.isSelected();
+      return m_decoratedElement.isSelected();
     }
     else
     {
-      return selected;
+      return m_isSelected;
     }
   }
 
@@ -181,84 +183,65 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
    * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#paint(java.awt.Graphics,
    *      org.kalypsodeegree.graphics.transformation.GeoTransform)
    */
+  @SuppressWarnings("unchecked")
   public void paint( final Graphics g, final GeoTransform projection )
   {
-    if( calUnit == null )
-    {
+    if( m_calculationUnit == null )
       return;
-    }
-
     final GM_Envelope sourceRect = projection.getSourceRect();
-    final LinkedList<ICalculationUnit> calUnitTreeToDraw = new LinkedList<ICalculationUnit>();
-    calUnitTreeToDraw.add( calUnit );
-
-    while( !calUnitTreeToDraw.isEmpty() )
+    final List<IFENetItem> visibleElements;
+    if( m_calculationUnit instanceof ICalculationUnit1D2D )
+      visibleElements = ((ICalculationUnit1D2D) m_calculationUnit).query( sourceRect );
+    else
+      visibleElements = m_calculationUnit.getElements().query( sourceRect );
+    for( final IFeatureWrapper2 element : visibleElements )
     {
-      final ICalculationUnit<IFENetItem> currentUnit = calUnitTreeToDraw.removeFirst();
-      // final Color color = new Color( Color.lightGray );
-      final IFeatureWrapperCollection<IFENetItem> elements = currentUnit.getElements();
-      final List<IFENetItem> visibleElements = elements.query( sourceRect );
-      final boolean includeChildLines = currentUnit.equals( calUnit );
-
-      for( final IFeatureWrapper2 element : visibleElements )
+      if( element instanceof IPolyElement )
       {
-        if( element instanceof IPolyElement )
+        try
         {
-          try
-          {
-            final GM_Surface surface = (GM_Surface) ((IFENetItem) element).recalculateElementGeometry();
-            paintSurface( surface, m_elementFillColor, (Graphics2D) g, projection );
-          }
-          catch( final Exception e )
-          {
-            e.printStackTrace();
-          }
+          final GM_Surface surface = (GM_Surface) ((IFENetItem) element).recalculateElementGeometry();
+          paintSurface( surface, ELEMENT_FILL_COLOR, (Graphics2D) g, projection, ELEMENT_BORDER_WIDTH );
         }
-        else if( element instanceof IElement1D )
+        catch( final Exception e )
         {
-          try
-          {
-            final GM_Curve curve = (GM_Curve) ((IFENetItem) element).recalculateElementGeometry();
-            paintLineString( curve, m_elementBorderColor, (Graphics2D) g, projection );
-          }
-          catch( final Exception e )
-          {
-            e.printStackTrace();
-            throw new RuntimeException( e );
-          }
-        }
-        else if( element instanceof IFELine )
-        {
-          if( includeChildLines )
-          {
-            try
-            {
-              final GM_Curve curve = ((IFELine) element).getGeometry();
-              paintLineString( curve, m_continuityLineColor, (Graphics2D) g, projection );
-            }
-            catch( final Exception e )
-            {
-              e.printStackTrace();
-              throw new RuntimeException( e );
-            }
-          }
-        }
-        else
-        {
-          throw new RuntimeException( "Unexpected type of element:" + element ); //$NON-NLS-1$
+          e.printStackTrace();
         }
       }
-
-      // add sub unit for drawing
-      if( currentUnit instanceof ICalculationUnit1D2D )
+      else if( element instanceof IElement1D )
       {
-        calUnitTreeToDraw.addAll( ((ICalculationUnit1D2D) currentUnit).getSubUnits() );
+        try
+        {
+          final GM_Curve curve = (GM_Curve) ((IFENetItem) element).recalculateElementGeometry();
+          paintLineString( curve, ELEMENT_BORDER_COLOR, (Graphics2D) g, projection, CONTINUITY_LINE_WIDTH );
+        }
+        catch( final Exception e )
+        {
+          e.printStackTrace();
+          throw new RuntimeException( e );
+        }
       }
-
+      else if( element instanceof IFELine )
+      {
+        try
+        {
+          final GM_Curve curve = ((IFELine) element).getGeometry();
+          paintLineString( curve, CONTINUITY_LINE_COLOR, (Graphics2D) g, projection, CONTINUITY_LINE_WIDTH );
+        }
+        catch( final Exception e )
+        {
+          e.printStackTrace();
+          throw new RuntimeException( e );
+        }
+      }
+      else
+      {
+        throw new RuntimeException( "Unexpected type of element:" + element ); //$NON-NLS-1$
+      }
     }
   }
 
-  public static final void paintSurface( final GM_Surface surface, final Color color, final Graphics2D g2d, final GeoTransform projection )
+  public static final void paintSurface( final GM_Surface surface, final Color color, final Graphics2D g2d, final GeoTransform projection, final float lineWidth )
   {
     try
     {
@@ -267,9 +250,8 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
       g2d.fill( area );
 
       // shape drawing
-      g2d.setColor( m_elementBorderColor );
-      final java.awt.Stroke bs2 = new BasicStroke( 1 );
-
+      g2d.setColor( ELEMENT_BORDER_COLOR );
+      final java.awt.Stroke bs2 = new BasicStroke( lineWidth );
       g2d.setStroke( bs2 );
       g2d.draw( area );
     }
@@ -279,11 +261,11 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
     }
   }
 
-  public static final void paintLineString( final GM_Curve curve, final Color color, final Graphics2D g2d, final GeoTransform projection ) throws Exception
+  public static final void paintLineString( final GM_Curve curve, final Color color, final Graphics2D g2d, final GeoTransform projection, final float lineWidth ) throws Exception
   {
     final int[][] linePointCoords = calcTargetCoordinates( projection, curve );
 
-    final Stroke stroke = new BasicStroke( 5 );
+    final Stroke stroke = new BasicStroke( lineWidth );
     g2d.setStroke( stroke );
     g2d.setColor( color );
     g2d.drawPolyline( linePointCoords[0], linePointCoords[1], linePointCoords[2][0] );
@@ -308,7 +290,6 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
     {
       Debug.debugException( e, "" ); //$NON-NLS-1$
     }
-
     return null;
   }
 
@@ -317,7 +298,7 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
    */
   public void setHighlighted( final boolean highlighted )
   {
-    this.highlighted = highlighted;
+    this.m_isHighlighted = highlighted;
   }
 
   /**
@@ -325,7 +306,7 @@ public class CalUnitDisplayElement implements DisplayElementDecorator
    */
   public void setSelected( final boolean selected )
   {
-    this.selected = selected;
+    this.m_isSelected = selected;
   }
 
   public static final CalUnitDisplayElement createDisplayElement( final ICalculationUnit<IFE1D2DElement> calUnit )

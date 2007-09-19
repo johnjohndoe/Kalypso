@@ -136,35 +136,37 @@ public class SelectedCalculationComponent
 
   protected void updateThisSection( Object newValue )
   {
-    m_subCalcUnitsTable.clearAll();
-    m_txtNumberOfElements1D.setText( "" );
-    m_txtNumberOfElements2D.setText( "" );
-    m_txtCalcUnitType.setText( "" );
-    m_numberOfContinuityLines.setText( "" );
     m_txtCalcUnitName.setText( "" );
-    m_numberOfBoundaryConditions.setText( "" );
-
+    m_txtCalcUnitType.setText( "" );
+    m_txtNumberOfElements1D.setText( "0" );
+    m_txtNumberOfElements2D.setText( "0" );
+    m_numberOfContinuityLines.setText( "0" );
+    m_numberOfBoundaryConditions.setText( "0" );
+    m_subCalcUnitsTable.clearAll();
+    
     if( newValue instanceof ICalculationUnit1D )
     {
       m_txtCalcUnitName.setText( ((ICalculationUnit) newValue).getName() );
       m_txtCalcUnitType.setText( Messages.getString( "SelectedCalculationComponent.5" ) ); //$NON-NLS-1$
-      m_txtNumberOfElements1D.setText( String.valueOf( CalcUnitOps.getNum1DElement( (ICalculationUnit) newValue ) ) );
-      m_numberOfContinuityLines.setText( String.valueOf( CalcUnitOps.getNumBoundaryLine( (ICalculationUnit) newValue ) ) );
+      m_txtNumberOfElements1D.setText( String.valueOf( ( (ICalculationUnit) newValue ).getElements1D().size() ) );
+      m_numberOfContinuityLines.setText( String.valueOf( ((ICalculationUnit) newValue).getContinuityLines().size() ) );
       m_numberOfBoundaryConditions.setText( String.valueOf( CalcUnitOps.countAssignedBoundaryConditions( getBoundaryConditions(), (ICalculationUnit) newValue ) ) );
     }
     else if( newValue instanceof ICalculationUnit2D )
     {
       m_txtCalcUnitName.setText( ((ICalculationUnit) newValue).getName() );
       m_txtCalcUnitType.setText( Messages.getString( "SelectedCalculationComponent.6" ) ); //$NON-NLS-1$
-      m_txtNumberOfElements2D.setText( String.valueOf( CalcUnitOps.getNum2DElement( (ICalculationUnit) newValue ) ) );
-      m_numberOfContinuityLines.setText( String.valueOf( CalcUnitOps.getNumBoundaryLine( (ICalculationUnit) newValue ) ) );
+      m_txtNumberOfElements2D.setText( String.valueOf( ( (ICalculationUnit) newValue ).getElements2D().size() ) );
+      m_numberOfContinuityLines.setText( String.valueOf( ((ICalculationUnit) newValue).getContinuityLines().size() ) );
       m_numberOfBoundaryConditions.setText( String.valueOf( CalcUnitOps.countAssignedBoundaryConditions( getBoundaryConditions(), (ICalculationUnit) newValue ) ) );
     }
     else if( newValue instanceof ICalculationUnit1D2D )
     {
       m_txtCalcUnitName.setText( ((ICalculationUnit) newValue).getName() );
       m_txtCalcUnitType.setText( Messages.getString( "SelectedCalculationComponent.7" ) ); //$NON-NLS-1$
-      m_numberOfContinuityLines.setText( String.valueOf( ((ICalculationUnit1D2D) newValue).getContinuityLines().size() ) );
+      m_txtNumberOfElements1D.setText( String.valueOf( ( (ICalculationUnit) newValue ).getElements1D().size() ) );
+      m_txtNumberOfElements2D.setText( String.valueOf( ( (ICalculationUnit) newValue ).getElements2D().size() ) );
+      m_numberOfContinuityLines.setText( String.valueOf( ((ICalculationUnit) newValue).getContinuityLines().size() ) );
       m_numberOfBoundaryConditions.setText( String.valueOf( CalcUnitOps.countAssignedBoundaryConditions( getBoundaryConditions(), (ICalculationUnit) newValue ) ) );
       m_subCalcUnitsTableViewer.setInput( ((ICalculationUnit1D2D) newValue).getSubUnits().toArray() );
     }

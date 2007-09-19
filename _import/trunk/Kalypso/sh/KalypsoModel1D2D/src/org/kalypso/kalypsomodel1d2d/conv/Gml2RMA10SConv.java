@@ -453,8 +453,8 @@ public class Gml2RMA10SConv implements INativeIDProvider
         }
         else
         {
-          leftParent = CalcUnitOps.isFiniteElementOf( m_calculationUnit, leftElement ) ? getConversionID( leftElement ) : 0;
-          rightParent = CalcUnitOps.isFiniteElementOf( m_calculationUnit, rightElement ) ? getConversionID( rightElement ) : 0;
+          leftParent = m_calculationUnit.contains( leftElement ) ? getConversionID( leftElement ) : 0;
+          rightParent = m_calculationUnit.contains( rightElement ) ? getConversionID( rightElement ) : 0;
         }
         formatter.format( "AR%10d%10d%10d%10d%10d%10d%n", cnt++, node0ID, node1ID, leftParent, rightParent, middleNodeID ); //$NON-NLS-1$
       }
@@ -616,7 +616,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
     for( final IFE1D2DElement element : elementsInBBox )
     {
       // TODO: shouldnt the check for calulation unit always happens? -> So export is per calculation unit?
-      if( !m_exportRequest && !CalcUnitOps.isFiniteElementOf( m_calculationUnit, element ) )
+      if( !m_exportRequest && !m_calculationUnit.contains( element ) )
         continue;
 
       if( m_exportRequest && element instanceof IElement1D )

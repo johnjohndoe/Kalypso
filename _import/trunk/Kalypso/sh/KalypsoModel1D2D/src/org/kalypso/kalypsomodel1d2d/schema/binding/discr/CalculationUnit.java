@@ -63,6 +63,20 @@ public class CalculationUnit<ET extends IFENetItem> extends FE1D2DComplexElement
     super( featureToBind, qnameToBind, elementListPropQName, wrapperClass );
   }
 
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit#getType()
+   */
+  public TYPE getType( )
+  {
+    if( this instanceof ICalculationUnit1D )
+      return TYPE.TYPE1D;
+    else if( this instanceof ICalculationUnit2D )
+      return TYPE.TYPE2D;
+    else if( this instanceof ICalculationUnit1D2D )
+      return TYPE.TYPE1D2D;
+    return TYPE.TYPE_NON_DEFINED;
+  }
+
   public List<IFELine> getContinuityLines( )
   {
     final IFeatureWrapperCollection<ET> elements = getElements();
@@ -78,6 +92,8 @@ public class CalculationUnit<ET extends IFENetItem> extends FE1D2DComplexElement
    */
   public boolean contains( final IFeatureWrapper2 member )
   {
+    if( member == null )
+      return false;
     final String memberID = member.getGmlID();
     final IFeatureWrapperCollection<ET> elements = getElements();
     for( final IFeatureWrapper2 element : elements )
@@ -86,4 +102,29 @@ public class CalculationUnit<ET extends IFENetItem> extends FE1D2DComplexElement
     return false;
   }
 
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit#getElements1D()
+   */
+  public List<IElement1D> getElements1D( )
+  {
+    final List<IElement1D> list = new ArrayList<IElement1D>();
+    final IFeatureWrapperCollection<ET> elements = getElements();
+    for( final IFeatureWrapper2 element : elements )
+      if( element instanceof IElement1D )
+        list.add( (IElement1D) element );
+    return list;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit#getElements2D()
+   */
+  public List<IElement2D> getElements2D( )
+  {
+    final List<IElement2D> list = new ArrayList<IElement2D>();
+    final IFeatureWrapperCollection<ET> elements = getElements();
+    for( final IFeatureWrapper2 element : elements )
+      if( element instanceof IElement2D )
+        list.add( (IElement2D) element );
+    return list;
+  }
 }

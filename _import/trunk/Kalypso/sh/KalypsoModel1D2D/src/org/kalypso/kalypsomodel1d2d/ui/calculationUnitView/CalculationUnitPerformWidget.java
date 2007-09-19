@@ -122,7 +122,6 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
         KeyBasedDataModelUtil.repaintMapPanel( dataModel, ICommonKeys.KEY_MAP_PANEL );
       }
     }
-
   };
 
   /**

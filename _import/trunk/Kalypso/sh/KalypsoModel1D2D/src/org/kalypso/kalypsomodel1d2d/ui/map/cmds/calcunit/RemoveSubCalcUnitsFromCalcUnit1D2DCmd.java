@@ -55,27 +55,25 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
  * @author Madanagopal
- *
+ * 
  */
 public class RemoveSubCalcUnitsFromCalcUnit1D2DCmd implements IDiscrModel1d2dChangeCommand
 {
 
   private List<ICalculationUnit> listCalculationUnits;
-  //private IFE1D2DElement[] elementsToAdd;
+
+  // private IFE1D2DElement[] elementsToAdd;
   private IFEDiscretisationModel1d2d model1d2d;
-    private boolean added = false;
-    private ICalculationUnit1D2D parentCalculationUnit;
 
-  public RemoveSubCalcUnitsFromCalcUnit1D2DCmd(
-      List<ICalculationUnit> listCalculationUnits,
-      ICalculationUnit1D2D parentCalculationUnit,
-      IFEDiscretisationModel1d2d model1d2d )
+  private boolean added = false;
 
-  {    
-      this.listCalculationUnits = listCalculationUnits;
-      this.parentCalculationUnit = parentCalculationUnit;
-      this.model1d2d = model1d2d;
-    
+  private ICalculationUnit1D2D parentCalculationUnit;
+
+  public RemoveSubCalcUnitsFromCalcUnit1D2DCmd( List<ICalculationUnit> listCalculationUnits, ICalculationUnit1D2D parentCalculationUnit, IFEDiscretisationModel1d2d model1d2d )
+  {
+    this.listCalculationUnits = listCalculationUnits;
+    this.parentCalculationUnit = parentCalculationUnit;
+    this.model1d2d = model1d2d;
   }
 
   /**
@@ -86,13 +84,13 @@ public class RemoveSubCalcUnitsFromCalcUnit1D2DCmd implements IDiscrModel1d2dCha
     if( added )
     {
       List<IFeatureWrapper2> changed = new ArrayList<IFeatureWrapper2>();
-      changed.addAll(listCalculationUnits);
-      changed.add( parentCalculationUnit);
+      changed.addAll( listCalculationUnits );
+      changed.add( parentCalculationUnit );
       return changed.toArray( new IFeatureWrapper2[changed.size()] );
     }
     else
     {
-      return new IFeatureWrapper2[]{};
+      return new IFeatureWrapper2[] {};
     }
   }
 
@@ -109,7 +107,6 @@ public class RemoveSubCalcUnitsFromCalcUnit1D2DCmd implements IDiscrModel1d2dCha
    */
   public String getDescription( )
   {
-    
     return null;
   }
 
@@ -118,59 +115,43 @@ public class RemoveSubCalcUnitsFromCalcUnit1D2DCmd implements IDiscrModel1d2dCha
    */
   public boolean isUndoable( )
   {
-    
     return false;
   }
 
   /**
    * @see org.kalypso.commons.command.ICommand#process()
    */
-  @SuppressWarnings({ "unchecked", "unchecked" }) //$NON-NLS-1$ //$NON-NLS-2$
+  @SuppressWarnings( { "unchecked", "unchecked" })//$NON-NLS-1$ //$NON-NLS-2$
   public void process( ) throws Exception
   {
-    IFeatureWrapperCollection subUnits = parentCalculationUnit.getSubUnits();
-       if(!added )
+    final IFeatureWrapperCollection subUnits = parentCalculationUnit.getSubUnits();
+    if( !added )
     {
       try
       {
         for( ICalculationUnit ele : listCalculationUnits )
-        {
-          subUnits.removeAllRefs(ele );
-          
-        }
-        
+          subUnits.removeAllRefs( ele );
         added = true;
-        //fire change
+        // fire change
         fireProcessChanges();
       }
       catch( Exception th )
-      {        
+      {
         th.printStackTrace();
         throw th;
       }
-      
     }
-
   }
 
   private void fireProcessChanges( )
-  {    
-    IFeatureWrapper2[] elementsToAdd = getChangedFeature();    
-    List<Feature> features = new ArrayList<Feature>();   
-    for( IFeatureWrapper2 ele: elementsToAdd )
-    {
+  {
+    final IFeatureWrapper2[] elementsToAdd = getChangedFeature();
+    final List<Feature> features = new ArrayList<Feature>();
+    for( IFeatureWrapper2 ele : elementsToAdd )
       features.add( ele.getWrappedFeature() );
-    }
-    
-    GMLWorkspace workspace = parentCalculationUnit.getWrappedFeature().getWorkspace();
-    FeatureStructureChangeModellEvent event = 
-        new FeatureStructureChangeModellEvent(
-            workspace,//final GMLWorkspace workspace, 
-            model1d2d.getWrappedFeature(),// Feature parentFeature, 
-            features.toArray( new Feature[features.size()] ),//final Feature[] changedFeature, 
-            FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD//final int changeType
-            );
-    workspace.fireModellEvent( event );    
+    final GMLWorkspace workspace = parentCalculationUnit.getWrappedFeature().getWorkspace();
+    final FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( workspace, model1d2d.getWrappedFeature(), features.toArray( new Feature[features.size()] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD );
+    workspace.fireModellEvent( event );
   }
 
   /**
@@ -178,7 +159,7 @@ public class RemoveSubCalcUnitsFromCalcUnit1D2DCmd implements IDiscrModel1d2dCha
    */
   public void redo( ) throws Exception
   {
-    
+
   }
 
   /**
@@ -186,7 +167,7 @@ public class RemoveSubCalcUnitsFromCalcUnit1D2DCmd implements IDiscrModel1d2dCha
    */
   public void undo( ) throws Exception
   {
-    
+
   }
 
 }

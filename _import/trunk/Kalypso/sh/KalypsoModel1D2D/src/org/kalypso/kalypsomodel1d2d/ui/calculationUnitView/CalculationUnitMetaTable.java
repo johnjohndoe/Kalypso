@@ -43,6 +43,7 @@ package org.kalypso.kalypsomodel1d2d.ui.calculationUnitView;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -64,16 +65,16 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DUIImages;
 import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.sim.CalculationUnitSimMode1D2DCalcJob;
@@ -104,18 +105,6 @@ public abstract class CalculationUnitMetaTable implements ICalculationUnitButton
 
   private Composite m_parent;
 
-  final String bTextMaximizeSelected = "Geländemodell anzeigen und maximieren";
-
-  final String deleteSelected = "Geländemodell löschen";
-
-  final String calculateSelected = "Run Calculation";
-
-  final String defaultTestDecription = "Wählen Sie ein Modell aus.";
-
-  final String saveToolTip = "Deskription Sichern";
-
-  final String titleDescriptionGroup = "Beschreibung";
-
   final private SelectionListener moveUpListener = new SelectionAdapter()
   {
     @Override
@@ -143,24 +132,18 @@ public abstract class CalculationUnitMetaTable implements ICalculationUnitButton
     {
       try
       {
-        IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+        final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
         if( selection == null )
-        {
-          System.out.println( "Selection is null" );
           return;
-        }
-        Object firstElement = selection.getFirstElement();
+        final Object firstElement = selection.getFirstElement();
         if( firstElement == null )
-        {
-          return;// throw new NullPointerException( "Null Value while selection.getFirstElement() :" + firstElement );
-        }
+          return;
         else
         {
           if( firstElement instanceof IFeatureWrapper2 )
           {
-            IFeatureWrapper2 firstElementWrapper = (IFeatureWrapper2) firstElement;
+            final IFeatureWrapper2 firstElementWrapper = (IFeatureWrapper2) firstElement;
             setCurrentSelection( firstElementWrapper );
-
           }
         }
       }
@@ -169,18 +152,9 @@ public abstract class CalculationUnitMetaTable implements ICalculationUnitButton
         th.printStackTrace();
       }
     }
-
   };
 
-  private Label descriptionLabel;
-
-  private Group descriptionGroupText;
-
-  private Text descriptionText;
-
   private String[] buttonsList;
-
-  private Button saveButton;
 
   private final KeyBasedDataModelChangeListener dataModelListener = new KeyBasedDataModelChangeListener()
   {
@@ -270,7 +244,6 @@ public abstract class CalculationUnitMetaTable implements ICalculationUnitButton
     if( searchForThisString( ICalculationUnitButtonIDs.BTN_SHOW_AND_MAXIMIZE ) )
     {
       m_btnMaximizeCalcUnit = new Button( btnComposite, SWT.PUSH );
-      // clickToRunBtn.setToolTipText( bTextMaximizeSelected );
       image = new Image( btnComposite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/17_show_calculationunit.gif" ).getImageData() );
       m_btnMaximizeCalcUnit.setImage( image );
       m_btnMaximizeCalcUnit.addSelectionListener( new SelectionAdapter()
@@ -316,7 +289,6 @@ public abstract class CalculationUnitMetaTable implements ICalculationUnitButton
     if( searchForThisString( ICalculationUnitButtonIDs.BTN_ADD ) )
     {
       m_btnCreateCalcUnit = new Button( btnComposite, SWT.PUSH );
-      // addButton.setToolTipText( deleteSelected );
       image = new Image( btnComposite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/18_add_calculationunit.gif" ).getImageData() );
       m_btnCreateCalcUnit.setImage( image );
       m_btnCreateCalcUnit.addSelectionListener( new SelectionAdapter()
@@ -342,7 +314,6 @@ public abstract class CalculationUnitMetaTable implements ICalculationUnitButton
     if( searchForThisString( ICalculationUnitButtonIDs.BTN_CLICK_TO_CALCULATE ) )
     {
       m_btnRunCalculation = new Button( btnComposite, SWT.PUSH );
-      // calculateButton.setToolTipText( calculateSelected );
       image = new Image( btnComposite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/startCalculation.gif" ).getImageData() );
       m_btnRunCalculation.setImage( image );
       m_btnRunCalculation.addSelectionListener( new SelectionAdapter()
@@ -350,13 +321,24 @@ public abstract class CalculationUnitMetaTable implements ICalculationUnitButton
         @Override
         public void widgetSelected( final SelectionEvent event )
         {
-          final ICalculationUnit calculationUnit = getDataModel().getData( ICalculationUnit.class, ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
-          if( calculationUnit != null )
+          final Action action = new Action()
           {
-            final IWorkbench workbench = PlatformUI.getWorkbench();
-            final IStatus result = CalculationUnitSimMode1D2DCalcJob.startCalculation( calculationUnit, workbench );
-            ErrorDialog.openError( parent.getShell(), Messages.getString( "CalculationUnitPerformComponent.2" ), Messages.getString( "CalculationUnitPerformComponent.3" ), result ); //$NON-NLS-1$ //$NON-NLS-2$
-          }
+            @Override
+            public void run( )
+            {
+              final ICalculationUnit calculationUnit = getDataModel().getData( ICalculationUnit.class, ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
+              if( calculationUnit != null )
+              {
+                final IWorkbench workbench = PlatformUI.getWorkbench();
+                final IStatus result = CalculationUnitSimMode1D2DCalcJob.startCalculation( calculationUnit, workbench );
+                if( result.isOK() )
+                  MessageDialog.openInformation( parent.getShell(), Messages.getString( "CalculationUnitPerformComponent.2" ), "Calculation finished succesfully." );
+                else
+                  ErrorDialog.openError( parent.getShell(), Messages.getString( "CalculationUnitPerformComponent.2" ), Messages.getString( "CalculationUnitPerformComponent.3" ), result ); //$NON-NLS-1$ //$NON-NLS-2$
+              }
+            }
+          };
+          action.run();
         }
       } );
       m_btnRunCalculation.setToolTipText( Messages.getString( "CalculationUnitMetaTable.Tooltip.BTN_CLICK_TO_CALCULATE" ) );

@@ -485,7 +485,7 @@
 	<xs:complexType name="CalculationUnitType1D2D">
 		<xs:annotation>
 			<xs:documentation>
-				calculation unit with 2D or 1D elements only
+				calculation unit with subunits only
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>

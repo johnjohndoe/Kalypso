@@ -451,7 +451,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
           if( object instanceof GM_Surface )
           {
             final Orientation surfaceOrientation = getSurfaceOrientation( (GM_Surface) object );
-            if( surfaceOrientation == orientation )
+            if( surfaceOrientation != orientation )
               return ele;
           }
           else
