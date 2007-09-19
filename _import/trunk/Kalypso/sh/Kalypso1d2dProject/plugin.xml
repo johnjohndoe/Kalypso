@@ -284,6 +284,10 @@
        <handler
              class="org.kalypso.kalypso1d2d.pjt.actions.ConfigureResultLengthSectionViewHandler"
              commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ConfigureResultLengthSectionView">
+       </handler>
+       <handler
+             class="org.kalypso.kalypso1d2d.pjt.actions.GenerateResultDifferenceViewHandler"
+             commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__GenerateDifferenceResultView">
        </handler>  	     	     	     	     	     	     
 	</extension>
     

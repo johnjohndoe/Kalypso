@@ -63,6 +63,7 @@ import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ui.action.AddThemeCommand;
 import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
+import org.kalypso.ui.wizards.results.filters.NonMapDataResultViewerFilter;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
@@ -97,7 +98,7 @@ public class AddResultThemeWizard extends Wizard implements IKalypsoDataImportWi
   @Override
   public void addPages( )
   {
-    final ResultViewerFilter resultFilter = new ResultViewerFilter();
+    final NonMapDataResultViewerFilter resultFilter = new NonMapDataResultViewerFilter();
     final ThemeConstructionFactory themeConstructionFactory = new ThemeConstructionFactory( m_scenarioFolder );
     final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, "Ergebniss(e) zur Karte hinzufügen", null, resultFilter, themeConstructionFactory );
 

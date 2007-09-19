@@ -75,6 +75,7 @@ import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.wizards.results.SelectResultWizardPage;
+import org.kalypso.ui.wizards.results.filters.DocumentResultViewerFilter;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
@@ -123,7 +124,7 @@ public class ConfigureLengthSectionWizard extends Wizard
     final ConfigureLengthSectionWizardPage lengthSectionPage = new ConfigureLengthSectionWizardPage( PAGE_GENERATE_LENGTH_SECTION_NAME, "Längsschnitteinstellungen", null, m_mapPanel );
 
     // select time step page
-    final StepResultViewerFilter resultFilter = new StepResultViewerFilter();
+    final DocumentResultViewerFilter resultFilter = new DocumentResultViewerFilter();
     final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, "Ergebnis für Längsschnitt auswählen", null, resultFilter, null );
 
     selectResultWizardPage.setResultMeta( m_resultModel );

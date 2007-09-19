@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypso1d2d.pjt.wizards;
 
@@ -64,6 +64,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.StepResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.ICommandPoster;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
+import org.kalypso.ui.wizards.results.filters.DocumentResultViewerFilter;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
@@ -81,7 +82,7 @@ public class RestartSelectWizard extends Wizard implements INewWizard
 
   private IScenarioResultMeta m_resultModel;
 
-  private ICaseDataProvider<IFeatureWrapper2> m_modelProvider;
+  private final ICaseDataProvider<IFeatureWrapper2> m_modelProvider;
 
   private final IControlModel1D2D m_controlModel;
 
@@ -101,7 +102,7 @@ public class RestartSelectWizard extends Wizard implements INewWizard
     catch( CoreException e )
     {
       Kalypso1d2dProjectPlugin.getDefault().getLog().log( e.getStatus() );
-      ErrorDialog.openError( shell, Messages.getString("RestartSelectWizard.5"), Messages.getString("RestartSelectWizard.6"), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
+      ErrorDialog.openError( shell, Messages.getString( "RestartSelectWizard.5" ), Messages.getString( "RestartSelectWizard.6" ), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 
@@ -112,13 +113,13 @@ public class RestartSelectWizard extends Wizard implements INewWizard
   public void addPages( )
   {
     setWindowTitle( Messages.getString( "RestartSelectWizard.0" ) ); //$NON-NLS-1$
-    final RestartViewerFilter resultFilter = new RestartViewerFilter();
-    m_restartSelectWizardPage1 = new RestartSelectWizardPage1( "restartSelectionPage", Messages.getString("RestartSelectWizard.8"), null, m_resultModel, m_controlModel.getRestartInfos(), resultFilter ); //$NON-NLS-1$ //$NON-NLS-2$
+    final DocumentResultViewerFilter resultFilter = new DocumentResultViewerFilter();
+    m_restartSelectWizardPage1 = new RestartSelectWizardPage1( "restartSelectionPage", Messages.getString( "RestartSelectWizard.8" ), null, m_resultModel, m_controlModel.getRestartInfos(), resultFilter ); //$NON-NLS-1$ //$NON-NLS-2$
     m_restartSelectWizardPage1.setResultMeta( m_resultModel );
     m_restartSelectWizardPage1.setTitle( Messages.getString( "RestartSelectWizard.3" ) ); //$NON-NLS-1$
     m_restartSelectWizardPage1.setDescription( Messages.getString( "RestartSelectWizard.4" ) ); //$NON-NLS-1$
     addPage( m_restartSelectWizardPage1 );
-    m_restartSelectWizardPage2 = new RestartSelectWizardPage2( "restartSelectionPage", Messages.getString("RestartSelectWizard.10"), null ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_restartSelectWizardPage2 = new RestartSelectWizardPage2( "restartSelectionPage", Messages.getString( "RestartSelectWizard.10" ), null ); //$NON-NLS-1$ //$NON-NLS-2$
     addPage( m_restartSelectWizardPage2 );
   }
 
@@ -160,7 +161,7 @@ public class RestartSelectWizard extends Wizard implements INewWizard
    * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
    *      org.eclipse.jface.viewers.IStructuredSelection)
    */
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
+  @SuppressWarnings("unchecked")//$NON-NLS-1$
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
   }

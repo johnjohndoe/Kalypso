@@ -245,6 +245,17 @@ Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodu
 				<Name>Längsschnitt anzeigen</Name>
 			</Task>
 		</TaskGroup>
+		<TaskGroup
+			URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__DifferenceResultViewGroup"
+			context="ResultMap">
+			<Help><![CDATA[Hier können zwei Ergebnisse durch Differenzenbildung miteinander verglichen werden.]]></Help>
+			<Name>Differenzenbildung</Name>
+			<Task context="ResultMap"
+				URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__GenerateDifferenceResultView">
+				<Help><![CDATA[Die Differenzen erzeugen.]]></Help>
+				<Name>Differenzen erzeugen</Name>
+			</Task>
+		</TaskGroup>
 	</TaskGroup>
 	<Perspectives>
 		<con:PerspectiveContext id="Context1d2dModelling"

@@ -38,30 +38,39 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.wizards.lengthsection;
+package org.kalypso.ui.wizards.results.filters;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE;
 
 /**
- * filter for hiding all result data except the length section data in the {@link SelectLengthSectionWizard}. <br>
+ * filter for hiding the non-georeference-able data in the {@link AddResultThemeWizard}. <br>
  * <br>
+ * non-georeference-able data are logs, coreDataZip, length-sections and for the moment the fem-terrain-tin.
  * 
  * @author Thomas Jung
  * 
  */
-public class StepResultViewerFilter extends ViewerFilter
+public class NonMapDataResultViewerFilter extends ViewerFilter
 {
   /**
    * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object,
    *      java.lang.Object)
    */
   @Override
-  public boolean select( final Viewer viewer, final Object parent, final Object element )
+  public boolean select( Viewer viewer, Object parent, Object element )
   {
     if( element instanceof IDocumentResultMeta )
-      return false;
+    {
+      IDocumentResultMeta docResult = (IDocumentResultMeta) element;
+      DOCUMENTTYPE documentType = docResult.getDocumentType();
+      if( documentType == DOCUMENTTYPE.log || documentType == DOCUMENTTYPE.lengthSection || documentType == DOCUMENTTYPE.coreDataZip || documentType == DOCUMENTTYPE.tinTerrain )
+        return false;
+      else
+        return true;
+    }
     else
       return true;
   }

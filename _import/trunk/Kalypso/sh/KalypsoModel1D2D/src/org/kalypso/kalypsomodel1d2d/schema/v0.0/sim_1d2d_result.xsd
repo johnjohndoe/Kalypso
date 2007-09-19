@@ -118,6 +118,7 @@ Provide schema for the result model metadata of 1d2d simulations.
 								<xs:enumeration
 									value="tinShearStress">
 								</xs:enumeration>
+								<xs:enumeration value="tinDifference"></xs:enumeration>
 								<xs:enumeration value="hydrograph"></xs:enumeration>
 								<xs:enumeration value="lengthSection"></xs:enumeration>
 								<xs:enumeration value="log"></xs:enumeration>

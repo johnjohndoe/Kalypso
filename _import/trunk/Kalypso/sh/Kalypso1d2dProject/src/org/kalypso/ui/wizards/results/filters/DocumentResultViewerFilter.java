@@ -38,13 +38,20 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypso1d2d.pjt.wizards;
+package org.kalypso.ui.wizards.results.filters;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 
-public class RestartViewerFilter extends ViewerFilter
+/**
+ * filter for hiding all document result data in the {@link SelectLengthSectionWizard}. <br>
+ * <br>
+ * 
+ * @author Thomas Jung
+ * 
+ */
+public class DocumentResultViewerFilter extends ViewerFilter
 {
   /**
    * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object,

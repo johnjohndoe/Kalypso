@@ -58,6 +58,7 @@ import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree_impl.model.geometry.GM_Triangle_Impl;
@@ -86,20 +87,82 @@ public class TriangulatedSurfaceTriangleEater implements ITriangleEater
   }
 
   /**
+   * add a triangle to the eater. The triangle is defined by its three nodes ({@link INodeResult} and a information, if
+   * the triangle is marked as wet or dry.
+   * 
    * @see org.kalypso.kalypsomodel1d2d.conv.results.ITriangleEater#add(java.util.List)
    */
   public void add( final List<INodeResult> nodes, final Boolean isWet )
   {
+    GM_Triangle_Impl gmTriangle = null;
+    GM_Position pos[] = null;
+
+    final CS_CoordinateSystem crs = nodes.get( 0 ).getPoint().getCoordinateSystem();
+    if( m_parameter != null )
+    {
+      if( isWet == true )
+      {
+        // process the wet triangles in order to get data only inside the inundation area
+        pos = processWetNodes( nodes );
+      }
+      else
+      {
+        if( m_parameter == ResultType.TYPE.TERRAIN )
+        {
+          // for fem terrain data add the dry triangles as well
+          pos = processNodes( nodes );
+        }
+      }
+    }
+    else
+    {
+      // if no parameter is set, add all triangles
+      pos = processNodes( nodes );
+    }
+
+    try
+    {
+      gmTriangle = new GM_Triangle_Impl( pos[0], pos[1], pos[2], crs );
+    }
+    catch( final GM_Exception e )
+    {
+      KalypsoModel1D2DDebug.TRIANGLEEATER.printf( "%s", "TriangulatedSurfaceTriangleEater: error while adding nodes to eater (GM_Exception)." );
+      e.printStackTrace();
+    }
+
+    if( gmTriangle != null )
+      m_surface.add( gmTriangle );
+
+  }
+
+  private GM_Position[] processNodes( final List<INodeResult> nodes )
+  {
     final GM_Position pos[] = new GM_Position[3];
 
-    if( isWet == true )
+    for( int i = 0; i < nodes.size(); i++ )
     {
-      for( int i = 0; i < nodes.size(); i++ )
-      {
-        final double x = nodes.get( i ).getPoint().getX();
-        final double y = nodes.get( i ).getPoint().getY();
-        double z;
+      final double x = nodes.get( i ).getPoint().getX();
+      final double y = nodes.get( i ).getPoint().getY();
+      final double z = nodes.get( i ).getPoint().getZ();
 
+      pos[i] = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Position( x, y, z );
+    }
+
+    return pos;
+  }
+
+  private GM_Position[] processWetNodes( final List<INodeResult> nodes )
+  {
+    final GM_Position pos[] = new GM_Position[3];
+
+    for( int i = 0; i < nodes.size(); i++ )
+    {
+      final double x = nodes.get( i ).getPoint().getX();
+      final double y = nodes.get( i ).getPoint().getY();
+      double z;
+
+      if( m_parameter != null )
+      {
         switch( m_parameter )
         {
           case VELOCITY:
@@ -136,57 +199,13 @@ public class TriangulatedSurfaceTriangleEater implements ITriangleEater
             break;
 
         }
-
-        pos[i] = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Position( x, y, z );
       }
-      final CS_CoordinateSystem crs = nodes.get( 0 ).getPoint().getCoordinateSystem();
+      else
+        z = nodes.get( i ).getPoint().getZ();
 
-      GM_Triangle_Impl gmTriangle = null;
-
-      try
-      {
-        gmTriangle = new GM_Triangle_Impl( pos[0], pos[1], pos[2], crs );
-      }
-      catch( final GM_Exception e )
-      {
-        KalypsoModel1D2DDebug.TRIANGLEEATER.printf( "%s", "TriangulatedSurfaceTriangleEater: error while adding nodes to eater (GM_Exception)." );
-        e.printStackTrace();
-      }
-
-      if( gmTriangle != null )
-        m_surface.add( gmTriangle );
+      pos[i] = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Position( x, y, z );
     }
-    else
-    {
-      if( m_parameter == ResultType.TYPE.TERRAIN )
-      {
-        for( int i = 0; i < nodes.size(); i++ )
-        {
-          final double x = nodes.get( i ).getPoint().getX();
-          final double y = nodes.get( i ).getPoint().getY();
-          final double z = nodes.get( i ).getPoint().getZ();
-
-          pos[i] = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Position( x, y, z );
-        }
-        final CS_CoordinateSystem crs = nodes.get( 0 ).getPoint().getCoordinateSystem();
-
-        GM_Triangle_Impl gmTriangle = null;
-
-        try
-        {
-          gmTriangle = new GM_Triangle_Impl( pos[0], pos[1], pos[2], crs );
-        }
-        catch( final GM_Exception e )
-        {
-          KalypsoModel1D2DDebug.TRIANGLEEATER.printf( "%s", "TriangulatedSurfaceTriangleEater: error while adding nodes to eater (GM_Exception)." );
-          e.printStackTrace();
-        }
-
-        if( gmTriangle != null )
-          m_surface.add( gmTriangle );
-      }
-    }
-
+    return pos;
   }
 
   /**
@@ -194,6 +213,9 @@ public class TriangulatedSurfaceTriangleEater implements ITriangleEater
    */
   public void finished( )
   {
+    if( m_surface.size() == 0 )
+      return;
+
     final String name = m_tinResultFile.getPath();
 
     final int extensionIndex = name.lastIndexOf( "." );
@@ -202,7 +224,12 @@ public class TriangulatedSurfaceTriangleEater implements ITriangleEater
     final String extension = name.substring( extensionIndex, name.length() );
 
     /* create filename */
-    final String param = m_parameter.name();
+    String param;
+    if( m_parameter != null )
+      param = m_parameter.name();
+    else
+      param = "";
+
     final String paramName = substring + "_" + param + extension;
     final File paramFile = new File( paramName );
 
@@ -244,6 +271,33 @@ public class TriangulatedSurfaceTriangleEater implements ITriangleEater
         e.printStackTrace();
       }
     }
+  }
 
+  public void add( List<GM_Point> nodeList )
+  {
+    final CS_CoordinateSystem crs = nodeList.get( 0 ).getCoordinateSystem();
+
+    GM_Triangle_Impl gmTriangle = null;
+
+    final GM_Position pos[] = new GM_Position[3];
+
+    for( int i = 0; i < nodeList.size(); i++ )
+    {
+      final GM_Point point = nodeList.get( i );
+      pos[i] = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Position( point.getX(), point.getY(), point.getZ() );
+    }
+
+    try
+    {
+      gmTriangle = new GM_Triangle_Impl( pos[0], pos[1], pos[2], crs );
+    }
+    catch( final GM_Exception e )
+    {
+      KalypsoModel1D2DDebug.TRIANGLEEATER.printf( "%s", "TriangulatedSurfaceTriangleEater: error while adding nodes to eater (GM_Exception)." );
+      e.printStackTrace();
+    }
+
+    if( gmTriangle != null )
+      m_surface.add( gmTriangle );
   }
 }

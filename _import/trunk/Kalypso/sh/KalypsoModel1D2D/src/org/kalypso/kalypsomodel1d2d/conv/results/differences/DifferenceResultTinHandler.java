@@ -38,40 +38,13 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.wizards.results;
-
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerFilter;
-import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
-import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE;
+package org.kalypso.kalypsomodel1d2d.conv.results.differences;
 
 /**
- * filter for hiding the non-georeference-able data in the {@link AddResultThemeWizard}. <br>
- * <br>
- * non-georeference-able data are logs, coreDataZip
- * 
  * @author Thomas Jung
  * 
  */
-public class ResultViewerFilter extends ViewerFilter
+public class DifferenceResultTinHandler
 {
-  /**
-   * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object,
-   *      java.lang.Object)
-   */
-  @Override
-  public boolean select( Viewer viewer, Object parent, Object element )
-  {
-    if( element instanceof IDocumentResultMeta )
-    {
-      IDocumentResultMeta docResult = (IDocumentResultMeta) element;
-      DOCUMENTTYPE documentType = docResult.getDocumentType();
-      if( documentType == DOCUMENTTYPE.log || documentType == DOCUMENTTYPE.lengthSection || documentType == DOCUMENTTYPE.coreDataZip || documentType == DOCUMENTTYPE.tinTerrain )
-        return false;
-      else
-        return true;
-    }
-    else
-      return true;
-  }
+
 }

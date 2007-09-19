@@ -38,54 +38,54 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.schema.binding.result;
+package org.kalypso.ui.wizards.differences;
 
 import java.math.BigDecimal;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
-import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
+import org.apache.commons.lang.NotImplementedException;
 
 /**
  * @author Thomas Jung
  * 
  */
-public interface IDocumentResultMeta extends IResultMeta
+public interface IMathOperatorDelegate
 {
-  enum DOCUMENTTYPE
+  public enum MATH_OPERATOR
   {
-    nodes,
-    tinTerrain,
-    tinWsp,
-    tinVelo,
-    tinDepth,
-    tinShearStress,
-    hydrograph,
-    lengthSection,
-    tinDifference,
-    log,
-    coreDataZip
+    ePlus,
+    eMinus;
+    public IMathOperatorDelegate getOperator( )
+    {
+      MATH_OPERATOR type = valueOf( name() );
+
+      switch( type )
+      {
+        case eMinus:
+          return new IMathOperatorDelegate()
+          {
+
+            public BigDecimal getResult( BigDecimal o1, BigDecimal o2 )
+            {
+              return o1.subtract( o2 ).setScale( 4, BigDecimal.ROUND_HALF_UP );
+            }
+          };
+
+        case ePlus:
+          return new IMathOperatorDelegate()
+          {
+            public BigDecimal getResult( BigDecimal o1, BigDecimal o2 )
+            {
+              return o1.add( o2 ).setScale( 4, BigDecimal.ROUND_HALF_UP );
+            }
+          };
+
+        default:
+          throw (new NotImplementedException());
+      }
+
+    }
+
   }
 
-  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "DocumentResultMeta" );
-
-  public static final QName QNAME_PROP_DOCUMENT_TYPE = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "type" );
-
-  public static final QName QNAME_PROP_DOCUMENT_MIN_VALUE = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "minValue" );
-
-  public static final QName QNAME_PROP_DOCUMENT_MAX_VALUE = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "maxValue" );
-
-  public DOCUMENTTYPE getDocumentType( );
-
-  public void setDocumentType( DOCUMENTTYPE documentType );
-
-  public BigDecimal getMinValue( );
-
-  public BigDecimal getMaxValue( );
-
-  public void setMinValue( BigDecimal minValue );
-
-  public void setMaxValue( BigDecimal maxValue );
-
+  public BigDecimal getResult( BigDecimal o1, BigDecimal o2 );
 }

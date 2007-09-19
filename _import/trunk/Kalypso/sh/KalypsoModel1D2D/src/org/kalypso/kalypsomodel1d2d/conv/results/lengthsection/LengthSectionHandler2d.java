@@ -135,8 +135,7 @@ public class LengthSectionHandler2d
         int fromint = from.intValue();
 
         // check, if the station value lies between min max of the current curve
-        // if( m_stationList[i].compareTo( from ) == 1 && m_stationList[i].compareTo( to ) == -1 )
-        if( fromint <= stat2 && stat2 <= toint )
+        if( fromint <= stat2 && stat2 < toint )
         {
           BigDecimal stationLengthPosition = to.subtract( stationList[i] );
           double stat = stationLengthPosition.doubleValue() / stationLength.doubleValue() * 100;

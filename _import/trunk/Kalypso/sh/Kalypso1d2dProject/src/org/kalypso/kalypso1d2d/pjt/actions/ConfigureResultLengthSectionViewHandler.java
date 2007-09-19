@@ -40,13 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypso1d2d.pjt.actions;
 
-import java.lang.reflect.InvocationTargetException;
-
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -102,7 +99,7 @@ public class ConfigureResultLengthSectionViewHandler extends AbstractHandler
     final ICoreRunnableWithProgress waitForMapOperation = new ICoreRunnableWithProgress()
     {
 
-      public IStatus execute( IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException
+      public IStatus execute( IProgressMonitor monitor ) throws InterruptedException
       {
         monitor.beginTask( "Warte auf Karte...", IProgressMonitor.UNKNOWN );
 
@@ -169,12 +166,6 @@ public class ConfigureResultLengthSectionViewHandler extends AbstractHandler
       final WizardDialog2 wizardDialog2 = new WizardDialog2( shell, wizard );
       if( wizardDialog2.open() == Window.OK )
       {
-        // get file from wizard
-        IFile file = wizard.getSelection();
-
-        // set file to chart view
-        // chartView.setInput( file );
-
         modelProvider.saveModel( IScenarioResultMeta.class, new NullProgressMonitor() );
 
         return Status.OK_STATUS;

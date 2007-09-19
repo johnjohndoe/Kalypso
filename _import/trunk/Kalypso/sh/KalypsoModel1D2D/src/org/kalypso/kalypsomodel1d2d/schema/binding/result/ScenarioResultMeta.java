@@ -40,7 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.result;
 
+import java.math.BigDecimal;
+
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.ResultMeta;
 import org.kalypsodeegree.model.feature.Feature;
@@ -108,4 +113,22 @@ public class ScenarioResultMeta extends ResultMeta implements IScenarioResultMet
     getChildren().cloneInto( calculationUnit );
   }
 
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta#addDocument(java.lang.String,
+   *      java.lang.String, org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE,
+   *      java.lang.String)
+   */
+  public void addDocument( String name, String description, DOCUMENTTYPE type, IPath path, IStatus status, BigDecimal minValue, BigDecimal maxValue )
+  {
+    final IDocumentResultMeta document = getChildren().addNew( IDocumentResultMeta.QNAME, IDocumentResultMeta.class );
+    document.setName( name );
+    document.setDescription( description );
+    document.setDocumentType( type );
+    document.setPath( path );
+    document.setStatus( status );
+    if( minValue != null )
+      document.setMinValue( minValue );
+    if( maxValue != null )
+      document.setMaxValue( maxValue );
+  }
 }
