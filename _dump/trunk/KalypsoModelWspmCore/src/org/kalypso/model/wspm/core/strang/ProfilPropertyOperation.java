@@ -38,42 +38,67 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.core.profile;
-
-import java.util.LinkedList;
+package org.kalypso.model.wspm.core.strang;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
-import org.kalypso.model.wspm.core.profil.filter.AbstractProfilePointFilter;
 import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 
 /**
- * @author Gernot Belger
+ * @author kimwerner
  */
-public class VorlandProfilePointFilter extends AbstractProfilePointFilter implements IProfilePointFilter
+public class ProfilPropertyOperation
 {
-  /**
-   * @see org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter#accept(org.kalypso.model.wspm.core.profil.IProfil,
-   *      org.kalypso.model.wspm.core.profil.IProfilPoint)
-   */
-  public boolean accept( final IProfil profil, final IProfilPoint point )
+  private ProfilPropertyOperation( )
   {
-    final IProfilPointMarker[] devider = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
-    if( devider.length != 2 )
-      return true;
-
-    final IProfilPoint leftPoint = devider[0].getPoint();
-    final IProfilPoint rightPoint = devider[1].getPoint();
-
-    final LinkedList<IProfilPoint> points = profil.getPoints();
-
-    final int left = points.indexOf( leftPoint );
-    final int right = points.indexOf( rightPoint );
-    final int index = points.indexOf( point );
-
-    return !(left <= index && index < right);
+    // helper class
   }
 
+  
+  
+  public static void operationFixValue( final IProfil[] profiles, final IProfilePointFilter filter, final String property, final Double value )
+  {
+    for( final IProfil profil : profiles )
+    {
+      for( final IProfilPoint point : profil.getPoints() )
+      {
+        if( filter.accept( profil, point ) )
+        {
+           point.setValueFor( property, value );
+        }
+      }
+    }
+  }
+
+  public static void operationPercent( final IProfil[] profiles, final IProfilePointFilter filter,final String property, final Double value )
+  {
+    for( final IProfil profil : profiles )
+    {
+      for( final IProfilPoint point : profil.getPoints() )
+      {
+        if( filter.accept( profil, point ) )
+        {
+          final Double oldValue = point.getValueFor( property );
+          final Double newValue = oldValue * value;
+          point.setValueFor( property, newValue );
+        }
+      }
+    }
+  }
+
+  public static void operationAdd( final IProfil[] profiles, final IProfilePointFilter filter,final String property, final Double value )
+  {
+    for( final IProfil profil : profiles )
+    {
+      for( final IProfilPoint point : profil.getPoints() )
+      {
+        if( filter.accept( profil, point ) )
+        {
+          final Double oldValue = point.getValueFor( property );
+          final Double newValue = oldValue + value;
+          point.setValueFor( property, newValue );
+        }
+      }
+    }
+  }
 }

@@ -86,7 +86,9 @@ public class DouglasPeuckerActionDelegate implements IViewActionDelegate
 
     // get profilpoints from selection and view
     // TODO: this does not work any more
-    final IProfilEventManager pem = (IProfilEventManager) m_view.getAdapter( IProfilEventManager.class );
+    //final IProfilEventManager pem = (IProfilEventManager) m_view.getAdapter( IProfilEventManager.class );
+    final IProfilEventManager pem = (m_view instanceof TableView)?((TableView)m_view).getProfilEventManager():null;
+    
     if( pem == null )
     {
       // should never happen

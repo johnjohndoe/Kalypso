@@ -4,6 +4,7 @@
      <extension-point id="profilPointsSource" name="profilPointsSource" schema="schema/profilPointsSource.exsd"/>
    <extension-point id="profilPointsTarget" name="profilPointsTarget" schema="schema/profilPointsTarget.exsd"/>
    <extension-point id="profilChartLayerProvider" name="profilChartLayerProvider" schema="schema/profilChartLayerProvider.exsd"/>
+   <extension-point id="pointPropertyCalculator" name="pointPropertyCalculator" schema="schema/pointPropertyCalculator.exsd"/>
 
         <extension
            point="org.eclipse.ui.preferencePages">
@@ -219,6 +220,11 @@
                id="org.kalypso.model.wspm.ui.action.ShowProfileAction"
                label="Profil anzeigen"
                tooltip="%org.kalypso.model.wspm.ui.action.ShowProfileAction.description"/>
+         <action
+               class="org.kalypso.model.wspm.ui.action.PropertyEditActionDelegate"
+               id="org.kalypso.model.wspm.ui.action.PropertyEditAction"
+               label="Profileigenschaften ändern">
+         </action>
       </objectContribution>
       <objectContribution
             adaptable="false"
@@ -265,7 +271,7 @@
                label="In neuer Karte anzeigen"
                menubarPath="org.kalypso.model.wspm.ui.wspmProfileActions"
                style="push"
-               tooltip="Erzeugt eine neue Karte welche die selektierten Features anzeigt."/>
+               tooltip="Erzeugt eine neue Karte welche die selektierten Profile anzeigt."/>
       </objectContribution>
       <objectContribution
             adaptable="false"
@@ -495,6 +501,27 @@
                id="org.kalypso.model.wspm.ui.view.table.swt.context"
                name="Table View"
                parentId="org.eclipse.ui.contexts.window"/>
+      </extension>
+      <extension
+            point="org.kalypso.model.wspm.ui.pointPropertyCalculator">
+         <pointPropertyCalculator
+               class="org.kalypso.model.wspm.core.util.pointpropertycalculator.AddFixValueOperator"
+               id="org.calypso.model.wspm.core.util.pointpropertycalculator.addfixvalue"
+               label="Offset"
+               tooltip="alle ausgewählten Profileigenschaften werden um einen festen Wert angehoben">
+         </pointPropertyCalculator>
+         <pointPropertyCalculator
+               class="org.kalypso.model.wspm.core.util.pointpropertycalculator.SetFixValueOperator"
+               id="org.calypso.model.wspm.core.util.pointpropertycalculator.setfixvalue"
+               label="fester Wert"
+               tooltip="alle ausgewählten Profileigenschaften werden mit diesem Wert überschrieben">
+         </pointPropertyCalculator>
+         <pointPropertyCalculator
+               class="org.kalypso.model.wspm.core.util.pointpropertycalculator.AddPercentValueOperator"
+               id="org.calypso.model.wspm.core.util.pointpropertycalculator.addpercentvalue"
+               label="Faktor"
+               tooltip="alle ausgewählten Profileigenschaften werden mit diesem Faktor multipliziert">
+         </pointPropertyCalculator>
       </extension>
 
 </plugin>

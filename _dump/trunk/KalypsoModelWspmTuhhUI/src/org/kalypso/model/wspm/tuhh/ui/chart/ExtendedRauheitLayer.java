@@ -204,7 +204,8 @@ public class ExtendedRauheitLayer extends AbstractRauheitLayer
     {
       final Point lp = logical2screen( points[i] );
       final Point rp = logical2screen( points[i + 1] );
-
+      if( lp.y == 0 )
+        return null;
       hover = new Rectangle( lp.x, lp.y, rp.x - lp.x, getValueRange().getScreenFrom() - lp.y );
       if( hover.contains( point ) )
       {
