@@ -47,7 +47,7 @@ import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit2D;
-import org.kalypso.kalypsomodel1d2d.ui.map.editor.ListLabelProvider;
+import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.ListLabelProvider;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 /**
  * @author Madanagopal

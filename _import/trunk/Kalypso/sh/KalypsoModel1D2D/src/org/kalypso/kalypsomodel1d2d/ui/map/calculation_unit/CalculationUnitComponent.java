@@ -41,9 +41,7 @@
 package org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.wizard.WizardDialog;
@@ -53,10 +51,10 @@ import org.eclipse.ui.PlatformUI;
 import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.CalculationUnitMetaTable;
+import org.kalypso.kalypsomodel1d2d.ui.calculationUnitView.ICalculationUnitButtonIDs;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.wizards.CreateCalculationUnitWizard;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.DeleteCalculationUnitCmd;
-import org.kalypso.kalypsomodel1d2d.ui.map.editor.FeatureWrapperListEditor;
-import org.kalypso.kalypsomodel1d2d.ui.map.editor.IButtonConstants;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
@@ -68,18 +66,11 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
  * @author Patrice Congo
  * 
  */
-@SuppressWarnings( { "unchecked", "hiding" })//$NON-NLS-1$ //$NON-NLS-2$
-public class CalculationUnitComponent extends FeatureWrapperListEditor implements IButtonConstants
+public class CalculationUnitComponent extends CalculationUnitMetaTable implements ICalculationUnitButtonIDs
 {
-  private final Map<String, String> btnDescription = new HashMap<String, String>();
-
   public CalculationUnitComponent( )
   {
-    super( null, null, null );
     setRequiredButtons( BTN_SHOW_AND_MAXIMIZE, BTN_REMOVE, BTN_ADD );
-    btnDescription.put( "SHOW_AND_MAXIMIZE", Messages.getString( "CalculationUnitComponent.3" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    btnDescription.put( "REMOVE", Messages.getString( "CalculationUnitComponent.5" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    btnDescription.put( "ADD", Messages.getString( "CalculationUnitComponent.7" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -99,27 +90,6 @@ public class CalculationUnitComponent extends FeatureWrapperListEditor implement
   protected boolean showDescription( )
   {
     return true;
-  }
-
-  @SuppressWarnings("unused")//$NON-NLS-1$
-  private void getDescriptionList( )
-  {
-
-  }
-
-  @Override
-  protected String getBtnDescription( final String key )
-  {
-    if( btnDescription.get( key ) != null )
-      return btnDescription.get( key );
-    else
-      return null;
-  }
-
-  @Override
-  public void refreshOtherSections( )
-  {
-
   }
 
   @Override

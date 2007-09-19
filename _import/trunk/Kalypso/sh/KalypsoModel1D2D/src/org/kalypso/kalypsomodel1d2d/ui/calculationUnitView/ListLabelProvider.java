@@ -38,42 +38,27 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.ui.map.editor;
+package org.kalypso.kalypsomodel1d2d.ui.calculationUnitView;
 
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.swt.graphics.Image;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 public class ListLabelProvider extends LabelProvider
 {
-  public ListLabelProvider( )
-  {
-    //i am empty
-  }
-
-  public Image getImage( Object element )
-  {
-    return null;
-  }
-
-  public String getText( Object element )
+  @Override
+  public String getText( final Object element )
   {
     if( element instanceof IFeatureWrapper2 )
     {
-
-      String name = ((IFeatureWrapper2) element).getName();
+      final String name = ((IFeatureWrapper2) element).getName();
       if( name != null )
-      {
         return name;
-      }
       else
-      {
         return ((IFeatureWrapper2) element).getGmlID();
-      }
     }
     else
     {
-      throw new RuntimeException( "Only IFeatureWrapper2 is supported:" + "but got \n\tclass=" + (element == null ? null : element.getClass()) + "\n\t value=" + element );
+      throw new RuntimeException( "Only IFeatureWrapper2 is supported, found " + (element == null ? null : element.getClass()) );
     }
   }
 }

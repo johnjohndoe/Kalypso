@@ -38,18 +38,18 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.ui.map.editor;
+package org.kalypso.kalypsomodel1d2d.ui.calculationUnitView;
 
 /**
  * @author Madanagopal
  *
  */
-public interface IButtonConstants
+public interface ICalculationUnitButtonIDs
 {
-  public String BTN_MOVE_UP = "MOVE_UP";
-  public String BTN_MOVE_DOWN = "MOVE_DOWN";
-  public String BTN_SHOW_AND_MAXIMIZE = "SHOW_AND_MAXIMIZE";
-  public String BTN_REMOVE = "REMOVE";
-  public String BTN_ADD = "ADD";
-  public String BTN_CLICK_TO_CALCULATE = "CLICK_TO_CALCULATE";
+  public final String BTN_MOVE_UP = "MOVE_UP";
+  public final String BTN_MOVE_DOWN = "MOVE_DOWN";
+  public final String BTN_SHOW_AND_MAXIMIZE = "SHOW_AND_MAXIMIZE";
+  public final String BTN_REMOVE = "REMOVE";
+  public final String BTN_ADD = "ADD";
+  public final String BTN_CLICK_TO_CALCULATE = "CLICK_TO_CALCULATE";
 }

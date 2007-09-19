@@ -38,17 +38,16 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.ui.map.editor;
+package org.kalypso.kalypsomodel1d2d.ui.calculationUnitView;
 
 import java.util.List;
 
-import org.eclipse.jface.action.IAction;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
-import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -65,34 +64,33 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
-import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeIFeatureWrapper2NameCmd;
+import org.kalypso.kalypsomodel1d2d.sim.CalculationUnitSimMode1D2DCalcJob;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelChangeListener;
-import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
-import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree_impl.model.sort.IEnvelopeProvider;
 
 /**
+ * Calculation unit widget component that shows the table of existing calculation units, with the corresponding buttons
  * 
  * @author Madanagopal
+ * @author Dejan Antanaskovic
  */
-public class FeatureWrapperListEditor implements IButtonConstants
+public abstract class CalculationUnitMetaTable implements ICalculationUnitButtonIDs
 {
   private TableViewer tableViewer;
 
@@ -105,134 +103,6 @@ public class FeatureWrapperListEditor implements IButtonConstants
   private Image imageUp;
 
   private Composite m_parent;
-
-  class ActionBaseButton
-  {
-    private final Button button;
-
-    public ActionBaseButton( final IAction action, final Composite parent, final int style )
-    {
-      button = new Button( parent, style );
-      button.setToolTipText( action.getToolTipText() );
-      final ImageDescriptor imageDescriptor = action.getImageDescriptor();
-      if( imageDescriptor != null )
-      {
-
-        button.setImage( new Image( parent.getDisplay(), imageDescriptor.getImageData() ) );
-      }
-      else
-      {
-        button.setText( action.getText() );
-      }
-
-      final SelectionListener seL = new SelectionListener()
-      {
-
-        public void widgetDefaultSelected( SelectionEvent e )
-        {
-
-        }
-
-        public void widgetSelected( SelectionEvent e )
-        {
-          // TODO: use helper class to create swt-event from other event
-          final Event event = new Event();
-          event.data = e.data;
-          event.detail = e.detail;
-          event.display = e.display;
-          event.doit = e.doit;
-          event.height = e.height;
-          event.item = e.widget;
-          event.stateMask = e.stateMask;
-          event.time = e.time;
-          event.width = e.width;
-          event.x = e.x;
-          event.y = e.y;
-          action.runWithEvent( event );
-        }
-
-      };
-      button.addSelectionListener( seL );
-    }
-  }
-
-  private final ICellModifier modifier = new ICellModifier()
-  {
-    public boolean canModify( Object element, String property )
-    {
-      return property.equals( tableViewer.getColumnProperties()[0] );
-    }
-
-    public Object getValue( Object element, String property )
-    {
-      if( property.equals( tableViewer.getColumnProperties()[0] ) )
-      {
-        if( element instanceof IFeatureWrapper2 )
-          return ((IFeatureWrapper2) element).getName();
-        else
-          throw new RuntimeException( "Only IFeatureWrapper2 are accepted: " + element );
-      }
-      return null;
-    }
-
-    public void modify( final Object element, final String property, final Object value )
-    {
-      IFeatureWrapper2 featureWrapper = null;
-      if( element instanceof TableItem )
-      {
-        final Object data = ((TableItem) element).getData();
-        if( data instanceof IFeatureWrapper2 )
-          featureWrapper = (IFeatureWrapper2) data;
-      }
-
-      if( property.equals( tableViewer.getColumnProperties()[0] ) )
-      {
-        final String oldName = featureWrapper.getName();
-        if( value != null && value.equals( oldName ) )
-          return;
-
-        featureWrapper.setName( (String) value );
-        ChangeIFeatureWrapper2NameCmd renameCommand = new ChangeIFeatureWrapper2NameCmd( featureWrapper, (String) value )
-        {
-          /**
-           * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.ChangeIFeatureWrapper2NameCmd#process()
-           */
-          @Override
-          public void process( ) throws Exception
-          {
-            super.process();
-            refreshTableView();
-          }
-        };
-
-        // TODO: this is probably not always the right key!
-        KeyBasedDataModelUtil.postCommand( m_dataModel, renameCommand, ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL );
-      }
-      else
-      {
-        System.out.println( "BAD property:" + property );
-      }
-    }
-
-  };
-
-  /**
-   * The id for the selection in the data model
-   */
-  private final String idSselection;
-
-  /**
-   * The id for the input in the data model
-   */
-  private final String idInput;
-
-  private final String idMapPanel;
-
-  private FeatureWrapperListInputProvider inputProvider;
-
-  private IEnvelopeProvider selectionEnvelopeProvider;
-
-  // final String mainGroupTitle = "Bitte Höhenmodell auswählen";
 
   final String bTextMaximizeSelected = "Geländemodell anzeigen und maximieren";
 
@@ -332,30 +202,13 @@ public class FeatureWrapperListEditor implements IButtonConstants
     }
   };
 
-  private IAction nonGenericActions[];
-
   private Button m_btnDeleteCalcUnit;
 
   private Button m_btnMaximizeCalcUnit;
 
-  public FeatureWrapperListEditor( final String selectionID, final String inputID, final String mapPanelID )
-  {
-    this( selectionID, inputID, mapPanelID, new IAction[] {} );
-  }
+  private Button m_btnCreateCalcUnit;
 
-  public FeatureWrapperListEditor( final String selectionID, final String inputID, final String mapPanelID, final IAction[] nonGenericActions )
-  {
-    this.idSselection = selectionID;
-    this.idMapPanel = mapPanelID;
-    this.idInput = inputID;
-    this.nonGenericActions = nonGenericActions;
-  }
-
-  public void setNonGenericActions( final IAction[] nonGenericActions )
-  {
-    Assert.throwIAEOnNullParam( nonGenericActions, "nonGenericActions" );
-    this.nonGenericActions = nonGenericActions;
-  }
+  private Button m_btnRunCalculation;
 
   public void createControl( final KeyBasedDataModel dataModel, final FormToolkit toolkit, final Composite parent )
   {
@@ -395,26 +248,26 @@ public class FeatureWrapperListEditor implements IButtonConstants
     final Composite btnComposite = new Composite( parent, SWT.NONE );
     btnComposite.setLayout( new GridLayout( 1, false ) );
     btnComposite.setLayoutData( formData );
-    if( searchForThisString( IButtonConstants.BTN_MOVE_UP ) )
+    if( searchForThisString( ICalculationUnitButtonIDs.BTN_MOVE_UP ) )
     {
       final Button moveUpBtn = new Button( btnComposite, SWT.PUSH );
       imageUp = new Image( btnComposite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/list_up.gif" ).getImageData() );
       moveUpBtn.setImage( imageUp );
       moveUpBtn.addSelectionListener( this.moveUpListener );
 
-      moveUpBtn.setToolTipText( getBtnDescription( IButtonConstants.BTN_MOVE_UP ) != null ? getBtnDescription( IButtonConstants.BTN_MOVE_UP ) : "Move Up #" );
+      moveUpBtn.setToolTipText( getBtnDescription( ICalculationUnitButtonIDs.BTN_MOVE_UP ) != null ? getBtnDescription( ICalculationUnitButtonIDs.BTN_MOVE_UP ) : "Move Up #" );
     }
 
-    if( searchForThisString( IButtonConstants.BTN_MOVE_DOWN ) )
+    if( searchForThisString( ICalculationUnitButtonIDs.BTN_MOVE_DOWN ) )
     {
       final Button moveDownBtn = new Button( btnComposite, SWT.PUSH );
       imageDown = new Image( btnComposite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/list_down.gif" ).getImageData() );
       moveDownBtn.setImage( imageDown );
       moveDownBtn.addSelectionListener( this.moveDownListener );
-      moveDownBtn.setToolTipText( getBtnDescription( IButtonConstants.BTN_MOVE_DOWN ) != null ? getBtnDescription( IButtonConstants.BTN_MOVE_DOWN ) : "Move Down #" );
+      moveDownBtn.setToolTipText( getBtnDescription( ICalculationUnitButtonIDs.BTN_MOVE_DOWN ) != null ? getBtnDescription( ICalculationUnitButtonIDs.BTN_MOVE_DOWN ) : "Move Down #" );
     }
 
-    if( searchForThisString( IButtonConstants.BTN_SHOW_AND_MAXIMIZE ) )
+    if( searchForThisString( ICalculationUnitButtonIDs.BTN_SHOW_AND_MAXIMIZE ) )
     {
       m_btnMaximizeCalcUnit = new Button( btnComposite, SWT.PUSH );
       // clickToRunBtn.setToolTipText( bTextMaximizeSelected );
@@ -428,11 +281,11 @@ public class FeatureWrapperListEditor implements IButtonConstants
           maximizeSelected();
         }
       } );
-      m_btnMaximizeCalcUnit.setToolTipText( getBtnDescription( IButtonConstants.BTN_SHOW_AND_MAXIMIZE ) != null ? getBtnDescription( IButtonConstants.BTN_SHOW_AND_MAXIMIZE ) : "Run #" );
+      m_btnMaximizeCalcUnit.setToolTipText( Messages.getString( "CalculationUnitMetaTable.Tooltip.BTN_SHOW_AND_MAXIMIZE" ) );
       m_btnMaximizeCalcUnit.setEnabled( false );
     }
 
-    if( searchForThisString( IButtonConstants.BTN_REMOVE ) )
+    if( searchForThisString( ICalculationUnitButtonIDs.BTN_REMOVE ) )
     {
       m_btnDeleteCalcUnit = new Button( btnComposite, SWT.PUSH );
       image = new Image( btnComposite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/19_cut_calculationunit.gif" ).getImageData() );
@@ -456,17 +309,17 @@ public class FeatureWrapperListEditor implements IButtonConstants
           }
         }
       } );
-      m_btnDeleteCalcUnit.setToolTipText( getBtnDescription( IButtonConstants.BTN_REMOVE ) != null ? getBtnDescription( IButtonConstants.BTN_REMOVE ) : "Remove #" );
+      m_btnDeleteCalcUnit.setToolTipText( Messages.getString( "CalculationUnitMetaTable.Tooltip.BTN_REMOVE" ) );
       m_btnDeleteCalcUnit.setEnabled( false );
     }
 
-    if( searchForThisString( IButtonConstants.BTN_ADD ) )
+    if( searchForThisString( ICalculationUnitButtonIDs.BTN_ADD ) )
     {
-      final Button btnCreateCalcUnit = new Button( btnComposite, SWT.PUSH );
+      m_btnCreateCalcUnit = new Button( btnComposite, SWT.PUSH );
       // addButton.setToolTipText( deleteSelected );
       image = new Image( btnComposite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/18_add_calculationunit.gif" ).getImageData() );
-      btnCreateCalcUnit.setImage( image );
-      btnCreateCalcUnit.addSelectionListener( new SelectionAdapter()
+      m_btnCreateCalcUnit.setImage( image );
+      m_btnCreateCalcUnit.addSelectionListener( new SelectionAdapter()
       {
         @Override
         public void widgetSelected( final SelectionEvent event )
@@ -483,24 +336,41 @@ public class FeatureWrapperListEditor implements IButtonConstants
           }
         }
       } );
-      btnCreateCalcUnit.setToolTipText( getBtnDescription( IButtonConstants.BTN_ADD ) != null ? getBtnDescription( IButtonConstants.BTN_ADD ) : "Add #" );
+      m_btnCreateCalcUnit.setToolTipText( Messages.getString( "CalculationUnitMetaTable.Tooltip.BTN_ADD" ) );
     }
 
-    for( final IAction action : nonGenericActions )
+    if( searchForThisString( ICalculationUnitButtonIDs.BTN_CLICK_TO_CALCULATE ) )
     {
-      final ActionBaseButton button = new ActionBaseButton( action, btnComposite, SWT.PUSH );
+      m_btnRunCalculation = new Button( btnComposite, SWT.PUSH );
+      // calculateButton.setToolTipText( calculateSelected );
+      image = new Image( btnComposite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/startCalculation.gif" ).getImageData() );
+      m_btnRunCalculation.setImage( image );
+      m_btnRunCalculation.addSelectionListener( new SelectionAdapter()
+      {
+        @Override
+        public void widgetSelected( final SelectionEvent event )
+        {
+          final ICalculationUnit calculationUnit = getDataModel().getData( ICalculationUnit.class, ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
+          if( calculationUnit != null )
+          {
+            final IWorkbench workbench = PlatformUI.getWorkbench();
+            final IStatus result = CalculationUnitSimMode1D2DCalcJob.startCalculation( calculationUnit, workbench );
+            ErrorDialog.openError( parent.getShell(), Messages.getString( "CalculationUnitPerformComponent.2" ), Messages.getString( "CalculationUnitPerformComponent.3" ), result ); //$NON-NLS-1$ //$NON-NLS-2$
+          }
+        }
+      } );
+      m_btnRunCalculation.setToolTipText( Messages.getString( "CalculationUnitMetaTable.Tooltip.BTN_CLICK_TO_CALCULATE" ) );
+      m_btnRunCalculation.setEnabled( false );
     }
 
-    // setup cell editing
     final TextCellEditor textCellEditor = new TextCellEditor( table );
     final CellEditor[] editors = new CellEditor[] { textCellEditor };
     tableViewer.setCellEditors( editors );
-    tableViewer.setCellModifier( modifier );
     tableViewer.setColumnProperties( new String[] { "Name" } );
   }
 
   /*
-   * Template Method
+   * Template Methods
    */
   protected boolean showDescription( )
   {
@@ -509,7 +379,6 @@ public class FeatureWrapperListEditor implements IButtonConstants
 
   protected IBaseLabelProvider getLabelProvider( final Display display )
   {
-
     return null;
   }
 
@@ -611,6 +480,7 @@ public class FeatureWrapperListEditor implements IButtonConstants
   {
     final Runnable runnable = new Runnable()
     {
+      @SuppressWarnings("synthetic-access")
       public void run( )
       {
         refreshTableView();
@@ -619,6 +489,8 @@ public class FeatureWrapperListEditor implements IButtonConstants
           m_btnDeleteCalcUnit.setEnabled( isEnabled );
         if( m_btnMaximizeCalcUnit != null )
           m_btnMaximizeCalcUnit.setEnabled( isEnabled );
+        if( m_btnRunCalculation != null )
+          m_btnRunCalculation.setEnabled( isEnabled );
       }
     };
     final Display display = m_parent.getDisplay();
