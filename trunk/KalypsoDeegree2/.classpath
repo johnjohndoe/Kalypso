@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="libs/deegree2.jar" sourcepath="libs/deegree2_src.zip"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="libs/acme/acme.jar"/>
 	<classpathentry kind="lib" path="libs/arcsde/jsde90_sdk.jar"/>
@@ -67,7 +68,6 @@
 	<classpathentry kind="lib" path="libs/sqlserver/msutil.jar"/>
 	<classpathentry kind="lib" path="libs/visad/visad.jar"/>
 	<classpathentry kind="lib" path="libs/xml/jaxen-1.1-beta-8.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/deegree2.jar" sourcepath="libs/deegree2_src.zip"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="output" path="build"/>
