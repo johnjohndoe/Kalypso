@@ -43,6 +43,8 @@ package org.kalypso.model.wspm.core.util.pointpropertycalculator;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.Status;
+import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
@@ -64,9 +66,14 @@ public class AddPercentValueOperator implements IPointPropertyCalculator
     {
       for( final String property : properties )
       {
-        final Double oldValue = point.getValueFor( property );
-        final double newValue = oldValue * operand;
-        changes.add( new PointPropertyEdit( point, property, newValue ) );
+        if( point.hasProperty( property ) )
+        {
+          final Double oldValue = point.getValueFor( property );
+          final double newValue = oldValue * operand;
+          changes.add( new PointPropertyEdit( point, property, newValue ) );
+        }
+        else
+          KalypsoModelWspmCorePlugin.getDefault().getLog().log( new Status( Status.CANCEL, KalypsoModelWspmCorePlugin.getID(), property + " existiert nicht für Punkt[" + point.toString() + "]" ) );
       }
     }
     return changes.toArray( new IProfilChange[changes.size()] );

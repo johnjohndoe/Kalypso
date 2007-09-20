@@ -51,7 +51,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -77,7 +76,6 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilPoint;
 import org.kalypso.model.wspm.core.profil.IProfilPointProperty;
-import org.kalypso.model.wspm.core.profil.IllegalProfileOperationException;
 import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
 import org.kalypso.model.wspm.core.util.pointpropertycalculator.IPointPropertyCalculator;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
@@ -87,8 +85,6 @@ import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
  */
 public class OperationChooserPage extends WizardPage
 {
-
- 
 
   private class PropertyCalculator
   {
@@ -121,7 +117,7 @@ public class OperationChooserPage extends WizardPage
 
   private Double m_value = Double.NaN;
 
-  protected OperationChooserPage( )
+  public OperationChooserPage( )
   {
     super( "operationChooserPage", "Änderung festlegen", null );
   }
@@ -193,10 +189,11 @@ public class OperationChooserPage extends WizardPage
       return false;
     }
   }
+
   /**
    * @see org.eclipse.jface.wizard.WizardPage#setPageComplete(boolean)
    */
-  
+
   private void createFilterGroup( final Composite composite, final Set<String> filterIds )
   {
     final Group group = new Group( composite, SWT.NONE );
@@ -234,7 +231,7 @@ public class OperationChooserPage extends WizardPage
     final Color goodColor = display.getSystemColor( SWT.COLOR_BLACK );
     final Color badColor = display.getSystemColor( SWT.COLOR_RED );
     final DoubleModifyListener doubleModifyListener = new DoubleModifyListener( goodColor, badColor );
-    
+
     final Label lbltip = new Label( group, SWT.NONE );
     final GridData gd = new GridData();
     gd.horizontalSpan = 2;
@@ -333,19 +330,17 @@ public class OperationChooserPage extends WizardPage
       public void widgetSelected( final SelectionEvent e )
       {
         final IDialogSettings dialogSettings = getDialogSettings();
+        final Set<String> fs = new HashSet<String>();
         if( dialogSettings != null )
         {
           final String[] filterIds = dialogSettings.getArray( SETTINGS_FILTER_IDS );
           if( filterIds != null )
-          {
-            final Set<String> fs = new HashSet<String>();
             Collections.addAll( fs, filterIds );
-            if( button.getSelection() )
-              fs.add( filter.getId() );
-            else
-              fs.remove( filter.getId() );
-            dialogSettings.put( SETTINGS_FILTER_IDS, fs.toArray( new String[0] ) );
-          }
+          if( button.getSelection() )
+            fs.add( filter.getId() );
+          else
+            fs.remove( filter.getId() );
+          dialogSettings.put( SETTINGS_FILTER_IDS, fs.toArray( new String[0] ) );
         }
       }
     } );
@@ -365,7 +360,7 @@ public class OperationChooserPage extends WizardPage
     return false;
   }
 
-  public void changeProfile( final IProfil profil, final Object[] properties )
+  public IProfilChange[] changeProfile( final IProfil profil, final Object[] properties )
   {
     final String[] propertyIds = new String[properties.length];
     for( int i = 0; i < properties.length; i++ )
@@ -384,7 +379,7 @@ public class OperationChooserPage extends WizardPage
       }
       final String calculatorId = dialogSettings.get( SETTINGS_CALCULATOR_ID );
       if( calculatorId == null )
-        return;
+        return new IProfilChange[0];
 
       for( final PropertyCalculator pc : m_calculators )
       {
@@ -404,19 +399,6 @@ public class OperationChooserPage extends WizardPage
         selectedPoints.add( point );
       }
     }
-    for( final IProfilChange change : calculator.calculate( m_value, propertyIds, selectedPoints ) )
-    {
-
-      try
-      {
-        change.doChange( null );
-      }
-      catch( IllegalProfileOperationException e )
-      {
-        KalypsoModelWspmUIPlugin.getDefault().getLog().log( new Status( Status.ERROR, "", e.getMessage() ) );
-      }
-
-    }
-
+    return calculator.calculate( m_value, propertyIds, selectedPoints );
   }
 }

@@ -78,6 +78,14 @@
                  menubarPath="points"
                  style="push"
                  tooltip="%com.bce.profil.eclipse.view.table.douglasPeucker.tooltip"/>
+           <action
+                 class="org.kalypso.model.wspm.ui.view.table.PropertyEditDelegate"
+                 id="com.bce.profil.eclipse.view.table.propertyedit"
+                 label="Eigenschaften ändern ..."
+                 menubarPath="points"
+                 style="push"
+                 tooltip="ändert mehrere Punkteigenschaften auf einmal">
+           </action>
         </viewContribution>
      </extension>
         <extension

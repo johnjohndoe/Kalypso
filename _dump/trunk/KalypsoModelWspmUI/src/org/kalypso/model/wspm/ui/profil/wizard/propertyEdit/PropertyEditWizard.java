@@ -44,8 +44,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.ArrayChooserPage;
@@ -53,9 +53,14 @@ import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilChange;
+import org.kalypso.model.wspm.core.profil.IProfilEventManager;
 import org.kalypso.model.wspm.core.profil.IProfilPointProperty;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
+import org.kalypso.model.wspm.core.profil.IllegalProfileOperationException;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
+import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
+import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -71,25 +76,43 @@ public class PropertyEditWizard extends Wizard
 
   private String m_profiletype = "";
 
-  private ArrayChooserPage m_profileChooserPage;
+  final private ArrayChooserPage m_profileChooserPage;
 
   private ArrayChooserPage m_propertyChooserPage;
 
-  private List<Feature> m_profiles;
+  final private IProfilEventManager m_pem;
 
-  private List<Feature> m_selectedProfiles;
+  final private List<Feature> m_profiles;
+
+  final private List<Feature> m_selectedProfiles;
 
   private OperationChooserPage m_operationChooserPage;
-  
-  private CommandableWorkspace m_workspace;
 
-  public PropertyEditWizard(CommandableWorkspace workspace, final List<Feature> profiles, final List<Feature> selection )
+  final private CommandableWorkspace m_workspace;
+
+  public PropertyEditWizard( CommandableWorkspace workspace, final List<Feature> profiles, final List<Feature> selection )
   {
+    m_pem = null;
     m_workspace = workspace;
     m_profiles = profiles;
     m_selectedProfiles = selection;
     m_profiletype = (String) profiles.get( 0 ).getProperty( ProfileFeatureFactory.QNAME_TYPE );
     setWindowTitle( "Profileigenschaften zuweisen" );
+    setNeedsProgressMonitor( true );
+    setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
+    m_profileChooserPage = new ArrayChooserPage( m_profiles, new Object[0], m_selectedProfiles.toArray(), 1, "profilesChooserPage", "Profile auswählen", null );
+    m_profileChooserPage.setLabelProvider( new GMLEditorLabelProvider2() );
+    m_profileChooserPage.setMessage( "Bitte wählen Sie aus, welchen Profilen Werte zugeweisen werden sollen." );
+  }
+
+  public PropertyEditWizard( final IProfilEventManager pem )
+  {
+    m_pem = pem;
+    m_workspace = null;
+    m_profiles = null;
+    m_selectedProfiles = null;
+    m_profiletype = m_pem.getProfil().getType();
+    m_profileChooserPage = null;
     setNeedsProgressMonitor( true );
     setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
   }
@@ -101,10 +124,8 @@ public class PropertyEditWizard extends Wizard
   public void addPages( )
   {
     super.addPages();
-
-    m_profileChooserPage = new ArrayChooserPage( m_profiles, new Object[0], m_selectedProfiles.toArray(), 1, "profilesChooserPage", "Profile auswählen", null );
-    m_profileChooserPage.setLabelProvider( new GMLEditorLabelProvider2() );
-    m_profileChooserPage.setMessage( "Bitte wählen Sie aus, welchen Profilen Werte zugeweisen werden sollen." );
+    if( m_pem == null )
+      addPage( m_profileChooserPage );
 
     final IProfilPointPropertyProvider[] ppps = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( m_profiletype );
     final List<IProfilPointProperty> properties = new ArrayList<IProfilPointProperty>();
@@ -118,7 +139,6 @@ public class PropertyEditWizard extends Wizard
     m_propertyChooserPage = new ArrayChooserPage( properties.toArray( new IProfilPointProperty[0] ), new Object[0], new Object[0], 1, "profilePropertiesChooserPage", "Profileigenschaften auswählen", null );
     m_propertyChooserPage.setLabelProvider( new LabelProvider()
     {
-
       /**
        * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
        */
@@ -132,10 +152,8 @@ public class PropertyEditWizard extends Wizard
       }
     } );
     m_propertyChooserPage.setMessage( "Bitte wählen Sie aus, welche Werte geändert werden sollen." );
-
     m_operationChooserPage = new OperationChooserPage();
     m_operationChooserPage.setPageComplete( false );
-    addPage( m_profileChooserPage );
 
     addPage( m_operationChooserPage );
     addPage( m_propertyChooserPage );
@@ -150,28 +168,54 @@ public class PropertyEditWizard extends Wizard
     return m_operationChooserPage.isPageComplete();
   }
 
+  private IProfil[] toProfiles( final Object[] features )
+  {
+    if( features == null )
+      return new IProfil[] { m_pem.getProfil() };
+    final IProfil[] choosenProfiles = new IProfil[features.length];
+    for( int i = 0; i < features.length; i++ )
+    {
+      final WspmProfile wspmProfile = new WspmProfile( (Feature)features[i] );
+      choosenProfiles[i] = wspmProfile.getProfil();
+    }
+    return choosenProfiles;
+  }
+
   /**
    * @see org.eclipse.jface.wizard.Wizard#performFinish()
    */
   @Override
   public boolean performFinish( )
   {
-    final Object[] choosenProfiles = m_profileChooserPage.getChoosen();
-    final Object[] choosenProperties =  m_propertyChooserPage.getChoosen();
-    final List<FeatureChange> changes = new ArrayList<FeatureChange>();
-    if( (choosenProfiles != null) && (choosenProfiles.length != 0) )
-    {
-      for( final Object objProfile : choosenProfiles )
-      {
-        final Feature p = (Feature) objProfile;
-        final WspmProfile wspmProfile = new WspmProfile( p );
-        final IProfil profile = wspmProfile.getProfil();
-        m_operationChooserPage.changeProfile( profile, choosenProperties );
-        changes.addAll( Arrays.asList( ProfileFeatureFactory.toFeatureAsChanges( profile, p ) ) );
-      }
-      GMLWorkspace workspace = m_profiles.get( 0 ).getWorkspace();
+    final Object[] profilFeatures = m_pem == null ? m_profileChooserPage.getChoosen() : null;
+    final IProfil[] choosenProfiles = toProfiles( profilFeatures );
+    final Object[] choosenProperties = m_propertyChooserPage.getChoosen();
+    final List<FeatureChange> featureChanges = new ArrayList<FeatureChange>();
+    IProfilChange[] profilChanges = null;
 
-      final ChangeFeaturesCommand command = new ChangeFeaturesCommand( workspace, changes.toArray( new FeatureChange[0] ) );
+    for( int i = 0; i < choosenProfiles.length; i++ )
+    {
+      profilChanges = m_operationChooserPage.changeProfile( choosenProfiles[i], choosenProperties );
+      if( m_pem == null )
+      {
+        try
+        {
+          for( final IProfilChange change : profilChanges )
+          {
+            change.doChange( null );
+          }
+        }
+        catch( IllegalProfileOperationException e )
+        {
+          KalypsoModelWspmUIPlugin.getDefault().getLog().log( new Status( Status.ERROR, KalypsoModelWspmUIPlugin.getDefault().id(), e.getMessage() ) );
+        }
+        featureChanges.addAll( Arrays.asList( ProfileFeatureFactory.toFeatureAsChanges( choosenProfiles[i], (Feature)profilFeatures[i] ) ) );
+      }
+    }
+    if( m_pem == null )
+    {
+      GMLWorkspace workspace = m_profiles.get( 0 ).getWorkspace();
+      final ChangeFeaturesCommand command = new ChangeFeaturesCommand( workspace, featureChanges.toArray( new FeatureChange[0] ) );
       try
       {
         m_workspace.postCommand( command );
@@ -182,6 +226,12 @@ public class PropertyEditWizard extends Wizard
         e.printStackTrace();
       }
     }
+    else
+    {
+      final ProfilOperation operation = new ProfilOperation( "Profilpunkteigenschaften ändern", m_pem, profilChanges, true );
+      new ProfilOperationJob( operation ).schedule();
+    }
+
     return true;
   }
 }

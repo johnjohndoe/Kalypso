@@ -327,16 +327,7 @@ public class ProfileFeatureFactory implements IWspmConstants
       /* Test, if this component describes a pointProperty, if yes add it to the profile. */
       if( profil.getPropertyProviderFor( pp ) != null )
       {
-        // TODO: Kim muss weg, besser wären zwei verschiedene Rauheits-Componenten bzw. Point-Properties
-// if( pp == IWspmConstants.POINT_PROPERTY_RAUHEIT )
-// {
-// if( "ks".equals( component.getUnit() ) )
-// profil.setProperty( IWspmConstants.RAUHEIT_TYP, IWspmConstants.RAUHEIT_TYP_KS );
-// else
-// profil.setProperty( IWspmConstants.RAUHEIT_TYP, IWspmConstants.RAUHEIT_TYP_KST );
-// }
-
-        profil.addPointProperty( pp );
+         profil.addPointProperty( pp );
       }
     }
 
