@@ -102,7 +102,7 @@ public class WMSCapabilitiesHelper
       inputStream = getter.getResult();
       final Reader urlReader = new InputStreamReader( inputStream );
 
-      // // Uncomment following lines to dump capabilities
+      // Uncomment following lines to dump capabilities
       // final String capabilitiesAsString = IOUtils.toString( urlReader );
       // System.out.println( capabilitiesAsString );
       // final StringReader reader = new StringReader( capabilitiesAsString );
@@ -118,7 +118,7 @@ public class WMSCapabilitiesHelper
       // final OGCWMSCapabilitiesFactory wmsCapFac = new OGCWMSCapabilitiesFactory();
       // final WMSCapabilities createCapabilities = wmsCapFac.createCapabilities( reader );
       
-      /* This should nver happen */
+      /* This should never happen */
       Assert.isNotNull( createCapabilities );
 
       return createCapabilities;
