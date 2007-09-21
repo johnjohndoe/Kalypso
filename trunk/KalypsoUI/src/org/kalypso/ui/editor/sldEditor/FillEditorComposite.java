@@ -294,7 +294,9 @@ public class FillEditorComposite extends Composite
     final Spinner opacitySpinner = new Spinner( this, SWT.NONE );
     opacitySpinner.setLayoutData( new GridData( SWT.END, SWT.CENTER, true, false ) );
     opacitySpinner.setBackground( this.getBackground() );
-    final double opacity = m_fill.getOpacity( null );
+    double opacity = m_fill.getOpacity( null );
+    if( Double.isNaN( opacity ) )
+      opacity = 1;
     final BigDecimal selectionValue = new BigDecimal( opacity * 100 ).setScale( 0, BigDecimal.ROUND_HALF_UP );
     opacitySpinner.setValues( selectionValue.intValue(), 1, 100, 0, 1, 10 );
 
