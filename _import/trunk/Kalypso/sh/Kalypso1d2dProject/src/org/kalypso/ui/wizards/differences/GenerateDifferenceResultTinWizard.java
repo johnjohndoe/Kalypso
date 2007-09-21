@@ -43,7 +43,6 @@ package org.kalypso.ui.wizards.differences;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
@@ -71,7 +70,6 @@ import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultType;
 import org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceTriangleEater;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
@@ -82,11 +80,10 @@ import org.kalypso.ui.wizards.differences.IMathOperatorDelegate.MATH_OPERATOR;
 import org.kalypso.ui.wizards.results.SelectResultWizardPage;
 import org.kalypso.ui.wizards.results.ThemeConstructionFactory;
 import org.kalypso.ui.wizards.results.filters.DocumentResultViewerFilter;
-import org.kalypso.ui.wizards.results.filters.NonMapDataResultViewerFilter;
+import org.kalypso.ui.wizards.results.filters.NonTinDocumentResultViewerFilter;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -104,6 +101,8 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public class GenerateDifferenceResultTinWizard extends Wizard
 {
+  private final MinMaxCatcher m_minMaxCatcher = new MinMaxCatcher();
+
   private static final String PAGE_SELECT_DESTINATION_RESULTS_NAME = "selectDestinationResults";
 
   private static final String PAGE_SELECT_MASTER_RESULTS_NAME = "selectMasterResults";
@@ -133,7 +132,7 @@ public class GenerateDifferenceResultTinWizard extends Wizard
   {
 
     // select master document page
-    final NonMapDataResultViewerFilter resultFilter = new NonMapDataResultViewerFilter();
+    final NonTinDocumentResultViewerFilter resultFilter = new NonTinDocumentResultViewerFilter();
     final SelectResultWizardPage selectMasterResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_MASTER_RESULTS_NAME, "Ergebnis-Minuend auswählen", null, resultFilter, null );
     final SelectResultWizardPage selectSlaveResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_SLAVE_RESULTS_NAME, "Ergebnis-Subtrahend auswählen", null, resultFilter, null );
 
@@ -159,17 +158,30 @@ public class GenerateDifferenceResultTinWizard extends Wizard
 
     final MATH_OPERATOR operator = IMathOperatorDelegate.MATH_OPERATOR.eMinus;
 
+    final GM_TriangulatedSurface[] surfaces = new GM_TriangulatedSurface[2];
+
+    IDocumentResultMeta.DOCUMENTTYPE masterDocType = null;
+    IDocumentResultMeta.DOCUMENTTYPE slaveDocType = null;
+
+    /* check user input */
+    // master
     final SelectResultWizardPage masterResultPage = (SelectResultWizardPage) getPage( PAGE_SELECT_MASTER_RESULTS_NAME );
     final IResultMeta[] masterResults = masterResultPage.getSelectedResults();
-
-    final GM_TriangulatedSurface[] surfaces = new GM_TriangulatedSurface[2];
 
     if( masterResults.length == 0 )
     {
       MessageDialog.openInformation( getShell(), "Kein Ergebnis-Minuend ausgewählt", "Bitte wählen Sie ein Ergebnis aus, von dem Sie andere Ergbnisdaten abziehen wollen." );
       return false;
     }
+    else
+    {
+      if( masterResults[0] instanceof IDocumentResultMeta )
+      {
+        masterDocType = ((IDocumentResultMeta) masterResults[0]).getDocumentType();
+      }
+    }
 
+    // slave
     final SelectResultWizardPage slaveResultPage = (SelectResultWizardPage) getPage( PAGE_SELECT_SLAVE_RESULTS_NAME );
     final IResultMeta[] slaveResults = slaveResultPage.getSelectedResults();
 
@@ -178,14 +190,47 @@ public class GenerateDifferenceResultTinWizard extends Wizard
       MessageDialog.openInformation( getShell(), "Kein Ergebnis-Subtrahend ausgewählt", "Bitte wählen Sie ein Ergebnis aus, das abgezogen wird." );
       return false;
     }
+    else
+    {
+      if( slaveResults[0] instanceof IDocumentResultMeta )
+      {
+        slaveDocType = ((IDocumentResultMeta) slaveResults[0]).getDocumentType();
+      }
+    }
+
+    if( !slaveDocType.equals( masterDocType ) )
+    {
+      if( !MessageDialog.openQuestion( getShell(), "Selektierte Ergebnisse haben unterschiedlichen Typ", "Wollen Sie trotzdem fortfahren?" ) )
+        return false;
+    }
 
     final SelectResultWizardPage destinationResultPage = (SelectResultWizardPage) getPage( PAGE_SELECT_DESTINATION_RESULTS_NAME );
     final IResultMeta[] destinationResults = destinationResultPage.getSelectedResults();
 
+    // destination
     if( destinationResults.length == 0 )
     {
-      MessageDialog.openInformation( getShell(), "Kein Ziel ausgewählt", "Bitte wählen Sie ein Ziel aus, unter dem die erzeugten Differenzen abgelegt werden sollen." );
+      MessageDialog.openInformation( getShell(), "Kein Ziel ausgewählt", "Bitte wählen Sie einen Zeitschritt aus, unter dem die erzeugten Differenzen abgelegt werden sollen." );
       return false;
+    }
+    else
+    {
+      IResultMeta destResult = null;
+
+      // take the first selected step result
+      for( IResultMeta resultMeta : destinationResults )
+      {
+        if( resultMeta instanceof IStepResultMeta )
+        {
+          destResult = resultMeta;
+        }
+      }
+
+      if( destResult == null )
+      {
+        MessageDialog.openInformation( getShell(), "Falsches Ziel ausgewählt", "Bitte wählen Sie einen Zeitschritt aus, unter dem die erzeugten Differenzen abgelegt werden sollen." );
+        return false;
+      }
     }
 
     /* Start */
@@ -194,7 +239,7 @@ public class GenerateDifferenceResultTinWizard extends Wizard
       @SuppressWarnings("synthetic-access")
       public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
       {
-        monitor.beginTask( "Erzeuge Differenzen: ", 10 );
+        monitor.beginTask( "Erzeuge Differenzen: ", 100 );
 
         try
         {
@@ -203,64 +248,82 @@ public class GenerateDifferenceResultTinWizard extends Wizard
 
           monitor.subTask( "...lese Minuend..." );
           masterSurface = getSurfaceData( masterResults[0] );
-          monitor.worked( 3 );
+          monitor.worked( 10 );
           if( masterSurface == null )
             return StatusUtilities.createErrorStatus( "Differenzen konnte nicht erzeugt werden:  Minuend konnte nicht gelesen werden." );
 
           monitor.subTask( "...lese Subtrahent..." );
           slaveSurface = getSurfaceData( slaveResults[0] );
-          monitor.worked( 3 );
+          monitor.worked( 10 );
           if( slaveSurface == null )
             return StatusUtilities.createErrorStatus( "Differenzen konnte nicht erzeugt werden:  Subtrahent konnte nicht gelesen werden." );
 
-          // just get the first selected items
           surfaces[0] = masterSurface;
           surfaces[1] = slaveSurface;
-          final IResultMeta destResult = destinationResults[0].getParent();
+
+          IResultMeta destResult = null;
+
+          // take the first selected step result
+          for( IResultMeta resultMeta : destinationResults )
+          {
+            if( resultMeta instanceof IStepResultMeta )
+            {
+              destResult = resultMeta;
+            }
+          }
+
+          if( destResult == null )
+            return StatusUtilities.createErrorStatus( "Differenzen konnte nicht erzeugt werden:  Ziel hat falschen Typ." );
 
           monitor.subTask( "...generiere Differenzen..." );
 
-          // TODO: where to write the differences? (scenario diff folder / everywhere)
-          // why do we receive here only document results??
           IPath docPath = destResult.getFullPath();
           IFolder folder = m_scenarioFolder.getFolder( docPath );
 
-          // TODO: generate unique name for difference file!!
+          /* generate unique name for difference file */
           String name = "tin";
           String extension = ".gml";
           File parentDir = docPath.toFile();
-          String uniqueFileName = FileUtilities.createNewUniqueFileName( name, extension, parentDir );
 
-          IFile destFile = folder.getFile( uniqueFileName );
-          IStatus status = generateDifferences( surfaces, operator, destFile );
+          // check, if file already exists and get the unique name */
+          final File tinPath = new File( parentDir, "Tin" );
+          String uniqueFileName = FileUtilities.createNewUniqueFileName( name, extension, tinPath );
+
+          IFolder destPath = folder.getFolder( "Tin" );
+          IFile destFile = destPath.getFile( uniqueFileName );
+
+          IStatus status = generateDifferences( surfaces, operator, destFile, monitor );
           monitor.worked( 3 );
 
           /* update the result db */
           if( status.isOK() )
           {
-            Path path = new Path( destFile.getName() );
+            /* create the path entry for the document */
+            final int extensionIndex = destFile.getName().lastIndexOf( "." );
+            final String substring = destFile.getName().substring( 0, extensionIndex );
 
-            BigDecimal min = new BigDecimal( 0 );
-            BigDecimal max = new BigDecimal( 0 );
+            /* create filename */
+            final String param = "DIFFERENCE";
+            final String paramName = substring + "_" + param + extension;
+
+            /* we "know", that the results are stored in the "Tin" folder */
+            Path path = new Path( "Tin/" + paramName );
+
+            // get min max via a minmaxCatcher during processing.
+            BigDecimal min = m_minMaxCatcher.getMinValue();
+            BigDecimal max = m_minMaxCatcher.getMaxValue();
 
             if( destResult instanceof IStepResultMeta )
             {
+              // TODO: set a good description e.g.
+              final String description = "Differenzen erzeugt am xx.xx.xxxx xx.xx:xx Uhr (resultierend aus: Minuend: xxx Subtrahent:xxx)";
+
               IStepResultMeta stepResult = (IStepResultMeta) destResult;
-              stepResult.addDocument( "Differenzen", "2d-Differenzen", IDocumentResultMeta.DOCUMENTTYPE.tinDifference, path, Status.OK_STATUS, min, max );
-            }
-            else if( destResult instanceof ICalcUnitResultMeta )
-            {
-              ICalcUnitResultMeta calcResult = (ICalcUnitResultMeta) destResult;
-              calcResult.addDocument( "Differenzen", "2d-Differenzen", IDocumentResultMeta.DOCUMENTTYPE.tinDifference, path, Status.OK_STATUS, min, max );
-            }
-            else if( destResult instanceof IScenarioResultMeta )
-            {
-              IStepResultMeta scenResult = (IStepResultMeta) destResult;
-              scenResult.addDocument( "Differenzen", "2d-Differenzen", IDocumentResultMeta.DOCUMENTTYPE.tinDifference, path, Status.OK_STATUS, min, max );
+              stepResult.addDocument( "Differenzen", description, IDocumentResultMeta.DOCUMENTTYPE.tinDifference, path, Status.OK_STATUS, min, max );
             }
             else
             {
-              throw new UnsupportedDataTypeException( "Daten können nicht an bestehende Ergebnis-Dokumente geschrieben werden." );
+              throw new UnsupportedDataTypeException( "Daten konnten keinem Zeitschritt zugeordnet werden.." );
               // TODO: cleanFiles();
             }
           }
@@ -273,17 +336,19 @@ public class GenerateDifferenceResultTinWizard extends Wizard
         catch( Exception e )
         {
           e.printStackTrace();
+          // TODO: cleanFiles();
           return StatusUtilities.statusFromThrowable( e, "Konnte Differenzen nicht erzeugen." );
         }
         catch( final Throwable t )
         {
+          // TODO: cleanFiles();
           throw new InvocationTargetException( t );
         }
         finally
         {
           monitor.done();
         }
-        return StatusUtilities.createOkStatus( "Längsschnitt erzeugt." );
+        return StatusUtilities.createOkStatus( "Differenzen erzeugt." );
 
       }
     };
@@ -297,10 +362,8 @@ public class GenerateDifferenceResultTinWizard extends Wizard
 
   }
 
-  protected IStatus generateDifferences( GM_TriangulatedSurface[] surfaces, MATH_OPERATOR operator, IFile diffFile )
+  protected IStatus generateDifferences( GM_TriangulatedSurface[] surfaces, MATH_OPERATOR operator, IFile diffFile, IProgressMonitor monitor )
   {
-    // TODO: generate unique name for difference file!!
-
     final CS_CoordinateSystem crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
 
     final File tinResultFile = diffFile.getLocation().toFile();
@@ -311,6 +374,8 @@ public class GenerateDifferenceResultTinWizard extends Wizard
       final GM_TriangulatedSurface surface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_TriangulatedSurface( crs );
       final Feature triangleFeature = triangleWorkspace.getRootFeature();
       triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "triangulatedSurfaceMember" ), surface );
+      triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "[-]" );
+      triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), "Differenzen" );
 
       // Loop over master triangles
       final GM_TriangulatedSurface masterSurface = surfaces[0];
@@ -318,17 +383,32 @@ public class GenerateDifferenceResultTinWizard extends Wizard
 
       TriangulatedSurfaceTriangleEater eater = new TriangulatedSurfaceTriangleEater( tinResultFile, triangleWorkspace, surface, ResultType.TYPE.DIFFERENCE );
 
-      // TODO: use monitor to display progress.
+      // monitor:
+      // 70% available
+      // => 70 / masterSurface.size()
 
-      for( GM_Triangle triangle : masterSurface )
+      // use monitor to display progress.
+      BigDecimal maxProgress = new BigDecimal( 70 );
+      BigDecimal stepNum = new BigDecimal( masterSurface.size() );
+      BigDecimal monitorValue = new BigDecimal( 0 );
+      BigDecimal val = stepNum.divide( maxProgress, 5, BigDecimal.ROUND_HALF_UP );
+
+      for( int i = 0; i < masterSurface.size(); i++ )
       {
+        final GM_Triangle triangle = masterSurface.get( i );
+
+        if( monitor != null )
+        {
+          monitorValue = updateMonitor( monitor, val, monitorValue );
+        }
+
         final List<GM_Point> nodeList = new LinkedList<GM_Point>();
 
         GM_Position[] ring = triangle.getExteriorRing();
 
-        for( int i = 0; i < ring.length - 1; i++ )
+        for( int j = 0; j < ring.length - 1; j++ )
         {
-          final GM_Point point = GeometryFactory.createGM_Point( ring[i], crs );
+          final GM_Point point = GeometryFactory.createGM_Point( ring[j], crs );
 
           final double o1 = point.getZ();
           final double o2 = slaveSurface.getValue( point );
@@ -338,6 +418,7 @@ public class GenerateDifferenceResultTinWizard extends Wizard
           if( !Double.isNaN( o2 ) )
           {
             result = operator.getOperator().getResult( new BigDecimal( o1 ), new BigDecimal( o2 ) );
+            m_minMaxCatcher.addResult( result );
           }
 
           if( result != null )
@@ -348,27 +429,36 @@ public class GenerateDifferenceResultTinWizard extends Wizard
         }
 
         if( nodeList.size() == 3 )
+        {
           eater.add( nodeList );
+
+        }
+
       }
+      if( monitor != null )
+        monitor.subTask( "...schreibe Ergebnis..." );
 
       eater.finished();
+
+      // TODO: written tin isn't displayed in eclipse, refresh is needed...? (Habbi was falsch gmacht?)
       return Status.OK_STATUS;
     }
-    catch( MalformedURLException e )
+    catch( Exception e )
     {
       e.printStackTrace();
       return StatusUtilities.statusFromThrowable( e, "Konnte Differenzen nicht erzeugen." );
     }
-    catch( InvocationTargetException e )
+  }
+
+  private BigDecimal updateMonitor( IProgressMonitor monitor, BigDecimal val, BigDecimal monitorValue )
+  {
+    monitorValue = monitorValue.add( new BigDecimal( 1 ).divide( val, 4, BigDecimal.ROUND_HALF_UP ) );
+    if( monitorValue.doubleValue() > 1 )
     {
-      e.printStackTrace();
-      return StatusUtilities.statusFromThrowable( e, "Konnte Differenzen nicht erzeugen." );
+      monitor.worked( 1 );
+      monitorValue = new BigDecimal( 0 );
     }
-    catch( GM_Exception e )
-    {
-      e.printStackTrace();
-      return StatusUtilities.statusFromThrowable( e, "Konnte Differenzen nicht erzeugen." );
-    }
+    return monitorValue;
   }
 
   public IFile getSelection( )
@@ -379,7 +469,6 @@ public class GenerateDifferenceResultTinWizard extends Wizard
   private GM_TriangulatedSurface getSurfaceData( final IResultMeta resultMeta )
   {
     /* get the result data */
-
     if( resultMeta instanceof IDocumentResultMeta )
     {
       IDocumentResultMeta docResult = (IDocumentResultMeta) resultMeta;

@@ -160,6 +160,9 @@ public class TinResultThemeCreator extends AbstractThemeCreator
   private void updateThemeCommandData( )
   {
     /* get infos about calc unit */
+
+    // TODO: this is dangerous, because the data need not to be stored in the document result level.
+    // use a more general approach instead.
     IResultMeta calcUnitMeta = m_documentResult.getParent().getParent();
     IResultMeta timeStepMeta = m_documentResult.getParent();
 

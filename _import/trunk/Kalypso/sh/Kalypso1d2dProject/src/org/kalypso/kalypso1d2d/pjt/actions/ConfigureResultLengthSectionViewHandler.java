@@ -46,7 +46,6 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
@@ -55,7 +54,6 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
@@ -63,11 +61,8 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeLoadStatusVisitor;
-import org.kalypso.ogc.gml.mapmodel.visitor.LoadStatusPredicater;
 import org.kalypso.ui.views.map.MapView;
 import org.kalypso.ui.wizards.lengthsection.ConfigureLengthSectionWizard;
-import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
@@ -82,6 +77,7 @@ public class ConfigureResultLengthSectionViewHandler extends AbstractHandler
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
+  @SuppressWarnings("unchecked")
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
@@ -96,53 +92,7 @@ public class ConfigureResultLengthSectionViewHandler extends AbstractHandler
 
     final MapPanel mapPanel = mapView.getMapPanel();
 
-    final ICoreRunnableWithProgress waitForMapOperation = new ICoreRunnableWithProgress()
-    {
-
-      public IStatus execute( IProgressMonitor monitor ) throws InterruptedException
-      {
-        monitor.beginTask( "Warte auf Karte...", IProgressMonitor.UNKNOWN );
-
-        Thread.sleep( 500 );
-
-        while( true )
-        {
-          if( monitor.isCanceled() )
-            return Status.CANCEL_STATUS;
-
-          try
-          {
-            final IMapModell modell = mapPanel.getMapModell();
-            if( modell != null )
-            {
-              // Here, we are just interested in line themes
-              // TODO: implement to wait for cascading theme (FE-Net) loading, because right now just the legend and the
-              // scrab-layer gets loaded.
-              //
-              // HACK: check if there are more than these two layers in the map.
-              int length = modell.getAllThemes().length;
-              if( length < 3 )
-                continue;
-              LoadStatusPredicater predicate = new LoadStatusPredicater();
-              final KalypsoThemeLoadStatusVisitor visitor = new KalypsoThemeLoadStatusVisitor( predicate );
-              modell.accept( visitor, FeatureVisitor.DEPTH_INFINITE );
-
-              if( visitor.isLoaded() == true )
-                return Status.OK_STATUS;
-            }
-
-            Thread.sleep( 500 );
-
-            monitor.worked( 10 );
-          }
-          catch( final InterruptedException e )
-          {
-            return StatusUtilities.statusFromThrowable( e );
-          }
-        }
-      }
-    };
-
+    final ICoreRunnableWithProgress waitForMapOperation = MapLoadHelper.waitForMap( mapPanel );
     final IStatus waitErrorStatus = ProgressUtilities.busyCursorWhile( waitForMapOperation );
     ErrorDialog.openError( shell, "Längsschnitt erzeugen", "Fehler beim Öffnen der Karte", waitErrorStatus );
     if( !waitErrorStatus.isOK() )
@@ -158,8 +108,6 @@ public class ConfigureResultLengthSectionViewHandler extends AbstractHandler
       IScenarioResultMeta resultModel = modelProvider.getModel( IScenarioResultMeta.class );
 
       final MapPanel panel = mapView.getMapPanel();
-
-      // final ChartView chartView = (ChartView) window.getActivePage().findView( ChartView.ID );
 
       // open wizard
       final ConfigureLengthSectionWizard wizard = new ConfigureLengthSectionWizard( scenarioFolder, resultModel, panel );
@@ -178,4 +126,5 @@ public class ConfigureResultLengthSectionViewHandler extends AbstractHandler
 
     return Status.CANCEL_STATUS;
   }
+
 }

@@ -45,14 +45,21 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
+import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ui.views.map.MapView;
 import org.kalypso.ui.wizards.differences.GenerateDifferenceResultTinWizard;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
@@ -76,6 +83,18 @@ public class GenerateResultDifferenceViewHandler extends AbstractHandler
     final ICaseDataProvider<IFeatureWrapper2> modelProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
     final IFolder scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
 
+    /* Get the map */
+    final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
+    final MapView mapView = (MapView) window.getActivePage().findView( MapView.ID );
+
+    final MapPanel mapPanel = mapView.getMapPanel();
+
+    final ICoreRunnableWithProgress waitForMapOperation = MapLoadHelper.waitForMap( mapPanel );
+    final IStatus waitErrorStatus = ProgressUtilities.busyCursorWhile( waitForMapOperation );
+    ErrorDialog.openError( shell, "Differenzen erzeugen", "Fehler beim Öffnen der Karte", waitErrorStatus );
+    if( !waitErrorStatus.isOK() )
+      return waitErrorStatus;
+
     try
     {
       IScenarioResultMeta resultModel = modelProvider.getModel( IScenarioResultMeta.class );
@@ -85,10 +104,7 @@ public class GenerateResultDifferenceViewHandler extends AbstractHandler
       final WizardDialog2 wizardDialog2 = new WizardDialog2( shell, wizard );
       if( wizardDialog2.open() == Window.OK )
       {
-
         modelProvider.saveModel( IScenarioResultMeta.class, new NullProgressMonitor() );
-
-        // add difference them to map (?)
 
         return Status.OK_STATUS;
       }

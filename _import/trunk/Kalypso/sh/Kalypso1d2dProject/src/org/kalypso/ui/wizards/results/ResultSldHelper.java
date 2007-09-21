@@ -405,6 +405,37 @@ public class ResultSldHelper
       tempText = tempText.replaceAll( ",", "." );
 
       BigDecimal db = new BigDecimal( tempText );
+      text.setText( db.toString() );
+
+      return db;
+    }
+    return null;
+  }
+
+  /**
+   * checks the user typed a string for a positive double value, if it is negative the value is set to 0.
+   * 
+   * @param comp
+   *            composite of the text field
+   * @param text
+   *            the text field
+   */
+  public static BigDecimal checkPositiveDoubleTextValue( final Composite comp, final Text text, Pattern pattern )
+  {
+    String tempText = text.getText();
+
+    final Matcher m = pattern.matcher( tempText );
+
+    if( !m.matches() )
+    {
+      text.setBackground( comp.getDisplay().getSystemColor( SWT.COLOR_RED ) );
+    }
+    else
+    {
+      text.setBackground( comp.getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
+      tempText = tempText.replaceAll( ",", "." );
+
+      BigDecimal db = new BigDecimal( tempText );
       if( db.doubleValue() > 0 )
       {
         text.setText( db.toString() );
