@@ -62,7 +62,7 @@ public class URLGetter implements ICoreRunnableWithProgress
   {
     try
     {
-      HttpClient client = ProxyUtilities.getConfiguredHttpClient( timeOut, new URL( url.getProtocol()+"://"+url.getHost() ) );
+      HttpClient client = ProxyUtilities.getConfiguredHttpClient( timeOut, new URL( url.getProtocol() + "://" + url.getHost() ) );
       return new URLGetter( client, url );
     }
     catch( MalformedURLException e )

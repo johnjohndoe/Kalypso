@@ -149,7 +149,7 @@ public class GisTemplateMapModell implements IMapModell
     for( final JAXBElement< ? extends StyledLayerType> layerType : layerList )
     {
       final IKalypsoTheme theme = addTheme( layerType.getValue() );
-      if( layerType == activeLayer )
+      if( layerType.getValue() == activeLayer )
         activateTheme( theme );
     }
   }
