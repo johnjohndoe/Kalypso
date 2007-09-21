@@ -149,7 +149,7 @@ public class ProxyUtilities
    */
   public static HttpClient getConfiguredHttpClient( int timeout, URL url )
   {
-    if( !isNonProxyHost( url ) )
+    if( getProxy().useProxy() && !isNonProxyHost( url ) )
       return getConfiguredHttpClient( timeout );
 
     /* Create the new http client. */
