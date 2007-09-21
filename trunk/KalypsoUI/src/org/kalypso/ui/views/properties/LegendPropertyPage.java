@@ -98,7 +98,7 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
     try
     {
       /* Get the legend graphic. */
-      legendGraphic = theme.getLegendGraphic( new Font( "Arial", Font.PLAIN, 10 ) );
+      legendGraphic = theme.getLegendGraphic( new Font( "Arial", Font.PLAIN, 10 ), theme.getName() );
     }
     catch( CoreException e )
     {

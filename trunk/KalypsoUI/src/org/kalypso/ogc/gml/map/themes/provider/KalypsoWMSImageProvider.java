@@ -152,15 +152,16 @@ public class KalypsoWMSImageProvider implements IKalypsoImageProvider, IKalypsoL
   }
 
   /**
-   * @see org.kalypso.ogc.gml.map.themes.provider.IKalypsoLegendProvider#getLegendGraphic(java.awt.Font)
+   * @see org.kalypso.ogc.gml.map.themes.provider.IKalypsoLegendProvider#getLegendGraphic(java.awt.Font,
+   *      java.lang.String)
    */
-  public Image getLegendGraphic( Font font ) throws CoreException
+  public Image getLegendGraphic( Font font, String layerName ) throws CoreException
   {
     /* Initialize the remote WMS, if it is not already done. */
     initializeRemoteWMS();
 
     /* Load the legend. */
-    Image result = loadLegendGraphic();
+    Image result = loadLegendGraphic( layerName );
 
     return result;
   }
@@ -285,9 +286,11 @@ public class KalypsoWMSImageProvider implements IKalypsoImageProvider, IKalypsoL
   /**
    * This function loads the legend graphic.
    * 
+   * @param layerName
+   *            The name of the layer, for which the legend should be loaded.
    * @return The legend graphic.
    */
-  private Image loadLegendGraphic( ) throws CoreException
+  private Image loadLegendGraphic( String layerName ) throws CoreException
   {
     /* We need a remote WMS. */
     if( m_wms == null )
@@ -303,8 +306,19 @@ public class KalypsoWMSImageProvider implements IKalypsoImageProvider, IKalypsoL
     if( layers.length == 0 )
       return null;
 
-    /* TODO: Only the first layer will be used, for now. */
+    /*
+     * TODO: Only the first layer will be used, for now. Except, if there is a layer with the same title as provided.
+     * But this is not good.
+     */
     Layer layer = layers[0];
+    for( int i = 0; i < layers.length; i++ )
+    {
+      if( layers[i].getTitle().equals( layerName ) )
+      {
+        layer = layers[i];
+        break;
+      }
+    }
 
     /* Get all styles. */
     Style[] styles = layer.getStyles();

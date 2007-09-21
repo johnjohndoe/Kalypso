@@ -71,7 +71,7 @@ public class HoverSelectionWidget extends AbstractWidget
   {
     m_function.execute( getMapPanel(), new Rectangle( p.x, p.y, 0, 0 ) );
     
-//  TODO: check if this repaint is necessary for the widget
+    // TODO: check if this repaint is necessary for the widget
     MapPanel panel = getMapPanel();
     if ( panel != null)
       panel.repaint();

@@ -309,10 +309,10 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
   }
 
   /**
-   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getLegendGraphic(java.awt.Font)
+   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getLegendGraphic(java.awt.Font, java.lang.String)
    */
   @Override
-  public Image getLegendGraphic( Font font ) throws CoreException
+  public Image getLegendGraphic( Font font, String layerName ) throws CoreException
   {
     if( m_provider == null )
       return null;
@@ -323,7 +323,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
     if( m_legend == null )
     {
       IKalypsoLegendProvider legendProvider = (IKalypsoLegendProvider) m_provider;
-      Image legend = legendProvider.getLegendGraphic( font );
+      Image legend = legendProvider.getLegendGraphic( font, layerName );
 
       m_legend = legend;
     }

@@ -266,10 +266,10 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   }
 
   /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#getLegendGraphic(java.awt.Font)
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#getLegendGraphic(java.awt.Font, java.lang.String)
    */
   @SuppressWarnings("unused")
-  public Image getLegendGraphic( final Font font ) throws CoreException
+  public Image getLegendGraphic( final Font font, final String layerName ) throws CoreException
   {
     /* Nothing to do here, childs should implement. */
     return null;

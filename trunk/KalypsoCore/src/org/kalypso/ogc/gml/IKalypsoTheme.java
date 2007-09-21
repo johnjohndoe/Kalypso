@@ -149,7 +149,9 @@ public interface IKalypsoTheme extends IAdaptable, IWorkbenchAdapter
    * 
    * @param font
    *            This font will be used for the self created text of the legend.
+   * @param layerName
+   *            The name of the layer, for which the legend should be loaded.
    * @return An legend graphic or null.
    */
-  public Image getLegendGraphic( Font font ) throws CoreException;
+  public Image getLegendGraphic( Font font, String layerName ) throws CoreException;
 }

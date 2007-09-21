@@ -42,7 +42,11 @@ package org.kalypso.ogc.gml.map.widgets;
 
 import java.awt.Cursor;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Point;
+import java.awt.Toolkit;
+
+import javax.swing.ImageIcon;
 
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.graphics.Rectangle;
@@ -129,7 +133,11 @@ public class SelectionWidget extends AbstractWidget
     super.activate( commandPoster, mapPanel );
 
     /* Init the cursor. */
-    Cursor cursor = Cursor.getPredefinedCursor( Cursor.CROSSHAIR_CURSOR );
+    ImageIcon img = new ImageIcon( "P:/0519909/work/albert/Cursor/DRAGCOPY.GIF" );
+    Image pointer = img.getImage();
+    Cursor cursor = Toolkit.getDefaultToolkit().createCustomCursor( pointer, new Point( 16, 8 ), "Select" );
+
+    // Cursor cursor = Cursor.getPredefinedCursor( Cursor.CROSSHAIR_CURSOR );
     getMapPanel().setCursor( cursor );
   }
 
@@ -144,6 +152,7 @@ public class SelectionWidget extends AbstractWidget
       m_selector.setEndPoint( new org.eclipse.swt.graphics.Point( p.x, p.y ) );
       getMapPanel().setMessage( "Auswahl durchführen ..." );
     }
+
     // TODO: check if this repaint is really necessary
     final MapPanel panel = getMapPanel();
     if( panel != null )
