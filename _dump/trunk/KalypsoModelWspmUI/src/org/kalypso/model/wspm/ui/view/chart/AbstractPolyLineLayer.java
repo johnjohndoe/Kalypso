@@ -394,4 +394,14 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
   {
     m_colors = colors;
   }
+
+  /**
+   * Returns the line properties.
+   * 
+   * @return The line properties.
+   */
+  protected String[] getLineProperties( )
+  {
+    return m_lineProperties;
+  }
 }
