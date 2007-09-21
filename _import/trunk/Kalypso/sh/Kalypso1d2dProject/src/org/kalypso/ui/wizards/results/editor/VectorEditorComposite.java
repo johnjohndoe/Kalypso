@@ -349,7 +349,7 @@ public class VectorEditorComposite extends Composite
         switch( event.keyCode )
         {
           case SWT.CR:
-            final BigDecimal value = ResultSldHelper.checkDoubleTextValue( propertyGroup, scaleValueText, m_patternDouble );
+            final BigDecimal value = ResultSldHelper.checkPositiveDoubleTextValue( propertyGroup, scaleValueText, m_patternDouble );
             if( value != null )
             {
               m_scale = value;
@@ -365,7 +365,7 @@ public class VectorEditorComposite extends Composite
       @SuppressWarnings("synthetic-access")
       public void focusGained( final FocusEvent e )
       {
-        final BigDecimal value = ResultSldHelper.checkDoubleTextValue( propertyGroup, scaleValueText, m_patternDouble );
+        final BigDecimal value = ResultSldHelper.checkPositiveDoubleTextValue( propertyGroup, scaleValueText, m_patternDouble );
         if( value != null )
         {
           m_scale = value;
@@ -376,7 +376,7 @@ public class VectorEditorComposite extends Composite
       @SuppressWarnings("synthetic-access")
       public void focusLost( final FocusEvent e )
       {
-        final BigDecimal value = ResultSldHelper.checkDoubleTextValue( propertyGroup, scaleValueText, m_patternDouble );
+        final BigDecimal value = ResultSldHelper.checkPositiveDoubleTextValue( propertyGroup, scaleValueText, m_patternDouble );
         if( value != null )
         {
           m_firstExpression.setValue( value.toString() );

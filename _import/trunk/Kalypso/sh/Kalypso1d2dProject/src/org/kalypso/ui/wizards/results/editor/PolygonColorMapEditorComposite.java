@@ -86,7 +86,7 @@ public class PolygonColorMapEditorComposite extends Composite
 
   private final PolygonColorMapEntry m_fromEntry;
 
-  private final Pattern m_patternDouble = Pattern.compile( "[0-9]+[\\.\\,]?[0-9]*?" );
+  private final Pattern m_patternDouble = Pattern.compile( "[\\+\\-]?[0-9]+[\\.\\,]?[0-9]*?" );
 
   private boolean m_strokeChecked;
 
@@ -404,7 +404,7 @@ public class PolygonColorMapEditorComposite extends Composite
         switch( event.keyCode )
         {
           case SWT.CR:
-            final BigDecimal value = ResultSldHelper.checkDoubleTextValue( propertyGroup, stepWidthText, m_patternDouble );
+            final BigDecimal value = ResultSldHelper.checkPositiveDoubleTextValue( propertyGroup, stepWidthText, m_patternDouble );
             if( value != null )
               m_stepWidth = value;
         }
@@ -416,7 +416,7 @@ public class PolygonColorMapEditorComposite extends Composite
       @SuppressWarnings("synthetic-access")
       public void focusGained( final FocusEvent e )
       {
-        final BigDecimal value = ResultSldHelper.checkDoubleTextValue( propertyGroup, stepWidthText, m_patternDouble );
+        final BigDecimal value = ResultSldHelper.checkPositiveDoubleTextValue( propertyGroup, stepWidthText, m_patternDouble );
         if( value != null )
           m_stepWidth = value;
       }
@@ -424,7 +424,7 @@ public class PolygonColorMapEditorComposite extends Composite
       @SuppressWarnings("synthetic-access")
       public void focusLost( final FocusEvent e )
       {
-        final BigDecimal value = ResultSldHelper.checkDoubleTextValue( propertyGroup, stepWidthText, m_patternDouble );
+        final BigDecimal value = ResultSldHelper.checkPositiveDoubleTextValue( propertyGroup, stepWidthText, m_patternDouble );
         if( value != null )
         {
           m_stepWidth = value;

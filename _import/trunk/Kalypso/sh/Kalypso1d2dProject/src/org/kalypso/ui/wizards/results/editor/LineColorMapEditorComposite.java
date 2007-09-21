@@ -81,7 +81,7 @@ public class LineColorMapEditorComposite extends Composite
 
   private LineColorMapEntry m_entry;
 
-  private final Pattern m_patternDouble = Pattern.compile( "[0-9]+[\\.\\,]?[0-9]*?" );
+  private final Pattern m_patternDouble = Pattern.compile( "[\\+\\-]?[0-9]+[\\.\\,]?[0-9]*?" );
 
   private BigDecimal m_stepWidth;
 
@@ -158,7 +158,7 @@ public class LineColorMapEditorComposite extends Composite
         switch( event.keyCode )
         {
           case SWT.CR:
-            final BigDecimal value = ResultSldHelper.checkDoubleTextValue( propertyGroup, stepWidthText, m_patternDouble );
+            final BigDecimal value = ResultSldHelper.checkPositiveDoubleTextValue( propertyGroup, stepWidthText, m_patternDouble );
             if( value != null )
               m_stepWidth = value;
         }
@@ -170,7 +170,7 @@ public class LineColorMapEditorComposite extends Composite
       @SuppressWarnings("synthetic-access")
       public void focusGained( final FocusEvent e )
       {
-        final BigDecimal value = ResultSldHelper.checkDoubleTextValue( propertyGroup, stepWidthText, m_patternDouble );
+        final BigDecimal value = ResultSldHelper.checkPositiveDoubleTextValue( propertyGroup, stepWidthText, m_patternDouble );
         if( value != null )
           m_stepWidth = value;
       }
@@ -178,7 +178,7 @@ public class LineColorMapEditorComposite extends Composite
       @SuppressWarnings("synthetic-access")
       public void focusLost( final FocusEvent e )
       {
-        final BigDecimal value = ResultSldHelper.checkDoubleTextValue( propertyGroup, stepWidthText, m_patternDouble );
+        final BigDecimal value = ResultSldHelper.checkPositiveDoubleTextValue( propertyGroup, stepWidthText, m_patternDouble );
         if( value != null )
         {
           m_stepWidth = value;
