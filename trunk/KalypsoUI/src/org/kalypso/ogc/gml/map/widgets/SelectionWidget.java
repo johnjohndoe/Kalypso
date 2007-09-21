@@ -45,6 +45,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
+import java.net.URL;
 
 import javax.swing.ImageIcon;
 
@@ -133,11 +134,16 @@ public class SelectionWidget extends AbstractWidget
     super.activate( commandPoster, mapPanel );
 
     /* Init the cursor. */
-    ImageIcon img = new ImageIcon( "P:/0519909/work/albert/Cursor/DRAGCOPY.GIF" );
-    Image pointer = img.getImage();
-    Cursor cursor = Toolkit.getDefaultToolkit().createCustomCursor( pointer, new Point( 16, 8 ), "Select" );
+    Cursor cursor = Cursor.getPredefinedCursor( Cursor.CROSSHAIR_CURSOR );
+    
+    URL resource = SelectionWidget.class.getResource( "/icons/cursor/select.gif" );
+    if( resource != null )
+    {
+      ImageIcon img = new ImageIcon( resource );
+      Image pointer = img.getImage();
+      cursor = Toolkit.getDefaultToolkit().createCustomCursor( pointer, new Point( 16, 8 ), "Select" );
+    }
 
-    // Cursor cursor = Cursor.getPredefinedCursor( Cursor.CROSSHAIR_CURSOR );
     getMapPanel().setCursor( cursor );
   }
 
