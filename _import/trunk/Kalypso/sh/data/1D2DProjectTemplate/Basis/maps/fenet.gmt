@@ -20,6 +20,9 @@
         <mapv:layer visible="true" name="1D-Elemente" id="ID_7" featurePath="#fid#root/element[Element1D]" linktype="gml" xlink:type="simple" xlink:href="../models/discretisation.gml" xlink:actuate="onRequest">
             <templ:property name="deleteable">false</templ:property>
         </mapv:layer>
+        <mapv:layer visible="true" name="1D-Einmündung" id="ID_8" featurePath="#fid#root/complexElement[JunctionElement]" linktype="gml" xlink:type="simple" xlink:href="../models/discretisation.gml" xlink:actuate="onRequest">
+            <templ:property name="deleteable">false</templ:property>
+        </mapv:layer>
         <mapv:layer visible="true" name="1D-2D Kopplung" id="ID_8" featurePath="#fid#root/complexElement[TransitionElement]" linktype="gml" xlink:type="simple" xlink:href="../models/discretisation.gml" xlink:actuate="onRequest">
             <templ:property name="deleteable">false</templ:property>
         </mapv:layer>

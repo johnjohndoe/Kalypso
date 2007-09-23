@@ -49,10 +49,12 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ITransitionElement;
 import org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit.CalculationUnitDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.AddSubCalcUnitsToCalcUnit1D2DCmd;
@@ -85,7 +87,7 @@ public class CreateSubCalculationUnitCopyWizard extends Wizard implements INewWi
   @Override
   public void addPages( )
   {
-    setWindowTitle( Messages.getString( "CreateSubCalculationUnitCopyWizardPage.0" ) );
+    setWindowTitle( Messages.getString( "CreateSubCalculationUnitCopyWizardPage.0" ) ); //$NON-NLS-1$
     m_wizardPage = new CreateSubCalculationUnitCopyWizardPage( m_dataModel );
     addPage( m_wizardPage );
     m_wizardPage.init( m_selection );
@@ -140,7 +142,7 @@ public class CreateSubCalculationUnitCopyWizard extends Wizard implements INewWi
     }
     else
     {
-      MessageDialog.openWarning( getShell(), "Warnung", "At least one of selected subcalculation units is not connected to other units (not connected via common continuity line, common transition element or common junction element).\nOnly connected units can create complex calculation unit." );
+      MessageDialog.openWarning( getShell(), Messages.getString("CreateSubCalculationUnitCopyWizard.1"), Messages.getString("CreateSubCalculationUnitCopyWizard.2") ); //$NON-NLS-1$ //$NON-NLS-2$
       return false;
     }
   }
@@ -170,7 +172,7 @@ public class CreateSubCalculationUnitCopyWizard extends Wizard implements INewWi
       // if calculation units are of different type, common continuity line cannot exists
       if( !connectedUnit.getType().equals( currentUnit.getType() ) )
         continue;
-      
+
       final List<IFELine> connectedUnitLines = connectedUnit.getContinuityLines();
       for( final IFELine line : connectedUnitLines )
         if( currentUnitLines.contains( line ) )
@@ -180,6 +182,7 @@ public class CreateSubCalculationUnitCopyWizard extends Wizard implements INewWi
     // --------------------------------------------------------------------------------
     // check if current unit have common transition element with any unit from the list
     // --------------------------------------------------------------------------------
+    final List<IFELine> currentUnitContinuityLines = currentUnit.getContinuityLines();
     final IFEDiscretisationModel1d2d model = (IFEDiscretisationModel1d2d) m_dataModel.getData( ICommonKeys.KEY_DISCRETISATION_MODEL );
     final IFeatureWrapperCollection<IFE1D2DComplexElement> complexElements = model.getComplexElements();
 
@@ -204,19 +207,53 @@ public class CreateSubCalculationUnitCopyWizard extends Wizard implements INewWi
     }
 
     // check if current unit is connected to any of the connected transition elements
-    final List<IFELine> currentUnutContinuityLines = currentUnit.getContinuityLines();
-    for( final IFELine line : currentUnutContinuityLines )
+    for( final IFELine line : currentUnitContinuityLines )
     {
       for( final ITransitionElement transitionElement : connectedTransitionElements )
       {
-        if(transitionElement.getContinuityLines().contains( line ))
+        if( transitionElement.getContinuityLines().contains( line ) )
           return true;
       }
     }
-    
+
     // ------------------------------------------------------------------------------
     // check if current unit have common junction element with any unit from the list
-    // TODO implement it!
+    // ------------------------------------------------------------------------------
+    if( currentUnit instanceof ICalculationUnit1D )
+    {
+      // get all junction elements from the discretisation model
+      final List<IJunctionElement> allJunctionElements = new ArrayList<IJunctionElement>();
+      for( final IFE1D2DComplexElement complexElement : complexElements )
+        if( complexElement instanceof IJunctionElement )
+          allJunctionElements.add( (IJunctionElement) complexElement );
+
+      // get all junction elements between already connected units
+      final List<IJunctionElement> connectedJunctionElements = new ArrayList<IJunctionElement>();
+      for( final IJunctionElement junctionElement : allJunctionElements )
+      {
+        for( final ICalculationUnit connectedUnit : connectedUnits )
+        {
+          if( connectedUnit instanceof ICalculationUnit1D )
+          {
+            final List<IFELine> connectedUnitLines = connectedUnit.getContinuityLines();
+            for( final IFELine line : connectedUnitLines )
+              if( junctionElement.getContinuityLines().contains( line ) )
+                if( !connectedJunctionElements.contains( junctionElement ) )
+                  connectedJunctionElements.add( junctionElement );
+          }
+        }
+      }
+
+      // check if current unit is connected to any of the connected transition elements
+      for( final IFELine line : currentUnitContinuityLines )
+      {
+        for( final IJunctionElement junctionElement : connectedJunctionElements )
+        {
+          if( junctionElement.getContinuityLines().contains( line ) )
+            return true;
+        }
+      }
+    }
     // ------------------------------------------------------------------------------
 
     return false;

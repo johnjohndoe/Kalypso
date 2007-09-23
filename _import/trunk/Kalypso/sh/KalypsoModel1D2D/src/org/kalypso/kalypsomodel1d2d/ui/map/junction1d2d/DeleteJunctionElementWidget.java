@@ -38,15 +38,15 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
+package org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d;
 
-import javax.xml.namespace.QName;
+import org.kalypso.ogc.gml.map.widgets.SingleElementSelectWidget;
 
-import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
-
-public interface ITransitionElement extends IAbstractJunction
+public class DeleteJunctionElementWidget extends SingleElementSelectWidget
 {
-  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "TransitionElement" ); //$NON-NLS-1$
-
-  public static final QName PROP_CONTI_LINES = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "continuityLine" ); //$NON-NLS-1$
+  public DeleteJunctionElementWidget( )
+  {
+    super( "name", "tooltip");
+  }
+  
 }

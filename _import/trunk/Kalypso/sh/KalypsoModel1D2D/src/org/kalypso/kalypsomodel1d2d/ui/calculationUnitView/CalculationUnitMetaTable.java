@@ -127,7 +127,7 @@ public abstract class CalculationUnitMetaTable implements ICalculationUnitButton
 
   final private ISelectionChangedListener elevationModelSelectListener = new ISelectionChangedListener()
   {
-    @SuppressWarnings("synthetic-access")
+    @SuppressWarnings("synthetic-access") //$NON-NLS-1$
     public void selectionChanged( SelectionChangedEvent event )
     {
       try
@@ -158,7 +158,7 @@ public abstract class CalculationUnitMetaTable implements ICalculationUnitButton
 
   private final KeyBasedDataModelChangeListener dataModelListener = new KeyBasedDataModelChangeListener()
   {
-    @SuppressWarnings("synthetic-access")
+    @SuppressWarnings("synthetic-access") //$NON-NLS-1$
     public void dataChanged( String key, Object newValue )
     {
       if( ICommonKeys.KEY_FEATURE_WRAPPER_LIST.equals( key ) )
@@ -225,26 +225,26 @@ public abstract class CalculationUnitMetaTable implements ICalculationUnitButton
     if( searchForThisString( ICalculationUnitButtonIDs.BTN_MOVE_UP ) )
     {
       final Button moveUpBtn = new Button( btnComposite, SWT.PUSH );
-      imageUp = new Image( btnComposite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/list_up.gif" ).getImageData() );
+      imageUp = new Image( btnComposite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/list_up.gif" ).getImageData() ); //$NON-NLS-1$
       moveUpBtn.setImage( imageUp );
       moveUpBtn.addSelectionListener( this.moveUpListener );
 
-      moveUpBtn.setToolTipText( getBtnDescription( ICalculationUnitButtonIDs.BTN_MOVE_UP ) != null ? getBtnDescription( ICalculationUnitButtonIDs.BTN_MOVE_UP ) : "Move Up #" );
+      moveUpBtn.setToolTipText( getBtnDescription( ICalculationUnitButtonIDs.BTN_MOVE_UP ) != null ? getBtnDescription( ICalculationUnitButtonIDs.BTN_MOVE_UP ) : "Move Up #" ); //$NON-NLS-1$
     }
 
     if( searchForThisString( ICalculationUnitButtonIDs.BTN_MOVE_DOWN ) )
     {
       final Button moveDownBtn = new Button( btnComposite, SWT.PUSH );
-      imageDown = new Image( btnComposite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/list_down.gif" ).getImageData() );
+      imageDown = new Image( btnComposite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/list_down.gif" ).getImageData() ); //$NON-NLS-1$
       moveDownBtn.setImage( imageDown );
       moveDownBtn.addSelectionListener( this.moveDownListener );
-      moveDownBtn.setToolTipText( getBtnDescription( ICalculationUnitButtonIDs.BTN_MOVE_DOWN ) != null ? getBtnDescription( ICalculationUnitButtonIDs.BTN_MOVE_DOWN ) : "Move Down #" );
+      moveDownBtn.setToolTipText( getBtnDescription( ICalculationUnitButtonIDs.BTN_MOVE_DOWN ) != null ? getBtnDescription( ICalculationUnitButtonIDs.BTN_MOVE_DOWN ) : "Move Down #" ); //$NON-NLS-1$
     }
 
     if( searchForThisString( ICalculationUnitButtonIDs.BTN_SHOW_AND_MAXIMIZE ) )
     {
       m_btnMaximizeCalcUnit = new Button( btnComposite, SWT.PUSH );
-      image = new Image( btnComposite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/17_show_calculationunit.gif" ).getImageData() );
+      image = new Image( btnComposite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/17_show_calculationunit.gif" ).getImageData() ); //$NON-NLS-1$
       m_btnMaximizeCalcUnit.setImage( image );
       m_btnMaximizeCalcUnit.addSelectionListener( new SelectionAdapter()
       {
@@ -254,14 +254,14 @@ public abstract class CalculationUnitMetaTable implements ICalculationUnitButton
           maximizeSelected();
         }
       } );
-      m_btnMaximizeCalcUnit.setToolTipText( Messages.getString( "CalculationUnitMetaTable.Tooltip.BTN_SHOW_AND_MAXIMIZE" ) );
+      m_btnMaximizeCalcUnit.setToolTipText( Messages.getString( "CalculationUnitMetaTable.Tooltip.BTN_SHOW_AND_MAXIMIZE" ) ); //$NON-NLS-1$
       m_btnMaximizeCalcUnit.setEnabled( false );
     }
 
     if( searchForThisString( ICalculationUnitButtonIDs.BTN_REMOVE ) )
     {
       m_btnDeleteCalcUnit = new Button( btnComposite, SWT.PUSH );
-      image = new Image( btnComposite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/19_cut_calculationunit.gif" ).getImageData() );
+      image = new Image( btnComposite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/19_cut_calculationunit.gif" ).getImageData() ); //$NON-NLS-1$
       m_btnDeleteCalcUnit.setImage( image );
       m_btnDeleteCalcUnit.addSelectionListener( new SelectionAdapter()
       {
@@ -270,7 +270,7 @@ public abstract class CalculationUnitMetaTable implements ICalculationUnitButton
         {
           try
           {
-            if( MessageDialog.openConfirm( parent.getShell(), "Bitte bestätigen", "Wollen Sie die Berechnungseinheit wirklich löschen?" ) )
+            if( MessageDialog.openConfirm( parent.getShell(), Messages.getString("CalculationUnitMetaTable.15"), Messages.getString("CalculationUnitMetaTable.14") ) ) //$NON-NLS-1$ //$NON-NLS-2$
             {
               deleteSelected();
               tableViewer.refresh();
@@ -282,14 +282,14 @@ public abstract class CalculationUnitMetaTable implements ICalculationUnitButton
           }
         }
       } );
-      m_btnDeleteCalcUnit.setToolTipText( Messages.getString( "CalculationUnitMetaTable.Tooltip.BTN_REMOVE" ) );
+      m_btnDeleteCalcUnit.setToolTipText( Messages.getString( "CalculationUnitMetaTable.Tooltip.BTN_REMOVE" ) ); //$NON-NLS-1$
       m_btnDeleteCalcUnit.setEnabled( false );
     }
 
     if( searchForThisString( ICalculationUnitButtonIDs.BTN_ADD ) )
     {
       m_btnCreateCalcUnit = new Button( btnComposite, SWT.PUSH );
-      image = new Image( btnComposite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/18_add_calculationunit.gif" ).getImageData() );
+      image = new Image( btnComposite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/18_add_calculationunit.gif" ).getImageData() ); //$NON-NLS-1$
       m_btnCreateCalcUnit.setImage( image );
       m_btnCreateCalcUnit.addSelectionListener( new SelectionAdapter()
       {
@@ -308,13 +308,13 @@ public abstract class CalculationUnitMetaTable implements ICalculationUnitButton
           }
         }
       } );
-      m_btnCreateCalcUnit.setToolTipText( Messages.getString( "CalculationUnitMetaTable.Tooltip.BTN_ADD" ) );
+      m_btnCreateCalcUnit.setToolTipText( Messages.getString( "CalculationUnitMetaTable.Tooltip.BTN_ADD" ) ); //$NON-NLS-1$
     }
 
     if( searchForThisString( ICalculationUnitButtonIDs.BTN_CLICK_TO_CALCULATE ) )
     {
       m_btnRunCalculation = new Button( btnComposite, SWT.PUSH );
-      image = new Image( btnComposite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/startCalculation.gif" ).getImageData() );
+      image = new Image( btnComposite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/startCalculation.gif" ).getImageData() ); //$NON-NLS-1$
       m_btnRunCalculation.setImage( image );
       m_btnRunCalculation.addSelectionListener( new SelectionAdapter()
       {
@@ -332,7 +332,7 @@ public abstract class CalculationUnitMetaTable implements ICalculationUnitButton
                 final IWorkbench workbench = PlatformUI.getWorkbench();
                 final IStatus result = CalculationUnitSimMode1D2DCalcJob.startCalculation( calculationUnit, workbench );
                 if( result.isOK() )
-                  MessageDialog.openInformation( parent.getShell(), Messages.getString( "CalculationUnitPerformComponent.2" ), "Calculation finished succesfully." );
+                  MessageDialog.openInformation( parent.getShell(), Messages.getString( "CalculationUnitPerformComponent.2" ), Messages.getString("CalculationUnitMetaTable.16") ); //$NON-NLS-1$ //$NON-NLS-2$
                 else
                   ErrorDialog.openError( parent.getShell(), Messages.getString( "CalculationUnitPerformComponent.2" ), Messages.getString( "CalculationUnitPerformComponent.3" ), result ); //$NON-NLS-1$ //$NON-NLS-2$
               }
@@ -341,14 +341,14 @@ public abstract class CalculationUnitMetaTable implements ICalculationUnitButton
           action.run();
         }
       } );
-      m_btnRunCalculation.setToolTipText( Messages.getString( "CalculationUnitMetaTable.Tooltip.BTN_CLICK_TO_CALCULATE" ) );
+      m_btnRunCalculation.setToolTipText( Messages.getString( "CalculationUnitMetaTable.Tooltip.BTN_CLICK_TO_CALCULATE" ) ); //$NON-NLS-1$
       m_btnRunCalculation.setEnabled( false );
     }
 
     final TextCellEditor textCellEditor = new TextCellEditor( table );
     final CellEditor[] editors = new CellEditor[] { textCellEditor };
     tableViewer.setCellEditors( editors );
-    tableViewer.setColumnProperties( new String[] { "Name" } );
+    tableViewer.setColumnProperties( new String[] { "Name" } ); //$NON-NLS-1$
   }
 
   /*
@@ -462,7 +462,7 @@ public abstract class CalculationUnitMetaTable implements ICalculationUnitButton
   {
     final Runnable runnable = new Runnable()
     {
-      @SuppressWarnings("synthetic-access")
+      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
       public void run( )
       {
         refreshTableView();

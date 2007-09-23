@@ -71,6 +71,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ITransitionElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.FlowRelationUtilitites;
@@ -203,37 +204,6 @@ public class Gml2RMA10SConv implements INativeIDProvider
     m_exportRoughness = exportRoughness;
   }
 
-  public boolean containsID( final IFeatureWrapper2 feature )
-  {
-    if( feature == null )
-      return false;
-    final String id = feature.getGmlID();
-    if( feature instanceof IFE1D2DNode )
-    {
-      return m_nodesIDProvider.containsKey( id );
-    }
-    else if( feature instanceof IFE1D2DEdge )
-    {
-      return m_edgesIDProvider.containsKey( id );
-    }
-    else if( feature instanceof IFELine )
-    {
-      return m_linesIDProvider.containsKey( feature );
-    }
-    else if( feature instanceof IFE1D2DElement )
-    {
-      return m_elementsIDProvider.containsKey( id );
-    }
-    else if( feature instanceof IFE1D2DComplexElement )
-    {
-      return m_complexElementsIDProvider.containsKey( id );
-    }
-    else
-    {
-      return false;
-    }
-  }
-
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.INativeIDProvider#getConversionID(java.lang.String)
    */
@@ -251,7 +221,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
     {
       return getID( m_edgesIDProvider, id );
     }
-    else if( feature instanceof IFE1D2DElement )
+    else if( feature instanceof IFE1D2DElement || feature instanceof IJunctionElement )
     {
       return getID( m_elementsIDProvider, id );
     }
@@ -331,10 +301,12 @@ public class Gml2RMA10SConv implements INativeIDProvider
 
     writeElementsNodesAndEdges( formatter, elements );
 
+    final IFeatureWrapperCollection<IFE1D2DComplexElement> complexElements = m_discretisationModel1d2d.getComplexElements();
+
+    // write transition elements
     if( m_calculationUnit instanceof ICalculationUnit1D2D )
     {
       final List continuityLines = m_calculationUnit.getContinuityLines();
-      final IFeatureWrapperCollection<IFE1D2DComplexElement> complexElements = m_discretisationModel1d2d.getComplexElements();
       for( final IFE1D2DComplexElement complexElement : complexElements )
       {
         if( complexElement instanceof ITransitionElement )
@@ -345,6 +317,27 @@ public class Gml2RMA10SConv implements INativeIDProvider
         }
       }
     }
+
+    // write junction elements
+    for( final IFE1D2DComplexElement complexElement : complexElements )
+    {
+      if( complexElement instanceof IJunctionElement )
+      {
+        final IJunctionElement junctionElement = (IJunctionElement) complexElement;
+        if( junctionElement.isMemberOfCalculationUnit( m_calculationUnit ) )
+          writeJunctionElement( formatter, junctionElement );
+      }
+    }
+  }
+
+  private void writeJunctionElement( final Formatter formatter, final IJunctionElement junctionElement )
+  {
+    final int junctionElementID = getConversionID( junctionElement );
+    final List<IFELine> continuityLines = junctionElement.getContinuityLines();
+    formatter.format( "JE%10s", junctionElementID );
+    for( final IFELine line : continuityLines )
+      formatter.format( "%10d", getConversionID( line.getNodes().get( 0 ) ) );
+    formatter.format( "%nFE%10d%10d%n", junctionElementID, 901 );
   }
 
   private void writeTransitionLine( final Formatter formatter, final ITransitionElement transitionElement ) throws SimulationException

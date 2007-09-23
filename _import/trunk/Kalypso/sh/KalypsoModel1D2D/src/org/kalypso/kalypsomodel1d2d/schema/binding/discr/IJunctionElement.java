@@ -44,9 +44,14 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 
-public interface ITransitionElement extends IAbstractJunction
+/**
+ * @author Dejan Antanaskovic
+ *
+ */
+public interface IJunctionElement extends IAbstractJunction
 {
-  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "TransitionElement" ); //$NON-NLS-1$
+  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "JunctionElement" ); //$NON-NLS-1$
 
-  public static final QName PROP_CONTI_LINES = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "continuityLine" ); //$NON-NLS-1$
+  public static final QName PROP_CONTI_LINES = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "continuityLine1D" ); //$NON-NLS-1$
+
 }

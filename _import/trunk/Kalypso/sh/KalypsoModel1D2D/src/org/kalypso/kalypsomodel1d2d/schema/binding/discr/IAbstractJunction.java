@@ -40,13 +40,28 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
+import java.util.List;
+
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
+import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
+import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Object;
 
-public interface ITransitionElement extends IAbstractJunction
+/**
+ * Common interface for {@link ITransitionElement} and {@link IJunctionElement}
+ * 
+ * @author Dejan Antanaskovic
+ *
+ */
+public interface IAbstractJunction extends IFE1D2DComplexElement<IFENetItem>
 {
-  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "TransitionElement" ); //$NON-NLS-1$
+  public static final QName PROP_GEOMETRY = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "geometry" ); //$NON-NLS-1$
 
-  public static final QName PROP_CONTI_LINES = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "continuityLine" ); //$NON-NLS-1$
+  public List<IFELine> getContinuityLines( );
+
+  public GM_Object recalculateElementGeometry( ) throws GM_Exception;
+
+  public boolean isMemberOfCalculationUnit( ICalculationUnit calculationUnit );
 }

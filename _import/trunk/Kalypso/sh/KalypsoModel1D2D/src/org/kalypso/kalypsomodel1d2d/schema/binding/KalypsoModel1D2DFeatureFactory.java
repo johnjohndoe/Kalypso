@@ -26,6 +26,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DDiscretisationMod
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FEMiddleNode;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IAbstractJunction;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
@@ -41,9 +42,11 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEMiddleNode;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IJunctionElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IRiverChannel1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ITransitionElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.JunctionElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.PolyElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.RiverChannel1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.TransitionElement;
@@ -314,6 +317,10 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
           return new FE1D2DComplexElement<Element1D>( feature, Kalypso1D2DSchemaConstants.WB1D2D_F_RIVER_CHANNEL1D, Kalypso1D2DSchemaConstants.WB1D2D_PROP_ELEMENT1D,// elements
           Element1D.class );
         }
+        else if( featureQName.equals( IJunctionElement.QNAME ) )
+        {
+          return new JunctionElement( feature );
+        }
         else if( featureQName.equals( ITransitionElement.QNAME ) )
         {
           return new TransitionElement( feature );
@@ -338,6 +345,8 @@ public class KalypsoModel1D2DFeatureFactory implements IAdapterFactory
       }
     };
     cMap.put( IFE1D2DComplexElement.class, cTor );
+    cMap.put( IAbstractJunction.class, cTor );
+    cMap.put( IJunctionElement.class, cTor );
     cMap.put( ITransitionElement.class, cTor );
     cMap.put( ICalculationUnit.class, cTor );
     cMap.put( ICalculationUnit1D.class, cTor );

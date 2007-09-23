@@ -51,21 +51,7 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
  */
 public interface INativeIDProvider
 {
-
-  /**
-   * Gets the ID native id for the given feature wrapper
-   */
   public int getConversionID( final IFeatureWrapper2 feature );
 
   public int getConversionID( final String featureGmlID );
-
-  /**
-   * Answers whether this native id provider already contains an id for the given feature.
-   * 
-   * @param feature
-   *            a feature wrapper representing the feature which id is to be checked for containment
-   * @return true if this provider already contains a id for the given feature otherwise false
-   */
-  public boolean containsID( final IFeatureWrapper2 feature );
-
 }

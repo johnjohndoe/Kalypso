@@ -44,14 +44,15 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine1D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
-import org.kalypso.kalypsomodel1d2d.ui.map.cmds.CreateTransitionElementCommand;
+import org.kalypso.kalypsomodel1d2d.ui.map.cmds.CreateJunctionElementCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -73,7 +74,7 @@ import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
 import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.Stroke_Impl;
 
-public class CreateTransitionElementWidget extends AbstractWidget
+public class CreateJunctionElementWidget extends AbstractWidget
 {
   private final int m_grabRadius = 10;
 
@@ -81,18 +82,16 @@ public class CreateTransitionElementWidget extends AbstractWidget
 
   private IFEDiscretisationModel1d2d m_discretisationModel;
 
-  private IContinuityLine1D m_line1D;
+  private List<IContinuityLine1D> m_lines = new ArrayList<IContinuityLine1D>();
 
-  private IContinuityLine2D m_line2D;
+  private IContinuityLine1D m_currentSelectedLine;
 
-  private IFELine m_currentSelectedLine;
-
-  public CreateTransitionElementWidget( )
+  public CreateJunctionElementWidget( )
   {
     this( "name", "tooltip" );
   }
 
-  public CreateTransitionElementWidget( String name, String toolTip )
+  public CreateJunctionElementWidget( String name, String toolTip )
   {
     super( name, toolTip );
   }
@@ -106,9 +105,7 @@ public class CreateTransitionElementWidget extends AbstractWidget
 
   private void reinit( )
   {
-    m_line1D = null;
-    m_line2D = null;
-
+    m_lines.clear();
     final MapPanel mapPanel = getMapPanel();
     final IMapModell mapModell = mapPanel.getMapModell();
     final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
@@ -137,9 +134,9 @@ public class CreateTransitionElementWidget extends AbstractWidget
       reinit();
     else if( e.getKeyChar() == KeyEvent.VK_ENTER )
     {
-      if( m_line1D != null && m_line2D != null )
+      if( m_lines.size() > 1 && m_lines.size() < 9 )
       {
-        final CreateTransitionElementCommand command = new CreateTransitionElementCommand( m_discretisationModel, m_line1D, m_line2D );
+        final CreateJunctionElementCommand command = new CreateJunctionElementCommand( m_discretisationModel, m_lines );
         final CommandableWorkspace workspace = m_mapActiveTheme.getWorkspace();
         try
         {
@@ -167,14 +164,17 @@ public class CreateTransitionElementWidget extends AbstractWidget
       return;
     if( m_discretisationModel == null )
     {
-      m_line1D = null;
-      m_line2D = null;
+      m_lines.clear();
       mapPanel.repaint();
       return;
     }
     final GM_Point currentPos = MapUtilities.transform( mapPanel, p );
     final double grabDistance = MapUtilities.calculateWorldDistance( mapPanel, currentPos, m_grabRadius );
-    m_currentSelectedLine = m_discretisationModel.findContinuityLine( currentPos, grabDistance / 2 );
+    final IFELine currentLine = m_discretisationModel.findContinuityLine( currentPos, grabDistance / 2 );
+    if( currentLine instanceof IContinuityLine1D && m_lines.size() < 8 )
+      m_currentSelectedLine = (IContinuityLine1D) currentLine;
+    else
+      m_currentSelectedLine = null;
     mapPanel.repaint();
   }
 
@@ -198,10 +198,7 @@ public class CreateTransitionElementWidget extends AbstractWidget
   {
     if( m_currentSelectedLine == null )
       return;
-    if( m_currentSelectedLine instanceof IContinuityLine1D )
-      m_line1D = (IContinuityLine1D) m_currentSelectedLine;
-    else
-      m_line2D = (IContinuityLine2D) m_currentSelectedLine;
+    m_lines.add( m_currentSelectedLine );
     final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
     final Feature featureToSelect = m_currentSelectedLine.getWrappedFeature();
     final EasyFeatureWrapper easyToSelect = new EasyFeatureWrapper( m_mapActiveTheme.getWorkspace(), featureToSelect, featureToSelect.getParent(), featureToSelect.getParentRelation() );

@@ -141,6 +141,11 @@ Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodu
 					<Help><![CDATA[Festlegung von Knoten- und Linienrandbedingungen für die Berechnung.]]></Help>
 					<Name>Randbedingungen</Name>
 				</Task>
+				<Task type="ASYNCHRONOUS" context="JunctionElementContextTheme"
+					URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__SetEltLineJunction">
+					<Help><![CDATA[Ermöglicht die Erstellung einer Kopplung von 1D zu 2D zwischen einem 1D-Element und einer 2D-Randlinie.]]></Help>
+					<Name>1D-Einmündung</Name>
+				</Task>
 				<Task type="ASYNCHRONOUS" context="TransitionElementContextTheme"
 					URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__SetEltLineTrans">
 					<Help><![CDATA[Ermöglicht die Erstellung einer Kopplung von 1D zu 2D zwischen einem 1D-Element und einer 2D-Randlinie.]]></Help>
@@ -412,6 +417,15 @@ Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodu
 								value="themeContext" />
 							<con:Parameter name="input"
 								value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}TransitionElement" />
+						</con:ExtensionContext>
+
+						<con:ExtensionContext id="JunctionElementContextTheme"
+							parent="FenetMap"
+							handlerFactoryId="kalypsoContextHandlerFactory">
+							<con:Parameter name="type"
+								value="themeContext" />
+							<con:Parameter name="input"
+								value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}JunctionElement" />
 						</con:ExtensionContext>
 
 						<con:ExtensionContext id="ContLineTheme"

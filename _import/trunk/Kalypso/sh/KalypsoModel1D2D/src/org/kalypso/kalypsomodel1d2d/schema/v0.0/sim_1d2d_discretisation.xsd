@@ -654,7 +654,7 @@
 	</xs:complexType>
 
 	<!-- ================================================================ 
-		Continiuty line element
+		Continiuty line property
 		==================================================================-->
 
 	<xs:element name="continuityLine"
@@ -663,6 +663,21 @@
 	<xs:complexType name="ContinuityLinePropertyType">
 		<xs:sequence>
 			<xs:element ref="wb1d2d:Line" minOccurs="0" maxOccurs="1" />
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+	</xs:complexType>
+
+	<!-- ================================================================ 
+		1D Continiuty line property 
+		(used for 1D junction element)
+		==================================================================-->
+
+	<xs:element name="continuityLine1D"
+		type="wb1d2d:ContinuityLinePropertyType" />
+
+	<xs:complexType name="ContinuityLine1DPropertyType">
+		<xs:sequence>
+			<xs:element ref="wb1d2d:ContinuityLine1D" minOccurs="0" maxOccurs="1" />
 		</xs:sequence>
 		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
 	</xs:complexType>
@@ -701,9 +716,12 @@
 		</xs:complexContent>
 	</xs:complexType>
 
-	<!--  ===============================================================
+	<!--  ============================================================================
 		Transition element
-		=================================================================-->
+		
+		connects 1D and 2D continuity lines, 
+		usually used to connect 1D and 2D calculation units 
+		===========================================================================-->
 	<xs:element name="TransitionElement"
 		type="wb1d2d:TransitionElementType"
 		substitutionGroup="wb1d2d:_TransitionElement" />
@@ -711,7 +729,7 @@
 		<xs:annotation>
 			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
 				<kapp:functionProperty
-					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.TransitionElementGeometryPropertyFunction"
+					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.AbstractJunctionGeometryPropertyFunction"
 					kapp:property="wb1d2d:geometry"
 					kapp:valueType="gml:PolygonPropertyType" kapp:isVirtual="true" />
 			</xs:appinfo>
@@ -721,7 +739,7 @@
 				base="wb1d2d:AbstractTransitionElementType">
 				<xs:sequence>
 					<xs:element ref="wb1d2d:continuityLine"
-						minOccurs="2" maxOccurs="unbounded" />
+						minOccurs="2" maxOccurs="2" />
 				</xs:sequence>
 			</xs:restriction>
 		</xs:complexContent>
@@ -732,6 +750,45 @@
 		substitutionGroup="wb1d2d:ComplexElement" />
 
 	<xs:complexType name="AbstractTransitionElementType">
+		<xs:complexContent>
+			<xs:extension base="wb1d2d:ComplexElementType"/>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<!--  ============================================================================
+		Junction element
+		
+		connects several 1D continuity lines, 
+		usually used to connect 1D calculation units, i.e. to create river branches 
+		===========================================================================-->
+	<xs:element name="JunctionElement"
+		type="wb1d2d:JunctionElementType"
+		substitutionGroup="wb1d2d:_JunctionElement" />
+	<xs:complexType name="JunctionElementType">
+		<xs:annotation>
+			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.kalypsomodel1d2d.schema.functions.AbstractJunctionGeometryPropertyFunction"
+					kapp:property="wb1d2d:geometry"
+					kapp:valueType="gml:PolygonPropertyType" kapp:isVirtual="true" />
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:restriction
+				base="wb1d2d:AbstractJunctionElementType">
+				<xs:sequence>
+					<xs:element ref="wb1d2d:continuityLine1D"
+						minOccurs="2" maxOccurs="8" />
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:element name="_JunctionElement"
+		type="wb1d2d:AbstractJunctionElementType"
+		substitutionGroup="wb1d2d:ComplexElement" />
+
+	<xs:complexType name="AbstractJunctionElementType">
 		<xs:complexContent>
 			<xs:extension base="wb1d2d:ComplexElementType">
 			</xs:extension>

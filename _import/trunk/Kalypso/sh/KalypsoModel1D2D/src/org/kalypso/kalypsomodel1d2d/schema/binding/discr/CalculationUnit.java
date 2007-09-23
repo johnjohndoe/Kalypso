@@ -41,6 +41,7 @@
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -58,9 +59,23 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
  */
 public class CalculationUnit<ET extends IFENetItem> extends FE1D2DComplexElement<ET> implements ICalculationUnit<ET>
 {
+  private HashSet<String> m_memberIDs;
+
   public CalculationUnit( Feature featureToBind, QName qnameToBind, QName elementListPropQName, Class<ET> wrapperClass )
   {
     super( featureToBind, qnameToBind, elementListPropQName, wrapperClass );
+  }
+
+  private HashSet<String> getMemberIDs( )
+  {
+    if( m_memberIDs == null )
+    {
+      m_memberIDs = new HashSet<String>();
+      final IFeatureWrapperCollection<ET> elements = getElements();
+      for( final IFeatureWrapper2 element : elements )
+        m_memberIDs.add( element.getGmlID() );
+    }
+    return m_memberIDs;
   }
 
   /**
@@ -94,12 +109,7 @@ public class CalculationUnit<ET extends IFENetItem> extends FE1D2DComplexElement
   {
     if( member == null )
       return false;
-    final String memberID = member.getGmlID();
-    final IFeatureWrapperCollection<ET> elements = getElements();
-    for( final IFeatureWrapper2 element : elements )
-      if( element.getGmlID().equals( memberID ) )
-        return true;
-    return false;
+    return getMemberIDs().contains( member.getGmlID() );
   }
 
   /**

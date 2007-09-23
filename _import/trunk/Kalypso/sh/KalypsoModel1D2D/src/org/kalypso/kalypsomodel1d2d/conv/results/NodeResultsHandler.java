@@ -1660,6 +1660,9 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
    */
   private void checkMidsideNodeData( final GMLNodeResult nodeDown, final GMLNodeResult nodeUp, final GMLNodeResult midsideNode )
   {
+    // TODO check what to do if some of the nodes is null
+    // (in the moment exception is thrown...)
+    
     if( nodeDown.getDepth() <= 0 && nodeUp.getDepth() <= 0 )
     {
       interpolateMidsideNodeData( nodeDown, nodeUp, midsideNode );

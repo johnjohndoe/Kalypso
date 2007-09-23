@@ -381,17 +381,17 @@ public class GenerateDifferenceResultTinWizard extends Wizard
       final GM_TriangulatedSurface masterSurface = surfaces[0];
       final GM_TriangulatedSurface slaveSurface = surfaces[1];
 
-      TriangulatedSurfaceTriangleEater eater = new TriangulatedSurfaceTriangleEater( tinResultFile, triangleWorkspace, surface, ResultType.TYPE.DIFFERENCE );
+      final TriangulatedSurfaceTriangleEater eater = new TriangulatedSurfaceTriangleEater( tinResultFile, triangleWorkspace, surface, ResultType.TYPE.DIFFERENCE );
 
       // monitor:
       // 70% available
       // => 70 / masterSurface.size()
 
       // use monitor to display progress.
-      BigDecimal maxProgress = new BigDecimal( 70 );
-      BigDecimal stepNum = new BigDecimal( masterSurface.size() );
+      final BigDecimal maxProgress = new BigDecimal( 70 );
+      final BigDecimal stepNum = new BigDecimal( masterSurface.size() );
+      final BigDecimal val = stepNum.divide( maxProgress, 5, BigDecimal.ROUND_HALF_UP );
       BigDecimal monitorValue = new BigDecimal( 0 );
-      BigDecimal val = stepNum.divide( maxProgress, 5, BigDecimal.ROUND_HALF_UP );
 
       for( int i = 0; i < masterSurface.size(); i++ )
       {

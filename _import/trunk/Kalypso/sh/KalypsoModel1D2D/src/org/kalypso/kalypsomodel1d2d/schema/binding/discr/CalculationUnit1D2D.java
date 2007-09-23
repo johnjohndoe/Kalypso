@@ -41,6 +41,7 @@
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -53,7 +54,6 @@ import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * Default implementation of {@link ICalculationUnit2D}
@@ -69,6 +69,8 @@ public class CalculationUnit1D2D<ET extends IFE1D2DElement> extends CalculationU
   private IFeatureWrapperCollection<ET> m_elements;
 
   private List<ET> m_virtualElements;
+
+  private HashSet<String> m_virtualMemberIDs;
 
   private final Feature m_featureToBind;
 
@@ -104,6 +106,17 @@ public class CalculationUnit1D2D<ET extends IFE1D2DElement> extends CalculationU
     return m_subCalculationUnits;
   }
 
+  private HashSet<String> getVirtualMemberIDs( )
+  {
+    if( m_virtualMemberIDs == null )
+    {
+      m_virtualMemberIDs = new HashSet<String>();
+      for( final IFeatureWrapper2 element : m_virtualElements )
+        m_virtualMemberIDs.add( element.getGmlID() );
+    }
+    return m_virtualMemberIDs;
+  }
+
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.discr.CalculationUnit#getContinuityLines()
    */
@@ -129,11 +142,7 @@ public class CalculationUnit1D2D<ET extends IFE1D2DElement> extends CalculationU
   {
     if( member == null )
       return false;
-    final String memberID = member.getGmlID();
-    for( final IFeatureWrapper2 element : m_virtualElements )
-      if( element.getGmlID().equals( memberID ) )
-        return true;
-    return false;
+    return getVirtualMemberIDs().contains( member.getGmlID() );
   }
 
   /**

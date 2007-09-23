@@ -3,17 +3,17 @@ package org.kalypso.kalypsomodel1d2d.schema.functions;
 import java.util.Map;
 
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ITransitionElement;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IAbstractJunction;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
 
 /**
- * Function property which compute the geometry of a junction context
+ * Function property that computes the geometry of abstract junction (junction and transition elements)
  * 
- * @author Patrice Congo
+ * @author Dejan Antanaskovic
  */
-public class TransitionElementGeometryPropertyFunction extends FeaturePropertyFunction
+public class AbstractJunctionGeometryPropertyFunction extends FeaturePropertyFunction
 {
   /**
    * @see org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction#init(java.util.Map)
@@ -30,7 +30,7 @@ public class TransitionElementGeometryPropertyFunction extends FeaturePropertyFu
    */
   public Object getValue( final Feature feature, final IPropertyType pt, final Object currentValue )
   {
-    final ITransitionElement element = (ITransitionElement) feature.getAdapter( ITransitionElement.class );
+    final IAbstractJunction element = (IAbstractJunction) feature.getAdapter( IAbstractJunction.class );
     if( element != null )
     {
       try

@@ -21,6 +21,9 @@
 		systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:TransitionElement:sld:default"
 		uri="TransitionElement.sld" />
 	<catalog:system
+		systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:JunctionElement:sld:default"
+		uri="JunctionElement.sld" />
+	<catalog:system
 		systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:MiddleNode:sld:default"
 		uri="MiddleNode.sld" />
 
