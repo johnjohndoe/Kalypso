@@ -76,6 +76,8 @@ import de.renew.workflow.connector.cases.ICaseDataProvider;
  */
 public class RestartSelectWizard extends Wizard implements INewWizard
 {
+  private final String RESULTS_FILE_PATH = "/results.gml";
+
   private RestartSelectWizardPage1 m_restartSelectWizardPage1;
 
   private RestartSelectWizardPage2 m_restartSelectWizardPage2;
@@ -114,7 +116,7 @@ public class RestartSelectWizard extends Wizard implements INewWizard
   {
     setWindowTitle( Messages.getString( "RestartSelectWizard.0" ) ); //$NON-NLS-1$
     final DocumentResultViewerFilter resultFilter = new DocumentResultViewerFilter();
-    m_restartSelectWizardPage1 = new RestartSelectWizardPage1( "restartSelectionPage", Messages.getString( "RestartSelectWizard.8" ), null, m_resultModel, m_controlModel.getRestartInfos(), resultFilter ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_restartSelectWizardPage1 = new RestartSelectWizardPage1( "restartSelectionPage", Messages.getString( "RestartSelectWizard.8" ), null, m_resultModel, m_controlModel.getRestartInfos(), resultFilter, RESULTS_FILE_PATH ); //$NON-NLS-1$ //$NON-NLS-2$
     m_restartSelectWizardPage1.setResultMeta( m_resultModel );
     m_restartSelectWizardPage1.setTitle( Messages.getString( "RestartSelectWizard.3" ) ); //$NON-NLS-1$
     m_restartSelectWizardPage1.setDescription( Messages.getString( "RestartSelectWizard.4" ) ); //$NON-NLS-1$
@@ -131,7 +133,11 @@ public class RestartSelectWizard extends Wizard implements INewWizard
   {
     final List<IRestartInfo> restartInfos = m_controlModel.getRestartInfos();
     restartInfos.clear();
-    final IResultMeta[] selectedResults = m_restartSelectWizardPage2.getSortedResults();
+    final IResultMeta[] selectedResults;
+    if( getContainer().getCurrentPage().equals( m_restartSelectWizardPage2 ) )
+      selectedResults = m_restartSelectWizardPage2.getSortedResults();
+    else
+      selectedResults = m_restartSelectWizardPage1.getSelectedResults();
     for( int i = 0; i < selectedResults.length; i++ )
     {
       if( selectedResults[i] instanceof StepResultMeta )
@@ -141,7 +147,7 @@ public class RestartSelectWizard extends Wizard implements INewWizard
         final IRestartInfo restartInfo = m_controlModel.addRestartInfo();
         restartInfo.setCalculationUnitID( ((ICalcUnitResultMeta) result.getParent()).getCalcUnit() );
         restartInfo.setStepResultMetaID( result.getGmlID() );
-        restartInfo.setRestartFilePath( result.getFullPath() + "/results.gml" ); //$NON-NLS-1$
+        restartInfo.setRestartFilePath( result.getFullPath() + RESULTS_FILE_PATH ); //$NON-NLS-1$
       }
     }
     try

@@ -65,8 +65,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IWorkbench;
@@ -74,7 +72,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DUIImages;
 import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.sim.CalculationUnitSimMode1D2DCalcJob;
@@ -127,7 +124,7 @@ public abstract class CalculationUnitMetaTable implements ICalculationUnitButton
 
   final private ISelectionChangedListener elevationModelSelectListener = new ISelectionChangedListener()
   {
-    @SuppressWarnings("synthetic-access") //$NON-NLS-1$
+    @SuppressWarnings("synthetic-access")//$NON-NLS-1$
     public void selectionChanged( SelectionChangedEvent event )
     {
       try
@@ -158,7 +155,7 @@ public abstract class CalculationUnitMetaTable implements ICalculationUnitButton
 
   private final KeyBasedDataModelChangeListener dataModelListener = new KeyBasedDataModelChangeListener()
   {
-    @SuppressWarnings("synthetic-access") //$NON-NLS-1$
+    @SuppressWarnings("synthetic-access")//$NON-NLS-1$
     public void dataChanged( String key, Object newValue )
     {
       if( ICommonKeys.KEY_FEATURE_WRAPPER_LIST.equals( key ) )
@@ -270,7 +267,7 @@ public abstract class CalculationUnitMetaTable implements ICalculationUnitButton
         {
           try
           {
-            if( MessageDialog.openConfirm( parent.getShell(), Messages.getString("CalculationUnitMetaTable.15"), Messages.getString("CalculationUnitMetaTable.14") ) ) //$NON-NLS-1$ //$NON-NLS-2$
+            if( MessageDialog.openConfirm( parent.getShell(), Messages.getString( "CalculationUnitMetaTable.15" ), Messages.getString( "CalculationUnitMetaTable.14" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
             {
               deleteSelected();
               tableViewer.refresh();
@@ -332,7 +329,7 @@ public abstract class CalculationUnitMetaTable implements ICalculationUnitButton
                 final IWorkbench workbench = PlatformUI.getWorkbench();
                 final IStatus result = CalculationUnitSimMode1D2DCalcJob.startCalculation( calculationUnit, workbench );
                 if( result.isOK() )
-                  MessageDialog.openInformation( parent.getShell(), Messages.getString( "CalculationUnitPerformComponent.2" ), Messages.getString("CalculationUnitMetaTable.16") ); //$NON-NLS-1$ //$NON-NLS-2$
+                  MessageDialog.openInformation( parent.getShell(), Messages.getString( "CalculationUnitPerformComponent.2" ), Messages.getString( "CalculationUnitMetaTable.16" ) ); //$NON-NLS-1$ //$NON-NLS-2$
                 else
                   ErrorDialog.openError( parent.getShell(), Messages.getString( "CalculationUnitPerformComponent.2" ), Messages.getString( "CalculationUnitPerformComponent.3" ), result ); //$NON-NLS-1$ //$NON-NLS-2$
               }
@@ -462,7 +459,7 @@ public abstract class CalculationUnitMetaTable implements ICalculationUnitButton
   {
     final Runnable runnable = new Runnable()
     {
-      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
+      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
       public void run( )
       {
         refreshTableView();

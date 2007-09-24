@@ -65,11 +65,14 @@ public class RestartSelectWizardPage1 extends SelectResultWizardPage
 
   private List<IRestartInfo> m_restartInfos;
 
-  public RestartSelectWizardPage1( final String pageName, final String title, final ImageDescriptor titleImage, final IScenarioResultMeta resultMeta, final List<IRestartInfo> restartInfos, final ViewerFilter filter )
+  private final String m_results_file_path;
+
+  public RestartSelectWizardPage1( final String pageName, final String title, final ImageDescriptor titleImage, final IScenarioResultMeta resultMeta, final List<IRestartInfo> restartInfos, final ViewerFilter filter, final String results_file_path )
   {
     super( pageName, title, titleImage, filter, null );
     m_resultMeta = resultMeta;
     m_restartInfos = restartInfos;
+    m_results_file_path = results_file_path;
   }
 
   /**
@@ -89,14 +92,20 @@ public class RestartSelectWizardPage1 extends SelectResultWizardPage
     for( final IRestartInfo restartInfo : m_restartInfos )
     {
       final ICalcUnitResultMeta calcUnitMetaResult = m_resultMeta.findCalcUnitMetaResult( restartInfo.getCalculationUnitID() );
-      final String stepResultMetaID = restartInfo.getStepResultMetaID();
+      final String stepResultFilePath = restartInfo.getRestartFilePath().toString();
       final IFeatureWrapperCollection<IResultMeta> children = calcUnitMetaResult.getChildren();
       for( final IResultMeta child : children )
-        if( child instanceof IStepResultMeta && child.getGmlID().equals( stepResultMetaID ) )
+      {
+        if( child instanceof IStepResultMeta )
         {
-          checkedElements.add( child );
-          expandedElements.add( child.getParent() );
+          final String childPath = child.getFullPath().toString() + m_results_file_path;
+          if( childPath.equals( stepResultFilePath ) )
+          {
+            checkedElements.add( child );
+            expandedElements.add( child.getParent() );
+          }
         }
+      }
     }
     m_treeViewer.setCheckedElements( checkedElements.toArray() );
     m_treeViewer.setExpandedElements( expandedElements.toArray() );

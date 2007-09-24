@@ -139,7 +139,7 @@ public class RMA10Calculation
     init();
   }
 
-  private void init( ) throws SimulationException
+  private void init( )
   {
     getControlModel();
     getCalculationUnit();

@@ -438,7 +438,7 @@ public class GenerateDifferenceResultTinWizard extends Wizard
       if( monitor != null )
         monitor.subTask( "...schreibe Ergebnis..." );
 
-      eater.finished();
+      eater.finishWithRefresh();
 
       // TODO: written tin isn't displayed in eclipse, refresh is needed...? (Habbi was falsch gmacht?)
       return Status.OK_STATUS;

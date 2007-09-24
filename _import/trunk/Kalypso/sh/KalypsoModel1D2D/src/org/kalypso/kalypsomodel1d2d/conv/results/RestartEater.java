@@ -48,7 +48,6 @@ import javax.xml.namespace.QName;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.GMLNodeResult;
-import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.Feature;
@@ -80,8 +79,6 @@ public class RestartEater
     if( !file.exists() )
       throw new SimulationException( "Restart file(s) does not exists: ".concat( file.toString() ), new FileNotFoundException() );
     final GMLWorkspace resultWorkspace = GmlSerializer.createGMLWorkspace( file.toURL(), null );
-    // final GMLWorkspace resultWorkspace = FeatureFactory.createGMLWorkspace( new QName(
-    // UrlCatalog1D2D.MODEL_1D2DResults_NS, "NodeResultCollection" ), file.toURL(), GmlSerializer.DEFAULT_FACTORY );
     final Feature rootFeature = resultWorkspace.getRootFeature();
     final FeatureList nodeList = (FeatureList) rootFeature.getProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "nodeResultMember" ) );
     addNodes( nodeList );
@@ -107,7 +104,7 @@ public class RestartEater
   /**
    * Returns parameters for node at certain position, or nearest (depends on search distance)
    */
-  public INodeResult getNodeResultAtPosition( final double x, final double y )
+  public GMLNodeResult getNodeResultAtPosition( final double x, final double y )
   {
     final GM_Point point = GeometryFactory.createGM_Point( x, y, COORDINATE_SYSTEM );
     return getNodeResult( point );
@@ -125,7 +122,7 @@ public class RestartEater
           m_nodes.add( node );
   }
 
-  private INodeResult getNodeResult( final GM_Point point )
+  private GMLNodeResult getNodeResult( final GM_Point point )
   {
     if( m_nodes == null )
       return null;

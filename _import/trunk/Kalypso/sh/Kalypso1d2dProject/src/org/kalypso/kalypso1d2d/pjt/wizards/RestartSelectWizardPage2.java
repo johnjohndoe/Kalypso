@@ -47,7 +47,7 @@ public class RestartSelectWizardPage2 extends WizardPage implements IWizardPage
   public RestartSelectWizardPage2( final String pageName, final String title, final ImageDescriptor titleImage )
   {
     super( pageName, title, titleImage );
-    setDescription( Messages.getString("RestartSelectWizardPage2.0") ); //$NON-NLS-1$
+    setDescription( Messages.getString( "RestartSelectWizardPage2.0" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -88,7 +88,7 @@ public class RestartSelectWizardPage2 extends WizardPage implements IWizardPage
       {
       }
 
-      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
+      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
       public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
       {
         m_btnUp.setEnabled( m_selectedInput != null );
@@ -112,7 +112,7 @@ public class RestartSelectWizardPage2 extends WizardPage implements IWizardPage
     } );
     m_listViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
-      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
+      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
       public void selectionChanged( final SelectionChangedEvent event )
       {
         final ISelection selection = event.getSelection();
@@ -142,7 +142,7 @@ public class RestartSelectWizardPage2 extends WizardPage implements IWizardPage
       {
       }
 
-      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
+      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
       public void widgetSelected( final SelectionEvent e )
       {
         final int position = m_sortedResults.indexOf( m_selectedInput );
@@ -164,7 +164,7 @@ public class RestartSelectWizardPage2 extends WizardPage implements IWizardPage
       {
       }
 
-      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
+      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
       public void widgetSelected( final SelectionEvent e )
       {
         final int position = m_sortedResults.indexOf( m_selectedInput );
@@ -188,8 +188,9 @@ public class RestartSelectWizardPage2 extends WizardPage implements IWizardPage
         m_sortedResults.add( (IStepResultMeta) resultMetas[i] );
     m_listViewer.setInput( m_sortedResults );
   }
-  
-  public IResultMeta[] getSortedResults(){
-    return m_sortedResults.toArray(new IResultMeta[0]);
+
+  public IResultMeta[] getSortedResults( )
+  {
+    return m_sortedResults.toArray( new IResultMeta[0] );
   }
 }

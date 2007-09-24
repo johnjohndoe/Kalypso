@@ -62,7 +62,8 @@ public interface IStepResultMeta extends IResultMeta
     steady,
     qSteady,
     unsteady,
-    maximum
+    maximum,
+    error
   }
 
   public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "StepResultMeta" );

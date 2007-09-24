@@ -89,7 +89,7 @@ public class StepResultMeta extends ResultMeta implements IStepResultMeta
   public STEPTYPE getStepType( )
   {
     final String value = (String) getFeature().getProperty( StepResultMeta.QNAME_PROP_STEP_TYPE );
-    return STEPTYPE.valueOf( value );
+    return value == null ? STEPTYPE.error : STEPTYPE.valueOf( value );
   }
 
   /**

@@ -49,17 +49,14 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 
-import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DDebug;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
+import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
@@ -70,8 +67,6 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree_impl.model.geometry.GM_Triangle_Impl;
 import org.opengis.cs.CS_CoordinateSystem;
-
-import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
  * @author Thomas Jung
@@ -261,22 +256,22 @@ public class TriangulatedSurfaceTriangleEater implements ITriangleEater
       KalypsoModel1D2DDebug.TRIANGLEEATER.printf( "%s", "TriangulatedSurfaceTriangleEater: error while finishing eater (GmlSerializeException)." );
       e.printStackTrace();
     }
+  }
 
-    // because the resource is created as a file (not ifile), we need to refresh it...
-//    final IWorkbench workbench = PlatformUI.getWorkbench();
-//    final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
-//    final IEvaluationContext context = handlerService.getCurrentState();
-//    final IFolder scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
-//    final IFolder resultsFolder = scenarioFolder.getFolder( "results" );
-//    try
-//    {
-//      resultsFolder.refreshLocal( IFile.DEPTH_INFINITE, new NullProgressMonitor() );
-//    }
-//    catch( Exception e )
-//    {
-//      // TODO Auto-generated catch block
-//      e.printStackTrace();
-//    }
+  public void finishWithRefresh( )
+  {
+    finished();
+    // because the resource is created as a file (not ifile), we need to make it visible...
+    final IFolder scenarioFolder = Util.getScenarioFolder();
+    final IFolder folderResults = scenarioFolder.getFolder( "results" );
+    try
+    {
+      folderResults.refreshLocal( IFolder.DEPTH_INFINITE, new NullProgressMonitor() );
+    }
+    catch( CoreException e )
+    {
+      e.printStackTrace();
+    }
   }
 
   /**

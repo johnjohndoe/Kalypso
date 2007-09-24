@@ -79,7 +79,6 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IKingFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.GMLNodeResult;
-import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
 import org.kalypso.kalypsomodel1d2d.sim.RMA10Calculation;
 import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
@@ -686,31 +685,23 @@ public class Gml2RMA10SConv implements INativeIDProvider
 
   private void writeRestartLines( final Formatter formatter, final int nodeID, final double x, final double y )
   {
-    final INodeResult node = m_restartEater.getNodeResultAtPosition( x, y );
+    final GMLNodeResult node = m_restartEater.getNodeResultAtPosition( x, y );
     if( node == null )
       return;
-    double vx = 0.0;
-    double vy = 0.0;
-    if( node instanceof GMLNodeResult )
+    final double vx;
+    final double vy;
+    final List<Double> velocity = node.getVelocity();
+    if( velocity != null )
     {
-      final List<Double> velocity = ((GMLNodeResult) node).getVelocity();
-      if( velocity != null )
-      {
-        vx = velocity.get( 0 );
-        vy = velocity.get( 1 );
-      }
-      else
-      {
-        vx = node.getAbsoluteVelocity();
-        vy = vx;
-      }
+      vx = velocity.get( 0 );
+      vy = velocity.get( 1 );
     }
     else
     {
       vx = node.getAbsoluteVelocity();
       vy = vx;
     }
-    formatter.format( "VA%10d%20.7f%20.7f%20.7f%20.7f%n", nodeID, vx, vy, node.getDepth(), node.getWaterlevel() ); //$NON-NLS-1$
+    formatter.format( "VA%10d%20.7f%20.7f%20.7f%20.7f%n", nodeID, vx, vy, node.getVirtualDepth(), node.getWaterlevel() ); //$NON-NLS-1$
   }
 
   private int getRoughnessID( final IFE1D2DElement element ) throws SimulationException
