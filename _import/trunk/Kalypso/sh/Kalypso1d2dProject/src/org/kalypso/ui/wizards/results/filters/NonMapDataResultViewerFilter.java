@@ -66,7 +66,7 @@ public class NonMapDataResultViewerFilter extends ViewerFilter
     {
       IDocumentResultMeta docResult = (IDocumentResultMeta) element;
       DOCUMENTTYPE documentType = docResult.getDocumentType();
-      if( documentType == DOCUMENTTYPE.log || documentType == DOCUMENTTYPE.lengthSection || documentType == DOCUMENTTYPE.coreDataZip || documentType == DOCUMENTTYPE.tinTerrain )
+      if( documentType == DOCUMENTTYPE.log || documentType == DOCUMENTTYPE.lengthSection || documentType == DOCUMENTTYPE.coreDataZip )
         return false;
       else
         return true;

@@ -21,6 +21,9 @@ public class Kalypso1d2dProjectImages
     RESULT_META_DOCUMENT_NODES("icons/cview16/resViewDocNodes.gif"),
     RESULT_META_DOCUMENT_TIN("icons/cview16/resViewDocTIN.gif"),
     RESULT_META_DOCUMENT_HYDRO("icons/cview16/resViewDocHydro.gif"),
+    RESULT_META_DOCUMENT_LENGTH_SECTION("icons/cview16/resViewDocError.gif"),
+    RESULT_META_DOCUMENT_DIFFERENCES("icons/cview16/resViewDocError.gif"),
+
     RESULT_META_DOCUMENT_LOG("icons/cview16/resViewDocLog.gif"),
     RESULT_META_DOCUMENT_ZIP("icons/cview16/resViewDocZip.gif"),
 
