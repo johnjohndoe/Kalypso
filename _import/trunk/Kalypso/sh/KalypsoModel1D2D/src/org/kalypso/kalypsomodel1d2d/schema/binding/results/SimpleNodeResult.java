@@ -259,4 +259,39 @@ public class SimpleNodeResult implements INodeResult
     else
       return 0;
   }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getVirtualDepth()
+   */
+  public double getVirtualDepth( )
+  {
+    // no virtual depth in simple nodes
+    return 0;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setVirtualDepth(double)
+   */
+  public void setVirtualDepth( double virtualDepth )
+  {
+    // no virtual depth in simple nodes
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getDry()
+   */
+  public int getDry( )
+  {
+    // TODO Auto-generated method stub
+    return 0;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setDry(int)
+   */
+  public void setDry( int dry )
+  {
+    // TODO Auto-generated method stub
+
+  }
 }

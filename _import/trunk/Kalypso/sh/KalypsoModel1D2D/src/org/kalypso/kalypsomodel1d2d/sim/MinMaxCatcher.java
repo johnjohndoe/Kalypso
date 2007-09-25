@@ -38,54 +38,43 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.wizards.differences;
+package org.kalypso.kalypsomodel1d2d.sim;
 
 import java.math.BigDecimal;
-
-import org.apache.commons.lang.NotImplementedException;
 
 /**
  * @author Thomas Jung
  * 
  */
-public interface IMathOperatorDelegate
+public class MinMaxCatcher
 {
-  public enum MATH_OPERATOR
+  BigDecimal m_minValue;
+
+  BigDecimal m_maxValue;
+
+  public void addResult( final BigDecimal resultValue )
   {
-    ePlus,
-    eMinus;
-    public IMathOperatorDelegate getOperator( )
-    {
-      MATH_OPERATOR type = valueOf( name() );
+    final BigDecimal value = resultValue;
 
-      switch( type )
-      {
-        case eMinus:
-          return new IMathOperatorDelegate()
-          {
+    if( m_minValue == null )
+      m_minValue = resultValue;
+    if( m_maxValue == null )
+      m_maxValue = resultValue;
 
-            public BigDecimal getResult( BigDecimal o1, BigDecimal o2 )
-            {
-              return o1.subtract( o2 ).setScale( 4, BigDecimal.ROUND_HALF_UP );
-            }
-          };
-
-        case ePlus:
-          return new IMathOperatorDelegate()
-          {
-            public BigDecimal getResult( BigDecimal o1, BigDecimal o2 )
-            {
-              return o1.add( o2 ).setScale( 4, BigDecimal.ROUND_HALF_UP );
-            }
-          };
-
-        default:
-          throw (new NotImplementedException());
-      }
-
-    }
-
+    if( value.compareTo( m_minValue ) < 0 )
+      m_minValue = value;
+    if( value.compareTo( m_maxValue ) > 0 )
+      m_maxValue = value;
   }
 
-  public BigDecimal getResult( BigDecimal o1, BigDecimal o2 );
+  public BigDecimal getMinValue( )
+  {
+    return m_minValue;
+  }
+
+  public BigDecimal getMaxValue( )
+  {
+    return m_maxValue;
+  }
+
 }

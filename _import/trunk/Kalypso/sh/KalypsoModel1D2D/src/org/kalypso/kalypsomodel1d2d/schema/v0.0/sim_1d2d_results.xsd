@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!--  
+<!--
 	Provide schema for the results of the 1d2d model
 	@author Thomas Jung
 -->
@@ -148,10 +148,20 @@
 					<xs:element name="virtualdepth" type="xs:double">
 						<xs:annotation>
 							<xs:documentation xml:lang="de">
-								<xs:label>Fliesstiefe</xs:label>
+								<xs:label>virtuelle Fliesstiefe</xs:label>
 							</xs:documentation>
 							<xs:documentation xml:lang="en">
 								<xs:label>virtualdepth</xs:label>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="depth" type="xs:double">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Fliesstiefe</xs:label>
+							</xs:documentation>
+							<xs:documentation xml:lang="en">
+								<xs:label>depth</xs:label>
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
@@ -172,6 +182,18 @@
 							</xs:documentation>
 							<xs:documentation xml:lang="en">
 								<xs:label>midside node</xs:label>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="dry" type="xs:int">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>trockener Knoten</xs:label>
+								<xs:description><![CDATA[zeigt an, ob Knoten während Berechnung trocken oder nass gesetzt ist.]]></xs:description>
+							</xs:documentation>
+							<xs:documentation xml:lang="en">
+								<xs:label>dry node</xs:label>
+								<xs:description><![CDATA[indicates, if the node was set dry or wet during calculation.]]></xs:description>
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>

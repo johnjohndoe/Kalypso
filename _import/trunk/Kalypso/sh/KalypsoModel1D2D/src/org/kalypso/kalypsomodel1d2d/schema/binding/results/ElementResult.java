@@ -271,9 +271,25 @@ public class ElementResult
     final double waterlevel = minDistNode.getWaterlevel();
     final double depth = waterlevel - node.getPoint().getZ();
     if( depth > 0 )
-      node.setResultValues( 0, 0, depth, waterlevel );
+    {
+      final List<Double> velocity = new LinkedList<Double>();
+      velocity.add( 0.0 );
+      velocity.add( 0.0 );
+      node.setVelocity( velocity );
+      node.setDepth( depth );
+      node.setWaterlevel( waterlevel );
+      // node.setResultValues( 0, 0, depth, waterlevel );
+    }
     else
-      node.setResultValues( 0, 0, 0, waterlevel );
+    {
+      final List<Double> velocity = new LinkedList<Double>();
+      velocity.add( 0.0 );
+      velocity.add( 0.0 );
+      node.setVelocity( velocity );
+      node.setDepth( 0.0 );
+      node.setWaterlevel( waterlevel );
+      // node.setResultValues( 0, 0, 0, waterlevel );
+    }
   }
 
   /**
@@ -318,8 +334,11 @@ public class ElementResult
               }
             }
           }
+          /* check implemented, so that a assigned node cannot assign the water level any further */
+          // if( minDistNode != null && minDistNode.isAssigned() == false )
           if( minDistNode != null )
           {
+
             assignWaterlevel( node, minDistNode );
             node.setAssigned( true );
             // if a node gets an assigned water level and becomes wet, maybe that has influence to other dry nodes of

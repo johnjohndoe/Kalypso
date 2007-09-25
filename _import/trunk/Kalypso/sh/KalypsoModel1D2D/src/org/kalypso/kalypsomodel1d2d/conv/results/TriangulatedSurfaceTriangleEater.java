@@ -49,14 +49,10 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DDebug;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
-import org.kalypso.kalypsosimulationmodel.core.Util;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
@@ -98,6 +94,8 @@ public class TriangulatedSurfaceTriangleEater implements ITriangleEater
    */
   public void add( final List<INodeResult> nodes, final Boolean isWet )
   {
+    if( nodes.size() < 3 )
+      return;
     GM_Triangle_Impl gmTriangle = null;
     GM_Position pos[] = null;
 
@@ -118,7 +116,7 @@ public class TriangulatedSurfaceTriangleEater implements ITriangleEater
         }
         else
         {
-          // TODO Case not covered, pos is null! And this happened during testing.
+          // TODO Case not covered, pos is null!
         }
       }
     }
@@ -254,22 +252,6 @@ public class TriangulatedSurfaceTriangleEater implements ITriangleEater
     catch( final GmlSerializeException e )
     {
       KalypsoModel1D2DDebug.TRIANGLEEATER.printf( "%s", "TriangulatedSurfaceTriangleEater: error while finishing eater (GmlSerializeException)." );
-      e.printStackTrace();
-    }
-  }
-
-  public void finishWithRefresh( )
-  {
-    finished();
-    // because the resource is created as a file (not ifile), we need to make it visible...
-    final IFolder scenarioFolder = Util.getScenarioFolder();
-    final IFolder folderResults = scenarioFolder.getFolder( "results" );
-    try
-    {
-      folderResults.refreshLocal( IFolder.DEPTH_INFINITE, new NullProgressMonitor() );
-    }
-    catch( CoreException e )
-    {
       e.printStackTrace();
     }
   }

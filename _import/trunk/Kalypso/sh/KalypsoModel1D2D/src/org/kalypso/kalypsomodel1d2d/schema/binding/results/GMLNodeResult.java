@@ -67,16 +67,20 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
   /*
    * the virtual depth is calculated by the calculation core RMA10 and can differ from the true depth defined by water
    * level minus node elevation! (Marsh-Algorithm).
-   * 
+   *
    * for that reason the true depth is computed separately.
    */
   private static final QName QNAME_PROP_VIRTUALDEPTH = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "virtualdepth" );
 
   private static final QName QNAME_PROP_WATERLEVEL = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "waterlevel" );
 
+  private static final QName QNAME_PROP_DEPTH = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "depth" );
+
   private static final QName QNAME_PROP_VELOCITY = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "velocity" );
 
   private static final QName QNAME_PROP_MIDSIDE = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "midside" );
+
+  private static final QName QNAME_PROP_DRY = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "dry" );
 
   public final List<ArcResult> m_arcs = new LinkedList<ArcResult>();
 
@@ -104,9 +108,14 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
     getFeature().setProperty( QNAME_PROP_CALCID, new Integer( id ) );
   }
 
-  public void setDepth( final double virtualDdepth )
+  public void setDry( final int dry )
   {
-    getFeature().setProperty( QNAME_PROP_VIRTUALDEPTH, new Double( virtualDdepth ) );
+    getFeature().setProperty( QNAME_PROP_DRY, new Integer( dry ) );
+  }
+
+  public void setDepth( final double depth )
+  {
+    getFeature().setProperty( QNAME_PROP_DEPTH, new Double( depth ) );
   }
 
   public void setWaterlevel( final double waterlevel )
@@ -122,9 +131,9 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
     getFeature().setProperty( QNAME_PROP_LOCATION, point );
   }
 
-  public void setResultValues( final double vx, final double vy, final double depth, final double waterlevel )
+  public void setResultValues( final double vx, final double vy, final double virtualDepth, final double waterlevel )
   {
-    getFeature().setProperty( QNAME_PROP_VIRTUALDEPTH, depth );
+    getFeature().setProperty( QNAME_PROP_VIRTUALDEPTH, virtualDepth );
     getFeature().setProperty( QNAME_PROP_WATERLEVEL, waterlevel );
 
     final List<Double> veloList = new ArrayList<Double>();
@@ -132,6 +141,10 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
     veloList.add( vx );
     veloList.add( vy );
     getFeature().setProperty( QNAME_PROP_VELOCITY, veloList );
+
+    /* check the real depth by comparing water level with terrain elevation */
+    double depth = getDepth();
+    getFeature().setProperty( QNAME_PROP_DEPTH, depth );
   }
 
   public void setMidSide( final boolean isMidSide )
@@ -168,7 +181,7 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
 
     final double depth = waterlevel - z;
     if( depth <= 0 )
-      return 0;
+      return 0.0;
     else
       return depth;
   }
@@ -176,6 +189,11 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
   public double getWaterlevel( )
   {
     return FeatureHelper.getAsDouble( getFeature(), GMLNodeResult.QNAME_PROP_WATERLEVEL, Double.NaN );
+  }
+
+  public int getDry( )
+  {
+    return (Integer) getFeature().getProperty( GMLNodeResult.QNAME_PROP_DRY );
   }
 
   public int getNodeID( )
@@ -253,5 +271,14 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
     }
     else
       return 0;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setVirtualDepth(double)
+   */
+  public void setVirtualDepth( double virtualDepth )
+  {
+    getFeature().setProperty( QNAME_PROP_VIRTUALDEPTH, new Double( virtualDepth ) );
+
   }
 }

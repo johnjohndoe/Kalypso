@@ -96,4 +96,6 @@ public interface IRMA10SModelElementHandler
   public void handleJunction( String line, int junctionID, int element1dID, int boundaryLine2dID, int node1dID );
 
   public void handleFlowResitance( final String line, final int id, final double combinedLambda, final double soilLambda, final double vegetationLambda );
+
+  public void handleNodeInformation( String line, int id, int dry, double value1, double value2, double value3, double value4 );
 }

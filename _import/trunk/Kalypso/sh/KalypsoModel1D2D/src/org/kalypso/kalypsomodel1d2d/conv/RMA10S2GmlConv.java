@@ -102,6 +102,7 @@ public class RMA10S2GmlConv
     final Pattern lineVA = Pattern.compile( "VA.*" ); //$NON-NLS-1$
     final Pattern lineDA = Pattern.compile( "DA.*" ); //$NON-NLS-1$
     final Pattern lineTL = Pattern.compile( "TL.*" ); //$NON-NLS-1$
+    final Pattern lineZU = Pattern.compile( "ZU.*" ); //$NON-NLS-1$
 
     m_monitor.beginTask( Messages.getString( "RMA10S2GmlConv.0" ), 100 );
     m_handler.start();
@@ -134,6 +135,8 @@ public class RMA10S2GmlConv
         interpreteTimeLine( line );
       else if( lineTL.matcher( line ).matches() )
         interprete1d2dJunctionElement( line );
+      else if( lineZU.matcher( line ).matches() )
+        interpreteNodeInformationLine( line );
       else if( VERBOSE_MODE )
         System.out.println( Messages.getString( "RMA10S2GmlConv.1" ) + line ); //$NON-NLS-1$
     }
@@ -293,6 +296,33 @@ public class RMA10S2GmlConv
         else
           m_handler.handleError( line, EReadError.ILLEGAL_SECTION );
       }
+    }
+    catch( final NumberFormatException e )
+    {
+      m_handler.handleError( line, EReadError.ILLEGAL_SECTION );
+    }
+  }
+
+  private void interpreteNodeInformationLine( final String line )
+  {
+    Matcher matcher = null;
+    // ZU 1 2 0.0000000 0.0000000 -0.0000036 0.0000045
+    final Pattern fourParamLinePattern = Pattern.compile( "ZU\\s*([0-9]+)\\s*([0-9]+)\\s+([\\+\\-]?[0-9]+\\.[0-9]*)\\s+([\\+\\-]?[0-9]+\\.[0-9]*)\\s+([\\+\\-]?[0-9]+\\.[0-9]*)\\s+([\\+\\-]?[0-9]+\\.[0-9]*)\\s*" ); //$NON-NLS-1$
+    matcher = fourParamLinePattern.matcher( line );
+    try
+    {
+      if( matcher.matches() )
+      {
+        final int id = Integer.parseInt( matcher.group( 1 ) );
+        final int dry = Integer.parseInt( matcher.group( 2 ) );
+        final double value1 = Double.parseDouble( matcher.group( 3 ) );
+        final double value2 = Double.parseDouble( matcher.group( 4 ) );
+        final double value3 = Double.parseDouble( matcher.group( 5 ) );
+        final double value4 = Double.parseDouble( matcher.group( 6 ) );
+        m_handler.handleNodeInformation( line, id, dry, value1, value2, value3, value4 );
+      }
+      else
+        m_handler.handleError( line, EReadError.ILLEGAL_SECTION );
     }
     catch( final NumberFormatException e )
     {

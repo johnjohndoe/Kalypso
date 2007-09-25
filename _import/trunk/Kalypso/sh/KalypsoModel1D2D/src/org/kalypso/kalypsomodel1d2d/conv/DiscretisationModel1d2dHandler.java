@@ -312,7 +312,7 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
    */
   public void handleError( final String lineString, final EReadError errorHints )
   {
-    // FIXE redaw me
+    // FIXE redraw me
     throw new RuntimeException( "bad line=" + lineString ); //$NON-NLS-1$
   }
 
@@ -380,6 +380,16 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
    *      double, double, double)
    */
   public void handleFlowResitance( String line, int id, double combinedLambda, double soilLambda, double vegetationLambda )
+  {
+    // TODO Auto-generated method stub
+
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleNodeInformation(java.lang.String, int, int,
+   *      double, double, double, double)
+   */
+  public void handleNodeInformation( String line, int id, int dry, double value1, double value2, double value3, double value4 )
   {
     // TODO Auto-generated method stub
 

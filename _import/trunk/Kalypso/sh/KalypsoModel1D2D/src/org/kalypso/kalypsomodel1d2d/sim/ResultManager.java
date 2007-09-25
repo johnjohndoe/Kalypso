@@ -137,6 +137,7 @@ public class ResultManager implements Runnable
 
   private boolean m_init = false;
 
+  @SuppressWarnings("unchecked")
   public ResultManager( final File inputDir, final File outputDir, final String resultFilePattern, final ISimulationDataProvider dataProvider, final RMA10Calculation calculation, final Date startTime ) throws InvocationTargetException
   {
     m_inputDir = inputDir;

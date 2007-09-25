@@ -788,7 +788,14 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
       final INodeResult node = new SimpleNodeResult();
       node.setLocation( x, y, z, crs );
-      node.setResultValues( vx, vy, h, wsp );
+      // node.setResultValues( vx, vy, h, wsp );
+
+      final List<Double> velocity = new LinkedList<Double>();
+      velocity.add( vx );
+      velocity.add( vy );
+      node.setVelocity( velocity );
+      node.setDepth( h );
+      node.setWaterlevel( wsp );
 
       nodes.add( node );
     }
@@ -837,7 +844,15 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
       final INodeResult node = new SimpleNodeResult();
       node.setLocation( x, y, z, crs );
-      node.setResultValues( vx, vy, 0, wsp );
+
+      final List<Double> velocity = new LinkedList<Double>();
+      velocity.add( vx );
+      velocity.add( vy );
+      node.setVelocity( velocity );
+      node.setDepth( 0.0 );
+      node.setWaterlevel( wsp );
+
+      // node.setResultValues( vx, vy, 0, wsp );
 
       nodes.add( node );
     }
@@ -1609,7 +1624,14 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     final CS_CoordinateSystem crs = node1.getPoint().getCoordinateSystem();
 
     node3.setLocation( x3, y3, z3, crs );
-    node3.setResultValues( 0, 0, 0, z3 );
+    // node3.setResultValues( 0, 0, 0, z3 );
+
+    final List<Double> velocity = new LinkedList<Double>();
+    velocity.add( 0.0 );
+    velocity.add( 0.0 );
+    node3.setVelocity( velocity );
+    node3.setDepth( 0.0 );
+    node3.setWaterlevel( z3 );
 
     return node3;
 
@@ -1662,7 +1684,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   {
     // TODO check what to do if some of the nodes is null
     // (in the moment exception is thrown...)
-    
+
     if( nodeDown.getDepth() <= 0 && nodeUp.getDepth() <= 0 )
     {
       interpolateMidsideNodeData( nodeDown, nodeUp, midsideNode );
@@ -1716,7 +1738,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     // midsideNode.setDepth( interpolate( depths ) );
     final double depth = waterlevel - midsideNode.getPoint().getZ();
     if( depth < 0 )
-      midsideNode.setDepth( 0 );
+      midsideNode.setDepth( 0.0 );
     else
       midsideNode.setDepth( depth );
   }
@@ -1738,7 +1760,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
     final double depth = waterlevel - midsideNode.getPoint().getZ();
     if( depth < 0 )
-      midsideNode.setDepth( 0 );
+      midsideNode.setDepth( 0.0 );
     else
       midsideNode.setDepth( depth );
   }
@@ -1984,5 +2006,35 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       points[i++] = node.getPoint();
     }
     return points;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleNodeInformation(java.lang.String, int, int,
+   *      double, double, double, double)
+   */
+  public void handleNodeInformation( String line, int id, int dry, double value1, double value2, double value3, double value4 )
+  {
+    final INodeResult result = m_nodeIndex.get( id );
+    if( result == null )
+    {
+      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s %d ", "Result for non-existing node: ", id );
+      return;
+    }
+    result.setDry( dry );
+
+    /* check dry nodes for strange values */
+    if( dry != 1 )
+    {
+      final double waterlevel = result.getWaterlevel();
+      final double z = result.getPoint().getZ();
+
+      /* a dry node can not have a water level above datum */
+      if( waterlevel - z > 0 )
+      {
+        result.setWaterlevel( z );
+        result.setDepth( 0.0 );
+      }
+    }
+
   }
 }

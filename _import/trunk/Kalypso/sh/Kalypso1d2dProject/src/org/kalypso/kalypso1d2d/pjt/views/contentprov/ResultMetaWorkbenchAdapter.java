@@ -141,6 +141,12 @@ public class ResultMetaWorkbenchAdapter extends WorkbenchAdapter
       case tinShearStress:
         return Kalypso1d2dProjectPlugin.getImageProvider().getImageDescriptor( DESCRIPTORS.RESULT_META_DOCUMENT_TIN );
 
+      case tinDifference:
+        return Kalypso1d2dProjectPlugin.getImageProvider().getImageDescriptor( DESCRIPTORS.RESULT_META_DOCUMENT_DIFFERENCES );
+
+      case lengthSection:
+        return Kalypso1d2dProjectPlugin.getImageProvider().getImageDescriptor( DESCRIPTORS.RESULT_META_DOCUMENT_LENGTH_SECTION );
+
       case hydrograph:
         return Kalypso1d2dProjectPlugin.getImageProvider().getImageDescriptor( DESCRIPTORS.RESULT_META_DOCUMENT_HYDRO );
 

@@ -38,43 +38,49 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.wizards.differences;
+package org.kalypso.kalypsomodel1d2d.conv.results;
 
-import java.math.BigDecimal;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
-/**
- * @author Thomas Jung
- * 
- */
-public class MinMaxCatcher
+public class ResultMeta1d2dFileHelper
 {
-  BigDecimal m_minValue;
-
-  BigDecimal m_maxValue;
-
-  public void addResult( final BigDecimal resultValue )
+  /**
+   * removes the specified resultMeta file
+   */
+  private static void removeResultMetaFile( final IResultMeta resultMeta )
   {
-    final BigDecimal value = resultValue;
-
-    if( m_minValue == null )
-      m_minValue = resultValue;
-    if( m_maxValue == null )
-      m_maxValue = resultValue;
-
-    if( value.compareTo( m_minValue ) < 0 )
-      m_minValue = value;
-    if( value.compareTo( m_maxValue ) > 0 )
-      m_maxValue = value;
+    final IFile file = (IFile) resultMeta.getFullPath();
+    try
+    {
+      if( file.exists() )
+        file.delete( true, true, new NullProgressMonitor() );
+    }
+    catch( CoreException e )
+    {
+      e.printStackTrace();
+    }
   }
 
-  public BigDecimal getMinValue( )
+  /**
+   * removes the specified resultMeta file including all of its children
+   */
+  public static void removeResultMetaFileWithChidren( final IResultMeta resultMeta )
   {
-    return m_minValue;
-  }
+    final IFeatureWrapperCollection<IResultMeta> children = resultMeta.getChildren();
 
-  public BigDecimal getMaxValue( )
-  {
-    return m_maxValue;
+    /* delete children */
+    for( IResultMeta child : children )
+    {
+      removeResultMetaFileWithChidren( child );
+    }
+
+    /* delete parent */
+    removeResultMetaFile( resultMeta );
+
   }
 
 }

@@ -71,7 +71,11 @@ public interface INodeResult extends IFeatureWrapper2
 
   public abstract void setDepth( final double depth );
 
+  public abstract void setVirtualDepth( final double virtualDepth );
+
   public double getDepth( );
+
+  public double getVirtualDepth( );
 
   public double getWaterlevel( );
 
@@ -86,5 +90,9 @@ public interface INodeResult extends IFeatureWrapper2
   public abstract void addLambda( final double lambda );
 
   public abstract double getAveragedLambda( );
+
+  public abstract void setDry( final int dry );
+
+  public int getDry( );
 
 }
