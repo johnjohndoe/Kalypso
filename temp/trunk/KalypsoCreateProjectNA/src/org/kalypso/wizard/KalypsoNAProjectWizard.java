@@ -388,51 +388,47 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
         final String targetkey = (String) it.next();
         final IPropertyType targetPT = hydFT.getProperty( targetkey );
         final String sourcekey = (String) mapping.get( targetkey );
-        Object so = sourceFeature.getProperty( sourcekey );
-        final IPropertyType pt = targetFeature.getFeatureType().getProperty( targetkey );
+        if( !sourcekey.equalsIgnoreCase( "-NULL-" ) )
+        {
+          Object so = sourceFeature.getProperty( sourcekey );
+          final IPropertyType pt = targetFeature.getFeatureType().getProperty( targetkey );
 
-        if( so instanceof GM_MultiSurface )
-        {
-          targetFeature.setProperty( targetPT, so );
-          final double area = GeometryUtilities.calcArea( (GM_Object) so );
-          targetFeature.setProperty( flaechPT, new Double( area ) );
-        }
-        else if( so instanceof GM_Surface )
-        {
-          final GM_Surface surface = (GM_Surface) so;
-          final GM_Surface[] surfaces = new GM_Surface[] { surface };
-          final GM_MultiSurface MultiSurface = GeometryFactory.createGM_MultiSurface( surfaces, surface.getCoordinateSystem() );
-          so = MultiSurface;
-          targetFeature.setProperty( targetPT, so );
-          final double area = GeometryUtilities.calcArea( (GM_Object) so );
-          targetFeature.setProperty( flaechPT, new Double( area ) );
-        }
-        else if( pt instanceof IValuePropertyType )
-        {
-          final IValuePropertyType vpt = (IValuePropertyType) pt;
-          if( so.getClass().equals( vpt.getTypeHandler().getValueClass() ) )
+          if( so instanceof GM_MultiSurface )
           {
-            targetFeature.setProperty( targetkey, so );
+            targetFeature.setProperty( targetPT, so );
+            final double area = GeometryUtilities.calcArea( (GM_Object) so );
+            targetFeature.setProperty( flaechPT, new Double( area ) );
           }
-          else
+          else if( so instanceof GM_Surface )
           {
-            try
+            final GM_Surface surface = (GM_Surface) so;
+            final GM_Surface[] surfaces = new GM_Surface[] { surface };
+            final GM_MultiSurface MultiSurface = GeometryFactory.createGM_MultiSurface( surfaces, surface.getCoordinateSystem() );
+            so = MultiSurface;
+            targetFeature.setProperty( targetPT, so );
+            final double area = GeometryUtilities.calcArea( (GM_Object) so );
+            targetFeature.setProperty( flaechPT, new Double( area ) );
+          }
+          else if( pt instanceof IValuePropertyType )
+          {
+            final IValuePropertyType vpt = (IValuePropertyType) pt;
+            if( so.getClass().equals( vpt.getTypeHandler().getValueClass() ) )
             {
-              targetFeature.setProperty( targetkey, SpecialPropertyMapper.map( so.getClass(), vpt.getTypeHandler().getValueClass(), so ) );
+              targetFeature.setProperty( targetkey, so );
             }
-            catch( final Exception e )
+            else
             {
-              e.printStackTrace();
+              try
+              {
+                targetFeature.setProperty( targetkey, SpecialPropertyMapper.map( so.getClass(), vpt.getTypeHandler().getValueClass(), so ) );
+              }
+              catch( final Exception e )
+              {
+                e.printStackTrace();
+              }
             }
           }
         }
-      }
-      // TODO: delete if default values in schema!
-      // if factor of the sealing rate isn´t set, then the factor will be set as 1.0 (instead of default 0.0)
-      if( !mapping.keySet().contains( "corrSealing" ) ) //$NON-NLS-1$
-      {
-        final double fak_vers = 1.0;
-        targetFeature.setProperty( fakVersPT, new Double( fak_vers ) );
       }
       hydList.add( targetFeature );
     }
@@ -532,31 +528,34 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
         final String targetkey = (String) it.next();
 // final IPropertyType targetPT = modelFT.getProperty( targetkey );
         final String sourcekey = (String) mapping.get( targetkey );
-        final Object so = sourceFeature.getProperty( sourcekey );
-        final IPropertyType pt = targetFeature.getFeatureType().getProperty( targetkey );
-        if( so instanceof GM_MultiSurface )
+        if( !sourcekey.equalsIgnoreCase( "-NULL-" ) )
         {
-          final GM_Surface[] surfaces = new GM_Surface[] { ((GM_MultiSurface) so).getSurfaceAt( 0 ) };
-          final Long area = new Long( (long) (surfaces[0]).getArea() );
-          targetFeature.setProperty( flaechPT, area );
-          targetFeature.setProperty( targetkey, surfaces[0] );
-        }
-        else if( pt instanceof IValuePropertyType )
-        {
-          final IValuePropertyType vpt = (IValuePropertyType) pt;
-          if( so.getClass().equals( vpt.getTypeHandler().getValueClass() ) )
+          final Object so = sourceFeature.getProperty( sourcekey );
+          final IPropertyType pt = targetFeature.getFeatureType().getProperty( targetkey );
+          if( so instanceof GM_MultiSurface )
           {
-            targetFeature.setProperty( targetkey, so );
+            final GM_Surface[] surfaces = new GM_Surface[] { ((GM_MultiSurface) so).getSurfaceAt( 0 ) };
+            final Long area = new Long( (long) (surfaces[0]).getArea() );
+            targetFeature.setProperty( flaechPT, area );
+            targetFeature.setProperty( targetkey, surfaces[0] );
           }
-          else
+          else if( pt instanceof IValuePropertyType )
           {
-            try
+            final IValuePropertyType vpt = (IValuePropertyType) pt;
+            if( so.getClass().equals( vpt.getTypeHandler().getValueClass() ) )
             {
-              targetFeature.setProperty( targetkey, SpecialPropertyMapper.map( so.getClass(), vpt.getTypeHandler().getValueClass(), so ) );
+              targetFeature.setProperty( targetkey, so );
             }
-            catch( final Exception e )
+            else
             {
-              e.printStackTrace();
+              try
+              {
+                targetFeature.setProperty( targetkey, SpecialPropertyMapper.map( so.getClass(), vpt.getTypeHandler().getValueClass(), so ) );
+              }
+              catch( final Exception e )
+              {
+                e.printStackTrace();
+              }
             }
           }
         }
@@ -612,26 +611,29 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
         final String targetkey = (String) it.next();
         final IPropertyType targetPT = modelFT.getProperty( targetkey );
         final String sourcekey = (String) mapping.get( targetkey );
-        final Object so = sourceFeature.getProperty( sourcekey );
-        final IPropertyType pt = targetFeature.getFeatureType().getProperty( targetkey );
-        if( so instanceof GM_Object )
-          targetFeature.setProperty( targetkey, so );
-        else if( pt instanceof IValuePropertyType )
+        if( !sourcekey.equalsIgnoreCase( "-NULL-" ) )
         {
-          final IValuePropertyType vpt = (IValuePropertyType) pt;
-          if( so.getClass().equals( vpt.getTypeHandler().getValueClass() ) )
-          {
+          final Object so = sourceFeature.getProperty( sourcekey );
+          final IPropertyType pt = targetFeature.getFeatureType().getProperty( targetkey );
+          if( so instanceof GM_Object )
             targetFeature.setProperty( targetkey, so );
-          }
-          else
+          else if( pt instanceof IValuePropertyType )
           {
-            try
+            final IValuePropertyType vpt = (IValuePropertyType) pt;
+            if( so.getClass().equals( vpt.getTypeHandler().getValueClass() ) )
             {
-              targetFeature.setProperty( targetkey, SpecialPropertyMapper.map( so.getClass(), vpt.getTypeHandler().getValueClass(), so ) );
+              targetFeature.setProperty( targetkey, so );
             }
-            catch( final Exception e )
+            else
             {
-              e.printStackTrace();
+              try
+              {
+                targetFeature.setProperty( targetkey, SpecialPropertyMapper.map( so.getClass(), vpt.getTypeHandler().getValueClass(), so ) );
+              }
+              catch( final Exception e )
+              {
+                e.printStackTrace();
+              }
             }
           }
         }
@@ -737,31 +739,34 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
         final String sourcekey = (String) mapping.get( targetkey );
         if( "StrangArt".equals( targetkey ) )
           continue;
-        final Object so = sourceFeature.getProperty( sourcekey );
-        final IPropertyType pt = targetFeature.getFeatureType().getProperty( targetkey );
-        if( so instanceof GM_MultiCurve )
+        if( !sourcekey.equalsIgnoreCase( "-NULL-" ) )
         {
-          final GM_Curve[] curves = new GM_Curve[] { ((GM_MultiCurve) so).getCurveAt( 0 ) };
-          targetFeature.setProperty( targetkey, curves[0] );
-        }
-//        if( so instanceof GMLMultiLineString )
-//          targetFeature.setProperty( targetkey, so );
-        else if( pt instanceof IValuePropertyType )
-        {
-          final IValuePropertyType vpt = (IValuePropertyType) pt;
-          if( so.getClass().equals( vpt.getTypeHandler().getValueClass() ) )
+          final Object so = sourceFeature.getProperty( sourcekey );
+          final IPropertyType pt = targetFeature.getFeatureType().getProperty( targetkey );
+          if( so instanceof GM_MultiCurve )
           {
-            targetFeature.setProperty( targetkey, so );
+            final GM_Curve[] curves = new GM_Curve[] { ((GM_MultiCurve) so).getCurveAt( 0 ) };
+            targetFeature.setProperty( targetkey, curves[0] );
           }
-          else
+// if( so instanceof GMLMultiLineString )
+// targetFeature.setProperty( targetkey, so );
+          else if( pt instanceof IValuePropertyType )
           {
-            try
+            final IValuePropertyType vpt = (IValuePropertyType) pt;
+            if( so.getClass().equals( vpt.getTypeHandler().getValueClass() ) )
             {
-              targetFeature.setProperty( targetkey, SpecialPropertyMapper.map( so.getClass(), vpt.getTypeHandler().getValueClass(), so ) );
+              targetFeature.setProperty( targetkey, so );
             }
-            catch( final Exception e )
+            else
             {
-              e.printStackTrace();
+              try
+              {
+                targetFeature.setProperty( targetkey, SpecialPropertyMapper.map( so.getClass(), vpt.getTypeHandler().getValueClass(), so ) );
+              }
+              catch( final Exception e )
+              {
+                e.printStackTrace();
+              }
             }
           }
         }
