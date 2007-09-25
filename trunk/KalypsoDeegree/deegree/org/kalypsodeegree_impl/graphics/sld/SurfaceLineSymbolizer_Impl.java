@@ -60,8 +60,16 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.graphics.sld;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.LineAttributes;
+import org.eclipse.swt.graphics.Rectangle;
+import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.Geometry;
+import org.kalypsodeegree.graphics.sld.LineColorMapEntry;
 import org.kalypsodeegree.graphics.sld.SurfaceLineSymbolizer;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.xml.Marshallable;
 import org.kalypsodeegree_impl.tools.Debug;
 
@@ -104,6 +112,37 @@ public class SurfaceLineSymbolizer_Impl extends Symbolizer_Impl implements Surfa
   public LineColorMap getColorMap( )
   {
     return m_colorMap;
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl#paint(org.eclipse.swt.graphics.GC,
+   *      org.kalypsodeegree.model.feature.Feature)
+   */
+  @Override
+  public void paint( GC gc, Feature feature ) throws FilterEvaluationException
+  {
+    final Rectangle clipping = gc.getClipping();
+
+    gc.setForeground( gc.getDevice().getSystemColor( SWT.COLOR_BLACK ) );
+    gc.setBackground( gc.getDevice().getSystemColor( SWT.COLOR_WHITE ) );
+    gc.setLineAttributes( new LineAttributes( 1 ) );
+
+    /* we draw 2 rects in the colors of the color map and a black rectangle around it */
+    final LineColorMapEntry[] colorMapEntries = m_colorMap.getColorMap();
+
+    // the black border
+    java.awt.Color startColor = colorMapEntries[0].getStroke().getStroke( null );
+    gc.setForeground( new Color( gc.getDevice(), startColor.getRed(), startColor.getGreen(), startColor.getBlue() ) );
+    gc.drawLine( clipping.x, clipping.y, clipping.width, clipping.height / 2 );
+
+    // the black border
+    java.awt.Color endColor = colorMapEntries[colorMapEntries.length - 1].getStroke().getStroke( null );
+    gc.setForeground( new Color( gc.getDevice(), endColor.getRed(), endColor.getGreen(), endColor.getBlue() ) );
+    gc.drawLine( clipping.x, clipping.height / 2, clipping.width, clipping.height );
+
+    // the black border
+    gc.setForeground( gc.getDevice().getSystemColor( SWT.COLOR_BLACK ) );
+    gc.drawRectangle( clipping.x, clipping.y, clipping.width - 1, clipping.height - 1 );
   }
 
   /**
