@@ -55,17 +55,127 @@ public interface IDocumentResultMeta extends IResultMeta
 {
   enum DOCUMENTTYPE
   {
-    nodes,
-    tinTerrain,
-    tinWsp,
-    tinVelo,
-    tinDepth,
-    tinShearStress,
-    hydrograph,
-    lengthSection,
-    tinDifference,
-    log,
+    nodes
+    {
+      /**
+       * @see java.lang.Enum#toString()
+       */
+      @Override
+      public String toString( )
+      {
+        return "Knotendaten";
+      }
+    },
+    tinTerrain
+    {
+      /**
+       * @see java.lang.Enum#toString()
+       */
+      @Override
+      public String toString( )
+      {
+        return "Gel‰ndemodell des FE-Netzes";
+      }
+    },
+    tinWsp
+    {
+      /**
+       * @see java.lang.Enum#toString()
+       */
+      @Override
+      public String toString( )
+      {
+        return "Gel‰ndemodell der Wasserspiegellagen";
+      }
+    },
+    tinVelo
+    {
+      /**
+       * @see java.lang.Enum#toString()
+       */
+      @Override
+      public String toString( )
+      {
+        return "Gel‰ndemodell der Flieﬂgeschwindigkeiten";
+      }
+    },
+    tinDepth
+    {
+      /**
+       * @see java.lang.Enum#toString()
+       */
+      @Override
+      public String toString( )
+      {
+        return "Gel‰ndemodell der Flieﬂtiefen";
+      }
+    },
+    tinShearStress
+    {
+      /**
+       * @see java.lang.Enum#toString()
+       */
+      @Override
+      public String toString( )
+      {
+        return "Gel‰ndemodell der Sohlschubspannungen";
+      }
+    },
+    hydrograph
+    {
+      /**
+       * @see java.lang.Enum#toString()
+       */
+      @Override
+      public String toString( )
+      {
+        return "Ganglinie";
+      }
+    },
+    lengthSection
+    {
+      /**
+       * @see java.lang.Enum#toString()
+       */
+      @Override
+      public String toString( )
+      {
+        return "L‰ngsschnitt";
+      }
+    },
+    tinDifference
+    {
+      /**
+       * @see java.lang.Enum#toString()
+       */
+      @Override
+      public String toString( )
+      {
+        return "Differenzen-Gel‰ndemodell";
+      }
+    },
+    log
+    {
+      /**
+       * @see java.lang.Enum#toString()
+       */
+      @Override
+      public String toString( )
+      {
+        return "Protokolldaten";
+      }
+    },
     coreDataZip
+    {
+      /**
+       * @see java.lang.Enum#toString()
+       */
+      @Override
+      public String toString( )
+      {
+        return "Originaldaten des Rechenkerns";
+      }
+    }
   }
 
   public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "DocumentResultMeta" );

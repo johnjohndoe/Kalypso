@@ -59,11 +59,61 @@ public interface IStepResultMeta extends IResultMeta
 {
   enum STEPTYPE
   {
-    steady,
-    qSteady,
-    unsteady,
-    maximum,
+    steady
+    {
+      /**
+       * @see java.lang.Enum#toString()
+       */
+      @Override
+      public String toString( )
+      {
+        return "stationärer Rechenlauf";
+      }
+    },
+    qSteady
+    {
+      /**
+       * @see java.lang.Enum#toString()
+       */
+      @Override
+      public String toString( )
+      {
+        return "quasi stationärer Rechenschritt";
+      }
+    },
+    unsteady
+    {
+      /**
+       * @see java.lang.Enum#toString()
+       */
+      @Override
+      public String toString( )
+      {
+        return "instationärer Rechenschritt";
+      }
+    },
+    maximum
+    {
+      /**
+       * @see java.lang.Enum#toString()
+       */
+      @Override
+      public String toString( )
+      {
+        return "maximale Strömungsgrößen";
+      }
+    },
     error
+    {
+      /**
+       * @see java.lang.Enum#toString()
+       */
+      @Override
+      public String toString( )
+      {
+        return "Protokoll";
+      }
+    }
   }
 
   public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "StepResultMeta" );

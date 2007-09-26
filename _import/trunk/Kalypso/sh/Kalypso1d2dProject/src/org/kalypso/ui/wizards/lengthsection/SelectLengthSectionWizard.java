@@ -93,7 +93,7 @@ public class SelectLengthSectionWizard extends Wizard
   public void addPages( )
   {
     final LengthSectionViewerFilter resultFilter = new LengthSectionViewerFilter();
-    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, "Ergebniss(e) zur Karte hinzufügen", null, resultFilter, null );
+    final SelectResultWizardPage selectResultWizardPage = new SelectResultWizardPage( PAGE_SELECT_RESULTS_NAME, "Längsschnitt anzeigen", null, resultFilter, null );
 
     selectResultWizardPage.setResultMeta( m_resultModel );
 

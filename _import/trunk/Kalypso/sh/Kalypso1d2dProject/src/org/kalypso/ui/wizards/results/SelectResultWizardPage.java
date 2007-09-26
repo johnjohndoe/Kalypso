@@ -108,7 +108,7 @@ public class SelectResultWizardPage extends WizardPage implements IWizardPage
     {
       final GridData pLayout = (GridData) layoutData;
       pLayout.widthHint = 700;
-      pLayout.heightHint = 300;
+      pLayout.heightHint = 350;
       parent.layout();
     }
     final Composite panel = new Composite( parent, SWT.NONE );

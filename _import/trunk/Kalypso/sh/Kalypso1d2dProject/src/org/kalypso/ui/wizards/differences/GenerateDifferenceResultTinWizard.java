@@ -375,7 +375,8 @@ public class GenerateDifferenceResultTinWizard extends Wizard
 
       DOCUMENTTYPE documentType = docResult.getDocumentType();
 
-      if( documentType == DOCUMENTTYPE.tinWsp || documentType == DOCUMENTTYPE.tinDepth || documentType == DOCUMENTTYPE.tinVelo || documentType == DOCUMENTTYPE.tinShearStress )
+      if( documentType == DOCUMENTTYPE.tinWsp || documentType == DOCUMENTTYPE.tinDepth || documentType == DOCUMENTTYPE.tinVelo || documentType == DOCUMENTTYPE.tinShearStress
+          || documentType == DOCUMENTTYPE.tinTerrain )
       {
         try
         {
