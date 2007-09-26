@@ -130,13 +130,13 @@ public class ResultMetaWorkbenchAdapter extends WorkbenchAdapter
         return Kalypso1d2dProjectPlugin.getImageProvider().getImageDescriptor( DESCRIPTORS.RESULT_META_DOCUMENT_NODES );
 
       case tinDepth:
-        return Kalypso1d2dProjectPlugin.getImageProvider().getImageDescriptor( DESCRIPTORS.RESULT_META_DOCUMENT_TIN );
+        return Kalypso1d2dProjectPlugin.getImageProvider().getImageDescriptor( DESCRIPTORS.RESULT_META_DOCUMENT_Depth );
 
       case tinVelo:
-        return Kalypso1d2dProjectPlugin.getImageProvider().getImageDescriptor( DESCRIPTORS.RESULT_META_DOCUMENT_TIN );
+        return Kalypso1d2dProjectPlugin.getImageProvider().getImageDescriptor( DESCRIPTORS.RESULT_META_DOCUMENT_Velo );
 
       case tinWsp:
-        return Kalypso1d2dProjectPlugin.getImageProvider().getImageDescriptor( DESCRIPTORS.RESULT_META_DOCUMENT_TIN );
+        return Kalypso1d2dProjectPlugin.getImageProvider().getImageDescriptor( DESCRIPTORS.RESULT_META_DOCUMENT_WSP );
 
       case tinShearStress:
         return Kalypso1d2dProjectPlugin.getImageProvider().getImageDescriptor( DESCRIPTORS.RESULT_META_DOCUMENT_TIN );
