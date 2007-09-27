@@ -9190,7 +9190,7 @@
           <pegel:QGMAX>9999</pegel:QGMAX>
           <pegel:Vorsp>24</pegel:Vorsp>
           <pegel:WDAT>0</pegel:WDAT>
-          <pegel:QDAT>0</pegel:QDAT>
+          <pegel:QDAT>1</pegel:QDAT>
           <pegel:VORGP>0</pegel:VORGP>
           <pegel:KUM>0</pegel:KUM>
           <pegel:WMIN>-9999</pegel:WMIN>
@@ -9224,8 +9224,8 @@
           <pegel:Reserve9>0</pegel:Reserve9>
           <pegel:Reserve10>TS-Wendefurth, Bode-Anteil</pegel:Reserve10>
           <gml:location>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5268573.093907915,5682063.608742092</gml:coordinates>
+            <gml:Point srsName="EPSG:31468">
+              <gml:coordinates cs="," decimal="." ts=" ">4423629.0,5734516.0</gml:coordinates>
             </gml:Point>
           </gml:location>
           <pegel:Durchfluss>
