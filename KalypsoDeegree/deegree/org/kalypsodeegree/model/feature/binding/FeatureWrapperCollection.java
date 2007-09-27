@@ -284,9 +284,11 @@ public class FeatureWrapperCollection<FWCls extends IFeatureWrapper2> extends Ab
       {
         final Object next = it.next();
         final Feature f = FeatureHelper.getFeature( workspace, next );
+        if( f == null )
+          throw new RuntimeException( "Feature does not exists: " + next.toString() );
         final FWCls wrapper = getAdaptedFeature( f );
         if( wrapper == null )
-          throw new RuntimeException( "Feature " + f + " could not be adapted!" );
+          throw new RuntimeException( "Feature " + f + " could not be adapted: " + f.getId() );
         return wrapper;
       }
 
