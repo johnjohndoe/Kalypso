@@ -156,18 +156,14 @@ public class ProcessHelper
         {
           process.destroy();
           if( procCtrlThread != null )
-          {
             procCtrlThread.endProcessControl();
-          }
           iRetVal = process.exitValue();
           return iRetVal;
         }
         Thread.sleep( 100 );
       }
       if( procCtrlThread != null )
-      {
         procCtrlThread.endProcessControl();
-      }
     }
     catch( final InterruptedException e )
     {
@@ -182,10 +178,8 @@ public class ProcessHelper
       IOUtils.closeQuietly( outStreamWtr );
     }
 
-    if( procCtrlThread != null && procCtrlThread.procDestroyed() )
-    {
+    if( (procCtrlThread != null) && procCtrlThread.procDestroyed() )
       throw new ProcessTimeoutException( "Timeout bei der Abarbeitung von '" + sCmd + "'" );
-    }
     return iRetVal;
   }
 
@@ -195,7 +189,7 @@ public class ProcessHelper
    */
   public static int startProcess( final String sCmd, final String[] envp, final File fleExeDir, final ICancelable cancelable, final long lTimeOut, final OutputStream wLog, final OutputStream wErr, final InputStream rIn ) throws IOException, ProcessTimeoutException
   {
-    return startProcess( sCmd, envp, fleExeDir, cancelable, lTimeOut, wLog, wErr, rIn, 100, null );
+    return ProcessHelper.startProcess( sCmd, envp, fleExeDir, cancelable, lTimeOut, wLog, wErr, rIn, 100, null );
   }
 
   /**
@@ -262,15 +256,12 @@ public class ProcessHelper
         {
           process.destroy();
           if( procCtrlThread != null )
-          {
             procCtrlThread.endProcessControl();
-          }
           iRetVal = process.exitValue();
           return iRetVal;
         }
 
         if( idleWorker != null )
-        {
           try
           {
             idleWorker.run();
@@ -279,14 +270,11 @@ public class ProcessHelper
           {
             t.printStackTrace();
           }
-        }
 
         Thread.sleep( sleepTime );
       }
       if( procCtrlThread != null )
-      {
         procCtrlThread.endProcessControl();
-      }
     }
     catch( final InterruptedException e )
     {
@@ -301,10 +289,8 @@ public class ProcessHelper
       IOUtils.closeQuietly( outStream );
     }
 
-    if( procCtrlThread != null && procCtrlThread.procDestroyed() )
-    {
+    if( (procCtrlThread != null) && procCtrlThread.procDestroyed() )
       throw new ProcessTimeoutException( "Timeout bei der Abarbeitung von '" + sCmd + "'" );
-    }
     return iRetVal;
   }
 

@@ -59,7 +59,6 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoThemeListener;
 import org.kalypso.ogc.gml.KalypsoThemeAdapter;
 import org.kalypso.ogc.gml.ScrabLayerFeatureTheme;
-import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor;
 import org.kalypso.ogc.gml.mapmodel.visitor.ThemeVisiblePredicate;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
@@ -216,8 +215,8 @@ public class MapModell implements IMapModell
 
     fireThemeAdded( theme );
 
-    if( m_activeTheme == null )
-      activateTheme( theme );
+// if( m_activeTheme == null )
+// activateTheme( theme );
   }
 
   public void insertTheme( final IKalypsoTheme theme, final int position )
@@ -341,10 +340,8 @@ public class MapModell implements IMapModell
   {
     final IKalypsoTheme[] allThemes = getAllThemes();
     for( final IKalypsoTheme theme : allThemes )
-    {
       if( theme instanceof ScrabLayerFeatureTheme )
         return (IKalypsoFeatureTheme) theme;
-    }
     return null;
   }
 
@@ -363,14 +360,12 @@ public class MapModell implements IMapModell
   {
     final boolean recurse = ktv.visit( theme );
 
-    if( recurse && depth != FeatureVisitor.DEPTH_ZERO )
-    {
-      if( theme instanceof IMapModell && depth == KalypsoThemeVisitor.DEPTH_INFINITE )
+    if( recurse && (depth != FeatureVisitor.DEPTH_ZERO) )
+      if( (theme instanceof IMapModell) && (depth == IKalypsoThemeVisitor.DEPTH_INFINITE) )
       {
         final IMapModell innerModel = (IMapModell) theme;
         innerModel.accept( ktv, depth );
       }
-    }
   }
 
   /**

@@ -45,10 +45,8 @@ import java.util.List;
 
 import javax.xml.bind.JAXBElement;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.gismapview.CascadingLayer;
@@ -63,8 +61,6 @@ import org.kalypso.template.types.StyledLayerType;
 // themes.
 public class CascadingLayerKalypsoTheme extends AbstractCascadingLayerTheme
 {
-
-  private final IFile m_file;
 
   public CascadingLayerKalypsoTheme( final CascadingLayer layerType, final URL context, final IFeatureSelectionManager selectionManager, final IMapModell mapModel ) throws Exception
   {
@@ -88,7 +84,6 @@ public class CascadingLayerKalypsoTheme extends AbstractCascadingLayerTheme
     // TODO: maybe get active layer from top-most Gismapview
     getInnerMapModel().createFromTemplate( layers, null );
 
-    m_file = ResourceUtilities.findFileFromURL( context );
   }
 
   /**
