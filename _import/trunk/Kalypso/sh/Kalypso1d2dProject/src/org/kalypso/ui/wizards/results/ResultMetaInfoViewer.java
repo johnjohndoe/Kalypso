@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.wizards.results;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
@@ -63,6 +66,9 @@ import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
  */
 public class ResultMetaInfoViewer extends Viewer
 {
+
+  private static final DateFormat INFO_DF = SimpleDateFormat.getDateTimeInstance( DateFormat.SHORT, DateFormat.LONG );
+
   /*
    * fonts
    */
@@ -153,6 +159,9 @@ public class ResultMetaInfoViewer extends Viewer
 
   private String getInformationText( final IResultMeta result )
   {
+    if( result == null )
+      return "kein Ergebnis selektiert";
+
     IScenarioResultMeta scenarioResult = null;
     ICalcUnitResultMeta calcUnitResult = null;
     IStepResultMeta stepResult = null;
@@ -197,8 +206,8 @@ public class ResultMetaInfoViewer extends Viewer
       // get infos about the selected calc unit
       calcUnitName = calcUnitResult.getName();
       calcUnitDescription = calcUnitResult.getDescription();
-      calcStart = calcUnitResult.getCalcStartTime().toString();
-      calcEnd = calcUnitResult.getCalcEndTime().toString();
+      calcStart = INFO_DF.format( calcUnitResult.getCalcStartTime() );
+      calcEnd = INFO_DF.format( calcUnitResult.getCalcEndTime() );
 
     }
     else if( result instanceof IStepResultMeta )
@@ -217,8 +226,8 @@ public class ResultMetaInfoViewer extends Viewer
       {
         calcUnitName = calcUnitResult.getName();
         calcUnitDescription = calcUnitResult.getDescription();
-        calcStart = calcUnitResult.getCalcStartTime().toString();
-        calcEnd = calcUnitResult.getCalcEndTime().toString();
+        calcStart = INFO_DF.format( calcUnitResult.getCalcStartTime() );
+        calcEnd = INFO_DF.format( calcUnitResult.getCalcEndTime() );
       }
 
       // get selection
@@ -228,7 +237,7 @@ public class ResultMetaInfoViewer extends Viewer
       stepName = stepResult.getName();
       stepDescription = stepResult.getDescription();
       stepType = stepResult.getStepType().toString();
-      stepTime = stepResult.getStepTime().toString();
+      stepTime = INFO_DF.format( stepResult.getStepTime() );
       stepNumber = ((Integer) stepResult.getStepNumber()).toString();
       // TODO: create a link to status
     }
@@ -247,8 +256,8 @@ public class ResultMetaInfoViewer extends Viewer
       {
         calcUnitName = calcUnitResult.getName();
         calcUnitDescription = calcUnitResult.getDescription();
-        calcStart = calcUnitResult.getCalcStartTime().toString();
-        calcEnd = calcUnitResult.getCalcEndTime().toString();
+        calcStart = INFO_DF.format( calcUnitResult.getCalcStartTime() );
+        calcEnd = INFO_DF.format( calcUnitResult.getCalcEndTime() );
       }
 
       stepResult = getStepResultMeta( result );
@@ -257,7 +266,7 @@ public class ResultMetaInfoViewer extends Viewer
         stepName = stepResult.getName();
         stepDescription = stepResult.getDescription();
         stepType = stepResult.getStepType().toString();
-        stepTime = stepResult.getStepTime().toString();
+        stepTime = INFO_DF.format( stepResult.getStepTime() );
         stepNumber = ((Integer) stepResult.getStepNumber()).toString();
       }
 
