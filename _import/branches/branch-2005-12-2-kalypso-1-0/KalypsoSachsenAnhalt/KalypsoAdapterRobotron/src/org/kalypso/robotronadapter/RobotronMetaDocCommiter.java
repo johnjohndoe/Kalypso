@@ -135,7 +135,6 @@ public class RobotronMetaDocCommiter implements IMetaDocCommiter
 
     final String strd = DFDATE.format( new Date() );
     metadata.put( TAG_ERSTELLUNGSDATUM, "date;" + strd );
-    // TODO: put a good gültigkeit into it
 
     // Put empty gültigkeit: docs are endlessly valid
     metadata.put( TAG_GUELTIGKEITSDATUM, "date;" + "" );
@@ -148,7 +147,6 @@ public class RobotronMetaDocCommiter implements IMetaDocCommiter
   public void commitDocument( final Properties serviceProps, final Map metadata, final File doc,
       final String identifier, final String category, final Configuration metadataExtensions ) throws MetaDocException
   {
-    //String endpoint = "http://localhost:8080/eXForms/KalypsoConnectorWS.jws";
     final String endpoint = serviceProps.getProperty( "robotron.ws.endpoint" );
 
     if( endpoint == null )
