@@ -140,6 +140,8 @@ public class ScenarioResultMeta extends ResultMeta implements IScenarioResultMet
         getChildren().cloneInto( calculationUnit );
       }
     }
+    else
+      getChildren().cloneInto( calculationUnit );
   }
 
   /**
