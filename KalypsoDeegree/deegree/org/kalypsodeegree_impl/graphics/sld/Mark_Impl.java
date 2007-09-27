@@ -227,30 +227,17 @@ public class Mark_Impl implements Mark, Marshallable
   private void drawImage( final Graphics2D g2D, final int size, final StrokePainter strokePainter, final FillPainter fillPainter )
   {
     if( m_wellKnownName.equalsIgnoreCase( "circle" ) )
-    {
       drawCircle( g2D, size, strokePainter, fillPainter );
-    }
     else if( m_wellKnownName.equalsIgnoreCase( "triangle" ) )
-    {
       drawTriangle( g2D, size, strokePainter, fillPainter );
-    }
     else if( m_wellKnownName.equalsIgnoreCase( "cross" ) )
-    {
       drawCross1( g2D, size, strokePainter );
-    }
     else if( m_wellKnownName.equalsIgnoreCase( "x" ) )
-    {
       drawCross2( g2D, size, strokePainter );
-    }
-    /* Kalypso known names */
     else if( m_wellKnownName.equalsIgnoreCase( "kalypsoArrow" ) )
-    {
       drawArrow( g2D, size, strokePainter, fillPainter );
-    }
     else
-    {
       drawSquare( g2D, size, strokePainter, fillPainter );
-    }
   }
 
   /**
@@ -258,8 +245,8 @@ public class Mark_Impl implements Mark, Marshallable
    */
   public void paint( final GC gc, final Feature feature ) throws FilterEvaluationException
   {
-    final Resource[] strokeResources = LineSymbolizer_Impl.prepareGc( gc, m_stroke, feature );
-    final Resource[] fillResources = PolygonSymbolizer_Impl.prepareGc( gc, m_fill, feature );
+    final Resource[] strokeResources = Symbolizer_Impl.prepareGc( gc, m_stroke, feature );
+    final Resource[] fillResources = Symbolizer_Impl.prepareGc( gc, m_fill, feature );
 
     final Transform oldTrans = new Transform( gc.getDevice() );
     gc.getTransform( oldTrans );
@@ -590,19 +577,15 @@ public class Mark_Impl implements Mark, Marshallable
 
     final StringBuffer sb = new StringBuffer( 1000 );
     sb.append( "<Mark>" );
-    if( m_wellKnownName != null && !m_wellKnownName.equals( "" ) )
+    if( (m_wellKnownName != null) && !m_wellKnownName.equals( "" ) )
     {
       sb.append( "<WellKnownName>" ).append( m_wellKnownName );
       sb.append( "</WellKnownName>" );
     }
     if( m_fill != null )
-    {
       sb.append( ((Marshallable) m_fill).exportAsXML() );
-    }
     if( m_stroke != null )
-    {
       sb.append( ((Marshallable) m_stroke).exportAsXML() );
-    }
 
     sb.append( "</Mark>" );
 
