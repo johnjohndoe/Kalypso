@@ -3,7 +3,7 @@
   <title>Allgemeine Einführung HN-Modell Kalypso1D2D</title>
 
   <para>Das zweidimensionale Strömungsmodell wird über den Ansatz der
-  zweidimensionalen, tiefengemittelten, REYNOLDDs-gemittelten
+  zweidimensionalen, tiefengemittelten, REYNOLDs-gemittelten
   Flachwassergleichungen formuliert. Im polynombasierten eindimensionalen
   Modell werden die SAINT-VENANT-Gleichungen verwendet. Mit diesem Ansatz
   können auch komplexe Gewässerprofile auf Basis einer stationär
@@ -11,7 +11,7 @@
   beschreibenden Polynome bestimmt werden. Die Lösung in Kalypso1D2D erfolgt
   über eine Diskretisierung des Modellgebietes nach dem
   Finite-Elemente-Verfahren mit der Methode der gewichteten Residuen nach
-  Galerkin. Für die Diskretisierung können unterschiedliche Elementformen
+  GALERKIN. Für die Diskretisierung können unterschiedliche Elementformen
   verwendet werden: Zweidimensionale Gebiete werden über planare Dreiecke oder
   Vierecke modelliert. Eindimensionale Bereiche werden über rein lineare
   Elemente mit zwei Eckknoten für den polynombasierten Berechnungsansatz
@@ -19,8 +19,8 @@
   Verfahren abgebildet, wobei das NEWTON-RAPHSON Verfahren verwendet wird.
   Innovative Ansätze sind in den Bereichen Rauheitsmodellierung und Turbulenz
   enthalten. Die Rauheitsmodellierung erfolgt über das COLEBROOK-WHITE'sche
-  Widerstandsgesetz und beinhalten die Modellierung von Fließverlusten infolge
-  von überströmtem und durchströmtem Bewuchs. Verschiedene Turbulenzmodelle
+  Widerstandsgesetz und beinhaltet die Modellierung von Fließverlusten infolge
+  von überströmten und durchströmten Bewuchs. Verschiedene Turbulenzmodelle
   sind bei der Simulation verfügbar: Ein konstantes Wirbelviskositätsmodell,
   ein bodeninduziertes Turbulenz-Modell, der PRANDTL'sche Mischungswegansatz
   und das SMAGORINSKY Modell. Das hydrodynamische Model Kalypso1D2D berechnet

@@ -53,7 +53,7 @@
         </listitem>
 
         <listitem>
-          <para>einen Web-Map-Service einzubinden.</para>
+          <para>einen Web-Map-Service einbinden.</para>
         </listitem>
       </itemizedlist>
 
@@ -270,25 +270,27 @@
       dieser Metadaten wird dann eine Zeitreihe erstellt.</para>
 
       <para>Um Zeitreihen zu importieren öffnen Sie im Aktivitätenfenster den
-      Baum Preprozessing &gt; Daten laden. Wenn Sie nun mit einem Doppelklick
-      auf Import von Zeitreihen gehen, dann öffnet sich der zugehörige
+      Baum <guimenuitem>Preprozessing &gt; Daten laden</guimenuitem>. Wenn Sie
+      nun mit einem Doppelklick auf <guimenuitem>Import von
+      Zeitreihen</guimenuitem> gehen, dann öffnet sich der zugehörige
       Assistent. Zunächst müssen die Zeitreihendaten ausgewählt werden. Gehen
-      Sie hierfür auf den Button Durchsuchen... und wählen Sie die
-      entsprechende <filename>*.zrx</filename>, <filename>*.csv</filename>,
-      <filename>*.grap</filename> oder <filename>*.dat</filename> Datei aus.
-      In dem Pull Down Menü muss das zugehörige Format ausgewählt werden in
-      dem die Datei vorliegt.</para>
+      Sie hierfür auf den Button <guibutton>Durchsuchen...</guibutton> und
+      wählen Sie die entsprechende <filename>*.zrx</filename>,
+      <filename>*.csv</filename>, <filename>*.grap</filename> oder
+      <filename>*.dat</filename> Datei aus. In dem Pull Down Menü muss das
+      zugehörige Format ausgewählt werden in dem die Datei vorliegt.</para>
 
       <para>Die angegebenen Optionen müssen lediglich berücksichtigt werden,
       wenn man eine Zeitreihe zum zweiten mal importiert, d.h. aktualisiert.
       Sie haben dann die Möglichkeit die Metadaten beizubehalten und die
       aktualisierten Werte hinzuzufügen anstatt sie zu überschreiben.</para>
 
-      <para>Anschließend können Sie entweder den Import abschießen, indem Sie
+      <para>Anschließend können Sie entweder den Import abschließen, indem Sie
       auf den Button <guibutton>Fertig stellen</guibutton> klicken, oder Sie
       klicken erst auf den Button <guibutton>Weiter</guibutton> und gelangen
       zum zweiten Fenster des Assistenten. In diesem Fenster ist die Vorschau
-      der Achsenzuordnung zu sehen.</para>
+      der Achsenzuordnung zu sehen (Hinweis: die Achsenbeschriftung kann
+      derzeit nicht geändert werden).</para>
 
       <mediaobject>
         <imageobject>
@@ -360,7 +362,7 @@
         </imageobject>
       </mediaobject>
 
-      <para>Indem Sie im Hauptmenüleiste auf <guimenuitem>Window &gt; Show
+      <para>Indem Sie in der Hauptmenüleiste auf <guimenuitem>Window &gt; Show
       View &gt; Other...</guimenuitem> klicken und im Fenster die
       <guimenu>Diagrammansicht</guimenu> auswählen, können Sie sich Profile
       anzeigen lassen.</para>
@@ -756,7 +758,7 @@
         Karte visualisiert werden.</para>
 
         <para>Voraussetzung für ein korrektes Funktionieren des
-        Schlauchgenerators ist, dass jedes Profil von den beiden Uferlinin
+        Schlauchgenerators ist, dass jedes Profil von den beiden Uferlinien
         geschnitten wird.</para>
 
         <para>Zunächst wählen Sie unter dem Menüpunkt
