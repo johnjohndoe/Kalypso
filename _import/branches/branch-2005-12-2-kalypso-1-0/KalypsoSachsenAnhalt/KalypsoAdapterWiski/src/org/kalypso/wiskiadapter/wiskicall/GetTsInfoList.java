@@ -66,24 +66,24 @@ public class GetTsInfoList implements IWiskiCall
   public final static String[] COLUMNS =
   { "tsinfo_id", "tsinfo_name", "tsinfo_group_ident", "tsinfo_unitname", "tsinfo_distunit", "tsinfo_distcount", "tsinfo_precision", "tsinfo_timelevel", "tsinfo_valuetype", "tsinfo_begin_of", "tsinfo_offset_of", "parametertype_name", "parametertype_longname", "stationparameter_id", "stationparameter_name", "stationparameter_longname", "station_id", "station_no", "station_name" };
 
-  private final SimpleRequestFilterTerm filter;
+  private final SimpleRequestFilterTerm m_filter;
 
-  private final SimpleRequestSortTerm sort;
+  private final SimpleRequestSortTerm m_sort;
 
-  private List resultList;
+  private List m_resultList;
 
   /**
    * Constructor with groupId. All tsInfoList objects in the group will be fetched in the wiski database.
    */
   public GetTsInfoList( final String groupId )
   {
-    filter = new SimpleRequestFilterTerm();
-    filter.addColumnReference( "tsinfo_group_ident" );
-    filter.addOperator( "like" );
-    filter.addValue( groupId );
+    m_filter = new SimpleRequestFilterTerm();
+    m_filter.addColumnReference( "tsinfo_group_ident" );
+    m_filter.addOperator( "like" );
+    m_filter.addValue( groupId );
 
-    sort = new SimpleRequestSortTerm();
-    sort.addColumnAscent( "tsinfo_name" );
+    m_sort = new SimpleRequestSortTerm();
+    m_sort.addColumnAscent( "tsinfo_name" );
   }
 
   /**
@@ -91,32 +91,32 @@ public class GetTsInfoList implements IWiskiCall
    */
   public GetTsInfoList( final String groupId, final String property, final String value )
   {
-    filter = new SimpleRequestFilterTerm();
+    m_filter = new SimpleRequestFilterTerm();
 
-    filter.addColumnReference( "tsinfo_group_ident" );
-    filter.addOperator( "like" );
-    filter.addValue( groupId );
+    m_filter.addColumnReference( "tsinfo_group_ident" );
+    m_filter.addOperator( "like" );
+    m_filter.addValue( groupId );
 
-    filter.addOperator( "and" );
+    m_filter.addOperator( "and" );
 
-    filter.addColumnReference( property );
-    filter.addOperator( "like" );
-    filter.addValue( value );
+    m_filter.addColumnReference( property );
+    m_filter.addOperator( "like" );
+    m_filter.addValue( value );
 
-    sort = new SimpleRequestSortTerm();
-    sort.addColumnAscent( "tsinfo_name" );
+    m_sort = new SimpleRequestSortTerm();
+    m_sort.addColumnAscent( "tsinfo_name" );
   }
 
   public void execute( KiWWDataProviderRMIf wiski, HashMap userData ) throws NoSuchObjectException, KiWWException,
       RemoteException
   {
-    final HashMap tsinfolist = wiski.getTsInfoList( userData, COLUMNS, sort, filter, 0, 0, false, null );
+    final HashMap tsinfolist = wiski.getTsInfoList( userData, COLUMNS, m_sort, m_filter, 0, 0, false, null );
 
-    resultList = (List)tsinfolist.get( KiWWDataProviderInterface.KEY_RESULT_LIST );
+    m_resultList = (List)tsinfolist.get( KiWWDataProviderInterface.KEY_RESULT_LIST );
   }
 
   public List getResultList()
   {
-    return resultList;
+    return m_resultList;
   }
 }

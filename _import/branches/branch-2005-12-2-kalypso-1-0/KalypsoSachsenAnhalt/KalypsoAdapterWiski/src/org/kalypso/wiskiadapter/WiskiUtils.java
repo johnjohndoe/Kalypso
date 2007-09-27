@@ -27,6 +27,8 @@ public final class WiskiUtils
    */
   final static String PROP_NUMBER_OF_DAYS = "NUMBER_OF_DAYS";
 
+  // TODO: do not make it static...
+  // TODO: move properties tuff into extra, non-static, class
   private static Properties PROPS = null;
 
   private WiskiUtils()
@@ -37,7 +39,7 @@ public final class WiskiUtils
   /**
    * Reads the properties from the configuration file in resources/config.ini
    */
-  public static Properties getProperties()
+  private static Properties getProperties()
   {
     // lazy loading
     if( PROPS != null )

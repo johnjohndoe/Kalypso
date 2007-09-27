@@ -216,7 +216,6 @@ public class WiskiTimeserie implements IObservation
     // if true, incomming and outgoing values are dumped to System.out
     // should be false normally
     /* We would like to fetch true/false from the config files, but this is not easily made.... */
-    // TODO: set to false
     final boolean bDump = false;
 
     final DateRange dr;
@@ -302,7 +301,7 @@ public class WiskiTimeserie implements IObservation
             System.out.println( elt );
           }
         }
-
+      
         System.out.println();
         System.out.println( "Generated observation tuple:" );
         System.out.println( ObservationUtilities.dump( m_cachedValues, "\t" ) );
@@ -525,7 +524,7 @@ public class WiskiTimeserie implements IObservation
     WQTable wqt = fetchWQTableIntern( m_tsinfo, rep, dateFrom, dateTo );
     if( wqt == null )
     {
-      // TODO: das macht keinen, weil fetchWQTableIntern nur noch über die Station sucht
+      // TODO: das macht keinen Sinn, weil fetchWQTableIntern nur noch über die Station sucht
       // wenn aber die Station keine Schlüsselkurve hat, wird man hiier auch nichts mehr finden
       LOG.info( "Trying to find WQ-Table with sibling for " + getName() );
 

@@ -46,7 +46,6 @@ public class WiskiRepository extends AbstractRepository
 
   private Map m_children = null;
 
-
   /**
    * @param conf
    *          the configuration should be build the followin way: URL # DOMAIN # LOGIN-NAME # PASSWORD # LANGUAGE
@@ -107,8 +106,8 @@ public class WiskiRepository extends AbstractRepository
           }
         }
 
-        LOG.info( "Using WDP-Debuger" + (m_simulate ? " simulate mode activated!" : "" ) );
-        
+        LOG.info( "Using WDP-Debuger" + ( m_simulate ? " simulate mode activated!" : "" ) );
+
         myServerObject = new WDPDebuger( new File( m_debugDir ), m_simulate, wraped );
       }
       else
@@ -201,6 +200,11 @@ public class WiskiRepository extends AbstractRepository
   public void reload() throws RepositoryException
   {
     WiskiUtils.forcePropertiesReload();
+
+    // Properties reload is not enough! also read strukture again and logout!
+    m_children = null;
+    wiskiLogout();
+    wiskiInit();
   }
 
   /**
@@ -282,20 +286,18 @@ public class WiskiRepository extends AbstractRepository
   {
     try
     {
-      // force test before calling execute()
-      // if null, will jump in catch() block where init is done again
       if( m_wiski == null )
-        throw new IllegalStateException( "Wiski wurde nicht initialisiert" );
+      {
+        // If wiski not initialized, do it now
+        reload();
+      }
 
       call.execute( m_wiski, m_userData );
     }
     catch( final Exception e )
     {
-      // normally, if we get this exception, that means wiski has logged us
-      // out. So we try here to reconnect and to perform the call again.
-      wiskiLogout();
-
-      wiskiInit(); // sets m_wiski and m_userData
+      // at least, try it twice
+      reload();
 
       call.execute( m_wiski, m_userData );
     }

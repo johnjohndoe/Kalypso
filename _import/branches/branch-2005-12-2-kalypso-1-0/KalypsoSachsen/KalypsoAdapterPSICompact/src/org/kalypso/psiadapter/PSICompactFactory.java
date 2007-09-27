@@ -110,6 +110,8 @@ public final class PSICompactFactory
       }
       catch( final Exception e )
       {
+        e.printStackTrace();
+        
         throw new IllegalStateException( "Error while creating PSICompact: " + e.toString() );
       }
       finally

@@ -8,6 +8,7 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
+import org.kalypso.wiskiadapter.wiskicall.GetGroupEntryList;
 
 /**
  * This item is adaptable into a wiski timeserie. It represens a station.
@@ -28,30 +29,19 @@ public class TsInfoItem implements IRepositoryItem
 
   private WiskiTimeserie m_ts = null;
 
+  private final GetGroupEntryList m_groupEntryList;
+
   /**
    * Constructor with group and map. The repository to which this item belongs is delivered by the group.
    */
-  public TsInfoItem( final GroupItem item, final Map map )
+  public TsInfoItem( final GroupItem item, final Map map, final GetGroupEntryList groupEntryList )
   {
     m_group = item;
+    m_groupEntryList = groupEntryList;
     m_map = new Properties();
     m_map.putAll( map );
 
     m_rep = (WiskiRepository)m_group.getRepository();
-  }
-
-  /**
-   * Constructor without group. Be aware that the group is null here. This constructor is provided for simplifying the
-   * process of retrieving items using WiskiRepository.findItem(). The group in that case is not relevant.
-   */
-  public TsInfoItem( final WiskiRepository rep, final Map map )
-  {
-    m_group = null;
-
-    m_map = new Properties();
-    m_map.putAll( map );
-
-    m_rep = rep;
   }
 
   /**
@@ -79,8 +69,6 @@ public class TsInfoItem implements IRepositoryItem
    */
   public String getIdentifier()
   {
-    //return m_rep.getIdentifier() + getName();
-
     return m_rep.getIdentifier() + getWiskiSuperGroupName() + "." + getWiskiGroupName() + "." + getWiskiStationNo();
   }
 
@@ -238,6 +226,11 @@ public class TsInfoItem implements IRepositoryItem
     return m_map.getProperty( "station_id", "<?>" );
   }
 
+  public boolean isActive()
+  {
+    return m_groupEntryList.isActive( getWiskiIdAsString() ); 
+  }
+  
   /**
    * Return the station number (in german: Messstellennummer) in the Wiski sense.
    * <p>
