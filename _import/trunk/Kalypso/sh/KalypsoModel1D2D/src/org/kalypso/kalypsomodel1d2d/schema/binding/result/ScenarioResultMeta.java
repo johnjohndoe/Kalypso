@@ -48,6 +48,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta.STEPTYPE;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.ResultMeta;
 import org.kalypsodeegree.model.feature.Feature;
@@ -117,7 +118,10 @@ public class ScenarioResultMeta extends ResultMeta implements IScenarioResultMet
           if( resultMeta instanceof IStepResultMeta )
           {
             final IStepResultMeta stepResultMeta = (IStepResultMeta) resultMeta;
-            if( isSteadyCalculation && stepResultMeta.getStepNumber() == -1 )
+            final STEPTYPE stepType = stepResultMeta.getStepType();
+            if(!stepType.equals( IStepResultMeta.STEPTYPE.unsteady ) || !stepType.equals( IStepResultMeta.STEPTYPE.steady ))
+              childrenToRemove.add( resultMeta );
+            else if( isSteadyCalculation && stepResultMeta.getStepNumber() == -1 )
               childrenToRemove.add( resultMeta );
             else if( isUnsteadyCalculation && stepResultMeta.getStepNumber() >= restartStep )
               childrenToRemove.add( resultMeta );
