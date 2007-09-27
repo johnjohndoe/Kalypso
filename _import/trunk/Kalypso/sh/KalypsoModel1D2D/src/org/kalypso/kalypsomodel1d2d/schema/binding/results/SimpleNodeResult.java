@@ -282,7 +282,6 @@ public class SimpleNodeResult implements INodeResult
    */
   public int getDry( )
   {
-    // TODO Auto-generated method stub
     return 0;
   }
 
@@ -291,7 +290,5 @@ public class SimpleNodeResult implements INodeResult
    */
   public void setDry( int dry )
   {
-    // TODO Auto-generated method stub
-
   }
 }

@@ -47,6 +47,7 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -164,7 +165,8 @@ public class ProcessResultsJob extends Job
     {
       /* Write template sld into result folder */
       final URL resultStyleURL = (URL) dataProvider.getInputForID( "ResultStepTemplate" );
-      ZipUtilities.unzip( resultStyleURL, outputDir );
+      if( resultStyleURL != null )
+        ZipUtilities.unzip( resultStyleURL, outputDir );
     }
 
     final File gmlResultFile = new File( outputDir, "results.gml" );
@@ -187,6 +189,19 @@ public class ProcessResultsJob extends Job
       final CS_CoordinateSystem crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
       final MultiTriangleEater multiEater = new MultiTriangleEater();
 
+      /*
+       * TESTING / can be removed later Jung
+       */
+      if( m_parameters == null )
+      {
+        m_parameters = new LinkedList<ResultType.TYPE>();
+        m_parameters.add( ResultType.TYPE.DEPTH );
+        m_parameters.add( ResultType.TYPE.TERRAIN );
+        m_parameters.add( ResultType.TYPE.VELOCITY );
+        m_parameters.add( ResultType.TYPE.WATERLEVEL );
+      }
+
+      /* -------- */
       for( final ResultType.TYPE parameter : m_parameters )
       {
         /* GML(s) */

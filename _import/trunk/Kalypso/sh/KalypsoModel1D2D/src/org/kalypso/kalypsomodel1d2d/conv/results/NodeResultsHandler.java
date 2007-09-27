@@ -78,8 +78,6 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation;
-import org.kalypso.kalypsomodel1d2d.schema.binding.results.ArcResult;
-import org.kalypso.kalypsomodel1d2d.schema.binding.results.ElementResult;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.GMLNodeResult;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.SimpleNodeResult;
@@ -143,6 +141,8 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
   private static final long PROCESS_TIMEOUT = 50000;
 
+  private static final int WSP_EXTRAPOLATION_RANGE = 10;
+
   private final NodeResultMinMaxCatcher m_resultMinMaxCatcher;
 
   private Date m_time;
@@ -166,7 +166,42 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
    */
   public void end( )
   {
+    /* extrapolate the water level into dry areas */
+    // extrapolateWaterLevel( 0 );
+    /* create the triangles for each element */
+    // for( int i = 0; i < m_elemIndex.size(); i++ )
+    // {
+    // ElementResult elementResult = m_elemIndex.get( i );
+    // elementResult.createCenterNode();
+    //
+    // /* split the element */
+    // splitElement( elementResult );
+    // }
+  }
 
+  /**
+   * extrapolates the water level into the dry elements until every dry element got assigned or until the maximum
+   * extrapolation range has been reached.
+   */
+  private void extrapolateWaterLevel( int count )
+  {
+    if( count > WSP_EXTRAPOLATION_RANGE )
+      return;
+    int assigned = 0;
+    for( int i = 0; i < m_elemIndex.size(); i++ )
+    {
+      final ElementResult elementResult = m_elemIndex.get( i );
+      // final boolean checkWaterlevels = elementResult.checkWaterlevels();
+      // if( checkWaterlevels == true )
+      // assigned = assigned + 1;
+    }
+    if( assigned > 0 )
+    {
+      count = count + 1;
+      System.out.println( "Anzahl zugewiesener Wasserspiegel: " + assigned );
+      System.out.println( "Anzahl Aufrufe extrpolateWaterLevel: " + count );
+      extrapolateWaterLevel( count );
+    }
   }
 
   /**
@@ -315,7 +350,10 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
         /* midside node of the current arc */
         GMLNodeResult midsideNode = m_nodeIndex.get( currentArc.middleNodeID );
-        checkMidsideNodeData( nodeDown, nodeUp, midsideNode );
+        midsideNode.setArc( currentArc );
+
+        // TODO: this check has to run again after the water level check of an element
+        NodeResultHelper.checkMidsideNodeData( nodeDown, nodeUp, midsideNode );
         elementResult.setMidsideNodes( midsideNode );
 
         nodeDown.setArc( currentArc );
@@ -348,6 +386,8 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
             /* element on the left side of the arc */
             midsideNode = m_nodeIndex.get( currentArc.middleNodeID );
+            midsideNode.setArc( currentArc );
+
             if( elementLeftID == id && nodeDown.equals( connectionNode ) )
             {
               if( elementResult.getNumCornerNodes() < numArcs )
@@ -361,7 +401,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
               connectionNode.setArc( currentArc );
               currentArc.setNodeDown( connectionNode );
 
-              checkMidsideNodeData( nodeDown, nodeUp, midsideNode );
+              NodeResultHelper.checkMidsideNodeData( nodeDown, nodeUp, midsideNode );
               elementResult.setMidsideNodes( midsideNode );
               break;
             }
@@ -379,7 +419,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
               connectionNode.setArc( currentArc );
               currentArc.setNodeUp( connectionNode );
 
-              checkMidsideNodeData( nodeDown, nodeUp, midsideNode );
+              NodeResultHelper.checkMidsideNodeData( nodeDown, nodeUp, midsideNode );
               elementResult.setMidsideNodes( midsideNode );
               break;
             }
@@ -392,14 +432,15 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         elementResult.checkWaterlevels();
 
         /* split element into triangles if there is a wet node. */
-        if( elementResult.isWet == true )
-        {
-          /* create the center node */
-          elementResult.createCenterNode();
-
-          /* split the element */
-          splitElement( elementResult );
-        }
+        // if( elementResult.isWet == true )
+        // {
+        /* create the center node */
+        // TODO: wrong place for this, because now there is only one assignment. Actually the wetted elements can
+        // extrapolate the water level to other elements. Maybe we can do this optionally.
+        elementResult.createCenterNode();
+        /* split the element */
+        splitElement( elementResult );
+        // }
       }
     }
     else
@@ -1671,101 +1712,6 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   }
 
   /**
-   * sets the mid-side node's water level and depth by interpolation between the corner nodes.
-   * 
-   * @param nodeDown
-   *            first node of the corresponding arc.
-   * @param nodeUp
-   *            second node of the corresponding arc.
-   * @param midsideNode
-   *            the mid-side node
-   */
-  private void checkMidsideNodeData( final GMLNodeResult nodeDown, final GMLNodeResult nodeUp, final GMLNodeResult midsideNode )
-  {
-    // TODO check what to do if some of the nodes is null
-    // (in the moment exception is thrown...)
-
-    if( nodeDown.getDepth() <= 0 && nodeUp.getDepth() <= 0 )
-    {
-      interpolateMidsideNodeData( nodeDown, nodeUp, midsideNode );
-      // midsideNode.setResultValues( 0, 0, 0, midsideNode.getPoint().getZ() - 1 );
-      return;
-    }
-
-    if( nodeDown.getDepth() > 0 && nodeUp.getDepth() <= 0 )
-    {
-
-      assignMidsideNodeData( nodeDown, midsideNode ); // assignment leads into extrapolation of the water level!!
-      // interpolateMidsideNodeData( nodeDown, nodeUp, midsideNode );
-      return;
-    }
-    if( nodeDown.getDepth() <= 0 && nodeUp.getDepth() > 0 )
-    {
-      assignMidsideNodeData( nodeUp, midsideNode ); // assignment leads into extrapolation of the water level!!
-    }
-
-    if( nodeDown.getDepth() > 0 && nodeUp.getDepth() > 0 )
-    {
-      interpolateMidsideNodeData( nodeDown, nodeUp, midsideNode );
-      return;
-    }
-  }
-
-  /**
-   * interpolates the water level for the midside node by using the water levels of the corner nodes. The depth will be
-   * calculated as well, using the interpolated water level.
-   * 
-   * @param nodeDown
-   *            first node of the arc on which the corner node lies.
-   * @param nodeUp
-   *            second node
-   * @param midsideNode
-   *            the midside node
-   */
-  private void interpolateMidsideNodeData( final GMLNodeResult nodeDown, final GMLNodeResult nodeUp, final GMLNodeResult midsideNode )
-  {
-    final List<Double> waterlevels = new LinkedList<Double>();
-    final List<Double> depths = new LinkedList<Double>();
-
-    waterlevels.add( nodeDown.getWaterlevel() );
-    waterlevels.add( nodeUp.getWaterlevel() );
-
-    depths.add( nodeDown.getDepth() );
-    depths.add( nodeUp.getDepth() );
-
-    final double waterlevel = getMeanValue( waterlevels );
-    midsideNode.setWaterlevel( waterlevel );
-    // midsideNode.setDepth( interpolate( depths ) );
-    final double depth = waterlevel - midsideNode.getPoint().getZ();
-    if( depth < 0 )
-      midsideNode.setDepth( 0.0 );
-    else
-      midsideNode.setDepth( depth );
-  }
-
-  private double getMeanValue( final List<Double> values )
-  {
-    double sum = 0;
-    for( int i = 0; i < values.size(); i++ )
-    {
-      sum = sum + values.get( i );
-    }
-    return (sum / values.size());
-  }
-
-  private void assignMidsideNodeData( final GMLNodeResult node, final GMLNodeResult midsideNode )
-  {
-    final double waterlevel = node.getWaterlevel();
-    midsideNode.setWaterlevel( waterlevel );
-
-    final double depth = waterlevel - midsideNode.getPoint().getZ();
-    if( depth < 0 )
-      midsideNode.setDepth( 0.0 );
-    else
-      midsideNode.setDepth( depth );
-  }
-
-  /**
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleNode(java.lang.String, int, double, double,
    *      double)
    */
@@ -2023,18 +1969,17 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     result.setDry( dry );
 
     /* check dry nodes for strange values */
-    if( dry != 1 )
-    {
-      final double waterlevel = result.getWaterlevel();
-      final double z = result.getPoint().getZ();
-
-      /* a dry node can not have a water level above datum */
-      if( waterlevel - z > 0 )
-      {
-        result.setWaterlevel( z );
-        result.setDepth( 0.0 );
-      }
-    }
-
+    // if( dry != 1 )
+    // {
+    // final double waterlevel = result.getWaterlevel();
+    // final double z = result.getPoint().getZ();
+    //
+    // /* a dry node can not have a water level above datum */
+    // if( waterlevel - z > 0 )
+    // {
+    // result.setWaterlevel( z );
+    // result.setDepth( 0.0 );
+    // }
+    // }
   }
 }

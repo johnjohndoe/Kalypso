@@ -43,6 +43,7 @@ package org.kalypso.kalypsomodel1d2d.conv.results;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
@@ -80,6 +81,15 @@ public class ResultMeta1d2dFileHelper
 
     /* delete parent */
     removeResultMetaFile( resultMeta );
+
+  }
+
+  /**
+   * Refreshes the file structure in dependence of the resultMeta entries. All files that are not included in the
+   * resultMeta will be deleted.
+   */
+  public static void refreshScenario( final IScenarioResultMeta scenarioResultMeta )
+  {
 
   }
 

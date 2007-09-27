@@ -46,6 +46,7 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.kalypsomodel1d2d.conv.results.ArcResult;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -67,7 +68,7 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
   /*
    * the virtual depth is calculated by the calculation core RMA10 and can differ from the true depth defined by water
    * level minus node elevation! (Marsh-Algorithm).
-   *
+   * 
    * for that reason the true depth is computed separately.
    */
   private static final QName QNAME_PROP_VIRTUALDEPTH = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "virtualdepth" );
@@ -143,8 +144,8 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
     getFeature().setProperty( QNAME_PROP_VELOCITY, veloList );
 
     /* check the real depth by comparing water level with terrain elevation */
-    double depth = getDepth();
-    getFeature().setProperty( QNAME_PROP_DEPTH, depth );
+    // double depth = getDepth();
+    // getFeature().setProperty( QNAME_PROP_DEPTH, depth );
   }
 
   public void setMidSide( final boolean isMidSide )

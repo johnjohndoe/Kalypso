@@ -38,12 +38,15 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.schema.binding.results;
+package org.kalypso.kalypsomodel1d2d.conv.results;
 
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.kalypso.kalypsomodel1d2d.schema.binding.results.GMLNodeResult;
+import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
+import org.kalypso.kalypsomodel1d2d.schema.binding.results.SimpleNodeResult;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.opengis.cs.CS_CoordinateSystem;
 
@@ -278,7 +281,7 @@ public class ElementResult
       node.setVelocity( velocity );
       node.setDepth( depth );
       node.setWaterlevel( waterlevel );
-      // node.setResultValues( 0, 0, depth, waterlevel );
+      // node.setResultValues( 0, 0, depth, water level );
     }
     else
     {
@@ -288,7 +291,7 @@ public class ElementResult
       node.setVelocity( velocity );
       node.setDepth( 0.0 );
       node.setWaterlevel( waterlevel );
-      // node.setResultValues( 0, 0, 0, waterlevel );
+      // node.setResultValues( 0, 0, 0, water level );
     }
   }
 
@@ -302,7 +305,7 @@ public class ElementResult
     {
       final GMLNodeResult node = m_cornerNodes.get( i );
 
-      if( node.getDepth() <= 0 && node.isAssigned() == false )
+      if( node.getDepth() <= 0 /* && node.isAssigned() == false */)
       {
         /* node is dry */
         // search for wet neighboring nodes and add them to a list
@@ -312,7 +315,7 @@ public class ElementResult
         final List<ArcResult> arcs = node.getArcs();
 
         // get the wet nodes of that arcs
-        neighborNodeList = getNeighbors( node, arcs );
+        neighborNodeList = getCornerNeighbors( node, arcs );
 
         if( neighborNodeList.size() != 0 ) // the complete element is dry (nothing to do)
         {
@@ -351,6 +354,22 @@ public class ElementResult
       else
         isWet = true;
     }
+
+    /* same check for midside nodes */
+    for( int i = 0; i < m_midsideNodes.size(); i++ )
+    {
+      final GMLNodeResult node = m_midsideNodes.get( i );
+
+      // get the arc of the midside node
+      final List<ArcResult> arcs = node.getArcs();
+
+      ArcResult arcResult = arcs.get( 0 );
+
+      GMLNodeResult nodeDown = arcResult.getNodeDown();
+      GMLNodeResult nodeUp = arcResult.getNodeUp();
+
+      NodeResultHelper.checkMidsideNodeData( nodeDown, nodeUp, node );
+    }
   }
 
   /**
@@ -370,7 +389,7 @@ public class ElementResult
     return false;
   }
 
-  private List<GMLNodeResult> getNeighbors( final GMLNodeResult node, final List<ArcResult> arcs )
+  private List<GMLNodeResult> getCornerNeighbors( final GMLNodeResult node, final List<ArcResult> arcs )
   {
     final List<GMLNodeResult> neighborList = new LinkedList<GMLNodeResult>();
 
@@ -383,7 +402,7 @@ public class ElementResult
       else
         neighboringNode = currentArc.getNodeDown();
 
-      if( neighboringNode.getDepth() > 0 ) // wet
+      if( neighboringNode.getDepth() > 0 ) // wet, here we just want the wet neighbors
         neighborList.add( neighboringNode );
 
     }
