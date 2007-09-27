@@ -99,7 +99,6 @@ public class RestartSelectWizard extends Wizard implements INewWizard
     {
       // Sometimes there is a NPE here... maybe wait until the models are loaded?
       m_resultModel = m_modelProvider.getModel( IScenarioResultMeta.class );
-      // m_resultModel.findCalcUnitMetaResult( "aaa" ).getChildren();
     }
     catch( CoreException e )
     {

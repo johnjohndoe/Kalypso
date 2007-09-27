@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.model;
 
+import javax.xml.namespace.QName;
+
+import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 
 /**
@@ -51,5 +54,7 @@ import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
  */
 public interface IControlModelGroup extends IModel
 {
+  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "ControlModelGroup" );
+
   public IControlModel1D2DCollection getModel1D2DCollection();
 }

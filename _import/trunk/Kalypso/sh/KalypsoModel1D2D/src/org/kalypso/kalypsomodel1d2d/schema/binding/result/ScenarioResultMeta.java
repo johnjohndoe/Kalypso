@@ -41,6 +41,8 @@
 package org.kalypso.kalypsomodel1d2d.schema.binding.result;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
@@ -78,12 +80,12 @@ public class ScenarioResultMeta extends ResultMeta implements IScenarioResultMet
    */
   public ICalcUnitResultMeta findCalcUnitMetaResult( String calcUnitGmlID )
   {
-    IFeatureWrapperCollection<IResultMeta> children = getChildren();
-    for( IResultMeta resultMeta : children )
+    final IFeatureWrapperCollection<IResultMeta> children = getChildren();
+    for( final IResultMeta resultMeta : children )
     {
       if( resultMeta instanceof ICalcUnitResultMeta )
       {
-        ICalcUnitResultMeta calcUnitMeta = (ICalcUnitResultMeta) resultMeta;
+        final ICalcUnitResultMeta calcUnitMeta = (ICalcUnitResultMeta) resultMeta;
         if( calcUnitMeta.getCalcUnit().equals( calcUnitGmlID ) )
           return calcUnitMeta;
       }
@@ -94,23 +96,46 @@ public class ScenarioResultMeta extends ResultMeta implements IScenarioResultMet
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta#importCalculationUnit(org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta)
    */
-  public void importCalculationUnit( ICalcUnitResultMeta calculationUnit ) throws Exception
+  public void updateResultMeta( final ICalcUnitResultMeta calculationUnit, final boolean isRestart, final boolean isSteadyCalculation, final boolean isUnsteadyCalculation, final Integer restartStep ) throws Exception
   {
     /* the managing of the result db data (documents) should happen somewhere outside the db */
     // look for existing results of this calc unit
-    final ICalcUnitResultMeta existingCalcUnitMeta = findCalcUnitMetaResult( calculationUnit.getCalcUnit() );
-    if( existingCalcUnitMeta == null )
-    {
-      // calcUnit does not exist, so there is nothing to do as to add the new one.
-    }
-    else
-    {
-      // TODO: delete file content
-      // TODO delete all or consider restart
-      getChildren().remove( existingCalcUnitMeta );
-    }
+    
+    // this cannot happen, but just to be sure...
+    if( isRestart && isUnsteadyCalculation && restartStep == null )
+      throw new RuntimeException( "Unsteady restart is calculated, but there is no information regarding the restart step. Result database cannot be updated." );
 
-    getChildren().cloneInto( calculationUnit );
+    final ICalcUnitResultMeta existingCalcUnitMeta = findCalcUnitMetaResult( calculationUnit.getCalcUnit() );
+    if( existingCalcUnitMeta != null )
+    {
+      if( isRestart )
+      {
+        final IFeatureWrapperCollection<IResultMeta> children = existingCalcUnitMeta.getChildren();
+        final List<IResultMeta> childrenToRemove = new ArrayList<IResultMeta>();
+        for( final IResultMeta resultMeta : children )
+        {
+          if( resultMeta instanceof IStepResultMeta )
+          {
+            final IStepResultMeta stepResultMeta = (IStepResultMeta) resultMeta;
+            if( isSteadyCalculation && stepResultMeta.getStepNumber() == -1 )
+              childrenToRemove.add( resultMeta );
+            else if( isUnsteadyCalculation && stepResultMeta.getStepNumber() >= restartStep )
+              childrenToRemove.add( resultMeta );
+          }
+        }
+        // removing cannot be done directly in previous loop because of ConcurrentModificationException on interator
+        for( final IResultMeta resultToRemove : childrenToRemove )
+          children.remove( resultToRemove );
+
+        children.addAll( calculationUnit.getChildren() );
+      }
+      else
+      {
+        // no restart
+        getChildren().remove( existingCalcUnitMeta );
+        getChildren().cloneInto( calculationUnit );
+      }
+    }
   }
 
   /**

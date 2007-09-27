@@ -134,10 +134,10 @@ public class ProcessResultsJob extends Job
     try
     {
       /* Zip .2d file to outputDir */
-      // final File exeLog = new File( m_inputFile.getParentFile().toString() + "/exe.log" );
-      // final File exeErr = new File( m_inputFile.getParentFile().toString() + "/exe.err" );
-      // final File outputOut = new File( m_inputFile.getParentFile().toString() + "/result/Output.out" );
-      final File[] files = new File[] { m_inputFile /* , exeLog, exeErr, outputOut */};
+      final File exeLog = new File( m_inputFile.getParentFile().toString() + "/exe.log" );
+      final File exeErr = new File( m_inputFile.getParentFile().toString() + "/exe.err" );
+      final File outputOut = new File( m_inputFile.getParentFile().toString() + "/result/Output.out" );
+      final File[] files = new File[] { m_inputFile, exeLog, exeErr, outputOut };
       final File outputZip2d = new File( m_outputDir, "original.2d.zip" );
       ZipUtilities.zip( outputZip2d, files, m_inputFile.getParentFile() );
       m_stepResultMeta.addDocument( "RMA-Rohdaten", "ASCII Ergebnisdatei(en) des RMA10 Rechenkerns", IDocumentResultMeta.DOCUMENTTYPE.coreDataZip, new Path( "original.2d.zip" ), Status.OK_STATUS, null, null );

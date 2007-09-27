@@ -40,12 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
+import javax.xml.namespace.QName;
+
+import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
+
 
 /**
  * @author Gernot Belger
  */
 public interface IElement1D<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge> extends IFE1D2DElement<CT, ET>
 {
+  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "Element1D" ); //$NON-NLS-1$
 
   /**
    * Returns the current edge of this 1d-element.

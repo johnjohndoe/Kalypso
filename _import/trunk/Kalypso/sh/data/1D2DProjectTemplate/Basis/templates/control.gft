@@ -175,8 +175,8 @@
 			<gft:checkbox editable="true" property="c1d2d:_steady"
 				style="SWT.NONE">
 				<gft:gridData horizontalSpan="1"
-					horizontalAlignment="GridData.CENTER"
-					grabExcessHorizontalSpace="false" />
+					horizontalAlignment="GridData.BEGINNING"
+					grabExcessHorizontalSpace="true" />
 			</gft:checkbox>
 
 			<gft:label
@@ -316,7 +316,7 @@
 			<gft:checkbox editable="true" property="c1d2d:_unsteady"
 				style="SWT.NONE">
 				<gft:gridData horizontalSpan="1"
-					horizontalAlignment="GridData.FILL"
+					horizontalAlignment="GridData.BEGINNING"
 					grabExcessHorizontalSpace="true" />
 					<!--
 				<gft:enabledOperation>
@@ -440,27 +440,133 @@
 				</gft:enabledOperation>
 			</gft:validatorlabel>
 
-			<!--
-				<gft:label text="Anzahl der Zeitschritte (instationär)" visible="true" tooltip="Anzahl der Zeitschritte (instationär)" style="SWT.NONE">
-				<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
-				</gft:label>
-				<gft:text editable="true" property="c1d2d:NCYC" tooltip="Anzahl der Zeitschritte (instationär)" style="SWT.BORDER">
-				<gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"/>
-				</gft:text>
-				<gft:label visible="false" style="SWT.NONE">
-				<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
-				</gft:label>
-				<gft:validatorlabel property="c1d2d:NCYC" visible="true" style="SWT.NONE">
-				<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
-				</gft:validatorlabel>
-			-->
+			<gft:label visible="false" style="SWT.NONE">
+				<gft:gridData horizontalAlignment="GridData.BEGINNING" horizontalSpan="2" 
+					grabExcessHorizontalSpace="false" />
+			</gft:label>
+			<gft:label text="Beginn Restart" visible="true"
+				tooltip="Restart step" style="SWT.NONE">
+				<gft:gridData verticalAlignment="GridData.CENTER"
+					horizontalAlignment="GridData.BEGINNING"
+					grabExcessHorizontalSpace="false" />
+				<gft:enabledOperation>
+					<and>
+						<ogc:PropertyIsLike wildCard="*"
+							singleChar="?" escape="\"
+							xmlns:ogc="http://www.opengis.net/ogc">
+							<ogc:PropertyName>
+								c1d2d:_steady
+							</ogc:PropertyName>
+							<ogc:Literal>false</ogc:Literal>
+						</ogc:PropertyIsLike>
+						<ogc:PropertyIsLike wildCard="*" singleChar="?"
+							escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+							<ogc:PropertyName>
+								c1d2d:_unsteady
+							</ogc:PropertyName>
+							<ogc:Literal>true</ogc:Literal>
+						</ogc:PropertyIsLike>
+						<ogc:PropertyIsLike wildCard="*"
+							singleChar="?" escape="\"
+							xmlns:ogc="http://www.opengis.net/ogc">
+							<ogc:PropertyName>
+								c1d2d:_restart
+							</ogc:PropertyName>
+							<ogc:Literal>true</ogc:Literal>
+						</ogc:PropertyIsLike>
+					</and>
+				</gft:enabledOperation>
+			</gft:label>
+			<gft:text editable="true" property="c1d2d:IACCYC"
+				tooltip="Restart step" style="SWT.BORDER">
+				<gft:gridData horizontalSpan="1"
+					horizontalAlignment="GridData.FILL"
+					grabExcessHorizontalSpace="true" />
+				<gft:enabledOperation>
+					<and>
+						<ogc:PropertyIsLike wildCard="*"
+							singleChar="?" escape="\"
+							xmlns:ogc="http://www.opengis.net/ogc">
+							<ogc:PropertyName>
+								c1d2d:_steady
+							</ogc:PropertyName>
+							<ogc:Literal>false</ogc:Literal>
+						</ogc:PropertyIsLike>
+						<ogc:PropertyIsLike wildCard="*" singleChar="?"
+							escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+							<ogc:PropertyName>
+								c1d2d:_unsteady
+							</ogc:PropertyName>
+							<ogc:Literal>true</ogc:Literal>
+						</ogc:PropertyIsLike>
+						<ogc:PropertyIsLike wildCard="*"
+							singleChar="?" escape="\"
+							xmlns:ogc="http://www.opengis.net/ogc">
+							<ogc:PropertyName>
+								c1d2d:_restart
+							</ogc:PropertyName>
+							<ogc:Literal>true</ogc:Literal>
+						</ogc:PropertyIsLike>
+					</and>
+				</gft:enabledOperation>
+			</gft:text>
+			<gft:label visible="false" style="SWT.NONE">
+				<gft:gridData horizontalAlignment="GridData.BEGINNING"
+					grabExcessHorizontalSpace="false" />
+			</gft:label>
+			<gft:validatorlabel property="c1d2d:IACCYC" visible="true"
+				style="SWT.NONE">
+				<gft:gridData horizontalAlignment="GridData.BEGINNING"
+					grabExcessHorizontalSpace="false" />
+				<gft:enabledOperation>
+					<and>
+						<ogc:PropertyIsLike wildCard="*"
+							singleChar="?" escape="\"
+							xmlns:ogc="http://www.opengis.net/ogc">
+							<ogc:PropertyName>
+								c1d2d:_steady
+							</ogc:PropertyName>
+							<ogc:Literal>false</ogc:Literal>
+						</ogc:PropertyIsLike>
+						<ogc:PropertyIsLike wildCard="*" singleChar="?"
+							escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+							<ogc:PropertyName>
+								c1d2d:_unsteady
+							</ogc:PropertyName>
+							<ogc:Literal>true</ogc:Literal>
+						</ogc:PropertyIsLike>
+						<ogc:PropertyIsLike wildCard="*"
+							singleChar="?" escape="\"
+							xmlns:ogc="http://www.opengis.net/ogc">
+							<ogc:PropertyName>
+								c1d2d:_restart
+							</ogc:PropertyName>
+							<ogc:Literal>true</ogc:Literal>
+						</ogc:PropertyIsLike>
+					</and>
+				</gft:enabledOperation>
+			</gft:validatorlabel>
 
 			<gft:subcomposite property="c1d2d:timestepsMember"
 				style="SWT.NONE">
 				<gft:gridData verticalAlignment="GridData.FILL"
 					horizontalSpan="4" horizontalAlignment="GridData.FILL"
 					grabExcessVerticalSpace="true" grabExcessHorizontalSpace="false" />
+				<gft:enabledOperation>
+					<ogc:PropertyIsLike wildCard="*" singleChar="?"
+						escape="\" xmlns:ogc="http://www.opengis.net/ogc">
+						<ogc:PropertyName>
+							c1d2d:_unsteady
+						</ogc:PropertyName>
+						<ogc:Literal>true</ogc:Literal>
+					</ogc:PropertyIsLike>
+				</gft:enabledOperation>
 			</gft:subcomposite>
+			
+			<gft:label visible="false" style="SWT.NONE">
+				<gft:gridData horizontalAlignment="GridData.BEGINNING" horizontalSpan="2" 
+					grabExcessHorizontalSpace="false" />
+			</gft:label>
 
 		</gft:group>
 		<!-- Konvergenz-->
@@ -654,75 +760,6 @@
 					</ogc:PropertyIsLike>
 				</gft:enabledOperation>
 			</gft:extensioncontrol>
-			<!-- 
-				<gft:label visible="false" style="SWT.NONE">
-				<gft:gridData horizontalAlignment="GridData.BEGINNING"
-				grabExcessHorizontalSpace="false" />
-				</gft:label>
-				<gft:validatorlabel property="c1d2d:_restart" visible="true"
-				style="SWT.NONE">
-				<gft:gridData horizontalAlignment="GridData.BEGINNING"
-				grabExcessHorizontalSpace="false" />
-				</gft:validatorlabel>
-			-->
-
-			<gft:label text="Beginn Restart" visible="true"
-				tooltip="Restart step" style="SWT.NONE">
-				<gft:gridData verticalAlignment="GridData.CENTER"
-					horizontalAlignment="GridData.BEGINNING"
-					grabExcessHorizontalSpace="false" />
-				<gft:enabledOperation>
-					<ogc:PropertyIsLike wildCard="*" singleChar="?"
-						escape="\" xmlns:ogc="http://www.opengis.net/ogc">
-						<ogc:PropertyName>
-							c1d2d:_restart
-						</ogc:PropertyName>
-						<ogc:Literal>true</ogc:Literal>
-					</ogc:PropertyIsLike>
-				</gft:enabledOperation>
-			</gft:label>
-			<gft:text editable="true" property="c1d2d:IACCYC"
-				tooltip="Restart step" style="SWT.BORDER">
-				<gft:gridData horizontalSpan="1"
-					horizontalAlignment="GridData.FILL"
-					grabExcessHorizontalSpace="true" />
-				<gft:enabledOperation>
-					<ogc:PropertyIsLike wildCard="*" singleChar="?"
-						escape="\" xmlns:ogc="http://www.opengis.net/ogc">
-						<ogc:PropertyName>
-							c1d2d:_restart
-						</ogc:PropertyName>
-						<ogc:Literal>true</ogc:Literal>
-					</ogc:PropertyIsLike>
-				</gft:enabledOperation>
-			</gft:text>
-			<gft:label visible="false" style="SWT.NONE">
-				<gft:gridData horizontalAlignment="GridData.BEGINNING"
-					grabExcessHorizontalSpace="false" />
-				<gft:enabledOperation>
-					<ogc:PropertyIsLike wildCard="*" singleChar="?"
-						escape="\" xmlns:ogc="http://www.opengis.net/ogc">
-						<ogc:PropertyName>
-							c1d2d:_restart
-						</ogc:PropertyName>
-						<ogc:Literal>true</ogc:Literal>
-					</ogc:PropertyIsLike>
-				</gft:enabledOperation>
-			</gft:label>
-			<gft:validatorlabel property="c1d2d:IACCYC" visible="true"
-				style="SWT.NONE">
-				<gft:gridData horizontalAlignment="GridData.BEGINNING"
-					grabExcessHorizontalSpace="false" />
-				<gft:enabledOperation>
-					<ogc:PropertyIsLike wildCard="*" singleChar="?"
-						escape="\" xmlns:ogc="http://www.opengis.net/ogc">
-						<ogc:PropertyName>
-							c1d2d:_restart
-						</ogc:PropertyName>
-						<ogc:Literal>true</ogc:Literal>
-					</ogc:PropertyIsLike>
-				</gft:enabledOperation>
-			</gft:validatorlabel>
 
 			<gft:label text="Anfangswasserspiegel [-]" visible="true"
 				tooltip="Anfangswert des Wasserstandes ?ber jeden Knoten [m]"

@@ -58,16 +58,6 @@ public interface IRMA10SModelWriter
   public void setRMA10SModelElementHandler( IRMA10SModelElementHandler handler ) throws IllegalArgumentException;
 
   /**
-   * Sets the id provide which will be ask to conver rma10s ids to gml id
-   * 
-   * @param idProvider
-   *          the id provider
-   * @param throw
-   *          {@link IllegalArgumentException} if the passed provided is null
-   */
-  public void setModelElementIDProvider( ConversionIDProvider idProvider ) throws IllegalArgumentException;
-
-  /**
    * Parse the model in the given input stream
    * 
    * @param inputStreamReader

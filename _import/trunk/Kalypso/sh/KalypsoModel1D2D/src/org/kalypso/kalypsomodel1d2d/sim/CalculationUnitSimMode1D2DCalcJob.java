@@ -134,9 +134,9 @@ public class CalculationUnitSimMode1D2DCalcJob
         final String calcUnitGmlID = calculationUnit.getGmlID();
         // boolean activeSet = false;
         IControlModel1D2D activeControlModel = null;
-        for( IControlModel1D2D controlModel : model.getModel1D2DCollection() )
+        for( final IControlModel1D2D controlModel : model.getModel1D2DCollection() )
         {
-          ICalculationUnit currentCalcUnit = controlModel.getCalculationUnit();
+          final ICalculationUnit currentCalcUnit = controlModel.getCalculationUnit();
           if( currentCalcUnit != null )
           {
             if( calcUnitGmlID.equals( currentCalcUnit.getGmlID() ) )
@@ -155,7 +155,6 @@ public class CalculationUnitSimMode1D2DCalcJob
                 return StatusUtilities.createErrorStatus( "Could not set active control model for: " + calculationUnit.getGmlID() );
               }
               activeControlModel = controlModel;
-
               caseDataProvider.saveModel( null );
             }
           }
@@ -178,7 +177,7 @@ public class CalculationUnitSimMode1D2DCalcJob
           final IStatus simulationResult = cjHandler.runJob( scenarioFolder, new SubProgressMonitor( monitor, 4 ) );
 
           final IScenarioResultMeta scenarioResultMeta = caseDataProvider.getModel( IScenarioResultMeta.class );
-          fillResultModel( unitFolder, scenarioResultMeta );
+          fillResultModel( unitFolder, scenarioResultMeta, activeControlModel.getRestart(), activeControlModel.isSteadySelected(), activeControlModel.isUnsteadySelected(), activeControlModel.getIaccyc() );
 
           if( caseDataProvider instanceof ICommandPoster )
             ((ICommandPoster) caseDataProvider).postCommand( IScenarioResultMeta.class, new EmptyCommand( "Empty command", false ) );
@@ -203,7 +202,7 @@ public class CalculationUnitSimMode1D2DCalcJob
     return RunnableContextHelper.execute( workbench.getProgressService(), true, false, runnable );
   }
 
-  protected static void fillResultModel( final IFolder unitFolder, final IScenarioResultMeta scenarioResultMeta )
+  protected static void fillResultModel( final IFolder unitFolder, final IScenarioResultMeta scenarioResultMeta, final boolean isRestart, final boolean isSteadyCalculation, final boolean isUnsteadyCalculation, final Integer restartStep )
   {
     try
     {
@@ -212,8 +211,7 @@ public class CalculationUnitSimMode1D2DCalcJob
       final GMLWorkspace metaWorkspace = GmlSerializer.createGMLWorkspace( metaURL, null );
       final Feature rootFeature = metaWorkspace.getRootFeature();
       final ICalcUnitResultMeta newCalcunitResultMeta = (ICalcUnitResultMeta) rootFeature.getAdapter( ICalcUnitResultMeta.class );
-
-      scenarioResultMeta.importCalculationUnit( newCalcunitResultMeta );
+      scenarioResultMeta.updateResultMeta( newCalcunitResultMeta, isRestart, isSteadyCalculation, isUnsteadyCalculation, restartStep );
     }
     catch( MalformedURLException e )
     {

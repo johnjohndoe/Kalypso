@@ -61,7 +61,6 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public class DeletePolyElementCmd implements IDiscrModel1d2dChangeCommand
 {
-
   private final IFEDiscretisationModel1d2d m_model1d2d;
 
   private final IPolyElement element2D;
@@ -119,7 +118,6 @@ public class DeletePolyElementCmd implements IDiscrModel1d2dChangeCommand
     {
       try
       {
-
         remEdgeCmd.setEdgeToDel( edge );
         remEdgeCmd.process();
       }

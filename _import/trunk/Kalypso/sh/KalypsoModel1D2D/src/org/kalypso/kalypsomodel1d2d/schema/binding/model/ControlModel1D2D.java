@@ -127,10 +127,16 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
 
   public Integer getIaccyc( )
   {
+    final Integer propertyValue;
     final Object property = getFeature().getProperty( Kalypso1D2DSchemaConstants.WB1D2DCONTROL_PROP_IACCYC );
     if( property instanceof BigInteger )
-      return ((BigInteger) property).intValue();
-    return (Integer) property;
+      propertyValue = ((BigInteger) property).intValue();
+    else
+      propertyValue = (Integer) property;
+    if( propertyValue != null && getRestart() && !isSteadySelected() && isUnsteadySelected() )
+      return propertyValue;
+    else
+      return 0;
   }
 
   public boolean getRestart( )

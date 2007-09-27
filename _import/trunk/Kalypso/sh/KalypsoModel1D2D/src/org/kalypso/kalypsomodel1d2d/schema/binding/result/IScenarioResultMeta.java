@@ -58,9 +58,9 @@ public interface IScenarioResultMeta extends IResultMeta
 {
   public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2DResult_NS, "ScenarioResultMeta" );
 
-  public ICalcUnitResultMeta findCalcUnitMetaResult( String calcUnitGmlID );
+  public ICalcUnitResultMeta findCalcUnitMetaResult( final String calcUnitGmlID );
 
-  public void importCalculationUnit( ICalcUnitResultMeta newCalcunitResultMeta ) throws Exception;
+  public void updateResultMeta( final ICalcUnitResultMeta newCalcunitResultMeta, final boolean isRestart, final boolean isSteadyCalculation, final boolean isUnsteadyCalculation, final Integer restartStep ) throws Exception;
 
   public void addDocument( final String name, final String description, final DOCUMENTTYPE type, final IPath path, final IStatus status, final BigDecimal minValue, final BigDecimal maxValue );
 }

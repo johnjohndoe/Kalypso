@@ -161,10 +161,19 @@ public class RoughnessStyleUpdateService extends Job
       final PoolableObjectType poolKey = new PoolableObjectType( "gml", roughnessUrl.toExternalForm(), roughnessUrl );
 
       final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
-      final GMLWorkspace roughnessWorkspace = (GMLWorkspace) pool.getObject( poolKey );
+      GMLWorkspace roughnessWorkspace;
 
-      // TODO: here happens a NPE (roughnessWorkspace == null) after creating a new 1d2d model
-
+      // Here happens a NPE (roughnessWorkspace == null) after creating a new 1d2d model
+      // reason: terrain model is still not loaded, so we will wait a bit...
+      synchronized( this )
+      {
+        do
+        {
+          Thread.sleep( 100 );
+          roughnessWorkspace = (GMLWorkspace) pool.getObject( poolKey );
+        }
+        while( roughnessWorkspace == null );
+      }
       final IRoughnessClsCollection collection = (IRoughnessClsCollection) roughnessWorkspace.getRootFeature().getAdapter( IRoughnessClsCollection.class );
       exportSLD( collection, monitor );
       return Status.OK_STATUS;

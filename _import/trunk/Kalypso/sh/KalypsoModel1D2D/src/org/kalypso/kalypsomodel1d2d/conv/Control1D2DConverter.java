@@ -126,8 +126,7 @@ public class Control1D2DConverter
     /* FILES DATA BLOCK */
     m_formatter.format( "OUTFIL  result\\Output%n" ); //$NON-NLS-1$
     m_formatter.format( "INKALYPSmodel.2d%n" ); //$NON-NLS-1$
-    final int restartStep = controlModel.getRestart() ? controlModel.getIaccyc() : 0;
-    m_formatter.format( "CONTROL A %4d 2d 0%n", restartStep ); //$NON-NLS-1$
+    m_formatter.format( "CONTROL A %4d 2d 0%n", controlModel.getIaccyc() ); //$NON-NLS-1$
     if( controlModel.getRestart() )
       m_formatter.format( "RESTART%n" ); //$NON-NLS-1$
 
@@ -273,7 +272,8 @@ public class Control1D2DConverter
     final IObservation<TupleResult> observation = controlModel.getTimeSteps();
     final TupleResult result = observation.getResult();
     final IComponent[] components = result.getComponents();
-    // final IComponent componentOrdinalNumber = ComponentUtilities.findComponentByID( components, Kalypso1D2DDictConstants.DICT_COMPONENT_ORDINAL_NUMBER );
+    // final IComponent componentOrdinalNumber = ComponentUtilities.findComponentByID( components,
+    // Kalypso1D2DDictConstants.DICT_COMPONENT_ORDINAL_NUMBER );
     final IComponent componentTime = ComponentUtilities.findComponentByID( components, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );
     final IComponent componentRelaxationsFaktor = ComponentUtilities.findComponentByID( components, Kalypso1D2DDictConstants.DICT_COMPONENT_UNDER_RELAXATION_FACTOR );
 
@@ -306,8 +306,8 @@ public class Control1D2DConverter
       {
         /* Unsteady state: a block for each time step */
         Calendar lastStepCal = ((XMLGregorianCalendar) firstRecord.getValue( componentTime )).toGregorianCalendar();
-
-        for( int stepCount = 1; iterator.hasNext(); stepCount++ )
+        int stepCount = 1;
+        for( ; iterator.hasNext(); stepCount++ )
         {
           final IRecord record = iterator.next();
           final float uRVal = ((BigDecimal) record.getValue( componentRelaxationsFaktor )).floatValue();
@@ -319,6 +319,8 @@ public class Control1D2DConverter
 
           lastStepCal = stepCal;
         }
+        if( controlModel.getIaccyc() > stepCount )
+          throw new SimulationException( stepCount + " timesteps defined, but " + controlModel.getIaccyc() + " is selected as first restart step.", null );
       }
     }
   }

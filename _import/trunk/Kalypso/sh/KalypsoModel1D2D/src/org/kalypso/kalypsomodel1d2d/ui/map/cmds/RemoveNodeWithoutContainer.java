@@ -48,22 +48,21 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1
  * Command to remove a node that has no container
  * 
  * @author Patrice Congo
- *
+ * 
  */
 public class RemoveNodeWithoutContainer implements ICommand
 {
- 
-  
+
   private IFEDiscretisationModel1d2d model1d2d;
+
   private IFE1D2DNode nodeToDel;
 
-  public RemoveNodeWithoutContainer(
-                          IFE1D2DNode nodeToDel, 
-                          IFEDiscretisationModel1d2d model1d2d )
+  public RemoveNodeWithoutContainer( IFE1D2DNode nodeToDel, IFEDiscretisationModel1d2d model1d2d )
   {
-    this.nodeToDel=nodeToDel;
-    this.model1d2d=model1d2d;
+    this.nodeToDel = nodeToDel;
+    this.model1d2d = model1d2d;
   }
+
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
@@ -85,22 +84,22 @@ public class RemoveNodeWithoutContainer implements ICommand
    */
   public void process( ) throws Exception
   {
-   IFE1D2DNode node = nodeToDel;
-   
-   if(node==null)
-   {
-     return;
-   }
-   
-   if(!node.getContainers().isEmpty())
-   {
-     return;
-   }
-   
-   model1d2d.getNodes().remove( node );
-   
+    IFE1D2DNode node = nodeToDel;
+
+    if( node == null )
+    {
+      return;
+    }
+
+    if( !node.getContainers().isEmpty() )
+    {
+      return;
+    }
+
+    model1d2d.getNodes().remove( node );
+
   }
-  
+
   public void setNodeToDel( IFE1D2DNode nodeToDel )
   {
     this.nodeToDel = nodeToDel;
@@ -111,7 +110,7 @@ public class RemoveNodeWithoutContainer implements ICommand
    */
   public void redo( ) throws Exception
   {
-    
+
   }
 
   /**
@@ -119,7 +118,7 @@ public class RemoveNodeWithoutContainer implements ICommand
    */
   public void undo( ) throws Exception
   {
-    
+
   }
 
 }

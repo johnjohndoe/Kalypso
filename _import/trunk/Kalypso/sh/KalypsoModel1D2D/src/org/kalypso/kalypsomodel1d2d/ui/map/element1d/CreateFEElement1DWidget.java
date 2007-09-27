@@ -88,11 +88,11 @@ public class CreateFEElement1DWidget extends AbstractWidget
     final double grabDistance = MapUtilities.calculateWorldDistance( getMapPanel(), m_currentPos, m_grabRadius * 2 );
     if( m_model1d2d == null )
       return;
-    
+
     m_node = m_model1d2d.findNode( m_currentPos, grabDistance );
-//  TODO: check if this repaint is necessary for the widget
+    // TODO: check if this repaint is necessary for the widget
     MapPanel panel = getMapPanel();
-    if ( panel != null)
+    if( panel != null )
       panel.repaint();
   }
 
@@ -162,13 +162,13 @@ public class CreateFEElement1DWidget extends AbstractWidget
     final ChangeDiscretiationModelCommand modelChangeCmd = new ChangeDiscretiationModelCommand( workspace, m_model1d2d );
 
     final int numberOfCurveSegments = curve.getNumberOfCurveSegments();
-    AddNodeCommand lastNodeCmd=null;
+    AddNodeCommand lastNodeCmd = null;
     for( int i = 0; i < numberOfCurveSegments; i++ )
     {
       final GM_CurveSegment segment = curve.getCurveSegmentAt( i );
 
       final int numberOfPoints = segment.getNumberOfPoints();
-      
+
       for( int j = 0; j < numberOfPoints - 1; j++ )
       {
         final GM_Position startPosition = segment.getPositionAt( j );
@@ -177,8 +177,7 @@ public class CreateFEElement1DWidget extends AbstractWidget
         final GM_Point startPoint = GeometryFactory.createGM_Point( startPosition, crs );
         final GM_Point endPoint = GeometryFactory.createGM_Point( endPosition, crs );
 
-        final AddNodeCommand addNode0 = 
-            lastNodeCmd!=null? lastNodeCmd:new AddNodeCommand( m_model1d2d, startPoint, m_grabRadius );
+        final AddNodeCommand addNode0 = lastNodeCmd != null ? lastNodeCmd : new AddNodeCommand( m_model1d2d, startPoint, m_grabRadius );
         final AddNodeCommand addNode1 = new AddNodeCommand( m_model1d2d, endPoint, m_grabRadius );
         lastNodeCmd = addNode1;
         final Add1DElementFromNodeCmd eleCmd = new Add1DElementFromNodeCmd( m_model1d2d, new AddNodeCommand[] { addNode0, addNode1 } );

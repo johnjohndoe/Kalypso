@@ -329,7 +329,11 @@ public class ResultMetaInfoViewer extends Viewer
       buf.append( "<li style=\"text\" bindent=\"10\" indent=\"120\" value=\"" + stepType + "\"></li>" );
 
       buf.append( "<li style=\"text\" bindent=\"10\" indent=\"120\" value=\"zum Zeitpunkt:\">" + stepTime + "</li>" );
-      buf.append( "<li style=\"text\" bindent=\"10\" indent=\"120\" value=\"Schrittnummer:\">" + stepNumber + "</li>" );
+      
+      // Just to avoid to write -1 as steady "timestep" 
+      if( !stepResult.getStepType().equals( IStepResultMeta.STEPTYPE.steady ) )
+        buf.append( "<li style=\"text\" bindent=\"10\" indent=\"120\" value=\"Schrittnummer:\">" + stepNumber + "</li>" );
+      
       buf.append( "<br/>" );
     }
 

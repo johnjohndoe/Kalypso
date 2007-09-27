@@ -122,7 +122,8 @@ public class ThemeContextHandler extends AbstractHandler implements IExecutableE
 
           if( m_mapModell != null )
             m_mapModell.addMapModelListener( m_modellListener );
-
+          // TODO and what if it IS null?
+          
           if( featureType != null )
           {
             final IKalypsoTheme activeTheme = m_mapModell == null ? null : m_mapModell.getActiveTheme();

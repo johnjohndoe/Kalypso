@@ -206,8 +206,10 @@ public class ResultManager implements Runnable
     if( matcher.matches() )
     {
       final String countStr = matcher.group( 1 );
-      final int count = Integer.parseInt( countStr ) - 1;
-      outDirName = "timestep-" + count;
+      final int count = Integer.parseInt( countStr );
+      // TODO Please explain why x-1? In that case, we have timestep-0 instead to start from 1
+      
+      outDirName = "timestep-" + countStr;
       timeStepNum = count;
     }
     else
