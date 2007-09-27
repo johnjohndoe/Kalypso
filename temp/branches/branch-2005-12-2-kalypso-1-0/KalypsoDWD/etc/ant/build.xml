@@ -11,7 +11,10 @@
      -->
     <property name="web.xml" value="${project}/src/org/kalypso/dwd/servlet/dwdfilecopy/web.xml"/>
     
+    <import file="${workspace}/KalypsoBuild/common-project/build.xml" />
+
     <path id="compile.classpath">
+    	<fileset dir="${compile-libs}" includes="**/*jar"/>
         <fileset dir="${project.lib}" includes="**/*.jar" />
         <fileset dir="${ant.file.commonbuild}/../compile-libs" includes="**/*.jar" />
         <fileset dir="${jwsdp}/jaxb/lib" includes="**/*.jar" />
@@ -22,7 +25,6 @@
         <fileset dir="${workspace}/KalypsoDeegree/build/deploy" includes="**/*.jar" />
     </path>
 
-    <import file="${workspace}/KalypsoBuild/common-project/build.xml" />
     <property name="project-name" value="KalypsoDWD" />
 
     <target name="binding">
