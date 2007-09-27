@@ -35,19 +35,38 @@ public class WiskiTuppleModel extends AbstractTuppleModel
    * @param conv
    *          a value converter (for instance when having different units)
    */
-  public WiskiTuppleModel( final IAxis[] axes, final LinkedList data, final IValueConverter conv, final WiskiTimeConverter timeConverter )
+  public WiskiTuppleModel( final IAxis[] axes, final LinkedList data, final IValueConverter conv,
+      final WiskiTimeConverter timeConverter )
   {
     super( axes );
 
     m_vc = conv;
 
-    m_data = data;
+    m_data = filter777( data );
     m_timeConverter = timeConverter;
     m_values = new Double[m_data.size()];
     m_kalypsoStati = new Integer[m_data.size()];
 
     for( int i = 0; i < axes.length; i++ )
       mapAxisToPos( axes[i], i );
+  }
+
+  /**
+   * Filters the -777 Values from the given list of data values
+   */
+  private static List filter777( final LinkedList data )
+  {
+    final LinkedList filteredData = new LinkedList();
+    for( final Iterator dataIter = data.iterator(); dataIter.hasNext(); )
+    {
+      final HashMap map = (HashMap)dataIter.next();
+
+      final String status = (String)map.get( "QUALITY" );
+      if( !"M".equals( status ) )
+        filteredData.add( map );
+    }
+
+    return filteredData;
   }
 
   /**
@@ -65,17 +84,17 @@ public class WiskiTuppleModel extends AbstractTuppleModel
   {
     switch( getPositionFor( axis ) )
     {
-      case 0:
-        return m_timeConverter.wiskiToKalypso( (Date)( (HashMap)m_data.get( index ) ).get( "timestamp" ) );
+    case 0:
+      return m_timeConverter.wiskiToKalypso( (Date)( (HashMap)m_data.get( index ) ).get( "timestamp" ) );
 
-      case 1:
-        return getValue( index );
+    case 1:
+      return getValue( index );
 
-      case 2:
-        return getKalypsoStatus( index );
+    case 2:
+      return getKalypsoStatus( index );
 
-      default:
-        throw new SensorException( "Position von Axis " + axis + " ist ungültig" );
+    default:
+      throw new SensorException( "Position von Axis " + axis + " ist ungültig" );
     }
   }
 
@@ -129,14 +148,14 @@ public class WiskiTuppleModel extends AbstractTuppleModel
   {
     switch( getPositionFor( axis ) )
     {
-      case 0:
-        throw new SensorException( "Kann Datum nicht setzen" );
-      case 1:
-        setValue( index, (Double)element );
-      case 2:
-        m_kalypsoStati[index] = (Integer)element;
-      default:
-        throw new SensorException( "Position von Achse " + axis + " ist ungültig" );
+    case 0:
+      throw new SensorException( "Kann Datum nicht setzen" );
+    case 1:
+      setValue( index, (Double)element );
+    case 2:
+      m_kalypsoStati[index] = (Integer)element;
+    default:
+      throw new SensorException( "Position von Achse " + axis + " ist ungültig" );
     }
   }
 
@@ -152,7 +171,7 @@ public class WiskiTuppleModel extends AbstractTuppleModel
       for( final Iterator it = m_data.iterator(); it.hasNext(); )
       {
         final HashMap map = (HashMap)it.next();
-        
+
         final Date wiskiDate = m_timeConverter.wiskiToKalypso( (Date)map.get( "timestamp" ) );
         if( date.equals( wiskiDate ) )
           return m_data.indexOf( map );

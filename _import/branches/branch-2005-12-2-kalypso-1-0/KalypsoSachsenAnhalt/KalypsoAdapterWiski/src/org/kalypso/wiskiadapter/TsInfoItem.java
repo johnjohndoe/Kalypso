@@ -190,8 +190,7 @@ public class TsInfoItem implements IRepositoryItem
    */
   Long getWiskiOffset()
   {
-   // TODO: bei offsetverschiebung auch defaultwert berücksichtigen: auf -1 setzen 
-    final String strOffset = m_map.getProperty( "tsinfo_offset_of", "0" );
+    final String strOffset = m_map.getProperty( "tsinfo_offset_of", "-1" );
 
     return Long.valueOf( strOffset );
   }

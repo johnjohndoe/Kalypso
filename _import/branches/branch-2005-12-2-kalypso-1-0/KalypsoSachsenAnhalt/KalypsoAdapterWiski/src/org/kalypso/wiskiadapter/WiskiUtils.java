@@ -185,6 +185,16 @@ public final class WiskiUtils
   }
 
   /**
+   * @return flag indicating if the time value must be set explicitely for fetched wiski values
+   */
+  public static boolean needsTimeAdjustment( final TsInfoItem item )
+  {
+    final int timeLevel = item.getWiskiTimeLevel();
+    /* At the moment, only dayly values get a explicit timestamp from wdp (wiskiBegin)*/
+    return timeLevel == 1;
+  }
+
+  /**
    * units to take for tsinfo_distvalue
    * <ul>
    * <li>1: seconds

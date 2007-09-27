@@ -41,6 +41,8 @@
 
 package org.kalypso.wiskiadapter;
 
+import java.util.logging.Level;
+
 import org.eclipse.jface.dialogs.IInputValidator;
 
 /**
@@ -77,6 +79,8 @@ public class WiskiConfigValidator implements IInputValidator
   private String m_debugDir;
 
   private boolean m_simulateMode;
+
+  private Level m_logLevel;
 
   /**
    * @see org.eclipse.jface.dialogs.IInputValidator#isValid(java.lang.String)
@@ -169,5 +173,10 @@ public class WiskiConfigValidator implements IInputValidator
   public boolean isSimulateMode()
   {
     return m_simulateMode;
+  }
+
+  public Level getLogLevel()
+  {
+    return m_logLevel;
   }
 }

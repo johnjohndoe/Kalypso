@@ -54,14 +54,15 @@ public class WiskiTimeConverter
 {
   private final TimeZone m_tzWiski;
 
-  /** flag indicating whether to convert the dates or not */
-  private final boolean m_needsConversion;
   /** [can be null] when dateOffset is also null, no conversion takes place */
   private Calendar m_wiskiBegin = null;
+
   /** [can be null] when beginDate is also null, no conversion takes place */
-  private int m_wiskiOffset = 0;
+  private Integer m_wiskiOffset = null;
+
   /** the calendar field for which the dateOffset will be used */
-  private int m_wiskiDateOffsetField = 0;
+  private Integer m_wiskiDateOffsetField = null;
+
   /** used for date conversions between wiski and kalypso */
   private final Calendar m_cal;
 
@@ -74,22 +75,21 @@ public class WiskiTimeConverter
   {
     m_tzWiski = tzSrc;
 
-    m_needsConversion = WiskiUtils.isConversionNeeded( tsinfo );
-
-    // TODO: Tageswerte: Zeitreihen mit Tagessummen können, im Gegensatz zu Hochauflösenden Zeitreihen,
-    // Lücken enthalten. Dies führt später zu Fehlern, da ereignisbasiert gedacht wird.
-    // Es müsste hier also zusätzlich noch mal auf das richtige Zeitraster interpoliert werden.
-
-    if( m_needsConversion )
+    if( WiskiUtils.needsTimeAdjustment( tsinfo ) )
     {
       // init a calendar for the begin date, it will be used to fetch the date fields
       m_wiskiBegin = Calendar.getInstance( m_tzWiski );
       m_wiskiBegin.setTime( tsinfo.getWiskiBegin() );
-      // offset is directly adapted to take care of kalypso conventions
+    }
 
-      // TODO: um den offset richtig zu aktivieren: hier die +1 einkommentieren!
-      m_wiskiOffset = tsinfo.getWiskiOffset().intValue() + 1;
-      m_wiskiDateOffsetField = WiskiUtils.getConversionCalendarField( tsinfo.getWiskiTimeLevel() );
+    // TODO: Tageswerte: Zeitreihen mit Tagessummen können Lücken enthalten. Dies führt später zu Fehlern, da
+    // ereignisbasiert gedacht wird.
+    // Es müsste hier also zusätzlich noch mal auf das richtige Zeitraster interpoliert werden.
+    if( WiskiUtils.isConversionNeeded( tsinfo ) )
+    {
+      // offset is directly adapted to take care of kalypso conventions
+      m_wiskiOffset = new Integer( tsinfo.getWiskiOffset().intValue() + 1 );
+      m_wiskiDateOffsetField = new Integer( WiskiUtils.getConversionCalendarField( tsinfo.getWiskiTimeLevel() ) );
     }
 
     m_cal = Calendar.getInstance( m_tzWiski );
@@ -111,19 +111,26 @@ public class WiskiTimeConverter
    */
   public Date wiskiToKalypso( final Date d )
   {
-    if( !m_needsConversion )
+    /* Shortcut for quick return */
+    if( m_wiskiBegin == null && m_wiskiDateOffsetField == null && m_wiskiOffset == null )
       return d;
 
     // Tageswert Problematik, Begin und Offset berücksichtigen
     m_cal.setTime( d );
 
-    // Begin-Zeit setzen (Hour, Minute, Second)
-    m_cal.set( Calendar.HOUR, m_wiskiBegin.get( Calendar.HOUR ) );
-    m_cal.set( Calendar.MINUTE, m_wiskiBegin.get( Calendar.MINUTE ) );
-    m_cal.set( Calendar.SECOND, m_wiskiBegin.get( Calendar.SECOND ) );
+    if( m_wiskiBegin != null )
+    {
+      // Begin-Zeit setzen (Hour, Minute, Second)
+      m_cal.set( Calendar.HOUR, m_wiskiBegin.get( Calendar.HOUR ) );
+      m_cal.set( Calendar.MINUTE, m_wiskiBegin.get( Calendar.MINUTE ) );
+      m_cal.set( Calendar.SECOND, m_wiskiBegin.get( Calendar.SECOND ) );
+    }
 
-    // Offset berücksichtigen
-    m_cal.add( m_wiskiDateOffsetField, m_wiskiOffset );
+    if( m_wiskiDateOffsetField != null && m_wiskiOffset != null )
+    {
+      // Offset berücksichtigen
+      m_cal.add( m_wiskiDateOffsetField.intValue(), m_wiskiOffset.intValue() );
+    }
 
     return m_cal.getTime();
   }
@@ -131,26 +138,53 @@ public class WiskiTimeConverter
   /**
    * Same as {@link #wiskiToKalypso(Date)}, but opposite direction (= negative offset)
    * 
-   *@see WiskiTimeConverter#wiskiToKalypso(Date) 
+   * @see WiskiTimeConverter#wiskiToKalypso(Date)
    * @return das Datum nachdem der Tagesanfang und -Offset berücksichtigt wurde
    */
   public Date kalypsoToWiski( final Date d )
   {
-    if( !m_needsConversion )
+    /* Shortcut for quick return */
+    if( m_wiskiBegin == null && m_wiskiDateOffsetField == null && m_wiskiOffset == null )
       return d;
 
     // Tageswert Problematik, Begin und Offset berücksichtigen
     m_cal.setTime( d );
 
-    // Begin-Zeit setzen (Hour, Minute, Second)
-    m_cal.set( Calendar.HOUR, m_wiskiBegin.get( Calendar.HOUR ) );
-    m_cal.set( Calendar.MINUTE, m_wiskiBegin.get( Calendar.MINUTE ) );
-    m_cal.set( Calendar.SECOND, m_wiskiBegin.get( Calendar.SECOND ) );
+    if( m_wiskiBegin != null )
+    {
+      // Begin-Zeit zurück auf 0 setzen (Hour, Minute, Second)
+      
+      // TODO: check if this is correct regarding the timezone
+      m_cal.set( Calendar.HOUR, 0 );
+      m_cal.set( Calendar.MINUTE, 0 );
+      m_cal.set( Calendar.SECOND, 0 );
+    }
 
-    // Offset berücksichtigen
-    m_cal.add( m_wiskiDateOffsetField, -m_wiskiOffset );
+    if( m_wiskiDateOffsetField != null && m_wiskiOffset != null )
+    {
+      // Offset berücksichtigen
+      m_cal.add( m_wiskiDateOffsetField.intValue(), -m_wiskiOffset.intValue() );
+    }
 
     return m_cal.getTime();
+  }
+  
+  /**
+   * @see java.lang.Object#toString()
+   */
+  public String toString()
+  {
+    final StringBuffer sb = new StringBuffer();
+    sb.append( "WiskiTimeConverter\t" );
+    sb.append( "TimeZone: " + m_tzWiski );
+    sb.append( "\t" );
+    sb.append( "WiskiBegin: " + m_wiskiBegin );
+    sb.append( "\t" );
+    sb.append( "WiskiDateOffsetField: " + m_wiskiDateOffsetField );
+    sb.append( "\t" );
+    sb.append( "WiskiOffset: " + m_wiskiOffset );
+    
+    return sb.toString();
   }
 
 }

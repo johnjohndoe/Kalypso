@@ -73,7 +73,7 @@ public class WiskiTimeserie implements IObservation
 
   private DateRange m_cachedDr = null;
 
-  private final static Logger LOG = Logger.getLogger( WiskiTimeserie.class.getName() );
+  private final Logger LOG = Logger.getLogger( WiskiTimeserie.class.getName() );
 
   public WiskiTimeserie( final TsInfoItem tsinfo )
   {
@@ -215,6 +215,8 @@ public class WiskiTimeserie implements IObservation
   {
     // if true, incomming and outgoing values are dumped to System.out
     // should be false normally
+    /* We would like to fetch true/false from the config files, but this is not easily made.... */
+    // TODO: set to false
     final boolean bDump = false;
 
     final DateRange dr;
@@ -246,7 +248,12 @@ public class WiskiTimeserie implements IObservation
 
       m_cachedDr = dr;
 
-      // TODO: also apply wiski-offset to request!
+      if( bDump )
+      {
+        System.out.println( "" );
+        System.out.println( "Fetching timeserie: " + getName() );
+        System.out.println( "DateRange: " + dr );
+      }
 
       try
       {
@@ -260,6 +267,9 @@ public class WiskiTimeserie implements IObservation
 
         // fetch WQTable now since we know the time-range
         fetchWQTable( getMetadataList(), dr.getFrom(), dr.getTo(), useType );
+
+        if( bDump )
+          System.out.println( "useType: " + useType );
       }
       catch( final Exception e )
       {
@@ -276,6 +286,9 @@ public class WiskiTimeserie implements IObservation
       {
         final WiskiTimeConverter timeConverter = new WiskiTimeConverter( call.getTimeZone(), m_tsinfo );
         m_cachedValues = new WiskiTuppleModel( getAxisList(), data, m_cv, timeConverter );
+
+        if( bDump )
+          System.out.println( "timeConverter: " + timeConverter );
       }
 
       if( bDump )
