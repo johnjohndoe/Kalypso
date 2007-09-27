@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.adapter;
 
@@ -95,7 +95,7 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
 
   private CommandableWorkspace m_workspace;
 
-  /** Flag to prevent update when source of modell change is this */
+  /** Flag to prevent update when source of model change is this */
   private boolean m_lockNextModelChange = false;
 
   public FeatureSelectionProfileProvider( final ISelectionProvider provider )
@@ -230,8 +230,7 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
     final IProfil profil = m_pem.getProfil();
-    if( profil != null && m_feature != null )
-    {
+    if( (profil != null) && (m_feature != null) )
       try
       {
         if( hint.isObjectChanged() || hint.isObjectDataChanged() || hint.isMarkerDataChanged() || hint.isMarkerMoved() || hint.isPointPropertiesChanged() || hint.isPointsChanged()
@@ -249,7 +248,6 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
         final IStatus status = StatusUtilities.statusFromThrowable( e );
         KalypsoModelWspmUIPlugin.getDefault().getLog().log( status );
       }
-    }
   }
 
   /**
@@ -270,10 +268,6 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
       return;
 
     if( modellEvent.isType( ModellEvent.FEATURE_CHANGE ) )
-    {
-      // TODO: this causes all profile controls to completely be re-created
-      // even, if the change originally came from one of those...
-
       try
       {
         final IProfil profil = ProfileFeatureFactory.toProfile( m_feature );
@@ -287,7 +281,6 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
         final IStatus status = StatusUtilities.statusFromThrowable( e );
         KalypsoModelWspmUIPlugin.getDefault().getLog().log( status );
       }
-    }
   }
 
   private void setProfile( final IProfil profil, final IStationResult[] results, final Feature feature, final CommandableWorkspace workspace )
@@ -309,6 +302,11 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
       m_feature.getWorkspace().addModellListener( this );
 
     fireOnProfilProviderChanged( this, oldPem, m_pem, m_viewData, m_viewData );
+  }
+
+  public ISelectionProvider getSelectionProvider( )
+  {
+    return m_provider;
   }
 
 }
