@@ -76,8 +76,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata align="center"
-                   fileref="img/bookinfo/KalypsoWSPM.png"
+        <imagedata align="left" fileref="img/WSPM/Modellstruktur.png"
                    scale="100" />
       </imageobject>
     </mediaobject>
@@ -366,7 +365,7 @@
 
       <mediaobject>
         <imageobject>
-          <imagedata align="center" fileref="img/WSPM/01_Willkommen.png"
+          <imagedata align="left" fileref="img/WSPM/01_Willkommen.png"
                      scale="90" />
         </imageobject>
       </mediaobject>
@@ -462,9 +461,9 @@
         </indexterm>
 
         <para>Hier wird standardgemäß die vordefinierte Perspektive
-        Spiegellinienberechnung beschrieben. Mit einer persönlichen
-        Anordnung einzelner Views (=Teilfenstern) und einer Abspeicherung
-        unter der Menuleiste <guimenuitem>Fenster &gt; Perspektive speichern
+        Spiegellinienberechnung beschrieben. Mit einer persönlichen Anordnung
+        einzelner Views (=Teilfenstern) und einer Abspeicherung unter der
+        Menuleiste <guimenuitem>Fenster &gt; Perspektive speichern
         unter...</guimenuitem> kann jede beliebige Anordnung an Teilfenstern
         gesichert werden.</para>
 
