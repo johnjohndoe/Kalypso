@@ -191,7 +191,9 @@ public class FE1D2DNode extends AbstractFeatureBinder implements IFE1D2DNode
   public void addContainer( String linkRef )
   {
     linkRef = Assert.throwIAEOnNullOrEmpty( linkRef );
-    containers.getWrappedList().add( linkRef );
+    FeatureList wrappedList = containers.getWrappedList();
+    if( !wrappedList.contains( linkRef ) )
+      wrappedList.add( linkRef );
   }
 
   /**

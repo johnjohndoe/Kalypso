@@ -12,7 +12,6 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.kalypsomodel1d2d.conv.ConversionIDProvider;
 import org.kalypso.kalypsomodel1d2d.conv.DiscretisationModel1d2dHandler;
 import org.kalypso.kalypsomodel1d2d.conv.IPositionProvider;
 import org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler;
@@ -43,7 +42,7 @@ public class Transformer implements ICoreRunnableWithProgress
       RMA10S2GmlConv.VERBOSE_MODE = false;
       final IPositionProvider positionProvider = new XYZOffsetPositionProvider( 0.0, 0.0, m_data.getCoordinateSystem( true ) );
       final RMA10S2GmlConv converter = new RMA10S2GmlConv( monitor, getNumberOfLines( m_data.getInputFile() ) );
-      final IRMA10SModelElementHandler handler = new DiscretisationModel1d2dHandler( m_data.getFE1D2DDiscretisationModel(), positionProvider, new ConversionIDProvider() );
+      final IRMA10SModelElementHandler handler = new DiscretisationModel1d2dHandler( m_data.getFE1D2DDiscretisationModel(), positionProvider );
       converter.setRMA10SModelElementHandler( handler );
       converter.parse( m_data.getInputFileURL().openStream() );
       if( monitor.isCanceled() )

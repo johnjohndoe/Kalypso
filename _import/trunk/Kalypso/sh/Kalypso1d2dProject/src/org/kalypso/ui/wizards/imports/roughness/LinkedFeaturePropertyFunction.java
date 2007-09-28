@@ -47,6 +47,7 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon;
 import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
@@ -79,7 +80,7 @@ public class LinkedFeaturePropertyFunction extends FeaturePropertyFunction
     {
       final Feature member = (Feature) feature.getProperty( m_clsMember );
       if( member == null )
-        return "_DEFAULT_STYLE_";
+        return IRoughnessPolygon.NO_ROUGHNESS;
       else
       {
         final Object object = member.getProperty( m_name );

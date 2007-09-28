@@ -195,7 +195,8 @@ public class EdgeInv implements IEdgeInv
   {
     containerID = Assert.throwIAEOnNullOrEmpty( containerID );
     FeatureList wrappedList = containers.getWrappedList();
-    wrappedList.add( containerID );
+    if( !wrappedList.contains( containerID ) )
+      wrappedList.add( containerID );
   }
 
   /**

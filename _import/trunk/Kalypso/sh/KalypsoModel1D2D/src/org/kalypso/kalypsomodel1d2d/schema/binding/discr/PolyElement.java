@@ -11,6 +11,7 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.ops.ModelOps;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.Util;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygon;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -336,7 +337,7 @@ public class PolyElement extends Element2D implements IPolyElement
   {
     final Object property = getFeature().getProperty( IFE1D2DElement.PROP_ROUGHNESS_STYLE );
     if( property == null || property.toString().length() == 0 )
-      return "_DEFAULT_STYLE_"; //$NON-NLS-1$
+      return IRoughnessPolygon.NO_ROUGHNESS;
     return property.toString();
   }
 

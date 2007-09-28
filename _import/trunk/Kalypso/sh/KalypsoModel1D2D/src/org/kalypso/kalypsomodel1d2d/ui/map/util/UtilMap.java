@@ -45,11 +45,17 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
@@ -70,6 +76,7 @@ import org.opengis.cs.CS_CoordinateSystem;
  * Provides map oriented utility methods.
  * 
  * @author Patrice Congo
+ * @author Dejan Antanaskovic
  */
 public class UtilMap
 {
@@ -83,22 +90,13 @@ public class UtilMap
   {
     final IWorkbench workbench = PlatformUI.getWorkbench();
     if( workbench == null )
-    {
-      System.out.println( Messages.getString( "UtilMap.0" ) ); //$NON-NLS-1$
       return null;
-    }
     final IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
     if( activeWorkbenchWindow == null )
-    {
-      System.out.println( Messages.getString( "UtilMap.1" ) ); //$NON-NLS-1$
       return null;
-    }
     final IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
     if( activePage == null )
-    {
-      System.out.println( Messages.getString( "UtilMap.2" ) ); //$NON-NLS-1$
       return null;
-    }
     final IViewPart findView = activePage.findView( MapView.ID );
     return findView;
   }
@@ -143,48 +141,72 @@ public class UtilMap
     throw new RuntimeException( Messages.getString( "UtilMap.4" ) );
   }
 
+  private static List<IKalypsoFeatureTheme> loadKalypsoFeatureThemes( final IMapModell mapModel )
+  {
+    final List<IKalypsoFeatureTheme> result = new ArrayList<IKalypsoFeatureTheme>();
+    final ICoreRunnableWithProgress waitForFeaturesLoadingRunnable = waitForFeaturesLoading( mapModel );
+    final IStatus waitForLoadingStatus = ProgressUtilities.busyCursorWhile( waitForFeaturesLoadingRunnable );
+    if( waitForLoadingStatus.isOK() )
+    {
+      final IKalypsoTheme[] allThemes = mapModel.getAllThemes();
+      for( int i = 0; i < allThemes.length; i++ )
+      {
+        final IKalypsoTheme kalypsoTheme = allThemes[i];
+        if( kalypsoTheme instanceof IKalypsoFeatureTheme )
+          result.add( (IKalypsoFeatureTheme) kalypsoTheme );
+      }
+    }
+    return result;
+  }
+
   /**
    * Method waits for all <code>IKalypsoFeatureTheme</code> objects from <code>mapModel</code> to be fully loaded
    * (not only themes to be assigned to the map, but also features to be loaded)
    * 
    * @param mapModel
    *            map model from which the themes should be loaded
-   * @return the list of loaded themes
    */
-  private static List<IKalypsoFeatureTheme> loadKalypsoFeatureThemes( final IMapModell mapModel )
+  private static ICoreRunnableWithProgress waitForFeaturesLoading( final IMapModell mapModel )
   {
-    Assert.throwIAEOnNullParam( mapModel, "mapModel" ); //$NON-NLS-1$
-    IKalypsoTheme[] allThemes;
-    IKalypsoFeatureTheme ftheme;
-    allThemes = mapModel.getAllThemes();
     final List<IKalypsoFeatureTheme> result = new ArrayList<IKalypsoFeatureTheme>();
-    synchronized( UtilMap.class )
+    final ICoreRunnableWithProgress waitForFeatureLoadingOperation = new ICoreRunnableWithProgress()
     {
-      boolean loadingNotFinished = true;
-      while( loadingNotFinished )
-        try
+      public IStatus execute( final IProgressMonitor monitor )
+      {
+        monitor.beginTask( "Warte auf Elemente laden...", IProgressMonitor.UNKNOWN );
+        boolean loadingNotFinished = true;
+        while( loadingNotFinished )
         {
-          loadingNotFinished = false;
-          UtilMap.class.wait( 100 );
-          allThemes = mapModel.getAllThemes();
-          for( final IKalypsoTheme theme : allThemes )
+          try
           {
-            if( theme instanceof IKalypsoFeatureTheme )
+            if( monitor.isCanceled() )
+              return Status.CANCEL_STATUS;
+            loadingNotFinished = false;
+            Thread.sleep( 200 );
+            monitor.worked( 10 );
+            final IKalypsoTheme[] allThemes = mapModel.getAllThemes();
+            for( final IKalypsoTheme theme : allThemes )
             {
-              ftheme = (IKalypsoFeatureTheme) theme;
-              if( !result.contains( ftheme ) )
-                loadingNotFinished = true;
-              final IFeatureType featureType = ftheme.getFeatureType();
-              if( featureType != null )
-                result.add( ftheme );
+              if( theme instanceof IKalypsoFeatureTheme )
+              {
+                final IKalypsoFeatureTheme ftheme = (IKalypsoFeatureTheme) theme;
+                if( !result.contains( ftheme ) )
+                  loadingNotFinished = true;
+                final IFeatureType featureType = ftheme.getFeatureType();
+                if( featureType != null )
+                  result.add( ftheme );
+              }
             }
           }
+          catch( final InterruptedException e )
+          {
+            return StatusUtilities.statusFromThrowable( e );
+          }
         }
-        catch( InterruptedException e )
-        {
-        }
-    }
-    return result;
+        return Status.OK_STATUS;
+      }
+    };
+    return waitForFeatureLoadingOperation;
   }
 
   /**

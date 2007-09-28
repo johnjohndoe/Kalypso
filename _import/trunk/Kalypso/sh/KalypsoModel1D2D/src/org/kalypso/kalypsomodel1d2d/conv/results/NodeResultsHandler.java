@@ -68,7 +68,6 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DDebug;
-import org.kalypso.kalypsomodel1d2d.conv.ConversionIDProvider;
 import org.kalypso.kalypsomodel1d2d.conv.EReadError;
 import org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler;
 import org.kalypso.kalypsomodel1d2d.conv.IRoughnessIDProvider;
@@ -1766,15 +1765,6 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#setIRoughnessIDProvider(org.kalypso.kalypsomodel1d2d.conv.IRoughnessIDProvider)
    */
   public void setIRoughnessIDProvider( final IRoughnessIDProvider roughnessIDProvider ) throws IllegalArgumentException
-  {
-    // TODO Auto-generated method stub
-
-  }
-
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#setModelElementIDProvider(org.kalypso.kalypsomodel1d2d.conv.IModelElementIDProvider)
-   */
-  public void setModelElementIDProvider( final ConversionIDProvider modelElementIDProvider ) throws IllegalArgumentException
   {
     // TODO Auto-generated method stub
 

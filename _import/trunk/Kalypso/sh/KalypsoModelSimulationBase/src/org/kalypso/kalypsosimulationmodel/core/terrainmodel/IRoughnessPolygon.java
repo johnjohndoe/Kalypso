@@ -34,6 +34,8 @@ public interface IRoughnessPolygon extends IFeatureWrapper2
 
   public static final QName PROP_CORRECTION_DP = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "correction_dp" );
 
+  public static final String NO_ROUGHNESS = Messages.getString( "RoughnessPolygon.NoRoughness" );
+
   /**
    * Returns the roughness ID for this polygon
    * 

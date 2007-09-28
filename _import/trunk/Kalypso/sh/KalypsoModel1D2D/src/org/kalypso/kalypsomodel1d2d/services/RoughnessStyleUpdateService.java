@@ -124,8 +124,6 @@ public class RoughnessStyleUpdateService extends Job
 
   private static final String DEFAULT_RULE_TITLE = "undefinierter Stil";
 
-  // private static final String DEFAULT_RULE_LITERAL = "_DEFAULT_STYLE_"; //$NON-NLS-1$
-
   private static final Color DEFAULT_RULE_FILLCOLOR = new Color( Integer.parseInt( "ffffff", 16 ) ); //$NON-NLS-1$
 
   private static final double DEFAULT_RULE_FILLOPACITY = 0.0;

@@ -42,10 +42,12 @@ package org.kalypso.kalypsomodel1d2d.conv;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.kalypso.kalypsomodel1d2d.ops.ModelOps;
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.EdgeInv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IEdgeInv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
@@ -53,12 +55,10 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
@@ -76,36 +76,23 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
    */
   private final IFEDiscretisationModel1d2d m_model;
 
-  private final IFeatureWrapperCollection<IFE1D2DNode> m_modelNodes;
-
-  private final IFeatureWrapperCollection<IFE1D2DEdge> m_modelEdges;
-
-  private final IFeatureWrapperCollection<IFE1D2DElement> m_modelElements;
-
-  private final IFeatureWrapperCollection<IFELine> m_modelContiLines;
-
   private final List<IFeatureWrapper2> m_createdFeatures = new ArrayList<IFeatureWrapper2>();
 
   private final GMLWorkspace m_workspace;
 
-  /**
-   * The provider used for conversion bettween native and gml ids
-   */
-  private ConversionIDProvider m_modelElementIDProvider;
-
   private final IPositionProvider m_positionProvider;
 
-  public DiscretisationModel1d2dHandler( final IFEDiscretisationModel1d2d model, final IPositionProvider positionProvider, final ConversionIDProvider modelElementIDProvider )
+  private final HashMap<Integer, String> m_nodesNameConversionMap = new HashMap<Integer, String>( 10000 );
+
+  private final HashMap<Integer, String> m_edgesNameConversionMap = new HashMap<Integer, String>( 50000 );
+
+  private final HashMap<Integer, String> m_elementsNameConversionMap = new HashMap<Integer, String>( 5000 );
+
+  public DiscretisationModel1d2dHandler( final IFEDiscretisationModel1d2d model, final IPositionProvider positionProvider )
   {
-    // Util.getCommandableWorkspace( modelClass )
     m_model = model;
     m_workspace = model.getWrappedFeature().getWorkspace();
-    m_modelNodes = model.getNodes();
-    m_modelEdges = model.getEdges();
-    m_modelElements = model.getElements();
-    m_modelContiLines = model.getContinuityLines();
     m_positionProvider = positionProvider;
-    m_modelElementIDProvider = modelElementIDProvider;
   }
 
   /**
@@ -113,7 +100,6 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
    */
   public void start( )
   {
-    System.out.println( "Parse start" );
   }
 
   /**
@@ -121,14 +107,11 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
    */
   public void end( )
   {
-    for( final IFE1D2DElement el : m_modelElements )
-    {
-      ModelOps.sortElementEdges( el );
-    }
-    // modelElements.getWrappedFeature().invalidEnvelope();
-    m_modelElements.getWrappedList().invalidate();
-    m_modelEdges.getWrappedList().invalidate();
-    m_modelNodes.getWrappedList().invalidate();
+    for( final IFE1D2DElement elelemt : m_model.getElements() )
+      ModelOps.sortElementEdges( elelemt );
+    m_model.getElements().getWrappedList().invalidate();
+    m_model.getEdges().getWrappedList().invalidate();
+    m_model.getNodes().getWrappedList().invalidate();
     final int size = m_createdFeatures.size();
     final Feature[] createdFeatures = new Feature[size];
     for( int i = size - 1; i >= 0; i-- )
@@ -146,133 +129,91 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
    */
   public void handleArc( final String lineString, final int id, final int node1ID, final int node2ID, final int elementLeftID, final int elementRightID, final int middleNodeID )
   {
-    final String edgeID = m_modelElementIDProvider.rma10sToGmlID( ERma10sModelElementKey.AR, id );
-    final String gmlNode1ID = m_modelElementIDProvider.rma10sToGmlID( ERma10sModelElementKey.PE, node1ID );
-    final String gmlNode2ID = m_modelElementIDProvider.rma10sToGmlID( ERma10sModelElementKey.PE, node2ID );
-
-    final IFE1D2DNode node1 = getNode( gmlNode1ID );
-    final IFE1D2DNode node2 = getNode( gmlNode2ID );
-    final Feature edgeFeature = m_workspace.getFeature( edgeID );
-    IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge = null;
+    final String edgeGmlID = m_edgesNameConversionMap.get( id );
+    final IFE1D2DEdge edge;
+    final Feature edgeFeature = m_workspace.getFeature( edgeGmlID );
+    final IFE1D2DNode node1 = getNode( node1ID );
+    final IFE1D2DNode node2 = getNode( node2ID );
     if( edgeFeature != null )
-      edge = (IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode>) edgeFeature.getAdapter( IFE1D2DEdge.class );
+      edge = (IFE1D2DEdge) edgeFeature.getAdapter( IFE1D2DEdge.class );
     else
     {
-      // TODO: this is a major performance bug!
-      // searching AND adding many new nodes causes the SplitSort of the edge-list to resort for every new egde
-
-      // TODO: commented it otu for the moment, because never an edge was found for
-      // existing valid .2d files
-      // check what to do
-      edge = m_model.findEdge( node1, node2 );
-      if( edge != null )
-      {
-        System.out.println( Messages.getString( "DiscretisationModel1d2dHandler.1" ) ); //$NON-NLS-1$
-      }
-    }
-
-    // boolean isNew=false;
-    if( edge == null )
-    {
-      edge = m_modelEdges.addNew( IFE1D2DEdge.QNAME, edgeID );
+      edge = m_model.getEdges().addNew( IFE1D2DEdge.QNAME );
       m_createdFeatures.add( edge );
-      edge.addNode( gmlNode1ID );
-      edge.addNode( gmlNode2ID );
-      node1.addContainer( edgeID );
-      node2.addContainer( edgeID );
-      // isNew=true;
-    }
-    // else
-    // // this never happens for existing (valid) .2d files
-    // // se coomend on find edges above
-    // System.out.println( "Edge already there: " + edge );
+      m_edgesNameConversionMap.put( id, edge.getGmlID() );
 
-    // TODO set elements
+      edge.addNode( node1.getGmlID() );
+      edge.addNode( node2.getGmlID() );
+      node1.addContainer( edge.getGmlID() );
+      node2.addContainer( edge.getGmlID() );
+    }
     if( elementLeftID == elementRightID )
     {
-      final String gmlID = m_modelElementIDProvider.rma10sToGmlID( ERma10sModelElementKey.FE, elementLeftID );
-      final IElement1D element1D = getElement1D( gmlID );
+      final IElement1D element1D = getElement1D( elementLeftID );
       element1D.setEdge( edge );
     }
     else
     {
       if( elementLeftID != 0 )
       {
-        try
-        {
-          final String gmlID = m_modelElementIDProvider.rma10sToGmlID( ERma10sModelElementKey.FE, elementLeftID );
-          final IPolyElement elementLeft = getElement2D( gmlID );
-          elementLeft.addEdge( edgeID );
-          edge.addContainer( gmlID );
-        }
-        catch( final Throwable th )
-        {
-          th.printStackTrace();
-        }
+        final IPolyElement elementLeft = getElement2D( elementLeftID );
+        elementLeft.addEdge( edge.getGmlID() );
+        edge.addContainer( elementLeft.getGmlID() );
       }
-
       if( elementRightID != 0 )
       {
-        try
+        final IPolyElement elementRight = getElement2D( elementRightID );
+        // TODO remove dependencies to the inv edge use find node instead
+        // change the api to get the whether is was newly created or not
+        IEdgeInv invertedEdge = edge.getEdgeInv();
+        if( invertedEdge == null )
         {
-          final String gmlID = m_modelElementIDProvider.rma10sToGmlID( ERma10sModelElementKey.FE, elementRightID );
-          final IPolyElement elementRight = getElement2D( gmlID );
-          // TODO remove dependencies to the inv edge use find node instead
-          // change the api to get the whether is was newly created or not
-          IEdgeInv inv = edge.getEdgeInv();
-          if( inv == null )
-          {
-            inv = new EdgeInv( edge, m_model );
-            m_createdFeatures.add( inv );
-          }
-          elementRight.addEdge( inv.getGmlID() );
-          inv.addContainer( gmlID );
+          invertedEdge = new EdgeInv( edge, m_model );
+          m_createdFeatures.add( invertedEdge );
+          // m_edgesNameConversionMap.put( id, invertedEdge.getGmlID() );
         }
-        catch( final Throwable th )
-        {
-          th.printStackTrace();
-        }
+        elementRight.addEdge( invertedEdge.getGmlID() );
+        invertedEdge.addContainer( elementRight.getGmlID() );
       }
     }
     // TODO add middle node
-
   }
 
-  private final IFE1D2DNode getNode( final String gmlID )
+  private final IFE1D2DNode getNode( final Integer rmaID )
   {
-    final Feature nodeFeature = m_workspace.getFeature( gmlID );
-    final IFE1D2DNode node = (IFE1D2DNode) nodeFeature.getAdapter( IFE1D2DNode.class );
-    return node;
+    final String nodeGmlID = m_nodesNameConversionMap.get( rmaID );
+    if( nodeGmlID == null )
+      return null;
+    final Feature nodeFeature = m_workspace.getFeature( nodeGmlID );
+    return (IFE1D2DNode) nodeFeature.getAdapter( IFE1D2DNode.class );
   }
 
-  private final IPolyElement getElement2D( final String gmlID )
+  private final IPolyElement getElement2D( final Integer rmaID )
   {
-    final Feature eleFeature = m_workspace.getFeature( gmlID );
-    if( eleFeature == null )
+    final String gmlID = m_elementsNameConversionMap.get( rmaID );
+    if( gmlID == null )
     {
-      final IPolyElement addNew = m_modelElements.addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT, gmlID, IPolyElement.class );
-      m_createdFeatures.add( addNew );
-      return addNew;
+      final IPolyElement newElement = m_model.getElements().addNew( IPolyElement.QNAME, IPolyElement.class );
+      m_createdFeatures.add( newElement );
+      m_elementsNameConversionMap.put( rmaID, newElement.getGmlID() );
+      return newElement;
     }
     else
-    {
-      return (IPolyElement) eleFeature.getAdapter( IPolyElement.class );
-    }
+      return (IPolyElement) m_workspace.getFeature( gmlID ).getAdapter( IPolyElement.class );
   }
 
-  private final IElement1D getElement1D( final String gmlID )
+  private final IElement1D getElement1D( final Integer rmaID )
   {
-    final Feature eleFeature = m_workspace.getFeature( gmlID );
-    if( eleFeature == null )
+    final String gmlID = m_elementsNameConversionMap.get( rmaID );
+    if( gmlID == null )
     {
-      final IElement1D addNew = m_modelElements.addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_POLY_ELEMENT, gmlID, IElement1D.class );
-      m_createdFeatures.add( addNew );
-      return addNew;
+      final IElement1D newElement = m_model.getElements().addNew( IPolyElement.QNAME, IElement1D.class );
+      m_createdFeatures.add( newElement );
+      m_elementsNameConversionMap.put( rmaID, newElement.getGmlID() );
+      return newElement;
     }
     else
-    {
-      return (IElement1D) eleFeature.getAdapter( IElement1D.class );
-    }
+      return (IElement1D) m_workspace.getFeature( gmlID ).getAdapter( IElement1D.class );
   }
 
   /**
@@ -288,22 +229,24 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleNode(java.lang.String, int, double, double,
    *      double)
    */
-  public void handleNode( final String lineString, final int id, final double easting, final double northing, final double elevation )
+  public void handleNode( final String lineString, final int id, final double xCoord, final double yCoord, final double elevation )
   {
-    // TODO use model.createNode to create from position
-    final String gmlID = m_modelElementIDProvider.rma10sToGmlID( ERma10sModelElementKey.PE, id );
-    if( m_workspace.getFeature( gmlID ) != null )
+    final GM_Point nodeLocation = m_positionProvider.getGMPoint( xCoord, yCoord, elevation );
+    final IFE1D2DNode existingNode = m_model.findNode( nodeLocation, 0.0 );
+    if( existingNode != null )
     {
+      // this means that in .2d file several nodes with different IDs have the same coords!
+      // What to do?
+
+      // For the moment, we will assume that it is the same node
+      m_nodesNameConversionMap.put( id, existingNode.getGmlID() );
+      Logger.getLogger( DiscretisationModel1d2dHandler.class.getName() ).log( Level.WARNING, "Multiple nodes with the same coordinates found. " + existingNode.getPoint().toString() );
       return;
     }
-
-    final IFE1D2DNode node = m_modelNodes.addNew( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE, gmlID );
+    final IFE1D2DNode node = m_model.getNodes().addNew( IFE1D2DNode.QNAME, IFE1D2DNode.class );
+    node.setPoint( nodeLocation );
     m_createdFeatures.add( node );
-    final GM_Point newLocation = m_positionProvider.getGMPoint( easting,// nativeX,
-    northing/* nativeY */, elevation// nativeZ
-    );
-    node.setPoint( newLocation );
-
+    m_nodesNameConversionMap.put( id, node.getGmlID() );
   }
 
   /**
@@ -329,14 +272,6 @@ public class DiscretisationModel1d2dHandler implements IRMA10SModelElementHandle
    */
   public void setIRoughnessIDProvider( final IRoughnessIDProvider roughnessIDProvider ) throws IllegalArgumentException
   {
-  }
-
-  /**
-   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#setModelElementIDProvider(org.kalypso.kalypsomodel1d2d.conv.IModelElementIDProvider)
-   */
-  public void setModelElementIDProvider( final ConversionIDProvider modelElementIDProvider ) throws IllegalArgumentException
-  {
-    this.m_modelElementIDProvider = modelElementIDProvider;
   }
 
   /**

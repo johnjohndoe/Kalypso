@@ -144,7 +144,7 @@ public class RoughnessAssignService extends Job
     boolean missingRoughnessCorrectionAxAy = true;
     boolean missingRoughnessCorrectionDP = true;
     String roughnessClsID = null;
-    String roughnessStyle = "_DEFAULT_STYLE_";
+    String roughnessStyle = IRoughnessPolygon.NO_ROUGHNESS;
     Double correctionParameterKS = null;
     Double correctionParameterAxAy = null;
     Double correctionParameterDP = null;

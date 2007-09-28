@@ -113,32 +113,26 @@ public class ModelOps
 
   public static final void sortElementEdges( final IFE1D2DElement element )
   {
-    
     // TODO: not every IFE1D2DElement is a IElement2D!!! What to do?
     if( !(element instanceof IElement2D) )
       return;
-
     final IFeatureWrapperCollection edges = ((IElement2D) element).getEdges();
     final List<IFE1D2DEdge> toSort = new ArrayList<IFE1D2DEdge>( edges );
     edges.clear();
-
-    if( element instanceof IElement2D )
-    {
-      sortElementEdges( (IElement2D) element, toSort );
-    }
+    sortElementEdges( (IElement2D) element, toSort );
   }
 
   public static final void sortElementEdges( IElement2D element, List<IFE1D2DEdge> toSortAndAddEdges )
   {
-// sortElementEdgesOld( element );
+    // sortElementEdgesOld( element );
     IFeatureWrapperCollection<IFE1D2DEdge> elementEdges = element.getEdges();
     final int INITIAL_SIZE = toSortAndAddEdges.size();// elementEdges.size();
     if( INITIAL_SIZE < 3 )
     {
       return;
-//      String str = "Illegal2D element:" + element.getGmlID() + " edgeCount=" + INITIAL_SIZE;
-//      throw new IllegalStateException( str );
-// return;
+      // String str = "Illegal2D element:" + element.getGmlID() + " edgeCount=" + INITIAL_SIZE;
+      // throw new IllegalStateException( str );
+      // return;
     }
     List<IFE1D2DEdge> edges = new ArrayList<IFE1D2DEdge>( toSortAndAddEdges );// element.getEdges());
 
@@ -147,7 +141,7 @@ public class ModelOps
 
     FeatureList edgeFeatureList = elementEdges.getWrappedList();
 
-// just select the first node
+    // just select the first node
     IFE1D2DEdge edge = edges.remove( 0 );
     edgeFeatureList.add( edge.getGmlID() );
     int SIZE = edges.size();
