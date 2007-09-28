@@ -9190,7 +9190,7 @@
           <pegel:QGMAX>9999</pegel:QGMAX>
           <pegel:Vorsp>24</pegel:Vorsp>
           <pegel:WDAT>0</pegel:WDAT>
-          <pegel:QDAT>1</pegel:QDAT>
+          <pegel:QDAT>0</pegel:QDAT>
           <pegel:VORGP>0</pegel:VORGP>
           <pegel:KUM>0</pegel:KUM>
           <pegel:WMIN>-9999</pegel:WMIN>

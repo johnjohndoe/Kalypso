@@ -3553,39 +3553,34 @@
 				<arg name="axisType" value="W"/>
 				<arg name="timeUnit" value="HOUR"/>
 				<arg name="timeStep" value="6"/>
+				<!--
 				<arg name="obs1">
 					<arg name="label" value="%obsname%"/>
-					<!-- <arg name="label" value="Saale-Talsperren"/> -->
 					<arg name="href" value="./Ergebnisse/Speicherinhalt/570250.zml"/>
 				</arg>
 				<arg name="obs2">
 					<arg name="label" value="%obsname%"/>
-					<!-- <arg name="label" value="TS Straußfurt"/> -->
 					<arg name="href" value="./Ergebnisse/Speicherinhalt/573100.zml"/>
 				</arg>
+				-->
 				<arg name="obs3">
 					<arg name="label" value="%obsname%"/>
-					<!-- <arg name="label" value="TS Kelbra"/> -->
 					<arg name="href" value="./Ergebnisse/Speicherinhalt/575406.zml"/>
 				</arg>
 				<arg name="obs4">
 					<arg name="label" value="%obsname%"/>
-					<!-- <arg name="label" value="TS Königshütte"/> -->
 					<arg name="href" value="./Ergebnisse/Speicherinhalt/579001.zml"/>
 				</arg>
 				<arg name="obs5">
 					<arg name="label" value="%obsname%"/>
-					<!-- <arg name="label" value="TS Wendefurth"/> -->
 					<arg name="href" value="./Ergebnisse/Speicherinhalt/579006.zml"/>
 				</arg>
 				<arg name="obs6">
 					<arg name="label" value="%obsname%"/>
-					<!-- <arg name="label" value="TS Rappbode"/> -->
 					<arg name="href" value="./Ergebnisse/Speicherinhalt/579012.zml"/>
 				</arg>
 				<arg name="obs7">
 					<arg name="label" value="%obsname%"/>
-					<!-- <arg name="label" value="HWR Kalte Bode"/> -->
 					<arg name="href" value="./Ergebnisse/Speicherinhalt/579330.zml"/>
 				</arg>
 			</arg>
