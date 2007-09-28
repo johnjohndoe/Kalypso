@@ -512,7 +512,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
           final double slope = teschkeRelation.getSlope();
           final Double min = teschkeConv.getMin();
           final Double max = teschkeConv.getMax();
-          
+
           formatter.format( "MM%10d%20.7f%20.7f%n", nodeID, min, max ); //$NON-NLS-1$
 
           final IPolynomial1D[] polyArea = teschkeConv.getPolynomialsByType( IWspmTuhhQIntervallConstants.DICT_PHENOMENON_AREA );
@@ -527,6 +527,15 @@ public class Gml2RMA10SConv implements INativeIDProvider
           writePolynome( formatter, "QP1", nodeID, polyRunoff[0], 0, 4, slope ); //$NON-NLS-1$
           writePolynome( formatter, "QP2", nodeID, polyRunoff[0], 4, 9, null ); //$NON-NLS-1$
           writePolynome( formatter, "QP3", nodeID, polyRunoff[0], 9, 13, null ); //$NON-NLS-1$
+
+          if( polyRunoff.length > 2 && polyArea.length > 2 )
+          {
+            formatter.format( "MH%10d%20.7f%20.7f%n", nodeID, polyRunoff[2].getRangeMin(), polyRunoff[2].getRangeMax() ); //$NON-NLS-1$
+            writePolynome( formatter, "QM", nodeID, polyArea[1], 0, 4, null ); //$NON-NLS-1$
+            writePolynome( formatter, "AM", nodeID, polyRunoff[1], 0, 4, null ); //$NON-NLS-1$
+            writePolynome( formatter, "QH", nodeID, polyArea[2], 0, 4, null ); //$NON-NLS-1$
+            writePolynome( formatter, "AH", nodeID, polyRunoff[2], 0, 4, null ); //$NON-NLS-1$
+          }
 
           final IPolynomial1D[] polyAlpha = teschkeConv.getPolynomialsByType( IWspmTuhhQIntervallConstants.DICT_PHENOMENON_ALPHA );
 
