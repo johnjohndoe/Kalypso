@@ -43,7 +43,9 @@ package org.kalypso.ui.wizards.results.filters;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE;
+import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta.STEPTYPE;
 
 /**
  * filter for hiding the non-georeference-able data in the {@link AddResultThemeWizard}. <br>
@@ -62,7 +64,14 @@ public class NonMapDataResultViewerFilter extends ViewerFilter
   @Override
   public boolean select( Viewer viewer, Object parent, Object element )
   {
-    if( element instanceof IDocumentResultMeta )
+    if( element instanceof IStepResultMeta )
+    {
+      IStepResultMeta stepResult = (IStepResultMeta) element;
+      STEPTYPE stepType = stepResult.getStepType();
+      if( stepType == STEPTYPE.error )
+        return false;
+    }
+    else if( element instanceof IDocumentResultMeta )
     {
       IDocumentResultMeta docResult = (IDocumentResultMeta) element;
       DOCUMENTTYPE documentType = docResult.getDocumentType();
@@ -73,5 +82,6 @@ public class NonMapDataResultViewerFilter extends ViewerFilter
     }
     else
       return true;
+    return true;
   }
 }

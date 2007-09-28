@@ -92,9 +92,9 @@ public class ResultManager implements Runnable
   private static final FilenameFilter FILTER_GMT = new PrefixSuffixFilter( "", ".gmt" );
 
   /**
-   * Time step id for steady calculation
+   * Time step id for non-unsteady calculation
    */
-  private static final int PSEUDO_STEADY_TIME_STEP_NR = -1;
+  private static final int PSEUDO_TIME_STEP_NR = -1;
 
   private final List<File> m_found2dFiles = new ArrayList<File>();
 
@@ -208,14 +208,14 @@ public class ResultManager implements Runnable
       final String countStr = matcher.group( 1 );
       final int count = Integer.parseInt( countStr );
       // TODO Please explain why x-1? In that case, we have timestep-0 instead to start from 1
-      
+
       outDirName = "timestep-" + countStr;
       timeStepNum = count;
     }
     else
     {
       outDirName = resultFileName;
-      timeStepNum = PSEUDO_STEADY_TIME_STEP_NR;
+      timeStepNum = PSEUDO_TIME_STEP_NR;
     }
 
     final File resultOutputDir = new File( m_outputDir, outDirName );

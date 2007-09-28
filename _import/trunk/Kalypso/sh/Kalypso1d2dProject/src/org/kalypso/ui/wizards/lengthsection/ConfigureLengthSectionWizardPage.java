@@ -381,8 +381,12 @@ public class ConfigureLengthSectionWizardPage extends WizardPage implements IWiz
     }
     else
     {
-      m_comboRiverLineNameField.setSelection( new StructuredSelection( m_comboRiverLineName.getElementAt( 1 ) ) );
-      m_riverNameField = properties[0].getQName().getLocalPart();
+      Object elementAt = m_comboRiverLineName.getElementAt( 1 );
+      if( elementAt != null )
+      {
+        m_comboRiverLineNameField.setSelection( new StructuredSelection( elementAt ) );
+        m_riverNameField = properties[0].getQName().getLocalPart();
+      }
     }
 
     // set the station fields to "RIVER_A" and "RIVER_B", If they does not exist, set them to the first field

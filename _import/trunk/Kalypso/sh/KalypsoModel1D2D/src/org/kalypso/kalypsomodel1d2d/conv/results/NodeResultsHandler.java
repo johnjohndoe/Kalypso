@@ -141,7 +141,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
   private static final long PROCESS_TIMEOUT = 50000;
 
-  private static final int WSP_EXTRAPOLATION_RANGE = 10;
+  private static final int WSP_EXTRAPOLATION_RANGE = 20;
 
   private final NodeResultMinMaxCatcher m_resultMinMaxCatcher;
 
@@ -167,16 +167,12 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   public void end( )
   {
     /* extrapolate the water level into dry areas */
-    // extrapolateWaterLevel( 0 );
-    /* create the triangles for each element */
-    // for( int i = 0; i < m_elemIndex.size(); i++ )
-    // {
-    // ElementResult elementResult = m_elemIndex.get( i );
-    // elementResult.createCenterNode();
-    //
-    // /* split the element */
-    // splitElement( elementResult );
-    // }
+    extrapolateWaterLevel( 0 ); // create the triangles for each element
+    for( ElementResult element : m_elemIndex.values() )
+    {
+      element.createCenterNode(); // split the element
+      splitElement( element );
+    }
   }
 
   /**
@@ -188,12 +184,10 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     if( count > WSP_EXTRAPOLATION_RANGE )
       return;
     int assigned = 0;
-    for( int i = 0; i < m_elemIndex.size(); i++ )
+    for( ElementResult element : m_elemIndex.values() )
     {
-      final ElementResult elementResult = m_elemIndex.get( i );
-      // final boolean checkWaterlevels = elementResult.checkWaterlevels();
-      // if( checkWaterlevels == true )
-      // assigned = assigned + 1;
+      if( element.checkWaterlevels() == true )
+        assigned = assigned + 1;
     }
     if( assigned > 0 )
     {
@@ -431,16 +425,13 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         /* check water levels for dry nodes */
         elementResult.checkWaterlevels();
 
-        /* split element into triangles if there is a wet node. */
-        // if( elementResult.isWet == true )
-        // {
-        /* create the center node */
         // TODO: wrong place for this, because now there is only one assignment. Actually the wetted elements can
         // extrapolate the water level to other elements. Maybe we can do this optionally.
-        elementResult.createCenterNode();
+
+        /* create the center node */
+        // elementResult.createCenterNode();
         /* split the element */
-        splitElement( elementResult );
-        // }
+        // splitElement( elementResult );
       }
     }
     else
@@ -992,7 +983,8 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   private void splitElement( final ElementResult elementResult )
   {
     final int numMidsideNodes = elementResult.getNumMidsideNodes();
-
+    if( numMidsideNodes == 0 )
+      return;
     for( int i = 0; i < numMidsideNodes; i++ )
     {
       // First triangle

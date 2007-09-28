@@ -40,8 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.conv.results;
 
-import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
@@ -54,11 +56,14 @@ public class ResultMeta1d2dFileHelper
    */
   private static void removeResultMetaFile( final IResultMeta resultMeta )
   {
-    final IFile file = (IFile) resultMeta.getFullPath();
+    final IPath resultPath = resultMeta.getFullPath();
+
+    final IResource member = ResourcesPlugin.getWorkspace().getRoot().findMember( resultPath );
+
     try
     {
-      if( file.exists() )
-        file.delete( true, true, new NullProgressMonitor() );
+      if( member != null )
+        member.delete( true, new NullProgressMonitor() );
     }
     catch( CoreException e )
     {
@@ -69,7 +74,7 @@ public class ResultMeta1d2dFileHelper
   /**
    * removes the specified resultMeta file including all of its children
    */
-  public static void removeResultMetaFileWithChidren( final IResultMeta resultMeta )
+  public static void removeResultMetaFileWithChidren( final IResultMeta resultMeta ) throws CoreException
   {
     final IFeatureWrapperCollection<IResultMeta> children = resultMeta.getChildren();
 

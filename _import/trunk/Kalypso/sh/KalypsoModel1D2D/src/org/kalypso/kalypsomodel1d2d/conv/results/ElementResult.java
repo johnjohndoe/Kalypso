@@ -176,6 +176,8 @@ public class ElementResult
    */
   private void interpolateCenterNode( )
   {
+    if( m_cornerNodes.size() == 0 )
+      return;
     /* get the center point location by using the corner nodes */
     double sumXCoord = 0;
     double sumYCoord = 0;
@@ -269,19 +271,25 @@ public class ElementResult
   /**
    * assigns the water level to a dry node from the nearest wetted node connected to the current node by an arc.
    */
-  private void assignWaterlevel( GMLNodeResult node, GMLNodeResult minDistNode )
+  private boolean assignWaterlevel( GMLNodeResult node, GMLNodeResult minDistNode )
   {
     final double waterlevel = minDistNode.getWaterlevel();
     final double depth = waterlevel - node.getPoint().getZ();
     if( depth > 0 )
     {
+      System.out.println( "Wasserspiegel zugewiesen (" + node.getNodeID() + "): " );
+      System.out.println( "alt:  " + node.getWaterlevel() );
+
       final List<Double> velocity = new LinkedList<Double>();
       velocity.add( 0.0 );
       velocity.add( 0.0 );
       node.setVelocity( velocity );
       node.setDepth( depth );
       node.setWaterlevel( waterlevel );
+
+      System.out.println( "neu:  " + node.getWaterlevel() );
       // node.setResultValues( 0, 0, depth, water level );
+      return true;
     }
     else
     {
@@ -292,6 +300,7 @@ public class ElementResult
       node.setDepth( 0.0 );
       node.setWaterlevel( waterlevel );
       // node.setResultValues( 0, 0, 0, water level );
+      return false;
     }
   }
 
@@ -299,8 +308,10 @@ public class ElementResult
    * checks for the dry nodes of an element if there is a wet node as neighbor. if this is the case the waterlevel of
    * the found wet node gets assigned to the dry node. This is important in order to get the proper inundation line.
    */
-  public void checkWaterlevels( )
+  public boolean checkWaterlevels( )
   {
+    boolean assigned = false;
+
     for( int i = 0; i < m_cornerNodes.size(); i++ )
     {
       final GMLNodeResult node = m_cornerNodes.get( i );
@@ -330,7 +341,8 @@ public class ElementResult
             {
 
               distance = currentNode.getPoint().distance( node.getPoint() );
-              if( distance < minDistance )
+              if( distance < minDistance && currentNode.getWaterlevel() > node.getPoint().getZ() )
+              // TODO: there could be a farer neighbor node that wets the node, so check if thats the case!
               {
                 minDistance = distance;
                 minDistNode = currentNode;
@@ -343,11 +355,15 @@ public class ElementResult
           {
 
             assignWaterlevel( node, minDistNode );
-            node.setAssigned( true );
-            // if a node gets an assigned water level and becomes wet, maybe that has influence to other dry nodes of
-            // the element which where processed before the current node -> therefore another water level check.
+
             if( node.isWet() == true )
+            {
+              assigned = true;
+              // if a node gets an assigned water level and becomes wet, maybe that has influence to other dry nodes of
+              // the element which where processed before the current node -> therefore another water level check.
               checkWaterlevels();
+            }
+            node.setAssigned( true );
           }
         }
       }
@@ -370,6 +386,8 @@ public class ElementResult
 
       NodeResultHelper.checkMidsideNodeData( nodeDown, nodeUp, node );
     }
+
+    return assigned;
   }
 
   /**
