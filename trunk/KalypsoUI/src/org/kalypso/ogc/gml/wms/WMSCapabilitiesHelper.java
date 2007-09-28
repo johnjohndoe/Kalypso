@@ -107,11 +107,9 @@ public class WMSCapabilitiesHelper
       // System.out.println( capabilitiesAsString );
       // final StringReader reader = new StringReader( capabilitiesAsString );
 
-      final Reader reader = urlReader;
-
       /* Added at change to degree2. */
       WMSCapabilitiesDocument doc = new WMSCapabilitiesDocument();
-      doc.load( reader, XMLFragment.DEFAULT_URL );
+      doc.load( urlReader, XMLFragment.DEFAULT_URL );
       WMSCapabilities createCapabilities = (WMSCapabilities) doc.parseCapabilities();
 
       /* Removed at change to degree2. */
