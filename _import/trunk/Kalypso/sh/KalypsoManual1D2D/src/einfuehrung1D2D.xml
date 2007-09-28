@@ -164,7 +164,10 @@
         </orderedlist>
 
         <para>Innerhalb dieser drei Hauptschritte werden dann alle
-        erforderlichen Unterschritte der Reihe nach durchgeführt.</para>
+        erforderlichen Unterschritte der Reihe nach durchgeführt. Wenn Sie das
+        Programm einmal verlassen haben und später an Ihrem Projekt
+        weiterarbeiten möchten, so ist der Arbeitsschritt an dem Sie zuletzt
+        gearbeitet haben fett markiert.</para>
       </section>
 
       <section>
@@ -177,6 +180,60 @@
         <para>Die Szenarien Ansicht ermöglicht den Wechsel der zu
         bearbeitenden Szenarien und das Ableiten erweiterter Szenarien eines
         Modelles.</para>
+
+        <section>
+          <title>Szenario wechseln</title>
+
+          <para>Unterhalb des Reiters im Aktivitätenfenster wird angezeigt
+          welches Szenario aktiviert ist. Bevor Sie damit beginnen können an
+          einem anderen Szenario/ Projekt zu arbeiten, muss dieses erst
+          aktiviert werden. Gehen Sie dafür in das Szenarienfenster und öffnen
+          Sie den Baum des gewünschten Projektes. Nun klicken Sie mit der
+          rechten Maustaste auf die Datei <filename>Basis</filename> (blaue
+          Kugel) und wählen aus dem Menü <guimenuitem>Szenario
+          aktivieren</guimenuitem>.</para>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata align="center"
+                         fileref="img/1D2D/szenario_aktivieren.png" />
+            </imageobject>
+          </mediaobject>
+        </section>
+
+        <section>
+          <title>Szenario ableiten</title>
+
+          <para>Um verschiedene Recheneinstellung vorzunehmen ist es sinnvoll
+          vorher eine Kopie der alten Einstellungen beizubehalten. Man behält
+          also das Basismodell und ändert lediglich die Einstellungen an der
+          Kopie. Hierfür muss kein neues Projekt angelegt werden, sondern es
+          lässt sich einfach ein weiteres Szenario von dem Basisszenario
+          ableiten. Dabei ist zu beachten, dass das Basisszenario nicht
+          aktiviert sein darf, wenn man ein abgeleitetes Szenario
+          erstellt.</para>
+
+          <para>Um ein Szenario abzuleiten klicken Sie mit der rechten
+          Maustaste bei dem nicht aktivierten, gewünschten Szenario auf die
+          <filename>Basis</filename> Datei und wählen mit Menü
+          <guimenuitem>Szenario hinzufügen</guimenuitem>. Es öffnet sich der
+          zugehörige Assistent. Geben Sie ihrem neuen Simulations Modell einen
+          Namen und fügen Sie ggf. einen Kommentar ein. Wenn Sie den Button
+          <guibutton>Fertig stellen</guibutton> drücken, wird der Assistent
+          geschlossen und ein abgeleitetes Szenario erstellt.</para>
+
+          <para>Wenn Sie das abgeleitete Szenario wieder löschen möchten,
+          müssen Sie zunächst wieder ein anderes Szenario aktivieren. Klicken
+          Sie dann mit der rechten Maustaste auf das abgeleitete Szenario, das
+          Sie löschen möchten und wählen Sie <guimenuitem>Szenario
+          löschen</guimenuitem>.</para>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/1D2D/szenario_hinzufügen.png" />
+            </imageobject>
+          </mediaobject>
+        </section>
       </section>
     </section>
 
@@ -256,6 +313,173 @@
       den Button <guibutton>Yes</guibutton>. Wenn Sie den Löschvorgang
       abbrechen wollen, klicken Sie auf den Button
       <guibutton>No</guibutton>.</para>
+    </section>
+
+    <section>
+      <title>Arbeiten und Darstellung in der Karte</title>
+
+      <para>Karte wird automatisch geladen, bei bestimmten Schritten des
+      Workflows.</para>
+
+      <table align="center" id="symbolleiste im Profileditor wspm">
+        <title>Die Grundfunktionen der Karte</title>
+
+        <tgroup align="center" cols="3">
+          <colspec align="left" colwidth="1*" />
+
+          <colspec align="left" />
+
+          <colspec align="left" />
+
+          <tbody>
+            <row>
+              <entry><figure>
+                  <mediaobject>
+                    <imageobject>
+                      <imagedata align="center"
+                                 fileref="img/1D2D/Icon_Karte_zoomen.png"
+                                 scale="110" valign="middle" />
+                    </imageobject>
+                  </mediaobject>
+                </figure></entry>
+
+              <entry valign="middle">Verkleinert einen gewählten
+              Kartenausschnitt, hereinzoomen</entry>
+
+              <entry align="left" valign="middle">Ausschnitt wählen (ziehe
+              Fenster von links oben nach rechts unten)</entry>
+            </row>
+
+            <row>
+              <entry><figure>
+                  <mediaobject>
+                    <imageobject>
+                      <imagedata align="center"
+                                 fileref="img/1D2D/Icon_Karte_Hand.png"
+                                 scale="110" valign="middle" />
+                    </imageobject>
+                  </mediaobject>
+                </figure></entry>
+
+              <entry valign="middle">Verschieben</entry>
+
+              <entry valign="middle">Blatt anfassen und Bildausschnitt
+              verschieben</entry>
+            </row>
+
+            <row>
+              <entry><figure>
+                  <mediaobject>
+                    <imageobject>
+                      <imagedata align="center"
+                                 fileref="img/1D2D/Icon_Karte_TINWerte.png"
+                                 scale="110" />
+                    </imageobject>
+                  </mediaobject>
+                </figure></entry>
+
+              <entry valign="middle">TIN Werte anzeigen</entry>
+
+              <entry valign="middle">Mauszeiger an gewünschte Stelle
+              halten</entry>
+            </row>
+
+            <row>
+              <entry><figure>
+                  <mediaobject>
+                    <imageobject>
+                      <imagedata align="center"
+                                 fileref="img/1D2D/Icon_Karte_herauszoomen.png"
+                                 scale="110" valign="middle" />
+                    </imageobject>
+                  </mediaobject>
+                </figure></entry>
+
+              <entry valign="middle"><para>Verkleinert den Kartenausschnitt,
+              herauszoomen</para></entry>
+
+              <entry>Button betätigen</entry>
+            </row>
+
+            <row>
+              <entry><figure>
+                  <mediaobject>
+                    <imageobject>
+                      <imagedata align="center"
+                                 fileref="img/1D2D/Icon_Karte_hereinzoomen.png"
+                                 scale="110" />
+                    </imageobject>
+                  </mediaobject>
+                </figure></entry>
+
+              <entry valign="middle">Vergrößert den Kartenausschnitt,
+              hereinzoomen in die Mitte des Kartenausschnitts</entry>
+
+              <entry valign="middle">Button betätigen</entry>
+            </row>
+
+            <row>
+              <entry><figure>
+                  <mediaobject>
+                    <imageobject>
+                      <imagedata align="center"
+                                 fileref="img/1D2D/Icon_Karte_Ausschnittverschieben.png"
+                                 scale="110" />
+                    </imageobject>
+                  </mediaobject>
+                </figure></entry>
+
+              <entry valign="middle">Verschieben der Kartenansicht nach links,
+              unten, oben oder rechts</entry>
+
+              <entry valign="middle">Durch betätigen der Buttons verschiebt
+              sich der Kartenausschnitt in voreingestellten Schritten</entry>
+            </row>
+
+            <row>
+              <entry><figure>
+                  <mediaobject>
+                    <imageobject>
+                      <imagedata align="center"
+                                 fileref="img/1D2D/Icon_Karte_Gesamtansicht.png"
+                                 scale="110" />
+                    </imageobject>
+                  </mediaobject>
+                </figure></entry>
+
+              <entry valign="middle">Maximieren der Kartenansicht</entry>
+
+              <entry valign="middle">Zeigt die gesamte Karte an</entry>
+            </row>
+
+            <row>
+              <entry><mediaobject>
+                  <imageobject>
+                    <imagedata fileref="img/1D2D/Icon_Karte_Kartenthema.png" />
+                  </imageobject>
+                </mediaobject></entry>
+
+              <entry>Verschiebt den Kartenausschnitt auf das aktive
+              Kartenthema</entry>
+
+              <entry>Button betätigen</entry>
+            </row>
+
+            <row>
+              <entry><mediaobject>
+                  <imageobject>
+                    <imagedata fileref="img/1D2D/Icon_Karte_screenshot.png" />
+                  </imageobject>
+                </mediaobject></entry>
+
+              <entry>Map screenshot</entry>
+
+              <entry>Diese Funktion macht ein Bild von dem aktuellen
+              Kartenausschnitt</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
     </section>
   </section>
 

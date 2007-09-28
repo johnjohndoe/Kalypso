@@ -990,23 +990,68 @@
       gekoppeltes Modell berechnen zu können.</para>
 
       <section>
-        <title>1D-2D-Linienkopplung</title>
-
-        <indexterm>
-          <primary>Lininenkopplung Kalypso 1D2D</primary>
-        </indexterm>
-
-        <para></para>
-      </section>
-
-      <section>
         <title>Ränder und Übergänge definieren</title>
 
         <indexterm>
           <primary>Ränder und Übergänge</primary>
         </indexterm>
 
-        <para></para>
+        <para>Kontinuitätslinien bearbeiten. Wozu dienen Kontinuitätslinien???
+        In der Karte grün dargestellt.</para>
+
+        <table align="center" id="symbolleiste im Profileditor wspm">
+          <title>Zusatzfunktionen der Karte zur Bearbeitung der
+          Kontinuitätslinien</title>
+
+          <tgroup align="center" cols="3">
+            <colspec align="left" colwidth="1*" />
+
+            <colspec align="left" />
+
+            <colspec align="left" />
+
+            <tbody>
+              <row>
+                <entry><figure>
+                    <mediaobject>
+                      <imageobject>
+                        <imagedata align="center"
+                                   fileref="img/1D2D/Icon_Karte_Kontin_hinzufuegen.png"
+                                   scale="110" valign="middle" />
+                      </imageobject>
+                    </mediaobject>
+                  </figure></entry>
+
+                <entry valign="middle">Kontinuitätslinie erzeugen</entry>
+
+                <entry align="left" valign="middle">Startpunkt der
+                Kontinuitätslinie mit einem einfachen Mausklick festlegen.
+                Weitere Punkte können ebenfalls mit einem Mausklick festgelegt
+                werden. Mit einem Doppelklick auf den Endpunkt beenden Sie
+                eine Kontinuitätslinie.</entry>
+              </row>
+
+              <row>
+                <entry><figure>
+                    <mediaobject>
+                      <imageobject>
+                        <imagedata align="center"
+                                   fileref="img/1D2D/Icon_Karte_Kontin_entfernen.png"
+                                   scale="110" valign="middle" />
+                      </imageobject>
+                    </mediaobject>
+                  </figure></entry>
+
+                <entry valign="middle">Kontinuitätslinie markieren und
+                entfernen</entry>
+
+                <entry valign="middle">Markieren Sie mit dem Mauszeiger die
+                Kontinuitätslinie. Wenn sie rot erscheint drücken Sie Entf auf
+                der Tastatur und die Kontinuitätslinie wird entfernt.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
       </section>
 
       <section>
@@ -1016,27 +1061,342 @@
           <primary>Randbedingungen</primary>
         </indexterm>
 
+        <para>In der Karte als gelbe Punkte dargestellt bzw. gelb umrahmte
+        Knoten.</para>
+
+        <table align="center" id="symbolleiste im Profileditor wspm">
+          <title>Zusatzfunktionen der Karte zur Bearbeitung der
+          Randbedingungen</title>
+
+          <tgroup align="center" cols="3">
+            <colspec align="left" colwidth="1*" />
+
+            <colspec align="left" />
+
+            <colspec align="left" />
+
+            <tbody>
+              <row>
+                <entry><figure>
+                    <mediaobject>
+                      <imageobject>
+                        <imagedata align="center"
+                                   fileref="img/1D2D/Icon_Karte_Randb_zuordnen.png"
+                                   scale="110" valign="middle" />
+                      </imageobject>
+                    </mediaobject>
+                  </figure></entry>
+
+                <entry valign="middle">Randbedingungen zuordnen</entry>
+
+                <entry align="left" valign="middle"></entry>
+              </row>
+
+              <row>
+                <entry><figure>
+                    <mediaobject>
+                      <imageobject>
+                        <imagedata align="center"
+                                   fileref="img/1D2D/Icon_Karte_Randb_entfernen.png"
+                                   scale="110" valign="middle" />
+                      </imageobject>
+                    </mediaobject>
+                  </figure></entry>
+
+                <entry valign="middle">Randbedingungen markieren und
+                entfernen</entry>
+
+                <entry valign="middle">Betätigen Sie den Button und markieren
+                Sie die Randbedingung, die gelöscht werden soll. Diese wird
+                dann automatisch entfernt.</entry>
+              </row>
+
+              <row>
+                <entry><mediaobject>
+                    <imageobject>
+                      <imagedata fileref="img/1D2D/Icon_Karte_Randb_bearbeiten.png" />
+                    </imageobject>
+                  </mediaobject></entry>
+
+                <entry>Randbedingungen bearbeiten</entry>
+
+                <entry>Sobald eine Randbedingung ausgewählt worden ist, öffnet
+                sich der Feature View und die Randbedingung kann so bearbeitet
+                werden.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para><emphasis role="bold">Randbedingungen zuordnen</emphasis></para>
+
+        <para>Was für Randbedingungen gibt es, wo können diese gesetzt
+        werden</para>
+
+        <para>Assistent für die Zuordnung von Randbedingungen. Stationäre
+        Randbedingungen (Standardwert 20,0???), Instationäre Randbedingungen
+        (spezifische Abflusszeitreihe oder importierte Zeitreihe). Wann drücke
+        ich auf next (Zeitreihendefinition) und wann auf finish??</para>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/1D2D/Randbed_zuordnen_1.png" />
+          </imageobject>
+        </mediaobject>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/1D2D/Randbed_zuordnen_2.png" />
+          </imageobject>
+        </mediaobject>
+
+        <para><emphasis role="bold">Randbedingungen
+        bearbeiten</emphasis></para>
+
+        <para>Gewünschte Randbedingung markieren, dann öffnet sich der Feature
+        View mit folgenden Optionen.</para>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/1D2D/Randbed_bearbeiten.png" />
+          </imageobject>
+        </mediaobject>
+      </section>
+
+      <section>
+        <title>1D-Einmündung</title>
+
         <para></para>
+      </section>
+
+      <section>
+        <title>1D-2D-Linienkopplung</title>
+
+        <indexterm>
+          <primary>Lininenkopplung Kalypso 1D2D</primary>
+        </indexterm>
+
+        <para>Ermöglicht die Erstellung einer Kopplung von 1D zu 2D zwischen
+        einem 1D-Element und einer 2D-Randlinie.</para>
+
+        <para>Eine 1D-2D Kopplung erscheint in einem hellen grün</para>
+
+        <table align="center" id="symbolleiste im Profileditor wspm">
+          <title>Zusatzfunktionen der Karte zur Erstellung einer
+          1D-2D-Linienkopplung</title>
+
+          <tgroup align="center" cols="3">
+            <colspec align="left" colwidth="1*" />
+
+            <colspec align="left" />
+
+            <colspec align="left" />
+
+            <tbody>
+              <row>
+                <entry><figure>
+                    <mediaobject>
+                      <imageobject>
+                        <imagedata align="center"
+                                   fileref="img/1D2D/Icon_Karte_1D2DKopplung_herstellen.png"
+                                   scale="110" valign="middle" />
+                      </imageobject>
+                    </mediaobject>
+                  </figure></entry>
+
+                <entry valign="middle">1D-2D-Linienkopplung erstellen</entry>
+
+                <entry align="left" valign="middle">Markieren Sie zunächst die
+                eine Randlinie (z.B. des 1D Elements), die dann rot erscheint
+                und markieren Sie dann die andere Randlinie (z.B. die
+                2D-Randlinie), so dass diese ebenfalls rot wird. Drücken Sie
+                anschließend auf Enter (Einfügen) und die Kopplung wird
+                abgeschlossen.</entry>
+              </row>
+
+              <row>
+                <entry><figure>
+                    <mediaobject>
+                      <imageobject>
+                        <imagedata align="center"
+                                   fileref="img/1D2D/Icon_Karte_1D2DKopplung_entfernen.png"
+                                   scale="110" valign="middle" />
+                      </imageobject>
+                    </mediaobject>
+                  </figure></entry>
+
+                <entry valign="middle">Kopplung markieren und
+                entfernen</entry>
+
+                <entry valign="middle">Markieren Sie mit dem Mauszeiger die
+                Kontinuitätslinie. Wenn sie rot erscheint drücken Sie Entf auf
+                der Tastatur und die Kontinuitätslinie wird entfernt.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <figure>
+          <title>1D-2D-Linienkopplung erstellen</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/1D2D/1D2DKopplung_erstellen.png" />
+            </imageobject>
+          </mediaobject>
+        </figure>
       </section>
 
       <section>
         <title>Berechnungeinheiten modellieren</title>
 
         <indexterm>
-          <primary>Berechnungeinheiten</primary>
+          <primary>Berechnungseinheiten</primary>
         </indexterm>
 
-        <para></para>
-      </section>
+        <para>Bei diesem Schritt öffnet sich neben der Karte eine Karten
+        Werkzeugansicht. Sie enthält alle Tools die nötig sind, um die
+        Berechnungseinheiten einzustellen.</para>
 
-      <section>
-        <title>1D-2D-Elementkopplung</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/1D2D/Berechneinh_Ansicht.png" />
+          </imageobject>
+        </mediaobject>
 
-        <indexterm>
-          <primary>Elementkopplung Kalypso 1D2D<guilabel></guilabel></primary>
-        </indexterm>
+        <table align="center" id="symbolleiste im Profileditor wspm">
+          <title>Funktionen der Karten Werkzeugansicht/
+          Berechnungseinheiten</title>
 
-        <para></para>
+          <tgroup align="center" cols="3">
+            <colspec align="left" colwidth="1*" />
+
+            <colspec align="left" />
+
+            <colspec align="left" />
+
+            <tbody>
+              <row>
+                <entry><figure>
+                    <mediaobject>
+                      <imageobject>
+                        <imagedata align="center"
+                                   fileref="img/1D2D/Icon_Werkzeug_Berechneinh_max.png"
+                                   scale="110" valign="middle" />
+                      </imageobject>
+                    </mediaobject>
+                  </figure></entry>
+
+                <entry valign="middle">Berechnungseinheit maximieren</entry>
+
+                <entry align="left" valign="middle"></entry>
+              </row>
+
+              <row>
+                <entry><figure>
+                    <mediaobject>
+                      <imageobject>
+                        <imagedata align="center"
+                                   fileref="img/1D2D/Icon_Werkzeug_Berechneinh_loeschen.png"
+                                   scale="110" valign="middle" />
+                      </imageobject>
+                    </mediaobject>
+                  </figure></entry>
+
+                <entry valign="middle">Berechnungseinheit löschen</entry>
+
+                <entry valign="middle"></entry>
+              </row>
+
+              <row>
+                <entry><mediaobject>
+                    <imageobject>
+                      <imagedata fileref="img/1D2D/Icon_Werkzeug_Berechneinh_hinzufuegen.png" />
+                    </imageobject>
+                  </mediaobject></entry>
+
+                <entry>Berechnungseinheit hinzufügen</entry>
+
+                <entry></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <table align="center" id="symbolleiste im Profileditor wspm">
+          <title>Funktionen der Karten Werkzeugansicht/ Berechnungseinheiten
+          verwalten</title>
+
+          <tgroup align="center" cols="3">
+            <colspec align="left" colwidth="1*" />
+
+            <colspec align="left" />
+
+            <colspec align="left" />
+
+            <tbody>
+              <row>
+                <entry><figure>
+                    <mediaobject>
+                      <imageobject>
+                        <imagedata align="center"
+                                   fileref="img/1D2D/Icon_Werkzeug_Element+.png"
+                                   scale="110" valign="middle" />
+                      </imageobject>
+                    </mediaobject>
+                  </figure></entry>
+
+                <entry valign="middle">Element(e) zur Randbedingung
+                hinzufügen/ entfernen</entry>
+
+                <entry align="left" valign="middle"></entry>
+              </row>
+
+              <row>
+                <entry><figure>
+                    <mediaobject>
+                      <imageobject>
+                        <imagedata align="center"
+                                   fileref="img/1D2D/Icon_Werkzeug_Randlinie+-.png"
+                                   scale="110" valign="middle" />
+                      </imageobject>
+                    </mediaobject>
+                  </figure></entry>
+
+                <entry valign="middle">Randlinie(n) zur Randbedingung
+                hinzufügen/ entfernen</entry>
+
+                <entry valign="middle"></entry>
+              </row>
+
+              <row>
+                <entry><mediaobject>
+                    <imageobject>
+                      <imagedata fileref="img/1D2D/Icon_Werkzeug_Subberechneinh+.png" />
+                    </imageobject>
+                  </mediaobject></entry>
+
+                <entry>Sub-Berechnungseinheiten zur Randbedingung hinzufügen/
+                entfernen</entry>
+
+                <entry></entry>
+              </row>
+
+              <row>
+                <entry><mediaobject>
+                    <imageobject>
+                      <imagedata fileref="img/1D2D/Icon_Werkzeug_RB+-.png" />
+                    </imageobject>
+                  </mediaobject></entry>
+
+                <entry>Randbedingung(en) zur Randbedingung hinzufügen/
+                entfernen</entry>
+
+                <entry></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
       </section>
     </section>
   </section>
