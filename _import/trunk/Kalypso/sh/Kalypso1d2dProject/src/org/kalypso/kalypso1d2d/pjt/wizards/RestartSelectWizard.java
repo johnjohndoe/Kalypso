@@ -115,7 +115,7 @@ public class RestartSelectWizard extends Wizard implements INewWizard
   {
     setWindowTitle( Messages.getString( "RestartSelectWizard.0" ) ); //$NON-NLS-1$
     final DocumentResultViewerFilter resultFilter = new DocumentResultViewerFilter();
-    m_restartSelectWizardPage1 = new RestartSelectWizardPage1( "restartSelectionPage", Messages.getString( "RestartSelectWizard.8" ), null, m_resultModel, m_controlModel.getRestartInfos(), resultFilter, RESULTS_FILE_PATH ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_restartSelectWizardPage1 = new RestartSelectWizardPage1( "restartSelectionPage", Messages.getString( "RestartSelectWizard.8" ), null, m_resultModel, m_controlModel.getRestart(), m_controlModel.getRestartInfos(), resultFilter, RESULTS_FILE_PATH ); //$NON-NLS-1$ //$NON-NLS-2$
     m_restartSelectWizardPage1.setResultMeta( m_resultModel );
     m_restartSelectWizardPage1.setTitle( Messages.getString( "RestartSelectWizard.3" ) ); //$NON-NLS-1$
     m_restartSelectWizardPage1.setDescription( Messages.getString( "RestartSelectWizard.4" ) ); //$NON-NLS-1$

@@ -97,51 +97,62 @@ public class ScenarioResultMeta extends ResultMeta implements IScenarioResultMet
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta#importCalculationUnit(org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta)
    */
-  public void updateResultMeta( final ICalcUnitResultMeta calculationUnit, final boolean isRestart, final boolean isSteadyCalculation, final boolean isUnsteadyCalculation, final Integer restartStep ) throws Exception
+  public void updateResultMeta( final ICalcUnitResultMeta newCalcUnitMeta, final boolean isRestart, final boolean isSteadyCalculation, final boolean isUnsteadyCalculation, final Integer restartStep ) throws Exception
   {
     /* the managing of the result db data (documents) should happen somewhere outside the db */
     // look for existing results of this calc unit
-    
     // this cannot happen, but just to be sure...
     if( isRestart && isUnsteadyCalculation && restartStep == null )
       throw new RuntimeException( "Unsteady restart is calculated, but there is no information regarding the restart step. Result database cannot be updated." );
 
-    final ICalcUnitResultMeta existingCalcUnitMeta = findCalcUnitMetaResult( calculationUnit.getCalcUnit() );
-    if( existingCalcUnitMeta != null )
+    final ICalcUnitResultMeta oldCalcUnitMeta = findCalcUnitMetaResult( newCalcUnitMeta.getCalcUnit() );
+    if( oldCalcUnitMeta != null )
     {
       if( isRestart )
       {
-        final IFeatureWrapperCollection<IResultMeta> children = existingCalcUnitMeta.getChildren();
-        final List<IResultMeta> childrenToRemove = new ArrayList<IResultMeta>();
-        for( final IResultMeta resultMeta : children )
+        final IFeatureWrapperCollection<IResultMeta> oldChildren = oldCalcUnitMeta.getChildren();
+        final IFeatureWrapperCollection<IResultMeta> newChildren = newCalcUnitMeta.getChildren();
+        final List<IResultMeta> oldChildrenToRemove = new ArrayList<IResultMeta>();
+        final List<IResultMeta> newChildrenToRemove = new ArrayList<IResultMeta>();
+        for( final IResultMeta resultMeta : oldChildren )
         {
           if( resultMeta instanceof IStepResultMeta )
           {
             final IStepResultMeta stepResultMeta = (IStepResultMeta) resultMeta;
-            final STEPTYPE stepType = stepResultMeta.getStepType();
-            if(!stepType.equals( IStepResultMeta.STEPTYPE.unsteady ) || !stepType.equals( IStepResultMeta.STEPTYPE.steady ))
-              childrenToRemove.add( resultMeta );
-            else if( isSteadyCalculation && stepResultMeta.getStepNumber() == -1 )
-              childrenToRemove.add( resultMeta );
+            if( isSteadyCalculation && stepResultMeta.getStepNumber() == -1 )
+              oldChildrenToRemove.add( resultMeta );
             else if( isUnsteadyCalculation && stepResultMeta.getStepNumber() >= restartStep )
-              childrenToRemove.add( resultMeta );
+              oldChildrenToRemove.add( resultMeta );
           }
         }
-        // removing cannot be done directly in previous loop because of ConcurrentModificationException on interator
-        for( final IResultMeta resultToRemove : childrenToRemove )
-          children.remove( resultToRemove );
+        for( final IResultMeta resultMeta : newChildren )
+        {
+          if( resultMeta instanceof IDocumentResultMeta )
+          {
+            final IResultMeta parent = resultMeta.getParent();
+            if( !(parent instanceof IStepResultMeta) )
+              newChildrenToRemove.add( resultMeta );
+          }
+        }
 
-        children.addAll( calculationUnit.getChildren() );
+        // removing cannot be done directly in previous loop because of ConcurrentModificationException on interator
+        for( final IResultMeta resultToRemove : oldChildrenToRemove )
+          oldChildren.remove( resultToRemove );
+        for( final IResultMeta resultToRemove : newChildrenToRemove )
+          newChildren.remove( resultToRemove );
+
+        for( final IResultMeta resultMeta : newChildren )
+          oldChildren.cloneInto( resultMeta );
       }
       else
       {
         // no restart
-        getChildren().remove( existingCalcUnitMeta );
-        getChildren().cloneInto( calculationUnit );
+        getChildren().remove( oldCalcUnitMeta );
+        getChildren().cloneInto( newCalcUnitMeta );
       }
     }
     else
-      getChildren().cloneInto( calculationUnit );
+      getChildren().cloneInto( newCalcUnitMeta );
   }
 
   /**

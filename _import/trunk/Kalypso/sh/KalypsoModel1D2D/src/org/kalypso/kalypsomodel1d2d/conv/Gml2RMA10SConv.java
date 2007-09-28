@@ -512,7 +512,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
           final double slope = teschkeRelation.getSlope();
           final Double min = teschkeConv.getMin();
           final Double max = teschkeConv.getMax();
-
+          
           formatter.format( "MM%10d%20.7f%20.7f%n", nodeID, min, max ); //$NON-NLS-1$
 
           final IPolynomial1D[] polyArea = teschkeConv.getPolynomialsByType( IWspmTuhhQIntervallConstants.DICT_PHENOMENON_AREA );

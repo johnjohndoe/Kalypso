@@ -67,10 +67,13 @@ public class RestartSelectWizardPage1 extends SelectResultWizardPage
 
   private final String m_results_file_path;
 
-  public RestartSelectWizardPage1( final String pageName, final String title, final ImageDescriptor titleImage, final IScenarioResultMeta resultMeta, final List<IRestartInfo> restartInfos, final ViewerFilter filter, final String results_file_path )
+  private final boolean m_isRestartSelected;
+
+  public RestartSelectWizardPage1( final String pageName, final String title, final ImageDescriptor titleImage, final IScenarioResultMeta resultMeta, final boolean isRestartSelected, final List<IRestartInfo> restartInfos, final ViewerFilter filter, final String results_file_path )
   {
     super( pageName, title, titleImage, filter, null );
     m_resultMeta = resultMeta;
+    m_isRestartSelected = isRestartSelected;
     m_restartInfos = restartInfos;
     m_results_file_path = results_file_path;
   }
@@ -87,6 +90,8 @@ public class RestartSelectWizardPage1 extends SelectResultWizardPage
 
   public void setInitialSelection( )
   {
+    if( !m_isRestartSelected )
+      return;
     final List<IResultMeta> checkedElements = new ArrayList<IResultMeta>();
     final List<IResultMeta> expandedElements = new ArrayList<IResultMeta>();
     for( final IRestartInfo restartInfo : m_restartInfos )
