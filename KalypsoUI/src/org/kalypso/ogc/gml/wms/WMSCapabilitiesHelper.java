@@ -109,6 +109,10 @@ public class WMSCapabilitiesHelper
 
       /* Added at change to degree2. */
       WMSCapabilitiesDocument doc = new WMSCapabilitiesDocument();
+
+      // TODO: The parsing deep into the classes do another internet connection, which failes, if no internet is available.
+      // It tries to load the schemes, used in the XML. To fix this, perhaps a catalog could be used, which maps the
+      // namespaces to a local server with the schemes.
       doc.load( urlReader, XMLFragment.DEFAULT_URL );
       WMSCapabilities createCapabilities = (WMSCapabilities) doc.parseCapabilities();
 
@@ -123,6 +127,7 @@ public class WMSCapabilitiesHelper
     }
     catch( final Exception e )
     {
+      e.printStackTrace();
       throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
     }
     finally

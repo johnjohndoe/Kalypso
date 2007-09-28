@@ -58,7 +58,7 @@ import com.sun.media.jai.codec.SeekableStream;
 public class RasterDataFileVerifier
 {
 
-  private static final String[] validFileExtensions = new String[] { "tif", "tiff", "jpg", "jpeg", "asc", "dat" };
+  private static final String[] validFileExtensions = new String[] { "tif", "tiff", "jpg", "jpeg", "asc", "dat", "png" };
 
   public enum RASTER_TYPE
   {
@@ -73,7 +73,8 @@ public class RasterDataFileVerifier
     eNoImage,
     eGIF,
     eJPG,
-    eTIFF
+    eTIFF,
+    ePNG
   }
 
   public boolean verify( final URL urlImage )
@@ -227,7 +228,7 @@ public class RasterDataFileVerifier
       throw (new IllegalStateException());
     }
 
-    final String[] worldFileExtensions = new String[] { "tfw", "gfw", "jpw" };
+    final String[] worldFileExtensions = new String[] { "tfw", "gfw", "jpw", "pgw" };
 
     for( final String extension : worldFileExtensions )
     {
@@ -250,7 +251,7 @@ public class RasterDataFileVerifier
       catch( final IOException e )
       {
         // file does not exists? -> exception is thrown, try next worldfile type
-        //e.printStackTrace();
+        // e.printStackTrace();
       }
     }
 
@@ -283,6 +284,10 @@ public class RasterDataFileVerifier
     else if( "gif".equals( fileExtension ) )
     {
       return IMAGE_TYPE.eGIF;
+    }
+    else if( "png".equals( fileExtension ) )
+    {
+      return IMAGE_TYPE.ePNG;
     }
 
     return IMAGE_TYPE.eNoImage;
