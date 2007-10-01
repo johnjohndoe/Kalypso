@@ -9,10 +9,10 @@
   <annotation>
     <documentation>
       <![CDATA[
-      
+
       KML 2.1 Reference:
       http://code.google.com/apis/kml/documentation/kml_tags_21.html
-      
+
       KML 2.1 Reference "abstract element" is a
       W3C XML Schema substitutionGroup:
 
@@ -24,7 +24,7 @@
           ColorStyle
           StyleSelector
           TimePrimitive
-      
+
       Child elements are generally minOccurs="0" due to Update's Change.
       However, it is considered good practice to explicitly set the
       "obvious" children of a given element.  For example, north, south,
@@ -77,12 +77,12 @@
     <annotation>
       <documentation>
         <![CDATA[
-        
+
         aabbggrr
-        
+
         ffffffff: opaque white
         ff000000: opaque black
-        
+
         ]]>
       </documentation>
     </annotation>
@@ -112,9 +112,9 @@
   <annotation>
     <documentation>
       <![CDATA[
-      
+
       Declare head of Object substitutionGroup.
-      
+
       ]]>
     </documentation>
   </annotation>
@@ -134,9 +134,9 @@
   <annotation>
     <documentation>
       <![CDATA[
-      
+
       Declare head of Feature substituionGroup.
-      
+
       ]]>
     </documentation>
   </annotation>
@@ -213,9 +213,9 @@
   <annotation>
     <documentation>
       <![CDATA[
-      
+
       Declare head of "Geometry" substitutionGroup.
-      
+
       ]]>
     </documentation>
   </annotation>
@@ -247,9 +247,9 @@
   <annotation>
     <documentation>
       <![CDATA[
-      
+
       Declare head of StyleSelector substitution group.
-    
+
       ]]>
     </documentation>
   </annotation>
@@ -265,9 +265,9 @@
   <annotation>
     <documentation>
       <![CDATA[
-      
+
       Declare head of TimePrimitive substitution group.
-    
+
       ]]>
     </documentation>
   </annotation>
@@ -306,11 +306,11 @@
   <annotation>
     <documentation>
       <![CDATA[
-      
+
       Concrete elements.
-      
+
       <kml> is the root element.
-      
+
       ]]>
     </documentation>
   </annotation>
@@ -382,9 +382,9 @@
             <annotation>
               <documentation>
                 <![CDATA[
-                
+
                 Url deprecated in 2.1.
-                
+
                 ]]></documentation>
             </annotation>
             <element ref="kml:Link"/>
@@ -458,12 +458,12 @@
   <annotation>
     <documentation>
       <![CDATA[
-      
+
       In KML 2.0 Icon is of type IconType which extends
       LinkType with palette indexing.
 
       Icon simply a LinkType in KML 2.1.
-      
+
       ]]>
     </documentation>
   </annotation>
@@ -473,11 +473,11 @@
   <annotation>
     <documentation>
       <![CDATA[
-      
+
       IconType unused in KML 2.1.
-      
+
       Presented for reference as used in KML 2.0.
-      
+
       ]]>
     </documentation>
   </annotation>
@@ -501,9 +501,9 @@
     <annotation>
       <documentation>
         <![CDATA[
-        
+
         Not final="#all" to show how IconType extended LinkType in KML 2.0.
-        
+
         ]]>
       </documentation>
     </annotation>
@@ -1055,7 +1055,7 @@
       <element ref="kml:TimePrimitive" minOccurs="0"/>
     </choice>
   </complexType>
-  
+
   <complexType name="ReplaceType">
     <sequence>
       <element ref="kml:Feature" minOccurs="0"/>

@@ -10,9 +10,9 @@ import javax.xml.bind.JAXBElement;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 
-import com.google.earth.kml._2.GeometryType;
-import com.google.earth.kml._2.MultiGeometryType;
-import com.google.earth.kml._2.ObjectFactory;
+import com.google.earth.kml.GeometryType;
+import com.google.earth.kml.MultiGeometryType;
+import com.google.earth.kml.ObjectFactory;
 
 /**
  * @author kuch

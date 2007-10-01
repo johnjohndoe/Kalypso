@@ -17,9 +17,9 @@ import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate;
 import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor;
 
-import com.google.earth.kml._2.FeatureType;
-import com.google.earth.kml._2.FolderType;
-import com.google.earth.kml._2.ObjectFactory;
+import com.google.earth.kml.FeatureType;
+import com.google.earth.kml.FolderType;
+import com.google.earth.kml.ObjectFactory;
 
 /**
  * @author kuch

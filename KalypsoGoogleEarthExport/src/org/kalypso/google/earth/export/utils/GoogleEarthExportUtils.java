@@ -13,9 +13,9 @@ import org.kalypsodeegree.model.feature.Feature;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import com.google.earth.kml._2.FolderType;
-import com.google.earth.kml._2.ObjectFactory;
-import com.google.earth.kml._2.StyleType;
+import com.google.earth.kml.FolderType;
+import com.google.earth.kml.ObjectFactory;
+import com.google.earth.kml.StyleType;
 
 /**
  * @author kuch

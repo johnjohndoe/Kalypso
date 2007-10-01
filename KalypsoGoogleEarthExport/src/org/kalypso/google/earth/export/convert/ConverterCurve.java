@@ -13,8 +13,8 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.ct.GeoTransformer;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
-import com.google.earth.kml._2.LineStringType;
-import com.google.earth.kml._2.ObjectFactory;
+import com.google.earth.kml.LineStringType;
+import com.google.earth.kml.ObjectFactory;
 
 /**
  * @author kuch

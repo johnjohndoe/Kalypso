@@ -21,12 +21,12 @@ import org.kalypsodeegree.graphics.sld.PointSymbolizer;
 import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
 
-import com.google.earth.kml._2.DocumentType;
-import com.google.earth.kml._2.LineStyleType;
-import com.google.earth.kml._2.ObjectFactory;
-import com.google.earth.kml._2.PolyStyleType;
-import com.google.earth.kml._2.StyleSelectorType;
-import com.google.earth.kml._2.StyleType;
+import com.google.earth.kml.DocumentType;
+import com.google.earth.kml.LineStyleType;
+import com.google.earth.kml.ObjectFactory;
+import com.google.earth.kml.PolyStyleType;
+import com.google.earth.kml.StyleSelectorType;
+import com.google.earth.kml.StyleType;
 
 /**
  * @author kuch

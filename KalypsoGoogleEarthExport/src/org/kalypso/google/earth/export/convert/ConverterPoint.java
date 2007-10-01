@@ -9,8 +9,8 @@ import org.kalypso.google.earth.export.utils.GoogleEarthUtils;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.ct.GeoTransformer;
 
-import com.google.earth.kml._2.ObjectFactory;
-import com.google.earth.kml._2.PointType;
+import com.google.earth.kml.ObjectFactory;
+import com.google.earth.kml.PointType;
 
 /**
  * @author kuch

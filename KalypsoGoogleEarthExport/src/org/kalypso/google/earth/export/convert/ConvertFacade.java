@@ -17,9 +17,9 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 
-import com.google.earth.kml._2.ObjectFactory;
-import com.google.earth.kml._2.PlacemarkType;
-import com.google.earth.kml._2.StyleType;
+import com.google.earth.kml.ObjectFactory;
+import com.google.earth.kml.PlacemarkType;
+import com.google.earth.kml.StyleType;
 
 /**
  * @author kuch
