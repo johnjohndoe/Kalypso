@@ -4,7 +4,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/xmlbeans-2.3/jsr173_1.0_api.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/xmlbeans-2.3/resolver.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/xmlbeans-2.3/xbean_xpath.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/xmlbeans-2.3/xbean.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/xmlbeans-2.3/xbean.jar" sourcepath="lib/xmlbeans-2.3/xmlbeans-2.3.0-src.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/xmlbeans-2.3/xmlbeans-qname.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/xmlbeans-2.3/xmlpublic.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/modified-httpclient-contribs.jar" sourcepath="lib/modified-httpclient-contribs-src.zip"/>
