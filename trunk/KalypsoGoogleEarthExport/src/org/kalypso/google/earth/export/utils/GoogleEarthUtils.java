@@ -10,11 +10,11 @@ import org.kalypsodeegree_impl.model.ct.GeoTransformer;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.opengis.cs.CS_CoordinateSystem;
 
-import com.google.earth.kml._2.DocumentType;
-import com.google.earth.kml._2.LatLonAltBoxType;
-import com.google.earth.kml._2.LookAtType;
-import com.google.earth.kml._2.ObjectFactory;
-import com.google.earth.kml._2.RegionType;
+import com.google.earth.kml.DocumentType;
+import com.google.earth.kml.LatLonAltBoxType;
+import com.google.earth.kml.LookAtType;
+import com.google.earth.kml.ObjectFactory;
+import com.google.earth.kml.RegionType;
 
 /**
  * @author kuch

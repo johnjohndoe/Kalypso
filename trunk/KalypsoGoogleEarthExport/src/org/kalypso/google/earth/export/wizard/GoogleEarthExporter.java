@@ -33,9 +33,9 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor;
 import org.kalypso.ui.views.map.MapView;
 
-import com.google.earth.kml._2.DocumentType;
-import com.google.earth.kml._2.FolderType;
-import com.google.earth.kml._2.ObjectFactory;
+import com.google.earth.kml.DocumentType;
+import com.google.earth.kml.FolderType;
+import com.google.earth.kml.ObjectFactory;
 
 /**
  * @author kuch

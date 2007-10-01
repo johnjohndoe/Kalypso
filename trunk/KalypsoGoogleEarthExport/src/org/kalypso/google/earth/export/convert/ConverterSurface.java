@@ -14,10 +14,10 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.ct.GeoTransformer;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
-import com.google.earth.kml._2.BoundaryType;
-import com.google.earth.kml._2.LinearRingType;
-import com.google.earth.kml._2.ObjectFactory;
-import com.google.earth.kml._2.PolygonType;
+import com.google.earth.kml.BoundaryType;
+import com.google.earth.kml.LinearRingType;
+import com.google.earth.kml.ObjectFactory;
+import com.google.earth.kml.PolygonType;
 
 /**
  * @author kuch
