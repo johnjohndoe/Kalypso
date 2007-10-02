@@ -4,6 +4,7 @@
 package org.kalypso.google.earth.export.convert;
 
 import java.util.List;
+import java.util.Locale;
 
 import org.kalypso.google.earth.export.utils.GoogleEarthUtils;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -44,7 +45,7 @@ public class ConverterCurve
       final GM_Point point = GeometryFactory.createGM_Point( position, curve.getCoordinateSystem() );
       final GM_Point kmlPoint = (GM_Point) transformer.transform( point );
 
-      coordinates.add( String.format( "%f,%f", kmlPoint.getX(), kmlPoint.getY() ) );
+      coordinates.add( String.format( Locale.ENGLISH, "%f,%f", kmlPoint.getX(), kmlPoint.getY() ) );
     }
 
     return lineStringType;
