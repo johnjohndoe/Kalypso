@@ -160,12 +160,12 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>synth. N.</label>
-								<tooltip>synthetischer Niederschlag</tooltip>
+								<tooltip>Berechnung mit synthetischem Niederschlag</tooltip>
 								<description>Berechnung mit synthetischem Niederschlag</description>
 							</documentation>
 							<documentation xml:lang="en">
 								<label>synth. P.</label>
-								<tooltip>synthetic Presipitation</tooltip>
+								<tooltip>calculation based on synthetic precipitation</tooltip>
 								<description>calculation based on synthetic precipitation</description>
 							</documentation>
 						</annotation>
@@ -175,12 +175,12 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Wiederkehrzeit</label>
-								<tooltip>Wiederkehrzeit</tooltip>
+								<tooltip>Wiederkehrzeit [a]</tooltip>
 								<description>Wiederkehrzeit des synthetischen Niederschlagereignisses [a]</description>
 							</documentation>
 							<documentation xml:lang="en">
 								<label>return period</label>
-								<tooltip>return period</tooltip>
+								<tooltip>return period [a]</tooltip>
 								<description>return period [a]</description>
 							</documentation>
 						</annotation>
@@ -189,12 +189,12 @@
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Dauer</label>
-								<tooltip>Niederschlagsdauer</tooltip>
+								<tooltip>Niederschlagsdauer [min]</tooltip>
 								<description>Dauer des synthetischen Niederschlagereignisses [min]</description>
 							</documentation>
 							<documentation xml:lang="en">
 								<label>duration</label>
-								<tooltip>duration</tooltip>
+								<tooltip>duration [min]</tooltip>
 								<description>duration [min]</description>
 							</documentation>
 						</annotation>

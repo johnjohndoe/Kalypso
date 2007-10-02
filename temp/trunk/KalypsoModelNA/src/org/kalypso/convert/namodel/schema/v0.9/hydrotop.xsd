@@ -88,7 +88,7 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="corrSealing" default="1.0" minOccurs="0">
+					<element name="corrSealing" default="1.0">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Faktor Versiegelung</label>
