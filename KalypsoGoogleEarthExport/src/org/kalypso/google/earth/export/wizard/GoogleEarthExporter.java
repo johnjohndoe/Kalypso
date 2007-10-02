@@ -127,6 +127,7 @@ public class GoogleEarthExporter implements ICoreRunnableWithProgress
       final File file = new File( tmpDir, "doc.kml" );
       final JAXBContext jc = JAXBContext.newInstance( ObjectFactory.class );
       final Marshaller m = jc.createMarshaller();
+      m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
 
       final FileOutputStream os = new FileOutputStream( file );
       m.marshal( kmlDocument, os );
