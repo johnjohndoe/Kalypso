@@ -61,7 +61,7 @@ import org.opengis.cs.CS_CoordinateSystem;
 /**
  * @author Stefan Kurzbach extended by Dirk Kuch
  */
-public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme implements IKalypsoSaveableTheme, IMapModell
+public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme implements IKalypsoCascadingTheme, IKalypsoSaveableTheme, IMapModell
 {
   private GisTemplateMapModell m_innerMapModel;
 
@@ -454,6 +454,14 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
   public void swapThemes( final IKalypsoTheme theme1, final IKalypsoTheme theme2 )
   {
     m_innerMapModel.swapThemes( theme1, theme2 );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoCascadingTheme#getAllChildFeatures()
+   */
+  public IKalypsoTheme[] getChildThemes( )
+  {
+    return CascadingThemeHelper.getAllChildThemes( this );
   }
 
 }
