@@ -439,7 +439,7 @@ public class FE1D2DEdge extends AbstractFeatureBinder implements IFE1D2DEdge<IFE
             return ele;
         }
         else
-          throw new RuntimeException( "Surface expected as geometrie but found:" + object );
+          throw new RuntimeException( "Iregular surface found for: " + ele.getGmlID() );
       }
       if( edgeInv != null )
       {

@@ -99,14 +99,11 @@ public class CreateFE2DElementWidget extends AbstractWidget
         command = m_builder.addNode( snapNode );
       else
         command = m_builder.addNode( currentPosition );
-
       if( command != null )
       {
         m_nodeTheme.getWorkspace().postCommand( command );
-
         reinit();
       }
-
       mapPanel.repaint();
     }
     catch( final Exception e )
@@ -124,6 +121,8 @@ public class CreateFE2DElementWidget extends AbstractWidget
   @Override
   public void doubleClickedLeft( final Point p )
   {
+    if( m_builder.getNumberOfNodes() < 3 )
+      return;
     try
     {
       final ICommand command = m_builder.finish();
@@ -162,12 +161,10 @@ public class CreateFE2DElementWidget extends AbstractWidget
   @Override
   public void keyTyped( final KeyEvent e )
   {
-    if( KeyEvent.VK_ESCAPE == e.getKeyChar()/* Code() */)
+    if( KeyEvent.VK_ESCAPE == e.getKeyChar() )
     {
       this.reinit();
       getMapPanel().repaint();
     }
-    // super.keyTyped(e);
-
   }
 }
