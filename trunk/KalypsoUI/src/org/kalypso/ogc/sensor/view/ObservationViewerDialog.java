@@ -153,7 +153,7 @@ public class ObservationViewerDialog extends Dialog
     if( m_viewer != null )
     {
       m_viewer.setContext( m_context );
-      m_viewer.setInput( m_input );
+      m_viewer.setInput( m_input, m_viewer.getShow() );
     }
   }
 
