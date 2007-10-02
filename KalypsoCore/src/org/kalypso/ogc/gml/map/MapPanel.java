@@ -65,8 +65,10 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.KalypsoCascadingThemeSelection;
 import org.kalypso.ogc.gml.KalypsoFeatureThemeSelection;
 import org.kalypso.ogc.gml.command.JMSelector;
 import org.kalypso.ogc.gml.map.listeners.IMapPanelListener;
@@ -575,10 +577,12 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
       return StructuredSelection.EMPTY;
 
     final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
-    if( !(activeTheme instanceof IKalypsoFeatureTheme) )
-      return StructuredSelection.EMPTY;
+    if( activeTheme instanceof IKalypsoFeatureTheme )
+      return new KalypsoFeatureThemeSelection( m_selectionManager.toList(), (IKalypsoFeatureTheme) activeTheme, m_selectionManager, null, null );
+    else if( activeTheme instanceof IKalypsoCascadingTheme )
+      return new KalypsoCascadingThemeSelection( m_selectionManager.toList(), (IKalypsoCascadingTheme) activeTheme, m_selectionManager, null, null );
 
-    return new KalypsoFeatureThemeSelection( m_selectionManager.toList(), (IKalypsoFeatureTheme) activeTheme, m_selectionManager, null, null );
+    return StructuredSelection.EMPTY;
   }
 
   public IFeatureSelectionManager getSelectionManager( )
@@ -832,7 +836,7 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
         final JMSelector selector = new JMSelector();
         final GM_Point pointSelect = GeometryFactory.createGM_Point( g1x, g1y, getMapModell().getCoordinatesSystem() );
 
-        final Feature fe = (Feature) selector.selectNearest( pointSelect, gisRadius, ((IKalypsoFeatureTheme) activeTheme).getFeatureListVisible( null ), false );
+        final Feature fe = (Feature) JMSelector.selectNearest( pointSelect, gisRadius, ((IKalypsoFeatureTheme) activeTheme).getFeatureListVisible( null ), false );
 
         final List<Feature> listFe = new ArrayList<Feature>();
         if( fe != null )
@@ -859,7 +863,7 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
         {
           final JMSelector selector = new JMSelector();
           final GM_Envelope envSelect = GeometryFactory.createGM_Envelope( minX, minY, maxX, maxY );
-          final List<Object> features = selector.select( envSelect, ((IKalypsoFeatureTheme) activeTheme).getFeatureListVisible( envSelect ), withinStatus );
+          final List<Object> features = JMSelector.select( envSelect, ((IKalypsoFeatureTheme) activeTheme).getFeatureListVisible( envSelect ), withinStatus );
 
           if( useOnlyFirstChoosen && !features.isEmpty() )
           {
