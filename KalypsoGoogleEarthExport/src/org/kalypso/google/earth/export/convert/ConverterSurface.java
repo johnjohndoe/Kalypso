@@ -84,7 +84,7 @@ public class ConverterSurface
           final GM_Point point = GeometryFactory.createGM_Point( position, gmo.getCoordinateSystem() );
           final GM_Point kmlPoint = (GM_Point) transformer.transform( point );
 
-          innerCoords.add( String.format( "%f,%f", kmlPoint.getX(), kmlPoint.getY() ) );
+          innerCoords.add( String.format( Locale.ENGLISH, "%f,%f", kmlPoint.getX(), kmlPoint.getY() ) );
         }
 
         innerBoundary.setLinearRing( innerLinearRing );
