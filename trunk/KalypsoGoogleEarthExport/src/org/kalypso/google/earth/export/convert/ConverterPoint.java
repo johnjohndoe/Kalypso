@@ -4,6 +4,7 @@
 package org.kalypso.google.earth.export.convert;
 
 import java.util.List;
+import java.util.Locale;
 
 import org.kalypso.google.earth.export.utils.GoogleEarthUtils;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -33,7 +34,7 @@ public class ConverterPoint
     final GM_Point kmlPoint = (GM_Point) transformer.transform( gmo );
 
     final List<String> coordinates = pointType.getCoordinates();
-    coordinates.add( String.format( "%f,%f", kmlPoint.getX(), kmlPoint.getY() ) );
+    coordinates.add( String.format( Locale.ENGLISH, "%f,%f", kmlPoint.getX(), kmlPoint.getY() ) );
 
     return pointType;
   }

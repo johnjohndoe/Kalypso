@@ -4,6 +4,7 @@
 package org.kalypso.google.earth.export.convert;
 
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.google.earth.export.utils.GoogleEarthUtils;
@@ -61,7 +62,7 @@ public class ConverterSurface
         final GM_Point point = GeometryFactory.createGM_Point( position, gmo.getCoordinateSystem() );
         final GM_Point kmlPoint = (GM_Point) transformer.transform( point );
 
-        outerCoord.add( String.format( "%f,%f", kmlPoint.getX(), kmlPoint.getY() ) );
+        outerCoord.add( String.format( Locale.ENGLISH, "%f,%f", kmlPoint.getX(), kmlPoint.getY() ) );
       }
 
       outerBoundary.setLinearRing( outerLinearRing );
