@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,27 +36,27 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- 
+
+
  history:
- 
+
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
- interface-compatibility to deegree is wanted but not retained always. 
- 
- If you intend to use this software in other ways than in kalypso 
+ interface-compatibility to deegree is wanted but not retained always.
+
+ If you intend to use this software in other ways than in kalypso
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
 
- all modifications are licensed as deegree, 
+ all modifications are licensed as deegree,
  original copyright:
- 
+
  Copyright (C) 2001 by:
  EXSE, Department of Geography, University of Bonn
  http://www.giub.uni-bonn.de/exse/
  lat/lon GmbH
  http://www.lat-lon.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 
 package org.kalypsodeegree_impl.io.shpapi;
@@ -66,16 +66,13 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 
 /**
  * Class representig a two dimensional point <BR>
- * 
  * <B>Last changes <B>: <BR>
  * 25.05.00 chm: method writeSHPPoint implemented <BR>
  * 14.08.00 ap: import clause added <BR>
- * 
  * <!---------------------------------------------------------------------------->
  * 
  * @version 14.08.2000
  * @author Andreas Poth
- *  
  */
 
 public class SHPPoint extends SHPGeometry
@@ -84,9 +81,9 @@ public class SHPPoint extends SHPGeometry
 
   public double y;
 
-  public SHPPoint()
+  public SHPPoint( )
   {
-  // empty
+    // empty
   }
 
   /**
@@ -98,9 +95,9 @@ public class SHPPoint extends SHPGeometry
 
     super( recBuf );
 
-    //get x out of recordbuffer
+    // get x out of recordbuffer
     this.x = ByteUtils.readLEDouble( recBuffer, xStart );
-    //get y out of recordbuffer
+    // get y out of recordbuffer
     this.y = ByteUtils.readLEDouble( recBuffer, xStart + 8 );
 
   }
@@ -127,12 +124,12 @@ public class SHPPoint extends SHPGeometry
 
     offset += 4;
 
-    //write x into the recbuffer
+    // write x into the recbuffer
     ByteUtils.writeLEDouble( byteArray, offset, x );
 
     offset += 8;
 
-    //write y into the recbuffer
+    // write y into the recbuffer
     ByteUtils.writeLEDouble( byteArray, offset, y );
 
   }
@@ -140,16 +137,15 @@ public class SHPPoint extends SHPGeometry
   /**
    * returns the size of the point shape in bytes <BR>
    */
-  public int size()
+  public int size( )
   {
     return 20;
   }
 
-  public String toString()
+  @Override
+  public String toString( )
   {
-
     return "SHPPOINT" + "[" + this.x + "; " + this.y + "]";
-
   }
 
 }

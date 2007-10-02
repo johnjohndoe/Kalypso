@@ -1187,6 +1187,12 @@
             id="org.kalypso.ogc.gml.map.Screenshot"
             name="Map screenshot">
       </command>
+      <command
+            categoryId="org.kalypso.ui.views.outline.category"
+            defaultHandler="org.kalypso.ogc.gml.outline.handler.ExportGml2ShapeThemeHandler"
+            id="org.kalypso.ui.views.outline.ShapeExport"
+            name="Shape Export">
+      </command>
       </extension>
  <extension
        point="org.eclipse.ui.viewActions">
@@ -1607,6 +1613,36 @@
               style="push"
               tooltip="Map screenshot">
         </command>
+     </menuContribution>
+     <menuContribution
+           locationURI="menu:org.kalypso.ui.views.outline?after=outlineExport">
+        <command
+              commandId="org.kalypso.ui.views.outline.ShapeExport"
+              icon="icons/full/obj16/exportGml2Shp.gif"
+              label="Shape Export"
+              style="push"
+              tooltip="selektierter Layer als Shape exportieren">
+           <visibleWhen
+                 checkEnabled="false">
+              <with
+                    variable="selection">
+                 <iterate
+                       ifEmpty="false"
+                       operator="and">
+                    <instanceof
+                          value="org.kalypso.ogc.gml.IKalypsoFeatureTheme">
+                    </instanceof>
+                 </iterate>
+              </with>
+           </visibleWhen>
+        </command>
+     </menuContribution>
+     <menuContribution
+           locationURI="menu:org.kalypso.ui.views.outline">
+        <separator
+              name="outlineExport"
+              visible="true">
+        </separator>
      </menuContribution>
 
  </extension>

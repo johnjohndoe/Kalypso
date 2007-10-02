@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,27 +36,27 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- 
+
+
  history:
- 
+
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
- interface-compatibility to deegree is wanted but not retained always. 
- 
- If you intend to use this software in other ways than in kalypso 
+ interface-compatibility to deegree is wanted but not retained always.
+
+ If you intend to use this software in other ways than in kalypso
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
 
- all modifications are licensed as deegree, 
+ all modifications are licensed as deegree,
  original copyright:
- 
+
  Copyright (C) 2001 by:
  EXSE, Department of Geography, University of Bonn
  http://www.giub.uni-bonn.de/exse/
  lat/lon GmbH
  http://www.lat-lon.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.io.shpapi;
 
@@ -218,7 +218,7 @@ public class ShapeFile
   }
 
   /**
-   *  
+   *
    */
   public void close( )
   {
@@ -687,7 +687,7 @@ public class ShapeFile
     {
       return -1;
     }
-
+    // TODO: here the shape-type-constants should be used!
     if( g[0] instanceof GM_Point )
     {
       return 0;
@@ -723,6 +723,8 @@ public class ShapeFile
 
   private GM_Object getFeatureAsGeometry( final Feature feature )
   {
+    // TODO: use get geometry from outside! or use at least getDefaultGeometry
+
     return feature.getGeometryProperties()[0];
   }
 
@@ -810,6 +812,8 @@ public class ShapeFile
     int nbyte = 0;
     int geotype = -1;
     byte shptype = -1;
+    // TODO: this is bad! maybe the first entry is a null-geometry; what to do then?
+    // Better: use feature type or define shape type from outside
     final int typ_ = getGeometryType( features[0] );
     byte[] bytearray = null;
     IndexRecord record = null;
@@ -906,6 +910,8 @@ public class ShapeFile
           throw new Exception( "not a homogen featurecollectiom" );
         }
       }
+
+      // TODO: handle -1: null-shape
 
       // get wks geometrie for feature (i) and write it to a file
       if( geotype == 0 )
