@@ -719,13 +719,17 @@ public class ZmlFactory
           {
             final String stringValue = cells[ax];
             final Class dataClass = axis[ax].getDataClass();
-            final Object keyValue;
+            Object keyValue;
             if( Number.class.isAssignableFrom( dataClass ) )
               keyValue = TimeserieUtils.getNumberFormatFor( axis[ax].getType() ).parseObject( stringValue );
             else
               keyValue = SpecialPropertyMapper.cast( stringValue, dataClass, false, false );
             if( collector.contains( keyValue ) )
               break;
+            if( !keyValue.getClass().equals( dataClass ) )
+            {
+              keyValue = SpecialPropertyMapper.cast( stringValue, dataClass, false, false );
+            }
             rowValues[ax] = keyValue;
           }
           catch( Exception e )
