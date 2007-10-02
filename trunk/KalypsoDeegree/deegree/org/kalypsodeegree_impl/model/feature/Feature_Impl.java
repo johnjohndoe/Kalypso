@@ -203,8 +203,8 @@ public class Feature_Impl extends AbstractFeature
    */
   public GM_Object getDefaultGeometryProperty( )
   {
-    final int pos = m_featureType.getDefaultGeometryPropertyPosition();
-    if( pos < 0 )
+    final IValuePropertyType defaultGeomProp = m_featureType.getDefaultGeometryProperty();
+    if( defaultGeomProp == null )
     {
       final IVirtualFunctionPropertyType[] virtualGeometryProperties = m_featureType.getVirtualGeometryProperties();
       if( virtualGeometryProperties == null )
@@ -221,10 +221,10 @@ public class Feature_Impl extends AbstractFeature
       }
     }
 
-    final IPropertyType property = m_featureType.getProperties( pos );
-    final Object prop = getProperty( property );
-    if( property.isList() )
+    final Object prop = getProperty( defaultGeomProp );
+    if( defaultGeomProp.isList() )
     {
+      // TODO: ugly! do not do such a thing
       final List props = (List) prop;
       return (GM_Object) (props.size() > 0 ? props.get( 0 ) : null);
     }
