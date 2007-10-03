@@ -1,4 +1,3 @@
-C     Last change:  EF    3 May 2007    9:51 am
 
       SUBROUTINE DEL
       USE BLK10MOD
