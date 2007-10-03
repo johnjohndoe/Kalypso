@@ -1,4 +1,4 @@
-!Last change:  WP   29 Aug 2007    3:05 pm
+!Last change:  WP    2 Oct 2007    9:18 pm
 
 !****************************************************************
 !1D subroutine for calculation of elements, whose corner nodes are described with
@@ -242,8 +242,6 @@ init3: DO i = 1, 2
   d2beiodh(i)   = 0.0
   froude(i)     = 0.0
 ENDDO init3
-
-
 
 !initialice gravitation factor for unit system
 IF (GRAV .LT. 32.)  THEN
@@ -1684,18 +1682,12 @@ TransitionCorrection: do l = 1, ncn, 2
       ESTIFM (irw, j) = 0.0
     end do
 
-    !testing
-!    WRITE(*,*)  '1d: ', q2d(trid), areacorrection * ah(m) * vt, '(', vt, ')', areacorrection
-    !WRITE(*,*)  'va: ', vel(1, m), vel(2, m), alfa(m)
-
     !set residual entry for 1D-node - 2D-line identity
     f (irw)           = areacorrection * ah(m) * VT - q2D (TrID)
     !set derivative over velocity
     estifm (irw, irw) = - ah(m) * areacorrection
     !set derivative over depth
     estifm (irw, irh) = - VT * dahdh(m) * areacorrection
-!    WRITE(*,*) f(irw), estifm(irw, irw), estifm(irw, irh)
-!    pause
   end if
 end do TransitionCorrection
 !-
@@ -1760,25 +1752,26 @@ if (testoutput == 2) then
 ENDIF
 
 !estifm-testoutput
-if (testoutput > -1) then
-  WRITE(9919,*) 'Element ', nn, 'coef1Pol'
-        WRITE(9919, 1233) ( nbc (nop(nn,1), j), j=1,  3, 2), nbc (nop(nn,2), 1), ( nbc (nop(nn,3), j), j=1,  3, 2)
-  writematrix: do i = 1, 11, 2
-    if (i == 7) CYCLE writematrix
-
-    if (MOD(i,4) == 1 .or. MOD(i,4) == 2) then
-      WRITE(9919, 1234) nbc( nop(nn, 1+(i-MOD(i,4))/ 4), mod(i,4)), (estifm(i,j), j=1,  5, 2), (estifm(i,j), j=9, 11, 2), f(i)
-    elseif (MOD(i,4) == 3 ) then
-      WRITE(9919, 1234) nbc( nop(nn, 1+(i-MOD(i,4))/ 4), mod(i,4)), (estifm(i,j), j=1,  5, 2), (estifm(i,j), j=9, 11, 2), f(i)
-    ELSE
-      WRITE(9919, 1234) nbc( nop(nn, i/4 ), 4), (estifm(i,j), j=1,  5, 2), (estifm(i,j), j=9, 11, 2), f(i)
-    endif
-  end do writematrix
-  WRITE(9919,*)
-  WRITE(9919,*)
- 1233 format (6x, 5(1x, i10))
- 1234 format (i6, 6(1x, f10.2))
-endif
+!if (testoutput > -1) then
+!  WRITE(9919,*) 'Element ', nn, 'coef1Pol'
+!        WRITE(9919, 1233) ( nbc (nop(nn,1), j), j=1,  3, 2), nbc (nop(nn,2), 1), ( nbc (nop(nn,3), j), j=1,  3, 2)
+!  writematrix: do i = 1, 11, 2
+!    if (i == 7) CYCLE writematrix
+!
+!    if (MOD(i,4) == 1 .or. MOD(i,4) == 2) then
+!      WRITE(9919, 1234) nbc( nop(nn, 1+(i-MOD(i,4))/ 4), mod(i,4)), (estifm(i,j), j=1,  5, 2), (estifm(i,j), j=9, 11, 2), f(i)
+!    elseif (MOD(i,4) == 3 ) then
+!      WRITE(9919, 1234) nbc( nop(nn, 1+(i-MOD(i,4))/ 4), mod(i,4)), (estifm(i,j), j=1,  5, 2), (estifm(i,j), j=9, 11, 2), f(i)
+!    ELSE
+!      WRITE(9919, 1234) nbc( nop(nn, i/4 ), 4), (estifm(i,j), j=1,  5, 2), (estifm(i,j), j=9, 11, 2), f(i)
+!    endif
+!  end do writematrix
+!  WRITE(9919,*)
+!  WRITE(9919,*)
+! 1233 format (6x, 5(1x, i10))
+! 1234 format (i6, 6(1x, f10.2))
+!endif
+!-
 
 !end of normal subroutine run
 RETURN
@@ -1811,6 +1804,12 @@ IF(IMAT(NN) .GT. 903) THEN
     dahdh(n1) = dahdh(n1) + (k) * apoly(n1,k) * h1**(k-1)
     dahdh(n3) = dahdh(n3) + (k) * apoly(n3,k) * h3**(k-1)
   end do
+
+  WRITE(*,*) n1, n3
+  WRITE(*,*) ah(n1), ah(n3)
+  WRITE(*,*) qh(n1), qh(n3)
+  WRITE(*,*) dahdh(n1), dahdh(n3)
+  pause
 
   CALL CSTRC(NN)
   GO TO 1320
