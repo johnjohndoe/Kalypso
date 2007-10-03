@@ -6,7 +6,7 @@ cipk  last update Mar 23 1998
 cipk  last update Nov 26 1997
 cipk  last update Oct 29 1996
 CIPK  LAST UPDATE OCT 16 1996
-C     Last change:  WP    9 Jul 2007    5:10 pm
+C     Last change:  WP   20 Sep 2007    4:57 pm
 cipk  last updated April 25 1996
 CIPK  LAST UPDATED SEP7 1995
       SUBROUTINE GETBC(IBIN)
@@ -24,9 +24,9 @@ CIPK AUG05      INCLUDE 'BLKSUB.COM'
 cipk apr96  drop initialization of TET
 c      TET=TSTART
       IF(NITI .GT. 0) THEN
-	NITA=NITI
+        NITA=NITI
       ELSE
-	NITA=NITN
+        NITA=NITN
       ENDIF
 
 
@@ -74,11 +74,11 @@ C
       IBK=IBK+1
         IF(IBK .GT. 1) THEN
 CIPK SEP04 CREATE ERROR FILE
-          CLOSE(75)
-          OPEN(75,FILE='ERROR.OUT')
-          WRITE(75,*) 'Error in dynamic boundary condition files'
+          !nis,sep07
+          !ERROR - ERROR IN DYNAMIC BOUNDARY CONDITION FILES
           CALL ZVRS(1)
-          STOP 'Error in dynamic boundary condition files'
+          call ErrorMessageAndStop(1402, 0, 0.0, 0.0)
+          !-
         ENDIF
       IBIN=IBUP
       ibinrst=ibin
@@ -139,12 +139,12 @@ c
           write(nscrin,7000) id,dlin
         endif
         call ginpt(ibin,id,dlin)
-	  CALL REVAO
-	  ISAD=1
-      else
-	  ISAD=0
+          CALL REVAO
+          ISAD=1
+        else
+          ISAD=0
         sadx=1.0
-      endif
+        endif
 
 
       IF(ID(1:2) .NE. 'BC') THEN
@@ -207,12 +207,12 @@ C
 C...... Go to read boundary conditions along line and wind data
 C
       CALL SBGEN(IBIN)
-	
+
 cipk jun05 save nfix and test for weir data
 
-	  do j=1,np
-	    nfixp(j)=nfix(j)
-	  enddo
+          do j=1,np
+            nfixp(j)=nfix(j)
+          enddo
 
         DO 725 J=1,NE
 CIPK JUL98 ADD TEST FOR 999
@@ -241,7 +241,7 @@ cipk sep00
 
                 ENDIF
 cipk jun05 skip for matrix entries
-	          if(NCTREF(imat(j)) .gt. 0) go to 720
+                  if(NCTREF(imat(j)) .gt. 0) go to 720
 
                 IF(KK .EQ. 1) THEN
                   IF(WHGT(NOP(J,1)) .LT. -9999.) THEN
@@ -307,7 +307,7 @@ cipkoct93 4.5 end of additions
 cipk jul04 add test for weir heights
 
         DO J=1,NP
-	  IF(WHGT(J) .GT. -9000.) THEN
+          IF(WHGT(J) .GT. -9000.) THEN
             IF(WHGT(J) .LT. AO(J)+0.1) THEN
               WRITE(*,6190) j,whgt(j)-ao(j)
               WRITE(75,6190) j,whgt(j)-ao(j)
@@ -315,24 +315,24 @@ cipk jul04
  6190 FORMAT('Warning weir height clearance less that 0.1  node',i5,
      +       ' Clearance =', f7.2)
             ENDIF
-	  ENDIF
+          ENDIF
         ENDDO
 
 C
 C...... Set ITEQV based on input
 C-
-	DO 2201 I=1,NITA
-	  IF(ITEQS(I) .GT. 0) THEN
-	    IF(ITEQV(I) .EQ. 0) THEN
-	      ITEQV(I)=ITEQS(I)+5
-	    ENDIF
-	    IF(ITEQV(I) .EQ. 2) THEN
-	      ITEQV(I)=ITEQS(I)+7
-	    ENDIF
-	    IF(ITEQV(I) .EQ. 3) THEN
-	      ITEQV(I)=ITEQS(I)+9
-	    ENDIF
-	  ENDIF
+        DO 2201 I=1,NITA
+          IF(ITEQS(I) .GT. 0) THEN
+            IF(ITEQV(I) .EQ. 0) THEN
+              ITEQV(I)=ITEQS(I)+5
+            ENDIF
+            IF(ITEQV(I) .EQ. 2) THEN
+              ITEQV(I)=ITEQS(I)+7
+            ENDIF
+            IF(ITEQV(I) .EQ. 3) THEN
+              ITEQV(I)=ITEQS(I)+9
+            ENDIF
+          ENDIF
  2201 CONTINUE
 
 
@@ -341,11 +341,11 @@ cipk dec00   test for gate structure
         if(imat(n) .gt. 903  .and.  imat(n) .lt. 1000) then
           if(ndupj(imat(n)-900) .ne. 0  .or. 
      +       ndflj(imat(n)-900) .ne. 0) then
-	      igtp(n) = imat(n)-900
+              igtp(n) = imat(n)-900
 cipk jun05
           else
-	      nfctp(n)= imat(n)-900
-	    endif
+              nfctp(n)= imat(n)-900
+            endif
 
         endif
       enddo

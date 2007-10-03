@@ -17,7 +17,7 @@ CIPK  LAST UPDATE JAN 25 1999 REFINE TESTING WHEN LARGE NUMBER OF LAYERS INPUT
 CIPK  LAST UPDATE JAN 19 1999 ADD MARSH PARAMETERS FOR 2DV TRANSITIONS REVISE
 C                   JUNCTION PROPERTIES
 cipk  last update Jan 3 1999 add for 2dv junctions
-C     Last change:  WP   28 Aug 2007   10:36 am
+C     Last change:  WP    2 Oct 2007    9:08 pm
 cipk  last update Aug 27 1998 fix marsh option
 cipk  last update Aug 22 1997 fix problem with alfak
 CIPK  LAST UPDATE OCT 1 1996
@@ -334,7 +334,6 @@ CIPK JUN03
   !NiS,apr06: adding this transformation like it is called after RDRM1 (see above)
          NCLL = NCL
   !-
-
 !NiS,mar06: Write control output in RM1 format, so it is readable again with for example RMAGEN
 !-CONTROL OUTPUT FILE IN RM1 FORMAT------------------------------------------------------------
          OPEN(5555,'testKalypso.rm1')
@@ -504,7 +503,10 @@ C-.....Find max node and element numbers.....
 C-
       NP = 0
       DO 75 J = 1, MAXE
-        IF( IMAT(J) .GT. 0 ) THEN
+        !nis,sep07: Adapting this; problem is, if during restart elements are dry they can never
+        !           be reactivated again, because, they're not considered during mesh reading
+        !IF( IMAT(J) .GT. 0 ) THEN
+        IF(imat(j) /= 0) then
           NE = J
           IF( J .LT. LE ) LE = J
           DO 70 K = 1, 20
@@ -536,7 +538,7 @@ C
 C        Insert pointers to inform about junction elements
 C
 
-        WRITE(*,*) j, (nop(i,j), i = 1, 8)
+        WRITE(*,*) j, (nop(j,i), i = 1, 8)
 
 cWP Jan 2006, writing informations
         write (*, 1000)

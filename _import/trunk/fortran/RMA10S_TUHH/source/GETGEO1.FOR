@@ -1,4 +1,4 @@
-C     Last change:  K     6 May 2007   11:56 am
+C     Last change:  WP    2 Oct 2007    8:34 pm
 CNis  LAST UPDATE MAR  XX 2006 Adding capabilities for Kalypso-2D-network-files
 CIPK  LAST UPDATE JUNE 25 2005 RESET LOWER LIMIT
       SUBROUTINE GETGEO1
@@ -43,7 +43,7 @@ C-
 CIPK FEB05
         !NiS,mar06,com: reading SMS-input-file node and element numbers
         CALL RDBIN(N,M,1)
-	  REWIND IFILE
+        REWIND IFILE
         GO TO 100
       ENDIF
       IF( IFILE .NE. 0 ) then
@@ -53,7 +53,7 @@ cipk jun03 add RM1 input capabilities
         IF(IGEO .EQ. 0) THEN
           CALL RDRM1(N,M,1)
           ILONG=1
-	    REWIND IFILE
+          REWIND IFILE
           GO TO 100
         ENDIF
 
@@ -68,8 +68,7 @@ cipk jun03 add RM1 input capabilities
           !-
           REWIND IFILE
           WRITE(*,*)' back from rdkalypso'
-          WRITE(*,*)' N,M,A,LT= ',N,', ',M,', ',A,', ', LT !, ', '
-!     +               FFFMS+AddMS
+          WRITE(*,*)' N,M,A,LT= ',N,', ',M,', ',A,', ', LT
           GO TO 100
         end if
 !-
@@ -101,17 +100,17 @@ cipk feb01 lahey version        READ (IFILE,ERR=63)
    63 CONTINUE
 
   100 CONTINUE
-	IF(N .GT. 500000  .OR.  M .GT. 500000) THEN
-	  CLOSE(75)
-	  OPEN(75,file='ERROR.OUT')
-        WRITE(*,6300) N,M
-        WRITE(75,6300) N,M
- 6300   FORMAT(' SUSPICIOUSLY LARGE NODE NUMBER',I10
-     +,'OR LARGE ELEMENT NUMBER',I10,' DETECTED'/
-     +  '   EXECUTION TERMINATED')
-      ENDIF
+      !nis,sep07
+      !ERROR - SUSPICIOUSLY LARGE NODE NUMBER OR ELEMENT NUMBER DETECTED
+      IF(N .GT. 500000) then
+        call ErrorMessageAndStop(1102, N, 0.0, 0.0)
+      ELSEIF (M .GT. 500000) THEN
+        call ErrorMessageAndStop(1201, M, 0.0, 0.0)
+      endif
+      !-
+
       MELL=M+1                                         	!the setting of maximum dimensions of the geometry data into the variables MaxE and MaxP
-CIPK JUN05 SET LOWER LIMIT                             	!provides the oportunity to dimension the allocatable arrays for the geometry input.
+CIPK JUN05 SET LOWER LIMIT                              !provides the oportunity to dimension the allocatable arrays for the geometry input.
       IF(MELL .LT. 1000) MELL=1000                     	!The way taken here is not very elegant, because firstly the variable MELL seems not be
       MAXE=MELL                                        	!used in another place and secondlyit can be replaced by just one statement concerning
       MAXP=N+1                                         	!MaxE, that is:
@@ -126,7 +125,7 @@ CIPK JUN05 SET LOWER LIMIT                             	!provides the oportunity
 
 !NiS,mar06: if the input file is in KALYPSO-2D format the size of allocatable arc array is not neglectable
         if (igeo==2) then
-	  MAXA=A+1
+          MAXA=A+1
           !nis,dec06: Adding 1D-2D-Transitionline-array counter
           MaxLT=LT
           !-

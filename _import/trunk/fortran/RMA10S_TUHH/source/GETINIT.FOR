@@ -1,4 +1,4 @@
-C     Last change:  NIS  16 Aug 2007    7:33 pm
+C     Last change:  WP   25 Sep 2007    1:29 pm
 CIPK  LAST UPDATE APRIL 05 2006 ADD MULTUPILE ENTRIES SO THAT SS INITIAL CONDITIONS CAN BE READ
 cipk  last update FEB 11 2004  add IOV option
 cipk  last update sEP 30 2002 ADD READ OF ICETHICKNESS FROM RESTART FILE
@@ -19,7 +19,7 @@ CIPK  LAST UPDATE MAY 1 1996
       USE paraKALYPS
       USE paraflow1dfe
 !-
-	!********************** DJW 20/07/04
+      !********************** DJW 20/07/04
       USE WBMMODS
       !********************** 
       SAVE
@@ -46,8 +46,10 @@ CIPK APR06
 !nis,jul07:
       INTEGER         :: TNode, LiNo, LiLe, na
       REAL (KIND = 8) :: waspi, TDep, TDepv
+      LOGICAL         :: tooShallow
 !-
 
+      tooShallow = .false.
 
 C-
 C-.....INPUT INITIAL CONDITIONS, IF SPECIFIED.....
@@ -61,20 +63,9 @@ C-
 
       RESTARTTEST: IF (inquiretest .eq. 'FORMATTED') THEN
         WRITE(*,*) ' Going to RDKALYPSO for restarting'
-!        call RDKALYPS(dummy(1),dummy(2),dummy(3),dummy(4),dummy(5),
-!     +                dummy(6),2)
         call RDKALYPS(dummy(1),dummy(2),dummy(3),dummy(4),2)
         npx = maxp-1
         ndx = 9
-        !NiS,may06: Testausgabe
-        !WRITE(*,*) tett,npx,ndx,iyrr,ndf
-        !OPEN(4567, FILE='Restart_kalypso.txt')
-        !DO j=1,npx
-        !  WRITE(4567,*) j,(vel(k,j),vdot(k,j),K=1,7),vvel(j),
-     +  !                hel(j),hdet(j)
-        !enddo
-        !CLOSE(4567)
-        !-
       ELSE
 
 CIPK APR06   READ FOR SUS SED DATA ONLY
@@ -94,17 +85,17 @@ CIPK APR06   READ FOR SUS SED DATA ONLY
      +      ,VVELDUM,J=1,NPX)
      +      ,(helDUM,hdetDUM,j=1,npx)
      +      ,(DELBED(J),ELEVB(J),TTHICK(J),J=1,NPX)
-	ELSE
-	  IF(INEWBED .EQ. 0) THEN
+        ELSE
+          IF(INEWBED .EQ. 0) THEN
             READ(NB) TETT,NPX,NDX,IYRR,((VDUM,VDUM1,K=1,7)
      +        ,VVELDUM,J=1,NPX)
      +        ,(helDUM,hdetDUM,j=1,npX)
      +        ,(NLAY(I),(THICK(I,J),SST(I,J),J=1,MXSEDLAY),I=1,NPX)
      +        ,(NLAYO(I),(THICKO(I,J),GBO(I,J),SSTO(I,J)
      &        ,SMVAL(I,J),J=1,MXSEDLAY),BEDORIG(I),I=1,NPX)
-	  ELSE
-	    READ(NB) TETT,NPX,NDX,IYRR
-	    REWIND (NB)
+          ELSE
+            READ(NB) TETT,NPX,NDX,IYRR
+            REWIND (NB)
             READ(NB) TETT,NPX,NDX,IYRR,((VDUM,VDUM1,K=1,7)
      +        ,VVELDUM,J=1,NPX)
      +        ,(helDUM,hdetDUM,j=1,npX)
@@ -129,21 +120,21 @@ CIPK APR06 READ FOR MAIN DATA BUT DO NOT READ SS VALUES
      +      ,VVEL(J),J=1,NPX)
      +      ,(hel(j),hdet(j),j=1,npx)
      +      ,(DELBED(J),ELEVB(J),TTHICK(J),J=1,NPX)
-	ELSE
-	  IF(INEWBED .EQ. 0) THEN
+        ELSE
+          IF(INEWBED .EQ. 0) THEN
             READ(NB) TETT,NPX,NDX,IYRR,((VEL(K,J),VDOT(K,J),K=1,7)
      +        ,VVEL(J),J=1,NPX)
      +        ,(hel(j),hdet(j),j=1,npX)
 CIPK APR06     +     ,(NLAY(I),(THICK(I,J),SST(I,J),J=1,MXSEDLAY),I=1,NPX)
 CIPK APR06     +     ,(NLAYO(I),(THICKO(I,J),GBO(I,J),SSTO(I,J)
 CIPK APR06     &     ,SMVAL(I,J),J=1,MXSEDLAY),BEDORIG(I),I=1,NPX)
-	  ELSE
-	    READ(NB) TETT,NPX,NDX,IYRR
-	    REWIND (NB)
+          ELSE
+            READ(NB) TETT,NPX,NDX,IYRR
+            REWIND (NB)
             READ(NB) TETT,NPX,NDX,IYRR,((VEL(K,J),VDOT(K,J),K=1,7)
      +        ,VVEL(J),J=1,NPX)
      +        ,(hel(j),hdet(j),j=1,npX)
-     	  ENDIF
+          ENDIF
         ENDIF
 
 
@@ -165,10 +156,10 @@ cipk FEB04  add IOV option
         TET=TTEM
       ELSE
 cipk MAY96 decode TET
-        IDAY=TETT/24.
-        DAYOFY=IDAY
-        TET=TETT-DAYOFY*24.
-        DAYOFY=DAYOFY+1
+!        IDAY=TETT/24.
+!        DAYOFY=IDAY
+!        TET=TETT-DAYOFY*24.
+!        DAYOFY=DAYOFY+1
       ENDIF
       write(LOUT,6240)  iyrr,dayofy,tet
 6240  FORMAT(//' RESTART FOR YEAR',I6,'  DAY',I5,'  HOUR',F8.2)
@@ -177,8 +168,9 @@ cipk nov02 set bed to input level
       do N=1,npx
 
       !nis,jun07: This must be something for testing
+      !TODO: delete this stuff
       IF(N .EQ. 2150  .OR.  N .EQ. 2359  .OR.  N .EQ. 1836) THEN
-	AAA=0
+        AAA=0
       ENDIF
       !-
 
@@ -186,16 +178,16 @@ CIPK APR03
         VAAA=VEL(3,N)
         CALL AMF(HEL(N),VAAA,AKP(N),ADT(N),ADB(N),D1,D2,0)
 CIPK JUN05
-	  IF(LSAND .GT. 0) THEN
-	    DIFF=ELEVB(N)-AO(N)
-	    AO(N)=ELEVB(N)
+        IF(LSAND .GT. 0) THEN
+          DIFF=ELEVB(N)-AO(N)
+          AO(N)=ELEVB(N)
           ADO(N)=ADO(N)+DIFF
         ENDIF
         WSLL(N)=HEL(N)+ADO(N)
 C        HEL(N)=WSLL(N)-ADO(N)
         CALL AMF(HEL(N),VAAA,AKP(N),ADT(N),ADB(N),D1,D2,1)
         VEL(3,N)=VAAA
-	enddo
+      enddo
 CIPK DEC97 DEVELOP VALUE FOR HEL
 cipk aug98 read in instead
 cipk aug98      DO J=1,NPX
@@ -205,10 +197,12 @@ cipk aug98      ENDDO
 
 C  *** CALL PRESR TO HAVE DENSITIES FOR MELLII FIRST HOT START ITER
       CALL PRESR
-      DO 159 N=1,NP
-      DO 159 K=1,NDF
-      VDOTO(K,N)=VDOT(K,N)
-  159 VOLD(K,N)=VEL(K,N)
+      DO N=1,NP
+        DO K=1,NDF
+          VDOTO(K,N)=VDOT(K,N)
+          VOLD(K,N)=VEL(K,N)
+        enddo
+      enddo
       IF(NPX .GE. NP) GO TO 164
       SCFC=6./(UMIN+1.+4.*(UMIN+(1.-UMIN)*0.5**PWERIN))
       DO 163 M=1,NPM
@@ -250,32 +244,32 @@ C-.....INITIALIZE PRIMARY STATE VARIABLE ARRAY.....
 C-
   170 CONTINUE
       DO 171 J = 1, NP
-	VEL(1,J) = 0.00
-	VEL(2,J) =0.00
+        VEL(1,J) = 0.00
+        VEL(2,J) =0.00
 CIPK NOV9T	VEL(3,J) = ELEV - AO(J)
 CIPK NOV97	IF(VEL(3,J) .LT. HMIN) VEL(3,J)=HMIN
 CIPK DEC99 CHANGE TP ELEV1
         HEL(J)=ELEV1-ADO(J)
         CALL AMF(HEL(J),HTP,AKP(J),ADT(J),ADB(J),D1,D2,1)
-	  VEL(3,J)=HTP
+        VEL(3,J)=HTP
         IF(VEL(3,J) .LT. HMIN) VEL(3,J)=HMIN
         HOL(J)=HEL(J)
-	  IF(HMNN .LT. 0.) VEL(3,J)=-HMNN
-	  VOLD(3,J)=VEL(3,J)
+        IF(HMNN .LT. 0.) VEL(3,J)=-HMNN
+        VOLD(3,J)=VEL(3,J)
 cipk mar05
         WSLL(J)=ELEV1
 C     VEL(4,J)=0.
 C     IF(ICK .EQ. 1) VEL(4,J)=TEMP
-      VEL(4,J)=SALI
-      VEL(5,J)=TEMPI
-      VEL(6,J)=SEDI
-      VOLD(4,J)=SALI
-      VOLD(5,J)=TEMPI
-      VOLD(6,J)=SEDI
+        VEL(4,J)=SALI
+        VEL(5,J)=TEMPI
+        VEL(6,J)=SEDI
+        VOLD(4,J)=SALI
+        VOLD(5,J)=TEMPI
+        VOLD(6,J)=SEDI
 
-      VOLD(7,J)=SEDI
-      VEL(7,J)=SEDI
-	GPB(J,1)=SEDI
+        VOLD(7,J)=SEDI
+        VEL(7,J)=SEDI
+        GPB(J,1)=SEDI
   171 CONTINUE
 !********************************************************************djw 20/07/04
 !
@@ -288,19 +282,19 @@ C     IF(ICK .EQ. 1) VEL(4,J)=TEMP
 !     We Go.
 !
         Write (*,*) "Assigning Initial Conditions from Mid File"
-	
+
         Allocate (wbm_NewConditions(Size(VEL,1),Size(VEL,2)))
         wbm_NewConditions = VEL
-	  Call wbm_AssignInits
-	  VEL = wbm_NewConditions
-	  Do J = 1,NP
+        Call wbm_AssignInits
+        VEL = wbm_NewConditions
+        Do J = 1,NP
           VOLD(4,J) = VEL(4,J)
-	    VOLD(5,J) = VEL(5,J)
-	    VOLD(6,J) = VEL(6,J)
-	    VOLD(7,J) = VEL(7,J)
-	  End Do
-	  Deallocate (wbm_NewConditions)
-	End If
+          VOLD(5,J) = VEL(5,J)
+          VOLD(6,J) = VEL(6,J)
+          VOLD(7,J) = VEL(7,J)
+        End Do
+        Deallocate (wbm_NewConditions)
+      End If
 !********************************************************************end djw 20/07/04
 
 
@@ -308,27 +302,27 @@ C-
 C...... Set up 1-D velocities
 C-
       DO 173 N=1,NE
-	IF(IMAT(N) .EQ. 0) GO TO 173
-	IF(IMAT(N) .GT. 900) GO TO 173
-	IF(NOP(N,6) .GT. 0) GO TO 173
+        IF(IMAT(N) .EQ. 0) GO TO 173
+        IF(IMAT(N) .GT. 900) GO TO 173
+        IF(NOP(N,6) .GT. 0) GO TO 173
 cipk revised nov06	IF(IMAT(N) .GT. 900) GO TO 173
-	IF(IMAT(N) .GT. 900  .and. IMAT(N) .LT. 904) GO TO 173
+        IF(IMAT(N) .GT. 900  .and. IMAT(N) .LT. 904) GO TO 173
 
-	IF(NCRN(N) .EQ. 5) THEN
-	  NLM=2
-	ELSE
-	  NLM=3
-	ENDIF
+        IF(NCRN(N) .EQ. 5) THEN
+          NLM=2
+        ELSE
+          NLM=3
+        ENDIF
 
-	DO 172 M=1,NLM
-	  NA=NOP(N,M)
+        DO 172 M=1,NLM
+          NA=NOP(N,M)
 
           !testing for polynomial nodes
           if (imat(n) == 89) then
             vel(3,na) = 0.5 * (hhmin(na) + hhmax(na))
           end if
 
-	  VEL(1,NA)=UNOM
+          VEL(1,NA)=UNOM
 
   172   CONTINUE
   173 CONTINUE
@@ -382,7 +376,9 @@ CIPK APR01  NOW RESET FOR MID-SIDES
           IF(NCRN(K) .GT. 0) THEN
 
             DO L=2,NCRN(K),2
-              IF(IMAT(K) .LT. 901  .OR.  IMAT(K) .GT. 903) THEN
+              !nis,sep07: negative imats mean that element is deactivated, therefore don't refresh water surface elevations of nodes inside
+              IF((IMAT(K) .LT. 901 .AND. imat(k) > 0)
+     +            .OR.  IMAT(K) .GT. 903) THEN
                 J=NOPS(K,L)
                 N1=NOPS(K,L-1)
                 IF(MOD(L,NCRN(K)) .EQ. 0) THEN
@@ -405,8 +401,10 @@ CIPK APR01  NOW RESET FOR MID-SIDES
           ENDIF
         ENDDO
 
-        !nis,jul07: update transition line depths
+        !nis,jul07: update transition line initial depths
         TransitionDepths: do j = 1, MaxLT
+          !nis,sep07: don't update this if restarting, because, then it fits probably
+          !if (nb /= 0) EXIT TransitionDepths
           TNode = TransLines(j, 3)
           if (TNode == 0) CYCLE TransitionDepths
 
@@ -425,24 +423,28 @@ CIPK APR01  NOW RESET FOR MID-SIDES
           else
             !calculate water level with marsh-option, first transform virtual depth to "real" flow depth and then add bottom elevation of marsh-range
             CALL amf (TDepv, TDep, akp (TNode),
-     +                adt (TNode), adb (TNode), dum1, dum2, 0)
+     +                  adt (TNode), adb (TNode), dum1, dum2, 0)
             waspi = ado(TNode) + TDepV
           end if
 
           !Assign water depth to nodes of transition
           if (idnopt == 0) then
             do k = 1, LiLe
-              na        = line(LiNo, k)
-              Vel(3,na) = waspi - ao(na)
-              WSLL(na) = waspi
+              na = line(LiNo, k)
+              if (vel(3,na) > 0.0) then
+                Vel(3,na) = waspi - ao(na)
+                WSLL(na)  = waspi
+              endif
             end do
           else
             do k = 1, LiLe
               na = line(LiNo, k)
-              tmpdepth = waspi - ado(na)
-              CALL amf (tmpdepth, vel(3,na), akp(na),
-     +                  adt (na), adb (na), dum1, dum2, 1)
-              WSLL(na) = waspi
+              if (vel(3,na) > 0.0) then
+                tmpdepth = waspi - ado(na)
+                CALL amf (tmpdepth, vel(3,na), akp(na),
+     +                    adt (na), adb (na), dum1, dum2, 1)
+                WSLL(na) = waspi
+              endif
             end do
           end if
         end do TransitionDepths
