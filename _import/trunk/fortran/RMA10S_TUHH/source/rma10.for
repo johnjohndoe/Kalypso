@@ -1,4 +1,4 @@
-C     Last change:  WP    3 Sep 2007    4:17 pm
+C     Last change:  WP   27 Sep 2007    4:34 pm
 cipk  last update sep 05 2006 add depostion/erosion rates to wave file
 CNis  LAST UPDATE NOV XX 2006 Changes for usage of TUHH capabilities
 CIPK  LAST UPDATE MAR 22 2006 ADD OUTPUT FILE REWIND and KINVIS initialization
@@ -45,8 +45,8 @@ cipk aug98 add character statement
       DIMENSION CURRENT(5),TARGT(5),IREC(40),FREC(40)
       CHARACTER*4 IPACKB(1200),IPACKT(77)
       !nis,feb07,testing: Writing matrix
-      CHARACTER (LEN = 25) :: matrixname, aendname
-      CHARACTER (LEN = 30) :: matrixformat
+      !CHARACTER (LEN = 25) :: matrixname
+      !CHARACTER (LEN = 30) :: matrixformat
       !-
 !NiS,jul06: Consistent data types for passing parameters
       REAL(KIND=8) :: VTM, HTP, VH, H, HS
@@ -361,18 +361,17 @@ c  250 CONTINUE
 
 
       !nis,feb07,testing: Write whole matrix
-      if (maxn > -1) then
-        write (matrixname, '(a6,i3.3,a4)') 'matrix',maxn,'.txt'
-        teststat = 0
-        open (9919, matrixname, iostat = teststat)
-        if (teststat /= 0) STOP 'ERROR - while opening matrix file'
-      endif
+      !write (matrixname, '(a6,i3.3,a4)') 'matrix',maxn,'.txt'
+      !teststat = 0
+      !open (9919, matrixname, iostat = teststat)
+      !if (teststat /= 0) STOP 'ERROR - while opening matrix file'
+      !WRITE(9919,*) 'maxn', maxn
       !-
 
       CALL FRONT(1)
 
       !close testfile
-      close (9919, status = 'keep')
+      !close (9919, status = 'keep')
       !-
 
 CIPK JAN97
@@ -383,10 +382,7 @@ CIPK JAN97 END CHANGES
 
       IDRYC=IDRYC-1
 
-      WRITE(aendname,'(a4,i3.3,a4)') 'aend', maxn, '.txt'
-      open (12345, aendname)
       CALL UPDATE
-      close (12345, status = 'keep')
 
       !EFa jul07, necessary for autoconverge
       if (exterr.eq.1.0) then
@@ -784,11 +780,11 @@ C-
               VEL(K,J)=VSING(K,J)
             ENDDO
 CIPK NOV97  457   CONTINUE
-  !NiS,jul06: The usage of single and double precision waterdepth for calling of amf is used in the code. For
-  !           consistency, the single precision waterdepth is replaced with double precision.
-  !            CALL AMF(HEL(J),VSING(3,J),AKP(J),ADT(J),ADB(J),D1,D2,0)
+            !NiS,jul06: The usage of single and double precision waterdepth for calling of amf is used in the code. For
+            !consistency, the single precision waterdepth is replaced with double precision.
+            !CALL AMF(HEL(J),VSING(3,J),AKP(J),ADT(J),ADB(J),D1,D2,0)
             CALL AMF(HEL(J),VEL(3,J),AKP(J),ADT(J),ADB(J),D1,D2,0)
-  !-
+            !-
             WSLL(J) = HEL(J) + ADO(J)
           ENDDO  
 CIPK NOV97  458 CONTINUE
@@ -948,38 +944,40 @@ C        WRITE(240,'(I6,6E15.5)') NNN,BSHEAR(NNN),SERAT(NNN),EDOT(NNN)
 C     +   ,THICK(NNN,1),THICK(NNN,2),DEPRAT(NNN)
 C        ENDDO
 C-
-C......ITERATION LOOP     !NiS,apr06:     starting iteration sequence
-C-                        !               initialization:
-        NITA=NITN         !               NITA = maximum number of iterations of timestep, local copy
-        MAXN=0            !               NITN = maximum number of iterations of timestep, global value
-        ITPAS=0           !               ITPAS= ???
+C......ITERATION LOOP
+C-
+        !NiS,apr06: starting iteration sequence
+        !initialization:
+        !NITA = maximum number of iterations of timestep, local copy
+        !NITN = maximum number of iterations of timestep, global value
+        !ITPAS= ???
+        NITA=NITN
+        MAXN=0
+        ITPAS=0
 
         !EFa jun07, necessary for autoconverge
         if (beiauto.ne.0.0) then
-
           call autoconverge(6.)
-
         end if
         !-
 
-  465   MAXN=MAXN+1       !               MAXN = actual iteration number; first initialized, then incremented
+        !MAXN = actual iteration number; first initialized, then incremented
+  465   MAXN=MAXN+1
 
        !EFa jun07, autoconverge
        if (beiauto.ne.0.) then
-
          call autoconverge(7.)
-
        end if
        !-
 
 cipk oct02
         IF(MAXN .EQ. 1) THEN
-                write(75,*) 'going to heatex-535',n,maxn,TET,itpas
+          write(75,*) 'going to heatex-535',n,maxn,TET,itpas
 CIPK AUG05          CALL HEATEX(ORT,NMAT,DELT,LOUT,IYRR,TET,ITPAS)
           CALL HEATEX(NMAT,DELT,LOUT,IYRR,TET,ITPAS)
           ITPAS=1
         ELSEIF(ITEQV(MAXN) .EQ. 8) THEN
-                write(75,*) 'going to heatex-540',n,maxn,TET,itpas
+          write(75,*) 'going to heatex-540',n,maxn,TET,itpas
 CIPK AUG05          CALL HEATEX(ORT,NMAT,DELT,LOUT,IYRR,TET,ITPAS)
           CALL HEATEX(NMAT,DELT,LOUT,IYRR,TET,ITPAS)
         ENDIF
@@ -996,6 +994,7 @@ C-
         IF(IDSWT .NE. 0) THEN
           IF(IDRYC .EQ. 0) THEN
             WRITE(*,*) 'ENTERING REWET'
+
             CALL REWET
             CALL DEL
             IDRYC=IDSWT
@@ -1063,8 +1062,22 @@ CIPK JAN97
         ENDIF
 CIPK JAN97 END CHANGES
 
+        !nis,feb07,testing: Write whole matrix
+        !if (maxn > -1) then
+        !  write (matrixname, '(a6,i3.3,a4)') 'matrix',maxn,'.txt'
+        !  teststat = 0
+        !  open (9919, matrixname, iostat = teststat)
+        !  if (teststat /= 0) STOP 'ERROR - while opening matrix file'
+        !  WRITE(9919,*) 'maxn', maxn
+        !endif
+        !-
+
         CALL FRONT(1)
         IDRYC=IDRYC-1
+        !close testfile
+        !close (9919, status = 'keep')
+        !-
+
 
         CALL UPDATE
 
@@ -1335,9 +1348,9 @@ CIPK AUG02
                 IMATL(JJ)=IMAT(JJ)
               ENDDO
             WRITE (ISMSFM) TETT, NPM, ((VSING(J,K),J=1,3), K = 1, NPM), 
-     *                         (NDRY(K), K = 1, NPM), 
-     *                    NEM,  (IMATL(JJ), JJ = 1, NEM), 
-     *                         (WSLL(K), K = 1, NPM)
+     *                     (NDRY(K), K = 1, NPM),
+     *                     NEM,  (IMATL(JJ), JJ = 1, NEM),
+     *                     (WSLL(K), K = 1, NPM)
             ENDIF
 
             IF(ISMSFM1 .GT. 0  .AND. MOD(N,NBSFRQ) .EQ. 0) THEN

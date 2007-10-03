@@ -1,4 +1,4 @@
-C     Last change:  IPK   5 Oct 98    1:59 pm
+C     Last change:  WP   25 Sep 2007   11:42 am
 
       SUBROUTINE REWET
       USE BLK10MOD
@@ -12,7 +12,8 @@ C-
       DIST(N1,N2)=(CORD(N2,1)-CORD(N1,1))**2+(CORD(N2,2)-CORD(N1,2))**2
       DO 200 N=1,NP
         DREC(N)=VOID
-        IF(NDRY(N) .EQ. 1) GO TO 200
+        !IF(NDRY(N) .EQ. 1) GO TO 200
+        IF(NDRY(N) .EQ. 1 .and. vel(3, n) /= 0.0) GO TO 200
         NDRY(N)=2
         VEL(3,N)=VDRY
   200 CONTINUE

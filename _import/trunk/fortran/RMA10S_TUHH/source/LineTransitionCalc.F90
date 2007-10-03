@@ -1,4 +1,4 @@
-!     Last change:  WP    3 Sep 2007    3:57 pm
+!     Last change:  WP   26 Sep 2007   11:53 am
 subroutine TransVelDistribution
 
 !description
@@ -53,10 +53,10 @@ delta = 0.0
 
 
 !testoutput file handling
-teststat = 0
-WRITE(filename_out,'(a16,i4.4,a4)') 'Transitionoutput',maxn,'.txt'
-OPEN(999,filename_out, IOSTAT=teststat)
-if (teststat.ne.0) STOP 'error with kopplungsoutput.txt'
+!teststat = 0
+!WRITE(filename_out,'(a16,i4.4,a4)') 'Transitionoutput',maxn,'.txt'
+!OPEN(999,filename_out, IOSTAT=teststat)
+!if (teststat.ne.0) STOP 'error with kopplungsoutput.txt'
 
 
 !increments for numerical derivative
@@ -102,7 +102,7 @@ transitionloop: do i = 1, MaxLT
     if (k == 1) Q1 = QI
 
     !ERROR because of line shape
-    if (QI * Q1 < 0) call ErrorMessageAndStop(3601, TransLi)
+    if (QI * Q1 < 0) call ErrorMessageAndStop(3601, TransLi, cord(line(Transli,1), 1), cord(line(Transli,1), 2))
 
   end do
 
@@ -281,6 +281,6 @@ transitionloop: do i = 1, MaxLT
 end do transitionloop
 
 !Close testing file
-close (999,STATUS='keep')
+!close (999,STATUS='keep')
 
 end subroutine

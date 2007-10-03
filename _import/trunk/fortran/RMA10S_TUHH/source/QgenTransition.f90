@@ -1,4 +1,4 @@
-!     Last change:  WP   29 Aug 2007   12:21 pm
+!     Last change:  WP   26 Sep 2007   11:52 am
       SUBROUTINE QGENtrans (TLine,TNode,QREQ,THET, TDep)
 
       !nis,jan07: Overgiven variables
@@ -106,10 +106,10 @@ else
   waspi = ado(TNode) + TDepV
 end if
 
-!testfile ouput
-WRITE(999,*) 'Average waterlevel at transition:', waspi
-WRITE(999,*) 'required discharge:              ', qreq
-WRITE(999,*) 'inflow angle:                    ', thet
+!testfile ouput ('TransitionoutputXXXX.txt
+!WRITE(999,*) 'Average waterlevel at transition:', waspi
+!WRITE(999,*) 'required discharge:              ', qreq
+!WRITE(999,*) 'inflow angle:                    ', thet
 !-
 
 !Initialize factor suma

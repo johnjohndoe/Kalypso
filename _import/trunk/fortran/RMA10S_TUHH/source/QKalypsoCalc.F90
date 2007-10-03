@@ -1,4 +1,4 @@
-!     Last change:  K     4 Jul 2007    7:01 pm
+!     Last change:  WP   25 Sep 2007    2:44 pm
 !purpose of the subroutine is to calculate the average water level along a CCL.
 
 subroutine getLineAverageWaterLevel(CCL, waspi)
@@ -56,21 +56,6 @@ DO k = 1, lmt (CCL)
       d3 = 0.0
     !nis,sep06,com: If flow depth is not small
     ELSE
-!nis,jun07: trying different formulation with marsh-approach
-!    !nis,sep06,com: Calculate the true depth over node k
-!!nis,sep06: Zeigmarsh is not working in RMA10S yet
-!!   CALL amf (d3, fliesstiefe, akp (na), adt (na), adb (na),amec (k), d2, 0, zeigmarsh)
-!    CALL amf (d3, fliesstiefe, akp (na), adt (na), adb (na), amec (k), d2, 0)
-!!-
-!    !nis,sep06,com: Sum the waterlevel elevation, that is the flow depth plus bottom elevation
-!    d3 = d3 + ao (na)
-!    !nis,sep06,controloutput: CCL-Flieﬂtiefen
-!     !nis,jan07,testing
-!     !WRITE(999,'(1x,i6,2(1x,f10.7))') na, fliesstiefe, (d3-ao(na))
-!     WRITE(999,'(1x,i6,4(1x,f10.7))') na, fliesstiefe, (d3-ao(na)), d3, ao(na)
-!     !-
-!    !-
-!-
       d3 = ao(na) + vel(3,na)
     ENDIF
     !nis,sep06,com: Summed waterlevel elevation over all not drown nodes

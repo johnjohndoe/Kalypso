@@ -1,4 +1,4 @@
-!     Last change:  WP   13 Sep 2007    5:54 pm
+!     Last change:  WP   25 Sep 2007   12:59 pm
 !-----------------------------------------------------------------------
 ! This code, data_in.f90, performs reading and validation of model
 ! inputa data in the library 'Kalypso-2D'.
@@ -144,8 +144,8 @@ first_call: IF (ncall.le.0) THEN
 
     !checking continuity line assignments
     DO l = 1, nn
-      !ERROR
-      IF (line (j, l) .eq. 0) call ErrorMessageAndStop(1401)
+      !ERROR - zero entry in continuity line
+      IF (line (j, l) == 0) call ErrorMessageAndStop(1401, j, cord(line(j,1),1), cord(line(j,1),2))
 
     END DO
                                                                         
@@ -410,7 +410,7 @@ ConnectsOuter: DO n = 1, ne
         IF (icon (i, j) == l) CYCLE ConnectsInner
 
         !ERROR
-        if (j == maxc) call ErrorMessageAndStop(1501, i)
+        if (j == maxc) call ErrorMessageAndStop(1501, i, cord(l, 1), cord(l, 2))
 
       END DO GetConnection
       icon (i, j) = l
@@ -1093,7 +1093,7 @@ reading: do
   if (istat == -1) EXIT reading
 
   !ERROR - reading error
-  if (istat /= 0) call ErrorMessageAndStop(1001, unit_nr)
+  if (istat /= 0) call ErrorMessageAndStop(1001, unit_nr, 0.0, 0.0)
 
 !NiS,apr06: first half of reading-DO-LOOP enables to read geometry informations (KSWIT.eq.{0,1}), later the RESTART informations are enabled
 !           to be read (KSWIT.eq.2); some ID-lines are disabled, that are necessary for Kalypso-2D; against that some new ID-lines are added for
@@ -1133,7 +1133,7 @@ reading: do
         IF (i.gt.nodecnt) nodecnt = i
 
         !ERROR
-        IF (i <= 0) call ErrorMessageAndStop (1002, i)
+        IF (i <= 0) call ErrorMessageAndStop (1002, i, 0.0, 0.0)
 
       ENDIF
     ENDIF
@@ -1157,7 +1157,7 @@ reading: do
 
         else
           !ERROR
-          call ErrorMessageAndStop(1101, temparc(5))
+          call ErrorMessageAndStop(1101, temparc(5), cord(temparc(1), 1), cord(temparc(1), 2))
 
         ENDIF
       !NiS,mar06: Read ARC geometry informations
@@ -1166,7 +1166,7 @@ reading: do
         IF (i > arccnt) arccnt = i
 
         !ERROR - negative arc number
-        IF (i <= 0) call ErrorMessageAndStop(1301, i)
+        IF (i <= 0) call ErrorMessageAndStop(1301, i, 0.0, 0.0)
 
       ENDIF
     ENDIF
@@ -1489,64 +1489,64 @@ reading: do
       !-
     ENDIF
 
-    !NiS,may06: these degrees of freedom are missing in Kalypso-2D, because they are not used there; adding for application in RMA10S
-    !INITIAL VALUES FOR DEGREES OF FREEDOM 4 TO 7 ---
-    IF (linie(1:2) .eq. 'DF') THEN
-      READ(linie,'(a2,i10,4f20.7)') id_local, i, (vel(j,i), j=4,7)
-    END IF
-    !-
-
-    !INITIAL GRADIENTS OF VELOCITIES AND WATER DEPTH OF ACTIVE TIME STEP ---
-    IF (linie (1:2) .eq.'GA') then
-      !NiS,apr06: variables deactivated for RMA10S
-      !cvga = 1
-      !-
-      READ (linie, '(a2,i10,3f20.7)') id_local, i, (vdot(j,i),j=1,3)
-      !NiS,mar06: name of variable changed; changed mnd to MaxP
-      !Stop program execution on nodenumber higher than MaxP; could normally not happen
-      IF (i.gt.MaxP) stop 'i.gt.MaxP'
-      !Stop program execution on negative NODE number
-      IF (i.le.0) stop 'Knotennummer.le.0'
-    ENDIF
-
-    !VALUES OF VELOCITIES AND WATER DEPTH OF OLD TIME STEP ---
-    IF (linie (1:2) .eq.'VO') then
-      !NiS,apr06: variables deactivated for RMA10S
-      !cvvo = 1
-      READ (linie, '(a2,i10,3f20.7)') id, i, (vold (j, i) , j=1,3)             !vold muss NICHT gelesen werden
-      !NiS,mar06: name of variable changed; changed mnd to MaxP
-      !Stop program execution on nodenumber higher than MaxP; could normally not happen
-      IF (i.gt.MaxP) stop 'i.gt.MaxP'
-      !Stop program execution on negative NODE number
-      IF (i.le.0) stop 'Knotennummer.le.0'
-    ENDIF
-
-    !GRADIENTS OF VELOCITIES AND WATER DEPTH OF OLD TIME STEP ---
-    IF (linie (1:2) .eq.'GO') then
-      !NiS,apr06: variables deactivated for RMA10S
-      !cvvo = 1
-      READ (linie, '(a2,i10,3f20.7)') id, i, (vdoto (j, i) , j=1,3)            !vdoto muss NICHT gelesen werden
-      !NiS,mar06: name of variable changed; changed mnd to MaxP
-      !Stop program execution on nodenumber higher than MaxP; could normally not happen
-      IF (i.gt.MaxP) stop 'i.gt.MaxP'
-      !Stop program execution on negative NODE number
-      IF (i.le.0) stop 'Knotennummer.le.0'
-    ENDIF
-
-    !ADDITIONAL INFORMATIONS FOR EVERY NODE ---
-    IF (linie (1:2) .eq.'ZU') then
-      !NiS,apr06: variables deactivated for RMA10S
-      !cvzu = 1
-      !NiS,apr06: only hel(i) and hdet(i) have to be read; changing read command
-      !READ (linie, '(a2,i10,i6,4f15.7)') id, i, ndry(i), hel(i), hol(i), hdet(i), hdot(i)
-      READ(linie,'(a2,i10,6x,2(f15.7,15x))')id_local,i,hel(i),hdet(i)
-
-      !NiS,mar06: name of variable changed; changed mnd to MaxP
-      !Stop program execution on nodenumber higher than MaxP; could normally not happen
-      IF (i.gt.MaxP) stop 'i.gt.MaxP'
-      !Stop program execution on negative NODE number
-      IF (i.le.0) stop 'Knotennummer.le.0'
-    ENDIF
+!    !NiS,may06: these degrees of freedom are missing in Kalypso-2D, because they are not used there; adding for application in RMA10S
+!    !INITIAL VALUES FOR DEGREES OF FREEDOM 4 TO 7 ---
+!    IF (linie(1:2) .eq. 'DF') THEN
+!      READ(linie,'(a2,i10,4f20.7)') id_local, i, (vel(j,i), j=4,7)
+!    END IF
+!    !-
+!
+!    !INITIAL GRADIENTS OF VELOCITIES AND WATER DEPTH OF ACTIVE TIME STEP ---
+!    IF (linie (1:2) .eq.'GA') then
+!      !NiS,apr06: variables deactivated for RMA10S
+!      !cvga = 1
+!      !-
+!      READ (linie, '(a2,i10,3f20.7)') id_local, i, (vdot(j,i),j=1,3)
+!      !NiS,mar06: name of variable changed; changed mnd to MaxP
+!      !Stop program execution on nodenumber higher than MaxP; could normally not happen
+!      IF (i.gt.MaxP) stop 'i.gt.MaxP'
+!      !Stop program execution on negative NODE number
+!      IF (i.le.0) stop 'Knotennummer.le.0'
+!    ENDIF
+!
+!    !VALUES OF VELOCITIES AND WATER DEPTH OF OLD TIME STEP ---
+!    IF (linie (1:2) .eq.'VO') then
+!      !NiS,apr06: variables deactivated for RMA10S
+!      !cvvo = 1
+!      READ (linie, '(a2,i10,3f20.7)') id, i, (vold (j, i) , j=1,3)             !vold muss NICHT gelesen werden
+!      !NiS,mar06: name of variable changed; changed mnd to MaxP
+!      !Stop program execution on nodenumber higher than MaxP; could normally not happen
+!      IF (i.gt.MaxP) stop 'i.gt.MaxP'
+!      !Stop program execution on negative NODE number
+!      IF (i.le.0) stop 'Knotennummer.le.0'
+!    ENDIF
+!
+!    !GRADIENTS OF VELOCITIES AND WATER DEPTH OF OLD TIME STEP ---
+!    IF (linie (1:2) .eq.'GO') then
+!      !NiS,apr06: variables deactivated for RMA10S
+!      !cvvo = 1
+!      READ (linie, '(a2,i10,3f20.7)') id, i, (vdoto (j, i) , j=1,3)            !vdoto muss NICHT gelesen werden
+!      !NiS,mar06: name of variable changed; changed mnd to MaxP
+!      !Stop program execution on nodenumber higher than MaxP; could normally not happen
+!      IF (i.gt.MaxP) stop 'i.gt.MaxP'
+!      !Stop program execution on negative NODE number
+!      IF (i.le.0) stop 'Knotennummer.le.0'
+!    ENDIF
+!
+!    !ADDITIONAL INFORMATIONS FOR EVERY NODE ---
+!    IF (linie (1:2) .eq.'ZU') then
+!      !NiS,apr06: variables deactivated for RMA10S
+!      !cvzu = 1
+!      !NiS,apr06: only hel(i) and hdet(i) have to be read; changing read command
+!      !READ (linie, '(a2,i10,i6,4f15.7)') id, i, ndry(i), hel(i), hol(i), hdet(i), hdot(i)
+!      READ(linie,'(a2,i10,6x,2(f15.7,15x))')id_local,i,hel(i),hdet(i)
+!
+!      !NiS,mar06: name of variable changed; changed mnd to MaxP
+!      !Stop program execution on nodenumber higher than MaxP; could normally not happen
+!      IF (i.gt.MaxP) stop 'i.gt.MaxP'
+!      !Stop program execution on negative NODE number
+!      IF (i.le.0) stop 'Knotennummer.le.0'
+!    ENDIF
 
 ! TEST BLOCK FOR ERRORS ------------------------------------------------------------------------
 

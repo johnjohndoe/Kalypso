@@ -7,7 +7,7 @@ CIPK  LAST UPDATE DEC 21 2000 ALLOW FOR GATE STRUCTURE
 cipk  last update Nov 12 1999 add dropout of nodes for 3-d to 2-d
 CIPK  LAST UPDATE JAN 12 1999 FIX 2DV JUNCTION LOGIC
 cipk  last update Dec 5 1998 fix error at transitions
-C     Last change:  NIS  16 Aug 2007    7:25 pm
+C     Last change:  WP   25 Sep 2007    2:40 pm
 cipk  last update Feb 4 1998 correct zero subscript test and for HCN
 CIPK  LAST UPDATE JAN 22 1998
 cipk  last update Dec 16 1997
@@ -23,6 +23,7 @@ cipk  last update Sep 4 1996  change logic for type 2 spec's of constits
 CIPK DEC06      
       USE PARAMMOD
       USE BLKSBG
+      USE parakalyps
       SAVE
 !NiS,may06:testing for non defined variables
 !      implicit none
@@ -347,7 +348,7 @@ C
 C.....  Set up for case of straight line salinity
 C
         IF(NSTRT(N,1) .NE. 0) NBC(N,4)=0
-  	  IF(ITEQV(MAXN) .EQ. 10) NBC(N,7)=NBC(N,7)+1
+        IF(ITEQV(MAXN) .EQ. 10) NBC(N,7)=NBC(N,7)+1
 C
   220 CONTINUE
 
@@ -355,86 +356,86 @@ CIPK DEC00       test for gate structure
 
       if(maxn .lt. 2) then
         DO N=1,NE
-	    igtcl(n)=0
+          igtcl(n)=0
           IF(IGTP(N) .NE. 0) THEN
             NGT=IMAT(N)-900
             IF(NDUPJ(NGT) .GT. 0  .AND. NDDNJ(NGT) .GT. 0) THEN
               IF(WSLL(NDUPJ(NGT)) .LT.  WSLL(NDDNJ(NGT))   .AND.
      +          WSLL(NDUPJ(NGT)) .GT. BJ(NGT)) THEN
-	          CALL SETGT(N)
-   	          igtcl(n)=1
+                CALL SETGT(N)
+                igtcl(n)=1
               ELSE
                 NSTRT(NOP(N,2),1)=0
               ENDIF
-			write(75,*) 'gate setting', n,igtcl(n)          
-	      ELSEIF(NDFLJ(NGT) .GT. 0) THEN
-	        IF(NDUPJ(NGT) .EQ. 0  .AND. NDDNJ(NGT) .EQ. 0) THEN
+              write(75,*) 'gate setting', n,igtcl(n)
+            ELSEIF(NDFLJ(NGT) .GT. 0) THEN
+              IF(NDUPJ(NGT) .EQ. 0  .AND. NDDNJ(NGT) .EQ. 0) THEN
                 ACR=(2.*WIDTH(NDFLJ(NGT))+VEL(3,NDFLJ(NGT))*
-     +		  (SS1(NDFLJ(NGT))+SS2(NDFLJ(NGT))))/2.*VEL(3,NDFLJ(NGT))
+     +		         (SS1(NDFLJ(NGT))+SS2(NDFLJ(NGT))))/2.*VEL(3,NDFLJ(NGT))
 CC               QFL=ACR*SQRT(VEL(1,NDFLJ(NGT))**2+VEL(2,NDFLJ(NGT))**2)
                 QFL=(VEL(1,NDFLJ(NGT))*COS(ALFA(NDFLJ(NGT)))+
      +               VEL(2,NDFLJ(NGT))*SIN(ALFA(NDFLJ(NGT))))*ACR
-	          write(75,*) 'gate flow',qfl,aj(ngt)
-	          IF(AJ(NGT) .GT. 0.) THEN
-			    IF(QFL .LT. AJ(NGT)) THEN
-	              CALL SETGT(N)
+                write(75,*) 'gate flow',qfl,aj(ngt)
+                IF(AJ(NGT) .GT. 0.) THEN
+                  IF(QFL .LT. AJ(NGT)) THEN
+                    CALL SETGT(N)
                     igtcl(n)=1
                   ELSE
                     NSTRT(NOP(N,2),1)=0
                   ENDIF
-	          ELSE
-			    IF(QFL .GT. AJ(NGT)) THEN
-	              CALL SETGT(N)
+                ELSE
+                  IF(QFL .GT. AJ(NGT)) THEN
+                    CALL SETGT(N)
                     igtcl(n)=1
                   ELSE
                     NSTRT(NOP(N,2),1)=0
                   ENDIF
-	          ENDIF
-			  write(75,*) 'gate setting', n,igtcl(n)          
-			ELSEIF(NDUPJ(NGT) .GT. 0) THEN
+                ENDIF
+                write(75,*) 'gate setting', n,igtcl(n)
+              ELSEIF(NDUPJ(NGT) .GT. 0) THEN
                 ACR=(2.*WIDTH(NDFLJ(NGT))+VEL(3,NDFLJ(NGT))*
-     +		  (SS1(NDFLJ(NGT))+SS2(NDFLJ(NGT))))/2.*VEL(3,NDFLJ(NGT))
+     +		         (SS1(NDFLJ(NGT))+SS2(NDFLJ(NGT))))/2.*VEL(3,NDFLJ(NGT))
 CC               QFL=ACR*SQRT(VEL(1,NDFLJ(NGT))**2+VEL(2,NDFLJ(NGT))**2)
                 QFL=(VEL(1,NDFLJ(NGT))*COS(ALFA(NDFLJ(NGT)))+
      +               VEL(2,NDFLJ(NGT))*SIN(ALFA(NDFLJ(NGT))))*ACR
 
-	          write(75,*) 'gate head flow',wsll(ndupj(ngt)),bj(ngt),
+                write(75,*) 'gate head flow',wsll(ndupj(ngt)),bj(ngt),
      +		  qfl,aj(ngt)
-	          write(75,*) 'vels',VEL(1,NDFLJ(NGT)),Vold(1,NDFLJ(NGT))
-	          IF(WSLL(NDUPJ(NGT)) .LT. BJ(NGT)) THEN
-	            CALL SETGT(N)
+                write(75,*) 'vels',VEL(1,NDFLJ(NGT)),Vold(1,NDFLJ(NGT))
+                IF(WSLL(NDUPJ(NGT)) .LT. BJ(NGT)) THEN
+                  CALL SETGT(N)
                   igtcl(n)=1
-	          ELSEIF(AJ(NGT) .GT. 0) THEN
+                ELSEIF(AJ(NGT) .GT. 0) THEN
                   IF(QFL .GT. AJ(NGT)) THEN
-  	              CALL SETGT(N)
+                    CALL SETGT(N)
                     igtcl(n)=1
-	            ELSE
+                  ELSE
                     NSTRT(NOP(N,2),1)=0
-	            ENDIF
+                  ENDIF
                 ELSE
                   IF(QFL .LT. AJ(NGT)) THEN
-  	              CALL SETGT(N)
+                    CALL SETGT(N)
                     igtcl(n)=1
-	            ELSE
+                  ELSE
                     NSTRT(NOP(N,2),1)=0
-	            ENDIF
+                  ENDIF
                 ENDIF
-			  write(75,*) 'gate setting', n,igtcl(n)          
-	        ENDIF
+                write(75,*) 'gate setting', n,igtcl(n)
+              ENDIF
             ENDIF
           ENDIF
         ENDDO
       else
-	  DO N=1,NE
+        DO N=1,NE
           IF(IGTP(N) .NE. 0) THEN
             if(igtcl(n) .eq. 1) then
-  	        call setgt(n)
-	      else
+              call setgt(n)
+            else
               NSTRT(NOP(N,2),1)=0
-	      endif
-	    endif
-	  ENDDO
-	endif
+            endif
+          endif
+        ENDDO
+      endif
 C-
 C...... Define overriding boundary conditions based on input ITEQV
 C-
@@ -453,8 +454,8 @@ cipk jun05  12=   vels+sed
 
 cipk may02 initialize seventh option
 C      do n=1,np
-C	  nbc(n,7)=0
-C	enddo
+C        nbc(n,7)=0
+C        enddo
 cipk jun05
       inovel=0
       if(iteqv(maxn) .eq. 2) inovel=1
@@ -539,14 +540,14 @@ cipk may02 revise for new 23 option ob BN line
           NBC(N,3)=0
           NBC(N,4)=0
           NBC(N,5)=0
-	    NBC(N,6)=0
+          NBC(N,6)=0
 C	    NBC(N,7)=1
         ENDDO
 CC        NBC(1,7)=0
 
 CIPK MAY02      ELSEIF(ITEQV(MAXN) .EQ. 10) THEN
       ELSEIF(ITEQV(MAXN) .EQ. 11) THEN
-cipk jun05      vels+temp	  
+cipk jun05      vels+temp
         DO 2281 N=1,NP
           NBC(N,3)=0
           NBC(N,4)=0
@@ -554,7 +555,7 @@ cipk jun05      vels+temp
  2281   CONTINUE
 CIPK MAY02      ELSEIF(ITEQV(MAXN) .EQ. 11) THEN
       ELSEIF(ITEQV(MAXN) .EQ. 12) THEN
-cipk jun05      vels+sed	  
+cipk jun05      vels+sed
         DO 2282 N=1,NP
           NBC(N,3)=0
           NBC(N,4)=0
@@ -564,19 +565,19 @@ cipk jun05      vels+sed
 
 
       do n=1,npm
-	  if(icesw .gt. 0) then
-	    if(icethk(n) .gt. 0  .or. 
+        if(icesw .gt. 0) then
+          if(icethk(n) .gt. 0  .or.
      +     (vel(5,n) .lt. TMED .and. ITPAS .GT. 0)) then
-	      if(ndep(n) .gt. 1) then
-	        nbc(n,5)=0
+            if(ndep(n) .gt. 1) then
+              nbc(n,5)=0
               spec(n,5)=0.
-	        vel(5,n)=TMED
+              vel(5,n)=TMED
               VDOT(5,n)=ALTM*(TMED-VOLD(5,n))-(ALPHA-1.)*VDOTO(5,n)
-	        vdoto(5,n)=0.
-	      endif
-	    endif
-	  endif
-	enddo
+              vdoto(5,n)=0.
+            endif
+          endif
+        endif
+      enddo
 
 
 
@@ -584,32 +585,14 @@ C-
 C...... Install special values for one-two dimension intersections
 C-
 
-!nis,may07
-!Add midside node to Polynom approach
+      !nis,may07
+      !Add midside node to Polynom approach
       !EFa Nov06, Modifikation für 1D-Teschke-Elemente
       do nn=1,ne
-      !nis,feb07: Allow for numbered FFF midsides
         if ((ncorn(nn).eq.5.or.ncorn(nn).eq.3).and.
-      !+       nop(nn,2).EQ.-9999) then
-      !+       nop(nn,2) < -1000) then
      +       imat(nn) == 89) then
-      !-
-
-          nbc(nop(nn,1),2)=0 !EFa Dec06
-          nbc(nop(nn,3),2)=0 !EFa Dec06
-          !EFa Mar07, estifm changed in coef1dfe, continuity equation is activated for steady state solution
-          !if (icyc.le.0) then
-          !  nbc(nop(nn,1),1)=0
-          !  nbc(nop(nn,3),1)=0
-          !end if
-          !nis,feb07: nbc of negative node numbers is not defined, so the program overrides other space. In this case overrides the velocities and depths of several nodes
-          !do i=1,4
-          !  nbc(nop(nn,2),i)=0
-          !end do
-          !-
-!Add midside node to Polynom approach
-!-
-
+          nbc(nop(nn,1),2)=0
+          nbc(nop(nn,3),2)=0
         end if
       end do
 
@@ -696,18 +679,18 @@ CIPK FEB07
                   CALL WFORM(Q1,HL1,WSLL(N1),WV1,HL2
      +           ,WSLL(N2),WV2,WHGT(N1),WLEN(N1),ITP,IWTYP,widem)
                 ELSE
-	            CALL WTFORM(Q1,NCTREF(IMAT(NN)),WSLL(N1),WSLL(N2))
-	          ENDIF
+                  CALL WTFORM(Q1,NCTREF(IMAT(NN)),WSLL(N1),WSLL(N2))
+                ENDIF
 
                 IF(NTMREF(IMAT(NN)) .NE. 0) THEN
                   CALL SWITON(NTMREF(IMAT(NN)),ISWTOF,IYRR,DAYOFY,TET
      +             ,QFACT)
 CIPK DEC05 ADD QFACT
                   Q1=Q1*QFACT
-	            IF(ISWTOF .EQ. 1) THEN
-	              Q1=0.0
-   	            ENDIF
-	          ENDIF
+                  IF(ISWTOF .EQ. 1) THEN
+                    Q1=0.0
+                  ENDIF
+                ENDIF
 
                 Q1C(K)=Q1
 
@@ -729,12 +712,12 @@ CIPK  TEST
                       NBC(N1,2)=1
                       NBC(N2,1)=1
                       NBC(N2,2)=1
-	              endif
-	              if(inovel .gt. 0) then 
+                    endif
+                    if(inovel .gt. 0) then
                       IF(ABS(Q1) .GT. 0) then
-	                  NBC(N2,INOVEL+3)=-N1
-	                ENDIF
-	              endif
+                        NBC(N2,INOVEL+3)=-N1
+                      ENDIF
+                    endif
                   ELSE
                     if(inovel .eq. 0) then
                       NBC(N1,1)=1
@@ -774,11 +757,11 @@ c       now do middle elements
                 if(inovel .eq. 0) then
                   NBC(NOP(NN,4),1)=1
                   NBC(NOP(NN,4),2)=1
-	          endif
+                endif
               ELSE
                 if(inovel .eq. 0) then
                   NBC(NOP(NN,4),1)=1
-	          endif
+                endif
                 NBC(NOP(NN,4),2)=0
               ENDIF
             ELSE
@@ -797,12 +780,12 @@ c       now do middle elements
                 if(inovel .eq. 0) then
                   NBC(NOP(NN,8),1)=1
                   NBC(NOP(NN,8),2)=0
-	          endif
+                endif
               ENDIF
             ELSE
               if(inovel .eq. 0) then
                 NBC(NOP(NN,8),1)=1
-	        endif
+              endif
             ENDIF
           ELSE
 
@@ -824,8 +807,8 @@ CIPK FEB07
                 CALL WFORM(Q1,HL1,WSLL(N1),WV1,HL2
      +           ,WSLL(N2),WV2,WHGT(N1),WLEN(N1),ITP,IWTYP,widem)
               ELSE
-	          CALL WTFORM(Q1,NCTREF(IMAT(NN)),WSLL(N1),WSLL(N2))
-	        ENDIF
+                CALL WTFORM(Q1,NCTREF(IMAT(NN)),WSLL(N1),WSLL(N2))
+              ENDIF
               IF(NTMREF(IMAT(NN)) .NE. 0) THEN
                 CALL SWITON(NTMREF(IMAT(NN)),ISWTOF,IYRR,DAYOFY,TET
      +             ,QFACT)
@@ -833,8 +816,8 @@ CIPK DEC05 ADD QFACT
                 Q1=Q1*QFACT
                 IF(ISWTOF .EQ. 1) THEN
                   Q1=0.0
-   	          ENDIF
-	        ENDIF
+                ENDIF
+              ENDIF
               Q1=Q1*(WIDTH(N1)*VEL(3,N1)
      +           +(SS1(N1)+SS2(N1))*VEL(3,N1)*VEL(3,N1)/2.)
 
@@ -849,16 +832,8 @@ CIPK DEC05 ADD QFACT
             !NiS,may06,com: get midside node
             N1=NOP(NN,2)
 
-!nis,may07
-!Add midside node for polynom approach
-            !EFa Nov06, die folgende nbc-Zuweisung nicht für 1D-Teschke-Elemente
-            !nis,feb07: Allow for numbered FFF midsides
-            !if (n1.ne.-9999) then
-            !if (n1 > -1000) THEN
+            !for polynom approach
             if (imat(nn) /= 89) then
-            !-
-!add midside node for polynom approach
-!-
             IF(ISUBMEL(nn) .EQ. 1) THEN
                 NBC(N1,1)=1
                 NBC(N1,2)=0
@@ -955,53 +930,49 @@ cipk oct98 update to f90
 
             !get copy of node number
             nd = line(LiNo,k)
-            !Initialize the momentum equations. The velocities are a result of the distribution calculation. This is done for every node
-            !DO eqdof = 1, 2
-            !  NBC(ND,eqdof) = 0
-            !ENDDO
+            if (vel(3,nd) <= 0.0) then
+              do eqdof = 1, 6
+                nbc(nd,eqdof) = 0
+              end do
+            ELSEIF (MOD(k,2) == 0 .AND.
+     +              imat(IsNodeOfElement(nd,1))<0) then
+              do eqdof = 1, 6
+                nbc(nd,eqdof) = 0
+              end do
+            else
+              !Initialize the momentum equations. The velocities are a result of the distribution calculation. This is done for every node
 
-            !nis,jul07: activate the velocity component in main direction
-            NBC(ND,1) = 1
-            NBC(ND,2) = 0
-            !-
+              !nis,jul07: activate the velocity component in main direction
+              NBC(ND,1) = 1
+              NBC(ND,2) = 0
 
-            !the same node must not be processed on
-            IF(NLN == nd) CYCLE equationassigning
+              !the same node must not be processed on
+              IF(NLN == nd) CYCLE equationassigning
 
-            !Stop, if there is gap in line
-            if (nd == 0) then
-              WRITE(*,*) 'ERROR - Definition gap in transition line.'
-              WRITE(*,*) 'the ', k, 'th slot has a zero entry'
-              WRITE(*,*) 'Have a look at your line definition'
-              WRITE(*,*) 'Program can not be executed'
-              WRITE(*,*) 'STOP'
-              STOP
+              !Stop, if there is gap in line
+              if (nd == 0) then
+                WRITE(*,*) 'ERROR - Definition gap in transition line.'
+                WRITE(*,*) 'the ', k, 'th slot has a zero entry'
+                WRITE(*,*) 'Have a look at your line definition'
+                WRITE(*,*) 'Program can not be executed'
+                WRITE(*,*) 'STOP'
+                STOP
+              endif
+
+              !assign equation references
+              DO eqdof = 3, 6
+                NBC(ND,eqdof) = -NLN
+              ENDDO
             endif
-
-            !assign equation references
-            DO eqdof = 3, 6
-              NBC(ND,eqdof) = -NLN
-            ENDDO
 
           ENDDO equationassigning
 
           !Process 1D-node, because this can't be member of the line
-          !nbc(CoNode,1) = -NLN
           nbc(CoNode,1) = 1
           nbc(CoNode,2) = 0
           DO eqdof = 3,6
             NBC(CoNode,eqdof) = -NLN
           ENDDO
-
-          !testoutput
-          !do iii = 1, LiLe
-          !  WRITE (*, '(1x,i5,6(1x,i5))') line(LiNo, iii),
-     +    !        (nbc(line(LiNo, iii), jjj), jjj=1, 6)
-          !end do
-          !WRITE (*,'(1x,i5,6(1x,i5))') CoNode,
-     +    !      (nbc(CoNode, jjj), jjj=1, 6)
-          !pause
-          !-
 
           !if element was found, jump out of Loop; Reason: This loop was only done for the 1D-transitioning element nn.
           EXIT EquationAdjustment
@@ -1183,16 +1154,8 @@ C-
           N1=NOP(N,1)
           IF(NDEP(N1) .GT. 1  .OR.  N .GT. NEM) THEN
             N2=NOP(N,2)
-!nis,may07
-!Add midside node for polynom approach; Think at this place it is senseless
-            !EFa Nov06, die folgenden nbc-Zuweisungen nicht für1D-Teschke-Elemente
-            !nis,feb07: Allow for numbered FFF midsides
-            !if (n2.NE.-9999) then
-            !if (n2 > -1000) then
+            !for polynom approach
             if (imat(n) /= 89) then
-            !-
-!add midside node for polynom approach
-!-
 cipk may02 switch  to 7
             DO 282 K=1,7
 cipk may02            DO 282 K=1,6
@@ -1210,16 +1173,7 @@ cipk may02
             SPEC(N3,3)=VEL(3,N1) + AO(N1)-AO(N3)
 C
 C
-!nis,may07
-!add midside node for polynom approach
-            !EFa Nov06, folgende Berechnungen nicht für 1D-Teschke-ELemente
-            !nis,feb07: Allow for numbered FFF midsides
-            !if (n2.NE.-9999) then
-!            if (n2 > -1000) then
             if (imat(n) /= 89) then
-            !-
-!add midside node for polynom approach
-!-
             WZ = WIDTH(N3) + (SS1(N3)+SS2(N3))*(CORD(N3,3)-AO(N3))
      &                    * (VEL(3,N3)/(ELEV-AO(N3)) ) 
 C
@@ -1407,21 +1361,21 @@ CIPK NOV99 End addition
 C
 CIPK MAY02 Eliminate mid-sides
       IF(ICK .EQ. 7) THEN
-	  do n=1,ne
-	    ncn=ncorn(n)
-	    if(imat(n) .lt. 1000  .or. imat(n) .gt. 5000) then
-	      ilk=1
+        do n=1,ne
+          ncn=ncorn(n)
+          if(imat(n) .lt. 1000  .or. imat(n) .gt. 5000) then
+            ilk=1
             IF(NCN .EQ. 15) ILK=2
             IF(NCN .EQ. 13) ILK=3
             IF(NCN .EQ. 10) ILK=2
             do k=1,ncn
-	        if(im(k,ilk) .eq. 0) then
+              if(im(k,ilk) .eq. 0) then
                 NBC(NOP(N,K),7)=0
-	        endif
-	      enddo
-	    endif
-	  enddo
-	ENDIF
+              endif
+            enddo
+          endif
+        enddo
+      ENDIF
 
 !NiS,jun06,comment: At this point the equation numbers will be assigned to the NBC-array
 CIPK DEC06  ALLOW FOR EQUAL FLOW AND DEPTH BC'S
@@ -1453,6 +1407,7 @@ C
 
       NSZF=0
       N = 0
+
       DO 300 NN = 1, NP
         N = N + 1
 
@@ -1534,21 +1489,22 @@ cipk oct96 end changes
 CIPK AUG05 NLSTEL MOVED TO FRONT
 
       IF(ITIMTH .EQ. 1) THEN
-	  MR1=NSZF+1
-	  IR1MAX=MR1
+       MR1=NSZF+1
+       IR1MAX=MR1
+
        ALLOCATE (IPOINT(MR1),NLSTEL(0:MR1),R1(0:MR1),LCS(MR1),
      + LPS(MR1),rkeep(0:mR1),ekeep(mR1),rkeepeq(mR1))
-	  ITIMTH=2
+       ITIMTH=2
 cipk jun05
       ELSE
         IF(MR1 .LT. NSZF) THEN	
           DEALLOCATE  (IPOINT,R1,NLSTEL,RKEEP,LCS,LPS,EKEEP,RKEEPEQ)
-	    MR1=NSZF+1
-	    IR1MAX=MR1
+          MR1=NSZF+1
+          IR1MAX=MR1
           ALLOCATE (IPOINT(MR1),NLSTEL(0:MR1),R1(0:MR1),LCS(MR1),
      +    LPS(MR1),rkeep(0:mR1),ekeep(mR1),rkeepeq(mR1))
-	  ENDIF
-	ENDIF
+        ENDIF
+      ENDIF
 
 C      DO N=1,NP
 C        WRITE(75,'(8I5)') N,(NBC(N,M),M=1,7)

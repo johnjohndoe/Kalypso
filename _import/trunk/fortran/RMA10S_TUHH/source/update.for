@@ -1,4 +1,4 @@
-C     Last change:  WP   27 Jul 2007    3:29 pm
+C     Last change:  WP   26 Sep 2007    2:20 pm
 CIPK  LAST UPDATE SEP 6 2004  add error file
 CIPK  LAST UPDATE AUG 22 2001 REORGANIZE CONVERGENCE TESTING
 CIPK  LAST UYPDATE APRIL 03  2001 ADD UPDATE OF WATER SURFACE ELEVATION 
@@ -27,7 +27,8 @@ CIPK AUG05      INCLUDE 'BLKDR.COM'
 !-
 !nis,feb07: Cross section of Flow1dFE elements
       REAL (KIND=8) :: NodalArea
-!-
+!nis,sep07: Remember problematic node
+      INTEGER :: problematicNode
 cipk apr05
       common /epor/ efpor
 C-
@@ -67,51 +68,51 @@ CIPK MAY02 EXPAND TO 7
         !DO I=1,NITN
         DO I=1,NITA
         !-
- 	    IF(ITEQV(I) .EQ. 0) THEN
-	      NCNV(1)=1
-	      NCNV(2)=1
-	      NCNV(3)=1        
-	      NCNV(4)=1        
-	    ELSEIF(ITEQV(I) .EQ. 1) THEN
-	      NCNV(1)=1
-	      NCNV(2)=1
-	      NCNV(3)=1        
-	    ELSEIF(ITEQV(I) .EQ. 2) THEN
-	      NCNV(4)=1
-	    ELSEIF(ITEQV(I) .EQ. 3) THEN
-	      NCNV(1)=1
-	      NCNV(2)=1
-	      NCNV(4)=1        
-	    ELSEIF(ITEQV(I) .EQ. 4) THEN
-	      NCNV(1)=1
-	      NCNV(2)=1
-	    ELSEIF(ITEQV(I) .EQ. 6) THEN
-	      NCNV(1)=1
-	      NCNV(2)=1
-	      NCNV(3)=1        
+          IF(ITEQV(I) .EQ. 0) THEN
+            NCNV(1)=1
+            NCNV(2)=1
+            NCNV(3)=1
+            NCNV(4)=1
+          ELSEIF(ITEQV(I) .EQ. 1) THEN
+            NCNV(1)=1
+            NCNV(2)=1
+            NCNV(3)=1
+          ELSEIF(ITEQV(I) .EQ. 2) THEN
+            NCNV(4)=1
+          ELSEIF(ITEQV(I) .EQ. 3) THEN
+            NCNV(1)=1
+            NCNV(2)=1
+            NCNV(4)=1
+          ELSEIF(ITEQV(I) .EQ. 4) THEN
+            NCNV(1)=1
+            NCNV(2)=1
+          ELSEIF(ITEQV(I) .EQ. 6) THEN
+            NCNV(1)=1
+            NCNV(2)=1
+            NCNV(3)=1
           NCNV(5)=1
-	    ELSEIF(ITEQV(I) .EQ. 7) THEN
-	      NCNV(1)=1
-	      NCNV(2)=1
-	      NCNV(3)=1        
+          ELSEIF(ITEQV(I) .EQ. 7) THEN
+            NCNV(1)=1
+            NCNV(2)=1
+            NCNV(3)=1
           NCNV(6)=1
-	    ELSEIF(ITEQV(I) .EQ. 8) THEN
-	      NCNV(5)=1
-	    ELSEIF(ITEQV(I) .EQ. 9) THEN
-	      NCNV(6)=1
+          ELSEIF(ITEQV(I) .EQ. 8) THEN
+            NCNV(5)=1
+          ELSEIF(ITEQV(I) .EQ. 9) THEN
+            NCNV(6)=1
 CIPK MAY02
-	    ELSEIF(ITEQV(I) .EQ. 10) THEN
+          ELSEIF(ITEQV(I) .EQ. 10) THEN
           NCNV(7)=1
 CIPK MAY02	    ELSEIF(ITEQV(I) .EQ. 10) THEN
-	    ELSEIF(ITEQV(I) .EQ. 11) THEN
-	      NCNV(1)=1
-	      NCNV(2)=1
-	      NCNV(5)=1        
+          ELSEIF(ITEQV(I) .EQ. 11) THEN
+            NCNV(1)=1
+            NCNV(2)=1
+            NCNV(5)=1
 CIPK MAY02	    ELSEIF(ITEQV(I) .EQ. 11) THEN
-	    ELSEIF(ITEQV(I) .EQ. 12) THEN
-	      NCNV(1)=1
-	      NCNV(2)=1
-	      NCNV(6)=1
+          ELSEIF(ITEQV(I) .EQ. 12) THEN
+            NCNV(1)=1
+            NCNV(2)=1
+            NCNV(6)=1
           ENDIF		         
         ENDDO
 
@@ -157,9 +158,20 @@ cipk dec97 define urfcc
       URFCC =1.0
       ITEST=0
       DO 150 J = 1, NP
-	IF(J .EQ. 1332) THEN
-	AAA=0
-	ENDIF
+
+        !nis,sep07: If node is deactivated because element is deactivated, it might still have invalid WSLL, therefore refresh that WSLL
+        IF(vel(1,j) == 0.0 .AND. vel(2,j) == 0.0) then
+          WSLL (J) = ado(j) + 0.0
+        endif
+        !-
+
+      !TODO
+      !nis,sep07: Delete the following?
+      IF(J .EQ. 1332) THEN
+      AAA=0
+      ENDIF
+      !-
+
       IF( NBC(J,KK) ) 150, 150, 125
   125 I = NBC(J,KK)
       IF(ITEST .EQ. 0) THEN
@@ -181,31 +193,17 @@ c
 
       EX=R1(I)*URFC*urfcc
 
-      !if (TransitionMember(j)) then
-      !  WRITE(*,*) 'node:     ', j, 'DOF: ', k
-      !  WRITE(*,*) 'r1:       ', r1 (nbc (j, k)), 'nbc: ', nbc (j, k)
-      !  WRITE(*,*) 'H bzw. v: ', vel (k, j), WSLL (j)
-      WRITE(12345,'(a8,i4.4,1x,a5,i3,1x,a11,1x,f15.8)')
-     +     'Knoten: ', j,'DOF: ', KK, 'Aenderung: ', ex
-      !  pause
-      !end if
-      !if (k == 1 .or. k == 2) then
-      !  EX=R1(I)*URFC*urfcc * eqscale(j,k)
-      !else
-      !  EX=R1(I)*URFC*urfcc
-      !end if
-
 cik dec97 end changes
       AEX = ABS( EX )
       EAVG(K) = EAVG(K) + AEX
 
 cipk jun05
-	if(k .ne. 3) then
+      if(k .ne. 3) then
         IF(AEX.LT.ABS(EMAX(K))) GO TO 128
         EMAX(K)=EX
         NMX(K)=J
   128   CONTINUE
-	endif
+      endif
 
       IF(ITEQV(MAXN) .EQ. 5) THEN
         IF(K .EQ. 1) FCA=UDST(J)
@@ -244,7 +242,7 @@ CIPK APR05
       if(inotr .eq. 1) then
         !nis,comment: efpor is updated for every node by usage of amf.subroutine
         EX=EX*EFPOR
-	endif
+      endif
       VN=VEL(3,J)+EX
 c
 c      Check sign of depth change
@@ -278,7 +276,7 @@ c
 
 cipk jun05
       horg=hel(j)
-	vt=vel(3,j)
+      vt=vel(3,j)
       CALL AMF(HEL(J),VT,AKP(J),ADT(J),ADB(J),D1,D2,0)
       aex=abs(hel(j)-horg)
       IF(AEX.GT.ABS(EMAX(K))) THEN
@@ -301,10 +299,10 @@ CIPK APR01 UPDATE WATER SURFACE ELEVATION
 CIPK MAY02 ALLOW FOR ICK=7
   149 CONTINUE
       IF(K .EQ. 7) THEN
-	  GAN(J) = GAN(J)+EX
+        GAN(J) = GAN(J)+EX
       ELSE
         VEL(K,J) = VEL(K,J) + EX
-	ENDIF
+      ENDIF
   150 CONTINUE
       IF(COUNT .EQ. 0.) COUNT=1.E20
       EAVG(K) = EAVG(K) / COUNT
@@ -480,19 +478,30 @@ C......PRINT AND/OR TERMINATE ON LARGE HEAD CHANGES
 C-
       IF(    ABS(EMAX(3)) .GT. 100.  .OR.  ABS(EMAX(1)) .GT.  50.
      +  .OR. ABS(EMAX(2)) .GT.  50.) THEN
-      !EFa jun07, necessary for autoconverge
+
+        !nis,sep07: Remember problematic node
+        IF (ABS(emax(3)) > 100.) THEN
+          problematicNode = nmx(3)
+        elseif (ABS(emax(2)) >  50.) THEN
+          problematicNode = nmx(2)
+        ELSE
+          problematicNode = nmx(1)
+        ENDIF
+        !-
+
+        !EFa jun07, necessary for autoconverge
         if (beiauto.gt.0.) then
           exterr = 1.
           return
         end if
-      !-
+        !-
+
         CALL OUTPUT(2)
 cipk sep04
-        CLOSE(75)
-        OPEN(75,FILE='ERROR.OUT')
-        WRITE(*,*) 'EXECUTION TERMINATED BY EXCESS CHANGES'
-        WRITE(75,*) 'EXECUTION TERMINATED BY EXCESS CHANGES'
-        STOP
+        !ERROR MESSAGE
+        !EXECUTION TERMINATED BY EXCESS CHANGES
+        call ErrorMessageAndStop (4001, problematicNode,
+     +       cord(problematicNode, 1), cord(problematicNode, 2))
       ENDIF
 C-
  6000 FORMAT( 1H1  / 10X, 'FINITE ELEMENT METHOD FOR FLUID FLOW...PROGRA

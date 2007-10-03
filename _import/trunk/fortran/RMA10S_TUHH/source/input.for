@@ -1,4 +1,4 @@
-C     Last change:  NIS  16 Aug 2007    6:48 pm
+C     Last change:  WP   25 Sep 2007    2:46 pm
 CIPK  LAST UPDATE AUGUST 30 2006 ADD CONSV AND AVEL OPTIONS
 CIPK  LAST UPDATE APRIL 05 2006 MODIFY CALL TO GETINIT
 CIPK  LAST UPDATE MARCH 25 2006 ADD TESTMODE
@@ -214,7 +214,7 @@ CIPK DEC00 ADD IPROJ
 
       write(*,*) 'read c0'
 CIPK FEB04 SAVE TIMES IN CASE IOV ACTIVE
-	IYKK=IYRR
+      IYKK=IYRR
       IDTM=DAYOFY
       TTEM=TET
 CIPK DEC03      IF(TBFACT .EQ. 0.) TBFACT=0.2
@@ -246,11 +246,11 @@ CIPK MAR05
 
 cipk jul01  Store info on metric geometry
       if(grav .lt. 10.) then
-	  imgeom=1
-	else
-	  imgeom=0
-	endif
-	
+        imgeom=1
+      else
+        imgeom=0
+      endif
+
 cipk sep96 add iedsw
 CIPK JUL99 reverse tbfact and tbmin order
 
@@ -1181,16 +1181,10 @@ C-
       !NiS,may06: testing
       !OPEN(UNIT=357, FILE='roughnesstest.txt')
       Materialassigning: DO J=1,MaxE
-        !WRITE(357,*) ' element    : ', J
-        !WRITE(357,*) ' Material   : ', IMAT(J)
-        !WRITE(357,*) ' Sandrauheit: ', ORT(IMAT(J),15)
-        !WRITE(357,*) ' Baumabstand: ', ORT(IMAT(J),16)
-        !WRITE(357,*) ' Baumdurchm.: ', ORT(IMAT(J),17)
-        !WRITE(357,*) ' Ende Element ', J
         if (IMAT(J).eq.0) CYCLE Materialassigning
-        CNIKU(J)     = ORT(IMAT(J),15)
-        ABST(J)      = ORT(IMAT(J),16)
-        DURCHBAUM(J) = ORT(IMAT(J),17)
+        CNIKU(J)     = ORT(ABS(IMAT(J)),15)
+        ABST(J)      = ORT(ABS(IMAT(J)),16)
+        DURCHBAUM(J) = ORT(ABS(IMAT(J)),17)
       END DO Materialassigning
       !close (357,STATUS='keep')
 !-

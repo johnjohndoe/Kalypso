@@ -1,4 +1,4 @@
-C     Last change:  K    15 Mar 2007    6:55 pm
+C     Last change:  WP   27 Sep 2007    5:25 pm
 CIPK  LAST UPDATE JUNE 27 2005 ALLOW FOR CONTROL STRUCTURES
 CIPK  LAST UPDATE SEP 6 2004   add error file
 cipk  last update Aug 06 2002 expand dlin to 80 char
@@ -31,9 +31,9 @@ C-
       ENDDO
       DO  J = 1, NP
 CIPK JUN05
-	nfix(j)=nfixp(j)
-	DO  K= 1, NDF
-	  SPEC(J,K) = 0.00
+        nfix(j)=nfixp(j)
+        DO  K= 1, NDF
+          SPEC(J,K) = 0.00
         ENDDO
       ENDDO
       IBK=0
@@ -104,10 +104,10 @@ cipk apr96 add ending time for time step
 CIPK MAR01  TEST FOR ELEVATION AND SCALE TIME STEP
 
       IF(NODETR .NE. 0) THEN
-	  IF(WSLL(NODETR) .GT. TRELEV) THEN
-	    DELT = DELT*TRFACT
-	  ENDIF
-	ENDIF
+        IF(WSLL(NODETR) .GT. TRELEV) THEN
+          DELT = DELT*TRFACT
+        ENDIF
+      ENDIF
 
       if(ibin .ne. nscrin) then
         write(lout,6156) delt,iyend,idye,hrend
@@ -144,7 +144,7 @@ CIPK FEB03 CATCH THE STEADY STATE CASE
 CIPK DEC05          
         ELSE 
           EXTLD=0          
-	  ENDIF
+        ENDIF
 
 C
 C-.... Read iteration controls
@@ -253,13 +253,14 @@ cipk apr96 save data to a scratch file
       IF(ID(1:2) .EQ. 'BN') THEN
         READ(DLIN,5050) N,NFIX(N),NFIX1(N),(SPEC(N,M),M=1,NDF)
         write(lout,6050) n,nfix(n),nfix1(n),(spec(n,m),m=1,ndf)
-	  CALL BFORM(N)
+        CALL BFORM(N)
         GO TO 210
       ENDIF    
+
 C
 C...... Go to read boundary conditions along line and wind data
 C
-      CALL SBGEN(IBIN)
+        CALL SBGEN(IBIN)
 c-
 c
 C Fixed salinity nodes 
@@ -302,16 +303,16 @@ C-
 C-..... INITIALIZE FOR BOUNDARY CONDITIONS.....
 C-
       DO 800 N=1,NP
-	IF(NSPL(N) .EQ. 1) THEN
-	  IF(NDEP(N) .GT. 1) THEN
-	    CALL BFORM(N)
-	    NL=NREF(N)+1
-	    NT=NL+NDEP(N)-2
-	    DO 790 M=NL,NT
-	      CALL BFORM(M)
+        IF(NSPL(N) .EQ. 1) THEN
+          IF(NDEP(N) .GT. 1) THEN
+            CALL BFORM(N)
+            NL=NREF(N)+1
+            NT=NL+NDEP(N)-2
+            DO 790 M=NL,NT
+              CALL BFORM(M)
   790       CONTINUE
-	  ENDIF
-	ENDIF
+          ENDIF
+        ENDIF
   800 CONTINUE
 
 C-
