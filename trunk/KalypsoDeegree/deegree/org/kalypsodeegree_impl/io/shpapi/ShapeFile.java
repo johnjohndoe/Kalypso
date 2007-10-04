@@ -217,12 +217,8 @@ public class ShapeFile
     hasRTreeIndex = false;
   }
 
-  /**
-   *
-   */
   public void close( )
   {
-
     shp.close();
 
     if( m_dbf != null )
@@ -255,7 +251,6 @@ public class ShapeFile
         // and here?
       }
     }
-
   }
 
   /**
