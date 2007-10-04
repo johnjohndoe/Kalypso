@@ -43,7 +43,6 @@ package org.kalypso.ant;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -85,7 +84,7 @@ public class GmlPropertyTask extends Task
     return m_gmlURL;
   }
 
-  public final void setGmlURL( URL gmlURL )
+  public final void setGmlURL( final URL gmlURL )
   {
     m_gmlURL = gmlURL;
   }
@@ -115,8 +114,8 @@ public class GmlPropertyTask extends Task
     try
     {
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlURL, null );
-      for( final Iterator iter = m_properties.iterator(); iter.hasNext(); )
-        addProperty( workspace, (Property) iter.next() );
+      for( final Object element : m_properties )
+        addProperty( workspace, (Property) element );
     }
     catch( final BuildException be )
     {
@@ -168,7 +167,7 @@ public class GmlPropertyTask extends Task
     {
       // special handling for Date
       // just write time in millies since 1970
-      final Date dateValue = DateUtilities.toDate((XMLGregorianCalendar) value);
+      final Date dateValue = DateUtilities.toDate( (XMLGregorianCalendar) value );
       final Integer dateoffset = property.getDateoffset();
       final String dateoffsetfield = property.getDateoffsetfield();
       final Date date;
@@ -231,7 +230,7 @@ public class GmlPropertyTask extends Task
       return m_dateoffset;
     }
 
-    public final void setDateoffset( Integer dateoffset )
+    public final void setDateoffset( final Integer dateoffset )
     {
       m_dateoffset = dateoffset;
     }
@@ -241,7 +240,7 @@ public class GmlPropertyTask extends Task
       return m_dateoffsetfield;
     }
 
-    public final void setDateoffsetfield( String dateoffsetfield )
+    public final void setDateoffsetfield( final String dateoffsetfield )
     {
       m_dateoffsetfield = dateoffsetfield;
     }
@@ -251,7 +250,7 @@ public class GmlPropertyTask extends Task
       return m_featureID;
     }
 
-    public final void setFeatureID( String featureID )
+    public final void setFeatureID( final String featureID )
     {
       m_featureID = featureID;
     }
@@ -261,7 +260,7 @@ public class GmlPropertyTask extends Task
       return m_featurePath;
     }
 
-    public final void setFeaturePath( String featurePath )
+    public final void setFeaturePath( final String featurePath )
     {
       m_featurePath = featurePath;
     }
@@ -271,7 +270,7 @@ public class GmlPropertyTask extends Task
       return m_featureProperty;
     }
 
-    public final void setFeatureProperty( String featureProperty )
+    public final void setFeatureProperty( final String featureProperty )
     {
       m_featureProperty = featureProperty;
     }
@@ -281,12 +280,12 @@ public class GmlPropertyTask extends Task
       return m_name;
     }
 
-    public final void setName( String name )
+    public final void setName( final String name )
     {
       m_name = name;
     }
 
-    public final void setDefaultValue( String defaultValue )
+    public final void setDefaultValue( final String defaultValue )
     {
       m_defaultValue = defaultValue;
     }
