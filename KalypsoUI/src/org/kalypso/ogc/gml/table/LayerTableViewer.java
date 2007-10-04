@@ -50,14 +50,17 @@ import java.util.logging.Logger;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.util.OpenStrategy;
 import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.viewers.ColumnViewerEditor;
+import org.eclipse.jface.viewers.FocusCellHighlighter;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TableViewerEditor;
+import org.eclipse.jface.viewers.TableViewerFocusCellManager;
+import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
@@ -75,8 +78,8 @@ import org.kalypso.commons.command.DefaultCommandManager;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.commons.command.InvisibleCommand;
-import org.kalypso.contribs.eclipse.swt.custom.ExcelTableCursor;
-import org.kalypso.contribs.eclipse.swt.custom.TableCursor;
+import org.kalypso.contribs.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
+import org.kalypso.contribs.eclipse.jface.viewers.FocusCellOwnerDrawHighlighter;
 import org.kalypso.contribs.eclipse.swt.widgets.TableColumnTooltipListener;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.annotation.AnnotationUtilities;
@@ -140,8 +143,6 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
   private final ICommandTarget m_commandTarget = new JobExclusiveCommandTarget( new DefaultCommandManager(), null );
 
   private final ModellEventProviderAdapter m_modellEventProvider = new ModellEventProviderAdapter();
-
-  final TableCursor m_tableCursor;
 
   private IFeatureModifier[] m_modifier;
 
@@ -261,9 +262,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
   private final IFeatureChangeListener m_fcl;
 
-  private Feature m_focusedFeature;
-
-  private IPropertyType m_focusedProperty;
+  private final TableViewerFocusCellManager m_focusCellManager;
 
   /**
    * @param parent
@@ -292,61 +291,21 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     // disable capture to let selection of table and tableviewer in sync
     table.setCapture( false );
 
-    final TableCursor tc = new ExcelTableCursor( this, SWT.NONE, ExcelTableCursor.ADVANCE_MODE.DOWN, true );
-    m_tableCursor = tc;
-
-    final OpenStrategy strategy = new OpenStrategy( tc );
-    strategy.addSelectionListener( new SelectionAdapter()
-    {
-      @Override
-      public void widgetSelected( final SelectionEvent e )
-      {
-        handleTableCursorSelected();
-      }
-    } );
-
-    strategy.addPostSelectionListener( new SelectionAdapter()
-    {
-      /**
-       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-       */
-      @Override
-      public void widgetSelected( final SelectionEvent e )
-      {
-        handleTableCursorPostSelected();
-      }
-    } );
-
-  }
-
-  protected void handleTableCursorPostSelected( )
-  {
-    cursorChanged();
-
-    firePostSelectionChanged( new SelectionChangedEvent( this, getSelection() ) );
-  }
-
-  protected void handleTableCursorSelected( )
-  {
-    cursorChanged();
-
-    fireSelectionChanged( new SelectionChangedEvent( this, getSelection() ) );
-  }
-
-  protected void cursorChanged( )
-  {
-    final TableItem row = m_tableCursor.getRow();
-    final int column = m_tableCursor.getColumn();
-
-    m_focusedFeature = row == null ? null : (Feature) row.getData();
-
-    m_focusedProperty = (column < 0 || m_modifier == null || column > m_modifier.length - 1) ? null : m_modifier[column].getFeatureTypeProperty();
+    // Override the default TableViewerEditor:
+    // - multi-selection is enabled
+    // - there is a focused cell
+    // - right-klick opens context-menu everywhere
+    // - single-click starts editing
+    final FocusCellHighlighter focusHighlighter = new FocusCellOwnerDrawHighlighter( this );
+    m_focusCellManager = new TableViewerFocusCellManager( this, focusHighlighter );
+    final ColumnViewerEditorActivationStrategy editorActivationStrategy = new ColumnViewerEditorActivationStrategy( this );
+    TableViewerEditor.create( this, m_focusCellManager, editorActivationStrategy, ColumnViewerEditor.KEYBOARD_ACTIVATION | ColumnViewerEditor.TABBING_HORIZONTAL
+        | ColumnViewerEditor.TABBING_MOVE_TO_ROW_NEIGHBOR );
   }
 
   public void dispose( )
   {
     applyTableTemplate( null, null );
-    m_tableCursor.dispose();
 
     m_selectionManager.removeSelectionListener( m_globalSelectionListener );
   }
@@ -669,11 +628,6 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     {
       final Feature[] features = ((FeaturesChangedModellEvent) event).getFeatures();
       update( features, null );
-      if( m_tableCursor != null && !m_tableCursor.isDisposed() )
-      {
-        m_tableCursor.update();
-        m_tableCursor.redraw();
-      }
     }
     if( event instanceof FeatureStructureChangeModellEvent )
     {
@@ -975,7 +929,14 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     if( theme == null )
       return selection;
 
-    return new KalypsoFeatureThemeSelection( selection.toList(), theme, m_selectionManager, m_focusedFeature, m_focusedProperty );
+    final ViewerCell focusCell = m_focusCellManager.getFocusCell();
+
+    final Feature focusedFeature = focusCell == null ? null : (Feature) focusCell.getElement();
+    final int column = focusCell == null ? -1 : focusCell.getColumnIndex();
+
+    final IPropertyType focusedProperty = (column < 0 || m_modifier == null || column > m_modifier.length - 1) ? null : m_modifier[column].getFeatureTypeProperty();
+
+    return new KalypsoFeatureThemeSelection( selection.toList(), theme, m_selectionManager, focusedFeature, focusedProperty );
   }
 
   @Override
@@ -1029,17 +990,6 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     final Table table = getTable();
     final Menu tablemenu = menuManager.createContextMenu( table );
     table.setMenu( tablemenu );
-
-    final Menu cursormenu = menuManager.createContextMenu( m_tableCursor );
-    m_tableCursor.setMenu( cursormenu );
-  }
-
-  public void setFocusedFeature( final Feature f, final IPropertyType ftp )
-  {
-    m_focusedFeature = f;
-    m_focusedProperty = ftp;
-
-    firePostSelectionChanged( new SelectionChangedEvent( this, getSelection() ) );
   }
 
   protected void handleStatusChanged( final IKalypsoTheme source )
@@ -1051,5 +1001,4 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
         workspace.addModellListener( this );
     }
   }
-
 }
