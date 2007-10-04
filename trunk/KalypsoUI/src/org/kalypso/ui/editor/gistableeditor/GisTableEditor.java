@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.gistableeditor;
 
@@ -136,8 +136,6 @@ public class GisTableEditor extends AbstractEditorPart implements IEditorPart, I
         final Shell shell = window.getShell();
         ErrorDialog.openError( shell, "Feature bearbeiten", "Fehler beim Öffnen der Feature-View", e.getStatus() );
       }
-
-      getLayerTable().setFocusedFeature( feature, ftp );
     }
   };
 
@@ -212,7 +210,7 @@ public class GisTableEditor extends AbstractEditorPart implements IEditorPart, I
     menuManager.setRemoveAllWhenShown( true );
     menuManager.addMenuListener( new IMenuListener()
     {
-      public void menuAboutToShow( IMenuManager manager )
+      public void menuAboutToShow( final IMenuManager manager )
       {
         manager.add( new GroupMarker( IWorkbenchActionConstants.MB_ADDITIONS ) );
         manager.add( new Separator() );
@@ -264,7 +262,7 @@ public class GisTableEditor extends AbstractEditorPart implements IEditorPart, I
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
    */
-  public void addSelectionChangedListener( ISelectionChangedListener listener )
+  public void addSelectionChangedListener( final ISelectionChangedListener listener )
   {
     m_layerTable.addSelectionChangedListener( listener );
   }
@@ -280,7 +278,7 @@ public class GisTableEditor extends AbstractEditorPart implements IEditorPart, I
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
    */
-  public void removeSelectionChangedListener( ISelectionChangedListener listener )
+  public void removeSelectionChangedListener( final ISelectionChangedListener listener )
   {
     m_layerTable.removeSelectionChangedListener( listener );
   }
@@ -301,8 +299,8 @@ public class GisTableEditor extends AbstractEditorPart implements IEditorPart, I
 
     final IPropertyType[] ftps = theme.getFeatureType().getProperties();
 
-    for( int i = 0; i < ftps.length; i++ )
-      manager.add( new ColumnAction( this, m_layerTable, ftps[i].getName(), AnnotationUtilities.getAnnotation( ftps[i] ) ) );
+    for( final IPropertyType element : ftps )
+      manager.add( new ColumnAction( this, m_layerTable, element.getName(), AnnotationUtilities.getAnnotation( element ) ) );
   }
 
   /**
@@ -334,7 +332,7 @@ public class GisTableEditor extends AbstractEditorPart implements IEditorPart, I
    * @see org.kalypso.metadoc.IExportableObjectFactory#createWizardPages(org.kalypso.metadoc.configuration.IPublishingConfiguration,
    *      ImageDescriptor)
    */
-  public IWizardPage[] createWizardPages( IPublishingConfiguration configuration, ImageDescriptor defaultImage )
+  public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration, final ImageDescriptor defaultImage )
   {
     final IWizardPage page = new ExportTableOptionsPage( "optionPage", "Export Otionen", ImageProvider.IMAGE_UTIL_BERICHT_WIZ );
 
