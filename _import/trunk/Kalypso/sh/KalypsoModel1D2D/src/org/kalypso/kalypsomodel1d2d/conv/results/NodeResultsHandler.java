@@ -529,7 +529,11 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     // A = A(y) //get it from the polynomials
     final BigDecimal area = getCrossSectionArea( teschkeRelation, depth );
 
-    final BigDecimal discharge = velocity.multiply( area );
+    BigDecimal discharge = null;
+    if( area != null )
+    {
+      discharge = velocity.multiply( area );
+    }
 
     // markers for Trennflächen / Bordvollpunkte u.ä.
 
@@ -555,7 +559,8 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     // newRecord.setValue( depthComp, depth );
     // newRecord.setValue( slopeComp, slope );
     // newRecord.setValue( velocityComp, velocity );
-    newRecord.setValue( dischargeComp, discharge );
+    if( discharge != null )
+      newRecord.setValue( dischargeComp, discharge );
 
     tuples.add( newRecord );
   }
@@ -569,7 +574,10 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     if( polyArea == null )
       return null;
 
+    // TODO: for some reason there appears a depth that is not defined in the Polynomial Array!?
     final IPolynomial1D poly = PolynomialUtilities.getPoly( polyArea, depth.doubleValue() );
+    if( poly == null )
+      return null;
     final double computeResult = poly.computeResult( depth.doubleValue() );
 
     return new BigDecimal( computeResult ).setScale( 4, BigDecimal.ROUND_HALF_UP );
