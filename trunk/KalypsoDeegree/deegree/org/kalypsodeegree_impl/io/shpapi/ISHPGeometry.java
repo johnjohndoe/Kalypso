@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,27 +36,27 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- 
+
+
  history:
- 
+
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
- interface-compatibility to deegree is wanted but not retained always. 
- 
- If you intend to use this software in other ways than in kalypso 
+ interface-compatibility to deegree is wanted but not retained always.
+
+ If you intend to use this software in other ways than in kalypso
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
 
- all modifications are licensed as deegree, 
+ all modifications are licensed as deegree,
  original copyright:
- 
+
  Copyright (C) 2001 by:
  EXSE, Department of Geography, University of Bonn
  http://www.giub.uni-bonn.de/exse/
  lat/lon GmbH
  http://www.lat-lon.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 
 package org.kalypsodeegree_impl.io.shpapi;
@@ -64,59 +64,26 @@ package org.kalypsodeegree_impl.io.shpapi;
 /**
  * Class representing basic Geometry for geometries read from a shape-file.
  * <p>
- * 
  * <B>Last changes <B>: <BR>
  * 12.01.2000 ap: constructor re-declared <BR>
  * 13.01.2000 ap: all methods removed <BR>
  * 13.01.2000 ap: all variables except reBuffer removed <BR>
  * 16.08.2000 ap: field enevlope added <BR>
  * 16.08.2000 ap: method getEnvelope() added <BR>
- * 26.01.2007 Thomas Jung: method getZRange() added <BR> * 
- * 
+ * 26.01.2007 Thomas Jung: method getZRange() added <BR> *
  * <!---------------------------------------------------------------------------->
  * 
  * @author Andreas Poth
  * @version 16.08.2000
  */
 
-public class SHPGeometry
+public interface ISHPGeometry
 {
 
-  protected byte[] recBuffer = null;
+  public abstract byte[] writeShape( );
 
-  protected SHPEnvelope envelope = null;
-  
-  protected SHPZRange zRange = null;
+  public abstract int size( );
 
-  public SHPGeometry()
-  {
-  // 
-  }
+  public abstract SHPEnvelope getEnvelope( );
 
-  public SHPGeometry( byte[] recBuf )
-  {
-
-    /* private copy of record Buffer */
-    recBuffer = recBuf;
-
-  } // end of constructor
-
-  /**
-   * returns the minimum boundary rectangle of the geomertry <BR>
-   */
-  public SHPEnvelope getEnvelope()
-  {
-    return envelope;
-  }
-
-  
-  /**
-   * returns the Range of the z-values for Z-Shapes <BR>
-   */
-  public SHPZRange getZRange()
-  {
-    return zRange;
-  }
-
-  
-} // end of class SHPGeometry
+}

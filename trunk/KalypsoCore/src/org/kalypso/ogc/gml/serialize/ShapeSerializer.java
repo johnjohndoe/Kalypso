@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.serialize;
 
@@ -64,6 +64,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.io.shpapi.DBaseException;
 import org.kalypsodeegree_impl.io.shpapi.DBaseFile;
 import org.kalypsodeegree_impl.io.shpapi.ShapeFile;
+import org.kalypsodeegree_impl.io.shpapi.StandardShapeDataProvider;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.GMLUtilities;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
@@ -105,7 +106,10 @@ public class ShapeSerializer
     try
     {
       final ShapeFile shapeFile = new ShapeFile( filenameBase, "rw" );
-      shapeFile.writeShape( features.toArray( new Feature[features.size()] ) );
+
+      final StandardShapeDataProvider shapeDataProvider = new StandardShapeDataProvider( features.toArray( new Feature[features.size()] ) );
+
+      shapeFile.writeShape( shapeDataProvider );
       shapeFile.close();
     }
     catch( final Exception e )
@@ -129,7 +133,7 @@ public class ShapeSerializer
    * @param filenameBase
    *            Der Ausgabename für das Shape (.shp, .dbf, und. shx)
    */
-  public static void serializeFeatures( final Feature[] features, final Map<String, String> mapping, final String geoName, final String filenameBase ) throws GmlSerializeException
+  public static void serializeFeatures( final Feature[] features, final Map<String, String> mapping, final String geoName, final String filenameBase, final StandardShapeDataProvider dataProvider ) throws GmlSerializeException
   {
     if( features.length == 0 )
     {
@@ -179,7 +183,9 @@ public class ShapeSerializer
       }
 
       final ShapeFile shapeFile = new ShapeFile( filenameBase, "rw" );
-      shapeFile.writeShape( shapeFeatures.toArray( new Feature[shapeFeatures.size()] ) );
+
+      shapeFile.writeShape( dataProvider );
+
       shapeFile.close();
     }
     catch( final Exception e )
@@ -203,7 +209,7 @@ public class ShapeSerializer
    * @param filenameBase
    *            Der Ausgabename für das Shape (.shp, .dbf, und. shx)
    */
-  public static void serializeFeatures( final Feature[] features, final Map<String, QName> mapping, final QName geomProperty, final String filenameBase ) throws GmlSerializeException
+  public static void serializeFeatures( final Feature[] features, final Map<String, QName> mapping, final QName geomProperty, final String filenameBase, final StandardShapeDataProvider dataProvider ) throws GmlSerializeException
   {
     if( features.length == 0 )
       throw new GmlSerializeException( "Keine Daten vorhanden. Leere Shape Datei kann nicht geschrieben werden." );
@@ -264,7 +270,9 @@ public class ShapeSerializer
       }
 
       final ShapeFile shapeFile = new ShapeFile( filenameBase, "rw" );
-      shapeFile.writeShape( shapeFeatures.toArray( new Feature[shapeFeatures.size()] ) );
+
+      shapeFile.writeShape( dataProvider );
+
       shapeFile.close();
     }
     catch( final Throwable e )
@@ -351,7 +359,14 @@ public class ShapeSerializer
     {
       if( sf != null )
       {
-        sf.close();
+        try
+        {
+          sf.close();
+        }
+        catch( IOException e )
+        {
+          throw new GmlSerializeException( "Fehler beim Laden der Shape-Dateien", e );
+        }
       }
     }
   }
@@ -392,7 +407,14 @@ public class ShapeSerializer
     {
       if( dbf != null )
       {
-        dbf.close();
+        try
+        {
+          dbf.close();
+        }
+        catch( IOException e )
+        {
+          e.printStackTrace();
+        }
       }
     }
   }

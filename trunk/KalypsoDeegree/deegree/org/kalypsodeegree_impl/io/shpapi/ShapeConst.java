@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,42 +36,39 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- 
+
+
  history:
- 
+
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
- interface-compatibility to deegree is wanted but not retained always. 
- 
- If you intend to use this software in other ways than in kalypso 
+ interface-compatibility to deegree is wanted but not retained always.
+
+ If you intend to use this software in other ways than in kalypso
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
 
- all modifications are licensed as deegree, 
+ all modifications are licensed as deegree,
  original copyright:
- 
+
  Copyright (C) 2001 by:
  EXSE, Department of Geography, University of Bonn
  http://www.giub.uni-bonn.de/exse/
  lat/lon GmbH
  http://www.lat-lon.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 
 package org.kalypsodeegree_impl.io.shpapi;
 
 /**
  * Class containing all constants needed for reading of a shape file <BR>
- * 
  * <B>Last changes <B>: <BR>
  * 21.12.1999 ap: all constants declared <BR>
- * 
  * <!---------------------------------------------------------------------------->
  * 
  * @version 14.12.1999
  * @author Andreas Poth
- *  
  */
 
 public class ShapeConst
@@ -100,27 +97,27 @@ public class ShapeConst
   /**
    * The indicator for a null shape type. (0)
    */
-  public static final int SHAPE_TYPE_NULL = 0;
+  public static final byte SHAPE_TYPE_NULL = 0;
 
   /**
    * The indicator for a point shape type. (1)
    */
-  public static final int SHAPE_TYPE_POINT = 1;
+  public static final byte SHAPE_TYPE_POINT = 1;
 
   /**
    * The indicator for an polyline shape type. (3)
    */
-  public static final int SHAPE_TYPE_POLYLINE = 3;
+  public static final byte SHAPE_TYPE_POLYLINE = 3;
 
   /**
    * The indicator for a polygon shape type. (5)
    */
-  public static final int SHAPE_TYPE_POLYGON = 5;
+  public static final byte SHAPE_TYPE_POLYGON = 5;
 
   /**
    * The indicator for a multipoint shape type. (8)
    */
-  public static final int SHAPE_TYPE_MULTIPOINT = 8;
+  public static final byte SHAPE_TYPE_MULTIPOINT = 8;
 
   /**
    * start point of field parts in ESRI shape record
@@ -130,21 +127,21 @@ public class ShapeConst
   /**
    * The indicator for a point shape type. (11)
    */
-  public static final int SHAPE_TYPE_POINTZ = 11;
-  
+  public static final byte SHAPE_TYPE_POINTZ = 11;
+
   /**
    * The indicator for an polyline shape type. (13)
    */
-  public static final int SHAPE_TYPE_POLYLINEZ = 13;
+  public static final byte SHAPE_TYPE_POLYLINEZ = 13;
 
   /**
    * The indicator for a polygon shape type. (15)
    */
-  public static final int SHAPE_TYPE_POLYGONZ = 15;  
-  
+  public static final byte SHAPE_TYPE_POLYGONZ = 15;
+
   /**
    * The indicator for a multipoint shape type. (18)
    */
-  public static final int SHAPE_TYPE_MULTIPOINTZ = 18;
-  
+  public static final byte SHAPE_TYPE_MULTIPOINTZ = 18;
+
 }

@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,27 +36,27 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- 
+
+
  history:
- 
+
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
- interface-compatibility to deegree is wanted but not retained always. 
- 
- If you intend to use this software in other ways than in kalypso 
+ interface-compatibility to deegree is wanted but not retained always.
+
+ If you intend to use this software in other ways than in kalypso
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
 
- all modifications are licensed as deegree, 
+ all modifications are licensed as deegree,
  original copyright:
- 
+
  Copyright (C) 2001 by:
  EXSE, Department of Geography, University of Bonn
  http://www.giub.uni-bonn.de/exse/
  lat/lon GmbH
  http://www.lat-lon.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 
 package org.kalypsodeegree_impl.io.shpapi;
@@ -71,7 +71,6 @@ import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * Class representig a two dimensional ESRI Polygon <BR>
- * 
  * <B>Last changes <B>: <BR>
  * 12.01.2000 ap: constructor re-declared <BR>
  * 25.01.2000 ap: constructor modified; 25.01.2000 ap: public variables numRings and numPoints declared <BR>
@@ -81,15 +80,13 @@ import org.kalypsodeegree_impl.tools.Debug;
  * 14.08.2000 ap: import clauses added <BR>
  * 14.08.2000 ap: method size() added <BR>
  * 16.08.2000 ap: constructor SHPPolygon (byte[] recBuf) modified <BR>
- * 
  * <!---------------------------------------------------------------------------->
  * 
  * @version 16.08.2000
  * @author Andreas Poth
- *  
  */
 
-public class SHPPolygon extends SHPGeometry
+public class SHPPolygon implements ISHPGeometry
 {
 
   public int numRings = 0;
@@ -98,26 +95,25 @@ public class SHPPolygon extends SHPGeometry
 
   public SHPPolyLine m_rings = null;
 
+  private SHPEnvelope m_envelope;
+
   /**
    * constructor: recieves a stream <BR>
    */
   public SHPPolygon( byte[] recBuf )
   {
-
-    super( recBuf );
-
-    envelope = ShapeUtils.readBox( recBuf, 4 );
+    m_envelope = ShapeUtils.readBox( recBuf, 4 );
 
     m_rings = new SHPPolyLine( recBuf );
 
     numPoints = m_rings.numPoints;
     numRings = m_rings.numParts;
-
   }
 
   /**
    * constructor: recieves an array of arrays of GM_Points <BR>
    */
+  @SuppressWarnings("unchecked")
   public SHPPolygon( GM_Surface[] surface )
   {
 
@@ -161,7 +157,7 @@ public class SHPPolygon extends SHPGeometry
 
       m_rings = new SHPPolyLine( curves );
 
-      envelope = m_rings.envelope;
+      m_envelope = m_rings.getEnvelope();
 
       numPoints = m_rings.numPoints;
       numRings = m_rings.numParts;
@@ -178,45 +174,45 @@ public class SHPPolygon extends SHPGeometry
   /**
    * method: writeSHPPolygon(byte[] bytearray, int start) <BR>
    */
-  public byte[] writeSHPPolygon( byte[] bytearray, int start )
+  public byte[] writeShape( )
   {
+    int offset = ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH;
+    final byte[] byteArray = new byte[offset + size()];
 
-    int offset = start;
-
-    double xmin = m_rings.points[0][0].x;
-    double xmax = m_rings.points[0][0].x;
-    double ymin = m_rings.points[0][0].y;
-    double ymax = m_rings.points[0][0].y;
+    double xmin = m_rings.points[0][0].getX();
+    double xmax = m_rings.points[0][0].getX();
+    double ymin = m_rings.points[0][0].getY();
+    double ymax = m_rings.points[0][0].getY();
 
     // write shape type identifier
-    ByteUtils.writeLEInt( bytearray, offset, ShapeConst.SHAPE_TYPE_POLYGON );
+    ByteUtils.writeLEInt( byteArray, offset, ShapeConst.SHAPE_TYPE_POLYGON );
 
     offset += 4;
     // save offset of the bounding box
     int tmp1 = offset;
 
     // increment offset with size of the bounding box
-    offset += ( 4 * 8 );
+    offset += (4 * 8);
 
     // write numRings
-    ByteUtils.writeLEInt( bytearray, offset, numRings );
+    ByteUtils.writeLEInt( byteArray, offset, numRings );
     offset += 4;
     // write numpoints
-    ByteUtils.writeLEInt( bytearray, offset, numPoints );
+    ByteUtils.writeLEInt( byteArray, offset, numPoints );
     offset += 4;
 
     // save offset of the list of offsets for each polyline
     int tmp2 = offset;
 
     // increment offset with numRings
-    offset += ( 4 * numRings );
+    offset += (4 * numRings);
 
     int count = 0;
     for( int i = 0; i < m_rings.points.length; i++ )
     {
 
       // stores the index of the i'th part
-      ByteUtils.writeLEInt( bytearray, tmp2, count );
+      ByteUtils.writeLEInt( byteArray, tmp2, count );
       tmp2 += 4;
 
       // write the points of the i'th part and calculate bounding box
@@ -226,64 +222,68 @@ public class SHPPolygon extends SHPGeometry
         count++;
 
         // calculate bounding box
-        if( m_rings.points[i][j].x > xmax )
+        if( m_rings.points[i][j].getX() > xmax )
         {
-          xmax = m_rings.points[i][j].x;
+          xmax = m_rings.points[i][j].getX();
         }
-        else if( m_rings.points[i][j].x < xmin )
+        else if( m_rings.points[i][j].getX() < xmin )
         {
-          xmin = m_rings.points[i][j].x;
+          xmin = m_rings.points[i][j].getX();
         }
 
-        if( m_rings.points[i][j].y > ymax )
+        if( m_rings.points[i][j].getY() > ymax )
         {
-          ymax = m_rings.points[i][j].y;
+          ymax = m_rings.points[i][j].getY();
         }
-        else if( m_rings.points[i][j].y < ymin )
+        else if( m_rings.points[i][j].getY() < ymin )
         {
-          ymin = m_rings.points[i][j].y;
+          ymin = m_rings.points[i][j].getY();
         }
 
         // write x-coordinate
-        ByteUtils.writeLEDouble( bytearray, offset, m_rings.points[i][j].x );
+        ByteUtils.writeLEDouble( byteArray, offset, m_rings.points[i][j].getX() );
         offset += 8;
 
         // write y-coordinate
-        ByteUtils.writeLEDouble( bytearray, offset, m_rings.points[i][j].y );
+        ByteUtils.writeLEDouble( byteArray, offset, m_rings.points[i][j].getY() );
         offset += 8;
-
       }
-
     }
 
     // jump back to the offset of the bounding box
     offset = tmp1;
 
     // write bounding box to the byte array
-    ByteUtils.writeLEDouble( bytearray, offset, xmin );
+    ByteUtils.writeLEDouble( byteArray, offset, xmin );
     offset += 8;
-    ByteUtils.writeLEDouble( bytearray, offset, ymin );
+    ByteUtils.writeLEDouble( byteArray, offset, ymin );
     offset += 8;
-    ByteUtils.writeLEDouble( bytearray, offset, xmax );
+    ByteUtils.writeLEDouble( byteArray, offset, xmax );
     offset += 8;
-    ByteUtils.writeLEDouble( bytearray, offset, ymax );
+    ByteUtils.writeLEDouble( byteArray, offset, ymax );
 
-    return bytearray;
+    return byteArray;
   }
 
   /**
    * returns the polygon shape size in bytes <BR>
    */
-  public int size()
+  public int size( )
   {
     return 44 + numRings * 4 + numPoints * 16;
   }
 
-  public String toString()
+  @Override
+  public String toString( )
   {
 
     return "WKBPOLYGON" + " numRings: " + numRings;
 
+  }
+
+  public SHPEnvelope getEnvelope( )
+  {
+    return m_envelope;
   }
 
 }

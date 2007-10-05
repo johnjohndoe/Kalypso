@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,27 +36,27 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- 
+
+
  history:
- 
+
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
- interface-compatibility to deegree is wanted but not retained always. 
- 
- If you intend to use this software in other ways than in kalypso 
+ interface-compatibility to deegree is wanted but not retained always.
+
+ If you intend to use this software in other ways than in kalypso
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
 
- all modifications are licensed as deegree, 
+ all modifications are licensed as deegree,
  original copyright:
- 
+
  Copyright (C) 2001 by:
  EXSE, Department of Geography, University of Bonn
  http://www.giub.uni-bonn.de/exse/
  lat/lon GmbH
  http://www.lat-lon.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 
 package org.kalypsodeegree_impl.io.shpapi;
@@ -67,7 +67,6 @@ import org.kalypsodeegree.model.geometry.ByteUtils;
 
 /**
  * Class representing a rectangle - envelope.
- * 
  * <P>
  * <B>Last changes <B>: <BR>
  * 07.01.2000 ap: all methods copied from Rectangle.java <BR>
@@ -75,21 +74,17 @@ import org.kalypsodeegree.model.geometry.ByteUtils;
  * 17.01.2000 ap: constructor SHPEnvelope(ESRIBoundingBox Ebb) removed <BR>
  * 17.01.2000 ap: constructor SHPEnvelope(SHPEnvelope env)implemented <BR>
  * 01.08.2000 ap: method writeSHPEnvelope() added <BR>
- * 
  * <!---------------------------------------------------------------------------->
  * 
  * @version 01.08.2000
  * @author Andreas Poth
- *  
  */
 
 public class SHPEnvelope implements Serializable
 {
 
   /**
-   * this order:
-   * 
-   * west, east, north, south
+   * this order: west, east, north, south
    */
 
   // each double 8 byte distance, offset due to position in .shp-file-record
@@ -101,20 +96,20 @@ public class SHPEnvelope implements Serializable
 
   public static int recNorth = 28;
 
-  //west bounding coordinate
+  // west bounding coordinate
   public double west;
 
-  //east bounding coordinate
+  // east bounding coordinate
   public double east;
 
-  //north bounding coordinate
+  // north bounding coordinate
   public double north;
 
-  //south bounding coordinate
+  // south bounding coordinate
   public double south;
 
-  //------------- CONSTRUTOR IMPLEMENTATION BEGIN
-  public SHPEnvelope()
+  // ------------- CONSTRUTOR IMPLEMENTATION BEGIN
+  public SHPEnvelope( )
   {
 
     west = 0.0;
@@ -140,14 +135,14 @@ public class SHPEnvelope implements Serializable
   public SHPEnvelope( SHPPoint min, SHPPoint max )
   {
 
-    //west bounding coordinate = minEsri.x
-    this.west = min.x;
-    //east bounding coordinate = maxEsri.x
-    this.east = max.x;
-    //north bounding coordinate = maxEsri.y
-    this.north = max.y;
-    //south bounding coordinate = minEsri.y
-    this.south = min.y;
+    // west bounding coordinate = minEsri.x
+    this.west = min.getX();
+    // east bounding coordinate = maxEsri.x
+    this.east = max.getX();
+    // north bounding coordinate = maxEsri.y
+    this.north = max.getY();
+    // south bounding coordinate = minEsri.y
+    this.south = min.getY();
 
   }
 
@@ -157,13 +152,13 @@ public class SHPEnvelope implements Serializable
   public SHPEnvelope( SHPEnvelope env )
   {
 
-    //west bounding coordinate = Ebb.min.x
+    // west bounding coordinate = Ebb.min.x
     this.west = env.west;
-    //east bounding coordinate = Ebb.max.x
+    // east bounding coordinate = Ebb.max.x
     this.east = env.east;
-    //north bounding coordinate = Ebb.max.y
+    // north bounding coordinate = Ebb.max.y
     this.north = env.north;
-    //south bounding coordinate = Ebb.min.y
+    // south bounding coordinate = Ebb.min.y
     this.south = env.south;
 
   }
@@ -171,53 +166,53 @@ public class SHPEnvelope implements Serializable
   public SHPEnvelope( byte[] recBuf )
   {
 
-    //west bounding coordinate = xmin of rec-Box
+    // west bounding coordinate = xmin of rec-Box
     this.west = ByteUtils.readLEDouble( recBuf, recWest );
-    //east bounding coordinate = xmax of rec-Box
+    // east bounding coordinate = xmax of rec-Box
     this.east = ByteUtils.readLEDouble( recBuf, recEast );
-    //north bounding coordinate = ymax of rec-Box
+    // north bounding coordinate = ymax of rec-Box
     this.north = ByteUtils.readLEDouble( recBuf, recNorth );
-    //south bounding coordinate = ymin of rec-Box
+    // south bounding coordinate = ymin of rec-Box
     this.south = ByteUtils.readLEDouble( recBuf, recSouth );
 
   }
 
-  public byte[] writeLESHPEnvelope()
+  public byte[] writeLESHPEnvelope( )
   {
     byte[] recBuf = new byte[8 * 4];
-    //west bounding coordinate = xmin of rec-Box
+    // west bounding coordinate = xmin of rec-Box
     ByteUtils.writeLEDouble( recBuf, 0, west );
-    //south bounding coordinate = ymin of rec-Box
+    // south bounding coordinate = ymin of rec-Box
     ByteUtils.writeLEDouble( recBuf, 8, south );
-    //east bounding coordinate = xmax of rec-Box
+    // east bounding coordinate = xmax of rec-Box
     ByteUtils.writeLEDouble( recBuf, 16, east );
-    //north bounding coordinate = ymax of rec-Box
+    // north bounding coordinate = ymax of rec-Box
     ByteUtils.writeLEDouble( recBuf, 24, north );
 
     return recBuf;
   }
 
-  public byte[] writeBESHPEnvelope()
+  public byte[] writeBESHPEnvelope( )
   {
     byte[] recBuf = new byte[8 * 4];
-    //west bounding coordinate = xmin of rec-Box
+    // west bounding coordinate = xmin of rec-Box
     ByteUtils.writeBEDouble( recBuf, 0, west );
-    //south bounding coordinate = ymin of rec-Box
+    // south bounding coordinate = ymin of rec-Box
     ByteUtils.writeBEDouble( recBuf, 8, south );
-    //east bounding coordinate = xmax of rec-Box
+    // east bounding coordinate = xmax of rec-Box
     ByteUtils.writeBEDouble( recBuf, 16, east );
-    //north bounding coordinate = ymax of rec-Box
+    // north bounding coordinate = ymax of rec-Box
     ByteUtils.writeLEDouble( recBuf, 24, north );
 
     return recBuf;
   }
 
-  //----------------- METHOD IMPLEMENTATION
-  public String toString()
+  // ----------------- METHOD IMPLEMENTATION
+  @Override
+  public String toString( )
   {
 
-    return "RECTANGLE" + "\n[west: " + this.west + "]" + "\n[east: " + this.east + "]" + "\n[north: " + this.north
-        + "]" + "\n[south: " + this.south + "]";
+    return "RECTANGLE" + "\n[west: " + this.west + "]" + "\n[east: " + this.east + "]" + "\n[north: " + this.north + "]" + "\n[south: " + this.south + "]";
 
   }
 

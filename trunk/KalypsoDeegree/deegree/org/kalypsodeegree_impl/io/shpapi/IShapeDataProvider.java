@@ -38,22 +38,24 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.gml.binding.math;
+package org.kalypsodeegree_impl.io.shpapi;
+
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
+ * Interface for providing data for generating shape files.
+ * 
  * @author Thomas Jung
  */
-public class PolynomialUtilities
+public interface IShapeDataProvider
 {
-  public static IPolynomial1D getPoly( final IPolynomial1D[] polyArray, final double pos )
-  {
-    // TODO: potential performance bug. Use binary search to find poly instead
-    // what if the value is exactly the range border?
-    for( final IPolynomial1D poly : polyArray )
-    {
-      if( poly.getRangeMin() < pos && pos < poly.getRangeMax() )
-        return poly;
-    }
-    return null;
-  }
+  public Feature[] getFeatures( );
+
+  public byte getOutputShapeConstant( );
+
+  public IFeatureType getFeatureType( );
+
+  public IPropertyType getGeometryPropertyType( );
 }

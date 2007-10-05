@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,27 +36,27 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- 
+
+
  history:
- 
+
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
- interface-compatibility to deegree is wanted but not retained always. 
- 
- If you intend to use this software in other ways than in kalypso 
+ interface-compatibility to deegree is wanted but not retained always.
+
+ If you intend to use this software in other ways than in kalypso
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
 
- all modifications are licensed as deegree, 
+ all modifications are licensed as deegree,
  original copyright:
- 
+
  Copyright (C) 2001 by:
  EXSE, Department of Geography, University of Bonn
  http://www.giub.uni-bonn.de/exse/
  lat/lon GmbH
  http://www.lat-lon.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 
 package org.kalypsodeegree_impl.io.shpapi;
@@ -67,17 +67,14 @@ import org.kalypsodeegree.model.geometry.GM_LineString;
 
 /**
  * Class representig a two dimensional ESRI PolyLine <BR>
- * 
  * <B>Last changes <B>: <BR>
  * <!---------------------------------------------------------------------------->
  * 
  * @version 19.01.2007
  * @author Thomas Jung
- *  
- *  
  */
 
-public class SHPPolyLinez extends SHPGeometry
+public class SHPPolyLinez implements ISHPGeometry
 {
 
   public int numParts;
@@ -85,8 +82,10 @@ public class SHPPolyLinez extends SHPGeometry
   public int numPoints;
 
   public SHPPointz[][] pointsz = null;
-  
-  public SHPZRange zrange;
+
+  public final SHPZRange m_zrange;
+
+  private final SHPEnvelope m_envelope;
 
   /**
    * constructor: gets a stream <BR>
@@ -94,32 +93,29 @@ public class SHPPolyLinez extends SHPGeometry
   public SHPPolyLinez( byte[] recBuf )
   {
 
-    // constructor invocation
-    super( recBuf );
-
     int pointsStart = 0;
     int sumPoints = 0;
-    int byteposition = 0;  //position of the bytes to be read
-    
-    //bounding box
-    byteposition = 4;
-    envelope = ShapeUtils.readBox( recBuf, byteposition );
-    
-    //number of line parts
-    byteposition = 36;
-    numParts = ByteUtils.readLEInt( recBuffer, byteposition );
-    
-    //total number of points
-    byteposition = 40;
-    numPoints = ByteUtils.readLEInt( recBuffer, byteposition );
+    int byteposition = 0; // position of the bytes to be read
 
-    //index of the first point in part
-    pointsStart = ShapeConst.PARTS_START + ( numParts * 4 );
-    
-    //array of points for all parts
+    // bounding box
+    byteposition = 4;
+    m_envelope = ShapeUtils.readBox( recBuf, byteposition );
+
+    // number of line parts
+    byteposition = 36;
+    numParts = ByteUtils.readLEInt( recBuf, byteposition );
+
+    // total number of points
+    byteposition = 40;
+    numPoints = ByteUtils.readLEInt( recBuf, byteposition );
+
+    // index of the first point in part
+    pointsStart = ShapeConst.PARTS_START + (numParts * 4);
+
+    // array of points for all parts
     pointsz = new SHPPointz[numParts][];
 
-    //get the index for the first point of each part
+    // get the index for the first point of each part
     for( int j = 0; j < numParts; j++ )
     {
 
@@ -129,19 +125,19 @@ public class SHPPolyLinez extends SHPGeometry
       int lnumPoints = 0;
 
       // get number of first point of current part out of ESRI shape Record:
-      firstPointNo = ByteUtils.readLEInt( recBuffer, ShapeConst.PARTS_START + ( j * 4 ) );
+      firstPointNo = ByteUtils.readLEInt( recBuf, ShapeConst.PARTS_START + (j * 4) );
 
       // calculate offset of part in bytes, count from the beginning of
       // recordbuffer
-      offset = pointsStart + ( firstPointNo * 16 );
+      offset = pointsStart + (firstPointNo * 16);
 
       // get number of first point of next part ...
       if( j < numParts - 1 )
       {
         // ... usually from ESRI shape Record
-        nextFirstPointNo = ByteUtils.readLEInt( recBuffer, ShapeConst.PARTS_START + ( ( j + 1 ) * 4 ) );
+        nextFirstPointNo = ByteUtils.readLEInt( recBuf, ShapeConst.PARTS_START + ((j + 1) * 4) );
       }
-      //... for the last part as total number of points
+      // ... for the last part as total number of points
       else if( j == numParts - 1 )
       {
         nextFirstPointNo = numPoints;
@@ -158,20 +154,20 @@ public class SHPPolyLinez extends SHPGeometry
       // create the points of the j-th part from the buffer
       for( int i = 0; i < lnumPoints; i++ )
       {
-        //allocate memory for the points of the j-th part 
-        pointsz[j][i] = new SHPPointz( recBuf, offset + ( i * 16 ) );
-        
-        //jump to the z-values of the points
-        byteposition = 44 + (4 * numParts) + (i * 16 );
-        
-        pointsz[j][i].z =  ByteUtils.readLEDouble( recBuffer,  byteposition );
+        // allocate memory for the points of the j-th part
+        pointsz[j][i] = new SHPPointz( recBuf, offset + (i * 16) );
+
+        // jump to the z-values of the points
+        byteposition = 44 + (4 * numParts) + (i * 16);
+
+        pointsz[j][i].setZ( ByteUtils.readLEDouble( recBuf, byteposition ) );
       }
       byteposition = offset;
     }
-      
-//  next the z-range of the pointsz...
-    byteposition  = 44 + (4 * numParts) + ( numPoints * 16 );
-    zrange = ShapeUtils.readZRange( recBuffer,  byteposition );
+
+    // next the z-range of the pointsz...
+    byteposition = 44 + (4 * numParts) + (numPoints * 16);
+    m_zrange = ShapeUtils.readZRange( recBuf, byteposition );
 
   }
 
@@ -187,7 +183,7 @@ public class SHPPolyLinez extends SHPGeometry
     double ymax = curve[0].getEnvelope().getMax().getY();
     double zmin = curve[0].getEnvelope().getMin().getZ();
     double zmax = curve[0].getEnvelope().getMax().getZ();
-    
+
     numParts = curve.length;
 
     numPoints = 0;
@@ -209,29 +205,29 @@ public class SHPPolyLinez extends SHPGeometry
         for( int j = 0; j < ls.getNumberOfPoints(); j++ )
         {
           pointsz[i][j] = new SHPPointz( ls.getPositionAt( j ) );
-          if( pointsz[i][j].x > xmax )
+          if( pointsz[i][j].getX() > xmax )
           {
-            xmax = pointsz[i][j].x;
+            xmax = pointsz[i][j].getX();
           }
-          else if( pointsz[i][j].x < xmin )
+          else if( pointsz[i][j].getX() < xmin )
           {
-            xmin = pointsz[i][j].x;
+            xmin = pointsz[i][j].getX();
           }
-          if( pointsz[i][j].y > ymax )
+          if( pointsz[i][j].getY() > ymax )
           {
-            ymax = pointsz[i][j].y;
+            ymax = pointsz[i][j].getY();
           }
-          else if( pointsz[i][j].y < ymin )
+          else if( pointsz[i][j].getY() < ymin )
           {
-            ymin = pointsz[i][j].y;
+            ymin = pointsz[i][j].getY();
           }
-          if( pointsz[i][j].z > zmax )
+          if( pointsz[i][j].getZ() > zmax )
           {
-            zmax = pointsz[i][j].z;
+            zmax = pointsz[i][j].getZ();
           }
-          else if( pointsz[i][j].z < zmin )
+          else if( pointsz[i][j].getZ() < zmin )
           {
-            zmin = pointsz[i][j].z;
+            zmin = pointsz[i][j].getZ();
           }
         }
 
@@ -242,57 +238,57 @@ public class SHPPolyLinez extends SHPGeometry
       System.out.println( "SHPPolyLine:: " + e );
     }
 
-    envelope = new SHPEnvelope( xmin, xmax, ymax, ymin );
-    zrange = new SHPZRange (zmin, zmax);
-    
+    m_envelope = new SHPEnvelope( xmin, xmax, ymax, ymin );
+    m_zrange = new SHPZRange( zmin, zmax );
+
   }
 
   /**
    * method: writeSHPPolyLine(byte[] bytearray, int start) <BR>
    */
-  public void writeSHPPolyLine( byte[] bytearray, int start )
+  public byte[] writeShape( )
   {
+    int offset = ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH;
+    final byte[] byteArray = new byte[offset + size()];
 
-    int offset = start;
+    double xmin = pointsz[0][0].getX();
+    double xmax = pointsz[0][0].getX();
+    double ymin = pointsz[0][0].getY();
+    double ymax = pointsz[0][0].getY();
+    double zmin = pointsz[0][0].getZ();
+    double zmax = pointsz[0][0].getZ();
 
-    double xmin = pointsz[0][0].x;
-    double xmax = pointsz[0][0].x;
-    double ymin = pointsz[0][0].y;
-    double ymax = pointsz[0][0].y;
-    double zmin = pointsz[0][0].z;
-    double zmax = pointsz[0][0].z;
-    
     int byteposition;
-    
+
     // write shape type identifier ( 3 = polyline )
-    ByteUtils.writeLEInt( bytearray, offset, 3 );
+    ByteUtils.writeLEInt( byteArray, offset, 3 );
 
     offset += 4;
     // save offset of the bounding box
     int tmp1 = offset;
 
     // increment offset with size of the bounding box
-    offset += ( 4 * 8 );
+    offset += (4 * 8);
 
     // write numparts
-    ByteUtils.writeLEInt( bytearray, offset, numParts );
+    ByteUtils.writeLEInt( byteArray, offset, numParts );
     offset += 4;
     // write numpoints
-    ByteUtils.writeLEInt( bytearray, offset, numPoints );
+    ByteUtils.writeLEInt( byteArray, offset, numPoints );
     offset += 4;
 
     // save offset of the list of offsets for each polyline
     int tmp2 = offset;
 
     // increment offset with numParts
-    offset += ( 4 * numParts );
+    offset += (4 * numParts);
 
     int count = 0;
     for( int i = 0; i < pointsz.length; i++ )
     {
 
       // stores the index of the i'th part
-      ByteUtils.writeLEInt( bytearray, tmp2, count );
+      ByteUtils.writeLEInt( byteArray, tmp2, count );
       tmp2 += 4;
 
       // write the points of the i'th part and calculate bounding box and z-range
@@ -302,48 +298,46 @@ public class SHPPolyLinez extends SHPGeometry
         count++;
 
         // calculate bounding box
-        if( pointsz[i][j].x > xmax )
+        if( pointsz[i][j].getX() > xmax )
         {
-          xmax = pointsz[i][j].x;
+          xmax = pointsz[i][j].getX();
         }
-        else if( pointsz[i][j].x < xmin )
+        else if( pointsz[i][j].getX() < xmin )
         {
-          xmin = pointsz[i][j].x;
-        }
-
-        if( pointsz[i][j].y > ymax )
-        {
-          ymax = pointsz[i][j].y;
-        }
-        else if( pointsz[i][j].y < ymin )
-        {
-          ymin = pointsz[i][j].y;
+          xmin = pointsz[i][j].getX();
         }
 
-        if( pointsz[i][j].z > zmax )
+        if( pointsz[i][j].getY() > ymax )
         {
-          zmax = pointsz[i][j].z;
+          ymax = pointsz[i][j].getY();
         }
-        else if( pointsz[i][j].z < zmin )
+        else if( pointsz[i][j].getY() < ymin )
         {
-          zmin = pointsz[i][j].z;
-        }        
+          ymin = pointsz[i][j].getY();
+        }
 
- 
-        
+        if( pointsz[i][j].getZ() > zmax )
+        {
+          zmax = pointsz[i][j].getZ();
+        }
+        else if( pointsz[i][j].getZ() < zmin )
+        {
+          zmin = pointsz[i][j].getZ();
+        }
+
         // write x-coordinate
-        ByteUtils.writeLEDouble( bytearray, offset, pointsz[i][j].x );
+        ByteUtils.writeLEDouble( byteArray, offset, pointsz[i][j].getX() );
         offset += 8;
 
         // write y-coordinate
-        ByteUtils.writeLEDouble( bytearray, offset, pointsz[i][j].y );
+        ByteUtils.writeLEDouble( byteArray, offset, pointsz[i][j].getY() );
         offset += 8;
-        
+
         // write z-coordinate
-        //jump to the z-values
-        byteposition = 44 + (4 * numParts) + ( count * 16 );  
-        ByteUtils.writeLEDouble( bytearray, byteposition, pointsz[i][j].z );
-        
+        // jump to the z-values
+        byteposition = 44 + (4 * numParts) + (count * 16);
+        ByteUtils.writeLEDouble( byteArray, byteposition, pointsz[i][j].getZ() );
+
       }
 
     }
@@ -352,29 +346,41 @@ public class SHPPolyLinez extends SHPGeometry
     offset = tmp1;
 
     // write bounding box to the byte array
-    ByteUtils.writeLEDouble( bytearray, offset, xmin );
+    ByteUtils.writeLEDouble( byteArray, offset, xmin );
     offset += 8;
-    ByteUtils.writeLEDouble( bytearray, offset, ymin );
+    ByteUtils.writeLEDouble( byteArray, offset, ymin );
     offset += 8;
-    ByteUtils.writeLEDouble( bytearray, offset, xmax );
+    ByteUtils.writeLEDouble( byteArray, offset, xmax );
     offset += 8;
-    ByteUtils.writeLEDouble( bytearray, offset, ymax );
+    ByteUtils.writeLEDouble( byteArray, offset, ymax );
 
     // write z-range
-    //jump to the z-range byte postition
-    byteposition = 44 + (4 * numParts) + (numPoints * 16 );
+    // jump to the z-range byte postition
+    byteposition = 44 + (4 * numParts) + (numPoints * 16);
     // write z-range to the byte array
-    ByteUtils.writeLEDouble( bytearray, byteposition, zmin );
+    ByteUtils.writeLEDouble( byteArray, byteposition, zmin );
     offset += 8;
-    ByteUtils.writeLEDouble( bytearray, byteposition, zmax );
+    ByteUtils.writeLEDouble( byteArray, byteposition, zmax );
+
+    return byteArray;
   }
 
   /**
    * returns the polyline shape size in bytes <BR>
    */
-  public int size()
+  public int size( )
   {
-    return 44 + numParts * 4 + numPoints * 16 + 16 +( 8 * numPoints);
+    return 44 + numParts * 4 + numPoints * 16 + 16 + (8 * numPoints);
+  }
+
+  public SHPEnvelope getEnvelope( )
+  {
+    return m_envelope;
+  }
+
+  public SHPZRange getZRange( )
+  {
+    return m_zrange;
   }
 
 } // end of class PolyLine
