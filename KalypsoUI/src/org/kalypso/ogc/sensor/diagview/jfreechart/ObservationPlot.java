@@ -58,7 +58,7 @@ import java.util.logging.Logger;
 
 import javax.swing.ImageIcon;
 
-import org.jfree.chart.annotations.XYTextAnnotation;
+import org.jfree.chart.annotations.XYPointerAnnotation;
 import org.jfree.chart.axis.AxisLocation;
 import org.jfree.chart.axis.DateAxis;
 import org.jfree.chart.axis.NumberAxis;
@@ -697,30 +697,18 @@ public class ObservationPlot extends XYPlot
   {
     if( diagAxis.getPosition().equals( DiagramAxis.POSITION_BOTTOM ) )
     {
-      //if( diagAxis.getPosition().equals( IDiagramAxis.POSITION_LEFT ) )
       return AxisLocation.BOTTOM_OR_LEFT;
-      //else if( diagAxis.getPosition().equals( IDiagramAxis.POSITION_RIGHT ) )
-      //  return AxisLocation.BOTTOM_OR_RIGHT;
     }
     else if( diagAxis.getPosition().equals( DiagramAxis.POSITION_TOP ) )
     {
-      //if( diagAxis.getPosition().equals( IDiagramAxis.POSITION_LEFT ) )
       return AxisLocation.TOP_OR_LEFT;
-      //else if( diagAxis.getPosition().equals( IDiagramAxis.POSITION_RIGHT ) )
-      //  return AxisLocation.TOP_OR_RIGHT;
     }
     else if( diagAxis.getPosition().equals( DiagramAxis.POSITION_LEFT ) )
     {
-      //if( diagAxis.getPosition().equals( IDiagramAxis.POSITION_BOTTOM ) )
-      //  return AxisLocation.BOTTOM_OR_LEFT;
-      //else if( diagAxis.getPosition().equals( IDiagramAxis.POSITION_TOP ) )
       return AxisLocation.TOP_OR_LEFT;
     }
     else if( diagAxis.getPosition().equals( DiagramAxis.POSITION_RIGHT ) )
     {
-      //if( diagAxis.getPosition().equals( IDiagramAxis.POSITION_BOTTOM ) )
-      //  return AxisLocation.BOTTOM_OR_RIGHT;
-      //else if( diagAxis.getPosition().equals( IDiagramAxis.POSITION_TOP ) )
       return AxisLocation.TOP_OR_RIGHT;
     }
 
@@ -738,15 +726,21 @@ public class ObservationPlot extends XYPlot
     final AlarmLevel alarm;
     final String label;
     final DiagramAxis axis;
-    final XYTextAnnotation annotation;
+    final XYPointerAnnotation annotation;
 
     public AlarmLevelPlotElement( final AlarmLevel al, final double xCoord, final DiagramAxis diagAxis )
     {
       this.alarm = al;
       this.label = al.label + " (" + al.value + ")";
       this.axis = diagAxis;
-      this.annotation = new XYTextAnnotation( al.label, xCoord, al.value );
-      this.annotation.setPaint( al.color );
+      //      this.annotation = new XYTextAnnotation( al.label, xCoord, al.value );
+      annotation = new XYPointerAnnotation( al.label, xCoord, al.value, 0 );
+      annotation.setAngle( Math.toRadians( 340 ) );
+      annotation.setArrowLength( 10.0 );
+      annotation.setLabelOffset( 30 );
+//      annotation.setArrowPaint( new Color( 0, 0, 0, 0 ) ); // invisible
+      annotation.setArrowPaint( al.color );
+      annotation.setPaint( al.color );
     }
 
     public String toString()
