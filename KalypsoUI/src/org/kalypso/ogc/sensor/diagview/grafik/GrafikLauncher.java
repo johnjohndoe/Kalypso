@@ -94,8 +94,8 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.DiagView;
 import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
-import org.kalypso.ogc.sensor.template.ObsViewUtils;
 import org.kalypso.ogc.sensor.template.ObsView;
+import org.kalypso.ogc.sensor.template.ObsViewUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
@@ -124,6 +124,7 @@ public class GrafikLauncher
 
   static
   {
+    GRAFIK_NF_W.setGroupingUsed( false ); // set to false, else we got '.' in 1000ers, causing the grafik exe to read it as 1.0
     GRAFIK_NF_W.setMaximumFractionDigits( 0 );
   }
 
@@ -176,12 +177,17 @@ public class GrafikLauncher
         return status;
 
       final ObsdiagviewType odt = DiagViewUtils.buildDiagramTemplateXML( diag );
+
       return startGrafikODT( zmlFile.getName(), odt, dest, monitor );
     }
     catch( final Exception e )
     {
       e.printStackTrace();
       throw new SensorException( e );
+    }
+    finally
+    {
+      diag.dispose();
     }
   }
 
@@ -206,7 +212,8 @@ public class GrafikLauncher
       if( !dest.exists() )
         dest.create( true, true, monitor );
 
-      final IFile tplFile = dest.getFile( org.kalypso.contribs.java.io.FileUtilities.nameWithoutExtension( fileName ) + ".tpl" );
+      final IFile tplFile = dest.getFile( org.kalypso.contribs.java.io.FileUtilities.nameWithoutExtension( fileName )
+          + ".tpl" );
 
       strWriter = new StringWriter();
       final IStatus status = odt2tpl( odt, dest, strWriter, monitor, sync );
@@ -335,8 +342,8 @@ public class GrafikLauncher
     grafikExe.deleteOnExit();
 
     // also create the help file if not already existing
-    final File grafikHelp = new File( grafikExe.getParentFile(), org.kalypso.contribs.java.io.FileUtilities.nameWithoutExtension( grafikExe
-        .getName() )
+    final File grafikHelp = new File( grafikExe.getParentFile(), org.kalypso.contribs.java.io.FileUtilities
+        .nameWithoutExtension( grafikExe.getName() )
         + ".hlp" );
     grafikHelp.deleteOnExit();
     if( !grafikHelp.exists() )
@@ -441,8 +448,11 @@ public class GrafikLauncher
         final TypeCurve tc = (TypeCurve)itc.next();
 
         // create a corresponding dat-File for the current observation file
-        final IFile datFile = dest
-            .getFile( org.kalypso.contribs.java.io.FileUtilities.nameWithoutExtension( zmlFile.getName() ) + "-" + cc + ".dat" );
+        final String datFileProtoName = org.kalypso.contribs.java.io.FileUtilities.nameWithoutExtension( zmlFile
+            .getName() )
+            + "-" + cc + ".dat";
+        final String datFileName = datFileProtoName.replace( ' ', '_' );
+        final IFile datFile = dest.getFile( datFileName );
 
         final IAxis axis = gKurven.addCurve( datFile, tc, numberAxes );
 
@@ -505,6 +515,7 @@ public class GrafikLauncher
       }
 
       // is this obs a forecast?
+      // TODO: check if odt wants forecast to be shown
       final DateRange fr = TimeserieUtils.isForecast( obs );
       if( fr != null )
       {
@@ -516,6 +527,8 @@ public class GrafikLauncher
       // W-axis
       try
       {
+        // TODO: check if odt wants alarmlevel to be shown
+
         ObservationUtilities.findAxisByType( (IAxis[])displayedAxes.toArray( new IAxis[displayedAxes.size()] ),
             TimeserieConstants.TYPE_WATERLEVEL );
 
