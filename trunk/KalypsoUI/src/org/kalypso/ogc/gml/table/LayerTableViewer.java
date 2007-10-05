@@ -80,6 +80,7 @@ import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.commons.command.InvisibleCommand;
 import org.kalypso.contribs.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
 import org.kalypso.contribs.eclipse.jface.viewers.FocusCellOwnerDrawHighlighter;
+import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.contribs.eclipse.swt.widgets.TableColumnTooltipListener;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.annotation.AnnotationUtilities;
@@ -895,7 +896,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
       {
         public void run( )
         {
-          refresh();
+          ViewerUtilities.refresh( LayerTableViewer.this, true );
         }
       } );
     }

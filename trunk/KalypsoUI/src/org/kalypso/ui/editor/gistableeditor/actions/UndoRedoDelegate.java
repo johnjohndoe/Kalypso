@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.gistableeditor.actions;
 
@@ -82,6 +82,7 @@ public class UndoRedoDelegate extends AbstractGisEditorActionDelegate implements
     final CommandableWorkspace workspace = theme.getWorkspace();
 
     if( (m_undo && workspace.canUndo()) || (!m_undo && workspace.canRedo()) )
+      // TODO: this cannot work: null command not supported!
       new CommandJob( null, workspace, theme.getSchedulingRule(), null, m_undo ? CommandJob.UNDO : CommandJob.REDO );
 
     refreshAction( action, getSelection() );
