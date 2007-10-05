@@ -260,7 +260,7 @@
         <kalypso.dwdTask dwd2zmlconfurl="${project.url}/.model/dwd/dwdZmlConf.xml"
                          obsrasterurl="${dwdRasterLocalURL}"
                          targetcontext="${calc.dir}"
-                         description="raster zu zml"
+                         description="Berechnung Gebietsniederschlagsmodell"
                          from="${startsimN}"
                          forecastfrom="${startforecast}"
                          to="${stopsim}"
