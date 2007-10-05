@@ -140,7 +140,7 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
       final IMetaDocService metadocService = getMetadocService();
 
       final DataHandler dh = new DataHandler( new FileDataSource( file ) );
-      
+
       // get a map out of the metadata extensions
       final Map map = org.kalypso.metadoc.configuration.ConfigurationUtils.createMap( mdEx );
 
@@ -155,7 +155,13 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
     {
       throw e;
     }
-    catch( final Exception e )
+    catch( final RemoteException re )
+    {
+      // Unpack true exception from remote exception
+      // TODO: maybe further unpacking is necessary?
+      throw new InvocationTargetException( re.getCause() );
+    }
+    catch( final Throwable e )
     {
       throw new InvocationTargetException( e );
     }
