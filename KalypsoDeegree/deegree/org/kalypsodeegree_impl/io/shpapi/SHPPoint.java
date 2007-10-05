@@ -62,6 +62,7 @@
 package org.kalypsodeegree_impl.io.shpapi;
 
 import org.kalypsodeegree.model.geometry.ByteUtils;
+import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 
 /**
@@ -75,16 +76,13 @@ import org.kalypsodeegree.model.geometry.GM_Position;
  * @author Andreas Poth
  */
 
-public class SHPPoint extends SHPGeometry
+public class SHPPoint implements ISHPGeometry
 {
-  public double x;
+  private final double x;
 
-  public double y;
+  private final double y;
 
-  public SHPPoint( )
-  {
-    // empty
-  }
+  private final SHPEnvelope m_envelope;
 
   /**
    * constructor: gets a stream and the start index <BR>
@@ -92,32 +90,45 @@ public class SHPPoint extends SHPGeometry
    */
   public SHPPoint( byte[] recBuf, int xStart )
   {
-
-    super( recBuf );
-
     // get x out of recordbuffer
-    this.x = ByteUtils.readLEDouble( recBuffer, xStart );
+    x = ByteUtils.readLEDouble( recBuf, xStart );
     // get y out of recordbuffer
-    this.y = ByteUtils.readLEDouble( recBuffer, xStart + 8 );
+    y = ByteUtils.readLEDouble( recBuf, xStart + 8 );
 
+    m_envelope = new SHPEnvelope( x, x, y, y );
   }
 
   /**
    * constructor: creates a SHPPoint from a WKS Geometrie <BR>
    */
-  public SHPPoint( GM_Position point )
+  public SHPPoint( GM_Position position )
   {
-    x = point.getX();
-    y = point.getY();
+    x = position.getX();
+    y = position.getY();
+
+    m_envelope = new SHPEnvelope( x, x, y, y );
   }
 
   /**
-   * method: writeSHPPoint: writes a SHPPoint Objekt to a recBuffer <BR>
+   * constructor: creates a SHPPoint from a GM_Point <BR>
    */
-  public void writeSHPPoint( byte[] byteArray, int start )
+  public SHPPoint( GM_Point point )
   {
+    x = point.getX();
+    y = point.getY();
 
-    int offset = start;
+    m_envelope = new SHPEnvelope( x, x, y, y );
+  }
+
+  public SHPEnvelope getEnvelope( )
+  {
+    return m_envelope;
+  }
+
+  public byte[] writeShape( )
+  {
+    int offset = ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH;
+    final byte[] byteArray = new byte[offset + size()];
 
     // write shape type identifier ( 1 = point )
     ByteUtils.writeLEInt( byteArray, offset, 1 );
@@ -132,11 +143,9 @@ public class SHPPoint extends SHPGeometry
     // write y into the recbuffer
     ByteUtils.writeLEDouble( byteArray, offset, y );
 
+    return byteArray;
   }
 
-  /**
-   * returns the size of the point shape in bytes <BR>
-   */
   public int size( )
   {
     return 20;
@@ -146,6 +155,16 @@ public class SHPPoint extends SHPGeometry
   public String toString( )
   {
     return "SHPPOINT" + "[" + this.x + "; " + this.y + "]";
+  }
+
+  public double getX( )
+  {
+    return x;
+  }
+
+  public double getY( )
+  {
+    return y;
   }
 
 }

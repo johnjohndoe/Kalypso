@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,44 +36,85 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- 
+
+
  history:
- 
+
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
- interface-compatibility to deegree is wanted but not retained always. 
- 
- If you intend to use this software in other ways than in kalypso 
+ interface-compatibility to deegree is wanted but not retained always.
+
+ If you intend to use this software in other ways than in kalypso
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
 
- all modifications are licensed as deegree, 
+ all modifications are licensed as deegree,
  original copyright:
- 
+
  Copyright (C) 2001 by:
  EXSE, Department of Geography, University of Bonn
  http://www.giub.uni-bonn.de/exse/
  lat/lon GmbH
  http://www.lat-lon.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 
 package org.kalypsodeegree_impl.io.shpapi;
 
+import org.kalypsodeegree.model.geometry.ByteUtils;
+
 /**
  * Class representig an empty geometry <BR>
- * 
  * <B>Last changes <B>: <BR>
- * 
+ * update 04.10.2007, Jung, implemented writeNullShape method
  * <!---------------------------------------------------------------------------->
  * 
  * @version 25.1.2000
- * @author Andreas Poth
- *  
+ * @author Andreas Poth <br>
+ *         Thomas Jung
  */
 
-public class SHPNullShape extends SHPGeometry
+public class SHPNullShape implements ISHPGeometry
 {
-  // nothing
+
+  /**
+   * constructor: gets a stream and the start index <BR>
+   * of point on it <BR>
+   */
+  public SHPNullShape( byte[] recBuf )
+  {
+  }
+
+  /**
+   * method: writeNullShape: writes a NullShape Object to a recBuffer <BR>
+   */
+  public byte[] writeShape( )
+  {
+    int offset = ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH;
+    final byte[] byteArray = new byte[offset + size()];
+
+    // write shape type identifier ( 0 = null shape )
+    ByteUtils.writeLEInt( byteArray, offset, 0 );
+
+    offset += 4;
+
+    return byteArray;
+  }
+
+  /**
+   * returns the polygon shape size in bytes <BR>
+   */
+  public int size( )
+  {
+    return 12;
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.io.shpapi.SHPGeometry#getEnvelope()
+   */
+  public SHPEnvelope getEnvelope( )
+  {
+    return null;
+  }
+
 }

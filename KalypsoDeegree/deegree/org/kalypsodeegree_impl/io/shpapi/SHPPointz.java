@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,61 +36,56 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- 
+
+
  history:
- 
+
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
- interface-compatibility to deegree is wanted but not retained always. 
- 
- If you intend to use this software in other ways than in kalypso 
+ interface-compatibility to deegree is wanted but not retained always.
+
+ If you intend to use this software in other ways than in kalypso
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
 
- all modifications are licensed as deegree, 
+ all modifications are licensed as deegree,
  original copyright:
- 
+
  Copyright (C) 2001 by:
  EXSE, Department of Geography, University of Bonn
  http://www.giub.uni-bonn.de/exse/
  lat/lon GmbH
  http://www.lat-lon.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 
 package org.kalypsodeegree_impl.io.shpapi;
 
 import org.kalypsodeegree.model.geometry.ByteUtils;
+import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 
 /**
  * Class representig a three dimensional point <BR>
- * 
  * <B>Last changes <B>: <BR>
  * 16.01.07 Jung: class createtd <BR>
- * 
  * <!---------------------------------------------------------------------------->
  * 
  * @version 16.01.07
  * @author Thomas Jung
- *  
  */
 
-public class SHPPointz extends SHPGeometry
+public class SHPPointz implements ISHPGeometry
 {
-  public double x;
+  private final double x;
 
-  public double y;
+  private final double y;
 
-  public double z;
+  private double z;
 
-  public double m;
-  
-  public SHPPointz()
-  {
-  // empty
-  }
+  private final double m = 0;
+
+  private final SHPEnvelope m_envelope;
 
   /**
    * constructor: gets a stream and the start index <BR>
@@ -98,74 +93,118 @@ public class SHPPointz extends SHPGeometry
    */
   public SHPPointz( byte[] recBuf, int xStart )
   {
+    // get x out of recordbuffer
+    x = ByteUtils.readLEDouble( recBuf, xStart );
+    // get y out of recordbuffer
+    y = ByteUtils.readLEDouble( recBuf, xStart + 8 );
+    // get z out of recordbuffer
+    z = ByteUtils.readLEDouble( recBuf, xStart + 16 );
+    // get measure m out of recordbuffer
+    // this.m = ByteUtils.readLEDouble( recBuffer, xStart + 24 );
 
-    super( recBuf );
-
-    //get x out of recordbuffer
-    this.x = ByteUtils.readLEDouble( recBuffer, xStart );
-    //get y out of recordbuffer
-    this.y = ByteUtils.readLEDouble( recBuffer, xStart + 8 );
-    //get z out of recordbuffer
-    this.z = ByteUtils.readLEDouble( recBuffer, xStart + 16 );    
-    //get measure m out of recordbuffer
-    //this.m = ByteUtils.readLEDouble( recBuffer, xStart + 24 ); 
+    m_envelope = new SHPEnvelope( x, x, y, y );
   }
 
   /**
    * constructor: creates a SHPPoint from a WKS Geometrie <BR>
    */
-  public SHPPointz( GM_Position point )
+  public SHPPointz( GM_Position position )
+  {
+    x = position.getX();
+    y = position.getY();
+    z = position.getZ();
+
+    m_envelope = new SHPEnvelope( x, x, y, y );
+  }
+
+  /**
+   * constructor: creates a SHPPoint from a point <BR>
+   */
+  public SHPPointz( GM_Point point )
   {
     x = point.getX();
     y = point.getY();
-    z = point.getZ();    
+    z = point.getZ();
+
+    m_envelope = new SHPEnvelope( x, x, y, y );
   }
 
   /**
    * method: writeSHPPoint: writes a SHPPoint Objekt to a recBuffer <BR>
    */
-  public void writeSHPPointz( byte[] byteArray, int start )
+  public byte[] writeShape( )
   {
-
-    int offset = start;
+    int offset = ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH;
+    final byte[] byteArray = new byte[offset + size()];
 
     // write shape type identifier ( 11 = pointz )
     ByteUtils.writeLEInt( byteArray, offset, 11 );
 
     offset += 4;
 
-    //write x into the recbuffer
+    // write x into the recbuffer
     ByteUtils.writeLEDouble( byteArray, offset, x );
 
     offset += 8;
 
-    //write y into the recbuffer
+    // write y into the recbuffer
     ByteUtils.writeLEDouble( byteArray, offset, y );
 
     offset += 8;
 
-    //write z into the recbuffer
+    // write z into the recbuffer
     ByteUtils.writeLEDouble( byteArray, offset, z );
 
     offset += 8;
 
-    //write m into the recbuffer
+    // write m into the recbuffer
     ByteUtils.writeLEDouble( byteArray, offset, m );
+
+    return byteArray;
   }
 
   /**
    * returns the size of the point shape in bytes <BR>
    */
-  public int size()
+  public int size( )
   {
     return 36;
   }
 
-  public String toString()
+  @Override
+  public String toString( )
   {
-
     return "SHPPOINTZ" + "[" + this.x + "; " + this.y + "; " + this.z + "]";
+  }
 
+  public double getX( )
+  {
+    return x;
+  }
+
+  public double getY( )
+  {
+    return y;
+  }
+
+  public double getZ( )
+  {
+    return z;
+  }
+
+  public double getM( )
+  {
+    return m;
+  }
+
+  public void setZ( final double z )
+  {
+    this.z = z;
+  }
+
+  public SHPEnvelope getEnvelope( )
+  {
+    return m_envelope;
   }
 
 }

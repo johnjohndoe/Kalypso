@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,27 +36,27 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- 
+
+
  history:
- 
+
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
- interface-compatibility to deegree is wanted but not retained always. 
- 
- If you intend to use this software in other ways than in kalypso 
+ interface-compatibility to deegree is wanted but not retained always.
+
+ If you intend to use this software in other ways than in kalypso
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
 
- all modifications are licensed as deegree, 
+ all modifications are licensed as deegree,
  original copyright:
- 
+
  Copyright (C) 2001 by:
  EXSE, Department of Geography, University of Bonn
  http://www.giub.uni-bonn.de/exse/
  lat/lon GmbH
  http://www.lat-lon.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 
 package org.kalypsodeegree_impl.io.shpapi;
@@ -64,10 +64,7 @@ package org.kalypsodeegree_impl.io.shpapi;
 import org.kalypsodeegree.model.geometry.ByteUtils;
 
 /**
- * Utilities for reading and writing the components of shape files.
- * 
- * 
- * <B>Last changes <B>: <BR>
+ * Utilities for reading and writing the components of shape files. <B>Last changes <B>: <BR>
  * 25.11.1999 ap: memory allocation dynaminized <BR>
  * 17.1.2000 ap: method SHPPoint readPoint(byte[] b, int off) modified <BR>
  * 17.1.2000 ap: method SHPEnvelope readBox(byte[] b, int off) modified <BR>
@@ -77,7 +74,6 @@ import org.kalypsodeegree.model.geometry.ByteUtils;
  * 
  * @version 25.1.2000
  * @author Andreas Poth
- *  
  */
 
 public class ShapeUtils
@@ -88,18 +84,15 @@ public class ShapeUtils
    * Reads a point record. A point record is a double representing the x value and a double representing a y value.
    * 
    * @param b
-   *          the raw data buffer
+   *            the raw data buffer
    * @param off
-   *          the offset into the buffer where the int resides
+   *            the offset into the buffer where the int resides
    * @return the point read from the buffer at the offset location
    */
   public static SHPPoint readPoint( byte[] b, int off )
   {
 
-    SHPPoint point = new SHPPoint();
-
-    point.x = ByteUtils.readLEDouble( b, off );
-    point.y = ByteUtils.readLEDouble( b, off + 8 );
+    SHPPoint point = new SHPPoint( b, off );
 
     return point;
 
@@ -110,33 +103,27 @@ public class ShapeUtils
    * Reads the min. and max. z-value of a shpz-file (as double).
    * 
    * @param b
-   *          the raw data buffer
+   *            the raw data buffer
    * @param off
-   *          the offset into the buffer where the int resides
-   * @return the z-value of the lowest and highest point (zmin and zmax) as doubles. 
+   *            the offset into the buffer where the int resides
+   * @return the z-value of the lowest and highest point (zmin and zmax) as doubles.
    */
   public static SHPZRange readZRange( byte[] b, int off )
   {
+    double minZ = ByteUtils.readLEDouble( b, off );
+    double maxZ = ByteUtils.readLEDouble( b, off + 8 );
 
-    SHPZRange zrange = new SHPZRange();
+    return new SHPZRange( minZ, maxZ );
+  }
 
-    zrange.zmin = ByteUtils.readLEDouble( b, off );
-    zrange.zmax = ByteUtils.readLEDouble( b, off + 8 );
-
-    return zrange;
-
-  }  
-  
-  
-  
   /**
    * method: readBox(byte[] b, int off) <BR>
    * Reads a bounding box record. A bounding box is four double representing, in order, xmin, ymin, xmax, ymax.
    * 
    * @param b
-   *          the raw data buffer
+   *            the raw data buffer
    * @param off
-   *          the offset into the buffer where the int resides
+   *            the offset into the buffer where the int resides
    * @return the point read from the buffer at the offset location
    */
   public static SHPEnvelope readBox( byte[] b, int off )
@@ -147,36 +134,34 @@ public class ShapeUtils
     SHPPoint min = readPoint( b, off );
     SHPPoint max = readPoint( b, off + 16 );
 
-    bb.west = min.x;
-    bb.south = min.y;
-    bb.east = max.x;
-    bb.north = max.y;
+    bb.west = min.getX();
+    bb.south = min.getY();
+    bb.east = max.getX();
+    bb.north = max.getY();
 
     return bb;
 
   }
 
-  
-  
   /**
    * method: writePoint(byte[] b, int off, ESRIPoint point) <BR>
    * Writes the given point to the given buffer at the given location. The point is written as a double representing x
    * followed by a double representing y.
    * 
    * @param b
-   *          the data buffer
+   *            the data buffer
    * @param off
-   *          the offset into the buffer where writing should occur
+   *            the offset into the buffer where writing should occur
    * @param point
-   *          the point to write
+   *            the point to write
    * @return the number of bytes written
    */
-  public static int writePoint( byte[] b, int off, SHPPoint point )
+  public static int writePoint( byte[] b, int off, final double x, final double y )
   {
 
-    int nBytes = ByteUtils.writeLEDouble( b, off, point.x );
+    int nBytes = ByteUtils.writeLEDouble( b, off, x );
 
-    nBytes += ByteUtils.writeLEDouble( b, off + nBytes, point.y );
+    nBytes += ByteUtils.writeLEDouble( b, off + nBytes, y );
 
     return nBytes;
 
@@ -188,58 +173,53 @@ public class ShapeUtils
    * doubles representing, in order, xmin, ymin, xmax, ymax.
    * 
    * @param b
-   *          the data buffer
+   *            the data buffer
    * @param off
-   *          the offset into the buffer where writing should occur
+   *            the offset into the buffer where writing should occur
    * @param box
-   *          the bounding box to write
+   *            the bounding box to write
    * @return the number of bytes written
    */
   public static int writeBox( byte[] b, int off, SHPEnvelope box )
   {
+    final double minX = box.west;
+    final double minY = box.south;
+    final double maxX = box.east;
+    final double maxY = box.north;
 
-    SHPPoint min = new SHPPoint();
-    min.x = box.west;
-    min.y = box.south;
-    SHPPoint max = new SHPPoint();
-    max.x = box.east;
-    max.y = box.north;
+    int nBytes = writePoint( b, off, minX, minY );
 
-    int nBytes = writePoint( b, off, min );
+    nBytes += writePoint( b, off + nBytes, maxX, maxY );
 
-    nBytes += writePoint( b, off + nBytes, max );
+    return nBytes;
+  }
+
+  /**
+   * method: writeZRange( byte[] b, int off, SHPZRange zrange ) <BR>
+   * Writes the given z-Range to the given buffer at the given location. The Z-Range is written as two doubles
+   * representing, in order, zmin and zmax.
+   * 
+   * @param b
+   *            the data buffer
+   * @param off
+   *            the offset into the buffer where writing should occur
+   * @param SHPZRange
+   *            the Z-Range to write
+   * @return the number of bytes written
+   */
+  public static int writeZRange( byte[] b, int off, SHPZRange zrange )
+  {
+
+    SHPZRange zr = new SHPZRange( zrange.getMinZ(), zrange.getMaxZ() );
+    zr.setMinZ( zrange.getMinZ() );
+    zr.setMaxZ( zrange.getMaxZ() );
+
+    int nBytes = ByteUtils.writeLEDouble( b, off, zr.getMinZ() );
+
+    nBytes += ByteUtils.writeLEDouble( b, off + nBytes, zr.getMaxZ() );
 
     return nBytes;
 
   }
 
-  /**
-   * method: writeZRange( byte[] b, int off, SHPZRange zrange ) <BR>
-   * Writes the given z-Range to the given buffer at the given location. The Z-Range is written as two
-   * doubles representing, in order, zmin and zmax.
-   * 
-   * @param b
-   *          the data buffer
-   * @param off
-   *          the offset into the buffer where writing should occur
-   * @param SHPZRange
-   *          the Z-Range to write
-   * @return the number of bytes written
-   */
-  public static int writeZRange( byte[] b, int off, SHPZRange zrange )
-  {
-    
-    SHPZRange zr = new SHPZRange();
-    zr.zmin  = zrange.zmin;
-    zr.zmax = zrange.zmax;
-
-
-    int nBytes = ByteUtils.writeLEDouble( b, off, zr.zmin );
-
-    nBytes += ByteUtils.writeLEDouble( b, off + nBytes, zr.zmax     );
-
-    return nBytes;
-
-  }  
-  
 }

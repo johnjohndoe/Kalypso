@@ -217,7 +217,11 @@ public class ShapeFile
     hasRTreeIndex = false;
   }
 
-  public void close( )
+  /**
+   *
+   */
+  @SuppressWarnings("unchecked")
+  public void close( ) throws IOException
   {
     shp.close();
 
@@ -242,14 +246,7 @@ public class ShapeFile
     {
       final DBaseIndex index = (DBaseIndex) e.nextElement();
 
-      try
-      {
-        index.close();
-      }
-      catch( final Exception ex )
-      {
-        // and here?
-      }
+      index.close();
     }
   }
 
@@ -347,6 +344,7 @@ public class ShapeFile
   /**
    * returns RecNo'th Geometrie <BR>
    */
+  @SuppressWarnings("unchecked")
   public GM_Object getGM_ObjectByRecNo( final int RecNo ) throws IOException
   {
     GM_Object geom = null;
@@ -459,6 +457,10 @@ public class ShapeFile
         geom = null;
       }
     }
+    else if( shpType == ShapeConst.SHAPE_TYPE_NULL )
+    {
+      geom = null;
+    }
     else
     {
       throw (new NotImplementedException());
@@ -480,6 +482,7 @@ public class ShapeFile
   /**
    * returns a int array that containts all the record numbers that matches the search operation
    */
+  @SuppressWarnings("unchecked")
   public int[] getGeoNumbersByAttribute( final String column, final Comparable value ) throws IOException, DBaseIndexException
   {
     final DBaseIndex index = dBaseIndexes.get( column );
@@ -546,7 +549,7 @@ public class ShapeFile
         geom = (SHPPoint) shp.getByRecNo( i + 1 );
 
         // is the Point within the seach rectangle?
-        final GM_Position pos = GeometryFactory.createGM_Position( geom.x, geom.y );
+        final GM_Position pos = GeometryFactory.createGM_Position( geom.getX(), geom.getY() );
 
         if( r.contains( pos ) == true )
         {
@@ -682,7 +685,6 @@ public class ShapeFile
     {
       return -1;
     }
-    // TODO: here the shape-type-constants should be used!
     if( g[0] instanceof GM_Point )
     {
       return 0;
@@ -725,6 +727,7 @@ public class ShapeFile
 
   /**
    */
+  @SuppressWarnings("unchecked")
   private void initDBaseFile( final IFeatureType featT ) throws DBaseException
   {
     // count regular fields
@@ -743,7 +746,7 @@ public class ShapeFile
       }
       final String s = ftpName.substring( pos + 1 );
       if( !(ftp[i] instanceof IValuePropertyType) )
-      {// TODO: this ssems to be a bug;
+      {// TODO: this seems to be a bug;
       }
       final IValuePropertyType vpt = (IValuePropertyType) ftp[i];
       final Class clazz = vpt.getValueClass();
@@ -795,6 +798,202 @@ public class ShapeFile
     m_dbf = new DBaseFile( m_url, fieldDesc );
   }
 
+  @SuppressWarnings("unchecked")
+  public void writeShape( final IShapeDataProvider dataProvider ) throws Exception
+  {
+    Debug.debugMethodBegin( this, "writeShape" );
+
+    final Feature[] features = dataProvider.getFeatures();
+
+    if( features.length == 0 )
+    {
+      throw new Exception( "Can't write an empty shape." );
+    }
+
+    // mbr of the whole shape file
+    SHPEnvelope shpmbr = new SHPEnvelope();
+
+    // Set the Offset to the end of the fileHeader
+    int offset = ShapeConst.SHAPE_FILE_HEADER_LENGTH;
+
+    // ====================DBASE TABLE =====================
+
+    /* initialize the dbasefile associated with the shape file */
+    final IFeatureType featureType = dataProvider.getFeatureType();
+    initDBaseFile( featureType );
+
+    /* loop through the Geometries of the feature collection and write them to a bytearray */
+    final IPropertyType[] ftp = featureType.getProperties();
+
+    /* loop over all features */
+    for( int i = 0; i < features.length; i++ )
+    {
+      // get i'th features properties
+      final Feature feature = features[i];
+
+      // write i'th feature properties to a ArrayList
+      final ArrayList<Object> vec = new ArrayList<Object>();
+      for( int j = 0; j < ftp.length; j++ )
+      {
+        /* get the property of the current feature */
+        final Object value = feature.getProperty( ftp[j] );
+        if( !(ftp[j] instanceof IValuePropertyType) )
+        {
+          continue;
+        }
+        final IValuePropertyType ivp = (IValuePropertyType) ftp[j];
+
+        final Class clazz = ivp.getValueClass();
+        if( (clazz == Integer.class) || (clazz == Byte.class) || (clazz == Character.class) || (clazz == Float.class) || (clazz == Double.class) || (clazz == Number.class) || (clazz == Date.class)
+            || (clazz == Long.class) || (clazz == String.class) )
+        {
+          vec.add( value );
+        }
+        else if( clazz == BigDecimal.class )
+        {
+          vec.add( new Double( ((java.math.BigDecimal) value).doubleValue() ) );
+        }
+        else if( clazz == BigInteger.class )
+        {
+          vec.add( new Long( ((BigInteger) value).longValue() ) );
+        }
+      }
+
+      // write the ArrayList (properties) to the dbase file
+      try
+      {
+        m_dbf.setRecord( vec );
+      }
+      catch( final DBaseException db )
+      {
+        db.printStackTrace();
+        throw new Exception( db.toString() );
+      }
+
+      // ==================== SHAPE ENTRIES =====================
+
+      /* create a new SHP type entry in the specified shape type */
+      /* convert feature geometry into output geometry */
+      final ISHPGeometry shpGeom = getShapeGeometry( feature, dataProvider.getGeometryPropertyType(), dataProvider.getOutputShapeConstant() );
+
+      final byte[] byteArray = shpGeom.writeShape();
+      final int nbyte = shpGeom.size();
+      final SHPEnvelope mbr = shpGeom.getEnvelope();
+
+      if( i == 0 )
+      {
+        shpmbr = mbr;
+      }
+
+      // write bytearray to the shape file
+      final IndexRecord record = new IndexRecord( offset / 2, nbyte / 2 );
+
+      // write recordheader to the bytearray
+      ByteUtils.writeBEInt( byteArray, 0, i );
+      ByteUtils.writeBEInt( byteArray, 4, nbyte / 2 );
+
+      // write record (bytearray) including recordheader to the shape file
+      shp.write( byteArray, record, mbr );
+
+      // actualize shape file minimum boundary rectangle
+
+      if( mbr.west < shpmbr.west )
+      {
+        shpmbr.west = mbr.west;
+      }
+
+      if( mbr.east > shpmbr.east )
+      {
+        shpmbr.east = mbr.east;
+      }
+
+      if( mbr.south < shpmbr.south )
+      {
+        shpmbr.south = mbr.south;
+      }
+
+      if( mbr.north > shpmbr.north )
+      {
+        shpmbr.north = mbr.north;
+      }
+
+      // icrement offset for pointing at the end of the file
+      offset += (nbyte + ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH);
+    }
+
+    m_dbf.writeAllToFile();
+
+    // Header schreiben
+    shp.writeHeader( offset, dataProvider.getOutputShapeConstant(), shpmbr );
+
+    Debug.debugMethodEnd();
+
+  }
+
+  @SuppressWarnings("unchecked")
+  private ISHPGeometry getShapeGeometry( Feature feature, IPropertyType geometryProperty, byte outputShapeConstant )
+  {
+    final GM_Object geom = (GM_Object) feature.getProperty( geometryProperty );
+
+    switch( outputShapeConstant )
+    {
+      case ShapeConst.SHAPE_TYPE_NULL:
+      {
+        // do nothing
+      }
+      case ShapeConst.SHAPE_TYPE_POINT:
+      {
+        final GM_Point point = (GM_Point) geom.getAdapter( GM_Point.class );
+        if( point == null )
+          return null;
+        else
+          return new SHPPoint( point );
+      }
+      case ShapeConst.SHAPE_TYPE_POLYLINE:
+      {
+        final GM_Curve[] curves = (GM_Curve[]) geom.getAdapter( GM_Curve[].class );
+        if( curves == null )
+          return null;
+        else
+          return new SHPPolyLine( curves );
+      }
+      case ShapeConst.SHAPE_TYPE_POLYGON:
+      {
+        final GM_Surface< ? >[] surfaces = (GM_Surface[]) geom.getAdapter( GM_Surface[].class );
+        if( surfaces == null )
+          return null;
+        else
+          return new SHPPolygon( surfaces );
+      }
+      case ShapeConst.SHAPE_TYPE_POINTZ:
+      {
+        final GM_Point point = (GM_Point) geom.getAdapter( GM_Point.class );
+        if( point == null )
+          return null;
+        else
+          return new SHPPointz( point );
+      }
+      case ShapeConst.SHAPE_TYPE_POLYLINEZ:
+      {
+        final GM_Curve[] curves = (GM_Curve[]) geom.getAdapter( GM_Curve[].class );
+        if( curves == null )
+          return null;
+        else
+          return new SHPPolyLinez( curves );
+      }
+      case ShapeConst.SHAPE_TYPE_POLYGONZ:
+      {
+        final GM_Surface< ? >[] surfaces = (GM_Surface[]) geom.getAdapter( GM_Surface[].class );
+        if( surfaces == null )
+          return null;
+        else
+          return new SHPPolygonz( surfaces );
+      }
+    }
+    return null;
+  }
+
+  @SuppressWarnings("unchecked")
   public void writeShape( final Feature[] features ) throws Exception
   {
     Debug.debugMethodBegin( this, "writeShape" );
@@ -824,7 +1023,7 @@ public class ShapeFile
     // initialize the dbasefile associated with the shapefile
     initDBaseFile( featureType );
 
-    // loop throug the Geometries of the feature collection anf write them
+    // loop through the Geometries of the feature collection anf write them
     // to a bytearray
     final IPropertyType[] ftp = featureType.getProperties();
     for( int i = 0; i < features.length; i++ )
@@ -913,10 +1112,9 @@ public class ShapeFile
       {
         // Geometrie Type = Point
         final GM_Point wks = (GM_Point) getFeatureAsGeometry( features[i] );
-        final SHPPoint shppoint = new SHPPoint( wks.getPosition() );
+        final SHPPoint shppoint = new SHPPoint( wks );
+        bytearray = shppoint.writeShape();
         nbyte = shppoint.size();
-        bytearray = new byte[nbyte + ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH];
-        shppoint.writeSHPPoint( bytearray, ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH );
         mbr = new SHPEnvelope( shppoint, shppoint );
 
         if( i == 0 )
@@ -933,9 +1131,8 @@ public class ShapeFile
         wks[0] = (GM_Curve) getFeatureAsGeometry( features[i] );
 
         final SHPPolyLine shppolyline = new SHPPolyLine( wks );
+        bytearray = shppolyline.writeShape();
         nbyte = shppolyline.size();
-        bytearray = new byte[nbyte + ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH];
-        shppolyline.writeSHPPolyLine( bytearray, ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH );
         mbr = shppolyline.getEnvelope();
 
         if( i == 0 )
@@ -952,9 +1149,8 @@ public class ShapeFile
         wks[0] = (GM_Surface) getFeatureAsGeometry( features[i] );
 
         final SHPPolygon shppolygon = new SHPPolygon( wks );
+        bytearray = shppolygon.writeShape();
         nbyte = shppolygon.size();
-        bytearray = new byte[nbyte + ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH];
-        shppolygon.writeSHPPolygon( bytearray, ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH );
         mbr = shppolygon.getEnvelope();
 
         if( i == 0 )
@@ -969,9 +1165,8 @@ public class ShapeFile
         // Geometrie Type = MultiPoint
         final GM_MultiPoint wks = (GM_MultiPoint) getFeatureAsGeometry( features[i] );
         final SHPMultiPoint shpmultipoint = new SHPMultiPoint( wks );
+        bytearray = shpmultipoint.writeShape();
         nbyte = shpmultipoint.size();
-        bytearray = new byte[nbyte + ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH];
-        shpmultipoint.writeSHPMultiPoint( bytearray, ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH );
         mbr = shpmultipoint.getEnvelope();
         shptype = 8;
       }
@@ -980,9 +1175,8 @@ public class ShapeFile
         // Geometrie Type = MultiLineString
         final GM_MultiCurve wks = (GM_MultiCurve) getFeatureAsGeometry( features[i] );
         final SHPPolyLine shppolyline = new SHPPolyLine( wks.getAllCurves() );
+        bytearray = shppolyline.writeShape();
         nbyte = shppolyline.size();
-        bytearray = new byte[nbyte + ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH];
-        shppolyline.writeSHPPolyLine( bytearray, ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH );
         mbr = shppolyline.getEnvelope();
 
         if( i == 0 )
@@ -997,9 +1191,8 @@ public class ShapeFile
         // Geometrie Type = MultiPolygon
         final GM_MultiSurface wks = (GM_MultiSurface) getFeatureAsGeometry( features[i] );
         final SHPPolygon shppolygon = new SHPPolygon( wks.getAllSurfaces() );
+        bytearray = shppolygon.writeShape();
         nbyte = shppolygon.size();
-        bytearray = new byte[nbyte + ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH];
-        shppolygon.writeSHPPolygon( bytearray, ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH );
         mbr = shppolygon.getEnvelope();
 
         if( i == 0 )

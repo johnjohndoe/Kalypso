@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,27 +36,27 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- 
+
+
  history:
- 
+
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
- interface-compatibility to deegree is wanted but not retained always. 
- 
- If you intend to use this software in other ways than in kalypso 
+ interface-compatibility to deegree is wanted but not retained always.
+
+ If you intend to use this software in other ways than in kalypso
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
 
- all modifications are licensed as deegree, 
+ all modifications are licensed as deegree,
  original copyright:
- 
+
  Copyright (C) 2001 by:
  EXSE, Department of Geography, University of Bonn
  http://www.giub.uni-bonn.de/exse/
  lat/lon GmbH
  http://www.lat-lon.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.io.shpapi;
 
@@ -104,7 +104,7 @@ public class SHP2WKS
    */
   public GM_Point transformPoint( CS_CoordinateSystem crs, SHPPoint shppoint )
   {
-    return GeometryFactory.createGM_Point( shppoint.x, shppoint.y, crs );
+    return GeometryFactory.createGM_Point( shppoint.getX(), shppoint.getY(), crs );
   }
 
   /**
@@ -116,7 +116,7 @@ public class SHP2WKS
   public GM_Point transformPointz( CS_CoordinateSystem crs, SHPPointz shppointz )
   {
     // return GeometryFactory.createGM_Point( shppointz.x, shppointz.y, shppointz.z, crs );
-    return GeometryFactory.createGM_Point( shppointz.x, shppointz.y, shppointz.z, crs );
+    return GeometryFactory.createGM_Point( shppointz.getX(), shppointz.getY(), shppointz.getZ(), crs );
   }
 
   /**
@@ -130,7 +130,7 @@ public class SHP2WKS
     GM_Point[] gm_points = new GM_Point[shpmultipoint.numPoints];
 
     for( int i = 0; i < shpmultipoint.numPoints; i++ )
-      gm_points[i] = GeometryFactory.createGM_Point( shpmultipoint.points[i].x, shpmultipoint.points[i].y, srs );
+      gm_points[i] = GeometryFactory.createGM_Point( shpmultipoint.points[i].getX(), shpmultipoint.points[i].getY(), srs );
 
     return gm_points;
   }
@@ -146,12 +146,11 @@ public class SHP2WKS
     GM_Point[] gm_points = new GM_Point[shpmultipointz.numPoints];
 
     for( int i = 0; i < shpmultipointz.numPoints; i++ )
-      gm_points[i] = GeometryFactory.createGM_Point( shpmultipointz.pointsz[i].x, shpmultipointz.pointsz[i].y, shpmultipointz.pointsz[i].z, srs );
+      gm_points[i] = GeometryFactory.createGM_Point( shpmultipointz.pointsz[i].getX(), shpmultipointz.pointsz[i].getY(), shpmultipointz.pointsz[i].getZ(), srs );
 
     return gm_points;
   }
-  
-  
+
   /**
    * method: GM_Point[][] transformPolyLine(CS_CoordinateSystem srs, <BR>
    * SHPPolyLine shppolyline)) <BR>
@@ -170,7 +169,7 @@ public class SHP2WKS
 
         for( int i = 0; i < shppolyline.points[j].length; i++ )
         {
-          gm_points[i] = GeometryFactory.createGM_Position( shppolyline.points[j][i].x, shppolyline.points[j][i].y );
+          gm_points[i] = GeometryFactory.createGM_Position( shppolyline.points[j][i].getX(), shppolyline.points[j][i].getY() );
         }
 
         GM_CurveSegment cs = GeometryFactory.createGM_CurveSegment( gm_points, crs );
@@ -191,7 +190,7 @@ public class SHP2WKS
    * transforms a SHPPolyLinez to a WKSGeometry <BR>
    * gets a polylinez that should be transformed <BR>
    */
-  public GM_Curve[] transformPolyLinez( CS_CoordinateSystem crs, SHPPolyLinez shppolylinez)
+  public GM_Curve[] transformPolyLinez( CS_CoordinateSystem crs, SHPPolyLinez shppolylinez )
   {
     GM_Curve[] curve = new GM_Curve[shppolylinez.numParts];
 
@@ -203,7 +202,7 @@ public class SHP2WKS
 
         for( int i = 0; i < shppolylinez.pointsz[j].length; i++ )
         {
-          gm_points[i] = GeometryFactory.createGM_Position( shppolylinez.pointsz[j][i].x, shppolylinez.pointsz[j][i].y , shppolylinez.pointsz[j][i].z );
+          gm_points[i] = GeometryFactory.createGM_Position( shppolylinez.pointsz[j][i].getX(), shppolylinez.pointsz[j][i].getY(), shppolylinez.pointsz[j][i].getZ() );
         }
 
         GM_CurveSegment cs = GeometryFactory.createGM_CurveSegment( gm_points, crs );
@@ -217,7 +216,6 @@ public class SHP2WKS
 
     return curve;
   }
-  
 
   /**
    * method: private boolean isInsideRing(GM_Point[] ring, GM_Point point) <BR>
@@ -301,7 +299,7 @@ public class SHP2WKS
     return false;
   }
 
-  //    
+  //
   // /**
   // * method: WKSLinearPolygon[] transformPolygon(CS_CoordinateSystem srs,<BR>
   // * SHPPolygon shppolygon))<BR>
@@ -310,90 +308,90 @@ public class SHP2WKS
   // */
   // public GM_Surface[] transformPolygon2(CS_CoordinateSystem crs,
   // SHPPolygon shppolygon) {
-  //        
+  //
   // ArrayList polygons = new ArrayList(shppolygon.numRings);
   // ArrayList outer_rings = new ArrayList(shppolygon.numRings);
   // ArrayList inner_rings = new ArrayList(shppolygon.numRings);
   // GM_Position[][] in_rings = null;
-  //        
+  //
   // int cnt = 0;
   // for (int i = 0; i < shppolygon.numRings; i++) {
-  //            
+  //
   // GM_Position[] ring = new GM_Position[shppolygon.rings.points[i].length];
   // for (int j = 0; j < shppolygon.rings.points[i].length; j++) {
   // ring[j] =
   // GeometryFactory.createGM_Position(shppolygon.rings.points[i][j].x,
   // shppolygon.rings.points[i][j].y);
   // }
-  //            
+  //
   // if ( (shppolygon.numRings == 1) || ccw(shppolygon.rings.points[i]) ) {
   // outer_rings.add( ring );
   // } else {
   // inner_rings.add( ring );
   // }
-  //            
+  //
   // }
-  //        
+  //
   // GM_Surface[] wkslp = new GM_Surface[outer_rings.size()];
-  //        
+  //
   // // for every outer ring
   // for (int i = 0; i < outer_rings.size(); i++) {
-  //            
+  //
   // GM_Position[] out_rings = (GM_Position[]) outer_rings.get(i);
-  //            
+  //
   // ArrayList innerRingsElements = new ArrayList(inner_rings.size());
-  //            
+  //
   // // for ever remaining inner ring check if it's inside
   // // the actual outer ring
   // int count = inner_rings.size()-1;
   // for (int j = count; j >= 0; j--) {
-  //                
+  //
   // GM_Position[] inring = (GM_Position[]) inner_rings.get(j);
-  //                
+  //
   // // check if one or more points of a inner ring are
   // // within the actual otter ring
   // try {
-  //                    
+  //
   // if ( (isInsideRing(out_rings,inring[0]) == true) ||
   // (isInsideRing(out_rings,inring[1]) == true) ){
   // innerRingsElements.add((Object) inner_rings.get(j));
   // inner_rings.remove(j);
   // }
-  //                    
+  //
   // } catch (Exception e) {
   // System.out.println( "Error: " + e.toString());
   // }
-  //                
+  //
   // in_rings = null;
-  //                
+  //
   // // build inner rings of the actual outer ring as GM_Position[]
   // if (innerRingsElements.size() > 0) {
-  //                    
+  //
   // in_rings = new GM_Position[innerRingsElements.size()][];
-  //                    
+  //
   // for (int k = 0; k < innerRingsElements.size(); k++) {
-  //                        
+  //
   // in_rings[k] = (GM_Position[]) innerRingsElements.get(k);
-  //                        
+  //
   // }
-  //                    
+  //
   // }
-  //                
+  //
   // } // end of building inner rings as GM_Position[]
-  //            
+  //
   // try {
-  //                
+  //
   // wkslp[i] = GeometryFactory.createGM_Surface( out_rings, in_rings,
   // new GM_SurfaceInterpolation_Impl(),
   // crs );
-  //                
+  //
   // } catch(Exception e) {
   // System.out.println("SHP2WKS::\n" + e);
   // }
   // }
-  //        
+  //
   // return wkslp;
-  //        
+  //
   // }
 
   /**
@@ -411,7 +409,7 @@ public class SHP2WKS
       final Coordinate[] ring = new Coordinate[shppolygon.m_rings.points[i].length];
 
       for( int k = 0; k < shppolygon.m_rings.points[i].length; k++ )
-        ring[k] = new Coordinate( shppolygon.m_rings.points[i][k].x, shppolygon.m_rings.points[i][k].y );
+        ring[k] = new Coordinate( shppolygon.m_rings.points[i][k].getX(), shppolygon.m_rings.points[i][k].getY() );
 
       // note: esris (unmathemathic) definition of positive area is clockwise => outer ring, negative => inner ring
       double area = GeometryUtilities.calcSignedAreaOfRing( ring );
@@ -520,7 +518,7 @@ public class SHP2WKS
       final Coordinate[] ring = new Coordinate[shppolygonz.m_rings.pointsz[i].length];
 
       for( int k = 0; k < shppolygonz.m_rings.pointsz[i].length; k++ )
-        ring[k] = new Coordinate( shppolygonz.m_rings.pointsz[i][k].x, shppolygonz.m_rings.pointsz[i][k].y, shppolygonz.m_rings.pointsz[i][k].z );
+        ring[k] = new Coordinate( shppolygonz.m_rings.pointsz[i][k].getX(), shppolygonz.m_rings.pointsz[i][k].getY(), shppolygonz.m_rings.pointsz[i][k].getZ() );
 
       // note: esris (unmathemathic) definition of positive area is clockwise => outer ring, negative => inner ring
       double area = GeometryUtilities.calcSignedAreaOfRing( ring );

@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,27 +36,27 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- 
+
+
  history:
- 
+
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
- interface-compatibility to deegree is wanted but not retained always. 
- 
- If you intend to use this software in other ways than in kalypso 
+ interface-compatibility to deegree is wanted but not retained always.
+
+ If you intend to use this software in other ways than in kalypso
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
 
- all modifications are licensed as deegree, 
+ all modifications are licensed as deegree,
  original copyright:
- 
+
  Copyright (C) 2001 by:
  EXSE, Department of Geography, University of Bonn
  http://www.giub.uni-bonn.de/exse/
  lat/lon GmbH
  http://www.lat-lon.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 
 package org.kalypsodeegree_impl.io.shpapi;
@@ -66,26 +66,25 @@ import org.kalypsodeegree.model.geometry.GM_MultiPoint;
 
 /**
  * Class representig a collection of points <BR>
- * 
  * <B>Last changes <B>: <BR>
  * 21.03.2000 ap: constructor declared and implemented <BR>
  * 14.08.2000 ap: constructor SHPMultiPoint(GM_Point[] gm_points) added <BR>
  * 14.08.2000 ap: method writeSHPMultiPoint(..) added <BR>
  * 14.08.2000 ap: import clause added <BR>
  * 16.08.2000 ap: constructor SHPMultiPoint(GM_Point[] gm_points) modified <BR>
- * 
  * <!---------------------------------------------------------------------------->
  * 
  * @version 16.08.2000
  * @author Andreas Poth
- *  
  */
 
-public class SHPMultiPoint extends SHPGeometry
+public class SHPMultiPoint implements ISHPGeometry
 {
   public SHPPoint[] points = null;
 
   public int numPoints = 0;
+
+  private final SHPEnvelope m_envelope;
 
   /**
    * constructor: recieves a stream <BR>
@@ -93,17 +92,15 @@ public class SHPMultiPoint extends SHPGeometry
   public SHPMultiPoint( byte[] recBuf )
   {
 
-    super( recBuf );
+    m_envelope = ShapeUtils.readBox( recBuf, 4 );
 
-    envelope = ShapeUtils.readBox( recBuf, 4 );
-
-    numPoints = ByteUtils.readLEInt( recBuffer, 36 );
+    numPoints = ByteUtils.readLEInt( recBuf, 36 );
 
     points = new SHPPoint[numPoints];
 
     for( int i = 0; i < numPoints; i++ )
     {
-      points[i] = new SHPPoint( recBuffer, 40 + i * 16 );
+      points[i] = new SHPPoint( recBuf, 40 + i * 16 );
     }
 
   }
@@ -124,22 +121,22 @@ public class SHPMultiPoint extends SHPGeometry
       points = new SHPPoint[multipoint.getSize()];
       for( int i = 0; i < multipoint.getSize(); i++ )
       {
-        points[i] = new SHPPoint( multipoint.getPointAt( i ).getPosition() );
-        if( points[i].x > xmax )
+        points[i] = new SHPPoint( multipoint.getPointAt( i ) );
+        if( points[i].getX() > xmax )
         {
-          xmax = points[i].x;
+          xmax = points[i].getX();
         }
-        else if( points[i].x < xmin )
+        else if( points[i].getX() < xmin )
         {
-          xmin = points[i].x;
+          xmin = points[i].getX();
         }
-        if( points[i].y > ymax )
+        if( points[i].getY() > ymax )
         {
-          ymax = points[i].y;
+          ymax = points[i].getY();
         }
-        else if( points[i].y < ymin )
+        else if( points[i].getY() < ymin )
         {
-          ymin = points[i].y;
+          ymin = points[i].getY();
         }
       }
     }
@@ -148,7 +145,7 @@ public class SHPMultiPoint extends SHPGeometry
       System.out.println( "SHPMultiPoint::" + e );
     }
 
-    envelope = new SHPEnvelope( xmin, xmax, ymax, ymin );
+    m_envelope = new SHPEnvelope( xmin, xmax, ymax, ymin );
 
   }
 
@@ -156,28 +153,29 @@ public class SHPMultiPoint extends SHPGeometry
    * method: writeSHPmultipoint (byte [] bytearray, int start) <BR>
    * loops through the point array and writes each point to the bytearray <BR>
    */
-  public byte[] writeSHPMultiPoint( byte[] bytearray, int start )
+  public byte[] writeShape( )
   {
 
-    int offset = start;
+    int offset = ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH;
+    final byte[] byteArray = new byte[offset + size()];
 
-    double xmin = points[0].x;
-    double xmax = points[0].x;
-    double ymin = points[0].y;
-    double ymax = points[0].y;
+    double xmin = points[0].getX();
+    double xmax = points[0].getX();
+    double ymin = points[0].getY();
+    double ymax = points[0].getY();
 
     // write shape type identifier ( 8 = multipoint )
-    ByteUtils.writeLEInt( bytearray, offset, 8 );
+    ByteUtils.writeLEInt( byteArray, offset, 8 );
 
     offset += 4;
     // save offset of the bounding box
     int tmp = offset;
 
     // increment offset with size of the bounding box
-    offset += ( 4 * 8 );
+    offset += (4 * 8);
 
     // write number of points
-    ByteUtils.writeLEInt( bytearray, offset, points.length );
+    ByteUtils.writeLEInt( byteArray, offset, points.length );
 
     offset += 4;
 
@@ -185,31 +183,31 @@ public class SHPMultiPoint extends SHPGeometry
     {
 
       // calculate bounding box
-      if( points[i].x > xmax )
+      if( points[i].getX() > xmax )
       {
-        xmax = points[i].x;
+        xmax = points[i].getX();
       }
-      else if( points[i].x < xmin )
+      else if( points[i].getX() < xmin )
       {
-        xmin = points[i].x;
+        xmin = points[i].getX();
       }
 
-      if( points[i].y > ymax )
+      if( points[i].getY() > ymax )
       {
-        ymax = points[i].y;
+        ymax = points[i].getY();
       }
-      else if( points[i].y < ymin )
+      else if( points[i].getY() < ymin )
       {
-        ymin = points[i].y;
+        ymin = points[i].getY();
       }
 
       // write x-coordinate
-      ByteUtils.writeLEDouble( bytearray, offset, points[i].x );
+      ByteUtils.writeLEDouble( byteArray, offset, points[i].getX() );
 
       offset += 8;
 
       // write y-coordinate
-      ByteUtils.writeLEDouble( bytearray, offset, points[i].y );
+      ByteUtils.writeLEDouble( byteArray, offset, points[i].getY() );
 
       offset += 8;
 
@@ -219,23 +217,31 @@ public class SHPMultiPoint extends SHPGeometry
     offset = tmp;
 
     // write bounding box to the byte array
-    ByteUtils.writeLEDouble( bytearray, offset, xmin );
+    ByteUtils.writeLEDouble( byteArray, offset, xmin );
     offset += 8;
-    ByteUtils.writeLEDouble( bytearray, offset, ymin );
+    ByteUtils.writeLEDouble( byteArray, offset, ymin );
     offset += 8;
-    ByteUtils.writeLEDouble( bytearray, offset, xmax );
+    ByteUtils.writeLEDouble( byteArray, offset, xmax );
     offset += 8;
-    ByteUtils.writeLEDouble( bytearray, offset, ymax );
+    ByteUtils.writeLEDouble( byteArray, offset, ymax );
 
-    return bytearray;
+    return byteArray;
   }
 
   /**
    * returns the size of the multipoint shape in bytes <BR>
    */
-  public int size()
+  public int size( )
   {
     return 40 + points.length * 16;
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.io.shpapi.SHPGeometry#getEnvelope()
+   */
+  public SHPEnvelope getEnvelope( )
+  {
+    return m_envelope;
   }
 
 }

@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,27 +36,27 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- 
+
+
  history:
- 
+
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
- interface-compatibility to deegree is wanted but not retained always. 
- 
- If you intend to use this software in other ways than in kalypso 
+ interface-compatibility to deegree is wanted but not retained always.
+
+ If you intend to use this software in other ways than in kalypso
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
 
- all modifications are licensed as deegree, 
+ all modifications are licensed as deegree,
  original copyright:
- 
+
  Copyright (C) 2001 by:
  EXSE, Department of Geography, University of Bonn
  http://www.giub.uni-bonn.de/exse/
  lat/lon GmbH
  http://www.lat-lon.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 
 package org.kalypsodeegree_impl.io.shpapi;
@@ -110,9 +110,9 @@ public class MainFile
   /*
    * instance variables
    */
-  private FileHeader sfh;
+  private final FileHeader sfh;
 
-  private IndexFile shx;
+  private final IndexFile shx;
 
   /*
    * file suffixes for shp
@@ -122,7 +122,7 @@ public class MainFile
   /*
    * references to the main file
    */
-  private RandomAccessFile rafShp;
+  private final RandomAccessFile rafShp;
 
   /**
    * Construct a MainFile from a file name.
@@ -165,16 +165,9 @@ public class MainFile
 
   }
 
-  public void close( )
+  public void close( ) throws IOException
   {
-    try
-    {
-      rafShp.close();
-    }
-    catch( Exception ex )
-    {
-      ex.printStackTrace();
-    }
+    rafShp.close();
     shx.close();
   }
 
@@ -237,7 +230,8 @@ public class MainFile
       /*
        * only for PolyLines, Polygons and MultiPoints minimum bounding rectangles are defined
        */
-      if( (shpType == ShapeConst.SHAPE_TYPE_POLYLINE) || (shpType == ShapeConst.SHAPE_TYPE_POLYGON) || (shpType == ShapeConst.SHAPE_TYPE_MULTIPOINT) || (shpType == ShapeConst.SHAPE_TYPE_POLYLINEZ) || (shpType == ShapeConst.SHAPE_TYPE_POLYGONZ) || (shpType == ShapeConst.SHAPE_TYPE_MULTIPOINTZ))
+      if( (shpType == ShapeConst.SHAPE_TYPE_POLYLINE) || (shpType == ShapeConst.SHAPE_TYPE_POLYGON) || (shpType == ShapeConst.SHAPE_TYPE_MULTIPOINT) || (shpType == ShapeConst.SHAPE_TYPE_POLYLINEZ)
+          || (shpType == ShapeConst.SHAPE_TYPE_POLYGONZ) || (shpType == ShapeConst.SHAPE_TYPE_MULTIPOINTZ) )
       {
 
         recordMBR = new SHPEnvelope( recBuf );
@@ -253,10 +247,10 @@ public class MainFile
    * method: getByRecNo (int RecNo) <BR>
    * retruns a ShapeRecord-Geometry by RecorcNumber <BR>
    */
-  public SHPGeometry getByRecNo( int RecNo ) throws IOException
+  public ISHPGeometry getByRecNo( int RecNo ) throws IOException
   {
 
-    SHPGeometry shpGeom = null;
+    ISHPGeometry shpGeom = null;
     byte[] recBuf = null;
 
     // index in IndexArray (see IndexFile)
