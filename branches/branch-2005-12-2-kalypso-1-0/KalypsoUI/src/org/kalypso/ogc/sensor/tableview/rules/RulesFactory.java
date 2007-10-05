@@ -81,7 +81,7 @@ public class RulesFactory
   /**
    * @return default rules for Kalypso
    */
-  public static ITableViewRules getDefaultRules()
+  public static synchronized ITableViewRules getDefaultRules()
   {
     // lazy loading
     if( DEFAULT_RULES == null )

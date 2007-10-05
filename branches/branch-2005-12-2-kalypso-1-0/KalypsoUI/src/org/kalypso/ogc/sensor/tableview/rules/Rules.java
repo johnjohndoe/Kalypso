@@ -98,7 +98,7 @@ public class Rules implements ITableViewRules
   public RenderingRule[] findRules( final Number mask ) throws NoSuchElementException
   {
     RenderingRule[] r = (RenderingRule[])m_map.get( mask );
-
+    // TODO: the mapo is never reset, this smells buggy...
     if( r != null )
       return r;
 
