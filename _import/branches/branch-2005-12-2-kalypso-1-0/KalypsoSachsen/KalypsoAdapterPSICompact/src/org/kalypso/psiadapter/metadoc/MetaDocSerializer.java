@@ -46,6 +46,9 @@ public class MetaDocSerializer
   private final static DateFormat DFDATETIME = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" );
 
   /**
+   * TODO: remove this preparation into the client code. For example: configure the wizard to fill in the right values
+   * (or even model-based in order to make this work for the expert mode)
+   * 
    * Prepares the properties with some default value
    * 
    * TRICKY: we currently given the XSD-type of the value we expect and the default value. The value stuff is a ';'
@@ -98,7 +101,7 @@ public class MetaDocSerializer
       // WeisseElster -> Weiﬂe Elster
       // Remark: dieser Stand entspricht nicht dem Stand auf
       // dem LHWZ Server
-      
+
       final String dokTyp = serviceProps.getProperty( TAG_DOKUMENTTYP + "_" + scenarioId, "" );
       writer.write( "<" + TAG_DOKUMENTTYP + ">" + dokTyp + "</" + TAG_DOKUMENTTYP + ">" );
 
@@ -106,8 +109,7 @@ public class MetaDocSerializer
           + TAG_ERSTELLER + ">" );
       writer.write( "<" + TAG_AUTOR + ">" + valueOfProperty( mdProps.getProperty( TAG_AUTOR ) ) + "</" + TAG_AUTOR
           + ">" );
-      writer.write( "<" + TAG_REGION + ">" + region + "</"
-          + TAG_REGION + ">" );
+      writer.write( "<" + TAG_REGION + ">" + region + "</" + TAG_REGION + ">" );
 
       writer.write( "<" + TAG_EINGANGSDATUM + ">" + DFDATETIME.format( new Date() ) + "</" + TAG_EINGANGSDATUM + ">" );
       writer.write( "<" + TAG_ERSTELLUNGSDATUM + ">" + valueOfProperty( mdProps.getProperty( TAG_ERSTELLUNGSDATUM ) )

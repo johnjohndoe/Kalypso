@@ -124,6 +124,8 @@ public class PSICompactObservationItem implements IObservation
   {
     final MetadataList metadata = new MetadataList();
 
+    // TODO: 'name' of ObjectMetaData is never used, why?
+    
     metadata.put( ObservationConstants.MD_NAME, getName() );
     metadata.put( ObservationConstants.MD_DESCRIPTION, m_objectInfo.getDescription() );
     metadata.put( ObservationConstants.MD_ORIGIN, "PSICompact" );

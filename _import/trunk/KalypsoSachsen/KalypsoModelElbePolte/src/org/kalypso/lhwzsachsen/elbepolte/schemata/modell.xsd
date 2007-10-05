@@ -404,16 +404,26 @@
                                 </documentation>
                             </annotation>
                         </element>
-                    <element name="ganglinie_vorhersage_cz" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0">
-                        <annotation>
-                            <documentation xml:lang="de">
-                                <name>(tschechische) Vorhersagewerte</name>
-                                <label>(tschechische) Vorhersagewerte</label>
-                                <tooltip>(tschechische) Vorhersagewerte</tooltip>
-                                <description>(tschechische) Vorhersagewerte</description>
-                            </documentation>
-                        </annotation>
-                    </element>
+                        <element name="ganglinie_messwerte_w" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0">
+                            <annotation>
+                                <documentation xml:lang="de">
+                                    <name>W-Messwerte (zur Information)</name>
+                                    <label>W-Messwerte (zur Information)</label>
+                                    <tooltip>W-Messwerte (zur Information)</tooltip>
+                                    <description>W-Messwerte (zur Information)</description>
+                                </documentation>
+                            </annotation>
+                        </element>
+                        <element name="ganglinie_vorhersage_cz" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0">
+                            <annotation>
+                                <documentation xml:lang="de">
+                                    <name>(tschechische) Vorhersagewerte</name>
+                                    <label>(tschechische) Vorhersagewerte</label>
+                                    <tooltip>(tschechische) Vorhersagewerte</tooltip>
+                                    <description>(tschechische) Vorhersagewerte</description>
+                                </documentation>
+                            </annotation>
+                        </element>
                         <element name="accuracyPrediction" type="double" minOccurs="0">
                             <annotation>
                                 <documentation xml:lang="de">

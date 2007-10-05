@@ -22,8 +22,11 @@ ToDo: Help-Ids setzen!!! -->
 		<!--  -->
 		<arg name="mainSash" value="40"/>
 		<arg name="rightSash" value="50"/>
+		<!-- sortierte Pegel-Tabelle (nach PKZ) -->
+		<arg name="zmlTableShow" value="template"/>
+		<arg name="zmlTableAlphaSort" value="false"/>
+		<arg name="zmlTableTemplate" value=".templates/calcCase/wiz01a_sortiertePegelUstiDresden.ott"/>
 		<!--  -->
-		<arg name="zmlTableShow" value="all"/>
 		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname%#linkColumn=ganglinie_messwerte"/>
 		<!--  -->
 		<arg name="ignoreType1" value="Q"/>
@@ -78,8 +81,11 @@ ToDo: Help-Ids setzen!!! -->
 		<arg name="mainSash" value="40"/>
 		<arg name="rightSash" value="50"/>
 		<!--  -->
-		<arg name="zmlTableShow" value="all"/>
 		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname%#linkColumn=ganglinie_messwerte"/>
+		<!-- sortierte Pegel-Tabelle (nach PKZ) -->
+		<arg name="zmlTableShow" value="template"/>
+		<arg name="zmlTableAlphaSort" value="false"/>
+		<arg name="zmlTableTemplate" value=".templates/calcCase/wiz01b_sortiertePegelDresdenTorgau.ott"/>
 		<!--  -->
 		<arg name="ignoreType1" value="Q"/>
 		<arg name="ignoreType2" value="W"/>
@@ -139,7 +145,10 @@ ToDo: Help-Ids setzen!!! -->
 		<arg name="maximizeMap" value="true"/>
 		<arg name="mapWidgetID" value="SELECT"/>
 		<!--  -->
-		<arg name="zmlTableShow" value="all"/>
+		<!-- sortierte Zwischengebiets-Tabelle (entlang der Elbe) -->
+		<arg name="zmlTableShow" value="template"/>
+		<arg name="zmlTableAlphaSort" value="false"/>
+		<arg name="zmlTableTemplate" value=".templates/calcCase/wiz04_sortierteZwischengebiete.ott"/>
 		<!-- 
 			Diagramm -->
 		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname%#linkColumn=ganglinie_gesamt"/>

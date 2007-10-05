@@ -2276,9 +2276,6 @@
       <ganglinie_modellwerte_oben>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/Pegel/Usti_oben.zml"/>
       </ganglinie_modellwerte_oben>
-      <ganglinie_messwerte_w>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Pegel/Usti_W.zml"/>
-      </ganglinie_messwerte_w>
       <ganglinie_vorhersage_cz>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Pegel/Vorhersage_Cz/Usti.zml"/>
       </ganglinie_vorhersage_cz>

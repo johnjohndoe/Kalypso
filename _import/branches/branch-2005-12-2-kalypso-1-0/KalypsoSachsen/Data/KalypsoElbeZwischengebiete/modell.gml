@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ZwgModell fid="root" xmlns:commons="org.kalypso.zwg.commons" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="org.kalypso.zwg.modell" xmlns:obslink="obslink.zml.kalypso.org" xmlns:gml="http://www.opengis.net/gml" xsi:schemaLocation="org.kalypso.zwg.modell modell.xsd">
+<ZwgModell fid="root" xmlns:commons="org.kalypso.zwg.commons" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="org.kalypso.zwg.modell"
+  xmlns:obslink="obslink.zml.kalypso.org" xmlns:gml="http://www.opengis.net/gml" xsi:schemaLocation="org.kalypso.zwg.modell modell.xsd">
   <name>Zwischengebiets-Modell</name>
   <description>Zwischengebiets-Modell der Oberen Elbe</description>
   <zwgZuflussPegelMember>
@@ -18,40 +19,6 @@
       <ganglinie_gesamt>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Zwischengebiete/UstiDresden.zml"/>
       </ganglinie_gesamt>
-      <zuflussPegelMember>
-        <ZuflussPegel fid="Dohna">
-          <lage>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5419590.0,5647130.0</gml:coordinates>
-            </gml:Point>
-          </lage>
-          <name>Dohna</name>
-          <description/>
-          <id>550940</id>
-          <river>Müglitz</river>
-          <istSummand>true</istSummand>
-          <ganglinie_messwerte>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Zuflusspegel/Dohna.zml"/>
-          </ganglinie_messwerte>
-        </ZuflussPegel>
-      </zuflussPegelMember>
-      <zuflussPegelMember>
-        <ZuflussPegel fid="Kreischa">
-          <lage>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5413410.0,5646030.0</gml:coordinates>
-            </gml:Point>
-          </lage>
-          <name>Kreischa</name>
-          <description/>
-          <id>551000</id>
-          <river>Lockwitzbach</river>
-          <istSummand>true</istSummand>
-          <ganglinie_messwerte>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Zuflusspegel/Kreischa.zml"/>
-          </ganglinie_messwerte>
-        </ZuflussPegel>
-      </zuflussPegelMember>
       <zuflussPegelMember>
         <ZuflussPegel fid="Kirnitzschtal">
           <lage>
@@ -121,23 +88,6 @@
         </ZuflussPegel>
       </zuflussPegelMember>
       <zuflussPegelMember>
-        <ZuflussPegel fid="Elbersdorf">
-          <lage>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5429540.0,5654580.0</gml:coordinates>
-            </gml:Point>
-          </lage>
-          <name>Elbersdorf</name>
-          <description/>
-          <id>550810</id>
-          <river>Wesenitz</river>
-          <istSummand>true</istSummand>
-          <ganglinie_messwerte>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Zuflusspegel/Elbersdorf.zml"/>
-          </ganglinie_messwerte>
-        </ZuflussPegel>
-      </zuflussPegelMember>
-      <zuflussPegelMember>
         <ZuflussPegel fid="Neundorf">
           <lage>
             <gml:Point srsName="EPSG:31469">
@@ -168,6 +118,57 @@
           <istSummand>true</istSummand>
           <ganglinie_messwerte>
             <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Zuflusspegel/Liebstadt_2.zml"/>
+          </ganglinie_messwerte>
+        </ZuflussPegel>
+      </zuflussPegelMember>
+      <zuflussPegelMember>
+        <ZuflussPegel fid="Elbersdorf">
+          <lage>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">5429540.0,5654580.0</gml:coordinates>
+            </gml:Point>
+          </lage>
+          <name>Elbersdorf</name>
+          <description/>
+          <id>550810</id>
+          <river>Wesenitz</river>
+          <istSummand>true</istSummand>
+          <ganglinie_messwerte>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Zuflusspegel/Elbersdorf.zml"/>
+          </ganglinie_messwerte>
+        </ZuflussPegel>
+      </zuflussPegelMember>
+      <zuflussPegelMember>
+        <ZuflussPegel fid="Dohna">
+          <lage>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">5419590.0,5647130.0</gml:coordinates>
+            </gml:Point>
+          </lage>
+          <name>Dohna</name>
+          <description/>
+          <id>550940</id>
+          <river>Müglitz</river>
+          <istSummand>true</istSummand>
+          <ganglinie_messwerte>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Zuflusspegel/Dohna.zml"/>
+          </ganglinie_messwerte>
+        </ZuflussPegel>
+      </zuflussPegelMember>
+      <zuflussPegelMember>
+        <ZuflussPegel fid="Kreischa">
+          <lage>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">5413410.0,5646030.0</gml:coordinates>
+            </gml:Point>
+          </lage>
+          <name>Kreischa</name>
+          <description/>
+          <id>551000</id>
+          <river>Lockwitzbach</river>
+          <istSummand>true</istSummand>
+          <ganglinie_messwerte>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Zuflusspegel/Kreischa.zml"/>
           </ganglinie_messwerte>
         </ZuflussPegel>
       </zuflussPegelMember>
@@ -207,19 +208,36 @@
         </ZuflussPegel>
       </zuflussPegelMember>
       <zuflussPegelMember>
-        <ZuflussPegel fid="Merzdorf">
+        <ZuflussPegel fid="Wilsdruff">
           <lage>
             <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5378332.877219608,5688129.233329983</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5397780.0,5658390.0</gml:coordinates>
             </gml:Point>
           </lage>
-          <name>Merzdorf</name>
+          <name>Wilsdruff</name>
           <description/>
-          <id>552210</id>
-          <river>Döllnitz</river>
+          <id>551600</id>
+          <river>Wilde Sau</river>
           <istSummand>true</istSummand>
           <ganglinie_messwerte>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Zuflusspegel/Merzdorf.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Zuflusspegel/Wilsdruff.zml"/>
+          </ganglinie_messwerte>
+        </ZuflussPegel>
+      </zuflussPegelMember>
+      <zuflussPegelMember>
+        <ZuflussPegel fid="Garsebach">
+          <lage>
+            <gml:Point srsName="EPSG:31469">
+              <gml:coordinates cs="," decimal="." ts=" ">5390350.0,5666830.0</gml:coordinates>
+            </gml:Point>
+          </lage>
+          <name>Garsebach</name>
+          <description/>
+          <id>551820</id>
+          <river>Triebisch</river>
+          <istSummand>true</istSummand>
+          <ganglinie_messwerte>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Zuflusspegel/Garsebach.zml"/>
           </ganglinie_messwerte>
         </ZuflussPegel>
       </zuflussPegelMember>
@@ -258,36 +276,19 @@
         </ZuflussPegel>
       </zuflussPegelMember>
       <zuflussPegelMember>
-        <ZuflussPegel fid="Garsebach">
+        <ZuflussPegel fid="Merzdorf">
           <lage>
             <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5390350.0,5666830.0</gml:coordinates>
+              <gml:coordinates cs="," decimal="." ts=" ">5378332.877219608,5688129.233329983</gml:coordinates>
             </gml:Point>
           </lage>
-          <name>Garsebach</name>
+          <name>Merzdorf</name>
           <description/>
-          <id>551820</id>
-          <river>Triebisch</river>
+          <id>552210</id>
+          <river>Döllnitz</river>
           <istSummand>true</istSummand>
           <ganglinie_messwerte>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Zuflusspegel/Garsebach.zml"/>
-          </ganglinie_messwerte>
-        </ZuflussPegel>
-      </zuflussPegelMember>
-      <zuflussPegelMember>
-        <ZuflussPegel fid="Wilsdruff">
-          <lage>
-            <gml:Point srsName="EPSG:31469">
-              <gml:coordinates cs="," decimal="." ts=" ">5397780.0,5658390.0</gml:coordinates>
-            </gml:Point>
-          </lage>
-          <name>Wilsdruff</name>
-          <description/>
-          <id>551600</id>
-          <river>Wilde Sau</river>
-          <istSummand>true</istSummand>
-          <ganglinie_messwerte>
-            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Zuflusspegel/Wilsdruff.zml"/>
+            <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Zuflusspegel/Merzdorf.zml"/>
           </ganglinie_messwerte>
         </ZuflussPegel>
       </zuflussPegelMember>

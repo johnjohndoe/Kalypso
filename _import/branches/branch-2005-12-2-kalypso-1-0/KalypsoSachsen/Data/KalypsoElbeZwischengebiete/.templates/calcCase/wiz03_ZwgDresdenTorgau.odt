@@ -7,13 +7,8 @@
     <axis datatype="date" direction="horizontal" id="date" inverted="false" label="Datum" position="bottom" unit=""/>
     <axis datatype="double" direction="vertical" id="Q" inverted="false" label="Abfluss" position="left" unit="m³/s"/>
     
-    <!-- Zwischengebiet Dresden / Torgau-->
-    <observation linktype="zml" xlink:href="Zeitreihen/Zwischengebiete/DresdenTorgau.zml">
-        <curve color="148;19;190" id="C1" name="ZWG Dresden / Torgau" shown="true">
-            <mapping diagram-axis="date" observation-axis="Datum"/>
-            <mapping diagram-axis="Q" observation-axis="Q"/>
-        </curve>
-    </observation>
+    <!-- Ergabnis als letzte Zeitreihe, weil Legende manchmal ein Eigenleben hat... -->
+
     <!-- 
         Cotta
         Garsebach
@@ -22,22 +17,20 @@
         Seerhausen 3
         Wilsdruff
     -->
-    
     <observation linktype="zml" xlink:href="Zeitreihen/Zuflusspegel/Cotta.zml">
         <curve color="0;107;178" id="C2" name="Cotta" shown="true">
             <mapping diagram-axis="date" observation-axis="Datum"/>
             <mapping diagram-axis="Q" observation-axis="Q"/>
         </curve>
     </observation>
-    
-    <observation linktype="zml" xlink:href="Zeitreihen/Zuflusspegel/Garsebach.zml">
-        <curve color="110;187;253" id="C3" name="Garsebach" shown="true">
+    <observation linktype="zml" xlink:href="Zeitreihen/Zuflusspegel/Wilsdruff.zml">
+        <curve color="226;234;17" id="C7" name="Wilsdruff" shown="true">
             <mapping diagram-axis="date" observation-axis="Datum"/>
             <mapping diagram-axis="Q" observation-axis="Q"/>
         </curve>
     </observation>
-    <observation linktype="zml" xlink:href="Zeitreihen/Zuflusspegel/Merzdorf.zml">
-        <curve color="4;225;196" id="C4" name="Merzdorf" shown="true">
+    <observation linktype="zml" xlink:href="Zeitreihen/Zuflusspegel/Garsebach.zml">
+        <curve color="110;187;253" id="C3" name="Garsebach" shown="true">
             <mapping diagram-axis="date" observation-axis="Datum"/>
             <mapping diagram-axis="Q" observation-axis="Q"/>
         </curve>
@@ -54,12 +47,18 @@
             <mapping diagram-axis="Q" observation-axis="Q"/>
         </curve>
     </observation>
-    <observation linktype="zml" xlink:href="Zeitreihen/Zuflusspegel/Wilsdruff.zml">
-        <curve color="226;234;17" id="C7" name="Wilsdruff" shown="true">
+    <observation linktype="zml" xlink:href="Zeitreihen/Zuflusspegel/Merzdorf.zml">
+        <curve color="4;225;196" id="C4" name="Merzdorf" shown="true">
+            <mapping diagram-axis="date" observation-axis="Datum"/>
+            <mapping diagram-axis="Q" observation-axis="Q"/>
+        </curve>
+    </observation>
+    
+    <!-- Zwischengebiet Dresden / Torgau-->
+    <observation linktype="zml" xlink:href="Zeitreihen/Zwischengebiete/DresdenTorgau.zml">
+        <curve color="148;19;190" id="C1" name="ZWG Dresden / Torgau" shown="true">
             <mapping diagram-axis="date" observation-axis="Datum"/>
             <mapping diagram-axis="Q" observation-axis="Q"/>
         </curve>
     </observation>
 </obsdiagview>
-
-

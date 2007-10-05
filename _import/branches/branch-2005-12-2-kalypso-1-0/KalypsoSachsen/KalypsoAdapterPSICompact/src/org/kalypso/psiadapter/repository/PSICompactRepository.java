@@ -63,7 +63,12 @@ public class PSICompactRepository extends AbstractRepository
           parent = (PSICompactItem)nodes.get( nodeID );
         else
         {
-          final PSICompactItem n = new PSICompactItem( parent, path[i], nodeID, info, valueType );
+          // TODO: ugly. Pseudo-items (only generated in order to reflect the path) get the ObjectInfo of their first
+          // real child (and so its meta-data). Better: generate 'pseudo'-object-info with empty meta-data (and no
+          // observation)
+
+          final String name = constructName( path, i );
+          final PSICompactItem n = new PSICompactItem( parent, name, nodeID, info, valueType );
 
           // gleich parent item aktualisieren (wird nicht von der Child gemacht,
           // deswegen hier)
@@ -76,18 +81,15 @@ public class PSICompactRepository extends AbstractRepository
         }
       }
     }
+  }
 
-    // should never happen
-    //    // abnormal case...
-    //    if( parent == null )
-    //      return new PSICompactItem( null, "Keine Struktur in PSICompact...", "<Kein ID>", new PSICompact.ObjectInfo(), 0
-    // );
+  private String constructName( final String[] path, final int i )
+  {
+    // HACK: use path-segment of parent instead of own, if we are a leaf...
+    if( i == 4 )
+      return path[3];
 
-    // create the root parent
-    //    while( parent.getParent() != null )
-    //      parent = (PSICompactItem)parent.getParent();
-
-    //    return parent;
+    return path[i];
   }
 
   /**
@@ -130,21 +132,9 @@ public class PSICompactRepository extends AbstractRepository
       final PSICompactItem rootItem = new PSICompactItem( null, "", "", null, -1 );
       final TreeMap nodes = new TreeMap();
 
-      //      final PSICompactItem nodeMeasurements = buildStructure( nodes, PSICompact.TYPE_MEASUREMENT );
-      //      final PSICompactItem nodeForecasts = buildStructure( nodes, PSICompact.TYPE_VALUE );
       buildStructure( rootItem, nodes, PSICompact.TYPE_MEASUREMENT );
       buildStructure( rootItem, nodes, PSICompact.TYPE_VALUE );
 
-      // this should never happen any more?
-      //      if( nodeMeasurements != nodeForecasts )
-      //      {
-      //        Logger.getLogger( getClass().getName() ).info(
-      //            "PSICompactRepository - Achtung: ungleiche Nodes bei Gemessene und Vorhergesagte." );
-      //
-      //        m_psiRoot = new PSICompactItem( null, "Fehler...", "Fehler", null, 0 );
-      //      }
-      //      else
-      //        m_psiRoot = nodeMeasurements;
       m_psiRoot = rootItem;
 
       fireRepositoryStructureChanged();
