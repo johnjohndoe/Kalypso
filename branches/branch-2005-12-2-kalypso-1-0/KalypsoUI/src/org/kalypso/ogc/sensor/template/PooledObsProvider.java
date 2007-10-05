@@ -72,8 +72,17 @@ public final class PooledObsProvider implements IObsProvider, IPoolListener
 
   public PooledObsProvider( final IPoolableObjectType key, final IRequest args )
   {
+    this( key, args, null );
+  }
+
+  /**
+   * Copy constructor, only used for copying.
+   */
+  private PooledObsProvider( final IPoolableObjectType key, final IRequest args, final IObservation observation )
+  {
     m_args = args;
     m_key = key;
+    m_observation = observation;
 
     m_pool.addPoolListener( this, key );
   }
@@ -81,7 +90,7 @@ public final class PooledObsProvider implements IObsProvider, IPoolListener
   public void dispose()
   {
     m_isDisposed = true;
-    
+
     m_pool.removePoolListener( this );
   }
 
@@ -161,7 +170,7 @@ public final class PooledObsProvider implements IObsProvider, IPoolListener
    */
   public IObsProvider copy()
   {
-    return new PooledObsProvider( m_key, m_args );
+    return new PooledObsProvider( m_key, m_args, m_observation );
   }
 
   /**

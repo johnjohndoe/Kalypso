@@ -56,6 +56,10 @@ public class GrafikAchsen
   /** maps diag-axis-id to grafik-axis (only for vertical axes) */
   private final Map m_name2grafikAxis = new HashMap();
 
+  private final Map m_id2axisnr = new HashMap();
+
+  private int m_axisIdCounter = 0;
+  
   private String m_leftLabel = "";
 
   private String m_rightLabel = "";
@@ -70,31 +74,47 @@ public class GrafikAchsen
 
       if( ta.getDirection().equals( DiagramAxis.DIRECTION_VERTICAL ) )
       {
-        GrafikAchse gAchse = null;
-
         final String name = ta.getLabel() + " [" + ta.getUnit() + "]";
 
-        if( !ta.isInverted() ) // Niederschlagsachse ist immer invertiert, und wie nehmen hier nicht
+        final int axisnr = axisnrByType( ta );
+        m_id2axisnr.put( ta.getDatatype(), new Integer( axisnr ) );
+
+        switch( axisnr )
         {
-          if( ta.getPosition().equals( DiagramAxis.POSITION_LEFT ) )
-          {
-            gAchse = new GrafikAchse( 1, name );
-            m_leftLabel = name;
-          }
-          else if( ta.getPosition().equals( DiagramAxis.POSITION_RIGHT ) )
-          {
-            gAchse = new GrafikAchse( 2, name );
-            m_rightLabel = name;
-          }
+        case 1:
+          m_leftLabel = name;
+          break;
+        case 2:
+          m_rightLabel = name;
+          break;
         }
-        else
-          gAchse = new GrafikAchse( 3, name );
+
+        final GrafikAchse gAchse = new GrafikAchse( axisnr, name );
 
         m_name2grafikAxis.put( ta.getId(), gAchse );
       }
       else if( ta.getDirection().equals( DiagramAxis.DIRECTION_HORIZONTAL ) )
         m_bottomLabel = ta.getLabel();
     }
+  }
+
+  private int axisnrByType( final TypeAxis ta )
+  {
+    final String axisId = ta.getId();
+
+    if( m_id2axisnr.containsKey( axisId ) )
+      return ( (Integer)m_id2axisnr.get( axisId ) ).intValue();
+
+    if( !ta.isInverted() ) // Niederschlagsachse ist immer invertiert, und wie nehmen hier nicht
+    {
+      final int axisnr = m_axisIdCounter % 2 + 1; 
+      
+       m_axisIdCounter++;
+      
+      return axisnr;
+    }
+
+    return 3;
   }
 
   public String getBottomLabel()

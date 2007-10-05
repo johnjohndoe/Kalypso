@@ -54,6 +54,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.util.pool.IPoolableObjectType;
@@ -95,7 +96,10 @@ public abstract class ObsView implements IObsViewEventProvider
 
   private final Set m_enabledFeatures = new HashSet();
 
-  /** If set, each add of an observation of one of these types is ignored (no items are added for this observation in this view) */
+  /**
+   * If set, each add of an observation of one of these types is ignored (no items are added for this observation in
+   * this view)
+   */
   private String[] m_ignoreTypes = new String[] {};
 
   /** If set, the concerned items are not displayed. Note: this is not to be confused with ignoreTypes */
@@ -116,8 +120,8 @@ public abstract class ObsView implements IObsViewEventProvider
   }
 
   /**
-   * This method must be called before items are added. If items were already 
-   * present in this view, it has no impact on them.
+   * This method must be called before items are added. If items were already present in this view, it has no impact on
+   * them.
    * 
    * @param ignoreTypes
    *          if null a default empty array is used
@@ -141,7 +145,7 @@ public abstract class ObsView implements IObsViewEventProvider
    * @see java.lang.Object#toString()
    */
   public abstract String toString();
-  
+
   /**
    * Print the document
    */
@@ -250,7 +254,7 @@ public abstract class ObsView implements IObsViewEventProvider
       m_listeners.add( l );
     }
   }
-  
+
   public void removeObsViewListener( final IObsViewEventListener l )
   {
     synchronized( m_listeners )
@@ -268,7 +272,7 @@ public abstract class ObsView implements IObsViewEventProvider
         ( (IObsViewEventListener)listeners[i] ).onObsViewChanged( evt );
     }
   }
-  
+
   protected void firePrintObsView( final ObsViewEvent evt )
   {
     synchronized( m_listeners )
@@ -289,22 +293,39 @@ public abstract class ObsView implements IObsViewEventProvider
   }
 
   /**
-   * Loads an observation, if synchro is true, the load is performed synchronuously.
+   * Loads an observation, if synchron is true, the load is performed synchronuously.
    */
   public IStatus loadObservation( final URL context, final String href, final boolean ignoreExceptions,
       final String tokenizedName, final ItemData data, final boolean synchron )
   {
     final PoolableObjectType k = new PoolableObjectType( "zml", href, context, ignoreExceptions );
 
+    final Boolean isSynchron = Boolean.valueOf( synchron );
+
     final PoolableObjectWaiter waiter = new PoolableObjectWaiter( k, new Object[]
-    { this, data, tokenizedName }, synchron )
+    {
+        this,
+        data,
+        tokenizedName,
+        isSynchron }, synchron )
     {
       protected void objectLoaded( final IPoolableObjectType key, final Object newValue )
       {
-        final IObsProvider provider = new PooledObsProvider( key, null );
+        final PooledObsProvider provider = new PooledObsProvider( key, null );
+
         try
         {
+          final boolean isSync = ( (Boolean)m_data[3] ).booleanValue();
+          if( isSync )
+          {
+            provider.objectLoaded( key, newValue, Status.OK_STATUS );
+          }
+
           ( (ObsView)m_data[0] ).addObservation( provider, (String)m_data[2], (ObsView.ItemData)m_data[1] );
+        }
+        catch( final Throwable t )
+        {
+          t.printStackTrace();
         }
         finally
         {
@@ -386,7 +407,8 @@ public abstract class ObsView implements IObsViewEventProvider
    * Hide items which are displaying an observation which axis is of the given type. This method is the pendant to
    * setIgnoreType, but in contrario to the former, it only hides the items in the ui (it does not remove it).
    * 
-   * @param types list of types that should be hidden
+   * @param types
+   *          list of types that should be hidden
    */
   public void hideTypes( final List types )
   {
@@ -399,9 +421,9 @@ public abstract class ObsView implements IObsViewEventProvider
     for( int i = 0; i < items.length; i++ )
       items[i].setShown( !items[i].shouldBeHidden( m_hiddenTypes ) );
   }
-  
+
   /**
-   * @return the list of hidden types 
+   * @return the list of hidden types
    */
   public List getHiddenTypes()
   {
