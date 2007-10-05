@@ -1159,6 +1159,41 @@
               <f>0.0</f>
             </StufenParamSet>
           </stufenParamSetMember>
+          <stufenParamSetMember>
+            <StufenParamSet fid="Strecke5-params-1-paramSet-2">
+              <tl>12</tl>
+              <a1>-1.11593</a1>
+              <a2>0.32109</a2>
+              
+              <bMember>
+                <B fid="Strecke5-params-1-paramSet-2-bMember-0">
+                  <b>0.0</b>
+                </B>
+              </bMember>
+              <bMember>
+                <B fid="Strecke5-params-1-paramSet-2-bMember-1">
+                  <b>0.00331</b>
+                </B>
+              </bMember>
+              <bMember>
+                <B fid="Strecke5-params-1-paramSet-2-bMember-2">
+                  <b>0.07193</b>
+                </B>
+              </bMember>
+              <bMember>
+                <B fid="Strecke5-params-1-paramSet-2-bMember-3">
+                  <b>0.10204</b>
+                </B>
+              </bMember>
+              
+              <bMember>
+                <B fid="Strecke5-params-1-paramSet-2-bMember-4">
+                  <b>0.02789</b>
+                </B>
+              </bMember>
+              <f>4.20000</f>
+            </StufenParamSet>
+          </stufenParamSetMember>
         </ParamSet>
       </paramSetMember>
       <paramSetMember>
