@@ -40,6 +40,7 @@ import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.io.shpapi.DBaseFile;
 import org.kalypsodeegree_impl.io.shpapi.FieldDescriptor;
+import org.kalypsodeegree_impl.io.shpapi.StandardShapeDataProvider;
 
 /**
  * Diese Klasse sammelt alles, was mit dem Erzeugen der Nativen Daten aus den Eingabedaten zu tun hat.
@@ -374,8 +375,8 @@ public class SpreeInputWorker
         throw new SimulationException( "Eingabedatei für Rechenmodell konnte nicht erzeugt werden. Layer nicht gefunden: " + layerName, null );
 
       final Feature[] features = workspace.getFeatures( featureType );
-
-      ShapeSerializer.serializeFeatures( features, mapping, geoName, filenameBase );
+      final StandardShapeDataProvider shapeDataProvider = new StandardShapeDataProvider( features );
+      ShapeSerializer.serializeFeatures( features, mapping, geoName, filenameBase, shapeDataProvider );
     }
     catch( final GmlSerializeException e )
     {
