@@ -26,24 +26,6 @@
         <column axis="W" editable="true" id="c2" name="Merzdorf [%axisunit%]" width="50"/>
     </observation>
     <alphaSort>false</alphaSort>
-    <!--  -->
     <rules>
-        <renderingrule mask="2">
-            <tooltip>Wert auf Gültigkeit prüfen</tooltip>
-        </renderingrule>
-        <renderingrule mask="4">
-            <tooltip>Eingabe erforderlich</tooltip>
-        </renderingrule>
-        <renderingrule mask="8">
-            <tooltip>Vom Benutzer geändert</tooltip>
-        </renderingrule>
-        <renderingrule mask="32">
-            <backgroundcolor>248;243;192</backgroundcolor>
-            <tooltip>Wert wurde abgeleitet</tooltip>
-        </renderingrule>
-        <renderingrule mask="16">
-            <backgroundcolor>248;243;192</backgroundcolor>
-            <tooltip>Wert konnte nicht abgeleitet werden</tooltip>
-        </renderingrule>
     </rules>
 </obstableview>

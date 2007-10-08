@@ -2,6 +2,7 @@
 <obsdiagview xmlns="obsdiagview.template.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink">
 	<title>Elbe-Längsschnitt (Abfluss)</title>
 	<legend title="" visible="true"/>
+	<features>Vorhersage</features>
 	<axis id="D" datatype="date" label="Datum" unit="" direction="horizontal" position="bottom"/>
 	<axis id="Q" datatype="double" label="Abfluss" unit="m³/s" direction="vertical" position="left"/>
 	<!-- Kodierung color:
