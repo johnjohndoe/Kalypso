@@ -52,14 +52,14 @@ import com.vividsolutions.jts.geom.Coordinate;
  */
 public class MinMaxRasterWalker implements DoubleRasterWalker
 {
-  private double m_min = Double.POSITIVE_INFINITY;
+  protected double m_min = Double.POSITIVE_INFINITY;
 
-  private double m_max = Double.NEGATIVE_INFINITY;
+  protected double m_max = Double.NEGATIVE_INFINITY;
 
   /**
    * @see org.kalypso.gis.doubleraster.DoubleRasterWalker#afterLine(int)
    */
-  public void afterLine( int y )
+  public void afterLine( final int y )
   {
   }
 
