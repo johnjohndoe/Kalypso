@@ -131,6 +131,9 @@ public class KalypsoCascadingThemeSelection extends AbstractFeatureSelection
    */
   public CommandableWorkspace getWorkspace( final Feature feature )
   {
+    if( feature == null )
+      return null;
+
     final GMLWorkspace workspace = feature.getWorkspace();
     if( workspace == null )
       throw (new IllegalStateException( "workspace can't be null" ));
