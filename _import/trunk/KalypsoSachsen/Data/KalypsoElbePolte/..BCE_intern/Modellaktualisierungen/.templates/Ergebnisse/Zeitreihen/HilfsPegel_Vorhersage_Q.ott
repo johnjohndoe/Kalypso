@@ -31,4 +31,4 @@
         <column axis="Q" editable="true" format="%.3f" id="c3" name="Q - Litomerice Ohre - Vorhersage - Spur oben [m³/s]" width="50"/>
     </observation>
     <alphaSort>false</alphaSort>
-    <rules> </rules> </obstableview>
+    </obstableview>

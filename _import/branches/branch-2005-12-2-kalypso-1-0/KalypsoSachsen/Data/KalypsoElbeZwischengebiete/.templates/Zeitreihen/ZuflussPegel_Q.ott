@@ -47,5 +47,4 @@
         <column axis="Q" editable="true" id="c35" name="Q - Wilsdruff [m³/s]" width="50"/>
     </observation>
     <alphaSort>false</alphaSort>
-    <rules> </rules>
 </obstableview>

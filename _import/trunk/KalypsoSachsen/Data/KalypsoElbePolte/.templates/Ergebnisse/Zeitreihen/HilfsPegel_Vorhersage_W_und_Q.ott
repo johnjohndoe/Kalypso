@@ -40,5 +40,4 @@
         <column axis="W" editable="true" id="c13" name="W - Litomerice Ohre - Vorhersage - Spur oben [cm]" width="50"/>
     </observation>
     <alphaSort>false</alphaSort>
-    <rules> </rules>
 </obstableview>

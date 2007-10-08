@@ -26,6 +26,4 @@
         <column axis="W" editable="true" id="c2" name="Merzdorf [%axisunit%]" width="50"/>
     </observation>
     <alphaSort>false</alphaSort>
-    <rules>
-    </rules>
 </obstableview>

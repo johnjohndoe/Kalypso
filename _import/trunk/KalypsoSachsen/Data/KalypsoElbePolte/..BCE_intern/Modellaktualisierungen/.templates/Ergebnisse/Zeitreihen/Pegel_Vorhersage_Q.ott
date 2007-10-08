@@ -61,5 +61,4 @@
         <column axis="Q" editable="true" format="%.3f" id="c9" name="Q - Riesa - Vorhersage - Spur oben [m³/s]" width="50"/>
     </observation>
     <alphaSort>false</alphaSort>
-    <rules> </rules>
 </obstableview>

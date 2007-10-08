@@ -29,5 +29,4 @@
         <column axis="W" editable="true" id="c19" name="W - Riesa [cm]" width="50"/>
     </observation>
     <alphaSort>false</alphaSort>
-    <rules> </rules>
 </obstableview>

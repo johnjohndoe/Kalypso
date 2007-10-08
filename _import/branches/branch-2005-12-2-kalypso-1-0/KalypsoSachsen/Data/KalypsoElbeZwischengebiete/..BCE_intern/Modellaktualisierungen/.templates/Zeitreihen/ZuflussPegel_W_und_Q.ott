@@ -62,5 +62,4 @@
         <column axis="W" editable="true" id="c41" name="W - Wilsdruff [cm]" width="50"/>
     </observation>
     <alphaSort>false</alphaSort>
-    <rules> </rules>
 </obstableview>

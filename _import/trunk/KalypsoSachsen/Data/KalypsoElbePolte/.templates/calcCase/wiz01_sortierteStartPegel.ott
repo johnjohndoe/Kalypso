@@ -12,6 +12,4 @@
         <column axis="Q" editable="true" id="c1" name="Louny [%axisunit%]" width="50"/>
     </observation>
     <alphaSort>false</alphaSort>
-     <rules>
-    </rules>
 </obstableview>

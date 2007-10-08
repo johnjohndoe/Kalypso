@@ -8,6 +8,5 @@
         <column axis="Q" editable="true" format="%.3f" id="c3" name="Q - Dresden / Torgau  [m³/s]" width="50"/>
     </observation>
     <alphaSort>false</alphaSort>
-    <rules/>
 </obstableview>
 
