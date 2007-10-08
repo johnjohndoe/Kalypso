@@ -56,10 +56,10 @@ public class OptimizeCalcResultEater extends HashMap<String, File> implements IS
   }
 
   /**
-   * @see org.kalypso.services.calculation.job.ICalcResultEater#addResult(java.lang.String, java.io.File)
+   * @see org.kalypso.simulation.core.ISimulationResultEater#addResult(java.lang.String, java.lang.Object)
    */
-  public void addResult( String id, File file )
+  public void addResult( String id, Object result )
   {
-    put( id, file );
+    put( id, (File) result );
   }
 }

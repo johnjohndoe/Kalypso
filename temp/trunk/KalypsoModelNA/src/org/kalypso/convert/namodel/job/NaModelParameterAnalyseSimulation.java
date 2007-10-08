@@ -217,13 +217,13 @@ public class NaModelParameterAnalyseSimulation implements ISimulation
     final NaModelInnerCalcJob job = new NaModelInnerCalcJob();
     final ISimulationResultEater resultEater = new ISimulationResultEater()
     {
-      public void addResult( String id, File file )
+      public void addResult( String id, Object result )
       {
         if( id.equals( NaModelConstants.OUT_ZML ) )
         {
           m_partResult = true;
           System.out.println( "irgendwo hinkopieren" );
-          final File fromDir = file;
+          final File fromDir = (File) result;
           final File toDir = new File( m_analyseResultDir, key );
           toDir.mkdirs();
           final FileCopyVisitor copyVisitor = new FileCopyVisitor( fromDir, toDir, true );
