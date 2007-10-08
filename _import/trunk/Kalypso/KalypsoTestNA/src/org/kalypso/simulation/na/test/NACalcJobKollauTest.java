@@ -54,10 +54,9 @@ import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
 
-
 public class NACalcJobKollauTest extends TestCase
 {
-  public void testKollau() throws SimulationException
+  public void testKollau( ) throws SimulationException
   {
     try
     {
@@ -70,14 +69,14 @@ public class NACalcJobKollauTest extends TestCase
     }
   }
 
-  private File getTmpDir()
+  private File getTmpDir( )
   {
     File file = FileUtilities.createNewTempDir( "NA_TEST", new File( "C:\\tmp" ) );
     file.mkdirs();
     return file;
   }
 
-  public void weisseElster() throws SimulationException
+  public void weisseElster( ) throws SimulationException
   {
     final File tmp = getTmpDir();
 
@@ -109,7 +108,7 @@ public class NACalcJobKollauTest extends TestCase
       public void dispose( )
       {
         // TODO Auto-generated method stub
-        
+
       }
     };
 
@@ -120,7 +119,7 @@ public class NACalcJobKollauTest extends TestCase
     assertTrue( job.isSucceeded() );
   }
 
-  public void weisseElsterOptimize() throws SimulationException
+  public void weisseElsterOptimize( ) throws SimulationException
   {
     final File tmp = getTmpDir();
 
@@ -154,7 +153,7 @@ public class NACalcJobKollauTest extends TestCase
       public void dispose( )
       {
         // TODO Auto-generated method stub
-        
+
       }
     };
 
@@ -164,7 +163,7 @@ public class NACalcJobKollauTest extends TestCase
     job.run( tmp, dataProvider, resultEater, monitor );
   }
 
-  public void kollau() throws SimulationException
+  public void kollau( ) throws SimulationException
   {
     final File tmp = getTmpDir();
     System.out.println( "Berechnungsverzeichnis: " + tmp.getPath() );
@@ -182,8 +181,8 @@ public class NACalcJobKollauTest extends TestCase
         if( NaModelConstants.IN_MODELL_ID.equals( id ) )
           return clazz.getResource( "kollau/calcCase_kollau.gml" );
         // 
-        //        if( NaModelConstants.IN_MODELL_ID.equals( id ) )
-        //          return clazz.getResource( "kollau/calcCase_cycle.gml" );
+        // if( NaModelConstants.IN_MODELL_ID.equals( id ) )
+        // return clazz.getResource( "kollau/calcCase_cycle.gml" );
         if( NaModelConstants.IN_META_ID.equals( id ) )
           return clazz.getResource( "kollau/.calculation" );
         return null;
@@ -200,7 +199,7 @@ public class NACalcJobKollauTest extends TestCase
       public void dispose( )
       {
         // TODO Auto-generated method stub
-        
+
       }
     };
 
@@ -211,7 +210,7 @@ public class NACalcJobKollauTest extends TestCase
     assertTrue( job.isSucceeded() );
   }
 
-  public void kollauOptimize() throws SimulationException
+  public void kollauOptimize( ) throws SimulationException
   {
 
     final NaModelCalcJob job = new NaModelCalcJob();
@@ -247,7 +246,7 @@ public class NACalcJobKollauTest extends TestCase
       public void dispose( )
       {
         // TODO Auto-generated method stub
-        
+
       }
     };
 
@@ -257,37 +256,36 @@ public class NACalcJobKollauTest extends TestCase
     job.run( tmp, dataProvider, resultEater, monitor );
   }
 
-  private ISimulationResultEater createResultEater()
+  private ISimulationResultEater createResultEater( )
   {
     return new ISimulationResultEater()
     {
       /**
-       * @see org.kalypso.services.calculation.job.ICalcResultEater#addResult(java.lang.String,
-       *      java.io.File)
+       * @see org.kalypso.simulation.core.ISimulationResultEater#addResult(java.lang.String, java.lang.Object)
        */
-      public void addResult( String id, File file )
+      public void addResult( String id, Object result )
       {
-        System.out.println( "ID" + id + " File:" + file.getAbsolutePath() );
+        System.out.println( "ID" + id + " File:" + ((File) result).getAbsolutePath() );
       }
     };
   }
 
-  private ISimulationMonitor createMonitor()
+  private ISimulationMonitor createMonitor( )
   {
     return new ISimulationMonitor()
     {
       /**
        * @see org.kalypso.services.calculation.job.ICalcMonitor#cancel()
        */
-      public void cancel()
+      public void cancel( )
       {
-      //  
+        //  
       }
 
       /**
        * @see org.kalypso.services.calculation.job.ICalcMonitor#isCanceled()
        */
-      public boolean isCanceled()
+      public boolean isCanceled( )
       {
         return false;
       }
@@ -297,13 +295,13 @@ public class NACalcJobKollauTest extends TestCase
        */
       public void setProgress( int progress )
       {
-      //
+        //
       }
 
       /**
        * @see org.kalypso.services.calculation.job.ICalcMonitor#getProgress()
        */
-      public int getProgress()
+      public int getProgress( )
       {
         return 0;
       }
@@ -311,7 +309,7 @@ public class NACalcJobKollauTest extends TestCase
       /**
        * @see org.kalypso.services.calculation.job.ICalcMonitor#getMessage()
        */
-      public String getMessage()
+      public String getMessage( )
       {
         return null;
       }
@@ -326,17 +324,17 @@ public class NACalcJobKollauTest extends TestCase
 
       public void setFinishInfo( int status, String text )
       {
-      // TODO Auto-generated method stub
+        // TODO Auto-generated method stub
 
       }
 
-      public String getFinishText()
+      public String getFinishText( )
       {
         // TODO Auto-generated method stub
         return null;
       }
 
-      public int getFinishStatus()
+      public int getFinishStatus( )
       {
         // TODO Auto-generated method stub
         return 0;

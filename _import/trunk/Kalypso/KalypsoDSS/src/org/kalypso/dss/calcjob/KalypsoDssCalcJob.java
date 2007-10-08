@@ -205,11 +205,11 @@ public class KalypsoDssCalcJob implements ISimulation
         dssResultDirRun.mkdirs();
         final ISimulationResultEater naJobResultEater = new ISimulationResultEater()
         {
-          public void addResult( final String id, final File file )
+          public void addResult( final String id, final Object result )
           {
             if( id.equals( NaModelConstants.OUT_ZML ) )
             {
-              final File rrmResultDir = file;
+              final File rrmResultDir = (File) result;
               // try
               // {
 
@@ -448,9 +448,9 @@ public class KalypsoDssCalcJob implements ISimulation
    * Visits all features in the workspace and sets the <genereateResults/> property.
    * 
    * @param modelWorkspace
-   *          the rrm workspace to visit and modify.
+   *            the rrm workspace to visit and modify.
    * @param state
-   *          true to generate results, false otherwise.
+   *            true to generate results, false otherwise.
    */
 
   private void setAllResultFlags( final GMLWorkspace modelWorkspace, final boolean state )

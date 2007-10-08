@@ -181,11 +181,11 @@ public class DssCalcJobTest extends TestCase
     return new ISimulationResultEater()
     {
       /**
-       * @see org.kalypso.services.calculation.job.ICalcResultEater#addResult(java.lang.String, java.io.File)
+       * @see org.kalypso.simulation.core.ISimulationResultEater#addResult(java.lang.String, java.lang.Object)
        */
-      public void addResult( final String id, final File file )
+      public void addResult( final String id, final Object result )
       {
-        System.out.println( "ID" + id + " File:" + file.getAbsolutePath() );
+        System.out.println( "ID" + id + " File:" + ((File) result).getAbsolutePath() );
       }
     };
   }

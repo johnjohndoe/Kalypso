@@ -36,7 +36,6 @@ import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.ISimulationResultEater;
 
 /**
- * 
  * TODO: insert type comment here
  * 
  * @author doemming
@@ -44,36 +43,36 @@ import org.kalypso.simulation.core.ISimulationResultEater;
 public class CalcJobTestUtilis
 {
 
-  public static ISimulationResultEater createResultEater()
+  public static ISimulationResultEater createResultEater( )
   {
     return new ISimulationResultEater()
     {
       /**
-       * @see org.kalypso.services.calculation.job.ICalcResultEater#addResult(java.lang.String, java.io.File)
+       * @see org.kalypso.simulation.core.ISimulationResultEater#addResult(java.lang.String, java.lang.Object)
        */
-      public void addResult( String id, File file )
+      public void addResult( String id, Object result )
       {
-        System.out.println( "ID" + id + " File:" + file.getAbsolutePath() );
+        System.out.println( "ID" + id + " File:" + ((File) result).getAbsolutePath() );
       }
     };
   }
 
-  public static ISimulationMonitor createMonitor()
+  public static ISimulationMonitor createMonitor( )
   {
     return new ISimulationMonitor()
     {
       /**
        * @see org.kalypso.services.calculation.job.ICalcMonitor#cancel()
        */
-      public void cancel()
+      public void cancel( )
       {
-      //  
+        //  
       }
 
       /**
        * @see org.kalypso.services.calculation.job.ICalcMonitor#isCanceled()
        */
-      public boolean isCanceled()
+      public boolean isCanceled( )
       {
         return false;
       }
@@ -83,13 +82,13 @@ public class CalcJobTestUtilis
        */
       public void setProgress( int progress )
       {
-      //
+        //
       }
 
       /**
        * @see org.kalypso.services.calculation.job.ICalcMonitor#getProgress()
        */
-      public int getProgress()
+      public int getProgress( )
       {
         return 0;
       }
@@ -97,7 +96,7 @@ public class CalcJobTestUtilis
       /**
        * @see org.kalypso.services.calculation.job.ICalcMonitor#getMessage()
        */
-      public String getMessage()
+      public String getMessage( )
       {
         return null;
       }
@@ -112,17 +111,17 @@ public class CalcJobTestUtilis
 
       public void setFinishInfo( int status, String text )
       {
-      // TODO Auto-generated method stub
+        // TODO Auto-generated method stub
 
       }
 
-      public String getFinishText()
+      public String getFinishText( )
       {
         // TODO Auto-generated method stub
         return null;
       }
 
-      public int getFinishStatus()
+      public int getFinishStatus( )
       {
         // TODO Auto-generated method stub
         return 0;
@@ -131,7 +130,7 @@ public class CalcJobTestUtilis
 
   }
 
-  public static File getTmpDir()
+  public static File getTmpDir( )
   {
     File file = FileUtilities.createNewTempDir( "NA_TEST", new File( "C:\\tmp" ) );
     file.mkdirs();
