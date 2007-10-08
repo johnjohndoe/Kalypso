@@ -141,12 +141,28 @@ public class Rules implements ITableViewRules
   {
     m_rules.clear();
   }
-  
+
   /**
    * @see java.lang.Object#toString()
    */
   public String toString()
   {
     return "Rules (Amount= " + m_rules.size() + ")";
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.tableview.rules.ITableViewRules#cloneRules()
+   */
+  public ITableViewRules cloneRules()
+  {
+    final Rules rules = new Rules();
+
+    for( Iterator iter = m_rules.iterator(); iter.hasNext(); )
+    {
+      final RenderingRule rule = (RenderingRule)iter.next();
+      rules.addRule( rule.cloneRule() );
+    }
+
+    return rules;
   }
 }

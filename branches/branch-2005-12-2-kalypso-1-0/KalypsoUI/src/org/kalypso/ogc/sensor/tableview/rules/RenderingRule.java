@@ -129,4 +129,12 @@ public class RenderingRule
   {
     return m_mask + " - " + m_tt == null ? "" : m_tt;
   }
+
+  /**
+   * Create a deep copy of this rule.
+   */
+  public RenderingRule cloneRule()
+  {
+    return new RenderingRule( m_mask, m_fg, m_bg, m_ft, m_tt, m_icon );
+  }
 }
