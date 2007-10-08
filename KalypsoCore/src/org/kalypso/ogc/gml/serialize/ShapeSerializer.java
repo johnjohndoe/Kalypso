@@ -136,9 +136,7 @@ public class ShapeSerializer
   public static void serializeFeatures( final Feature[] features, final Map<String, String> mapping, final String geoName, final String filenameBase, final StandardShapeDataProvider dataProvider ) throws GmlSerializeException
   {
     if( features.length == 0 )
-    {
       return;
-    }
 
     final IFeatureType featureType = features[0].getFeatureType();
     final IValuePropertyType geoPt = (IValuePropertyType) featureType.getProperty( geoName );
@@ -226,7 +224,7 @@ public class ShapeSerializer
     {
       final QName qname = entry.getValue();
 
-      if( qname == QNAME_GMLID )
+      if( qname == ShapeSerializer.QNAME_GMLID )
       {
         /* If it is the pseudo gml-id qname, create a string-property */
         final IMarshallingTypeHandler typeHandler = MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "string" ) );
@@ -259,7 +257,7 @@ public class ShapeSerializer
         for( final Entry<String, QName> entry : mapping.entrySet() )
         {
           final QName qname = entry.getValue();
-          if( qname == QNAME_GMLID )
+          if( qname == ShapeSerializer.QNAME_GMLID )
             data[datacount++] = kalypsoFeature.getId();
           else
             data[datacount++] = kalypsoFeature.getProperty( qname );
@@ -344,9 +342,7 @@ public class ShapeSerializer
         final Feature fe = sf.getFeatureByRecNo( rootFeature, listRelation, i + 1, true );
         GMLUtilities.setCrs( fe, sourceCrs );
         if( fe != null )
-        {
           list.add( fe );
-        }
       }
 
       return workspace;
@@ -358,16 +354,14 @@ public class ShapeSerializer
     finally
     {
       if( sf != null )
-      {
         try
         {
           sf.close();
         }
-        catch( IOException e )
+        catch( final IOException e )
         {
           throw new GmlSerializeException( "Fehler beim Laden der Shape-Dateien", e );
         }
-      }
     }
   }
 
@@ -406,16 +400,15 @@ public class ShapeSerializer
     finally
     {
       if( dbf != null )
-      {
         try
         {
           dbf.close();
         }
-        catch( IOException e )
+        catch( final IOException e )
         {
           e.printStackTrace();
         }
-      }
     }
   }
+
 }
