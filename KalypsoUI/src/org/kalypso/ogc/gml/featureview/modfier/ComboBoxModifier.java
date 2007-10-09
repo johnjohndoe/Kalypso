@@ -133,7 +133,10 @@ public class ComboBoxModifier implements IFeatureModifier
   public Object parseInput( final Feature f, final Object value )
   {
     final int counter = ((Integer) value).intValue();
-    return m_entries.get( counter );
+    if( counter >= 0 )
+      return m_entries.get( counter );
+    else //TODO: catch -1 and return null feature, is this correct?
+      return null;
   }
 
   /**
