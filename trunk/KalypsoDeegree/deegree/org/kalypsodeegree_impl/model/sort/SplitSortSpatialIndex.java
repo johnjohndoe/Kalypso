@@ -195,9 +195,7 @@ public class SplitSortSpatialIndex implements SpatialIndexExt
           // because it throws exception
         }
         else
-        {
           spatialAdd( next, envelope );
-        }
       }
     }
     else
