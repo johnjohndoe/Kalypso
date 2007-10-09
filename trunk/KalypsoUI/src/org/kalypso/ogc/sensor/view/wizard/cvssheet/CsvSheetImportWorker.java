@@ -230,7 +230,7 @@ public class CsvSheetImportWorker implements ICoreRunnableWithProgress
       final String xmlString = WQTableFactory.createXMLString( wqSet );
 
       if( xmlString != null )
-        mdl.setProperty( "wqtable", xmlString );
+        mdl.setProperty( "WQ-Tabelle", xmlString );
     }
 
     /*******************************************************************************************************************
