@@ -186,9 +186,9 @@ public class CsvSheetImportDataModel
       switch( kind )
       {
         case eW:
-          return "W";
+          return "W [cm]";
         case eQ:
-          return "Q";
+          return "Q [m³/s]";
         default:
           throw new NotImplementedException();
       }
