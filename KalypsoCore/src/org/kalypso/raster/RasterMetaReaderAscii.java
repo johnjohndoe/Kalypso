@@ -180,4 +180,9 @@ public class RasterMetaReaderAscii implements IRasterMetaReader
 
     return new RectifiedGridDomain( origin, offsetX, offsetY, gridRange );
   }
+
+  public String getNoDataValue( )
+  {
+    return m_coverage.getGridDomain().getNoDataValue();
+  }
 }

@@ -72,6 +72,8 @@ public class RectifiedGridDomain
 
   private final GM_Surface m_rasterBoundaryAsSurface;
 
+  private String m_noDataValue;
+
   /**
    * constructs a RectifiedGridDomain with the given origin, offset and gridRange
    * 
@@ -253,5 +255,15 @@ public class RectifiedGridDomain
   public GM_Position getPositionAt( final int x, final int y )
   {
     return m_offsetY.move( m_offsetX.move( m_origin.getPosition(), x ), y );
+  }
+
+  public void setNoDataValue( final String noDataValue )
+  {
+    m_noDataValue = noDataValue;
+  }
+
+  public String getNoDataValue( )
+  {
+    return m_noDataValue;
   }
 }

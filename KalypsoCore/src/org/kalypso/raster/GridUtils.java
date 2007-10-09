@@ -177,10 +177,13 @@ public abstract class GridUtils
 
     final GM_Point origin = GeometryFactory.createGM_Point( reader.getOriginCornerX(), reader.getOriginCornerY(), cs );
 
+    final String noDataValue = reader.getNoDataValue();
+
     final double[] low = { 0.0, 0.0 };
     final double[] high = { nCols, nRows };
     final GridRange gridRange = new GridRange_Impl( low, high );
     final RectifiedGridDomain gridDomain = new RectifiedGridDomain( origin, offsetX, offsetY, gridRange );
+    gridDomain.setNoDataValue( noDataValue );
 
     /* RangeSet */
     final FileType rangeSetFile = KalypsoOGC31JAXBcontext.GML3_FAC.createFileType();
