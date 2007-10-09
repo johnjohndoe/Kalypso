@@ -179,7 +179,7 @@ public class PageCSVImportCSVSetup extends WizardPage
 
     /* WQ Kind */
     final Label lWQKind = new Label( container, SWT.NONE );
-    lWQKind.setText( "Import W or Q?" );
+    lWQKind.setText( "Import W [cm] or Q [m³/s]?" );
 
     final WQ_KIND[] wqInput = new WQ_KIND[] { WQ_KIND.eW, WQ_KIND.eQ };
     final FacadeComboViewer wWq = new FacadeComboViewer( new FCVArrayDelegate( wqInput ) );
