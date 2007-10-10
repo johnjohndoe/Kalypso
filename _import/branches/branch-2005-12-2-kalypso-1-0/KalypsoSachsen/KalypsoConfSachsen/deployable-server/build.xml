@@ -227,7 +227,7 @@
              inheritAll="false" />
     </target>
 
-    <target name="buildwar-UserService">
+    <target name="buildwar-UserService" depends="build-basic">
         <copy todir="${workspace}/KalypsoServiceUser/build/build-war/WEB-INF/lib">
             <fileset dir="${workspace}/KalypsoAdapterPSICompact/build/deploy" includes="**/*.jar" />
         </copy>
@@ -240,7 +240,7 @@
             overwrite="true" />
     </target>
 
-    <target name="buildwar-ObsService">
+    <target name="buildwar-ObsService" depends="build-basic">
         <copy todir="${workspace}/KalypsoServiceObs/build/build-war/WEB-INF/lib" overwrite="true">
             <fileset dir="${workspace}/KalypsoAdapterPSICompact/build/deploy" includes="**/*.jar" />
         </copy>
@@ -297,7 +297,7 @@
     	    overwrite="true" />
     </target>
 
-    <target name="buildwar-MetaDocService">
+    <target name="buildwar-MetaDocService" depends="build-basic">
         <copy todir="${workspace}/KalypsoServiceMetaDoc/build/build-war/WEB-INF/lib">
             <fileset dir="${workspace}/KalypsoAdapterPSICompact/build/deploy" includes="**/*.jar" />
         </copy>
@@ -433,7 +433,7 @@
 
     <target name="redeploy-UserService"
             depends="psicompact-fake,buildwar-UserService,deploy-allconf"
-            description="Redeploy service and configuration">
+            description="Redeploy service and configuration with PSI-Fake Implementation">
         <echo message="Redeploying User Service" />
         <ant antfile="${workspace}/KalypsoServiceUser/etc/ant/build.xml"
              target="redeploy"
@@ -442,9 +442,12 @@
         </ant>
     </target>
 
+	<!-- TODO: das geht so nicht! psicompact-fake muss garantiert vor buildwar-ObsService aufgerufen werden
+		dies ist aber so nicht garantiert...
+	--> 
     <target name="redeploy-ObsService"
             depends="clean,psicompact-fake,buildwar-ObsService,deploy-allconf"
-            description="Redeploy service and configuration">
+            description="Redeploy service and configuration with PSI-Fake Implementation">
         <echo message="Redeploying Observation Service" />
         <ant antfile="${workspace}/KalypsoServiceObs/etc/ant/build.xml"
              target="redeploy"
@@ -455,7 +458,7 @@
 
     <target name="redeploy-MetaDocService"
             depends="psicompact-fake,buildwar-MetaDocService,deploy-allconf"
-            description="Redeploy service and configuration">
+            description="Redeploy service and configuration with PSI-Fake Implementation">
         <echo message="Redeploying MetaDoc Service" />
         <ant antfile="${workspace}/KalypsoServiceMetaDoc/etc/ant/build.xml"
              target="redeploy"
@@ -466,7 +469,7 @@
 
     <target name="redeploy-CalcService"
             depends="psicompact-fake,buildwar-CalcService,deploy-allconf"
-            description="Redeploy service and configuration">
+            description="Redeploy service and configuration with PSI-Fake Implementation">
         <echo message="Redeploying Calculation Service" />
         <ant antfile="${workspace}/KalypsoServiceCalc/etc/ant/build.xml"
              target="redeploy"
