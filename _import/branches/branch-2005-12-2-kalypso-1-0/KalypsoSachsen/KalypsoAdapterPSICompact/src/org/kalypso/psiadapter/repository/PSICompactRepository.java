@@ -67,8 +67,9 @@ public class PSICompactRepository extends AbstractRepository
           // real child (and so its meta-data). Better: generate 'pseudo'-object-info with empty meta-data (and no
           // observation)
 
-          final String name = constructName( path, i );
-          final PSICompactItem n = new PSICompactItem( parent, name, nodeID, info, valueType );
+          final String name = path[i];
+          final String obsName = constructName( path, i );
+          final PSICompactItem n = new PSICompactItem( parent, name, nodeID, info, valueType, obsName );
 
           // gleich parent item aktualisieren (wird nicht von der Child gemacht,
           // deswegen hier)
@@ -86,8 +87,8 @@ public class PSICompactRepository extends AbstractRepository
   private String constructName( final String[] path, final int i )
   {
     // HACK: use path-segment of parent instead of own, if we are a leaf...
-    if( i == 4 )
-      return path[3];
+    if( i == 6 )
+      return path[5];
 
     return path[i];
   }
@@ -129,7 +130,7 @@ public class PSICompactRepository extends AbstractRepository
   {
     try
     {
-      final PSICompactItem rootItem = new PSICompactItem( null, "", "", null, -1 );
+      final PSICompactItem rootItem = new PSICompactItem( null, "", "", null, -1, "" );
       final TreeMap nodes = new TreeMap();
 
       buildStructure( rootItem, nodes, PSICompact.TYPE_MEASUREMENT );

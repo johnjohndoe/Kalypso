@@ -31,14 +31,17 @@ public class PSICompactItem implements IRepositoryItem
 
   private final int m_valueType;
 
+  private final String m_obsName;
+
   public PSICompactItem( final PSICompactItem parent, final String name, final String identifier,
-      final PSICompact.ObjectInfo info, final int valueType )
+      final PSICompact.ObjectInfo info, final int valueType, final String obsName )
   {
     m_parent = parent;
     m_name = name;
     m_identifier = identifier;
     m_objectInfo = info;
     m_valueType = valueType;
+    m_obsName = obsName;
 
     m_children = new Vector();
   }
@@ -98,7 +101,7 @@ public class PSICompactItem implements IRepositoryItem
       final boolean adaptable = PSICompactFactory.getConnection().getMeasureType( m_identifier ) != PSICompact.TYPE_UNDEF;
 
       if( adaptable && anotherClass == IObservation.class )
-        return new PSICompactObservationItem( getName(), getIdentifier(), m_objectInfo, m_valueType );
+        return new PSICompactObservationItem( m_obsName, m_identifier, m_objectInfo, m_valueType );
     }
     catch( final Exception e )
     {
