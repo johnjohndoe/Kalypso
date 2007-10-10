@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypso1d2d.pjt.views;
+package org.kalypso.afgui.scenarios;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -54,9 +54,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
-import org.kalypso.kalypso1d2d.pjt.perspective.Perspective;
-import org.kalypso.kalypso1d2d.pjt.perspective.PerspectiveWatcher;
-import org.kalypso.ogc.gml.outline.GisMapOutlineView;
+import org.kalypso.afgui.views.WorkflowView;
 
 import de.renew.workflow.base.EActivityType;
 import de.renew.workflow.base.Task;
@@ -107,14 +105,13 @@ public class TaskExecutor implements ITaskExecutor
     {
       final Collection<String> partsToKeep = new ArrayList<String>();
       partsToKeep.add( WorkflowView.ID );
-      partsToKeep.add( Perspective.SCENARIO_VIEW_ID );
-      partsToKeep.add( GisMapOutlineView.ID );
+      partsToKeep.add( PerspectiveWatcher.SCENARIO_VIEW_ID );
       final IWorkbench workbench = PlatformUI.getWorkbench();
       PerspectiveWatcher.cleanPerspective( workbench, partsToKeep );
       m_activeTask = null;
       // here execute a command that stops the active task
       // m_handlerService.executeCommand( command.getId(), null );
-    }    
+    }
   }
 
   /**
@@ -139,8 +136,7 @@ public class TaskExecutor implements ITaskExecutor
     }
     final Collection<String> partsToKeep = collectOpenedViews( context );
     partsToKeep.add( WorkflowView.ID );
-    partsToKeep.add( Perspective.SCENARIO_VIEW_ID );
-    partsToKeep.add( GisMapOutlineView.ID );
+    partsToKeep.add( PerspectiveWatcher.SCENARIO_VIEW_ID );
     final IWorkbench workbench = PlatformUI.getWorkbench();
     PerspectiveWatcher.cleanPerspective( workbench, partsToKeep );
     try

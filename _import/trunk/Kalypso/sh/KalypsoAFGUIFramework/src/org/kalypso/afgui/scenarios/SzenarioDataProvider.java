@@ -1,11 +1,13 @@
 /**
  *
  */
-package org.kalypso.kalypso1d2d.pjt.views;
+package org.kalypso.afgui.scenarios;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.ObjectUtils;
@@ -23,15 +25,8 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModelGroup;
-import org.kalypso.kalypsomodel1d2d.schema.binding.model.IStaticModel1D2D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.ICommandPoster;
-import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
-import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
-import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -41,7 +36,6 @@ import org.kalypso.util.pool.KeyInfo;
 import org.kalypso.util.pool.PoolableObjectType;
 import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 import de.renew.workflow.connector.cases.ICaseDataProvider;
 
@@ -55,35 +49,29 @@ import de.renew.workflow.connector.cases.ICaseDataProvider;
  * 
  * @author Gernot Belger
  */
-public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>, ICommandPoster
+public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommandPoster
 {
-  /**
-   * Maps the (adapted) feature-wrapper-classes onto the (szenario-relative) path of its gml-file.
-   * <p>
-   * At the moment this works, because each gml-file corresponds to exactly one (different) wraper class.
-   */
-  private static final Map<Class< ? extends IFeatureWrapper2>, String> LOCATION_MAP = new HashMap<Class< ? extends IFeatureWrapper2>, String>();
 
-  private static final String MODELS_FOLDER = "models"; //$NON-NLS-1$
+// private static final String MODELS_FOLDER = "models"; //$NON-NLS-1$
 
-  static
-  {
-    LOCATION_MAP.put( IFEDiscretisationModel1d2d.class, MODELS_FOLDER + "/discretisation.gml" );
-    LOCATION_MAP.put( ITerrainModel.class, MODELS_FOLDER + "/terrain.gml" );
-    LOCATION_MAP.put( IFlowRelationshipModel.class, MODELS_FOLDER + "/flowrelations.gml" );
-    LOCATION_MAP.put( IControlModelGroup.class, MODELS_FOLDER + "/control.gml" );
-    LOCATION_MAP.put( IStaticModel1D2D.class, MODELS_FOLDER + "/static_model.gml" );
-    LOCATION_MAP.put( IRoughnessClsCollection.class, "project:/.metadata/roughness.gml" );
-    LOCATION_MAP.put( IScenarioResultMeta.class, MODELS_FOLDER + "/scenarioResultMeta.gml" );
-  }
+// static
+// {
+// LOCATION_MAP.put( IFEDiscretisationModel1d2d.class, MODELS_FOLDER + "/discretisation.gml" );
+// LOCATION_MAP.put( ITerrainModel.class, MODELS_FOLDER + "/terrain.gml" );
+// LOCATION_MAP.put( IFlowRelationshipModel.class, MODELS_FOLDER + "/flowrelations.gml" );
+// LOCATION_MAP.put( IControlModelGroup.class, MODELS_FOLDER + "/control.gml" );
+// LOCATION_MAP.put( IStaticModel1D2D.class, MODELS_FOLDER + "/static_model.gml" );
+// LOCATION_MAP.put( IRoughnessClsCollection.class, "project:/.metadata/roughness.gml" );
+// LOCATION_MAP.put( IScenarioResultMeta.class, MODELS_FOLDER + "/scenarioResultMeta.gml" );
+// }
 
   private static final class KeyPoolListener implements IPoolListener
   {
     private final IPoolableObjectType m_key;
 
-    private final SzenarioController m_controller;
+    private final List<IScenarioDataListener> m_controller;
 
-    public KeyPoolListener( final IPoolableObjectType key, final SzenarioController controller )
+    public KeyPoolListener( final IPoolableObjectType key, final List<IScenarioDataListener> controller )
     {
       m_key = key;
       m_controller = controller;
@@ -131,9 +119,18 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
       if( newValue instanceof GMLWorkspace )
       {
         final GMLWorkspace workspace = (GMLWorkspace) newValue;
+        // TODO: is IFeatureWrapper2 correct here? Used to be IModel
         final IModel model = (IModel) workspace.getRootFeature().getAdapter( IModel.class );
         if( model != null )
-          m_controller.modelLoaded( model );
+          fireModelLoaded( model );
+      }
+    }
+
+    private void fireModelLoaded( final IModel model )
+    {
+      for( final IScenarioDataListener listener : m_controller )
+      {
+        listener.modelLoaded( model );
       }
     }
   }
@@ -143,13 +140,23 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
    * <p>
    * At the moment this works, because each gml-file corresponds to exactly one (different) wraper class.
    */
-  private final Map<Class< ? extends IFeatureWrapper2>, KeyPoolListener> m_keyMap = new HashMap<Class< ? extends IFeatureWrapper2>, KeyPoolListener>();
+  private final Map<Class< ? extends IModel>, KeyPoolListener> m_keyMap = new HashMap<Class< ? extends IModel>, KeyPoolListener>();
 
-  private final SzenarioController m_controller = new SzenarioController();
+  private final List<IScenarioDataListener> m_controller = new ArrayList<IScenarioDataListener>();
+
+  public void addScenarioDataListener( final IScenarioDataListener listener )
+  {
+    m_controller.add( listener );
+  }
+
+  public void removeScenarioDataListener( final IScenarioDataListener listener )
+  {
+    m_controller.remove( listener );
+  }
 
   public void setCurrent( final IContainer szenarioFolder )
   {
-    m_controller.szenarioChanged( (IFolder) szenarioFolder );
+    fireScenarioDataFolderChanged( szenarioFolder );
 
     final Job job = new Job( "" )
     {
@@ -170,9 +177,9 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
           th.printStackTrace();
         }
 
-        for( final Map.Entry<Class< ? extends IFeatureWrapper2>, String> entry : LOCATION_MAP.entrySet() )
+        for( final Map.Entry<Class< ? extends IModel>, String> entry : ScenarioDataExtension.getLocationMap().entrySet() )
         {
-          final Class< ? extends IFeatureWrapper2> wrapperClass = entry.getKey();
+          final Class< ? extends IModel> wrapperClass = entry.getKey();
           final String gmlLocation = entry.getValue();
 
           resetKeyForProject( (IFolder) szenarioFolder, wrapperClass, gmlLocation );
@@ -183,6 +190,14 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
     if( szenarioFolder != null )
       job.setRule( szenarioFolder.getProject() );
     job.schedule();
+  }
+
+  private void fireScenarioDataFolderChanged( IContainer szenarioFolder )
+  {
+    for( final IScenarioDataListener listener : m_controller )
+    {
+      listener.scenarioChanged( (IFolder) szenarioFolder );
+    }
   }
 
   public static IFolder findModelContext( final IFolder szenarioFolder, final String modelFile )
@@ -218,7 +233,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
    * @param szenarioFolder
    *            If <code>null</code>, just releases the existing key.
    */
-  protected synchronized void resetKeyForProject( final IFolder szenarioFolder, final Class< ? extends IFeatureWrapper2> wrapperClass, final String gmlLocation )
+  protected synchronized void resetKeyForProject( final IFolder szenarioFolder, final Class< ? extends IModel> wrapperClass, final String gmlLocation )
   {
     final IPoolableObjectType newKey = keyForLocation( szenarioFolder, gmlLocation );
 
@@ -271,21 +286,21 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
    * </p>.
    */
   @SuppressWarnings("unchecked")
-  public <T extends IFeatureWrapper2> T getModel( final Class<T> modelClass ) throws CoreException
+  public <T extends IModel> T getModel( final Class<T> modelClass ) throws CoreException
   {
     final CommandableWorkspace workspace = getModelWorkspace( modelClass );
     return (T) workspace.getRootFeature().getAdapter( modelClass );
   }
 
-  public void postCommand( final Class< ? extends IFeatureWrapper2> wrapperClass, final ICommand command ) throws Exception
+  public void postCommand( final Class< ? extends IModel> wrapperClass, final ICommand command ) throws Exception
   {
     final CommandableWorkspace modelWorkspace = getModelWorkspace( wrapperClass );
     modelWorkspace.postCommand( command );
   }
 
-  private synchronized CommandableWorkspace getModelWorkspace( final Class< ? extends IFeatureWrapper2> wrapperClass ) throws IllegalArgumentException, CoreException
+  private synchronized CommandableWorkspace getModelWorkspace( final Class< ? extends IModel> wrapperClass ) throws IllegalArgumentException, CoreException
   {
-    if( !LOCATION_MAP.containsKey( wrapperClass ) )
+    if( !ScenarioDataExtension.getLocationMap().containsKey( wrapperClass ) )
       throw new IllegalArgumentException( Messages.getString( "SzenarioDataProvider.13" ) + wrapperClass ); //$NON-NLS-1$
 
     final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
@@ -304,7 +319,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
 
   public boolean isDirty( )
   {
-    for( final Class< ? extends IFeatureWrapper2> modelClass : m_keyMap.keySet() )
+    for( final Class< ? extends IModel> modelClass : m_keyMap.keySet() )
     {
       if( isDirty( modelClass ) )
         return true;
@@ -315,7 +330,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
   /**
    * @see de.renew.workflow.cases.ICaseDataProvider#isDirty(java.lang.Class)
    */
-  public boolean isDirty( final Class< ? extends IFeatureWrapper2> modelClass )
+  public boolean isDirty( final Class< ? extends IModel> modelClass )
   {
     final KeyPoolListener keyPoolListener = m_keyMap.get( modelClass );
     if( keyPoolListener == null )
@@ -344,7 +359,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
    * @see de.renew.workflow.cases.ICaseDataProvider#saveModel(java.lang.Class,
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
-  public void saveModel( final Class< ? extends IFeatureWrapper2> modelClass, IProgressMonitor monitor ) throws CoreException
+  public void saveModel( final Class< ? extends IModel> modelClass, IProgressMonitor monitor ) throws CoreException
   {
     if( monitor == null )
     {
@@ -387,7 +402,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
     try
     {
       monitor.beginTask( Messages.getString( "SzenarioDataProvider.16" ), m_keyMap.size() * 100 ); //$NON-NLS-1$
-      for( final Class< ? extends IFeatureWrapper2> modelClass : m_keyMap.keySet() )
+      for( final Class< ? extends IModel> modelClass : m_keyMap.keySet() )
       {
         saveModel( modelClass, new SubProgressMonitor( monitor, 100 ) );
       }
@@ -401,7 +416,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IFeatureWrapper2>
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.ICommandPoster#getCommandableWorkSpace(java.lang.Class)
    */
-  public CommandableWorkspace getCommandableWorkSpace( final Class< ? extends IFeatureWrapper2> wrapperClass ) throws IllegalArgumentException, CoreException
+  public CommandableWorkspace getCommandableWorkSpace( final Class< ? extends IModel> wrapperClass ) throws IllegalArgumentException, CoreException
   {
     return getModelWorkspace( wrapperClass );
   }

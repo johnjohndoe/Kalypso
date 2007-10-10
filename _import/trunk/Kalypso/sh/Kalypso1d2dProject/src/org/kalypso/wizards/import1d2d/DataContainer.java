@@ -4,11 +4,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.eclipse.core.runtime.CoreException;
+import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.core.preferences.IKalypsoCorePreferences;
-import org.kalypso.kalypso1d2d.pjt.views.SzenarioDataProvider;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.opengis.cs.CS_CoordinateSystem;
 
@@ -73,7 +73,7 @@ public class DataContainer
     m_szenarioDataProvider = szenarioDataProvider;
   }
 
-  public void postCommand( final Class< ? extends IFeatureWrapper2> clazz, final ICommand command ) throws Exception
+  public void postCommand( final Class< ? extends IModel> clazz, final ICommand command ) throws Exception
   {
     m_szenarioDataProvider.postCommand( clazz, command );
   }

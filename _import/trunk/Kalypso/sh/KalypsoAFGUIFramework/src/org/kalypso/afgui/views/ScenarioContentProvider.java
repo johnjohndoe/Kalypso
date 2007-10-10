@@ -1,4 +1,4 @@
-package org.kalypso.kalypso1d2d.pjt.views.contentprov;
+package org.kalypso.afgui.views;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,8 +13,8 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.kalypso.afgui.ScenarioHandlingProjectNature;
 import org.kalypso.afgui.scenarios.Scenario;
+import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.scenarios.ScenarioList;
-import org.kalypso.kalypso1d2d.pjt.actions.ScenarioHelper;
 
 import de.renew.workflow.connector.cases.ICaseManager;
 import de.renew.workflow.connector.cases.ICaseManagerListener;

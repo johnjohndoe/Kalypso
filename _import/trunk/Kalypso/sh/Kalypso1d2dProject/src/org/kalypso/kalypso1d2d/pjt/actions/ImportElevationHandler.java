@@ -59,7 +59,7 @@ import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.wizards.IWizardDescriptor;
-import org.kalypso.kalypso1d2d.pjt.views.SzenarioDataProvider;
+import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler;
 

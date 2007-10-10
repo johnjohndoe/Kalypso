@@ -1,4 +1,4 @@
-package org.kalypso.kalypso1d2d.pjt.views;
+package org.kalypso.afgui.views;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -12,9 +12,8 @@ import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.scenarios.Scenario;
-import org.kalypso.afgui.views.WorkflowControl;
-import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 
 import de.renew.workflow.connector.WorkflowProjectNature;
 import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
@@ -26,13 +25,13 @@ import de.renew.workflow.connector.context.IActiveContextChangeListener;
  */
 public class WorkflowView extends ViewPart
 {
-  final static public String ID = "org.kalypso.kalypso1d2d.pjt.views.WorklistView";  //$NON-NLS-1$
+  final static public String ID = "org.kalypso.kalypso1d2d.pjt.views.WorklistView"; //$NON-NLS-1$
 
   static Logger LOGGER = Logger.getLogger( WorkflowView.class.getName() );
 
   static
   {
-    final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.kalypso1d2d.pjt/debug" ) );  //$NON-NLS-1$
+    final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.kalypso1d2d.pjt/debug" ) ); //$NON-NLS-1$
     if( !log )
       LOGGER.setUseParentHandlers( false );
   }
@@ -90,7 +89,8 @@ public class WorkflowView extends ViewPart
             {
               m_workflowControl.setWorkflow( workflowNature.getCurrentWorklist() );
             }
-            else {
+            else
+            {
               m_workflowControl.setWorkflow( null );
             }
           }
@@ -126,9 +126,9 @@ public class WorkflowView extends ViewPart
   public void init( final IViewSite site, final IMemento memento ) throws PartInitException
   {
     super.init( site, memento );
-    m_activeWorkContext = Kalypso1d2dProjectPlugin.getDefault().getActiveWorkContext();
+    m_activeWorkContext = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext();
     m_activeWorkContext.addActiveContextChangeListener( m_contextListener );
-    m_workflowControl = new WorkflowControl( Kalypso1d2dProjectPlugin.getDefault().getTaskExecutor() );
+    m_workflowControl = new WorkflowControl( KalypsoAFGUIFrameworkPlugin.getDefault().getTaskExecutor() );
     m_workflowControl.restoreState( memento );
   }
 

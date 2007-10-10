@@ -1,4 +1,4 @@
-package org.kalypso.kalypso1d2d.pjt.actions;
+package org.kalypso.afgui.handlers;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -11,9 +11,9 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.scenarios.Scenario;
-import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
-import org.kalypso.kalypso1d2d.pjt.views.TaskExecutionAuthority;
+import org.kalypso.afgui.scenarios.TaskExecutionAuthority;
 
 import de.renew.workflow.connector.context.ActiveWorkContext;
 import de.renew.workflow.connector.worklist.ITaskExecutor;
@@ -31,7 +31,7 @@ public class ActivateScenarioHandler extends AbstractHandler
       if( firstElement instanceof Scenario )
       {
         final Scenario scenario = (Scenario) firstElement;
-        final Kalypso1d2dProjectPlugin plugin = Kalypso1d2dProjectPlugin.getDefault();
+        final KalypsoAFGUIFrameworkPlugin plugin = KalypsoAFGUIFrameworkPlugin.getDefault();
         final ActiveWorkContext<Scenario> activeWorkContext = plugin.getActiveWorkContext();
         try
         {
@@ -47,7 +47,7 @@ public class ActivateScenarioHandler extends AbstractHandler
         {
           final Shell shell = HandlerUtil.getActiveShellChecked( event );
           final IStatus status = e.getStatus();
-          ErrorDialog.openError( shell, Messages.getString("ActivateScenarioHandler.0"), Messages.getString("ActivateScenarioHandler.1"), status ); //$NON-NLS-1$ //$NON-NLS-2$
+          ErrorDialog.openError( shell, Messages.getString( "ActivateScenarioHandler.0" ), Messages.getString( "ActivateScenarioHandler.1" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
           plugin.getLog().log( status );
         }
       }

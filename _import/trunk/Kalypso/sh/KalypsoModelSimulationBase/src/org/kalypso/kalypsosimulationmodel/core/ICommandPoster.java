@@ -42,8 +42,8 @@ package org.kalypso.kalypsosimulationmodel.core;
 
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
  * Interface use to make some workflow specific stuff accessible to class in simulation base and model1d2d plugin.
@@ -57,11 +57,11 @@ public interface ICommandPoster
    * Post the command to a commandable wokspace identified by the wrapperClass.
    * 
    */
-  public void postCommand( final Class< ? extends IFeatureWrapper2> wrapperClass, final ICommand command ) throws Exception;
+  public void postCommand( final Class< ? extends IModel> wrapperClass, final ICommand command ) throws Exception;
 
   /**
    * gets the a commandable workspace for the given wrapper class.
    * 
    */
-  public CommandableWorkspace getCommandableWorkSpace( final Class< ? extends IFeatureWrapper2> wrapperClass ) throws IllegalArgumentException, CoreException;
+  public CommandableWorkspace getCommandableWorkSpace( final Class< ? extends IModel> wrapperClass ) throws IllegalArgumentException, CoreException;
 }

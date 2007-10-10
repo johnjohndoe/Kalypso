@@ -38,34 +38,19 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypso1d2d.pjt.perspective;
+package org.kalypso.afgui.scenarios;
 
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
+import org.eclipse.core.resources.IFolder;
+import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 
 /**
- * @author schrage
- *
+ * @author Stefan Kurzbach
+ * 
+ * Is notified when a model has been loaded and when the scenario data folder has changed
  */
-public class Messages
+public interface IScenarioDataListener
 {
-  private static final String BUNDLE_NAME = "org.kalypso.kalypso1d2d.pjt.perspective.messages"; //$NON-NLS-1$
+  public void modelLoaded( final IModel model );
 
-  private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle( BUNDLE_NAME );
-
-  private Messages( )
-  {
-  }
-
-  public static String getString( String key )
-  {
-    try
-    {
-      return RESOURCE_BUNDLE.getString( key );
-    }
-    catch( MissingResourceException e )
-    {
-      return '!' + key + '!';
-    }
-  }
+  public void scenarioChanged( final IFolder scenarioDataFolder );
 }

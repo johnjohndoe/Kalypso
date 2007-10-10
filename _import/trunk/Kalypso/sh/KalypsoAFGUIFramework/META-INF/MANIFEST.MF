@@ -13,9 +13,13 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.ide,
  org.junit4,
  org.eclipse.ui.forms,
- org.kalypso.ui.addlayer,
- de.renew.workflow.connector,
- de.renew.workflow.model
+ de.renew.workflow.connector;visibility:=reexport,
+ de.renew.workflow.model;visibility:=reexport,
+ org.eclipse.ui.navigator,
+ org.eclipse.ui.navigator.resources,
+ org.eclipse.core.expressions,
+ org.kalypso.ui,
+ org.kalypso.ModelSimulationBase
 Eclipse-LazyStart: true 
 Export-Package: org.kalypso.afgui,
  org.kalypso.afgui.scenarios,

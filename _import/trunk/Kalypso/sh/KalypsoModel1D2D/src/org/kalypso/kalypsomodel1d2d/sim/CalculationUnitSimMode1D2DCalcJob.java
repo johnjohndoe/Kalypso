@@ -74,6 +74,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.ICommandPoster;
 import org.kalypso.kalypsosimulationmodel.core.Util;
+import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -85,7 +86,6 @@ import org.kalypso.simulation.ui.calccase.CalcJobHandler;
 import org.kalypso.simulation.ui.calccase.ModelNature;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 import de.renew.workflow.connector.cases.ICaseDataProvider;
@@ -101,6 +101,7 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
  */
 public class CalculationUnitSimMode1D2DCalcJob
 {
+  @SuppressWarnings("unchecked")
   public static IStatus startCalculation( final ICalculationUnit calculationUnit, final IWorkbench workbench )
   {
     // TODO: scenarioFolder etc. should come from outside
@@ -108,7 +109,7 @@ public class CalculationUnitSimMode1D2DCalcJob
     final IEvaluationContext currentState = service.getCurrentState();
     final Shell shell = (Shell) currentState.getVariable( ISources.ACTIVE_SHELL_NAME );
     final IFolder scenarioFolder = (IFolder) currentState.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
-    final ICaseDataProvider<IFeatureWrapper2> caseDataProvider = (ICaseDataProvider<IFeatureWrapper2>) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+    final ICaseDataProvider<IModel> caseDataProvider = (ICaseDataProvider<IModel>) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
 
     if( !MessageDialog.openConfirm( shell, "Berechnung starten", "Die Berechnung wird jetzt gestartet, dies kann sehr lange dauern." ) )
       return Status.CANCEL_STATUS;

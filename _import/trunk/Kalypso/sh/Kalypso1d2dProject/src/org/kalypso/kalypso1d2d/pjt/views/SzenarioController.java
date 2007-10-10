@@ -44,6 +44,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.kalypso.afgui.scenarios.IScenarioDataListener;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.services.RoughnessAssignListener;
 import org.kalypso.kalypsomodel1d2d.services.RoughnessStyleUpdateListener;
@@ -52,30 +53,30 @@ import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 
 /**
- * A central place for controlling szenario specific stuff.
+ * A central place for controlling scenario specific stuff for Kalypso1d2d.
  * <p>
- * Get informed when models are loaded and/or sezanrio is changed.
+ * Get informed when models are loaded and/or scenario is changed.
  * 
  * @author Dejan Antanaskovic
  * @author Gernot Belger
  */
-public class SzenarioController
+public class SzenarioController implements IScenarioDataListener
 {
   private IFEDiscretisationModel1d2d m_discModel = null;
 
   private ITerrainModel m_terrainModel = null;
-  
+
   private RoughnessAssignListener m_roughnessAssignListener = null;
-  
+
   private RoughnessStyleUpdateListener m_roughnessStyleUpdateListener = new RoughnessStyleUpdateListener();
 
-  private IFolder m_activeScenario;
+  private IFolder m_scenarioDataPath;
 
   public SzenarioController( )
   {
-    ResourcesPlugin.getWorkspace().addResourceChangeListener( m_roughnessStyleUpdateListener, IResourceChangeEvent.POST_CHANGE);
+    ResourcesPlugin.getWorkspace().addResourceChangeListener( m_roughnessStyleUpdateListener, IResourceChangeEvent.POST_CHANGE );
   }
-  
+
   public synchronized void modelLoaded( final IModel model )
   {
     if( model instanceof IFEDiscretisationModel1d2d )
@@ -92,20 +93,20 @@ public class SzenarioController
       m_discModel.getWrappedFeature().getWorkspace().addModellListener( m_roughnessAssignListener );
       m_terrainModel.getWrappedFeature().getWorkspace().addModellListener( m_roughnessAssignListener );
     }
-    
+
     if( model instanceof IRoughnessClsCollection )
     {
-      final IFile roughnessDbFile = m_activeScenario.getProject().getFile( RoughnessStyleUpdateListener.ROUGHNESS_DATABASE_PATH );
+      final IFile roughnessDbFile = m_scenarioDataPath.getProject().getFile( RoughnessStyleUpdateListener.ROUGHNESS_DATABASE_PATH );
       m_roughnessStyleUpdateListener.startStyleUpdateJob( roughnessDbFile );
     }
-    
+
     // maybe get status info from status-model
   }
 
-  public synchronized void szenarioChanged(final IFolder activeScenario  )
+  public synchronized void scenarioChanged( final IFolder scenarioDataPath )
   {
-    m_activeScenario = activeScenario;
-    
+    m_scenarioDataPath = scenarioDataPath;
+
     // unregister any listeners
     if( m_discModel != null )
       m_discModel.getWrappedFeature().getWorkspace().removeModellListener( m_roughnessAssignListener );

@@ -10,7 +10,7 @@ import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
-import org.kalypso.kalypso1d2d.pjt.views.SzenarioDataProvider;
+import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelRoughnessConsts;
 import org.kalypsodeegree.model.feature.Feature;
 

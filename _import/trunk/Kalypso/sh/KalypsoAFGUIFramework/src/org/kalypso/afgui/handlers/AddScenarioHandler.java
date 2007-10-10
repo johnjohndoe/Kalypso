@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.kalypso.kalypso1d2d.pjt.actions;
+package org.kalypso.afgui.handlers;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -16,7 +16,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.kalypso.afgui.scenarios.Scenario;
-import org.kalypso.kalypso1d2d.pjt.wizards.NewSimulationModelControlBuilder;
+import org.kalypso.afgui.scenarios.ScenarioHelper;
 
 /**
  * @author Patrice Congo, Stefan Kurzbach

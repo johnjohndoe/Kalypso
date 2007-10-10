@@ -50,20 +50,20 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
-import org.kalypso.kalypso1d2d.pjt.views.SzenarioDataProvider;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.wizard.ImportWspmWizard;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
+import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetworkCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
 import org.kalypso.ui.views.map.MapView;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
@@ -78,12 +78,13 @@ public class ImportWSPMHandler extends AbstractHandler
   /**
    * @see org.kalypso.ui.command.WorkflowCommandHandler#executeInternal(org.eclipse.core.commands.ExecutionEvent)
    */
+  @SuppressWarnings("unchecked")
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
     final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
-    final ICaseDataProvider<IFeatureWrapper2> modelProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+    final ICaseDataProvider<IModel> modelProvider = (ICaseDataProvider<IModel>) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
 
     ITerrainModel terrainModel;
     try
@@ -106,9 +107,9 @@ public class ImportWSPMHandler extends AbstractHandler
       try
       {
         /* post empty command(s) in order to make pool dirty. */
-        ((SzenarioDataProvider) modelProvider).postCommand( ITerrainModel.class, new EmptyCommand( Messages.getString("ImportWSPMHandler.0"), false ) ); //$NON-NLS-1$
-        ((SzenarioDataProvider) modelProvider).postCommand( IFEDiscretisationModel1d2d.class, new EmptyCommand( Messages.getString("ImportWSPMHandler.1"), false ) ); //$NON-NLS-1$
-        ((SzenarioDataProvider) modelProvider).postCommand( IFlowRelationshipModel.class, new EmptyCommand( Messages.getString("ImportWSPMHandler.2"), false ) ); //$NON-NLS-1$
+        ((SzenarioDataProvider) modelProvider).postCommand( ITerrainModel.class, new EmptyCommand( Messages.getString( "ImportWSPMHandler.0" ), false ) ); //$NON-NLS-1$
+        ((SzenarioDataProvider) modelProvider).postCommand( IFEDiscretisationModel1d2d.class, new EmptyCommand( Messages.getString( "ImportWSPMHandler.1" ), false ) ); //$NON-NLS-1$
+        ((SzenarioDataProvider) modelProvider).postCommand( IFlowRelationshipModel.class, new EmptyCommand( Messages.getString( "ImportWSPMHandler.2" ), false ) ); //$NON-NLS-1$
       }
       catch( final Exception e )
       {
@@ -131,7 +132,7 @@ public class ImportWSPMHandler extends AbstractHandler
     }
     catch( final CoreException e )
     {
-      throw new ExecutionException( Messages.getString("ImportWSPMHandler.3"), e ); //$NON-NLS-1$
+      throw new ExecutionException( Messages.getString( "ImportWSPMHandler.3" ), e ); //$NON-NLS-1$
     }
 
     return Status.OK_STATUS;

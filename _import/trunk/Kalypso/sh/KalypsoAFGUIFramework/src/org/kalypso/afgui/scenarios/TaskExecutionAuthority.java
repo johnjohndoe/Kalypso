@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypso1d2d.pjt.views;
+package org.kalypso.afgui.scenarios;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -51,8 +51,8 @@ import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 
 import de.renew.workflow.base.Task;
 import de.renew.workflow.connector.WorkflowConnectorPlugin;
@@ -70,13 +70,13 @@ public class TaskExecutionAuthority implements ITaskExecutionAuthority
    */
   public boolean canStopTask( final Task task )
   {
-    final ICaseDataProvider dataProvider = Kalypso1d2dProjectPlugin.getDefault().getDataProvider();
+    final ICaseDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider();
     // check if any model is dirty
     if( !dataProvider.isDirty() )
       return true;
     final Shell activeShell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
-    final MessageDialog confirmDialog = new MessageDialog( activeShell, Messages.getString("TaskExecutionAuthority.0"), null, Messages.getString("TaskExecutionAuthority.1"), MessageDialog.QUESTION, new String[] { //$NON-NLS-1$ //$NON-NLS-2$
-        Messages.getString("TaskExecutionAuthority.2"), Messages.getString("TaskExecutionAuthority.3"), Messages.getString("TaskExecutionAuthority.4") }, 1 ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    final MessageDialog confirmDialog = new MessageDialog( activeShell, Messages.getString( "TaskExecutionAuthority.0" ), null, Messages.getString( "TaskExecutionAuthority.1" ), MessageDialog.QUESTION, new String[] { //$NON-NLS-1$ //$NON-NLS-2$
+    Messages.getString( "TaskExecutionAuthority.2" ), Messages.getString( "TaskExecutionAuthority.3" ), Messages.getString( "TaskExecutionAuthority.4" ) }, 1 ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     final boolean result;
     final int decision = confirmDialog.open();
     if( decision == 0 )
@@ -102,7 +102,7 @@ public class TaskExecutionAuthority implements ITaskExecutionAuthority
       catch( final InvocationTargetException e )
       {
         final IStatus status = StatusUtilities.statusFromThrowable( e );
-        ErrorDialog.openError( activeShell, Messages.getString("TaskExecutionAuthority.5"), Messages.getString("TaskExecutionAuthority.6"), status ); //$NON-NLS-1$ //$NON-NLS-2$
+        ErrorDialog.openError( activeShell, Messages.getString( "TaskExecutionAuthority.5" ), Messages.getString( "TaskExecutionAuthority.6" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
         WorkflowConnectorPlugin.getDefault().getLog().log( status );
       }
       catch( final InterruptedException e )

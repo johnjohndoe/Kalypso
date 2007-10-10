@@ -89,6 +89,7 @@ public class WorkflowLabelProvider extends ColumnLabelProvider
     IMAGE_TASK.dispose();
     IMAGE_GROUP.dispose();
     FONT_TASK.dispose();
+    FONT_ACTIVE_TASK.dispose();
     FONT_TASKGROUP.dispose();
     super.dispose();
   }

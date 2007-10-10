@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.kalypso.kalypso1d2d.pjt.actions;
+package org.kalypso.afgui.handlers;
 
 import java.util.List;
 
@@ -22,10 +22,11 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.progress.UIJob;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.ScenarioHandlingProjectNature;
 import org.kalypso.afgui.scenarios.Scenario;
+import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.scenarios.ScenarioList;
-import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 
 import de.renew.workflow.connector.cases.ICaseManager;
 
@@ -54,7 +55,7 @@ public class RemoveScenarioHandler extends AbstractHandler
         final ScenarioList derivedScenarios = scenario.getDerivedScenarios();
         if( derivedScenarios != null && !derivedScenarios.getScenarios().isEmpty() )
         {
-          MessageDialog.openInformation( shell, Messages.getString("RemoveScenarioHandler.0"), Messages.getString("RemoveScenarioHandler.1") ); //$NON-NLS-1$ //$NON-NLS-2$
+          MessageDialog.openInformation( shell, Messages.getString( "RemoveScenarioHandler.0" ), Messages.getString( "RemoveScenarioHandler.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
           return Status.CANCEL_STATUS;
         }
         else
@@ -69,17 +70,17 @@ public class RemoveScenarioHandler extends AbstractHandler
             final List<Scenario> rootScenarios = scenarioManager.getCases();
             if( rootScenarios.contains( scenario ) && rootScenarios.size() == 1 )
             {
-              MessageDialog.openInformation( shell, Messages.getString("RemoveScenarioHandler.2"), Messages.getString("RemoveScenarioHandler.3") ); //$NON-NLS-1$ //$NON-NLS-2$
+              MessageDialog.openInformation( shell, Messages.getString( "RemoveScenarioHandler.2" ), Messages.getString( "RemoveScenarioHandler.3" ) ); //$NON-NLS-1$ //$NON-NLS-2$
               return Status.CANCEL_STATUS;
             }
-            else if( Kalypso1d2dProjectPlugin.getDefault().getActiveWorkContext().getCurrentCase() == scenario )
+            else if( KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().getCurrentCase() == scenario )
             {
-              MessageDialog.openInformation( shell, Messages.getString("RemoveScenarioHandler.4"), Messages.getString("RemoveScenarioHandler.5") ); //$NON-NLS-1$ //$NON-NLS-2$
+              MessageDialog.openInformation( shell, Messages.getString( "RemoveScenarioHandler.4" ), Messages.getString( "RemoveScenarioHandler.5" ) ); //$NON-NLS-1$ //$NON-NLS-2$
               return Status.CANCEL_STATUS;
             }
-            else if(MessageDialog.openConfirm( shell, "Bitte bestätigen", "Wollen Sie das Szenario wirklich löschen?" ))
+            else if( MessageDialog.openConfirm( shell, "Bitte bestätigen", "Wollen Sie das Szenario wirklich löschen?" ) )
             {
-              final UIJob runnable = new UIJob( shell.getDisplay(), Messages.getString("RemoveScenarioHandler.6") ) //$NON-NLS-1$
+              final UIJob runnable = new UIJob( shell.getDisplay(), Messages.getString( "RemoveScenarioHandler.6" ) ) //$NON-NLS-1$
               {
                 /**
                  * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
@@ -103,7 +104,7 @@ public class RemoveScenarioHandler extends AbstractHandler
           }
           catch( final CoreException e )
           {
-            throw new ExecutionException( Messages.getString("RemoveScenarioHandler.7"), e ); //$NON-NLS-1$
+            throw new ExecutionException( Messages.getString( "RemoveScenarioHandler.7" ), e ); //$NON-NLS-1$
           }
         }
       }

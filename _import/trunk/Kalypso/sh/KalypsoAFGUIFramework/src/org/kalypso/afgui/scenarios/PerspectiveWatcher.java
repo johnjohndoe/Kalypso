@@ -1,4 +1,4 @@
-package org.kalypso.kalypso1d2d.pjt.perspective;
+package org.kalypso.afgui.scenarios;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -7,7 +7,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.IEditorReference;
-import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
@@ -15,7 +14,7 @@ import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.UIJob;
-import org.kalypso.kalypso1d2d.pjt.views.WorkflowView;
+import org.kalypso.afgui.views.WorkflowView;
 
 import de.renew.workflow.cases.Case;
 import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
@@ -26,6 +25,9 @@ import de.renew.workflow.connector.context.IActiveContextChangeListener;
  */
 public class PerspectiveWatcher<T extends Case> implements IActiveContextChangeListener<T>
 {
+
+  public static final String SCENARIO_VIEW_ID = "org.kalypso.kalypso1d2d.pjt.views.ScenarioView"; //$NON-NLS-1$
+
   private CaseHandlingProjectNature m_currentProject;
 
   private T m_currentScenario;
@@ -43,24 +45,25 @@ public class PerspectiveWatcher<T extends Case> implements IActiveContextChangeL
     if( newProject != m_currentProject || scenario != m_currentScenario )
     {
       final IWorkbench workbench = PlatformUI.getWorkbench();
-      final IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
-      final IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
-      final IPerspectiveDescriptor perspective = activePage.getPerspective();
+// final IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
+// final IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
+// final IPerspectiveDescriptor perspective = activePage.getPerspective();
 
       // handle case where the 1d2d-perspective is open, but not active
-      if( !perspective.getId().equals( Perspective.ID ))
-      {
-        final IPerspectiveDescriptor[] perspectives = activeWorkbenchWindow.getWorkbench().getPerspectiveRegistry().getPerspectives();
-        for( final IPerspectiveDescriptor pd : perspectives )
-        {
-          if( pd.getId().equals( Perspective.ID ) )
-            activePage.closePerspective( pd, true, false );
-        }
-      }
-      else if( perspective.getId().equals( Perspective.ID ) )
-      {
-        cleanPerspective( workbench, Collections.EMPTY_LIST );
-      }
+// if( !perspective.getId().equals( Perspective.ID ) )
+// {
+// final IPerspectiveDescriptor[] perspectives =
+// activeWorkbenchWindow.getWorkbench().getPerspectiveRegistry().getPerspectives();
+// for( final IPerspectiveDescriptor pd : perspectives )
+// {
+// if( pd.getId().equals( Perspective.ID ) )
+// activePage.closePerspective( pd, true, false );
+// }
+// }
+// else if( perspective.getId().equals( Perspective.ID ) )
+// {
+      cleanPerspective( workbench, Collections.EMPTY_LIST );
+// }
       m_currentProject = newProject;
       m_currentScenario = scenario;
     }
@@ -68,9 +71,9 @@ public class PerspectiveWatcher<T extends Case> implements IActiveContextChangeL
 
   public static void cleanPerspective( final IWorkbench workbench, final Collection<String> partsToKeep )
   {
-    final UIJob job = new UIJob( Messages.getString("PerspectiveWatcher.0") ) //$NON-NLS-1$
+    final UIJob job = new UIJob( Messages.getString( "PerspectiveWatcher.0" ) ) //$NON-NLS-1$
     {
-      @SuppressWarnings("unchecked")  //$NON-NLS-1$
+      @SuppressWarnings("unchecked")//$NON-NLS-1$
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
       {
@@ -115,11 +118,11 @@ public class PerspectiveWatcher<T extends Case> implements IActiveContextChangeL
         {
           return true;
         }
-        else if( Perspective.SCENARIO_VIEW_ID.equals( viewId ) )
+        else if( SCENARIO_VIEW_ID.equals( viewId ) )
         {
           return true;
         }
-        else if( reference.getPartName().equals( "Welcome" ) )  //$NON-NLS-1$
+        else if( reference.getPartName().equals( "Welcome" ) ) //$NON-NLS-1$
         {
           return true;
         }

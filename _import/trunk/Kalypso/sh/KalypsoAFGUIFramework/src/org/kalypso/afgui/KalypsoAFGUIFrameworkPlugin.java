@@ -1,39 +1,162 @@
 package org.kalypso.afgui;
 
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Properties;
 
-import de.renew.workflow.base.IWorkflowSystem;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchListener;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.commands.ICommandService;
+import org.eclipse.ui.handlers.IHandlerService;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.kalypso.afgui.scenarios.PerspectiveWatcher;
+import org.kalypso.afgui.scenarios.Scenario;
+import org.kalypso.afgui.scenarios.SzenarioDataProvider;
+import org.kalypso.afgui.scenarios.TaskExecutionAuthority;
+import org.kalypso.afgui.scenarios.TaskExecutor;
+import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
+import org.osgi.framework.BundleContext;
+
+import de.renew.workflow.cases.Case;
+import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
+import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
+import de.renew.workflow.connector.context.ActiveWorkContext;
+import de.renew.workflow.connector.worklist.ITaskExecutor;
+import de.renew.workflow.connector.worklist.TaskExecutionListener;
+import de.renew.workflow.contexts.WorkflowContextHandlerFactory;
 
 /**
  * The activator class controls the plug-in life cycle
  */
 public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
 {
-
-  public static final String TEMPLATE_WORKFLOW_DATA = "/workflow/template_workflow_data.xml"; //$NON-NLS-1$
-
-  public static final String WORKFLOW_SPEC = "/workflow/spec.xml"; //$NON-NLS-1$
-
-  public static final String WORKFLOW_STATUS = "/workflow/status.xml"; //$NON-NLS-1$
-
   // The plug-in ID
   public static final String PLUGIN_ID = "org.kalypso.afgui"; //$NON-NLS-1$
 
   // The shared instance
   private static KalypsoAFGUIFrameworkPlugin plugin;
 
-  // private IWorkflow workflow;
-  private IWorkflowSystem workflowSystem;
+  private static final String ACTIVE_WORKCONTEXT_MEMENTO = "activeWorkContext";
 
-  /**
-   * The constructor
-   */
+  private PerspectiveWatcher<Scenario> m_perspectiveWatcher;
+
+  private ActiveWorkContext<Scenario> m_activeWorkContext;
+
+  private CaseHandlingSourceProvider<Scenario, IModel> m_szenarioSourceProvider;
+
+  private SzenarioDataProvider m_szenarioDataProvider;
+
+  private TaskExecutionAuthority m_taskExecutionAuthority;
+
+  private ITaskExecutor m_taskExecutor;
+
+  private TaskExecutionListener m_taskExecutionListener;
+
   public KalypsoAFGUIFrameworkPlugin( )
   {
     plugin = this;
   }
-  
+
+  /**
+   * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
+   */
+  @Override
+  public void start( BundleContext context ) throws Exception
+  {
+    super.start( context );
+
+    startSzenarioSourceProvider();
+
+    final WorkflowContextHandlerFactory workflowContextHandlerFactory = new WorkflowContextHandlerFactory();
+    final IWorkbench workbench = PlatformUI.getWorkbench();
+    final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
+    final ICommandService commandService = (ICommandService) workbench.getService( ICommandService.class );
+    m_taskExecutionListener = new TaskExecutionListener();
+    commandService.addExecutionListener( m_taskExecutionListener );
+    m_taskExecutionAuthority = new TaskExecutionAuthority();
+    m_taskExecutor = new TaskExecutor( workflowContextHandlerFactory, m_taskExecutionAuthority, commandService, handlerService );
+
+    PlatformUI.getWorkbench().addWorkbenchListener( new IWorkbenchListener()
+    {
+      /**
+       * @see org.eclipse.ui.IWorkbenchListener#postShutdown(org.eclipse.ui.IWorkbench)
+       */
+      public void postShutdown( final IWorkbench workbench2 )
+      {
+      }
+
+      /**
+       * @see org.eclipse.ui.IWorkbenchListener#preShutdown(org.eclipse.ui.IWorkbench, boolean)
+       */
+      @SuppressWarnings("synthetic-access")
+      public boolean preShutdown( final IWorkbench workbench2, final boolean forced )
+      {
+        if( !forced && m_taskExecutionAuthority.canStopTask( m_taskExecutor.getActiveTask() ) )
+        {
+          m_taskExecutor.stopActiveTask();
+          stopSzenarioSourceProvider();
+          return true;
+        }
+        else
+        {
+          return false;
+        }
+      }
+    } );
+  }
+
+  /**
+   * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
+   */
+  @Override
+  public void stop( BundleContext context ) throws Exception
+  {
+    final IWorkbench workbench = PlatformUI.getWorkbench();
+    if( !workbench.isClosing() )
+    {
+      final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
+      if( handlerService != null )
+      {
+        handlerService.removeSourceProvider( m_szenarioSourceProvider );
+      }
+      final ICommandService commandService = (ICommandService) workbench.getService( ICommandService.class );
+      if( commandService != null )
+      {
+        commandService.removeExecutionListener( m_taskExecutionListener );
+      }
+    }
+
+    plugin = null;
+    super.stop( context );
+  }
+
+  public ActiveWorkContext<Scenario> getActiveWorkContext( )
+  {
+    return m_activeWorkContext;
+  }
+
+  public ITaskExecutor getTaskExecutor( )
+  {
+    return m_taskExecutor;
+  }
+
+  public TaskExecutionAuthority getTaskExecutionAuthority( )
+  {
+    return m_taskExecutionAuthority;
+  }
+
+  public SzenarioDataProvider getDataProvider( )
+  {
+    return m_szenarioDataProvider;
+  }
+
   /**
    * Returns the shared instance
    * 
@@ -48,7 +171,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
    * Returns an image descriptor for the image file at the given plug-in relative path
    * 
    * @param path
-   *          the path
+   *            the path
    * @return the image descriptor
    */
   public static ImageDescriptor getImageDescriptor( String path )
@@ -56,56 +179,94 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
     return imageDescriptorFromPlugin( PLUGIN_ID, path );
   }
 
-  // TODO: this is never called, remove it
-  public IWorkflowSystem getWorkflowSystem( )
+  private void startSzenarioSourceProvider( )
   {
-    return this.workflowSystem;
+    if( m_szenarioSourceProvider == null )
+    {
+      final Properties properties = new Properties();
+      final String fileName = getStateLocation().append( ACTIVE_WORKCONTEXT_MEMENTO ).toOSString();
+      final File file = new File( fileName );
+      if( file.exists() )
+      {
+        try
+        {
+          properties.loadFromXML( new FileInputStream( file ) );
+        }
+        catch( final Throwable e )
+        {
+          e.printStackTrace();
+        }
+      }
+      // This can only be called if the platform has already been started
+      m_activeWorkContext = new ActiveWorkContext<Scenario>( properties, ScenarioHandlingProjectNature.ID );
+      final IWorkbench workbench = PlatformUI.getWorkbench();
+      final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
+      m_szenarioDataProvider = new SzenarioDataProvider();
+      m_szenarioSourceProvider = new CaseHandlingSourceProvider<Scenario, IModel>( m_activeWorkContext, m_szenarioDataProvider );
+      handlerService.addSourceProvider( m_szenarioSourceProvider );
+      m_perspectiveWatcher = new PerspectiveWatcher<Scenario>( m_activeWorkContext.getCurrentCase() );
+      m_activeWorkContext.addActiveContextChangeListener( m_perspectiveWatcher );
+    }
   }
 
-  // public static final String IMG_PATH_BASE_SWEEZIES="/icons/sweetie2/png/";
-  // public static final String IMG_PATH_DO=IMG_PATH_BASE_SWEEZIES+"24-tools.png";
-  // public static final String IMG_PATH_DOWN=IMG_PATH_BASE_SWEEZIES+"24-em-down.png";
-  // public static final String IMG_PATH_GET_HELP=IMG_PATH_BASE_SWEEZIES+"24-message-info.png";
-  // public static final String IMG_PATH_NEXT=IMG_PATH_BASE_SWEEZIES+"24-arrow-next.png";
-  // public static final String IMG_PATH_PREVIOUS=IMG_PATH_BASE_SWEEZIES+"24-arrow-previous.png";
-  // public static final String IMG_PATH_SHOW_DATA=IMG_PATH_BASE_SWEEZIES+"24-tab.png";
-  // public static final String IMG_PATH_UP=IMG_PATH_BASE_SWEEZIES+"24-em-up.png";
-  // //public static final String IMG_PATH_TOP=IMG_PATH_BASE_SWEEZIES+"top.png";
-  //	
-  // public static final String IMG_PATH_BASE_NUVOLA="/icons/nuvola_select/";
-  // public static final String IMG_PATH_DO=IMG_PATH_BASE_NUVOLA+"kig.png";
-  // public static final String IMG_PATH_DOWN=IMG_PATH_BASE_NUVOLA+"down.png";
-  // public static final String IMG_PATH_GET_HELP=IMG_PATH_BASE_NUVOLA+"quiz.png";
-  // public static final String IMG_PATH_NEXT=IMG_PATH_BASE_NUVOLA+"forward.png";
-  // public static final String IMG_PATH_PREVIOUS=IMG_PATH_BASE_NUVOLA+"back.png";
-  // public static final String IMG_PATH_SHOW_DATA=IMG_PATH_BASE_NUVOLA+"kalzium.png";
-  // public static final String IMG_PATH_UP=IMG_PATH_BASE_NUVOLA+"up.png";
-  // public static final String IMG_PATH_TOP=IMG_PATH_BASE_NUVOLA+"top.png";
-  // public static final String IMG_PATH_RELOAD=IMG_PATH_BASE_NUVOLA+"kaboodleloop.png";
-  // @Override
-  // protected void initializeImageRegistry(ImageRegistry reg)
-  // {
-  // super.initializeImageRegistry(reg);
-  // String couples[][]={
-  // {EActivityAction.DO.toString(),IMG_PATH_DO},
-  // {EActivityAction.DOWN.toString(),IMG_PATH_DOWN},
-  // {EActivityAction.GET_HELP.toString(),IMG_PATH_GET_HELP},
-  // {EActivityAction.NEXT.toString(),IMG_PATH_NEXT},
-  // {EActivityAction.PREVIOUS.toString(),IMG_PATH_PREVIOUS},
-  // {EActivityAction.SHOW_DATA.toString(),IMG_PATH_SHOW_DATA},
-  // {EActivityAction.UP.toString(),IMG_PATH_UP},
-  // {EActivityAction.TOP.toString(),IMG_PATH_TOP},
-  // {EActivityAction.RELOAD.toString(),IMG_PATH_RELOAD}
-  // };
-  //				
-  // String curCouple[];
-  // for(int i=0; i<couples.length;i++)
-  // {
-  // curCouple=couples[i];
-  // URL url = getBundle().getEntry(curCouple[1]);//Platform.find(bundle, path);
-  // ImageDescriptor desc = ImageDescriptor.createFromURL(url);
-  // reg.put(curCouple[0], desc);
-  // }
-  //
-  // }
+  private void stopSzenarioSourceProvider( )
+  {
+    final Properties properties = createProperties();
+    final String fileName = getStateLocation().append( ACTIVE_WORKCONTEXT_MEMENTO ).toOSString();
+    final File file = new File( fileName );
+    if( file.exists() )
+    {
+      file.delete();
+    }
+    try
+    {
+      properties.storeToXML( new FileOutputStream( file ), "" );
+    }
+    catch( FileNotFoundException e1 )
+    {
+      e1.printStackTrace();
+    }
+    catch( IOException e1 )
+    {
+      e1.printStackTrace();
+    }
+
+    if( PlatformUI.isWorkbenchRunning() )
+    {
+      try
+      {
+        m_activeWorkContext.setCurrentCase( null );
+      }
+      catch( final CoreException e )
+      {
+        e.printStackTrace();
+      }
+      m_activeWorkContext.removeActiveContextChangeListener( m_perspectiveWatcher );
+    }
+  }
+
+  /**
+   * Creates properties that contain current project and case information for restoring state later
+   */
+  private Properties createProperties( )
+  {
+    final Properties properties = new Properties();
+    final CaseHandlingProjectNature currentProject = m_activeWorkContext.getCurrentProject();
+    if( currentProject != null )
+    {
+      final IProject project = currentProject.getProject();
+      if( project != null )
+      {
+        final String projectPath = project.getName();
+        properties.put( ActiveWorkContext.MEMENTO_PROJECT, projectPath );
+      }
+      final Case currentCase = m_activeWorkContext.getCurrentCase();
+      if( currentCase != null )
+      {
+        final String caseString = currentCase.getURI();
+        properties.put( ActiveWorkContext.MEMENTO_CASE, caseString );
+      }
+    }
+    return properties;
+  }
 }

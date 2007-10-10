@@ -1,7 +1,7 @@
 /**
  *
  */
-package org.kalypso.kalypso1d2d.pjt.actions;
+package org.kalypso.afgui.handlers;
 
 import java.util.Map;
 
@@ -17,7 +17,7 @@ import org.eclipse.ui.ISources;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.kalypso.kalypso1d2d.pjt.views.SzenarioDataProvider;
+import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.ui.editor.featureeditor.FeatureTemplateView;
 
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;

@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypso1d2d.pjt.actions;
+package org.kalypso.afgui.handlers;
 
 import java.util.List;
 

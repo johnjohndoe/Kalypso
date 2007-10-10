@@ -1,4 +1,4 @@
-package org.kalypso.kalypso1d2d.pjt.wizards;
+package org.kalypso.afgui.handlers;
 
 public interface IUpdateListener
 {

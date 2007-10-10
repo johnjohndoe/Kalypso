@@ -1,7 +1,7 @@
 /**
  *
  */
-package org.kalypso.kalypso1d2d.pjt.actions;
+package org.kalypso.afgui.handlers;
 
 import java.util.Map;
 
@@ -113,7 +113,7 @@ public class ThemeContextHandler extends AbstractHandler implements IExecutableE
       // see above
       final MapPanel mapPanel = (MapPanel) mapView.getAdapter( MapPanel.class );
       final String featureType = m_featureType;
-      final Job job = new Job( org.kalypso.kalypso1d2d.pjt.actions.Messages.getString( "ThemeContextHandler.3" ) ) //$NON-NLS-1$
+      final Job job = new Job( Messages.getString( "ThemeContextHandler.3" ) ) //$NON-NLS-1$
       {
         @Override
         protected IStatus run( final IProgressMonitor monitor )
@@ -123,7 +123,7 @@ public class ThemeContextHandler extends AbstractHandler implements IExecutableE
           if( m_mapModell != null )
             m_mapModell.addMapModelListener( m_modellListener );
           // TODO and what if it IS null?
-          
+
           if( featureType != null )
           {
             final IKalypsoTheme activeTheme = m_mapModell == null ? null : m_mapModell.getActiveTheme();
