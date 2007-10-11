@@ -13,7 +13,7 @@
    <element name="extension">
       <complexType>
          <sequence>
-            <element ref="scenarioDatum" minOccurs="1" maxOccurs="unbounded"/>
+            <element ref="dataSet" minOccurs="1" maxOccurs="unbounded"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -62,6 +62,21 @@
             </annotation>
          </attribute>
          <attribute name="bundle" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="dataSet">
+      <complexType>
+         <sequence>
+            <element ref="scenarioDatum" minOccurs="1" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="id" type="string" use="required">
             <annotation>
                <documentation>
                   

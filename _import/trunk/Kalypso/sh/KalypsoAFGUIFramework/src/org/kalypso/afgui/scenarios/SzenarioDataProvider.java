@@ -13,7 +13,9 @@ import java.util.Map;
 import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -51,19 +53,6 @@ import de.renew.workflow.connector.cases.ICaseDataProvider;
  */
 public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommandPoster
 {
-
-// private static final String MODELS_FOLDER = "models"; //$NON-NLS-1$
-
-// static
-// {
-// LOCATION_MAP.put( IFEDiscretisationModel1d2d.class, MODELS_FOLDER + "/discretisation.gml" );
-// LOCATION_MAP.put( ITerrainModel.class, MODELS_FOLDER + "/terrain.gml" );
-// LOCATION_MAP.put( IFlowRelationshipModel.class, MODELS_FOLDER + "/flowrelations.gml" );
-// LOCATION_MAP.put( IControlModelGroup.class, MODELS_FOLDER + "/control.gml" );
-// LOCATION_MAP.put( IStaticModel1D2D.class, MODELS_FOLDER + "/static_model.gml" );
-// LOCATION_MAP.put( IRoughnessClsCollection.class, "project:/.metadata/roughness.gml" );
-// LOCATION_MAP.put( IScenarioResultMeta.class, MODELS_FOLDER + "/scenarioResultMeta.gml" );
-// }
 
   private static final class KeyPoolListener implements IPoolListener
   {
@@ -144,6 +133,8 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
 
   private final List<IScenarioDataListener> m_controller = new ArrayList<IScenarioDataListener>();
 
+  private String m_dataSetScope;
+
   public void addScenarioDataListener( final IScenarioDataListener listener )
   {
     m_controller.add( listener );
@@ -156,6 +147,17 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
 
   public void setCurrent( final IContainer szenarioFolder )
   {
+    if( szenarioFolder != null )
+    {
+      final IProject project = szenarioFolder.getProject();
+      final ProjectScope projectScope = new ProjectScope( project );
+      m_dataSetScope = projectScope.getNode( "org.kalypso.afgui" ).get( "dataSetScope", "" );
+    }
+    else
+    {
+      m_dataSetScope = null;
+    }
+
     fireScenarioDataFolderChanged( szenarioFolder );
 
     final Job job = new Job( "" )
@@ -177,12 +179,16 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
           th.printStackTrace();
         }
 
-        for( final Map.Entry<Class< ? extends IModel>, String> entry : ScenarioDataExtension.getLocationMap().entrySet() )
+        final Map<Class< ? extends IModel>, String> locationMap = ScenarioDataExtension.getLocationMap( m_dataSetScope );
+        if( locationMap != null )
         {
-          final Class< ? extends IModel> wrapperClass = entry.getKey();
-          final String gmlLocation = entry.getValue();
+          for( final Map.Entry<Class< ? extends IModel>, String> entry : locationMap.entrySet() )
+          {
+            final Class< ? extends IModel> wrapperClass = entry.getKey();
+            final String gmlLocation = entry.getValue();
 
-          resetKeyForProject( (IFolder) szenarioFolder, wrapperClass, gmlLocation );
+            resetKeyForProject( (IFolder) szenarioFolder, wrapperClass, gmlLocation );
+          }
         }
         return Status.OK_STATUS;
       }
@@ -300,7 +306,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
 
   private synchronized CommandableWorkspace getModelWorkspace( final Class< ? extends IModel> wrapperClass ) throws IllegalArgumentException, CoreException
   {
-    if( !ScenarioDataExtension.getLocationMap().containsKey( wrapperClass ) )
+    if( !ScenarioDataExtension.getLocationMap( m_dataSetScope ).containsKey( wrapperClass ) )
       throw new IllegalArgumentException( Messages.getString( "SzenarioDataProvider.13" ) + wrapperClass ); //$NON-NLS-1$
 
     final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();

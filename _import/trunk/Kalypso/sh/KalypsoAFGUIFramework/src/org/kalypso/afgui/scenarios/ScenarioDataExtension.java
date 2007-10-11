@@ -64,13 +64,13 @@ public class ScenarioDataExtension
    * <p>
    * At the moment this works, because each gml-file corresponds to exactly one (different) wraper class.
    */
-  private static Map<Class< ? extends IModel>, String> LOCATION_MAP;
+  private static Map<String, Map<Class< ? extends IModel>, String>> LOCATION_MAP;
 
   private final static String SCENARIO_DATA_EXTENSION_POINT = "org.kalypso.afgui.scenarioData"; //$NON-NLS-1$
 
-  public static String getScenarioDataPath( final Class< ? extends IModel> classKey )
+  public static String getScenarioDataPath( final String id, final Class< ? extends IModel> classKey )
   {
-    final Map<Class< ? extends IModel>, String> map = getLocationMap();
+    final Map<Class< ? extends IModel>, String> map = getLocationMap( id );
     if( map == null )
       return null;
 
@@ -78,37 +78,44 @@ public class ScenarioDataExtension
   }
 
   @SuppressWarnings("unchecked")
-  public static Map<Class< ? extends IModel>, String> getLocationMap( )
+  public static Map<Class< ? extends IModel>, String> getLocationMap( final String id )
   {
     if( LOCATION_MAP == null )
     {
       final IExtensionRegistry registry = Platform.getExtensionRegistry();
       final IExtensionPoint extensionPoint = registry.getExtensionPoint( SCENARIO_DATA_EXTENSION_POINT );
       final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
-      LOCATION_MAP = new HashMap<Class< ? extends IModel>, String>( configurationElements.length );
+      LOCATION_MAP = new HashMap<String, Map<Class< ? extends IModel>, String>>( configurationElements.length );
 
-      for( final IConfigurationElement element : configurationElements )
+      for( final IConfigurationElement dataSet : configurationElements )
       {
-        String bundleName = element.getAttribute( "bundle" ); //$NON-NLS-1$
-        if( bundleName == null )
+        final String dataSetId = dataSet.getAttribute( "id" );
+        final IConfigurationElement[] elements = dataSet.getChildren();
+        final HashMap<Class< ? extends IModel>, String> dataSetMap = new HashMap<Class< ? extends IModel>, String>( elements.length );
+        for( final IConfigurationElement element : elements )
         {
-          // default to loading from same bundle
-          bundleName = element.getContributor().getName();
+          String bundleName = element.getAttribute( "bundle" ); //$NON-NLS-1$
+          if( bundleName == null )
+          {
+            // default to loading from same bundle
+            bundleName = element.getContributor().getName();
+          }
+          final String classKeyName = element.getAttribute( "classKey" ); //$NON-NLS-1$
+          final String modelPath = element.getAttribute( "modelPath" ); //$NON-NLS-1$
+          try
+          {
+            final Class< ? extends IModel> classKey = Platform.getBundle( bundleName ).loadClass( classKeyName );
+            dataSetMap.put( classKey, modelPath );
+          }
+          catch( final ClassNotFoundException e )
+          {
+            KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+          }
         }
-        final String classKeyName = element.getAttribute( "classKey" ); //$NON-NLS-1$
-        final String modelPath = element.getAttribute( "modelPath" ); //$NON-NLS-1$
-        try
-        {
-          final Class< ? extends IModel> classKey = Platform.getBundle( bundleName ).loadClass( classKeyName );
-          LOCATION_MAP.put( classKey, modelPath );
-        }
-        catch( final ClassNotFoundException e )
-        {
-          KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-        }
+        LOCATION_MAP.put( dataSetId, dataSetMap );
       }
     }
-    return LOCATION_MAP;
+    return LOCATION_MAP.get( id );
   }
 
 }
