@@ -42,85 +42,53 @@ package org.kalypsodeegree_impl.io.shpapi;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_MultiCurve;
-import org.kalypsodeegree.model.geometry.GM_MultiPoint;
-import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree_impl.model.geometry.GM_TriangulatedSurface_Impl;
 
 /**
- * simulates the "old" shape behavior of kalypso in order that the GeometryType of the first feature defines the output
- * shape type.
+ * data provider for exporting GM_TriangulatedSurface patches from 1d2d result as one multipart shape (polygonZ). That
+ * means all patches as one feature (like it is in its gml file). The result is a shape file which cannot handled in
+ * ArcView.<br>
+ * If you want to export the TriangulatedSurface for further works in ArcView use
+ * {@link TriangulatedSurfaceSinglePartShapeDataProvider} instead.
  * 
  * @author Thomas Jung
  */
-public class StandardShapeDataProvider implements IShapeDataProvider
+public class TriangulatedSurfaceMultiPartShapeDataProvider implements IShapeDataProvider
 {
-
   private Feature[] m_features;
 
-  private byte m_shptype;
+  private byte m_shapeConstant;
 
-  private IPropertyType m_geometryPropertyType;
+  private final IValuePropertyType m_geometryPropertyType;
 
-  public StandardShapeDataProvider( final Feature[] features )
+  private GM_TriangulatedSurface_Impl m_triSurface;
+
+  public TriangulatedSurfaceMultiPartShapeDataProvider( final Feature[] features, final byte shapeType )
   {
     m_features = features;
-
-    getStandardParameter( features );
-  }
-
-  private void getStandardParameter( final Feature[] features )
-  {
-    // take the default geometry of the first feature to get the shape type.
-    final GM_Object object = features[0].getDefaultGeometryProperty();
-    if( object instanceof GM_Point )
-    {
-      m_shptype = ShapeConst.SHAPE_TYPE_POINT;
-    }
-    else if( object instanceof GM_Curve )
-    {
-      m_shptype = ShapeConst.SHAPE_TYPE_POLYLINE;
-    }
-    else if( object instanceof GM_Surface )
-    {
-      m_shptype = ShapeConst.SHAPE_TYPE_POLYGON;
-    }
-    else if( object instanceof GM_MultiPoint )
-    {
-      m_shptype = ShapeConst.SHAPE_TYPE_POINT;
-    }
-    else if( object instanceof GM_MultiCurve )
-    {
-      m_shptype = ShapeConst.SHAPE_TYPE_POLYLINE;
-    }
-    else if( object instanceof GM_MultiSurface )
-    {
-      m_shptype = ShapeConst.SHAPE_TYPE_POLYGON;
-    }
-    else
-      m_shptype = ShapeConst.SHAPE_TYPE_POINT;
+    m_shapeConstant = shapeType;
 
     m_geometryPropertyType = features[0].getFeatureType().getDefaultGeometryProperty();
+
+    // get the GM_Objects in order to get the number of patches
+    final GM_Object geom = (GM_Object) features[0].getProperty( getGeometryPropertyType() );
+    if( geom instanceof GM_TriangulatedSurface_Impl )
+    {
+      m_triSurface = (GM_TriangulatedSurface_Impl) geom;
+    }
+
   }
 
   /**
-   * @see org.kalypsodeegree_impl.io.shpapi.IShapeDataProvider#getFeatures()
+   * @see org.kalypsodeegree_impl.io.shpapi.IShapeDataProvider#getFeature(int)
    */
-  public Feature getFeature( final int index )
+  public Feature getFeature( int index )
   {
     return m_features[index];
-  }
 
-  /**
-   * @see org.kalypsodeegree_impl.io.shpapi.IShapeDataProvider#getOutputShapeConstant()
-   */
-  public byte getOutputShapeConstant( )
-  {
-    return m_shptype;
   }
 
   /**
@@ -129,11 +97,6 @@ public class StandardShapeDataProvider implements IShapeDataProvider
   public IFeatureType getFeatureType( )
   {
     return m_features[0].getFeatureType();
-  }
-
-  public IPropertyType getGeometryPropertyType( )
-  {
-    return m_geometryPropertyType;
   }
 
   /**
@@ -145,21 +108,35 @@ public class StandardShapeDataProvider implements IShapeDataProvider
   }
 
   /**
+   * @see org.kalypsodeegree_impl.io.shpapi.IShapeDataProvider#getGeometryPropertyType()
+   */
+  public IPropertyType getGeometryPropertyType( )
+  {
+    return m_geometryPropertyType;
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.io.shpapi.IShapeDataProvider#getOutputShapeConstant()
+   */
+  public byte getOutputShapeConstant( )
+  {
+    return m_shapeConstant;
+  }
+
+  /**
    * @see org.kalypsodeegree_impl.io.shpapi.IShapeDataProvider#setFeatures(org.kalypsodeegree.model.feature.Feature[])
    */
-  public void setFeatures( final Feature[] features )
+  public void setFeatures( Feature[] features )
   {
     m_features = features;
-
   }
 
   /**
    * @see org.kalypsodeegree_impl.io.shpapi.IShapeDataProvider#setOutputShapeConstant(byte)
    */
-  public void setOutputShapeConstant( final byte shapeConstant )
+  public void setOutputShapeConstant( byte shapeConstant )
   {
-    m_shptype = shapeConstant;
-
+    m_shapeConstant = ShapeConst.SHAPE_TYPE_POLYGONZ;
   }
 
   /**
@@ -167,7 +144,7 @@ public class StandardShapeDataProvider implements IShapeDataProvider
    */
   public GM_Object getGeometry( final int index )
   {
-    return (GM_Object) m_features[index].getProperty( getGeometryPropertyType() );
+    return m_triSurface;
   }
 
   /**
@@ -176,7 +153,7 @@ public class StandardShapeDataProvider implements IShapeDataProvider
    */
   public Object getFeatureProperty( int featureIndex, IPropertyType propertyType )
   {
-    return m_features[featureIndex].getProperty( propertyType );
+    return m_features[0].getProperty( propertyType );
   }
 
 }

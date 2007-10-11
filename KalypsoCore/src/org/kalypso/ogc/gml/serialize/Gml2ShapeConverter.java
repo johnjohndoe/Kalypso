@@ -56,7 +56,7 @@ import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ISimpleMarshallingTypeHandler;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree_impl.io.shpapi.StandardShapeDataProvider;
+import org.kalypsodeegree_impl.io.shpapi.IShapeDataProvider;
 
 /**
  * Helps converting gml(-workspace) to shape files.
@@ -104,14 +104,13 @@ public class Gml2ShapeConverter
     m_geomProp = geomProp;
   }
 
-  public void writeShape( final FeatureList featureList, final String shapeFileBase, final IProgressMonitor monitor ) throws CoreException
+  public void writeShape( final FeatureList featureList, final String shapeFileBase, IShapeDataProvider shapeDataProvider, final IProgressMonitor monitor ) throws CoreException
   {
     monitor.beginTask( "Schreibe Shape...", 2 );
 
     final Feature[] features = featureList.toFeatures();
     try
     {
-      final StandardShapeDataProvider shapeDataProvider = new StandardShapeDataProvider( features );
       ShapeSerializer.serializeFeatures( features, m_mapping, m_geomProp, shapeFileBase, shapeDataProvider );
     }
     catch( final GmlSerializeException e )

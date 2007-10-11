@@ -77,13 +77,13 @@ import org.kalypsodeegree.model.geometry.GM_LineString;
 public class SHPPolyLinez implements ISHPGeometry
 {
 
-  public int numParts;
+  private final int numParts;
 
-  public int numPoints;
+  private int numPoints;
 
-  public SHPPointz[][] pointsz = null;
+  private SHPPointz[][] pointsz = null;
 
-  public final SHPZRange m_zrange;
+  private final SHPZRange m_zrange;
 
   private final SHPEnvelope m_envelope;
 
@@ -114,6 +114,8 @@ public class SHPPolyLinez implements ISHPGeometry
 
     // array of points for all parts
     pointsz = new SHPPointz[numParts][];
+
+    int count = 0;
 
     // get the index for the first point of each part
     for( int j = 0; j < numParts; j++ )
@@ -154,13 +156,17 @@ public class SHPPolyLinez implements ISHPGeometry
       // create the points of the j-th part from the buffer
       for( int i = 0; i < lnumPoints; i++ )
       {
+        // number of the current point
+        count++;
+
         // allocate memory for the points of the j-th part
-        pointsz[j][i] = new SHPPointz( recBuf, offset + (i * 16) );
+        pointsz[j][i] = new SHPPointz( recBuf, offset + (i * 16), ShapeConst.SHAPE_TYPE_POLYLINEZ );
 
         // jump to the z-values of the points
-        byteposition = 44 + (4 * numParts) + (i * 16);
+        byteposition = 44 + (4 * numParts) + (numPoints * 16) + 16 + ((count - 1) * 8);
 
-        pointsz[j][i].setZ( ByteUtils.readLEDouble( recBuf, byteposition ) );
+        final double zValue = ByteUtils.readLEDouble( recBuf, byteposition );
+        pointsz[j][i].setZ( zValue );
       }
       byteposition = offset;
     }
@@ -181,8 +187,8 @@ public class SHPPolyLinez implements ISHPGeometry
     double xmax = curve[0].getEnvelope().getMax().getX();
     double ymin = curve[0].getEnvelope().getMin().getY();
     double ymax = curve[0].getEnvelope().getMax().getY();
-    double zmin = curve[0].getEnvelope().getMin().getZ();
-    double zmax = curve[0].getEnvelope().getMax().getZ();
+    double zmin = Double.MAX_VALUE;
+    double zmax = Double.MIN_VALUE;
 
     numParts = curve.length;
 
@@ -261,7 +267,7 @@ public class SHPPolyLinez implements ISHPGeometry
     int byteposition;
 
     // write shape type identifier ( 3 = polyline )
-    ByteUtils.writeLEInt( byteArray, offset, 3 );
+    ByteUtils.writeLEInt( byteArray, offset, 13 );
 
     offset += 4;
     // save offset of the bounding box
@@ -335,7 +341,7 @@ public class SHPPolyLinez implements ISHPGeometry
 
         // write z-coordinate
         // jump to the z-values
-        byteposition = 44 + (4 * numParts) + (count * 16);
+        byteposition = ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH + 44 + (4 * numParts) + (numPoints * 16) + 16 + ((count - 1) * 8);
         ByteUtils.writeLEDouble( byteArray, byteposition, pointsz[i][j].getZ() );
 
       }
@@ -356,7 +362,7 @@ public class SHPPolyLinez implements ISHPGeometry
 
     // write z-range
     // jump to the z-range byte postition
-    byteposition = 44 + (4 * numParts) + (numPoints * 16);
+    byteposition = ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH + 44 + (4 * numParts) + (numPoints * 16);
     // write z-range to the byte array
     ByteUtils.writeLEDouble( byteArray, byteposition, zmin );
     offset += 8;
@@ -379,6 +385,26 @@ public class SHPPolyLinez implements ISHPGeometry
   }
 
   public SHPZRange getZRange( )
+  {
+    return m_zrange;
+  }
+
+  public int getNumParts( )
+  {
+    return numParts;
+  }
+
+  public int getNumPoints( )
+  {
+    return numPoints;
+  }
+
+  public SHPPointz[][] getPointsz( )
+  {
+    return pointsz;
+  }
+
+  public SHPZRange getZrange( )
   {
     return m_zrange;
   }

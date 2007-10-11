@@ -62,6 +62,6 @@ public class WriteShapeTest extends TestCase
       workspace.addFeatureAsComposition( shapeRootFeature, shapeParentRelation, -1, feature );
     }
 
-    ShapeSerializer.serialize( workspace, "C:\\tmp\\shapetest" );
+    ShapeSerializer.serialize( workspace, "C:\\tmp\\shapetest", null );
   }
 }

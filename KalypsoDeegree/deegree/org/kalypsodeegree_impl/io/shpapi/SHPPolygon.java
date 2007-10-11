@@ -61,13 +61,19 @@
 
 package org.kalypsodeegree_impl.io.shpapi;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.kalypsodeegree.model.geometry.ByteUtils;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_CurveSegment;
-import org.kalypsodeegree.model.geometry.GM_Ring;
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree_impl.model.geometry.GM_PositionOrientation;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.model.geometry.GM_PositionOrientation.TYPE;
 import org.kalypsodeegree_impl.tools.Debug;
+import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * Class representig a two dimensional ESRI Polygon <BR>
@@ -114,48 +120,43 @@ public class SHPPolygon implements ISHPGeometry
    * constructor: recieves an array of arrays of GM_Points <BR>
    */
   @SuppressWarnings("unchecked")
-  public SHPPolygon( GM_Surface[] surface )
+  public SHPPolygon( GM_SurfacePatch[] surfacePatch )
   {
 
     Debug.debugMethodBegin( this, "SHPPolygon" );
 
     try
     {
-      int count = 0;
+      final List<GM_Curve> curveList = new LinkedList<GM_Curve>();
+      CS_CoordinateSystem crs = surfacePatch[0].getCoordinateSystem();
 
-      for( int i = 0; i < surface.length; i++ )
+      for( int i = 0; i < surfacePatch.length; i++ )
       {
-        // increment for exterior ring
-        count++;
-        // increment for inner rings
-        GM_Ring[] rings = surface[i].getSurfaceBoundary().getInteriorRings();
-        if( rings != null )
+        final GM_Position[] exteriorRing = surfacePatch[i].getExteriorRing();
+
+        GM_CurveSegment cs = GeometryFactory.createGM_CurveSegment( exteriorRing, crs );
+
+        final GM_Position[] positions = GM_PositionOrientation.orient( cs.getPositions(), TYPE.NEGATIV );
+        cs = GeometryFactory.createGM_CurveSegment( positions, crs );
+        if( cs != null )
+          curveList.add( GeometryFactory.createGM_Curve( cs ) );
+
+        final GM_Position[][] interiorRings = surfacePatch[i].getInteriorRings();
+
+        if( interiorRings != null )
         {
-          count += rings.length;
-        }
-      }
-
-      GM_Curve[] curves = new GM_Curve[count];
-
-      count = 0;
-      for( int i = 0; i < surface.length; i++ )
-      {
-
-        GM_CurveSegment cs = surface[i].getSurfaceBoundary().getExteriorRing().getAsCurveSegment();
-        curves[count++] = GeometryFactory.createGM_Curve( cs );
-
-        GM_Ring[] rings = surface[i].getSurfaceBoundary().getInteriorRings();
-        if( rings != null )
-        {
-          for( int j = 0; j < rings.length; j++ )
+          final GM_Curve[] rings = GeometryFactory.createGM_Curve( interiorRings, crs );
+          if( rings != null )
           {
-            cs = rings[j].getAsCurveSegment();
-            curves[count++] = GeometryFactory.createGM_Curve( cs );
+            for( int j = 0; j < rings.length; j++ )
+            {
+              curveList.add( rings[i] );
+            }
           }
         }
       }
 
-      m_rings = new SHPPolyLine( curves );
+      m_rings = new SHPPolyLine( curveList.toArray( new GM_Curve[curveList.size()] ) );
 
       m_envelope = m_rings.getEnvelope();
 

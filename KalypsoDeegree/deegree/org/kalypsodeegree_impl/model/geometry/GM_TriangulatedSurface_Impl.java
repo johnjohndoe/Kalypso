@@ -43,6 +43,7 @@ package org.kalypsodeegree_impl.model.geometry;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -395,6 +396,19 @@ public class GM_TriangulatedSurface_Impl extends GM_OrientableSurface_Impl imple
     if( adapter == GM_SurfacePatch[].class || adapter == GM_Polygon[].class || adapter == GM_Triangle[].class )
     {
       return m_items.toArray( new GM_Triangle[m_items.size()] );
+    }
+
+    // for points: get centroids of the triangles
+    if( adapter == GM_Point[].class )
+    {
+      final List<GM_Point> pointList = new LinkedList<GM_Point>();
+
+      GM_Triangle[] triangles = m_items.toArray( new GM_Triangle[m_items.size()] );
+      for( GM_Triangle triangle : triangles )
+      {
+        pointList.add( triangle.getCentroid() );
+      }
+      return pointList.toArray( new GM_Point[pointList.size()] );
     }
 
     // NO: behaviour assymmetric to GM_Surface

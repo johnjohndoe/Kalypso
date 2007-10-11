@@ -105,7 +105,7 @@ public class SHPMultiPointz implements ISHPGeometry
 
       // at first the x- and y-values of the points will be loaded
       byteposition = 40 + i * 16;
-      pointsz[i] = new SHPPointz( recBuf, byteposition );
+      pointsz[i] = new SHPPointz( recBuf, byteposition, ShapeConst.SHAPE_TYPE_MULTIPOINTZ );
 
     }
 
@@ -116,7 +116,7 @@ public class SHPMultiPointz implements ISHPGeometry
     for( int j = 0; j < numPoints; j++ )
     {
       // at last the z-values of the pointsz...
-      byteposition = (40 + numPoints * 16) + 16 + (8 * j);
+      byteposition = ShapeConst.SHAPE_FILE_HEADER_LENGTH + (40 + numPoints * 16) + 16 + (8 * numPoints) + (8 * j);
       pointsz[j].setZ( ByteUtils.readLEDouble( recBuf, byteposition ) );
     }
 

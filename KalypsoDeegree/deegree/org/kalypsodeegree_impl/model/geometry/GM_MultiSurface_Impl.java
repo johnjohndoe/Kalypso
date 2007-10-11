@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,27 +36,27 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- 
+
+
  history:
- 
+
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
- interface-compatibility to deegree is wanted but not retained always. 
- 
- If you intend to use this software in other ways than in kalypso 
+ interface-compatibility to deegree is wanted but not retained always.
+
+ If you intend to use this software in other ways than in kalypso
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
 
- all modifications are licensed as deegree, 
+ all modifications are licensed as deegree,
  original copyright:
- 
+
  Copyright (C) 2001 by:
  EXSE, Department of Geography, University of Bonn
  http://www.giub.uni-bonn.de/exse/
  lat/lon GmbH
  http://www.lat-lon.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.geometry;
 
@@ -64,9 +64,14 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.eclipse.core.runtime.IStatus;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
+import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.opengis.cs.CS_CoordinateSystem;
@@ -204,6 +209,61 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
   public GM_Surface< ? >[] getAllSurfaces( )
   {
     return m_aggregate.toArray( new GM_Surface[getSize()] );
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.model.geometry.GM_Primitive_Impl#getAdapter(java.lang.Class)
+   */
+  @SuppressWarnings("unchecked")
+  @Override
+  public Object getAdapter( final Class adapter )
+  {
+    if( adapter == GM_SurfacePatch[].class )
+    {
+      final List<GM_SurfacePatch> patchList = new LinkedList<GM_SurfacePatch>();
+
+      GM_Surface< ? >[] surfaces = getAllSurfaces();
+
+      for( GM_Surface< ? > surface : surfaces )
+      {
+        final GM_SurfacePatch[] surfacePatches = (GM_SurfacePatch[]) surface.getAdapter( GM_SurfacePatch[].class );
+        for( GM_SurfacePatch surfacePatch : surfacePatches )
+        {
+          patchList.add( surfacePatch );
+        }
+      }
+      return patchList.toArray( new GM_SurfacePatch[patchList.size()] );
+    }
+
+    if( adapter == GM_Curve.class )
+    {
+      final List<GM_Curve> curveList = new LinkedList<GM_Curve>();
+
+      GM_Surface< ? >[] surfaces = getAllSurfaces();
+
+      for( GM_Surface< ? > surface : surfaces )
+      {
+        final GM_SurfacePatch[] surfacePatches = (GM_SurfacePatch[]) surface.getAdapter( GM_SurfacePatch[].class );
+        for( GM_SurfacePatch surfacePatch : surfacePatches )
+        {
+          final GM_Position[] exteriorRing = surfacePatch.getExteriorRing();
+          try
+          {
+            curveList.add( GeometryFactory.createGM_Curve( exteriorRing, getCoordinateSystem() ) );
+          }
+          catch( final GM_Exception e )
+          {
+            final IStatus status = StatusUtilities.statusFromThrowable( e );
+            KalypsoDeegreePlugin.getDefault().getLog().log( status );
+            return null;
+          }
+        }
+      }
+      return curveList.toArray( new GM_Curve[curveList.size()] );
+
+    }
+
+    return super.getAdapter( adapter );
   }
 
   /**

@@ -309,7 +309,7 @@ public class MainFile
       }
       if( shpType == ShapeConst.SHAPE_TYPE_POINTZ )
       {
-        SHPPointz shppointz = new SHPPointz( recBuf, 4 );
+        SHPPointz shppointz = new SHPPointz( recBuf, 4, ShapeConst.SHAPE_TYPE_POINTZ );
         shpGeom = shppointz;
       }
       else if( shpType == ShapeConst.SHAPE_TYPE_POLYLINEZ )
