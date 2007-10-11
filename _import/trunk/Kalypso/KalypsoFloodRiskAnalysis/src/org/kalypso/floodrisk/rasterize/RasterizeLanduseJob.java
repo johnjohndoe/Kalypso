@@ -56,6 +56,7 @@ import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationDataPath;
 import org.kalypso.simulation.core.SimulationException;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage2;
 import org.kalypsodeegree_impl.model.feature.FeaturePath;
@@ -70,21 +71,19 @@ import org.kalypsodeegree_impl.model.feature.FeaturePath;
 public class RasterizeLanduseJob implements ISimulation
 {
 
-  // IDs
-  // input
   public static final String LanduseVectorDataID = "LanduseVectorData"; //$NON-NLS-1$
 
   public static final String ContextModelID = "ContextModel"; //$NON-NLS-1$
 
   public static final String BaseRasterID = "BaseRaster"; //$NON-NLS-1$
 
-  // output
-  public static final String LanduseRasterDataID = "LanduseRasterData"; //$NON-NLS-1$
+  public static final String LanduseGmlFilePath = "LanduseGmlFilePath"; //$NON-NLS-1$
+
+  public static final String LanduseRasterFilePath = "LanduseRasterFilePath"; //$NON-NLS-1$
 
   public RasterizeLanduseJob( )
   {
     super();
-
   }
 
   /**
@@ -92,38 +91,36 @@ public class RasterizeLanduseJob implements ISimulation
    *      org.kalypso.services.calculation.job.ICalcDataProvider, org.kalypso.services.calculation.job.ICalcResultEater,
    *      org.kalypso.services.calculation.job.ICalcMonitor)
    */
-  public void run( File tmpdir, ISimulationDataProvider inputProvider, ISimulationResultEater resultEater, ISimulationMonitor monitor ) throws SimulationException
+  public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
     try
     {
-      monitor.setMessage( Messages.getString("rasterize.RasterizeLanduseJob.LoadingInputData") ); //$NON-NLS-1$
+      monitor.setMessage( Messages.getString( "rasterize.RasterizeLanduseJob.LoadingInputData" ) ); //$NON-NLS-1$
 
       // landuseVectorData: featureList
-      URL landuseVectorDataGML = (URL) inputProvider.getInputForID( LanduseVectorDataID );
-      GMLWorkspace landuseVectorData;
-      landuseVectorData = GmlSerializer.createGMLWorkspace( landuseVectorDataGML, null );
-      FeaturePath featureMember = new FeaturePath( "FeatureMember" ); //$NON-NLS-1$
-      List featureList = (List) featureMember.getFeature( landuseVectorData );
+      final URL landuseVectorDataGML = (URL) inputProvider.getInputForID( LanduseVectorDataID );
+      final GMLWorkspace landuseVectorData = GmlSerializer.createGMLWorkspace( landuseVectorDataGML, null );
+      final FeaturePath featureMember = new FeaturePath( "FeatureMember" ); //$NON-NLS-1$
+      final List<Feature> featureList = (List) featureMember.getFeature( landuseVectorData );
 
       // contextModel: landuseTypeList
-      URL contextModelGML = (URL) inputProvider.getInputForID( ContextModelID );
-      Hashtable landuseTypeList;
-      ContextModel contextModel = new ContextModel( contextModelGML );
-      landuseTypeList = contextModel.getLanduseList();
+      final URL contextModelGML = (URL) inputProvider.getInputForID( ContextModelID );
+      final ContextModel contextModel = new ContextModel( contextModelGML );
+      final Hashtable landuseTypeList = contextModel.getLanduseList();
 
       // baseRaster
-      URL baseRasterGML = (URL) inputProvider.getInputForID( BaseRasterID );
-      RasterDataModel rasterDataModel = new RasterDataModel();
-      RectifiedGridCoverage2 baseRaster = rasterDataModel.getRectifiedGridCoverage( baseRasterGML );
+      final URL baseRasterGML = (URL) inputProvider.getInputForID( BaseRasterID );
+      final RasterDataModel rasterDataModel = new RasterDataModel();
+      final RectifiedGridCoverage2 baseRaster = rasterDataModel.getRectifiedGridCoverage( baseRasterGML );
 
-      monitor.setMessage( Messages.getString("rasterize.RasterizeLanduseJob.Calculating") ); //$NON-NLS-1$
-      RectifiedGridCoverage2 resultGrid = VectorToGridConverter.toGrid( featureList, landuseTypeList, baseRaster, monitor );
+      monitor.setMessage( Messages.getString( "rasterize.RasterizeLanduseJob.Calculating" ) ); //$NON-NLS-1$
+      final RectifiedGridCoverage2 resultGrid = VectorToGridConverter.createCoverage( featureList, landuseTypeList, baseRaster, (SimulationDataPath) ((IProcessResultEater) resultEater).getOutputMap().get( LanduseRasterFilePath ), monitor );
 
-      SimulationDataPath outputBean = (SimulationDataPath) ((IProcessResultEater) resultEater).getOutputMap().get( LanduseRasterDataID );
-      File resultFile = new File( outputBean.getPath() );
+      final SimulationDataPath outputBean = (SimulationDataPath) ((IProcessResultEater) resultEater).getOutputMap().get( LanduseGmlFilePath );
+      final File resultFile = new File( outputBean.getPath() );
       if( !resultFile.exists() )
         resultFile.createNewFile();
-      monitor.setMessage( Messages.getString("rasterize.RasterizeLanduseJob.SavingResults") ); //$NON-NLS-1$
+      monitor.setMessage( Messages.getString( "rasterize.RasterizeLanduseJob.SavingResults" ) ); //$NON-NLS-1$
       rasterDataModel.exportToGML( resultFile, resultGrid );
       resultEater.addResult( outputBean.getId(), null );
     }

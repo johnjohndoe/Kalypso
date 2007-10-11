@@ -179,4 +179,13 @@ public class ProcessResultEater implements IProcessResultEater
     return m_clientOutputMap;
   }
 
+  /**
+   * @see org.kalypso.simulation.core.ISimulationResultEater#addResult(java.lang.String, java.lang.Object)
+   */
+  public void addResult( String id, Object result ) throws SimulationException
+  {
+    // TODO Auto-generated method stub
+    
+  }
+
 }

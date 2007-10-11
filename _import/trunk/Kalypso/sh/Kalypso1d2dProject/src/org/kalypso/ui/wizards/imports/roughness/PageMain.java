@@ -217,7 +217,7 @@ public class PageMain extends WizardPage implements Listener
     getWizard().getContainer().updateButtons();
   }
 
-  String getFilenameFromDialog( File selectedFile, String[] filterExtensions, String path )
+  private String getFilenameFromDialog( File selectedFile, String[] filterExtensions, String path )
   {
     FileDialog dialog = new FileDialog( getShell(), SWT.SINGLE );
     dialog.setFilterExtensions( filterExtensions );

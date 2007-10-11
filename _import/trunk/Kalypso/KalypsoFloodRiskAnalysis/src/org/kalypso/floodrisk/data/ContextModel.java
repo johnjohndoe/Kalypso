@@ -80,7 +80,6 @@ public class ContextModel
    */
   public ContextModel( URL gmlURL )
   {
-    //System.out.println( "/n/n/nDejan: Read " + gmlURL.getPath() + ".../n/n/n" );
     try
     {
       workspace = GmlSerializer.createGMLWorkspace( gmlURL, null );
@@ -88,7 +87,7 @@ public class ContextModel
     }
     catch( Exception e )
     {
-      System.out.println( e );
+      e.printStackTrace();
     }
   }
 

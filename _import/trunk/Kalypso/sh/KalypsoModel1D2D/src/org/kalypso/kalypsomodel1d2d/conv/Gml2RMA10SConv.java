@@ -159,6 +159,9 @@ public class Gml2RMA10SConv implements INativeIDProvider
     if( m_restart )
     {
       m_restartEater = new RestartEater();
+      
+      // TODO: this prohibits using this calc-job in a server-client application
+      // Always access data via the ISimulationDataProvider
       final IFolder scenarioFolder = Util.getScenarioFolder();
       final List<IRestartInfo> restartInfos = m_calculation.getControlModel().getRestartInfos();
       for( final IRestartInfo restartInfo : restartInfos )

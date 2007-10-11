@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema targetNamespace="http://www.tuhh.de/floodrisk/riskContextModel" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:risk_rcm="http://www.tuhh.de/floodrisk/riskContextModel">
+<xs:schema
+	targetNamespace="http://www.tuhh.de/floodrisk/riskContextModel"
+	elementFormDefault="qualified" attributeFormDefault="unqualified"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:gml="http://www.opengis.net/gml"
+	xmlns:risk_rcm="http://www.tuhh.de/floodrisk/riskContextModel">
 	<!-- =========================================================== -->
 	<!--Imports=========================================================== -->
-	<xs:import namespace="http://www.opengis.net/gml" schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd"/>
+	<xs:import namespace="http://www.opengis.net/gml" />
 	<!-- =========================================================== -->
 	<xs:annotation>
 		<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
@@ -11,15 +17,21 @@
 	</xs:annotation>
 	<!-- =========================================================== -->
 	<!-- RiskContextModel=========================================================== -->
-	<xs:element name="RiskContextModel" type="risk_rcm:RiskContextModelType"/>
+	<xs:element name="RiskContextModel"
+		type="risk_rcm:RiskContextModelType" />
 	<xs:complexType name="RiskContextModelType">
 		<xs:complexContent>
 			<xs:extension base="gml:AbstractFeatureType">
 				<xs:sequence>
-					<xs:element name="LanduseCollectionMember" type="risk_rcm:LanduseCollectionMemberAssociationType"/>
-					<xs:element name="RiskClassCollectionMember" type="risk_rcm:RiskClassCollectionMemberAssociationType"/>
-					<xs:element name="IntervalCollectionMember" type="risk_rcm:IntervalCollectionMemberAssociationType" maxOccurs="unbounded"/>
-					<xs:element name="IntervalMappingCollectionMember" type="risk_rcm:IntervalMappingCollectionMemberAssociationType"/>
+					<xs:element name="LanduseCollectionMember"
+						type="risk_rcm:LanduseCollectionMemberAssociationType" />
+					<xs:element name="RiskClassCollectionMember"
+						type="risk_rcm:RiskClassCollectionMemberAssociationType" />
+					<xs:element name="IntervalCollectionMember"
+						type="risk_rcm:IntervalCollectionMemberAssociationType"
+						maxOccurs="unbounded" />
+					<xs:element name="IntervalMappingCollectionMember"
+						type="risk_rcm:IntervalMappingCollectionMemberAssociationType" />
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -30,17 +42,21 @@
 		<xs:complexContent>
 			<xs:restriction base="gml:FeaturePropertyType">
 				<xs:sequence>
-					<xs:element ref="risk_rcm:LanduseCollection"/>
+					<xs:element ref="risk_rcm:LanduseCollection" />
 				</xs:sequence>
 			</xs:restriction>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="LanduseCollection" type="risk_rcm:LanduseCollectionType" substitutionGroup="gml:_Feature"/>
+	<xs:element name="LanduseCollection"
+		type="risk_rcm:LanduseCollectionType"
+		substitutionGroup="gml:_Feature" />
 	<xs:complexType name="LanduseCollectionType">
 		<xs:complexContent>
 			<xs:restriction base="gml:AbstractFeatureCollectionType">
 				<xs:sequence>
-					<xs:element name="LanduseMember" type="risk_rcm:LanduseMemberAssociationType" maxOccurs="unbounded"/>
+					<xs:element name="LanduseMember"
+						type="risk_rcm:LanduseMemberAssociationType"
+						maxOccurs="unbounded" />
 				</xs:sequence>
 			</xs:restriction>
 		</xs:complexContent>
@@ -50,17 +66,18 @@
 		<xs:complexContent>
 			<xs:restriction base="gml:FeaturePropertyType">
 				<xs:sequence>
-					<xs:element ref="risk_rcm:Landuse"/>
+					<xs:element ref="risk_rcm:Landuse" />
 				</xs:sequence>
 			</xs:restriction>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="Landuse" type="risk_rcm:LanduseFeatureType" substitutionGroup="gml:_Feature"/>
+	<xs:element name="Landuse" type="risk_rcm:LanduseFeatureType"
+		substitutionGroup="gml:_Feature" />
 	<xs:complexType name="LanduseFeatureType">
 		<xs:complexContent>
 			<xs:extension base="gml:AbstractFeatureType">
 				<xs:sequence>
-					<xs:element name="Name" type="xs:string"/>
+					<xs:element name="Name" type="xs:string" />
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -71,17 +88,21 @@
 		<xs:complexContent>
 			<xs:restriction base="gml:FeaturePropertyType">
 				<xs:sequence>
-					<xs:element ref="risk_rcm:RiskClassCollection"/>
+					<xs:element ref="risk_rcm:RiskClassCollection" />
 				</xs:sequence>
 			</xs:restriction>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="RiskClassCollection" type="risk_rcm:RiskClassCollectionType" substitutionGroup="gml:_Feature"/>
+	<xs:element name="RiskClassCollection"
+		type="risk_rcm:RiskClassCollectionType"
+		substitutionGroup="gml:_Feature" />
 	<xs:complexType name="RiskClassCollectionType">
 		<xs:complexContent>
 			<xs:restriction base="gml:AbstractFeatureCollectionType">
 				<xs:sequence>
-					<xs:element name="RiskClassMember" type="risk_rcm:RiskClassMemberAssociationType" maxOccurs="unbounded"/>
+					<xs:element name="RiskClassMember"
+						type="risk_rcm:RiskClassMemberAssociationType"
+						maxOccurs="unbounded" />
 				</xs:sequence>
 			</xs:restriction>
 		</xs:complexContent>
@@ -91,17 +112,18 @@
 		<xs:complexContent>
 			<xs:restriction base="gml:FeaturePropertyType">
 				<xs:sequence>
-					<xs:element ref="risk_rcm:RiskClass"/>
+					<xs:element ref="risk_rcm:RiskClass" />
 				</xs:sequence>
 			</xs:restriction>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="RiskClass" type="risk_rcm:RiskClassFeatureType" substitutionGroup="gml:_Feature"/>
+	<xs:element name="RiskClass" type="risk_rcm:RiskClassFeatureType"
+		substitutionGroup="gml:_Feature" />
 	<xs:complexType name="RiskClassFeatureType">
 		<xs:complexContent>
 			<xs:extension base="gml:AbstractFeatureType">
 				<xs:sequence>
-					<xs:element name="Risk" type="xs:string"/>
+					<xs:element name="Risk" type="xs:string" />
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -112,17 +134,20 @@
 		<xs:complexContent>
 			<xs:restriction base="gml:FeaturePropertyType">
 				<xs:sequence>
-					<xs:element ref="risk_rcm:IntervalCollection"/>
+					<xs:element ref="risk_rcm:IntervalCollection" />
 				</xs:sequence>
 			</xs:restriction>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="IntervalCollection" type="risk_rcm:IntervalCollectionType" substitutionGroup="gml:_Feature"/>
+	<xs:element name="IntervalCollection"
+		type="risk_rcm:IntervalCollectionType"
+		substitutionGroup="gml:_Feature" />
 	<xs:complexType name="IntervalCollectionType">
 		<xs:complexContent>
 			<xs:restriction base="gml:AbstractFeatureCollectionType">
 				<xs:sequence>
-					<xs:element name="IntervalMember" type="risk_rcm:IntervalMemberAssociationType" maxOccurs="3"/>
+					<xs:element name="IntervalMember"
+						type="risk_rcm:IntervalMemberAssociationType" maxOccurs="3" />
 				</xs:sequence>
 			</xs:restriction>
 		</xs:complexContent>
@@ -132,40 +157,48 @@
 		<xs:complexContent>
 			<xs:restriction base="gml:FeaturePropertyType">
 				<xs:sequence>
-					<xs:element ref="risk_rcm:Interval"/>
+					<xs:element ref="risk_rcm:Interval" />
 				</xs:sequence>
 			</xs:restriction>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="Interval" type="risk_rcm:IntervalFeatureType" substitutionGroup="gml:_Feature"/>
+	<xs:element name="Interval" type="risk_rcm:IntervalFeatureType"
+		substitutionGroup="gml:_Feature" />
 	<xs:complexType name="IntervalFeatureType">
 		<xs:complexContent>
 			<xs:extension base="gml:AbstractFeatureType">
 				<xs:sequence>
-					<xs:element name="RiskClassLink" type="risk_rcm:RiskClassLinkType"/>
-					<xs:element name="minValue" type="xs:double"/>
-					<xs:element name="maxValue" type="xs:double"/>
+					<xs:element name="RiskClassLink"
+						type="risk_rcm:RiskClassLinkType" />
+					<xs:element name="minValue" type="xs:double" />
+					<xs:element name="maxValue" type="xs:double" />
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 	<!-- =========================================================== -->
 	<!-- IntervalMappingCollectionMember=========================================================== -->
-	<xs:complexType name="IntervalMappingCollectionMemberAssociationType">
+	<xs:complexType
+		name="IntervalMappingCollectionMemberAssociationType">
 		<xs:complexContent>
 			<xs:restriction base="gml:FeaturePropertyType">
 				<xs:sequence>
-					<xs:element ref="risk_rcm:IntervalMappingCollection"/>
+					<xs:element
+						ref="risk_rcm:IntervalMappingCollection" />
 				</xs:sequence>
 			</xs:restriction>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="IntervalMappingCollection" type="risk_rcm:IntervalMappingCollectionType" substitutionGroup="gml:_Feature"/>
+	<xs:element name="IntervalMappingCollection"
+		type="risk_rcm:IntervalMappingCollectionType"
+		substitutionGroup="gml:_Feature" />
 	<xs:complexType name="IntervalMappingCollectionType">
 		<xs:complexContent>
 			<xs:restriction base="gml:AbstractFeatureCollectionType">
 				<xs:sequence>
-					<xs:element name="IntervalMappingMember" type="risk_rcm:IntervalMappingMemberAssociationType" maxOccurs="unbounded"/>
+					<xs:element name="IntervalMappingMember"
+						type="risk_rcm:IntervalMappingMemberAssociationType"
+						maxOccurs="unbounded" />
 				</xs:sequence>
 			</xs:restriction>
 		</xs:complexContent>
@@ -175,18 +208,22 @@
 		<xs:complexContent>
 			<xs:restriction base="gml:FeaturePropertyType">
 				<xs:sequence>
-					<xs:element ref="risk_rcm:IntervalMapping"/>
+					<xs:element ref="risk_rcm:IntervalMapping" />
 				</xs:sequence>
 			</xs:restriction>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="IntervalMapping" type="risk_rcm:IntervalMappingFeatureType" substitutionGroup="gml:_Feature"/>
+	<xs:element name="IntervalMapping"
+		type="risk_rcm:IntervalMappingFeatureType"
+		substitutionGroup="gml:_Feature" />
 	<xs:complexType name="IntervalMappingFeatureType">
 		<xs:complexContent>
 			<xs:extension base="gml:AbstractFeatureType">
 				<xs:sequence>
-					<xs:element name="IntervalCollectionLink" type="risk_rcm:IntervalCollectionLinkType"/>
-					<xs:element name="LanduseLink" type="risk_rcm:LanduseLinkType" maxOccurs="unbounded"/>
+					<xs:element name="IntervalCollectionLink"
+						type="risk_rcm:IntervalCollectionLinkType" />
+					<xs:element name="LanduseLink"
+						type="risk_rcm:LanduseLinkType" maxOccurs="unbounded" />
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -197,7 +234,7 @@
 		<xs:complexContent>
 			<xs:restriction base="gml:FeaturePropertyType">
 				<xs:sequence minOccurs="0">
-					<xs:element ref="risk_rcm:Landuse"/>
+					<xs:element ref="risk_rcm:Landuse" />
 				</xs:sequence>
 			</xs:restriction>
 		</xs:complexContent>
@@ -207,7 +244,7 @@
 		<xs:complexContent>
 			<xs:restriction base="gml:FeaturePropertyType">
 				<xs:sequence minOccurs="0">
-					<xs:element ref="risk_rcm:IntervalCollection"/>
+					<xs:element ref="risk_rcm:IntervalCollection" />
 				</xs:sequence>
 			</xs:restriction>
 		</xs:complexContent>
@@ -217,7 +254,7 @@
 		<xs:complexContent>
 			<xs:restriction base="gml:FeaturePropertyType">
 				<xs:sequence minOccurs="0">
-					<xs:element ref="risk_rcm:RiskClass"/>
+					<xs:element ref="risk_rcm:RiskClass" />
 				</xs:sequence>
 			</xs:restriction>
 		</xs:complexContent>

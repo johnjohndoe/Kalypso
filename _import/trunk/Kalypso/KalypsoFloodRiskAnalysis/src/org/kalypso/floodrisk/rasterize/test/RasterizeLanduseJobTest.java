@@ -62,26 +62,18 @@ public class RasterizeLanduseJobTest extends TestCase
 
   private void testRasterizeLanduse( RasterizeLanduseJob job ) throws SimulationException
   {
-    String base = "D://Dejan//eclipse3.2//runtime-Risk//fff//";
-    // Input
-    int numInputBeans = 3;
-    SimulationDataPath[] input = new SimulationDataPath[numInputBeans];
-    SimulationDataPath input1 = new SimulationDataPath( RasterizeLanduseJob.LanduseVectorDataID, base + "Landuse//LanduseVectorData.gml" );
-    input[0] = input1;
-    SimulationDataPath input2 = new SimulationDataPath( RasterizeLanduseJob.ContextModelID, base + "Control//contextModell.gml" );
-    input[1] = input2;
-    SimulationDataPath input3 = new SimulationDataPath( RasterizeLanduseJob.BaseRasterID, base + "Waterlevel//wsp_hq100.gml" );
-    input[2] = input3;
-    ProcessDataProvider inputProvider = new ProcessDataProvider( input );
-    // Output
-    int numOutputBeans = 1;
-    SimulationDataPath[] output = new SimulationDataPath[numOutputBeans];
-    SimulationDataPath output1 = new SimulationDataPath( RasterizeLanduseJob.LanduseRasterDataID, base + "Landuse//landuseData.gml" );
-    output[0] = output1;
-    ProcessResultEater resultEater = new ProcessResultEater( output );
+    final String base = "D://__test//";
+    final SimulationDataPath[] input = new SimulationDataPath[3];
+    final SimulationDataPath[] output = new SimulationDataPath[2];
+    input[0] = new SimulationDataPath( RasterizeLanduseJob.LanduseVectorDataID, base + "Landuse//LanduseVectorData.gml" );
+    input[1] = new SimulationDataPath( RasterizeLanduseJob.ContextModelID, base + "Control//contextModell.gml" );
+    input[2] = new SimulationDataPath( RasterizeLanduseJob.BaseRasterID, base + "Waterlevel//wsp_hq100.gml" );
+    output[0] = new SimulationDataPath( RasterizeLanduseJob.LanduseGmlFilePath, base + "Landuse//landuseData.gml" );
+    output[1] = new SimulationDataPath( RasterizeLanduseJob.LanduseRasterFilePath, base + "Landuse//landuseRaster.dat" );
 
-    SimulationInfo jobBean = new SimulationInfo( "", "", "RasterizeLanduseJob", ISimulationConstants.STATE.RUNNING, -1, "" );
-
+    final ProcessDataProvider inputProvider = new ProcessDataProvider( input );
+    final ProcessResultEater resultEater = new ProcessResultEater( output );
+    final SimulationInfo jobBean = new SimulationInfo( "", "", "RasterizeLanduseJob", ISimulationConstants.STATE.RUNNING, -1, "" );
     job.run( null, inputProvider, resultEater, jobBean );
   }
 

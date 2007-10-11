@@ -48,7 +48,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE;
-import org.kalypso.kalypsomodel1d2d.schema.binding.result.IStepResultMeta.STEPTYPE;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.IResultMeta;
 import org.kalypso.kalypsosimulationmodel.core.resultmeta.ResultMeta;
 import org.kalypsodeegree.model.feature.Feature;
@@ -114,6 +113,8 @@ public class ScenarioResultMeta extends ResultMeta implements IScenarioResultMet
         final IFeatureWrapperCollection<IResultMeta> newChildren = newCalcUnitMeta.getChildren();
         final List<IResultMeta> oldChildrenToRemove = new ArrayList<IResultMeta>();
         final List<IResultMeta> newChildrenToRemove = new ArrayList<IResultMeta>();
+        
+        // Delete every step-result which is after the restart step
         for( final IResultMeta resultMeta : oldChildren )
         {
           if( resultMeta instanceof IStepResultMeta )
@@ -125,6 +126,9 @@ public class ScenarioResultMeta extends ResultMeta implements IScenarioResultMet
               oldChildrenToRemove.add( resultMeta );
           }
         }
+        
+        // Filter out any toplevel doc-nodes: necessairy, because there is this 'Model-DTM' toplevel
+        // Maybe TODO later: maybe its better to replace the old one by the new one....
         for( final IResultMeta resultMeta : newChildren )
         {
           if( resultMeta instanceof IDocumentResultMeta )
@@ -136,6 +140,7 @@ public class ScenarioResultMeta extends ResultMeta implements IScenarioResultMet
         }
 
         // removing cannot be done directly in previous loop because of ConcurrentModificationException on interator
+        // TODO: ask Thomas how to delete all attached resources as well (there is a helper function)
         for( final IResultMeta resultToRemove : oldChildrenToRemove )
           oldChildren.remove( resultToRemove );
         for( final IResultMeta resultToRemove : newChildrenToRemove )
@@ -147,7 +152,10 @@ public class ScenarioResultMeta extends ResultMeta implements IScenarioResultMet
       else
       {
         // no restart
+        
+        // TODO: ask Thomas how to delete all attached resources as well (there is a helper function)
         getChildren().remove( oldCalcUnitMeta );
+        
         getChildren().cloneInto( newCalcUnitMeta );
       }
     }

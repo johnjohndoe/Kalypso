@@ -69,13 +69,13 @@ public class RasterDataModel
    * creates a rectifiedGridCoverage object of a gml object
    * 
    * @param gmlURL
-   *          (Schema: RasterDataModel.xsd)
+   *            (Schema: RasterDataModel.xsd)
    * @return RectifiedGridCoverage2
    * @throws Exception
    */
-  public RectifiedGridCoverage2 getRectifiedGridCoverage( URL gmlURL ) throws Exception
+  public RectifiedGridCoverage2 getRectifiedGridCoverage( final URL gmlURL ) throws Exception
   {
-    GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlURL, null );
+    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlURL, null );
     return getRectifiedGridCoverage( workspace );
   }
 
@@ -85,9 +85,9 @@ public class RasterDataModel
    * @param workspace
    * @return RectifiedGridCoverage
    */
-  public static RectifiedGridCoverage2 getRectifiedGridCoverage( GMLWorkspace workspace )
+  public static RectifiedGridCoverage2 getRectifiedGridCoverage( final GMLWorkspace workspace )
   {
-    Feature rootFeature = workspace.getRootFeature();
+    final Feature rootFeature = workspace.getRootFeature();
     return new RectifiedGridCoverage2( rootFeature );
   }
 
@@ -96,10 +96,10 @@ public class RasterDataModel
    * 
    * @param rasterDataGML_OutputFile
    * @param grid
-   * @throws InvocationTargetException, IOException, GmlSerializeException
+   * @throws InvocationTargetException,
+   *             IOException, GmlSerializeException
    */
-  public void exportToGML( File rasterDataGML_OutputFile, RectifiedGridCoverage2 grid ) 
-  throws InvocationTargetException, IOException, GmlSerializeException
+  public void exportToGML( final File rasterDataGML_OutputFile, final RectifiedGridCoverage2 grid ) throws InvocationTargetException, IOException, GmlSerializeException
   {
     // load schema
     final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();

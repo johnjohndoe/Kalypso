@@ -40,97 +40,152 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.floodrisk.rasterize;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.Vector;
 
-import org.kalypso.floodrisk.internationalize.Messages;
+import javax.xml.namespace.QName;
+
+import ogc31.www.opengis.net.gml.FileType;
+import ogc31.www.opengis.net.gml.RangeSetType;
+
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
+import org.kalypso.contribs.ogc31.KalypsoOGC31JAXBcontext;
+import org.kalypso.floodrisk.schema.UrlCatalogFloodRisk;
 import org.kalypso.simulation.core.ISimulationMonitor;
+import org.kalypso.simulation.core.SimulationDataPath;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree_impl.model.cv.RangeSet;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage2;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridDomain;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * Class for converting Vectordata (featureList (Properties: "GEOM" and "RasterProperty")) to Rasterdata
  * (RectifiedGridCoverages)
  * 
  * @author N. Peiler
+ * 
  */
 public class VectorToGridConverter
 {
 
   /**
-   * converts a List of Features to a RectifiedGridCoverage
+   * converts a List of Features to a RectifiedGridCoverage2
    * 
    * @param featureList
-   *          List of Features with properties "GEOM" and "RasterProperty" (value of gridCell)
+   *            List of Features with properties "GEOM" and "RasterProperty" (value of gridCell)
    * @param propertyTable
-   *          Mapping of key and propertyValue (e.g. landuseTypeList)
+   *            Mapping of key and propertyValue (e.g. landuseTypeList)
    * @param baseGrid
-   *          RectifiedGridCoverage that defines the origin, offset and gridRange of the new grid
+   *            RectifiedGridCoverage that defines the origin, offset and gridRange of the new grid
    * @return new RectifiedGridCoverage
    * @throws Exception
    */
-  public static RectifiedGridCoverage2 toGrid( List featureList, Hashtable propertyTable, RectifiedGridCoverage2 baseGrid, ISimulationMonitor monitor ) throws Exception
+  public static RectifiedGridCoverage2 createCoverage( final List<Feature> featureList, final Hashtable<Object, Long> propertyTable, final RectifiedGridCoverage2 baseGrid, final SimulationDataPath resultRasterFile, final ISimulationMonitor monitor ) throws Exception
   {
-    String propertyName = "RasterProperty"; //$NON-NLS-1$
+    final QName propertyName = new QName( UrlCatalogFloodRisk.NS_VECTORDATAMODEL, "RasterProperty" );
     final RectifiedGridDomain gridDomain = baseGrid.getGridDomain();
-    GM_Point origin = gridDomain.getOrigin( null );
-    RectifiedGridDomain newGridDomain = new RectifiedGridDomain( origin, gridDomain.getOffsetX(), gridDomain.getOffsetY(), gridDomain.getGridRange() );
-    Vector<Vector<Double>> newRangeSetData = new Vector<Vector<Double>>();
-    
-    // ovde treba da iscitam fajl
-    Vector rangeSetData = null;//baseGrid.getRangeSet().getRangeSetData();
-    
-    for( int i = 0; i < rangeSetData.size(); i++ )
+    final GM_Point origin = gridDomain.getOrigin( null );
+    final RectifiedGridDomain newGridDomain = new RectifiedGridDomain( origin, gridDomain.getOffsetX(), gridDomain.getOffsetY(), baseGrid.getGridDomain().getGridRange() );
+    final double originX = origin.getX();
+    final double originY = origin.getY();
+    final double offsetX = baseGrid.getGridDomain().getOffsetX( origin.getCoordinateSystem() );
+    final double offsetY = baseGrid.getGridDomain().getOffsetY( origin.getCoordinateSystem() );
+    final String datFileName = baseGrid.getRangeSet().getFile().getFileName();
+    final IPath workspacePath = new Path( baseGrid.getFeature().getWorkspace().getContext().getPath() );
+    final File inputDatFile = workspacePath.removeLastSegments( 1 ).append( datFileName ).toFile();
+    final File outputDatFile = new File( resultRasterFile.getPath() );
+    BufferedReader reader = null;
+    BufferedWriter writer = null;
+    try
     {
-      Vector rowData = (Vector) rangeSetData.get( i );
-      Vector<Double> newRowData = new Vector<Double>();
-      for( int j = 0; j < rowData.size(); j++ )
+      final long fileLength = inputDatFile.length();
+      long processed = 0;
+      reader = new BufferedReader( new FileReader( inputDatFile ) );
+      writer = new BufferedWriter( new FileWriter( outputDatFile ) );
+      String line = null;
+      int cellY = 0;
+      while( (line = reader.readLine()) != null )
       {
-        final GM_Position position = gridDomain.getPositionAt( j, i );
-        
-        Feature actualFeature = null;
-        if( rowData.get( j ) != null )
+        final String[] chunks = line.split( " " );
+        for( int cellX = 0; cellX < chunks.length; cellX++ )
         {
-          Long key = null;
-          for( int k = 0; k < featureList.size(); k++ )
+          final double x = originX + (cellX + 0.5) * offsetX;
+          final double y = originY + (cellY + 0.5) * offsetY;
+          final GM_Position position = GeometryFactory.createGM_Position( x, y );
+          try
           {
-            actualFeature = (Feature) featureList.get( k );
-            GM_Object gm_Object = actualFeature.getDefaultGeometryProperty();
-            if( gm_Object.contains( position ) )
+            Long key = null;
+            for( int k = 0; k < featureList.size(); k++ )
             {
-              String property = actualFeature.getProperty( propertyName ).toString();
-              key = (Long) propertyTable.get( property );
-              break;
+              final Feature actualFeature = featureList.get( k );
+              GM_Object gm_Object = actualFeature.getDefaultGeometryProperty();
+              if( gm_Object.contains( position ) )
+              {
+                final String property = actualFeature.getProperty( propertyName ).toString();
+                key = propertyTable.get( property );
+                break;
+              }
             }
+            if( key != null )
+              writer.write( key.toString() + " " );
+            else
+              writer.write( "null " );
           }
-          if( key != null )
+          catch( final NumberFormatException e )
           {
-            newRowData.addElement( new Double( key.doubleValue() ) );
-          }
-          else
-          {
-            newRowData.addElement( null );
+            writer.write( "null " );
           }
         }
-        else
+        processed += line.length() + 1;
+        monitor.setProgress( (int) (100.0 * processed / fileLength) );
+        cellY++;
+        writer.newLine();
+      }
+    }
+    catch( final FileNotFoundException ex )
+    {
+      ex.printStackTrace();
+    }
+    catch( final IOException ex )
+    {
+      ex.printStackTrace();
+    }
+    finally
+    {
+      try
+      {
+        if( reader != null )
+          reader.close();
+        if( writer != null )
         {
-          newRowData.addElement( null );
+          writer.flush();
+          writer.close();
         }
       }
-      newRangeSetData.addElement( newRowData );
-      monitor.setMessage( i + 1 + " "+Messages.getString("rasterize.VectorToGridConverter.RowsOf")+" " + rangeSetData.size() + " "+Messages.getString("rasterize.VectorToGridConverter.Calculated") ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-      monitor.setProgress( 100 * i / rangeSetData.size() );
-      // System.out.println(i + 1 + " rows of " + rangeSetData.size() + "
-      // calculated"+ " Progress: "+100 * i / rangeSetData.size());
+      catch( IOException ex )
+      {
+        ex.printStackTrace();
+      }
     }
-    RangeSet newRangeSet = new RangeSet( newRangeSetData, null );
-    RectifiedGridCoverage2 newGrid = null;//RectifiedGridCoverage2.createRectifiedGridCoverage( newGridDomain, newRangeSet );
-    return newGrid;
+    final FileType rangeSetFile = KalypsoOGC31JAXBcontext.GML3_FAC.createFileType();
+    rangeSetFile.setFileName( outputDatFile.toURL().toExternalForm() );
+    rangeSetFile.setMimeType( "text/asc" );
+    final RangeSetType rangeSet = KalypsoOGC31JAXBcontext.GML3_FAC.createRangeSetType();
+    rangeSet.setFile( rangeSetFile );
+    final RectifiedGridCoverage2 rectifiedGridCoverage = RectifiedGridCoverage2.createRectifiedGridCoverage();
+    rectifiedGridCoverage.setGridDomain( newGridDomain );
+    rectifiedGridCoverage.setRangeSet( rangeSet );
+    return rectifiedGridCoverage;
   }
 }

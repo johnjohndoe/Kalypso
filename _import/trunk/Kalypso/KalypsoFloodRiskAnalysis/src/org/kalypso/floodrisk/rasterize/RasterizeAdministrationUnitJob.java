@@ -56,6 +56,7 @@ import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationDataPath;
 import org.kalypso.simulation.core.SimulationException;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.cv.RectifiedGridCoverage2;
 import org.kalypsodeegree_impl.model.feature.FeaturePath;
@@ -73,21 +74,19 @@ import org.kalypsodeegree_impl.model.feature.FeaturePath;
 public class RasterizeAdministrationUnitJob implements ISimulation
 {
 
-  //IDs
-  //input
   public static final String AdministrationUnitDataID = "AdministrationUnitVectorData"; //$NON-NLS-1$
 
   public static final String ContextModelID = "ContextModel"; //$NON-NLS-1$
 
   public static final String BaseRasterID = "BaseRaster"; //$NON-NLS-1$
 
-  //output
-  public static final String AdministrationUnitRasterDataID = "AdministrationUnitRasterData"; //$NON-NLS-1$
+  public static final String AdministrationUnitGmlFilePath = "AdministrationUnitGmlFilePath"; //$NON-NLS-1$
 
-  public RasterizeAdministrationUnitJob()
+  public static final String AdministrationUnitRasterFilePath = "AdministrationUnitRasterFilePath"; //$NON-NLS-1$
+
+  public RasterizeAdministrationUnitJob( )
   {
     super();
-
   }
 
   /**
@@ -95,41 +94,36 @@ public class RasterizeAdministrationUnitJob implements ISimulation
    *      org.kalypso.services.calculation.job.ICalcDataProvider, org.kalypso.services.calculation.job.ICalcResultEater,
    *      org.kalypso.services.calculation.job.ICalcMonitor)
    */
-  public void run( File tmpdir, ISimulationDataProvider inputProvider, ISimulationResultEater resultEater, ISimulationMonitor monitor )
-      throws SimulationException
+  public void run( File tmpdir, ISimulationDataProvider inputProvider, ISimulationResultEater resultEater, ISimulationMonitor monitor ) throws SimulationException
   {
     try
     {
-      monitor.setMessage( Messages.getString("rasterize.RasterizeAdministrationUnitJob.LoadingInputData") ); //$NON-NLS-1$
+      monitor.setMessage( Messages.getString( "rasterize.RasterizeAdministrationUnitJob.LoadingInputData" ) ); //$NON-NLS-1$
 
-      //administrationUnitVectorData: featureList
+      // administrationUnitVectorData: featureList
       URL administrationUnitVectorDataGML = (URL) inputProvider.getInputForID( AdministrationUnitDataID );
-      GMLWorkspace administrationUnitVectorData;
-      administrationUnitVectorData = GmlSerializer.createGMLWorkspace( administrationUnitVectorDataGML, null );
-      FeaturePath featureMember = new FeaturePath( "FeatureMember" ); //$NON-NLS-1$
-      List featureList = (List)featureMember.getFeature( administrationUnitVectorData );
+      final GMLWorkspace administrationUnitVectorData = GmlSerializer.createGMLWorkspace( administrationUnitVectorDataGML, null );
+      final FeaturePath featureMember = new FeaturePath( "FeatureMember" ); //$NON-NLS-1$
+      final List<Feature> featureList = (List) featureMember.getFeature( administrationUnitVectorData );
 
-      //contextModel: administrationUnitTypeList
-      URL contextModelGML = (URL) inputProvider.getInputForID( ContextModelID );
-      Hashtable administrationUnitTypeList;
-      ContextModel contextModel = new ContextModel( contextModelGML );
-      administrationUnitTypeList = contextModel.getAdministrationUnitList();
+      // contextModel: administrationUnitTypeList
+      final URL contextModelGML = (URL) inputProvider.getInputForID( ContextModelID );
+      final ContextModel contextModel = new ContextModel( contextModelGML );
+      final Hashtable administrationUnitTypeList = contextModel.getAdministrationUnitList();
 
-      //baseRaster
-      URL baseRasterGML = (URL) inputProvider.getInputForID( BaseRasterID );
-      RasterDataModel rasterDataModel = new RasterDataModel();
-      RectifiedGridCoverage2 baseRaster = rasterDataModel.getRectifiedGridCoverage( baseRasterGML );
+      // baseRaster
+      final URL baseRasterGML = (URL) inputProvider.getInputForID( BaseRasterID );
+      final RasterDataModel rasterDataModel = new RasterDataModel();
+      final RectifiedGridCoverage2 baseRaster = rasterDataModel.getRectifiedGridCoverage( baseRasterGML );
 
-      monitor.setMessage( Messages.getString("rasterize.RasterizeAdministrationUnitJob.Calculating") ); //$NON-NLS-1$
-      RectifiedGridCoverage2 resultGrid = VectorToGridConverter.toGrid( featureList, administrationUnitTypeList,
-          baseRaster, monitor );
+      monitor.setMessage( Messages.getString( "rasterize.RasterizeAdministrationUnitJob.Calculating" ) ); //$NON-NLS-1$
+      final RectifiedGridCoverage2 resultGrid = VectorToGridConverter.createCoverage( featureList, administrationUnitTypeList, baseRaster, (SimulationDataPath) ((IProcessResultEater) resultEater).getOutputMap().get( AdministrationUnitRasterFilePath ), monitor );
 
-      SimulationDataPath outputBean = (SimulationDataPath)( (IProcessResultEater)resultEater ).getOutputMap().get(
-          AdministrationUnitRasterDataID );
-      File resultFile = new File( outputBean.getPath() );
+      final SimulationDataPath outputBean = (SimulationDataPath) ((IProcessResultEater) resultEater).getOutputMap().get( AdministrationUnitGmlFilePath );
+      final File resultFile = new File( outputBean.getPath() );
       if( !resultFile.exists() )
         resultFile.createNewFile();
-      monitor.setMessage( Messages.getString("rasterize.RasterizeAdministrationUnitJob.SavingResults") ); //$NON-NLS-1$
+      monitor.setMessage( Messages.getString( "rasterize.RasterizeAdministrationUnitJob.SavingResults" ) ); //$NON-NLS-1$
       rasterDataModel.exportToGML( resultFile, resultGrid );
       resultEater.addResult( outputBean.getId(), null );
     }
@@ -142,7 +136,7 @@ public class RasterizeAdministrationUnitJob implements ISimulation
   /**
    * @see org.kalypso.services.calculation.job.ICalcJob#getSpezifikation()
    */
-  public URL getSpezifikation()
+  public URL getSpezifikation( )
   {
     return getClass().getResource( "resources/rasterAdminUnitCalcjob_spec.xml" ); //$NON-NLS-1$
   }
