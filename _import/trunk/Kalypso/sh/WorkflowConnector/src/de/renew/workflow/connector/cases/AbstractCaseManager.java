@@ -57,6 +57,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.ui.ide.ResourceUtil;
+import org.kalypso.contribs.eclipse.core.resources.FolderUtilities;
 
 import de.renew.workflow.cases.Case;
 import de.renew.workflow.cases.CaseList;
@@ -226,6 +228,7 @@ public abstract class AbstractCaseManager<T extends Case> implements ICaseManage
           }
           else
           {
+            FolderUtilities.mkdirs( m_metaDataFile.getParent() );
             m_metaDataFile.create( bis, false, null );
           }
           bis.close();
