@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:gml="http://www.opengis.net/gml"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:krldb="http://www.tu-harburg.de/wb/kalypso/risk/schemata/landuseDatabase"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:common="org.kalypso.gml.common"
+	targetNamespace="http://www.tu-harburg.de/wb/kalypso/risk/schemata/landuseDatabase"
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:annotation>
+		<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+		</xs:appinfo>
+	</xs:annotation>
+	<xs:import namespace="http://www.opengis.net/gml" />
+	<xs:import namespace="org.kalypso.gml.common" />
+	<!-- =================================================================
+		Landuse classes Collection
+		================================================================== -->
+	<xs:element name="LanduseClassCollection"
+		type="krldb:LanduseClassCollectionType"
+		substitutionGroup="gml:_Feature" />
+		
+	<xs:complexType name="LanduseClassCollectionType">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element ref="krldb:landuseClassMember"
+						minOccurs="0" maxOccurs="unbounded" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<!-- =================================================================
+		landuseClassMember property
+		================================================================== -->
+	<xs:element name="landuseClassMember"
+		type="krldb:LanduseClassPropertyType" />
+		
+	<xs:complexType name="LanduseClassPropertyType">
+		<xs:sequence>
+			<xs:element ref="krldb:LanduseClass" minOccurs="0" />
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+	</xs:complexType>
+
+	<!-- =================================================================
+		Landuse classes
+		================================================================== -->
+	<xs:element name="LanduseClass" type="krldb:LanduseClassType"
+		substitutionGroup="gml:_Feature">
+		<xs:annotation>
+			<xs:documentation xml:lang="de">
+				<xs:label>
+					<![CDATA[${listProperty:http://www.opengis.net/gml#name;0;-no name-}]]>
+				</xs:label>
+			</xs:documentation>
+			<xs:documentation xml:lang="en">
+				<xs:label>
+					<![CDATA[${listProperty:http://www.opengis.net/gml#name;0;-no name-}]]>
+				</xs:label>
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+
+	<xs:complexType name="LanduseClassType">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element name="colorStyle" type="common:color">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Farbdarstellung</xs:label>
+								<xs:tooltip>
+									Farbdarstellung der
+									Landnutzungsklasse in der Karte
+								</xs:tooltip>
+							</xs:documentation>
+							<xs:documentation xml:lang="en">
+								<xs:label>Color style</xs:label>
+								<xs:tooltip>
+									Color of landuse class in the map
+								</xs:tooltip>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+				<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+</xs:schema>

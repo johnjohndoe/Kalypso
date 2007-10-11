@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.3"?>
+<plugin>
+   <extension
+         id="org.kalypso.risk.project.KalypsoRiskProjectNature"
+         name="KalypsoRiskProjectNature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="org.kalypso.risk.project.KalypsoRiskProjectNature">
+         </run>
+      </runtime>
+      <requires-nature
+            id="org.kalypso.afgui.ScenarioHandlingProjectNature">
+      </requires-nature>
+      <requires-nature
+            id="de.renew.workflow.connector.WorkflowProjectNature">
+      </requires-nature>
+   </extension>
+   <extension
+         point="org.eclipse.ui.intro.configExtension">
+      <configExtension
+            configId="org.kalypso.model.product.configId"
+            content="content/ext.xml">
+      </configExtension>
+   </extension>
+   <extension
+         point="de.renew.workflow.model.workflowSystem">
+      <workflowSystem
+            definition="src/org/kalypso/risk/project/workflow.xml"
+            id="workflowKalypsoRisk"
+            name="Workflow Kalypso Risk">
+      </workflowSystem>
+   </extension>
+	<extension
+       point="org.eclipse.ui.newWizards">
+		<category
+            id="org.kalypso.risk.wizard.CreateProject"
+            name="Risk Model"
+            parentCategory="org.kalypso.ui.newwizards.kalypso"/>
+		<wizard
+        category="org.kalypso.ui.newwizards.kalypso/org.kalypso.risk.wizard.CreateProject"
+        class="org.kalypso.risk.project.KalypsoRiskProjectWizard"
+        icon="icons/pencil.gif"
+        id="org.kalypso.risk.project.KalypsoRiskProjectWizard"
+        name="Kalypso Risk Model"
+        project="true">
+		<description>Creates a new risk project</description>
+		</wizard>
+		<wizard
+            class="org.kalypso.risk.model.wizards.importlanduse.ImportLanduseWizard"
+            icon="icons/pencil.gif"
+            id="org.kalypso.risk.model.wizards.importlanduse.ImportLanduseWizard"
+            name="ImportLanduseShape"
+            project="false"/>
+	</extension>
+ <extension
+       point="org.kalypso.contribs.java.urlCatalog">
+    <catalog
+          class="org.kalypso.risk.model.schema.RiskSchemaCatalog"
+          id="org.kalypso.risk.model.schema.SchemaCatalog">
+    </catalog>
+ </extension>
+ <extension
+       id="org.kalypso.core.adapters"
+       name="KalypsoRisk adapter factory"
+       point="org.eclipse.core.runtime.adapters">
+    <factory
+          adaptableType="org.kalypsodeegree.model.feature.Feature"
+          class="org.kalypso.kalypsomodel1d2d.schema.binding.KalypsoRiskFeatureFactory">
+       <adapter type="org.kalypso.risk.model.schema.binding.ILandusePolygonCollection"/>
+       <adapter type="org.kalypso.risk.model.schema.binding.ILandusePolygon"/>
+    </factory>
+ </extension>
+ <extension
+       point="org.kalypso.afgui.scenarioData">
+    <scenarioDatum
+          bundle="org.kalypso.risk"
+          classKey="org.kalypso.risk.model.schema.binding.ILandusePolygonCollection"
+          modelPath="models/LanduseVectorData.gml">
+    </scenarioDatum>
+ </extension>
+</plugin>
