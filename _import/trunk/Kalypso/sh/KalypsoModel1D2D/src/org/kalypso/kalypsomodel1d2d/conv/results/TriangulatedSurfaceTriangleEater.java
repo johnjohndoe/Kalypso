@@ -296,7 +296,10 @@ public class TriangulatedSurfaceTriangleEater implements ITriangleEater
 
     try
     {
-      gmTriangle = new GM_Triangle_Impl( pos[0], pos[1], pos[2], crs );
+      // for shape export we need a clockwise orientation, the algorithm that delivers the nodes is the nodes to the
+      // eater is thinking counter-clockwise.
+      // for that reason we switch the positions order to get that clockwise orientation.
+      gmTriangle = new GM_Triangle_Impl( pos[2], pos[1], pos[0], crs );
     }
     catch( final GM_Exception e )
     {
