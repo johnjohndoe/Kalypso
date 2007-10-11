@@ -161,7 +161,7 @@ public class RectifiedGridDomain
    * @return Returns the offset of a gridCell for the x-Axis
    * @throws Exception
    */
-  private double getOffsetX( final CS_CoordinateSystem cs ) throws Exception
+  public double getOffsetX( final CS_CoordinateSystem cs ) throws Exception
   {
     if( (cs == null) || m_origin.getCoordinateSystem().equals( cs ) )
       return m_offsetX.getGeoX();
@@ -174,7 +174,7 @@ public class RectifiedGridDomain
   /**
    * @return Returns the offset of a gridCell for the y-Axis
    */
-  private double getOffsetY( final CS_CoordinateSystem cs ) throws Exception
+  public double getOffsetY( final CS_CoordinateSystem cs ) throws Exception
   {
     if( (cs == null) || m_origin.getCoordinateSystem().equals( cs ) )
       return m_offsetY.getGeoY();
