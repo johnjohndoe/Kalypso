@@ -50,7 +50,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.kalypso.commons.resources.FolderUtilities;
+import org.kalypso.contribs.eclipse.core.resources.FolderUtilities;
 
 /**
  * @deprecated use ant task instead in your model-configuration
