@@ -74,7 +74,7 @@ public class ImportShapeFile
       // String schema = schemaURL.getPath();
       // String host = schemaURL.getHost();
       GMLWorkspace gmlWS = ShapeSerializer.deserialize( shpBase, cs );
-      ShapeSerializer.serialize( gmlWS, "D://Temp//test" );
+      ShapeSerializer.serialize( gmlWS, "D://Temp//test", null );
       Feature rootFeature = gmlWS.getRootFeature();
       // List propertyList = (List)rootFeature.getProperty( "featureMember" );
 
