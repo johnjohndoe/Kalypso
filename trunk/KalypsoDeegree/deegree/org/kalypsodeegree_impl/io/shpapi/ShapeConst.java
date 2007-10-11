@@ -144,4 +144,50 @@ public class ShapeConst
    */
   public static final byte SHAPE_TYPE_MULTIPOINTZ = 18;
 
+  public static String getShapeConstantAsString( final byte shpType )
+  {
+    final String string = null;
+
+    switch( shpType )
+    {
+      case 0:
+        return "Null";
+
+      case 1:
+        return "Point";
+
+      case 3:
+        return "PolyLine";
+
+      case 5:
+        return "Polygon";
+
+      case 8:
+        return "MultiPoint";
+
+      case 11:
+        return "PointZ";
+
+      case 13:
+        return "PolyLineZ";
+
+      case 15:
+        return "PolygonZ";
+      case 18:
+        return "MultiPointZ";
+      case 21:
+        return "PointM";
+      case 23:
+        return "PolyLineM";
+      case 25:
+        return "PolygonM";
+      case 28:
+        return "MultiPointM";
+      case 31:
+        return "MultiPatch";
+    }
+    return string;
+
+  }
+
 }

@@ -63,6 +63,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.io.shpapi.DBaseException;
 import org.kalypsodeegree_impl.io.shpapi.DBaseFile;
+import org.kalypsodeegree_impl.io.shpapi.IShapeDataProvider;
 import org.kalypsodeegree_impl.io.shpapi.ShapeFile;
 import org.kalypsodeegree_impl.io.shpapi.StandardShapeDataProvider;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
@@ -98,7 +99,7 @@ public class ShapeSerializer
     // wird nicht instantiiert
   }
 
-  public static void serialize( final GMLWorkspace workspace, final String filenameBase ) throws GmlSerializeException
+  public static void serialize( final GMLWorkspace workspace, final String filenameBase, IShapeDataProvider shapeDataProvider ) throws GmlSerializeException
   {
     final Feature rootFeature = workspace.getRootFeature();
     final List<Feature> features = (List<Feature>) rootFeature.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
@@ -107,7 +108,9 @@ public class ShapeSerializer
     {
       final ShapeFile shapeFile = new ShapeFile( filenameBase, "rw" );
 
-      final StandardShapeDataProvider shapeDataProvider = new StandardShapeDataProvider( features.toArray( new Feature[features.size()] ) );
+      // if no dataProvider is set take the StandardProvider
+      if( shapeDataProvider == null )
+        shapeDataProvider = new StandardShapeDataProvider( features.toArray( new Feature[features.size()] ) );
 
       shapeFile.writeShape( shapeDataProvider );
       shapeFile.close();
@@ -133,7 +136,7 @@ public class ShapeSerializer
    * @param filenameBase
    *            Der Ausgabename für das Shape (.shp, .dbf, und. shx)
    */
-  public static void serializeFeatures( final Feature[] features, final Map<String, String> mapping, final String geoName, final String filenameBase, final StandardShapeDataProvider dataProvider ) throws GmlSerializeException
+  public static void serializeFeatures( final Feature[] features, final Map<String, String> mapping, final String geoName, final String filenameBase, StandardShapeDataProvider shapeDataProvider ) throws GmlSerializeException
   {
     if( features.length == 0 )
       return;
@@ -182,7 +185,12 @@ public class ShapeSerializer
 
       final ShapeFile shapeFile = new ShapeFile( filenameBase, "rw" );
 
-      shapeFile.writeShape( dataProvider );
+      if( shapeDataProvider == null )
+        shapeDataProvider = new StandardShapeDataProvider( shapeFeatures.toArray( new Feature[shapeFeatures.size()] ) );
+      else
+        shapeDataProvider.setFeatures( shapeFeatures.toArray( new Feature[shapeFeatures.size()] ) );
+
+      shapeFile.writeShape( shapeDataProvider );
 
       shapeFile.close();
     }
@@ -207,7 +215,7 @@ public class ShapeSerializer
    * @param filenameBase
    *            Der Ausgabename für das Shape (.shp, .dbf, und. shx)
    */
-  public static void serializeFeatures( final Feature[] features, final Map<String, QName> mapping, final QName geomProperty, final String filenameBase, final StandardShapeDataProvider dataProvider ) throws GmlSerializeException
+  public static void serializeFeatures( final Feature[] features, final Map<String, QName> mapping, final QName geomProperty, final String filenameBase, IShapeDataProvider shapeDataProvider ) throws GmlSerializeException
   {
     if( features.length == 0 )
       throw new GmlSerializeException( "Keine Daten vorhanden. Leere Shape Datei kann nicht geschrieben werden." );
@@ -269,7 +277,13 @@ public class ShapeSerializer
 
       final ShapeFile shapeFile = new ShapeFile( filenameBase, "rw" );
 
-      shapeFile.writeShape( dataProvider );
+      // if no dataProvider is set take the StandardProvider
+      if( shapeDataProvider == null )
+        shapeDataProvider = new StandardShapeDataProvider( shapeFeatures.toArray( new Feature[shapeFeatures.size()] ) );
+      else
+        shapeDataProvider.setFeatures( shapeFeatures.toArray( new Feature[shapeFeatures.size()] ) );
+
+      shapeFile.writeShape( shapeDataProvider );
 
       shapeFile.close();
     }
@@ -277,7 +291,7 @@ public class ShapeSerializer
     {
       e.printStackTrace();
 
-      throw new GmlSerializeException( "Shape konnte nicht geschrieben werden", e );
+      throw new GmlSerializeException( "Shape konnte nicht geschrieben werden. \n" + e.getMessage(), e );
     }
   }
 

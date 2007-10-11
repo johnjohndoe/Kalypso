@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,27 +36,27 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
- 
+
+
  history:
- 
+
  Files in this package are originally taken from deegree and modified here
  to fit in kalypso. As goals of kalypso differ from that one in deegree
- interface-compatibility to deegree is wanted but not retained always. 
- 
- If you intend to use this software in other ways than in kalypso 
+ interface-compatibility to deegree is wanted but not retained always.
+
+ If you intend to use this software in other ways than in kalypso
  (e.g. OGC-web services), you should consider the latest version of deegree,
  see http://www.deegree.org .
 
- all modifications are licensed as deegree, 
+ all modifications are licensed as deegree,
  original copyright:
- 
+
  Copyright (C) 2001 by:
  EXSE, Department of Geography, University of Bonn
  http://www.giub.uni-bonn.de/exse/
  lat/lon GmbH
  http://www.lat-lon.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.geometry;
 
@@ -76,6 +76,7 @@ import org.kalypsodeegree.model.geometry.GM_MultiPoint;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfaceInterpolation;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
@@ -1091,10 +1092,47 @@ final public class GeometryFactory
   {
     return new GM_Triangle_Impl( pos1, pos2, pos3, crs );
   }
-  
+
   public static GM_TriangulatedSurface createGM_TriangulatedSurface( final CS_CoordinateSystem crs ) throws GM_Exception
   {
     return new GM_TriangulatedSurface_Impl( crs );
+  }
+
+  /**
+   * creates a GM_Curve from an double array of GM_Positions.
+   * 
+   * @param positions
+   *            positions
+   * @param crs
+   *            geometries coordinate reference system
+   */
+  public static GM_Curve[] createGM_Curve( GM_Position[][] rings, CS_CoordinateSystem crs ) throws GM_Exception
+  {
+    final List<GM_Curve> curveList = new LinkedList<GM_Curve>();
+
+    for( int i = 0; i < rings.length; i++ )
+    {
+      final GM_CurveSegment[] cs = new GM_CurveSegment[1];
+      final GM_Position[] positions = rings[i];
+      cs[0] = GeometryFactory.createGM_CurveSegment( positions, crs );
+
+      curveList.add( new GM_Curve_Impl( cs ) );
+    }
+    return curveList.toArray( new GM_Curve[curveList.size()] );
+  }
+
+  public static GM_Ring[] createGM_Ring( GM_Position[][] rings, CS_CoordinateSystem crs ) throws GM_Exception
+  {
+    final List<GM_Ring> ringList = new LinkedList<GM_Ring>();
+
+    for( int i = 0; i < rings.length; i++ )
+    {
+      final GM_Ring[] ring = new GM_Ring[1];
+      final GM_Position[] positions = rings[i];
+
+      ringList.add( new GM_Ring_Impl( positions, crs ) );
+    }
+    return ringList.toArray( new GM_Ring[ringList.size()] );
   }
 
 }

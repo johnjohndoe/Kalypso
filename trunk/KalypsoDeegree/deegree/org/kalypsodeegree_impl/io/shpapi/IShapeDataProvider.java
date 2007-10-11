@@ -43,6 +43,7 @@ package org.kalypsodeegree_impl.io.shpapi;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Object;
 
 /**
  * Interface for providing data for generating shape files.
@@ -51,11 +52,21 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public interface IShapeDataProvider
 {
-  public Feature[] getFeatures( );
+  public Feature getFeature( final int index );
+
+  public int getFeaturesLength( );
 
   public byte getOutputShapeConstant( );
+
+  public void setOutputShapeConstant( final byte shapeConstant );
 
   public IFeatureType getFeatureType( );
 
   public IPropertyType getGeometryPropertyType( );
+
+  public void setFeatures( final Feature[] features );
+
+  public GM_Object getGeometry( final int index );
+
+  public Object getFeatureProperty( int featureIndex, IPropertyType propertyType );
 }

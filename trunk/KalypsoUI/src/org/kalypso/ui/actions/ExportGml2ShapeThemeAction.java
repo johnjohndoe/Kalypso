@@ -24,7 +24,13 @@ import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.serialize.Gml2ShapeConverter;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree_impl.io.shpapi.IShapeDataProvider;
+import org.kalypsodeegree_impl.io.shpapi.ShapeConst;
+import org.kalypsodeegree_impl.io.shpapi.TriangulatedSurfaceSinglePartShapeDataProvider;
+import org.kalypsodeegree_impl.model.geometry.GM_TriangulatedSurface_Impl;
 
 public class ExportGml2ShapeThemeAction implements IObjectActionDelegate, IActionDelegate2
 {
@@ -133,12 +139,23 @@ public class ExportGml2ShapeThemeAction implements IObjectActionDelegate, IActio
 
     final Job job = new Job( action.getText() + " - " + result )
     {
+      @SuppressWarnings("unchecked")
       @Override
       protected IStatus run( final IProgressMonitor monitor )
       {
+        IShapeDataProvider shapeDataProvider = null;
+
+        Feature feature = (Feature) featureList.get( 0 );
+        GM_Object geometryProperty = feature.getDefaultGeometryProperty();
+        if( geometryProperty instanceof GM_TriangulatedSurface_Impl )
+        {
+          final byte shapeType = ShapeConst.SHAPE_TYPE_POLYGONZ;
+          shapeDataProvider = new TriangulatedSurfaceSinglePartShapeDataProvider( (Feature[]) featureList.toArray( new Feature[featureList.size()] ), shapeType );
+        }
+
         try
         {
-          converter.writeShape( featureList, shapeFileBase, monitor );
+          converter.writeShape( featureList, shapeFileBase, shapeDataProvider, monitor );
         }
         catch( final CoreException e )
         {

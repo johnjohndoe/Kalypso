@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.loader;
 
@@ -209,7 +209,7 @@ public class ShapeLoader extends AbstractLoader
       if( file != null )
       {
 
-        ShapeSerializer.serialize( workspace, file.getLocation().toFile().getAbsolutePath() );
+        ShapeSerializer.serialize( workspace, file.getLocation().toFile().getAbsolutePath(), null );
 
       }
       else

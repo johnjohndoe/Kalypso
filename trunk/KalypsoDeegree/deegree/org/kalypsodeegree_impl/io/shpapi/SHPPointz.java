@@ -91,16 +91,29 @@ public class SHPPointz implements ISHPGeometry
    * constructor: gets a stream and the start index <BR>
    * of point on it <BR>
    */
-  public SHPPointz( byte[] recBuf, int xStart )
+  public SHPPointz( byte[] recBuf, int xStart, final byte shapeType )
   {
-    // get x out of recordbuffer
-    x = ByteUtils.readLEDouble( recBuf, xStart );
-    // get y out of recordbuffer
-    y = ByteUtils.readLEDouble( recBuf, xStart + 8 );
-    // get z out of recordbuffer
-    z = ByteUtils.readLEDouble( recBuf, xStart + 16 );
-    // get measure m out of recordbuffer
-    // this.m = ByteUtils.readLEDouble( recBuffer, xStart + 24 );
+    if( shapeType == ShapeConst.SHAPE_TYPE_POINTZ )
+    {
+
+      // get x out of recordbuffer
+      x = ByteUtils.readLEDouble( recBuf, xStart );
+      // get y out of recordbuffer
+      y = ByteUtils.readLEDouble( recBuf, xStart + 8 );
+      // get z out of recordbuffer
+      z = ByteUtils.readLEDouble( recBuf, xStart + 16 );
+      // get measure m out of recordbuffer
+// m = ByteUtils.readLEDouble( recBuf, xStart + 24 );
+    }
+    else
+    {
+      // get x out of recordbuffer
+      x = ByteUtils.readLEDouble( recBuf, xStart );
+      // get y out of recordbuffer
+      y = ByteUtils.readLEDouble( recBuf, xStart + 8 );
+
+      // z-value is set at other position, because the byte address differs from the address of a real SHPPointZ
+    }
 
     m_envelope = new SHPEnvelope( x, x, y, y );
   }
