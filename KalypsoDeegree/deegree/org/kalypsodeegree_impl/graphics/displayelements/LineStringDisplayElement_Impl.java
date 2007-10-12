@@ -131,7 +131,7 @@ class LineStringDisplayElement_Impl extends GeometryDisplayElement_Impl implemen
 
     try
     {
-      final StrokePainter painter = new StrokePainter( stroke, getFeature(), uom, projection  );
+      final StrokePainter painter = new StrokePainter( stroke, getFeature(), uom, projection );
 
       for( final GM_Curve curve : curves )
         paintCurve( g2, projection, curve, painter );
@@ -152,6 +152,7 @@ class LineStringDisplayElement_Impl extends GeometryDisplayElement_Impl implemen
   {
     final int[][] pos = LabelFactory.calcScreenCoordinates( projection, curve );
     painter.paintPoses( g2, pos );
+    painter.paintAdditionals( g2, curve, pos );
   }
 
   public double getDistance( final double x1, final double y1, final double x2, final double y2 )

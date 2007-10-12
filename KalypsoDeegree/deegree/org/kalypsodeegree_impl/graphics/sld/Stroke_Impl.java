@@ -91,7 +91,16 @@ import org.kalypsodeegree_impl.tools.Debug;
  * <li>stroke-linecap
  * <li>stroke-dasharray
  * <li>stroke-dashoffset
+ * <li>stroke-arrow-type (line | segment)
+ * <li>stroke-arrow-alignment (start | middle | end)
+ * <li>stroke-arrow-size
  * <p>
+ * 
+ * <h1>stroke-arrow-type</h1>
+ * An Arrow will be placed on a line or its line segments
+ * 
+ * <h1>stroke-arrow-alignment</h1>
+ * where on a line or its line segments the arrow will be placed: start, middle, end
  * 
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
