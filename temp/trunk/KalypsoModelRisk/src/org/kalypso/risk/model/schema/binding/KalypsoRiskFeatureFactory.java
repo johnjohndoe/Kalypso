@@ -10,18 +10,14 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.IAdapterFactory;
+import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 import org.kalypsodeegree.model.feature.Feature;
 
 public class KalypsoRiskFeatureFactory implements IAdapterFactory
 {
-  public final void warnUnableToAdapt( final Feature featureToAdapt, final QName featureQName, final Class targetClass )
-  {
-    // System.out.println("Unable to adapt "+featureToAdapt.getFeatureType().getQName()+" to "+targetClass.getName());
-  }
-
   interface AdapterConstructor
   {
-    public Object constructAdapter( Feature feature, Class cls ) throws IllegalArgumentException;
+    public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException;
   }
 
   private final Map<Class, AdapterConstructor> m_constructors = createConstructorMap();
@@ -62,18 +58,30 @@ public class KalypsoRiskFeatureFactory implements IAdapterFactory
       public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
       {
         final QName featureQName = feature.getFeatureType().getQName();
-        if( featureQName.equals( ILandusePolygonCollection.QNAME ) )
-        {
-          return new LandusePolygonCollection( feature );
-        }
+        if( ILanduseModel.QNAME.equals( featureQName ) )
+          return new LanduseModel( feature );
+        // else if( ITerrainModel.QNAME_TERRAIN_MODEL.equals( featureType.getQName() ) )
+        // return new TerrainModel( feature );
+        // else if( KalypsoModelRoughnessConsts.WBR_F_ROUGHNESS_CLS_COLLECTION.equals( featureType.getQName() ) )
+        // return new RoughnessClsCollection( feature );
         else
-        {
-          warnUnableToAdapt( feature, featureQName, ILandusePolygonCollection.class );
           return null;
-        }
       }
     };
-    cMap.put( LandusePolygonCollection.class, cTor );
+    cMap.put( IModel.class, cTor );
+
+    cTor = new AdapterConstructor()
+    {
+      public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
+      {
+        final QName featureQName = feature.getFeatureType().getQName();
+        if( featureQName.equals( ILandusePolygonCollection.QNAME ) )
+          return new LandusePolygonCollection( feature );
+        else
+          return null;
+      }
+    };
+    cMap.put( ILandusePolygonCollection.class, cTor );
 
     cTor = new AdapterConstructor()
     {
@@ -81,17 +89,12 @@ public class KalypsoRiskFeatureFactory implements IAdapterFactory
       {
         final QName featureQName = feature.getFeatureType().getQName();
         if( featureQName.equals( ILandusePolygon.QNAME ) )
-        {
           return new LandusePolygon( feature );
-        }
         else
-        {
-          warnUnableToAdapt( feature, featureQName, ILandusePolygon.class );
           return null;
-        }
       }
     };
-    cMap.put( LandusePolygon.class, cTor );
+    cMap.put( ILandusePolygon.class, cTor );
 
     return Collections.unmodifiableMap( cMap );
   }

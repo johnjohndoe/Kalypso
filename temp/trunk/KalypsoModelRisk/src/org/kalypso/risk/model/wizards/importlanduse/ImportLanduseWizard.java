@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.risk.model.wizards.importlanduse;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -58,25 +57,19 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.eclipse.ui.internal.UIPlugin;
+import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.command.EmptyCommand;
-import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
+import org.kalypso.risk.model.schema.binding.ILanduseModel;
 import org.kalypso.risk.model.schema.binding.ILandusePolygon;
 import org.kalypso.risk.model.schema.binding.ILandusePolygonCollection;
-import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.util.pool.PoolableObjectType;
-import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.opengis.cs.CS_CoordinateSystem;
 
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
@@ -145,51 +138,35 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
           monitor.beginTask( Messages.getString( "ImportLanduseWizard.1" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
           try
           {
-            // final IWorkbench workbench = UIPlugin.getDefault().getWorkbench();
-            // final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
-            // final IEvaluationContext context = handlerService.getCurrentState();
-            // final SzenarioDataProvider szenarioDataProvider = (SzenarioDataProvider) context.getVariable(
-            // ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
-            // final ILandusePolygonCollection model = new LandusePolygonCollection(
-            // getFeature().getWorkspace().getRootFeature() );
+            monitor.subTask( Messages.getString( "ImportLanduseWizard.7" ) ); //$NON-NLS-1$
+            final IWorkbench workbench = UIPlugin.getDefault().getWorkbench();
+            final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
+            final IEvaluationContext context = handlerService.getCurrentState();
+            final SzenarioDataProvider szenarioDataProvider = (SzenarioDataProvider) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+            final ILanduseModel landuseModel = szenarioDataProvider.getModel( ILanduseModel.class );
 
-            final IFile landuseDataResource = m_scenarioFolder.getFile( "/models/LanduseVectorData.gml" ); //$NON-NLS-1$
             final QName shapeGeomPropertyName = new QName( "namespace", "GEOM" ); //$NON-NLS-1$ //$NON-NLS-2$
             final QName shapeLandusePropertyName = new QName( "namespace", landuseProperty ); //$NON-NLS-1$
-
-            final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
-
-            // Comment: probably a good idea to wait for the map before accessing the data
-            // not nessesary, because loadin the model from the pool is synchronized with the map loading
-            
-            monitor.subTask( "Loading workspaces" );
-            final URL landuseDataURL = ResourceUtilities.createURL( landuseDataResource );
-            final PoolableObjectType key = new PoolableObjectType( "gml", landuseDataURL.toExternalForm(), landuseDataURL );
-            final CommandableWorkspace landuseVectorWS = (CommandableWorkspace) pool.getObject( key );
-
-            final IFeatureType landusePolygonFeatureType = landuseVectorWS.getGMLSchema().getFeatureType( ILandusePolygon.QNAME );
-            final Feature landuseCollection = landuseVectorWS.getRootFeature();
 
             final GMLWorkspace landuseShapeWS = ShapeSerializer.deserialize( sourceShapeFilePath, coordinateSystem );
 
             final Feature shapeRootFeature = landuseShapeWS.getRootFeature();
             final List shapeFeatureList = (List) shapeRootFeature.getProperty( new QName( "namespace", Messages.getString( "ImportLanduseWizard.3" ) ) ); //$NON-NLS-1$ //$NON-NLS-2$
-            
-            final List polygonMembers = (List) landuseCollection.getProperty( ILandusePolygonCollection.QNAME_PROPERTY_POLYGON );
-            polygonMembers.clear();
-            
-            final IRelationType polygonRelationType = (IRelationType) landuseCollection.getFeatureType().getProperty( ILandusePolygonCollection.QNAME_PROPERTY_POLYGON );
+
+            final ILandusePolygonCollection landusePolygonCollection = landuseModel.getLandusePolygonCollection();
+            landusePolygonCollection.clear();
+
             final List<Feature> changedFeatures = new ArrayList<Feature>();
-            
-            monitor.subTask( "Importing data" );
+
+            monitor.subTask( Messages.getString( "ImportLanduseWizard.9" ) ); //$NON-NLS-1$
             for( int i = 0; i < shapeFeatureList.size(); i++ )
             {
               final Feature shpFeature = (Feature) shapeFeatureList.get( i );
               final String shpPropertyValue = (String) shpFeature.getProperty( shapeLandusePropertyName );
               if( !m_landuseTypeSet.contains( shpPropertyValue ) )
                 m_landuseTypeSet.add( shpPropertyValue );
-              final Feature feature = landuseVectorWS.createFeature( landuseCollection, polygonRelationType, landusePolygonFeatureType );
-              changedFeatures.add( feature );
+              final ILandusePolygon polygon = landusePolygonCollection.addNew( ILandusePolygon.QNAME );
+              changedFeatures.add( polygon.getWrappedFeature() );
               final GM_Object shpGeometryProperty = (GM_Object) shpFeature.getProperty( shapeGeomPropertyName );
 
               // we don't like multi surfaces, so...
@@ -199,31 +176,23 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
                 final GM_Surface< ? >[] surfaces = multiSurface.getAllSurfaces();
                 for( int k = 0; k < surfaces.length; k++ )
                 {
-                  feature.setProperty( ILandusePolygon.QNAME_PROPERTY_GEOMETRY, surfaces[k] );
-                  feature.setProperty( ILandusePolygon.QNAME_PROPERTY_SLDSTYLE, shpPropertyValue );
-                  FeatureHelper.addProperty( landuseCollection, polygonRelationType, feature );
+                  polygon.setGeometry( surfaces[k] );
+                  polygon.setStyleType( shpPropertyValue );
                 }
               }
               else if( shpGeometryProperty instanceof GM_Surface )
               {
-                feature.setProperty( ILandusePolygon.QNAME_PROPERTY_GEOMETRY, shpGeometryProperty );
-                feature.setProperty( ILandusePolygon.QNAME_PROPERTY_SLDSTYLE, shpPropertyValue );
-                FeatureHelper.addProperty( landuseCollection, polygonRelationType, feature );
+                polygon.setGeometry( (GM_Surface< ? >) shpGeometryProperty );
+                polygon.setStyleType( shpPropertyValue );
               }
               else
                 throw new RuntimeException( Messages.getString( "ImportLanduseWizard.4" ) + shpGeometryProperty.getClass().getName() ); //$NON-NLS-1$
             }
-            landuseVectorWS.fireModellEvent( new FeatureStructureChangeModellEvent( landuseVectorWS, landuseCollection, changedFeatures.toArray( new Feature[0] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
-            // GmlSerializer.serializeWorkspace( landuseDataFile, landuseVectorWS, "UTF-8" ); //$NON-NLS-1$
-            // landuseDataResource.refreshLocal( IFile.DEPTH_ZERO, new NullProgressMonitor() );
-
-            // send an (empty?) command to the workspace in order to make the pool dirty
-            landuseVectorWS.postCommand( new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
+            szenarioDataProvider.postCommand( ILanduseModel.class, new EmptyCommand( "Get dirty!", false ) );
 
             // TODO create landuse class database
-            monitor.subTask( "Creating landuse database" );
-            
-            
+            monitor.subTask( Messages.getString( "ImportLanduseWizard.10" ) ); //$NON-NLS-1$
+
           }
           catch( final Exception e )
           {

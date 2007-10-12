@@ -89,7 +89,7 @@ public class RiskSchemaCatalog extends AbstractUrlCatalog
   {
     catalog.put( NS_LANDUSEDB, myClass.getResource( "schemata/LanduseClasses.xsd" ) );
     prefixes.put( NS_LANDUSEDB, PREFIX_LANDUSEDB );
-    catalog.put( NS_LANDUSEVECTORMODEL, myClass.getResource( "schemata/LandusePolygonCollection.xsd" ) );
+    catalog.put( NS_LANDUSEVECTORMODEL, myClass.getResource( "schemata/LanduseVectorModel.xsd" ) );
     prefixes.put( NS_LANDUSEVECTORMODEL, PREFIX_LANDUSEVECTORMODEL );
     // catalog.put( NS_CONTEXTMODEL, myClass.getResource( "ContextModel.xsd" ) );
     // catalog.put( NS_RISKCONTEXTMODEL, myClass.getResource( "RiskContextModel.xsd" ) );

@@ -75,7 +75,7 @@ public class KalypsoRiskProjectNature implements IProjectNature
   private final static Logger logger = Logger.getLogger( KalypsoRiskProjectNature.class.getName() );
 
   // TODO: change tracing option id (use Debug helper class, see KalypsoUIDebug example)
-  private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.kalypso1d2d.pjt/debug" ) );  //$NON-NLS-1$
+  private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.risk/debug" ) );  //$NON-NLS-1$
 
   static
   {
