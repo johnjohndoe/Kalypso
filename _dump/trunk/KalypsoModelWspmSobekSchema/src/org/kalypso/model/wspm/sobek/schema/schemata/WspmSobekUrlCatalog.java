@@ -58,8 +58,14 @@ public class WspmSobekUrlCatalog extends AbstractUrlCatalog implements IWspmSobe
   @Override
   protected void fillCatalog( Class< ? > myClass, Map<String, URL> catalog, Map<String, String> prefixes )
   {
-    catalog.put( NS_WSPM_SOBEK, myClass.getResource( "wspmSobekProj.xsd" ) );
-    prefixes.put( NS_WSPM_SOBEK, "sobek" );
+    catalog.put( NS_WSPM_SOBEK_PROJECT, myClass.getResource( "wspmSobekProj.xsd" ) );
+    prefixes.put( NS_WSPM_SOBEK_PROJECT, "wspmSobekProj" );
+
+    catalog.put( NS_WSPM_SOBEK_COMMON, myClass.getResource( "wspmSobekCommons.xsd" ) );
+    prefixes.put( NS_WSPM_SOBEK_COMMON, "wspmSobekCommon" );
+
+    catalog.put( NS_WSPM_SOBEK, myClass.getResource( "wspmSobek.xsd" ) );
+    prefixes.put( NS_WSPM_SOBEK, "wspmSobek" );
 
   }
 

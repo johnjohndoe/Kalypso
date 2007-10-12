@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:wspmcommon="org.kalypso.model.wspmcommon" targetNamespace="org.kalypso.model.wspmcommon"
+<schema xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:wspmSobekCommon="org.kalypso.model.wspmcommon" targetNamespace="org.kalypso.model.wspm.sobek.common"
 	elementFormDefault="qualified" version="0.1">
 	<annotation>
 		<appinfo xmlns:kapp="org.kalypso.appinfo">
@@ -14,6 +14,7 @@
 	TYPES
 	_________________________________________________________________________________________	
 	-->
+	
 	<complexType name="EmptyFeatureBaseType">
 		<complexContent>
 			<restriction base="gml:AbstractFeatureType">
@@ -27,6 +28,62 @@
 	<simpleType name="stationDouble">
 		<restriction base="decimal">
 			<fractionDigits value="4"/>
+		</restriction>
+	</simpleType>
+	
+	<simpleType name="boundaryConditionType">
+		<restriction base="string">
+			<enumeration value="bc_q">
+				<annotation>
+					<documentation xml:lang="de">
+						<label>Abfluss</label>
+						<tooltip>Abfluss</tooltip>
+						<description>Abfluss</description>
+					</documentation>
+					<documentation xml:lang="en">
+						<label>Discharge</label>
+						<tooltip>Discharge</tooltip>
+						<description>Discharge</description>
+					</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="bc_w">
+				<annotation>
+					<documentation xml:lang="de">
+						<label>Wasserstand</label>
+						<tooltip>Wasserstand</tooltip>
+						<description>Wasserstand</description>
+					</documentation>
+					<documentation xml:lang="en">
+						<label>Waterlevel</label>
+						<tooltip>Waterlevel</tooltip>
+						<description>Waterlevel</description>
+					</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="bc_wq">
+				<annotation>
+					<documentation xml:lang="de">
+						<label>W/Q-Tabelle</label>
+						<tooltip>W/Q-Tabelle</tooltip>
+						<description>W/Q-Tabelle</description>
+					</documentation>
+					<documentation xml:lang="en">
+						<label>Q-H Relation</label>
+						<tooltip>Q-H Relation</tooltip>
+						<description>Q-H Relation</description>
+					</documentation>
+				</annotation>
+			</enumeration>
+		</restriction>
+	</simpleType>
+	<!-- 
+		______________________________
+		Very basic simple types
+		______________________________
+	-->
+	<simpleType name="uniqueIdType">
+		<restriction base="string">
 		</restriction>
 	</simpleType>
 </schema>

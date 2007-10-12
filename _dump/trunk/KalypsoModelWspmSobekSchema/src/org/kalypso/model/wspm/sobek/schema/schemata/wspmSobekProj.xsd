@@ -1,19 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om"
-	xmlns="http://www.w3.org/2001/XMLSchema" xmlns:wspm="org.kalypso.model.wspm"
-	xmlns:wspmcommon="org.kalypso.model.wspmcommon" xmlns:wspmproj="org.kalypso.model.wspmproj"
-	targetNamespace="org.kalypso.model.wspmproj" elementFormDefault="qualified" version="0.1">
+<schema xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:wspmSobek="org.kalypso.model.wspm.sobek"
+	xmlns:wspmSobekCommon="org.kalypso.model.wspm.sobek.common" xmlns:wspmSobekProj="org.kalypso.model.wspm.sobek.project" targetNamespace="org.kalypso.model.wspm.sobek.project"
+	elementFormDefault="qualified" version="0.1">
 	<annotation>
 		<appinfo xmlns:kapp="org.kalypso.appinfo">
 			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
 		</appinfo>
 	</annotation>
-	<import namespace="org.kalypso.model.wspm" schemaLocation="wspmSobek.xsd"/>
-	<import namespace="org.kalypso.model.wspmcommon" schemaLocation="wspmSobekCommons.xsd"/>
-	<import namespace="http://www.opengis.net/gml"
-		schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/>
-	<import namespace="http://www.opengis.net/om"
-		schemaLocation="http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd"/>
+	<import namespace="org.kalypso.model.wspm.sobek" schemaLocation="wspmSobek.xsd"/>
+	<import namespace="org.kalypso.model.wspm.sobek.common" schemaLocation="wspmSobekCommons.xsd"/>
+	<import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/>
+	<import namespace="http://www.opengis.net/om" schemaLocation="http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd"/>
 	<!-- schema for WSPM projects -->
 	<!-- TODO: KALYPSO-Header einfügen -->
 	<!-- 
@@ -21,8 +18,8 @@
 	ELEMENTS
 	_________________________________________________________________________________________
 	-->
-	<element name="WspmSobekProject" type="wspmproj:WspmSobekProjectType" substitutionGroup="gml:_Feature">
-		<annotation> 
+	<element name="WspmSobekProject" type="wspmSobekProj:WspmSobekProjectType" substitutionGroup="gml:_Feature">
+		<annotation>
 			<documentation xml:lang="de">
 				<name>WSPM-Projekt</name>
 				<label>${listProperty:http://www.opengis.net/gml#name;0;-Name nicht gesetzt-}</label>
@@ -37,6 +34,36 @@
 			</documentation>
 		</annotation>
 	</element>
+	<element name="sobekModelMember" type="wspmSobekProj:SobekModelPropertyType">
+		<annotation>
+			<documentation xml:lang="de">
+				<label>Sobek-Modell (PI)</label>
+				<tooltip>Sobek-Modell (PI)</tooltip>
+				<description>Sobek-Modell (PI)</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<label>Sobek-Model (PI)</label>
+				<tooltip>Sobek-Model (PI)</tooltip>
+				<description>Sobek-Model (PI)</description>
+			</documentation>
+		</annotation>
+	</element>
+	<element name="SobekModel" type="wspmSobekProj:SobekModelType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<name>NOFDP-1D-Modell</name>
+				<label>NOFDP-1D-Modell</label>
+				<tooltip>NOFDP-1D-Modell</tooltip>
+				<description>...</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<name>Sobek-Model (PI)</name>
+				<label>Sobek-Model (PI)</label>
+				<tooltip>Sobek-Model (PI)</tooltip>
+				<description>...</description>
+			</documentation>
+		</annotation>
+	</element>
 	<!-- 
 	_________________________________________________________________________________________
 	TYPES
@@ -45,8 +72,24 @@
 	<complexType name="WspmSobekProjectType">
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
+				<sequence> </sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="SobekModelPropertyType">
+		<sequence>
+			<element ref="wspmSobekProj:SobekModel"/>
+		</sequence>
+	</complexType>
+	<complexType name="SobekModelType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
 				<sequence>
-					<element ref="wspm:waterBodyMember" minOccurs="0" maxOccurs="unbounded"/>
+					<element ref="wspmSobek:nodeMember" minOccurs="0" maxOccurs="unbounded"/>
+					<element ref="wspmSobek:branchMember" minOccurs="0" maxOccurs="unbounded"/>
+					<!-- hier kommen die Elemente, die mit den calculationPoints neu entstehen -->
+					<element ref="wspmSobek:calcLinkMember" minOccurs="0" maxOccurs="unbounded"/>
+					<element ref="wspmSobek:lastfallMember" minOccurs="0" maxOccurs="unbounded"/>
 				</sequence>
 			</extension>
 		</complexContent>

@@ -42,9 +42,13 @@ package org.kalypso.model.wspm.sobek.core;
 
 /**
  * @author thuel2
- *
  */
 public interface IWspmSobekConstants
 {
+  public static String NS_WSPM_SOBEK_PROJECT = "org.kalypso.model.wspm.sobek.project";
+
   public static String NS_WSPM_SOBEK = "org.kalypso.model.wspm.sobek";
+
+  public static String NS_WSPM_SOBEK_COMMON = "org.kalypso.model.wspm.sobek.common";
+
 }
