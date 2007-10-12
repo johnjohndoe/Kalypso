@@ -45,6 +45,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.geom.AffineTransform;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.kalypso.contribs.java.awt.ColorUtilities;
@@ -53,7 +54,11 @@ import org.kalypsodeegree.graphics.sld.GraphicStroke;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree_impl.graphics.displayelements.CurveWalker;
+import org.kalypsodeegree_impl.graphics.displayelements.strokearrow.IAdditionalStrokePainter;
+import org.kalypsodeegree_impl.graphics.displayelements.strokearrow.StrokeArrowHelper;
+import org.kalypsodeegree_impl.graphics.displayelements.strokearrow.StrokeArrowPainter;
 import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
 
 /**
@@ -69,6 +74,9 @@ public class StrokePainter
 
   private final java.awt.Stroke m_stroke;
 
+  // additional painters - paint an arrow, aso
+  private final List<IAdditionalStrokePainter> m_painters = new ArrayList<IAdditionalStrokePainter>();
+
   public StrokePainter( final Stroke stroke, final Feature feature, final UOM uom, final GeoTransform projection ) throws FilterEvaluationException
   {
     m_color = stroke == null ? null : ColorUtilities.createTransparent( stroke.getStroke( feature ), stroke.getOpacity( feature ) );
@@ -79,6 +87,8 @@ public class StrokePainter
 
     final int cap = stroke == null ? BasicStroke.CAP_ROUND : stroke.getLineCap( feature );
     final int join = stroke == null ? BasicStroke.JOIN_ROUND : stroke.getLineJoin( feature );
+
+    getAdditionalPainters( stroke, projection );
 
     // use a simple Stroke if dash == null or its length < 2 because that's faster
     if( stroke == null )
@@ -93,6 +103,15 @@ public class StrokePainter
       m_image = graphicStroke.getGraphic().getAsImage( feature, uom, projection );
     else
       m_image = null;
+  }
+
+  private void getAdditionalPainters( Stroke stroke, GeoTransform projection )
+  {
+    /* TODO bad style - StrokePainter shouldn't know something about IAdditionalStrokePainter Implementations */
+    if( StrokeArrowHelper.isArrowDefined( stroke ) )
+    {
+      m_painters.add( new StrokeArrowPainter( stroke.getCssParameters(), projection ) );
+    }
   }
 
   public double getWidth( )
@@ -165,5 +184,15 @@ public class StrokePainter
     prepareGraphics( g );
 
     g.drawPolyline( pos[0], pos[1], pos[2][0] );
+  }
+
+  public void paintAdditionals( Graphics2D g, GM_Curve curve, int[][] pos )
+  {
+    prepareGraphics( g );
+
+    for( IAdditionalStrokePainter painter : m_painters )
+    {
+      painter.paint( g, curve, pos );
+    }
   }
 }
