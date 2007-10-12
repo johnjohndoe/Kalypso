@@ -60,10 +60,13 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
 
     private final List<IScenarioDataListener> m_controller;
 
-    public KeyPoolListener( final IPoolableObjectType key, final List<IScenarioDataListener> controller )
+    private final Class m_modelClass;
+
+    public KeyPoolListener( final IPoolableObjectType key, final List<IScenarioDataListener> controller, final Class modelClass )
     {
       m_key = key;
       m_controller = controller;
+      m_modelClass = modelClass;
     }
 
     public IPoolableObjectType getKey( )
@@ -108,8 +111,11 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
       if( newValue instanceof GMLWorkspace )
       {
         final GMLWorkspace workspace = (GMLWorkspace) newValue;
-        // TODO: is IFeatureWrapper2 correct here? Used to be IModel
-        final IModel model = (IModel) workspace.getRootFeature().getAdapter( IModel.class );
+        
+        // Adapting directly to IModel is dangerous because the mapping is not unique
+        // (for example, 1d2d adapter factory as well as risk adapter factory are registered to adapt Feature to IModel)
+        // TODO remove mappings to IModel from the factories
+        final IModel model = (IModel) workspace.getRootFeature().getAdapter( m_modelClass );
         if( model != null )
           fireModelLoaded( model );
       }
@@ -258,7 +264,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
       m_keyMap.put( wrapperClass, null );
     else
     {
-      final KeyPoolListener newListener = new KeyPoolListener( newKey, m_controller );
+      final KeyPoolListener newListener = new KeyPoolListener( newKey, m_controller, wrapperClass );
       m_keyMap.put( wrapperClass, newListener );
       pool.addPoolListener( newListener, newKey );
     }

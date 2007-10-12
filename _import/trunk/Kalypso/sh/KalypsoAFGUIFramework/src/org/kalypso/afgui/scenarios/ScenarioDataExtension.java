@@ -95,6 +95,7 @@ public class ScenarioDataExtension
         for( final IConfigurationElement element : elements )
         {
           String bundleName = element.getAttribute( "bundle" ); //$NON-NLS-1$
+          
           if( bundleName == null )
           {
             // default to loading from same bundle
