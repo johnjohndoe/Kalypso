@@ -172,12 +172,7 @@ public class FeatureUtils
     final FeatureChange[] arrChanges = changes.toArray( new FeatureChange[] {} );
     final ChangeFeaturesCommand chgCmd = new ChangeFeaturesCommand( workspace, arrChanges );
 
-    CommandableWorkspace cmdWork;
-    if( workspace instanceof CommandableWorkspace )
-      cmdWork = (CommandableWorkspace) workspace;
-    else
-      cmdWork = new CommandableWorkspace( workspace );
-
+    CommandableWorkspace cmdWork = getWorkspace( feature );
     cmdWork.postCommand( chgCmd );
   }
 
@@ -198,12 +193,17 @@ public class FeatureUtils
     final FeatureChange change = new FeatureChange( feature, chgProp, impl );
     final ChangeFeaturesCommand chgCmd = new ChangeFeaturesCommand( workspace, new FeatureChange[] { change } );
 
-    CommandableWorkspace cmdWork;
-    if( workspace instanceof CommandableWorkspace )
-      cmdWork = (CommandableWorkspace) workspace;
-    else
-      cmdWork = new CommandableWorkspace( workspace );
-
+    CommandableWorkspace cmdWork = getWorkspace( feature );
     cmdWork.postCommand( chgCmd );
+  }
+
+  public static CommandableWorkspace getWorkspace( Feature feature )
+  {
+    GMLWorkspace workspace = feature.getWorkspace();
+
+    if( workspace instanceof CommandableWorkspace )
+      return (CommandableWorkspace) workspace;
+    else
+      return new CommandableWorkspace( workspace );
   }
 }
