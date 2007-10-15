@@ -63,7 +63,7 @@ import org.kalypso.chart.framework.model.impl.ChartModel;
 import org.kalypso.chart.framework.util.ChartUtilities;
 import org.kalypso.chart.framework.view.ChartComposite;
 import org.kalypso.chart.ui.editor.actions.ChartActionContributor;
-import org.kalypso.chart.ui.editor.mouse.DragHandler;
+import org.kalypso.chart.ui.editor.mouse.DragZoomHandler;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
@@ -130,7 +130,7 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
 
       chart.setLayoutData( gridData );
       contributor.contributeActions( chart, manager );
-      final DragHandler handler = new DragHandler( chart );
+      final DragZoomHandler handler = new DragZoomHandler( chart );
       chart.addMouseListener( handler );
       chart.addMouseMoveListener( handler );
 
