@@ -48,7 +48,6 @@ import javax.xml.namespace.QName;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.kalypso.model.wspm.sobek.core.SobekModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode;
@@ -90,7 +89,7 @@ public class Branch implements IBranch
     throw (new NotImplementedException());
   }
 
-  public static String createBranchId( SobekModelMember model )
+  public static String createBranchId( IModelMember model )
   {
     int count = 0;
 

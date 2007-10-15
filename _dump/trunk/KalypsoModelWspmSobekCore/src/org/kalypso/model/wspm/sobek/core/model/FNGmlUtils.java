@@ -47,12 +47,10 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.wspm.sobek.core.SobekModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode;
@@ -65,7 +63,6 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
@@ -84,7 +81,7 @@ public class FNGmlUtils
    * @param lowerNodeType
    *            lower node type of branch
    */
-  public static INode[] createBranch( final SobekModelMember model, final GM_Curve curve, final Feature[] nodes, final TYPE upperNodeType, final TYPE lowerNodeType ) throws Exception
+  public static INode[] createBranch( final IModelMember model, final GM_Curve curve, final INode[] nodes, final TYPE upperNodeType, final TYPE lowerNodeType ) throws Exception
   {
     if( curve.getAsLineString().getNumberOfPoints() < 2 )
       throw new IllegalStateException( "Geometry is not a line!" );
@@ -131,74 +128,18 @@ public class FNGmlUtils
     return new INode[] { upperNode, lowerNode };
   }
 
-  public static INode createNode( final SobekModelMember model, final TYPE nodeType, final GM_Point point, final Feature[] nodes ) throws Exception
+  public static INode createNode( final IModelMember model, final TYPE nodeType, final GM_Point point, final INode[] nodes ) throws Exception
   {
     // a new node must be created?!?
-    for( final Feature node : nodes )
+    for( final INode node : nodes )
     {
-      final GM_Point pNode = (GM_Point) node.getDefaultGeometryProperty();
+      final GM_Point pNode = node.getGeometry();
       if( pNode.intersects( point ) )
-        return AbstractNode.getNode( model, node );
+        return node;
     }
 
     INode node = AbstractNode.createNode( model, nodeType, point );
-
     return node;
-  }
-
-  private static String createBranchId( final GMLWorkspace workspace )
-  {
-// final Feature root = workspace.getRootFeature();
-// final List< ? > branches = (List< ? >) root.getProperty( ISobekConstants.QN_HYDRAULIC_BRANCH_MEMBER );
-//
-// int count = 0;
-//
-// for( final Object object : branches )
-// {
-// if( !(object instanceof Feature) )
-// continue;
-//
-// final Feature branch = (Feature) object;
-// final String id = (String) branch.getProperty( ISobekConstants.QN_HYDRAULIC_UNIQUE_ID );
-// if( id == null )
-// continue;
-//
-// final String[] split = id.split( "b_" );
-// if( split.length != 2 )
-// throw new IllegalStateException();
-//
-// final Integer iBranch = new Integer( split[1] );
-//
-// if( iBranch > count )
-// count = iBranch;
-// }
-//
-// return String.format( "b_%05d", ++count );
-
-    throw (new NotImplementedException());
-  }
-
-  public static void deleteFoo( final GMLWorkspace workspace, final Feature feature ) throws Exception
-  {
-// if( ISobekConstants.QN_HYDRAULIC_SOBEK_BRANCH.equals( feature.getFeatureType().getQName() ) )
-// {
-// FNGmlUtils.deleteBranch( workspace, feature );
-// return;
-// }
-//
-// final TYPE type = TYPE.getFeatureType( feature );
-// switch( type )
-// {
-// case eCrossSectionNode:
-// FeatureUtils.deleteFeature( feature );
-// break;
-//
-// case eLinkageNode:
-// throw new IllegalStateException(); // delete branch?!? no - delete branch and its linkage nodes!
-//
-// default:
-// throw (new NotImplementedException());
-// }
   }
 
   /**
@@ -216,53 +157,7 @@ public class FNGmlUtils
     }
   }
 
-  /**
-   * resolves node features from node ids
-   */
-  protected static Feature[] getLinkedNodes( final GMLWorkspace workspace, final String[] nodesId )
-  {
-// final List<Feature> myNodes = new ArrayList<Feature>();
-// final Feature root = workspace.getRootFeature();
-//
-// final List< ? > nodes = (List< ? >) root.getProperty( ISobekConstants.QN_HYDRAULIC_NODE_MEMBER );
-// for( final Object object : nodes )
-// {
-// if( !(object instanceof Feature) )
-// continue;
-//
-// final Feature node = (Feature) object;
-//
-// if( ArrayUtils.contains( nodesId, node.getId() ) )
-// myNodes.add( node );
-// }
-//
-// return myNodes.toArray( new Feature[] {} );
-
-    throw (new NotImplementedException());
-  }
-
-  protected static Feature getBranch( GMLWorkspace workspace, final String id )
-  {
-// final Feature root = workspace.getRootFeature();
-//
-// final List< ? > branches = (List< ? >) root.getProperty( ISobekConstants.QN_HYDRAULIC_BRANCH_MEMBER );
-// for( final Object object : branches )
-// {
-// if( !(object instanceof Feature) )
-// continue;
-//
-// final Feature branch = (Feature) object;
-//
-// if( branch.getId().equals( id ) )
-// return branch;
-//
-// }
-// return null;
-
-    throw (new NotImplementedException());
-  }
-
-  private static void addBranchesToLinkToNodes( SobekModelMember model, final INode[] nodes )
+  private static void addBranchesToLinkToNodes( IModelMember model, final INode[] nodes )
   {
     IBranch[] branches = model.getBranchMembers();
     for( final IBranch branch : branches )
@@ -291,9 +186,16 @@ public class FNGmlUtils
     myList.add( branch.getFeature().getId() );
   }
 
-  public static void createInflowBranch( GMLWorkspace workspace, Feature feature, GM_Curve curve )
+  public static void createInflowBranch( IModelMember model, IBranch branch, GM_Curve curve ) throws Exception
   {
-// throw (new NotImplementedException());
+    INode[] nodes = new INode[] { branch.getUpperNode(), branch.getLowerNode() };
+    createBranch( model, curve, nodes, TYPE.eConnectionNode, TYPE.eLinkageNode );
+  }
+
+  public static void createOutflowBranch( IModelMember model, IBranch branch, GM_Curve curve ) throws Exception
+  {
+    INode[] nodes = new INode[] { branch.getUpperNode(), branch.getLowerNode() };
+    createBranch( model, curve, nodes, TYPE.eLinkageNode, TYPE.eConnectionNode );
   }
 
 }

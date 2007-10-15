@@ -44,6 +44,7 @@ import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.model.wspm.sobek.core.model.Branch;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * @author kuch
@@ -93,4 +94,6 @@ public interface INode
   public boolean isEmpty( );
 
   public void delete( ) throws Exception;
+
+  public GM_Point getGeometry( );
 }

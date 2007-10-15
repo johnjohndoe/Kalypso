@@ -182,6 +182,8 @@ public abstract class AbstractNode implements INode
     QName qname = node.getFeatureType().getQName();
     if( ISobekConstants.QN_HYDRAULIC_CONNECTION_NODE.equals( qname ) )
       return new ConnectionNode( model, node );
+    else if( ISobekConstants.QN_HYDRAULIC_LINKAGE_NODE.equals( qname ) )
+      return new LinkageNode( model, node );
 
     throw (new NotImplementedException());
   }
@@ -239,4 +241,13 @@ public abstract class AbstractNode implements INode
   {
     return HashCodeBuilder.reflectionHashCode( this );
   }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getGeometry()
+   */
+  public GM_Point getGeometry( )
+  {
+    return (GM_Point) getFeature().getDefaultGeometryProperty();
+  }
+
 }
