@@ -9,5 +9,6 @@ Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.ui.intro,
- org.kalypso.ui
+ org.kalypso.ui,
+ de.renew.workflow.model
 Eclipse-LazyStart: true

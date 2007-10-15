@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Workflow URI="http___www.tu-harburg.de_wb_kalypso_risk__WF_KalypsoRisk"
+	xmlns="http://www.renew.de/workflow/base"
+	xmlns:con="http://www.renew.de/workflow/contexts"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<Help>NONE</Help>
+	<Name>KalypsoRisk-Workflow</Name>
+	<TaskGroup
+		URI="http___www.tu-harburg.de_wb_kalypso_risk__Preprocessing">
+		<Name>Preprocessing: Modellaufbau</Name>
+		<TaskGroup
+			URI="http___www.tu-harburg.de_wb_kalypso_risk__DataLoad">
+			<Help>Daten aus dem Dateisystem in das Projekt laden</Help>
+			<Name>Daten laden</Name>
+			<Task context="ImportLanduseShapeDataWizard"
+				URI="http___www.tu-harburg.de_wb_kalypso_risk__ImportLanduseShapeData">
+				<Help><![CDATA[Import von Landnutzung shape-Dateien]]></Help>
+				<Name>Import von Landnutzung shape-Dateien</Name>
+			</Task>
+			<Task context="ImportWaterlevelData"
+				URI="http___www.tu-harburg.de_wb_kalypso_risk__ImportWaterlevelData">
+				<Help><![CDATA[Import waterlevel data]]></Help>
+				<Name>Import waterlevel data</Name>
+			</Task>
+		</TaskGroup>
+		<TaskGroup
+			URI="http___www.tu-harburg.de_wb_kalypso_risk__Databases">
+			<Help><![CDATA[Common data definition]]></Help>
+			<Name>Common data definition</Name>
+			<Task context="LanduseDatabase"
+				URI="http___www.tu-harburg.de_wb_kalypso_risk__LanduseDatabase">
+				<Help><![CDATA[Landnutzung bearbeiten]]></Help>
+				<Name>Landnutzung bearbeiten</Name>
+			</Task>
+			<Task context="AssetValuesDatabase"
+				URI="http___www.tu-harburg.de_wb_kalypso_risk__AssetValuesDatabase">
+				<Help><![CDATA[Asset values definition]]></Help>
+				<Name>Asset values definition</Name>
+			</Task>
+			<Task context="DamageFunctionsDefinition"
+				URI="http___www.tu-harburg.de_wb_kalypso_risk__DamageFunctionsDefinition">
+				<Help><![CDATA[Damage functions definition]]></Help>
+				<Name>Damage functions definition</Name>
+			</Task>
+			<Task context="RiskZonesDefinition"
+				URI="http___www.tu-harburg.de_wb_kalypso_risk__RiskZonesDefinition">
+				<Help><![CDATA[Risk zones definition]]></Help>
+				<Name>Risk zones definition</Name>
+			</Task>
+		</TaskGroup>
+	</TaskGroup>
+	<TaskGroup
+		URI="http___www.tu-harburg.de_wb_kalypso_risk__Processing">
+		<Help><![CDATA[Processing: Rasterung und Rechnen]]></Help>
+		<Name>Processing: Rasterung und Rechnen</Name>
+		<Task type="ASYNCHRONOUS" context="RasterizingLanduseJob"
+			URI="http___www.tu-harburg.de_wb_kalypso_risk__RasterizingLanduseJob">
+			<Help><![CDATA[Rasterung der Landnutzung]]></Help>
+			<Name>Rasterung der Landnutzung</Name>
+		</Task>
+		<Task type="ASYNCHRONOUS"
+			context="CalculatingDamagePotentialJob"
+			URI="http___www.tu-harburg.de_wb_kalypso_risk__CalculatingDamagePotentialJob">
+			<Help><![CDATA[Schadenspotentialberechnung]]></Help>
+			<Name>Schadenspotentialberechnung</Name>
+		</Task>
+		<Task type="ASYNCHRONOUS" context="CalculatingRiskZonesJob"
+			URI="http___www.tu-harburg.de_wb_kalypso_risk__CalculatingRiskZonesJob">
+			<Help><![CDATA[Ausweisung des Hochwasserrisikos]]></Help>
+			<Name>Ausweisung des Hochwasserrisikos</Name>
+		</Task>
+		<Task type="ASYNCHRONOUS" context="StatisticalAnalysesJob"
+			URI="http___www.tu-harburg.de_wb_kalypso_risk__StatisticalAnalysesJob">
+			<Help><![CDATA[Statistische Auswertung]]></Help>
+			<Name>Statistische Auswertung</Name>
+		</Task>
+	</TaskGroup>
+	<TaskGroup
+		URI="http___www.tu-harburg.de_wb_kalypso_risk__Postprocessing">
+		<Help><![CDATA[Ergebnisauswertungen]]></Help>
+		<Name>Postprocessing: Ergebnisauswertungen</Name>
+		<Task context="ExportRasterData"
+			URI="http___www.tu-harburg.de_wb_kalypso_risk__ExportRasterData">
+			<Help><![CDATA[Exportieren von Rasterdaten in externe Dateien]]></Help>
+			<Name>Exportieren Rasterdaten</Name>
+		</Task>
+	</TaskGroup>
+	<Perspectives>
+		<con:PerspectiveContext id="ContextRiskModelling"
+			perspectiveId="org.kalypso.kalypso1d2d.pjt.perspective.Perspective">
+			<!-- perspectiveId="org.kalypso.risk.perspective.Perspective"> -->
+			<con:ViewContext id="FeatureView"
+				partId="org.kalypso.ui.views.featuretemplateview"
+				parent="ContextRiskModelling">
+				<con:ExtensionContext id="LanduseDatabase"
+					parent="FeatureView"
+					handlerFactoryId="kalypsoContextHandlerFactory">
+					<con:Parameter name="type"
+						value="featureViewInputContext" />
+					<con:Parameter name="input"
+						value="templates/landuse.gft" />
+				</con:ExtensionContext>
+				<con:ExtensionContext id="AssetValuesDatabase"
+					parent="FeatureView"
+					handlerFactoryId="kalypsoContextHandlerFactory">
+					<con:Parameter name="type"
+						value="featureViewInputContext" />
+					<con:Parameter name="input"
+						value="templates/assetValues.gft" />
+				</con:ExtensionContext>
+				<con:ExtensionContext id="DamageFunctionsDefinition"
+					parent="FeatureView"
+					handlerFactoryId="kalypsoContextHandlerFactory">
+					<con:Parameter name="type"
+						value="featureViewInputContext" />
+					<con:Parameter name="input"
+						value="templates/damageFunctions.gft" />
+				</con:ExtensionContext>
+			</con:ViewContext>
+			<con:WorkbenchSiteContext id="MapContext"
+				parent="ContextRiskModelling">
+				<con:ViewContext id="MapOutlineView"
+					partId="org.kalypso.ui.views.outline" parent="MapContext" />
+				<con:ViewContext id="MapView"
+					partId="org.kalypso.ui.views.mapView" parent="MapContext">
+					<con:ExtensionContext
+						id="ImportLanduseShapeDataContext" parent="MapContext"
+						handlerFactoryId="kalypsoContextHandlerFactory">
+						<con:WizardContext
+							id="ImportLanduseShapeDataWizard"
+							wizardId="org.kalypso.risk.model.wizards.importlanduse.ImportLanduseWizard"
+							wizardType="NEW_WIZARD" parent="ImportLanduseShapeDataContext" />
+						<con:Parameter name="type"
+							value="mapViewInputContext" />
+						<con:Parameter name="input"
+							value="maps/basemap.gmt" />
+					</con:ExtensionContext>
+				</con:ViewContext>
+			</con:WorkbenchSiteContext>
+			<con:ViewContext id="FeatureSelectionView"
+				partId="org.kalypso.featureview.views.FeatureView"
+				parent="ContextRiskModelling" />
+		</con:PerspectiveContext>
+	</Perspectives>
+</Workflow>

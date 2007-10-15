@@ -12,6 +12,7 @@ import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 
 import de.renew.workflow.base.Task;
 import de.renew.workflow.base.TaskGroup;
+import de.renew.workflow.base.Task.Help;
 
 /**
  * @author Stefan Kurzbach
@@ -35,8 +36,8 @@ public class WorkflowLabelProvider extends ColumnLabelProvider
   {
     m_workflowControl = workflowControl;
     final Display display = workflowControl.getTreeViewer().getControl().getDisplay();
-    final ImageDescriptor taskImage = KalypsoAFGUIFrameworkPlugin.getImageDescriptor( "icons/nuvola_select/kig.png" );  //$NON-NLS-1$
-    final ImageDescriptor groupImage = KalypsoAFGUIFrameworkPlugin.getImageDescriptor( "icons/nuvola_select/forward.png" );  //$NON-NLS-1$
+    final ImageDescriptor taskImage = KalypsoAFGUIFrameworkPlugin.getImageDescriptor( "icons/nuvola_select/kig.png" ); //$NON-NLS-1$
+    final ImageDescriptor groupImage = KalypsoAFGUIFrameworkPlugin.getImageDescriptor( "icons/nuvola_select/forward.png" ); //$NON-NLS-1$
     IMAGE_TASK = ImageDescriptor.createFromImageData( taskImage.getImageData().scaledTo( 16, 16 ) ).createImage();
     IMAGE_GROUP = ImageDescriptor.createFromImageData( groupImage.getImageData().scaledTo( 16, 16 ) ).createImage();
     final FontData[] fontData = JFaceResources.getFontRegistry().getFontData( JFaceResources.DIALOG_FONT );
@@ -122,7 +123,11 @@ public class WorkflowLabelProvider extends ColumnLabelProvider
     if( element instanceof Task )
     {
       Task task = (Task) element;
-      return task.getHelp().getValue();
+      final Help help = task.getHelp();
+      if( help == null )
+        return null;
+
+      return help.getValue();
     }
     else
     {
