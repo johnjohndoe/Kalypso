@@ -87,6 +87,8 @@ public class ISobekConstants
 
   public static final String NS_SOBEK = "org.kalypso.model.wspm.sobek";
 
+  public static final String NS_SOBEK_PROJECT = "org.kalypso.model.wspm.sobek.project";
+
   public static final QName QN_HYDRAULIC_BRANCH_LENGTH = new QName( NS_SOBEK, F_HYDRAULIC_BRANCH_LENGTH );
 
   public static final QName QN_HYDRAULIC_BRANCH_LOWER_CONNECTION_NODE = new QName( NS_SOBEK, F_HYDRAULIC_BRANCH_LOWER_CONNECTION_NODE );
@@ -124,5 +126,9 @@ public class ISobekConstants
   public static final QName QN_HYDRAULIC_UNIQUE_ID = new QName( NS_SOBEK, F_HYDRAULIC_UNIQUE_ID );
 
   public static final QName QN_HYDRAULICNODE_LINKED_BRANCH = new QName( NS_SOBEK, F_HYDRAULIC_NODE_LINKED_BRANCH );
+
+  public static final String F_SOBEK_MODEL_MEMBER = "sobekModelMember";
+
+  public static final QName QN_SOBEK_MODEL_MEMBER = new QName( NS_SOBEK_PROJECT, F_SOBEK_MODEL_MEMBER );
 
 }
