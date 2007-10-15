@@ -40,15 +40,26 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.xml.namespace.QName;
 
 import org.apache.commons.lang.NotImplementedException;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.model.wspm.sobek.core.SobekModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
+import org.kalypso.model.wspm.sobek.core.utils.AtomarAddFeatureCommand;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * @author kuch
@@ -62,55 +73,128 @@ public abstract class AbstractNode implements INode
     m_node = node;
   }
 
-  public TYPE getType( )
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getId()
+   */
+  public String getId( )
   {
-    final QName qname = m_node.getFeatureType().getQName();
-
-    if( ISobekConstants.QN_HYDRAULIC_CROSS_SECTION_NODE.equals( qname ) )
-      return TYPE.eCrossSectionNode;
-    else if( ISobekConstants.QN_HYDRAULIC_LINKAGE_NODE.equals( qname ) )
-      return TYPE.eLinkageNode;
-    else if( ISobekConstants.QN_HYDRAULIC_CONNECTION_NODE.equals( qname ) )
-      return TYPE.eConnectionNode;
-
-    throw new NotImplementedException();
+    return (String) m_node.getProperty( ISobekConstants.QN_HYDRAULIC_UNIQUE_ID );
   }
 
-  protected String getDelimiter( )
+  private static String getDelimiter( TYPE nodeType )
   {
-    switch( getType() )
+    switch( nodeType )
     {
       case eLinkageNode:
         return "ln_";
 
-      case eCrossSectionNode:
-        return "csn_";
-
       case eConnectionNode:
         return "cn_";
 
+      case eCrossSectionNode:
+        return "csn_";
+
       default:
-        throw new NotImplementedException();
+        throw (new NotImplementedException());
     }
   }
 
-  public IFeatureType getTargetFeatureType( final GMLWorkspace workspace )
+// //
+// switch( nodeType )
+// {
+// case eLinkageNode:
+// return schema.getFeatureType( ISobekConstants.QN_HYDRAULIC_LINKAGE_NODE );
+//
+// case eCrossSectionNode:
+// return schema.getFeatureType( ISobekConstants.QN_HYDRAULIC_CROSS_SECTION_NODE );
+//
+// case eConnectionNode:
+// return schema.getFeatureType( ISobekConstants.QN_HYDRAULIC_CONNECTION_NODE );
+//
+// default:
+// throw (new IllegalStateException());
+// }
+// }
+
+  public static INode createNode( SobekModelMember model, TYPE nodeType, GM_Point point ) throws Exception
   {
-    final IGMLSchema schema = workspace.getGMLSchema();
+    final IRelationType targetPropertyType = (IRelationType) model.getFeature().getFeatureType().getProperty( ISobekConstants.QN_HYDRAULIC_NODE_MEMBER );
+    IGMLSchema schema = model.getFeature().getFeatureType().getGMLSchema();
 
-    switch( getType() )
+    IFeatureType targetFeatureType;
+    if( TYPE.eBoundaryNode.equals( nodeType ) )
     {
-      case eLinkageNode:
-        return schema.getFeatureType( ISobekConstants.QN_HYDRAULIC_LINKAGE_NODE );
-
-      case eCrossSectionNode:
-        return schema.getFeatureType( ISobekConstants.QN_HYDRAULIC_CROSS_SECTION_NODE );
-
-      case eConnectionNode:
-        return schema.getFeatureType( ISobekConstants.QN_HYDRAULIC_CONNECTION_NODE );
-
-      default:
-        throw (new IllegalStateException());
+      throw (new NotImplementedException());
     }
+    else if( TYPE.eConnectionNode.equals( nodeType ) )
+    {
+      targetFeatureType = schema.getFeatureType( ISobekConstants.QN_HYDRAULIC_CONNECTION_NODE );
+    }
+    else if( TYPE.eCrossSectionNode.equals( nodeType ) )
+    {
+      targetFeatureType = schema.getFeatureType( ISobekConstants.QN_HYDRAULIC_CROSS_SECTION_NODE );
+    }
+    else if( TYPE.eLinkageNode.equals( nodeType ) )
+    {
+      targetFeatureType = schema.getFeatureType( ISobekConstants.QN_HYDRAULIC_LINKAGE_NODE );
+    }
+    else
+      throw (new IllegalStateException());
+
+    final IFeatureSelectionManager selectionManager = KalypsoCorePlugin.getDefault().getSelectionManager();
+    final String nodeId = createNodeId( model, nodeType );
+
+    final Map<IPropertyType, Object> values = new HashMap<IPropertyType, Object>();
+    values.put( targetFeatureType.getProperty( ISobekConstants.QN_HYDRAULIC_NODE_LOCATION ), point );
+    values.put( targetFeatureType.getProperty( ISobekConstants.QN_HYDRAULIC_UNIQUE_ID ), nodeId );
+    values.put( targetFeatureType.getProperty( ISobekConstants.QN_HYDRAULIC_NAME ), nodeId );
+
+    CommandableWorkspace cw;
+    GMLWorkspace workspace = model.getFeature().getWorkspace();
+    if( workspace instanceof CommandableWorkspace )
+      cw = (CommandableWorkspace) workspace;
+    else
+      cw = new CommandableWorkspace( workspace );
+
+    final AtomarAddFeatureCommand command = new AtomarAddFeatureCommand( cw, targetFeatureType, model.getFeature(), targetPropertyType, -1, values, selectionManager );
+    cw.postCommand( command );
+
+    return getNode( command.getNewFeature() );
+  }
+
+  public static INode getNode( Feature node )
+  {
+    QName qname = node.getFeatureType().getQName();
+    if( ISobekConstants.QN_HYDRAULIC_CONNECTION_NODE.equals( qname ) )
+      return new ConnectionNode( node );
+
+    throw (new NotImplementedException());
+  }
+
+  private static String createNodeId( final SobekModelMember model, final TYPE nodeType )
+  {
+    int count = 0;
+
+    INode[] nodes = model.getNodeMembers();
+    for( final INode node : nodes )
+    {
+
+      if( nodeType.equals( node.getType() ) )
+      {
+        String nodeId = node.getId();
+        if( nodeId == null )
+          continue;
+
+        final String[] split = nodeId.split( "_" );
+        if( split.length != 2 )
+          throw new IllegalStateException();
+
+        final Integer iBranch = new Integer( split[1] );
+        if( iBranch > count )
+          count = iBranch;
+      }
+    }
+
+    return String.format( "%s%05d", getDelimiter( nodeType ), ++count );
   }
 }

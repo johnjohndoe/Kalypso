@@ -40,20 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.interfaces;
 
+import org.kalypsodeegree.model.geometry.GM_Curve;
+
 /**
- * ISobekModelMember, IBlueMModelMember derives
- * 
  * @author kuch
  */
-public interface IModelMember
+public interface IBranchMaker
 {
-  public INode[] getNodeMembers( );
+  /**
+   * Creates an SOBEK branch gml representation - a branch consists of two linkage points and a branch with an river
+   * line geometry
+   */
+  void createBranch( GM_Curve curve ) throws Exception;
 
-  public IBranch[] getBranchMembers( );
-
-  public ICalculationLink[] getCalculationLinkMembers( );
-
-  public ILastfallMember[] getLastfallMembers( );
-
-  public IBranchMaker getBranchMaker( );
 }

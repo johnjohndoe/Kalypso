@@ -41,19 +41,9 @@
 package org.kalypso.model.wspm.sobek.core.interfaces;
 
 /**
- * ISobekModelMember, IBlueMModelMember derives
- * 
  * @author kuch
  */
-public interface IModelMember
+public interface IConnectionNode extends INode
 {
-  public INode[] getNodeMembers( );
 
-  public IBranch[] getBranchMembers( );
-
-  public ICalculationLink[] getCalculationLinkMembers( );
-
-  public ILastfallMember[] getLastfallMembers( );
-
-  public IBranchMaker getBranchMaker( );
 }

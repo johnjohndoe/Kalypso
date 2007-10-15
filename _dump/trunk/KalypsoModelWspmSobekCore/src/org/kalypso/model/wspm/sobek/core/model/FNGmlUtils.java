@@ -40,10 +40,25 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.xml.namespace.QName;
+
 import org.apache.commons.lang.NotImplementedException;
+import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.gmlschema.IGMLSchema;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.model.wspm.sobek.core.SobekModelMember;
+import org.kalypso.model.wspm.sobek.core.interfaces.INode;
+import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode.NODE_BRANCH_TYPE;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode.TYPE;
+import org.kalypso.model.wspm.sobek.core.utils.AtomarAddFeatureCommand;
+import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -55,15 +70,6 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 public class FNGmlUtils
 {
   /**
-   * Creates an SOBEK branch gml representation - a branch consists of two linkage points and a branch with an river
-   * line geometry
-   */
-  public static void createBranch( final CommandableWorkspace workspace, final GM_Curve curve ) throws Exception
-  {
-// FNGmlUtils.createBranch( workspace, curve, new Feature[] {}, TYPE.eConnectionNode, TYPE.eConnectionNode );
-  }
-
-  /**
    * @param curve
    *            geometry of branch
    * @param nodes
@@ -73,128 +79,66 @@ public class FNGmlUtils
    * @param lowerNodeType
    *            lower node type of branch
    */
-
-  private static Feature[] createBranch( final CommandableWorkspace workspace, final GM_Curve curve, final Feature[] nodes, final TYPE upperNodeType, final TYPE lowerNodeType ) throws Exception
+  public static INode[] createBranch( final SobekModelMember model, final GM_Curve curve, final Feature[] nodes, final TYPE upperNodeType, final TYPE lowerNodeType ) throws Exception
   {
-// if( curve.getAsLineString().getNumberOfPoints() < 2 )
-// throw new IllegalStateException( "Geometry is not a line!" );
-//
-// /* create linkage nodes at start and end position of linestring */
-// final Feature root = workspace.getRootFeature();
-//
-// final IGMLSchema schema = root.getFeatureType().getGMLSchema();
-//
-// // start and end linkage node
-// final Feature upperNode = createNode( workspace, upperNodeType, curve.getStartPoint(), nodes );
-// final Feature lowerNode = createNode( workspace, lowerNodeType, curve.getEndPoint(), nodes );
-//
-// // create new branch
-// final IFeatureType ftBranch = schema.getFeatureType( ISobekConstants.QN_HYDRAULIC_SOBEK_BRANCH );
-//
-// final IRelationType rtBranchMember = (IRelationType) root.getFeatureType().getProperty(
-// ISobekConstants.QN_HYDRAULIC_BRANCH_MEMBER );
-// final IFeatureSelectionManager selectionManager = KalypsoCorePlugin.getDefault().getSelectionManager();
-//
-// final AtomarAddFeatureCommand command = new AtomarAddFeatureCommand( workspace, ftBranch, root, rtBranchMember, -1,
-// null, selectionManager );
-// workspace.postCommand( command );
-//
-// try
-// {
-// final Feature branch = command.getNewFeature();
-// final String id = FNGmlUtils.createBranchId( workspace );
-//
-// final Map<QName, Object> values = new HashMap<QName, Object>();
-// values.put( ISobekConstants.QN_HYDRAULIC_BRANCH_RIVER_LINE, curve );
-// values.put( ISobekConstants.QN_HYDRAULIC_BRANCH_LENGTH, curve.getLength() );
-// values.put( ISobekConstants.QN_HYDRAULIC_UNIQUE_ID, id );
-// values.put( ISobekConstants.QN_HYDRAULIC_NAME, id );
-//
-// FeatureUtils.updateFeature( branch, values );
-//
-// FeatureUtils.updateLinkedFeature( branch, ISobekConstants.QN_HYDRAULIC_BRANCH_UPPER_CONNECTION_NODE, "#" +
-// upperNode.getId() );
-// FeatureUtils.updateLinkedFeature( branch, ISobekConstants.QN_HYDRAULIC_BRANCH_LOWER_CONNECTION_NODE, "#" +
-// lowerNode.getId() );
-//
-// FNGmlUtils.addBranchesToLinkToNodes( workspace, new Feature[] { upperNode, lowerNode } );
-// }
-// catch( final Exception e )
-// {
-// e.printStackTrace();
-// }
-//
-// return new Feature[] { upperNode, lowerNode };
+    if( curve.getAsLineString().getNumberOfPoints() < 2 )
+      throw new IllegalStateException( "Geometry is not a line!" );
 
-    throw (new NotImplementedException());
+    /* create linkage nodes at start and end position of linestring */
+    final IGMLSchema schema = model.getFeature().getFeatureType().getGMLSchema();
+
+    // start and end linkage node
+    final INode upperNode = createNode( model, upperNodeType, curve.getStartPoint(), nodes );
+    final INode lowerNode = createNode( model, lowerNodeType, curve.getEndPoint(), nodes );
+
+    CommandableWorkspace workspace = FeatureUtils.getWorkspace( model.getFeature() );
+    final IFeatureType ftBranch = schema.getFeatureType( ISobekConstants.QN_HYDRAULIC_SOBEK_BRANCH );
+
+    final IRelationType rtBranchMember = (IRelationType) model.getFeature().getFeatureType().getProperty( ISobekConstants.QN_HYDRAULIC_BRANCH_MEMBER );
+    final IFeatureSelectionManager selectionManager = KalypsoCorePlugin.getDefault().getSelectionManager();
+
+    final AtomarAddFeatureCommand command = new AtomarAddFeatureCommand( workspace, ftBranch, model.getFeature(), rtBranchMember, -1, null, selectionManager );
+    workspace.postCommand( command );
+
+    try
+    {
+      final Feature branch = command.getNewFeature();
+      final String id = Branch.createBranchId( model );
+
+      final Map<QName, Object> values = new HashMap<QName, Object>();
+      values.put( ISobekConstants.QN_HYDRAULIC_BRANCH_RIVER_LINE, curve );
+      values.put( ISobekConstants.QN_HYDRAULIC_BRANCH_LENGTH, curve.getLength() );
+      values.put( ISobekConstants.QN_HYDRAULIC_UNIQUE_ID, id );
+      values.put( ISobekConstants.QN_HYDRAULIC_NAME, id );
+
+      FeatureUtils.updateFeature( branch, values );
+
+      FeatureUtils.updateLinkedFeature( branch, ISobekConstants.QN_HYDRAULIC_BRANCH_UPPER_CONNECTION_NODE, "#" + upperNode.getId() );
+      FeatureUtils.updateLinkedFeature( branch, ISobekConstants.QN_HYDRAULIC_BRANCH_LOWER_CONNECTION_NODE, "#" + lowerNode.getId() );
+
+      FNGmlUtils.addBranchesToLinkToNodes( workspace, new INode[] { upperNode, lowerNode } );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+    }
+
+    return new INode[] { upperNode, lowerNode };
   }
 
-  public static Feature createNode( final CommandableWorkspace workspace, final TYPE nodeType, final GM_Point point, final Feature[] nodes ) throws Exception
+  public static INode createNode( final SobekModelMember model, final TYPE nodeType, final GM_Point point, final Feature[] nodes ) throws Exception
   {
-// // a new node must be created?!?
-// for( final Feature node : nodes )
-// {
-// final GM_Point pNode = (GM_Point) node.getDefaultGeometryProperty();
-// if( pNode.intersects( point ) )
-// return node;
-// }
-//
-// final Feature root = workspace.getRootFeature();
-// final IRelationType targetPropertyType = (IRelationType) root.getFeatureType().getProperty(
-// ISobekConstants.QN_HYDRAULIC_NODE_MEMBER );
-//
-// final IFeatureSelectionManager selectionManager = KalypsoCorePlugin.getDefault().getSelectionManager();
-// final String nodeId = FNGmlUtils.createNodeId( workspace, nodeType );
-//
-// final Map<IPropertyType, Object> values = new HashMap<IPropertyType, Object>();
-// values.put( nodeType.getTargetFeatureType( workspace ).getProperty( ISobekConstants.QN_HYDRAULIC_NODE_LOCATION ),
-// point );
-// values.put( nodeType.getTargetFeatureType( workspace ).getProperty( ISobekConstants.QN_HYDRAULIC_UNIQUE_ID ), nodeId
-// );
-// values.put( nodeType.getTargetFeatureType( workspace ).getProperty( ISobekConstants.QN_HYDRAULIC_NAME ), nodeId );
-//
-// final AtomarAddFeatureCommand command = new AtomarAddFeatureCommand( workspace, nodeType.getTargetFeatureType(
-// workspace ), root, targetPropertyType, -1, values, selectionManager );
-// workspace.postCommand( command );
-//
-// return command.getNewFeature();
+    // a new node must be created?!?
+    for( final Feature node : nodes )
+    {
+      final GM_Point pNode = (GM_Point) node.getDefaultGeometryProperty();
+      if( pNode.intersects( point ) )
+        return AbstractNode.getNode( node );
+    }
 
-    throw (new NotImplementedException());
-  }
+    INode node = AbstractNode.createNode( model, nodeType, point );
 
-  private static String createNodeId( final GMLWorkspace workspace, final TYPE nodeType )
-  {
-// final QName qNodeType = nodeType.getQName();
-//
-// int count = 0;
-//
-// final Feature root = workspace.getRootFeature();
-// final List< ? > nodes = (List< ? >) root.getProperty( ISobekConstants.QN_HYDRAULIC_NODE_MEMBER );
-// for( final Object object : nodes )
-// {
-// if( !(object instanceof Feature) )
-// continue;
-//
-// final Feature node = (Feature) object;
-// if( qNodeType.equals( node.getFeatureType().getQName() ) )
-// {
-// final String nodeId = (String) node.getProperty( ISobekConstants.QN_HYDRAULIC_UNIQUE_ID );
-// if( nodeId == null )
-// continue;
-//
-// final String[] split = nodeId.split( nodeType.getDelimiter() );
-// if( split.length != 2 )
-// throw new IllegalStateException();
-//
-// final Integer iBranch = new Integer( split[1] );
-//
-// if( iBranch > count )
-// count = iBranch;
-// }
-// }
-//
-// return String.format( "%s%05d", nodeType.getDelimiter(), ++count );
-    throw (new NotImplementedException());
+    return node;
   }
 
   private static String createBranchId( final GMLWorkspace workspace )
@@ -505,8 +449,10 @@ public class FNGmlUtils
     throw (new NotImplementedException());
   }
 
-  private static void addBranchesToLinkToNodes( GMLWorkspace workspace, final Feature[] nodes )
+  private static void addBranchesToLinkToNodes( GMLWorkspace workspace, final INode[] nodes )
   {
+    throw (new NotImplementedException());
+
 // final Feature root = workspace.getRootFeature();
 // final List< ? > branches = (List< ? >) root.getProperty( ISobekConstants.QN_HYDRAULIC_BRANCH_MEMBER );
 // for( final Object object : branches )

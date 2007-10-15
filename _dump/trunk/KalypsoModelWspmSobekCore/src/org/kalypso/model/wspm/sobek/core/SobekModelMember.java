@@ -40,12 +40,20 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
+import org.kalypso.model.wspm.sobek.core.interfaces.IBranchMaker;
 import org.kalypso.model.wspm.sobek.core.interfaces.ICalculationLink;
 import org.kalypso.model.wspm.sobek.core.interfaces.ILastfallMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode;
+import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember;
+import org.kalypso.model.wspm.sobek.core.model.AbstractNode;
+import org.kalypso.model.wspm.sobek.core.model.Branch;
+import org.kalypso.model.wspm.sobek.core.model.BranchMaker;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -65,7 +73,21 @@ public final class SobekModelMember implements ISobekModelMember
    */
   public IBranch[] getBranchMembers( )
   {
-    throw (new NotImplementedException());
+    List<IBranch> myBranches = new ArrayList<IBranch>();
+
+    List< ? > branches = (List< ? >) m_modelMember.getProperty( ISobekConstants.QN_HYDRAULIC_BRANCH_MEMBER );
+    for( Object object : branches )
+    {
+      if( !(object instanceof Feature) )
+        continue;
+
+      Feature branch = (Feature) object;
+
+      IBranch myBranch = new Branch( branch );
+      myBranches.add( myBranch );
+    }
+
+    return myBranches.toArray( new IBranch[] {} );
   }
 
   /**
@@ -89,7 +111,32 @@ public final class SobekModelMember implements ISobekModelMember
    */
   public INode[] getNodeMembers( )
   {
-    throw (new NotImplementedException());
+    List<INode> myNodes = new ArrayList<INode>();
+
+    List< ? > nodes = (List< ? >) m_modelMember.getProperty( ISobekConstants.QN_HYDRAULIC_NODE_MEMBER );
+    for( Object object : nodes )
+    {
+      if( !(object instanceof Feature) )
+        continue;
+
+      Feature node = (Feature) object;
+      myNodes.add( AbstractNode.getNode( node ) );
+    }
+
+    return myNodes.toArray( new INode[] {} );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.IModelMember#getBranchMaker()
+   */
+  public IBranchMaker getBranchMaker( )
+  {
+    return new BranchMaker( this );
+  }
+
+  public Feature getFeature( )
+  {
+    return m_modelMember;
   }
 
 }

@@ -38,22 +38,33 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.sobek.core.interfaces;
+package org.kalypso.model.wspm.sobek.core.model;
+
+import org.kalypso.model.wspm.sobek.core.SobekModelMember;
+import org.kalypso.model.wspm.sobek.core.interfaces.IBranchMaker;
+import org.kalypso.model.wspm.sobek.core.interfaces.INode.TYPE;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Curve;
 
 /**
- * ISobekModelMember, IBlueMModelMember derives
- * 
  * @author kuch
  */
-public interface IModelMember
+public class BranchMaker implements IBranchMaker
 {
-  public INode[] getNodeMembers( );
 
-  public IBranch[] getBranchMembers( );
+  private final SobekModelMember m_model;
 
-  public ICalculationLink[] getCalculationLinkMembers( );
+  public BranchMaker( SobekModelMember model )
+  {
+    m_model = model;
+  }
 
-  public ILastfallMember[] getLastfallMembers( );
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBranchMaker#createBranch(org.kalypsodeegree.model.geometry.GM_Curve)
+   */
+  public void createBranch( GM_Curve curve ) throws Exception
+  {
+    FNGmlUtils.createBranch( m_model, curve, new Feature[] {}, TYPE.eConnectionNode, TYPE.eConnectionNode );
+  }
 
-  public IBranchMaker getBranchMaker( );
 }

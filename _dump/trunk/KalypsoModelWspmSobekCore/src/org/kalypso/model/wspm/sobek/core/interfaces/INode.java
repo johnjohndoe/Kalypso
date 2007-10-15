@@ -82,4 +82,6 @@ public interface INode
   public TYPE getType( );
 
   public String getName( );
+
+  public String getId( );
 }
