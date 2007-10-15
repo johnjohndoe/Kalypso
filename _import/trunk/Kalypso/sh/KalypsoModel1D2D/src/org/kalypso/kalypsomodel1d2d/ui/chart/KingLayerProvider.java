@@ -42,7 +42,6 @@ package org.kalypso.kalypsomodel1d2d.ui.chart;
 
 import java.net.URL;
 
-
 import org.kalypso.chart.factory.configuration.exception.LayerProviderException;
 import org.kalypso.chart.factory.configuration.parameters.IParameterContainer;
 import org.kalypso.chart.factory.provider.AbstractLayerProvider;
@@ -53,24 +52,23 @@ import org.kalypso.model.wspm.ui.featureview.ChartDataProvider;
 import org.kalypsodeegree.model.feature.Feature;
 import org.ksp.chart.factory.LayerType;
 
-
 /**
  * @author Gernot Belger
  */
 public class KingLayerProvider extends AbstractLayerProvider
 {
-  
+
   /**
    * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayer(java.net.URL)
    */
   @SuppressWarnings("unchecked")
   public IChartLayer getLayer( final URL context ) throws LayerProviderException
   {
-    
+
     IParameterContainer pc = getParameterContainer();
     LayerType lt = getLayerType();
     IChartModel chartModel = getChartModel();
-    
+
     final String featureKey = pc.getParameterValue( "featureKey", null );
     if( featureKey == null )
       throw new LayerProviderException( "Missing parameter: featureKey" );
@@ -82,14 +80,14 @@ public class KingLayerProvider extends AbstractLayerProvider
     final String domainAxisId = lt.getMapper().getDomainAxisRef().getRef();
     final String targetAxisId = lt.getMapper().getTargetAxisRef().getRef();
 
-    final IAxis<Number> domAxis = chartModel.getMapperRegistry().getAxis( domainAxisId );
-    final IAxis<Number> targetAxis = chartModel.getMapperRegistry().getAxis( targetAxisId );
+    final IAxis<Number> domAxis = (IAxis<Number>) chartModel.getMapperRegistry().getAxis( domainAxisId );
+    final IAxis<Number> targetAxis = (IAxis<Number>) chartModel.getMapperRegistry().getAxis( targetAxisId );
 
-    KingDataContainer data=new KingDataContainer(kingFeature);
-    
+    KingDataContainer data = new KingDataContainer( kingFeature );
+
     final KingLayer kingLayer = new KingLayer( data, domAxis, targetAxis );
-    kingLayer.setVisible(  lt.getVisible() );
-    
+    kingLayer.setVisible( lt.getVisible() );
+
     return kingLayer;
   }
 

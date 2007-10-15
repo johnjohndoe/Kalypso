@@ -44,10 +44,10 @@ import java.math.BigDecimal;
 
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Path;
+import org.kalypso.chart.ext.base.layer.AbstractChartLayer;
 import org.kalypso.chart.framework.exception.ZeroSizeDataRangeException;
 import org.kalypso.chart.framework.model.data.IDataRange;
 import org.kalypso.chart.framework.model.data.impl.DataRange;
-import org.kalypso.chart.framework.model.layer.AbstractChartLayer;
 import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 
