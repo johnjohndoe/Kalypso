@@ -111,6 +111,9 @@ public class StrokeArrowHelper
 
   public static boolean isArrowDefined( Stroke stroke )
   {
+    if( stroke == null )
+      return false;
+
     Map< ? , ? > map = stroke.getCssParameters();
     Object object = map.get( STROKE_ARROW_TYPE );
 
