@@ -54,4 +54,8 @@ public interface IBranch
 
   String getId( );
 
+  INode getUpperNode( );
+
+  INode getLowerNode( );
+
 }

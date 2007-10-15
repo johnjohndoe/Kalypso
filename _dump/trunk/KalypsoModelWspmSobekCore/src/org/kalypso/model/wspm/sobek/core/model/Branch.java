@@ -40,10 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.model;
 
+import javax.xml.namespace.QName;
+
 import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.model.wspm.sobek.core.SobekModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
+import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
+import org.kalypso.model.wspm.sobek.core.interfaces.INode;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
+import org.kalypso.model.wspm.sobek.core.utils.ILinkFeatureWrapperDelegate;
+import org.kalypso.model.wspm.sobek.core.utils.LinkFeatureWrapper;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Object;
 
@@ -52,10 +58,13 @@ import org.kalypsodeegree.model.geometry.GM_Object;
  */
 public class Branch implements IBranch
 {
-  private final Feature m_branch;
+  protected final Feature m_branch;
 
-  public Branch( Feature branch )
+  protected final IModelMember m_model;
+
+  public Branch( IModelMember model, Feature branch )
   {
+    m_model = model;
     m_branch = branch;
   }
 
@@ -104,5 +113,49 @@ public class Branch implements IBranch
   public String getId( )
   {
     return (String) m_branch.getProperty( ISobekConstants.QN_HYDRAULIC_UNIQUE_ID );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBranch#getLowerNode()
+   */
+  public INode getLowerNode( )
+  {
+    return getNode( ISobekConstants.QN_HYDRAULIC_BRANCH_LOWER_CONNECTION_NODE );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBranch#getUpperNode()
+   */
+  public INode getUpperNode( )
+  {
+    return getNode( ISobekConstants.QN_HYDRAULIC_BRANCH_UPPER_CONNECTION_NODE );
+  }
+
+  private INode getNode( final QName lnkBranch )
+  {
+    ILinkFeatureWrapperDelegate delegate = new ILinkFeatureWrapperDelegate()
+    {
+
+      public Feature getLinkedFeature( String id )
+      {
+        INode[] nodes = m_model.getNodeMembers();
+        for( INode node : nodes )
+        {
+          String nodeId = node.getFeature().getId();
+          if( nodeId.equals( id ) )
+            return node.getFeature();
+        }
+
+        return null;
+      }
+
+      public Object getProperty( )
+      {
+        return m_branch.getProperty( lnkBranch );
+      }
+    };
+
+    LinkFeatureWrapper wrapper = new LinkFeatureWrapper( delegate );
+    return AbstractNode.getNode( wrapper.getFeature() );
   }
 }

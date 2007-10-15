@@ -66,5 +66,4 @@ public class BranchMaker implements IBranchMaker
   {
     FNGmlUtils.createBranch( m_model, curve, new Feature[] {}, TYPE.eConnectionNode, TYPE.eConnectionNode );
   }
-
 }

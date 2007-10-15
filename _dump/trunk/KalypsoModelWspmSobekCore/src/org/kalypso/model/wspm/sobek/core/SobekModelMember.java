@@ -43,6 +43,8 @@ package org.kalypso.model.wspm.sobek.core;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.namespace.QName;
+
 import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranchMaker;
@@ -83,7 +85,7 @@ public final class SobekModelMember implements ISobekModelMember
 
       Feature branch = (Feature) object;
 
-      IBranch myBranch = new Branch( branch );
+      IBranch myBranch = new Branch( this, branch );
       myBranches.add( myBranch );
     }
 
@@ -137,6 +139,16 @@ public final class SobekModelMember implements ISobekModelMember
   public Feature getFeature( )
   {
     return m_modelMember;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.IModelMember#deleteFoo(org.kalypsodeegree.model.feature.Feature)
+   */
+  public void deleteFoo( Feature feature )
+  {
+    QName qn = feature.getFeatureType().getQName();
+
+    throw (new NotImplementedException());
   }
 
 }

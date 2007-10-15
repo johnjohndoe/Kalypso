@@ -46,6 +46,8 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.lang.NotImplementedException;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -79,6 +81,11 @@ public abstract class AbstractNode implements INode
   public String getId( )
   {
     return (String) m_node.getProperty( ISobekConstants.QN_HYDRAULIC_UNIQUE_ID );
+  }
+
+  public Feature getFeature( )
+  {
+    return m_node;
   }
 
   private static String getDelimiter( TYPE nodeType )
@@ -196,5 +203,33 @@ public abstract class AbstractNode implements INode
     }
 
     return String.format( "%s%05d", getDelimiter( nodeType ), ++count );
+  }
+
+  /**
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  @Override
+  public boolean equals( Object obj )
+  {
+    if( obj instanceof INode )
+    {
+      INode node = (INode) obj;
+      EqualsBuilder equalsBuilder = new EqualsBuilder();
+      equalsBuilder.append( node, getId() );
+      equalsBuilder.append( this, getId() );
+
+      return equalsBuilder.isEquals();
+    }
+
+    return super.equals( obj );
+  }
+
+  /**
+   * @see java.lang.Object#hashCode()
+   */
+  @Override
+  public int hashCode( )
+  {
+    return HashCodeBuilder.reflectionHashCode( this );
   }
 }

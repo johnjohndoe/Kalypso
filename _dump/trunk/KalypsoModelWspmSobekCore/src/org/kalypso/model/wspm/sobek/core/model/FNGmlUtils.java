@@ -45,12 +45,14 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.sobek.core.SobekModelMember;
+import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode.NODE_BRANCH_TYPE;
@@ -113,10 +115,10 @@ public class FNGmlUtils
 
       FeatureUtils.updateFeature( branch, values );
 
-      FeatureUtils.updateLinkedFeature( branch, ISobekConstants.QN_HYDRAULIC_BRANCH_UPPER_CONNECTION_NODE, "#" + upperNode.getId() );
-      FeatureUtils.updateLinkedFeature( branch, ISobekConstants.QN_HYDRAULIC_BRANCH_LOWER_CONNECTION_NODE, "#" + lowerNode.getId() );
+      FeatureUtils.updateLinkedFeature( branch, ISobekConstants.QN_HYDRAULIC_BRANCH_UPPER_CONNECTION_NODE, "#" + upperNode.getFeature().getId() );
+      FeatureUtils.updateLinkedFeature( branch, ISobekConstants.QN_HYDRAULIC_BRANCH_LOWER_CONNECTION_NODE, "#" + lowerNode.getFeature().getId() );
 
-      FNGmlUtils.addBranchesToLinkToNodes( workspace, new INode[] { upperNode, lowerNode } );
+      FNGmlUtils.addBranchesToLinkToNodes( model, new INode[] { upperNode, lowerNode } );
     }
     catch( final Exception e )
     {
@@ -449,49 +451,23 @@ public class FNGmlUtils
     throw (new NotImplementedException());
   }
 
-  private static void addBranchesToLinkToNodes( GMLWorkspace workspace, final INode[] nodes )
+  private static void addBranchesToLinkToNodes( SobekModelMember model, final INode[] nodes )
   {
-    throw (new NotImplementedException());
+    IBranch[] branches = model.getBranchMembers();
+    for( final IBranch branch : branches )
+    {
+      final INode branchUpperNode = branch.getUpperNode();
+      final INode branchLowerNode = branch.getLowerNode();
 
-// final Feature root = workspace.getRootFeature();
-// final List< ? > branches = (List< ? >) root.getProperty( ISobekConstants.QN_HYDRAULIC_BRANCH_MEMBER );
-// for( final Object object : branches )
-// {
-// if( !(object instanceof Feature) )
-// continue;
-//
-// final Feature branch = (Feature) object;
-//
-// final LinkFeatureWrapper upperWrapper = new LinkFeatureWrapper( new AbstractBranchLinkNode()
-// {
-// // $ANALYSIS-IGNORE
-// public Object getProperty( )
-// {
-// return branch.getProperty( ISobekConstants.QN_HYDRAULIC_BRANCH_UPPER_CONNECTION_NODE );
-// }
-// } );
-//
-// final LinkFeatureWrapper lowerWrapper = new LinkFeatureWrapper( new AbstractBranchLinkNode()
-// {
-// // $ANALYSIS-IGNORE
-// public Object getProperty( )
-// {
-// return branch.getProperty( ISobekConstants.QN_HYDRAULIC_BRANCH_LOWER_CONNECTION_NODE );
-// }
-// } );
-//
-// final Feature branchUpperNode = upperWrapper.getFeature();
-// final Feature branchLowerNode = lowerWrapper.getFeature();
-//
-// if( ArrayUtils.contains( nodes, branchUpperNode ) )
-// FNGmlUtils.addBranchToNode( branchUpperNode, branch, NODE_BRANCH_TYPE.eInflowingBranch );
-//
-// if( ArrayUtils.contains( nodes, branchLowerNode ) )
-// FNGmlUtils.addBranchToNode( branchLowerNode, branch, NODE_BRANCH_TYPE.eOutflowingBranch );
-// }
+      if( ArrayUtils.contains( nodes, branchUpperNode ) )
+        FNGmlUtils.addBranchToNode( branchUpperNode, branch, NODE_BRANCH_TYPE.eInflowingBranch );
+
+      if( ArrayUtils.contains( nodes, branchLowerNode ) )
+        FNGmlUtils.addBranchToNode( branchLowerNode, branch, NODE_BRANCH_TYPE.eOutflowingBranch );
+    }
   }
 
-  private static void addBranchToNode( final Feature node, final Feature branch, final NODE_BRANCH_TYPE direction )
+  private static void addBranchToNode( final INode node, final IBranch branch, final NODE_BRANCH_TYPE direction )
   {
 // FeatureList myList;
 // if( NODE_BRANCH_TYPE.eInflowingBranch.equals( direction ) )

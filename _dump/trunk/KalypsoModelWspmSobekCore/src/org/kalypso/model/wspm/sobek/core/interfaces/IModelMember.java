@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.interfaces;
 
+import org.kalypsodeegree.model.feature.Feature;
+
 /**
  * ISobekModelMember, IBlueMModelMember derives
  * 
@@ -56,4 +58,6 @@ public interface IModelMember
   public ILastfallMember[] getLastfallMembers( );
 
   public IBranchMaker getBranchMaker( );
+
+  public void deleteFoo( Feature feature );
 }
