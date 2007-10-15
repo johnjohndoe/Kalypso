@@ -59,5 +59,7 @@ public interface IModelMember
 
   public IBranchMaker getBranchMaker( );
 
-  public void deleteFoo( Feature feature );
+  public Feature getFeature( );
+
+  public void deleteFoo( Feature feature ) throws Exception;
 }

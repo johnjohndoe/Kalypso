@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.sobek.core.interfaces;
 
 import org.apache.commons.lang.NotImplementedException;
+import org.kalypso.model.wspm.sobek.core.model.Branch;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
@@ -86,4 +87,10 @@ public interface INode
   public String getId( );
 
   public Feature getFeature( );
+
+  public void removeBranch( Branch branch );
+
+  public boolean isEmpty( );
+
+  public void delete( ) throws Exception;
 }

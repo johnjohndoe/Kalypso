@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.interfaces;
 
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Object;
 
 /**
@@ -47,7 +48,6 @@ import org.kalypsodeegree.model.geometry.GM_Object;
  */
 public interface IBranch
 {
-
   String getName( );
 
   GM_Object getGeometryProperty( );
@@ -58,4 +58,5 @@ public interface IBranch
 
   INode getLowerNode( );
 
+  Feature getFeature( );
 }

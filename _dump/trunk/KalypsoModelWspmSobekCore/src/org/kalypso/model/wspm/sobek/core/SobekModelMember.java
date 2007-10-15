@@ -122,7 +122,7 @@ public final class SobekModelMember implements ISobekModelMember
         continue;
 
       Feature node = (Feature) object;
-      myNodes.add( AbstractNode.getNode( node ) );
+      myNodes.add( AbstractNode.getNode( this, node ) );
     }
 
     return myNodes.toArray( new INode[] {} );
@@ -144,11 +144,14 @@ public final class SobekModelMember implements ISobekModelMember
   /**
    * @see org.kalypso.model.wspm.sobek.core.interfaces.IModelMember#deleteFoo(org.kalypsodeegree.model.feature.Feature)
    */
-  public void deleteFoo( Feature feature )
+  public void deleteFoo( Feature feature ) throws Exception
   {
     QName qn = feature.getFeatureType().getQName();
 
-    throw (new NotImplementedException());
+    if( ISobekConstants.QN_HYDRAULIC_SOBEK_BRANCH.equals( qn ) )
+      new Branch( this, feature ).delete();
+    else
+      throw (new NotImplementedException());
   }
 
 }

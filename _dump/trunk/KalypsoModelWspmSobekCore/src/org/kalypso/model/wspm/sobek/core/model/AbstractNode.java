@@ -53,7 +53,7 @@ import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.wspm.sobek.core.SobekModelMember;
+import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.model.wspm.sobek.core.utils.AtomarAddFeatureCommand;
@@ -70,9 +70,17 @@ public abstract class AbstractNode implements INode
 {
   private final Feature m_node;
 
-  public AbstractNode( Feature node )
+  private final IModelMember m_model;
+
+  public AbstractNode( IModelMember model, Feature node )
   {
+    m_model = model;
     m_node = node;
+  }
+
+  protected IModelMember getModel( )
+  {
+    return m_model;
   }
 
   /**
@@ -123,7 +131,7 @@ public abstract class AbstractNode implements INode
 // }
 // }
 
-  public static INode createNode( SobekModelMember model, TYPE nodeType, GM_Point point ) throws Exception
+  public static INode createNode( IModelMember model, TYPE nodeType, GM_Point point ) throws Exception
   {
     final IRelationType targetPropertyType = (IRelationType) model.getFeature().getFeatureType().getProperty( ISobekConstants.QN_HYDRAULIC_NODE_MEMBER );
     IGMLSchema schema = model.getFeature().getFeatureType().getGMLSchema();
@@ -166,19 +174,19 @@ public abstract class AbstractNode implements INode
     final AtomarAddFeatureCommand command = new AtomarAddFeatureCommand( cw, targetFeatureType, model.getFeature(), targetPropertyType, -1, values, selectionManager );
     cw.postCommand( command );
 
-    return getNode( command.getNewFeature() );
+    return getNode( model, command.getNewFeature() );
   }
 
-  public static INode getNode( Feature node )
+  public static INode getNode( IModelMember model, Feature node )
   {
     QName qname = node.getFeatureType().getQName();
     if( ISobekConstants.QN_HYDRAULIC_CONNECTION_NODE.equals( qname ) )
-      return new ConnectionNode( node );
+      return new ConnectionNode( model, node );
 
     throw (new NotImplementedException());
   }
 
-  private static String createNodeId( final SobekModelMember model, final TYPE nodeType )
+  private static String createNodeId( final IModelMember model, final TYPE nodeType )
   {
     int count = 0;
 
@@ -215,8 +223,7 @@ public abstract class AbstractNode implements INode
     {
       INode node = (INode) obj;
       EqualsBuilder equalsBuilder = new EqualsBuilder();
-      equalsBuilder.append( node, getId() );
-      equalsBuilder.append( this, getId() );
+      equalsBuilder.append( this.getFeature(), node.getFeature() );
 
       return equalsBuilder.isEquals();
     }

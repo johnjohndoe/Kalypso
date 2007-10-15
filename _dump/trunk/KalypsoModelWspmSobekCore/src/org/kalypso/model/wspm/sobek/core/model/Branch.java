@@ -40,9 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.xml.namespace.QName;
 
 import org.apache.commons.lang.NotImplementedException;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypso.model.wspm.sobek.core.SobekModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
@@ -50,6 +55,7 @@ import org.kalypso.model.wspm.sobek.core.interfaces.INode;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.model.wspm.sobek.core.utils.ILinkFeatureWrapperDelegate;
 import org.kalypso.model.wspm.sobek.core.utils.LinkFeatureWrapper;
+import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Object;
 
@@ -156,6 +162,66 @@ public class Branch implements IBranch
     };
 
     LinkFeatureWrapper wrapper = new LinkFeatureWrapper( delegate );
-    return AbstractNode.getNode( wrapper.getFeature() );
+    return AbstractNode.getNode( m_model, wrapper.getFeature() );
+  }
+
+  /**
+   * Delete nofdp branch - a branch consists of a branch ;-) and two connection nodes - remark: a connection node can
+   * connected to more than one branch!
+   */
+  public void delete( ) throws Exception
+  {
+    // getAllLinkageNodes of branch
+    // branch its the only branch link of linkage node?!? if yes -> delete linkage node...
+    final List<INode> nodes = new ArrayList<INode>();
+    nodes.add( getUpperNode() );
+    nodes.add( getLowerNode() );
+
+    for( INode node : nodes )
+    {
+      node.removeBranch( this );
+    }
+
+    // deletes empty nodes
+    FNGmlUtils.cleanUpNodes( m_model, this );
+
+    // delete branch
+    FeatureUtils.deleteFeature( m_branch );
+  }
+
+  /**
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  @Override
+  public boolean equals( Object obj )
+  {
+    if( obj instanceof IBranch )
+    {
+      IBranch branch = (IBranch) obj;
+      Feature feature = branch.getFeature();
+      EqualsBuilder builder = new EqualsBuilder();
+      builder.append( getFeature(), feature );
+
+      return builder.isEquals();
+    }
+
+    return super.equals( obj );
+  }
+
+  /**
+   * @see java.lang.Object#hashCode()
+   */
+  @Override
+  public int hashCode( )
+  {
+    return HashCodeBuilder.reflectionHashCode( m_branch );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBranch#getFeature()
+   */
+  public Feature getFeature( )
+  {
+    return m_branch;
   }
 }
