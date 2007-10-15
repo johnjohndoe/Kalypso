@@ -78,7 +78,7 @@ public class PolynomeLayerProvider extends AbstractLayerProvider
   @SuppressWarnings("unchecked")
   public PolynomeChartLayer getLayer( final URL context )
   {
-    LayerType lt=getLayerType();
+    LayerType lt = getLayerType();
 
     final IParameterContainer parameterContainer = getParameterContainer();
 
@@ -89,16 +89,16 @@ public class PolynomeLayerProvider extends AbstractLayerProvider
     final String featureKey = parameterContainer.getParameterValue( "featureKey", null );
     final String propertyNameStr = parameterContainer.getParameterValue( "propertyName", null );
     final QName propertyName = propertyNameStr == null ? null : QName.valueOf( propertyNameStr );
-    
+
     final Feature feature = ChartDataProvider.FEATURE_MAP.get( featureKey );
 
     final String domainAxisId = lt.getMapper().getDomainAxisRef().getRef();
     final String targetAxisId = lt.getMapper().getTargetAxisRef().getRef();
 
-    IChartModel chartModel=getChartModel(); 
-    
-    final IAxis<Number> domAxis = chartModel.getMapperRegistry().getAxis( domainAxisId );
-    final IAxis<Number> valAxis = chartModel.getMapperRegistry().getAxis( targetAxisId );
+    IChartModel chartModel = getChartModel();
+
+    final IAxis<Number> domAxis = (IAxis<Number>) chartModel.getMapperRegistry().getAxis( domainAxisId );
+    final IAxis<Number> valAxis = (IAxis<Number>) chartModel.getMapperRegistry().getAxis( targetAxisId );
 
     final FeatureList polygones = (FeatureList) feature.getProperty( propertyName );
 
@@ -113,10 +113,10 @@ public class PolynomeLayerProvider extends AbstractLayerProvider
     }
 
     final IPolynomial1D[] polyArray = polys.toArray( new IPolynomial1D[polys.size()] );
-    PolynomDataContainer data=new PolynomDataContainer(polyArray);
+    PolynomDataContainer data = new PolynomDataContainer( polyArray );
     final PolynomeChartLayer layer = new PolynomeChartLayer( data, domAxis, valAxis, pixelsPerTick, showPoints );
     layer.setTitle( lt.getTitle() );
-    layer.setVisible(  lt.getVisible() );
+    layer.setVisible( lt.getVisible() );
 
     return layer;
   }
