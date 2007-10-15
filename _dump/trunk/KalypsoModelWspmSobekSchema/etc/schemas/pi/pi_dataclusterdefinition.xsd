@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  Delft FEWS Published Interface (Copyright 2003 WL | Delft Hydraulics) -->
+<schema targetNamespace="http://www.wldelft.nl/fews/PI" xmlns:fews="http://www.wldelft.nl/fews/PI" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
+	<include schemaLocation="pi_sharedtypes.xsd"/>
+	<element name="dataClusterDefinition" type="fews:DataClusterDefinitionComplexType">
+		<annotation>
+			<documentation>A DataCluster is generic XML file which contains the model data  either be it state or measurement or model parameters</documentation>
+		</annotation>
+	</element>
+	<!-- -->
+	<complexType name="DataClusterDefinitionComplexType">
+		<annotation>
+			<documentation>A DataCluster is generic XML file which contains the model data  either be it state or measurement or model parameters</documentation>
+		</annotation>
+		<sequence>
+			<element name="Id" type="fews:idString" minOccurs="0">
+				<annotation>
+					<documentation>id of this data cluster, defined by the module</documentation>
+				</annotation>
+			</element>
+			<element name="description" type="fews:nameString" minOccurs="0">
+				<annotation>
+					<documentation>optional description</documentation>
+				</annotation>
+			</element>
+			<element name="dataDimension" type="fews:DataDimensionComplexType" maxOccurs="unbounded"/>
+			<element name="dataDefinition" type="fews:ModelDataDefinitionComplexType" maxOccurs="unbounded"/>
+		</sequence>
+		<attribute name="version" type="fews:versionString" use="required" fixed="1.2"/>
+	</complexType>
+	<!-- -->
+	<complexType name="ModelDataDefinitionComplexType">
+		<annotation>
+			<documentation>module parameters</documentation>
+		</annotation>
+		<sequence>
+			<element name="description" type="string" minOccurs="0"/>
+		</sequence>
+		<attribute name="dataId" type="fews:idString" use="required">
+			<annotation>
+				<documentation source=" data ID or parameter ID for e.g. V(velocaity0, S(waterlevel)"/>
+			</annotation>
+		</attribute>
+		<attribute name="name" type="fews:nameString" use="optional"/>
+		<attribute name="dataDimensionId" type="fews:idString" use="required"/>
+		<attribute name="dataType" type="fews:DataTypeEnumStringType" use="optional" default="float"/>
+	</complexType>
+	<!-- -->
+	<simpleType name="DataTypeEnumStringType">
+		<restriction base="string">
+			<enumeration value="boolean"/>
+			<enumeration value="int"/>
+			<enumeration value="float"/>
+			<enumeration value="double"/>
+			<enumeration value="file"/>
+		</restriction>
+	</simpleType>
+	<!-- -->
+	<simpleType name="DimensionTypeEnumStringType">
+		<restriction base="string">
+			<enumeration value="scalar"/>
+			<enumeration value="constant"/>
+			<enumeration value="array"/>
+		</restriction>
+	</simpleType>
+	<!-- -->
+	<complexType name="DataDimensionComplexType">
+		<annotation>
+			<documentation> data dimension, dimension ordering should be is first diemnsion column, second dimension row.</documentation>
+		</annotation>
+		<sequence>
+			<element name="description" type="string" minOccurs="0"/>
+			<element name="dimension" type="fews:DimensionSizeComplexType" minOccurs="0" maxOccurs="unbounded"/>
+		</sequence>
+		<attribute name="id" type="fews:idString" use="required"/>
+		<attribute name="name" type="fews:nameString" use="optional"/>
+		<attribute name="dimensionType" type="fews:DimensionTypeEnumStringType" use="optional" default="array"/>
+		<attribute name="numOfDimension" type="int" use="optional" default="1"/>
+	</complexType>
+	<complexType name="DimensionSizeComplexType">
+		<attribute name="num" type="int" use="required"/>
+		<attribute name="value" type="string" use="required">
+			<annotation>
+				<documentation source="absolute integer value or  constant id"/>
+			</annotation>
+		</attribute>
+	</complexType>
+</schema>

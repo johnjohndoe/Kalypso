@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  Delft FEWS Published Interface (Copyright 2003 WL | Delft Hydraulics) -->
+<schema targetNamespace="http://www.wldelft.nl/fews/PI" xmlns:fews="http://www.wldelft.nl/fews/PI" xmlns="http://www.w3.org/2001/XMLSchema"  elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
+	<include schemaLocation="pi_sharedtypes.xsd"/>
+	<element name="Locations" type="fews:LocationsComplexType">
+		<annotation>
+			<documentation>Time series location data files identify points at which specific times series exist.
+                The point is represented by X, Y and Z coordinates. Each location element of a time
+                series location file corresponds to a time series data file and consist of four elements.</documentation>
+		</annotation>
+	</element>
+	<complexType name="LocationsComplexType">
+		<annotation>
+			<documentation>Time series location data files identify points at which specific times series exist.
+                The point is represented by X, Y and Z coordinates. Each location element of a time
+                series location file corresponds to a time series data file and consist of four elements.</documentation>
+		</annotation>
+		<sequence>
+			<element name="geoDatum" type="fews:GeoDatumStringType" default="LOCAL"/>
+			<element name="location" maxOccurs="unbounded">
+				<complexType>
+					<complexContent>
+						<extension base="fews:LocationComplexType">
+							<attribute name="locationId" type="fews:idString" use="required">
+								<annotation>
+									<documentation>A unique location ID</documentation>
+								</annotation>
+							</attribute>
+						</extension>
+					</complexContent>
+				</complexType>
+			</element>
+		</sequence>
+		<attribute name="version" type="fews:versionString" use="required" fixed="1.2"/>
+	</complexType>
+	<complexType name="LocationComplexType">
+		<sequence>
+			<element name="stationName" type="fews:nameString">
+				<annotation>
+					<documentation>Name of station</documentation>
+				</annotation>
+			</element>
+			<element name="longName" type="string" minOccurs="0">
+				<annotation>
+					<documentation>Long (descriptive) name of location</documentation>
+				</annotation>
+			</element>
+			<element name="x" type="double">
+				<annotation>
+					<documentation>X coordinate of the point (Easting)</documentation>
+				</annotation>
+			</element>
+			<element name="y" type="double">
+				<annotation>
+					<documentation>Y coordinate of the point (Northing)</documentation>
+				</annotation>
+			</element>
+			<element name="z" type="double">
+				<annotation>
+					<documentation>Z coordinate of the point (altitude)</documentation>
+				</annotation>
+			</element>
+			<element name="comment" type="fews:commentString" minOccurs="0">
+				<annotation>
+					<documentation>use this field as a notebook to add comments, suggestions
+                        description of data entered etc.</documentation>
+				</annotation>
+			</element>
+		</sequence>
+	</complexType>
+</schema>

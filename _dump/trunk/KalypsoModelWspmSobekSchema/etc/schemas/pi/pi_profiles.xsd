@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  Delft FEWS Published Interface (Copyright 2003 WL | Delft Hydraulics) -->
+<schema targetNamespace="http://www.wldelft.nl/fews/PI" xmlns:fews="http://www.wldelft.nl/fews/PI" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
+	<include schemaLocation="pi_sharedtypes.xsd"/>
+	<element name="Profiles" type="fews:ProfilesComplexType">
+		<annotation>
+			<documentation>Longtitudional profiles</documentation>
+		</annotation>
+	</element>
+	<complexType name="ProfilesComplexType">
+		<annotation>
+			<documentation>Longtitudional profiles</documentation>
+		</annotation>
+		<sequence>
+			<element name="geoDatum" type="fews:GeoDatumStringType" default="LOCAL"/>
+			<element name="timeZone" type="fews:TimeZoneSimpleType" default="0.0" minOccurs="0"/>
+			<element name="profile" type="fews:ProfileComplexType" maxOccurs="unbounded"/>
+		</sequence>
+		<attribute name="version" type="fews:versionString" use="required" fixed="1.2"/>
+	</complexType>
+	<complexType name="ProfileComplexType">
+		<sequence>
+			<element name="locationId" type="fews:LocationIdSimpleType"/>
+			<element name="parameterId" type="fews:ParameterSimpleType"/>
+			<element name="timeStep" type="fews:TimeStepComplexType"/>
+			<element name="startDate" type="fews:DateTimeComplexType">
+				<annotation>
+					<documentation>date/time of the first event</documentation>
+				</annotation>
+			</element>
+			<element name="endDate" type="fews:DateTimeComplexType">
+				<annotation>
+					<documentation>date/time of the last event</documentation>
+				</annotation>
+			</element>
+			<element name="event" type="fews:ProfileEventComplexType" maxOccurs="unbounded">
+				<annotation>
+					<documentation>Each profile can hold one or more events). A single profile just holds one event. A date and time attribute must be specified</documentation>
+				</annotation>
+			</element>
+			<element name="comment" type="fews:commentString" minOccurs="0">
+				<annotation>
+					<documentation>use this field as a notebook to add comments, suggestions
+                        description of data entered etc.</documentation>
+				</annotation>
+			</element>
+		</sequence>
+	</complexType>
+	<complexType name="ProfileXdataComplexType">
+		<annotation>
+			<documentation>Each profile can hold an (unlimited) umber of
+                X, Y, and Z points representing the surveyed location and elevation</documentation>
+		</annotation>
+		<attribute name="label" type="string" use="required">
+			<annotation>
+				<documentation>chainage along the branch</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="value" type="double" use="required"/>
+	</complexType>
+	<complexType name="ProfileEventComplexType">
+		<sequence>
+			<element name="xdata" type="fews:ProfileXdataComplexType" maxOccurs="unbounded">
+				<annotation>
+					<documentation>Each profile can hold an (unlimited) umber of
+                                    X, Y, and Z points representing the surveyed location and elevation</documentation>
+				</annotation>
+			</element>
+		</sequence>
+		<attribute name="date" type="date" use="required"/>
+		<attribute name="time" type="time" use="required"/>
+	</complexType>
+</schema>

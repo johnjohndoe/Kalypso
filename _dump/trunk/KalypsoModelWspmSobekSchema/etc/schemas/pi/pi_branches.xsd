@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  Delft FEWS Published Interface (Copyright 2003 WL | Delft Hydraulics) -->
+<schema targetNamespace="http://www.wldelft.nl/fews/PI" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:fews="http://www.wldelft.nl/fews/PI" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
+	<include schemaLocation="pi_sharedtypes.xsd"/>
+	<element name="Branches" type="fews:BranchesComplexType">
+		<annotation>
+			<documentation>Branch data is used to represent linear futures such as rivers, streams and canals.
+                Each branch has an unique identifier , a name, a start and end-chainage field, a link to an upper
+                node and a link to a downstream node. A series of X, Y points
+                defines the actual branch, the first point being the upstream node,
+                the last point the downstream node. </documentation>
+		</annotation>
+	</element>
+	<complexType name="BranchesComplexType">
+		<sequence>
+			<element name="geoDatum" type="fews:GeoDatumStringType" default="LOCAL"/>
+			<element name="branch" type="fews:BranchComplexType" maxOccurs="unbounded">
+				<annotation>
+					<documentation>Each branch element has a number of required elements
+                        These are:
+
+                        -BranchID
+                        -BranchName
+                        -StartChainage
+                        -EndChainage
+                        -UpNode
+                        -DownNode
+                        This definition is modified from the EUROTAS format</documentation>
+				</annotation>
+			</element>
+		</sequence>
+		<attribute name="version" type="fews:versionString" use="required" fixed="1.2"/>
+	</complexType>
+	<complexType name="BranchComplexType">
+		<annotation>
+			<documentation>Each branch element has a number of required elements
+                These are:
+
+                -BranchID
+                -BranchName
+                -StartChainage
+                -EndChainage
+                -UpNode
+                -DownNode
+                This definition is modified from the EUROTAS format</documentation>
+		</annotation>
+		<sequence>
+			<element name="branchName" type="fews:nameString">
+				<annotation>
+					<documentation>Name of the branch</documentation>
+				</annotation>
+			</element>
+			<element name="startChainage" type="double">
+				<annotation>
+					<documentation>Chainage at the start of the branch</documentation>
+				</annotation>
+			</element>
+			<element name="endChainage" type="double">
+				<annotation>
+					<documentation>Chainage at the end of the branch</documentation>
+				</annotation>
+			</element>
+			<element name="upNode" type="string">
+				<annotation>
+					<documentation>Upstream node id (string)</documentation>
+				</annotation>
+			</element>
+			<element name="downNode" type="string">
+				<annotation>
+					<documentation>Downstream node ID (string)</documentation>
+				</annotation>
+			</element>
+			<element name="pt" type="fews:NodePointComplexType" minOccurs="2" maxOccurs="unbounded">
+				<annotation>
+					<documentation>Each branch must hold at least two pt (point/node) elements.
+                        The maximum number of points is not imited. Each pt
+                        element has two required attributes, X and Y that
+                        point to a geographical location.</documentation>
+				</annotation>
+			</element>
+			<element name="comment" type="fews:commentString" minOccurs="0">
+				<annotation>
+					<documentation>use this field as a notebook to add comments, suggestions
+                        description of data entered etc.</documentation>
+				</annotation>
+			</element>
+		</sequence>
+		<attribute name="branchId" type="fews:idString" use="required"/>
+	</complexType>
+	<complexType name="NodePointComplexType">
+		<annotation>
+			<documentation>Each branch must hold at least two pt (point/node) elements.
+                The maximum number of points is not imited. Each pt
+                element has two required attributes, X and Y that
+                point to a geographical location.</documentation>
+		</annotation>
+		<attribute name="x" type="double" use="optional"/>
+		<attribute name="y" type="double" use="optional"/>
+		<attribute name="z" type="double" use="optional"/>
+		<attribute name="chainage" type="double" use="required"/>
+		<attribute name="label" type="string" use="required"/>
+	</complexType>
+</schema>

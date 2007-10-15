@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  Delft FEWS Published Interface (Copyright 2003 WL | Delft Hydraulics) -->
+<schema targetNamespace="http://www.wldelft.nl/fews/PI" xmlns:fews="http://www.wldelft.nl/fews/PI" xmlns="http://www.w3.org/2001/XMLSchema"  elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
+	<include schemaLocation="pi_sharedtypes.xsd"/>
+	<element name="Cells" type="fews:CellsComplexType">
+		<annotation>
+			<documentation>Each point specifies a cell centrepoint location.</documentation>
+		</annotation>
+	</element>
+	<complexType name="CellsComplexType">
+		<sequence>
+			<element name="geoDatum" type="fews:GeoDatumStringType" default="LOCAL"/>
+			<element name="locationId" type="fews:LocationIdSimpleType"/>
+			<element name="rows" type="int"/>
+			<element name="columns" type="int"/>
+			<element name="pt" type="fews:CellPtComplexType" maxOccurs="unbounded"/>
+			<element name="comment" type="fews:commentString" minOccurs="0">
+				<annotation>
+					<documentation>use this field as a notebook to add comments, suggestions
+                        description of data entered etc.</documentation>
+				</annotation>
+			</element>
+		</sequence>
+		<attribute name="version" type="fews:versionString" use="required" fixed="1.2"/>
+	</complexType>
+	<complexType name="CellPtComplexType">
+		<annotation>
+			<documentation>Points are read in the order in which they occur and
+                allocating starts in the upper left corner.
+                i.e. the first points is the upper left corner,
+                the last points is the lower right corner. The
+                number of points should match rows*columns</documentation>
+		</annotation>
+		<attribute name="x" type="double" use="required"/>
+		<attribute name="y" type="double" use="required"/>
+		<attribute name="z" type="double" use="required"/>
+	</complexType>
+</schema>

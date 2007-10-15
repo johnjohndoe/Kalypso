@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  Delft FEWS Published Interface (Copyright 2003 WL | Delft Hydraulics) -->
+<schema targetNamespace="http://www.wldelft.nl/fews/PI" xmlns:fews="http://www.wldelft.nl/fews/PI" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
+	<include schemaLocation="pi_sharedtypes.xsd"/>
+	<element name="CrossSections" type="fews:CrossSectionsComplexType">
+		<annotation>
+			<documentation>Crossections are  measured locations along a branch,
+                where a surveyed cross section is located. This data type includes
+                a unique identifier, the branchID it is associated with,
+                and the chainage or location along the branch.</documentation>
+		</annotation>
+	</element>
+	<complexType name="CrossSectionsComplexType">
+		<annotation>
+			<documentation>Crossections are  measured locations along a branch,
+                where a surveyed cross section is located. This data type includes
+                a unique identifier, the branchID it is associated with,
+                and the chainage or location along the branch.</documentation>
+		</annotation>
+		<sequence>
+			<element name="geoDatum" type="fews:GeoDatumStringType" default="LOCAL"/>
+			<element name="crossSection" maxOccurs="unbounded">
+				<complexType>
+					<complexContent>
+						<extension base="fews:CrossSectionComplexType">
+							<attribute name="crossSectionID" type="string" use="required"/>
+						</extension>
+					</complexContent>
+				</complexType>
+			</element>
+		</sequence>
+		<attribute name="version" type="fews:versionString" use="required" fixed="1.2"/>
+	</complexType>
+	<complexType name="CrossSectionComplexType">
+		<sequence>
+			<element name="branchId" type="fews:idString"/>
+			<element name="crossSectionName" type="fews:nameString" minOccurs="0"/>
+			<element name="label" type="string">
+				<annotation>
+					<documentation>Label of cross section - this links to the branch and also to the longitudinal profile</documentation>
+				</annotation>
+			</element>
+			<element name="x" type="double" minOccurs="0">
+				<annotation>
+					<documentation>Geographic coordinate (Easting) of cross section</documentation>
+				</annotation>
+			</element>
+			<element name="y" type="double" minOccurs="0">
+				<annotation>
+					<documentation>Geographic coordinate (Northing) of cross section</documentation>
+				</annotation>
+			</element>
+			<element name="leftBankCoordinate" type="double" minOccurs="0">
+				<annotation>
+					<documentation>Coordinate of the left bank point (cross section coordinate)</documentation>
+				</annotation>
+			</element>
+			<element name="rightBankCoordinate" type="double" minOccurs="0">
+				<annotation>
+					<documentation>Coordinate of the right bank point (cross section coordinate)</documentation>
+				</annotation>
+			</element>
+			<element name="thalwegCoordinate" type="double" minOccurs="0">
+				<annotation>
+					<documentation>Coordinate of the thalweg point (cross section coordinate)</documentation>
+				</annotation>
+			</element>
+			<element name="leftBankElevation" type="double" minOccurs="0">
+				<annotation>
+					<documentation>Elevation of the left bank point </documentation>
+				</annotation>
+			</element>
+			<element name="rightBankElevation" type="double" minOccurs="0">
+				<annotation>
+					<documentation>Elevation of the right bank point </documentation>
+				</annotation>
+			</element>
+			<element name="thalwegElevation" minOccurs="0"/>
+			<element name="crossSectionData" type="fews:CrossSectionXdataComplexType" maxOccurs="unbounded">
+				<annotation>
+					<documentation>Each crossection can hold an (unlimited) umber of
+                        X and Z point representing the surveyed location and alevation
+                        along the cross section and two attributes describing the
+                        resistance and mark</documentation>
+				</annotation>
+			</element>
+			<element name="comment" type="fews:commentString" minOccurs="0">
+				<annotation>
+					<documentation>use this field as a notebook to add comments, suggestions
+                        description of data entered etc.</documentation>
+				</annotation>
+			</element>
+		</sequence>
+	</complexType>
+	<complexType name="CrossSectionXdataComplexType">
+		<annotation>
+			<documentation>Each crossection can hold an (unlimited) umber of
+                X and Z point representing the surveyed location and alevation
+                along the cross section and two attributes describing the
+                resistance and mark</documentation>
+		</annotation>
+		<attribute name="csy" type="double" use="required">
+			<annotation>
+				<documentation>cross section point distance co-ordinate</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="z" type="double" use="required">
+			<annotation>
+				<documentation>cross section point elevation</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="roughness" type="double" use="optional">
+			<annotation>
+				<documentation>This assigns roughness to each point
+                    in the cross section.</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="mark" type="integer" use="optional">
+			<annotation>
+				<documentation>Indicators used to define points of interest
+                    (i.e. thalweg, left bank)</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="x" type="double" use="optional">
+			<annotation>
+				<documentation>geographical X co-ordinate</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="y" type="double" use="optional">
+			<annotation>
+				<documentation>geographical Y co-ordinate</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+</schema>

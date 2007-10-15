@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSPY v2004 rel. 3 U (http://www.xmlspy.com) by rooij_e (WL | Delft Hydraulics) -->
+<!--  Delft FEWS Published Interface (Copyright 2003 WL | Delft Hydraulics) -->
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:fews="http://www.wldelft.nl/fews/PI" targetNamespace="http://www.wldelft.nl/fews/PI" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
+	<!--    -->
+	<simpleType name="idString">
+		<restriction base="string"/>
+	</simpleType>
+	<!--    -->
+	<simpleType name="versionString">
+		<restriction base="string"/>
+	</simpleType>
+	<!--    -->
+	<simpleType name="nameString">
+		<restriction base="string"/>
+	</simpleType>
+	<!-- -->
+	<simpleType name="commentString">
+		<restriction base="string"/>
+	</simpleType>
+	<!--    -->
+	<complexType name="TimeStepComplexType">
+		<annotation>
+			<documentation>The timeunit element has three attributes, unit and devider and multiplier.
+            the unit is second, minute, hour, week, month year.
+            The divider attribute is optional (default = 1).</documentation>
+		</annotation>
+		<attribute name="unit" type="fews:timeStepUnitEnumStringType" use="required"/>
+		<attribute name="divider" type="positiveInteger" use="optional" default="1"/>
+		<attribute name="multiplier" type="positiveInteger" use="optional" default="1"/>
+	</complexType>
+	<!--    -->
+	<simpleType name="timeStepUnitEnumStringType">
+		<restriction base="string">
+			<enumeration value="second"/>
+			<enumeration value="minute"/>
+			<enumeration value="hour"/>
+			<enumeration value="day"/>
+			<enumeration value="week"/>
+			<enumeration value="month"/>
+			<enumeration value="year"/>
+			<enumeration value="nonequidistant"/>
+		</restriction>
+	</simpleType>
+	<!--    -->
+	<complexType name="TimeStepUnitComplexType">
+		<annotation>
+			<documentation>The timeunit element has two attributes, unit and divider.
+                the unit is required and can be 1, 2, 3, or 4 meaning: year, month, day and hour.
+                The divider attribute is optional (default = 1).</documentation>
+		</annotation>
+		<attribute name="unit" use="required">
+			<simpleType>
+				<restriction base="int">
+					<enumeration value="1"/>
+					<enumeration value="2"/>
+					<enumeration value="3"/>
+					<enumeration value="4"/>
+				</restriction>
+			</simpleType>
+		</attribute>
+		<attribute name="divider" type="int" use="optional" default="1">
+			<annotation>
+				<documentation>Example: to construct timeSteps op 5 seconds use unit 4 (hours) 
+                and a divider of 720. For daily timeSteps use unit 2 (day) and divider 1.</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+	<!--    -->
+    <simpleType name="GeoDatumEnumStringType">
+        <annotation>
+            <documentation>The geographical datum for the location data.
+                Presently only WGS-1984, OS 1936 and LOCAL are recognised.
+                LOCAL indicates a local grid.</documentation>
+        </annotation>
+        <restriction base="string">
+            <enumeration value="LOCAL"/>
+            <enumeration value="WGS 1984"/>
+            <enumeration value="Ordnance Survey Great Britain 1936"/>
+            <enumeration value="TWD 1967"/>
+            <enumeration value="Gauss Krueger Meridian3"/>
+            <enumeration value="Gauss Krueger Austria M34"/>
+            <enumeration value="Gauss Krueger Austria M31"/>
+            <enumeration value="Rijks Driehoekstelsel"/>
+            <enumeration value="JRC"/>
+            <enumeration value="DWD"/>
+            <enumeration value="KNMI Radar"/>
+        </restriction>
+    </simpleType>
+    <simpleType name="UtmGeoDatumStringType">
+        <restriction base="string">
+            <pattern value="UTM((0[1-9])|([1-5][0-9])|(UTM60))[NS]"/>
+        </restriction>
+    </simpleType>
+
+    <simpleType name="GeoDatumStringType">
+        <union memberTypes="fews:GeoDatumEnumStringType fews:UtmGeoDatumStringType"/>
+    </simpleType>
+    <!--    -->
+	<simpleType name="LocationIdSimpleType">
+		<annotation>
+			<documentation>Location ID, defined by the model </documentation>
+		</annotation>
+		<restriction base="string"/>
+	</simpleType>
+	<!--    -->
+	<simpleType name="ParameterSimpleType">
+		<annotation>
+			<documentation>Content of the data (Discharge, Precipitation, VPD); defined by the model</documentation>
+		</annotation>
+		<restriction base="string"/>
+	</simpleType>
+	<!--    -->
+	<simpleType name="TimeZoneSimpleType">
+		<annotation>
+			<documentation>The timeZone (in decimal hours shift from GMT) 
+            e.g. -1.0 or 3.5. If not present GMT is assumed</documentation>
+		</annotation>
+		<restriction base="double"/>
+	</simpleType>
+	<!--    -->
+
+
+    <simpleType name="dateType">
+        <restriction base="date">
+            <pattern value="\d\d\d\d-\d\d-\d\d"/>
+        </restriction>
+    </simpleType>
+
+    <simpleType name="timeType">
+        <restriction base="time">
+            <pattern value="\d\d:\d\d:\d\d"/>
+        </restriction>
+    </simpleType>
+
+    <complexType name="DateTimeComplexType">
+		<attribute name="date" type="fews:dateType" use="required"/>
+		<attribute name="time" type="fews:timeType" use="required"/>
+	</complexType>
+	<simpleType name="timeSeriesType">
+		<annotation>
+			<documentation>Type of data, either accumulative or instantaneous.
+                        For accumulative data the time/date of the event is
+                        the moment at which the data was gathered.
+ </documentation>
+		</annotation>
+		<restriction base="string">
+			<enumeration value="accumulative"/>
+			<enumeration value="instantaneous"/>
+		</restriction>
+	</simpleType>
+</schema>
