@@ -153,8 +153,13 @@ public class ISobekConstants
 
   public static final QName QN_NOFDP_WEIR_NODE = new QName( NS_NOFPD_1D_MODEL, F_NOFDP_WEIR_NODE );
 
+  public static final String NS_WSPM_PROFILE = "org.kalypso.model.wspmprofile";
+
   public static final String F_NOFDP_HYDRAULIC_PROFILE_MEMBER = "profileMember";
 
-  public static final QName QN_NOFDP_HYDRAULIC_PROFILE_MEMBER = new QName( NS_NOFPD_1D_MODEL, F_NOFDP_HYDRAULIC_PROFILE_MEMBER );
+  public static final QName QN_NOFDP_HYDRAULIC_PROFILE_MEMBER = new QName( NS_WSPM_PROFILE, F_NOFDP_HYDRAULIC_PROFILE_MEMBER );
 
+  public static final String F_NOFDP_HYDRAULIC_PROFILE = "Profile";
+
+  public static final QName QN_NOFDP_HYDRAULIC_PROFILE = new QName( NS_WSPM_PROFILE, F_NOFDP_HYDRAULIC_PROFILE );
 }

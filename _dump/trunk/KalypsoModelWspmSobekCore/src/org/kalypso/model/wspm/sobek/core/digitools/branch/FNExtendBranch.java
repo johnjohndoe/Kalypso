@@ -201,7 +201,7 @@ public class FNExtendBranch extends AbstractWidget
   @Override
   public void paint( final Graphics g )
   {
-    if( m_snapPainter != null )
+    if( m_snapPainter != null && m_currentPoint != null )
     {
       final Point point = m_snapPainter.paint( g, getMapPanel(), m_currentPoint );
       if( point != null )

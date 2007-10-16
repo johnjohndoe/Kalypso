@@ -43,8 +43,6 @@ package org.kalypso.model.wspm.sobek.core.digitools.crosssection;
 import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Point;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.xml.namespace.QName;
 
@@ -52,25 +50,22 @@ import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.model.wspm.sobek.core.SobekModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
-import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
+import org.kalypso.ogc.gml.map.widgets.changers.SingleSelectionChanger;
 import org.kalypso.ogc.gml.map.widgets.mapfunctions.IRectangleMapFunction;
-import org.kalypso.ogc.gml.map.widgets.mapfunctions.MapfunctionHelper;
 import org.kalypso.ogc.gml.map.widgets.mapfunctions.RectangleSelector;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.map.widgets.mapfunctions.SelectFeaturesMapFunction;
+import org.kalypso.ogc.gml.map.widgets.providers.QNameFeaturesProvider;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
@@ -88,42 +83,55 @@ public class FNCreateCrossSectionNode extends AbstractWidget
 
   private RectangleSelector m_selector;
 
-  private final IRectangleMapFunction m_clickFunction = new IRectangleMapFunction()
-  {
-    public void execute( final MapPanel mapPanel, final Rectangle rectangle )
-    {
-      final IKalypsoTheme[] themes = mapPanel.getMapModell().getAllThemes();
+  private final IRectangleMapFunction m_clickFunction = new SelectFeaturesMapFunction( SelectFeaturesMapFunction.DEFAULT_RADIUS, new QNameFeaturesProvider( ISobekConstants.QN_NOFDP_HYDRAULIC_PROFILE ), new SingleSelectionChanger( true ), KalypsoCorePlugin.getDefault().getSelectionManager() );
 
-      final List<EasyFeatureWrapper> myFeatures = new ArrayList<EasyFeatureWrapper>();
-
-      for( final IKalypsoTheme theme : themes )
-        /* measure are type of gml - all other are type of shape, etc */
-        if( "GML".equals( theme.getType() ) )
-        {
-          final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme) theme;
-          final FeatureList list = featureTheme.getFeatureList();
-          for( final Object object : list )
-            if( object instanceof Feature )
-            {
-              final Feature f = (Feature) object;
-              final EasyFeatureWrapper eft = new EasyFeatureWrapper( new CommandableWorkspace( f.getWorkspace() ), f, f.getParent(), f.getParentRelation() );
-
-              myFeatures.add( eft );
-            }
-        }
-
-      /* no features found?!? */
-      if( myFeatures.size() == 0 )
-        return;
-
-      final EasyFeatureWrapper[] selected = MapfunctionHelper.findFeatureToSelect( mapPanel, rectangle, myFeatures.toArray( new EasyFeatureWrapper[] {} ), 10 );
-      if( selected.length <= 0 )
-        return;
-
-      final IFeatureSelectionManager manager = mapPanel.getSelectionManager();
-      manager.setSelection( selected );
-    }
-  };
+// new IRectangleMapFunction()
+// {
+// public void execute( final MapPanel mapPanel, final Rectangle rectangle )
+// {
+// final IKalypsoTheme[] themes = mapPanel.getMapModell().getAllThemes();
+//
+// final List<EasyFeatureWrapper> myFeatures = new ArrayList<EasyFeatureWrapper>();
+//
+// for( final IKalypsoTheme theme : themes )
+// if( theme instanceof IKalypsoCascadingTheme )
+// {
+// IKalypsoCascadingTheme ct = (IKalypsoCascadingTheme) theme;
+//
+// int asdfasdf = 0;
+//
+// }
+//
+// //
+// // /* measure are type of gml - all other are type of shape, etc */
+// // if( "GML".equals( theme.getType() ) )
+// // {
+// // final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme) theme;
+// // final FeatureList list = featureTheme.getFeatureList();
+// // for( final Object object : list )
+// // if( object instanceof Feature )
+// // {
+// // final Feature f = (Feature) object;
+// // final EasyFeatureWrapper eft = new EasyFeatureWrapper( new CommandableWorkspace( f.getWorkspace() ), f,
+// // f.getParent(), f.getParentRelation() );
+// //
+// // myFeatures.add( eft );
+// // }
+// // }
+//
+// /* no features found?!? */
+// if( myFeatures.size() == 0 )
+// return;
+//
+// final EasyFeatureWrapper[] selected = MapfunctionHelper.findFeatureToSelect( mapPanel, rectangle, myFeatures.toArray(
+// new EasyFeatureWrapper[] {} ), 10 );
+// if( selected.length <= 0 )
+// return;
+//
+// final IFeatureSelectionManager manager = mapPanel.getSelectionManager();
+// manager.setSelection( selected );
+// }
+// };
 
   public FNCreateCrossSectionNode( )
   {
@@ -178,7 +186,7 @@ public class FNCreateCrossSectionNode extends AbstractWidget
       final Feature feature = eft.getFeature();
 
       final QName ftName = feature.getFeatureType().getQName();
-      if( ISobekConstants.QN_NOFDP_HYDRAULIC_PROFILE_MEMBER.equals( ftName ) )
+      if( ISobekConstants.QN_NOFDP_HYDRAULIC_PROFILE.equals( ftName ) )
         return feature;
     }
 
@@ -281,7 +289,7 @@ public class FNCreateCrossSectionNode extends AbstractWidget
       m_selector.paint( g );
 
     if( m_snappedBranchPoint == null )
-      if( m_snapPainter != null )
+      if( m_snapPainter != null && m_currentPoint != null )
       {
         final Point point = m_snapPainter.paint( g, getMapPanel(), m_currentPoint );
         if( point != null )
