@@ -73,12 +73,12 @@ public final class SobekModelMember implements ISobekModelMember
     if( modelMember == null )
       throw new IllegalStateException( "modelMember is null" );
 
-    if( !ISobekConstants.QN_SOBEK_MODEL.equals( modelMember.getFeatureType().getQName() ) )
-      throw new IllegalStateException( "modelMember is not of type: " + ISobekConstants.QN_SOBEK_MODEL );
+    if( !ISobekConstants. QN_SOBEK_MODEL_MEMBER.equals( modelMember.getFeatureType().getQName() ) )
+      throw new IllegalStateException( "modelMember is not of type: " + ISobekConstants.QN_SOBEK_MODEL_MEMBER);
 
     if( m_model == null )
     {
-      m_modelMember = modelMember;
+    m_modelMember = modelMember;
       m_model = this;
     }
 
@@ -194,4 +194,5 @@ public final class SobekModelMember implements ISobekModelMember
     }
     throw (new NotImplementedException());
   }
+
 }
