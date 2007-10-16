@@ -94,4 +94,16 @@ public class BranchMaker implements IBranchMaker
   {
     FNGmlUtils.extendBranch( m_model, branch, curve );
   }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBranchMaker#connectBranches(org.kalypso.model.wspm.sobek.core.interfaces.IBranch[],
+   *      org.kalypsodeegree.model.geometry.GM_Curve)
+   */
+  public void connectBranches( IBranch[] branches, GM_Curve curve ) throws Exception
+  {
+    if( branches.length != 2 )
+      throw (new IllegalStateException( "Can only connect two branches!" ));
+
+    FNGmlUtils.connectBranches( m_model, branches, curve );
+  }
 }

@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -217,5 +218,18 @@ public class FNGmlUtils
     INode lowerNode = branch.getLowerNode();
 
     createBranch( model, curve, new INode[] { upperNode, lowerNode }, TYPE.eConnectionNode, TYPE.eConnectionNode );
+  }
+
+  public static void connectBranches( final IModelMember model, final IBranch[] branches, final GM_Curve curve ) throws Exception
+  {
+    final List<INode> nodes = new ArrayList<INode>();
+
+    for( final IBranch branch : branches )
+    {
+      nodes.add( branch.getUpperNode() );
+      nodes.add( branch.getLowerNode() );
+    }
+
+    createBranch( model, curve, nodes.toArray( new INode[] {} ), TYPE.eConnectionNode, TYPE.eConnectionNode );
   }
 }

@@ -59,4 +59,6 @@ public interface IBranchMaker
 
   void extendBranch( IBranch branch, GM_Curve curve ) throws Exception;
 
+  void connectBranches( IBranch[] branchesToExtend, GM_Curve curve ) throws Exception;
+
 }
