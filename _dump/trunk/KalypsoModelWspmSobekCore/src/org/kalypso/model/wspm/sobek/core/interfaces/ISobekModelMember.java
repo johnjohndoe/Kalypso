@@ -40,10 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.interfaces;
 
+import java.net.URL;
+
 /**
  * @author kuch
  */
 public interface ISobekModelMember extends IModelMember
 {
 
+  public enum TARGET
+  {
+    eLocations
+  }
+
+  public void writePi( URL targetDir, TARGET target );
 }

@@ -3,7 +3,7 @@
 <project name="OGC_SLD-binding" default="generate">
 	<description>Erzeugt die Binding-Klassen aus den Schemata</description>
 
-	<property name="project" value="${workspace}/KalypsoModelWspmSobekSchema" />
+	<property name="project" value="${workspace}/KalypsoModelWspmSobekCore" />
 
     <patternset id="binding.schemata">
       <include name="etc/schemas/**/*.xsd"/>
