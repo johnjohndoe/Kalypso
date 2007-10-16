@@ -30,21 +30,21 @@
 	<element name="AbstractNode" abstract="true" type="wspmSobek:AbstractNodeType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>${property:org.kalypso.nofdpidss.1dmodel#name}</label>
-				<tooltip>AbstractNode - ${property:org.kalypso.nofdpidss.1dmodel#name}</tooltip>
-				<description>AbstractNode - ${property:org.kalypso.nofdpidss.1dmodel#name}</description>
+				<label>${property:org.kalypso.model.wspm.sobek#name}</label>
+				<tooltip>AbstractNode - ${property:org.kalypso.model.wspm.sobek#name}</tooltip>
+				<description>AbstractNode - ${property:org.kalypso.model.wspm.sobek#name}</description>
 			</documentation>
 			<documentation xml:lang="en">
-				<label>${property:org.kalypso.nofdpidss.1dmodel#name}</label>
-				<tooltip>AbstractNode - ${property:org.kalypso.nofdpidss.1dmodel#name}</tooltip>
-				<description>AbstractNode - ${property:org.kalypso.nofdpidss.1dmodel#name}</description>
+				<label>${property:org.kalypso.model.wspm.sobek#name}</label>
+				<tooltip>AbstractNode - ${property:org.kalypso.model.wspm.sobek#name}</tooltip>
+				<description>AbstractNode - ${property:org.kalypso.model.wspm.sobek#name}</description>
 			</documentation>
 		</annotation>
 	</element>
 	<element name="AbstractNetworkNode" abstract="true" type="wspmSobek:AbstractNetworkNodeType" substitutionGroup="wspmSobek:AbstractNode">
 		<annotation>
 			<documentation xml:lang="de">
-				<label>AbstractNetworkNode - ${property:org.kalypso.nofdpidss.1dmodel#name}</label>
+				<label>AbstractNetworkNode - ${property:org.kalypso.model.wspm.sobek#name}</label>
 				<tooltip>AbstractNetworkNode</tooltip>
 				<description>AbstractNetworkNode</description>
 			</documentation>
@@ -71,15 +71,15 @@
 		<annotation>
 			<documentation xml:lang="de">
 				<name>LinkageNode</name>
-				<label>${property:org.kalypso.nofdpidss.1dmodel#name}</label>
-				<tooltip>LinkageNode - ${property:org.kalypso.nofdpidss.1dmodel#name}</tooltip>
-				<description>LinkageNode - ${property:org.kalypso.nofdpidss.1dmodel#name}</description>
+				<label>${property:org.kalypso.model.wspm.sobek#name}</label>
+				<tooltip>LinkageNode - ${property:org.kalypso.model.wspm.sobek#name}</tooltip>
+				<description>LinkageNode - ${property:org.kalypso.model.wspm.sobek#name}</description>
 			</documentation>
 			<documentation xml:lang="en">
 				<name>LinkageNode</name>
-				<label>${property:org.kalypso.nofdpidss.1dmodel#name}</label>
-				<tooltip>LinkageNode - ${property:org.kalypso.nofdpidss.1dmodel#name}</tooltip>
-				<description>LinkageNode - ${property:org.kalypso.nofdpidss.1dmodel#name}</description>
+				<label>${property:org.kalypso.model.wspm.sobek#name}</label>
+				<tooltip>LinkageNode - ${property:org.kalypso.model.wspm.sobek#name}</tooltip>
+				<description>LinkageNode - ${property:org.kalypso.model.wspm.sobek#name}</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -87,15 +87,15 @@
 		<annotation>
 			<documentation xml:lang="de">
 				<name>AbstractCalculationPoint</name>
-				<label>${property:org.kalypso.nofdpidss.1dmodel#name}</label>
-				<tooltip>AbstractCalculationPoint - ${property:org.kalypso.nofdpidss.1dmodel#name}</tooltip>
-				<description>AbstractCalculationPoint - ${property:org.kalypso.nofdpidss.1dmodel#name}</description>
+				<label>${property:org.kalypso.model.wspm.sobek#name}</label>
+				<tooltip>AbstractCalculationPoint - ${property:org.kalypso.model.wspm.sobek#name}</tooltip>
+				<description>AbstractCalculationPoint - ${property:org.kalypso.model.wspm.sobek#name}</description>
 			</documentation>
 			<documentation xml:lang="en">
 				<name>AbstractCalculationPoint</name>
-				<label>${property:org.kalypso.nofdpidss.1dmodel#name}</label>
-				<tooltip>AbstractCalculationPoint - ${property:org.kalypso.nofdpidss.1dmodel#name}</tooltip>
-				<description>AbstractCalculationPoint - ${property:org.kalypso.nofdpidss.1dmodel#name}</description>
+				<label>${property:org.kalypso.model.wspm.sobek#name}</label>
+				<tooltip>AbstractCalculationPoint - ${property:org.kalypso.model.wspm.sobek#name}</tooltip>
+				<description>AbstractCalculationPoint - ${property:org.kalypso.model.wspm.sobek#name}</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -103,15 +103,15 @@
 		<annotation>
 			<documentation xml:lang="de">
 				<name>BoundaryConditionNode</name>
-				<label>${property:org.kalypso.nofdpidss.1dmodel#name}</label>
-				<tooltip>BoundaryConditionNode - ${property:org.kalypso.nofdpidss.1dmodel#name}</tooltip>
-				<description>BoundaryConditionNode - ${property:org.kalypso.nofdpidss.1dmodel#name}</description>
+				<label>${property:org.kalypso.model.wspm.sobek#name}</label>
+				<tooltip>BoundaryConditionNode - ${property:org.kalypso.model.wspm.sobek#name}</tooltip>
+				<description>BoundaryConditionNode - ${property:org.kalypso.model.wspm.sobek#name}</description>
 			</documentation>
 			<documentation xml:lang="en">
 				<name>BoundaryConditionNode</name>
-				<label>${property:org.kalypso.nofdpidss.1dmodel#name}</label>
-				<tooltip>BoundaryConditionNode - ${property:org.kalypso.nofdpidss.1dmodel#name}</tooltip>
-				<description>BoundaryConditionNode - ${property:org.kalypso.nofdpidss.1dmodel#name}</description>
+				<label>${property:org.kalypso.model.wspm.sobek#name}</label>
+				<tooltip>BoundaryConditionNode - ${property:org.kalypso.model.wspm.sobek#name}</tooltip>
+				<description>BoundaryConditionNode - ${property:org.kalypso.model.wspm.sobek#name}</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -119,15 +119,15 @@
 		<annotation>
 			<documentation xml:lang="de">
 				<name>CrossSectionNode</name>
-				<label>${property:org.kalypso.nofdpidss.1dmodel#name}</label>
-				<tooltip>CrossSectionNode - ${property:org.kalypso.nofdpidss.1dmodel#name}</tooltip>
-				<description>CrossSectionNode - ${property:org.kalypso.nofdpidss.1dmodel#name}</description>
+				<label>${property:org.kalypso.model.wspm.sobek#name}</label>
+				<tooltip>CrossSectionNode - ${property:org.kalypso.model.wspm.sobek#name}</tooltip>
+				<description>CrossSectionNode - ${property:org.kalypso.model.wspm.sobek#name}</description>
 			</documentation>
 			<documentation xml:lang="en">
 				<name>CrossSectionNode</name>
-				<label>${property:org.kalypso.nofdpidss.1dmodel#name}</label>
-				<tooltip>CrossSectionNode - ${property:org.kalypso.nofdpidss.1dmodel#name}</tooltip>
-				<description>CrossSectionNode - ${property:org.kalypso.nofdpidss.1dmodel#name}</description>
+				<label>${property:org.kalypso.model.wspm.sobek#name}</label>
+				<tooltip>CrossSectionNode - ${property:org.kalypso.model.wspm.sobek#name}</tooltip>
+				<description>CrossSectionNode - ${property:org.kalypso.model.wspm.sobek#name}</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -135,15 +135,15 @@
 		<annotation>
 			<documentation xml:lang="de">
 				<name>ConnectionNode</name>
-				<label>${property:org.kalypso.nofdpidss.1dmodel#name}</label>
-				<tooltip>ConnectionNode - ${property:org.kalypso.nofdpidss.1dmodel#name}</tooltip>
-				<description>ConnectionNode - ${property:org.kalypso.nofdpidss.1dmodel#name}</description>
+				<label>${property:org.kalypso.model.wspm.sobek#name}</label>
+				<tooltip>ConnectionNode - ${property:org.kalypso.model.wspm.sobek#name}</tooltip>
+				<description>ConnectionNode - ${property:org.kalypso.model.wspm.sobek#name}</description>
 			</documentation>
 			<documentation xml:lang="en">
 				<name>ConnectionNode</name>
-				<label>${property:org.kalypso.nofdpidss.1dmodel#name}</label>
-				<tooltip>ConnectionNode - ${property:org.kalypso.nofdpidss.1dmodel#name}</tooltip>
-				<description>ConnectionNode - ${property:org.kalypso.nofdpidss.1dmodel#name}</description>
+				<label>${property:org.kalypso.model.wspm.sobek#name}</label>
+				<tooltip>ConnectionNode - ${property:org.kalypso.model.wspm.sobek#name}</tooltip>
+				<description>ConnectionNode - ${property:org.kalypso.model.wspm.sobek#name}</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -151,15 +151,15 @@
 		<annotation>
 			<documentation xml:lang="de">
 				<name>CalculationPoint</name>
-				<label>${property:org.kalypso.nofdpidss.1dmodel#name}</label>
-				<tooltip>CalculationPoint - ${property:org.kalypso.nofdpidss.1dmodel#name}</tooltip>
-				<description>CalculationPoint - ${property:org.kalypso.nofdpidss.1dmodel#name}</description>
+				<label>${property:org.kalypso.model.wspm.sobek#name}</label>
+				<tooltip>CalculationPoint - ${property:org.kalypso.model.wspm.sobek#name}</tooltip>
+				<description>CalculationPoint - ${property:org.kalypso.model.wspm.sobek#name}</description>
 			</documentation>
 			<documentation xml:lang="en">
 				<name>CalculationPoint</name>
-				<label>${property:org.kalypso.nofdpidss.1dmodel#name}</label>
-				<tooltip>CalculationPoint - ${property:org.kalypso.nofdpidss.1dmodel#name}</tooltip>
-				<description>CalculationPoint - ${property:org.kalypso.nofdpidss.1dmodel#name}</description>
+				<label>${property:org.kalypso.model.wspm.sobek#name}</label>
+				<tooltip>CalculationPoint - ${property:org.kalypso.model.wspm.sobek#name}</tooltip>
+				<description>CalculationPoint - ${property:org.kalypso.model.wspm.sobek#name}</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -316,15 +316,15 @@
 		<annotation>
 			<documentation xml:lang="de">
 				<name>CalcLink</name>
-				<label>${property:org.kalypso.nofdpidss.1dmodel#name}</label>
-				<tooltip>CalcLink - ${property:org.kalypso.nofdpidss.1dmodel#name}</tooltip>
-				<description>CalcLink - ${property:org.kalypso.nofdpidss.1dmodel#name}</description>
+				<label>${property:org.kalypso.model.wspm.sobek#name}</label>
+				<tooltip>CalcLink - ${property:org.kalypso.model.wspm.sobek#name}</tooltip>
+				<description>CalcLink - ${property:org.kalypso.model.wspm.sobek#name}</description>
 			</documentation>
 			<documentation xml:lang="en">
 				<name>CalcLink</name>
-				<label>${property:org.kalypso.nofdpidss.1dmodel#name}</label>
-				<tooltip>CalcLink - ${property:org.kalypso.nofdpidss.1dmodel#name}</tooltip>
-				<description>CalcLink - ${property:org.kalypso.nofdpidss.1dmodel#name}</description>
+				<label>${property:org.kalypso.model.wspm.sobek#name}</label>
+				<tooltip>CalcLink - ${property:org.kalypso.model.wspm.sobek#name}</tooltip>
+				<description>CalcLink - ${property:org.kalypso.model.wspm.sobek#name}</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -395,15 +395,15 @@
 		<annotation>
 			<documentation xml:lang="de">
 				<name>Branch</name>
-				<label>${property:org.kalypso.nofdpidss.1dmodel#name}</label>
-				<tooltip>Branch - ${property:org.kalypso.nofdpidss.1dmodel#name}</tooltip>
-				<description>Branch - ${property:org.kalypso.nofdpidss.1dmodel#name}</description>
+				<label>${property:org.kalypso.model.wspm.sobek#name}</label>
+				<tooltip>Branch - ${property:org.kalypso.model.wspm.sobek#name}</tooltip>
+				<description>Branch - ${property:org.kalypso.model.wspm.sobek#name}</description>
 			</documentation>
 			<documentation xml:lang="en">
 				<name>Branch</name>
-				<label>${property:org.kalypso.nofdpidss.1dmodel#name}</label>
-				<tooltip>Branch - ${property:org.kalypso.nofdpidss.1dmodel#name}</tooltip>
-				<description>Branch - ${property:org.kalypso.nofdpidss.1dmodel#name}</description>
+				<label>${property:org.kalypso.model.wspm.sobek#name}</label>
+				<tooltip>Branch - ${property:org.kalypso.model.wspm.sobek#name}</tooltip>
+				<description>Branch - ${property:org.kalypso.model.wspm.sobek#name}</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -487,15 +487,15 @@
 		<annotation>
 			<documentation xml:lang="de">
 				<name>Lastfall</name>
-				<label>${property:org.kalypso.nofdpidss.1dmodel#name}</label>
-				<tooltip>Lastfall - ${property:org.kalypso.nofdpidss.1dmodel#name}</tooltip>
-				<description>Lastfall - ${property:org.kalypso.nofdpidss.1dmodel#name}</description>
+				<label>${property:org.kalypso.model.wspm.sobek#name}</label>
+				<tooltip>Lastfall - ${property:org.kalypso.model.wspm.sobek#name}</tooltip>
+				<description>Lastfall - ${property:org.kalypso.model.wspm.sobek#name}</description>
 			</documentation>
 			<documentation xml:lang="en">
 				<name>Lastfall</name>
-				<label>${property:org.kalypso.nofdpidss.1dmodel#name}</label>
-				<tooltip>Lastfall - ${property:org.kalypso.nofdpidss.1dmodel#name}</tooltip>
-				<description>Lastfall - ${property:org.kalypso.nofdpidss.1dmodel#name}</description>
+				<label>${property:org.kalypso.model.wspm.sobek#name}</label>
+				<tooltip>Lastfall - ${property:org.kalypso.model.wspm.sobek#name}</tooltip>
+				<description>Lastfall - ${property:org.kalypso.model.wspm.sobek#name}</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -558,15 +558,15 @@
 		<annotation>
 			<documentation xml:lang="de">
 				<name>LastfallDefinition</name>
-				<label>${property:org.kalypso.nofdpidss.1dmodel#name}</label>
-				<tooltip>LastfallDefinition - ${property:org.kalypso.nofdpidss.1dmodel#name}</tooltip>
-				<description>LastfallDefinition - ${property:org.kalypso.nofdpidss.1dmodel#name}</description>
+				<label>${property:org.kalypso.model.wspm.sobek#name}</label>
+				<tooltip>LastfallDefinition - ${property:org.kalypso.model.wspm.sobek#name}</tooltip>
+				<description>LastfallDefinition - ${property:org.kalypso.model.wspm.sobek#name}</description>
 			</documentation>
 			<documentation xml:lang="en">
 				<name>LastfallDefinition</name>
-				<label>${property:org.kalypso.nofdpidss.1dmodel#name}</label>
-				<tooltip>LastfallDefinition - ${property:org.kalypso.nofdpidss.1dmodel#name}</tooltip>
-				<description>LastfallDefinition - ${property:org.kalypso.nofdpidss.1dmodel#name}</description>
+				<label>${property:org.kalypso.model.wspm.sobek#name}</label>
+				<tooltip>LastfallDefinition - ${property:org.kalypso.model.wspm.sobek#name}</tooltip>
+				<description>LastfallDefinition - ${property:org.kalypso.model.wspm.sobek#name}</description>
 			</documentation>
 		</annotation>
 	</element>
