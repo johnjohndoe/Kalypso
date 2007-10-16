@@ -54,9 +54,9 @@ import org.kalypso.model.wspm.sobek.core.interfaces.ILastfallMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember;
-import org.kalypso.model.wspm.sobek.core.model.AbstractNode;
 import org.kalypso.model.wspm.sobek.core.model.Branch;
 import org.kalypso.model.wspm.sobek.core.model.BranchMaker;
+import org.kalypso.model.wspm.sobek.core.pub.FNNodeUtils;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -129,7 +129,7 @@ public final class SobekModelMember implements ISobekModelMember
         continue;
 
       Feature node = (Feature) object;
-      myNodes.add( AbstractNode.getNode( this, node ) );
+      myNodes.add( FNNodeUtils.getNode( this, node ) );
     }
 
     return myNodes.toArray( new INode[] {} );

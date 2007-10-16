@@ -52,6 +52,8 @@ import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
+import org.kalypso.model.wspm.sobek.core.pub.FNNodeUtils;
+import org.kalypso.model.wspm.sobek.core.utils.FNGmlUtils;
 import org.kalypso.model.wspm.sobek.core.utils.ILinkFeatureWrapperDelegate;
 import org.kalypso.model.wspm.sobek.core.utils.LinkFeatureWrapper;
 import org.kalypso.ogc.gml.FeatureUtils;
@@ -161,7 +163,7 @@ public class Branch implements IBranch
     };
 
     LinkFeatureWrapper wrapper = new LinkFeatureWrapper( delegate );
-    return AbstractNode.getNode( m_model, wrapper.getFeature() );
+    return FNNodeUtils.getNode( m_model, wrapper.getFeature() );
   }
 
   /**

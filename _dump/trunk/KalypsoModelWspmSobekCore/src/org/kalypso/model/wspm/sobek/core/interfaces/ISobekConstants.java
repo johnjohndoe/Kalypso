@@ -134,4 +134,11 @@ public class ISobekConstants
   public static final String F_LN_LINKS_TO_BRANCH = "linksToBranch";
 
   public static final QName QN_LN_LINKS_TO_BRANCH = new QName( NS_SOBEK, F_LN_LINKS_TO_BRANCH );
+
+  public static final String NS_NOFPD_1D_MODEL = "org.kalypso.nofdpidss.1dmodel";
+
+  public static final String F_NOFDP_POLDER_NODE = "PolderNode";
+
+  public static final QName QN_NOFDP_POLDER_NODE = new QName( NS_NOFPD_1D_MODEL, F_NOFDP_POLDER_NODE );
+
 }

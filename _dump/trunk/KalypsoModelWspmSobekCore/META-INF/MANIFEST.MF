@@ -8,6 +8,7 @@ Bundle-Localization: plugin
 Eclipse-LazyStart: true
 Export-Package: org.kalypso.model.wspm.sobek.core,
  org.kalypso.model.wspm.sobek.core.interfaces,
+ org.kalypso.model.wspm.sobek.core.pub,
  org.kalypso.model.wspm.sobek.core.wizard
 Require-Bundle: org.eclipse.core.runtime,
  org.kalypso.model.wspm.core,

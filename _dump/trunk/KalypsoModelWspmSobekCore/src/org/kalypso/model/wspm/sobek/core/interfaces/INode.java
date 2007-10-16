@@ -45,6 +45,8 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
+ * Generic Node interface, Node implementations and special interface should be derived from this interface!
+ * 
  * @author kuch
  */
 public interface INode
@@ -57,26 +59,10 @@ public interface INode
     eLinkageNode
   }
 
-  public enum NODE_BRANCH_TYPE
+  public enum FLOW_DIRECTION
   {
     eOutflowingBranch,
     eInflowingBranch;
-
-// public static NODE_BRANCH_TYPE getType( final GMLWorkspace workspace, final Feature branch, final Feature node )
-// {
-// // final Object objUpperNode = branch.getProperty( GmlConstants.QN_HYDRAULIC_BRANCH_UPPER_CONNECTION_NODE );
-// // final Feature upperNode = FNGmlUtils.getLinkedNodeFeature( model, objUpperNode );
-// // if( node.equals( upperNode ) )
-// // return eOutflowingBranch;
-// //
-// // final Object objLowerNode = branch.getProperty( GmlConstants.QN_HYDRAULIC_BRANCH_LOWER_CONNECTION_NODE );
-// // final Feature lowerNode = FNGmlUtils.getLinkedNodeFeature( model, objLowerNode );
-// // if( node.equals( lowerNode ) )
-// // return eInflowingBranch;
-// //
-// // return null;
-// throw (new NotImplementedException());
-// }
   }
 
   public TYPE getType( );

@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.sobek.core.model;
+package org.kalypso.model.wspm.sobek.core.utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -57,9 +57,10 @@ import org.kalypso.model.wspm.sobek.core.interfaces.ILinkageNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
-import org.kalypso.model.wspm.sobek.core.interfaces.INode.NODE_BRANCH_TYPE;
+import org.kalypso.model.wspm.sobek.core.interfaces.INode.FLOW_DIRECTION;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode.TYPE;
-import org.kalypso.model.wspm.sobek.core.utils.AtomarAddFeatureCommand;
+import org.kalypso.model.wspm.sobek.core.model.AbstractNode;
+import org.kalypso.model.wspm.sobek.core.model.Branch;
 import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
@@ -169,10 +170,10 @@ public class FNGmlUtils
 
       /* set inflowing and outflowing branches */
       if( ArrayUtils.contains( nodes, branchUpperNode ) )
-        FNGmlUtils.addBranchToNode( branchUpperNode, branch, NODE_BRANCH_TYPE.eOutflowingBranch );
+        FNGmlUtils.addBranchToNode( branchUpperNode, branch, FLOW_DIRECTION.eOutflowingBranch );
 
       if( ArrayUtils.contains( nodes, branchLowerNode ) )
-        FNGmlUtils.addBranchToNode( branchLowerNode, branch, NODE_BRANCH_TYPE.eInflowingBranch );
+        FNGmlUtils.addBranchToNode( branchLowerNode, branch, FLOW_DIRECTION.eInflowingBranch );
     }
 
     /* node is an linkage node? set linkToBranch (ln lays on branch x - lnk to this branch!) */
@@ -187,12 +188,12 @@ public class FNGmlUtils
     }
   }
 
-  private static void addBranchToNode( final INode node, final IBranch branch, final NODE_BRANCH_TYPE direction )
+  private static void addBranchToNode( final INode node, final IBranch branch, final FLOW_DIRECTION direction )
   {
     List myList;
-    if( NODE_BRANCH_TYPE.eInflowingBranch.equals( direction ) )
+    if( FLOW_DIRECTION.eInflowingBranch.equals( direction ) )
       myList = (FeatureList) node.getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_NODE_LINKED_INFLOWING_BRANCHES );
-    else if( NODE_BRANCH_TYPE.eOutflowingBranch.equals( direction ) )
+    else if( FLOW_DIRECTION.eOutflowingBranch.equals( direction ) )
       myList = (FeatureList) node.getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_NODE_LINKED_OUTFLOWING_BRANCHES );
     else
       throw new IllegalStateException();

@@ -45,6 +45,7 @@ import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranchMaker;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode.TYPE;
+import org.kalypso.model.wspm.sobek.core.utils.FNGmlUtils;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 
 /**
