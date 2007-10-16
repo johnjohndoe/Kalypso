@@ -459,7 +459,7 @@
             </imageobject>
           </mediaobject></para>
 
-        <section>
+        <section id="Kalypso1D2DWSPMimport">
           <title>WSPM Modell</title>
 
           <indexterm>
@@ -775,60 +775,255 @@
         <para>Dieses Werkzeug dient der Erstellung des 2D-Netzes im
         Flussschlauch , dessen Form und Lage anhand von Querprofilen definiert
         ist. Voraussetzung hierfür ist das Vorhandensein eines
-        WSPM-Profilthemas und einer Uferliniendefinition (ESRI-Shape
-        Format)</para>
+        WSPM-Profilthemas (bzw. Profildaten als Trippel importieren) und einer
+        Uferliniendefinition (ESRI-Shape Format).</para>
 
-        <para>Das WSPM -Profilthema wird über den Menüpunkt
-        <guimenu>Netzaufbau &gt; 1D-Gewässernetz &gt; Fremddaten importiern
-        &gt; WSPM-Modell</guimenu> eingeladen. Danach können die Profile über
-        den Menüpunkt <guimenu>Profile in Karte anzeigen</guimenu> in der
-        Karte visualisiert werden.</para>
+        <para>Um ein WSPM-Profilthema zu importieren, siehe <xref
+        linkend="Kalypso1D2DWSPMimport" />. Um die Profildaten im
+        Trippel-Format zu importieren siehe <xref
+        linkend="Kalypso1D2DImportProf" />. Die Uferlinien gehören mit zu den
+        Hintergrundkarten. Wie diese eingeladen werden siehe <xref
+        linkend="Kalypso1D2DImportBackgroundmaps" />.</para>
 
-        <para>Voraussetzung für ein korrektes Funktionieren des
-        Schlauchgenerators ist, dass jedes Profil von den beiden Uferlinien
-        geschnitten wird.</para>
+        <para>Wenn Sie die Uferlinien und die Profildaten eingeladen haben und
+        den Flussschlauchgenerator aktiviert haben, dann sollte die Ansicht in
+        etwa so aussehen wie das Beispiel unten. Überprüfen Sie, ob die
+        Grundlagen und die Profile in der Gliederung aktiviert sind.
+        Voraussetzung für ein korrektes Funktionieren des
+        Flussschlauchgenerators ist, dass jedes Profil von beiden Uferlinien
+        geschnitten wird. Ziehen Sie die Karten Werkzeugansicht so weit auf,
+        bis alle Buttons zu sehen sind.</para>
+
+        <figure>
+          <title>Ansicht Flussschlauchgenerator</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/1D2D/Flussschlauchg_01.png" />
+            </imageobject>
+          </mediaobject>
+        </figure>
 
         <para>Zunächst wählen Sie unter dem Menüpunkt
         <guimenuitem>Profile</guimenuitem> das gewünschte Profilthema aus.
-        Danach können Sie über den Selektionsknopf aus diesem Thema einzelne
-        Profile in der Karte selektieren, mit denen Sie Ihr 2D-Netz erstellen
-        möchten. Als nächstes ist die Anzahl der Profilstützstellen zu
+        Danach können Sie über den Selektionsknopf <inlinemediaobject>
+            <imageobject>
+              <imagedata fileref="img/1D2D/Flussschlauchg_Selektion.png" />
+            </imageobject>
+          </inlinemediaobject>aus diesem Thema einzelne Profile in der Karte
+        selektieren, mit denen Sie Ihr 2D-Netz erstellen möchten. Gehen Sie
+        hierfür in die Karte und ziehen Sie mit der linken Maustaste ein
+        Rechteck auf. Alle Profile, die das Rechteck schneidet, werden
+        selektiert. Als nächstes ist die Anzahl der Profilstützstellen zu
         definieren. Die hier angegebene Anzahl gilt global für alle Profile
         und richtet sich nach der Breite des Gewässers und der Heterogenität
-        der Profilgeometrie. Ändert man während der Bearbeitung die Anzahl
-        erneut, so findet eine Neuberechnung anhand der Ausgangsdaten statt
-        und bis dahin vorgenommene Anpassungen werden verworfen!</para>
+        der Profilgeometrie.</para>
 
-        <para>Nach dem gleichen Verfahren werden die beiden Uferlinien
-        ausgewählt. Auch hier haben Sie die Möglichkeit die Anzahl der
-        Stützstellen in Fließrichtung zu definieren. Diese können später noch
-        in der Segmentansicht für jedes Segment individuell angepasst werden.
-        Sobald alle nötigen Spezifikationen vorliegen findet die Berechung der
-        Segmente statt. Bei der ersten Berechnung werden die selektierten
-        Profile anhand der Methode von DOUGLAS-PEUCKER ausgedünnt und die
-        wesentlichen Profilpunkte beibehalten. Gleichzeitig öffnet sich die
-        Segment- und Profilansicht, in welcher Sie weitere
+        <note>
+          <para>Wenn Sie die Anzahl der Stützstellen im Menüpunkt Profile oder
+          Uferlinien während der Bearbeitung erneut verändern, dann erfolgt
+          die Änderung global! D.h. dass eine Neuberechnung anhand der
+          Ausgangsdaten stattfindet und bis dahin vorgenommene Anpassungen
+          z.B. einzelner Segmente verworfen werden!</para>
+        </note>
+
+        <para>Auf dem folgenden Bild ist zu sehen, dass alle selektierten
+        Profile geld dargestellt werden. Sie müssen nicht alle Profile auf
+        einmal selektieren, sondern Sie könnten mit dem selben Verfahren nun
+        noch weitere Profile selektieren. Wenn Sie sich geirrt haben und die
+        Selektion wieder rückgängig machen wollen, dann öffnen Sie einfach
+        wieder so ein Rechteck über alle selektierten Profile, die nicht mehr
+        markiert sein sollen und sie werden wieder orange dargestellt.</para>
+
+        <figure>
+          <title>Profilauswahl mit dem Flussschlauchgenerator</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/1D2D/Flussschlauchg_03.png" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+
+        <figure>
+          <title>Bezeichnungen für den Netzaufbau</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/1D2D/Flussschlauchg_02.png" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+
+        <para>Nach dem gleichen Verfahren werden die beiden Uferlinien unter
+        dem Menüpunkt <guimenuitem>Uferlinien</guimenuitem> ausgewählt.
+        Drücken Sie zunächst den oberen Selektionsknopf und wählen Sie die
+        erste Uferlinie aus (der aktivierte Selektionsknopf erscheint etwas
+        heller als die anderen). Diese wird nach der Selektion grün
+        dargestellt (siehe Abbildung). Wenn Sie für beide Uferlinien nur eine
+        shape-Datei eingeladen haben, spielt die Reihenfolge der Selektion
+        keine Rolle, ansonsten müssen Sie auf das Profilthema achten und
+        dementsprechend die zugehörigen Uferlinienen selektieren.</para>
+
+        <para>Auch hier haben Sie die Möglichkeit die Anzahl der Stützstellen
+        in Fließrichtung zu definieren. Diese können später noch in der
+        Segmentansicht für jedes Segment individuell angepasst werden.</para>
+
+        <figure>
+          <title>Selektion der Uferlinien</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/1D2D/Flussschlauchg_04.png" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+
+        <para>Es sollte nun eine Vorschau zu sehen sein (siehe Abbildung
+        unten). Ist dies nicht der Fall sind die Daten fehlerhaft. Überprüfen
+        Sie ob alle selektierten Profile von beiden Uferlinien geschnitten
+        werden.</para>
+
+        <figure>
+          <title>Netzvorschau</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/1D2D/Flussschlauchg_05.png" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+
+        <para>Sobald alle nötigen Spezifikationen vorliegen findet die
+        Berechung der Segmente statt. Bei der ersten Berechnung werden die
+        selektierten Profile anhand der Methode von DOUGLAS-PEUCKER ausgedünnt
+        und die wesentlichen Profilpunkte beibehalten. Gleichzeitig öffnet
+        sich die Segment- und Profilansicht, in welcher Sie weitere
         Editiermöglichkeiten für die Uferlinien und die Profilunterteilungen
         finden.</para>
 
-        <para>In der Segmentansicht hat man die Möglichkeit zwischen den
-        einzelnen erzeugten Segmenten zu navigieren. Ein Segment ist hierbei
-        definiert als der Raum zwischen zwei Profilen. Nach der Auswahl des
+        <para>In der <guimenuitem>Segmentansicht</guimenuitem> hat man die
+        Möglichkeit zwischen den einzelnen erzeugten Segmenten zu navigieren.
+        Ein Segment ist hierbei definiert als der Raum zwischen zwei Profilen.
+        Wenn der automatische Zoom aktiviert ist (Häkchen setzen), dann ist in
+        der Karte das ausgewählte Segment zu sehen. Nach der Auswahl des
         gewünschten Segments kann für dieses die Anzahl der
         Uferlinienstützpunkte gewählt werden und der anhand der
         Uferlinien-Shapedatei erzeugte Uferverlauf nach Betätigen der
-        Editierknöpfe (Stifte) angepasst werden.</para>
+        Editierknöpfe <inlinemediaobject>
+            <imageobject>
+              <imagedata fileref="img/1D2D/Flussschlauchg_Editieren.png" />
+            </imageobject>
+          </inlinemediaobject> angepasst werden. Es können jedoch nur die
+        Stützpunkte zwischen den Profilen editiert werden, da die
+        Schnittstellen der Uferlinien mit den Profilen fest definiert
+        sind.</para>
 
-        <para>In der Profilansicht werden die das Segment definierenden
-        Profile angezeigt. Die Originalprofile werden in orange dargestellt.
-        Das ausgedünnte Profil für das spätere 2D-Netz ist blau. In dieser
-        Ansicht haben Sie die Möglichkeit die Profilunterteilungen durch
-        Ziehen der blauen Stützpunkte individuell der Profilgeometrie
-        anzupassen. Mittels der Umschalttaste (Shift-Taste) ist es möglich
-        zwischen den beiden Profilen umzuschalten. Nachdem alle Profile und
-        Uferlinien zufriedenstellend bearbeitet wurden, kann man abschließend
-        durch die Betätigung des Konvertierungsknopfes die Vorschau in ein
-        Finite-Elemente-Netz umwandeln.</para>
+        <para>In der <guimenuitem>Profilansicht</guimenuitem> werden die das
+        Segment definierenden Profile angezeigt. Die Originalprofile werden in
+        orange dargestellt. Das ausgedünnte Profil für das spätere 2D-Netz ist
+        blau. In dieser Ansicht haben Sie die Möglichkeit die
+        Profilunterteilungen durch Ziehen der blauen Stützpunkte individuell
+        der Profilgeometrie anzupassen. Hier gilt wiederum, dass die äußersten
+        Knoten nicht verschoben werden können, da dies die definierten
+        Schnittstellen mit den Uferlinien sind. </para>
+
+        <para>Folgende Funktionen sind in der Profilansicht möglich:</para>
+
+        <table>
+          <title>Funktionen der Profilansicht</title>
+
+          <tgroup cols="3">
+            <tbody>
+              <row>
+                <entry><mediaobject>
+                    <imageobject>
+                      <imagedata fileref="img/1D2D/Flussschlauchg_rauszoomen.png" />
+                    </imageobject>
+                  </mediaobject></entry>
+
+                <entry>Ausschnitt verkleinern</entry>
+
+                <entry><para>Beim Betätigen dieses Buttons wird der Ausschnitt
+                schrittweise verkleinert, also herausgezoomt.</para></entry>
+              </row>
+
+              <row>
+                <entry><mediaobject>
+                    <imageobject>
+                      <imagedata fileref="img/1D2D/Flussschlauchg_reinzoomen.png" />
+                    </imageobject>
+                  </mediaobject></entry>
+
+                <entry>Ausschnitt vergrößern</entry>
+
+                <entry>Ziehen Sie mit der linken Maustaste ein Rechtecht über
+                den Bereich, der vergrößert werden soll.</entry>
+              </row>
+
+              <row>
+                <entry><mediaobject>
+                    <imageobject>
+                      <imagedata fileref="img/1D2D/Flussschlauchg_verschieben.png" />
+                    </imageobject>
+                  </mediaobject></entry>
+
+                <entry>Ausschnitt verschieben</entry>
+
+                <entry>Halten Sie die linke Maustaste gedrückt und schieben
+                Sie so das Bild zu dem Ausschnitt, den Sie betrachten
+                möchten.</entry>
+              </row>
+
+              <row>
+                <entry><mediaobject>
+                    <imageobject>
+                      <imagedata fileref="img/1D2D/Flussschlauchg_maximieren.png" />
+                    </imageobject>
+                  </mediaobject></entry>
+
+                <entry>Ausschnitt maximieren</entry>
+
+                <entry>Das gesamte Profil wird angezeigt.</entry>
+              </row>
+
+              <row>
+                <entry><mediaobject>
+                    <imageobject>
+                      <imagedata fileref="img/1D2D/Flussschlauchg_bild.png" />
+                    </imageobject>
+                  </mediaobject></entry>
+
+                <entry>Aktuellen Ausschnitt als Bild speichern</entry>
+
+                <entry></entry>
+              </row>
+
+              <row>
+                <entry><mediaobject>
+                    <imageobject>
+                      <imagedata fileref="img/1D2D/Flussschlauchg_wechseln.png" />
+                    </imageobject>
+                  </mediaobject></entry>
+
+                <entry>Profil wechseln</entry>
+
+                <entry>Zu einem Segment gehören jeweils zwei Profile, die das
+                Segment abschließen. Wenn Sie den Button drücken wird jeweils
+                das andere Profil aktiviert und angezeigt.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para>Nachdem alle Profile und Uferlinien zufriedenstellend bearbeitet
+        wurden, kann man abschließend durch die Betätigung des
+        Konvertierungsknopfes <inlinemediaobject>
+            <imageobject>
+              <imagedata fileref="img/1D2D/Flussschlauchg_konvertieren.png" />
+            </imageobject>
+          </inlinemediaobject> die Vorschau in ein Finite-Elemente-Netz
+        umwandeln.</para>
       </section>
 
       <section>
@@ -842,7 +1037,7 @@
         den Baum <guimenuitem>Preprozessing &gt; Netzaufbau &gt;
         2D-Netz</guimenuitem>. Mit einem Doppelklick auf
         <guimenuitem>Bandgenerator</guimenuitem> wird der Bandgenerator und
-        die zugehörige Karten Werkzeugansicht geöffnet. </para>
+        die zugehörige Karten Werkzeugansicht geöffnet.</para>
 
         <para>Der Bandgenerator stellt ein Werkzeug zur halb-automatischen
         Erzeugung eines 2D-Netzes dar . Mittels der Definition von vier
@@ -872,7 +1067,7 @@
         Mit einem Doppelklick auf den letzten Punkt beenden Sie diese und es
         wird automatisch mit der zweiten Linie begonnen. Der aktuelle
         Bearbeitungsstatus zeigt nur den Istzustand an, da für die erste Linie
-        die Anzahl der Stützstellen frei gewählt werden kann. </para>
+        die Anzahl der Stützstellen frei gewählt werden kann.</para>
 
         <figure>
           <title>Erstellen der zweiten Linie im Bandgenerator</title>
@@ -909,7 +1104,7 @@
         Linie entsprechen. Im Bearbeitungsstatus wird nun ein Sollwert von 4
         Stützstellen angezeigt. Sobald die Sollanzahl der Stützstellen
         erreicht ist (einfacher Mausklick), wird automatisch mit der vierten
-        Linie begonnen (Linienfarbe wechselt). </para>
+        Linie begonnen (Linienfarbe wechselt).</para>
 
         <figure>
           <title>Fertig erstelltes Netz</title>
@@ -932,7 +1127,7 @@
             <imageobject>
               <imagedata fileref="img/1D2D/Bandgenerator_FENetz_generieren.png" />
             </imageobject>
-          </inlinemediaobject>FE-Netz generieren. </para>
+          </inlinemediaobject>FE-Netz generieren.</para>
 
         <para>Um das erstellte Netz zu speichern siehe <xref
         linkend="Kalypso1D2DExportFENetz" />.</para>
@@ -950,7 +1145,7 @@
         zu öffnen, klicken Sie auf den blauen kleinen Pfeil. Die Ansicht
         sollte dann so aussehen wie im Bild unten. Hier kann nun die
         Punktfangweite (Größe des Snapmodus) eingestellt werden und die Farben
-        für die Darstellung der Linien frei gewählt werden. </para>
+        für die Darstellung der Linien frei gewählt werden.</para>
 
         <para>Um die <emphasis role="bold">Hilfe</emphasis>funktion zu öffnen,
         klicken Sie auf den blauen kleinen Pfeil. Die Ansicht sollte dann so
@@ -1698,7 +1893,7 @@
       <primary>Datenexport</primary>
     </indexterm>
 
-    <para></para>
+    <para>Der Datenexport ermöglicht es z.B. FE-Netze zu speichern.</para>
 
     <section id="Kalypso1D2DExportFENetz">
       <title>Exportieren von FE-Netzen</title>
@@ -1707,21 +1902,42 @@
         <primary>Export von FE-Netzen</primary>
       </indexterm>
 
-      <para>beim anzugebenden Dateinamen .2d mitschreiben</para>
+      <para>Um ein FE-Netz zu exportieren, öffnen Sie im Aktivitätenfenster
+      den Baum <guimenuitem>Preprozessing &gt; Daten
+      exportieren</guimenuitem>. Mit einem Doppelklick auf
+      <guimenuitem>Exportieren von FE-Netzen</guimenuitem> wird der zugehörige
+      Assistent geöffnet. Klicken Sie auf <guibutton>Durchsuchen</guibutton>
+      und wählen Sie ein Verzeichnis aus, wohin das FE-Netz exportiert werden
+      soll. Fügen Sie die Endung <filename>*.2d</filename> zum Dateinamen
+      hinzu.</para>
 
-      <para>Zwei verschiedene Dinge können exportiert werden:</para>
+      <para>Anschließend müssen Sie noch angeben, was Sie exportieren möchten.
+      Es gibt zwei Möglichkeiten:</para>
 
       <itemizedlist>
         <listitem>
-          <para>Mittseitenknoten sind Knoten in der Mitte der Kanten; werden
-          von Kalypso erzeugt</para>
+          <para>Mittseitenknoten; sind Knoten in der Mitte der Kanten, die von
+          Kalypso erzeugt werden</para>
         </listitem>
 
         <listitem>
-          <para>Rauheitsklassen sind Einträge, welche Rauheitszonen am Element
-          vorhanden sind</para>
+          <para>Rauheitsklassen; sind Einträge, die einem Element bestimmte
+          Rauheitszonen zuordnen</para>
         </listitem>
       </itemizedlist>
+
+      <para>Wenn Sie das entsprechende Kästchen mit einem Häkchen markiert
+      haben, klicken Sie auf <guibutton>Fertig stellen</guibutton>. </para>
+
+      <figure>
+        <title>Assistent zum exportieren von FE-Netzen</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/1D2D/Export_FENetze_Assistent.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
     </section>
   </section>
 </chapter>
