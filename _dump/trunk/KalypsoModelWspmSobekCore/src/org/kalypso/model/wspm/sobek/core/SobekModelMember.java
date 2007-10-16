@@ -155,6 +155,10 @@ public final class SobekModelMember implements ISobekModelMember
       throw (new NotImplementedException());
   }
 
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember#writePi(java.net.URL,
+   *      org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember.TARGET)
+   */
   public void writePi( final URL targetDir, final TARGET target )
   {
     throw (new NotImplementedException());
