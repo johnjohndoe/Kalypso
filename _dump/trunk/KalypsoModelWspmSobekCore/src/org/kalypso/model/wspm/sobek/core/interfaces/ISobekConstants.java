@@ -153,4 +153,8 @@ public class ISobekConstants
 
   public static final QName QN_NOFDP_WEIR_NODE = new QName( NS_NOFPD_1D_MODEL, F_NOFDP_WEIR_NODE );
 
+  public static final String F_NOFDP_HYDRAULIC_PROFILE_MEMBER = "profileMember";
+
+  public static final QName QN_NOFDP_HYDRAULIC_PROFILE_MEMBER = new QName( NS_NOFPD_1D_MODEL, F_NOFDP_HYDRAULIC_PROFILE_MEMBER );
+
 }

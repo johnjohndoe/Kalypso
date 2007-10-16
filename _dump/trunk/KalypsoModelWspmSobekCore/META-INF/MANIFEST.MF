@@ -7,6 +7,8 @@ Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
 Eclipse-LazyStart: true
 Export-Package: org.kalypso.model.wspm.sobek.core,
+ org.kalypso.model.wspm.sobek.core.digitools.branch,
+ org.kalypso.model.wspm.sobek.core.digitools.crosssection,
  org.kalypso.model.wspm.sobek.core.interfaces,
  org.kalypso.model.wspm.sobek.core.pub,
  org.kalypso.model.wspm.sobek.core.wizard

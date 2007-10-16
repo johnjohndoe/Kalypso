@@ -64,9 +64,11 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public final class SobekModelMember implements ISobekModelMember
 {
-  private final Feature m_modelMember;
+  private Feature m_modelMember;
 
-  public SobekModelMember( Feature modelMember )
+  private static ISobekModelMember m_model = null;
+
+  private SobekModelMember( Feature modelMember )
   {
     if( modelMember == null )
       throw new IllegalStateException( "modelMember is null" );
@@ -74,7 +76,23 @@ public final class SobekModelMember implements ISobekModelMember
     if( !ISobekConstants.QN_SOBEK_MODEL.equals( modelMember.getFeatureType().getQName() ) )
       throw new IllegalStateException( "modelMember is not of type: " + ISobekConstants.QN_SOBEK_MODEL );
 
-    m_modelMember = modelMember;
+    if( m_model == null )
+    {
+      m_modelMember = modelMember;
+      m_model = this;
+    }
+
+  }
+
+  public static ISobekModelMember getModel( Feature feature )
+  {
+    if( m_model == null && feature != null )
+    {
+      m_model = new SobekModelMember( feature );
+      return m_model;
+    }
+
+    return m_model;
   }
 
   /**
