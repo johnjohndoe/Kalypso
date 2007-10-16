@@ -83,7 +83,7 @@
 			</documentation>
 		</annotation>
 	</element>
-	<element name="AbstractCalculationPoint" type="wspmSobek:AbstractCalculationPointType" substitutionGroup="wspmSobek:AbstractNetworkNode">
+	<element name="AbstractCalculationPoint" type="wspmSobek:AbstractCalculationPointType" substitutionGroup="wspmSobek:AbstractNetworkNode" abstract="true">
 		<annotation>
 			<documentation xml:lang="de">
 				<name>AbstractCalculationPoint</name>
@@ -210,7 +210,7 @@
 					</element>
 					<element name="location" type="gml:PointPropertyType"/>
 					<element name="uniqueID" type="wspmSobekCommon:uniqueIdType"/>
-					<element name="stationName" type="string" minOccurs="0" nillable="true"/>
+					<element name="stationName" type="string" nillable="true"/>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -283,6 +283,7 @@
 			<extension base="wspmSobek:AbstractCalculationPointType">
 				<sequence>
 					<element name="linkedProfile" type="wspmSobek:ProfileLinkPropertyType"/>
+					<element name="linksToBranch" type="wspmSobek:BranchLinkPropertyType"/>
 				</sequence>
 			</extension>
 		</complexContent>
