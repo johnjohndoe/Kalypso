@@ -53,5 +53,5 @@ public interface ISobekModelMember extends IModelMember
     eLocations
   }
 
-  public void writePi( URL targetDir, TARGET target );
+  public void writePi( final URL targetDir, final TARGET target );
 }

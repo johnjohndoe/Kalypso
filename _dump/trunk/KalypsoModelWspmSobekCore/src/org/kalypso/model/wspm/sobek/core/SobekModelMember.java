@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -154,4 +155,8 @@ public final class SobekModelMember implements ISobekModelMember
       throw (new NotImplementedException());
   }
 
+  public void writePi( final URL targetDir, final TARGET target )
+  {
+    throw (new NotImplementedException());
+  }
 }
