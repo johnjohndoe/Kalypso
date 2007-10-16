@@ -40,10 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.interfaces;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.model.wspm.sobek.core.model.Branch;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
@@ -64,21 +62,21 @@ public interface INode
     eOutflowingBranch,
     eInflowingBranch;
 
-    public static NODE_BRANCH_TYPE getType( final GMLWorkspace workspace, final Feature branch, final Feature node )
-    {
-      // final Object objUpperNode = branch.getProperty( GmlConstants.QN_HYDRAULIC_BRANCH_UPPER_CONNECTION_NODE );
-      // final Feature upperNode = FNGmlUtils.getLinkedNodeFeature( model, objUpperNode );
-      // if( node.equals( upperNode ) )
-      // return eOutflowingBranch;
-      //
-      // final Object objLowerNode = branch.getProperty( GmlConstants.QN_HYDRAULIC_BRANCH_LOWER_CONNECTION_NODE );
-      // final Feature lowerNode = FNGmlUtils.getLinkedNodeFeature( model, objLowerNode );
-      // if( node.equals( lowerNode ) )
-      // return eInflowingBranch;
-      //
-      // return null;
-      throw (new NotImplementedException());
-    }
+// public static NODE_BRANCH_TYPE getType( final GMLWorkspace workspace, final Feature branch, final Feature node )
+// {
+// // final Object objUpperNode = branch.getProperty( GmlConstants.QN_HYDRAULIC_BRANCH_UPPER_CONNECTION_NODE );
+// // final Feature upperNode = FNGmlUtils.getLinkedNodeFeature( model, objUpperNode );
+// // if( node.equals( upperNode ) )
+// // return eOutflowingBranch;
+// //
+// // final Object objLowerNode = branch.getProperty( GmlConstants.QN_HYDRAULIC_BRANCH_LOWER_CONNECTION_NODE );
+// // final Feature lowerNode = FNGmlUtils.getLinkedNodeFeature( model, objLowerNode );
+// // if( node.equals( lowerNode ) )
+// // return eInflowingBranch;
+// //
+// // return null;
+// throw (new NotImplementedException());
+// }
   }
 
   public TYPE getType( );

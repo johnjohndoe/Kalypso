@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.sobek.core.wizard;
+package org.kalypso.model.wspm.sobek.core.wizard.pages;
 
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -61,7 +61,7 @@ public class PageEditBranch extends WizardPage
 
   private WizardFeatureTextBox m_description;
 
-  protected PageEditBranch( final Feature branch )
+  public PageEditBranch( final Feature branch )
   {
     super( "editFlowNetworkBranch" );
     m_branch = branch;
