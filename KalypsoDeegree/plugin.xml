@@ -46,6 +46,26 @@
                class="org.kalypsodeegree_impl.model.feature.function.ConstantDoubleIfNullFeaturePropertyFunction"
                id="org.kalypso.gmlschema.functionProperty.constDoubleIfNull"
                name="Constant Double if Null"/>
+         <function
+               class="org.kalypsodeegree_impl.model.feature.function.GetPolygoneArea"
+               id="org.kalypso.gmlschema.functionProperty.getPolygoneArea"
+               name="Get Polygone Area">
+         </function>
+         <function
+               class="org.kalypsodeegree_impl.model.feature.function.Multiply"
+               id="org.kalypso.gmlschema.functionProperty.multiply"
+               name="Multiply">
+         </function>
+         <function
+               class="org.kalypsodeegree_impl.model.feature.function.Difference"
+               id="org.kalypso.gmlschema.functionProperty.difference"
+               name="Difference">
+         </function>
+         <function
+               class="org.kalypsodeegree_impl.model.feature.function.ConnectGeometryCenterPointsByLine"
+               id="org.kalypso.gmlschema.functionProperty.connectCentersByLine"
+               name="Connect Two Geometry Center Points By Line">
+         </function>
      </extension>
      <extension
            point="org.kalypso.deegree.featureRule">
