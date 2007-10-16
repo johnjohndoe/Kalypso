@@ -50,14 +50,16 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
+ * Objects of class EmptyNodeImplementation will be returned for all created nodes which this plugin doesn't recognize
+ * 
  * @author kuch
  */
-public class EmptyNode implements INode
+public class EmptyNodeImplementation implements INode
 {
 
   private final Feature m_node;
 
-  public EmptyNode( Feature node )
+  public EmptyNodeImplementation( Feature node )
   {
     m_node = node;
   }

@@ -127,6 +127,10 @@ public class ISobekConstants
 
   public static final QName QN_HYDRAULICNODE_LINKED_BRANCH = new QName( NS_SOBEK, F_HYDRAULIC_NODE_LINKED_BRANCH );
 
+  public static final String F_SOBEK_MODEL = "SobekModel";
+
+  public static final QName QN_SOBEK_MODEL = new QName( NS_SOBEK_PROJECT, F_SOBEK_MODEL );
+
   public static final String F_SOBEK_MODEL_MEMBER = "sobekModelMember";
 
   public static final QName QN_SOBEK_MODEL_MEMBER = new QName( NS_SOBEK_PROJECT, F_SOBEK_MODEL_MEMBER );
@@ -140,5 +144,13 @@ public class ISobekConstants
   public static final String F_NOFDP_POLDER_NODE = "PolderNode";
 
   public static final QName QN_NOFDP_POLDER_NODE = new QName( NS_NOFPD_1D_MODEL, F_NOFDP_POLDER_NODE );
+
+  public static final String F_NOFDP_RETARDIN_BASIN_NODE = "RetardingBasinNode";
+
+  public static final QName QN_NOFDP_RETARDIN_BASIN_NODE = new QName( NS_NOFPD_1D_MODEL, F_NOFDP_RETARDIN_BASIN_NODE );
+
+  public static final String F_NOFDP_WEIR_NODE = "WeirNode";
+
+  public static final QName QN_NOFDP_WEIR_NODE = new QName( NS_NOFPD_1D_MODEL, F_NOFDP_WEIR_NODE );
 
 }

@@ -130,6 +130,10 @@ public class FNNodeUtils
       return "csn_";
     else if( ISobekConstants.QN_NOFDP_POLDER_NODE.equals( qn ) )
       return "pn_";
+    else if( ISobekConstants.QN_NOFDP_RETARDIN_BASIN_NODE.equals( qn ) )
+      return "rbn_";
+    else if( ISobekConstants.QN_NOFDP_WEIR_NODE.equals( qn ) )
+      return "wn_";
     else
       throw (new NotImplementedException());
   }
@@ -142,6 +146,6 @@ public class FNNodeUtils
     else if( ISobekConstants.QN_HYDRAULIC_LINKAGE_NODE.equals( qname ) )
       return new LinkageNode( model, node );
 
-    return new EmptyNode( node );
+    return new EmptyNodeImplementation( node );
   }
 }
