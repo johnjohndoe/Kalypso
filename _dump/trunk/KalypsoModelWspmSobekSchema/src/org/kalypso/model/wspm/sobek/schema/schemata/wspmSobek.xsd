@@ -294,6 +294,7 @@
 				<sequence>
 					<element name="linkedInflowBranches" type="wspmSobek:BranchLinkPropertyType" minOccurs="0" maxOccurs="unbounded"/>
 					<element name="linkedOutflowBranches" type="wspmSobek:BranchLinkPropertyType" minOccurs="0" maxOccurs="unbounded"/>
+					<element name="typeOfConnectionNode" type="wspmSobekCommon:connectionNodeEnumType"/>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -468,7 +469,6 @@
 			</extension>
 		</complexContent>
 	</complexType>
-	
 	<!-- Lastfall-Dinge -->
 	<element name="lastfallMember" type="wspmSobek:LastfallPropertyType">
 		<annotation>
@@ -586,8 +586,6 @@
 			</extension>
 		</complexContent>
 	</complexType>
-	
-	
 	<!-- 
 		_________________________________________________________________________________________
 		LINK PROPERTIES

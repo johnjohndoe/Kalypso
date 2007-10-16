@@ -85,11 +85,11 @@
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
-					<element ref="wspmSobek:nodeMember" minOccurs="0" maxOccurs="unbounded"/>
-					<element ref="wspmSobek:branchMember" minOccurs="0" maxOccurs="unbounded"/>
+					<element ref="wspmSobek:nodeMember" minOccurs="2" maxOccurs="unbounded"/>
+					<element ref="wspmSobek:branchMember" minOccurs="1" maxOccurs="unbounded"/>
 					<!-- hier kommen die Elemente, die mit den calculationPoints neu entstehen -->
-					<element ref="wspmSobek:calcLinkMember" minOccurs="0" maxOccurs="unbounded"/>
-					<element ref="wspmSobek:lastfallMember" minOccurs="0" maxOccurs="unbounded"/>
+					<element ref="wspmSobek:calcLinkMember" minOccurs="1" maxOccurs="unbounded"/>
+					<element ref="wspmSobek:lastfallMember" minOccurs="1" maxOccurs="unbounded"/>
 				</sequence>
 			</extension>
 		</complexContent>

@@ -14,7 +14,6 @@
 	TYPES
 	_________________________________________________________________________________________	
 	-->
-	
 	<complexType name="EmptyFeatureBaseType">
 		<complexContent>
 			<restriction base="gml:AbstractFeatureType">
@@ -30,7 +29,6 @@
 			<fractionDigits value="4"/>
 		</restriction>
 	</simpleType>
-	
 	<simpleType name="boundaryConditionType">
 		<restriction base="string">
 			<enumeration value="bc_q">
@@ -77,13 +75,58 @@
 			</enumeration>
 		</restriction>
 	</simpleType>
+	<simpleType name="connectionNodeEnumType">
+		<restriction base="string">
+			<enumeration value="base">
+				<annotation>
+					<documentation xml:lang="de">
+						<label>Connection Node</label>
+						<tooltip>Connection Node</tooltip>
+						<description>Connection Node</description>
+					</documentation>
+					<documentation xml:lang="en">
+						<label>Connection Node</label>
+						<tooltip>Connection Node</tooltip>
+						<description>Connection Node</description>
+					</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="linkage">
+				<annotation>
+					<documentation xml:lang="de">
+						<label>Linkage Node</label>
+						<tooltip>Linkage Node</tooltip>
+						<description>Linkage Node</description>
+					</documentation>
+					<documentation xml:lang="en">
+						<label>Linkage Node</label>
+						<tooltip>Linkage Node</tooltip>
+						<description>Linkage Node</description>
+					</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="boundaryCondition">
+				<annotation>
+					<documentation xml:lang="de">
+						<label>Boundary Condition Node</label>
+						<tooltip>Boundary Condition Node</tooltip>
+						<description>Boundary Condition Node</description>
+					</documentation>
+					<documentation xml:lang="en">
+						<label>Boundary Condition Node</label>
+						<tooltip>Boundary Condition Node</tooltip>
+						<description>Boundary Condition Node</description>
+					</documentation>
+				</annotation>
+			</enumeration>
+		</restriction>
+	</simpleType>
 	<!-- 
 		______________________________
 		Very basic simple types
 		______________________________
 	-->
 	<simpleType name="uniqueIdType">
-		<restriction base="string">
-		</restriction>
+		<restriction base="string"> </restriction>
 	</simpleType>
 </schema>
