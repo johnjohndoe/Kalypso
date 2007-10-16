@@ -68,6 +68,12 @@ public final class SobekModelMember implements ISobekModelMember
 
   public SobekModelMember( Feature modelMember )
   {
+    if( modelMember == null )
+      throw new IllegalStateException( "modelMember is null" );
+
+    if( !ISobekConstants.QN_SOBEK_MODEL_MEMBER.equals( modelMember.getFeatureType().getQName() )  )
+      throw new IllegalStateException( "modelMember is not of type: " + ISobekConstants.QN_SOBEK_MODEL_MEMBER );
+
     m_modelMember = modelMember;
   }
 
@@ -158,9 +164,16 @@ public final class SobekModelMember implements ISobekModelMember
   /**
    * @see org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember#writePi(java.net.URL,
    *      org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember.TARGET)
+   * @author thuel2
    */
   public void writePi( final URL targetDir, final TARGET target )
   {
+    if( TARGET.eLocations.equals( target ) )
+    {
+      final INode[] nodes = getNodeMembers();
+      // create target file (outputStream)
+      // write
+    }
     throw (new NotImplementedException());
   }
 }
