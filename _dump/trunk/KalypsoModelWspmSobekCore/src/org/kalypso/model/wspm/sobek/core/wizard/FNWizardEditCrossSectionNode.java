@@ -49,10 +49,10 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
+import org.kalypso.contribs.eclipse.jface.viewers.IFCVDelegate;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author kuch
@@ -61,15 +61,15 @@ public class FNWizardEditCrossSectionNode extends Wizard implements INewWizard
 {
   private final Feature m_node;
 
-  private final GMLWorkspace m_workspace;
-
   private PageEditCrossSectionNode m_pageEditNode;
 
+  private final IFCVDelegate m_crossSectionDelegate;
+
   /* todo list of waterbodies - profiles */
-  public FNWizardEditCrossSectionNode( final GMLWorkspace workspace, final Feature node )
+  public FNWizardEditCrossSectionNode( final Feature node, IFCVDelegate crossSectionDelegate )
   {
-    m_workspace = workspace;
     m_node = node;
+    m_crossSectionDelegate = crossSectionDelegate;
   }
 
   /**
@@ -78,7 +78,7 @@ public class FNWizardEditCrossSectionNode extends Wizard implements INewWizard
    */
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
-    m_pageEditNode = new PageEditCrossSectionNode( m_workspace, m_node );
+    m_pageEditNode = new PageEditCrossSectionNode( m_node, m_crossSectionDelegate );
     addPage( m_pageEditNode );
 
   }

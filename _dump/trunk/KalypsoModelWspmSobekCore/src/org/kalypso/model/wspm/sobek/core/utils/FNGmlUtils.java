@@ -57,6 +57,7 @@ import org.kalypso.model.wspm.sobek.core.interfaces.ILinkageNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
+import org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode.FLOW_DIRECTION;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode.TYPE;
 import org.kalypso.model.wspm.sobek.core.model.AbstractNode;
@@ -232,5 +233,18 @@ public class FNGmlUtils
     }
 
     createBranch( model, curve, nodes.toArray( new INode[] {} ), TYPE.eConnectionNode, TYPE.eConnectionNode );
+  }
+
+  public static void createProfileNode( ISobekModelMember model, IBranch branch, GM_Point pointOnBranch, Feature profile ) throws Exception
+  {
+    if( (branch == null) || (pointOnBranch == null) || (profile == null) )
+      return;
+
+    /* create new profile node */
+    INode node = createNode( model, TYPE.eCrossSectionNode, pointOnBranch, new INode[] {} );
+
+    /* link branch and profile */
+    FeatureUtils.updateLinkedFeature( node.getFeature(), ISobekConstants.QN_HYDRAULIC_CROSS_SECTION_NODE_LINKED_BRANCH, "#" + branch.getFeature().getId() );
+    FeatureUtils.updateLinkedFeature( node.getFeature(), ISobekConstants.QN_HYDRAULIC_CROSS_SECTION_NODE_LINKED_PROFILE, "#" + profile.getId() );
   }
 }

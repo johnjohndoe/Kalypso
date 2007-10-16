@@ -57,6 +57,7 @@ import org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember;
 import org.kalypso.model.wspm.sobek.core.model.Branch;
 import org.kalypso.model.wspm.sobek.core.model.BranchMaker;
 import org.kalypso.model.wspm.sobek.core.pub.FNNodeUtils;
+import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -175,6 +176,8 @@ public final class SobekModelMember implements ISobekModelMember
 
     if( ISobekConstants.QN_HYDRAULIC_SOBEK_BRANCH.equals( qn ) )
       new Branch( this, feature ).delete();
+    else if( ISobekConstants.QN_HYDRAULIC_CROSS_SECTION_NODE.equals( qn ) )
+      FeatureUtils.deleteFeature( feature );
     else
       throw (new NotImplementedException());
   }

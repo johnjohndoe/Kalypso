@@ -61,7 +61,7 @@ public class ISobekConstants
 
   public static final String F_HYDRAULIC_CROSS_SECTION_NODE = "CrossSectionNode";
 
-  public static final String F_HYDRAULIC_CROSS_SECTION_NODE_LINKED_BRANCH = "linkedBranch";
+  public static final String F_HYDRAULIC_CROSS_SECTION_NODE_LINKED_BRANCH = "linksToBranch";
 
   public static final String F_HYDRAULIC_CROSS_SECTION_NODE_LINKED_PROFILE = "linkedProfile";
 

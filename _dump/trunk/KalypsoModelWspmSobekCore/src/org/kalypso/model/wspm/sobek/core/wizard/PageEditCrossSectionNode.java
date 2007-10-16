@@ -48,10 +48,10 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.kalypso.contribs.eclipse.jface.viewers.FacadeComboViewer;
+import org.kalypso.contribs.eclipse.jface.viewers.IFCVDelegate;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.util.swt.WizardFeatureTextBox;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author kuch
@@ -64,15 +64,15 @@ public class PageEditCrossSectionNode extends WizardPage
 
   private WizardFeatureTextBox m_description;
 
-  protected final GMLWorkspace m_workspace;
-
   private FacadeComboViewer m_viewer;
 
-  protected PageEditCrossSectionNode( final GMLWorkspace workspace, final Feature node )
+  private final IFCVDelegate m_delegate;
+
+  protected PageEditCrossSectionNode( final Feature node, IFCVDelegate delegate )
   {
     super( "editFlowNetworkCrossSectionNode" );
-    m_workspace = workspace;
     m_node = node;
+    m_delegate = delegate;
     setTitle( "Edit cross section node" );
     setDescription( "Edit flow network cross section node" );
   }
@@ -144,75 +144,8 @@ public class PageEditCrossSectionNode extends WizardPage
     final Label lProfile = new Label( container, SWT.NONE );
     lProfile.setText( "Cross section" );
 
-    // TODO
-
-// final IFCVDelegate delegate = new IFCVDelegate()
-// {
-// protected Set m_profiles;
-//
-// public ISelection getDefaultKey( )
-// {
-// ILinkFeatureWrapperDelegate wrapper = new ILinkFeatureWrapperDelegate()
-// {
-// public Feature getLinkedFeature( String id )
-// {
-// for( Object object : m_profiles )
-// {
-// if( !(object instanceof Feature) )
-// continue;
-//
-// Feature profile = (Feature) object;
-// if( profile.getId().equals( id ) )
-// return profile;
-// }
-//
-// return null;
-// }
-//
-// // $ANALYSIS-IGNORE
-// public Object getProperty( )
-// {
-// return m_node.getProperty( ISobekConstants.QN_HYDRAULIC_CROSS_SECTION_NODE_LINKED_PROFILE );
-// }
-// };
-//
-// LinkFeatureWrapper lnkProfile = new LinkFeatureWrapper( wrapper );
-// return new StructuredSelection( lnkProfile.getFeature() );
-// }
-//
-// // public Object[] getInputData( )
-// // {
-// // m_profiles = new HashSet();
-// //
-// // Feature root = m_pool.getWorkspace().getRootFeature();
-// //
-// // List< ? > waterBodies = (List< ? >) root.getProperty( GmlConstants.QN_HYDRAULIC_WATER_BODY_MEMBER );
-// // for( Object object : waterBodies )
-// // {
-// // if( !(object instanceof Feature) )
-// // continue;
-// //
-// // Feature waterBody = (Feature) object;
-// //
-// // List< ? > profiles = (List< ? >) waterBody.getProperty( GmlConstants.QN_HYDRAULIC_PROFILE_MEMBER );
-// // m_profiles.addAll( profiles );
-// // }
-// //
-// // return m_profiles.toArray();
-// // }
-//
-// public String getValue( Object element )
-// {
-// Feature profile = (Feature) element;
-// BigDecimal station = (BigDecimal) profile.getProperty( GmlConstants.QN_HYDRAULIC_PROFILE_STATION );
-//
-// return "Station: " + station.toString();
-// }
-// };
-//
-// m_viewer = new FacadeComboViewer( delegate );
-// m_viewer.draw( container, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.READ_ONLY | SWT.SINGLE |
-// SWT.BORDER );
+    m_viewer = new FacadeComboViewer( m_delegate );
+    m_viewer.draw( container, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.READ_ONLY | SWT.SINGLE | SWT.BORDER );
 
     checkPageCompleted();
   }

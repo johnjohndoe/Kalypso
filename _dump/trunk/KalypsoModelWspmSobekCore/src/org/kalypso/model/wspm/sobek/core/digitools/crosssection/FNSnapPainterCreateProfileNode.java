@@ -82,7 +82,7 @@ public class FNSnapPainterCreateProfileNode implements ISnapPainter
     }
   }
 
-  public IBranch getLastSnappedFeature( )
+  public IBranch getLastSnappedBranch( )
   {
     return m_lastSnappedBranch;
   }

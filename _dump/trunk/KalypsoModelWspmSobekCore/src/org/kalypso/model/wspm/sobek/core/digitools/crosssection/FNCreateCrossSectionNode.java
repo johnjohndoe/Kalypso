@@ -46,7 +46,6 @@ import java.awt.Point;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -55,6 +54,8 @@ import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.model.wspm.sobek.core.SobekModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
+import org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember;
+import org.kalypso.model.wspm.sobek.core.utils.FNGmlUtils;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
@@ -84,54 +85,6 @@ public class FNCreateCrossSectionNode extends AbstractWidget
   private RectangleSelector m_selector;
 
   private final IRectangleMapFunction m_clickFunction = new SelectFeaturesMapFunction( SelectFeaturesMapFunction.DEFAULT_RADIUS, new QNameFeaturesProvider( ISobekConstants.QN_NOFDP_HYDRAULIC_PROFILE ), new SingleSelectionChanger( true ), KalypsoCorePlugin.getDefault().getSelectionManager() );
-
-// new IRectangleMapFunction()
-// {
-// public void execute( final MapPanel mapPanel, final Rectangle rectangle )
-// {
-// final IKalypsoTheme[] themes = mapPanel.getMapModell().getAllThemes();
-//
-// final List<EasyFeatureWrapper> myFeatures = new ArrayList<EasyFeatureWrapper>();
-//
-// for( final IKalypsoTheme theme : themes )
-// if( theme instanceof IKalypsoCascadingTheme )
-// {
-// IKalypsoCascadingTheme ct = (IKalypsoCascadingTheme) theme;
-//
-// int asdfasdf = 0;
-//
-// }
-//
-// //
-// // /* measure are type of gml - all other are type of shape, etc */
-// // if( "GML".equals( theme.getType() ) )
-// // {
-// // final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme) theme;
-// // final FeatureList list = featureTheme.getFeatureList();
-// // for( final Object object : list )
-// // if( object instanceof Feature )
-// // {
-// // final Feature f = (Feature) object;
-// // final EasyFeatureWrapper eft = new EasyFeatureWrapper( new CommandableWorkspace( f.getWorkspace() ), f,
-// // f.getParent(), f.getParentRelation() );
-// //
-// // myFeatures.add( eft );
-// // }
-// // }
-//
-// /* no features found?!? */
-// if( myFeatures.size() == 0 )
-// return;
-//
-// final EasyFeatureWrapper[] selected = MapfunctionHelper.findFeatureToSelect( mapPanel, rectangle, myFeatures.toArray(
-// new EasyFeatureWrapper[] {} ), 10 );
-// if( selected.length <= 0 )
-// return;
-//
-// final IFeatureSelectionManager manager = mapPanel.getSelectionManager();
-// manager.setSelection( selected );
-// }
-// };
 
   public FNCreateCrossSectionNode( )
   {
@@ -306,8 +259,9 @@ public class FNCreateCrossSectionNode extends AbstractWidget
 
       getMapPanel().setMessage( "" );
 
-// FNGmlUtils.createProfileNode( pool, m_snapPainter.getLastSnappedFeature(), m_snappedBranchPoint, profile );
-      throw (new NotImplementedException());
+      ISobekModelMember model = SobekModelMember.getModel( null );
+
+      FNGmlUtils.createProfileNode( model, m_snapPainter.getLastSnappedBranch(), m_snappedBranchPoint, profile );
     }
     catch( final Exception e )
     {
