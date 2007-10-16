@@ -612,6 +612,10 @@
       <para>Das 2D Netz besteht aus Drei- und Vierecken, welche wiederum durch
       die Kanten und Knoten definiert sind.</para>
 
+      <para>Importiere Netzdatei mit Endung .2d</para>
+
+      <para>Formatspezifikation</para>
+
       <section>
         <title>BCE-2D-Netz importieren</title>
 
@@ -670,21 +674,19 @@
                     </imageobject>
                   </mediaobject></entry>
 
-                <entrytbl cols="1">
-                  <tbody>
-                    <row>
-                      <entry>2D-Element erzeugen</entry>
-                    </row>
-                  </tbody>
-                </entrytbl>
+                <entry>2D-Element erzeugen</entry>
 
-                <entry>Ein neues Element wird durch das direkte Zeichnen in
-                der Karte erstellt. Ein neuer Punkt wird durch die linke
-                Maustaste erstellt. Ein Element kann durch einen Doppelklick
-                abgeschlossen werden bzw. beim Zeichnen des vierten Eckpunktes
-                wird das Element automatisch abgeschlossen.<para>Ein Element
-                kann an bestehende Elemente angeschlossen werden, in dem die
-                vorhandenen Knoten gesnapt werden.</para></entry>
+                <entry><para>Um ein neues 2D-Element zu erzeugen, aktivieren
+                Sie zunächst den Button. Nun können Sie in der Karte entweder
+                ein Dreieck oder ein Viereck als 2D-Element erstellen. Klicken
+                Sie einmal mit der linken Maustaste auf den ersten gewünschten
+                Punkt, danach auf den zweiten. Um ein Dreieckelement
+                abzuschließen klicken Sie mit einem Doppelklick auf den
+                dritten Punkt. Das Viereckelement wird automatisch nach dem
+                vierten einfachen Mausklick abgeschlossen (Doppelklick ist
+                aber auch hier möglich). Ein Element kann an bestehende
+                Elemente angeschlossen werden indem die vorhandenen Knoten
+                gesnapt werden.</para></entry>
               </row>
 
               <row>
@@ -694,17 +696,39 @@
                     </imageobject>
                   </mediaobject></entry>
 
-                <entrytbl cols="1">
-                  <tbody>
-                    <row>
-                      <entry>2D-Element markieren und entfernen</entry>
-                    </row>
-                  </tbody>
-                </entrytbl>
+                <entry>2D-Element löschen entfernen</entry>
 
-                <entry>Zum Löschen eines Elements klickt man einfach in die
-                Mitte des Selbigen um es zu markiernen und dann auf der
-                Tastatur auf die "Entf" -Taste.</entry>
+                <entry>Um ein 2D-Element zu löschen, betätigen Sie zunächst
+                den Button. Gehen Sie dann in die Karte und selektieren Sie
+                die zu löschende Element. Hier gibt es drei Möglichkeiten:
+                <itemizedlist>
+                    <listitem>
+                      <para>ein einzelnes Element selektieren: Klicken Sie mit
+                      der linken Maustaste in das Element.</para>
+                    </listitem>
+
+                    <listitem>
+                      <para>mehrere Elemente selektieren mit einem Rechteck:
+                      Halten Sie die linke Maustaste gedrückt und ziehen Sie
+                      ein Rechteck auf. Umschließen Sie dabei alle Elemente,
+                      die gelöscht werden sollen, denn es werden nur die
+                      Elemente selektiert, die komplett im Rechteck
+                      liegen!</para>
+                    </listitem>
+
+                    <listitem>
+                      <para>mehrere Elemente selektieren mit einem Polygon:
+                      Drücken Sie die Shift-Taste und halten Sie diese während
+                      des gesamten Vorgangs gedrückt. Klicken Sie nun mit der
+                      linken Maustaste auf die Eckpunkte des Polygons und
+                      umschließen Sie alle Elemente, die gelöscht werden
+                      sollen, denn es werden wiederum nur die Elemente
+                      gelöscht, die komplett innerhalb des Polygons
+                      liegen!</para>
+                    </listitem>
+                  </itemizedlist><para>Die selektierten Elemente erscheinen
+                nun leuchtend geld mit einem roten Rand. Drücken Sie auf der
+                Tastatur Entf um diese Elemente zu löschen.</para></entry>
               </row>
 
               <row>
@@ -714,16 +738,11 @@
                     </imageobject>
                   </mediaobject></entry>
 
-                <entrytbl cols="1">
-                  <tbody>
-                    <row>
-                      <entry>Knoten bewegen</entry>
-                    </row>
-                  </tbody>
-                </entrytbl>
+                <entry>Knoten verschieben</entry>
 
                 <entry>Die Knoten von Elementen können durch das einfache
-                Ziehen mit der linken Maustaste verschoben werden.</entry>
+                Ziehen mit der linken Maustaste verschoben werden (Drag and
+                drop).</entry>
               </row>
             </tbody>
           </tgroup>
@@ -744,6 +763,14 @@
         <indexterm>
           <primary>Flussschlauchgenerator Kalypso 1D2D</primary>
         </indexterm>
+
+        <para>Um die den Flussschlauchgenerator zu öffnen, öffnen Sie im
+        Aktivitätenfenster den Baum <guimenuitem>Preprozessing &gt; Netzaufbau
+        &gt; 2D-Netz</guimenuitem>. Mit einem Doppelklick auf
+        <guimenuitem>Flusschlauchgenerator </guimenuitem>wird der
+        Flussschlauchgenerator und die dazugehörige Karten Werkzeugansicht
+        geöffnet. Wählen Sie in der Werkzeugansicht das gewünschte Profil
+        aus.</para>
 
         <para>Dieses Werkzeug dient der Erstellung des 2D-Netzes im
         Flussschlauch , dessen Form und Lage anhand von Querprofilen definiert
@@ -778,7 +805,7 @@
         in der Segmentansicht für jedes Segment individuell angepasst werden.
         Sobald alle nötigen Spezifikationen vorliegen findet die Berechung der
         Segmente statt. Bei der ersten Berechnung werden die selektierten
-        Profile anhand der Methode von Douglas-Peucker ausgedünnt und die
+        Profile anhand der Methode von DOUGLAS-PEUCKER ausgedünnt und die
         wesentlichen Profilpunkte beibehalten. Gleichzeitig öffnet sich die
         Segment- und Profilansicht, in welcher Sie weitere
         Editiermöglichkeiten für die Uferlinien und die Profilunterteilungen
@@ -802,14 +829,6 @@
         Uferlinien zufriedenstellend bearbeitet wurden, kann man abschließend
         durch die Betätigung des Konvertierungsknopfes die Vorschau in ein
         Finite-Elemente-Netz umwandeln.</para>
-
-        <para>Um die <guilabel>Karten Werkzeugansicht</guilabel> des
-        Flussschlauchgenerators zu öffnen, öffnen Sie im Aktivitätenfenster
-        den Baum <guimenuitem>Preprozessing &gt; Netzaufbau &gt;
-        2D-Netz</guimenuitem>. Mit einem Doppelklick auf
-        <guimenuitem>Flusschlauchgenerator </guimenuitem>wird dann die
-        Werkzeugansicht geöffnet. Wählen Sie in der Werkzeugansicht das
-        gewünschte Profil aus.</para>
       </section>
 
       <section>
@@ -819,25 +838,173 @@
           <primary>Bandgenerator Kalypso 1D2D</primary>
         </indexterm>
 
+        <para>Um den Bandgenerator zu öffnen, öffnen Sie im Aktivitätenfenster
+        den Baum <guimenuitem>Preprozessing &gt; Netzaufbau &gt;
+        2D-Netz</guimenuitem>. Mit einem Doppelklick auf
+        <guimenuitem>Bandgenerator</guimenuitem> wird der Bandgenerator und
+        die zugehörige Karten Werkzeugansicht geöffnet. </para>
+
         <para>Der Bandgenerator stellt ein Werkzeug zur halb-automatischen
-        Erzeugung eines 2D-Netzes dar. Mittels der Definition von vier
+        Erzeugung eines 2D-Netzes dar . Mittels der Definition von vier
         aneinander liegenden Linien haben Sie die Möglichkeit auf schnelle und
-        einfache Weise ein Netz aus Viereck-Elementen zu erzeugen. Um ein
-        Viereck-Netz erzeugen zu können ist es notwendig, dass die jeweils
-        gegenüberliegenden Linien die gleiche Anzahl an Stützstellen haben
-        müssen. Durch Klicken in der Karte kann der Benutzer die vier Linien
-        definieren, die später den äußeren Rand des Netzes repräsentieren. Bei
-        den ersten beiden Linien wird durch einen Doppelklick die aktuelle
-        Linie beendet und direkt mit der nächsten begonnen. Die Anzahl an
-        Stützpunkten wird hierbei von den ersten beiden Linien definiert. Für
-        die dritte und vierte Linie gelten die Angaben der ersten beiden
-        Linien. Unterstützt wird der Anwender hierbei von dem im linken
-        Fenster angezeigten Bearbeitungsstatus. Dieser liefert für die dritte
-        und vierte Linie Informationen über die noch verbleibende Anzahl an
-        Stützpunkten. Nachdem der letzte Linienpunkt definiert wurde wird
-        unmittelbar eine Netzvorschau erzeugt. Durch Betätigen der mittleren
-        Maustaste kann man nun zwischen den vier Linien wechseln und die
-        Knoten durch Ziehen mit der Maus individuell anpassen.</para>
+        einfache Weise ein Netz aus Viereck-Elementen zu erzeugen (geeignet
+        z.B. für große Vorlandflächen). Um ein Viereck-Netz erzeugen zu können
+        ist es notwendig, dass die jeweils gegenüberliegenden Linien die
+        gleiche Anzahl an Stützstellen haben. Durch Klicken in der Karte kann
+        der Benutzer die vier Linien definieren, die später den äußeren Rand
+        des Netzes repräsentieren. Die Vorgehensweise zur Erstellung des
+        Netzes wird nun beispielhaft beschrieben. Die Karten Werkzeugansicht
+        unterstützt Sie bei der Erstellung und zeigt den aktuellen
+        Bearbeitungsstatus.</para>
+
+        <figure>
+          <title>Erstellen der ersten Linie im Bandgenerator</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/1D2D/Bandgenerator_Linie1.png" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+
+        <para>Klicken Sie mit der linken Maustaste auf beliebig ausgewählte
+        Punkte. So erzeugen Sie die Stützstellen für die erste Linie (Kante).
+        Mit einem Doppelklick auf den letzten Punkt beenden Sie diese und es
+        wird automatisch mit der zweiten Linie begonnen. Der aktuelle
+        Bearbeitungsstatus zeigt nur den Istzustand an, da für die erste Linie
+        die Anzahl der Stützstellen frei gewählt werden kann. </para>
+
+        <figure>
+          <title>Erstellen der zweiten Linie im Bandgenerator</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/1D2D/Bandgenerator_Linie2.png" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+
+        <para>Die erste Linie (blau dargestellt) wurde beendet, indem die
+        vierte Stützstelle durch einen Doppelklick erstellt wurde. Die zweite
+        Linie (rot dargestellt) verwendet nun die letzte Stützstelle der
+        ersten Linie als erste Stützstelle. Auch bei der zweiten Linie kann
+        die Anzahl der Stützstellen frei gewählt werden und somit wird beim
+        Bearbeitungsstatus wieder nur der Istzustand angezeigt.</para>
+
+        <figure>
+          <title>Erstellen der dritten Linie im Bandgenerator</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/1D2D/Bandgenerator_Linie3.png" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+
+        <para>Die zweite Linie wurde beendet, indem die dritte Stützstelle
+        durch einen Doppelklick erstellt wurde. Auch hier verwendet nun die
+        dritte Linie die letzte Stützstelle der zweiten Linie als erste
+        Stützstelle. Die Anzahl der Stützstelle kann nun aber nicht mehr frei
+        gewählt werden, sondern muss der Anzahl der Stützstellen der ersten
+        Linie entsprechen. Im Bearbeitungsstatus wird nun ein Sollwert von 4
+        Stützstellen angezeigt. Sobald die Sollanzahl der Stützstellen
+        erreicht ist (einfacher Mausklick), wird automatisch mit der vierten
+        Linie begonnen (Linienfarbe wechselt). </para>
+
+        <figure>
+          <title>Fertig erstelltes Netz</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/1D2D/Bandgenerator_Linie4.png" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+
+        <para>Für die vierte Linie gilt, dass die Stützstellenanzahl die der
+        zweiten Linie entspricht. Wenn man mit einem einfach linken Mausklick
+        die vorletzte Stützstelle erstellt hat wird das Netz automatisch
+        geschlossen und eine Netzvorschau erstellt. Durch Betätigen der
+        mittleren Maustaste kann man nun zwischen den vier Linien wechseln und
+        die Knoten durch Ziehen mit der Maus individuell anpassen. Um die
+        Netzvorschau in die Karte einzufügen, drücken Sie auf den Button
+        <inlinemediaobject>
+            <imageobject>
+              <imagedata fileref="img/1D2D/Bandgenerator_FENetz_generieren.png" />
+            </imageobject>
+          </inlinemediaobject>FE-Netz generieren. </para>
+
+        <para>Um das erstellte Netz zu speichern siehe <xref
+        linkend="Kalypso1D2DExportFENetz" />.</para>
+
+        <para><emphasis role="bold">Karten Werkzeugansicht des
+        Bandgenerators</emphasis></para>
+
+        <para>Die Karten Werkzeugansicht besteht aus vier Teilen, dem
+        aktuellen Bearbeitungsstatus, der Konfiguration, der Hilfe und dem
+        Button um das FE-Netz zu generieren. Die Funktion des aktuellen
+        Bearbeitungsstatus wurde in dem obigen Beispiel schon erläutert und
+        wird hier somit vernachlässigt.</para>
+
+        <para>Um die <emphasis role="bold">Konfiguration</emphasis>sfunktion
+        zu öffnen, klicken Sie auf den blauen kleinen Pfeil. Die Ansicht
+        sollte dann so aussehen wie im Bild unten. Hier kann nun die
+        Punktfangweite (Größe des Snapmodus) eingestellt werden und die Farben
+        für die Darstellung der Linien frei gewählt werden. </para>
+
+        <para>Um die <emphasis role="bold">Hilfe</emphasis>funktion zu öffnen,
+        klicken Sie auf den blauen kleinen Pfeil. Die Ansicht sollte dann so
+        aussehen wie im Bild unten. Hier werden die Tastenkombinationen zur
+        Linienerstellung noch einmal in Kurzform erläutert:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Linienpunkt setzen: Linke Maustaste</para>
+          </listitem>
+
+          <listitem>
+            <para>Linienpunkt löschen: Rücktaste</para>
+          </listitem>
+
+          <listitem>
+            <para>Linie beenden: Doppelklick</para>
+          </listitem>
+
+          <listitem>
+            <para>Aktuelle Linie verwerfen: Esc-Taste (Funktioniert nicht bei
+            der ersten Linie! Hier muss Shift + Esc-Taste gedrückt werden. Die
+            letzte Stützstelle der letzten Linie wird hierbei nicht
+            gelöscht!)</para>
+          </listitem>
+
+          <listitem>
+            <para>Zurück zur letzten Linie: Shift + Rücktaste (Achtung! Die
+            letzte Stützstelle der letzten Linie wird gelöscht!)</para>
+          </listitem>
+
+          <listitem>
+            <para>Abbrechen: Shift + Esc-Taste (Sämtliche Linien und Punkte
+            werden gelöscht)</para>
+          </listitem>
+        </itemizedlist>
+
+        <para>Wenn Sie denn Button <inlinemediaobject>
+            <imageobject>
+              <imagedata fileref="img/1D2D/Bandgenerator_FENetz_generieren.png" />
+            </imageobject>
+          </inlinemediaobject><guilabel> FE-Netz generieren</guilabel>
+        drücken, dann wird die Netzvorschau umgesetzt und in die Karte
+        integriert.</para>
+
+        <figure>
+          <title>Karten Werkzeugansicht des Bandgenerators</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/1D2D/Bandgenerator_Werkzeug.png" />
+            </imageobject>
+          </mediaobject>
+        </figure>
       </section>
 
       <section>
@@ -849,43 +1016,86 @@
 
         <para>Diese Funktionsgruppe zeigt die vorhandenen Höhenmodelle in
         einer Tabelle. Die Reihenfolge in der Tabelle ist für die Bestimmung
-        der Höhen entscheidend, wenn der Benutzer kein Höhenmodel explizit
+        der Höhen entscheidend, wenn der Benutzer kein Höhenmodell explizit
         auswählt: Die Auswertungsreihenfolge ist von oben nach unten und die
         Höhe wird von dem ersten Höhenmodell genommen, das eine Höhen-Info
         bereit stellt. Folgende Aktionen stehen Ihnen zur Verfügung:</para>
 
         <itemizedlist>
           <listitem>
-            <para>Selektieren eines Höhenmodel als alleinige und aktive
+            <para>Selektieren eines Höhenmodells als alleinige und aktive
             Quelle.</para>
 
             <para>Dies wird durch klicken auf das Höhenmodell in der Tabelle
             durchgeführt.</para>
           </listitem>
-
-          <listitem>
-            <para>Manipulation der Auswertungsreihenfolge eines selektierten
-            Höhenmodells.</para>
-
-            <para>Ein Klick auf den Pfeil nach oben verschiebt das selektierte
-            Höhenmodell nach oben. Ein Klick auf den Pfeil nach unten
-            verschiebt das selektierte Höhenmodel nach unten.</para>
-          </listitem>
-
-          <listitem>
-            <para>Das selektierte Höhenmodel Zentrieren und Maximieren.</para>
-
-            <para>Ein Klick auf den grünen Pfeil zentriert und maximiert das
-            selektierte Höhenmodell.</para>
-          </listitem>
-
-          <listitem>
-            <para>Höhenmodel entfernen.</para>
-
-            <para>Klick auf das rote Kreuz entfernt das selektierte
-            Höhenmodell</para>
-          </listitem>
         </itemizedlist>
+
+        <table>
+          <title>Höhenmodell-System Funktionen</title>
+
+          <tgroup cols="3">
+            <tbody>
+              <row>
+                <entry><mediaobject>
+                    <imageobject>
+                      <imagedata fileref="img/1D2D/Hoehenzuweisen_Icon_Pfeiloben.png" />
+                    </imageobject>
+                  </mediaobject></entry>
+
+                <entry>Manipulation der Auswertungsreihenfolge eines
+                selektierten Höhenmodells</entry>
+
+                <entry><para>Klicken Sie mit der linken Maustaste auf den
+                Pfeil nach oben, um das selektierte Höhenmodell nach oben zu
+                verschieben.</para></entry>
+              </row>
+
+              <row>
+                <entry><mediaobject>
+                    <imageobject>
+                      <imagedata fileref="img/1D2D/Hoehenzuweisen_Icon_Pfeilunten.png" />
+                    </imageobject>
+                  </mediaobject></entry>
+
+                <entry>Manipulation der Auswertungsreihenfolge eines
+                selektierten Höhenmodells</entry>
+
+                <entry>Klicken Sie mit der linken Maustaste auf den Pfeil nach
+                unten, um das selektierte Höhenmodell nach unten zu
+                verschieben.</entry>
+              </row>
+
+              <row>
+                <entry><mediaobject>
+                    <imageobject>
+                      <imagedata fileref="img/1D2D/Hoehenzuweisen_Icon_Gelaendemmax.png" />
+                    </imageobject>
+                  </mediaobject></entry>
+
+                <entry>Geländemodell anzeigen (zentrieren) und
+                maximieren</entry>
+
+                <entry>Klicken Sie mit der linken Maustaste auf diesen Button
+                um das selektierte Höhenmodell zu zentrieren und
+                maximieren.</entry>
+              </row>
+
+              <row>
+                <entry><mediaobject>
+                    <imageobject>
+                      <imagedata fileref="img/1D2D/Hoehenzuweisen_Icon_Gelaendemloeschen.png" />
+                    </imageobject>
+                  </mediaobject></entry>
+
+                <entry>Geländemodell löschen</entry>
+
+                <entry>Klicken Sie auf den Button mit dem roten Kreuz um das
+                selektierte Höhenmodell zu löschen.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
 
         <para><guimenu>Knoten bearbeiten</guimenu></para>
 
@@ -1478,6 +1688,40 @@
 
       <para><guilabel>-&gt;Rauheitsmodellierung -&gt;&gt;Rauheitszonen
       bearbeiten</guilabel></para>
+    </section>
+  </section>
+
+  <section>
+    <title>Daten exportieren</title>
+
+    <indexterm>
+      <primary>Datenexport</primary>
+    </indexterm>
+
+    <para></para>
+
+    <section id="Kalypso1D2DExportFENetz">
+      <title>Exportieren von FE-Netzen</title>
+
+      <indexterm>
+        <primary>Export von FE-Netzen</primary>
+      </indexterm>
+
+      <para>beim anzugebenden Dateinamen .2d mitschreiben</para>
+
+      <para>Zwei verschiedene Dinge können exportiert werden:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Mittseitenknoten sind Knoten in der Mitte der Kanten; werden
+          von Kalypso erzeugt</para>
+        </listitem>
+
+        <listitem>
+          <para>Rauheitsklassen sind Einträge, welche Rauheitszonen am Element
+          vorhanden sind</para>
+        </listitem>
+      </itemizedlist>
     </section>
   </section>
 </chapter>
