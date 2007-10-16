@@ -51,7 +51,15 @@ public interface ISobekModelMember extends IModelMember
   public enum TARGET
   {
     eLocations
+    // PI locations (nodes)
   }
+
+  /**
+   * @param targetDir
+   *            directory into which result is written
+   * @param target
+   *            part of a Sobek model that shall be written into an XML file (with fixed filename)
+   */
 
   public void writePi( final URL targetDir, final TARGET target );
 }
