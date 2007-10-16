@@ -65,7 +65,7 @@ public abstract class FeaturePropertyFunction implements IFeaturePropertyHandler
   }
 
   /**
-   * Parses a schema fragement of this kind:
+   * Parses a schema fragment of this kind:
    * 
    * <pre>
    *    &lt;kapp:functionProperty kapp:functionId=&quot;org.kalypso.gmlschema.functionProperty.const&quot; kapp:property=&quot;wspm:cacheDate&quot;&gt;
@@ -76,7 +76,9 @@ public abstract class FeaturePropertyFunction implements IFeaturePropertyHandler
    *    &lt;/kapp:functionProperty&gt;
    * </pre>
    * 
-   * @param properties the properties of the appinfo 
+   * @param properties the properties of the appinfo
+   * 
+   *  TODO: allow init to throw an exception in order to produce better error messages, if function could not be correctly initialized
    */
   public abstract void init( final Map<String, String> properties );
   
