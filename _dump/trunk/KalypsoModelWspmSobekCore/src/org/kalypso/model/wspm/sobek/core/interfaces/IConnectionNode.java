@@ -45,7 +45,5 @@ package org.kalypso.model.wspm.sobek.core.interfaces;
  */
 public interface IConnectionNode extends INode
 {
-  IBranch[] getInflowingBranches( );
 
-  IBranch[] getOutflowingBranches( );
 }

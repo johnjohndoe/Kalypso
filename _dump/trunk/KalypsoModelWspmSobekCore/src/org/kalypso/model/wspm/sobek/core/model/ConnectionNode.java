@@ -40,18 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.IConnectionNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode;
-import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
-import org.kalypso.model.wspm.sobek.core.utils.ILinkFeatureWrapperDelegate;
-import org.kalypso.model.wspm.sobek.core.utils.LinkFeatureWrapper;
 import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -79,96 +72,6 @@ public class ConnectionNode extends AbstractNode implements IConnectionNode
   public TYPE getType( )
   {
     return INode.TYPE.eConnectionNode;
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#removeBranch(org.kalypso.model.wspm.sobek.core.model.Branch)
-   */
-  public void removeBranch( Branch branch )
-  {
-    IBranch[] inflowing = getInflowingBranches();
-    IBranch[] outflowingBranches = getOutflowingBranches();
-
-    if( ArrayUtils.contains( inflowing, branch ) )
-    {
-      this.removeInflowingBranch( branch );
-    }
-
-    if( ArrayUtils.contains( outflowingBranches, branch ) )
-    {
-      this.removeOutflowingBranch( branch );
-    }
-
-  }
-
-  private void removeOutflowingBranch( Branch branch )
-  {
-    List< ? > inflowing = (List< ? >) getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_NODE_LINKED_OUTFLOWING_BRANCHES );
-    inflowing.remove( branch.getFeature().getId() );
-  }
-
-  private void removeInflowingBranch( Branch branch )
-  {
-    List< ? > inflowing = (List< ? >) getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_NODE_LINKED_INFLOWING_BRANCHES );
-    inflowing.remove( branch.getFeature().getId() );
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.IConnectionNode#getInflowingBranches()
-   */
-  public IBranch[] getInflowingBranches( )
-  {
-    List< ? > inflowing = (List< ? >) getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_NODE_LINKED_INFLOWING_BRANCHES );
-
-    return getBranches( inflowing );
-  }
-
-  private IBranch[] getBranches( List< ? > inflowing )
-  {
-    final List<IBranch> branches = new ArrayList<IBranch>();
-
-    for( final Object obj : inflowing )
-    {
-      ILinkFeatureWrapperDelegate delegate = new ILinkFeatureWrapperDelegate()
-      {
-
-        public Feature getLinkedFeature( String id )
-        {
-          IBranch[] myBranches = getModel().getBranchMembers();
-          for( IBranch branch : myBranches )
-          {
-            if( branch.getFeature().getId().equals( id ) )
-              return branch.getFeature();
-          }
-
-          return null;
-        }
-
-        public Object getProperty( )
-        {
-          return obj;
-        }
-      };
-
-      LinkFeatureWrapper wrapper = new LinkFeatureWrapper( delegate );
-      Feature feature = wrapper.getFeature();
-      if( feature == null )
-        continue;
-
-      branches.add( new Branch( getModel(), feature ) );
-    }
-
-    return branches.toArray( new IBranch[] {} );
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.IConnectionNode#getOutflowingBranches()
-   */
-  public IBranch[] getOutflowingBranches( )
-  {
-    List< ? > outflowing = (List< ? >) getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_NODE_LINKED_OUTFLOWING_BRANCHES );
-
-    return getBranches( outflowing );
   }
 
   /**

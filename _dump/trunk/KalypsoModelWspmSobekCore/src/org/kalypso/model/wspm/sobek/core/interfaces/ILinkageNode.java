@@ -45,5 +45,5 @@ package org.kalypso.model.wspm.sobek.core.interfaces;
  */
 public interface ILinkageNode extends INode
 {
-
+  public void setLinkToBranch( IBranch[] branches ) throws Exception;
 }

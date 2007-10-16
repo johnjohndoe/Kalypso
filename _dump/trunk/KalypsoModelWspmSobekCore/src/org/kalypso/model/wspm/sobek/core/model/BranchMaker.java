@@ -85,4 +85,13 @@ public class BranchMaker implements IBranchMaker
   {
     FNGmlUtils.createOutflowBranch( m_model, branch, curve );
   }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBranchMaker#extendBranch(org.kalypso.model.wspm.sobek.core.interfaces.IBranch,
+   *      org.kalypsodeegree.model.geometry.GM_Curve)
+   */
+  public void extendBranch( IBranch branch, GM_Curve curve ) throws Exception
+  {
+    FNGmlUtils.extendBranch( m_model, branch, curve );
+  }
 }

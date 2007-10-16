@@ -56,7 +56,7 @@ import org.kalypso.model.wspm.sobek.core.utils.ILinkFeatureWrapperDelegate;
 import org.kalypso.model.wspm.sobek.core.utils.LinkFeatureWrapper;
 import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Curve;
 
 /**
  * @author kuch
@@ -76,9 +76,9 @@ public class Branch implements IBranch
   /**
    * @see org.kalypso.model.wspm.sobek.core.interfaces.IBranch#getGeometryProperty()
    */
-  public GM_Object getGeometryProperty( )
+  public GM_Curve getGeometryProperty( )
   {
-    return m_branch.getDefaultGeometryProperty();
+    return (GM_Curve) m_branch.getDefaultGeometryProperty();
   }
 
   /**

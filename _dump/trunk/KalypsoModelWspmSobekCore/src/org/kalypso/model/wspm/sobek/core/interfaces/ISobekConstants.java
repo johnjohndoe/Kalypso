@@ -131,4 +131,7 @@ public class ISobekConstants
 
   public static final QName QN_SOBEK_MODEL_MEMBER = new QName( NS_SOBEK_PROJECT, F_SOBEK_MODEL_MEMBER );
 
+  public static final String F_LN_LINKS_TO_BRANCH = "linksToBranch";
+
+  public static final QName QN_LN_LINKS_TO_BRANCH = new QName( NS_SOBEK, F_LN_LINKS_TO_BRANCH );
 }

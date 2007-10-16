@@ -52,6 +52,7 @@ import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
+import org.kalypso.model.wspm.sobek.core.interfaces.ILinkageNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
@@ -157,7 +158,7 @@ public class FNGmlUtils
     }
   }
 
-  private static void addBranchesToLinkToNodes( IModelMember model, final INode[] nodes )
+  private static void addBranchesToLinkToNodes( IModelMember model, final INode[] nodes ) throws Exception
   {
     IBranch[] branches = model.getBranchMembers();
     for( final IBranch branch : branches )
@@ -165,11 +166,23 @@ public class FNGmlUtils
       final INode branchUpperNode = branch.getUpperNode();
       final INode branchLowerNode = branch.getLowerNode();
 
+      /* set inflowing and outflowing branches */
       if( ArrayUtils.contains( nodes, branchUpperNode ) )
-        FNGmlUtils.addBranchToNode( branchUpperNode, branch, NODE_BRANCH_TYPE.eInflowingBranch );
+        FNGmlUtils.addBranchToNode( branchUpperNode, branch, NODE_BRANCH_TYPE.eOutflowingBranch );
 
       if( ArrayUtils.contains( nodes, branchLowerNode ) )
-        FNGmlUtils.addBranchToNode( branchLowerNode, branch, NODE_BRANCH_TYPE.eOutflowingBranch );
+        FNGmlUtils.addBranchToNode( branchLowerNode, branch, NODE_BRANCH_TYPE.eInflowingBranch );
+    }
+
+    /* node is an linkage node? set linkToBranch (ln lays on branch x - lnk to this branch!) */
+    for( INode node : nodes )
+    {
+      if( !(node instanceof ILinkageNode) )
+        continue;
+
+      ILinkageNode ln = (ILinkageNode) node;
+      ln.setLinkToBranch( branches );
+
     }
   }
 
@@ -198,4 +211,11 @@ public class FNGmlUtils
     createBranch( model, curve, nodes, TYPE.eLinkageNode, TYPE.eConnectionNode );
   }
 
+  public static void extendBranch( IModelMember model, final IBranch branch, final GM_Curve curve ) throws Exception
+  {
+    INode upperNode = branch.getUpperNode();
+    INode lowerNode = branch.getLowerNode();
+
+    createBranch( model, curve, new INode[] { upperNode, lowerNode }, TYPE.eConnectionNode, TYPE.eConnectionNode );
+  }
 }

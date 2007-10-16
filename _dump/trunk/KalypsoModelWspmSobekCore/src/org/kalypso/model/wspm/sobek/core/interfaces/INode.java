@@ -96,4 +96,8 @@ public interface INode
   public void delete( ) throws Exception;
 
   public GM_Point getGeometry( );
+
+  IBranch[] getInflowingBranches( );
+
+  IBranch[] getOutflowingBranches( );
 }

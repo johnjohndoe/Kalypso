@@ -41,7 +41,7 @@
 package org.kalypso.model.wspm.sobek.core.interfaces;
 
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Curve;
 
 /**
  * @author kuch
@@ -50,7 +50,7 @@ public interface IBranch
 {
   String getName( );
 
-  GM_Object getGeometryProperty( );
+  GM_Curve getGeometryProperty( );
 
   String getId( );
 

@@ -40,10 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.model;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.NotImplementedException;
+import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.ILinkageNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
+import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
+import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * @author kuch
@@ -61,7 +67,7 @@ public class LinkageNode extends AbstractNode implements ILinkageNode
    */
   public void delete( ) throws Exception
   {
-    throw (new NotImplementedException());
+    FeatureUtils.deleteFeature( getFeature() );
   }
 
   /**
@@ -85,16 +91,41 @@ public class LinkageNode extends AbstractNode implements ILinkageNode
    */
   public boolean isEmpty( )
   {
-    // link to branch
-    throw (new NotImplementedException());
+    IBranch[] inflowing = getInflowingBranches();
+    IBranch[] outflowing = getOutflowingBranches();
+
+    if( inflowing.length == 0 && outflowing.length == 0 )
+      return true;
+
+    return false;
   }
 
   /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#removeBranch(org.kalypso.model.wspm.sobek.core.model.Branch)
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#setLinkToBranch(org.kalypso.model.wspm.sobek.core.interfaces.IBranch[])
    */
-  public void removeBranch( Branch branch )
+  public void setLinkToBranch( IBranch[] branches ) throws Exception
   {
-    throw (new NotImplementedException());
+    IBranch[] inflowing = getInflowingBranches();
+    IBranch[] outflowing = getOutflowingBranches();
+
+    for( IBranch branch : branches )
+    {
+      /* if branch is an in- or outflowing branch -> continue */
+      if( ArrayUtils.contains( inflowing, branch ) )
+        continue;
+      if( ArrayUtils.contains( outflowing, branch ) )
+        continue;
+
+      /* linkage node lays on branch?!? */
+      GM_Curve curve = branch.getGeometryProperty();
+      GM_Point point = this.getGeometry();
+
+      if( curve.intersects( point ) ) // point lays on branch
+      {
+        FeatureUtils.updateLinkedFeature( getFeature(), ISobekConstants.QN_LN_LINKS_TO_BRANCH, branch.getId() );
+
+      }
+    }
   }
 
 }
