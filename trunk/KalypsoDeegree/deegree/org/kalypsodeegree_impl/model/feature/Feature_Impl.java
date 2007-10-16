@@ -366,7 +366,7 @@ public class Feature_Impl extends AbstractFeature
     final IPropertyType pt = m_featureType.getProperty( propQName );
     if( pt == null )
     {
-      final String message = String.format( "Unknow property:\n\tfeatureType=%s\n\tprop QName=%s", getFeatureType().getQName(), propQName );
+      final String message = String.format( "Unknown property:\n\tfeatureType=%s\n\tprop QName=%s", getFeatureType().getQName(), propQName );
       throw new IllegalArgumentException( message );
     }
     return getProperty( pt );
