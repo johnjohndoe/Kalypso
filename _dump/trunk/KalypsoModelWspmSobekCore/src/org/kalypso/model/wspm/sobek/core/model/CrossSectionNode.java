@@ -38,12 +38,44 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.sobek.core.interfaces;
+package org.kalypso.model.wspm.sobek.core.model;
+
+import org.kalypso.model.wspm.sobek.core.interfaces.ICrossSectionNode;
+import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
+import org.kalypso.ogc.gml.FeatureUtils;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author kuch
  */
-public interface IConnectionNode extends IAbstractConnectionNode
+public class CrossSectionNode extends AbstractNode implements ICrossSectionNode
 {
+  public CrossSectionNode( IModelMember model, Feature node )
+  {
+    super( model, node );
+  }
 
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#delete()
+   */
+  public void delete( ) throws Exception
+  {
+    FeatureUtils.deleteFeature( getFeature() );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getType()
+   */
+  public TYPE getType( )
+  {
+    return TYPE.eCrossSectionNode;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#isEmpty()
+   */
+  public boolean isEmpty( )
+  {
+    return true;
+  }
 }

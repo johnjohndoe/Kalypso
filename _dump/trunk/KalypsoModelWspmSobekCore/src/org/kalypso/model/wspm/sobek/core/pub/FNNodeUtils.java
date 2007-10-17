@@ -55,6 +55,7 @@ import org.kalypso.model.wspm.sobek.core.interfaces.INode;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.model.wspm.sobek.core.model.BoundaryNode;
 import org.kalypso.model.wspm.sobek.core.model.ConnectionNode;
+import org.kalypso.model.wspm.sobek.core.model.CrossSectionNode;
 import org.kalypso.model.wspm.sobek.core.model.LinkageNode;
 import org.kalypso.model.wspm.sobek.core.utils.AtomarAddFeatureCommand;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -154,7 +155,7 @@ public class FNNodeUtils
     else if( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE.equals( qname ) )
       return new BoundaryNode( model, node );
     else if( ISobekConstants.QN_HYDRAULIC_CROSS_SECTION_NODE.equals( qname ) )
-      throw (new NotImplementedException());
+      return new CrossSectionNode( model, node );
 
     return new EmptyNodeImplementation( node );
   }

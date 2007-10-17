@@ -50,7 +50,7 @@ import org.kalypsodeegree.model.feature.Feature;
 /**
  * @author kuch
  */
-public class ConnectionNode extends AbstractNode implements IConnectionNode
+public class ConnectionNode extends AbstractConnectionNode implements IConnectionNode
 {
   public ConnectionNode( IModelMember model, Feature node )
   {

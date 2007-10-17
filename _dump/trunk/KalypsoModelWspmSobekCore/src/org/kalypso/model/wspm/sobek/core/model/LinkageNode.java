@@ -53,7 +53,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 /**
  * @author kuch
  */
-public class LinkageNode extends AbstractNode implements ILinkageNode
+public class LinkageNode extends AbstractConnectionNode implements ILinkageNode
 {
 
   public LinkageNode( IModelMember model, Feature node )
@@ -109,7 +109,7 @@ public class LinkageNode extends AbstractNode implements ILinkageNode
 
       /* linkage node lays on branch?!? */
       GM_Curve curve = branch.getGeometryProperty();
-      GM_Point point = this.getGeometry();
+      GM_Point point = this.getLocation();
 
       if( curve.intersects( point ) ) // point lays on branch
       {

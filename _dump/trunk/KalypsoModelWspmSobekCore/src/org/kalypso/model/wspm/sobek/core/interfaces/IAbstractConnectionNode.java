@@ -40,10 +40,20 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.interfaces;
 
+import org.kalypso.model.wspm.sobek.core.model.Branch;
+
 /**
  * @author kuch
  */
-public interface IConnectionNode extends IAbstractConnectionNode
+public interface IAbstractConnectionNode extends INode
 {
+  public void removeBranch( Branch branch );
 
+  IBranch[] getInflowingBranches( );
+
+  IBranch[] getOutflowingBranches( );
+
+  public void addInflowingBranch( IBranch branch );
+
+  public void addOutflowingBranch( IBranch branch );
 }

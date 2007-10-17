@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.interfaces;
 
-import org.kalypso.model.wspm.sobek.core.model.Branch;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
@@ -75,20 +74,9 @@ public interface INode
 
   public Feature getFeature( );
 
-  public void removeBranch( Branch branch );
+  public GM_Point getLocation( );
 
   public boolean isEmpty( );
 
   public void delete( ) throws Exception;
-
-  public GM_Point getGeometry( );
-
-  IBranch[] getInflowingBranches( );
-
-  IBranch[] getOutflowingBranches( );
-
-  public void addInflowingBranch( IBranch branch );
-
-  public void addOutflowingBranch( IBranch branch );
-
 }

@@ -54,9 +54,9 @@ public interface IBranch
 
   String getId( );
 
-  INode getUpperNode( );
+  IConnectionNode getUpperNode( );
 
-  INode getLowerNode( );
+  IConnectionNode getLowerNode( );
 
   Feature getFeature( );
 

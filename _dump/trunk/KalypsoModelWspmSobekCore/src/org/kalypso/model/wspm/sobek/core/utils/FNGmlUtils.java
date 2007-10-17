@@ -53,12 +53,12 @@ import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
+import org.kalypso.model.wspm.sobek.core.interfaces.IConnectionNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.ILinkageNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember;
-import org.kalypso.model.wspm.sobek.core.interfaces.INode.FLOW_DIRECTION;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode.TYPE;
 import org.kalypso.model.wspm.sobek.core.model.AbstractNode;
 import org.kalypso.model.wspm.sobek.core.model.Branch;
@@ -137,7 +137,7 @@ public class FNGmlUtils
     // a new node must be created?!?
     for( final INode node : nodes )
     {
-      final GM_Point pNode = node.getGeometry();
+      final GM_Point pNode = node.getLocation();
       if( pNode.intersects( point ) )
         return node;
     }
@@ -166,15 +166,15 @@ public class FNGmlUtils
     IBranch[] branches = model.getBranchMembers();
     for( final IBranch branch : branches )
     {
-      final INode branchUpperNode = branch.getUpperNode();
-      final INode branchLowerNode = branch.getLowerNode();
+      final IConnectionNode branchUpperNode = branch.getUpperNode();
+      final IConnectionNode branchLowerNode = branch.getLowerNode();
 
       /* set inflowing and outflowing branches */
       if( ArrayUtils.contains( nodes, branchUpperNode ) )
-        FNGmlUtils.addBranchToNode( branchUpperNode, branch, FLOW_DIRECTION.eOutflowingBranch );
+        branchUpperNode.addOutflowingBranch( branch );
 
       if( ArrayUtils.contains( nodes, branchLowerNode ) )
-        FNGmlUtils.addBranchToNode( branchLowerNode, branch, FLOW_DIRECTION.eInflowingBranch );
+        branchLowerNode.addInflowingBranch( branch );
     }
 
     /* node is an linkage node? set linkToBranch (ln lays on branch x - lnk to this branch!) */
@@ -187,17 +187,6 @@ public class FNGmlUtils
       ln.setLinkToBranch( branches );
 
     }
-  }
-
-  private static void addBranchToNode( final INode node, final IBranch branch, final FLOW_DIRECTION direction )
-  {
-    List myList;
-    if( FLOW_DIRECTION.eInflowingBranch.equals( direction ) )
-      node.addInflowingBranch( branch );
-    else if( FLOW_DIRECTION.eOutflowingBranch.equals( direction ) )
-      node.addOutflowingBranch( branch );
-    else
-      throw new IllegalStateException();
   }
 
   public static void createInflowBranch( IModelMember model, IBranch branch, GM_Curve curve ) throws Exception

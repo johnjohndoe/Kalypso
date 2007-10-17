@@ -49,7 +49,7 @@ import org.kalypsodeegree.model.feature.Feature;
 /**
  * @author kuch
  */
-public class BoundaryNode extends AbstractNode implements IBoundaryNode
+public class BoundaryNode extends AbstractConnectionNode implements IBoundaryNode
 {
 
   public BoundaryNode( IModelMember model, Feature node )

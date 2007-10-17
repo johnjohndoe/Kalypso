@@ -48,7 +48,9 @@ import javax.xml.namespace.QName;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.kalypso.model.wspm.sobek.core.interfaces.IAbstractConnectionNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
+import org.kalypso.model.wspm.sobek.core.interfaces.IConnectionNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
@@ -125,7 +127,7 @@ public class Branch implements IBranch
   /**
    * @see org.kalypso.model.wspm.sobek.core.interfaces.IBranch#getLowerNode()
    */
-  public INode getLowerNode( )
+  public IConnectionNode getLowerNode( )
   {
     return getNode( ISobekConstants.QN_HYDRAULIC_BRANCH_LOWER_CONNECTION_NODE );
   }
@@ -133,12 +135,12 @@ public class Branch implements IBranch
   /**
    * @see org.kalypso.model.wspm.sobek.core.interfaces.IBranch#getUpperNode()
    */
-  public INode getUpperNode( )
+  public IConnectionNode getUpperNode( )
   {
     return getNode( ISobekConstants.QN_HYDRAULIC_BRANCH_UPPER_CONNECTION_NODE );
   }
 
-  private INode getNode( final QName lnkBranch )
+  private IConnectionNode getNode( final QName lnkBranch )
   {
     ILinkFeatureWrapperDelegate delegate = new ILinkFeatureWrapperDelegate()
     {
@@ -163,7 +165,7 @@ public class Branch implements IBranch
     };
 
     LinkFeatureWrapper wrapper = new LinkFeatureWrapper( delegate );
-    return FNNodeUtils.getNode( m_model, wrapper.getFeature() );
+    return (IConnectionNode) FNNodeUtils.getNode( m_model, wrapper.getFeature() );
   }
 
   /**
@@ -180,8 +182,12 @@ public class Branch implements IBranch
 
     for( INode node : nodes )
     {
-      if( node != null )
-        node.removeBranch( this );
+      if( node instanceof IAbstractConnectionNode )
+      {
+        IAbstractConnectionNode n = (IAbstractConnectionNode) node;
+        n.removeBranch( this );
+      }
+
     }
 
     // deletes empty nodes

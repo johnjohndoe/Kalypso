@@ -46,6 +46,7 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.lang.NotImplementedException;
+import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.IConnectionNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode;
@@ -95,7 +96,7 @@ public class NodeUtils implements INodeUtils
   private void connectionNodeToBoundaryNode( IConnectionNode cn ) throws Exception
   {
     /* create new boundary node */
-    INode boundaryNode = FNGmlUtils.createNode( m_model, TYPE.eBoundaryNode, cn.getGeometry(), new INode[] {} );
+    IBoundaryNode boundaryNode = (IBoundaryNode) FNGmlUtils.createNode( m_model, TYPE.eBoundaryNode, cn.getLocation(), new INode[] {} );
 
     Map<QName, Object> map = new HashMap<QName, Object>();
     map.put( ISobekConstants.QN_HYDRAULIC_NAME, cn.getName() );
@@ -133,7 +134,7 @@ public class NodeUtils implements INodeUtils
   private void updateBranchNode( IBranch branch, INode node ) throws Exception
   {
     GM_Curve curve = branch.getGeometryProperty();
-    GM_Point pn = node.getGeometry();
+    GM_Point pn = node.getLocation();
 
     if( curve.getStartPoint().intersects( pn ) )
     {

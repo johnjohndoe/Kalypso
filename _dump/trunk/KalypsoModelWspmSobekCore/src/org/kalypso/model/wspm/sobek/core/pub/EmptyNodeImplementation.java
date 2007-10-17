@@ -40,12 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.pub;
 
-import javax.transaction.NotSupportedException;
-
-import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
-import org.kalypso.model.wspm.sobek.core.model.Branch;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
@@ -65,27 +61,11 @@ public class EmptyNodeImplementation implements INode
   }
 
   /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#delete()
-   */
-  public void delete( ) throws Exception
-  {
-    throw (new NotSupportedException());
-  }
-
-  /**
    * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getFeature()
    */
   public Feature getFeature( )
   {
     return m_node;
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getGeometry()
-   */
-  public GM_Point getGeometry( )
-  {
-    throw (new IllegalStateException());
   }
 
   /**
@@ -97,51 +77,12 @@ public class EmptyNodeImplementation implements INode
   }
 
   /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getInflowingBranches()
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#delete()
    */
-  public IBranch[] getInflowingBranches( )
+  public void delete( ) throws Exception
   {
-    throw (new IllegalStateException());
-  }
+    // TODO Auto-generated method stub
 
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getName()
-   */
-  public String getName( )
-  {
-    throw (new IllegalStateException());
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getOutflowingBranches()
-   */
-  public IBranch[] getOutflowingBranches( )
-  {
-    throw (new IllegalStateException());
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getType()
-   */
-  public TYPE getType( )
-  {
-    throw (new IllegalStateException());
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#isEmpty()
-   */
-  public boolean isEmpty( )
-  {
-    throw (new IllegalStateException());
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#removeBranch(org.kalypso.model.wspm.sobek.core.model.Branch)
-   */
-  public void removeBranch( Branch branch )
-  {
-    throw (new IllegalStateException());
   }
 
   /**
@@ -149,23 +90,44 @@ public class EmptyNodeImplementation implements INode
    */
   public String getDescription( )
   {
-    throw (new IllegalStateException());
+    // TODO Auto-generated method stub
+    return null;
   }
 
   /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#addInflowingBranch(org.kalypso.model.wspm.sobek.core.interfaces.IBranch)
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getLocation()
    */
-  public void addInflowingBranch( IBranch branch )
+  public GM_Point getLocation( )
   {
-    throw (new IllegalStateException());
+    // TODO Auto-generated method stub
+    return null;
   }
 
   /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#addOutflowingBranch(org.kalypso.model.wspm.sobek.core.interfaces.IBranch)
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getName()
    */
-  public void addOutflowingBranch( IBranch branch )
+  public String getName( )
   {
-    throw (new IllegalStateException());
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getType()
+   */
+  public TYPE getType( )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#isEmpty()
+   */
+  public boolean isEmpty( )
+  {
+    // TODO Auto-generated method stub
+    return false;
   }
 
 }

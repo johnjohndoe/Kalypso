@@ -40,21 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.model.wspm.sobek.core.pub.FNNodeUtils;
-import org.kalypso.model.wspm.sobek.core.utils.ILinkFeatureWrapperDelegate;
-import org.kalypso.model.wspm.sobek.core.utils.LinkFeatureWrapper;
 import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -80,6 +73,22 @@ public abstract class AbstractNode implements INode
   }
 
   /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getDescription()
+   */
+  public String getDescription( )
+  {
+    return (String) m_node.getProperty( ISobekConstants.QN_HYDRAULIC_DESCRIPTION );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getFeature()
+   */
+  public Feature getFeature( )
+  {
+    return m_node;
+  }
+
+  /**
    * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getId()
    */
   public String getId( )
@@ -87,36 +96,20 @@ public abstract class AbstractNode implements INode
     return (String) m_node.getProperty( ISobekConstants.QN_HYDRAULIC_UNIQUE_ID );
   }
 
-  public Feature getFeature( )
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getGeometry()
+   */
+  public GM_Point getLocation( )
   {
-    return m_node;
+    return (GM_Point) getFeature().getDefaultGeometryProperty();
   }
 
-  public static INode createNode( IModelMember model, TYPE nodeType, GM_Point point ) throws Exception
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getName()
+   */
+  public String getName( )
   {
-    IGMLSchema schema = model.getFeature().getFeatureType().getGMLSchema();
-
-    IFeatureType targetFeatureType;
-    if( TYPE.eBoundaryNode.equals( nodeType ) )
-    {
-      targetFeatureType = schema.getFeatureType( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE );
-    }
-    else if( TYPE.eConnectionNode.equals( nodeType ) )
-    {
-      targetFeatureType = schema.getFeatureType( ISobekConstants.QN_HYDRAULIC_CONNECTION_NODE );
-    }
-    else if( TYPE.eCrossSectionNode.equals( nodeType ) )
-    {
-      targetFeatureType = schema.getFeatureType( ISobekConstants.QN_HYDRAULIC_CROSS_SECTION_NODE );
-    }
-    else if( TYPE.eLinkageNode.equals( nodeType ) )
-    {
-      targetFeatureType = schema.getFeatureType( ISobekConstants.QN_HYDRAULIC_LINKAGE_NODE );
-    }
-    else
-      throw (new IllegalStateException());
-
-    return FNNodeUtils.createNode( model, targetFeatureType, point );
+    return FeatureUtils.getFeatureName( ISobekConstants.NS_SOBEK, m_node );
   }
 
   /**
@@ -146,134 +139,30 @@ public abstract class AbstractNode implements INode
     return HashCodeBuilder.reflectionHashCode( this );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getGeometry()
-   */
-  public GM_Point getGeometry( )
+  public static INode createNode( IModelMember model, TYPE nodeType, GM_Point point ) throws Exception
   {
-    return (GM_Point) getFeature().getDefaultGeometryProperty();
-  }
+    IGMLSchema schema = model.getFeature().getFeatureType().getGMLSchema();
 
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.IConnectionNode#getInflowingBranches()
-   */
-  public IBranch[] getInflowingBranches( )
-  {
-    List< ? > inflowing = (List< ? >) getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_NODE_LINKED_INFLOWING_BRANCHES );
-
-    return getBranches( inflowing );
-  }
-
-  private IBranch[] getBranches( List< ? > inflowing )
-  {
-    final List<IBranch> branches = new ArrayList<IBranch>();
-
-    for( final Object obj : inflowing )
+    IFeatureType targetFeatureType;
+    if( TYPE.eBoundaryNode.equals( nodeType ) )
     {
-      ILinkFeatureWrapperDelegate delegate = new ILinkFeatureWrapperDelegate()
-      {
-
-        public Feature getLinkedFeature( String id )
-        {
-          IBranch[] myBranches = getModel().getBranchMembers();
-          for( IBranch branch : myBranches )
-          {
-            if( branch.getFeature().getId().equals( id ) )
-              return branch.getFeature();
-          }
-
-          return null;
-        }
-
-        public Object getProperty( )
-        {
-          return obj;
-        }
-      };
-
-      LinkFeatureWrapper wrapper = new LinkFeatureWrapper( delegate );
-      Feature feature = wrapper.getFeature();
-      if( feature == null )
-        continue;
-
-      branches.add( new Branch( getModel(), feature ) );
+      targetFeatureType = schema.getFeatureType( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE );
     }
-
-    return branches.toArray( new IBranch[] {} );
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.IConnectionNode#getOutflowingBranches()
-   */
-  public IBranch[] getOutflowingBranches( )
-  {
-    List< ? > outflowing = (List< ? >) getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_NODE_LINKED_OUTFLOWING_BRANCHES );
-
-    return getBranches( outflowing );
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#removeBranch(org.kalypso.model.wspm.sobek.core.model.Branch)
-   */
-  public void removeBranch( Branch branch )
-  {
-    IBranch[] inflowing = getInflowingBranches();
-    IBranch[] outflowingBranches = getOutflowingBranches();
-
-    if( ArrayUtils.contains( inflowing, branch ) )
+    else if( TYPE.eConnectionNode.equals( nodeType ) )
     {
-      this.removeInflowingBranch( branch );
+      targetFeatureType = schema.getFeatureType( ISobekConstants.QN_HYDRAULIC_CONNECTION_NODE );
     }
-
-    if( ArrayUtils.contains( outflowingBranches, branch ) )
+    else if( TYPE.eCrossSectionNode.equals( nodeType ) )
     {
-      this.removeOutflowingBranch( branch );
+      targetFeatureType = schema.getFeatureType( ISobekConstants.QN_HYDRAULIC_CROSS_SECTION_NODE );
     }
-  }
+    else if( TYPE.eLinkageNode.equals( nodeType ) )
+    {
+      targetFeatureType = schema.getFeatureType( ISobekConstants.QN_HYDRAULIC_LINKAGE_NODE );
+    }
+    else
+      throw (new IllegalStateException());
 
-  private void removeOutflowingBranch( Branch branch )
-  {
-    List< ? > inflowing = (List< ? >) getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_NODE_LINKED_OUTFLOWING_BRANCHES );
-    inflowing.remove( branch.getFeature().getId() );
-  }
-
-  private void removeInflowingBranch( Branch branch )
-  {
-    List< ? > inflowing = (List< ? >) getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_NODE_LINKED_INFLOWING_BRANCHES );
-    inflowing.remove( branch.getFeature().getId() );
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getName()
-   */
-  public String getName( )
-  {
-    return FeatureUtils.getFeatureName( ISobekConstants.NS_SOBEK, m_node );
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getDescription()
-   */
-  public String getDescription( )
-  {
-    return (String) m_node.getProperty( ISobekConstants.QN_HYDRAULIC_DESCRIPTION );
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#addInflowingBranch(org.kalypso.model.wspm.sobek.core.interfaces.IBranch)
-   */
-  public void addInflowingBranch( IBranch branch )
-  {
-    List inflowing = (List) getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_NODE_LINKED_INFLOWING_BRANCHES );
-    inflowing.add( branch.getFeature().getId() );
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#addOutflowingBranch(org.kalypso.model.wspm.sobek.core.interfaces.IBranch)
-   */
-  public void addOutflowingBranch( IBranch branch )
-  {
-    List outflowing = (List) getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_NODE_LINKED_OUTFLOWING_BRANCHES );
-    outflowing.add( branch.getFeature().getId() );
+    return FNNodeUtils.createNode( model, targetFeatureType, point );
   }
 }
