@@ -55,10 +55,12 @@ import org.kalypso.model.wspm.sobek.core.interfaces.IBranchMaker;
 import org.kalypso.model.wspm.sobek.core.interfaces.ICalculationLink;
 import org.kalypso.model.wspm.sobek.core.interfaces.ILastfallMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode;
+import org.kalypso.model.wspm.sobek.core.interfaces.INodeUtils;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember;
 import org.kalypso.model.wspm.sobek.core.model.Branch;
 import org.kalypso.model.wspm.sobek.core.model.BranchMaker;
+import org.kalypso.model.wspm.sobek.core.model.NodeUtils;
 import org.kalypso.model.wspm.sobek.core.pub.FNNodeUtils;
 import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypsodeegree.model.feature.Feature;
@@ -204,6 +206,14 @@ public final class SobekModelMember implements ISobekModelMember
       // write
     }
     throw (new NotImplementedException());
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.IModelMember#getNodeUtils()
+   */
+  public INodeUtils getNodeUtils( )
+  {
+    return new NodeUtils( this );
   }
 
 }

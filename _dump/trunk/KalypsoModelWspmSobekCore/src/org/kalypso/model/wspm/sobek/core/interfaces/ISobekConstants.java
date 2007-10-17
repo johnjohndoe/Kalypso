@@ -162,4 +162,9 @@ public class ISobekConstants
   public static final String F_NOFDP_HYDRAULIC_PROFILE = "Profile";
 
   public static final QName QN_NOFDP_HYDRAULIC_PROFILE = new QName( NS_WSPM_PROFILE, F_NOFDP_HYDRAULIC_PROFILE );
+
+  public static final String F_HYDRAULIC_BOUNDARY_NODE = "BoundaryConditionNode";
+
+  public static final QName QN_HYDRAULIC_BOUNDARY_NODE = new QName( NS_SOBEK, F_HYDRAULIC_BOUNDARY_NODE );
+
 }

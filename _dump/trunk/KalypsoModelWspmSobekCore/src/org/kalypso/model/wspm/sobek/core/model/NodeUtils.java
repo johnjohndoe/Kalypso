@@ -38,52 +38,51 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.sobek.core.interfaces;
+package org.kalypso.model.wspm.sobek.core.model;
 
+import javax.xml.namespace.QName;
+
+import org.apache.commons.lang.NotImplementedException;
+import org.kalypso.model.wspm.sobek.core.interfaces.INodeUtils;
+import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
+import org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * Abstract interface of calculation model, ISobekModelMember, IBlueMModelMember, aso, should be derived from this
- * interface!
- * 
  * @author kuch
  */
-public interface IModelMember
+public class NodeUtils implements INodeUtils
 {
-  /**
-   * get all node members
-   */
-  public INode[] getNodeMembers( );
+  private final ISobekModelMember m_model;
+
+  public NodeUtils( ISobekModelMember model )
+  {
+    m_model = model;
+  }
 
   /**
-   * get all branch members
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INodeUtils#switchBoundaryConnectionNode(org.kalypsodeegree.model.feature.Feature)
    */
-  public IBranch[] getBranchMembers( );
+  public void switchBoundaryConnectionNode( Feature node )
+  {
+    QName nqn = node.getFeatureType().getQName();
 
-  /**
-   * get all calculation link members
-   */
-  public ICalculationLink[] getCalculationLinkMembers( );
+    /* which node type? */
+    if( ISobekConstants.QN_HYDRAULIC_CONNECTION_NODE.equals( nqn ) )
+      connectionNodeToBoundaryNode( node );
+    else if( ISobekConstants.QN_HYDRAULIC_CONNECTION_NODE.equals( nqn ) )
+      boundaryNodeToConnectionNode( node );
+    else
+      throw (new NotImplementedException());
+  }
 
-  /**
-   * get all lastfall members
-   */
-  public ILastfallMember[] getLastfallMembers( );
+  private void boundaryNodeToConnectionNode( Feature node )
+  {
+    throw (new NotImplementedException());
+  }
 
-  /**
-   * facade for creating, editing branches
-   */
-  public IBranchMaker getBranchMaker( );
-
-  /**
-   * get this model feature
-   */
-  public Feature getFeature( );
-
-  /**
-   * generic interface for deleting a model member (branch, node, ...)
-   */
-  public void deleteFoo( Feature feature ) throws Exception;
-
-  public INodeUtils getNodeUtils( );
+  private void connectionNodeToBoundaryNode( Feature node )
+  {
+    throw (new NotImplementedException());
+  }
 }
