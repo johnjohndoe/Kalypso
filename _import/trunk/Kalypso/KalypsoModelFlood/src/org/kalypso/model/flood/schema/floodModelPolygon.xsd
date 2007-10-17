@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns:gml="http://www.opengis.net/gml"
+	xmlns="http://www.w3.org/2001/XMLSchema"
+	xmlns:flood="org.kalypso.model.flood"
+	targetNamespace="org.kalypso.model.flood"
+	elementFormDefault="qualified" version="0.1">
+	<annotation>
+		<appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+		</appinfo>
+	</annotation>
+	<import namespace="http://www.opengis.net/gml"
+		schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd" />
+
+
+
+	<element name="FloodModel"
+		type="flood:FloodModelType" 
+		substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<name><![CDATA[FloodModel]]></name>
+				<label><![CDATA[FloodModel]]></label>
+				<tooltip><![CDATA[FloodModel]]></tooltip>
+				<description><![CDATA[FloodModel]]></description>
+			</documentation>
+		</annotation>
+	</element>
+
+	<complexType name="FloodModelType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="floodPolygonMember"
+						type="flood:FloodPolygonPropertyType" minOccurs="0" maxOccurs="unbounded">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Polygon</label>
+								<tooltip>Polygon</tooltip>
+								<description>Polygon</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="eventMember"
+						type="flood:RunoffEventPropertyType" minOccurs="0" maxOccurs="unbounded">
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+
+	<complexType name="RunoffEventPropertyType">
+		<sequence minOccurs="1" maxOccurs="1">
+			<element ref="flood:RunoffEvent"/>
+		</sequence>
+	</complexType>
+
+	<complexType name="RunoffEventReferencePropertyType">
+		<sequence minOccurs="0" maxOccurs="0">
+			<element ref="flood:RunoffEvent"/>
+		</sequence>
+		<attributeGroup ref="gml:AssociationAttributeGroup" />
+	</complexType>
+
+
+	<element name="RunoffEvent"
+		type="flood:RunoffEventType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<name><![CDATA[Ereig	nisXXXX]]></name>
+				<label><![CDATA[Polygon]]></label>
+				<tooltip><![CDATA[Polygon]]></tooltip>
+				<description><![CDATA[Polygon]]></description>
+			</documentation>
+		</annotation>
+	</element>
+
+	<complexType name="RunoffEventType" >
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<!--  TODO: referenc auf TIN, evtl. Järhlichkiet und andere Metadaten? -->
+					<!-- Quelle/Zeitstempel des TINs -->
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="FloodPolygonPropertyType">
+		<sequence minOccurs="1" maxOccurs="1">
+			<element ref="flood:AbstractFloodPolygon"/>
+		</sequence>
+	</complexType>
+
+	<element name="AbstractFloodPolygon"
+		type="flood:AbstractFloodPolygonType" abstract="true"
+		substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<name><![CDATA[Polygon]]></name>
+				<label><![CDATA[Polygon]]></label>
+				<tooltip><![CDATA[Polygon]]></tooltip>
+				<description><![CDATA[Polygon]]></description>
+			</documentation>
+		</annotation>
+	</element>
+
+	<complexType name="AbstractFloodPolygonType" abstract="true">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="areaMember"
+						type="gml:PolygonPropertyType" minOccurs="1" maxOccurs="1">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Geometrie des Polygons</label>
+								<tooltip>
+									Geometrie des Polygons
+								</tooltip>
+								<description>
+									Geometrie des Polygons
+								</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="eventMember"
+						type="flood:RunoffEventReferencePropertyType" minOccurs="0" maxOccurs="unbounded">
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<element name="FloodExtrapolationPolygon"
+		type="flood:FloodExtrapolationPolygonType"
+		substitutionGroup="flood:AbstractFloodPolygon">
+		<annotation>
+			<documentation xml:lang="de">
+				<name><![CDATA[Extrapolationspolygon]]></name>
+				<label><![CDATA[Extrapolationspolygon]]></label>
+				<tooltip><![CDATA[Extrapolationspolygon mit zusätzlichem Referenzpunkt.]]></tooltip>
+				<description><![CDATA[Extrapolationspolygon mit zusätzlichem Referenzpunkt.]]></description>
+			</documentation>
+		</annotation>
+	</element>
+
+	<complexType name="FloodExtrapolationPolygonType">
+		<complexContent>
+			<extension base="flood:AbstractFloodPolygonType">
+				<sequence>
+					<element name="referencePoint"
+						type="gml:PointPropertyType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Bezugspunkt</label>
+								<tooltip>
+									Bezugspunkt zum Höhenmodell
+								</tooltip>
+								<description>
+									Bezugspunkt zum Höhenmodell
+								</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<element name="FloodClipPolygon"
+		type="flood:FloodClipPolygonType"
+		substitutionGroup="flood:AbstractFloodPolygon">
+		<annotation>
+			<documentation xml:lang="de">
+				<name><![CDATA[Clip-Polygon]]></name>
+				<label><![CDATA[Clip-Polygon]]></label>
+				<tooltip><![CDATA[Clip-Polygon]]></tooltip>
+				<description><![CDATA[Clip-Polygon]]></description>
+			</documentation>
+		</annotation>
+	</element>
+
+	<complexType name="FloodClipPolygonType">
+		<complexContent>
+			<extension base="flood:AbstractFloodPolygonType">
+				<sequence minOccurs="1" maxOccurs="1">
+					<element name="type">
+						<annotation>
+							<documentation><![CDATA[Type of this polygon.]]></documentation>
+						</annotation>
+						<simpleType>
+							<restriction base="string">
+								<enumeration value="positive"></enumeration>
+								<enumeration value="negative"></enumeration>
+							</restriction>
+						</simpleType>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+</schema>

@@ -1,97 +1,81 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Workflow URI="http___www.tu-harburg.de_wb_kalypso_risk__WF_KalypsoRisk"
+<Workflow
+	URI="http___www.tu-harburg.de_wb_kalypso_flood__WF_KalypsoFlood"
 	xmlns="http://www.renew.de/workflow/base"
 	xmlns:con="http://www.renew.de/workflow/contexts"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<Help>NONE</Help>
-	<Name>KalypsoRisk-Workflow</Name>
+	<Name>KalypsoFlood-Workflow</Name>
+	
 	<TaskGroup
-		URI="http___www.tu-harburg.de_wb_kalypso_risk__Preprocessing">
-		<Name>Preprocessing: Modellaufbau</Name>
-		<TaskGroup
-			URI="http___www.tu-harburg.de_wb_kalypso_risk__DataLoad">
-			<Help>Daten aus dem Dateisystem in das Projekt laden</Help>
-			<Name>Daten laden</Name>
-			<Task context="ImportLanduseShapeDataWizard"
-				URI="http___www.tu-harburg.de_wb_kalypso_risk__ImportLanduseShapeData">
-				<Help><![CDATA[Import von Landnutzung shape-Dateien]]></Help>
-				<Name>Import von Landnutzung shape-Dateien</Name>
-			</Task>
-			<Task context="ImportWaterlevelData"
-				URI="http___www.tu-harburg.de_wb_kalypso_risk__ImportWaterlevelData">
-				<Help><![CDATA[Import waterlevel data]]></Help>
-				<Name>Import waterlevel data</Name>
-			</Task>
-		</TaskGroup>
-		<TaskGroup
-			URI="http___www.tu-harburg.de_wb_kalypso_risk__Databases">
-			<Help><![CDATA[Common data definition]]></Help>
-			<Name>Common data definition</Name>
-			<Task context="LanduseDatabase"
-				URI="http___www.tu-harburg.de_wb_kalypso_risk__LanduseDatabase">
-				<Help><![CDATA[Landnutzung bearbeiten]]></Help>
-				<Name>Landnutzung bearbeiten</Name>
-			</Task>
-			<Task context="AssetValuesDatabase"
-				URI="http___www.tu-harburg.de_wb_kalypso_risk__AssetValuesDatabase">
-				<Help><![CDATA[Asset values definition]]></Help>
-				<Name>Asset values definition</Name>
-			</Task>
-			<Task context="DamageFunctionsDefinition"
-				URI="http___www.tu-harburg.de_wb_kalypso_risk__DamageFunctionsDefinition">
-				<Help><![CDATA[Damage functions definition]]></Help>
-				<Name>Damage functions definition</Name>
-			</Task>
-			<Task context="RiskZonesDefinition"
-				URI="http___www.tu-harburg.de_wb_kalypso_risk__RiskZonesDefinition">
-				<Help><![CDATA[Risk zones definition]]></Help>
-				<Name>Risk zones definition</Name>
-			</Task>
-		</TaskGroup>
-	</TaskGroup>
-	<TaskGroup
-		URI="http___www.tu-harburg.de_wb_kalypso_risk__Processing">
-		<Help><![CDATA[Processing: Rasterung und Rechnen]]></Help>
-		<Name>Processing: Rasterung und Rechnen</Name>
-		<Task type="ASYNCHRONOUS" context="RasterizingLanduseJob"
-			URI="http___www.tu-harburg.de_wb_kalypso_risk__RasterizingLanduseJob">
-			<Help><![CDATA[Rasterung der Landnutzung]]></Help>
-			<Name>Rasterung der Landnutzung</Name>
+		URI="http___www.tu-harburg.de_wb_kalypso_flood__DataLoad">
+		<Help><![CDATA[Grunddaten importieren]]></Help>
+		<Name>Grunddaten importieren</Name>
+		<Task context="ImportProjectDataSetWizard"
+			URI="http___www.tu-harburg.de_wb_kalypso_flood__ImportBackgroundData">
+			<Help><![CDATA[Grunddaten anderer Projekte in die Karte importieren]]></Help>
+			<Name>
+				Grunddaten anderer Projekte in die Karte importieren
+			</Name>
 		</Task>
-		<Task type="ASYNCHRONOUS"
-			context="CalculatingDamagePotentialJob"
-			URI="http___www.tu-harburg.de_wb_kalypso_risk__CalculatingDamagePotentialJob">
-			<Help><![CDATA[Schadenspotentialberechnung]]></Help>
-			<Name>Schadenspotentialberechnung</Name>
+		<Task context="ImportBackgroundDataWizard"
+			URI="http___www.tu-harburg.de_wb_kalypso_flood__ImportBackgroundData">
+			<Help><![CDATA[importiert Hintergrunddaten.]]></Help>
+			<Name>Hintergrunddaten importieren</Name>
 		</Task>
-		<Task type="ASYNCHRONOUS" context="CalculatingRiskZonesJob"
-			URI="http___www.tu-harburg.de_wb_kalypso_risk__CalculatingRiskZonesJob">
-			<Help><![CDATA[Ausweisung des Hochwasserrisikos]]></Help>
-			<Name>Ausweisung des Hochwasserrisikos</Name>
+		<Task context="ImportWaterlevelData"
+			URI="http___www.tu-harburg.de_wb_kalypso_flood__ImportWaterlevelData">
+			<Help><![CDATA[Importiert Wasserspiegeldaten.]]></Help>
+			<Name>Wasserspiegeldaten importieren</Name>
 		</Task>
-		<Task type="ASYNCHRONOUS" context="StatisticalAnalysesJob"
-			URI="http___www.tu-harburg.de_wb_kalypso_risk__StatisticalAnalysesJob">
-			<Help><![CDATA[Statistische Auswertung]]></Help>
-			<Name>Statistische Auswertung</Name>
+		<Task context="ImportDTMData"
+			URI="http___www.tu-harburg.de_wb_kalypso_flood__ImportDTMData">
+			<Help><![CDATA[Importiert Gelände-Rasterdaten]]></Help>
+			<Name>Gelände-Raster importieren</Name>
 		</Task>
 	</TaskGroup>
+
 	<TaskGroup
-		URI="http___www.tu-harburg.de_wb_kalypso_risk__Postprocessing">
-		<Help><![CDATA[Ergebnisauswertungen]]></Help>
-		<Name>Postprocessing: Ergebnisauswertungen</Name>
+		URI="http___www.tu-harburg.de_wb_kalypso_flood__Editing">
+		<Help><![CDATA[Manuelle Bearbeitung]]></Help>
+		<Name>Manuelle Bearbeitung</Name>
+		<Task type="ASYNCHRONOUS" context="PolygonEditing"
+			URI="http___www.tu-harburg.de_wb_kalypso_flood__PolygonEditing">
+			<Help><![CDATA[Ermöglicht das Anlegen von Korrekturpolygonen.]]></Help>
+			<Name>Korrekturpolygone</Name>
+		</Task>
+	</TaskGroup>
+
+	<TaskGroup
+		URI="http___www.tu-harburg.de_wb_kalypso_flood__Processing">
+		<Help><![CDATA[Fliesstiefen generieren]]></Help>
+		<Name>Fliesstiefen generieren</Name>
+		<Task context="ProcessFloodModel"
+			URI="http___www.tu-harburg.de_wb_kalypso_flood__ProcessFloodModel">
+			<Help><![CDATA[Startet Generierung des Fliesstiefen-Rasters.]]></Help>
+			<Name>Start</Name>
+		</Task>
+	</TaskGroup>
+
+	<TaskGroup
+		URI="http___www.tu-harburg.de_wb_kalypso_flood__Postprocessing">
+		<Help><![CDATA[Ergebnisauswertung]]></Help>
+		<Name>Ergebnisauswertung</Name>
 		<Task context="ExportRasterData"
-			URI="http___www.tu-harburg.de_wb_kalypso_risk__ExportRasterData">
-			<Help><![CDATA[Exportieren von Rasterdaten in externe Dateien]]></Help>
-			<Name>Exportieren Rasterdaten</Name>
+			URI="http___www.tu-harburg.de_wb_kalypso_flood__ExportRasterData">
+			<Help><![CDATA[Exportiert die Fliesstiefen-Rasterdaten in externe Dateien.]]></Help>
+			<Name>Rasterdatenexport</Name>
 		</Task>
 	</TaskGroup>
+	
 	<Perspectives>
-		<con:PerspectiveContext id="ContextRiskModelling"
+		<con:PerspectiveContext id="ContextFloodModelling"
 			perspectiveId="org.kalypso.kalypso1d2d.pjt.perspective.Perspective">
-			<!-- perspectiveId="org.kalypso.risk.perspective.Perspective"> -->
+			<!-- perspectiveId="org.kalypso.flood.perspective.Perspective"> -->
+			
 			<con:ViewContext id="FeatureView"
 				partId="org.kalypso.ui.views.featuretemplateview"
-				parent="ContextRiskModelling">
+				parent="ContextFloodModelling">
 				<con:ExtensionContext id="LanduseDatabase"
 					parent="FeatureView"
 					handlerFactoryId="kalypsoContextHandlerFactory">
@@ -117,8 +101,9 @@
 						value="templates/damageFunctions.gft" />
 				</con:ExtensionContext>
 			</con:ViewContext>
+			
 			<con:WorkbenchSiteContext id="MapContext"
-				parent="ContextRiskModelling">
+				parent="ContextFloodModelling">
 				<con:ViewContext id="MapOutlineView"
 					partId="org.kalypso.ui.views.outline" parent="MapContext" />
 				<con:ViewContext id="MapView"
@@ -128,7 +113,7 @@
 						handlerFactoryId="kalypsoContextHandlerFactory">
 						<con:WizardContext
 							id="ImportLanduseShapeDataWizard"
-							wizardId="org.kalypso.risk.model.wizards.importlanduse.ImportLanduseWizard"
+							wizardId="org.kalypso.flood.model.wizards.importlanduse.ImportLanduseWizard"
 							wizardType="NEW_WIZARD" parent="ImportLanduseShapeDataContext" />
 						<con:Parameter name="type"
 							value="mapViewInputContext" />
@@ -137,9 +122,11 @@
 					</con:ExtensionContext>
 				</con:ViewContext>
 			</con:WorkbenchSiteContext>
+			
 			<con:ViewContext id="FeatureSelectionView"
 				partId="org.kalypso.featureview.views.FeatureView"
-				parent="ContextRiskModelling" />
+				parent="ContextFloodModelling" />
+				
 		</con:PerspectiveContext>
 	</Perspectives>
 </Workflow>
