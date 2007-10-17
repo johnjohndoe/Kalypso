@@ -112,14 +112,21 @@ public class AdvancedFeaturePropertyHandler implements IFeaturePropertyHandler
           /* final */IPropertyType pt = featureType.getProperty( propertyQName );
           // introducing virtual property
           if( pt == null )
-          {
             pt = featureType.getVirtualProperty( propertyQName );
-          }
-          final XmlObject[] parameters = funcProp.selectPath( "declare namespace xs='" + NS.XSD_SCHEMA + "' " + "declare namespace kapp" + "='" + NS.KALYPSO_APPINFO + "' ./kapp:parameter" );
-          final Map<String, String> properties = parseParameters( parameters );
 
-          final FeaturePropertyFunction propertyFunction = KalypsoDeegreeExtensions.createPropertyFunction( functionId, properties );
-          m_handlers.put( pt.getQName(), propertyFunction );
+          if( pt == null )
+          {
+            final IStatus status = StatusUtilities.createWarningStatus( "Unknown property-qname in function-property definition: " + property );
+            KalypsoDeegreePlugin.getDefault().getLog().log( status );
+          }
+          else
+          {
+            final XmlObject[] parameters = funcProp.selectPath( "declare namespace xs='" + NS.XSD_SCHEMA + "' " + "declare namespace kapp" + "='" + NS.KALYPSO_APPINFO + "' ./kapp:parameter" );
+            final Map<String, String> properties = parseParameters( parameters );
+
+            final FeaturePropertyFunction propertyFunction = KalypsoDeegreeExtensions.createPropertyFunction( functionId, properties );
+            m_handlers.put( pt.getQName(), propertyFunction );
+          }
         }
         catch( final Exception e )
         {
