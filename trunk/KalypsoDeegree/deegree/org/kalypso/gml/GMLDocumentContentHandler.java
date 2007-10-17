@@ -223,7 +223,7 @@ public class GMLDocumentContentHandler extends DelegateContentHandler
     }
     catch( final Exception e )
     {
-      /* Log it, because the following SaxException eats the innner exception */
+      /* Log it, because the following SaxException eats the inner exception */
       KalypsoDeegreePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
       if( schema == null )
         schemaNotFoundExceptions.addException( new SAXException( "Schema unknown. Could not load schema with namespace: " + uri + " (schemaLocationHint was " + schemaLocationHint
