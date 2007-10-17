@@ -56,7 +56,7 @@ import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ISimpleMarshallingTypeHandler;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree_impl.io.shpapi.IShapeDataProvider;
+import org.kalypsodeegree_impl.io.shpapi.dataprovider.IShapeDataProvider;
 
 /**
  * Helps converting gml(-workspace) to shape files.

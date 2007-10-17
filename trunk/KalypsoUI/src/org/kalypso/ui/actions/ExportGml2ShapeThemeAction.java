@@ -27,9 +27,9 @@ import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree_impl.io.shpapi.IShapeDataProvider;
 import org.kalypsodeegree_impl.io.shpapi.ShapeConst;
-import org.kalypsodeegree_impl.io.shpapi.TriangulatedSurfaceSinglePartShapeDataProvider;
+import org.kalypsodeegree_impl.io.shpapi.dataprovider.IShapeDataProvider;
+import org.kalypsodeegree_impl.io.shpapi.dataprovider.TriangulatedSurfaceSinglePartShapeDataProvider;
 import org.kalypsodeegree_impl.model.geometry.GM_TriangulatedSurface_Impl;
 
 public class ExportGml2ShapeThemeAction implements IObjectActionDelegate, IActionDelegate2
