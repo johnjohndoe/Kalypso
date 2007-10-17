@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2007 sp2 (http://www.altova.com) by WL | Delft Hydraulics (WL | Delft Hydraulics) -->
 <!--  Delft FEWS Published Interface (Copyright 2003 WL | Delft Hydraulics) -->
-<schema targetNamespace="http://www.wldelft.nl/fews/PI" xmlns:fews="http://www.wldelft.nl/fews/PI" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
+<schema xmlns:fews="http://www.wldelft.nl/fews/PI" xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.wldelft.nl/fews/PI" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
 	<include schemaLocation="pi_sharedtypes.xsd"/>
 	<element name="CrossSections" type="fews:CrossSectionsComplexType">
 		<annotation>
@@ -76,6 +77,7 @@
 				</annotation>
 			</element>
 			<element name="thalwegElevation" minOccurs="0"/>
+			<element name="roughnessType" type="string" minOccurs="0"/>
 			<element name="crossSectionData" type="fews:CrossSectionXdataComplexType" maxOccurs="unbounded">
 				<annotation>
 					<documentation>Each crossection can hold an (unlimited) umber of
