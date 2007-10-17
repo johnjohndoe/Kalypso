@@ -82,15 +82,48 @@ public class NodeUtils implements INodeUtils
     /* which node type? */
     if( ISobekConstants.QN_HYDRAULIC_CONNECTION_NODE.equals( nqn ) )
       connectionNodeToBoundaryNode( new ConnectionNode( m_model, node ) );
-    else if( ISobekConstants.QN_HYDRAULIC_CONNECTION_NODE.equals( nqn ) )
-      boundaryNodeToConnectionNode( node );
+    else if( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE.equals( nqn ) )
+      boundaryNodeToConnectionNode( new BoundaryNode( m_model, node ) );
     else
       throw (new NotImplementedException());
   }
 
-  private void boundaryNodeToConnectionNode( Feature node )
+  private void boundaryNodeToConnectionNode( BoundaryNode bn ) throws Exception
   {
-    throw (new NotImplementedException());
+    /* create new connection node */
+    IConnectionNode connectionNode = (IConnectionNode) FNGmlUtils.createNode( m_model, TYPE.eConnectionNode, bn.getLocation(), new INode[] {} );
+
+    Map<QName, Object> map = new HashMap<QName, Object>();
+    map.put( ISobekConstants.QN_HYDRAULIC_NAME, bn.getName() );
+    map.put( ISobekConstants.QN_HYDRAULIC_DESCRIPTION, bn.getDescription() );
+
+    FeatureUtils.updateFeature( connectionNode.getFeature(), map );
+
+    for( IBranch branch : bn.getInflowingBranches() )
+    {
+      connectionNode.addInflowingBranch( branch );
+    }
+
+    for( IBranch branch : bn.getOutflowingBranches() )
+    {
+      connectionNode.addOutflowingBranch( branch );
+    }
+
+    // set node at branches
+    IBranch[] inflowing = connectionNode.getInflowingBranches();
+    for( IBranch branch : inflowing )
+    {
+      updateBranchNode( branch, connectionNode );
+    }
+
+    IBranch[] outflowing = connectionNode.getOutflowingBranches();
+    for( IBranch branch : outflowing )
+    {
+      updateBranchNode( branch, connectionNode );
+    }
+
+    // delete connection node
+    bn.delete();
   }
 
   private void connectionNodeToBoundaryNode( IConnectionNode cn ) throws Exception

@@ -157,6 +157,6 @@ public class FNNodeUtils
     else if( ISobekConstants.QN_HYDRAULIC_CROSS_SECTION_NODE.equals( qname ) )
       return new CrossSectionNode( model, node );
 
-    return new EmptyNodeImplementation( node );
+    return new EmptyNodeImplementation( model, node );
   }
 }

@@ -40,40 +40,21 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.pub;
 
-import org.kalypso.model.wspm.sobek.core.interfaces.INode;
-import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
+import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
+import org.kalypso.model.wspm.sobek.core.model.AbstractNode;
+import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * Objects of class EmptyNodeImplementation will be returned for all created nodes which this plugin doesn't recognize
  * 
  * @author kuch
  */
-public class EmptyNodeImplementation implements INode
+public class EmptyNodeImplementation extends AbstractNode
 {
-
-  private final Feature m_node;
-
-  public EmptyNodeImplementation( Feature node )
+  public EmptyNodeImplementation( IModelMember model, Feature node )
   {
-    m_node = node;
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getFeature()
-   */
-  public Feature getFeature( )
-  {
-    return m_node;
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getId()
-   */
-  public String getId( )
-  {
-    return (String) m_node.getProperty( ISobekConstants.QN_HYDRAULIC_UNIQUE_ID );
+    super( model, node );
   }
 
   /**
@@ -81,35 +62,7 @@ public class EmptyNodeImplementation implements INode
    */
   public void delete( ) throws Exception
   {
-    // TODO Auto-generated method stub
-
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getDescription()
-   */
-  public String getDescription( )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getLocation()
-   */
-  public GM_Point getLocation( )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getName()
-   */
-  public String getName( )
-  {
-    // TODO Auto-generated method stub
-    return null;
+    FeatureUtils.deleteFeature( getFeature() );
   }
 
   /**
@@ -117,7 +70,6 @@ public class EmptyNodeImplementation implements INode
    */
   public TYPE getType( )
   {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -126,8 +78,6 @@ public class EmptyNodeImplementation implements INode
    */
   public boolean isEmpty( )
   {
-    // TODO Auto-generated method stub
-    return false;
+    return true;
   }
-
 }
