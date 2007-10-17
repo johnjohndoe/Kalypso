@@ -205,7 +205,9 @@ public final class SobekModelMember implements ISobekModelMember
       // create target file (outputStream)
       // write
     }
-    throw (new NotImplementedException());
+    else
+      throw (new NotImplementedException());
+ 
   }
 
   /**
@@ -215,5 +217,4 @@ public final class SobekModelMember implements ISobekModelMember
   {
     return new NodeUtils( this );
   }
-
 }
