@@ -51,6 +51,7 @@ import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.kalypso.contribs.eclipse.jface.viewers.IFCVDelegate;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
+import org.kalypso.model.wspm.sobek.core.wizard.pages.PageEditCrossSectionNode;
 import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -66,7 +67,7 @@ public class FNWizardEditCrossSectionNode extends Wizard implements INewWizard
   private final IFCVDelegate m_crossSectionDelegate;
 
   /* todo list of waterbodies - profiles */
-  public FNWizardEditCrossSectionNode( final Feature node, IFCVDelegate crossSectionDelegate )
+  public FNWizardEditCrossSectionNode( final Feature node, final IFCVDelegate crossSectionDelegate )
   {
     m_node = node;
     m_crossSectionDelegate = crossSectionDelegate;
@@ -80,7 +81,6 @@ public class FNWizardEditCrossSectionNode extends Wizard implements INewWizard
   {
     m_pageEditNode = new PageEditCrossSectionNode( m_node, m_crossSectionDelegate );
     addPage( m_pageEditNode );
-
   }
 
   /**

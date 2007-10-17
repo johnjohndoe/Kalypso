@@ -40,11 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.interfaces;
 
+import org.kalypsodeegree.model.feature.Feature;
+
 /**
  * @author kuch
- *
  */
 public interface ILastfall
 {
+  String getName( );
+
+  public IModelMember getModel( );
+
+  public Feature getFeature( );
 
 }

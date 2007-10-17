@@ -170,4 +170,9 @@ public class ISobekConstants
   public static final String F_HYDRAULIC_LASTFALL_MEMBER = "lastfallMember";
 
   public static final QName QN_HYDRAULIC_LASTFALL_MEMBER = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.F_HYDRAULIC_LASTFALL_MEMBER );
+
+  public static final String F_HYDRAULIC_LASTFALL = "Lastfall";
+
+  public static final QName QN_HYDRAULIC_LASTFALL = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.F_HYDRAULIC_LASTFALL );
+
 }

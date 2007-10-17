@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.sobek.core.wizard;
+package org.kalypso.model.wspm.sobek.core.wizard.pages;
 
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.WizardPage;
@@ -68,7 +68,7 @@ public class PageEditCrossSectionNode extends WizardPage
 
   private final IFCVDelegate m_delegate;
 
-  protected PageEditCrossSectionNode( final Feature node, IFCVDelegate delegate )
+  public PageEditCrossSectionNode( final Feature node, final IFCVDelegate delegate )
   {
     super( "editFlowNetworkCrossSectionNode" );
     m_node = node;

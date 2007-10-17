@@ -42,6 +42,9 @@ package org.kalypso.model.wspm.sobek.core.model;
 
 import org.kalypso.model.wspm.sobek.core.SobekModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.ILastfall;
+import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
+import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
+import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -58,6 +61,30 @@ public class Lastfall implements ILastfall
   {
     m_sobekModelMember = sobekModelMember;
     m_lastfall = lastfall;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.ILastfall#getName()
+   */
+  public String getName( )
+  {
+    return FeatureUtils.getFeatureName( ISobekConstants.NS_SOBEK, m_lastfall );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.ILastfall#getFeature()
+   */
+  public Feature getFeature( )
+  {
+    return m_lastfall;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.ILastfall#getModel()
+   */
+  public IModelMember getModel( )
+  {
+    return m_sobekModelMember;
   }
 
 }
