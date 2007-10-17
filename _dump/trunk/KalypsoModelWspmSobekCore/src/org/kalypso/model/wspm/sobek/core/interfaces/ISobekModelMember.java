@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.interfaces;
 
+import java.io.IOException;
 import java.net.URL;
 
 /**
@@ -61,5 +62,5 @@ public interface ISobekModelMember extends IModelMember
    *            part of a Sobek model that shall be written into an XML file (with fixed filename)
    */
 
-  public void writePi( final URL targetDir, final TARGET target );
+  public void writePi( final URL targetDir, final TARGET target ) throws IOException;
 }

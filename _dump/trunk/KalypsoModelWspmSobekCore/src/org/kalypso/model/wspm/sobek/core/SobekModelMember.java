@@ -40,12 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranchMaker;
@@ -187,10 +190,15 @@ public final class SobekModelMember implements ISobekModelMember
    *      org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember.TARGET)
    * @author thuel2
    */
-  public void writePi( final URL targetDir, final TARGET target )
+  public void writePi( final URL targetDir, final TARGET target ) throws IOException
   {
+    final File fleTargetDir = new File( targetDir.getFile() );
+    if( !fleTargetDir.exists() )
+      FileUtils.forceMkdir( fleTargetDir );
+
     if( TARGET.eLocations.equals( target ) )
     {
+      final File fleLocations = new File( targetDir.getFile(), "locations.xml" );
       final INode[] nodes = getNodeMembers();
       // create target file (outputStream)
       // write
