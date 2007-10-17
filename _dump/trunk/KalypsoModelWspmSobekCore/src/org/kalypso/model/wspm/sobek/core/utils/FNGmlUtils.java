@@ -66,7 +66,6 @@ import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
@@ -119,8 +118,9 @@ public class FNGmlUtils
 
       FeatureUtils.updateFeature( branch, values );
 
-      FeatureUtils.updateLinkedFeature( branch, ISobekConstants.QN_HYDRAULIC_BRANCH_UPPER_CONNECTION_NODE, "#" + upperNode.getFeature().getId() );
-      FeatureUtils.updateLinkedFeature( branch, ISobekConstants.QN_HYDRAULIC_BRANCH_LOWER_CONNECTION_NODE, "#" + lowerNode.getFeature().getId() );
+      IBranch myBranch = new Branch( model, branch );
+      myBranch.setUpperNode( upperNode );
+      myBranch.setLowerNode( lowerNode );
 
       FNGmlUtils.addBranchesToLinkToNodes( model, new INode[] { upperNode, lowerNode } );
     }
@@ -193,13 +193,11 @@ public class FNGmlUtils
   {
     List myList;
     if( FLOW_DIRECTION.eInflowingBranch.equals( direction ) )
-      myList = (FeatureList) node.getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_NODE_LINKED_INFLOWING_BRANCHES );
+      node.addInflowingBranch( branch );
     else if( FLOW_DIRECTION.eOutflowingBranch.equals( direction ) )
-      myList = (FeatureList) node.getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_NODE_LINKED_OUTFLOWING_BRANCHES );
+      node.addOutflowingBranch( branch );
     else
       throw new IllegalStateException();
-
-    myList.add( branch.getFeature().getId() );
   }
 
   public static void createInflowBranch( IModelMember model, IBranch branch, GM_Curve curve ) throws Exception

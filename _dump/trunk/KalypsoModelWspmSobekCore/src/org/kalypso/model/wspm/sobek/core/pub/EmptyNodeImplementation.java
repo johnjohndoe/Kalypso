@@ -144,4 +144,28 @@ public class EmptyNodeImplementation implements INode
     throw (new IllegalStateException());
   }
 
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getDescription()
+   */
+  public String getDescription( )
+  {
+    throw (new IllegalStateException());
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#addInflowingBranch(org.kalypso.model.wspm.sobek.core.interfaces.IBranch)
+   */
+  public void addInflowingBranch( IBranch branch )
+  {
+    throw (new IllegalStateException());
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#addOutflowingBranch(org.kalypso.model.wspm.sobek.core.interfaces.IBranch)
+   */
+  public void addOutflowingBranch( IBranch branch )
+  {
+    throw (new IllegalStateException());
+  }
+
 }

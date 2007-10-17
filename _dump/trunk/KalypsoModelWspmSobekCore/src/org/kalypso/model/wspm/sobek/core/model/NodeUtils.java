@@ -40,13 +40,24 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.xml.namespace.QName;
 
 import org.apache.commons.lang.NotImplementedException;
+import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
+import org.kalypso.model.wspm.sobek.core.interfaces.IConnectionNode;
+import org.kalypso.model.wspm.sobek.core.interfaces.INode;
 import org.kalypso.model.wspm.sobek.core.interfaces.INodeUtils;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember;
+import org.kalypso.model.wspm.sobek.core.interfaces.INode.TYPE;
+import org.kalypso.model.wspm.sobek.core.utils.FNGmlUtils;
+import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * @author kuch
@@ -63,13 +74,13 @@ public class NodeUtils implements INodeUtils
   /**
    * @see org.kalypso.model.wspm.sobek.core.interfaces.INodeUtils#switchBoundaryConnectionNode(org.kalypsodeegree.model.feature.Feature)
    */
-  public void switchBoundaryConnectionNode( Feature node )
+  public void switchBoundaryConnectionNode( Feature node ) throws Exception
   {
     QName nqn = node.getFeatureType().getQName();
 
     /* which node type? */
     if( ISobekConstants.QN_HYDRAULIC_CONNECTION_NODE.equals( nqn ) )
-      connectionNodeToBoundaryNode( node );
+      connectionNodeToBoundaryNode( new ConnectionNode( m_model, node ) );
     else if( ISobekConstants.QN_HYDRAULIC_CONNECTION_NODE.equals( nqn ) )
       boundaryNodeToConnectionNode( node );
     else
@@ -81,8 +92,57 @@ public class NodeUtils implements INodeUtils
     throw (new NotImplementedException());
   }
 
-  private void connectionNodeToBoundaryNode( Feature node )
+  private void connectionNodeToBoundaryNode( IConnectionNode cn ) throws Exception
   {
-    throw (new NotImplementedException());
+    /* create new boundary node */
+    INode boundaryNode = FNGmlUtils.createNode( m_model, TYPE.eBoundaryNode, cn.getGeometry(), new INode[] {} );
+
+    Map<QName, Object> map = new HashMap<QName, Object>();
+    map.put( ISobekConstants.QN_HYDRAULIC_NAME, cn.getName() );
+    map.put( ISobekConstants.QN_HYDRAULIC_DESCRIPTION, cn.getDescription() );
+
+    FeatureUtils.updateFeature( boundaryNode.getFeature(), map );
+
+    for( IBranch branch : cn.getInflowingBranches() )
+    {
+      boundaryNode.addInflowingBranch( branch );
+    }
+
+    for( IBranch branch : cn.getOutflowingBranches() )
+    {
+      boundaryNode.addOutflowingBranch( branch );
+    }
+
+    // set node at branches
+    IBranch[] inflowing = boundaryNode.getInflowingBranches();
+    for( IBranch branch : inflowing )
+    {
+      updateBranchNode( branch, boundaryNode );
+    }
+
+    IBranch[] outflowing = boundaryNode.getOutflowingBranches();
+    for( IBranch branch : outflowing )
+    {
+      updateBranchNode( branch, boundaryNode );
+    }
+
+    // delete connection node
+    cn.delete();
   }
+
+  private void updateBranchNode( IBranch branch, INode node ) throws Exception
+  {
+    GM_Curve curve = branch.getGeometryProperty();
+    GM_Point pn = node.getGeometry();
+
+    if( curve.getStartPoint().intersects( pn ) )
+    {
+      branch.setUpperNode( node );
+    }
+    else if( curve.getEndPoint().intersects( pn ) )
+    {
+      branch.setLowerNode( node );
+    }
+  }
+
 }

@@ -53,6 +53,7 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
+import org.kalypso.model.wspm.sobek.core.model.BoundaryNode;
 import org.kalypso.model.wspm.sobek.core.model.ConnectionNode;
 import org.kalypso.model.wspm.sobek.core.model.LinkageNode;
 import org.kalypso.model.wspm.sobek.core.utils.AtomarAddFeatureCommand;
@@ -124,6 +125,8 @@ public class FNNodeUtils
 
     if( ISobekConstants.QN_HYDRAULIC_LINKAGE_NODE.equals( qn ) )
       return "ln_";
+    else if( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE.equals( qn ) )
+      return "bn_";
     else if( ISobekConstants.QN_HYDRAULIC_CONNECTION_NODE.equals( qn ) )
       return "cn_";
     else if( ISobekConstants.QN_HYDRAULIC_CROSS_SECTION_NODE.equals( qn ) )
@@ -140,11 +143,18 @@ public class FNNodeUtils
 
   public static INode getNode( IModelMember model, Feature node )
   {
+    if( node == null )
+      return null;
+
     QName qname = node.getFeatureType().getQName();
     if( ISobekConstants.QN_HYDRAULIC_CONNECTION_NODE.equals( qname ) )
       return new ConnectionNode( model, node );
     else if( ISobekConstants.QN_HYDRAULIC_LINKAGE_NODE.equals( qname ) )
       return new LinkageNode( model, node );
+    else if( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE.equals( qname ) )
+      return new BoundaryNode( model, node );
+    else if( ISobekConstants.QN_HYDRAULIC_CROSS_SECTION_NODE.equals( qname ) )
+      throw (new NotImplementedException());
 
     return new EmptyNodeImplementation( node );
   }

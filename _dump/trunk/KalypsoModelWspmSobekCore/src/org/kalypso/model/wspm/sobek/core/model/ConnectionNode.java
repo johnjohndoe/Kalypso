@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.model;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.IConnectionNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
@@ -56,14 +55,6 @@ public class ConnectionNode extends AbstractNode implements IConnectionNode
   public ConnectionNode( IModelMember model, Feature node )
   {
     super( model, node );
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getName()
-   */
-  public String getName( )
-  {
-    throw (new NotImplementedException());
   }
 
   /**

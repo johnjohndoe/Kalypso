@@ -44,7 +44,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypso.gmlschema.IGMLSchema;
@@ -56,6 +55,7 @@ import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.model.wspm.sobek.core.pub.FNNodeUtils;
 import org.kalypso.model.wspm.sobek.core.utils.ILinkFeatureWrapperDelegate;
 import org.kalypso.model.wspm.sobek.core.utils.LinkFeatureWrapper;
+import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
@@ -99,7 +99,7 @@ public abstract class AbstractNode implements INode
     IFeatureType targetFeatureType;
     if( TYPE.eBoundaryNode.equals( nodeType ) )
     {
-      throw (new NotImplementedException());
+      targetFeatureType = schema.getFeatureType( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE );
     }
     else if( TYPE.eConnectionNode.equals( nodeType ) )
     {
@@ -241,5 +241,39 @@ public abstract class AbstractNode implements INode
   {
     List< ? > inflowing = (List< ? >) getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_NODE_LINKED_INFLOWING_BRANCHES );
     inflowing.remove( branch.getFeature().getId() );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getName()
+   */
+  public String getName( )
+  {
+    return FeatureUtils.getFeatureName( ISobekConstants.NS_SOBEK, m_node );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getDescription()
+   */
+  public String getDescription( )
+  {
+    return (String) m_node.getProperty( ISobekConstants.QN_HYDRAULIC_DESCRIPTION );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#addInflowingBranch(org.kalypso.model.wspm.sobek.core.interfaces.IBranch)
+   */
+  public void addInflowingBranch( IBranch branch )
+  {
+    List inflowing = (List) getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_NODE_LINKED_INFLOWING_BRANCHES );
+    inflowing.add( branch.getFeature().getId() );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#addOutflowingBranch(org.kalypso.model.wspm.sobek.core.interfaces.IBranch)
+   */
+  public void addOutflowingBranch( IBranch branch )
+  {
+    List outflowing = (List) getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_NODE_LINKED_OUTFLOWING_BRANCHES );
+    outflowing.add( branch.getFeature().getId() );
   }
 }

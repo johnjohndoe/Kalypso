@@ -180,7 +180,8 @@ public class Branch implements IBranch
 
     for( INode node : nodes )
     {
-      node.removeBranch( this );
+      if( node != null )
+        node.removeBranch( this );
     }
 
     // deletes empty nodes
@@ -224,5 +225,21 @@ public class Branch implements IBranch
   public Feature getFeature( )
   {
     return m_branch;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBranch#setLowerNode(org.kalypso.model.wspm.sobek.core.interfaces.INode)
+   */
+  public void setLowerNode( INode node ) throws Exception
+  {
+    FeatureUtils.updateLinkedFeature( m_branch, ISobekConstants.QN_HYDRAULIC_BRANCH_LOWER_CONNECTION_NODE, "#" + node.getFeature().getId() );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBranch#setUpperNode(org.kalypso.model.wspm.sobek.core.interfaces.INode)
+   */
+  public void setUpperNode( INode node ) throws Exception
+  {
+    FeatureUtils.updateLinkedFeature( m_branch, ISobekConstants.QN_HYDRAULIC_BRANCH_UPPER_CONNECTION_NODE, "#" + node.getFeature().getId() );
   }
 }

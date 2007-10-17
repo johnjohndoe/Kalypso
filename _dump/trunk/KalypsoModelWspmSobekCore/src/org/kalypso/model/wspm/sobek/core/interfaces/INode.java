@@ -69,6 +69,8 @@ public interface INode
 
   public String getName( );
 
+  public String getDescription( );
+
   public String getId( );
 
   public Feature getFeature( );
@@ -84,4 +86,9 @@ public interface INode
   IBranch[] getInflowingBranches( );
 
   IBranch[] getOutflowingBranches( );
+
+  public void addInflowingBranch( IBranch branch );
+
+  public void addOutflowingBranch( IBranch branch );
+
 }

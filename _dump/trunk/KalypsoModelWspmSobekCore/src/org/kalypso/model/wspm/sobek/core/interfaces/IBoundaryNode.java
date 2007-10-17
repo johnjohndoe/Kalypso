@@ -40,17 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.interfaces;
 
-import org.kalypsodeegree.model.feature.Feature;
-
 /**
  * @author kuch
  */
-public interface INodeUtils
+public interface IBoundaryNode extends INode
 {
-  /**
-   * toggle / switch between boundary node and connection node only connection nodes can be "promoted" to a boundary
-   * node
-   */
-  void switchBoundaryConnectionNode( Feature node ) throws Exception;
 
 }

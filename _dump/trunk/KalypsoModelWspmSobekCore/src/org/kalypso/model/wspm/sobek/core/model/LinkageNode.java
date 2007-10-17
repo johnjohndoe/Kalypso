@@ -41,7 +41,6 @@
 package org.kalypso.model.wspm.sobek.core.model;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.ILinkageNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
@@ -68,14 +67,6 @@ public class LinkageNode extends AbstractNode implements ILinkageNode
   public void delete( ) throws Exception
   {
     FeatureUtils.deleteFeature( getFeature() );
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getName()
-   */
-  public String getName( )
-  {
-    throw (new NotImplementedException());
   }
 
   /**

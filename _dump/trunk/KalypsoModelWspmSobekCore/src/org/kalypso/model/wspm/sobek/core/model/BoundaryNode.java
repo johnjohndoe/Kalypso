@@ -38,19 +38,53 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.sobek.core.interfaces;
+package org.kalypso.model.wspm.sobek.core.model;
 
+import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode;
+import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
+import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
+import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author kuch
  */
-public interface INodeUtils
+public class BoundaryNode extends AbstractNode implements IBoundaryNode
 {
+
+  public BoundaryNode( IModelMember model, Feature node )
+  {
+    super( model, node );
+  }
+
   /**
-   * toggle / switch between boundary node and connection node only connection nodes can be "promoted" to a boundary
-   * node
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#delete()
    */
-  void switchBoundaryConnectionNode( Feature node ) throws Exception;
+  public void delete( ) throws Exception
+  {
+    FeatureUtils.deleteFeature( getFeature() );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getType()
+   */
+  public TYPE getType( )
+  {
+    return TYPE.eBoundaryNode;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#isEmpty()
+   */
+  public boolean isEmpty( )
+  {
+    IBranch[] inflowingBranches = getInflowingBranches();
+    IBranch[] outflowingBranches = getOutflowingBranches();
+
+    if( inflowingBranches.length == 0 && outflowingBranches.length == 0 )
+      return true;
+
+    return false;
+  }
 
 }

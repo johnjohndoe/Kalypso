@@ -59,4 +59,8 @@ public interface IBranch
   INode getLowerNode( );
 
   Feature getFeature( );
+
+  void setUpperNode( INode upperNode ) throws Exception;
+
+  void setLowerNode( INode lowerNode ) throws Exception;
 }
