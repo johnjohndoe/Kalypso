@@ -90,6 +90,7 @@ import org.kalypsodeegree_impl.io.rtree.HyperBoundingBox;
 import org.kalypsodeegree_impl.io.rtree.HyperPoint;
 import org.kalypsodeegree_impl.io.rtree.RTree;
 import org.kalypsodeegree_impl.io.rtree.RTreeException;
+import org.kalypsodeegree_impl.io.shpapi.dataprovider.IShapeDataProvider;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.Debug;
 
