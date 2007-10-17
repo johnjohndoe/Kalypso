@@ -89,82 +89,85 @@ public class ISobekConstants
 
   public static final String NS_SOBEK_PROJECT = "org.kalypso.model.wspm.sobek.project";
 
-  public static final QName QN_HYDRAULIC_BRANCH_LENGTH = new QName( NS_SOBEK, F_HYDRAULIC_BRANCH_LENGTH );
+  public static final QName QN_HYDRAULIC_BRANCH_LENGTH = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.F_HYDRAULIC_BRANCH_LENGTH );
 
-  public static final QName QN_HYDRAULIC_BRANCH_LOWER_CONNECTION_NODE = new QName( NS_SOBEK, F_HYDRAULIC_BRANCH_LOWER_CONNECTION_NODE );
+  public static final QName QN_HYDRAULIC_BRANCH_LOWER_CONNECTION_NODE = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.F_HYDRAULIC_BRANCH_LOWER_CONNECTION_NODE );
 
-  public static final QName QN_HYDRAULIC_BRANCH_MEMBER = new QName( NS_SOBEK, F_HYDRAULIC_BRANCH_MEMBER );
+  public static final QName QN_HYDRAULIC_BRANCH_MEMBER = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.F_HYDRAULIC_BRANCH_MEMBER );
 
-  public static final QName QN_HYDRAULIC_BRANCH_RIVER_LINE = new QName( NS_SOBEK, F_HYDRAULIC_BRANCH_RIVER_LINE );
+  public static final QName QN_HYDRAULIC_BRANCH_RIVER_LINE = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.F_HYDRAULIC_BRANCH_RIVER_LINE );
 
-  public static final QName QN_HYDRAULIC_BRANCH_UPPER_CONNECTION_NODE = new QName( NS_SOBEK, F_HYDRAULIC_BRANCH_UPPER_CONNECTION_NODE );
+  public static final QName QN_HYDRAULIC_BRANCH_UPPER_CONNECTION_NODE = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.F_HYDRAULIC_BRANCH_UPPER_CONNECTION_NODE );
 
-  public static final QName QN_HYDRAULIC_CONNECTION_NODE = new QName( NS_SOBEK, F_HYDRAULIC_CONNECTION_NODE );
+  public static final QName QN_HYDRAULIC_CONNECTION_NODE = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.F_HYDRAULIC_CONNECTION_NODE );
 
-  public static final QName QN_HYDRAULIC_CROSS_SECTION_NODE = new QName( NS_SOBEK, F_HYDRAULIC_CROSS_SECTION_NODE );
+  public static final QName QN_HYDRAULIC_CROSS_SECTION_NODE = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.F_HYDRAULIC_CROSS_SECTION_NODE );
 
-  public static final QName QN_HYDRAULIC_CROSS_SECTION_NODE_LINKED_BRANCH = new QName( NS_SOBEK, F_HYDRAULIC_CROSS_SECTION_NODE_LINKED_BRANCH );
+  public static final QName QN_HYDRAULIC_CROSS_SECTION_NODE_LINKED_BRANCH = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.F_HYDRAULIC_CROSS_SECTION_NODE_LINKED_BRANCH );
 
-  public static final QName QN_HYDRAULIC_CROSS_SECTION_NODE_LINKED_PROFILE = new QName( NS_SOBEK, F_HYDRAULIC_CROSS_SECTION_NODE_LINKED_PROFILE );
+  public static final QName QN_HYDRAULIC_CROSS_SECTION_NODE_LINKED_PROFILE = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.F_HYDRAULIC_CROSS_SECTION_NODE_LINKED_PROFILE );
 
-  public static final QName QN_HYDRAULIC_DESCRIPTION = new QName( NS_SOBEK, F_HYDRAULIC_DESCRIPTION );
+  public static final QName QN_HYDRAULIC_DESCRIPTION = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.F_HYDRAULIC_DESCRIPTION );
 
-  public static final QName QN_HYDRAULIC_LINKAGE_NODE = new QName( NS_SOBEK, F_HYDRAULIC_LINKAGE_NODE );
+  public static final QName QN_HYDRAULIC_LINKAGE_NODE = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.F_HYDRAULIC_LINKAGE_NODE );
 
-  public static final QName QN_HYDRAULIC_NAME = new QName( NS_SOBEK, F_HYDRAULIC_NAME );
+  public static final QName QN_HYDRAULIC_NAME = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.F_HYDRAULIC_NAME );
 
-  public static final QName QN_HYDRAULIC_NODE_LINKED_INFLOWING_BRANCHES = new QName( NS_SOBEK, F_HYDRAULIC_NODE_LINKED_INFLOWING_BRANCHES );
+  public static final QName QN_HYDRAULIC_NODE_LINKED_INFLOWING_BRANCHES = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.F_HYDRAULIC_NODE_LINKED_INFLOWING_BRANCHES );
 
-  public static final QName QN_HYDRAULIC_NODE_LINKED_OUTFLOWING_BRANCHES = new QName( NS_SOBEK, F_HYDRAULIC_NODE_LINKED_OUTFLOWING_BRANCHES );
+  public static final QName QN_HYDRAULIC_NODE_LINKED_OUTFLOWING_BRANCHES = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.F_HYDRAULIC_NODE_LINKED_OUTFLOWING_BRANCHES );
 
-  public static final QName QN_HYDRAULIC_NODE_LOCATION = new QName( NS_SOBEK, F_HYDRAULIC_NODE_LOCATION );
+  public static final QName QN_HYDRAULIC_NODE_LOCATION = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.F_HYDRAULIC_NODE_LOCATION );
 
-  public static final QName QN_HYDRAULIC_NODE_MEMBER = new QName( NS_SOBEK, F_HYDRAULIC_NODE_MEMBER );
+  public static final QName QN_HYDRAULIC_NODE_MEMBER = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.F_HYDRAULIC_NODE_MEMBER );
 
-  public static final QName QN_HYDRAULIC_SOBEK_BRANCH = new QName( NS_SOBEK, F_HYDRAULIC_SOBEK_BRANCH );
+  public static final QName QN_HYDRAULIC_SOBEK_BRANCH = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.F_HYDRAULIC_SOBEK_BRANCH );
 
-  public static final QName QN_HYDRAULIC_UNIQUE_ID = new QName( NS_SOBEK, F_HYDRAULIC_UNIQUE_ID );
+  public static final QName QN_HYDRAULIC_UNIQUE_ID = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.F_HYDRAULIC_UNIQUE_ID );
 
-  public static final QName QN_HYDRAULICNODE_LINKED_BRANCH = new QName( NS_SOBEK, F_HYDRAULIC_NODE_LINKED_BRANCH );
+  public static final QName QN_HYDRAULICNODE_LINKED_BRANCH = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.F_HYDRAULIC_NODE_LINKED_BRANCH );
 
   public static final String F_SOBEK_MODEL = "SobekModel";
 
-  public static final QName QN_SOBEK_MODEL = new QName( NS_SOBEK_PROJECT, F_SOBEK_MODEL );
+  public static final QName QN_SOBEK_MODEL = new QName( ISobekConstants.NS_SOBEK_PROJECT, ISobekConstants.F_SOBEK_MODEL );
 
   public static final String F_SOBEK_MODEL_MEMBER = "sobekModelMember";
 
-  public static final QName QN_SOBEK_MODEL_MEMBER = new QName( NS_SOBEK_PROJECT, F_SOBEK_MODEL_MEMBER );
+  public static final QName QN_SOBEK_MODEL_MEMBER = new QName( ISobekConstants.NS_SOBEK_PROJECT, ISobekConstants.F_SOBEK_MODEL_MEMBER );
 
   public static final String F_LN_LINKS_TO_BRANCH = "linksToBranch";
 
-  public static final QName QN_LN_LINKS_TO_BRANCH = new QName( NS_SOBEK, F_LN_LINKS_TO_BRANCH );
+  public static final QName QN_LN_LINKS_TO_BRANCH = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.F_LN_LINKS_TO_BRANCH );
 
   public static final String NS_NOFPD_1D_MODEL = "org.kalypso.nofdpidss.1dmodel";
 
   public static final String F_NOFDP_POLDER_NODE = "PolderNode";
 
-  public static final QName QN_NOFDP_POLDER_NODE = new QName( NS_NOFPD_1D_MODEL, F_NOFDP_POLDER_NODE );
+  public static final QName QN_NOFDP_POLDER_NODE = new QName( ISobekConstants.NS_NOFPD_1D_MODEL, ISobekConstants.F_NOFDP_POLDER_NODE );
 
   public static final String F_NOFDP_RETARDIN_BASIN_NODE = "RetardingBasinNode";
 
-  public static final QName QN_NOFDP_RETARDIN_BASIN_NODE = new QName( NS_NOFPD_1D_MODEL, F_NOFDP_RETARDIN_BASIN_NODE );
+  public static final QName QN_NOFDP_RETARDIN_BASIN_NODE = new QName( ISobekConstants.NS_NOFPD_1D_MODEL, ISobekConstants.F_NOFDP_RETARDIN_BASIN_NODE );
 
   public static final String F_NOFDP_WEIR_NODE = "WeirNode";
 
-  public static final QName QN_NOFDP_WEIR_NODE = new QName( NS_NOFPD_1D_MODEL, F_NOFDP_WEIR_NODE );
+  public static final QName QN_NOFDP_WEIR_NODE = new QName( ISobekConstants.NS_NOFPD_1D_MODEL, ISobekConstants.F_NOFDP_WEIR_NODE );
 
   public static final String NS_WSPM_PROFILE = "org.kalypso.model.wspmprofile";
 
   public static final String F_NOFDP_HYDRAULIC_PROFILE_MEMBER = "profileMember";
 
-  public static final QName QN_NOFDP_HYDRAULIC_PROFILE_MEMBER = new QName( NS_WSPM_PROFILE, F_NOFDP_HYDRAULIC_PROFILE_MEMBER );
+  public static final QName QN_NOFDP_HYDRAULIC_PROFILE_MEMBER = new QName( ISobekConstants.NS_WSPM_PROFILE, ISobekConstants.F_NOFDP_HYDRAULIC_PROFILE_MEMBER );
 
   public static final String F_NOFDP_HYDRAULIC_PROFILE = "Profile";
 
-  public static final QName QN_NOFDP_HYDRAULIC_PROFILE = new QName( NS_WSPM_PROFILE, F_NOFDP_HYDRAULIC_PROFILE );
+  public static final QName QN_NOFDP_HYDRAULIC_PROFILE = new QName( ISobekConstants.NS_WSPM_PROFILE, ISobekConstants.F_NOFDP_HYDRAULIC_PROFILE );
 
   public static final String F_HYDRAULIC_BOUNDARY_NODE = "BoundaryConditionNode";
 
-  public static final QName QN_HYDRAULIC_BOUNDARY_NODE = new QName( NS_SOBEK, F_HYDRAULIC_BOUNDARY_NODE );
+  public static final QName QN_HYDRAULIC_BOUNDARY_NODE = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.F_HYDRAULIC_BOUNDARY_NODE );
 
+  public static final String F_HYDRAULIC_LASTFALL_MEMBER = "lastfallMember";
+
+  public static final QName QN_HYDRAULIC_LASTFALL_MEMBER = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.F_HYDRAULIC_LASTFALL_MEMBER );
 }

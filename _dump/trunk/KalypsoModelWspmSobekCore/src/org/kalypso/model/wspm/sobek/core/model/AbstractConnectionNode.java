@@ -69,6 +69,39 @@ public abstract class AbstractConnectionNode extends AbstractNode implements ICo
   public void addInflowingBranch( IBranch branch )
   {
     List inflowing = (List) getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_NODE_LINKED_INFLOWING_BRANCHES );
+
+    /* unique entries! */
+    for( final Object object : inflowing )
+    {
+
+      ILinkFeatureWrapperDelegate delegate = new ILinkFeatureWrapperDelegate()
+      {
+
+        public Feature getLinkedFeature( String id )
+        {
+          IBranch[] myBranches = getModel().getBranchMembers();
+          for( IBranch branch : myBranches )
+          {
+            if( branch.getFeature().getId().equals( id ) )
+              return branch.getFeature();
+          }
+
+          return null;
+        }
+
+        public Object getProperty( )
+        {
+          return object;
+        }
+      };
+
+      LinkFeatureWrapper wrapper = new LinkFeatureWrapper( delegate );
+      Feature feature = wrapper.getFeature();
+
+      if( feature.equals( branch ) )
+        return;
+    }
+
     inflowing.add( branch.getFeature().getId() );
   }
 
@@ -78,6 +111,39 @@ public abstract class AbstractConnectionNode extends AbstractNode implements ICo
   public void addOutflowingBranch( IBranch branch )
   {
     List outflowing = (List) getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_NODE_LINKED_OUTFLOWING_BRANCHES );
+
+    /* unique entries! */
+    for( final Object object : outflowing )
+    {
+
+      ILinkFeatureWrapperDelegate delegate = new ILinkFeatureWrapperDelegate()
+      {
+
+        public Feature getLinkedFeature( String id )
+        {
+          IBranch[] myBranches = getModel().getBranchMembers();
+          for( IBranch branch : myBranches )
+          {
+            if( branch.getFeature().getId().equals( id ) )
+              return branch.getFeature();
+          }
+
+          return null;
+        }
+
+        public Object getProperty( )
+        {
+          return object;
+        }
+      };
+
+      LinkFeatureWrapper wrapper = new LinkFeatureWrapper( delegate );
+      Feature feature = wrapper.getFeature();
+
+      if( feature.equals( branch ) )
+        return;
+    }
+
     outflowing.add( branch.getFeature().getId() );
   }
 

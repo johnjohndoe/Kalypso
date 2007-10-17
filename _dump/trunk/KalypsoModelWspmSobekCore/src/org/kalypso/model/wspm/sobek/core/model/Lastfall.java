@@ -38,13 +38,26 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.sobek.core.interfaces;
+package org.kalypso.model.wspm.sobek.core.model;
+
+import org.kalypso.model.wspm.sobek.core.SobekModelMember;
+import org.kalypso.model.wspm.sobek.core.interfaces.ILastfall;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author kuch
- *
  */
-public interface ILastfallMember
+public class Lastfall implements ILastfall
 {
+
+  private final SobekModelMember m_sobekModelMember;
+
+  private final Feature m_lastfall;
+
+  public Lastfall( final SobekModelMember sobekModelMember, final Feature lastfall )
+  {
+    m_sobekModelMember = sobekModelMember;
+    m_lastfall = lastfall;
+  }
 
 }

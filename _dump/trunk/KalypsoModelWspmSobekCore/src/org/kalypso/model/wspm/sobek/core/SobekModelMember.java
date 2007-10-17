@@ -50,17 +50,17 @@ import javax.xml.namespace.QName;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.NotImplementedException;
-import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranchMaker;
 import org.kalypso.model.wspm.sobek.core.interfaces.ICalculationLink;
-import org.kalypso.model.wspm.sobek.core.interfaces.ILastfallMember;
+import org.kalypso.model.wspm.sobek.core.interfaces.ILastfall;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode;
 import org.kalypso.model.wspm.sobek.core.interfaces.INodeUtils;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember;
 import org.kalypso.model.wspm.sobek.core.model.Branch;
 import org.kalypso.model.wspm.sobek.core.model.BranchMaker;
+import org.kalypso.model.wspm.sobek.core.model.Lastfall;
 import org.kalypso.model.wspm.sobek.core.model.NodeUtils;
 import org.kalypso.model.wspm.sobek.core.pub.FNNodeUtils;
 import org.kalypso.ogc.gml.FeatureUtils;
@@ -75,7 +75,7 @@ public final class SobekModelMember implements ISobekModelMember
 
   private static ISobekModelMember m_model = null;
 
-  private SobekModelMember( Feature modelMember )
+  private SobekModelMember( final Feature modelMember )
   {
     if( modelMember == null )
       throw new IllegalStateException( "modelMember is null" );
@@ -83,23 +83,23 @@ public final class SobekModelMember implements ISobekModelMember
     if( !ISobekConstants.QN_SOBEK_MODEL.equals( modelMember.getFeatureType().getQName() ) )
       throw new IllegalStateException( "modelMember is not of type: " + ISobekConstants.QN_SOBEK_MODEL_MEMBER );
 
-    if( m_model == null )
+    if( SobekModelMember.m_model == null )
     {
       m_modelMember = modelMember;
-      m_model = this;
+      SobekModelMember.m_model = this;
     }
 
   }
 
-  public static ISobekModelMember getModel( Feature feature )
+  public static ISobekModelMember getModel( final Feature feature )
   {
-    if( m_model == null && feature != null )
+    if( SobekModelMember.m_model == null && feature != null )
     {
-      m_model = new SobekModelMember( feature );
-      return m_model;
+      SobekModelMember.m_model = new SobekModelMember( feature );
+      return SobekModelMember.m_model;
     }
 
-    return m_model;
+    return SobekModelMember.m_model;
   }
 
   /**
@@ -107,17 +107,17 @@ public final class SobekModelMember implements ISobekModelMember
    */
   public IBranch[] getBranchMembers( )
   {
-    List<IBranch> myBranches = new ArrayList<IBranch>();
+    final List<IBranch> myBranches = new ArrayList<IBranch>();
 
-    List< ? > branches = (List< ? >) m_modelMember.getProperty( ISobekConstants.QN_HYDRAULIC_BRANCH_MEMBER );
-    for( Object object : branches )
+    final List< ? > branches = (List< ? >) m_modelMember.getProperty( ISobekConstants.QN_HYDRAULIC_BRANCH_MEMBER );
+    for( final Object object : branches )
     {
       if( !(object instanceof Feature) )
         continue;
 
-      Feature branch = (Feature) object;
+      final Feature branch = (Feature) object;
 
-      IBranch myBranch = new Branch( this, branch );
+      final IBranch myBranch = new Branch( this, branch );
       myBranches.add( myBranch );
     }
 
@@ -129,15 +129,27 @@ public final class SobekModelMember implements ISobekModelMember
    */
   public ICalculationLink[] getCalculationLinkMembers( )
   {
-    throw (new NotImplementedException());
+    throw new NotImplementedException();
   }
 
   /**
    * @see org.kalypso.model.wspm.sobek.core.interfaces.IModelMember#getLastfallMembers()
    */
-  public ILastfallMember[] getLastfallMembers( )
+  public ILastfall[] getLastfallMembers( )
   {
-    throw (new NotImplementedException());
+    final List<ILastfall> myLastfalls = new ArrayList<ILastfall>();
+
+    final List< ? > lastfalls = (List< ? >) m_modelMember.getProperty( ISobekConstants.QN_HYDRAULIC_LASTFALL_MEMBER );
+    for( final Object object : lastfalls )
+    {
+      if( !(object instanceof Feature) )
+        continue;
+
+      final Feature lastfall = (Feature) object;
+      myLastfalls.add( new Lastfall( this, lastfall ) );
+    }
+
+    return myLastfalls.toArray( new ILastfall[] {} );
   }
 
   /**
@@ -145,15 +157,15 @@ public final class SobekModelMember implements ISobekModelMember
    */
   public INode[] getNodeMembers( )
   {
-    List<INode> myNodes = new ArrayList<INode>();
+    final List<INode> myNodes = new ArrayList<INode>();
 
-    List< ? > nodes = (List< ? >) m_modelMember.getProperty( ISobekConstants.QN_HYDRAULIC_NODE_MEMBER );
-    for( Object object : nodes )
+    final List< ? > nodes = (List< ? >) m_modelMember.getProperty( ISobekConstants.QN_HYDRAULIC_NODE_MEMBER );
+    for( final Object object : nodes )
     {
       if( !(object instanceof Feature) )
         continue;
 
-      Feature node = (Feature) object;
+      final Feature node = (Feature) object;
       myNodes.add( FNNodeUtils.getNode( this, node ) );
     }
 
@@ -176,16 +188,16 @@ public final class SobekModelMember implements ISobekModelMember
   /**
    * @see org.kalypso.model.wspm.sobek.core.interfaces.IModelMember#deleteFoo(org.kalypsodeegree.model.feature.Feature)
    */
-  public void deleteFoo( Feature feature ) throws Exception
+  public void deleteFoo( final Feature feature ) throws Exception
   {
-    QName qn = feature.getFeatureType().getQName();
+    final QName qn = feature.getFeatureType().getQName();
 
     if( ISobekConstants.QN_HYDRAULIC_SOBEK_BRANCH.equals( qn ) )
       new Branch( this, feature ).delete();
     else if( ISobekConstants.QN_HYDRAULIC_CROSS_SECTION_NODE.equals( qn ) )
       FeatureUtils.deleteFeature( feature );
     else
-      throw (new NotImplementedException());
+      throw new NotImplementedException();
   }
 
   /**
@@ -210,7 +222,7 @@ public final class SobekModelMember implements ISobekModelMember
       // write
     }
     else
-      throw (new NotImplementedException());
+      throw new NotImplementedException();
 
   }
 

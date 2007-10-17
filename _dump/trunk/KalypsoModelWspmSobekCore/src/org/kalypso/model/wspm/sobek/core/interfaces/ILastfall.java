@@ -40,50 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.interfaces;
 
-import org.kalypsodeegree.model.feature.Feature;
-
 /**
- * Abstract interface of calculation model, ISobekModelMember, IBlueMModelMember, aso, should be derived from this
- * interface!
- * 
  * @author kuch
+ *
  */
-public interface IModelMember
+public interface ILastfall
 {
-  /**
-   * get all node members
-   */
-  public INode[] getNodeMembers( );
 
-  /**
-   * get all branch members
-   */
-  public IBranch[] getBranchMembers( );
-
-  /**
-   * get all calculation link members
-   */
-  public ICalculationLink[] getCalculationLinkMembers( );
-
-  /**
-   * get all lastfall members
-   */
-  public ILastfall[] getLastfallMembers( );
-
-  /**
-   * facade for creating, editing branches
-   */
-  public IBranchMaker getBranchMaker( );
-
-  /**
-   * get this model feature
-   */
-  public Feature getFeature( );
-
-  /**
-   * generic interface for deleting a model member (branch, node, ...)
-   */
-  public void deleteFoo( Feature feature ) throws Exception;
-
-  public INodeUtils getNodeUtils( );
 }

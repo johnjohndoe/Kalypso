@@ -67,32 +67,6 @@ import org.kalypsodeegree.model.geometry.GM_Curve;
  */
 public class Branch implements IBranch
 {
-  protected final Feature m_branch;
-
-  protected final IModelMember m_model;
-
-  public Branch( IModelMember model, Feature branch )
-  {
-    m_model = model;
-    m_branch = branch;
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBranch#getGeometryProperty()
-   */
-  public GM_Curve getGeometryProperty( )
-  {
-    return (GM_Curve) m_branch.getDefaultGeometryProperty();
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBranch#getName()
-   */
-  public String getName( )
-  {
-    throw (new NotImplementedException());
-  }
-
   public static String createBranchId( IModelMember model )
   {
     int count = 0;
@@ -116,56 +90,14 @@ public class Branch implements IBranch
     return String.format( "b_%05d", ++count );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBranch#getId()
-   */
-  public String getId( )
+  protected final Feature m_branch;
+
+  protected final IModelMember m_model;
+
+  public Branch( IModelMember model, Feature branch )
   {
-    return (String) m_branch.getProperty( ISobekConstants.QN_HYDRAULIC_UNIQUE_ID );
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBranch#getLowerNode()
-   */
-  public IConnectionNode getLowerNode( )
-  {
-    return getNode( ISobekConstants.QN_HYDRAULIC_BRANCH_LOWER_CONNECTION_NODE );
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBranch#getUpperNode()
-   */
-  public IConnectionNode getUpperNode( )
-  {
-    return getNode( ISobekConstants.QN_HYDRAULIC_BRANCH_UPPER_CONNECTION_NODE );
-  }
-
-  private IConnectionNode getNode( final QName lnkBranch )
-  {
-    ILinkFeatureWrapperDelegate delegate = new ILinkFeatureWrapperDelegate()
-    {
-
-      public Feature getLinkedFeature( String id )
-      {
-        INode[] nodes = m_model.getNodeMembers();
-        for( INode node : nodes )
-        {
-          String nodeId = node.getFeature().getId();
-          if( nodeId.equals( id ) )
-            return node.getFeature();
-        }
-
-        return null;
-      }
-
-      public Object getProperty( )
-      {
-        return m_branch.getProperty( lnkBranch );
-      }
-    };
-
-    LinkFeatureWrapper wrapper = new LinkFeatureWrapper( delegate );
-    return (IConnectionNode) FNNodeUtils.getNode( m_model, wrapper.getFeature() );
+    m_model = model;
+    m_branch = branch;
   }
 
   /**
@@ -217,20 +149,88 @@ public class Branch implements IBranch
   }
 
   /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBranch#getFeature()
+   */
+  public Feature getFeature( )
+  {
+    return m_branch;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBranch#getGeometryProperty()
+   */
+  public GM_Curve getGeometryProperty( )
+  {
+    return (GM_Curve) m_branch.getDefaultGeometryProperty();
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBranch#getId()
+   */
+  public String getId( )
+  {
+    return (String) m_branch.getProperty( ISobekConstants.QN_HYDRAULIC_UNIQUE_ID );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBranch#getLowerNode()
+   */
+  public IConnectionNode getLowerNode( )
+  {
+    return getNode( ISobekConstants.QN_HYDRAULIC_BRANCH_LOWER_CONNECTION_NODE );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBranch#getName()
+   */
+  public String getName( )
+  {
+    throw (new NotImplementedException());
+  }
+
+  private IConnectionNode getNode( final QName lnkBranch )
+  {
+    ILinkFeatureWrapperDelegate delegate = new ILinkFeatureWrapperDelegate()
+    {
+
+      public Feature getLinkedFeature( String id )
+      {
+        INode[] nodes = m_model.getNodeMembers();
+        for( INode node : nodes )
+        {
+          String nodeId = node.getFeature().getId();
+          if( nodeId.equals( id ) )
+            return node.getFeature();
+        }
+
+        return null;
+      }
+
+      public Object getProperty( )
+      {
+        return m_branch.getProperty( lnkBranch );
+      }
+    };
+
+    LinkFeatureWrapper wrapper = new LinkFeatureWrapper( delegate );
+    return (IConnectionNode) FNNodeUtils.getNode( m_model, wrapper.getFeature() );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBranch#getUpperNode()
+   */
+  public IConnectionNode getUpperNode( )
+  {
+    return getNode( ISobekConstants.QN_HYDRAULIC_BRANCH_UPPER_CONNECTION_NODE );
+  }
+
+  /**
    * @see java.lang.Object#hashCode()
    */
   @Override
   public int hashCode( )
   {
     return HashCodeBuilder.reflectionHashCode( m_branch );
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBranch#getFeature()
-   */
-  public Feature getFeature( )
-  {
-    return m_branch;
   }
 
   /**
