@@ -50,6 +50,7 @@ import javax.xml.namespace.QName;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.NotImplementedException;
+import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranchMaker;
 import org.kalypso.model.wspm.sobek.core.interfaces.ICalculationLink;
@@ -194,7 +195,10 @@ public final class SobekModelMember implements ISobekModelMember
    */
   public void writePi( final URL targetDir, final TARGET target ) throws IOException
   {
+    // verify and / or create targetDir
     final File fleTargetDir = new File( targetDir.getFile() );
+    if( !fleTargetDir.isDirectory() )
+      throw new IOException( "'" + targetDir + "' is not a directory" );
     if( !fleTargetDir.exists() )
       FileUtils.forceMkdir( fleTargetDir );
 
@@ -207,7 +211,7 @@ public final class SobekModelMember implements ISobekModelMember
     }
     else
       throw (new NotImplementedException());
- 
+
   }
 
   /**
