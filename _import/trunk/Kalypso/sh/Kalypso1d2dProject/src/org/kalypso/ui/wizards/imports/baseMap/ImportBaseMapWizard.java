@@ -59,6 +59,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizardPage;
@@ -68,14 +69,16 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
+import org.kalypso.ogc.gml.map.themes.provider.IKalypsoImageProvider;
 import org.kalypso.ogc.gml.map.themes.provider.KalypsoWMSImageProvider;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoServiceConstants;
 import org.kalypso.ui.action.AddThemeCommand;
 import org.kalypso.ui.views.map.MapView;
 import org.kalypso.ui.wizard.wms.IKalypsoImportWMSWizard;
-import org.kalypso.ui.wizard.wms.ImportWmsWizardPage;
+import org.kalypso.ui.wizard.wms.pages.ImportWmsWizardPage;
 import org.kalypso.ui.wizards.imports.Messages;
 
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
@@ -118,13 +121,37 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
   public ImportBaseMapWizard( )
   {
     super();
+
+    /* Get the dialog settings. */
+    IDialogSettings dialogSettings = getDialogSettings();
+
+    /* If not available, add a section inside the settings of the plugin. */
+    if( dialogSettings == null )
+    {
+      IDialogSettings settings = Kalypso1d2dProjectPlugin.getDefault().getDialogSettings();
+
+      /* Cannot do anything, if even the plugin has no settings. */
+      if( settings == null )
+        return;
+
+      /* If available, check, if there is a section from this wizard. */
+      IDialogSettings section = settings.getSection( "IMPORT_WMS_WIZARD" );
+      if( section == null )
+      {
+        /* There is none available, add a new one. */
+        section = settings.addNewSection( "IMPORT_WMS_WIZARD" );
+      }
+
+      /* Finally set it. */
+      setDialogSettings( section );
+    }
   }
 
   /**
    * @param workbench
-   *          the current workbench
+   *            the current workbench
    * @param selection
-   *          the current object selection
+   *            the current object selection
    */
   public void init( IWorkbench workbench, IStructuredSelection selection )
   {
@@ -414,11 +441,16 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
 
   private boolean performFinishWMS( MapView mapView, GisTemplateMapModell mapModell )
   {
+    /* Finishes the work on this page (dialog settings). */
+    m_PageImportWMS.finish();
+
     try
     {
-      final StringBuffer source = new StringBuffer( KalypsoWMSImageProvider.KEY_URL + "=" + m_PageImportWMS.getBaseURL().toString() );
-      final StringBuffer layers = new StringBuffer( KalypsoWMSImageProvider.KEY_LAYERS + "=" );
-      final StringBuffer styles = new StringBuffer( KalypsoWMSImageProvider.KEY_STYLES + "=" );
+      final StringBuffer source = new StringBuffer( IKalypsoImageProvider.KEY_URL + "=" + m_PageImportWMS.getBaseURL().toString() );
+      final StringBuffer layers = new StringBuffer( IKalypsoImageProvider.KEY_LAYERS + "=" );
+      final StringBuffer styles = new StringBuffer( IKalypsoImageProvider.KEY_STYLES + "=" );
+      final StringBuffer provider = new StringBuffer( IKalypsoImageProvider.KEY_PROVIDER + "=" );
+
       final Layer[] layerArray = m_PageImportWMS.getLayersList();
 
       if( m_PageImportWMS.isMultiLayer() )
@@ -441,9 +473,16 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
             styles.append( "," );
           }
         }
+
+        String providerID = m_PageImportWMS.getProviderID();
+        if( providerID != null )
+          provider.append( providerID );
+
         final String layerName = "Multi" + source;
         source.append( "#" ).append( layers.toString() );
         source.append( "#" ).append( styles.toString() );
+        source.append( "#" ).append( provider.toString() );
+
         final AddThemeCommand command = new AddThemeCommand( mapModell, layerName, "wms", null, source.toString() );
         mapView.postCommand( command, null );
       }
@@ -460,9 +499,15 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
           else
             styleName = "default";
 
+          String providerID = m_PageImportWMS.getProviderID();
+          if( providerID != null )
+            provider.append( providerID );
+
           final String layerTitle = layer.getTitle();
           source.append( "#" ).append( KalypsoWMSImageProvider.KEY_LAYERS ).append( "=" ).append( layerName );
           source.append( "#" ).append( KalypsoWMSImageProvider.KEY_STYLES ).append( "=" ).append( styleName );
+          source.append( "#" ).append( provider.toString() );
+
           final AddThemeCommand command = new AddThemeCommand( mapModell, layerTitle, "wms", null, source.toString() );
           mapView.postCommand( command, null );
         }
@@ -496,5 +541,4 @@ public class ImportBaseMapWizard extends Wizard implements INewWizard, IKalypsoI
       IOUtils.closeQuietly( in );
     }
   }
-
 }
