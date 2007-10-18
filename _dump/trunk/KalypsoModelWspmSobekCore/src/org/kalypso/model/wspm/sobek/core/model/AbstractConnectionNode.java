@@ -45,8 +45,8 @@ import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
-import org.kalypso.model.wspm.sobek.core.interfaces.IConnectionNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
+import org.kalypso.model.wspm.sobek.core.interfaces.INode;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.model.wspm.sobek.core.utils.ILinkFeatureWrapperDelegate;
 import org.kalypso.model.wspm.sobek.core.utils.LinkFeatureWrapper;
@@ -55,10 +55,10 @@ import org.kalypsodeegree.model.feature.Feature;
 /**
  * @author kuch
  */
-public abstract class AbstractConnectionNode extends AbstractNode implements IConnectionNode
+public abstract class AbstractConnectionNode extends AbstractNode implements INode
 {
 
-  public AbstractConnectionNode( IModelMember model, Feature node )
+  public AbstractConnectionNode( final IModelMember model, final Feature node )
   {
     super( model, node );
   }
@@ -66,25 +66,23 @@ public abstract class AbstractConnectionNode extends AbstractNode implements ICo
   /**
    * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#addInflowingBranch(org.kalypso.model.wspm.sobek.core.interfaces.IBranch)
    */
-  public void addInflowingBranch( IBranch branch )
+  public void addInflowingBranch( final IBranch branch )
   {
-    List inflowing = (List) getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_NODE_LINKED_INFLOWING_BRANCHES );
+    final List inflowing = (List) getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_NODE_LINKED_INFLOWING_BRANCHES );
 
     /* unique entries! */
     for( final Object object : inflowing )
     {
 
-      ILinkFeatureWrapperDelegate delegate = new ILinkFeatureWrapperDelegate()
+      final ILinkFeatureWrapperDelegate delegate = new ILinkFeatureWrapperDelegate()
       {
 
         public Feature getLinkedFeature( String id )
         {
           IBranch[] myBranches = getModel().getBranchMembers();
           for( IBranch branch : myBranches )
-          {
             if( branch.getFeature().getId().equals( id ) )
               return branch.getFeature();
-          }
 
           return null;
         }
@@ -95,8 +93,8 @@ public abstract class AbstractConnectionNode extends AbstractNode implements ICo
         }
       };
 
-      LinkFeatureWrapper wrapper = new LinkFeatureWrapper( delegate );
-      Feature feature = wrapper.getFeature();
+      final LinkFeatureWrapper wrapper = new LinkFeatureWrapper( delegate );
+      final Feature feature = wrapper.getFeature();
 
       if( feature.equals( branch ) )
         return;
@@ -108,25 +106,23 @@ public abstract class AbstractConnectionNode extends AbstractNode implements ICo
   /**
    * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#addOutflowingBranch(org.kalypso.model.wspm.sobek.core.interfaces.IBranch)
    */
-  public void addOutflowingBranch( IBranch branch )
+  public void addOutflowingBranch( final IBranch branch )
   {
-    List outflowing = (List) getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_NODE_LINKED_OUTFLOWING_BRANCHES );
+    final List outflowing = (List) getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_NODE_LINKED_OUTFLOWING_BRANCHES );
 
     /* unique entries! */
     for( final Object object : outflowing )
     {
 
-      ILinkFeatureWrapperDelegate delegate = new ILinkFeatureWrapperDelegate()
+      final ILinkFeatureWrapperDelegate delegate = new ILinkFeatureWrapperDelegate()
       {
 
         public Feature getLinkedFeature( String id )
         {
           IBranch[] myBranches = getModel().getBranchMembers();
           for( IBranch branch : myBranches )
-          {
             if( branch.getFeature().getId().equals( id ) )
               return branch.getFeature();
-          }
 
           return null;
         }
@@ -137,8 +133,8 @@ public abstract class AbstractConnectionNode extends AbstractNode implements ICo
         }
       };
 
-      LinkFeatureWrapper wrapper = new LinkFeatureWrapper( delegate );
-      Feature feature = wrapper.getFeature();
+      final LinkFeatureWrapper wrapper = new LinkFeatureWrapper( delegate );
+      final Feature feature = wrapper.getFeature();
 
       if( feature.equals( branch ) )
         return;
@@ -147,23 +143,21 @@ public abstract class AbstractConnectionNode extends AbstractNode implements ICo
     outflowing.add( branch.getFeature().getId() );
   }
 
-  private IBranch[] getBranches( List< ? > inflowing )
+  private IBranch[] getBranches( final List< ? > inflowing )
   {
     final List<IBranch> branches = new ArrayList<IBranch>();
 
     for( final Object obj : inflowing )
     {
-      ILinkFeatureWrapperDelegate delegate = new ILinkFeatureWrapperDelegate()
+      final ILinkFeatureWrapperDelegate delegate = new ILinkFeatureWrapperDelegate()
       {
 
         public Feature getLinkedFeature( String id )
         {
           IBranch[] myBranches = getModel().getBranchMembers();
           for( IBranch branch : myBranches )
-          {
             if( branch.getFeature().getId().equals( id ) )
               return branch.getFeature();
-          }
 
           return null;
         }
@@ -174,8 +168,8 @@ public abstract class AbstractConnectionNode extends AbstractNode implements ICo
         }
       };
 
-      LinkFeatureWrapper wrapper = new LinkFeatureWrapper( delegate );
-      Feature feature = wrapper.getFeature();
+      final LinkFeatureWrapper wrapper = new LinkFeatureWrapper( delegate );
+      final Feature feature = wrapper.getFeature();
       if( feature == null )
         continue;
 
@@ -190,7 +184,7 @@ public abstract class AbstractConnectionNode extends AbstractNode implements ICo
    */
   public IBranch[] getInflowingBranches( )
   {
-    List< ? > inflowing = (List< ? >) getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_NODE_LINKED_INFLOWING_BRANCHES );
+    final List< ? > inflowing = (List< ? >) getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_NODE_LINKED_INFLOWING_BRANCHES );
 
     return getBranches( inflowing );
   }
@@ -200,7 +194,7 @@ public abstract class AbstractConnectionNode extends AbstractNode implements ICo
    */
   public IBranch[] getOutflowingBranches( )
   {
-    List< ? > outflowing = (List< ? >) getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_NODE_LINKED_OUTFLOWING_BRANCHES );
+    final List< ? > outflowing = (List< ? >) getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_NODE_LINKED_OUTFLOWING_BRANCHES );
 
     return getBranches( outflowing );
   }
@@ -208,31 +202,27 @@ public abstract class AbstractConnectionNode extends AbstractNode implements ICo
   /**
    * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#removeBranch(org.kalypso.model.wspm.sobek.core.model.Branch)
    */
-  public void removeBranch( Branch branch )
+  public void removeBranch( final Branch branch )
   {
-    IBranch[] inflowing = getInflowingBranches();
-    IBranch[] outflowingBranches = getOutflowingBranches();
+    final IBranch[] inflowing = getInflowingBranches();
+    final IBranch[] outflowingBranches = getOutflowingBranches();
 
     if( ArrayUtils.contains( inflowing, branch ) )
-    {
-      this.removeInflowingBranch( branch );
-    }
+      removeInflowingBranch( branch );
 
     if( ArrayUtils.contains( outflowingBranches, branch ) )
-    {
-      this.removeOutflowingBranch( branch );
-    }
+      removeOutflowingBranch( branch );
   }
 
-  private void removeInflowingBranch( Branch branch )
+  private void removeInflowingBranch( final Branch branch )
   {
-    List< ? > inflowing = (List< ? >) getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_NODE_LINKED_INFLOWING_BRANCHES );
+    final List< ? > inflowing = (List< ? >) getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_NODE_LINKED_INFLOWING_BRANCHES );
     inflowing.remove( branch.getFeature().getId() );
   }
 
-  private void removeOutflowingBranch( Branch branch )
+  private void removeOutflowingBranch( final Branch branch )
   {
-    List< ? > inflowing = (List< ? >) getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_NODE_LINKED_OUTFLOWING_BRANCHES );
+    final List< ? > inflowing = (List< ? >) getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_NODE_LINKED_OUTFLOWING_BRANCHES );
     inflowing.remove( branch.getFeature().getId() );
   }
 }

@@ -179,4 +179,24 @@ public class ISobekConstants
 
   public static final QName QN_HYDRAULIC_BOUNDARY_NODE_TYPE = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.F_HYDRAULIC_BOUNDARY_NODE_TYPE );
 
+  public static final String F_LASTFALL_SIMULATION_BEGIN = "simulationBegin";
+
+  public static final QName QN_LASTFALL_SIMULATION_BEGIN = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.F_LASTFALL_SIMULATION_BEGIN );
+
+  public static final String F_LASTFALL_SIMULATION_END = "simulationEnd";
+
+  public static final QName QN_LASTFALL_SIMULATION_END = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.F_LASTFALL_SIMULATION_END );
+
+  public static final String F_LASTFALL_SIMULATION_PRE_TIME = "preSimulationTime";
+
+  public static final QName QN_LASTFALL_SIMULATION_PRE_TIME = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.F_LASTFALL_SIMULATION_PRE_TIME );
+
+  public static final String F_LASTFALL_SIMULATION_TIMESTEP = "simulationTimestep";
+
+  public static final QName QN_LASTFALL_SIMULATION_TIMESTEP = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.F_LASTFALL_SIMULATION_TIMESTEP );
+
+  public static final String F_LASTFALL_SIMULATION_TIMESTEP_MULTIPLIER = "resultTimeStepAsMultiple";
+
+  public static final QName QN_LASTFALL_SIMULATION_TIMESTEP_MULTIPLIER = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.F_LASTFALL_SIMULATION_TIMESTEP_MULTIPLIER );
+
 }

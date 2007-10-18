@@ -40,10 +40,54 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.interfaces;
 
+import org.kalypso.model.wspm.sobek.core.model.BoundaryNode;
+
 /**
  * @author kuch
  */
 public interface IBoundaryNode extends IAbstractConnectionNode
 {
+  public enum BOUNDARY_TYPE
+  {
+    eW,
+    eQ,
+    eWQ;
 
+    public static BOUNDARY_TYPE getType( final BoundaryNode node )
+    {
+      final String type = (String) node.getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_TYPE );
+
+      if( BOUNDARY_TYPE.eW.toString().equals( type ) )
+        return BOUNDARY_TYPE.eW;
+      else if( BOUNDARY_TYPE.eQ.toString().equals( type ) )
+        return BOUNDARY_TYPE.eQ;
+      else if( BOUNDARY_TYPE.eWQ.toString().equals( type ) )
+        return BOUNDARY_TYPE.eWQ;
+
+      throw new IllegalStateException();
+    }
+
+    /**
+     * @see java.lang.Enum#toString()
+     */
+    @Override
+    public String toString( )
+    {
+      final BOUNDARY_TYPE type = BOUNDARY_TYPE.valueOf( name() );
+      switch( type )
+      {
+        case eW:
+          return "bc_q";
+        case eQ:
+          return "bc_w";
+        case eWQ:
+          return "bc_wq";
+
+        default:
+          throw new IllegalStateException();
+      }
+    }
+  }
+
+  public BOUNDARY_TYPE getBoundaryType( );
 }

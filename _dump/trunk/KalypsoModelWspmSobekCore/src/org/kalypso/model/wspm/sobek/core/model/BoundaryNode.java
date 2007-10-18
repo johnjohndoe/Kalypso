@@ -52,7 +52,7 @@ import org.kalypsodeegree.model.feature.Feature;
 public class BoundaryNode extends AbstractConnectionNode implements IBoundaryNode
 {
 
-  public BoundaryNode( IModelMember model, Feature node )
+  public BoundaryNode( final IModelMember model, final Feature node )
   {
     super( model, node );
   }
@@ -78,13 +78,21 @@ public class BoundaryNode extends AbstractConnectionNode implements IBoundaryNod
    */
   public boolean isEmpty( )
   {
-    IBranch[] inflowingBranches = getInflowingBranches();
-    IBranch[] outflowingBranches = getOutflowingBranches();
+    final IBranch[] inflowingBranches = getInflowingBranches();
+    final IBranch[] outflowingBranches = getOutflowingBranches();
 
     if( inflowingBranches.length == 0 && outflowingBranches.length == 0 )
       return true;
 
     return false;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode#getBoundaryType()
+   */
+  public BOUNDARY_TYPE getBoundaryType( )
+  {
+    return BOUNDARY_TYPE.getType( this );
   }
 
 }
