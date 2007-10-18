@@ -493,10 +493,10 @@
 				<description>Lastfall - ${property:org.kalypso.model.wspm.sobek#name}</description>
 			</documentation>
 			<documentation xml:lang="en">
-				<name>Lastfall</name>
+				<name>Loading Case</name>
 				<label>${property:org.kalypso.model.wspm.sobek#name}</label>
-				<tooltip>Lastfall - ${property:org.kalypso.model.wspm.sobek#name}</tooltip>
-				<description>Lastfall - ${property:org.kalypso.model.wspm.sobek#name}</description>
+				<tooltip>Loading Case - ${property:org.kalypso.model.wspm.sobek#name}</tooltip>
+				<description>Loading Case - ${property:org.kalypso.model.wspm.sobek#name}</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -537,6 +537,76 @@
 							</documentation>
 						</annotation>
 					</element>
+					<element name="simulationBegin" type="date" nillable="false">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Beginn der Simulation</label>
+								<tooltip>Beginn der Simulation</tooltip>
+								<description>Beginn der Simulation</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Start of Simulation</label>
+								<tooltip>Start of Simulation</tooltip>
+								<description>Start of Simulation</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="simulationEnd" type="date" nillable="false">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Ende der Simulation</label>
+								<tooltip>Ende der Simulation</tooltip>
+								<description>Ende der Simulation</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>End of Simulation</label>
+								<tooltip>End of Simulation</tooltip>
+								<description>End of Simulation</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="preSimulationTime" type="int" nillable="false" default="12">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Vorlaufrechnung [h]</label>
+								<tooltip>Vorlaufrechnung [h]</tooltip>
+								<description>Vorlaufrechnung [h]</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Length of Feeding Simulation [h]</label>
+								<tooltip>Length of Feeding Simulation [h]</tooltip>
+								<description>Length of Feeding Simulation [h]</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="simulationTimestep" type="int" nillable="false" default="10">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Zeitschritt [min]</label>
+								<tooltip>Zeitschritt [min]</tooltip>
+								<description>Zeitschritt [min]</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Time Step [min]</label>
+								<tooltip>Time Step [min]</tooltip>
+								<description>Time Step [min]</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="resultTimeStepAsMultiple" type="int" nillable="false" default="3">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Ergebnis Zeitschritt [Anzahl Zeitschritte]</label>
+								<tooltip>Ergebnis Zeitschritt [Anzahl Zeitschritte]</tooltip>
+								<description>Ergebnis Zeitschritt [Anzahl Zeitschritte]</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Result Time Step [Count of Time Steps]</label>
+								<tooltip>Result Time Step [Count of Time Steps]</tooltip>
+								<description>Result Time Step [Count of Time Steps]</description>
+							</documentation>
+						</annotation>
+					</element>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -549,25 +619,25 @@
 				<description>Lastfall Definitionen</description>
 			</documentation>
 			<documentation xml:lang="en">
-				<label>Load Definitions</label>
-				<tooltip>Load Definitions</tooltip>
-				<description>Load Definitions</description>
+				<label>Loading Case Definitions</label>
+				<tooltip>Loading Case Definitions</tooltip>
+				<description>Loading Case Definitions</description>
 			</documentation>
 		</annotation>
 	</element>
 	<element name="LastfallDefinition" type="wspmSobek:lastfallDefinitionType" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
-				<name>LastfallDefinition</name>
+				<name>Lastfall Definition</name>
 				<label>${property:org.kalypso.model.wspm.sobek#name}</label>
-				<tooltip>LastfallDefinition - ${property:org.kalypso.model.wspm.sobek#name}</tooltip>
-				<description>LastfallDefinition - ${property:org.kalypso.model.wspm.sobek#name}</description>
+				<tooltip>Lastfall Definition - ${property:org.kalypso.model.wspm.sobek#name}</tooltip>
+				<description>Lastfall Definition - ${property:org.kalypso.model.wspm.sobek#name}</description>
 			</documentation>
 			<documentation xml:lang="en">
-				<name>LastfallDefinition</name>
+				<name>Loading Case Definition</name>
 				<label>${property:org.kalypso.model.wspm.sobek#name}</label>
-				<tooltip>LastfallDefinition - ${property:org.kalypso.model.wspm.sobek#name}</tooltip>
-				<description>LastfallDefinition - ${property:org.kalypso.model.wspm.sobek#name}</description>
+				<tooltip>Loading Case Definition - ${property:org.kalypso.model.wspm.sobek#name}</tooltip>
+				<description>Loading Case Definition - ${property:org.kalypso.model.wspm.sobek#name}</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -582,6 +652,8 @@
 				<sequence>
 					<element name="linkedLastfall" type="wspmSobek:LastfallLinkPropertyType"/>
 					<element name="data" type="om:ObservationType"/>
+					<element name="observationBegin" type="date" nillable="true"/>
+					<element name="observationEnd" type="date" nillable="true"/>
 				</sequence>
 			</extension>
 		</complexContent>
