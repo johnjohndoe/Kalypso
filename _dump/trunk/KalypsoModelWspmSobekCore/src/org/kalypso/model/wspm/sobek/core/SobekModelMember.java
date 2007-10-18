@@ -40,16 +40,36 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core;
 
+import static javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI;
+
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import javax.xml.namespace.QName;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+
+import nl.wldelft.fews.pi.LocationComplexType;
+import nl.wldelft.fews.pi.LocationsComplexType;
+import nl.wldelft.fews.pi.ObjectFactory;
+import nl.wldelft.fews.pi.LocationsComplexType.Location;
+import nl.wldelft.fews.pi.GeoDatumEnumStringType;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.NotImplementedException;
+import org.jfree.io.IOUtils;
+import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
+import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
+import org.kalypso.gmlschema.KalypsoGmlSchemaExtensions;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranchMaker;
 import org.kalypso.model.wspm.sobek.core.interfaces.ICalculationLink;
@@ -63,8 +83,10 @@ import org.kalypso.model.wspm.sobek.core.model.BranchMaker;
 import org.kalypso.model.wspm.sobek.core.model.Lastfall;
 import org.kalypso.model.wspm.sobek.core.model.NodeUtils;
 import org.kalypso.model.wspm.sobek.core.pub.FNNodeUtils;
+import org.kalypso.model.wspm.sobek.core.utils.PiSobekModelUtils;
 import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypsodeegree.model.feature.Feature;
+import org.xml.sax.SAXException;
 
 /**
  * @author kuch
@@ -207,23 +229,74 @@ public final class SobekModelMember implements ISobekModelMember
    */
   public void writePi( final URL targetDir, final TARGET target ) throws IOException
   {
-    // verify and / or create targetDir
+    // ensure existence of targetDir
     final File fleTargetDir = new File( targetDir.getFile() );
     if( !fleTargetDir.isDirectory() )
       throw new IOException( "'" + targetDir + "' is not a directory" );
     if( !fleTargetDir.exists() )
       FileUtils.forceMkdir( fleTargetDir );
 
+    final ObjectFactory factory = new ObjectFactory();
+    File fleXml;
+    JAXBElement< ? > xmlElements;
+
     if( TARGET.eLocations.equals( target ) )
     {
-      final File fleLocations = new File( targetDir.getFile(), "locations.xml" );
+      // root element Locations
+      final LocationsComplexType locationsComplexType = factory.createLocationsComplexType();
+      locationsComplexType.setVersion( locationsComplexType.getVersion() );
+      locationsComplexType.setGeoDatum( GeoDatumEnumStringType.LOCAL.value() );
+      xmlElements = factory.createLocations( locationsComplexType );
+      // list of locations
       final INode[] nodes = getNodeMembers();
-      // create target file (outputStream)
-      // write
+      for( final INode node : nodes )
+      {
+        final Location location = PiSobekModelUtils.createLocationFromNode( factory, node );
+        locationsComplexType.getLocation().add( location );
+      }
+      // create target file
+      fleXml = new File( targetDir.getFile(), "locations.xml" );
+
     }
     else
       throw new NotImplementedException();
 
+    // marsh
+    final FileOutputStream os = new FileOutputStream( fleXml );
+    JAXBContext jc;
+    try
+    {
+      jc = JAXBContext.newInstance( ObjectFactory.class );
+
+      final Marshaller m = jc.createMarshaller();
+      m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
+
+//      final SchemaFactory SCHEMA_FACTORY = SchemaFactory.newInstance( W3C_XML_SCHEMA_NS_URI );
+//      final URL schemaURL = PluginUtilities.findResource( "org.kalypso.model.wspm.sobek.core", "etc/schemas/pi/pi_locations.xsd" );
+//      final Schema schema = SCHEMA_FACTORY.newSchema( schemaURL );
+//      m.setSchema( schema );
+
+      m.marshal( xmlElements, os );
+
+      os.flush();
+      os.close();
+
+    }
+    catch( JAXBException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+//    catch( SAXException e )
+//    {
+//      // TODO Auto-generated catch block
+//      e.printStackTrace();
+//    }
+    finally
+    {
+
+      org.apache.commons.io.IOUtils.closeQuietly( os );
+    }
   }
 
   /**
