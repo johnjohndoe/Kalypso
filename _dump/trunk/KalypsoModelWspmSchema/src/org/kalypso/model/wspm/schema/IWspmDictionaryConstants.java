@@ -60,4 +60,6 @@ public interface IWspmDictionaryConstants
 // public static final String LS_COMPONENT_SLOPE = LS_COMPONENT_URN + "#LengthSectionSlope";
 
   public static final String LS_COMPONENT_RUNOFF = LS_COMPONENT_URN + "#LengthSectionRunOff";
+
+  public static final String LS_COMPONENT_TYPE = LS_COMPONENT_URN + "#LengthSectionProfileType";
 }

@@ -92,17 +92,33 @@ public class WspmProfile extends AbstractFeatureBinder implements IFeatureWrappe
     return null;
   }
 
-  // TODO: this should directly return the BigDecimal
+  /**
+   * @Deprecated Use {@link #getBigStation()} instead.
+   */
   public double getStation( )
   {
-    final BigDecimal profileStation = ProfileFeatureFactory.getProfileStation( getFeature() );
+    final BigDecimal profileStation = getBigStation();
 
     return profileStation == null ? Double.NaN : profileStation.doubleValue();
   }
 
+  /**
+   * @deprecated Use {@link #setBigStation(BigDecimal)} instead.
+   */
+  @Deprecated
   public void setStation( final double station )
   {
     final BigDecimal bigStation = stationToBigDecimal( station );
+    setBigStation( bigStation );
+  }
+
+  public BigDecimal getBigStation( )
+  {
+    return ProfileFeatureFactory.getProfileStation( getFeature() );
+  }
+
+  public void setBigStation( final BigDecimal bigStation )
+  {
     ProfileFeatureFactory.setProfileStation( getFeature(), bigStation );
   }
 
