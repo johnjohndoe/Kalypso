@@ -160,11 +160,24 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
       // TODO: ugly! Instead, adwe apt something to GM_Curve[] and let the normal LineStirngSymbolizer mechanisms aply
       // TODO: probably we can just remove the line stuff and just add lineSymbolizer to our maps.
 
-      final VirtualFeatureTypeProperty vpt = VirtualPropertyUtilities.getVirtualProperties( feature.getFeatureType() )[0];
-      final GM_Object geom = (GM_Object) vpt.getVirtuelValue( feature );
-      final CS_CoordinateSystem cs = geom.getCoordinateSystem();
+      GM_Surface surface = null;
+      final VirtualFeatureTypeProperty[] virtualProperties = VirtualPropertyUtilities.getVirtualProperties( feature.getFeatureType() );
+      if( virtualProperties.length > 0 )
+      {
+        final VirtualFeatureTypeProperty vpt = virtualProperties[0];
+        final GM_Object geom = (GM_Object) vpt.getVirtuelValue( feature );
 
-      final GM_Surface surface = (GM_Surface) geom;
+        surface = (GM_Surface) geom;
+      }
+      else
+      {
+        final GM_Object defaultGeometryProperty = feature.getDefaultGeometryProperty();
+        if( defaultGeometryProperty != null )
+          surface = (GM_Surface) defaultGeometryProperty;
+        else
+          throw new Exception("No suitable geometry.");
+      }
+      final CS_CoordinateSystem cs = surface.getCoordinateSystem();
       final GM_SurfaceBoundary surfaceBoundary = surface.getSurfaceBoundary();
       final GM_Ring exteriorRing = surfaceBoundary.getExteriorRing();
       final GM_Curve curve = GeometryFactory.createGM_Curve( exteriorRing.getAsCurveSegment() );
