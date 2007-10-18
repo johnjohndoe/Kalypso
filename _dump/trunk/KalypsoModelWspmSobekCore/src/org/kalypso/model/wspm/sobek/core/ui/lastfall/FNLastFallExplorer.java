@@ -110,8 +110,8 @@ public class FNLastFallExplorer
 
     final Image iAdd = new Image( body.getDisplay(), getClass().getResourceAsStream( "icons/add.gif" ) );
     lnk.setImage( iAdd );
-    lnk.setText( "Create a new lastfall..." );
-    lnk.setToolTipText( "Create a new lastfall" );
+    lnk.setText( "Create a new Loading Case..." );
+    lnk.setToolTipText( "Create a new Loading Case" );
 
     lnk.addHyperlinkListener( new HyperlinkAdapter()
     {
@@ -136,7 +136,7 @@ public class FNLastFallExplorer
   {
 
     /* label */
-    final Label lLastfalls = toolkit.createLabel( header, "Lastfalls:" );
+    final Label lLastfalls = toolkit.createLabel( header, "Loading Cases:" );
     lLastfalls.setFont( FNLastFallExplorer.fTextBold );
 
     final ToolBar toolBar = new ToolBar( header, SWT.FLAT );

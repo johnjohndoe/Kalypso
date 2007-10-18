@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core;
 
-import static javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -54,10 +52,6 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.namespace.QName;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-
-import nl.wldelft.fews.pi.LocationComplexType;
 import nl.wldelft.fews.pi.LocationsComplexType;
 import nl.wldelft.fews.pi.ObjectFactory;
 import nl.wldelft.fews.pi.LocationsComplexType.Location;
@@ -65,11 +59,6 @@ import nl.wldelft.fews.pi.GeoDatumEnumStringType;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.NotImplementedException;
-import org.jfree.io.IOUtils;
-import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
-import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
-import org.kalypso.gmlschema.KalypsoGmlSchemaExtensions;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranchMaker;
 import org.kalypso.model.wspm.sobek.core.interfaces.ICalculationLink;
@@ -86,7 +75,6 @@ import org.kalypso.model.wspm.sobek.core.pub.FNNodeUtils;
 import org.kalypso.model.wspm.sobek.core.utils.PiSobekModelUtils;
 import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypsodeegree.model.feature.Feature;
-import org.xml.sax.SAXException;
 
 /**
  * @author kuch

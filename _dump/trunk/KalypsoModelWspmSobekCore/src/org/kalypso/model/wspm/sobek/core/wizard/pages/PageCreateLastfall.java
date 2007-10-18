@@ -63,8 +63,8 @@ public class PageCreateLastfall extends WizardPage
   public PageCreateLastfall( )
   {
     super( "createLastfall" );
-    setTitle( "Create a new Lastfall" );
-    setDescription( "Enter name and description for the lastfall which will be created, please." );
+    setTitle( "Create a new Loading Case" );
+    setDescription( "Enter name and description for the Loading Case which will be created, please." );
   }
 
   /**

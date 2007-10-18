@@ -59,7 +59,7 @@ public class FNLastfallTreeLabelProvider extends LabelProvider
     {
       final ILastfall lastfall = (ILastfall) element;
 
-      return "Lastfall: " + lastfall.getName();
+      return "Loading Case: " + lastfall.getName();
     }
     else if( element instanceof INode )
     {
