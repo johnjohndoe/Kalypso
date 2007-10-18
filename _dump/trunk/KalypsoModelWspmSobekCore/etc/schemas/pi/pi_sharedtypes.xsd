@@ -86,8 +86,7 @@
             <enumeration value="DWD"/>
             <enumeration value="KNMI Radar"/>
             <enumeration value="PAK1"/>
-            <enumeration value="PAK2"/>
-            <enumeration value="SVY21"/>
+	    <enumeration value="PAK2"/>
         </restriction>
     </simpleType>
     <simpleType name="UtmGeoDatumStringType">

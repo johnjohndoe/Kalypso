@@ -6,7 +6,9 @@
 	<property name="project" value="${workspace}/KalypsoModelWspmSobekCore" />
 
     <patternset id="binding.schemata">
-      <include name="etc/schemas/**/*.xsd"/>
+    	<!-- <include name="etc/schemas/**/*.xsd"/> -->
+    	
+    	<include name="etc/schemas/pi/fileformats.xsd"/>
     </patternset>
 
 	<import file="${workspace}/KalypsoBuild/common-binding/build.xml" />

@@ -1,0 +1,944 @@
+<?xml version="1.0" standalone="no"?>
+<Structures xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="D:\data\PI\pi-schemas\pi_structures.xsd">
+	<Structure>
+		<structureId>34</structureId>
+		<structureName/>
+		<branchId>2</branchId>
+		<x>255572.439796047</x>
+		<y>471365.386606973</y>
+		<structureDefinitions>
+			<structureDefinition>
+				<structureDefinitionId>##2</structureDefinitionId>
+				<structureDefinitionName>RAWeirdef</structureDefinitionName>
+				<structureDefinitionType>Sobek.Structures.RiverAdvancedWeir</structureDefinitionType>
+				<Parameters>
+					<parameter id="CrestLevel" type="double">3</parameter>
+					<parameter id="SillWidth" type="double">4</parameter>
+					<parameter id="NumberOfPiers" type="long">2</parameter>
+					<parameter id="PositiveUpstreamFaceHeight" type="double">10</parameter>
+					<parameter id="PositiveWeirDesignHead" type="double">3</parameter>
+					<parameter id="PositivePierContractionCoefficient" type="double">0.01</parameter>
+					<parameter id="PositiveAbutmentContractionCoefficient" type="double">0.1</parameter>
+					<parameter id="NegativeUpstreamFaceHeight" type="double">10</parameter>
+					<parameter id="NegativeWeirDesignHead" type="double">3</parameter>
+					<parameter id="NegativePierContractionCoefficient" type="double">0.01</parameter>
+					<parameter id="NegativeAbutmentContractionCoefficient" type="double">0.1</parameter>
+				</Parameters>
+			</structureDefinition>
+			<structureDefinition>
+				<structureDefinitionId>##4</structureDefinitionId>
+				<structureDefinitionName>RPumpdef</structureDefinitionName>
+				<structureDefinitionType>Sobek.Structures.RiverPump</structureDefinitionType>
+				<Parameters>
+					<parameter id="FlowDirection" type="string">Direction.Negative</parameter>
+					<parameter id="ControlPosition" type="string">PumpControl.Downward</parameter>
+					<parameter id="ReductionConstant" type="double">3</parameter>
+					<parameter id="CapacitySettings" type="table">
+						<Table name="CapacitySettings">
+							<Info>
+								<Interpolation Type="Interpolation.Continuous" Period="No">0</Interpolation>
+								<Columns count="5">
+									<column type="double"/>
+									<column type="double"/>
+									<column type="double"/>
+									<column type="double"/>
+									<column type="double"/>
+								</Columns>
+							</Info>
+							<rows>
+								<row>
+									<cell>2</cell>
+									<cell>0</cell>
+									<cell>0</cell>
+									<cell>34</cell>
+									<cell>67</cell>
+								</row>
+							</rows>
+						</Table>
+					</parameter>
+				</Parameters>
+			</structureDefinition>
+		</structureDefinitions>
+	</Structure>
+	<Structure>
+		<structureId>5</structureId>
+		<structureName/>
+		<branchId>1</branchId>
+		<x>252971.018474013</x>
+		<y>473010.721158527</y>
+		<structureDefinitions>
+			<structureDefinition>
+				<structureDefinitionId>##1</structureDefinitionId>
+				<structureDefinitionName>rweirdef</structureDefinitionName>
+				<structureDefinitionType>Sobek.Structures.RiverWeir</structureDefinitionType>
+				<Parameters>
+					<parameter id="CrestLevel" type="double">11</parameter>
+					<parameter id="CrestWidth" type="double">4</parameter>
+					<parameter id="CrestShape" type="double">0</parameter>
+					<parameter id="PositiveCorrectionCoefficient" type="double">2</parameter>
+					<parameter id="PositiveSubmergeLimit" type="double">0.82</parameter>
+					<parameter id="PositiveReductionFactors" type="table">
+						<Table name="PositiveReductionFactors">
+							<Info>
+								<Interpolation Type="Interpolation.Continuous" Period="No">0</Interpolation>
+								<Columns count="2">
+									<column type="double"/>
+									<column type="double"/>
+								</Columns>
+							</Info>
+							<rows>
+								<row>
+									<cell>0.82</cell>
+									<cell>1</cell>
+								</row>
+								<row>
+									<cell>0.86</cell>
+									<cell>0.95</cell>
+								</row>
+								<row>
+									<cell>0.9</cell>
+									<cell>0.9</cell>
+								</row>
+								<row>
+									<cell>0.94</cell>
+									<cell>0.8</cell>
+								</row>
+								<row>
+									<cell>0.96</cell>
+									<cell>0.7</cell>
+								</row>
+								<row>
+									<cell>0.97</cell>
+									<cell>0.6</cell>
+								</row>
+								<row>
+									<cell>1</cell>
+									<cell>0</cell>
+								</row>
+							</rows>
+						</Table>
+					</parameter>
+					<parameter id="NegativeCorrectionCoefficient" type="double">3</parameter>
+					<parameter id="NegativeSubmergeLimit" type="double">0.82</parameter>
+					<parameter id="NegativeReductionFactors" type="table">
+						<Table name="NegativeReductionFactors">
+							<Info>
+								<Interpolation Type="Interpolation.Continuous" Period="No">0</Interpolation>
+								<Columns count="2">
+									<column type="double"/>
+									<column type="double"/>
+								</Columns>
+							</Info>
+							<rows>
+								<row>
+									<cell>0.82</cell>
+									<cell>1</cell>
+								</row>
+								<row>
+									<cell>0.86</cell>
+									<cell>0.95</cell>
+								</row>
+								<row>
+									<cell>0.9</cell>
+									<cell>0.9</cell>
+								</row>
+								<row>
+									<cell>0.94</cell>
+									<cell>0.8</cell>
+								</row>
+								<row>
+									<cell>0.96</cell>
+									<cell>0.7</cell>
+								</row>
+								<row>
+									<cell>0.97</cell>
+									<cell>0.6</cell>
+								</row>
+								<row>
+									<cell>1</cell>
+									<cell>0</cell>
+								</row>
+							</rows>
+						</Table>
+					</parameter>
+				</Parameters>
+				<controllers>
+					<Controller>
+						<ControllerId>##1</ControllerId>
+						<ControllerName>ctrt1</ControllerName>
+						<ControllerType>Sobek.Controller.Time</ControllerType>
+						<ControlledParameter>Sobek.Controller.ControlledParameter.CrestLevel</ControlledParameter>
+						<ControlledActive>True</ControlledActive>
+						<ControlFrequency>4</ControlFrequency>
+						<Parameters>
+							<parameter id="MaxChangedValuePerdT" type="double">0</parameter>
+							<parameter id="LinearInterpolation" type="double">False</parameter>
+							<parameter id="TimeTable" type="table">
+								<Table name="TimeTable">
+									<Info>
+										<Interpolation Type="Interpolation.Continuous" Period="No">0</Interpolation>
+										<Columns count="2">
+											<column type="datetime"/>
+											<column type="double"/>
+										</Columns>
+									</Info>
+									<rows>
+										<row>
+											<cell>'1999/11/30;00:00:00'</cell>
+											<cell>1</cell>
+										</row>
+										<row>
+											<cell>'2007/06/09;00:00:00'</cell>
+											<cell>2</cell>
+										</row>
+										<row>
+											<cell>'2007/06/10;00:00:00'</cell>
+											<cell>4</cell>
+										</row>
+										<row>
+											<cell>'2007/06/11;00:00:00'</cell>
+											<cell>6</cell>
+										</row>
+									</rows>
+								</Table>
+							</parameter>
+						</Parameters>
+						<Triggers/>
+					</Controller>
+				</controllers>
+			</structureDefinition>
+		</structureDefinitions>
+	</Structure>
+	<Structure>
+		<structureId>8</structureId>
+		<structureName/>
+		<branchId>1</branchId>
+		<x>253346.461035316</x>
+		<y>473005.93206451</y>
+		<structureDefinitions>
+			<structureDefinition>
+				<structureDefinitionId>##2</structureDefinitionId>
+				<structureDefinitionName>RAWeirdef</structureDefinitionName>
+				<structureDefinitionType>Sobek.Structures.RiverAdvancedWeir</structureDefinitionType>
+				<Parameters>
+					<parameter id="CrestLevel" type="double">3</parameter>
+					<parameter id="SillWidth" type="double">4</parameter>
+					<parameter id="NumberOfPiers" type="long">2</parameter>
+					<parameter id="PositiveUpstreamFaceHeight" type="double">10</parameter>
+					<parameter id="PositiveWeirDesignHead" type="double">3</parameter>
+					<parameter id="PositivePierContractionCoefficient" type="double">0.01</parameter>
+					<parameter id="PositiveAbutmentContractionCoefficient" type="double">0.1</parameter>
+					<parameter id="NegativeUpstreamFaceHeight" type="double">10</parameter>
+					<parameter id="NegativeWeirDesignHead" type="double">3</parameter>
+					<parameter id="NegativePierContractionCoefficient" type="double">0.01</parameter>
+					<parameter id="NegativeAbutmentContractionCoefficient" type="double">0.1</parameter>
+				</Parameters>
+			</structureDefinition>
+		</structureDefinitions>
+	</Structure>
+	<Structure>
+		<structureId>11</structureId>
+		<structureName/>
+		<branchId>1</branchId>
+		<x>253552.87671577</x>
+		<y>473003.299054292</y>
+		<structureDefinitions>
+			<structureDefinition>
+				<structureDefinitionId>##3</structureDefinitionId>
+				<structureDefinitionName>rGStructdef</structureDefinitionName>
+				<structureDefinitionType>Sobek.Structures.GeneralStructure</structureDefinitionType>
+				<Parameters>
+					<parameter id="WidthUpstream" type="double">1</parameter>
+					<parameter id="WidthStructureLeft" type="double">2</parameter>
+					<parameter id="Widthstructure" type="double">3</parameter>
+					<parameter id="WidthStructureRight" type="double">4</parameter>
+					<parameter id="WidthDownstream" type="double">5</parameter>
+					<parameter id="BedLevelUpstream" type="double">1</parameter>
+					<parameter id="BedLevelStructureLeft" type="double">2</parameter>
+					<parameter id="BedLevelstructure" type="double">3</parameter>
+					<parameter id="BedLevelStructureRight" type="double">4</parameter>
+					<parameter id="BedLevelDownstream" type="double">5</parameter>
+					<parameter id="GateHeight" type="double">6</parameter>
+					<parameter id="PositiveFreeGateFlow" type="double">0.7</parameter>
+					<parameter id="PositiveDrownedGateFlow" type="double">0.8</parameter>
+					<parameter id="PositiveFreeWeirFlow" type="double">0.9</parameter>
+					<parameter id="PositiveDrownedWeirFlow" type="double">0.95</parameter>
+					<parameter id="PositiveContractionCoefficient" type="double">0.96</parameter>
+					<parameter id="NegativeFreeGateFlow" type="double">0.71</parameter>
+					<parameter id="NegativeDrownedGateFlow" type="double">0.81</parameter>
+					<parameter id="NegativeFreeWeirFlow" type="double">0.91</parameter>
+					<parameter id="NegativeDrownedWeirFlow" type="double">0.96</parameter>
+					<parameter id="NegativeContractionCoefficient" type="double">0.97</parameter>
+					<parameter id="ExtraResistance" type="double">0</parameter>
+				</Parameters>
+			</structureDefinition>
+		</structureDefinitions>
+	</Structure>
+	<Structure>
+		<structureId>14</structureId>
+		<structureName/>
+		<branchId>1</branchId>
+		<x>253777.568259225</x>
+		<y>473000.432919662</y>
+		<structureDefinitions>
+			<structureDefinition>
+				<structureDefinitionId>##4</structureDefinitionId>
+				<structureDefinitionName>RPumpdef</structureDefinitionName>
+				<structureDefinitionType>Sobek.Structures.RiverPump</structureDefinitionType>
+				<Parameters>
+					<parameter id="FlowDirection" type="string">Direction.Negative</parameter>
+					<parameter id="ControlPosition" type="string">PumpControl.Downward</parameter>
+					<parameter id="ReductionConstant" type="double">3</parameter>
+					<parameter id="CapacitySettings" type="table">
+						<Table name="CapacitySettings">
+							<Info>
+								<Interpolation Type="Interpolation.Continuous" Period="No">0</Interpolation>
+								<Columns count="5">
+									<column type="double"/>
+									<column type="double"/>
+									<column type="double"/>
+									<column type="double"/>
+									<column type="double"/>
+								</Columns>
+							</Info>
+							<rows>
+								<row>
+									<cell>2</cell>
+									<cell>0</cell>
+									<cell>0</cell>
+									<cell>34</cell>
+									<cell>67</cell>
+								</row>
+							</rows>
+						</Table>
+					</parameter>
+				</Parameters>
+			</structureDefinition>
+		</structureDefinitions>
+	</Structure>
+	<Structure>
+		<structureId>17</structureId>
+		<structureName/>
+		<branchId>1</branchId>
+		<x>254012.354389725</x>
+		<y>472997.438019859</y>
+		<structureDefinitions>
+			<structureDefinition>
+				<structureDefinitionId>##5</structureDefinitionId>
+				<structureDefinitionName>RDatabaseDef</structureDefinitionName>
+				<structureDefinitionType>Sobek.Structures.DatabaseStructure</structureDefinitionType>
+				<Parameters>
+					<parameter id="CrestLevel" type="double">23</parameter>
+					<parameter id="NumberOfGateValues" type="long">1</parameter>
+					<parameter id="SecondHeightRelative" type="long">0</parameter>
+					<parameter id="InterpolationType" type="string">Sobek.RiverDatabaseStructure.InterpolationType.Lineair</parameter>
+					<parameter id="Database" type="table">
+						<Table name="Database">
+							<Info>
+								<Columns count="3">
+									<column type="double"/>
+									<column type="double"/>
+									<column type="double"/>
+								</Columns>
+							</Info>
+							<rows>
+								<row>
+									<cell>0</cell>
+									<cell>1</cell>
+									<cell>3</cell>
+								</row>
+								<row>
+									<cell>1</cell>
+									<cell>0</cell>
+									<cell>-0.5</cell>
+								</row>
+								<row>
+									<cell>3</cell>
+									<cell>0.5</cell>
+									<cell>0</cell>
+								</row>
+							</rows>
+						</Table>
+					</parameter>
+					<parameter id="DatabaseUsage" type="table">
+						<Table name="DatabaseUsage">
+							<Info>
+								<Columns count="2">
+									<column type="double"/>
+									<column type="double"/>
+								</Columns>
+							</Info>
+							<rows>
+								<row>
+									<cell>2</cell>
+									<cell>2</cell>
+								</row>
+								<row>
+									<cell>1</cell>
+									<cell>2</cell>
+								</row>
+								<row>
+									<cell>1</cell>
+									<cell>2</cell>
+								</row>
+							</rows>
+						</Table>
+					</parameter>
+				</Parameters>
+			</structureDefinition>
+		</structureDefinitions>
+	</Structure>
+	<Structure>
+		<structureId>20</structureId>
+		<structureName/>
+		<branchId>1</branchId>
+		<x>254865.430906043</x>
+		<y>472986.556292369</y>
+		<structureDefinitions>
+			<structureDefinition>
+				<structureDefinitionId>20</structureDefinitionId>
+				<structureDefinitionName/>
+				<structureDefinitionType>Sobek.Structures.Weir</structureDefinitionType>
+				<Parameters>
+					<parameter id="FlowDirection" type="string">Direction.Both</parameter>
+					<parameter id="CrestLevel" type="double">0.7</parameter>
+					<parameter id="CrestWidth" type="double">2</parameter>
+					<parameter id="DischargeCoef" type="double">1</parameter>
+					<parameter id="LateralContractioncCoef" type="double">1</parameter>
+				</Parameters>
+			</structureDefinition>
+		</structureDefinitions>
+	</Structure>
+	<Structure>
+		<structureId>21</structureId>
+		<structureName/>
+		<branchId>1</branchId>
+		<x>255203.365085798</x>
+		<y>472982.245650143</y>
+		<structureDefinitions>
+			<structureDefinition>
+				<structureDefinitionId>21</structureDefinitionId>
+				<structureDefinitionName/>
+				<structureDefinitionType>Sobek.Structures.Orifice</structureDefinitionType>
+				<Parameters>
+					<parameter id="CrestLevel" type="double">0.7</parameter>
+					<parameter id="CrestWidth" type="double">2</parameter>
+					<parameter id="GateHeight" type="double">0.9</parameter>
+					<parameter id="ContractionCoef" type="double">0.63</parameter>
+					<parameter id="LateralContractionCoefficient" type="double">1</parameter>
+					<parameter id="FlowDirection" type="string">Direction.Both</parameter>
+					<parameter id="UseMaximumFlowPositive" type="double">False</parameter>
+					<parameter id="MaximumFlowPositive" type="double">0</parameter>
+					<parameter id="UseMaximumFlowNegative" type="double">False</parameter>
+					<parameter id="MaximumFlowNegative" type="double">0</parameter>
+				</Parameters>
+			</structureDefinition>
+		</structureDefinitions>
+	</Structure>
+	<Structure>
+		<structureId>22</structureId>
+		<structureName/>
+		<branchId>1</branchId>
+		<x>255747.356200179</x>
+		<y>472975.306573811</y>
+		<structureDefinitions>
+			<structureDefinition>
+				<structureDefinitionId>22</structureDefinitionId>
+				<structureDefinitionName/>
+				<structureDefinitionType>Sobek.Structures.Pump</structureDefinitionType>
+				<Parameters>
+					<parameter id="FlowDirection" type="string">Direction.Positive</parameter>
+					<parameter id="ControlPosition" type="string">PumpControl.Upward</parameter>
+					<parameter id="ReductionConstant" type="double">1</parameter>
+					<parameter id="CapacitySettings" type="table">
+						<Table name="CapacitySettings">
+							<Info>
+								<Columns count="5">
+									<column type="double"/>
+									<column type="double"/>
+									<column type="double"/>
+									<column type="double"/>
+									<column type="double"/>
+								</Columns>
+							</Info>
+							<rows>
+								<row>
+									<cell>1</cell>
+									<cell>0.8</cell>
+									<cell>0.6</cell>
+									<cell>0</cell>
+									<cell>0</cell>
+								</row>
+							</rows>
+						</Table>
+					</parameter>
+				</Parameters>
+			</structureDefinition>
+		</structureDefinitions>
+	</Structure>
+	<Structure>
+		<structureId>23</structureId>
+		<structureName/>
+		<branchId>1</branchId>
+		<x>256216.091387578</x>
+		<y>472969.327451802</y>
+		<structureDefinitions>
+			<structureDefinition>
+				<structureDefinitionId>23</structureDefinitionId>
+				<structureDefinitionName/>
+				<structureDefinitionType>Sobek.Structures.Culvert</structureDefinitionType>
+				<ClosedCrossSection>
+					<crossSectionData height="0" totalwidth="-5.204576391" flowwidth="-5.20457639144193E-17"/>
+					<crossSectionData height="0.00965434808229149" totalwidth="7.33320541517459E-02" flowwidth="7.33320541517459E-02"/>
+					<crossSectionData height="3.79594644619225E-02" totalwidth=".14166665" flowwidth=".14166665"/>
+					<crossSectionData height="8.29864022340375E-02" totalwidth=".200346897765962" flowwidth=".200346897765962"/>
+					<crossSectionData height=".14166665" totalwidth=".245373835538077" flowwidth=".245373835538077"/>
+					<crossSectionData height=".210001245848254" totalwidth=".273678951917708" flowwidth=".273678951917708"/>
+					<crossSectionData height=".2833333" totalwidth=".2833333" flowwidth=".2833333"/>
+					<crossSectionData height=".319999327075873" totalwidth=".273678951917709" flowwidth=".273678951917709"/>
+					<crossSectionData height=".354166625" totalwidth=".245373835538077" flowwidth=".245373835538077"/>
+					<crossSectionData height=".383506748882981" totalwidth=".200346897765962" flowwidth=".200346897765962"/>
+					<crossSectionData height=".406020217769039" totalwidth=".14166665" flowwidth=".14166665"/>
+					<crossSectionData height=".420172775958854" totalwidth=".073332054151746" flowwidth=".073332054151746"/>
+				</ClosedCrossSection>
+				<Parameters>
+					<parameter id="CulvertType" type="string">Sobek.Structures.Culvert.Culvert</parameter>
+					<parameter id="BedLevelRight" type="double">0</parameter>
+					<parameter id="BedLevelLeft" type="double">0</parameter>
+					<parameter id="InletLossCoefficient" type="double">0.7</parameter>
+					<parameter id="OutletLossCoefficient" type="double">1</parameter>
+					<parameter id="BendLossCoefficient" type="double">0</parameter>
+					<parameter id="InitialOpeningLevelValve" type="double">0</parameter>
+					<parameter id="FlowDirection" type="string">Direction.Both</parameter>
+					<parameter id="Length" type="double">11</parameter>
+					<parameter id="StartLevelOperation" type="double">0</parameter>
+					<parameter id="EndLevelOperation" type="double">0</parameter>
+				</Parameters>
+			</structureDefinition>
+		</structureDefinitions>
+	</Structure>
+	<Structure>
+		<structureId>24</structureId>
+		<structureName/>
+		<branchId>1</branchId>
+		<x>256900.619350819</x>
+		<y>472960.595706627</y>
+		<__chainage__>4295.65703183239</__chainage__>
+		<structureDefinitions>
+			<structureDefinition>
+				<structureDefinitionId>24</structureDefinitionId>
+				<structureDefinitionName/>
+				<structureDefinitionType>Sobek.Structures.UniversalWeir</structureDefinitionType>
+				<ClosedCrossSection/>
+				<Parameters>
+					<parameter id="CrestLevel" type="double">1</parameter>
+					<parameter id="DischargeCoefficient" type="double">0.99</parameter>
+					<parameter id="FlowDirection" type="string">Direction.Both</parameter>
+					<parameter id="WaterLevelLimit" type="double">0.667</parameter>
+				</Parameters>
+			</structureDefinition>
+		</structureDefinitions>
+	</Structure>
+	<Structure>
+		<structureId>25</structureId>
+		<structureName/>
+		<branchId>1</branchId>
+		<x>257369.952447934</x>
+		<y>472954.608957764</y>
+		<__chainage__>4765.02831046957</__chainage__>
+		<structureDefinitions>
+			<structureDefinition>
+				<structureDefinitionId>25</structureDefinitionId>
+				<structureDefinitionName/>
+				<structureDefinitionType>Sobek.Structures.Bridge</structureDefinitionType>
+				<ClosedCrossSection>
+					<crossSectionData height="0" totalwidth="10" flowwidth="10"/>
+					<crossSectionData height="5" totalwidth="10" flowwidth="10"/>
+					<crossSectionData height="5.0001" totalwidth=".0001" flowwidth=".0001"/>
+				</ClosedCrossSection>
+				<Parameters>
+					<parameter id="BridgeType" type="string">Sobek.Structures.Bridge.FixedBed</parameter>
+					<parameter id="PillarWidth" type="double">3</parameter>
+					<parameter id="FormFactor" type="double">1.5</parameter>
+					<parameter id="InletLossCoefficient" type="double">0.25</parameter>
+					<parameter id="OutletLossCoefficient" type="double">0.25</parameter>
+					<parameter id="LengthBridge" type="double">21</parameter>
+					<parameter id="BottomLevel" type="double">0</parameter>
+				</Parameters>
+			</structureDefinition>
+		</structureDefinitions>
+	</Structure>
+	<Structure>
+		<structureId>40</structureId>
+		<structureName/>
+		<branchId>1</branchId>
+		<x>258016.852447683</x>
+		<y>472946.35718975</y>
+		<__chainage__>5411.98093729058</__chainage__>
+		<structureDefinitions>
+			<structureDefinition>
+				<structureDefinitionId>##1</structureDefinitionId>
+				<structureDefinitionName>rweirdef</structureDefinitionName>
+				<structureDefinitionType>Sobek.Structures.RiverWeir</structureDefinitionType>
+				<Parameters>
+					<parameter id="CrestLevel" type="double">11</parameter>
+					<parameter id="CrestWidth" type="double">4</parameter>
+					<parameter id="CrestShape" type="double">0</parameter>
+					<parameter id="PositiveCorrectionCoefficient" type="double">2</parameter>
+					<parameter id="PositiveSubmergeLimit" type="double">0.82</parameter>
+					<parameter id="PositiveReductionFactors" type="table">
+						<Table name="PositiveReductionFactors">
+							<Info>
+								<Interpolation Type="Interpolation.Continuous" Period="No">0</Interpolation>
+								<Columns count="2">
+									<column type="double"/>
+									<column type="double"/>
+								</Columns>
+							</Info>
+							<rows>
+								<row>
+									<cell>0.82</cell>
+									<cell>1</cell>
+								</row>
+								<row>
+									<cell>0.86</cell>
+									<cell>0.95</cell>
+								</row>
+								<row>
+									<cell>0.9</cell>
+									<cell>0.9</cell>
+								</row>
+								<row>
+									<cell>0.94</cell>
+									<cell>0.8</cell>
+								</row>
+								<row>
+									<cell>0.96</cell>
+									<cell>0.7</cell>
+								</row>
+								<row>
+									<cell>0.97</cell>
+									<cell>0.6</cell>
+								</row>
+								<row>
+									<cell>1</cell>
+									<cell>0</cell>
+								</row>
+							</rows>
+						</Table>
+					</parameter>
+					<parameter id="NegativeCorrectionCoefficient" type="double">3</parameter>
+					<parameter id="NegativeSubmergeLimit" type="double">0.82</parameter>
+					<parameter id="NegativeReductionFactors" type="table">
+						<Table name="NegativeReductionFactors">
+							<Info>
+								<Interpolation Type="Interpolation.Continuous" Period="No">0</Interpolation>
+								<Columns count="2">
+									<column type="double"/>
+									<column type="double"/>
+								</Columns>
+							</Info>
+							<rows>
+								<row>
+									<cell>0.82</cell>
+									<cell>1</cell>
+								</row>
+								<row>
+									<cell>0.86</cell>
+									<cell>0.95</cell>
+								</row>
+								<row>
+									<cell>0.9</cell>
+									<cell>0.9</cell>
+								</row>
+								<row>
+									<cell>0.94</cell>
+									<cell>0.8</cell>
+								</row>
+								<row>
+									<cell>0.96</cell>
+									<cell>0.7</cell>
+								</row>
+								<row>
+									<cell>0.97</cell>
+									<cell>0.6</cell>
+								</row>
+								<row>
+									<cell>1</cell>
+									<cell>0</cell>
+								</row>
+							</rows>
+						</Table>
+					</parameter>
+				</Parameters>
+				<controllers>
+					<Controller>
+						<ControllerId>##3</ControllerId>
+						<ControllerName>chtpid</ControllerName>
+						<ControllerType>Sobek.Controller.PID</ControllerType>
+						<ControlledParameter>Sobek.Controller.ControlledParameter.CrestLevel</ControlledParameter>
+						<ControlledActive>True</ControlledActive>
+						<ControlFrequency>4</ControlFrequency>
+						<Parameters>
+							<parameter id="MeasuredParameter" type="string">Sobek.Controller.MeasuredParameter.Discharge</parameter>
+							<parameter id="UsMinimum" type="double">0</parameter>
+							<parameter id="UsMaximum" type="double">0</parameter>
+							<parameter id="UsInitial" type="double">0</parameter>
+							<parameter id="KFactorProportional" type="double">0</parameter>
+							<parameter id="KFactorIntegral" type="double">0</parameter>
+							<parameter id="KFactorDifferential " type="double">0</parameter>
+							<parameter id="MaximumSpeedOfChange" type="double">0</parameter>
+							<parameter id="LinearInterpolation" type="boolean">False</parameter>
+							<parameter id="SetPointType" type="string">Sobek.Constant</parameter>
+							<parameter id="SetPointConstant" type="double">0</parameter>
+							<parameter id="SetPointTable" type="table">
+								<Table name="SetPointTable">
+									<Info>
+										<Columns count="2">
+											<column type="datetime"/>
+											<column type="double"/>
+										</Columns>
+									</Info>
+									<rows/>
+								</Table>
+							</parameter>
+							<parameter id="MeasurementStation" type="string">37</parameter>
+						</Parameters>
+						<Triggers>
+							<Trigger>
+								<TriggerId>##1</TriggerId>
+								<TriggerName>teen</TriggerName>
+								<TriggerType>Sobek.Trigger.Time</TriggerType>
+								<TriggerParameter>Sobek.Trigger.Parameter.WaterLevelBranch</TriggerParameter>
+								<StructureId/>
+								<MeasurementStationId/>
+								<CheckOnDirection>False</CheckOnDirection>
+								<TimeTable>
+									<Table>
+										<Info>
+											<Interpolation Type="Interpolation.Block" Period="No">0</Interpolation>
+											<Columns count="5">
+												<column type="datetime"/>
+												<column type="double"/>
+												<column type="double"/>
+												<column type="double"/>
+												<column type="double"/>
+											</Columns>
+										</Info>
+										<rows>
+											<row>
+												<cell>'1999/12/07;00:00:00'</cell>
+												<cell>0</cell>
+												<cell>0</cell>
+												<cell>0</cell>
+												<cell>0</cell>
+											</row>
+										</rows>
+									</Table>
+								</TimeTable>
+								<And2NextTrigger>True</And2NextTrigger>
+							</Trigger>
+							<Trigger>
+								<TriggerId>##1</TriggerId>
+								<TriggerName>teen</TriggerName>
+								<TriggerType>Sobek.Trigger.Time</TriggerType>
+								<TriggerParameter>Sobek.Trigger.Parameter.WaterLevelBranch</TriggerParameter>
+								<StructureId/>
+								<MeasurementStationId/>
+								<CheckOnDirection>False</CheckOnDirection>
+								<TimeTable>
+									<Table>
+										<Info>
+											<Interpolation Type="Interpolation.Block" Period="No">0</Interpolation>
+											<Columns count="5">
+												<column type="datetime"/>
+												<column type="double"/>
+												<column type="double"/>
+												<column type="double"/>
+												<column type="double"/>
+											</Columns>
+										</Info>
+										<rows>
+											<row>
+												<cell>'1999/12/07;00:00:00'</cell>
+												<cell>0</cell>
+												<cell>0</cell>
+												<cell>0</cell>
+												<cell>0</cell>
+											</row>
+										</rows>
+									</Table>
+								</TimeTable>
+								<And2NextTrigger>True</And2NextTrigger>
+							</Trigger>
+						</Triggers>
+					</Controller>
+					<Controller>
+						<ControllerId>##2</ControllerId>
+						<ControllerName>ctrhyd1</ControllerName>
+						<ControllerType>Sobek.Controller.Hydraulic</ControllerType>
+						<ControlledParameter>Sobek.Controller.ControlledParameter.CrestLevel</ControlledParameter>
+						<ControlledActive>True</ControlledActive>
+						<ControlFrequency>4</ControlFrequency>
+						<Parameters>
+							<parameter id="TimeLag" type="long">0</parameter>
+							<parameter id="MeasuredParameter" type="string">Sobek.Controller.MeasuredParameter.Velocity</parameter>
+							<parameter id="StructureId" type="string"/>
+							<parameter id="LinearInterpolation" type="boolean">False</parameter>
+							<parameter id="ControlTable" type="table">
+								<Table name="ControlTable">
+									<Info>
+										<Interpolation Type="Interpolation.Continuous" Period="No">0</Interpolation>
+										<Columns count="2">
+											<column type="double"/>
+											<column type="double"/>
+										</Columns>
+									</Info>
+									<rows>
+										<row>
+											<cell>12</cell>
+											<cell>12</cell>
+										</row>
+									</rows>
+								</Table>
+							</parameter>
+							<parameter id="PositiveStream" type="double">0</parameter>
+							<parameter id="NegativeStream" type="double">0</parameter>
+							<parameter id="MeasurementStation" type="string">37</parameter>
+						</Parameters>
+						<Triggers/>
+					</Controller>
+					<Controller>
+						<ControllerId>##4</ControllerId>
+						<ControllerName>ctrinterval</ControllerName>
+						<ControllerType>Sobek.Controller.Interval</ControllerType>
+						<ControlledParameter>Sobek.Controller.ControlledParameter.CrestLevel</ControlledParameter>
+						<ControlledActive>True</ControlledActive>
+						<ControlFrequency>4</ControlFrequency>
+						<Parameters>
+							<parameter id="MeasuredParameter" type="string">Sobek.Controller.MeasuredParameter.Discharge</parameter>
+							<parameter id="UsMinimum" type="double">0</parameter>
+							<parameter id="UsMaximum" type="double">0</parameter>
+							<parameter id="ControlIntervalType" type="long">1</parameter>
+							<parameter id="FixedInterval" type="double">0</parameter>
+							<parameter id="ControlVelocity" type="double">5</parameter>
+							<parameter id="DeadBandType" type="string">Sobek.Controller.Interval.DeadBandType.DischargePercentage</parameter>
+							<parameter id="DeadBandStepSize" type="long">0</parameter>
+							<parameter id="DeadBandPercentage" type="double">0</parameter>
+							<parameter id="DeadBandMinimum" type="double">0</parameter>
+							<parameter id="DeadBandMaximum" type="double">0</parameter>
+							<parameter id="LinearInterpolation" type="boolean">False</parameter>
+							<parameter id="SetPointType" type="string">Sobek.Constant</parameter>
+							<parameter id="SetPointConstant" type="double">0</parameter>
+							<parameter id="SetPointTable" type="table">
+								<Table name="SetPointTable">
+									<Info>
+										<Columns count="2">
+											<column type="datetime"/>
+											<column type="double"/>
+										</Columns>
+									</Info>
+									<rows/>
+								</Table>
+							</parameter>
+							<parameter id="MeasurementStation" type="string">37</parameter>
+						</Parameters>
+						<Triggers/>
+					</Controller>
+					<Controller>
+						<ControllerId>##5</ControllerId>
+						<ControllerName>ctrrelative</ControllerName>
+						<ControllerType>Sobek.Controller.RelativeTime</ControllerType>
+						<ControlledParameter>Sobek.Controller.ControlledParameter.CrestLevel</ControlledParameter>
+						<ControlledActive>True</ControlledActive>
+						<ControlFrequency>4</ControlFrequency>
+						<Parameters>
+							<parameter id="MaxChangeValuePer" type="double">0</parameter>
+							<parameter id="SetPointTable" type="table">
+								<Table name="SetPointTable">
+									<Info>
+										<Interpolation Type="Interpolation.Continuous" Period="No">0</Interpolation>
+										<Columns count="2">
+											<column type="double"/>
+											<column type="double"/>
+										</Columns>
+									</Info>
+									<rows>
+										<row>
+											<cell>10</cell>
+											<cell>23</cell>
+										</row>
+									</rows>
+								</Table>
+							</parameter>
+							<parameter id="MinimumPeriod" type="long">0</parameter>
+						</Parameters>
+						<Triggers/>
+					</Controller>
+				</controllers>
+			</structureDefinition>
+		</structureDefinitions>
+	</Structure>
+	<Structure>
+		<structureId>39</structureId>
+		<structureName/>
+		<branchId>1</branchId>
+		<x>258213.771450807</x>
+		<y>472943.84531785</y>
+		<__chainage__>5608.91596031033</__chainage__>
+		<structureDefinitions>
+			<structureDefinition>
+				<structureDefinitionId>40</structureDefinitionId>
+				<structureDefinitionName/>
+				<structureDefinitionType>Sobek.Structures.Weir</structureDefinitionType>
+				<Parameters>
+					<parameter id="FlowDirection" type="string">Direction.Both</parameter>
+					<parameter id="CrestLevel" type="double">0.7</parameter>
+					<parameter id="CrestWidth" type="double">2</parameter>
+					<parameter id="DischargeCoef" type="double">1</parameter>
+					<parameter id="LateralContractioncCoef" type="double">1</parameter>
+				</Parameters>
+				<controllers>
+					<Controller>
+						<ControllerId>39</ControllerId>
+						<ControllerName>hyd1</ControllerName>
+						<ControllerType>Sobek.Controller.Hydraulic</ControllerType>
+						<ControlledParameter>Sobek.Controller.ControlledParameter.CrestLevel</ControlledParameter>
+						<ControlledActive>True</ControlledActive>
+						<ControlFrequency>3</ControlFrequency>
+						<Parameters>
+							<parameter id="TimeLag" type="long">0</parameter>
+							<parameter id="MeasuredParameter" type="string">Sobek.Controller.MeasuredParameter.WaterLevel</parameter>
+							<parameter id="StructureId" type="string"/>
+							<parameter id="LinearInterpolation" type="boolean">False</parameter>
+							<parameter id="ControlTable" type="table">
+								<Table name="ControlTable">
+									<Info>
+										<Columns count="2">
+											<column type="double"/>
+											<column type="double"/>
+										</Columns>
+									</Info>
+									<rows>
+										<row>
+											<cell>0.5</cell>
+											<cell>0.6</cell>
+										</row>
+										<row>
+											<cell>1</cell>
+											<cell>1.2</cell>
+										</row>
+									</rows>
+								</Table>
+							</parameter>
+							<parameter id="PositiveStream" type="double">0</parameter>
+							<parameter id="NegativeStream" type="double">0</parameter>
+							<parameter id="MeasurementStation" type="string">37</parameter>
+						</Parameters>
+						<Triggers/>
+					</Controller>
+				</controllers>
+			</structureDefinition>
+		</structureDefinitions>
+	</Structure>
+</Structures>

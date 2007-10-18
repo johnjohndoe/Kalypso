@@ -119,4 +119,13 @@ public class LinkageNode extends AbstractConnectionNode implements ILinkageNode
     }
   }
 
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.ILinkageNode#getLinkToBranch()
+   */
+  public IBranch getLinkToBranch( )
+  {
+
+    return (IBranch) (getFeature().getProperty( ISobekConstants.QN_LN_LINKS_TO_BRANCH ));
+  }
+
 }

@@ -41,37 +41,61 @@
 package org.kalypso.model.wspm.sobek.core.utils;
 
 import nl.wldelft.fews.pi.LocationComplexType;
-import nl.wldelft.fews.pi.LocationsComplexType;
 import nl.wldelft.fews.pi.ObjectFactory;
 import nl.wldelft.fews.pi.LocationsComplexType.Location;
 
+import org.kalypso.model.wspm.sobek.core.interfaces.IAbstractConnectionNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode;
+import org.kalypso.model.wspm.sobek.core.interfaces.IConnectionNode;
+import org.kalypso.model.wspm.sobek.core.interfaces.ILinkageNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode;
 import org.kalypso.model.wspm.sobek.core.model.BoundaryNode;
+import org.kalypso.model.wspm.sobek.core.model.LinkageNode;
 
 /**
  * @author thuel2
  */
 public class PiSobekModelUtils
 {
+  public static String SOBEK_NODES_CONNECTION = "Sobek.Nodes.Connection";
+
+  public static String SOBEK_NODES_CONN_WITH_LAT_AND_STOR = "Sobek.Nodes.ConnWithLatAndStor";
+
+  public static String SOBEK_NODES_BOUNDARY_Q = "Sobek.Nodes.Bound_Q";
+
+  public static String SOBEK_NODES_BOUNDARY_W = "Sobek.Nodes.Bound_H";
+
+  public static String SOBEK_NODES_LINKAGE = "Sobek.Nodes.Linkage";
 
   public static Location createLocationFromNode( ObjectFactory factory, INode node )
   {
     final LocationComplexType createLocationComplexType = factory.createLocationComplexType();
     final Location location = factory.createLocationsComplexTypeLocation();
-    
-    
-    
-    if (node instanceof IBoundaryNode)
-    {
-      BoundaryNode bn = ( BoundaryNode)node;
-    }
-    location.setLocationId( "fdf" + node.getId() );
+
+    location.setLocationId( node.getId() );
     location.setStationName( node.getName() );
-    
     location.setX( node.getLocation().getX() );
-//    location.setY( node.getLocation().getY() );
-//    location.setZ( node.getLocation().getZ() );
+    location.setY( node.getLocation().getY() );
+
+    if( node instanceof IAbstractConnectionNode )
+    {
+      if( node instanceof IConnectionNode )
+      {
+        location.setLocationType( SOBEK_NODES_CONNECTION );
+      }
+      else if( node instanceof ILinkageNode )
+      {
+        final LinkageNode ln = (LinkageNode)node;
+        location.setLocationType( SOBEK_NODES_LINKAGE + "@" + ln.getLinkToBranch().getFeature().getId());
+      }
+      else if( node instanceof IBoundaryNode )
+      {
+// differenzieren zw. Boundary_H und Boundary_W
+        BoundaryNode bn = (BoundaryNode) node;
+       
+      }
+
+    }
     return location;
   }
 }
