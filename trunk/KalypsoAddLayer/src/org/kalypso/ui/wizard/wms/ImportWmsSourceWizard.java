@@ -50,30 +50,89 @@ import java.util.Map.Entry;
 import org.apache.commons.io.IOUtils;
 import org.deegree.ogcwebservices.wms.capabilities.Layer;
 import org.deegree.ogcwebservices.wms.capabilities.Style;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
+import org.kalypso.ogc.gml.map.themes.provider.IKalypsoImageProvider;
 import org.kalypso.ogc.gml.map.themes.provider.KalypsoWMSImageProvider;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.KalypsoAddLayerPlugin;
 import org.kalypso.ui.KalypsoServiceConstants;
 import org.kalypso.ui.action.AddThemeCommand;
 import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
+import org.kalypso.ui.wizard.wms.pages.ImportWmsWizardPage;
 
 /**
- * @author Kuepferle
+ * Wizard for importing WMS sources.
+ * 
+ * @author Kuepferle (original)
+ * @author Holger Albert
  */
 public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportWizard, IKalypsoImportWMSWizard
 {
-  private ImportWmsWizardPage m_page = null;
+  /**
+   * This constant stores the id for the dialog settings of this page.
+   */
+  private static final String IMPORT_WMS_WIZARD = "IMPORT_WMS_WIZARD";
 
+  /**
+   * The page needed for import WMS sources.
+   */
+  private ImportWmsWizardPage m_page;
+
+  /**
+   * Command target.
+   */
   private ICommandTarget m_outlineviewer;
 
-  private final ArrayList<String> m_catalog = new ArrayList<String>();
+  /**
+   * Catalog.
+   */
+  private ArrayList<String> m_catalog;
 
+  /**
+   * Map modell.
+   */
   private IMapModell m_modell;
+
+  /**
+   * The constructor.
+   */
+  public ImportWmsSourceWizard( )
+  {
+    m_page = null;
+    m_outlineviewer = null;
+    m_catalog = new ArrayList<String>();
+    m_modell = null;
+
+    /* Get the dialog settings. */
+    IDialogSettings dialogSettings = getDialogSettings();
+
+    /* If not available, add a section inside the settings of the plugin. */
+    if( dialogSettings == null )
+    {
+      IDialogSettings settings = KalypsoAddLayerPlugin.getDefault().getDialogSettings();
+
+      /* Cannot do anything, if even the plugin has no settings. */
+      if( settings == null )
+        return;
+
+      /* If available, check, if there is a section from this wizard. */
+      IDialogSettings section = settings.getSection( IMPORT_WMS_WIZARD );
+      if( section == null )
+      {
+        /* There is none available, add a new one. */
+        section = settings.addNewSection( IMPORT_WMS_WIZARD );
+      }
+
+      /* Finally set it. */
+      setDialogSettings( section );
+    }
+  }
 
   /**
    * @see org.eclipse.jface.wizard.IWizard#performFinish()
@@ -81,15 +140,19 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
   @Override
   public boolean performFinish( )
   {
+    /* Finishes the work on this page (dialog settings). */
+    m_page.finish();
+
     IMapModell mapModell = m_modell;
     if( mapModell != null )
-
       try
       {
         final boolean isMulti = m_page.isMultiLayer();
-        final StringBuffer source = new StringBuffer( KalypsoWMSImageProvider.KEY_URL + "=" + m_page.getBaseURL().toString() );
-        final StringBuffer layers = new StringBuffer( KalypsoWMSImageProvider.KEY_LAYERS + "=" );
-        final StringBuffer styles = new StringBuffer( KalypsoWMSImageProvider.KEY_STYLES + "=" );
+        final StringBuffer source = new StringBuffer( IKalypsoImageProvider.KEY_URL + "=" + m_page.getBaseURL().toString() );
+        final StringBuffer layers = new StringBuffer( IKalypsoImageProvider.KEY_LAYERS + "=" );
+        final StringBuffer styles = new StringBuffer( IKalypsoImageProvider.KEY_STYLES + "=" );
+        final StringBuffer provider = new StringBuffer( IKalypsoImageProvider.KEY_PROVIDER + "=" );
+
         final Layer[] layerArray = m_page.getLayersList();
 
         if( isMulti )
@@ -112,9 +175,16 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
               styles.append( "," );
             }
           }
+
+          String providerID = m_page.getProviderID();
+          if( providerID != null )
+            provider.append( providerID );
+
           final String layerName = "Multi" + source;
           source.append( "#" ).append( layers.toString() );
           source.append( "#" ).append( styles.toString() );
+          source.append( "#" ).append( provider.toString() );
+
           final AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell) mapModell, layerName, "wms", null, source.toString() );
           m_outlineviewer.postCommand( command, null );
         }
@@ -131,9 +201,15 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
             else
               styleName = "default";
 
+            String providerID = m_page.getProviderID();
+            if( providerID != null )
+              provider.append( providerID );
+
             final String layerTitle = layer.getTitle();
             source.append( "#" ).append( KalypsoWMSImageProvider.KEY_LAYERS ).append( "=" ).append( layerName );
             source.append( "#" ).append( KalypsoWMSImageProvider.KEY_STYLES ).append( "=" ).append( styleName );
+            source.append( "#" ).append( provider.toString() );
+
             final AddThemeCommand command = new AddThemeCommand( (GisTemplateMapModell) mapModell, layerTitle, "wms", null, source.toString() );
             m_outlineviewer.postCommand( command, null );
           }

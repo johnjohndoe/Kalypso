@@ -78,21 +78,6 @@ import org.opengis.cs.CS_CoordinateSystem;
 public class KalypsoWMSImageProvider implements IKalypsoImageProvider, IKalypsoLegendProvider
 {
   /**
-   * This constant stores the key for the layers.
-   */
-  public final static String KEY_LAYERS = "LAYERS";
-
-  /**
-   * This constant stores the key for the URL.
-   */
-  public final static String KEY_URL = "URL";
-
-  /**
-   * This constant stores the key for the styles.
-   */
-  public final static String KEY_STYLES = "STYLES";
-
-  /**
    * This constant stores the type name.
    */
   public final static String TYPE_NAME = "wms";
@@ -119,15 +104,16 @@ public class KalypsoWMSImageProvider implements IKalypsoImageProvider, IKalypsoL
 
   /**
    * The constructor.
-   * 
-   * @param themeName
-   *            The name of the theme.
-   * @param source
-   *            Some parameters for the WMS.
-   * @param localSRS
-   *            The client coordinate system.
    */
-  public KalypsoWMSImageProvider( String themeName, String source, CS_CoordinateSystem localSRS )
+  public KalypsoWMSImageProvider( )
+  {
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.themes.provider.IKalypsoImageProvider#init(java.lang.String, java.lang.String,
+   *      org.opengis.cs.CS_CoordinateSystem)
+   */
+  public void init( String themeName, String source, CS_CoordinateSystem localSRS )
   {
     m_themeName = themeName;
     m_source = source;

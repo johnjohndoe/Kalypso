@@ -44,6 +44,7 @@ import java.awt.Image;
 
 import org.eclipse.core.runtime.CoreException;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * This interface provides functions for image provider.
@@ -52,6 +53,38 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  */
 public interface IKalypsoImageProvider
 {
+  /**
+   * This constant stores the key for the layers.
+   */
+  public final static String KEY_LAYERS = "LAYERS";
+
+  /**
+   * This constant stores the key for the URL.
+   */
+  public final static String KEY_URL = "URL";
+
+  /**
+   * This constant stores the key for the styles.
+   */
+  public final static String KEY_STYLES = "STYLES";
+
+  /**
+   * This constant stores the key for the image provider.
+   */
+  public final static String KEY_PROVIDER = "PROVIDER";
+
+  /**
+   * Initializes this image provider. This function must be called.
+   * 
+   * @param themeName
+   *            The name of the theme.
+   * @param source
+   *            Some parameters for the WMS.
+   * @param localSRS
+   *            The client coordinate system.
+   */
+  public void init( String themeName, String source, CS_CoordinateSystem localSRS );
+
   /**
    * This function will create the image and return it.
    * 
