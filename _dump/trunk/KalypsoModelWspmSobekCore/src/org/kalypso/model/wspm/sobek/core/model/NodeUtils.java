@@ -46,6 +46,14 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.lang.NotImplementedException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.ui.IWorkbenchWizard;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.progress.UIJob;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.IConnectionNode;
@@ -55,6 +63,7 @@ import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode.TYPE;
 import org.kalypso.model.wspm.sobek.core.utils.FNGmlUtils;
+import org.kalypso.model.wspm.sobek.core.wizard.SobekWizardEditBoundaryNode;
 import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -67,7 +76,7 @@ public class NodeUtils implements INodeUtils
 {
   private final ISobekModelMember m_model;
 
-  public NodeUtils( ISobekModelMember model )
+  public NodeUtils( final ISobekModelMember model )
   {
     m_model = model;
   }
@@ -75,9 +84,9 @@ public class NodeUtils implements INodeUtils
   /**
    * @see org.kalypso.model.wspm.sobek.core.interfaces.INodeUtils#switchBoundaryConnectionNode(org.kalypsodeegree.model.feature.Feature)
    */
-  public void switchBoundaryConnectionNode( Feature node ) throws Exception
+  public void switchBoundaryConnectionNode( final Feature node ) throws Exception
   {
-    QName nqn = node.getFeatureType().getQName();
+    final QName nqn = node.getFeatureType().getQName();
 
     /* which node type? */
     if( ISobekConstants.QN_HYDRAULIC_CONNECTION_NODE.equals( nqn ) )
@@ -85,98 +94,104 @@ public class NodeUtils implements INodeUtils
     else if( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE.equals( nqn ) )
       boundaryNodeToConnectionNode( new BoundaryNode( m_model, node ) );
     else
-      throw (new NotImplementedException());
+      throw new NotImplementedException();
   }
 
-  private void boundaryNodeToConnectionNode( BoundaryNode bn ) throws Exception
+  private void boundaryNodeToConnectionNode( final BoundaryNode bn ) throws Exception
   {
     /* create new connection node */
-    IConnectionNode connectionNode = (IConnectionNode) FNGmlUtils.createNode( m_model, TYPE.eConnectionNode, bn.getLocation(), new INode[] {} );
+    final IConnectionNode connectionNode = (IConnectionNode) FNGmlUtils.createNode( m_model, TYPE.eConnectionNode, bn.getLocation(), new INode[] {} );
 
-    Map<QName, Object> map = new HashMap<QName, Object>();
-    map.put( ISobekConstants.QN_HYDRAULIC_NAME, bn.getName() );
+    final Map<QName, Object> map = new HashMap<QName, Object>();
+// map.put( ISobekConstants.QN_HYDRAULIC_NAME, bn.getName() );
     map.put( ISobekConstants.QN_HYDRAULIC_DESCRIPTION, bn.getDescription() );
 
     FeatureUtils.updateFeature( connectionNode.getFeature(), map );
 
-    for( IBranch branch : bn.getInflowingBranches() )
-    {
+    for( final IBranch branch : bn.getInflowingBranches() )
       connectionNode.addInflowingBranch( branch );
-    }
 
-    for( IBranch branch : bn.getOutflowingBranches() )
-    {
+    for( final IBranch branch : bn.getOutflowingBranches() )
       connectionNode.addOutflowingBranch( branch );
-    }
 
     // set node at branches
-    IBranch[] inflowing = connectionNode.getInflowingBranches();
-    for( IBranch branch : inflowing )
-    {
+    final IBranch[] inflowing = connectionNode.getInflowingBranches();
+    for( final IBranch branch : inflowing )
       updateBranchNode( branch, connectionNode );
-    }
 
-    IBranch[] outflowing = connectionNode.getOutflowingBranches();
-    for( IBranch branch : outflowing )
-    {
+    final IBranch[] outflowing = connectionNode.getOutflowingBranches();
+    for( final IBranch branch : outflowing )
       updateBranchNode( branch, connectionNode );
-    }
 
     // delete connection node
     bn.delete();
+
   }
 
-  private void connectionNodeToBoundaryNode( IConnectionNode cn ) throws Exception
+  private void connectionNodeToBoundaryNode( final IConnectionNode cn ) throws Exception
   {
     /* create new boundary node */
-    IBoundaryNode boundaryNode = (IBoundaryNode) FNGmlUtils.createNode( m_model, TYPE.eBoundaryNode, cn.getLocation(), new INode[] {} );
+    final IBoundaryNode boundaryNode = (IBoundaryNode) FNGmlUtils.createNode( m_model, TYPE.eBoundaryNode, cn.getLocation(), new INode[] {} );
 
-    Map<QName, Object> map = new HashMap<QName, Object>();
-    map.put( ISobekConstants.QN_HYDRAULIC_NAME, cn.getName() );
+    final Map<QName, Object> map = new HashMap<QName, Object>();
+// map.put( ISobekConstants.QN_HYDRAULIC_NAME, cn.getName() );
     map.put( ISobekConstants.QN_HYDRAULIC_DESCRIPTION, cn.getDescription() );
 
     FeatureUtils.updateFeature( boundaryNode.getFeature(), map );
 
-    for( IBranch branch : cn.getInflowingBranches() )
-    {
+    for( final IBranch branch : cn.getInflowingBranches() )
       boundaryNode.addInflowingBranch( branch );
-    }
 
-    for( IBranch branch : cn.getOutflowingBranches() )
-    {
+    for( final IBranch branch : cn.getOutflowingBranches() )
       boundaryNode.addOutflowingBranch( branch );
-    }
 
     // set node at branches
-    IBranch[] inflowing = boundaryNode.getInflowingBranches();
-    for( IBranch branch : inflowing )
-    {
+    final IBranch[] inflowing = boundaryNode.getInflowingBranches();
+    for( final IBranch branch : inflowing )
       updateBranchNode( branch, boundaryNode );
-    }
 
-    IBranch[] outflowing = boundaryNode.getOutflowingBranches();
-    for( IBranch branch : outflowing )
-    {
+    final IBranch[] outflowing = boundaryNode.getOutflowingBranches();
+    for( final IBranch branch : outflowing )
       updateBranchNode( branch, boundaryNode );
-    }
 
-    // delete connection node
-    cn.delete();
+    new UIJob( "setting boundary node parameters..." )
+    {
+      @Override
+      public IStatus runInUIThread( final IProgressMonitor monitor )
+      {
+        final IWorkbenchWizard wizard = new SobekWizardEditBoundaryNode( boundaryNode );
+        wizard.init( PlatformUI.getWorkbench(), null );
+
+        final WizardDialog dialog = new WizardDialog( null, wizard );
+        dialog.open();
+
+        final int returnCode = dialog.getReturnCode();
+        try
+        {
+          if( Window.OK == returnCode )
+            cn.delete();
+          else
+            boundaryNode.delete();
+        }
+        catch( final Exception e )
+        {
+          return new Status( IStatus.ERROR, this.getClass().getName(), e.getMessage() );
+        }
+
+        return Status.OK_STATUS;
+      }
+    }.schedule();
   }
 
-  private void updateBranchNode( IBranch branch, INode node ) throws Exception
+  private void updateBranchNode( final IBranch branch, final INode node ) throws Exception
   {
-    GM_Curve curve = branch.getGeometryProperty();
-    GM_Point pn = node.getLocation();
+    final GM_Curve curve = branch.getGeometryProperty();
+    final GM_Point pn = node.getLocation();
 
     if( curve.getStartPoint().intersects( pn ) )
-    {
       branch.setUpperNode( node );
-    }
     else if( curve.getEndPoint().intersects( pn ) )
-    {
       branch.setLowerNode( node );
-    }
   }
 
 }

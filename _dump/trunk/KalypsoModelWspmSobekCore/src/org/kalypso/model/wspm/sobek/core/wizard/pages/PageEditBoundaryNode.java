@@ -40,31 +40,39 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.wizard.pages;
 
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
+import org.kalypso.contribs.eclipse.jface.viewers.FacadeComboViewer;
+import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode;
+import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
+import org.kalypso.util.swt.FCVFeatureDelegate;
+import org.kalypso.util.swt.WizardFeatureTextBox;
 
 /**
  * @author kuch
  */
-public class PageCreateLastfall extends WizardPage
+public class PageEditBoundaryNode extends WizardPage
 {
 
-  private Text m_name;
+  private final IBoundaryNode m_boundaryNode;
 
-  private Text m_description;
+  private WizardFeatureTextBox m_description;
 
-  public PageCreateLastfall( )
+  private WizardFeatureTextBox m_name;
+
+  private FacadeComboViewer m_type;
+
+  public PageEditBoundaryNode( final IBoundaryNode boundaryNode )
   {
-    super( "createLastfall" );
-    setTitle( "Create a new Lastfall" );
-    setDescription( "Enter name and description for the lastfall which will be created, please." );
+    super( "editBoundaryNode" );
+    m_boundaryNode = boundaryNode;
+    setTitle( "Edit boundary node" );
+    setDescription( "Enter boundary node parameters, please." );
   }
 
   /**
@@ -82,12 +90,12 @@ public class PageCreateLastfall extends WizardPage
     final Label lName = new Label( container, SWT.NONE );
     lName.setText( "Name" );
 
-    m_name = new Text( container, SWT.BORDER );
-    m_name.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+    m_name = new WizardFeatureTextBox( m_boundaryNode.getFeature(), ISobekConstants.QN_HYDRAULIC_NAME );
+    m_name.draw( container, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER );
 
-    m_name.addModifyListener( new ModifyListener()
+    m_name.addModifyListener( new Runnable()
     {
-      public void modifyText( final ModifyEvent e )
+      public void run( )
       {
         checkPageCompleted();
       }
@@ -96,20 +104,44 @@ public class PageCreateLastfall extends WizardPage
     /* description */
     final Label lDescription = new Label( container, SWT.NONE );
     lDescription.setText( "Description" );
-    lDescription.setLayoutData( new GridData( GridData.FILL, GridData.BEGINNING, false, false ) );
 
-    m_description = new Text( container, SWT.BORDER | SWT.WRAP | SWT.MULTI );
-    m_description.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+    m_description = new WizardFeatureTextBox( m_boundaryNode.getFeature(), ISobekConstants.QN_HYDRAULIC_DESCRIPTION );
+    m_description.draw( container, new GridData( GridData.FILL, GridData.FILL, true, true ), SWT.BORDER | SWT.MULTI | SWT.WRAP );
+
+    /* bc type */
+    final Label lType = new Label( container, SWT.NONE );
+    lType.setText( "Boundary Node Type" );
+
+    m_type = new FacadeComboViewer( new FCVFeatureDelegate( m_boundaryNode.getFeature(), ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_TYPE ) );
+    m_type.draw( container, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER | SWT.SINGLE | SWT.READ_ONLY );
+
+    m_type.addSelectionChangedListener( new Runnable()
+    {
+      public void run( )
+      {
+        checkPageCompleted();
+      }
+    } );
 
     checkPageCompleted();
   }
 
   protected void checkPageCompleted( )
   {
-    if( m_name.getText() == null || m_name.getText().trim().equals( "" ) )
+    if( m_name.getText() == null )
     {
       setMessage( null );
       setErrorMessage( "Name not defined." );
+      setPageComplete( false );
+
+      return;
+    }
+
+    final StructuredSelection selection = (StructuredSelection) m_type.getSelection();
+    if( selection.getFirstElement() == null )
+    {
+      setMessage( null );
+      setErrorMessage( "Boundary Node type not set." );
       setPageComplete( false );
 
       return;
@@ -120,17 +152,23 @@ public class PageCreateLastfall extends WizardPage
     setPageComplete( true );
   }
 
-  public Object getLastfallName( )
+  public String getBoundaryName( )
   {
     return m_name.getText();
   }
 
-  public Object getLastfallDescription( )
+  public String getBoundaryDescription( )
   {
     if( m_description.getText() == null )
       return "";
 
     return m_description.getText();
+  }
+
+  public String getBoundaryType( )
+  {
+    final StructuredSelection selection = (StructuredSelection) m_type.getSelection();
+    return (String) selection.getFirstElement();
   }
 
 }

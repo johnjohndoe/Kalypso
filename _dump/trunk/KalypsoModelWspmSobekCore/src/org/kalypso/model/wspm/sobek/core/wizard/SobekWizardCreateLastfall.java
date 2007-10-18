@@ -63,7 +63,7 @@ import org.kalypsodeegree.model.feature.Feature;
 /**
  * @author kuch
  */
-public class FNWizardCreateLastfall extends Wizard implements INewWizard
+public class SobekWizardCreateLastfall extends Wizard implements INewWizard
 {
 
   private PageCreateLastfall m_page;
@@ -74,7 +74,7 @@ public class FNWizardCreateLastfall extends Wizard implements INewWizard
    * @param modelBuilder
    *            instance of sobek model gml notation
    */
-  public FNWizardCreateLastfall( final IModelMember modelBuilder )
+  public SobekWizardCreateLastfall( final IModelMember modelBuilder )
   {
     m_modelBuilder = modelBuilder;
   }

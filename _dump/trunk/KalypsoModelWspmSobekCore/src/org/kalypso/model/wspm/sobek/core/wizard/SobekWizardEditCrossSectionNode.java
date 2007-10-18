@@ -58,7 +58,7 @@ import org.kalypsodeegree.model.feature.Feature;
 /**
  * @author kuch
  */
-public class FNWizardEditCrossSectionNode extends Wizard implements INewWizard
+public class SobekWizardEditCrossSectionNode extends Wizard implements INewWizard
 {
   private final Feature m_node;
 
@@ -67,7 +67,7 @@ public class FNWizardEditCrossSectionNode extends Wizard implements INewWizard
   private final IFCVDelegate m_crossSectionDelegate;
 
   /* todo list of waterbodies - profiles */
-  public FNWizardEditCrossSectionNode( final Feature node, final IFCVDelegate crossSectionDelegate )
+  public SobekWizardEditCrossSectionNode( final Feature node, final IFCVDelegate crossSectionDelegate )
   {
     m_node = node;
     m_crossSectionDelegate = crossSectionDelegate;

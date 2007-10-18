@@ -175,4 +175,8 @@ public class ISobekConstants
 
   public static final QName QN_HYDRAULIC_LASTFALL = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.F_HYDRAULIC_LASTFALL );
 
+  public static final String F_HYDRAULIC_BOUNDARY_NODE_TYPE = "bcType";
+
+  public static final QName QN_HYDRAULIC_BOUNDARY_NODE_TYPE = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.F_HYDRAULIC_BOUNDARY_NODE_TYPE );
+
 }
