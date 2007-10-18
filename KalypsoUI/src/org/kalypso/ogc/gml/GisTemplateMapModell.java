@@ -60,6 +60,8 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme;
+import org.kalypso.ogc.gml.map.themes.provider.IKalypsoImageProvider;
+import org.kalypso.ogc.gml.map.themes.utils.KalypsoWMSUtilities;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
@@ -199,7 +201,11 @@ public class GisTemplateMapModell implements IMapModell
     {
       final String layerName = layerType.getName();
       final String source = layerType.getHref();
-      return new KalypsoWMSTheme( linktype, layerName, source, defaultCS, this );
+
+      /* Create the image provider. */
+      IKalypsoImageProvider imageProvider = KalypsoWMSUtilities.getImageProvider( layerName, source, defaultCS );
+
+      return new KalypsoWMSTheme( linktype, layerName, imageProvider, this );
     }
     else if( ArrayUtils.contains( arrImgTypes, linktype.toLowerCase() ) )
       return KalypsoPictureTheme.getPictureTheme( layerType, context, this, defaultCS );

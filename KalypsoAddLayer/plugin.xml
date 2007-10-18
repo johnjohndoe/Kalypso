@@ -3,6 +3,7 @@
 <plugin>
 
      <extension-point id="addLayerWizard" name="addLayerWizard" schema="schema/addLayerWizard.exsd"/>
+     <extension-point id="WMSImageProvider" name="WMSImageProvider" schema="schema/WMSImageProvider.exsd"/>
    <extension
          id="mapviewaction"
          name="mapviewaction"
@@ -69,6 +70,14 @@
             icon="icons/sample.gif"
             id="org.kalypso.ui.gazetter.view.GazetterView"
             name="GazetterView"/>
+   </extension>
+   <extension
+         point="org.kalypso.ui.addlayer.WMSImageProvider">
+      <imageProvider
+            class="org.kalypso.ogc.gml.map.themes.provider.KalypsoWMSImageProvider"
+            id="org.kalypso.ui.addlayer.kalypsoImageProvider"
+            name="WMS Client">
+      </imageProvider>
    </extension>
 
 </plugin>

@@ -60,11 +60,9 @@ import org.kalypso.ogc.gml.IGetFeatureInfoResultProcessor;
 import org.kalypso.ogc.gml.map.themes.loader.KalypsoImageLoader;
 import org.kalypso.ogc.gml.map.themes.provider.IKalypsoImageProvider;
 import org.kalypso.ogc.gml.map.themes.provider.IKalypsoLegendProvider;
-import org.kalypso.ogc.gml.map.themes.provider.KalypsoWMSImageProvider;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * This class implements the a theme, which loads images from a given provider.
@@ -178,19 +176,17 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
    *            The link type.
    * @param themeName
    *            The name of the theme.
-   * @param source
-   *            TODO Remove this parameter, if the provider is created outside.
-   * @param localSRS
-   *            TODO Remove this parameter, if the provider is created outside.
+   * @param imageProvider
+   *            The image provider, which should be used. If it has also the type {@link IKalypsoLegendProvider} also a
+   *            legend can be shown.
    * @param mapModel
    *            The map modell.
    */
-  public KalypsoWMSTheme( final String linktype, final String themeName, final String source, final CS_CoordinateSystem localSRS, final IMapModell mapModel )
+  public KalypsoWMSTheme( final String linktype, final String themeName, final IKalypsoImageProvider imageProvider, final IMapModell mapModel )
   {
     super( themeName, linktype.toUpperCase(), mapModel );
 
-    /* Create the image provider. TODO Move this outside. */
-    m_provider = new KalypsoWMSImageProvider( themeName, source, localSRS );
+    m_provider = imageProvider;
 
     m_buffer = null;
     m_legend = null;
@@ -287,7 +283,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
       m_maxEnvLocalSRS = null;
 
     /* Create a new loader. */
-    if( width > 0 && height > 0 && extent.getWidth() > 0 && extent.getHeight() > 0 )
+    if( width > 0 && height > 0 && extent != null && extent.getWidth() > 0 && extent.getHeight() > 0 )
     {
       m_loader = new KalypsoImageLoader( getName(), m_provider, width, height, extent );
 
