@@ -86,12 +86,12 @@ public class ImportLanduseShpPage extends WizardPage implements Listener
     txt_InputFile.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
 
     btn_inputFileBrowse = new Button( container, SWT.NONE );
-    btn_inputFileBrowse.setText( Messages.getString("ImportLanduseShpPage.11") ); //$NON-NLS-1$
+    btn_inputFileBrowse.setText( Messages.getString( "ImportLanduseShpPage.11" ) ); //$NON-NLS-1$
 
     createLine( container, 3 );
 
     // Landuse property combo box
-    new Label( container, SWT.NONE ).setText( Messages.getString("ImportLanduseShpPage.12") ); //$NON-NLS-1$
+    new Label( container, SWT.NONE ).setText( Messages.getString( "ImportLanduseShpPage.12" ) ); //$NON-NLS-1$
     cmb_ShapeProperty = new Combo( container, SWT.BORDER | SWT.READ_ONLY );
     final GridData gd0 = new GridData();
     gd0.horizontalAlignment = GridData.FILL;
@@ -102,7 +102,7 @@ public class ImportLanduseShpPage extends WizardPage implements Listener
     createLine( container, 3 );
 
     // Coordinate system combo box
-    new Label( container, SWT.NONE ).setText( Messages.getString("ImportLanduseShpPage.13") ); //$NON-NLS-1$
+    new Label( container, SWT.NONE ).setText( Messages.getString( "ImportLanduseShpPage.13" ) ); //$NON-NLS-1$
     cmb_CoordinateSystem = new Combo( container, SWT.BORDER | SWT.READ_ONLY );
     cmb_CoordinateSystem.setItems( (new ConvenienceCSFactoryFull()).getKnownCS() );
     final int indexOfDefaultCRS = cmb_CoordinateSystem.indexOf( IKalypsoCorePreferences.DEFAULT_CRS );
@@ -137,7 +137,7 @@ public class ImportLanduseShpPage extends WizardPage implements Listener
     msg_StatusLine = status;
     if( event.widget == btn_inputFileBrowse )
     {
-      txt_InputFile.setText( getFilenameFromDialog( null, new String[] { "*.shp" }, null ) ); //$NON-NLS-1$
+      txt_InputFile.setText( getFilenameFromDialog( new String[] { "*.shp" }, null ) ); //$NON-NLS-1$
     }
     else if( event.widget == txt_InputFile )
     {
@@ -262,7 +262,7 @@ public class ImportLanduseShpPage extends WizardPage implements Listener
   {
     // if(m_sourcePath != null)
     // return m_sourcePath;
-    String text = txt_InputFile.getText().trim();
+    final String text = txt_InputFile.getText().trim();
     if( text.length() == 0 )
       return null;
     m_sourcePath = new Path( text );
@@ -281,32 +281,25 @@ public class ImportLanduseShpPage extends WizardPage implements Listener
     return cmb_ShapeProperty.getText();
   }
 
-  private String getFilenameFromDialog( File selectedFile, String[] filterExtensions, String path )
+  private String getFilenameFromDialog( final String[] filterExtensions, final String path )
   {
-    FileDialog dialog = new FileDialog( getShell(), SWT.SINGLE );
+    final FileDialog dialog = new FileDialog( getShell(), SWT.SINGLE );
     dialog.setFilterExtensions( filterExtensions );
     if( path != null )
       dialog.setFilterPath( path );
-    if( selectedFile != null )
-    {
-      dialog.setFileName( selectedFile.getName() );
-      dialog.setFilterPath( selectedFile.getParent() );
-    }
     dialog.open();
-    String fileName = dialog.getFileName();
-    String filterPath = dialog.getFilterPath();
+    final String fileName = dialog.getFileName();
+    final String filterPath = dialog.getFilterPath();
     String filePath = null;
     if( fileName != null && fileName != "" && filterPath != null ) //$NON-NLS-1$
-    {
       filePath = filterPath + File.separator + fileName; //$NON-NLS-1$
-    }
     return filePath;
   }
 
   /**
    * Applies the status to the status line of a dialog page.
    */
-  private void applyToStatusLine( IStatus status )
+  private void applyToStatusLine( final IStatus status )
   {
     String message = status.getMessage();
     if( message.length() == 0 )
@@ -332,18 +325,16 @@ public class ImportLanduseShpPage extends WizardPage implements Listener
     }
   }
 
-  protected boolean isTextNonEmpty( Text t )
+  protected boolean isTextNonEmpty( final Text t )
   {
-    String s = t.getText();
-    if( (s != null) && (s.trim().length() > 0) )
-      return true;
-    return false;
+    final String s = t.getText();
+    return (s != null) && (s.trim().length() > 0);
   }
 
-  private void createLine( Composite parent, int ncol )
+  private void createLine( final Composite parent, final int ncol )
   {
-    Label line = new Label( parent, SWT.SEPARATOR | SWT.HORIZONTAL | SWT.BOLD );
-    GridData gridData = new GridData( GridData.FILL_HORIZONTAL );
+    final Label line = new Label( parent, SWT.SEPARATOR | SWT.HORIZONTAL | SWT.BOLD );
+    final GridData gridData = new GridData( GridData.FILL_HORIZONTAL );
     gridData.horizontalSpan = ncol;
     line.setLayoutData( gridData );
   }

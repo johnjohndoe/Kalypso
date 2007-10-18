@@ -17,8 +17,8 @@
 				<Help><![CDATA[Import von Landnutzung shape-Dateien]]></Help>
 				<Name>Import von Landnutzung shape-Dateien</Name>
 			</Task>
-			<Task context="ImportWaterlevelData"
-				URI="http___www.tu-harburg.de_wb_kalypso_risk__ImportWaterlevelData">
+			<Task context="ImportWaterdepthRasterWizard"
+				URI="http___www.tu-harburg.de_wb_kalypso_risk__ImportWaterdepthRaster">
 				<Help><![CDATA[Import waterlevel data]]></Help>
 				<Name>Import waterlevel data</Name>
 			</Task>
@@ -130,6 +130,18 @@
 							id="ImportLanduseShapeDataWizard"
 							wizardId="org.kalypso.risk.model.wizards.importlanduse.ImportLanduseWizard"
 							wizardType="NEW_WIZARD" parent="ImportLanduseShapeDataContext" />
+						<con:Parameter name="type"
+							value="mapViewInputContext" />
+						<con:Parameter name="input"
+							value="maps/basemap.gmt" />
+					</con:ExtensionContext>
+					<con:ExtensionContext
+						id="ImportWaterdepthRasterContext" parent="MapContext"
+						handlerFactoryId="kalypsoContextHandlerFactory">
+						<con:WizardContext
+							id="ImportWaterdepthRasterWizard"
+							wizardId="org.kalypso.risk.model.wizards.importwaterdepth.ImportWaterdepthWizard"
+							wizardType="NEW_WIZARD" parent="ImportWaterdepthRasterContext" />
 						<con:Parameter name="type"
 							value="mapViewInputContext" />
 						<con:Parameter name="input"

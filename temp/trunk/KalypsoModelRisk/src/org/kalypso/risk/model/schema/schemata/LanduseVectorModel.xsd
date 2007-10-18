@@ -6,7 +6,7 @@
 	xmlns:gml="http://www.opengis.net/gml"
 	xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:krvdm="http://www.tu-harburg.de/wb/kalypso/risk/schemata/landuseVectorData"
-	xmlns:krldb="http://www.tu-harburg.de/wb/kalypso/risk/schemata/landuseDatabase"
+	xmlns:krrcm="http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel"
 	elementFormDefault="qualified" attributeFormDefault="unqualified">
 
 	<xs:annotation>
@@ -17,7 +17,7 @@
 
 	<xs:import namespace="http://www.opengis.net/gml" />
 	<xs:import
-		namespace="http://www.tu-harburg.de/wb/kalypso/risk/schemata/landuseDatabase" />
+		namespace="http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel" />
 
 	<xs:element name="_Model" type="gml:AbstractFeatureType"
 		substitutionGroup="gml:_Feature" />
@@ -30,7 +30,7 @@
 			<xs:extension base="gml:AbstractFeatureType">
 				<xs:sequence>
 					<xs:element ref="krvdm:landusePolygonCollection"
-						minOccurs="1" maxOccurs="unbounded" />
+						minOccurs="0" maxOccurs="1" />
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -78,6 +78,7 @@
 	</xs:element>
 
 	<xs:complexType name="PolygonType">
+	<!-- 
 		<xs:annotation>
 			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
 				<kapp:functionProperty
@@ -85,6 +86,7 @@
 					kapp:property="krvdm:sldStyle" />
 			</xs:appinfo>
 		</xs:annotation>
+		 -->
 		<xs:complexContent>
 			<xs:extension base="gml:AbstractFeatureType">
 				<xs:sequence>

@@ -47,7 +47,7 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.risk.model.schema.RiskSchemaCatalog;
+import org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
 
@@ -56,7 +56,7 @@ import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
  */
 public class LanduseStylePropertyFunction extends FeaturePropertyFunction
 {
-  private final static QName m_clsMember = new QName( RiskSchemaCatalog.NS_LANDUSEDB, "roughnessClassMember" );
+  private final static QName m_clsMember = new QName( KalypsoRiskSchemaCatalog.NS_LANDUSE_VECTOR_MODEL, "roughnessClassMember" );
 
   private final static QName m_name = new QName( NS.GML3, "name" );
 

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:gml="http://www.opengis.net/gml"
 	xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:krldb="http://www.tu-harburg.de/wb/kalypso/risk/schemata/landuseDatabase"
+	xmlns:krrcm="http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel"
 	xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:common="org.kalypso.gml.common"
-	targetNamespace="http://www.tu-harburg.de/wb/kalypso/risk/schemata/landuseDatabase"
+	targetNamespace="http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel"
 	elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:annotation>
 		<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
@@ -14,17 +14,45 @@
 	<xs:import namespace="http://www.opengis.net/gml" />
 	<xs:import namespace="org.kalypso.gml.common" />
 	<!-- =================================================================
+		RasterizationControlModel
+		================================================================== -->
+	<xs:element name="RasterizationControlModel"
+		type="krrcm:RasterizationControlModelType"
+		substitutionGroup="gml:_Feature" />
+	<xs:complexType name="RasterizationControlModelType">
+		<xs:complexContent>
+			<xs:restriction base="gml:AbstractFeatureCollectionType">
+				<xs:sequence>
+					<xs:element ref="krrcm:landuseClassCollection"
+						minOccurs="1" maxOccurs="1" />
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- =================================================================
+		ControlModelMemberPropertyType member or property 
+		===================================================================-->
+	<xs:element name="landuseClassCollection"
+		type="krrcm:LanduseClassCollectionPropertyType" />
+	<xs:complexType name="LanduseClassCollectionPropertyType">
+		<xs:sequence>
+			<xs:element ref="krrcm:LanduseClassCollection"
+				minOccurs="0" />
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+	</xs:complexType>
+	<!-- =================================================================
 		Landuse classes Collection
 		================================================================== -->
 	<xs:element name="LanduseClassCollection"
-		type="krldb:LanduseClassCollectionType"
+		type="krrcm:LanduseClassCollectionType"
 		substitutionGroup="gml:_Feature" />
-		
+
 	<xs:complexType name="LanduseClassCollectionType">
 		<xs:complexContent>
 			<xs:extension base="gml:AbstractFeatureType">
 				<xs:sequence>
-					<xs:element ref="krldb:landuseClassMember"
+					<xs:element ref="krrcm:landuseClassMember"
 						minOccurs="0" maxOccurs="unbounded" />
 				</xs:sequence>
 			</xs:extension>
@@ -35,11 +63,11 @@
 		landuseClassMember property
 		================================================================== -->
 	<xs:element name="landuseClassMember"
-		type="krldb:LanduseClassPropertyType" />
-		
+		type="krrcm:LanduseClassPropertyType" />
+
 	<xs:complexType name="LanduseClassPropertyType">
 		<xs:sequence>
-			<xs:element ref="krldb:LanduseClass" minOccurs="0" />
+			<xs:element ref="krrcm:LanduseClass" minOccurs="0" />
 		</xs:sequence>
 		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
 	</xs:complexType>
@@ -47,7 +75,7 @@
 	<!-- =================================================================
 		Landuse classes
 		================================================================== -->
-	<xs:element name="LanduseClass" type="krldb:LanduseClassType"
+	<xs:element name="LanduseClass" type="krrcm:LanduseClassType"
 		substitutionGroup="gml:_Feature">
 		<xs:annotation>
 			<xs:documentation xml:lang="de">
@@ -89,5 +117,5 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	
+
 </xs:schema>

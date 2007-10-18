@@ -50,10 +50,12 @@ import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.handlers.IHandlerService;
@@ -61,12 +63,16 @@ import org.eclipse.ui.internal.UIPlugin;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.kalypsosimulationmodel.utils.SLDHelper;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
+import org.kalypso.risk.model.schema.binding.ILanduseClass;
 import org.kalypso.risk.model.schema.binding.ILanduseModel;
 import org.kalypso.risk.model.schema.binding.ILandusePolygon;
-import org.kalypso.risk.model.schema.binding.ILandusePolygonCollection;
+import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Surface;
@@ -81,8 +87,6 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
 {
   private IStructuredSelection initialSelection;
 
-  private IFolder m_scenarioFolder;
-
   protected ImportLanduseShpPage m_PageImportShp;
 
   private final HashSet<String> m_landuseTypeSet = new HashSet<String>();
@@ -94,10 +98,6 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
 
   public void init( IWorkbench workbench, IStructuredSelection selection )
   {
-    final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
-    final IEvaluationContext context = handlerService.getCurrentState();
-    m_scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
-
     initialSelection = selection;
     setNeedsProgressMonitor( true );
     setWindowTitle( Messages.getString( "ImportLanduseWizard.0" ) ); //$NON-NLS-1$
@@ -153,20 +153,18 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
             final Feature shapeRootFeature = landuseShapeWS.getRootFeature();
             final List shapeFeatureList = (List) shapeRootFeature.getProperty( new QName( "namespace", Messages.getString( "ImportLanduseWizard.3" ) ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
-            final ILandusePolygonCollection landusePolygonCollection = landuseModel.getLandusePolygonCollection();
+            final IFeatureWrapperCollection<ILandusePolygon> landusePolygonCollection = landuseModel.getLandusePolygonCollection();
             landusePolygonCollection.clear();
 
-            final List<Feature> changedFeatures = new ArrayList<Feature>();
-
             monitor.subTask( Messages.getString( "ImportLanduseWizard.9" ) ); //$NON-NLS-1$
+            final List<Feature> createdFeatures = new ArrayList<Feature>();
             for( int i = 0; i < shapeFeatureList.size(); i++ )
             {
               final Feature shpFeature = (Feature) shapeFeatureList.get( i );
-              final String shpPropertyValue = (String) shpFeature.getProperty( shapeLandusePropertyName );
+              final String shpPropertyValue = shpFeature.getProperty( shapeLandusePropertyName ).toString();
               if( !m_landuseTypeSet.contains( shpPropertyValue ) )
                 m_landuseTypeSet.add( shpPropertyValue );
               final ILandusePolygon polygon = landusePolygonCollection.addNew( ILandusePolygon.QNAME );
-              changedFeatures.add( polygon.getWrappedFeature() );
               final GM_Object shpGeometryProperty = (GM_Object) shpFeature.getProperty( shapeGeomPropertyName );
 
               // we don't like multi surfaces, so...
@@ -178,24 +176,51 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
                 {
                   polygon.setGeometry( surfaces[k] );
                   polygon.setStyleType( shpPropertyValue );
+                  polygon.getWrappedFeature().invalidEnvelope();
+                  createdFeatures.add( polygon.getWrappedFeature() );
                 }
               }
               else if( shpGeometryProperty instanceof GM_Surface )
               {
                 polygon.setGeometry( (GM_Surface< ? >) shpGeometryProperty );
                 polygon.setStyleType( shpPropertyValue );
+                polygon.getWrappedFeature().invalidEnvelope();
+                createdFeatures.add( polygon.getWrappedFeature() );
               }
               else
                 throw new RuntimeException( Messages.getString( "ImportLanduseWizard.4" ) + shpGeometryProperty.getClass().getName() ); //$NON-NLS-1$
             }
+            // landuseModel.getWrappedFeature().invalidEnvelope();
+
+            // fireModellEvent to redraw a map...
+            final GMLWorkspace workspace = szenarioDataProvider.getCommandableWorkSpace( ILanduseModel.class );
+            workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, landusePolygonCollection.getWrappedFeature(), createdFeatures.toArray( new Feature[0] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+
             szenarioDataProvider.postCommand( ILanduseModel.class, new EmptyCommand( "Get dirty!", false ) );
 
             // TODO create landuse class database
             monitor.subTask( Messages.getString( "ImportLanduseWizard.10" ) ); //$NON-NLS-1$
 
+            final IRasterizationControlModel controlModel = szenarioDataProvider.getModel( IRasterizationControlModel.class );
+            final IFeatureWrapperCollection<ILanduseClass> landuseClassCollection = controlModel.getLanduseClassCollection();
+            landuseClassCollection.clear();
+            for( final String landuseType : m_landuseTypeSet )
+            {
+              final ILanduseClass landuseClass = landuseClassCollection.addNew( ILanduseClass.QNAME );
+              landuseClass.setName( landuseType );
+              landuseClass.setColorStyle( getRandomColor() );
+            }
+            szenarioDataProvider.postCommand( IRasterizationControlModel.class, new EmptyCommand( "Get dirty!", false ) );
+
+            final IFolder projectFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
+            final IFile sldFile = projectFolder.getFile( "styles/LanduseVectorModel.sld" );
+            if( sldFile.exists() )
+              sldFile.delete( false, new NullProgressMonitor() );
+            SLDHelper.exportSLD( sldFile, landuseClassCollection, ILandusePolygon.QNAME_PROPERTY_GEOMETRY, ILandusePolygon.QNAME_PROPERTY_SLDSTYLE, "Landuse style", "Landuse style", null );
           }
           catch( final Exception e )
           {
+            e.printStackTrace();
             throw new InterruptedException( e.getLocalizedMessage() );
           }
         }
@@ -210,4 +235,8 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
     return true;
   }
 
+  private RGB getRandomColor( )
+  {
+    return new RGB( new Double( 255.0 * Math.random() ).intValue(), new Double( 255.0 * Math.random() ).intValue(), new Double( 255.0 * Math.random() ).intValue() );
+  }
 }

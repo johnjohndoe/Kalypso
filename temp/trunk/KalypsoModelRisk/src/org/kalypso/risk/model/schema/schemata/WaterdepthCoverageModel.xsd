@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema
+	targetNamespace="http://www.tu-harburg.de/wb/kalypso/risk/schemata/waterlevelCoverageData"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:gml="http://www.opengis.net/gml"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:krwcd="http://www.tu-harburg.de/wb/kalypso/risk/schemata/waterlevelCoverageData"
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+	<xs:annotation>
+		<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+		</xs:appinfo>
+	</xs:annotation>
+
+	<xs:import namespace="http://www.opengis.net/gml" />
+
+	<xs:element name="_Model" type="gml:AbstractFeatureType"
+		substitutionGroup="gml:_Feature" />
+
+	<xs:element name="WaterdepthCoverageModel"
+		type="krwcd:WaterdepthCoverageModelType"
+		substitutionGroup="krwcd:_Model" />
+
+	<xs:complexType name="WaterdepthCoverageModelType">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element ref="krwcd:waterdepthCoverageCollection"
+						minOccurs="0" maxOccurs="1" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:element name="waterdepthCoverageCollection">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="krwcd:WaterdepthCoverageCollection"
+					minOccurs="0" maxOccurs="1" />
+			</xs:sequence>
+			<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+		</xs:complexType>
+	</xs:element>
+	<!-- =================================================================
+		PolygonCollection
+		================================================================== -->
+	<xs:element name="WaterdepthCoverageCollection"
+		type="krwcd:WaterdepthCoverageCollectionType"
+		substitutionGroup="gml:_Feature">
+	</xs:element>
+
+	<xs:complexType name="WaterdepthCoverageCollectionType">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element ref="krwcd:waterdepthCoverageMember"
+						minOccurs="0" maxOccurs="unbounded" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:element name="waterdepthCoverageMember"
+		type="krwcd:WaterdepthCoverageMemberPropertyType" />
+
+	<xs:complexType name="WaterdepthCoverageMemberPropertyType">
+		<xs:sequence>
+			<xs:element ref="krwcd:WaterdepthCoverage" minOccurs="0"
+				maxOccurs="1" />
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+	</xs:complexType>
+
+	<xs:element name="WaterdepthCoverage"
+		type="krwcd:WaterdepthCoverageType"
+		substitutionGroup="gml:RectifiedGridCoverage">
+	</xs:element>
+
+	<xs:complexType name="WaterdepthCoverageType">
+		<xs:annotation>
+			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.risk.model.schema.propertyFunctions.VirtualRasterGeometryProperty"
+					kapp:property="krwcd:virtualRasterGeometryProperty" kapp:isVirtual="true"
+					kapp:valueType="gml:PolygonPropertyType" />
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gml:RectifiedGridCoverageType">
+				<xs:sequence>
+					<xs:element name="returnPeriod" type="xs:int" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+</xs:schema>

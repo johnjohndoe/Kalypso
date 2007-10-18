@@ -2,12 +2,14 @@ package org.kalypso.risk.model.schema.binding;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.risk.model.schema.RiskSchemaCatalog;
+import org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 public interface ILandusePolygonCollection extends IFeatureWrapperCollection<ILandusePolygon>
 {
-  public QName QNAME = new QName( RiskSchemaCatalog.NS_LANDUSEVECTORMODEL, "PolygonCollection" );
+  public QName QNAME = new QName( KalypsoRiskSchemaCatalog.NS_LANDUSE_VECTOR_MODEL, "PolygonCollection" );
 
-  public QName QNAME_PROPERTY_POLYGON = new QName( RiskSchemaCatalog.NS_LANDUSEVECTORMODEL, "polygonMember" );
+  public QName PROPERTY_POLYGON_MEMBER = new QName( KalypsoRiskSchemaCatalog.NS_LANDUSE_VECTOR_MODEL, "polygonMember" );
+
+  public IFeatureWrapperCollection<ILandusePolygon> getLandusePolygonCollection( );
 }

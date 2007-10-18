@@ -50,19 +50,20 @@ import org.kalypso.contribs.java.net.AbstractUrlCatalog;
  * 
  * @author Dejan Antanaskovic
  */
-public class RiskSchemaCatalog extends AbstractUrlCatalog
+public class KalypsoRiskSchemaCatalog extends AbstractUrlCatalog
 {
-  public static final String NS_LANDUSEDB = "http://www.tu-harburg.de/wb/kalypso/risk/schemata/landuseDatabase";
+  public static final String NS_RASTERIZATION_CONTROL_MODEL = "http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel";
 
-  public static final String PREFIX_LANDUSEDB = "krldb";
+  public static final String PREFIX_RASTERIZATION_CONTROL_MODEL = "krrcm";
 
-  // public static final String NS_CONTEXTMODEL = "http://www.tuhh.de/floodrisk/contextModel";
-  //
-  // public static final String NS_RISKCONTEXTMODEL = "http://www.tuhh.de/floodrisk/riskContextModel";
-  //
-  // public static final String NS_RASTERDATAMODEL = "http://www.tu-harburg.de/wb/kalypso/risk/schemata/landuseRasterData";
-   public static final String NS_LANDUSEVECTORMODEL = "http://www.tu-harburg.de/wb/kalypso/risk/schemata/landuseVectorData";
-   public static final String PREFIX_LANDUSEVECTORMODEL = "krvdm";
+  public static final String NS_LANDUSE_VECTOR_MODEL = "http://www.tu-harburg.de/wb/kalypso/risk/schemata/landuseVectorData";
+
+  public static final String PREFIX_LANDUSE_VECTOR_MODEL = "krvdm";
+
+  public static final String NS_WATERDEPTH_COVERAGE_MODEL = "http://www.tu-harburg.de/wb/kalypso/risk/schemata/waterlevelCoverageData";
+
+  public static final String PREFIX_WATERDEPTH_COVERAGE_MODEL = "krwcd";
+
   //
   // // public static final String NS_RECTIFIEDGRIDCOVERAGE = "http://www.tuhh.de/floodrisk/rectifiedGridCoverage";
   // public static final String NS_WATERLEVELDATA = "http://www.tuhh.de/floodrisk/waterlevelData";
@@ -87,10 +88,12 @@ public class RiskSchemaCatalog extends AbstractUrlCatalog
   @Override
   protected void fillCatalog( final Class< ? > myClass, final Map<String, URL> catalog, final Map<String, String> prefixes )
   {
-    catalog.put( NS_LANDUSEDB, myClass.getResource( "schemata/LanduseClasses.xsd" ) );
-    prefixes.put( NS_LANDUSEDB, PREFIX_LANDUSEDB );
-    catalog.put( NS_LANDUSEVECTORMODEL, myClass.getResource( "schemata/LanduseVectorModel.xsd" ) );
-    prefixes.put( NS_LANDUSEVECTORMODEL, PREFIX_LANDUSEVECTORMODEL );
+    catalog.put( NS_RASTERIZATION_CONTROL_MODEL, myClass.getResource( "schemata/RasterizationControlModel.xsd" ) );
+    prefixes.put( NS_RASTERIZATION_CONTROL_MODEL, PREFIX_RASTERIZATION_CONTROL_MODEL );
+    catalog.put( NS_LANDUSE_VECTOR_MODEL, myClass.getResource( "schemata/LanduseVectorModel.xsd" ) );
+    prefixes.put( NS_LANDUSE_VECTOR_MODEL, PREFIX_LANDUSE_VECTOR_MODEL );
+    catalog.put( NS_WATERDEPTH_COVERAGE_MODEL, myClass.getResource( "schemata/WaterdepthCoverageModel.xsd" ) );
+    prefixes.put( NS_WATERDEPTH_COVERAGE_MODEL, PREFIX_WATERDEPTH_COVERAGE_MODEL );
     // catalog.put( NS_CONTEXTMODEL, myClass.getResource( "ContextModel.xsd" ) );
     // catalog.put( NS_RISKCONTEXTMODEL, myClass.getResource( "RiskContextModel.xsd" ) );
     // catalog.put( NS_RASTERDATAMODEL, myClass.getResource( "RasterDataModel.xsd" ) );

@@ -22,5 +22,7 @@ Require-Bundle: org.eclipse.ui,
  org.kalypso.chart.ui,
  org.kalypso.workflow,
  org.kalypso.kalypso1d2d.pjt,
- org.kalypso.ModelSimulationBase
+ org.kalypso.ModelSimulationBase,
+ org.kalypso.contribs.ogc31,
+ org.kalypso.gml.ui
 Eclipse-LazyStart: true
