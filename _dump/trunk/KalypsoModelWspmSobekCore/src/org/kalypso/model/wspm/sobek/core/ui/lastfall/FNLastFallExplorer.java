@@ -1,0 +1,233 @@
+/*----------------    FILE HEADER KALYPSO ------------------------------------------
+ *
+ *  This file is part of kalypso.
+ *  Copyright (C) 2004 by:
+ * 
+ *  Technical University Hamburg-Harburg (TUHH)
+ *  Institute of River and coastal engineering
+ *  Denickestraﬂe 22
+ *  21073 Hamburg, Germany
+ *  http://www.tuhh.de/wb
+ * 
+ *  and
+ *  
+ *  Bjoernsen Consulting Engineers (BCE)
+ *  Maria Trost 3
+ *  56070 Koblenz, Germany
+ *  http://www.bjoernsen.de
+ * 
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ * 
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ * 
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * 
+ *  Contact:
+ * 
+ *  E-Mail:
+ *  belger@bjoernsen.de
+ *  schlienger@bjoernsen.de
+ *  v.doemming@tuhh.de
+ *   
+ *  ---------------------------------------------------------------------------*/
+package org.kalypso.model.wspm.sobek.core.ui.lastfall;
+
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.TreeSelection;
+import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
+import org.eclipse.ui.IWorkbenchWizard;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.forms.events.HyperlinkAdapter;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
+import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.ImageHyperlink;
+import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode;
+import org.kalypso.model.wspm.sobek.core.interfaces.ILastfall;
+import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
+import org.kalypso.model.wspm.sobek.core.wizard.SobekWizardCreateLastfall;
+import org.kalypso.ogc.gml.FeatureUtils;
+
+/**
+ * @author kuch
+ */
+public class FNLastFallExplorer
+{
+  static private final Font fTextBold = new Font( Display.getDefault(), "Tahoma", 8, SWT.BOLD );
+
+  protected final IModelMember m_modelBuilder;
+
+  public FNLastFallExplorer( final IModelMember modelBuilder )
+  {
+
+    m_modelBuilder = modelBuilder;
+  }
+
+  public void draw( final FormToolkit toolkit, final Composite body )
+  {
+    /* header */
+    final Composite header = toolkit.createComposite( body );
+    final GridLayout layout = new GridLayout( 2, false );
+    layout.marginWidth = layout.horizontalSpacing = 0;
+    header.setLayout( layout );
+    header.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+
+    final TreeViewer viewer = new TreeViewer( body );
+
+    getHeader( toolkit, header, viewer );
+
+    /* tree */
+    viewer.getTree().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+    viewer.setLabelProvider( new FNLastfallTreeLabelProvider() );
+    viewer.setContentProvider( new FNLastfallTreeContentProvider() );
+
+    final ILastfall[] lastfalls = m_modelBuilder.getLastfallMembers();
+    viewer.setInput( lastfalls );
+
+    /* link - create new lastfall */
+    final ImageHyperlink lnk = toolkit.createImageHyperlink( body, SWT.NONE );
+
+    final Image iAdd = new Image( body.getDisplay(), getClass().getResourceAsStream( "icons/add.gif" ) );
+    lnk.setImage( iAdd );
+    lnk.setText( "Create a new lastfall..." );
+    lnk.setToolTipText( "Create a new lastfall" );
+
+    lnk.addHyperlinkListener( new HyperlinkAdapter()
+    {
+      /**
+       * @see org.eclipse.ui.forms.events.HyperlinkAdapter#linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent)
+       */
+      @Override
+      public void linkActivated( final HyperlinkEvent e )
+      {
+        final IWorkbenchWizard wizard = new SobekWizardCreateLastfall( m_modelBuilder );
+        wizard.init( PlatformUI.getWorkbench(), null );
+
+        final WizardDialog dialog = new WizardDialog( null, wizard );
+        dialog.open();
+      }
+    } );
+
+    viewer.expandAll();
+  }
+
+  private void getHeader( final FormToolkit toolkit, final Composite header, final TreeViewer viewer )
+  {
+
+    /* label */
+    final Label lLastfalls = toolkit.createLabel( header, "Lastfalls:" );
+    lLastfalls.setFont( FNLastFallExplorer.fTextBold );
+
+    final ToolBar toolBar = new ToolBar( header, SWT.FLAT );
+    toolBar.setLayoutData( new GridData( GridData.END, GridData.FILL, true, false ) );
+    toolkit.adapt( toolBar );
+
+    /* edit */
+    final ToolItem edit = new ToolItem( toolBar, SWT.NONE );
+    final Image iEdit = new Image( header.getDisplay(), getClass().getResourceAsStream( "icons/edit.gif" ) );
+    edit.setImage( iEdit );
+    edit.setEnabled( false );
+
+    edit.addSelectionListener( new SelectionAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
+      @Override
+      public void widgetSelected( final SelectionEvent e )
+      {
+        final TreeSelection selection = (TreeSelection) viewer.getSelection();
+        final Object element = selection.getFirstElement();
+
+        if( element instanceof ILastfall )
+        {
+
+        }
+        else if( element instanceof IBoundaryNode )
+        {
+
+        }
+      }
+    } );
+
+    /* delete */
+    final ToolItem delete = new ToolItem( toolBar, SWT.NONE );
+    final Image iDelete = new Image( header.getDisplay(), getClass().getResourceAsStream( "icons/delete.gif" ) );
+    delete.setImage( iDelete );
+    delete.setEnabled( false );
+
+    delete.addSelectionListener( new SelectionAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
+      @Override
+      public void widgetSelected( final SelectionEvent e )
+      {
+        final TreeSelection selection = (TreeSelection) viewer.getSelection();
+        final Object element = selection.getFirstElement();
+
+        if( element instanceof ILastfall )
+        {
+          final ILastfall lastfall = (ILastfall) element;
+          try
+          {
+            FeatureUtils.deleteFeature( lastfall.getFeature() );
+          }
+          catch( final Exception e1 )
+          {
+            e1.printStackTrace();
+          }
+        }
+      }
+    } );
+
+    /* selection change listener for en/disabling toolitems */
+    viewer.addSelectionChangedListener( new ISelectionChangedListener()
+    {
+      public void selectionChanged( final SelectionChangedEvent event )
+      {
+        final TreeSelection selection = (TreeSelection) viewer.getSelection();
+        final Object element = selection.getFirstElement();
+
+        if( element instanceof IBoundaryNode )
+        {
+          edit.setEnabled( true );
+          delete.setEnabled( false );
+        }
+        else if( element instanceof ILastfall )
+        {
+          edit.setEnabled( true );
+          delete.setEnabled( true );
+        }
+        else
+        {
+          edit.setEnabled( false );
+          delete.setEnabled( false );
+        }
+      }
+    } );
+
+  }
+}
