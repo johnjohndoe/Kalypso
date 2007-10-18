@@ -38,23 +38,15 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.sobek.core.wizard;
+package org.kalypso.model.wspm.sobek.core.model;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.ui.INewWizard;
-import org.eclipse.ui.IWorkbench;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
+import org.kalypso.model.wspm.sobek.core.interfaces.ILastfall;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
+import org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember;
 import org.kalypso.model.wspm.sobek.core.utils.AtomarAddFeatureCommand;
-import org.kalypso.model.wspm.sobek.core.wizard.pages.PageCreateLastfall;
 import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
@@ -63,62 +55,29 @@ import org.kalypsodeegree.model.feature.Feature;
 /**
  * @author kuch
  */
-public class SobekWizardCreateLastfall extends Wizard implements INewWizard
+public class LastfallUtils
 {
-
-  private PageCreateLastfall m_page;
-
-  private final IModelMember m_modelBuilder;
-
-  /**
-   * @param modelBuilder
-   *            instance of sobek model gml notation
-   */
-  public SobekWizardCreateLastfall( final IModelMember modelBuilder )
+  public static ILastfall createEmptyLastfallFeature( final ISobekModelMember modelMember )
   {
-    m_modelBuilder = modelBuilder;
-  }
-
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#performFinish()
-   */
-  @Override
-  public boolean performFinish( )
-  {
-    final Feature model = m_modelBuilder.getFeature();
+    final Feature model = modelMember.getFeature();
 
     final IRelationType prop = (IRelationType) model.getFeatureType().getProperty( ISobekConstants.QN_HYDRAULIC_LASTFALL_MEMBER );
     final IFeatureType targetType = prop.getTargetFeatureType();
     final IFeatureSelectionManager selectionManager = KalypsoCorePlugin.getDefault().getSelectionManager();
 
-    final Map<IPropertyType, Object> atValues = new HashMap<IPropertyType, Object>();
-    atValues.put( targetType.getProperty( ISobekConstants.QN_HYDRAULIC_NAME ), m_page.getLastfallName() );
-    atValues.put( targetType.getProperty( ISobekConstants.QN_HYDRAULIC_DESCRIPTION ), m_page.getLastfallDescription() );
-
     final CommandableWorkspace workspace = FeatureUtils.getWorkspace( model );
-
-    final AtomarAddFeatureCommand command = new AtomarAddFeatureCommand( workspace, targetType, model, prop, -1, atValues, selectionManager );
+    final AtomarAddFeatureCommand command = new AtomarAddFeatureCommand( workspace, targetType, model, prop, -1, null, selectionManager );
     try
     {
       workspace.postCommand( command );
+
+      return new Lastfall( modelMember, command.getNewFeature() );
     }
     catch( final Exception e )
     {
       e.printStackTrace();
-      return false;
     }
 
-    return true;
+    return null;
   }
-
-  /**
-   * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
-   *      org.eclipse.jface.viewers.IStructuredSelection)
-   */
-  public void init( final IWorkbench workbench, final IStructuredSelection selection )
-  {
-    m_page = new PageCreateLastfall();
-    addPage( m_page );
-  }
-
 }

@@ -40,10 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.model;
 
-import org.kalypso.model.wspm.sobek.core.SobekModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.ILastfall;
 import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
+import org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember;
 import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -53,11 +53,11 @@ import org.kalypsodeegree.model.feature.Feature;
 public class Lastfall implements ILastfall
 {
 
-  private final SobekModelMember m_sobekModelMember;
+  private final ISobekModelMember m_sobekModelMember;
 
   private final Feature m_lastfall;
 
-  public Lastfall( final SobekModelMember sobekModelMember, final Feature lastfall )
+  public Lastfall( final ISobekModelMember sobekModelMember, final Feature lastfall )
   {
     m_sobekModelMember = sobekModelMember;
     m_lastfall = lastfall;

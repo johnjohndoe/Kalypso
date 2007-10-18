@@ -44,6 +44,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -65,8 +66,9 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.ILastfall;
-import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
-import org.kalypso.model.wspm.sobek.core.wizard.SobekWizardCreateLastfall;
+import org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember;
+import org.kalypso.model.wspm.sobek.core.model.LastfallUtils;
+import org.kalypso.model.wspm.sobek.core.wizard.SobekWizardEditLastfall;
 import org.kalypso.ogc.gml.FeatureUtils;
 
 /**
@@ -76,9 +78,9 @@ public class FNLastFallExplorer
 {
   static private final Font fTextBold = new Font( Display.getDefault(), "Tahoma", 8, SWT.BOLD );
 
-  protected final IModelMember m_modelBuilder;
+  protected final ISobekModelMember m_modelBuilder;
 
-  public FNLastFallExplorer( final IModelMember modelBuilder )
+  public FNLastFallExplorer( final ISobekModelMember modelBuilder )
   {
 
     m_modelBuilder = modelBuilder;
@@ -121,11 +123,24 @@ public class FNLastFallExplorer
       @Override
       public void linkActivated( final HyperlinkEvent e )
       {
-        final IWorkbenchWizard wizard = new SobekWizardCreateLastfall( m_modelBuilder );
+        final ILastfall lastfall = LastfallUtils.createEmptyLastfallFeature( m_modelBuilder );
+
+        final IWorkbenchWizard wizard = new SobekWizardEditLastfall( lastfall );
         wizard.init( PlatformUI.getWorkbench(), null );
 
         final WizardDialog dialog = new WizardDialog( null, wizard );
         dialog.open();
+
+        final int returnCode = dialog.getReturnCode();
+        if( returnCode != Window.OK )
+          try
+          {
+            FeatureUtils.deleteFeature( lastfall.getFeature() );
+          }
+          catch( final Exception e1 )
+          {
+            e1.printStackTrace();
+          }
       }
     } );
 
